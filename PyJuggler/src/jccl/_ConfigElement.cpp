@@ -82,10 +82,6 @@ void _Export_ConfigElement()
         .def(init< const jccl::ConfigElement& >())
         .def("isValid", &jccl::ConfigElement::isValid)
         .def("assertValid", &jccl::ConfigElement::assertValid)
-        .def("initFromNode", &jccl::ConfigElement::initFromNode,
-             "initFromNode(elementNode) -> Boolean\n"
-             "Initializes this element from an XML node.\n"
-             "Constructs the element to reference the given element node.")
         .def("getChildElement", &jccl::ConfigElement::getChildElement,
              "getChildElement(path) -> ConfigElement\n"
              "Gets a child element from a property of self.\n"
@@ -206,7 +202,6 @@ void _Export_ConfigElement()
              "Returns:\n"
              "A list of ConfigElement objects that are the config elements\n"
              "embedded in self.")
-        .def("getNode", &jccl::ConfigElement::getNode)
         .def(self_ns::str(self))
         .def( self == self )
         .def( self != self )
