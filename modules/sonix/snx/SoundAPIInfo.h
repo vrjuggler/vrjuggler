@@ -39,12 +39,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
-
-
 #ifndef SNX_SOUND_API_INFO
 #define SNX_SOUND_API_INFO
+
+#include <snx/snxConfig.h>
 
 namespace snx
 {
@@ -52,25 +50,36 @@ namespace snx
 class SoundAPIInfo
 {
 public:
-   SoundAPIInfo() : voices( 65535 ), speakerConfig( STEREO ), sampleRate( STEREO_22050_KHZ ) {}
+   SoundAPIInfo()
+      : voices(65535)
+      , speakerConfig(STEREO)
+      , sampleRate(STEREO_22050_KHZ)
+   {}
 
    int voices; // 0 - n (hardware limited)
-   
+
    enum SpeakerConfig
    {
-      MONO, STEREO, QUAD, DOLBY5_1, OCT
-   };   
+      MONO,
+      STEREO,
+      QUAD,
+      DOLBY5_1,
+      OCT
+   };
 
    SpeakerConfig speakerConfig;
 
    enum SampleRate
    {
-      STEREO_22050_KHZ, MONO_22050_KHZ, STEREO_44100_KHZ, MONO_44100_KHZ
+      STEREO_22050_KHZ,
+      MONO_22050_KHZ,
+      STEREO_44100_KHZ,
+      MONO_44100_KHZ
    };
 
    SampleRate sampleRate;
 };
 
-}; // end namespace
+} // end namespace
 
 #endif //SNX_SOUND_API_INFO

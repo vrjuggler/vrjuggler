@@ -62,14 +62,17 @@
 namespace snx
 {
    /**
-    * A handle to a sonix sound.
-    * This is a convenient handle to your sound and is your interface to
-    * using individual sounds in sonix use configure, and remove as you
-    * would new and delete.
-    * That is, you could leak, if you don't call remove.  This is because
-    * there may be more than one handle to a sound.
-    * @note You may have to sonix::instance()->changeAPI() to the API
-    *       you want to use (usually OpenAL or AudioWorks).
+    * A handle to a Sonix sound.
+    * This is a convenient handle to a sound, and it is the interface to using
+    * individual sounds in Sonix.  Use conifgure() and remove() as the new and
+    * delete C++ operators would be used.  Memory leaks could occur if remove()
+    * not called.  This is because there may be more than one handle to a
+    * sound.
+    *
+    * @note You may have to call snx::sonix::instance()->changeAPI() to
+    *       switch to the sound API you want to use (such as OpenAL or
+    *       AudioWorks).
+    *
     * @ingroup SonixAPI
     */
    class SNX_CLASS_API SoundHandle
@@ -78,31 +81,33 @@ namespace snx
       /**
        * Default constructor.  You should call init to name this handle.
        *
+       * @post This sound handle is not associated with any name.  init()
+       *       must be called to assign a name to this handle.
+       *
        * @see init
        */
       SoundHandle();
 
       /**
-       * Name constructor.  This gives the handle your chosen name.
-       * This name is what is used in all sonix:: class calls (SoundHandle is
-       * a wrapper for sonix::).
+       * Name constructor.  This assigns the given name to this sound handle.
+       * This name is that is used in all snx::sonix class calls.
+       * (snx::SoundHandle is a wrapper for snx::sonix).
        *
-       * @post You do not need to call init if you use the name constructor.
-       *
-       * @see init
+       * @post This sound handle is associated with the given name, and there
+       *       is no need to call init().
        */
       SoundHandle(const std::string& myUniqueName);
 
       /**
-       * Initialize the name of this sound with your chosen name.
-       * Important: you must configure() your sound after calling init(), if
-       * this name hasn't been configured before...
+       * Initializes the name of this sound with the given name.  If this name
+       * has not been conifgured before, then configure() must be invoked on
+       * this handle after calling init().
        *
        * @example "Example of initializing a SoundHandle"
        * \code
-       *    snx::SoundHandle click_sound;
-       *    click_sound.init( "click" );
-       *    click_sound.configure( sound_info );
+       * snx::SoundHandle click_sound;
+       * click_sound.init("click");
+       * click_sound.configure(sound_info);
        * \endcode
        *
        * @see snx::SoundHandle::configure
@@ -112,7 +117,7 @@ namespace snx
          mAlias = myUniqueName;
       }
 
-      /** Gets the handle name. */
+      /** Gets the name of this handle. */
       std::string getName() const { return mAlias; }
 
       /** Virtual destructor. */
@@ -127,7 +132,7 @@ namespace snx
        * @post If it is, then the loaded sound is triggered.  If it isn't then
        *       nothing happens.
        *
-       * @param repeat Number of times to play: -1 to repeat infinately, 1
+       * @param repeat Number of times to play: -1 to repeat forever, 1
        *               (single shot) is default.
        */
       virtual void trigger( const int& repeat = 1 )
@@ -144,9 +149,11 @@ namespace snx
       }
 
       /**
-       * Specifies whether sound retriggers from beginning when triggered
-       * while playing.  When sound is already playing then you call trigger,
-       * does the sound restart from beginning?
+       * Specifies whether the sound retriggers from beginning when triggered
+       * while playing.  In other words, when the sound is already playing and
+       * trigger() is called, does the sound restart from the beginning?
+       *
+       * @param onOff A Boolean value enabling or disabling retriggering.
        */
       virtual void setRetriggerable( bool onOff )
       {
@@ -170,7 +177,8 @@ namespace snx
       }
 
       /**
-       * Pause the sound.  Use unpause to return playback where you left off.
+       * Pauses the sound.  Use unpause() to return playback from where the
+       * sound was paused.
        */
       virtual void pause()
       {
@@ -178,8 +186,8 @@ namespace snx
       }
 
       /**
-       * Resumes playback from a paused state.  Does nothing if sound was not
-       * paused.
+       * Resumes playback from a paused state.  This does nothing if the sound
+       * was not paused.
        */
       virtual void unpause()
       {
@@ -193,15 +201,18 @@ namespace snx
       }
 
       /**
-       * Ambient or positional sound.
-       * Is the sound ambient: attached to the listener, doesn't change volume
-       * when listener moves.
-       * Or is the sound positional: changes volume as listener nears or
-       * retreats.
+       * Sets the sound as either ambient or positional depending on the value
+       * of ambient.  If the sound is ambient, it is attached to the listener,
+       * and its volume does not change when the listener moves.  If the sound
+       * is positional, the volume changes when the listener moves.
+       *
+       * @param ambient A flag identifying whether this sound is ambient (true)
+       *                or positional (false).  This parameter is optional,
+       *                and it defaults to false (the sound is positional).
        */
-      virtual void setAmbient( bool setting = false )
+      virtual void setAmbient(const bool ambient = false)
       {
-         sonix::instance()->setAmbient( mAlias, setting );
+         sonix::instance()->setAmbient(mAlias, ambient);
       }
 
       /** Is the sound ambient? */
@@ -212,24 +223,32 @@ namespace snx
 
       /**
        * Alters the frequency of the sample.
-       * 1 is no change.
-       * < 1 is low.
-       * > 1 is high.
+       *
+       * @param amount The value that determines the pitch bend.  1.0 means
+       *               that there is no change.  A value less than 1.0 is low;
+       *               a value greather than 1.0 is high.
        */
       virtual void setPitchBend( float amount )
       {
          sonix::instance()->setPitchBend( mAlias, amount );
       }
 
-      /** Sets the effect volume.  set to a value between [0..1]. */
+      /**
+       * Sets the effect volume.  The value must be in the range [0,1].
+       *
+       * @param amount The value of the volume.  It must be between 0.0 and
+       *               1.0 inclusive.
+       */
       virtual void setVolume( float amount )
       {
          sonix::instance()->setVolume( mAlias, amount );
       }
 
       /**
-       * Sets the effect cutoff.
-       * Set to a value between [0..1]... 1 is no change.  0 is total cutoff.
+       * Sets the effect cutoff.  The value must be in the range [0,1].
+       *
+       * @param amount The value of the cutoff.  1.0 is no change; 0.0 is
+       *               total cutoff.
        */
       virtual void setCutoff( float amount )
       {
@@ -265,6 +284,9 @@ namespace snx
 
       /**
        * Sets the position of the listener.
+       *
+       * @param mat A transformation matrix representing the position of the
+       *            listener.
        */
       virtual void setListenerPosition( const gmtl::Matrix44f& mat )
       {
@@ -273,6 +295,8 @@ namespace snx
 
       /**
        * Gets the position of the listener.
+       *
+       * @param mat Storage for returning the position of the listener.
        */
       virtual void getListenerPosition( gmtl::Matrix44f& mat )
       {
@@ -286,11 +310,15 @@ namespace snx
        *
        * Configure: associate a name (alias) to the description if not already
        * done.
-       * Reconfigure: change properties of the sound to the descriptino
+       *
+       * Reconfigure: change properties of the sound to the description
        * provided.
        *
        * @pre Provide a SoundInfo which describes the sound.
        * @post This handle will point to loaded sound data.
+       *
+       * @param description An object that describes the sound for which this
+       *                    object will be a handle.
        */
       virtual void configure( const snx::SoundInfo& description )
       {
@@ -299,8 +327,8 @@ namespace snx
       }
 
       /**
-        * Removes a configured sound.  Any future reference to the mAlias will
-        * not cause an error, but will not result in a rendered sound.
+        * Removes a configured sound.  Any future reference to the alias will
+        * not cause an error, but it will not result in a rendered sound.
         */
       virtual void remove()
       {
