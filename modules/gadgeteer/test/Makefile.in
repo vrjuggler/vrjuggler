@@ -34,6 +34,28 @@ default: all
 all: ${PROGS}
 
 # ----------------
+# aFlock test driver
+# ----------------
+aFlockTest: aFlockTest.o aFlock.o
+	${COMPILE} -o $@ aFlockTest.o aFlock.o 
+
+aFlockTest.o: aFlockTest.cpp
+	${COMPILE} -woff 3303 -c -o $@ ${srcdir}/aFlockTest.cpp
+
+aFlock.o: ../../Input/vjPosition/aFlock.cpp
+	${COMPILE} -woff 3303 -c -o $@ ../../Input/vjPosition/aFlock.cpp
+
+# ----------------
+# vjFlock test driver
+# ----------------
+vjFlockTest: vjFlockTest.o
+	${COMPILE} -o $@ vjFlockTest.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+vjFlockTest.o: vjFlockTest.cpp
+	${COMPILE} -woff 3303 -c -o $@ ${srcdir}/vjFlockTest.cpp
+
+
+# ----------------
 # new
 # ----------------
 new: new.o
