@@ -113,10 +113,7 @@ MKDEPS_C	= $(MKDEPS_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 MKDEPS_CXX	= $(MKDEPS_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 # -----------------------------------------------------------------------------
-# Platform- and binary-specific options.  The assignments preceding the
-# ifeq ... endif blocks are the default values.  Depending on the value of
-# $(ABI), further settings may be made to allow for building with multiple
-# ABIs.
+# Platform- and binary-specific options
 # -----------------------------------------------------------------------------
 ifdef jcclABI
     dppABI	= $(jcclABI)
