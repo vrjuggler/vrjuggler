@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -121,7 +121,7 @@ bool Analog::config(jccl::ConfigChunkPtr c)
    mMin = c->template getProperty<float>("min");
    mMax = c->template getProperty<float>("max");
 
-   vprDEBUG(vprDBG_ALL,4) << " SimAnalog::config() min:" << mMin
+   vprDEBUG(vprDBG_ALL,4) << " Analog::config() min:" << mMin
                           << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
 
    return true;
