@@ -124,13 +124,13 @@ protected:
    /** Load the chunks from a given "ChunkDescDB" element into the db
    * @post All ChunkDesc's that are children of chunkDescDBNode are loaded
    */
-   bool loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode);
+   bool loadFromChunkDescDBNode(cppdom::NodePtr chunkDescDBNode);
 
    /** Creates a chunkDescDB element node and puts all the contained descs under it
    * @param chunkDescDBNode - returns with the new node that contains all the children desc
    * This function is used to create the root descdb node for writing out dbs
    */
-   void createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) const;
+   void createChunkDescDBNode(cppdom::NodePtr& chunkDescDBNode) const;
 
    std::map<std::string, ChunkDescPtr> mDescs;
 };

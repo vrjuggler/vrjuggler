@@ -46,10 +46,10 @@ namespace jccl
 PropertyDesc::PropertyDesc ()
 {
    mIsValid = true;
-   mNode = ChunkFactory::instance()->createXMLNode(); // cppdom::XMLNodePtr(new cppdom::XMLNode);  // Set a default node
+   mNode = ChunkFactory::instance()->createXMLNode(); // cppdom::NodePtr(new cppdom::Node);  // Set a default node
 }
 
-PropertyDesc::PropertyDesc(cppdom::XMLNodePtr node)
+PropertyDesc::PropertyDesc(cppdom::NodePtr node)
 {
    mIsValid = true;
    mNode = node;
@@ -91,11 +91,11 @@ std::string PropertyDesc::getHelp () const
 {
    std::string help_str("");
 
-   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+   cppdom::NodePtr help_node = mNode->getChild(jccl::help_TOKEN);
 
    if ( help_node.get() != NULL )
    {
-      cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+      cppdom::NodePtr help_cdata = help_node->getChild("cdata");
 
       if ( help_cdata.get() != NULL )
       {
@@ -108,7 +108,7 @@ std::string PropertyDesc::getHelp () const
 
 void PropertyDesc::setHelp (const std::string& help)
 {
-   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+   cppdom::NodePtr help_node = mNode->getChild(jccl::help_TOKEN);
 
    // If this chunk description does not have a <help> child, create one.
    if ( help_node.get() == NULL )
@@ -119,7 +119,7 @@ void PropertyDesc::setHelp (const std::string& help)
       vprASSERT(mNode->getChild(jccl::help_TOKEN).get() != NULL && "Node addition failed");
    }
 
-   cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+   cppdom::NodePtr help_cdata = help_node->getChild("cdata");
 
    if ( help_cdata.get() == NULL )
    {
@@ -139,11 +139,11 @@ std::string PropertyDesc::getDefaultValueString(int index)
 
    if ( mNode.get() != NULL )
    {
-      cppdom::XMLNodeList children(mNode->getChildren(item_TOKEN));
+      cppdom::NodeList children(mNode->getChildren(item_TOKEN));
 
       if ( unsigned(index) < children.size() )
       {
-         cppdom::XMLNodeList::iterator i(children.begin());
+         cppdom::NodeList::iterator i(children.begin());
          std::advance(i, index);
          value_str = (*i)->getAttribute(default_value_TOKEN).getString();
       }

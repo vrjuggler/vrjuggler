@@ -61,7 +61,7 @@ public:
    /** Constructor
    * Constructs the chunk to reference the given chunk node
    */
-   ConfigChunk(cppdom::XMLNodePtr chunkNode);
+   ConfigChunk(cppdom::NodePtr chunkNode);
 
    /** Copy constructor. */
    ConfigChunk(const ConfigChunk& c);
@@ -204,7 +204,7 @@ public:
    template<class T>
    bool setProperty(const std::string& prop, const int ind, T val)
    {
-      cppdom::XMLNodePtr cdata_node = getPropertyCdataNode(prop, ind, true);
+      cppdom::NodePtr cdata_node = getPropertyCdataNode(prop, ind, true);
       vprASSERT(cdata_node.get() != NULL && "Autogrow failed");
 
       std::ostringstream oss;
@@ -239,7 +239,7 @@ public:
     */
    void setDesc(ChunkDescPtr d);
 
-   cppdom::XMLNodePtr getNode()
+   cppdom::NodePtr getNode()
    { return mNode; }
 
 protected:
@@ -257,7 +257,7 @@ protected:
    *
    * @note We always autocreate the cdata node if need be
    */
-   cppdom::XMLNodePtr getPropertyCdataNode(const std::string& prop, int ind, bool autoCreate) const;
+   cppdom::NodePtr getPropertyCdataNode(const std::string& prop, int ind, bool autoCreate) const;
 
    /** Get a chunk ptr from the given property
    * Have to call this way because specialization would use symbols that aren't available
@@ -265,7 +265,7 @@ protected:
    ConfigChunkPtr getProperty_ChunkPtr(const std::string& prop, int ind) const;
 
 protected:
-   cppdom::XMLNodePtr mNode;         /**< Node for the Config chunk element */
+   cppdom::NodePtr mNode;         /**< Node for the Config chunk element */
    ChunkDescPtr      mDesc;         /**< Description for this Chunk. */
    bool              mValidation;   /**< Flag for testing memory use.*/
 };

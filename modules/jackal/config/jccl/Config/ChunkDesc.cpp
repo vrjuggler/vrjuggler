@@ -55,7 +55,7 @@ ChunkDesc::ChunkDesc ()
    mNode = jccl::ChunkFactory::instance()->createXMLNode();  // Set a default node
 }
 
-ChunkDesc::ChunkDesc(cppdom::XMLNodePtr node)
+ChunkDesc::ChunkDesc(cppdom::NodePtr node)
 {
    mIsValid = true;
    mNode = node;  // Set a default node
@@ -96,7 +96,7 @@ void ChunkDesc::setHelp (const std::string& help)
 {
    assertValid();
 
-   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+   cppdom::NodePtr help_node = mNode->getChild(jccl::help_TOKEN);
 
    // If this chunk description does not have a <help> child, create one.
    if ( help_node.get() == NULL )
@@ -107,7 +107,7 @@ void ChunkDesc::setHelp (const std::string& help)
       vprASSERT(mNode->getChild(jccl::help_TOKEN).get() != NULL && "Node addition failed");
    }
 
-   cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+   cppdom::NodePtr help_cdata = help_node->getChild("cdata");
 
    if ( help_cdata.get() == NULL )
    {
@@ -125,7 +125,7 @@ std::string ChunkDesc::getName () const
 {
    assertValid();
 
-   // This must use cppdom::XMLAttribute::getString() because a chunk
+   // This must use cppdom::Attribute::getString() because a chunk
    // description's name may contain spaces.
    return mNode->getAttribute(jccl::name_TOKEN).getString();
 }
@@ -141,11 +141,11 @@ std::string ChunkDesc::getHelp () const
    assertValid();
 
    std::string help_str("");
-   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+   cppdom::NodePtr help_node = mNode->getChild(jccl::help_TOKEN);
 
    if ( help_node.get() != NULL )
    {
-      cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+      cppdom::NodePtr help_cdata = help_node->getChild("cdata");
 
       if ( help_cdata.get() != NULL )
       {
@@ -160,7 +160,7 @@ void ChunkDesc::add (PropertyDesc pd)
 {
    assertValid();
 
-   cppdom::XMLNodePtr pd_node = pd.getNode();
+   cppdom::NodePtr pd_node = pd.getNode();
    mNode->addChild(pd_node);
 }
 
@@ -209,7 +209,7 @@ PropertyDesc ChunkDesc::getPropertyDesc(const std::string& token) const
    assertValid();
 
    cppdom::HasAttributeValuePredicate attrib_pred("token", token);
-   cppdom::XMLNodeList prop_descs = mNode->getChildrenPred(attrib_pred);
+   cppdom::NodeList prop_descs = mNode->getChildrenPred(attrib_pred);
 
    vprASSERT((prop_descs.size() < 2) && "Have multiple properties of same token name");
    if(!prop_descs.empty())
@@ -218,7 +218,7 @@ PropertyDesc ChunkDesc::getPropertyDesc(const std::string& token) const
    }
    else
    {
-      return PropertyDesc( cppdom::XMLNodePtr(NULL) ); // Failed to find
+      return PropertyDesc( cppdom::NodePtr(NULL) ); // Failed to find
    }
 }
 
@@ -227,9 +227,9 @@ std::vector<PropertyDesc> ChunkDesc::getAllPropertyDesc() const
    assertValid();
 
    std::vector<PropertyDesc> ret_val;
-   cppdom::XMLNodeList prop_descs = mNode->getChildren();
+   cppdom::NodeList prop_descs = mNode->getChildren();
 
-   for(cppdom::XMLNodeList::iterator i=prop_descs.begin(); i!= prop_descs.end(); i++)
+   for(cppdom::NodeList::iterator i=prop_descs.begin(); i!= prop_descs.end(); i++)
    {
       ret_val.push_back( PropertyDesc(*i) );
    }

@@ -156,9 +156,9 @@ public:
    }
 
 public:
-   bool loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode, std::string currentFile = "");
+   bool loadFromChunkDBNode(cppdom::NodePtr chunkDBNode, std::string currentFile = "");
 
-   void createChunkDBNode(cppdom::XMLNodePtr& chunkDBNode) const;
+   void createChunkDBNode(cppdom::NodePtr& chunkDBNode) const;
 
 protected :
    /** The name of the file that this DB was loaded from.  Used for

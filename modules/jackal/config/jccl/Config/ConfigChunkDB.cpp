@@ -279,7 +279,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
 std::ostream& operator<<(std::ostream& out, const ConfigChunkDB& self)
 {
-   cppdom::XMLNodePtr chunk_db_node;
+   cppdom::NodePtr chunk_db_node;
    self.createChunkDBNode(chunk_db_node);
    chunk_db_node->save(out);
    return out;
@@ -287,8 +287,8 @@ std::ostream& operator<<(std::ostream& out, const ConfigChunkDB& self)
 
 std::istream& operator>>(std::istream& in, ConfigChunkDB& self)
 {
-   cppdom::XMLNodePtr chunk_db_node = ChunkFactory::instance()->createXMLNode();
-   cppdom::XMLContextPtr context_ptr = chunk_db_node->getContext();
+   cppdom::NodePtr chunk_db_node = ChunkFactory::instance()->createXMLNode();
+   cppdom::ContextPtr context_ptr = chunk_db_node->getContext();
    chunk_db_node->load( in, context_ptr );
    self.loadFromChunkDBNode( chunk_db_node );
 
@@ -304,21 +304,21 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
    std::string absolute_filename = demangleFileName(filename, parentfile);
    mFileName = absolute_filename;
 
-   cppdom::XMLDocumentPtr chunk_db_doc = ChunkFactory::instance()->createXMLDocument();
+   cppdom::DocumentPtr chunk_db_doc = ChunkFactory::instance()->createXMLDocument();
    bool status(false);
 
    try
    {
       chunk_db_doc->loadFile( absolute_filename );
 
-      cppdom::XMLNodePtr chunk_db_node = chunk_db_doc->getChild( jccl::chunk_db_TOKEN);
+      cppdom::NodePtr chunk_db_node = chunk_db_doc->getChild( jccl::chunk_db_TOKEN);
       vprASSERT(chunk_db_node.get() != NULL);
 
       // Go through the include processing instructions
-      cppdom::XMLNodeList pi_list = chunk_db_doc->getPiList();
-      for (cppdom::XMLNodeList::iterator itr = pi_list.begin(); itr != pi_list.end(); ++itr)
+      cppdom::NodeList pi_list = chunk_db_doc->getPiList();
+      for (cppdom::NodeList::iterator itr = pi_list.begin(); itr != pi_list.end(); ++itr)
       {
-         cppdom::XMLNodePtr pi = *itr;
+         cppdom::NodePtr pi = *itr;
          // A desc DB has been included
          if (pi->getName() == include_desc_INSTRUCTION)
          {
@@ -346,9 +346,9 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
 
       status = true;
    }
-   catch (cppdom::XMLError& xml_e)
+   catch (cppdom::Error& xml_e)
    {
-      cppdom::XMLLocation where( chunk_db_doc->getContext()->getLocation() );
+      cppdom::Location where( chunk_db_doc->getContext()->getLocation() );
       std::string errmsg;
       xml_e.getStrError(errmsg);
 
@@ -364,9 +364,9 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
 
 bool ConfigChunkDB::save(const std::string& fname) const
 {
-   cppdom::XMLNodePtr chunk_db_node;
+   cppdom::NodePtr chunk_db_node;
    createChunkDBNode(chunk_db_node);                              // Get base db element
-   cppdom::XMLDocumentPtr chunk_db_doc(new cppdom::XMLDocument);        // Put in in a document
+   cppdom::DocumentPtr chunk_db_doc(new cppdom::Document);        // Put in in a document
    chunk_db_doc->addChild(chunk_db_node);
    chunk_db_doc->saveFile(fname);                                 // Write out the document
    return true;
@@ -391,7 +391,7 @@ struct ChunkNamePred
 };
 
 /** Load the chunks from a given "ChunkDB" element into the db */
-bool ConfigChunkDB::loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode,
+bool ConfigChunkDB::loadFromChunkDBNode(cppdom::NodePtr chunkDBNode,
                                         std::string currentFile)
 {
    if(chunkDBNode->getName() != chunk_db_TOKEN)
@@ -400,7 +400,7 @@ bool ConfigChunkDB::loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode,
       return false;
    }
 
-   for(cppdom::XMLNodeList::iterator cur_child = chunkDBNode->getChildren().begin();
+   for(cppdom::NodeList::iterator cur_child = chunkDBNode->getChildren().begin();
         cur_child != chunkDBNode->getChildren().end(); cur_child++)
    {
       ConfigChunkPtr new_chunk(new ConfigChunk( *cur_child ) );     // New chunk
@@ -427,7 +427,7 @@ bool ConfigChunkDB::loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode,
    return true;
 }
 
-void ConfigChunkDB::createChunkDBNode(cppdom::XMLNodePtr& chunkDBNode) const
+void ConfigChunkDB::createChunkDBNode(cppdom::NodePtr& chunkDBNode) const
 {
    chunkDBNode = ChunkFactory::instance()->createXMLNode();
    chunkDBNode->setName(chunk_db_TOKEN);
@@ -436,7 +436,7 @@ void ConfigChunkDB::createChunkDBNode(cppdom::XMLNodePtr& chunkDBNode) const
 
    for(cur_chunk = mChunks.begin(); cur_chunk != mChunks.end(); ++cur_chunk)
    {
-      cppdom::XMLNodePtr child_node = (*cur_chunk)->getNode();
+      cppdom::NodePtr child_node = (*cur_chunk)->getNode();
       chunkDBNode->addChild( child_node );
    }
 }

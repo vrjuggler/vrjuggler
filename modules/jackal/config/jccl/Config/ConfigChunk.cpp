@@ -54,7 +54,7 @@ ConfigChunk::ConfigChunk(ChunkDescPtr desc)
    mNode = ChunkFactory::instance()->createXMLNode(); // Create a fresh node
 }
 
-ConfigChunk::ConfigChunk(cppdom::XMLNodePtr chunkNode)
+ConfigChunk::ConfigChunk(cppdom::NodePtr chunkNode)
 {
    vprASSERT(chunkNode.get() != NULL);    // Make sure we have a valid node
 
@@ -124,7 +124,7 @@ bool ConfigChunk::operator<(const ConfigChunk& c) const
 }
 
 /**
- * This is a helper type for use with cppdom::XMLNode::getChildPred()
+ * This is a helper type for use with cppdom::Node::getChildPred()
  */
 struct NamePred
 {
@@ -133,7 +133,7 @@ struct NamePred
       ;
    }
 
-   bool operator()(cppdom::XMLNodePtr node)
+   bool operator()(cppdom::NodePtr node)
    {
       return (node->getAttribute(name_TOKEN).getString() == mName);
    }
@@ -145,8 +145,8 @@ struct NamePred
 ConfigChunkPtr ConfigChunk::getChildChunk(const std::string &path)
 {
    std::string working_path(path), prop_token;
-   cppdom::XMLNodePtr root(mNode);
-   cppdom::XMLNodeList props;
+   cppdom::NodePtr root(mNode);
+   cppdom::NodeList props;
 
    while ( jccl::hasSeparator(working_path) )
    {
@@ -172,11 +172,11 @@ ConfigChunkPtr ConfigChunk::getChildChunk(const std::string &path)
          root.reset();
 
          NamePred name_pred(child_chunk_name);
-         cppdom::XMLNodeList children;
+         cppdom::NodeList children;
 
          // Search the properties for a child whose "name" attribute matches
          // child_chunk_name.
-         for ( cppdom::XMLNodeList::iterator i = props.begin();
+         for ( cppdom::NodeList::iterator i = props.begin();
                i != props.end();
                ++i )
          {
@@ -209,7 +209,7 @@ std::string ConfigChunk::getName() const
 
 std::string ConfigChunk::getFullName() const
 {
-   cppdom::XMLNode *chunk_parent, *prop_parent;
+   cppdom::Node *chunk_parent, *prop_parent;
    std::string full_name(getName());
 
    chunk_parent = mNode.get();
@@ -234,19 +234,19 @@ ConfigChunkPtr ConfigChunk::getProperty_ChunkPtr(const std::string& prop, int in
    vprASSERT(mNode.get() != NULL);
 
    // Get all property children matching the given property type.
-   cppdom::XMLNodeList prop_children(mNode->getChildren(prop));
+   cppdom::NodeList prop_children(mNode->getChildren(prop));
 
-   cppdom::XMLNodePtr embedded_node(NULL);
+   cppdom::NodePtr embedded_node(NULL);
 
    // --- GET the cdata node --- //
    if(prop_children.size() > unsigned(ind))                       // If we have children in range
    {
-      cppdom::XMLNodeList::iterator property_i(prop_children.begin());
+      cppdom::NodeList::iterator property_i(prop_children.begin());
       std::advance(property_i, ind);                              // Advance to the correct property
 
       // Get the children of this property.  There should only be one child
       // that is the chunk.
-      cppdom::XMLNodeList emb_nodes = (*property_i)->getChildren();
+      cppdom::NodeList emb_nodes = (*property_i)->getChildren();
       vprASSERT(! emb_nodes.empty() && "Empty property");
       embedded_node = *(emb_nodes.begin());
    }
@@ -367,12 +367,12 @@ void ConfigChunk::setDesc(ChunkDescPtr desc)
 *
 * @note We always autocreate the cdata node if need be
 */
-cppdom::XMLNodePtr ConfigChunk::getPropertyCdataNode(const std::string& prop, int ind, bool autoCreate) const
+cppdom::NodePtr ConfigChunk::getPropertyCdataNode(const std::string& prop, int ind, bool autoCreate) const
 {
    vprASSERT(mNode.get() != NULL);
 
-   cppdom::XMLNodePtr cdata_node(NULL);
-   cppdom::XMLNodeList prop_children(mNode->getChildren(prop));    // Get all children call prop
+   cppdom::NodePtr cdata_node(NULL);
+   cppdom::NodeList prop_children(mNode->getChildren(prop));    // Get all children call prop
 
    // -- Autogrow for children --- //
    if( !(prop_children.size() > unsigned(ind)) && autoCreate)      // If child not in range and autocreate
@@ -381,7 +381,7 @@ cppdom::XMLNodePtr ConfigChunk::getPropertyCdataNode(const std::string& prop, in
 
       while( !(prop_children.size() > unsigned(ind) ))     // While not in range
       {
-         cppdom::XMLNodePtr new_node = ChunkFactory::instance()->createXMLNode();
+         cppdom::NodePtr new_node = ChunkFactory::instance()->createXMLNode();
          new_node->setName(prop);
          new_node->setCdata(prop_desc.getDefaultValueString(ind));
          mNode->addChild(new_node);                      // Add Child
@@ -392,13 +392,13 @@ cppdom::XMLNodePtr ConfigChunk::getPropertyCdataNode(const std::string& prop, in
    // --- GET the cdata node --- //
    if(prop_children.size() > unsigned(ind))                                 // If we have children in range
    {
-      cppdom::XMLNodeList::iterator property_i(prop_children.begin());
+      cppdom::NodeList::iterator property_i(prop_children.begin());
       std::advance(property_i, ind);                                    // Advance to the correct child
       cdata_node = (*property_i)->getChild("cdata");        // Get the text node
 
       if(cdata_node.get() == NULL)     // If no cdata node, then make one
       {
-         cppdom::XMLNodePtr new_cdata_node = ChunkFactory::instance()->createXMLNode();
+         cppdom::NodePtr new_cdata_node = ChunkFactory::instance()->createXMLNode();
          new_cdata_node->setName("cdata");
          new_cdata_node->setType(cppdom::xml_nt_cdata);
          (*property_i)->addChild(new_cdata_node);
@@ -420,7 +420,7 @@ std::string ConfigChunk::getPropertyString(const std::string& prop, int ind) con
 
    std::string prop_string_rep("");     // The String rep to convert from
    // Get the cdata node without auto create
-   cppdom::XMLNodePtr cdata_node = getPropertyCdataNode(prop,ind,false);
+   cppdom::NodePtr cdata_node = getPropertyCdataNode(prop,ind,false);
 
    if(cdata_node.get() != NULL)
    {
