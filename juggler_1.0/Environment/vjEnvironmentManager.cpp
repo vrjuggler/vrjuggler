@@ -18,8 +18,8 @@
 #include <Environment/vjTimedUpdate.h>
 
 
-vjEnvironmentManager::vjEnvironmentManager(): 
-                          connections(), 
+vjEnvironmentManager::vjEnvironmentManager():
+                          connections(),
                           updaters() {
 
     /* I want some hardcoded defaults, yes? */
@@ -81,16 +81,16 @@ bool vjEnvironmentManager::acceptConnections() {
 	return false;
     if (listen_thread != NULL)
 	return true;
-    
+
     /* here, we open a socket & get ready to read connections */
     listen_socket = socket (AF_INET, SOCK_STREAM, 0);
     bzero(&sockaddress, sizeof (struct sockaddr_in));
     sockaddress.sin_family = PF_INET;
     sockaddress.sin_port = htons(Port);
-    
-    if (bind ( listen_socket, (sockaddr*)&sockaddress, 
+
+    if (bind ( listen_socket, (sockaddr*)&sockaddress,
 	       sizeof (struct sockaddr_in))) {
-	vjDEBUG(0) << "vjEnvironmentManager couldn't open socket\n" 
+	vjDEBUG(0) << "vjEnvironmentManager couldn't open socket\n"
 		   << vjDEBUG_FLUSH;
 	return false;
     }
@@ -99,13 +99,13 @@ bool vjEnvironmentManager::acceptConnections() {
 		   << Port << '\n' << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
-    vjThreadMemberFunctor<vjEnvironmentManager>* memberFunctor = 
+    vjThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
 	new vjThreadMemberFunctor<vjEnvironmentManager>(
-				this, 
-				&vjEnvironmentManager::controlLoop, 
+				this,
+				&vjEnvironmentManager::controlLoop,
 	       			NULL);
     listen_thread = new vjThread (memberFunctor, 0);
-    
+
     return (listen_thread != NULL);
 }
 
@@ -117,7 +117,7 @@ bool vjEnvironmentManager::rejectConnections () {
 	listen_thread = NULL;
 	close(listen_socket);
     }
-    
+
     return 1;
 }
 
@@ -168,9 +168,9 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
     int len;
     vjConnect* connection;
 
-    vjDEBUG(3) << "vjEnvironmentManager network server running.\n" 
+    vjDEBUG(3) << "vjEnvironmentManager network server running.\n"
 	       << vjDEBUG_FLUSH;
-    
+
     /* start listening for connections */
     if (listen (listen_socket, 0)) {
 	vjDEBUG(1) << "ERROR: vjEnvironmentManager socket listen "
@@ -180,7 +180,7 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 
     for (;;) {
 	len = sizeof (struct sockaddr_in);
-	servsock = accept (listen_socket, 
+	servsock = accept (listen_socket,
 			   (sockaddr*)&servaddr, &len);
 	connection = new vjConnect (servsock);
 	connections.push_back( connection );
@@ -199,7 +199,7 @@ void vjEnvironmentManager::reconfigure () {
     bool networkingchanged;
     int newport;
 
-    chunkdb = vjKernel::instance()->getChunkDB();
+    chunkdb = vjKernel::instance()->getInitialChunkDB();
     v = chunkdb->getMatching ("EnvironmentManager");
 
     if (v->size() == 0) {
@@ -213,10 +213,10 @@ void vjEnvironmentManager::reconfigure () {
 		   << " - multiple EM ConfigChunks found. Using "
 		   << "first one.\n" << vjDEBUG_FLUSH;
     }
-    
+
     c = (*v)[0];
     delete v;
-    
+
     configured_to_accept = c->getProperty ("AcceptConnections");
     newport = c->getProperty("Port");
 
@@ -224,8 +224,8 @@ void vjEnvironmentManager::reconfigure () {
 	newport = Port;
     if (newport != Port || configured_to_accept != isAccepting())
 	networkingchanged = 1;
-    
-    /* BUG: we need to 
+
+    /* BUG: we need to
      *    a) delete current connects that aren't in v
      *    b) not add connects for ones that are in v
      * otherwise we won't reconfigure correctly
@@ -237,11 +237,11 @@ void vjEnvironmentManager::reconfigure () {
 	vn->startProcess();
     }
     delete v;
-    
+
     s = c->getProperty ("PerformanceTarget");
     perf_buffer_reader->setTarget(getConnect(s));
     delete s;
-    
+
     if (networkingchanged) {
 	Port = newport;
 	if (isAccepting())
@@ -253,7 +253,8 @@ void vjEnvironmentManager::reconfigure () {
     }
 
     /* repeat above w/ various tu's */
-    
+
+
 }
 
 
@@ -262,4 +263,5 @@ void vjEnvironmentManager::sendRefresh() {
     for (int i = 0; i < connections.size(); i++) {
 	connections[i]->sendRefresh();
     }
+
 }

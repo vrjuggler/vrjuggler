@@ -29,9 +29,9 @@ class vjConnect {
 
     //: destructor
     //! PRE:  True
-    //! POST: all dynamically-allocated memory associated 
+    //! POST: all dynamically-allocated memory associated
     //+       with self is freed.
-    //+       If ControlPID is non-NULL, the process it refers 
+    //+       If ControlPID is non-NULL, the process it refers
     //+       to is stopped.
     ~vjConnect();
 
@@ -39,19 +39,19 @@ class vjConnect {
 
     //: Starts the file connection process.
     //! PRE:  None
-    //! POST: A thread has been created to read from the file/pipe 
-    //+       connection (or an error has occurred while 
+    //! POST: A thread has been created to read from the file/pipe
+    //+       connection (or an error has occurred while
     //+       attempting to do so).
     //+       controlPID is set to the PID of the generated process.
     //! RETURNS: True - successfully created the thread.
     //! RETURNS: False - unable to create thread.
     bool startProcess();
-  
+
 
 
     //: Stops file connection process.
     //! PRE:  None
-    //! POST: If self had a thread associated with it, that 
+    //! POST: If self had a thread associated with it, that
     //+       thread is terminated.
     //! RETURNS: always True
     bool stopProcess();
@@ -64,8 +64,8 @@ class vjConnect {
     vjSyncWriter            output;
     char*                   name;
     char*                   filename;
-    vjConfigChunkDB*        chunkdb;
-    vjChunkDescDB*          descdb;
+    vjConfigChunkDB*        cachedChunkdb;
+    vjChunkDescDB*          cachedDescdb;
     vjThread*               connect_thread;
     int                     fd;
     bool                    readable;
@@ -75,7 +75,7 @@ class vjConnect {
     //: body of network process.
     void controlLoop(void* nullParam);
 
-    
+
 }; // end vjConnect
 
 
