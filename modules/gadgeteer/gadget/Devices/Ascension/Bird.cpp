@@ -117,7 +117,7 @@ int vjBird::StartSampling()
 
 int vjBird::Sample()
 {
-     int i;
+     //int i;
      int tmp;
 
      //for(i=1; i < theTransmitter; i++)
@@ -325,8 +325,10 @@ void vjBird::InitCorrectionTable()
 //////////////////////////////////////////////////////////////////
 inline int getReading(vjMatrix *data, int port)
 {
-  char buff[12], group;
-  int  c,i, addr;
+  char buff[12];
+  //char group;
+  int  c,i;
+  //int addr;
 
   {
         c=i = 0;

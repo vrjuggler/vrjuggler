@@ -12,7 +12,7 @@
 //: Pure virtual base class for viewport definitions.
 //
 //	Responsible for storing and computing projection
-//  information. 
+//  information.
 //
 // @author Allen Bierbaum
 //  Date: 9-8-97
@@ -32,6 +32,7 @@ public:
    virtual void config(vjConfigChunk* chunk)
    {
       char* proj  = chunk->getProperty("projectiontype");
+      vjASSERT(proj != NULL);    // Check for a seg fault error
       setSurface(proj);
    }
 
@@ -55,9 +56,9 @@ public:
    }
 
    virtual void setSurface(int _surface)
-   { 
+   {
       surface = _surface;
-      this->surfaceSet(); 
+      this->surfaceSet();
    }
 
    int   getSurface()
@@ -87,7 +88,7 @@ public:
 
 protected:
    int surface;
-   int eye;  
+   int eye;
 };
 
 

@@ -20,18 +20,17 @@ class vjGestureProxy
 {
 public:
      //: Construct the proxy to point to the given gesture device.
-  vjGestureProxy(vjGesture* gesturePtr)
-  { Set(gesturePtr); }
+   vjGestureProxy(vjGesture* gesturePtr)
+   { Set(gesturePtr); }
 
-  ~vjGestureProxy()
-  {}
+   ~vjGestureProxy()
+   {}
 
-  //: Set the gloveProxy to point to another device and subUnit number.
-  void Set(vjGesture* gesturePtr)
-  {
+   //: Set the gloveProxy to point to another device and subUnit number.
+   void Set(vjGesture* gesturePtr)
+   {
       vjASSERT( gesturePtr->FDeviceSupport(DEVICE_GESTURE) );
-      mGlovePtr = glovePtr;
-      mUnitNum = unitNum;
+      mGesturePtr = gesturePtr;
    }
 
    //: Get the current gesture.
