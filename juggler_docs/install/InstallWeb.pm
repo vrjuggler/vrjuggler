@@ -698,7 +698,7 @@ sub processIncludes($)
             #       path to  include the file
             # "0" - all other links are http, since we want the final html
             #       output
-            xmlFilter(\$xml_data, "", $use_http_paths,
+            xmlFilter(\$xml_data, "", $use_abs_paths,
                       $use_abs_paths_within_jit);
             xmlToc_htmlBookActions::useme();
             xmlToc::traverse(\$html_data, "$xml_data");
