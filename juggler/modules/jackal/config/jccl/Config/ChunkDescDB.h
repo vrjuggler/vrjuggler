@@ -3,13 +3,13 @@
  *
  * Author: Christopher Just
  *
- * Storage class for vjChunkDescs used by the vjConfigChunkDB.
+ * Storage class for vjChunkDescs used by the ConfigChunkDB.
  *
  */
 
 
-#ifndef _CHUNKDESCDB_H_
-#define _CHUNKDESCDB_H_
+#ifndef _VJ_CHUNKDESCDB_H_
+#define _VJ_CHUNKDESCDB_H_
 
 #include <config.h>
 #include <iostream.h>
@@ -51,7 +51,7 @@ public:
   void removeAll ();
   /* PRE:  none
    * POST: All vjChunkDescs are removed from self & their associated memory 
-   *       freed.  This _can_ be dangerous, if there still exist vjConfigChunks
+   *       freed.  This _can_ be dangerous, if there still exist ConfigChunks
    *       that refer to the deleted vjChunkDescs.
    */
 

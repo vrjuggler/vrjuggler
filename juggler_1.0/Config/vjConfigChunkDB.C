@@ -136,9 +136,11 @@ int vjConfigChunkDB::remove (char *property, float value) {
 }
 
 int vjConfigChunkDB::remove (char *property, char *value) {
+  if (value == NULL)
+    return 0;
   int i = 0;
   char* c;
-
+  cout << "vjConfigChunkDB remove (" << property << ", " << value << ")" << endl;
   vector<vjConfigChunk*>::iterator begin = chunks.begin();
   while (begin != chunks.end()) {
     c = (*begin)->getProperty(property);

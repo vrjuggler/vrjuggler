@@ -5,8 +5,8 @@
 // Author: Christopher Just
 
 
-#ifndef _CONFIGCHUNK_H_
-#define _CONFIGCHUNK_H_
+#ifndef _VJ_CONFIGCHUNK_H_
+#define _VJ_CONFIGCHUNK_H_
 
 #include <config.h>
 #include <stdlib.h>
@@ -32,36 +32,36 @@
 
 
 /*****************************************************************************
- *                              vjPropery                                     *
+ *                              vjProperty                                     *
  *****************************************************************************/
 
-/** A vjPropery is a unit of storage inside of a vjConfigChunk.
+/** A vjProperty is a unit of storage inside of a vjConfigChunk.
  *  It has a name, a type, and some number of values.
  *  Properties are meant for use only inside of a vjConfigChunk,
  *  and should not be directly used or manipulated by other classes.
  */
-class vjPropery {
+class vjProperty {
 
 public:
 
-  char *name;                    // Name of vjPropery.
+  char *name;                    // Name of vjProperty.
   /** Number of entries allowed.
    *  -1 for variable number.  Note that this may not neccessarily be
    *  the number of values in self - use getNum for that.
    */
   int num;  
-  vjPropertyDesc *description;      // Pointer to this vjPropery's description.
+  vjPropertyDesc *description;      // Pointer to this vjProperty's description.
   VarType type;                   // Type of value entries.
   CfgUnit units;                  // A unit, if type is T_DISTANCE.
   vector<vjVarValue*> value;        // Vector of vjVarValues.
 
 
 
-  vjPropery (vjPropertyDesc *pd);
-  ~vjPropery ();
+  vjProperty (vjPropertyDesc *pd);
+  ~vjProperty ();
 
 
-  /// Returns the actual current number of values for this vjPropery.
+  /// Returns the actual current number of values for this vjProperty.
   int getNum ();
 
 
@@ -85,7 +85,7 @@ public:
    */
   bool applyUnits (CfgUnit u);
 
-  friend ostream& operator << (ostream &out, vjPropery& p);
+  friend ostream& operator << (ostream &out, vjProperty& p);
 
 private:
   // private fn used inside setValue()s.
@@ -125,7 +125,7 @@ class vjConfigChunk {
 
 private:
   char *mytypename;                         // typename of chunk
-  vector<vjPropery*> props;                  // Stores the set of properties
+  vector<vjProperty*> props;                  // Stores the set of properties
 
 
 public:
@@ -151,7 +151,7 @@ public:
 
 
   /** Returns the name of a chunk's type.
-   *  This is the same as a call to getProperty ("type",0).
+   *  This is the same as a call to getvjProperty ("type",0).
    */
   vjVarValue getType ();
 
@@ -182,8 +182,8 @@ public:
   //@}
 
   /** @name Functions to Set/Add values of properties.
-   *  Use the setProperty functions to change a value at a given index
-   *  for a property, and use addProperty to add values to Properties
+   *  Use the setvjProperty functions to change a value at a given index
+   *  for a property, and use addvjProperty to add values to Properties
    *  that have a variable number of properties.
    */
   //@{
@@ -193,7 +193,7 @@ public:
    *       given is valid, then val is assigned to that property
    *       and we return true.  If the property isn't found, or
    *       the given index is out of range, we return false.
-   * note: the char* version of setProperty allocates its own
+   * note: the char* version of setvjProperty allocates its own
    *       memory for the string.
    */
   bool setProperty (char *property, int val, int ind=0);
@@ -203,7 +203,7 @@ public:
   bool setProperty (char *property, char *val,  int ind=0);
 
   /** Appends val to the set of values for the named property.
-   *  pre:  Property is a non-null string.
+   *  pre:  vjProperty is a non-null string.
    *  post: If property has a fixed number of values, this
    *        does nothing and returns false.  Otherwise, we
    *        attempt to add val to the property.  A false
@@ -220,9 +220,9 @@ public:
 
 
 private:
-  vjPropery *getPropertyPtr (char *name);
+  vjProperty *getPropertyPtr (char *name);
 
-  vjPropery *getPropertyFromToken (char *token);
+  vjProperty *getPropertyFromToken (char *token);
 
   /** Tokenizer for vjConfigChunk read.
    *  Fills in the Token object passed to it with the next token in _in_.
@@ -230,11 +230,11 @@ private:
    */
   bool getToken (istream& in, Token& tok);
 
-  /** Attempts to assign a value (in tok) to the Property's ith value.
+  /** Attempts to assign a value (in tok) to the vjProperty's ith value.
    *  This function does a certain amount of type-mangling, and also
    *  handles enumeration lookups.  Return value is success/failure.
    */
-  bool tryassign (vjPropery *p, Token &tok, int i);
+  bool tryassign (vjProperty *p, Token &tok, int i);
 
 };
 
