@@ -78,6 +78,9 @@ SHLIB_MICRO	= @MICRO_VERSION@
 
 ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+# But we will name the static libraries differently than the dynamic libraries.
+else
+STATIC_SUFFIX=	_s
 endif
 
 GL_API		= @OPENGL_API@
@@ -108,17 +111,17 @@ DYLIB_PROF_DEPS_VJ	= @DYLIB_PROF_DEPS_VJ@
 DYLIB_PROF_DEPS_GL	= @DYLIB_PROF_DEPS_GL@
 DYLIB_PROF_DEPS_PF	= @DYLIB_PROF_DEPS_PF@
 
-VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
+VJ_LIB_STATIC		= $(VJ_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
-VJ_PROF_LIB_STATIC	= $(VJ_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+VJ_PROF_LIB_STATIC	= $(VJ_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 VJ_PROF_LIB_DYNAMIC	= $(VJ_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-GL_LIB_STATIC		= $(GL_LIBRARY).$(STATICLIB_EXT)
+GL_LIB_STATIC		= $(GL_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 GL_LIB_DYNAMIC		= $(GL_LIBRARY).$(DYNAMICLIB_EXT)
-GL_PROF_LIB_STATIC	= $(GL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+GL_PROF_LIB_STATIC	= $(GL_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 GL_PROF_LIB_DYNAMIC	= $(GL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-PF_LIB_STATIC		= $(PF_LIBRARY).$(STATICLIB_EXT)
+PF_LIB_STATIC		= $(PF_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 PF_LIB_DYNAMIC		= $(PF_LIBRARY).$(DYNAMICLIB_EXT)
-PF_PROF_LIB_STATIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+PF_PROF_LIB_STATIC	= $(PF_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 PF_PROF_LIB_DYNAMIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
@@ -159,7 +162,6 @@ afterbuild:
 $(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(VJ_PROF_LIB_STATIC)		\
 $(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(GL_PROF_LIB_STATIC)		\
 $(LIBDIR)/$(PF_LIB_STATIC) $(LIBDIR)/$(PF_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -170,7 +172,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
-endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
@@ -182,12 +183,10 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_VJ)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIB_DYNAMIC).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -200,12 +199,10 @@ $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_PROF_DEPS_VJ)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -218,12 +215,10 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_GL)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(GL_LIBRARY).exp ./
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIB_DYNAMIC).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -236,12 +231,10 @@ $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_PROF_DEPS_GL)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(GL_LIBRARY).exp ./
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -254,7 +247,11 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_PF)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_LIB_DYNAMIC).* .
+else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -266,7 +263,11 @@ $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_PROF_DEPS_PF)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC).* .
+else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
