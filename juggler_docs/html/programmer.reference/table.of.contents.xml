@@ -17,6 +17,11 @@ Builder: JExplorerBuilder V 1. 0. 7
 				image="Leaf.gif" >
 
 			<!-- install-web include ${PROGRAMMERREF}/classes/index.xml -->		
+
+			< item title="Full Class Index"
+				link="${PROGRAMMERREF}/classes/index_long.html" 
+				info="A complete index of all documented VR Juggler classes, structures, types, etc." 
+				image="Leaf.gif" >
 </rootfolder>
 		</idefault>
 	</font>
