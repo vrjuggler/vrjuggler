@@ -37,11 +37,10 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import info.clearthought.layout.*;
-//TODO: Remove these import
-import org.vrjuggler.jccl.config.ConfigElement;
-
 import com.sun.java.swing.plaf.windows.WindowsTreeUI;
+import info.clearthought.layout.*;
+import org.vrjuggler.jccl.config.ConfigContext;
+import org.vrjuggler.jccl.config.ConfigElement;
 
 public class EmbeddedElementPanel extends ExpandablePanel
 {
@@ -63,7 +62,7 @@ public class EmbeddedElementPanel extends ExpandablePanel
       super.finalize();
    }
    
-   public EmbeddedElementPanel(ConfigElement elm, Color color)
+   public EmbeddedElementPanel(ConfigContext ctx, ConfigElement elm, Color color)
    {
       super(color);
       
@@ -75,7 +74,7 @@ public class EmbeddedElementPanel extends ExpandablePanel
       
       // Create a panel for the embedded element.
       //PropertySheet new_sheet = new PropertySheet(mConfigElement, getNextColor());
-      PropertySheet new_sheet = PropertySheetFactory.instance().makeSheet(mConfigElement, getNextColor());
+      PropertySheet new_sheet = PropertySheetFactory.instance().makeSheet(ctx, mConfigElement, getNextColor());
       mComponent = new_sheet;
       
       // Set the border for an embedded element.
