@@ -70,7 +70,8 @@ ThreadPosix::staticWrapper ThreadPosix::statics;
 ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
-     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
+     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
+     mThreadStartCompleted(false)
 {
    mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
 }
@@ -81,7 +82,8 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
                          VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
-     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
+     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
+     mThreadStartCompleted(false)
 {
    mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
 
@@ -98,7 +100,8 @@ ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
                          VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
-     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
+     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
+     mThreadStartCompleted(false)
 {
    mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
    setFunctor(functorPtr);
@@ -143,19 +146,28 @@ vpr::ReturnStatus ThreadPosix::start()
          new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
                                               NULL);
 
-      // Spawn the thread.
+      // Spawn the thread.  If the thread is spawned successfully, the method
+      // startThread() will register the actual thread info.
+      mThreadStartCompleted = false;  // Make sure this is set correctly
       status = spawn(start_functor);
 
+      // Thread spawned successfully.
       if ( status.success() )
       {
-         mRunning = true;
-
-         ThreadManager::instance()->lock();
+         // startThread() will register the thread, so we wait for
+         // registration to complete here.
+         mThreadStartCondVar.acquire();
          {
-            registerThread(true);
+            while ( ! mThreadStartCompleted )
+            {
+               mThreadStartCondVar.wait();
+            }
          }
-         ThreadManager::instance()->unlock();
+         mThreadStartCondVar.release();
+
+         mRunning = true;
       }
+      // Thread spawning failed.  Yikes!
       else
       {
          ThreadManager::instance()->lock();
@@ -273,9 +285,18 @@ void ThreadPosix::startThread(void* null_param)
    // TELL EVERYONE THAT WE LIVE!!!!
    ThreadManager::instance()->lock();      // Lock manager
    {
-      threadIdKey().setspecific((void*)this);     // Store the pointer to me
+      threadIdKey().setspecific((void*)this);  // Store the pointer to me
+      registerThread(true);                    // Finish thread initialization
    }
    ThreadManager::instance()->unlock();
+
+   // Signal that thread registration is complete.
+   mThreadStartCondVar.acquire();
+   {
+      mThreadStartCompleted = true;
+      mThreadStartCondVar.signal();
+   }
+   mThreadStartCondVar.release();
 
    // --- CALL USER FUNCTOR --- //
    (*mUserThreadFunctor)();
