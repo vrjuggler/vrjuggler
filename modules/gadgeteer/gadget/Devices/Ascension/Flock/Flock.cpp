@@ -289,9 +289,7 @@ int Flock::sample()
    }
 
    // Locks and then swaps the indices.
-   mPosSamples.lock();
-   mPosSamples.addSample(cur_samples);
-   mPosSamples.unlock();
+   addPositionSample(cur_samples);   
 
    return 1;
 }
@@ -340,7 +338,7 @@ void Flock::updateData()
       return;
    }
 
-   mPosSamples.swapBuffers();
+   swapPositionBuffers();
 
    return;
 }

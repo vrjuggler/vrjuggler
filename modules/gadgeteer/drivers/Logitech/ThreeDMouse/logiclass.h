@@ -115,9 +115,7 @@ public:
       std::vector<gadget::PositionData> cur_samples(1);
       getRecord(&cur_samples[0]);
 
-      mPosSamples.lock();
-      mPosSamples.addSample(cur_samples);
-      mPosSamples.unlock();
+      addPositionSample(cur_samples);      
 
       return 1;
    }

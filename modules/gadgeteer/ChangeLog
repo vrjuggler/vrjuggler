@@ -1,5 +1,11 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-28-2002 allenb    All base device type interfaces now make the sample
+                      buffers private data.  Derived devices add data and swap
+		      the buffer using a new interface in the base device type
+		      class.  This is a first step in adding the filter code
+		      to the system.
+		      NEW VERSION: 0.6.0
 Oct-19-2002 patrickh  Use of the numeric keypad works on HP and Sun hardware.
                       Submitted by Fuel Tech Inc.
                       NEW VERSION: 0.5.1

@@ -88,11 +88,9 @@ void SimDigital::updateData()
    }
 
    // Add a sample
-   mDigitalSamples.lock();
-   mDigitalSamples.addSample(digital_data_sample);
-   mDigitalSamples.unlock();
-
-   mDigitalSamples.swapBuffers();
+   addDigitalSample(digital_data_sample);
+      
+   swapDigitalBuffers();
 }
 
 } // End of gadget namespace

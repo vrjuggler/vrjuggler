@@ -146,14 +146,8 @@ void SimDigitalGlove::updateData()
          mDigitalData[i] = 0;
    }
 
-   mDigitalSamples.lock();
-   mDigitalSamples.addSample(mDigitalData);
-   mDigitalSamples.unlock();
-
-   // swap the indicies for the pointers.
-   // This swaps the temp and readable buffers (called 'valid' and 'current')
-
-
+   addDigitalSample(mDigitalData);
+      
    //vprDEBUG(vprDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vprDEBUG_FLUSH;
    //vprDEBUG(vprDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vprDEBUG_FLUSH;
 

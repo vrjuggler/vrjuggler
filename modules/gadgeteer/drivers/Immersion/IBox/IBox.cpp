@@ -203,13 +203,8 @@ int IBox::sample()
 
       cur_reading.setTime();
 
-      //swapValidIndexes();     // Swap the buffers since we just read in a complete value
-      mDigitalSamples.lock();
-      mAnalogSamples.lock();
-      mDigitalSamples.addSample(cur_reading.button);
-      mAnalogSamples.addSample(cur_reading.analog);
-      mAnalogSamples.unlock();
-      mDigitalSamples.unlock();
+      addAnalogSample(cur_reading.analog);
+      addDigitalSample(cur_reading.button);
    }
    return 1;
 }
@@ -246,8 +241,8 @@ int IBox::stopSampling()
 *********************************************** ahimberg */
 void IBox::updateData()
 {
-   mAnalogSamples.swapBuffers();
-   mDigitalSamples.swapBuffers();
+   swapAnalogBuffers();
+   swapDigitalBuffers();
    return;
 }
 

@@ -60,11 +60,9 @@ void SimRelativePosition::updateData()
    // NOTE: This is a little bit of an overkill, but it works and it allows for the
    //       buffering that could be needed in multi-threaded cases
    mPos.setTime();   // Set the time
-   mPosSamples.lock();
-   mPosSamples.addSample(std::vector< gadget::PositionData>(1, mPos) );
-   mPosSamples.unlock();
+   addPositionSample(std::vector< gadget::PositionData>(1, mPos) );   
 
-   mPosSamples.swapBuffers(); // Swap the buffers
+   swapPositionBuffers(); // Swap the buffers
 }
 
 

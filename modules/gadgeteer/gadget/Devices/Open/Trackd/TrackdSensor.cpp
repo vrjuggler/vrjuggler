@@ -108,12 +108,8 @@ TrackdSensor::~TrackdSensor()
     }
 
     // Update the data buffer
-    mPosSamples.lock();
-    mPosSamples.addSample(mCurSensorValues);
-    mPosSamples.unlock();
-
-    // Swap it
-    mPosSamples.swapBuffers();
+    addPositionSample(mCurSensorValues);
+            
  }
 
 
