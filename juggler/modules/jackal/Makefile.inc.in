@@ -192,20 +192,24 @@ else
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
 endif
+ifeq (@BUILD_JAVA@, Y)
 	cd $(instlinks)/bin && \
 		for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'`; do \
 			$(RM_LN) ./`basename $$jar` && $(LN_S) $$jar ./; \
 		done
+endif
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && \
 		$(RM_LN) ./data && $(LN_S) $(JCCLROOT_ABS)/data ./data
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && \
 		$(RM_LN) ./samples && $(LN_S) $(JCCLROOT_ABS)/samples ./samples
+ifeq (@BUILD_JAVA@, Y)
 	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
           $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
 	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
           sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
             $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
           chmod $(EXEC_PERMS) cfgupdater
+endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
             -v $(JCCLROOT_ABS)/VERSION -o $(instlinks)/bin/jccl-config -x
