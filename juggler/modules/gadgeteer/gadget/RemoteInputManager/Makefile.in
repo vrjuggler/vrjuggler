@@ -49,13 +49,16 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 
 SRCS=		ClusterBarrierSerial.cpp	\
 		ClusterBarrierTCP.cpp		\
-		ClusterBarrierWired.cpp		\
 		ClusterSync.cpp			\
 		MsgPackage.cpp			\
 		NetConnection.cpp		\
 		RecvBuffer.cpp			\
 		RemoteInputManager.cpp		\
 		RmtMgrDepChecker.cpp
+
+ifneq (@OS_TYPE@, Win32)
+SRCS+=		ClusterBarrierWired.cpp
+endif
 
 include $(MKPATH)/dpp.obj.mk
 
