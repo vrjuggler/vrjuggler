@@ -46,7 +46,6 @@ AC_CONFIG_AUX_DIR([../../../share/config])
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
-
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
@@ -199,7 +198,7 @@ if test "x$HAVE_TWEEK_JAVA" = "xY"; then
       AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
 
       if test "x$ANT" == "xno"; then
-         AC_MSG_WARN([*** Can't find the java build tool ant. TweekGadget.jar will not be built. ***])
+         AC_MSG_WARN([*** Can't find the Java build tool ant. TweekGadget.jar will not be built. ***])
          HAVE_TWEEK_JAVA='N'
       else
          ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
@@ -506,14 +505,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 #fi
 
 CXXFLAGS="$CXXFLAGS $GADGET_CXXFLAGS"
-BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$GADGET_INCLUDES"
-#gadget_cxxflags="$STDFLAGS"
-
-# List the scripts gadgeteer-config will call to get flags.  This should be
-# in the order used for linking.  That means the dependencies are satisfied
-# right to left.
-#gadget_dep_scripts='jccl-config vpr-config'
 
 # Note that we do not have to add to $gadget_cxxflags because user code
 # would never need to know where the Trackd API headers live.
@@ -526,26 +518,18 @@ if test "x$DTK_INCLUDES" != "x" ; then
    INCLUDES="$INCLUDES $DTK_INCLUDES"
 fi
 
-#if test "x$LOCAL_GMTL" = "xY" ; then
-#   gadget_cxxflags="$gadget_cxxflags $GMTL_INCLUDES"
-#fi
-
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -w2"
-    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -J4 -all"
 elif test "x$PLATFORM" = "xDarwin" ; then
     CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
-    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
     CFLAGS="$CFLAGS $vc_cflags"
     CXXFLAGS="$CXXFLAGS $vc_cxxflags"
-    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
-    #gadget_cxxflags="$vc_cxxflags $gadget_cxxflags"
 fi
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
@@ -561,34 +545,18 @@ fi
 # alternative to using $(srcdir).
 UNIX_DRIVER_ROOT_ABS="$DRIVER_ROOT_ABS"
 
-
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD_MIN $GADGET_EXTRA_LIBS_LD_MIN $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN comctl32.lib gdi32.lib user32.lib"
-    APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
+   DSO_DRIVER_DEPS="$LDFLAGS $GADGET_LIBS_LD $GADGET_EXTRA_LIBS_LD comctl32.lib gdi32.lib user32.lib"
+   DSO_DRIVER_PROF_DEPS="$DSO_DRIVER_DEPS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC_MIN $GADGET_EXTRA_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
-    APP_EXTRA_PROF_LIBS="$LDFLAGS $GADGET_PROF_LIBS_CC_MIN $GADGET_EXTRA_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_PROF_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
-
+   DSO_DRIVER_DEPS="$LDFLAGS $GADGET_LIBS_CC $GADGET_EXTRA_LIBS_CC "
+   DSO_DRIVER_PROF_DEPS="$LDFLAGS $GADGET_PROF_LIBS_CC $GADGET_EXTRA_LIBS_CC "
 fi
 
-# Put together the basic information needed to compile Gadgeteer applications.
-VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                GADGET_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
-VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
-              [GADGET_BASE_DIR], [gadget], [$APP_EXTRA_LIBS])
-
-APP_BASE_DIR='$(topdir)/instlinks'
-APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
-
-DYLIB_DEPS="$APP_EXTRA_LIBS"
-DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
-
 if test "x$OS_TYPE" = "xUNIX" ; then
-    DSO_DRIVER_DEPS="-L\$(LIBDIR) -lgadget $DYLIB_DEPS"
-    TWEEK_DRIVER_DEPS="$TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN"
+   TWEEK_DRIVER_DEPS="$TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN"
 elif test "x$OS_TYPE" = "xWin32" ; then
-    DSO_DRIVER_DEPS="-libpath:\$(LIBDIR) gadget.lib $DYLIB_DEPS"
-    TWEEK_DRIVER_DEPS="$TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN"
+   TWEEK_DRIVER_DEPS="$TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN"
 fi
 
 # Translate paths from UNIX-style to Win32.
@@ -604,11 +572,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
     MTREE_CMD=`dospath "$MTREE_CMD"`
 
     JDK_HOME=`dospath -p "$JDK_HOME"`
-
-#    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
-    APP_EXTRA_LIBS_GL=`dospath "$APP_EXTRA_LIBS_GL"`
-    APP_EXTRA_LIBS_PF=`dospath "$APP_EXTRA_LIBS_PF"`
-    APP_EXTRA_LIBS_OSG=`dospath "$APP_EXTRA_LIBS_OSG"`
 else
     RM_LN='rm -f'
     DRIVER_ROOT_ABS="$DRIVER_ROOT_ABS"
@@ -637,24 +600,16 @@ AC_SUBST(HAVE_VRPN)
 AC_SUBST(VRPNROOT)
 AC_SUBST(VRPN_LDFLAGS)
 
-AC_SUBST(APP_BASE_DIR)
-AC_SUBST(APP_BASE_DIR_INST)
-
-AC_SUBST(DYLIB_DEPS)
-AC_SUBST(DYLIB_PROF_DEPS)
 AC_SUBST(DSO_DRIVER_DEPS)
+AC_SUBST(DSO_DRIVER_PROF_DEPS)
 AC_SUBST(TWEEK_DRIVER_DEPS)
-
-AC_SUBST(APP_EXTRA_LIBS_X11)
 
 AC_SUBST(HAVE_TRACKDAPI)
 AC_SUBST(TRACKD_API_LIB_FLAGS)
 
-
 # -----------------------------------------------------------------------------
 # Final file generation step.
 # -----------------------------------------------------------------------------
-
 AC_CONFIG_FILES([
    Makefile
    Makefile.inc
@@ -692,6 +647,3 @@ AC_CONFIG_FILES([
    ])
 
 AC_OUTPUT
-
-
-#
