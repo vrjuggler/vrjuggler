@@ -123,6 +123,14 @@ dnl     TWEEK_LIBS_CC
 dnl     TWEEK_LIBS_CC_MIN
 dnl     TWEEK_LIBS_STATIC_CC
 dnl     TWEEK_LIBS_STATIC_CC_MIN
+dnl     TWEEK_PROF_LIBS_LD
+dnl     TWEEK_PROF_LIBS_LD_MIN
+dnl     TWEEK_PROF_LIBS_STATIC_LD
+dnl     TWEEK_PROF_LIBS_STATIC_LD_MIN
+dnl     TWEEK_PROF_LIBS_CC
+dnl     TWEEK_PROF_LIBS_CC_MIN
+dnl     TWEEK_PROF_LIBS_STATIC_CC
+dnl     TWEEK_PROF_LIBS_STATIC_CC_MIN
 dnl     TWEEK_CXX_IDL
 dnl     TWEEK_CXX_IDL_OPTS
 dnl     TWEEK_CXX_IDL_GENDIR_OPT
@@ -143,6 +151,14 @@ AC_DEFUN(TWEEK_PATH_CXX,
    TWEEK_LIBS_CC_MIN=""
    TWEEK_LIBS_STATIC_CC=""
    TWEEK_LIBS_STATIC_CC_MIN=""
+   TWEEK_PROF_LIBS_LD=""
+   TWEEK_PROF_LIBS_LD_MIN=""
+   TWEEK_PROF_LIBS_STATIC_LD=""
+   TWEEK_PROF_LIBS_STATIC_LD_MIN=""
+   TWEEK_PROF_LIBS_CC=""
+   TWEEK_PROF_LIBS_CC_MIN=""
+   TWEEK_PROF_LIBS_STATIC_CC=""
+   TWEEK_PROF_LIBS_STATIC_CC_MIN=""
    TWEEK_CXX_IDL=""
    TWEEK_CXX_IDL_OPTS=""
    TWEEK_CXX_IDL_GENDIR_OPT=""
@@ -169,8 +185,12 @@ AC_DEFUN(TWEEK_PATH_CXX,
             TWEEK_EXTRA_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker`
             TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS_CC"
             TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
+            TWEEK_PROF_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --profiled` $TWEEK_EXTRA_LIBS_CC"
+            TWEEK_PROF_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --profiled` $TWEEK_EXTRA_LIBS_LD"
             TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS_CC"
             TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
+            TWEEK_PROF_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --profiled` $TWEEK_EXTRA_LIBS_CC"
+            TWEEK_PROF_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --profiled` $TWEEK_EXTRA_LIBS_LD"
 
             TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
             TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
@@ -183,9 +203,12 @@ AC_DEFUN(TWEEK_PATH_CXX,
             TWEEK_EXTRA_LIBS_LD_MIN=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker --min`
             TWEEK_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min` $TWEEK_EXTRA_LIBS_CC_MIN"
             TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD_MIN"
-            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD_MIN"
+            TWEEK_PROF_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min --profiled` $TWEEK_EXTRA_LIBS_CC_MIN"
+            TWEEK_PROF_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min --profiled` $TWEEK_EXTRA_LIBS_LD_MIN"
             TWEEK_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min` $TWEEK_EXTRA_LIBS_CC_MIN"
             TWEEK_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min` $TWEEK_EXTRA_LIBS_LD_MIN"
+            TWEEK_PROF_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min --profiled` $TWEEK_EXTRA_LIBS_CC_MIN"
+            TWEEK_PROF_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min --profiled` $TWEEK_EXTRA_LIBS_LD_MIN"
 
             ifelse([$2], , :, [$2])
          fi
@@ -198,8 +221,12 @@ AC_DEFUN(TWEEK_PATH_CXX,
    AC_SUBST([TWEEK_CXXFLAGS])
    AC_SUBST([TWEEK_LIBS_CC])
    AC_SUBST([TWEEK_LIBS_LD])
+   AC_SUBST([TWEEK_PROF_LIBS_CC])
+   AC_SUBST([TWEEK_PROF_LIBS_LD])
    AC_SUBST([TWEEK_LIBS_STATIC_LD])
    AC_SUBST([TWEEK_LIBS_STATIC_CC])
+   AC_SUBST([TWEEK_PROF_LIBS_STATIC_LD])
+   AC_SUBST([TWEEK_PROF_LIBS_STATIC_CC])
 
    AC_SUBST([TWEEK_CXX_IDL])
    AC_SUBST([TWEEK_CXX_IDL_OPTS])
@@ -210,8 +237,12 @@ AC_DEFUN(TWEEK_PATH_CXX,
    AC_SUBST([TWEEK_INCLUDES_MIN])
    AC_SUBST([TWEEK_LIBS_CC_MIN])
    AC_SUBST([TWEEK_LIBS_LD_MIN])
+   AC_SUBST([TWEEK_PROF_LIBS_CC_MIN])
+   AC_SUBST([TWEEK_PROF_LIBS_LD_MIN])
    AC_SUBST([TWEEK_LIBS_STATIC_CC_MIN])
    AC_SUBST([TWEEK_LIBS_STATIC_LD_MIN])
+   AC_SUBST([TWEEK_PROF_LIBS_STATIC_CC_MIN])
+   AC_SUBST([TWEEK_PROF_LIBS_STATIC_LD_MIN])
 ])
 
 dnl ---------------------------------------------------------------------------
