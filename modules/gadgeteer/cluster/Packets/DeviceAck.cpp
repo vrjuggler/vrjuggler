@@ -46,7 +46,7 @@ namespace cluster
       recv(packet_head,stream);
       parse();
    }
-   DeviceAck::DeviceAck(vpr::Uint16& device_id, std::string& device_name, 
+   DeviceAck::DeviceAck(vpr::GUID& id, std::string& device_name, 
                               std::string& device_base_type, bool ack)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
@@ -58,7 +58,7 @@ namespace cluster
       //
 
       // Device Request Vars
-      mDeviceId = device_id;
+      mId = id;
       mDeviceName = device_name;
       mDeviceBaseType = device_base_type;
       mAck = ack;
@@ -75,7 +75,7 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DEVICE_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 /*mDeviceID*/
+                                      + 16 /*mID*/
                                       + 2 /*value of size*/+ mDeviceName.size() /*length of mDeviceName*/
                                       + 2 /*value of size*/+ mDeviceBaseType.size() /*length of mDeviceBaseType*/
                                       + 2 /*value of size*/+ mHostname.size() /*length of mDeviceBaseType*/
@@ -99,8 +99,9 @@ namespace cluster
       
       // =============== Packet Specific =================
       //
-               // Remote and Local ID's
-      mPacketWriter->writeUint16(mDeviceId);
+      
+      // mId
+      mId.writeObject(mPacketWriter);
       
          // Device Name
 //      mPacketWriter->writeUint16(mDeviceName.size());
@@ -132,10 +133,11 @@ namespace cluster
    {
       // =============== Packet Specific =================
       //
-         // Remote and Local ID's
-      mDeviceId = mPacketReader->readUint16();
-
-         // Device Name
+      
+      // mId
+      mId.readObject(mPacketReader);
+         
+      // Device Name
 //      vpr::Uint16 temp_string_len = mPacketReader->readUint16();
 //      mDeviceName = mPacketReader->readString(temp_string_len);
       mDeviceName = mPacketReader->readString();
@@ -190,13 +192,13 @@ namespace cluster
          }                                                                  
          else
          {
-            RemoteInputManager::instance()->addVirtualDevice(mDeviceId, mDeviceName, mDeviceBaseType, mHostname);
+            RemoteInputManager::instance()->addVirtualDevice(mId, mDeviceName, mDeviceBaseType, mHostname);
             // Tell the input Mangager that we may now have the device it was trying to point to
             gadget::InputManager::instance()->refreshAllProxies();      
          }
       }
       else
-      {
+      {  //XXX: FIX
          // Do Nothing Since we will just re-try later
          //RemoteInputManager::instance()->createPendingConfigRemoveAndAdd(mDeviceName);
          //jccl::ConfigManager::instance()->delayStalePendingList();
@@ -214,7 +216,7 @@ namespace cluster
       Packet::printData(debug_level);
 
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device ID:        ") << mDeviceId
+         << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Device Name:      ") << mDeviceName

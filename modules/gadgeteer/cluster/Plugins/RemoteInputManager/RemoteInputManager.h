@@ -78,11 +78,11 @@ public:
 //   cluster::ClusterNode* getClusterNodeByHostname(std::string node_name);
 //   cluster::ClusterNode* getClusterNodeByName(std::string node_name);
   
-   vpr::ReturnStatus addVirtualDevice(const vpr::Uint16& device_id, const std::string& name, 
+   vpr::ReturnStatus addVirtualDevice(const vpr::GUID& device_id, const std::string& name, 
                                       const std::string& device_base_type, const std::string& hostname);
    void addVirtualDevice(VirtualDevice* device);
    void removeVirtualDevice(const std::string& device_name);
-   void removeVirtualDevice(const vpr::Uint16& device_id);
+   void removeVirtualDevice(const vpr::GUID& device_id);
    void debugDumpVirtualDevices(int debug_level);
 
    /** Locks the active list.
@@ -106,7 +106,7 @@ public:
    void unlockVirtualDevices()
    { mVirtualDevicesLock.release(); }
 
-   gadget::Input* getVirtualDevice(const vpr::Uint16& device_id);
+   gadget::Input* getVirtualDevice(const vpr::GUID& device_id);
    
    gadget::Input* getVirtualDevice(const std::string& device_name);
 
@@ -122,7 +122,7 @@ public:
    /** Get an iterator to the beginning of the active std::map.
     *  The caller of this method must have locked the active list.
     */
-   std::map<vpr::Uint16, cluster::VirtualDevice*>::iterator getVirtualDevicesBegin()
+   std::map<vpr::GUID, cluster::VirtualDevice*>::iterator getVirtualDevicesBegin()
    {
       vprASSERT(1 == mVirtualDevicesLock.test());
       return mVirtualDevices.begin();
@@ -131,7 +131,7 @@ public:
    /** Get an iterator to the end of the active list.
     *  The caller of this method must have locked the active list.
     */
-   std::map<vpr::Uint16, cluster::VirtualDevice*>::iterator getVirtualDevicesEnd()
+   std::map<vpr::GUID, cluster::VirtualDevice*>::iterator getVirtualDevicesEnd()
    {
       vprASSERT(1 == mVirtualDevicesLock.test());
       return mVirtualDevices.end();
@@ -220,7 +220,7 @@ private:
    std::map<DeviceRequest*, ClusterNode*>          mPendingDeviceRequests;     /**< UserData Request list. */
    vpr::Mutex                                      mPendingDeviceRequestsLock; /**< Lock on UserData Request list.*/   
    
-   std::map<vpr::Uint16, cluster::VirtualDevice*>  mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
+   std::map<vpr::GUID, cluster::VirtualDevice*>    mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
    vpr::Mutex                                      mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
 
    std::vector<cluster::DeviceServer*>             mDeviceServers;      /**< List of Devices that should act as servers to remote ClusterNodes.*/

@@ -74,14 +74,14 @@ namespace cluster
 
       //--send to all nodes in the map
       //WE MUST NEVER USE THE BASE CLASS's SEND()
-      for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin();
+      for (std::map<cluster::ClusterNode*,vpr::GUID>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
-//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: " 
-//            << (*i).first->getName() << std::endl << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: " 
+         //   << (*i).first->getName() << std::endl << vprDEBUG_FLUSH;
          (*i).first->lockSockWrite();
-//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We have the lock for " << (*i).first->getName()
-//            << std::endl << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We have the lock for " << (*i).first->getName()
+         //   << std::endl << vprDEBUG_FLUSH;
 
          try
          {
@@ -125,13 +125,13 @@ namespace cluster
       mDevice->writeObject(mBufferObjectWriter);
    }
 
-   void DeviceServer::addClient(ClusterNode* new_client_node, vpr::Uint16& remote_id)
+   void DeviceServer::addClient(ClusterNode* new_client_node, vpr::GUID& id)
    {
       vprASSERT(0 == mClientsLock.test());
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
       lockClients();
 
-      mClients[new_client_node] = remote_id;
+      mClients[new_client_node] = id;
       
       unlockClients();
    }
@@ -141,7 +141,7 @@ namespace cluster
       vprASSERT(0 == mClientsLock.test());
       lockClients();
    
-      for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ; 
+      for (std::map<cluster::ClusterNode*,vpr::GUID>::iterator i = mClients.begin() ; 
             i!= mClients.end() ; i++)
       {
          if ((*i).first->getHostname() == host_name)
@@ -169,7 +169,7 @@ namespace cluster
          vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
                            std::string("------------ Clients ------------\n"),
                            std::string("---------------------------------\n"));
-         for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ; 
+         for (std::map<cluster::ClusterNode*,vpr::GUID>::iterator i = mClients.begin() ; 
                i!= mClients.end() ; i++)
          {
             vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i).first->getName() << " --------" << std::endl << vprDEBUG_FLUSH;

@@ -53,10 +53,10 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
 
-// UserData
-#include <cluster/SerializableData.h>
-#include <cluster/Plugins/ApplicationDataManager/UserDataServer.h>
-#include <cluster/Packets/UserDataRequest.h>
+// ApplicationData
+#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
+#include <cluster/Plugins/ApplicationDataManager/ApplicationDataServer.h>
+#include <cluster/Packets/ApplicationDataRequest.h>
 
 
 namespace cluster
@@ -155,7 +155,7 @@ namespace cluster
     
     bool ApplicationDataManager::isPluginReady()
     {
-       return (0 == mPendingUserDataRequests.size());
+       return (0 == mPendingApplicationDataRequests.size());
     }
 
     void ApplicationDataManager::updateAll()
@@ -166,42 +166,42 @@ namespace cluster
        mFrameNumber++;
        
        //////////////////////////////////////////////////////////////////////////////
-       //                              Send UserData                               //
+       //                              Send ApplicationData                               //
        //////////////////////////////////////////////////////////////////////////////
        
        //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
        //   << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-       //   << "Sending UserData.\n" << vprDEBUG_FLUSH;
+       //   << "Sending ApplicationData.\n" << vprDEBUG_FLUSH;
 
-       mUserDataServersLock.acquire();
-       std::map<std::string, UserDataServer*>::iterator userdata_servers_begin = mUserDataServers.begin();
-       std::map<std::string, UserDataServer*>::iterator userdata_servers_end = mUserDataServers.end();
-       for (std::map<std::string, UserDataServer*>::iterator i = userdata_servers_begin; i != userdata_servers_end; i++)
+       mApplicationDataServersLock.acquire();
+       std::map<vpr::GUID, ApplicationDataServer*>::iterator ApplicationData_servers_begin = mApplicationDataServers.begin();
+       std::map<vpr::GUID, ApplicationDataServer*>::iterator ApplicationData_servers_end = mApplicationDataServers.end();
+       for (std::map<vpr::GUID, ApplicationDataServer*>::iterator i = ApplicationData_servers_begin; i != ApplicationData_servers_end; i++)
        {
           (*i).second->updateLocalData();
           (*i).second->send();
        }
-       mUserDataServersLock.release();
+       mApplicationDataServersLock.release();
       
       //////////////////////////////////////////////////////////////////////////////
-      //                            Send UserData Reqs                            //
+      //                            Send ApplicationData Reqs                            //
       //////////////////////////////////////////////////////////////////////////////
       
       //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       //   << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-      //   << "Sending UserData Requests.\n" << vprDEBUG_FLUSH;
+      //   << "Sending ApplicationData Requests.\n" << vprDEBUG_FLUSH;
 
-         // Send UserData Requests
-      sendUserDataRequests();    //Only happens if Connected
+         // Send ApplicationData Requests
+      sendApplicationDataRequests();    //Only happens if Connected
    }
 
-   void ApplicationDataManager::sendUserDataRequests()
+   void ApplicationDataManager::sendApplicationDataRequests()
    {
-      vpr::Guard<vpr::Mutex> guard(mPendingUserDataRequestsLock);
+      vpr::Guard<vpr::Mutex> guard(mPendingApplicationDataRequestsLock);
 
-      std::map<UserDataRequest*, std::string>::iterator begin = mPendingUserDataRequests.begin();
-      std::map<UserDataRequest*, std::string>::iterator end   = mPendingUserDataRequests.end();
-      std::map<UserDataRequest*, std::string>::iterator i;
+      std::map<ApplicationDataRequest*, std::string>::iterator begin = mPendingApplicationDataRequests.begin();
+      std::map<ApplicationDataRequest*, std::string>::iterator end   = mPendingApplicationDataRequests.end();
+      std::map<ApplicationDataRequest*, std::string>::iterator i;
       for (i = begin ; i != end ; i++)
       {
          ClusterNode* temp_node = ClusterNetwork::instance()->getClusterNodeByHostname((*i).second);
@@ -212,159 +212,121 @@ namespace cluster
       }
    }
 
-   UserDataServer* ApplicationDataManager::getUserDataServer(std::string name)
+   ApplicationDataServer* ApplicationDataManager::getApplicationDataServer(vpr::GUID id)
    {
-      vpr::Guard<vpr::Mutex> guard(mUserDataServersLock);
+      vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);
       
-      UserDataServer* temp_userdata_server = mUserDataServers[name];
-      return(temp_userdata_server);
+      ApplicationDataServer* temp_app_data_server = mApplicationDataServers[id];
+      return(temp_app_data_server);
    }
-    
-   SerializableData* ApplicationDataManager::getRemoteUserData(std::string name)
+        
+   ApplicationData* ApplicationDataManager::getRemoteApplicationData(vpr::GUID id)
    {
-      return(NULL);
-   }
-    
-   SerializableData* ApplicationDataManager::getRemoteUserData(vpr::Uint16 id)
-   {
-      vpr::Guard<vpr::Mutex> guard(mRemoteUserDataLock);
+      vpr::Guard<vpr::Mutex> guard(mRemoteApplicationDataLock);
 
-      SerializableData* temp_remote_userdata = mRemoteUserData[id];
-      return(temp_remote_userdata);
+      ApplicationData* temp_remote_app_data = mRemoteApplicationData[id];
+      return(temp_remote_app_data);
    }
 
-   void ApplicationDataManager::addPendingUserDataRequest(UserDataRequest* new_userdata_req, std::string hostname)
+   void ApplicationDataManager::addPendingApplicationDataRequest(ApplicationDataRequest* new_req, std::string hostname)
    {
-      vpr::Guard<vpr::Mutex> guard(mPendingUserDataRequestsLock);
+      vpr::Guard<vpr::Mutex> guard(mPendingApplicationDataRequestsLock);
 
-      mPendingUserDataRequests[new_userdata_req] = hostname;
+      mPendingApplicationDataRequests[new_req] = hostname;
    }
 
-   void ApplicationDataManager::removePendingUserDataRequest(std::string userdata_name)
+   void ApplicationDataManager::removePendingApplicationDataRequest(const vpr::GUID& guid)
    {
-      vpr::Guard<vpr::Mutex> guard(mPendingUserDataRequestsLock);
-      std::map<UserDataRequest*, std::string>::iterator begin = mPendingUserDataRequests.begin();
-      std::map<UserDataRequest*, std::string>::iterator end = mPendingUserDataRequests.end();
-      std::map<UserDataRequest*, std::string>::iterator i;
+      vpr::Guard<vpr::Mutex> guard(mPendingApplicationDataRequestsLock);
+      std::map<ApplicationDataRequest*, std::string>::iterator begin = mPendingApplicationDataRequests.begin();
+      std::map<ApplicationDataRequest*, std::string>::iterator end = mPendingApplicationDataRequests.end();
+      std::map<ApplicationDataRequest*, std::string>::iterator i;
+
       for ( i = begin ; i != end ; i++)
       {
-         if ((*i).first->getUserDataName() == userdata_name)
+         if ((*i).first->getId() == guid)
          {
-            mPendingUserDataRequests.erase(i);
+            mPendingApplicationDataRequests.erase(i);
             return;
          }
       }
    }
 
-    void ApplicationDataManager::addUserData(SerializableData* new_user_data)
-    {
-       std::string name = new_user_data->getAttrib<std::string>("cluster.userdata.name");
-       std::string hostname = new_user_data->getAttrib<std::string>("cluster.userdata.hostname");
+   void ApplicationDataManager::addApplicationData(ApplicationData* new_app_data)
+   {
+      vpr::GUID id = new_app_data->getId();
+      std::string hostname = new_app_data->getHostname();
 
-       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-          << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-          << " Adding UserData: " << name
-          << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+         << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
+         << " Adding ApplicationData: " << id.toString()
+         << std::endl << vprDEBUG_FLUSH;
 
-       setActive(true);
+      setActive(true);
 
       if (hostname != "")
       {
          if (hostname == ClusterNetwork::instance()->getLocalHostname())
          {
-            vpr::Guard<vpr::Mutex> guard(mUserDataServersLock);         
+            vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
 
-            new_user_data->setAttrib("cluster.userdata.local", true);
-            UserDataServer* new_userdata_server = new UserDataServer(name,new_user_data);                        
-            mUserDataServers[name] = new_userdata_server;
+            new_app_data->setIsLocal(true);
+            
+            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id,new_app_data);                        
+            mApplicationDataServers[id] = new_appdata_server;
          }
          else
-         {
-               // Get a new device_id
-            vpr::Uint16 new_id = ClusterNetwork::instance()->generateLocalId();
-               
-               // Create a UserDataRequest
-            UserDataRequest* new_userdata_req = 
-            new UserDataRequest( /*mUserDataIdGen.generateNewId()*/new_id, name);
-            addPendingUserDataRequest(new_userdata_req, hostname);
+         {               
+               // Create a ApplicationDataRequest
+            ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(id);
+            addPendingApplicationDataRequest(new_appdata_req, hostname);
              
-               // Add UserData to Remote Vector
-            vpr::Guard<vpr::Mutex> guard(mRemoteUserDataLock);
-            mRemoteUserData[new_id] = new_user_data;
+               // Add ApplicationData to Remote Vector
+            vpr::Guard<vpr::Mutex> guard(mRemoteApplicationDataLock);
+            mRemoteApplicationData[id] = new_app_data;
          }
       }
-       //if (!new_user_data->getAttrib<bool>("cluster.userdat.local"))
-       //{
-          // Send Device Request
-          // Local Cluster Nodes
-          // Create New ClusterNode
-          // Add Node to Pending
-          // Add 
-
-          // WE ARE WILL HAVE TO MOVE THIS INTO configAdd and worry about it there????
-          // BUT IF WE DO NOT HAVE A CONFIG CHUNK THEN WE WILL NEED TO SIMPLY LOOK AT
-          // THIS TABLE WHEN WE CONNECTED TO A REMOTE NODE....WE WILL HAVE 
-
-
-
-          // WE CAN DO THIS AT CONFIGADD FOR CLUSTER NODE
-
-          //ClusterNode* remote_node = ClusterNetwork::instance()->getPendingNode(hostname);
-          //if ( remote_node == NULL)
-          //{
-          //   ClusterNetwork::instance()->lockClusterNodes();
-          //   ClusterNode* remote_node = ClusterNetwork::instance()->getClusterNodeByHostname(hostname);
-          //   ClusterNetwork::instance()->unlockClusterNodes();
-          //
-          //   ClusterNetwork::instance()->addPendingNode(remote_node);
-          //   
-          //}
-          //UserDataRequest* user_data_request = new UserDataRequest(generateLocalId(), new_user_data->getName());
-          //remote_node->addDeviceRequest(user_data_request);
-       //}
-       
-       //dumpUserData();
     }
 
-    void ApplicationDataManager::removeUserData(SerializableData* old_user_data)
+    void ApplicationDataManager::removeApplicationData(ApplicationData* old_app_data)
     {
-       std::string name = old_user_data->getAttrib<std::string>("cluster.userdata.name");
-       std::string hostname = old_user_data->getAttrib<std::string>("cluster.userdata.hostname");
+       vpr::GUID id = old_app_data->getId();
+       std::string hostname = old_app_data->getHostname();
 
        vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
           << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-          << " Removing UserData: " << name
+          << " Removing ApplicationData: " << id.toString()
           << std::endl << vprDEBUG_FLUSH;
 
-       // Remove Active UserData
-/*       vpr::Guard<vpr::Mutex> guard(mUserDataLock);
-       for (std::vector<cluster::SerializableData*>::iterator i = mUserData.begin() ;
-            i != mUserData.end() ; i++)
+       // Remove Active ApplicationData
+/*       vpr::Guard<vpr::Mutex> guard(mApplicationDataLock);
+       for (std::vector<cluster::ApplicationData*>::iterator i = mApplicationData.begin() ;
+            i != mApplicationData.end() ; i++)
        {
           if ((*i) == old_user_data)
           {
-             mUserData.erase(i);
+             mApplicationData.erase(i);
              return;
           }
        }
 */
-       // Remove Pending UserData
+       // Remove Pending ApplicationData
     }
 
-    void ApplicationDataManager::dumpUserData()
+    void ApplicationDataManager::dumpApplicationData()
     {
        vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
           << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-          << " Listing All Application Level UserData"
+          << " Listing All Application Level ApplicationData"
           << std::endl << vprDEBUG_FLUSH;
 
-/*       vpr::Guard<vpr::Mutex> guard(mUserDataLock);
-       for (std::vector<cluster::SerializableData*>::iterator i = mUserData.begin() ;
-            i != mUserData.end() ; i++)
+/*       vpr::Guard<vpr::Mutex> guard(mApplicationDataLock);
+       for (std::vector<cluster::ApplicationData*>::iterator i = mApplicationData.begin() ;
+            i != mApplicationData.end() ; i++)
        {
-          std::string name = (*i)->getAttrib<std::string>("cluster.userdata.name");
-          std::string hostname = (*i)->getAttrib<std::string>("cluster.userdata.hostname");
-          bool local = (*i)->getAttrib<bool>("cluster.userdata.local");
+          std::string name = (*i)->getAttrib<std::string>("cluster.ApplicationData.name");
+          std::string hostname = (*i)->getAttrib<std::string>("cluster.ApplicationData.hostname");
+          bool local = (*i)->getAttrib<bool>("cluster.ApplicationData.local");
 
           vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << name
           << " - " << (local ? "Local" : "Remote") << std::endl << vprDEBUG_FLUSH;

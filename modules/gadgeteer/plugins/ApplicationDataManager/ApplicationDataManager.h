@@ -50,9 +50,9 @@
 
 namespace cluster
 {
-   class SerializableData;
-   class UserDataRequest;
-   class UserDataServer;
+   class ApplicationData;
+   class ApplicationDataRequest;
+   class ApplicationDataServer;
 
 class GADGET_CLASS_API ApplicationDataManager : public cluster::ClusterPlugin
 {
@@ -102,76 +102,71 @@ public:
 
 public:
    /**
-    * Called each frame by the kernel to update all application level data(UserData)
+    * Called each frame by the kernel to update all application level data(ApplicationData)
     */
    void updateAll();
 
    /**
-    * Add a UserData object to the current configuration.
+    * Add a ApplicationData object to the current configuration.
     *
-    * @pre This should only be called by the UserData constructor
+    * @pre This should only be called by the ApplicationData constructor
     */
-   void addUserData(SerializableData* new_user_data);
+   void addApplicationData(ApplicationData* new_user_data);
 
    /**
-    * Remove the UserData object from the current configuration
-    * @pre This should only be called by the UserData destructor
+    * Remove the ApplicationData object from the current configuration
+    * @pre This should only be called by the ApplicationData destructor
     */
-   void removeUserData(SerializableData* old_user_data);
+   void removeApplicationData(ApplicationData* old_user_data);
 
    /**
-    * Print a list of all UserData objects currently in the configuration
+    * Print a list of all ApplicationData objects currently in the configuration
     */
-   void dumpUserData();
+   void dumpApplicationData();
 
 private:
    /**
-    * Send all of the remaining requests for UserData
+    * Send all of the remaining requests for ApplicationData
     */
-   void sendUserDataRequests();
+   void sendApplicationDataRequests();
 
 public:
    /**
-    * Get a pointer to the UserDataServer for the given name
+    * Get a pointer to the ApplicationDataServer for the given name
     */
-   UserDataServer* getUserDataServer(std::string name);
+   ApplicationDataServer* getApplicationDataServer(vpr::GUID id);
 
    /**
-    * Get a pointer to the UserData object that is being updated by a remote machine
+    * Get a pointer to the ApplicationData object that is being updated by a remote machine
     */
-   SerializableData* getRemoteUserData(std::string name);
-
-   /**
-    * Get a pointer to the UserData object that is being updated by a remote machine
-    */
-   SerializableData* getRemoteUserData(vpr::Uint16 id);
+   ApplicationData* getRemoteApplicationData(vpr::GUID id);
 
 private:
    /**
-    * Add a request for a UserData machine on a remote mahine
+    * Add a request for a ApplicationData machine on a remote mahine
     */
-   void addPendingUserDataRequest(UserDataRequest* new_userdata_req, std::string hostname);
+   void addPendingApplicationDataRequest(ApplicationDataRequest* new_appdata_req, std::string hostname);
 
 public:
    /**
-    * Remove a UserData request that has been fulfilled.
+    * Remove a ApplicationData request that has been fulfilled.
     */
-   void removePendingUserDataRequest(std::string userdata_name);
+   void removePendingApplicationDataRequest(const vpr::GUID& guid);
 
 
 private:
-   std::map<vpr::Uint16,SerializableData*>         mRemoteUserData;              /**< Application level UserData list. */
-   vpr::Mutex                                      mRemoteUserDataLock;          /**< Lock on UserData list.*/   
+   std::map<vpr::GUID, ApplicationData*>           mRemoteApplicationData;              /**< Application level ApplicationData list. */
+   vpr::Mutex                                      mRemoteApplicationDataLock;          /**< Lock on ApplicationData list.*/   
 
-   std::map<UserDataRequest*, std::string>         mPendingUserDataRequests;     /**< UserData Request list. */
-   vpr::Mutex                                      mPendingUserDataRequestsLock; /**< Lock on UserData Request list.*/   
+   std::map<ApplicationDataRequest*, std::string>  mPendingApplicationDataRequests;     /**< ApplicationData Request list. */
+   vpr::Mutex                                      mPendingApplicationDataRequestsLock; /**< Lock on ApplicationData Request list.*/   
 
-   std::map<std::string, UserDataServer*>          mUserDataServers;             /**< UserData Server list. */
-   vpr::Mutex                                      mUserDataServersLock;         /**< Lock UserData Server list.*/   
+   std::map<vpr::GUID, ApplicationDataServer*>     mApplicationDataServers;             /**< ApplicationData Server list. */
+   vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
 
    vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */
    
-   IdGenerator<vpr::Uint16>                        mUserDataIdGen;               /**< Keeps track of used/free virtual ids. */
+   IdGenerator<vpr::Uint16>                        mApplicationDataIdGen;               /**< Keeps track of used/free virtual ids. */
 };
 
 } // end namespace

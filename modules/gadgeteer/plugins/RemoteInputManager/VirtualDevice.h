@@ -46,8 +46,8 @@ namespace cluster
    class GADGET_CLASS_API VirtualDevice
    {
    public:
-      VirtualDevice(std::string name, vpr::Uint16 local_id, std::string base_type, 
-                    std::string hostname, gadget::Input* device);
+      VirtualDevice(const std::string& name, const vpr::GUID& local_id, const std::string& base_type, 
+                    const std::string& hostname, gadget::Input* device);
       ~VirtualDevice();
 
       void debugDump(int debug_level);
@@ -57,8 +57,8 @@ namespace cluster
       
       std::string getRemoteHostname() { return mRemoteHostname; }
       
-      vpr::Uint16 getLocalId() { return mLocalId; }
-      void setLocalId(vpr::Uint16 local_id) { mLocalId = local_id; }
+      vpr::GUID getId() { return mId; }
+      void setLocalId(vpr::GUID id) { mId = id; }
 
       gadget::Input* getDevice() { return mDevice; }
       void setDevice(gadget::Input* device) { mDevice = device; }
@@ -69,7 +69,7 @@ private:
          std::string          mName;                     /**< VirtualDevice name */
          std::string          mBaseType;
          std::string          mRemoteHostname;
-         vpr::Uint16          mLocalId;
+         vpr::GUID            mId;
          gadget::Input*       mDevice;
          vpr::BufferObjectReader*   mBufferObjectReader;      
    };

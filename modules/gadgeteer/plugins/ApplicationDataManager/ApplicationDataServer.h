@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef CLUSTER_USERDATA_SERVER_H
-#define CLUSTER_USERDATA_SERVER_H
+#ifndef CLUSTER_ApplicationData_SERVER_H
+#define CLUSTER_ApplicationData_SERVER_H
 
 #include <gadget/gadgetConfig.h>
 #include <cluster/Packets/DataPacket.h>
@@ -50,23 +50,23 @@
 namespace cluster
 {
    class ClusterNode;
-   class SerializableData;
+   class ApplicationData;
 
-   class GADGET_CLASS_API UserDataServer
+   class GADGET_CLASS_API ApplicationDataServer
    {
    public:
-      UserDataServer(const std::string& name, SerializableData* user_data);
-      ~UserDataServer();
+      ApplicationDataServer(vpr::GUID guid, ApplicationData* user_data);
+      ~ApplicationDataServer();
 
       void send();
       void updateLocalData();
 
-      void addClient(ClusterNode* new_client_node, vpr::Uint16& remote_id);
+      void addClient(ClusterNode* new_client_node);
       void removeClient(const std::string& host_name);
 
       void debugDump(int debug_level);
 
-      std::string getName() { return mName; }
+      vpr::GUID getId() { return mId; }
       /** Locks the active list.
        *
        *  This function blocks until it can lock the std::map of active
@@ -89,13 +89,13 @@ namespace cluster
       { mClientsLock.release(); }
 
    private:
-      std::string                                  mName;   /**< UserDataServer name */
-      std::map<cluster::ClusterNode*,vpr::Uint16>  mClients;
+      vpr::GUID                                    mId;   /**< ApplicationDataServer name */
+      std::vector<cluster::ClusterNode*>           mClients;
       vpr::Mutex                                   mClientsLock;   /**< Lock on active config list.*/   
       
-      SerializableData*                            mUserData;
+      ApplicationData*                             mApplicationData;
       DataPacket*                                  mDataPacket;
-      vpr::BufferObjectWriter*                           mBufferObjectWriter;
+      vpr::BufferObjectWriter*                     mBufferObjectWriter;
       std::vector<vpr::Uint8>*                     mDeviceData;
    };
 

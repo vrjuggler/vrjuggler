@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/UserDataAck.h>
+#include <cluster/Packets/ApplicationDataAck.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/ClusterManager.h>
@@ -42,12 +42,12 @@
 
 namespace cluster
 {
-   UserDataAck::UserDataAck(Header* packet_head, vpr::SocketStream* stream)
+   ApplicationDataAck::ApplicationDataAck(Header* packet_head, vpr::SocketStream* stream)
    {
       recv(packet_head,stream);
       parse();
    }
-   UserDataAck::UserDataAck(vpr::Uint16& device_id, std::string& device_name, bool ack)
+   ApplicationDataAck::ApplicationDataAck(vpr::GUID id, bool ack)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
@@ -58,10 +58,8 @@ namespace cluster
       //
 
       // Device Request Vars
-      mDeviceId = device_id;
-      mDeviceName = device_name;
+      mId = id;
       mAck = ack;
-      mHostname = ClusterNetwork::instance()->getLocalHostname();
       
       // string -> string.size()
       // Uint8 -> 1
@@ -72,18 +70,16 @@ namespace cluster
 
       // Header vars (Create Header)
       mHeader = new Header(Header::RIM_PACKET,
-                                      Header::RIM_USERDATA_ACK,
+                                      Header::RIM_APPDATA_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 /*mDeviceID*/
-                                      + 2 /*value of size*/+ mDeviceName.size() /*length of mDeviceName*/
-                                      + 2 /*value of size*/+ mHostname.size() /*length of mDeviceBaseType*/
+                                      + 16/*Size of GUID*/
                                       + 1 /*mAck*/,0);                      
       //
       // =============== Packet Specific =================
 
       serialize();
    }
-   void UserDataAck::serialize()
+   void ApplicationDataAck::serialize()
    {
       // - Clear
       // - Write Header
@@ -97,77 +93,39 @@ namespace cluster
       
       // =============== Packet Specific =================
       //
-               // Remote and Local ID's
-      mPacketWriter->writeUint16(mDeviceId);
       
-         // Device Name
-//      mPacketWriter->writeUint16(mDeviceName.size());
-      mPacketWriter->writeString(mDeviceName);
-      
-         // Hostname of the machine that the device on
-//      mPacketWriter->writeUint16(mHostname.length());
-      mPacketWriter->writeString(mHostname);
-
+      mId.writeObject(mPacketWriter);
          // Ack
       mPacketWriter->writeBool(mAck);
 
-      
-
-/*      // Remote Device ID
-      mPacketWriter->writeUint16(mSenderId);
-      // Device Name
-//      mPacketWriter->writeUint16(mDeviceName.size());      
-      mPacketWriter->writeString(mDeviceName);
-*/
       //
       // =============== Packet Specific =================
    }
-   void UserDataAck::parse()
+   void ApplicationDataAck::parse()
    {
       // =============== Packet Specific =================
       //
-         // Remote and Local ID's
-      mDeviceId = mPacketReader->readUint16();
-
-         // Device Name
-//      vpr::Uint16 temp_string_len = mPacketReader->readUint16();
-//      mDeviceName = mPacketReader->readString(temp_string_len);
-      mDeviceName = mPacketReader->readString();
-
-         // Hostname of the machine that the device on
-//      temp_string_len = mPacketReader->readUint16();
-//      mHostname = mPacketReader->readString(temp_string_len);
-      mHostname = mPacketReader->readString();
+      
+      mId.readObject(mPacketReader);
 
          // Ack
       mAck = mPacketReader->readBool();
 
-/*
-      // Remote Device ID
-      mSenderId = mPacketReader->readUint16();
-   
-      // Device Name
-//      vpr::Uint16 temp_name_len = mPacketReader->readUint16();
-//      mDeviceName = mPacketReader->readString(temp_name_len);
-      mDeviceName = mPacketReader->readString();
-*/
-
-
       //
       // =============== Packet Specific =================
    }
 
-   bool UserDataAck::action(ClusterNode* node)
+   bool ApplicationDataAck::action(ClusterNode* node)
    {  
       if (mAck)
       {
-         ApplicationDataManager::instance()->removePendingUserDataRequest(mDeviceName);
+         ApplicationDataManager::instance()->removePendingApplicationDataRequest(mId);
       }
       return true;
    }
 
 
-   void UserDataAck::printData(int debug_level)
+   void ApplicationDataAck::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"==== User Data Ack Packet Data ====\n") << vprDEBUG_FLUSH;
@@ -175,13 +133,7 @@ namespace cluster
       Packet::printData(debug_level);
 
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device ID:        ") << mDeviceId
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device Name:      ") << mDeviceName
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Remote Hostname:  ") << mHostname
+         << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Ack or Nack:      ") << (mAck ? "Ack" : "Nack")  << std::endl

@@ -65,8 +65,8 @@ public:
    const static unsigned short RIM_CONNECTION_ACK  = 405;
    const static unsigned short RIM_SYNC_REQ        = 406;
    const static unsigned short RIM_SYNC_ACK        = 407;
-   const static unsigned short RIM_USERDATA_REQ    = 408;
-   const static unsigned short RIM_USERDATA_ACK    = 409;
+   const static unsigned short RIM_APPDATA_REQ     = 408;
+   const static unsigned short RIM_APPDATA_ACK     = 409;
    const static unsigned short RIM_END_BLOCK 	   = 410;
 
    //const unsigned short MSG_DEVICE_NACK 	= 404;

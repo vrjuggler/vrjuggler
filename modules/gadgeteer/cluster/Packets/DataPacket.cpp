@@ -37,8 +37,8 @@
 #include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-#include <cluster/Plugins/ApplicationDataManager//ApplicationDataManager.h>
-#include <cluster/SerializableData.h>
+#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
+#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
 //#include <gadget/RemoteInputManager/VirtualDevice.h>
 #include <gadget/Type/Input.h>
 
@@ -67,7 +67,7 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DATA_PACKET,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 /* uint16 for virtualID*/
+                                      + 16 /* GUID */
                                       + 0 /*mDeviceData->size()*/,
                                       0/* Frame ID*/);
       serialize();
@@ -78,7 +78,7 @@ namespace cluster
       vprASSERT("YOU SHOULD NOT BE USING THIS SEND FUNCTION");
       return(vpr::ReturnStatus::Fail);
    }
-   void DataPacket::send(vpr::SocketStream* socket, vpr::Uint16 device_id, std::vector<vpr::Uint8>* device_data)
+   void DataPacket::send(vpr::SocketStream* socket, vpr::GUID device_id, std::vector<vpr::Uint8>* device_data)
    {
       // - Send header data
       // - Send Device ID
@@ -90,23 +90,32 @@ namespace cluster
 
       vpr::Uint32 bytes_written;
       mHeader->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 /* uint16 for virtualID*/
+                                      + 16 /* GUID*/
                                       + device_data->size());
       mHeader->serializeHeader();
       mHeader->send(socket);
       
       // Send the device ID
       ////////////////////////////////
-      std::vector<vpr::Uint8> val(2);
 
-      vpr::Uint16 nw_val = vpr::System::Htons(device_id);
+      mId = device_id;
+      
+      vpr::BufferObjectWriter temp_writer;
+      mId.writeObject((vpr::ObjectWriter*)&temp_writer);
+      /////
+
+//      std::vector<vpr::Uint8> val(2);
+
+//      vpr::Uint16 nw_val = vpr::System::Htons(device_id);
    
-      val[0] = ((vpr::Uint8*)&nw_val)[0];
-      val[1] = ((vpr::Uint8*)&nw_val)[1];
+//      val[0] = ((vpr::Uint8*)&nw_val)[0];
+//      val[1] = ((vpr::Uint8*)&nw_val)[1];
       /////////////////////////////////
 
-      socket->send(val,2,bytes_written);
-      socket->send(*device_data,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE-2,bytes_written);
+      //socket->send(val,2,bytes_written);
+      socket->send(*temp_writer.getData(),16,bytes_written);
+
+      socket->send(*device_data,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE-16,bytes_written);
    }
    void DataPacket::serialize()
    {
@@ -115,10 +124,11 @@ namespace cluster
    }
    void DataPacket::parse()
    {
-      mVirtualId = mPacketReader->readUint16();
+      //mVirtualId = mPacketReader->readUint16();
+      mId.readObject(mPacketReader);
    
       // WE MUST KEEP IN MIND THAT mData is not simply the device data but the device data with the
-      // Virtual Device Data ID on the beginning
+      // Virtual Device Data ID at the beginning
       
       //std::cout << "Size before shrink: " << mPacketReader->mData->size() << std::endl;
       //std::vector<vpr::Uint8>::iterator i;
@@ -136,18 +146,21 @@ namespace cluster
          return false;
       }
 
-      gadget::Input* virtual_device = RemoteInputManager::instance()->getVirtualDevice(mVirtualId);
+      gadget::Input* virtual_device = RemoteInputManager::instance()->getVirtualDevice(mId);
       if (virtual_device != NULL)
       {
          mPacketReader->setAttrib("rim.timestamp.delta", node->getDelta());
          virtual_device->readObject(mPacketReader);
+         return true;
       }
-      SerializableData* user_data = ApplicationDataManager::instance()->getRemoteUserData(mVirtualId);
+      ApplicationData* user_data = ApplicationDataManager::instance()->getRemoteApplicationData(mId);
       if (user_data != NULL)
       {
          user_data->readObject(mPacketReader);
+         return true;
       }
-      return true;
+      
+      return false;
    }
    
    void DataPacket::printData(int debug_level)
@@ -158,7 +171,7 @@ namespace cluster
       Packet::printData(vprDBG_VERB_LVL);
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
-         << clrOutBOLD(clrYELLOW, "Virtual ID: ") << mVirtualId
+         << clrOutBOLD(clrYELLOW, "Virtual ID: ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) 

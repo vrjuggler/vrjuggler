@@ -54,11 +54,6 @@
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
 #include <cluster/Plugins/SwapLockPlugin/SwapLockPlugin.h>
 
-// UserData
-#include <cluster/SerializableData.h>
-#include <cluster/Plugins/ApplicationDataManager/UserDataServer.h>
-#include <cluster/Packets/UserDataRequest.h>
-
 
 namespace cluster
 {
