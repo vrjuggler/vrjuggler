@@ -65,7 +65,7 @@ public class PerformanceModule extends DefaultCoreModule {
 
     public PerformanceModule () {
         component_name = "Performance Module";
-	collectors = new Vector();
+	collectors = new ArrayList();
 	max_samples = 500;
 	file = new File(System.getProperty("user.dir",""), "perfdata");
         performance_module_listeners = new ArrayList();
@@ -122,7 +122,7 @@ public class PerformanceModule extends DefaultCoreModule {
 //      }
 
 
-    public void write (DataOutputStream out) throws IOException {
+    public synchronized void write (DataOutputStream out) throws IOException {
 	for (int i = 0; i < collectors.size(); i++) {
 	    PerfDataCollector col = (PerfDataCollector)collectors.get(i);
 	    col.write (out);
@@ -131,7 +131,9 @@ public class PerformanceModule extends DefaultCoreModule {
 
 
     public void removeAllData () {
-	collectors.clear();
+        synchronized (collectors) {
+            collectors.clear();
+        }
         notifyPerformanceModuleListenersRemoveAll();
     }
 
@@ -150,25 +152,32 @@ public class PerformanceModule extends DefaultCoreModule {
 
 
     public PerfDataCollector getCollector (int i) throws ArrayIndexOutOfBoundsException {
-        return (PerfDataCollector)collectors.get(i);
+        synchronized (collectors) {
+            return (PerfDataCollector)collectors.get(i);
+        }
     }
+
 
 
     public PerfDataCollector getCollector (String _name) {
-	int i;
-	PerfDataCollector p;
-	for (i = 0; i < collectors.size(); i++) {
-	    p = (PerfDataCollector) collectors.get (i);
-	    if (p.name.equalsIgnoreCase (_name))
-		return p;
-	}
-	return null;
+        synchronized (collectors) {
+            int i;
+            PerfDataCollector p;
+            for (i = 0; i < collectors.size(); i++) {
+                p = (PerfDataCollector) collectors.get (i);
+                if (p.getName().equalsIgnoreCase (_name))
+                    return p;
+            }
+            return null;
+        }
     }
 
-    
-    public PerfDataCollector addCollector (String _name, int _num) {
-	PerfDataCollector p = new PerfDataCollector (_name, _num, max_samples);
-	collectors.add (p);
+
+    public PerfDataCollector addNumberedCollector (String _name, int _num) {
+	PerfDataCollector p = new NumberedPerfDataCollector (_name, _num, max_samples);
+        synchronized (collectors) {
+            collectors.add (p);
+        }
         notifyPerformanceModuleListenersAdd (p);
 	return p;
     }
@@ -289,8 +298,13 @@ public class PerformanceModule extends DefaultCoreModule {
                 
                     p = getCollector (name);
                     if (p == null)
-                        p = addCollector (name, num);   
-                    p.read (st);
+                        p = addNumberedCollector (name, num); 
+                    if (p instanceof NumberedPerfDataCollector) {
+                        ((NumberedPerfDataCollector)p).read (st);
+                    }
+                    else {
+                        System.out.println ("perfdatacollector type mismatch");
+                    }
                 }
             }
 
@@ -310,12 +324,14 @@ public class PerformanceModule extends DefaultCoreModule {
 	int i;
 	String s = "";
 
-	for (i = 0; i < collectors.size(); i++) {
-	    p = (PerfDataCollector) collectors.get (i);
-	    s += p.dumpAverages (preskip, postskip, doanomaly, anomalycutoff);
-	    s += "--------------------------------------\n";
-	}
-	return s;
+        synchronized (collectors) {
+            for (i = 0; i < collectors.size(); i++) {
+                p = (PerfDataCollector) collectors.get (i);
+                s += p.dumpAverages (preskip, postskip, doanomaly, anomalycutoff);
+                s += "--------------------------------------\n";
+            }
+        }
+        return s;
     }
 
 
