@@ -127,37 +127,20 @@ public:
    // not already be in the array.  Returns -1 on failure
    //
    //! MODIFIES: self
-   //! POST: m_devVector' = m_devVector \/ devPtr
+   //! POST: mDevTable' = mDevTable \/ devPtr
    //+       return = devNum (position in the array)
    //                or -1 for fail
    bool addDevice(vjInput* devPtr);
 
 private:
-
    //: Remove a device from the vjInputManager.
    // Remove the device at position devNum from the
    // device Array.  Returns true on success.
    //
    //! MODIFIES: self
-   //! POST: m_devVector[devNum]' = NULL
-   bool removeDevice(int devNum);
-   bool removeDevice(char* instName);
-   bool removeDevice(vjInput* devPtr);
-
-   //: Get the device number from its Instance Name.
-   //
-   //  Find the devNum of the device whose name is instName
-   //
-   //! RETURNS: -1 if fails
-   int findDeviceNum(const char* instName);
-
-   //: Get a pointer to the instance at devNum.
-   // return the pointer at the devNum position in the array. <br>
-   //
-   //!POST: return = m_devVector[devNum]  (this can be NULL)
-   vjInput* getDevice(unsigned int devNum);
-
-
+   //! POST: mDevTable[devNum]' = NULL
+   bool removeDevice(std::string instName);
+   bool removeDevice(const vjInput* devPtr);
 
    /*********************************************************
     *          PROXIES                                      *
@@ -176,7 +159,12 @@ public:
    void refreshAllProxies();
 
 protected:
-   std::vector<vjInput*>                  m_devVector;
+   bool removeProxy(vjConfigChunk* chunk);
+
+protected:
+   typedef std::map<std::string,vjInput*> tDevTableType;
+
+   tDevTableType                          mDevTable;
    std::map<std::string, vjProxy*>        mProxyTable;      // list of proxies in the system
    std::map<std::string, std::string>     mProxyAliases;     // List of alias names for proxies
 
