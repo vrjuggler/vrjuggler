@@ -105,6 +105,7 @@ namespace vrj
          filename = vpr::replaceEnvVars( filename );
          bool ambient = sound_element->getProperty<bool>("ambient");
          bool retriggerable = sound_element->getProperty<bool>("retriggerable");
+         bool streaming = sound_element->getProperty<bool>("streaming");
          int loop = sound_element->getProperty<int>("loop");
          float cutoff = sound_element->getProperty<float>("cutoff");
          float volume = sound_element->getProperty<float>("volume");
@@ -124,6 +125,7 @@ namespace vrj
          si.repeat = loop;
          si.ambient = ambient;
          si.retriggerable = retriggerable;
+         si.streaming = streaming;
          si.position[0] = position[0];
          si.position[1] = position[1];
          si.position[2] = position[2];
