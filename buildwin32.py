@@ -675,6 +675,9 @@ def main():
             doInstall(options['prefix'])
    except OSError, osEx:
       print "Could not execute %s: %s" % (devenv_cmd, osEx)
+      sys.exit(3)
+
+   sys.exit(0)
 
 juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 if __name__ == '__main__':
@@ -687,6 +690,8 @@ if __name__ == '__main__':
          status = 'no Visual Studio installation found'
       elif exitEx.code == 2:
          status = 'could not read data file required for compiling'
+      elif exitEx.code == 3:
+         status = 'could not start Visual Studio'
       else:
          status = 'error encountered'
 
