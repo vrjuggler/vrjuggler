@@ -59,7 +59,7 @@ typedef struct sched_param sched_param_t;
 // This will actually start a new thread that will execute the specified
 // function.
 // ---------------------------------------------------------------------------
-vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
+vjThreadPosix::vjThreadPosix (vj_thread_func_t func, void* arg, long flags,
                               u_int priority, void* stack_addr,
                               size_t stack_size)
 {

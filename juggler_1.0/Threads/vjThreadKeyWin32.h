@@ -49,14 +49,14 @@
 #include <Threads/vjThreadFunctor.h>
 
 // Key destructor function type.
-typedef THREAD_FUNC	vjKeyDestructor;
+typedef vj_thread_func_t	vjKeyDestructor;
 
 class vjThreadKeyWin32 {
 public:
     // -----------------------------------------------------------------------
     //: Constructor.
     // -----------------------------------------------------------------------
-    vjThreadKeyWin32 (THREAD_FUNC destructor, void* arg = 0) {
+    vjThreadKeyWin32 (vj_thread_func_t destructor, void* arg = 0) {
         keycreate(destructor, arg);
     }
 
@@ -86,7 +86,7 @@ public:
     //
     //! ARGS: dest_func - The destructor function for the key.  This uses
     //+                   the functor data structure.
-    //! ARGS: arg - Argument to be passed to THREAD_FUNC (optional).
+    //! ARGS: arg - Argument to be passed to destructor (optional).
     //
     //! RETURNS:  0 - Successful completion
     //! RETURNS: -1 - Error
@@ -96,7 +96,7 @@ public:
     //+       version of keycreate().
     // -----------------------------------------------------------------------
     int
-    keycreate (THREAD_FUNC destructor, void* arg = 0) {
+    keycreate (vj_thread_func_t destructor, void* arg = 0) {
         std::cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
 
         return -1;

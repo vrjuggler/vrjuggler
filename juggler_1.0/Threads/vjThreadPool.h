@@ -88,7 +88,7 @@ public:
     //: Give a function to the processes.  Start a function going
     //+ asynchronously.  Called by master process.
     // -----------------------------------------------------------------------
-    void startFunc (THREAD_FUNC func, void* arg = NULL)
+    void startFunc (vj_thread_func_t func, void* arg = NULL)
     {
         vjThreadNonMemberFunctor* NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
         this->startFunc(NonMemFunctor);

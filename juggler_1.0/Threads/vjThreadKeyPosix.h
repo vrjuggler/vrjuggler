@@ -54,7 +54,7 @@
 #ifdef _PTHREADS_DRAFT_4
     typedef pthread_destructor_t	vjKeyDestructor;
 #else
-    typedef THREAD_FUNC			vjKeyDestructor;
+    typedef vj_thread_func_t		vjKeyDestructor;
 #endif
 
 
@@ -71,7 +71,7 @@ public:
     // -----------------------------------------------------------------------
     //: Constructor.
     // -----------------------------------------------------------------------
-    vjThreadKeyPosix (THREAD_FUNC destructor, void* arg) {
+    vjThreadKeyPosix (vj_thread_func_t destructor, void* arg) {
         keycreate(destructor, arg);
     }
 
@@ -101,7 +101,7 @@ public:
     //
     //! ARGS: dest_func - The destructor function for the key.  This uses
     //+                   the functor data structure.
-    //! ARGS: arg - Argument to be passed to THREAD_FUNC (optional).
+    //! ARGS: arg - Argument to be passed to destructor (optional).
     //
     //! RETURNS:  0 - Successful completion
     //! RETURNS: -1 - Error
@@ -111,7 +111,7 @@ public:
     //+       of keycreate().
     // -----------------------------------------------------------------------
     int
-    keycreate (THREAD_FUNC destructor, void* arg) {
+    keycreate (vj_thread_func_t destructor, void* arg) {
         vjThreadNonMemberFunctor *NonMemFunctor = new vjThreadNonMemberFunctor(destructor, arg);
 
         return keycreate(NonMemFunctor);

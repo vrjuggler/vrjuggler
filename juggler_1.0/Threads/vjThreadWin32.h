@@ -59,7 +59,7 @@ public:
     //: Constructor with arguments.  This will start a new thread that will
     //+ execute the specified function with the given argument.
     // -----------------------------------------------------------------------
-    vjThreadWin32 (THREAD_FUNC func, void* arg = 0, long flags = 0,
+    vjThreadWin32 (vj_thread_func_t func, void* arg = 0, long flags = 0,
                  u_int priority = 0, void* stack_addr = NULL,
                  size_t stack_size = 0);
 

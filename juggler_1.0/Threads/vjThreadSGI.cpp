@@ -43,7 +43,7 @@
 //: Spawning constructor
 //  This will actually start a new thread
 //  that will execute the specified function.
-vjThreadSGI::vjThreadSGI (THREAD_FUNC func, void* arg, long flags,
+vjThreadSGI::vjThreadSGI (vj_thread_func_t func, void* arg, long flags,
              u_int priority, void* stack_addr, size_t stack_size)
 {
    mUserThreadFunctor = NULL;
