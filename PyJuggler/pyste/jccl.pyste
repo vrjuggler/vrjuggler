@@ -25,7 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-ConfigChunk = Class('jccl::ConfigChunk', 'jccl/Config/ConfigChunk.h')
-use_shared_ptr(ConfigChunk)
+ConfigElement = Class('jccl::ConfigElement', 'jccl/Config/ConfigElement.h')
+use_shared_ptr(ConfigElement)
 
-Class('jccl::ConfigChunkHandler', 'jccl/RTRC/ConfigChunkHandler.h')
+Class('jccl::ConfigElementHandler', 'jccl/RTRC/ConfigElementHandler.h')
