@@ -56,7 +56,7 @@ namespace tweek
 CorbaService::CorbaService(const std::string& nsHost, vpr::Uint16 nsPort,
                            const std::string& iiopVersion,
                            const std::string& subContextId)
-   : mOrbThread(NULL), mNsHost(nsHost), mNsPort(nsPort),
+   : mOrbFunctor(NULL), mOrbThread(NULL), mNsHost(nsHost), mNsPort(nsPort),
      mNameServiceURI("corbaloc:iiop:"), mSubContextId(subContextId)
 {
    // Why isn't this conversion easier to do with std::string?
@@ -127,10 +127,9 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
 
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Starting ORB thread\n"
                                                  << vprDEBUG_FLUSH;
-      vpr::ThreadMemberFunctor<CorbaService>* corba_run =
-         new vpr::ThreadMemberFunctor<CorbaService>(this, &CorbaService::run);
 
-      mOrbThread = new vpr::Thread(corba_run);
+      mOrbFunctor = new vpr::ThreadRunFunctor<CorbaService>(this);
+      mOrbThread  = new vpr::Thread(mOrbFunctor);
    }
    catch (CORBA::SystemException& sysEx)
    {
@@ -419,7 +418,7 @@ void CorbaService::addSubjectManagers(const CosNaming::BindingList& bindingList,
    }
 }
 
-void CorbaService::run(void* args)
+void CorbaService::run()
 {
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"
                                               << vprDEBUG_FLUSH;
