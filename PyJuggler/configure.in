@@ -56,6 +56,10 @@ AC_ARG_WITH([bpldir],
                           version of Boost.Python v2      [default=/usr/local/lib]],
             [BOOST_PYTHON_LIBDIR="$withval"], [BOOST_PYTHON_LIBDIR='/usr/local/lib'])
 
+AC_ARG_WITH([pyste],
+            [  --with-pytse=<PATH>     Full path to pyste.py script   [default=none]],
+            PYSTE="$withval", PYSTE='none')
+
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -169,6 +173,15 @@ LDFLAGS="${_pyj_save_LDFLAGS}"
 
 DPP_LANG_RESTORE
 
+AC_PATH_PROG(PYTHON, python, no, [$PYTHON_ROOT/bin:$PATH])
+
+if test "x$PYTHON" = "xno" ; then
+   AC_MSG_WARN([*** python is required to run Pyste ***])
+else
+   AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** $PYSTE does not exist ***])])
+fi
+
+
 BOOST_PYTHON_LIB="boost_python.$DYNAMICLIB_EXT"
 
 if test "x$OS_TYPE" = "xUNIX" ; then
@@ -201,6 +214,8 @@ AC_SUBST(PYTHON_LIB)
 AC_SUBST(PYTHON_LIB_DEPS)
 AC_SUBST(PYTHON_LDFLAGS)
 AC_SUBST(PYTHON_VERSION)
+
+AC_SUBST(PYSTE)
 
 AC_SUBST(BOOST_PYTHON_LDFLAGS)
 

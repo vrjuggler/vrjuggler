@@ -27,33 +27,82 @@
 
 srcdir=		@srcdir@
 prefix=		@prefix@
+topdir=		@topdir@
+top_srcdir=	@top_srcdir@
 
 CXX=		@CXX@
-CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@
+CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
+		-I$(srcdir)
+INCLUDES=	$(shell vrjuggler-config --includes)
 LIBS=		$(shell vrjuggler-config --libs)
 EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
+PYTHON=		@PYTHON@
+PYSTE=		$(PYTHON) @PYSTE@ $(INCLUDES)
+
+PYTHON_VERSION=		@PYTHON_VERSION@
+PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages
 
 PYTHON_LDFLAGS=		@PYTHON_LDFLAGS@ @PYTHON_LIB@ @PYTHON_LIB_DEPS@
 BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 
-SRCS=		PyJuggler.cpp
-OBJS=		$(SRCS:.cpp=.o)
-MOD=		PyJuggler.so
+OBJEXT=		@OBJEXT@
+DLLEXT=		@DYNAMICLIB_EXT@
+
+PYSTE_FILES=	vpr.pyste	\
+		jccl.pyste	\
+		gmtl.pyste	\
+		gadget.pyste	\
+		vrj.pyste
+
+SRCS=		$(PYSTE_FILES:.pyste=.cpp) PyJuggler.cpp
+OBJS=		$(SRCS:.cpp=.$(OBJEXT))
+MODS=		$(OBJS:.$(OBJEXT)=.$(DLLEXT))
 
 vpath %.cpp $(srcdir)
+vpath %.pyste $(srcdir)/../pyste
 
-all: $(MOD)
+# -----------------------------------------------------------------------------
+# Targets
+# -----------------------------------------------------------------------------
 
-$(MOD): $(OBJS)
-	$(CXX) -shared -o $@ $(OBJS) $(BOOST_PYTHON_LDFLAGS)		\
-          $(PYTHON_LDFLAGS) $(LIBS) $(EXTRA_LIBS)
+# XXX: It will probably be helpful in the long run to have 'debug' and 'optim'
+# targets that link against the appropriate Boost.Python library.
+# It might also be good to do static linking against Boost.Python to simplify
+# distribution issues.
 
-%.o: %.cpp
+all: $(MODS)
+	$(MAKE) prefix="$(topdir)" install
+
+install:
+	mkdir -p $(PYTHON_PACKAGES)
+	for mod in $(MODS) ; do			\
+            cp -p $$mod $(PYTHON_PACKAGES) ;	\
+          done
+
+# Rule for generating a .cpp file from a .pyste file.
+%.cpp: %.pyste
+	$(PYSTE) --module=$(basename $(@F)) $<
+
+%.$(OBJEXT): %.cpp
 	$(CXX) $(CXXFLAGS) -c $<
+
+%.$(DLLEXT): %.$(OBJEXT)
+	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\
+          $(PYTHON_LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
 clean:
 	rm -f $(OBJS)
 
 clobber:
 	$(MAKE) clean
-	rm -f $(MOD)
+	rm -f $(MODS)
+
+# -----------------------------------------------------------------------------
+# Dependency generation.
+# XXX: This doesn't work quite right yet ...
+# -----------------------------------------------------------------------------
+BASIC_OBJECTS=	$(OBJS)
+CXX_COMPILE=	$(CXX) $(CXXFLAGS)
+
+include $(top_srcdir)/Doozer++/mk/dpp.dep.mk
+#-include $(DEPEND_FILES)
