@@ -45,6 +45,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
@@ -62,7 +63,8 @@ import org.vrjuggler.tweek.services.*;
  * @see org.vrjuggler.tweek.BeanContainer
  */
 public class TweekFrame extends JFrame implements TreeModelRefreshListener,
-                                                  BeanFocusChangeListener
+                                                  BeanFocusChangeListener,
+                                                  MessageAdditionListener
 {
    public TweekFrame ()
    {
@@ -100,6 +102,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    public void initGUI (BeanTreeModel data_model)
    {
       data_model.addTreeModelRefreshListener(this);
+      MessagePanel.instance().addMessageAdditionListener(this);
 
       try
       {
@@ -147,6 +150,14 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       else if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_UNFOCUSED )
       {
          System.out.println("Bean " + e.getBean() + " unfocused!");
+      }
+   }
+
+   public void messageAdded (MessageAdditionEvent e)
+   {
+      if ( m_bulb_on_icon != null )
+      {
+         m_status_msg_button.setIcon(m_bulb_on_icon);
       }
    }
 
@@ -294,10 +305,60 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       // Finally, set the menu bar to what we have just defined.
       this.setJMenuBar(m_menu_bar);
 
-      // Add the various components to their respective containers.
+      m_main_panel.setTopComponent(m_bean_container);
+      m_main_panel.setBottomComponent(null);
+      m_main_panel.setOrientation(JSplitPane.VERTICAL_SPLIT);
+      m_main_panel.setDividerSize(1);
+
+      m_status_bar.setLayout(m_status_bar_layout);
       m_status_bar.setBorder(BorderFactory.createLoweredBevelBorder());
-      m_content_pane.add(m_bean_container, BorderLayout.CENTER);
+      m_status_msg_button.setMinimumSize(new Dimension(24, 24));
+
+      String bulb_on_icon_name  = "org/vrjuggler/tweek/bulb-on-small.gif";
+      String bulb_off_icon_name = "org/vrjuggler/tweek/bulb-off-small.gif";
+
+      try
+      {
+         m_bulb_on_icon = new ImageIcon(BeanJarClassLoader.instance().getResource(bulb_on_icon_name));
+      }
+      catch (NullPointerException e)
+      {
+         System.err.println("WARNING: Failed to load icon " + bulb_on_icon_name);
+      }
+
+      try
+      {
+         m_bulb_off_icon = new ImageIcon(BeanJarClassLoader.instance().getResource(bulb_off_icon_name));
+      }
+      catch (NullPointerException e)
+      {
+         System.err.println("WARNING: Failed to load icon " + bulb_off_icon_name);
+      }
+
+      if ( m_bulb_off_icon != null )
+      {
+         m_status_msg_button.setPreferredSize(new Dimension(24, 24));
+         m_status_msg_button.setIcon(m_bulb_off_icon);
+      }
+      else
+      {
+         m_status_msg_button.setText("Expand");
+      }
+
+      m_status_msg_button.addActionListener(new ActionListener()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               statusMessageExpandAction(e);
+            }
+         });
+
+      // Add the various components to their respective containers.
+      m_content_pane.add(m_main_panel, BorderLayout.CENTER);
       m_content_pane.add(m_status_bar,  BorderLayout.SOUTH);
+      m_status_bar.add(m_status_msg_button,  BorderLayout.EAST);
+      m_status_bar.add(m_status_msg_label,  BorderLayout.CENTER);
+      m_main_panel.setDividerLocation(500);
    }
 
    // =========================================================================
@@ -526,6 +587,37 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       dlg.show();
    }
 
+   private void statusMessageExpandAction (ActionEvent e)
+   {
+      if ( m_msg_panel_expanded )
+      {
+         m_main_panel.setBottomComponent(null);
+         m_main_panel.resetToPreferredSizes();
+         MessagePanel.instance().clear();
+         m_msg_panel_expanded = false;
+
+         if ( m_status_msg_button.getIcon() == null )
+         {
+            m_status_msg_button.setText("Expand");
+         }
+      }
+      else
+      {
+         m_main_panel.setBottomComponent(MessagePanel.instance().getPanel());
+         m_main_panel.setDividerLocation(0.85);
+         m_msg_panel_expanded = true;
+
+         if ( m_bulb_off_icon != null )
+         {
+            m_status_msg_button.setIcon(m_bulb_off_icon);
+         }
+         else
+         {
+            m_status_msg_button.setText("Collapse");
+         }
+      }
+   }
+
    // ========================================================================
    // Private data members.
    // ========================================================================
@@ -535,8 +627,17 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    // GUI objects.
    private JPanel        m_content_pane        = null;    /**< Top-level container */
    private BorderLayout  m_content_pane_layout = new BorderLayout();
+   private JSplitPane    m_main_panel          = new JSplitPane();
    private BeanContainer m_bean_container      = new BeanContainer();
-   private JPanel        m_status_bar          = new JPanel();
+
+   // Status bar stuff.
+   private JPanel        m_status_bar         = new JPanel();
+   private JLabel        m_status_msg_label   = new JLabel();
+   private JButton       m_status_msg_button  = new JButton();
+   private BorderLayout  m_status_bar_layout  = new BorderLayout();
+   private ImageIcon     m_bulb_on_icon       = null;
+   private ImageIcon     m_bulb_off_icon      = null;
+   private boolean       m_msg_panel_expanded = false;
 
    // Menu bar objects.
    private JMenuBar m_menu_bar             = new JMenuBar();
