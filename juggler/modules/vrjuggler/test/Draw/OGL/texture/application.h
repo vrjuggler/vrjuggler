@@ -58,6 +58,7 @@
 #include "Image.h"
 #include "Texture.h"
 #include "hexImage.h"
+#include "squareImage.h"
 #include "renderTexture.h"
 
 //: VR Juggler application demonstration to show you 
@@ -116,9 +117,13 @@ private:
    
    // Cube objects:
    Texture                       mCubeTexture;
-   cubeGeometry                  mCubeGeometry;
    vjGlContextData<ResourceID>   mCubeTextureObj;
+   cubeGeometry                  mCubeGeometry;
    vjGlContextData<ResourceID>   mCubeDisplayList;
+   
+   // Floor:
+   Texture                       mFloorTexture;
+   vjGlContextData<ResourceID>   mFloorTextureObj;
 };
 
 

@@ -60,7 +60,7 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= main.@OBJEXT@ application.@OBJEXT@ cubeGeometry.@OBJEXT@ Image.@OBJEXT@ Texture.@OBJEXT@ hexImage.@OBJEXT@
+OBJECTS		= main.@OBJEXT@ application.@OBJEXT@ cubeGeometry.@OBJEXT@ Image.@OBJEXT@ Texture.@OBJEXT@ hexImage.@OBJEXT@ squareImage.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
