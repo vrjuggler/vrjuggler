@@ -167,7 +167,7 @@ DPP_PROG_LINKER
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
-GADGETEER_PATH([0.13.2], ,
+GADGETEER_PATH([0.14], ,
                [AC_MSG_ERROR(*** Gadgeteer required for Device Drivers ***)])
 
 min_tweek_ver='0.15.0'
