@@ -164,7 +164,8 @@ public class MessagePanel
       }
 
       StyleConstants.setForeground(mTextStyles[STATUS], Color.black);
-      StyleConstants.setForeground(mTextStyles[WARNING], Color.orange);
+      StyleConstants.setForeground(mTextStyles[WARNING],
+                                   new Color(255, 115, 0));
       StyleConstants.setForeground(mTextStyles[ERROR], Color.red);
       StyleConstants.setBold(mTextStyles[ERROR], true);
 
