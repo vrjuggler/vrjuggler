@@ -143,9 +143,9 @@ public:
 //            sock->write(buffer2, sizeof(buffer2));
             sock->write(buffer1, bytes);
             sock->close();
-            mItemProtectionMutex->acquire();
+            mItemProtectionMutex.acquire();
             mClientCounter++;
-            mItemProtectionMutex->release();
+            mItemProtectionMutex.release();
          }
       }
       delete sock;
@@ -183,7 +183,7 @@ public:
    }
 
 protected:
-   vpr::Mutex*    mItemProtectionMutex;         // Protect an exclusive item
+   vpr::Mutex     mItemProtectionMutex;         // Protect an exclusive item
    long           mOpenServerSuccess;
    long           mNumSServer;
    long           mNumClient;
