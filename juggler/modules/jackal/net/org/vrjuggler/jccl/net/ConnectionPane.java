@@ -37,8 +37,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import VjControl.Core;
-import VjControl.VjComponent;
+import VjControl.*;
 import VjComponents.UI.PlugPanel;
 import VjConfig.*;
 import VjComponents.Network.NetworkModule;
@@ -117,12 +116,17 @@ public class ConnectionPane extends JPanel
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     public ImageIcon getComponentIcon () {
         return null;
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -144,20 +148,16 @@ public class ConnectionPane extends JPanel
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (network_module == null)
-            network_module = (NetworkModule)Core.getComponentFromRegistry ("Network Module");
-        if ((ui_module == null) || (network_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
+
+    
+    public void initialize () throws VjComponentException {
+        if (ui_module == null || network_module == null)
+            throw new VjComponentException (component_name + " initialized with unmet VjComponent dependencies.");
 
         updateactive_mi = 
             ui_module.addMenuItem ("File/Update Active Configuration");
         updateactive_mi.addActionListener (this);
-
-        return true;
     }
 
     

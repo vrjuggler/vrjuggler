@@ -40,10 +40,8 @@ import java.util.*;
 import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ConfigChunk;
 import VjConfig.VarValue;
-import VjControl.DefaultCoreModule;
+import VjControl.*;
 import VjComponents.ConfigEditor.ChunkOrgTree;
-import VjControl.FileControl;
-import VjControl.Core;
 
 
 /** Core Module for ChunkOrgTrees
@@ -73,7 +71,7 @@ public class ChunkOrgTreeModule extends DefaultCoreModule {
 //      }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         int i;
         boolean autoload = true;
         String orgtreename = null;
@@ -112,8 +110,12 @@ public class ChunkOrgTreeModule extends DefaultCoreModule {
 	else if (orgtreename != null) {
             loadChunkOrgTree (active_tree, orgtreename);
 	}
+    }
 
-        return true;
+
+    public void initialize () throws VjComponentException {
+        // strictly, loading orgtree files should happen here instead of
+        // the end of configure.
     }
 
 

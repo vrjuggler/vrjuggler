@@ -54,7 +54,7 @@ public class Init {
     /** Main() routine for VjControl. */
     public static void main (String args[]) {
 
-	Core.initialize();
+	Core.initInstance();
         Core.setCommandLine (args);
 
 	/* do config stuff... 	 */

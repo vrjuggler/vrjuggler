@@ -42,8 +42,7 @@ import javax.swing.border.*;
 import VjConfig.*;
 import VjComponents.ConfigEditor.*;
 import VjComponents.UI.Widgets.*;
-import VjControl.Core;
-import VjControl.VjComponent;
+import VjControl.*;
 
 
 /** Default implementation of ConfigChunkPanel.
@@ -167,7 +166,12 @@ public class DefaultConfigChunkPanel extends JPanel
 
 
     public String getComponentName () {
-        return getName();
+        return chunk.getName();
+    }
+
+
+    public void setComponentName (String _name) {
+        ; // determined by our chunk...
     }
 
 
@@ -175,7 +179,7 @@ public class DefaultConfigChunkPanel extends JPanel
 //          uihelper_module = h;
 //      }
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -195,12 +199,12 @@ public class DefaultConfigChunkPanel extends JPanel
                 }
             }
         }
-        if (uihelper_module == null) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
 
-        return true;
+     
+    public void initialize () throws VjComponentException {
+        if (uihelper_module == null)
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
     }
 
 

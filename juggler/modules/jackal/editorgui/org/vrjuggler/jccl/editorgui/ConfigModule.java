@@ -42,9 +42,7 @@ import java.io.*;
 import javax.swing.*;
 
 import VjConfig.*;
-import VjControl.Core;
-import VjControl.FileControl;
-import VjControl.DefaultCoreModule;
+import VjControl.*;
 import VjComponents.ConfigEditor.ConfigCommunicator;
 
 
@@ -143,7 +141,7 @@ public class ConfigModule extends DefaultCoreModule {
      *  this component's own chunk, and on the vjcontrol command line.
      *  whew!
      */ 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         List descdbnames = new ArrayList();
         List chunkdbnames = new ArrayList();
         List auto_descdbnames = new ArrayList();
@@ -229,9 +227,11 @@ public class ConfigModule extends DefaultCoreModule {
 	    lastfname = (String)chunkdbnames.get(i);
 	    loadNewChunkDBFile (lastfname);
 	}
+    }
 
 
-        return true;
+    public void initialize () throws VjComponentException {
+        // strictly, loading should happen here & not configure.
     }
 
 

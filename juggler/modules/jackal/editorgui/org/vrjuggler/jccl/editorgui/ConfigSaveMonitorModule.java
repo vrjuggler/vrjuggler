@@ -78,7 +78,7 @@ public class ConfigSaveMonitorModule
 //      }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_name = ch.getName();
 
         // get pointers to the modules we need.
@@ -99,25 +99,12 @@ public class ConfigSaveMonitorModule
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (config_module == null)
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
-        if ((ui_module == null) || (config_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
-        
-//         config_module = (ConfigModule)Core.getModule ("Config Module");
-//         if (config_module == null) {
-//             Core.consoleErrorMessage (component_name, "ConfigSaveMonitor expected Config Module to exist.");
-//             return false;
-//         }
-//         ui_module = (ControlUIModule)Core.getModule ("ControlUI Module");
-//         if (ui_module == null) {
-//             Core.consoleErrorMessage (component_name, "ConfigSaveMonitor expected ControlUI Module to exist.");
-//             return false;
-//         }
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if ((ui_module == null) || (config_module == null))
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies");
 
         chunkdb_filter = new SuffixFilter ("Config Files (*.config, *.cfg)", ".config");
         chunkdb_filter.addSuffix(".cfg");
@@ -127,8 +114,6 @@ public class ConfigSaveMonitorModule
         descdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (descdb_filter, "ChunkDescDB");
 
         config_module.addConfigModuleListener (this);
-
-        return true;
     }
 
 
