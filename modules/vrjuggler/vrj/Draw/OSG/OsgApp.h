@@ -52,9 +52,9 @@ namespace vrj
 {
 
 /**
- * OsgApp: Encapulates an open scene graph application.
- *
- * PURPOSE:
+ * Encapulates an Open Scene Graph (OSG) application.  This defines the base
+ * class from which OSG-based application classes should be derived.  It makes
+ * use of the OpenGL Draw Manager.
  *
  * @see vrj::GlApp
  */
@@ -92,7 +92,7 @@ public:
     * Configures newly created scene viewers.
     * This is called immediately after a new scene viewer is created for a
     * context.  This is the place to configure application background colors
-    * and other viewer specific information.
+    * and other viewer-specific information.
     */
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
@@ -104,16 +104,24 @@ public:
    }
 
    /**
-    * Function to draw the scene.
-    * Override this function with the user draw routine.
+    * Function to set up and render the scene using OSG.  Override this
+    * method with great care.  All the logic to handle multi-pipe rendering
+    * and other VR Juggler features happens here.
     *
     * @pre OpenGL state has correct transformation and buffer selected.
     * @post The current scene has been drawn.
     */
    virtual void draw();
 
-   // Initialize
-   // Make sure to call initScene if you override this function
+   /**
+    * Application initialization function.
+    * Execute any initialization needed before the grahpics API is started.
+    * If this method is overridden, it must be called by the overriding
+    * version.  This calls initScene(), which is used to set up this
+    * application object's scene graph.
+    *
+    * @note Derived classes MUST call base class version of this method.
+    */
    virtual void init()
    {
       GlApp::init();
@@ -124,17 +132,18 @@ public:
 
    /**
     * Function that is called immediately after a new context is created.
-    * Use this function to create context specific data structures.
-    * i.e. Display lists, Texture objects, etc.
+    * Use this function to create context-specific data structures such as
+    * display lists and texture objects that are known to be required when
+    * the context is created.
     *
-    * @pre The ogl context has been set to the new context.
-    * @post Application has completed in initialization the user wishes.
+    * @pre The OpenGL context has been set to the new context.
+    * @post The application has completed context-specific initialization.
     */
-   virtual void contextInit();
+   void contextInit();
 
    /**
     * Function that is called immediately before a context is closed.
-    * Use the function to clean up any context data structures.
+    * Use the function to clean up any context-specific data structures.
     */
    virtual void contextClose()
    {
@@ -142,14 +151,15 @@ public:
    }
 
    /**
-    * Function that is called upon entry into the context for a draw.
+    * Function that is called upon entry into the context before rendering.
+    * This can be used to allocate context-specific data dynamically.
     *
-    * @pre The ogl context has been set to the context for drawing.
-    * @post User application has executed any commands that need
-    *       to only be executed once per context, per frame.
+    * @pre The OpenGL context has been set to the context for drawing.
+    * @post The application object has executed any commands that need to be
+    *       executed only once per context, per frame.
+    *
     * @note This function can be used for things that need to happen
-    *        every frame, but only once per context.
-    *   <br> Ex: Dynamically Create display lists
+    *       every frame but only once per context.
     */
    virtual void contextPreDraw()
    {
@@ -157,15 +167,19 @@ public:
    }
 
    /**
-    * Function that is called upon entry into a buffer of a GL context.
+    * Function that is called once for each frame buffer of an OpenGL context.
+    * This function is executed after contextInit() (if needed) but before
+    * contextPreDraw().  It is called once per frame buffer (see note).
     *
-    * @pre The ogl context has been set to the context for drawing.
-    * @post User application has executed any commands that need
-    *       to only be executed once per context, per buffer, per frame.
-    * @note This function is designed to be used when you want to do something
-    *        only once per buffer (ie.once for left buffer, once for right
-    *        buffer).
-    *   <br> Ex: glClear's need to be done in this method
+    * @pre The OpenGL context has been set to the context for drawing.
+    * @post The application object has executed any commands that need to be
+    *        executed once per context, per buffer, per frame.
+    *
+    * @note This function is designed to be used when some task must be
+    *       performed only once per frame buffer (i.e., once for the left
+    *       buffer, once for the right buffer).  For example, the OpenGL clear
+    *       color should be defined and glClear(GL_COLOR_BUFFER_BIT) should be
+    *       called in this method.
     */
    virtual void bufferPreDraw()
    {
@@ -177,8 +191,9 @@ public:
     *
     * @pre The library is preparing to render all windows on a given pipe.
     * @post Any pre-pipe user calls have been done.
-    * @note Currently the OGL context is not set when this function is called.
-    *       This is a TEST function.  USE AT YOUR OWN RISK!!!
+    *
+    * @note Currently the OpenGL context is not set when this function is
+    *       called.  This is a TEST function.  USE AT YOUR OWN RISK!!!
     */
    virtual void pipePreDraw()
    {
