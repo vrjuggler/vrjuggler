@@ -42,13 +42,7 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/DynLoad/LibraryLoader.h>
-/*
-#include <jccl/Config/Configuration.h>
-#include <jccl/Config/ConfigDefinitionRepository.h>
-#include <jccl/Config/ConfigElement.h>
 
-#include <jccl/Util/Debug.h>
-*/
 
 namespace vrj
 {
@@ -63,7 +57,7 @@ public:
    void setPerfPlugin(vrj::PerfPlugin* plugin);
 
 protected:
-   /** Enables the remote runtime reconfiguration interface object. */
+   /** Enables the remote performance monitoring interface object. */
    void loadPerfPlugin();
 
    // needed for windows:
