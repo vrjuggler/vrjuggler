@@ -143,11 +143,11 @@ public class ChunkOrgTreeModule extends DefaultCoreModule {
         }
         catch (FileNotFoundException e) {
             try {
-                f1 = new File (Core.file.mangleFileName ("$VJ_BASE_DIR/Data/orgtree.org"));
+                f1 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/orgtree.org"));
                 r = new FileReader(f1);
             }
             catch (FileNotFoundException e2) {
-                Core.consoleErrorMessage (component_name, "Couldn't find default organization tree");
+                Core.consoleErrorMessage (component_name, "Couldn't find default orgtree $VJ_SHARE_DIR/Data/orgtree.org");
                 return;
             }
         }
