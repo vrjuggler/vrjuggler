@@ -31,7 +31,9 @@
  * -----------------------------------------------------------------
  */
 
-#include "vjSoundFactory.h"
+#include <Sound/vjSoundFactory.h>
+#include <Sound/vjSoundEngineConstructor.h>
+
 
 //std::vector< vjSoundEngineConstructorBase* > vjSoundFactory::mConstructors;
 vjSoundFactory* vjSoundFactory::_instance = NULL;   //: The singleton instance ptr
