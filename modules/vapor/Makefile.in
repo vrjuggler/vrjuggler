@@ -241,16 +241,16 @@ endif
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/ChangeLog $(prefix)
+          $(VPRROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/COPYING.txt $(prefix)
+          $(VPRROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/INSTALL.txt $(prefix)
+          $(VPRROOT_ABS)/INSTALL.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/README.txt $(prefix)
+          $(VPRROOT_ABS)/README.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/RELEASE_NOTES.txt $(prefix)
-	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
+          $(VPRROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VPR make release started on $(STARTTIME)"
 	@echo ">>> VPR make release completed on `LTIME=C date`"

@@ -222,16 +222,16 @@ endif
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/ChangeLog $(prefix)
+          $(GADGETROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/COPYING.txt $(prefix)
+          $(GADGETROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/INSTALL.txt $(prefix)
+          $(GADGETROOT_ABS)/INSTALL.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/README.txt $(prefix)
+          $(GADGETROOT_ABS)/README.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/RELEASE_NOTES.txt $(prefix)
-	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
+          $(GADGETROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Gadgeteer make release started on $(STARTTIME)"
 	@echo ">>> Gadgeteer make release completed on `LTIME=C date`"
