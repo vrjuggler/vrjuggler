@@ -34,10 +34,7 @@ package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
@@ -52,6 +49,7 @@ import org.jgraph.graph.GraphConstants;
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.PropertyDefinition;
 
 import org.vrjuggler.vrjconfig.commoneditors.DeviceGraph;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
@@ -59,6 +57,54 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
 /**
  * A collection of helper functions that can be helpful in extending JGraph.
+ *
+ * <p>
+ * The basic structure of a device graph is relatively straightfoward.  There
+ * are three types of cells: edges, proxy vertices, and device vertices.
+ * Edges must always be of type <code>ProxyPointerEdge</code>.  Proxy vertices
+ * have the following characteristics:
+ *
+ * <ul>
+ *   <li>
+ *     Is of type <code>org.jgraph.graph.DefaultGraphCell</code>
+ *   </li>
+ *   <li>
+ *     Contains a user object of type <code>ProxyInfo</code>
+ *   </li>
+ *   <li>
+ *     Has a single port (type <code>DefaultPort</code>) with at most one
+ *     out-going edge
+ *   </li>
+ * </ul>
+ *
+ * Device vertices, on the other hand, have these characteristics:
+ *
+ * <ul>
+ *   <li>
+ *     Is of type <code>org.jgraph.graph.DefaultGraphCell</code>
+ *   </li>
+ *   <li>
+ *     Contains a user object of type <code>DeviceInfo</code>
+ *   </li>
+ *   <li>
+ *     Has one or more ports (type <code>DefaultPort</code>), each of which
+ *     contains a user object of type <code>UnitInfo</code>
+ *   </li>
+ * </ul>
+ *
+ * <p>
+ * The functions included in this class take care of all the details related
+ * to creating and connecting cells.  In particular, there are functions that
+ * know about all the default device and device proxy config element types in
+ * VR Juggler and know how to create cells and proxies for those types.
+ * </p>
+ *
+ * @see DeviceInfo
+ * @see ProxyInfo
+ * @see UnitInfo
+ * @see ProxyPointerEdge
+ * @see org.jgraph.graph.DefaultGraphCell
+ * @see org.jgraph.graph.DefaultPort
  */
 public abstract class GraphHelpers
    implements EditorConstants
@@ -154,14 +200,62 @@ public abstract class GraphHelpers
       // XXX: Come up with a better system for setting the x and y values.
       int x = 120, y = 20;
 
-      if ( def.getToken().equals(SIM_POS_DEVICE_TYPE) )
+      String token = def.getToken();
+
+      // XXX: This should use functors to allow for more dynamic addition of
+      // cell creators.
+      if ( token.equals(SIM_POS_DEVICE_TYPE) ||
+           token.equals(KEYBOARD_MOUSE_DEVICE_TYPE) ||
+           token.equals(TRACKD_CONTROLLER_TYPE) ||
+           token.equals(TRACKD_SENSOR_TYPE) ||
+           token.equals(TRACKD_API_CONTROLLER_TYPE) ||
+           token.equals(TRACKD_API_SENSOR_TYPE) )
       {
          cell = createDeviceCell(devElt, context, 1, attributes, x, y, true);
       }
-      else if ( def.getToken().equals(SIM_DIGITAL_DEVICE_TYPE) )
+      else if ( token.equals(SIM_DIGITAL_DEVICE_TYPE) )
       {
          cell = createDeviceCell(devElt, context, KEY_PAIR_PROPERTY,
                                  attributes, x, y, false);
+      }
+      else if ( token.equals(FLOCK_TYPE) || token.equals(MOTION_STAR_TYPE) )
+      {
+      }
+      else if ( token.equals(INTERSENSE_TYPE) ||
+                token.equals(INTERSENSE_API_TYPE) )
+      {
+         cell = createDeviceCell(devElt, context, STATIONS_PROPERTY,
+                                 attributes, x, y, false);
+      }
+      else if ( token.equals(DIRECTX_JOYSTICK_TYPE) ||
+                token.equals(LINUX_JOYDEV_TYPE) )
+      {
+         cell = createBaseDeviceCell(new DeviceInfo(devElt, context),
+                                     attributes, x, y, false);
+         addDevicePorts(cell, UnitConstants.ANALOG, 6);
+         addDevicePorts(cell, UnitConstants.DIGITAL, 10);
+      }
+      else if ( token.equals(PUCK_DEVICE_TYPE) )
+      {
+      }
+      else if ( token.equals(IBOX_TYPE) )
+      {
+         List unit_list = new ArrayList(2);
+         unit_list.add(0, UnitConstants.ANALOG);
+         unit_list.add(1, UnitConstants.DIGITAL);
+         cell = createBaseDeviceCell(new DeviceInfo(devElt, context, unit_list),
+                                     attributes, x, y, false);
+         addDevicePorts(cell, UnitConstants.ANALOG, 4);
+         addDevicePorts(cell, UnitConstants.DIGITAL, 4);
+      }
+      else if ( token.equals(DATA_GLOVE_TYPE) )
+      {
+      }
+      else if ( token.equals(PINCH_GLOVE_TYPE) )
+      {
+      }
+      else if ( token.equals(VRPN_TYPE) )
+      {
       }
       else
       {
@@ -245,7 +339,8 @@ public abstract class GraphHelpers
                                                    int y, boolean autoSize)
    {
       DefaultGraphCell dev_cell =
-         new DefaultGraphCell(new DeviceInfo(devElt, context, unitPropName));
+         createBaseDeviceCell(new DeviceInfo(devElt, context, unitPropName),
+                              attributes, x, y, autoSize);
 
       // If unitPropName is null, that means that the number of units for the
       // device being represented by dev_cell is exactly 1 at all times.
@@ -254,9 +349,9 @@ public abstract class GraphHelpers
          (unitPropName == null) ? 1
                                 : devElt.getPropertyValueCount(unitPropName);
 
-      addDevicePorts(dev_cell, num_units);
-      attributes.put(dev_cell, DeviceGraph.createDeviceAttributes(x, y,
-                                                                  autoSize));
+      addDevicePorts(dev_cell,
+                     UnitTypeHelpers.getSingleUnitType(devElt.getDefinition()),
+                     num_units);
 
       return dev_cell;
    }
@@ -295,11 +390,23 @@ public abstract class GraphHelpers
    {
       // Create a DeviceInfo object with a fixed number of units.
       DefaultGraphCell dev_cell =
-         new DefaultGraphCell(new DeviceInfo(devElt, context));
-      addDevicePorts(dev_cell, numUnits);
+         createBaseDeviceCell(new DeviceInfo(devElt, context), attributes,
+                              x, y, autoSize);
+      addDevicePorts(dev_cell,
+                     UnitTypeHelpers.getSingleUnitType(devElt.getDefinition()),
+                     numUnits);
+
+      return dev_cell;
+   }
+
+   private static DefaultGraphCell createBaseDeviceCell(DeviceInfo devInfo,
+                                                        Map attributes,
+                                                        int x, int y,
+                                                        boolean autoSize)
+   {
+      DefaultGraphCell dev_cell = new DefaultGraphCell(devInfo);
       attributes.put(dev_cell, DeviceGraph.createDeviceAttributes(x, y,
                                                                   autoSize));
-
       return dev_cell;
    }
 
@@ -417,11 +524,29 @@ public abstract class GraphHelpers
    {
       ProxyPointerEdge edge = null;
       ProxyInfo proxy_info = (ProxyInfo) proxyCell.getUserObject();
-      Object unit_prop = proxy_info.getElement().getProperty(UNIT_PROPERTY, 0);
+
+      ConfigElement proxy_elt = proxy_info.getElement();
+
+      PropertyDefinition dev_prop_def =
+         proxy_elt.getDefinition().getPropertyDefinition(DEVICE_PROPERTY);
+      Integer unit_type =
+         UnitTypeHelpers.getUnitType(dev_prop_def.getAllowedType(0));
+      Object unit_prop = null;
+
+      try
+      {
+         unit_prop = proxy_elt.getProperty(UNIT_PROPERTY, 0);
+      }
+      // Thrown if proxy_info's config element does not have a property
+      // EditorConstants.UNIT_PROPERTY.
+      catch (IllegalArgumentException ex)
+      {
+         unit_prop = new Integer(0);
+      }
 
       // Look for the child of deviceCell that is a DefaultPort whose user
-      // object matches the UNIT_PROPERTY value of proxyCell's ConfigElement.
-      // If none is found, we cannot make a connection.
+      // object matches the UNIT_PROPERTY value of proxyCell's
+      // ConfigElement.   If none is found, we cannot make a connection.
       for ( Iterator c = deviceCell.getChildren().iterator(); c.hasNext(); )
       {
          Object child = c.next();
@@ -429,13 +554,13 @@ public abstract class GraphHelpers
          if ( child instanceof DefaultPort )
          {
             DefaultPort child_port = (DefaultPort) child;
+            UnitInfo unit_info = (UnitInfo) child_port.getUserObject();
 
-            if ( child_port.getUserObject().equals(unit_prop) )
+            if ( unit_info.getUnitType().equals(unit_type) &&
+                 unit_info.getUnitNumber().equals(unit_prop) )
             {
-               DefaultPort proxy_port = (DefaultPort) proxyCell.getFirstChild();
-               edge = new ProxyPointerEdge("");
-               cs.connect(edge, proxy_port, child_port);
-               attributes.put(edge, DeviceGraph.createProxyLineStyle());
+               edge = connectPorts((DefaultPort) proxyCell.getFirstChild(),
+                                   child_port, cs, attributes);
                break;
             }
          }
@@ -454,11 +579,24 @@ public abstract class GraphHelpers
     * Adds the given number of ports to the given graph cell as children.
     * The ports are all instances of <code>org.jgraph.graph.DefaultPort</code>.
     */
-   private static void addDevicePorts(DefaultGraphCell cell, int numUnits)
+   private static void addDevicePorts(DefaultGraphCell cell, Integer unitType,
+                                      int numUnits)
    {
       for ( int i = 0; i < numUnits; ++i )
       {
-         cell.add(new DefaultPort(new Integer(i)));
+         cell.add(new DefaultPort(new UnitInfo(unitType, new Integer(i))));
       }
+   }
+
+   private static ProxyPointerEdge connectPorts(DefaultPort proxyPort,
+                                                DefaultPort deviceUnitPort,
+                                                ConnectionSet cs,
+                                                Map attributes)
+   {
+      ProxyPointerEdge edge = new ProxyPointerEdge("");
+      cs.connect(edge, proxyPort, deviceUnitPort);
+      attributes.put(edge, DeviceGraph.createProxyLineStyle());
+
+      return edge;
    }
 }

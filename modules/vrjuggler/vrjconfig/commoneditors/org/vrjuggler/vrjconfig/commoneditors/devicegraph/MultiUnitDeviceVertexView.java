@@ -101,8 +101,7 @@ public class MultiUnitDeviceVertexView
       private static final int BUTTON_PREF_WIDTH  = 30;
       private static final int BUTTON_PREF_HEIGHT = 16;
 
-      private static final int NAME_ROW       = 1;
-      private static final int ADD_BUTTON_ROW = 2;
+      private static final int NAME_ROW = 1;
 
       private static String IMG_ROOT = EditorConstants.COMMON_IMG_ROOT;
 
@@ -114,46 +113,12 @@ public class MultiUnitDeviceVertexView
             {
                {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5,
                 TableLayout.MINIMUM, 5},
-               {5, TableLayout.PREFERRED, TableLayout.MINIMUM}
+               {5, TableLayout.PREFERRED}
             };
          mMainLayout = new TableLayout(sizes);
          this.setLayout(mMainLayout);
 
          nameLabel.setText(" ");
-
-         mAddUnitButton.setEnabled(false);
-         mAddUnitButton.setToolTipText(
-            "Add a new input source for this device"
-         );
-         mAddUnitButton.setText("Create Input Source");
-         mAddUnitButton.setMargin(new Insets(3, 0, 0, 0));
-         mAddUnitButton.setBorderPainted(false);
-         mAddUnitButton.setFont(new Font("Dialog", Font.PLAIN, 10));
-         mAddUnitButton.setContentAreaFilled(false);
-
-         try
-         {
-            ClassLoader loader = getClass().getClassLoader();
-            mAddUnitButton.setIcon(
-               new ImageIcon(loader.getResource(IMG_ROOT + "/New16.gif"))
-            );
-         }
-         catch (Exception ex)
-         {
-         }
-
-         mAddUnitButton.addActionListener(
-            new ActionListener()
-            {
-               public void actionPerformed(ActionEvent evt)
-               {
-                  // This adds a new property value to our config element
-                  // which results in propertyValueAdded() being invoked.
-                  // It is there that we add the new row to the layout.
-                  addUnit();
-               }
-            }
-         );
 
          this.add(nameLabel,
                   new TableLayoutConstraints(SPAN_START_COLUMN, NAME_ROW,
@@ -185,44 +150,106 @@ public class MultiUnitDeviceVertexView
 
                mVariableUnits = mDeviceInfo.hasVariableUnitCount();
 
-               if ( mVariableUnits )
-               {
-                  mUnitStartRow = ADD_BUTTON_ROW + 1;
-                  mAddUnitButton.setEnabled(true);
-                  this.add(mAddUnitButton,
-                           new TableLayoutConstraints(SPAN_START_COLUMN,
-                                                      ADD_BUTTON_ROW,
-                                                      SPAN_END_COLUMN,
-                                                      ADD_BUTTON_ROW,
-                                                      TableLayoutConstraints.CENTER,
-                                                      TableLayoutConstraints.CENTER));
-               }
-               else
-               {
-                  mUnitStartRow = ADD_BUTTON_ROW;
-               }
-
                Dimension label_size = nameLabel.getPreferredSize();
-               Dimension add_size   = mAddUnitButton.getPreferredSize();
 
-               int min_width = Math.max(label_size.width, add_size.width);
+               int min_width = label_size.width;
 
                // The extra 10 units of height is to allow some vertical
                // breathing room.
-               int min_height = label_size.height + add_size.height + 10;
+               int min_height = label_size.height + 10;
 
                setMinimumSize(new Dimension(min_width, min_height));
                setPreferredSize(new Dimension(min_width, min_height));
 
-               for ( Iterator c = cell.getChildren().iterator(); c.hasNext(); )
+               ImageIcon add_icon = null;
+               try
                {
-                  Object child = c.next();
+                  ClassLoader loader = getClass().getClassLoader();
+                  add_icon =
+                     new ImageIcon(loader.getResource(IMG_ROOT + "/New16.gif"));
+               }
+               catch (Exception ex)
+               {
+               }
 
-                  if ( child instanceof DefaultPort )
+               int extra_width = min_width, extra_height = 0;
+
+               for ( Iterator i = mDeviceInfo.getUnitTypes().iterator();
+                     i.hasNext(); )
+               {
+                  final Integer unit_type = (Integer) i.next();
+
+                  if ( mVariableUnits )
                   {
-                     addUnitRow((DefaultPort) child, false);
+                     JButton add_button = new JButton();
+                     add_button.setEnabled(true);
+                     add_button.setToolTipText(
+                        "Add a new input source for this device"
+                     );
+
+                     add_button.setText("Create " +
+                                        getUnitTypeName(unit_type) +
+                                        " Input Source");
+                     add_button.setMargin(new Insets(3, 0, 0, 0));
+                     add_button.setBorderPainted(false);
+                     add_button.setFont(new Font("Dialog", Font.PLAIN, 10));
+                     add_button.setContentAreaFilled(false);
+                     add_button.setIcon(add_icon);
+
+                     add_button.addActionListener(
+                        new ActionListener()
+                        {
+                           public void actionPerformed(ActionEvent evt)
+                           {
+                              // This adds a new property value to our config
+                              // element which results in propertyValueAdded()
+                              // being invoked.  It is there that we add the
+                              // new row to the layout.
+                              addUnit(unit_type);
+                           }
+                        }
+                     );
+
+                     UnitTypeGroup ug = new UnitTypeGroup(add_button, 0);
+                     mUnitGroups.put(unit_type, ug);
+                     int button_row = mMainLayout.getNumRow();
+                     mMainLayout.insertRow(button_row, TableLayout.MINIMUM);
+
+                     this.add(add_button,
+                              new TableLayoutConstraints(SPAN_START_COLUMN,
+                                                         button_row,
+                                                         SPAN_END_COLUMN,
+                                                         button_row,
+                                                         TableLayoutConstraints.CENTER,
+                                                         TableLayoutConstraints.CENTER));
+
+                     Dimension add_size = add_button.getPreferredSize();
+                     extra_width   = Math.max(extra_width, add_size.width);
+                     extra_height += add_size.height;
+                  }
+
+                  for ( Iterator c = cell.getChildren().iterator();
+                        c.hasNext(); )
+                  {
+                     Object child = c.next();
+
+                     if ( child instanceof DefaultPort )
+                     {
+                        DefaultPort port = (DefaultPort) child;
+                        UnitInfo unit_info = (UnitInfo) port.getUserObject();
+                        if ( unit_info.getUnitType().equals(unit_type) )
+                        {
+                           addUnitRow((DefaultPort) child, false);
+                        }
+                     }
                   }
                }
+
+               Dimension pref_size = getPreferredSize();
+               setPreferredSize(
+                  new Dimension(Math.max(pref_size.width, extra_width),
+                                pref_size.height + extra_height)
+               );
 
                // At this point, we only revalidate the layout.  There is no
                // need to change the cell view size because it is still being
@@ -256,19 +283,32 @@ public class MultiUnitDeviceVertexView
 
       public void propertyValueAdded(ConfigElementEvent evt)
       {
-         PropertyDefinition prop_def = mDeviceInfo.getUnitPropertyDefinition();
-
-         // If the device has a variable unit count and the value added was
-         // for the device unit property, then we need to add another row to
-         // the renderer to repersent the new unit.
-         // mVariableUnits == true iff prop_def != null
-         if ( mVariableUnits && prop_def.getToken().equals(evt.getProperty()) )
+         if ( mVariableUnits )
          {
-            ConfigElement elt = mDeviceInfo.getElement();
-            int count = elt.getPropertyValueCount(prop_def.getToken()) - 1;
-            DefaultPort port = new DefaultPort(new Integer(count));
-            ((DefaultGraphCell) mView.getCell()).add(port);
-            addUnitRow(port, true);
+            Collection unit_types = mDeviceInfo.getUnitTypes();
+
+            for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+            {
+               Integer type = (Integer) t.next();
+               PropertyDefinition prop_def =
+                  mDeviceInfo.getUnitPropertyDefinition(type);
+
+               // If the device has a variable unit count and the value added
+               // was for the device unit property, then we need to add another
+               // row to the renderer to repersent the new unit.
+               // mVariableUnits == true iff prop_def != null
+               if ( prop_def.getToken().equals(evt.getProperty()) )
+               {
+                  ConfigElement elt = mDeviceInfo.getElement();
+                  int count = elt.getPropertyValueCount(prop_def.getToken()) - 1;
+                  DefaultPort port =
+                     new DefaultPort(new UnitInfo(type, new Integer(count)));
+                  ((DefaultGraphCell) mView.getCell()).add(port);
+                  addUnitRow(port, true);
+
+                  break;
+               }
+            }
          }
       }
 
@@ -285,6 +325,42 @@ public class MultiUnitDeviceVertexView
             removeUnitRow(evt.getIndex());
          }
 */
+      }
+
+      private String getUnitTypeName(Integer unitType)
+      {
+         String type_str = "Unknown";
+
+         if ( unitType.equals(UnitConstants.ANALOG) )
+         {
+            type_str = "Analog";
+         }
+         else if ( unitType.equals(UnitConstants.COMMAND) )
+         {
+            type_str = "Command";
+         }
+         else if ( unitType.equals(UnitConstants.DIGITAL) )
+         {
+            type_str = "Digital";
+         }
+         else if ( unitType.equals(UnitConstants.GLOVE) )
+         {
+            type_str = "Glove";
+         }
+         else if ( unitType.equals(UnitConstants.KEYBOARD_MOUSE) )
+         {
+            type_str = "Keyboard/Mouse";
+         }
+         else if ( unitType.equals(UnitConstants.POSITION) )
+         {
+            type_str = "Position";
+         }
+         else if ( unitType.equals(UnitConstants.STRING) )
+         {
+            type_str = "String";
+         }
+
+         return type_str;
       }
 
       /**
@@ -307,7 +383,8 @@ public class MultiUnitDeviceVertexView
        */
       private void addUnitRow(DefaultPort unitPort, boolean resizeCellView)
       {
-         Object user_obj = unitPort.getUserObject();
+         UnitInfo unit_info = (UnitInfo) unitPort.getUserObject();
+         final Integer unit_type = unit_info.getUnitType();
 
          final PortComponent port_widget = new PortComponent(this.graph,
                                                              unitPort);
@@ -317,10 +394,12 @@ public class MultiUnitDeviceVertexView
 
          final JLabel name_field = new JLabel();
 
-         PropertyDefinition unit_def = mDeviceInfo.getUnitPropertyDefinition();
+         PropertyDefinition unit_def =
+            mDeviceInfo.getUnitPropertyDefinition(unit_type);
+
          if ( unit_def != null && unit_def.getType() == ConfigElement.class )
          {
-            Integer unit_num = (Integer) user_obj;
+            Integer unit_num = unit_info.getUnitNumber();
             ConfigElement dev_elt = mDeviceInfo.getElement();
             ConfigElement unit_elt =
                (ConfigElement) dev_elt.getProperty(unit_def.getToken(),
@@ -329,7 +408,8 @@ public class MultiUnitDeviceVertexView
          }
          else
          {
-            name_field.setText("Unit: " + user_obj.toString());
+            name_field.setText(getUnitTypeName(unit_type) + " Unit: " +
+                               unit_info.getUnitNumber());
          }
 
          name_field.setFont(new Font("Dialog", Font.ITALIC,
@@ -340,16 +420,30 @@ public class MultiUnitDeviceVertexView
                                   : this.getBackground().brighter().brighter()
          );
 
-         final int row = mMainLayout.getNumRow();
-         int label_start_col, label_end_col;
+         int row, label_start_col, label_end_col;
 
+         // If we have variable units, we have to place the new unit relative
+         // to its "Add" button.
          if ( mVariableUnits )
          {
+            UnitTypeGroup ug = (UnitTypeGroup) mUnitGroups.get(unit_type);
+
+            // Account for the addition of the new unit to this group.
+            ug.unitCount++;
+
+            // Calculate the new row as an offset to the "Add" button.
+            TableLayoutConstraints c = mMainLayout.getConstraints(ug.addButton);
+            row = c.row1 + ug.unitCount;
+
             label_start_col = LABEL_START_COLUMN;
             label_end_col   = LABEL_END_COLUMN;
          }
+         // If we have static units, then they are being added as a result of
+         // the initialization of this renderer.  As such, they are being
+         // added sequentially, so we can just tack on another row.
          else
          {
+            row             = mMainLayout.getNumRow();
             label_start_col = LABEL_START_COLUMN;
             label_end_col   = BUTTON0_END_COLUMN;
          }
@@ -406,7 +500,14 @@ public class MultiUnitDeviceVertexView
                                                                 remove_btn};
 
                      int row = removeUnitRow(components);
-                     removeUnit(row - mUnitStartRow);
+                     UnitTypeGroup ug =
+                        (UnitTypeGroup) mUnitGroups.get(unit_type);
+                     TableLayoutConstraints c =
+                        mMainLayout.getConstraints(ug.addButton);
+                     removeUnit(row - c.row1 - 1, unit_type);
+
+                     // Account for the unit removal from this group.
+                     ug.unitCount--;
                   }
                }
             );
@@ -446,11 +547,11 @@ public class MultiUnitDeviceVertexView
        * can only happen by clicking the button for adding a new unit,
        * which implies that this device has a variable unit count.
        */
-      private void addUnit()
+      private void addUnit(Integer unitType)
       {
          ConfigElement elt = mDeviceInfo.getElement();
          PropertyDefinition unit_prop_def =
-            mDeviceInfo.getUnitPropertyDefinition();
+            mDeviceInfo.getUnitPropertyDefinition(unitType);
          PropertyValueDefinition value_def =
             unit_prop_def.getPropertyValueDefinition(0);
          String token = unit_prop_def.getToken();
@@ -595,7 +696,7 @@ public class MultiUnitDeviceVertexView
          // The ports need to have their contained Integer decremented, and
          // all proxies referring to each of those ports needs to have its
          // UNIT_PROPERTY updated to the new unit value.
-         Integer unit_val = (Integer) port.getUserObject();
+         Integer unit_val = ((UnitInfo) port.getUserObject()).getUnitNumber();
 
          for ( Enumeration children = device_cell.children();
                children.hasMoreElements(); )
@@ -605,16 +706,15 @@ public class MultiUnitDeviceVertexView
             if ( child instanceof DefaultPort )
             {
                DefaultPort child_port = (DefaultPort) child;
+               UnitInfo unit_info     = (UnitInfo) child_port.getUserObject();
 
-               // If unit_value is less than child_port's Integer, then we
-               // know that child_port's Integer comes after unit_value
+               // If unit_value is less than child_port's unit number, then we
+               // know that child_port's unit number comes after unit_value
                // sequentially.  Therefore, it needs to be updated to have its
                // Integer value decremented by one.
-               if ( unit_val.compareTo(child_port.getUserObject()) < 0 )
+               if ( unit_val.compareTo(unit_info.getUnitNumber()) < 0 )
                {
-                  Integer old_value = (Integer) child_port.getUserObject();
-                  Integer new_value = new Integer(old_value.intValue() - 1);
-                  child_port.setUserObject(new_value);
+                  unit_info.decrementUnitNumber();
 
                   // Update any proxies referring to the unit that has had its
                   // index decremented.
@@ -628,8 +728,8 @@ public class MultiUnitDeviceVertexView
                      ProxyInfo proxy_info =
                         (ProxyInfo) proxy_cell.getUserObject();
                      proxy_info.getElement().setProperty(
-                        EditorConstants.UNIT_PROPERTY, 0, new_value,
-                        proxy_info.getContext()
+                        EditorConstants.UNIT_PROPERTY, 0,
+                        unit_info.getUnitNumber(), proxy_info.getContext()
                      );
                   }
                }
@@ -649,22 +749,33 @@ public class MultiUnitDeviceVertexView
          return row;
       }
 
-      private void removeUnit(int unitNumber)
+      private void removeUnit(int unitNumber, Integer unitType)
       {
          ConfigElement elt = mDeviceInfo.getElement();
          ConfigContext ctx = mDeviceInfo.getContext();
          PropertyDefinition unit_prop_def =
-            mDeviceInfo.getUnitPropertyDefinition();
+            mDeviceInfo.getUnitPropertyDefinition(unitType);
          elt.removeProperty(unit_prop_def.getToken(), unitNumber, ctx);
       }
 
       private transient CellView   mView       = null;
       private transient DeviceInfo mDeviceInfo = null;
+      private transient Map        mUnitGroups = new HashMap();
 
-      private int     mUnitStartRow  = 0;
       private boolean mVariableUnits = false;
 
       private TableLayout mMainLayout    = null;
-      private JButton     mAddUnitButton = new JButton();
+
+      private static class UnitTypeGroup
+      {
+         UnitTypeGroup(JButton addButton, int unitCount)
+         {
+            this.addButton = addButton;
+            this.unitCount = unitCount;
+         }
+
+         public JButton addButton = null;
+         public int     unitCount = 0;
+      }
    }
 }
