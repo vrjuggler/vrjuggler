@@ -194,7 +194,12 @@ namespace cluster
       // case they for some reason want to re-connect back to us. This should be taken care 
       // of in configuration but in all reality the remote machine does not have to have the 
       // machine specific element for this machine.
-      ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/);
+      
+      // Get the localhost name.
+      vpr::InetAddr local;
+      vpr::InetAddr::getLocalHost(local);
+         
+      ConnectionRequest request(local.getHostname(),0/*Might be needed, look above*/);
 
       send(&request);
       
