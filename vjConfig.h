@@ -25,9 +25,6 @@
 #include <iomanip.h>
 #include <fstream.h>
 #include <string>
-
-using std::string;
-using std::wstring;
 #endif
 
 #ifdef _DEBUG
