@@ -112,10 +112,10 @@ void GlWindow::setProjection(vrj::Projection* proj)
    if (!window_is_open)
       return;
 
-   float* frust = proj->mFrustum.frust;
+   const float* frust = proj->getFrustum().frust;
 
    vprDEBUG(vrjDBG_DRAW_MGR,7)  << "---- Frustum ----\n"
-               << proj->mFrustum.frust << std::endl
+               << proj->getFrustum().frust << std::endl
                << vprDEBUG_FLUSH;
 
    // --- Set up the projection --- //
@@ -127,14 +127,14 @@ void GlWindow::setProjection(vrj::Projection* proj)
                  frust[Frustum::VJ_NEAR],frust[Frustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
-      glMultMatrixf(proj->mViewMat.mData);
+      glMultMatrixf(proj->getViewMatrix().mData);
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(proj->viewMat.mData);
+   glMultMatrixf(proj->getViewMat().mData);
 #endif
 }
 
