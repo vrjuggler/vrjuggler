@@ -271,13 +271,7 @@ public class ConfigElement implements ConfigElementPointerListener
     *   <li>Property type config element (i.e., embedded element):
     *       <code>value</code> type must be ConfigElement</li>
     *   <li>Property type config element pointer: <code>value</code> type
-    *       must be java.lang.String<br>
-    *       <blockquote>
-    *       <b>NOTE:</b> Using ConfigElementPointer for the type of
-    *       <code>value</code> will result in a ClassCastException being
-    *       thrown.  The translation from java.lang.String to
-    *       ConfigElementPointer is performed internally by this method.
-    *       </blockquote>
+    *       must be java.lang.String or ConfigElementPointer<br>
     *   </li>
     * </ul>
     *
@@ -303,7 +297,15 @@ public class ConfigElement implements ConfigElementPointerListener
          {
             old_value = "";
          }
-         cep.setTarget((String)value);
+
+         if ( value instanceof String )
+         {
+            cep.setTarget((String) value);
+         }
+         else
+         {
+            cep.setTarget(((ConfigElementPointer) value).getTarget());
+         }
       }
       else
       {      
