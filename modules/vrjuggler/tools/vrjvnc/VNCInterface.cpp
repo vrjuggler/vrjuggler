@@ -1,0 +1,811 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VRJ VNC is (C) Copyright 2003 by Iowa State University
+ *
+ * Original Author:
+ *   Patrick Hartling
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this application; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+ * MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+/* ------------------------------------------------------------------------
+ * VNCInterface.cc
+ *
+ * This file is part of 3Dwm: The Three-Dimensional User Environment.
+ *
+ * 3Dwm: The Three-Dimensional User Environment:
+ *	<http://www.3dwm.org>
+ *
+ * Chalmers Medialab
+ * 	<http://www.medialab.chalmers.se>
+ *
+ * ------------------------------------------------------------------------
+ * File created 2000-09-23 by Niklas Elmqvist.
+ *
+ * Copyright (c) 2000 Niklas Elmqvist <elm@3dwm.org>.
+ * Copyright (c) 2000 Steve Houston <shouston@programmer.net>.
+ * ------------------------------------------------------------------------
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ * ------------------------------------------------------------------------
+ */
+
+// -- Standard Includes
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cmath>
+#include <list>
+
+// -- X11 Includes
+#include <X11/Xmd.h>
+
+// -- VNC Includes
+extern "C" {
+#include <rfbproto.h>
+#include <vncauth.h>
+}
+
+#include <vpr/Sync/Guard.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+
+#include <VNCInterface.h>
+
+// -- Defines
+
+// @@@ Need to make this portable!
+int endianTest = 1;
+
+#define Swap16IfLE(s) \
+    (*(char *)&endianTest ? ((((s) & 0xff) << 8) | (((s) >> 8) & 0xff)) : (s))
+
+#define Swap32IfLE(l) \
+    (*(char *)&endianTest ? ((((l) & 0xff000000) >> 24) | \
+			     (((l) & 0x00ff0000) >> 8)  | \
+			     (((l) & 0x0000ff00) << 8)  | \
+			     (((l) & 0x000000ff) << 24))  : (l))
+
+//#define DEBUG
+
+namespace vrjvnc
+{
+
+static const unsigned int MAX_ENCODINGS = 10;
+
+// -- Local Function Prototypes
+static int countBits(int mask);
+
+// -- Code Segment
+
+VNCInterface::VNCInterface(const std::string& host, const vpr::Uint16 port,
+                           const std::string& password)
+   : mHost(host), mPort(port), mIncremental(false), mWidth(-1), mHeight(-1),
+     mFramebuffer(NULL), mReadBuffer(NULL), mRunning(false)
+{
+   // Set up pixel format (in VNC, we get to define it ourselves)
+   mPf.depth      = 24; mPf.size       = 32;
+   mPf.red_bits   = 8;  mPf.red_mask   = 0xff;     mPf.red_shift   = 0;
+   mPf.green_bits = 8;  mPf.green_mask = 0xff00;   mPf.green_shift = 8;
+   mPf.blue_bits  = 8;  mPf.blue_mask  = 0xff0000; mPf.blue_shift  = 16;
+
+   // Connect to the VNC server
+   connectToVNCServer(password);
+
+   // connectToVNCServer should fill in the width and height.
+   vprASSERT(mWidth > 0 && "Invalid width");
+   vprASSERT(mHeight > 0 && "Invalid height");
+
+   // Create framebuffer
+   const int framebuffer_size = mWidth * mHeight * (mPf.size / 8);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "VNCInterface(): framebuffer_size == " << framebuffer_size
+      << std::endl << vprDEBUG_FLUSH;
+
+   mFramebuffer = new char[framebuffer_size];
+   memset(mFramebuffer, 0, framebuffer_size);
+
+   // Define the read buffer to read one row at a time.
+   mReadBufferSize = mWidth * (mPf.size / 8);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "VNCInterface(): mReadBufferSize (row size) == " << mReadBufferSize
+      << std::endl << vprDEBUG_FLUSH;
+
+   mReadBuffer = new char[mReadBufferSize];
+   memset(mReadBuffer, 0, mReadBufferSize);
+
+   // Inform the VNC server of pixel formats and encodings
+   setVNCPixelFormat();
+   setVNCEncodings();
+}
+
+VNCInterface::~VNCInterface()
+{
+   if ( NULL != mReadBuffer )
+   {
+      delete[] mReadBuffer;
+   }
+
+   if ( NULL != mFramebuffer )
+   {
+      delete[] mFramebuffer;
+   }
+
+   // Shutdown and close the VNC socket
+   mSock.close();
+}
+
+void VNCInterface::run()
+{
+   mRunning = true;
+
+   // Loop forever
+   while ( mRunning )
+   {
+      try
+      {
+         // Handle a server message
+         handleVNCServerMessage();
+      }
+      catch (std::exception& ex)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED, "ERROR")
+            << ": Caught an exception from handleVNCServerMessage: "
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+         mRunning = false;
+         break;
+      }
+   }
+}
+
+void VNCInterface::updateFramebuffer(int x, int y, int w, int h)
+{
+    rfbFramebufferUpdateRequestMsg fur;
+    // Initialize the message
+    fur.type = rfbFramebufferUpdateRequest;
+    fur.incremental = mIncremental ? 1 : 0;
+    fur.x = Swap16IfLE(x);
+    fur.y = Swap16IfLE(y);
+    fur.w = Swap16IfLE(w);
+    fur.h = Swap16IfLE(h);
+
+    // Send the message
+    writeData(&fur, sz_rfbFramebufferUpdateRequestMsg);
+
+    // This is no longer the first time we update, we want incremental
+    // framebuffer updates
+    mIncremental = true;
+}
+
+void VNCInterface::pointerEvent(int x, int y, int button_mask)
+{
+    rfbPointerEventMsg pe;
+
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+       << "VNCInterface::pointerEvent(): Pointer event at ("
+       << x << ", " << y << ")\n" << vprDEBUG_FLUSH;
+
+    // Initialize the message
+    pe.type = rfbPointerEvent;
+    pe.buttonMask = button_mask;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    pe.x = Swap16IfLE(x);
+    pe.y = Swap16IfLE(y);
+
+    // Send the message
+    writeData(&pe, sz_rfbPointerEventMsg);
+}
+
+void VNCInterface::keyEvent(unsigned int key, bool pressed)
+{
+    rfbKeyEventMsg ke;
+
+    // Initialize the message
+    ke.type = rfbKeyEvent;
+    ke.down = pressed ? 1 : 0;
+    ke.key = Swap32IfLE(key);
+
+    // Send the message
+    writeData(&ke, sz_rfbKeyEventMsg);
+}
+
+bool VNCInterface::getFramebufferUpdate(Rectangle &r)
+{
+   vpr::Guard<vpr::Mutex> guard(mMutex);
+
+   // Maybe there is no update?
+   if ( mRectQueue.empty() == true )
+   {
+      return false;
+   }
+
+   // Yes, there is, update argument and then remove it
+   r = mRectQueue.front();
+   mRectQueue.pop_front();
+   return true;
+}
+
+// -- VNC utility methods (protected) -------------------------------------
+
+void VNCInterface::addUpdate(int x, int y, int w, int h)
+{
+   vpr::Guard<vpr::Mutex> guard(mMutex);
+
+   // Construct a new rectangle
+   Rectangle r;
+   r.x = x; r.y = y; r.width = w; r.height = h;
+
+   // Let's move through the rectangle queue
+   std::list<Rectangle>::iterator i = mRectQueue.begin();
+   while (i != mRectQueue.end())
+   {
+      // Get a temporary iterator and move the main iterator forward
+      std::list<Rectangle>::iterator temp = i++;
+
+      // Can we merge these two rectangles?
+      if (isMergeable(r, *temp) == true)
+      {
+
+         // Then merge and remove the original rectangle
+         r = merge(r, *temp);
+         mRectQueue.erase(temp);
+      }
+   }
+
+   // Finally, add the new rectangle to the end of the queue
+   mRectQueue.push_back(r);
+}
+
+bool VNCInterface::isMergeable(const Rectangle &r1, const Rectangle &r2)
+{
+   // @@@ NOTE: The implementation of this function is quite
+   // arbitrary, we just need a heuristic that yields good
+   // performance when merging rectangles.
+
+   int x1 = r1.x + r1.width;  int x2 = r2.x + r2.width;
+   int y1 = r1.y + r1.height; int y2 = r2.y + r2.height;
+
+   // Do the rectangles coincide horizontally?
+   if ( (r1.x >= r2.x && r1.x <= x2) || (r1.x <= r2.x && x1 >= r2.x) )
+   {
+      // Yes? Then what about vertically?
+      if ((r1.y >= r2.y && r1.y <= y2) || (r1.y <= r2.y && y1 >= r2.y))
+      {
+         return true;
+      }
+   }
+
+   // Not mergeable
+   return false;
+}
+
+Rectangle VNCInterface::merge(const Rectangle &r1, const Rectangle &r2)
+{
+   Rectangle r;
+
+   // Find the resulting rectangle that encloses both rectangles
+   r.x = std::min(r1.x, r2.x); r.y = std::min(r1.y, r2.y);
+   int x1 = r1.x + r1.width;  int x2 = r2.x + r2.width;
+   int y1 = r1.y + r1.height; int y2 = r2.y + r2.height;
+   r.width = x1 > x2 ? r1.width : r2.width;
+   r.height = y1 > y2 ? r1.height : r2.height;
+
+   return r;
+}
+
+void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
+{
+   int bpp = mPf.size / 8;
+   char *fbptr = mFramebuffer + (y * mWidth + x) * bpp;
+
+   // Copy the contents of the rectangle buffer
+   while (h > 0)
+   {
+      // Copy memory
+      memcpy(fbptr, buf, w * bpp);
+
+      // Update buffer positions
+      fbptr += mWidth * bpp;
+      buf   += w * bpp;
+      h     -= 1;
+   }
+}
+
+void VNCInterface::readData(std::string& data, vpr::Uint32 len)
+{
+   vpr::Uint32 bytes_read;
+   vpr::ReturnStatus read_status;
+
+   read_status = mSock.recvn(data, len, bytes_read);
+
+   if ( ! read_status.success() || len != bytes_read )
+   {
+      char msg[256];
+      sprintf(msg, "Failed to read %u bytes", len);
+      throw NetReadException(msg);
+   }
+}
+
+void VNCInterface::readData(void* data, vpr::Uint32 len)
+{
+   vpr::Uint32 bytes_read;
+   vpr::ReturnStatus read_status;
+
+   mSock.recvn(data, len, bytes_read);
+
+   if ( ! read_status.success() || len != bytes_read )
+   {
+      char msg[256];
+      sprintf(msg, "Failed to read %u bytes", len);
+      throw NetReadException(msg);
+   }
+}
+
+void VNCInterface::writeData(const void* data, vpr::Uint32 len)
+{
+   vpr::Uint32 bytes_written;
+   vpr::ReturnStatus write_status;
+
+   write_status = mSock.write(data, len, bytes_written);
+
+   if ( ! write_status.success() || len != bytes_written )
+   {
+      char msg[256];
+      sprintf(msg, "Failed to write %u bytes", len);
+      throw NetWriteException(msg);
+   }
+}
+
+void VNCInterface::handleVNCVersion()
+{
+   rfbProtocolVersionMsg pv;
+   int msglen = sz_rfbProtocolVersionMsg;
+
+   // Read the message and zero-terminate the result
+   readData(pv, msglen);
+   pv[msglen] = '\0';
+
+   // Extract server version from protocol version message
+   if ( sscanf(pv, rfbProtocolVersionFormat, &mServerMajor, &mServerMinor)!=2 )
+   {
+      throw VNCProtoException("Not a valid VNC server!");
+   }
+
+   // Form and write the client protocol version message
+   sprintf(pv, rfbProtocolVersionFormat,
+           rfbProtocolMajorVersion, rfbProtocolMinorVersion);
+   writeData(pv, msglen);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Server uses protocol version " << mServerMajor << "."
+      << mServerMinor << std::endl << vprDEBUG_FLUSH;
+}
+
+bool VNCInterface::handleVNCAuthentication(const std::string& pwd)
+{
+   static const vpr::Uint32 MAX_PASSWORD_SIZE = 64;
+   vpr::Uint32 scheme, result, reasonLen;
+   vpr::Uint8 challenge[CHALLENGESIZE];
+   char password[MAX_PASSWORD_SIZE];
+   char* reason;
+
+   // Copy the password into mutable array
+   strncpy(password, pwd.c_str(), MAX_PASSWORD_SIZE);
+
+   // Which authentication scheme to use?
+   readData(&scheme, 4);
+   scheme = Swap32IfLE(scheme);
+
+#ifdef DEBUG
+    std::cerr << "Authentication scheme " << scheme << std::endl;
+#endif
+
+   // What do we do with it?
+   switch (scheme)
+   {
+      case rfbConnFailed:
+         // Why did it fail?
+         readData((void*) &reasonLen, 4);
+         reason = (char*) malloc(reasonLen);
+         readData(reason, reasonLen);
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "Connection failed: " << reason << std::endl << vprDEBUG_FLUSH;
+         free(reason);
+         return false;
+
+      case rfbNoAuth:
+         // No authentication needed
+         break;
+
+      case rfbVncAuth:
+         // VNC password authentication
+         readData(challenge, CHALLENGESIZE);
+
+         // Take care of the password
+         if ( password == NULL || strlen(password) == 0 )
+         {
+            return false;
+         }
+
+         // Truncate passwords that are too long.
+         if ( strlen(password) > 8 )
+         {
+            password[8] = '\0';
+         }
+
+         // Encrypt it! (using the vncauth lib)
+         vncEncryptBytes(challenge, password);
+
+         // @@@ Lose it from memory like in vncviewer?
+
+         // Send it back to the server and get the response
+         writeData(challenge, CHALLENGESIZE);
+         readData(&result, 4);
+         result = Swap32IfLE(result);
+
+         // How'd it go?
+         switch (result)
+         {
+            case rfbVncAuthOK:
+               // Everything is fine, return with success
+               return true;
+
+            case rfbVncAuthFailed:
+            case rfbVncAuthTooMany:
+            default:
+               // Failed to authenticate, return with failure
+               return false;
+         }
+
+         break;
+
+       default:
+         return false;
+   }
+
+   // We should never reach this position...
+   return true;
+}
+
+void VNCInterface::handleVNCInitialization()
+{
+   rfbClientInitMsg ci;
+   rfbServerInitMsg si;
+
+   // Send the client initialization message
+   ci.shared = 1;
+   writeData(&ci, sz_rfbClientInitMsg);
+
+   // Read the server initialization message
+   readData(&si, sz_rfbServerInitMsg);
+
+   // Extract the information we need
+   mWidth        = Swap16IfLE(si.framebufferWidth);
+   mHeight       = Swap16IfLE(si.framebufferHeight);
+
+   int red_max   = Swap16IfLE(si.format.redMax);
+   int green_max = Swap16IfLE(si.format.greenMax);
+   int blue_max  = Swap16IfLE(si.format.blueMax);
+
+   si.nameLength = Swap32IfLE(si.nameLength);
+
+   // Set up pixel format
+   mNativePf.depth       = si.format.depth;
+   mNativePf.size        = si.format.bitsPerPixel;
+
+   mNativePf.red_shift   = si.format.redShift;
+   mNativePf.red_mask    = red_max << mNativePf.red_shift;
+   mNativePf.red_bits    = countBits(red_max);
+
+   mNativePf.green_shift = si.format.greenShift;
+   mNativePf.green_mask  = green_max << mNativePf.green_shift;
+   mNativePf.green_bits  = countBits(green_max);
+
+   mNativePf.blue_shift  = si.format.blueShift;
+   mNativePf.blue_mask   = blue_max << mNativePf.blue_shift;
+   mNativePf.blue_bits   = countBits(blue_max);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Desktop size: " << mWidth << "x" << mHeight << "x"
+      << mNativePf.depth << "." << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Pixel format: red (" << mNativePf.red_bits << ", "
+      << mNativePf.red_shift << "), green (" << mNativePf.green_bits
+      << ", " << mNativePf.green_shift  << "), blue ("
+      << mNativePf.blue_bits << ", " << mNativePf.blue_shift << ")."
+      << std::endl << vprDEBUG_FLUSH;
+
+    // Read the name of the desktop
+    readData(mName, si.nameLength);
+
+    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Desktop name: " << mName
+                                              << std::endl << vprDEBUG_FLUSH;
+}
+
+void VNCInterface::connectToVNCServer(const std::string& password)
+{
+   vpr::InetAddr server_addr;
+   server_addr.setAddress(mHost, mPort);
+   mSock.setRemoteAddr(server_addr);
+
+   if ( mSock.open().success() )
+   {
+      if ( mSock.connect().success() )
+      {
+         // Read and write version information
+         handleVNCVersion();
+
+         // Authenticate client
+         if ( handleVNCAuthentication(password) == false )
+         {
+            throw VNCProtoException("Authentication failed.");
+         }
+
+         // Initialize the connection
+         handleVNCInitialization();
+      }
+   }
+}
+
+void VNCInterface::setVNCPixelFormat()
+{
+    rfbSetPixelFormatMsg spf;
+
+    // Set up the message
+    spf.type                = rfbSetPixelFormat;
+
+    // Pixel format: 24 depth, 32 bpp, true color, RGB 8:8:8
+    // @@@ Need to add support for bigendian architectures!
+    spf.format.bitsPerPixel = mPf.size;
+    spf.format.depth        = mPf.depth;
+    spf.format.bigEndian    = false;
+    spf.format.trueColour   = true;
+
+    spf.format.redMax     = Swap16IfLE((1 << mPf.red_bits) - 1);
+    spf.format.redShift   = mPf.red_shift;
+
+    spf.format.greenMax   = Swap16IfLE((1 << mPf.green_bits) - 1);
+    spf.format.greenShift = mPf.green_shift;
+
+    spf.format.blueMax    = Swap16IfLE((1 << mPf.blue_bits) - 1);
+    spf.format.blueShift  = mPf.blue_shift;
+
+    // Send it to the server
+    writeData(&spf, sz_rfbSetPixelFormatMsg);
+}
+
+void VNCInterface::setVNCEncodings()
+{
+    char buf[sz_rfbSetEncodingsMsg + MAX_ENCODINGS * 4];
+    rfbSetEncodingsMsg *se = (rfbSetEncodingsMsg *) buf;
+    CARD32 *encs = (CARD32 *) (&buf[sz_rfbSetEncodingsMsg]);
+    int len = 0;
+
+    // Initialize message
+    se->type = rfbSetEncodings;
+    se->nEncodings = 0;
+
+    // @@@ We just want raw encoding for now!
+    encs[se->nEncodings++] = Swap32IfLE(rfbEncodingRaw);
+
+    /*
+    if (mSock.isSameHost() == true) {
+	fprintf(stderr,"Same machine: preferring raw encoding\n");
+	encs[se->nEncodings++] = Swap32IfLE(rfbEncodingRaw);
+    }
+
+    // Set up the encodings we support
+    encs[se->nEncodings++] = Swap32IfLE(rfbEncodingCopyRect);
+    encs[se->nEncodings++] = Swap32IfLE(rfbEncodingHextile);
+    encs[se->nEncodings++] = Swap32IfLE(rfbEncodingCoRRE);
+    encs[se->nEncodings++] = Swap32IfLE(rfbEncodingRRE);
+    */
+
+    len = sz_rfbSetEncodingsMsg + se->nEncodings * 4;
+    se->nEncodings = Swap16IfLE(se->nEncodings);
+
+    // Send the message to the server
+    writeData(buf, len);
+}
+
+void VNCInterface::handleVNCFramebufferUpdate()
+{
+   vpr::DebugOutputGuard guard(vprDBG_ALL, vprDBG_STATE_LVL,
+                               "VNCInterface::handleVNCFramebufferUpdate()\n",
+                               "VNCInterface::handleVNCFramebufferUpdate() done\n");
+
+   rfbFramebufferUpdateMsg fu;
+
+   // Read the message (bar the initial type byte)
+   readData((char *) &fu + 1, sz_rfbFramebufferUpdateMsg - 1);
+   int num_rectangles = Swap16IfLE(fu.nRects);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "fu.nRects == " << fu.nRects << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "num_rectangles == " << num_rectangles << std::endl << vprDEBUG_FLUSH;
+
+   // Read the rectangles and update the framebuffer
+   for ( int i = 0; i < num_rectangles; ++i )
+   {
+      rfbFramebufferUpdateRectHeader rect;
+      size_t lines_per_read, bytes_per_line;
+
+      // Read a rectangle header from the server
+      readData(&rect, sz_rfbFramebufferUpdateRectHeader);
+
+      // Convert results to something we can use
+      rect.r.x = Swap16IfLE(rect.r.x);
+      rect.r.y = Swap16IfLE(rect.r.y);
+      rect.r.w = Swap16IfLE(rect.r.w);
+      rect.r.h = Swap16IfLE(rect.r.h);
+
+      rect.encoding = Swap32IfLE(rect.encoding);
+
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "Read rectangle information: (" << rect.r.x << ", " << rect.r.y
+         << ") " << rect.r.w << "x" << rect.r.h << std::endl << vprDEBUG_FLUSH;
+
+      // Sanity checking
+      if (rect.r.x + rect.r.w > mWidth || rect.r.y + rect.r.h > mHeight)
+      {
+         throw VNCException("Rectangle too large.");
+      }
+
+      if ((rect.r.h * rect.r.w) == 0)
+      {
+         continue;
+      }
+
+      // Store away the rectangle for later update
+      int x = rect.r.x; int y = rect.r.y;
+      int w = rect.r.w; int h = rect.r.h;
+
+      // Now, do different things depending on the encoding
+      switch (rect.encoding)
+      {
+         case rfbEncodingRaw:
+            // How many lines can we copy?
+            bytes_per_line = rect.r.w * (mPf.size / 8);
+            lines_per_read = mReadBufferSize / bytes_per_line;
+
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+               << "Bytes per line: " << bytes_per_line << std::endl
+               << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+               << "Lines to read: " << lines_per_read << std::endl
+               << vprDEBUG_FLUSH;
+
+            // Read the entire rectangle from the server
+            while (rect.r.h > 0)
+            {
+               // Clamp value if too large
+               if ( lines_per_read > rect.r.h )
+               {
+                  lines_per_read = rect.r.h;
+               }
+
+               vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+                  << "Reading " << bytes_per_line * lines_per_read
+                  << " bytes into the read buffer\n" << vprDEBUG_FLUSH;
+
+               // Read data from the server
+               readData(mReadBuffer, bytes_per_line * lines_per_read);
+
+               // Copy the rectangle buffer into the framebuffer
+               copyRectToFramebuffer(mReadBuffer, rect.r.x, rect.r.y, rect.r.w,
+                                     lines_per_read);
+
+               // Update readbuffer and framebuffer positions
+               rect.r.h -= lines_per_read;
+               rect.r.y += lines_per_read;
+            }
+            break;
+
+         default:
+            throw VNCEncodingException("Unknown rectangle encoding.");
+      }
+
+      // Add the rectangle to the update rectangle queue
+      addUpdate(x, y, w, h);
+   }
+
+   // Finally, we send a framebuffer update request (incremental)
+   // @@@ Remove this?
+   updateFramebuffer(0, 0, mWidth, mHeight);
+}
+
+void VNCInterface::handleVNCServerCutText()
+{
+    rfbServerCutTextMsg sct;
+
+    // Read the message (bar the initial type byte)
+    readData((char *) &sct + 1, sz_rfbServerCutTextMsg - 1);
+    sct.length = Swap32IfLE(sct.length);
+
+    // Retrieve the actual text
+    char *text = (char *) malloc(sct.length + 1);
+    readData(text, sct.length);
+    text[sct.length] = '\0';
+    free(text);
+}
+
+void VNCInterface::handleVNCServerMessage()
+{
+   vpr::Uint8 msg;
+
+   // Retrieve the message type
+   readData(&msg, 1);
+
+   // What do we do with it?
+   switch (msg)
+   {
+      case rfbFramebufferUpdate:
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "handleVNCServerMessage(): Handling framebuffer update\n"
+            << vprDEBUG_FLUSH;
+         handleVNCFramebufferUpdate();
+         break;
+      case rfbBell:
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "handleVNCServerMessage(): Dropping rfbBell\n"
+            << vprDEBUG_FLUSH;
+         break;
+      case rfbServerCutText:
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "handleVNCServerMessage(): Handling server cut text\n"
+            << vprDEBUG_FLUSH;
+         handleVNCServerCutText();
+         break;
+      default:
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "handleVNCServerMessage(): Unexpected message type\n"
+            << vprDEBUG_FLUSH;
+         throw VNCProtoException("Unknown message type from server.");
+   }
+}
+
+int countBits(int mask)
+{
+    int bits = 0;
+    for (int i = 1; mask & i; i <<= 1, bits++);
+    return bits;
+}
+
+} // End of vrjvnc namespace
