@@ -82,7 +82,7 @@ class ThreadPosix : public BaseThread
 public:  // ---- Thread CREATION and SPAWNING -----
    /** Non-spawning constructor.  This will not start a thread. */
    ThreadPosix(VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-               VPRThreadScope scope = VPR_LOCAL_THREAD,
+               VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                size_t stack_size = 0);
 
@@ -92,7 +92,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
     */
    ThreadPosix(thread_func_t func, void* arg = NULL,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-               VPRThreadScope scope = VPR_LOCAL_THREAD,
+               VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                size_t stack_size = 0);
 
@@ -102,7 +102,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
     */
    ThreadPosix(BaseThreadFunctor* functorPtr,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-               VPRThreadScope scope = VPR_LOCAL_THREAD,
+               VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                size_t stack_size = 0);
 
