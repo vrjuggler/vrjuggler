@@ -10,3 +10,4 @@ EXPORTS
    ?is_directory@filesystem@boost@@YA_NABVpath@12@@Z
    ?m_deref@directory_iterator@filesystem@boost@@ABEABVpath@23@XZ
    ?m_inc@directory_iterator@filesystem@boost@@AAEXXZ
+   ??0path@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4path_format@12@@Z
