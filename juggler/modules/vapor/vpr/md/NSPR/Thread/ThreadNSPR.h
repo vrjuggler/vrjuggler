@@ -62,6 +62,7 @@
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/ThreadManager.h>
 
+#include <vpr/md/NSPR/Thread/ThreadKeyNSPR.h>
 #include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 
 
@@ -256,10 +257,7 @@ public:
     * @return NULL - Thread is not in global table
     * @return NonNull - Ptr to the thread that we are running within
     */
-   static BaseThread* self (void)
-   {
-      return mThreadTable.getThread(gettid());
-   }
+   static BaseThread* self (void);
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -308,19 +306,6 @@ private:
    bool              mThreadStartCompleted;  /**< Flag for signaling when thread start is completed */
    vpr::CondVarNSPR  mThreadStartCondVar;    /**< CondVar for thread starting */
 
-   /**
-    * Checks the status of the thread creation in order to determine if this
-    * thread should be registered in the thread table or not.
-    *
-    * @pre An attempt must have been made to create a thread using spawn().
-    * @post If status is 0, the thread gets registered in the thread table
-    *       and in the local thread hash.  The count of created threads is
-    *       incremented as well.
-    *
-    * @param status  The integer status returned by spawn().
-    */
-   //void checkRegister(const int status);
-
    PRThreadPriority vprThreadPriorityToNSPR(const VPRThreadPriority priority);
 
    PRThreadScope vprThreadScopeToNSPR(const VPRThreadScope scope);
@@ -333,22 +318,23 @@ private:
 
    VPRThreadState nsprThreadStateToVPR(const PRThreadState state);
 
-   /**
-    * Gets this thread's ID (i.e., its hash index for the thread table).  It
-    * will always be a valid pointer.
-    *
-    * @pre None.
-    * @post The hash index ID for this thread is returned to the caller.
-    *
-    * @return Nonzero - The index of this tread.
-    */
-   static PRThread* gettid (void)
-   {
-      return PR_GetCurrentThread();
-   }
-
    static PRUint32               mTicksPerSec;
-   static ThreadTable<PRThread*> mThreadTable;
+
+   // ---- STATICS --- //
+   struct staticWrapper
+   {
+      staticWrapper() : mStaticsInitialized(1221), mThreadIdKey(NULL)
+      {;}
+
+      unsigned       mStaticsInitialized;    // Just a debug helper to help find when called before initialized
+      ThreadKeyNSPR mThreadIdKey;           // Key for the id of the local thread
+   };
+
+   static ThreadKeyNSPR& threadIdKey()
+   {  return statics.mThreadIdKey;  }
+
+   static staticWrapper statics;
+
 };
 
 } // End of vpr namespace

@@ -65,7 +65,6 @@ typedef void (*thread_func_t)(void *);
 
 
 class BaseThreadFunctor;
-class TSKeyAllocator;
 
 /**
  * This is used as the base class for all thread classes.
@@ -354,75 +353,6 @@ private:
    }
 
    static vpr::Int32 mNextThreadId;    // Initialized to 0
-};
-
-
-/**
- * Helper class for vpr::Thread that maintains a list of threads and IDs.
- * It maps from system specific index ==> vpr::BaseThread*
- *
- * Used internally because we can have many types of indexes for the thread
- * list depending upon the type of threads being used.
- */
-template <class IdxType>
-class VPR_CLASS_API ThreadTable
-{
-public:
-   /**
-    * Adds a thread to the list.
-    *
-    * @post The given thread object is registred using the given index.
-    *
-    * @param threadPtr A pointer to the thread to register.
-    * @param index     The index of the thread to be added.
-    */
-   void addThread(BaseThread* threadPtr, IdxType index)
-   {
-      mThreadMap[index] = threadPtr;
-   }
-
-   /**
-    * Gets a thread from the list.
-    *
-    * @post The thread indexed by the given value is returned to the caller.
-    *
-    * @param index The index of the thread to be retrieved.
-    *
-    * @return A pointer to a vpr::BaseThread is returned if the index was
-    *         valid.<br>
-    *         NULL is returned if the indexed thread could not be found.
-    */
-   BaseThread* getThread(IdxType index)
-   {
-      //std::hash_map<IdxType, BaseThread*>::iterator i;
-      typename std::map<IdxType, BaseThread*>::iterator i;
-      i = mThreadMap.find(index);
-      if (i == mThreadMap.end())
-      {
-         return NULL;
-      }
-      else
-      {
-         return (*i).second;
-      }
-   }
-
-   /**
-    * Removes a thread from the list.
-    *
-    * @pre The given value is the index of a registered thread.
-    * @post The thread indexed by the given value is removed from the list.
-    *
-    * @param index The index of the thread to be removed.
-    */
-   void removeThread(IdxType index)
-   {
-      mThreadMap.erase(index);
-   }
-
-private:
-   std::map<IdxType, BaseThread*> mThreadMap;
-   //std::hash_map<IdxType, BaseThread*> mThreadMap;
 };
 
 /// Ouput operator.
