@@ -121,7 +121,7 @@ void SurfaceProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float sca
    gmtl::Point3f   eye_surface;         // Xformed position of eyes
    eye_surface = m_surface_M_base * gmtl::makeTrans<gmtl::Point3f>(eyePos);
 
-   vprDEBUG(vrjDBG_DISP_MGR,7)
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "SurfaceProjection::calcviewFrustum:    Base eye:" << gmtl::makeTrans<gmtl::Point3f>(eyePos)
       << "  Xformed eye:" << eye_surface
       << std::endl << vprDEBUG_FLUSH;
@@ -148,7 +148,7 @@ void SurfaceProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float sca
 
    mFocusPlaneDist = eye_to_screen;    // Needed for drawing
 
-   vprDEBUG(vrjDBG_DISP_MGR,7)
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "SurfaceProjection::calcWallProjection: \n\tFrustum: " << mFrustum
       << std::endl << vprDEBUG_FLUSH;
 

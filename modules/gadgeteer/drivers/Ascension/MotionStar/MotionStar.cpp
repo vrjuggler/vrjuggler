@@ -124,7 +124,7 @@ bool MotionStar::config(jccl::ConfigChunkPtr c)
 
    if ( Input::config(c) &&  Position::config(c) )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 3)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "       MotionStar::config(jccl::ConfigChunkPtr)\n"
          << vprDEBUG_FLUSH;
 
@@ -279,9 +279,10 @@ int MotionStar::sample()
 
    if ( isActive() == false )
    {
-      vprDEBUG(vprDBG_ALL, 0) << clrSetNORM(clrRED) << "MotionStar ("
-                              << getAddressName() << ") NOT ACTIVE IN SAMPLE\n"
-                              << clrRESET << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrSetNORM(clrRED) << "MotionStar ("
+         << getAddressName() << ") NOT ACTIVE IN SAMPLE\n"
+         << clrRESET << vprDEBUG_FLUSH;
    }
    else
    {
@@ -413,10 +414,11 @@ void MotionStar::updateData()
    // If the device is not active, we cannot update the data.
    if ( isActive() == false )
    {
-      vprDEBUG(vprDBG_ALL, 0) << clrSetNORM(clrRED) << "MotionStar ("
-                              << getAddressName()
-                              << ") not active in updateData()\n" << clrRESET
-                              << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrSetNORM(clrRED) << "MotionStar ("
+         << getAddressName()
+         << ") not active in updateData()\n" << clrRESET
+         << vprDEBUG_FLUSH;
    }
    // Otherwise, go through with the update.
    else

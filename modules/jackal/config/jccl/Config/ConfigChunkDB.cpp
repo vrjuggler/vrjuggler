@@ -113,7 +113,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
    for ( unsigned int i=0; i< mChunks.size(); i++ )
    {
-      vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << mChunks[i]->getName()
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL) << "Chunk:" << mChunks[i]->getName()
                                  << std::endl << "\tDepends on:\n"
                                  << vprDEBUG_FLUSH;
       std::vector<std::string> deps = mChunks[i]->getChunkPtrDependencies();
@@ -122,14 +122,14 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
       {
          for ( unsigned int j=0;j<deps.size();j++ )
          {
-            vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": "
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL) << "   " << j << ": "
                                        << deps[j].c_str() << std::endl
                                        << vprDEBUG_FLUSH;
          }
       }
       else
       {
-         vprDEBUG(jcclDBG_CONFIG,4) << "   None.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL) << "   None.\n" << vprDEBUG_FLUSH;
       }
    }
    vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------------------\n" << vprDEBUG_FLUSH;
@@ -151,7 +151,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
    while ( cur_item != src_chunks.end() )    // While not at end of src list
    {
-      vprDEBUG(jcclDBG_CONFIG,4)
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
          << "Checking depencies for: " << (*cur_item)->getName()
          << "\n" << vprDEBUG_FLUSH;
 
@@ -209,7 +209,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
    {
       for ( unsigned int i=0;i<src_chunks.size();i++ )
       {
-         vprDEBUG(vprDBG_ERROR,0)
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR:") << " Dependency error:  Chunk:"
             << src_chunks[i]->getName() << "\tDepends on: \n"
             << vprDEBUG_FLUSH;
@@ -219,14 +219,14 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
          {
             for ( unsigned j=0; j<deps.size(); j++ )
             {
-               vprDEBUG(vprDBG_ERROR,0) << "\tdep " << j << ": "
+               vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << "\tdep " << j << ": "
                                         << deps[j].c_str() << std::endl
                                         << vprDEBUG_FLUSH;
             }
          }
          else
          {
-            vprDEBUG(vprDBG_ERROR,0) << "Nothing.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << "Nothing.\n" << vprDEBUG_FLUSH;
          }
 
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -246,7 +246,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
       for ( unsigned i=0; i<mChunks.size(); ++i )
       {
-         vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:"
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL) << "Chunk:"
                                     << mChunks[i]->getName()
                                     << "\n\tDepends on:\n"
                                     << vprDEBUG_FLUSH;
@@ -256,14 +256,14 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
          {
             for ( unsigned j=0; j<deps.size(); j++ )
             {
-               vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": "
+               vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL) << "   " << j << ": "
                                           << deps[j].c_str()
                                           << std::endl << vprDEBUG_FLUSH;
             }
          }
          else
          {
-            vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL) << "   Nothing.\n" << vprDEBUG_FLUSH;
          }
       }
 

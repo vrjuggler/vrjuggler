@@ -41,18 +41,18 @@ SimAnalog::SimAnalog()
    : mAnaStep(0.0f)
    , mInitialValue(0.0f)
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 /** Destructor */
 SimAnalog::~SimAnalog()
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::config()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Analog::config(chunk) && SimInput::config(chunk)))
       return false;
 
@@ -91,7 +91,7 @@ bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
 
 void SimAnalog::updateData()
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::updateData()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::updateData()\n"<< vprDEBUG_FLUSH;
 
    // Make an list of the data that will be normalized
    std::vector<AnalogData> norm_data(mAnaData.size());

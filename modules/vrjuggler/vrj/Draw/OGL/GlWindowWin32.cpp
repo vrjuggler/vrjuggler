@@ -85,7 +85,7 @@ int GlWindowWin32::open()
    // a titlebar and a border.
    if ( border )
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, 5) << "attempting to give window a border"
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to give window a border"
          << std::endl << vprDEBUG_FLUSH;
       style |= WS_OVERLAPPEDWINDOW;
    }
@@ -93,7 +93,7 @@ int GlWindowWin32::open()
    // the thin-line border.
    else
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, 5) << "attempting to make window borderless"
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to make window borderless"
          << std::endl << vprDEBUG_FLUSH;
       style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
    }
@@ -289,8 +289,9 @@ void GlWindowWin32::configWindow( vrj::Display* disp )
           mXDisplayName = std::string( d );
        }
    }
-   vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
-                             << mXDisplayName << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "glxWindow::config: display name is: "
+      << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
    bool was_i_a_keyboard = mAreEventSource;
    mAreEventSource = displayChunk->getProperty<bool>("act_as_event_source");

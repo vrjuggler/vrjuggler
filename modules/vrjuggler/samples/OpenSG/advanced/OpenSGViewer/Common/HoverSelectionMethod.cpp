@@ -162,7 +162,7 @@ void HoverSelectionMethod::updateSelection()
       {
          if(does_isect)
          {
-            vprDEBUG(vprDBG_ALL, 1) << "GrabController: Intersection with object: " << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "GrabController: Intersection with object: " << std::endl << vprDEBUG_FLUSH;
 
             mSelectionState = IsHighlighted;            
             mSelectStateChanged = true;   // Now in selected state

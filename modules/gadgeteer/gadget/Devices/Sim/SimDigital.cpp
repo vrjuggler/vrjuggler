@@ -40,18 +40,18 @@ namespace gadget
 /** Default Constructor */
 SimDigital::SimDigital()
 {
-   vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::SimDigital()\n"<< vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
 /** Destructor */
 SimDigital::~SimDigital()
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
 bool SimDigital::config(jccl::ConfigChunkPtr chunk)
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::config()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))
       return false;
 
@@ -74,7 +74,7 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
  */
 void SimDigital::updateData()
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::updateData()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::updateData()\n"<< vprDEBUG_FLUSH;
    std::vector<DigitalData>  digital_data_sample(mSimKeys.size());   // The digital data that makes up the sample
 
    // -- Update digital data --- //

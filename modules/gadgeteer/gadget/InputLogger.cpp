@@ -190,7 +190,7 @@ void InputLogger::process()
 */
 void InputLogger::startRecording()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "\n--- LOGGER: startRecording ---\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "\n--- LOGGER: startRecording ---\n" << vprDEBUG_FLUSH;
 
    // -- Get recording filename
    std::cout << "/n/n------- LOGGER ------\nEnter log filename:" << std::flush;
@@ -210,8 +210,8 @@ void InputLogger::startRecording()
 
 void InputLogger::stopRecording()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "\n--- LOGGER: stopRecording ---\n" << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "Done recording\n"
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "\n--- LOGGER: stopRecording ---\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Done recording\n"
                                     << "Saving data to: " << mRecordingFilename << std::endl << vprDEBUG_FLUSH;
 
    // Compress the data before saving
@@ -312,7 +312,7 @@ void InputLogger::load(std::string logFilename)
    }
 #endif
 
-   vprDEBUG(vprDBG_ALL,0) << "InputLogger: Loaded file: num_samples:" << mRootNode->getChildren().size() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "InputLogger: Loaded file: num_samples:" << mRootNode->getChildren().size() << std::endl << vprDEBUG_FLUSH;
 }
 
 /* Start playing
@@ -328,7 +328,7 @@ void InputLogger::play()
 
    if(mRootNode.get() == NULL)
    {
-      vprDEBUG(vprDBG_ALL,0) << "Logger::play: Null root node, so can't play.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Logger::play: Null root node, so can't play.\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -338,7 +338,7 @@ void InputLogger::play()
 
    if(mNextSample_i == mEndSample_i)
    {
-      vprDEBUG(vprDBG_ALL,0) << "Logger::play: Zero children, so can't play.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Logger::play: Zero children, so can't play.\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -472,7 +472,7 @@ void InputLogger::playNextSample()
       {
          mActiveStamp = (*mNextSample_i)->getAttribute("id").getValue<std::string>();
          mNextSample_i++;
-         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Got stamp: [" << mActiveStamp << "]\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Logger: Got stamp: [" << mActiveStamp << "]\n" << vprDEBUG_FLUSH;
       }
    }
 
@@ -480,7 +480,7 @@ void InputLogger::playNextSample()
    {
       mCurState = Inactive;
       mSleepFramesLeft = 10;     // Wait 10 frames until we start processing anything again
-      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Done playing.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Logger: Done playing.\n" << vprDEBUG_FLUSH;
    }
 
 }

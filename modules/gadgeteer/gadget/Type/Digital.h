@@ -80,7 +80,7 @@ namespace gadget
       /* Constructor/Destructors */
       Digital()
       {
-         //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::Digital()\n"<< vprDEBUG_FLUSH;
+         //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** Digital::Digital()\n"<< vprDEBUG_FLUSH;
       }
 
       virtual ~Digital()
@@ -90,7 +90,7 @@ namespace gadget
       virtual bool config(jccl::ConfigChunkPtr c)
       {
          boost::ignore_unused_variable_warning(c);
-         //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
+         //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
          return true;
       }
 

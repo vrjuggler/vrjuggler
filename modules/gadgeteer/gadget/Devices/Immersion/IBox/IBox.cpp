@@ -72,8 +72,9 @@ bool IBox::config(jccl::ConfigChunkPtr c)
    if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
       return false;
 
-   vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
-                                  << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "   IBox::config:" << std::endl
+      << vprDEBUG_FLUSH;
    mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
 

@@ -58,12 +58,12 @@ int main (int argc, char **argv)
     timeval cur_time;
     vpr::System::gettimeofday(&cur_time);
     random_seed = cur_time.tv_usec;
-    vprDEBUG(vprDBG_ALL,0) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
 #else
     random_seed = 1;                // Use this for repeatability
 #endif
 
-   vprDEBUG(vprDBG_ALL,0) << " Random seed: " << random_seed << std::endl
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << " Random seed: " << random_seed << std::endl
                           << vprDEBUG_FLUSH;
 
    srandom(random_seed);

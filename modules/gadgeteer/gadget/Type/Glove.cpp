@@ -199,7 +199,7 @@ std::istream& GloveData::inputAngles(std::istream& in)
 ////////////////////////////////////////////////////////////////////////
 Glove::Glove()
 {
-   //vprDEBUG(gadgetDBG_INPUT_MGR,3)<<"*** Glove::Glove()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)<<"*** Glove::Glove()\n"<< vprDEBUG_FLUSH;
 
    for(int i=0;i<GADGET_MAX_GLOVE_DEVS;i++)
       mGlovePos[i] = NULL;
@@ -280,7 +280,7 @@ gmtl::Matrix44f Glove::getGlovePos(GloveData::GloveComponent component, int devN
    }
    else
    {
-      vprDEBUG( gadgetDBG_INPUT_MGR,0)
+      vprDEBUG( gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:")
          << " Glove: Trying to get a glove without a position proxy set for device number: "
          << devNum << ".\n" << vprDEBUG_FLUSH;

@@ -190,7 +190,7 @@ void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
 
    }
    else
-      vprDEBUG(gadgetDBG_INPUT_MGR,4) << "SimPos hit a surface.\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL) << "SimPos hit a surface.\n"
                                       << vprDEBUG_FLUSH;
 
 }

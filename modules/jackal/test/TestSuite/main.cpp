@@ -17,8 +17,8 @@
 
 int main (int ac, char **av)
 {
-   vprDEBUG(vprDBG_ALL,0) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
 
     // Init random number generation
     unsigned int random_seed;
@@ -27,12 +27,12 @@ int main (int ac, char **av)
     timeval cur_time;
     vpr::System::gettimeofday(&cur_time);
     random_seed = cur_time.tv_usec;
-    vprDEBUG(vprDBG_ALL,0) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
 #else
     random_seed = 1;                // Use this for repeatability
 #endif
 
-    vprDEBUG(vprDBG_ALL,0) << " Random seed: " << random_seed << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << " Random seed: " << random_seed << std::endl << vprDEBUG_FLUSH;
 
     srandom(random_seed);
     srand(random_seed);

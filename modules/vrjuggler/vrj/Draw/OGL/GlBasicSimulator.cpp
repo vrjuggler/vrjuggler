@@ -85,7 +85,7 @@ bool GlBasicSimulator::config(jccl::ConfigChunkPtr chunk)
 
    if(!mCamera.isConnected())
    {
-      vprDEBUG(vprDBG_ERROR,0)
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
          << "GlBasicSimulator:: Fatal Error: Camera not found named: "
          << camera_proxy_str.c_str() << vprDEBUG_FLUSH;
@@ -133,10 +133,10 @@ void GlBasicSimulator::updateProjectionData(const float positionScale,
    gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
    // -- Calculate camera (eye) Positions -- //
-   vprDEBUG(vprDBG_ALL,7)
+   vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
       << "vjDisplay::updateProjections: Getting cam position" << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,7) << "CamPos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL) << "CamPos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
    // Compute location of left and right eyes
    float interocular_dist = mSimViewport->getUser()->getInterocularDistance();
@@ -323,7 +323,7 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
 
       bool use_lighting_in_sim = (lighting_on == GL_TRUE);
 
-      //vprDEBUG(vprDBG_ALL,0) << "lighting on: " << ((lighting_on == GL_TRUE)?"Y":"N")
+      //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "lighting on: " << ((lighting_on == GL_TRUE)?"Y":"N")
       //                       << "  light0_on:" << ((light0_on == GL_TRUE)?"Y":"N") << std::endl << vprDEBUG_FLUSH;
 
       //-----------------set up materials....

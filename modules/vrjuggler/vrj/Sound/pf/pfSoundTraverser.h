@@ -194,7 +194,7 @@ protected:
 
          // unpause the sound, unmute it too
          sonix::instance()->trigger( nodeName );
-         vprDEBUG(vprDBG_ALL,0) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
             << "Setting the " << nodeName
             << " sound to <triggered>\n" << vprDEBUG_FLUSH;
       }
@@ -225,7 +225,7 @@ protected:
          // unpause the sound, unmute it too
          sonix::instance()->stop( nodeName );
 
-         vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"[SoundStop] ")
             << "Setting the " << nodeName
             << " sound to <stopped>\n" << vprDEBUG_FLUSH;
       }
@@ -256,7 +256,7 @@ protected:
          // unpause the sound, unmute it too
          sonix::instance()->unpause( nodeName );
 
-         vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
             << "Setting the " << nodeName
             << " sound to <enabled>\n" << vprDEBUG_FLUSH;
       }
@@ -287,7 +287,7 @@ protected:
          // pause the sound, mute it too in case it is triggered again
          sonix::instance()->pause( nodeName );
 
-         vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
             << "Setting the " << nodeName
             << " sound to <disabled>\n" << vprDEBUG_FLUSH;
       }

@@ -288,7 +288,7 @@ void OpenSGGrabController::updateHighlightGeom(void)
 void OpenSGGrabController::initSelectionGeom()
 {
    vprASSERT(mInitialized == false && "Tried to initialize twice");
-   vprDEBUG(dspaceCNTRL, 1) << "OSGGrabController: Intializing selection geom, for entity: "
+   vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "OSGGrabController: Intializing selection geom, for entity: "
                            << getEntity()->getName() << std::endl << vprDEBUG_FLUSH;
 
    mInitialized = true;

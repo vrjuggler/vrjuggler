@@ -91,19 +91,19 @@ int main(void)
       std::cerr << std::setw(5) << vpr::Thread::self() << "P1: Before Trigger"
                 << std::endl;
 
-         vprDEBUG(vprDBG_ALL, 0) << "main: trigger\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "main: trigger\n" << vprDEBUG_FLUSH;
       syncer.trigger();    // Trigger the beginning of frame drawing
-         vprDEBUG(vprDBG_ALL, 3) << "main: trigger done\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "main: trigger done\n" << vprDEBUG_FLUSH;
 
       std::cerr << std::setw(5) << vpr::Thread::self() << "P1: Between"
                 << std::endl;
 
-         vprDEBUG(vprDBG_ALL, 0) << "main: sync up\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "main: sync up\n" << vprDEBUG_FLUSH;
       syncer.sync();    // Block until drawing is done
-         vprDEBUG(vprDBG_ALL, 0) << "main: sync done\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "main: sync done\n" << vprDEBUG_FLUSH;
       
       syncer.decValue();
-      vprDEBUG(vprDBG_ALL, 0) << "VAL: " << syncer.getValue() << std::endl
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "VAL: " << syncer.getValue() << std::endl
                             << vprDEBUG_FLUSH;
    }
 
@@ -124,7 +124,7 @@ int SyncIncrementer::start()
 
    vpr::Thread* control_thread = new vpr::Thread(memberFunctor);
 
-   vprDEBUG(vprDBG_ALL, 0) << "SyncIncrementer::start: Just started main loop.  "
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SyncIncrementer::start: Just started main loop.  "
                            << control_thread << std::endl << vprDEBUG_FLUSH;
 
    return 1;
@@ -142,7 +142,7 @@ void SyncIncrementer::trigger()
 
       go = true;          // Signal that rendering can happen
       syncCond.signal();
-         vprDEBUG(vprDBG_ALL, 0) << "Trigger signaled\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Trigger signaled\n" << vprDEBUG_FLUSH;
          //syncCond.dump();
    }
    syncCond.release();
@@ -160,7 +160,7 @@ void SyncIncrementer::sync()
          syncCond.wait();
       }
       /* Do nothing */
-         vprDEBUG(vprDBG_ALL, 0) << "Sync: Completed. trigger == false\n"
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Sync: Completed. trigger == false\n"
                                  << vprDEBUG_FLUSH;
          //syncCond.dump();
       std::cerr << std::setw(5) << vpr::Thread::self() << "  P1: Exit wait"
@@ -176,7 +176,7 @@ void SyncIncrementer::main(void* nullParam) {
    {
       syncCond.acquire();
       {
-         vprDEBUG(vprDBG_ALL, 0) << "Wait for trigger\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Wait for trigger\n" << vprDEBUG_FLUSH;
          
          // Wait for trigger == true
          while (go == false)
@@ -190,11 +190,11 @@ void SyncIncrementer::main(void* nullParam) {
                    << std::endl;
          //syncCond.dump();
          // THEN --- Do Work --- //
-         vprDEBUG(vprDBG_ALL, 0) << "Incrementing\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Incrementing\n" << vprDEBUG_FLUSH;
 	
          incValue();
 
-         vprDEBUG(vprDBG_ALL, 0) << "Var Incremented - Set trigger FALSE and SIGNAL\n"
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Var Incremented - Set trigger FALSE and SIGNAL\n"
                                  << vprDEBUG_FLUSH;
 
          go = false;   // We are done rendering

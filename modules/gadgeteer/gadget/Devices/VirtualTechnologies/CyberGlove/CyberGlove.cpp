@@ -77,7 +77,7 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
    std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
          << std::endl << vprDEBUG_FLUSH;
       return false;
@@ -92,7 +92,7 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
    }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:")
          << " CyberGlove::CyberGlove: Can't find posProxy."
          << std::endl << std::endl << vprDEBUG_FLUSH;
@@ -140,7 +140,7 @@ void CyberGlove::controlLoop(void* nullParam)
    // Open the port and run with it
    if(mGlove->open() == 0)
    {
-     vprDEBUG(gadgetDBG_INPUT_MGR,0)
+     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
         << clrOutNORM(clrRED, "ERROR:")
         << " Can't open Cyberglove or it is already opened.\n"
         << vprDEBUG_FLUSH;

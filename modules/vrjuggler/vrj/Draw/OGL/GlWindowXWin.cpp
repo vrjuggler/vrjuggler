@@ -82,7 +82,7 @@ int GlWindowXWin::open()
    ::XClassHint *classhint;
    unsigned long event_mask(0);    // Event masks to use
 
-   vprDEBUG(vrjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "glxWindow: Open window\n" << vprDEBUG_FLUSH;
 
    if ( window_is_open )
       return true;
@@ -201,7 +201,7 @@ int GlWindowXWin::open()
     */
    if ( !border )
    {
-      vprDEBUG(vrjDBG_DRAW_MGR,5) << "attempting to make window borderless"
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to make window borderless"
          << std::endl << vprDEBUG_FLUSH;
       Atom MotifHints = XInternAtom(mXDisplay, "_MOTIF_WM_HINTS", 0);
       if ( MotifHints == None )
@@ -229,7 +229,7 @@ int GlWindowXWin::open()
    ::XIfEvent(mXDisplay, &fooevent, EventIsMapNotify, (XPointer)mXWindow);
    ::XSync(mXDisplay, 0);
 
-   vprDEBUG(vrjDBG_DRAW_MGR,4) << "vrj::GlWindowXWin: done mapping window\n"
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vrj::GlWindowXWin: done mapping window\n"
                                << vprDEBUG_FLUSH;
 
    /********************* OpenGL Context Stuff *********************/
@@ -362,7 +362,7 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
          mXDisplayName = std::string( d );
       }
    }
-   vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "glxWindow::config: display name is: "
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
    mAreEventSource = displayChunk->getProperty<bool>("act_as_event_source");

@@ -101,7 +101,7 @@ public:
       mHomePos = pos;
       gmtl::Vec3f hpos;
       gmtl::setTrans( hpos, mHomePos );
-      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
                            << hpos << std::endl << vprDEBUG_FLUSH;
     }
 

@@ -248,7 +248,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array
    mKeys[gadget::MOUSE_NEGY] = int(float(mKeys[gadget::MOUSE_NEGY]) * mMouseSensitivity);
 
    /*
-   vprDEBUG(vprDBG_ALL,0)
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "gadget::EventWindowXWin::updateData:" << mInstName << " -- "
       << "mouse_keys: px:" << mKeys[gadget::MOUSE_POSX]
       << " nx:" << mKeys[gadget::MOUSE_NEGX]
@@ -1031,14 +1031,16 @@ void EventWindowXWin::setHints(Window window, char* window_name,
 
    if(0 == status)
    {
-      vprDEBUG(vprDBG_ALL, 0) << "Error allocating XString\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << "Error allocating XString\n" << vprDEBUG_FLUSH;
    }
 
    status = XStringListToTextProperty(&icon_name, 1, &i_name);
 
    if(0 == status)
    {
-      vprDEBUG(vprDBG_ALL, 0) << "Error allocating XString\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << "Error allocating XString\n" << vprDEBUG_FLUSH;
    }
 
    sizehints.width       = mWidth;    /* -- Obsolete in R4 */
