@@ -71,15 +71,6 @@ public:
    // memory managed by engine
    virtual vjSound* newSound();
 
-   // get the manager's soundengine
-   vjSoundEngine* engine()
-   {
-      return mSoundEngine;
-   }   
-   
-   // TODO make protected...
-   vjSoundEngine* mSoundEngine;
-
    /*
    vjSound stubSound;
    vjSound* sound( vjSoundHandle* handle )
@@ -95,6 +86,12 @@ public:
    }*/
    
 public:
+   // get the manager's soundengine
+   vjSoundEngine* engine()
+   {
+      return mSoundEngine;
+   }
+   
    //: Get instance of singleton object
    static vjSoundManager* instance()
    {
@@ -109,6 +106,7 @@ protected:
 
 private:
    static vjSoundManager* _instance;   //: The instance
+   vjSoundEngine* mSoundEngine;
 };
 
 #endif   /* _VJ_SOUND_MANAGER_H_ */

@@ -52,31 +52,29 @@ bool vjSoundManager::configAdd(vjConfigChunk* chunk)
       return false;
    }
 
-   if (mSoundEngine != NULL)
+   if (mSoundEngine == NULL)
    {
-      //TODO: add to it
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrMAGENTA,"WARNING:")
-                                          << "Trying to configure sound manager when we already have one configured.\n" << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   // Allocate new engine, configure it, init it
-   mSoundEngine = vjSoundFactory::instance()->loadEngine(chunk);
-   if(mSoundEngine != NULL)
-   {
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"SUCCESS:")
-                                          << "Initializing SoundEngine\n" << vjDEBUG_FLUSH;
-      
-      mSoundEngine->init();         // Initialize the new puppy *woof*
-      return true;
+      // if not created yet, create it, adding the first config.
+      mSoundEngine = vjSoundFactory::instance()->loadEngine(chunk);
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"vjSoundEngine:") << " created and added config" << "\n" << vjDEBUG_FLUSH;
    }
    else
+   {
+      // if already created, then add to it.
+      mSoundEngine->config( chunk );
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"vjSoundEngine:")  << " Added config." << "\n" << vjDEBUG_FLUSH;
+   
+   }   
+
+   if(mSoundEngine == NULL)
    {
       vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
                << clrOutNORM(clrRED,"ERROR:")
                << "Failed to load sound engine\n" << vjDEBUG_FLUSH;
       return false;
    }
+   
+   return true;
 }
 
 //: Remove the chunk from the current configuration
