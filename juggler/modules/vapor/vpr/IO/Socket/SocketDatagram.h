@@ -95,22 +95,6 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    recvfrom (unsigned char* msg, const size_t len, const int flags,
-              InetAddr& from)
-    {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    recvfrom (char* msg, const size_t len, const int flags, InetAddr& from) {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
     recvfrom (std::vector<char>& msg, const int flags, InetAddr& from) {
         return m_socket_dgram_imp.recvfrom(msg, flags, from);
     }
@@ -128,24 +112,6 @@ public:
     // ------------------------------------------------------------------------
     inline virtual ssize_t
     sendto (const void* msg, const size_t len, const int flags,
-            const InetAddr& to)
-    {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    sendto (const unsigned char* msg, const size_t len, const int flags,
-            const InetAddr& to)
-    {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    sendto (const char* msg, const size_t len, const int flags,
             const InetAddr& to)
     {
         return m_socket_dgram_imp.sendto(msg, len, flags, to);

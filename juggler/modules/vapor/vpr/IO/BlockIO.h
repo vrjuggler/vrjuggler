@@ -238,46 +238,6 @@ public:
     //+       device, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer (an array of unsigned chars)
-    //+                where the device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual ssize_t read(unsigned char* buffer, const size_t length) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Read at most the specified number of bytes from the I/O device into
-    //+ the given buffer.
-    //
-    //! PRE: The device is open for reading, and the buffer is at least length
-    //+      bytes long.
-    //! POST: The given buffer has length bytes copied into it from the
-    //+       device, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer (an array of chars) where the
-    //+                device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual ssize_t read(char* buffer, const size_t length) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Read at most the specified number of bytes from the I/O device into
-    //+ the given buffer.
-    //
-    //! PRE: The device is open for reading, and the buffer is at least length
-    //+      bytes long.
-    //! POST: The given buffer has length bytes copied into it from the
-    //+       device, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
     //! ARGS: buffer - A reference to the buffer (a std::string object) where
     //+                the device's buffer contents are to be stored.
     //! ARGS: length - The number of bytes to be read.  This is optional and
@@ -332,46 +292,6 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual ssize_t readn(void* buffer, const size_t length) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the I/O device into
-    //+ the given buffer.
-    //
-    //! PRE: The device is open for reading, and the buffer is at least length
-    //+      bytes long.
-    //! POST: The given buffer has length bytes copied into it from the
-    //+       device, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer (an array of unsigned chars)
-    //+                where the device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual ssize_t readn(unsigned char* buffer, const size_t length) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the I/O device into
-    //+ the given buffer.
-    //
-    //! PRE: The device is open for reading, and the buffer is at least length
-    //+       bytes long.
-    //! POST: The given buffer has length bytes copied into it from the
-    //+       device, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer (an array of chars) where the
-    //+                device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual ssize_t readn(char* buffer, const size_t length) = 0;
 
     // ------------------------------------------------------------------------
     //: Read exactly the specified number of bytes from the I/O device into
@@ -433,40 +353,6 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual ssize_t write(const void* buffer, const size_t length) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the I/O device.
-    //
-    //! PRE: The device is open for writing.
-    //! POST: The given buffer is written to the I/O device, and the number of
-    //+       bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer (an array of unsigned chars) to
-    //+                be written.
-    //! ARGS: length - The length of the buffer.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully written to the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when writing.
-    // ------------------------------------------------------------------------
-    virtual ssize_t write(const unsigned char* buffer, const size_t length) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the I/O device.
-    //
-    //! PRE: The device is open for writing.
-    //! POST: The given buffer is written to the I/O device, and the number of
-    //+       bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer (an array of chars) to be
-    //+                written.
-    //! ARGS: length - The length of the buffer.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully written to the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when writing.
-    // ------------------------------------------------------------------------
-    virtual ssize_t write(const char* buffer, const size_t length) = 0;
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the I/O device.

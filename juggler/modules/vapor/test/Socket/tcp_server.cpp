@@ -51,7 +51,7 @@ main (int argc, char* argv[]) {
 
         while ( 1 ) {
             client_sock = sock.accept();
-            client_sock->send(buffer, sizeof(buffer));
+            client_sock->write(buffer, sizeof(buffer));
             delete client_sock;
         }
 

@@ -56,7 +56,7 @@ main (int argc, char* argv[]) {
         if ( sock->connect() ) {
             ssize_t bytes;
 
-            bytes = sock->recv(buffer, 40);
+            bytes = sock->read(buffer, 40);
 
             if ( bytes > 0 ) {
                 printf("Read %d bytes from server\n", bytes);

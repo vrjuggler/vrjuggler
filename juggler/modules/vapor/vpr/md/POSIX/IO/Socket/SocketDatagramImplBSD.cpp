@@ -111,24 +111,6 @@ SocketDatagramImpBSD::recvfrom (void* msg, const size_t len,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 ssize_t
-SocketDatagramImpBSD::recvfrom (unsigned char* msg, const size_t len,
-                                const int flags, InetAddr& from)
-{
-    return recvfrom((void*) msg, len, flags, from);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::recvfrom (char* msg, const size_t len,
-                                const int flags, InetAddr& from)
-{
-    return recvfrom((void*) msg, len, flags, from);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
 SocketDatagramImpBSD::recvfrom (std::vector<char>& msg, const int flags,
                                 InetAddr& from)
 {
@@ -179,24 +161,6 @@ SocketDatagramImpBSD::sendto (const void* msg, const size_t len,
     }
 
     return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::sendto (const unsigned char* msg, const size_t len,
-                              const int flags, const InetAddr& to)
-{
-    return sendto((void*) msg, len, flags, to);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::sendto (const char* msg, const size_t len,
-                              const int flags, const InetAddr& to)
-{
-    return sendto((void*) msg, len, flags, to);
 }
 
 // ----------------------------------------------------------------------------
