@@ -377,12 +377,12 @@ case $target_os in
         fi
 
         AR='${CXX}'
-        ARFLAGS='-J6 -ar -WR,-v -o'
+        ARFLAGS='-LANG:std -J6 -ar -WR,-v -o'
         CXXFLAGS="$CXXFLAGS -LANG:std"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
-        LDOPTS="$LDOPTS -all ${_LD_REGOPTS} -elf -rdata_shared"
+        LDOPTS="$LDOPTS -LANG:std -all ${_LD_REGOPTS} -elf -rdata_shared"
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
