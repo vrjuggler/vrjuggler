@@ -240,9 +240,9 @@ int vjDisplayManager::closeDisplay(vjDisplay* disp, bool notifyDrawMgr)
 
    // Remove it from local data structures
    unsigned int num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
-   mActiveDisplays.erase( std::remove(mActiveDisplays.begin(), mActiveDisplays.end(), disp), 
+   mActiveDisplays.erase( std::remove(mActiveDisplays.begin(), mActiveDisplays.end(), disp),
                           mActiveDisplays.end());
-   mInactiveDisplays.erase( std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp), 
+   mInactiveDisplays.erase( std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp),
                             mInactiveDisplays.end());
    vjASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
 

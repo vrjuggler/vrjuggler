@@ -62,17 +62,21 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
 
 void vjDependencyManager::debugDump()
 {
-   vjDEBUG_BEGIN(vjDBG_KERNEL,0) << "vjDepChecker::debugDump\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_KERNEL,0) << "num checkers:" << mDepCheckers.size() << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_KERNEL, vjDBG_CONFIG_LVL) << "vjDepChecker::debugDump\n" << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
+      << "This is a list of all the dependency checkers currently registered with the dependencyManager.\n" << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "num checkers:" << mDepCheckers.size() << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" << vjDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mDepCheckers.size();cNum++)
    {
       vjDepChecker* checker = mDepCheckers[cNum];
-      vjDEBUG(vjDBG_KERNEL,0) << cNum << ": Checker:" << (void*)checker
-                 << "   type:" << typeid(*checker).name() << "\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_KERNEL,0) << "   recog:" << checker->getCheckerName().c_str() << "\n" << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
+                 << cNum << ": Checker:" << (void*)checker
+                 << "   type:" << typeid(*checker).name()
+                 << "   recog:" << checker->getCheckerName().c_str() << "\n" << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_KERNEL,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;
 }
 

@@ -51,6 +51,7 @@
 #include <Input/vjGlove/vjCyberGlove.h>
 #include <Input/vjGlove/vjPinchGlove.h>
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
+#include <Input/vjKeyboard/vjXWinKBDepChecker.h>
 #include <Input/vjPosition/logiclass.h>
 #include <Input/vjPosition/vjMotionStar.h>
 #else
@@ -71,6 +72,7 @@ vjDeviceConstructor<DEV>::vjDeviceConstructor()
 
 
 // Register all the devices that I know about
+//!NOTE: This should really be moved to dynamic library loading code.
 void vjDeviceFactory::hackLoadKnownDevices()
 {
    // NOTE: These will all given unused variable errors in compiling.
@@ -82,8 +84,8 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjSimGloveGesture>* sim_glove = new vjDeviceConstructor<vjSimGloveGesture>;
    //vjDeviceConstructor<vjSimKeyboardDigital>* sim_keyboard_digital = new vjDeviceConstructor<vjSimKeyboardDigital>;
    vjDeviceConstructor<vjSimRelativePosition>* sim_relative = new vjDeviceConstructor<vjSimRelativePosition>;
-   vjDeviceConstructor<vjSimDigitalGlove>* simpinch_glove = new vjDeviceConstructor<vjSimDigitalGlove>;
-   
+   vjDeviceConstructor<vjSimPinchGlove>* simpinch_glove = new vjDeviceConstructor<vjSimPinchGlove>;
+
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
    vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
@@ -91,6 +93,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
+   vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
 #else
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;

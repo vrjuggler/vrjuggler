@@ -219,6 +219,9 @@ protected:  // Helpers
    void assertIndexes()
    {
       vjASSERT((current != progress) && (current != valid) && (progress != valid));
+      vjASSERT((current >= 0) && (current <= 3));
+      vjASSERT((progress >= 0) && (progress <= 3));
+      vjASSERT((valid >= 0) && (valid <= 3));
    }
 
 protected:

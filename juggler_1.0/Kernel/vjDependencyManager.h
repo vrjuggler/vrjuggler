@@ -51,17 +51,21 @@ private:
    {
       mDepCheckers = std::vector<vjDepChecker*>(0);
       vjASSERT(mDepCheckers.size() == 0);
+      debugDump();
    }
 
 public:
+   // Called to register a new checker with the system
    void registerChecker(vjDepChecker* checker)
    {
       vjASSERT(checker != NULL);
-      mDepCheckers.push_back(checker);     // Add the constructor to the list
-      vjDEBUG(vjDBG_KERNEL,1) << "vjDependencyManager::registerChecker: Checker registered: "
+      mDepCheckers.push_back(checker);          // Add the checker to the list
+      vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
+              << "vjDependencyManager::registerChecker: Checker registered: "
               << checker->getCheckerName().c_str()
               << "   :" << (void*)checker
               << " type:" << typeid(*checker).name() << endl << vjDEBUG_FLUSH;
+      debugDump();
    }
 
    //: Are the dependencies satisfied for the given chunk?
@@ -88,7 +92,6 @@ private:
    vjDepChecker* findDepChecker(vjConfigChunk* chunk);
 
    void debugDump();
-
 
 private:
    std::vector<vjDepChecker*> mDepCheckers;     //: List of the device constructors
