@@ -50,5 +50,5 @@ java:
 	$(ANT)
 
 clean:
-	rmdir /S /Q jccl
+	-rmdir /S /Q jccl
 	$(ANT) clean
