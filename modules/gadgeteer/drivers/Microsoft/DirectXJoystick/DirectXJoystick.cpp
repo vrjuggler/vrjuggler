@@ -65,18 +65,11 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-/** Constructor. */
 DirectXJoystick::DirectXJoystick()
    : mActive(false)
 {
 }
 
-/**
- * Destructor.
- *
- * @pre None.
- * @post Shared memory is released.
- */
 DirectXJoystick::~DirectXJoystick()
 {
    stopSampling();
@@ -87,9 +80,6 @@ std::string DirectXJoystick::getElementType()
    return "directx_joystick";
 }
 
-/**
- * config 
- */
 bool DirectXJoystick::config(jccl::ConfigElementPtr e)
 {
    if(! (Input::config(e) && Digital::config(e) && Analog::config(e)))
@@ -186,10 +176,8 @@ bool DirectXJoystick::startSampling()
    return true;
 }
 
-/**
- * Stops sampling.
- * Drop connection to joystick and clear everything.
- */
+// Stops sampling.
+// Drop connection to joystick and clear everything.
 bool DirectXJoystick::stopSampling()
 {
    if ( mActive )
@@ -201,12 +189,7 @@ bool DirectXJoystick::stopSampling()
    return true;
 }
 
-/**
- * Updates to the sampled data.
- *
- * @pre None.
- * @post Most recent value is copied over to temp area.
- */
+// Updates to the sampled data.
 void DirectXJoystick::updateData()
 {
    if ( mInputDrv.poll() )
