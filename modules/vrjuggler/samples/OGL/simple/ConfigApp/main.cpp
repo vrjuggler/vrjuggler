@@ -71,5 +71,8 @@ int main(int argc, char* argv[])
    // Keep thread alive and waiting
    kernel->waitForKernelStop();
 
+   // Destory the application
+   delete app;
+
    return 0;
 }
