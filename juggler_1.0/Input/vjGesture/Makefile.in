@@ -1,6 +1,8 @@
 # -----------------------------------------------------------------------------
 # Makefile.in for juggler/Input/vjGesture.  It requires GNU make.
 # $Id$
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
 default: all

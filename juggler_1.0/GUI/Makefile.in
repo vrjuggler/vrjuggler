@@ -1,6 +1,8 @@
 # -----------------------------------------------------------------------------
 # Makefile.in for juggler/GUI.  It requires GNU make.
 # $Id$
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
 default: VjControl.jar
