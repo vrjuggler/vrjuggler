@@ -197,26 +197,7 @@ public:
     //! RETURNS: 0 - Not locked
     //! RETURNS: 1 - Locked
     // -----------------------------------------------------------------------
-    inline int
-    test (void) {
-        int ret_val;
-
-        ret_val = pthread_mutex_trylock(mMutex);
-
-        // The mutex is not currently locked if ret_val is 0.
-        if ( ret_val == 0 ) {
-            return 1;
-        }
-        // If the return value from pthread_mutex_trylock() is 1, then this
-        // process now has a lock on mutex.  Therefore, no other process
-        // could have held a lock on it, so unlock mutex and return 0.
-        else if ( ret_val == 1 ) {
-            pthread_mutex_unlock(mMutex);
-            return 0;
-        }
-
-        return ret_val;
-    }
+    int test(void);
 
     // -----------------------------------------------------------------------
     //: Dump the mutex debug stuff and current state.
@@ -240,9 +221,8 @@ public:
     }
 
 
-// Allow the  vjCondPosix class to access the private and protected members
-// of this class.  Specifically, direct access is needed to the mutex
-// variable.
+// Allow the vjCondPosix class to access the private and protected members of
+// this class.  Specifically, direct access is needed to the mutex variable.
 friend class  vjCondPosix;
 
 protected:
@@ -252,5 +232,6 @@ protected:
     void operator= (const vjMutexPosix &) {}
     vjMutexPosix (const vjMutexPosix &) {}
 };
+
 
 #endif	/* ifdef _VJ_MUTEX_POSIX_H_ */
