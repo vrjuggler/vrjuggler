@@ -1,13 +1,17 @@
 #ifndef _VJ_SIM_GLOVE_GESTURE_H_
 #define _VJ_SIM_GLOVE_GESTURE_H_
 
+#include <Input/vjGesture/vjGloveGesture.h>
+#include <Input/vjGesture/vjGesture.h>
+#include <Input/vjSim/vjSimInput.h>
+
 
 //: Simulated glove class
 //
 // This class simulates a gesture input device
 //
 // By default the glove is in gesture 0
-class vjSimGloveGesture : public vjGesture, public vjGlove, public vjSimInput
+class vjSimGloveGesture : public vjGloveGesture, public vjGlove, public vjSimInput
 {
 public:
    //: Construct a vjSimGloveGesture
@@ -44,5 +48,5 @@ private:
    int                     mCurGesture;   //: The current gesture id
 };
 
+#endif
 
-#endif	/* _VJ_SIM_GLOVE_GESTURE_H_ */

@@ -16,7 +16,7 @@
 // Has the common routines for accessing and seting
 // up keyboard interface
 //
-public class vjSimInput
+class vjSimInput
 {
 protected:
    class vjKeyModPair
@@ -24,10 +24,10 @@ protected:
    public:
       int mKey;
       int mModifier;
-   }
+   };
 
 public:
-   void  vjSimInput(vjConfigChunk* chunk);
+   vjSimInput(vjConfigChunk* chunk);
 
 protected:
    //: Check the given keypair
@@ -42,6 +42,7 @@ protected:
 
 private:
    vjKeyboardInterface mKeyboard;
-}
+};
 
-#endif	/* _VJ_SIM_INPUT_H */
+#endif
+
