@@ -75,7 +75,7 @@ namespace cluster
    
    vpr::ReturnStatus DataPacket::send(vpr::SocketStream* socket)
    {
-      vprASSERT("YOU SHOULD NOT BE USING THIS SEND FUNCTION");
+      vprASSERT(false && "YOU SHOULD NOT BE USING THIS SEND FUNCTION");
       return(vpr::ReturnStatus::Fail);
    }
 
