@@ -66,7 +66,7 @@ CyberGloveBasic::CyberGloveBasic (char* calFileDir, char *serport, int baud)
       std::cerr << "Invalid calibration file specified" << std::endl;
 
    mBaudRate = baud;
-};
+}
 
 CyberGloveBasic::~CyberGloveBasic ()
 {
@@ -171,7 +171,7 @@ CYBER_GLOVE_DATA* CyberGloveBasic::getData()
 //      for (i = 0; i < MAX_SENSOR_GROUPS; i++)
 //  joints[i] = (hand->joint_angle[i]);
 //      return joints;
-//    };
+//    }
 
 
 matrix4x4 ** CyberGloveBasic::getDigitXForms ()
@@ -180,17 +180,17 @@ matrix4x4 ** CyberGloveBasic::getDigitXForms ()
    for (i = 0; i < 5; i++)
     xforms[i] = (hand->digit_xform[i]);
       return xforms;
-};
+}
 
 float CyberGloveBasic::getThumbRoll ()
 {
     return (DEG2RAD)*vt_calc_thumb_roll(hand);
-};
+}
 
 SurfaceModel CyberGloveBasic::getSurfaceModel()
 {
     return (hand->surface);
-};
+}
 
 volatile float * CyberGloveBasic::getStateVec()
 {
@@ -223,7 +223,7 @@ int CyberGloveBasic::getFingerState (int finger)
   hand->joint_angle[finger][1] < -0.35 */)
       return 1;
    return 0;
-};
+}
 
 
 void CyberGloveBasic::readSurfaceModel (int resolution, char *dir, char *name) {
