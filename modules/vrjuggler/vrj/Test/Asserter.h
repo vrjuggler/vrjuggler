@@ -26,6 +26,7 @@ namespace  Asserter
       if( shouldFail )
          fail(test,message,filename,linenum);
    }
+}
 
 } }
 
@@ -34,11 +35,10 @@ namespace  Asserter
  * \ingroup Assertions
  */
 #define VRJTEST_ASSERT(condition)                                                 \
-  ( vrj::test::Asserter::failIf( !(condition), this                               \
+  ( vrj::test::Asserter::failIf( !(condition), this,                              \
                                  vrj::test::Message( "assertion failed",          \
                                                       "Expression: " #condition), \
                                  __FILE__, __LINE__ ) )
-
 
 
 #endif
