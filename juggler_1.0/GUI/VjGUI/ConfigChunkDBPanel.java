@@ -228,7 +228,7 @@ add (centerpanel, "Center");
 	    core.fileio.saveUserConfigChunkDB();
 	}
 	else if (e.getSource() == loadbutton) {
-	    System.out.println ("loading file");
+	    //System.out.println ("loading file");
 	    core.fileio.loadUserConfigChunkDB();
 	}
 	else if (e.getSource() == insertbutton) {
@@ -250,7 +250,6 @@ add (centerpanel, "Center");
 	    }      
 	}
 	else if (e.getSource() == clearbutton) {
-	    System.out.println ("pressed clear");
 	    core.chunks.removeAll();
 	    updateList();
 	}

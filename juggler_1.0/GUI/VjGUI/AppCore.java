@@ -74,7 +74,7 @@ public class AppCore extends java.applet.Applet {
 		if (!core.noautoload) {
 		    core.fileio.loadBaseChunkDescDB();
 		    core.fileio.loadUserChunkDescDB();
-		    core.fileio.loadBaseConfigChunkDB();
+		    //core.fileio.loadBaseConfigChunkDB();
 		}
 	        for (i = 0; i < descfiles.size(); i++)
 		    core.fileio.loadUserChunkDescDB ((String)descfiles.elementAt(i));
@@ -101,12 +101,4 @@ public class AppCore extends java.applet.Applet {
     
     
 }
-
-
-
-
-
-
-
-
 
