@@ -239,7 +239,7 @@ struct vrj_App_Wrapper: vrj::App
         return vrj::App::getDrawScaleFactor();
     }
 
-    bool configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configCanHandle()\n",
                                  "vrj_App_Wrapper::configCanHandle() done.\n");
@@ -257,7 +257,7 @@ struct vrj_App_Wrapper: vrj::App
         return false;
     }
 
-    bool default_configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
         return vrj::App::configCanHandle(p0);
     }
 
@@ -283,7 +283,7 @@ struct vrj_App_Wrapper: vrj::App
         return vrj::App::depSatisfied();
     }
 
-    bool configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configAdd()\n",
                                  "vrj_App_Wrapper::configAdd() done.\n");
@@ -301,11 +301,11 @@ struct vrj_App_Wrapper: vrj::App
         return false;
     }
 
-    bool default_configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
         return vrj::App::configAdd(p0);
     }
 
-    bool configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configRemove()\n",
                                  "vrj_App_Wrapper::configRemove() done.\n");
@@ -323,7 +323,7 @@ struct vrj_App_Wrapper: vrj::App
         return false;
     }
 
-    bool default_configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
         return vrj::App::configRemove(p0);
     }
 
@@ -393,7 +393,7 @@ void _Export_App()
         .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &vrj_App_Wrapper::default_getDrawScaleFactor)
         .def("configCanHandle", &vrj::App::configCanHandle, &vrj_App_Wrapper::default_configCanHandle)
         .def("depSatisfied", &vrj::App::depSatisfied, &vrj_App_Wrapper::default_depSatisfied)
-        .def("configProcessPending", &jccl::ConfigChunkHandler::configProcessPending, &vrj_App_Wrapper::default_configProcessPending)
+        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &vrj_App_Wrapper::default_configProcessPending)
         .def("haveFocus", &vrj::App::haveFocus)
         .def("setFocus", &vrj::App::setFocus)
     ;

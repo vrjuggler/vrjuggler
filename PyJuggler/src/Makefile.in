@@ -75,8 +75,8 @@ VPR_SRCS= \
 	vpr/_ReturnStatus.cpp
 
 JCCL_SRCS= \
-	jccl/_ConfigChunk.cpp		\
-	jccl/_ConfigChunkHandler.cpp
+	jccl/_ConfigElement.cpp		\
+	jccl/_ConfigElementHandler.cpp
 
 GADGET_SRCS= \
 	gadget/_Analog.cpp				\

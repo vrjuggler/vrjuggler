@@ -27,7 +27,7 @@
 
 // Includes ====================================================================
 #include <boost/python.hpp>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -38,15 +38,15 @@ using namespace boost::python;
 namespace  {
 
 
-struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
+struct jccl_ConfigElementHandler_Wrapper: jccl::ConfigElementHandler
 {
-    jccl_ConfigChunkHandler_Wrapper(PyObject* self_, const jccl::ConfigChunkHandler & p0):
-        jccl::ConfigChunkHandler(p0), self(self_) {}
+    jccl_ConfigElementHandler_Wrapper(PyObject* self_, const jccl::ConfigElementHandler & p0):
+        jccl::ConfigElementHandler(p0), self(self_) {}
 
-    jccl_ConfigChunkHandler_Wrapper(PyObject* self_):
-        jccl::ConfigChunkHandler(), self(self_) {}
+    jccl_ConfigElementHandler_Wrapper(PyObject* self_):
+        jccl::ConfigElementHandler(), self(self_) {}
 
-    bool configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "configCanHandle", p0);
@@ -73,10 +73,10 @@ struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
     }
 
     int default_configProcessPending() {
-        return jccl::ConfigChunkHandler::configProcessPending();
+        return jccl::ConfigElementHandler::configProcessPending();
     }
 
-    bool configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "configAdd", p0);
@@ -89,7 +89,7 @@ struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
         return false;
     }
 
-    bool configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "configRemove", p0);
@@ -111,9 +111,9 @@ struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
 
 
 // Module ======================================================================
-void _Export_ConfigChunkHandler()
+void _Export_ConfigElementHandler()
 {
-    class_< jccl::ConfigChunkHandler, boost::noncopyable, jccl_ConfigChunkHandler_Wrapper >("ConfigChunkHandler", init<  >())
-        .def("configProcessPending", &jccl::ConfigChunkHandler::configProcessPending, &jccl_ConfigChunkHandler_Wrapper::default_configProcessPending)
+    class_< jccl::ConfigElementHandler, boost::noncopyable, jccl_ConfigElementHandler_Wrapper >("ConfigElementHandler", init<  >())
+        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &jccl_ConfigElementHandler_Wrapper::default_configProcessPending)
     ;
 }

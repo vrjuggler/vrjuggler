@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-03-2003 patrickh    Updated to JCCL 0.12, Gadgeteer 0.13, and VR Juggler
+                        1.1.144.
+                        NEW VERSION: 0.8.0
 Jul-09-2003 patrickh    Reorganized the way the modules are exposed to Python
                         so that the code can be loaded from a single DSO/DLL.
                         This is being done to fix runtime loader problems on

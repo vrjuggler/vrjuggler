@@ -77,7 +77,7 @@ struct gadget_Analog_Wrapper: gadget::Analog
         return gadget::Analog::readObject(p0);
     }
 
-    bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -90,7 +90,7 @@ struct gadget_Analog_Wrapper: gadget::Analog
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
         return gadget::Analog::config(p0);
     }
 

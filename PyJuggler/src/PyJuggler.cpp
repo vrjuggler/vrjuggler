@@ -36,8 +36,8 @@ void _Export_Interval();
 void _Export_ReturnStatus();
 void _Export_GUID();
 
-void _Export_ConfigChunk();
-void _Export_ConfigChunkHandler();
+void _Export_ConfigElement();
+void _Export_ConfigElementHandler();
 
 void _Export_AnalogData();
 void _Export_KeyEvent();
@@ -98,8 +98,8 @@ BOOST_PYTHON_MODULE(PyJuggler)
    delete vpr_scope;
 
    scope* jccl_scope = new scope(class_<jccl>("jccl"));
-      _Export_ConfigChunk();
-      _Export_ConfigChunkHandler();
+      _Export_ConfigElement();
+      _Export_ConfigElementHandler();
    delete jccl_scope;
 
    scope* gadget_scope = new scope(class_<gadget>("gadget"));

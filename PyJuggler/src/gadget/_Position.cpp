@@ -43,7 +43,7 @@ struct gadget_Position_Wrapper: gadget::Position
     gadget_Position_Wrapper(PyObject* self_):
         gadget::Position(), self(self_) {}
 
-    bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -56,7 +56,7 @@ struct gadget_Position_Wrapper: gadget::Position
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
         return gadget::Position::config(p0);
     }
 

@@ -61,7 +61,7 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
         gadget::DigitalProxy::updateData();
     }
 
-    bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -74,7 +74,7 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
         return gadget::DigitalProxy::config(p0);
     }
 
@@ -170,8 +170,8 @@ void _Export_DigitalProxy()
         .def("getDigitalData", &gadget::DigitalProxy::getDigitalData, return_internal_reference< 1 >())
         .def("getDigitalPtr", &gadget::DigitalProxy::getDigitalPtr, return_internal_reference< 1 >())
         .def("getUnit", &gadget::DigitalProxy::getUnit)
-        .def("getChunkType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::DigitalProxy::getChunkType)
-        .staticmethod("getChunkType")
+        .def("getElementType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::DigitalProxy::getElementType)
+        .staticmethod("getElementType")
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
         .def("stupify", &gadget::Proxy::stupify, gadget_Proxy_stupify_overloads_0_1())

@@ -29,12 +29,12 @@
 #include <boost/python.hpp>
 
 // Exports =====================================================================
-void _Export_ConfigChunk();
-void _Export_ConfigChunkHandler();
+void _Export_ConfigElement();
+void _Export_ConfigElementHandler();
 
 // Module ======================================================================
 BOOST_PYTHON_MODULE(jccl)
 {
-    _Export_ConfigChunk();
-    _Export_ConfigChunkHandler();
+    _Export_ConfigElement();
+    _Export_ConfigElementHandler();
 }

@@ -61,7 +61,7 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         gadget::PositionProxy::updateData();
     }
 
-    bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -74,7 +74,7 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
         return gadget::PositionProxy::config(p0);
     }
 
@@ -172,8 +172,8 @@ void _Export_PositionProxy()
         .def("getPositionData", &gadget::PositionProxy::getPositionData, return_internal_reference< 1 >())
         .def("getUnit", &gadget::PositionProxy::getUnit)
         .def("getPositionPtr", &gadget::PositionProxy::getPositionPtr, return_internal_reference< 1 >())
-        .def("getChunkType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::PositionProxy::getChunkType)
-        .staticmethod("getChunkType")
+        .def("getElementType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::PositionProxy::getElementType)
+        .staticmethod("getElementType")
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
         .def("stupify", &gadget::Proxy::stupify, gadget_Proxy_stupify_overloads_0_1())

@@ -42,7 +42,7 @@ namespace  {
 
 struct vrj_Kernel_Wrapper: vrj::Kernel
 {
-    bool configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "configCanHandle", p0);
@@ -55,11 +55,11 @@ struct vrj_Kernel_Wrapper: vrj::Kernel
         return false;
     }
 
-    bool default_configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
         return vrj::Kernel::configCanHandle(p0);
     }
 
-    bool configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "configAdd", p0);
@@ -72,11 +72,11 @@ struct vrj_Kernel_Wrapper: vrj::Kernel
         return false;
     }
 
-    bool default_configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
         return vrj::Kernel::configAdd(p0);
     }
 
-    bool configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "configRemove", p0);
@@ -89,7 +89,7 @@ struct vrj_Kernel_Wrapper: vrj::Kernel
         return false;
     }
 
-    bool default_configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
         return vrj::Kernel::configRemove(p0);
     }
 
@@ -132,7 +132,7 @@ void vrj_Kernel_waitForKernelStop(vrj::Kernel* kernel)
 void _Export_Kernel()
 {
     class_< vrj::Kernel, boost::noncopyable, vrj_Kernel_Wrapper >("Kernel", no_init)
-        .def("configProcessPending", &jccl::ConfigChunkHandler::configProcessPending, &vrj_Kernel_Wrapper::default_configProcessPending)
+        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &vrj_Kernel_Wrapper::default_configProcessPending)
         .def("start", &vrj::Kernel::start)
         .def("stop", &vrj::Kernel::stop)
         .def("isRunning", &vrj::Kernel::isRunning)
@@ -140,7 +140,6 @@ void _Export_Kernel()
         .def("setApplication", &vrj::Kernel::setApplication)
         .def("loadConfigFile", (void (vrj::Kernel::*)(const char *) )&vrj::Kernel::loadConfigFile)
         .def("loadConfigFile", (void (vrj::Kernel::*)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >) )&vrj::Kernel::loadConfigFile)
-        .def("loadChunkDescFile", &vrj::Kernel::loadChunkDescFile)
         .def("getUser", &vrj::Kernel::getUser, return_internal_reference< 1 >())
         .def("getUsers", &vrj::Kernel::getUsers)
         .def("instance", &vrj::Kernel::instance, return_value_policy< reference_existing_object >())

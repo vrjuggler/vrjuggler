@@ -25,7 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_INIT([PyJuggler], [0.7], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([PyJuggler], [0.8], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling])
 AC_REVISION([$Revision$])
@@ -212,9 +212,11 @@ else
 fi
 
 VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
-GADGETEER_PATH([0.12], ,
+JCCL_PATH([0.12], ,
+          [AC_MSG_ERROR([*** JCCL is required for PyJuggler ***])])
+GADGETEER_PATH([0.13], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for PyJuggler ***])])
-VRJUGGLER_PATH([1.1.140], ,
+VRJUGGLER_PATH([1.1.144], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
 # -----------------------------------------------------------------------------

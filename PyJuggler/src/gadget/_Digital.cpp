@@ -43,7 +43,7 @@ struct gadget_Digital_Wrapper: gadget::Digital
     gadget_Digital_Wrapper(PyObject* self_):
         gadget::Digital(), self(self_) {}
 
-    bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -56,7 +56,7 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
         return gadget::Digital::config(p0);
     }
 

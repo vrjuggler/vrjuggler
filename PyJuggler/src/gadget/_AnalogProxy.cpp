@@ -61,7 +61,7 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
         gadget::AnalogProxy::updateData();
     }
 
-    bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -74,7 +74,7 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
         return gadget::AnalogProxy::config(p0);
     }
 
@@ -169,8 +169,8 @@ void _Export_AnalogProxy()
         .def("getData", &gadget::AnalogProxy::getData)
         .def("getAnalogPtr", &gadget::AnalogProxy::getAnalogPtr, return_internal_reference< 1 >())
         .def("getUnit", &gadget::AnalogProxy::getUnit)
-        .def("getChunkType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::AnalogProxy::getChunkType)
-        .staticmethod("getChunkType")
+        .def("getElementType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::AnalogProxy::getElementType)
+        .staticmethod("getElementType")
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
         .def("stupify", &gadget::Proxy::stupify, gadget_Proxy_stupify_overloads_0_1())
