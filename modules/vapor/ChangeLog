@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-07-27 patrick  Removed the compiler flags dealing with warnings from the
+                    output of 'vpr-config --cxxflags'.
 2001-07-24 allenb   Changed socket bridge templates to use boost::shared_ptr
                     to reference the impl sockets.  This change introduces
                     reference counting on the impl sockets and makes

@@ -470,6 +470,8 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # For use in linking applications.
 EXTRA_LINK_FLAGS=''
 
+vpr_cxxflags="$STDFLAGS"
+
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
@@ -480,6 +482,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
+    vpr_cxxflags="$CXXFLAGS"
 fi
 
 DPP_SYSTEM_SUBST
@@ -714,6 +717,7 @@ AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
+AC_SUBST(vpr_cxxflags)
 AC_SUBST(vpr_ldflags)
 AC_SUBST(vpr_libs)
 AC_SUBST(vpr_extra_cxxflags)
