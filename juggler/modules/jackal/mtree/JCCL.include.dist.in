@@ -41,6 +41,8 @@
         jccl
             Config
             ..
+            ConfigManager
+            ..
             JackalServer
             ..
             XMLUtil

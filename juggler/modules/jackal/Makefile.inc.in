@@ -281,7 +281,7 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
-#	@$(MAKE) install-samples
+	@$(MAKE) install-samples
 #	@$(MAKE) install-test
 #	@$(MAKE) install-tools
 #	@$(MAKE) install-data
