@@ -184,7 +184,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 VPR_PATH([0.40.1], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-vrj_min_jccl_ver='0.20'
+vrj_min_jccl_ver='0.21.1'
 JCCL_PATH_CXX([$vrj_min_jccl_ver], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.19.0], ,
@@ -198,7 +198,7 @@ if test "x$VRJ_USE_X11" = "xyes" ; then
 fi
 
 if test "x$BUILD_JAVA" = "xY" ; then
-   TWEEK_PATH_JAVA([0.18],
+   TWEEK_PATH_JAVA([0.19.2],
                    [JCCL_PATH_JAVA([$vrj_min_jccl_ver], ,
                        [AC_MSG_WARN([*** JCCL Java API required for VRJConfig ***])
                        BUILD_JAVA='N'])],
@@ -274,9 +274,9 @@ if test "x$OS_TYPE" = "xUNIX" -a "x$PLATFORM" != "xDarwin" ; then
    DPP_LANG_RESTORE
 fi
 
-# --------------------
-# IRIS Performer API.
-# --------------------
+# ---------------------
+# OpenGL Performer API.
+# ---------------------
 PERFORMER_API=''		# 'Y' then we are using Performer
 
 # Test for the Performer library if the Performer API was enabled.
@@ -644,6 +644,23 @@ fi
 vrj_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
 
+if test "x$PLATFORM" = "xDarwin" ; then
+   changequote(<<, >>)
+   vrjconfig_bundle_tweek_jardir=`echo $TWEEK_JARS | awk -F: '{ print $1 }' | sed -e 's/^\(.*\)\/[^/]*\.jar$/\1/'`
+   vrjconfig_bundle_jccl_jardir=`echo $JCCL_JARS | awk -F: '{ print $1 }' | sed -e 's/^\(.*\)\/[^/]*\.jar$/\1/'`
+
+   tweek_java_api_jars_bundle=`echo $TWEEK_JARS | sed -e "s|$vrjconfig_bundle_tweek_jardir/\([^/]*.jar\)|"'$JAVAROOT/\1|g'`
+   tweek_ext_java_api_jars_bundle=`echo $TWEEK_EXT_JARS | sed -e 's/:/ /g' -e "s|$vrjconfig_bundle_tweek_jardir/\([^/].jar\)|\1|g"`
+   changequote([, ])
+
+   tweek_datadir=`echo $vrjconfig_bundle_tweek_jardir | sed -e 's/\(.*\)java$/\1/'`
+   vrjconfig_bundle_tweek_beandir="${tweek_datadir}beans"
+
+   jccl_datadir=`echo $vrjconfig_bundle_jccl_jardir | sed -e 's/\(.*\)java$/\1/'`
+   vrjconfig_bundle_jccl_beandir="${jccl_datadir}beans"
+   vrjconfig_bundle_jccl_datadir="${jccl_datadir}data"
+fi
+
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
@@ -708,6 +725,14 @@ AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj_ogl_extra_libs)
 AC_SUBST(vrj_pf_extra_libs)
 
+AC_SUBST(tweek_java_api_jars_bundle)
+AC_SUBST(tweek_ext_java_api_jars_bundle)
+AC_SUBST(vrjconfig_bundle_tweek_beandir)
+AC_SUBST(vrjconfig_bundle_tweek_jardir)
+AC_SUBST(vrjconfig_bundle_jccl_beandir)
+AC_SUBST(vrjconfig_bundle_jccl_datadir)
+AC_SUBST(vrjconfig_bundle_jccl_jardir)
+
 # -----------------------------------------------------------------------------
 # Final file generation step.
 # -----------------------------------------------------------------------------
@@ -735,6 +760,7 @@ AC_CONFIG_FILES([
    vrj/Util/Makefile
    vrj.appdefs.mk
    vrjconfig/build.xml
+   vrjconfig/Info.plist
    vrjconfig/Makefile
    vrjconfig/Makefile.inc
    vrjconfig/commoneditors/build.xml

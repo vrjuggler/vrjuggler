@@ -44,6 +44,7 @@ include @topdir@/make.defs.mk
 include @topdir@/java.defs.mk
 
 jardir=			$(beandir)/customeditors
+bundle_jardir=		$(bundle_vrj_beandir)/customeditors
 
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
@@ -90,7 +91,7 @@ ifneq ($(JARS), )
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
                 $(topdir)/vrjconfig/customeditors/proxyeditor/$$jar	\
-                $(jardir) || exit 1;					\
+                $(javadir) || exit 1;					\
           done
 endif
 ifneq ($(BEANS), )
@@ -111,6 +112,35 @@ endif
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
                 $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
+ifeq (@PLATFORM@, Darwin)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/vrjconfig/customeditors/proxyeditor/$$jar	\
+                $(bundle_vrj_javadir) || exit 1 ;			\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/vrjconfig/customeditors/proxyeditor/$$bean.jar \
+                $(bundle_jardir) || exit 1 ;				\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(top_srcdir)/vrjconfig/customeditors/proxyeditor/$$bean.xml \
+                $(bundle_jardir) || exit 1;				\
+          done
+endif
+	for jar in `echo "$(JGRAPH_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_vrj_javadir) ;		\
+          done
+endif
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
