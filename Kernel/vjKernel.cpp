@@ -85,21 +85,12 @@ void vjKernel::controlLoop(void* nullParam)
    initConfig();
 
    // setup performance buffer
-   performanceEnabled = 0;
-   std::vector<vjConfigChunk*>* perfchunks = mInitialChunkDB->getMatching ("PerfMeasure");
-   if (perfchunks->size() > 0) {
-       vjConfigChunk* perfchunk = (*perfchunks)[0];
-       performanceEnabled = (*perfchunks)[0]->getProperty ("KernelEnabled");
-       delete perfchunks;
-   }
    perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 7);
    environmentManager->addPerfDataBuffer (perfBuffer);
-
 
    //while(!Exit)
    while (1)
    {
-       //perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: app->preDraw()\n" << vjDEBUG_FLUSH;
       app->preDraw();         // PREDRAW: Do Any application pre-draw stuff
          perfBuffer->set (0);

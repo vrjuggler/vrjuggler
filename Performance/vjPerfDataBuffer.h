@@ -84,6 +84,10 @@ public:
 
 
 
+    std::string getName() {
+	return (std::string)name;
+    }
+
     //: activates the buffer
     //! POST: once this call is made, the buffer will start 
     //+       storing data whenever a set() is made and
