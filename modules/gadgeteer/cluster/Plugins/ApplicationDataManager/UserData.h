@@ -58,12 +58,12 @@ public:
    
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
-      BASE::writeObject(writer);
+      return BASE::writeObject(writer);
    }
    
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
-      BASE::readObject(reader);
+      return BASE::readObject(reader);
    }
 
 private:      
