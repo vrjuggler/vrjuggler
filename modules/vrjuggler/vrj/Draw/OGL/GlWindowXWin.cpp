@@ -136,7 +136,7 @@ int GlWindowXWin::open()
       if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:") << " glXChooseVisual failed\n"
+            << clrOutNORM(clrRED,"ERROR:") << " Failed to get a GLX visual\n"
             << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
@@ -601,6 +601,18 @@ void GlWindowXWin::checkEvents()
             mInStereo = (mVrjDisplay->isStereoRequested() &&
                          has_stereo == True);
          }
+      }
+      // If XGetVisualInfo(3) returned NULL, print an error message.
+      else
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR:")
+            << " Failed to get X11 visual info for visual ID 0x"
+            << std::hex << visual_id << std::dec << std::endl
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "Window '" << mVrjDisplay->getName() << "' cannot be opened"
+            << std::endl << vprDEBUG_FLUSH;
       }
 
       return vi;
