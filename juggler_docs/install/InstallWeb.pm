@@ -77,6 +77,7 @@ sub configure($$$$$$$$$$$$)
    $html_header_filename = shift;
    $html_footer_filename = shift;
    $html_install_prefix = shift;
+   $alias_subst{"SiteURL"} = "$html_install_prefix";
    $subst_file = shift;
    $rebuild_all = shift;
    my $skipdirslist = shift;
@@ -183,6 +184,12 @@ sub recurseAction($)
     my $full_dest_path = shift;
     my $rel_path = shift;
 
+    # initialize built-in subst vars...
+    $alias_subst{"CurrentPath"} = $full_src_path;
+    $alias_subst{"CurrentFile"} = $curfile;
+    $alias_subst{"CurrentFilePath"} = "$full_src_path/$curfile";
+    $alias_subst{"CurrentURL"} = "$html_install_prefix/$rel_path/$curfile";
+   
     # print "recurseAction: $curfile , $full_src_path , $full_dest_path, $rel_path\n";
 
     # I need the full name of the file where it is going to be installed
