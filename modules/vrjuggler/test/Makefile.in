@@ -14,7 +14,7 @@ WORKDIR		= ${topdir}/test
 
 include @topdir@/Makefile.base
 
-SUBDIRS		= CfgTest input ogl pfNav Sync
+SUBDIRS		= CfgTest input ogl pfNav Sync Quat
 
 @SET_MAKE@
 
