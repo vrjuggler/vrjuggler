@@ -45,151 +45,162 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Extension to the vpr::BlockIO interface defining a cross-platform file
-//+ handle interface.
-// ----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Extension to the vpr::BlockIO interface defining a cross-platform file
+ * handle interface.
+ *
+ * @author Patrick Hartling
+ */
 template<class RealFileHandleImpl>
 class FileHandle_t : public BlockIO {
 public:
-    // ------------------------------------------------------------------------
-    //: Constructor.  This initializes the member variables to reasonable
-    //+ defaults and stores the given file name for later use.
-    //
-    //! PRE: None.
-    //! POST: All member variables are initialized including m_name that is
-    //+       assigned the string in file_name.
-    //
-    //! ARGS: file_name - The name of the file to be handled.
-    // ------------------------------------------------------------------------
+    /**
+     * Constructor.  This initializes the member variables to reasonable
+     * defaults and stores the given file name for later use.
+     *
+     * <b>PRE:</b> None.<br>
+     * <b>POST:</b> All member variables are initialized including m_name that
+     *              is assigned the string in file_name.
+     *
+     * @param file_name The name of the file to be handled.
+     */
     FileHandle_t (const std::string& file_name)
         : BlockIO(file_name), m_handle_impl(file_name)
     {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    //: Destructor.  This does nothing.
-    //
-    //! PRE:  None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
+    /**
+     * Destructor.  This does nothing.
+     *
+     * <b>PRE:</b> None.<br>
+     * <b>POST:</b> None.
+     */
     virtual ~FileHandle_t (void) {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the name of this file.
-    //
-    //! PRE: None.
-    //! POST: A constant reference to the m_name object is returned to the
-    //+       caller.
-    //
-    //! RETURNS: An object containing the name of this file.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the name of this file.
+     *
+     * <b>PRE:</b> None.<br>
+     * <b>POST:</b> A constant reference to the m_name object is returned to
+     *              the caller.
+     *
+     * @return An object containing the name of this file.
+     */
     virtual const std::string&
     getName (void) {
         return m_handle_impl.getName();
     }
 
-    // ------------------------------------------------------------------------
-    //: Open the file handle.
-    //
-    //! PRE: The file handle is not already open.
-    //! POST: An attempt is made to open the file.  The resulting status is
-    //+       returned to the caller.
-    //
-    //! RETURNS: vpr::Status::Success - The file handle was opened
-    //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The file handle could not be opened
-    //+                                 for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Opens the file.
+     *
+     * <b>PRE:</b> This file handle has not already been opened.<br>
+     * <b>POST:</b> An attempt is made to open the file.  The resulting status
+     *              is returned to the caller.  If opened successfully, this
+     *              file is ready for use.
+     *
+     * @return <code>vpr::Status::Success</code> is returned when the file was
+     *         opened successfully.<br>
+     *         <code>vpr::Status::Failure</code> is returned if the file could
+     *         not be opened for some reason.
+     */
     virtual Status
     open (void) {
         return m_handle_impl.open();
     }
 
-    // ------------------------------------------------------------------------
-    //: Close the file handle.
-    //
-    //! PRE: The file handle is open.
-    //! POST: An attempt is made to close the file.  The resulting status is
-    //+       returned to the caller.
-    //
-    //! RETURNS: vpr::Status::Success - The file handle was closed
-    //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The file handle could not be closed
-    //+                                 for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Closes the file.  All pending operatings (as queued by the OS) are
+     * completed.
+     *
+     * <b>PRE:</b> This file handle is open.<br>
+     * <b>POST:</b> An attempt is made to close the file.  The resulting
+     *              status is returned to the caller.
+     *      
+     * @return <code>vpr::Status::Success</code> is returned if the file was
+     *         closed successfully.<br>
+     *         <code>vpr::Status::Failure</code> is returned if the file could
+     *         not be closed.
+     */
     virtual Status
     close (void) {
         return m_handle_impl.close();
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle so that it is in blocking mode.
-    //
-    //! PRE: The file handle is open.
-    //! POST: Processes will block when accessing the file.
-    //
-    //! RETURNS: vpr::Status::Success - The blocking mode was changed
-    //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The blocking mode could not be changed
-    //+                                 for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the file handle so that it is in blocking mode.
+     *
+     * <b>PRE:</b> The file handle is open.<br>
+     * <b>POST:</b> Processes may block when accessing the file.
+     *
+     * @return <code>vpr::Status::Success</code> will be returned if the
+     *         blocking mode was changed successfully.<br>
+     *         <code>vpr::Status::Failure</code> will be returned if the
+     *         blocking mode could not be changed.
+     */
     virtual Status
     enableBlocking (void) {
         return m_handle_impl.enableBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle so that it is in non-blocking mode.
-    //
-    //! PRE: The file handle is open.
-    //! POST: Processes will not block when accessing the file.
-    //
-    //! RETURNS: vpr::Status::Success - The blocking mode was changed
-    //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The blocking mode could not be changed
-    //+                                 for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the file handle so that it is in non-blocking mode.
+     *
+     * <b>PRE:</b> The file handle is open.<br>
+     * <b>POST:</b> Processes will not block when accessing the file.
+     *
+     * @return <code>vpr::Status::Success</code> will be returned if the
+     *         blocking mode was changed successfully.<br>
+     *         <code>vpr::Status::Failure</code> will be returned if the
+     *         blocking mode could not be changed.
+     */
     virtual Status
     enableNonBlocking (void) {
         return m_handle_impl.enableNonBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the current blocking state for the file.
-    //
-    //! PRE: m_blocking is set correctly
-    //! POST:
-    //
-    //! RETURNS: true  - The file is in blocking mode.
-    //! RETURNS: false - The file is in non-blocking mode.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current blocking state for the file.
+     *
+     * <b>PRE:</b> <code>m_blocking</code> is set correctly<br>
+     * <b>POST:</b>
+     *
+     * @return <code>true</code> is returned when the file is in blocking
+     *         mode.<br>
+     *         <code>false</code> is returned when the file is in non-blocking
+     *         mode.
+     */
     inline bool
     getBlocking (void) const {
         return m_handle_impl.getBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the current non-blocking state for the file.
-    //
-    //! PRE: m_blocking is set correctly
-    //! POST:
-    //
-    //! RETURNS: true  - The file is in non-blocking mode.
-    //! RETURNS: false - The file is in blocking mode.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current non-blocking state for the file.
+     *
+     * <b>PRE:</b> <code>m_blocking</code> is set correctly<br>
+     * <b>POST:</b>
+     *
+     * @return <code>true</code> is returned when the file is in non-blocking
+     *         mode.<br>
+     *         <code>false</code> is returned when the file is in blocking
+     *         mode.
+     */
     inline bool
     getNonBlocking (void) const {
         return m_handle_impl.getNonBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //! RETURNS: vpr::IOSys::NullHandle
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the <code>vpr::IOSys::Handle</code> object for this file.
+     *
+     * @return <code>vpr::IOSys::NullHandle</code> is returned if the file
+     *         has no handle or if the handle could not be returned for some
+     *         reason.
+     */
     virtual IOSys::Handle
     getHandle (void) {
         return m_handle_impl.getHandle();
@@ -199,33 +210,32 @@ public:
     // vpr::FileHandle API extensions.
     // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle to be in append mode.
-    //
-    //! PRE: The file handle is open.
-    //! POST: The file handle's write mode is set to append.
-    //
-    //! RETURNS: vpr::Status::Success - The write mode was changed
-    //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The write mode could not be changed
-    //+                                 for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the file handle to be in append mode.
+     *
+     * <b>PRE:</b> The file handle is open.<br>
+     * <b>POST:</b> The file handle's write mode is set to append.
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the write mode
+     *         was changed successfully.<br>
+     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     */
     inline Status
     enableAppend (void) {
         return m_handle_impl.enableAppend();
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle so that it is not in append mode.
-    //
-    //! PRE: The file handle is open.
-    //! POST: The file handle's write mode is set so that writes are appended.
-    //
-    //! RETURNS: vpr::Status::Success - The write mode was changed
-    //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The write mode could not be changed
-    //+                                 for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the file handle so that it is not in append mode.
+     *
+     * <b>PRE:</b> The file handle is open.<br>
+     * <b>POST:</b> The file handle's write mode is set so that writes are
+     *              appended.
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the write mode
+     *         was changed successfully.
+     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     */
     inline Status
     disableAppend (void) {
         return m_handle_impl.disableAppend();
