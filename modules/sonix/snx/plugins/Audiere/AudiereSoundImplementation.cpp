@@ -142,6 +142,7 @@ bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 {
    assert( mDev != NULL && "startAPI must be called prior to this function" );
    return false;
+
 }
 
 /** if the sound is paused, then return true. */
@@ -157,7 +158,6 @@ bool AudiereSoundImplementation::isPaused( const std::string& alias )
 void AudiereSoundImplementation::pause( const std::string& alias )
 {
    assert( mDev != NULL && "startAPI must be called prior to this function" );
-   
 }
 
 /**
@@ -177,6 +177,16 @@ void AudiereSoundImplementation::stop( const std::string& alias )
 {
    assert( mDev != NULL && "startAPI must be called prior to this function" );
    
+   if(this->lookup(alias).streaming)
+   {
+      if(trackMap.count(alias) > 0)
+         trackMap[alias]->stop();
+   }
+   else
+   {
+      if(effectMap.count(alias) > 0)
+         effectMap[alias]->stop();
+   }
 }
 
 /**
