@@ -10,19 +10,20 @@
 
 // ---------------------------------------------------------------------------------
 //: Class to encapsulate quaternion behaviors.
-// 
+//
 // Note: The code for most of these routines was taken from the the folling sources.
-// 
-// Advanced Animation and Rendering Techniques: pp363-365
-// Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989  
-// Animating Rotation with Quaternion Curves,  Ken Shoemake 
-//		SIGGRAPH Proceedings Vol 19, Number 3, 1985
+//
+// ** Game Developer Magazine: Feb 98, pg.34-42
+//    Advanced Animation and Rendering Techniques: pp363-365
+//    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989
+//    Animating Rotation with Quaternion Curves,  Ken Shoemake
+//		   SIGGRAPH Proceedings Vol 19, Number 3, 1985
 //----------------------------------------------------------------------------------
 class vjQuat : public vjVec4
 {
 public:
    vjQuat()
-   {} 
+   {}
 
    //: Construct Quat from 4 floats
    vjQuat( const float x,
@@ -30,7 +31,10 @@ public:
            const float z,
            const float w)
    {
-      set(x, y, z, w);
+      vec[VJ_X] = x;
+      vec[VJ_Y] = y;
+      vec[VJ_Z] = z;
+      vec[VJ_W] = w;
    }
 
    //: Construct quat from matrix
@@ -48,13 +52,14 @@ public:
    //: set to conj of quat
    void conj(const vjQuat& quat)
    {
-      vec[0] = -quat.vec[0];
-      vec[1] = -quat.vec[1]; 
-      vec[2] = -quat.vec[2]; 
-      vec[3] =  quat.vec[3];
+      *this = quat;
+      normalize();
+      vec[VJ_X] = -quat.vec[VJ_X];
+      vec[VJ_Y] = -quat.vec[VJ_Y];
+      vec[VJ_Z] = -quat.vec[VJ_Z];
    }
 
-   float length() const
+   float norm() const
    {
       return ((vec[0]*vec[0])+(vec[1]*vec[1])+(vec[2]*vec[2])+(vec[3]*vec[3]));
    }
@@ -63,45 +68,26 @@ public:
 public:
    //: Multiply two quaternions
    //!POST: this' = q1 * q2
-   void mult(const vjQuat& q1, const vjQuat& q2)
-   {
-      vjQuat tempQuat;
-      tempQuat[VJ_X] = q1[VJ_W]*q2[VJ_X] + q1[VJ_X]*q2[VJ_W] + q1[VJ_Z]*q2[VJ_Y] - q1[VJ_Y]*q2[VJ_Z];
-      tempQuat[VJ_Y] = q1[VJ_W]*q2[VJ_Y] + q1[VJ_Y]*q2[VJ_W] + q1[VJ_X]*q2[VJ_Z] - q1[VJ_Z]*q2[VJ_X];
-      tempQuat[VJ_Z] = q1[VJ_W]*q2[VJ_Z] + q1[VJ_Z]*q2[VJ_W] + q1[VJ_Y]*q2[VJ_X] - q1[VJ_X]*q2[VJ_Y];
-      tempQuat[VJ_W] = q1[VJ_W]*q2[VJ_W] - q1[VJ_X]*q2[VJ_X] - q1[VJ_Y]*q2[VJ_Y] - q1[VJ_Z]*q2[VJ_Z];
-
-      vec[VJ_X] = tempQuat[VJ_X];
-      vec[VJ_Y] = tempQuat[VJ_Y];
-      vec[VJ_Z] = tempQuat[VJ_Z];
-      vec[VJ_W] = tempQuat[VJ_W];
-   }
+   void mult(const vjQuat& q1, const vjQuat& q2);
 
    // quat = q1/q2
    void div(const vjQuat& q1, const vjQuat& q2)
    {
-      vjQuat inv;
-      inv.invert(q2);
-      mult(q1, inv);
+      vjQuat r, s;
+      vjQuat inv_denom;
+      inv_denom.invert(q2);
+
+      r.mult(q1, inv_denom);
+      s.mult(inv_denom, inv_denom);
+
+      vec[VJ_X] = r.vec[VJ_X] / s.vec[VJ_W];
+      vec[VJ_Y] = r.vec[VJ_Y] / s.vec[VJ_W];
+      vec[VJ_Z] = r.vec[VJ_Z] / s.vec[VJ_W];
+      vec[VJ_W] = r.vec[VJ_W] / s.vec[VJ_W];
    }
 
    /// quat = inv(q1)
-   void invert(const vjQuat& q1)
-   {
-      float len = q1.length();
-      float invLength;
-
-      if (len >= VJ_QUAT_EPSILON)
-      {
-         invLength = 1.0f/len;
-         vec[VJ_X] = -q1.vec[VJ_X]*invLength;
-         vec[VJ_Y] = -q1.vec[VJ_Y]*invLength;
-         vec[VJ_Z] = -q1.vec[VJ_Z]*invLength;
-         vec[VJ_W] =  q1.vec[VJ_W]*invLength;
-      }
-      else
-         set(0.0f, 0.0f, 0.0f, 0.0f);
-   }
+   void invert(const vjQuat& q1);
 
    //void exp(const vjQuat& _q);
    //void log(const vjQuat& _q);
