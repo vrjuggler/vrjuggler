@@ -83,12 +83,13 @@ public interface NetCommunicator extends VjComponent {
      *  to read part of its input stream.  The Communicator should 
      *  read data until it reaches the end of the stream (how to 
      *  determine this is protocol dependant; for example, VR Juggler
-     *  config streams end with the text token "end".
+     *  config streams end with the text token "end".  However it is
+     *  also safe to simply read until EOF.
      *  <p>
      *  readStream (and anything called by it) can safely throw
      *  IOExceptions, and in case of EOF etc. this is encouraged.
      */
-    public boolean readStream (InputStream instream, String id)
+    public void readStream (InputStream instream, String id)
     throws IOException;
 
 
