@@ -127,12 +127,6 @@ Introduction
    support for templates and the C++ standard in general, users need to be
    aware that it may not be possible.
 
-   To build VR Juggler on Windows, you must use the Visual Studio solution.
-   After getting the dependencies needed to compile VR Juggler (see the next
-   section), refer to the README.html file located in the vc7 subdirectory of
-   this directory. Do not bother to read the section called "Compiling" in
-   this document.
-
 Getting the Source Code and the Dependencies
 
    In this section, we explain how to get the Juggler Project source code and
@@ -291,7 +285,8 @@ Compiling
 
    You have downloaded developmental code. It may not be stable, and it may
    not even compile. Compiling VR Juggler itself can be a little complicated
-   for anyone who does not have some background in Autoconf, C++, and make.
+   for anyone who does not have some background in using CVS, Autoconf, C++,
+   and make or Visual Studio.
 
   Compiling the Juggler Suite of Tools
 
@@ -299,6 +294,11 @@ Compiling
    that make up VR Juggler. Each tool compiles to its own library and can be
    installed individually. (Refer to the README file in this directory for
    more information about the specific modules.)
+
+   To build VR Juggler on Windows, you must use the Visual Studio solution.
+   After getting the dependencies needed to compile VR Juggler (see the next
+   section), refer to the README.html file located in the vc7 subdirectory of
+   this directory. Do not bother to the rest of this document.
 
     Configuring VR Juggler
 
