@@ -18,4 +18,3 @@ ParenthesesInConditional2.rule
 PutReturn.rule
 ReferenceInitialization.rule
 UnusedParameter.rule
-#UnusedPrivateMember.rule
