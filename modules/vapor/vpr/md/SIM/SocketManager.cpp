@@ -457,11 +457,7 @@ namespace sim
       // 0x7F000001 is the integer value for 127.0.0.1.
       if ( 0x7F000001 == addr.getAddressValue() )
       {
-         vpr::Uint32 last_node = vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount() - 1;
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "SocketManager::assignToNode(): Using last node (#" << last_node
-            << ") for localhost\n" << vprDEBUG_FLUSH;
-         node = vpr::sim::Controller::instance()->getNetworkGraph().getNode(last_node);
+         node = getLocalhost();
       }
       else
       {
@@ -581,7 +577,14 @@ namespace sim
       vpr::ReturnStatus status;
       NetworkGraph::net_vertex_t dest_node;
 
-      status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
+      if ( 0x7F000001 == dest_addr.getAddressValue() )
+      {
+         dest_node = getLocalhost();
+      }
+      else
+      {
+         status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
+      }
 
       if ( status.success() )
       {
@@ -595,6 +598,7 @@ namespace sim
             NetworkGraph::VertexListPtr path;
 
             peer = const_cast<vpr::SocketImplSIM*>(mBindListAddr[dest_addr]);
+            vprASSERT(src_sock->mNodeAssigned && "Trying to send from socket not assigned to a node!");
             path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(src_sock->getNetworkNode(), dest_node);
             msg->setPath(path, src_sock, peer);
 
@@ -757,6 +761,15 @@ namespace sim
       vprASSERT( isBound( addr ) == false );
 
       return status;
+   }
+
+   vpr::sim::NetworkGraph::net_vertex_t SocketManager::getLocalhost ()
+   {
+      vpr::Uint32 last_node = vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount() - 1;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "SocketManager::getLocalhost(): Using last node (#" << last_node
+         << ") for localhost\n" << vprDEBUG_FLUSH;
+      return vpr::sim::Controller::instance()->getNetworkGraph().getNode(last_node);
    }
 
    // XXX: This needs to be rethough since we can now have 2^64 port numbers
