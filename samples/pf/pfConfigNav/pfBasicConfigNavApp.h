@@ -124,6 +124,8 @@ protected:
 // Load with new settings
 bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
 {
+   int x;
+
    vjASSERT(std::string("pf_basic_nav_app") == (std::string)chunk->getType());
 
    // Set the properties based on the chunk values
@@ -138,7 +140,7 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
 
    // models
    mModelList.clear();//start out clean
-   for (int x = 0; x < chunk->getNum( "Model" ); ++x)
+   for (x = 0; x < chunk->getNum( "Model" ); ++x)
    {
       vjConfigChunk* model_chunk = chunk->getProperty( "Model", x );
       Model m;
