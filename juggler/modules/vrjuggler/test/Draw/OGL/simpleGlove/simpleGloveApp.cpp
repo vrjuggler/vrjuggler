@@ -108,11 +108,11 @@ void simpleGloveApp::myDraw()
       for(finger=gadget::GloveData::THUMB;finger<=gadget::GloveData::PINKY;finger++)
       {
       glPushMatrix();
-         gmtl::Vec3f origin(0,0,0);    // Base of the vector
+         gmtl::Point3f origin(0,0,0);    // Base of the vector
          finger_matrix =
             mGlove->getPos((gadget::GloveData::GloveComponent)finger);
-         gmtl::xform(origin, finger_matrix, origin);
-         gmtl::Vec3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
+         origin = finger_matrix * origin;  // Go to new coord system
+         gmtl::Point3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
          drawLine(origin, end);
       glPopMatrix();
       }
