@@ -5,7 +5,7 @@
  * $Date$
  *
  * Author:
- *   Patrick Hartling (based on CondSGI by Allen Bierbaum).
+ *   Patrick Hartling (based on vjCondSGI by Allen Bierbaum).
  * --------------------------------------------------------------------------
  * NOTES:
  *    - This file (vjCondPosix.h) must be included by vjCond.h, not the
@@ -13,8 +13,8 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _COND_POSIX_H_
-#define _COND_POSIX_H_
+#ifndef _VJ_COND_POSIX_H_
+#define _VJ_COND_POSIX_H_
 
 
 #include <vjConfig.h>
@@ -43,18 +43,18 @@ public:
     vjCondPosix (vjMutexPosix* mutex = NULL) {
         // Initialize the condition variable.
 #ifdef _PTHREADS_DRAFT_4
-        pthread_cond_init(&cond_var, pthread_condattr_default);
+        pthread_cond_init(&mCondVar, pthread_condattr_default);
 #else
-        pthread_cond_init(&cond_var, NULL);
+        pthread_cond_init(&mCondVar, NULL);
 #endif
 
         // If the caller did not specify a mutex variable to use with
-        // the condition variable, use defaultMutex.
+        // the condition variable, use mDefaultMutex.
         if ( mutex == NULL ) {
-            mutex = &defaultMutex;
+            mutex = &mDefaultMutex;
         }
 
-        condMutex = mutex;
+        mCondMutex = mutex;
     }
 
     // -----------------------------------------------------------------------
@@ -64,7 +64,7 @@ public:
     //! POST: The condition variable is destroyed.
     // -----------------------------------------------------------------------
     ~vjCondPosix (void) {
-        pthread_cond_destroy(&cond_var);
+        pthread_cond_destroy(&mCondVar);
     }
 
     // -----------------------------------------------------------------------
@@ -83,7 +83,7 @@ public:
         // ASSERT:  We have been locked
 
         // If not locked ...
-        if ( condMutex->test() == 0 ) {
+        if ( mCondMutex->test() == 0 ) {
             cerr << "vjCondPosix::wait: INCORRECT USAGE: Mutex was not "
                  << "locked when wait invoked!!!\n";
 
@@ -92,7 +92,7 @@ public:
 
         // The mutex variable must be locked when passed to
         // pthread_cond_wait().
-        return pthread_cond_wait(&cond_var, condMutex->mutex);
+        return pthread_cond_wait(&mCondVar, mCondMutex->mMutex);
     }
 
     // -----------------------------------------------------------------------
@@ -108,7 +108,7 @@ public:
     inline int
     signal (void) {
         // ASSERT:  We have been locked
-        return pthread_cond_signal(&cond_var);
+        return pthread_cond_signal(&mCondVar);
     }
 
     // -----------------------------------------------------------------------
@@ -127,12 +127,12 @@ public:
         // ASSERT:  We have been locked
 
         // If not locked ...
-        if ( condMutex->test() == 0 ) {
+        if ( mCondMutex->test() == 0 ) {
             cerr << "vjCondPosix::broadcast: Mutex was not locked when "
                  << "broadcast called!!!\n";
         }
 
-        return pthread_cond_broadcast(&cond_var);
+        return pthread_cond_broadcast(&mCondVar);
     }
 
     // -----------------------------------------------------------------------
@@ -150,7 +150,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     acquire (void) {
-        return condMutex->acquire();
+        return mCondMutex->acquire();
     }
 
     // -----------------------------------------------------------------------
@@ -167,7 +167,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     tryAcquire (void) {
-        return condMutex->tryAcquire();
+        return mCondMutex->tryAcquire();
     }
 
     // -----------------------------------------------------------------------
@@ -179,7 +179,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     release (void) {
-        return condMutex->release();
+        return mCondMutex->release();
     }
 
     // -----------------------------------------------------------------------
@@ -199,7 +199,7 @@ public:
     setMutex (vjMutexPosix* mutex) {
         // NOT exactly correct, but just make sure not to leave it locked
         mutex->release();
-        condMutex = mutex;
+        mCondMutex = mutex;
     }
 
     // -----------------------------------------------------------------------
@@ -216,13 +216,13 @@ public:
     }
 
 private:
-    pthread_cond_t	cond_var;	//: Condition variable
-    vjMutexPosix*	condMutex;	//: Mutex for the condition variable
-    vjMutexPosix	defaultMutex;	//: A default mutex variable
+    pthread_cond_t	mCondVar;	//: Condition variable
+    vjMutexPosix*	mCondMutex;	//: Mutex for the condition variable
+    vjMutexPosix	mDefaultMutex;	//: A default mutex variable
 
     // = Prevent assignment and initialization.
     void operator= (const vjCondPosix&) {}
     vjCondPosix (const vjCondPosix &c) {}
 };
 
-#endif	/* _COND_POSIX_H_ */
+#endif	/* _VJ_COND_POSIX_H_ */
