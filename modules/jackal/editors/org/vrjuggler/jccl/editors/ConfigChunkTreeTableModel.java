@@ -43,6 +43,7 @@ import org.vrjuggler.tweek.ui.treetable.*;
  */
 public class ConfigChunkTreeTableModel
    extends AbstractTreeTableModel
+   implements ConfigChunkListener
 {
    /**
     * Creates a new table model with no config chunk for its data.
@@ -70,6 +71,7 @@ public class ConfigChunkTreeTableModel
       ((DefaultMutableTreeNode)getRoot()).removeAllChildren();
 
       this.chunk = chunk;
+      chunk.addConfigChunkListener(this);
       setRoot(new DefaultMutableTreeNode(this.chunk));
 
       // First node is name
@@ -139,22 +141,23 @@ public class ConfigChunkTreeTableModel
             }
             else
             {
-               addEmbeddedChunk(parent, (ConfigChunk)value);
+               addEmbeddedChunk(parent, (ConfigChunk)value, i);
             }
          }
       }
    }
 
    /**
-    * Adds a new embedded config chunk to the given parent node.
+    * Adds a new embedded config chunk to the given parent node at the given
+    * index relative to the parent node.
     */
-   private void addEmbeddedChunk(DefaultMutableTreeNode parent, ConfigChunk chunk)
+   private void addEmbeddedChunk(DefaultMutableTreeNode parent, ConfigChunk chunk, int index)
    {
-      int idx = parent.getChildCount();
+      chunk.addConfigChunkListener(this);
 //      System.out.println("Adding embedded chunk node for chunk: "+
 //                         chunk.getName()+"["+idx+"]");
       DefaultMutableTreeNode chunk_node = new DefaultMutableTreeNode(chunk);
-      insertNodeInto(chunk_node, parent, idx);
+      insertNodeInto(chunk_node, parent, index);
 
       for (Iterator itr = chunk.getDesc().getPropertyDescs().iterator(); itr.hasNext(); )
       {
@@ -449,9 +452,34 @@ public class ConfigChunkTreeTableModel
    public void insertNodeInto(MutableTreeNode child, MutableTreeNode parent, int idx)
    {
       parent.insert(child, idx);
-      this.fireTreeNodesInserted(this, this.getPathToRoot(parent),
-                                 new int[] { idx },
-                                 new Object[] { child });
+      fireTreeNodesInserted(this,
+                            getPathToRoot(parent),
+                            new int[] { idx },
+                            new Object[] { child });
+   }
+
+   /**
+    * Removes the given node from its parent.
+    */
+   public void removeNodeFromParent(MutableTreeNode node)
+   {
+      MutableTreeNode parent = (MutableTreeNode)node.getParent();
+
+      // Ensure that the given node has a parent
+      if (parent == null)
+      {
+         throw new IllegalArgumentException("node does not have a parent");
+      }
+
+      // Remove the node from the parent
+      int idx = parent.getIndex(node);
+      parent.remove(idx);
+
+      // Notify listeners that the node has been removed
+      fireTreeNodesRemoved(this,
+                           getPathToRoot(parent),
+                           new int[] { idx },
+                           new Object[] { node });
    }
 
    /**
@@ -549,6 +577,123 @@ public class ConfigChunkTreeTableModel
 
       // Didn't find anything :(
       return null;
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are modeling has
+    * changed its name.
+    */
+   public void nameChanged(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      setValueAt(src.getName(), getRoot(), 1);
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are editing has one
+    * of its property values change.
+    */
+   public void propertyValueChanged(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      int idx = evt.getIndex();
+      PropertyDesc prop_desc = src.getPropertyDesc(evt.getProperty());
+      DefaultMutableTreeNode chunk_node = getNodeFor(src);
+
+      // Multi-valued properties and embedded chunks are treated specially
+      if ((prop_desc.getItemsSize() > 1)
+         || (prop_desc.hasVariableNumberOfValues())
+         || (prop_desc.getValType() == ValType.EMBEDDEDCHUNK))
+      {
+         // Look for the property desc node
+         for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+         {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+            if (node.getUserObject().equals(prop_desc))
+            {
+               DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(idx);
+               fireTreeNodesChanged(this,
+                                    new Object[] { getPathToRoot(node) },
+                                    new int[] { node.getIndex(child) },
+                                    new Object[] { child });
+            }
+         }
+      }
+      // Property value is not an embedded chunk
+      else
+      {
+         // Take into account the extra two rows at the top of the table
+         if (chunk_node == getRoot())
+         {
+            idx += 2;
+         }
+
+         fireTreeNodesChanged(this,
+                              new Object[] { getPathToRoot(chunk_node) },
+                              new int[] { idx },
+                              new Object[] { chunk_node.getChildAt(idx) });
+      }
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are editing adds a
+    * new property value.
+    */
+   public void propertyValueAdded(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      int idx = evt.getIndex();
+      PropertyDesc prop_desc = src.getPropertyDesc(evt.getProperty());
+      DefaultMutableTreeNode chunk_node = getNodeFor(src);
+
+      // Get the node containing the property description under the source
+      // ConfigChunk node
+      for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+      {
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+         if (node.getUserObject().equals(prop_desc))
+         {
+            // The newly inserted property value must be added as a child to
+            // this node
+            if (prop_desc.getValType() != ValType.EMBEDDEDCHUNK)
+            {
+               DefaultMutableTreeNode new_child = new DefaultMutableTreeNode(evt.getValue());
+               insertNodeInto(new_child, node, idx);
+            }
+            else
+            {
+               // Embedded chunks are handled specially in that all of their
+               // respective child properties and such also need to be added to
+               // the tree at this time.
+               addEmbeddedChunk(node, (ConfigChunk)evt.getValue(), idx);
+            }
+         }
+      }
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are editing removes a
+    * property value.
+    */
+   public void propertyValueRemoved(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      int idx = evt.getIndex();
+      PropertyDesc prop_desc = src.getPropertyDesc(evt.getProperty());
+      DefaultMutableTreeNode chunk_node = getNodeFor(src);
+
+      // Get the node containing the property description under the source
+      // ConfigChunk node
+      for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+      {
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+         if (node.getUserObject().equals(prop_desc))
+         {
+            // The newly removed property value must be a child to this node
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(idx);
+            removeNodeFromParent(child);
+         }
+      }
    }
 
    private ConfigChunk chunk = null;
