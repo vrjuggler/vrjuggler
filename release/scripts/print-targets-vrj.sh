@@ -81,6 +81,7 @@ Install targets are:
     install-headers - Install only the header files.
     install-sample  - Install only the sample applications.
     install-test    - Install only the test code.
+    install-tools   - Install only the user tools code.
     install-data    - Install only the Data directory.
     install-gui     - Install only the configuration GUI.
 
