@@ -429,7 +429,7 @@ sub xmlFilter($$)
 # Each tag in %web_subst is replaced with the tag value prefixed
 # by the html_install_directory
 # Each tag in %alias_subst is replace by the tag only
-sub replaceTags(\$)
+sub replaceTags($)
 {
    my $contents_ref = shift;
 
@@ -452,7 +452,7 @@ sub replaceTags(\$)
 }
 
 # Check for includes and do them
-sub processIncludes(\$)
+sub processIncludes($)
 {
    my $contents_ref = shift;
 

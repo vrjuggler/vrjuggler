@@ -20,7 +20,7 @@
 # directories within the ~/  directory
 $web_subst{"HTML"} = 'html/';
 $web_subst{"IMAGES"} = 'images/';
-$web_subst{"CLASS_PATH"} = 'java.class/';
+$web_subst{"CLASS_PATH"} = 'java.class/ver1.07/';
 
 # directories within the ~/html directory
 $web_subst{"BUGS"} = 'html/bugs';
@@ -33,7 +33,7 @@ $web_subst{"LEGAL"} = 'html/legal';
 $web_subst{"MISC"} = 'html/misc';
 $web_subst{"NEWS"} = 'html/news';
 $web_subst{"PUBLICATIONS"} = 'html/publications';
-$web_subst{"USERGUIDE"} = 'html/user.guide';
+$web_subst{"PROGRAMMERGUIDE"} = 'html/programmer.guide';
 $web_subst{"VJCONTROL"} = 'html/vjcontrol';
 
 # html files
