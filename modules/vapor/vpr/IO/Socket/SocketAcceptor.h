@@ -84,7 +84,10 @@ public:
      *                  connections.
      */
     SocketAcceptor(const vpr::InetAddr& addr, bool reuseAddr = true,
-                   const int backlog = 5);
+                   const int backlog = 5)
+    {
+       open(addr, reuseAddr, backlog);
+    }
 
     /**
      * Opens the socket for accepting a connection.
@@ -127,7 +130,12 @@ public:
      *         vpr::Status::Failure is returned if the socket failed to accept.
      */
     vpr::Status accept(vpr::SocketStream& sock,
-                       vpr::Interval timeout = vpr::Interval::NoTimeout);
+                       vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+       vprASSERT(mSocket.isOpen());
+
+       return mSocket.accept(sock, timeout);
+    }
 
     /**
      * Closes the accepting socket.
@@ -147,6 +155,37 @@ public:
 private:
     vpr::SocketStream    mSocket;
 };
+
+inline vpr::Status SocketAcceptor::open(const vpr::InetAddr& addr,
+                                        bool reuseAddr, int backlog)
+{
+   vpr::Status ret_val;
+
+   vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
+
+    mSocket.setLocalAddr(addr);
+
+    ret_val = mSocket.open();
+    if(ret_val.failure())
+        return ret_val;
+
+    mSocket.setReuseAddr(reuseAddr);
+
+    ret_val = mSocket.bind();
+    if(ret_val.failure())
+    {
+        mSocket.close();
+        return ret_val;
+    }
+
+    ret_val = mSocket.listen(backlog);
+    if(ret_val.failure())
+    {
+        mSocket.close();
+        return ret_val;
+    }
+    return ret_val;
+}
 
 }
 
