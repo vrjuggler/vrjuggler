@@ -274,15 +274,12 @@ $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 # =============================================================================
 # VRJConfig targets
 # =============================================================================
-EXTRA_OBJ_TARGETS = vrjconfig-jar
-
 # Build the VRJConfig code base and the JAR files
 vrjconfig-gui:
 	@$(MAKE) vrjconfig-java
-	@$(MAKE) vrjconfig-jar
 
 # Build the java code and the JAR files
-vrjconfig-java vrjconfig-jar:
+vrjconfig-java:
 ifeq ($(BUILD_JAVA), Y)
 	@echo "===> vrjconfig"
 	$(MAKE) -C vrjconfig $@

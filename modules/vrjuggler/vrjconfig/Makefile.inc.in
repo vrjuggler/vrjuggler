@@ -41,13 +41,3 @@ else
 	@echo "VRJConfig build skipped"
 	@echo "------------------------------------------------"
 endif
-
-# Build the JAR files for VRJConfig.
-vrjconfig-jar:
-ifeq ($(BUILD_JAVA), Y)
-	@$(MAKE) jars
-else
-	@echo "------------------------------------------------"
-	@echo "VRJConfig JAR file creation skipped"
-	@echo "------------------------------------------------"
-endif
