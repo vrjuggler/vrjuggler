@@ -12,7 +12,6 @@
 // Exports =====================================================================
 void _Export_sonix();
 void _Export_SoundAPIInfo();
-void _Export_SoundFactory();
 void _Export_SoundHandle();
 void _Export_SoundImplementation();
 void _Export_SoundInfo();
@@ -33,7 +32,6 @@ BOOST_PYTHON_MODULE(snx)
 
     _Export_sonix();
     _Export_SoundAPIInfo();
-    _Export_SoundFactory();
     _Export_SoundHandle();
     _Export_SoundImplementation();
     _Export_SoundInfo();
