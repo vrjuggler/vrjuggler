@@ -35,12 +35,10 @@ package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.jccl.config.ConfigDefinition;
-import org.vrjuggler.jccl.config.ConfigElement;
-import org.vrjuggler.jccl.config.PropertyDefinition;
+import org.vrjuggler.jccl.config.*;
 
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
@@ -182,6 +180,174 @@ public class DeviceInfo
       }
    }
 
+   public void addUnit(Integer unitType)
+      throws IllegalArgumentException
+   {
+      if ( ! hasVariableUnitCount() )
+      {
+         throw new IllegalArgumentException("Device element does not have " +
+                                            "variable unit numbers");
+      }
+
+      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+
+      if ( prop_def.isVariable() )
+      {
+         PropertyValueDefinition value_def =
+            prop_def.getPropertyValueDefinition(0);
+         String token = prop_def.getToken();
+
+         Object default_value = value_def.getDefaultValue();
+
+         if ( default_value == null )
+         {
+            if ( prop_def.getType() == ConfigElement.class )
+            {
+               ConfigBroker broker = new ConfigBrokerProxy();
+               ConfigDefinitionRepository repos = broker.getRepository();
+               ConfigElementFactory factory =
+                  new ConfigElementFactory(repos.getAllLatest());
+
+               // XXX: How do we deal with this?  The flexibility of allowed
+               // types makes this tricky.
+               int count = getElement().getPropertyValueCount(token);
+               default_value =
+                  factory.create(value_def.getLabel() + " " + count,
+                                 repos.get(prop_def.getAllowedType(0)));
+            }
+            else
+            {
+               System.out.println("Don't know what to do for type " +
+                                  prop_def.getType());
+            }
+         }
+
+         System.out.println("[DeviceVertexRenderer.addUnit()] " +
+                            "default_value == " + default_value + " (type: " +
+                            prop_def.getType() + ")");
+         getElement().addProperty(token, default_value, getContext());
+      }
+      else
+      {
+         if ( prop_def.getType() == Integer.class )
+         {
+            Integer old_value =
+               (Integer) getElement().getProperty(prop_def.getToken(), 0);
+            Integer new_value = new Integer(old_value.intValue() + 1);
+            getElement().setProperty(prop_def.getToken(), 0, new_value,
+                                     getContext());
+         }
+         else
+         {
+            throw new IllegalArgumentException("Don't know how to add a " +
+                                               "new unit to property " +
+                                               prop_def.getToken());
+         }
+      }
+   }
+
+   public void removeUnit(Integer unitType, int unitNumber)
+      throws IllegalArgumentException
+   {
+      if ( ! hasVariableUnitCount() )
+      {
+         throw new IllegalArgumentException("Device element does not have " +
+                                            "variable unit numbers");
+      }
+
+      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+      if ( prop_def.isVariable() )
+      {
+         getElement().removeProperty(prop_def.getToken(), unitNumber,
+                                     getContext());
+      }
+      else
+      {
+         if ( prop_def.getType() == Integer.class )
+         {
+            Integer value =
+               (Integer) getElement().getProperty(prop_def.getToken(), 0);
+            Integer new_value = new Integer(value.intValue() - 1);
+            getElement().setProperty(prop_def.getToken(), 0, new_value,
+                                     getContext());
+         }
+         else
+         {
+            throw new IllegalArgumentException("Don't know how to remove " +
+                                               "unit for property " +
+                                               prop_def.getToken());
+         }
+      }
+   }
+
+   public int getUnitCount(Integer unitType)
+   {
+      int count = 0;
+      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+
+      if ( prop_def != null )
+      {
+         if ( prop_def.isVariable() )
+         {
+            count = getElement().getPropertyValueCount(prop_def.getToken());
+         }
+         else
+         {
+            Number val =
+               (Number) getElement().getProperty(prop_def.getToken(), 0);
+            count = val.intValue();
+         }
+      }
+
+      return count;
+   }
+
+   public int getUnitCount(String propToken)
+   {
+      int count = 0;
+      Collection unit_types = getUnitTypes();
+
+      for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+      {
+         Integer type = (Integer) t.next();
+         String cur_prop_token = getUnitPropertyToken(type);
+
+         if ( propToken.equals(cur_prop_token) )
+         {
+            count = getUnitCount(type);
+            break;
+         }
+      }
+
+      return count;
+   }
+
+   public String getUnitPropertyToken(Integer unitType)
+   {
+      String result = null;
+      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+
+      if ( prop_def != null )
+      {
+         result = prop_def.getToken();
+      }
+
+      return result;
+   }
+
+   public Class getUnitPropertyType(Integer unitType)
+   {
+      Class result = null;
+      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+
+      if ( prop_def != null )
+      {
+         result = prop_def.getType();
+      }
+
+      return result;
+   }
+
    /**
     * Retrieves the definition for the property in this device's config
     * element that provides an indication of how many input sources (units)
@@ -203,7 +369,7 @@ public class DeviceInfo
     * @see #hasVariableUnitCount()
     * @see #getUnitTypes()
     */
-   public PropertyDefinition getUnitPropertyDefinition(Integer inputType)
+   private PropertyDefinition getUnitPropertyDefinition(Integer inputType)
    {
       return getUnitPropertyDefinition((Object) inputType);
    }
@@ -237,7 +403,7 @@ public class DeviceInfo
     * @see #hasVariableUnitCount()
     * @see #getUnitTypes()
     */
-   public PropertyDefinition getUnitPropertyDefinition(Object inputType)
+   private PropertyDefinition getUnitPropertyDefinition(Object inputType)
    {
       return (PropertyDefinition) mUnitTypeMap.get(inputType);
    }

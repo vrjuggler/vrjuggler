@@ -48,7 +48,10 @@ import org.jgraph.graph.*;
 
 import info.clearthought.layout.*;
 
-import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.ConfigBroker;
+import org.vrjuggler.jccl.config.ConfigBrokerProxy;
+import org.vrjuggler.jccl.config.ConfigContext;
+import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
@@ -297,18 +300,14 @@ public class MultiUnitDeviceVertexView
             for ( Iterator t = unit_types.iterator(); t.hasNext(); )
             {
                Integer type = (Integer) t.next();
-               PropertyDefinition prop_def =
-                  mDeviceInfo.getUnitPropertyDefinition(type);
+               String prop_token = mDeviceInfo.getUnitPropertyToken(type);
 
                // If the device has a variable unit count and the value added
                // was for the device unit property, then we need to add another
                // row to the renderer to repersent the new unit.
-               // mVariableUnits == true iff prop_def != null
-               if ( prop_def.getToken().equals(evt.getProperty()) )
+               if ( evt.getProperty().equals(prop_token) )
                {
-                  ConfigElement elt = mDeviceInfo.getElement();
-                  int unit_num =
-                     elt.getPropertyValueCount(prop_def.getToken()) - 1;
+                  int unit_num = mDeviceInfo.getUnitCount(type) - 1;
                   DefaultPort port = GraphHelpers.createDevicePort(type,
                                                                    unit_num);
                   ((DefaultGraphCell) mView.getCell()).add(port);
@@ -329,24 +328,23 @@ public class MultiUnitDeviceVertexView
             for ( Iterator t = unit_types.iterator(); t.hasNext(); )
             {
                Integer type = (Integer) t.next();
-               PropertyDefinition prop_def =
-                  mDeviceInfo.getUnitPropertyDefinition(type);
+               String prop_token = mDeviceInfo.getUnitPropertyToken(type);
 
                // If the device has a variable unit count and the value added
                // was for the device unit property, then we need to add another
                // row to the renderer to repersent the new unit.
-               // mVariableUnits == true iff prop_def != null
-               if ( prop_def.getToken().equals(evt.getProperty()) )
+               if ( evt.getProperty().equals(prop_token) )
                {
-                  ConfigElement elt = mDeviceInfo.getElement();
-                  Number value =
-                     (Number) elt.getProperty(prop_def.getToken(), 0);
-                  int cur_count = value.intValue();
+                  int cur_count = mDeviceInfo.getUnitCount(type);
                   int old_count = ((Number) evt.getValue()).intValue();
+
+                  System.out.println("cur_count == " + cur_count);
+                  System.out.println("old_count == " + old_count);
 
                   // Unit addition.  This always appends the new unit.
                   if ( cur_count > old_count )
                   {
+                     System.out.println("Adding new row");
                      UnitInfo new_unit_info =
                         new UnitInfo(type, new Integer(cur_count - 1));
                      DefaultPort port =
@@ -358,14 +356,12 @@ public class MultiUnitDeviceVertexView
                      // Keep track of the rows that are added dynamically.
                      // These may need to be removed later as a result of an
                      // undo operation.
-                     mAddedUnitRows.push( 
-                        new UnitRow(new_unit_info,
-                                    (List) mUnitRowMap.get(new_unit_info))
-                     );
+                     mAddedUnitRows.push(new_unit_info);
                   }
                   // Unit removal.
                   else
                   {
+                     System.out.println("Removing a row");
                      DefaultPort port = null;
 
                      // This bit is needed for handling undo and redo
@@ -376,13 +372,15 @@ public class MultiUnitDeviceVertexView
                      {
                         if ( ! mAddedUnitRows.empty() )
                         {
-                           UnitRow row_stuff = (UnitRow) mAddedUnitRows.pop();
+                           UnitInfo row_unit_info =
+                              (UnitInfo) mAddedUnitRows.pop();
                            port = findPort((DefaultGraphCell) mView.getCell(),
-                                           row_stuff.unitInfo);
+                                           row_unit_info);
                         }
                      }
                      else
                      {
+                        mAddedUnitRows.remove(mRemovedUnitInfo);
                         port = findPort((DefaultGraphCell) mView.getCell(),
                                         mRemovedUnitInfo);
                      }
@@ -422,11 +420,9 @@ public class MultiUnitDeviceVertexView
             for ( Iterator t = unit_types.iterator(); t.hasNext(); )
             {
                Integer type = (Integer) t.next();
-               PropertyDefinition prop_def =
-                  mDeviceInfo.getUnitPropertyDefinition(type);
+               String prop_token = mDeviceInfo.getUnitPropertyToken(type);
 
-               // mVariableUnits == true iff prop_def != null
-               if ( prop_def.getToken().equals(evt.getProperty()) )
+               if ( evt.getProperty().equals(prop_token) )
                {
                   ConfigElement elt = mDeviceInfo.getElement();
                   int old_unit = evt.getIndex();
@@ -469,6 +465,10 @@ public class MultiUnitDeviceVertexView
             {
                UnitInfo cur_unit_info =
                   (UnitInfo) ((DefaultPort) child).getUserObject();
+               System.out.println("[findPort()] Comparing " + searchUnitInfo +
+                                  " with " + cur_unit_info);
+               System.out.println("             Result == " +
+                                  searchUnitInfo.equals(cur_unit_info));
                if ( searchUnitInfo.equals(cur_unit_info) )
                {
                   port = (DefaultPort) child;
@@ -545,24 +545,7 @@ public class MultiUnitDeviceVertexView
          port_widget.setForeground(nameLabel.getForeground());
 
          JLabel name_field = new JLabel();
-
-         PropertyDefinition unit_def =
-            mDeviceInfo.getUnitPropertyDefinition(unit_type);
-
-         if ( unit_def != null && unit_def.getType() == ConfigElement.class )
-         {
-            Integer unit_num = unit_info.getUnitNumber();
-            ConfigElement dev_elt = mDeviceInfo.getElement();
-            ConfigElement unit_elt =
-               (ConfigElement) dev_elt.getProperty(unit_def.getToken(),
-                                                   unit_num.intValue());
-            name_field.setText(unit_elt.getName());
-         }
-         else
-         {
-            setLabelText(name_field, unit_info);
-         }
-
+         setLabelText(name_field, unit_info);
          name_field.setFont(new Font("Dialog", Font.ITALIC,
                                      nameLabel.getFont().getSize()));
          name_field.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -712,63 +695,7 @@ public class MultiUnitDeviceVertexView
        */
       private void addUnit(Integer unitType)
       {
-         ConfigElement elt = mDeviceInfo.getElement();
-         PropertyDefinition unit_prop_def =
-            mDeviceInfo.getUnitPropertyDefinition(unitType);
-
-         if ( unit_prop_def.isVariable() )
-         {
-            PropertyValueDefinition value_def =
-               unit_prop_def.getPropertyValueDefinition(0);
-            String token = unit_prop_def.getToken();
-
-            Object default_value = value_def.getDefaultValue();
-
-            if ( default_value == null )
-            {
-               if ( unit_prop_def.getType() == ConfigElement.class )
-               {
-                  ConfigBroker broker = new ConfigBrokerProxy();
-                  ConfigDefinitionRepository repos = broker.getRepository();
-                  ConfigElementFactory factory =
-                     new ConfigElementFactory(repos.getAllLatest());
-
-                  // XXX: How do we deal with this?  The flexibility of allowed
-                  // types makes this tricky.
-                  int count = elt.getPropertyValueCount(token);
-                  default_value =
-                     factory.create(value_def.getLabel() + " " + count,
-                                    repos.get(unit_prop_def.getAllowedType(0)));
-               }
-               else
-               {
-                  System.out.println("Don't know what to do for type " +
-                                     unit_prop_def.getType());
-               }
-            }
-
-            System.out.println("[DeviceVertexRenderer.addUnit()] " +
-                               "default_value == " + default_value +
-                               " (type: " + unit_prop_def.getType() + ")");
-            elt.addProperty(token, default_value, mDeviceInfo.getContext());
-         }
-         else
-         {
-            if ( unit_prop_def.getType() == Integer.class )
-            {
-               Integer old_value =
-                  (Integer) elt.getProperty(unit_prop_def.getToken(), 0);
-               Integer new_value = new Integer(old_value.intValue() + 1);
-               elt.setProperty(unit_prop_def.getToken(), 0, new_value,
-                               mDeviceInfo.getContext());
-            }
-            else
-            {
-               throw new IllegalArgumentException("Don't know how to add a " +
-                                                  "new unit to property " +
-                                                  unit_prop_def.getToken());
-            }
-         }
+         mDeviceInfo.addUnit(unitType);
       }
 
       private void removeUnitRow(DefaultPort port)
@@ -926,15 +853,9 @@ public class MultiUnitDeviceVertexView
 
                   // Update the labels for the remaining units to reflect that
                   // they have been shifted up one.
-                  PropertyDefinition unit_def =
-                     mDeviceInfo.getUnitPropertyDefinition(unit_info.getUnitType());
-
-                  // The label is only updated if the property type is not
-                  // ConfigElement.  In the ConfigElement case, the label is
-                  // the embedded element's name, and we do not want to mess
-                  // around with trying to change that.
-                  if ( unit_def != null &&
-                       unit_def.getType() != ConfigElement.class )
+                  Class property_type =
+                     mDeviceInfo.getUnitPropertyType(unit_info.getUnitType());
+                  if ( property_type == ConfigElement.class )
                   {
                      List comp_list = (List) mUnitRowMap.get(unit_info);
 
@@ -966,43 +887,24 @@ public class MultiUnitDeviceVertexView
 
       private void removeUnit(int unitNumber, Integer unitType)
       {
-         ConfigElement elt = mDeviceInfo.getElement();
-         ConfigContext ctx = mDeviceInfo.getContext();
-         PropertyDefinition unit_prop_def =
-            mDeviceInfo.getUnitPropertyDefinition(unitType);
-
-         // XXX: This is a hack.  We know that propertyValueRemoved() or
-         // propertyValueChanged() is going to be invoked as a result of one
-         // of the two code paths below.  Having this member variable gives
-         // us an easy way to figure out exactly which unit was removed.
-         // This is particularly necessary for the propertyValueChanged() case
-         // since we are decrementing a value rather than removing a whole
-         // value.  I simply couldn't come up with a more elegant, more robust
-         // way to handle the propertyValueChanged case().  -PH 3/22/2005
-         mRemovedUnitInfo = new UnitInfo(unitType, new Integer(unitNumber));
-
-         if ( unit_prop_def.isVariable() )
+         try
          {
-            elt.removeProperty(unit_prop_def.getToken(), unitNumber, ctx);
+            // XXX: This is a hack.  We know that propertyValueRemoved() or
+            // propertyValueChanged() is going to be invoked as a result of one
+            // of the two code paths below.  Having this member variable gives
+            // us an easy way to figure out exactly which unit was removed.
+            // This is particularly necessary for the propertyValueChanged()
+            // case since we are decrementing a value rather than removing a
+            // whole value.  I simply couldn't come up with a more elegant,
+            // more robust way to handle the propertyValueChanged case().
+            // -PH 3/22/2005
+            mRemovedUnitInfo = new UnitInfo(unitType, new Integer(unitNumber));
+
+            mDeviceInfo.removeUnit(unitType, unitNumber);
          }
-         else
+         catch (IllegalArgumentException ex)
          {
-            if ( unit_prop_def.getType() == Integer.class )
-            {
-               Integer value =
-                  (Integer) elt.getProperty(unit_prop_def.getToken(), 0);
-               Integer new_value = new Integer(value.intValue() - 1);
-               elt.setProperty(unit_prop_def.getToken(), 0, new_value, ctx);
-            }
-            else
-            {
-               // Things have gone awry, so just dump the UnitInfo object that
-               // we created above.
-               mRemovedUnitInfo = null;
-               throw new IllegalArgumentException("Don't know how to remove " +
-                                                  "unit for property " +
-                                                  unit_prop_def.getToken());
-            }
+            mRemovedUnitInfo = null;
          }
       }
 
@@ -1055,19 +957,6 @@ public class MultiUnitDeviceVertexView
 
          public JButton addButton = null;
          public int     unitCount = 0;
-      }
-
-      /** Used in conjunction with the mRemovedUnitInfo hack. */
-      private static class UnitRow
-      {
-         UnitRow(UnitInfo unitInfo, List components)
-         {
-            this.unitInfo   = unitInfo;
-            this.components = components;
-         }
-
-         public UnitInfo unitInfo   = null;
-         public List     components = null;
       }
    }
 }
