@@ -88,26 +88,26 @@ namespace vpr
       /**
        * Stop timing on most resent startProfile and record the results.
        */
-      static   void                 stopProfile( void );
+      static   void                 stopProfile();
 
       /**
        * Reset the contents of the profiling system
        *
        * @post Everything is reset except tree structure. Timing data is reset.
        */
-      static   void                 reset( void );
+      static   void                 reset();
 
       /**
        * Increment the frame counter
        *
        * @post Frame counter incremented by one.
        */
-      static   void                 incrementFrameCounter( void );
+      static   void                 incrementFrameCounter();
 
       /**
        * @return Returns the number of frames since reset
        */
-      static   int                  getFrameCountSinceReset( void )
+      static   int                  getFrameCountSinceReset()
       {
          return mFrameCounter;
       }
@@ -115,22 +115,28 @@ namespace vpr
       /**
        * @return Returns the elapsed time since last reset
        */
-      static   float                getTimeSinceReset(void);
+      static   float                getTimeSinceReset();
 
       /**
        * @return Returns a new Iterator that is set to the root.
        */
-      static   ProfileIterator*     getIterator( void )
+      static   ProfileIterator     begin()
       {
-         return new ProfileIterator(&mRoot);
+         return ProfileIterator(&mRoot);
       }
 
-      static   ProfileNode*         getRootNode( void )
+      static   ProfileIterator     end()
+      {
+         return ProfileIterator(NULL);
+      }
+
+
+      static   ProfileNode*         getRootNode()
       {
          return &mRoot;
       }
 
-      static   void                 printTree(void )
+      static   void                 printTree()
       {
          mTreeLock.acquire();
          if ( mRoot.getChild() != NULL )
@@ -140,7 +146,7 @@ namespace vpr
          mTreeLock.release();
       }
 
-      static std::vector<std::string> getNames(void)
+      static std::vector<std::string> getNames()
       {
             mTreeLock.acquire();
               std::vector<std::string> names_list;
@@ -161,16 +167,16 @@ namespace vpr
            mTreeLock.acquire();
            ProfileNode* node = mRoot.getNamedNode( nodeName );
 
-           if(node == NULL ) 
-            { 
+           if(node == NULL )
+            {
                mTreeLock.release();
-               return 0.0; 
+               return 0.0;
             }
 
            ProfileNode::NodeHistoryRange p = node->getNodeHistoryRange();
            mTreeLock.release();
            return p.first->msecf();
-       } 
+       }
 
       /**
        * @post Iterator has been deleted
