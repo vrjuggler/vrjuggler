@@ -59,6 +59,9 @@ public class PropertySheet extends PropertyComponent
    public static final int DOWN_ICON_COLUMN   = 3;
    public static final int DELETE_ICON_COLUMN = 4;
 
+   public static final int SPAN_START_COLUMN = LABEL_COLUMN;
+   public static final int SPAN_END_COLUMN   = DELETE_ICON_COLUMN;
+
    public static final int START_ROW                = 1;
    public static final int VAR_LIST_VALUE_START_ROW = 2;
 
