@@ -2,7 +2,7 @@
 #include <Input/vjInput/vjInput.h>
 
 vjInput::vjInput( vjConfigChunk *c)
-{ 
+{
   cout << "  vjInput::vjInput(vjConfigChunk*) " << endl;
   sPort = NULL;
   char* t = c->getProperty("port");
@@ -17,11 +17,11 @@ vjInput::vjInput( vjConfigChunk *c)
     instName = new char[ strlen(t) + 1];
     strcpy(instName,t);
   }
-  
+
   baudRate = c->getProperty("baud");
-  
+
   deviceAbilities = 0;
-  samplePID = 0;
+  myThread = NULL;
   active = 0;
 }
 
@@ -29,7 +29,7 @@ vjInput::vjInput()
 {
   cout << "  vjInput::vjInput() " << endl;
   deviceAbilities = 0;
-   instName = NULL; 
+   instName = NULL;
    sPort = NULL;
 }
 
@@ -44,7 +44,7 @@ vjInput::~vjInput()
 
 void vjInput::SetPort(char* serialPort)
 {
-if (samplePID != 0) {
+if (myThread != NULL) {
      cerr << "Cannot change the serial Port while active\n";
      return;
   }
@@ -59,7 +59,7 @@ char* vjInput::GetPort()
 
 void vjInput::SetBaudRate(int baud)
 {
-  if (samplePID != 0)
+  if (myThread != NULL)
      baudRate = baud;
 }
 

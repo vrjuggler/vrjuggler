@@ -6,39 +6,39 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
 				vjAnalog(c), vjInput(c)
 {
     cout << "     vjKeyboard::vjKeyboard(vjConfigChunk*c) " << endl;
-    myThreadID = 0;
+    myThread = NULL;
     int i;
     for(i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = 0;
     m_realkeys[0] = m_keys[0] = 1;
-    
+
     m_width = (int)c->getProperty("width");
     m_height = (int)c->getProperty("height");
-    
+
     if (m_width == 0) m_width = 400;
     if (m_height == 0) m_height = 400;
-    
+
     m_toggleoff = c->getProperty("toggleoff");
     m_anastep   = c->getProperty("anastep");
     if (m_anastep == 0) m_anastep = 2;
-    
+
     m_dtrans = c->getProperty("dtrans");
     if (0 == m_dtrans) m_dtrans = 0.1;
     m_drot   = c->getProperty("drot");
     if (0 == m_drot) m_drot = 1;
     m_mouse_sensitivity = c->getProperty("msens");
     if (0 == m_mouse_sensitivity) m_mouse_sensitivity = 0.5;
-    
+
     cout << "Mouse Sensititivty: " << m_mouse_sensitivity << endl;
-      
+
     for (i = 0; i < NUM_POS_CONTROLS; i++)
-    { 
-      m_pos0key[i] = c->getProperty("pos0keys",i);       
-      m_pos0mod[i] = c->getProperty("pos0mods",i);        
-      m_pos1key[i] = c->getProperty("pos1keys",i);       
-      m_pos1mod[i] = c->getProperty("pos1mods",i);    
+    {
+      m_pos0key[i] = c->getProperty("pos0keys",i);
+      m_pos0mod[i] = c->getProperty("pos0mods",i);
+      m_pos1key[i] = c->getProperty("pos1keys",i);
+      m_pos1mod[i] = c->getProperty("pos1mods",i);
     }
-    
+
     for(int z = 0; z < 4; z++)
     {
       m_digkeys[z] = c->getProperty("digkeys",z);
@@ -47,25 +47,25 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
       m_anamodsup[z] = c->getProperty("anamodsup",z);
       m_anakeysdn[z] = c->getProperty("anakeysdn",z);
       m_anamodsdn[z] = c->getProperty("anamodsdn",z);
-      
+
       /* Got rid of this hack
       if (m_digmods[z] != 0) m_digmods[z] += 4;
       if (m_anamodsup[z] != 0) m_anamodsup[z] += 4;
       if (m_anamodsdn[z] != 0) m_anamodsdn[z] += 4; */
     }
-    
+
     /* Got rid of this hack
     for(int q = 0; q < NUM_POS_CONTROLS; q++)
-    {  
+    {
        if (m_pos0mod[q] != 0)  // if the key is not NONE, then add 4 to get it
           m_pos0mod[q] += 4;   // to the SHIFT/CTRL/ALT key
        if (m_pos1mod[q] != 0)
           m_pos1mod[q] += 4;
     } */
-    
+
     for (int n = 0; n < 2; n++)
       m_posdata[n].makeIdent();
-     
+
     cout << "        Keyboard config: " << endl
          << "           Forward :" << m_pos0key[FORWARD] << "  " << m_pos0mod[FORWARD] << endl
 	      << "           Backward:" << m_pos0key[BACK] << "  " << m_pos0mod[BACK] << endl
@@ -80,22 +80,22 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
          << "           Rot CCW :" << m_pos0key[ROT_ROLL_CCW] << "   " << m_pos0mod[ROT_ROLL_CCW] << endl
          << "           Rot CW  :" << m_pos0key[ROT_ROLL_CW] << "   " << m_pos0mod[ROT_ROLL_CW] << endl
            << endl;
- 
+
 }
 
 int vjKeyboard::StartSampling()
-{ 
+{
 
-if (myThreadID == 0) {
+if (myThread == NULL) {
   //UnUsed// int processID;
   int i;
-  
+
   current = 0;
   valid = 1;
   progress = 2;
-  
-  m_x = 100; m_y = 200; 
-  
+
+  m_x = 100; m_y = 200;
+
   m_display = XOpenDisplay(NULL);
   if (m_display == NULL)
   {
@@ -103,40 +103,40 @@ if (myThreadID == 0) {
      return 0;
   }
   m_screen = DefaultScreen(m_display);
-  
+
   XVisualInfo vTemplate;
   long vMask = VisualScreenMask;
   vTemplate.screen = m_screen;
   int nVisuals;
-  
+
   m_visual = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
   XVisualInfo* p_visinfo;
   for(i = 0, p_visinfo = m_visual; i < nVisuals; i++, p_visinfo++)
   {
     if (p_visinfo->depth > 8)
-    {   
+    {
 	m_visual = p_visinfo;
         break;
     }
   }
-  
+
   if (i == nVisuals)
   {
     cerr << "vjKeyboard::StartSampling() : find visual failed" << endl;
     return 0;
   }
-  
+
   m_swa.colormap = XCreateColormap(m_display,
                               RootWindow(m_display,m_visual->screen),
-                            
-				m_visual->visual, AllocNone); 
-  m_swa.border_pixel = 0; 
-  m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask; 
-  CheckGeometry();  
-   
+
+				m_visual->visual, AllocNone);
+  m_swa.border_pixel = 0;
+  m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
+  CheckGeometry();
+
   m_window = CreateWindow ( DefaultRootWindow(m_display) ,
-		1, BlackPixel(m_display,m_screen), 
-                WhitePixel(m_display,m_screen), ExposureMask | 
+		1, BlackPixel(m_display,m_screen),
+                WhitePixel(m_display,m_screen), ExposureMask |
 		StructureNotifyMask |
 		KeyPressMask | KeyReleaseMask | ButtonPressMask |
 		ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
@@ -146,16 +146,16 @@ if (myThreadID == 0) {
   XMapWindow(m_display, m_window);
   XFlush(m_display);
   XRaiseWindow(m_display,m_window);
-  
+
 
   vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
-  
+
   //UnUsed// vjKeyboard* devicePtr = this;
   void Samplem_keys(void*);
-  
-  myThreadID = (vjThreadId *) 1;
+
+  myThread = (vjThread *) 1;
   return 1;
-     
+
   }
   else return 0; // already sampling
 
@@ -176,16 +176,16 @@ int vjKeyboard::OnlyModifier(int mod)
      default:
        vjASSERT(false);
        return 0;
-  } 
-  
+  }
+
 
 }
 
 void vjKeyboard::UpdateData()
-{ 
+{
   int i;
   UpdKeys();
-  
+
   // --- Update position 0 --- //
   if (m_keys[m_pos0key[FORWARD]] && OnlyModifier(m_pos0mod[FORWARD]))
       MoveFor( 1 * m_keys[m_pos0key[FORWARD]] , 0);
@@ -199,7 +199,7 @@ void vjKeyboard::UpdateData()
       MoveUp ( 1 * m_keys[m_pos0key[UP]] , 0);
   if (m_keys[m_pos0key[DOWN]] && OnlyModifier(m_pos0mod[DOWN]))
       MoveUp (-1 * m_keys[m_pos0key[DOWN]] , 0 );
-      
+
   if (m_keys[m_pos0key[ROTR]] && OnlyModifier(m_pos0mod[ROTR]))
       RotLeft( -1 * m_keys[m_pos0key[ROTR]] , 0);
   if (m_keys[m_pos0key[ROTL]] && OnlyModifier(m_pos0mod[ROTL]))
@@ -211,7 +211,7 @@ void vjKeyboard::UpdateData()
   if (m_keys[m_pos0key[ROT_ROLL_CCW]] && OnlyModifier(m_pos0mod[ROT_ROLL_CCW]))
       RotRollCCW( 1 * m_keys[m_pos0key[ROT_ROLL_CCW]] , 0);
   if (m_keys[m_pos0key[ROT_ROLL_CW]] && OnlyModifier(m_pos0mod[ROT_ROLL_CW]))
-      RotRollCCW( -1 * m_keys[m_pos0key[ROT_ROLL_CW]] , 0); 
+      RotRollCCW( -1 * m_keys[m_pos0key[ROT_ROLL_CW]] , 0);
 
   // --- Update position 1 --- //
   if (m_keys[m_pos1key[FORWARD]] && OnlyModifier(m_pos1mod[FORWARD]))
@@ -226,7 +226,7 @@ void vjKeyboard::UpdateData()
       MoveUp ( 1 * m_keys[m_pos1key[UP]] , 1);
   if (m_keys[m_pos1key[DOWN]] && OnlyModifier(m_pos1mod[DOWN]))
       MoveUp (-1 * m_keys[m_pos1key[DOWN]] , 1 );
-      
+
   if (m_keys[m_pos1key[ROTR]] && OnlyModifier(m_pos1mod[ROTR]))
       RotLeft( -1 * m_keys[m_pos1key[ROTR]] , 1);
   if (m_keys[m_pos1key[ROTL]] && OnlyModifier(m_pos1mod[ROTL]))
@@ -238,7 +238,7 @@ void vjKeyboard::UpdateData()
   if (m_keys[m_pos1key[ROT_ROLL_CCW]] && OnlyModifier(m_pos1mod[ROT_ROLL_CCW]))
       RotRollCCW( 1 * m_keys[m_pos1key[ROT_ROLL_CCW]] , 1);
   if (m_keys[m_pos1key[ROT_ROLL_CW]] && OnlyModifier(m_pos1mod[ROT_ROLL_CW]))
-      RotRollCCW( -1 * m_keys[m_pos1key[ROT_ROLL_CW]] , 1); 
+      RotRollCCW( -1 * m_keys[m_pos1key[ROT_ROLL_CW]] , 1);
 
   // -- Update digital data -- //
   if (m_toggleoff)
@@ -252,25 +252,25 @@ void vjKeyboard::UpdateData()
   {
     for (i = 0; i < 4; i++)
       if (m_keys[m_digkeys[i]] && OnlyModifier(m_digmods[i]))
-         m_digdata[i] = 1 - m_digdata[i]; 
-  } 
-      
+         m_digdata[i] = 1 - m_digdata[i];
+  }
+
   // -- Update analog data --- //
   for (i = 0; i < 4; i++)
   {
       m_anadata[i] += m_keys[m_anakeysup[i]] * OnlyModifier(m_anamodsup[i]) * m_anastep;
       m_anadata[i] -= m_keys[m_anakeysdn[i]] * OnlyModifier(m_anamodsdn[i]) * m_anastep;
-  
+
       if (m_anadata[i] < 0) m_anadata[i] = 0;
       if (m_anadata[i] > 255) m_anadata[i] = 255;
   }
- 
+
   for (i = 0; i < 4; i++)
   {
     vjDEBUG(6) << "Digital " << i << ": " << m_digdata[i]
                << "\tAnalog  " << i << ": " << m_anadata[i] << endl << vjDEBUG_FLUSH;
   }
- 
+
 }
 
 // Move forward the given amount on position data n
@@ -284,7 +284,7 @@ void vjKeyboard::MoveFor(float amt, int n)
 // Left is -X dir
 void vjKeyboard::MoveLeft(float amt, int n)
 {
-    m_posdata[n].postTrans(m_posdata[n], -amt*m_dtrans, 0.0, 0.0);  
+    m_posdata[n].postTrans(m_posdata[n], -amt*m_dtrans, 0.0, 0.0);
 }
 
 // Move up the given amount on position data n
@@ -312,7 +312,7 @@ void vjKeyboard::RotLeft(float amt, int n)
 void vjKeyboard::RotRollCCW(float amt, int n)
 {
    static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
-   m_posdata[n].postRot(m_posdata[n], amt*m_drot, neg_z_axis); 
+   m_posdata[n].postRot(m_posdata[n], amt*m_drot, neg_z_axis);
 }
 
 void vjKeyboard::UpdKeys()
@@ -327,7 +327,7 @@ void vjKeyboard::UpdKeys()
 
    for(int i = 0; i < 256; i++)
       m_keys[i] = m_realkeys[i];
- 
+
    while(XCheckWindowEvent(m_display,m_window,KeyPressMask |
 		KeyReleaseMask | ButtonPressMask | ButtonReleaseMask, &event))
    {
@@ -337,60 +337,60 @@ void vjKeyboard::UpdKeys()
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 1;
          m_keys[XKeyTovjKey(key)] += 1;
-         vjDEBUG(1) << "KeyPress:  " << hex << key 
+         vjDEBUG(1) << "KeyPress:  " << hex << key
          << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
       case KeyRelease:
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 0;
-         vjDEBUG(1) << "KeyRelease:" << hex << key 
+         vjDEBUG(1) << "KeyRelease:" << hex << key
          << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
       }
    }
-   
-   
+
+
    XQueryPointer(m_display, m_window, &win1, &win2, &rootX, &rootY,
 		   &wX, &wY, &mask);
 	
-   if ((rootX - oldx) > 0) 
+   if ((rootX - oldx) > 0)
       m_keys[VJMOUSE_POSX] = (rootX - oldx) * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_POSX] = 0;
-   
-   if ((rootX - oldx) < 0) 
+
+   if ((rootX - oldx) < 0)
       m_keys[VJMOUSE_NEGX] = -(rootX - oldx) * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_NEGX] = 0;
-      
-   if ((rootY - oldy) > 0) 
+
+   if ((rootY - oldy) > 0)
       m_keys[VJMOUSE_POSY] = (rootY - oldy) * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_POSY] = 0;
-   
-   if ((rootY - oldy) > 0) 
+
+   if ((rootY - oldy) > 0)
       m_keys[VJMOUSE_NEGY] = -(rootY - oldy) * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_NEGY] = 0;
-      
+
   oldx = rootX; oldy = rootY;
-  
+
    m_keys[VJMBUTTON1] = ((mask | Button1Mask) == mask) ? 1 : 0;
    m_keys[VJMBUTTON2] = ((mask | Button2Mask) == mask) ? 1 : 0;
    m_keys[VJMBUTTON3] = ((mask | Button3Mask) == mask) ? 1 : 0;
-       
+
 }
 
 int vjKeyboard::StopSampling()
 {
-  if (myThreadID != 0)
+  if (myThread != NULL)
   {
     //vjThread::kill(myThreadID);
-    myThreadID = 0;
+    myThread = NULL;
     cout << "Stoppping Keyboard.." << endl;
     sleep(1);
-    
-    
+
+
     XDestroyWindow(m_display,m_window);
     XFree(m_visual);
     XCloseDisplay((Display*) m_display);
@@ -415,7 +415,7 @@ int vjKeyboard::XKeyTovjKey(KeySym xKey)
    case XK_Shift_R   : return VJKEY_SHIFT;
    case XK_Alt_L     : return VJKEY_ALT;
    case XK_Alt_R     : return VJKEY_ALT;
-   
+
       // Map all number keys
       // Note we map keypad and normal keys making no distinction
    case XK_1            : return VJKEY_1;
@@ -438,7 +438,7 @@ int vjKeyboard::XKeyTovjKey(KeySym xKey)
    case XK_KP_Page_Up   : return VJKEY_9;
    case XK_0            : return VJKEY_0;
    case XK_KP_Insert    : return VJKEY_0;
-   
+
    case XK_A         : return VJKEY_A;
    case XK_B         : return VJKEY_B;
    case XK_C         : return VJKEY_C;
@@ -550,7 +550,7 @@ void vjKeyboard::SetHints(Window window,
 
     /* Fill in class name. */
     classhints.res_name  = class_name;
-    classhints.res_class = class_type; 
+    classhints.res_class = class_type;
 
     XSetWMProperties(m_display, window,
         &w_name,
@@ -578,7 +578,7 @@ Window vjKeyboard::CreateWindow (Window parent, unsigned int border, unsigned lo
   //UnUsed// attributes.border_pixel = fore;
   //UnUsed// attributes.event_mask = event_mask;
   //UnUsed// attribute_mask = CWBackPixel | CWBorderPixel | CWEventMask;
-  
+
   // create it
   window = XCreateWindow( m_display, parent,
            m_x,m_y,m_width,m_height, border,

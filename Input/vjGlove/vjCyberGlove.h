@@ -16,10 +16,10 @@
 struct vjGLOVE_DATA {
   float joints[MAX_SENSOR_GROUPS][MAX_SENSOR_VALUES];
  // matrix4x4 xforms[5][3];
-}; 
+};
 
 /* a note about fingers...
- * the GetJoints and GetDigitXForms both return 2d arrays.  The 
+ * the GetJoints and GetDigitXForms both return 2d arrays.  The
  * first index of each of these is a finger, enumerated in vt_glove-types.h
  *    THUMB  = 0
  *    INDEX  = 1
@@ -57,21 +57,21 @@ class vjCyberGlove : public vjInput {
      *  the port and baudrate come from vjInput's constructor
      */
     vjCyberGlove(vjConfigChunk *c);
-      /* initializes hand & opens hand on serport 
-       * homedir = directory with glove data files, 
+      /* initializes hand & opens hand on serport
+       * homedir = directory with glove data files,
        *   e.g. "/home/vr/CAVE/glove"
        * port - serprot, e.g. "/dev/ttyd2".  the named port must
        *   actually exist, but it's ok if there's no glove attached
        *   to it - initialization will give a warning, and all values
        *   will be 0.0 unless set by hand
-       * baud - baud rate, set on the back of the glove box. 
+       * baud - baud rate, set on the back of the glove box.
        *   Usually 38400.
       */
-    
-     /** destroys virtualhand 
+
+     /** destroys virtualhand
       */
-    ~vjCyberGlove (); 
-      
+    ~vjCyberGlove ();
+
 
     int StartSampling();
     int StopSampling();
@@ -79,7 +79,7 @@ class vjCyberGlove : public vjInput {
     void GetData(vjGLOVE_DATA* &data);
   //  void UpdateData();
 
-    void UpdateData (); 
+    void UpdateData ();
       /* reads current hand data from serial port and
        * updates the array returned by GetJoints.
        * note: synchronous
@@ -90,16 +90,16 @@ class vjCyberGlove : public vjInput {
        * after every update; new data just gets written into the same
        * old memory locations.  All values in degrees.
        * Note that it is also ok to write joint values into this array;
-       * you may want to do so if you're just simulating the presence 
+       * you may want to do so if you're just simulating the presence
        * of the glove.
        * all values measured in radians.
        */
     volatile float** GetData ();
-      
+
       /** returns the thumb roll (in radians).
        */
     float GetThumbRoll ();
-     
+
      /** reads the actual surface object file (eg "hires-hand.surf")
       * Better be called before calling GetSurfaceModel...
       * Not necessary if you don't want to actually draw the hand.
@@ -109,38 +109,38 @@ class vjCyberGlove : public vjInput {
       * "lowres-hand.surf" or "hires-hand.surf"
       */
     void ReadSurfaceModel (int resolution, char *dir, char *name);
-    
-      /** returns a pointer to the surface model struct, defined in 
+
+      /** returns a pointer to the surface model struct, defined in
        * vt_read_hand_model-types.h, used to draw a glove.
-       * This struct basically contains a bunch of GL lists to 
+       * This struct basically contains a bunch of GL lists to
        * draw the hand.
        */
     SurfaceModel GetSurfaceModel();
-      
-      /** An the digit transforms are a [5][3] array of matrix4x4's 
+
+      /** An the digit transforms are a [5][3] array of matrix4x4's
        * used when drawing the glove - they represent an unflexed
        * transform to successive joints.  Also used when calulating
        * the fingertip positions.
        */
     matrix4x4** GetDigitXForms ();
-      
-      /** the state vec is used in the CAVE code which calculates 
-       * fingertip positions. 
+
+      /** the state vec is used in the CAVE code which calculates
+       * fingertip positions.
        * indices are TR_AZ, TR_EL, TR_ROLL, in that order.
        */
       /* Note: state_vec & digit_xform are used in the Get[finger]TipPosition
        * functions of cave.glove.c.  That functionality could be stuck
-       * into this class, with a function that takes the 
+       * into this class, with a function that takes the
        * wand x y z az el roll as args... with a cleaner interface to
        * boot... should check with carolina about who owns cave.glove.c
        */
     volatile float *GetStateVec();
-   
+
       /** gets unflexed abduction value of the thumb; used when
        * calculating thumbtip position.
        */
     float GetThumbUnflexedAbduction();
-      
+
       /** quick function to determine position of a finger
        * return values:
        * 0 finger open
@@ -148,7 +148,7 @@ class vjCyberGlove : public vjInput {
        * 2 finger inbetween/relaxed (whatever isn't zero or one)
        */
     int GetFingerState (int finger);
-     
+
 
 
   private:
@@ -163,7 +163,7 @@ class vjCyberGlove : public vjInput {
     int needToClosePorts;
     char *home;
 
-    vjThreadId* myThreadID;	//: Thread ID structure
+    vjThread* myThread;	//: Thread ID structure
 
   /* private member functions */
   /** @name the VirtualHand utility functions
@@ -173,7 +173,7 @@ class vjCyberGlove : public vjInput {
     // vt_init.C
     void vt_init(char *dir, AppDataStruct &app);
     // vt_virtual_hand.C
-    VirtualHand vt_create_VirtualHand(char *port, int baud, 
+    VirtualHand vt_create_VirtualHand(char *port, int baud,
 					 AppDataStruct &app );
     void vt_destroy_VirtualHand(VirtualHand hand);
     void *vt_hand_receiver_map_address(VirtualHand hand);
