@@ -21,15 +21,17 @@
 # INSTALL_FILES - The file(s) to be installed.
 # INSTALL_PATH  - The path to which the file(s) will be installed.
 # FILE_PERMS    - Permissions on normal (non-executable) files.
-# GROUP_NAME    - The name of the group that will own the files.
+# GROUP_NAME    - The name of the group that will own the files.  If this is
+#                 not defined, no attempt is made to set an alternate group
+#                 name.
 # -----------------------------------------------------------------------------
 
 ifndef FILE_PERMS
     FILE_PERMS	= 664
 endif
 
-ifndef GROUP_NAME
-    GROUP_NAME	= vrjuggler
+ifdef GROUP_NAME
+    GROUP_OPT	= -g ${GROUP_NAME}
 endif
 
 INSTALL_DEPS	?=
@@ -44,6 +46,6 @@ endif
 
 install: ${INSTALL_DEPS}
 	for file in ${INSTALL_FILES} ; do				\
-            ${INSTALL} -m ${FILE_PERMS} -g ${GROUP_NAME} $${file}	\
+            ${INSTALL} -m ${FILE_PERMS} ${GROUP_OPT} $${file}		\
               ${INSTALL_PATH} ;						\
         done

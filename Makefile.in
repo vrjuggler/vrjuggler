@@ -121,7 +121,14 @@ _DEFAULT_DIR	= ${_DEBUG_DIR}
 _UMASK		= 002
 _FILE_PERMS	= 664
 _EXEC_PERMS	= 775
-_GROUP_NAME	= vrjuggler
+
+# If we have a name for the install group, define group-setting options for
+# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
+# (makefiles-gen.pl in particular).
+ifdef GROUP_NAME
+    _GROUP_OPT_UNIX	= -g ${GROUP_NAME}
+    _GROUP_OPT_PL	= --gname="${GROUP_NAME}"
+endif
 
 # ------------------------------------------------
 # Object file build and installation directories.
@@ -739,14 +746,14 @@ install-dbg:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 ifeq (${GL_API}, Y)
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
@@ -761,14 +768,14 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 ifeq (${GL_API}, Y)
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
@@ -796,14 +803,14 @@ install-opt:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ud -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 ifeq (${GL_API}, Y)
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
@@ -817,14 +824,14 @@ install-dso:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 ifeq (${GL_API}, Y)
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
@@ -883,10 +890,10 @@ install-headers:
 	@cat ${VJROOT_ABS}/vjConfig.h |					\
             sed -e 's/^#ifdef HAVE_CONFIG_H//'				\
                 -e 's/^#endif..*HAVE_CONFIG_H.*$$//' >./vjConfig.tmp
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ./vjConfig.tmp ${includedir}/vjConfig.h
 	@-rm -f ./vjConfig.tmp
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/vjDefines.h ${includedir}
 
 # Install the sample applications.
@@ -896,12 +903,11 @@ install-sample:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
-          -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/samples
+          -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/samples
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
           --vars="${topdir}/VARS.pl" --SUBDIRS="${SAMPLE_SUBDIRS}"	\
           --startdir="${top_srcdir}/samples" --mode="${_FILE_PERMS}"	\
-          --gname="${_GROUP_NAME}" --srcdir="."				\
-          --prefix="${prefix}/samples"
+          ${_GROUP_OPT_PL} --srcdir="." --prefix="${prefix}/samples"
 
 # Install the test programs.
 install-test:
@@ -910,11 +916,11 @@ install-test:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
-          -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
+          -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/test
 	${PERL} ${scriptdir}/makefiles-gen.pl --prefix="${prefix}/test"	\
           --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
           --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
-          --gname="${_GROUP_NAME}" --srcdir="."
+          ${_GROUP_OPT_PL} --srcdir="."
 
 # Install the standard data files.
 install-data:
@@ -923,7 +929,7 @@ install-data:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
 	${PERL} ${scriptdir}/install-dir.pl -i ${top_srcdir}/Data	\
-          -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/Data
+          -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/Data
 
 # Install the Java-based config editor if possible.
 install-gui:
@@ -933,13 +939,13 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
 	swingpath=`${PERL} ${scriptdir}/find-swing.pl` ;		\
-          ${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}		\
+          ${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           $$swingpath ${bindir}
-	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/GUI/VjControl.jar ${bindir}
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
-	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/GUI/vjcontrol1.1 ${bindir}/vjcontrol1.1
 else
 	@echo "------------------------------------------------"
