@@ -1100,6 +1100,10 @@ vpr::ReturnStatus FlockStandalone::openPort ()
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting character size\n" << vprDEBUG_FLUSH;
             mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
             
+            mSerialPort->disableHardwareFlowControl();
+            mSerialPort->disableParityGeneration();
+            mSerialPort->setRequestToSend(false);
+            
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup correctly\n" << vprDEBUG_FLUSH;
             return(vpr::ReturnStatus::Succeed);
          }
