@@ -100,6 +100,12 @@ public:
 
    virtual void resetReading() = 0;
 
+   /** The following methods allow users to push/pop that active state of reading.
+   * This can be used to move back to previous reading states if needed.
+   */
+   virtual void pushState() = 0;
+   virtual void popState() = 0;
+
    virtual vpr::Uint8 readUint8() = 0;
    virtual vpr::Uint16 readUint16() = 0;
    virtual vpr::Uint32 readUint32() = 0;

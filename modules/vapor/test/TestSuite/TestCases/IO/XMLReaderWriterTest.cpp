@@ -115,6 +115,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
             xml_reader.endAttribute();
             xml_reader.readUint32(read_uint32);
             xml_reader.readUint64(read_uint64);
+            xml_reader.pushState();                   // *** Push state for later ***
             xml_reader.beginTag("LargeNumberLevel");
                xml_reader.readFloat(read_float);
                xml_reader.beginAttribute("StringAttrib");
@@ -151,9 +152,24 @@ void XMLReaderWriterTest::testBasicWriteRead()
          CPPUNIT_ASSERT_EQUAL(data_bool, read_bool);
          CPPUNIT_ASSERT_EQUAL(long_string, read_long_string);
 
-         xml_reader.resetReading();       // Reset the reading for another pass
-      }
+         // Test pop state
+         xml_reader.popState();           // *** POP state *** //
 
+            xml_reader.beginTag("LargeNumberLevel");
+               xml_reader.readFloat(read_float);
+               xml_reader.beginAttribute("StringAttrib");
+                  xml_reader.readString(read_string_attrib);
+               xml_reader.endAttribute();
+               xml_reader.readDouble(read_double);
+            xml_reader.endTag();
+
+         CPPUNIT_ASSERT_DOUBLES_EQUAL(data_float, read_float, 0.001f);
+         CPPUNIT_ASSERT_EQUAL(data_string1, read_string_attrib);
+         CPPUNIT_ASSERT_DOUBLES_EQUAL(data_double, read_double, 0.001f);
+
+
+         xml_reader.resetReading();       // Reset the reading for another pass         
+      }
    }
    catch (cppdom::Error& ce)
    {

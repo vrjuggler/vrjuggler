@@ -249,6 +249,28 @@ void SerializableTest::testReadWriteNested()
       CPPUNIT_ASSERT(obj2 == obj3);
       reader->resetReading();             // Reset the reading source ro iter test
    }
+
+   // Test pushing and poping state
+   {
+      vpr::BufferObjectWriter* writer;     // Automagically gets data for storage
+      writer = new vpr::BufferObjectWriter;
+      writer->writeFloat(1221.75f);
+   
+      obj1.writeObject(writer);
+   
+      vpr::ObjectReader* reader;
+      reader = new vpr::BufferObjectReader(writer->getData());
+      float r_float = reader->readFloat();
+      reader->pushState();
+   
+      Class2 obj3;
+      obj3.readObject(reader);
+      CPPUNIT_ASSERT(obj2 == obj3);
+      
+      reader->popState();
+      obj3.readObject(reader);
+      CPPUNIT_ASSERT(obj2 == obj3);
+   }
 }
 
 /*
