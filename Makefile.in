@@ -159,7 +159,8 @@ SUBDIRS		= Math Config Kernel Environment Performance Input SharedMem Sync Threa
 
 # Subdirectories used for recursion through the test source tree when
 # installing.
-TEST_SUBDIRS	= . CfgTest Quat input ogl ogl/cubes ogl/wand pfNav threads
+TEST_SUBDIRS	= . CfgTest Quat Sync input ogl ogl/cubes ogl/wand	\
+                  pfNav testDynamicCastSTL threads
 
 # The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
