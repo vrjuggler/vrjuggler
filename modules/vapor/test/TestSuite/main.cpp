@@ -22,7 +22,7 @@
 #include <TestCases/Util/IntervalTest.h>
 #include <TestCases/Util/GUIDTest.h>
 #include <TestCases/Util/FactoryTest.h>
-//#include <TestCases/Util/DebugTest.h>
+#include <TestCases/Util/DebugTest.h>
 
 // Simulator tests.
 #ifdef VPR_SIMULATOR
@@ -136,7 +136,7 @@ int main (int ac, char **av)
    noninteractive_suite->addTest(vprTest::FileUtilsTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
    noninteractive_suite->addTest(vprTest::GUIDTest::suite());
-//   noninteractive_suite->addTest(vprTest::DebugTest::suite());
+   noninteractive_suite->addTest(vprTest::DebugTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
    noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
