@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 # Main app for osgnav remote gui
 #
 import os;
