@@ -10,7 +10,7 @@
 #include <config.h>
 #include <Input/vjInput/vjInput.h>
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 //: vjDigital is the abstract base class that devices with digital data derive
 //+ from.
 //
@@ -21,11 +21,17 @@
 //  vjDigital adds one new pure virtual function, GetDigitalData for
 //  retreiving the digital data, similar to the addition for vjPosition and
 //  vjAnalog.
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 class vjDigital : virtual public vjInput
 {
 public:
+   //: Enum for the state of the digital buttons
+   // Used in vjDigitalProxy
+   enum {
+      OFF=0, ON=1, TOGGLE_ON=2, TOGGLE_OFF=3
+   };
 
+public:
    /* Constructor/Destructors */
    vjDigital(vjConfigChunk *c):vjInput(c) {
       deviceAbilities = deviceAbilities | DEVICE_DIGITAL;}
