@@ -235,7 +235,7 @@ sub make_CXXFLAGS ($)
       my $dir;
       foreach $dir ( split(/\s+/, "$vpr_extra_include_dirs") )
       {
-         $vpr_extra_includes .= " -I@includedir@/$dir";
+         $vpr_extra_includes .= qq( -I@includedir@/$dir);
       }
    }
 
@@ -286,10 +286,10 @@ sub make_LDFLAGS ($;$$)
       $ldflags = "$VPR_ABI_FLAGS $VPR_ISA_FLAGS";
    }
 
-   $ldflags .= ($use_linker ? " @vpr_ldflags_linker@"
-                            : " @vpr_ldflags_compiler@");
+   $ldflags .= ($use_linker ? qq( @vpr_ldflags_linker@)
+                            : qq( @vpr_ldflags_compiler@));
 
-   my $full_ldflags = "$ldflags $static_begin @vpr_libs@ $static_end";
+   my $full_ldflags = qq($ldflags $static_begin @vpr_libs@ $static_end);
    $full_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_ldflags";
@@ -315,13 +315,13 @@ sub make_EXTRA_LDFLAGS ($;$)
    my $arg;
    foreach $arg ( split(/\s+/, "$subsystem_libs") )
    {
-      $my_subsystem_libs .= " $arg" unless "$arg" eq "-L@libdir@";
+      $my_subsystem_libs .= " $arg" unless "$arg" eq qq(-L@libdir@);
    }
 
    my $extra_ldflags = ($use_linker ? qq(@vpr_extra_ldflags_linker@)
                                     : qq(@vpr_extra_ldflags_compiler@));
 
-   my $full_extra_ldflags = "$extra_ldflags @vpr_extra_libs@ " .
+   my $full_extra_ldflags = qq($extra_ldflags @vpr_extra_libs@ ) .
                             "$my_subsystem_libs";
    $full_extra_ldflags    =~ s/\s{2,}/ /g;
 
