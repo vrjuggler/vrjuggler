@@ -47,6 +47,7 @@ use Pod::Usage;
 
 # Subroutine prototypes.
 sub parseConfigFile($);
+sub hasDependency($$);
 sub configureModule($);
 sub regenModuleInfo($);
 sub generateMakefile(;$);
@@ -185,7 +186,24 @@ sub parseConfigFile ($)
 
          while ( $deps !~ /^\s*$/ )
          {
-            if ( $deps =~ /\s*(\S.+?):\s+(.+?);/ )
+            if ( $deps =~ /^\s*depend\s+(\S+);/ )
+            {
+               $deps = $';
+               my $module_name = "$1";
+
+               die "ERROR: No such module $module_name for $mod dependency\n"
+                  unless defined($MODULES{"$module_name"});
+
+               # The $MODULES entry for $module_name contains an array of
+               # hash references.  We just copy those references into the
+               # array for the current module ($mod).  Simple, no?
+               foreach ( @{$MODULES{"$module_name"}} )
+               {
+                  push(@{$MODULES{"$mod"}}, $_)
+                     unless hasDependency(\@{$MODULES{"$mod"}}, $_);
+               }
+            }
+            elsif ( $deps =~ /\s*(\S.+?):\s+(.+?);/ )
             {
                $deps = $';
 
@@ -218,6 +236,29 @@ sub parseConfigFile ($)
 
       $cfg_file =~ s/^\s*//;
    }
+}
+
+# Checks to see if the given array of dependencies already contains the new
+# dependency.  If the new dependency already exists, 0 is returned.  Otherwise,
+# 1 is returned.
+sub hasDependency ($$)
+{
+   my $cur_array_ref = shift;
+   my $new_dep_ref   = shift;
+
+   my $has_dependency = 0;
+
+   my $dep;
+   foreach $dep ( @$cur_array_ref )
+   {
+      if ( ${$dep}{'path'} eq ${$new_dep_ref}{'path'} )
+      {
+         $has_dependency = 1;
+         last;
+      }
+   }
+
+   return $has_dependency;
 }
 
 sub configureModule ($)
