@@ -360,6 +360,26 @@ public class GlobalPreferencesService
       return defaultCorbaPort;
    }
 
+   public void setDefaultIiopVersion(String version)
+   {
+      defaultIiopVersion = version;
+
+      Element e = mPrefsDocRoot.getChild("corba");
+
+      if ( e == null )
+      {
+         e = new Element("corba");
+         mPrefsDocRoot.addContent(e);
+      }
+
+      e.setAttribute("iiop", version);
+   }
+
+   public String getDefaultIiopVersion ()
+   {
+      return defaultIiopVersion;
+   }
+
    /**
     * Changes the default preferences file name to be the given name.
     */
@@ -450,14 +470,29 @@ public class GlobalPreferencesService
 
             if ( corba_element != null )
             {
-               Attribute corba_host_attr = corba_element.getAttribute("host");
+               // Read the preferred Naming Service host identifier.
+               Attribute corba_attr = corba_element.getAttribute("host");
 
-               if ( null != corba_host_attr )
+               if ( null != corba_attr )
                {
-                  defaultCorbaHost = corba_host_attr.getValue();
+                  defaultCorbaHost = corba_attr.getValue();
                }
 
-               defaultCorbaPort = corba_element.getAttribute("port").getIntValue();
+               // Read the preferred Naming Service port number.
+               corba_attr = corba_element.getAttribute("port");
+
+               if ( null != corba_attr )
+               {
+                  defaultCorbaPort = corba_attr.getIntValue();
+               }
+
+               // Read the preferred IIOP version.
+               corba_attr = corba_element.getAttribute("iiop");
+
+               if ( null != corba_attr )
+               {
+                  defaultIiopVersion = corba_attr.getValue();
+               }
             }
          }
          catch (JDOMException e)
@@ -525,6 +560,7 @@ public class GlobalPreferencesService
          Element corba_element = new Element("corba");
          corba_element.setAttribute("host", defaultCorbaHost);
          corba_element.setAttribute("port", String.valueOf(defaultCorbaPort));
+         corba_element.setAttribute("iiop", defaultIiopVersion);
          mPrefsDocRoot.addContent(corba_element);
 
          save();
@@ -661,6 +697,7 @@ public class GlobalPreferencesService
    private String  chooserStartDir  = CWD_START;
    private int     chooserOpenStyle = WINDOWS_CHOOSER;
    private boolean lazyPanelBeanInstantiation = true;
-   private String  defaultCorbaHost = "";
-   private int     defaultCorbaPort = 2809;
+   private String  defaultCorbaHost   = "";
+   private int     defaultCorbaPort   = 2809;
+   private String  defaultIiopVersion = "1.0";
 }

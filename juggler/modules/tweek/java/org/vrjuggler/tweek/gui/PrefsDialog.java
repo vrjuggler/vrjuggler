@@ -61,15 +61,16 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       mPrefs = prefs;
 
-      userLevel        = mPrefs.getUserLevel();
-      lookAndFeel      = mPrefs.getLookAndFeel();
-      beanViewer       = mPrefs.getBeanViewer();
-      windowWidth      = new Integer(mPrefs.getWindowWidth());
-      windowHeight     = new Integer(mPrefs.getWindowHeight());
-      chooserStartDir  = mPrefs.getChooserStartDir();
-      chooserOpenStyle = mPrefs.getChooserOpenStyle();
-      defaultCorbaHost = mPrefs.getDefaultCorbaHost();
-      defaultCorbaPort = mPrefs.getDefaultCorbaPort();
+      userLevel          = mPrefs.getUserLevel();
+      lookAndFeel        = mPrefs.getLookAndFeel();
+      beanViewer         = mPrefs.getBeanViewer();
+      windowWidth        = new Integer(mPrefs.getWindowWidth());
+      windowHeight       = new Integer(mPrefs.getWindowHeight());
+      chooserStartDir    = mPrefs.getChooserStartDir();
+      chooserOpenStyle   = mPrefs.getChooserOpenStyle();
+      defaultCorbaHost   = mPrefs.getDefaultCorbaHost();
+      defaultCorbaPort   = mPrefs.getDefaultCorbaPort();
+      defaultIiopVersion = mPrefs.getDefaultIiopVersion();
 
       WindowSizeTableModel table_model = new WindowSizeTableModel(windowWidth,
                                                                   windowHeight);
@@ -89,6 +90,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       mCorbaHostField.setText(String.valueOf(defaultCorbaHost));
       mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
+      mIiopVerField.setText(String.valueOf(defaultIiopVersion));
 
       switch ( chooserOpenStyle )
       {
@@ -195,6 +197,16 @@ public class PrefsDialog extends JDialog implements TableModelListener
    public int getDefaultCorbaPort()
    {
       return defaultCorbaPort;
+   }
+
+   /**
+    * Returns the current default IIOP version choice.  This may be different
+    * than what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public String getDefaultIiopVersion()
+   {
+      return defaultIiopVersion;
    }
 
    /**
@@ -358,9 +370,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mLafLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mLafLabel.setLabelFor(mLafBox);
       mLafLabel.setText("Look and Feel");
-      mCorbaPortField.setMaximumSize(new Dimension(15, 17));
-      mCorbaPortField.setMinimumSize(new Dimension(15, 17));
-      mCorbaPortField.setPreferredSize(new Dimension(15, 17));
+      mCorbaPortField.setMinimumSize(new Dimension(50, 17));
+      mCorbaPortField.setPreferredSize(new Dimension(50, 17));
       mCorbaPortField.setToolTipText("The port number of the CORBA Naming Service");
       mCorbaPortField.addFocusListener(new java.awt.event.FocusAdapter()
       {
@@ -376,16 +387,10 @@ public class PrefsDialog extends JDialog implements TableModelListener
             corbaPortFieldChanged();
          }
       });
-      mCorbaPortLabel.setMaximumSize(new Dimension(77, 13));
-      mCorbaPortLabel.setMinimumSize(new Dimension(77, 13));
-      mCorbaPortLabel.setPreferredSize(new Dimension(77, 13));
       mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mCorbaPortLabel.setLabelFor(mCorbaPortField);
       mCorbaPortLabel.setText("Port Number");
       mCorbaPanel.setLayout(mCorbaLayout);
-      mCorbaHostField.setMaximumSize(new Dimension(120, 17));
-      mCorbaHostField.setMinimumSize(new Dimension(85, 17));
-      mCorbaHostField.setPreferredSize(new Dimension(85, 17));
       mCorbaHostField.setToolTipText("The hostname for the CORBA Naming Service");
       mCorbaHostField.addFocusListener(new java.awt.event.FocusAdapter()
       {
@@ -404,6 +409,26 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mCorbaHostLabel.setLabelFor(mCorbaHostField);
       mCorbaHostLabel.setText("Host Name");
+      mIiopVerField.setMinimumSize(new Dimension(50, 17));
+      mIiopVerField.setPreferredSize(new Dimension(50, 17));
+      mIiopVerField.setToolTipText("The version number of the Internet Inter-ORB Protocol");
+      mIiopVerField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            iiopVersionFieldChanged();
+         }
+      });
+      mIiopVerField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            iiopVersionFieldChanged();
+         }
+      });
+      mIiopVerLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mIiopVerLabel.setLabelFor(mIiopVerField);
+      mIiopVerLabel.setText("IIOP Version");
 
       mWinSizeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mWinSizeLabel.setText("Window Size");
@@ -434,14 +459,18 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mGenConfigPanel.add(mWinSizeLabel,    new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 0, 23));
       mContentPane.add(mCorbaPanel,   "CORBA");
-      mCorbaPanel.add(mCorbaHostLabel,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 40, 9));
-      mCorbaPanel.add(mCorbaHostField,            new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 4), 112, 9));
-      mCorbaPanel.add(mCorbaPortLabel,             new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(4, 0, 1, 2), 40, 9));
-      mCorbaPanel.add(mCorbaPortField,                new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(4, 0, 1, 1), 45, 9));
+      mCorbaPanel.add(mCorbaHostLabel,              new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 40, 0));
+      mCorbaPanel.add(mCorbaHostField,              new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 4), 0, 0));
+      mCorbaPanel.add(mCorbaPortLabel,                   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(3, 0, 0, 2), 0, 0));
+      mCorbaPanel.add(mCorbaPortField,                   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(3, 0, 0, 0), 0, 0));
+      mCorbaPanel.add(mIiopVerLabel,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(3, 0, 0, 2), 0, 0));
+      mCorbaPanel.add(mIiopVerField,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(3, 0, 0, 0), 0, 0));
 
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mFileChooserPanel.add(mFcConfigPanel, BorderLayout.CENTER);
@@ -607,6 +636,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
       mPrefs.setDefaultCorbaHost(defaultCorbaHost);
       mPrefs.setDefaultCorbaPort(defaultCorbaPort);
+      mPrefs.setDefaultIiopVersion(defaultIiopVersion);
    }
 
    private void commitAndSave()
@@ -666,8 +696,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
    /**
     * Action taken when the user changes the text field containing the default
-    * CORBA port.  This validates the entered port number to ensure that it is
-    * valid.
+    * CORBA port.  This validates the entered hostname.
     */
    private void corbaHostFieldChanged()
    {
@@ -677,8 +706,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
    /**
     * Action taken when the user changes the text field containing the default
-    * CORBA port.  This validates the entered port number to ensure that it is
-    * valid.
+    * CORBA port.  This validates the entered port number.
     */
    private void corbaPortFieldChanged()
    {
@@ -700,6 +728,16 @@ public class PrefsDialog extends JDialog implements TableModelListener
       {
          mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
       }
+   }
+
+   /**
+    * Action taken when the user changes the text field containing the default
+    * IIOP version number.
+    */
+   private void iiopVersionFieldChanged()
+   {
+      defaultIiopVersion = mIiopVerField.getText();
+      fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_IIOP_VERSION);
    }
 
    private class WindowSizeTableModel extends AbstractTableModel
@@ -799,15 +837,16 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
    private int status;
 
-   private int     userLevel        = 0;
-   private String  lookAndFeel      = null;
-   private String  beanViewer       = null;
-   private Integer windowWidth      = new Integer(1024);
-   private Integer windowHeight     = new Integer(768);
-   private String  chooserStartDir  = GlobalPreferencesService.DEFAULT_START;
-   private int     chooserOpenStyle = GlobalPreferencesService.DEFAULT_CHOOSER;
-   private String  defaultCorbaHost = "";
-   private int     defaultCorbaPort = 0;
+   private int     userLevel          = 0;
+   private String  lookAndFeel        = null;
+   private String  beanViewer         = null;
+   private Integer windowWidth        = new Integer(1024);
+   private Integer windowHeight       = new Integer(768);
+   private String  chooserStartDir    = GlobalPreferencesService.DEFAULT_START;
+   private int     chooserOpenStyle   = GlobalPreferencesService.DEFAULT_CHOOSER;
+   private String  defaultCorbaHost   = "";
+   private int     defaultCorbaPort   = 0;
+   private String  defaultIiopVersion = "";
 
    private GlobalPreferencesService mPrefs = null;
 
@@ -847,6 +886,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private JLabel mLafLabel = new JLabel();
    private JTextField mCorbaPortField = new JTextField();
    private JLabel mCorbaPortLabel = new JLabel();
+   private JTextField mIiopVerField = new JTextField();
+   private JLabel mIiopVerLabel = new JLabel();
    private JPanel mCorbaPanel = new JPanel();
    private JTextField mCorbaHostField = new JTextField();
    private JLabel mCorbaHostLabel = new JLabel();
