@@ -197,7 +197,6 @@ public class DeviceProxyGraphEditor
                {
                   if ( def.isOfType((String) t.next()) )
                   {
-                     System.out.println("Adding " + def.getToken());
                      this.allowedTypes.add(def);
                      break;
                   }
