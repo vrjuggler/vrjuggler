@@ -69,8 +69,13 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const size_t length,
                              NSPR_getInterval(timeout) );
 
     if ( bytes_read == -1 ) {
-        if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+        PRErrorCode err_code = PR_GetError();
+
+        if ( err_code == PR_WOULD_BLOCK_ERROR ) {
             retval.setCode(Status::InProgress);
+        }
+        else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
+            retval.setCode(Status::Timeout);
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::recvfrom: Could not read from socket");
@@ -95,8 +100,13 @@ SocketDatagramImplNSPR::sendto (const void* msg, const size_t length,
                            NSPR_getInterval(timeout));
 
     if ( bytes_sent == -1 ) {
-        if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+        PRErrorCode err_code;
+
+        if ( err_code == PR_WOULD_BLOCK_ERROR ) {
             retval.setCode(Status::InProgress);
+        }
+        else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
+            retval.setCode(Status::Timeout);
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
