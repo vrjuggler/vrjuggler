@@ -60,16 +60,18 @@ void WallProjection::config(jccl::ConfigChunkPtr chunk)
    Projection::config(chunk);        // Call base class config first
 }
 
-//: Recalculate the projection matrix
-// Uses a method that needs to know the distance in the screen plane
-// from the origin (determined by the normal to the plane throught the
-// origin) to the edges of the screen.
-// This method can be used for any rectangular planar screen.
-// By adjusting the wall rotation matrix, this method can be used for
-// the general case of a rectangular screen in 3-space
-//
-//! PRE: WallRotation matrix must be set correctly
-//! PRE: mOrigin*'s must all be set correctly
+/**
+ * Recalculate the projection matrix.
+ * Uses a method that needs to know the distance in the screen plane
+ * from the origin (determined by the normal to the plane throught the
+ * origin) to the edges of the screen.
+ * This method can be used for any rectangular planar screen.
+ * By adjusting the wall rotation matrix, this method can be used for
+ * the general case of a rectangular screen in 3-space.
+ *
+ * @pre WallRotation matrix must be set correctly.
+ * @pre mOrigin*'s must all be set correctly.
+ */
 void WallProjection::calcViewMatrix(gmtl::Matrix44f& eyePos)
 {
    calcViewFrustum(eyePos);
@@ -84,16 +86,18 @@ void WallProjection::calcViewMatrix(gmtl::Matrix44f& eyePos)
 }
 
 
-//: Recalculate the view frustum
-// Uses a method that needs to know the distance in the screen plane
-// from the origin (determined by the normal to the plane throught the
-// origin) to the edges of the screen.
-// This method can be used for any rectangular planar screen.
-// By adjusting the wall rotation matrix, this method can be used for
-// the general case of a rectangular screen in 3-space
-//
-//! PRE: WallRotation matrix must be set correctly
-//! PRE: mOrigin*'s must all be set correctly
+/**
+ * Recalculate the view frustum.
+ * Uses a method that needs to know the distance in the screen plane
+ * from the origin (determined by the normal to the plane throught the
+ * origin) to the edges of the screen.
+ * This method can be used for any rectangular planar screen.
+ * By adjusting the wall rotation matrix, this method can be used for
+ * the general case of a rectangular screen in 3-space.
+ *
+ * @pre WallRotation matrix must be set correctly.
+ * @pre mOrigin*'s must all be set correctly.
+ */
 void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos)
 {
    float near_dist, far_dist;
