@@ -305,17 +305,9 @@ int Intersense::sample()
    }
 
     // Locks and then swaps the indices
-    mAnalogSamples.lock();
-    mDigitalSamples.lock();
-    mPosSamples.lock();
-
-    mAnalogSamples.addSample(cur_sample.analog);
-    mDigitalSamples.addSample(cur_sample.digital);
-    mPosSamples.addSample(cur_pos_samples);
-
-    mPosSamples.unlock();
-    mDigitalSamples.unlock();
-    mAnalogSamples.unlock();
+    addAnalogSample(cur_sample.analog);
+    addDigitalSample(cur_sample.digital);
+    addPositionSample(cur_pos_samples);
 
     return 1;
 }
@@ -359,9 +351,9 @@ void Intersense::updateData()
    if (!isActive())
       return;
 
-   mDigitalSamples.swapBuffers();
-   mAnalogSamples.swapBuffers();
-   mPosSamples.swapBuffers();
+   swapDigitalBuffers();
+   swapAnalogBuffers();
+   swapPositionBuffers();
 }
 
 } // End of gadget namespace

@@ -128,6 +128,28 @@ namespace gadget
          }
       }
 
+      /** Helper method to add a sample to the sample buffers.
+      * This MUST be called by all digital devices to add a new sample.
+      * The data samples passed in will then be modified by any local filters.
+      * @post Sample is added to the buffers and the local filters are run on that sample.
+      */
+      void addDigitalSample(const std::vector< DigitalData >& digSample)
+      {
+         // Locks and then swaps the indices.
+         mDigitalSamples.lock();
+         mDigitalSamples.addSample(digSample);
+         mDigitalSamples.unlock();
+      }
+      
+      /** Swap the digital data buffers.
+       * @post If ready has values, then copy values from ready to stable
+       *        if not, then stable keeps its old values
+       */
+      void swapDigitalBuffers()
+      {
+         mDigitalSamples.swapBuffers();
+      }
+
       const SampleBuffer_t::buffer_t& getDigitalDataBuffer()
       {
          return mDigitalSamples.stableBuffer();
@@ -213,8 +235,7 @@ namespace gadget
          return vpr::ReturnStatus::Succeed;
       }
 
-
-   protected:
+   private:
       SampleBuffer_t    mDigitalSamples; /**< Position samples */
       DigitalData       mDefaultValue;   /**< Default analog value to return */
    };

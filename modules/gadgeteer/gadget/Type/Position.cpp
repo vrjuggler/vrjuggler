@@ -201,10 +201,9 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* d
       mPosSamples.addSample(dataSample);
    }
    mPosSamples.unlock();
-   mPosSamples.swapBuffers();
+   swapPositionBuffers();
+
    return(vpr::ReturnStatus::Succeed);
-
-
 }
 
 Position::Position()

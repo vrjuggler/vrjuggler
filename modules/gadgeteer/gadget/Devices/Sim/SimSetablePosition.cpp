@@ -51,11 +51,9 @@ bool SimSetablePosition::config(jccl::ConfigChunkPtr chunk)
 void SimSetablePosition::setData(const std::vector<PositionData> &pos_data_vec)
 {
    mPos.setTime();   // Set the time
-   mPosSamples.lock();
-   mPosSamples.addSample(pos_data_vec);
-   mPosSamples.unlock();
+   addPositionSample(pos_data_vec);   
 
-   mPosSamples.swapBuffers(); // Swap the buffers
+   swapPositionBuffers(); // Swap the buffers
 }
 
 void SimSetablePosition::setData(const PositionData& pos_data)
@@ -64,11 +62,9 @@ void SimSetablePosition::setData(const PositionData& pos_data)
    pos_data_vec.push_back(pos_data);
 
    mPos.setTime();   // Set the time
-   mPosSamples.lock();
-   mPosSamples.addSample(pos_data_vec);
-   mPosSamples.unlock();
+   addPositionSample(pos_data_vec);   
 
-   mPosSamples.swapBuffers(); // Swap the buffers
+   swapPositionBuffers(); // Swap the buffers
 
    //vprDEBUG(gadgetDBG_INPUT_MGR,6) << "SimSetablePosition: set Data:" << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl << vprDEBUG_FLUSH;
 }

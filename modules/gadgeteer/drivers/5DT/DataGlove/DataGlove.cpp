@@ -147,16 +147,13 @@ int DataGlove::sample()
 //    mDigitalData[0]=ch7;   // Somehow DigitalData is not working right!!!
                              // AnalogData is being used instead of DigitalData.
     
-    mAnalogSamples.lock();
-    mAnalogSamples.addSample(mAnalogData);
-    mAnalogSamples.unlock();
+    addAnalogSample(mAnalogData);
     return 1;
-
 }
 
 void DataGlove::updateData()
 {
-    mAnalogSamples.swapBuffers();
+    swapAnalogBuffers();
 //    mDigitalSamples.swapBuffers();   // Somehow DigitalData is not working right!!!
     return;
 }

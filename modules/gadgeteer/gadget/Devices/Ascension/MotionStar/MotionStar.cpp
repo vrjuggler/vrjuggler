@@ -399,10 +399,8 @@ int MotionStar::sample()
             *(cur_samples[i].getPosition()) = world_T_receiver;
          }
 
-         // Locks and then swaps the indices.
-         mPosSamples.lock();
-         mPosSamples.addSample(cur_samples);
-         mPosSamples.unlock();
+         // Add the current data as a sample
+         addPositionSample(cur_samples);         
 
          retval = 1;
       }
@@ -434,7 +432,7 @@ void MotionStar::updateData()
    // Otherwise, go through with the update.
    else
    {
-      mPosSamples.swapBuffers();
+      swapPositionBuffers();
    }
 }
 

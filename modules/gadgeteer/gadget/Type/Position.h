@@ -108,6 +108,31 @@ public:
          return mDefaultValue;
       }
    }
+
+   /** Helper method to add a sample to the sample buffers.
+   * This MUST be called by all positional devices to add a new sample.
+   * The data samples passed in will then be modified by any local filters.
+   * The tracker transformations will occur in those filters, so the data does
+   * not need to be xformed before bing passed in.
+   * @post Sample is added to the buffers and the local filters are run on that sample.
+   */
+   void addPositionSample(const std::vector< PositionData >& posSample)
+   {
+      // Locks and then swaps the indices.
+      mPosSamples.lock();
+      mPosSamples.addSample(posSample);
+      mPosSamples.unlock();
+   }
+
+   /** Swap the position data buffers.
+    * @post If ready has values, then copy values from ready to stable
+    *        if not, then stable keeps its old values
+    */
+   void swapPositionBuffers()
+   {
+      mPosSamples.swapBuffers();
+   }
+
     virtual std::string getBaseType()
     {
         return std::string("Position");
@@ -116,19 +141,20 @@ public:
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta);
 
-
-
    const SampleBuffer_t::buffer_t& getPositionDataBuffer()
    {
       return mPosSamples.stableBuffer();
    }
 
-public:
-   SampleBuffer_t    mPosSamples;   /**< Position samples */
+protected:
    PositionData      mDefaultValue;   /**< Default analog value to return */
 
    gmtl::Matrix44f xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
    gmtl::Matrix44f rotMat;     /**< Only the rotation matrix */
+
+private:
+   SampleBuffer_t    mPosSamples;   /**< Position samples */
+
 };
 
 } // End of gadget namespace

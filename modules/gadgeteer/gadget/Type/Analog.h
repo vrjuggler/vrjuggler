@@ -154,7 +154,7 @@ public:
          mAnalogSamples.addSample(dataSample);
       }
       mAnalogSamples.unlock();
-      mAnalogSamples.swapBuffers();
+      swapAnalogBuffers();
       return vpr::ReturnStatus::Succeed;
    }
 
@@ -225,6 +225,29 @@ public:
       }
    }
 
+   /** Helper method to add a sample to the sample buffers.
+   * This MUST be called by all analog devices to add a new sample.
+   * The data samples passed in will then be modified by any local filters.
+   * @post Sample is added to the buffers and the local filters are run on that sample.
+   */
+   void addAnalogSample(const std::vector< AnalogData >& anaSample)
+   {
+      // Locks and then swaps the indices.
+      mAnalogSamples.lock();
+      mAnalogSamples.addSample(anaSample);
+      mAnalogSamples.unlock();
+   }
+   
+   /** Swap the analog data buffers.
+    * @post If ready has values, then copy values from ready to stable
+    *        if not, then stable keeps its old values
+    */
+   void swapAnalogBuffers()
+   {
+      mAnalogSamples.swapBuffers();
+   }
+
+
    const SampleBuffer_t::buffer_t& getAnalogDataBuffer()
    {
       return mAnalogSamples.stableBuffer();
@@ -285,7 +308,7 @@ protected:
 private:
    float mMin, mMax;
 
-protected:
+private:
    SampleBuffer_t    mAnalogSamples;  /**< Position samples */
    AnalogData        mDefaultValue;   /**< Default analog value to return */
 };
