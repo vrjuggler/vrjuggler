@@ -204,7 +204,7 @@ vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
 
       // Make sure that we get to child of type node.
       // While next child is not of type node skip over cdata...
-      while( (*(mCurNodeStack.back().nextChild_i))->getType() != cppdom::xml_nt_node)
+      while( (*(mCurNodeStack.back().nextChild_i))->getType() != cppdom::Node::xml_nt_node)
       {
          vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Skip node: " << (*(mCurNodeStack.back().nextChild_i))->getName() << " -- non nt_node type.\n" << vprDEBUG_FLUSH;
          mCurNodeStack.back().nextChild_i++;
