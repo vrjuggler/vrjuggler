@@ -45,13 +45,14 @@
 #include <vpr/md/POSIX/Util/ErrorImplPosix.h>
 
 
+extern int errno;
+
 namespace vpr
 {
 
 void ErrorImplPosix::outputCurrentError (std::ostream& out,
                                          const std::string& prefix)
 {
-   extern int errno;
    const char* err_str = strerror(errno);
 
    out << "Error (POSIX): " << prefix << " (" << errno;
