@@ -119,7 +119,7 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    mISenseDriverLocation = e->getProperty<std::string>("driver");
 
    // Create a new array of StationConfigs
-   stations.resize(mTracker.getNumStations());
+   mStations.resize(mTracker.getNumStations());
 
    vprASSERT(mTracker.getNumStations() == e->getNum("stations") &&
              "ERROR: IntersenseAPI is configured incorrectly. " &&
@@ -141,15 +141,17 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
       jccl::ConfigElementPtr station_config =
          e->getProperty<jccl::ConfigElementPtr>("stations", i);
 
-      stations[i].enabled = station_config->getProperty<bool>("enabled");
-      stations[i].stationIndex = station_config->getProperty<int>("station_index");
-      stations[i].useDigital = station_config->getProperty<bool>("use_digital");
-      stations[i].useAnalog = station_config->getProperty<bool>("use_analog");
+      mStations[i].enabled = station_config->getProperty<bool>("enabled");
+      mStations[i].stationIndex =
+         station_config->getProperty<int>("station_index");
+      mStations[i].useDigital =
+         station_config->getProperty<bool>("use_digital");
+      mStations[i].useAnalog = station_config->getProperty<bool>("use_analog");
 
-      stations[i].dig_min = station_config->getProperty<int>("digital_first");
-      stations[i].dig_num = station_config->getProperty<int>("digital_count");
-      stations[i].ana_min = station_config->getProperty<int>("analog_first");
-      stations[i].ana_num = station_config->getProperty<int>("analog_count");
+      mStations[i].dig_min = station_config->getProperty<int>("digital_first");
+      mStations[i].dig_num = station_config->getProperty<int>("digital_count");
+      mStations[i].ana_min = station_config->getProperty<int>("analog_first");
+      mStations[i].ana_num = station_config->getProperty<int>("analog_count");
    }
 
    return true;
@@ -182,14 +184,14 @@ bool IntersenseAPI::startSampling()
    // Configure the stations used by the configuration
    for( unsigned int i = 0; i < mTracker.getNumStations(); ++i )
    {
-      int station_index = stations[i].stationIndex;
+      int station_index = mStations[i].stationIndex;
 
       // Load the config state from the physical tracker
       mTracker.loadConfigState(station_index);
-      mTracker.setState(station_index, stations[i].enabled);
+      mTracker.setState(station_index, mStations[i].enabled);
       mTracker.setAngleFormat(station_index, ISD_EULER);
-      mTracker.setButtons(station_index, stations[i].useDigital);
-      mTracker.setAnalogData(station_index, stations[i].useAnalog);
+      mTracker.setButtons(station_index, mStations[i].useDigital);
+      mTracker.setAnalogData(station_index, mStations[i].useAnalog);
       // Save the config state to the physical tracker.
       mTracker.saveConfigState(station_index);
    }
@@ -272,7 +274,7 @@ bool IntersenseAPI::sample()
    for ( unsigned int i = 0 ; i < (mTracker.getNumStations()); ++i )
    {
       // Get the station index for the given station.
-      int stationIndex = stations[i].stationIndex;
+      int stationIndex = mStations[i].stationIndex;
 
       // Set the time of each PositionData to match the first.
       cur_pos_samples[i].setTime( cur_pos_samples[0].getTime() );
@@ -305,9 +307,9 @@ bool IntersenseAPI::sample()
       // InterSense device for range (min -> min+count-1).
 
       // Get the miniumum and maximum index that we should write data into.
-      int min_digital = stations[i].dig_min;
-      int max_digital = min_digital + stations[i].dig_num;
-      if (stations[i].useDigital)
+      int min_digital = mStations[i].dig_min;
+      int max_digital = min_digital + mStations[i].dig_num;
+      if (mStations[i].useDigital)
       {
          int j, k;
          for ( j = 0, k = min_digital;
@@ -321,9 +323,9 @@ bool IntersenseAPI::sample()
       }
 
       // Analog works the same as the digital
-      int min_analog = stations[i].ana_min;
-      int max_analog = min_analog + stations[i].ana_num;
-      if (stations[i].useAnalog)
+      int min_analog = mStations[i].ana_min;
+      int max_analog = min_analog + mStations[i].ana_num;
+      if (mStations[i].useAnalog)
       {
          float f;
          int j, k;
