@@ -136,11 +136,11 @@ bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
         current_perf_config = new ConfigChunk (*chunk);
 
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
-
-        if (!perf_target || !vjstrcasecmp (perf_target->getName(), perf_target_name)) {
+        if ((perf_target == 0) || 
+            !vjstrcasecmp (perf_target->getName(), perf_target_name)) {
             std::vector<Connect*>& connections = JackalServer::instance()->getConnections();
             for (unsigned int i = 0; i < connections.size(); i++)
-                if (s == connections[i]->getName()) {
+                if (!vjstrcasecmp (connections[i]->getName(), perf_target_name)) {
                     setPerformanceTarget (connections[i]);
                     break;
                 }
@@ -194,7 +194,6 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
 
 
     void PerformanceMonitor::setPerformanceTarget (Connect* con) {
-        //std::cout << "setting performance target" << std::endl;
         if (con == perf_target)
             return;
         perf_buffers_mutex.acquire();
@@ -221,8 +220,6 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
         // activates all perf buffers configured to do so
         // this is still a bit on the big and bulky side.
 
-        std::cout << "activating perfbuffers" << std::endl;
-        
         if (perf_buffers.empty())
             return;
         
@@ -230,8 +227,6 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
             deactivatePerfBuffers();
             return;
         }
-        
-        std::cout << "activating perfbuffers 2" << std::endl;
         
         std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
         std::vector<buffer_element>::const_iterator b;
