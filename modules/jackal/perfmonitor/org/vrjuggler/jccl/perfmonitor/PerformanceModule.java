@@ -173,12 +173,15 @@ public class PerformanceModule extends DefaultCoreModule {
      *  The stream begins with "PerfData1 <name> <num>" and ends with
      *  "-1 <numlost>" 
      */
-    public void readStream (ConfigStreamTokenizer st, String id) 
+    public void readStream (InputStream instream, String id) 
         throws IOException {
         
 	String name;
 	int num;
 	PerfDataCollector p;
+
+        ConfigStreamTokenizer st = new ConfigStreamTokenizer (new InputStreamReader (instream));
+
         st.nextToken();
         if (st.sval.equalsIgnoreCase ("PerfData1")) {
             st.nextToken();
