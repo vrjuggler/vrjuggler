@@ -60,24 +60,14 @@ public class NodeSettingsStep
       if (cwp == null)
       {
          cwp = new NodeSettingsPanel();
-         cwp.setFileSourceName(mFileSourceName);
       }
-      cwp.init();
+      cwp.init(mWhiteBoard);
       return cwp;
    }
 
    public boolean onExiting()
    {
      return(cwp.saveFile());
-   }
-
-   public void setFileSourceName(String file_name)
-   {
-     mFileSourceName = file_name;
-   }
-   public String getFileSourceName()
-   {
-     return(mFileSourceName);
    }
 
    public List getRequiredClasses()
@@ -102,5 +92,4 @@ public class NodeSettingsStep
     * The JPanel that makes up this pane's UI.
     */
    private transient NodeSettingsPanel cwp;
-   private String mFileSourceName = new String("DefaultFileSource");
 }

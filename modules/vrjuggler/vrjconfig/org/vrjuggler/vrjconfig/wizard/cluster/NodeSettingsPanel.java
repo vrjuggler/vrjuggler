@@ -33,9 +33,9 @@ package org.vrjuggler.vrjconfig.wizard.cluster;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.util.*;
 
 import org.vrjuggler.jccl.config.*;
 
@@ -62,8 +62,6 @@ public class NodeSettingsPanel
    private WizardListModel lstModelNodes = null;
    private JList lstNodes = new JList();
 
-   private String mFileSourceName = null;
-
    ////////
    private ConfigContext mContext = null;
    private ConfigBroker mBroker = null;
@@ -77,6 +75,8 @@ public class NodeSettingsPanel
    private JLabel lblTitle = new JLabel();
    private JLabel lblDirections = new JLabel();
    ///////
+
+   private Map mWhiteBoard;
 
    public NodeSettingsPanel()
    {
@@ -171,27 +171,19 @@ public class NodeSettingsPanel
       this.add(directionsPanel, BorderLayout.NORTH);
    }
 
-   public void setFileSourceName(String file_name)
+   public void init(Map whiteboard)
    {
-      mFileSourceName = file_name;
-   }
-   
-   public String getFileSourceName()
-   {
-      return(mFileSourceName);
-   }
+      mWhiteBoard = whiteboard;
 
-   public void init()
-   {
       // Get handle to broker
       mBroker = new ConfigBrokerProxy();
 
       // Create a context
       mContext = new ConfigContext();
-      mContext.add(mFileSourceName);
+      mContext.add((String)mWhiteBoard.get("datasource.name"));
 
       lstModelNodes = new WizardListModel();
-      lstModelNodes.setFileSource(mFileSourceName);
+      lstModelNodes.setFileSource((String)mWhiteBoard.get("datasource.name"));
       lstModelNodes.addElementType("machine_specific");
       lstNodes.setModel(lstModelNodes);
 
@@ -201,7 +193,7 @@ public class NodeSettingsPanel
    public boolean saveFile()
    {
       createClusterManagerElement();
-      DataSource mFileSource = mBroker.get(mFileSourceName);
+      DataSource mFileSource = mBroker.get((String)mWhiteBoard.get("datasource.name"));
       try
       {
          mFileSource.commit();

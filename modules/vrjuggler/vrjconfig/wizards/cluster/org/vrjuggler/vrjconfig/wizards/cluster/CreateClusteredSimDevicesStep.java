@@ -60,12 +60,7 @@ public class CreateClusteredSimDevicesStep
       {
          // If this is the first time on this step...
          cwp = new CreateClusteredSimDevicesPanel();
-         cwp.setFileSourceName(mFileSourceName);
-         cwp.setHeadEventWindowName(mHeadEventWindowName);
-         cwp.setSimViewEventWindowName(mSimViewEventWindowName);
-         cwp.setWandEventWindowName(mWandEventWindowName);
-         cwp.setConfigFilePath(mConfigFilePath);
-         cwp.init();
+         cwp.init(mWhiteBoard);
          cwp.copySimFilesToContext();
          cwp.createDisplayElements();
       }
@@ -78,51 +73,6 @@ public class CreateClusteredSimDevicesStep
      return(cwp.saveFile());
    }
 
-   public String getConfigFilePath()
-   {
-     return(mConfigFilePath);
-   }
-   public void setConfigFilePath(String path)
-   {
-     mConfigFilePath = path;
-   }
-
-   public void setFileSourceName(String file_name)
-   {
-     mFileSourceName = file_name;
-   }
-   public String getFileSourceName()
-   {
-     return(mFileSourceName);
-   }
-   
-   public void setHeadEventWindowName(String name)
-   {
-      mHeadEventWindowName = name;
-   }
-   public String getHeadEventWindowName()
-   {
-      return mHeadEventWindowName;
-   }
-   
-   public void setSimViewEventWindowName(String name)
-   {
-      mSimViewEventWindowName = name;
-   }
-   public String getSimViewEventWindowName()
-   {
-      return mSimViewEventWindowName;
-   }
-   
-   public void setWandEventWindowName(String name)
-   {
-      mWandEventWindowName = name;
-   }
-   public String getWandEventWindowName()
-   {
-      return mWandEventWindowName;
-   }
-   
    public List getRequiredClasses()
    {
       List classes = new ArrayList();

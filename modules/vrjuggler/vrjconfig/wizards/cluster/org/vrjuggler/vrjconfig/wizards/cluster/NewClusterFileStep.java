@@ -63,12 +63,12 @@ public class NewClusterFileStep
       if (cwp == null)
       {
          cwp = new NewClusterFilePanel();
-         cwp.setFileSourceName(mFileSourceName);
+         //cwp.setFileSourceName(mFileSourceName);
       }
-      cwp.init();
+      cwp.init(mWhiteBoard);
       return cwp;
    }
-
+/*
    public void setFileSourceName(String file_name)
    {
      mFileSourceName = file_name;
@@ -77,6 +77,7 @@ public class NewClusterFileStep
    {
      return(mFileSourceName);
    }
+*/
 
    public List getRequiredClasses()
    {
@@ -97,5 +98,5 @@ public class NewClusterFileStep
     * The JPanel that makes up this pane's UI.
     */
    private transient NewClusterFilePanel cwp;
-   private String mFileSourceName = new String("DefaultFileSource");
+//   private String mFileSourceName = new String("DefaultFileSource");
 }

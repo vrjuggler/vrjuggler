@@ -32,14 +32,19 @@
 
 package org.vrjuggler.vrjconfig.wizard.cluster;
 
-import java.util.Iterator;
-import java.io.IOException;
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.swing.*;
+import javax.swing.border.*;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.wizard.*;
-import java.awt.event.*;
-import javax.swing.border.*;
+
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
@@ -53,13 +58,16 @@ public class CreateClusteredSimDevicesPanel extends JPanel
    private DefaultComboBoxModel lstCameraNodes = new DefaultComboBoxModel();
    // Contains all sim display windows and the display system after
    // copying the config files and before writing all machine specific details
-   private java.util.List mDisplayElementList = new java.util.ArrayList();
-   private java.util.List mDisplaySystemElementList = new java.util.ArrayList();
+   private List mDisplayElementList = new ArrayList();
+   private List mDisplaySystemElementList = new ArrayList();
 
-   private String mFileSourceName = null;
-   private String mHeadEventWindowName = null;
-   private String mSimViewEventWindowName = null;
-   private String mWandEventWindowName = null;
+   private Map mWhiteBoard;
+
+   private String mConfigFilePath =
+       new String("${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/");
+   private String mHeadEventWindowName = "Head Event Window";
+   private String mSimViewEventWindowName = "Sim View Cameras Control";
+   private String mWandEventWindowName = "Wand Event Window";
 
    private ConfigContext mContext = null;
    private TitledBorder titledBorder1;
@@ -185,44 +193,6 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       this.add(directionsPanel, BorderLayout.NORTH);
    }
    
-   public void setHeadEventWindowName(String name)
-   {
-      mHeadEventWindowName = name;
-   }
-   public String getHeadEventWindowName()
-   {
-      return mHeadEventWindowName;
-   }
-   
-   public void setSimViewEventWindowName(String name)
-   {
-      mSimViewEventWindowName = name;
-   }
-   public String getSimViewEventWindowName()
-   {
-      return mSimViewEventWindowName;
-   }
-   
-   public void setWandEventWindowName(String name)
-   {
-      mWandEventWindowName = name;
-   }
-   public String getWandEventWindowName()
-   {
-      return mWandEventWindowName;
-   }
-   
-
-
-   public void setFileSourceName(String file_name)
-   {
-      mFileSourceName = file_name;
-   }
-   public String getFileSourceName()
-   {
-      return(mFileSourceName);
-   }
-   
    /**
     * Gets a handle to the configuration broker.
     */
@@ -244,14 +214,15 @@ public class CreateClusteredSimDevicesPanel extends JPanel
    /** The handle to the configuration broker. */
    private ConfigBroker mBroker;
 
-   public void init()
+   public void init(Map whiteboard)
    {
+      mWhiteBoard = whiteboard;
+      
       // Create a context
       mContext = new ConfigContext();
-      mContext.add(mFileSourceName);
+      mContext.add((String)mWhiteBoard.get("datasource.name"));
    }
 
-   private String mConfigFilePath = new String();
    private JPanel jPanel3 = new JPanel();
    private JPanel jPanel2 = new JPanel();
    private JPanel directionsPanel = new JPanel();
@@ -259,17 +230,6 @@ public class CreateClusteredSimDevicesPanel extends JPanel
    private BorderLayout borderLayout1 = new BorderLayout();
    private JLabel lblTitle = new JLabel();
    private JLabel lblDirections = new JLabel();
-
-   public String getConfigFilePath()
-   {
-      return(mConfigFilePath);
-   }
-   
-   public void setConfigFilePath(String path)
-   {
-      mConfigFilePath = path;
-   }
-
 
    public void copySimFilesToContext()
    {
@@ -339,8 +299,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
    public void createDisplayElements()
    {
       // - Iterate over all cluster nodes.
-      java.util.List matches 
-         = ConfigUtilities.getElementsWithDefinition(getBroker().getElements(mContext),
+      List matches = ConfigUtilities.getElementsWithDefinition(getBroker().getElements(mContext),
                                                      "machine_specific");
       for(Iterator itr = matches.iterator() ; itr.hasNext() ; )
       {
@@ -367,17 +326,14 @@ public class CreateClusteredSimDevicesPanel extends JPanel
 
    public boolean saveFile()
    {
-      DataSource mFileSource = getBroker().get(mFileSourceName);
-
       try
       {
-         mFileSource.commit();
+         getBroker().get((String)mWhiteBoard.get("datasource.name")).commit();
       }
       catch(java.io.IOException exp)
       {
          exp.printStackTrace();
       }
-      //mContext.remove("ClusterFileSource");
       return(true);
    }
 
@@ -387,8 +343,8 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       lstWandNodes.removeAllElements();
       lstCameraNodes.removeAllElements();
 
-      java.util.List element_list = getBroker().getElements(mContext);
-      java.util.List matches = ConfigUtilities.getElementsWithDefinition(element_list, "machine_specific");
+      List element_list = getBroker().getElements(mContext);
+      List matches = ConfigUtilities.getElementsWithDefinition(element_list, "machine_specific");
       for(int i = 0; i < matches.size() ; i++)
       {
          lstHeadNodes.addElement(((ConfigElement)matches.get(i)).getName());
@@ -405,7 +361,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
 
       if(e.getActionCommand().equals("headChanged"))
       {
-         java.util.List element_list = ConfigUtilities.getElementsWithName(getBroker().getElements(mContext), mHeadEventWindowName);
+         List element_list = ConfigUtilities.getElementsWithName(getBroker().getElements(mContext), mHeadEventWindowName);
          if (element_list.size() == 1)
          {
             String device_host = (String)cbHeadKeyboard.getSelectedItem();
@@ -419,7 +375,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       }
       else if(e.getActionCommand().equals("cameraChanged"))
       {
-         java.util.List element_list = ConfigUtilities.getElementsWithName(getBroker().getElements(mContext), mSimViewEventWindowName);
+         List element_list = ConfigUtilities.getElementsWithName(getBroker().getElements(mContext), mSimViewEventWindowName);
          if (element_list.size() == 1)
          {
             String device_host = (String)cbSimCameraKeyboard.getSelectedItem();
@@ -433,7 +389,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       }
       else if(e.getActionCommand().equals("wandChanged"))
       {
-         java.util.List element_list = ConfigUtilities.getElementsWithName(getBroker().getElements(mContext), mWandEventWindowName);
+         List element_list = ConfigUtilities.getElementsWithName(getBroker().getElements(mContext), mWandEventWindowName);
          if (element_list.size() == 1)
          {
             String device_host = (String)cbWandKeyboard.getSelectedItem();
