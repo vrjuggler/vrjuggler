@@ -53,6 +53,9 @@ public interface EditorConstants
    /** Config element type analog_proxy. */
    public static final String ANALOG_PROXY_TYPE = "analog_proxy";
 
+   /** Config element type data_glove (5DT). */
+   public static final String DATA_GLOVE = "data_glove";
+
    /** Config element type default_simulator. */
    public static final String DEFAULT_SIMULATOR_TYPE = "default_simulator";
 
@@ -62,11 +65,35 @@ public interface EditorConstants
    /** Config element type display_window. */
    public static final String DISPLAY_WINDOW_TYPE = "display_window";
 
+   /** Config element type directx_joystick. */
+   public static final String DIRECTX_JOYSTICK_TYPE = "directx_joystick";
+
+   /** Config element type dtk. */
+   public static final String DTK_TYPE = "dtk";
+
+   /** Config element type fastrak. */
+   public static final String FASTRAK_TYPE = "fastrak";
+
+   /** Config element type flock. */
+   public static final String FLOCK_TYPE = "flock";
+
+   /** Config element type ibox. */
+   public static final String IBOX_TYPE = "ibox";
+
    /** Config element type input_area. */
    public static final String INPUT_AREA_TYPE = "input_area";
 
+   /** Config element type input_device. */
+   public static final String INPUT_DEVICE_TYPE = "input_device";
+
    /** Config element type input_window. */
    public static final String INPUT_WINDOW_TYPE = "input_window";
+
+   /** Config element type intersense. */
+   public static final String INTERSENSE_TYPE = "intersense";
+
+   /** Config element type intersense_api. */
+   public static final String INTERSENSE_API_TYPE = "intersense_api";
 
    /** Config element type keyboard_mouse_device. */
    public static final String KEYBOARD_MOUSE_TYPE = "keyboard_mouse_device";
@@ -75,15 +102,33 @@ public interface EditorConstants
    public static final String KEYBOARD_MOUSE_PROXY_TYPE =
       "keyboard_mouse_proxy";
 
+   /** Config element type linux_joydev. */
+   public static final String LINUX_JOYDEV_TYPE = "linux_joydev";
+
+   /** Config element type motion_star. */
+   public static final String MOTION_STAR_TYPE = "motion_star";
+
    /** Config element type opengl_frame_buffer_config. */
    public static final String OPENGL_FRAME_BUFFER_TYPE =
       "opengl_frame_buffer_config";
+
+   /** Config element type pinch_glove. */
+   public static final String PINCH_GLOVE_TYPE = "pinch_glove";
 
    /** Config element type position_proxy. */
    public static final String POSITION_PROXY_TYPE = "position_proxy";
 
    /** Config element type proxy. */
    public static final String PROXY_TYPE = "proxy";
+
+   /** Config element type puck_device. */
+   public static final String PUCK_DEVICE_TYPE = "puck_device";
+
+   /**
+    * Config element type serial_encoder (US Digital Serial Encoder on a
+    * Barco Baron).
+    */
+   public static final String SERIAL_ENCODER_TYPE = "serial_encoder";
 
    /** Config element type simulated_analog_device. */
    public static final String SIM_ANALOG_DEVICE_TYPE =
@@ -106,6 +151,22 @@ public interface EditorConstants
 
    /** Config element type surface_viewport. */
    public static final String SURFACE_VIEWPORT_TYPE = "surface_viewport";
+
+   /** Config element type trackd_controller. */
+   public static final String TRACKD_CONTROLLER_TYPE = "trackd_controller";
+
+   /** Config element type trackd_sensor. */
+   public static final String TRACKD_SENSOR_TYPE = "trackd_sensor";
+
+   /** Config element type trackd_api_controller. */
+   public static final String TRACKD_API_CONTROLLER_TYPE =
+      "trackd_api_controller";
+
+   /** Config element type trackd_api_sensor. */
+   public static final String TRACKD_API_SENSOR_TYPE = "trackd_api_sensor";
+
+   /** Config element type vrpn. */
+   public static final String VRPN_TYPE = "vrpn";
 
    // Properties.
 
@@ -226,6 +287,9 @@ public interface EditorConstants
    /** Property type sleep_time. */
    public static final String SLEEP_TIME_PROPERTY = "sleep_time";
 
+   /** Property type stations. */
+   public static final String STATIONS_PROPERTY = "stations";
+
    /** Property type start_locked. */
    public static final String START_LOCKED_PROPERTY = "start_locked";
 
@@ -233,11 +297,11 @@ public interface EditorConstants
    public static final String STENCIL_BUFFER_SIZE_PROPERTY =
       "stencil_buffer_size";
 
-   /** Property type surface_viewports. */
-   public static final String SURFACE_VIEWPORTS_PROPERTY = "surface_viewports";
-
    /** Property type stereo. */
    public static final String STEREO_PROPERTY = "stereo";
+
+   /** Property type surface_viewports. */
+   public static final String SURFACE_VIEWPORTS_PROPERTY = "surface_viewports";
 
    /** Property type tracked. */
    public static final String TRACKED_PROPERTY = "tracked";
