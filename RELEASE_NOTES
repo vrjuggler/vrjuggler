@@ -8,6 +8,26 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+Version: 1.0.4
+Released: ???
+
+    Major bug fixes:
+        * glContextData allocation race conditions. SF Bug# 500569
+          Under certain circumstances there was a race condition in the 
+          allocation of the data stored in a glContextData entry.  This 
+          cause seg faults and NULL pointer exceptions.
+        * OpenSceneGraph application class now correctly displays across
+          multiple display surfaces. (note: this required a change to
+          OSG, so you must be using OSG v0.8.44 -- Camera needs an ADJUST_NONE
+          setting).
+        * Deallocation bug with performance monitoring code.
+        * Added command-line options to vjControl (--help and -prefs)
+        * Fixed assertion failures on angled surfaces.
+        * Fixed CyberGlove driver to allow compilation on Linux/PowerPC.
+        * 64-bit support for HP-UX.
+
+===============================================================================
+
  Version: 1.0.3
 Released: November 26, 2001
 

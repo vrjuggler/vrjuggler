@@ -1,6 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-21-2001 allenb    Fixed synchronization bug in the vjGlWindow class.  This
+                      bug could cause multiple windows to get the same id.
 Jan-17-2002 cjust     Fixed a deallocation bug in performance monitoring code.
+Jan-15-2002 allenb    Updated OSG app class to fixed OSG interface. OSG apps
+                      should now work correctly in IPT environments.
 Jan-14-2002 cjust     Added "-prefs file" option to VjControl, to explicitly
                       name the prefs file to use.  This is helpful for
                       developers using both Juggler 1.0 and 1.1.
