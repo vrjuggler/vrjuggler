@@ -39,6 +39,8 @@
 #include <X11/keysym.h>
 
 #include <Input/vjInput/vjKeyboard.h>
+#include <Sync/vjMutex.h>
+
 class vjConfigChunk;
 
 //---------------------------------------------------------------
@@ -76,15 +78,22 @@ public:
 
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;     // Initialize to unlocked.
+      mExitFlag = false;
    }
    ~vjXWinKeyboard() { stopSampling();}
 
    virtual bool config(vjConfigChunk* c);
 
+   // Main thread of control for this active object
+   void controlLoop(void* nullParam);
+
    /* Pure Virtuals required by vjInput */
    int startSampling();
    int stopSampling();
-   int sample() { return 1;}
+
+   // process the current x-events
+   // Called repetatively by the controlLoop
+   int sample() { updKeys();}
    void updateData();
 
    char* getDeviceName() { return "vjXwinKeyboard";}
@@ -95,7 +104,7 @@ public:
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
    int isKeyPressed(int vjKey)
-   {  return m_keys[vjKey];}
+   {  return m_curKeys[vjKey];}
 
    virtual int keyPressed(int keyId)
    { return isKeyPressed(keyId); }
@@ -108,19 +117,24 @@ private:
    int onlyModifier(int);
 
    //: Update the keys.
+   // Copies m_keys to m_curKeys
    void updKeys();
 
    /* X-Windows utility functions */
    //: Convert XKey to vjKey
    //! NOTE: Keypad keys are transformed ONLY to number keys
    int xKeyTovjKey(KeySym xKey);
+
+   // Open the X window to sample from
+   int openTheWindow();
+
    int filterEvent( XEvent* event, int want_exposes,
                     int width, int height);
-   char* checkArgs(char* look_for);
-   void checkGeometry();
-   Window createWindow (Window parent, unsigned int border, unsigned long
+   char*    checkArgs(char* look_for);
+   void     checkGeometry();
+   Window   createWindow (Window parent, unsigned int border, unsigned long
                         fore, unsigned long back, unsigned long event_mask);
-   void setHints(Window window, char*  window_name, char*  icon_name,
+   void     setHints(Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
 
    //: Perform anything that must be done when state switches
@@ -135,8 +149,13 @@ private:
    unsigned int m_width,m_height;
 
    /* Keyboard state holders */
-   int m_keys[256];     // The keyboard state during an UpdateData, without KeyUp events included
-   int m_realkeys[256]; // The real keyboard state, all events processed
+   // NOTE: This driver does not use the normal triple buffering mechanism.
+   // Instead, it just uses a modified double buffering system.
+   int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
+   int      m_curKeys[256];     // (0,*): Copy of m_keys that the user reads from between updates
+   int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
+   vjMutex  mKeysLock;           // Must hold this lock when accessing m_keys.
+   bool     mExitFlag;           // Should we exit
 
    lockState   mLockState;       // The current state of locking
    int         mLockStoredKey;   // The key that was pressed down

@@ -34,6 +34,7 @@
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
+#include <Threads/vjThread.h>
 
 
 //: Constructor
@@ -89,94 +90,60 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     return true;
 }
 
+
+// Main thread of control for this active object
+void vjXWinKeyboard::controlLoop(void* nullParam)
+{
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
+
+   // Open the x-window
+   openTheWindow();
+
+   // Loop on updating
+   while(!mExitFlag)
+   {
+      sample();
+      usleep(100);
+      //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
+   }
+
+   // Exit, cleanup code
+   XDestroyWindow(m_display,m_window);
+   XFree(m_visual);
+   XCloseDisplay((Display*) m_display);
+}
+
+
 int vjXWinKeyboard::startSampling()
 {
-
-   if (myThread == NULL)
+   if(myThread != NULL)
    {
-      int i;
-
-      resetIndexes();      // Reset the buffering variables
-
-      m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
-      if (m_display == NULL)
-      {
-         cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
-         return 0;
-      }
-      m_screen = DefaultScreen(m_display);
-
-      XVisualInfo vTemplate;
-      long vMask = VisualScreenMask;
-      vTemplate.screen = m_screen;
-      int nVisuals;
-
-      m_visual = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
-      XVisualInfo* p_visinfo;
-      for (i = 0, p_visinfo = m_visual; i < nVisuals; i++, p_visinfo++)
-      {
-         if (p_visinfo->depth > 8)
-         {
-            m_visual = p_visinfo;
-            break;
-         }
-      }
-
-      if (i == nVisuals)
-      {
-         cerr << "vjKeyboard::startSampling() : find visual failed" << endl;
-         return 0;
-      }
-
-      m_swa.colormap = XCreateColormap(m_display,
-                                       RootWindow(m_display,m_visual->screen),
-                                       m_visual->visual, AllocNone);
-      // Try to make it just a black window
-      m_swa.border_pixel = WhitePixel(m_display,m_screen);
-      m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
-      m_swa.background_pixel = BlackPixel(m_display,m_screen);
-      checkGeometry();
-
-      m_window = createWindow ( DefaultRootWindow(m_display) ,
-                                1, BlackPixel(m_display,m_screen),
-                                WhitePixel(m_display,m_screen), ExposureMask |
-                                StructureNotifyMask |
-                                KeyPressMask | KeyReleaseMask | ButtonPressMask |
-                                ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
-      setHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
-      XSelectInput(m_display, m_window,
-                   KeyPressMask | KeyReleaseMask | ButtonPressMask |
-                   ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
-      XMapWindow(m_display, m_window);
-      XFlush(m_display);
-      XRaiseWindow(m_display,m_window);
-      XClearWindow(m_display,m_window);    // Try to clear the background
-
-
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
-                 << "vjKeyboard::startSampling() : ready to go.." << endl
-                 << vjDEBUG_FLUSH;
-
-
-      myThread = (vjThread *) 1;
-      return 1;
-
+      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjXWinKeyboard: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
+      vjASSERT(false);
    }
-   else
-      return 0; // already sampling
+
+   resetIndexes();      // Reset the buffering variables
+
+   // Create a new thread to handle the control
+   vjThreadMemberFunctor<vjXWinKeyboard>* memberFunctor =
+      new vjThreadMemberFunctor<vjXWinKeyboard>(this, &vjXWinKeyboard::controlLoop, NULL);
+
+   myThread = new vjThread(memberFunctor, 0);
+
+   return 1;
 }
 
 int vjXWinKeyboard::onlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
-        return (!m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && !m_keys[VJKEY_ALT]);
+        return (!m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
      case VJKEY_SHIFT:
-        return (m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && !m_keys[VJKEY_ALT]);
+        return (m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
      case VJKEY_CTRL:
-        return (!m_keys[VJKEY_SHIFT] && m_keys[VJKEY_CTRL] && !m_keys[VJKEY_ALT]);
+        return (!m_curKeys[VJKEY_SHIFT] && m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
      case VJKEY_ALT:
-        return (!m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_keys[VJKEY_ALT]);
+        return (!m_curKeys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
      default:
        vjASSERT(false);
        return 0;
@@ -186,7 +153,17 @@ int vjXWinKeyboard::onlyModifier(int mod)
 void vjXWinKeyboard::updateData()
 {
   //int i;
-  updKeys();
+  // updKeys();
+vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
+
+   // Copy over values
+   for(unsigned int i=0;i<256;i++)
+      m_curKeys[i] = m_keys[i];
+
+   // Re-initialize the m_keys based on current key state in realKeys
+   // Set the initial state of the m_key key counts based on the current state of the system
+   for(unsigned int j = 0; j < 256; j++)
+      m_keys[j] = m_realkeys[j];
 }
 
 void vjXWinKeyboard::updKeys()
@@ -195,9 +172,6 @@ void vjXWinKeyboard::updKeys()
    KeySym key;
    int    vj_key;    // The key in vj space
 
-   for(int i = 0; i < 256; i++)
-      m_keys[i] = m_realkeys[i];
-
    // Loop while the event queue contains events for m_window that are part
    // of the given event mask.
    while ( XCheckWindowEvent(m_display, m_window,
@@ -205,6 +179,12 @@ void vjXWinKeyboard::updKeys()
                              ButtonReleaseMask | ButtonMotionMask |
                              PointerMotionMask, &event) )
    {
+      // GUARD m_keys for duration of loop
+      // Doing it here gives the input manager the opprotunity to interrupt the processing of a group of x-events
+      // In order to copy data over to the m_curKeys array
+      vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
+
+
       switch (event.type)
       {
       // A KeyPress event occurred.  Flag the key that was pressed (as a
@@ -361,7 +341,7 @@ void vjXWinKeyboard::updKeys()
                m_keys[VJMOUSE_NEGY] = int(-dy * m_mouse_sensitivity);
                m_keys[VJMOUSE_POSY] = 0;
             }
-	 }
+         }
 
          break;
 
@@ -408,14 +388,8 @@ int vjXWinKeyboard::stopSampling()
 {
   if (myThread != NULL)
   {
-    myThread = NULL;
-    cout << "Stoppping Keyboard.." << endl;
+    mExitFlag = true;
     sleep(1);
-
-
-    XDestroyWindow(m_display,m_window);
-    XFree(m_visual);
-    XCloseDisplay((Display*) m_display);
   }
 
   return 1;
@@ -522,6 +496,74 @@ int vjXWinKeyboard::xKeyTovjKey(KeySym xKey)
 /***********************X WINDOW STUFF****************************/
 /*****************************************************************/
 /*****************************************************************/
+// Open the X window to sample from
+int vjXWinKeyboard::openTheWindow()
+{
+   int i;
+
+   m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
+   if (m_display == NULL)
+   {
+      cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
+      return 0;
+   }
+   m_screen = DefaultScreen(m_display);
+
+   XVisualInfo vTemplate;
+   long vMask = VisualScreenMask;
+   vTemplate.screen = m_screen;
+   int nVisuals;
+
+   m_visual = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
+   XVisualInfo* p_visinfo;
+   for (i = 0, p_visinfo = m_visual; i < nVisuals; i++, p_visinfo++)
+   {
+      if (p_visinfo->depth > 8)
+      {
+         m_visual = p_visinfo;
+         break;
+      }
+   }
+
+   if (i == nVisuals)
+   {
+      cerr << "vjKeyboard::startSampling() : find visual failed" << endl;
+      return 0;
+   }
+
+   m_swa.colormap = XCreateColormap(m_display,
+                                    RootWindow(m_display,m_visual->screen),
+                                    m_visual->visual, AllocNone);
+   // Try to make it just a black window
+   m_swa.border_pixel = WhitePixel(m_display,m_screen);
+   m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
+   m_swa.background_pixel = BlackPixel(m_display,m_screen);
+   checkGeometry();
+
+   m_window = createWindow ( DefaultRootWindow(m_display) ,
+                             1, BlackPixel(m_display,m_screen),
+                             WhitePixel(m_display,m_screen), ExposureMask |
+                             StructureNotifyMask |
+                             KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                             ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
+   setHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
+   XSelectInput(m_display, m_window,
+                KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
+   XMapWindow(m_display, m_window);
+   XFlush(m_display);
+   XRaiseWindow(m_display,m_window);
+   XClearWindow(m_display,m_window);    // Try to clear the background
+
+   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
+              << "vjXWinKeyboard::openTheWindow() : done." << endl
+              << vjDEBUG_FLUSH;
+
+   return 1;
+}
+
+
+
 /* Sets basic window manager hints for a window. */
 void vjXWinKeyboard::setHints(Window window,
     char*  window_name,
