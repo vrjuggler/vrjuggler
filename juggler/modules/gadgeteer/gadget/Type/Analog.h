@@ -125,7 +125,8 @@ public:
 
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
-      vprASSERT(reader->readUint16()==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");							// ASSERT if this data is really not Analog Data		
+      vpr::Uint16 temp = reader->readUint16();
+      vprASSERT(temp==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");							// ASSERT if this data is really not Analog Data		
 	  std::vector<AnalogData> dataSample;
 
       unsigned numAnalogDatas;
