@@ -108,13 +108,13 @@ public:  // --- Internal helper class ----- //
       /** Add the given window to the registry.
        * @return true if window is added, false if matches existing window name.
        */
-      bool addWindow(std::string name, WindowInfo winInfo);
+      bool addWindow(const std::string& name, WindowInfo winInfo);
 
       /** Remove the window with the id of "name". */
-      void removeWindow(std::string name);
+      void removeWindow(const std::string& name);
 
       /** Get the window information. */
-      bool getWindow(std::string name, WindowInfo& winInfo);
+      bool getWindow(const std::string& name, WindowInfo& winInfo);
 
    protected:
       typedef std::map<std::string,WindowInfo> window_map_t;

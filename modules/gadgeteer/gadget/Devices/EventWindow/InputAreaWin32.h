@@ -74,13 +74,13 @@ public:  // --- Internal helper class ----- //
       /** Add the given window to the registry.
        * @return true if window is added, false if matches existing window name.
        */
-      bool addInputArea(std::string name, InputAreaInfo winInfo);
+      bool addInputArea(const std::string& name, InputAreaInfo winInfo);
 
       /** Remove the window with the id of "name". */
-      void removeInputArea(std::string name);
+      void removeInputArea(const std::string& name);
 
       /** Get the window information. */
-      bool getInputArea(std::string name, InputAreaInfo& winInfo);
+      bool getInputArea(const std::string& name, InputAreaInfo& winInfo);
 
    protected:
       typedef std::map<std::string,InputAreaInfo> input_area_map_t;

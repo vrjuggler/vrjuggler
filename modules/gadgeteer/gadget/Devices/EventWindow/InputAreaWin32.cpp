@@ -55,7 +55,7 @@ namespace gadget
 vprSingletonImp(InputAreaWin32::InputAreaRegistry);
 
 /** Add the given window to the registry. */
-bool InputAreaWin32::InputAreaRegistry::addInputArea(std::string name,
+bool InputAreaWin32::InputAreaRegistry::addInputArea(const std::string& name,
                                                      InputAreaInfo winInfo)
 {
    input_area_map_t::iterator found_input_area = mInputAreaMap.find(name);
@@ -76,7 +76,7 @@ bool InputAreaWin32::InputAreaRegistry::addInputArea(std::string name,
 }
 
 /** Remove the window with the id of "name". */
-void InputAreaWin32::InputAreaRegistry::removeInputArea(std::string name)
+void InputAreaWin32::InputAreaRegistry::removeInputArea(const std::string& name)
 {
    unsigned num_erased = mInputAreaMap.erase(name);
    if(0 == num_erased)
@@ -87,7 +87,8 @@ void InputAreaWin32::InputAreaRegistry::removeInputArea(std::string name)
    }
 }
 
-bool InputAreaWin32::InputAreaRegistry::getInputArea(std::string name, InputAreaInfo& inputAreaInfo)
+bool InputAreaWin32::InputAreaRegistry::getInputArea(const std::string& name,
+                                                     InputAreaInfo& inputAreaInfo)
 {
    input_area_map_t::iterator found_input_area = mInputAreaMap.find(name);
    if(found_input_area != mInputAreaMap.end())
