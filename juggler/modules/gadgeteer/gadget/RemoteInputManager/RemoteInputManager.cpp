@@ -1,4 +1,3 @@
-
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/InputManager.h>
 #include <vrj/Util/Debug.h>
@@ -40,6 +39,8 @@ RemoteInputManager::RemoteInputManager(InputManager* input_manager){
    mRmtMgrChunkExists = RIM_UNKNOWN;
    // mNetworkInitted = false;
    // setWaitingForHostsFlagOff();
+   mManagerId.generate(); 
+   vprDEBUG(vrjDBG_INPUT_MGR,2) << "Remote Input Manager Id: " << mManagerId << std::endl << vprDEBUG_FLUSH;
 }
 
 RemoteInputManager::~RemoteInputManager(){
@@ -108,28 +109,27 @@ void RemoteInputManager::acceptLoop(void* nullParam){
 
           mConfigMutex.acquire();   // so we don't add/remove devices/connections while they are in use
 
-          std::string streamHostname; // name of device requested by the stream 
+          std::string streamHostname,streamManagerId; // name of device requested by the stream 
           int streamPort;
-          if (receiveHandshake(streamHostname, streamPort, client_sock)){  // read the name from stream
-              vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CONFIG_LVL)  << " Adding connection: " << streamHostname << std::endl << vprDEBUG_FLUSH;
+          char local_port_str[64];
+          sprintf(local_port_str, "%i", mListenPort);
+
+          if (receiveHandshake(streamHostname, streamPort, streamManagerId, client_sock)){  // read the name from stream
+              vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CONFIG_LVL)  << " Adding connection: " << streamHostname << ", " << streamPort << ", " << streamManagerId << std::endl << vprDEBUG_FLUSH;
                           
               // create an alias_name to pass to addConnection
-              char port_str[32];
-              sprintf(port_str, "%d", streamPort);
-              std::string streamAlias = streamHostname + ":" + port_str;
+              char stream_port_str[32];
+              sprintf(stream_port_str, "%d", streamPort);
+              std::string streamAlias = streamHostname + ":" + stream_port_str;
 
-              if( addConnection(streamAlias, streamHostname, streamPort, client_sock)){  // pass the host:port as the alias_name also.
+              if( addConnection(streamAlias, streamHostname, streamPort, streamManagerId, client_sock)){  // pass the host:port as the alias_name also.
                  // if connection is successfully added, send handshake
-                 // sendHandshake(mInstanceName, client_sock);   // send my manager's name
-                 char port_str[64];
-                 sprintf(port_str, "%i", mListenPort);
-                 std::string my_host_and_port = mShortHostname + std::string(":") + port_str;
-                 this->sendHandshake(my_host_and_port, client_sock);   // send my name: send my hostname & port
+                 this->sendHandshake(mShortHostname, local_port_str, mManagerId.toString(), client_sock);   // send my name: send my hostname & port
                  client_sock = new vpr::SocketStream;
               }
               else{  
                  // connection already exists or could not be made, so send rejection
-                 sendRejectionHandshake(mInstanceName, client_sock);   // send my manager's name
+                 sendRejectionHandshake(mShortHostname, local_port_str, mManagerId.toString(), client_sock); 
                  // prepare new socket
                  client_sock->close();
                  delete client_sock;
@@ -139,7 +139,7 @@ void RemoteInputManager::acceptLoop(void* nullParam){
         
           else{
              vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "failed connnection handshake" << vprDEBUG_FLUSH;              
-             sendRejectionHandshake(mInstanceName, client_sock);   // send my manager's name
+             sendRejectionHandshake(mShortHostname, local_port_str, mManagerId.toString(), client_sock);   // send my manager's name
              // failed handshake so prepare new socket
              client_sock->close();
              delete client_sock;
@@ -525,16 +525,13 @@ bool RemoteInputManager::makeConnection(const std::string& connection_alias, con
    }
 
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "connected, yeah\n" << vprDEBUG_FLUSH;
-   //this->sendHandshake(mInstanceName, sock_stream);  // send my name: use instance name
-   //this->sendHandshake(connection_name, sock_stream);   // send my name: use connection_name
-   char port_str[64];
-   sprintf(port_str, "%i", mListenPort);
-   std::string my_host_and_port = mShortHostname + std::string(":") + port_str;
-   this->sendHandshake(my_host_and_port, sock_stream);   // send my name: send my hostname & port
-   std::string received_hostname;
+   char local_port_str[64];
+   sprintf(local_port_str, "%i", mListenPort);
+   this->sendHandshake(mShortHostname, local_port_str, mManagerId.toString(), sock_stream);   // send my name: send my hostname & port
+   std::string received_hostname, received_manager_id;
    int received_port;
-   if(this->receiveHandshake(received_hostname, received_port, sock_stream)){ // receive parameters from other manager, but to addConnection we'll actually use the variable names passed in from above
-      this->addConnection(connection_alias, connection_hostname, connection_port, sock_stream);    // hostname and port are saved to identify the connection.
+   if(this->receiveHandshake(received_hostname, received_port, received_manager_id, sock_stream)){ // receive parameters from other manager, but to addConnection we'll actually use the variable names passed in from above
+      this->addConnection(connection_alias, connection_hostname, connection_port, received_manager_id, sock_stream);    // hostname and port are saved to identify the connection.
    }
    return true;
 }
@@ -670,24 +667,24 @@ bool RemoteInputManager::configConnection(jccl::ConfigChunkPtr chunk){
    }
 }
 
-bool RemoteInputManager::sendHandshake(const std::string& name_to_send, vpr::SocketStream* newStream){
+bool RemoteInputManager::sendHandshake(const std::string& host, const std::string& port, const std::string& manager_id, vpr::SocketStream* newStream){
    char str[64];
-   sprintf(str, "vjNet:1:%s;", name_to_send.c_str());   
+   sprintf(str, "vjNet:1:%s:%s:%s;", host.c_str(), port.c_str(), manager_id.c_str());   
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "handshake to send: " << str << ".  " << strlen(str) << " bytes." << std::endl << vprDEBUG_FLUSH;
    sendAtOnce(*newStream, str, strlen(str));    
    return true;
 }
 
-bool RemoteInputManager::sendRejectionHandshake(const std::string& name_to_send, vpr::SocketStream* newStream){
+bool RemoteInputManager::sendRejectionHandshake(const std::string& host, const std::string& port, const std::string& manager_id, vpr::SocketStream* newStream){
    char str[64];
-   sprintf(str, "vjNet:0:%s;", name_to_send.c_str()); 
+   sprintf(str, "vjNet:0:%s:%s:%s;", host.c_str(), port.c_str(), manager_id.c_str());
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "Rejection handshake to send: " << str << ".  " << strlen(str) << " bytes." << std::endl << vprDEBUG_FLUSH;
    sendAtOnce(*newStream, str, strlen(str));    
    return true;
 }
 
 // Receives handshake on newStream and stores newly received hostname and port values in receivedHostname and receivedPort
-bool RemoteInputManager::receiveHandshake(std::string& receivedHostname, int& receivedPort, vpr::SocketStream* newStream){
+bool RemoteInputManager::receiveHandshake(std::string& receivedHostname, int& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream){
     const int HSHAKE_BUFFSIZE = 256;
     char buffer[HSHAKE_BUFFSIZE];
     buffer[0] = '\0';
@@ -730,28 +727,25 @@ bool RemoteInputManager::receiveHandshake(std::string& receivedHostname, int& re
     int i;    
     // the name starts on the 8th byte
     for(i = 8; buffer[i] != ':' && buffer[i] != ';'; i++){
-        // if(i > 7)  // the name starts on the 8th byte
             receivedHostname += buffer[i];        
     }
 
-    // make sure the correct "host:port" format was used for the name
-    if(buffer[i] != ':'){
-       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "Handshake name did not include :port " << std::endl << vprDEBUG_FLUSH;
-       return false;
-    }
     i++; // move iterator past colon
-    
-    std::string port_str;
-    for( ; buffer[i] != ';'; i++){        // reading port from rest of buffer
-      port_str += buffer[i];           
-    }
 
+    std::string port_str;
+    for(; buffer[i] != ':' && buffer[i] != ';'; i++){
+            port_str += buffer[i];
+    }
     receivedPort = atoi(port_str.c_str());
 
-    //connectionName = std::string(buffer + 8);       // save name (which starts on 8th character)
-    //connectionName.erase( connectionName.size() - 1 );  // remove last character: ";" from the end of the name
-    //vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "Handshake buffer received: " << buffer << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "Handshake received connection host:port: " << receivedHostname <<":"<< receivedPort << std::endl << vprDEBUG_FLUSH;
+    i++; // move iterator past colon
+
+    received_manager_id = "";
+    for(; buffer[i] != ':' && buffer[i] != ';'; i++){
+        received_manager_id += buffer[i];
+    }
+
+    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "Handshake received connection: " << receivedHostname <<":"<< receivedPort <<":"<< received_manager_id << std::endl << vprDEBUG_FLUSH;
     vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "Handshake, buffer[i]= " << buffer[i] << std::endl << vprDEBUG_FLUSH;
     vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "Handshake, last character recv'd: " << buffer[bytes_read - 1] << std::endl << vprDEBUG_FLUSH;
 
@@ -958,7 +952,7 @@ void RemoteInputManager::initNetwork(){
 */
 
 // addConnection if it doesn't exist already
-bool RemoteInputManager::addConnection(const std::string &connection_alias, const std::string& connection_hostname, const int connection_port, vpr::SocketStream* sock_stream){   
+bool RemoteInputManager::addConnection(const std::string &connection_alias, const std::string& connection_hostname, const int connection_port, const std::string& manager_id, vpr::SocketStream* sock_stream){   
    // make sure connection doesn't exist already:
    if (getConnectionByHostAndPort(connection_hostname, connection_port) != NULL) {
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManger: Connection Host and port: " << connection_hostname <<":"<< connection_port << " has already been added." << std::endl << vprDEBUG_FLUSH;
@@ -969,7 +963,7 @@ bool RemoteInputManager::addConnection(const std::string &connection_alias, cons
       return false;
    }
    else{ // add connection
-      NetConnection* connection = new NetConnection(connection_alias, connection_hostname, connection_port, sock_stream);
+      NetConnection* connection = new NetConnection(connection_alias, connection_hostname, connection_port, manager_id, sock_stream);
       mConnections.push_back(connection);
       return true;
    }
@@ -1142,6 +1136,5 @@ void RemoteInputManager::resendRequestsForNackedDevices(){
       (*i)->resendRequestsForNackedDevices();
    }
 }
-
 
 }  // end namespace gadget

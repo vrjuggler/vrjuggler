@@ -41,6 +41,7 @@ protected:
     //std::string mHostname;
     //std::string mHostIp;
     int mListenPort;
+    vpr::GUID mManagerId;
 
     gadget::InputManager* mInputManager;  // a ptr to the Input Manager so we can access devices    
 
@@ -300,12 +301,12 @@ public:
 // INTER-JUGGLER CONNECTION MANAGEMENT
    //  if new stream is valid, returns true and sets deviceName
    // bool handshake(std::string& deviceName, vpr::SocketStream* newStream);
-   bool sendHandshake(const std::string& deviceName, vpr::SocketStream* newStream);
-   bool sendRejectionHandshake(const std::string& name_to_send, vpr::SocketStream* newStream);
-   bool receiveHandshake(std::string& recievedHostname, int& receivedPort, vpr::SocketStream* newStream);
+   bool sendHandshake(const std::string& host, const std::string& port, const std::string& manager_id, vpr::SocketStream* newStream);
+   bool sendRejectionHandshake(const std::string& host, const std::string& port, const std::string& manager_id, vpr::SocketStream* newStream);
+   bool receiveHandshake(std::string& recievedHostname, int& receivedPort, std::string& received_manager_id, vpr::SocketStream* newStream);
 
    bool makeConnection(const std::string &connection_alias, const std::string &hostname, const int port);
-   bool addConnection(const std::string &connection_alias, const std::string& hostname, const int port, vpr::SocketStream* sock_stream);
+   bool addConnection(const std::string &connection_alias, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
         
 /*
    NetConnection* findConnection(const std::string& connection_name){
