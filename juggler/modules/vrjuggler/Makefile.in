@@ -355,7 +355,8 @@ links:
 	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
           ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
 	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
-	cd ${instlinks}/include && ln -sf ${topdir}/config.h ./config.h
+	cd ${instlinks}/include && ln -sf ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
+	cd ${instlinks}/include && ln -sf ${topdir}/vjDefines.h ./vjDefines.h
 	${scriptdir}/mkinstalldirs ${instlinks}/bin
 	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjCfg.jar ./
 	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/editconfig ./vjConfig
@@ -370,7 +371,6 @@ clean-links:
 	@echo "------------------------------------------------"
 	@echo "Removing developer installation links"
 	@echo "------------------------------------------------"
-	-cd ${instlinks}/include && rm -f ./config.h
 	rm -rf ${instlinks}
 
 # Installation targets.
@@ -518,7 +518,8 @@ install-headers:
 	@echo "Installing header files"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="install" recursive
-	${INSTALL} -m 644 ${topdir}/config.h ${includedir}
+	${INSTALL} -m 644 ${VJROOT_ABS}/vjConfig.h ${includedir}
+	${INSTALL} -m 644 ${topdir}/vjDefines.h ${includedir}
 
 install-test:
 	@echo "------------------------------------------------"
