@@ -52,6 +52,7 @@
 
 // NEED TO FIX!!!!
 #include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
+#include <cluster/ClusterManager.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
 #include <gadget/InputLogger.h>
@@ -112,8 +113,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    bool ret_val = false;      // Flag to return success
    
-   // NEED TO FIX!!!!
-   if (cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "InputManager can not handle remote devices, we must use Remote Input Manager."
@@ -251,7 +251,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    bool ret_val = false;      // Flag to return success
 
    // NEED TO FIX!!!!
-   if (cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "InputManager can not handle remote devices, we must use Remote Input Manager."
@@ -291,7 +291,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {           // NEED TO FIX!!!!
    return ( (DeviceFactory::instance()->recognizeDevice(chunk) && 
-             !cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk)) ||
+             !cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk)) ||
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
             //mRemoteInputManager->configCanHandle(chunk) ||
