@@ -549,7 +549,12 @@ sub generateReconfig ($@)
    }
 
    print RECONFIG "rm -f config.cache\n";
-   print RECONFIG "exec $0 ", "@arg_list \n";
+
+   # Print the command to run this script again.  The actual output will be
+   # the exec shell command followed by the full path to the Perl
+   # interpreter used to run this script; the same path to the script that
+   # the user entered; and the full argument list given on the command line.
+   print RECONFIG "exec $^X $0 ", "@arg_list \n";
    close(RECONFIG);
    chmod(0755, "reconfig");
 }
