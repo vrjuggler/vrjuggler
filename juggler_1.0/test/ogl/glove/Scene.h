@@ -24,6 +24,7 @@ public:
 		    const bool& highlighted );
     void drawTable();  
     void renderWoodTexture();
+    void renderRainbowTexture();
     
     
 //:  Scene components: table, floor, and some objects.    
@@ -43,7 +44,7 @@ private:
 		    const float& _height,
 		    const float& _depth, 
 		    const bool& highlighted );
-    void _renderWoodTexture();
+    void _renderTexture(char bitmap[16*3]);
     
     // these hold the display list IDs
     int _tableList;
@@ -57,8 +58,10 @@ private:
     int _cubeHlList;
     int _sphereHlList; 
     unsigned int _woodBitmapBindId;
+    unsigned int _rainbowBitmapBindId;
     
     char woodBitmap[16*3]; 
+    char rainbowBitmap[16*3]; 
 };
 
 inline Scene::Scene() : _tableList(0), 
@@ -70,6 +73,7 @@ inline Scene::Scene() : _tableList(0),
 		    _sphereList(0), 
 		    _sphereHlList(0)
 {
+    //: Wood texture ---
     // RED channel
     woodBitmap[0] = 80;woodBitmap[3] = 0;woodBitmap[6] = 80;woodBitmap[9] = 80;
     woodBitmap[12] = 80;woodBitmap[15] = 0;woodBitmap[18] = 80;woodBitmap[21] = 80;
@@ -87,6 +91,26 @@ inline Scene::Scene() : _tableList(0),
     woodBitmap[14] = 0;woodBitmap[17] = 0;woodBitmap[20] = 0;woodBitmap[23] = 0;
     woodBitmap[26] = 0;woodBitmap[29] = 0;woodBitmap[32] = 0;woodBitmap[35] = 0;
     woodBitmap[38] = 0;woodBitmap[41] = 0;woodBitmap[44] = 0;woodBitmap[47] = 0;
+    
+    
+    //: Colorful rainbow texture ---
+    // RED channel
+    rainbowBitmap[0] = 80;rainbowBitmap[3] = 0;rainbowBitmap[6] = 0;rainbowBitmap[9] = 80;
+    rainbowBitmap[12] = 80;rainbowBitmap[15] = 0;rainbowBitmap[18] = 0;rainbowBitmap[21] = 80;
+    rainbowBitmap[24] = 0;rainbowBitmap[27] = 80;rainbowBitmap[30] = 80;rainbowBitmap[33] = 0;
+    rainbowBitmap[36] = 0;rainbowBitmap[39] = 80;rainbowBitmap[42] = 80;rainbowBitmap[45] = 0;
+    
+    // GREEN channel
+    rainbowBitmap[1] = 70;rainbowBitmap[4] = 0;rainbowBitmap[7] = 0;rainbowBitmap[10] = 70;
+    rainbowBitmap[13] = 0;rainbowBitmap[16] = 70;rainbowBitmap[19] = 70;rainbowBitmap[22] = 0;
+    rainbowBitmap[25] = 0;rainbowBitmap[28] = 70;rainbowBitmap[31] = 70;rainbowBitmap[34] = 0;
+    rainbowBitmap[37] = 70;rainbowBitmap[40] = 0;rainbowBitmap[43] = 0;rainbowBitmap[46] = 70;
+    
+    // BLUE channel
+    rainbowBitmap[2] = 90;rainbowBitmap[5] = 90;rainbowBitmap[8] = 0;rainbowBitmap[11] = 0;
+    rainbowBitmap[14] = 90;rainbowBitmap[17] = 90;rainbowBitmap[20] = 0;rainbowBitmap[23] = 0;
+    rainbowBitmap[26] = 0;rainbowBitmap[29] = 0;rainbowBitmap[32] = 90;rainbowBitmap[35] = 90;
+    rainbowBitmap[38] = 0;rainbowBitmap[41] = 0;rainbowBitmap[44] = 0;rainbowBitmap[47] = 90;
 }
 
 inline Scene::~Scene()
@@ -214,11 +238,14 @@ inline void Scene::_drawSphere( const float& width,
     // draw the highlight if requested.
     if ( highlighted == true )
     {
-	glColor3f( 0.0f, 0.0f, 1.0f );
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-	glLineWidth( 2 );
-	this->drawSphere( width+0.01f, height+0.01f, depth+0.01f, false );
-	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_POLYGON_BIT);
+	    glColor3f( 0.0f, 0.0f, 1.0f );
+	    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	    glLineWidth( 2 );
+	    glDisable(GL_TEXTURE_2D);
+	    this->drawSphere( width+0.01f, height+0.01f, depth+0.01f, false );
+	    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	glPopAttrib();
     }
 }
 
@@ -237,11 +264,14 @@ inline void Scene::_drawCone( const float& width,
     // draw the highlight if requested.
     if ( highlighted == true )
     {
-	glColor3f( 0.0f, 0.0f, 1.0f );
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-	glLineWidth( 2 );
-	this->drawCone( width+0.01f, height+0.01f, depth+0.01f, false );
-	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_POLYGON_BIT);
+	    glColor3f( 0.0f, 0.0f, 1.0f );
+	    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	    glLineWidth( 2 );
+	    glDisable(GL_TEXTURE_2D);
+	    this->drawCone( width+0.01f, height+0.01f, depth+0.01f, false );
+	    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	glPopAttrib();
     }
 }
 
@@ -338,11 +368,13 @@ inline void Scene::_drawCube( const float& _width,
   // draw the highlight if requested.
     if ( highlighted == true )
     {
-	glColor3f( 0.0f, 0.0f, 1.0f );
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-	glLineWidth( 2 );
-	this->drawCube( _width+0.01f, _height+0.01f, _depth+0.01f, false );
-	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_POLYGON_BIT);
+	    glColor3f( 0.0f, 0.0f, 1.0f );
+	    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	    glLineWidth( 2 );
+	    glDisable(GL_TEXTURE_2D);
+	    this->drawCube( _width+0.01f, _height+0.01f, _depth+0.01f, false );
+	glPopAttrib();
     }
 }
 
@@ -386,7 +418,17 @@ inline void Scene::renderWoodTexture()
     glBindTextureEXT(GL_TEXTURE_2D, _woodBitmapBindId);
     #endif
 }
-inline void Scene::_renderWoodTexture()
+
+inline void Scene::renderRainbowTexture()
+{
+    #ifdef GL_VERSION_1_1
+    glBindTexture(GL_TEXTURE_2D, _rainbowBitmapBindId);
+    #else
+    glBindTextureEXT(GL_TEXTURE_2D, _rainbowBitmapBindId);
+    #endif
+}
+
+inline void Scene::_renderTexture(char bitmap[16*3])
 {
     glEnable(GL_TEXTURE_2D);
     
@@ -403,7 +445,7 @@ inline void Scene::_renderWoodTexture()
     glTexImage2D(GL_TEXTURE_2D, mipmapLevelOfDetail, 
 				channels, width, 
 				height, bordersize, format, 
-				type, woodBitmap);
+				type, bitmap);
     
     // set the filtering for the texture...
     // use mipmap filtering if making mipmaps.
@@ -416,8 +458,6 @@ inline void Scene::_renderWoodTexture()
     //set repeat or clamp mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    
-    cout<<"Loaded wood texture into OpenGL.\n"<<flush;
 }
 
 inline void Scene::init()
@@ -473,7 +513,18 @@ inline void Scene::init()
     glGenTexturesEXT(1, &_woodBitmapBindId);
     glBindTextureEXT(GL_TEXTURE_2D, _woodBitmapBindId);
 #endif
-    this->_renderWoodTexture();
+    this->_renderTexture(woodBitmap);
+    cout<<"Loaded wood texture.\n"<<flush;
+    
+    #ifdef GL_VERSION_1_1
+    glGenTextures(1, &_rainbowBitmapBindId);
+    glBindTexture(GL_TEXTURE_2D, _rainbowBitmapBindId);
+#else
+    glGenTexturesEXT(1, &_rainbowBitmapBindId);
+    glBindTextureEXT(GL_TEXTURE_2D, _rainbowBitmapBindId);
+#endif
+    this->_renderTexture(rainbowBitmap);
+    cout<<"Loaded rainbow texture.\n"<<flush;
     
     cout<<"Initialized scene.\n"<<flush;
 }

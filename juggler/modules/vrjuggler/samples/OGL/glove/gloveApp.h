@@ -191,7 +191,10 @@ inline void gloveApp::myDraw()
     glPushMatrix();
 	glColor3f( 0.4f, 0.1f, 0.2f );
 	glTranslatef( cubePos[0], cubePos[1], cubePos[2] );
+	glEnable(GL_TEXTURE_2D);
+	scene->renderRainbowTexture();
 	scene->drawCube( 1.0f, 1.0f, 1.0f, cubeSelected );
+	glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     
     // draw cone.
@@ -212,7 +215,7 @@ inline void gloveApp::myDraw()
     glPushMatrix();
 	glTranslatef( 0.0f, 0.0f, -20.0f );
 	glEnable(GL_TEXTURE_2D);
-	//scene->renderWoodTexture();
+	scene->renderWoodTexture();
 	scene->drawTable();
 	glDisable(GL_TEXTURE_2D);
     glPopMatrix();
@@ -241,6 +244,28 @@ inline void gloveApp::preDraw()
     //: Get the position of the index finger:
     finger_matrix = mGlove->getPos(vjGloveData::INDEX);
     finger_matrix.getTrans( x, y, z );
+    
+    //: pick up the object if you're pointing.
+    //  set the object position equal to the glove position.
+    if ( mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
+    {
+	if (coneSelected)
+	{ 
+	    conePos[0] = x; 
+	    conePos[1] = y; 
+	    conePos[2] = z; 
+	} else if (sphereSelected)
+	{ 
+	    spherePos[0] = x; 
+	    spherePos[1] = y; 
+	    spherePos[2] = z; 
+	} else if (cubeSelected)
+	{ 
+	    cubePos[0] = x; 
+	    cubePos[1] = y; 
+	    cubePos[2] = z; 
+	}
+    }
     
     float cubeDistance   = sqrtf( pow(x - cubePos[0], 2) + pow(y - cubePos[1], 2) + pow(z - cubePos[2], 2) );
     float sphereDistance = sqrtf( pow(x - spherePos[0], 2) + pow(y - spherePos[1], 2) + pow(z - spherePos[2], 2) );
@@ -281,28 +306,6 @@ inline void gloveApp::preDraw()
 	    sphereSelected = false; 
 	    coneSelected = false; 
 	} 
-    }
-
-    //: pick up the object if you're pointing.
-    //  set the object position equal to the glove position.
-    if ( mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
-    {
-	if (coneSelected)
-	{ 
-	    conePos[0] = x; 
-	    conePos[1] = y; 
-	    conePos[2] = z; 
-	} else if (sphereSelected)
-	{ 
-	    spherePos[0] = x; 
-	    spherePos[1] = y; 
-	    spherePos[2] = z; 
-	} else if (cubeSelected)
-	{ 
-	    cubePos[0] = x; 
-	    cubePos[1] = y; 
-	    cubePos[2] = z; 
-	}
     }
 }
 
