@@ -6,9 +6,12 @@ a:visited
 {
 color: rgb(21, 99, 13); 
 } 
-a:active 
+a:active, a:hover
 {
 color: rgb(170, 23, 42);
+}
+a
+{
 }
 body
 {
