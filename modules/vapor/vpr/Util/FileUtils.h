@@ -39,11 +39,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef FILE_UTILS_H
-#define FILE_UTILS_H
+#ifndef VPR_FILE_UTILS_H
+#define VPR_FILE_UTILS_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/System.h>
 #include <string>
 
 
@@ -57,25 +56,8 @@ namespace vpr
 * @param endStr The string that marks the end of an env var
 */
 std::string replaceEnvVars(const std::string str,
-                           const std::string startStr, const std::string endStr)
-{
-
-   std::string ret_str(endStr);
-   std::string::size_type subst_begin(0), subst_end(0), subst_len(0);
-
-   while( (subst_begin = ret_str.find(startStr)) != string::npos)
-   {
-      std::string env_var, env_var_val;   // The environment variable and it's value
-
-      subst_end = ret_str.find(endStr);
-      subst_len = subst_end - subst_begin;
-      env_var = std::string(ret_str, subst_begin, subst_len);
-      vpr::System::getenv(env_var, env_var_val);
-      ret_str.replace(subst_begin, subst_len, env_var_val);
-   }
-
-   return ret_str;
-}
+                           const std::string startStr,
+                           const std::string endStr);
 
 /** Replace environment variable strings embedded in str
 *
@@ -83,16 +65,9 @@ std::string replaceEnvVars(const std::string str,
 *  ${VAR}
 *  $(VAR)
 */
-std::string replaceEnvVars(const std::string str)
-{
-   std::string ret_str(str);
-
-   ret_str = replaceEnvVars(ret_str, std::string("${"), std::string("}") );
-   ret_str = replaceEnvVars(ret_str, std::string("$("), std::string(")") );
-}
-
+std::string replaceEnvVars(const std::string str);
 
 }; // namespace vpr
 
-#endif
 
+#endif

@@ -62,6 +62,7 @@ SUBDIR		= md5		\
                   uuid
 
 SRCS 		= Debug.cpp		\
+                  FileUtils.cpp		\
                   GUID.cpp		\
                   Interval.cpp		\
                   StreamLock.cpp	\
