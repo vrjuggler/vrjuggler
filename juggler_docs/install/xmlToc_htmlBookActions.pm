@@ -34,6 +34,10 @@ $book{'appendices'} = [];
 
 my $new_page_str = '<!--NewPage-->';
 
+# Commands to ignore a block when generating the book.
+my $book_ignore_b = 'book-ignore-begin';
+my $book_ignore_e = 'book-ignore-end';
+
 sub useme () {
     xmlToc::setAction("folder", \&xmlToc_htmlBookActions::pushFolder_action);
     xmlToc::setAction("/folder", \&xmlToc_htmlBookActions::popFolder_action);
@@ -211,6 +215,9 @@ sub loadHTML ($$$) {
         # Strip out tables of contents.  We will let the HTML -> PostScript
         # or HTML -> PDF converter make the TOC.
         $body =~ s/${html_comment_begin}\s+install-web\s+toc-begin\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+toc-end\s*${html_comment_end}//ogis;
+
+        # Strip out blocks to be ignored in book format.
+        $body =~ s/${html_comment_begin}\s+install-web\s+${book_ignore_b}\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+${book_ignore_e}\s*${html_comment_end}//ogis;
 
         # At this point, the HTML is suitable for appending.
 
