@@ -351,12 +351,192 @@ namespace jccl {
             std::vector<ConfigChunkHandler*>::iterator it = chunk_handlers.begin();
             std::vector<ConfigChunkHandler*>::iterator end = chunk_handlers.end();
             for (; it != end; it++) {
-                chunks_processed += (*it)->configProcessPending (true);
+                //chunks_processed += (*it)->configProcessPending (true);
+                chunks_processed += attemptHandlerReconfiguration (*it, true);
             }
         }
 
         return chunks_processed;
     }
+
+
+
+    enum PendItemResult { SUCCESS, FAILED, NEED_DEPS };
+
+    void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result);
+
+
+    int ConfigManager::attemptHandlerReconfiguration (ConfigChunkHandler* h, bool lockIt) {
+        DependencyManager* dep_mgr = DependencyManager::instance();
+
+        // should we scan for lost dependencies?
+        bool scan_for_lost_dependants(false);
+
+        // store these to check if we've changed anything.
+        int num_pending_before = getNumPending();
+        int num_pending_after(0);
+
+        bool success;
+
+        vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << typeid(*this).name() << 
+            "::configProcessPending: Entering: " << num_pending_before << 
+            " items pending.\n" << vprDEBUG_FLUSH;
+
+        if(lockIt)
+            lockPending();     // We need to lock the pending first
+   
+        std::list<ConfigManager::PendingChunk>::iterator current, end, remove_me;
+        current = getPendingBegin();
+        end = getPendingEnd();
+
+        // --- For each item in pending list --- //
+        while(current != end) {
+            // Get information about the current chunk
+            ConfigChunk* cur_chunk = (*current).mChunk;
+            vprASSERT(cur_chunk != NULL && "Trying to use an invalid chunk");
+            std::string chunk_name = cur_chunk->getProperty("name");
+            std::string chunk_type = cur_chunk->getType();
+
+            vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_VERB_LVL) << "Item: name:" << 
+                chunk_name << " type:" << chunk_type << std::endl << 
+                vprDEBUG_FLUSH;
+
+            // If the current handler (this) knows about the chunk
+            if (h->configCanHandle (cur_chunk)) {
+                // ---- HANDLE THE CHUNK ---- //
+                switch ((*current).mType) {
+
+                    // Adding Chunk
+                case ConfigManager::PendingChunk::ADD:   
+                    if (dep_mgr->depSatisfied(cur_chunk)) {
+                        success = h->configAdd(cur_chunk);
+                        if (success) {
+                            // advance iterator & remove old current.
+                            remove_me = current;
+                            current++;
+                            removePending(remove_me);
+                            // update active chunkdb
+                            addActive(cur_chunk);
+                            
+                            outputPendingItemState(vprDBG_CONFIG_LVL,
+                                                   cur_chunk->getProperty("name"),
+                                                   ((std::string)cur_chunk->getType()).c_str(),
+                                                   SUCCESS);
+                        }
+                        else { // FAILED adding
+                            outputPendingItemState(vprDBG_CRITICAL_LVL,
+                                                   cur_chunk->getProperty("name"),
+                                                   ((std::string)cur_chunk->getType()).c_str(),
+                                                   FAILED);
+                            current++;
+                        }
+                    }
+                    else {   // Dependencies not met
+                        outputPendingItemState(vprDBG_WARNING_LVL,
+                                               cur_chunk->getProperty("name"),
+                                               ((std::string)cur_chunk->getType()).c_str(),
+                                               NEED_DEPS);
+                        vprDEBUG_CONT(vprDBG_ALL,vprDBG_WARNING_LVL) << 
+                            std::endl << vprDEBUG_FLUSH;
+                        dep_mgr->debugOutDependencies(cur_chunk,vprDBG_WARNING_LVL);
+                        current++;
+                    }
+                    break;
+
+                    // Removing Chunk
+                case ConfigManager::PendingChunk::REMOVE:
+                    success = h->configRemove(cur_chunk);
+                    if (success) {
+                        // advance iterator & delete old current
+                        remove_me = current;
+                        current++;
+                        removePending(remove_me);
+                        // update active chunkdb
+                        removeActive(cur_chunk->getProperty("name"));
+                        scan_for_lost_dependants = true;
+                    }
+                    else { // Failed to remove
+                        current++;
+                    }
+                    break;
+
+                    // Default would be from a really nasty bug...
+                default:
+                    current++;  // Goto next entry
+                    break;
+                }
+            }
+
+            else { 
+                // Can't handle the chunk add or remove.
+                vprDEBUG_NEXT(vprDBG_ALL,vprDBG_STATE_LVL) << "Pending item: " << 
+                    cur_chunk->getProperty("name") << " type: " << 
+                    ((std::string)cur_chunk->getType()).c_str() << 
+                    " --> Not handled by this handler.\n" << vprDEBUG_FLUSH;
+                current++;
+            }
+
+            vprDEBUG_END(vprDBG_ALL,vprDBG_VERB_LVL) << "==== End item =====\n" << vprDEBUG_FLUSH;
+
+        }        // END: while(current != end)
+
+        if(lockIt)
+            unlockPending();   // Unlock it
+
+        num_pending_after = getNumPending();
+        
+        vprDEBUG_END(vprDBG_ALL,vprDBG_STATE_LVL)
+            << "              Exiting: "
+            << num_pending_after << " items now pending ==> We processed "
+            << (num_pending_before-num_pending_after) << " items.\n" << vprDEBUG_FLUSH;
+        
+        // Check for items that have lost their dependencies dues to a remove item being processed
+        if(scan_for_lost_dependants) {
+            scanForLostDependencies();
+        }
+
+        return (num_pending_before-num_pending_after);   
+    }
+
+
+
+//  void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result)
+//  {
+//     const int item_width(25);
+//     const int type_width(20);
+
+//     const std::string name_prefix("Pending item: ");
+//     const std::string type_prefix(" type: ");
+//     vprDEBUG(vprDBG_ALL,debugLevel) << "Pending item: " << std::setiosflags(std::ios::right) << std::setfill(' ') << std::setw(item_width) << chunkName
+//                                   <<    "     type: " << std::setiosflags(std::ios::right) << std::setfill(' ') << std::setw(type_width) << chunkType
+//                                                       << std::resetiosflags(std::ios::right) << "  ";
+
+//     /*
+//     const int prefix_len = name_prefix.length() + type_prefix.length();
+//     int item_and_type_len = chunkName.length() + chunkType.length() + prefix_len;
+//     const int state_offset(60);
+
+//     for(int c=0;c<(state_offset-item_and_type_len);c++)
+//     {
+//        vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << " ";
+//     }
+//     */
+
+//     switch(result)
+//     {
+//     case SUCCESS:
+//        vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]";
+//        break;
+//     case FAILED:
+//        vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]";
+//        break;
+//     case NEED_DEPS:
+//        vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrYELLOW) << "NEED DEPS" << clrRESET << " ]";
+//        break;
+//     }
+
+//     vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << std::endl << vprDEBUG_FLUSH;
+//  }
 
 
 

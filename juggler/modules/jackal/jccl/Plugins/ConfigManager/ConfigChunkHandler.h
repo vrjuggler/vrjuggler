@@ -79,7 +79,6 @@ public:
    //! RETURNS: Number of chunks it actually processes
    virtual int configProcessPending(bool lockIt = true);
 
-protected:
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success

@@ -244,6 +244,7 @@ public:
     void addConfigChunkHandler (ConfigChunkHandler* h);
     void removeConfigChunkHandler (ConfigChunkHandler* h);
     int attemptReconfiguration ();
+    int attemptHandlerReconfiguration (ConfigChunkHandler* h, bool lockIt);
 
     //------------------ JackalControl Stuff --------------------------------
 
