@@ -599,7 +599,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
         LIBS=`unix2dos "$LIBS"`
     fi
 
-    LN_S='cp -r'
+    LN_S='cp -pr'
     RM_LN='rm -rf'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
