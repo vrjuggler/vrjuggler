@@ -33,25 +33,24 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprSystemPosix.h) MUST be included by vprSystemBase.h, 
+ *    - This file (vprSystemPosix.h) MUST be included by vprSystemBase.h,
  *      not the other way around.
  * --------------------------------------------------------------------------
  */
 
-/* this define is the same as the Win32/Posix/NSPR version */
-/* in order to protect against including both */
-#ifndef _VPR_SYSTEM_H_
-#define _VPR_SYSTEM_H_
+#ifndef _VPR_SYSTEM_POSIX_H_
+#define _VPR_SYSTEM_POSIX_H_
 
 #include <vprConfig.h>
 
 #include <stdlib.h>
 #include <sys/time.h>
 
+#include <SystemBase.h>
 
 namespace vpr {
 
-class System : public SystemBase {
+class SystemPosix : public SystemBase {
 public:
     inline static int
     gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
@@ -60,6 +59,6 @@ public:
 };
 
 };
- 
+
 
 #endif   /* _VPR_SYSTEM_H_ */

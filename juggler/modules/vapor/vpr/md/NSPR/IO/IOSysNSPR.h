@@ -30,19 +30,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SYSTEM_H_
-#define _VPR_SYSTEM_H_
+#ifndef _VPR_IOSYS_NSPR_H_
+#define _VPR_IOSYS_NSPR_H_
 
-// include base class for vprSystem
-//#include <SystemBase.h>
+#include <vprConfig.h>
 
-// determine which implementation of vprSystem to include.
-#if defined(VPR_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
-#   include <md/POSIX/SystemPosix.h>
-#elif defined(VPR_OS_Win32)
-#   include <md/WIN32/SystemWin32.h>
-#else
-#   include <md/NSPR/SystemNSPR.h>
-#endif  /* VPR_IRIX_SPROC || VPR_USE_PTHREADS */
+namespace vpr {
 
-#endif // _VPR_SYSTEM_FAKE_H_
+// Base class for all for the IOSys class.
+// The "real" impl is in an included file.
+class IOSysNSPR
+{
+public:
+
+};
+
+
+}; // End of vpr namespace
+
+
+#endif   /* _VPR_IOSYS_NSPR_H_ */

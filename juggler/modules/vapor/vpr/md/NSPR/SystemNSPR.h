@@ -33,15 +33,13 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprSystemNSPR.h) MUST be included by vprSystemBase.h, 
+ *    - This file (vprSystemNSPR.h) MUST be included by vprSystemBase.h,
  *      not the other way around.
  * --------------------------------------------------------------------------
  */
 
-/* this define is the same as the Win32/Posix/NSPR version */
-/* in order to protect against including both */
-#ifndef _VPR_SYSTEM_H_
-#define _VPR_SYSTEM_H_
+#ifndef _VPR_SYSTEM_NSPR_H_
+#define _VPR_SYSTEM_NSPR_H_
 
 #include <vprConfig.h>
 
@@ -49,6 +47,7 @@
 #include <string.h>
 #include <prtime.h>
 
+#include <SystemBase.h>
 
 #ifndef HAVE_GETTIMEOFDAY
 struct timeval {
@@ -67,7 +66,7 @@ struct timezone {
 
 namespace  {
 
-class System: public SystemBase {
+class SystemNSPR : public SystemBase {
 public:
     inline static int
     gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
@@ -82,6 +81,6 @@ public:
 };
 
 }; // End of vpr namespace
- 
+
 
 #endif   /* _VPR_SYSTEM_H_ */
