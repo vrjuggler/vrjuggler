@@ -128,6 +128,14 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
  //     mCurrentTrack->play();
       trackMap[alias]->play();
    }
+   else
+   {
+      // if the sound is already bound then play it.
+      if(effectMap.count(alias) > 0)
+      {
+         effectMap[alias]->play();
+      }
+   }
 }
 
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
@@ -340,8 +348,11 @@ void AudiereSoundImplementation::bind( const std::string& alias )
    if(soundInfo.streaming)
    {
       trackMap[alias] = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
+   }else
+   {
+      effectMap[alias] = audiere::OpenSoundEffect(mDev.get(), soundInfo.filename.c_str(), audiere::SINGLE);
+
    }
-   
 
    // was it playing?  if so, then start it up again...
    if (soundInfo.triggerOnNextBind == true)
