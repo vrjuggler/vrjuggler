@@ -130,8 +130,8 @@ $prefix      = "$base_dir";
 $exec_prefix = qq(@exec_prefix@);
 
 my $cxx_orb_root   = "$deps_dir" || "$base_dir";
-my $cxx_orb_bindir = "$cxx_orb_root/" . (qq(@tweek_cxx_orb_bindir@) || 'bin');
-my $cxx_orb_libdir = "$cxx_orb_root/" . (qq(@tweek_cxx_orb_libdir@) || 'lib');
+my $cxx_orb_bindir = "$cxx_orb_root/bin";
+my $cxx_orb_libdir = "$cxx_orb_root/lib$LIBBITSUF";
 
 $ECHO_PREFIX      = 0;
 $ECHO_EXEC_PREFIX = 0;
