@@ -233,6 +233,29 @@ public:
     isBigEndian (void) {
         return (getEndian() == 1);
     }
+    
+    // -----------------------------------------------------------------------
+    //: return a random number between 0.0f and 1.0f
+    //
+    //! RETURNS: random number between 0 and 1
+    // -----------------------------------------------------------------------
+    inline float random()
+   {
+      // rand returns int from  0 - RAND_MAX
+      const float rand_max( RAND_MAX );
+      float r = static_cast<float>( rand() );
+      r /= rand_max;
+      return r;
+   }
+
+   //: return a random number between x1 and x2
+   //! RETURNS: random number between x1 and x2
+    inline float random( float x1, float x2 )
+   {
+      float r = vjSystemBase::random();
+      float size = x2 - x1;
+      return r * size + x1;
+   }
 };
 
 
