@@ -118,10 +118,14 @@ STARTTIME	:= $(shell LC_TIME=C date)
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= tweek
+SUBDIR=		
+
+ifeq (@BUILD_CXX@, Y)
+   SUBDIR+=	tweek
+endif
 
 ifeq (@BUILD_JAVA@, Y)
-    SUBDIR	+= java
+   SUBDIR+=	java
 endif
 
 # =============================================================================

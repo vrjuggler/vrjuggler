@@ -50,6 +50,7 @@ instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 
+BUILD_CXX	= @BUILD_CXX@
 BUILD_JAVA	= @BUILD_JAVA@
 
 # Extra compiler and linker options needed only by this file.
@@ -206,6 +207,7 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/tweek
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C tweek instlinks="$(instlinks)" links
+ifeq ($(BUILD_CXX), Y)
 ifeq (@OS_TYPE@, Win32)
 	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
 else
@@ -220,6 +222,7 @@ endif
           $(LN_S) $(topdir)/tweek/tweekDefines.h ./
 	cd $(instlinks)/include/tweek && $(RM_LN) ./tweekParam.h &&	\
           $(LN_S) $(topdir)/tweek/tweekParam.h ./
+endif
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
@@ -299,8 +302,10 @@ post-install:
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tweek-config $(bindir)
 
+ifeq ($(BUILD_CXX), Y)
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
+endif
 
 pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.include.dist -p $(prefix)
