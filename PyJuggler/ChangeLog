@@ -3,6 +3,8 @@ DATE        AUTHOR      CHANGE
 Jul-12-2004 patrickh    Exposed vpr::ObjectReader, vpr::ObjectWriter,
                         vpr::ReadableObject, vpr::WriteableObject, and
                         vpr::SerializableObject.
+                        PyJuggler.vpr is now imported automatically with all
+                        the other modules under the PyJuggler namespace.
 Jul-09-2004 patrickh    Regenerated the Boost.Python bindings code.
 Jul-02-2004 patrickh    NEW VERSION: 0.9.1
 Jul-01-2004 patrickh    Fixed a problem with multiple threads and Python 2.3 on
