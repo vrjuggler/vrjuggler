@@ -32,23 +32,23 @@ typedef void (*THREAD_FUNC)(void *);
 #include <Threads/vjBaseThread.h>
 
 
-#if defined(VJ_IRIX_SPROC)	// ---- SGI IPC Barrier ------ //
-    typedef struct cancel_state	cancel_state_t;
+#if defined(VJ_IRIX_SPROC)      // ---- SGI IPC Barrier ------ //
+    typedef struct cancel_state cancel_state_t;
 
 #   include <Threads/vjThreadSGI.h>
 #   include <Threads/vjThreadKeySGI.h>
 
-    typedef class vjThreadSGI	vjThread;
-    typedef class vjThreadKeySGI	vjKeyId;
+    typedef class vjThreadSGI    vjThread;
+    typedef class vjThreadKeySGI vjKeyId;
 #elif defined(VJ_OS_Win32)
 #   include <windows.h>
 #   include <process.h>
 #   include <Threads/vjThreadWin32.h>
 //#   include <Threads/vjThreadKeyWin32.h>
     typedef vjThreadWin32 vjThread;
-//	typedef vjThreadKeyWin32 vjKeyId;
+//   typedef vjThreadKeyWin32 vjKeyId;
 #elif defined(VJ_USE_PTHREADS)
-    typedef int		cancel_state_t;
+    typedef int cancel_state_t;
 
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
@@ -57,14 +57,14 @@ typedef void (*THREAD_FUNC)(void *);
 #   include <Threads/vjThreadPosix.h>
 #   include <Threads/vjThreadKeyPosix.h>
 
-    typedef class vjThreadPosix		vjThread;
-    typedef class vjThreadKeyPosix	vjKeyId;
+    typedef class vjThreadPosix    vjThread;
+    typedef class vjThreadKeyPosix vjKeyId;
 #else
 #   include <Threads/vjThreadFunctor.h>
-#endif	/* VJ_IRIX_SPROC */
+#endif  /* VJ_IRIX_SPROC */
 
    // Other thread related classes //
 #include <Threads/vjThreadManager.h>
 
 
-#endif	/* _VJ_THREAD_H_ */
+#endif  /* _VJ_THREAD_H_ */
