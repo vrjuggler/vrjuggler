@@ -147,9 +147,6 @@ int MotionStar::startSampling ()
       {
          int start_status;
 
-         // Reset current, progress, and valid indices.
-         resetIndexes();
-
          vprDEBUG(vrjDBG_INPUT_MGR, 1) << "    Getting MotionStar ready ...\n"
                                        << vprDEBUG_FLUSH;
 

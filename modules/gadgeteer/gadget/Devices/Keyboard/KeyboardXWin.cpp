@@ -174,8 +174,6 @@ int KeyboardXWin::startSampling()
       vprASSERT(false);
    }
 
-   resetIndexes();      // Reset the buffering variables
-
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<KeyboardXWin>* memberFunctor =
       new vpr::ThreadMemberFunctor<KeyboardXWin>(this, &KeyboardXWin::controlLoop, NULL);

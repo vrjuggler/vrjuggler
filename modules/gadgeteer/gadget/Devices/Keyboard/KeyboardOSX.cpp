@@ -155,7 +155,7 @@ int KeyboardOSX::startSampling()
       vprASSERT(false);
    }
 
-   resetIndexes();      // Reset the buffering variables
+//   resetIndexes();      // Reset the buffering variables
 
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<KeyboardOSX>* memberFunctor =

@@ -180,7 +180,7 @@ void DTK::controlLoop(void* nullParam)
     mAnalogData = new float[numbuffs];
 
 // Reset current, progress, and valid indices
-    resetIndexes();
+//    resetIndexes();
 
 // Loop through and keep sampling
     for (;;)

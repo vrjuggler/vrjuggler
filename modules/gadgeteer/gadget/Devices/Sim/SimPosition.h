@@ -48,7 +48,7 @@ namespace gadget
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class SimPosition : public Input, public Position, public SimInput
+class SimPosition :  public SimInput, public Input, public Position
 {
 public:
    /* constants for the key array */
@@ -74,7 +74,10 @@ public:
       GLOBAL = 1
    };
 public:
-   SimPosition() {;}
+   SimPosition()
+      : mTransCoordSystem(LOCAL), mRotCoordSystem(LOCAL),
+        mDTrans(-1221.75f), mDRot(-1221.75f)   
+   {;}
    virtual ~SimPosition() {;}
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
