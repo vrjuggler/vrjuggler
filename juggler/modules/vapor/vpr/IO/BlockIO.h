@@ -153,8 +153,7 @@ public:
     //+       is returned to the caller.  If the I/O device is opened, m_open
     //+       is set to true.
     //
-    //! RETURNS: true  - The device was opened successfully.
-    //! RETURNS: false - The device could not be opened for some reason.
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual Status open(void) = 0;
 
@@ -166,8 +165,7 @@ public:
     //+       status is returned to the caller.  If the I/O device is closed,
     //+       m_open is set to false.
     //
-    //! RETURNS: true  - The device was closed successfully.
-    //! RETURNS: false - The device could not be closed for some reason.
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual Status close(void) = 0;
 
@@ -191,9 +189,7 @@ public:
     //! PRE: The device is open.
     //! POST: Processes will block when accessing the device.
     //
-    //! RETURNS: true  - The blocking mode was changed successfully.
-    //! RETURNS: false - The blocking mode could not be changed for some
-    //+                  reason.
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual Status enableBlocking(void) = 0;
 
@@ -203,9 +199,7 @@ public:
     //! PRE: The device is open.
     //! POST: Processes will not block when accessing the device.
     //
-    //! RETURNS: true  - The blocking mode was changed successfully.
-    //! RETURNS: false - The blocking mode could not be changed for some
-    //+                  reason.
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual Status enableNonBlocking(void) = 0;
 
@@ -215,8 +209,7 @@ public:
     //! PRE: m_blocking is set correctly to 
     //! POST: 
     //
-    //! RETURNS: true  - The device is in blocking mode.
-    //! RETURNS: false - The device is in non-blocking mode.
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     inline bool
     getBlocking (void) const {
@@ -238,7 +231,7 @@ public:
     //! ARGS: length     - The number of bytes to be read.
     //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     read (void* buffer, const size_t length, ssize_t& bytes_read) {
@@ -261,7 +254,7 @@ public:
     //! ARGS: length     - The number of bytes to be read.
     //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     read (std::string& buffer, const size_t length, ssize_t& bytes_read) {
@@ -291,10 +284,11 @@ public:
     //! ARGS: length     - The number of bytes to be read.
     //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    read (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
+    read (std::vector<vpr::Uint8>& buffer, const size_t length,
+          ssize_t& bytes_read)
     {
        Status status;
        buffer.resize( length );
@@ -329,7 +323,7 @@ public:
     //! ARGS: length     - The number of bytes to be read.
     //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     readn (void* buffer, const size_t length, ssize_t& bytes_read) {
@@ -352,7 +346,7 @@ public:
     //! ARGS: length     - The number of bytes to be read.
     //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     readn (std::string& buffer, const size_t length, ssize_t& bytes_read) {
@@ -382,18 +376,18 @@ public:
     //+       device, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer (a vector of chars) where the
-    //+                device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the vector if not
-    //+                specified.
+    //! ARGS: buffer     - A pointer to the buffer (a vector of chars) where
+    //+                    the device's buffer contents are to be stored.
+    //! ARGS: length     - The number of bytes to be read.  This is optional
+    //+                    and can be determined from the length of the vector
+    //+                    if not specified.
+    //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    readn (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
+    readn (std::vector<vpr::Uint8>& buffer, const size_t length
+           ssize_t& bytes_read)
     {
         Status status;
         
@@ -422,7 +416,7 @@ public:
     //! ARGS: length        - The length of the buffer.
     //! ARGS: bytes_written - The number of bytes written to the device.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     write (const void* buffer, const size_t length, ssize_t& bytes_written) {
@@ -441,7 +435,7 @@ public:
     //! ARGS: length        - The length of the buffer.
     //! ARGS: bytes_written - The number of bytes written to the device.
     //
-    //! RETURNS: >-1
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     write (const std::string& buffer, const size_t length,
@@ -463,7 +457,7 @@ public:
     //! ARGS: length        - The length of the buffer.
     //! ARGS: bytes_written - The number of bytes written to the device.
     //
-    //! RETURNS:
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
     write (const std::vector<vpr::Uint8>& buffer, const size_t length,
@@ -558,19 +552,63 @@ protected:
     }
 
     /**
+     * ------------------------------------------------------------------------
+     * Implementation of the read() template method.
      *
+     * PRE: The device is open for reading, and the buffer is at least length
+     *      bytes long.
+     * POST: The given buffer has length bytes copied into it from the
+     *       device, and the number of bytes read successfully is returned to
+     *       the caller.
+     *
+     * ARGS: buffer     - A pointer to the buffer where the device's buffer
+     *                    contents are to be stored.
+     * ARGS: length     - The number of bytes to be read.
+     * ARGS: bytes_read - The number of bytes read into the buffer.
+     *
+     * RETURNS: A vpr::Status object describing the results of the operation.
+     * ------------------------------------------------------------------------
      */
     virtual Status read_i(void* buffer, const size_t length,
                           ssize_t& bytes_read) = 0;
 
     /**
+     * ------------------------------------------------------------------------
+     * Implementation of the readn() template method.
      *
+     * PRE: The device is open for reading, and the buffer is at least length
+     *       bytes long.
+     * POST: The given buffer has length bytes copied into it from the
+     *       device, and the number of bytes read successfully is returned to
+     *       the caller.
+     *
+     * ARGS: buffer     - A pointer to the buffer where the device's buffer
+     *                    contents are to be stored.
+     * ARGS: length     - The number of bytes to be read.  This is optional
+     *                    and can be determined from the length of the vector
+     *                    if not specified.
+     * ARGS: bytes_read - The number of bytes read into the buffer.
+     *
+     * RETURNS: A vpr::Status object describing the results of the operation.
+     * ------------------------------------------------------------------------
      */
     virtual Status readn_i(void* buffer, const size_t length,
                            ssize_t& bytes_read) = 0;
 
     /**
+     * ------------------------------------------------------------------------
+     * Write the buffer to the I/O device.
      *
+     * PRE: The device is open for writing.
+     * POST: The given buffer is written to the I/O device, and the number of
+     *       bytes written successfully is returned to the caller.
+     *
+     * ARGS: buffer        - A pointer to the buffer to be written.
+     * ARGS: length        - The length of the buffer.
+     * ARGS: bytes_written - The number of bytes written to the device.
+     *
+     * RETURNS: A vpr::Status object describing the results of the operation.
+     * ------------------------------------------------------------------------
      */
     virtual Status write_i(const void* buffer, const size_t length,
                            ssize_t& bytes_written) = 0;
@@ -578,10 +616,10 @@ protected:
     std::string m_name;          //: The name of the I/O device
     _open_mode  m_open_mode;     //: The open mode of the device
     bool        m_open_blocking; //: Flag telling if blocking is enabled when
-             //+ opening the device
+                                 //+ opening the device
     bool        m_open;          //: Flag telling if the device is open
     bool        m_blocking;      //: Flag telling if blocking for reads and
-             //+ writes is enabled
+                                 //+ writes is enabled
 };
 
 }; // End of vpr namespace
