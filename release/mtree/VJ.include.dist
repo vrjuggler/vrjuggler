@@ -15,11 +15,17 @@
 	    ..
 	    ibox
 	    ..
+	    vjGesture
+	    ..
 	    vjGlove
 	    ..
 	    vjInput
 	    ..
+	    vjKeyboard
+	    ..
 	    vjPosition
+	    ..
+	    vjSim
 	    ..
 	..
 	Kernel
