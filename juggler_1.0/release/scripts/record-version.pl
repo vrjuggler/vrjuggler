@@ -44,7 +44,7 @@ use vars qw(%opts);
 
 my $status = 0;
 
-getopts('f:i:o:v:', \%opts);
+getopts('f:i:o:s:v:', \%opts);
 
 die "ERROR: No version number given!\n" unless $opts{'f'} || $opts{'v'};
 
@@ -72,6 +72,10 @@ elsif ( $opts{'f'} ) {
         die "ERROR: No version number found in $opts{'f'}\n";
     }
 }
+
+# Append a suffix to the version string.  If none was specified, nothing
+# will be appended.
+$version_string .= "$opts{'s'}";
 
 if ( $opts{'o'} ) {
     if ( $opts{'i'} ) {
