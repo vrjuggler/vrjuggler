@@ -83,7 +83,7 @@ jccl::ConfigChunkPtr DisplayManager::getDisplaySystemChunk()
 
 void DisplayManager::setDrawManager(DrawManager* drawMgr)
 {
-   vprDEBUG(vrjDBG_DISP_MGR,3) << "vjDisplayManager: Setting draw manager.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_STATE_LVL) << "vjDisplayManager: Setting draw manager.\n" << vprDEBUG_FLUSH;
 
    // set the draw manager
    mDrawManager = drawMgr;
@@ -111,7 +111,7 @@ bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
    if(   (chunk_type == std::string("surfaceDisplay"))
       || (chunk_type == std::string("simDisplay")) )
    {
-      vprDEBUG(vprDBG_ALL,0) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
       return false;
    }
    else if( (chunk_type == std::string("displayWindow")))
@@ -142,7 +142,7 @@ bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
    if(  (chunk_type == std::string("surfaceDisplay"))
      || (chunk_type == std::string("simDisplay")) )
    {
-      vprDEBUG(vprDBG_ALL,0) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
       return false;
    }
    else if(chunk_type == std::string("displayWindow"))
@@ -251,7 +251,7 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigChunkPtr chunk)
 // notifyDrawMgr = 0; Defaults to 0
 int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
 {
-   vprDEBUG(vrjDBG_DISP_MGR,4) << "vjDisplayManager::addDisplay \n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_VERB_LVL) << "vjDisplayManager::addDisplay \n" << vprDEBUG_FLUSH;
 
    // Test if active or not, to determine correct list
    // The place it in the list

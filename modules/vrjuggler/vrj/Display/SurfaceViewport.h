@@ -98,7 +98,7 @@ protected:
       gmtl::cross(norm2, bot_side, right_side);
       gmtl::normalize( norm1 ); gmtl::normalize(norm2);
       if(norm1 != norm2)
-         vprDEBUG(vprDBG_ERROR,0) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
    }
 
 

@@ -70,7 +70,7 @@ int Kernel::start()
 {
    if(mControlThread != NULL) // Have already started
    {
-      vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vprDEBUG_FLUSH;
       vprASSERT(false);
       exit(0);
    }
@@ -157,9 +157,9 @@ void Kernel::controlLoop(void* nullParam)
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
-            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
-            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager preDraw()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update ClusterManager preDraw()\n" << vprDEBUG_FLUSH;
       }
       else
       {
@@ -172,15 +172,15 @@ void Kernel::controlLoop(void* nullParam)
 
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
-            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
-            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
-            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
       }
       else
@@ -194,11 +194,11 @@ void Kernel::controlLoop(void* nullParam)
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
       checkSignalButtons();      // Check for any pending control requests
 
-         vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
-         vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
       mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
-         vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Any frame-based manager data
    }
 
@@ -511,8 +511,8 @@ void Kernel::loadConfigFile(std::string filename)
    // Put them all in pending
    jccl::ConfigManager::instance()->addPendingAdds(chunk_db);
 
-   //vprDEBUG(vrjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vprDEBUG_FLUSH;
-   //vprDEBUG(vrjDBG_KERNEL,5) << (*mInitialChunkDB) << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "------------  Loaded Config Chunks ----------" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << (*mInitialChunkDB) << vprDEBUG_FLUSH;
 }
 
 /**
@@ -593,19 +593,19 @@ Kernel::Kernel()
      mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL), mClusterManager(NULL)
 {
    // Print out the Juggler version number when the kernel is created.
-   vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "VR Juggler: ")
-                           << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "VPR: ")
-                           << clrOutNORM(clrGREEN, vpr::getVersionString())
-                           << clrRESET << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "Gadgeteer: ")
-                           << clrOutNORM(clrGREEN, gadget::getVersionString())
-                           << clrRESET << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
-                           << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
+                                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN, "VR Juggler: ")
+                                             << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+                                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN, "VPR: ")
+                                             << clrOutNORM(clrGREEN, vpr::getVersionString())
+                                             << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN, "Gadgeteer: ")
+                                             << clrOutNORM(clrGREEN, gadget::getVersionString())
+                                             << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
+                                             << std::endl << vprDEBUG_FLUSH;
 
    jccl::ChunkFactory::instance()->loadDescs
        ("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/vrj-chunks.desc");

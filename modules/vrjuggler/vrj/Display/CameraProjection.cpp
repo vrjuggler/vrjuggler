@@ -61,7 +61,7 @@ void CameraProjection::calcViewMatrix(gmtl::Matrix44f& cameraPos, const float sc
    mViewMat = cameraPos;
 
    gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(cameraPos);
-   vprDEBUG(vprDBG_ALL,6) << "calcView: Cam pos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "calcView: Cam pos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
    int win_xo, win_yo, win_xs, win_ys;  // origin and size of display window
    float vp_xo, vp_yo, vp_xs, vp_ys;  // origin and size of viewport

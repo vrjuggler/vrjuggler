@@ -65,7 +65,7 @@ namespace kev
 
          if (!frames_file.rdbuf()->is_open())
          {
-            vprDEBUG(vprDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrSetNORM(clrYELLOW) << "WARNING: "
                            << clrRESET
                            << "couldn't open keyframe file: "
                            << filename <<"\n"
@@ -73,7 +73,7 @@ namespace kev
             return;
          }
 
-         vprDEBUG(vprDBG_ALL,0) << "Reading keyframe(s) in file: "
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Reading keyframe(s) in file: "
                 <<filename<<"\n"<<vprDEBUG_FLUSH;
 
          float time;
@@ -87,7 +87,7 @@ namespace kev
             // if EOF then return...
             if (time == -1)
             {
-               vprDEBUG(vprDBG_ALL,0)<<"time==-1: "<<time<<"\n"<<vprDEBUG_FLUSH;
+               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)<<"time==-1: "<<time<<"\n"<<vprDEBUG_FLUSH;
                return;
             }
             frames_file>>pos[0]>>pos[1]>>pos[2]>>deg>>vec[0]>>vec[1]>>vec[2];

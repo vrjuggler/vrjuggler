@@ -66,7 +66,7 @@ void SimSetablePosition::setData(const PositionData& pos_data)
 
    swapPositionBuffers(); // Swap the buffers
 
-   //vprDEBUG(gadgetDBG_INPUT_MGR,6) << "SimSetablePosition: set Data:" << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "SimSetablePosition: set Data:" << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl << vprDEBUG_FLUSH;
 }
 
 } // End of gadget namespace

@@ -42,18 +42,18 @@ namespace gadget
 /** Default Constructor */
 SimDigitalGlove::SimDigitalGlove() : Digital(), SimInput(), Glove()
 {
-   //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigitalGlove::SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 /** Destructor */
 SimDigitalGlove::~SimDigitalGlove()
 {
-  // vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
+  // vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
 {
-   //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::config\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigitalGlove::config\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk) && Glove::config(chunk)))
       return false;
 
@@ -148,8 +148,8 @@ void SimDigitalGlove::updateData()
 
    addDigitalSample(mDigitalData);
       
-   //vprDEBUG(vprDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vprDEBUG_FLUSH;
-   //vprDEBUG(vprDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<mTheData[0][current].outputAngles(cout)<<vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<mTheData[1][current].outputAngles(cout)<<vprDEBUG_FLUSH;
 
 
    //TODO:  how does the angles get turned into a gesture ID????
@@ -186,7 +186,7 @@ void SimDigitalGlove::updateFingerAngles()
     // if that assert failed, then at least the code will still run...
     if ( LEFT_HAND < GADGET_MAX_GLOVE_DEVS )
     {
-       //vprDEBUG(vprDBG_ALL,0)<<"Lpinky:"<<mLeftHand.pinky().mpj()<<","<<mLeftHand.pinky().pij()<<","<<mLeftHand.pinky().dij()<<","<<mLeftHand.pinky().abduct()<<"\n"<<vprDEBUG_FLUSH;
+       //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"Lpinky:"<<mLeftHand.pinky().mpj()<<","<<mLeftHand.pinky().pij()<<","<<mLeftHand.pinky().dij()<<","<<mLeftHand.pinky().abduct()<<"\n"<<vprDEBUG_FLUSH;
        // Left Pinky
        mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = mLeftHand.pinky().mpj();
        mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = mLeftHand.pinky().pij();
@@ -225,7 +225,7 @@ void SimDigitalGlove::updateFingerAngles()
     // if that assert failed, then at least the code will still run...
     if ( RIGHT_HAND < GADGET_MAX_GLOVE_DEVS )
     {
-       //vprDEBUG(vprDBG_ALL,0)<<"Rpinky:"<<mRightHand.pinky().mpj()<<","<<mRightHand.pinky().pij()<<","<<mRightHand.pinky().dij()<<","<<mRightHand.pinky().abduct()<<"   "<<vprDEBUG_FLUSH;
+       //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"Rpinky:"<<mRightHand.pinky().mpj()<<","<<mRightHand.pinky().pij()<<","<<mRightHand.pinky().dij()<<","<<mRightHand.pinky().abduct()<<"   "<<vprDEBUG_FLUSH;
        // Right Pinky
        mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = mRightHand.pinky().mpj();
        mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = mRightHand.pinky().pij();
@@ -261,7 +261,7 @@ void SimDigitalGlove::updateFingerAngles()
        mTheData[RIGHT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = mRightHand.pitch();
     }
 
-    //vprDEBUG(vprDBG_ALL,0)<<"out\n"<<std::flush<<vprDEBUG_FLUSH;
+    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"out\n"<<std::flush<<vprDEBUG_FLUSH;
 */
 }
 
@@ -288,7 +288,7 @@ void SimDigitalGlove::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << "vjSimGloveGesture:: Can't load trained file: " << fileName.c_str()
          << std::endl << vprDEBUG_FLUSH;
    }

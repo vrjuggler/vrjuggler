@@ -81,7 +81,7 @@ bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
 
    // Create sensor
    int shm_key = c->getProperty<int>("shm_key");
-   vprDEBUG(vprDBG_ALL,0) << "TrackdAPIController::config: shared mem key:" << shm_key << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "TrackdAPIController::config: shared mem key:" << shm_key << std::endl << vprDEBUG_FLUSH;
    if (shm_key == 0)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
@@ -96,8 +96,8 @@ bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
    mCurValuators.resize(mControllerReader->trackdGetNumberOfValuators());
    mCurButtons.resize(mControllerReader->trackdGetNumberOfButtons());
 
-   vprDEBUG(vprDBG_ALL,0) << "Num valuators:" << mCurValuators.size() << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,0) << "Num buttons:" << mCurButtons.size() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Num valuators:" << mCurValuators.size() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Num buttons:" << mCurButtons.size() << std::endl << vprDEBUG_FLUSH;
 
    return true;
 }

@@ -273,7 +273,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
       while ( con_sock.isReadBlocked() )
       {
          vpr::System::usleep(10);
-         vprDEBUG(vprDBG_ALL, 0) << "Connector waiting for data\n"
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Connector waiting for data\n"
                                  << vprDEBUG_FLUSH;
       }
    }

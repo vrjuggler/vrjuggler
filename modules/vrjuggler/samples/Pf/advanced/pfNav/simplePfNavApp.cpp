@@ -213,7 +213,7 @@ void simplePfNavApp::preForkInit()
 /// Return the current scene graph
 pfGroup* simplePfNavApp::getScene()
 {
-   vprDEBUG(vprDBG_ALL, 0) << "simplePfNavApp::getScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "simplePfNavApp::getScene\n" << vprDEBUG_FLUSH;
    return mRootNode;
 }
 
@@ -397,7 +397,7 @@ void simplePfNavApp::preFrame()
 /// Function called after pfDraw
 void simplePfNavApp::intraFrame()
 {
-   //vprDEBUG(vprDBG_ALL,0) << "-------- simplePfNavApp::intraFrame -------\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "-------- simplePfNavApp::intraFrame -------\n" << vprDEBUG_FLUSH;
 }
 
 //: Reset the application to initial state
@@ -434,7 +434,7 @@ void simplePfNavApp::enableNav( bool state )
 /*
 void focusChanged()
 {
-   vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << std::endl << vprDEBUG_FLUSH;
 
    if(mNavigationDCS != NULL)
    {
@@ -444,7 +444,7 @@ void focusChanged()
       { mNavigationDCS->setActive(false); }
    }
    else
-      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << std::endl << vprDEBUG_FLUSH;
 }
 */
 
@@ -455,7 +455,7 @@ void focusChanged()
 // These must be set before the kernel starts calling the application
 void simplePfNavApp::addModelFile( const std::string& filename )
 {
-   vprDEBUG(vprDBG_ALL,0) << "Adding model file: " << filename.c_str() <<"\n"
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Adding model file: " << filename.c_str() <<"\n"
                         << vprDEBUG_FLUSH;
    Model m;
    m.filename = filename;
@@ -510,7 +510,7 @@ void simplePfNavApp::setInitialNavPos( const gmtl::Vec3f& initialPos )
    for (unsigned int i = 0; i < mNavigators.size(); ++i)
    {
       gmtl::Matrix44f initial_nav;
-      vprDEBUG(vprDBG_ALL,0) << "setting pos\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "setting pos\n" << vprDEBUG_FLUSH;
       gmtl::setTrans( initial_nav, mInitialNavPos );
 
       mNavigators[i]->setHomePosition(initial_nav);
@@ -541,7 +541,7 @@ void simplePfNavApp::setNavigator( unsigned new_index )
       // Switch em
       mCurNavIndex = new_index;
       mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
-      vprDEBUG(vprDBG_ALL,0) << "simplePfNavApp: Navigation switched to: "
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "simplePfNavApp: Navigation switched to: "
                            << clrSetNORM(clrGREEN)
                            << mNavigators[mCurNavIndex]->getName().c_str()
                            << clrRESET << std::endl << vprDEBUG_FLUSH;
@@ -618,7 +618,7 @@ void simplePfNavApp::initializeModels()
       // FIXME: do rotation...
       mModelList[x].modelDCS->setScale( mModelList[x].scale );
 
-      vprDEBUG(vprDBG_ALL,0) << "pfNavApp: Adding "
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "pfNavApp: Adding "
                            << mModelList[x].filename.c_str()
                            << "\n" << vprDEBUG_FLUSH;
       mModelList[x].modelNode = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
@@ -686,7 +686,7 @@ void simplePfNavApp::initializeSounds()
 void simplePfNavApp::initScene()
 {
    // Load the scene
-   vprDEBUG(vprDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "pfNavJugglerApplication::initScene\n" << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
    mRootNode             = new pfGroup;       // Root of our graph
@@ -794,20 +794,22 @@ void simplePfNavApp::initScene()
 
 int AppNotifyPreTrav(pfTraverser* trav, void* data)
 {
-   vprDEBUG(vprDBG_ALL,0) << "Traversing app (pre): "
-                        << "chan: " << (void*)trav->getChan()
-                        << " node:" << (void*)trav->getNode() << ": "
-                        << trav->getNode()->getName() << std::endl
-                        << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Traversing app (pre): "
+      << "chan: " << (void*)trav->getChan()
+      << " node:" << (void*)trav->getNode() << ": "
+      << trav->getNode()->getName() << std::endl
+      << vprDEBUG_FLUSH;
    return PFTRAV_CONT;
 }
 
 int AppNotifyPostTrav(pfTraverser* trav, void* data)
 {
-   vprDEBUG(vprDBG_ALL,0) << "Traversing app (post): "
-                        << "chan: " << (void*)trav->getChan()
-                        << " node:" << (void*)trav->getNode() << ": "
-                        << trav->getNode()->getName() << std::endl
-                        << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Traversing app (post): "
+      << "chan: " << (void*)trav->getChan()
+      << " node:" << (void*)trav->getNode() << ": "
+      << trav->getNode()->getName() << std::endl
+      << vprDEBUG_FLUSH;
    return PFTRAV_CONT;
 }

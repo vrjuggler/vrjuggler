@@ -238,8 +238,9 @@ void GlDrawManager::addDisplay(Display* disp)
 {
    vprASSERT(disp != NULL);    // Can't add a null display
 
-   vprDEBUG(vrjDBG_DRAW_MGR,3) << "vrj::GlDrawManager:addDisplay: " << disp
-                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+      << "vrj::GlDrawManager:addDisplay: " << disp
+      << std::endl << vprDEBUG_FLUSH;
 
 
    // -- Finish Simulator setup
@@ -348,7 +349,7 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
    else
    {
-      vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
 
@@ -358,7 +359,7 @@ void GlDrawManager::removeDisplay(Display* disp)
 /** Shutdown the drawing API */
 void GlDrawManager::closeAPI()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "vrj::GlDrawManager::closeAPI\n" << vprDEBUG_FLUSH;
 
    mRunning = false;
 

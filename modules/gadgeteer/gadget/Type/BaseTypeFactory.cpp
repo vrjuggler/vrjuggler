@@ -171,7 +171,7 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
    Input* new_dev;
    BaseTypeConstructorBase* constructor = mConstructors[index];
 
-   //vprDEBUG(gadgetDBG_INPUT_MGR,3)
+   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
    //   << "gadget::BaseType::loadDevice: Loading device: "
    //   << chunk->getDescToken() << "  with: " << typeid(*constructor).name()
    //   << std::endl << vprDEBUG_FLUSH;
@@ -204,21 +204,21 @@ int BaseTypeFactory::findConstructor(std::string base_type)
 
 void BaseTypeFactory::debugDump()
 {
-   vprDEBUG_OutputGuard(gadgetDBG_RIM, 0,
+   vprDEBUG_OutputGuard(gadgetDBG_RIM, vprDBG_VERB_LVL,
       std::string("gadget::BaseTypeFactory::debugDump\n"),
       std::string("------ END DUMP ------\n"));
 
-   vprDEBUG(gadgetDBG_RIM,0) << "num constructors:"
+   vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL) << "num constructors:"
                              << mConstructors.size() << "\n"
                              << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
    {
       BaseTypeConstructorBase* dev_constr = mConstructors[cNum];
-      vprDEBUG(gadgetDBG_RIM,0)
+      vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL)
          << cNum << ": Constructor:" << (void*)dev_constr
          << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,0) << "   recog:"
+      vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL) << "   recog:"
                                 << dev_constr->getBaseType() << "\n"
                                 << vprDEBUG_FLUSH;
    }

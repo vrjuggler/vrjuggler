@@ -108,7 +108,7 @@ void GrabController::initLocalGrabControllerData()
    vprASSERT( (found_it || was_constructed) && "Initialized failed???");
    vprASSERT(!found_it && "Somehow we found the local grabber and that is not good");
 
-   vprDEBUG(dspaceBUILDER,1) <<  "   Initialized grab controller::localGrabber: [" << local_grabber_guid.toString() 
+   vprDEBUG(dspaceBUILDER, vprDBG_CONFIG_LVL) <<  "   Initialized grab controller::localGrabber: [" << local_grabber_guid.toString() 
                                 << "] found=[" << (found_it?"true":"false") << "]\n" << vprDEBUG_FLUSH;
        
    while(!mLocalGrabber.lock().success())
@@ -190,17 +190,17 @@ void GrabController::preUpdate(Traverser* traverser)
    if(remote_locked && (mLocalSelectionState != IsGrabbedAndLocked))
    {  
       mRemoteState = HoldsLock; 
-      if(mOldRemoteState != mRemoteState) vprDEBUG(dspaceCNTRL, 1) << "Remote State: HoldsLock\n" << vprDEBUG_FLUSH;
+      if(mOldRemoteState != mRemoteState) vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "Remote State: HoldsLock\n" << vprDEBUG_FLUSH;
    }
    else if(num_remote_grabbers > 0)
    {        
       mRemoteState = DoesIsect; 
-      if(mOldRemoteState != mRemoteState) vprDEBUG(dspaceCNTRL, 1) << "Remote State: DoesIsect\n" << vprDEBUG_FLUSH;
+      if(mOldRemoteState != mRemoteState) vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "Remote State: DoesIsect\n" << vprDEBUG_FLUSH;
    }
    else
    {
       mRemoteState = UnSelected;
-      if(mOldRemoteState != mRemoteState) vprDEBUG(dspaceCNTRL, 1) << "Remote State: UnSelected\n" << vprDEBUG_FLUSH;
+      if(mOldRemoteState != mRemoteState) vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "Remote State: UnSelected\n" << vprDEBUG_FLUSH;
    }
 
    if(mOldRemoteState != mRemoteState)
@@ -208,7 +208,7 @@ void GrabController::preUpdate(Traverser* traverser)
       if(remote_locked && (mLocalSelectionState != IsGrabbedAndLocked))
       {  
          mSounds[RemoteLock].trigger();
-         vprDEBUG(dspaceCNTRL, 1) << "Remote State: HoldsLock\n" << vprDEBUG_FLUSH;
+         vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "Remote State: HoldsLock\n" << vprDEBUG_FLUSH;
       }
       else if(num_remote_grabbers > 0)
       {        
@@ -218,12 +218,12 @@ void GrabController::preUpdate(Traverser* traverser)
          }
          else
             mSounds[RemoteSelect].trigger();
-         vprDEBUG(dspaceCNTRL, 1) << "Remote State: DoesIsect\n" << vprDEBUG_FLUSH;
+         vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "Remote State: DoesIsect\n" << vprDEBUG_FLUSH;
       }
       else
       {
          mSounds[RemoteDeselect].trigger();
-         vprDEBUG(dspaceCNTRL, 1) << "Remote State: UnSelected\n" << vprDEBUG_FLUSH;
+         vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "Remote State: UnSelected\n" << vprDEBUG_FLUSH;
       }
    }
       
@@ -238,7 +238,7 @@ void GrabController::preUpdate(Traverser* traverser)
       {
          if(does_isect)
          {
-            vprDEBUG(dspaceCNTRL, 1) << "GrabController: Intersection with entity: " << getEntity()->getName() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(dspaceCNTRL, vprDBG_CONFIG_LVL) << "GrabController: Intersection with entity: " << getEntity()->getName() << std::endl << vprDEBUG_FLUSH;
 
             // Add to grabber list and go to SelectedState
             addOurGrabberToList();     // Locks the list and adds our grabber to it

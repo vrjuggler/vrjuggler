@@ -145,7 +145,6 @@ void PfDrawManager::draw()
    updatePfProjections();
 
    vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "vjPfDrawManager::draw\n" << vprDEBUG_FLUSH;
-   //vprDEBUG(vprDBG_ALL,0) << "vjPfDrawManager::draw\n" << vprDEBUG_FLUSH;
 
    pfFrame();
 }
@@ -575,7 +574,7 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSurfChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vprDEBUG(vrjDBG_DRAW_MGR, 0) << "Trying to remove a non-existant pfChannel\n" << vprDEBUG_FLUSH;
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "Trying to remove a non-existant pfChannel\n" << vprDEBUG_FLUSH;
             }
 
             // Check if we were the master
@@ -596,7 +595,7 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSimChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vprDEBUG(vrjDBG_DRAW_MGR, 0) << "Trying to remove a non-existant pfChannel";
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "Trying to remove a non-existant pfChannel";
             }
 
             // Check if we were the master
@@ -1078,23 +1077,23 @@ void PFconfigPWin(pfPipeWindow* pWin)
 /*
 void PfAppFunc(pfChannel *chan, void* chandata)
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, 0) << "--- PfAppFunc: Enter ---.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, 0) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "--- PfAppFunc: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
 
    pfChannel* master_chan = PfDrawManager::instance()->mMasterChan;
    if(master_chan == chan)
    {
-      vprDEBUG(vrjDBG_DRAW_MGR,0) << "I am the master of the house:\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "I am the master of the house:\n" << vprDEBUG_FLUSH;
       if(PfDrawManager::instance()->mPfAppCalled == false)      // Haven't called it yet
       {
-         vprDEBUG(vrjDBG_DRAW_MGR,0) << "pfApp has not been called yet.  Let me do it...\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "pfApp has not been called yet.  Let me do it...\n" << vprDEBUG_FLUSH;
          PfDrawManager::instance()->mPfAppCalled = true;
          pfApp();
       }
    }
    else
    {
-      vprDEBUG(vrjDBG_DRAW_MGR,0) << "I am not master. I can't do anything.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "I am not master. I can't do anything.\n" << vprDEBUG_FLUSH;
    }
 }
 */

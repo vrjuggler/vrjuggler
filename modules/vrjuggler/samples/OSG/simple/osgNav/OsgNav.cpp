@@ -42,7 +42,7 @@
 void OsgNav::preFrame()
 {
 
-//vprDEBUG(vprDBG_ALL,0) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
+//vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
 
    // -- Get wand info -- //
    gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix

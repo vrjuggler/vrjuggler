@@ -86,8 +86,9 @@ Flock::Flock(const char* const port, const int& baud, const int& sync,
 
 bool Flock::config(jccl::ConfigChunkPtr c)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   Flock::Flock(jccl::ConfigChunk*)"
-                                   << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "   Flock::Flock(jccl::ConfigChunk*)"
+         << std::endl << vprDEBUG_FLUSH;
 
    // read in Position's config stuff,
    // --> this will be the port and baud fields
@@ -154,7 +155,7 @@ void Flock::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
 
-   // vprDEBUG(gadgetDBG_INPUT_MGR,3)
+   // vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
    //    << "gadget::Flock: Spawned SampleBirds starting"
    //    << std::endl << vprDEBUG_FLUSH;
 

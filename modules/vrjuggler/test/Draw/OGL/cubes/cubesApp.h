@@ -178,7 +178,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      vprDEBUG(vprDBG_ALL,0) << "---- cubesApp::apiInit() ----\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---- cubesApp::apiInit() ----\n" << vprDEBUG_FLUSH;
    }
 
    // Called immediately upon opening a new OpenGL context.  This is called
@@ -212,7 +212,7 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
-       vprDEBUG(vprDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
+       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::preFrame()" << std::endl
                             << vprDEBUG_FLUSH;
 
        for ( unsigned int i = 0; i < mUserData.size(); ++i )
@@ -230,7 +230,7 @@ public:
       { 
          ContextTimingData* timing_data = &(*mContextTiming);
          double mean = timing_data->dlist_wait.getMean();
-         vprDEBUG(vprDBG_ALL,0) << "dlist wait: " << mean << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "dlist wait: " << mean << std::endl << vprDEBUG_FLUSH;
       }
    }
 
@@ -256,7 +256,7 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vprDEBUG(vprDBG_ALL,5) << "cubesApp::intraFrame()" << std::endl
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::intraFrame()" << std::endl
                            << vprDEBUG_FLUSH;
    }
 
@@ -264,7 +264,7 @@ public:
    // Do calculations here.
    virtual void postFrame()
    {
-      vprDEBUG(vprDBG_ALL,5) << "cubesApp::postFrame" << std::endl
+      vprDEBUG(vprDBG_ALL, vprDBG_HERB_LVL) << "cubesApp::postFrame" << std::endl
                            << vprDEBUG_FLUSH;
    }
 

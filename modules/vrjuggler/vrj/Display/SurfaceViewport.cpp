@@ -135,10 +135,10 @@ void SurfaceViewport::updateProjections(const float positionScale)
    /*
    Coord  head_coord(cur_head_pos);       // Create a user readable version
 
-   vprDEBUG(vprDBG_ALL,5)
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
       << "vjDisplay::updateProjections: Getting head position" << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
                         << head_coord.orient << std::endl << vprDEBUG_FLUSH;
                         */
 

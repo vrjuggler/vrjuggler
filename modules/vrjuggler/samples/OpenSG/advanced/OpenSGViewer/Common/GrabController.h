@@ -97,7 +97,7 @@ public:
 
       initAndCreate(getObjId(), found_it);
 
-      vprDEBUG(dspaceBUILDER,1) <<  "   Initialized grab controller: [" << getObjId().toString() 
+      vprDEBUG(dspaceBUILDER, vprDBG_CONFIG_LVL) <<  "   Initialized grab controller: [" << getObjId().toString() 
                                 << "] found=[" << (found_it?"true":"false") << "]\n" << vprDEBUG_FLUSH;
 
       initLocalGrabControllerData();      // Initialize the local grab controller that we have here

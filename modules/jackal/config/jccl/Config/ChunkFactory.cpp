@@ -51,13 +51,13 @@ namespace jccl
       bool retval = mDescDB.load(demangleFileName(file_name, parentFile));
       if ( retval )
       {
-         vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
+         vprDEBUG(jcclDBG_CONFIG,vprDBG_CONFIG_LVL)
             << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
             << vprDEBUG_FLUSH;
       }
       else
       {
-         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
             << "Failed to load ChunkDesc file: '" << file_name.c_str()
             << "'.\n" << vprDEBUG_FLUSH;
       }

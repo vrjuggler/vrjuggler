@@ -66,11 +66,11 @@ void UserData::updateNavigation()
    gmtl::Matrix44f wand_matrix = mWand->getData();
    gmtl::setRot( xyzAngles, wand_matrix );
 
-   vprDEBUG(vprDBG_ALL,6) << "===================================\n"
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "===================================\n"
                         << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,6) << "Wand:\n" << wand_matrix << std::endl
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Wand:\n" << wand_matrix << std::endl
                         << vprDEBUG_FLUSH;
-//   vprDEBUG(vprDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
+//   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Wand XYZ: " << xyzAngles << std::endl
 //                        << vprDEBUG_FLUSH;
 
    gmtl::set(goal_rot, wand_matrix); // Create the goal rotation quaternion
@@ -85,13 +85,13 @@ void UserData::updateNavigation()
       gmtl::identity(transform);
    }
 
-   vprDEBUG(vprDBG_ALL,6) << "Transform:\n" << transform << std::endl
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform:\n" << transform << std::endl
                         << vprDEBUG_FLUSH;
    gmtl::setRot(xyzAngles, transform);
-//   vprDEBUG(vprDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
+//   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform XYZ: " << xyzAngles << std::endl
 //                        << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,6) << "Nav:\n" << mNavMatrix << std::endl << std::endl
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Nav:\n" << mNavMatrix << std::endl << std::endl
                         << vprDEBUG_FLUSH;
 
    // ----- Translation ------- //
@@ -107,15 +107,15 @@ void UserData::updateNavigation()
 
 
    if(mIncVelocityButton->getData() || mDecVelocityButton->getData())
-      vprDEBUG(vprDBG_ALL,6) << "Velocity: " << mCurVelocity << std::endl
+      vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Velocity: " << mCurVelocity << std::endl
                            << vprDEBUG_FLUSH;
 
    if(mIncVelocityButton->getData() == gadget::Digital::TOGGLE_ON)
-      vprDEBUG(vprDBG_ALL,2) << "-- Toggle ON --" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- Toggle ON --" << std::endl << vprDEBUG_FLUSH;
    if(mIncVelocityButton->getData() == gadget::Digital::TOGGLE_OFF)
-      vprDEBUG(vprDBG_ALL,2) << "-- Toggle OFF --" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- Toggle OFF --" << std::endl << vprDEBUG_FLUSH;
    if(mIncVelocityButton->getData() == gadget::Digital::ON)
-      vprDEBUG(vprDBG_ALL,2) << "-- ON --" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- ON --" << std::endl << vprDEBUG_FLUSH;
 //   if(mIncVelocityButton->getData() == Digital::OFF)
 //      vprDEBUG(vprDBG_ALL,) << "-- OFF --" << std::endl << vprDEBUG_FLUSH;
 
@@ -134,11 +134,11 @@ void UserData::updateNavigation()
 
    gmtl::setRot(xyzAngles, local_xform );
    gmtl::setTrans(xyzTrans, local_xform);
-//   vprDEBUG(vprDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
+//   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform   Rot: " << xyzAngles << std::endl
 //                        << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,6) << "Transform Trans: " << xyzTrans << std::endl
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform Trans: " << xyzTrans << std::endl
                         << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,6) << "-------------------------------------------"
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "-------------------------------------------"
                         << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -161,7 +161,7 @@ void cubesApp::init()
 {
    vrj::GlApp::init();
 
-   vprDEBUG(vprDBG_ALL,0) << "---------- cubes:App:init() ---------------"
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---------- cubes:App:init() ---------------"
                         << std::endl << vprDEBUG_FLUSH;
    std::vector<vrj::User*> users = mKernel->getUsers();
    int num_users = users.size();
@@ -184,7 +184,7 @@ void cubesApp::init()
       vprASSERT(users[0]->getId() == 0);
       break;
    default:
-      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users." << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users." << vprDEBUG_FLUSH;
       exit();
       break;
    }
@@ -221,9 +221,9 @@ void cubesApp::contextInit()
          drawCone(1.1f, 2.0f, 20, 10);
       glEndList();
 
-      vprDEBUG(vprDBG_ALL,0) << "Created cube DL:" << mDlCubeData->dlIndex
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Created cube DL:" << mDlCubeData->dlIndex
                              << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,0) << "Created cone DL:" << mDlConeData->dlIndex
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Created cone DL:" << mDlConeData->dlIndex
                              << std::endl << vprDEBUG_FLUSH;
       std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
                 << std::endl;
@@ -240,7 +240,7 @@ void cubesApp::contextClose()
    // Deallocate the random display lists used for debugging.
    if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE )
    {
-      vprDEBUG(vprDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Deallocating " << mDlDebugData->maxIndex
                               << " display lists\n" << vprDEBUG_FLUSH;
       glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
    }
@@ -254,7 +254,7 @@ void cubesApp::contextClose()
    // Deallocate the cone geometry data from the video hardware.
    if ( glIsList(mDlConeData->dlIndex) == GL_TRUE )
    {
-      vprDEBUG(vprDBG_ALL, 0) << "Deallocating cone display list\n"
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Deallocating cone display list\n"
                               << vprDEBUG_FLUSH;
       glDeleteLists(mDlConeData->dlIndex, 1);
    }
@@ -271,7 +271,7 @@ void cubesApp::contextClose()
 //----------------------------------------------
 void cubesApp::myDraw(vrj::User* user)
 {
-   vprDEBUG(vprDBG_ALL,5) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
 
    static const float SCALE = 100;
    //static const float SCALE = 10;

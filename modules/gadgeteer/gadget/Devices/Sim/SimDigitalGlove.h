@@ -95,14 +95,14 @@ public:
    /// dev = finger (see finger enum above)
    virtual const DigitalData getDigitalData( int dev = 0 )
    {
-      //vprDEBUG(vprDBG_ALL,0)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vprDEBUG_FLUSH;
       vprASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
       return (mDigitalData[dev]);
    }
 
    virtual int startSampling()
    {
-     //vprDEBUG(vprDBG_ALL,3)<<"start\n"<<vprDEBUG_FLUSH;
+     //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"start\n"<<vprDEBUG_FLUSH;
        DigitalData temp;
        temp=0;
        for (int i=0;i<10;i++)
@@ -115,13 +115,13 @@ public:
 
    virtual int stopSampling()
    {
-     //vprDEBUG(vprDBG_ALL,3)<<"stop\n"<<vprDEBUG_FLUSH;
+     //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"stop\n"<<vprDEBUG_FLUSH;
      return 1;
    }
 
    virtual int sample()
    {
-     //vprDEBUG(vprDBG_ALL,3)<<"sample\n"<<vprDEBUG_FLUSH;
+     //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"sample\n"<<vprDEBUG_FLUSH;
      return 1;
    }
 
