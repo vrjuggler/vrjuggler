@@ -45,7 +45,7 @@ public:
       vjASSERT(checker != NULL);
       mDepCheckers.push_back(checker);     // Add the constructor to the list
       vjDEBUG(vjDBG_KERNEL,1) << "vjDependencyManager::registerChecker: Checker registered: "
-              << checker->getCheckerName()
+              << checker->getCheckerName().c_str()
               << "   :" << (void*)checker
               << " type:" << typeid(*checker).name() << endl << vjDEBUG_FLUSH;
    }
