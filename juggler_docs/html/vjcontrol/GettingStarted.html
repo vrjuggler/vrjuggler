@@ -1,0 +1,91 @@
+<html>
+
+<title>Getting Started</title>
+
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif" width="29" height="33"></img>Getting Started</h2>
+
+Welcome to VR Juggler vjcontrol!  This page will tell you how to set up
+and run the vjcontrol program.  It assumes that VR Juggler
+has already been installed on your system.
+
+<p>
+<h3>Setup</h3>
+If you're reading this from the vjcontrol help menu, you've probably done
+this already, but if not, these are the steps that need to be taken before
+using vjcontrol:
+
+<ol>
+<li>Make sure your <tt>$VJ_BASE_DIR</tt> environment variable is set to the directory where VR Juggler is installed.
+<li>Create a directory called <tt>.vjconfig</tt> in your home directory.
+This is where VjControl will store its own preferences information, and is a good general place to store any custom Juggler config files you may make.
+<li>You should add the directory <tt>${VJ_BASE_DIR}/bin</tt> to your <tt>$PATH</tt>.
+<li>Find out what version of Java is installed on your machine (if you don't
+know how, <a href="javacheck.html">click here</a>).  Vjcontrol prefers java
+1.2, but can be used with java 1.1.
+<li>Make sure your <tt>$JDK_HOME</tt> environment variable is set to the 
+directory where java is installed.
+<li>Find out where the Juggler config files you should use are located.
+The Juggler distribution includes a number of sample config files
+in the directory <TT>$VJ_BASE_DIR/Data/configFiles</TT>.  Your system
+administrators may also have a location for customized config files.
+</ol>
+
+<h3>Starting VjControl</h3>
+
+If you are using JDK 1.2, type:
+<pre>
+        vjcontrol
+</pre>
+If you are using JDK 1.1, type:
+<pre> 
+        vjcontrol1.1
+</pre>
+
+The vjcontrol program will start up and open its main window.  By default,
+vjcontrol will load the main Chunk Description file, 
+<tt>$VJ_BASE_DIR/Data/chunksDesc</tt>.
+
+<p>
+vjcontrol's <a href="Preferences.html">Preferences</a> control what files
+are loaded automatically on startup.  There are also <a href="cmdline.html">
+command-line arguments</a> that can be used to load files at startup.
+
+<h3>The Main Window</h3>
+
+The main Juggler window consists of a set of panels accessed by a row of tabs:
+<br>
+<img src="gfx/MainWindowTabs.jpg" alt="Window Tabs Picture" width="456" height="27">
+<br>
+
+Clicking on a tab exposes its panel; each panel gives access to a particular
+Juggler function:
+
+<dl>
+<dt><a href="ChunkDBPanel.html">Configure</a>
+<dd>Panel for editing and viewing Juggler config files.  This is the most
+important option for new users.
+<dt><a href="DynamicReconfiguration.html">Connection</a>
+<dd>Panel for connecting to Juggler applications.  Used for dynamic reconfiguration.
+<dt><a href="DescDBPanel.html">Descriptions</a>
+<dd>Panel used for editing and viewing Juggler Chunk Description files.
+<dt><a href="OrgTreePanel.html">Org Tree</a>
+<dd>Panel used for editing the Chunk Organization Tree, which controls how
+the chunks in a file are organized in the Configure panel.
+<dt>Messages
+<dd>Panel used for logging error and informational messages from vjcontrol.
+<dt><a href="PerformancePanel.html">Performance</a>
+<dd>Panel used for viewing Juggler performance data files.
+</dl>
+
+<p>
+In addition to these tabbed panels, the vjcontrol main window also 
+has a fairly typical set of File, Help, and <a href="Preferences.html">
+Options</a> menus.
+
+</body>
+
+</html>
+
+
+

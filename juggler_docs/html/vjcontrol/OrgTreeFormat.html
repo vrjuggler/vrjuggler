@@ -1,0 +1,74 @@
+<html>
+
+<title>Description of ChunkOrgTree format</title>
+
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif" width="29" height="33"></img>
+File Format for VR Juggler Chunk Organization Trees Files</H2>
+
+<h3>Overview</h3>
+A Chunk Organization Tree (OrgTree) is used to put a logical tree structure
+onto a ConfigChunkDB.  VjControl uses the OrgTree to provide a 
+file-folder-like view of a config file.
+
+<p>
+The OrgTree file is composed of OrgTreeElements, which look like this:
+
+<pre>
+begin "name"
+      <i>contents</i>
+end
+</pre>
+
+<p>
+where <i>contents</i> is a list of OrgTreeElements and chunk type names, 
+separated by whitespace (Note that that's chunk type <i>names</i>, not
+tokens).  The entire file is a single OrgTreeElement (usually
+called "root", though the GUI never actually uses its name) containing
+all the other elements. Here's a real example:
+
+<p>
+<pre>
+Begin "Zelda"
+    Begin "Input"
+        Begin "Proxies and Aliases"
+            "ProxyAlias"
+        End
+        Begin "Input Devices"
+            "Keyboard"
+            "flock"
+            "ibox"
+            "Cyberglove"
+            "ThreeDMouse"
+            "DummyPosition"
+        End
+    End
+    Begin "Expert Only"
+        Begin "Performer API"
+            "ApiPerformer"
+        End
+        Begin "Environment Manager"
+            "Environment Manager"
+            "EM File Output"
+        End
+    End
+    Begin "*"
+    End
+End   
+</pre>
+
+<p>
+This OrgTree will create a tree view where, for example, the top
+level will have a subfolder called "Input" containing a folder called
+"Input Devices" which will list all chunks of types Keyboard, flock,
+ibox, etc.
+
+<p>
+There are two important things to note:  first, it's entirely ok for chunk
+type names to appear in multiple folders.  Second, the last OrgTreeElement 
+has the name "*" and no children.  Any OrgTreeElement named "*" will 
+represent a folder that lists all available chunks of any type.
+
+<br><br><br><br>
+</body>
+</html>

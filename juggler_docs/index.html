@@ -1,0 +1,53 @@
+<!doctype html html.public "-//W3C//DTD HTML 3.2//EN">
+<html>
+
+<head>
+   
+
+<title>Juggler - The Virtual Reality Platform</title>
+<script LANGUAGE="JavaScript">
+
+	//<!--
+	function start() 
+	{
+		// Left
+        	parent.frames[1].location = "layout/navigation.bar.left.html";
+        	
+		// Top
+		//parent.frames[0].location = "layout/navigation.bar.top.html";
+		
+		// Body
+		parent.frames[5].location = "quick.summeries/introduction.html";
+	}
+
+	//-->
+
+	</script>
+</head>
+
+
+<frameset border=0 framespacing="0" frameborder=no rows="95,100%">
+  <frame name="Top" src="html/layout/navigation.bar.top.html" scrolling="no" noresize border="no" MARGINWIDTH=0 MARGINHEIGHT=0>
+      
+  <frameset border=0 framespacing="0" frameborder=no cols="180,100%">
+    <frame name="LeftSide" src="html/layout/navigation.bar.left.html" scrolling="no" noresize border="no" MARGINWIDTH=0 MARGINHEIGHT=0>
+
+    <frameset border="0" framespacing="0" frameborder=no rows="16,100%">
+   	<frameset border="0" framespacing="0" frameborder=no cols="16,100%">
+		<frame name="Curve" src="html/layout/curve.html" scrolling="no" noresize border="no" MARGINWIDTH=0 MARGINHEIGHT=0>
+		<frame name="Horz" src="html/layout/horizontal.line.html" scrolling="no" noresize border="no" MARGINWIDTH=0 MARGINHEIGHT=0>
+        </frameset>
+	<frameset border="0" framespacing="0" frameborder=no cols="16,100%">
+        	<frame name="Vert" src="html/layout/vertical.line.html" scrolling="no" noresize border="no" MARGINWIDTH=0 MARGINHEIGHT=0>
+        	<frame name="Body" src="html/news/index.html" scrolling="auto" border="no" MARGINWIDTH=0 MARGINHEIGHT=0>
+    	</frameset>
+    </frameset>
+  </frameset>
+  
+  <noframes>
+  <body LEFTMARGIN=0 TOPMARGIN=0 bgcolor="#FFFFFF">
+	You'll need a frames-capable browser to view this site. Our apologies.
+  </body>
+  </noframes>
+</frameset>
+</html>

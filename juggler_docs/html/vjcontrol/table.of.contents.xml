@@ -1,0 +1,43 @@
+Builder: JExplorerBuilder V 1. 0. 7   
+< treecontrol imageurl="../../images/Icons/W98_Images/" >
+	< font face="Helvetica" style="Plain" size="10">
+		< idefault title="Item" image="Folder_Closed.gif" imagetwo="" info="VR Juggler" link="" rlink="" target="Body" rtarget="NewWindow" >
+
+			< rootfolder title="VJ Control" 
+				expand
+				link="../html.protected/vjcontrol/table.of.contents.html" 
+				target="Body" 
+				info="VJ Control" 
+				image="Book_Closed.gif" 
+				imagetwo="Book_Open.gif" >
+
+			< folder title="Installing and Using VjControl" 
+			link="../html.protected/" 
+			target="Body" 
+			info="Installing and Using VjControl" 
+			image="Leaf.gif" >
+
+				< item title="About VjControl" link="../html.protected/vjcontrol/about.html" info="About VjControl" target="Body" image="Leaf.gif" >
+				< item title="Getting Started" link="../html.protected/vjcontrol/GettingStarted.html" info="Getting Started" target="Body" image="Leaf.gif" >
+				< item title="Command-Line Arguments" link="../html.protected/vjcontrol/cmdline.html" info="Command-Line Arguments" target="Body" image="Leaf.gif" >
+				< item title="Working with Config files" link="../html.protected/vjcontrol/ChunkDBPanel.html" info="Working with Configuration files" target="Body" image="Leaf.gif" >
+				< item title="Working with ChunkDesc files" link="../html.protected/vjcontrol/DescDBPanel.html" info="Working with Chunk Description files" target="Body" image="Leaf.gif" >
+				< item title="Working with Chunk Org Trees" link="../html.protected/vjcontrol/OrgTreePanel.html" info="Working with Chunk Org Trees" target="Body" image="Leaf.gif" >
+				< item title="VjControl Preferences" link="../html.protected/vjcontrol/Preferences.html" info="VjControl Preferences" target="Body" image="Leaf.gif" >
+				< item title="Known Bugs" link="../html.protected/bugs/known.bugs.vjcontrol.html" info="Known VJ Control Bugs" target="Body" image="Leaf.gif" >
+
+			</folder>
+
+      			< folder title="Technical Specifications" 
+			link="../html.protected/" 
+			target="Body" 
+			info="Technical Specifications" 
+			image="Leaf.gif" >
+				< item title="Config File Format" link="../html.protected/vjcontrol/" info="Configuration File Format" target="Body" image="Leaf.gif" >
+				< item title="ChunkDesc File Format" link="../html.protected/vjcontrol/" info="Chunk Description File Format" target="Body" image="Leaf.gif" >
+				< item title="ChunkOrgTree File Format" link="../html.protected/vjcontrol/OrgTreeFormat.html" info="ChunkOrgTree File Format" target="Body" image="Leaf.gif" >
+			</folder>	
+			
+		</idefault>
+	</font>
+</treecontrol>

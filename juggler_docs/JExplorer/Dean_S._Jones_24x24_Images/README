@@ -1,0 +1,20 @@
+
+This is a quick page to preview the icons I am creating for some of my Java(TM) programs.  You are free to
+use them in your programs,   but I am retaining Copyright,   and they can not be used in any books, CD-ROM's,
+Web pages, or any other form of image collection without my consent.  I ask that if you do use them to drop
+me some e-mail at dean@gallant.com, also, if a screen shot of your application using these icons is available I
+will add a link to it from this page. I would please me greatly if you would add a little blurb in something like a
+``Help about..'' screen like: 
+
+ Icons  Copyright(C) 1998  by  Dean S. Jones 
+dean@gallant.com www.gallant.com/icons.htm 
+
+ The collection is somewhat small now,  but I will continue to add to it. Send me mail if you would like
+something added. I hope to create a library of standard icons for many applications to use,  I would like 
+for these icons to be the default icons for most Java(TM) freeware and  JFA Applications.  These icons 
+are all 20x20 pixels, and look best at high color and high resolutions.  The ``by hand'' anti-aliasing I did 
+looks best on a standard gray background.  I plan to produce a 16x16 subset.  I am working on some 
+Swing based icon management tools and an icon editor that can deal with alpha channels properly. The 
+following image is a grid of the current icons. A web browser may dither the image somewhat, so there may be
+some artifacts. I look forward to your feedback. 
+Dean S. Jones   

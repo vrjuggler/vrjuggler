@@ -1,0 +1,75 @@
+Builder: JExplorerBuilder V 1. 0. 7
+< treecontrol
+    imageurl="${IMAGES}/Icons/W98_Images/"
+    linkurl="../"
+    >
+< font face="Arial" style="Plain" size="8">
+< idefault title="Item" image="Folder_Closed.gif" target="Body" rtarget="NewWindow" imagetwo="" info="VR Juggler" link="" rlink="">
+< rootfolder title="VR Juggler" link="../index.html" info="Juggler Virtual Reality Platform" target="_top" image="Home.gif" imagetwo="Home.gif" >
+
+    < item title="Mission Statement" link="${MISC}/mission.statement.html"  info="VR Juggler Mission Statement: What is juggler's intent, how will it be used in the future." image="Speaker.gif" >
+
+    < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
+    < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
+
+    < folder title="Books" ref=1 info="Online documentation.   What does each manual say?  What manual do I need?" link="${MISC}/documentation.html"  image="Book_Closed.gif" >
+                < jitfolder jit="${VJCONTROL}/table.of.contents.xml" title="VJ Control Manual (Unloaded)" link="${VJCONTROL}/table.of.contents.html"  info="How to use vjcontrol" image="Book_Closed.gif" imagetwo="Book_Open.gif" >
+                < jitfolder jit="${USERGUIDE}/table.of.contents.xml" title="User Guide (Unloaded)" link="${USERGUIDE}/table.of.contents.html"  info="How to run apps, use vjcontrol, installing the binaries, etc..." image="Book_Closed.gif" imagetwo="Book_Open.gif" >
+                < jitfolder jit="${DEVGUIDE}/table.of.contents.xml" title="Developer Guide (Unloaded)" link="${DEVGUIDE}/table.of.contents.html"  info="For developers writting VR Juggler applications, drivers, and extensions." image="Book_Closed.gif" imagetwo="Book_Open.gif">
+                < jitfolder jit="${DEVREF}/table.of.contents.xml" title="Developer Reference (Unloaded)" link="${DEVREF}/index.html"  image="Book_Closed.gif" imageTwo="Book_Open.gif" info="Quick Reference for Developers.">
+    </folder>
+
+    < folder title="Publications" link="${PUBLICATIONS}/index.html"  info="Papers, Articles, and Press Releases" image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
+                < item title="VR Juggler: A Framework for VR Development, 1998. IPT 98" info="A paper accepted at IPT: VR Juggler: A Framework for VR Development, 1998. IPT 98" link="publications/vr.juggler.framework.for.vr.dev.1998.IPT98.pdf" image="Leaf.gif" >
+                < item title="VR Development Tools, 1998.  SIGGRAPH 98" info="A paper accepted at SIGGRAPH: VR Development Tools, 1998.  SIGGRAPH 98" link="publications/vr.dev.tools.1998.SIGGRAPH98.pdf" image="Leaf.gif" >
+                < item title="Learning VR Juggler.  VRAC 99" info="A presentation given at VRAC: Learning VR Juggler.  VRAC 99" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >
+    </folder>
+
+        < item title="History" link="${MISC}/history.html"  info="Project History" image="Leaf.gif" >
+    < item title="User Community" link="contact.info/usercommunity.html"  info="Can't find it in the Books?  Reach out and ask someone." image="Chat.gif" >
+    < item title="Download" link="download/index.html" info="Download VR Juggler library in source or binary form." image="Inbox.gif" >
+
+    < folder title="Bugs" link="${BUGS}/bugs.html"  info="Find something wrong with Juggler?  Let us know, submit a bug report." image="Bug.gif" >
+                < item title="Juggler" link="${BUGS}/known.bugs.juggler.html"  info="A list of known Check this list of known bugs." image="Leaf.gif" >
+                < item title="VJControl" link="${BUGS}/known.bugs.vjcontrol.html"  info="Check this list of known bugs." image="Leaf.gif" >
+                < item title="Report Bugs" link="${JUGGLERBUGS}"  info="Let us know, submit a bug report." image="Inbox.gif" >
+    </folder>
+
+    < folder title="Legal" link="${LEGAL}/index.html"  info="Your Rights" image="Leaf_Script2.gif" >
+                < item title="Juggler License (LGPL)" link="${LEGAL}/LGPL.html"  info="The LGPL license used for VR Juggler." image="Leaf.gif" >
+                < item title="Documentation License (GPL)" link="${LEGAL}/GPL.html" info="The GPL license used for VR Juggler documentation." image ="Leaf.gif" >
+    </folder>
+    </font>
+   <!--
+   < folder title="Fonts" info="Some fonts">
+        < folder title="Arial Plain" info="Some fonts">
+            <font face="Arial" style="Plain" size="8"> < item title="Size 8: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Arial" style="Plain" size="10"> < item title="Size 10: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Arial" style="Plain" size="12"> < item title="Size 12: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Arial" style="Plain" size="14"> < item title="Size 14: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+        </folder>
+        < folder title="Arial Bold" info="Some fonts">
+            <font face="Arial" style="Bold" size="8"> < item title="Size 8: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Arial" style="Bold" size="10"> < item title="Size 10: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Arial" style="Bold" size="12"> < item title="Size 12: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Arial" style="Bold" size="14"> < item title="Size 14: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+        </folder>
+        < folder title="Helvetica Plain" info="Some fonts">
+            <font face="Helvetica" style="Plain" size="8"> < item title="Size 8: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Helvetica" style="Plain" size="10"> < item title="Size 10: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Helvetica" style="Plain" size="12"> < item title="Size 12: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Helvetica" style="Plain" size="14"> < item title="Size 14: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+        </folder>
+        < folder title="Helvetica Bold" info="Some fonts">
+            <font face="Helvetica" style="Bold" size="8"> < item title="Size 8: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Helvetica" style="Bold" size="10"> < item title="Size 10: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Helvetica" style="Bold" size="12"> < item title="Size 12: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+            <font face="Helvetica" style="Bold" size="14"> < item title="Size 14: This is a test. abcdefghijklmnopqrstuvwxyz"> </font>
+        </folder>
+    </folder>
+    -->
+
+
+</idefault>
+</treecontrol>
+

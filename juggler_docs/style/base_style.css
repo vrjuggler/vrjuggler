@@ -1,0 +1,51 @@
+a:link
+{
+color: rgb(1, 48, 90); 
+}
+a:visited
+{
+color: rgb(21, 99, 13); 
+} 
+a:active 
+{
+color: rgb(170, 23, 42);
+}
+body
+{
+font-family: Century Gothic, Arial, Helvetica;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+}
+table
+{
+table-border-color-light: rgb(204, 153, 255);
+table-border-color-dark: rgb(204, 0, 204); 
+}
+h1, h2, h3, h4, h5, h6, h1style
+{
+font-family: Century Gothic, Arial, Helvetica;
+}
+h1, h1style
+{
+color: rgb(0, 51, 102);
+}
+h2, h2style
+{
+color: rgb(113, 34, 55);
+}
+h3, h3style
+{
+color: rgb(96, 72, 130); 
+}
+h4, h4style
+{
+color: rgb(0, 55, 92);
+}
+h5, h5style
+{
+color: rgb(145, 60, 29);
+}
+h6, h6style
+{
+color: rgb(204, 0, 153);
+}

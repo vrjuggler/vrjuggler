@@ -1,0 +1,5 @@
+put a list of development tools that are preferred by us.
+- ddd
+- nedit
+- slick edit
+- ???

@@ -1,0 +1,5 @@
+This is the VR Juggler Documentation
+
+Build the project by running "install-web.pl" from the install directory.
+If you run this with a -z option, it will save your arguments in a script 
+that you can then use to build the project (this is recommended).

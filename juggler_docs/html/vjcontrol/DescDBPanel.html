@@ -1,0 +1,73 @@
+<html>
+
+<title>Working with Description Files</title>
+
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif" width="29" height="33"></img>Working with Description Files</h2>
+
+Vjcontrol includes the ability to view and edit the Chunk Description
+files, allowing you to create new kinds of ConfigChunks or modify existing
+Chunks.  Typically, there are two reasons you might want to do this:
+<ol>
+<li>You're an application writer, and you want your application to be
+able to configure itself using the VR Juggler configuration mechanism.
+You could create a new kind of ConfigChunk that contains information
+specific to your application.
+<li>You're developing a new component for VR Juggler - a device driver,
+or something similar.  Right now this is only possible for developers
+with access to the Juggler source.
+</ol>
+
+<p>
+You can load and edit VR Juggler Chunk Description Files by clicking on the 
+"Descriptions" tab of vjcontrol's main window.
+
+<p>The Descriptions panel is similar to the <a href="ChunkDBPanel.html">
+Configure panel</a>, without the side-by-side display of multiple files.
+
+<p>
+<img alt="Descriptions Panel picture" src="gfx/DescDBPanel1.png"></img>
+
+<p>
+The ComboBox at the top of the panel lets you choose which of the
+loaded description files to display (in this case, the file is called
+``chunksDesc'').  Below that is a list of all the ChunkDescs defined
+in the file.  Click on a name 
+to select it.  You can double-click
+on a name to view or edit the ChunkDesc.
+
+<p>
+There are six buttons along the side of the panel:
+
+<ul>
+<li>New - creates a new (empty) descriptions file.
+<li>Load - loads a descriptions file.
+<li>Save - save the descriptions file currently being viewed.  Note that this
+button always opens a file dialog, so it's technically ``Save As...''
+<li>Close - removes the currently viewed description file from memory.
+<b>WARNING!</b> VjControl does not currently warn you if you close a
+file without saving it.
+
+<li>Remove - deletes all selected descriptions in the currently viewed file.
+<li>Insert - inserts a new description.  Initially, a new description only
+has one property - the instance name.
+
+</ul>
+
+<hr>
+
+<h3>The ChunkDesc Editing Window</h3>
+
+Double-clicking on the name of a ChunkDesc brings up a new window, like
+this:
+
+<p>
+<img alt="Description Editing Window" src="gfx/DescFrame1.png"></img>
+<p>
+
+under construction
+
+</body>
+</html>
+
+
