@@ -80,6 +80,11 @@ public:
     */
    void draw();
 
+   /** Update the desktop texture
+   * @pre The texture is currently bound
+   */
+   void updateDesktopTexture();
+
    /** Print texture upload stats
    */
    void printStats();
@@ -151,6 +156,7 @@ private:
    int   mTexWidth, mTexHeight;             /**< Width and height of the texture in pixels */
    int   mVncWidth, mVncHeight;              /**< The width and height of the vnc/X desktop */
    float mMaxTexCoordX, mMaxTexCoordY;       /**< Texture coordinates for the sub-texture that is the desktop */
+   GLuint mTexObjId;                         /**< Id of the texture object for the desktop */
 
    /** Scale value for converting from virt desktop size to VNC coords
    *    ex. vnc.x = desktoppoly.x * mDesktopToVncWidthScale;
