@@ -47,12 +47,6 @@ namespace jccl
  */
 VarType stringToVarType(const std::string& str);
 
-/** Converts a VarType enum elem to a c string.
- *  @param t A VarType (see jccl/Config/VarValue.h)
- *  @return A non-NULL c string.
- */
-std::string typeString(const VarType t);
-
 /** Demangle a filename so that it can be passed to open().
  *  @param n A filename.
  *  @param parentfile The name of the file that n is being loaded
