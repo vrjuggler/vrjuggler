@@ -53,6 +53,8 @@
 #include <vpr/DynLoad/LibraryLoader.h>
 
 
+namespace fs = boost::filesystem;
+
 namespace vpr
 {
 
@@ -88,41 +90,76 @@ vpr::ReturnStatus LibraryLoader::findAndInitDSO(const std::string& dsoBaseName,
                                                 const std::string& initFuncName,
                                                 boost::function1<bool, void*> initFunc)
 {
+   std::vector<fs::path> fs_path(searchPath.size());
+
+   // Convert the vector of std::string objects to a vector of
+   // boost::filesystem::path objects.
+   for ( std::vector<std::string>::size_type i = 0; i < searchPath.size(); ++i )
+   {
+      try
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "vpr::LibraryLoader::findAndInitDSO(): Converting std::string '"
+            << searchPath[i] << "' to a boost::filesystem::path object.\n"
+            << vprDEBUG_FLUSH;
+
+         // Use a Boost FS path object here so that we can indicate that
+         // native path names are allowed.
+         fs_path[i] = fs::path(searchPath[i], fs::native);
+      }
+      catch(fs::filesystem_error& fsEx)
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED, "ERROR:")
+            << " File system exception caught while converting\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "'" << searchPath[i] << "'\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "to a Boost.Filesystem path.\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << fsEx.what() << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+
+   return this->findAndInitDSO(dsoBaseName, fs_path, initFuncName, initFunc);
+}
+
+vpr::ReturnStatus LibraryLoader::findAndInitDSO(const std::string& dsoBaseName,
+                                                const std::vector<fs::path>& searchPath,
+                                                const std::string& initFuncName,
+                                                boost::function1<bool, void*> initFunc)
+{
    vpr::ReturnStatus status;
    bool load_attempted(false);
 
    const std::string dso_name = dsoBaseName + DSO_NAME_EXT + DSO_FILE_EXT;
 
-   for ( std::vector<std::string>::const_iterator i = searchPath.begin();
+   for ( std::vector<fs::path>::const_iterator i = searchPath.begin();
          i != searchPath.end();
          ++i )
    {
-      std::string temp_name = *i + PATH_SEP + dso_name;
-
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "vpr::LibraryLoader::findAndInitDSO(): Looking for '"
-         << temp_name << "'\n" << vprDEBUG_FLUSH;
-
       try
       {
-         // Use a Boost FS path object here so that we can indicate that
-         // native path names are allowed.
-         boost::filesystem::path temp_path =
-            boost::filesystem::path(temp_name, boost::filesystem::native);
+         fs::path temp_path = *i / dso_name;
 
-         if ( boost::filesystem::exists(temp_path) )
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "vpr::LibraryLoader::findAndInitDSO(): Looking for '"
+            << temp_path.native_file_string() << "'\n" << vprDEBUG_FLUSH;
+
+         if ( fs::exists(temp_path) )
          {
             // If any part of the driver loading fails, the object
             // dsowill go out of scope at the end of this block, thereby
             // freeing the allocated memory.
             vpr::LibraryPtr dso =
-               vpr::LibraryPtr(new vpr::Library(temp_name));
+               vpr::LibraryPtr(new vpr::Library(temp_path.native_file_string()));
             status = this->loadAndInitDSO(dso, initFuncName, initFunc);
             load_attempted = true;
             break;
          }
       }
-      catch (boost::filesystem::filesystem_error& fsEx)
+      catch(fs::filesystem_error& fsEx)
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR:")
