@@ -33,7 +33,8 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl VPR_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for VPR and then define VPR_CFLAGS, VPR_CXXFLAGS and VPR_LIBS.
+dnl Test for VPR and then define VPR_CFLAGS, VPR_CXXFLAGS, VPR_LIBS, and
+dnl VPR_LIBS_STATIC.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VPR_PATH,
 [
@@ -82,6 +83,7 @@ dnl    AC_MSG_CHECKING(for VPR - version >= $min_vpr_version)
         VPR_CFLAGS=`$VPR_CONFIG $vpr_config_args --cflags`
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags`
         VPR_LIBS=`$VPR_CONFIG $vpr_config_args --libs`
+        VPR_LIBS_STATIC=`$VPR_CONFIG $vpr_config_args --libs --static`
 dnl        vpr_config_major_version=`$VPR_CONFIG $vpr_config_args --version | \
 dnl               sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
 dnl        vpr_config_minor_version=`$VPR_CONFIG $vpr_config_args --version | \
@@ -100,9 +102,12 @@ dnl               sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
         VPR_CFLAGS=""
         VPR_CXXFLAGS=""
         VPR_LIBS=""
+        VPR_LIBS_STATIC=""
         ifelse([$3], , :, [$3])
     fi
+
     AC_SUBST(VPR_CFLAGS)
     AC_SUBST(VPR_CXXFLAGS)
     AC_SUBST(VPR_LIBS)
+    AC_SUBST(VPR_LIBS_STATIC)
 ])
