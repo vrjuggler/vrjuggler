@@ -64,6 +64,8 @@ public class SimKeyboardEditorPanel
       sSimDevProxyTypeMap.put(SIM_ANALOG_DEVICE_TYPE, ANALOG_PROXY_TYPE);
       sSimDevProxyTypeMap.put(SIM_DIGITAL_DEVICE_TYPE, DIGITAL_PROXY_TYPE);
       sSimDevProxyTypeMap.put(SIM_POS_DEVICE_TYPE, POSITION_PROXY_TYPE);
+      sSimDevProxyTypeMap.put(SIM_RELATIVE_POS_DEVICE_TYPE,
+                              POSITION_PROXY_TYPE);
 
       sSimDevEditorMap = new HashMap();
    }
