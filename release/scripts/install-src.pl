@@ -76,7 +76,7 @@ if ( $#ARGV < 3 )
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopts('e:g:i:m:o:u:');
+getopts('e:g:i:lm:o:u:');
 
 my $dest_dir = "$opt_o";
 
@@ -139,6 +139,8 @@ if ( $opt_e )
    }
 }
 
+my $make_symlink = ($opt_l ? 1 : 0);
+
 # Recurse through $src_dir and create the destination directory tree.
 # recurseAction() handles further work.
 recurseDir("$opt_i", "$start_dir/$dest_dir");
@@ -166,7 +168,8 @@ sub recurseAction
    {
       if ( $curfile =~ /$ext$/i )
       {
-         installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+         installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
+                     $make_symlink);
          $installed = 1;
          last;
       }
@@ -180,14 +183,16 @@ sub recurseAction
          # Match README.
          if ( "$curfile" eq "README" )
          {
-            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
+                        $make_symlink);
             last SWITCH;
          }
 
          # Match Makefile.
          if ( "$curfile" eq "Makefile" )
          {
-            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
+                        $make_symlink);
             last SWITCH;
          }
       }
