@@ -165,55 +165,42 @@ AH_TEMPLATE([VPR_HPUX_VERSION],
 AH_TEMPLATE([_INCLUDE_TERMIO], [Define if building on HP-UX.])
 AH_TEMPLATE([_CMA_NOWRAPPERS_], [Define if building on HP-UX.])
 
+AC_DEFUN([VPR_FORCE_SUBSYSTEM],
+[
+   if test "x$SUBSYSTEM" = "xnone" ; then
+      AC_MSG_WARN([*** Forcing the use of the $1 subsystem ***])
+      SUBSYSTEM='$1'
+   fi
+])
+
 # Depending on the target operating system, set various command options and
 # such.
 case $target_os in
     # IBM RS/6000 running AIX.
     aix*)
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
-            SUBSYSTEM='POSIX'
-        fi
-
+        VPR_FORCE_SUBSYSTEM([POSIX])
         AC_DEFINE(VPR_OS_AIX, , [Define if building on AIX.])
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
-        # We have to use Win32 subsystem on Win32.
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
-            SUBSYSTEM='NSPR'
-        fi
-
+        VPR_FORCE_SUBSYSTEM([NSPR])
         AC_DEFINE(VPR_OS_Win32, , [Define if building on a Win32 platform.])
         ;;
     # Darwin, aka Mac OS X.
     darwin*)
-        if test "x$SUBSYSTEM" != "xPOSIX" ; then
-            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
-            SUBSYSTEM='POSIX' 
-        fi
-
+        VPR_FORCE_SUBSYSTEM([POSIX])
         AC_DEFINE(VPR_OS_Darwin, , [Define if building on Darin.])
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
-            SUBSYSTEM='POSIX'
-        fi
-
+        VPR_FORCE_SUBSYSTEM([POSIX])
         AC_DEFINE(VPR_OS_FreeBSD, , [Define if building on FreeBSD.])
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
         # We have to use the NSPR subsystem on HP-UX 10.20.
-        if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
-            SUBSYSTEM='NSPR'
-        fi
-
+        VPR_FORCE_SUBSYSTEM([NSPR])
         AC_DEFINE(VPR_OS_HPUX,)
         AC_DEFINE(VPR_HPUX_VERSION, 10)
         AC_DEFINE(_INCLUDE_TERMIO,)
@@ -232,21 +219,13 @@ case $target_os in
             DBG_FLAGS="$DBG_FLAGS -gslim"
         fi
 
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN([*** Forcing the use of SPROC subsystem ***])
-            SUBSYSTEM='SPROC'
-        fi
-
+        VPR_FORCE_SUBSYSTEM([SPROC])
         AC_DEFINE(VPR_OS_IRIX, , [Define if building on IRIX.])
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
-            SUBSYSTEM='POSIX'
-        fi
-
+        VPR_FORCE_SUBSYSTEM([POSIX])
         AC_DEFINE(VPR_OS_Linux, , [Define if building on Linux.])
         ;;
     # DEC Alpha running Digital UNIX 4.0.
@@ -256,11 +235,7 @@ case $target_os in
     # A machine running Solaris (aka SunOS).  Currently only i386 is known
     # to work.
     solaris*)
-        if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
-            SUBSYSTEM='NSPR' 
-        fi
-
+        VPR_FORCE_SUBSYSTEM([NSPR])
         AC_DEFINE(VPR_OS_Solaris, , [Define if building on Solaris/SunOS.])
         ;;
     unknown)
