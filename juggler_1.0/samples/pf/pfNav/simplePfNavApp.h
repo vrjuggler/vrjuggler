@@ -348,12 +348,18 @@ public:  // Configure the application
       unsigned new_nav_index = mCurNavIndex + 1;
       if(new_nav_index >= mNavigators.size())
          new_nav_index = 0;
+      setNavigator(new_nav_index);
+   }
+
+   void setNavigator(unsigned new_index)
+   {
+      vjASSERT(index < mNavigators.size());
 
       // Copy cur position to new navigator
-      mNavigators[new_nav_index]->setCurPos(mNavigators[mCurNavIndex]->getCurPos());
+      mNavigators[new_index]->setCurPos(mNavigators[mCurNavIndex]->getCurPos());
 
       // Switch em
-      mCurNavIndex = new_nav_index;
+      mCurNavIndex = new_index;
       mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
       vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: " << clrSetNORM(clrGREEN) << mNavigators[mCurNavIndex]->getName() << clrRESET << endl << vjDEBUG_FLUSH;
    }
