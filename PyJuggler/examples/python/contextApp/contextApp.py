@@ -12,6 +12,12 @@ import sys
 from OpenGL.GL import *
 import gmtl
 
+import os
+
+if os.uname()[0] == 'Darwin':
+   os.environ['NO_RTRC_PLUGIN'] = "1"
+   os.environ['NO_PERF_PLUGIN'] = "1"
+
 # NOTE: If you import the individual modules from PyJuggler, make sure to
 # import PyJuggler.vrj first.
 from PyJuggler import *
