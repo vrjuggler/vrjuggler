@@ -54,6 +54,8 @@
 namespace vpr
 {
 
+static const vpr::Uint32 SOCK_MAX_BUFFER_SIZE = 65536;
+
 SocketImplSIM::~SocketImplSIM ()
 {
    close();
@@ -345,13 +347,119 @@ vpr::ReturnStatus SocketImplSIM::write_i( vpr::sim::Message::MessageDataPtr msgD
 vpr::ReturnStatus SocketImplSIM::getOption (const vpr::SocketOptions::Types option,
                                             struct vpr::SocketOptions::Data& data)
 {
-   return vpr::ReturnStatus();
+   vpr::ReturnStatus status;
+
+   switch ( option )
+   {
+      // Socket-level options.
+      case vpr::SocketOptions::Linger:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::ReuseAddr:
+         data.reuse_addr = mReuseAddr;
+         break;
+      case vpr::SocketOptions::KeepAlive:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::RecvBufferSize:
+         data.recv_buffer_size = SOCK_MAX_BUFFER_SIZE;
+         break;
+      case vpr::SocketOptions::SendBufferSize:
+         data.send_buffer_size = SOCK_MAX_BUFFER_SIZE;
+         break;
+
+      // IP-level options.
+      case vpr::SocketOptions::IpTimeToLive:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::IpTypeOfService:
+         data.type_of_service = vpr::SocketOptions::LowDelay;
+         break;
+      case vpr::SocketOptions::AddMember:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::DropMember:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::McastInterface:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::McastTimeToLive:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::McastLoopback:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+
+      // TCP-level options.
+      case vpr::SocketOptions::NoDelay:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::MaxSegment:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+    }
+
+   return status;
 }
 
 vpr::ReturnStatus SocketImplSIM::setOption (const vpr::SocketOptions::Types option,
                                             const struct vpr::SocketOptions::Data& data)
 {
-   return vpr::ReturnStatus();
+   vpr::ReturnStatus status;
+
+   switch ( option )
+   {
+      // Socket-level options.
+      case vpr::SocketOptions::Linger:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::ReuseAddr:
+         mReuseAddr = data.reuse_addr;
+         break;
+      case vpr::SocketOptions::KeepAlive:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::RecvBufferSize:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::SendBufferSize:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+
+      // IP-level options.
+      case vpr::SocketOptions::IpTimeToLive:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::IpTypeOfService:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::AddMember:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::DropMember:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::McastInterface:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::McastTimeToLive:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::McastLoopback:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+
+      // TCP-level options.
+      case vpr::SocketOptions::NoDelay:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+      case vpr::SocketOptions::MaxSegment:
+         status.setCode(vpr::ReturnStatus::Fail);
+         break;
+    }
+
+   return status;
 }
 
 vpr::ReturnStatus SocketImplSIM::inExceptState ()
