@@ -721,7 +721,7 @@ void vjPfDrawManager::debugDumpPfDisp(pfDisp* pf_disp, int debugLevel)
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "Display:" << (void*)(pf_disp->disp) << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::dec << std::endl << vjDEBUG_FLUSH;
 
    pfChannel* l_chan = (pf_disp->chans[pfDisp::PRIMARY]);
    pfChannel* r_chan = (pf_disp->chans[pfDisp::SECONDARY]);
