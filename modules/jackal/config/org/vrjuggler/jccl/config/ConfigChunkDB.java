@@ -42,7 +42,7 @@ public class ConfigChunkDB extends Vector {
 
   public boolean remove(String name) {
     for (int i = 0; i < size(); i++) {
-      if (((ConfigChunk)elementAt(i)).chunkName().equalsIgnoreCase(name)) {
+      if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
         removeElementAt(i);
         return true;
       }
@@ -52,14 +52,14 @@ public class ConfigChunkDB extends Vector {
 
   public ConfigChunk get (String name) {
     for (int i = 0; i < size(); i++) {
-      if (((ConfigChunk)elementAt(i)).chunkName().equalsIgnoreCase(name)) {
+      if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
         return (ConfigChunk)elementAt(i);
       }
     }
     return null;
   }
 
-    public Vector getOfType (String typename) {
+    public Vector getOfDescName (String typename) {
 	Vector v = new Vector();
 	for (int i = 0; i < size(); i++) {
 	    if (((ConfigChunk)elementAt(i)).desc.name.equalsIgnoreCase(typename))
@@ -67,6 +67,16 @@ public class ConfigChunkDB extends Vector {
 	}
 	return v;
     }
+
+    public Vector getOfDescToken (String typename) {
+	Vector v = new Vector();
+	for (int i = 0; i < size(); i++) {
+	    if (((ConfigChunk)elementAt(i)).desc.token.equalsIgnoreCase(typename))
+		v.addElement((ConfigChunk)elementAt(i));
+	}
+	return v;
+    }
+
 
   public void insertOrdered (ConfigChunk c) {
     /* adds a chunk into self, with the constraint that it's stored
@@ -79,7 +89,7 @@ public class ConfigChunkDB extends Vector {
     remove(c.name);
     for (i = 0; i < size(); i++) {
       t = (ConfigChunk)elementAt(i);
-      if (t.descName().equalsIgnoreCase(c.descName())) 
+      if (t.getDescName().equalsIgnoreCase(c.getDescName())) 
 	break;
     }
     if (i == size())
@@ -87,7 +97,7 @@ public class ConfigChunkDB extends Vector {
     else {
       for ( ; i < size(); i++) {
 	t = (ConfigChunk)elementAt(i);
-	if (!t.descName().equalsIgnoreCase(c.descName()))
+	if (!t.getDescName().equalsIgnoreCase(c.getDescName()))
 	  break;
       }
       insertElementAt(c, i);
@@ -155,7 +165,7 @@ public class ConfigChunkDB extends Vector {
     ConfigChunk t;
     for (int i = 0; i < size(); i++) {
       t = (ConfigChunk)elementAt(i);
-      if (t.chunkName().equals(o.chunkName())) {
+      if (t.getName().equals(o.getName())) {
 	removeElementAt(i);
 	insertElementAt(n,i);
 	return;

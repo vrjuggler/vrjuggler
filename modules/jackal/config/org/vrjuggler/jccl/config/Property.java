@@ -16,6 +16,8 @@ public class Property {
   ValType valtype;
   public Vector vals;
 
+
+
   public boolean equals (Property p) {
     /* note - this does a total value comparison, not just checking names
      * The exception to this is that right now I only check the name of the
@@ -41,6 +43,8 @@ public class Property {
     }
     return true;
   }
+
+
 
   public String toString() {
     VarValue v;
@@ -77,76 +81,99 @@ public class Property {
     return s;
   }
 
-  public boolean read (StreamTokenizer st) throws IOException {
-    /* the idea here is that st holds the string, less the property name
-     * which was already read by ConfigChunk.read()
-     */
-    VarValue v;
-    int n = 0;
-    try {
-      int t = st.nextToken();
-      String token = st.sval;
 
-      if (st.ttype == '{') {
-	/* multiple entries */
-	t = st.nextToken();
-	token = st.sval;
-	vals.removeAllElements();
-	while (st.ttype != '}') {
-	  v = buildVarValue(token);
-	  vals.addElement(v);
-	  st.nextToken();
-	  token = st.sval;
+
+    public boolean read (StreamTokenizer st) throws IOException {
+	/* the idea here is that st holds the string, less the property name
+	 * which was already read by ConfigChunk.read()
+	 */
+	VarValue v;
+	int n = 0;
+	try {
+	    int t = st.nextToken();
+	    String token = st.sval;
+	    
+	    if (st.ttype == '{') {
+		/* multiple entries */
+		t = st.nextToken();
+		token = st.sval;
+		vals.removeAllElements();
+		while (st.ttype != '}') {
+		    v = buildVarValue(token);
+		    vals.addElement(v);
+		    st.nextToken();
+		    token = st.sval;
+		}
+	    }
+	    else {
+		/* one entry */
+		v = buildVarValue(token);
+		vals.removeAllElements();
+		vals.addElement(v);
+	    }
+	    if (num != -1) {
+		/* are we a proper # of values? */
+		while (vals.size() < num)
+		    vals.addElement (new VarValue(valtype));
+	    }
+	    return true;
 	}
-      }
-      else {
-	/* one entry */
-	v = buildVarValue(token);
-	vals.removeAllElements();
-	vals.addElement(v);
-      }
-      if (num != -1) {
-	/* are we a proper # of values? */
-	while (vals.size() < num)
-	  vals.addElement (new VarValue(valtype));
-      }
-      return true;
-    }
-    catch (IOException e) {
-      /* Either a streamtokenizer error or unexpected eof */
-      System.err.println ("Error in Property.read()");
-      return false;
-    }
-  }
-
-  public VarValue buildVarValue (String token) {
-    /* here we build a token into an appopriate VarValue; includes
-     * type resolution and enumeration lookup 
-     */
-    try {
-      return (desc.getEnumValue(token));
-    }
-    catch (NoSuchElementException e) {
-      VarValue v = new VarValue(valtype);
-      v.set(token);
-      return v;
-    }
-  }
-
-  public Property (PropertyDesc d) {
-
-    desc = d;
-    name = d.name;
-    token = d.token;
-    valtype = d.valtype;
-    num = d.num;
-    vals = new Vector();
-    if (num > 0) {
-      for (int i = 0; i < num; i++)
-	vals.addElement (new VarValue (d.valtype));
+	catch (IOException e) {
+	    /* Either a streamtokenizer error or unexpected eof */
+	    System.err.println ("Error in Property.read()");
+	    return false;
+	}
     }
 
-  }
+
+
+    public VarValue buildVarValue (String token) {
+	/* here we build a token into an appopriate VarValue; includes
+	 * type resolution and enumeration lookup 
+	 */
+	try {
+	    return (desc.getEnumValue(token));
+	}
+	catch (NoSuchElementException e) {
+	    VarValue v = new VarValue(valtype);
+	    v.set(token);
+	    return v;
+	}
+    }
+
+
+
+    public Property (PropertyDesc d) {
+	
+	desc = d;
+	name = d.name;
+	token = d.token;
+	valtype = d.valtype;
+	num = d.num;
+	vals = new Vector();
+	if (num > 0) {
+	    for (int i = 0; i < num; i++)
+		vals.addElement (new VarValue (d.valtype));
+	}
+    }
+
+
+    
+    public boolean containsValue (String s) {
+	int i;
+	String s2;
+
+	if (!valtype.equals(ValType.t_string)) {
+	    for (i = 0; i < vals.size(); i++) {
+		s2 = ((VarValue)vals.elementAt(i)).getString();
+		if (s2.equalsIgnoreCase(s))
+		    return true;
+	    }
+	}
+	return false;
+    }
+
+
 
 }
 
