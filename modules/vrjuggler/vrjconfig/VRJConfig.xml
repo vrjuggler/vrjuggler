@@ -7,7 +7,7 @@
       <dependencies>
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
-         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+         <bean>jccl_editors</bean>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
       </dependencies>
       <tree path="/" />
