@@ -28,7 +28,7 @@
 #include <OpenSG/OSGGeometry.h>
 #include <OpenSG/OSGGeoPropPtrs.h>
 #include <OpenSG/OSGSimpleMaterial.h>
-#include <OpenSG/OSGPerspectiveCamera.h>
+#include <OpenSG/OSGMatrixCamera.h>
 #include <OpenSG/OSGDirectionalLight.h>
 #include <OpenSG/OSGGroup.h>
 
@@ -46,8 +46,8 @@ struct context_data
 
    OSG::RenderAction*         mRenderAction;    /**< The render action for the scene */
    OSG::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
-   OSG::PerspectiveCameraPtr  mCamera;
-   OSG::TransformPtr          mCameraCartTransform;
+   OSG::MatrixCameraPtr       mCamera;
+   OSG::TransformPtr          mCameraCartTransform;   /**< Do I really need all this cart stuff */
    OSG::NodePtr               mCameraCartNode;
 
    bool                       mContextThreadInitialized;

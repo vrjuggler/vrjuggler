@@ -197,9 +197,9 @@ inline void OsgApp::draw()
 
    //Set the frustrum (this is set with the matrix below)
    //float near_val = frustum[Frustum::VJ_NEAR];
-   the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
+   the_cam->setFrustum(frustum[Frustum::VJ_LEFT],    frustum[Frustum::VJ_RIGHT],
                        frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
-                       frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
+                       frustum[Frustum::VJ_NEAR],    frustum[Frustum::VJ_FAR]);
 
    //Set the look at
    // NOTE: This is on the wrong stack !!!!
