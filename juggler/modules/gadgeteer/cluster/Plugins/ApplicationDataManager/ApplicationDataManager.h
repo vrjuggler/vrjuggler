@@ -40,7 +40,6 @@
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
-#include <cluster/IdGenerator.h>
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkPtr.h>
@@ -165,8 +164,6 @@ private:
    vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
 
    vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */
-   
-   IdGenerator<vpr::Uint16>                        mApplicationDataIdGen;               /**< Keeps track of used/free virtual ids. */
 };
 
 } // end namespace
