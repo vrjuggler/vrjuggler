@@ -56,13 +56,13 @@ class vjProjection
 {
 public:
    // Eye and type
-   enum
-   {LEFT = 1, RIGHT = 2, SURFACE, SIM};
+   enum ProjType
+   {NOT_SET = 0, LEFT = 1, RIGHT = 2, SURFACE, SIM};
 
 public:
    vjProjection()
    {
-      mType = -1;
+      mType = NOT_SET;
       mEye = 0;
       mFocusPlaneDist = 1.0f;
    }
@@ -77,6 +77,9 @@ public:
    { return mEye;}
 
    virtual void calcViewMatrix(vjMatrix& eyePos) = 0;
+
+   ProjType getType()
+   { return mType; }
 
    //: Helper to the frustum apex and corners in model coordinates
    //!NOTE: This function is meant for debugging purposes
@@ -98,7 +101,7 @@ public:
 
 protected:
    int mEye;
-   int mType;
+   ProjType    mType;
 
    float       mFocusPlaneDist;     // Basically the distance to the surface.  Needed for drawing.
 
