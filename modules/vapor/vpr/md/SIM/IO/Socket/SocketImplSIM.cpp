@@ -59,16 +59,6 @@ static const vpr::Uint32 SOCK_MAX_BUFFER_SIZE = 65536;
 SocketImplSIM::~SocketImplSIM ()
 {
    close();
-
-   // cant do this because accept retuns an imp, which gets deleted
-   // after constructing the returned Socket_t
-/*
-   if (this->isOpen())
-   {
-      std::cout<<"~SocketImplSIM(), closing...\n"<<std::flush;
-      this->close();
-   }
-*/
 }
 
 vpr::ReturnStatus SocketImplSIM::close ()
@@ -76,7 +66,7 @@ vpr::ReturnStatus SocketImplSIM::close ()
    vpr::ReturnStatus status;
 
 
-   vprDEBUG(vprDBG_ALL, 0) << "SocketImplSIM::close: Closing: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: Closing: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
 
    if ( mPeer != NULL )
    {
@@ -89,7 +79,7 @@ vpr::ReturnStatus SocketImplSIM::close ()
 
    if ( mBound )
    {
-      vprDEBUG(vprDBG_ALL, 0) << "SocketImplSIM::close: Unbinding: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: Unbinding: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
       // Release the node to which we were bound.
       status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
       mBound = false;
@@ -128,13 +118,7 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    vprASSERT(mBound && "We must be bound first");
 
    status = sock_mgr.connect(this, mRemoteAddr, mPathToPeer, timeout);
-   //mConnected = status.success();
    // NOTE: We are not connected until the other side says so
-
-   // Now that we are connected (or queued to get connected), we do not have
-   // to manipulate our local address as is done in the real VPR sockets.
-   // In a real OS, the local address would be set automatically, so that's
-   // what the Sim Socket Manager does.
 
    return status;
 }
