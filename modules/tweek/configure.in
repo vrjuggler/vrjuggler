@@ -867,6 +867,7 @@ AC_OUTPUT(tweek-config
           test/TestSuite/Makefile
           test/TestSuite/java/Makefile
           test/corba/Makefile
+          mtree/TWEEK.data.dist
           mtree/TWEEK.include.dist
           mtree/TWEEK.install.dist
           mtree/TWEEK.test.dist
