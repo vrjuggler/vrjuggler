@@ -76,10 +76,6 @@
 #                 extension.
 # PF_LIBRARY    - The base name of the Performer Juggler API library with no
 #                 file extension.
-# AW_LIBRARY    - The base name of the Juggler AudioWorks sound engine
-#                 library with no file extension.
-# SL_LIBRARY    - The base name of the Juggler SL sound engine library with no
-#                 file extension.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -132,7 +128,5 @@ VJ_LIBRARY	= @LIB_PREFIX@Juggler
 UTILS_LIBRARY	= @LIB_PREFIX@Juggler_utils
 GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
 PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
-AW_LIBRARY	= @LIB_PREFIX@Juggler_aw
-SL_LIBRARY	= @LIB_PREFIX@Juggler_sl
 
 include $(topdir)/common.defs.mk
