@@ -119,6 +119,9 @@ namespace sim
             // Queue us up in the listening socket's connection queue.
             status = remote_stream_socket->addConnector(localSock);
             vprASSERT(!status.failure() && "Failed to add connector");
+
+            vpr::sim::Controller* controller = vpr::sim::Controller::instance();
+            controller->addConnectionEvent(controller->getClock().getCurrentTime(), remote_sock);
          }
          else
          {
@@ -296,7 +299,8 @@ namespace sim
                << vprDEBUG_FLUSH;
 
             first_edge_prop.addMessage(msg, dir);
-            controller->addEvent(msg->whenArrivesFully(), first_edge, dir);
+            controller->addMessageEvent(msg->whenArrivesFully(), first_edge,
+                                        dir);
          }
       }
       // This is a loopback, so we can just deliver the message without going
