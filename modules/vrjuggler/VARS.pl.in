@@ -76,8 +76,6 @@ $VARS{'OBJ_BUILD_FLAG'}  = '@OBJ_BUILD_FLAG@';
 $VARS{'OBJ_NAME_FLAG'}   = '@OBJ_NAME_FLAG@';
 $VARS{'PLATFORM'}        = '@PLATFORM@';
 $VARS{'LIBBITSUF'}       = '@LIBBITSUF@';
-$VARS{'JAR'}             = '@JAR@';
-$VARS{'JAVAC'}           = '@JAVAC@';
 
 # VR Juggler stuff.
 $VARS{'VJ_SHARE_DIR'}       = '@VJ_SHARE_DIR@';
