@@ -432,7 +432,7 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib ws2_32.lib"
 else
     APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
 fi
@@ -454,52 +454,13 @@ APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
 
 if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_JCCL="$APP_EXTRA_LIBS"
-#    DYLIB_DEPS_GL="$OGL_LDFLAGS $LIBOPENGL -lm"
-#    DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER -lm"
-
-#    APP_VJ_LIBS_GL="-lJuggler_ogl"
-#    APP_VJ_LIBS_PF="-lJuggler_pf"
-#    APP_VJ_LIBS_UTILS="-lJuggler_utils"
-
-#    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
-
-#    if test "x$OGL_LDFLAGS" != "x" ; then
-#        if test "x$PLATFORM" = "xDarwin" ; then
-#            APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
-#        else
-#            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
-#        fi
-#    else
-#        APP_EXTRA_LIBS_GL="$LIBOPENGL"
-#    fi
-
-#    if test "x$PF_LDFLAGS" != "x" ; then
-#        APP_EXTRA_LIBS_PF="-L$PFROOT/lib$LIBBITSUF $LIBPERFORMER"
-#    else
-#        APP_EXTRA_LIBS_PF="$LIBPERFORMER"
-#    fi
-
-#    if test "x$PLATFORM" = "xLinux" ; then
-#        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
-#    fi
-
-#    if test "x$OSG_LDFLAGS" != "x" ; then
-#        APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib $LIBOSG"
-#    else
-#        APP_EXTRA_LIBS_OSG="$LIBOSG"
-#    fi
 elif test "$OS_TYPE" = "Win32" ; then
     DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
-    DYLIB_DEPS_JCCL="-libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
+#    DYLIB_DEPS_JCCL="-libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
+     DYLIB_DEPS_JCCL="$DYLIB_DEPS_BASIC"
 #    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
 #    DYLIB_DEPS_GL="-libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
-#    APP_VJ_LIBS_GL='Juggler_ogl.lib'
-#    APP_VJ_LIBS_PF='Juggler_pf.lib'
-#    APP_VJ_LIBS_UTILS='Juggler_utils.lib'
-#    APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
-#    APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
-#    APP_EXTRA_LIBS_OSG="$OSG_LDFLAGS $LIBOSG"
 fi
 
 
@@ -583,7 +544,6 @@ AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
 AC_SUBST(DYLIB_DEPS_JCCL)
-AC_SUBST(DYLIB_DEPS)
 
 AC_SUBST(APP_BASIC_LIBS)
 AC_SUBST(APP_EXTRA_LIBS)
