@@ -41,8 +41,6 @@ Juggler_lib="@Juggler_lib@"
 Juggler_utils_lib="@Juggler_utils_lib@"
 Juggler_ogl_lib="@Juggler_ogl_lib@"
 Juggler_pf_lib="@Juggler_pf_lib@"
-Juggler_aw_lib="@Juggler_aw_lib@"
-Juggler_sl_lib="@Juggler_sl_lib@"
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -70,8 +68,6 @@ Libraries (prints the linker options for one or more of these libraries):
         Juggler_utils
         Juggler_ogl
         Juggler_pf
-        Juggler_aw
-        Juggler_sl
 EOF
 
     exit $1
@@ -84,8 +80,6 @@ fi
 lib_Juggler=no
 lib_Juggler_ogl=no
 lib_Juggler_pf=no
-lib_Juggler_aw=no
-lib_Juggler_sl=no
 lib_Juggler_utils=no
 
 while test $# -gt 0; do
@@ -149,14 +143,6 @@ while test $# -gt 0; do
             ;;
         Juggler_pf)
             lib_Juggler_pf=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_aw)
-            lib_Juggler_aw=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_sl)
-            lib_Juggler_sl=yes
             lib_Juggler_all=no
             ;;
         *)
@@ -223,14 +209,6 @@ if test "$echo_libs" = "yes"; then
 
         if test "x$lib_Juggler_pf" = "xyes" ; then
             vrj_libs="$vrj_libs $Juggler_pf_lib"
-        fi
-
-        if test "x$lib_Juggler_aw" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_aw_lib"
-        fi
-
-        if test "x$lib_Juggler_sl" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_sl_lib"
         fi
     fi
 
