@@ -73,6 +73,9 @@ void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata);
 //void PfDrawFuncSimulator(pfChannel* chan, void* chandata);
 //void PfAppFunc(pfChannel *chan, void* chandata);
 
+
+void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw);
+
 //vjPfDrawManager* PfDrawManager::_instance = NULL;
 vprSingletonImp(PfDrawManager);
 
@@ -254,6 +257,7 @@ void PfDrawManager::initAPI()
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
    pfMultiprocess(PFMP_APP_CULL_DRAW);
+   // XXX: Uncomment this line to get synchronization on the cluster
    //pfMultiprocess(PFMP_APPCULLDRAW);
 
    initLoaders();          // Must call before pfConfig
@@ -319,6 +323,9 @@ void PfDrawManager::initPipes()
 
       pfPipeWindow* pw = allocatePipeWin(pipe_num);   // new pfPipeWindow(mPipes[pipe_num]);
       pw->setOriginSize(0,0,1,1);
+
+      // XXX: Set the swap func
+      mPipes[pipe_num]->setSwapFunc( PfPipeSwapFunc );      // Set to the given swap func
    }
 }
 
@@ -1142,6 +1149,31 @@ void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,false,false);
+}
+
+/*******************************
+* Callback for swapping buffers
+********************************/
+void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
+{
+    PfDrawManager* pf_draw_mgr = PfDrawManager::instance();     // get the draw manager
+
+    // If "first pw", then sync
+    // What is the "first" pw and how do I know?
+
+    // For each pfDisplay
+    //    if(pw == display->pipeWindow)
+    //   
+
+    // Swap the buffer
+    vprDEBUG(vrjDBG_DRAW_MGR, 0) << "--- PfPipeSwapFunc: pipe:" << pf_draw_mgr << " -- pw:" << pw << "\n" << vprDEBUG_FLUSH;
+
+    // Barrier for Cluster
+    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH; 
+    gadget::InputManager::instance()->getRemoteInputManager()->createBarrier();
+    vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH; 
+
+    pw->swapBuffers();
 }
 
 };
