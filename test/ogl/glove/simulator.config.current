@@ -139,22 +139,6 @@ display
   simCamera { "Simulator Camera Proxy" }
   headPos { "Head Proxy" }
   end
-display
-  Name "Sim Window 2"
-  projectiontype { "" }
-  origin { 0 0 }
-  size { 640 480 }
-  pipe { 0 }
-  stereo { False }
-  border { True }
-  lowerleft { 0.0 0.0 0.0 }
-  lowerright { 0.0 0.0 0.0 }
-  upperleft { 0.0 0.0 0.0 }
-  ScreenPos { 0.0 0.0 0.0 0.0 0.0 }
-  simulator { True }
-  simCamera { "Simulator Camera Proxy 2" }
-  headPos { "Head Proxy" }
-  end
 Keyboard
   Name "Head and Wand Keyboard"
   Pos0Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
