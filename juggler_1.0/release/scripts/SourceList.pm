@@ -157,6 +157,14 @@ sub hasDirectory ($$) {
     return exists(${$this->{'dirs'}}{"$_[0]"});
 }
 
+sub hasSuffix ($$$) {
+    my $this = shift;
+    my $dir  = shift;
+    my $ext  = shift;
+
+    return exists(${${$this->{'dirs'}}{"$dir"}}{"$ext"});
+}
+
 # -----------------------------------------------------------------------------
 # Get all the files registered with this object.
 # -----------------------------------------------------------------------------
