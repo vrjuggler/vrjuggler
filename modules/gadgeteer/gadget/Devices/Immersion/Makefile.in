@@ -48,8 +48,8 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
 ifneq (@PLATFORM@, Darwin)
-SRCS		= Ibox.cpp	\
-                  ibox2.cpp
+SRCS		= Ibox.cpp		\
+                  IboxStandalone.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
