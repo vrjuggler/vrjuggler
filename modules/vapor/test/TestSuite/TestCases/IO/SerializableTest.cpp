@@ -20,7 +20,11 @@ void SerializableTest::testReaderWriter()
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
+#ifdef VPR_OS_Win32
+   const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
+#else
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221ll);
+#endif
 
    const vpr::Int8 data_int8(-7);
    const vpr::Int16 data_int16(-298);
@@ -73,7 +77,7 @@ void SerializableTest::testReaderWriter()
    reader->readUint16(read_uint16);
    reader->readUint32(read_uint32);
    reader->readUint64(read_uint64);
-#ifdef VPR_OS_IRIX
+#if defined(VPR_OS_IRIX) || defined(VPR_OS_Win32)
    read_int8 = reader->readUint8();
    read_int16 = reader->readUint16();
    read_int32 = reader->readUint32();
@@ -112,7 +116,11 @@ void SerializableTest::testDataOffsets()
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
+#ifdef VPR_OS_Win32
+   const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
+#else
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221ll);
+#endif
    const float       data_float(1221.75f);
    const double      data_double(1.2211975);
    const std::string data_string("test string");
@@ -189,7 +197,11 @@ void SerializableTest::testReadWriteSimple()
    obj1.charVal = 0xAB;
    obj1.shortVal = 0xCAFE;
    obj1.longVal = 0xDEADBEEF;
+#ifdef VPR_OS_Win32
+   obj1.longlongVal = 0xFACEBEEFCAFEDEAD;
+#else
    obj1.longlongVal = 0xFACEBEEFCAFEDEADll;
+#endif
 
    obj1.scharVal = -10;
    obj1.sshortVal = -233;
@@ -222,14 +234,22 @@ void SerializableTest::testReadWriteNested()
    obj1.mObj1.charVal = 0xAB;
    obj1.mObj1.shortVal = 0xCAFE;
    obj1.mObj1.longVal = 0xDEADBEEF;
+#ifdef VPR_OS_Win32
+   obj1.mObj1.longlongVal = 0xFACEBEEFCAFEDEAD;
+#else
    obj1.mObj1.longlongVal = 0xFACEBEEFCAFEDEADll;
+#endif
    obj1.mObj1.floatVal = 1221.1975f;
    obj1.mObj1.doubleVal = 25.000034;
 
    obj1.mObj2.charVal = 0xEF;
    obj1.mObj2.shortVal = 0xDEAD;
    obj1.mObj2.longVal = 0xBEEFFACE;
+#ifdef VPR_OS_Win32
+   obj1.mObj2.longlongVal = 0xFACEBEEFCAFEDEAD;
+#else
    obj1.mObj2.longlongVal = 0xFACEBEEFCAFEDEADll;
+#endif
    obj1.mObj2.floatVal = 1321.1975f;
    obj1.mObj2.doubleVal = 25.000034;
 

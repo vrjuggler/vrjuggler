@@ -67,7 +67,12 @@ void SocketConnectorAcceptorTest::testAcceptorConstruction ()
 void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
 {
    threadAssertReset();
-   mRendevousPort = 47000 + (random() % 71);     // Get a partially random port
+#ifdef VPR_OS_Win32
+   long rand_num(rand());
+#else
+   long rand_num(random());
+#endif
+   mRendevousPort = 47000 + (rand_num % 71);     // Get a partially random port
    mNumItersA = 5;
    mMessageValue = std::string("The Data");
    mMessageLen = mMessageValue.length();

@@ -357,7 +357,12 @@ void SocketTest::sameAddressOpenBindCloseTest()
 {
    int openSuccess( 0 ), closeSuccess( 0 ), bindSuccess( 0 );
    vpr::InetAddr local_addr;
-   vpr::Uint16 port = (random() % 20000) + 20000;
+#ifdef VPR_OS_Win32
+   long rand_num(rand());
+#else
+   long rand_num(random());
+#endif
+   vpr::Uint16 port = (rand_num % 20000) + 20000;
 
    local_addr.setAddress("localhost", port);
    vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
@@ -383,7 +388,12 @@ void SocketTest::sameAddressOpenBindDestructTest()
 {
    int openSuccess( 0 ), bindSuccess( 0 );
    vpr::InetAddr local_addr;
-   vpr::Uint16 port = (random() % 20000) + 20000;
+#ifdef VPR_OS_Win32
+   long rand_num(rand());
+#else
+   long rand_num(random());
+#endif
+   vpr::Uint16 port = (rand_num % 20000) + 20000;
 
    local_addr.setAddress("localhost", port);
    vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
@@ -410,7 +420,12 @@ void SocketTest::differentAddressOpenBindCloseTest()
 {
    int openSuccess( 0 ), closeSuccess( 0 ), bindSuccess( 0 );
    vpr::InetAddr local_addr;
-   vpr::Uint16 port = (random() % 20000) + 20000;
+#ifdef VPR_OS_Win32
+   long rand_num(rand());
+#else
+   long rand_num(random());
+#endif
+   vpr::Uint16 port = (rand_num % 20000) + 20000;
 
    // same address, open-bind-close
    const int runs = 10;
@@ -934,7 +949,11 @@ void SocketTest::testReadn ()
    for ( unsigned int i = 0; i < 20; i += pkt_size )
    {
       memset((void*) buffer, 0, sizeof(buffer));
+#ifdef VPR_OS_Win32
+      sprintf(buffer, "%04d", i);
+#else
       snprintf(buffer, sizeof(buffer), "%04d", i);
+#endif
 
       client_sock.write(buffer, pkt_size, bytes);
       CPPUNIT_ASSERT(bytes != 0 && "Server could not write to client");
