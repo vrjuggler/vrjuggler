@@ -1,5 +1,5 @@
-#ifndef _SYSTEM_TEST_H
-#define _SYSTEM_TEST_H
+#ifndef _VARVALUE_TEST_H
+#define _VARVALUE_TEST_H
 
 #include <iostream>
 
