@@ -6,7 +6,7 @@
 #define _TRACKD_MEM_H_
 
 #include <sys/types.h>
-#include <stdint.h>
+//#include <stdint.h>
 
 struct CAVE_SENSOR_ST
    {
