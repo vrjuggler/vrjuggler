@@ -50,23 +50,57 @@ import javax.swing.event.ListSelectionListener;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.commoneditors.DeviceConfig;
 import org.vrjuggler.vrjconfig.commoneditors.KeyboardEditorPanel;
+import org.vrjuggler.vrjconfig.commoneditors.ProxyEditorUI;
 
 
 public class SimKeyboardEditorPanel
    extends JPanel
    implements EditorConstants
 {
+   /**
+    * Mapping from simulated device config element type to device proxy
+    * config element type.  These simulated device types rely on input received
+    * through a proxy to a keyboard/mouse input handler.
+    */
    private static Map sSimDevProxyTypeMap;
+
+   /**
+    * Mapping from non-keyboard simulated device config element type to device
+    * proxy config element type.  These simulated device types do not rely on
+    * keyboard/mouse input and instead get their input through other means.
+    */
+   private static Map sSimDevNoKbdProxyTypeMap;
+
+   /**
+    * Mapping from simulated device config element type to a SimDeviceEditor
+    * type that is used to edit the configuration for that simulated device
+    * type.
+    */
    private static Map sSimDevEditorMap;
 
    static
    {
+      // Set up the mapping for keyboard-based simulated device types and
+      // their proxies.
       sSimDevProxyTypeMap = new HashMap();
       sSimDevProxyTypeMap.put(SIM_ANALOG_DEVICE_TYPE, ANALOG_PROXY_TYPE);
       sSimDevProxyTypeMap.put(SIM_DIGITAL_DEVICE_TYPE, DIGITAL_PROXY_TYPE);
       sSimDevProxyTypeMap.put(SIM_POS_DEVICE_TYPE, POSITION_PROXY_TYPE);
 
+      // Set up the mapping for non-keyboard simulated device types and their
+      // proxies.
+      sSimDevNoKbdProxyTypeMap = new HashMap();
+      sSimDevNoKbdProxyTypeMap.put(SIM_RELATIVE_POS_DEVICE_TYPE,
+                                   POSITION_PROXY_TYPE);
+
+      // Set up the mapping for each simulated device type config elements and
+      // its SimDeviceEditor implementation type.
       sSimDevEditorMap = new HashMap();
+      sSimDevEditorMap.put(SIM_ANALOG_DEVICE_TYPE,
+                           SimAnalogDeviceEditor.class);
+      sSimDevEditorMap.put(SIM_DIGITAL_DEVICE_TYPE,
+                           SimDigitalDeviceEditor.class);
+      sSimDevEditorMap.put(SIM_POS_DEVICE_TYPE, SimPositionDeviceEditor.class);
    }
 
    public SimKeyboardEditorPanel()
@@ -76,6 +110,15 @@ public class SimKeyboardEditorPanel
       ConfigBroker broker = new ConfigBrokerProxy();
       ConfigDefinitionRepository def_repos = broker.getRepository();
 
+      // Set up the mapping from the simulated device type ConfigDefinition
+      // reference to the device proxy type ConfigDefinition reference.  The
+      // map mSimDevProxyDefMap will have a direct correlation to
+      // sSimDevProxyTypeMap in terms of its key/value pairs.  In
+      // sSimDevProxyTypeMap, the mapping is from String to String.  In
+      // mSimDevProxyDefMap, the mapping is from ConfigDefinition to
+      // ConfigDefinition.
+      // XXX: This is done here because I am not sure if it is safe to use the
+      // Config Broker during static initialization.
       for ( Iterator i = sSimDevProxyTypeMap.keySet().iterator();
             i.hasNext(); )
       {
@@ -88,6 +131,7 @@ public class SimKeyboardEditorPanel
       try
       {
          jbInit();
+         mAllProxyEditor.getDeviceProxyEditor().getGraph().setPortsVisible(true);
       }
       catch (Exception ex)
       {
@@ -236,6 +280,8 @@ public class SimKeyboardEditorPanel
             }
          }
       }
+
+      mAllProxyEditor.setConfig(mContext, null);
    }
 
    /**
@@ -288,10 +334,14 @@ public class SimKeyboardEditorPanel
       mKeyboardEditor.setPreferredSize(new Dimension(500, 225));
       mDeviceSplitPane.add(mEmptyEditor, JSplitPane.LEFT);
       mDeviceSplitPane.add(mKeyboardEditor, JSplitPane.RIGHT);
-      this.add(mMainSplitPane, BorderLayout.CENTER);
-      mMainSplitPane.add(mDevicePanel, JSplitPane.LEFT);
-      mMainSplitPane.add(mDeviceSplitPane, JSplitPane.RIGHT);
+      mAdvancedEditorPanel.setLayout(new BorderLayout());
+      mAdvancedEditorPanel.add(mAllProxyEditor, BorderLayout.CENTER);
+      mTabContainer.add(mDeviceEditorPane, "Simulator Devices");
+      mTabContainer.add(mAdvancedEditorPanel, "Advanced");
+      mDeviceEditorPane.add(mDevicePanel, JSplitPane.LEFT);
+      mDeviceEditorPane.add(mDeviceSplitPane, JSplitPane.RIGHT);
       mDeviceScrollPane.getViewport().add(mDeviceList);
+      this.add(mTabContainer, BorderLayout.CENTER);
    }
 
    private ConfigContext mContext              = null;
@@ -307,8 +357,9 @@ public class SimKeyboardEditorPanel
 
    private JPanel mEmptyEditor = new JPanel();
 
-   private JSplitPane mMainSplitPane = new JSplitPane();
    private BorderLayout mMainLayout = new BorderLayout();
+   private JTabbedPane mTabContainer = new JTabbedPane();
+   private JSplitPane mDeviceEditorPane = new JSplitPane();
    private JPanel mDevicePanel = new JPanel();
    private BorderLayout mDevicePanelLayout = new BorderLayout();
    private Box mDeviceButtonPanel = new Box(BoxLayout.Y_AXIS);
@@ -317,6 +368,8 @@ public class SimKeyboardEditorPanel
    private JScrollPane mDeviceScrollPane = new JScrollPane();
    private JList mDeviceList = new JList();
    private JSplitPane mDeviceSplitPane = new JSplitPane();
+   private JPanel mAdvancedEditorPanel = new JPanel();
+   private ProxyEditorUI mAllProxyEditor = new ProxyEditorUI();
 
    void mAddSimDeviceButton_actionPerformed(ActionEvent event)
    {
