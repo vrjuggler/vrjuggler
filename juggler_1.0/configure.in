@@ -239,6 +239,7 @@ DSOREGFILE=''
 DSOVERSION=''
 DSOVERSIONOPTS=''
 ABI_LIST=''		dnl # List of supported ABIs on a given platform
+OS_TYPE='UNIX'		dnl # General type of operating system (UNIX, Win32)
 PLATFORM=''		dnl # Platform name
 
 dnl # Depending on the target operating system, set various command options and
@@ -451,6 +452,7 @@ case $target_os in
 
         AC_DEFINE(VJ_OS_Win32,)
         ABI_LIST='WIN32'
+        OS_TYPE='Win32'
         PLATFORM=`uname -s`
 
         AC_DEFINE(WIN32,)
@@ -1043,6 +1045,7 @@ AC_SUBST(ABI)
 AC_SUBST(ISA)
 AC_SUBST(ABI_LIST)
 AC_SUBST(LIBBITSUF)
+AC_SUBST(OS_TYPE)
 AC_SUBST(PLATFORM)
 AC_SUBST(DSOREGFILE)
 AC_SUBST(DSOVERSION)
