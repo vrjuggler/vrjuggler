@@ -154,7 +154,7 @@ ifeq ($(BUILD_JAVA), Y)
 endif
 
 python-idl:
-ifeq ($(BUILD_PYTHON), Y)
+ifeq ($(BUILD_PYTHON_IDL), Y)
 	@$(MAKE) -C python DO_IDL=1 python_idl
 endif
 
@@ -259,7 +259,7 @@ endif
 endif	# ifndef NO_JAVA
 
 tweek-python:
-ifeq ($(BUILD_PYTHON), Y)
+ifeq ($(BUILD_PYTHON_GUI), Y)
 	@echo "===> python"
 	@$(MAKE) -C python $@
 	@echo "<=== python"
@@ -430,7 +430,7 @@ ifeq ($(BUILD_EXTENSIONS), Y)
 endif # if $(BUILD_EXTENSIONS) == Y
 endif	# if $(BUILD_JAVA) == Y
 endif	# ifdef NO_JAVA
-ifeq ($(BUILD_PYTHON), Y)
+ifeq ($(BUILD_PYTHON_GUI), Y)
 	@$(MAKE) -C python tweek-gui-install
 endif
 

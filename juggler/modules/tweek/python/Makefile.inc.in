@@ -24,10 +24,10 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-BUILD_PYTHON=	@BUILD_PYTHON@
+BUILD_PYTHON_GUI=	@BUILD_PYTHON_GUI@
 
 tweek-python:
-ifeq ($(BUILD_PYTHON), Y)
+ifeq ($(BUILD_PYTHON_GUI), Y)
 	@echo "------------------------------------------------"
 	@echo "Setting up for the Tweek Python GUI"
 	@echo "------------------------------------------------"
