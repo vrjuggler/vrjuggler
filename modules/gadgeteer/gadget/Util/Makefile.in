@@ -47,7 +47,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
-SRCS 		=
+SRCS 		= Version.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
