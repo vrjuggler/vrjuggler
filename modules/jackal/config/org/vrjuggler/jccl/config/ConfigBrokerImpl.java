@@ -226,7 +226,8 @@ public class ConfigBrokerImpl
       List resources = context.getResources();
       for (Iterator itr = resources.iterator(); itr.hasNext(); )
       {
-         DataSource data_source = (DataSource)itr.next();
+         String data_source_name = (String)itr.next();
+         DataSource data_source = get(data_source_name);
          if (data_source.contains(elt))
          {
             data_source.remove(elt);
