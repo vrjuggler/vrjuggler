@@ -66,7 +66,7 @@ EXTRA_DEPEND_FLAGS=	-I$(JUGGLERROOT_ABS)/external/leach-uuid
 EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/leach-uuid
 
 EXTRA_DEFS+=		@UUID_DEFS@
-SUBDIR+=		md5 uuid
+SUBDIR+=		uuid
 endif
 
 SRCS=		Debug.cpp		\
