@@ -61,7 +61,8 @@ class ContextData
 public:
    ContextData()
    {
-      dlIndex   = -1;
+      dlIndex  = -1;
+      maxIndex = -1;
    }
 
 public:
