@@ -178,11 +178,13 @@ public class DeviceProxyGraphEditor
    }
 
    /**
-    * Initializes the graph will the given proxy and all devices at which it
-    * is allowed to point (including the device it currently points at if it
-    * is so configured.  If the given proxy config element is null, then all
-    * allowed types of device and proxy config elements will be used to
-    * populate the graph.
+    * Initializes the graph will the given config element (either a device
+    * or a proxy).  If the config element is for a device proxy, all the
+    * devices at which it is allowed to point will be included with the
+    * graph.  If the config element is for an input device, all the proxies
+    * pointing at it (of any type) will be included in the graph.  If the
+    * given config element is null, then all allowed types of device and proxy
+    * config elements will be used to populate the graph.
     *
     * <p>
     * <b>NOTE:</b>
@@ -193,24 +195,25 @@ public class DeviceProxyGraphEditor
     *
     * @param ctx        the context containing the given config element and
     *                   any devices to which that config element may refer
-    * @param proxyElt   the config element for the single proxy that will be
-    *                   edited in this editor instance (it must be non-null
-    *                   and of type <code>EditorConstants.PROXY_TYPE</code>)
-    *                   or null to edit all proxies in the given context
+    * @param elt        the config element for an input device (its definition
+    *                   is of type
+    *                   <code>EditorConstants.INPUT_DEVICE_TYPE</code>), for
+    *                   a device proxy (its definition is of type
+    *                   <code>EditorConstants.PROXY_TYPE</code>), or null
     *
     * @see org.vrjuggler.vrjconfig.commoneditors.EditorConstants
     */
-   public void setConfig(ConfigContext ctx, ConfigElement proxyElt)
+   public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
       mContext = ctx;
 
       List device_elts = new ArrayList(), proxy_elts = new ArrayList();
-      List all_elts = null;
+      List all_elts = mBroker.getElements(mContext);
 
-      if ( proxyElt == null )
+      // A null element means that we must pull all allowed types of device
+      // and proxy config elements from the given context.
+      if ( elt == null )
       {
-         all_elts = mBroker.getElements(mContext);
-
          for ( Iterator d = this.allowedTypes.iterator(); d.hasNext(); )
          {
             ConfigDefinition cur_def = (ConfigDefinition) d.next();
@@ -228,20 +231,34 @@ public class DeviceProxyGraphEditor
             }
          }
       }
-      else if ( proxyElt.getDefinition().isOfType(PROXY_TYPE) )
+      // A config element for an input device means that we need to use the
+      // device as the "root" of the graph and find all its proxies.
+      else if ( elt.getDefinition().isOfType(INPUT_DEVICE_TYPE) )
       {
-         if ( ! this.allowedTypes.contains(proxyElt.getDefinition()) )
+         if ( ! this.allowedTypes.contains(elt.getDefinition()) )
          {
-            this.allowedTypes.add(proxyElt.getDefinition());
+            this.allowedTypes.add(elt.getDefinition());
+         }
+
+         device_elts.add(elt);
+
+         DeviceConfig dev_cfg = new DeviceConfig(ctx, elt);
+         proxy_elts.addAll(dev_cfg.getProxies());
+      }
+      // A config element for a device proxy means that we need to use the
+      // proxy as the "root" of the graph and find all the devices at which
+      // it is allowed to point.
+      else if ( elt.getDefinition().isOfType(PROXY_TYPE) )
+      {
+         if ( ! this.allowedTypes.contains(elt.getDefinition()) )
+         {
+            this.allowedTypes.add(elt.getDefinition());
          }
 
          // For this proxy, we need to find all the device config elements at
          // which it is allowed to point.
          PropertyDefinition device_prop_def =
-            proxyElt.getDefinition().getPropertyDefinition(DEVICE_PROPERTY);
-
-         all_elts    = mBroker.getElements(mContext);
-         device_elts = new ArrayList();
+            elt.getDefinition().getPropertyDefinition(DEVICE_PROPERTY);
 
          List allowed_dev_types = device_prop_def.getAllowedTypes();
          List all_defs = mBroker.getRepository().getAllLatest();
@@ -269,13 +286,13 @@ public class DeviceProxyGraphEditor
             }
          }
 
-         proxy_elts.add(0, proxyElt);
+         proxy_elts.add(0, elt);
       }
       else
       {
          throw new IllegalArgumentException(
-            "proxyElt is not a proxy type: " +
-            proxyElt.getDefinition().getToken()
+            "elt is not a device proxy type or an input device type: " +
+            elt.getDefinition().getToken()
          );
       }
 
