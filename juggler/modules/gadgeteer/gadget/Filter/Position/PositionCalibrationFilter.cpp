@@ -1,9 +1,39 @@
-#include <gadget/Filter/Position/PositionCalibrationFilter.h>
-#include <gadget/Filter/Position/PositionFilterFactory.h>
-#include <jccl/Config/ConfigElement.h>
-#include <jccl/Config/ParseUtil.h>
-#include <vpr/Util/Assert.h>
-#include <vpr/Util/Debug.h>
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <gadget/gadgetConfig.h>
+
+#include <sstream>
+#include <fstream>
 
 #include <cppdom/cppdom.h>
 #include <gmtl/Math.h>
@@ -12,8 +42,12 @@
 #include <gmtl/Output.h>
 #include <gmtl/VecOps.h>
 
-#include <sstream>
-#include <fstream>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+#include <jccl/Config/ParseUtil.h>
+#include <jccl/Config/ConfigElement.h>
+#include <gadget/Filter/Position/PositionFilterFactory.h>
+#include <gadget/Filter/Position/PositionCalibrationFilter.h>
 
 namespace gadget
 {
