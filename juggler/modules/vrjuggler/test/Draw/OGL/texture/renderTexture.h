@@ -42,13 +42,15 @@ public:
    // give: your Texture, and texture object resource ID
    // texObjectID must == -1 (to mean unused tex object)
    static void bind( Texture& texture, int& texObjectID, int mipmapLevelOfDetail = 0, int bordersize = 0 );
+
+   static void render( const Texture& texture, const int& texObjectID )
 };
 
 
 // create an OpenGL texture object from a Texture
 // give: your Texture, and texture object resource ID
 // texObjectID must == -1 (to mean unused tex object)
-inline void tex::bind( Texture& texture, int& texObjectID, int mipmapLevelOfDetail = 0, int bordersize = 0 )
+inline void tex::bind( Texture& texture, int& texObjectID, int mipmapLevelOfDetail, int bordersize )
 {
    assert( texObjectID == -1 && "listID must == -1 (to mean unused tex object)" );
 
@@ -112,7 +114,7 @@ inline bool tex::isBound( const Texture& texture, const int& texObjectID )
 //       of tex::bind() and tex::render()
 // NOTE: if you don't use the tex::bind() and tex::render() combination, then 
 //       tex::render() will call tex::load() after setting a lot of glEnable()s
-inline bool tex::load( const Texture& texture, int mipmapLevelOfDetail = 0, int bordersize = 0 )
+inline bool tex::load( const Texture& texture, int mipmapLevelOfDetail, int bordersize )
 {
    int format, type;
    const Image& image = texture.image();
