@@ -47,28 +47,35 @@
       </property>
       <upgrade_transform>
          <xsl:stylesheet version="1.0"
-                         xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                         xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
             <xsl:template match="/">
-               <xsl:element name="swap_lock_plugin">
+               <xsl:apply-templates />
+            </xsl:template>
+
+            <xsl:template match="jconf:swap_lock_plugin">
+               <xsl:element name="swap_lock_plugin" namespace="{$jconf}">
                   <xsl:attribute name="name">
                      <xsl:value-of select="@name"/>
                   </xsl:attribute>
                   <xsl:attribute name="version">2</xsl:attribute>
                   <xsl:copy-of select="./*"/>
-                  <xsl:element name="slave_one">
+                  <xsl:element name="slave_one" namespace="{$jconf}">
                      <xsl:text>false</xsl:text>
                   </xsl:element>
-                  <xsl:element name="slave_two">
+                  <xsl:element name="slave_two" namespace="{$jconf}">
                      <xsl:text>false</xsl:text>
                   </xsl:element>
-                  <xsl:element name="slave_three">
+                  <xsl:element name="slave_three" namespace="{$jconf}">
                      <xsl:text>false</xsl:text>
                   </xsl:element>
-                  <xsl:element name="slave_four">
+                  <xsl:element name="slave_four" namespace="{$jconf}">
                      <xsl:text>false</xsl:text>
                   </xsl:element>
-                  <xsl:element name="slave_five">
+                  <xsl:element name="slave_five" namespace="{$jconf}">
                      <xsl:text>false</xsl:text>
                   </xsl:element>
                </xsl:element>
