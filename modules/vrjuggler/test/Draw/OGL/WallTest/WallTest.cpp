@@ -166,8 +166,15 @@ void WallTest::drawC6()
 void WallTest::drawWall(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur)
 {
    gmtl::Matrix44f rotate=calculateSurfaceRotation(ll,lr,ul,ur);
-   gmtl::Vec3f origin=(ll+lr+ul+ur)/4.0;
-   gmtl::Vec3f scale(gmtl::length(lr-ll),gmtl::length(ur-lr),1);
+   // FIXME:  The following is a workaround for GMTL CVS Head's meta 
+   //         programming.  It should be removed as soon as the GMTL API
+   //         addresses this.
+   gmtl::Vec3f origin = ll + lr + ul + ur;
+   origin /= 4.0;
+   //gmtl::Vec3f origin=(ll+lr+ul+ur)/4.0;
+   gmtl::Vec3f lr_ll = lr - ll;
+   gmtl::Vec3f ur_lr = ur - lr;
+   gmtl::Vec3f scale(gmtl::length(lr_ll), gmtl::length(ur_lr));
    scale[2]=scale[0]; // To keep the cubes and tetrahedrons happy
    scale*=0.1f;
    
