@@ -1,0 +1,22 @@
+#HOSTTYPE := $(shell uname | sed "s/CYGWIN.*//Win32/")
+HOSTTYPE:=$(shell uname)
+
+ifeq ($(HOSTTYPE), IRIX64)
+HOSTTYPE=IRIX
+endif
+
+ifeq ($(HOSTTYPE), CYGWIN_98-4.10)
+HOSTTYPE=Win32
+endif
+
+ifeq ($(HOSTTYPE), i486)
+HOSTTYPE=Win32
+endif
+
+ifeq ($(HOSTTYPE), i586)
+HOSTTYPE=Win32
+endif
+
+ifeq ($(HOSTTYPE), i686)
+HOSTTYPE=Win32
+endif
