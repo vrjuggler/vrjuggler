@@ -77,11 +77,10 @@ void CameraProjection::calcViewMatrix(gmtl::Matrix44f& cameraPos, const float sc
 
    // Calculate frustum
    float top, right;
-
    top = gmtl::Math::tan( gmtl::Math::deg2Rad(mVertFOV/2.0f) ) * mNearDist;     // Calculate the top based on fovy
    right = aspect_ratio * top;
 
-   // XXX: The frustum is not used
+   // Calculate the frustum to use for the camera
    mFrustum.set(-right, right, -top, top, mNearDist, mFarDist);
 }
 
