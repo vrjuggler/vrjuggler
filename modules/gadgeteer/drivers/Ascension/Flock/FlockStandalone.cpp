@@ -995,7 +995,7 @@ void FlockStandalone::printFlockStatus()
       if(unit.mHasSensor)
       { label += "sensor"; }
       label += "]";
-
+#ifndef VPR_OS_IRIX
       std::cout << boost::format("  %s: %|-14|  master:%s accessible:%s  running:%s error:%s init:%s") % i
                                  % label % (bool) unit.mIsMaster
                                  % (bool) unit.mAccessible
@@ -1003,6 +1003,7 @@ void FlockStandalone::printFlockStatus()
                                  % (bool) unit.mHasError
                                  % (bool) unit.mHasBeenInitialized
                 << std::endl;
+#endif
    }
 
    std::ostringstream x_indices_oss;
