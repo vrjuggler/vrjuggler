@@ -13,15 +13,24 @@
    </articleinfo>
    <section>
       <title>Introduction</title>
-      <para>This document explains how to build the modules of the Juggler Project from the source code.</para>
+      <para>This document explains how to build the modules of the Juggler Project from the source code. We begin by explaining some issues related to specific operating systems. We then explain how to get the source code from our CVS repository. (Those users who downloaded a pre-packaged source release can skip ahead to <xref linkend="config.section"/>). We conclude with instructions on how to build VR Juggler and its individual components.</para>
       <section>
-         <title>Important Note for IRIX Users</title>
-         <para>There are many Perl scripts used as part of getting, configuring, and building the Juggler Suite of tools. In particular, two scripts required for compiling need Perl 5.005 or newer. The version of Perl that ships with IRIX 6.5 is very old (circa 1997) and does not work with many Perl scripts we have written. SGI provides a much newer version of Perl (5.6.1) with their freeware tools (<ulink url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It will be necessary to install that version for our scripts to work. This version is typically installed as <filename>/usr/freeware/bin/perl</filename>.</para>
-         <para>Once you have a modern Perl installed, you can run various Perl scripts as follows:</para>
-         <screen>/usr/freeware/bin/perl &lt;script-name&gt;</screen>
-         <para>The above will be required any time a Perl script fails with an error similar to the following:</para>
-         <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
+         <title>Important Notes for IRIX Users</title>
+         <para>Despite our best efforts, there are some issues related to compiling the Juggler Project on IRIX. We introduce them in this section and explain how to work around them.</para>
+         <section>
+            <title>Perl Version</title>
+            <para>There are many Perl scripts used as part of getting, configuring, and building the Juggler Suite of tools. In particular, two scripts required for compiling need Perl 5.005 or newer. The version of Perl that ships with IRIX 6.5 is very old (circa 1997) and does not work with many Perl scripts we have written. SGI provides a much newer version of Perl (5.6.1) with their freeware tools (<ulink url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It will be necessary to install that version for our scripts to work. This version is typically installed as <filename>/usr/freeware/bin/perl</filename>.</para>
+            <para>Once you have a modern Perl installed, you can run various Perl scripts as follows:</para>
+            <screen>/usr/freeware/bin/perl &lt;script-name&gt;</screen>
+            <para>The above will be required any time a Perl script fails with an error similar to the following:</para>
+            <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
 BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
+         </section>
+         <section>
+            <title>MIPSpro Compiler Version</title>
+            <para>Reports have been made on the VR Juggler mailing list regarding compile failures (including segmentation faults within the compiler) occur when using the MIPSpro Compilers Version 7.3.1.1m. We have found upgrading to Version 7.3.1.3m (or newer) fixes the problems.</para>
+            <para>A new feature of VR Juggler 1.1 is support for GCC on IRIX. Users who do not have MIPSpro or cannot upgrade can compile and run VR Juggler (without OpenGL Performer support) using the version of GCC distributed by SGI. It can be downloaded from <ulink url="http://freeware.sgi.com/index-by-alpha.html">http://freeware.sgi.com/index-by-alpha.html</ulink> for free.</para>
+         </section>
       </section>
       <section>
          <title>Important Note for Win32 Users</title>
@@ -101,16 +110,22 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          <para>Please note: you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and make.</para>
       </section>
       <section>
-         <title>Compiling the Juggler Suite of tools</title>
+         <title>Compiling the Juggler Suite of Tools</title>
          <para>This section explains how to get, configure, and compile all of the tools that make up VR Juggler at once. Each tool compiles to its own library and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
          <section id="config.section">
             <title>Configuring and compiling VR Juggler</title>
             <para>Every time you have newly updated source code acquired from CVS or <command>cvs-gather</command>, it is recommended that you run <command>autogen.sh</command>, found in the top-level <filename>juggler</filename> directory:</para>
             <screen>./autogen.sh</screen>
+            <note>
+               <para>On Win32, recent versions of Cygwin install Autoconf 2.13 <emphasis>and</emphasis> Autoconf 2.5x. Similarly, Automake 1.4 <emphasis>and</emphasis> Automake 1.5 are installed. The former versions (2.13 and 1.4) are considered <quote>stable</quote> while the latter are <quote>developmental</quote>. While the VR Juggler build system does work with either set on UNIX-based systems, the build system does not work with Automake 1.5 on Win32. At this time, it is unclear why it does not work, but the following provides a workaround for running <command>autogen.sh</command> on Win32 using the default BASH environment:</para>
+               <screen>ACLOCAL=/usr/autotools/stable/bin/aclocal ./autogen.sh</screen>
+               <para>If you are using tcsh, use the following command instead:</para>
+               <screen>env ACLOCAL=/usr/autotools/stable/bin/aclocal ./autogen.sh</screen>
+            </note>
             <para>Also in this directory, we have a <quote>global</quote> configure script written in Perl rather than Autoconf. It is called <command>configure.pl</command>. To get options for this script, use one of the following (the second being much more detailed):</para>
             <screen>./configure.pl --help
 ./configure.pl --manual</screen>
-            <para>To configure your system, you'll need to see what options all the Autoconf-based configure scripts in Juggler need. To get this text, enter:</para>
+            <para>To configure your system, you'll need to see what options all the Autoconf-based configure scripts in VR Juggler need. To get this text, enter:</para>
             <screen>./configure.pl --all-help</screen>
             <para><command>configure.pl</command> works in a different <quote>build</quote> directory or in the directory where it resides. Here is how we (the team) have been using it:</para>
             <orderedlist>
