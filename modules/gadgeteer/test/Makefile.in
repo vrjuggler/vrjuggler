@@ -82,6 +82,8 @@ VPATH	= @srcdir@:@srcdir@/../gadget/Devices/Ascension:@srcdir@/../gadget/Devices
 
 aFlockTest_OBJS	= FlockStandalone.@OBJEXT@ aFlockTest.@OBJEXT@
 
+flockDebug_OBJS	= FlockStandalone.@OBJEXT@ flockDebug.@OBJEXT@
+
 aMotionStarTest_OBJS	= MotionStarStandalone.@OBJEXT@ aMotionStarTest.@OBJEXT@
 
 dummyTrackd_OBJS	= dummyTrackd.@OBJEXT@
@@ -101,10 +103,13 @@ FlockTest_OBJS	= FlockTest.@OBJEXT@
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-all: aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@
+all: aFlockTest@EXEEXT@ flockDebug@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@
 
 aFlockTest@EXEEXT@: $(aFlockTest_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(aFlockTest_OBJS) @APP_EXTRA_LIBS@
+
+flockDebug@EXEEXT@: $(flockDebug_OBJS)
+	$(LINK) @EXE_NAME_FLAG@ $(flockDebug_OBJS) @APP_EXTRA_LIBS@
 
 aMotionStarTest@EXEEXT@: $(aMotionStarTest_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(aMotionStarTest_OBJS) -lm
