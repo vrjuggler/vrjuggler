@@ -38,7 +38,9 @@
 #include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 
+#include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/Config/PropertyDefinition.h>
@@ -133,9 +135,55 @@ PropertyDefinition ConfigDefinition::getPropertyDefinition(const std::string& to
    {
       return PropertyDefinition(*prop_defs.begin()); // Return the property def
    }
+   // If we do not have the definition for the requested property, check our
+   // parent(s).
    else
    {
-      return PropertyDefinition(cppdom::NodePtr(NULL)); // Failed to find
+      cppdom::NodeList parents = mNode->getChildren(tokens::PARENT);
+
+      // Iterate over each parent until we find the property definition the
+      // caller requested.
+      for ( cppdom::NodeList::iterator p = parents.begin(); p != parents.end(); ++p )
+      {
+         const std::string p_name((*p)->getCdata());
+
+         // Minor optimization for empty <parent> XML nodes.  There may be a
+         // nicer way of doing this via the cppdom::Node interface.
+         if ( p_name == std::string("") )
+         {
+            continue;
+         }
+
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+            << "[ConfigDefinition::getPropertyDefinition()] Checking parent '"
+            << p_name << "' for property '" << token << "'\n"
+            << vprDEBUG_FLUSH;
+
+         ConfigDefinitionPtr parent_def =
+            ElementFactory::instance()->getConfigDefinition(p_name);
+
+         if ( parent_def.get() != NULL )
+         {
+            PropertyDefinition prop_def =
+               parent_def->getPropertyDefinition(token);
+
+            // We found the property definition we need.
+            if ( prop_def.getNode().get() != NULL )
+            {
+               return prop_def;
+            }
+         }
+         else
+         {
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
+               << "[ConfigDefinition::getPropertyDefinition()] WARNING: "
+               << "Failed to find parent of '" << this->getName()
+               << "' named '" << p_name << "'\n" << vprDEBUG_FLUSH;
+         }
+      }
+
+      // We failed to find the requested property definition.
+      return PropertyDefinition(cppdom::NodePtr(NULL));
    }
 }
 
