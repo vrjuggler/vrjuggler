@@ -77,7 +77,6 @@ Intersense::Intersense()
 {
     vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
     //vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
-    mData = NULL;
 }
 
 bool Intersense::config(jccl::ConfigChunkPtr c)
@@ -132,21 +131,13 @@ Intersense::~Intersense()
     this->stopSampling();
     if (stations != NULL)
         delete [] stations;
-    if (mData != NULL)
-        delete [] mData;
 }
 
 // Main thread of control for this active object
 void Intersense::controlLoop(void* nullParam)
 {
 
-    if (mData != NULL)
-        delete [] mData;
-
-    int numbuffs = (mTracker.NumStations())*3;
-    mData = new PositionData[numbuffs];
-
-// Configure the stations used by the configuration
+    // Configure the stations used by the configuration
     int j = 0;
     for( int i = 0; i < mTracker.NumStations(); i++ )
     {
@@ -224,83 +215,105 @@ int Intersense::sample()
 
     int i,  j;
 
+    IsenseData cur_sample;
+    std::vector< gadget::PositionData > cur_pos_samples( mTracker.NumStations() );
 
     mTracker.updateData();
 
     // get an initial timestamp for this entire sample. we'll copy it into
     // each PositionData for this sample.
-    int firstindex;
-    if (mTracker.NumStations() > 0) {
-        firstindex = getStationIndex (0, progress);
-        mData[firstindex].setTime();
+    //int firstindex;
+    if (!cur_pos_samples.empty())
+    {
+        //firstindex = getStationIndex (0, progress);
+        cur_pos_samples[0].setTime();
     }
-
 
     int k;
     int stationIndex;
     int min, num;
 
-    vpr::Thread::yield();
+    //vpr::Thread::yield();
 
-    for (i = 0 ; i < (mTracker.NumStations()); i++)
-    {
-        int index = getStationIndex(i,progress);
+   for (i = 0 ; i < (mTracker.NumStations()); i++)
+   {
+      //int index = getStationIndex(i,progress);
 
-        stationIndex = stations[i].stationIndex;
+      stationIndex = stations[i].stationIndex;
 
-        if( mTracker.rAngleFormat(stationIndex) == ISD_EULER ) {
-            mData[index].getPositionData()->makeZYXEuler(mTracker.zRot( stationIndex ),
-                                      mTracker.yRot( stationIndex ),
-                                      mTracker.xRot( stationIndex ));
-            mData[index].getPositionData()->setTrans(mTracker.xPos( stationIndex ),
-                                  mTracker.yPos( stationIndex ),
-                                  mTracker.zPos( stationIndex ));
-        } else {
-            
-            vrj::Quat quatValue(mTracker.xQuat( stationIndex ),
-                                mTracker.yQuat( stationIndex ),
-                                mTracker.zQuat( stationIndex ),
-                                mTracker.wQuat( stationIndex ));
-            mData[index].getPositionData()->makeQuaternion(quatValue);
-        }
+      if ( mTracker.rAngleFormat(stationIndex) == ISD_EULER )
+      {
+         cur_pos_samples[i].getPositionData()->makeZYXEuler(mTracker.zRot( stationIndex ),
+                                                      mTracker.yRot( stationIndex ),
+                                                      mTracker.xRot( stationIndex ));
+         cur_pos_samples[i].getPositionData()->setTrans(mTracker.xPos( stationIndex ),
+                                                  mTracker.yPos( stationIndex ),
+                                                  mTracker.zPos( stationIndex ));
+      }
+      else
+      {
 
-         mData[index].setTime (mData[firstindex].getTime());
-        
-// We start at the index of the first digital item (set in the config files)
-// and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)
-   min = stations[i].dig_min;
-   num = min + stations[i].dig_num;
-   if(stations[i].useDigital) {
-       for( j = 0, k = min; (j < MAX_NUM_BUTTONS) && (k < IS_BUTTON_NUM) && (k < num); j++, k++)
-      mInput[progress].digital[k] = mTracker.buttonState(stationIndex, j);
+         vrj::Quat quatValue(mTracker.xQuat( stationIndex ),
+                             mTracker.yQuat( stationIndex ),
+                             mTracker.zQuat( stationIndex ),
+                             mTracker.wQuat( stationIndex ));
+         cur_pos_samples[i].getPositionData()->makeQuaternion(quatValue);
+      }
+
+      cur_pos_samples[i].setTime (cur_pos_samples[0].getTime());
+
+      // We start at the index of the first digital item (set in the config files)
+      // and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)
+      min = stations[i].dig_min;
+      num = min + stations[i].dig_num;
+      if (stations[i].useDigital)
+      {
+         for ( j = 0, k = min; (j < MAX_NUM_BUTTONS) && (k < IS_BUTTON_NUM) && (k < num); j++, k++)
+         {
+            //mInput[progress].digital[k] = mTracker.buttonState(stationIndex, j);
+            cur_sample.digital[k] = mTracker.buttonState(stationIndex, j);
+         }
+      }
+      // Analog works the same as the digital
+      min = stations[i].ana_min;
+      num = min + stations[i].ana_num;
+      if (stations[i].useAnalog)
+      {
+         float f;
+         for ( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++)
+         {
+            Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
+            //mInput[progress].analog[k] = f;
+            cur_sample.analog[k] = f;
+         }
+      }
+
+   // Transforms between the cord frames
+   // See transform documentation and VR System pg 146
+   // Since we want the reciver in the world system, Rw
+   // wTr = wTt*tTr
+
+      vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+
+      world_T_transmitter = xformMat;                                       // Set transmitter offset from local info
+      transmitter_T_reciever = *(cur_pos_samples[i].getPositionData());           // Get reciever data from sampled data
+      world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
+      *(cur_pos_samples[i].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
+
    }
-// Analog works the same as the digital
-   min = stations[i].ana_min;
-   num = min + stations[i].ana_num;
-   if(stations[i].useAnalog) {
-       float f;
-       for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++) {
-           Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
-           mInput[progress].analog[k] = f;
-       }
-   }
 
-// Transforms between the cord frames
-// See transform documentation and VR System pg 146
-// Since we want the reciver in the world system, Rw
-// wTr = wTt*tTr
+    // Locks and then swaps the indices
+    mAnalogSamples.lock();
+    mDigitalSamples.lock();
+    mPosSamples.lock();
 
-        vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+    mAnalogSamples.addSample(cur_sample.analog);
+    mDigitalSamples.addSample(cur_sample.digital);
+    mPosSamples.addSample(cur_pos_samples);
 
-        world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-        transmitter_T_reciever = *(mData[index].getPositionData());           // Get reciever data from sampled data
-        world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-        *(mData[index].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
-
-   }
-
-// Locks and then swaps the indices
-    swapValidIndexes();
+    mPosSamples.unlock();
+    mDigitalSamples.unlock();
+    mAnalogSamples.unlock();
 
     return 1;
 }
@@ -335,54 +348,14 @@ int Intersense::stopSampling()
 }
 
 
-PositionData* Intersense::getPositionData (int dev) {
-    if (this->isActive() == false) {
-        return NULL;
-    }
-    else
-        return &mData[getStationIndex (dev, current)];
-}
-
-
-DigitalData* Intersense::getDigitalData( int d )
-{
-    if(this->isActive() == false)
-        return 0;
-
-    return &(mInput[current].digital[d]);
-}
-
-AnalogData* Intersense::getAnalogData( int d )
-{
-//    float newValue;
-    if(this->isActive() == false)
-        return 0;
-    return &(mInput[current].analog[d]);
-//      Analog::normalizeMinToMax(mInput[current].analog[d], newValue);
-//      return newValue;
-}
-
-
 void Intersense::updateData()
 {
-    if (this->isActive() == false)
-   return;
-    int i;
+   if (!isActive())
+      return;
 
-// this unlocks when this object is destructed (upon return of the function)
-    vpr::Guard<vpr::Mutex> updateGuard(lock);
-
-
-// TODO: modify the datagrabber to get correct data
-// Copy the valid data to the current data so that both are valid
-    for(i=0;i<mTracker.NumStations();i++)
-        mData[getStationIndex(i,current)] = mData[getStationIndex(i,valid)];   // first hand
-    for(i=0;i<IS_BUTTON_NUM;i++)
-        mInput[current].digital[i] = mInput[valid].digital[i];
-    for(i=0;i<IS_ANALOG_NUM;i++)
-        mInput[current].analog[i] = mInput[valid].analog[i];
-// Locks and then swap the indicies
-    swapCurrentIndexes();
+   mDigitalSamples.swapBuffers();
+   mAnalogSamples.swapBuffers();
+   mPosSamples.swapBuffers();
 }
 
 
