@@ -33,7 +33,7 @@
 #define _JCCL_PERFORMANCE_MONITOR_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Net/JackalControl.h>
+//#include <jccl/Net/JackalControl.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
@@ -45,17 +45,18 @@
 namespace jccl
 {
 
-class Connect;
-class JackalServer;
-class PeriodicCommand;
+//class Connect;
+//class JackalServer;
+//class PeriodicCommand;
 
 
 /** Jackal Performance-monitoring agent.
  *
  *  @version $Revision$, $Date$
  */
-class JCCL_CLASS_API PerformanceMonitor: public JackalControl,
-                                         public ConfigChunkHandler
+//class JCCL_CLASS_API PerformanceMonitor: public JackalControl,
+//                                         public ConfigChunkHandler
+class JCCL_CLASS_API PerformanceMonitor: public ConfigChunkHandler
 {
 
 public:
@@ -75,13 +76,13 @@ public:
    }
 
 
-   
+/*
    //--------------- JackalControl Stuff -----------------------
 
    virtual void addConnect (Connect *c);
 
    virtual void removeConnect (Connect* c);
-
+*/
 
    //---------------- ConfigChunkHandler Stuff -----------------
 
@@ -96,23 +97,26 @@ public:
 private:
 
    std::string               mPerfTargetName;
-   Connect*                  mPerfTarget;
+//   Connect*                  mPerfTarget;
    float                     mPerfRefreshTime;  // in milliseconds
    ConfigChunkPtr            mCurrentPerfConfig;
 
    vpr::TSObjectProxy<LabeledPerfDataBuffer> mTSBuffers;
 
-   PeriodicCommand* mBuffersCommand;
+//   PeriodicCommand* mBuffersCommand;
 
    void activatePerfBuffers();
    void deactivatePerfBuffers();
 
-   void setPerformanceTarget (Connect* con);
+//   void setPerformanceTarget (Connect* con);
 
 
    // These are needed to appease Visual C++ in its creation of DLLs.
+//   PerformanceMonitor(const PerformanceMonitor&)
+//      : JackalControl(), ConfigChunkHandler()
+//   {;}
    PerformanceMonitor(const PerformanceMonitor&)
-      : JackalControl(), ConfigChunkHandler()
+      : ConfigChunkHandler()
    {;}
    void operator=(const PerformanceMonitor&) {;}
 
