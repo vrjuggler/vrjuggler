@@ -68,8 +68,7 @@ pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend pfNav pfBasicConfigNav pfSwitcher pfNav.exe	\
-          pfNav.ilk $(PFNAV_OBJECTS) *core so_locations *.?db
+	rm -f pfNav $(PFNAV_OBJECTS) *core
 	rm -rf ./ii_files
 
 # -----------------------------------------------------------------------------
