@@ -60,14 +60,12 @@ public:
         mWand.init(wand);
         //OSG::osgInit(0,0);
 
-        //initRenderer();
+        initRenderer();
         //myInit();
 
     }
 
     void myInit(void);
-    void highlightChanged(void);
-    void updateHighlight(void);
     void initRenderer();
 
     virtual OSG::RenderAction * getAction()
@@ -116,10 +114,6 @@ public:
     float speed;
 
     std::string mFileToLoad;
-
-    OSG::NodePtr              _highlight;
-    OSG::NodePtr              _highlightNode;
-    OSG::GeoPositions3fPtr    _highlightPoints;
 
     OSG::NodePtr              _root;
 
