@@ -462,15 +462,11 @@ public class ConfigChunk
                // A child chunk property.
                if (ValType.EMBEDDEDCHUNK == val_type)
                {
-                  // This gets the child of prop that is the embedded chunk.
-                  String chunk_type = prop_desc.getAllowedType(0);
-
-                  Element child = prop.getChild(chunk_type);
-
-                  // If we have a child chunk, we can return it.  Otherwise,
-                  // we return an empty VarValue object.
-                  if (null != child)
+                  // Gets the child at the requested index if it exists.
+                  // Otherwise, return a null object.
+                  if (index < prop.getChildren().size())
                   {
+                     Element child = (Element)prop.getChildren().get(index);
                      ConfigChunk child_chunk = new ConfigChunk(child);
                      value = child_chunk;
                   }

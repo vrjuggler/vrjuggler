@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-09-2003 nonchocoboy Embedded chunks may now be heterogenously defined. The
+                        allowed types list is used to specify which types of
+                        chunks are allowed for a given property containing
+                        embedded chunks.
 Mar-04-2003 allenb      Fixed config chunk and config description equality
                         operators.  Commented out old un-used dependency
                         sorting method.
