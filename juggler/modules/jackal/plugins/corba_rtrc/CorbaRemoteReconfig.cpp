@@ -99,6 +99,11 @@ vpr::ReturnStatus CorbaRemoteReconfig::init()
 
             if ( status.success() )
             {
+               // Customize the Subject Manager information a little to help
+               // users.
+               mCorbaManager->getSubjectManager()->addInfoItem("Usage",
+                                                               "Config Manager");
+
                // Create an intstance of our subject.
                mInterface = new RemoteReconfigSubjectImpl;
             }
