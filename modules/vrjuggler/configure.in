@@ -39,6 +39,7 @@
 
 AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
+AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
 DPP_PREREQ(1.4.98)
 DPP_INIT
