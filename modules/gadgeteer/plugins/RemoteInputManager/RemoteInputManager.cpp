@@ -214,7 +214,7 @@ namespace cluster
                //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "RIM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
                //temp_data_packet->printData(1);
 
-               gadget::Input* virtual_device = getVirtualDevice(temp_data_packet->getId());
+               gadget::Input* virtual_device = getVirtualDevice(temp_data_packet->getObjectId());
                if ( virtual_device != NULL )
                {                  
                   vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
