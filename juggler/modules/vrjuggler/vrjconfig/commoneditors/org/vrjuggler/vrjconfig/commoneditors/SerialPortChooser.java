@@ -173,7 +173,7 @@ public class SerialPortChooser
        * @param devRegExp The regular expression that will be used for matching
        *                  against java.io.File objects.
        *
-       * @see accept
+       * @see #accept(java.io.File)
        */
       public MatchFilter(String devRegExp)
       {
