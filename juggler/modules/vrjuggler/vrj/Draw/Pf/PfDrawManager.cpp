@@ -30,16 +30,18 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  */
-
+#define PF_C_API 1
 
 #include <vjConfig.h>
 
+#include <Performer/pf.h>
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfScene.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pf/pfLightSource.h>
 #include <Performer/pfdu.h>
+#include <Performer/pf/pfTraverser.h>
 
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
@@ -56,6 +58,7 @@ void vjPfDrawFuncStereoRight(pfChannel *chan, void* chandata);
 void vjPfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata);
 void vjPfDrawFuncSimulator(pfChannel* chan, void* chandata);
 
+//void vjPfAppFunc(pfChannel *chan, void* chandata);
 
 vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
@@ -150,6 +153,7 @@ void vjPfDrawManager::draw()
    callAppChanFuncs();
 
    vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
 
    pfFrame();
 }
@@ -285,7 +289,6 @@ void vjPfDrawManager::initDrawing()
       tempPfDisp.pWin->setConfigFunc(vjPFconfigPWin); // Set config function
       tempPfDisp.pWin->config();                      // Next pfFrame, config Func will be called
 
-
       // --- Setup Channels --- //
       // Left
       tempPfDisp.chans[pfDisp::LEFT] = new pfChannel(localPipe);
@@ -326,20 +329,40 @@ void vjPfDrawManager::initDrawing()
 
 
    // ----- SETUP MASTER CHANNEL ----- //
-   pfChannel* masterChan = disps[0].chans[pfDisp::LEFT];
-   vjASSERT(masterChan != NULL);
+   mMasterChan = disps[0].chans[pfDisp::LEFT];
+   vjASSERT(mMasterChan != NULL);
 
    // Setup all Shared properties
-   masterChan->setNearFar(0.05, 10000.0f);
+   //mMasterChan->setNearFar(0.05, 10000.0f);      // XXX: Look here near far information
 
-   vjASSERT(masterChan != NULL);
+   vjASSERT(mMasterChan != NULL);
 
-   masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+
+   int cur_master_share = mMasterChan->getShare();          // Get current setting, and OR the new stuff on
+   mMasterChan->setShare(cur_master_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
                         PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
-   //masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-   //                     PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
-   //                     PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
+
+
+   /*
+   unsigned cur_share = pfGetChanShare(mMasterChan);              // Get the current attribs
+   pfChanShare(mMasterChan, cur_share | PFCHAN_APPFUNC);          // Set share mode with APPFUNC
+   */
+
+   /*
+   pfChanShare(mMasterChan, cur_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+                        */
+
+
+   /*
+   mMasterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
+
+   mMasterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                        PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
+   */
 
    // ----- SETUP CHANNEL GROUP ---- //
    unsigned dispIndex=0;
@@ -352,9 +375,9 @@ void vjPfDrawManager::initDrawing()
       vjASSERT(NULL != left_ch);
 
       if (dispIndex != 0)                    // Assumes that all displays will have a valid left channel
-         masterChan->attach(left_ch);
+         mMasterChan->attach(left_ch);
       if(right_ch != NULL)
-         masterChan->attach(right_ch);
+         mMasterChan->attach(right_ch);
    }
 
    // --- Setup channel's scene --- //
@@ -368,14 +391,13 @@ void vjPfDrawManager::initDrawing()
             disps[dispIndex].chans[pfDisp::LEFT]->setScene(mRootWithSim);
       } else {
          if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
-            disps[dispIndex].chans[pfDisp::LEFT]->setScene(sceneRoot);
+            disps[dispIndex].chans[pfDisp::LEFT]->setScene(mSceneRoot);
          if (disps[dispIndex].chans[pfDisp::RIGHT] != NULL)
-            disps[dispIndex].chans[pfDisp::RIGHT]->setScene(sceneRoot);
+            disps[dispIndex].chans[pfDisp::RIGHT]->setScene(mSceneRoot);
       }
    }
 
-   vjASSERT(sceneRoot != NULL);
-
+   vjASSERT(mSceneRoot != NULL);
 
    //pfFrame();
 
@@ -442,10 +464,10 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
 void vjPfDrawManager::initPerformerApp()
 {
    app->initScene();
-   sceneRoot = new pfScene;
+   mSceneRoot = new pfScene;
    mSceneGroup = app->getScene();
-   sceneRoot->addChild(mSceneGroup);      // Create the base scene without sim
-   mRootWithSim->addChild(mSceneGroup);   // Create base scene with sim
+   mSceneRoot->addChild(mSceneGroup);        // Create the base scene without sim
+   mRootWithSim->addChild(mSceneGroup);      // Create base scene with sim
 }
 
 void vjPfDrawManager::initLoaders()
@@ -602,17 +624,38 @@ vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 
 void vjPfDrawManager::debugDump()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- vjPfDrawManager: " << (void*)this << " ------------" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR,0)       << "app:" << (void*)app << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "scene:" << (void*)sceneRoot << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0)       << "scene:" << (void*)mSceneRoot << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0)       << "sim scene:" << (void*)mRootWithSim << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR,0)       << "Disps:" << disps.size() << endl << vjDEBUG_FLUSH;
 
    for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
    {
       vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "Display:" << (void*)(i->disp) << endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_DRAW_MGR,0) << "pWin:" << (void*)(i->pWin) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "vis id:" << hex << i->pWin->getFBConfigId() << dec << endl << vjDEBUG_FLUSH;
-      vjDEBUG_END(vjDBG_DRAW_MGR,0) << "chans: L:" << (void*)(i->chans[pfDisp::LEFT]) << "\tR:" << (void*)(i->chans[pfDisp::RIGHT]) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "vis id:" << hex << i->pWin->getFBConfigId() << endl << vjDEBUG_FLUSH;
+      pfChannel* l_chan = (i->chans[pfDisp::LEFT]);
+      pfChannel* r_chan = (i->chans[pfDisp::RIGHT]);
+      unsigned lc_mask,rc_mask;
+      if(l_chan != NULL)
+         lc_mask = l_chan->getShare();
+      if(r_chan != NULL)
+         rc_mask = r_chan->getShare();
+      vjDEBUG_END(vjDBG_DRAW_MGR,0)  << "chans: L:" << (void*)l_chan
+                                     << "  shared: FOV:" << (lc_mask & PFCHAN_FOV)
+                                     << " Scene:" << (lc_mask & PFCHAN_SCENE)
+                                     << " AppFunc:" << (lc_mask & PFCHAN_APPFUNC)
+                                     << " SwapBuff:" << (lc_mask & PFCHAN_SWAPBUFFERS)
+                                     << " SwapBuff-HW:" << (lc_mask & PFCHAN_SWAPBUFFERS_HW)
+                                     << endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_DRAW_MGR,0) << "       R:" << (void*)r_chan
+                                     << "  shared: FOV:" << (rc_mask & PFCHAN_FOV)
+                                     << " Scene:" << (rc_mask & PFCHAN_SCENE)
+                                     << " AppFunc:" << (rc_mask & PFCHAN_APPFUNC)
+                                     << " SwapBuff:" << (rc_mask & PFCHAN_SWAPBUFFERS)
+                                     << " SwapBuff-HW:" << (rc_mask & PFCHAN_SWAPBUFFERS_HW)
+                                     << endl << vjDEBUG_FLUSH;
    }
    vjDEBUG_END(vjDBG_DRAW_MGR,0) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
 }
@@ -636,6 +679,31 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 }
 
 
+/*
+void vjPfAppFunc(pfChannel *chan, void* chandata)
+{
+   vjDEBUG(vjDBG_DRAW_MGR, 0) << "--- vjPfAppFunc: Enter ---.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, 0) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+
+   pfChannel* master_chan = vjPfDrawManager::instance()->mMasterChan;
+   if(master_chan == chan)
+   {
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "I am the master of the house:\n" << vjDEBUG_FLUSH;
+      if(vjPfDrawManager::instance()->mPfAppCalled == false)      // Haven't called it yet
+      {
+         vjDEBUG(vjDBG_DRAW_MGR,0) << "pfApp has not been called yet.  Let me do it...\n" << vjDEBUG_FLUSH;
+         vjPfDrawManager::instance()->mPfAppCalled = true;
+         pfApp();
+      }
+   }
+   else
+   {
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "I am not master. I can't do anything.\n" << vjDEBUG_FLUSH;
+   }
+}
+*/
+
+
 // --- Traversal functions --- //
 // This function is the performer draw callback function
 // - Sets up the correct OGL drawing buffer
@@ -646,7 +714,7 @@ void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFunc: Enter ---.\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << endl << vjDEBUG_FLUSH;
 
-      // Select correct buffer to draw to                              d b
+      // Select correct buffer to draw to
       // If we are in stereo and not a simulator
    if(stereo && !simulator)
    {
@@ -682,8 +750,6 @@ void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
 
    vjDEBUG_END(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFunc: Exit ---.\n" << vjDEBUG_FLUSH;
 }
-
-
 
 /*********************************************************************
 *  Draw traversal functions.

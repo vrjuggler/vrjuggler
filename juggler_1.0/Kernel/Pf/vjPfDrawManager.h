@@ -55,6 +55,7 @@ class vjSimDisplay;
     // Performer Config function called in draw proc after window is set up
 void vjPFconfigPWin(pfPipeWindow* pWin);
 void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
+void vjPfAppFunc(pfChannel *chan, void* chandata);
 
 //------------------------------------------------------------
 //: Concrete singleton class for API specific Draw Manager.
@@ -152,6 +153,7 @@ public:
 
    friend void vjPFconfigPWin(pfPipeWindow* pWin);
    friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
+   friend void vjPfAppFunc(pfChannel *chan, void* chandata);
 
 public: // Chunk handlers
    //: Can the handler handle the given chunk?
@@ -159,7 +161,7 @@ public: // Chunk handlers
    //+          false - Can't handle it
    virtual bool configCanHandle(vjConfigChunk* chunk);
 
-protected:     // --- Config handling functions --- //   
+protected:     // --- Config handling functions --- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
@@ -169,7 +171,7 @@ protected:     // --- Config handling functions --- //
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
    virtual bool configRemove(vjConfigChunk* chunk)
-   { 
+   {
       vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vjDEBUG_FLUSH;
       return false;
    }
@@ -220,12 +222,13 @@ protected:
    unsigned int mNumPipes;    // The number of Performer pipes
 
    // --- Performer State --- //
-   vjPfApp*             app;        // There User applications
-   std::vector<pfDisp>  disps;      // List of displays with Performer data
-   std::vector<pfPipe*> pipes;      // Performer pipes we have opened
-   std::vector<char*> mPipeStrs;     // The X-Strs of the pipes
-   pfScene*          sceneRoot;     // Root of Performer tree to render
-   pfGroup*          mSceneGroup;   // The group node with only sceneRoot under it
+   vjPfApp*             app;           // There User applications
+   pfChannel*           mMasterChan;   // Master channel
+   std::vector<pfDisp>  disps;         // List of displays with Performer data
+   std::vector<pfPipe*> pipes;         // Performer pipes we have opened
+   std::vector<char*>   mPipeStrs;     // The X-Strs of the pipes
+   pfScene*             mSceneRoot;    // Root of Performer tree to render
+   pfGroup*             mSceneGroup;   // The group node with only sceneRoot under it
 
    // ---- Simulator stuff --- //
    pfGroup*          mSimTree;      // The simulator scene graph
@@ -245,11 +248,13 @@ public:
       }
       return _instance;
    }
-   
+
 protected:
-   
+
    vjPfDrawManager() {
-      sceneRoot    = NULL;
+      mMasterChan = NULL;
+      mSceneRoot    = NULL;
+      mSceneGroup = NULL;
       mSimTree     = NULL;
       mRootWithSim = NULL;
       mHeadDCS     = NULL;
@@ -257,7 +262,7 @@ protected:
    }
 
    virtual ~vjPfDrawManager() {}
-   
+
 
 private:
    static vjPfDrawManager* _instance;
