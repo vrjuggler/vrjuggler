@@ -48,7 +48,7 @@
 class torusApp : public vrj::GlApp
 {
 public:
-   torusApp(vrj::Kernel* kern) : vrj::GlApp(kern)
+   torusApp(vrj::Kernel* kern) : vrj::GlApp(kern), mTorusRotation(0.0f)
    {;}
 
    virtual ~torusApp (void) {
@@ -102,6 +102,7 @@ private:
 
 private:
    gadget::PositionInterface    mWand;
+   float                        mTorusRotation;
 };
 
 #endif
