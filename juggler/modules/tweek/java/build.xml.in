@@ -5,11 +5,18 @@
    <property name="debug" value="on" />
    <property name="optimize" value="off" />
 
+   <property name="jdomdir" value="@JUGGLERROOT_ABS@/external/jdom" />
    <property name="lafdir" value="@JUGGLERROOT_ABS@/external/swing-laf" />
    <property name="kunststoff_srcdir" value="${lafdir}/kunststoff/sources" />
 
    <path id="tweek.classpath">
-      <pathelement path="@JDOM_JAR@" />
+      <pathelement path="${jdomdir}/jdom.jar" />
+      <pathelement path="${jdomdir}/jaxen-core.jar" />
+      <pathelement path="${jdomdir}/jaxen-jdom.jar" />
+      <pathelement path="${jdomdir}/saxpath.jar" />
+      <pathelement path="${jdomdir}/xalan.jar" />
+      <pathelement path="${jdomdir}/xerces.jar" />
+      <pathelement path="${jdomdir}/xml-apis.jar" />
       <pathelement path="@JAVA_ORB_JAR@" />
       <pathelement path="${lafdir}/metouia/metouia.jar" />
       <pathelement path="${lafdir}/jgoodies-looks/looks.jar" />
