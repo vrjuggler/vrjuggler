@@ -223,7 +223,7 @@
             <mediaobject>
               <imageobject>
                 <imagedata align="center" fileref="figures/AppHierarchy.png"
-                format="PNG" scalefit="1" />
+                format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -583,8 +583,7 @@ int main(int argc, char* argv[])
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/userOglApp_hierarchy.png" format="PNG"
-              scalefit="1" />
+              fileref="figures/userOglApp_hierarchy.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -806,7 +805,7 @@ int main(int argc, char* argv[])
             <mediaobject>
               <imageobject>
                 <imagedata align="center" fileref="figures/GlAppHierarchy.png"
-                format="PNG" scalefit="1" />
+                format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -895,8 +894,7 @@ int main(int argc, char* argv[])
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                fileref="figures/userPfApp_hierarchy.png" format="PNG"
-                scalefit="1" />
+                fileref="figures/userPfApp_hierarchy.png" format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -3341,8 +3339,7 @@ public:
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/userOglApp_hierarchy.png" format="PNG"
-              scalefit="1" />
+              fileref="figures/userOglApp_hierarchy.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -4148,8 +4145,7 @@ void contextApp::draw()
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/userPfApp_hierarchy.png" format="PNG"
-              scalefit="1" />
+              fileref="figures/userPfApp_hierarchy.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -4577,8 +4573,7 @@ pfDraw();</programlisting>
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/userOpenSGApp_hierarchy.png" format="PNG"
-              scalefit="1" />
+              fileref="figures/userOpenSGApp_hierarchy.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
