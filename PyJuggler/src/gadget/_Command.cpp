@@ -121,7 +121,7 @@ void _Export_Command()
              "The given samples are added to the buffers.\n"
              "Arguments:\n"
              "sampleList -- The list of newly collected samples as a\n"
-             "              gadget.CommandDataVec object."
+             "              gadget.DigitalDataVec object."
          )
         .def("swapCommandBuffers",
              &gadget::Command::swapCommandBuffers,
@@ -138,12 +138,6 @@ void _Export_Command()
              "getCommandDataBuffer() -> list of lists of CommandData objects\n"
              "Returns the current stable sample buffers for this device."
          )
-    ;
-
-    class_< std::vector<gadget::CommandData> >("CommandDataVec",
-        "An indexable container of gadget.DigitalData objects."
-        )
-        .def(vector_indexing_suite< std::vector<gadget::CommandData> >())
     ;
 
 }
