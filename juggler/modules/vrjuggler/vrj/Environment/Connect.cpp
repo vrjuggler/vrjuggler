@@ -23,6 +23,11 @@
 // author: Christopher Just
 
 
+#include <iostream.h>
+#include <fstream.h>
+#include <sys/types.h>
+#include <sys/poll.h>
+
 #include <Environment/vjConnect.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
@@ -30,11 +35,6 @@
 #include <Environment/vjEnvironmentManager.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Kernel/vjKernel.h>
-
-#include <iostream.h>
-#include <fstream.h>
-#include <sys/types.h>
-#include <sys/poll.h>
 
 
 

@@ -22,12 +22,12 @@
 #define _VJ_CONNECT_H_
 
 #include <vjConfig.h>
+#include <queue>
+#include <Environment/vjSocket.h>
 #include <Threads/vjThread.h>
 #include <Performance/vjTimeStamp.h>
 #include <Environment/vjCommand.h>
-#include <queue>
 
-#include <Environment/vjSocket.h>
 
 class vjTimedUpdate;
 class vjConfigChunk;
