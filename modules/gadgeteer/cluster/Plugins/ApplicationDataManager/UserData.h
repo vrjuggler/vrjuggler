@@ -91,8 +91,9 @@ public:
    {
       return BASE::readObject(reader);
    }
-
-private:      
+      
+#ifndef _MSC_VER
+private:
    // Make sure that we are not already deriving from ApplicationData
    BOOST_STATIC_ASSERT(::boost::type_traits::ice_not< 
                         (::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value) 
@@ -100,7 +101,7 @@ private:
    
    // Make sure that we are deriving from a SerializableObject class
    BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,BASE>::value));
-
+#endif
 };
 
 /* Allows the user to have a copy constructor
@@ -169,11 +170,11 @@ public:
    
    TYPE& operator*()
    { return *(mAppData); }
-
+#ifndef _MSC_VER
 private:      
    // Make sure that we are wrapping a type that is derived from ApplicationData
    BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,TYPE>::value));
-
+#endif
 private:
    cluster::AppDataMixin<TYPE>*    mAppData;
 };
