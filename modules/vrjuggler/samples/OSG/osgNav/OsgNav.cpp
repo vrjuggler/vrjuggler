@@ -23,21 +23,21 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:			 OsgNav.cpp,v
- * Date modified: 2000/10/30 16:06:10
- * Version:		 1.9
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <Math/vjVec3.h>
-#include <Math/vjCoord.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Coord.h>
 
 #include <OsgNav.h>
 
@@ -75,7 +75,7 @@ cout  << "Wand Buttons:"
 	mModelTrans->getMatrix().setTrans(mPos);
 
    // -- Get wand info -- //
-	Matrix* wandMatrix;
+	vrj::Matrix* wandMatrix;
 	wandMatrix = mWand->getData();		// Get the wand matrix
 	
 	osg::Matrix osgWandMat;
@@ -83,18 +83,18 @@ cout  << "Wand Buttons:"
 	osgWandMat.set(wandMatrix->getFloatPtr());
 		
    	
-   if(mButton0->getData() == Digital::ON)
+   if(mButton0->getData() == vrj::Digital::ON)
 	{
       //Move in the direction of the wand
 		speed = speed + inc;
       cout << "speed: " << speed << std::endl;
 	}
-	if(mButton1->getData() == Digital::ON)
+	if(mButton1->getData() == vrj::Digital::ON)
 	{
 		//joint->preRotate(5.0f, 0.0f, 0.0f, 1.0f);
       speed = 0;
 	}
-	if(mButton2->getData() == Digital::ON)
+	if(mButton2->getData() == vrj::Digital::ON)
 	{
 		//joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
 		speed = speed - inc;
@@ -103,8 +103,8 @@ cout  << "Wand Buttons:"
 
 
 	//Navigation	
-	Vec3 direction;
-	Vec3 Zdir = Vec3(0.0f, 0.0f, speed);
+	vrj::Vec3 direction;
+	vrj::Vec3 Zdir = vrj::Vec3(0.0f, 0.0f, speed);
 	direction.xformVec(*wandMatrix, Zdir);
 	mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
 }

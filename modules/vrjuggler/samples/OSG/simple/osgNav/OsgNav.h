@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:			 wandApp.h,v
- * Date modified: 2000/10/30 16:06:10
- * Version:		 1.19
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -33,19 +33,19 @@
 #ifndef _OSG_NAV_
 #define _OSG_NAV_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <iostream>
 //using namespace std;
 
 #include <iomanip>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Math/Matrix.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/AnalogInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
 //OSG  includes
 #include <osg/Geode>
@@ -61,7 +61,7 @@
 #include <osgDB/ReadFile>
 #include <math.h>
 
-#include <Kernel/OSG/vjOsgApp.h>
+#include <vrj/Draw/OSG/OsgApp.h>
 
 using namespace std;
 
@@ -71,11 +71,11 @@ using namespace std;
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class OsgNav : public OsgApp
+class OsgNav : public vrj::OsgApp
 {
 public:
-	OsgNav(Kernel* kern)
-		: OsgApp(kern)			// Initialize base class
+	OsgNav(vrj::Kernel* kern)
+		: vrj::OsgApp(kern)			// Initialize base class
 	{
       mFileToLoad = std::string("");
    }
@@ -194,14 +194,14 @@ private:
    std::string mFileToLoad;
 
 public:
-	PosInterface	 mWand;		// the Wand
-	PosInterface	 mHead;		// the head
-	DigitalInterface	mButton0;
-	DigitalInterface	mButton1;
-	DigitalInterface	mButton2;
-	DigitalInterface	mButton3;
-	DigitalInterface	mButton4;
-	DigitalInterface	mButton5;	
+	vrj::PosInterface	 mWand;		// the Wand
+	vrj::PosInterface	 mHead;		// the head
+	vrj::DigitalInterface	mButton0;
+	vrj::DigitalInterface	mButton1;
+	vrj::DigitalInterface	mButton2;
+	vrj::DigitalInterface	mButton3;
+	vrj::DigitalInterface	mButton4;
+	vrj::DigitalInterface	mButton5;	
 };
 
 
