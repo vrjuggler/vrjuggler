@@ -141,4 +141,67 @@ vpr::ReturnStatus SocketStreamImplSIM::addConnector ( const vpr::SocketImplSIM* 
    return vpr::ReturnStatus(vpr::ReturnStatus::InProgress);
 }
 
+vpr::ReturnStatus SocketStreamImplSIM::isReadReady (const vpr::Interval timeout)
+   const
+{
+   vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+
+   if ( vpr::Interval::NoWait == timeout )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "SocketStreamImplSIM::isReadReady(): Timeouts not supported "
+         << "with sim sockets--yet\n" << vprDEBUG_FLUSH;
+   }
+
+//   if ( vpr::Interval::NoWait == timeout )
+//   {
+      if ( mOpen && NULL != mPeer && mArrivedQueue.size() > 0 )
+      {
+         status.setCode(vpr::ReturnStatus::Succeed);
+      }
+
+      if ( mOpen && getConnectorCount() > 0 )
+      {
+         status.setCode(vpr::ReturnStatus::Succeed);
+      }
+//   }
+/*
+   XXX: Will there be a way to handle waiting until the timeout expires?
+   else
+   {
+   }
+*/
+
+   return status;
+}
+
+vpr::ReturnStatus SocketStreamImplSIM::isWriteReady (const vpr::Interval timeout)
+   const
+{
+   vpr::ReturnStatus status;
+
+   if ( vpr::Interval::NoWait == timeout )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "SocketStreamImplSIM::isWriteReady(): Timeouts not supported with "
+         << "sim sockets--yet\n" << vprDEBUG_FLUSH;
+   }
+
+//   if ( vpr::Interval::NoWait == timeout )
+//   {
+      if ( ! mOpen || NULL == mPeer )
+      {
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
+//   }
+/*
+   XXX: Will there be a way to handle waiting until the timeout expires?
+   else
+   {
+   }
+*/
+
+   return status;
+}
+
 } // End of vpr namespace

@@ -255,64 +255,6 @@ vpr::ReturnStatus SocketImplSIM::setOption (const vpr::SocketOptions::Types opti
    return vpr::ReturnStatus();
 }
 
-vpr::ReturnStatus SocketImplSIM::isReadReady (const vpr::Interval timeout)
-   const
-{
-   vpr::ReturnStatus status;
-
-   if ( vpr::Interval::NoWait == timeout )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "SocketImplSIM::isReadReady(): Timeouts not supported with sim "
-         << "sockets--yet\n" << vprDEBUG_FLUSH;
-   }
-
-//   if ( vpr::Interval::NoWait == timeout )
-//   {
-      if ( ! mOpen || NULL == mPeer || mArrivedQueue.size() == 0 )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-//   }
-/*
-   XXX: Will there be a way to handle waiting until the timeout expires?
-   else
-   {
-   }
-*/
-
-   return status;
-}
-
-vpr::ReturnStatus SocketImplSIM::isWriteReady (const vpr::Interval timeout)
-   const
-{
-   vpr::ReturnStatus status;
-
-   if ( vpr::Interval::NoWait == timeout )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "SocketImplSIM::isWriteReady(): Timeouts not supported with sim "
-         << "sockets--yet\n" << vprDEBUG_FLUSH;
-   }
-
-//   if ( vpr::Interval::NoWait == timeout )
-//   {
-      if ( ! mOpen )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-//   }
-/*
-   XXX: Will there be a way to handle waiting until the timeout expires?
-   else
-   {
-   }
-*/
-
-   return status;
-}
-
 vpr::ReturnStatus SocketImplSIM::inExceptState ()
 {
    // XXX: For now, we never go into an exceptional state.
