@@ -416,6 +416,8 @@ inline void Scene::_renderWoodTexture()
     //set repeat or clamp mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    cout<<"Loaded wood texture into OpenGL.\n"<<flush;
 }
 
 inline void Scene::init()
@@ -472,4 +474,6 @@ inline void Scene::init()
     glBindTextureEXT(GL_TEXTURE_2D, _woodBitmapBindId);
 #endif
     this->_renderWoodTexture();
+    
+    cout<<"Initialized scene.\n"<<flush;
 }
