@@ -53,7 +53,7 @@ default: TestSuite
 SUBDIRS=	SerialPort	\
 		Socket		\
 		Sync		\
-		Threads		\
+		Thread		\
 		TestSuite
 
 all: $(SUBDIRS)
