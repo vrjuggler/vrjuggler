@@ -1,6 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Aug-15-2002 nonchocoboy Fleshed out the browse tab of the ChunkDescChooser.
+Aug-20-2002 nonchocoboy The ConfigBroker will now popup a dialog asking the
+                        user to choose a destination resource when adding a new
+                        ConfigChunk or ChunkDesc if there is more than one
+                        valid resource in the active context.
+                        NEW VERSION: 0.8.1
+Aug-19-2002 nonchocoboy Fleshed out the browse tab of the ChunkDescChooser.
 Aug-15-2002 nonchocoboy Integated editors with the ConfigBroker and contexts.
                         NEW VERSION: 0.8.0
 Aug-15-2002 nonchocoboy Added ability to add new values to properties with
