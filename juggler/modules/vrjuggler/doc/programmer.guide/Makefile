@@ -8,7 +8,12 @@ XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
 PDF_FILES=	$(NAME).pdf
 
-$(NAME).html: $(NAME).xml
-$(NAME).pdf: $(NAME).xml $(NAME).fo
+SVG_IMAGES=	figures/Kernel_Loop_Call_Sequence.svg		\
+		figures/userOglApp_hierarchy.svg		\
+		figures/userPfApp_hierarchy.svg
+IMAGES=		$(SVG_IMAGES:%.svg=%.png)
+
+$(NAME).html: $(NAME).xml $(IMAGES)
+$(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
 
 include ../../../../docs/docbook.mk
