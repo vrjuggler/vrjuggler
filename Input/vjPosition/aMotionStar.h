@@ -95,8 +95,8 @@ extern const unsigned char TRANSMITTER_RUNNING;
 extern const unsigned char SUDDEN_OUTPUT_CHANGE;
 extern const unsigned char XYZ_REFERENCE;
 extern const unsigned char APPEND_BUTTON_DATA;
-extern const unsigned char AC_NARROW_NOT_CHFILTER;
-extern const unsigned char AC_WIDE_NOT_CHFILTER;
+extern const unsigned char AC_NARROW_FILTER;
+extern const unsigned char AC_WIDE_FILTER;
 extern const unsigned char DC_FILTER;
 
 // ----------------------------------------------------------------------------

@@ -61,12 +61,12 @@ const unsigned char SENSOR_PRESENT      = 0x04;
 const unsigned char TRANSMITTER_PRESENT = 0x02;
 const unsigned char TRANSMITTER_RUNNING = 0x01;
 
-const unsigned char SUDDEN_OUTPUT_CHANGE   = 0x20;
-const unsigned char XYZ_REFERENCE          = 0x10;
-const unsigned char APPEND_BUTTON_DATA     = 0x08;
-const unsigned char AC_NARROW_NOT_CHFILTER = 0x04;
-const unsigned char AC_WIDE_NOT_CHFILTER   = 0x02;
-const unsigned char DC_FILTER              = 0x01;
+const unsigned char SUDDEN_OUTPUT_CHANGE = 0x20;
+const unsigned char XYZ_REFERENCE        = 0x10;
+const unsigned char APPEND_BUTTON_DATA   = 0x08;
+const unsigned char AC_NARROW_FILTER     = 0x04;
+const unsigned char AC_WIDE_FILTER       = 0x02;
+const unsigned char DC_FILTER            = 0x01;
 
 // ----------------------------------------------------------------------------
 // Convert the given Flock data format into a human-readable string that
@@ -201,10 +201,9 @@ operator<< (std::ostream& out, const BIRDNET::SINGLE_BIRD_STATUS& device) {
     out << " Button data: "
         << (device.setup & FLOCK::APPEND_BUTTON_DATA ? "ON" : "OFF") << "\n";
     out << " AC narrow filter: "
-        << (device.setup & FLOCK::AC_NARROW_NOT_CHFILTER ? "ON" : "OFF")
-        << "\n";
+        << (device.setup & FLOCK::AC_NARROW_FILTER ? "ON" : "OFF") << "\n";
     out << " AC wide filter: "
-        << (device.setup & FLOCK::AC_WIDE_NOT_CHFILTER ? "ON" : "OFF") << "\n";
+        << (device.setup & FLOCK::AC_WIDE_FILTER ? "ON" : "OFF") << "\n";
     out << " DC filter: "
         << (device.setup & FLOCK::DC_FILTER ? "ON" : "OFF") << "\n";
 
