@@ -13,8 +13,8 @@
       <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -94,8 +94,8 @@
       <enumeration name="PosProxy" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -178,8 +178,8 @@
       <enumeration name="PosProxy" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -496,8 +496,8 @@
       <item label="roll" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -577,8 +577,8 @@
       <item label="Extended Range" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -655,7 +655,7 @@
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
-      <item label="" defaultvalue="" />
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -704,8 +704,8 @@
       <item label="Range Maximum" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -867,8 +867,8 @@
       <item label="Sleep Time" defaultvalue="75" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -988,8 +988,8 @@
       <item label="Chassis Measurement Rate" defaultavlue="0.0" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1411,8 +1411,8 @@
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1574,8 +1574,8 @@
       <enumeration name="DigProxy" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1587,8 +1587,8 @@
       <enumeration name="simKeyDigital" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
