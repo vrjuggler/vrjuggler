@@ -64,21 +64,36 @@ class GADGET_CLASS_API SimSetablePosition
 #endif
 {
 public:
-   SimSetablePosition() {;}
-   virtual ~SimSetablePosition() {;}
+   SimSetablePosition()
+   {;}
+
+   virtual ~SimSetablePosition()
+   {;}
 
    virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
-   bool startSampling() { return 1; }
-   bool stopSampling() { return 1; }
-   bool sample() { return 1; }
+   bool startSampling()
+   {
+      return true;
+   }
+
+   bool stopSampling()
+   {
+      return true;
+   }
+
+   bool sample()
+   {
+      return true;
+   }
 
    /** Updates the data. */
-   virtual void updateData(){;}
+   virtual void updateData()
+   {;}
 
-   void setData(const std::vector<PositionData> &pos_data_vec);
-   void setData(const PositionData &pos_data);
+   void setData(const std::vector<PositionData>& posDataVec);
+   void setData(const PositionData& posData);
 
    static std::string getElementType();
 
@@ -103,9 +118,9 @@ protected:
 
 private:
    PositionData            mPos;                   /**<  The current position */
-
 };
 
 } // End of gadget namespace
+
 
 #endif
