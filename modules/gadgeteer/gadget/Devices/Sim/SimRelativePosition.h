@@ -61,16 +61,6 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-    /** Get current data from the receiver.
-     *  @arg dev - the virutal device number. 
-     *  @return a pointer to the receiver's current PositionData.
-     */
-    PositionData* getPositionData (int dev=0) {
-        vprASSERT (dev == 0);  // Make sure we have a valid dev.
-        return &mPos;
-    }
-
-
    /* These functions don't do anything */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
