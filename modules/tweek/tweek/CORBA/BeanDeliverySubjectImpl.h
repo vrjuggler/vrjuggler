@@ -194,11 +194,7 @@ private:
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
-   BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj)
-      : POA_tweek::BeanDeliverySubject(subj), tweek::SubjectImpl()
-   {
-      /* Do nothing. */ ;
-   }
+   BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj);
 
    BeanDeliverySubjectImpl& operator=(const BeanDeliverySubjectImpl& subj)
    {

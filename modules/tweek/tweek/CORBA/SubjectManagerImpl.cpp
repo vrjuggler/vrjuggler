@@ -275,4 +275,20 @@ void SubjectManagerImpl::initInfoMap()
    mInfoMap[APPNAME_KEY] = "unknown";
 }
 
+SubjectManagerImpl::SubjectManagerImpl(const SubjectManagerImpl& sm)
+   :
+#ifdef OMNIORB_VER
+     omniServant(sm)
+   , tweek::_impl_SubjectManager(sm)
+   ,
+#endif
+     PortableServer::ServantBase(sm)
+   , POA_tweek::SubjectManager(sm)
+   , PortableServer::RefCountServantBase(sm)
+   , mCorbaMgr(sm.mCorbaMgr)
+   , mInfoMap(sm.mInfoMap)
+{
+   /* Do nothing. */ ;
+}
+
 } // End of tweek namespace

@@ -234,4 +234,24 @@ void BeanDeliverySubjectImpl::removeActiveBean()
    tweek::SubjectImpl::notify();
 }
 
+// ============================================================================
+// Private methods follow.
+// ============================================================================
+
+BeanDeliverySubjectImpl::BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj)
+   :
+#ifdef OMNIORB_VER
+     omniServant(subj)
+   , tweek::_impl_Subject(subj)
+   , tweek::_impl_BeanDeliverySubject(subj)
+   ,
+#endif
+     PortableServer::ServantBase(subj)
+   , POA_tweek::Subject(subj)
+   , POA_tweek::BeanDeliverySubject(subj)
+   , tweek::SubjectImpl(subj)
+{
+   /* Do nothing. */ ;
+}
+
 }  // End of tweek namespace
