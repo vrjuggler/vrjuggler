@@ -15,7 +15,7 @@ PDF_FILES=	$(NAME).pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	vrjuggler/$(PROJECT_NUMBER)/perf.measure.guide
+instdir=	jccl/$(PROJECT_NUMBER)/perf.measure.guide
 
 prefix=		$(webroot)/$(instdir)
 INSTALL_DIRS=	figures
