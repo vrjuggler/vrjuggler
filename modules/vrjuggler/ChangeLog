@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-22-2004 patrickh    Removed vrj::Timer.  vpr::Interval should be used
+                        instead.
+Apr-28-2004 aronb       NEW VERSION: 1.1.151
 
 [2.0 Alpha 4 released - 4.28.2004]=============================================
 Apr-28-2004 aronb       NEW VERSION: 1.1.150
