@@ -20,8 +20,9 @@
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="-Zm400 -I. -I&quot;$(OSGROOT)/include&quot; -I&quot;$(OSGROOT)/lib/glut_3.7/include&quot; -I&quot;$(OSGROOT)/lib/jpg6b/include&quot; -I&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot; -I&quot;$(VJ_BASE_DIR)/include&quot; -I&quot;$(NSPR_ROOT)/include/nspr&quot;"
+				AdditionalOptions="-Zm400"
 				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(OSGROOT)/include&quot;;&quot;$(OSGROOT)/lib/glut_3.7/include&quot;;&quot;$(OSGROOT)/lib/jpg6b/include&quot;;&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;$(NSPR_ROOT)/include/nspr&quot;"
 				PreprocessorDefinitions="WIN32,_WINDOWS,WINVER=0x0400,_WIN32_WINDOWS=0x0410,_WIN32_WINNT=0x0400,_OSG_HAVE_CONFIGURED_H_,OSG_BUILD_DLL,_DEBUG,OSG_DEBUG,OSG_WITH_GLUT,OSG_WITH_GIF,OSG_WITH_TIF,OSG_WITH_JPG"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -70,6 +71,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm1200 -I&quot;$(OSGROOT)/include&quot; -I&quot;$(OSGROOT)/lib/glut_3.7/include&quot; -I&quot;$(OSGROOT)/lib/jpg6b/include&quot; -I&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot; -I&quot;$(VJ_BASE_DIR)/include&quot; -I&quot;$(NSPR_ROOT)/include/nspr&quot;"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories=".;&quot;$(OSGROOT)/include&quot;;&quot;$(OSGROOT)/lib/glut_3.7/include&quot;;&quot;$(OSGROOT)/lib/jpg6b/include&quot;;&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;$(NSPR_ROOT)/include/nspr&quot;"
 				PreprocessorDefinitions="WIN32,_WINDOWS,WINVER=0x0400,_WIN32_WINDOWS=0x0410,_WIN32_WINNT=0x0400,_OSG_HAVE_CONFIGURED_H_,OSG_BUILD_DLL,OSG_WITH_GLUT,OSG_WITH_GIF,OSG_WITH_TIF,OSG_WITH_JPG"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
