@@ -1111,7 +1111,7 @@ public:
    */
    int getRingIndicator()
    {
-      returm -1;
+      return -1;
    }
 
    /** Set the data terminal ready line. */
