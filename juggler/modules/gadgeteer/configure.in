@@ -161,6 +161,8 @@ DPP_HAVE_GNU_MAKE(3.78, ,
     [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 DPP_PROG_INSTALL
+DPP_PROG_LINKER
+DPP_LINKER_IS_GNU_LD([$LINKER])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -505,16 +507,18 @@ fi
 # Information needed to generate gadgeteer-config.
 case $OS_TYPE in
     UNIX)
-        if test "x$GXX" = "xyes" ; then
+        if test "x$GNU_LD" = "xyes" ; then
             static_begin="-Wl,-Bstatic"
             static_end="-Wl,-Bdynamic"
+            gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF -Wl,--export-dynamic"
+            gadget_ldflags_linker="-L\$prefix/lib\$LIBBITSUF --export-dynamic"
         else
             static_begin="-B static"
             static_end="-B dynamic"
+            gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
+            gadget_ldflags_linker="$gadget_ldflags_compiler"
         fi
 
-        gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
-        gadget_ldflags_linker="$gadget_ldflags_compiler"
         gadget_libs='-lgadget'
         gadget_prof_libs='-lgadget_p'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
