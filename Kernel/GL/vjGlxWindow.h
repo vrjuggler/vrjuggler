@@ -87,7 +87,9 @@ private:
    GLXContext      glx_context;
    Window          x_window;
    std::string     window_name;
-   int             pipe;
+   int             mPipe;
+   std::string     mXDisplayName;  //: Name of the x display to use
+
 
    /* private member functions.  these get profoundly painful */
    XVisualInfo *GetGlxVisInfo (Display *display, int screen);
