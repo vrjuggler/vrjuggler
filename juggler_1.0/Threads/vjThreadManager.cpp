@@ -53,7 +53,7 @@ vjTSTable* vjThreadManager::getCurrentTSTable()
 {
    vjGuard<vjMutex> guard(mTSMutex);                             // MUTEX Protection
    vjBaseThread* cur_thread = vjThread::self();    // Get current thread
-   long thread_id = cur_thread->getTID();          // Get thread id
+   int32_t thread_id = cur_thread->getTID();      // Get thread id
    vjASSERT((thread_id >= 0) && (thread_id < mTSTables.size()));
    return mTSTables[thread_id];                    // Get the table for that id
 }
