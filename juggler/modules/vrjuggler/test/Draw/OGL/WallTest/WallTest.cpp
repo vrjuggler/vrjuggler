@@ -174,7 +174,7 @@ void WallTest::drawWall(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl:
    //gmtl::Vec3f origin=(ll+lr+ul+ur)/4.0;
    gmtl::Vec3f lr_ll = lr - ll;
    gmtl::Vec3f ur_lr = ur - lr;
-   gmtl::Vec3f scale(gmtl::length(lr_ll), gmtl::length(ur_lr));
+   gmtl::Vec3f scale(gmtl::length(lr_ll), gmtl::length(ur_lr), 0.0f);
    scale[2]=scale[0]; // To keep the cubes and tetrahedrons happy
    scale*=0.1f;
    
