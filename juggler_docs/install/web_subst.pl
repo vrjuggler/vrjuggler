@@ -28,7 +28,7 @@ $web_subst{"PUB"} = 'pub/';
 # directories within the ~/html directory
 $web_subst{"BUGS"} = 'html/bugs';
 $web_subst{"CONTACT"} = 'html/contact.info';
-$web_subst{"DEVGUIDE"} = 'html/developer.guide/';
+$web_subst{"TEAMGUIDE"} = 'html/juggler.team.guide/';
 $web_subst{"DOWNLOAD"} = 'html/download';
 $web_subst{"LAYOUT"} = 'html/layout';
 $web_subst{"LEGAL"} = 'html/legal';
