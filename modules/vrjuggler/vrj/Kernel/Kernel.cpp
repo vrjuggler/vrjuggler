@@ -218,11 +218,15 @@ void Kernel::controlLoop(void* nullParam)
       checkSignalButtons();      // Check for any pending control requests
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
-      getInputManager()->updateAllData();    // Update the input manager
+      getInputManager()->updateAllDevices();
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update ClusterManager\n"
             << vprDEBUG_FLUSH;
-      mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
+      mClusterManager->postPostFrame();
+           vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+            << "vrj::Kernel::controlLoop: Update Proxies\n"
+            << vprDEBUG_FLUSH;
+      getInputManager()->updateAllProxies();
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update Projections\n"
             << vprDEBUG_FLUSH;
