@@ -104,6 +104,12 @@ sub parseChunks ($$$)
          my $type = "$1";
          $chunks = $';
 
+         if ( "$type" eq "displayWindow" )
+         {
+            print OUTPUT "</ConfigChunkDB>\n";
+            die "Cannot convert VR Juggler 1.1 displayWindow chunks--bailing out\n";
+         }
+
          if ( $chunks =~ /^Name\s*"(.*?)"\s*$/m )
          {
             my $name = "$1";
