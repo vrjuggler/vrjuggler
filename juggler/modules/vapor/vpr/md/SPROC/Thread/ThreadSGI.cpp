@@ -136,7 +136,6 @@ vpr::ReturnStatus ThreadSGI::start()
          }
          ThreadManager::instance()->unlock();
       }
-      else
    }
 
    return status;
