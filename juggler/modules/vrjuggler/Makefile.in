@@ -841,6 +841,7 @@ endif
 # Install only the dynamic optimized version of the libraries.
 # -------------------------------------------------------------
 install-dso:
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
@@ -857,6 +858,7 @@ ifeq (${PF_API}, Y)
           ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
+endif
 
 # Install symlinks to the installed library binaries in the destination
 # directory.
