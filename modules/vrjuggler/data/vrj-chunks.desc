@@ -292,22 +292,6 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>surfaceViewport</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="DummyPosition" name="Dummy Position">
-    <category>Devices</category>
-    <help>A 'dummy' position device</help>
-    <PropertyDesc token="position" name="Position" type="float" variable="0">
-      <help>Initial Dummy Position</help>
-      <item label="x" defaultvalue="0.0" />
-      <item label="y" defaultvalue="0.0" />
-      <item label="z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="ori" name="Orientation" type="float" variable="0">
-      <help>Initial Dummy Orientation XYZ Euler</help>
-      <item label="x" defaultvalue="0.0" />
-      <item label="y" defaultvalue="0.0" />
-      <item label="z" defaultvalue="0.0" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="FileConnect" name="EM Connection">
     <category>Generic</category>
     <help>A file for outputing Environment Manager data</help>
@@ -1236,7 +1220,6 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Device" defaultvalue="" />
       <allowedtype>Flock</allowedtype>
       <allowedtype>SimPosition</allowedtype>
-      <allowedtype>DummyPosition</allowedtype>
       <allowedtype>MotionStar</allowedtype>
       <allowedtype>TrackdSensor</allowedtype>
       <allowedtype>Fastrak</allowedtype>
