@@ -33,10 +33,8 @@ CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@
 LIBS=		$(shell vrjuggler-config --libs)
 EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
 
-BOOST_PYTHON_LIBDIR=	/home/patrick/src/Juggler/main/juggler/external/boost/libs/python/build/bin/libboost_python.so/gcc/release/inlining-on/runtime-link-dynamic/shared-linkable-true
-BOOST_PYTHON_LIBS=	-L$(BOOST_PYTHON_LIBDIR) -lboost_python		\
-			@PYTHON_LDFLAGS@ @PYTHON_LIB@ @PYTHON_LIB_DEPS@	\
-			$(NULL)
+PYTHON_LDFLAGS=		@PYTHON_LDFLAGS@ @PYTHON_LIB@ @PYTHON_LIB_DEPS@
+BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 
 SRCS=		PyJuggler.cpp
 OBJS=		$(SRCS:.cpp=.o)
@@ -47,7 +45,8 @@ vpath %.cpp $(srcdir)
 all: $(MOD)
 
 $(MOD): $(OBJS)
-	$(CXX) -shared -o $@ $(OBJS) $(BOOST_PYTHON_LIBS) $(LIBS) $(EXTRA_LIBS)
+	$(CXX) -shared -o $@ $(OBJS) $(BOOST_PYTHON_LDFLAGS)		\
+          $(PYTHON_LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<

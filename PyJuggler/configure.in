@@ -44,12 +44,17 @@ DPP_GEN_RECONFIG
 DPP_STD_CPP([yes])
 
 AC_ARG_WITH([python],
-            [  --with-python=<PATH>    Path to Python root     [default=/usr/local]],
+            [  --with-python=<PATH>    Path to Python root             [default=/usr/local]],
             [PYTHON_ROOT="$withval"], [PYTHON_ROOT='/usr/local'])
 
 AC_ARG_WITH([python-ver],
-            [  --with-python-ver=<VER> Python version          [default=2.2]],
+            [  --with-python-ver=<VER> Python version                  [default=2.2]],
             [PYTHON_VERSION="$withval"], [PYTHON_VERSION='2.2'])
+
+AC_ARG_WITH([bpldir],
+            [  --with-bpldir=<PATH>    Directory containing a built
+                          version of Boost.Python v2      [default=/usr/local/lib]],
+            [BOOST_PYTHON_LIBDIR="$withval"], [BOOST_PYTHON_LIBDIR='/usr/local/lib'])
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
@@ -158,12 +163,26 @@ if test "x$OS_TYPE" = "xUNIX" ; then
    PYTHON_LIB="-l$PYTHON_LIB"
 fi
 
-
 CPPFLAGS="${_pyj_save_CPPFLAGS}"
 LIBS="${_pyj_save_LIBS}"
 LDFLAGS="${_pyj_save_LDFLAGS}"
 
 DPP_LANG_RESTORE
+
+BOOST_PYTHON_LIB="boost_python.$DYNAMICLIB_EXT"
+
+if test "x$OS_TYPE" = "xUNIX" ; then
+   BOOST_PYTHON_LIB="lib$BOOST_PYTHON_LIB"
+fi
+
+AC_CHECK_FILE([$BOOST_PYTHON_LIBDIR/$BOOST_PYTHON_LIB], ,
+              [AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])])
+
+if test "x$OS_TYPE" = "xWin32" ; then
+   BOOST_PYTHON_LDFLAGS="/libpath:$BOOST_PYTHON_LIBDIR boost_python.lib"
+else
+   BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_LIBDIR -lboost_python"
+fi
 
 VRJUGGLER_PATH([1.1.129], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
@@ -182,6 +201,8 @@ AC_SUBST(PYTHON_LIB)
 AC_SUBST(PYTHON_LIB_DEPS)
 AC_SUBST(PYTHON_LDFLAGS)
 AC_SUBST(PYTHON_VERSION)
+
+AC_SUBST(BOOST_PYTHON_LDFLAGS)
 
 AC_OUTPUT(Makefile)
 AC_OUTPUT(src/Makefile)
