@@ -215,7 +215,7 @@ case $target_os in
 
         AC_DEFINE(VPR_OS_Linux,)
 
-        _vpr_gxx_ver=`$(CXX) -dumpversion`
+        _vpr_gxx_ver=`$CXX -dumpversion`
 
         case ${_vpr_gxx_ver} in
            3.0*)
@@ -496,16 +496,30 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
+vpr_cxxflags="$STDFLAGS"
+
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
-#    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
-    CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+#   CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
+   CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+
+   _vpr_gxx_ver=`$CXX -dumpversion`
+
+   case ${_vpr_gxx_ver} in
+      3.0*)
+         CXXFLAGS="$CXXFLAGS -fexceptions"
+         vpr_cxxflags="$vpr_cxxflags -fexceptions"
+         ;;
+      2.9*)
+         if test "x$DPP_PLATFORM" = "xLinux" ; then
+            AC_DEFINE(_GNU_SOURCE,)
+         fi
+         ;;
+   esac
 fi
 
 # For use in linking applications.
 EXTRA_LINK_FLAGS="$STDFLAGS"
-
-vpr_cxxflags="$STDFLAGS"
 
 if test "x$ac_cv_header_sys_sysinfo_h" = "xyes" ; then
     UUID_DEFS='-DHAVE_SYS_SYSINFO_H'
