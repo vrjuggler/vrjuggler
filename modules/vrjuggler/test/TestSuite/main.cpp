@@ -34,7 +34,7 @@
 #include <vector>
 
 #include <cppunit/TestSuite.h>
-#include <cppunit/TextTestRunner.h>
+#include <cppunit/ui/text/TestRunner.h>
 
 #include <vrj/vrjConfig.h>
 #ifdef VJ_API_PERFORMER
@@ -48,7 +48,7 @@ int main (int ac, char **av)
    // Do this here to get init text out of the way
    vprDEBUG(vprDBG_ALL,0) << "Starting test\n" << vprDEBUG_FLUSH;
 
-   CppUnit::TextTestRunner runner;
+   CppUnit::TextUi::TestRunner runner;
 
    //------------------------------------
    //  noninteractive
