@@ -49,12 +49,18 @@ public:
    {
       std::string path_base;
       vpr::ReturnStatus status;
+      vpr::sim::NetworkGraph::AddressList addrs;
 
       status = vpr::System::getenv("VPR_TEST_DIR", path_base);
       CPPUNIT_ASSERT(status.success() && "Could not find VPR_TEST_DIR environment variable");
 
       status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.tiers"));
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
+
+      status = vpr::sim::Controller::instance()->getNetworkGraph().getAllAddresses(addrs);
+      CPPUNIT_ASSERT(status.success() && "Could not request all addresses");
+
+      CPPUNIT_ASSERT(addrs.size() == vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount());
    }
 
    void
@@ -147,8 +153,6 @@ public:
       vpr::ThreadMemberFunctor<SocketSimulatorTest>* connector_func =
          new vpr::ThreadMemberFunctor<SocketSimulatorTest>(this, &SocketSimulatorTest::multiThreadTest_connector);
       vpr::Thread connector(connector_func);
-
-      vpr::sim::Controller::instance()->start();
 
       // Run, Lola, run.
       while ( vpr::sim::Controller::instance()->isRunning() ) {

@@ -128,6 +128,8 @@ public:
    typedef std::vector<net_vertex_t>     VertexList;
    typedef boost::shared_ptr<VertexList> VertexListPtr;
 
+   typedef std::vector<std::pair<net_vertex_t, vpr::Uint32> > AddressList;
+
    /**
     * Retrieves the property (an instance of vpr::sim::NetworkLine) for the
     * given edge.
@@ -220,6 +222,11 @@ public:
 
       return vertex == source;
    }
+
+   /**
+    * Returns all the addresses in the network via the by-reference parameter.
+    */
+   vpr::ReturnStatus getAllAddresses (AddressList& list);
 
 private:
    net_graph_t mGraph;
