@@ -967,7 +967,178 @@ include ../docbook.mk
       </partintro>
       <chapter id="extend.global.config.chapter">
          <title>Extending the Global Configuration Script</title>
-         <para></para>
+         <para>Most extensions to <filename>configure.pl</filename> can be localized to the <filename>JugglerConfigure.pm</filename> module file. That module contains the configuration file parsing code and two data structures (<classname>JugglerModule</classname> and <classname>ModuleDependency</classname>) for managing the data that is parsed. In <filename>configure.pl</filename>, most of the code relates to execution of the configure scripts in the individual modules. This includes running the configuration scripts to configure a build tree and running them to collect, reformat, and output usage information (the output normally printed from passing <option>--help</option>). In this chapter, we examine both files separately and explain how to extend them.</para>
+         <section>
+            <title><filename>JugglerConfigure.pm</filename></title>
+            <indexterm>
+               <primary>JugglerConfigure.pm</primary>
+               <secondary>extension of</secondary>
+            </indexterm>
+            <para>This file contains three Perl packages: <literal>JugglerConfigure</literal>, <literal>JugglerModule</literal>, and <literal>ModuleDependency</literal>. The first has a single procedure, <function>parseConfigFile()</function>, that parses the user-specified configuration (<filename>juggler.cfg</filename><indexterm>
+                  <primary>juggler.cfg</primary>
+               </indexterm> in most cases). The latter two define data structures (Perl classes) used to manage individual modules defined in the configuration file and the dependencies of each module. We will discuss each package in turn.</para>
+            <section id="JugglerConfigure.pkg.section">
+               <title><literal>JugglerConfigure</literal></title>
+               <indexterm>
+                  <primary>JugglerConfigure.pm</primary>
+                  <secondary>JugglerConfigure package</secondary>
+               </indexterm>
+               <para>As stated above, this package contains a single subroutine: <function>parseConfigFile()</function>. This parses a user-specified configuration file in the format described in <xref linkend="build.cfg.file.section"/>. If the config file is parsed correctly, a hash named <varname>%MODULES</varname> is returned to the caller. This hash, indexed by module name, provides references to <classname>JugglerModule</classname> instances.</para>
+               <para>The parsing code is fairly straightforward. There are only three keywords in the configuration file format: <token>module</token>, <token>depend</token>, and <token>Default</token>. The basic concepts used in the format are similar to those for the C grammar. In other words, curly braces denote blocks, semi-colons denote the end of a declaration, and all code is case-sensitive. The following provides the grammar for the configuration file:</para>
+               <programlisting>DOCUMENT   ::= COMMENT DEFAULT MODULE
+DEFAULT    ::= 'Default:' NAME | ε
+MODULE     ::= NAME '{' COMMENT DEPENDENCY '}' COMMENT MODULE | ε
+NAME       ::= ([A-Za-z0-9_][A-Za-z0-9_]* + λ)[A-Za-z0-9_]
+DEPENDENCY ::= DIR ';' DEPENDENCY | MODDEP ';' DEPENDENCY | ε
+DIR        ::= &lt;valid-path&gt; | &lt;valid-path&gt; ':' ENVVAR
+ENVVAR     ::= NAME '=' &lt;text&gt; | NAME '=' &lt;text&gt; ',' ENVVAR
+MODDEP     ::= 'depend' NAME
+COMMENT    ::= '#' &lt;text&gt; | '//' &lt;text&gt; | '/*' &lt;text&gt; '*/' | ε</programlisting>
+               <para>The structure of this grammar should be reflected in the parsing code. Differences between strict regular expressions (used above, more or less) and Perl regular expressions may muddy the correlation.</para>
+            </section>
+            <section id="JugglerModule.pkg.section">
+               <title><literal>JugglerModule</literal></title>
+               <indexterm>
+                  <primary>JugglerConfigure.pm</primary>
+                  <secondary>JugglerModule package</secondary>
+               </indexterm>
+               <para>The <literal>JugglerModule</literal> package defines a class containing two <quote>data members</quote>: <varname>name</varname> and <varname>deps</varname>. These are actually keys of the blessed hash returned by the <function>new()</function> subroutine. The <varname>name</varname> member is just a string that contains the unique name of the module. The <varname>deps</varname> member is more interesting. Indded, the main purpose of the <literal>JugglerModule</literal> package is to maintain the list of dependencies.</para>
+               <para>The <varname>deps</varname> member is a reference to an array of <classname>ModuleDependency</classname> objects (see <xref linkend="ModuleDependency.pkg.section"/>). An array is used to preserve the ordering read from the configuration file. All dependencies given in the configuration file appear in the array. This includes those <quote>inherited</quote> from another module through the use of the <token>depend</token> keyword.</para>
+               <para>Duplication of dependencies is avoided by performing a check whenever a new dependency is added using <methodname>addDependency()</methodname>. The <methodname>hasDependency()</methodname> method encapsulates the process of making the check. The dependencies of two modules can be merged using the <methodname>addDependencies()</methodname> method.</para>
+            </section>
+            <section id="ModuleDependency.pkg.section">
+               <title><literal>ModuleDependency</literal></title>
+               <indexterm>
+                  <primary>JugglerConfigure.pm</primary>
+                  <secondary>ModuleDependency package</secondary>
+               </indexterm>
+               <para>The <literal>ModuleDependency</literal> package defines a class containing two <quote>data members</quote>: <varname>path</varname> and <varname>env</varname>. The first is a simple string, and the second is a reference to a hash where the keys are environment variable names. The values for these are extracted from the <literal>DIR</literal> rule in the above grammar. More specifically, the terminal <token>&lt;valid-path&gt;</token> in <literal>DIR</literal> rule corresponds to the path member, and the <literal>ENVVAR</literal> rule defines the hash of environment variable mappings.</para>
+               <para>Access to a given <classname>JugglerModule</classname> object's dependencies happens entirely through the API of that class. This class is provided as a convenient abstraction around the information provided through each <literal>DIR</literal> parser rule expansion.</para>
+            </section>
+         </section>
+         <section>
+            <title><filename>conifgure.pl</filename></title>
+            <indexterm>
+               <primary>configure.pl</primary>
+               <secondary>extension of</secondary>
+            </indexterm>
+            <para>This script pulls everything together. After calling <function>JugglerConfigure::parseConfigFile()</function>, the returned hash (see <xref linkend="JugglerConfigure.pkg.section"/>) is used to perform all the relevant operations including, but not limited to, invoking each Autoconf-based configure script in the correct order. As a whole, the work done by <command>configure.pl</command> is fairly straightforward, regardless of the arguments passed on the command line. In this section, we will examine the four main aspects of this script's functionality:</para>
+            <orderedlist>
+               <listitem>
+                  <para>Command-line argument handling</para>
+               </listitem>
+               <listitem>
+                  <para>Help output</para>
+               </listitem>
+               <listitem>
+                  <para>Build configuration</para>
+               </listitem>
+               <listitem>
+                  <para>File regeneration</para>
+               </listitem>
+            </orderedlist>
+            <para>We will present each in turn with the goal that understanding these pieces of functionality, extensions to <command>configure.pl</command> will be easier to perform. Of these points, #3 will require the most discussion since that is the main reason for <command>configure.pl</command>'s existence.</para>
+            <section>
+               <title>Command-Line Argument Handling</title>
+               <indexterm>
+                  <primary>configure.pl</primary>
+                  <secondary>command-line argument handling</secondary>
+               </indexterm>
+               <para>The handling of command-line arguments in <command>configure.pl</command> is rather unique. To function correctly as a wrapper around multiple Autoconf-based build systems, this script must be capable of passing the correct arguments to the individual configure scripts. In other words, when the user executes the following:</para>
+               <screen>configure.pl --module=VPR --enable-subsystem=NSPR --with-nspr=$HOME/nspr-4.2</screen>
+               <para>the argument <option>--module</option> must be handled by <command>configure.pl</command> while the other two are passed through to VPR's configure script. Luckily, the Perl module <literal>Getopt::Long</literal> provides a mechanism for doing just that. The module is configured to allow unrecognized arguments to be passed through so that, after the execution of <function>GetOptions()</function>, <varname>@ARGV</varname> will contain what <function>GetOptions()</function> did not handle. When the time comes to execute a module's configure script, <varname>@ARGV</varname> is passed to the script as normal arguments.</para>
+               <para>This usage of <literal>Getopt::Long</literal> is not without a drawback or two. Allowing the pass through of unrecognized arguments means that <function>GetOptions()</function> is not performing robust error checking on user input. What if <option>--module</option> were spelled as <option>--mdoule</option> accidentally? <function>GetOptions()</function> would not recognize it, and the execution of <command>configure.pl</command> would not proceed the way the user had intended. Because of this, it is important for users to be especially careful with the options they give when running <command>configure.pl</command>.</para>
+            </section>
+            <section>
+               <title>Help Output</title>
+               <indexterm>
+                  <primary>configure.pl</primary>
+                  <secondary>help output</secondary>
+               </indexterm>
+               <para>Two types of output can be printed by <command>configure.pl</command>: usage for <command>configure.pl</command> and usage for all the known configure scripts. The first is done quite simply. The <literal>Pod::Usage</literal> module is used to render the internal <glossterm linkend="gloss.pod">POD</glossterm> as usage output<footnote>
+                     <para>Use of this very handy Perl module has actually been a source of problems. In particular, IRIX 6.5 ships with a version of Perl that does not contain this module. For that reason, Perl 5.005 or newer is required to run <command>configure.pl</command> and some other Perl scripts used by the build system.</para>
+                  </footnote>. This output is printed when the user passes <option>--help</option> on the command line.</para>
+               <para>Usage information for the known configure scripts can be printed using the <option>--all-help</option> argument. This is provided so that users have a way to get a complete listing of all the command-line arguments that may be passed when running <command>configure.pl</command>. (The exact details of how this works were described in the previous subsection.) Only the relevant output is actually printed when this argument is passed. The meaning of <quote>relevant</quote> is tied to the module the user is configuring. For example, with an unmodified <filename>juggler.cfg</filename><indexterm>
+                     <primary>juggler.cfg</primary>
+                  </indexterm>, the default module is <quote>VRJuggler</quote> (sic). If the <option>--module</option> option is not specified in conjunction with <option>--all-help</option>, then the usage information for the VR Juggler configure script and the use information for the configure scripts of all of its dependencies are printed. If a different module is specified, the output will change based on the alternate module and its dependencies.</para>
+               <para>To print this information, each configure script is run by <command>configure.pl</command> with the <option>--help</option> command-line option. The output is collected and processed so that the arguments are printed to the screen in an orderly fashion. Duplicated output is discarded. The process of presenting the output to the user is very important because there exists the potential for a large amount of information.</para>
+            </section>
+            <section>
+               <title>Build Configuration</title>
+               <indexterm>
+                  <primary>configure.pl</primary>
+                  <secondary>build configuration</secondary>
+               </indexterm>
+               <para>Configuring a build tree involves several steps, and they are as follows:</para>
+               <orderedlist>
+                  <listitem>
+                     <para>Load default configure script arguments (if any exist)</para>
+                  </listitem>
+                  <listitem>
+                     <para>Generate the <command>reconfig</command> helper script</para>
+                  </listitem>
+                  <listitem>
+                     <para>Run the appropriate configure scripts in the right order</para>
+                  </listitem>
+                  <listitem>
+                     <para>Generate the top-level makefile that invokes targets in each module's glue makefile</para>
+                  </listitem>
+               </orderedlist>
+               <para>Each of these steps will be discussed in turn in the following sub-subsections.</para>
+               <section>
+                  <title>Load Default Arguments</title>
+                  <indexterm>
+                     <primary>configure.pl</primary>
+                     <secondary>default arguemnts</secondary>
+                     <tertiary>loading of</tertiary>
+                  </indexterm>
+                  <para>To simplify the execution of <command>configure.pl</command>, users may write a default arguments file or a Perl plug-in that provides default arguments. In either case, the idea is that arguments for Autoconf-generated configure scripts can be collected into reusable platform- and site-specified pieces so that they do not have to be passed every time <command>configure.pl</command> is run. The preferred method for specifying default arguments is the Perl plug-in, but for users who do not know Perl, a simple configuration file can be used instead. Here, we will only describe the process of loading these files, not how to use them.</para>
+                  <para>To load the Perl plug-in, the arguments file is treated as loadable Perl code. (Indeed, the requirements of using the Perl plug-in state that it must be valid Perl code with a subroutine that can be called by another package.) Once the plug-in is loaded into memory, its subroutine is executed. The subroutine must return an array of command-line arguments that can be merged with <varname>@ARGV</varname>. It is the responsibility of the plug-in to inform <command>configure.pl</command> of its executable subroutine by assigning a subroutine reference to a global variable in <command>configure.pl</command>'s scope. In <command>configure.pl</command>, this whole process involves roughly four lines of code, thus making it very attractive from the standpoint of maintaining <command>configure.pl</command>.</para>
+                  <para>Loading the simple configuration file requires more effort because the file format must be parsed. In <command>configure.pl</command>, the parsing code for this file format is found in <function>loadDefaultArgs()</function>. To summarize the file format, platform-specific blocks are defined, and within a block, each line gives a configure script argument. The platform-specific blocks are named according to platform, though they can be named with user-defined identifiers when used in conjunction with the <option>--os</option> command-line option. Parsing the file simply means reading the right block(s) and adding each line to <varname>@ARGV</varname>.</para>
+               </section>
+               <section>
+                  <title>Generate <command>reconfig</command></title>
+                  <indexterm>
+                     <primary>configure.pl</primary>
+                     <secondary>reconfig</secondary>
+                     <tertiary>generation of</tertiary>
+                  </indexterm>
+                  <para>Generating the <command>reconfig</command> helper script is quite simple. The arguments passed on the command line are simply saved to the <filename>reconfig</filename> file. In addition, commands to remove any Autoconf cache files (named <filename>config.cache</filename>) are added. Finally, the <command>reconfig</command> file is made executable.</para>
+               </section>
+               <section>
+                  <title>Run the Configure Scripts</title>
+                  <indexterm>
+                     <primary>configure.pl</primary>
+                     <secondary>module configure scripts</secondary>
+                     <tertiary>execution of</tertiary>
+                  </indexterm>
+                  <para></para>
+               </section>
+               <section>
+                  <title>Generate the Top-Level Makefile</title>
+                  <indexterm>
+                     <primary>configure.pl</primary>
+                     <secondary>top-level makefile</secondary>
+                     <tertiary>generation of</tertiary>
+                  </indexterm>
+                  <para></para>
+               </section>
+            </section>
+            <section>
+               <title>File Regeneration</title>
+               <indexterm>
+                  <primary>configure.pl</primary>
+                  <secondary>file regeneration</secondary>
+               </indexterm>
+               <para>When an Autoconf-generated configure script is run successfully, a shell script called <command>config.status</command><indexterm>
+                     <primary>config.status</primary>
+                  </indexterm> is created. This script contains all the state information generated as a result of running <command>configure</command>. If there is a need to regenerate the files created by <command>configure</command>, <command>config.status</command> can do the job quickly because it reuses the static information from when it was created without re-running all the tests. There is no global <command>config.status</command> created by <command>configure.pl</command>, but an alternate method is provided through the <option>--regen</option> argument.</para>
+               <para>When <option>--regen</option> is passed on the command line, <command>configure.pl</command> iteratively executes the individual <command>config.status</command> scripts instead of the configure scripts. This allows users to regenerate files more quickly than by running all the configure scripts again. Deciding which <command>config.status</command> scripts to run is a somewhat difficult process, however.</para>
+               <para>In a normal situation when only one <command>config.status</command> exists, it is easy for a user to decide when (and how) to run it. In the context of the VR Juggler build system, there are many configure scripts, each having its own <command>config.status</command> script. Furthermore, some <command>config.status</command> scripts may not exist based on which module (in <filename>juggler.cfg</filename><indexterm>
+                     <primary>juggler.cfg</primary>
+                  </indexterm>) was configured. As with all other cases where <command>configure.pl</command> must decide what to execute, the requested module dictates the execution behavior. Thus, if the user did not configure the default module, the <option>--module</option> argument must be passed with <option>--regen</option> to ensure proper execution of the various <command>config.status</command> scripts.</para>
+            </section>
+         </section>
       </chapter>
       <chapter id="extend.module.config.chapter">
          <title>Extending a Module's Configure Script</title>
@@ -988,19 +1159,87 @@ include ../docbook.mk
       <chapter id="extend.module.makefile.chapter">
          <title>Extending a Module's Makefiles</title>
          <para></para>
+         <section>
+            <title>The Glue Makefile</title>
+            <para></para>
+         </section>
+         <section>
+            <title>Individual Component Makefiles</title>
+            <para></para>
+         </section>
       </chapter>
    </part>
+   <appendix id="helper.scripts.appendix">
+      <title>Helper Scripts</title>
+      <para>The VR Juggler build system makes use of many, many helper scripts. Most are written in Perl, though a few are written in <command>sh</command>(1) because their task is very simple. In this appendix, we present information on how each script fits into the larger picture of the VR Juggler <quote>global</quote> build system.</para>
+      <section>
+         <title><command>mtree</command>(1) and <command>mtree.pl</command></title>
+         <para><command>mtree</command>(1) is a utility for mapping directory hierarchies. It dates back to 4.3BSD-Reno, and development of it has continued in FreeBSD and in NetBSD. <command>mtree.pl</command> is a Perl script written to mimic the behavior of <command>mtree</command>(1) (the version distributed with FreeBSD 3.0) so that Juggler's installation can take advantage of its features on platforms without <command>mtree</command>(1). The two are not completely functionally equivalent at this time, but the basic features needed by VR Juggler are present.</para>
+         <para>The key aspect of <command>mtree</command>(1) that the Juggler installation uses is the creation of directory hierarchies from specification files (named with the extension <filename>.dist</filename>). These specifications can be used to create the full installation tree with all directories guaranteed to have the same permissions and ownership. The actual specification files are generated by <command>configure</command> from template files to allow maximum flexibility. One key file, <filename>VJ.lib.dist</filename>, is generated by <command>configure</command> from scratch (i.e., without a template) so that it can take advantage of <command>configure</command>'s internal knowledge about the target platform.</para>
+         <para><command>mtree</command>(1) provides a wide range of features but unfortunately not all are implemented in <command>mtree.pl</command>. For example, besides being used to build a hierarchy, it can be used to generate a specification file for an existing hierarchy. For more information about what can be done with this utility, refer to the manual page if <command>mtree</command>(1) is distributed with the operating system. More work on bringing the two closer together in functional equivalence is anticipated.</para>
+      </section>
+      <section>
+         <title><command>install-dir.pl</command></title>
+         <para>This Perl 5 script is used to install an entire directory tree without any of the <filename>CVS</filename> directories. Its use is very simple. In general, the base of the tree to be installed and the destination directory are all that is necessary. The basic usage is:</para>
+         <cmdsynopsis>
+            <command>install-dir.pl</command>
+            <group>
+               <arg choice="req">-i <replaceable>source directory</replaceable></arg>
+               <arg choice="req">-o <replaceable>destination directory</replaceable></arg>
+               <arg>-u <replaceable>user name</replaceable></arg>
+               <arg>-g <replaceable>group name</replaceable></arg>
+               <arg>-m <replaceable>mode</replaceable></arg>
+            </group>
+         </cmdsynopsis>
+         <para>Currently, this script is used to install the <filename>Data</filename> directory since it contains no source files (see <command>install-src.pl</command> below), and it is used in the process of creating <filename>VjControl.jar</filename>. Thus, it is versatile enough to be used during both the compile and install phases.</para>
+      </section>
+      <section>
+         <title><command>install-src.pl</command></title>
+         <para>Similar to <command>install-dir.pl</command>, this script installs the contents of a directory tree to a specified location. It is, however, more selective in what it installs. Only source files of recognized types (<filename>.txt</filename>, <filename>.TXT</filename>, <filename>.C</filename>, <filename>.c</filename>, <filename>.h</filename>, <filename>.cxx</filename>, <filename>.CXX</filename>, <filename>.cpp</filename>, <filename>.CPP</filename> and makefiles) are copied from the source to the destination. Any <filename>CVS</filename> directories are not copied over. The options for this script are exactly the same as those for <command>install-dir.pl</command>.</para>
+      </section>
+      <section>
+         <title><command>makefiles-gen.pl</command></title>
+         <para>This script is used to perform the same functions as <command>configure</command> when it expands the <quote><literal>@...@</literal></quote> strings in <filename>.in</filename> template files. Its use is reserved for the installation phase rather than the configuration phase. The installation process copies over many <filename>Makefile.in</filename>'s that <command>configure</command> would normally generate for use by developers. To simplify maintenance, the same template files are used for installations that users can access. Since the templates still contain the <quote><literal>@...@</literal></quote> strings, they must be expanded again. Thus, <command>makefiles-gen.pl</command> steps in for this purpose.</para>
+         <para>Options for <literal>makefiles-gen.pl</literal> are slightly different from any of the other scripts. It uses GNU-style options for the sake of clarity since some of the options correspond directly to a <quote><literal>@...@</literal></quote> string to be expanded. The options described here are required unless otherwise noted.</para>
+         <para>The key to this script is <filename>VARS.pl.in</filename>, located in the top-level VR Juggler source directory. It is a Perl file that can be evaluated at run time by the script to set values used for substitution. The format used in the file is:</para>
+         <programlisting>$VARS{'<emphasis>VAR_NAME</emphasis>'} = '@<emphasis>VAR_NAME</emphasis>@';</programlisting>
+         <para>Note that <literal>VAR_NAME</literal> should be the same in both places for ease of understanding. The <varname>%VARS</varname> hash is used in the substitution process. Occurrences of its keys found in a <filename>Makefile.in</filename> are replaced with the value associated with that key (the expanded <quote><literal>@...@</literal></quote> string). Also note the use of apostrophes to prevent expansion of variables by the Perl interpreter. Be careful to use the right string delimiters when adding new values.</para>
+      </section>
+      <section>
+         <title><literal>InstallOps</literal> Perl Module</title>
+         <para>Many of these Perl scripts use the <literal>InstallOps</literal> module (found in <filename>InstallOps.pm</filename> with the other scripts). This module provides subroutines implementing commonly used techniques in working with directory trees and files during installation. Ideally, it is general enough to be used in writing new scripts that can be added to the installation process. A short description of the available subroutines and their use is provided here.</para>
+         <funcsynopsis>
+            <funcprototype>
+               <funcdef><function>recurseDir</function></funcdef>
+               <paramdef><funcparams>$start_dir, $base_inst_dir</funcparams></paramdef>
+            </funcprototype>
+            <funcsynopsisinfo>Recurse through the given directory tree beginning at <varname>$start_dir</varname>. The second argument, <varname>$base_inst_dir</varname>, names the base directory to which the files will be installed. This routine requires that the calling package define a subroutine called <function>recurseAction()</function> that defines what actions to take when a normal file is encountered during the recursion process. It is only called when non-directory type files are found in the current directory of the recursion process. Since this is specialized for installation, it ensures that the destination directories (rooted at <varname>$base_inst_dir</varname>) exist.</funcsynopsisinfo>
+         </funcsynopsis>
+         <funcsynopsis>
+            <funcprototype>
+               <funcdef><function>newDir</function></funcdef>
+               <paramdef><funcparams>$base_dir, $newdir</funcparams></paramdef>
+            </funcprototype>
+            <funcsynopsisinfo>Create a new directory (<varname>$newdir</varname>) in a given directory tree (<varname>$base_dir</varname>). If it already exists, it is not created.</funcsynopsisinfo>
+         </funcsynopsis>
+         <funcsynopsis>
+            <funcprototype>
+               <funcdef><function>installFile</function></funcdef>
+               <paramdef><funcparams>$filename, $uid, $gid, $mode, $dest_dir</funcparams></paramdef>
+            </funcprototype>
+            <funcsynopsisinfo>Install a given file (<varname>$filename</varname>) with specified permissions (<varname>$mode</varname>) in UNIX octal style to a destination directory (<varname>$dest_dir</varname>). Ownership is set based on the provided values for <varname>$uid</varname> and <varname>$gid</varname> (which has no effect on a Win32 platform).</funcsynopsisinfo>
+         </funcsynopsis>
+         <funcsynopsis>
+            <funcprototype>
+               <funcdef><function>replaceTags</function></funcdef>
+               <paramdef><funcparams>Replace tags of the form <literal>@...@</literal> in the given file (<varname>$infile</varname>) with known replacement values (found in <varname>%VARS</varname>). The tags are the keys of <varname>%VARS</varname>, and the replacement values are the values associated with those keys.</funcparams></paramdef>
+            </funcprototype>
+         </funcsynopsis>
+      </section>
+   </appendix>
    <appendix>
       <title>Build System Usage</title>
-      <para>We can now delve into the use of the VR Juggler build system. This part is separated into two chapters: one covering the general, everyday use, and one covering more advanced topics for the most stalwart users.</para>
-      <section>
-         <title>General Use</title>
-         <para></para>
-      </section>
-      <section>
-         <title>Advanced Use</title>
-         <para></para>
-      </section>
+      <para>Refer to the <emphasis>Juggler Team Guide</emphasis> for VR Juggler 2.0 (and beyond) for build system usage information.</para>
    </appendix>
    <glossary>
       <title>Glossary</title>
@@ -1068,6 +1307,17 @@ include ../docbook.mk
             <glossterm>JAR file</glossterm>
             <glossdef>
                <para>A Java archive. These files typically contain everything needed to execute a Java application or a Java applet. They may also be used to package language-independent information such as data files or images.</para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>P</title>
+         <glossentry id="gloss.pod">
+            <glossterm>Plain Old Documentation</glossterm>
+            <acronym>POD</acronym>
+            <glossdef>
+               <para>The documentation format used by Perl. It may be embedded within Perl scripts so that the documentation is bundled with the script at all times. The documentation can be rendered to three formats: manpage, HTML, and plain text. To get a script's documentation in the same style as that used by the <command>man</command>(1) command, use the following (replacing <literal>&lt;script-name&gt;</literal> appropriately):</para>
+               <screen>perldoc &lt;script-name&gt;</screen>
             </glossdef>
          </glossentry>
       </glossdiv>
