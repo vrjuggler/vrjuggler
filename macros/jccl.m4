@@ -114,8 +114,8 @@ dnl                          test JCCL program], , enable_jccltest=yes)
         JCCL_EXTRA_LIBS=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
         JCCL_EXTRA_LIBS_ALL=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --all`
         JCCL_VERSION=`$JCCL_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(JCCL, $JCCL_VERSION, $min_jccl_version,
-                              jccl_cv_jccl_version, $2, $3)
+        DPP_VERSION_CHECK_MSG([JCCL], [$JCCL_VERSION], [$min_jccl_version],
+                              [jccl_cv_jccl_version], $2, $3)
     fi
 
     if test "x$no_jccl" != x ; then

@@ -93,8 +93,8 @@ dnl                          test VR Juggler program], , enable_vrjtest=yes)
         VRJ_LIBS="`$VRJ_CONFIG $vrj_config_args --libs $ABI` $VRJ_EXTRA_LIBS"
         VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` $VRJ_EXTRA_LIBS"
         VRJ_VERSION=`$VRJ_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(VR Juggler, $VRJ_VERSION, $min_vrj_version,
-                              vrj_cv_vrj_version, $2, $3)
+        DPP_VERSION_CHECK_MSG([VR Juggler], [$VRJ_VERSION], [$min_vrj_version],
+                              [vrj_cv_vrj_version], $2, $3)
     fi
 
     if test "x$no_vrj" != x ; then
