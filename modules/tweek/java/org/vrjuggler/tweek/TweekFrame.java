@@ -335,48 +335,19 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       ConnectionDialog dialog = new ConnectionDialog(this, "ORB Connections");
       dialog.display();
 
-/*
-      if ( addr != null )
+      if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
       {
-         int colon_index = addr.indexOf(':');
+         System.out.println("ORB host: " + dialog.getOrbHost());
+         System.out.println("ORB port: " + dialog.getOrbPort());
 
-         if ( colon_index != -1 )
+         if ( dialog.getOrbHost() != null )
          {
-            String node_addr     = addr.substring(0, colon_index);
-            String node_port_str = addr.substring(colon_index + 1);
-            int node_port        = Integer.parseInt(node_port_str);
-
-            // XXX: We need some way to disable the "Connect to ..." option
-            // once we are connected.
-            try
-            {
-               InetAddress plex_addr = InetAddress.getByName(node_addr);
-               String plex_host      = plex_addr.getHostAddress();
-
-               m_plex_if.connect(plex_host, node_port);
-               m_bean_container.fireConnectionEvent(plex_host, node_port,
-                                                    m_plex_if);
-            }
-            catch (org.vrjuggler.tweek.net.CommException net_ex)
-            {
-               JOptionPane.showMessageDialog(null, "Could not connect to " +
-                                             addr, "Connection Failure",
-                                             JOptionPane.ERROR_MESSAGE);
-            }
-            catch (java.net.UnknownHostException addr_ex)
-            {
-               JOptionPane.showMessageDialog(null, "Could not connect to " +
-                                             node_addr, "Connection Failure",
-                                             JOptionPane.ERROR_MESSAGE);
-            }
-         }
-         else {
-            JOptionPane.showMessageDialog(null, "Invalid format " + addr,
-                                          "Address Format Error",
-                                          JOptionPane.ERROR_MESSAGE);
+            CorbaService new_orb = new CorbaService(dialog.getOrbHost(),
+                                                    dialog.getOrbPort());
+            new_orb.init(null);
+            m_bean_container.fireConnectionEvent(new_orb);
          }
       }
-*/
    }
 
    /**
@@ -409,7 +380,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       PrefsDialog dialog = new PrefsDialog(this, "Global Preferences",
                                            GlobalPreferencesService.instance());
       dialog.display();
-/*
+
       if ( dialog.getStatus() == PrefsDialog.OK_OPTION )
       {
          String viewer = GlobalPreferencesService.instance().getBeanViewer();
@@ -444,7 +415,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                                                  GlobalPreferencesService.instance().getUserLevel());
          }
       }
-*/
    }
 
    private void beansLoadAction (ActionEvent e)
