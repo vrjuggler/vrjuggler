@@ -647,10 +647,6 @@ int EventWindowXWin::getMask(const int& state)
       mask |= gadget::BUTTON5_MASK;
    }
 
-   vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-      << "EventWindowXWin::getMask(" << state << ") => " << mask << "\n"
-      << vprDEBUG_FLUSH;
-
    return mask;
 }
 
