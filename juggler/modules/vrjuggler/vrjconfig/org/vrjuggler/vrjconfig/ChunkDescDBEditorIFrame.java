@@ -61,10 +61,23 @@ public class ChunkDescDBEditorIFrame
       this.getContentPane().add(editor,  BorderLayout.CENTER);
    }
 
+   public String getFilename()
+   {
+      return filename;
+   }
+
+   public void setFilename(String filename)
+   {
+      this.filename = filename;
+      setTitle("Configuration Format: "+filename); 
+   }
+
    public ChunkDescDBEditor getEditor()
    {
       return editor;
    }
+
+   private String filename = "";
 
    // JBuilder GUI variables.
    private ChunkDescDBEditor editor = new ChunkDescDBEditor();
