@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-04-2003 allenb      Fixed config chunk and config description equality
+                        operators.  Commented out old un-used dependency
+                        sorting method.
 Feb-27-2003 nonchocoboy Added a version property to both config chunks and
                         chunk descs to be used for future work.
                         Bumped desc file format version to 2.3.
