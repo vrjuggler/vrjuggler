@@ -261,7 +261,7 @@ public:
     * @return 0 is returned if this mutex is not currently locked.<br>
     *         1 is returned if this mutex is locked.
     */
-   int test();
+   int test() const;
 
    /**
     * Dumps the mutex debug stuff and current state.
