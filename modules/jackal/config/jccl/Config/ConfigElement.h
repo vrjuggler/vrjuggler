@@ -80,8 +80,10 @@ public:
       vprASSERT(mValid == true && "Trying to use deleted config element");
    }
 #else
-   inline void assertValid() const
-   {}
+   void assertValid() const
+   {
+      /* Do nothing. */ ;
+   }
 #endif
 
    /**
@@ -100,46 +102,60 @@ public:
     */
    bool operator==(const ConfigElement& c) const;
 
-   /** Inequality */
+   /** Inequality. */
    bool operator!=(const ConfigElement& c) const;
 
    /** Lexical comparison based on element names (alphabetically). */
    bool operator<(const ConfigElement& c) const;
 
-   /** Gets a child element from a property of self.
-    *  @param path The complete name of a child element in self.
-    *              The form is, for example,
-    *              "prop_name/instance_name".
-    *  @note This uses the name attribute of the elements.
-    *  @return A ConfigElementPtr to the child element.  This may be
-    *          a NULL ConfigElementPtr, if the child element name was
-    *          not found.  Check before use.
+   /**
+    * Gets a child element from a property of self.
+    * @param path The complete name of a child element in self.
+    *             The form is, for example, "property_token/instance_name".
+    *
+    * @note This uses the name attribute of the elements.
+    *
+    * @return The ConfigElementPtr that is the child element.  This may be
+    *         a NULL ConfigElementPtr if the child element name was
+    *         not found.  Check before use.
     */
    ConfigElementPtr getChildElement(const std::string &path);
 
-   /** Writes a representation of self to out.
-    *  @param out An ostream.
-    *  @param self A ConfigElement.
+   /**
+    * Writes a representation of self to out.
+    * @param out  An ostream.
+    * @param self A ConfigElement.
     */
    friend JCCL_API(std::ostream&) operator<<(std::ostream& out,
                                              const ConfigElement& self);
 
-   /** Returns number of values for the specified property.
-    *  @param property The token of a property.
-    *  @return The number of values that exist for the given property,
-    *          or 0 if the property does not exist in self.
+   /**
+    * Returns the number of values for the specified property.
+    *
+    * @pre The named property exists in the definition for this config element.
+    *
+    * @param property The token of a property.  This comes from the
+    *                 definition for this config element.
+    *
+    * @return The number of values that exist for the given property which
+    *         may be 0.
     */
    int getNum(const std::string& property) const;
 
-   /** Returns the instance name of this ConfigElement. */
+   /**
+    * Returns the instance name of this ConfigElement without any hierarchy
+    * information.
+    *
+    * @see getFullName
+    */
    std::string getName() const;
 
    /**
     * Returns the fully qualified, unique name of this element.  This will be
     * different from getName() when this element is a child of another element.
     * In that case, the name will be based on the element hierarchy and the
-    * property token.  The format will be
-    * "element name 0/property name 0/element name 1/property name 1/..."
+    * property token.  The format in that case will be
+    * "element name 0/property_token_0/element name 1/property_token_1/..."
     */
    std::string getFullName() const;
 
@@ -250,17 +266,21 @@ public:
    /** Specialization for ConfigElementPtrs */
    bool setProperty(const std::string& prop, const int ind, ConfigElementPtr val);
 
-   /** Returns a list of self's depenencies.
-    *  Dependencies are any ConfigElements named by an "Element Pointer"
-    *  property of self (or any element embedded in self).
-    *  @return A vector of the names of all ConfigElements referenced by self,
-    *          which can be used for dependency checking.
+   /**
+    * Returns a list of self's depenencies.
+    * Dependencies are any config elements named by an "Element Pointer"
+    * property of self (or any element embedded in self).
+    *
+    * @return A vector of the names of all config elements referenced by self,
+    *         which can be used for dependency checking.
     */
    std::vector<std::string> getElementPtrDependencies() const;
 
-   /** Return a list of self's child elements.
-    *  @return A vector of ConfigElementPtrs to embedded ConfigElements
-    *          within self.
+   /**
+    * Return a list of self's child (embedded) elements.
+    *
+    * @return A vector of ConfigElementPtr objects that are the config
+    *         elements embedded in self.
     */
    std::vector<jccl::ConfigElementPtr> getChildElements() const;
 
