@@ -161,26 +161,31 @@ jccl::ConfigChunkPtr Display::getGlFrameBufferConfig()
 
 std::ostream& operator<<(std::ostream& out, Display& disp)
 {
-   const int pad_width_dot(20);
    out.setf(std::ios::left);
 
    char fill_char(out.fill());
    out.fill('.');
 
-   out << std::setw(pad_width_dot)
-       << "  Name " << " " << disp.mName.c_str() << std::endl;
-   out << std::setw(pad_width_dot)
-       << "  Origin " << " " << disp._xo << ", " << disp._yo << std::endl;
-   out << std::setw(pad_width_dot)
-       << "  Size " << " " << disp._xs << "x" << disp._ys << std::endl;
-   out << std::setw(pad_width_dot)
-       << "  Pipe number " << " " << disp.mPipe << std::endl;
-   out << std::setw(pad_width_dot)
-       << "  Active " << " " << (disp.mActive ? "Yes" : "No") << std::endl;
+   const unsigned int indent_level(2);
+   const std::string indent_text(indent_level, ' ');
+   const int pad_width_dot(20 - indent_level);
+
+   out << indent_text << std::setw(pad_width_dot)
+       << "Name " << " " << disp.mName.c_str() << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Origin " << " " << disp._xo << ", " << disp._yo << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Size " << " " << disp._xs << "x" << disp._ys << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Pipe number " << " " << disp.mPipe << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Active " << " " << (disp.mActive ? "Yes" : "No") << std::endl;
 
    for(unsigned i=0;i<disp.mViewports.size();i++)
    {
-      out << "  Viewport " << i << ":\n" << *(disp.mViewports[i]) << std::endl;
+      out << indent_text << "Viewport " << i << ":\n";
+      disp.mViewports[i]->outStream(out, 4);
+      out << std::endl;
    }
 
    // Restore the previous state.

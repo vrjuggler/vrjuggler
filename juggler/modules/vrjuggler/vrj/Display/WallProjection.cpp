@@ -32,10 +32,10 @@
 
 #include <vrj/vrjConfig.h>
 //#include <sys/types.h>
+#include <string>
 
 #include <jccl/Config/ConfigChunk.h>
 
-#include <vrj/Display/WallProjection.h>
 #include <vrj/Kernel/Kernel.h>
 
 #include <gmtl/Vec.h>
@@ -47,6 +47,8 @@
 
 //#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
+
+#include <vrj/Display/WallProjection.h>
 
 namespace vrj
 {
@@ -160,13 +162,18 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleF
       */
 }
 
-
-std::ostream& WallProjection::outStream(std::ostream& out)
+std::ostream& WallProjection::outStream(std::ostream& out,
+                                        const unsigned int indentLevel)
 {
-   out << "vjWallProjection: ";
+   const int pad_width_dot(20 - indentLevel);
+   out.setf(std::ios::left);
 
-   return Projection::outStream(out);
+   const std::string indent_text(indentLevel, ' ');
+
+   out << indent_text << std::setw(pad_width_dot)
+       << "Type " << " vrj::WallProjection\n";
+
+   return Projection::outStream(out, indentLevel);
 }
 
-
-};
+}
