@@ -57,10 +57,6 @@
 /* Define all of the following if building on HP-UX. */
 #undef VJ_HPUX_VERSION
 
-/* Define if building on a Win32 platform. */
-#undef WIN32
-#undef _MBCS
-
 @BOTTOM@
 
 #endif	/* _VJ_DEFINES_H_ */
