@@ -90,6 +90,8 @@ dummyTrackd_OBJS	= dummyTrackd.@OBJEXT@
 
 fsPinchGloveTest_OBJS	= fsPinchGloveTest.@OBJEXT@
 
+gadgetTest_OBJS	= gadgetTest.@OBJEXT@ PinchGloveAdaptor.@OBJEXT@ IboxAdaptor.@OBJEXT@ FlockAdaptor.@OBJEXT@ BaseAdaptor.@OBJEXT@
+
 go_OBJS	= main.@OBJEXT@
 
 go-ibox_OBJS	= main-ibox.@OBJEXT@
@@ -103,7 +105,7 @@ FlockTest_OBJS	= FlockTest.@OBJEXT@
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-all: aFlockTest@EXEEXT@ flockDebug@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@
+all: gadgetTest
 
 aFlockTest@EXEEXT@: $(aFlockTest_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(aFlockTest_OBJS) @APP_EXTRA_LIBS@
@@ -116,6 +118,9 @@ aMotionStarTest@EXEEXT@: $(aMotionStarTest_OBJS)
 
 dummyTrackd@EXEEXT@: $(dummyTrackd_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(dummyTrackd_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
+
+gadgetTest@EXEEXT@: $(gadgetTest_OBJS)
+	$(LINK) @EXE_NAME_FLAG@ $(gadgetTest_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS) -lm
 
 fsPinchGloveTest@EXEEXT@: $(fsPinchGloveTest_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(fsPinchGloveTest_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS) -lm
