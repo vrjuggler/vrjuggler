@@ -79,7 +79,7 @@ public:
     //: Destructor
     virtual ~Position();
 
-    virtual bool config(jccl::ConfigChunk *c);
+    virtual bool config(jccl::ConfigChunkPtr c);
 
     /* New pure virtual functions */
     //: Get Position data

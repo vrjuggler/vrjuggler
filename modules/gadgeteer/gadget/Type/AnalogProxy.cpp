@@ -37,7 +37,7 @@
 namespace gadget
 {
 
-bool AnalogProxy::config(jccl::ConfigChunk* chunk)
+bool AnalogProxy::config(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "AnaProxy");

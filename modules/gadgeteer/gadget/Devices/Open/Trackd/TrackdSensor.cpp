@@ -64,7 +64,7 @@ namespace gadget
  // -Create the trackdSensor based on config info
  // -set to active
  // -grow the vector to however many values we need
- bool TrackdSensor::config(jccl::ConfigChunk* c)
+ bool TrackdSensor::config(jccl::ConfigChunkPtr c)
  {
     if(! (Input::config(c) && Position::config(c)))
        return false;

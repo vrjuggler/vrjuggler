@@ -36,7 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Proxy.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Singleton.h>
 #include <jccl/Plugins/ConfigManager/DependencyManager.h>
 
@@ -56,7 +56,7 @@ public:
 
    //: Create the proxy
    //! RETURNS: NULL - Proxy failed creation or configuration
-   virtual Proxy* createProxy(jccl::ConfigChunk* chunk) const = 0;
+   virtual Proxy* createProxy(jccl::ConfigChunkPtr chunk) const = 0;
 
    //: Get the string desc of the type of chunk we can create
    virtual std::string    getChunkType() const = 0;
@@ -71,7 +71,7 @@ public:
 
    //: Create the proxy
    //! RETURNS: NULL - Proxy failed creation or configuration
-   Proxy* createProxy(jccl::ConfigChunk* chunk) const
+   Proxy* createProxy(jccl::ConfigChunkPtr chunk) const
    {
       PROXY* new_proxy = new PROXY;             // Create new proxy
       bool success = new_proxy->config(chunk);  // Attempt to configure it
@@ -113,21 +113,21 @@ public:
    //!ARGS: chunk - chunk we are requesting about knowledge to create
    //!RETURNS: true - factory knows how to create the proxy
    //+          false - factory does not know how to create the proxy
-   bool recognizeProxy(jccl::ConfigChunk* chunk);
+   bool recognizeProxy(jccl::ConfigChunkPtr chunk);
 
    //: Load the specified proxy
    //!PRE: recognizeDevice(chunk) == true
    //!ARGS: chunk - specification of the proxy to load
    //!RETURNS: null - Proxy failed to load
    //+         other - Pointer to the loaded proxy
-   Proxy* loadProxy(jccl::ConfigChunk* chunk);
+   Proxy* loadProxy(jccl::ConfigChunkPtr chunk);
 
 private:
 
    //: Find a constructor for the given proxy type
    //!RETURNS: -1 - Not found
    //+            - Index of the constructorck
-   int   findConstructor(jccl::ConfigChunk* chunk);
+   int   findConstructor(jccl::ConfigChunkPtr chunk);
 
 private:
    std::vector<ProxyConstructorBase*> mConstructors;   //: List of the proxy constructors

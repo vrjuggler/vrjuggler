@@ -77,7 +77,7 @@ public:
    SimPosition() {;}
    virtual ~SimPosition() {;}
 
-   virtual bool config(jccl::ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
    //: Return position data
    vrj::Matrix* getPosData(int devNum=0)

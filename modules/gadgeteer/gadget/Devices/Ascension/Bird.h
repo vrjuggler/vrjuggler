@@ -63,7 +63,7 @@ public:
    ~Bird();
    //@}
 
-   virtual bool config(jccl::ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunkPtr c);
 
    /** @name Input pure virtual functions
     *

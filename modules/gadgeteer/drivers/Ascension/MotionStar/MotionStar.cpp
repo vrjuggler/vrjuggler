@@ -106,7 +106,7 @@ MotionStar::~MotionStar ()
 // ----------------------------------------------------------------------------
 // Configure the MotionStar with the given config chunk.
 // ----------------------------------------------------------------------------
-bool MotionStar::config (jccl::ConfigChunk* c)
+bool MotionStar::config (jccl::ConfigChunkPtr c)
 {
    bool retval;
 
@@ -115,7 +115,7 @@ bool MotionStar::config (jccl::ConfigChunk* c)
    if ( Input::config(c) &&  Position::config(c) )
    {
       vprDEBUG(vrjDBG_INPUT_MGR, 3)
-         << "       MotionStar::config(jccl::ConfigChunk*)\n" << vprDEBUG_FLUSH;
+         << "       MotionStar::config(jccl::ConfigChunkPtr)\n" << vprDEBUG_FLUSH;
 
       // Configure m_motion_star with the config info.
       setAddressName(static_cast<std::string>(c->getProperty("address")).c_str());

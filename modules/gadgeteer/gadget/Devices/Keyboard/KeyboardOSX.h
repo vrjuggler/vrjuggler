@@ -40,10 +40,7 @@
 #include <vpr/Sync/Mutex.h>
 #include <Carbon/Carbon.h>
 #include <vrj/Kernel/OSXSystemFactory.h>
-
-namespace jccl {
-    class ConfigChunk;
-};
+#include <jccl/Config/ConfigChunkPtr.h>
 
 
 namespace gadget
@@ -85,7 +82,7 @@ public:
    }
    ~KeyboardOSX() { stopSampling();}
 
-   virtual bool config(jccl::ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunkPtr c);
 
    // Main thread of control for this active object
    void controlLoop(void* nullParam);

@@ -43,7 +43,7 @@
 namespace gadget
 {
 
-bool ProxyDepChecker::canHandle(jccl::ConfigChunk* chunk)
+bool ProxyDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 

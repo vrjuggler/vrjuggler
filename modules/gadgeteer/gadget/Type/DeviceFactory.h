@@ -36,7 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Singleton.h>
 
 #include <vrj/Util/Debug.h>
@@ -56,7 +56,7 @@ public:
    DeviceConstructorBase() {;}
 
    //: Create the device
-   virtual Input* createDevice(jccl::ConfigChunk* chunk)
+   virtual Input* createDevice(jccl::ConfigChunkPtr chunk)
    {
       vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
       return NULL;
@@ -74,7 +74,7 @@ class DeviceConstructor : public DeviceConstructorBase
 public:
    DeviceConstructor();
 
-   Input* createDevice(jccl::ConfigChunk* chunk)
+   Input* createDevice(jccl::ConfigChunkPtr chunk)
    {
       DEV* new_dev = new DEV;
       bool success = new_dev->config(chunk);
@@ -115,20 +115,20 @@ public:
    //!ARGS: chunk - chunk we are requesting about knowledge to create
    //!RETURNS: true - factory knows how to create the device
    //+          false - factory does not know how to create the device
-   bool recognizeDevice(jccl::ConfigChunk* chunk);
+   bool recognizeDevice(jccl::ConfigChunkPtr chunk);
 
    //: Load the specified device
    //!PRE: recognizeDevice(chunk) == true
    //!ARGS: chunk - specification of the device to load
    //!RETURNS: null - Device failed to load
    //+         other - Pointer to the loaded device
-   Input* loadDevice(jccl::ConfigChunk* chunk);
+   Input* loadDevice(jccl::ConfigChunkPtr chunk);
 
 private:
    //: Find a constructor for the given device type
    //!RETURNS: -1 - Not found
    //+            - Index of the constructorck
-   int   findConstructor(jccl::ConfigChunk* chunk);
+   int   findConstructor(jccl::ConfigChunkPtr chunk);
 
    void debugDump();
 

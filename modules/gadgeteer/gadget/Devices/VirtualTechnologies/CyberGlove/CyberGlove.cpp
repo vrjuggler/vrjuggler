@@ -48,7 +48,7 @@
 namespace gadget
 {
 
-bool CyberGlove::config(jccl::ConfigChunk *c)
+bool CyberGlove::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Glove::config(c) ))
       return false;

@@ -49,7 +49,7 @@ SimDigital::~SimDigital()
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimDigital::config(jccl::ConfigChunk* chunk)
+bool SimDigital::config(jccl::ConfigChunkPtr chunk)
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))

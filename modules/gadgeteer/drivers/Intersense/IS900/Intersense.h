@@ -120,7 +120,7 @@ class Intersense :  public Input, public Position,  public Digital,  public Anal
 
 
 //: configure the flock with a config chunk
-    virtual bool config(jccl::ConfigChunk* c);
+    virtual bool config(jccl::ConfigChunkPtr c);
 
 //: begin sampling
     int startSampling();

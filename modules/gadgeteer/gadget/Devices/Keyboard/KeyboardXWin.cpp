@@ -45,7 +45,7 @@ namespace gadget
 {
 
 //: Constructor
-bool KeyboardXWin::config(jccl::ConfigChunk *c)
+bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Keyboard::config(c)))
       return false;
@@ -69,9 +69,9 @@ bool KeyboardXWin::config(jccl::ConfigChunk *c)
 
    // Get the X display string
    int x_disp_num = c->getProperty("display_number");
-   jccl::ConfigChunk* dispSysChunk = vrj::DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunkPtr dispSysChunk = vrj::DisplayManager::instance()->getDisplaySystemChunk();
 
-   if ((x_disp_num >= 0) && dispSysChunk)
+   if ((x_disp_num >= 0) && dispSysChunk.get())
       mXDisplayString = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
    else
       mXDisplayString = std::string("-1");

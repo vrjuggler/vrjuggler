@@ -56,7 +56,7 @@ public:
 
    virtual ~SimAnalog();
 
-   virtual bool config(jccl::ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
    //: Return analog data
    virtual float getAnalogData(int devNum=0)

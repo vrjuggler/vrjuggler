@@ -125,7 +125,7 @@ public:
    virtual ~Glove() {}
 
    // Let constructor take care of device abilities and init
-   virtual bool config(jccl::ConfigChunk* chunk)
+   virtual bool config(jccl::ConfigChunkPtr chunk)
    {return true;}
 
 public:  // ---- GLOVE INTERFACE ---- //
