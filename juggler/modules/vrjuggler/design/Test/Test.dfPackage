@@ -61,7 +61,7 @@ class __options {
 <oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::test::TestRunner#mTests:oiref>=316,139,30,13,0:oigroup>
 <oigroup:<oiref:cpp#Class#vrj::test::TestCase:oiref>=180,380,148,124,1:oigroup>
 <oigroup:Composite#stereotype#MemberLink#<oiref:cpp#Member#vrj::test::Test#lnkTestFailure:oiref>=519,164,91,13,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::test::TestFailure:oiref>=630,40,200,228,1:oigroup> 
+<oigroup:<oiref:cpp#Class#vrj::test::TestFailure:oiref>=630,40,200,228,1:oigroup>
 */
 class __positions {
 }
