@@ -33,33 +33,9 @@
 
 
 #include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
-#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 
 namespace jccl {
-
-
-    // CommandWritePerfData
-
-    /*static*/ const std::string CommandWritePerfData::protocol_name ("vjc_performance");
-    
-
-    CommandWritePerfData::CommandWritePerfData (PerfDataBuffer* _perf_buffer, 
-                                                float _refresh_time) :PeriodicCommand (_refresh_time) {
-        perf_buffer = _perf_buffer;
-    }
-
-    
-    /*virtual*/ void CommandWritePerfData::call (std::ostream& out) const {
-    perf_buffer->write (out);
-    }
-
-
-    /*virtual*/ const std::string& CommandWritePerfData::getProtocolName () const {
-        return protocol_name;
-    }
-
-
 
     // CommandLabeledWritePerfData
 

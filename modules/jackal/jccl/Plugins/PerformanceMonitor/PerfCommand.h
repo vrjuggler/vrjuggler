@@ -45,21 +45,7 @@ namespace jccl {
 
     //------------------ PerfManager Commands --------------------------
 
-    class PerfDataBuffer;
     class LabeledPerfDataBuffer;
-
-    class CommandWritePerfData: public PeriodicCommand {
-    public:
-        PerfDataBuffer* perf_buffer;
-        static const std::string protocol_name;
-        
-        CommandWritePerfData (PerfDataBuffer *pd, float _refresh_time);
-        
-        virtual void call (std::ostream& out) const;
-        
-        virtual const std::string& getProtocolName () const;
-    };
-
 
     class CommandWriteLabeledPerfData: public PeriodicCommand {
     public:
