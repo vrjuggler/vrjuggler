@@ -288,30 +288,77 @@ public class ControlPanelView
             if (item.equals("A n a l o g"))
             {
                ClassLoader loader = BeanJarClassLoader.instance();
-               showPanelWithChunks("SimAnalog",
-                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")),
-                                   "Choose an analog device");
+               ControlPanel ctl = createPanelWithChunks(
+                                       "SimAnalog",
+                                       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")));
+               ctl.setTitle("Choose an analog device");
+               ctl.addActionListener(new ActionListener()
+               {
+                  public void actionPerformed(ActionEvent evt)
+                  {
+                     JDialog dlg = new JDialog(
+                           (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+                           "Analog Device Editor",
+                           true);
+                     dlg.getContentPane().setLayout(new BorderLayout());
+                     SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor();
+
+                     ConfigManagerService mgr = getConfigManager();
+                     ConfigChunk device = mgr.getActiveConfig().get((String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID()));
+                     editor.setDevice(device);
+                     dlg.getContentPane().add(editor, BorderLayout.CENTER);
+                     dlg.pack();
+                     dlg.setVisible(true);
+                  }
+               });
+               pushCurrentBack(ctl);
             }
             else if (item.equals("D i g i t a l"))
             {
                ClassLoader loader = BeanJarClassLoader.instance();
-               showPanelWithChunks("SimDigital",
-                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")),
-                                   "Choose a digital device");
+               ControlPanel ctl = createPanelWithChunks(
+                                       "SimDigital",
+                                       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")));
+               ctl.setTitle("Choose a digital device");
+               pushCurrentBack(ctl);
             }
             else if (item.equals("P o s i t i o n a l"))
             {
                ClassLoader loader = BeanJarClassLoader.instance();
-               showPanelWithChunks("SimPosition",
-                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")),
-                                   "Choose a positional device");
+               ControlPanel ctl = createPanelWithChunks(
+                                       "SimPosition",
+                                       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")));
+               ctl.setTitle("Choose a positional device");
+               ctl.addActionListener(new ActionListener()
+               {
+                  public void actionPerformed(ActionEvent evt)
+                  {
+                     JDialog dlg = new JDialog(
+                           (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+                           "Positional Device Editor",
+                           true);
+                     dlg.getContentPane().setLayout(new BorderLayout());
+                     SimPosDeviceEditor editor = new SimPosDeviceEditor();
+
+                     ConfigManagerService mgr = getConfigManager();
+                     System.out.println("Action Cmd: "+evt.getActionCommand());
+                     ConfigChunk device = mgr.getActiveConfig().get((String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID()));
+                     editor.setDevice(device);
+                     dlg.getContentPane().add(editor, BorderLayout.CENTER);
+                     dlg.pack();
+                     dlg.setVisible(true);
+                  }
+               });
+               pushCurrentBack(ctl);
             }
             else if (item.equals("G l o v e"))
             {
                ClassLoader loader = BeanJarClassLoader.instance();
-               showPanelWithChunks("SimGlove",
-                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/glove_devices64.png")),
-                                   "Choose a glove device");
+               ControlPanel ctl = createPanelWithChunks(
+                                       "SimGlove",
+                                       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/glove_devices64.png")));
+               ctl.setTitle("Choose a glove device");
+               pushCurrentBack(ctl);
             }
          }
       });
@@ -324,7 +371,7 @@ public class ControlPanelView
    /**
     * Displays a panel containing all of the chunks that have the given token.
     */
-   private void showPanelWithChunks(String token, Icon icon, String title)
+   private ControlPanel createPanelWithChunks(String token, Icon icon)
    {
       ClassLoader loader = BeanJarClassLoader.instance();
       DefaultControlPanelModel model = new DefaultControlPanelModel();
@@ -336,9 +383,9 @@ public class ControlPanelView
       }
       ControlPanel new_control = new ControlPanel();
       new_control.setModel(model);
-      new_control.setTitle(title);
       new_control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
-      pushCurrentBack(new_control);
+
+      return new_control;
    }
 
    /**
