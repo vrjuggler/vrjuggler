@@ -1,0 +1,120 @@
+<ChunkDescDB>
+  <ChunkDesc token="EnvironmentManager" name="Environment Manager">
+    <help>Application-side of connection to vjcontrol GUI</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="Port" name="Port" type="Int" num="1">
+        <help>Networking port to listen on</help>
+    </PropertyDesc>
+    <PropertyDesc token="AcceptConnections" name="Accept Connections" type="Bool" num="1">
+        <help>Whether or not we should accept connections from vjcontrol clients</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="FileConnect" name="EM Connection">
+    <help>A file for outputing Environment Manager data</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="FileName" name="File Name" type="String" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="Enabled" name="Enabled" type="Bool" num="1">
+        <help>Should file be opened &amp; used?</help>
+    </PropertyDesc>
+    <PropertyDesc token="Mode" name="File Mode" type="Int" num="1">
+        <help>Is the file readable, writeable, or interactive (e.g. socket or pipe)</help>
+        <enumeration name="Interactive" value="0"/>
+        <enumeration name="Input" value="1"/>
+        <enumeration name="Output" value="2"/>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PerfMeasure" name="Performance Measurements">
+    <help>Controls performance monitoring of Juggler library</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="PerformanceTarget" name="Performance Target" type="Chunk" num="1">
+        <help>File or network connection that performance data should be sent to.</help>
+        <enumeration name="FileConnect"/>
+        <enumeration name="NetworkConnect"/>
+    </PropertyDesc>
+    <PropertyDesc token="TimingTests" name="Timing Tests" type="EmbeddedChunk" num="variable">
+        <help>Turn on/off Juggler internal timing tests</help>
+        <enumeration name="PerfTestActive"/>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PerfTestActive" name="PerfTestActive">
+    <help>inner chunk for Performance Testing</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="Prefix" name="Prefix" type="String" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="Enabled" name="Enabled" type="Bool" num="1">
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="vjIncludeFile" name="Include File">
+    <help>File that should be loaded along with this one</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
+    <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="vjcontrol" name="VjControl Configuration">
+    <help>Configuration information for the VjControl GUI itself</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="looknfeel" name="Look and Feel" type="String" num="1">
+        <help>The visual 'Look and Feel' to use for the GUI</help>
+        <enumeration name="Java"/>
+        <enumeration name="Motif"/>
+        <enumeration name="Windows"/>
+    </PropertyDesc>
+    <PropertyDesc token="host" name="Default Host" type="String" num="1">
+        <help>A remote host that VjControl should try to connect to</help>
+    </PropertyDesc>
+    <PropertyDesc token="port" name="Default Port" type="Int" num="1">
+        <help>Network Port that VjControl should try to connect to</help>
+    </PropertyDesc>
+    <PropertyDesc token="descfiles" name="Preload ChunkDesc Files" type="String" num="variable">
+        <help>The names of Chunk Description files that VjControl should load at startup</help>
+    </PropertyDesc>
+    <PropertyDesc token="chunkfiles" name="Preload ConfigChunk Files" type="String" num="variable">
+        <help>The names of ConfigChunk files that VjControl should load at startup</help>
+    </PropertyDesc>
+    <PropertyDesc token="defaultchunkfiles" name="Default ConfigChunk Files" type="String" num="variable">
+        <help>Files that contain default values for new ConfigChunks</help>
+    </PropertyDesc>
+    <PropertyDesc token="fontname" name="Font Name" type="String" num="1">
+        <help>Name of the font to use for the GUI</help>
+        <enumeration name="Courier"/>
+        <enumeration name="Dialog"/>
+        <enumeration name="DialogInput"/>
+        <enumeration name="Helvetica"/>
+        <enumeration name="TimesRoman"/>
+    </PropertyDesc>
+    <PropertyDesc token="fontsize" name="Font Size" type="Int" num="1">
+        <help>Font size to use for GUI</help>
+    </PropertyDesc>
+    <PropertyDesc token="windowsize" name="Max Window Size" type="Int" num="2">
+        <help>Maximum size to open vjcontrol windows</help>
+        <label name="Width"/>
+        <label name="Height"/>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PerfData" name="Performance Data Display">
+    <help>Information for displaying data from perfbuffers with a matching name</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="labels" name="Labels" type="String" num="variable">
+        <help>Labels for Perf Buffer phases</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
