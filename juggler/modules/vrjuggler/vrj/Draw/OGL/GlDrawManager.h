@@ -278,6 +278,7 @@ protected:
    void operator=(const GlDrawManager& o) {;}
 
    vprSingletonHeader(GlDrawManager);
+   
 };
 
 } // end namespace
