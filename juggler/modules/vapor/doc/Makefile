@@ -18,4 +18,4 @@ instdir=	vapor/0.11/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
-include ../../../docs/doxygen.mk
+include ../../../doc/doxygen.mk
