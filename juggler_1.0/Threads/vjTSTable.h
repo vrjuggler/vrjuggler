@@ -7,7 +7,7 @@
 #include <Kernel/vjDebug.h>
 
 //-----------------------------------------------------------------
-//: This class is the actual TS Table
+//: This class is the actual TS Table.
 //
 // This class maintains a table that has ptrs to all the TS data
 // in the system.
@@ -18,8 +18,10 @@ public:
    vjTSTable()
    {;}
 
+   //-----------------------------------------------------------------
    //: Return a newly created table.
    //! NOTE: This is not a copy.
+   //-----------------------------------------------------------------
    vjTSTable* createNew()
    {
       vjTSTable* new_table = new vjTSTable;
@@ -47,7 +49,9 @@ public:
    }
 
 public:
-      //: Set an object entry in the table
+   //-----------------------------------------------------------------
+   //: Set an object entry in the table.
+   //-----------------------------------------------------------------
    void setObject(vjTSBaseObject* object, long key)
    {
       vjASSERT(key >= 0);
@@ -56,8 +60,11 @@ public:
       mTSObjects[key] = object;
    }
 
-   //: Release the object given by key
-   //! POST: Obj(key) is deleted, and the ptr is set to NULL
+   //-----------------------------------------------------------------
+   //: Release the object given by key.
+   //
+   //! POST: Obj(key) is deleted, and the ptr is set to NULL.
+   //-----------------------------------------------------------------
    void releaseObject(long key)
    {
       vjASSERT( (key>=0) && (key<mTSObjects.size()) );

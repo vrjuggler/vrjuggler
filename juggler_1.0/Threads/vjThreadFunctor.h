@@ -4,14 +4,13 @@
 #include <vjConfig.h>
 #include <stdlib.h>
 
-class  vjBaseThreadFunctor
 //---------------------------------------------------------------
-// PURPOSE:
-//     Converts a function into a functor that can be passed
-//	to a extern C type function to be called by a thread creation
-//	routine.
+//: Converts a function into a functor that can be passed to a
+//  extern C type function to be called by a thread creation
+//  routine.
 //!PUBLIC_API:
 //---------------------------------------------------------------
+class  vjBaseThreadFunctor
 {
 public:
     virtual void operator()() = 0;    // Pure virtual
@@ -19,8 +18,10 @@ public:
     virtual void setArg(void*) = 0;
 };
 
+//---------------------------------------------------------------
 //: Member functor class.
 //!PUBLIC_API:
+//---------------------------------------------------------------
 template<class T>
 class vjThreadMemberFunctor : public  vjBaseThreadFunctor
 {
@@ -56,18 +57,20 @@ private:
 };
 
 
-//: Nonmember functor class.
+//---------------------------------------------------------------
+//: Nonmember functor class.  Converts a NonMember function into
+//+ a functor.
+//
 //!PUBLIC_API:
+//---------------------------------------------------------------
 class vjThreadNonMemberFunctor : public  vjBaseThreadFunctor
-//---------------------------------------------------------------
-// PURPOSE:
-//     Converts a NonMember function into a functor
-//---------------------------------------------------------------
 {
 public:
     typedef void(* NonMemFunPtr)(void*);
 
-    // Constructor
+    //---------------------------------------------------------------
+    //: Constructor.
+    //---------------------------------------------------------------
     vjThreadNonMemberFunctor (NonMemFunPtr f, void* a = NULL) : func(f), argument(a)
     {;}
 
@@ -89,10 +92,10 @@ public:
     void* argument;		// Argument to thread startup function.
 };
 
-//--------------------------------------------
+//---------------------------------------------
 // This is the actual function that is called.
 // It must be extern "C"
-//--------------------------------------------
+//---------------------------------------------
 #ifdef VJ_SGI_IPC   // ---- SGI IPC Barrier ------ //
     extern "C" void ThreadFunctorFunction(void* args);
 #else

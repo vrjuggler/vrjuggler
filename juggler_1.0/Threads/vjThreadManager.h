@@ -9,7 +9,7 @@
 #include <Sync/vjGuard.h>
 
 //----------------------------------------------------
-//: Manager that maintains data about all threads
+//: Manager that maintains data about all threads.
 //
 // This class holds data on: <br>
 // - List of all threads in system <br>
@@ -20,8 +20,11 @@
 class vjThreadManager
 {
 public:
-   //: Called when a thread has been added to the system
-   //! PRE: Manager must be locked
+   //-----------------------------------------------------
+   //: Called when a thread has been added to the system.
+   //
+   //! PRE: Manager must be locked.
+   //-----------------------------------------------------
    void addThread(vjBaseThread* thread)
    {
       vjASSERT((mThreadVectorMutex.test()) && (mTSMutex.test())); // Assert manager locked
@@ -36,8 +39,12 @@ public:
       debugDump();               // Dump current state
    }
 
-   //: Called when a thread has been removed from the system
-   //! PRE: Manager must be locked
+   //-----------------------------------------------------
+   //: Called when a thread has been removed from the
+   //+ system.
+   //
+   //! PRE: Manager must be locked.
+   //-----------------------------------------------------
    void removeThread(vjBaseThread* thread)
    {
       vjASSERT((mThreadVectorMutex.test()) && (mTSMutex.test())); // Assert manager locked
@@ -46,23 +53,32 @@ public:
       tsThreadRemoved(thread);   // Tell TS routines that thread removed
    }
 
-   //: Lock the manager so that we have complete control to do stuff
-   // The manager should be locked whenever there is about to be a change in
-   // number of threads in the system
+   //-----------------------------------------------------
+   //: Lock the manager so that we have complete control
+   //+ to do stuff.
+   // The manager should be locked whenever there is
+   // about to be a change in number of threads in the
+   // system.
+   //-----------------------------------------------------
    void lock()
    {
       mThreadVectorMutex.acquire();
       mTSMutex.acquire();
    }
 
-   //: Unlock the manager to allow people to use it again
+   //-----------------------------------------------------
+   //: Unlock the manager to allow people to use it
+   //+ again.
+   //-----------------------------------------------------
    void unlock()
    {
       mTSMutex.release();
       mThreadVectorMutex.release();
    }
 
-   //: Dump the state of the manager to debug
+   //-----------------------------------------------------
+   //: Dump the state of the manager to debug.
+   //-----------------------------------------------------
    void debugDump();
 
 private:
@@ -71,25 +87,42 @@ private:
 
       /******** TS DATA **********/
 public:
-   //: Add an object to all the tables
-   //! POST: The new object has been assigned to all tables in system
+   //-----------------------------------------------------
+   //: Add an object to all the tables.
+   //
+   //! POST: The new object has been assigned to all
+   //+       tables in system.
+   //-----------------------------------------------------
    long addTSObject(vjTSBaseObject* object);
 
-   //: Remove an object from all tables
-   //! POST: The object of key is removed from all tables in system
+   //-----------------------------------------------------
+   //: Remove an object from all tables.
+   //
+   //! POST: The object of key is removed from all tables
+   //+       in system.
+   //-----------------------------------------------------
    void removeTSObject(long key);
 
-   //: Return the table for the current thread
+   //-----------------------------------------------------
+   //: Return the table for the current thread.
+   //-----------------------------------------------------
    vjTSTable* getCurrentTSTable();
 
 private:
-   //: Called when a thread has been added to the system
+   //-----------------------------------------------------
+   //: Called when a thread has been added to the system.
+   //-----------------------------------------------------
    void tsThreadAdded(vjBaseThread* thread);
 
-   //: Called when a thread has been removed from the system
+   //-----------------------------------------------------
+   //: Called when a thread has been removed from the
+   //+ system.
+   //-----------------------------------------------------
    void tsThreadRemoved(vjBaseThread* thread);
 
-   //: Returns a newly generated TS key to use
+   //-----------------------------------------------------
+   //: Returns a newly generated TS key to use.
+   //-----------------------------------------------------
    long generateNewTSKey()
    { return mNextTSObjectKey++; }
 
@@ -104,12 +137,17 @@ private:
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
-   //: Constructor:  Hidden, so no instantiation is allowed
+   //-----------------------------------------------------
+   //: Constructor.  Hidden, so no instantiation is
+   //+ allowed.
+   //-----------------------------------------------------
    vjThreadManager() : mNextTSObjectKey(0)
    {;}
 
 public:
-   //: Get instance of singleton object
+   //-----------------------------------------------------
+   //: Get instance of singleton object.
+   //-----------------------------------------------------
    static vjThreadManager* instance()
    {
       if (_instance == NULL)
@@ -122,4 +160,3 @@ private:
 };
 
 #endif
-

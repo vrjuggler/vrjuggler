@@ -10,9 +10,9 @@
 typedef int cancel_state_t;
 typedef int pid_t;
 typedef int sigset_t;
-//----------------------------------------------
-//: Wrapper for Win32 thread handling functions
-//----------------------------------------------
+//-----------------------------------------------
+//: Wrapper for Win32 thread handling functions.
+//-----------------------------------------------
 //!PUBLIC_API:
 class vjThreadWin32
 {
@@ -106,7 +106,7 @@ public:
     //! RETURNS:  0 - Successful thread creation
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    int create ( vjBaseThreadFunctor* functorPtr, long flags = 0,
+    int create (vjBaseThreadFunctor* functorPtr, long flags = 0,
                 u_int priority= 0, void* stack_addr = NULL,
                 size_t stack_size = 0);
 
