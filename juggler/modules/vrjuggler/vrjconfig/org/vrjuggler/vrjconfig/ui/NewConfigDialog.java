@@ -62,6 +62,20 @@ public class NewConfigDialog
       try
       {
          jbInit();
+
+         EnvironmentService env_svc = new EnvironmentServiceProxy();
+         if ( env_svc.getOS() == EnvironmentService.Windows )
+         {
+            buttonPnl.setLayout(new FlowLayout(FlowLayout.CENTER));
+            buttonPnl.add(okBtn);
+            buttonPnl.add(cancelBtn);
+         }
+         else
+         {
+            buttonPnl.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            buttonPnl.add(cancelBtn);
+            buttonPnl.add(okBtn);
+         }
       }
       catch (Exception e)
       {
@@ -136,6 +150,7 @@ public class NewConfigDialog
       validateData();
 
       // Size and position the dialog
+      dialog.getRootPane().setDefaultButton(okBtn);
       dialog.pack();
       dialog.setLocationRelativeTo(parent);
       dialog.setVisible(true);
@@ -382,7 +397,6 @@ public class NewConfigDialog
       includesListNewBtn.setToolTipText("New Include");
       includesListNewBtn.setMargin(new Insets(0, 0, 0, 0));
       */
-      buttonPnl.setLayout(new BoxLayout(buttonPnl, BoxLayout.X_AXIS));
       cancelBtn.setText("Cancel");
       okBtn.setText("OK");
       nameTxt.getDocument().addDocumentListener(new DocumentListener()
@@ -521,10 +535,6 @@ public class NewConfigDialog
       /*
       includesListSP.getViewport().add(includesList, null);
       */
-      buttonPnl.add(Box.createHorizontalGlue());
-      buttonPnl.add(okBtn, null);
-      buttonPnl.add(Box.createHorizontalStrut(8));
-      buttonPnl.add(cancelBtn, null);
    }
 
    // JBuilder GUI variables
