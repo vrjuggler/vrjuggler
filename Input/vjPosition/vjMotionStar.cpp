@@ -233,7 +233,7 @@ vjMotionStar::sample () {
    mMotionStar.sample();
 
    // For each bird
-   for ( int i = 0; i < mMotionStar.getNumBirds(); i++ ) {
+   for ( unsigned int i = 0; i < mMotionStar.getNumBirds(); i++ ) {
       // Get the index to the current read buffer
       int index = getBirdIndex(i,progress);
 
@@ -282,7 +282,7 @@ vjMotionStar::updateData () {
       vjGuard<vjMutex> updateGuard(lock);
 
       // Copy the valid data to the current data so that both are valid.
-      for ( int i = 0; i < getNumBirds(); i++ ) {
+      for ( unsigned int i = 0; i < getNumBirds(); i++ ) {
          theData[getBirdIndex(i,current)] = theData[getBirdIndex(i,valid)];   // first hand
       }
 
@@ -458,9 +458,9 @@ vjMotionStar::initCorrectionTable (const char* table_file) {
 //
 // XXX: We are going to say the birds are 0 based.
 // ----------------------------------------------------------------------------
-int
+unsigned int
 vjMotionStar::getBirdIndex (int birdNum, int bufferIndex) {
-   int ret_val = (birdNum*3)+bufferIndex;
+   unsigned int ret_val = (birdNum*3)+bufferIndex;
    vjASSERT((ret_val >= 0) && (ret_val < ((getNumBirds()+1)*3)));
 
    return ret_val;

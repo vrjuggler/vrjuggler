@@ -69,7 +69,7 @@ public:
    ~vjTSTable();
 
    //: Get the object with the spcified key
-   vjTSBaseObject* getObject(int objectKey);
+   vjTSBaseObject* getObject(unsigned int objectKey);
 
 public:
    //-----------------------------------------------------------------
@@ -82,7 +82,7 @@ public:
    //
    //! POST: Obj(key) is deleted, and the ptr is set to NULL.
    //-----------------------------------------------------------------
-   void releaseObject(long key);
+   void releaseObject(unsigned long key);
 
 public:
 //   friend vjThreadManager;

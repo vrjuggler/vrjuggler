@@ -48,7 +48,7 @@ vjGuard<vjMutex>  guard(mListGuard);
    vjTSTable* new_table = new vjTSTable;
 
    // For all elements in the table
-   for(int i=0;i<mTSObjects.size();i++)
+   for(unsigned int i=0;i<mTSObjects.size();i++)
       if(mTSObjects[i] != NULL)
          new_table->setObject(mTSObjects[i]->createNew(), i);
 
@@ -60,13 +60,13 @@ vjGuard<vjMutex>  guard(mListGuard);
 vjTSTable::~vjTSTable()
 {
    // For all elements in the table
-   for(int i=0;i<mTSObjects.size();i++)
+   for(unsigned int i=0;i<mTSObjects.size();i++)
       if(mTSObjects[i] != NULL)        // If valid object
          delete mTSObjects[i];         // Delete them
 }
 
 //: Get the object with the spcified key
-vjTSBaseObject* vjTSTable::getObject(int objectKey)
+vjTSBaseObject* vjTSTable::getObject(unsigned int objectKey)
 {
 vjGuard<vjMutex>  guard(mListGuard);
    vjASSERT((objectKey >= 0) && (objectKey < mTSObjects.size()));
@@ -91,7 +91,7 @@ vjGuard<vjMutex>  guard(mListGuard);
 //
 //! POST: Obj(key) is deleted, and the ptr is set to NULL.
 //-----------------------------------------------------------------
-void vjTSTable::releaseObject(long key)
+void vjTSTable::releaseObject(unsigned long key)
 {
 vjGuard<vjMutex>  guard(mListGuard);
    vjASSERT( (key>=0) && (key<mTSObjects.size()) );
