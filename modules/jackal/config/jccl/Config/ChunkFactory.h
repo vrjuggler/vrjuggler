@@ -49,21 +49,26 @@ class vjChunkFactory {
 
 public:
 
-    static void setChunkDescDB (vjChunkDescDB *_descdb) {
-	descdb = _descdb;
-	if (!nulldesc)
-	    nulldesc = new vjChunkDesc();
+
+    //: Adds descriptions in _descdb to the factory
+    static void addDescs (vjChunkDescDB* _descdb) {
+        descdb.insert (_descdb);
     }
 
 
+    //: Adds descriptions in file 'filename' to the factory
+    static void loadDescs (const std::string& filename) {
+        descdb.load(filename.c_str());
+    }
+
+
+    // we actually do need this so that the EM can send the descdb to the gui...
     static vjChunkDescDB* getChunkDescDB () {
-	return descdb;
+         return &descdb;
     }
 
     static vjChunkDesc* getChunkDesc (const std::string& token) {
-	if (!descdb)
-	    return NULL;
-	return descdb->getChunkDesc (token);
+        return descdb.getChunkDesc (token);
     }
 
     //: Creates a Chunk using the named description
@@ -72,29 +77,26 @@ public:
     //+          vjChunkDesc is found, an "empty" vjChunkDesc,
     //+          containing only a Name vjPropertyDesc, is used.
     static vjConfigChunk* createChunk (const std::string& desctoken) {
-	vjConfigChunk* ch;
+        vjConfigChunk* ch;
 
-	if (!descdb)
-	    return NULL;
-
-	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
-	if (desc)
-	    ch = new vjConfigChunk (desc);
-	else
-	    ch = NULL; //return new vjConfigChunk (nulldesc);
-	return ch;
+        vjChunkDesc* desc = descdb.getChunkDesc (desctoken);
+        if (desc)
+            ch = new vjConfigChunk (desc);
+        else
+            ch = NULL; //return new vjConfigChunk (nulldesc);
+        return ch;
     }
 
     //: Creates a Chunk using the given description
     static vjConfigChunk* createChunk (vjChunkDesc* d) {
-	if (d)
-	    return new vjConfigChunk (d);
-	else
-	    return NULL;
+        if (d)
+            return new vjConfigChunk (d);
+        else
+            return 0;
     }
 
 private:
-    static vjChunkDescDB *descdb;
+    static vjChunkDescDB descdb;
     static vjChunkDesc *nulldesc;
 
 

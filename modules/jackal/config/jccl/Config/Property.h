@@ -98,7 +98,7 @@ public:
 
     bool operator== (const vjProperty& p) const;
     inline bool operator != (const vjProperty& p) const {
-	return !(*this == p);
+        return !(*this == p);
     }
 
 
@@ -145,7 +145,7 @@ public:
 
 
     inline vjEnumEntry* getEnumEntry (const std::string& n) const {
-	return description->getEnumEntry (n);
+        return description->getEnumEntry (n);
     }
     vjEnumEntry* getEnumEntryWithValue (int val) const;
 
