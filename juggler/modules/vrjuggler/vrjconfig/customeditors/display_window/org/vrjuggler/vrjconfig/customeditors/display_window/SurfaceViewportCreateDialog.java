@@ -45,6 +45,7 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 public class SurfaceViewportCreateDialog
    extends ViewportCreateDialog
+   implements EditorConstants
 {
    public SurfaceViewportCreateDialog(Container parent)
    {
@@ -55,7 +56,7 @@ public class SurfaceViewportCreateDialog
                                       ConfigElement elt)
    {
       super("Basic Surface Viewport Parameters", ctx, elt,
-            EditorConstants.surfaceViewportType);
+            SURFACE_VIEWPORT_TYPE);
 
       mCorners[Plane.LL_CORNER] = "Lower Left Corner";
       mCorners[Plane.LR_CORNER] = "Lower Right Corner";
@@ -64,7 +65,7 @@ public class SurfaceViewportCreateDialog
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def =
-         broker.getRepository().get(EditorConstants.surfaceViewportType);
+         broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
 
       mTrackerProxyEditor =
          new PropertyEditorPanel(ctx, mViewportElement.getProperty("tracker_proxy", 0),
@@ -253,14 +254,19 @@ public class SurfaceViewportCreateDialog
       mCornerPanelLayout = new TableLayout(corner_size);
 
       ClassLoader loader = getClass().getClassLoader();
-      String img_base = EditorConstants.imageBase;
+      String img_base = IMAGE_BASE;
 
       try
       {
-         mPlaneImages[0] = new ImageIcon(loader.getResource(img_base + "/xy-plane-icon.png"));
-         mPlaneImages[1] = new ImageIcon(loader.getResource(img_base + "/yz-plane-icon.png"));
-         mPlaneImages[2] = new ImageIcon(loader.getResource(img_base + "/xz-plane-icon.png"));
-         mPlaneImages[3] = new ImageIcon(loader.getResource(img_base + "/custom-plane-icon.png"));
+         mPlaneImages[0] =
+            new ImageIcon(loader.getResource(img_base + "/xy-plane-icon.png"));
+         mPlaneImages[1] =
+            new ImageIcon(loader.getResource(img_base + "/yz-plane-icon.png"));
+         mPlaneImages[2] =
+            new ImageIcon(loader.getResource(img_base + "/xz-plane-icon.png"));
+         mPlaneImages[3] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/custom-plane-icon.png"));
       }
       catch (NullPointerException ex)
       {

@@ -49,6 +49,7 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 public class DisplayWindowStartDialog
    extends JDialog
+   implements EditorConstants
 {
    public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
                                    Dimension resolution)
@@ -64,16 +65,16 @@ public class DisplayWindowStartDialog
 
       ConfigBroker cfg_broker = new ConfigBrokerProxy();
       ConfigDefinition my_def =
-         cfg_broker.getRepository().get(EditorConstants.inputAreaType);
+         cfg_broker.getRepository().get(INPUT_AREA_TYPE);
 
       // Create a dummy config element to hand off to a new
       // PropertyEditorPanel instance.
       ConfigElementFactory factory =
          new ConfigElementFactory(cfg_broker.getRepository().getAllLatest());
       ConfigElement win_elt = factory.createUnique(my_def, ctx);
-      Object value = win_elt.getProperty(EditorConstants.lockKeyProperty, 0);
+      Object value = win_elt.getProperty(LOCK_KEY_PROPERTY, 0);
       PropertyDefinition prop_def =
-         my_def.getPropertyDefinition(EditorConstants.lockKeyProperty);
+         my_def.getPropertyDefinition(LOCK_KEY_PROPERTY);
 
       mLockKeyEditor = new PropertyEditorPanel(ctx, value, prop_def, win_elt,
                                                0, Color.white);
@@ -94,11 +95,11 @@ public class DisplayWindowStartDialog
          setSpinnerModel(mDepthBufferSpinner, 1, 1, 32);
 
          mSleepTimeField.setValue(
-            mWinElement.getProperty(EditorConstants.sleepTimeProperty, 0)
+            mWinElement.getProperty(SLEEP_TIME_PROPERTY, 0)
          );
 
          Object start_locked =
-            mWinElement.getProperty(EditorConstants.startLockedProperty, 0);
+            mWinElement.getProperty(START_LOCKED_PROPERTY, 0);
          mStartLockedCB.setSelected(Boolean.TRUE.equals(start_locked));
 
          // Validate the default values for the various text fields.
@@ -128,10 +129,9 @@ public class DisplayWindowStartDialog
       mVisualIdField.setDocument(new HexidecimalDocument());
 
       PropertyDefinition prop_def =
-         winElt.getDefinition().getPropertyDefinition(EditorConstants.lockKeyProperty);
+         winElt.getDefinition().getPropertyDefinition(LOCK_KEY_PROPERTY);
       mLockKeyEditor =
-         new PropertyEditorPanel(ctx,
-                                 winElt.getProperty(EditorConstants.lockKeyProperty, 0),
+         new PropertyEditorPanel(ctx, winElt.getProperty(LOCK_KEY_PROPERTY, 0),
                                  prop_def, winElt, 0, Color.white);
 
       try
@@ -159,28 +159,17 @@ public class DisplayWindowStartDialog
          mVisualIdField.setText(((Integer) fb_cfg.getProperty("visual_id", 0)).toString());
          mFSAACheckbox.setSelected(fb_cfg.getProperty("fsaa_enable", 0).equals(Boolean.TRUE));
 
-         mPositionXField.setValue(winElt.getProperty(
-            EditorConstants.originProperty, 0)
-         );
-         mPositionYField.setValue(winElt.getProperty(
-            EditorConstants.originProperty, 1)
-         );
-         mWidthField.setValue(winElt.getProperty(
-            EditorConstants.sizeProperty, 0)
-         );
-         mHeightField.setValue(winElt.getProperty(
-            EditorConstants.sizeProperty, 1)
-         );
+         mPositionXField.setValue(winElt.getProperty(ORIGIN_PROPERTY, 0));
+         mPositionYField.setValue(winElt.getProperty(ORIGIN_PROPERTY, 1));
+         mWidthField.setValue(winElt.getProperty(SIZE_PROPERTY, 0));
+         mHeightField.setValue(winElt.getProperty(SIZE_PROPERTY, 1));
 
          mStereoCheckbox.setSelected(winElt.getProperty("stereo", 0).equals(Boolean.TRUE));
          mBorderCheckbox.setSelected(winElt.getProperty("border", 0).equals(Boolean.TRUE));
          mHideMouseCheckbox.setSelected(winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE));
 
-         mSleepTimeField.setValue(
-            winElt.getProperty(EditorConstants.sleepTimeProperty, 0)
-         );
-         Object start_locked =
-            winElt.getProperty(EditorConstants.startLockedProperty, 0);
+         mSleepTimeField.setValue(winElt.getProperty(SLEEP_TIME_PROPERTY, 0));
+         Object start_locked = winElt.getProperty(START_LOCKED_PROPERTY, 0);
          mStartLockedCB.setSelected(Boolean.TRUE.equals(start_locked));
 
          // Validate the default values for the various text fields.
@@ -276,7 +265,7 @@ public class DisplayWindowStartDialog
 
    public Object getLockKey()
    {
-      return mWinElement.getProperty(EditorConstants.lockKeyProperty, 0);
+      return mWinElement.getProperty(LOCK_KEY_PROPERTY, 0);
    }
 
    public Boolean shouldStartLocked()
