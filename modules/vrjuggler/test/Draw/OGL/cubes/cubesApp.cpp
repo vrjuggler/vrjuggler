@@ -47,17 +47,17 @@
 // Uses a quaternion to do rotation in the environment
 void UserData::updateNavigation()
 {
-   Vec3 xyzAngles;
-   Vec3 xyzTrans;
+   vrj::Vec3 xyzAngles;
+   vrj::Vec3 xyzTrans;
 
    // Cur*Transform = New Location
-   Matrix    transform, transformIdent;
-   Quat      source_rot, goal_rot, slerp_rot;
+   vrj::Matrix    transform, transformIdent;
+   vrj::Quat      source_rot, goal_rot, slerp_rot;
 
    transformIdent.makeIdent();            // Create an identity matrix to rotate from
    source_rot.makeRot(transformIdent);
 
-   Matrix* wand_matrix;
+   vrj::Matrix* wand_matrix;
    wand_matrix = mWand->getData();
    wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
@@ -104,20 +104,20 @@ void UserData::updateNavigation()
       vjDEBUG(vjDBG_ALL,6) << "Velocity: " << mCurVelocity << std::endl
                            << vjDEBUG_FLUSH;
 
-   if(mIncVelocityButton->getData() == Digital::TOGGLE_ON)
+   if(mIncVelocityButton->getData() == vrj::Digital::TOGGLE_ON)
       vjDEBUG(vjDBG_ALL,2) << "-- Toggle ON --" << std::endl << vjDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == Digital::TOGGLE_OFF)
+   if(mIncVelocityButton->getData() == vrj::Digital::TOGGLE_OFF)
       vjDEBUG(vjDBG_ALL,2) << "-- Toggle OFF --" << std::endl << vjDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == Digital::ON)
+   if(mIncVelocityButton->getData() == vrj::Digital::ON)
       vjDEBUG(vjDBG_ALL,2) << "-- ON --" << std::endl << vjDEBUG_FLUSH;
 //   if(mIncVelocityButton->getData() == Digital::OFF)
 //      vjDEBUG(vjDBG_ALL,) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
 
    // Find direction vector
-   Vec3   forward(0.0f, 0.0f, -1.0f);
+   vrj::Vec3   forward(0.0f, 0.0f, -1.0f);
    forward *= mCurVelocity;
 
-   Matrix rot_mat, local_xform;
+   vrj::Matrix rot_mat, local_xform;
    rot_mat.invert(transform);
 
    local_xform.makeTrans(0, 0, mCurVelocity);
@@ -145,7 +145,7 @@ void cubesApp::init()
 {
    vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------"
                         << std::endl << vjDEBUG_FLUSH;
-   std::vector<User*> users = kernel->getUsers();
+   std::vector<vrj::User*> users = kernel->getUsers();
    int num_users = users.size();
    vprASSERT(num_users > 0);      // Make sure that we actually have users defined
 
@@ -225,7 +225,7 @@ void cubesApp::contextClose()
 // Draw the scene.  A bunch of boxes of
 // differing color and stuff.
 //----------------------------------------------
-void cubesApp::myDraw(User* user)
+void cubesApp::myDraw(vrj::User* user)
 {
    vjDEBUG(vjDBG_ALL,5) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
@@ -236,7 +236,7 @@ void cubesApp::myDraw(User* user)
    glPushMatrix();
          // --- Push on Navigation matrix for the user --- //
 
-      Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
+      vrj::Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
       glMultMatrixf(nav_matrix.getFloatPtr());
 
 
