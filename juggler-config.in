@@ -251,9 +251,9 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$VJ_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ $vrj_extra_cxxflags -I$VJ_BASE_DIR/include $subsystem_cxxflags
     else
-        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
+        echo @CXXFLAGS@ $vrj_extra_cxxflags -I@includedir@ $subsystem_cxxflags
     fi
 fi
 
