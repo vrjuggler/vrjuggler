@@ -9,7 +9,7 @@ install-docs: install-html install-chunk-html install-pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	sonix/0.0.3/programmer.guide
+instdir=	sonix/0.1/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
 #INSTALL_DIRS=	figures
