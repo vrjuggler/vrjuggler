@@ -61,6 +61,7 @@ require Exporter;
 @dirstack = ();
 
 my $caller = caller();
+my $rec_func = \&{"${caller}::recurseAction"};
 
 my $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
@@ -101,7 +102,7 @@ sub recurseDir ($$) {
 
 	# $curfile is a directory.
 	if ( -d "$curfile" ) {
-	    next if "$curfile" eq "CVS";	# SKip CVS directories
+	    next if "$curfile" eq "CVS";	# Skip CVS directories
 
 	    newDir("$base_inst_dir", "$curfile");
 	    push(@dirstack, "$curfile");
@@ -111,7 +112,19 @@ sub recurseDir ($$) {
 	# $curfile is something other than a directory (most likely a normal
 	# file).
 	else {
-	    &{"${caller}::recurseAction"}("$curfile");
+	    # Pass &$rec_func only the current file name.
+	    if ( $pass_rec_func_cur_file ) {
+		&$rec_func("$curfile");
+	    }
+	    # Pass &$rec_func the current file name and the current directory
+	    # stack.
+	    elsif ( $pass_rec_func_cur_file_dir ) {
+		&$rec_func("$curfile", join("/", @dirstack));
+	    }
+	    # Pass &$rec_func nothing.
+	    else {
+		&$rec_func();
+	    }
 	}
     }
 
