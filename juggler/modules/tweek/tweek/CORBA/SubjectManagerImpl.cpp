@@ -99,9 +99,18 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
    subject_map_t::iterator i;
    CORBA::ULong j;
 
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "Constructing sequence of subjects to return to caller ...\n"
+      << vprDEBUG_FLUSH;
+
    // Create the sequence and size it.
    tweek::SubjectManager::SubjectList* subjects =
-      new tweek::SubjectManager::SubjectList(m_subjects.size());
+      new tweek::SubjectManager::SubjectList();
+   subjects->length(m_subjects.size());
+
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "Sequence size: " << subjects->length() << std::endl
+      << vprDEBUG_FLUSH;
 
    for ( i = m_subjects.begin(), j = 0; i != m_subjects.end(); i++, j++ )
    {
@@ -109,8 +118,15 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
       rs.subject_name = CORBA::string_dup((*i).first.c_str());
       rs.subject_ref  = Subject::_duplicate((*i).second);
 
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Adding subject[" << j << "]: " << rs.subject_name << std::endl
+         << vprDEBUG_FLUSH;
+
       (*subjects)[j] = rs;
    }
+
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "Returning all subjects to caller\n" << vprDEBUG_FLUSH;
 
    return subjects;
 }
