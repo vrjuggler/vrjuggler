@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-29-2003 patrickh    Exposed vjAvatar and vjAvatar factory.
+                        NEW VERSION: 0.4.5
 Apr-26-2003 patrickh    Exposed common instances of gmtl::Coord<S, T>.
                         NEW VERSION: 0.4.4
 Apr-25-2003 patrickh    Updated to GMTL 0.3.1.

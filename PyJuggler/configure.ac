@@ -61,7 +61,11 @@ AC_ARG_WITH([bpldir],
 
 AC_ARG_WITH([pyste],
             [  --with-pytse=<PATH>     Full path to pyste.py script   [default=none]],
-            PYSTE="$withval", PYSTE='none')
+            [PYSTE="$withval"], [PYSTE='none'])
+
+AC_ARG_WITH([vjavatar],
+            [  --with-vjavatar=<PATH>  vjAvatar installation path     [default=none]],
+            [VJ_AVATAR_ROOT="$withval"], [VJ_AVATAR_ROOT='none'])
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
@@ -203,6 +207,39 @@ VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
 VRJUGGLER_PATH([1.1.135], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
+HAVE_VJ_AVATAR='N'
+
+if test "x$VJ_AVATAR_ROOT" != "xnone" ; then
+   DPP_LANG_SAVE
+   DPP_LANG_CPLUSPLUS
+
+   pyj_save_CPPFLAGS="$CPPFLAGS"
+   pyj_save_LDFLAGS="$LDFLAGS"
+   pyj_save_LIBS="$LIBS"
+
+   CPPFLAGS="$CPPFLAGS -I$VJ_AVATAR_ROOT/include"
+   LDFLAGS="$LDFLAGS -L$VJ_AVATAR_ROOT/lib"
+   LIBS="$LIBS -lavatar -lcal3d $VRJ_LIBS_CC $VRJ_EXTRA_LIBS_CC"
+
+   AC_CACHE_CHECK([for vjAvatarFactory::newAvatar() in -lavatar],
+      ac_cv_vjAvatarFactory__newAvatar_in_avatar,
+      [AC_TRY_LINK([#include <vjAvatarFactory.h>], [
+vjAvatarFactory factory;
+vjAvatar* a = factory.newAvatar("AutoconfTest");
+],
+         [HAVE_VJ_AVATAR='Y'
+          ac_cv_vjAvatarFactory__newAvatar_in_avatar='yes'],
+         [ac_cv_vjAvatarFactory__newAvatar_in_avatar='no'
+          AC_MSG_WARN([*** Will not build vjAvatar module ***])]
+      )])
+
+   CPPFLAGS="$pyj_save_CPPFLAGS"
+   LDFLAGS="$pyj_save_LDFLAGS"
+   LIBS="$pyj_save_LIBS"
+
+   DPP_LANG_RESTORE
+fi
+
 # -----------------------------------------------------------------------------
 # Finalize substitution settings.
 # -----------------------------------------------------------------------------
@@ -221,6 +258,9 @@ DPP_PTHREAD_FINISH
 # -----------------------------------------------------------------------------
 
 DPP_SUBST
+
+AC_SUBST(VJ_AVATAR_ROOT)
+AC_SUBST(HAVE_VJ_AVATAR)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 
