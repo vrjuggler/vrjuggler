@@ -72,11 +72,11 @@ LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
 
 LN_S            = @LN_S@
 
-JCCL_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-                  @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@		\
+JCCL_LIBS	= @APP_LINKALL_ON@ @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ \
+                  @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@	           \
                   $(NULL)
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@		\
-                  @APP_EXTRA_LIBS_END@					\
+EXTRA_LIBS	= @APP_LINKALL_OFF@ @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ \
+                  @APP_EXTRA_LIBS_END@					   \
                   $(NULL)
 
 # -----------------------------------------------------------------------------
