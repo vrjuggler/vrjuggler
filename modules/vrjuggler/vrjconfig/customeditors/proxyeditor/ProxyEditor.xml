@@ -8,7 +8,9 @@
          <bean>ConfigBroker</bean>
          <jar path="${JCCL_BASE_DIR}/share/java/beans">jccl_editors.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
-         <jar path="${VJ_BASE_DIR}/sharae/vrjuggler/java">jgraphpad.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jgraph.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jgraphaddons.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">CommonEditors.jar</jar>
       </dependencies>
    </generic>
 </beanlist>
