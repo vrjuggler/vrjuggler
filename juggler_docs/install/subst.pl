@@ -117,6 +117,7 @@ $alias_subst{"GETWIN32PERL"} = 'http://www.activestate.com/Products/ActivePerl/D
 $alias_subst{"PERCEPS"} = 'http://starship.python.net/crew/tbryan/PERCEPS/';
 $alias_subst{"CVS"} = 'http://www.cvshome.com/';
 $alias_subst{"OPENGL"} = 'http://www.opengl.org';
+$alias_subst{"MESA"} = 'http://sourceforge.net/projects/mesa3d/';
 $alias_subst{"DIRECT3D"} = 'http://www.microsoft.com/directx/';
 $alias_subst{"MICROSOFT"} = 'http://www.microsoft.com';
 $alias_subst{"FAKESPACE"} = 'http://www.fakespace.com';
