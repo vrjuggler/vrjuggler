@@ -71,7 +71,12 @@ public class PositionalDeviceEditor extends JPanel
    private int mCurrentFloorIndex = 0;
    private List mFloorTextures = new ArrayList();
    private JButton mChangeTex = new JButton("Change Floor");
-   
+
+   public ActionListener getHelpActionListener()
+   {
+      return null;
+   }
+
    /**
     * We'd like to be 600x400, please.
     */
