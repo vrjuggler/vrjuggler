@@ -1766,8 +1766,9 @@ END_DIST
 fi
 
 AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
-          GUI/Makefile Input/Makefile Input/InputManager/Makefile
-          Input/ibox/Makefile Input/vjGesture/Makefile Input/vjGlove/Makefile
+          GUI/Makefile Input/Makefile Input/Filter/Makefile
+          Input/InputManager/Makefile Input/ibox/Makefile
+          Input/vjGesture/Makefile Input/vjGlove/Makefile
           Input/vjInput/Makefile Input/vjKeyboard/Makefile
           Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
