@@ -85,6 +85,10 @@ public:
    char* getDeviceName() { return "vjDigital";}
 
    //: Get the digital data for the given devNum
+   //  Returns digital 0 or 1, if devNum makes sense.<BR>
+   //  Returns -1 if function fails or if devNum is out of range.<BR>
+   //  NOTE: If devNum is out of range, function will fail, possibly issueing 
+   //  an error to a log or console - but will not ASSERT.<BR>
    virtual int getDigitalData(int devNum = 0) = 0;
 };
 
