@@ -65,8 +65,8 @@ DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@
 EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@
 INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
-                  -I$(VPR_BASE_DIR)/include/md5-c  -I$(srcdir)		\
-                  -I$(srcdir)/TestCases -I$(CPP_UNIT)/CppUnit.old	\
+                  -I$(srcdir) -I$(srcdir)/TestCases			\
+                  -I$(CPP_UNIT)/CppUnit.old				\
                   -I$(CPP_UNIT)/CppUnit.old/framework			\
                   -I$(CPP_UNIT)/CppUnit.old/textui
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
