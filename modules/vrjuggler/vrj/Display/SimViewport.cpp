@@ -59,9 +59,9 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
    mSurfaceColor[2] = chunk->getProperty<float>("surfaceColor", 2);
 }
 
-void SimViewport::updateProjections()
+void SimViewport::updateProjections(float positionScale)
 {
-   updateInternalData();
+   updateInternalData(positionScale);
    gmtl::Matrix44f camera_pos = getCameraPos();
    gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(camera_pos);
 
@@ -76,8 +76,9 @@ void SimViewport::updateProjections()
    vprDEBUG(vprDBG_ALL,7) << "CamPos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
    // Compute location of left and right eyes
-   float interocularDist = mUser->getInterocularDistance();
-   float eye_offset = interocularDist / 2.0f;      // Distance to move eye
+   float interocular_dist = mUser->getInterocularDistance();
+   interocular_dist *= positionScale;               // Scale into correct units
+   float eye_offset = interocular_dist / 2.0f;      // Distance to move eye
 
    left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f) );
    right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f) );
@@ -87,12 +88,12 @@ void SimViewport::updateProjections()
 }
 
 /**  Update internal simulator data */
-void SimViewport::updateInternalData()
+void SimViewport::updateInternalData(float positionScale)
 {
-   mHeadPos = mUser->getHeadPosProxy()->getData(gadget::PositionUnitConversion::ConvertToMeters);
-   mWandPos = mWand->getData(gadget::PositionUnitConversion::ConvertToMeters);   
+   mHeadPos = mUser->getHeadPosProxy()->getData(positionScale);
+   mWandPos = mWand->getData(positionScale);   
 
-   mCameraPos = mCamera->getData(gadget::PositionUnitConversion::ConvertToMeters);
+   mCameraPos = mCamera->getData(positionScale);
    gmtl::invert(mCameraPos);
 }
 
