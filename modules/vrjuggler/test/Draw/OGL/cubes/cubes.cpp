@@ -77,10 +77,6 @@ int main(int argc, char* argv[])
    }
 
    kernel->start();
-      //- Kernel load global config  -- Environment variable
-      //- App KernelConfig function
-      //- Load user local config
-
    kernel->setApplication(application);         // Set application
 
    kernel->waitForKernelStop();
