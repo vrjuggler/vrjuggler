@@ -3,6 +3,8 @@
 #define _VJ_VARVALUE_H_
 
 #include <config.h>
+#include <ctype.h>
+#include <string.h>
 #include <iostream.h>
 
 

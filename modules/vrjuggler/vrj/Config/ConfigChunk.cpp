@@ -8,6 +8,7 @@
 #include <Kernel/vjDebug.h>
 
 
+
 vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props() {
 
   desc = d;

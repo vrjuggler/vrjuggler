@@ -13,7 +13,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <iostream.h>
-#include <string.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>
@@ -30,70 +29,7 @@
 #include <Config/vjVarValue.h>
 #include <Config/vjChunkDesc.h>
 
-
-/***************************************************************************
- *                              vjProperty                                 *
- ***************************************************************************/
-
-/** A vjProperty is a unit of storage inside of a vjConfigChunk.
- *  It has a name, a type, and some number of values.
- *  Properties are meant for use only inside of a vjConfigChunk,
- *  and should not be directly used or manipulated by other classes.
- */
-class vjProperty {
-
-public:
-
-  char *name;                    // Name of vjProperty.
-  /** Number of entries allowed.
-   *  -1 for variable number.  Note that this may not neccessarily be
-   *  the number of values in self - use getNum for that.
-   */
-  int num;  
-  vjPropertyDesc *description;      // Pointer to this vjProperty's description.
-  VarType type;                   // Type of value entries.
-  CfgUnit units;                  // A unit, if type is T_DISTANCE.
-  vector<vjVarValue*> value;        // Vector of vjVarValues.
-
-
-
-  vjProperty (vjPropertyDesc *pd);
-  ~vjProperty ();
-
-
-  /// Returns the actual current number of values for this vjProperty.
-  int getNum ();
-
-
-  vjVarValue& getValue (int ind = 0);
-  // returns the value at the given index
-
-
-  bool setValue (int val, int ind = 0);
-  bool setValue (float val, int ind = 0);
-  bool setValue (char* val, int ind = 0);
-
-
-  vjEnumEntry* getEnumEntry (char *n);
-  vjEnumEntry* getEnumEntry (int val);
-
-  /** Converts the values in this property from units of u to units of feet.
-   *  This is used when we're reading in a new distance property - The
-   *  values have been read in as raw numbers, then we read in the unit type
-   *  and realize what kind of conversion we have to do to put them in
-   *  feet (our standard unit for internal storage of distances).
-   */
-  bool applyUnits (CfgUnit u);
-
-  friend ostream& operator << (ostream &out, vjProperty& p);
-
-private:
-  // private fn used inside setValue()s.
-  // just expands the vector if needed & allowed & checks that index is valid.
-  bool preSet (int ind);
-
-};
-
+#include <Config/vjProperty.h>
 
 
 typedef enum {
