@@ -54,7 +54,7 @@ else {
     my $line   = '';
 
     while ( $line = <INPUT> ) {
-        if ( $line =~ /^s%@(\w+)@%(.*?)%/ ) {
+        if ( $line =~ /^s[%,]@(\w+)@[%,](.*?)[%,]/ ) {
             $vars{"$1"} = "$2";
         }
     }
