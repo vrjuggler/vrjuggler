@@ -192,14 +192,10 @@ $(LIBDIR)/$(AW_LIB_DYNAMIC) $(LIBDIR)/$(SL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 # =============================================================================
 # VjControl targets.
 # =============================================================================
-EXTRA_OBJ_TARGETS	= gui
-
-# 'gui' must be a phony target so that platforms that do not have
-# case-sensitive file names will not get it confused with the GUI directory.
-.PHONY: gui
+EXTRA_OBJ_TARGETS	= vjcontrol
 
 # Build the Java-based configuration GUI.
-gui:
+vjcontrol:
 ifndef NO_JAVA_GUI
 ifeq ($(BUILD_GUI), Y)
 	@echo "===> GUI"
@@ -331,7 +327,7 @@ post-install:
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
-	@$(MAKE) install-gui
+	@$(MAKE) install-vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/juggler-config $(bindir)
 
@@ -404,7 +400,7 @@ install-data:
           -v "$(topdir)/VARS.pl"
 
 # Install the Java-based config editor if possible.
-install-gui:
+install-vjcontrol:
 ifdef NO_JAVA_GUI
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of VjControl (not built)"
