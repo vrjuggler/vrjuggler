@@ -32,6 +32,7 @@
 
 package VjComponents.PerfMonitor;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
@@ -40,14 +41,22 @@ public class PanelTree extends JComponent implements TreeModelListener {
 
     TreeModel mModel;
     //PanelTreeFolder mRootFolder;
+    GridBagLayout gbl;
+    GridBagConstraints gbc;
 
     public PanelTree (TreeModel model) {
 	super();
 
 	mModel = model;
 
-	setLayout (new BoxLayout (this, BoxLayout.Y_AXIS));
+	//setLayout (new BoxLayout (this, BoxLayout.Y_AXIS));
 	//setLayout (new GridLayout (1,1));
+        gbl = new GridBagLayout();
+        setLayout(gbl);
+
+        gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.fill = GridBagConstraints.REMAINDER;
 
 	doInitialLayout();
 

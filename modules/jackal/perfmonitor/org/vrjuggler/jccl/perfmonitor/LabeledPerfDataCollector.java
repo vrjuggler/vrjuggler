@@ -159,12 +159,19 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    total_times = total_times + sample_time;
             if (sample_time > max_time)
                 max_time = sample_time;
+            if (getAverage() < 0.0) {
+                System.out.println ("index " + index + " went negative adding sample " + sample_time);
+                System.exit(1);
+            }
 	}
 
 	public void removeSample (double sample_time) {
 	    num_samples--;
 	    total_times = total_times - sample_time;
-	}
+            if (getAverage() < 0.0) {
+                System.out.println ("index " + index + " went negative removing sample " + sample_time);
+                System.exit(1);
+            }}
 
 	public double getAverage () {
 	    return total_times/num_samples;
@@ -191,6 +198,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
     int maxdatalines;
     protected List action_listeners;
     double last_stamp; // last recorded sample, for finding deltas.
+    boolean last_stamp_set;
 
     public LabeledPerfDataCollector(String _name, int maxsamples) {
         datalines = new LinkedList();
@@ -204,7 +212,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	current_dl = new DataLine ();
 	maxdatalines = maxsamples;
 	System.out.println ("creating PerfDataCollector " + _name + ".");
-
+        last_stamp_set = false;
 
     }
 
@@ -267,7 +275,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
                 i = dl.iterator();
                 while (i.hasNext()) {
                     DataElem de = (DataElem)i.next();
-                    de.index_info.removeSample (de.stamp);
+                    de.index_info.removeSample (de.delta);
                 }
             }
         }
@@ -292,6 +300,10 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    index_info.put (index, ii);
             ordered_index_info.add (ii);
 	}
+        if (!last_stamp_set) {
+            last_stamp = stamp;
+            last_stamp_set = true;
+        }
 	ii.addSample (stamp - last_stamp);
 	current_dl.addSample (ii, stamp, stamp - last_stamp);
 
@@ -345,7 +357,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
                     }
                     else if (child.getNodeName().equals ("time")) {
                         time = Double.parseDouble (child.getNodeValue());
-                        System.out.println("read timestamp " + time);
+                        //System.out.println("read timestamp " + time);
                     }
                 }
                 if (!label.equals(""))

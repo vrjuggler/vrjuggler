@@ -210,7 +210,9 @@ public class LabeledSummaryGraphPanel
 				    x, cursize.height - new_y);
 			y = new_y;
 		    }
+                    i++;
 		}
+                x++;
 	    }
 
 	    // draw some markings...
