@@ -150,7 +150,7 @@ JCCL_PATH([0.15], ,
           [AC_MSG_ERROR([*** JCCL is required for VRJ.NET ***])])
 GADGETEER_PATH([0.15.1], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for VRJ.NET ***])])
-VRJUGGLER_PATH([1.1.148], ,
+VRJUGGLER_PATH([1.1.152], ,
                [AC_MSG_ERROR([*** VR Juggler is required for VRJ.NET ***])])
 
 #vrjnet_save_CFLAGS="$CFLAGS"
