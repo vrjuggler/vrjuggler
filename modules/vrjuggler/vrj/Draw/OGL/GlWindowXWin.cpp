@@ -455,6 +455,7 @@ void GlWindowXWin::checkEvents()
    // Using 1 here requests the *largest* available size for each of these
    // buffers.  Refer to the glXChooseVisual() manual page for more details.
    int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1);
+   bool want_fsaa(false);
 
    jccl::ConfigChunkPtr gl_fb_chunk = mDisplay->getGlFrameBufferConfig();
 
@@ -465,6 +466,7 @@ void GlWindowXWin::checkEvents()
       blue_size  = gl_fb_chunk->getProperty<int>("blueSize");
       alpha_size = gl_fb_chunk->getProperty<int>("alphaSize");
       db_size    = gl_fb_chunk->getProperty<int>("depthBufferSize");
+      want_fsaa  = gl_fb_chunk->getProperty<bool>("fsaaEnable");
 
       if ( red_size < 0 )
       {
@@ -522,7 +524,27 @@ void GlWindowXWin::checkEvents()
    viattrib.push_back(GLX_GREEN_SIZE); viattrib.push_back(green_size);
    viattrib.push_back(GLX_BLUE_SIZE); viattrib.push_back(blue_size);
    viattrib.push_back(GLX_ALPHA_SIZE); viattrib.push_back(alpha_size);
-   const int AlphaAttribIndex = 11;
+   const unsigned int AlphaAttribIndex = 11;
+
+   // Enable full-screen anti-aliasing if it is available and it was requested.
+#ifdef GLX_SAMPLES_SGIS
+   // Save the current attribute vector size so we can try disabling FSAA if
+   // necessary.
+   const unsigned int fsaa_attrib_index = viattrib.size();
+
+   if ( want_fsaa )
+   {
+      viattrib.push_back(GLX_SAMPLES_SGIS); viattrib.push_back(1);
+      viattrib.push_back(GLX_SAMPLE_BUFFERS_SGIS); viattrib.push_back(1);
+   }
+#else
+   if ( want_fsaa )
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "WARNING: Full-screen anti-aliasing is not available\n"
+         << vprDEBUG_FLUSH;
+   }
+#endif
 
    /* Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
     * for the _largest_ available buffers.  If this fails,  we might
@@ -588,6 +610,28 @@ void GlWindowXWin::checkEvents()
    {
       return vi;
    }
+
+#ifdef GLX_SAMPLES_SGIS
+   // Last-ditch effort: try disabling FSAA if it was enabled.
+   // XXX: It might be better to try disabling FSAA *first* instead of last.
+   if ( want_fsaa )
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "WARNING: Display process for '" << mXDisplayName
+ 	 << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
+
+      // Disabling is achieved by moving the terminator for the attribute
+      // array up to the beginning of the FSAA attributes.  This effectively
+      // blocks off anything that was added to the vector after the FSAA
+      // attribute settings, so this isn't necessarily a good thing...
+      viattrib[fsaa_attrib_index] = None;
+
+      if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+      {
+         return vi;
+      }
+   }
+#endif
 
    // Failed, so return NULL
    return NULL;
