@@ -841,6 +841,13 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- Flock property "position_filters". -->
+   <xsl:template match="Flock/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
 
 <!-- gadget_logger ========================================================= -->
    <!-- Keep the name the same, but add version information. -->
@@ -1282,7 +1289,7 @@
    </xsl:template>
 
    <!-- PosXformFilter property "dev_units". -->
-   <xsl:template match="PinchGlove/dev_units">
+   <xsl:template match="PosXformFilter/dev_units">
       <xsl:element name="device_units">
          <xsl:value-of select="." />
       </xsl:element>
