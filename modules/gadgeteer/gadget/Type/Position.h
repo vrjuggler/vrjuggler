@@ -57,20 +57,19 @@ namespace gadget
 class PositionFilter;
 const unsigned short MSG_DATA_POS = 422;
 
-/** Position is the abstract base class that devices with digital data derive from.
-*
-*  Position is the base class that digital devices must derive from.  Position
-*  inherits from Input, so it has pure virtual function constraints from
-*  Input in the following functions: StartSampling,StopSampling,Sample,
-*  and UpdateData.
-*
-*  Position objects have the ability to convert from the tracker's coord system
-*  to the Juggler coordinate system.
-*
-*  Position adds one new pure virtual function, getPositionData() for
-*  retreiving the positional data, similar to the addition for gadget:;Analog
-*  and gadget:;Digital.
-*/
+/**
+ * Position is the abstract base class from which devices with positional
+ * (translation and/or rotation) data derive (through gadget::InputMixer).
+ * This is in addition to gadget::Input.  gadget::Input provides pure virtual
+ * function constraints in the following functions: startSampling(),
+ * stopSampling(), sample(), and updateData().
+ *
+ * gadget::Position adds the function getPositionData() for retreiving the
+ * received positional data.  This is similar to the additions made by
+ * gadget::Analog and gadget::Digital.
+ *
+ * @see Input, InputMixer
+ */
 class GADGET_CLASS_API Position : public vpr::SerializableObject
 {
 public:
@@ -86,8 +85,8 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
 
-   /** Get Positional data. */
-   PositionData getPositionData (int devNum = 0)
+   /** Get positional data. */
+   PositionData getPositionData(int devNum = 0)
    {
       SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
 
@@ -111,32 +110,47 @@ public:
       }
    }
 
-   /** Helper method to add a sample to the sample buffers.
-   * This MUST be called by all positional devices to add a new sample.
-   * The data samples passed in will then be modified by any local filters.
-   * The tracker transformations will occur in those filters, so the data does
-   * not need to be xformed before bing passed in.
-   * @post Sample is added to the buffers and the local filters are run on that sample.
-   */
+   /**
+    * Helper method to add a collection of positional samples to the sample
+    * buffers.  This MUST be called by all positional devices to add a new
+    * sample.  The data samples passed in will then be modified by any local
+    * filters.  The tracker transformations will occur in those filters, so
+    * the data does not need to be transformed before being passed in.
+    *
+    * @post The given positional samples are added to the buffers, and the
+    *       local filters are run on the new samples.
+    *
+    * @param posSample A vector of PositionData objects that represent the
+    *                  newest samples taken.
+    */
    void addPositionSample(std::vector< PositionData > posSample);
 
-   /** Swap the position data buffers.
-    * @post If ready has values, then copy values from ready to stable
-    *        if not, then stable keeps its old values
+   /**
+    * Swaps the positional data buffers.
+    *
+    * @post If the ready queue has values, then those values are copied from
+    *       the ready queue to the stable queue.  If not, then stable queue
+    *       is not changed.
     */
    void swapPositionBuffers()
    {
       mPosSamples.swapBuffers();
    }
 
-    virtual std::string getInputTypeName()
-    {
-        return std::string("Position");
-    }
+   virtual std::string getInputTypeName()
+   {
+      return std::string("Position");
+   }
 
+   /** Serializes this object. */
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+
+   /** De-serializes this object. */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
+   /**
+    * Returns the current stable sample buffers for this device.
+    */
    const SampleBuffer_t::buffer_t& getPositionDataBuffer()
    {
       return mPosSamples.stableBuffer();

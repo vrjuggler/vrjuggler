@@ -49,17 +49,17 @@ namespace gadget
 const unsigned short MSG_DATA_ANALOG = 421;
 
 /**
- * Analog is the abstract base class that devices with Analog data derive
- * from.
+ * Analog is the abstract base class from which devices returning analog data
+ * must derive (through the use of gadget::InputMixer).  This is in addition
+ * to gadget::Input.  gadget::Input provides pure virtual function constraints
+ * in the following functions: startSampling(), stopSampling(), sample(), and
+ * updateData().
  *
- * Analog is the base class that analog devices must derive from.
- * Analog inherits from Input, so it has pure virtual function
- * constraints from Input in the following functions: StartSampling,
- * StopSampling, Sample, and UpdateData.
- *
- * Analog adds one new pure virtual function, getAnalogData() for retreiving
- * the analog data, similar to the type specific get data methods in
+ * gadget::Analog adds the function getAnalogData() for retreiving the
+ * received analog data.  This is similar to the additions made by
  * gadget::Position and gadget::Digital.
+ *
+ * @see Input, InputMixer
  */
 class GADGET_CLASS_API Analog : public vpr::SerializableObject
 {
@@ -77,23 +77,30 @@ public:
 
    virtual ~Analog();
 
+   /** Serializes this object. */
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
+   /** De-serializes this object. */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    /**
-    * Just call base class config.
-    * @note Let constructor set device abilities.
+    * Reads the minimum and maximum value configuration information for this
+    * analog device.
+    *
+    * @post mMin and mMax are set to the values contained in the given config
+    *       element.
+    *
+    * @param e The config element for an analog device.  It must derive from
+    *          the base config element type 'analog'.
     */
    virtual bool config(jccl::ConfigElementPtr e);
 
    /**
-    * Returns "analog data".
+    * Returns analog data.
     *
-    * @pre  Give the device number you wish to access.
     * @post Returns a value that ranges from 0.0f to 1.0f.
     *
-    * @param devNum Device unit number to access
+    * @param devNum Device unit number to access.
     *
     * @note For example, if you are sampling a potentiometer, and it returns
     *       reading from 0, 255.  This function will normalize those values
@@ -111,22 +118,30 @@ public:
    AnalogData getAnalogData(int devNum = 0);
 
    /**
-    * Helper method to add a sample to the sample buffers.
-    * This MUST be called by all analog devices to add a new sample.
+    * Helper method to add a collection of analog samples to the sample
+    * buffers.  This MUST be called by all analog devices to add new samples.
     * The data samples passed in will then be modified by any local filters.
     *
-    * @post Sample is added to the buffers and the local filters are run on
-    *       that sample.
+    * @post The given analog samples are added to the buffers, and the local
+    *       filters are run on the new samples.
+    *
+    * @param anaSample A vector of AnalogData objects that represent the
+    *                  newest samples taken.
     */
    void addAnalogSample(const std::vector< AnalogData >& anaSample);
 
    /**
     * Swaps the analog data buffers.
-    * @post If ready has values, then copy values from ready to stable.
-    *       If not, then stable keeps its old values.
+    *
+    * @post If the ready queue has values, then those values are copied from
+    *       the ready queue to the stable queue.  If not, then stable queue
+    *       is not changed.
     */
    void swapAnalogBuffers();
 
+   /**
+    * Returns the current stable sample buffers for this device.
+    */
    const SampleBuffer_t::buffer_t& getAnalogDataBuffer();
 
    virtual std::string getInputTypeName();

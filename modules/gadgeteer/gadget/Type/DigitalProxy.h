@@ -44,10 +44,12 @@ namespace gadget
 /**
  * A proxy class to digital devices, used by the Input Manager.
  *
- * A DigitalProxy always points to a digital device and subUnit number,
- * the inputgroup can therefore keep an array of these around and
- * treat them as digital devices which only return a single
- * subDevice's amount of data.  (one int)
+ * A digital proxy always points to a digital device and unit number within
+ * that device.  The Input Manager can therefore keep an array of these
+ * around and treat them as digital devices that only return a single
+ * sub-device's amount of data (one int).
+ *
+ * @see gagdet:;Digital
  */
 class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
@@ -56,7 +58,8 @@ public:
    /** @name Construction/Destruction */
    //@{
    DigitalProxy() 
-      : mUnitNum(-1), mData(0)
+      : mUnitNum(-1)
+      , mData(0)
    {;}
 
    virtual ~DigitalProxy()
@@ -98,12 +101,17 @@ public:
       return &mData;
    }
 
+   /** Returns a pointer to the gadget::Digital object that we are proxying. */
    Digital* getDigitalPtr()
    {
       // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
       return (isStupified() ? NULL : mTypedDevice);
    }
 
+   /**
+    * Returns the unit index into the analog device from which this proxy
+    * is reading data.
+    */
    int getUnit() const
    {
       return mUnitNum;

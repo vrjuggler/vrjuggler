@@ -79,8 +79,8 @@ public:
 
    /**
     * Default constructor needed in order to use the templated EventFactory 
-    * without modification. The EventFactory was needed to allow the 
-    * correct subtype of Event, KeyEvent in this case, to be created 
+    * without modification.  The EventFactory was needed to allow the 
+    * correct subtype of Event (KeyEvent in this case) to be created 
     * during de-serialization.
     */
    KeyEvent();

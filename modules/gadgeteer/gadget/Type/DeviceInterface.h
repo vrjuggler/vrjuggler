@@ -53,16 +53,13 @@ class SpeechRecogStringProxy;
 class SpeechRecogDigitalProxy;
 
 /**
- * Base class for simplified proxy interfaces.
+ * Base class for simplified proxy interfaces.  Device interfaces are wrappers
+ * that provide an easier way to access proxy objects from within user
+ * applications.  Users can simply declare a local interface variable and use
+ * it as a smart pointer for the proxy.
  *
- * Wrapper to provide an easier way to access proxy objects from
- * within user applications.
- *
- * Users can simply declare a local interface variable and use it
- * as a smart_ptr for the proxy.
- *
- * @note The init function should be called in the init function of the user
- *       application.
+ * @note The init() function should be called in the init() function of the
+ *       user application.
  */
 class GADGET_CLASS_API BaseDeviceInterface
 {
@@ -82,14 +79,17 @@ public:
 
    /**
     * Initializes the object.
-    * @param proxyName  String name of the proxy to connect to.
+    *
+    * @param proxyName String name of the proxy to connect to.
     */
    void init(const std::string proxyName);
 
    /**
     * Refreshes the interface based on the current configuration.
-    * @post (mProxyIndex == -1) ==> Proxy not initi.ized yet<br>
-    *       (mProxyIndex != -1) ==> mProxyName has name of device && local proxy ptr is set to the device
+    *
+    * @post (mProxyIndex == -1) ==> Proxy not initialized yet.<br>
+    *       (mProxyIndex != -1) ==> mProxyName has name of device && local
+    *       proxy pointer is set to the device.
     */
    virtual void refresh();
 
@@ -99,6 +99,7 @@ public:
       return mProxyName;
    }
 
+   /** Identifies whether this device interface is connected to a proxy. */
    bool isConnected()
    {
       return (NULL != mProxyPtr);
@@ -110,6 +111,7 @@ protected:
    bool        mNameSet;    /**< Has the user set a name?? */
 
 public:
+   /** Refreshes all the known device interface objects. */
    static void refreshAllDevices();
 
 private:    // Static information
@@ -149,16 +151,39 @@ public:
       mTypeSpecificProxy = &mDummyProxy;
    }
 
+   /**
+    * @name Smart pointer operator overloads.
+    *
+    * Device interfaces make use of the Smart Pointer design pattern.  Access
+    * to the contained device proxy must occur through one of these operators.
+    */
+   //@{
+   /**
+    * Member selection (via pointer) operator overload.
+    *
+    * @pre init() has been invoked.
+    *
+    * @see init()
+    */
    PROXY_TYPE* operator->()
    {
       return mTypeSpecificProxy;
    }
 
+   /**
+    * Dereference operator overload.
+    *
+    * @pre init() has been invoked.
+    *
+    * @see init()
+    */
    PROXY_TYPE& operator*()
    {
       return *(mTypeSpecificProxy);
    }
+   //@}
 
+   /** Returns the underlying proxy to which we are connected. */
    PROXY_TYPE* getProxy()
    {
       return mTypeSpecificProxy;
