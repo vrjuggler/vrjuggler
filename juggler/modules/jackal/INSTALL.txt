@@ -1,6 +1,6 @@
 ==============================================================================
-This file contains instructions on how to build Jackal from the source
-code.  For a detailed description of this process, please refer to
+This file contains instructions on how to build JCCL from the source code.
+For a detailed description of this process, please refer to
 http://www.vrjuggler.org/html/juggler.team.guide/build/juggler/index.html
 before sending email to the mailing lists.
 ==============================================================================
@@ -12,7 +12,7 @@ Table of contents:
     1. Getting started
         A. Supported platforms
         B. Minimum requirements (compiler, libraries, etc.)
-    2. Compiling Jackal
+    2. Compiling JCCL
 
 ==============================================================================
 1. Getting started
@@ -20,15 +20,15 @@ Table of contents:
 
     A. Supported platforms
 
-        Jackal is officially supported on the following platforms:
+        JCCL is officially supported on the following platforms:
 
             IRIX 6.5
             RedHat Linux 6.1, 6.2, 7.1, and newer
             Windows NT 4.0 and 2000
             Windows 98/Me
 
-        Jackal is known to work on the following platforms (but is
-        not officially supported):
+        JCCL is known to work on the following platforms (but is not
+        officially supported):
 
             HP-UX 11.00
             FreeBSD 4.2 and 5.0-CURRENT (x86)
@@ -86,15 +86,15 @@ Table of contents:
             Developer package
 
 ==============================================================================
-2. Compiling VR Juggler
+2. Compiling JCCL
 ==============================================================================
 
     A. Steps
 
-          i. Choose a directory to put the VR Juggler source code
-             (referred to as <JUGGLER_DIR> from now on).
+          i. Choose a directory to put the Juggler source code (referred to
+             as <JUGGLER_DIR> from now on).
 
-         ii. Go to that directory and checkout VR Juggler using CVS
+         ii. Go to that directory and checkout JCCL using CVS
              NOTE: make sure CVS is set up, and pointing to the VR Juggler
              repository.  For more information about this, see the
              following page:
@@ -106,11 +106,11 @@ Table of contents:
                 cd <JUGGLER_DIR>
                 cvs checkout juggler
 
-        iii. Enter the newly checked out Juggler source directory
+        iii. Enter the newly checked out JCCL source directory
 
-                cd <JUGGLER_DIR>/juggler
+                cd <JUGGLER_DIR>/juggler/modules/jackal
 
-         iv. Compile VR Juggler (using the Autoconf system and GNU make)
+         iv. Compile JCCL (using the Autoconf system and GNU make)
 
               a. Generate aclocal.m4, header template (vjDefines.h.in), and
                  the configure script
@@ -129,11 +129,11 @@ Table of contents:
                     gmake
 
           v. Set the environment variable $JCCL_BASE_DIR.  This is *required*
-             by VR Juggler's application makefiles and runtime environment.
+             by JCCL's application makefiles and runtime environment.
 
              NOTES:
                  1. The directory "instlinks" is semi-important. 
-                    It is a working distribution of the VR Juggler library.
+                    It is a working distribution of the JCCL library.
                     After "gmake" is done, you'll be able to use this
                     directory to compile and link your application code.
                     This will not work on Win32, so a full installation
@@ -154,13 +154,13 @@ Table of contents:
        by making a directory to put the object files and compiled
        libraries before building.
 
-       The following steps set up a build directory within your VR Juggler
+       The following steps set up a build directory within your JCCL
        source directory.  Here, we use the name <BUILD_DIR> to refer to
        the directory that will contain the object files and libraries.  It
        can be called whatever you want.
 
-           mkdir <JUGGLER_DIR>/juggler/<BUILD_DIR>
-           cd <JUGGLER_DIR>/juggler/<BUILD_DIR>
-           <JUGGLER_DIR>/juggler/configure
+           mkdir <JUGGLER_DIR>/juggler/modules/jackal/<BUILD_DIR>
+           cd <JUGGLER_DIR>/juggler/modules/jackal/<BUILD_DIR>
+           <JUGGLER_DIR>/juggler/modules/jackal/configure
 
 $Id$
