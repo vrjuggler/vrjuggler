@@ -655,8 +655,15 @@ case $SUBSYSTEM in
         subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-        static_begin="-Wl,-Bstatic"
-        static_end="-Wl,-Bdynamic"
+
+        if test "x$USE_GCC" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+        fi
+
         vpr_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
         vpr_libs='-lvpr'
         ;;
@@ -664,8 +671,15 @@ case $SUBSYSTEM in
         subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-        static_begin="-Wl,-Bstatic"
-        static_end="-Wl,-Bdynamic"
+
+        if test "x$USE_GCC" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+        fi
+
         vpr_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
         vpr_libs='-lvpr'
         ;;
