@@ -54,10 +54,13 @@
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 
+// XXX: This is a hack.
+#ifdef VPR_OS_Darwin
+#  include <vrj/Draw/OGL/GlBasicSimulator.h>
+#endif
+
 #include <gmtl/Vec.h>
 #include <gmtl/Output.h>
-
-#include <boost/concept_check.hpp>
 
 //#include <gadget/Type/Glove.h>
 //#include <gadget/Type/GloveProxy.h>
@@ -447,7 +450,7 @@ void GlDrawManager::outStream(std::ostream& out)
 
 #if  defined(VPR_OS_Win32)
 #  include <vrj/Draw/OGL/GlWindowWin32.h>
-#elif defined(VPR_OS_Darwin)
+#elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
 #  include <vrj/Draw/OGL/GlWindowOSX.h>
 #else
 #  include <vrj/Draw/OGL/GlWindowXWin.h>
@@ -460,7 +463,7 @@ vrj::GlWindow* GlDrawManager::getGLWindow()
 {
 #if  defined(VPR_OS_Win32)
    return new vrj::GlWindowWin32;
-#elif defined(VPR_OS_Darwin)
+#elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
    return new vrj::GlWindowOSX;
 #else
    return new vrj::GlWindowXWin;

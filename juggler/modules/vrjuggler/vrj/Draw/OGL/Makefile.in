@@ -57,7 +57,11 @@ ifeq (@OS_TYPE@, Win32)
     SRCS	+= GlWindowWin32.cpp
 else
     ifeq (@PLATFORM@, Darwin)
-        SRCS    += GlWindowOSX.cpp
+	ifeq (@GADGET_USE_X11@, yes)
+           SRCS    += GlWindowXWin.cpp
+	else
+           SRCS    += GlWindowOSX.cpp
+	endif
     else
     	SRCS	+= GlWindowXWin.cpp
     endif
