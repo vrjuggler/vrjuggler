@@ -124,21 +124,9 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
       sample();
       long usleep_time(1); // to be set...
 
-      // HACK: usleep(0) does not do anything
-      /*
-      if (1 > usleep_time)
-      {
-         usleep_time = 1;
-      }
-
-      else
-      {
-      */
-         usleep_time = mSleepTimeMS*1000;
-
+      usleep_time = mSleepTimeMS*1000;
 
       usleep( usleep_time );
-      //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
    }
 
    // Exit, cleanup code
@@ -190,7 +178,7 @@ int vjXWinKeyboard::onlyModifier(int mod)
 void vjXWinKeyboard::updateData()
 {
 vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
-   if(mUpdKeysHasBeenCalled)
+   if(mUpdKeysHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
    {
       mUpdKeysHasBeenCalled = false;
 
@@ -222,22 +210,30 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
 
 void vjXWinKeyboard::updKeys()
 {
-// GUARD m_keys for duration of loop
-// Doing it here gives makes sure that we process all events and don't get only part of them for an update
-// In order to copy data over to the m_curKeys array
-vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
-   mUpdKeysHasBeenCalled = true;       // We have been called now
-
    XEvent event;
    KeySym key;
    int    vj_key;    // The key in vj space
 
+   // XXX: Need to add to mask to get more events for subclasses
+   const long event_mask = (KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                             ButtonReleaseMask | ButtonMotionMask |
+                             PointerMotionMask);
+   mKeysLock.acquire();
+   mUpdKeysHasBeenCalled = true;       // We have been called now -- Tell them to swap data because we don't have events
+   mKeysLock.release();
+
+   // Wait until we actually have some events -- THIS BLOCKS for an event
+   XWindowEvent(m_display, m_window, event_mask, &event);
+
+// GUARD m_keys for duration of loop
+// Doing it here gives makes sure that we process all events and don't get only part of them for an update
+// In order to copy data over to the m_curKeys array
+vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
+
+   mUpdKeysHasBeenCalled = true;       // We have been called now - Tell tehm to swap because we do have data
    // Loop while the event queue contains events for m_window that are part
    // of the given event mask.
-   while ( XCheckWindowEvent(m_display, m_window,
-                             KeyPressMask | KeyReleaseMask | ButtonPressMask |
-                             ButtonReleaseMask | ButtonMotionMask |
-                             PointerMotionMask, &event) )
+   do
    {
       switch (event.type)
       {
@@ -245,6 +241,7 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
       // VJ key) as being pressed and grab the keyboard.
       case KeyPress:
          // Convert the pressed key from the event to a VJ key.
+         // And store in the array of key presses
          key = XLookupKeysym((XKeyEvent*)&event,0);
          vj_key = xKeyTovjKey(key);
          m_realkeys[vj_key] = 1;
@@ -321,7 +318,6 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
             unlockMouse();
          }
 
-
          vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyRelease:" << std::hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
                     << " ==> " << xKeyTovjKey(key) << std::endl
@@ -342,10 +338,7 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
             cur_x = event.xmotion.x;
             cur_y = event.xmotion.y;
 
-            vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "MotionNotify: x:"
-                                               << std::setw(6) << cur_x << "  y:"
-                                               << std::setw(6) << cur_y
-                                               << std::endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "MotionNotify: x:"  << std::setw(6) << cur_x << "  y:" << std::setw(6) << cur_y << std::endl << vjDEBUG_FLUSH;
 
             if(mLockState == Unlocked)
             {
@@ -366,17 +359,14 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
                // This prevents us from sending an event based on our XWarp event
                if((dx != 0) || (dy != 0))
                {
-                  vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:"
-                                                     << std::setw(6) << dx
-                                                     << "  y:" << std::setw(6)
-                                                     << dy << std::endl
-                                                     << vjDEBUG_FLUSH;
+                  vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:" << std::setw(6) << dx << "  y:" << std::setw(6) << dy << std::endl << vjDEBUG_FLUSH;
+
                   XWarpPointer(m_display, None, m_window, 0,0, 0,0,
                                win_center_x, win_center_y);
                }
             }
 
-            // Update m_keys based on key pressed
+            // Update m_keys based on key pressed and store in the key array
             if ( dx > 0 ) {
                m_keys[VJMOUSE_POSX] += dx;      // Positive movement in the x direction.
             } else {
@@ -429,6 +419,8 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
          break;
       }
    }
+   while ( XCheckWindowEvent(m_display, m_window, event_mask, &event) );
+
 }
 
 int vjXWinKeyboard::stopSampling()
