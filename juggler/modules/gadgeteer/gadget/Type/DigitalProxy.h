@@ -30,14 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/////////////////////////////////////////////////////////////////////////
-//
-// positional proxy class
-//
-////////////////////////////////////////////////////////////////////////
-
-#ifndef _GADGET_DIGITALPROXY_H_
-#define _GADGET_DIGITALPROXY_H_
+#ifndef _GADGET_DIGITAL_PROXY_H_
+#define _GADGET_DIGITAL_PROXY_H_
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Digital.h>
@@ -93,16 +87,9 @@ public:
     */
    int getData() const
    {
-      const int defaultDigital(Digital::OFF);
-
-      if(isStupified())
-      {
-         return defaultDigital;
-      }
-      else
-      {
-         return mData.getDigital();
-      }
+      // If we're stupified, return gadget::Digital::OFF.  Otherwise, return
+      // the current digital value.
+      return (isStupified() ? Digital::OFF : mData.getDigital());
    }
 
    DigitalData* getDigitalData()
@@ -112,14 +99,8 @@ public:
 
    Digital* getDigitalPtr()
    {
-      if(isStupified())
-      {
-         return NULL;
-      }
-      else
-      {
-         return mTypedDevice;
-      }
+      // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
+      return (isStupified() ? NULL : mTypedDevice);
    }
 
    int getUnit() const
