@@ -324,7 +324,8 @@ void Kernel::checkForReconfig()
 void Kernel::changeApplication(App* newApp)
 {
    vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
-      << "vrj::Kernel::changeApplication: Changing to:" << newApp << std::endl
+      << "vrj::Kernel::changeApplication: Changing to: 0x"
+      << std::hex << (void*) newApp << std::dec << std::endl
       << vprDEBUG_FLUSH;
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
