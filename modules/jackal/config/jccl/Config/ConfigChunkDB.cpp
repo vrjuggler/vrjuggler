@@ -104,6 +104,7 @@ bool ConfigChunkDB::remove(const std::string& name)
 // - Repetatively try to find an item in the source list that already
 //     has it's dependencies in the dst list of in the aux chunks
 // - Do this iteratively until done or until fail.
+/*
 bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 {
    // Print out dependancies
@@ -274,6 +275,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
    return true;
 }
+*/
 
 /* IO functions: */
 
