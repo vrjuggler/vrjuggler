@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-31-2003 patrickh    Changed --with-bpldir to --with-boost-python.  The
+                        option now specifies the root of the Boost.Python
+                        installation tree.
+Aug-30-2003 patrickh    Fixed Visual C++ 7.1 (.NET 2003) compile failures.
 Aug-20-2003 patrickh    Split PyJuggler back up into multiple Python modules.
                         On Windows, the modules have the extension .pyd.
                         NEW VERSION: 0.8.2
