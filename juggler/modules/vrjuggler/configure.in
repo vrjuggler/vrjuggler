@@ -378,6 +378,7 @@ case $target_os in
 
         AR='${CXX}'
         ARFLAGS='-J6 -ar -WR,-v -o'
+        CXXFLAGS="$CXXFLAGS -LANG:std"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
