@@ -281,6 +281,9 @@ Options:
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
+        [--static]              Print the library arguments using static
+                                linking flags
+        [--profiled]            Print the profiled library names
         [--idl cxx|java]        Print path to the IDL compiler used for
                                 generating C++ or Java based on the given
                                 parameter
@@ -368,7 +371,7 @@ sub make_LDFLAGS ($;$$$)
 {
    my $libs_arg      = shift;
    my $echo_static   = shift || 0;  # Echo static linking flags
-   my $echo_profiled = shift || 0;  # Echo static linking flags
+   my $echo_profiled = shift || 0;  # Echo profiled libraries
    my $use_linker    = shift || 0;  # Use flags for direct use of the linker
 
    my $static_begin = '';
