@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "ajSoundInfo.h"
 #include "AudioJuggler.h"    // interface
 #include "CFileIO.h"
