@@ -90,6 +90,7 @@ protected:
    }
 
 private:
+   vpr::ThreadMemberFunctor<SerialEncoder>* mThreadFunctor;
    vpr::Thread* mSampleThread;
    bool  mExitFlag;
    std::string mPortStr;

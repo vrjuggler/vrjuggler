@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <boost/concept_check.hpp>
 #include <gmtl/Generate.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
@@ -41,10 +42,12 @@ void initDevice(gadget::InputManager* inputMgr)
 }
 
 SerialEncoder::SerialEncoder()   
+   : mThreadFunctor(NULL)
+   , mSampleThread(NULL)
+   , mExitFlag(false)
+   , mBaudRate(0)
 {
-   mExitFlag = false;
-   mSampleThread=0;
-   mBaudRate=0;
+   /* Do nothing. */
 }
 
 SerialEncoder::~SerialEncoder()   
@@ -69,7 +72,10 @@ bool SerialEncoder::startSampling()
 {
    mBus.initializeSEI(mPortStr.c_str());
    mExitFlag = false;
-   mSampleThread=new vpr::Thread(threadedSampleFunction,(void*)this);
+   mThreadFunctor =
+      new vpr::ThreadMemberFunctor<SerialEncoder>(this,
+                                                  &SerialEncoder::threadedSampleFunction);
+   mSampleThread = new vpr::Thread(mThreadFunctor);
 
    if ( !mSampleThread->valid() )
    {
@@ -119,19 +125,20 @@ bool SerialEncoder::stopSampling()
       mSampleThread->join();
       delete mSampleThread;
       mSampleThread=NULL;
+      delete mThreadFunctor;
+      mThreadFunctor = NULL;
    }
 
    return true;
 }
 
-void SerialEncoder::threadedSampleFunction(void* classPointer)
+void SerialEncoder::threadedSampleFunction(void* nullArg)
 {
-   SerialEncoder *this_ptr=static_cast<SerialEncoder*>(classPointer);
+   boost::ignore_unused_variable_warning(nullArg);
 
    while ( !mExitFlag )
    {
-      this_ptr->sample();
+      sample();
       vpr::System::msleep(1);
    }
 }
-
