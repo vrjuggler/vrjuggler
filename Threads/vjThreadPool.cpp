@@ -1,6 +1,4 @@
 #include <vjConfig.h>
-#include <vjConfig.h>
-#include <iostream.h>
 #include <new.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,7 +7,7 @@
 #include <unistd.h>
 
 #ifndef WIN32
-   #include <sys/resource.h>
+#   include <sys/resource.h>
 #endif
 
 #include <Threads/vjThreadPool.h>
@@ -170,7 +168,7 @@ vjOneThread* vjThreadPool::addThread (void)
 //    vjThreadMemberFunctor<vjThreadPool>* memberFunctor = new vjThreadMemberFunctor<vjThreadPool>(this, vjThreadPool::threadLoop, (void*)newThread);
     vjThreadMemberFunctor<vjThreadPool>* memberFunctor = new vjThreadMemberFunctor<vjThreadPool>(this, &vjThreadPool::threadLoop, (void*)newThread);
 
-    newThread->thread = new vjThreadspawn(memberFunctor, 0);
+    newThread->thread = new vjThread(memberFunctor, 0);
 
     DebugLock.acquire();
         vjDEBUG(vjDBG_ALL,5) << newThread->thread

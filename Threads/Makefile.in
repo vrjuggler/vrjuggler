@@ -28,7 +28,8 @@ vpath %.o ${OBJDIR}
 
 THREAD_SRCS	:= vjBaseThread.cpp	\
                    vjThreadFunctor.cpp	\
-                   vjThreadManager.cpp
+                   vjThreadManager.cpp	\
+                   vjThreadPool.cpp
 
 ifeq (@THREAD_SYS@,POSIX)
     THREAD_SRCS += vjThreadPosix.cpp
