@@ -32,17 +32,17 @@
 
 #include <jccl/XMLUtil/XercesXMLParser.h>
 
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <framework/XMLFormatter.hpp>
-#include <util/TranscodingException.hpp>
-#include <sax/SAXParseException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/util/TranscodingException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
-#include <dom/DOM_DOMException.hpp>
+#include <xercesc/dom/DOM_DOMException.hpp>
 
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
 //#include <string.h>
 #include <stdlib.h>
 
@@ -61,7 +61,7 @@ XercesXMLParser::XercesXMLParser () {
     parser->setErrorHandler(error_handler);
     parser->setCreateEntityReferenceNodes(false);
     parser->setToCreateXMLDeclTypeNode(true);
-    
+
 }
 
 
@@ -88,9 +88,9 @@ bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
     catch (SAXParseException& e) {
         char* id = (DOMString(e.getSystemId())).transcode();
         char* msg = (DOMString(e.getMessage())).transcode();
-        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") << 
-            " in file \"" << id << "\", line " << e.getLineNumber() << 
-            ", column " << e.getColumnNumber() << ": " << 
+        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
+            " in file \"" << id << "\", line " << e.getLineNumber() <<
+            ", column " << e.getColumnNumber() << ": " <<
             msg << "\n" << vprDEBUG_FLUSH;
         delete[] id;
         delete[] msg;
@@ -105,7 +105,7 @@ bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
 //     }
     catch (...) {
         vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            " XercesXMLParser threw unidentified exception.\n" << 
+            " XercesXMLParser threw unidentified exception.\n" <<
             vprDEBUG_FLUSH;
         retval = false;
     }
@@ -132,9 +132,9 @@ bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
     }
     catch (SAXParseException& e) {
         char* msg = (DOMString(e.getMessage())).transcode();
-        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") << 
-            " in file \"<unnamed stream>\", line " << e.getLineNumber() << 
-            ", column " << e.getColumnNumber() << ": " << 
+        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
+            " in file \"<unnamed stream>\", line " << e.getLineNumber() <<
+            ", column " << e.getColumnNumber() << ": " <<
             msg << "\n" << vprDEBUG_FLUSH;
         delete[] msg;
         retval = false;
@@ -148,7 +148,7 @@ bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
 //     }
     catch (...) {
         vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            " XercesXMLParser threw unidentified exception.\n" << 
+            " XercesXMLParser threw unidentified exception.\n" <<
             vprDEBUG_FLUSH;
         retval = false;
     }

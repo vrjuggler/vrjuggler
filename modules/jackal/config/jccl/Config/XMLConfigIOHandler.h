@@ -36,10 +36,10 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigIOHandler.h>
 
-#include <util/PlatformUtils.hpp>
-#include <parsers/DOMParser.hpp>
-#include <framework/XMLFormatter.hpp>
-#include <dom/DOM.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/dom/DOM.hpp>
 
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/Property.h>

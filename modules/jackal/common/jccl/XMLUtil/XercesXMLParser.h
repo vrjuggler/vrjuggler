@@ -35,7 +35,7 @@
 
 #include <jccl/jcclConfig.h>
 
-#include <dom/DOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 
 class DOMParser;
 class ErrorHandler;

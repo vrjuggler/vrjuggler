@@ -32,10 +32,10 @@
 
 #include <jccl/jcclConfig.h>
 
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <dom/DOM.hpp>
-#include <dom/DOM_Document.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DOM_Document.hpp>
 
 #include <stdlib.h>
 
@@ -290,7 +290,7 @@ bool XMLConfigIOHandler::parseTextValues (Property* p, int& startval, char* text
       {
          break;
       }
-      
+
       retval = p->tryAssign (startval++, ch);
       ch = stringTokenizer (0, ptr);
    }
