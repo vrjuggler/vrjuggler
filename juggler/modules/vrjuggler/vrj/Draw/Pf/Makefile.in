@@ -10,6 +10,7 @@ default: all
 # Include common definitions.
 include @topdir@/Makefile.base
 
+
 includedir	= @includedir@/Kernel/Pf
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
@@ -29,6 +30,12 @@ WORKDIR		= ${topdir}/Kernel/Pf
 include ${MKPATH}/vj.compile.mk
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
+
+## Linux performer must have  optimed compile ##
+ifeq (${PLATFORM}, Linux)
+   OPTIMIZER := ${OPTIMIZER} -O
+endif
+
 
 # Search path for source code and object files.
 vpath
