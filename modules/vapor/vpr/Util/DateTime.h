@@ -47,212 +47,211 @@
 #include <vpr/System.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Simple wrapper around time since the UNIX Epoch (00:00 UTC January 1, 1970).
  */
-class DateTime {
+class DateTime
+{
 public:
-    /**
-     * Constructs an empty time object.  To assign this object the current
-     * time, invoke setNow on it.
-     *
-     * @see setNow
-     */
-    DateTime (void)
-        : mSeconds(0), mMicroSeconds(0)
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    * Constructs an empty time object.  To assign this object the current
+    * time, invoke setNow on it.
+    *
+    * @see setNow
+    */
+   DateTime (void) : mSeconds(0), mMicroSeconds(0)
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     * Updates this object to reflect the current time.
-     *
-     * @pre None.
-     * @post The member variables are updated the time returned by
-     *       vpr::System::gettimeofday.
-     */
-    inline void
-    setNow (void) {
-        struct timeval tv;
+   /**
+    * Updates this object to reflect the current time.
+    *
+    * @pre None.
+    * @post The member variables are updated the time returned by
+    *       vpr::System::gettimeofday.
+    */
+   void setNow (void)
+   {
+      struct timeval tv;
 
-        vpr::System::gettimeofday(&tv);
-        mSeconds       = tv.tv_sec;
-        mMicroSeconds = tv.tv_usec;
-    }
+      vpr::System::gettimeofday(&tv);
+      mSeconds      = tv.tv_sec;
+      mMicroSeconds = tv.tv_usec;
+   }
 
-    /**
-     * Get the seconds since the Epoch for this object.
-     *
-     * @return An unsigned integer representing the seconds since the Epoch.
-     *         If 0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline vpr::Uint32
-    getSeconds (void) {
-        return mSeconds;
-    }
+   /**
+    * Get the seconds since the Epoch for this object.
+    *
+    * @return An unsigned integer representing the seconds since the Epoch.
+    *         If 0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   vpr::Uint32 getSeconds (void)
+   {
+      return mSeconds;
+   }
 
-    /**
-     * Get the seconds (and microseconds) since the Epoch for this object.
-     *
-     * @return A floating-point value representing the seconds since the Epoch.
-     *         If 0.0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline double
-    getSecondsf (void) {
-        double sec_f, usec_f, usec_f_div;
+   /**
+    * Get the seconds (and microseconds) since the Epoch for this object.
+    *
+    * @return A floating-point value representing the seconds since the Epoch.
+    *         If 0.0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   double getSecondsf (void)
+   {
+      double sec_f, usec_f, usec_f_div;
 
-        sec_f      = (double) mSeconds;
-        usec_f     = (double) mMicroSeconds;
-        usec_f_div = usec_f / 1000000.0f;
+      sec_f      = (double) mSeconds;
+      usec_f     = (double) mMicroSeconds;
+      usec_f_div = usec_f / 1000000.0f;
 
-        return sec_f + usec_f_div;
-    }
+      return sec_f + usec_f_div;
+   }
 
-    /**
-     * Get the minutes since the Epoch for this object.
-     *
-     * @return An unsigned integer representing the minutes since the Epoch.
-     *         If 0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline vpr::Uint32
-    getMinutes (void) {
-        return mSeconds / 60;
-    }
+   /**
+    * Get the minutes since the Epoch for this object.
+    *
+    * @return An unsigned integer representing the minutes since the Epoch.
+    *         If 0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   vpr::Uint32 getMinutes (void)
+   {
+      return mSeconds / 60;
+   }
 
-    /**
-     * Get the minutes since the Epoch for this object with floating-point
-     * precision.
-     *
-     * @return A floating-point value representing the minutes since the Epoch.
-     *         If 0.0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline double
-    getMinutesf (void) {
-        return getSecondsf() / 60.0f;
-    }
+   /**
+    * Get the minutes since the Epoch for this object with floating-point
+    * precision.
+    *
+    * @return A floating-point value representing the minutes since the Epoch.
+    *         If 0.0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   double getMinutesf (void)
+   {
+      return getSecondsf() / 60.0f;
+   }
 
-    /**
-     * Get the hours since the Epoch for this object.
-     *
-     * @return An unsigned integer representing the hours since the Epoch.
-     *         If 0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline vpr::Uint32
-    getHours (void) {
-        return mSeconds / 3600;
-    }
+   /**
+    * Get the hours since the Epoch for this object.
+    *
+    * @return An unsigned integer representing the hours since the Epoch.
+    *         If 0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   vpr::Uint32 getHours (void)
+   {
+      return mSeconds / 3600;
+   }
 
-    /**
-     * Get the hours since the Epoch for this object with floating-point
-     * precision.
-     *
-     * @return A floating-point value representing the hours since the Epoch.
-     *         If 0.0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline double
-    getHoursf (void) {
-        return getSecondsf() / 3600.0f;
-    }
+   /**
+    * Get the hours since the Epoch for this object with floating-point
+    * precision.
+    *
+    * @return A floating-point value representing the hours since the Epoch.
+    *         If 0.0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   double getHoursf (void)
+   {
+      return getSecondsf() / 3600.0f;
+   }
 
-    /**
-     * Get the days since the Epoch for this object.
-     *
-     * @return An unsigned integer representing the days since the Epoch.
-     *         If 0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline vpr::Uint32
-    getDays (void) {
-        return mSeconds / 86400;
-    }
+   /**
+    * Get the days since the Epoch for this object.
+    *
+    * @return An unsigned integer representing the days since the Epoch.
+    *         If 0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   vpr::Uint32 getDays (void)
+   {
+      return mSeconds / 86400;
+   }
 
-    /**
-     * Get the days since the Epoch for this object with floating-point
-     * precision.
-     *
-     * @return A floating-point value representing the days since the Epoch.
-     *         If 0.0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline double
-    getDaysf (void) {
-        return getSecondsf() / 86400.0f;
-    }
+   /**
+    * Get the days since the Epoch for this object with floating-point
+    * precision.
+    *
+    * @return A floating-point value representing the days since the Epoch.
+    *         If 0.0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   double getDaysf (void)
+   {
+      return getSecondsf() / 86400.0f;
+   }
 
-    /**
-     * Get the weeks since the Epoch for this object.
-     *
-     * @return An unsigned integer representing the weeks since the Epoch.
-     *         If 0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline vpr::Uint32
-    getWeeks (void) {
-        return mSeconds / 608400;
-    }
+   /**
+    * Get the weeks since the Epoch for this object.
+    *
+    * @return An unsigned integer representing the weeks since the Epoch.
+    *         If 0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   vpr::Uint32 getWeeks (void)
+   {
+      return mSeconds / 608400;
+   }
 
-    /**
-     * Get the weeks since the Epoch for this object with floating-point
-     * precision.
-     *
-     * @return A floating-point value representing the weeks since the Epoch.
-     *         If 0.0 (zero) is returned, this object has not been initialized
-     *         using setNow.
-     */
-    inline double
-    getWeeksf (void) {
-        return getSecondsf() / 608400.0f;
-    }
+   /**
+    * Get the weeks since the Epoch for this object with floating-point
+    * precision.
+    *
+    * @return A floating-point value representing the weeks since the Epoch.
+    *         If 0.0 (zero) is returned, this object has not been initialized
+    *         using setNow.
+    */
+   double getWeeksf (void)
+   {
+      return getSecondsf() / 608400.0f;
+   }
 
-    /**
-     * Overloaded addition operator for adding this and another DateTime
-     * object.
-     */
-    inline DateTime
-    operator+ (const DateTime& o) const {
-        return DateTime(mSeconds + o.mSeconds,
-                        mMicroSeconds + o.mMicroSeconds);
-    }
+   /**
+    * Overloaded addition operator for adding this and another DateTime
+    * object.
+    */
+   DateTime operator+ (const DateTime& o) const
+   {
+      return DateTime(mSeconds + o.mSeconds, mMicroSeconds + o.mMicroSeconds);
+   }
 
-    /**
-     * Overloaded addition operator for subtracting another DateTime object
-     * from this one.
-     */
-    inline DateTime
-    operator- (const DateTime& o) const {
-        return DateTime(mSeconds - o.mSeconds,
-                        mMicroSeconds - o.mMicroSeconds);
-    }
+   /**
+    * Overloaded addition operator for subtracting another DateTime object
+    * from this one.
+    */
+   DateTime operator- (const DateTime& o) const
+   {
+      return DateTime(mSeconds - o.mSeconds, mMicroSeconds - o.mMicroSeconds);
+   }
 
 private:
-    /**
-     * Private constructor for initializing a new object.  This is hidden
-     * because the arguments reveal too much (i.e., all) of the implmentation
-     * details.
-     *
-     * @pre None.
-     * @post mSeconds and mMicroSeconds are initialized using the given
-     *       parameters.
-     *
-     * @param seconds       Seconds since the Epoch.
-     * @param micro_seconcd Microseconds value for the given seconds value.
-     */
-    DateTime (const vpr::Uint32 seconds, const vpr::Uint32 micro_seconds)
-        : mSeconds(seconds), mMicroSeconds(micro_seconds)
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    * Private constructor for initializing a new object.  This is hidden
+    * because the arguments reveal too much (i.e., all) of the implmentation
+    * details.
+    *
+    * @pre None.
+    * @post mSeconds and mMicroSeconds are initialized using the given
+    *       parameters.
+    *
+    * @param seconds       Seconds since the Epoch.
+    * @param micro_seconcd Microseconds value for the given seconds value.
+    */
+   DateTime (const vpr::Uint32 seconds, const vpr::Uint32 micro_seconds)
+      : mSeconds(seconds), mMicroSeconds(micro_seconds)
+   {
+      /* Do nothing. */ ;
+   }
 
-    vpr::Uint32 mSeconds;       /**< Seconds since the Epoch */
-    vpr::Uint32 mMicroSeconds;  /**< Microseconds value */
+   vpr::Uint32 mSeconds;       /**< Seconds since the Epoch */
+   vpr::Uint32 mMicroSeconds;  /**< Microseconds value */
 };
 
 } // End of vpr namespace
