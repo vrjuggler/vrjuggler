@@ -148,9 +148,9 @@ public:
     //---------------------------------------------------------
     int release()
     {
-       bool ret_val = ReleaseMutex(mutex);
+       int ret_val = ReleaseMutex(mutex);
        
-       if(ret_val == true)
+       if(ret_val == 1)
           mLocked = false;       // If failure, I will keep it locked
 
        return ret_val;
