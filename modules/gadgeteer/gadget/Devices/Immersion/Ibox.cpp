@@ -49,7 +49,7 @@ bool vjIBox::config(vjConfigChunk *c)
 
   vjDEBUG(vjDBG_INPUT_MGR,3) << "   vjIBox::config:" << std::endl
                              << vjDEBUG_FLUSH;
-  port_id = c->getProperty("portNum");
+  port_id = c->getProperty( "portNum" );
 
   // Done in vjInput
   //active = 0;
@@ -155,43 +155,44 @@ void sampleBox(void* pointer)
 *********************************************** ahimberg */
 int vjIBox::sample()
 {
-     //struct timeval tv;
-     // double start_time, stop_time;
-     ibox_result result;
-     //int tmp;
-     //static int c = 0;
+   //struct timeval tv;
+   // double start_time, stop_time;
+   ibox_result result;
+   //int tmp;
+   //static int c = 0;
 
-     result = hci_check_packet(&thingie);
-     if (result == NO_PACKET_YET)
-        ;
-     else if (result == SUCCESS)
-     {
-        hci_std_cmd(&thingie, 0,0,0);
-//    if (c == 0) {
-//      gettimeofday(&tv,0);
-//      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-//    }
-//    c++;
-//    if (c == 60) {
-//      gettimeofday(&tv,0);
-//      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-//      std::cout << 1/((stop_time-start_time) / 60)
-//                << "  " << std::endl;
-//      c = 0;
-//    }
+   result = hci_check_packet(&thingie);
+   if (result == NO_PACKET_YET)
+   {
+   }     
+   else if (result == SUCCESS)
+   {
+      hci_std_cmd( &thingie, 0,0,0 );
+      //    if (c == 0) {
+      //      gettimeofday(&tv,0);
+      //      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+      //    }
+      //    c++;
+      //    if (c == 60) {
+      //      gettimeofday(&tv,0);
+      //      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+      //      std::cout << 1/((stop_time-start_time) / 60)
+      //                << "  " << std::endl;
+      //      c = 0;
+      //    }
 
-   theData[progress].button[0] = thingie.button[0];
-   theData[progress].button[1] = thingie.button[1];
-   theData[progress].button[2] = thingie.button[2];
-   theData[progress].button[3] = thingie.button[3];
-   theData[progress].analog[0] = thingie.analog[0];
-   theData[progress].analog[1] = thingie.analog[1];
-   theData[progress].analog[2] = thingie.analog[2];
-   theData[progress].analog[3] = thingie.analog[3];
+      theData[progress].button[0] = thingie.button[0];
+      theData[progress].button[1] = thingie.button[1];
+      theData[progress].button[2] = thingie.button[2];
+      theData[progress].button[3] = thingie.button[3];
+      theData[progress].analog[0] = thingie.analog[0];
+      theData[progress].analog[1] = thingie.analog[1];
+      theData[progress].analog[2] = thingie.analog[2];
+      theData[progress].analog[3] = thingie.analog[3];
 
-   swapValidIndexes();     // Swap the buffers since we just read in a complete value
-     }
-     return 1;
+      swapValidIndexes();     // Swap the buffers since we just read in a complete value
+   }
+   return 1;
 }
 
 /**********************************************************
