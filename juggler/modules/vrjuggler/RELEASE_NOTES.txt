@@ -10,6 +10,16 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.1.91 (dev build)
+Released: <month> <day>, 2001
+
+    Required application and configuration changes for upgrading from all
+    versions previous releases (including 1.1.x up through 1.1.90):
+        * The script juggler-config is now called vrjuggler-config.
+        * vjDEBUG has been replaced with vprDEBUG.  The levels and
+          categories are now prefixed with "vrj" instead of "vj".  The
+          category formerly called vjDBG_ALL is now vprDBG_ALL.
+
  Version: 1.1.90 (dev build)
 Released: September 21, 2001
 

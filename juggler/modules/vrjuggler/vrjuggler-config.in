@@ -49,7 +49,7 @@ exec_prefix_set=no
 usage()
 {
     cat <<EOF
-Usage: juggler-config [OPTIONS] [LIBRARIES]
+Usage: vrjuggler-config [OPTIONS] [LIBRARIES]
 Options:
         [--basedir]           Use \$VJ_BASE_DIR when printing paths
         [--prefix[=DIR]]      Print the installation prefix or set an
