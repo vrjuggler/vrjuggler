@@ -35,7 +35,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # This file defines the specification for the base installation directory
-# tree for Plexus.
+# tree for Tweek.
 
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
