@@ -91,8 +91,40 @@ public class WizardStepChooserDialog
       panesModel = new DefaultListModel();
       panesList.setModel(panesModel);
       panesList.setCellRenderer(new WizardStepListCellRenderer());
+      panesList.addMouseListener(new MouseAdapter()
+      {
+         public void mouseClicked(MouseEvent evt)
+         {
+            // Double-click on a list item, approves that item
+            if (evt.getClickCount() == 2)
+            {
+               JList list = (JList)evt.getSource();
+               int idx = list.locationToIndex(evt.getPoint());
+               if (idx != -1)
+               {
+                  okPressed();
+               }
+            }
+         }
+      });
       sequencesModel = new DefaultListModel();
       sequencesList.setModel(sequencesModel);
+      sequencesList.addMouseListener(new MouseAdapter()
+      {
+         public void mouseClicked(MouseEvent evt)
+         {
+            // Double-click on a list item, approves that item
+            if (evt.getClickCount() == 2)
+            {
+               JList list = (JList)evt.getSource();
+               int idx = list.locationToIndex(evt.getPoint());
+               if (idx != -1)
+               {
+                  okPressed();
+               }
+            }
+         }
+      });
       sequencesList.setCellRenderer(new WizardStepListCellRenderer());
 
       // Add in the default panes
