@@ -109,6 +109,7 @@ chunk Keyboard "Keyboard" ""
   toggleoff Int 1 "toggleoff" "1 turns keyboard toggle of digital devices off, mode would change to holding down for digital to be true"
   width Int 1 "width" "window width"
   height Int 1 "height" "window height"
+  origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (upper left is 0,0)"
   end
 chunk GloveProxy "GloveProxy" "A Glove Proxy points to a glove device and unit"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
