@@ -670,35 +670,35 @@ public class Placer
          {
          // left
          case Rectangle.OUT_LEFT:
-            setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
             break;
          // top left
          case (Rectangle.OUT_LEFT | Rectangle.OUT_TOP):
-            setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
             break;
          // top
          case Rectangle.OUT_TOP:
-            setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
             break;
          // top right
          case (Rectangle.OUT_RIGHT | Rectangle.OUT_TOP):
-            setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
             break;
          // right
          case Rectangle.OUT_RIGHT:
-            setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
             break;
          // bottom right
          case (Rectangle.OUT_RIGHT | Rectangle.OUT_BOTTOM):
-            setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
             break;
          // bottom
          case Rectangle.OUT_BOTTOM:
-            setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
             break;
          // bottom left
          case (Rectangle.OUT_LEFT | Rectangle.OUT_BOTTOM):
-            setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));
+            getRootPane().getGlassPane().setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));
             break;
          }
 
@@ -708,13 +708,13 @@ public class Placer
       // Check if cursor is inside the object's bounds, but not on an edge
       else if (bounds.contains(mousePt.x, mousePt.y) && allowMove)
       {
-         setCursor(new Cursor(Cursor.MOVE_CURSOR));
+         getRootPane().getGlassPane().setCursor(new Cursor(Cursor.MOVE_CURSOR));
          dragMode = MOVE;
       }
       // Cursor is nowhere near the selected object
       else
       {
-         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+         getRootPane().getGlassPane().setCursor(Cursor.getDefaultCursor());
          dragMode = INVALID;
       }
    }

@@ -392,21 +392,23 @@ public class DisplayWindowFrame
 
    void this_mouseEntered(MouseEvent e)
    {
+/*
       if ( mHideMouse )
       {
          this.setCursor(mInverseCursor);
       }
-
+*/
       redispatchMouseEvent(e);
    }
 
    void this_mouseExited(MouseEvent e)
    {
+/*
       if ( mHideMouse )
       {
          this.setCursor(Cursor.getDefaultCursor());
       }
-
+*/
       redispatchMouseEvent(e);
    }
 
@@ -659,15 +661,17 @@ public class DisplayWindowFrame
 
    void this_mouseDragged(MouseEvent e)
    {
+      redispatchMouseEvent(e);
    }
 
    void this_mouseMoved(MouseEvent e)
    {
+/*
       if ( mHideMouse )
       {
          this.setCursor(mInverseCursor);
       }
-
+*/
       redispatchMouseEvent(e);
    }
 
