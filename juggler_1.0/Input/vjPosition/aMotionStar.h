@@ -220,7 +220,10 @@ public:
     //
     //! ARGS: n - The new hemisphere to use.
     // ------------------------------------------------------------------------
-    void setHemisphere(int n);
+    inline void
+    setHemisphere (int n) {
+        hemisphere = n;
+    }
 
     // ------------------------------------------------------------------------
     //: Get the transmitter hemisphere currently in use by the device.
@@ -243,7 +246,10 @@ public:
     //
     //! ARGS: n - The new bird format to use.
     // ------------------------------------------------------------------------
-    void setBirdFormat(unsigned int n);
+    inline void
+    setBirdFormat (unsigned int n) {
+        birdFormat = n;
+    }
 
     // ------------------------------------------------------------------------
     //: Get the bird format currently in use.
@@ -266,7 +272,10 @@ public:
     //
     //! ARGS: n - The new value for the number of birds in use.
     // ------------------------------------------------------------------------
-    void setNumBirds(unsigned int n);
+    inline void
+    setNumBirds (unsigned int n) {
+        birdsRequired = n;
+    }
 
     // ------------------------------------------------------------------------
     //: Get the number of bird currently connected to the flock.
@@ -289,7 +298,10 @@ public:
     //
     //! ARGS: n - The new value for the bird rate.
     // ------------------------------------------------------------------------
-    void setBirdRate(double n);
+    inline void
+    setBirdRate (double n) {
+        birdRate = n;
+    }
 
     // ------------------------------------------------------------------------
     //: Get the current bird rate.
@@ -312,7 +324,10 @@ public:
     //
     //! ARGS: i - The new value for the run mode.
     // ------------------------------------------------------------------------
-    void setRunMode(int n);
+    inline void
+    setRunMode (int n) {
+        runMode = n;
+    }
 
     // ------------------------------------------------------------------------
     //: Get the current run mode for the device.
@@ -335,7 +350,10 @@ public:
     //
     //! ARGS: ch - The new value for the report rate.
     // ------------------------------------------------------------------------
-    void setReportRate(unsigned char n);
+    inline void
+    setReportRate (unsigned char n) {
+        reportRate = n;
+    }
 
     // ------------------------------------------------------------------------
     //: Get the current report rate for the device.
@@ -385,7 +403,10 @@ public:
     //! RETURNS: A floating-point value for the current x position of the
     //+          given bird.
     // ------------------------------------------------------------------------
-    float xPos(int i);
+    inline float
+    xPos (int i) {
+        return posinfo[i][0];
+    }
 
     // ------------------------------------------------------------------------
     //: Get the y position of the i'th bird.
@@ -397,7 +418,10 @@ public:
     //! RETURNS: A floating-point value for the current y position of the
     //+          given bird.
     // ------------------------------------------------------------------------
-    float yPos(int i);
+    inline float
+    yPos (int i) {
+        return posinfo[i][1];
+    }
 
     // ------------------------------------------------------------------------
     //: Get the z position of the i'th bird.
@@ -409,7 +433,10 @@ public:
     //! RETURNS: A floating-point value for the current z position of the
     //+          given bird.
     // ------------------------------------------------------------------------
-    float zPos(int i);
+    inline float
+    zPos (int i) {
+        return posinfo[i][2];
+    }
 
     // ------------------------------------------------------------------------
     //: Get the z rotation of the i'th bird.
@@ -421,7 +448,10 @@ public:
     //! RETURNS: A floating-point value for the current z rotation of the
     //+          given bird.
     // ------------------------------------------------------------------------
-    float zRot(int i);
+    inline float
+    zRot (int i) {
+        return posinfo[i][3];
+    }
 
     // ------------------------------------------------------------------------
     //: Get the y rotation of the i'th bird.
@@ -433,7 +463,10 @@ public:
     //! RETURNS: A floating-point value for the current y rotation of the
     //+          given bird.
     // ------------------------------------------------------------------------
-    float yRot(int i);
+    inline float
+    yRot (int i) {
+        return posinfo[i][4];
+    }
 
     // ------------------------------------------------------------------------
     //: Get the x rotation of the i'th bird.
@@ -445,7 +478,10 @@ public:
     //! RETURNS: A floating-point value for the current x rotation of the
     //+          given bird.
     // ------------------------------------------------------------------------
-    float xRot(int i);
+    inline float
+    xRot (int i) {
+        return posinfo[i][5];
+    }
 
 //*****************************************************
 
