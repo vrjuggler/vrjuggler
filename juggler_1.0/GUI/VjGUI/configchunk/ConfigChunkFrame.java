@@ -77,7 +77,8 @@ public class ConfigChunkFrame extends JFrame
 	properties = new JPanel ();
 	properties.setLayout (new BoxLayout (properties, BoxLayout.Y_AXIS));
 
-	sp = new JScrollPane(properties);
+	sp = new JScrollPane(properties, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+			     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	sp.getVerticalScrollBar().setUnitIncrement(40);
 	sp.getHorizontalScrollBar().setUnitIncrement(40);
 
@@ -104,22 +105,10 @@ public class ConfigChunkFrame extends JFrame
 
 	addWindowListener(this);
 
-	/* this slightly convoluted process is needed in 
-	 * order to open a window that is wide enough to 
-	 * show the full PropertyPanels, regardless of
-	 * font & label sizes etc.
-	 *
-	 * Window.pack() doesn't always handle the width 
-	 * of scrollpanels as well as I'd like.
-	 */
-	pack();
-	Dimension d = properties.getPreferredSize();
-	d.width += 45;
-	d.height += getMinimumSize().height;
-	d.height = Math.min (d.height, Core.screenHeight);
-	d.width = Math.min (d.width, Core.screenWidth);
+	Dimension d = getPreferredSize();
+	d.height = Math.min (d.height + 28, Core.screenHeight);
+	d.width = Math.min (d.width + 20, Core.screenWidth);
 	setSize(d);
-	properties.setSize (properties.getMinimumSize());
 
 	setVisible(true);
 
