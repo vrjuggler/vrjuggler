@@ -61,7 +61,7 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-TEST_PROGS	= test testPool testSelfPerformance testTSD_Performance
+TEST_PROGS	= test testSelfPerformance testTSD_Performance
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -73,9 +73,6 @@ all: $(TEST_PROGS)
 test: test.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ test.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testPool: testPool.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ testPool.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-	
 testSelfPerformance: testSelfPerformance.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ testSelfPerformance.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 	
