@@ -23,6 +23,15 @@
          <para>Please note: you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and make.</para>
       </section>
       <section>
+         <title>Important Not for IRIX Users</title>
+         <para>There are many Perl scripts used as part of getting, configuring, and building the Juggler tools. The version of Perl that ships with IRIX 6.5 is very old (circa 1997) and does not work with many Perl scripts we have written. SGI provides a much newer version of Perl (5.6.1) with their freeware tools (<ulink url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It will be necessary to install that version for our scripts to work. This version is typically installed as <filename>/usr/freeware/bin/perl</filename>.</para>
+         <para>Once you have a modern Perl installed, you can run various Perl scripts as follows:</para>
+         <screen>/usr/freeware/bin/perl &lt;script-name&gt;</screen>
+         <para>The above will be required any time a Perl script fails with an error similar to the following:</para>
+         <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
+BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
+      </section>
+      <section>
          <title>Compiling the Juggler suite of tools</title>
          <para>This section explains how to get, configure, and compile all of the Juggler tools at once. Each tool compiles to its own library, and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
          <para>Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GGT, Xerces, and possibly NSPR. Here are the steps:</para>
@@ -106,7 +115,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             <para>Sometimes you do not want to build everything in the Juggler suite. Here are steps for configuring/building each package individually.</para>
             <section>
                <title>Sonix (individual)</title>
-               <para>Sonix requires a third-party software package called GMTL (ggt.sf.net).  Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or audioworks (multigen.com).  One of these subsystems are required in order to hear sound.  Here is how you build sonix:</para>
+               <para>Sonix requires a third-party software package called GMTL (ggt.sf.net). Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or audioworks (multigen.com). One of these subsystems are required in order to hear sound. Here is how you build sonix:</para>
                <orderedlist>
                   <listitem>
                      <para><command>cd modules/sonix</command></para>
