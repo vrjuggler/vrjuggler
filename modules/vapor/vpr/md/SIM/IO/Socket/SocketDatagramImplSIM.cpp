@@ -102,6 +102,11 @@ vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
 {
    vpr::ReturnStatus status;
 
+   if ( ! mNodeAssigned )
+   {
+      vpr::sim::Controller::instance()->getSocketManager().assignToNode(this, mLocalAddr);
+   }
+
    bytes_sent = length;
    vpr::sim::MessagePtr net_msg(new vpr::sim::Message(msg, length));
    vpr::sim::Controller::instance()->getSocketManager().sendMessageTo(net_msg, this, to);
