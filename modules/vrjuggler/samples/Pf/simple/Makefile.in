@@ -70,7 +70,7 @@ LINK		= @APP_LINK@ $(LINK_FLAGS)
 
 VPATH	= @srcdir@
 
-OBJS	= main.@OBJEXT@
+OBJS	= main.@OBJEXT@ simplePfApp.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Application build targets.
