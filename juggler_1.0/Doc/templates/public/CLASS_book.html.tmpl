@@ -181,31 +181,31 @@
 
 	    <BLOCKQUOTE>
 	      {include ../common/member_prototype.html.inc}
-	    </BLOCKQUOTE>
 
-	    <BLOCKQUOTE>
-	      {private false}
-		{if descr}
+	      <BLOCKQUOTE>
+	        {private false}
+		  {if descr}
+		    <P>
+		      {include ../common/descr.html.inc}
+		    </P>
+		  {endif}
+
 		  <P>
-		    {include ../common/descr.html.inc}
+		    <B>Contract</B>
 		  </P>
-		{endif}
 
-		<P>
-		  <B>Contract</B>
-		</P>
+		  <BLOCKQUOTE>
+		    {include ../common/contract.html.inc}
+		  </BLOCKQUOTE>
+	        {endprivate}
 
-		<BLOCKQUOTE>
-		  {include ../common/contract.html.inc}
-		</BLOCKQUOTE>
-	      {endprivate}
-
-	      {if ARGS}
-		{ARGS}
-	      {endif}
-	      {if RETURNS}
-		{RETURNS}
-	      {endif}
+	        {if ARGS}
+		  {ARGS}
+	        {endif}
+	        {if RETURNS}
+		  {RETURNS}
+	        {endif}
+	      </BLOCKQUOTE>
 	    </BLOCKQUOTE>
 
 	  {endif}
@@ -227,38 +227,38 @@
 
 	    <BLOCKQUOTE>
 	      {include ../common/member_prototype.html.inc}
-	    </BLOCKQUOTE>
 
-	    <BLOCKQUOTE>
-	      {private false}
-		{if descr}
-		  <P>
-		    {include ../common/descr.html.inc}
-		  </P>
-		{endif}
-		{else}
-		  {if overrides}
+	      <BLOCKQUOTE>
+	        {private false}
+		  {if descr}
 		    <P>
 		      {include ../common/descr.html.inc}
 		    </P>
 		  {endif}
-		{endelse}
+		  {else}
+		    {if overrides}
+		      <P>
+		        {include ../common/descr.html.inc}
+		      </P>
+		    {endif}
+		  {endelse}
 
-		<P>
-		  <B>Contract</B>
-		</P>
+		  <P>
+		    <B>Contract</B>
+		  </P>
 
-		<BLOCKQUOTE>
-		  {include ../common/contract.html.inc}
-		</BLOCKQUOTE>
-	      {endprivate}
+		  <BLOCKQUOTE>
+		    {include ../common/contract.html.inc}
+		  </BLOCKQUOTE>
+	        {endprivate}
 
-	      {if ARGS}
-		{ARGS}
-	      {endif}
-	      {if RETURNS}
-		{RETURNS}
-	      {endif}
+	        {if ARGS}
+		  {ARGS}
+	        {endif}
+	        {if RETURNS}
+		  {RETURNS}
+	        {endif}
+	      </BLOCKQUOTE>
 	    </BLOCKQUOTE>
 
 	  {endif}
