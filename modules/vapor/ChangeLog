@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-01-14 allenb   Removed length parameter from string serialization and
+                    deserialization in object reader and writer.
 2003-01-14 patrickh Fixed the implementation of vpr::GUID::generate() for the
                     non-Leach UUID case.
                     NEW VERSION: 0.26.1
