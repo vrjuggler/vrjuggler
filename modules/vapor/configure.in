@@ -276,10 +276,6 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
             AC_DEFINE(VPR_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
         fi
 
-        if test "x$PLATFORM" = "xLinux" ; then
-            AC_DEFINE(_GNU_SOURCE,)
-        fi
-
         USE_PTHREADS='yes'
         DPP_GET_POSIX_SEMAPHORE_LIB( ,
             AC_MSG_ERROR(*** POSIX semaphores are required for POSIX subsystem ***))
