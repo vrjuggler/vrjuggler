@@ -230,7 +230,10 @@ public class ControlPanelView
          Wizard wizard = WizardLoader.loadWizard(root.getWizardLocation(),
             this.getClass().getClassLoader());
 
-         WizardViewerBean viewer = new WizardViewerBean();
+         Map white_board = new HashMap();
+         white_board.put("context", mContext);
+         
+         WizardViewerBean viewer = new WizardViewerBean(white_board);
          viewer.setWizard(wizard);
          viewer.setSidebarImage(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
          viewer.addWizardViewListener(new WizardViewListener()
