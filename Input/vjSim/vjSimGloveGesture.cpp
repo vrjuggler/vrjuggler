@@ -13,19 +13,8 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
 
    mCurGesture = 0;     // We are in no gesture yet
 
-   // Get keyboard pairs
-   int num_keys = chunk->getNum("keys");
-   int num_mods = chunk->getNum("modKeys");
-   int num_pairs = ( (num_keys < num_mods) ? num_keys : num_mods);   // Trim to smaller value
-
-   // Fill the key pairs
-   for(int i=0;i<num_pairs;i++)
-   {
-      vjKeyModPair key_pair;
-      key_pair.mKey      = (int)chunk->getProperty("keys",i);
-      key_pair.mModifier = (int)chunk->getProperty("modKeys",i);
-      mSimKeys.push_back(key_pair);
-   }
+   std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
+   mSimKeys = readKeyList(key_list);
 
    // Get sample filename
    std::string sample_file = (char*)chunk->getProperty("trainedFilename");
