@@ -359,7 +359,11 @@ void SubsynthSoundImplementation::startAPI()
    
    // open the audio port
    result = sink->open();
-   if (result == false) { std::cout<<"[snx]Subsynth| sink couldn't open"<<std::endl; return; }
+   if (result == false) 
+   { 
+      vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("[snx]Subsynth| sink couldn't open\n"), std::string("\n"));
+      return;
+   }
    
    // mixer
    syn::MixerModule* mixer = new syn::MixerModule;
@@ -368,16 +372,28 @@ void SubsynthSoundImplementation::startAPI()
    
    // open the mixer
    result = mixer->open();
-   if (result == false) { std::cout<<"[snx]Subsynth| mix couldn't open"<<std::endl; return; }
+   if (result == false) 
+   { 
+      vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, std::string("mix couldn't open\n"), std::string("\n"));
+      return;
+   }
 
-   std::cout<<"make connections\n"<<std::flush;
+   vpr::DebugOutputGuard output3(snxDBG, vprDBG_CONFIG_LVL, std::string("make connections\n"), std::string("\n"));
    syn::TerminalPtr output, input;
 
-   std::cout<<"[snx]Subsynth| mixer -> audioport connection\n"<<std::flush;
+   vpr::DebugOutputGuard output4(snxDBG, vprDBG_CONFIG_LVL, std::string(" mixer -> audioport connection\n"), std::string("\n"));
    result = mixer->getOutput( "output", output );
-   if (result == false) { std::cout << "[snx]Subsynth| couldn't get mixer out-term" << std::endl; return; }
+   if (result == false) 
+   { 
+      vpr::DebugOutputGuard output5(snxDBG, vprDBG_CONFIG_LVL, std::string("couldn't get mixer out-term\n"), std::string("\n"));
+      return; 
+   }
    result = sink->getInput( "mono audio", input );
-   if (result == false) { std::cout << "[snx]Subsynth| couldn't get audioport in-term" << std::endl; return; }
+   if (result == false) 
+   { 
+      vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("couldn't get audioport in-term\n"), std::string("\n"));
+      return; 
+   }
    syn::Terminal::connect( input, output );
 //   syn::SampleBufferRepos::instance()->setBlockSize( blocksize );
       
@@ -486,7 +502,7 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
          {
             // set up the subsynth instrument...
             mBindLookup[alias].inst->setInstanceName( alias );
-            std::cout<<"[snx]Subsynth| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::endl;
+            vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTIFY: loading: ")+soundInfo.filename+std::string("... \n"), std::string("\n"));
             mBindLookup[alias].inst->setParam( "filename", soundInfo.filename );
             mBindLookup[alias].inst->setParam( "loop", false );
             mBindLookup[alias].inst->setParam( "samplebased", true );
@@ -503,7 +519,7 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
             result = mBindLookup[alias].inst->getOutput( "mono audio", output );
             if (result == false) 
             { 
-               std::cout << "[snx]Subsynth| ERORR: couldn't get inst out-term" << std::endl; 
+               vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL, std::string("ERORR: couldn't get inst out-term\n"), std::string("\n")); 
                return; 
             }
             if (mMixer->isInput( alias ))
@@ -522,7 +538,7 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
    if (soundInfo.triggerOnNextBind == true)
    {
       soundInfo.triggerOnNextBind = false; // done...
-      std::cout<<"[snx]Subsynth| NOTIFY: triggering reconfigured sound\n"<<std::flush;
+      vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTIFY: triggering reconfigured sound\n"), std::string("\n"));
       this->trigger( alias, soundInfo.repeat );
    }
 }   

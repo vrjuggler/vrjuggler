@@ -67,6 +67,8 @@
 #include "snx/SoundFactory.h"
 #include "snx/plugins/OpenAL/OpenALSoundImplementation.h"
 
+#include "snx/Util/Debug.h"
+
 /////////////////////////
 // plugin API:
 #ifdef NO_SELF_REGISTER
@@ -529,9 +531,8 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          }
 
          // read the data from the file.
-         std::cout<<"[snx]OpenAL| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
+         vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("[snx]OpenAL| NOTIFY: loading: ")+soundInfo.filename+std::string("... \n"), std::string("\n"));
          snxFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
-         std::cout<<"done("<<mBindLookup[alias].data.size()<<")\n" << std::flush;
 
          // create a new buffer to put our loaded data into...
          alGenBuffers( 1, &bufferID );
@@ -561,19 +562,19 @@ void OpenALSoundImplementation::bind( const std::string& alias )
             switch (err)
             {
                case AL_ILLEGAL_COMMAND:
-                  std::cout<<"       Streaming buffers cannot use alBufferData\n"<<std::flush;
+                  std::cerr <<  "Streaming buffers cannot use alBufferData\n" << std::flush;
                   break;
                case AL_INVALID_NAME:
-                  std::cout<<"       bufferID is not a valid buffer name\n"<<std::flush;
+                  std::cerr << "bufferID is not a valid buffer name\n" << std::flush;
                   break;
                //case AL_INVALID_ENUM:
                //   std::cout<<"       format is invalid\n"<<std::flush;
                //   break;
                case AL_OUT_OF_MEMORY:
-                  std::cout<<"       not enough memory is available to make a copy of this data\n"<<std::flush;
+                  std::cerr << "not enough memory is available to make a copy of this data\n" << std::flush;
                   break;
                default:
-                  std::cout<<"       unknown error\n"<<std::flush;
+                  std::cerr << "       unknown error\n" << std::flush;
             }            
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
@@ -615,7 +616,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    if (soundInfo.triggerOnNextBind == true)
    {
       soundInfo.triggerOnNextBind = false; // done...
-      std::cout<<"[snx]OpenAL| NOTIFY: triggering reconfigured sound\n"<<std::flush;
+      vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTIFY: triggering reconfigured sound\n"), std::string("\n"));
       this->trigger( alias, soundInfo.repeat );
    }
 }   
@@ -644,7 +645,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       }
       else
       {
-         std::cout<<"[snx]OpenAL| ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
+         vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: can't trigger on next bind. alias not registered when it should be\n"), std::string("\n"));
       }      
    }
    
@@ -656,13 +657,13 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         std::cout<<"[snx]OpenAL| ERROR: unbind() deleting source\n"<<std::flush;
+         vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: unbind() deleting source\n"), std::string("\n"));
       }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         std::cout<<"[snx]OpenAL| ERROR: unbind() deleting buffer\n"<<std::flush;
+         vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: unbind() deleting buffer\n"), std::string("\n"));
       }
       mBindLookup.erase( alias );
    }
