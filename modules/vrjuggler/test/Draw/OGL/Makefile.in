@@ -44,6 +44,7 @@ APPS	= analog	\
           simpleGlove	\
           texture	\
           torus		\
+	  WallTest	\
           wand
 
 # -----------------------------------------------------------------------------
