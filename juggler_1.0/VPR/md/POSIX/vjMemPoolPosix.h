@@ -50,8 +50,6 @@
 #include <vjConfig.h>
 #include <sys/types.h>
 
-#include <Utils/vjDebug.h>
-
 
 //: Shared memory pool for multi-threaded code.
 //
@@ -81,9 +79,7 @@ public:
     vjMemPoolPosix (size_t initialSize = 65536,  int numProcs = 8,
                     char* staticTempName = "/var/tmp/memPoolPosixXXXXXX")
     {
-        vjDEBUG(vjDBG_ALL,3)
-            << "vjMemPoolPosix: Allocating arena ("
-            << initialSize << " bytes)\n" << vjDEBUG_FLUSH;
+        /* Do nothing. */ ;
     }
 
     // -----------------------------------------------------------------------
@@ -94,8 +90,7 @@ public:
     // -----------------------------------------------------------------------
     virtual
     ~vjMemPoolPosix (void) {
-        vjDEBUG(vjDBG_ALL,6) << "vjMemPoolPosix::~vjMemPoolPosix() entered\n"
-                   << vjDEBUG_FLUSH;
+        /* Do nothing. */ ;
     }
 
     // -----------------------------------------------------------------------
@@ -180,12 +175,7 @@ public:
     init (size_t initialSize = 32768, int numProcs = 64,
           char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")
     {
-        vjDEBUG(vjDBG_ALL,3)
-            << "\nvjMemPoolPosix: Allocating Base Arena for ALL "
-            << "vjMemPoolPosix's.\n  "
-            << initialSize << " bytes, "
-            << numProcs << " procs"
-            << "\n" << vjDEBUG_FLUSH;
+        /* Do nothing. */ ;
     }
 
     // -----------------------------------------------------------------------
@@ -199,9 +189,6 @@ public:
     // -----------------------------------------------------------------------
     void*
     operator new (size_t size) {
-        vjDEBUG(vjDBG_ALL,6) << "vjMemPoolPosix::new called.\n"
-                             << vjDEBUG_FLUSH;
-
         init();
 
         return malloc(sizeof(vjMemPoolPosix));
