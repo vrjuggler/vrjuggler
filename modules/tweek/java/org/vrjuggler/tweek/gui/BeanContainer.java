@@ -66,6 +66,37 @@ public class BeanContainer extends JPanel
 
    public BeanContainer ()
    {
+      // Before we register ourselves as a listener for Bean instatiation
+      // events, query the list of existing Beans.  We need to make sure that
+      // we know about any existing Beans that implement the various listener
+      // interfaces this class manages.
+      java.util.List known_beans =
+         BeanRegistry.instance().getBeansOfType(TweekBean.class.getName());
+
+      java.util.Iterator i = known_beans.iterator();
+      Object bean;
+
+      while ( i.hasNext() )
+      {
+         bean = ((TweekBean) i.next()).getBean();
+
+         // Check
+         if ( bean instanceof CommunicationListener )
+         {
+            addCommunicationListener((CommunicationListener) bean);
+         }
+
+         if ( bean instanceof UserLevelChangeListener )
+         {
+            addUserLevelChangeListener((UserLevelChangeListener) bean);
+         }
+
+         if ( bean instanceof TweekFrameListener )
+         {
+            addTweekFrameListener((TweekFrameListener) bean);
+         }
+      }
+
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
 
       try
@@ -90,6 +121,7 @@ public class BeanContainer extends JPanel
 
    public synchronized void addUserLevelChangeListener (UserLevelChangeListener listener)
    {
+      System.out.println("Adding new UserLevelChangeListener");
       mLevelListeners.add(listener);
    }
 
@@ -120,6 +152,7 @@ public class BeanContainer extends JPanel
 
    public synchronized void addCommunicationListener (CommunicationListener listener)
    {
+      System.out.println("Adding new CommunicationListener");
       mCommListeners.add(listener);
    }
 
@@ -169,8 +202,10 @@ public class BeanContainer extends JPanel
       }
    }
 
+   // XXX: Should this be here or in TweekFrame?
    public synchronized void addTweekFrameListener (TweekFrameListener l)
    {
+      System.out.println("Adding new TweekFrameListener");
       mFrameListeners.add(l);
    }
 
@@ -211,19 +246,16 @@ public class BeanContainer extends JPanel
       {
          if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.net.CommunicationListener")) )
          {
-            System.out.println("Adding new CommunicationListener");
             addCommunicationListener((CommunicationListener) bean);
          }
 
          if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.event.UserLevelChangeListener")) )
          {
-            System.out.println("Adding new UserLevelChangeListener");
             addUserLevelChangeListener((UserLevelChangeListener) bean);
          }
 
          if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.event.TweekFrameListener")) )
          {
-            System.out.println("Adding new TweekFrameListener");
             addTweekFrameListener((TweekFrameListener) bean);
          }
       }
