@@ -73,27 +73,6 @@ VarType stringToVarType(const std::string& str)
    return VJ_T_INVALID;
 }
 
-std::string typeString(const VarType t)
-{
-   switch ( t )
-   {
-      case T_INT:
-         return tokens::INTEGER;
-      case T_BOOL:
-         return tokens::BOOLEAN;
-      case T_FLOAT:
-         return tokens::FLOAT;
-      case T_STRING:
-         return tokens::STRING;
-      case T_ELEMENT_PTR:
-         return tokens::CONFIGELEMENTPOINTER;
-      case T_CHILD_ELEMENT:
-         return tokens::CONFIGELEMENT;
-      default:
-         return "Unrecognized_Type";
-   }
-}
-
 /** Is n an absolute path name? */
 bool isAbsolutePathName(const std::string& n)
 {
