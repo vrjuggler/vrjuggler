@@ -295,7 +295,7 @@ sub make_LDFLAGS ($;$$$)
                             : qq( @vpr_ldflags_compiler@));
 
    my $vpr_libs     = ($echo_profiled ? qq(@vpr_prof_libs@) : qq(@vpr_libs@));
-   my $full_ldflags = qq($ldflags $static_begin $vpr_libs $static_end);
+   my $full_ldflags = "$ldflags $static_begin $vpr_libs $static_end";
    $full_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_ldflags";
