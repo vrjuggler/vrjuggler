@@ -89,7 +89,7 @@ namespace jccl
            itr != search_path.end();
            ++itr)
       {
-         const std::string dir_str = demangleFileName(*itr, "");
+         const std::string dir_str = ParseUtil::expandFileName(*itr, "");
          try
          {
             fs::path dir(dir_str, boost::filesystem::native);
@@ -145,7 +145,8 @@ namespace jccl
       // Attempt to read all the definitions from the file
       try
       {
-         const std::string abs_filename = demangleFileName(file_name, parentFile);
+         const std::string abs_filename = ParseUtil::expandFileName(file_name,
+                                                                    parentFile);
          ConfigDefinitionReader reader;
          std::vector<ConfigDefinitionPtr> defs = reader.read(abs_filename);
 

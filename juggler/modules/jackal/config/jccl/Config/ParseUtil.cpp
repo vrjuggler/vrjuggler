@@ -44,10 +44,18 @@ namespace tokens = jccl::types_tokens;
 namespace jccl
 {
 
+ParseUtil::SearchPathData ParseUtil::mSearchInfo;
+
+#ifdef VPR_OS_Win32
+static const std::string sPathSep("\\");
+#else
+static const std::string sPathSep("/");
+#endif
+
 /** Is n an absolute path name? */
 static bool isAbsolutePathName(const std::string& n)
 {
-#ifdef WIN32
+#ifdef VPR_OS_Win32
    return((n.length() > 0) && (n[0] == '\\'))
       || ((n.length() > 2) && (n[1] == ':') && (n[2] == '\\'));
 #else
@@ -55,75 +63,112 @@ static bool isAbsolutePathName(const std::string& n)
 #endif
 }
 
-std::string demangleFileName(const std::string& n, std::string parentfile)
+std::string ParseUtil::expandFileName(const std::string& n,
+                                      const std::string& parentfile)
 {
    std::string fname = vpr::replaceEnvVars(n);
 
    if ( ! isAbsolutePathName(fname) )
    {
-      // it's a relative pathname... so we have to add in the path part
-      // of parentfile...
-      int lastslash(0);
-      for ( unsigned int i = 0; i < parentfile.length(); ++i )
+      // If the parentfile string is empty, we'll use the search path to find
+      // the file.
+      if ( parentfile.length() == 0 )
       {
-#ifdef VPR_OS_Win32
-         if ( parentfile[i] == '\\' )
-         {
-            lastslash = i;
-         }
-#else
-         if ( parentfile[i] == '/' )
-         {
-            lastslash = i;
-         }
-#endif
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+            << "jccl::ParseUtil::expandFileName(): Looking up '" << n
+            << "' using search path ...\n" << vprDEBUG_FLUSH;
+         findFileUsingPath(n, fname);
       }
-
-      if ( lastslash )
+      else
       {
-         std::string s(parentfile, 0, lastslash + 1);
-         fname = s + n;
+         // It's a relative pathname, so we have to add in the path part
+         // of parentfile.
+         int lastslash(0);
+         for ( unsigned int i = 0; i < parentfile.length(); ++i )
+         {
+            if ( parentfile[i] == sPathSep[0] )
+            {
+               lastslash = i;
+            }
+         }
+
+         if ( lastslash )
+         {
+            std::string s(parentfile, 0, lastslash + 1);
+            fname = s + n;
+         }
       }
    }
 
    return fname;
 }
 
-vpr::ReturnStatus findFileUsingPathVar(const std::string& file_name,
-                                       const std::string& env_name,
-                                       std::string& absolute_file)
+void ParseUtil::setCfgSearchPath(const std::string& path)
 {
-   // based on patrick's code to support VJ_CFG_PATH
-   // if we find file_name on any path in the variable env_var, we'll
-   // open it.  someone calling this function should check in to see
-   // if it's an open file afterwards.
+   mSearchInfo.setSearchPath(path);
+}
 
-   bool found = false;
-   std::string path_string;
+vpr::ReturnStatus ParseUtil::findFileUsingPath(const std::string& fileName,
+                                               std::string& absoluteFile)
+{
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+   std::ifstream in;
 
-   // Read the value in the config path environment variable.
-   if ( vpr::System::getenv(env_name, path_string).success() )
+   for ( std::vector<std::string>::iterator i = mSearchInfo.mPath.begin();
+         i != mSearchInfo.mPath.end();
+         ++i )
    {
-      vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
-         << "Falling back on " << env_name << ": '" << path_string << "'\n"
-         << vprDEBUG_FLUSH;
+      // Clear the flags on in so that we can try opening a new file.
+      in.clear();
+
+      std::string full_path(*i + sPathSep + fileName);
+
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
+         << "jccl::ParseUtil::findFileUsingPath(): Attempting to open file '"
+         << full_path << "'\n" << vprDEBUG_FLUSH;
+
+      // Try to open the file name constructed above.
+      in.open(full_path.c_str());
+
+      if ( in )
+      {
+         absoluteFile = full_path;
+         status.setCode(vpr::ReturnStatus::Succeed);
+         in.close();
+         break;
+      }
    }
 
-   // If the user set a value for $VJ_CFG_PATH, parse it, baby!
-   if ( path_string.length() > 0 )
-   {
-      std::string::size_type cur_pos = 0, old_pos = 0;
-      std::string full_path;
+   return status;
+}
 
-// Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
-// we use ";", and on everything else, we use ":".
+ParseUtil::SearchPathData::SearchPathData()
+{
+   // By default, initialize the search path using the value (if any) in the
+   // environment variable $JCCL_CFG_PATH.
+   const std::string jccl_search_env("JCCL_CFG_PATH");
+   std::string search_path;
+
+   if ( vpr::System::getenv(jccl_search_env, search_path).success() )
+   {
+      this->setSearchPath(search_path);
+   }
+}
+
+void ParseUtil::SearchPathData::setSearchPath(const std::string& path)
+{
+   mPath.clear();
+
+   // Ensure that we have a path that is not empty before we try any parsing.
+   if ( path.length() > 0 )
+   {
+// Define the separator character for the elements of the path.  On Win32, we
+// use ";", and on everything else, we use ":".
 #ifdef VPR_OS_Win32
-      char elem_sep = ';';
+      char elem_sep(';');
       std::string ostype;
 
-      // If we are in a Cygwin environment, use ":" as the element
-      // separator.
+      // If we are in a Cygwin environment, use ":" as the element separator.
       if ( vpr::System::getenv("OSTYPE", ostype).success() )
       {
          if ( strcmp(ostype.c_str(), "cygwin") == 0 )
@@ -132,29 +177,27 @@ vpr::ReturnStatus findFileUsingPathVar(const std::string& file_name,
          }
       }
 #else
-      char elem_sep = ':';
+      char elem_sep(':');
 #endif
-      std::ifstream in;
 
-      while ( ! found )
+      std::string::size_type cur_pos(0), old_pos(0);
+
+      while ( true )
       {
-         // Clear the flags on in so that we can try opening a new file.
-         in.clear();
-
          // Find the next occurrence of an element separator.
-         cur_pos = path_string.find(elem_sep, old_pos);
+         cur_pos = path.find(elem_sep, old_pos);
 
          // If cur_pos is greater than the length of the path, there
          // are no more :'s in the path.
-         if ( cur_pos > path_string.length() )
+         if ( cur_pos > path.length() )
          {
             // If old_pos is still less than the length of the path,
             // there is one more directory to be read, so set cur_pos
             // to the length of the path string so we can read it.
             // Once it's read, we'll be done.
-            if ( old_pos < path_string.length() )
+            if ( old_pos < path.length() )
             {
-               cur_pos = path_string.length();
+               cur_pos = path.length();
             }
             // At this point, both old_pos and cur_pos point beyond
             // the end of the path string.
@@ -164,34 +207,36 @@ vpr::ReturnStatus findFileUsingPathVar(const std::string& file_name,
             }
          }
 
-         // Extract the current directory from the path and point
-         // old_pos to be one character past the current position
-         // (which points at a ':').
-         full_path = path_string.substr(old_pos, cur_pos - old_pos);
-         old_pos   = cur_pos + 1;
+         // Extract the current directory from the path and point old_sep to
+         // be one character past the current position (which points at the
+         // character elem_sep).
+         std::string cur_entry(path.substr(old_pos, cur_pos - old_pos));
 
-         // Append "/" + file_name to the current directory.
-         full_path += "/";
-         full_path += file_name;
+         // Update old_pos for the next pass through this loop.
+         old_pos = cur_pos + 1;
 
          vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
-            << "ConfigChunkDB::load(): opening file " << full_path
-            << "\n" << vprDEBUG_FLUSH;
+            << "jccl::ParseUtil::SearchPathData::setSearchPath(): Adding '"
+            << cur_entry << "' to the search path.\n" << vprDEBUG_FLUSH;
 
-         // Try to open the file name constructed above.
-         in.open(full_path.c_str());
-
-         if ( in )
-         {
-            found         = true;
-            absolute_file = full_path;
-            status.setCode(vpr::ReturnStatus::Succeed);
-            in.close();
-         }
+         mPath.push_back(cur_entry);
       }
    }
 
-   return status;
+#ifdef JCCL_DEBUG
+   {
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
+         << "Config file search path is:\n" << vprDEBUG_FLUSH;
+
+      for ( std::vector<std::string>::iterator i = mSearchInfo.mPath.begin();
+            i != mSearchInfo.mPath.end();
+            ++i )
+      {
+         vprDEBUG_NEXT(jcclDBG_CONFIG, vprDBG_VERB_LVL) << *i << std::endl
+                                                            << vprDEBUG_FLUSH;
+      }
+   }
+#endif
 }
 
 } // End of jccl namespace

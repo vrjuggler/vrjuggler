@@ -179,7 +179,8 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
                         std::string("Loading config file ")+filename+std::string("\n"),
                         std::string("\n"));
 
-   std::string absolute_filename = demangleFileName(filename, parentfile);
+   std::string absolute_filename = ParseUtil::expandFileName(filename,
+                                                             parentfile);
    mFileName = absolute_filename;
 
    cppdom::DocumentPtr cfg_doc(ElementFactory::instance()->createXMLDocument());
