@@ -280,14 +280,17 @@ private:
          // source --> gain --> filter -->
          syn::TerminalPtr output, input;
          bool result = false;
+         std::cout<<"source -> velocity connection\n"<<std::flush;
          result = source->getOutput( "mono audio", output );
          result = velocity->getInput( "mono audio0", input );
          syn::Terminal::connect( input, output );
 
-         result = velocity->getOutput( "mono audio", input );
+         std::cout<<"velocity -> filter connection\n"<<std::flush;
+         result = velocity->getOutput( "mono audio", output );
          result = filter->getInput( "mono audio", input );
          syn::Terminal::connect( input, output );
          
+         std::cout<<"add source/velocity/filter to instrument\n"<<std::flush;
          i->addModule( source );
          i->addModule( velocity );
          i->addModule( filter );

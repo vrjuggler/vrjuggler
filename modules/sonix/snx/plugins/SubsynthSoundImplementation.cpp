@@ -136,6 +136,7 @@ void SubsynthSoundImplementation::trigger( const std::string& alias, const int& 
             mBindLookup[alias].inst->setParam( "loop", false );
          }
          
+         std::cout << "[snx] trigger" << std::endl;
          mBindLookup[alias].inst->setParam( "trigger", true );
       }
    }
@@ -317,6 +318,9 @@ void SubsynthSoundImplementation::setPitchBend( const std::string& alias, float 
 /** 0 - 1.  use 0 for mute, use 1 for unmute... */
 void SubsynthSoundImplementation::setVolume( const std::string& alias, float amount )
 {
+   // only set the vol if in range...
+   if (amount < 0) return;
+   
    snx::SoundImplementation::setVolume( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
@@ -342,7 +346,7 @@ void SubsynthSoundImplementation::setCutoff( const std::string& alias, float amo
  */
 void SubsynthSoundImplementation::startAPI()
 {
-   if (mIsOpen == true) return;
+   if (this->isStarted() == true) return;
 
    bool result = false;
    
@@ -384,6 +388,7 @@ void SubsynthSoundImplementation::startAPI()
    // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
    // alListenerfv( AL_VELOCITY, velocity );
    
+   this->reschedule();
    mRunner.run( 1 );
    mIsOpen = true;
 }
@@ -395,14 +400,13 @@ void SubsynthSoundImplementation::startAPI()
  */
 void SubsynthSoundImplementation::shutdownAPI()
 {
-   if (mIsOpen == false) return;
-   mIsOpen = false;
    if (this->isStarted() == false)
    {
       std::cerr << "[snx]Subsynth| WARNING: API not started, nothing to shutdown\n" << std::flush;
       return;
    }
-
+   mIsOpen = false;
+   
    this->unbindAll();
    mRunner.stop();
    mMixer->close();
@@ -490,6 +494,9 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
          mBindLookup[alias].inst->setParam( "loop", false );
          mBindLookup[alias].inst->setParam( "samplebased", true );
          mBindLookup[alias].inst->setParam( "basefreq", 22050.0f );
+         this->setPitchBend( alias, soundInfo.pitchbend );
+         this->setCutoff( alias, soundInfo.cutoff );
+         this->setVolume( alias, soundInfo.volume );
          this->setAmbient( alias, soundInfo.ambient );
          this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
 
