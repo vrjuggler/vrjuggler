@@ -405,9 +405,11 @@ namespace cluster
          }
       }
    }
-
-   void ApplicationDataManager::addApplicationData(ApplicationData* new_app_data)
+   
+   void ApplicationDataManager::addSerializableObject(vpr::SerializableObject* object)
    {
+      ApplicationData* new_app_data = static_cast<ApplicationData*>(object);
+
       vpr::GUID id = new_app_data->getId();
       std::string hostname = new_app_data->getHostname();
 
