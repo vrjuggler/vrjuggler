@@ -143,7 +143,7 @@ protected:
     */
    void removeEventWindowDevice();
 
-public:
+private:
     HWND  mWinHandle;      /**< Window handle */
     HGLRC mRenderContext;  /**< Permenant Rendering context */
     HDC   mDeviceContext;  /**< Private GDI Device context */
