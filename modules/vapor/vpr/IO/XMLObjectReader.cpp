@@ -60,7 +60,7 @@
 
 namespace
 {
-/** Helper to read the data from the current string */
+ /** Helper to read the data from the current string. */
  template<class T>
  vpr::ReturnStatus readValueStringRep(T& val, std::stringstream* inStream)
  {
@@ -153,7 +153,10 @@ std::stringstream* XMLObjectReader::getCurSource()
    return in_stream;
 }
 
-/** Initialize the members based on a serialized version of something in the data buffer */
+/**
+ * Initialize the members based on a serialized version of something in the
+ * data buffer.
+ */
 void XMLObjectReader::initCppDomTree(std::vector<vpr::Uint8> data)
 {
    std::string xml_data(data.begin(), data.end());
@@ -179,9 +182,10 @@ void XMLObjectReader::debugDumpStack(int debug_level)
    }
 }
 
-/** Starting a new tag
-* Get the local cdata into the current data source
-*/
+/**
+ * Starting a new tag.
+ * Get the local cdata into the current data source.
+ */
 vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
 {
    vprDEBUG_OutputGuard(vprDBG_ALL, XML_OR_LEVEL, std::string("beginTag:[") + tagName + std::string("]\n"), "endTag");
@@ -236,9 +240,10 @@ vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Ends the most recently named tag.
-* Just pop of the cur node state information
-*/
+/**
+ * Ends the most recently named tag.
+ * Just pop of the current node state information.
+ */
 vpr::ReturnStatus XMLObjectReader::endTag()
 {
    vprASSERT(!mCurNodeStack.empty());
@@ -246,9 +251,10 @@ vpr::ReturnStatus XMLObjectReader::endTag()
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Starts an attribute of the name attributeName
-* Get the attribute content and set the attribute source with that content
-*/
+/**
+ * Starts an attribute of the name attributeName.
+ * Get the attribute content and set the attribute source with that content.
+ */
 vpr::ReturnStatus XMLObjectReader::beginAttribute(std::string attributeName)
 {
    //std::cout << "beginAttribute: " << attributeName << std::endl;
@@ -262,7 +268,7 @@ vpr::ReturnStatus XMLObjectReader::beginAttribute(std::string attributeName)
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Ends the most recently named attribute */
+/** Ends the most recently named attribute. */
 vpr::ReturnStatus XMLObjectReader::endAttribute()
 {
    mAttribSource.clear();
@@ -384,4 +390,3 @@ bool XMLObjectReader::readBool()
 }
 
 } // namespace vpr
-
