@@ -537,11 +537,7 @@ void MotionStarStandalone::sample()
    {
       // First, we need to read the header for the incoming data packet so we
       // know how much data to expect.
-      getRsp(&recv_pkt.header, sizeof(BIRDNET::HEADER));
-
-      // Record the current sequence number so that we know what to use the
-      // next time we need to send a packet to the server.
-      m_seq_num = vpr::System::Ntohs(recv_pkt.header.sequence);
+      getRsp(&recv_pkt.header);
 
       if ( recv_pkt.header.error_code != 0 )
       {
@@ -561,7 +557,7 @@ void MotionStarStandalone::sample()
             vpr::ReturnStatus resp_status;
 
             // Try to read the bird data from the packet based on the number
-            // of bytes the header claims are available.  If an exceptoin that
+            // of bytes the header claims are available.  If an exception that
             // derives from mstar::MotionStarException is thrown, this loop
             // will repeat.  All other exceptions are rethrown to the caller
             // of this method.
@@ -569,6 +565,8 @@ void MotionStarStandalone::sample()
             {
                try
                {
+                  // Read the remainder of the waiting packet from the receive
+                  // buffer.
                   resp_status = getRsp(&recv_pkt.buffer,
                                        vpr::System::Ntohs(recv_pkt.header.number_bytes));
                }
@@ -721,20 +719,17 @@ vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException
    // it.
    if ( m_run_mode == BIRDNET::CONTINUOUS )
    {
-      BIRDNET::HEADER msg(BIRDNET::MSG_STOP_DATA), rsp;
-
-      msg.sequence = vpr::System::Htons(m_seq_num);
-      m_seq_num++;
-
       try
       {
+         BIRDNET::HEADER msg(BIRDNET::MSG_STOP_DATA), rsp;
+
          // Send the MSG_STOP_DATA packet.
-         status = sendMsg(&msg, sizeof(BIRDNET::HEADER));
+         status = sendMsg(&msg);
 
          try
          {
             // Get the server's response.
-            status = getRsp(&rsp, sizeof(BIRDNET::HEADER));
+            status = getRsp(&rsp);
 
             vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
                << "[MotionStarStandalone] Continuous data stopped"
@@ -767,21 +762,19 @@ vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::shutdown() throw(mstar::CommandException)
 {
-   BIRDNET::HEADER msg(BIRDNET::MSG_SHUT_DOWN), rsp;
    vpr::ReturnStatus status;
-
-   msg.sequence = vpr::System::Htons(m_seq_num);
-   m_seq_num++;
 
    try
    {
+      BIRDNET::HEADER msg(BIRDNET::MSG_SHUT_DOWN), rsp;
+
       // Send the MSG_SHUT_DOWN packet.
-      status = sendMsg(&msg, sizeof(BIRDNET::HEADER));
+      status = sendMsg(&msg);
 
       try
       {
          // Get the server's response to the MSG_SHUT_DOWN packet.
-         status = getRsp(&rsp, sizeof(BIRDNET::HEADER));
+         status = getRsp(&rsp);
 
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "[MotionStarStandalone] Server chassis shut down" << std::endl
@@ -823,21 +816,18 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
       if ( m_run_mode == BIRDNET::CONTINUOUS &&
            mode == BIRDNET::SINGLE_SHOT )
       {
-         BIRDNET::HEADER msg(BIRDNET::MSG_STOP_DATA), rsp;
-
-         msg.sequence = vpr::System::Htons(m_seq_num);
-         m_seq_num++;
-
          try
          {
-            sendMsg(&msg, sizeof(BIRDNET::HEADER));
+            BIRDNET::HEADER msg(BIRDNET::MSG_STOP_DATA), rsp;
+
+            sendMsg(&msg);
             vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
                << "[MotionStarStandalone] Continuous data stopped" << std::endl
                << vprDEBUG_FLUSH;
 
             try
             {
-               getRsp(&rsp, sizeof(BIRDNET::HEADER));
+               getRsp(&rsp);
             }
             catch (...)
             {
@@ -859,21 +849,18 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
       else if ( m_run_mode == BIRDNET::SINGLE_SHOT &&
                 mode == BIRDNET::CONTINUOUS )
       {
-         BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
-
-         msg.sequence = vpr::System::Htons(m_seq_num);
-         m_seq_num++;
-
          try
          {
-            sendMsg(&msg, sizeof(BIRDNET::HEADER));
+            BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
+
+            sendMsg(&msg);
             vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
                << "[MotionStarStandalone] Continuous data requested"
                << std::endl << vprDEBUG_FLUSH;
 
             try
             {
-               getRsp(&rsp, sizeof(BIRDNET::HEADER));
+               getRsp(&rsp);
             }
             catch (...)
             {
@@ -1210,19 +1197,17 @@ void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
 vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
    throw(mstar::CommandException)
 {
-   BIRDNET::HEADER msg(BIRDNET::MSG_WAKE_UP), rsp;
    vpr::ReturnStatus status;
-
-   msg.sequence = vpr::System::Htons(m_seq_num);
-   m_seq_num++;
 
    try
    {
-      status = sendMsg((void*) &msg, sizeof(msg));
+      BIRDNET::HEADER msg(BIRDNET::MSG_WAKE_UP), rsp;
+
+      status = sendMsg(&msg);
 
       try
       {
-         getRsp((void*) &rsp, sizeof(rsp));
+         getRsp(&rsp);
 
          // If we got a response but there was an error from the server, shut
          // it down and send the wake-up message again.  This is the
@@ -1240,11 +1225,12 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
 
             try
             {
-               status = sendMsg((void*) &shutdown_msg, sizeof(shutdown_msg));
+               status = sendMsg(&shutdown_msg);
 
                try
                {
-                  status = getRsp((void*) &rsp, sizeof(rsp));
+                  // This reuses the rsp object declared above.
+                  status = getRsp(&rsp);
                }
                catch (...)
                {
@@ -1686,7 +1672,7 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
 {
    vpr::ReturnStatus status;
    BIRDNET::HEADER msg(BIRDNET::MSG_GET_STATUS);
-   BIRDNET::DATA_PACKET* rsp = NULL;
+   BIRDNET::DATA_PACKET* rsp(NULL);
 
    // Set the xtype field to the given device number.
    msg.xtype = device;
@@ -1694,7 +1680,7 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
    try
    {
       // Send the status request packet to the server.
-      status = sendMsg((void*) &msg, sizeof(msg));
+      status = sendMsg(&msg);
 
       // Allocate the new data packet object that will be returned to the
       // caller.
@@ -1704,7 +1690,7 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
       {
          // First read the header of the response.  It will contain the size
          // of the data part of the packet.
-         getRsp((void*) &(rsp->header), sizeof(rsp->header));
+         getRsp(&(rsp->header));
 
          // If that succeeded (i.e., didn't throw an exception), read the rest
          // of the response using the size in the header's number_bytes field.
@@ -1765,7 +1751,6 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
                                                         const unsigned short bufferSize)
 {
    BIRDNET::DATA_PACKET msg;
-   BIRDNET::HEADER rsp;
    size_t total_size;
    vpr::ReturnStatus status;
 
@@ -1774,6 +1759,9 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
    total_size = sizeof(BIRDNET::HEADER) + bufferSize;
 
    // Fill in the header bits.
+   // Note that we do not increment m_seq_num.  It should only be
+   // incremented when a response is received from the MotionStar chassis.
+   msg.header.sequence     = vpr::System::Htons(m_seq_num);
    msg.header.type         = BIRDNET::MSG_SEND_SETUP;
    msg.header.xtype        = device;
    msg.header.number_bytes = vpr::System::Htons(bufferSize);
@@ -1788,7 +1776,8 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
 
       try
       {
-         status = getRsp(&rsp, sizeof(rsp));
+         BIRDNET::HEADER rsp;
+         status = getRsp(&rsp);
       }
       catch (mstar::NetworkReadException ex)
       {
@@ -1814,16 +1803,17 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
 vpr::ReturnStatus MotionStarStandalone::setContinuous()
    throw(mstar::CommandException)
 {
-   BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
    vpr::ReturnStatus status;
 
    try
    {
-      status = sendMsg(&msg, sizeof(BIRDNET::HEADER));
+      BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
+
+      status = sendMsg(&msg);
 
       try
       {
-         status = getRsp(&rsp, sizeof(BIRDNET::HEADER));
+         status = getRsp(&rsp);
 
          if ( rsp.error_code != 0 )
          {
@@ -2040,6 +2030,22 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
    return status;
 }
 
+vpr::ReturnStatus MotionStarStandalone::sendMsg(BIRDNET::HEADER* packet)
+   throw(mstar::NetworkWriteException, mstar::NoDataWrittenException)
+{
+   vprASSERT(packet->sequence == 0 && "Sequence number already set");
+
+   // NOTE: We do not increment m_seq_num here.  The response we get from the
+   // server based on this message will have the same sequence number as what
+   // is being assigned here.  Therefore, the sequence number should only be
+   // incremented after a response is received.
+   packet->sequence = vpr::System::Htons(m_seq_num);
+
+   // If sendMsg() throws an exception, we will let it propagate up to the
+   // caller.
+   return sendMsg((void*) packet, sizeof(BIRDNET::HEADER));
+}
+
 // ----------------------------------------------------------------------------
 // Get the server's response to a sent message.
 // ----------------------------------------------------------------------------
@@ -2070,6 +2076,42 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << "[MotionStarStandalone] " << msg << std::endl << vprDEBUG_FLUSH;
       throw mstar::NoDataReadException(msg);
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus MotionStarStandalone::getRsp(BIRDNET::HEADER* packet)
+   throw(mstar::NetworkReadException, mstar::NoDataReadException)
+{
+   vpr::ReturnStatus status;
+
+   // If getRsp() throws an exception, we will let it propagate up to the
+   // caller.
+   status = getRsp((void*) packet, sizeof(BIRDNET::HEADER));
+
+   if ( status.success() )
+   {
+      const unsigned short seq_num(vpr::System::Ntohs(packet->sequence));
+
+      // Verify that we got the message we were expecting based on its
+      // sequence number.
+      if ( seq_num != m_seq_num )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "[MotionStarStandalone]: "
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Expected message #"
+            << m_seq_num << " but received #" << seq_num << std::endl
+            << vprDEBUG_FLUSH;
+
+         // Resynchronize with the server's sequence number.
+         m_seq_num = seq_num;
+      }
+      // Increment the sequence number for the next message we will send.
+      else
+      {
+         m_seq_num++;
+      }
    }
 
    return status;
