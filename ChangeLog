@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-29-2001 patrick   Fixed a major bug in the MotionStar driver that was
+                      preventing proper system configuration when the server
+                      was in a bad state
 May-17-2001 patrick   Added support for HP-UX 11.00 (submitted by Daniel Heath
                       <DHeath@fueltechnv.com>)
 
