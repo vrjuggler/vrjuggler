@@ -33,7 +33,7 @@
 
 package VjGUI;
 
-import java.util.Vector;
+import java.util.*;
 import java.util.Enumeration;
 import java.awt.event.*;
 import javax.swing.*;
@@ -41,6 +41,11 @@ import javax.swing.tree.*;
 import VjConfig.*;
 import VjGUI.*;
 
+/** Trees used by ChunkDBPanel.
+ * 
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener, ChunkDBListener{
 
     public ConfigChunkDB chunkdb;
@@ -77,6 +82,11 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
     }
 
 
+    public void updateUI () {
+        tree.updateUI();
+        ((ChunkDBTreeCellRenderer)tree.getCellRenderer()).updateUI();
+    }
+
 
     public String getName() {
 	return (chunkdb == null) ? "No Selection" : chunkdb.getName();
@@ -91,42 +101,16 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    private void removeNode (ConfigChunk ch) {
-	/* note: doing this in a single stage seems to screw up the enumeration
-	 * when we remove elements from the tree, causing us to miss nodes that
-	 * should be removed.
-	 */
-	DefaultMutableTreeNode n, p;
-	ChunkTreeNodeInfo ni;
-	int i;
-	Vector v = new Vector();
 
-	Enumeration nodes = ((DefaultMutableTreeNode)root).breadthFirstEnumeration();
-	while (nodes.hasMoreElements()) {
-	    n = (DefaultMutableTreeNode)nodes.nextElement();
-	    ni = (ChunkTreeNodeInfo)n.getUserObject();
-	    if (ni.isChunkNode() && (ni.toString().equalsIgnoreCase (ch.getName())))
-		v.addElement(n);
-	}
-	for (i = 0; i < v.size(); i++) {
-	    n = (DefaultMutableTreeNode)v.elementAt(i);
-	    p = (DefaultMutableTreeNode)n.getParent();
-	    p.remove(n);
-	    removedChildCount(p);
-	    reload (p);
-	}
-    }
-
-
-
-
-    public void addedChildCount (DefaultMutableTreeNode n) {
+    protected void addedChildCount (DefaultMutableTreeNode n) {
 	if (n == null)
 	    return;
 	try {
 	    ChunkTreeNodeInfo ni = (ChunkTreeNodeInfo)n.getUserObject();
 	    ni.childchunks++;
 	    addedChildCount ((DefaultMutableTreeNode)n.getParent());
+            if (ni.childchunks == 1)
+                nodeChanged (n);
 	}
 	catch (ClassCastException exc) {  // root node
 	}
@@ -134,14 +118,15 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    public void removedChildCount (DefaultMutableTreeNode n) {
+    protected void removedChildCount (DefaultMutableTreeNode n) {
 	if (n == null)
 	    return;
 	try {
 	    ChunkTreeNodeInfo ni = (ChunkTreeNodeInfo)n.getUserObject();
 	    ni.childchunks--;
 	    removedChildCount ((DefaultMutableTreeNode)n.getParent());
-	    tree.repaint();
+            if (ni.childchunks == 0)
+                nodeChanged (n);
 	}
 	catch (ClassCastException exc) {  // root node
 	}
@@ -150,22 +135,25 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
     public void buildTree() {
+        //System.out.println ("buildtree (chunkdbtreemodel)");
+        DefaultMutableTreeNode newroot;
 
 	if (chunkdb == null) {
-	    root = new DefaultMutableTreeNode ("No DB selected");
+	    newroot = new DefaultMutableTreeNode ("No DB selected");
 	}
 	else {
 	    if (chunkorgtree == null) 
 		Core.consoleErrorMessage ("ChunkDBTreeModel", "chunkorgtree is null..");
 
-	    root = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.FOLDER, chunkdb, chunkdb.getName()));
-	    buildTreeEntry (chunkorgtree.root, (DefaultMutableTreeNode)root, chunkdb);
+	    newroot = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.FOLDER, chunkdb, chunkdb.getName()));
+	    buildTreeEntry (chunkorgtree.root, newroot, chunkdb);
 	}
 
+        // fix up the child counts...
 	DefaultMutableTreeNode n, n2;
 	ChunkTreeNodeInfo inf, inf2;
 	Enumeration ch, e;
-	e = ((DefaultMutableTreeNode)root).depthFirstEnumeration();
+	e = ((DefaultMutableTreeNode)newroot).depthFirstEnumeration();
 	while (e.hasMoreElements()) {
 	    n = (DefaultMutableTreeNode)e.nextElement();
 	    try {
@@ -182,39 +170,40 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    catch (ClassCastException ex) {
 	    }
 	}
-	reload();
+        setRoot (newroot);
     }
 
 
-
-    public void buildTreeEntry (OrgTreeElem on, DefaultMutableTreeNode tn,
+    /** Helper for buildTree. */
+    protected void buildTreeEntry (OrgTreeElem on, DefaultMutableTreeNode tn,
 				ConfigChunkDB db) {
 	DefaultMutableTreeNode newtn, newtn1, newtn2;
 	ConfigChunk ch;
 	OrgTreeElem newon;
-	int i, j, k;
+	int i, j, k, n;
 	String s, s2;
-	Vector v;
+	List v;
 
 	if (on == null) {
 	    Core.consoleErrorMessage ("ChunkDBTree", "OrgTreeElem is NULL");
 	    return;
 	}
-	for (i = 0; i < on.children.size(); i++) {
-	    if (on.children.elementAt(i) instanceof String) {
-		s = (String)(on.children.elementAt(i));
+        n = on.children.size();
+	for (i = 0; i < n; i++) {
+	    if (on.children.get(i) instanceof String) {
+		s = (String)(on.children.get(i));
 		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.DESC_FOLDER, db, s), true);
 		// get all chunks in db of type s & add as childrne of newtn
 		v = db.getOfDescName(s);
 		for (j = 0; j < v.size(); j++) {
-		    ch = (ConfigChunk)v.elementAt(j);
+		    ch = (ConfigChunk)v.get(j);
 		    newtn2 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, db, ch.getName()), false);
 		    newtn.add(newtn2);
 		}
 		tn.add(newtn);
 	    }
-	    else if (on.children.elementAt(i) instanceof OrgTreeElem) {
-		newon = (OrgTreeElem)(on.children.elementAt(i));
+	    else if (on.children.get(i) instanceof OrgTreeElem) {
+		newon = (OrgTreeElem)(on.children.get(i));
 		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.FOLDER, db, newon.label));
 		
 		if (newon.label.equals ("*")) {
@@ -224,7 +213,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 			newtn1 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.DESC_FOLDER, db, s2));
 			v = db.getOfDescName(s2);
 			for (k = 0; k < v.size(); k++) {
-			    ch = (ConfigChunk)v.elementAt(k);
+			    ch = (ConfigChunk)v.get(k);
 			    newtn2 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, db, ch.getName()), false);
 			    newtn1.add(newtn2);
 			}
@@ -242,85 +231,214 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    public void actionPerformed (ActionEvent e) {
-	if (e.getActionCommand().equalsIgnoreCase ("reload")) {
-	    buildTree();
-	}
-    }
-
-
-    /******************** ChunkDBListener Stuff ***********************/
-    public void replaceChunk (ChunkDBEvent e) {
-	ConfigChunk oldc = e.getOldChunk();
-	ConfigChunk newc = e.getNewChunk();
+    protected void doReplaceChunk (ConfigChunk oldc, ConfigChunk newc) {
 	ChunkTreeNodeInfo ni;
 	DefaultMutableTreeNode n;
 	
-	Enumeration nodes = ((DefaultMutableTreeNode)root).breadthFirstEnumeration();
+	Enumeration nodes = ((DefaultMutableTreeNode)root).depthFirstEnumeration();
 	while (nodes.hasMoreElements()) {
 	    n = (DefaultMutableTreeNode)nodes.nextElement();
 	    ni = (ChunkTreeNodeInfo)n.getUserObject();
 	    if (ni.name.equals(oldc.getName())) {
 		ni.name = newc.name;
-		reload (n);
+                nodeChanged (n);
 	    }
 	}
     }
 
 
+    protected void doRemoveChunk (ConfigChunk ch) {
+	/* note: doing this in a single stage seems to screw up the enumeration
+	 * when we remove elements from the tree, causing us to miss nodes that
+	 * should be removed.
+	 */
+        //System.out.println ("removing node: " + ch.getName());
+	DefaultMutableTreeNode node, p;
+	ChunkTreeNodeInfo ni;
+	int i, n;
+	List v = new ArrayList();
 
-    public void removeChunk (ChunkDBEvent e) { //String name) {
-	removeNode (e.getOldChunk());
+	Enumeration nodes = ((DefaultMutableTreeNode)root).depthFirstEnumeration();
+	while (nodes.hasMoreElements()) {
+	    node = (DefaultMutableTreeNode)nodes.nextElement();
+            if (node.isLeaf()) {
+                ni = (ChunkTreeNodeInfo)node.getUserObject();
+                if (ni.isChunkNode() && (ni.toString().equalsIgnoreCase (ch.getName())))
+                    v.add(node);
+            }
+	}
+        n = v.size();
+	for (i = 0; i < n; i++) {
+	    node = (DefaultMutableTreeNode)v.get(i);
+	    removedChildCount((DefaultMutableTreeNode)node.getParent());
+            removeNodeFromParent (node);
+	}
+    }
+
+
+    protected void doRemoveAllChunks () {
+	/* note: doing this in a single stage seems to screw up the enumeration
+	 * when we remove elements from the tree, causing us to miss nodes that
+	 * should be removed.
+	 */
+        //System.out.println ("remove all chunks called on chundbtreemodel");
+	DefaultMutableTreeNode node, p;
+	int i, n;
+	List v = new ArrayList();
+
+	Enumeration nodes = ((DefaultMutableTreeNode)root).depthFirstEnumeration();
+	while (nodes.hasMoreElements()) {
+	    node = (DefaultMutableTreeNode)nodes.nextElement();
+	    if (((ChunkTreeNodeInfo)node.getUserObject()).isChunkNode()) {
+		v.add(node);
+	    }
+	}
+        n = v.size();
+	for (i = 0; i < n; i++) {
+	    node = (DefaultMutableTreeNode)v.get(i);
+            removedChildCount ((DefaultMutableTreeNode)node.getParent());
+            removeNodeFromParent (node);
+	}
+    }
+
+
+    protected void doAddChunk (ConfigChunk ch) {
+        //System.out.println ("adding node: " + ch.getName());
+	doRemoveChunk (ch);
+	ChunkTreeNodeInfo ni;
+	DefaultMutableTreeNode parent, child;
+	Enumeration nodes = ((DefaultMutableTreeNode)root).depthFirstEnumeration();
+	while (nodes.hasMoreElements()) {
+	    parent = (DefaultMutableTreeNode)nodes.nextElement();
+	    ni = (ChunkTreeNodeInfo)parent.getUserObject();
+	    if (ni.isDescNode() && 
+		ni.toString().equalsIgnoreCase(ch.getDescName())) {
+                child = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, chunkdb, ch.getName()), false);
+		addedChildCount(parent);	
+                insertNodeInto (child, parent, parent.getChildCount());
+	    } 
+	}
+    }
+
+
+    //------------------ Listener helper classes ---------------------
+
+    // These classes are used to encapsulate various change requests 
+    // so that they can be placed on the EventDispatchThread's queue.
+    // Remember that Swing is single-threaded <sigh>.
+
+    final public class ReplaceChunkHandler implements Runnable {
+        ConfigChunk oldc, newc;
+        public ReplaceChunkHandler (ConfigChunk _oldc, ConfigChunk _newc) {
+            oldc = _oldc;
+            newc = _newc;
+        }
+        public void run () {
+            doReplaceChunk (oldc, newc);
+        }
+    }
+
+    final public class AddChunkHandler implements Runnable {
+        ConfigChunk newc;
+        public AddChunkHandler (ConfigChunk _newc) {
+            newc = _newc;
+        }
+        public void run () {
+            doAddChunk (newc);
+        }
+    }
+
+    final public class RemoveChunkHandler implements Runnable {
+        ConfigChunk oldc;
+        public RemoveChunkHandler (ConfigChunk _oldc) {
+            oldc = _oldc;
+        }
+        public void run () {
+            doRemoveChunk (oldc);
+        }
+    }
+
+    final public class RemoveAllChunksHandler implements Runnable {
+        public RemoveAllChunksHandler () {
+        }
+        public void run () {
+            doRemoveAllChunks ();
+        }
+    }
+            
+
+    //------------------------ ChunkDBListener Stuff -------------------------
+
+    public void replaceChunk (ChunkDBEvent e) {
+        //System.out.println ("replace chunk... chunkdbtreemodel");
+	ConfigChunk oldc = e.getOldChunk();
+	ConfigChunk newc = e.getNewChunk();
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            doReplaceChunk (oldc, newc);
+        }
+        else {
+            try {
+                SwingUtilities.invokeLater (new ReplaceChunkHandler (oldc, newc));
+            }
+            catch (Exception ex) {
+            }
+        }
+    }
+
+
+
+    public void removeChunk (ChunkDBEvent e) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            doRemoveChunk (e.getOldChunk());
+        }
+        else {
+            try {
+                SwingUtilities.invokeLater (new RemoveChunkHandler (e.getOldChunk()));
+            }
+            catch (Exception ex) {
+            }
+        }
     }
 
 
 
     public void removeAllChunks (ChunkDBEvent e) {
-	/* note: doing this in a single stage seems to screw up the enumeration
-	 * when we remove elements from the tree, causing us to miss nodes that
-	 * should be removed.
-	 */
-	DefaultMutableTreeNode n, p;
-	int i;
-	Vector v = new Vector();
-
-	Enumeration nodes = ((DefaultMutableTreeNode)root).breadthFirstEnumeration();
-	while (nodes.hasMoreElements()) {
-	    n = (DefaultMutableTreeNode)nodes.nextElement();
-	    if (((ChunkTreeNodeInfo)n.getUserObject()).isChunkNode()) {
-		v.addElement(n);
-	    }
-	}
-	for (i = 0; i < v.size(); i++) {
-	    n = (DefaultMutableTreeNode)v.elementAt(i);
-	    p = (DefaultMutableTreeNode)n.getParent();
-	    p.remove(n);
-	    removedChildCount(p);
-	    reload (p);
-	}
+        if (SwingUtilities.isEventDispatchThread()) {
+            doRemoveAllChunks ();
+        }
+        else {
+            try {
+                SwingUtilities.invokeLater (new RemoveAllChunksHandler ());
+            }
+            catch (Exception ex) {
+            }
+        }
     }
 
 
 
     public void addChunk (ChunkDBEvent e) {
-	ConfigChunk ch = e.getNewChunk();
-	removeNode (ch);
-	ChunkTreeNodeInfo ni;
-	DefaultMutableTreeNode n;
-	Enumeration nodes = ((DefaultMutableTreeNode)root).breadthFirstEnumeration();
-	while (nodes.hasMoreElements()) {
-	    n = (DefaultMutableTreeNode)nodes.nextElement();
-	    ni = (ChunkTreeNodeInfo)n.getUserObject();
-	    if (ni.isDescNode() && 
-		ni.toString().equalsIgnoreCase(ch.getDescName())) {
-		n.add (new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, chunkdb, ch.getName()), false));
-		addedChildCount(n);	
-		reload(n);
-	    } 
-	}
-	tree.repaint();
+        if (SwingUtilities.isEventDispatchThread()) {
+            doAddChunk (e.getNewChunk());
+        }
+        else {
+            try {
+                SwingUtilities.invokeLater (new AddChunkHandler (e.getNewChunk()));
+            }
+            catch (Exception ex) {
+            }
+        }
     }
 
+
+    //--------------------- ActionListener stuff -----------------------------
+
+    public void actionPerformed (ActionEvent e) {
+	if (e.getActionCommand().equalsIgnoreCase ("reload")) {
+	    buildTree();
+	}
+    }
 
 
 }
