@@ -82,7 +82,7 @@ public class PerfTreeNodeInfo implements ActionListener {
 	    mComponent.add (mGraphButton);
 	}
 	else {
-	    mComponent.add(new JLabel ("<i>" + sublabel + "</i>"));
+	    mComponent.add(new JLabel ("<html><h2><i>" + sublabel + "</i></h2></html>"));
             mComponent.add (Box.createHorizontalGlue());
 	    mGraphButton = new LabeledPanelButton (col, null, "Graph");
 	    mGraphButton.setActionCommand ("Graph");
