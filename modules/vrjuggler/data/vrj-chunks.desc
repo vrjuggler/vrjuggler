@@ -38,6 +38,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>IntersenseAPI</allowedtype>
       <allowedtype>TrackdAPIController</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
+      <allowedtype>linux_joydev</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -274,6 +275,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>TrackdAPIController</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
       <allowedtype>Vrpn</allowedtype>
+      <allowedtype>linux_joydev</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -1010,6 +1012,31 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="MOUSE_BUT1" value="49" />
       <enumeration name="MOUSE_BUT2" value="50" />
       <enumeration name="MOUSE_BUT3" value="51" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="linux_joydev" name="Linux Joystick" version="1.0">
+    <category>Devices</category>
+    <help>Element for configuring a LInux joystick input device.</help>
+    <PropertyDesc token="port_name" name="Port Name" type="string" variable="0">
+      <help>Port that the joystick is attached to.</help>
+      <item label="Port Name" defaultvalue="/dev/js0" />
+    </PropertyDesc>
+    <PropertyDesc token="axis_buttons" name="Axis Buttons" type="int" variable="1">
+      <help>Indices of analog/axes that should be added as extra buttons.  This is useful for example when the analog axis is a hat switch that should be treated as a button instead.  Axes with these given indices will be added as extra buttons at the end of the current set of buttons.</help>
+      <item label="Axis Buttons" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="min" name="min" type="float" variable="0">
+      <help>the actual analog data values range - lower bound</help>
+      <item label="Range Minimum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="max" name="max" type="float" variable="0">
+      <help>the actual analog data values range - upper bound</help>
+      <item label="Range Maximum" defaultvalue="255.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="MachineSpecific" name="Machine Specific" version="1.0">
