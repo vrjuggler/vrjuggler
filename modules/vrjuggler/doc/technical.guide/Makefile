@@ -2,6 +2,11 @@
 
 default: pdf
 
+docs: html chunk-html pdf
+install-docs: install-html install-chunk-html install-pdf
+
+NAME=		technical-overview
+
 # Define to use OpenJade to render PDF document.
 #USE_JADEPROC=1
 
@@ -31,7 +36,14 @@ SVG_IMAGES=	figures/AppPulloutCode.svg			\
 
 IMAGES=		$(SVG_IMAGES:%.svg=%.png)
 
-NAME=		technical-overview
+# Fill these in!!  Together, they make up the installation prefix.
+webroot=	$(HOME)/public_html/jugglerweb
+instdir=	vrjuggler/1.0/technical.guide
+
+prefix=		$(webroot)/$(instdir)
+INSTALL_DIRS=	figures
+INSTALL_FILES=	$(webroot)/base_style.css
+
 MK_PATH=	../../../../doc
 
 #########################################################
