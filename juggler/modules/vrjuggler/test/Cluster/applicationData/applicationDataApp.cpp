@@ -101,11 +101,11 @@ void applicationDataApp::preFrame()
       }
    }
    static vpr::Interval last_time;
-   static long frame=0;
+//   static long frame=0;
    //static long count=0;
 
    //count++;
-   frame++;
+/*   frame++;
    
    vpr::Interval cur_time = mWand->getTimeStamp();
    vpr::Interval diff_time(cur_time-last_time);
@@ -114,6 +114,7 @@ void applicationDataApp::preFrame()
    std::cout << "Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
       
    last_time = cur_time;
+*/   
 }
 
 void applicationDataApp::bufferPreDraw()
@@ -227,7 +228,7 @@ void applicationDataApp::draw()
          drawNetwork();
          //std::cout << "Bool: " << (int)mMyDataCopy->drawBool << std::endl;
       }
-   vpr::System::msleep(2000);
+//   vpr::System::msleep(2000);
 }
 
 void applicationDataApp::drawNetwork()
@@ -361,24 +362,6 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
          glVertex3dv(&v[faces[i][3]][0]);
       glEnd();
    }
-}
-
-
-
-template<class MyType>
-vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
-{ 
-   writer->writeUint16(something);  
-   writer->writeBool(drawBool);
-   return vpr::ReturnStatus::Succeed;
-}
-
-template<class MyType>
-vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* reader)
-{
-   something = reader->readUint16();
-   drawBool = reader->readBool();
-   return vpr::ReturnStatus::Succeed;
 }
 
 

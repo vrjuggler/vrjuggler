@@ -41,18 +41,23 @@ struct MyType
    char stupid;
    bool drawBool;
 };
+}
 
-/*template<class MyType>
-vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
+namespace vpr
+{
+template<>
+inline vpr::ReturnStatus vpr::SerializableObjectMixin<vrjTest::MyType>::writeObject(vpr::ObjectWriter* writer)
 { 
    writer->writeUint16(something);  
    writer->writeBool(drawBool);
+   return vpr::ReturnStatus::Succeed;
 }
 
-template<class MyType>
-vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* reader)
+template<>
+inline vpr::ReturnStatus vpr::SerializableObjectMixin<vrjTest::MyType>::readObject(vpr::ObjectReader* reader)
 {
    something = reader->readUint16();
    drawBool = reader->readBool();
-}*/
+   return vpr::ReturnStatus::Succeed;
+}
 }
