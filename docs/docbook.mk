@@ -15,7 +15,7 @@ PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
 PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
-RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.1.1/svgrasterizer
+RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.5/svgrasterizer
 RM=		rm -f
 SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
@@ -96,10 +96,10 @@ endif
 # Image conversions -----------------------------------------------------------
 
 %.png: %.svg
-	$(RASTERIZER) -m png $<
+	$(RASTERIZER) -bg 255.255.255.255 -m png $<
 
 %.jpg %.jpeg: %.svg
-	$(RASTERIZER) -m jpg $<
+	$(RASTERIZER) -q .75 -bg 255.255.255.255 -m jpg $<
 
 # Basic XSL conversions -------------------------------------------------------
 
