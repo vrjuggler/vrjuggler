@@ -174,7 +174,7 @@ h6, .h6, h6 a
 TT, tt, PRE, pre, CODE
 {
    font-family: monospace,monospaced,courier,default,serif;
-   font-size: 2pt; 
+   font-size: 12pt; 
    color: rgb(210, 255, 210);
 }
 
