@@ -522,11 +522,15 @@ class ElementTree
 
                   DefaultMutableTreeNode cur_node;
 
+                  // The last node in the path is the config element that the
+                  // user wants to remove.  We do not have to test the type
+                  // before the cast because the user interface only allows
+                  // removal of ConfigElement objects.
                   cur_node = (DefaultMutableTreeNode) nodes[nodes.length - 1];
                   ConfigElement elt_to_remove =
                      (ConfigElement) cur_node.getUserObject();
 
-                  // We need to see if the parent of the selected config
+                  // Now, we need to see if the parent of the selected config
                   // element is a PropertyDefinition object.
                   cur_node = (DefaultMutableTreeNode) nodes[nodes.length - 2];
                   Object obj = cur_node.getUserObject();
