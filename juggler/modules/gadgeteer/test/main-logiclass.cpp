@@ -56,13 +56,13 @@ int main()
 
    std::cout << std::flush;
    switch(achar) {
-     case 'u':case 'U': t1->UpdateData(); break;
-     case 's':case 'S': t1->StartSampling(); break;
-     case 'x':case 'X': t1->StopSampling(); break;
+     case 'u':case 'U': t1->updateData(); break;
+     case 's':case 'S': t1->startSampling(); break;
+     case 'x':case 'X': t1->stopSampling(); break;
      case 'o':case 'O': 
      for(int z = 0; z < 10; z++){
-         t1->UpdateData();
-         t1->GetData(data);
+         t1->updateData();
+         t1->getData(data);
 
          std::cout << std::endl 
                    << "Data: x:" << std::setw(10) << data->pos.vec[0] << std::endl
@@ -80,7 +80,7 @@ int main()
    std::cout << achar;
   } while ((achar != 'q') && (achar != 'Q'));
   
-  t1->StopSampling();
+  t1->stopSampling();
   
   delete t1;
   delete anSgiPool;
