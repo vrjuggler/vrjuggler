@@ -182,6 +182,7 @@ void vjConnect::controlLoop(void* nullParam) {
 	    //fin >> *chunkdb;
 	    vjConfigChunkDB newchunkdb (descdb);
 	    fin >> newchunkdb;
+	    vjDEBUG(0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
 	    // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
 	}
 
