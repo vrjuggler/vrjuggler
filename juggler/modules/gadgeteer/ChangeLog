@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-29-2002 allenb    Migrated Positional devices to use new PositionFilter
+                      interface for all data transformations.  This removes
+		      all transformation code from the devices drivers and
+		      moves it into common code in gadget::Position.
+		      NEW VERSION: 0.6.1
 Oct-28-2002 allenb    All base device type interfaces now make the sample
                       buffers private data.  Derived devices add data and swap
 		      the buffer using a new interface in the base device type
