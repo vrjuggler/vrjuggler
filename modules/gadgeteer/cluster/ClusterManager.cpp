@@ -63,28 +63,41 @@ namespace cluster
 {
    vprSingletonImp( ClusterManager );
 
-	ClusterManager::ClusterManager()
-	{
-	   jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
-       jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
-//       jccl::ConfigManager::instance()->addConfigChunkHandler(RemoteInputManager::instance());
-//       jccl::ConfigManager::instance()->addConfigChunkHandler(ApplicationDataManager::instance());
-    }
-	ClusterManager::~ClusterManager()
-	{
-		;
-	}
-	/** Add the pending chunk to the configuration.
-	 *  PRE: configCanHandle (chunk) == true.
-	 *  @return true iff chunk was successfully added to configuration.
-	 */
-	bool ClusterManager::configAdd(jccl::ConfigChunkPtr chunk)
-	{
+   ClusterManager::ClusterManager()
+   {
+      jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
+      jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
+   }
+   ClusterManager::~ClusterManager()
+   {
+      ;
+   }
+   /** Add the pending chunk to the configuration.
+    *  PRE: configCanHandle (chunk) == true.
+    *  @return true iff chunk was successfully added to configuration.
+    */
+   bool ClusterManager::configAdd(jccl::ConfigChunkPtr chunk)
+   {
       if (recognizeClusterManagerConfig(chunk))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "Configure the Cluster: " << chunk->getName() 
             << "\n" << vprDEBUG_FLUSH;
+         int num_plugins = chunk->getNum(std::string("clusterPlugin"));
+         for (int i = 0 ; i < num_plugins ; i++)
+         {
+            std::string new_plugin = chunk->getProperty<std::string>(std::string("clusterPlugin"), i);
+            std::cout << "New Plugin: " << new_plugin << std::endl;
+            if (new_plugin == "RemoteInputManager")
+            {
+               RemoteInputManager::instance()->load();
+            }
+            else if (new_plugin == "ApplicationDataManager")
+            {
+               ApplicationDataManager::instance()->load();
+            }
+         }
+         
          return(true);
       }
 	  else
@@ -144,42 +157,41 @@ namespace cluster
    	  return(chunk->getDescToken() == ClusterManager::getChunkType());
 	}
 
-   void ClusterManager::addManager(ClusterPlugin* new_manager)
+   void ClusterManager::addPlugin(ClusterPlugin* new_plugin)
    {
-      vpr::Guard<vpr::Mutex> guard(mManagersLock);
-      if (!doesManagerExist(new_manager))
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+      if (!doesPluginExist(new_plugin))
       {
-         mManagers.push_back(new_manager);
+         mPlugins.push_back(new_plugin);
          // We should do this here, but since we do not add the manager until its configAdd
          // currently you can see the problem
-         //jccl::ConfigManager::instance()->addConfigChunkHandler(new_manager);
+         jccl::ConfigManager::instance()->addConfigChunkHandler(new_plugin);
          //We can still unregister it when removed below though
          std::cout << "[ClusterManager] Adding a Manager!" << std::endl;
       }
-      mManagersLock.release();
    }
-   void ClusterManager::removeManager(ClusterPlugin* old_manager)
+   void ClusterManager::removePlugin(ClusterPlugin* old_manager)
    {
-      vpr::Guard<vpr::Mutex> guard(mManagersLock);
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
-      for (std::list<ClusterPlugin*>::iterator i = mManagers.begin();
-           i != mManagers.end() ; i++)
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
          if ((*i) == old_manager)
          {
-            mManagers.erase(i);
+            mPlugins.erase(i);
             jccl::ConfigManager::instance()->removeConfigChunkHandler(*i);
             std::cout << "[ClusterManager] Removing a Manager!" << std::endl;
             return;
          }
       }
    }
-   bool ClusterManager::doesManagerExist(ClusterPlugin* old_manager)
+   bool ClusterManager::doesPluginExist(ClusterPlugin* old_manager)
    {
-      vprASSERT(mManagersLock.test() == 1 && "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()");
+      vprASSERT(mPluginsLock.test() == 1 && "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()");
       
-      for (std::list<ClusterPlugin*>::iterator i = mManagers.begin();
-           i != mManagers.end() ; i++)
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
          if ((*i) == old_manager)
          {
@@ -192,6 +204,7 @@ namespace cluster
    void ClusterManager::sendEndBlocksAndSignalUpdate()
    {
       ClusterNetwork::instance()->lockClusterNodes();
+
       std::vector<cluster::ClusterNode*>::iterator begin_cluster_nodes = ClusterNetwork::instance()->getClusterNodesBegin();
       std::vector<cluster::ClusterNode*>::iterator end_cluster_nodes = ClusterNetwork::instance()->getClusterNodesEnd();
    
@@ -216,17 +229,17 @@ namespace cluster
             (*i)->sync();
          }               
       }
-      ClusterNetwork::instance()->unlockClusterNodes();
       delete temp_end_block;
+      ClusterNetwork::instance()->unlockClusterNodes();
    }
 
    void ClusterManager::preDraw()
    {
       bool updateNeeded = false;
-      vpr::Guard<vpr::Mutex> guard(mManagersLock);
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
-      for (std::list<ClusterPlugin*>::iterator i = mManagers.begin();
-           i != mManagers.end() ; i++)
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
          if ((*i)->isActive())
          {
@@ -242,10 +255,10 @@ namespace cluster
    void ClusterManager::postPostFrame()
    {
       bool updateNeeded = false;
-      vpr::Guard<vpr::Mutex> guard(mManagersLock);
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
-      for (std::list<ClusterPlugin*>::iterator i = mManagers.begin();
-           i != mManagers.end() ; i++)
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
          if ((*i)->isActive())
          {

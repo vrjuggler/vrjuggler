@@ -63,7 +63,7 @@ public:
       delete mData;
    }
 
-   vpr::ReturnStatus writeObject(vpr::BufferObjectWriter* writer)
+/*   vpr::ReturnStatus writeObject(vpr::BufferObjectWriter* writer)
    {
       ;
    }
@@ -72,7 +72,7 @@ public:
    {
       ;
    }
-
+*/
    bool isLocal()
    {
       return(getAttrib<bool>("cluster.userdata.local"));
