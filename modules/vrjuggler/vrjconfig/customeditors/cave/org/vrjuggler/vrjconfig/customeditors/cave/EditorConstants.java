@@ -37,7 +37,7 @@ interface EditorConstants
    extends org.vrjuggler.vrjconfig.commoneditors.EditorConstants
 {
    static final String RESOURCE_BASE =
-      "org/vrjuggler/vrjconfig/customeditors/display_window";
+      "org/vrjuggler/vrjconfig/customeditors/cave";
 
    static final String IMAGE_BASE = RESOURCE_BASE + "/images";
 }
