@@ -87,7 +87,6 @@ public:
       mExitFlag = false;
       mHandleEventsHasBeenCalled = false;      // Initialize it to not being called yet
       mWeOwnTheWindow = true;
-      mShared = false;                         // False by default
    }
    ~KeyboardXWin() { stopSampling();}
 
@@ -125,9 +124,6 @@ protected:
    virtual void processEvent(XEvent event)
    {;}
 
-   bool isShared()
-   { return mShared; }
-
 private:
    /* Private functions for processing input data */
    int onlyModifier(int);
@@ -157,9 +153,7 @@ protected:
    bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
                                        // NOTE: In a case where it does not, then the window vars must be set prior
                                        //    to starting the controlLoop (startSampling)
-   bool           mShared;   // True if the window is shared between multiple processes
-   vpr::Mutex     mXfuncLock;      // Lock for exclusive access to x functions.  Must be held if mshared==true
-
+      
    ::Window       m_window;
    ::XVisualInfo* m_visual;
    ::Display*     m_display;

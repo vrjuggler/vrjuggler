@@ -60,8 +60,7 @@ GlWindowXWin::GlWindowXWin():GlWindow() {
    window_name = std::string("");
    mPipe = -1;
    mXDisplayName = std::string("");
-   mAreKeyboardDevice = false;
-   gadget::KeyboardXWin::mShared = true;       // Window is shared
+   mAreKeyboardDevice = false;   
 }
 
 
@@ -74,8 +73,6 @@ GlWindowXWin::~GlWindowXWin() {
 
 void GlWindowXWin::swapBuffers()
 {
-vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
-
    glXSwapBuffers (x_display,  x_window);
 }
 
@@ -83,8 +80,6 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
 int GlWindowXWin::open()
 {
-vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
-
     /* attempts to open the glxWindow & create the gl context.  Does nothing
      * if the window is already open (& returns true).
      * returns true for success, false for failure.
@@ -256,11 +251,14 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
        gadget::KeyboardXWin::m_display = x_display;
 
        // Start up the device
+       /*   Do it in out check event function
        gadget::KeyboardXWin::startSampling();
+       */
 
        gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
 
        // XXX: Possibly not the best way to add this to input manager
+       // - What happens when the keyboard is removed at run-time???
        vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
     }
 
@@ -283,8 +281,11 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 int GlWindowXWin::close()
 {
 
-   vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
-
+   //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
+   // Assert that we have not impllemented correct shutdown for the case that we
+   // are a keyboard window as well
+   vprASSERT(!mAreKeyboardDevice  && "Need to implement GLX window close with gadget-keyboard window");
+   
    if (glx_context)
    {
       makeCurrent();    // Might not need this
@@ -319,8 +320,6 @@ int GlWindowXWin::close()
 
 bool GlWindowXWin::makeCurrent()
 {
-   vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
-
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
     */
@@ -413,6 +412,15 @@ void GlWindowXWin::config(vrj::Display* disp)
    return true;
 }
 
+
+void GlWindowXWin::checkEvents()
+{
+   if(true == mAreKeyboardDevice)
+   {
+      KeyboardXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
+   }
+
+}
 
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
