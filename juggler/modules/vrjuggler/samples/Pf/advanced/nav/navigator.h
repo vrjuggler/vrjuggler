@@ -34,6 +34,8 @@
 #define _NAVIGATOR_H_
 
 #include <gmtl/Vec.h>
+#include <gmtl/Xforms.h>
+#include <gmtl/Output.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
