@@ -109,6 +109,7 @@ $alias_subst{"TREE_FONTSIZE"} = '11';
 # links to documentation
 $alias_subst{"JEXPLORER"} = 'http://www.jexplorer.com';
 $alias_subst{"AUTOCONF"} = 'http://www.gnu.org/software/autoconf/autoconf.html';
+$alias_subst{"AUTOMAKE"} = 'http://www.gnu.org/software/automake/automake.html';
 $alias_subst{"MAKE"} = 'http://www.gnu.org/software/make/make.html';
 $alias_subst{"GCC"} = 'http://www.gnu.org/software/gcc/gcc.html';
 $alias_subst{"PERL"} = 'http://www.perl.com/';
@@ -136,6 +137,7 @@ $alias_subst{"PATTERNS"} = 'http://hillside.net/patterns/patterns.html';
 $alias_subst{"CYGWIN"} = 'http://sourceware.cygnus.com/cygwin/';
 $alias_subst{"GETCYGWIN"} = 'http://sources.redhat.com/cygwin/download.html';
 $alias_subst{"GETAUTOCONF"} = 'ftp://ftp.gnu.org/gnu/autoconf/';
+$alias_subst{"GETAUTOMAKE"} = 'ftp://ftp.gnu.org/gnu/automake/';
 $alias_subst{"OPENSOURCE"} = 'http://www.opensource.org';
 
 
