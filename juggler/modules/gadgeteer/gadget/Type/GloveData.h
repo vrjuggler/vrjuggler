@@ -33,11 +33,10 @@
 #ifndef _GADGET_GLOVEDATA_H
 #define _GADGET_GLOVEDATA_H
 
+#include <gadget/gadgetConfig.h>
 #include <gadget/Type/InputData.h>
 #include <gmtl/Matrix.h>
-#include <gmtl/MatrixOps.h>
-#include <gmtl/Vec.h>
-#include <gmtl/VecOps.h>
+
 
 namespace gadget
 {

@@ -30,11 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/Type/GloveData.h>
-#include <gadget/Type/Position/PositionUnitConversion.h>
+#include <gadget/gadgetConfig.h>
+
 #include <gmtl/AxisAngle.h>
 #include <gmtl/AxisAngleOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
+
+#include <gadget/Type/Position/PositionUnitConversion.h>
+#include <gadget/Type/GloveData.h>
 
 namespace gadget
 {
