@@ -281,8 +281,9 @@
       <enumeration name="CRT_Above_72Hz" value="1" />
       <enumeration name="CRT_Below_72hz" value="2" />
     </PropertyDesc>
-    <PropertyDesc token="blocking" name="Blocking" type="int" num="1">
-      <help>blocked port? 0-no 1-yes</help>
+    <PropertyDesc token="blocking" name="Blocking" type="bool" num="1">
+      <help>Run in blocking mode or non-blocking mode</help>
+      <item label="Blocking" defaultvalue="1" />
     </PropertyDesc>
     <PropertyDesc token="report" name="Report Frequency" type="string" num="1">
       <help>Q-(every cycle) R-(every other cycle) S-(every 8 cycles) T-(every 32 cycles)</help>
