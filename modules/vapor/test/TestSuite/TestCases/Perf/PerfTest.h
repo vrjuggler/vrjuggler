@@ -22,8 +22,8 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    void testNamedLookupSample();
-   void testConstructTree ();
-   void testReset ();
+   void testConstructTree();
+   void testReset();
 };
 
 

@@ -15,7 +15,7 @@ namespace vprTest
 CPPUNIT_TEST_SUITE_REGISTRATION( PerfTest );
 CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( PerfMetricTest, MySuites::metric() );
 
-void PerfTest::testConstructTree ()
+void PerfTest::testConstructTree()
 {
    vpr::ProfileManager::startProfile("First");
    vpr::ProfileManager::startProfile("First-one");
@@ -30,10 +30,10 @@ void PerfTest::testConstructTree ()
    CPPUNIT_ASSERT(first_one_node->getParent() == first_node);
 }
 
-void PerfTest::testNamedLookupSample ()
+void PerfTest::testNamedLookupSample()
 {
    vpr::ProfileManager::startProfile("myNamedProfile");
-   
+
    //do something so there is a little time in the profile
    int i(0), j(1);
 
@@ -51,14 +51,10 @@ void PerfTest::testNamedLookupSample ()
    CPPUNIT_ASSERT(f != 0.0f);
 }
 
-   
-
-void PerfTest::testReset ()
+void PerfTest::testReset()
 {
-
    //CPPUNIT_ASSERT(false);
 }
-
 
 // ------------------ Perf Metric --------------------- //
 void PerfMetricTest::testTreeOverhead()
