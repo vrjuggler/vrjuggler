@@ -1,10 +1,18 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-07-14 patrickh    Extended org.vrjuggler.tweek.beans.FileLoader to include
+                       a method for indicating that the user wants to save an
+                       open file with a different name (a "Save As ..."-type
+                       option).
+                       NEW VERSION: 0.6.1
 2002-07-14 patrickh    org.vrjuggler.tweek.gui.MessagePanel is no longer a
                        singleton.  Further, it now uses a custom document,
                        org.vrjuggler.tweek.text.MessageDocument, an
                        instance of which is held by the TweekCore singleton.
                        NEW VERSION: 0.6.0
+2002-07-13 patrickh    Added a new command-line option, --validate, that
+                       directs the XML loader to validate XML beanlist
+                       documents against the XML Schema that describes them.
 2002-07-05 nonchocoboy Added support for programmtic focusing of PanelBeans in
                        BeanModelViewers. The --defaultbean command-line
                        argument has been added.
