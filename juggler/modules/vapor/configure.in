@@ -607,13 +607,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
 
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
-    JDK_HOME=`unix2dos -p "$JDK_HOME"`
-
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
-    APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
-    APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
-    APP_EXTRA_LIBS_AW=`unix2dos "$APP_EXTRA_LIBS_AW"`
-    APP_EXTRA_LIBS_SL=`unix2dos "$APP_EXTRA_LIBS_SL"`
 else
     SAFE_VPRROOT_ABS="$VPRROOT_ABS"
 fi
