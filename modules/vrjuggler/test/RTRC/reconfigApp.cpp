@@ -1105,6 +1105,61 @@ bool reconfigApp::readdKeyboardWin_exec()
 bool reconfigApp::readdKeyboardWin_check()
 {
    //Check the wand keyboard proxy that is supposed to point to it
+
+   //First check that the keyboard device exists again
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/startup/sim.wandkeyboard.config" );
+   std::vector<jccl::ConfigChunkPtr> fileChunks;
+   fileDB.getByType( "Keyboard", fileChunks );
+
+   std::string keyboardName = fileChunks[0]->getName();
+
+   gadget::Keyboard* keyboard = (gadget::Keyboard*)gadget::InputManager::instance()->getDevice( keyboardName );
+
+   if (keyboard == NULL)
+   {
+      std::cout << "\tError: the keyboard device named " << keyboardName << " doesn't exist\n" << std::flush;
+      return false;
+   }
+
+   //Check the wand keyboard proxy that is supposed to point to it is stupified
+   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( "./Chunks/startup/sim.wandkeyboardproxy.config" );
+   fileChunks.clear();
+   fileDB2.getByType( "KeyboardProxy", fileChunks );
+
+   if (fileChunks.size() != 1)
+   {
+      std::cout << "\tError: there are " << fileChunks.size() << " keyboard proxies in the file (should be 1)\n" << std::flush;
+      return false;
+   }
+
+   gadget::KeyboardProxy* keyboard_proxy = (gadget::KeyboardProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
+
+   if (keyboard_proxy == NULL)
+   {
+      std::cout << "\tError: there is no keyboard proxy named " << fileChunks[0]->getName() << "\n" << std::flush;
+      return false;
+   }
+ 
+   if (keyboard_proxy->isStupified())
+   {
+      std::cout << "\tError: keyboard proxy named " << fileChunks[0]->getName() << " is stupified\n" << std::flush;
+      return false;
+
+   }
+
+   if (keyboard_proxy->getDeviceName() != keyboardName)
+   {
+      std::cout << "\tError: this keyboard proxy points at a keyboard named " << keyboard_proxy->getDeviceName() << "\n" << std::flush;
+      return false;
+   }
+
+   //Make sure the pointers match up
+   if (((gadget::Keyboard*)(keyboard_proxy->getProxiedInputDevice())) != keyboard)
+   {
+      std::cout << "\tError: pointers don't match up\n" << std::flush;
+      return false;
+   }
+
    return true;
 }
 
