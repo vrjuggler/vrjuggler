@@ -40,26 +40,28 @@
 
 namespace jccl {
    
-//------------------------------------------------------------------
-//: Database of ConfigChunks
-//
-// The ConfigChunkDB is a general-purpose container for
-// ConfigChunks, with functionality for reading/writing
-// files of ConfigChunks and querying for sets of configchunks
-// with specific properties.
-//
-// @author Christopher Just
-// October 1997
-//
-//!PUBLIC_API:
-//------------------------------------------------------------------
+    /** Database of ConfigChunks.
+     *
+     *  The ConfigChunkDB is a general-purpose container for 
+     *  ConfigChunks, with functionality for loading/saving files
+     *  of ConfigChunks, querying for sets of ConfigChunks with
+     *  specific properties, and checking for dependencies between
+     *  ConfigChunks.
+     */
 class JCCL_CLASS_API ConfigChunkDB {
 
+
 private:
-    //: vector of ConfigChunks
+
+    /** Vector of ConfigChunks.  We use boost shared_ptrs to handle
+     *  memory management for all ConfigChunks.
+     */
     std::vector<ConfigChunkPtr> chunks;
 
-    //: name of the file this DB was loaded from - used for includes
+
+    /** The name of the file that this DB was loaded from.  Used for
+     *  locating files named in "Include" chunks.
+     */
     std::string file_name;
 
 public:
@@ -83,51 +85,59 @@ public:
         return chunks.end();
     }
 
-    //: Constructor
-    //! PRE: true
-    //! POST: self is created. Chunks is empty.
+
+
+    /** Constructor.  Creates an empty ChunkDB. */
     ConfigChunkDB ();
 
 
 
-    //: Copy constructor
+    /** Copy Constructor.  
+     *  This performs a shallow copy - this & db contain the same
+     *  instances of ConfigChunk.
+     */
     ConfigChunkDB (ConfigChunkDB& db);
 
 
 
-    //: Destructor
-    //! PRE: true
-    //! POST: self is destroyed and its associated memory freed.
-    //+       This includes all ConfigChunks stored in self, but
-    //+       not any ChunkDescDB
+    /** Destructor.
+     *  Note that since we use ConfigChunkPtrs for memory management,
+     *  the Chunks contained in self are only deleted if there are no
+     *  other references to them.
+     */
     ~ConfigChunkDB ();
 
 
 
-    //: Assignment operator
+    /** Assignment operator.
+     *  This performs a shallow copy - self and db contain the same
+     *  instances of ConfigChunks.
+     */
     ConfigChunkDB& operator = (const ConfigChunkDB& db);
 
 
 
+    /** Returns the filename that this DB was last loaded from.
+     *  @return A string filename, or the empty string if load() was
+     *          never called.
+     */
     const std::string& getFileName() {
         return file_name;
     }
 
+
+    /** Sets the filename associated with this DB to _name. */
     void setFileName(const std::string& _name) {
         file_name = _name;
     }
 
-    //: Checks if self is empty
-    //! RETURNS: true - if self contains no ConfigChunks
-    //! RETURNS: false - otherwise
+
+    /** True if self is empty. */
     bool isEmpty() const;
 
 
 
-    //: Removes and destroys all ConfigChunks in self
-    //! PRE: true
-    //! POST: All ConfigChunks in self have been removed and their
-    //+       associated memory freed.
+    /** Alias for erase(). */
     void removeAll();
 
 
@@ -141,157 +151,161 @@ public:
 
 
 
-    //: Finds a chunk with a given name
-    //! PRE: true
-    //! ARGS: name - a non-NULL C string.
-    //! RETURNS: p - A pointer to a ConfigChunk in self whose name matches
-    //+          the argument, or NULL if no such element exists.
-    //! NOTE: The memory associated with the return value belongs to
-    //+       the ConfigChunkDB, and should not be delete()d
+    /** Finds a chunk with a given name.
+     *  @param The name of an instance of ConfigChunk.
+     *  @return A ConfigChunkPtr reference to a ConfigChunk in self whose
+     *          name matches the argument, or a ConfigChunkPtr referring 
+     *          to NULL if no such exists.
+     */
     ConfigChunkPtr getChunk (const std::string& name) const;
 
 
-    //: return a vector of all the chunks
-    //! POST: returns
-    //! RETURNS: Copy of the pointers to the chunks in this.
+
+    /** Creates a vector containing all the chunks in self.
+     *  Note that this is a shallow copy of self's contents.
+     */
     std::vector<ConfigChunkPtr> getChunks() const;
 
 
 
-    //: Add chunks to self
-    //! POST: self has added copies of all chunks in new_chunks
+    /** Adds all chunks in new_chunks to self.
+     *  Note that this is a shallow copy - self and new_chunks refer to the
+     *  same instances of ConfigChunks.
+     */
     void addChunks(std::vector<ConfigChunkPtr> new_chunks);
 
 
 
-    //: Add chunks to self
-    //! PRE: db is non-null.
-    //! POST: self has added copies of all chunks in db.
-    void addChunks(const ConfigChunkDB *db);
+    /** Adds all chunks in new_chunks to self.
+     *  Note that this is a shallow copy - self and new_chunks refer to the
+     *  same instances of ConfigChunks.
+     *  @param db - Non-NULL pointer to a ConfigChunkDB.
+     */
+    void addChunks(const ConfigChunkDB *new_chunks);
 
 
 
-    //: Adds a chunk to this
+    /** Adds new_chunk to self.
+     *  Note that this is a shallow copy.
+     */
     void addChunk(ConfigChunkPtr new_chunk);
 
 
 
-    //: Returns all chunks of a given type.
-    //! PRE: true;
-    //! POST: true;
-    //! ARGS: property - a non-NULL C string, the name of a property.
-    //! ARGS: value - value of a property.  non-NULL C string.
-    //! RETURNS: p - Pointer to a vector of ConfigChunk* containing
-    //+          all ConfigChunks in self that have the specified
-    //+          type (ie ChunkDesc token).
-    //! NOTE: The memory for the vector should be deleted by the
-    //+       caller when it is no longer needed.  The individual
-    //+       ConfigChunks in the vector should not be freed.
+    /** Returns all ConfigChunks of a given type.
+     *  @param mytypename - The token of a ChunkDesc.
+     *  @return A pointer to a vector containing every ConfigChunk in
+     *          self that uses the named ChunkDesc.  The memory for the
+     *          vector should be deleted by the caller.
+     */ 
     std::vector<ConfigChunkPtr>* getMatching (const std::string& mytypename) const {
         return getMatching ("type", mytypename);
     }
 
 
 
-    //: Returns all chunks with a given property and value.
-    //! PRE: true
-    //! ARGS: property - a non-NULL C string, the name of a property.
-    //! ARGS: value - value of a property.  If char*, must be non-NULL
-    //! RETURNS: p - Pointer to a vector of ConfigChunk* containing
-    //+          all ConfigChunks in self that have a property whose
-    //+          name matches the first argument and which has as
-    //+          one of its values the value given in the second
-    //+          argument.
-    //! NOTE: The memory for the vector should be deleted by the
-    //+       caller when it is no longer needed.  The individual
-    //+       ConfigChunks in the vector should not be freed.
+    /** Returns all ConfigChunks matching a given property and value.
+     *
+     *  @param property - name of a property to search for.
+     *  @param value - a value that should match.
+     *  @return A pointer to a vector containing every ConfigChunk in
+     *          self that matches property and value.  The memory for the
+     *          vector should be deleted by the caller.
+     */ 
     std::vector<ConfigChunkPtr>* getMatching (const std::string& property, const std::string value) const;
     std::vector<ConfigChunkPtr>* getMatching (const std::string& property, int value) const;
     std::vector<ConfigChunkPtr>* getMatching (const std::string& property, float value) const;
 
 
 
-    //: Alias for removeAll()
-    bool erase ();
+    /** Removes all ConfigChunks from self.
+     *  Note that ConfigChunks are only deleted if there are no other
+     *  references to them.
+     */
+    void clear ();
 
 
 
-    //: Removes the named chunk
-    //! POST: If a ConfigChunk with the specified name exists
-    //+       in self, it is removed and its memory freed.
-    //! RETURNS: true - a matching chunk was found.
-    //! RETURNS: false - otherwise.
-    int removeNamed (const std::string& name);
+    /** Removes a chunk with the given name.
+     *  @param name - name of an instance of ConfigChunk.
+     *  @return True if a matching ConfigChunk was found and removed,
+     *          false otherwise.
+     */
+    bool removeNamed (const std::string& name);
 
 
 
-    //: Removes all chunks with a matching property and value
-    //! PRE: true
-    //! POST: All selected ConfigChunks in self are removed and
-    //+       their memory freed.  The selection criteria is
-    //+       the same as for getMatching(property, value)
-    //! ARGS: property - Name of a property. Non-NULL C string.
-    //! ARGS: value - value to match.  If char*, must be non-NULL
-    //+       C string.
-    //! RETURNS: n - Number of ConfigChunks removed.
+    /** Removes all chunks matching property and value.
+     *  @param property - name of a property to search for.
+     *  @param value - a value that should match.
+     *  @return Number of ConfigChunks removed.
+     */
     int removeMatching (const std::string& property, int value);
     int removeMatching (const std::string& property, float value);
     int removeMatching (const std::string& property, const std::string& value);
 
 
 
-    //: Sorts the chunks based on dependencies
-    //! PRE: true
-    //! MODIFIES: self.  In place sort of the config chunks
-    //! ARGS: auxChunks - Auxilary chunks that have been loaded already
-    //! POST: (if returns != -1)
-    //+     for( i>=0 && i<chunks.size()) <br>
-    //+        chunks[i] dependent only of chunks[0...(i-1)] <br>
-    //+     This is a topological sorting of the dependencies. <br>
-    //+     informally( forall elts in the chunks list ) <br>
-    //! RETURNS: -1 - Failed to complete sort
+    /** Sorts the ConfigChunks in self based on dependencies.
+     *  The chunks are sorted so that element i can only have dependencies
+     *  on elements 0 thru i-1.
+     *  @param auxChunks - A ConfigChunkDB of ConfigChunks that have
+     *                     already been loaded/configured succesfully,
+     *                     and which can therefore be used to resolve
+     *                     dependencies.
+     *  @return -1 iff the sort failed to complete.
+     */
     int dependencySort(ConfigChunkDB* auxChunks = NULL);
 
 
     /* IO functions: */
 
-    //! POST: A text representation of self is written to out
-    //! ARGS: out - an output stream
-    //! ARGS: self - a ConfigChunkDB
-    //! RETURNS: out
+    /** Write contents of self to out.
+     *  This uses the "old" ConfigChunk file format.
+     */
     friend std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self);
 
 
 
-    //! POST: ConfigChunks are read from in and added to self until
-    //+       an 'end' token or EOF is read.
-    //! ARGS: in - an input stream.
-    //! ARGS: self - a ConfigChunkDB.
-    //! RETURNS: in
-    //! NOTE: Any ConfigChunks in self before the >> operation remain,
-    //+       unless they have the same name as a newly read chunk
-    //+       in which case they are replaced by the newer chunks.
+    /** Reads contents of self from in.
+     *  This uses the old ConfigChunk file format.
+     *  Note that the previous contents of self are not removed (although
+     *  a ConfigChunk in self can be replaced by a newly-read Chunk with the
+     *  same name).
+     *  @param in - an istream.
+     *  @param self - a ConfigChunkDB.
+     *  @return in.
+     */
     friend std::istream& operator >> (std::istream& in, ConfigChunkDB& self);
 
 
 
-    //: loads ConfigChunks from the given file
-    //! ARGS: fname - name of file to read from.
-    //! RETURNS: true - file was opened succesfully.
-    //! RETURNS: false - otherwise.
-    //! NOTE: This function calls operator >> to do its work.
-    //! NOTE: The return value only considers opening the file,
-    //+       and does not account for parsing or other reading
-    //+       errors.
+    /** Loads ConfigChunks from the given file.
+     *  This uses ConfigIO to handle the actual parsing, and therefore it
+     *  can intelligently determine which ConfigFile format to use for 
+     *  parsing.
+     *  Note that the previous contents of self are not removed (although
+     *  a ConfigChunk in self can be replaced by a newly-read Chunk with the
+     *  same name).
+     *  @param filename - name of the file to load.
+     *  @param parentfile - name of the "parent" file.  This is used for
+     *                      loading files named in "Include" Chunks - if
+     *                      filename is a relative pathname, the path part
+     *                      of parentfile is prepended to it.
+     *  @return true if the file was found and no fatal errors occurred;
+     *          false if the file was not found or there was a fatal
+     *          error while parsing.
+     */
     bool load (const std::string& fname, const std::string& parentfile = "");
 
 
 
-    //: writes ConfigChunks to the given file
-    //! ARGS: fname - name of file to write to.
-    //! RETURNS: true - file was opened succesfully.
-    //! RETURNS: false - otherwise.
-    //! NOTE: This function calls operator << to do its work.
+    /** Writes ConfigChunks to the given file.
+     *  This uses ConfigIO to handle writing, and uses the "default"
+     *  ConfigFile output format (currently XML).
+     *  @param filename - name of file to create & write.
+     *  @return true if succesful, false if unable to create the file.
+     */
     bool save (const std::string& fname) const;
 
 };

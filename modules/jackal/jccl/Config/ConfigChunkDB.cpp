@@ -71,8 +71,6 @@ ConfigChunkDB::ConfigChunkDB (ConfigChunkDB& db): chunks() {
 
 ConfigChunkDB& ConfigChunkDB::operator = (const ConfigChunkDB& db) {
     unsigned int i, size;
-    //for (i = 0; i < chunks.size(); i++)
-    //    delete chunks[i];
     chunks.clear();
     for (i = 0, size = db.chunks.size(); i < size; i++) {
         chunks.push_back (db.chunks[i]);
@@ -168,13 +166,9 @@ std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& prop
 
 
 
-bool ConfigChunkDB::erase () {
-    /* removes all chunks from self (and frees them)
-     */
-    //for (unsigned int i = 0; i < chunks.size(); i++)
-    //delete (chunks[i]);
+void ConfigChunkDB::clear () {
+    /* removes all chunks from self */
     chunks.clear();
-    return true;
 }
 
 
@@ -188,7 +182,6 @@ int ConfigChunkDB::removeMatching (const std::string& property, int value) {
     while (cur_chunk != chunks.end()) {
         c = (*cur_chunk)->getProperty(property);
         if (c == value) {
-            //delete (*next);
             cur_chunk = chunks.erase(cur_chunk);
             i++;
         }
@@ -206,7 +199,6 @@ int ConfigChunkDB::removeMatching (const std::string& property, float value) {
     while (cur_chunk != chunks.end()) {
         c = (*cur_chunk)->getProperty(property);
         if (c == value) {
-            //delete (*cur_chunk);
             cur_chunk = chunks.erase(cur_chunk);
             i++;
         }
@@ -224,7 +216,6 @@ int ConfigChunkDB::removeMatching (const std::string& property, const std::strin
         VarValue v = ((*cur_chunk)->getProperty(property));
         if (((v.getType() == T_STRING) || (v.getType() == T_STRING))
             &&  (!vjstrcasecmp (value, (std::string)v))) {
-            //delete (*begin);
             cur_chunk = chunks.erase(cur_chunk);
             i++;
         }
@@ -421,7 +412,6 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
                 self.load (s, fname);
                 // load changes the filename, so reset it.
                 self.setFileName(fname);
-                //self.addChunks(&newdb);
             }
             else if (!vjstrcasecmp (ch->getType(), "IncludeDescFile")) {
                 // the descs could be needed by everybody else in this file,
@@ -485,12 +475,12 @@ bool ConfigChunkDB::isEmpty() const {
 
 void ConfigChunkDB::removeAll() {
     // just an alias
-    erase();
+    clear();
 }
 
 
 
-int ConfigChunkDB::removeNamed (const std::string& name) {
+bool ConfigChunkDB::removeNamed (const std::string& name) {
     return removeMatching ("Name", name);
 }
 
