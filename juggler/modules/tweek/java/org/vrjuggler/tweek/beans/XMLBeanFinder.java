@@ -105,25 +105,36 @@ public class XMLBeanFinder
       }
 
       SAXBuilder builder = new SAXBuilder();
+      File xml_file;
 
       // Check each XML file for beans
       for ( Iterator itr = files.iterator(); itr.hasNext(); )
       {
-         try
-         {
-            Document document = builder.build( (File)itr.next() );
-            Element root = document.getRootElement();
+         xml_file = (File) itr.next();
 
-            // If the root element is a <beantree>, proceed.  Otherwise, this
-            // XML document is not one about which we care.
-            if ( root.getName().equals( "beanlist" ) )
+         if ( xml_file.canRead() )
+         {
+            try
             {
-               beans.addAll( manageChildren( root.getChildren() ) );
+               Document document = builder.build(xml_file);
+               Element root = document.getRootElement();
+
+               // If the root element is a <beantree>, proceed.  Otherwise, this
+               // XML document is not one about which we care.
+               if ( root.getName().equals( "beanlist" ) )
+               {
+                  beans.addAll( manageChildren( root.getChildren() ) );
+               }
+            }
+            catch ( JDOMException e )
+            {
+               e.printStackTrace();
             }
          }
-         catch ( JDOMException e )
+         else
          {
-            e.printStackTrace();
+            System.err.println("WARNING: Could not read '" +
+                               xml_file.getAbsolutePath() + "'");
          }
       }
       return beans;
