@@ -42,7 +42,7 @@ import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.vjcontrol.*;
 import org.vrjuggler.jccl.vjcontrol.ui.*;
-import org.vrjuggler.jccl.vjcontrol.ui.widgets*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 
 /** PlugPanel for editing ChunkDescDB files.

@@ -40,7 +40,7 @@ import javax.swing.border.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editorgui.*;
 import org.vrjuggler.jccl.vjcontrol.*;
-import org.vrjuggler.jccl.vjcontrol.ui.widget.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 
 /** Default implementation of ConfigChunkPanel.
