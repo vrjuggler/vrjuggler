@@ -38,6 +38,7 @@
 #include <iostream>
 #include <iomanip>
 
+#include <vpr/Util/StatCollector.h>
 #include <vrj/Draw/OGL/GlApp.h>
 
 #include <gadget/Type/PositionInterface.h>
