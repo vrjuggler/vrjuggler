@@ -40,7 +40,6 @@
 #include <Performer/pf/pfChannel.h>
 
 #include <vrj/Kernel/App.h>
-#include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vrj/Util/Debug.h>
 
@@ -59,17 +58,11 @@ namespace vrj
 class PfApp : public App
 {
 public:
-   PfApp(Kernel* kern) : App(kern)
-   {
-      //api.setPerformer();  // Tell everyone that we are Performer
-   }
+   PfApp(Kernel* kern);
 
-   PfApp() {;}
+   PfApp();
 
-   virtual ~PfApp()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~PfApp();
 
    /**
     * Initializes the scene graph.
@@ -148,8 +141,8 @@ public:
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
       vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL, 
-                     std::string("--- drawChan: Entered ---.\n"),
-                     std::string("--- drawChan: Exited ---.\n"));
+                           std::string("--- vrj::PfApp::drawChan() Entered ---\n"),
+                           std::string("--- vrj::PfApp::drawChan() Exited ---\n"));
       this->preDrawChan(chan,chandata);
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel
@@ -180,10 +173,7 @@ public: // -- Factory Function -- //
    /**
     * Gets the Draw Manager to use. Returns the Performer Draw Manager.
     */
-   virtual DrawManager* getDrawManager()
-   {
-      return PfDrawManager::instance();
-   }
+   virtual DrawManager* getDrawManager();
 };
 
 }

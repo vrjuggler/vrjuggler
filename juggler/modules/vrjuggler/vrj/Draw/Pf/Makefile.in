@@ -47,9 +47,10 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(PF_LIBRARY)
 
-SRCS=		PfDrawManager.cpp	     \
-		PfUtil.cpp		     \
-		PfBasicSimulator.cpp	     \
+SRCS=		PfApp.cpp			\
+		PfDrawManager.cpp		\
+		PfUtil.cpp			\
+		PfBasicSimulator.cpp		\
 		PfSimInterfaceFactory.cpp
 
 include $(MKPATH)/dpp.obj.mk
