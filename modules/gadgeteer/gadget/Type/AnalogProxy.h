@@ -47,21 +47,22 @@
 namespace gadget
 {
 
-//: A proxy class to analog devices, used by the InputManager.
-//
-//  A AnalogProxy always points to an analog device and subUnit number,
-//  the inputgroup can therefore keep an array of these around and
-//  treat them as analog devices which only return a single
-//  subDevice's amount of data.  (one int)
-//
-// See also: Analog
-//
-//!PUBLIC_API:
+/**
+ * A proxy class to analog devices, used by the InputManager.
+ *
+ * A AnalogProxy always points to an analog device and subUnit number,
+ * the inputgroup can therefore keep an array of these around and
+ * treat them as analog devices which only return a single
+ * subDevice's amount of data.  (one int)
+ *
+ * @see Analog
+ *
+ */
 class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
 
 public:
-   //: Constructor
+   /** Constructor. */
    AnalogProxy() : m_unitNum(-1)
    {
        m_data = -1.0f;
@@ -69,7 +70,7 @@ public:
 
    virtual ~AnalogProxy() {}
 
-   //: Update the cached data copy from the device
+   /** Updates the cached data copy from the device. */
    virtual void updateData()
    {
       if(!mStupified)
@@ -78,8 +79,10 @@ public:
       }
    }
 
-   //: Get the current analog data value
-   //! RETURNS: The analog data from the device
+   /**
+    * Gets the current analog data value.
+    * @return The analog data from the device.
+    */
    float getData() const
    {
       const float analogDefault(0.0f);

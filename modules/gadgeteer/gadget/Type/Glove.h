@@ -48,24 +48,23 @@
 namespace gadget
 {
 
-//: This is the data stored about a glove
-//
-// Desc:
-//  The angles are the joint angles for all fingers and the wrist
-//  DIJ = Distal Interphalangeal Joint  --- finger tip
-//  PIJ = Proximal "              "     --- Middle joint
-//  MPJ = Metacarpo "             "     --- closest to hand
-//  ABDUCT = spread of fingers
-//
-// YAW and PITCH apply only to WRIST
-//
-// xforms transfer you from one coord system to the other
-// if the xforms are tied together, then they can return
-// complete transformations
-//
-// NOTE: More docs needed here
-//
-//!PUBLIC_API:
+/**
+ * This is the data stored about a glove
+ *
+ * The angles are the joint angles for all fingers and the wrist
+ * DIJ = Distal Interphalangeal Joint  --- finger tip
+ * PIJ = Proximal "              "     --- Middle joint
+ * MPJ = Metacarpo "             "     --- closest to hand
+ * ABDUCT = spread of fingers
+ *
+ * YAW and PITCH apply only to WRIST
+ *
+ * xforms transfer you from one coord system to the other.
+ * If the xforms are tied together, then they can return
+ * complete transformations.
+ *
+ * @note More docs needed here.
+ */
 class GADGET_CLASS_API GloveData: public InputData
 {
 public:
@@ -76,28 +75,34 @@ public:
       { THUMB = 0, INDEX = 1, MIDDLE = 2, RING = 3, PINKY = 4, WRIST = 5};
 
 public:
-   //: Constructor
-   //! POST: Initialized with zero values and identities
+   /**
+    * Constructor.
+    * @post Initialized with zero values and identities.
+    */
    GloveData();
 
-    //: Copy Constructor
-    //! POST: Initialized with the values from data
+    /**
+     * Copy Constructor.
+     * @post Initialized with the values from data.
+     */
     GloveData(const GloveData &data);
 
-   //: From the given angle data, calculate the xforms
+   /** From the given angle data, calculate the xforms. */
    int calcXforms();
 
 public:  // --- I/O Functions --- //
-   //: Output the angles
+   /** Outputs the angles. */
    std::ostream& outputAngles(std::ostream& out) const;
    std::istream& inputAngles(std::istream& in);
 
 public:
    float     angles[NUM_COMPONENTS][NUM_JOINTS];
 
-   //: These are the xforms from TO the coord system of the given joint
-   // Ex: xforms[0] ==> <br>
-   //     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
+   /**
+    * These are the xforms from TO the coord system of the given joint.
+    * Ex: xforms[0] ==> <br>
+    *     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
+    */
    gmtl::Matrix44f  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
 
    // Finger params
@@ -108,15 +113,11 @@ public:
 };
 
 
-//------------------------------------------------------------------------
-//: This is the abstract base glove class. Derived from Input.
-// It specifies the interface to all glove objects in the system.
-// VR Juggler will deal only with gloves using this interface.
-//
-// Description:
-//
-//-------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * This is the abstract base glove class. Derived from Input.
+ * It specifies the interface to all glove objects in the system.
+ * Gadgeteer will deal only with gloves using this interface.
+ */
 class GADGET_CLASS_API Glove : virtual public Input
 {
 public:
@@ -129,21 +130,27 @@ public:
    {return true;}
 
 public:  // ---- GLOVE INTERFACE ---- //
-   //: Return the angle of the given joint.
-   // joint is one of a predefined enum type (jointType)
+   /**
+    * Returns the angle of the given joint.
+    * joint is one of a predefined enum type (jointType).
+    */
    float getGloveAngle(GloveData::GloveComponent component,
                        GloveData::GloveJoint joint, int devNum);
 
-   //: This returns a vector ponting "out" of the component
-   // Can be used for selection, etc.
+   /**
+    * Returns a vector ponting "out" of the component.
+    * Can be used for selection, etc.
+    */
    gmtl::Vec3f getGloveVector(GloveData::GloveComponent component, int devNum);
 
-   //: This returns the position of given components.
-   // Defaults to returning the palm position.
-   // Can also get finger tips.
+   /**
+    * Returns the position of given components.
+    * Defaults to returning the palm position.
+    * Can also get finger tips.
+    */
    gmtl::Matrix44f getGlovePos(GloveData::GloveComponent component = GloveData::WRIST, int devNum = 0);
 
-   //: This returns a copy of the glove data struct
+   /** Returns a copy of the glove data struct. */
    GloveData getGloveData(int devNum);
 
 protected:
@@ -153,10 +160,14 @@ protected:
    //       the pinch glove act more like the flock of birds.
    GloveData mTheData[GADGET_MAX_GLOVE_DEVS][3];
 
-   //: This is the positional proxy of the glove.  It defines the location of the
-   // "center" of the glove. "center" could be different for each glove type.
-   // TODO: GADGET_MAX_GLOVE_DEVS = 2 here is a hack until we make
-   //       the pinch glove act more like the flock of birds.
+   /**
+    * This is the positional proxy of the glove.  It defines the location of
+    * the "center" of the glove. "center" could be different for each glove
+    * type.
+    *
+    * @todo GADGET_MAX_GLOVE_DEVS = 2 here is a hack until we make
+    *       the pinch glove act more like the flock of birds.
+    */
    PositionProxy*  mGlovePos[GADGET_MAX_GLOVE_DEVS];
 
 };

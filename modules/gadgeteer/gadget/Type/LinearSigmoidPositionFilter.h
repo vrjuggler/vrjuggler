@@ -41,7 +41,7 @@
 namespace gadget
 {
 
-//: A pos filter class that uses a linear sigmoid
+/** A pos filter class that uses a linear sigmoid */
 class LinearSigmoidPositionFilter : public PositionFilter
 {
 public:
@@ -52,12 +52,16 @@ public:
       mMaxThreshold = 10000000.0f;        // Just set to some huge number
    }
 
-   // Get the position to use
-   // ARGS: newPos - The new postion this frame of the physical device
+   /**
+    * Gets the position to use>
+    * @param newPos The new postion this frame of the physical device.
+    */
    gmtl::Matrix44f getPos(const gmtl::Matrix44f newPos);
 
-   // Given a distance, return the scale factor
-   // based upon the minDist and maxDist values
+   /**
+    * Given a distance, return the scale factor based upon the minDist and
+    * maxDist values.
+    */
    float getScaleFactor(const float distance);
 
    void setMinDist(float val) { mMinDist = val;}
@@ -73,11 +77,13 @@ private:
    gmtl::Matrix44f mLastReturnedPos;
 
    // These parameters influence the sigmoid
-   float    mMinDist;            // Mininum distance parameter
-   float    mMaxDist;            // Maximum distance parameter
+   float    mMinDist;            /**< Mininum distance parameter */
+   float    mMaxDist;            /**< Maximum distance parameter */
 
-   float    mMaxThreshold;       // Maximum distance that the tracker is allowed to move.
-                                 // Anything farther is just ignored and is not interpolated to
+   float    mMaxThreshold;       /**< Maximum distance that the tracker is
+                                      allowed to move.  Anything farther is
+                                      just ignored and is not interpolated to */
+
 };
 
 };

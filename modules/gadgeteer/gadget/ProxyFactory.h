@@ -44,21 +44,27 @@
 namespace gadget
 {
 
-//: Base class for virtual construction of proxies
-// Implementations of this class are registered with the proxy factory
-// for each proxy tyep in the system
+/**
+ * Base class for virtual construction of proxies.
+ * Implementations of this class are registered with the proxy factory
+ * for each proxy tyep in the system.
+ */
 class ProxyConstructorBase
 {
 public:
-   //: Constructor
-   //! POST: We have been registered with the proxy factory
+   /**
+    * Constructor.
+    * @post We have been registered with the proxy factory.
+    */
    ProxyConstructorBase() {;}
 
-   //: Create the proxy
-   //! RETURNS: NULL - Proxy failed creation or configuration
+   /**
+    * Creates the proxy.
+    * @return NULL if the proxy failed creation or configuration.
+    */
    virtual Proxy* createProxy(jccl::ConfigChunkPtr chunk) const = 0;
 
-   //: Get the string desc of the type of chunk we can create
+   /** Gets the string desc of the type of chunk we can create. */
    virtual std::string    getChunkType() const = 0;
 };
 
@@ -69,8 +75,10 @@ class ProxyConstructor : public ProxyConstructorBase
 public:
    ProxyConstructor();
 
-   //: Create the proxy
-   //! RETURNS: NULL - Proxy failed creation or configuration
+   /**
+    * Creates the proxy.
+    * @return NULL if proxy failed creation or configuration.
+    */
    Proxy* createProxy(jccl::ConfigChunkPtr chunk) const
    {
       PROXY* new_proxy = new PROXY;             // Create new proxy
@@ -93,44 +101,55 @@ public:
 };
 
 
-//: Object used for creating proxies
-//!NOTE: Singleton
+/**
+ * Object used for creating proxies.
+ * @note Singleton
+ */
 class ProxyFactory
 {
 private:
    // Singleton so must be private
    ProxyFactory() {;}
 
-   //: register the proxies that the system knows about
-   //! POST: all known proxies are registered with this factory
+   /**
+    * Registers the proxies that the system knows about.
+    * @post All known proxies are registered with this factory.
+    */
    void loadKnownProxies();
 
 public:
    void registerProxy(ProxyConstructorBase* constructor);
 
-   //: Query if the factory knows about the given proxy
-   //!PRE: chunk != NULL, chunk is a valid chunk
-   //!ARGS: chunk - chunk we are requesting about knowledge to create
-   //!RETURNS: true - factory knows how to create the proxy
-   //+          false - factory does not know how to create the proxy
+   /**
+    * Queries if the factory knows about the given proxy.
+    *
+    * @pre chunk != NULL, chunk is a valid chunk.
+    * @param chunk The chunk we are requesting about knowledge to create.
+    * @return true if the factory knows how to create the proxy; false if not.
+    */
    bool recognizeProxy(jccl::ConfigChunkPtr chunk);
 
-   //: Load the specified proxy
-   //!PRE: recognizeDevice(chunk) == true
-   //!ARGS: chunk - specification of the proxy to load
-   //!RETURNS: null - Proxy failed to load
-   //+         other - Pointer to the loaded proxy
+   /**
+    * Loads the specified proxy.
+    *
+    * @pre recognizeDevice(chunk) == true.
+    * @param chunk The specification of the proxy to load.
+    * @return NULL is returned if the proxy failed to load.
+    *         Otherwise, a pointer to the loaded proxy is returned.
+    */
    Proxy* loadProxy(jccl::ConfigChunkPtr chunk);
 
 private:
 
-   //: Find a constructor for the given proxy type
-   //!RETURNS: -1 - Not found
-   //+            - Index of the constructorck
+   /**
+    * Finds a constructor for the given proxy type.
+    * @return -1 is returned if the constructor is not found.
+    *         Otherwise, the index of the constructor is returned.
+    */
    int   findConstructor(jccl::ConfigChunkPtr chunk);
 
 private:
-   std::vector<ProxyConstructorBase*> mConstructors;   //: List of the proxy constructors
+   std::vector<ProxyConstructorBase*> mConstructors;   /**<  List of the proxy constructors */
 
 
    vprSingletonHeaderWithInitFunc(ProxyFactory,loadKnownProxies);

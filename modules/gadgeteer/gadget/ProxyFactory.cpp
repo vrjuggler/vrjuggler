@@ -108,11 +108,9 @@ bool ProxyFactory::recognizeProxy(jccl::ConfigChunkPtr chunk)
       return true;
 }
 
-//: Load the specified proxy
-//!PRE: recognizeProxy(chunk) == true
-//!ARGS: chunk - specification of the proxy to load
-//!RETURNS: null - Proxy failed to load
-//+         other - Pointer to the loaded proxy
+/**
+ * Loads the specified proxy.
+ */
 Proxy* ProxyFactory::loadProxy(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(recognizeProxy(chunk));

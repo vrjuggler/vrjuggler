@@ -48,12 +48,16 @@
 namespace gadget
 {
 
-//: Glove proxy class.
-//!PUBLIC_API:
+/**
+ * Glove proxy class.
+ */
 class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
 public:
-     //: Construct the proxy to point to the given glove device and sub-unit number.
+  /**
+   * Constructs the proxy to point to the given glove device and sub-unit
+   * number.
+   */
   GloveProxy()
   {
      mUnitNum = -1;
@@ -99,7 +103,7 @@ public:
   }
 
 
-  //: Returns a pointer to the device held by this proxy.
+  /** Returns a pointer to the device held by this proxy. */
   Glove* getGlovePtr()
   {
      if(mStupified)
@@ -109,7 +113,7 @@ public:
   }
 
 
-  //: Returns the subUnit number that this proxy points to.
+  /** Returns the subUnit number that this proxy points to. */
   int getUnit()
   { return mUnitNum; }
 
@@ -132,10 +136,10 @@ public:
 
 
 private:
-   //: Should we be drawn on the screen
+   /** Should we be drawn on the screen? */
    bool  mVisible;
 
-   //: The subUnit number to use in the device.
+   /** The sub-unit number to use in the device. */
    int mUnitNum;
 };
 

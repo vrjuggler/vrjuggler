@@ -45,24 +45,28 @@
 namespace gadget
 {
 
-//: Base class for virtual construction of devices
-// Implementations of this class are registered with the device factory
-// for each device in the system
+/**
+ * Base class for virtual construction of devices.
+ * Implementations of this class are registered with the device factory
+ * for each device in the system.
+ */
 class DeviceConstructorBase
 {
 public:
-   //: Constructor
-   //! POST: Device is registered
+   /**
+    * Constructor.
+    * @post Device is registered.
+    */
    DeviceConstructorBase() {;}
 
-   //: Create the device
+   /** Creates the device. */
    virtual Input* createDevice(jccl::ConfigChunkPtr chunk)
    {
       vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
       return NULL;
    }
 
-   //: Get the string desc of the type of chunk we can create
+   /** Gets the string desc of the type of chunk we can create. */
    virtual std::string    getChunkType()
    { return std::string("BaseConstructor: Invalid type"); }
 };
@@ -91,8 +95,10 @@ public:
    { return DEV::getChunkType(); }
 };
 
-//: Object used for creating devices
-//!NOTE: Singleton
+/**
+ * Object used for creating devices.
+ * @note Singleton
+ */
 class DeviceFactory
 {
 private:
@@ -103,38 +109,45 @@ private:
       vprASSERT(mConstructors.size() == 0);
    }
 
-   // This should be replaced with device plugins
-   //! POST: Devices are loaded that the system knows about
+   // This should be replaced with device plugins.
+   /**
+    * @post Devices are loaded that the system knows about.
+    */
    void hackLoadKnownDevices();
 
 public:
    void registerDevice(DeviceConstructorBase* constructor);
 
-   //: Query if the factory knows about the given device
-   //!PRE: chunk != NULL, chunk is a valid chunk
-   //!ARGS: chunk - chunk we are requesting about knowledge to create
-   //!RETURNS: true - factory knows how to create the device
-   //+          false - factory does not know how to create the device
+   /**
+    * Queries if the factory knows about the given device.
+    * @pre chunk != NULL, chunk is a valid chunk.
+    * @param chunk The chunk we are requesting about knowledge to create.
+    * @return true if the factory knows how to create the device; false if not.
+    */
    bool recognizeDevice(jccl::ConfigChunkPtr chunk);
 
-   //: Load the specified device
-   //!PRE: recognizeDevice(chunk) == true
-   //!ARGS: chunk - specification of the device to load
-   //!RETURNS: null - Device failed to load
-   //+         other - Pointer to the loaded device
+   /**
+    * Loads the specified device.
+    * @pre recognizeDevice(chunk) == true
+    * @param chunk The specification of the device to load.
+    * @return NULL is returned if the device failed to load.
+    *         Otherwise, a pointer to the loaded device is returned.
+    */
    Input* loadDevice(jccl::ConfigChunkPtr chunk);
 
 private:
-   //: Find a constructor for the given device type
-   //!RETURNS: -1 - Not found
-   //+            - Index of the constructorck
+   /**
+    * Finds a constructor for the given device type.
+    * @return -1 is returned if the constructor is not found.
+    *         Otherwise, the index of the constructor is returned.
+    */
    int   findConstructor(jccl::ConfigChunkPtr chunk);
 
    void debugDump();
 
 
 private:
-   std::vector<DeviceConstructorBase*> mConstructors;  //: List of the device constructors
+   std::vector<DeviceConstructorBase*> mConstructors;  /**<  List of the device constructors */
 
    vprSingletonHeaderWithInitFunc(DeviceFactory, hackLoadKnownDevices);
 };

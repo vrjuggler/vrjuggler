@@ -47,15 +47,14 @@
 namespace gadget
 {
 
-//--------------------------------------------------------------------------
-//: A proxy class to digital devices, used by the InputManager.
-//
-//  A DigitalProxy always points to a digital device and subUnit number,
-//  the inputgroup can therefore keep an array of these around and
-//  treat them as digital devices which only return a single
-//  subDevice's amount of data.  (one int)
-//!PUBLIC_API:
-//--------------------------------------------------------------------------
+/**
+ * A proxy class to digital devices, used by the Input Manager.
+ *
+ * A DigitalProxy always points to a digital device and subUnit number,
+ * the inputgroup can therefore keep an array of these around and
+ * treat them as digital devices which only return a single
+ * subDevice's amount of data.  (one int)
+ */
 class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
 
@@ -70,15 +69,20 @@ public:
    virtual void updateData();
 
 
-   //: Get the digital data
-   // Digital::OFF - Button not pressed, and was not pressed last update either
-   // Digital::ON  - Button on, and was on last frame as well
-   // Digital::TOGGLE_ON - Button was off, now it is on
-   // Digital::TOGGLE_OFF - Button was on, now it is going off
-   //
-   // The identifiers are defined so that a simple test for non-zero means the button is
-   // pressed in some way.  NOTE: Because of how TOGGLE_OFF is defined, testing for non-zero
-   // will result in a one update lag in detecting the button not being pressed
+   /**
+    * Get the digital data.
+    * Digital::OFF - Button not pressed, and was not pressed last update either
+    * Digital::ON  - Button on, and was on last frame as well
+    * Digital::TOGGLE_ON - Button was off, now it is on
+    * Digital::TOGGLE_OFF - Button was on, now it is going off
+    *
+    * The identifiers are defined so that a simple test for non-zero means the
+    * button is pressed in some way.
+    *
+    * @note Because of how TOGGLE_OFF is defined, testing for non-zero
+    *       will result in a one update lag in detecting the button not being
+    *       pressed.
+    */
    int getData()
    {
       const int defaultDigital(Digital::OFF);
@@ -124,10 +128,12 @@ public:
    }
 
 private:
-   int         m_unitNum;     //: The sub-unit of the device we are working with
+   int         m_unitNum;     /**<  The sub-unit of the device we are working with */
 
-      //: Copy of the digital data we are dealing with
-      // See also: GetData - for definition of values for the data item
+   /**
+    * Copy of the digital data we are dealing with.
+    * @see GetData - for definition of values for the data item
+    */
    DigitalData         m_data;
 
 };
