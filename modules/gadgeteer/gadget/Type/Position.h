@@ -44,7 +44,6 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/SampleBuffer.h>
-#include <gadget/Filter/Position/PositionFilter.h>
 
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
@@ -53,7 +52,9 @@
 
 namespace gadget
 {
-   const unsigned short MSG_DATA_POS = 422;
+
+class PositionFilter;
+const unsigned short MSG_DATA_POS = 422;
 
 /** Position is the abstract base class that devices with digital data derive from.
 *
