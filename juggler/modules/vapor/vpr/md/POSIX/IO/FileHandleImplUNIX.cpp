@@ -455,7 +455,16 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
 
    while ( bytes_left > 0 )
    {
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "[vpr::FileHandleImplUNIX::readn_i()] Reading " << bytes_left
+         << " bytes from file handle " << mFdesc << std::endl
+         << vprDEBUG_FLUSH;
+
       bytes = ::read(mFdesc, buffer, bytes_left);
+
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "Read " << bytes << " bytes from file handle " << mFdesc
+         << std::endl << vprDEBUG_FLUSH;
 
       // Read error.
       if ( bytes < 0 )
