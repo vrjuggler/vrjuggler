@@ -5,7 +5,7 @@ default: html
 docs: html pdf
 install-docs: install-html install-ps install-pdf
 
-DOXYGEN_FILE=		Jackal.doxy
+DOXYGEN_FILE=		JCCL.doxy
 HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
 LATEX_DOXYGEN_FILE=	JCCL_latex.doxy
 MAN_DOXYGEN_FILE=	$(DOXYGEN_FILE)
