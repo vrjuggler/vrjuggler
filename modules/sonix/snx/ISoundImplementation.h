@@ -54,6 +54,10 @@
 namespace snx
 {
 
+/** \class ISoundImplementation ISoundImplementation.h snx/ISoundImplementation.h
+ *
+ * API-specific sound implementation interface.
+ */
 class ISoundImplementation
 {
 public:

@@ -63,6 +63,10 @@
 namespace snx
 {
 
+/** \class StubSoundImplementation StubSoundImplementation.h snx/StubSoundImplementation.h
+ *
+ * Stub sound implementation.
+ */
 class StubSoundImplementation : public snx::SoundImplementation
 {
 public:

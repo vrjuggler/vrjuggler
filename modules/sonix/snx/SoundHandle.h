@@ -62,7 +62,8 @@
 
 namespace snx
 {
-   /**
+   /** \class SoundHandle SoundHandle.h snx/SoundHandle.h
+    *
     * A handle to a Sonix sound.
     * This is a convenient handle to a sound, and it is the interface to using
     * individual sounds in Sonix.  Use conifgure() and remove() as the new and

@@ -47,6 +47,10 @@
 namespace snx
 {
 
+/** \class SoundAPIInfo SoundAPIInfo.h snx/SoundAPIInfo.h
+ *
+ * API-specific sound informational data type.
+ */
 class SoundAPIInfo
 {
 public:
