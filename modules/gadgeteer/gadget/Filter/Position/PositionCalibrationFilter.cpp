@@ -147,9 +147,11 @@ namespace gadget
       float r_squared(100.0f);
       float r(10.0f);
       mWMatrix = new float*[mTable.size()];
+      float** w_matrix_copy = new float*[mTable.size()];
       for (unsigned int i = 0; i < mTable.size(); ++i)
       {
          mWMatrix[i] = new float[mTable.size()];
+         w_matrix_copy[i] = new float[mTable.size()];
          for (unsigned int j = 0; j < mTable.size(); ++j)
          {
             if (i == j)
@@ -169,6 +171,7 @@ namespace gadget
                                 length * length + 
                                 r_squared );
             }
+            w_matrix_copy[i][j] = mWMatrix[i][j];
             vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
                << "[PositionCalibrationFilter::config()] Assigning " << mWMatrix[i][j]
                << " to mWMatrix( " << i << ", " << j << ").\n"
@@ -232,6 +235,23 @@ namespace gadget
             << vprDEBUG_FLUSH;
       }
 
+      for (size_t i = 0; i < mTable.size(); ++i)
+      {
+         float x_dot_product = 0.0f;
+         float y_dot_product = 0.0f;
+         float z_dot_product = 0.0f;
+         for (size_t j = 0; j < mTable.size(); ++j)
+         {
+            x_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][0]
+            y_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][1]
+            z_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][2]
+         }
+         gmtl::Vec3f solution(x_dot_product, y_dot_product, z_dot_product);
+         vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+            << "[PositionCalibrationFilter::config() Solution is "
+            << solution << " and the answer should be "
+            << mAlphaVec[i] << ".\n" << vprDEBUG_FLUSH;
+      }
       vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
          << "[PositionCalibrationFilter::config()] Alpha Vector found.\n"
          << vprDEBUG_FLUSH;
@@ -273,20 +293,11 @@ namespace gadget
          rotation[2][3] = 0;
          rotation[3][3] = 1;
          
-         // Verify this is still a rotation matrix.
-         float square_sum = (rotation[0][0] * rotation[0][0]) +
-                            (rotation[0][1] * rotation[0][1]) + 
-                            (rotation[0][2] * rotation[0][2]) + 
-                            (rotation[0][3] * rotation[0][3]);
-         if (square_sum != 1.0)
-         {
-            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << "[PositionCalibrationFilter::apply()] Invalid rotation "
-               << "matrix; the sum of the squares of the first row is "
-               << square_sum << ", but it should be 1!\n"
-               << vprDEBUG_FLUSH;
-         }
          gmtl::Matrix44f translation = gmtl::transpose(rotation) * itr->getPosition();
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "[PositionCalibrationFIlter::apply()] Received tracked "
+            << "position\n" << translation << "\n"
+            << vprDEBUG_FLUSH;
          gmtl::Vec3f tracked_pos( translation[0][3], 
                                   translation[1][3], 
                                   translation[2][3] );
@@ -296,7 +307,7 @@ namespace gadget
          // w[N](tracked_pos)
          // where w[j](p) = sqrt( length( p - p[j] )^2 + R^2 )
          // where 10 <= R^2 <= 1000.
-         gmtl::Vec3f real_pos;
+         gmtl::Vec3f real_pos(0.0f, 0.0f, 0.0f);
          float r_squared = 100.0f;
          vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
             << "[PositionCalibrationFilter::apply()] Summing real position...\n"
@@ -309,7 +320,7 @@ namespace gadget
             //      NOT gmtl::Vec.
             gmtl::Vec3f difference = tracked_pos - mTable[i].second;
             float length = gmtl::length(difference);
-            real_pos = mAlphaVec[i] * 
+            real_pos += mAlphaVec[i] * 
                        gmtl::Math::sqrt( length * length + r_squared ); 
             vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
                << "[PositionCalibrationFilter::apply()] real_pos: "
@@ -324,7 +335,12 @@ namespace gadget
          new_translation[1][3] = real_pos[1];
          new_translation[2][3] = real_pos[2];
          
-         vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "[PositionCalibrationFilter::apply()] Replaced " 
+            << tracked_pos << " with \n"
+            << real_pos << "\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "[PositionCalibrationFilter::apply()] Replaced \n" << translation
             << "\nwith " << new_translation
             << vprDEBUG_FLUSH;
@@ -337,7 +353,8 @@ namespace gadget
    void 
    PositionCalibrationFilter::luBacksubstitution(float** decomposedA, 
                                                  int size, 
-                                                 int* permutation, float* solution)
+                                                 int* permutation, 
+                                                 float* solution)
    {
       int ii(0);
       int ip(0);
@@ -391,6 +408,7 @@ namespace gadget
       
       for (i = 0; i < size; ++i)
       {
+         big = 0.0;
          for (j = 0; j < size; ++j)
          {
             temp = gmtl::Math::abs(matrix[i][j]);
@@ -402,8 +420,8 @@ namespace gadget
          if (0.0 == big)
          {
             vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-               << "[PositionCalibrationFilter::luDecomposition()] Singular matrix "
-               << "given.\n"
+               << "[PositionCalibrationFilter::luDecomposition()] Singular "
+               << "matrix given.\n"
                << vprDEBUG_FLUSH;
          }
          vv[i] = 1.0 / big;
