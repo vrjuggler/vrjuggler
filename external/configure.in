@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(boost/boost/version.hpp)
 AC_CONFIG_AUX_DIR(../share/config)
-DPP_PREREQ(1.4.103)
+DPP_PREREQ(1.5.1)
 DPP_INIT
 
 # -----------------------------------------------------------------------------
@@ -158,8 +158,8 @@ fi
 #UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    EXTROOT_ABS=`unix2dos -p "$EXTROOT_ABS"`
-    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+    EXTROOT_ABS=`dospath -p "$EXTROOT_ABS"`
+    JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
     LN_S='cp -pr'
     RM_LN='rm -rf'
 else
