@@ -134,7 +134,7 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
    if (chunk->doesPropertyExistFromToken( "enable_nav" ))
    {
       this->enableNav( (bool)chunk->getProperty( "enable_nav" ) );
-      vprDEBUG_BEGIN(vrjDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vprDEBUG_FLUSH;
+      vprDEBUG_BEGIN(vprDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vprDEBUG_FLUSH;
    }   
    else
    {
@@ -162,7 +162,7 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
    }
    ////////////////////////////
    
-   vprDEBUG_BEGIN(vrjDBG_ALL,0) << "pfBasicConfigNav::configApp: " << app_name << "===========================\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vprDBG_ALL,0) << "pfBasicConfigNav::configApp: " << app_name << "===========================\n" << vprDEBUG_FLUSH;
 
    // models
    mModelList.clear();//start out clean
@@ -172,7 +172,7 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
       Model m;
       m.description = (std::string)model_chunk->getProperty( "Name" );
       m.filename = (std::string)model_chunk->getProperty( "filename" );
-      vprDEBUG_NEXT(vrjDBG_ALL,0) << "Reading " <<m.filename<<" model from the config file\n"<< vprDEBUG_FLUSH;;
+      vprDEBUG_NEXT(vprDBG_ALL,0) << "Reading " <<m.filename<<" model from the config file\n"<< vprDEBUG_FLUSH;;
       m.scale = (float)model_chunk->getProperty( "Scale" );
       m.pos.set( (float)model_chunk->getProperty( "x" ),
             (float)model_chunk->getProperty( "y" ),
@@ -192,7 +192,7 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
       Sound s;
       s.name = (std::string)sound_chunk->getProperty( "Name" );
       s.alias = (std::string)sound_chunk->getProperty( "soundAlias" );
-      vprDEBUG_NEXT(vrjDBG_ALL,0) <<"Reading "<<s.alias<<" sound from the config file\n"<< vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL,0) <<"Reading "<<s.alias<<" sound from the config file\n"<< vprDEBUG_FLUSH;
       s.positional = (bool)sound_chunk->getProperty( "positional" );
       s.pos.set( (float)sound_chunk->getProperty( "x" ),
             (float)sound_chunk->getProperty( "y" ),
@@ -204,13 +204,13 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
    setInitialNavPos( initial_pos );
    mBoundingSize = chunk->getProperty("bounding_size");
 
-   vprDEBUG_NEXT(vrjDBG_ALL,0) << "   filepath: " << file_path << std::endl
+   vprDEBUG_NEXT(vprDBG_ALL,0) << "   filepath: " << file_path << std::endl
                              << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_ALL,0) << "initial pos: " << initial_pos << std::endl
+   vprDEBUG_NEXT(vprDBG_ALL,0) << "initial pos: " << initial_pos << std::endl
                              << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_ALL,0) << " bound size: " << mBoundingSize << std::endl
+   vprDEBUG_NEXT(vprDBG_ALL,0) << " bound size: " << mBoundingSize << std::endl
                              << vprDEBUG_FLUSH;
-   vprDEBUG_END(vrjDBG_ALL,0) << "========================================\n" << vprDEBUG_FLUSH;
+   vprDEBUG_END(vprDBG_ALL,0) << "========================================\n" << vprDEBUG_FLUSH;
 
    
    

@@ -100,7 +100,7 @@ public:
    void setToggleButton(std::string button_name)
    {
       mStatsButton.init(button_name);
-      vprDEBUG(vrjDBG_ALL,0)
+      vprDEBUG(vprDBG_ALL,0)
          << clrOutNORM(clrCYAN,"vjPfAppStats::toggleButton set to:")
          << button_name.c_str() << std::endl << vprDEBUG_FLUSH;
    }
@@ -132,25 +132,25 @@ inline void PfAppStats::setStatsMode(PfAppStats::statMode mode)
    switch(mode)
    {
       case PfAppStats::NONE:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to NONE Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to NONE Stats mode.\n" << vprDEBUG_FLUSH;
          break;
       case PfAppStats::FrameTime:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to FrameTime Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to FrameTime Stats mode.\n" << vprDEBUG_FLUSH;
          break;
       case PfAppStats::Gfx:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to Gfx Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to Gfx Stats mode.\n" << vprDEBUG_FLUSH;
          break;
       case PfAppStats::Pipe:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to Pipe Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to Pipe Stats mode.\n" << vprDEBUG_FLUSH;
          break;
       case PfAppStats::MPipe:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to MPipe Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to MPipe Stats mode.\n" << vprDEBUG_FLUSH;
          break;
       case PfAppStats::Fill:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to Fill Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to Fill Stats mode.\n" << vprDEBUG_FLUSH;
          break;
       default:
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: Switching to unknown Stats mode.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: Switching to unknown Stats mode.\n" << vprDEBUG_FLUSH;
          break;
    }
 
@@ -158,7 +158,7 @@ inline void PfAppStats::setStatsMode(PfAppStats::statMode mode)
    if(mStatsMode == PfAppStats::MPipe)
    {
       mMPStats.init(120,1);
-      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrGREEN,"--> MP Stats mode starting!")
+      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrGREEN,"--> MP Stats mode starting!")
                            << std::endl << vprDEBUG_FLUSH;
    }
 }
@@ -277,7 +277,7 @@ inline void PfAppStats::preFrame()
    {
       if(0 == mMPStats.update())       // Is it done updating
       {
-         vprDEBUG(vrjDBG_ALL,0) << "vjPfAppStats: MP Stats mode done!\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,0) << "vjPfAppStats: MP Stats mode done!\n" << vprDEBUG_FLUSH;
          setStatsMode(PfAppStats::Fill);    // Go to next mode
       } else { std::cout << ".." <<std::flush; }
    }
@@ -285,7 +285,7 @@ inline void PfAppStats::preFrame()
    // Check for STATS CYCLE Button
    if(mStatsButton->getData() == Digital::TOGGLE_ON)
    {
-      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrGREEN,"vjPfAppStats: mStatsButton pressed. Turning on or cycling stats.\n") << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrGREEN,"vjPfAppStats: mStatsButton pressed. Turning on or cycling stats.\n") << vprDEBUG_FLUSH;
 
       PfAppStats::statMode cur_stat_mode = getStatsMode();
       switch(cur_stat_mode)

@@ -156,7 +156,7 @@ simplePfNavApp::~simplePfNavApp()
 //: data init
 void simplePfNavApp::init()
 {
-   //vprDEBUG(vrjDBG_ALL, 1) << "simplePfNavApp::init\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, 1) << "simplePfNavApp::init\n" << vprDEBUG_FLUSH;
    /* Projection::setNearFar( 0.4f, 200000 ); XXXX: */
 
    mStats.setToggleButton( "VJButton5" );
@@ -166,14 +166,14 @@ void simplePfNavApp::init()
 //: data init
 void simplePfNavApp::apiInit()
 {
-   //vprDEBUG(vrjDBG_ALL,1) << "simplePfNavApp::apiInit\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,1) << "simplePfNavApp::apiInit\n" << vprDEBUG_FLUSH;
 }
 
 //: data init
 void simplePfNavApp::preForkInit()
 {
    // Initialize type system
-   vprDEBUG(vrjDBG_ALL,1) << "simplePfNavApp::preForkInit: Initializing new types.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << "simplePfNavApp::preForkInit: Initializing new types.\n" << vprDEBUG_FLUSH;
 
    // Initialize loaders
    for (unsigned int x = 0; x < mModelList.size(); ++x)
@@ -195,7 +195,7 @@ void simplePfNavApp::preForkInit()
 /// Return the current scene graph
 pfGroup* simplePfNavApp::getScene()
 {
-   vprDEBUG(vrjDBG_ALL, 0) << "simplePfNavApp::getScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << "simplePfNavApp::getScene\n" << vprDEBUG_FLUSH;
    return mRootNode;
 }
 
@@ -309,7 +309,7 @@ void simplePfNavApp::preFrame()
 /// Function called after pfDraw
 void simplePfNavApp::intraFrame()
 {
-   //vprDEBUG(vrjDBG_ALL,0) << "-------- simplePfNavApp::intraFrame -------\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << "-------- simplePfNavApp::intraFrame -------\n" << vprDEBUG_FLUSH;
 }
 
 //: Reset the application to initial state
@@ -324,11 +324,11 @@ void simplePfNavApp::enableNav( bool state )
    mDisableNav = !state;
    if (mDisableNav == true) 
    {
-      vprDEBUG_BEGIN(vrjDBG_ALL,0) << "====================\nnavigation disabled\n" << vprDEBUG_FLUSH;
+      vprDEBUG_BEGIN(vprDBG_ALL,0) << "====================\nnavigation disabled\n" << vprDEBUG_FLUSH;
    }
    if (mDisableNav == false) 
    {
-      vprDEBUG_BEGIN(vrjDBG_ALL,0) << "====================\nnavigation enabled\n" << vprDEBUG_FLUSH;
+      vprDEBUG_BEGIN(vprDBG_ALL,0) << "====================\nnavigation enabled\n" << vprDEBUG_FLUSH;
    }
 }   
 
@@ -346,7 +346,7 @@ void simplePfNavApp::enableNav( bool state )
 /*
 void focusChanged()
 {
-   vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << std::endl << vprDEBUG_FLUSH;
 
    if(mNavigationDCS != NULL)
    {
@@ -356,7 +356,7 @@ void focusChanged()
       { mNavigationDCS->setActive(false); }
    }
    else
-      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << std::endl << vprDEBUG_FLUSH;
 }
 */
 
@@ -367,7 +367,7 @@ void focusChanged()
 // These must be set before the kernel starts calling the application
 void simplePfNavApp::addModelFile( const std::string& filename )
 {
-   vprDEBUG(vrjDBG_ALL,0) << "Adding model file: " << filename.c_str() <<"\n"
+   vprDEBUG(vprDBG_ALL,0) << "Adding model file: " << filename.c_str() <<"\n"
                         << vprDEBUG_FLUSH;
    Model m;
    m.filename = filename;
@@ -422,7 +422,7 @@ void simplePfNavApp::setInitialNavPos( const vrj::Vec3& initialPos )
    for (unsigned int i = 0; i < mNavigators.size(); ++i)
    {
       vrj::Matrix initial_nav;
-      vprDEBUG(vrjDBG_ALL,0) << "setting pos\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << "setting pos\n" << vprDEBUG_FLUSH;
       initial_nav.setTrans( mInitialNavPos );
 
       mNavigators[i]->setHomePosition(initial_nav);
@@ -453,7 +453,7 @@ void simplePfNavApp::setNavigator( unsigned new_index )
       // Switch em
       mCurNavIndex = new_index;
       mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
-      vprDEBUG(vrjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: "
+      vprDEBUG(vprDBG_ALL,0) << "simplePfNavApp: Navigation switched to: "
                            << clrSetNORM(clrGREEN)
                            << mNavigators[mCurNavIndex]->getName().c_str()
                            << clrRESET << std::endl << vprDEBUG_FLUSH;
@@ -495,7 +495,7 @@ void simplePfNavApp::initializeModels()
    pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
    // set the file paths...
    pfFileIO::addFilePath( mFilePath );
-   vprDEBUG( vrjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ")
+   vprDEBUG( vprDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ")
                            << mFilePath.c_str() << "\n" << vprDEBUG_FLUSH;
 
 
@@ -530,7 +530,7 @@ void simplePfNavApp::initializeModels()
       // FIXME: do rotation...
       mModelList[x].modelDCS->setScale( mModelList[x].scale );
 
-      vprDEBUG(vrjDBG_ALL,0) << "pfNavApp: Adding "
+      vprDEBUG(vprDBG_ALL,0) << "pfNavApp: Adding "
                            << mModelList[x].filename.c_str()
                            << "\n" << vprDEBUG_FLUSH;
       mModelList[x].modelNode = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
@@ -600,7 +600,7 @@ void simplePfNavApp::initializeSounds()
 void simplePfNavApp::initScene()
 {
    // Load the scene
-   vprDEBUG(vrjDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
    mRootNode             = new pfGroup;       // Root of our graph
@@ -708,7 +708,7 @@ void simplePfNavApp::initScene()
 
 int AppNotifyPreTrav(pfTraverser* trav, void* data)
 {
-   vprDEBUG(vrjDBG_ALL,0) << "Traversing app (pre): "
+   vprDEBUG(vprDBG_ALL,0) << "Traversing app (pre): "
                         << "chan: " << (void*)trav->getChan()
                         << " node:" << (void*)trav->getNode() << ": "
                         << trav->getNode()->getName() << std::endl
@@ -718,7 +718,7 @@ int AppNotifyPreTrav(pfTraverser* trav, void* data)
 
 int AppNotifyPostTrav(pfTraverser* trav, void* data)
 {
-   vprDEBUG(vrjDBG_ALL,0) << "Traversing app (post): "
+   vprDEBUG(vprDBG_ALL,0) << "Traversing app (post): "
                         << "chan: " << (void*)trav->getChan()
                         << " node:" << (void*)trav->getNode() << ": "
                         << trav->getNode()->getName() << std::endl
