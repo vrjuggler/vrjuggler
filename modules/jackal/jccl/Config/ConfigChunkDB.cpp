@@ -40,7 +40,7 @@
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ParseUtil.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ConfigIO.h>
 
@@ -247,22 +247,22 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 {
     // Print out dependancies
 #ifdef VJ_vprDEBUG
-    vprDEBUG_BEGIN(vprDBG_CONFIG,4) << "---- Dependencies -----------\n" << vprDEBUG_FLUSH;
+    vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- Dependencies -----------\n" << vprDEBUG_FLUSH;
     for (unsigned int i=0;i<chunks.size();i++) {
-        vprDEBUG(vprDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name")
+        vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name")
                                 << std::endl << "\tDepends on:\n"
                                 << vprDEBUG_FLUSH;
         std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
         if (deps.size() > 0) {
             for (unsigned int j=0;j<deps.size();j++)
-                vprDEBUG(vprDBG_CONFIG,4) << "   " << j << ": "
+                vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": "
                                         << deps[j].c_str() << std::endl
                                         << vprDEBUG_FLUSH;
         } else {
-            vprDEBUG(vprDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
         }
     }
-    vprDEBUG_END(vprDBG_CONFIG,4) << "-----------------------------\n" << vprDEBUG_FLUSH;
+    vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------------------\n" << vprDEBUG_FLUSH;
 #endif
     
     
@@ -281,7 +281,7 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
     std::vector<ConfigChunk*>::iterator cur_item = src_chunks.begin();          // The current src item to look at
     
     while (cur_item != src_chunks.end()) {          // While not at end of src list
-        vprDEBUG(vprDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vprDEBUG_FLUSH;
         
         dep_pass = true;
         deps = (*cur_item)->getChunkPtrDependencies();             // Get src dependencies
@@ -342,19 +342,19 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
         // Print out sorted dependancies
 #ifdef VJ_vprDEBUG
         
-        vprDEBUG_BEGIN(vprDBG_CONFIG,4) << "---- After sort ----" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- After sort ----" << std::endl << vprDEBUG_FLUSH;
         for (unsigned int i=0;i<chunks.size();i++) {
-            vprDEBUG(vprDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << std::endl
+            vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << std::endl
                                     << "\tDepends on:\n" << vprDEBUG_FLUSH;
             std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
                 for (unsigned int j=0;j<deps.size();j++)
-                    vprDEBUG(vprDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << std::endl << vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << std::endl << vprDEBUG_FLUSH;
             } else {
-                vprDEBUG(vprDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
+                vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
             }
         }
-        vprDEBUG_END(vprDBG_CONFIG,4) << "-----------------\n" << vprDEBUG_FLUSH;
+        vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------\n" << vprDEBUG_FLUSH;
 #endif
         
         return 0;      // Success
@@ -428,7 +428,7 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
         }
     } while (!in.eof());
 
-    vprDEBUG(vprDBG_CONFIG,3) << "ConfigChunkDB::>> : Finished - "
+    vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::>> : Finished - "
                             << self.chunks.size() << " chunks read."
                             << std::endl << vprDEBUG_FLUSH;
 
@@ -443,10 +443,10 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
 bool ConfigChunkDB::load (const std::string& filename, const std::string& parentfile) {
 
     file_name = demangleFileName (filename, parentfile);
-    vprDEBUG(vprDBG_CONFIG,3) << "ConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vprDEBUG_FLUSH;
+    vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vprDEBUG_FLUSH;
     bool retval = ConfigIO::instance()->readConfigChunkDB (file_name, *this);
 
-    vprDEBUG(vprDBG_CONFIG,3) << " finished.. read " << chunks.size() 
+    vprDEBUG(jcclDBG_CONFIG,3) << " finished.. read " << chunks.size() 
                             << " chunks\n" << vprDEBUG_FLUSH;
     return retval;
 }

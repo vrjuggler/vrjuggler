@@ -48,7 +48,7 @@ namespace jccl {
 
 Connect::Connect(Socket* s, const std::string& _name,
            ConnectMode _mode): name(""), filename(""), commands_mutex(), communicators() {
-    vprDEBUG(vprDBG_ENV_MGR,4) << "EM: Creating Connect to file or socket\n"
+    vprDEBUG(jcclDBG_SERVER,4) << "EM: Creating Connect to file or socket\n"
           << vprDEBUG_FLUSH;
     sock = s;
     mode = _mode;
@@ -279,7 +279,7 @@ void Connect::removePeriodicCommand (PeriodicCommand* pc1) {
 
 
 void Connect::readControlLoop(void* nullParam) {
-   vprDEBUG(vprDBG_ENV_MGR,5) << "Connect " << name.c_str()
+   vprDEBUG(jcclDBG_SERVER,5) << "Connect " << name.c_str()
              << " started read control loop.\n"
              << vprDEBUG_FLUSH;
    while (!read_die) {
@@ -288,7 +288,7 @@ void Connect::readControlLoop(void* nullParam) {
       if (!readCommand (*instream))
           ; // do some error handling...
    }
-   vprDEBUG(vprDBG_ENV_MGR,5) << "Connect " << name.c_str()
+   vprDEBUG(jcclDBG_SERVER,5) << "Connect " << name.c_str()
              <<" ending read control loop.\n" << vprDEBUG_FLUSH;
 
    read_connect_thread = NULL;
@@ -306,7 +306,7 @@ void Connect::writeControlLoop(void* nullParam) {
 
 //              *outstream << "another test : ( \n" << flush;
 
-    vprDEBUG(vprDBG_ENV_MGR,5) << "Connect " << name.c_str()
+    vprDEBUG(jcclDBG_SERVER,5) << "Connect " << name.c_str()
                              << " started write control loop.\n"
                              << vprDEBUG_FLUSH;
 
@@ -324,14 +324,14 @@ void Connect::writeControlLoop(void* nullParam) {
         while (!commands.empty()) {
             cmd = commands.front();
             commands.pop();
-            vprDEBUG (vprDBG_ENV_MGR, 5) << "calling EM command; protocol="
+            vprDEBUG (jcclDBG_SERVER, 5) << "calling EM command; protocol="
                                        << cmd->getProtocolName().c_str()
                                        <<vprDEBUG_FLUSH;
             *outstream << "<protocol handler=\"" << cmd->getProtocolName()
                        << "\">\n";
             cmd->call (*outstream);
             *outstream << "</protocol>\n" << std::flush;
-            vprDEBUG (vprDBG_ENV_MGR, 5) << " -- done.\n" << vprDEBUG_FLUSH;
+            vprDEBUG (jcclDBG_SERVER, 5) << " -- done.\n" << vprDEBUG_FLUSH;
             delete cmd;
         }
 
@@ -353,7 +353,7 @@ void Connect::writeControlLoop(void* nullParam) {
         commands_mutex.release();
 
     } // end main loop
-    vprDEBUG (vprDBG_ENV_MGR,5) << "Connect " << name.c_str() << " ending write loop.\n" << vprDEBUG_FLUSH;
+    vprDEBUG (jcclDBG_SERVER,5) << "Connect " << name.c_str() << " ending write loop.\n" << vprDEBUG_FLUSH;
     //write_connect_thread = NULL;
     write_alive = false;
 }
@@ -371,7 +371,7 @@ bool Connect::readCommand(std::istream& fin) {
     if (!fin.getline (buf, buflen, '\n'))
         return false;
     if (strncmp (buf, protocol_start_string, protocol_start_string_len)) {
-        vprDEBUG (vprDBG_ENV_MGR, 3) << "Connection: Invalid protocol identifier." << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG (jcclDBG_SERVER, 3) << "Connection: Invalid protocol identifier." << std::endl << vprDEBUG_FLUSH;
         do {
             if (!fin.getline (buf, buflen, '\n'))
                 return false;
@@ -386,7 +386,7 @@ bool Connect::readCommand(std::istream& fin) {
         protocol_name[len] = 0;
     }
     else {
-        vprDEBUG (vprDBG_ENV_MGR, 3) << "foo\n" << vprDEBUG_FLUSH;
+        vprDEBUG (jcclDBG_SERVER, 3) << "foo\n" << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -406,7 +406,7 @@ bool Connect::readCommand(std::istream& fin) {
         return communicator->readStream (this, fin, buf);
     }
     else {
-        vprDEBUG (vprDBG_ENV_MGR, 1) << "Connection: Couldn't find protocol handler for '" << protocol_name << "'\n" << vprDEBUG_FLUSH;
+        vprDEBUG (jcclDBG_SERVER, 1) << "Connection: Couldn't find protocol handler for '" << protocol_name << "'\n" << vprDEBUG_FLUSH;
         // should we scan for </protocol> here?
         return false;
     }

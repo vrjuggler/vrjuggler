@@ -61,7 +61,7 @@ public:
    {
       vprASSERT(checker != NULL);
       mDepCheckers.push_back(checker);          // Add the checker to the list
-      vprDEBUG(vprDBG_KERNEL,vprDBG_CONFIG_LVL)
+      vprDEBUG(jcclDBG_RECONFIGURATION,vprDBG_CONFIG_LVL)
               << "DependencyManager: Registered: "
               << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << std::resetiosflags(std::ios::right)
               << "  type: " << typeid(*checker).name() << std::endl

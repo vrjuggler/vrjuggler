@@ -37,7 +37,7 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
 namespace jccl
@@ -185,7 +185,7 @@ VarValue::operator int() const {
     case T_FLOAT:
         return (int)floatval;
     case VJ_T_INVALID:
-        vprDEBUG(vprDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
+        vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
                                 << std::endl << vprDEBUG_FLUSH;
         return 0;
     default:
@@ -210,7 +210,7 @@ VarValue::operator ConfigChunk*() const {
             return NULL;
         }
     case VJ_T_INVALID:
-        vprDEBUG(vprDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
+        vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
                  << std::endl << vprDEBUG_FLUSH;
         return NULL;
     default:
@@ -234,7 +234,7 @@ VarValue::operator bool() const {
     case T_FLOAT:
         return (bool)floatval;
     case VJ_T_INVALID:
-        vprDEBUG(vprDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
+        vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
                                 << std::endl << vprDEBUG_FLUSH;
         return false;
     default:
@@ -257,7 +257,7 @@ VarValue::operator float () const {
     case T_BOOL:
         return (float)boolval;
     case VJ_T_INVALID:
-        vprDEBUG(vprDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
+        vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
                                 << std::endl << vprDEBUG_FLUSH;
         return 0.0f;
     default:
@@ -285,7 +285,7 @@ char* VarValue::cstring () const {
     case T_BOOL:
         return strdup (boolval?"true":"false");
     case VJ_T_INVALID:
-        vprDEBUG(vprDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
+        vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
                                 << std::endl << vprDEBUG_FLUSH;
         return strdup("");
     default:
@@ -332,7 +332,7 @@ VarValue::operator std::string () const {
     case T_BOOL:
         return boolval?"true":"false";
     case VJ_T_INVALID:
-        vprDEBUG(vprDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
+        vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
                                 << std::endl << vprDEBUG_FLUSH;
         return (std::string)"";
     default:

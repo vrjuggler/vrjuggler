@@ -48,7 +48,7 @@
 
 #include <jccl/XMLUtil/XercesStreamInputSource.h>
 #include <jccl/XMLUtil/XercesXMLError.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 
 namespace jccl {
 

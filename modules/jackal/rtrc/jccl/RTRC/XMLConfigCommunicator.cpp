@@ -175,18 +175,18 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
             ConfigChunkDB* db = new ConfigChunkDB((*(config_manager->getActiveConfig())));   // Make a copy
             config_manager->unlockActive();
             
-            //vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
-            //vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
+            //vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
+            //vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
             con->addCommand (new CommandSendChunkDB (db, true));
         }
         else if (!strcasecmp (name, "request_current_descs")) {
             ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
-            vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
-            vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
             con->addCommand (new CommandSendDescDB (db));
         }
         else {
-            vprDEBUG (vprDBG_ENV_MGR,0) << "Connect: Unrecognized command: '"
+            vprDEBUG (jcclDBG_SERVER,0) << "Connect: Unrecognized command: '"
                                       << name << "'\n" << vprDEBUG_FLUSH;
         }
         break; // ELEMENT_NODE
