@@ -87,13 +87,13 @@ public:
     * Default constructor.
     */
    NetworkLine (void)
-      : mLength(0.0f), mCapacity(0.0f), mDelay(0), mNetworkType(LAN),
+      : mLength(0.0f), mCapacity(0.0f), mDelay(0.0f), mNetworkType(LAN),
         mNetworkID(0), mNetworkIP(0), mLatency(0.0f)
    {
       /* Do nothing. */ ;
    }
 
-   NetworkLine(const double miles, const double Mbps, vpr::Uint32 delay,
+   NetworkLine(const double miles, const double Mbps, const double delay,
                const std::string& net_type, const vpr::Uint8 net_id,
                const std::string& net_ip);
 
@@ -291,7 +291,7 @@ private:
 
    double      mLength;       /**< Length in miles */
    double      mCapacity;     /**< Capacity in Mbps */
-   vpr::Uint32 mDelay;
+   double      mDelay;
    NetworkType mNetworkType;  /**< */
    vpr::Uint8  mNetworkID;    /**< */
    vpr::Uint32 mNetworkIP;
