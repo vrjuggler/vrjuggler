@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
 import org.jdom.*;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
@@ -274,7 +275,9 @@ public class PrefsEditor extends JPanel
    private synchronized void writePrefs (boolean add_newlines)
       throws java.io.IOException
    {
-      XMLOutputter outputter = new XMLOutputter("  ", add_newlines);
+      Format f = Format.getPrettyFormat();
+      f.setLineSeparator(System.getProperty("line.separator"));
+      XMLOutputter outputter = new XMLOutputter(f);
       FileWriter writer = new FileWriter(mPrefsFile);
       outputter.output(mPrefsDoc, writer);
       writer.close();
