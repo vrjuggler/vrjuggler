@@ -53,6 +53,8 @@
 #include <snx/Util/Debug.h>
 #include <snx/plugins/AudioWorks/AudioWorksSoundImplementation.h>
 
+#include <vpr/Util/Debug.h>
+
 /////////////////////////
 // plugin API:
 #ifdef NO_SELF_REGISTER
@@ -364,7 +366,7 @@ namespace snx
          hostname = "localhost";
          std::string rc_filepath = getenv( "HOME" );
          rc_filepath += "/.sonix-aw";
-         std::cerr << "[snx]AudioWorks| Reading "<<rc_filepath<<" for hostname\n" << std::flush;
+         vpr::DebugOutputGuard output1(snxDBG, vprDEBUG_CONFIG_LVL, std::string("AudioWorks| Reading "+rc_filepath+" for hostname"), std::string("\n")); 
          std::ifstream rc_file;
          rc_file.open( rc_filepath.c_str(), std::ifstream::in );
          if (rc_file.good())
@@ -377,7 +379,7 @@ namespace snx
          }
          rc_file.close();
       }
-      std::cerr << "[snx]AudioWorks| hostname="<<hostname<<"\n" << std::flush;
+      vpr::DebugOutputGuard output2(snxDBG, vprDEBUG_CONFIG_LVL, std::string("AudioWorks| hostname="+hostname), std::string("\n"));
         
       
       // setup the hardware system
@@ -391,7 +393,7 @@ namespace snx
       //initialize the AW system
       if (awInitSys() == -1) 
       {
-        std::cerr << "[snx]AudioWorks| ERROR: InitSys() failed!\n" << std::flush;
+        vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "AudioWorks| ERROR: InitSys() failed!\n") << vprDEBUG_FLUSH;
         return 0;
       }
 
@@ -408,7 +410,7 @@ namespace snx
       int result = awAttachEng(mEngine);
       if (result < 0)      //Attach the engine to the system
       {
-          std::cerr << "[snx]AudioWorks| ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
+          vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "AudioWorks| ERROR: " << "failed to attach to engine (retval="<<result<<")...\n\n" << vprDEBUG_FLUSH;
      //     awPrint(mEngine);
           return 0;
       }
