@@ -180,6 +180,8 @@ public:      // Global "get" interface
     vjEnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
 
+    vjSoundManager* getSoundManager()
+    { return mSoundManager; }
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
