@@ -328,26 +328,6 @@ case $host_os in
         ;;
     dnl # A machine running FreeBSD.  Currently only i386 is supported.
     freebsd*)
-        if test "$ABI" != "ELF" -a "$ABI" != "AOUT" ; then
-            if test -x "/usr/bin/objformat" ; then
-                _binfmt=`/usr/bin/objformat`
-
-                if test "$_binfmt" = "elf" ; then
-                    ABI="ELF"
-                    LIBBITSUF=''
-                    _EXTRA_FLAGS='-elf'
-                else
-                    ABI="AOUT"
-                    LIBBITSUF=''
-                    _EXTRA_FLAGS='-aout'
-                fi
-            else
-                ABI="AOUT"
-                LIBBITSUF=''
-                _EXTRA_FLAGS='-aout'
-            fi
-        fi
-
         AR='ar -r'
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
@@ -356,8 +336,11 @@ case $host_os in
         SHAREDLIB_EXT='so'
 
         AC_DEFINE(VJ_OS_FreeBSD,)
+        ABI='ELF'
         ISA='i386'
-        ABI_LIST='AOUT ELF'
+        ABI_LIST='ELF'
+        LIBBITSUF=''
+        _EXTRA_FLAGS='-elf'
         PLATFORM='FreeBSD'
         ;;
     dnl # A machine running Linux.  Currently only i386 is supported.
