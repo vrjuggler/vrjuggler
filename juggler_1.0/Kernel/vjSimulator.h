@@ -22,11 +22,13 @@ public:
       char* proxy_str = NULL;
       proxy_str  = chunk->getProperty("simCamera");
 
-      std::string user_name = (std::string)(char*)chunk->getProperty("user");
+      std::string wand_proxy_str = chunk->getProperty("simWand");
+      std::string user_name = (string)(char*)chunk->getProperty("user");
+
       mUser = vjKernel::instance()->getUser(user_name);
 
       mCamera.init(proxy_str);
-      mWand.init("VJWand");
+      mWand.init(wand_proxy_str);      // Configure the wand to use
 
       if(mCamera.getProxyIndex() == -1)
       {

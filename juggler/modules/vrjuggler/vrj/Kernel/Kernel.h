@@ -59,13 +59,16 @@ public:
    void setApplication(vjApp* _app)
    { app = _app; }
 
-   void setProgramSpecifiedConfigFile(std::string filename)
-   { mProgramConfigFile = filename; }
-
    // Stops the current application but leaves the kernel running.
    // It closes all API specific stuff (DrawManager,  etc.)
    int stopApplication()
    { return 1; }
+
+   /* Load configuration data for Kernel
+    * POST: Config data has been read in
+    *       All Managers are configured
+    */
+   void loadConfigFile(std::string filename);
 
 public:  // --- Config interface --- //
    vjConfigChunkDB* getChunkDB()
@@ -88,13 +91,7 @@ protected:
    void updateFrameData();
 
 protected:      // --- STARTUP ROUTINES --- //
-   /* Load configuration data for Kernel
-    * POST: Config data has been read in
-    *       All Managers are configured
-    */
-   void loadConfigFile();
-
-      // --- Manager Initial setup functions ---- //
+         // --- Manager Initial setup functions ---- //
    void initialSetupInputManager();
    void setupEnvironmentManager();
    void initialSetupDisplayManager();
@@ -138,9 +135,13 @@ protected:
    bool performanceEnabled;               //: is performance measurement for kernel active?
 
    /// Config Stuff
-   vjChunkDescDB*    configDesc;
+   vjChunkDescDB*    mConfigDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
+<<<<<<< vjKernel.h
+
+=======
    std::string       mProgramConfigFile;  //: Config file specified by program
+>>>>>>> 1.21
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
@@ -153,8 +154,12 @@ protected:
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel() : mProgramConfigFile("")
-   { app = NULL;}
+   vjKernel()
+   {
+      app = NULL;
+      mChunkDB = NULL;
+      mConfigDesc = NULL;
+   }
 
 public:
    //: Get instance of singleton object

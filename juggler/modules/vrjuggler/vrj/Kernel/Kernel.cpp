@@ -41,8 +41,8 @@ void vjKernel::initConfig()
    vjSharedPool::init();         // Try to init the pool stuff
    sharedMemPool = new vjSharedPool(1024*1024);      // XXX: should not be system specific
 
-   // --- Read default config file --- //
-   loadConfigFile();
+   // --- Make sure chunks have been initialized --- //
+   //loadConfigFile(std::string(""));
 
    // Setup initial environments.
    initialSetupInputManager();
@@ -140,6 +140,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
    {
       bool added_chunk = false;
 
+      vjDEBUG(1) << "vjKernel::configAdd: chunk: " << (char*)chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
       if(this->configKernelHandle(chunks[i]))            // Kernel
          added_chunk = this->configKernelAdd(chunks[i]);
       if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
@@ -211,58 +212,49 @@ bool vjKernel::configKernelRemove(vjConfigChunk* chunk)
 
 
 // --- STARTUP ROUTINES --- //
-void vjKernel::loadConfigFile()
+void vjKernel::loadConfigFile(std::string filename)
 {
-   vjDEBUG(5) << "   vjKernel::loadConfig:\n" << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "   vjKernel::loadConfigFile: " << filename << endl << vjDEBUG_FLUSH;
 
-   // ------ OPENG chunksDesc file ----- //
+   // ------ OPEN chunksDesc file ----- //
    char* vj_base_dir = getenv("VJ_BASE_DIR");
    if(vj_base_dir == NULL)
    {
-      cerr << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined." << endl;
+      vjDEBUG(0) << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined.\n" << vjDEBUG_FLUSH;
       exit(1);
    }
 
-   char chunk_desc_file[250];
-   strcpy(chunk_desc_file, vj_base_dir);
-   strcat(chunk_desc_file, "/Data/chunksDesc");
-
-   configDesc = new vjChunkDescDB;
-   vjChunkFactory::setChunkDescDB (configDesc);
-   if (!configDesc->load(chunk_desc_file))
+   if (NULL == mConfigDesc)
    {
-      cerr << "vjKernel::loadConfig: Config Desc failed to load file: " << endl;
-      exit(1);
-   }
+      char chunk_desc_file[250];
+      strcpy(chunk_desc_file, vj_base_dir);
+      strcat(chunk_desc_file, "/Data/chunksDesc");
 
-   mChunkDB = new vjConfigChunkDB(configDesc);      // Create config database
-
-   // ------- OPEN User Config file ----------- //
-      /*
-   char  configFile[250];
-   char* homeDir = getenv("HOME");     // Get users home directory
-   strcpy(configFile, homeDir);
-   strcat(configFile, "/.vjconfig/activeConfig");
-
-   if (!chunkDB->load(configFile))
-   {
-      cerr << "vjKernel::loadConfig: DB Load failed to load file: " << configFile << endl;
-      exit(1);
-   }
-   */
-   // ------- OPEN Program specified Config file ------ //
-   if(!mProgramConfigFile.empty())   // We have a filename
-   {
-      if (!mChunkDB->load(mProgramConfigFile.c_str()))
+      mConfigDesc = new vjChunkDescDB;
+      vjChunkFactory::setChunkDescDB (mConfigDesc);
+      if (!mConfigDesc->load(chunk_desc_file))
       {
-         cerr << "vjKernel::loadConfig: DB Load failed to load file: " << mProgramConfigFile << endl;
+         vjDEBUG(0) << "ERROR: vjKernel::loadConfig: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
          exit(1);
       }
    }
 
-   vjDEBUG(2) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
-   vjDEBUG(2) << (*mChunkDB) << vjDEBUG_FLUSH;
+   if(NULL == mChunkDB)
+      mChunkDB = new vjConfigChunkDB(mConfigDesc);      // Create config database
 
+
+   // ------- OPEN Program specified Config file ------ //
+   if(!filename.empty())   // We have a filename
+   {
+      if (!mChunkDB->load(filename.c_str()))
+      {
+         vjDEBUG(0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename << endl << vjDEBUG_FLUSH;
+         exit(1);
+      }
+   }
+
+   vjDEBUG(5) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
+   vjDEBUG(5) << (*mChunkDB) << vjDEBUG_FLUSH;
 }
 
 
