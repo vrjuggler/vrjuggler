@@ -59,19 +59,19 @@ include @topdir@/make.defs.mk
 # -----------------------------------------------------------------------------
 # Base variables needed by all test suite makefiles.
 # -----------------------------------------------------------------------------
-test_topdir	= @topdir@/test/TestSuite
-VPR_BASE_DIR	?= @APP_BASE_DIR@
-CPP_UNIT	= $(JUGGLERROOT_ABS)/external/cppunit
+test_topdir=    @topdir@/test/TestSuite
+VPR_BASE_DIR?=  @APP_BASE_DIR@
+CPP_UNIT=       $(JUGGLERROOT_ABS)/external/cppunit
 
 # -----------------------------------------------------------------------------
 # Override settings for variables read from make.defs.mk.
 # -----------------------------------------------------------------------------
-EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@
-EXTRA_CXXFLAGS	= @APP_EXTRA_CFLAGS@
-EXTRA_DEFS	= -DGRAPH_PATH="\"$(VPRROOT_ABS)\""
-EXTRA_INCLUDES	= -I$(VPR_BASE_DIR)/include -I$(srcdir) -I$(CPP_UNIT)/include
+EXTRA_CFLAGS=   @APP_EXTRA_CFLAGS@
+EXTRA_CXXFLAGS= @APP_EXTRA_CFLAGS@
+EXTRA_DEFS=     -DGRAPH_PATH="\"$(VPRROOT_ABS)\""
+EXTRA_INCLUDES= -I$(VPR_BASE_DIR)/include -I$(srcdir) -I$(CPP_UNIT)/include
 
 ifeq (@PLATFORM@, IRIX)
-    EXTRA_DEPEND_FLAGS	+= -I$(VPR_BASE_DIR)/include/boost/compatibility/cpp_c_headers
-    EXTRA_INCLUDES	+= -I$(VPR_BASE_DIR)/include/boost/compatibility/cpp_c_headers
+   EXTRA_DEPEND_FLAGS+=        -I$(VPR_BASE_DIR)/include/boost/compatibility/cpp_c_headers
+   EXTRA_INCLUDES+=            -I$(VPR_BASE_DIR)/include/boost/compatibility/cpp_c_headers
 endif
