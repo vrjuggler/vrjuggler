@@ -327,8 +327,9 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       vprASSERT(got_next_line && "Edge between nodes not found!");
 
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-         << "Controller::moveMessage(): Passing message on to next hop -- "
-         << next_line << "\n" << vprDEBUG_FLUSH;
+         << "Controller::moveMessage(): Passing message for "
+         << msg->getDestinationSocket()->getLocalAddr()
+         << " on to next hop -- " << next_line << "\n" << vprDEBUG_FLUSH;
 
       dir = mGraph.isSource(next_hop, next_line) ? NetworkLine::FORWARD
                                                  : NetworkLine::REVERSE;
