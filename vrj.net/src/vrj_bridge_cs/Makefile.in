@@ -26,7 +26,6 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 srcdir=		@srcdir@
-LIBDIR=		../lib
 
 MOD_NAME=	vrjnet
 DLL_DEPS=	/lib:$(LIBDIR) /r:vprnet.dll /r:jcclnet.dll	\
