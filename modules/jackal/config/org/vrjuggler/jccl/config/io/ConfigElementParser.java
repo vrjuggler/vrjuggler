@@ -101,7 +101,16 @@ public class ConfigElementParser
          throw new MissingAttributeException(NAME);
       }
 
-      int newest_version_number = mDefinitionRepos.getNewestVersionNumber(token).intValue();
+      int newest_version_number;
+      try
+      {
+         newest_version_number =
+            mDefinitionRepos.getNewestVersionNumber(token).intValue();
+      }
+      catch (DefinitionLookupException dle)
+      {
+         throw new ParseException(dle.getMessage());
+      }
       
       // - If we have an old version
       //   - For i=our_version ; i < newest_version_num ; i++
