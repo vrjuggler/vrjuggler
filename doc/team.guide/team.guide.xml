@@ -968,128 +968,96 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                      </itemizedlist>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>world-all-abi</term>
                   <listitem>
                      <para>This is the same as the '<literal>world</literal>' target except that it builds and installs <emphasis>all possible</emphasis> ABI and ISA combinations for the target platform. On IRIX, for example, this means that all combinations of N32, 64, mips3 and mips4 (debugging and optimized versions) are built and installed. Most platforms currently support only one ABI/ISA combination thus making this target the same as '<literal>world</literal>'.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>buildworld</term>
                   <listitem>
                      <para>This target is the same as '<literal>all</literal>'.; In other words, it builds everything. It executes the first phase of the '<literal>world</literal>' target (i.e., only the build phase, not the install phase). Since it builds both debugging and optimized versions of VR Juggler without installing, it is useful for testing changes to the library code to ensure that it works in both the debugging and optimized cases.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>all-abi</term>
                   <listitem>
                      <para>In the same manner as '<literal>world-all-abi</literal>', this target builds, but <emphasis>does not install</emphasis>, all possible ABI/ISA combinations for the target platform. Thus, it provides functionality that could also be called '<literal>buildworld-all-abi</literal>', but the length of such a target's name is unwieldy.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>debug</term>
                   <listitem>
                      <para>Build only the debugging version of the library binaries (both static and dynamic). In other words, the libraries are built so that debugging symbols are turned on. It is the combination of '<literal>dbg</literal>' and '<literal>ddso</literal>' (see below). <emphasis>This is the default target and is what gets built if running <command>make</command> with no arguments.</emphasis></para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>optim</term>
                   <listitem>
                      <para>Build only the optimized version of the library binaries (both static and dynamic). This is built with no debugging symbols at all. It is the combination of '<literal>opt</literal>' and '<literal>dso</literal>'.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>dbg</term>
                   <listitem>
                      <para>Build only the <emphasis>static</emphasis> debugging version of the libraries. This does the same thing as '<literal>debug</literal>' but does not compile the dynamic libraries.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
-                  <term>ddso</term>
+                  <term>dbg-dso</term>
                   <listitem>
                      <para>Build only the <emphasis>dynamic</emphasis> debugging version of the libraries. This does the same thing as '<literal>debug</literal>' but does not compile the static libraries.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>opt</term>
                   <listitem>
                      <para>Build only the <emphasis>static</emphasis> optimized version of the libraries. This does the same thing as '<literal>optim</literal>' but does not compile the dynamic libraries.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
-                  <term>dso</term>
+                  <term>opt-dso</term>
                   <listitem>
                      <para>Build only the <emphasis>dynamic</emphasis> optimized version of the libraries. This does the same thing as '<literal>optim</literal>' but does not compile the static libraries.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>gui</term>
                   <listitem>
                      <para>Compile the VjControl Java files and collect them into <filename>VjControl.jar</filename>. This is only done if the configure script found a working Java compiler during its phase of the compile process.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>links</term>
                   <listitem>
                      <para>Set up the developer pseudo-installation environment. More detail is given on this subject below in <xref linkend="instlinks-sect"/>.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>clean</term>
                   <listitem>
                      <para>Clean up everything in the build environment. This uses a '<literal>clean</literal>' target defined in <filename>Makefile.base</filename> that is automatically shared by all makefiles that include that file. The cleaning process is recursive just as the build process is. Each makefile defines which files are safe for cleaning, but generally core files, compiler-generated files and object files are the only things removed during this process.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>cleandepend</term>
                   <listitem>
                      <para>Clean up the automatically generated dependency files (the <filename>.d</filename> files in each directory). This method for cleaning up deletes only these files and nothing else--ever.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>clean-links</term>
                   <listitem>
                      <para>Remove the developer pseudo-installation environment. More detail is given on this subject in <xref linkend="instlinks-sect"/>.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>clobber</term>
                   <listitem>
                      <para>Clean up (clobber) the entire build environment except what was generated by <command>configure</command>. This runs the previous clean-up targets and removes the object directory(ies) and <filename>lib</filename> directory(ies). Its purpose is to totally reset the build environment to its state just prior to running <command>configure</command>.</para>
                   </listitem>
                </varlistentry>
-            </variablelist>
-            <variablelist>
                <varlistentry>
                   <term>info</term>
                   <listitem>
