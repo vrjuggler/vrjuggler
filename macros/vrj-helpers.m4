@@ -307,12 +307,16 @@ AC_DEFUN(VJ_APP_LINKER,
             APP_lINK="$1"
         fi
 
+        APP_LINK_FLAGS="$2"
+
         for lib in $4 ; do
             APP_BASIC_LIBS="$APP_BASIC_LIBS ${lib}.lib"
         done
 
         APP_BASIC_LIBS_BEGIN="-libpath:\$($3)/lib/debug"
         APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
+
+        APP_EXTRA_LIBS="$5"
     fi
 
     AC_SUBST(APP_LINK)
