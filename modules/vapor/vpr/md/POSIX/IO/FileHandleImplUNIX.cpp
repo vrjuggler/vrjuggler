@@ -43,8 +43,9 @@
 #include <sys/file.h>
 #endif
 
-#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/IO/Selector.h>
+#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
 
 
 extern int errno;
@@ -501,6 +502,62 @@ FileHandleUNIX::getFlags () {
 int
 FileHandleUNIX::setFlags (const int flags) {
     return fcntl(m_fdesc, F_SETFL, flags);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+bool
+FileHandleUNIX::isReadable (const vpr::Interval timeout) {
+    bool ready;
+
+    ready = true;
+
+    if ( timeout == vpr::Interval::NoTimeout ) {
+        vpr::Selector selector;
+        vpr::IOSys::Handle handle;
+        vpr::Uint16 num_events;
+
+        handle = getHandle();
+        selector.addHandle(handle);
+        selector.setIn(handle, vpr::Selector::VPR_READ);
+
+        if ( selector.select(num_events, timeout).success() ) {
+            ready = (num_events == 1);
+        }
+        else {
+            ready = false;
+        }
+    }
+
+    return ready;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+bool
+FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
+    bool ready;
+
+    ready = false;
+
+    if ( timeout == vpr::Interval::NoTimeout ) {
+        vpr::Selector selector;
+        vpr::IOSys::Handle handle;
+        vpr::Uint16 num_events;
+
+        handle = getHandle();
+        selector.addHandle(handle);
+        selector.setIn(handle, vpr::Selector::VPR_WRITE);
+
+        if ( selector.select(num_events, timeout).success() ) {
+            ready = (num_events == 1);
+        }
+        else {
+            ready = false;
+        }
+    }
+
+    return ready;
 }
 
 }; // End of vpr namespace

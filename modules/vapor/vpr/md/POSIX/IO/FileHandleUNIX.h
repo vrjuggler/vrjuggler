@@ -38,6 +38,7 @@
 #include <vector>
 
 #include <vpr/IO/FileHandle.h>
+#include <vpr/IO/IOSys.h>
 
 
 namespace vpr {
@@ -95,6 +96,14 @@ public:
     //+                  wrong.
     // ------------------------------------------------------------------------
     virtual Status close(void);
+
+    // ------------------------------------------------------------------------
+    //: Return the contained handle.
+    // ------------------------------------------------------------------------
+    inline IOSys::Handle
+    getHandle (void) {
+        return m_fdesc;
+    }
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is in blocking mode.
@@ -255,6 +264,14 @@ protected:
     //! RETURNS: -1 - The current flags could not be overwritten.
     // ------------------------------------------------------------------------
     int setFlags(const int flags);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    bool isReadable(const vpr::Interval timeout);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    bool isWriteable(const vpr::Interval timeout);
 
     int m_fdesc;    //: File descriptor
 };
