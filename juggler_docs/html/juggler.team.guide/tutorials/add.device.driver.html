@@ -1,0 +1,54 @@
+<head>
+</head>
+
+<body>
+<h2>How To Add a Device Driver To Juggler</h2>
+<p>
+First, decide what type of device you need to implement, there are a few to choose from:
+</P>
+<ul>
+   <li>vjDigital, vjSimDigital
+   <li>vjAnalog, vjSimAnalog
+   <li>vjPosition, vjSimPosition
+   <li>vjGlove, vjSimDigitalGlove, vjGloveGesture
+</ul>
+
+<p>
+Lets take a look at a digital device.  vjDigital derived devices give you 
+a boolean 0 or 1 value.
+</p>
+<pre>
+class MyDigitalDevice : public vjDigital
+{
+public:
+   virtual void startSampling();
+   virtual void stopSampling();
+   
+   virtual void sample();
+   virtual void getData();
+   
+private:
+   int mDigitalData;
+};
+
+void vjDigital::startSampling()
+{
+   // spawn a sample thread, which calls vjDigital::sample() repeatedly
+}
+   
+// this is called repeatedly by your thread
+void vjDigital::sample()
+{
+}
+
+virtual void stopSampling()
+{
+   // kill sample thread
+}
+
+int vjDigital::getData()
+{
+   return mDigitalData;
+}
+</pre>
+</body>

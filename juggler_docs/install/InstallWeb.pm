@@ -277,16 +277,18 @@ sub htmlFilter($)
    
    ################# search and replace (tags and includes) ##################
    #
-   if ($$file_contents =~ m/$ignore_includes_str/is)
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_includes_str\s*?$html_comment_end/is)
    {
+      print "[ignoring includes...]";
    }
    else
    { 
       processIncludesRecursive( $file_contents );
    }
    
-   if ($$file_contents =~ m/$ignore_tags_str/is)
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_tags_str\s*?$html_comment_end/is)
    {
+      print "[ignoring tags...]";
    }
    else
    { 
@@ -302,7 +304,7 @@ sub htmlFilter($)
    # ----------- HEADER INSERT ----------- #
    # Insert header
    # Look for <BODY> and put it right after that
-   if ($$file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE HEADER ####
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_header_str\s*?$html_comment_end/is)  ### Check for IGNORE HEADER ####
    {
       print "[ignoring header...]";
    }
@@ -314,7 +316,7 @@ sub htmlFilter($)
    # ----------- CSS HEADER INSERT ----------- #
    # if there is </head> then insert before it
    # if not, then look for <html> and insert after it with <head>...</head> around it
-   if ($$file_contents =~ m/$ignore_css_str/is)  ### Check for IGNORE HEADER ####
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_css_str\s*?$html_comment_end/is)  ### Check for IGNORE HEADER ####
    {
       print "[ignoring stylesheet...]";
    }
@@ -342,7 +344,7 @@ sub htmlFilter($)
    # ----------- FOOTER INSERT ----------- #
    # Insert footer
    # Look for </BODY> and put it right before that
-   if ($$file_contents =~ m/$ignore_footer_str/is)  ### Check for IGNORE FOOTER ####
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_footer_str\s*?$html_comment_end/is)  ### Check for IGNORE FOOTER ####
    {
       print "[ignoring footer...]";
    }
@@ -364,16 +366,18 @@ sub htmlFilter($)
    
    ################# search and replace (tags and includes) ##################
    #
-   if ($$file_contents =~ m/$ignore_includes_str/is)
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_includes_str\s*?$html_comment_end/is)
    {
+      print "[ignoring includes...]";
    }
    else
    { 
       processIncludesRecursive( $file_contents );
    }
    
-   if ($$file_contents =~ m/$ignore_tags_str/is)
+   if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_tags_str\s*?$html_comment_end/is)
    {
+      print "[ignoring tags...]";
    }
    else
    { 
