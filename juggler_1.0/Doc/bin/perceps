@@ -1069,6 +1069,14 @@ sub GENTEXT {
               (($arg[1] eq "hasinlines") && $hasinlines{$cname})  ||
               (($arg[1] eq "abstract") && $isabstract{$cname})  ||
               (($arg[1] eq "pure") && $mname && $ispure{$mloc,$mnm})  ||
+	      ( ("$arg[1]" eq "mpublic") && $mname &&
+	        ispublic("$cname", "$mname") ) ||
+	      ( ("$arg[1]" eq "mprivate") && $mname &&
+	        isprivate("$cname", "$mname") ) ||
+	      ( ("$arg[1]" eq "mprotected") && $mname &&
+	        isprotected("$cname", "$mname") ) ||
+	      ( ("$arg[1]" eq "mfriend") && $mname &&
+	        isfriend("$cname", "$mname") ) ||
               ($mname && ${"$var_name"}{"$mloc","$mnm"})  ||
               (!$mname && ${"$var_name"}{"$cname"})  ||
               ($curglob && ($arg[1] eq $curglob) && $curglobval{$curglob})){
@@ -1908,7 +1916,7 @@ sub PROCCLASS {
       }
     }
   }
-     
+
   if ($modtime>$modtime{$classname}) { $modtime{$classname}=$modtime; }
     
   if (!$nest) {
@@ -2814,4 +2822,72 @@ sub mkLastBuildFile {
   print LBT "Last Build $buildtime";
 
   close (LBT) or warn "ERROR: Could not save $lastbuildFile: $!\n";
+}
+
+sub ispublic ($$) {
+  my $class_name = shift;
+  my $mname = shift;
+
+  # Get the list of private members in $class_name.
+  my (@pub_members) = split($;, $members{"$class_name", 'public'});
+
+  # Get the name of the member in question.
+  my $member_name = (split($;, "$mname"))[1];
+
+  foreach ( @pub_members ) {
+    return 1 if "$_" eq "$member_name";
+  }
+
+  return 0;
+}
+
+sub isprotected ($$) {
+  my $class_name = shift;
+  my $mname = shift;
+
+  # Get the list of private members in $class_name.
+  my (@prot_members) = split($;, $members{"$class_name", 'protected'});
+
+  # Get the name of the member in question.
+  my $member_name = (split($;, "$mname"))[1];
+
+  foreach ( @prot_members ) {
+    return 1 if "$_" eq "$member_name";
+  }
+
+  return 0;
+}
+
+sub isprivate ($$) {
+  my $class_name = shift;
+  my $mname = shift;
+
+  # Get the list of private members in $class_name.
+  my (@priv_members) = split($;, $members{"$class_name", 'private'});
+
+  # Get the name of the member in question.
+  my $member_name = (split($;, "$mname"))[1];
+
+  foreach ( @priv_members ) {
+    return 1 if "$_" eq "$member_name";
+  }
+
+  return 0;
+}
+
+sub isfriend ($$) {
+  my $class_name = shift;
+  my $mname = shift;
+
+  # Get the list of private members in $class_name.
+  my (@friend_members) = split($;, $members{"$class_name", 'friend'});
+
+  # Get the name of the member in question.
+  my $member_name = (split($;, "$mname"))[1];
+
+  foreach ( @friend_members ) {
+    return 1 if "$_" eq "$member_name";
+  }
+
+  return 0;
 }
