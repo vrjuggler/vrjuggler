@@ -53,7 +53,7 @@ VjControl.jar: ${VJCONFIG_OBJS} ${VJPERF_OBJS} ${VJGUI_OBJS} ${VJGUICHUNKDESC_OB
             VjConfig/*.class VjPerf/*.class VjFiles
 
 VjFiles:
-	${scriptdir}/install-dir.pl -i ${srcdir}/VjFiles		\
+	${PERL} ${scriptdir}/install-dir.pl -i ${srcdir}/VjFiles	\
             -o ${topdir}/GUI/VjFiles
 
 VjPerf/%.class: %.java

@@ -872,13 +872,13 @@ install-test:
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
-	${scriptdir}/install-src.pl -i ${top_srcdir}/test		\
+	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
-	${scriptdir}/makefiles-gen.pl --CXX="${CXX}" --DEFS="${DEFS}"	\
-          --CPPFLAGS="${CPPFLAGS}" --CXXFLAGS="${CXXFLAGS}" 		\
-          --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test" 	\
-          --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
-          --gname="${_GROUP_NAME}" --srcdir="."				\
+	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
+          --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
+          --CXXFLAGS="${CXXFLAGS}" --INCLUDES="@INCLUDES@"		\
+          --startdir="${top_srcdir}/test"  --SUBDIRS="${TEST_SUBDIRS}"	\
+          --mode="${_FILE_PERMS}" --gname="${_GROUP_NAME}" --srcdir="."	\
           --prefix="${prefix}/test"					\
           --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
           --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
@@ -894,7 +894,7 @@ install-data:
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
-	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data		\
+	${PERL} ${scriptdir}/install-dir.pl -i ${top_srcdir}/Data	\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/Data
 
 # Install the Java-based config editor if possible.
@@ -904,7 +904,7 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
-	swingpath=`${scriptdir}/find-swing.pl` ;			\
+	swingpath=`${PERL} ${scriptdir}/find-swing.pl` ;		\
           ${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}		\
           $$swingpath ${bindir}
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\

@@ -1,5 +1,4 @@
 chmod +x config.guess
 chmod +x config.sub
 chmod +x install-sh
-chmod +x release/scripts/*.pl
 chmod +x GUI/vjcontrol
