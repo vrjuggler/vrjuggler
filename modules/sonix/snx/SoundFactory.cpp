@@ -71,7 +71,7 @@ void SoundFactory::createImplementation( const std::string& apiName,
       mImplementation = new snx::StubSoundImplementation;
    }
    
-   mImplementation->setName( apiName );
+   //mImplementation->setName( apiName );
 }
 
 }; // end namespace
