@@ -47,6 +47,7 @@
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjProxy.h>
 #include <Math/vjMatrix.h>
+#include <Input/Filter/vjPosFilter.h>
 
 //-----------------------------------------------------------------------
 //: A proxy class to positional devices, used by the vjInputManager.
@@ -62,7 +63,7 @@
 class vjPosProxy : public vjMemory, public vjProxy
 {
 public:
-   vjPosProxy() : m_posPtr(NULL), m_unitNum(-1), etrans(false)
+   vjPosProxy() : mPosPtr(NULL), mUnitNum(-1), mETrans(false), mFilter(NULL)
    {;}
 
    virtual ~vjPosProxy() {}
@@ -71,16 +72,22 @@ public:
    //: Update the proxy's copy of the data
    // Copy the device data to local storage, and transform it if necessary
    void updateData() {
-      m_posData = *(m_posPtr->getPosData(m_unitNum));
-      m_posUpdateTime = *(m_posPtr->getPosUpdateTime(m_unitNum));
+      mPosData = *(mPosPtr->getPosData(mUnitNum));
+      mPosUpdateTime = *(mPosPtr->getPosUpdateTime(mUnitNum));
 
-      if(etrans)
+      if(mETrans)
          transformData();
+
+      // Filter the data if there is an active filters
+      if(mFilter != NULL)
+      {
+         mPosData = mFilter->getPos(mPosData);
+      }
    }
 
     //: returns time of last update...
     vjTimeStamp* getUpdateTime () {
-   return &m_posUpdateTime;
+   return &mPosUpdateTime;
     }
 
 
@@ -98,29 +105,29 @@ public:
 
    //: Get the data
    vjMatrix* getData()
-   { return &m_posData; }
+   { return &mPosData; }
 
    //: Return this device's subunit number
    int getUnit()
-   { return m_unitNum; }
+   { return mUnitNum; }
 
    //: Return the vjPosition pointer held by this proxy
    vjPosition* getPositionPtr()
-   { return m_posPtr; }
+   { return mPosPtr; }
 
    //: Get the transform being using by this proxy
    vjMatrix& getTransform()
-   { return m_matrixTransform; }
+   { return mMatrixTransform; }
 
 
-   //: Transform the data in m_posData
-   //! PRE: m_posData needs to have most recent data
-   //! POST: m_posData is transformed by the xform matrix
-   //+       m_posData = old(m_posData).post(xformMatrix)
+   //: Transform the data in mPosData
+   //! PRE: mPosData needs to have most recent data
+   //! POST: mPosData is transformed by the xform matrix
+   //+       mPosData = old(mPosData).post(xformMatrix)
    //!NOTE: This moves the wMr to the modifed reciever system wMmr
    //+  where w = world, mr = world of the reciever, and r = reciever
    void transformData()
-   { m_posData.postMult(m_matrixTransform); }
+   { mPosData.postMult(mMatrixTransform); }
 
    static std::string getChunkType() { return "PosProxy"; }
 
@@ -128,18 +135,19 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(m_posPtr);
+      vjInput* ret_val = dynamic_cast<vjInput*>(mPosPtr);
       vjASSERT(ret_val != NULL);
       return ret_val;
    }
 
 private:
-   vjMatrix     m_posData;
-   vjTimeStamp  m_posUpdateTime;
-   vjMatrix     m_matrixTransform;        // reciever_t_modifiedReciever
-   vjPosition*  m_posPtr;                 // Ptr to the position device
-   int          m_unitNum;
-   bool         etrans;
+   vjMatrix       mPosData;
+   vjTimeStamp    mPosUpdateTime;
+   vjMatrix       mMatrixTransform;        // reciever_t_modifiedReciever
+   vjPosition*    mPosPtr;                 // Ptr to the position device
+   int            mUnitNum;
+   bool           mETrans;                // Are transformation enabled;
+   vjPosFilter*   mFilter;                // A possible position filter to use
 };
 
 #endif
