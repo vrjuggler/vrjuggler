@@ -48,7 +48,6 @@
 #include <Threads/vjThreadFunctor.h>
 
 
-vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 vjThreadKeyPosix           vjThreadPosix::mThreadIdKey(NULL);
 
 typedef struct sched_param sched_param_t;
@@ -62,7 +61,7 @@ typedef struct sched_param sched_param_t;
 // ---------------------------------------------------------------------------
 vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
                               u_int priority, void* stack_addr,
-                              size_t stack_size) 
+                              size_t stack_size)
 {
    mUserThreadFunctor = NULL;
    vjThreadManager* vj_tm_inst;
@@ -133,7 +132,6 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
 vjThreadPosix::~vjThreadPosix (void) {
     int status;
 
-    mThreadTable.removeThread(hash());
     delete mUserThreadFunctor;
 
     status = 0;
@@ -168,7 +166,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
         }
 #   endif   /* _POSIX_THREAD_REALTIME_SCHEDULING */
 
-#else	/* ! _PTHREADS_DRAFT_4 */
+#else /* ! _PTHREADS_DRAFT_4 */
     sched_param_t prio_param;
 
     pthread_attr_init(&thread_attrs);
@@ -192,7 +190,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
         if ( capabilities->cap_effective & CAP_SCHED_MGT ) {
             mScope = PTHREAD_SCOPE_SYSTEM;
         }
-#   endif	/* HAVE_SYS_CAPABILITY_H */
+#   endif   /* HAVE_SYS_CAPABILITY_H */
 
         pthread_attr_setscope(&thread_attrs, mScope);
 
@@ -240,7 +238,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
  * PRE: Called ONLY by a new thread
  * POST: Do any thread registration necessary
  *       Call the user thread functor
- * 
+ *
  * @param null_param
  */
 void vjThreadPosix::startThread(void* null_param)
@@ -249,9 +247,8 @@ void vjThreadPosix::startThread(void* null_param)
    // TELL EVERYONE THAT WE LIVE!!!!
    vjThreadManager::instance()->lock();      // Lock manager
    {
-      mThreadTable.addThread(this, hash());      // Store way to look me up
-      mThreadIdKey.setspecific((void*)this);     // Store the pointer to me 
-      registerThread(true);  
+      mThreadIdKey.setspecific((void*)this);     // Store the pointer to me
+      registerThread(true);
    }
    vjThreadManager::instance()->unlock();
 
@@ -310,16 +307,6 @@ vjThreadPosix::self (void)
 {
    vjBaseThread* my_thread;
    mThreadIdKey.getspecific((void**)&my_thread);
-   
-   /*
-   vjBaseThread* old_thread_id = mThreadTable.getThread(gettid());
-   if (my_thread != old_thread_id)
-   {
-      cout << "FATAL ERROR: vjThreadPosix::self: Incorrect self.\n" << flush;
-      cout << "old: " << (void*)old_thread_id << " new:" << (void*)my_thread << endl << flush;
-      exit(1);
-   }
-   */
 
    return my_thread;
 }
@@ -341,13 +328,15 @@ vjThreadPosix::self (void)
 //
 //! ARGS: status - The integer status returned by spawn().
 // ---------------------------------------------------------------------------
+/*
 void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
        mThreadTable.addThread(this, hash());      // Store way to look me up
-       mThreadIdKey.setspecific((void*)this);     // Store the pointer to me 
-       registerThread(true);       
+       mThreadIdKey.setspecific((void*)this);     // Store the pointer to me
+       registerThread(true);
     } else {
         registerThread(false);   // Failed to create
     }
 }
+*/
