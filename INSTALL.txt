@@ -219,12 +219,14 @@ Compiling
 
    3. Configure all the modules making up VR Juggler. This is when you must
        tell the module configure scripts where all the package dependencies
-       are found. For this description, we will use the term <JUGGLER PATH>
-       to refer to the base of the Juggler Project source tree and <JDOMPATH>
-       to refer to the JDOM installation. Assume that both of these are
-       absolute paths (e.g., <JUGGLERPATH> = /home/user1/Source/juggler).
+       are found. For this description, we will use the term <JDOMPATH> to
+       refer to the JDOM installation. Assume that this is an absolute path
+       (e.g., <JDOMPATH> = /home/user1/pkgs/jdomm).
 
- ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-cppdomroot=<JUGGLERPATH>/external/cppdom --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
+ ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
+
+       On Win32, remember that the path is given as the full DOS drive path,
+       but / should be used instead of \ as the path separator.
 
    4. Compile the source tree using GNU make.
 
@@ -293,7 +295,7 @@ Compiling
    1. mkdir build.jccl
  cd build.jccl
 
-   2. ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-cppdomroot=<JUGGLERPATH>/external/cppdom --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
+   2. ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
 
    3. gmake debug install
 
@@ -308,7 +310,7 @@ Compiling
    1. mkdir build.gadgeteer
  cd build.gadgeteer
 
-   2. ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-cppdomroot=<JUGGLERPATH>/external/cppdom --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOM PATH>/lib/xerces.jar"
+   2. ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
 
    3. gmake debug install
 
