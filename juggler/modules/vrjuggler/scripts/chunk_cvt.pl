@@ -58,6 +58,7 @@ if ( $opt_i && $opt_o )
       open(OUTPUT, "> $opt_o")
          or die "ERROR: Could not create new output file $opt_o: $!\n";
 
+      print OUTPUT "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
       print OUTPUT "<ConfigChunkDB>\n";
 
       my (@chunk_types) = ();
