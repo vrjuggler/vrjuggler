@@ -121,8 +121,11 @@ ifdef GLOBAL_BUILD
 	cp $(JARS) $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin
 endif
 
-Observer.java: Observer.idl
-	$(JAVA_IDL) $(JAVA_IDL_OPTS) -fserver $(JAVA_IDL_INCLUDES) $<
+Subject.java: Subject.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
+
+SubjectManager.java: SubjectManager.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
 
 Tweek.jar: $(TWEEK_CLASSES)
 	$(JAR) cvf $@ $(TWEEK_CLASSES)
