@@ -38,6 +38,7 @@
 #include <vrj/Util/Debug.h>
 #include <gadget/Type/PositionInterface.h>
 
+
 namespace vrj
 {
 
@@ -49,8 +50,6 @@ class Matrix;
  * This class behaves the same as the SurfaceProjection class except that it is
  * tracked.  This means that all parameters are relative to a tracked (moving)
  * frame of reference.
- *
- * @date 10-5-97
  */
 class TrackedSurfaceProjection : public SurfaceProjection
 {
@@ -66,13 +65,8 @@ public:
                     float toTop, float toBottom, std::string tracker_name)
       : SurfaceProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
    {
-      // --- Backup some parameters --- //
-      mOriginToScreen_bak = toScr;
-      mOriginToRight_bak = toRight;
-      mOriginToLeft_bak = toLeft;
-      mOriginToTop_bak = toTop;
-      mOriginToBottom_bak = toBottom;
-      mWallRotationMatrix_bak = surfaceRot;
+      // -- Save the relative transformation
+      m_surftrans_M_surf = surfaceRot;
 
       //XXX: Watch for timing problems here if trakcer is not inited first.
       //     It shoulbe be though from dependency checking
@@ -92,27 +86,30 @@ public:
     * @pre scaleFactor is the scale current used
     * @post frustum has been recomputed for given eyePos.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor)
-   {
-      updateWallParams();
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor);
 
-      calcViewFrustum(eyePos, scaleFactor);
-
-      // We don't need to postTrans like in non-tracked projection
-      // because the wall position is already in mWallRotationMatrix
-      //**//mViewMat = mWallRotationMatrix;
-   }
-
-   void updateWallParams();
+   /** Update the parameters of the tracked surface */
+   void updateSurfaceParams(const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out);
 
 private:
+   /* coord system notes
+   *
+   * new base_M_surface' =  base_M_surftrans * surftrans_M_surf
+   *
+   * note: surftrans_M_surf = initial base_M_surf
+   */
    // ---- Original parameters ------/
-   gmtl::Matrix44f   mWallRotationMatrix_bak;    /**< Rotation of the screen */
-   // Screen configuration
-   float mOriginToScreen_bak, mOriginToRight_bak, mOriginToLeft_bak, mOriginToTop_bak, mOriginToBottom_bak;
+   /** Rotation of the screen from base
+   */
+   gmtl::Matrix44f   m_surftrans_M_surf;
 
+
+   /** Tracker connected to the surface.
+   * The surface coordinate system is relative to this tracker
+   * base_M_surfacetrans
+   */
    gadget::PositionInterface    mTracker;
 };
 
