@@ -11,6 +11,7 @@ default: echo_info $(PROJECT_NAME)
 srcdir		= @srcdir@
 topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
+basedir		= @APP_BASE_DIR@
 
 CXX		= @CXX@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
@@ -21,13 +22,12 @@ DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ $(INCLUDES)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
-INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
+INCLUDES	= @INCLUDES@ -I$(topdir) -I$(basedir)/include		\
                  -I$(srcdir) -I$(srcdir)/TestCases			\
                  -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
-LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) 		\
-                  -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)
+LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L$(basedir)/lib$(LIBBITSUF)
 LIBBITSUF	= @LIBBITSUF@
 LIBS		= @LIBS@ $(VPR_LIBS)
 MAKEDEPEND	= @MAKEDEPEND@
@@ -84,7 +84,7 @@ $(PROJECT_NAME): $(OBJS)
 echo_info:
 	@echo ""
 	@echo "Building $(PROJECT_NAME)"
-	@echo "Using VPR_BASE_DIR: $(VPR_BASE_DIR)"
+	@echo "Using VPR_BASE_DIR: $(basedir)"
 	@echo ""
 
 # Remove the compiled stuff from the system
