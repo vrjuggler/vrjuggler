@@ -29,6 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <jccl/jcclConfig.h>
+
 #include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 
 namespace jccl
@@ -47,7 +50,7 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer ()
 
 
 
-LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name, 
+LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name,
                                               int _mBufferCount)
 {
    mName = _name;
@@ -81,9 +84,10 @@ void LabeledPerfDataBuffer::setBufferSize (int n)
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
+void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  const std::string& index_name)
 {
+#ifdef USE_JCCL_PERF
    if (mWritePos == mReadBegin)
    {
       //std::cout << "lost something!!!" << std::endl;
@@ -92,13 +96,13 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
          mLost++;
          mLostLock.release();
       }
-      else 
+      else
       {
-         vprDEBUG(vprDBG_ALL,2) 
+         vprDEBUG(vprDBG_ALL,2)
             << "LabeledPerfDataBuffer: lock acquire "
             << "failed\n" << vprDEBUG_FLUSH;
       }
-      
+
       int tw = (mWritePos + mBufferCount - 1) % mBufferCount;
       mBuffer[tw].mCategory = &category;
       mBuffer[tw].mIndexString = &index_name;
@@ -113,13 +117,15 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
       mBuffer[mWritePos].mStamp.setNow();
       mWritePos = (mWritePos+1)%mBufferCount;
    }
+#endif
 }
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
+void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  char* index_name)
 {
+#ifdef USE_JCCL_PERF
    int tw;
 
    if (PerformanceCategories::instance()->isCategoryActive (category))
@@ -131,9 +137,9 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
             mLost++;
             mLostLock.release();
          }
-         else 
+         else
          {
-            vprDEBUG(vprDBG_ALL,2) 
+            vprDEBUG(vprDBG_ALL,2)
                << "LabeledPerfDataBuffer: lock acquire "
                << "failed\n" << vprDEBUG_FLUSH;
          }
@@ -151,15 +157,17 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
          mBuffer[mWritePos].mStamp.setNow();
          mWritePos = (mWritePos+1)%mBufferCount;
       }
-   }  
+   }
+#endif
 }
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
+void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  const std::string& index_name,
                                  vpr::Interval& value)
 {
+#ifdef USE_JCCL_PERF
    int tw;
 
    if (PerformanceCategories::instance()->isCategoryActive (category))
@@ -173,7 +181,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
          }
          else
          {
-            vprDEBUG(vprDBG_ALL,2) 
+            vprDEBUG(vprDBG_ALL,2)
                << "LabeledPerfDataBuffer: lock acquire "
                << "failed\n" << vprDEBUG_FLUSH;
          }
@@ -192,14 +200,16 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
          mWritePos = (mWritePos+1)%mBufferCount;
       }
    }
+#endif
 }
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
+void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  char* index_name,
                                  vpr::Interval& value)
 {
+#ifdef USE_JCCL_PERF
    int tw;
 
    if (PerformanceCategories::instance()->isCategoryActive (category))
@@ -214,7 +224,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
          }
          else
          {
-            vprDEBUG(vprDBG_ALL,2) 
+            vprDEBUG(vprDBG_ALL,2)
                << "LabeledPerfDataBuffer: lock acquire "
                << "failed\n" << vprDEBUG_FLUSH;
          }
@@ -233,6 +243,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
          mWritePos = (mWritePos+1)%mBufferCount;
       }
    }
+#endif
 }
 
 
@@ -248,7 +259,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
 //                  mLostLock.release();
 //              }
 //              else
-//                  vprDEBUG(vprDBG_ALL,2) 
+//                  vprDEBUG(vprDBG_ALL,2)
 //                      << "LabeledPerfDataBuffer: lock acquire "
 //                      << "failed\n" << vprDEBUG_FLUSH;
 //              tw = (mWritePos + mBufferCount - 1) % mBufferCount;
@@ -291,17 +302,17 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad)
    // case is for.
    int begin, end, i, tlost;
    BufEntry* b;
-   
+
    //out.width(13);
-   
+
    begin = mReadBegin;
    end = (mWritePos - 1 + mBufferCount)%mBufferCount;
 //     //cout << "begin/end are " << begin <<' '<< end << endl;
-   if (begin == end) 
+   if (begin == end)
    {
       return;
    }
-   
+
    out << pad << "<labeledbuffer name=\"" << mName << "\" >\n";
 
    if (begin < end)
@@ -310,13 +321,13 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad)
       {
          b = &(mBuffer[i]);
          out << pad << pad << "<stamp label=\"";
-         if (b->mIndexString) 
+         if (b->mIndexString)
          {
             out << b->mIndexString;
          }
          else
          {
-            if (b->mIndexCString) 
+            if (b->mIndexCString)
             {
                out << b->mIndexCString;
             }
@@ -332,7 +343,7 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad)
       {
          b = &(mBuffer[i]);
          out << pad << pad << "<stamp label=\"";
-         if (b->mIndexString) 
+         if (b->mIndexString)
          {
             out << b->mIndexString;
          }
@@ -349,35 +360,35 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad)
       {
          b = &(mBuffer[i]);
          out << pad << pad << "<stamp label=\"";
-         if (b->mIndexString) 
+         if (b->mIndexString)
          {
             out << b->mIndexString;
          }
          else
          {
-            if (b->mIndexCString) 
+            if (b->mIndexCString)
             {
                out << b->mIndexCString;
             }
-            
+
          }
          out << "\" time=\""
              << std::setiosflags(std::ios::fixed) << b->mStamp.usec() << "\" />\n";
       }
    }
-	
+
    mLostLock.acquire();
    tlost = mLost;
    mLost = 0;
    mLostLock.release();
    mReadBegin = end;
-   
+
    //out << -1 << ' ' << tlost << std::endl;
-   if (tlost > 0) 
+   if (tlost > 0)
    {
       out << pad << pad << "<lost num=\"" << tlost << "\" />\n";
    }
-   
+
    out << pad << "</labeledbuffer>\n";
 }
 
