@@ -52,17 +52,17 @@
     It is important to note that the same VR Juggler application can be
     run in simulator mode or in a full-scale VR system with <I>no
     modifications</I>.  What does change is the configuration files used
-    when starting the program.  In <TT>$VJ_BASE_DIR/Data/configFiles</TT>,
-    you can find many basic configuration files including those for
-    running in simulator using a mouse and keyboard to simulate VR input
-    devices and some example files based on those used for the VRAC C2
-    systems.  In the directory, you will see some files whose name
-    contains ``<TT>mixin</TT>''.  These are special files that provide a
-    specific capability not necessarily needed by all applications.  They
-    can be mixed in (hence the name) with other configuration files as
-    needed.  The configuration files found in the <TT>configFiles</TT>
-    directory will be referenced in the examples provided, so be sure you
-    know where they are.
+    when starting the program.  In
+    <TT>$VJ_BASE_DIR/share/Data/configFiles</TT>, you can find many basic
+    configuration files including those for running in simulator using a
+    mouse and keyboard to simulate VR input devices and some example
+    files based on those used for the VRAC C2 systems.  In the directory,
+    you will see some files whose name contains ``<TT>mixin</TT>''.  These
+    are special files that provide a specific capability not necessarily
+    needed by all applications.  They can be mixed in (hence the name)
+    with other configuration files as needed.  The configuration files
+    found in the <TT>configFiles</TT> directory will be referenced in the
+    examples provided, so be sure you know where they are.
   </P>
 
 <A NAME="reading"><H2>Required Reading</H2></A>
@@ -187,15 +187,15 @@
     path to the files.  VR Juggler does not have any logic (at this time)
     for defining a path that would contain configuration files.
     Beginning users will typically want to reference the example
-    configuration files in <TT>$VJ_BASE_DIR/Data/configFiles</TT>.  As
+    configuration files in <TT>$VJ_BASE_DIR/share/Data/configFiles</TT>.  As
     you get more comfortable with VR Juggler and its configuration
     system, you may want to make your own modified files and put them in
     the directory <TT>$HOME/.vjconfig</TT>.  To simplify running
     applications, you may want to make a shell script (or batch file as
     appropriate) that does all the work of passing configuration files
     and common command-line arguments.  For now, though, use the path
-    <TT>$VJ_BASE_DIR/Data/configFiles</TT> for each of the configuration
-    files you pass on the command line.
+    <TT>$VJ_BASE_DIR/share/Data/configFiles</TT> for each of the
+    configuration files you pass on the command line.
   </P>
 
   <P>
@@ -627,7 +627,7 @@
     gestures.  The mapping of the gesture numbers to actual hand positions
     is controlled by the ``training file'' for the sim glove.  The defaults
     training file is
-    <TT>$VJ_BASE_DIR/Data/gesture/simpleSimGestures.dat</TT>.
+    <TT>$VJ_BASE_DIR/share/Data/gesture/simpleSimGestures.dat</TT>.
   </P>
 
 <A NAME="analog"><H3>Using a Simulated Analog Device</H3></A>
@@ -739,7 +739,7 @@
 
   <P>
     The example configuration files in the directory
-    <TT>$VJ_BASE_DIR/Data/configFiles</TT> modeled after those used for
+    <TT>$VJ_BASE_DIR/share/Data/configFiles</TT> modeled after those used for
     VRAC's C2 system are as follows:
 
     <UL>
