@@ -34,6 +34,7 @@ public:
    */
    void process();
 
+public:
    /** @name Recording interface */
    //@{
    void startRecording();
@@ -44,11 +45,43 @@ public:
    void stampRecord();
    //@}
 
+public:
+   /** @name Playback interface */
+   //@{
+   /** Load a log file.
+   * @param logFilename - The name of the log file to load
+   */
+   void load(std::string logFilename);
+
+   /** Play the currently active log */
+   void play();
+
+   /** Stop playing a log */
+   void stop();
+
+   /** Pause log playback. */
+   void pause();
+
+   /** Get the stamp for the most recent sample
+   * @return Returns empty string if no active stamp.
+   */
+   std::string getStamp();
+   //@}
+
+public:
+   /** @name Query methods */
+   //@{
+   bool getState()
+   {  return mCurState; }
+   //@}
+
 protected:
    /** @name Internal helpers */
    //@{
 
    void addRecordingSample();
+
+   void playNextSample();
    //@}
 
 
@@ -68,6 +101,9 @@ private:
 
    cppdom::NodePtr   mRootNode;           /**< Root node of the data */
    std::string       mRecordingFilename;  /**< Filename to use for the recording */
+
+   cppdom::NodeListIterator   mNextSample_i;    /**< Iterator pointing to the next sample to play */
+   cppdom::NodeListIterator   mEndSample_i;     /**< The end of the sample list to play */
 
    gadget::DigitalInterface   mStartStopButton;    /**< Button for stopping and starting the logger */
    gadget::DigitalInterface   mStampButton;        /**< Button for setting a stamp */

@@ -11,6 +11,7 @@
 #include <fstream>
 
 #include <cppdom/cppdom.h>
+#include <stdio.h>
 
 /*
 
@@ -110,7 +111,7 @@ void InputLogger::process()
    }
    else if(Playing == mCurState)
    {
-
+      playNextSample();
    }
 }
 
@@ -151,7 +152,7 @@ void InputLogger::stopRecording()
    out_file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
    try
    {
-      std::ofstream out_file(mRecordingFilename.c_str());
+      out_file.open(mRecordingFilename.c_str());
       mRootNode->save(out_file);
       out_file.flush();
       out_file.close();
@@ -175,9 +176,12 @@ void InputLogger::stampRecord()
    vprASSERT(Recording == mCurState && "Tried to stamp input while not recording");
 
    // -- Get recording filename
+   char tag_name[1024];
    std::cout << "/n/n------- LOGGER ------\nEnter stamp id:" << std::flush;
    std::string stamp_id;
-   std::cin >> stamp_id;
+   //std::cin >> stamp_id;
+   scanf("%s", tag_name);
+   stamp_id = std::string(tag_name);
    std::cout << "\nStamping with: " << stamp_id << std::endl;
 
    cppdom::NodePtr stamp_node(new cppdom::Node("stamp", mRootNode->getContext()));
@@ -185,6 +189,90 @@ void InputLogger::stampRecord()
 
    mRootNode->addChild(stamp_node);
 }
+
+/** Load a log file.
+* @param logFilename - The name of the log file to load
+*/
+void InputLogger::load(std::string logFilename)
+{
+   vprASSERT(Inactive == mCurState && "Tried to load a file while logger is active");
+
+   std::cout << "InputLogger: Loading file: " << logFilename << std::endl;
+
+   // Create new root to read into
+   cppdom::ContextPtr ctx( new cppdom::Context );
+   mRootNode = cppdom::NodePtr(new cppdom::Node("not_set", ctx ));
+
+   std::ifstream in_file;
+   in_file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+   try
+   {
+      in_file.open(logFilename.c_str(), std::ios::in);
+      mRootNode->load(in_file, ctx);
+      in_file.close();
+   }
+   catch(std::ifstream::failure& se)
+   {
+      std::cerr << "IOS failure saving file: desc:" << se.what() << std::endl;
+      if(in_file.is_open())
+      {  in_file.close(); }
+   }
+   catch(...)
+   {
+      std::cerr << "Unknown error saving file." << std::endl;
+   }
+
+   std::cout << "InputLogger: Loaded file: num_children:" << mRootNode->getChildren().size() << std::endl;
+}
+
+/* Start playing
+*
+* - Set state to playing
+* - Find the first node is list
+* - Set the start and end nodes
+* - Clear the stamp
+*/
+void InputLogger::play()
+{
+   vprASSERT(mCurState == Inactive);
+
+   if(mRootNode.get() == NULL)
+   {
+      std::cout << "Logger::play: Null root node, so can't play.\n" << std::flush;
+      return;
+   }
+
+   mNextSample_i = mRootNode->getChildren().begin();
+   mEndSample_i = mRootNode->getChildren().end();
+   mActiveStamp.clear();
+
+   if(mNextSample_i == mEndSample_i)
+   {
+      std::cout << "Logger::play: Zero children, so can't play.\n" << std::flush;
+      return;
+   }
+
+   mCurState = Playing;
+}
+
+/** Stop playing a log */
+void InputLogger::stop()
+{;
+}
+
+/** Pause log playback. */
+void InputLogger::pause()
+{;
+}
+
+/** Get the stamp for the most recent sample
+* @return Returns empty string if no active stamp.
+*/
+std::string InputLogger::getStamp()
+{
+   return mActiveStamp;
+}
+
 
 /** Add a recording sample to the current dom tree
 *
@@ -235,6 +323,68 @@ void InputLogger::addRecordingSample()
    }
 }
 
+/*
+* - Get the node for the next sample
+* - For each device element
+*    - Get the device name
+*    - Get handle to that device from the input manager
+*    - Deserialize the device
+*
+* - Increment next sample
+* - If nextSample is a stamp element
+*    - Read and set the stamp
+*    - Increment next sample
+* - Else, clear the stamp
+*/
+void InputLogger::playNextSample()
+{
+   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, 0, "InputLogger::playNextSample", "done playing sample");
+
+   vprASSERT(mNextSample_i != mEndSample_i && "Overran the logger sample list");
+   gadget::InputManager* input_mgr = gadget::InputManager::instance();
+
+   cppdom::NodePtr next_node = (*mNextSample_i);
+   vprASSERT(next_node->getName() == std::string("sample") && "Didn't get element of name sample");
+
+   // For each device element
+   cppdom::NodeList dev_nodes = next_node->getChildren();
+   for(cppdom::NodeListIterator cur_dev_node=dev_nodes.begin(); cur_dev_node != dev_nodes.end(); ++cur_dev_node)
+   {
+      vprASSERT((*cur_dev_node)->getName() == std::string("device"));
+      std::string dev_name = (*cur_dev_node)->getAttribute("dev_name").getValue<std::string>();
+      cppdom::NodePtr serial_dev_node = *((*cur_dev_node)->getChildren().begin());
+      vprASSERT(serial_dev_node.get() != NULL && "Got null serialized device node");
+
+      gadget::Input* dev_ptr = input_mgr->getDevice(dev_name);
+      if(NULL != dev_ptr)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Reading device: " << dev_name << std::endl;
+
+         vpr::XMLObjectReader xml_reader(serial_dev_node);     // Create XML reader
+         dev_ptr->readObject(&xml_reader);                     // Deserialize the device
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Skipping device: [" << dev_name
+                                         << "]  Could not find it.\n" << vprDEBUG_FLUSH;
+      }
+   }
+
+   // Increment next sample
+   mNextSample_i++;
+   mActiveStamp.clear();      // Clear the stamp for now
+
+   if(mNextSample_i == mEndSample_i)   // If done playing
+   {
+      mCurState = Inactive;
+   }
+   else if( (*mNextSample_i)->getName() == std::string("stamp"))
+   {
+      mActiveStamp = (*mNextSample_i)->getAttribute("id").getValue<std::string>();
+      mNextSample_i++;
+   }
+
+}
 
 } // namespace gadget
 
