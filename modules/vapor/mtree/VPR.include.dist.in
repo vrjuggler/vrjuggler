@@ -42,6 +42,8 @@
                 ..
                 Socket
                 ..
+                Stats
+                ..
             ..
             Sync
             ..
