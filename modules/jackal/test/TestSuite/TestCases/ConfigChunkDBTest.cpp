@@ -32,6 +32,14 @@ void ConfigChunkDBTest::testDependencySort ()
    bool status;
    int result;
 
+   // Construct the known sorted list of dependencies.
+   std::vector<std::string> chunk_names;
+   chunk_names.push_back(std::string("DependentChunk1"));
+   chunk_names.push_back(std::string("DependentChunk2"));
+   chunk_names.push_back(std::string("Test Chunk 1"));
+   chunk_names.push_back(std::string("External Test Chunk 1"));
+   chunk_names.push_back(std::string("DependentChunk3"));
+
    // Load the test configuration file
    jccl::ConfigChunkDB chunkdb_start, chunkdb_dep;
    status = jccl::ChunkFactory::instance()->loadDescs(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.desc");
@@ -46,12 +54,34 @@ void ConfigChunkDBTest::testDependencySort ()
    result = chunkdb_dep.dependencySort(&chunkdb_start);
    CPPUNIT_ASSERT(result == 0 && "Dependency sort failed");
 
+   // This is pretty gross...
+   jccl::ConfigChunkDB::iterator i;
+   int j = 0;
+   for ( i = chunkdb_dep.begin(); i != chunkdb_dep.end(); ++i, ++j )
+   {
+      CPPUNIT_ASSERT((*i)->getName() == chunk_names[j] && "Incorrect dependency sort");
+   }
+}
+
+void ConfigChunkDBTest::testDependencySortFailure ()
+{
+   std::string file_path(TESTFILES_PATH);
+   bool status;
+   int result;
+
+   // Load the test configuration file
+   jccl::ConfigChunkDB chunkdb;
+   status = jccl::ChunkFactory::instance()->loadDescs(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.desc");
+   CPPUNIT_ASSERT(status && "Failed to load description file");
+
+   status = chunkdb.load(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.config");
+   CPPUNIT_ASSERT(status && "Failed to load config file with dependencies");
+
    // This dependency sort should fail because chunkdb_dep depends on chunks
    // in chunkdb_start.  Since it's suppoesd to fail, ignore warnings/errors
    // printed to the screen and focus on the result of the assertion.
-   result = chunkdb_dep.dependencySort(NULL);
+   result = chunkdb.dependencySort(NULL);
    CPPUNIT_ASSERT(result == -1 && "Dependency sort should have failed");
-
 }
 
 void ConfigChunkDBTest::testClear ()
