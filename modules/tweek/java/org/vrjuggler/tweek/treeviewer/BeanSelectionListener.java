@@ -53,9 +53,6 @@ import org.vrjuggler.tweek.beans.PanelBean;
  * used as the container for the BeanTree where the BeanTree is the left
  * member of the split pane.  The Beans are displayed in the right member.
  *
- * @version $Revision$
- * @since 1.0
- *
  * @see org.vrjuggler.tweek.treeviewer.BeanTree
  * @see org.vrjuggler.tweek.beans.PanelBean
  */

@@ -41,7 +41,7 @@ package org.vrjuggler.tweek.beans;
  * The interface that must be implemented by Beans that provide their own
  * preferences editors.
  *
- * @since 1.0
+ * @since 0.2.0
  */
 public interface BeanPreferences
 {

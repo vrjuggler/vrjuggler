@@ -38,7 +38,10 @@ package org.vrjuggler.tweek.beans;
 
 
 /**
- * @since 1.0
+ * Event type for Panel Bean focus changes within Bean viewers.
+ *
+ * @see BeanFocusChangeListener
+ * @see PanelBean
  */
 public class BeanFocusChangeEvent extends java.util.EventObject
 {

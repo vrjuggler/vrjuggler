@@ -38,7 +38,13 @@ package org.vrjuggler.tweek.event;
 
 
 /**
- * @since 1.0
+ * Interface to implement for Beans that wish to be informed when the user
+ * changes his or her preferred level of expertise.  Beans can use this
+ * information to display more or less information, for example.  To be a
+ * listener for user change events, Beans must implement this interface in
+ * their "main" class.
+ *
+ * @since 0.0.4
  */
 public interface UserLevelChangeListener extends java.util.EventListener
 {

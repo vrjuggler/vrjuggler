@@ -47,7 +47,13 @@ import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
 /**
- * @since 1.0
+ * Dialog box for editing the Tweek Java GUI "global" preferences.  Only the
+ * preferences known to the Global Preferences Service are editable through
+ * this dialog box.  Beans supporting preferences are edited through
+ * instances of <code>BeanPrefsDialog</code>
+ *
+ * @see BeanPrefsDialog
+ * @see org.vrjuggler.tweek.services.GlobalPreferencesService
  */
 public class PrefsDialog extends JDialog
 {

@@ -50,7 +50,7 @@ import org.vrjuggler.tweek.beans.BeanPreferences;
  * responsible for providing their own preferences editors--this class just
  * collects them into a single dialog box and presents it to the GUI user.
  *
- * @since 1.0
+ * @since 0.2.0
  */
 public class BeanPrefsDialog extends JDialog
 {

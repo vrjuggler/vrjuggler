@@ -40,7 +40,7 @@ package org.vrjuggler.tweek.beans;
 /**
  * The interface used to identify Beans as being able to provide help to users.
  *
- * @since 1.0
+ * @since 0.92.1
  */
 public interface HelpProvider
 {

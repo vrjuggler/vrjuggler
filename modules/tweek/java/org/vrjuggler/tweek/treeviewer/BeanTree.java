@@ -47,9 +47,6 @@ import org.vrjuggler.tweek.beans.BeanInstantiationListener;
  * listening for BeanInstantiationEvents.  Instances of this class always
  * use javax.swing.tree.DefaultTreeModel as their internal tree model.
  *
- * @version $Revision$
- * @since 1.0
- *
  * @see javax.swing.tree.DefaultTreeModel
  */
 public class BeanTree extends javax.swing.JTree

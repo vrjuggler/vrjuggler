@@ -62,7 +62,7 @@ import org.vrjuggler.tweek.net.corba.*;
 
 
 /**
- * @since 1.0
+ * The singleton entry point into the Tweek Java GUI.
  */
 public class TweekCore
    implements BeanInstantiationListener

@@ -43,8 +43,6 @@ import java.awt.*;
 /**
  * A subclass of JInternalFrame designed to simplify access to the contained
  * BeanIconPanel object.
- *
- * @since 1.0
  */
 public class InternalBeanFrame extends JInternalFrame
 {

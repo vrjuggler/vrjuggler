@@ -51,8 +51,6 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 /**
  * Presents the Bean hierarchy as icons in a style similar to a GUI's folder
  * view.
- *
- * @since 1.0
  */
 public class BeanIconViewer
    extends DefaultBeanModelViewer

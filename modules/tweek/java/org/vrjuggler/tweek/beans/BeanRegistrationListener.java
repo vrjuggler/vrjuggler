@@ -41,7 +41,7 @@ import java.util.EventListener;
  * Interface for objects interested in being informed when a TweekBean has been
  * registered with the BeanRegistry.
  *
- * @since 1.0
+ * @since 0.1.0
  */
 public interface BeanRegistrationListener
    extends EventListener

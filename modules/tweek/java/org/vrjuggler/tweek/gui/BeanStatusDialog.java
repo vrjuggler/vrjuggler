@@ -56,7 +56,7 @@ import org.vrjuggler.tweek.beans.*;
 
 
 /**
- * @since 1.0
+ * @since 0.16.0
  */
 public class BeanStatusDialog extends JDialog
 {

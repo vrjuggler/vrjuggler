@@ -38,7 +38,9 @@ package org.vrjuggler.tweek.beans;
 
 
 /**
- * @since 1.0
+ * Event type used when a Bean is instantiated.
+ *
+ * @see BeanInstantiationListener
  */
 public class BeanInstantiationEvent extends java.util.EventObject
 {

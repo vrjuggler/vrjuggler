@@ -43,8 +43,6 @@ import org.vrjuggler.tweek.beans.BeanRegistrationListener;
 /**
  * This class provides access to the global preferences for the entire base
  * system.  Access is granted through a singleton interface.
- *
- * @since 1.0
  */
 public interface GlobalPreferencesService
    extends BeanRegistrationListener
