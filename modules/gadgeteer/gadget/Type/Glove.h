@@ -115,7 +115,7 @@ public:
 //
 //-------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjGlove : virtual public vjInput
+class VJ_CLASS_API vjGlove : virtual public vjInput
 {
 public:
    vjGlove();

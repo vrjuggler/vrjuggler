@@ -58,7 +58,7 @@ class vjDisplay;
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //-----------------------------------------------------------------------------
-class vjDisplayManager : public vjConfigChunkHandler
+class VJ_CLASS_API vjDisplayManager : public vjConfigChunkHandler
 {
 public:     // --- Config stuff -- //
    //: Add the chunk to the configuration
@@ -155,6 +155,9 @@ protected:
 
    virtual ~vjDisplayManager()
    {;}
+
+   vjDisplayManager (const vjDisplayManager& o) {;}
+   void operator= (const vjDisplayManager& o) {;}
 
    vjSingletonHeader(vjDisplayManager);
 /*

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
+#include <vjConfig.h>
 #include <Kernel/vjProjection.h>
 
 float vjProjection::mNearDist = 0.1f;
@@ -85,7 +85,7 @@ std::ostream& vjProjection::outStream(std::ostream& out)
    return out;
 }
 
-std::ostream& operator<<(std::ostream& out, vjProjection& proj)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjProjection& proj)
 {
    return proj.outStream(out);
 }

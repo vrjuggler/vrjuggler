@@ -69,7 +69,7 @@
 // write() call.
 //
 //----------------------------------------------------------------
-class vjPerfDataBuffer: public vjTimedUpdate {
+class VJ_CLASS_API vjPerfDataBuffer: public vjTimedUpdate {
 
     struct buf_entry {
 
@@ -195,9 +195,11 @@ public:
     //: just empties out the buffer & throws away the data.
     void dumpData();
 
-    private:
+private:
     void init (const char* _name, int _numbufs, int _nindex);
    
+    vjPerfDataBuffer (const vjPerfDataBuffer& o) {;}
+    void operator= (const vjPerfDataBuffer& o) {;}
 };
 
 
