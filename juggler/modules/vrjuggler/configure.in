@@ -646,6 +646,9 @@ AC_OUTPUT(Makefile
           test/Matrix/Makefile
           test/Quat/Makefile
           test/TestSuite/Makefile
+          test/TestSuite/test.defs.mk
+          test/TestSuite/TestCases/Makefile
+          test/TestSuite/TestCases/Pf/Makefile
           tools/Makefile
           mtree/VJ.data.dist
           mtree/VJ.include.dist
