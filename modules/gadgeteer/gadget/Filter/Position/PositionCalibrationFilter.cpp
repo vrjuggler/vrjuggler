@@ -319,7 +319,7 @@ namespace gadget
       int ip(0);
       float sum(0.0f);
 
-      for (unsigned int i = 0; i < size; ++i) 
+      for (int i = 0; i < size; ++i) 
       {
          ip = permutation[i];
          sum = solution[ip];
@@ -337,10 +337,10 @@ namespace gadget
          }
          solution[i] = sum;
       }
-      for (unsigned int i = size - 1; i >= 0; --i)
+      for (int i = size - 1; i >= 0; --i)
       {
          sum = solution[i];
-         for (unsigned int j = i + 1; j < size; ++j)
+         for (int j = i + 1; j < size; ++j)
          {
             sum -= decomposedA[i][j] * solution[j];
          }
