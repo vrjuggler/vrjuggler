@@ -243,11 +243,17 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/vprConfig.h $(includedir)/vprConfig.h
+          $(VPRROOT_ABS)/include/vprConfig.h $(includedir)/vprConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vprDefines.h $(includedir)
+          $(VPRROOT_ABS)/include/vprTypes.h $(includedir)/vprTypes.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vprParam.h $(includedir)
+          $(VPRROOT_ABS)/include/System.h $(includedir)/System.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/include/SystemBase.h $(includedir)/SystemBase.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/include/vprDefines.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/include/vprParam.h $(includedir)
 
 # Install the test programs.
 install-test:
