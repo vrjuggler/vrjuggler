@@ -479,17 +479,13 @@ public class NetControl
 	}
 	for (int i = 0; i < l.size(); i++) {
 	    NetControlListener lis = (NetControlListener)l.elementAt (i);
-	    switch (e.event_type) {
-	    case e.OPENED:
+	    int a = e.event_type;
+	    if (a == e.OPENED)
 		lis.openedConnection (e);
-		break;
-	    case e.CLOSED:
+	    if (a == e.CLOSED)
 		lis.closedConnection (e);
-		break;
-	    case e.ADDRESS:
+	    if (a == e.ADDRESS)
 		lis.addressChanged (e);
-		break;
-	    }
 	}
     }
 
