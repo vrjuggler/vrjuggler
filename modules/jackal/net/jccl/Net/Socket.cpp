@@ -46,6 +46,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include <Environment/vjSockStream.h>
 
 const int vjSOCKID_INVALID = -1;
 
@@ -60,8 +61,10 @@ vjSocketPosix::vjSocketPosix() {
 
 vjSocketPosix::vjSocketPosix(vjSocketIDPosix id) {
     sockid = id;
-    out = new ofstream (id);
-    in = new ifstream (id);
+    //sockstreambuf* s = new sockstreambuf (id);
+    //s->doallocate();
+    out = new ostream (new sockstreambuf (id));
+    in = new istream (new sockstreambuf(id));
 }
 
 
@@ -69,6 +72,13 @@ vjSocketPosix::vjSocketPosix(vjSocketIDPosix id) {
 vjSocketPosix::~vjSocketPosix () {
     close();
 }
+
+
+
+//  std::string vjSocketPosix::getName () {
+//      std::string foo = sockid;
+//      return foo;
+//  }
 
 
 
@@ -136,6 +146,7 @@ vjSocketPosix* vjSocketPosix::accept () {
 /****************************** Winsock2 Version ***************************/
 
 #include <winsock2.h>
+#include <Environment/vjSockStream.h>
 
 
 const int vjSOCKID_INVALID = -1;
@@ -151,8 +162,11 @@ vjSocketWin32::vjSocketWin32() {
 
 vjSocketWin32::vjSocketWin32(vjSocketIDWin32& id) {
     sockid = id;
-    out = new ofstream (id);
-    in = new ifstream (id);
+//     sockstreambuf* buf = new sockstreambuf (id, new char[512], 512);
+//     out = new ofstream (buf);
+//     in = new ifstream (buf);
+    out = new ostream (new sockstreambuf (id));
+    in = new istream (new sockstreambuf(id));
 }
 
 
@@ -195,10 +209,11 @@ bool vjSocketWin32::listen (int port) {
         //cout<<"socketUtil: "<<error<<"\n"<<flush;
     }
 
+    u_long nInterfaceAddr = inet_addr("0.0.0.0");
     struct sockaddr_in sockaddress;
-    //bzero(&sockaddress, sizeof (struct sockaddr_in));
-    for (int j = 0; j < sizeof (struct sockaddr_in); j++)
-        *((char*)&sockaddress) = 0;
+//      for (int j = 0; j < sizeof (struct sockaddr_in); j++)
+//          *((char*)&sockaddress) = 0;
+    sockaddress.sin_addr.s_addr = nInterfaceAddr;
     sockaddress.sin_family = PF_INET;
     sockaddress.sin_port = htons(port);
 

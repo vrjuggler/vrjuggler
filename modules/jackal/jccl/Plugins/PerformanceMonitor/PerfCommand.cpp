@@ -94,10 +94,14 @@ vjCommandSendDescDB::vjCommandSendDescDB (vjChunkDescDB* _db, bool _all) {
     
 void vjCommandSendDescDB::call (ostream& out) {
     if (all)
-	out << "descriptions all\n";
+	out << "descriptions all\n" << flush;
     else
-	out << "descriptions\n";
+	out << "descriptions\n" << flush;
     out << *db << flush;
+}
+
+std::string vjCommandSendDescDB::getName () {
+    return (std::string)"Send DescDB command";
 }
 
 

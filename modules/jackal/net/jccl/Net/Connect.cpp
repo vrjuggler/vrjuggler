@@ -161,7 +161,7 @@ bool vjConnect::startProcess() {
 
 
 bool vjConnect::stopProcess() {
-    sendDisconnect();
+//      sendDisconnect();
     read_die = write_die = true;
     if (read_connect_thread) {
         read_connect_thread->kill();
@@ -175,9 +175,17 @@ bool vjConnect::stopProcess() {
         delete write_connect_thread;
         write_connect_thread = NULL;
     }
-    //outstream.close();
-    //instream.close();
-    //close(fd);
+    if (sock) {
+        delete (sock);
+    }
+    else {
+        delete outstream;
+        if (outstream != (void*)instream)
+            delete instream;
+    }
+    instream = 0;
+    outstream = 0;
+    sock = 0;
     return true;
 }
 
@@ -212,9 +220,9 @@ void vjConnect::sendRefresh () {
 //! ARGS: _refresh_time - time between refreshes, in milliseconds
 void vjConnect::addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
     if (mode != VJC_INPUT) {
-   commands_mutex.acquire();
-   timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
-   commands_mutex.release();
+        commands_mutex.acquire();
+        timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
+        commands_mutex.release();
     }
 }
 
@@ -269,11 +277,16 @@ void vjConnect::writeControlLoop(void* nullParam) {
     vjCommand*  cmd;
     write_alive = true;
 
+//              *outstream << "another test : ( \n" << flush;
+
     vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
                              << " started write control loop.\n"
                              << vjDEBUG_FLUSH;
 
     while (!write_die) {
+//          cout << "writing in write loop " << flush;
+//          *outstream << "yet another test : ( \n" << flush;
+//          cout << " -done\n" << flush;
 
         usleep (300000); // half a sec - find a better way to do this...
         if (!outstream)
@@ -284,10 +297,11 @@ void vjConnect::writeControlLoop(void* nullParam) {
         while (!commands.empty()) {
             cmd = commands.front();
             commands.pop();
-            cmd->call (*outstream);
-            vjDEBUG (vjDBG_ENV_MGR, 5) << "called EM command " 
+            vjDEBUG (vjDBG_ENV_MGR, 5) << "calling EM command " 
                                        << cmd->getName().c_str() 
-                                       << endl <<vjDEBUG_FLUSH;
+                                       <<vjDEBUG_FLUSH;
+            cmd->call (*outstream);
+            vjDEBUG (vjDBG_ENV_MGR, 5) << " -- done.\n" << vjDEBUG_FLUSH;
             delete cmd;
         }
 

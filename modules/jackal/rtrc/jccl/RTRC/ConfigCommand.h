@@ -91,6 +91,8 @@ public:
     vjCommandSendDescDB (vjChunkDescDB* _db, bool _all = false);
     
     virtual void call (ostream& out);
+
+    virtual std::string getName();
 };
 
 
