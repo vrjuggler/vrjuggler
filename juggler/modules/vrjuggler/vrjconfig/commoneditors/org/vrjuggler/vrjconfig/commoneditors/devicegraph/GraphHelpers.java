@@ -304,6 +304,56 @@ public abstract class GraphHelpers
    }
 
    /**
+    * Creates a new graph cell for the given config element that is used to
+    * configure a device proxy.  The parameters to use for creating the
+    * appropriate <code>DefaultGraphCell</code> (with its ports) are
+    * determined based on the type of the config element passed in.  This
+    * method is intended to be used for ensuring correct and easy graph cell
+    * creation for config elements used to configure proxies.  However, the
+    * config element type must be known <i>a priori</i> in order for this
+    * method to be able to do its job.
+    *
+    * @param proxyElt           the config element for the device proxy being
+    *                           represented by the vertex cell to be created
+    * @param context            the config context where <code>proxyElt</code>
+    *                           exists
+    * @param aliases            all the aliases (zero or more) that exist for
+    *                           <code>proxyElt</code>
+    * @param attributes         the attribute map where the vertex cell's
+    *                           default attribute map will be stored by this
+    *                           function
+    *
+    * @throws IllegalArgumentException
+    *   thrown when the type of <code>proxyElt</code> is unknown to this
+    *   method, thus preventing correct creation of a
+    *   <code>DefaultGraphCell</code> instance.
+    */
+   public static DefaultGraphCell createProxyCell(ConfigElement proxyElt,
+                                                  ConfigContext context,
+                                                  List aliases,
+                                                  Map attributes)
+   {
+      ConfigDefinition def = proxyElt.getDefinition();
+      DefaultGraphCell cell = null;
+
+      // XXX: Come up with a better system for setting the x and y values.
+      int x = 120, y = 20;
+
+      if ( def.isOfType(PROXY_TYPE) )
+      {
+         cell = createProxyCell(proxyElt, context, aliases, attributes, x, y,
+                                false);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Unexpected definition " +
+                                            def.getToken());
+      }
+
+      return cell;
+   }
+
+   /**
     * Creates a graph cell for a device proxy that has a single port as a
     * child.  The initial attribute map used for the graph cell is created
     * using
