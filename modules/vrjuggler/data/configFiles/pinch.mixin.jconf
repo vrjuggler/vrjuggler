@@ -138,8 +138,10 @@
          <sleep_time>0</sleep_time>
          <device_host />
       </event_window>
-      <input_manager name="Input Manager" version="1">
-         <driver>${VJ_BASE_DIR}/lib32/gadgeteer/drivers/PinchGlove_drv.so</driver>
+      <input_manager name="Input Manager" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
+         <driver>PinchGlove_drv</driver>
       </input_manager>
       <pinch_glove name="FakespacePinchGlove" version="1">
          <port>/dev/ttyd1</port>
