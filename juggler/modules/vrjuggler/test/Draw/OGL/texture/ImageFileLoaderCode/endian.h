@@ -63,17 +63,5 @@ namespace kev
    {
       return !littleEndian();
    }   
-
-   // Linear Interpolation
-   template<class DataType>
-   inline void Lerp(const DataType& from, 
-		   const DataType& to, 
-		   const float& lerp, 
-		   DataType& result )
-   {
-       DataType offset = to - from;
-       result = from + offset*lerp;
-   }
-
 };
 #endif
