@@ -83,7 +83,7 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-mtreedir	= $(topdir)/release/mtree
+mtreedir	= $(topdir)/mtree
 releasedir	= @SAFE_JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
