@@ -80,7 +80,7 @@ public class FileActionGenerator
    }
 
    /**
-    * Generates a file open action and delivers it to all the listenerrs
+    * Generates a file open action and delivers it to all the listeners
     * registered with this generator.  The method
     * FileActionListener.fileOpenPerformed() is invoked on all listeners.
     *
@@ -109,7 +109,7 @@ public class FileActionGenerator
    }
 
    /**
-    * Generates a file open action and delivers it to all the listenerrs
+    * Generates a file open action and delivers it to all the listeners
     * registered with this generator.  The method
     * FileActionListener.fileOpenPerformed() is invoked on all listeners.
     *
@@ -138,7 +138,7 @@ public class FileActionGenerator
    }
 
    /**
-    * Generates a file save action and delivers it to all the listenerrs
+    * Generates a file save action and delivers it to all the listeners
     * registered with this generator.  The method
     * FileActionListener.fileSavePerformed() is invoked on all listeners.
     *
@@ -167,7 +167,7 @@ public class FileActionGenerator
    }
 
    /**
-    * Generates a file save-as action and delivers it to all the listenerrs
+    * Generates a file save-as action and delivers it to all the listeners
     * registered with this generator.  The method
     * FileActionListener.fileSaveAsPerformed() is invoked on all listeners.
     *
@@ -196,7 +196,7 @@ public class FileActionGenerator
    }
 
    /**
-    * Generates a file save-all action and delivers it to all the listenerrs
+    * Generates a file save-all action and delivers it to all the listeners
     * registered with this generator.  The method
     * FileActionListener.fileSaveAllPerformed() is invoked on all listeners.
     *
@@ -225,7 +225,7 @@ public class FileActionGenerator
    }
 
    /**
-    * Generates a file close action and delivers it to all the listenerrs
+    * Generates a file close action and delivers it to all the listeners
     * registered with this generator.  The method
     * FileActionListener.fileClosePerformed() is invoked on all listeners.
     *
