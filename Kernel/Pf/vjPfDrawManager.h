@@ -36,7 +36,9 @@
 #define _VJ_PF_DRAW_MANAGER_
 
 #include <vjConfig.h>
+#ifndef VJ_OS_Win32
 #include <function.h>
+#endif
 #include <algorithm>
 
 #include <Performer/pf/pfChannel.h>
@@ -86,7 +88,7 @@ protected:
       pfChannel*     chans[2];
    };
 
-   struct findPfDispChan : unary_function<pfDisp, bool>
+   struct findPfDispChan : std::unary_function<pfDisp, bool>
    {
       findPfDispChan(pfChannel* chan) : mChan(chan) {;}
       bool operator()(pfDisp disp) {

@@ -181,7 +181,8 @@ void vjPfDrawManager::draw()
 // XXX: Hack for now
 void vjPfDrawManager::callAppChanFuncs()
 {
-   for(unsigned int dispIndex=0;dispIndex<mSurfDisps.size();dispIndex++)
+   unsigned int dispIndex;
+   for ( dispIndex = 0; dispIndex < mSurfDisps.size(); ++dispIndex )
    {
       if (mSurfDisps[dispIndex].chans[pfDisp::PRIMARY] != NULL)
          app->appChanFunc(mSurfDisps[dispIndex].chans[pfDisp::PRIMARY]);
@@ -189,7 +190,7 @@ void vjPfDrawManager::callAppChanFuncs()
          app->appChanFunc(mSurfDisps[dispIndex].chans[pfDisp::SECONDARY]);
    }
 
-   for(unsigned int dispIndex=0;dispIndex<mSimDisps.size();dispIndex++)
+   for ( dispIndex = 0; dispIndex < mSimDisps.size(); ++dispIndex )
    {
       if (mSimDisps[dispIndex].chans[pfDisp::PRIMARY] != NULL)
          app->appChanFunc(mSimDisps[dispIndex].chans[pfDisp::PRIMARY]);
@@ -473,7 +474,11 @@ std::vector<int> vjPfDrawManager::getMonoFBConfig()
    std::vector<int> app_fb = app->getFrameBufferAttrs();
    mono_fb.insert(mono_fb.end(), app_fb.begin(), app_fb.end());
 
+#ifdef VJ_OS_Win32
+   mono_fb.push_back(0);
+#else
    mono_fb.push_back(None);
+#endif
 
    return mono_fb;
 }
@@ -495,7 +500,12 @@ std::vector<int> vjPfDrawManager::getStereoFBConfig()
    std::vector<int> app_fb = app->getFrameBufferAttrs();
    stereo_fb.insert(stereo_fb.end(), app_fb.begin(), app_fb.end());
 
+#ifdef VJ_OS_Win32
+   stereo_fb.push_back(0);
+#else
    stereo_fb.push_back(None);
+#endif
+
    return stereo_fb;
 }
 
@@ -529,8 +539,8 @@ void vjPfDrawManager::initLoaders()
 
 void vjPfDrawManager::initSimulator()
 {
-   pfNode* head_node(NULL);
-   pfNode* wand_node(NULL);
+   pfNode* head_node = NULL;
+   pfNode* wand_node = NULL;
 
    if(!mHeadModel.empty())
    {
@@ -556,11 +566,11 @@ void vjPfDrawManager::initSimulator()
    mSimTree->addChild(mWandDCS);
    if(NULL != head_node)
    {
-      mHeadDCS->addChild(head_node);
+      ((pfDCS*) mHeadDCS)->addChild(head_node);
    }
    if(NULL != wand_node)
    {
-      mWandDCS->addChild(wand_node);
+      ((pfDCS*) mWandDCS)->addChild(wand_node);
    }
 
    if((head_node != NULL) && (wand_node != NULL))
@@ -588,11 +598,12 @@ void vjPfDrawManager::closeAPI()
 void vjPfDrawManager::updateProjections()
 {
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::updateProjections: Entering." << std::endl << vjDEBUG_FLUSH;
+   std::vector<pfDisp>::iterator i;
 
    // --- Update the channel projections --- //
    //for(each pfDisp)
    //    update Performer specific stuff.
-   for (std::vector<pfDisp>::iterator i = mSurfDisps.begin(); i != mSurfDisps.end(); i++)
+   for ( i = mSurfDisps.begin(); i != mSurfDisps.end(); ++i )
    {
       vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>((*i).disp);
       vjASSERT(surf_disp != NULL && "Could not cast supposedly surface display to vjSurfaceDisplay.");
@@ -617,7 +628,7 @@ void vjPfDrawManager::updateProjections()
       }
    }
 
-   for(std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
+   for ( i = mSimDisps.begin(); i != mSimDisps.end(); ++i )
    {
       vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>((*i).disp);
       vjASSERT(sim_disp != NULL && "Could not cast supposedly simulator display to vjSimDisplay.");
@@ -680,8 +691,10 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
 // NOTE: The "cool" STL functor search didn't work for some reason
 vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 {
+   unsigned int i;
+
    // Search surface displays
-   for(unsigned int i=0;i<mSurfDisps.size();i++)
+   for ( i = 0; i < mSurfDisps.size(); ++i )
    {
       pfChannel* primary_chan = mSurfDisps[i].chans[pfDisp::PRIMARY];
       pfChannel* secondary_chan = mSurfDisps[i].chans[pfDisp::SECONDARY];
@@ -690,7 +703,7 @@ vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
    }
 
    // Search simulator displays
-   for(unsigned int i=0;i<mSimDisps.size();i++)
+   for ( i = 0; i < mSimDisps.size(); ++i )
    {
       pfChannel* primary_chan = mSimDisps[i].chans[pfDisp::PRIMARY];
       pfChannel* secondary_chan = mSimDisps[i].chans[pfDisp::SECONDARY];
@@ -708,12 +721,14 @@ void vjPfDrawManager::debugDump(int debugLevel)
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mSceneRoot << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "Surf Disps:" << mSurfDisps.size() << std::endl << vjDEBUG_FLUSH;
-   for (std::vector<pfDisp>::iterator i = mSurfDisps.begin(); i != mSurfDisps.end(); i++)
+
+   std::vector<pfDisp>::iterator i;
+   for ( i = mSurfDisps.begin(); i != mSurfDisps.end(); ++i )
    {
       debugDumpPfDisp(&(*i),debugLevel);
    }
    vjDEBUG(vjDBG_DRAW_MGR,debugLevel)       << "Sim Disps:" << mSimDisps.size() << std::endl << vjDEBUG_FLUSH;
-   for (std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
+   for ( i = mSimDisps.begin(); i != mSimDisps.end(); ++i )
    {
       debugDumpPfDisp(&(*i),debugLevel);
    }
