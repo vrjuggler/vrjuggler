@@ -88,7 +88,7 @@ public:
 
 
 
-    vjProperty (vjProperty& p);
+    vjProperty (const vjProperty& p);
 
 
 
@@ -96,21 +96,21 @@ public:
 
 
 
-    bool operator== (const vjProperty& p);
-    inline bool operator != (const vjProperty& p) {
+    bool operator== (const vjProperty& p) const;
+    inline bool operator != (const vjProperty& p) const {
 	return !(*this == p);
     }
 
 
     //: Returns actual current number of values in self
     //! RETURNS: n - size of value vector.
-    int getNum ();
+    int getNum () const;
 
 
-    std::string& getName ();
+    const std::string& getName () const;
 
 
-    std::string& getToken ();
+    const std::string& getToken () const;
 
 
     //: Returns the VarValue at index
@@ -144,10 +144,10 @@ public:
     bool setValue (vjVarValue& val, int ind = 0);
 
 
-    inline vjEnumEntry* getEnumEntry (const std::string& n) {
+    inline vjEnumEntry* getEnumEntry (const std::string& n) const {
 	return description->getEnumEntry (n);
     }
-    vjEnumEntry* getEnumEntryWithValue (int val);
+    vjEnumEntry* getEnumEntryWithValue (int val) const;
 
 
     //: creates a vjVarValue of the correct type for this property
