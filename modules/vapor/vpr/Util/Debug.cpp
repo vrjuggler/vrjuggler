@@ -404,7 +404,8 @@ void Debug::updateAllowedCategories()
    {
       if(getLevel() > 2)
       {
-         std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found." << std::flush;
+         std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found.\n"
+                   << std::flush;
       }
    }
 
