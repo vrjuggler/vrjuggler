@@ -337,11 +337,6 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
 void GlWindowXWin::config(vrj::Display* disp)
 {
-   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowXWin::config: _display: "
-                               << (*disp) << "\nConfig chunk:\n"
-                               << (*(disp->getConfigChunk())) << std::endl
-                               << vprDEBUG_FLUSH;
-
    const char neg_one_STRING[] = "-1";
    vrj::GlWindow::config(disp);
 
