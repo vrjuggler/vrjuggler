@@ -43,6 +43,7 @@ dnl     TWEEK_CXX_IDL_OPTS
 dnl     TWEEK_CXX_IDL_GENDIR_OPT
 dnl     TWEEK_JAVA_IDL_OPTS
 dnl     TWEEK_JAVA_IDL_GENDIR_OPT
+dnl     TWEEK_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(TWEEK_PATH,
 [
@@ -110,16 +111,17 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_JAVA_IDL="`$TWEEK_CONFIG $tweek_config_args --idl java`"
         TWEEK_JAVA_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags java`"
         TWEEK_JAVA_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
+        TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
 
         TWEEK_VERSION=`$TWEEK_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(TWEEK, $TWEEK_VERSION, $min_tweek_version,
+        DPP_VERSION_CHECK_MSG(Tweek, $TWEEK_VERSION, $min_tweek_version,
                               tweek_cv_tweek_version, $2, $3)
     fi
 
     if test "x$no_tweek" != x ; then
         if test "$TWEEK_CONFIG" = "no" ; then
-            echo "*** The tweek-config script installed by TWEEK could not be found"
-            echo "*** If TWEEK was installed in PREFIX, make sure PREFIX/bin is in"
+            echo "*** The tweek-config script installed by Tweek could not be found"
+            echo "*** If Tweek was installed in PREFIX, make sure PREFIX/bin is in"
             echo "*** your path, or set the TWEEK_CONFIG environment variable to the"
             echo "*** full path to tweek-config."
         fi
@@ -134,6 +136,7 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_JAVA_IDL=""
         TWEEK_JAVA_IDL_OPTS=""
         TWEEK_JAVA_IDL_GENDIR_OPT=""
+        TWEEK_JARS=""
         ifelse([$3], , :, [$3])
     fi
 
@@ -148,4 +151,5 @@ AC_DEFUN(TWEEK_PATH,
     AC_SUBST(TWEEK_CXX_IDL_GENDIR_OPT)
     AC_SUBST(TWEEK_JAVA_IDL_OPTS)
     AC_SUBST(TWEEK_JAVA_IDL_GENDIR_OPT)
+    AC_SUBST(TWEEK_JARS)
 ])
