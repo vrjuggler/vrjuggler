@@ -41,16 +41,18 @@
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
-# mtreedir      - Base directory containing the mtree directory hierarchy
-#                 specifications.
-# releasedir    - The absolute path to the release directory.
-# scriptdir     - The path to the directory containing scripts used in the
-#                 build and install/release process.
-# topdir        - The top of the build tree.
-# JCCLROOT_ABS  - The absolute path to the root of the Jackal source tree.
-# JCCL_SHARE_DIR  - The name of the directory where the Jackal data files,
-#                 test programs, and sample apps are installed.  This is
-#                 only the name of the directory, not the full path to it.
+# mtreedir       - Base directory containing the mtree directory hierarchy
+#                  specifications.
+# projdatadir    - Project-specific data directory.  This is a subdirectory
+#                  of $(datadir).
+# releasedir     - The absolute path to the release directory.
+# scriptdir      - The path to the directory containing scripts used in the
+#                  build and install/release process.
+# topdir         - The top of the build tree.
+# JCCLROOT_ABS   - The absolute path to the root of the Jackal source tree.
+# JCCL_SHARE_DIR - The name of the directory where the Jackal data files,
+#                  test programs, and sample apps are installed.  This is
+#                  only the name of the directory, not the full path to it.
 #
 # MKDEPS_CC     - Compiler for C dependencies.
 # MKDEPS_CXX    - Compiler for CXX dependencies.
@@ -76,6 +78,7 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir	= $(topdir)/mtree
+projdatadir	= $(datadir)/jccl
 releasedir	= @JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
