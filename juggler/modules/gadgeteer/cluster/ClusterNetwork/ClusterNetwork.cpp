@@ -371,83 +371,139 @@ namespace cluster
             //   
             ClusterNode* node = getClusterNodeByHostname(connection_request->getHostname());
             
-            if (NULL != node)
+                              /*if (NULL != node)
+                              {
+                                 vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                                    << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
+                                    << " Cluster Node already exists." << std::endl << vprDEBUG_FLUSH;
+                                 
+                                 // XXX:  In the odd case that the ClusterNode already has a
+                                 //       SocketStream associated with it, we should close the
+                                 //       old socket and delete the memory. This is not possible
+                                 //       because SocketStream::close() does not currently work.
+                                 //if (old_node->getSockStream() != NULL)
+                                 //{
+                                 //   old_node->getSockStream()->close();
+                                 //   delete old_node->getSockStream();
+                                 //   old_node->setSockStream(NULL);
+                                 //}
+                                 node->setSockStream(client_sock);
+                              }
+                              else
+                              {
+                                 vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                                    << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
+                                    << " Creating new ClusterNode." << std::endl << vprDEBUG_FLUSH;           
+                                 // NICE BUG WAS HERE, dang scope
+                                 //ClusterNode* node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), std::string("Unknown"), client_sock);               
+                                 node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), std::string("Unknown"), client_sock);               
+                                 vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                                    << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
+                                    << " Adding new Cluster Node to ClusterNetwork." << std::endl << vprDEBUG_FLUSH;           
+                                 addClusterNode(node);               
+                              }*/
+            if (node != NULL)
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-                  << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-                  << " Cluster Node already exists." << std::endl << vprDEBUG_FLUSH;
+               connection_request->printData(vprDBG_CONFIG_LVL);
+               // connection_request & temp_packet point to the same thing
                
-               // XXX:  In the odd case that the ClusterNode already has a
-               //       SocketStream associated with it, we should close the
-               //       old socket and delete the memory. This is not possible
-               //       because SocketStream::close() does not currently work.
-               /*if (old_node->getSockStream() != NULL)
-               {
-                  old_node->getSockStream()->close();
-                  delete old_node->getSockStream();
-                  old_node->setSockStream(NULL);
-               }*/
                node->setSockStream(client_sock);
+               
+               delete connection_request;
+               connection_request = NULL;
+               temp_packet = NULL;
+               
+               ConnectionAck* responce_packet = new ConnectionAck(ClusterNetwork::instance()->getLocalHostname(),
+                                                                  mListenAddr.getPort(), std::string("NONE")/*mManagerId*/,true);            
+               try
+               {
+                  if (NULL == responce_packet)
+                  {
+                     throw(new cluster::ClusterException(std::string("Responce Packet is NULL")));
+                  }
+                  responce_packet->printData(vprDBG_CONFIG_LVL);
+                  responce_packet->send(client_sock);
+               }
+               catch(cluster::ClusterException cluster_exception)
+               {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                     << clrOutBOLD(clrRED,"ERROR:")
+                     << "ClusterNetwork::acceptLoop() Could not send responce packet: " 
+                     << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
+   
+                  node->setConnected(ClusterNode::DISCONNECTED);   
+                  delete client_sock;
+                  client_sock = new vpr::SocketStream;
+                  continue;
+               }
+               delete responce_packet;
+                           
+               // We need to create a new SocketStream since the to
+               // hold the value of the next recieved socketstream since
+               // the old one is now being used by the new ClusterNode
+               client_sock = new vpr::SocketStream;
+               
+               ClusterDelta cluster_delta;
+               cluster_delta.clientClusterDelta(node->getSockStream());
+   
+               // Since we have just recieved a new connection,
+               // set the connected status as so. We are not 
+               // in a fully connected state until the begining
+               // of the next frame in ClusterNetwork::updateNewConnetions()
+               // this is becuase we only want to start using a
+               // new connection at the start of a new frame.
+               node->setConnected(ClusterNode::NEWCONNECTION);
+               // Print the new state information about this node.
+               node->debugDump(vprDBG_CONFIG_LVL);            
             }
             else
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                   << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-                  << " Creating new ClusterNode." << std::endl << vprDEBUG_FLUSH;           
-               ClusterNode* node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), std::string("Unknown"), client_sock);               
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-                  << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-                  << " Adding new Cluster Node to ClusterNetwork." << std::endl << vprDEBUG_FLUSH;           
-               addClusterNode(node);               
-            }
-            connection_request->printData(vprDBG_CONFIG_LVL);
-            // connection_request & temp_packet point to the same thing
-            delete connection_request;
-            connection_request = NULL;
-            temp_packet = NULL;
-            
-            ConnectionAck* responce_packet = new ConnectionAck(ClusterNetwork::instance()->getLocalHostname(),
-                                                               mListenAddr.getPort(), std::string("NONE")/*mManagerId*/,true);            
-            try
-            {
-               if (NULL == responce_packet)
+                  << " ClusterNode is not exist in ClusterNetwork." << std::endl << vprDEBUG_FLUSH;           
+               
+               
+               ConnectionAck* responce_packet = new ConnectionAck(ClusterNetwork::instance()->getLocalHostname(),
+                                                                  mListenAddr.getPort(), std::string("NONE")/*mManagerId*/,false);            
+               try
                {
-                  throw(new cluster::ClusterException(std::string("Responce Packet is NULL")));
+                  if (NULL == responce_packet)
+                  {
+                     throw(new cluster::ClusterException(std::string("Responce Packet is NULL")));
+                  }
+                  responce_packet->printData(vprDBG_CONFIG_LVL);
+                  responce_packet->send(client_sock);
                }
-               responce_packet->printData(vprDBG_CONFIG_LVL);
-               responce_packet->send(client_sock);
-            }
-            catch(cluster::ClusterException cluster_exception)
-            {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-                  << clrOutBOLD(clrRED,"ERROR:")
-                  << "ClusterNetwork::acceptLoop() Could not send responce packet: " 
-                  << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
-
-               node->setConnected(ClusterNode::DISCONNECTED);   
-               delete client_sock;
+               catch(cluster::ClusterException cluster_exception)
+               {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                     << clrOutBOLD(clrRED,"ERROR:")
+                     << "ClusterNetwork::acceptLoop() Could not send responce packet: " 
+                     << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
+   
+                  node->setConnected(ClusterNode::DISCONNECTED);   
+                  delete client_sock;
+                  client_sock = new vpr::SocketStream;
+                  continue;
+               }
+               delete responce_packet;
+               
+               
+               
+               if (NULL != client_sock)
+               {
+                  delete client_sock;
+               }
                client_sock = new vpr::SocketStream;
-               continue;
+               
+               if (NULL != connection_request)
+               {
+                  delete connection_request;
+                  connection_request = NULL;
+                  // connection_request & temp_packet point to the same thing
+                  temp_packet = NULL;
+               }
             }
-            delete responce_packet;
-                        
-            // We need to create a new SocketStream since the to
-            // hold the value of the next recieved socketstream since
-            // the old one is now being used by the new ClusterNode
-            client_sock = new vpr::SocketStream;
-            
-            ClusterDelta cluster_delta;
-            cluster_delta.clientClusterDelta(node->getSockStream());
-
-            // Since we have just recieved a new connection,
-            // set the connected status as so. We are not 
-            // in a fully connected state until the begining
-            // of the next frame in ClusterNetwork::updateNewConnetions()
-            // this is becuase we only want to start using a
-            // new connection at the start of a new frame.
-            node->setConnected(ClusterNode::NEWCONNECTION);
-            // Print the new state information about this node.
-            node->debugDump(vprDBG_CONFIG_LVL);            
          }
          else if ( status == vpr::ReturnStatus::Timeout )
          {

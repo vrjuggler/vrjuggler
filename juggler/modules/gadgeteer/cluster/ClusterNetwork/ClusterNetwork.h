@@ -191,12 +191,12 @@ public:
     */
    void removePendingNode(std::string hostname);
 
-private:   
    /** Returns the Pending node with the given hostname.
     *  If the is not a node with the given hotname, NULL is returned.
     */
    ClusterNode* getPendingNode(std::string host_name);
-   
+
+private:      
    /**
     * Return the number of ClusterNodes in the Pending Nodes list.
     */
