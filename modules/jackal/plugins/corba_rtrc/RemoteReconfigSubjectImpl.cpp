@@ -3,14 +3,6 @@
 namespace jccl
 {
 
-RTRCInterfaceSubjectImpl::RTRCInterfaceSubjectImpl()
-{
-}
-
-RTRCInterfaceSubjectImpl::~RTRCInterfaceSubjectImpl()
-{
-}
-
 void RTRCInterfaceSubjectImpl::add( std::string chunkDBString )
 {
    jccl::ConfigChunkDB newChunks;

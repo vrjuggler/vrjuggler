@@ -13,7 +13,10 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Singleton.h>
 
-#include <tweek/CORBA/CorbaManager.h>
+#include <tweek/tweekConfig.h>
+#include <tweek/CORBA/SubjectImpl.h>
+#include <tweek/CORBA/Observer.h>
+#include <jccl/RTRC/RTRCInterfaceSubject.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <list>
@@ -34,6 +37,12 @@ class ConfigChunkHandler;
 class JCCL_CLASS_API RTRCInterfaceSubjectImpl : public tweek::SubjectImpl
 {
 public:
+
+   RTRCInterfaceSubjectImpl()
+   {;}
+
+   ~RTRCInterfaceSubjectImpl()
+   {;}
 
    /**
     * Add a string containing an XML definition of a config chunk DB
