@@ -134,7 +134,8 @@ endif
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR=	5DT/DataGlove			\
+SUBDIR=	3Dconnexion/SpaceBall		\
+	5DT/DataGlove			\
 	Ascension/Flock 		\
 	Ascension/MotionStar		\
 	Fakespace/PinchGlove		\
