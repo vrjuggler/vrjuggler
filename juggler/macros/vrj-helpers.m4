@@ -317,6 +317,91 @@ AC_DEFUN([VJ_STRIP_DUPLICATE_ARGS_REVERSE],
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl This defines a handy little macro that will "clean up" linker arguments.
+dnl The basic process is simple: move all path arguments (-L, /libpath:) to
+dnl the beginning and move all library arguments (-l, *.lib, -framework <X>,
+dnl -pthread[s]) to the end.  Order is preserved, but duplicate arguments are
+dnl removed.
+dnl
+dnl Usage:
+dnl     VJ_CLEAN_LINKRE_ARGS(variable, arg-list)
+dnl
+dnl Arguments:
+dnl     variable - The name of the variable that will contain the resulting
+dnl                clean list of arguments.  This should NOT begin with a $
+dnl                (dollar sign) character.
+dnl     arg-list - The list of linker arguments that will be "cleansed."
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([VJ_CLEAN_LINKER_ARGS],
+[
+   changequote(<<, >>)
+
+   $1=<<`echo $2 | awk '{
+   j = 0
+   k = 0
+
+   # Go through the list in forward order and extract the linker path
+   # arguments.  We only want those that are not duplicated.
+   for ( i = 1; i <= NF; i++ )
+   {
+      if ( $i ~ /^-L/ || $i ~ /[-\/]libpath:/ )
+      {
+         if ( ! valid_path_list[$i] )
+         {
+            valid_path_list[$i] = 1
+            path_list[k] = $i
+            k++
+         }
+      }
+   }
+
+   # Go through the list in reverse order and extract the library
+   # arguments.  We only want those that are not duplicated.
+   for ( i = NF; i >= 1; i-- )
+   {
+      if ( $i ~ /^-l/ || $i ~ /\.[Ll][Ii][Bb]$/ || $i ~ /^-pthread/ )
+      {
+         if ( ! valid_list[$i] )
+         {
+            valid_list[$i] = 1
+            arg_list[j] = $i
+            j++
+         }
+      }
+      # Ignore linker path arguments.  Those are already stored in path_list
+      # from above.
+      else if ( $i !~ /^-L/ && $i !~ /[-\/]libpath:/ )
+      {
+         arg_list[j] = $i
+         j++
+      }
+   }
+
+   # Put the path arguments at the beginning of result.
+   if ( k > 0 )
+   {
+      result = path_list[0]
+      for ( i = 1; i < k; i++ )
+         result = sprintf("%s %s", result, path_list[i])
+   }
+
+   # Now, build result as a space-separated string of everything in arg_list.
+   if ( j > 0 )
+   {
+      result = sprintf("%s %s", result, arg_list[j - 1])
+      for ( i = j - 2; i >= 0; i-- )
+         result = sprintf("%s %s", result, arg_list[i])
+   }
+
+   # This gives the final argument string that will be assigned to the sh
+   # variable.
+   print result
+}' -`>>
+
+   changequote([, ])
+])
+
+dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_MTREE_GEN(file-prefix, path, platform [, ISA])
 dnl ---------------------------------------------------------------------------
