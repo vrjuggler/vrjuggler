@@ -137,7 +137,7 @@ public:
         Status status;
 
         status = m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
-        vprASSERT((! status.failure()) && "Impll:accept: failed.  This may be non-blocking accept");
+        vprASSERT((! status.failure()) && "Impl:accept: failed.  This may be non-blocking accept");
 
         return status;
     }
