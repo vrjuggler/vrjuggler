@@ -3976,7 +3976,7 @@ Unlock Working Copy Mutex</programlisting>
                      </listitem>
                   </itemizedlist>
                   <para>Once decisions are made regarding configuration information, it is time to define the kinds of ConfigChunks that will contain it. This essentially means creating a file containing one or more ChunkDescs. To understand this better, consider the following example. One might define an <quote>Object</quote> ChunkDesc in an application. The ChunkDesc would have properties that include the name and type of an object, its color and size, and so forth.</para>
-                  <para>There are several ways to ensure that custom ChunkDescs are read by the application. One way is to load the ChunkDesc file explicitly (described below), but the simplest way is to include the custom ChunkDesc file from one of the configuration files the application loads at startup. Instructions for editing ChunkDesc files and creating new kinds of ChunkDescs are included in the <emphasis>VjControl User's Guide</emphasis>.</para>
+                  <para>There are several ways to ensure that custom ChunkDescs are read by the application. One way is to load the ChunkDesc file explicitly (described below), but the simplest way is to include the custom ChunkDesc file from one of the configuration files the application loads at startup. Instructions for editing ChunkDesc files and creating new kinds of ChunkDescs are included in the <emphasis>VRJConfig User's Guide</emphasis>.</para>
                </listitem>
                <listitem>
                   <para>Implement dynamic reconfiguration interface</para>
@@ -4048,23 +4048,24 @@ if ( !jccl::strcasecmp(s, "my_custom_chunk_type") )
                   <itemizedlist>
                      <listitem>
                         <methodsynopsis>
-                           <type>std::string&amp;</type>
-                           <methodname>jccl::ConfigChunk::getType</methodname>
+                           <type>std::string</type>
+                           <methodname>jccl::ConfigChunk::getDescToken</methodname>
                            <void/>
+                           <modifier>const</modifier>
                         </methodsynopsis>
                         <indexterm>
                            <primary>jccl::ConfigChunk</primary>
-                           <secondary>getType() method</secondary>
+                           <secondary>getDescToken() method</secondary>
                         </indexterm>
                         <para>This method returns the token of the ChunkDesc which describes this ConfigChunk. This is useful if an application uses several kinds of custom ConfigChunk types. With this method, it is possible to distinguish one from another.</para>
                      </listitem>
                      <listitem>
                         <methodsynopsis>
-                           <type>jccl::VarValue&amp;</type>
-                           <methodname>jccl::ConfigChunk::getProperty</methodname>
+                           <type>T</type>
+                           <methodname>jccl::ConfigChunk::getProperty&lt;T&gt;</methodname>
                            <methodparam>
                               <type>std::string&amp;</type>
-                              <parameter>property_token</parameter>
+                              <parameter>propertyToken</parameter>
                            </methodparam>
                            <methodparam>
                               <type>int</type>
@@ -4075,24 +4076,15 @@ if ( !jccl::strcasecmp(s, "my_custom_chunk_type") )
                            <primary>jccl::ConfigChunk</primary>
                            <secondary>getProperty() method</secondary>
                         </indexterm>
-                        <para>This is the key method for getting the information contained in a ConfigChunk. Its arguments are the token associated with a property, and a numeric index. For example, a property might store a coordinate with three values, each of which can be accessed separately by using the numbers 0, 1, or 2 for the <varname>num</varname> parameter.</para>
-                        <para>The return value for this method needs some explanation. <classname>jccl::VarValue</classname><indexterm>
-                              <primary>classes</primary>
-                              <secondary>jccl::VarValue</secondary>
-                           </indexterm> is a placeholder class designed to be cast safely to one of a variety of data types. Basically, the return value of <methodname>getProperty()</methodname> is cast to whichever type the caller expects to receive. It is assumed that the caller knows the types of values stored in a given property.</para>
-                        <para><classname>jccl::VarValue</classname> tries to coax the data in a variety of ways for convenience. For example, the VarValue returned from an integer, float, or boolean property can be safely cast to a string or <type>char*</type>. Booleans can be cast to integers and vice versa. The following code fragment gives a few examples of this usage:</para>
-                        <programlisting>std::string s1 = (std::string) chunk-&gt;getProperty("name", 0);
-char* s2 = (char*) chunk-&gt;getProperty("name");
-// NOTE: the cast allocates new memory for s2, which you are
-// responsible for deleting.
+                        <para>This is the key method for getting the information contained in a ConfigChunk. Its arguments are the token associated with a property and a numeric index. For example, a property might store a coordinate with three values, each of which can be accessed separately by using the numbers 0, 1, or 2 for the <varname>num</varname> parameter.</para>
+                        <para>The return value and the template paramter for this method need some explanation. Basically, the return value of <methodname>getProperty()</methodname> is cast to whichever type the caller expects to receive. This type is named using the template paramter. (It is assumed that the caller knows the types of values stored in a given property.) The use of the template paramter allows any type to be used through the type-specific specialization performed by the C++ compiler. The following code fragment gives a few examples of this usage:</para>
+                        <programlisting>std::string s1 = chunk-&gt;getProperty&lt;std::string&gt;("name", 0);
 
-bool b = (bool) chunk-&gt;getProperty("enabled");
-std::string s3 = (std::string) chunk-&gt;getProperty("enabled");
-// s3 will be one of the strings "True" or "False"
+bool b = chunk-&gt;getProperty&lt;bool&gt;("enabled");
+std::string s3 = chunk-&gt;getProperty&lt;std::string&gt;("enabled");
+// s3 will be one of the strings "0" or "1"
 
-jccl::ConfigChunkPtr ch = (jccl::ConfigChunkPtr) chunk-&gt;getProperty("embedded_chunk", 2);
-// ch is a copy of the embedded chunk. Once again, the caller
-// of getProperty() is responsible for freeing this memory.</programlisting>
+jccl::ConfigChunkPtr ch = chunk-&gt;getProperty&lt;jccl::ConfigChunkPtr&gt;("embedded_chunk", 2);</programlisting>
                      </listitem>
                      <listitem>
                         <methodsynopsis>
@@ -4101,7 +4093,7 @@ jccl::ConfigChunkPtr ch = (jccl::ConfigChunkPtr) chunk-&gt;getProperty("embedded
                            <methodparam>
                               <modifier>const</modifier>
                               <type>std::string&amp;</type>
-                              <parameter>property_token</parameter>
+                              <parameter>propertyToken</parameter>
                            </methodparam>
                            <modifier>const</modifier>
                         </methodsynopsis>
@@ -4113,7 +4105,7 @@ jccl::ConfigChunkPtr ch = (jccl::ConfigChunkPtr) chunk-&gt;getProperty("embedded
                         <para>Sometimes properties of a ConfigChunk can have a variable number of values. A good example is a property that lists a set of files to be loaded. The <methodname>getNum()</methodname> method returns the actual number of values of the named property.</para>
                      </listitem>
                   </itemizedlist>
-                  <para>For definitive information about the ConfigChunk API, refer to the VR Juggler <emphasis>Programmer's Reference</emphasis>.</para>
+                  <para>For definitive information about the ConfigChunk API, refer to the JCCL <emphasis>Programmer's Reference</emphasis>.</para>
                </listitem>
                <listitem>
                   <para>Loading and saving configurations</para>
@@ -4121,7 +4113,7 @@ jccl::ConfigChunkPtr ch = (jccl::ConfigChunkPtr) chunk-&gt;getProperty("embedded
             </orderedlist>
          </section>
          <section>
-            <title>Application Tutorial</title>
+            <title>Tutorial: Using Application-Specific Configurations</title>
             <para></para>
          </section>
       </chapter>
