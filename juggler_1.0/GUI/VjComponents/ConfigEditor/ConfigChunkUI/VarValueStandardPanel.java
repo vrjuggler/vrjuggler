@@ -127,22 +127,22 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 
 
     /** Utility for generateChunkSelectionList(). */
-    private void addEmbeddedChunks (Vector bm, ConfigChunk ch, Vector chunktypes) {
+    private void addEmbeddedChunks (ListBoxModel bm, ConfigChunk ch, Vector chunktypes) {
         Vector v = ch.getEmbeddedChunks();
         ConfigChunk ch2;
         for (int i = 0; i < v.size(); i++) {
             ch2 = (ConfigChunk)v.elementAt(i);
             if (matchesTypes (ch2, chunktypes))
-                bm.addElement (ch2.getName());
+                bm.addObject (ch2.getName());
             addEmbeddedChunks (bm, ch2, chunktypes);
         }
     }
 
 
-    private Vector generateChunkSelectionList( Vector chunktypes) {
+    private ListBoxModel generateChunkSelectionList( Vector chunktypes) {
         int i,j;
         Vector v;
-        Vector bm = new Vector();
+        ListBoxModel bm = new ListBoxModel();
         ConfigChunkDB db;
         ConfigChunk ch;
 
@@ -152,13 +152,13 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
             return bm;
         }
 
-        bm.addElement ("<No Selection>");
+        bm.addObject ("<No Selection>");
         for (i = 0; i < config_module.chunkdbs.size(); i++) {
             db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
             for (j = 0; j < db.size(); j++) {
                 ch = (ConfigChunk)db.elementAt(j);
                 if (matchesTypes(ch, chunktypes))
-                    bm.addElement (db.getName() + ": " + ch.getName());
+                    bm.addObject (db.getName() + ": " + ch.getName());
                 addEmbeddedChunks (bm, ch, chunktypes);
             }
         }
@@ -184,17 +184,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 
     public void setValue (VarValue v) {
 	// sets the displayed value.
-	ValType tp = v.getValType();
-
-	if (desc.valtype.equals(ValType.t_chunk)) {
-            // this is kludgey
-            String s = v.toString();
-            choice.addItem (s);
-            choice.setSelectedItem(s);
-        }
-	else 
         if (choice != null) {
-            System.out.println ("setting value to " + desc.getEnumString(v));
 	    choice.setSelectedItem(desc.getEnumString(v));
         }
 	else
