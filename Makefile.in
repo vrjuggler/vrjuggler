@@ -61,11 +61,13 @@
 
 default: dbg
 
+# Include common definitions.
+include @topdir@/Makefile.base
+
 # Variables whose values are specific to this file.
 includedir	= @includedir@
 instlinks	= ${topdir}/instlinks
 srcdir		= @srcdir@
-topdir		= @topdir@
 top_srcdir	= @top_srcdir@
 wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
@@ -76,8 +78,7 @@ WORKDIR		= ${topdir}
 # '_clean' target to be run besides the standard 'clean' target.
 _LOCAL_CLEAN	= 1
 
-# Include common definitions.
-include ${topdir}/Makefile.base
+# Include recursive target code.
 include ${MKPATH}/vj.rec.mk
 
 # Extra compiler and linker options needed only by this file.
