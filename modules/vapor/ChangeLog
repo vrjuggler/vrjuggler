@@ -2,6 +2,8 @@ DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
 2004-10-27 allenb   Refactored API of ProfileNode and ProfileManager.
                     Removed redundant code, simplified API, and fixed bugs.
+                    Added XML output of profile data.
+                    Removed framecounter from ProfileManager.
 2004-10-14 patrickh Added support for named semaphores in vpr::SemaphorePosix
                     for use on Darwin 7.5 and earlier.
                     NEW VERSION: 0.40.1
