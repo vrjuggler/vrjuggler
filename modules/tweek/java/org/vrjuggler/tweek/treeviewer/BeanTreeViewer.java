@@ -93,6 +93,11 @@ public class BeanTreeViewer
       this.model = model;
    }
 
+   public BeanTreeModel getModel()
+   {
+      return model;
+   }
+
    /**
     * Component initialization.
     */
@@ -106,6 +111,41 @@ public class BeanTreeViewer
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * Programmatically focuses the given panel bean in this viewer.
+    *
+    * @param bean       the bean to focus
+    */
+   public void focusBean(PanelBean bean)
+   {
+      java.util.List paths = bean.getPaths();
+
+      // Can't select it if it doesn't have a path
+      if (paths.size() == 0)
+      {
+         return;
+      }
+
+      // Just use the first path found and add the bean onto the end of the path
+      String path = (String)paths.get(0);
+      if (! path.endsWith("/"))
+      {
+         path = path + "/";
+      }
+      path = path + bean.getName();
+
+      // Get the TreePath to the bean's node
+      TreeNode node = model.getNode(path);
+      if (node == null)
+      {
+         // Can't select an invalid node
+         System.err.println("Invalid node for path '" + path + "'");
+         return;
+      }
+      // Select the bean's node
+      mBeanTree.setSelectionPath(new TreePath(model.getPathToRoot(node)));
    }
 
    public JComponent getViewer ()
