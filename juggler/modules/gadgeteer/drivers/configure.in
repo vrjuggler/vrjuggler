@@ -580,6 +580,8 @@ AC_CONFIG_FILES([
    Open/VRPN/Makefile
    Polhemus/Makefile
    Polhemus/Fastrak/Makefile
+   USDigital/Makefile
+   USDigital/SerialEncoder/Makefile
    VRCO/Makefile
    VRCO/TrackdAPI/Makefile
    VirtualTechnologies/Makefile
