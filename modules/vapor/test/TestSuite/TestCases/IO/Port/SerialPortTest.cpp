@@ -586,6 +586,12 @@ void SerialPortTest::testSendRecv_receiver (void* arg)
       status = recv_port.enableRead();
       assertTestThread(status.success() && "Failed to enable reading");
 
+      status = recv_port.disableCanonicalInput();
+      assertTestThread(status.success() && "Failed to disable canonical input");
+
+      status = recv_port.setBufferSize(mDataBuffer.size() * 2);
+      assertTestThread(status.success() && "Failed to change buffer size");
+
       mCondVar.acquire();
       {
          mState = RECEIVER_READY;
@@ -596,7 +602,13 @@ void SerialPortTest::testSendRecv_receiver (void* arg)
       status = recv_port.read(buffer, mDataBuffer.size(), bytes_read,
                               vpr::Interval(2, vpr::Interval::Sec));
       assertTestThread(status.success() && "Failed to read from serial port");
-      assertTestThread(mDataBuffer.size() == bytes_read && "Read wrong number of bytes");
+      assertTestThread(mDataBuffer == buffer && "Read wrong string");
+
+      if ( mDataBuffer != buffer )
+      {
+         std::cout << "Expected '" << mDataBuffer << "'" << std::endl;
+         std::cout << "Got '" << buffer << "'" << std::endl;
+      }
 
       mCondVar.acquire();
       {
@@ -628,6 +640,9 @@ void SerialPortTest::testSendRecv_sender (void* arg)
 
       status = send_port.setCharacterSize(vpr::SerialTypes::CS_BITS_8);
       assertTestThread(status.success() && "Failed to change character size");
+
+      status = send_port.disableCanonicalInput();
+      assertTestThread(status.success() && "Failed to disable canonical input");
 
       mCondVar.acquire();
       {
@@ -690,7 +705,7 @@ CppUnit::Test* SerialPortTest::suite ()
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeOutputBaudRate", &SerialPortTest::testChangeOutputBaudRate));
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeHardwareFlowControl", &SerialPortTest::testChangeHardwareFlowControl));
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeSoftwareFlowControl", &SerialPortTest::testChangeSoftwareFlowControl));
-//   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testSendRecv", &SerialPortTest::testSendRecv));
+   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testSendRecv", &SerialPortTest::testSendRecv));
 
    return test_suite;
 }
