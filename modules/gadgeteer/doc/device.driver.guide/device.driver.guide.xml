@@ -12,8 +12,7 @@ type="text/css"?>
   morphon.document.settings.whitespaces.type="indent"
   morphon.document.settings.endofline.type="2"
 ?>
-<!DOCTYPE book SYSTEM
-"file://localhost/home/patrick/Morphon_XML-Editor_3.0b3/Examples/docbook/dtd/docbookx.dtd">
+<!DOCTYPE book SYSTEM "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>Gadgeteer</title>
@@ -1485,7 +1484,7 @@ endif</programlisting>
             <surname>Stevens</surname>
          </author>
          <title>UNIX Network Programming</title>
-         <volumenum>1</volumenum>
+         <volumenum>Volume 1</volumenum>
          <subtitle>Network APIS: Sockets and XTI</subtitle>
          <edition>Second Edition</edition>
          <publisher>
