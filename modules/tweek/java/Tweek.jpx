@@ -5,6 +5,8 @@
   <property category="debug.0" name="SmartStepSkipStaticInitializers" value="0"/>
   <property category="debug.0" name="SmartStepSkipSynthetics" value="0"/>
   <property category="idl" name="ProcessIDL" value="false"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.0" name="ConfigurationName" value="Tweek"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.0" name="application.class" value="org.vrjuggler.tweek.Tweek"/>
   <property category="runtime.0" name="test.harness" value="junit.textui.TestRunner"/>
@@ -53,5 +55,6 @@
   <node name="org.vrjuggler.tweek.net" type="Package"/>
   <node name="org.vrjuggler.tweek.net.corba" type="Package"/>
   <node name="org.vrjuggler.tweek.services" type="Package"/>
+  <node name="org.vrjuggler.tweek.text" type="Package"/>
   <node name="org.vrjuggler.tweek.treeviewer" type="Package"/>
 </project>
