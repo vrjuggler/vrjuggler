@@ -85,7 +85,16 @@
 #ifdef __cplusplus
 #include <iostream>
 
-#if defined(__GNUC__) && \
+/*
+ * GCC 3.1 and beyond have non-standard STL stuff in the __gnu_cxx namespace.
+ * The code below works around that behavior by bringing the __gnu_cxx
+ * namespace into the std namespace.
+ *
+ * NOTE: The Intel C++ compiler masquerades as GCC by defining __GNUC__.  It
+ * does not, however, do the __gnu_cxx namespace stuff, so we have to make
+ * sure we are not using the Intel compiler when performing this operation.
+ */
+#if ! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
     ((__GNUC__ == 3 && __GNUC_MINOR__ >= 1) || __GNUC__ > 3)
 namespace std
 {
