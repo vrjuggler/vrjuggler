@@ -18,28 +18,46 @@ import org.vrjuggler.jccl.config.event.*;
 
    public void setUp()
    {
+      List prop_value_defs;
+
       // Create a simple chunk desc we can use for the tests
-      mDesc = new ChunkDesc();
-      mDesc.setName("Person");
-      mDesc.setToken("person");
-      // Name
-      PropertyDesc prop = new PropertyDesc();
-      prop.setName("Name");
-      prop.setToken("name");
-      mDesc.addPropertyDesc(prop);
-      // Age
-      prop = new PropertyDesc();
-      prop.setName("Age");
-      prop.setToken("age");
-      prop.setValType(ValType.INT);
-      mDesc.addPropertyDesc(prop);
-      // Friends
-      prop = new PropertyDesc();
-      prop.setName("Friends");
-      prop.setToken("friends");
-      prop.setValType(ValType.EMBEDDEDCHUNK);
-      prop.setHasVariableNumberOfValues(true);
-      mDesc.addPropertyDesc(prop);
+      List prop_defs = new ArrayList();
+
+      prop_value_defs = new ArrayList();
+      prop_value_defs.add(new PropertyValueDefinition("Name", ""));
+      prop_defs.add(new PropertyDefinition("Name",
+                                           "name",
+                                           String.class,
+                                           "Your name",
+                                           prop_value_defs,
+                                           false));
+
+      prop_value_defs = new ArrayList();
+      prop_value_defs.add(new PropertyValueDefinition("Age", new Integer(0)));
+      prop_defs.add(new PropertyDefinition("Age",
+                                           "age",
+                                           Integer.class,
+                                           "Your age",
+                                           prop_value_defs,
+                                           false));
+
+      prop_value_defs = new ArrayList();
+      prop_value_defs.add(new PropertyValueDefinition("Friends"));
+      prop_defs.add(new PropertyDefinition("Friends",
+                                           "friends",
+                                           ConfigElement.class,
+                                           "Your friends",
+                                           prop_value_defs,
+                                           true));
+
+      List categories = new ArrayList();
+      categories.add("VRAC");
+      mDef = new ConfigDefinition("Person",
+                                  "person",
+                                  "1.0",
+                                  "A person",
+                                  categories,
+                                  prop_defs);
    }
 
    private ConfigElement makePerson(String name, int age, List friends)
@@ -56,7 +74,7 @@ import org.vrjuggler.jccl.config.event.*;
       // friends
       props.put("friends", friends);
 
-      return new ConfigElement(mDesc, name, props);
+      return new ConfigElement(mDef, name, props);
    }
 
    public void testConstructor()
@@ -68,7 +86,7 @@ import org.vrjuggler.jccl.config.event.*;
       friends.add(makePerson("Josh", 24, new ArrayList()));
 
       ConfigElement e = makePerson("Patrick", 27, friends);
-      assertEquals(e.getDefinition(), mDesc);
+      assertEquals(e.getDefinition(), mDef);
       assertEquals(e.getName(), "Patrick");
       assertEquals(e.getProperty("name", 0), "Patrick");
       assertEquals(e.getProperty("age", 0), new Integer(27));
@@ -214,5 +232,5 @@ import org.vrjuggler.jccl.config.event.*;
       assertTrue(l.fired);
    }
 
-   private ChunkDesc mDesc;
+   private ConfigDefinition mDef;
 }

@@ -25,7 +25,9 @@ public class AllTests
       suite.addTestSuite( ChunkDescTest.class );
       suite.addTestSuite( ChunkDescEventTest.class );
       suite.addTestSuite( ConfigChunkTest.class );
+
       suite.addTestSuite( ConfigElementTest.class );
+      suite.addTestSuite( ConfigDefinitionTest.class );
 
       return suite;
    }
