@@ -54,6 +54,14 @@ DPP_ABI_SETUP
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
+# -----------------------------------------------------------------------------
+# Checks for libraries.
+# -----------------------------------------------------------------------------
+VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for sonix***))
+VRJUGGLER_PATH(1.1.91, , AC_MSG_ERROR(*** VR Juggler Math required for sonix ***))
+CXXFLAGS="$VRJ_CXXFLAGS $VPR_CXXFLAGS $CXXFLAGS"
+    
+
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
 DPP_SYSTEM_SUBST
@@ -180,7 +188,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 #     FILE_PERMS - The UNIX-style octal permissions of normal files.
 #     EXEC_PERMS - The UNIX-style octal permissions of executable files.
 #     DIR_PERMS  - The UNIX-style octal permissions of directories.
-DPP_INSTALLER(plexus, 0644, 0755, 0755)
+DPP_INSTALLER(sonix, 0644, 0755, 0755)
 
 # For use in linking applications.
 EXTRA_LINK_FLAGS=''
@@ -251,8 +259,6 @@ fi
 
 DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL), AC_MSG_ERROR(*** project requires openal, type configure --help for options***) )
 DPP_HAVE_AUDIOWORKS( /usr, AC_MSG_RESULT(+ Found AudioWorks), AC_MSG_ERROR(*** project requires audioworks, type configure --help for options***) )
-dnl DPP_HAVE_VRJUGGLER( /usr, AC_MSG_RESULT(+ Found VR Juggler), AC_MSG_ERROR(*** project requires vrjuggler, type configure --help for options***) )
-
 
 dnl Define the root directory for the OpenAL installation.
 dnl sound_subsystem_default="None"
@@ -318,10 +324,11 @@ if test "x$PLATFORM" = "xIRIX" ; then
     snx_n32_flags='-n32'
     snx_64_flags='-64'
 fi
-snx_extra_cxxflags=''
+
+snx_extra_cxxflags='$VRJ_CXXFLAGS $VPR_CXXFLAGS'
 snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-snx_extra_libs="$LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
+snx_extra_libs="$LDFLAGS $VPR_LIBS $VRJ_LIBS $LIBS $APP_EXTRA_LIBS_END"
 
 
 AC_SUBST(snx_lib)
