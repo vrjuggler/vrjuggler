@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-06-2003 patrickh    Restored the ability to read symbolic values from
+                        configuration files where value enumerations are used.
+                        NEW VERSION: 0.10.1
 Apr-09-2003 nonchocoboy Embedded chunks may now be heterogenously defined. The
                         allowed types list is used to specify which types of
                         chunks are allowed for a given property containing
