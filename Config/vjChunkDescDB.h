@@ -3,11 +3,6 @@
  *
  * Author: Christopher Just
  *
-<<<<<<< vjChunkDescDB.h
- *
- *
-=======
->>>>>>> 1.5
  */
 
 
