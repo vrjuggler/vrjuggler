@@ -18,30 +18,6 @@
           {endif}	 
           {next public}
           </font>
-        <!-- Protected Funcs -->
-          <font style="Bold" color="002200">
-          {foreach protected all}
-          {if func}        
-            <item
-                title="{mname}"
-                info="{type} {mname}({args}): {if brief} {brief} {endif}"
-                link="$(PROGRAMMERREF)/classes/{class}.html#{memberef}"
-                image="Protected_Method.gif">
-          {endif}	 
-          {next protected}
-          </font>
-        <!-- Private Funcs -->
-          <font style="Bold" color="220000">
-          {foreach private all}
-          {if func}
-            <item
-                title="{mname}"
-                info="{type} {mname}({args}): {if brief} {brief} {endif}"
-                link="$(PROGRAMMERREF)/classes/{class}.html#{memberef}"
-                image="Protected_Method.gif">
-          {endif}	 
-          {next private}
-          </font>
 
         <!-- Public vars -->
           <font style="Plain" color="000022">
@@ -54,30 +30,6 @@
                 image="Public_Method.gif">
           {endif}	 
           {next public}
-          </font>
-        <!-- Protected vars -->
-          <font style="Plain" color="002200">
-          {foreach protected all}        
-          {if !func}        
-            <item
-                title="{mname}: {type}"
-                info="{type} {mname}: {if brief} {brief} {endif}"
-                link="$(PROGRAMMERREF)/classes/{class}.html#{memberef}"
-                image="Protected_Method.gif">
-          {endif}	 
-          {next protected}
-          </font>
-        <!-- Private vars -->
-          <font style="Plain" color="220000">
-          {foreach private all}        
-          {if !func}        
-             <item
-                 title="{mname}: {type}"
-                 info="{type} {mname}: {if brief} {brief} {endif}"
-                 link="$(PROGRAMMERREF)/classes/{class}.html#{memberef}"
-                 image="Protected_Method.gif">
-          {endif}	 
-          {next private}
           </font>
     </folder>
   {endif}
