@@ -91,6 +91,9 @@ public class NetControl implements Runnable {
 	    thread = new Thread(this);
 	    thread.start();
 	    Core.consoleInfoMessage ("Net", "Connected to " + remote_name);
+
+	    Core.perf_collection.removeAllData();
+
 	    getChunkDescs();
 	    getChunks();
 	    return true;
@@ -349,12 +352,19 @@ public class NetControl implements Runnable {
 	    }
 	    else if (instream.sval.equalsIgnoreCase ("PerfData1")) {
 		instream.pushBack();
-		Core.perf_collection.read(instream);
+		Core.perf_collection.read(instream, false);
 		return true;
 	    }
 	    else if (instream.sval.equalsIgnoreCase ("refresh")) {
 		// juggler is telling the GUI it needs to refresh itself.
-		getChunks();
+		// for the moment, no args is the same as 'all'
+		instream.nextToken();
+		if (instream.sval.equalsIgnoreCase ("all"))
+		    getChunks();
+		else {
+		    instream.pushBack();
+		    getChunks();
+		}
 		return true;
 	    }
 	    else {

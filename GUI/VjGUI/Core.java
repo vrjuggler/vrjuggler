@@ -22,6 +22,7 @@ public class Core {
     static public NetControl net;
     static public ControlUI ui;
     static public ConfigChunkDB gui_chunkdb;
+    static public ConfigChunkDB default_chunkdb;
     static public ConfigChunk vjcontrol_preferences = null;
 
     static public PerfDataCollection perf_collection;
@@ -65,6 +66,8 @@ public class Core {
 	perf_collection = new PerfDataCollection();
 	chunkorgtree = new ChunkOrgTree();
 	descdb = new ChunkDescDB();
+	default_chunkdb = new ConfigChunkDB (descdb);
+	ChunkFactory.setDefaultChunkDB (default_chunkdb);
 	ChunkFactory.setChunkDescDB (descdb);
 	gui_chunkdb = new ConfigChunkDB (descdb);
 	db = new ConfigChunkDB(descdb);
@@ -247,6 +250,7 @@ public class Core {
 	Property p;
 	int fontsize = -1;
 	String fontname = "";
+	String defaultchunkfile = null;
 
 	ConfigChunk ch = vjcontrol_preferences;
 	if (ch == null)
@@ -263,11 +267,17 @@ public class Core {
 
 	    screenWidth = ch.getPropertyFromToken("windowsize").getVal(0).getInt();
 	    screenHeight = ch.getPropertyFromToken("windowsize").getVal(1).getInt();
+	    defaultchunkfile = ch.getPropertyFromToken("defaultchunkfile").getVal(0).getString();
+	   
 
 	}
 	catch (Exception e) {
 	    Core.consoleInfoMessage ("vjControl", "Old vjcontrol preferences file - please check preferences and re-save");
 	}
+
+//  	if (defaultchunkfile != null) {
+//  	    default_chunkdb.removeAllElements();
+	    
 
 	if (screenWidth < 1)
 	    screenWidth = 800;

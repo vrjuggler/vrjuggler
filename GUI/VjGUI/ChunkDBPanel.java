@@ -340,10 +340,9 @@ public class ChunkDBPanel extends JPanel
 	    }
 	}
 	else if (source == insert_button) {
-	    ChunkDesc cd = Core.descdb.getByName ((String)insert_type.getSelectedItem());
-	    if (cd != null) {
-		ch = ChunkFactory.createChunk (cd);
-		ch.name = (current_treemodel.chunkdb.getNewName(cd.name));
+	    ch = ChunkFactory.createChunkWithDescName ((String)insert_type.getSelectedItem());
+	    if (ch != null) {
+		ch.name = (current_treemodel.chunkdb.getNewName(ch.getDescName()));
 		current_treemodel.insertNode (ch);
 	    }
 	}
