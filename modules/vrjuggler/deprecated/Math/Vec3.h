@@ -81,7 +81,7 @@ public:
 
    inline Vec3 cross(const Vec3& v) const           //Calculate the cross product vector
    {
-      return Vec3( gmtl::cross( *this, v ) );
+      return Vec3( gmtl::makeCross( *this, v ) );
    }
 
    inline void lerp(float n, const Vec3& a, const Vec3& b)  //Linear interpolation
