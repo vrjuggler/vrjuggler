@@ -341,37 +341,7 @@ public class PropertyDesc implements Cloneable {
 
 
     public String toString() {
-	String s = token + " " + valtype + " " 
-	    + num 
-	    + " \"" + name + "\"";
-
-	/* value labels: */
-	if (valuelabels.size() > 0) {
-	    DescEnum e;
-	    s += " vj_valuelabels { ";
-	    for (int i = 0; i < valuelabels.size(); i++) {
-		s += "\"" + (String)valuelabels.get(i) + "\" ";
-	    }
-	    s += "}";
-	}
-
-	/* enumerations */
-	if (enums.size() > 0) {
-	    DescEnum e;
-	    s += " vj_enumeration { ";
-	    for (int i = 0; i < enums.size(); i++) {
-		e = (DescEnum) enums.get(i);
-                if (valtype == ValType.STRING ||
-                    valtype == ValType.CHUNK ||
-                    valtype == ValType.EMBEDDEDCHUNK)
-		    s += "\"" + e.str + "\" ";
-		else
-		    s += "\"" + e.str + "=" + e.val + "\" ";
-	    }
-	    s += "}";
-	}
-	s += " \"" + help + "\"";
-	return s;
+        return xmlRep ("");
     }
 
 
