@@ -307,11 +307,13 @@ public class NetControl implements Runnable {
 		for (;;) {
 		    c = Core.active_treemodel.chunkdb.readAChunk(instream);
 		    if (c != null) {
+			System.out.println ("read chunk: \n" + c.toString());
 			Core.active_treemodel.insertNode (c);
 		    }
 		    else
 			break;
 		}
+		System.out.println (" done reading chunks");
 
 // 		if (! Core.active_treemodel.chunkdb.read (instream))
 // 		    return false;
