@@ -263,15 +263,19 @@ namespace cluster
       {
          if (hostname == ClusterNetwork::instance()->getLocalHostname())
          {
-            vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
-
+            // This application data is local
             new_app_data->setIsLocal(true);
             
+            // Adding a new ApplicationData server
+            vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
             ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id,new_app_data);                        
             mApplicationDataServers[id] = new_appdata_server;
          }
          else
-         {               
+         {    
+            // This application data is not local
+            new_app_data->setIsLocal(false);
+
                // Create a ApplicationDataRequest
             ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(id);
             addPendingApplicationDataRequest(new_appdata_req, hostname);
