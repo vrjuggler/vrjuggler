@@ -212,6 +212,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
 
       sonix::instance()->changeAPI( "Subsynth" );
    }
+   break;
    case '4':
    {
       sonix::instance()->changeAPI( "Stub" );
