@@ -41,7 +41,7 @@
 #include <vpr/vpr.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <gadget/Type/KeyboardInterface.h>
+#include <gadget/Type/EventWindowInterface.h>
 #include <vector>
 #include <vrj/Draw/OGL/GlContextData.h>
 
