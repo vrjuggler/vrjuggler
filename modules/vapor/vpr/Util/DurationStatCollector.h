@@ -58,7 +58,7 @@ public:
    DurationStatCollector(vpr::Interval::Unit units = vpr::Interval::Sec,
                          unsigned sampleLimit = 100)
       : SampleLimitedStatCollector<double, false>(sampleLimit)
-      , mUints(units)
+      , mUnits(units)
       , mStartTimeNeededNext(true)
    {
       ;
