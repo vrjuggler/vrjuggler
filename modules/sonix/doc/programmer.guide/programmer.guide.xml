@@ -12,7 +12,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article lang="en">
    <articleinfo>
-      <title>Sonix: The Juggler High Level Simple Sound Abstraction</title>
+      <title>Sonix: The Juggler Simple Sound Abstraction</title>
       <subtitle>Course notes for Open source VR - IEEEVR2002</subtitle>
       <authorgroup>
          <author>
@@ -25,25 +25,26 @@
    </articleinfo>
    <section>
       <title>Introduction</title>
-      <para>Sonix is a high level abstraction for audio hardware or audio APIs, The interface to sonix is kept very very simple in order to get people up and running with sound as fast as possible... </para>
-      <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. systems using this layer expect to be completely portable. changing sound APIs at run time will be useful so that the user can play with quality and latency differences of different hardware and different soud APIs </para>
+      <para>Sonix provides simple audio sound objects on top of several audio APIs. The interface to sonix is kept very very simple in order to get people up and running with sound as fast as possible. </para>
       <para>Here is an overview of Sonix capabilities: <itemizedlist>
             <listitem>
-               <para>Very simple interface.</para>
-               <para>Small learning curve.</para>
+               <para>Provides simple access to spacialized sound triggering.</para>
             </listitem>
             <listitem>
-               <para>Sound abstraction supports reconfigurability.</para>
-               <para>Reconfigurations of sound resources are protected (i.e. does not break application).</para>
+               <para>Small learning curve, Simple interface and usage.</para>
+            </listitem>
+            <listitem>
+               <para>Runs on top of several well known audio systems - currently OpenAL and Multigen/Paradigm's AudioWorks. </para>
+            </listitem>
+            <listitem>
+               <para>Supports reconfigurability at runtime.</para>
+               <para>Reconfigurations of sound resources are protected (i.e. reconfiguration does not break application).</para>
                <para>Changing a sound resource reflects properly in all other handles to the same resource (resources allow multiple users) </para>
             </listitem>
             <listitem>
-               <para>Support for features needed by 3D virtual environments.</para>
+               <para>Supports features needed by 3D virtual environments.</para>
                <para>Spacialized or ambient audio</para>
                <para>One-shot and looping sounds.</para>
-            </listitem>
-            <listitem>
-               <para>Runs on top of some well known audio systems - <productname>OpenAL</productname>, and Multigen/Paradigm's <productname>AudioWorks</productname>. </para>
             </listitem>
          </itemizedlist></para>
    </section>
@@ -60,21 +61,13 @@
                </imageobject>
             </mediaobject>
          </figure></para>
-      <para>To start the <productname>sonix</productname> system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by <productname>sonix</productname>, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.<figure>
+      <para>To start the sonix system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by sonix, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.<figure id="startupCode">
             <title>Code to startup and initialize sonix to use the OpenAL audio subsystem</title>
-            <programlisting
-              id     = "startupCode"
-            >sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
+            <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
          </figure></para>
-      <para><methodname></methodname>To setup a sound is also straight forward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <ooclass>
-            <classname>snx::SoundInfo</classname>
-         </ooclass> to configure the sound object, which is accessed by a <ooclass>
-            <classname>snx::SoundHandle</classname>
-         </ooclass>. <figure>
+      <para><methodname></methodname>To setup a sound is also straight forward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <classname>snx::SoundInfo</classname> to configure the sound object, which is accessed by a <classname>snx::SoundHandle</classname>. <figure id="soundHandleSetup">
             <title>Code to setup a sonix sound</title>
-            <programlisting
-              id     = "soundHandleSetup"
-            >snx::SoundInfo info;
+            <programlisting>snx::SoundInfo info;
 info.filename = "crack.wav";
 info.datasource = snx::SoundInfo::FILESYTEM;
 
@@ -87,16 +80,94 @@ crack_sound.configure( info );</programlisting>
    time_delta = getTimeChangeInSeconds(); // use a system call, or other API to get your time delta
    sonix::instance()-&gt;step( time_delta );
 }</programlisting>
+         </figure><figure>
+            <title>Example C++ program that uses sonix to play a sound using OpenAL</title>
+            <programlisting>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;snx/sonix.h&gt;
+
+int main( int argc, char* argv[] )
+{
+   std::string filename( "808kick.wav" ), api( "OpenAL" );
+   
+   if (!snxFileIO::fileExists( filename.c_str() ))
+   {
+      std::cout &lt;&lt; "File not found: " &lt;&lt; filename &lt;&lt; "\n" &lt;&lt; std::flush;
+      return 0;
+   }
+
+   // start sonix using OpenAL
+   sonix::instance()-&gt;changeAPI( api );
+      
+   // fill out a description for the sound we want to play
+   snx::SoundInfo sound_info;
+   sound_info.filename = filename;
+   sound_info.datasource = snx::SoundInfo::FILESYSTEM;
+
+   // create the sound object
+   snx::SoundHandle sound_handle;
+   sound_handle.init( "my simple sound" );
+   sound_handle.configure( sound_info );
+   
+   // trigger the sound
+   sound_handle.trigger();
+   sleep( 1 );
+
+   // trigger the sound from a different position in 3D space...
+   sound_handle.setPosition( 10.0f, 0.0f, 0.0f );
+   sound_handle.trigger();
+   sleep( 1 );
+
+   // this simulates a running application...
+   while (1)
+   {
+      sonix::instance()-&gt;step( time_delta );    
+   }
+
+   return 1;
+}</programlisting>
          </figure></para>
    </section>
    <section>
       <title>Reconfiguration</title>
-      <para>Audio API abstraction for audio sound objects ontop of hardware or audio APIs, reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. systems using this layer expect to be completely portable. changing sound APIs at run time will be useful so that the user can play with quality and latency differences of different hardware and different soud APIs</para>
-      <para></para>
+      <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. Application using sonix expect to be completely portable. Changing sound APIs at run time can be useful so that the user can experiment with quality and latency differences of different hardware and sound APIs. </para>
+      <para>If no audio API is available on a given platform, your calls to sonix simply get ignored. This gives the benefit that you need no special code in your application to enable or disable sound - it is handled by sonix. </para>
+      <para>Reconfiguration allows application code to not need to be aware when something changes. Everything is changable behind the scenes. See <xref linkend="reconfigCode"/> for an example of how to reconfigure sonix in C++. This probably makes more sense in a more complex application where there is some application logic that triggers sounds and does not want or need to know when a sound has changed state, or when the user has tried out a new audio API.<figure id="reconfigCode">
+            <title>How to reconfigure sonix at runtime</title>
+            <programlisting>   // start sonix using OpenAL
+   sonix::instance()-&gt;changeAPI( "OpenAL" );
+      
+   // fill out a description for the sound we want to play
+   snx::SoundInfo sound_info;
+   sound_info.filename = "808kick.wav";
+   sound_info.datasource = snx::SoundInfo::FILESYSTEM;
+
+   // create the sound object
+   snx::SoundHandle sound_handle;
+   sound_handle.init( "my sound for testing" );
+   sound_handle.configure( sound_info );
+   
+   // trigger the sound
+   sound_handle.trigger();
+   sleep( 1 );
+
+   // trigger the sound using a different audio system...
+   sonix::instance()-&gt;changeAPI( "AudioWorks" );
+   sound_handle.trigger();
+   sleep( 1 );
+
+   // trigger our sound object using different source data
+   sound_info.filename = "303riff.wav";
+   sound_handle.configure( sound_info );
+   sound_handle.trigger();
+   sleep( 1 );
+</programlisting>
+         </figure></para>
    </section>
    <section>
-      <title>Techinical Details / Internal Implementation</title>
-      <para></para>
+      <title>Design and Implementation of Sonix</title>
+      <para>Sonix was designed (see <xref linkend="completesonixinterface"/>) using modern software design principles including design patterns and object oriented design. </para>
       <section>
          <title>Design Patterns Overview</title>
          <para>Design patterns describe simple and elegant solutions to specific problems in object oriented software design <xref linkend="Patterns"/>. When designing sonix, we used many design patterns, which were appropriate to a simple audio system <xref linkend="Gems2"/>.</para>
@@ -108,27 +179,42 @@ crack_sound.configure( info );</programlisting>
                <para>Prototype (<classname>snx::SoundImplementation</classname>) each sound implementation can be cloned, preserving its engine setup state </para>
             </listitem>
             <listitem>
-               <para>Store/plugin-method (<classname>snx::SoundFactory</classname>) each sound impl is registered with a Store. The Store allows users to select items from its inventory. The Store is also an "Abstract Factory" </para>
+               <para>Store/plugin-method (<classname>snx::SoundFactory</classname>) each sound implementation is registered with a Store called <classname>snx::SoundFactory</classname>. This Store allows users to select items from its inventory. Another name for Store is "Abstract Factory".</para>
             </listitem>
             <listitem>
                <para>Abstract Factory (<classname>snx::SoundFactory</classname>) The Store can create new instances of the requested sound implementation. The Abstract Factory consults its Store of registered objects, and if found, makes a clone of that object (Prototype pattern). The Abstract Factory is used to configure the Bridge. </para>
             </listitem>
             <listitem>
-               <para>Bridge (sonix interface class / <classname>snx::SoundImplementation</classname>) sonix class is the audio system abstraction which is decoupled from its implementation SoundImplementation. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API. </para>
+               <para>Bridge (<classname>sonix</classname> interface class and <classname>snx::SoundImplementation</classname>) <classname>sonix</classname> class is the audio system abstraction which is decoupled from its implementation <classname>snx::SoundImplementation</classname>. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API.</para>
             </listitem>
             <listitem>
-               <para>Proxy (<classname>std::string</classname>) refer to actual sounds with a <classname>std::string</classname> Proxy. This allows you to generically control a sound for any sound API. The sonix class acts as Mediator between every Proxy method and the actual SoundImplementation Adaptor. </para>
+               <para>Proxy (<classname>std::string</classname>) refer to actual sounds with a <classname>std::string</classname> Proxy. This allows you to generically control a sound for any sound API. The sonix class acts as Mediator between every Proxy method and the actual SoundImplementation Adaptor. <classname>snx::SoundHandle</classname> is actually a proxy to this <classname>std::string</classname> proxy.</para>
             </listitem>
          </itemizedlist>
          <figure
            id        = "completesonixinterface"
            xreflabel = "completesonixinterface"
          >
-            <title>The complete sonix interface.</title>
+            <title>The sonix design.</title>
             <mediaobject>
                <imageobject>
                   <imagedata
-                    fileref = "complete.interface.uml.png"
+                    fileref = "sonix.system.view.png"
+                    format  = "PNG"
+                  />
+               </imageobject>
+            </mediaobject>
+         </figure>
+      </section>
+      <section>
+         <title>Plug-in audio subsystems</title>
+         <para>Sonix supports the selection of several audio subsystems by the application through implementation plug-ins. Each plug-in implements an adaptor to an underlying audio subsystem. The adaptor supports a common interface that sonix knows how talk to. Each adaptor is then registered with a factory object, which may ask that adaptor to clone itself for use by whoever called the factory. </para>
+         <figure>
+            <title>How sonix is able to support run many audio subsystems through "plug-ins"</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata
+                    fileref = "how.plugins.work.png"
                     format  = "PNG"
                   />
                </imageobject>
