@@ -25,7 +25,7 @@
       <title>Software Choreography</title>
       <para>Within this book, we present the fundamentals of the VR Juggler 2.0 build system, a complex piece of software in its own right that manages the compilation of the various modules that make up VR Juggler 2.0 (and beyond, I suspect). Those few readers who may be familiar with the VR Juggler 1.0 build system may recognize a few similarities, but truly, the Doozer++-based build is quite different than what was originally intended to be backwards compatible with an IRIX-only build written for the first version of VR Juggler (then called VRLib).</para>
       <para>Since 1998, the Autoconf-based VR Juggler build system has grown more and more complex. Originally, the build made use of Autoconf, GNU make, and a few small Perl scripts to simplify installations. Now, in mid-2002, the build system still makes use of all those tools, but it has many, many custom m4 macros (most of which come from Doozer++), makefile stubs, Autoconf-like scripts written in Perl, and custom CVS utilities. It may yet evolve to include Java- and Python-based tools.</para>
-      <para>With all this (growing) complexity, the VR Juggler 2.0 build system is a colossal effort in software choreography wherein all the pieces have to come together in such a way as to exude a Broadway-calibre performance. In this book, I strive to lay out the steps like one of Arthur Miller's finest teachers.</para>
+      <para>With all this (growing) complexity, the VR Juggler 2.0 build system is a colossal effort in software choreography wherein all the pieces have to come together in such a way as to exude a Broadway-caliber performance. In this book, I strive to lay out the steps like one of Arthur Miller's finest teachers.</para>
    </preface>
    <part id="introduction.part">
       <title>Introduction</title>
@@ -52,8 +52,8 @@
          <para>Automation in a build system means doing as much as possible to avoid requiring programmers to type anything beyond the following familiar command:</para>
          <screen>configure ; make ; make install</screen>
          <para>Whether this is always possible is highly debatable, but either way, it should always be the goal. If the above cannot be achieved, some mechanism must exist so that programmers feel as though that is all they ever have to type.</para>
-         <para>There is much more to the philosophy of the VR Juggler build system than just automation, but someone looking at the code would see that steps to automate configuration and compliation make up a sizeable percentage of the total line count. Beyond simplifying the process of building, we also have the goal of simplifying extensions to the build system.</para>
-         <para>Unfortunately, repeated experience has shown that no amount of simplification is enough to satisfy even the most patient of users. This harkens back to the original point stating that programmers focus more on writing their code than on compiling it. A build system is always going to be foreign to the majority of the people on any given team, and taking the time to learn and understand a build system takes up valuable coding time. Despite these bleak statements, it is possible to put together a build system that requires little effort to extend when a new file must be compiled or a new source directory is added. Those who hope for more than this are likely to be let down.</para>
+         <para>There is much more to the philosophy of the VR Juggler build system than just automation, but someone looking at the code would see that steps to automate configuration and compilation make up a sizable percentage of the total line count. Beyond simplifying the process of building, we also have the goal of simplifying extensions to the build system.</para>
+         <para>Unfortunately, repeated experience has shown that no amount of simplification is enough to satisfy even the most patient of users. This hearkens back to the original point stating that programmers focus more on writing their code than on compiling it. A build system is always going to be foreign to the majority of the people on any given team, and taking the time to learn and understand a build system takes up valuable coding time. Despite these bleak statements, it is possible to put together a build system that requires little effort to extend when a new file must be compiled or a new source directory is added. Those who hope for more than this are likely to be let down.</para>
          <para>More details on the goals of Doozer++ and the VR Juggler build system are provided in the next chapter. All of these goals are founded by the philosophy discussed above.</para>
       </chapter>
       <chapter id="goals.dpp.chapter">
@@ -107,7 +107,7 @@
          </section>
          <section>
             <title>Platform Independence</title>
-            <para>Because VR Juggler has always been a cross-platform tool, we have had the need for a cross-platform way to build it. The VR Juggler 1.0 build system achieved this to a limited degree, and Doozer++ goes a step further towards true platform independence. At this time, Doozer++ makes use of software utilities found on all modern operating systems. The list of utilities includes <command>m4</command>(1), <command>sh</command>(1), Perl, Autoconf, and GNU make. We have avoided the use of platform-specific tools because it is all too easy for the platform-specific parts of a build system to get out of sync with each other. Furthermore, we have tried to avoid the use of platform-specific code whenever possible. This is a more difficult goal to achieve, but later sections will address the extent to which platform-specific code can be reduced.</para>
+            <para>Because VR Juggler has always been a cross-platform tool, we have had the need for a cross-platform way to build it. The VR Juggler 1.0 build system achieved this to a limited degree, and Doozer++ goes a step further toward true platform independence. At this time, Doozer++ makes use of software utilities found on all modern operating systems. The list of utilities includes <command>m4</command>(1), <command>sh</command>(1), Perl, Autoconf, and GNU make. We have avoided the use of platform-specific tools because it is all too easy for the platform-specific parts of a build system to get out of sync with each other. Furthermore, we have tried to avoid the use of platform-specific code whenever possible. This is a more difficult goal to achieve, but later sections will address the extent to which platform-specific code can be reduced.</para>
          </section>
          <section>
             <title>Compiler Freedom</title>
@@ -124,14 +124,14 @@
             <title>Language Freedom</title>
             <para>Language freedom is slightly more complicated than compiler freedom. As will be discussed more fully in the following section, Doozer++ separates its work into two pieces: configuration and compilation. During configuration, the tools for compilation are chosen; during compilation, the chosen tools are put to use.</para>
             <para>The primary project building tool is GNU make. We chose GNU make initially because of its portability and because it offered useful features over most basic <command>make</command>(1) implementations. Other implementations, such as BSD make, offer even more features, but they are not as portable as GNU make.</para>
-            <para>Because Doozer++ uses GNU make, users must write makefiles. Doozer++ provides a number of modular makefile <quote>stubs</quote> that collect common functionality. In particular, these stubs provide support for compiling code written in Java, C, C++, and IDL. Adding support for other langauges can be done within Doozer++ or within user-level makefiles.</para>
+            <para>Because Doozer++ uses GNU make, users must write makefiles. Doozer++ provides a number of modular makefile <quote>stubs</quote> that collect common functionality. In particular, these stubs provide support for compiling code written in Java, C, C++, and IDL. Adding support for other languages can be done within Doozer++ or within user-level makefiles.</para>
          </section>
          <section>
             <title>Separation of Tools and Tasks</title>
             <para>The design of Doozer++ involves a distinct separation between the tools used and the tasks performed. As a result of this separation, there exists the possibility to extend Doozer++ to use tools other than Autoconf and GNU make. Moreover, different combinations are allowed. For example, we have found that <command>make</command>(1) does not deal well with compiling Java code in general. A more appropriate tool for this task has come out of <ulink url="http://jakarta.apache.org/">the Apache Jakarta Project</ulink> called <ulink url="http://jakarta.apache.org/ant/">Ant</ulink><indexterm>
                   <primary>Ant</primary>
                </indexterm>. Within Doozer++, we could make use of Ant instead of or in addition to GNU make to compile Java software. Nothing restricts users to Autoconf and/or GNU make.</para>
-            <para>The basic idea behind the separation is the following: detect and configure the static information needed to execute tools that compile a (potentially complex) software system. This leads to a two-step process: configuration and compliation. These steps are described in the following subsections.</para>
+            <para>The basic idea behind the separation is the following: detect and configure the static information needed to execute tools that compile a (potentially complex) software system. This leads to a two-step process: configuration and compilation. These steps are described in the following subsections.</para>
             <section>
                <title>Configuration</title>
                <para>During the configuration stage, we determine what tools are available that meet a given set of needs. Typically, this means finding suitable compilers and determining what options the compilers support. Of course, most projects have more complicated needs than this. For example, VR Juggler can be compiled with several different versions of GCC (2.95.3 through 3.1 as of this writing). When moving between platforms, the GCC C++ compiler will almost always be called <command>g++</command>, but it may not always be the same version<footnote>
@@ -234,7 +234,7 @@
          </section>
          <section>
             <title>Minimize Special Steps</title>
-            <para>As has been discussed at great length previously, it is important that users of the build system be freed from remembering many commnad-line arguments or special steps that must be taken to build a given piece of software. With several modules to configure and build, there is a lot to know about compiling VR Juggler. Most modules have external dependencies, the paths to which must be specified using command-line arguments. Furthermore, some modules may be compiled differently based on configuration-time settings. The so-called <quote>global build</quote> manages all of this, and so it has the responsibility of reducing the amount of information users must remember.</para>
+            <para>As has been discussed at great length previously, it is important that users of the build system be freed from remembering many command-line arguments or special steps that must be taken to build a given piece of software. With several modules to configure and build, there is a lot to know about compiling VR Juggler. Most modules have external dependencies, the paths to which must be specified using command-line arguments. Furthermore, some modules may be compiled differently based on configuration-time settings. The so-called <quote>global build</quote> manages all of this, and so it has the responsibility of reducing the amount of information users must remember.</para>
             <para>To that end, the global build offers some features for remembering command-line arguments so that users do not have to. Many of the configure scripts for the individual modules are written such that the default values for arguments are reasonable enough that users rarely have to pass them. The combination of these two features usually allows the typical developer to run the global configure script with no arguments. While this is not always the case (for example, on Win32, the path to NSPR must be specified unless the user has done something special in his or her environment), it happens often enough to keep people reasonably happy.</para>
          </section>
          <section>
@@ -307,7 +307,7 @@
                      <varlistentry>
                         <term>profiled</term>
                         <listitem>
-                           <para>Build only the profiled version of the library binaries (both static and dynamic). This capability is dependent on the compiler being used. Not all compilers support the process of generating profiled code, so this target may have no effect. Profiled libares are built with debugging symbols. This target is the combination of '<literal>prof</literal>' and '<literal>prof-dso</literal>'.</para>
+                           <para>Build only the profiled version of the library binaries (both static and dynamic). This capability is dependent on the compiler being used. Not all compilers support the process of generating profiled code, so this target may have no effect. Profiled libraries are built with debugging symbols. This target is the combination of '<literal>prof</literal>' and '<literal>prof-dso</literal>'.</para>
                         </listitem>
                      </varlistentry>
                      <varlistentry>
@@ -514,7 +514,7 @@
                <section>
                   <title>Module Configuration Header</title>
                   <para>Each module has a single header that includes the header file generated by running configure. The idea here is to have a single point where common actions are taken based on what comes in through the generated header. For example, based on platform settings, symbol export macros are defined in the module configuration header. This single header is then included by all the other files in the project.</para>
-                  <para>The naming convention for the module configuration header is the same as that of the generated header except that the word <quote>Config</quote> is used instead of <quote>Defines</quote>. The reasoning for this convention is similar to that of the generated header, but in this case, at least one other file fromthe project is being included. Namely, the generated header file is always included on the first (non-comment) line of this header file. We decided long ago that the name <filename>Config.h</filename> was too common and needed an extra bit of uniqueness. Again, this is done to prevent user errors.</para>
+                  <para>The naming convention for the module configuration header is the same as that of the generated header except that the word <quote>Config</quote> is used instead of <quote>Defines</quote>. The reasoning for this convention is similar to that of the generated header, but in this case, at least one other file from the project is being included. Namely, the generated header file is always included on the first (non-comment) line of this header file. We decided long ago that the name <filename>Config.h</filename> was too common and needed an extra bit of uniqueness. Again, this is done to prevent user errors.</para>
                </section>
                <section>
                   <title>Data Directory</title>
@@ -532,7 +532,7 @@
                      <para>User-accessible executables/scripts go in <filename>$prefix/bin</filename>.</para>
                   </listitem>
                   <listitem>
-                     <para>Libraries go in subdirectories of <filename>$prefix/lib</filename> (or a variant thereof depending on platform-specific conventions). More specifically, optimized librares go in <filename>$prefix/lib/opt</filename>, debugging libraries go in <filename>$prefix/lib/debug</filename>, and profiled libraries go in <filename>$prefix/lib/profiled</filename>. There is further subdivision within those directories based on the binary format (ELF, a.out, etc.) and the instruction set architecture (i386, i686, mips4, sparc, etc.). To make things more convenient for users, symlinks to (or copies of depending on the host platform) libraries should be made in <filename>$prefix/lib</filename>. For full releases, we make symlinks to the optimized libraries. In the developer installation, we make symlinks to the debugging libraries. Typically, profiled libraries will be named differently than their non-profiled counterparts, so symlinks to those can be made along side the non-profiled versions.</para>
+                     <para>Libraries go in subdirectories of <filename>$prefix/lib</filename> (or a variant thereof depending on platform-specific conventions). More specifically, optimized libraries go in <filename>$prefix/lib/opt</filename>, debugging libraries go in <filename>$prefix/lib/debug</filename>, and profiled libraries go in <filename>$prefix/lib/profiled</filename>. There is further subdivision within those directories based on the binary format (ELF, a.out, etc.) and the instruction set architecture (i386, i686, mips4, sparc, etc.). To make things more convenient for users, symlinks to (or copies of depending on the host platform) libraries should be made in <filename>$prefix/lib</filename>. For full releases, we make symlinks to the optimized libraries. In the developer installation, we make symlinks to the debugging libraries. Typically, profiled libraries will be named differently than their non-profiled counterparts, so symlinks to those can be made along side the non-profiled versions.</para>
                   </listitem>
                   <listitem>
                      <para>Project data files and sample code goes in <filename>$prefix/share/&lt;project-name&gt;</filename>. The use of the <filename>&lt;project-name&gt;</filename> subdirectory is to avoid conflicts with existing software.</para>
@@ -549,7 +549,7 @@
                <primary>configure.pl</primary>
                <secondary>design of</secondary>
             </indexterm>
-            <para>The script <filename>configure.pl</filename> is a Perl script written to act as part of a build wrapper around an arbitrary collection of software modules. The modules are linked through some sort of (conceptual) <glossterm linkend="gloss.dependency-graph">dependency graph</glossterm>, in this case specified by a simple configuration file (see <xref linkend="build.cfg.file.section"/>). <filename>configure.pl</filename> reads the configuration file and proceeds to configure the individual modules in an order that satisifies the dependencies. Along the way, environment variables are set or extended so that each subsequent module is configured with the correct settings. The processes of managing the dependencies and performing the configuration are the topics of this section.</para>
+            <para>The script <filename>configure.pl</filename> is a Perl script written to act as part of a build wrapper around an arbitrary collection of software modules. The modules are linked through some sort of (conceptual) <glossterm linkend="gloss.dependency-graph">dependency graph</glossterm>, in this case specified by a simple configuration file (see <xref linkend="build.cfg.file.section"/>). <filename>configure.pl</filename> reads the configuration file and proceeds to configure the individual modules in an order that satisfies the dependencies. Along the way, environment variables are set or extended so that each subsequent module is configured with the correct settings. The processes of managing the dependencies and performing the configuration are the topics of this section.</para>
             <section id="build.cfg.file.section">
                <title>Build Configuration File</title>
                <indexterm zone="configure.pl.section">
@@ -740,7 +740,7 @@ module Tweek
                         <para>External dependency libraries (<option>--extra-libs</option>)</para>
                      </listitem>
                   </itemizedlist>
-                  <para>Each of the above iteratively calls the <filename>-config</filename> script(s) from the depdency module(s) using at least a subset of the arguments specified by the user on the command line. One additional argument is given that reduces the amount of output: <option>--min</option>. This causes each script to print out only the minimal information needed for compiling. The motivation for doing this is to keep the compile lines short whenever possible.</para>
+                  <para>Each of the above iteratively calls the <filename>-config</filename> script(s) from the dependency module(s) using at least a subset of the arguments specified by the user on the command line. One additional argument is given that reduces the amount of output: <option>--min</option>. This causes each script to print out only the minimal information needed for compiling. The motivation for doing this is to keep the compile lines short whenever possible.</para>
                </section>
                <section>
                   <title>Script Generation</title>
@@ -813,7 +813,7 @@ module Tweek
                </section>
                <section>
                   <title>Variables Defined</title>
-                  <para>Upon successful complection of step 3 (see above), there are several shell variables defined for the calling code to use. Typically, these variables are concatenated with other variables to form the full set of options passed to the compiler and the linker. In order to maintain onsistency across all the <filename>.m4</filename> files, it is important to know what variables must be defined and why.</para>
+                  <para>Upon successful completion of step 3 (see above), there are several shell variables defined for the calling code to use. Typically, these variables are concatenated with other variables to form the full set of options passed to the compiler and the linker. In order to maintain consistency across all the <filename>.m4</filename> files, it is important to know what variables must be defined and why.</para>
                   <para>First, the variables can be separated into two broad categories: minimal and maximal. The basic idea with minimal versus maximal flags is to allow the user some flexibility in composing the full command-line options. The minimal variables provide only the minimum amount of information needed for compiling. No dependency information is included. For example, such settings usually include one or two header path extensions (<option>-I</option> options) and mandatory compiler flags such as <option>-LANG:std</option>. The maximal variables, on the other hand, include all the information needed for compiling including dependency data. More concretely, the minimal C++ compiler flags for Gadgeteer would give the header path for the Gadgeteer headers and any mandatory compiler flags. The maximal C++ compiler flags would include the minimal information as well as flags relating to JCCL, Tweek, and VPR (in that order). The same would be true for linker flags. To summarize, the minimal variables must be mixed with other minimal variables if the module has dependencies; the maximal variables can stand on their own.</para>
                   <para>Within the minimal and maximal categories, there are two more categories: compiler flags and linker flags. Based on the discussion above, this distinction should be fairly obvious. This distinction is made to deal with platforms where the compiler is not used to perform the link stage. Since some compilers can call the linker as necessary, <emphasis>linking</emphasis> flags<footnote>
                         <para>Note the distinction between <emphasis>linker</emphasis> flags (flags for the linker program) and <emphasis>linking</emphasis> flags (flags used to link object files).</para>
@@ -877,12 +877,12 @@ module Tweek
             <section>
                <title>Installation Hierarchy</title>
                <para>The individual documentation building makefiles are expected to behave when installing the generated documentation. That is, they should install to a subdirectory of <varname>$(webroot)</varname> that reflects the appropriate project. In many cases, the installation hierarchy should also reflect the version of the software against which the documentation was written.</para>
-               <para>Each makefile is responsible for creating its own installation hierarchy and for installing any related, external files. The documentation build offers some automation to help with this, but its abilities are limited. At this time, the documentation build can be directed to install the image fiels that come with the DocBook stylesheets and any local images that the documentation needs.</para>
+               <para>Each makefile is responsible for creating its own installation hierarchy and for installing any related, external files. The documentation build offers some automation to help with this, but its abilities are limited. At this time, the documentation build can be directed to install the image files that come with the DocBook style sheets and any local images that the documentation needs.</para>
             </section>
          </section>
          <section>
             <title>Configuration and Customization</title>
-            <para>At this time, most of the documentation in the Juggler Project is written using DocBook. Because of that, the settings for building documents from DocBook files are centralized in the file <filename>juggler/doc/docbook.mk</filename>. This file is parameterized to the extreme so that including makefiles can override its default settings easily. Usually, makefiles that include docbook.mk direct the build to use OpenJade, Saxon, or Xalan to process the DocBook input and PassiveTeX, FOP, or XEP to create PDF files. Further configuration can be done that chooses different versions or installations of the DocBook stylesheets, Saxon, Xalan, FOP, etc. The following is the makefile used to generate HTML and PDF versions of this document:</para>
+            <para>At this time, most of the documentation in the Juggler Project is written using DocBook. Because of that, the settings for building documents from DocBook files are centralized in the file <filename>juggler/doc/docbook.mk</filename>. This file is parameterized to the extreme so that including makefiles can override its default settings easily. Usually, makefiles that include docbook.mk direct the build to use OpenJade, Saxon, or Xalan to process the DocBook input and PassiveTeX, FOP, or XEP to create PDF files. Further configuration can be done that chooses different versions or installations of the DocBook style sheets, Saxon, Xalan, FOP, etc. The following is the makefile used to generate HTML and PDF versions of this document:</para>
             <programlistingco>
                <areaspec>
                   <areaset coords=" " id="docs.makefile.req.targets">
@@ -939,7 +939,7 @@ include ../docbook.mk
                      <para>These are the required targets that all makefiles in the documentation build must have. Refer to <xref linkend="doc.build.req.targets.section"/> for more information on these targets.</para>
                   </callout>
                   <callout arearefs="docs.makefile.name">
-                     <para>This variable lists the base name of the source document. Since the generated documents differ only in final extension, this variable is used internally as the basis for the name of the source file and the generated documents. If there are multiple source documents, multiple varables (such as <varname>$(NAME1)</varname>, <varname>$(NAME2)</varname>, etc.) would be used.</para>
+                     <para>This variable lists the base name of the source document. Since the generated documents differ only in final extension, this variable is used internally as the basis for the name of the source file and the generated documents. If there are multiple source documents, multiple variables (such as <varname>$(NAME1)</varname>, <varname>$(NAME2)</varname>, etc.) would be used.</para>
                   </callout>
                   <callout arearefs="docs.makefile.src.xml">
                      <para>This variable lists all the DocBook XML source files that will be used as input to the XSLT processor. Each source file should have corresponding output files, also listed in this makefile.</para>
@@ -1016,7 +1016,7 @@ COMMENT    ::= '#' &lt;text&gt; | '//' &lt;text&gt; | '/*' &lt;text&gt; '*/' | Î
                   <primary>JugglerConfigure.pm</primary>
                   <secondary>JugglerModule package</secondary>
                </indexterm>
-               <para>The <literal>JugglerModule</literal> package defines a class containing two <quote>data members</quote>: <varname>name</varname> and <varname>deps</varname>. These are actually keys of the blessed hash returned by the <function>new()</function> subroutine. The <varname>name</varname> member is just a string that contains the unique name of the module. The <varname>deps</varname> member is more interesting. Indded, the main purpose of the <literal>JugglerModule</literal> package is to maintain the list of dependencies.</para>
+               <para>The <literal>JugglerModule</literal> package defines a class containing two <quote>data members</quote>: <varname>name</varname> and <varname>deps</varname>. These are actually keys of the blessed hash returned by the <function>new()</function> subroutine. The <varname>name</varname> member is just a string that contains the unique name of the module. The <varname>deps</varname> member is more interesting. Indeed, the main purpose of the <literal>JugglerModule</literal> package is to maintain the list of dependencies.</para>
                <para>The <varname>deps</varname> member is a reference to an array of <classname>ModuleDependency</classname> objects (see <xref linkend="ModuleDependency.pkg.section"/>). An array is used to preserve the ordering read from the configuration file. All dependencies given in the configuration file appear in the array. This includes those <quote>inherited</quote> from another module through the use of the <token>depend</token> keyword.</para>
                <para>Duplication of dependencies is avoided by performing a check whenever a new dependency is added using <methodname>addDependency()</methodname>. The <methodname>hasDependency()</methodname> method encapsulates the process of making the check. The dependencies of two modules can be merged using the <methodname>addDependencies()</methodname> method.</para>
             </section>
@@ -1103,7 +1103,7 @@ COMMENT    ::= '#' &lt;text&gt; | '//' &lt;text&gt; | '/*' &lt;text&gt; '*/' | Î
                   <title>Load Default Arguments</title>
                   <indexterm>
                      <primary>configure.pl</primary>
-                     <secondary>default arguemnts</secondary>
+                     <secondary>default arguments</secondary>
                      <tertiary>loading of</tertiary>
                   </indexterm>
                   <para>To simplify the execution of <command>configure.pl</command>, users may write a default arguments file or a Perl plug-in that provides default arguments. In either case, the idea is that arguments for Autoconf-generated configure scripts can be collected into reusable platform- and site-specified pieces so that they do not have to be passed every time <command>configure.pl</command> is run. The preferred method for specifying default arguments is the Perl plug-in, but for users who do not know Perl, a simple configuration file can be used instead. Here, we will only describe the process of loading these files, not how to use them.</para>
@@ -1164,7 +1164,7 @@ COMMENT    ::= '#' &lt;text&gt; | '//' &lt;text&gt; | '/*' &lt;text&gt; '*/' | Î
          <para>Because there are so many <filename>configure.in</filename> files, consistency among all of them is very important. It only takes one script that does not follow the rules to complicate maintenance of the entire build.</para>
          <section>
             <title>Basic Concepts</title>
-            <para>In this section, we present the basic concepts of <filename>configure.in</filename> files in the Juggler Project. It may be intersting to note that some of the content in this section was written in mid-1998 and has been copied verbatim. Whether this is an indication of robustness or stagnation is debatable.</para>
+            <para>In this section, we present the basic concepts of <filename>configure.in</filename> files in the Juggler Project. It may be interesting to note that some of the content in this section was written in mid-1998 and has been copied verbatim. Whether this is an indication of robustness or stagnation is debatable.</para>
             <section>
                <title>Comments</title>
                <para>Two types of comments can be used in <filename>configure.in</filename>. The first is the relatively standard <quote>#</quote> comment. Lines beginning with this character are copied into the final configure script generated by <command>autoconf</command>(1). The other type is the <command>m4</command>(1) comment. Lines commented in this way begin with <literal>dnl</literal> and are not copied into the configure script.</para>
@@ -1233,7 +1233,7 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])</programlisting>
                <title>Custom Preprocessor Information</title>
                <para>Anything that defines preprocessor macros other than those generated by the Autoconf macros must be defined in the module's <filename>acconfig.h</filename>. If they are not defined in this file, <command>autoheader</command>(1) will complain as it parses <command>configure.in</command> and finds these customizations. Follow the existing syntax and layout of <filename>acconfig.h</filename> when making additions to it. In general, additions only have to be made when a new <function>AC_DEFINE()</function>, <function>AC_CHECK_TYPE()</function>, etc. line is added to <filename>configure.in</filename>.</para>
                <note>
-                  <para>Autoconf verions since 2.50 discourage the use of <filename>acconfig.h</filename> and <command>autoheader</command>(1). As of this writing, Autoconf 2.13 is still the most commonly available version, and as such, we cannot update to Autoconf 2.5x conventions. All Juggler Project configure scripts (and Doozer++<indexterm>
+                  <para>Autoconf versions since 2.50 discourage the use of <filename>acconfig.h</filename> and <command>autoheader</command>(1). As of this writing, Autoconf 2.13 is still the most commonly available version, and as such, we cannot update to Autoconf 2.5x conventions. All Juggler Project configure scripts (and Doozer++<indexterm>
                         <primary>Doozer++</primary>
                      </indexterm>) work with both versions.</para>
                </note>
@@ -1301,7 +1301,7 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])</programlisting>
                <para>The string enclosed by <literal>@</literal>'s is the tag that will be replaced when <filename>Makefile</filename> is generated. In <filename>configure.in</filename>, there following line must be present:</para>
                <programlisting>AC_SUBST(CUSTOM_VAR)</programlisting>
                <para>Note that the variable is not prepended by a `<literal>$</literal>' because variable interpolation should not be done here. Of course, <varname>$CUSTOM_VAR</varname> will generally have had some value set prior to this point. That is not required, however.</para>
-               <para>It is in this phase of configuration that most of the system-dependent build work is done. This is similar to what Imake template files do. Virtually everything preceding this point set variables to have values appropriate to the host machine, and now they are put into the makefiles to be used for compiling the code. There are several pre-defined variables that <command>configure</command> will substitute in the input template files. Refer to the section titled <quote>Preset Output Variables</quote> in the Autuconf 2.13 documentation for a list of these. </para>
+               <para>It is in this phase of configuration that most of the system-dependent build work is done. This is similar to what Imake template files do. Virtually everything preceding this point set variables to have values appropriate to the host machine, and now they are put into the makefiles to be used for compiling the code. There are several pre-defined variables that <command>configure</command> will substitute in the input template files. Refer to the section titled <quote>Preset Output Variables</quote> in the Autoconf 2.13 documentation for a list of these. </para>
             </section>
             <section>
                <title>File Generation</title>
@@ -1313,13 +1313,13 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])</programlisting>
             <para></para>
             <section>
                <title>Tweek</title>
-               <para>Tweek is an interesting case because it contains two dinstinct yet interoperable components: a C++ API and a Java API. It is possible to use one without the other, and it is even possible to configure Tweek so that neither is compiled. Of couse, the latter is a rather odd case that usually only occurs when something went wrong during the execution of the configure script. Furthermore, Tweek can be compiled against any Java or C++ CORBA 2.3 (or newer) implementation. This is the result of using high-level CORBA standards and interfaces that allow ORBs swapped and allow ORBs from different vendors to communicate with each other.</para>
+               <para>Tweek is an interesting case because it contains two distinct yet interoperable components: a C++ API and a Java API. It is possible to use one without the other, and it is even possible to configure Tweek so that neither is compiled. Of course, the latter is a rather odd case that usually only occurs when something went wrong during the execution of the configure script. Furthermore, Tweek can be compiled against any Java or C++ CORBA 2.3 (or newer) implementation. This is the result of using high-level CORBA standards and interfaces that allow ORBs swapped and allow ORBs from different vendors to communicate with each other.</para>
             </section>
          </section>
       </chapter>
       <chapter id="extend.module.makefile.chapter">
          <title>Extending a Module's Makefiles</title>
-         <para>In this chapter, we explain how to extend a given module's makefiles. In most cases, all the modules in the Juggler Project use the same basic structure for their makefiles. Those that do not follow the existing conventions should be updated to ease maintenance issues. This chapter begins with a discussion of the basic ideas used in writing makefiles for a Juggler module. We then move on to the top-level glue makefile. Next, we discuss the individual component makefiles that typically perform the actual compiling steps. This chapter conclused with an examination of some specific modules to understand how different special cases are handled.</para>
+         <para>In this chapter, we explain how to extend a given module's makefiles. In most cases, all the modules in the Juggler Project use the same basic structure for their makefiles. Those that do not follow the existing conventions should be updated to ease maintenance issues. This chapter begins with a discussion of the basic ideas used in writing makefiles for a Juggler module. We then move on to the top-level glue makefile. Next, we discuss the individual component makefiles that typically perform the actual compiling steps. This chapter concludes with an examination of some specific modules to understand how different special cases are handled.</para>
          <section>
             <title>Makefile Conventions</title>
             <para>Due to the size of the Juggler Project code base, following conventions in all makefiles is very important. The uniformity makes it easier for anyone to maintain the various module build systems. If a given module does not follow the conventions, someone who does not have direct knowledge of that makefile may find it hard to fix problems that may occur. Furthermore, extensions to a given module's build system are more difficult if the same basic ideas cannot be shared across all modules. The following subsections cover most of the conventions currently in use.</para>
@@ -1332,11 +1332,11 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])</programlisting>
                      <primary>Doozer++</primary>
                   </indexterm> file), and <filename>test.defs.mk</filename>.</para>
                <para>In some cases, one makefile may include targets from another. The idea here is that the high-level tasks are defined in <filename>Makefile.in</filename>, and all the grunt work is done in the included file(s). Providing this separation can help casual viewers to understand the high-level tasks without worrying about all the behind-the-scenes details. The included files have the string <quote>inc</quote> in their name. The most common example seen in modules is <filename>Makefile.inc.in</filename>, though there could be files such as <filename>Makefile.inc0.in</filename>, <filename>Makefile.inc1.in</filename>, and so on. The use of numbering allows multiple files to be used for separating the tasks.</para>
-               <para>It is important to note that all of the makfiles named in the above examples begin with a capital letter. While it is often useful to include multiple makefiles in a single directory (of the Autoconf <filename>.in</filename> template variety and otherwise), there must never be a situation where a directory could contain the files <filename>Makefile</filename> and <filename>makefile</filename>. Win32 file systems cannot distinguish between the two, and only bad things can occur as a result.</para>
+               <para>It is important to note that all of the makefiles named in the above examples begin with a capital letter. While it is often useful to include multiple makefiles in a single directory (of the Autoconf <filename>.in</filename> template variety and otherwise), there must never be a situation where a directory could contain the files <filename>Makefile</filename> and <filename>makefile</filename>. Win32 file systems cannot distinguish between the two, and only bad things can occur as a result.</para>
             </section>
             <section>
                <title>Variable Assignments</title>
-               <para>Recently, there has been a shift in the style used to perform variable assignments. The new style is based on the formatting used in all FreeBSD system and ports makefiles. This sytle was adopted to make formatting makefiles easier and cleaner. It is shown below:</para>
+               <para>Recently, there has been a shift in the style used to perform variable assignments. The new style is based on the formatting used in all FreeBSD system and ports makefiles. This style was adopted to make formatting makefiles easier and cleaner. It is shown below:</para>
                <programlisting>VAR=		value
 OPT_VAR?=	default-setting
 LIST_VAR=	item1	\
@@ -1365,7 +1365,7 @@ target:
                      <para>Some implementations of <command>make</command>(1) only support this style. While the majority of the build system is based on GNU make, some makefiles are designed to work with any implementation. Having some makefiles that use one style and others that make use of a different style can be confusing. By choosing the style that is supported by all implementations, we can never go wrong.</para>
                   </listitem>
                   <listitem>
-                     <para>The look of the parentheses is cleaner than the curly braces. This, of course, is purely asthetic, so it does not make the best case during style discussions (read, <quote>arguments</quote>).</para>
+                     <para>The look of the parentheses is cleaner than the curly braces. This, of course, is purely aesthetic, so it does not make the best case during style discussions (read, <quote>arguments</quote>).</para>
                   </listitem>
                </orderedlist>
             </section>
@@ -1456,7 +1456,7 @@ DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 LIBS=		$(MY_LIBRARY)
 STATIC_LIBS=	$(LIBS)
 DYNAMIC_LIBS=	$(LIBS)</programlisting>
-                     <para>Using the above variables (and more settings from <filename>make.defs.mk</filename>), we can construct the names of various library versions. These names are then used internally for the targets that build the actualy libraries. The name construction is performed as follows:</para>
+                     <para>Using the above variables (and more settings from <filename>make.defs.mk</filename>), we can construct the names of various library versions. These names are then used internally for the targets that build the actual libraries. The name construction is performed as follows:</para>
                      <programlisting>MY_LIB_STATIC=		$(MY_LIBRARY).$(STATICLIB_EXT)
 MY_LIB_DYNAMIC=		$(MY_LIBRARY).$(DYNAMICLIB_EXT)
 MY_PROF_LIB_STATIC=	$(MY_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
@@ -1566,7 +1566,7 @@ endif</programlisting>
                         </calloutlist>
                      </programlistingco>
                      <note>
-                        <para>The separation of the targets for profiled and non-profiled versions reflects the lack of good support for profiled libraries. The suport for building profiled libraries in the Juggler Project was added in late 2001, and it has not reached a level of solid maturity yet. With time, it is hoped that the the above two targets can be merged into one or that there can be better information sharing between the two.</para>
+                        <para>The separation of the targets for profiled and non-profiled versions reflects the lack of good support for profiled libraries. The support for building profiled libraries in the Juggler Project was added in late 2001, and it has not reached a level of solid maturity yet. With time, it is hoped that the the above two targets can be merged into one or that there can be better information sharing between the two.</para>
                      </note>
                   </section>
                   <section>
@@ -1579,14 +1579,14 @@ endif</programlisting>
 
 beforeinstall:
 	&lt;create installation hierarchy&gt;</programlisting>
-                     <para>If the variable <varname>$(BEFOREINSTALL)</varname> is defined, the Doozer++ installation targets will invoke the target(s) defined in <varname>$(BEFOREINSTALL)</varname> before installing anything (hence the name). (Using this technique is necessary because GNU make provides no way for makefiles to determine if a target has been defined.) Most modules make use of <command>mtree</command>(1) (or the workalike Perl script) to create the installation hierarchy in a target called '<literal>hier</literal>'. More information about the <command>mtree</command>(1) command is available in <xref linkend="helper.scripts.appendix"/>.</para>
+                     <para>If the variable <varname>$(BEFOREINSTALL)</varname> is defined, the Doozer++ installation targets will invoke the target(s) defined in <varname>$(BEFOREINSTALL)</varname> before installing anything (hence the name). (Using this technique is necessary because GNU make provides no way for makefiles to determine if a target has been defined.) Most modules make use of <command>mtree</command>(1) (or the work-alike Perl script) to create the installation hierarchy in a target called '<literal>hier</literal>'. More information about the <command>mtree</command>(1) command is available in <xref linkend="helper.scripts.appendix"/>.</para>
                      <para>Next, modules may need to take extra steps before installing specific builds of the libraries (such as those built by the targets '<literal>dbg</literal>', '<literal>prof-dso</literal>', etc.). This need is indicated as follows:</para>
                      <programlisting>PREINSTALL=	pre-install
 
 pre-install:
 	&lt;perform steps immediately prior to library installation&gt;</programlisting>
                      <para>If GNU make were more expressive, the above would probably be done using targets such as '<literal>pre-dbg-install</literal>', '<literal>pre-prof-dso-install</literal>', and so on.</para>
-                     <para>The complement of pre-installation is post-installation. Availability of custom post-installation targets is specified using the <varname>$(POSTINSTALL)</varname> variable. However, in Doozer++ 1.5, there is some inconsistency with the use of post-installation targets. They do not correspond exactly to the pre-installation targets, and for that reason, some refactoring is needed. In Doozer++ 1.5, the post-installation targets are executed after a full installation is done rather than after each library version is installed. For that reason, the currnt <varname>$(POSTINSTALL)</varname> variable should probably be renamed to <varname>$(POSTLIBSINSTALL)</varname> or some variant thereof. The current post-installation target always installs the module's header files and then runs any custom post-installation steps. It is at this point that most modules install their data files, sample programs, and other necessary/helpful files.</para>
+                     <para>The complement of pre-installation is post-installation. Availability of custom post-installation targets is specified using the <varname>$(POSTINSTALL)</varname> variable. However, in Doozer++ 1.5, there is some inconsistency with the use of post-installation targets. They do not correspond exactly to the pre-installation targets, and for that reason, some refactoring is needed. In Doozer++ 1.5, the post-installation targets are executed after a full installation is done rather than after each library version is installed. For that reason, the current <varname>$(POSTINSTALL)</varname> variable should probably be renamed to <varname>$(POSTLIBSINSTALL)</varname> or some variant thereof. The current post-installation target always installs the module's header files and then runs any custom post-installation steps. It is at this point that most modules install their data files, sample programs, and other necessary/helpful files.</para>
                      <para>Finally, the complement of <varname>$(BEFOREINSTALL)</varname> is executed. It is specified using the variable <varname>$(AFTERINSTALL)</varname>. Considering that most modules use <varname>$(POSTINSTALL)</varname> for data file installation, there is not much left for <varname>$(AFTERINSTALL)</varname> to do.</para>
                   </section>
                   <section>
@@ -1676,8 +1676,8 @@ CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
                </section>
             </section>
             <section>
-               <title>Auxillary Files</title>
-               <para>We now turn our attention to auxillary files used by the glue makefile and the component makefiles (discussed in <xref linkend="component.makefile.section"/>). Most modules have only two auxillary makefiles in their top-level directory: <filename>common.defs.mk.in</filename> and <filename>make.defs.mk.in</filename>. We discuss only those two files here; any extra files are project-specific and could probably be merged into <filename>make.defs.mk.in</filename> or <filename>Makefile.inc.in</filename> somehow.</para>
+               <title>Auxiliary Files</title>
+               <para>We now turn our attention to axillary files used by the glue makefile and the component makefiles (discussed in <xref linkend="component.makefile.section"/>). Most modules have only two axillary makefiles in their top-level directory: <filename>common.defs.mk.in</filename> and <filename>make.defs.mk.in</filename>. We discuss only those two files here; any extra files are project-specific and could probably be merged into <filename>make.defs.mk.in</filename> or <filename>Makefile.inc.in</filename> somehow.</para>
                <section>
                   <title><filename>common.defs.mk.in</filename></title>
                   <indexterm>
@@ -1721,7 +1721,7 @@ CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
                      <title>Name the Library (or Libraries)</title>
                      <para>This is actually part of the project-specific customizations, but it is important to distinguish it so that it is not overlooked. The basic idea here is that one or more variables, one for each C/C++ library, will be defined. These variables will contain the basic name of the library without any extensions or version information. Furthermore, the library name will vary correctly based on the target platform. On UNIX-based systems, that means that the library will have the prefix <quote>lib</quote>, and on Win32 platforms, there will be no prefix. For example:</para>
                      <programlisting>TWEEK_LIBRARY=	@LIB_PREFIX@tweek</programlisting>
-                     <para>The library name varibles will be used by <filename>Makefile.inc.in</filename> when constructing the list of libraries that Doozer++<indexterm>
+                     <para>The library name variables will be used by <filename>Makefile.inc.in</filename> when constructing the list of libraries that Doozer++<indexterm>
                            <primary>Doozer++</primary>
                         </indexterm> must build.</para>
                   </section>
@@ -1826,7 +1826,7 @@ CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
                </section>
                <section id="list.srcs.section">
                   <title>Listing Source Files</title>
-                  <para>Next, we provide the list of source files that will be compiled. This is also used by <command>makedepend</command>(1) (or other depdency-generating tool) to get dependencies. For C++ code, the list of sources must be assigned to the <varname>$(SRCS)</varname> variable. These file names should not have any path prepended to them. When the dependencies (the so-called <quote><filename>.d</filename> files</quote>) are generated, it knows which directory contains the files to parse from the <varname>$(srcdir)</varname> variable.</para>
+                  <para>Next, we provide the list of source files that will be compiled. This is also used by <command>makedepend</command>(1) (or other dependency-generating tool) to get dependencies. For C++ code, the list of sources must be assigned to the <varname>$(SRCS)</varname> variable. These file names should not have any path prepended to them. When the dependencies (the so-called <quote><filename>.d</filename> files</quote>) are generated, it knows which directory contains the files to parse from the <varname>$(srcdir)</varname> variable.</para>
                   <para>In some cases, some files may be conditionally compiled depending on the results of running the configure script. To add these source files to $(SRCS), insert something similar to the following before making the list of object files:</para>
                   <programlisting>ifeq (@SOME_VAR@, "YES")
    SRCS+=	extra_src.cpp
@@ -2076,7 +2076,7 @@ $(PARAM_HEADER): $(PROJROOT_ABS)/proj/projParam.h.in $(PROJROOT_ABS)/VERSION
             </indexterm>. For that reason, it cannot be distributed with Doozer++. In other words, this script is tailored for use within the Juggler Project build system and cannot be used outside of that scope without modification.</para>
          <para>Use of this script is rather complicated, but it is probably easier than writing the makefiles by hand. Due to the complex nature, it is recommended that interested readers refer to the usage information printed by executing the following:</para>
          <screen>mkmakefile.pl --help</screen>
-         <para>The output is quite comprehensive, and any usage information included within this document would simply be verbatim copies of that output. However, the following explanation, taken from the comments at the top of the file profide a good description of what this script can do.</para>
+         <para>The output is quite comprehensive, and any usage information included within this document would simply be verbatim copies of that output. However, the following explanation, taken from the comments at the top of the file provide a good description of what this script can do.</para>
          <blockquote>
             <para>This script can generate three types of template <filename>Makefile.in</filename>'s for use with a configure script:</para>
             <orderedlist>
@@ -2117,7 +2117,7 @@ $(PARAM_HEADER): $(PROJROOT_ABS)/proj/projParam.h.in $(PROJROOT_ABS)/VERSION
          <glossentry id="gloss.autoconf">
             <glossterm>Autoconf</glossterm>
             <glossdef>
-               <para>A tool used to generate cross-platform shell scripts that test the functionality of software development tools such as compilers and of local software installations. The results of the tests can be used to configure a software build system to work with the local system setup. Autoconf-generated scripts aid in the development of cross-platform software by detecting and managing platform-specific idiosyncracies. Autoconf is part of the GNU software distribution.</para>
+               <para>A tool used to generate cross-platform shell scripts that test the functionality of software development tools such as compilers and of local software installations. The results of the tests can be used to configure a software build system to work with the local system setup. Autoconf-generated scripts aid in the development of cross-platform software by detecting and managing platform-specific idiosyncrasies. Autoconf is part of the GNU software distribution.</para>
             </glossdef>
          </glossentry>
          <glossentry id="gloss.automake">
@@ -2204,7 +2204,7 @@ $(PARAM_HEADER): $(PROJROOT_ABS)/proj/projParam.h.in $(PROJROOT_ABS)/VERSION
          <glossentry id="gloss.substitution-variable">
             <glossterm>substitution variable</glossterm>
             <glossdef>
-               <para>A shell variable within an Autoconf-based configure script that is substituted in a <filename>.in</filename> template file. For the variable <varname>$variable</varname>, the Autoconf <literal>@variable@</literal> syntax is used in the <filename>.in</filename> template file. This is not a formal term used in Autoconf documentation but rather a term used within the VR Juggler build system documentation to distiguish these variables from other shell variables in a configure script.</para>
+               <para>A shell variable within an Autoconf-based configure script that is substituted in a <filename>.in</filename> template file. For the variable <varname>$variable</varname>, the Autoconf <literal>@variable@</literal> syntax is used in the <filename>.in</filename> template file. This is not a formal term used in Autoconf documentation but rather a term used within the VR Juggler build system documentation to distinguish these variables from other shell variables in a configure script.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -2214,7 +2214,7 @@ $(PARAM_HEADER): $(PROJROOT_ABS)/proj/projParam.h.in $(PROJROOT_ABS)/VERSION
             <glossterm>XSL Transformations</glossterm>
             <acronym>XSLT</acronym>
             <glossdef>
-               <para>One of two parts that make up the Extensible Stylesheet Language (XSL). This part defines an XML-based programming language used to perform transfroms on XML documents.</para>
+               <para>One of two parts that make up the Extensible Stylesheet Language (XSL). This part defines an XML-based programming language used to perform transforms on XML documents.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
