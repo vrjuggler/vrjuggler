@@ -133,6 +133,50 @@ std::string InetAddrNSPR::getAddressString (void) const
    return temp;
 }
 
+std::string InetAddrNSPR::getHostname () const
+{
+   std::string hostname;
+   char buffer[PR_NETDB_BUF_SIZE];
+   PRStatus ret_status;
+   PRHostEnt hostent;
+
+   ret_status = PR_GetHostByAddr(&mAddr, buffer, sizeof(buffer), &hostent);
+
+   if ( ret_status == PR_FAILURE )
+   {
+      NSPR_PrintError("[InetAddrNSPR::getHostname] Failed to get host by address");
+      hostname = std::string("<hostname lookup failed>");
+   }
+   else
+   {
+      hostname = hostent.h_name;
+   }
+
+   return hostname;
+}
+
+std::vector<std::string> InetAddrNSPR::getHostnames () const
+{
+   std::vector<std::string> names;
+   char buffer[PR_NETDB_BUF_SIZE];
+   PRStatus ret_status;
+   PRHostEnt hostent;
+
+   ret_status = PR_GetHostByAddr(&mAddr, buffer, sizeof(buffer), &hostent);
+
+   if ( ret_status != PR_FAILURE )
+   {
+      names.push_back(std::string(hostent.h_name));
+
+      for ( char** ptr = hostent.h_aliases; *ptr != NULL; ptr++ )
+      {
+         names.push_back(std::string(*ptr));
+      }
+   }
+
+   return names;
+}
+
 // ----------------------------------------------------------------------------
 // Look up the address in m_name and store the address in m_remote_addr.
 // ----------------------------------------------------------------------------
@@ -149,7 +193,7 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
    if(ret_status == PR_FAILURE)
    {
       setAddressValue(0);           // Error on lookup, so zero the address
-      std::string error_msg("[InetAddrNSPR::setAddress] Fail to look up host: ");
+      std::string error_msg("[InetAddrNSPR::lookupAddress] Fail to look up host: ");
       error_msg += address;
 
       NSPR_PrintError(error_msg);

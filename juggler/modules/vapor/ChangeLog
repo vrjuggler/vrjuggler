@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-20 patrickh vpr::InetAddr now has getHostname() and getHostnames() that
+                    return the hostname(s) for a given address.
+                    NEW VERSION: 0.8.3
 2001-12-20 patrickh POSIX sockets have caught up to NSPR sockets again.
                     NEW VERSION: 0.8.2
 2001-12-19 patrickh Support for building a profiled VPR library has been added.
