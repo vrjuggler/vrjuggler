@@ -25,8 +25,9 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+LIBDIR=		../lib
 MOD_NAME=	jcclnet
-DLL_DEPS=	/r:../vpr_bridge_cs/vprnet.dll
+DLL_DEPS=	/r:$(LIBDIR)/vprnet.dll
 
 SRCS=		jccl_ConfigDefinition.cs	\
 		jccl_ConfigElement.cs		\

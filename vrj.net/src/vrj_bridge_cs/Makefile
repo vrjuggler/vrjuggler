@@ -25,11 +25,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+LIBDIR=		../lib
 MOD_NAME=	vrjnet
-DLL_DEPS=	/r:../vpr_bridge_cs/vprnet.dll		\
-		/r:../jccl_bridge_cs/jcclnet.dll	\
-		/r:../gmtl_bridge_cs/gmtlnet.dll	\
-		/r:../gadget_bridge_cs/gadgetnet.dll
+DLL_DEPS=	/r:$(LIBDIR)/vprnet.dll		\
+		/r:$(LIBDIR)/jcclnet.dll	\
+		/r:$(LIBDIR)/gmtlnet.dll	\
+		/r:$(LIBDIR)/gadgetnet.dll
 
 SRCS=		vrj_App.cs		\
 		vrj_DrawManager.cs	\
