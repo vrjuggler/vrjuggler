@@ -51,18 +51,31 @@ void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
    pfdStoreFile( node, optimizedName.data() );
 }
 
+//: check the filename.  Does it look like it is already optimized?
+//  returns true if so.
+bool pfFileIO::isOptimized( const std::string& fileName )
+{
+   int size = fileName.find( ".pfb" );
+   
+   if (size == 0)
+      return false;
+   else
+      return true;
+}
+
 // use this function just like the pfdLoadFile performer function.
 // this function automatically keeps track of optimised versions of the filename.
 // if there is no .pfb file, or the .pfb is older than filename, then
 // function generates a new pfb file.
 // if there is a current pfb file, then functino uses it instead.
 // TODO: add time stamp check - not implemented yet.
-pfNode* pfFileIO::autoloadFile( std::string fileName, const pfFileIO::units& un )
+pfNode* pfFileIO::autoloadFile( const std::string& fileName, const pfFileIO::units& un )
 {
    pfNode* node = NULL;
 
    std::string optimizedFileName = optimizedName( fileName );
-   if (fileIO::fileExists(optimizedFileName))
+   if (fileIO::fileExists(optimizedFileName) ||
+         fileIO::isOptimized( fileName ) )
    {
       // don't need to output this, because performer already does. :)
       //cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;

@@ -9,17 +9,24 @@
 
 srcdir		= @srcdir@
 
-EXTRA_FLAGS	= @TEST_EXTRA_FLAGS@
-COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+EXTRA_FLAGS	= @TEST_EXTRA_FLAGS@ -all 
+COMPILE		= @CXX@ -DUSESOUND @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
-VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include			\
+AW_LIB = 	-L/usr/lib32/PSI -law -lawhwi -lpsi -laudiofile
+AW_INCLUDE = -I/usr/include/PSI
+VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDE) -I$(VJ_BASE_DIR)/include			\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
                   -I$(srcdir)/../nav -I$(srcdir)/../pfTools 		\
+<<<<<<< Makefile.in
+                  -I$(srcdir)/../../Sound/
+VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ -lJuggler_aw $(AW_LIB) @TEST_LIBS_BASIC@
+=======
                   -I$(VJ_BASE_DIR)/include/Sound
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_pf.a
+>>>>>>> 1.43
 
 vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
 
