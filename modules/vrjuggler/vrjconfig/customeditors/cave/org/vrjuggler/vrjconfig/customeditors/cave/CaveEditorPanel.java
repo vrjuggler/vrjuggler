@@ -361,6 +361,8 @@ public class CaveEditorPanel
          }
       
          CaveWall cw = mCaveModel.makeNewWall(default_view);
+         mWallList.setSelectedValue(cw, true);
+         editWall(cw);
          /*
          TabData td = new TabData(cw, null, cw.getName(), cw.getName());
          mWallTabDataModel.addTab(mWallTabDataModel.size(), td);
@@ -388,13 +390,8 @@ public class CaveEditorPanel
       float old_height =
          ((Number) mSelectedViewport.getProperty(SIZE_PROPERTY, 1)).floatValue();
       */
-      int status;
       //float origin_x = 0.0f, origin_y = 0.0f, width = 0.0f, height = 0.0f;
-      
-      Container parent =
-         (Container) SwingUtilities.getAncestorOfClass(Container.class,
-                                                       this);
-      
+
       Object value = mWallList.getSelectedValue();
       
       if (null == value || !(value instanceof CaveWall))
@@ -403,7 +400,16 @@ public class CaveEditorPanel
       }
 
       CaveWall selected_wall = (CaveWall)value;
-         
+
+      editWall(selected_wall);
+   }
+   void editWall(CaveWall selected_wall)
+   {
+      int status;
+
+      Container parent =
+         (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                       this);
       WallEditorDialog dlg =
          new WallEditorDialog(parent, mConfigContext, selected_wall);
 
@@ -431,7 +437,6 @@ public class CaveEditorPanel
                                        mContext);
          */
          
-         System.out.println("Handling changes from dialog.");
          Point3D[] corners = dlg.getCorners();
          selected_wall.setCorners(corners, mConfigContext);
          selected_wall.setTracked(dlg.isTracked(), mConfigContext);
@@ -594,8 +599,6 @@ public class CaveEditorPanel
       {
          CaveWall wall = (CaveWall)value;
          int selected_index = wall.getPlane();
-
-         System.out.println("PlaneRenderer.getListCellRendererComponent(): " + selected_index);
 
          if ( isSelected )
          {
