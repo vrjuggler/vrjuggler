@@ -39,10 +39,10 @@
 
 const std::string PinchGloveStandalone::mOpenHandString = "00000.00000";
    
-const unsigned short START_BYTE_DATA = 0x80;
-const unsigned short START_BYTE_DATA_TS = 0x81;
-const unsigned short START_BYTE_TEXT = 0x82;
-const unsigned short END_BYTE = 0x8F;
+static const unsigned short START_BYTE_DATA = 0x80;
+static const unsigned short START_BYTE_DATA_TS = 0x81;
+static const unsigned short START_BYTE_TEXT = 0x82;
+static const unsigned short END_BYTE = 0x8F;
 
 
 ///////////////////////////////////////////////////////////
