@@ -33,8 +33,6 @@
 #ifndef _VPR_SOCKET_IMP_BSD_H_
 #define _VPR_SOCKET_IMP_BSD_H_
 
-#include <vprConfig.h>
-
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
@@ -504,29 +502,18 @@ protected:
     SocketImpBSD(void);
 
     // ------------------------------------------------------------------------
-    // Standard constructor.  This takes the given address (a string
-    // containing a hostname or an IP address), port, domain and type and
-    // stores the values in the member variables for use when opening the
-    // socket and performing communications.
+    // Standard constructor.  This takes two InetAddr objects, a local address
+    // and a remote address.
     // 
     // PRE: None.
     // POST: The member variables are initialized with the given values.
     //
     // Arguments:
-    //     address - The hostname or IP address of the remote site with which
-    //               communication will be performed.
-    //     port    - The port on the remote site to which we will send data.
-    //     domain  - The communications domain for the socket.
-    //     type    - The communications type of the socket (either
-    //               vpr::Socket::STREAM or vpr::Socket::DATAGRAM).
-    //
-    // Note:
-    //     The m_file_name member variable is used to store the remote site's
-    //     address string.
+    //     local_addr  - The local address for the socket.
+    //     remote_addr - The remote address for the socket.
     // ------------------------------------------------------------------------
-    SocketImpBSD(const std::string& address, const unsigned short port,
-                 const SocketTypes::Domain domain,
-                 const SocketTypes::Type type);
+    SocketImpBSD(const InetAddr& local_addr, const InetAddr& remote_addr,
+                 const SocketTypes::Type sock_type);
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.

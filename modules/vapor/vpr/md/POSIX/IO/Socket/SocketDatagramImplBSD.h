@@ -60,23 +60,14 @@ public:
     SocketDatagramImpBSD(void);
 
     // ------------------------------------------------------------------------
-    //: Constructor.  This takes the address (either hostname or IP address)
-    //+ of a remote site and a port and stores the values for later use in the
-    //+ member variables of the object.  The domain may also be set to
-    //+ something other than vpr::SocketTypes::INET.
     //
     //! PRE: None.
     //! POST: The member variables are initialized with the type in particular
     //+       set to vpr::SocketTypes::DATAGRAM.
     //
-    //! ARGS: address - The hostname or IP address of the site to which we
-    //+                 will connect.
-    //! ARGS: port    - The port on the remote site with which we will
-    //+                 communicate.
-    //! ARGS: domain  - The protocol family (domain) for this socket.
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD(const std::string& address, const unsigned short port,
-                         const SocketTypes::Domain domain = SocketTypes::INET);
+    SocketDatagramImpBSD(const InetAddr& local_addr,
+                         const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
@@ -84,7 +75,9 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagramImpBSD(void);
+    virtual ~SocketDatagramImpBSD (void) {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
