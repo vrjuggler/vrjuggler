@@ -39,6 +39,8 @@
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+SUBOBJDIR=	$(VJ_LIBRARY)
+
 # Prefix for recursive stuff.
 DIRPRFX=	vrj/
 
@@ -51,6 +53,6 @@ SUBDIR=		Display	\
 		Test	\
 		Util
 
-$(RECTARGET): recursive
+SRCS=		vrjParam.cpp
 
-include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.obj-subdir.mk
