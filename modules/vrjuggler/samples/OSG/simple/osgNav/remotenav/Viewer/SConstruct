@@ -1,0 +1,72 @@
+#!python
+#
+# Build for pyqt viewer gui
+#
+import SCons;
+import sys;
+import os;
+import string;
+#import wing.wingdbstub;       # stuff for debugging
+import re
+
+pj = os.path.join;
+
+def cleanPyuicOutput(target, source,env):
+   fname = str(target[0])
+   print "Cleaning file:", fname
+   f = open(fname, 'r+')
+   
+   # List of re's to remove from file
+   re_removes = [ re.compile(r'.*WState_Polished.*?\n'), ]
+   
+   f_contents = f.read()
+   for re_r in re_removes:
+      f_contents = re_r.sub("",f_contents)
+
+   f.seek(0)
+   f.truncate()
+   f.write(f_contents)
+   f.close()      
+
+# Pyuic builder
+def registerPyuicBuilder(env):
+   pyuic_build_str = 'pyuic -x -p 3 -o $TARGET $SOURCE';
+   pyuic_builder = Builder(action = [pyuic_build_str, Action(cleanPyuicOutput)],
+                           src_suffix = '.ui',
+                           suffix = '.py');                           
+   env.Append(BUILDERS = {'Pyuic' : pyuic_builder});
+   
+   pyuic_build_str = 'pyuic -x -p 3 -subimpl ${TARGET.filebase} -o $TARGET $SOURCE';
+   pyuic_builder = Builder(action = [pyuic_build_str, Action(cleanPyuicOutput)],
+                           src_suffix = '.ui',
+                           suffix = '.py');                           
+   env.Append(BUILDERS = {'PyuicImpl' : pyuic_builder});
+
+
+# ###############################
+# Create builder
+# ###############################
+help_text = "\n---- OSG Nav GUI build system ----\n";
+
+env = Environment()
+
+registerPyuicBuilder(env);    # Register custom builders
+opts = Options(files = ['options.cache', 'options.custom']);  # Add options
+
+#if SCons.Script.SConscript.print_help:
+if not SCons.Script.options.help_msg:
+   opts.Update(env);
+   opts.Save('options.cache', env);
+
+help_text += opts.GenerateHelpText(env);
+
+# Python UI files
+#pyuic_src_files = ['MainWindowBase.ui', 'OtherWindowBase.ui'];
+pyuic_src_files = ['MainWindowBase.ui',];
+
+for sfile in pyuic_src_files:
+   env.Pyuic(sfile);
+   env.PyuicImpl(target = sfile[:-3] + 'ImplEx.py', source = sfile);
+
+Default(".");
+Help(help_text);
