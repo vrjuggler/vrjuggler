@@ -39,7 +39,6 @@
 
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/ClusterPlugin.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/DeviceFactory.h>
 
 #include <gadget/Util/Debug.h>
@@ -49,6 +48,10 @@
 //#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
+
+//NEED TO REMOVE THESE FILES
+#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
+#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
 
 // UserData
 #include <cluster/SerializableData.h>
@@ -64,6 +67,8 @@ namespace cluster
 	{
 	   jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
        jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
+//       jccl::ConfigManager::instance()->addConfigChunkHandler(RemoteInputManager::instance());
+//       jccl::ConfigManager::instance()->addConfigChunkHandler(ApplicationDataManager::instance());
     }
 	ClusterManager::~ClusterManager()
 	{
@@ -145,8 +150,11 @@ namespace cluster
       if (!doesManagerExist(new_manager))
       {
          mManagers.push_back(new_manager);
-         jccl::ConfigManager::instance()->addConfigChunkHandler(new_manager);
-         std::cout << "Adding a Manager!" << std::endl;
+         // We should do this here, but since we do not add the manager until its configAdd
+         // currently you can see the problem
+         //jccl::ConfigManager::instance()->addConfigChunkHandler(new_manager);
+         //We can still unregister it when removed below though
+         std::cout << "[ClusterManager] Adding a Manager!" << std::endl;
       }
       mManagersLock.release();
    }
@@ -161,6 +169,7 @@ namespace cluster
          {
             mManagers.erase(i);
             jccl::ConfigManager::instance()->removeConfigChunkHandler(*i);
+            std::cout << "[ClusterManager] Removing a Manager!" << std::endl;
             return;
          }
       }
@@ -225,10 +234,10 @@ namespace cluster
             updateNeeded = true;
          }                  
       }
-      if (updateNeeded)
-      {
+//      if (updateNeeded)
+//      {
          sendEndBlocksAndSignalUpdate();
-      }                                 
+//      }                                 
    }
    void ClusterManager::postPostFrame()
    {
@@ -244,9 +253,9 @@ namespace cluster
             updateNeeded = true;
          }
       }  
-      if (updateNeeded)
-      {
+//      if (updateNeeded)
+//      {
          sendEndBlocksAndSignalUpdate();
-      }                                 
+//      }                                 
    }
 } // End of gadget namespace

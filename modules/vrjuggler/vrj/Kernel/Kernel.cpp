@@ -58,6 +58,10 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 
+//NEED TO REMOVE THESE FILES
+#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
+#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
+
 
 namespace vrj
 {
@@ -156,6 +160,9 @@ void Kernel::controlLoop(void* nullParam)
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
             jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/preFrame()");
+            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager preDraw()\n" << vprDEBUG_FLUSH;
+         mClusterManager->preDraw();
+            jcclTIMESTAMP(jcclPERF_ALL, "kernel/cluster/preDraw()");            
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
@@ -186,7 +193,7 @@ void Kernel::controlLoop(void* nullParam)
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
          jcclTIMESTAMP(jcclPERF_ALL, "kernel/input/updateAllData()");
-         vprDEBUG(vrjDBG_KERNEL,5) << "vjKERNEL::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
       mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
          jcclTIMESTAMP(jcclPERF_ALL, "kernel/cluster/postPostFrame()");
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
@@ -370,6 +377,11 @@ void Kernel::initConfig()
    jccl::ConfigManager::instance()->addConfigChunkHandler(mInputManager);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mClusterManager);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mDisplayManager);
+
+   //MOVE LATER
+   jccl::ConfigManager::instance()->addConfigChunkHandler(cluster::RemoteInputManager::instance());
+   jccl::ConfigManager::instance()->addConfigChunkHandler(cluster::ApplicationDataManager::instance());
+
 
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }

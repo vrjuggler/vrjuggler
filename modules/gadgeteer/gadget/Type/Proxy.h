@@ -38,7 +38,7 @@
 #include <typeinfo>
 
 #include <gadget/InputManager.h>
-//#include <gadget/RemoteInputManager/RemoteInputManager.h>
+#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Util/Debug.h>
@@ -146,10 +146,17 @@ namespace gadget
          Input* input_dev = NULL;
          input_dev = InputManager::instance()->getDevice(mDeviceName);
          
-//         if ( input_dev == NULL && InputManager::instance()->getRemoteInputManager()->isConfigured())
-//         {  
-//            input_dev = InputManager::instance()->getRemoteInputManager()->getDevice(mDeviceName);
-//         }
+         // If the InputManager Doesn't have the device we can request it from the RemoteInputManager
+         if ( NULL == input_dev )
+         {  
+            input_dev = cluster::RemoteInputManager::instance()->getVirtualDevice(mDeviceName);
+            if ( NULL != input_dev )
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "vjTypedProxy::refresh: Using Remote Input Manager Virtual Device: "
+               << mDeviceName << std::endl << vprDEBUG_FLUSH;
+            }
+         }        
          if ( NULL == input_dev )       // Not found, so stupify
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)

@@ -39,24 +39,17 @@ namespace cluster
    ClusterPlugin::ClusterPlugin()
    {
       mActive = false;
+      ClusterManager::instance()->addManager(this);
    }
    
    ClusterPlugin::~ClusterPlugin()
-   {;
+   {
+      ClusterManager::instance()->removeManager(this);
    }
    
    void ClusterPlugin::setActive(bool active)
    {
-      if (!mActive && active)
-      {
-         ClusterManager::instance()->addManager(this);
-         mActive = active;
-      }
-      else if (mActive && !active)
-      {
-         ClusterManager::instance()->removeManager(this);
-         mActive = active;
-      }
+      mActive = active;
    }
    bool ClusterPlugin::isActive()
    {
