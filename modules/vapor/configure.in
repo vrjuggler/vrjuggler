@@ -439,7 +439,7 @@ DPP_LANG_RESTORE
 # Checks for library functions.
 # -----------------------------------------------------------------------------
 AC_CHECK_FUNCS(gettimeofday sigaction sigemptyset sigfillset sigaddset \
-               sigdelset sigismember socket strerror)
+               sigdelset sigismember snprintf socket strerror)
 
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',

@@ -55,7 +55,11 @@ std::string GUID::toString () const
    std::string guid_str;
    char guid_c_str[37];
 
+#ifdef HAVE_SNPRINTF
    snprintf(guid_c_str, 37,
+#else
+   sprintf(guid_c_str,
+#endif
             "%08X-%04hX-%04hX-%02X%02X-%02X%02X%02X%02X%02X%02X",
             m_guid.moz.m0, m_guid.moz.m1, m_guid.moz.m2, m_guid.moz.m3[0],
             (vpr::Uint32) m_guid.moz.m3[1], (vpr::Uint32) m_guid.moz.m3[2],
