@@ -161,9 +161,6 @@ bool PfDrawManager::configPerformerAPI(jccl::ConfigChunkPtr chunk)
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "Head Model: " << mHeadModel.c_str() << std::endl
       << "Wand Model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-      << "-----------------------------------------------------" << std::endl
-      << vprDEBUG_FLUSH;
    return true;
 }
 
