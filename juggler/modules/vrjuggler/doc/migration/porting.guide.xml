@@ -82,12 +82,12 @@ gadget::PositionInterface posInt;
 gadget::DigitalInterface button1;</programlisting>
          <para></para>
          <programlisting>//Initializing devices in 1.0
-posInt.init( "VJHead" );
-button1.init( "VJButton" );
+posInt.init("VJHead");
+button1.init("VJButton");
 
 //Initializing devices in 1.1 (no change)
-posInt.init( "VJHead" );
-button1.init( "VJButton" );</programlisting>
+posInt.init("VJHead");
+button1.init("VJButton");</programlisting>
          <para></para>
          <programlisting>//Checking position device values in 1.0
 vjMatrix* mat = posInt.getData();
@@ -115,12 +115,12 @@ gmtl::Quatf q;</programlisting>
          <programlisting>//Passing a Juggler 1.0 matrix to an OpenGL function call
 vjMatrix mat;
  ... //Do stuff to mat
-glMultMatrixf( mat.getFloatPtr() );
+glMultMatrixf(mat.getFloatPtr());
 
 //Passing a Juggler 1.1 matrix to an OpenGL function call
 gmtl::Matrix44f mat;
  ... //Do stuff to mat
-glMultMatrixf( mat.getData() );</programlisting>
+glMultMatrixf(mat.getData());</programlisting>
          <para>This is by no means a complete list of changes necessary for every VR application. Read on for module-specific information regarding their header files and other porting changes.</para>
       </section>
       <section>
@@ -166,7 +166,7 @@ class myApplication : public vjGlApp
    {
       //Clear the window
       glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       //Render the scene
       ...
@@ -182,7 +182,7 @@ class myApplication : public vrj::GlApp
    {
       //Clear the window
       glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    }
 
    void draw()
@@ -208,22 +208,22 @@ class myApplication : public vrj::GlApp
 
 // make a rotation quaternion from an axis angle
 gmtl::Quatf q;
-gmtl::setRot( q, gmtl::AxisAnglef( gmtl::Math::deg2Rad( 90.0f ), 0.0f, 1.0f, 0.0f ) );
+gmtl::setRot(q, gmtl::AxisAnglef(gmtl::Math::deg2Rad(90.0f), 0.0f, 1.0f, 0.0f));
 
-// make a rotation quaternion from euler angles
-gmtl::setRot( q, gmtl::EulerAngleXYZf( 0.0f, gmtl::Math::deg2Rad( 90.0f ), 0.0f ) );
+// make a rotation quaternion from Euler angles
+gmtl::setRot(q, gmtl::EulerAngleXYZf(0.0f, gmtl::Math::deg2Rad(90.0f), 0.0f));
 
 // set the rotation part of the matrix to the rotation defined by the quaternion
 gmtl::Matrix44f mat;
-gmtl::setRot( mat, q );
+gmtl::setRot(mat, q);
 
 // set the translation of the matrix
-gmtl::Vec3f vec( 1.0f, 3.0f, -5.0f );
-gmtl::setTrans( mat, vec );
+gmtl::Vec3f vec(1.0f, 3.0f, -5.0f);
+gmtl::setTrans(mat, vec);
 
 // set the matrix to the rotation defined by the quaternion (eliminates any other transform in the mat)
 gmtl::Matrix44f rot_mat;
-gmtl::set( rot_mat, q );
+gmtl::set(rot_mat, q);
 
 // transform the vector (the mathematical definition of Mat * Vec is that it only does rotation)
 gmtl::Vec3f result_v = mat * vec;
@@ -232,20 +232,20 @@ gmtl::Vec3f result_v = mat * vec;
 gmtl::Point3f result_p = mat * point;
 
 // init the matrix using the quaternion
-gmtl::Matrix44f rot_mat( gmtl::make&lt;gmtl::Matrix44f&gt;( q ) );
+gmtl::Matrix44f rot_mat(gmtl::make&lt;gmtl::Matrix44f&gt;(q));
 
 // get the length of the vector
-float length = gmtl::length( vec );
+float length = gmtl::length(vec);
 
 // get the cross product
-gmtl::Vec3f result_cross = gmtl::cross( vec1, vec2 );</programlisting>
+gmtl::Vec3f result_cross = gmtl::cross(vec1, vec2);</programlisting>
             </listitem>
             <listitem>
                <para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>gmtl/Math.h</filename>. These are listed in the <classname>gmtl::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>gmtl::Math::deg2Rad()</function>. The following illustrates the new use:</para>
                <programlisting>#include &lt;gmtl/Math.h&gt;
 
 // convert degrees to radians...
-float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
+float radians = gmtl::Math::deg2Rad(degrees);</programlisting>
             </listitem>
             <listitem>
                <para>While porting applications to GMTL there is one critical thing to keep in mind. All GMTL functions take angles in <emphasis>radians</emphasis> while 1.0 Math took <emphasis>degrees</emphasis> for most of its functions. You may need to use <function>gmtl::Math::deg2Rad()</function> to convert some values.</para>
@@ -338,12 +338,12 @@ q.makeRot(q);</programlisting>
             </listitem>
             <listitem>
                <para> To select your sound API, configure the VR Juggler Sound Manager with config chunks or directly call the Sonix API as in the following example:</para>
-               <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
+               <programlisting>sonix::instance()-&gt;changeAPI("OpenAL");</programlisting>
                <para>Here, the string "OpenAL" can be "AudioWorks" or "OpenAL" depending on how sonix was compiled.</para>
             </listitem>
             <listitem>
                <para>If you want to disable sound, then do the following:</para>
-               <programlisting>sonix::instance()-&gt;changeAPI( "Stub" );</programlisting>
+               <programlisting>sonix::instance()-&gt;changeAPI("Stub");</programlisting>
             </listitem>
             <listitem>
                <para>The new sound library is located in <filename>libsonix</filename>, and the headers can be found in <filename>include/snx</filename>.</para>
