@@ -1,0 +1,408 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Specialized include file for the top-level makefile.  Targets and variables
+# needed for building the whole source tree are provided here.  This file
+# should only be included by the top-level makefile.  It is written in such a
+# way that no assumptions are made by this file about what the including file
+# provides except that it includes make.defs.mk.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# Variables whose values are specific to this file.
+includedir	= @includedir@
+instlinks	= $(topdir)/instlinks
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+VJROOT		= $(top_srcdir)
+VJ_SRCDIR	= @VJ_SRCDIR@
+
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
+OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+
+# =============================================================================
+# Build and installation directory naming and ownership information.
+# =============================================================================
+DEFAULT_DIR	= $(OPT_DIR)
+
+# If we have a name for the install group, define group-setting options for
+# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
+# (makefiles-gen.pl in particular).
+ifdef GROUP_NAME
+    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+endif
+
+# --------------------------------------------
+# Library build information.
+# --------------------------------------------
+
+SHLIB_MAJOR	= 1
+SHLIB_MINOR	= 0
+
+GL_API		= @OPENGL_API@
+PF_API		= @PERFORMER_API@
+AUDIO_WORKS	= @AUDIO_WORKS@
+SL		= @SL@
+
+STATICLIB_EXT	= @STATICLIB_EXT@
+DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+
+# Full list of the libraries to build.
+LIBS		= $(VJ_LIBRARY)		\
+                  $(UTILS_LIBRARY)
+
+ifeq ($(GL_API), Y)
+    LIBS	+= $(GL_LIBRARY)
+endif
+
+ifeq ($(PF_API), Y)
+    LIBS	+= $(PF_LIBRARY)
+endif
+
+ifeq ($(AUDIO_WORKS), Y)
+    LIBS	+= $(AW_LIBRARY)
+endif
+
+ifeq ($(SL), Y)
+    LIBS	+= $(SL_LIBRARY)
+endif
+
+STATIC_LIBS	= $(LIBS)
+
+# We cannot build dynamic libraries on Win32 yet.
+ifneq ($(OS_TYPE), Win32)
+    DYNAMIC_LIBS	= $(LIBS)
+endif
+
+VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
+VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
+UTILS_LIB_STATIC	= $(UTILS_LIBRARY).$(STATICLIB_EXT)
+UTILS_LIB_DYNAMIC	= $(UTILS_LIBRARY).$(DYNAMICLIB_EXT)
+GL_LIB_STATIC		= $(GL_LIBRARY).$(STATICLIB_EXT)
+GL_LIB_DYNAMIC		= $(GL_LIBRARY).$(DYNAMICLIB_EXT)
+PF_LIB_STATIC		= $(PF_LIBRARY).$(STATICLIB_EXT)
+PF_LIB_DYNAMIC		= $(PF_LIBRARY).$(DYNAMICLIB_EXT)
+AW_LIB_STATIC		= $(AW_LIBRARY).$(STATICLIB_EXT)
+AW_LIB_DYNAMIC		= $(AW_LIBRARY).$(DYNAMICLIB_EXT)
+SL_LIB_STATIC		= $(SL_LIBRARY).$(STATICLIB_EXT)
+SL_LIB_DYNAMIC		= $(SL_LIBRARY).$(DYNAMICLIB_EXT)
+
+# On Linux, we have to compile the Performer library with -O for things to
+# link properly.
+ifeq ($(PLATFORM), Linux)
+    EXTRA_LDOPTS = -O
+endif
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+BEFOREBUILD	= beforebuild
+AFTERBUILD	= afterbuild
+
+# Things to do before the object files and library are built.
+beforebuild:
+
+# Things to do after the object files and library are built.
+afterbuild:
+	@$(MAKE) links
+
+# -----------------------------------------------
+# Construct the static version of the libraries.
+# -----------------------------------------------
+$(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC)		\
+$(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(PF_LIB_STATIC)			\
+$(LIBDIR)/$(AW_LIB_STATIC) $(LIBDIR)/$(SL_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(RANLIB) $@
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(VJ_LIB_DYNAMIC) $(LIBDIR)/$(UTILS_LIB_DYNAMIC)		\
+$(LIBDIR)/$(GL_LIB_DYNAMIC) $(LIBDIR)/$(PF_LIB_DYNAMIC)			\
+$(LIBDIR)/$(AW_LIB_DYNAMIC) $(LIBDIR)/$(SL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) -o $@ $(OBJDIR)/*.$(OBJEXT)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# =============================================================================
+# VjControl targets.
+# =============================================================================
+EXTRA_OBJ_TARGETS	= gui
+
+# 'gui' must be a phony target so that platforms that do not have
+# case-sensitive file names will not get it confused with the GUI directory.
+.PHONY: gui
+
+# Build the Java-based configuration GUI.
+gui:
+ifndef NO_JAVA_GUI
+ifeq ($(BUILD_GUI), Y)
+	@echo "===> GUI"
+	@$(MAKE) -C GUI VjControl.jar
+	@echo "<=== GUI"
+else
+	@echo "------------------------------------------------"
+	@echo "GUI cannot be built without javac"
+	@echo "------------------------------------------------"
+endif
+endif	# ifndef NO_JAVA_GUI
+
+# =============================================================================
+# Make links for developer use that provide the needed functionality for
+# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# should be set to $(instlinks).
+# =============================================================================
+links:
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation links"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	cd $(instlinks)/include &&					\
+          for dir in $(SUBDIR) ; do					\
+              rm -f ./$$dir ;						\
+              ln -s $(VJROOT_ABS)/$$dir ./$$dir ;			\
+          done
+	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
+          ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks) && rm -f ./Data && ln -s $(VJROOT_ABS)/Data ./Data
+	cd $(instlinks) && rm -f ./samples &&				\
+          ln -s $(VJROOT_ABS)/samples ./samples
+	cd $(instlinks)/include && rm -f ./vjConfig.h &&		\
+          $(LN_S) $(VJROOT_ABS)/vjConfig.h ./vjConfig.h
+	cd $(instlinks)/include && rm -f ./vjDefines.h &&		\
+	  $(LN_S) $(topdir)/vjDefines.h ./vjDefines.h
+	cd $(instlinks)/include && rm -f ./vjParam.h &&			\
+	  $(LN_S) $(topdir)/vjParam.h ./vjParam.h
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
+          $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
+ifndef NO_JAVA_GUI
+	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
+          $(LN_S) $(topdir)/GUI/VjControl.jar ./
+	cd $(instlinks)/bin && rm -f ./vjcontrol &&			\
+          $(LN_S) $(VJROOT_ABS)/GUI/vjcontrol ./vjcontrol
+endif
+	@echo "\n\n"
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$VJ_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
+
+# Remove the links in $(instlinks).
+clean-links:
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	rm -rf $(instlinks)
+
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Create the full installation directory hierarchy.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the Data directory.
+#     6) Install the Java-based config editor (if possible).
+# =============================================================================
+
+BEFOREINSTALL	= beforeinstall
+AFTERINSTALL	= afterinstall
+
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
+beforeinstall:
+	@$(MAKE) hier
+
+# Make the full directory hierarchy for the installation.
+hier:
+	@echo "------------------------------------------------"
+	@echo "Making hierarchy"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.install.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(prefix)
+
+# Steps to take after the installation process is complete.  This target is
+# independent of the current ABI.
+afterinstall:
+	@echo "==============================================================="
+	@echo "VR Juggler installation complete"
+	@echo "==============================================================="
+
+PREINSTALL	= pre-install
+POSTINSTALL	= post-install
+
+pre-install:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
+
+# Do everything needed after installing the library binaries.
+post-install:
+	@$(MAKE) install-samples
+	@$(MAKE) install-test
+	@$(MAKE) install-tools
+	@$(MAKE) install-data
+	@$(MAKE) install-gui
+
+PREINSTALL_HEADERS	= pre-install-headers
+POSTINSTALL_HEADERS	= post-install-headers
+
+pre-install-headers:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
+
+post-install-headers:
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/vjConfig.h $(includedir)/vjConfig.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/vjDefines.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/vjParam.h $(includedir)
+
+# Install the sample applications.
+install-samples:
+	@echo "------------------------------------------------"
+	@echo "Installing sample applications"
+	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(prefix)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(prefix)/samples
+	$(PERL) $(scriptdir)/makefiles-gen.pl				\
+          --vars="$(topdir)/VARS.pl" --startdir="$(top_srcdir)/samples"	\
+          --mode="$(FILE_PERMS)" $(_GROUP_OPT_PL) --srcdir="."		\
+          --prefix="$(prefix)/samples"
+
+# Install the test programs.
+install-test:
+	@echo "------------------------------------------------"
+	@echo "Installing test programs"
+	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(prefix)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(prefix)/test
+	$(PERL) $(scriptdir)/makefiles-gen.pl --prefix="$(prefix)/test"	\
+          --vars="$(topdir)/VARS.pl" --startdir="$(top_srcdir)/test"	\
+          --mode="$(FILE_PERMS)" $(_GROUP_OPT_PL) --srcdir="."
+
+# Install the user tools code.
+install-tools:
+	@echo "------------------------------------------------"
+	@echo "Installing user tools"
+	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(prefix)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(prefix)/tools
+	$(PERL) $(scriptdir)/makefiles-gen.pl				\
+          --prefix="$(prefix)/tools" --vars="$(topdir)/VARS.pl"		\
+          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
+          $(_GROUP_OPT_PL) --srcdir="."
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
+
+# Install the standard data files.
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing standard data files"
+	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(prefix)
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(prefix)/Data
+
+# Install the Java-based config editor if possible.
+install-gui:
+ifdef NO_JAVA_GUI
+	@echo "------------------------------------------------"
+	@echo "Skipping installation of vjcontrol (not built)"
+	@echo "------------------------------------------------"
+else
+ifeq ($(BUILD_GUI), Y)
+	@echo "------------------------------------------------"
+	@echo "Installing vjcontrol"
+	@echo "------------------------------------------------"
+ifeq (@OS_TYPE@, UNIX)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/GUI/vjcontrol $(bindir)/vjcontrol
+else
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
+          $(VJROOT_ABS)/GUI/vjcontrol.bat $(bindir)/vjcontrol.bat
+endif	# if OS_TYPE == UNIX
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/GUI/VjControl.jar $(bindir)
+endif	# if $(BUILD_GUI) == Y
+endif	# ifdef NO_JAVA_GUI
+
+# =============================================================================
+# Clean-up targets.  '_clean' removes all the files in the build directories.  
+# '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
+# =============================================================================
+_clean:
+	@$(MAKE) -C GUI clean
+
+CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+
+_clobber:
+	@$(MAKE) clean-links
+
+# Define $(_LOCAL_CLEAN) and $(_LOCAL_CLOBBER) to inform the shared 'clean'
+# and 'clobber' targets that there is a '_clean' target and a '_clobber'
+# target to be run besides the standard targets.
+_LOCAL_CLEAN	= 1
+_LOCAL_CLOBBER	= 1
+
+include $(MKPATH)/dpp.libs.mk
+include $(MKPATH)/dpp.clean.mk
