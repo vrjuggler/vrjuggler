@@ -53,15 +53,22 @@
 
 #include <snx/sonix.h>
 
+/** @defgroup SonixAPI The Sonix API.
+ *  The classes listed here define the sonix API.
+ *  You shouldn't need to use anything else.
+ */
+
 namespace snx
 {
-   /** A proxy (handle) to a sonix sound 
-    *  this is a convenient handle to your sound and is your interface to
-    *   using individual sounds in sonix
-    *  use configure, and remove as you would new and delete... 
+   /**
+    * A handle to a sonix sound.
+    *  This is a convenient handle to your sound and is your interface to
+    *   using individual sounds in sonix use configure, and remove as you 
+    *  would new and delete... 
     *  i.e. you could leak, if you don't call remove - this is because there may be more than one handle to a sound...
     * NOTE: you may have to sonix::instance()->changeAPI() to the api 
     *       you want to use (usually OpenAL, or AudioWorks)
+    * @ingroup SonixAPI
     */
    class SoundHandle
    {
