@@ -81,8 +81,6 @@ NetCommunicator::NetCommunicator () {
 
 
 //: Reads data from a communications stream.
-//  This should only be called by the Connect object self is
-//  owned by.
 //  The Communicator should read data until it reaches the end of
 //  the protocol stream (signified by the character string
 //  "</protocol>".  readStream should read that string and
@@ -92,7 +90,7 @@ NetCommunicator::NetCommunicator () {
 //! RETURNS: true - if reading the protocol stream was succesful.
 //! RETURNS: false - if EOF or a fatal error occurs.  This will
 //+                  kill the Connect.
-/*virtual*/ bool NetCommunicator::readStream (std::istream& instream, const std::string& id) {
+/*virtual*/ bool NetCommunicator::readStream (Connect* con, std::istream& instream, const std::string& id) {
     return false;
 }
 

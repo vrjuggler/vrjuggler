@@ -35,6 +35,7 @@
 #include <jccl/JackalServer/NetCommunicator.h>
 #include <iostream.h>
 //#include <Kernel/ConfigManager.h>
+#include <jccl/ConfigManager/ConfigManager.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <jccl/Config/ConfigIO.h>
 #include <jccl/Config/XMLConfigIOHandler.h>
@@ -43,8 +44,13 @@
 namespace jccl {
 
 //: Constructor
-XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
-    //connection = NULL;
+XMLConfigCommunicator::XMLConfigCommunicator (ConfigManager* _config_manager):
+    NetCommunicator() {
+
+    vprASSERT (_config_manager != 0);
+
+    config_manager = _config_manager;
+
     config_xml_handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler ("xml_config");
     xml_parser = XercesXMLParserPool::instance()->getParser();
 }
@@ -68,7 +74,6 @@ XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
 //! POST: true.
 /*virtual*/ void XMLConfigCommunicator::initConnection(Connect* _connection) {
     NetCommunicator::initConnection (_connection);
-    //connection = _connection;
 }
 
 
@@ -78,7 +83,6 @@ XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
 //! PRE: connection != NULL.
 //! POST: connection = NULL.
 /*virtual*/ void XMLConfigCommunicator::shutdownConnection() {
-    //connection = 0;
     NetCommunicator::shutdownConnection();
 }
 
@@ -96,8 +100,6 @@ XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
 
 
 //: Reads data from a communications stream.
-//  This should only be called by the Connect object self is
-//  owned by.
 //  The Communicator should read data until it reaches the end of
 //  the protocol stream (signified by the character string
 //  "</protocol>".  readStream should read that string and
@@ -107,17 +109,17 @@ XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
 //! RETURNS: true - if reading the protocol stream was succesful.
 //! RETURNS: false - if EOF or a fatal error occurs.  This will
 //+                  kill the Connect.
-/*virtual*/ bool XMLConfigCommunicator::readStream (std::istream& instream, const std::string& id) {
+/*virtual*/ bool XMLConfigCommunicator::readStream (Connect* con, std::istream& instream, const std::string& id) {
     DOM_Node doc;
     bool retval = xml_parser->readStream (instream, doc);
     if (retval) {
-        retval = interpretDOM_Node (doc);
+        retval = interpretDOM_Node (con, doc);
     }
     return retval;
 }
 
 
-bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
+bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
     bool retval = true;
     DOMString node_name = doc.getNodeName();
     DOMString node_value = doc.getNodeValue();
@@ -135,7 +137,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
         cout << "document node..." << endl;
         child = doc.getFirstChild();
         while (child != 0) {
-            retval = retval && (interpretDOM_Node(child));
+            retval = retval && (interpretDOM_Node(con, child));
             child = child.getNextSibling();
         }
         break;
@@ -150,7 +152,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
                 child = child.getNextSibling();
             }
             if (retval) {
-                //ConfigManager::instance()->addChunkDB(&newchunkdb);
+                config_manager->addChunkDB(&newchunkdb);
             }
         }
         else if (!strcasecmp (name, "remove_chunks")) {
@@ -162,7 +164,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
                 child = child.getNextSibling();
             }
             if (retval) {
-                //ConfigManager::instance()->removeChunkDB (&newchunkdb);
+                config_manager->removeChunkDB (&newchunkdb);
             }
         }
         else if (!strcasecmp (name, "remove_descs")) {
@@ -170,20 +172,19 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
             // this request.
         }
         else if (!strcasecmp (name, "request_current_chunks")) {
-//              ConfigManager::instance()->lockActive();
-//              ConfigChunkDB* db = new ConfigChunkDB((*(ConfigManager::instance()->getActiveConfig())));   // Make a copy
-//              ConfigManager::instance()->unlockActive();
+            config_manager->lockActive();
+            ConfigChunkDB* db = new ConfigChunkDB((*(config_manager->getActiveConfig())));   // Make a copy
+            config_manager->unlockActive();
             
             //vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
             //vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
-//              connection->sendChunkDB (db, true);
-            
+            con->sendCommand (new CommandSendChunkDB (db, true));
         }
         else if (!strcasecmp (name, "request_current_descs")) {
             ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
             vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
             vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
-            connection->sendDescDB (db);
+            con->sendCommand (new CommandSendDescDB (db));
         }
         else {
             vprDEBUG (vprDBG_ENV_MGR,0) << "Connect: Unrecognized command: '"

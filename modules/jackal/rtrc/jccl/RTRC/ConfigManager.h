@@ -286,7 +286,7 @@ protected:
         mPendingCheckCount = 0;
         mLastPendingSize = 0;
         jackal_server = 0;
-        config_communicator = new XMLConfigCommunicator();
+        config_communicator = new XMLConfigCommunicator(this);
     }
 
     virtual ~ConfigManager () {

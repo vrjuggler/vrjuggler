@@ -35,104 +35,106 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/ConfigManager/DependencyManager.h>
+#include <jccl/JackalServer/Connect.h>
 #include <vpr/Util/Debug.h>
 #include <stdlib.h>
 
 namespace jccl {
 
-vprSingletonImp(ConfigManager);
+    vprSingletonImp(ConfigManager);
 
-//: Do we need to check the pending list
-//! CONCURRENCY: concurrent
-// The routine counts the number of pending chunks
-// each time it is called.
-// if it goes pending_repeat_limit calls without
-// changing size, then it returns false until mLastPendingSize changes
-bool ConfigManager::pendingNeedsChecked()
-{
-   const int pending_repeat_limit = 1;    // Must be one or greater.  1 means only allow one time of no changes
-   int cur_pending_size = 0;
-   bool ret_val = false;
+    //: Do we need to check the pending list
+    //! CONCURRENCY: concurrent
+    // The routine counts the number of pending chunks
+    // each time it is called.
+    // if it goes pending_repeat_limit calls without
+    // changing size, then it returns false until mLastPendingSize changes
+    bool ConfigManager::pendingNeedsChecked()
+    {
+        const int pending_repeat_limit = 1;    // Must be one or greater.  1 means only allow one time of no changes
+        int cur_pending_size = 0;
+        bool ret_val = false;
 
-   mPendingCountMutex.acquire();
-   {
-      cur_pending_size = mPendingConfig.size();
-      if(cur_pending_size != mLastPendingSize)
-      {
-         ret_val = true;                           // Flag it for a check
-         mPendingCheckCount=0;                     // Reset the counter
-         mLastPendingSize = cur_pending_size;      // Keep track of size
-      }
-      else if(mPendingCheckCount < pending_repeat_limit)     // allowed in at least once [1...pending_repeat_limit]
-      {
-         mPendingCheckCount++;   // Increment it
-
+        mPendingCountMutex.acquire();
+        {
+            cur_pending_size = mPendingConfig.size();
+            if(cur_pending_size != mLastPendingSize)
+                {
+                    ret_val = true;                           // Flag it for a check
+                    mPendingCheckCount=0;                     // Reset the counter
+                    mLastPendingSize = cur_pending_size;      // Keep track of size
+                }
+            else if(mPendingCheckCount < pending_repeat_limit)     // allowed in at least once [1...pending_repeat_limit]
+                {
+                    mPendingCheckCount++;   // Increment it
+                    
          if(mPendingCheckCount < pending_repeat_limit)
-         {
-            ret_val = true;        // Repeats still allowed
-         }
+             {
+                 ret_val = true;        // Repeats still allowed
+             }
          else
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
-                << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                << clrOutNORM(clrGREEN,"STALE: ")
-                << cur_pending_size << " items still in pending\n"
-                << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                << "NOTE: These items have been specified in configuration,\n"
-                << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                << "      This may be an error in the configuration OR\n"
-                << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                << "      it may be waiting for more configuration information.\n"
-                << vprDEBUG_FLUSH;
-//            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << vprDEBUG_FLUSH;
-
-            lockPending();
-            debugDumpPending(vprDBG_CRITICAL_LVL); // Output the stale pending list
-            unlockPending();
-
-            ret_val = false;
-         }
+             {
+                 vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
+                     << vprDEBUG_FLUSH;
+                 vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << clrOutNORM(clrGREEN,"STALE: ")
+                     << cur_pending_size << " items still in pending\n"
+                     << vprDEBUG_FLUSH;
+                 vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "NOTE: These items have been specified in configuration,\n"
+                     << vprDEBUG_FLUSH;
+                 vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
+                 vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "      This may be an error in the configuration OR\n"
+                     << vprDEBUG_FLUSH;
+                 vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "      it may be waiting for more configuration information.\n"
+                     << vprDEBUG_FLUSH;
+                 //            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << vprDEBUG_FLUSH;
+                 
+                 lockPending();
+                 debugDumpPending(vprDBG_CRITICAL_LVL); // Output the stale pending list
+                 unlockPending();
+                 
+                 ret_val = false;
+             }
       }
-      else
-      {
-         ret_val = false;
-      }
-   }
-   mPendingCountMutex.release();
+            else
+                {
+                    ret_val = false;
+                }
+        }
+        mPendingCountMutex.release();
+        
+        return ret_val;
+    }
 
-   return ret_val;
-}
 
+    // Add the given chunk db to the pending list as adds
+    void ConfigManager::addChunkDB(ConfigChunkDB* db)
+    {
+        vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
+        lockPending();
 
-// Add the given chunk db to the pending list as adds
-void ConfigManager::addChunkDB(ConfigChunkDB* db)
-{
-   vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
-   lockPending();
-   {
-      PendingChunk pending;
-      pending.mType = PendingChunk::ADD;
-
-      for(std::vector<ConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
-      {
-         pending.mChunk = (*i);
-         mPendingConfig.push_back(pending);
-      }
-   }
-   unlockPending();
-
-   // Reset pending count
-   mPendingCountMutex.acquire();
-   mPendingCheckCount = 0;
-   mPendingCountMutex.release();
-}
+        PendingChunk pending;
+        pending.mType = PendingChunk::ADD;
+        
+        for(std::vector<ConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
+            {
+                pending.mChunk = (*i);
+                mPendingConfig.push_back(pending);
+            }
+        
+        unlockPending();
+        
+        // Reset pending count
+        mPendingCountMutex.acquire();
+        mPendingCheckCount = 0;
+        mPendingCountMutex.release();
+    }
+    
 
 void ConfigManager::removeChunkDB(ConfigChunkDB* db)
 {
@@ -240,8 +242,6 @@ void ConfigManager::debugDumpPending(int debug_level)
        << "----------------------------------\n" << vprDEBUG_FLUSH;
 }
 
-}; // namespace jccl
-
 
 //------------------ JackalControl Stuff --------------------------------
 
@@ -254,3 +254,6 @@ void ConfigManager::debugDumpPending(int debug_level)
 /*virtual*/ void ConfigManager::removeConnect (Connect* c) {
     ;
 }
+
+
+}; // namespace jccl
