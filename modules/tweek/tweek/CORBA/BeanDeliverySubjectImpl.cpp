@@ -77,9 +77,6 @@ BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
    std::string bean_name_str(beanName);
    vprASSERT(mBeanCollection.count(bean_name_str) > 0 && "Unknown Bean requested");
 
-   // Allocate memory for the object to be returned.
-   BeanInfo* bean_info = new BeanInfo();
-
    // Lock down the Bean collection before accessing it.  We basically have to
    // hold the lock for the duration of this method because we get back a
    // reference to data held by the collection (see bean_data below).
@@ -105,18 +102,18 @@ BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
          // First, we have to size the sequence so that it can hold all the bytes
          // read from the file.
          bean_file.seekg(0, std::ios::end);
-         bean_info->jarFile.length(bean_file.tellg());
+         std::streampos file_size = bean_file.tellg();
+
+         // Allocate the space for reading in the file contents.
+         bean_data.fileContents.resize(file_size);
 
          vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
-            << "Return JAR file buffer size: " << bean_info->jarFile.length()
-            << std::endl << vprDEBUG_FLUSH;
-         vprASSERT(bean_info->jarFile.length() == (unsigned long) bean_file.tellg() && "Buffer resize failed");
+            << "JAR file buffer size: " << file_size << std::endl
+            << vprDEBUG_FLUSH;
+         vprASSERT(bean_data.fileContents.size() == file_size && "Buffer resize failed");
 
          bean_file.seekg(0, std::ios::beg);
          vprASSERT((unsigned long) bean_file.tellg() == 0 && "Failed to restore stream pointer to beginning of file");
-
-         // Allocate the space for reading in the file contents.
-         bean_data.fileContents.resize(bean_info->jarFile.length());
 
          // Read in the whole JAR file in one big swoop.
          bean_file.read((char*) &bean_data.fileContents[0],
@@ -134,6 +131,9 @@ BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
       << "Using cached copy of JAR file" << std::endl << vprDEBUG_FLUSH;
+
+   // Allocate memory for the object to be returned.
+   BeanInfo* bean_info = new BeanInfo();
 
    // Size bean_info->jarFile so that it can hold the complete JAR file.
    bean_info->jarFile.length(bean_data.fileContents.size());
