@@ -58,6 +58,10 @@
                 ..
                 simpleInput
                 ..
+                WallTest
+                ..
+                collideApp
+                ..
            ..
         ..
         OSG
