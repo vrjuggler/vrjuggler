@@ -47,22 +47,25 @@
 public:                                        \
    static TYPE* instance(void)                 \
    {                                           \
+      static vjMutex _inst_lock;               \
+      static TYPE* _instance = NULL;           \
+                                               \
       if(_instance == NULL)                    \
       {                                        \
          vjGuard<vjMutex> guard(_inst_lock);   \
          if (_instance == NULL)                \
          { _instance = new TYPE; }             \
       }                                        \
-      return _instance;                        \
-   }                                           \
-private:                                       \
-   static vjMutex _inst_lock;                  \
-   static TYPE* _instance
+      return _instance;                       \
+   }
 
 #define vjSingletonHeaderWithInitFunc(TYPE, INIT_FUNC_NAME) \
 public:                                        \
    static TYPE* instance(void)                 \
    {                                           \
+      static vjMutex _inst_lock;               \
+      static TYPE* _instance = NULL;           \
+                                               \
       if(_instance == NULL)                    \
       {                                        \
          vjGuard<vjMutex> guard(_inst_lock);   \
@@ -73,15 +76,12 @@ public:                                        \
          }                                     \
       }                                        \
       return _instance;                        \
-   }                                           \
-private:                                       \
-   static vjMutex _inst_lock;                  \
-   static TYPE* _instance
+   }
 
-
-#define vjSingletonImp(TYPE) \
-            TYPE* TYPE::_instance = NULL; \
-            vjMutex  TYPE::_inst_lock
+#define vjSingletonImp(TYPE) ;
+// \
+//            TYPE* TYPE::_instance = NULL; \
+//            vjMutex  TYPE::_inst_lock
 //*/
 
 //
