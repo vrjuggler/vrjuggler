@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -42,10 +42,12 @@ extern "C"
       return obj;
    }
 
-   // Copy constructor wrapper.
-   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__gmtl_VecBase_float_3(const gmtl::VecBase<float,3>* p)
+   // Constructor wrapper.
+   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__gmtl_VecBase_float_3(const gmtl::VecBase<float,3>* p0)
    {
-      gmtl::VecBase<float,3>* obj = new gmtl::VecBase<float,3>(*p);
+      const gmtl::VecBase<float,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      gmtl::VecBase<float,3>* obj = new gmtl::VecBase<float,3>(marshal_p0);
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -75,19 +77,19 @@ extern "C"
       delete self_;
    }
 
+/*
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
    SHARPPY_API void gmtl_VecBase_float_3__set__float(gmtl::VecBase<float,3>* self_, const float* p0)
    {
       self_->set(p0);
    }
+*/
 
-/*
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
    SHARPPY_API void gmtl_VecBase_float_3__set__float(gmtl::VecBase<float,3>* self_, const float& p0)
    {
       self_->set(p0);
    }
-*/
 
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
    SHARPPY_API void gmtl_VecBase_float_3__set__float_float(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1)
@@ -116,8 +118,8 @@ extern "C"
       return result;
    }
 
-   // Wrapper for non-virtual method gmtl::VecBase<float,3>::getData()
 /*
+   // Wrapper for non-virtual method gmtl::VecBase<float,3>::getData()
    SHARPPY_API const float* gmtl_VecBase_float_3__getData__(gmtl::VecBase<float,3>* self_)
    {
       const float* result;
@@ -126,6 +128,7 @@ extern "C"
       return result;
    }
 */
+
 
 
 
