@@ -52,7 +52,8 @@ DIRPRFX=	gadget/Type
 
 SUBDIR=		Position
 
-SRCS=		AnalogProxy.cpp			\
+SRCS=		Analog.cpp			\
+		AnalogProxy.cpp			\
 		DeviceFactory.cpp		\
 		BaseTypeFactory.cpp		\
 		DeviceInterface.cpp		\
