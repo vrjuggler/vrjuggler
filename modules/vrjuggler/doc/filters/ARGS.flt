@@ -1,0 +1,52 @@
+sub filter {
+    my $str = shift;
+
+    my $new_str = "";
+    my($param, $param_desc) = ("", "");
+
+    foreach ( split("\n", "$str") ) {
+	$param_desc .= "$1" if $_ =~ /^\s*\t(.*)/;
+
+	if ( /^[^\t\S]*(\S+)\s*\-\s*(.*)/ ) {
+	    $new_str .= addRow("$param", "$param_desc") if $param_desc;
+
+	    $param = "$1";
+	    $param_desc = "$2";
+	}
+    }
+
+    $new_str .= addRow("$param", "$param_desc");
+
+    $str = <<END_TABLE;
+<TABLE BORDER="1" CELLPADDING="2">
+  <TR>
+    <TH BGCOLOR="#dddddd">
+      <FONT SIZE="2">Paramater</FONT>
+    </TH>
+    <TH BGCOLOR="#dddddd">
+      <FONT SIZE="2">Description</FONT>
+    </TH>
+  </TR>
+  $new_str
+</TABLE>
+END_TABLE
+
+    return "$str";
+}
+
+sub addRow {
+    my ($value, $descr) = @_;
+
+    my $str = <<END_ROW;
+  <TR>
+    <TD>
+      <B><FONT FACE="Helvetica" SIZE="2">$value</FONT></B>
+    </TD>
+    <TD>
+      <FONT FACE="Helvetica" SIZE="2">$descr</FONT>
+    </TD>
+  </TR>
+END_ROW
+
+    return "$str";
+}
