@@ -79,6 +79,9 @@ IDL_CXX_FILE_BASES= \
 	Observer		\
 	BeanDeliverySubject
 
+BUILD_CXX=		@BUILD_CXX@
+
+ifeq ($(BUILD_CXX), Y)
 IDL_GEN_FILES=	$(addsuffix $(SERVER_EXT_CPP), $(IDL_CXX_FILE_BASES))	\
 		$(addsuffix $(SERVER_EXT_H), $(IDL_CXX_FILE_BASES))
 
@@ -104,6 +107,7 @@ endif
 
 IDL_CXX_FILES=	$(sort $(IDL_GEN_FILES))
 SRCS=		$(sort $(CXX_FILES))
+endif
 
 include $(MKPATH)/dpp.obj.mk
 
