@@ -9,6 +9,11 @@
 #include <StringObserverImpl.h>
 
 
+/**
+ * Using the given CORBA Service object, we will try to choose a Subject
+ * Manager for use with this client application.  The user will be presented
+ * with choices of valid Subject Manager references.
+ */
 static tweek::SubjectManager_var chooseSubjectManager(tweek::CorbaService& corbaService)
 {
    tweek::SubjectManager_var subj_mgr;
@@ -19,10 +24,16 @@ static tweek::SubjectManager_var chooseSubjectManager(tweek::CorbaService& corba
 
    std::list<tweek::SubjectManager_var>::iterator cur_mgr;
 
+   // Iterate over all the tweek::SubjectManager references we have.
+   // XXX: This one-way iterative approach to choosing the reference is not
+   // very good.  However, it should serve to demonstrate the basic idea.
    for ( cur_mgr = mgrs.begin(); cur_mgr != mgrs.end(); ++cur_mgr )
    {
       try
       {
+         // It is not entirely safe to assume that *cur_mgr is still valid at
+         // this point, even though it was valid when the mgrs list was
+         // constructed.  Hence, we test it again now.
          if ( ! (*cur_mgr)->_non_existent() )
          {
             std::string response;
@@ -74,32 +85,52 @@ int main(int argc, char* argv[])
    std::cout << "IIOP version (usually 1.0): ";
    std::cin >> iiop_ver;
 
+   // Create the local CORBA Service using the Naming Service URI information
+   // we just collected.
    tweek::CorbaService corba_service(ns_host, ns_port, iiop_ver);
 
    try
    {
+      // Attempt to initialize the CORBA Service.
       if ( corba_service.init(argc, argv).success() )
       {
-         vpr::ReturnStatus status;
-
          // This will hold the reference to the Subject Manager we use.
          tweek::SubjectManager_var subj_mgr =
             chooseSubjectManager(corba_service);
 
+         // Verify that we actually got a Subject Manager reference back
+         // from chooseSubjectManager.
          if ( ! CORBA::is_nil(subj_mgr) )
          {
+            // Request the Subject with which we will communicate.  This
+            // hard-coded Subject name is not necessarily a good thing.
             tweek::Subject_var subj = subj_mgr->getSubject("StringSubject");
 
+            // If the Subject Manager knows about the Subject named above,
+            // then we are good to go.
             if ( ! CORBA::is_nil(subj) )
             {
                try
                {
+                  // Attempt to narrow subj to the more specific reference type
+                  // CxxClientTest::StringSubject_var.  If this fails, an
+                  // exception will be thrown and caught below.
                   CxxClientTest::StringSubject_var string_subj =
                      CxxClientTest::StringSubject::_narrow(subj);
 
+                  // Request the current value before we create the Observer.
+                  // In this way, we can see the persistent state maintained
+                  // by the Subject.
+                  char* cur_value = string_subj->getValue();
+                  std::cout << "Current string value is '" << cur_value << "'"
+                            << std::endl;
+                  delete cur_value;
+
+                  // Create our Observer servant.
                   StringObserverImpl* string_observer =
                      new StringObserverImpl(string_subj);
 
+                  // Register the newly created servant with our ORB's POA.
                   PortableServer::ObjectId_var observer_id =
                      corba_service.registerObject(string_observer,
                                                    "StringObserver");
@@ -139,12 +170,14 @@ int main(int argc, char* argv[])
                }
             }
          }
+         // We did not get a Subject Manager reference back for some reason.
          else
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "No Subject Manager chosen--exiting.\n" << vprDEBUG_FLUSH;
          }
       }
+      // The CORBA Service initialization failed.
       else
       {
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
