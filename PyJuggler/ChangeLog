@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-26-2004 patrickh    Added support for sharing application-specific data in
+                        a VR Juggler cluster configuration via a specialization
+                        of cluster::UserData<T>.
+                        NEW VERSION: 0.12.0
 Oct-25-2004 patrickh    Added support for context-specific data in applications
                         using the OpenGL Draw Manager
                         NEW VERSION: 0.11.0
