@@ -652,10 +652,11 @@ AC_CONFIG_FILES([
    samples/OSG/simple/Makefile
    samples/OSG/simple/osgNav/Makefile
    samples/OpenSG/Makefile
+   samples/OpenSG/advanced/Makefile
+   samples/OpenSG/advanced/OpenSGNavGrab/Makefile
+   samples/OpenSG/advanced/OpenSGViewer/Makefile
    samples/OpenSG/simple/Makefile
    samples/OpenSG/simple/OpenSGNav/Makefile
-   samples/OpenSG/advanced/Makefile
-   samples/OpenSG/advanced/OpenSGViewer/Makefile
    samples/Pf/Makefile
    samples/Pf/advanced/Makefile
    samples/Pf/advanced/pfConfigNav/Makefile
