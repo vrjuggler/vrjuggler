@@ -139,7 +139,7 @@ void vjGlDrawManager::main(void* nullParam)
 
 void vjGlDrawManager::drawAllPipes()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: " << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "vjGLDrawManager::drawAllPipes: " << endl << flush << vjDEBUG_FLUSH;
    unsigned int pipeNum;
 
    // RENDER
@@ -161,7 +161,7 @@ void vjGlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeSwap();
 
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: Done" << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "vjGLDrawManager::drawAllPipes: Done" << endl << flush << vjDEBUG_FLUSH;
 }
 
 //: Initialize the drawing API (if not already running)
