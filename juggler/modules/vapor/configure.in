@@ -427,7 +427,11 @@ if test "x$ac_cv_has_socklen_t" = "xno" ; then
     AC_DEFINE(socklen_t, int)
 fi
 
-DPP_CHECK_TYPE_POSIX
+AC_CHECK_SIZEOF(char, 8)
+AC_CHECK_SIZEOF(short, 16)
+AC_CHECK_SIZEOF(int, 32)
+AC_CHECK_SIZEOF(long, 64)
+AC_CHECK_SIZEOF(long long, 64)
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
