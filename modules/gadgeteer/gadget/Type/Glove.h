@@ -66,7 +66,7 @@ namespace vrj
 // NOTE: More docs needed here
 //
 //!PUBLIC_API:
-class VJ_CLASS_API GloveData
+class GAD_CLASS_API GloveData
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };
@@ -117,7 +117,7 @@ public:
 //
 //-------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API Glove : virtual public Input
+class GAD_CLASS_API Glove : virtual public Input
 {
 public:
    Glove();

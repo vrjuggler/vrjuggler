@@ -56,7 +56,7 @@ namespace vrj
 //  subDevice's amount of data.  (one int)
 //!PUBLIC_API:
 //--------------------------------------------------------------------------
-class VJ_CLASS_API DigitalProxy : public TypedProxy<Digital>
+class GAD_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
 
 public:
