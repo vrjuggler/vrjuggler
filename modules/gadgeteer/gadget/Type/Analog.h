@@ -74,7 +74,7 @@ public:
    {
       mMin = static_cast<float>( c->getProperty("min") );
       mMax = static_cast<float>( c->getProperty("max") );
-      
+
       vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::config() min:"<<mMin<<" max:"<<mMax<<"\n"<< vjDEBUG_FLUSH;
 
       return true;
@@ -100,8 +100,8 @@ public:
 
 protected:
    // give a value that will range from [min() <= n <= max()]
-   // return a value that is normalized to the range of 0.0f <= n <= 1.0f
-   // if n < 0 or n > 1, then result = 0 or 1 respectively.
+   // return a value that is normalized to the range of mMin <= n <= mMax
+   // if n < mMin or n > mMax, then result = mMin or mMax respectively.
    void normalizeMinToMax( const float& plainJaneValue, float& normedFromMinToMax )
    {
       float value = plainJaneValue;
@@ -111,9 +111,9 @@ protected:
       if (value > mMax) value = mMax;
 
       // slide everything to 0.0 (subtract all by mMin)
-      float //tmin( 0.0f ),
-            tmax( mMax - mMin),
-            tvalue = value - mMin;
+      // Then divide by max to get normalized value
+      float tmax( mMax - mMin),
+            tvalue(value - mMin);
 
       // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
       normedFromMinToMax = tvalue / tmax;
