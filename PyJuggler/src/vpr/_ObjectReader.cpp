@@ -280,12 +280,10 @@ void _Export_ObjectReader()
          "support for formats such as XML where there is a logical grouping\n"
          "of the data.\n\n"
          "The structure looks something like the following (based on XML):\n\n"
-         "<pre>\n"
          "<tag1>\n"
          "  <tag2 attrib1=\"XXX\">\n"
          "  </tag2>\n"
-         "</tag1>\n"
-         "</pre>",
+         "</tag1>",
          no_init)
         .def("beginTag", pure_virtual(&vpr::ObjectReader::beginTag),
              "beginTag(tagName) -> PyJuggler.vpr.ReturnStatus object\n"
