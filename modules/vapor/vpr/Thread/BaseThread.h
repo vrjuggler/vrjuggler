@@ -49,6 +49,8 @@
 #include <boost/concept_check.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
 
 namespace vpr
@@ -63,6 +65,7 @@ typedef void (*thread_func_t)(void *);
 
 
 class BaseThreadFunctor;
+class TSKeyAllocator;
 
 /**
  * This is used as the base class for all thread classes.
@@ -125,6 +128,7 @@ public:     // Thread specific data caching
    {
       return &gTSTable;
    }
+
 
 private:
    TSTable        mTSTable;  /**< Thread specific data for the thread */
