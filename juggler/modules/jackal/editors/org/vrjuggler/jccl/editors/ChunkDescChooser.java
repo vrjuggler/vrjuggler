@@ -78,12 +78,22 @@ public class ChunkDescChooser
          e.printStackTrace();
       }
 
-      // Make sure the browse search text field gets the initial focus
-      SwingUtilities.invokeLater(new Runnable()
+      browseTab.addComponentListener(new ComponentAdapter()
       {
-         public void run()
+         public void componentShown(ComponentEvent evt)
          {
+            System.out.println("Showing browseTab");
             browseSearchTextField.requestFocus();
+            setSelectedChunkDesc((ChunkDesc)browseList.getSelectedValue());
+         }
+      });
+      searchTab.addComponentListener(new ComponentAdapter()
+      {
+         public void componentShown(ComponentEvent evt)
+         {
+            System.out.println("Showing searchTab");
+            searchSearchTextField.requestFocus();
+            setSelectedChunkDesc((ChunkDesc)searchList.getSelectedValue());
          }
       });
 
