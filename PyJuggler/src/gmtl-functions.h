@@ -42,8 +42,21 @@
 #include <gmtl/EulerAngleOps.h>
 #include <gmtl/AxisAngle.h>
 #include <gmtl/AxisAngleOps.h>
+#include <gmtl/Sphere.h>
+#include <gmtl/SphereOps.h>
+#include <gmtl/AABox.h>
+#include <gmtl/AABoxOps.h>
+#include <gmtl/LineSeg.h>
+#include <gmtl/LineSegOps.h>
+#include <gmtl/Plane.h>
+#include <gmtl/PlaneOps.h>
+#include <gmtl/Tri.h>
+#include <gmtl/TriOps.h>
+#include <gmtl/Containment.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Intersection.h>
 #include <gmtl/Output.h>
+#include <gmtl/Xforms.h>
 
 namespace gmtl
 {
@@ -234,6 +247,76 @@ namespace gmtl
    template bool isEqual(const AxisAngled&, const AxisAngled&, const double&);
 // ================================================ gmtl::AxisAngle<> functions
 
+// gmtl::Sphere<> functions ===================================================
+   template bool isEqual(const gmtl::Spheref&, const gmtl::Spheref&,
+                         const float&);
+   template bool isEqual(const gmtl::Sphered&, const gmtl::Sphered&,
+                         const double&);
+// =================================================== gmtl::Sphere<> functions
+
+// gmtl::AABox<> functions ====================================================
+   template bool isEqual(const gmtl::AABoxf&, const gmtl::AABoxf&,
+                         const float&);
+   template bool isEqual(const gmtl::AABoxd&, const gmtl::AABoxd&,
+                         const double&);
+// ==================================================== gmtl::AABox<> functions
+
+// gmtl::LineSeg<> functions ==================================================
+   template gmtl::Point3f findNearestPt(const gmtl::LineSegf&,
+                                        const gmtl::Point3f&);
+   template gmtl::Point3d findNearestPt(const gmtl::LineSegd&,
+                                        const gmtl::Point3d&);
+
+   template float distance(const gmtl::LineSegf&, const gmtl::Point3f&);
+   template double distance(const gmtl::LineSegd&, const gmtl::Point3d&);
+
+   template float distanceSquared(const gmtl::LineSegf&, const gmtl::Point3f&);
+   template double distanceSquared(const gmtl::LineSegd&, const gmtl::Point3d&);
+
+   template bool isEqual(const gmtl::LineSegf&, const gmtl::LineSegf&,
+                         const float&);
+   template bool isEqual(const gmtl::LineSegd&, const gmtl::LineSegd&,
+                         const double&);
+// ================================================== gmtl::LineSeg<> functions
+
+// gmtl::Plane<> functions ====================================================
+   template float distance(const gmtl::Planef&, const gmtl::Point3f&);
+   template double distance(const gmtl::Planed&, const gmtl::Point3d&);
+
+   template gmtl::PlaneSide whichSide(const gmtl::Planef&,
+                                      const gmtl::Point3f&);
+   template gmtl::PlaneSide whichSide(const gmtl::Planed&,
+                                      const gmtl::Point3d&);
+
+   template gmtl::PlaneSide whichSide(const gmtl::Planef&,
+                                      const gmtl::Point3f&, const float&);
+   template gmtl::PlaneSide whichSide(const gmtl::Planed&,
+                                      const gmtl::Point3d&, const double&);
+
+   template float findNearestPt(const gmtl::Planef&, const gmtl::Point3f&,
+                                gmtl::Point3f&);
+   template double findNearestPt(const gmtl::Planed&, const gmtl::Point3d&,
+                                 gmtl::Point3d&);
+
+   template bool isEqual(const gmtl::Planef&, const gmtl::Planef&,
+                         const float&);
+   template bool isEqual(const gmtl::Planed&, const gmtl::Planed&,
+                         const double&);
+// ==================================================== gmtl::Plane<> functions
+
+// gmtl::Tri<> functions ======================================================
+   template gmtl::Point3f center(const gmtl::Trif&);
+   template gmtl::Point3d center(const gmtl::Trid&);
+   template gmtl::Point3i center(const gmtl::Trii&);
+
+   template gmtl::Vec3f normal(const gmtl::Trif&);
+   template gmtl::Vec3d normal(const gmtl::Trid&);
+//   template gmtl::Vec3i normal(const gmtl::Trii&);
+
+   template bool isEqual(const gmtl::Trif&, const gmtl::Trif&, const float&);
+   template bool isEqual(const gmtl::Trid&, const gmtl::Trid&, const double&);
+// ====================================================== gmtl::Tri<> functions
+
 // Generator functions ========================================================
    // See the gmtlWrapper namespace for GMTL functions that use the
    // Type2Type idiom.
@@ -392,6 +475,144 @@ namespace gmtl
    // XXX: gmtl::setRot(Coord, const Matrix) missing...
 
 // ======================================================== Generator functions
+
+// Containment functions ======================================================
+   template bool isInVolume(const gmtl::Spheref&, const gmtl::Point3f&);
+   template bool isInVolume(const gmtl::Sphered&, const gmtl::Point3d&);
+
+   template bool isInVolume(const gmtl::Spheref&, const gmtl::Spheref&);
+   template bool isInVolume(const gmtl::Sphered&, const gmtl::Sphered&);
+
+   template void extendVolume(gmtl::Spheref&, const gmtl::Point3f&);
+   template void extendVolume(gmtl::Sphered&, const gmtl::Point3d&);
+
+   template void extendVolume(gmtl::Spheref&, const gmtl::Spheref&);
+   template void extendVolume(gmtl::Sphered&, const gmtl::Sphered&);
+
+   template void makeVolume(gmtl::Spheref&, const std::vector<gmtl::Point3f>&);
+   template void makeVolume(gmtl::Sphered&, const std::vector<gmtl::Point3d>&);
+
+   template bool isOnVolume(const gmtl::Spheref&, const gmtl::Point3f&,
+                            const float&);
+   template bool isOnVolume(const gmtl::Sphered&, const gmtl::Point3d&,
+                            const double&);
+
+   template void extendVolume(gmtl::AABoxf&, const gmtl::Point3f&);
+   template void extendVolume(gmtl::AABoxd&, const gmtl::Point3d&);
+
+   template void extendVolume(gmtl::AABoxf&, const gmtl::AABoxf&);
+   template void extendVolume(gmtl::AABoxd&, const gmtl::AABoxd&);
+
+   template void makeVolume(gmtl::AABoxf&, const gmtl::Spheref&);
+   template void makeVolume(gmtl::AABoxd&, const gmtl::Sphered&);
+// ====================================================== Containment functions
+
+// Intersection functions =====================================================
+   template bool intersect(const gmtl::AABoxf&, const gmtl::AABoxf&);
+   template bool intersect(const gmtl::AABoxd&, const gmtl::AABoxd&);
+
+   template bool intersect(const gmtl::AABoxf&, const gmtl::Point3f&);
+   template bool intersect(const gmtl::AABoxd&, const gmtl::Point3d&);
+
+   template bool intersect(const gmtl::AABoxf&, const gmtl::Vec3f&,
+                           const gmtl::AABoxf&, const gmtl::Vec3f&,
+                           float&, float&);
+   template bool intersect(const gmtl::AABoxd&, const gmtl::Vec3d&,
+                           const gmtl::AABoxd&, const gmtl::Vec3d&,
+                           double&, double&);
+
+   template bool intersect(const gmtl::Spheref&, const gmtl::Vec3f&,
+                           const gmtl::Spheref&, const gmtl::Vec3f&,
+                           float&, float&);
+   template bool intersect(const gmtl::Sphered&, const gmtl::Vec3d&,
+                           const gmtl::Sphered&, const gmtl::Vec3d&,
+                           double&, double&);
+
+   template bool intersect(const gmtl::AABoxf&, const gmtl::Spheref&);
+   template bool intersect(const gmtl::AABoxd&, const gmtl::Sphered&);
+
+   template bool intersect(const gmtl::Spheref&, const gmtl::AABoxf&);
+   template bool intersect(const gmtl::Sphered&, const gmtl::AABoxd&);
+
+   template bool intersect(const gmtl::Spheref&, const gmtl::Point3f&);
+   template bool intersect(const gmtl::Sphered&, const gmtl::Point3d&);
+
+   template bool intersect(const gmtl::Spheref&, const gmtl::Rayf&, int&,
+                           float&, float&);
+   template bool intersect(const gmtl::Sphered&, const gmtl::Rayd&, int&,
+                           float&, float&);
+
+   template bool intersect(const gmtl::Spheref&, const gmtl::LineSegf&, int&,
+                           float&, float&);
+   template bool intersect(const gmtl::Sphered&, const gmtl::LineSegd&, int&,
+                           float&, float&);
+
+   template bool intersect(const gmtl::Planef&, const gmtl::Rayf&, float&);
+   template bool intersect(const gmtl::Planed&, const gmtl::Rayd&, double&);
+
+   template bool intersect(const gmtl::Trif&, const gmtl::Rayf&, float&,
+                           float&, float&);
+   template bool intersect(const gmtl::Trid&, const gmtl::Rayd&, float&,
+                           float&, float&);
+
+   template bool intersect(const gmtl::Trif&, const gmtl::LineSegf&, float&,
+                           float&, float&);
+   template bool intersect(const gmtl::Trid&, const gmtl::LineSegd&, float&,
+                           float&, float&);
+// ===================================================== Intersection functions
+
+// Transform functions ========================================================
+   template gmtl::VecBase<float, 3>& xform(gmtl::VecBase<float, 3>&,
+                                           const gmtl::Quat<float>&,
+                                           const gmtl::VecBase<float, 3>&);
+   template gmtl::VecBase<double, 3>& xform(gmtl::VecBase<double, 3>&,
+                                            const gmtl::Quat<double>&,
+                                            const gmtl::VecBase<double, 3>&);
+
+   // XXX: Could probably add a gmtl::Matrix43[fd] here if that type were
+   // exposed to Python as well.
+   template gmtl::Vec<float, 3>& xform(gmtl::Vec<float, 3>&,
+                                       const gmtl::Matrix<float, 3, 3>&,
+                                       const gmtl::Vec<float, 3>&);
+   template gmtl::Vec<double, 3>& xform(gmtl::Vec<double, 3>&,
+                                        const gmtl::Matrix<double, 3, 3>&,
+                                        const gmtl::Vec<double, 3>&);
+   template gmtl::Vec<float, 4>& xform(gmtl::Vec<float, 4>&,
+                                       const gmtl::Matrix<float, 4, 4>&,
+                                       const gmtl::Vec<float, 4>&);
+   template gmtl::Vec<double, 4>& xform(gmtl::Vec<double, 4>&,
+                                        const gmtl::Matrix<double, 4, 4>&,
+                                        const gmtl::Vec<double, 4>&);
+
+   template gmtl::Vec<float, 3>& xform(gmtl::Vec<float, 3>&,
+                                       const gmtl::Matrix<float, 4, 4>&,
+                                       const gmtl::Vec<float, 3>&);
+   template gmtl::Vec<double, 3>& xform(gmtl::Vec<double, 3>&,
+                                        const gmtl::Matrix<double, 4, 4>&,
+                                        const gmtl::Vec<double, 3>&);
+
+   // XXX: Could probably add a gmtl::Matrix43[fd] here if that type were
+   // exposed to Python as well.
+   template gmtl::Point<float, 3>& xform(gmtl::Point<float, 3>&,
+                                         const gmtl::Matrix<float, 3, 3>&,
+                                         const gmtl::Point<float, 3>&);
+   template gmtl::Point<double, 3>& xform(gmtl::Point<double, 3>&,
+                                          const gmtl::Matrix<double, 3, 3>&,
+                                          const gmtl::Point<double, 3>&);
+   template gmtl::Point<float, 4>& xform(gmtl::Point<float, 4>&,
+                                         const gmtl::Matrix<float, 4, 4>&,
+                                         const gmtl::Point<float, 4>&);
+   template gmtl::Point<double, 4>& xform(gmtl::Point<double, 4>&,
+                                          const gmtl::Matrix<double, 4, 4>&,
+                                          const gmtl::Point<double, 4>&);
+
+   template gmtl::Point<float, 3>& xform(gmtl::Point<float, 3>&,
+                                         const gmtl::Matrix<float, 4, 4>&,
+                                         const gmtl::Point<float, 3>&);
+   template gmtl::Point<double, 3>& xform(gmtl::Point<double, 3>&,
+                                          const gmtl::Matrix<double, 4, 4>&,
+                                          const gmtl::Point<double, 3>&);
+// ======================================================== Transform functions
 
 // Output functions ===========================================================
    template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<float,3>&);

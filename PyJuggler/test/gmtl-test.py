@@ -173,3 +173,18 @@ if gmtl.isEqual(mat1, mat3):
    print "gmtl.makeInverse() pass (lame test!)"
 else:
    print "gmtl.makeInverse() fail"
+
+sphere = gmtl.Spheref(gmtl.Point3f(5.0, 5.0, 5.0), 2.0)
+
+if sphere.getRadius() == 2.0:
+   print "gmtl.Sphere.getRadius() psas"
+else:
+   print "gmtl.Sphere.getRadius() fail"
+
+aabox = gmtl.AABoxf(gmtl.Point3f(4.0, 4.0, 4.0),
+                    gmtl.Point3f(6.0, 6.0, 6.0))
+
+if gmtl.intersect(sphere, aabox):
+   print "gmtl.intersect(Spheref, AABoxf) pass"
+else:
+   print "gmtl.intersect(Spheref, AABoxf) fail"

@@ -25,6 +25,10 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+# Basics ======================================================================
+AllFromHeader('gmtl/Defines.h')
+# ====================================================================== Basics
+
 # gmtl::Matrix<> ==============================================================
 Matrix = Template('gmtl::Matrix', 'gmtl/Matrix.h')
 
@@ -212,6 +216,75 @@ AxisAngled = AxisAngle('double')
 rename(AxisAngled, 'AxisAngled')
 # =========================================================== gmtl::AxisAngle<>
 
+# gmtl::Sphere<> ==============================================================
+Sphere = Template('gmtl::Sphere', 'gmtl/Sphere.h')
+
+Spheref = Sphere('float')
+rename(Spheref, 'Spheref')
+
+Sphered = Sphere('double')
+rename(Sphered, 'Sphered')
+# ============================================================== gmtl::Sphere<>
+
+# gmtl::AABox<> ===============================================================
+AABox = Template('gmtl::AABox', 'gmtl/AABox.h')
+
+AABoxf = AABox('float')
+rename(AABoxf, 'AABoxf')
+
+AABoxd = AABox('double')
+rename(AABoxd, 'AABoxd')
+# =============================================================== gmtl::AABox<>
+
+# gmtl::Ray<> =================================================================
+Ray = Template('gmtl::Ray', 'gmtl/Ray.h')
+
+Rayf = Ray('float')
+rename(Rayf, 'Rayf')
+
+Rayd = Ray('double')
+rename(Rayd, 'Rayd')
+# ================================================================= gmtl::Ray<>
+
+# gmtl::LineSeg<> =============================================================
+LineSeg = Template('gmtl::LineSeg', 'gmtl/LineSeg.h')
+
+LineSegf = LineSeg('float')
+rename(LineSegf, 'LineSegf')
+
+LineSegd = LineSeg('double')
+rename(LineSegd, 'LineSegd')
+# ============================================================= gmtl::LineSeg<>
+
+# gmtl::Plane<> ===============================================================
+Plane = Template('gmtl::Plane', 'gmtl/Plane.h')
+
+Planef = Plane('float')
+rename(Planef, 'Planef')
+
+Planed = Plane('double')
+rename(Planed, 'Planed')
+
+Function('gmtl::distance', 'gmtl-functions.h')
+Function('gmtl::whichSide', 'gmtl-functions.h')
+Function('gmtl::findNearestPt', 'gmtl-functions.h')
+# =============================================================== gmtl::Plane<>
+
+# gmtl::Tri<> =================================================================
+Tri = Template('gmtl::Tri', 'gmtl/Tri.h')
+
+Trif = Tri('float')
+rename(Trif, 'Trif')
+
+Trid = Tri('double')
+rename(Trid, 'Trid')
+
+Trii = Tri('int')
+rename(Trii, 'Trii')
+
+Function('gmtl::center', 'gmtl-functions.h')
+# ================================================================= gmtl::Tri<>
+
 # Generator operations ========================================================
 Function('gmtlWrapper::makeRotMatrix33', 'gmtl-functions.h')
 Function('gmtlWrapper::makeRotMatrix44', 'gmtl-functions.h')
@@ -256,6 +329,24 @@ set_policy(Function('gmtl::setAxes', 'gmtl-functions.h'),
 Function('gmtl::makeTranspose', 'gmtl-functions.h')
 Function('gmtl::makeInverse', 'gmtl-functions.h')
 # ======================================================== Generator operations
+
+# Containment operations ======================================================
+Function('gmtl::isInVolume', 'gmtl-functions.h')
+set_policy(Function('gmtl::extendVolume', 'gmtl-functions.h'),
+                    return_internal_reference())
+Function('gmtl::isOnVolume', 'gmtl-functions.h')
+set_policy(Function('gmtl::makeVolume', 'gmtl-functions.h'),
+                    return_internal_reference())
+# ====================================================== Containment operations
+
+# Intersection operations =====================================================
+Function('gmtl::intersect', 'gmtl-functions.h')
+# ===================================================== Intersection operations
+
+# Transform operations ========================================================
+set_policy(Function('gmtl::xform', 'gmtl-functions.h'),
+           return_internal_reference())
+# ======================================================== Transform operations
 
 # General operations ==========================================================
 Function('gmtl::isEqual', 'gmtl-functions.h')
