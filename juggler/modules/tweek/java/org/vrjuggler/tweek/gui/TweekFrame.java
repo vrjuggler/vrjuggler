@@ -90,8 +90,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                                    KunststoffMiniLookAndFeel.class.getName());
       KunststoffMiniLookAndFeel.setIsInstalled(true);
 
-      UIManager.installLookAndFeel("Metouia",
-                                   net.sourceforge.mlf.metouia.MetouiaLookAndFeel.class.getName());
+      // This class installs itself with the UI Manager automatically.
+      new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();
 
       mBeanPrefsDialog =
          new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
