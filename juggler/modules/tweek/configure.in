@@ -345,26 +345,29 @@ setup_omniORB ( )
       [AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])])
 
    LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
-   LIBS="$LIBS -l$tweek_omni_lib -lomnithread -lomniGK_stub $tweek_extra_libs"
+   LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
+
+   if test "x$OMNI_VER" = "x3" ; then
+      LIBS="$LIBS -lomniGK_stub"
+   fi
 
    DPP_LANG_SAVE
    DPP_LANG_CPLUSPLUS
 
-   AC_CACHE_CHECK([for omniORB::MaxMessageSize in -l$tweek_omni_lib],
-      [tweek_cv_omniORB__MaxMessageSize_in_omniORB],
+   AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
+      [tweek_cv_CORBA__ORB_init_in_omniORB],
       AC_TRY_LINK([
-#include <omnithread.h>
 #include <omniORB$OMNI_VER/CORBA.h>
-#include <omniORB$OMNI_VER/omniORB.h>
 
 int omni_main_i(int argc, char** const argv)
 {
+   CORBA::ORB_init(argc, argv, "omniORB$OMNI_VER");
    return 0;
 }],
-                  [omniORB::MaxMessageSize();],
-                  [ tweek_cv_omniORB__MaxMessageSize_in_omniORB='yes'
+                  [omni_main_i(0, NULL);],
+                  [ tweek_cv_CORBA__ORB_init_in_omniORB='yes'
                     rm -rf ./ii_files ],
-                  [tweek_cv_omniORB__MaxMessageSize_in_omniORB='no']))
+                  [tweek_cv_CORBA__ORB_init_in_omniORB='no']))
 
    AC_PATH_PROG(CXX_IDL, omniidl, no, [${OMNI_BIN_DIR}:$PATH])
 
@@ -376,7 +379,7 @@ int omni_main_i(int argc, char** const argv)
    CXX_IDL_GENDIR_OPT='-C'
    CXX_IDL_INCFLAG='-I'
 
-   if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
+   if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
       CXX_ORB_INCLUDES="-I$tweek_omni_inc"
       CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
       CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
