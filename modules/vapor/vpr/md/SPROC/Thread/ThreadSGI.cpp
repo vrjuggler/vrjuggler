@@ -138,8 +138,11 @@ void ThreadSGI::startThread(void* null_param)
 int
 ThreadSGI::join (void** arg)
 {
-   std::cerr << "vpr::ThreadSGI::join() not implemented yet!\n";
-   return -1;
+    int status;
+    pid_t val = waitpid(mThreadPID, &status, 0);
+//    ((int**) **arg) = status;
+
+    return val;
 }
 
 }; // End of vpr namespace
