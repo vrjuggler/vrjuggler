@@ -70,9 +70,9 @@ int vjInputManager::FNewInput(vjConfigChunkDB *cdb)
    ConfigureIbox(cdb);
    ConfigureDummyPos(cdb);
    ConfigurevjCyberGlove(cdb);
-   ConfigureKeyboard(cdb);
    Configure3DMouse(cdb);
 #endif
+   ConfigureKeyboard(cdb);
 
    ConfigurePosProxy(cdb);
    ConfigureAnaProxy(cdb);
@@ -577,6 +577,7 @@ void vjInputManager::ConfigurevjCyberGlove(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 }
+#endif // ndef WIN32
 
 void vjInputManager::ConfigureKeyboard(vjConfigChunkDB *cdb)
 {   
@@ -604,7 +605,6 @@ void vjInputManager::ConfigureKeyboard(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 }
-#endif // ndef WIN32
 
 void vjInputManager::ConfigurePosProxy(vjConfigChunkDB *cdb)
 { 
