@@ -423,54 +423,14 @@ dnl # Check for the JDK (specifically try to find javac(1) in $JDK_HOME).
 JAVAC=''
 JAR=''
 
-dnl # In checking for javac(1), "${JDK_HOME}/bin" is added to the script's
-dnl # $PATH variable.  This directory may already be in the path, but this
-dnl # ensures that javac(1) will be found by AC_PATH_PROG().
-_vjsave_PATH="$PATH"
-PATH="$PATH:${JDK_HOME}/bin"
-AC_PATH_PROG(JAVAC, javac)
-PATH="${_vjsave_PATH}"
-
-dnl # If $JAVAC was not set by AC_PATH_PROG(), try to find the JDK installation
-dnl # directory using the list in $JDK_HOME_ALT_LIST.
-if test -z "$JAVAC" ; then
-    dnl # Add the default value for $JDK_HOME (found in ${_JDK_HOME_DEFAULT})
-    dnl # to the list of alternate installation directories in case the user
-    dnl # gave a different value for $JDK_HOME on the command line.
-    if test "x$JDK_HOME" != "x${_JDK_HOME_DEFAULT}" ; then
-        _JDK_HOME_ALT_LIST="${_JDK_HOME_DEFAULT} ${_JDK_HOME_ALT_LIST}"
-    fi
-
-    dnl # Loop over the list of possible alternate installation directories
-    dnl # for the JDK found in ${_JDK_HOME_ALT_LIST}.
-    for _JDK_HOME_TMP in ${_JDK_HOME_ALT_LIST} ; do
-        dnl # Only check the directory in ${_JDK_HOME_TMP} if it is not the
-        dnl # same as the path given by the user on the command line.
-        if test "${_JDK_HOME_TMP}" != "$JDK_HOME" ; then
-            AC_MSG_CHECKING(for javac in ${_JDK_HOME_TMP})
-
-            dnl # If an executable javac is found in ${_JDK_HOME_TMP}, set
-            dnl # $JAVAC to the full path to it, save ${_JDK_HOME_TMP} in
-            dnl # $JDK_HOME and quit looping.
-            if test -x "${_JDK_HOME_TMP}/bin/javac" ; then
-                JAVAC="${_JDK_HOME_TMP}/bin/javac"
-                JDK_HOME="${_JDK_HOME_TMP}"
-                AC_MSG_RESULT(yes)
-                break
-            dnl # Otherwise, print "no" and go on to the next directory.
-            else
-                AC_MSG_RESULT(no)
-            fi
-        fi
-    done
-fi
-
-BUILD_GUI='N'
+_jdk_path_extra=`echo ${_JDK_HOME_ALT_LIST} | sed -e 's/ /\/bin:/g'`
+AC_PATH_PROG(JAVAC, javac, no, $PATH:${JDK_HOME}/bin:${_jdk_path_extra})
 
 dnl # If there is still no value in $JAVAC, then warn that the GUI will not be
 dnl # built.
-if test -z "$JAVAC" ; then
+if test "$JAVAC" = "no" ; then
     AC_MSG_WARN(*** The GUI requires javac -- it will not be built ***)
+    BUILD_GUI='N'
 dnl # Otherwise, set $JAR to the path to jar(1) and continue.
 else
     JAR="${JDK_HOME}/bin/jar"
