@@ -60,7 +60,9 @@ vjcontrol-pkg-install:
 
 links:
 	cd $(instlinks)/bin && \
-		$(RM_LN) ./vjcontrol.jar && $(LN_S) $(topdir)/vjcontrol/vjcontrol.jar
+		for jar in $(JARS); do \
+			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/vjcontrol/$$jar ./$$jar; \
+		done
 	cd $(instlinks)/bin && rm -f ./vjcontrol && \
 		sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g' \
 			$(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol && \
