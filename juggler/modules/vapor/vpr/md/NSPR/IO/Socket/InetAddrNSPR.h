@@ -237,6 +237,14 @@ public:
     operator= (const InetAddrNSPR& addr)
     { mAddr = addr.mAddr;}
 
+    // --- Impl specific --- //
+
+    // Get the info needed by other NSPR commands
+    PRNetAddr* getPRNetAddr()
+    {
+       return &mAddr;
+    }
+
 protected:
    PRNetAddr   mAddr;         // Actual address
 };
