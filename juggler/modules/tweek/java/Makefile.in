@@ -70,116 +70,98 @@ IDL_JAVA_FILES=	SubjectManager.java	\
 		Subject.java		\
 		Observer.java
 
-#JAVA_SRCS   = $(shell find $(srcdir) -name '*.java')
+#JAVA_SRCS=	$(shell find $(srcdir) -name '*.java')
 
-TWEEK_PKG		= org.vrjuggler.tweek
-TWEEK_DIR		= $(subst .,/,$(TWEEK_PKG))
-TWEEK_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TWEEK_DIR)/*.java))
-TWEEK_CLASSES		= $(TWEEK_SRCS:.java=.class)
+TWEEK_PKG=		org.vrjuggler.tweek
+TWEEK_DIR=		$(subst .,/,$(TWEEK_PKG))
+TWEEK_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TWEEK_DIR)/*.java))
+TWEEK_CLASSES=		$(TWEEK_SRCS:.java=.class)
 
-BEANS_PKG		= org.vrjuggler.tweek.beans
-BEANS_DIR		= $(subst .,/,$(BEANS_PKG))
-BEANS_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(BEANS_DIR)/*.java))
-BEANS_CLASSES		= $(BEANS_SRCS:.java=.class)
+BEANS_PKG=		org.vrjuggler.tweek.beans
+BEANS_DIR=		$(subst .,/,$(BEANS_PKG))
+BEANS_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(BEANS_DIR)/*.java))
+BEANS_CLASSES=		$(BEANS_SRCS:.java=.class)
 
-LOADER_PKG		= org.vrjuggler.tweek.beans.loader
-LOADER_DIR		= $(subst .,/,$(LOADER_PKG))
-LOADER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(LOADER_DIR)/*.java))
-LOADER_CLASSES		= $(LOADER_SRCS:.java=.class)
+LOADER_PKG=		org.vrjuggler.tweek.beans.loader
+LOADER_DIR=		$(subst .,/,$(LOADER_PKG))
+LOADER_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(LOADER_DIR)/*.java))
+LOADER_CLASSES=		$(LOADER_SRCS:.java=.class)
 
-EVENT_PKG		= org.vrjuggler.tweek.event
-EVENT_DIR		= $(subst .,/,$(EVENT_PKG))
-EVENT_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(EVENT_DIR)/*.java))
-EVENT_CLASSES		= $(EVENT_SRCS:.java=.class)
+EVENT_PKG=		org.vrjuggler.tweek.event
+EVENT_DIR=		$(subst .,/,$(EVENT_PKG))
+EVENT_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(EVENT_DIR)/*.java))
+EVENT_CLASSES=		$(EVENT_SRCS:.java=.class)
 
-GUI_PKG			= org.vrjuggler.tweek.gui
-GUI_DIR			= $(subst .,/,$(GUI_PKG))
-GUI_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(GUI_DIR)/*.java))
-GUI_CLASSES		= $(GUI_SRCS:.java=.class)
+GUI_PKG=		org.vrjuggler.tweek.gui
+GUI_DIR=		$(subst .,/,$(GUI_PKG))
+GUI_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(GUI_DIR)/*.java))
+GUI_CLASSES=		$(GUI_SRCS:.java=.class)
 
-ICONVIEWER_PKG		= org.vrjuggler.tweek.iconviewer
-ICONVIEWER_DIR		= $(subst .,/,$(ICONVIEWER_PKG))
-ICONVIEWER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(ICONVIEWER_DIR)/*.java))
-ICONVIEWER_CLASSES	= $(ICONVIEWER_SRCS:.java=.class)
+ICONVIEWER_PKG=		org.vrjuggler.tweek.iconviewer
+ICONVIEWER_DIR=		$(subst .,/,$(ICONVIEWER_PKG))
+ICONVIEWER_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(ICONVIEWER_DIR)/*.java))
+ICONVIEWER_CLASSES=	$(ICONVIEWER_SRCS:.java=.class)
 
-NET_PKG			= org.vrjuggler.tweek.net
-NET_DIR			= $(subst .,/,$(NET_PKG))
-NET_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
-NET_CLASSES		= $(NET_SRCS:.java=.class)
+NET_PKG=		org.vrjuggler.tweek.net
+NET_DIR=		$(subst .,/,$(NET_PKG))
+NET_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
+NET_CLASSES=		$(NET_SRCS:.java=.class)
 
-CORBA_PKG		= org.vrjuggler.tweek.net.corba
-CORBA_DIR		= $(subst .,/,$(CORBA_PKG))
-CORBA_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CORBA_DIR)/*.java))
-CORBA_CLASSES		= $(CORBA_SRCS:.java=.class)
+CORBA_PKG=		org.vrjuggler.tweek.net.corba
+CORBA_DIR=		$(subst .,/,$(CORBA_PKG))
+CORBA_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CORBA_DIR)/*.java))
+CORBA_CLASSES=		$(CORBA_SRCS:.java=.class)
 
-SERVICES_PKG		= org.vrjuggler.tweek.services
-SERVICES_DIR		= $(subst .,/,$(SERVICES_PKG))
-SERVICES_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(SERVICES_DIR)/*.java))
-SERVICES_CLASSES	= $(SERVICES_SRCS:.java=.class)
+SERVICES_PKG=		org.vrjuggler.tweek.services
+SERVICES_DIR=		$(subst .,/,$(SERVICES_PKG))
+SERVICES_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(SERVICES_DIR)/*.java))
+SERVICES_CLASSES=	$(SERVICES_SRCS:.java=.class)
 
-TEXT_PKG		= org.vrjuggler.tweek.text
-TEXT_DIR		= $(subst .,/,$(TEXT_PKG))
-TEXT_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TEXT_DIR)/*.java))
-TEXT_CLASSES		= $(TEXT_SRCS:.java=.class)
+TEXT_PKG=		org.vrjuggler.tweek.text
+TEXT_DIR=		$(subst .,/,$(TEXT_PKG))
+TEXT_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TEXT_DIR)/*.java))
+TEXT_CLASSES=		$(TEXT_SRCS:.java=.class)
 
-TREEVIEWER_PKG		= org.vrjuggler.tweek.treeviewer
-TREEVIEWER_DIR		= $(subst .,/,$(TREEVIEWER_PKG))
-TREEVIEWER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TREEVIEWER_DIR)/*.java))
-TREEVIEWER_CLASSES	= $(TREEVIEWER_SRCS:.java=.class)
+TREEVIEWER_PKG=		org.vrjuggler.tweek.treeviewer
+TREEVIEWER_DIR=		$(subst .,/,$(TREEVIEWER_PKG))
+TREEVIEWER_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TREEVIEWER_DIR)/*.java))
+TREEVIEWER_CLASSES=	$(TREEVIEWER_SRCS:.java=.class)
 
-TWEEK_AUTO_SRCS = \
-	tweek/SubjectManagerHolder.java \
-	tweek/SubjectHolder.java \
-	tweek/ObserverHolder.java \
-	tweek/ObserverPOA.java \
-	tweek/SubjectManagerPackage/RegisteredSubjectHolder.java \
+TWEEK_AUTO_SRCS=							\
+	tweek/SubjectManagerHolder.java					\
+	tweek/SubjectHolder.java					\
+	tweek/ObserverHolder.java					\
+	tweek/ObserverPOA.java						\
+	tweek/SubjectManagerPackage/RegisteredSubjectHolder.java	\
 	tweek/SubjectManagerPackage/SubjectListHolder.java
 
-JAVA_SRCS = \
-	$(TWEEK_SRCS) \
-	$(BEANS_SRCS) \
-	$(LOADER_SRCS) \
-	$(EVENT_SRCS) \
-	$(GUI_SRCS) \
-	$(ICONVIEWER_SRCS) \
-	$(NET_SRCS) \
-	$(CORBA_SRCS) \
-	$(SERVICES_SRCS) \
-	$(TEXT_SRCS) \
-	$(TREEVIEWER_SRCS) \
+JAVA_SRCS=			\
+	$(TWEEK_SRCS)		\
+	$(BEANS_SRCS)		\
+	$(LOADER_SRCS)		\
+	$(EVENT_SRCS)		\
+	$(GUI_SRCS)		\
+	$(ICONVIEWER_SRCS)	\
+	$(NET_SRCS)		\
+	$(CORBA_SRCS)		\
+	$(SERVICES_SRCS)	\
+	$(TEXT_SRCS)		\
+	$(TREEVIEWER_SRCS)	\
 	$(TWEEK_AUTO_SRCS)
 
-JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
+JAVA_CLASSES=	$(JAVA_SRCS:.java=.class)
 
-JARS		= Tweek.jar		\
-                  TweekBeans.jar	\
-                  TweekEvents.jar	\
-                  TweekNet.jar		\
-                  TweekServices.jar
-BEANS		= Viewers
+JARS=		Tweek.jar		\
+		TweekBeans.jar		\
+		TweekEvents.jar		\
+		TweekNet.jar		\
+		TweekServices.jar
+BEANS=		Viewers
 
 # Some of our jars need custom manifests
-BEANS_MF	= $(srcdir)/beans.MF
-SERVICES_MF	= $(srcdir)/services.MF
-VIEWERS_MF	= $(srcdir)/viewers.MF
-
-# List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(TWEEK_PKG) \
-		  $(BEANS_PKG) \
-		  $(LOADER_PKG) \
-		  $(EVENT_PKG) \
-		  $(GUI_PKG) \
-		  $(ICONVIEWER_PKG) \
-		  $(NET_PKG) \
-		  $(CORBA_PKG) \
-		  $(SERVICES_PKG) \
-		  $(TEXT_PKG) \
-		  $(TREEVIEWER_PKG)
-
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= tweek/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT	= programmer.reference.java
+BEANS_MF=	$(srcdir)/beans.MF
+SERVICES_MF=	$(srcdir)/services.MF
+VIEWERS_MF=	$(srcdir)/viewers.MF
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -319,13 +301,8 @@ ifneq ($(JAVA_ORB_JAR), none)
           done
 endif
 
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES	+= $(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
-CLEAN_DIRS	+= tweek $(srcdir)/tweek
+CLEAN_FILES+=	$(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
+CLEAN_DIRS+=	tweek $(srcdir)/tweek
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
