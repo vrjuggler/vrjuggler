@@ -20,15 +20,6 @@ public:
    }
 
    /**
-    * copies current state of the system from one API to another.
-    * @semantics copy constructor
-    */
-   ajSoundImplementation( const ajSoundImplementation& si )
-   {
-      this->copy( si );
-   }
-
-   /**
     * @semantics destructor 
     */
    virtual ~ajSoundImplementation()
@@ -38,27 +29,13 @@ public:
    }
 
    /**
-    * copies current state of the system from one API to another. 
+    * copies current state of the system from one API to another.
+    * @semantics copies sound state.  doesn't do binding here, you must do that separately
     */
    void copy( const ajSoundImplementation& si )
    {
-      // clean up from any previous state...
-      this->_unbindAll();
-      
       // copy over the current state
       mSounds = si.mSounds;
-      
-      // bind all sounds
-      this->_bindAll();
-   }
-
-   /**
-    * copies current state of the system from one API to another. 
-    */
-   ajSoundImplementation& operator=( ajSoundImplementation& si )
-   {
-      this->copy( si );
-      return *this;
    }
 
 public:
@@ -71,6 +48,8 @@ public:
     */
    virtual void trigger( const std::string & alias, const unsigned int & repeat = -1 )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
       // todo: capture this in a soundinfo::play func
       this->lookup( alias ).isPlaying = true;
       this->lookup( alias ).repeat = repeat;
@@ -88,6 +67,8 @@ public:
     */
    virtual void stop( const std::string& alias )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
       this->lookup( alias ).isPlaying = false;
       this->lookup( alias ).repeat_countdown = 0;
    }
@@ -98,6 +79,8 @@ public:
     */
    virtual void step( const float& timeElapsed )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
    }   
 
 
@@ -110,7 +93,11 @@ public:
    virtual void associate( const std::string& alias, const ajSoundInfo& description )
    {
       mSounds[alias] = description;
-      this->_bind( alias );
+      if (this->isStarted())
+      {
+         this->bind( alias );
+      }
+      std::cout<<"associated "<<alias<<" with "<<description.filename<<"\n"<<std::flush;
    }
 
    /**
@@ -118,7 +105,10 @@ public:
     */
    virtual void remove( const std::string alias )
    {
-      this->_unbind( alias );
+      if (this->isStarted())
+      {
+         this->unbind( alias );
+      }
       mSounds.erase( alias );
    }
 
@@ -127,6 +117,7 @@ public:
     */
    virtual void setPosition( const std::string& alias, float x, float y, float z )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
       this->lookup( alias ).position[0] = x;
       this->lookup( alias ).position[1] = y;
       this->lookup( alias ).position[2] = z;
@@ -139,6 +130,8 @@ public:
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
       x = this->lookup( alias ).position[0];
       y = this->lookup( alias ).position[1];
       z = this->lookup( alias ).position[2];
@@ -149,6 +142,8 @@ public:
     */
    virtual void setListenerPosition( const float& x, const float& y, const float& z )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
       mListenerPos[0] = x;
       mListenerPos[1] = y;
       mListenerPos[2] = z;
@@ -159,6 +154,8 @@ public:
     */
    virtual void getListenerPosition( float& x, float& y, float& z )
    {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
       x = mListenerPos[0];
       y = mListenerPos[1];
       z = mListenerPos[2];
@@ -172,6 +169,12 @@ public:
    virtual void startAPI() = 0;
 
    /**
+    * query whether the API has been started or not
+    * @semantics return true if api has been started, false otherwise.
+    */
+   virtual bool isStarted() const = 0;   
+   
+   /**
     * kill the sound API, deallocating any sounds, etc...
     * @postconditions sound API is ready to go.
     * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
@@ -184,32 +187,32 @@ public:
     */
    virtual void clear()
    {
-      this->_unbindAll();
+      this->unbindAll();
    }   
 
    /**
     * bind: load (or reload) all associate()d sounds
     * @postconditions all sound associations are buffered by the sound API
     */
-   virtual void _bindAll() = 0;
+   virtual void bindAll() = 0;
 
    /**
     * unbind: unload/deallocate all associate()d sounds.
     * @postconditions all sound associations are unbuffered by the sound API
     */
-   virtual void _unbindAll() = 0;
+   virtual void unbindAll() = 0;
 
    /**
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
     */
-   virtual void _bind( const std::string& alias ) = 0;
+   virtual void bind( const std::string& alias ) = 0;
 
    /**
     * unload/deallocate the sound data this alias refers from the sound API
     * @postconditions the sound API no longer has the sound buffered.
     */
-   virtual void _unbind( const std::string& alias ) = 0;
+   virtual void unbind( const std::string& alias ) = 0;
 
 protected:
    std::map<std::string, ajSoundInfo> mSounds;

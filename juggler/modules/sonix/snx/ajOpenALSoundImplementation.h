@@ -15,8 +15,14 @@ class ajOpenALSoundImplementation : public ajSoundImplementation
 {
 public:
     
+   /**
+    * constructor for the OpenAL implementation 
+    */
    ajOpenALSoundImplementation();
-   
+
+   /**
+    * destructor for the OpenAL implementation
+    */
    virtual ~ajOpenALSoundImplementation();
     
    /**
@@ -98,6 +104,15 @@ public:
    virtual void startAPI();
 
    /**
+     * query whether the API has been started or not
+     * @semantics return true if api has been started, false otherwise.
+     */
+   virtual bool isStarted() const
+   {
+      return mDev != NULL && mContextId != NULL;
+   }   
+   
+   /**
     * kill the sound API, deallocating any sounds, etc...
     * @postconditions sound API is ready to go.
     * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
@@ -114,13 +129,13 @@ public:
     * bind: load (or reload) all associate()d sounds
     * @postconditions all sound associations are buffered by the sound API
     */
-   virtual void _bindAll();
+   virtual void bindAll();
 
    /**
     * unbind: unload/deallocate all associate()d sounds.
     * @postconditions all sound associations are unbuffered by the sound API
     */
-   virtual void _unbindAll();
+   virtual void unbindAll();
 
    
    
@@ -128,24 +143,24 @@ public:
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
     */
-   virtual void _bind( const std::string& alias );
+   virtual void bind( const std::string& alias );
 
    /**
     * unload/deallocate the sound data this alias refers from the sound API
     * @postconditions the sound API no longer has the sound buffered.
     */
-   virtual void _unbind( const std::string& alias );
+   virtual void unbind( const std::string& alias );
    
 private:
     /** @link dependency */
     /*#  ajSoundInfo lnkSoundInfo; */
    
-   class ajAlSoundInfo
+   struct ajAlSoundInfo
    {
-   public:
       ajAlSoundInfo() : data(), source( 0 ), buffer( 0 ) {}
       ALuint source, buffer;
-      std::vector<unsigned char> data;
+      std::vector<unsigned char> data; // TODO: use the source ajSoundInfo
+                                       // instead of this separate copy of the data...
    };
    std::map< std::string, ajAlSoundInfo > mBindLookup;
    void*       mContextId;
