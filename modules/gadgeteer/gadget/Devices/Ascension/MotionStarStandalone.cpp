@@ -46,7 +46,6 @@
 #include <errno.h>
 
 #include <Input/vjPosition/aMotionStar.h>
-#include <Config/vjConfigChunk.h>
 
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 
