@@ -41,6 +41,7 @@
             <include name="org/vrjuggler/vrjconfig/ui/images/*" />
             <include name="LICENSE-java-laf.txt" />
          </fileset>
+         <exclude name="org/vrjuggler/vrjconfig/wizard/**" />
       </jar>
       <jar destfile="ClusterWizard.jar" basedir=".">
          <include name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
