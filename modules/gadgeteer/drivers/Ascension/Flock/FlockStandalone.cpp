@@ -381,7 +381,7 @@ vpr::ReturnStatus FlockStandalone::configure()
    }
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << " [FlockStandalone] Flock configured and ready to run."
+      << " [FlockStandalone] Flock configured and ready to run.\n"
       << vprDEBUG_FLUSH;
 
    // Check for errors
@@ -601,11 +601,11 @@ vpr::ReturnStatus FlockStandalone::startStreaming()
    sendReportRateCmd(mReportRate);
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << " [FlockStandalone] Starting stream." << vprDEBUG_FLUSH;
+      << " [FlockStandalone] Starting stream.\n" << vprDEBUG_FLUSH;
    sendStreamStartCommand();
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << " [FlockStandalone] Streaming..." << vprDEBUG_FLUSH;
+      << " [FlockStandalone] Streaming...\n" << vprDEBUG_FLUSH;
 
    // flock is streaming now
    mStatus = FlockStandalone::STREAMING;
@@ -619,7 +619,7 @@ vpr::ReturnStatus FlockStandalone::stopStreaming()
    vprASSERT(mStatus == STREAMING && "Tried to stop streaming we are not currently doing it");
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << " [FlockStandalone] Switching out of streaming mode. \n"
+      << " [FlockStandalone] Switching out of streaming mode.\n"
       << vprDEBUG_FLUSH;
    sendStreamStopCommand();
    mStatus = FlockStandalone::RUNNING;
@@ -1165,28 +1165,28 @@ void FlockStandalone::sendHemisphereCmd(BIRD_HEMI hemi, bool sendToAll)
    switch ( hemi )
    {
       case FRONT_HEM:
+         params[0] = 0x00;
          params[1] = 0x00;
-         params[2] = 0x00;
          break;
       case AFT_HEM:
-         params[1] = 0x00;
-         params[2] = 0x01;
+         params[0] = 0x00;
+         params[1] = 0x01;
          break;
       case UPPER_HEM:
-         params[1] = 0x0C;
-         params[2] = 0x01;
+         params[0] = 0x0C;
+         params[1] = 0x01;
          break;
       case LOWER_HEM:
-         params[1] = 0x0C;
-         params[2] = 0x00;
+         params[0] = 0x0C;
+         params[1] = 0x00;
          break;
       case LEFT_HEM:
-         params[1] = 0x06;
-         params[2] = 0x01;
+         params[0] = 0x06;
+         params[1] = 0x01;
          break;
       case RIGHT_HEM:
-         params[1] = 0x06;
-         params[2] = 0x00;
+         params[0] = 0x06;
+         params[1] = 0x00;
          break;
    }
 
@@ -1328,7 +1328,7 @@ void FlockStandalone::pickBird (const vpr::Uint8 birdID)
       vprASSERT(birdID < 16);
       cmd = Flock::Command::ToFbbNormal + birdID;
    }
-   if(Flock::ExpandedAddressing == mAddrMode)
+   else if(Flock::ExpandedAddressing == mAddrMode)
    {
       vprASSERT(birdID < 31);
       if(birdID < 16)
@@ -1417,7 +1417,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize,
    
    // Read response and then flush the port to make sure we don't leave
    // anything extra.
-   mSerialPort->read(respData, respSize, bytes_read, mReadTimeout);
+   mSerialPort->readn(respData, respSize, bytes_read, mReadTimeout);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
    // Check response size
