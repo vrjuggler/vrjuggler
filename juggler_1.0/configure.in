@@ -213,6 +213,10 @@ AC_ARG_WITH(dir-perms,
                           Installed directory permisions  [default=0755]],
             DIR_PERMS="$withval", DIR_PERMS='0755')
 
+AC_ARG_WITH(version,
+            [  --with-version=<major>.<minor>.<micro>
+                          VR Juggler version number       [default=none]],
+            _vj_version="$withval", _vj_version='no')
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
@@ -1474,6 +1478,23 @@ if test "x${_install_group}" != "x" ; then
 fi
 
 PATH="${_vjsave_PATH}"
+
+dnl # Construct the VR Juggler version using the getversion Perl script (if
+dnl # Perl is available).  This is never cached because the version number
+dnl # will change on a daily basis.  Thus, every time configure is run, there
+dnl # exists the potential for a new version number to be generated.
+dnl # XXX: Get this to work without Perl!
+if test "x${_vj_version}" != "xno" ; then
+    if test "x$PERL" != "xno" ; then
+        _recversion="$PERL $srcdir/release/scripts/record-version.pl"
+        ${_recversion} -v "${_vj_version}" -i "$srcdir/vjParam.h.in" -o vjParam.h
+    else
+        AC_MSG_WARN(Cannot construct VR Juggler version without Perl)
+        cp "$srcdir/vjParam.h.in" vjParam.h
+    fi
+else
+    cp "$srcdir/vjParam.h.in" vjParam.h
+fi
 
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
