@@ -51,6 +51,8 @@ top_srcdir		= @top_srcdir@
 INSTALL			= @INSTALL@
 INSTALL_FILES		=
 
+CLASSPATH	= $(topdir)/java/TweekBeans.jar
+
 # For each package, we need the four lines to automatically add found sources
 # to the build process. This allows us to not have to modify the build
 # whenever new sources are added.
@@ -63,11 +65,17 @@ WIZARD_BUILDER_PKG	= org.vrjuggler.tweek.wizard.builder
 WIZARD_BUILDER_DIR	= $(subst .,/,$(WIZARD_BUILDER_PKG))
 WIZARD_BUILDER_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_BUILDER_DIR)/*.java))
 WIZARD_BUILDER_CLASSES	= $(WIZARD_BUILDER_SRCS:.java=.class)
-# Misc files needed for java targets, such as gfx files and licenses
+
+WIZARD_PANES_PKG	= org.vrjuggler.tweek.wizard.panes
+WIZARD_PANES_DIR	= $(subst .,/,$(WIZARD_PANES_PKG))
+WIZARD_PANES_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_PANES_DIR)/*.java))
+WIZARD_PANES_CLASSES	= $(WIZARD_PANES_SRCS:.java=.class)
+
 
 JAVA_SRCS = \
 	$(WIZARD_SRCS) \
-	$(WIZARD_BUILDER_SRCS)
+	$(WIZARD_BUILDER_SRCS) \
+	$(WIZARD_PANES_SRCS)
 
 JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
 
@@ -76,7 +84,7 @@ JARS		= wizard.jar
 BEANS		= WizardBuilder
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(WIZARD_PKG) $(WIZARD_BUILDER_PKG)
+DOC_PKGS	= $(WIZARD_PKG) $(WIZARD_BUILDER_PKG) $(WIZARD_PANES_PKG)
 webroot		= $(HOME)/public_html/jugglerweb
 instdir		= tweek/wizard/1.0
 doc_prefix	= $(webroot)/$(instdir)
@@ -99,13 +107,19 @@ ifneq ($(BEANS), )
 endif
 endif
 
-wizard.jar: $(WIZARD_CLASSES)
+wizard.jar: $(WIZARD_CLASSES) $(WIZARD_PANES)
 	$(JAR) cvf $@ \
-		$(WIZARD_DIR)/*.class
+		$(WIZARD_DIR)/*.class \
+		$(WIZARD_PANES_DIR)/*.class
+	cd $(srcdir) && $(JAR) uvf $(topdir)/extensions/java/$@ \
+		$(WIZARD_DIR)/images/*.png
 
 WizardBuilder.jar: $(WIZARD_BUILDER_CLASSES)
 	$(JAR) cvf $@ \
 		$(WIZARD_BUILDER_DIR)/*.class
+	cd $(srcdir) && $(JAR) uvf $(topdir)/extensions/java/$@ \
+		$(WIZARD_BUILDER_DIR)/images/*.gif \
+		LICENSE-java-laf.txt
 
 # -----------------------------------------------------------------------------
 # Extra targets

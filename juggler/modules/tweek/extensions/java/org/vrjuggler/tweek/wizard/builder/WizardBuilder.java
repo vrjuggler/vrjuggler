@@ -33,13 +33,14 @@ package org.vrjuggler.tweek.wizard.builder;
 
 import java.io.*;
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.tree.*;
 
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.tweek.wizard.panes.*;
-import java.awt.event.*;
-import javax.swing.event.*;
 
 /**
  * Tweak panel bean that allows for the construction of Wizards.
@@ -103,17 +104,18 @@ public class WizardBuilder
       }
 
       // setup the main toolbar
-      newBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/general/New24.gif")));
-      openBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/general/Open24.gif")));
-      saveBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/general/Save24.gif")));
-      saveAsBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/general/SaveAs24.gif")));
-      previewBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/media/Movie24.gif")));
+      ClassLoader loader = BeanJarClassLoader.instance();
+      newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/new24.gif")));
+      openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/open24.gif")));
+      saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/save24.gif")));
+      saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/saveas24.gif")));
+      previewBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/preview24.gif")));
 
       // setup the tree toolbar
-      addBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/general/Add16.gif")));
-      removeBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/general/Remove16.gif")));
-      moveUpBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/navigation/Up16.gif")));
-      moveDownBtn.setIcon(new ImageIcon(ClassLoader.getSystemResource("toolbarButtonGraphics/navigation/Down16.gif")));
+      addBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/add16.gif")));
+      removeBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/remove16.gif")));
+      moveUpBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/up16.gif")));
+      moveDownBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/down16.gif")));
 
       // setup the tree
       model = new WizardBuilderTreeModel(new Wizard());
@@ -580,7 +582,7 @@ public class WizardBuilder
 
       WizardViewerBean viewer = new WizardViewerBean();
       viewer.setWizard(model.getWizard());
-      viewer.setSidebarImage(new ImageIcon(ClassLoader.getSystemResource("data/juggler_sidebar.png")));
+      viewer.setSidebarImage(new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
       viewer.addWizardViewListener(new WizardViewListener()
       {
          public void wizardStarted(WizardViewEvent evt) {}
