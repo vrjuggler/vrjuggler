@@ -916,26 +916,6 @@
     <help>Use an audioworks sound engine.</help>
     <PropertyDesc token="adfConfigFile" name="adfConfigFile" type="string" num="1" />
   </ChunkDesc>
-  <ChunkDesc token="SlSoundInfo" name="SlSoundInfo">
-    <category>Audio</category>
-    <help>defines one sound</help>
-    <PropertyDesc token="Alias" name="Alias" type="string" num="1">
-      <help>i.e. bigsound</help>
-    </PropertyDesc>
-    <PropertyDesc token="Filename" name="Filename" type="string" num="1">
-      <help>i.e. bigsound.wav</help>
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="SlSoundEngine" name="SL Sound Engine">
-    <category>Audio</category>
-    <help>Use the SL sound engine (8bit mono)</help>
-    <PropertyDesc token="Sounds" name="Sounds" type="embeddedchunk" num="variable">
-      <enumeration name="SlSoundInfo" />
-    </PropertyDesc>
-    <PropertyDesc token="FilePath" name="FilePath" type="string" num="1">
-      <help>the search path to use to find your .wav files.</help>
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="TrackdSensor" name="TrackdSensor">
     <category>Devices</category>
     <help>Configure the interface to a trackd sensor memory area</help>
