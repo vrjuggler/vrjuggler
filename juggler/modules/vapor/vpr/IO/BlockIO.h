@@ -240,7 +240,7 @@ public:
     // ------------------------------------------------------------------------
     Status
     read (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return read_i(buffer, length, bytes_read);
+        return this->read_i(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -264,20 +264,12 @@ public:
     Status
     read (std::string& buffer, const size_t length, ssize_t& bytes_read) {
        Status status;
-       char* temp_buf;
-
+       
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
-       temp_buf = (char*) malloc(length);
-       memset(temp_buf, 0, length);
-       status = read(temp_buf, length, bytes_read);
-
-       // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes_read > -1 ) {
-           buffer = temp_buf;
-       }
-
-       free(temp_buf);
+       buffer.resize( length );
+       memset( &buffer[0], 0, buffer.size() );
+       status = this->read( &buffer[0], buffer.size(), bytes_read );
 
        return status;
     }
@@ -303,28 +295,19 @@ public:
     read (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
     {
        Status status;
-       char* temp_buf;
-
+       buffer.resize( length );
+       
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
-       temp_buf = (char*) malloc(length);
-       memset(temp_buf, 0, length);
-       status = read(temp_buf, length, bytes_read);
+       status = this->read( &buffer[0], buffer.size(), bytes_read );
 
-       // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes_read > -1 ) {
-          // Check to make sure we have enough space
-          if (bytes_read > (int)buffer.size()) {
-             buffer.resize(bytes_read);
-          }
-
-          for ( ssize_t i = 0; i < bytes_read; i++ ) {
-               buffer[i] = temp_buf[i];
-           }
+       // size it down if needed, if (bytes_read==length), 
+       // then resize does nothing...
+       if (bytes_read >= 0)
+       {
+          buffer.resize( bytes_read );
        }
-
-       free(temp_buf);
-
+             
        return status;
     }
 
@@ -347,7 +330,7 @@ public:
     // ------------------------------------------------------------------------
     Status
     readn (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return readn_i(buffer, length, bytes_read);
+        return this->readn_i(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -371,20 +354,16 @@ public:
     Status
     readn (std::string& buffer, const size_t length, ssize_t& bytes_read) {
        Status status;
-       char* temp_buf;
-
+       
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
-       temp_buf = (char*) malloc(length);
-       memset(temp_buf, 0, length);
-       status = readn(temp_buf, length, bytes_read);
+       buffer.resize( length );
+       status = this->readn( &buffer[0], buffer.size(), bytes_read);
        
        // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes_read > -1 ) {
-           buffer = temp_buf;
+       if ( bytes_read >= 0 ) {
+           buffer.resize( bytes_read );
        }
-
-       free(temp_buf);
 
        return status;
     }
@@ -413,24 +392,16 @@ public:
     readn (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
     {
         Status status;
-        char* temp_buf;
-
+        
         // Allocate the temporary buffer, zero it, and read in the current
         // buffer from the device.
-        temp_buf = (char*) malloc(length);
-        memset(temp_buf, 0, length);
-        status = readn(temp_buf, length, bytes_read);
+        buffer.resize( length );
+        status = this->readn( &buffer[0], buffer.size(), bytes_read );
 
         // If anything was read into temp_buf, copy it into buffer.
-        if ( bytes_read > -1 ) {
-           if(bytes_read > (int)buffer.size())
-              buffer.resize(bytes_read);
-           for ( ssize_t i = 0; i < bytes_read; i++ ) {
-              buffer[i] = temp_buf[i];
-          }
+        if ( bytes_read >= 0 ) {
+           buffer.resize(bytes_read);
         }
-
-        free(temp_buf);
 
         return status;
     }
@@ -450,7 +421,7 @@ public:
     // ------------------------------------------------------------------------
     Status
     write (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return write_i(buffer, length, bytes_written);
+        return this->write_i(buffer, length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -471,7 +442,7 @@ public:
     write (const std::string& buffer, const size_t length,
            ssize_t& bytes_written)
     {
-       return write(buffer.c_str(), length, bytes_written);
+       return this->write(buffer.c_str(), length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -492,7 +463,7 @@ public:
     write (const std::vector<char>& buffer, const size_t length,
            ssize_t& bytes_written)
     {
-        return write(&buffer[0], length, bytes_written);
+        return this->write(&buffer[0], length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
