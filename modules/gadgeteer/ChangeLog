@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-20-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
 Apr-30-2003 patrickh    Added all (U.S. Latin) keyboard keys as recognized
                         input from event windows.
                         NEW VERSION: 0.11.1
