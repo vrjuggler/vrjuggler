@@ -34,10 +34,17 @@ CXX=		@CXX@
 CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
 		-I$(srcdir)
 INCLUDES=	$(shell vrjuggler-config --includes) -I$(srcdir)
-LIBS=		$(shell vrjuggler-config --libs)
-EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
 PYTHON=		@PYTHON@
 PYSTE=		$(PYTHON) @PYSTE@ $(INCLUDES)
+
+VPR_LIBS=		$(shell vpr-config --libs)
+VPR_EXTRA_LIBS=		$(shell vpr-config --extra-libs)
+JCCL_LIBS=		$(shell jccl-config --libs)
+JCCL_EXTRA_LIBS=	$(shell jccl-config --extra-libs)
+GADGET_LIBS=		$(shell gadgeteer-config --libs)
+GADGET_EXTRA_LIBS=	$(shell gadgeteer-config --extra-libs)
+VJ_LIBS=		$(shell vrjuggler-config --libs)
+VJ_EXTRA_LIBS=		$(shell vrjuggler-config --extra-libs)
 
 PYTHON_VERSION=		@PYTHON_VERSION@
 PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/PyJuggler
@@ -54,8 +61,8 @@ PYSTE_FILES=	vpr.pyste	\
 		vrj.pyste
 
 SRCS=		$(PYSTE_FILES:.pyste=.cpp)
-OBJS=		$(SRCS:.cpp=.$(OBJEXT))
-MODS=		$(OBJS:.$(OBJEXT)=.$(DLLEXT)) gmtl.$(DLLEXT)
+OBJS=		$(SRCS:.cpp=.$(OBJEXT)) MethodGuard.$(OBJEXT)
+MODS=		$(PYSTE_FILES:.pyste=.$(DLLEXT)) gmtl.$(DLLEXT)
 
 GMTL_SRCS=	\
 	gmtl/gmtl.cpp				\
@@ -102,6 +109,10 @@ GMTL_SRCS=	\
 	gmtl/_Vec_float_4.cpp
 
 GMTL_OBJS=	$(GMTL_SRCS:.cpp=.$(OBJEXT))
+VPR_OBJS=	vpr.$(OBJEXT)
+JCCL_OBJS=	jccl.$(OBJEXT)
+GADGET_OBJS=	gadget.$(OBJEXT)
+VRJ_OBJS=	vrj.$(OBJEXT) MethodGuard.$(OBJEXT)
 
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
@@ -139,6 +150,22 @@ install:
 %.$(DLLEXT): %.$(OBJEXT)
 	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\
           $(PYTHON_LDFLAGS) $(LIBS) $(EXTRA_LIBS)
+
+vpr.$(DLLEXT): $(VPR_OBJS)
+	$(CXX) -shared -o $@ $(VPR_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
+          $(PYTHON_LDFLAGS) $(VPR_LIBS) $(VPR_EXTRA_LIBS)
+
+jccl.$(DLLEXT): $(JCCL_OBJS)
+	$(CXX) -shared -o $@ $(JCCL_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
+          $(PYTHON_LDFLAGS) $(JCCL_LIBS) $(JCCL_EXTRA_LIBS)
+
+gadget.$(DLLEXT): $(GADGET_OBJS)
+	$(CXX) -shared -o $@ $(GADGET_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
+          $(PYTHON_LDFLAGS) $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
+
+vrj.$(DLLEXT): $(VRJ_OBJS)
+	$(CXX) -shared -o $@ $(VRJ_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
+          $(PYTHON_LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
 
 gmtl.$(DLLEXT): $(GMTL_OBJS)
 	$(CXX) -shared -o $@ $(GMTL_OBJS) $(BOOST_PYTHON_LDFLAGS)	\

@@ -28,13 +28,10 @@
 #ifndef _PYJUGGLER_METHOD_GUARD_H_
 #define _PYJUGGLER_METHOD_GUARD_H_
 
-#include <stdlib.h>
 #include <Python.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/TSObjectProxy.h>
-
-#include "Debug.h"
 
 
 namespace PyJuggler
@@ -64,26 +61,9 @@ private:
     */
    struct State
    {
-      State() : gilLocked(false), pyState(NULL)
-      {
-         vprDEBUG(pyjDBG_CXX, vprDBG_HVERB_LVL)
-            << "MethodGuard::State constructor -- this->pyState: "
-            << std::hex << this->pyState << std::dec << std::endl
-            << vprDEBUG_FLUSH;
-      }
+      State();
 
-      ~State()
-      {
-         if ( NULL != pyState )
-         {
-            PyEval_AcquireThread(pyState);
-            PyInterpreterState_Clear(pyState->interp);
-            PyEval_ReleaseThread(pyState);
-            PyInterpreterState_Delete(pyState->interp);
-            PyThreadState_Delete(pyState);
-            pyState = NULL;
-         }
-      }
+      ~State();
 
       bool           gilLocked;
       PyThreadState* pyState;
@@ -94,55 +74,13 @@ public:
     * Acquires the Python Global Interpreter Lock (GIL) for the invoking
     * thread.  If that thread already holds the GIL, then no action is taken.
     */
-   MethodGuard() : mMyLock(false)
-   {
-      if ( NULL == mState->pyState )
-      {
-         vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
-            << "Getting new thread state data\n" << vprDEBUG_FLUSH;
-         mState->pyState = PyThreadState_New(PyInterpreterState_New());
-      }
-
-      vprDEBUG(pyjDBG_CXX, 0)
-         << "mState->pyState: " << std::hex << mState->pyState << std::dec
-         << std::endl << vprDEBUG_FLUSH;
-
-      if ( ! mState->gilLocked )
-      {
-         vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
-            << std::hex << this << std::dec << " locking\n" << vprDEBUG_FLUSH;
-
-         // Lock the GIL.
-         PyEval_AcquireThread(mState->pyState);
-
-         vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
-            << std::hex << this << std::dec << " locked\n" << vprDEBUG_FLUSH;
-
-         mState->gilLocked = true;
-         mMyLock           = true;
-      }
-   }
+   MethodGuard();
 
    /**
     * Releases the Python Global Interpreter Lock (GIL) for the invoking thread
     * iff that thread holds the GIL and the constructor acquired the GIL.
     */
-   ~MethodGuard()
-   {
-      if ( mMyLock && mState->gilLocked )
-      {
-         vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
-            << std::hex << this << std::dec << " unlocking\n" << vprDEBUG_FLUSH;
-
-         // Unlock the GIL.
-         PyEval_ReleaseThread(mState->pyState);
-
-         vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
-            << std::hex << this << std::dec << " unlocked\n" << vprDEBUG_FLUSH;
-
-         mState->gilLocked = false;
-      }
-   }
+   ~MethodGuard();
 
 private:
    /**
@@ -165,9 +103,6 @@ private:
 
    bool   mMyLock;
 };
-
-// XXX: This really should be in MethodGuard.cpp.
-vpr::TSObjectProxy<MethodGuard::State> MethodGuard::mState;
 
 } // End of PyJuggler namespace
 
