@@ -591,6 +591,13 @@ case $CC in
    gcc)
       toolset='gcc'
       ;;
+   icc)
+      if test "x$OS_TYPE" = "xWin32" ; then
+         toolset='iw'
+      else
+         toolset='il'
+      fi
+      ;;
    cygcl|msvccc|cl*|CL*)
       toolset=${BOOST_TOOL:=vc7}
       ;;
