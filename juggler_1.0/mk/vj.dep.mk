@@ -10,12 +10,14 @@
 #
 # C_COMPILE    - The compiler command for C files.
 # CXX_COMPILE  - The compiler command for C++ files.
+# DEP_GEN_FLAG - The flag passed to the compiler to generate dependencies.
 # DEPEND_FILES - The list of dependency makefiles to be generated.
 # OBJDIR       - The directory to which the object file(s) will be written.
 #
 # Example:
 #         srcdir = /usr/src/proj1
 #         OBJDIR = /usr/obj/proj1
+#   DEP_GEN_FLAG = -M
 #   DEPEND_FILES = file1.d file2.d file3.d
 #
 # With these settings, the source code comes from /usr/src/proj1 and the
@@ -41,10 +43,10 @@ _SED_EXP	= '\''s/\($*\)\.o[ :]*/$${OBJDIR}\/\1.o $@ : /g'\''
 
 %.d: %.c
 	@echo "Updating dependency file $@ ..."
-	@${SHELL} -ec '${C_COMPILE} -M $< | sed ${_SED_EXP} > $@ ;	\
-                        [ -s $@ ] || rm -f $@'
+	${SHELL} -ec '${C_COMPILE} ${DEP_GEN_FLAG} $< |			\
+                       sed ${_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 
 %.d: %.cpp
 	@echo "Updating dependency file $@ ..."
-	@${SHELL} -ec '${CXX_COMPILE} -M $< | sed ${_SED_EXP} > $@ ;	\
-                        [ -s $@ ] || rm -f $@'
+	${SHELL} -ec '${CXX_COMPILE} ${DEP_GEN_FLAG} $< |		\
+                        sed ${_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
