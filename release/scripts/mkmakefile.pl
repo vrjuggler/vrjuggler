@@ -382,7 +382,7 @@ MK_START
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
-include \$(DEPEND_FILES)
+-include \$(DEPEND_FILES)
 endif
 MK_END
     }
