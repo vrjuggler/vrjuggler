@@ -46,11 +46,6 @@
 #include <vpr/vprTypes.h>
 #include <vpr/Util/Assert.h>
 
-#if defined(VPR_USE_NSPR)
-#  include <prinrval.h>
-#else
-#  include <vpr/System.h>
-#endif
 
 namespace vpr
 {

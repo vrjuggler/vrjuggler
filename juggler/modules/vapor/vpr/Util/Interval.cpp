@@ -52,12 +52,17 @@
 #include <sys/syssgi.h>
 #endif
 
+#if defined(VPR_USE_NSPR)
+#  include <prinrval.h>
+#endif
+
 #ifdef VPR_SIMULATOR
 #  include <vpr/md/SIM/Controller.h>
 #endif
 
 #include <vpr/Util/Interval.h>
 #include <vpr/System.h>
+
 
 const vpr::Interval vpr::Interval::NoWait(0,vpr::Interval::Base);
 const vpr::Interval vpr::Interval::NoTimeout(0xffffffffUL, vpr::Interval::Base);
