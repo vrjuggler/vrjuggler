@@ -99,7 +99,7 @@ void Interval::setNowReal()
       vpr::Uint64 high = count.HighPart;
       mMicroSeconds = low + (high << 32);
       mMicroSeconds /= counts_per_sec64;
-      mMicroSeconds *= microseonds_per_sec;
+      mMicroSeconds *= microseconds_per_sec;
 
 //      vpr::Int32 top = count.HighPart & _nt_highMask;
 //      top = top << (32 - _nt_bitShift);
