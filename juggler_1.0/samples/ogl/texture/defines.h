@@ -1,5 +1,5 @@
 
-namespace defines
+namespace kev
 {
    // returns the maximum of a and b.
    template<class T> 
