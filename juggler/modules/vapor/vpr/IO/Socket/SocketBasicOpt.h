@@ -39,6 +39,11 @@
 
 namespace vpr {
 
+/**
+ * Options common to all types of sockets.
+ *
+ * @author Patrick Hartling
+ */
 class VPR_CLASS_API SocketBasicOpt {
 public:
     /**
@@ -181,9 +186,9 @@ public:
     }
 
     /**
-     * Enable reuse of the address that will be bound by this socket.
+     * Enables reuse of the address that will be bound by the socket.
      *
-     * PRE: The socket has been opened, but bind() has not been called.
+     * @pre The socket has been opened, but bind() has not been called.
      */
     inline Status
     setReuseAddr (const bool enable_val) {
@@ -194,13 +199,26 @@ public:
 
 protected:
     /**
+     * Retrieves the value for the given option as set on the socket.
      *
+     * @param option The option to be queried.
+     * @param data   A data buffer that will be used to store the value of the
+     *               given option.
+     *
+     * @return vpr::Status::Success is returned if the value for the given
+     *         option was retrieved successfully.<br>
+     *         vpr::Status;:Failure is returned otherwise.
      */
     virtual Status getOption(const SocketOptions::Types option,
                              struct SocketOptions::Data& data) = 0;
 
     /**
+     * Sets a value for the given option on the socket using the given data
+     * block.
      *
+     * @param option The option whose value will be set.
+     * @param data   A data buffer containing the value to be used in setting
+     *               the socket option.
      */
     virtual Status setOption(const SocketOptions::Types option,
                              const struct SocketOptions::Data& data) = 0;

@@ -829,14 +829,13 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual vpr::Status
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
@@ -865,14 +864,13 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual vpr::Status
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
@@ -898,15 +896,13 @@ protected:
      *                      and defaults to
      *                      <code>vpr::Interval::NoTimeout</code>.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the write
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> is returned if the handle
-     *         is in non-blocking mode, and the write operation is in
-     *         progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the write
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the write operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress is returned if the handle is in
+     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the write could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the write operation failed.
      */
     virtual vpr::Status
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,

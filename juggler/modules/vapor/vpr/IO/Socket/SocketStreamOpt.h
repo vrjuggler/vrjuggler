@@ -38,6 +38,11 @@
 
 namespace vpr {
 
+/**
+ * Options for stream sockets.
+ *
+ * @author Patrick Hartling
+ */
 class VPR_CLASS_API SocketStreamOpt : public SocketIpOpt {
 public:
     /**
@@ -68,7 +73,15 @@ public:
     }
 
     /**
+     * Gets the current no-delay status for this socket.  If no-delay is true,
+     * then the Nagel algorithm has been disabled.
      *
+     * @param enabled A reference to a <code>bool</code> variable to be used as
+     *                storage for the current no-delay enable state.  If the
+     *                value is <code>true</code>, the Nagel algorithm is
+     *                <i>not</i> being used to delay the transmission of TCP
+     *                segements.  Otherwise, the Nagel alorithm is delaying
+     *                the transmission.
      */
     inline Status
     getNoDelay (bool& enabled) {
@@ -85,7 +98,11 @@ public:
     }
 
     /**
+     * Sets the current no-delay status for this socket.  If no-delay is true,
+     * then the Nagel algorithm will be disabled.
      *
+     * @param enable_val The Boolean enable/disable state for no-delay on this
+     *                   socket.
      */
     inline Status
     setNoDelay (const bool enable_val) {
