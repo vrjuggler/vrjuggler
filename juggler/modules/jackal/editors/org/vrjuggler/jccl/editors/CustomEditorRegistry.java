@@ -106,6 +106,8 @@ public class CustomEditorRegistry
       // Register the new editor class with the given token
       if (editorClass != null)
       {
+         System.out.println("CustomEditorRegistry - Registering["
+               + token + " -> " + editorClass);
          if(mEditors.containsKey(token))
          {
             java.util.List editorList = (java.util.List)mEditors.get(token);
