@@ -122,9 +122,23 @@ public class BeanLoader
       catch (ClassNotFoundException e)
       {
          System.err.println("ERROR: Could not instantiate Bean of type " +
-                            bean_class);
-         System.err.println("       Class " + e.getMessage() + " not found.");
+                            bean_class + "\n" +
+                            "       " + e.getMessage());
+
+         if ( e.getCause() != null )
+         {
+            System.err.println("       " + e.getCause().getMessage());
+//            e.getCause().printStackTrace();
+         }
+
+         if ( e.getException() != null )
+         {
+            System.err.println("       " + e.getException().getMessage());
+//            e.getException().printStackTrace();
+         }
+
 //         e.printStackTrace();
+
          throw new BeanInstantiationException("Instantiation of " + bean_class +
                                               " failed!\n(" +
                                               "Class " + e.getMessage() +
