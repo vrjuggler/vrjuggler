@@ -51,6 +51,18 @@ namespace vpr {
 class VPR_CLASS_API SocketStreamOpt : public vpr::SocketOptionWrapper {
 public:
     /**
+     * Default constructor.  This does nothing and exists only so that we can
+     * build a DLL on Win32.
+     */
+    SocketStreamOpt(void);
+
+    /**
+     * Default destructor.  This does nothing and exists only so that we can
+     * build a DLL on Win32.
+     */
+    ~SocketStreamOpt(void);
+
+    /**
      *
      */
     inline vpr::Status
