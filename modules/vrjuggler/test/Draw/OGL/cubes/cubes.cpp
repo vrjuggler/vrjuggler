@@ -67,6 +67,17 @@ int main(int argc, char* argv[])
                <<std::flush;
       std::cout<<"\n"<<std::flush;
       std::cout<<"\n"<<std::flush;
+
+#ifdef VPR_OS_Win32
+      // Create a stringstream to format the output.
+      std::stringstream error_output;
+      error_output << "Usage: "<< argv[0]
+                   << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
+                   << std::flush;
+      // Display a message box to inform the user of the error.
+      MessageBox( NULL, error_output.str().c_str(), "VR Juggler Usage Error",
+              MB_OK | MB_ICONERROR | MB_TASKMODAL );
+#endif
       exit(1);
    }
    
