@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib gadget_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib"
 				OutputFile="$(OutDir)/TweekGadget_drv_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VPR\DebugDLL"
