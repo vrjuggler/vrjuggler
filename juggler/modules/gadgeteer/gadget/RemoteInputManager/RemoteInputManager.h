@@ -121,7 +121,7 @@ namespace gadget{
       bool configureRIM();
       bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
       bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
-      bool recognizeClusterSystemConfig(jccl::ConfigChunkPtr chunk);
+      
       /**
        * If there is not already a thread for listening and the local listening
        * port is valid, then create a new thread and startListening on it.
@@ -163,11 +163,9 @@ namespace gadget{
       * 			the local machine, it is now configured and listening.
       */
       bool configureClusterMachine(jccl::ConfigChunkPtr chunk);
-      bool configureClusterSystem(jccl::ConfigChunkPtr chunk);
-
-      //SPELLING
+      
       /**			 
-       * Determaines if the device's host_chunk field is pointing to a cluster machine
+       * Determines if the device's host_chunk field is pointing to a cluster machine
        * that is in the curent configuration. And create a connection to that machine 
        * and a NetDevice to manage the communication to the new "virtual device"
        * @param	chunk The chunk for the device that we are trying to find.
