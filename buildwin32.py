@@ -780,14 +780,14 @@ def installTweekJava(prefix):
       beans     = ['Viewers']
       ext_beans = ['WizardBuilder']
 
-      destdir = os.path.join(prefix, 'bin')
+      destdir = os.path.join(prefix, 'share', 'tweek', 'java')
       mkinstalldirs(destdir)
 
       # Install the base JAR files that make up the Tweek Java API.
       for j in jars:
          shutil.copy2(os.path.join(srcdir, j), destdir)
 
-      destdir = os.path.join(prefix, 'bin', 'beans')
+      destdir = os.path.join(prefix, 'share', 'tweek', 'beans')
       mkinstalldirs(destdir)
 
       bean_srcdir = srcdir
@@ -819,6 +819,9 @@ def installTweekJava(prefix):
       srcdir = os.path.join(gJugglerDir, 'external', 'JacORB')
       installDir(srcdir, destdir, ['.jar'])
       shutil.copy2(os.path.join(srcdir, 'idl.bat'), destdir)
+
+      # Destination for all remaining .jar files.
+      destdir = os.path.join(prefix, 'share', 'tweek', 'java')
 
       # Install JDOM.
       srcdir = os.path.join(gJugglerDir, 'external', 'jdom', 'lib')
