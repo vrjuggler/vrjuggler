@@ -108,4 +108,20 @@ chunk Keyboard "Keyboard" ""
   width Int 1 "width" "window width"
   height Int 1 "height" "window height"
   end
+
+
+chunk EnvironmentManager "Environment Manager" "GUI server-side config"
+  	Name String 1 "Name" ""
+	Port Int 1 "Port" "Networking port to listen on"
+  	AcceptConnections Bool 1 "Accept Connections" "Whether or not we should accept network connections"
+	PerformanceTarget Chunk 1 "Performance Target" { "FileConnect" "NetworkConnect" } "File or network connection that performance data should be sent to."
+       	End
+
+chunk FileConnect "EM File Output" "A file for outputing Environment Manager data"
+	Name String 1 "Name" ""
+ 	FileName String 1 "File Name" ""
+	Enabled Bool 1 "Enabled" "Should file be opened & used?"
+	Readable Bool 1 "Readable" "Should the file be open for reading?"
+	End
+
 End
