@@ -776,6 +776,7 @@ public class ConfigChunkDBEditor
       locationLbl.setText("");
       locationLbl.setFont(new Font("serif", Font.BOLD, 16));
       locationLbl.setBorder(BorderFactory.createRaisedBevelBorder());
+      locationLbl.setMinimumSize(new Dimension(0, 0));
       editorPane.setLayout(editorPaneLayout);
       addBtn.addActionListener(new ActionListener()
       {
