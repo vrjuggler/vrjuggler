@@ -338,7 +338,9 @@ FileHandleUNIX::read (std::vector<char>& buffer, const size_t length) {
 
     // If anything was read into temp_buf, copy it into buffer.
     if ( bytes > -1 ) {
-        for ( ssize_t i = 0; i < bytes; i++ ) {
+       if(bytes > buffer.size());      // Check to make sure we have enough space
+            buffer.resize(bytes);
+       for ( ssize_t i = 0; i < bytes; i++ ) {
             buffer[i] = temp_buf[i];
         }
     }
