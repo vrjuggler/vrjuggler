@@ -65,7 +65,7 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name,
 //: POST: all memory & buffers have been freed.
 LabeledPerfDataBuffer::~LabeledPerfDataBuffer () {
     active = false;
-    delete buffer;
+    delete[] buffer;
 }
 
 
