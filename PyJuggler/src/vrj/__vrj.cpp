@@ -45,7 +45,7 @@ void _Export_OsgApp();
 #endif
 
 // Module ======================================================================
-BOOST_PYTHON_MODULE(vrj)
+BOOST_PYTHON_MODULE(__vrj)
 {
     // Create and acquire the global interpreter lock.
     PyEval_InitThreads();
