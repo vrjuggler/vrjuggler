@@ -75,10 +75,9 @@
 
 #include <drivers/Open/VRPN/Vrpn.h>
 
-#define VRPN_DEBUG 0
+#define VRPN_DEBUG 1
 // 1 == reporting
 // 2 == misc
-
 
 extern "C"
 {
@@ -125,34 +124,41 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
       return false;
    }
 
-   std::cerr << "***************** config ******* " << std::endl;
-
-   // tracking
+   // Get the name of the VRPN tracker server.
    mTrackerServer = e->getProperty<std::string>("tracker_server");
    if ( mTrackerServer == std::string("") )
    {
-      std::cerr << "vrpn tracker server name not set!!!!!!" << std::endl;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "Vrpn::config() VRPN tracker server name not set!\n" << vprDEBUG_FLUSH;
    }
    else
    {
-      std::cerr << "vrpn tracker server name set to " << mTrackerServer << std::endl;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+         << "Vrpn::config() VRPN tracker server name set to: " << mTrackerServer
+         << std::endl << vprDEBUG_FLUSH;
    }
 
+   // Get the number of tracked objects.
    mTrackerNumber = e->getProperty<int>("tracker_count");
 
-   // button
+   // Get the name of the VRPN button server.
    mButtonServer = e->getProperty<std::string >("button_server");
    if ( mButtonServer == std::string("") )
    {
-      std::cerr << "vrpn button server name not set!!!!!!" << std::endl;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "Vrpn::config() VRPN button server name not set!\n" << vprDEBUG_FLUSH;
    }
    else
    {
-      std::cerr << "vrpn button server name set to " << mButtonServer << std::endl;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+         << "Vrpn::config() VRPN button server name set to: " << mButtonServer
+         << std::endl << vprDEBUG_FLUSH;
    }
 
+   // Get the number of buttons.
    mButtonNumber = e->getProperty<int>("button_count");
 
+   // Resize vectors to hold the right amount of data.
    mPositions.resize(mTrackerNumber);
    mQuats.resize(mTrackerNumber);
    mButtons.resize(mButtonNumber);
@@ -170,33 +176,35 @@ Vrpn::~Vrpn()
 
 bool Vrpn::startSampling()
 {
-   int status(0);
-
-   std::cout << "Going to create fine\n";
-
-   if ( NULL == mReadThread )
+   if (NULL != mThread)
    {
-      // Set flags and spawn sample thread
-      mExitFlag = false;
-      vpr::ThreadMemberFunctor<Vrpn>* read_func =
-         new vpr::ThreadMemberFunctor<Vrpn>(this, &Vrpn::readLoop, NULL);
-      mReadThread = new vpr::Thread(read_func);
-      if ( mReadThread->valid() )
-      {
-         status = 1; // thread creation succeded
-         std::cout << "Created fine\n";
-      }
-      else
-      {
-         std::cout << "Not fine\n";
-      }
+      // Already sampling
+      return 0; 
    }
    else
    {
-      std::cout << "Not null\n";
-   }
+      // Set flags and spawn sample thread
+      mExitFlag = false;
 
-   return status;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) 
+         << "[VRPN] Spawning control thread." << std::endl  << vprDEBUG_FLUSH;
+      
+      vpr::ThreadMemberFunctor<Vrpn>* read_func =
+         new vpr::ThreadMemberFunctor<Vrpn>(this, &Vrpn::readLoop, NULL);
+      mReadThread = new vpr::Thread(read_func);
+      if ( !mReadThread->valid() )
+      {
+         return 0;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            << "[VRPN] VRPN driver is active." << std::endl
+            << vprDEBUG_FLUSH;
+
+         return 1;
+      }
+   }
 }
 
 void Vrpn::readLoop(void *nullParam)
@@ -216,7 +224,6 @@ void Vrpn::readLoop(void *nullParam)
    {
       tracker->mainloop();
       button->mainloop();
-      sample();
    }
 }
 
@@ -256,14 +263,14 @@ void Vrpn::handleButton(vrpn_BUTTONCB b)
    if ( b.button > mButtonNumber )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << "Vrpn: button " << b.button
+         << "Vrpn: button " << b.button
          << " out of declared range ("<<mButtons.size()<<")"<<std::endl
          << vprDEBUG_FLUSH;
       mButtons.resize(b.button);
    }
 #if (VRPN_DEBUG&1)
-   std::cout << "Button #"<<b.button<< " state " <<
-      b.state << " " << std::endl;
+   std::cout << "Button #"<<b.button<< " state " 
+      << b.state << " " << std::endl;
 
 #endif
    mButtons[b.button] = b.state;
@@ -294,10 +301,9 @@ bool Vrpn::stopSampling()
 {
    if( mReadThread != NULL )
    {
-      
       mExitFlag = true;
 
-      //Wait for thread to exit..
+      // Wait for thread to exit..
       mReadThread->join();
       delete mReadThread;
       mReadThread = NULL;
@@ -309,10 +315,14 @@ bool Vrpn::stopSampling()
 
 void Vrpn::updateData()
 {
+   // Sample the data from the device.
+   // NOTE: This is done here because the readLoop is asyncronous and
+   //       if we place it there we get very large buffer sizes.
+   sample();
+   
    // Swap it
    swapPositionBuffers();
    swapDigitalBuffers();
-
 }
 
 gmtl::Matrix44f Vrpn::getSensorPos(int d)
