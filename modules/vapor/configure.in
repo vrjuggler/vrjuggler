@@ -296,14 +296,8 @@ DPP_PROG_INSTALL
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
+DPP_CHECK_DYNLOAD_LIB
 DPP_HAVE_CPPUNIT
-
-# We do this first so that we can pass the $DL_LOAD_LIB in as a dependency of
-# NSPR.
-_vpr_save_LIBS="$LIBS"
-AC_CHECK_FUNC([dlopen], [DL_LOAD_LIB=''],
-    [AC_CHECK_LIB([dl], [dlopen], [DL_LOAD_LIB='-ldl'])])
-LIBS="${_vpr_save_LIBS}"
 
 # Shared memory and synchronization primitives.
 SEMAPHORE_SYS=''		# POSIX, SPROC, NSPR
@@ -382,7 +376,7 @@ else
     fi
 
     _vpr_save_LIBS="$LIBS"
-    LIBS="$LIBS $DL_LOAD_LIB"
+    LIBS="$LIBS $DYN_LOAD_LIB"
     DPP_HAVE_NSPR([4.0], ["$USE_PTHREADS"],
         [AC_MSG_ERROR([*** NSPR requried for compiling ***])])
     LIBS="${_vpr_save_LIBS}"
@@ -625,7 +619,7 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -673,7 +667,7 @@ fi
 case $SUBSYSTEM in
     SPROC)
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
+        subsystem_libs="$SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
@@ -685,7 +679,7 @@ case $SUBSYSTEM in
         ;;
     POSIX)
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
+        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
 
         if test "x$PLATFORM" != "xDarwin" ; then
             if test "x$GXX" = "xyes" ; then
@@ -716,7 +710,7 @@ case $SUBSYSTEM in
             vpr_prof_libs='vpr.lib'
         else
             subsystem_cxxflags="$INCLUDES"
-            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
+            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
             vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
