@@ -53,14 +53,8 @@ public class ControlPanel
          e.printStackTrace();
       }
 
-      // Init the model to something stupid
-      model = new AbstractControlPanelModel()
-      {
-         public Object getElementAt(int index) { return null; }
-         public Icon getIconAt(int index)      { return null; }
-         public int getIndexOf(Object value)   { return -1; }
-         public int getSize()                  { return 0; }
-      };
+      // Init the model to something useful
+      model = new DefaultControlPanelModel();
 
       // Setup the model listener and do the initial hookup
       model.addListDataListener(modelListener);
