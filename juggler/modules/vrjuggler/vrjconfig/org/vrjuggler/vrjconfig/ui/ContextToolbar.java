@@ -185,12 +185,11 @@ public class ContextToolbar
       {
          nonempty_context = false;
       }
-      saveBtn.setEnabled(nonempty_context);
+      saveBtn.setEnabled(ctx.getConfigUndoManager().getUnsavedChanges());
+      saveAsBtn.setEnabled(nonempty_context);
       expandBtn.setEnabled(nonempty_context);
-      undoBtn.setEnabled(false);
-      redoBtn.setEnabled(false);
-      saveBtn.setEnabled(false);
-      saveAsBtn.setEnabled(true);
+      undoBtn.setEnabled(ctx.getConfigUndoManager().canUndo());
+      redoBtn.setEnabled(ctx.getConfigUndoManager().canRedo());
       context.addConfigContextListener(contextListener);
       context.addUndoableEditListener(this);
    }
@@ -1039,7 +1038,6 @@ public class ContextToolbar
    {
       public void resourceAdded(ConfigContextEvent evt)
       {
-         saveBtn.setEnabled(true);
          saveAsBtn.setEnabled(true);
          expandBtn.setEnabled(true);
       }
