@@ -261,9 +261,9 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo  $vpr_extra_cxxflags $subsystem_cxxflags -I${VPR_BASE_DIR}${include_dir} $vpr_basedir_extra_includes
+        echo @vpr_cxxflags@ $vpr_extra_cxxflags $subsystem_cxxflags -I${VPR_BASE_DIR}${include_dir} $vpr_basedir_extra_includes
     else
-        echo  $vpr_extra_cxxflags $subsystem_cxxflags -I${prefix}${include_dir} $vpr_extra_includes
+        echo @vpr_cxxflags@ $vpr_extra_cxxflags $subsystem_cxxflags -I${prefix}${include_dir} $vpr_extra_includes
     fi
 fi
 
