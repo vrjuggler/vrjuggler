@@ -35,10 +35,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-//import javax.xml.parsers.*;
-//import org.xml.sax.SAXException;
-//import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
+import org.jdom.*;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.vjcontrol.Core;
@@ -59,7 +56,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
       public double stamp;
       public double delta;
       public IndexInfo index_info;
-      
+
       public DataElem (IndexInfo _index_info, double _stamp, double _delta)
       {
          index_info = _index_info;
@@ -68,7 +65,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
       }
    }
 
-   
+
    /** Stores a single frame's worth of DataElems. */
    protected class DataLine
    {
@@ -100,7 +97,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
       }
    }
 
-   
+
    /** Stores information about a particular label. */
    protected class IndexInfo
    {
@@ -168,7 +165,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
          System.out.println ("Created IndexInfo for: " + label_components);
       }
 
-      
+
       public void addSample (double sample_time)
       {
          num_samples++;
@@ -182,7 +179,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
          }
       }
 
-      
+
       public void removeSample (double sample_time)
       {
          num_samples--;
@@ -194,20 +191,20 @@ public class LabeledPerfDataCollector implements PerfDataCollector
          }
       }
 
-      
+
       public double getAverage ()
       {
          return total_times/num_samples;
       }
 
-      
+
       public double getMaximum ()
       {
          return max_time;
       }
    }
 
-   
+
    // stores all performance data coming from a particular buffer
    public String name;
    public List datalines; // list of DataLines
@@ -226,7 +223,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
    double last_stamp; // last recorded sample, for finding deltas.
    boolean last_stamp_set;
 
-   
+
    public LabeledPerfDataCollector(String _name, int maxsamples)
    {
       datalines = new LinkedList();
@@ -244,7 +241,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
 
    }
 
-   
+
    public Iterator indexIterator()
    {
       return ordered_index_info.iterator();
@@ -293,7 +290,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
       return index_info.size();
    }
 
-   
+
    public String getName()
    {
       return name;
@@ -357,80 +354,61 @@ public class LabeledPerfDataCollector implements PerfDataCollector
    /** doc should be the element node for this labeledbuffer... we just
     *  extract all the subelements from it...
     */
-   public void interpretXMLData (Node doc)
+   public void interpretXMLData (Element doc)
    {
-      String name = doc.getNodeName();
-      String value = doc.getNodeValue();
-      NamedNodeMap attributes;
-      int attrcount;
-      int i;
-      boolean retval = true;
-      Node child;
+      String name = doc.getName();
 
-      switch (doc.getNodeType())
+      if (name.equalsIgnoreCase ("labeledbuffer"))
       {
-         case Node.DOCUMENT_NODE:
-         case Node.DOCUMENT_FRAGMENT_NODE:
-            child = doc.getFirstChild();
-            while (child != null)
+         // should check to verify it's got the right name
+         Iterator i = doc.getChildren().iterator();
+
+         while ( i.hasNext() )
+         {
+            interpretXMLData((Element) i.next());
+         }
+      }
+      else if (name.equalsIgnoreCase ("stamp"))
+      {
+         String label = "";
+         String category = "";
+         double time = 0.0;
+         Attribute attr;
+
+         attr = doc.getAttribute("label");
+         if ( attr != null )
+         {
+            label = attr.getValue();
+         }
+
+         attr = doc.getAttribute("category");
+         if ( attr != null )
+         {
+            category = attr.getValue();
+         }
+
+         attr = doc.getAttribute("time");
+         if ( attr != null )
+         {
+            try
             {
-               interpretXMLData (child);
-               child = child.getNextSibling();
+               time = attr.getFloatValue();
             }
-            break;
-         case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("labeledbuffer"))
+            catch (DataConversionException e)
             {
-               // should check to verify it's got the right name
-               child = doc.getFirstChild();
-               while (child != null)
-               {
-                  interpretXMLData (child);
-                  child = child.getNextSibling();
-               }
-	    }
-            else if (name.equalsIgnoreCase ("stamp"))
-            {
-               attributes = doc.getAttributes();
-               attrcount = attributes.getLength();
-               String label = "";
-               String category = "";
-               double time = 0.0;
-               for (i = 0; i < attrcount; i++)
-               {
-                  child = attributes.item(i);
-                  if (child.getNodeName().equals ("label"))
-                  {
-                     label = child.getNodeValue();
-                  }
-                  else if (child.getNodeName().equals ("category"))
-                  {
-                     category = child.getNodeValue();
-                  }
-                  else if (child.getNodeName().equals ("time"))
-                  {
-                     time = Double.parseDouble (child.getNodeValue());
-                     //System.out.println("read timestamp " + time);
-                  }
-               }
-               if (!label.equals(""))
-               {
-                  addDataElem (label, category, time);
-               }
-                
+               System.err.println("WARNING: Failed to convert '" +
+                                  attr.getValue() + "' to float");
             }
-            else
-            {
-               // shouldn't be anything else, eh?
-            }
-         case Node.COMMENT_NODE:
-         case Node.NOTATION_NODE:
-         case Node.PROCESSING_INSTRUCTION_NODE:
-         case Node.TEXT_NODE:
-            break;
-         default:
-	    System.out.println ("unexpected dom node...");
-            //iostatus.addWarning ("Unexpected DOM node type...");
+         }
+
+         if (!label.equals(""))
+         {
+            addDataElem(label, category, time);
+         }
+      }
+      else
+      {
+         // shouldn't be anything else, eh?
       }
 
       notifyActionListenersUpdate();
@@ -439,7 +417,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
 
 
    /** Recalculate the 'max' value stored for each label.
-    *  (The max value can become outdated when old DataLines are 
+    *  (The max value can become outdated when old DataLines are
     *  purged from the collector to reduce memory usage).
     */
    public void refreshMaxValues ()
@@ -466,7 +444,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
          while (de_it.hasNext())
          {
             de = (DataElem)de_it.next();
-            if (de.index_info.max_time < de.delta) 
+            if (de.index_info.max_time < de.delta)
             {
                de.index_info.max_time = de.delta;
             }
@@ -495,14 +473,14 @@ public class LabeledPerfDataCollector implements PerfDataCollector
    public String prebuff (double d, int b)
    {
       String s = Double.toString(d);
-      while (s.length() < b) 
+      while (s.length() < b)
       {
-         s = " " + s; 
+         s = " " + s;
       }
       return s;
    }
 
-   
+
    public String dumpData()
    {
       String s = name + "\n";
@@ -554,10 +532,10 @@ public class LabeledPerfDataCollector implements PerfDataCollector
 
    }
 
-   
+
    public String dumpAverages (int preskip, int postskip, boolean doanomaly, double cutoff)
    {
-      return "";  
+      return "";
 //  	int i;
 //    	Property labelsprop = null;
 //    	String label;
@@ -624,7 +602,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
       notifyActionListeners (e);
    }
 
-   
+
    private void notifyActionListenersClear ()
    {
       ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
@@ -632,7 +610,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector
       notifyActionListeners (e);
    }
 
-   
+
    private void notifyActionListeners (ActionEvent e)
    {
       ActionListener l;

@@ -34,7 +34,11 @@ package org.vrjuggler.jccl.config;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.jdom.Element;
+import org.jdom.Attribute;
+
 
 /** A ConfigChunk is a logical collection of configuration information.
  *  A vjConfigChunk stores a number of vjPropertys that describe
@@ -47,248 +51,218 @@ import java.util.List;
  */
 public class ConfigChunk
 {
-   protected ArrayList props;
-   protected String    name;
-   protected ChunkDesc desc;
+   public final static String EMBEDDED_SEPARATOR = "/";
 
-   public final static String embedded_separator = "->";
-
-   public ConfigChunk(ConfigChunk ch)
+   public ConfigChunk (Element root)
    {
-      init(null, ch);
-   }
+      mDomElement = root;
+      desc = ChunkFactory.getChunkDescByToken(root.getName());
 
-   public ConfigChunk(ChunkDesc d)
-   {
-      init(d, d.getDefaultChunk());
-   }
-
-   public ConfigChunk(ChunkDesc d, boolean use_defaults)
-   {
-      init (d, use_defaults?d.getDefaultChunk():null);
-   }
-
-   /** Initializes a new ConfigChunk - utility for Constructor methods.
-    *  If ch is non-null, self's value is copied from ch.  Otherwise it's
-    *  built up from the ChunkDesc d.
-    *  At least one of the arguments must be non-null.
-    */
-   private void init(ChunkDesc d, ConfigChunk ch)
-   {
-      props = new ArrayList();
-      int i, n;
-      if (ch != null)
+      if ( null == desc )
       {
-         desc = ch.desc;
-         name = ch.name;
-         n = ch.props.size();
-         for (i = 0; i < n; i++)
-         {
-            props.add(new Property((Property)ch.props.get(i)));
-         }
-         //validateEmbeddedChunkNames(); -- shoulda already been done to c.
-      }
-      else
-      {
-         desc = d;
-         name = "";
-         /* we start at one here cuz we don't include name, which is always
-          * the first element in a propertydesc
-          */
-         n = d.propertyDescsSize();
-         for (i = 1; i < n; i++)
-         {
-            props.add(new Property(d.getPropertyDesc(i)));
-         }
-         validateEmbeddedChunkNames();
+         System.err.println("WARNING: Unknown chunk type '" + root.getName() +
+                            "' encountered");
       }
    }
 
-   /** Applies a new ChunkDesc to self, attempting to preserve its values.
-    *  THIS IS VERY DANGEROUS.  It is designed for, and should only be used
-    *  by, the ChunkDesc editor panel to update a defaults chunk.
-    */
-   public void applyNewDesc(ChunkDesc d)
+   public ConfigChunk (ConfigChunk srcChunk)
    {
-      PropertyDesc pd;
-      Property p;
+      desc = srcChunk.desc;
+      mDomElement = (Element) srcChunk.mDomElement.clone();
+   }
+
+   public ConfigChunk (ChunkDesc d)
+   {
       desc = d;
-      ArrayList newprops = new ArrayList();
-      int i, n = desc.propertyDescsSize();
-      for (i = 1; i <n; i++)
+      mDomElement = new Element(d.getToken());
+
+      Iterator i = d.getPropertyDescs().iterator();
+      PropertyDesc prop_desc;
+      String prop_desc_type;
+
+      while ( i.hasNext() )
       {
-         pd = desc.getPropertyDesc(i);
-         p = getPropertyFromToken(pd.getToken());
-         if (p != null)
+         prop_desc = (PropertyDesc) i.next();
+         prop_desc_type = prop_desc.getToken();
+
+         if ( prop_desc.hasVariableNumberOfValues() )
          {
-            p.applyNewDesc (pd);
-            newprops.add(p);
+            this.setProperty(prop_desc_type, 0, prop_desc.getDefaultValue(0));
          }
          else
          {
-            newprops.add(new Property(pd));
+            int max_props = prop_desc.getNumAllowed();
+
+            for ( int j = 0; j < max_props; ++j )
+            {
+               this.setProperty(prop_desc_type, j,
+                                prop_desc.getDefaultValue(j));
+            }
          }
       }
-      props = newprops;
    }
 
-   public final String getName()
+   /**
+    * Returns the symbolic, human-friendly name of this chunk.  If this chunk
+    * does not have a name when this method is invoked, it is assigned here.
+    */
+   public final String getName ()
    {
-      return name;
+      Attribute name_attr = mDomElement.getAttribute("name");
+
+      // If this chunk does not yet have a name, we have to set one now.
+      if ( null == name_attr )
+      {
+         name_attr = new Attribute("name", this.getDescToken());
+      }
+
+      return name_attr.getValue();
    }
 
-   public final void setName(String s)
+   public final void setName (String s)
    {
-      setLastNameComponent(s);
-      //name = s;
-      //validateEmbeddedChunkNames();
+      // We assign s to name and fullName to keep them in sync.  The call to
+      // validateEmbeddedChunkNames() will deal with updating the fully
+      // qualified names of embedded chunks.
+      mDomElement.setAttribute("name", s);
    }
 
-   public final void setFullName(String s)
+   /**
+    * Returns the fully qualified, unique name of thsi chunk.  This will be
+    * different from the value returned by getName() if this chunk is a child
+    * of another chunk.  In that case, the full name will be the path to this
+    * chunk based on the chunk hierarchy and the property tokens.
+    */
+   public final String getFullName ()
    {
-      name = s;
+      Element chunk_parent, prop_parent;
+      String full_name = this.getName();
+
+      chunk_parent = mDomElement;
+
+      while ( (prop_parent = chunk_parent.getParent()) != null &&
+              ! prop_parent.getName().equals(ConfigTokens.chunk_db_TOKEN) )
+      {
+         full_name = prop_parent.getName() + EMBEDDED_SEPARATOR + full_name;
+         chunk_parent = prop_parent.getParent();
+         full_name = chunk_parent.getAttribute("name").getValue() +
+                     EMBEDDED_SEPARATOR + full_name;
+      }
+
+      return full_name;
    }
 
    //-------- Stuff for dealing with embedded chunk names ---------------
 
-   /** Corrects names of embedded chunks contained by this chunk.
-    *  This function checks that all embedded ConfigChunks contained in
-    *  self have names which accurately reflect the entire path to them
-    *  (e.g. "parentchunkname->propertyname->embeddedchunkname").
-    *  <p>
-    *  It is called when:
-    *  <br> - A ConfigChunk is read from a file (to correct legacy
-    *  config files).
-    *  <br> - setName() is called on a chunk.
-    *  <br> - A chunk is edited by VjControl (this last is a semi-kludgey
-    *  catchall because the current DefaultChunkEditorPanel doesn't carry
-    *  around all the context information needed to accurately keep track
-    *  of this).
+   /**
+    * Retrieves the named embedded chunk from this chunk.
+    *
+    * @note Expects self's own name/prop pair at start of pathname.
+    * @note
     */
-   public void validateEmbeddedChunkNames()
+   public ConfigChunk getEmbeddedChunk (String pathname)
    {
-      Property p;
-      int i, k;
-      ConfigChunk ch;
-      for (i = 0; i < props.size(); i++)
-      {
-         p = (Property)props.get(i);
-         if (p.valtype == ValType.EMBEDDEDCHUNK)
-         {
-            for (k = 0; k < p.getNum(); k++)
-            {
-               ch = p.getValue(k).getEmbeddedChunk();
-               // set name will also cause recursive validation.
-               ch.name = (name + embedded_separator + p.getToken() +
-                         embedded_separator + ch.getLastNameComponent());
-               ch.validateEmbeddedChunkNames();
-            }
-         }
-      }
-   }
+      ConfigChunk ch = null;
 
-   public ConfigChunk getEmbeddedChunk(String pathname)
-   {
-      // note: expects self's own name/prop pair at start of pathname.
-      // note2: a nonrecursive version of this is probably worth it
-      //        for the performance increase.  this is yicky.
+      // note: a nonrecursive version of this is probably worth it
+      //       for the performance increase.  this is yicky.
       try
       {
-         String s = ConfigChunk.getNameRemainder(pathname);
-         String s2 = ConfigChunk.getFirstNameComponent(s);
-         Property p = getPropertyFromToken(s2);
-         // s3 = embeddedchunkname->prop etc...
-         String s3 = ConfigChunk.getNameRemainder(s);
-         if (ConfigChunk.hasSeparator(s3))
-         {
-            String s4 = ConfigChunk.getFirstNameComponent(s3);
-            for (int i = 0; i < p.getNum(); i++)
-            {
-               ConfigChunk ch = p.getValue(i).getEmbeddedChunk();
-               if (ch.getLastNameComponent().equalsIgnoreCase(s4))
-               {
-                  return ch.getEmbeddedChunk(s3);
-               }
-            }
-         }
-         else
-         {
-            for (int i = 0; i < p.getNum(); i++)
-            {
-               ConfigChunk ch = p.getValue(i).getEmbeddedChunk();
-               if (ch.getLastNameComponent().equalsIgnoreCase(s3))
-               {
-                  return ch;
-               }
-            }
+         Element root = mDomElement;
 
+         while ( ConfigChunk.hasSeparator(pathname) && root != null )
+         {
+            String prop_name = ConfigChunk.getFirstNameComponent(pathname);
+
+            // Get the child element matching the current property name.
+            Element property = root.getChild(prop_name);
+            PropertyDesc property_desc = desc.getPropertyDesc(prop_name);
+
+            // At this point, we (hopefully) have a valid child of prop_name
+            // and the corresponding property description.  The next phase of
+            // work will set root to the next child chunk element in pathname.
+            // If it doesn't, then we're done or something went wrong.
+            root = null;
+
+            // If the path element is valid, we can continue.
+            if ( null != property && null != property_desc &&
+                 property_desc.getValType() == ValType.EMBEDDEDCHUNK )
+            {
+               // Chop off the part of the path that is prop_name.
+               pathname = ConfigChunk.getNameRemainder(pathname);
+
+               // Get the name of the chunk from the newly truncated
+               // pathname string.
+               String next_chunk_name =
+                  ConfigChunk.getFirstNameComponent(pathname);
+
+               // Chop off the part of the path that is next_chunk_name.
+               pathname = ConfigChunk.getNameRemainder(pathname);
+
+               // Now we have to search the children of property for the
+               // next chunk name in the path.
+               Iterator i = property.getChildren().iterator();
+
+               while ( i.hasNext() )
+               {
+                  Element child = (Element) i.next();
+
+                  // Hooray!  We found the next child chunk in the path.
+                  // We're done with this phase.
+                  if ( child.getAttribute("name").equals(next_chunk_name) )
+                  {
+                     root = child;
+                     break;
+                  }
+               }
+            }
          }
-         return null;
+
+         // If we have a valid root element and its name attribute matches
+         // what is left of pathname, then we found our chunk!
+         if ( root != null && root.getAttribute("name").equals(pathname) )
+         {
+            ch = new ConfigChunk(root);
+         }
       }
       catch (Exception e)
       {
-         return null;
+         /* Do nothing.  We'll end up returning null. */ ;
       }
+
+      return ch;
    }
 
-   public static final String getLastNameComponent(String _name)
+   public static final String getLastNameComponent (String chunkName)
    {
-      int i = _name.lastIndexOf(embedded_separator);
-      return(i < 0) ? _name : _name.substring(i+embedded_separator.length());
+      int i = chunkName.lastIndexOf(EMBEDDED_SEPARATOR);
+      return ((i < 0) ? chunkName
+                      : chunkName.substring(i + EMBEDDED_SEPARATOR.length()));
    }
 
-   public final String getLastNameComponent()
-   {
-      return ConfigChunk.getLastNameComponent(name);
-   }
-
-   public final static String setLastNameComponent(String _name, String _last)
-   {
-      int i = _name.lastIndexOf(embedded_separator);
-      if (i < 0)
-      {
-         return _last;
-      }
-      else
-      {
-         return _name.substring(0, i+embedded_separator.length()) + _last;
-      }
-   }
-
-   public final void setLastNameComponent(String last)
-   {
-      name = ConfigChunk.setLastNameComponent(name, last);
-      validateEmbeddedChunkNames();
-   }
-
+   /**
+    * This is a helper function for classes wanting to deal with fully
+    * qualified chunk names.
+    */
    public static final String getFirstNameComponent(String _name)
    {
-      int i = _name.indexOf(embedded_separator);
+      int i = _name.indexOf(EMBEDDED_SEPARATOR);
       return(i < 0) ? "" : _name.substring(0, i);
-   }
-
-   public final String getFirstNameComponent()
-   {
-      return ConfigChunk.getFirstNameComponent(name);
    }
 
    /* Returns everything after the first divider in a name.
     * If there is no separator, returns name.
     */
-   public final static String getNameRemainder(String _name)
+   public final static String getNameRemainder (String chunkName)
    {
-      int i = _name.indexOf(embedded_separator);
-      return(i < 0) ? _name : _name.substring(i+embedded_separator.length());
+      int i = chunkName.indexOf(EMBEDDED_SEPARATOR);
+      return (i < 0) ? chunkName
+                     : chunkName.substring(i + EMBEDDED_SEPARATOR.length());
    }
 
-   public final String getNameRemainder()
+   public final static boolean hasSeparator (String chunkName)
    {
-      return ConfigChunk.getNameRemainder(name);
-   }
-
-   public final static boolean hasSeparator(String _name)
-   {
-      return(_name.indexOf(embedded_separator) >= 0);
+      return (chunkName.indexOf(EMBEDDED_SEPARATOR) >= 0);
    }
 
    public final ChunkDesc getDesc()
@@ -296,14 +270,34 @@ public class ConfigChunk
       return desc;
    }
 
+   public final PropertyDesc getPropertyDesc (String propertyToken)
+   {
+      return desc.getPropertyDesc(propertyToken);
+   }
+
    public final String getDescName()
    {
       return desc.getName();
    }
 
+   /**
+    * Returns the type of this chunk using its chunk description.  The type of
+    * this chunk is defined by its description's token/type identifier.  If
+    * this chunk has no description, null is returned.
+    *
+    * @return A string containing this chunk's type or null if this chunk has
+    *         no description.
+    */
    public final String getDescToken()
    {
-      return desc.getToken();
+      String desc_token = null;
+
+      if ( null != desc )
+      {
+         desc_token = desc.getToken();
+      }
+
+      return desc_token;
    }
 
    public final String getDescHelp()
@@ -314,203 +308,319 @@ public class ConfigChunk
    /** This is helpful for the GUI. */
    public List getEmbeddedChunks()
    {
-      ArrayList v = new ArrayList();
-      Property p;
-      int i, j;
-      for (i = 0; i < props.size(); i++)
+      List chunks = new ArrayList();
+
+      Iterator i = this.getDesc().getPropertyDescs().iterator();
+      String full_name = this.getName();
+
+      while ( i.hasNext() )
       {
-         p = (Property)props.get(i);
-         if (p.valtype == ValType.EMBEDDEDCHUNK)
+         PropertyDesc prop_desc = (PropertyDesc) i.next();
+
+         if ( prop_desc.getValType() == ValType.EMBEDDEDCHUNK )
          {
-            for (j = 0; j < p.getNum(); j++)
+            String prop_type = prop_desc.getToken();
+            int prop_count = this.getPropertyCount(prop_type);
+
+            for ( int j = 0; j < prop_count; ++j )
             {
-               v.add(p.getValue(j).getEmbeddedChunk());
+               ConfigChunk emb_chunk =
+                  this.getProperty(prop_type, j).getEmbeddedChunk();
+               chunks.add(emb_chunk);
             }
          }
       }
-      return v;
+
+      return chunks;
    }
 
    public boolean equals(ConfigChunk c)
    {
-      Property p1, p2;
-      if (c == null)
-      {
-         return false;
-      }
-      if (!name.equals(c.name))
-      {
-         return false;
-      }
-      if (!desc.token.equals(c.desc.token))
-      {
-         return false;
-      }
-
-      /* This next part is O(n^2) <sigh> */
-      for (int i = 0; i < props.size(); i++)
-      {
-         p1 = (Property) props.get(i);
-         p2 = c.getProperty(p1.getToken());
-         if (!p1.equals(p2))
-         {
-            return false;
-         }
-      }
-      return true;
+      return this.mDomElement == c.mDomElement;
    }
 
-   public int getPropertiesSize()
+   /**
+    * Returns the named property value in propStorage if the property exists
+    * in this chunk.
+    */
+   public VarValue getProperty (String propType)
    {
-      return props.size();
+      return getProperty(propType, 0);
    }
 
-   public Property getProperty(int i)
+   /**
+    * Gets the value of the given property type at the specified index.
+    *
+    * @param propType A property type that matches those defined in this
+    *                 chunk's description.
+    * @param index    The indexed property matching the named type.
+    *
+    * @return A valid VarValue object is returned if the named property type
+    *         exists within this chunk and the index is within the allowed
+    *         range.  Otherwise, null is returned.
+    *
+    * @note The rest of the code expects this method to return null if the
+    *       index is valid but not within the range of currently defined
+    *       values.  This seems incorrect, but it may be too hard to change
+    *       every place.  Either that, or determining the difference between
+    *       an "empty" VarValue object and a default value may be too hard.
+    */
+   public VarValue getProperty (String propType, int index)
    {
-      return(Property)props.get(i);
-   }
+      VarValue value = null;
 
+      // Get the property description for the given property type.
+      PropertyDesc prop_desc = desc.getPropertyDesc(propType);
 
-   public Property getProperty(String n)
-   {
-      Property p;
-      for (int i = 0; i < props.size(); i++)
+      // Invalid property type!  We have to return null.
+      if ( null == prop_desc )
       {
-         p = (Property)props.get(i);
-         if (p.getName().equalsIgnoreCase(n))
-         {
-            return p;
-         }
+         System.err.println("WARNING: Invalid property type '" + propType +
+                            "' requested in chunk of type '" +
+                            desc.getToken() + "'");
       }
-      return null;
-   }
-
-   public boolean setPropertyFromToken(String tok, VarValue val, int i)
-   {
-      // sets the ith value in property tok to val
-      Property p = getPropertyFromToken(tok);
-      if (p != null)
-      {
-         p.setValue (val, i);
-         return true;
-      }
+      // The property type is valid, so we can look up the indexed value.
       else
       {
-         return false;
-      }
-   }
+         // JDOM will return an empty list if there are no children matching
+         // propType.
+         List props = mDomElement.getChildren(propType);
 
-   public boolean setProperty(Property p)
-   {
-      // replaces a property with p's token w/ p itself.
-      int i, n = props.size();
-      Property p2;
-      for (i = 0; i < n; i++)
-      {
-         p2 = (Property)props.get(i);
-         if (p2.getToken().equalsIgnoreCase(p.getToken()))
+         // Extract the information relevant for the given property type.
+         ValType val_type = prop_desc.getValType();
+
+         // Verify that the index is valid.
+         // XXX: Remove the test for the size of props to return a default
+         // value rather than null when the index is valid but just doesn't
+         // have a value yet.
+         if ( props.size() > 0 &&
+              (index < prop_desc.getNumAllowed() ||
+               prop_desc.hasVariableNumberOfValues()) )
          {
-            props.set (i, p);
-            return true;
+            // Ensure that the index actually falls within the loaded list of
+            // property values.
+            if ( index < props.size() )
+            {
+               // Look up the property in the list.
+               Element prop = (Element) props.get(index);
+               String prop_val = prop.getTextTrim();
+               value = new VarValue(val_type);
+
+               // A child chunk property.
+               if ( ValType.EMBEDDEDCHUNK == val_type )
+               {
+                  // This gets the child of prop that is the embedded chunk.
+                  // Using the description enumeration string seems like a
+                  // strange way to get it, but that's what the API has right
+                  // now.
+                  String chunk_type = prop_desc.getEnumAtIndex(0).str;
+
+                  Element child = prop.getChild(chunk_type);
+
+                  // If we have a child chunk, we can return it.  Otherwise,
+                  // we return an empty VarValue object.
+                  if ( null != child )
+                  {
+                     ConfigChunk child_chunk = new ConfigChunk(child);
+                     value.set(child_chunk);
+                  }
+               }
+               // All other property types.
+               else
+               {
+                  value.set(prop_desc.getEnumValue(prop_val));
+               }
+            }
+            // The index is outside the range of currently defined property
+            // values.  In this case, we fall back on the default value.
+            // Thank goodness for those!
+            else
+            {
+               value = prop_desc.getDefaultValue(index);
+            }
          }
       }
-      return false;
+
+      return value;
    }
 
-   public Property getPropertyFromToken(String _token)
+   public int getPropertyCount (String propType)
    {
-      Property p;
-      int i, n = props.size();
-      for (i = 0; i < n; i++)
+      List children = mDomElement.getChildren(propType);
+      int count = 0;
+
+      if ( null != children )
       {
-         p = (Property)props.get(i);
-         if (p.getToken().equalsIgnoreCase(_token))
+         count = children.size();
+      }
+
+      return count;
+   }
+
+   /**
+    * Sets the value for the property of type propType at the given index.
+    *
+    * @pre value must not be null.
+    *
+    * @param propType The property description identifier/token for the
+    *                 property being set.
+    * @param index    The index within the named property type that will be
+    *                 set.  If this index is not within the valid range, no
+    *                 value is set.
+    * @param value    The value to be set.  It must not be a null reference.
+    *
+    * @return A boolean value stating whether or not the set operation
+    *         succeeded is returned to the caller.
+    */
+   public boolean setProperty (String propType, int index, VarValue value)
+   {
+      List props = mDomElement.getChildren(propType);
+      boolean status = false;
+
+      PropertyDesc prop_desc = desc.getPropertyDesc(propType);
+
+      // Verify that we can set the property value at the given index.
+      if ( index < prop_desc.getNumAllowed() ||
+           prop_desc.hasVariableNumberOfValues() )
+      {
+         if ( null != props && index < props.size() )
          {
-            return p;
+            Element prop = (Element) props.get(index);
+
+            // The special case for embedded chunks is needed because we do
+            // not want to insert them as text strings.
+            if ( value.getValType() == ValType.EMBEDDEDCHUNK )
+            {
+               prop.removeChildren();
+               prop.addContent(value.getEmbeddedChunk().getNode());
+            }
+            else
+            {
+               prop.setText(value.toString());
+            }
          }
+         // The property does not currently exist, so we'll add it.
+         else
+         {
+            Element prop = new Element(propType);
+
+            // The special case for embedded chunks is needed because we do
+            // not want to insert them as text strings.
+            if ( value.getValType() == ValType.EMBEDDEDCHUNK )
+            {
+               if ( value.getEmbeddedChunk() != null )
+               {
+                  prop.addContent(value.getEmbeddedChunk().getNode());
+               }
+            }
+            else
+            {
+               prop.addContent(value.toString());
+            }
+
+            mDomElement.addContent(prop);
+         }
+
+         status = true;
       }
-      return null;
+
+      return status;
    }
 
-   public VarValue getValueFromToken(String n, int i)
+   /**
+    * Removes the property of type propType at the given index.
+    */
+   public boolean removeProperty (String propType, int index)
    {
-      Property p = getPropertyFromToken(n);
-      if (p != null)
+      List props = mDomElement.getChildren(propType);
+      boolean status = false;
+
+      PropertyDesc prop_desc = desc.getPropertyDesc(propType);
+
+      if ( index < props.size() )
       {
-         return p.getValue(i);
+         Element del_prop = (Element) props.get(index);
+         mDomElement.removeContent(del_prop);
+         status = true;
       }
-      else
-      {
-         return null;
-      }
+
+      return status;
    }
 
    /** Returns a vector of ConfigChunk names this chunk depends on */
    public List getDependencyNames()
    {
-      int j, k;
-      ConfigChunk ch2;
-      Property p;
-      String s;
-      VarValue val;
       ArrayList results = new ArrayList();
 
-      for (j = 0; j < props.size(); j++)
+      Iterator i= desc.getPropertyDescs().iterator();
+
+      while ( i.hasNext() )
       {
-         p = (Property)props.get(j);
-         if (p.valtype == ValType.CHUNK)
+         PropertyDesc prop_desc = (PropertyDesc) i.next();
+
+         if ( prop_desc.getValType() == ValType.CHUNK )
          {
-            for (k = 0; k < p.vals.size(); k++)
+            // Get all the elements matching the current property description
+            // token.
+            Iterator j = mDomElement.getChildren(prop_desc.getToken()).iterator();
+
+            while ( j.hasNext() )
             {
-               s = ((VarValue)p.vals.get(k)).getString();
-               if (!s.equals(""))
+               String dep_text = ((Element) j.next()).getTextTrim();
+
+               // JDOM will return an empty string rather than null if the
+               // element has no text.
+               if ( ! dep_text.equals("") )
                {
-                  results.add(s);
+                  results.add(dep_text);
                }
             }
          }
-         else if (p.valtype == ValType.EMBEDDEDCHUNK)
+         else if ( prop_desc.getValType() == ValType.EMBEDDEDCHUNK )
          {
-            for (k = 0; k < p.vals.size(); k++)
+            // Get all the elements matching the current property description
+            // token.
+            Iterator j = mDomElement.getChildren(prop_desc.getToken()).iterator();
+
+            while ( j.hasNext() )
             {
-               ch2 = ((VarValue)p.vals.get(k)).getEmbeddedChunk();
-               List results2 = ch2.getDependencyNames();
-               results.addAll(results2);
+               Element parent_prop = (Element) j.next();
+
+               // This is needed to go to to next level in the hierarchy--that
+               // is, to the position of the actual embedded chunk.
+               Iterator k = parent_prop.getChildren().iterator();
+
+               while ( k.hasNext() )
+               {
+                  ConfigChunk child_chunk = new ConfigChunk((Element) k.next());
+                  results.addAll(child_chunk.getDependencyNames());
+               }
             }
          }
       }
+
       return results;
    }
 
    public final String toString()
    {
-      return xmlRep();
+      org.jdom.output.XMLOutputter outputter =
+         new org.jdom.output.XMLOutputter("   ", true);
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+      return outputter.outputString(mDomElement);
    }
 
-   public String xmlRep()
+   /**
+    * Returns the DOM tree node for this chunk.  The constructors guarantee
+    * that it is non-null.  It is package visible so that code in other
+    * packages cannot abuse this implementation exposure.
+    */
+   Element getNode ()
    {
-      return xmlRep("");
+      return mDomElement;
    }
 
-   public String xmlRep (String pad)
-   {
-      StringBuffer s = new StringBuffer(256);
-      s.append(pad);
-      s.append('<');
-      s.append(XMLConfigIOHandler.escapeString(desc.token));
-      s.append(" name=\"");
-      s.append(XMLConfigIOHandler.escapeString(name));
-      s.append("\">\n");
+   private Element mDomElement = null;
 
-      // careful - rem that name isn't a property in this implementation.
-      for (int i = 0; i < props.size(); i++)
-      {
-         s.append (((Property)props.get(i)).xmlRep(pad + "  "));
-      }
-      s.append(pad);
-      s.append("</");
-      s.append(XMLConfigIOHandler.escapeString(desc.token));
-      s.append(">\n");
-      return s.toString();
-   }
+   private ChunkDesc desc   = null;
 }

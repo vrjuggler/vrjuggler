@@ -34,45 +34,40 @@
 #define _JCCL_PROPERTY_DESC_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/EnumEntry.h>
+//#include <jccl/Config/EnumEntry.h>
+#include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ParseUtil.h>
+
+#include <cppdom/cppdom.h>
 
 namespace jccl
 {
 
-//------------------------------------------------------------
-//: A Description used to instantiate a vrj::Property
-//
-//       Information stored in a vrj::PropertyDesc includes vrj::Property
-//       Name, Type, number of allowed values, and a Help string
-//       describing the purpose of the particular property.
-//       vrj::PropertyDescs also include information for parsing a
-//       vrj::Property, and (optional) enumeration data for T_INT
-//       type Properties.
-//       Note: Frequently the docs for this class will refer to 'this
-//       vrj::Property', which refers to any object of class vrj::Property
-//       instantiated
-//       using this description.
-//
-// @author:  Christopher Just
-//------------------------------------------------------------
-
+/** Describes properties
+*
+* Holds all the information describing a property
+*/
 class PropertyDesc
 {
-
 public:
 
-   //: Constructor
-   //!POST: name, token, help = NULL, type = T_INVALID, num = 0,
-   //+      valuelabels & enumerations are empty.
+   /** Constructor
+   * Initialized with default values
+   */
    PropertyDesc ();
 
-   //:Copy Constructor
+   /** Constructor from XML node*/
+   PropertyDesc(cppdom::XMLNodePtr node);
+
+   /** Copy Constructor */
    PropertyDesc (const PropertyDesc& d);
 
    //: Convenience constructor
    //!POST: name = token = n, help = h, num = i, type = t,
    //+      valuelabels & enumerations are empty.
+   /*
    PropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
+   */
 
    //: Destroys a PropertyDesc, and frees all allocated memory.
    ~PropertyDesc ();
@@ -87,63 +82,58 @@ public:
 #endif
 
    //: returns the token string for
-   inline const std::string& getToken () const
+   inline const std::string getToken () const
    {
-      return token;
+      return mNode->getAttribute(jccl::token_TOKEN).getValue<std::string>();
    }
 
    inline void setToken (const std::string& tok)
    {
-      token = tok;
+      mNode->setAttribute(jccl::token_TOKEN, tok);
    }
 
-   inline const std::string& getName () const
+   inline const std::string getName () const
    {
-      return name;
+      return mNode->getAttribute(jccl::name_TOKEN).getString();
    }
 
-   inline void setName (const std::string& _name)
+   inline void setName (const std::string& name)
    {
-      name = _name;
+      mNode->setAttribute(jccl::name_TOKEN, name);
    }
 
-   inline const std::string& getHelp () const
-   {
-      return help;
-   }
+   std::string getHelp() const;
 
-   inline void setHelp (const std::string& _help)
-   {
-      help = _help;
-   }
-
-   // get rid of this soon
-   inline VarType getType () const
-   {
-      return type;
-   }
+   void setHelp(const std::string& help);
 
    inline VarType getVarType () const
    {
-      return type;
+      return jccl::stringToVarType( mNode->getAttribute(jccl::type_TOKEN) );
    }
 
    inline void setVarType (VarType _type)
    {
-      type = _type;
+      mNode->setAttribute(jccl::type_TOKEN, jccl::typeString(_type) );
    }
 
    inline int getNumAllowed () const
    {
-      return num;
+      return mNode->getAttribute(jccl::num_TOKEN).getValue<int>();
    }
 
    // -1 for variable
-   inline void setNumAllowed (int _num)
+   inline void setNumAllowed (int num)
    {
-      num = _num;
+      mNode->setAttribute(jccl::num_TOKEN, num );
    }
 
+   /**
+    * Retrieves the default value (as an XML string) for the i'th item in this
+    * property description.
+    */
+   cppdom::XMLString getDefaultValueString(int index);
+
+   /*
    //: Returns the number of individual value labels
    inline int getValueLabelsSize () const
    {
@@ -154,35 +144,11 @@ public:
 
    //: Returns the ith value label
    const std::string& getValueLabel (unsigned int index) const;
+   */
 
-
-   inline int getEnumerationsSize() const
-   {
-      return enumv.size();
-   }
-
-   void appendEnumeration (const std::string& _label, const std::string& _val);
-
-   //: Returns the enumeration entry at index ind
-   //! ARGS: index - index of EnumEntry to retrieve (0-base)
-   //! RETURNS: NULL - if index is < 0 or out of range
-   //! RETURNS: enumentry* - otherwise
-   EnumEntry* getEnumEntryAtIndex (unsigned int index) const;
-
-   //: Returns an enumentry with val matching val...
-   EnumEntry* getEnumEntryWithValue (const VarValue& val) const;
-
-   //: Returns the enumentry named _name
-   //! RETURNS: NULL - if no match if found
-   //! RETURNS: EnumEntry* - otherwise
-   EnumEntry* getEnumEntry (const std::string& _name) const;
-
-   //: Writes a PropertyDesc to the given ostream
-   //!NOTE: output format is:
-   //+      name typename num token { enum1 enum2=42 } "help string"
+   /** Writes a PropertyDesc to the given ostream
+   */
    friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
-
-   PropertyDesc& operator= (const PropertyDesc& pd);
 
    //: Equality Operator
    // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
@@ -194,40 +160,17 @@ public:
       return !(*this == pd);
    }
 
-private:
+   /** Get the xml node pointer.
+   * Users should not use this directly
+   */
+   cppdom::XMLNodePtr getNode()
+   {
+      return mNode;
+   }
 
-   //: Descriptive name of the Property this object describes. Used in GUI.
-   std::string name;
-
-   //: Short name for this PropertyDesc.  Used in app/library code.
-   std::string token;
-
-   //: One line of help information for this PropertyDesc.
-   std::string help;
-
-   //: Type of values allowed in this Property.
-   VarType type;
-
-   //: Number of value entries allowed for this Property. (-1 for variable)
-   //  Typically this is an integer > 0.  For example, a tracker
-   //  position offset might be described with 3 Float values (xyz).
-   //  A value of -1 indicates that this Property may have a variable
-   //  number of values (e.g. for a list of active Walls).
-   int  num;
-
-   //: Labels for individual values of this Property (ie. "width", "height")
-   std::vector<EnumEntry*> valuelabels;
-
-   //: A list of labeled values that are allowed.
-   //  string/int pairs for T_INTs,
-   //  valid string values for T_STRINGS, and names of acceptable chunk
-   //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
-   //  means _all_ chunk types are accepted
-   std::vector<EnumEntry*> enumv;
-
-   int enum_val;
-
-   unsigned int validation;
+protected:
+   bool                 mIsValid;   /**< Validation flag */
+   cppdom::XMLNodePtr    mNode;      /**< The xml node for this chunk desc */
 };
 
 } // End of jccl namespace

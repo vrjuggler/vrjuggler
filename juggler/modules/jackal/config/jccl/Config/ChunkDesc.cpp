@@ -35,147 +35,152 @@
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
-#include <vpr/Util/Assert.h>
-#include <jccl/Config/ConfigIO.h>
-#include <jccl/Config/XMLConfigIOHandler.h>
+#include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/PropertyDesc.h>
 
+#include <sstream>
+
+#include <vpr/Util/Assert.h>
+
+#include <cppdom/cppdom.h>
+#include <cppdom/predicates.h>
 
 namespace jccl
 {
 
-ChunkDesc::ChunkDesc () :plist()
+ChunkDesc::ChunkDesc ()
 {
-   validation = 1;
-   name = "unnamed";
-   token = "unnamed";
-   help = "";
-   default_node = 0;
-   PropertyDesc *d = new PropertyDesc("name",1,T_STRING," ");
-   add (d);
+   mIsValid = true;
+   mNode = jccl::ChunkFactory::instance()->createXMLNode();  // Set a default node
 }
 
-ChunkDesc::ChunkDesc (const ChunkDesc& desc): plist()
+ChunkDesc::ChunkDesc(cppdom::XMLNodePtr node)
 {
-   validation = 1;
+   mIsValid = true;
+   mNode = node;  // Set a default node
+}
+
+ChunkDesc::ChunkDesc (const ChunkDesc& desc)
+{
+   mIsValid = true;
    *this = desc;
 }
 
 ChunkDesc::~ChunkDesc()
 {
-   for ( unsigned int i = 0; i < plist.size(); i++ )
-   {
-      delete plist[i];
-   }
-
-   validation = 0;
+   mIsValid = false;
 }
 
 #ifdef JCCL_DEBUG
 void ChunkDesc::assertValid () const
 {
-   vprASSERT (validation == 1 && "Trying to use deleted ChunkDesc");
-   for ( unsigned int i = 0; i < plist.size(); i++ )
-   {
-      plist[i]->assertValid();
-   }
+   vprASSERT (mIsValid == true && "Trying to use deleted ChunkDesc");
 }
 #endif
 
-ChunkDesc& ChunkDesc::operator= (const ChunkDesc& other)
+
+void ChunkDesc::setName (const std::string& name)
 {
    assertValid();
-   other.assertValid();
+   mNode->setAttribute(jccl::name_TOKEN, name);
+}
 
-   unsigned int i;
+void ChunkDesc::setToken (const std::string& token)
+{
+   assertValid();
+   mNode->setAttribute(jccl::token_TOKEN, token);
+}
 
-   if ( &other == this )
+void ChunkDesc::setHelp (const std::string& help)
+{
+   assertValid();
+
+   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+
+   // If this chunk description does not have a <help> child, create one.
+   if ( help_node.get() == NULL )
    {
-      return *this;
+      help_node = jccl::ChunkFactory::instance()->createXMLNode();
+      help_node->setName(jccl::help_TOKEN);
+      mNode->addChild(help_node);
+      vprASSERT(mNode->getChild(jccl::help_TOKEN).get() != NULL && "Node addition failed");
    }
 
-   for ( i = 0; i < plist.size(); i++ )
-   {
-      delete plist[i];
-   }
-   plist.clear();
+   cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
 
-   name = other.name;
-   token = other.token;
-   help = other.help;
-   default_node = other.default_node;
-   default_chunk = other.default_chunk;
-
-   plist.reserve (other.plist.size());
-   for ( i = 0; i < other.plist.size(); i++ )
+   if ( help_cdata.get() == NULL )
    {
-      plist.push_back(new PropertyDesc(*(other.plist[i])));
+      help_cdata = jccl::ChunkFactory::instance()->createXMLNode();
+      help_cdata->setName("cdata");
+      help_cdata->setType(cppdom::xml_nt_cdata);
+      help_node->addChild(help_cdata);
+      vprASSERT(help_node->getChild("cdata").get() != NULL && "CDATA addition failed");
    }
 
-   return *this;
+   help_cdata->setCdata(help);
 }
 
-void ChunkDesc::setName (const std::string& _name)
+std::string ChunkDesc::getName () const
 {
    assertValid();
 
-   name = _name;
+   // This must use cppdom::XMLAttribute::getString() because a chunk
+   // description's name may contain spaces.
+   return mNode->getAttribute(jccl::name_TOKEN).getString();
 }
 
-void ChunkDesc::setToken (const std::string& _token)
+std::string ChunkDesc::getToken () const
+{
+   assertValid();
+   return mNode->getAttribute(jccl::token_TOKEN).getValue<std::string>();
+}
+
+std::string ChunkDesc::getHelp () const
 {
    assertValid();
 
-   token = _token;
+   std::string help_str("");
+   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+
+   if ( help_node.get() != NULL )
+   {
+      cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+
+      if ( help_cdata.get() != NULL )
+      {
+         help_str = help_cdata->getCdata();
+      }
+   }
+
+   return help_str;
 }
 
-void ChunkDesc::setHelp (const std::string& _help)
+void ChunkDesc::add (PropertyDesc pd)
 {
    assertValid();
 
-   help = _help;
+   cppdom::XMLNodePtr pd_node = pd.getNode();
+   mNode->addChild(pd_node);
 }
 
-const std::string& ChunkDesc::getName () const
-{
-   assertValid();
-
-   return name;
-}
-
-const std::string& ChunkDesc::getToken () const
-{
-   assertValid();
-
-   return token;
-}
-
-const std::string& ChunkDesc::getHelp () const
-{
-   assertValid();
-
-   return help;
-}
-
-void ChunkDesc::add (PropertyDesc *pd)
-{
-   assertValid();
-
-   remove(pd->getToken());
-   plist.push_back(pd);
-}
-
+/*
 void ChunkDesc::setDefaultChunk (DOM_Node* n)
 {
    default_node = new DOM_Node;
    *default_node = *n;
    default_chunk.reset();
 }
+*/
 
+/*
 void ChunkDesc::setDefaultChunk (ConfigChunkPtr ch)
 {
    default_chunk = ch;
 }
+*/
 
+/*
 ConfigChunkPtr ChunkDesc::getDefaultChunk() const
 {
    // thread safety???
@@ -197,36 +202,45 @@ ConfigChunkPtr ChunkDesc::getDefaultChunk() const
 //          std::cout << "getDefaultChunk return null" << std::endl;
    return default_chunk;
 }
+*/
 
-PropertyDesc* ChunkDesc::getPropertyDesc (const std::string& _token) const
+PropertyDesc ChunkDesc::getPropertyDesc(const std::string& token) const
 {
    assertValid();
 
-   for ( unsigned int i = 0; i < plist.size(); i++ )
+   cppdom::HasAttributeValuePredicate attrib_pred("token", token);
+   cppdom::XMLNodeList prop_descs = mNode->getChildrenPred(attrib_pred);
+
+   vprASSERT((prop_descs.size() < 2) && "Have multiple properties of same token name");
+   if(!prop_descs.empty())
    {
-      if ( !vjstrcasecmp (_token, plist[i]->getToken()) )
-      {
-         return plist[i];
-      }
+      return PropertyDesc( (*prop_descs.begin()) ); // Return the property desc
+   }
+   else
+   {
+      return PropertyDesc( cppdom::XMLNodePtr(NULL) ); // Failed to find
+   }
+}
+
+std::vector<PropertyDesc> ChunkDesc::getAllPropertyDesc() const
+{
+   assertValid();
+
+   std::vector<PropertyDesc> ret_val;
+   cppdom::XMLNodeList prop_descs = mNode->getChildren();
+
+   for(cppdom::XMLNodeList::iterator i=prop_descs.begin(); i!= prop_descs.end(); i++)
+   {
+      ret_val.push_back( PropertyDesc(*i) );
    }
 
-   return NULL;
+   return ret_val;
 }
+
 
 bool ChunkDesc::remove (const std::string& _token)
 {
-   assertValid();
-
-   std::vector<PropertyDesc*>::iterator cur_desc = plist.begin();
-   while ( cur_desc != plist.end() )
-   {
-      if ( !vjstrcasecmp ((*cur_desc)->getToken(), _token) )
-      {
-         cur_desc = plist.erase(cur_desc);
-         return true;
-      }
-      cur_desc++;
-   }
+   vprASSERT("ChunkDesc::remove: Not implemented yet");
    return false;
 }
 
@@ -234,7 +248,7 @@ JCCL_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
                                            const ChunkDesc& self)
 {
    self.assertValid();
-   ConfigIO::instance()->writeChunkDesc(out, self);
+   self.mNode->save(out);
    return out;
 }
 
@@ -246,30 +260,11 @@ bool ChunkDesc::operator== (const ChunkDesc& d) const
    assertValid();
    d.assertValid();
 
-   if ( vjstrcasecmp(token, d.token) )
-   {
-      return false;
-   }
+   std::ostringstream self_string, d_string;
+   mNode->save(self_string);
+   d.mNode->save(d_string);
 
-   if ( vjstrcasecmp(name, d.name) )
-   {
-      return false;
-   }
-
-   if ( plist.size() != d.plist.size() )
-   {
-      return false;
-   }
-
-   for ( unsigned int i = 0; i < plist.size(); i++ )
-   {
-      if ( (*plist[i]) != (*d.plist[i]) )
-      {
-         return false;
-      }
-   }
-
-   return true;
+   return (self_string == d_string);
 }
 
 } // End of jccl namespace

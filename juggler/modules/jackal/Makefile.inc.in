@@ -51,7 +51,7 @@ DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
 OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 
 BUILD_VJCONTROL	= @BUILD_VJCONTROL@
-JAXP_JAR	= @JAXP_JAR@
+JDOM_JAR	= @JDOM_JAR@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.
@@ -185,7 +185,7 @@ else
           done
 endif
 	cd $(instlinks)/bin && \
-		for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'`; do \
+		for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'`; do \
 			$(RM_LN) ./`basename $$jar` && $(LN_S) $$jar ./; \
 		done
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && \

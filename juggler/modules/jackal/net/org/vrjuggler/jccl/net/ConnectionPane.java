@@ -41,10 +41,10 @@ import org.vrjuggler.jccl.vjcontrol.ui.PlugPanel;
 import org.vrjuggler.jccl.vjcontrol.*;
 
 /** PlugPanel for managing connections to VR Juggler apps.
- * 
+ *
  *  @version $Revision$
  */
-public class ConnectionPane extends JPanel 
+public class ConnectionPane extends JPanel
     implements PlugPanel, ActionListener, NetControlListener {
 
     JButton connect_button;
@@ -59,7 +59,7 @@ public class ConnectionPane extends JPanel
     protected boolean ui_initialized;
 
     public ConnectionPane () {
-	super(new GridLayout (2, 1, 10, 10));
+   super(new GridLayout (2, 1, 10, 10));
 
         component_name = "Unconfigured ConnectionPane";
         component_chunk = null;
@@ -72,8 +72,8 @@ public class ConnectionPane extends JPanel
 
 
     protected void setRemoteAddress (String _host, int port) {
-	hostfield.setText (_host);
-	portfield.setText (Integer.toString(port));
+   hostfield.setText (_host);
+   portfield.setText (Integer.toString(port));
     }
 
 
@@ -84,7 +84,7 @@ public class ConnectionPane extends JPanel
         if (e.getSource() == connect_button) {
             network_module.disconnect(); // if we were connected, drop it
             int portnum = Integer.parseInt(portfield.getText());
-	    network_module.setRemoteHost (hostfield.getText(), portnum);
+       network_module.setRemoteHost (hostfield.getText(), portnum);
             network_module.connect ();
         }
         else if (e.getSource() == disconnect_button) {
@@ -100,7 +100,7 @@ public class ConnectionPane extends JPanel
     public void openedConnection (NetControlEvent e) {;}
     public void closedConnection (NetControlEvent e) {;}
     public void addressChanged (NetControlEvent e) {
-	setRemoteAddress (e.host, e.port);
+   setRemoteAddress (e.host, e.port);
     }
 
 
@@ -127,14 +127,16 @@ public class ConnectionPane extends JPanel
         component_name = ch.getName();
 
         // get pointers to the modules we need.
-        Property p = ch.getPropertyFromToken ("Dependencies");
-        if (p != null) {
+        VarValue prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES);
+
+        if ( prop_val != null )
+        {
             int i;
-            int n = p.getNum();
+            int n = ch.getPropertyCount(VjComponentTokens.DEPENDENCIES);
             String s;
             VjComponent c;
             for (i = 0; i < n; i++) {
-                s = p.getValue(i).toString();
+                s = ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString();
                 c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof ControlUIModule)
@@ -146,17 +148,17 @@ public class ConnectionPane extends JPanel
         }
     }
 
-    
+
     public void initialize () throws VjComponentException {
         if (ui_module == null || network_module == null)
             throw new VjComponentException (component_name + " initialized with unmet VjComponent dependencies.");
 
-        updateactive_mi = 
+        updateactive_mi =
             ui_module.addMenuItem ("File/Update Active Configuration");
         updateactive_mi.addActionListener (this);
     }
 
-    
+
     public ConfigChunk getConfiguration () {
         return component_chunk;
     }
@@ -178,7 +180,7 @@ public class ConnectionPane extends JPanel
     public boolean initUIComponent() {
         if (!ui_initialized) {
             JPanel p1, p2;
-	
+
             /*    GridLayout l = new GridLayout(2,1);
                   l.setVgap(10);
                   l.setHgap(10);
@@ -201,10 +203,10 @@ public class ConnectionPane extends JPanel
             p2.add (disconnect_button);
             add(p1);
             add(p2);
-            
+
             connect_button.setToolTipText ("Connect or reconnect to remote host");
             disconnect_button.setToolTipText ("Disconnect from remote host");
-            
+
             hostfield.setText (network_module.getHost());
             portfield.setText (Integer.toString(network_module.getPort()));
 

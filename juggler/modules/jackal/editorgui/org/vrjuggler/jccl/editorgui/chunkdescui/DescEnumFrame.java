@@ -47,252 +47,296 @@ import org.vrjuggler.jccl.vjcontrol.Core;
  *
  *  @version $Revision$
  */
-public class DescEnumFrame extends JFrame 
-    implements ActionListener, 
-               WindowListener {
+public class DescEnumFrame extends JFrame implements ActionListener,
+                                                     WindowListener
+{
+   protected ValType pdtype; // current type of the associated propertydescpanel
+   protected JPanel panel;
+   protected JPanel sppanel;  /* sppanel is the panel inside the scrollpane...*/
+   protected JButton insertbutton;
+   protected JButton removebutton;
+   protected JButton okbutton;
+   protected JButton cancelbutton;
+   protected java.util.List elempanels; // List of DescEnumElemPanels
+   protected java.util.List data;  // List of DescEnum
+   public boolean closed;
+   protected JPanel buttonspanel;
+   protected boolean varnumbers;
+   protected int numvals;
 
-    protected ValType pdtype; // current type of the associated propertydescpanel
-    protected JPanel panel;
-    protected JPanel sppanel;  /* sppanel is the panel inside the scrollpane...*/
-    protected JButton insertbutton;
-    protected JButton removebutton;
-    protected JButton okbutton;
-    protected JButton cancelbutton;
-    protected java.util.List elempanels; // List of DescEnumElemPanels
-    protected java.util.List data;  // List of DescEnum
-    public boolean closed;
-    protected JPanel buttonspanel;
-    protected boolean varnumbers;
-    protected int numvals;
 
+   /*
+    * @param _varnumbers if true, show insert & remove buttons
+    * @param _numval # of values to show (only matters if varnumbers false)
+    */
+   public DescEnumFrame (PropertyDescPanel p, java.util.List _data,
+                         String pdn, ValType pdt, boolean _varnumbers,
+                         int _numval)
+   {
+      super(pdn);
 
-    /* 
-     * ARGS: _varnumbers - if true, show insert & remove buttons
-     * ARGS: _numval - # of values to show (only matters if varnumbers false)
-     */
-    public DescEnumFrame (PropertyDescPanel p,
-			  java.util.List _data,
-			  String pdn,
-			  ValType pdt,
-			  boolean _varnumbers,
-			  int _numval) {
+      closed = false;
+      pdtype = pdt;
 
-	super(pdn);
-	
-	closed = false;
-	pdtype = pdt;
+      buttonspanel = new JPanel();
 
-	buttonspanel = new JPanel();
+      data = _data;
+      varnumbers = _varnumbers;
+      numvals = _numval;
 
-	data = _data;
-	varnumbers = _varnumbers;
-	numvals = _numval;
+      elempanels = new ArrayList();
+      panel = new JPanel(new BorderLayout (10,2));
+      panel.setBorder (new EmptyBorder (10, 5, 5, 5));
+      getContentPane().add(panel);
 
-	elempanels = new ArrayList();
-	panel = new JPanel(new BorderLayout (10,2));
-	panel.setBorder (new EmptyBorder (10, 5, 5, 5));
-	getContentPane().add(panel);
-	
-	sppanel = new JPanel();
-	sppanel.setLayout (new BoxLayout (sppanel, BoxLayout.Y_AXIS));
+      sppanel = new JPanel();
+      sppanel.setLayout (new BoxLayout (sppanel, BoxLayout.Y_AXIS));
 
-	JScrollPane sp = new JScrollPane(sppanel, 
-					 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
-					 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	sp.getVerticalScrollBar().setUnitIncrement(40);
-	sp.getHorizontalScrollBar().setUnitIncrement(40);
+      JScrollPane sp = new JScrollPane(sppanel,
+                                       JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                                       JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+      sp.getVerticalScrollBar().setUnitIncrement(40);
+      sp.getHorizontalScrollBar().setUnitIncrement(40);
 
-	panel.add (sp, "Center");
+      panel.add (sp, "Center");
 
-	if (varnumbers) {
-	    buttonspanel.setLayout (new GridLayout (1, 4));
-	    insertbutton = new JButton ("Insert");
-	    insertbutton.addActionListener(this);
-	    buttonspanel.add (insertbutton);
-	    removebutton = new JButton ("Remove");
-	    removebutton.addActionListener(this);
-	    buttonspanel.add (removebutton);
-	}
-	else {
-	    buttonspanel.setLayout (new GridLayout (1, 2));
-	    insertbutton = null;
-	    removebutton = null;
-	}
-	okbutton = new JButton ("OK");
-	okbutton.addActionListener(this);
-	buttonspanel.add (okbutton);
-	cancelbutton = new JButton ("Cancel");
-	cancelbutton.addActionListener(this);
-	buttonspanel.add (cancelbutton);
-	panel.add (buttonspanel, "South");
+      if( varnumbers )
+      {
+         buttonspanel.setLayout (new GridLayout (1, 4));
+         insertbutton = new JButton ("Insert");
+         insertbutton.addActionListener(this);
+         buttonspanel.add (insertbutton);
+         removebutton = new JButton ("Remove");
+         removebutton.addActionListener(this);
+         buttonspanel.add (removebutton);
+      }
+      else
+      {
+         buttonspanel.setLayout (new GridLayout (1, 2));
+         insertbutton = null;
+         removebutton = null;
+      }
+      okbutton = new JButton ("OK");
+      okbutton.addActionListener(this);
+      buttonspanel.add (okbutton);
+      cancelbutton = new JButton ("Cancel");
+      cancelbutton.addActionListener(this);
+      buttonspanel.add (cancelbutton);
+      panel.add (buttonspanel, "South");
 
-	makeItems();
-	addWindowListener(this);
+      makeItems();
+      addWindowListener(this);
 
-	setFrameSize();
-	setVisible(true);
-    }
+      setFrameSize();
+      setVisible(true);
+   }
 
 
 
-    private void setFrameSize() {
-	Dimension d = sppanel.getPreferredSize();
-	Dimension d2 = buttonspanel.getPreferredSize();
-	d.width = Math.max (d.width+42, d2.width +20);
-	d.width = Math.min (d.width, Core.screenWidth);
-	if (varnumbers)
-	    d.height = Math.min (300, Core.screenHeight);
-	else
-	    d.height = Math.min (d.height + d2.height + 45, Core.screenHeight);
-	setSize(d);
-    }
+   private void setFrameSize()
+   {
+      Dimension d = sppanel.getPreferredSize();
+      Dimension d2 = buttonspanel.getPreferredSize();
+      d.width = Math.max (d.width+42, d2.width +20);
+      d.width = Math.min (d.width, Core.screenWidth);
+      if( varnumbers )
+      {
+         d.height = Math.min (300, Core.screenHeight);
+      }
+      else
+      {
+         d.height = Math.min (d.height + d2.height + 45, Core.screenHeight);
+      }
+      setSize(d);
+   }
 
 
 
-    public void closeFrame() {
-	/* closes this frame & informs it's parent - doesn't save any data or
-	 * anything.
-	 */
-	closed = true;
-	dispose();
-    }
+   public void closeFrame()
+   {
+      /* closes this frame & informs it's parent - doesn't save any data or
+       * anything.
+       */
+      closed = true;
+      dispose();
+   }
 
 
 
-    private int makeItems() {
-	/* fills up the scrollpane with all the items in enums, 
-         * which is a list of DescEnum
-	 */
-	int i;
-        int n = data.size();
-        if (!varnumbers)
-            n = Math.min(n, numvals);
-	//int ypos = 0;
-	DescEnumElemPanel p;
-	for (i = 0; i < n; i++) {
-	    p = new DescEnumElemPanel((DescEnum)data.get(i),
-				      pdtype);
-	    elempanels.add (p);
-	    sppanel.add(p);
-	}
-	if (!varnumbers) {
-	    for (; i < numvals; i++) {
-		p = new DescEnumElemPanel(pdtype);
-		elempanels.add (p);
-		sppanel.add(p);
-	    }
-	}
-	sppanel.validate();
-	return data.size();
-    }
+   private int makeItems()
+   {
+      /* fills up the scrollpane with all the items in enums,
+       * which is a list of DescEnum
+       */
+      int i;
+      int n = data.size();
+      if ( !varnumbers )
+      {
+         n = Math.min(n, numvals);
+      }
+
+      //int ypos = 0;
+      DescEnumElemPanel p;
+      for( i = 0; i < n; i++ )
+      {
+         p = new DescEnumElemPanel((DescEnum)data.get(i),
+                                   pdtype);
+         elempanels.add (p);
+         sppanel.add(p);
+      }
+      if( !varnumbers )
+      {
+         for( ; i < numvals; i++ )
+         {
+            p = new DescEnumElemPanel(pdtype);
+            elempanels.add (p);
+            sppanel.add(p);
+         }
+      }
+      sppanel.validate();
+      return data.size();
+   }
 
 
 
-    public void actionPerformed (ActionEvent e) {
-	DescEnumElemPanel p;
-	int unused,j;
-	float k;
-	String s = null;
-	if (e.getSource() == insertbutton) {
-	    p = new DescEnumElemPanel(pdtype);
-	    elempanels.add (p);
-	    sppanel.add(p);
+   public void actionPerformed (ActionEvent e)
+   {
+      DescEnumElemPanel p;
+      int unused,j;
+      float k;
+      String s = null;
+      if( e.getSource() == insertbutton )
+      {
+         p = new DescEnumElemPanel(pdtype);
+         elempanels.add (p);
+         sppanel.add(p);
 
-	    if (elempanels.size() == 1) { // make sure panel wide enough
-		setFrameSize();
-		Dimension d = getSize();
-		Dimension d2 = sppanel.getPreferredSize();
-		d.width = Math.max (d.width, d2.width + 42);
-		d.width = Math.min (d.width, Core.screenWidth);
-		setSize (d);
-	    }
-	    validate();
-	}
-	else if (e.getSource() == removebutton) {
-	    for (int i = 0; i < elempanels.size(); ) {
-		p = (DescEnumElemPanel)elempanels.get(i);
-		if (p.getSelected()) {
-		    sppanel.remove(p);
-		    elempanels.remove(i);
-		}
-		else
-		    i++;
-	    }
-	    // validate & repaint both needed
-	    validate();
-	    sppanel.repaint (sppanel.getBounds());
-	}
-	else if (e.getSource() == cancelbutton) {
-	    closeFrame();
-	}
-	else if (e.getSource() == okbutton) {
-	    unused = 0;
-	    data.clear();
-	    VarValue val;
-	    
-	    if (pdtype == ValType.EMBEDDEDCHUNK || 
-                pdtype == ValType.CHUNK)
-		val = new VarValue(ValType.STRING);
-	    else
-		val = new VarValue (pdtype);
+         if( elempanels.size() == 1 )
+         { // make sure panel wide enough
+            setFrameSize();
+            Dimension d = getSize();
+            Dimension d2 = sppanel.getPreferredSize();
+            d.width = Math.max (d.width, d2.width + 42);
+            d.width = Math.min (d.width, Core.screenWidth);
+            setSize (d);
+         }
+         validate();
+      }
+      else if( e.getSource() == removebutton )
+      {
+         for( int i = 0; i < elempanels.size(); )
+         {
+            p = (DescEnumElemPanel)elempanels.get(i);
+            if( p.getSelected() )
+            {
+               sppanel.remove(p);
+               elempanels.remove(i);
+            }
+            else
+            {
+               i++;
+            }
+         }
+         // validate & repaint both needed
+         validate();
+         sppanel.repaint (sppanel.getBounds());
+      }
+      else if( e.getSource() == cancelbutton )
+      {
+         closeFrame();
+      }
+      else if( e.getSource() == okbutton )
+      {
+         unused = 0;
+         data.clear();
+         VarValue val;
 
-	    for (int i = 0; i < elempanels.size(); i++) {
-		p = (DescEnumElemPanel)elempanels.get(i);
+         if( pdtype == ValType.EMBEDDEDCHUNK ||
+             pdtype == ValType.CHUNK )
+         {
+            val = new VarValue(ValType.STRING);
+         }
+         else
+         {
+            val = new VarValue (pdtype);
+         }
 
-		s = p.getName();
-		val.set (p.getVal());
+         for( int i = 0; i < elempanels.size(); i++ )
+         {
+            p = (DescEnumElemPanel)elempanels.get(i);
 
-		if (s == null || s.equals (""))
-		    continue; 
+            s = p.getName();
+            val.set (p.getVal());
 
-		if (pdtype == ValType.CHUNK || 
-                    pdtype == ValType.EMBEDDEDCHUNK) {
-                    String s2 = Core.descdb.getTokenFromName(p.getName());
-          
-                    if (s2 != null) {
-                        s = s2;
-                        val.set(s2);
-                    }
-		}
+            if( s == null || s.equals ("") )
+            {
+               continue;
+            }
 
-		if (pdtype == ValType.INT || pdtype == ValType.FLOAT) {
-		    if (p.getVal().equals("")) {
-			val.set (unused++);
-		    }
-		    else
-			unused = (unused > val.getInt())?(unused):(val.getInt()+1);
-		}
+            if( pdtype == ValType.CHUNK ||
+                pdtype == ValType.EMBEDDEDCHUNK )
+            {
+               String s2 = Core.descdb.getTokenFromName(p.getName());
 
-		if (pdtype == ValType.STRING ||
-                    pdtype == ValType.CHUNK ||
-                    pdtype == ValType.EMBEDDEDCHUNK)
-		    if (p.getVal().equals(""))
-			val.set (s);
+               if( s2 != null )
+               {
+                  s = s2;
+                  val.set(s2);
+               }
+            }
 
-		data.add (new DescEnum (s, val));
-		
-	    }
-	    closeFrame();
-	}
-    }
+            if( pdtype == ValType.INT || pdtype == ValType.FLOAT )
+            {
+               if( p.getVal().equals("") )
+               {
+                  val.set (unused++);
+               }
+               else
+               {
+                  unused = (unused > val.getInt())?(unused):(val.getInt()+1);
+               }
+            }
+
+            if( pdtype == ValType.STRING ||
+                pdtype == ValType.CHUNK ||
+                pdtype == ValType.EMBEDDEDCHUNK )
+            {
+               if( p.getVal().equals("") )
+               {
+                  val.set (s);
+               }
+            }
+
+            data.add (new DescEnum (s, val));
+
+         }
+         closeFrame();
+      }
+   }
 
 
 
-    /* WindowListener Stuff */
-    public void windowActivated(WindowEvent e) {}
-    public void windowClosed(WindowEvent e) {}
-    public void windowClosing(WindowEvent e) {
-	closeFrame();
-    }
-    public void windowDeactivated(WindowEvent e) {}
-    public void windowDeiconified(WindowEvent e) {}
-    public void windowIconified(WindowEvent e) {}
-    public void windowOpened(WindowEvent e) {}
-
-
-
+   /* WindowListener Stuff */
+   public void windowActivated(WindowEvent e)
+   {
+   }
+   public void windowClosed(WindowEvent e)
+   {
+   }
+   public void windowClosing(WindowEvent e)
+   {
+      closeFrame();
+   }
+   public void windowDeactivated(WindowEvent e)
+   {
+   }
+   public void windowDeiconified(WindowEvent e)
+   {
+   }
+   public void windowIconified(WindowEvent e)
+   {
+   }
+   public void windowOpened(WindowEvent e)
+   {
+   }
 }
-
-
-
-

@@ -37,94 +37,41 @@
 #include <jccl/Config/PropertyDesc.h>
 #include <jccl/Config/ChunkDescPtr.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-//#include <dom/DOM.hpp>
 
-class DOM_Node;
+#include <cppdom/cppdom.h>
 
 namespace jccl
 {
 
-//-----------------------------------------------------------------
-//:Defines name and properties for a kind of ConfigChunk
-//
-//       Primarily, it is a name and a list of PropertyDescs.
-//       ChunkDescs will probably only need to be used by the
-//       ChunkDescDB, ChunkFactory, and the GUI.
-//
-// @author  Christopher Just
-//
-//!PUBLIC_API:
-//------------------------------------------------------------------------
+/** Description of a single chunk "type"
+* 
+* @note: We do not maintain an explicit list of property descs,
+*        but instead we just create them dynamically from the 
+*        children of our ChunkDesc XML node.
+*/
 class JCCL_CLASS_API ChunkDesc
 {
-
 public:
-
-   //:Identifer for this ChunkDesc - no spaces allowed
-   std::string token;
-
-   //:A longer, friendlier name (for use in GUI displays, etc.)
-   std::string name;
-
-   //:A help string of help text
-   std::string help;
-
-   //:Container for this ChunkDesc's PropertyDescs
-   std::vector<PropertyDesc*> plist;
-
-   unsigned int validation;
-
-   ConfigChunkPtr default_chunk;
-   // be very careful with this
-   DOM_Node *default_node;
-
-   //:Constructor
-   //!POST: Self is created with name and token "Unnamed",
-   //+      and with only a single PropertyDesc ("Name")
+   /** Constructor */
    ChunkDesc ();
 
-   //:Copy Constructor
+   /** Construct a chunk desc using the node given */
+   ChunkDesc(cppdom::XMLNodePtr node);
+
+   /** Copy Constructor */
    ChunkDesc (const ChunkDesc& desc);
 
-   //:Desctructor
-   //!POST: Destroys self and frees all allocated memory.
+   /** Destructor */
    ~ChunkDesc ();
 
 #ifdef JCCL_DEBUG
    void assertValid () const;
 #else
    inline void assertValid () const
-   {
-      ;
-   }
+   {;}
 #endif
 
-   typedef std::vector<PropertyDesc*>::iterator iterator;
-   typedef std::vector<PropertyDesc*>::const_iterator const_iterator;
-
-   inline iterator begin()
-   {
-      return plist.begin();
-   }
-
-   inline const_iterator begin() const
-   {
-      return plist.begin();
-   }
-
-   inline iterator end()
-   {
-      return plist.end();
-   }
-
-   inline const_iterator end() const
-   {
-      return plist.end();
-   }
-
-   //:equality operator
-   // a little stricter than it needs to be.. it shouldn't care about the order of
-   // propertydescs...
+   /** equality operator */
    bool operator== (const ChunkDesc& d) const;
 
    inline bool operator!= (const ChunkDesc& d) const
@@ -132,62 +79,76 @@ public:
       return !(*this == d);
    }
 
-   //:Assignment operator
-   //!POST: self copies the value of other
-   //!ARGS: other - a ChunkDesc
-   //!RETURNS: self
-   ChunkDesc& operator= (const ChunkDesc& other);
+   /** Sets the user-friendly name of self */
+   void setName (const std::string& name);
 
-   //:Sets the user-friendly name of self
-   //!ARGS: _name - a string. Whitespace is allowed.
-   //!NOTE: self makes a copy of the argument string
-   void setName (const std::string& _name);
+   /** Sets the token identifier of self */
+   void setToken (const std::string& token);
 
-   //:Sets the token identifier of self
-   //!ARGS: _token - a string. Whitespace is not allowed.
-   //!NOTE: self makes a copy of the argument string
-   void setToken (const std::string& _token);
+   /** Sets the help string for self */
+   void setHelp (const std::string& help);
 
-   //:Sets the help string for self
-   //!ARGS: _help - a string. Whitespace is allowed.
-   void setHelp (const std::string& _help);
+   /** Return name
+   * @return "" if not set
+   */
+   std::string getName() const;
+   
+   /** Return token
+   * @return "" if not set
+   */
+   std::string getToken() const;
+   
+   /** Return help text
+   * @return "" if not set
+   */
+   std::string getHelp() const;
 
-   const std::string& getName() const;
-
-   const std::string& getToken() const;
-
-   const std::string& getHelp() const;
-
+   /*
    void setDefaultChunk (DOM_Node* n);
-
    ConfigChunkPtr getDefaultChunk() const;
-
    void setDefaultChunk (ConfigChunkPtr ch);
+   */
 
-   //:Adds a PropertyDesc to self.
-   //!NOTE: Any PropertyDesc previously in self with the
-   //+      same token as pd is removed.
-   void add (PropertyDesc *pd);
+   /** Adds a PropertyDesc to self.
+   * NOTE: Any PropertyDesc previously in self with the
+   *      same token as pd is removed.
+   */
+   void add (PropertyDesc pd);
 
-   //:Removes named PropertyDesc from self.
-   //!ARGS: _token - token to search for
-   //!RETURNS: true - a PropertyDesc with that token was found
-   //+         and removed.
-   //!RETURNS: false - no such PropertyDesc was found.
+   /** Removes named PropertyDesc from self.
+   * @param _token - token to search for
+   * @returns true - a PropertyDesc with that token was found
+   * @returns false - no such PropertyDesc was found.
+   */
    bool remove (const std::string& _token);
 
-   //:Gets a PropertyDesc from self with matching token
-   //!ARGS: _token - non-NULL token for the desired PropertyDesc
-   //!RETURNS: pdesc - Pointer to propertydesc in self with
-   //+         matching token
-   //!RETURNS: NULL - if no match is found
-   PropertyDesc *getPropertyDesc (const std::string& _token) const;
+   /** Gets a PropertyDesc from self with matching token
+   * @param   _token - non-NULL token for the desired PropertyDesc
+   * @returns pdesc - Pointer to propertydesc in self with matching token
+   */
+   PropertyDesc getPropertyDesc (const std::string& _token) const;
 
-   //: Writes self to the given output stream
+   /** Get all the PropertyDescs from the ChunkDesc */
+   std::vector<PropertyDesc> getAllPropertyDesc() const;
+
+   /** Set the node.
+   * Do any specialized processing necessary
+   */
+   void setNode(cppdom::XMLNodePtr node)
+   { mNode = node; }
+   cppdom::XMLNodePtr getNode()
+   { return mNode; }
+
+   /** Writes self to the given output stream */
    friend JCCL_API(std::ostream&) operator << (std::ostream& out,
                                                const ChunkDesc& self);
+
+protected:
+   bool               mIsValid;   /**< Validation flag */
+   cppdom::XMLNodePtr  mNode;      /**< The xml node for this chunk desc */
 };
 
 } // End of jccl namespace
 
 #endif
+

@@ -63,8 +63,8 @@ INSTALL_FILES			=
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JAXP_JAR		= @JAXP_JAR@
-CLASSPATH	= $(JAXP_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/net$(JCPS)$(topdir)/vjcontrol
+JDOM_JAR	= @JDOM_JAR@
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/net$(JCPS)$(topdir)/vjcontrol
 
 PERFMONITOR_PKG		= org.vrjuggler.jccl.perfmonitor
 PERFMONITOR_DIR		= $(subst .,/,$(PERFMONITOR_PKG))
@@ -189,7 +189,7 @@ perfmonitor-install:
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(topdir)/perfmonitor/$$jar $(bindir) ; \
           done
-	for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
+	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $$jar $(bindir) ; \

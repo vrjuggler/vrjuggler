@@ -39,7 +39,7 @@ import org.vrjuggler.jccl.config.VarValue;
 import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
 
 /**
- * VarValuePanel is just a little panel that we'll stick several of 
+ * VarValuePanel is just a little panel that we'll stick several of
  * in a PropertyPanel.
  *
  *     -----------------------------------------------------

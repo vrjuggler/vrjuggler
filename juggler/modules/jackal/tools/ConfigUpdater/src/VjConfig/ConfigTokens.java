@@ -30,44 +30,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _JCCL_XERCESSTREAMINPUTSOURCE_H_
-#define _JCCL_XERCESSTREAMINPUTSOURCE_H_
+package VjConfig;
 
-#include <jccl/jcclConfig.h>
 
-#include <xercesc/sax/InputSource.hpp>
-#include <xercesc/util/BinInputStream.hpp>
-
-namespace jccl
+public class ConfigTokens
 {
+   public static final String int_TOKEN           = "int";
+   public static final String float_TOKEN         = "float";
+   public static final String bool_TOKEN          = "bool";
+   public static final String string_TOKEN        = "string";
+   public static final String chunk_TOKEN         = "chunk";
+   public static final String embeddedchunk_TOKEN = "embeddedchunk";
+   public static final String invalid_TOKEN       = "invalid";
 
-/**
- * Xerces-XML compatible InputSource wrapper for std::istream.
- * The stream has some kind of a terminating symbole (e.g.
- * "&lt;/protocol&gt;").  The InputSource stops reading
- * <i>immediately</i> upon seeing the end of the terminator string.
- * This is useful for grabbing sections of an XML document out of
- * a larger data stream, such as we have with VjControl and the
- * JackalServer.
- */
-class XercesStreamInputSource: public InputSource
-{
+   public static final String chunk_desc_TOKEN    = "ChunkDesc";
+   public static final String name_TOKEN          = "name";
+   public static final String property_desc_TOKEN = "PropertyDesc";
+   public static final String num_TOKEN           = "num";
+   public static final String type_TOKEN          = "type";
+   public static final String help_TOKEN          = "help";
 
-   std::istream* in;
-
-   /** The terminator-string that demarks the end of the stream. */
-   char* terminator;
-
-public:
-
-   XercesStreamInputSource (std::istream& _in, char const * _terminator);
-
-   virtual ~XercesStreamInputSource ();
-
-   virtual BinInputStream* makeStream() const;
-
-};
-
-} // End of jccl namespace
-
-#endif
+   public static final String chunk_desc_db_TOKEN = "ChunkDescDB";
+   public static final String chunk_db_TOKEN      = "ConfigChunkDB";
+}

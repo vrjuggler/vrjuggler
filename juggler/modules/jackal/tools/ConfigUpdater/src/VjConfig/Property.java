@@ -277,27 +277,39 @@ public class Property {
         VarValue v;
         StringBuffer s = new StringBuffer (128);
         String tok = XMLConfigIOHandler.escapeString (getToken());
-        s.append(pad);
-        s.append('<');
-        s.append(tok);
-        s.append('>');
-        int i, n = vals.size();
-        for (i = 0; i < n; i++) {
-            v = (VarValue)vals.get(i);
-            if (valtype == ValType.EMBEDDEDCHUNK) {
-                s.append('\n');
-                s.append(v.getEmbeddedChunk().xmlRep (pad + "    "));
-            }
-            else {
-                s.append('"');
-                //s.append(XMLConfigIOHandler.escapeString(desc.getEnumString(v)));
-                s.append(XMLConfigIOHandler.escapeString(v.toString()));
-                s.append("\" ");
-            }
+
+        int n = vals.size();
+        for ( int i = 0; i < n; ++i )
+        {
+           s.append(pad);
+           s.append('<');
+           s.append(tok);
+
+           // Give this property a name because it contains an embedded chunk.
+           if ( valtype == ValType.EMBEDDEDCHUNK )
+           {
+              s.append(" name=\"" + tok + "\"");
+           }
+
+           s.append('>');
+
+           v = (VarValue)vals.get(i);
+           if (valtype == ValType.EMBEDDEDCHUNK)
+           {
+              s.append('\n');
+              s.append(v.getEmbeddedChunk().xmlRep (pad + "    "));
+           }
+           else
+           {
+              //s.append(XMLConfigIOHandler.escapeString(desc.getEnumString(v)));
+              s.append(XMLConfigIOHandler.escapeString(v.toString()));
+           }
+
+           s.append("</");
+           s.append(tok);
+           s.append(">\n");
         }
-        s.append("</");
-        s.append(tok);
-        s.append(">\n");
+
         return s.toString();
     }
 

@@ -101,14 +101,11 @@ public class ConfigIO {
                 inst = new ConfigIO();
             }
             catch (NoClassDefFoundError e) {
+                e.printStackTrace();
                 System.out.println 
-                    ("ERROR: JAXP (The \"Java API for XML Processing\")\n" +
-                     "Was not found.  If you are using JDK 1.3 or\n" +
-                     "earlier, you need to install the JAXP packages\n" +
-                     "or make sure the JAXP .jar files are included\n" +
-                     "in your CLASSPATH.\n" +
-                     "See http://java.sun.com/xml/index.html for\n" + 
-                     "more information.\n");
+                    ("ERROR: JDOM was not found.  You need to make sure\n" +
+                     "the JDOM .jar files are included in your CLASSPATH.\n" +
+                     "JDOM can be downloaded from http://www.jdom.org/\n");
                 System.exit (1);
             }
         }

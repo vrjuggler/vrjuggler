@@ -30,56 +30,50 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _JCCL_XERCESXMLPARSERPOOL_H_
-#define _JCCL_XERCESXMLPARSERPOOL_H_
+package org.vrjuggler.jccl.editorgui;
 
-#include <jccl/jcclConfig.h>
+import java.awt.Component;
+import javax.swing.*;
 
-#include <vpr/Util/Singleton.h>
-#include <jccl/XMLUtil/XercesXMLParser.h>
-
-namespace jccl
-{
 
 /**
- * Singleton object which can handle multi-format reading and writing of
- * ConfigChunkDB and ChunkDescDB files.
- * Internally, this class knows a lot of specifics about the different
- * config_io handlers.  while this isn't great in terms of modularity, if
- * we ever actually have more than 2 or 3 config io handlers, this'll be the
- * least of our problems.
+ * This is a handy little class for rendering VarValues of type
+ * ValType.BOOL.  It translates the "0" for false to the string "false"
+ * and simiilarly for "true".
  */
-class JCCL_CLASS_API XercesXMLParserPool
+public class TrueFalseCellRenderer extends JLabel
+                                   implements ListCellRenderer
 {
+   public TrueFalseCellRenderer ()
+   {
+      setOpaque(true);
+   }
 
-public:
+   public Component getListCellRendererComponent (JList list, Object value,
+                                                  int index,
+                                                  boolean isSelected,
+                                                  boolean cellHasFocus)
+   {
+      if ( isSelected )
+      {
+         setBackground(list.getSelectionBackground());
+         setForeground(list.getSelectionForeground());
+      }
+      else
+      {
+         setBackground(list.getBackground());
+         setForeground(list.getForeground());
+      }
 
-   ~XercesXMLParserPool ();
+      if ( value.toString().equals("1") )
+      {
+         setText("true");
+      }
+      else
+      {
+         setText("false");
+      }
 
-   XercesXMLParser* getParser();
-
-   void releaseParser (XercesXMLParser* parser);
-
-protected:
-
-   /// Constructor - private for singleton.
-   XercesXMLParserPool ();
-
-private:
-   typedef std::vector<XercesXMLParser*> parser_v;
-
-   parser_v free_parsers;
-   parser_v used_parsers;
-
-   vpr::Mutex pool_lock;
-
-   XercesXMLParserPool(const XercesXMLParserPool& o) {;}
-   void operator=(const XercesXMLParserPool& o) {;}
-
-vprSingletonHeader(XercesXMLParserPool);
-
-};
-
-};
-
-#endif
+      return this;
+   }
+}

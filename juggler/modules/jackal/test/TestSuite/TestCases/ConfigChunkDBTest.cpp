@@ -18,19 +18,18 @@ void ConfigChunkDBTest::testLoad ()
    status = jccl::ChunkFactory::instance()->loadDescs(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.desc");
    CPPUNIT_ASSERT(status && "Failed to load description file");
 
-   CPPUNIT_ASSERT(chunkdb.isEmpty() && "The DB should be empty");
+   CPPUNIT_ASSERT(chunkdb.empty() && "The DB should be empty");
 
    status = chunkdb.load(file_path + "ConfigChunkDBTest/ConfigChunkDBTest_start.config");
    CPPUNIT_ASSERT(status && "Failed to load initial config file");
 
-   CPPUNIT_ASSERT(! chunkdb.isEmpty() && "The DB should not be empty");
+   CPPUNIT_ASSERT(! chunkdb.empty() && "The DB should not be empty");
 }
 
 void ConfigChunkDBTest::testDependencySort ()
 {
    std::string file_path(TESTFILES_PATH);
    bool status;
-   int result;
 
    // Construct the known sorted list of dependencies.
    std::vector<std::string> chunk_names;
@@ -39,6 +38,7 @@ void ConfigChunkDBTest::testDependencySort ()
    chunk_names.push_back(std::string("Test Chunk 1"));
    chunk_names.push_back(std::string("External Test Chunk 1"));
    chunk_names.push_back(std::string("DependentChunk3"));
+   chunk_names.push_back(std::string("Embedded Chunk Ptr Test"));
 
    // Load the test configuration file
    jccl::ConfigChunkDB chunkdb_start, chunkdb_dep;
@@ -51,8 +51,8 @@ void ConfigChunkDBTest::testDependencySort ()
    status = chunkdb_dep.load(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.config");
    CPPUNIT_ASSERT(status && "Failed to load config file with dependencies");
 
-   result = chunkdb_dep.dependencySort(&chunkdb_start);
-   CPPUNIT_ASSERT(result == 0 && "Dependency sort failed");
+   status = chunkdb_dep.dependencySort(&chunkdb_start);
+   CPPUNIT_ASSERT(status && "Dependency sort failed");
 
    // This is pretty gross...
    jccl::ConfigChunkDB::iterator i;
@@ -67,7 +67,6 @@ void ConfigChunkDBTest::testDependencySortFailure ()
 {
    std::string file_path(TESTFILES_PATH);
    bool status;
-   int result;
 
    // Load the test configuration file
    jccl::ConfigChunkDB chunkdb;
@@ -80,8 +79,8 @@ void ConfigChunkDBTest::testDependencySortFailure ()
    // This dependency sort should fail because chunkdb_dep depends on chunks
    // in chunkdb_start.  Since it's suppoesd to fail, ignore warnings/errors
    // printed to the screen and focus on the result of the assertion.
-   result = chunkdb.dependencySort(NULL);
-   CPPUNIT_ASSERT(result == -1 && "Dependency sort should have failed");
+   status = chunkdb.dependencySort(NULL);
+   CPPUNIT_ASSERT(! status && "Dependency sort should have failed");
 }
 
 void ConfigChunkDBTest::testClear ()
@@ -94,14 +93,14 @@ void ConfigChunkDBTest::testClear ()
    status = jccl::ChunkFactory::instance()->loadDescs(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.desc");
    CPPUNIT_ASSERT(status && "Failed to load description file");
 
-   CPPUNIT_ASSERT(chunkdb.isEmpty() && "The DB should be empty");
+   CPPUNIT_ASSERT(chunkdb.empty() && "The DB should be empty");
 
    status = chunkdb.load(file_path + "ConfigChunkDBTest/ConfigChunkDBTest_start.config");
    CPPUNIT_ASSERT(status && "Failed to load initial config file");
 
-   CPPUNIT_ASSERT(! chunkdb.isEmpty() && "The DB should not be empty");
+   CPPUNIT_ASSERT(! chunkdb.empty() && "The DB should not be empty");
    chunkdb.clear();
-   CPPUNIT_ASSERT(chunkdb.isEmpty() && "The DB now should be empty");
+   CPPUNIT_ASSERT(chunkdb.empty() && "The DB now should be empty");
 }
 
 }

@@ -29,9 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <jccl/jcclConfig.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/RTRC/ConfigManager.h>
+#include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/RTRC/DependencyManager.h>
 #include <jccl/Util/Debug.h>
@@ -51,7 +53,7 @@ int ConfigChunkHandler::configProcessPending()
 {
    ConfigManager*     cfg_mgr = ConfigManager::instance();
    DependencyManager* dep_mgr = DependencyManager::instance();
-   
+
    bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
 
    // We need to track the number vefore and after to know if we changed anything
@@ -75,8 +77,8 @@ int ConfigChunkHandler::configProcessPending()
          // Get information about the current chunk
          ConfigChunkPtr cur_chunk = (*current).mChunk;
          vprASSERT(cur_chunk.get() != NULL && "Trying to use an invalid chunk");
-         std::string chunk_name = cur_chunk->getProperty("name");
-         std::string chunk_type = cur_chunk->getType();
+         std::string chunk_name = cur_chunk->getName();
+         std::string chunk_type = cur_chunk->getDescToken();
 
          vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_VERB_LVL) << "Item: name:" << chunk_name << " type:" << chunk_type << std::endl << vprDEBUG_FLUSH;
 
@@ -97,16 +99,15 @@ int ConfigChunkHandler::configProcessPending()
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_chunk);      // Add it to the current config
 
-                     outputPendingItemState(vprDBG_CONFIG_LVL,
-                                            cur_chunk->getProperty("name"),
-                                            ((std::string)cur_chunk->getType()).c_str(),
+                     outputPendingItemState(vprDBG_CONFIG_LVL, cur_chunk->getName(),
+                                            cur_chunk->getDescToken(),
                                             SUCCESS);
                   }
                   else  // FAILED adding
                   {
                      outputPendingItemState(vprDBG_CRITICAL_LVL,
-                                            cur_chunk->getProperty("name"),
-                                            ((std::string)cur_chunk->getType()).c_str(),
+                                            cur_chunk->getName(),
+                                            cur_chunk->getDescToken(),
                                             FAILED);
                      current++;
                   }
@@ -115,9 +116,9 @@ int ConfigChunkHandler::configProcessPending()
                {
 
                   outputPendingItemState(vprDBG_WARNING_LVL,
-                                            cur_chunk->getProperty("name"),
-                                            ((std::string)cur_chunk->getType()).c_str(),
-                                            NEED_DEPS);
+                                         cur_chunk->getName(),
+                                         cur_chunk->getDescToken(),
+                                         NEED_DEPS);
                   vprDEBUG_CONT(vprDBG_ALL,vprDBG_WARNING_LVL) << std::endl << vprDEBUG_FLUSH;
                   dep_mgr->debugOutDependencies(cur_chunk,vprDBG_WARNING_LVL);
                   current++;
@@ -132,7 +133,7 @@ int ConfigChunkHandler::configProcessPending()
                      remove_me = current;
                      current++;                          // Goto next item
                      cfg_mgr->removePending(remove_me);  // Delete previous item
-                     cfg_mgr->removeActive(cur_chunk->getProperty("name"));     // Add it to the current config
+                     cfg_mgr->removeActive(cur_chunk->getName());     // Add it to the current config
                      scan_for_lost_dependants = true;    // We have to scan to see if somebody depended on that chunk
                   }
                   else // Failed to remove
@@ -150,9 +151,10 @@ int ConfigChunkHandler::configProcessPending()
          // ---- CAN'T HANDLE THE CHUNK --- //
          else           // if(can_handle)
          {
-            vprDEBUG_NEXT(vprDBG_ALL,vprDBG_STATE_LVL) << "Pending item: " << cur_chunk->getProperty("name")
-                                                 << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << " --> Not handled by this handler.\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vprDBG_ALL,vprDBG_STATE_LVL)
+               << "Pending item: " << cur_chunk->getName()
+               << " type: " << cur_chunk->getDescToken()
+               << " --> Not handled by this handler.\n" << vprDEBUG_FLUSH;
             current++;
          }
          vprDEBUG_END(vprDBG_ALL,vprDBG_VERB_LVL) << "==== End item =====\n" << vprDEBUG_FLUSH;

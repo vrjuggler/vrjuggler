@@ -39,7 +39,6 @@
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
-#include <jccl/Config/ConfigIO.h>
 #include <jccl/Util/Debug.h>
 
 
@@ -47,94 +46,38 @@ namespace jccl
 {
 
 
-ConfigChunkDB::ConfigChunkDB (): chunks()
-{
-   ;
-}
-
-ConfigChunkDB::~ConfigChunkDB ()
-{
-   // Any ConfigChunks where the only copy is owned by this db
-   // are automagically deleted here.
-}
-
-ConfigChunkDB::ConfigChunkDB (ConfigChunkDB& db): chunks()
+ConfigChunkDB::ConfigChunkDB (ConfigChunkDB& db)
 {
    *this = db;
 }
 
-ConfigChunkDB& ConfigChunkDB::operator = (const ConfigChunkDB& db)
+ConfigChunkPtr ConfigChunkDB::get (const std::string& name) const
 {
-   unsigned int i, size;
-   chunks.clear();
-   for ( i = 0, size = db.chunks.size(); i < size; i++ )
+   for ( ConfigChunkDB::const_iterator i = begin(); i != end(); i++)
    {
-      chunks.push_back (db.chunks[i]);
-      //chunks.push_back (new ConfigChunk(*(db.chunks[i])));
-   }
-   return *this;
-}
-
-ConfigChunkPtr ConfigChunkDB::getChunk (const std::string& name) const
-{
-   /* returns a chunk with the given name, if such exists, or NULL.
-    */
-   unsigned int i, size;
-   for ( i = 0, size = chunks.size(); i < size; i++ )
-   {
-      if ( !vjstrcasecmp (name, chunks[i]->getProperty("name")) )
+      if ( name == (*i)->getName() )
       {
-         return chunks[i];
+         return *i;
       }
    }
    return ConfigChunkPtr();
 }
 
-std::vector<ConfigChunkPtr> ConfigChunkDB::getChunks() const
+void ConfigChunkDB::getByType(const std::string& typeName, std::vector<ConfigChunkPtr>& chunks) const
 {
-   return chunks;
-}
 
-void ConfigChunkDB::addChunks(std::vector<ConfigChunkPtr> new_chunks)
-{
-   // no! must make copies of all chunks. sigh...
-   unsigned int i, size;
-   for ( i = 0, size = new_chunks.size(); i < size; i++ )
+   for ( ConfigChunkDB::const_iterator i = begin(); i != end(); i++)
    {
-      addChunk (new_chunks[i]);
-   }
-
-   //addChunk (new ConfigChunk (*new_chunks[i]));
-}
-
-void ConfigChunkDB::addChunks(const ConfigChunkDB *db)
-{
-   addChunks (db->chunks);
-}
-
-void ConfigChunkDB::addChunk(ConfigChunkPtr new_chunk)
-{
-   removeNamed (new_chunk->getProperty("Name"));
-   chunks.push_back (new_chunk);
-}
-
-std::vector<ConfigChunkPtr>* ConfigChunkDB::getOfDescToken (const std::string& mytypename) const
-{
-   std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
-
-   for ( unsigned int i = 0; i < chunks.size(); i++ )
-   {
-      if ( !vjstrcasecmp (mytypename, chunks[i]->getProperty("type")) )
+      if ( typeName == (*i)->getDescToken() )
       {
-         v->push_back(chunks[i]);
+         chunks.push_back(*i);
       }
    }
-   return v;
 }
 
-void ConfigChunkDB::clear ()
+bool ConfigChunkDB::remove(const std::string& name)
 {
-   chunks.clear();
+   vprASSERT(false && "Not implemented yet");
 }
 
 //: Sorts the chunks based on dependancies of chunk ptrs
@@ -142,24 +85,25 @@ void ConfigChunkDB::clear ()
 //! MODIFIES: self.  We move the objects around so they are sorted
 //! ARGS: auxChunks - Auxilary chunks that have been loaded already
 //! POST: Topologically sorted
-// Copy the chunks over to a new list.  Repetatively try to
-// find an item in the source list that already has it's dependencies
-// copied into the dst list.  Do this iteratively until done or
-// until fail.
-int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
+// Impl
+// - Copy the chunks over to a new list.
+// - Repetatively try to find an item in the source list that already
+//     has it's dependencies in the dst list of in the aux chunks
+// - Do this iteratively until done or until fail.
+bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 {
    // Print out dependancies
 #ifdef JCCL_DEBUG
    vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- Dependencies -----------\n" << vprDEBUG_FLUSH;
 
-   for ( unsigned int i=0;i<chunks.size();i++ )
+   for ( unsigned int i=0; i< this->size(); i++ )
    {
-      vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name")
+      vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << (*this)[i]->getName()
                                  << std::endl << "\tDepends on:\n"
                                  << vprDEBUG_FLUSH;
-      std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
+      std::vector<std::string> deps = (*this)[i]->getChunkPtrDependencies();
 
-      if ( deps.size() > 0 )
+      if (!deps.empty())
       {
          for ( unsigned int j=0;j<deps.size();j++ )
          {
@@ -170,61 +114,70 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
       }
       else
       {
-         vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(jcclDBG_CONFIG,4) << "   None.\n" << vprDEBUG_FLUSH;
       }
    }
    vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------------------\n" << vprDEBUG_FLUSH;
 #endif
 
    // --- THE SORT --- //
-   // Create new src list to work from
-   // Targetting the local data
+   // - Create new src list to work from
+   // - Targetting the local data
    // So basically, we take an element from the src list one at a time
    // If it's dependencies are already in the local list, add it to the local list
    // else go on to the next one
    // Kinda like an insertion sort
-   std::vector<ConfigChunkPtr> src_chunks = chunks;
-   chunks = std::vector<ConfigChunkPtr>(0);        // Chunks is the local data - Zero it out to start
+   std::vector<ConfigChunkPtr> src_chunks = *this;
+   this->clear();                   // Zero out the current state
 
    bool dep_pass(true);             // Flag for Pass dependency check
    std::vector<std::string> deps;   // Dependencies of current item
    std::vector<ConfigChunkPtr>::iterator cur_item = src_chunks.begin();          // The current src item to look at
 
-   while ( cur_item != src_chunks.end() )
-   {          // While not at end of src list
+   while ( cur_item != src_chunks.end() )    // While not at end of src list
+   {
       vprDEBUG(jcclDBG_CONFIG,4)
-         << "Checking depencies for: " << (*cur_item)->getProperty("name")
+         << "Checking depencies for: " << (*cur_item)->getName()
          << "\n" << vprDEBUG_FLUSH;
 
-      dep_pass = true;
-      deps = (*cur_item)->getChunkPtrDependencies();             // Get src dependencies
-      for ( unsigned int dep_num=0; (dep_num < deps.size()) && dep_pass; dep_num++ )
-      {  // For each dependency
+      dep_pass = true;                                         // Default to deps passing
+      deps = (*cur_item)->getChunkPtrDependencies();           // Get src dependencies
 
-         if ( ConfigChunk::hasSeparator (deps[dep_num]) )
+      // For each dep: While (still have another dep) AND (deps haven't failed)
+      // - If embedded chunk dep, then check that
+      // - Else check as a normal chunk name
+      for ( unsigned int dep_num=0; (dep_num < deps.size()) && dep_pass; dep_num++ )
+      {
+         vprASSERT(dep_pass == true);
+
+         if ( jccl::hasSeparator (deps[dep_num]) )      // If it is an embedded chunk
          {
-            std::string chunkname = ConfigChunk::getFirstNameComponent(deps[dep_num]);
-            bool found = false;
-            ConfigChunkPtr ch = getChunk(chunkname);
-            found = ((ch.get() != 0) && (ch->getEmbeddedChunk (deps[dep_num]).get() != 0));
-            if ( !found && auxChunks )
+            std::string chunkname = jccl::getFirstNameComponent(deps[dep_num]);
+            std::string child_chunkname = jccl::getRemainder(deps[dep_num]);
+            ConfigChunkPtr parent_ch = get(chunkname);
+            dep_pass = ((parent_ch.get() != NULL) &&
+                         (parent_ch->getChildChunk(child_chunkname).get() != NULL));
+            if ( !dep_pass && (auxChunks != NULL) )            // Check chunks in aux chunks
             {
-               ch = auxChunks->getChunk(chunkname);
-               found = ((ch.get() != 0) && (ch->getEmbeddedChunk (deps[dep_num]).get() != 0));
+               parent_ch = auxChunks->get(chunkname);                 // Get the aux chunk parent chunk
+               dep_pass = ((parent_ch.get() != 0) &&
+                           (parent_ch->getChildChunk(child_chunkname).get() != 0));
             }
-            dep_pass = dep_pass && found;
          }
          else
          {
-            dep_pass = dep_pass && (getChunk(deps[dep_num]).get() ||
-                                    (auxChunks && auxChunks->getChunk(deps[dep_num]).get()));
-
+            // = found local or found in aux
+            dep_pass = (get(deps[dep_num]).get() != NULL);
+            if (!dep_pass && (auxChunks != NULL))  // If didn't pass and have aux to check
+            {
+               dep_pass = (auxChunks->get(deps[dep_num]).get() != NULL);
+            }
          }
       }
 
-      if ( dep_pass )
-      {        // If all dependencies are accounted for
-         addChunk(*cur_item);        // Copy src to dst
+      if ( dep_pass )      // If all dependencies are accounted for
+      {
+         push_back(*cur_item);               // Copy src to dst
          src_chunks.erase(cur_item);         // Erase it from source
          cur_item = src_chunks.begin();      // Goto first item
       }
@@ -237,21 +190,19 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
    // ASSERT: (Done with sort)
    //   Either, all depencies have been accounted for and the src list is empty
    //   OR we went all the way through list without finding an item that passes
-
-   if ( src_chunks.size() > 0 )
-   {     // Items left, so we failed to get all dependencies
-      // ouput error
+   if ( src_chunks.size() > 0 )     // Items left, so we failed -- ouput error
+   {
       for ( unsigned int i=0;i<src_chunks.size();i++ )
       {
          vprDEBUG(vprDBG_ERROR,0)
             << clrOutNORM(clrRED, "ERROR:") << " Dependency error:  Chunk:"
-            << src_chunks[i]->getProperty("name") << "\tDepends on: \n"
+            << src_chunks[i]->getName() << "\tDepends on: \n"
             << vprDEBUG_FLUSH;
 
          std::vector<std::string> deps = src_chunks[i]->getChunkPtrDependencies();
          if ( deps.size() > 0 )
          {
-            for ( unsigned int j=0;j<deps.size();j++ )
+            for ( unsigned j=0; j<deps.size(); j++ )
             {
                vprDEBUG(vprDBG_ERROR,0) << "\tdep " << j << ": "
                                         << deps[j].c_str() << std::endl
@@ -267,29 +218,28 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
             << clrOutNORM(clrRED, "Check for missing files or missing chunks in loaded files.\n")
             << vprDEBUG_FLUSH;
       }
-      chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
+      this->insert(this->end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
 
-      return -1;
+      return false;
    }
    else
    {
       // Print out sorted dependancies
 #ifdef JCCL_DEBUG
-
       vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- After sort ----"
                                        << std::endl << vprDEBUG_FLUSH;
 
-      for ( unsigned int i=0; i<chunks.size(); i++ )
+      for ( unsigned i=0; i<this->size(); i++ )
       {
          vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:"
-                                    << chunks[i]->getProperty("name")
+                                    << (*this)[i]->getName()
                                     << "\n\tDepends on:\n"
                                     << vprDEBUG_FLUSH;
 
-         std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
+         std::vector<std::string> deps = (*this)[i]->getChunkPtrDependencies();
          if ( deps.size() > 0 )
          {
-            for ( unsigned int j=0;j<deps.size();j++ )
+            for ( unsigned j=0; j<deps.size(); j++ )
             {
                vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": "
                                           << deps[j].c_str()
@@ -298,94 +248,167 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
          }
          else
          {
-            vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n"<< vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
          }
       }
 
-      vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------\n"
-                                     << vprDEBUG_FLUSH;
+      vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------\n" << vprDEBUG_FLUSH;
 #endif
 
-      return 0;      // Success
+      return true;      // Success
    }
+
+   return true;
 }
 
 /* IO functions: */
 
 std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self)
 {
-   ConfigIO::instance()->writeConfigChunkDB (out, self);
+   cppdom::XMLNodePtr chunk_db_node;
+   self.createChunkDBNode(chunk_db_node);
+   chunk_db_node->save(out);
    return out;
 }
 
 std::istream& operator >> (std::istream& in, ConfigChunkDB& self)
 {
-   ConfigIO::instance()->readConfigChunkDB (in, self);
+   cppdom::XMLNodePtr chunk_db_node = ChunkFactory::instance()->createXMLNode();
+   cppdom::XMLContextPtr context_ptr = chunk_db_node->getContext();
+   chunk_db_node->load( in, context_ptr );
+   self.loadFromChunkDBNode( chunk_db_node );
+
    return in;
 }
 
 bool ConfigChunkDB::load (const std::string& filename, const std::string& parentfile)
 {
-
-   file_name = demangleFileName (filename, parentfile);
+   mFileName = demangleFileName (filename, parentfile);
    vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::load(): opening file "
-                              << file_name.c_str() << " -- " << vprDEBUG_FLUSH;
-   bool retval = ConfigIO::instance()->readConfigChunkDB (file_name, *this);
+                              << mFileName.c_str() << " -- " << vprDEBUG_FLUSH;
 
-   vprDEBUG(jcclDBG_CONFIG,3) << " finished.. read " << chunks.size()
-                              << " chunks\n" << vprDEBUG_FLUSH;
-   return retval;
-}
+   cppdom::XMLDocumentPtr chunk_db_doc = ChunkFactory::instance()->createXMLDocument();
+   bool status(false);
 
-bool ConfigChunkDB::save (const std::string& file_name) const
-{
-   vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::save(): saving file "
-                              << file_name.c_str() << " -- " << vprDEBUG_FLUSH;
-
-   bool retval = ConfigIO::instance()->writeConfigChunkDB (file_name, *this);
-   if ( retval )
+   try
    {
-      vprDEBUG(jcclDBG_CONFIG,3) << " finished.\n" << vprDEBUG_FLUSH;
+      chunk_db_doc->loadFile( mFileName );
+
+      cppdom::XMLNodePtr chunk_db_node = chunk_db_doc->getChild( jccl::chunk_db_TOKEN);
+      vprASSERT(chunk_db_node.get() != NULL);
+      loadFromChunkDBNode( chunk_db_node, filename );
+
+      status = true;
    }
-   else
+   catch (cppdom::XMLError& xml_e)
    {
-      vprDEBUG(vprDBG_ERROR,1)
-         << clrOutNORM(clrRED, "ERROR:") << " ConfigChunkDB::save() - "
-         << "Unable to open file '"
-         << file_name.c_str() << "'\n" << vprDEBUG_FLUSH;
+      cppdom::XMLLocation where( chunk_db_doc->getContext()->getLocation() );
+      cppdom::XMLString errmsg;
+      xml_e.getStrError(errmsg);
+
+      // print out where the error occured
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ConfigChunkDB: XMLError:") << mFileName
+         << ": line " << where.getLine() << " at position " << where.getPos()
+         << ": error: " << errmsg.c_str() << std::endl << vprDEBUG_FLUSH;
    }
-   return retval;
+
+   return status;
 }
 
-bool ConfigChunkDB::isEmpty() const
+bool ConfigChunkDB::save (const std::string& fname) const
 {
-   return chunks.empty();
+   cppdom::XMLNodePtr chunk_db_node;
+   createChunkDBNode(chunk_db_node);                              // Get base db element
+   cppdom::XMLDocumentPtr chunk_db_doc(new cppdom::XMLDocument);        // Put in in a document
+   chunk_db_doc->addChild(chunk_db_node);
+   chunk_db_doc->saveFile(fname);                                 // Write out the document
+   return true;
 }
 
-void ConfigChunkDB::removeAll()
+/**
+ * This is a helper for use with std::find_if() for comparing chunk names.
+ */
+struct ChunkNamePred
 {
-   clear();
-}
-
-bool ConfigChunkDB::removeNamed (const std::string& name)
-{
-   iterator cur_chunk = chunks.begin();
-   while ( cur_chunk != chunks.end() )
+   ChunkNamePred (const std::string& name) : mName(name)
    {
-      VarValue v = ((*cur_chunk)->getProperty("Name"));
-      if ( (v.getType() == T_STRING)
-           &&  (!vjstrcasecmp (name, (std::string)v)) )
+      ;
+   }
+
+   bool operator() (jccl::ConfigChunkPtr chunk)
+   {
+      return (chunk->getName() == mName);
+   }
+
+   std::string mName;
+};
+
+/** Load the chunks from a given "ChunkDB" element into the db */
+bool ConfigChunkDB::loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode,
+                                        std::string currentFile)
+{
+   if(chunkDBNode->getName() != chunk_db_TOKEN)
+   {
+      vprASSERT(false && "Trying to load a chunk db node that is not a chunkdb node");
+      return false;
+   }
+
+   for(cppdom::XMLNodeList::iterator cur_child = chunkDBNode->getChildren().begin();
+        cur_child != chunkDBNode->getChildren().end(); cur_child++)
+   {
+      // If it is an include, then process it special
+      std::string chunk_elt_type = (*cur_child)->getName();
+      if(chunk_elt_type == vj_include_desc_file_TOKEN)            // Include a desc file
       {
-         cur_chunk = chunks.erase(cur_chunk);
-         return true;
+         std::string desc_filename = (*cur_child)->getAttribute(name_TOKEN).getValue<std::string>();
+         ChunkFactory::instance()->loadDescs(desc_filename, currentFile);
       }
-      else
+      else if(chunk_elt_type == vj_include_file_TOKEN)            // Load another chunk file
       {
-         cur_chunk++;
+         std::string chunk_filename = (*cur_child)->getAttribute(name_TOKEN).getValue<std::string>();
+         load(chunk_filename, currentFile);
+      }
+      else                                                        // Load normal chunk
+      {
+         ConfigChunkPtr new_chunk(new ConfigChunk( *cur_child ) );     // New chunk
+
+         // Before we can add new_chunk to the database, we have to determine
+         // if there is already a chunk with the same name.
+         ConfigChunkDB::iterator iter =
+            std::find_if(this->begin(), this->end(),
+                         ChunkNamePred(new_chunk->getName()));
+
+         // If no existing chunk has the same name as new_chunk, then we can
+         // just add it to the end.
+         if ( iter == this->end() )
+         {
+            push_back(new_chunk);
+         }
+         // Otherwise, overwrite the old version.
+         else
+         {
+            *iter = new_chunk;
+         }
       }
    }
 
-   return false;
+   return true;
 }
+
+void ConfigChunkDB::createChunkDBNode(cppdom::XMLNodePtr& chunkDBNode) const
+{
+   chunkDBNode = ChunkFactory::instance()->createXMLNode();
+   chunkDBNode->setName(chunk_db_TOKEN);
+
+   ConfigChunkDB::const_iterator cur_chunk;
+
+   for(cur_chunk = begin(); cur_chunk != end(); cur_chunk++)
+   {
+      cppdom::XMLNodePtr child_node = (*cur_chunk)->getNode();
+      chunkDBNode->addChild( child_node );
+   }
+}
+
 
 } // End of jccl namespace

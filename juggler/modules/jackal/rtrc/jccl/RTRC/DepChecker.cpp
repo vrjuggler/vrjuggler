@@ -32,9 +32,10 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/RTRC/DepChecker.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkDesc.h>
 #include <jccl/RTRC/ConfigManager.h>
+#include <jccl/RTRC/DepChecker.h>
 
 namespace jccl
 {
@@ -44,8 +45,8 @@ DepChecker::DepChecker ()
 
 
 /*virtual*/ std::string DepChecker::getCheckerName ()
-{ 
-   return std::string("Default Checker"); 
+{
+   return std::string("Default Checker");
 }
 
 
@@ -60,11 +61,11 @@ DepChecker::DepChecker ()
    bool pass=true;
 
    ConfigManager* cfg_mgr = ConfigManager::instance();
-   
+
    // Get the list of dependencies
-   std::vector<std::string> dependencies = 
+   std::vector<std::string> dependencies =
       chunk->getChunkPtrDependencies();
-   
+
    // Check to see if they are loaded already
    for(unsigned int i=0;i<dependencies.size();i++)
    {
@@ -79,11 +80,11 @@ DepChecker::DepChecker ()
 /*virtual*/ void DepChecker::debugOutDependencies (ConfigChunkPtr chunk,
                                                    int dbg_lvl)
 {
-   vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) 
-      << "---- Dependencies for: item: " << chunk->getProperty("name")
-      << " type: " << ((std::string)chunk->getType()).c_str()
+   vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
+      << "---- Dependencies for: item: " << chunk->getName()
+      << " type: " << chunk->getDescToken()
       << "-------\n" << vprDEBUG_FLUSH;
-   
+
    ConfigManager* cfg_mgr = ConfigManager::instance();
 
    // Get the list of dependencies
@@ -106,7 +107,7 @@ DepChecker::DepChecker ()
    }
 
    vprDEBUG_CONT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
-   
+
 }
 
 

@@ -29,18 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 package VjConfig;
 
-import javax.xml.parsers.*;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
 import java.io.*;
+import java.util.Iterator;
+import java.util.List;
+import javax.xml.parsers.*;
+import org.jdom.*;
+import org.jdom.input.SAXBuilder;
 
-import VjConfig.*;
 
 /** ConfigIOHandler for XML files.
  *  This class handles reading and writing ChunkDescDB and ConfigChunkDB files
@@ -51,744 +48,605 @@ import VjConfig.*;
  *
  *  @version $Revision$
  */
-public class XMLConfigIOHandler implements ConfigIOHandler {
+public class XMLConfigIOHandler
+   implements ConfigIOHandler
+{
 
-    /** Constructor. */
-    public XMLConfigIOHandler () {
-        ;
-    }
+   /** Constructor. */
+   public XMLConfigIOHandler()
+   {
+      ;
+   }
 
-
-    /** Escapes &, <, >, and other symbols that can't appear in xml strings.
-     *  This is a utility used by the writer functions.
-     *  These escapes get undone by the xml parser so we don't need to 
-     *  worry about 'em ourselves.
-     */
-    public static String escapeString (String original) {
-        // the overwhelming majority of strings won't need to be escaped.
-        int amppos = original.indexOf('&');
-        int lpos = original.indexOf('<');
-        int gpos = original.indexOf('>');
-        if (amppos == -1 && lpos == -1 && gpos == -1)
-            return original;
-        // ok, there's something that needs to be fixed... this probably
-        // doesn't need to be fast cuz it'll be used rarely.
-        StringBuffer s = new StringBuffer(original);
-        // remove ampersands
-        while (amppos != -1) {
-            s.replace (amppos, amppos+1, "&amp;");
-            amppos = indexOf (s, '&', amppos+1);
-        }
-        lpos = indexOf (s, '<', 0);
-        while (lpos != -1) {
-            s.replace (lpos, lpos+1, "&lt;");
-            lpos = indexOf (s, '<', lpos+1);
-        }
-        gpos = indexOf (s, '>', 0);
-        while (gpos != -1) {
-            s.replace (gpos, gpos+1, "&gt;");
-            gpos = indexOf (s, '>', gpos+1);
-        }
-        return s.toString();
-    }
-
-
-    /** does a stringbuffer indexof.
-     *  remove this if we ever go to requiring jdk1.4.  sometimes the
-     *  shortsightedness of the jdk developers really stuns me.
-     */
-    private static int indexOf (StringBuffer source, char ch, int startindex) {
-        for (; startindex < source.length(); startindex++)
-            if (source.charAt(startindex) == ch)
-                return startindex;
-        return -1;
-    }
+   /** Escapes &, <, >, and other symbols that can't appear in xml strings.
+    *  This is a utility used by the writer functions.
+    *  These escapes get undone by the xml parser so we don't need to
+    *  worry about 'em ourselves.
+    */
+   public static String escapeString(String original)
+   {
+      // the overwhelming majority of strings won't need to be escaped.
+      int amppos = original.indexOf('&');
+      int lpos = original.indexOf('<');
+      int gpos = original.indexOf('>');
+      if (amppos == -1 && lpos == -1 && gpos == -1)
+      {
+         return original;
+      }
+      // ok, there's something that needs to be fixed... this probably
+      // doesn't need to be fast cuz it'll be used rarely.
+      StringBuffer s = new StringBuffer(original);
+      // remove ampersands
+      while (amppos != -1)
+      {
+         s.replace (amppos, amppos+1, "&amp;");
+         amppos = indexOf(s, '&', amppos+1);
+      }
+      lpos = indexOf(s, '<', 0);
+      while (lpos != -1)
+      {
+         s.replace (lpos, lpos+1, "&lt;");
+         lpos = indexOf(s, '<', lpos+1);
+      }
+      gpos = indexOf(s, '>', 0);
+      while (gpos != -1)
+      {
+         s.replace (gpos, gpos+1, "&gt;");
+         gpos = indexOf(s, '>', gpos+1);
+      }
+      return s.toString();
+   }
 
 
-    public void readConfigChunkDB (File file, ConfigChunkDB db,
-                                   ConfigIOStatus iostatus) {
-
-        Document doc;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        
-	// build the XML stream into a DOM tree
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            doc = builder.parse (file);
-            buildChunkDB (db, doc, iostatus);
-        }
-        catch (javax.xml.parsers.ParserConfigurationException e1) {
-            iostatus.addFailure (e1);
-        }
-        catch (org.xml.sax.SAXException e2) {
-            iostatus.addFailure (e2);
-        }
-        catch (IOException e3) {
-            iostatus.addFailure (e3);
-        }
-    }
+   /** does a stringbuffer indexof.
+    *  remove this if we ever go to requiring jdk1.4.  sometimes the
+    *  shortsightedness of the jdk developers really stuns me.
+    */
+   private static int indexOf(StringBuffer source, char ch, int startindex)
+   {
+      for (; startindex < source.length(); startindex++)
+      {
+         if (source.charAt(startindex) == ch)
+         {
+            return startindex;
+         }
+      }
+      return -1;
+   }
 
 
-    public void readConfigChunkDB (InputStream in, ConfigChunkDB db,
-                                   ConfigIOStatus iostatus) {
-
-        Document doc;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-	// build the XML stream into a DOM tree
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            doc = builder.parse (in);
-            buildChunkDB (db, doc, iostatus);
-        }
-        catch (javax.xml.parsers.ParserConfigurationException e1) {
-            iostatus.addFailure (e1);
-        }
-        catch (org.xml.sax.SAXException e2) {
-            iostatus.addFailure (e2);
-        }
-        catch (IOException e3) {
-            iostatus.addFailure (e3);
-        }
-    }
-    
-
-    public void writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db) 
-        throws IOException {
-
-        out.writeBytes (db.xmlRep());
-    }
+   public void readConfigChunkDB(File file, ConfigChunkDB db,
+                                 ConfigIOStatus iostatus)
+   {
+      // build the XML stream into a DOM tree
+      try
+      {
+         SAXBuilder builder = new SAXBuilder();
+         Document doc = builder.build(file);
+         buildChunkDB(db, doc.getRootElement(), iostatus);
+      }
+      catch (JDOMException e)
+      {
+         iostatus.addFailure(e);
+      }
+   }
 
 
-    public void writeConfigChunkDB (File out, ConfigChunkDB db) 
-        throws IOException {
+   public void readConfigChunkDB(InputStream in, ConfigChunkDB db,
+                                 ConfigIOStatus iostatus)
+   {
+      // build the XML stream into a DOM tree
+      try
+      {
+         SAXBuilder builder = new SAXBuilder();
+         Document doc = builder.build(in);
+         buildChunkDB(db, doc.getRootElement(), iostatus);
+      }
+      catch (JDOMException e)
+      {
+         iostatus.addFailure(e);
+      }
+   }
 
-        DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
-        ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        ostream.writeBytes (db.xmlRep());
-    }
+
+   public void writeConfigChunkDB(DataOutputStream out, ConfigChunkDB db)
+      throws IOException
+   {
+      try
+      {
+         String xml = db.xmlRep();
+         out.writeBytes(xml);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new IOException(e.getMessage());
+      }
+   }
 
 
-    /** Converts a DOM tree to a ConfigChunkDB.
-     *  This method reads the DOM tree rooted at doc, and puts all
-     *  ConfigChunks it finds into db.  doc can be a DOCUMENT, 
-     *  DOCUMENT_FRAGMENT (with the first element being "<ConfigChunkDB">)
-     *  or an ELEMENT (labeled "<ConfigChunkDB>").
-     *
-     *  Any problems encountered during the build are recorded in the
-     *  ConfigIOStatus argument.
-     */
-    public void buildChunkDB (ConfigChunkDB db, Node doc, 
-                              ConfigIOStatus iostatus) {
-        Node child;
-        ConfigChunk ch;
-        boolean retval = true;
-        String name = doc.getNodeName();
-        
-        switch (doc.getNodeType()) {
-        case Node.DOCUMENT_NODE:
-        case Node.DOCUMENT_FRAGMENT_NODE:
-            child = doc.getFirstChild();
-            while (child != null) {
-                buildChunkDB (db, child, iostatus);
-                child = child.getNextSibling();
+   public void writeConfigChunkDB(File out, ConfigChunkDB db)
+      throws IOException
+   {
+      try
+      {
+         String xml = db.xmlRep();
+         DataOutputStream ostream = new DataOutputStream(new FileOutputStream(out));
+         ostream.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+         ostream.writeBytes(xml);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new IOException(e.getMessage());
+      }
+   }
+
+
+   /** Converts a DOM tree to a ConfigChunkDB.
+    *  This method reads the DOM tree rooted at doc, and puts all
+    *  ConfigChunks it finds into db.  doc can be a DOCUMENT,
+    *  DOCUMENT_FRAGMENT (with the first element being "<ConfigChunkDB">)
+    *  or an ELEMENT (labeled "<ConfigChunkDB>").
+    *
+    *  Any problems encountered during the build are recorded in the
+    *  ConfigIOStatus argument.
+    */
+   public void buildChunkDB(ConfigChunkDB db, Element doc,
+                            ConfigIOStatus iostatus)
+   {
+      Element child;
+      ConfigChunk ch;
+      boolean retval = true;
+      String name = doc.getName();
+
+      if ( name.equals(ConfigTokens.chunk_db_TOKEN) )
+      {
+         List children = doc.getChildren();
+         Iterator i    = children.iterator();
+
+         while ( i.hasNext() )
+         {
+            ch = buildConfigChunk((Element) i.next(), iostatus);
+            if (ch != null)
+            {
+               db.add(ch);
             }
-            break;
-        case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("ConfigChunkDB")) {
-                child = doc.getFirstChild();
-                while (child != null) {
-                    //System.out.println ("got a child of ConfigChunkDB");
-                    if (child.getNodeType() == Node.ELEMENT_NODE) {
-                        ch = buildConfigChunk (child, true, iostatus);
-                        if (ch != null)
-                            db.add (ch);
-                    }
-                    child = child.getNextSibling();
-                }
-            }
-            else {
-                iostatus.addWarning ("Unrecognized element '" + name + "'.");
-            }
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unexpected DOM node type...");
-        }
-    }
+         }
+      }
+      else
+      {
+         iostatus.addWarning("Unrecognized element '" + name + "'.");
+      }
+   }
 
 
-    public ConfigChunk buildConfigChunk (Node doc, boolean use_defaults,
-                                         ConfigIOStatus iostatus) {
-        Node child;
-        NamedNodeMap attributes;
-        int attrcount;
-        int i;
-        ConfigChunk ch = null;
-        String name = doc.getNodeName();
+   public ConfigChunk buildConfigChunk (Element doc, ConfigIOStatus iostatus)
+   {
+      ConfigChunk ch = null;
+      String name = doc.getName();
 
-        switch (doc.getNodeType()) {
-        case Node.DOCUMENT_NODE:
-        case Node.DOCUMENT_FRAGMENT_NODE:
-            child = doc.getFirstChild();
-            return buildConfigChunk (child, use_defaults, iostatus);
-        case Node.ELEMENT_NODE:
-            ch = ChunkFactory.createChunkWithDescToken (name, use_defaults);
-            if (ch == null) {
-                iostatus.addError ("Unable to create ConfigChunk of type '"
-                                   + name + "' - no ChunkDesc known.");
-            }
-            else {
-                // parse attributes
-                attributes = doc.getAttributes();
-                attrcount = attributes.getLength();
-                for (i = 0; i < attrcount; i++) {
-                    child = attributes.item(i);
-                    buildProperty (ch, child, iostatus);
-                }
-                // parse child elements
-                child = doc.getFirstChild();
-                while (child != null) {
-                    buildProperty (ch, child, iostatus);
-                    child = child.getNextSibling();
-                }
-            }
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unexpected DOM node type...");
-        }
+      ch = ChunkFactory.createChunkWithDescToken(name);
 
-        return ch;
-    }
-        
-            
-    private void buildProperty (ConfigChunk ch, Node doc,
-                                ConfigIOStatus iostatus) {
-        String name = doc.getNodeName();
-        String value = doc.getNodeValue();
-        boolean retval = true;
-        Node child;
-        Property p;
-        int valindex = 0;
+      if (ch == null)
+      {
+         iostatus.addError("Unable to create ConfigChunk of type '"
+                           + name + "' - no ChunkDesc known.");
+      }
+      else
+      {
+         // Get the chunk's name attribute.
+         ch.setName(doc.getAttribute("name").getValue());
 
-        switch (doc.getNodeType()) {
-        case Node.ELEMENT_NODE:
-            p = ch.getPropertyFromToken (name);
-            if (p != null) {
-                child = doc.getFirstChild();
-                while (child != null) {
-                    if (p.getValType() == ValType.EMBEDDEDCHUNK) {
-                        ch = buildConfigChunk (child, true, iostatus);
-                        if (ch != null)
-                            p.setValue (new VarValue(ch), valindex++);
-                    }
-                    else {
-                        switch (child.getNodeType()) {
-                        case Node.TEXT_NODE:
-                            // watch it... we're not gonna handle multiple
-                            // text fragments at all with this bit of code.
-                            // need to muck with parseTextValues cuz we're
-                            // not passing valindex by reference like we do
-                            // on the C++ side.
-                            parseTextValues (p, valindex, child.getNodeValue(), iostatus);
-                            break;
-                        default:
-                            iostatus.addWarning ("Unexpected XML element in " +
-                                                 "Property definition: '" +
-                                                 child.getNodeValue() + 
-                                                 "'.");
+         // Get child elements.
+         buildProperty(ch, doc, iostatus);
+      }
+
+      return ch;
+   }
+
+
+   private void buildProperty (ConfigChunk ch, Element doc,
+                               ConfigIOStatus iostatus)
+   {
+      String name = doc.getName();
+      int valindex;
+
+      PropertyDesc[] prop_descs = ch.getDesc().getPropertyDescs();
+      List children             = doc.getChildren();
+      int child_count           = children.size();
+
+      // This starts at 1 because the "Name" property is always at index 0.
+      // Since the chunk's name is an attribute of the element rather than
+      // a child element, it is not handled here.
+      for ( int i = 1; i < prop_descs.length; ++i )
+      {
+         String prop_name  = prop_descs[i].getToken();
+         Property cur_prop = ch.getPropertyFromToken(prop_name);
+         valindex = 0;
+
+         int prop_count = prop_descs[i].getNumValues();
+         Iterator j     = children.iterator();
+
+         while ( j.hasNext() )
+         {
+            Element child = (Element) j.next();
+
+            if ( child.getName().equals(prop_name) )
+            {
+               VarValue new_val = null;
+
+               // I wish there weren't a special case for embedded chunk...
+               if ( cur_prop.getValType() == ValType.EMBEDDEDCHUNK )
+               {
+                  if ( child.hasChildren() )
+                  {
+                     DescEnum[] allowed_types = prop_descs[i].getEnumerations();
+                     Element next_child;
+                     Iterator iter;
+
+                     for ( int k = 0; k < allowed_types.length; ++k )
+                     {
+                        iter = child.getChildren(allowed_types[k].str).iterator();
+
+                        while ( iter.hasNext() )
+                        {
+                           ConfigChunk child_chunk =
+                              buildConfigChunk((Element) iter.next(), iostatus);
+
+                           if ( child_chunk != null )
+                           {
+                              cur_prop.setValue(new VarValue(child_chunk),
+                                                valindex);
+                              valindex++;
+                           }
                         }
-                    }
-                    child = child.getNextSibling();
-                }
+                     }
+                  }
+                  else
+                  {
+                     iostatus.addError("ERROR: Embedded chunk expected for property " +
+                                       prop_name + " but no chunk found");
+                  }
+               }
+               else
+               {
+                  String child_value = child.getTextTrim();
+                  new_val = cur_prop.desc.getEnumValue(child_value);
+
+                  if ( new_val == null )
+                  {
+                     new_val = new VarValue(cur_prop.getValType());
+                     try
+                     {
+                        new_val.set(child_value);
+                     }
+                     catch (Exception e)
+                     {
+                        iostatus.addWarning(e);
+                     }
+                  }
+
+                  // prop_count will be -1 if there is no limit to the number
+                  // of values for the curent property.  Otherwise, it will
+                  // specify the maximum number that can be inserted.
+                  if ( new_val != null &&
+                       (prop_count == -1 || valindex < prop_count) )
+                  {
+                     cur_prop.setValue(new_val, valindex);
+                     valindex++;
+                  }
+                  else if ( prop_count != -1 && valindex >= prop_count )
+                  {
+                     iostatus.addWarning("WARNING: Ignoring extra element for property " +
+                                         prop_name + " (" + prop_count +
+                                         " allowed, " + valindex + " read)");
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   //------------------------ ChunkDescDB Methods --------------------------
+
+   public void readChunkDescDB(File file, ChunkDescDB db,
+                               ConfigIOStatus iostatus)
+   {
+      // build the XML stream into a DOM tree
+      try
+      {
+         SAXBuilder builder = new SAXBuilder();
+         Document doc       = builder.build(file);
+         buildChunkDescDB(db, doc.getRootElement(), iostatus);
+      }
+      catch (JDOMException e)
+      {
+         iostatus.addFailure(e);
+      }
+   }
+
+
+   public void readChunkDescDB(InputStream in, ChunkDescDB db,
+                               ConfigIOStatus iostatus)
+   {
+      // build the XML stream into a DOM tree
+      try
+      {
+         SAXBuilder builder = new SAXBuilder();
+         Document doc       = builder.build(in);
+         buildChunkDescDB(db, doc.getRootElement(), iostatus);
+      }
+      catch (JDOMException e)
+      {
+         iostatus.addFailure(e);
+      }
+   }
+
+
+   public void writeChunkDescDB(DataOutputStream out, ChunkDescDB db)
+      throws IOException
+   {
+      try
+      {
+         String xml = db.xmlRep();
+         out.writeBytes(xml);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new IOException(e.getMessage());
+      }
+   }
+
+   public void writeChunkDescDB(File out, ChunkDescDB db)
+      throws IOException
+   {
+      try
+      {
+         String xml = db.xmlRep();
+         DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
+         ostream.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+         ostream.writeBytes(xml);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new IOException(e.getMessage());
+      }
+   }
+
+
+
+   /** Converts a DOM tree to a ChunkDescDB.
+    *  This method reads the DOM tree rooted at doc, and puts all
+    *  ChunkDescs it finds into db.  doc can be a DOCUMENT,
+    *  DOCUMENT_FRAGMENT (with the first element being "<ChunkDescDB">)
+    *  or an ELEMENT (labeled "<ChunkDescDB>").
+    *
+    *  Any problems encountered during the build are recorded in the
+    *  ConfigIOStatus argument.
+    */
+   public void buildChunkDescDB(ChunkDescDB db, Element doc,
+                                ConfigIOStatus iostatus)
+   {
+      ChunkDesc desc;
+      String name = doc.getName();
+
+      if (name.equals(ConfigTokens.chunk_desc_db_TOKEN))
+      {
+         List children = doc.getChildren();
+         Iterator i    = children.iterator();
+
+         while ( i.hasNext() )
+         {
+            desc = buildChunkDesc((Element) i.next(), iostatus);
+            if (desc != null)
+            {
+               db.add(desc);
+            }
+         }
+      }
+      else
+      {
+         iostatus.addWarning("Unrecognized element '" + name + "'.");
+      }
+   }
+
+   public void buildChunkDescDB(ChunkDescDB db, Document doc,
+                                ConfigIOStatus iostatus)
+   {
+      List children = doc.getRootElement().getChildren();
+      Iterator i    = children.iterator();
+
+      while ( i.hasNext() )
+      {
+         buildChunkDescDB(db, (Element) i.next(), iostatus);
+      }
+   }
+
+   /** Builds a ChunkDesc out of the DOM tree rooted at doc.
+    *  Any problems encountered during the build are recorded in the
+    *  ConfigIOStatus argument.
+    */
+   public ChunkDesc buildChunkDesc (Element doc, ConfigIOStatus iostatus)
+   {
+      ChunkDesc desc = null;
+      String name = doc.getName();
+
+      if (name.equals("ChunkDesc"))
+      {
+         desc = new ChunkDesc();
+         // parse attributes
+         desc.setToken(doc.getAttribute("token").getValue());
+         desc.setName(doc.getAttribute("name").getValue());
+
+         if ( doc.getAttribute("name") == null )
+         {
+            desc.setName(desc.getToken());
+         }
+         else
+         {
+            desc.setName(doc.getAttribute("name").getValue());
+         }
+
+         List children = doc.getChildren();
+         Iterator i    = children.iterator();
+
+         while ( i.hasNext() )
+         {
+            parseChunkDescChildElement(desc, (Element) i.next(), iostatus);
+         }
+      }
+      else
+      {
+         iostatus.addWarning("Unrecognized element '" + name + "'.");
+      }
+
+      return desc;
+   }
+
+   /** Parse a child element of a ChunkDesc element.
+    *  This is a utility function for buildChunkDesc.
+    *  The children of ChunkDesc nodes include PropertyDesc, help,
+    *  and Defaults nodes.
+    */
+   private void parseChunkDescChildElement (ChunkDesc desc, Element doc,
+                                            ConfigIOStatus iostatus)
+   {
+      String name = doc.getName();
+
+      if (name.equals("PropertyDesc"))
+      {
+         PropertyDesc p = new PropertyDesc();
+         Attribute attr;
+
+         attr = doc.getAttribute("token");
+         if ( attr != null )
+         {
+            p.setToken(attr.getValue());
+         }
+
+         attr = doc.getAttribute("name");
+         if ( attr != null )
+         {
+            p.setName(attr.getValue());
+         }
+
+         attr = doc.getAttribute("type");
+         if ( attr != null )
+         {
+            p.setValType(ValType.getValType(attr.getValue()));
+         }
+
+         attr = doc.getAttribute("num");
+         if ( attr != null )
+         {
+            if ( attr.getValue().startsWith("var") )
+            {
+               p.setNumValues(-1);
             }
             else
-                iostatus.addWarning ("No such property '" + name + 
-                                     "' in ConfigChunk of type '" +
-                                     ch.getDescName() + "'.");
-            break;
-        case Node.ATTRIBUTE_NODE:
-            if (name.equalsIgnoreCase ("name")) {
-                ch.setName (value);
+            {
+               p.setNumValues(Integer.parseInt(attr.getValue()));
             }
-            else {
-                p = ch.getPropertyFromToken (name);
-                if (p != null) {
-                    parseTextValues (p, valindex, value, iostatus);
-                }
-                else
-                    iostatus.addWarning ("No such property '" + name + 
-                                         "' in ConfigChunk of type '" +
-                                         ch.getDescName() + "'.");
+         }
+
+         attr = doc.getAttribute("userlevel");
+         if ( attr != null )
+         {
+            String val = attr.getValue();
+
+            if ( val.equalsIgnoreCase("expert") )
+            {
+               p.setUserLevel(1);
             }
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unexpected DOM node type...");
-        }
-    }
-
-
-    private String stringTokenizer (StringBuffer buf) {
-        String s = null;
-        //String tbuf = new String(buf); // for debugging
-        char ch;
-        int i = 0;
-        int j;
-        int n = buf.length();
-        for (i = 0; i < n;) {
-            ch = buf.charAt(i);
-            if (Character.isWhitespace (ch)) {
-                i++;
-                continue;
+            else if ( val.equalsIgnoreCase("beginner") )
+            {
+               p.setUserLevel(0);
             }
-            if (ch == '"') {
-                // we found a quoted string
-                for (j = i+1; j < n; j++)
-                    if (buf.charAt(j) == '"')
-                        break;
-                s = buf.substring (i+1, j);
-                buf.delete (0, j+1);
-                break;
+         }
+
+         if ( p.getName().equals("") )
+         {
+            p.setName(p.getToken());
+         }
+
+         // parse child elements
+         List children = doc.getChildren();
+         Iterator i    = children.iterator();
+
+         while ( i.hasNext() )
+         {
+            parsePropertyDescChildElement(p, (Element) i.next(), iostatus);
+         }
+
+         // right here we should add some validation of the new
+         // propertydesc...
+         desc.addPropertyDesc (p);
+      }
+      else if (name.equals("help"))
+      {
+         desc.setHelp(doc.getText());
+      }
+      else
+      {
+         iostatus.addWarning("Unrecognized element '" + name + "'.");
+      }
+   }
+
+
+
+   /** Parses the child Nodes of a PropertyDesc.
+    *  Utility function for parseChunkDescChildElement.
+    *  The children of a PropertyDesc node include label, enumeration,
+    *  and help nodes.
+    */
+   private void parsePropertyDescChildElement (PropertyDesc p, Element doc,
+                                               ConfigIOStatus iostatus)
+   {
+      String name = doc.getName();
+      Element child;
+      String childname;
+      String childval;
+      int attrcount;
+      int valindex = 0;
+
+      if ( name.equals("item") )
+      {
+         String label_name = doc.getAttribute("label").getValue();
+
+         VarValue value = new VarValue(p.getValType());
+         if ( doc.getAttribute("defaultvalue") != null )
+         {
+            value.set(doc.getAttribute("defaultvalue").getValue());
+         }
+
+         p.addItem(new PropertyDesc.Item(label_name, value));
+      }
+      else if ( name.equals("enumeration") )
+      {
+         String enumname = doc.getAttribute("name").getValue();
+
+         if (!enumname.equals(""))
+         {
+            String enumval = "";
+            if ( doc.getAttribute("value") != null )
+            {
+               enumval= doc.getAttribute("value").getValue();
             }
-            else {
-                // we found an unquoted string
-                for (j = i+1; j < n; j++)
-                    if (Character.isWhitespace(buf.charAt(j)))
-                        break;
-                s = buf.substring (i, j);
-                buf.delete (0, j);
-                break;
-            }
-        }
-        //System.out.println ("String Tokenizer called with '" + tbuf + "' returns '" + s + "'");
-        return s;
-    }
 
+            p.appendEnumeration(enumname, enumval);
+         }
 
-    private void parseTextValues (Property p, int startval, String text,
-                                  ConfigIOStatus iostatus) {
-
-        StringBuffer buf = new StringBuffer (text);
-        String s;
-        VarValue v;
-
-        ValType vt = p.getValType();
-        if (vt == ValType.CHUNK) {
-            // don't check enums for this type, because it contains a list
-            // of allowed chunk _types_, not chunk references.
-            while ((s = stringTokenizer (buf)) != null) {
-                v = new VarValue(ValType.CHUNK);
-                v.set (s);
-                p.setValue (v, startval++);
-            }
-        }
-        else if (vt == ValType.STRING) {
-            while ((s = stringTokenizer (buf)) != null) {
-                v = p.desc.getEnumValue (s);
-                p.setValue (v, startval++);
-            }
-        }
-        else if (vt == ValType.INT || vt == ValType.FLOAT || 
-                 vt == ValType.BOOL) {
-            while ((s = stringTokenizer (buf)) != null) {
-                v = p.desc.getEnumValue (s);
-                p.setValue (v, startval++);
-            }
-        }
-        else
-            iostatus.addError ("THIS SHOULD NOT HAPPEN in XMLConfigIOHandler" +
-                               ".parseTextValues().");
-
-    }
-
-
-    //------------------------ ChunkDescDB Methods --------------------------
-    
-    public void readChunkDescDB (File file, ChunkDescDB db,
-                                 ConfigIOStatus iostatus) {
-
-        Document doc;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        
-	// build the XML stream into a DOM tree
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            doc = builder.parse (file);
-            buildChunkDescDB (db, doc, iostatus);
-        }
-        catch (javax.xml.parsers.ParserConfigurationException e1) {
-            iostatus.addFailure (e1);
-        }
-        catch (org.xml.sax.SAXException e2) {
-            iostatus.addFailure (e2);
-        }
-        catch (IOException e3) {
-            iostatus.addFailure (e3);
-        }
-    }
-
-
-    public void readChunkDescDB (InputStream in, ChunkDescDB db,
-                                 ConfigIOStatus iostatus) {
-
-        Document doc;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-	// build the XML stream into a DOM tree
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            doc = builder.parse (in);
-            buildChunkDescDB (db, doc, iostatus);
-        }
-        catch (javax.xml.parsers.ParserConfigurationException e1) {
-            iostatus.addFailure (e1);
-        }
-        catch (org.xml.sax.SAXException e2) {
-            iostatus.addFailure (e2);
-        }
-        catch (IOException e3) {
-            iostatus.addFailure (e3);
-        }
-    }
-    
-
-    public void writeChunkDescDB (DataOutputStream out, ChunkDescDB db) 
-        throws IOException {
-
-        out.writeBytes (db.xmlRep());
-    }
-
-    public void writeChunkDescDB (File out, ChunkDescDB db) 
-        throws IOException {
-
-        DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
-        ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        ostream.writeBytes (db.xmlRep());
-    }
-
-
-
-    /** Converts a DOM tree to a ChunkDescDB.
-     *  This method reads the DOM tree rooted at doc, and puts all
-     *  ChunkDescs it finds into db.  doc can be a DOCUMENT, 
-     *  DOCUMENT_FRAGMENT (with the first element being "<ChunkDescDB">)
-     *  or an ELEMENT (labeled "<ChunkDescDB>").
-     *
-     *  Any problems encountered during the build are recorded in the
-     *  ConfigIOStatus argument.
-     */
-    public void buildChunkDescDB (ChunkDescDB db, Node doc, 
-                                     ConfigIOStatus iostatus) {
-        Node child;
-        ChunkDesc desc;
-        String name = doc.getNodeName();
-        
-        switch (doc.getNodeType()) {
-        case Node.DOCUMENT_NODE:
-        case Node.DOCUMENT_FRAGMENT_NODE:
-            child = doc.getFirstChild();
-            while (child != null) {
-                buildChunkDescDB (db, child, iostatus);
-                child = child.getNextSibling();
-            }
-            break;
-        case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("ChunkDescDB")) {
-                child = doc.getFirstChild();
-                while (child != null) {
-                    if (child.getNodeType() == Node.ELEMENT_NODE) {
-                        //System.out.println ("got a child of ChunkDescDB");
-                        desc = buildChunkDesc (child, iostatus);
-                        if (desc != null)
-                            db.add (desc);
-                    }
-                    child = child.getNextSibling();
-                }
-            }
-            else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.");
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unrecognized DOM Node type...");
-        }
-
-    }
-
-
-
-    /** Builds a ChunkDesc out of the DOM tree rooted at doc.
-     *  Any problems encountered during the build are recorded in the
-     *  ConfigIOStatus argument.
-     */
-    public ChunkDesc buildChunkDesc (Node doc, ConfigIOStatus iostatus) {
-        Node child;
-        NamedNodeMap attributes;
-        int attrcount;
-        int i;
-        ChunkDesc desc = null;
-        String name = doc.getNodeName();
-
-        switch (doc.getNodeType()) {
-        case Node.DOCUMENT_NODE:
-        case Node.DOCUMENT_FRAGMENT_NODE:
-            child = doc.getFirstChild();
-            return buildChunkDesc (child, iostatus);
-        case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("ChunkDesc")) {
-                desc = new ChunkDesc ();
-                // parse attributes
-                attributes = doc.getAttributes();
-                attrcount = attributes.getLength();
-                for (i = 0; i < attrcount; i++) {
-                    child = attributes.item(i);
-                    if (child.getNodeName().equalsIgnoreCase ("token"))
-                        desc.setToken (child.getNodeValue());
-                    else if (child.getNodeName().equalsIgnoreCase ("name"))
-                        desc.setName (child.getNodeValue());
-                }
-                if (desc.getName().equals (""))
-                    desc.setName (desc.getToken());
-                // parse child elements
-                child = doc.getFirstChild();
-                while (child != null) {
-                    parseChunkDescChildElement (desc, child, iostatus);
-                    child = child.getNextSibling();
-                }
-            }
-            else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.");
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unrecognized DOM Node type...");
-        }
-
-        return desc;
-    }
-        
-
-
-    /** Parse a child element of a ChunkDesc element.
-     *  This is a utility function for buildChunkDesc.
-     *  The children of ChunkDesc nodes include PropertyDesc, help,
-     *  and Defaults nodes.
-     */
-    private void parseChunkDescChildElement (ChunkDesc desc, Node doc,
-                                             ConfigIOStatus iostatus) {
-        String name = doc.getNodeName();
-        String value = doc.getNodeValue();
-        Node child;
-        String childname;
-        String childval;
-        NamedNodeMap attributes;
-        int attrcount;
-        int valindex = 0;
-
-        switch (doc.getNodeType()) {
-        case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("PropertyDesc")) {
-                PropertyDesc p = new PropertyDesc();
-                // parse attributes
-                attributes = doc.getAttributes();
-                attrcount = attributes.getLength();
-                for (int i = 0; i < attrcount; i++) {
-                    child = attributes.item(i);
-                    childname = child.getNodeName();
-                    childval = child.getNodeValue();
-                    if (childname.equalsIgnoreCase ("token"))
-                        p.setToken (childval);
-                    else if (childname.equalsIgnoreCase ("name"))
-                        p.setName (childval);
-                    else if (childname.equalsIgnoreCase ("type"))
-                        p.setValType (ValType.getValType(childval));
-                    else if (childname.equalsIgnoreCase ("num")) {
-                        if (childval.equalsIgnoreCase ("var") ||
-                            childval.equalsIgnoreCase ("variable"))
-                            p.setNumValues (-1);
-                        else {
-                            p.setNumValues (Integer.parseInt (childval));
-                        }
-                    }
-                    else if (childname.equalsIgnoreCase ("userlevel")) {
-                        if (childval.equalsIgnoreCase ("expert"))
-                            p.setUserLevel (1);
-                        else if (childval.equalsIgnoreCase ("beginner"))
-                            p.setUserLevel (0);
-                    }
-                }
-                if (p.getName().equals (""))
-                    p.setName (p.getToken());
-                // parse child elements
-                child = doc.getFirstChild();
-                while (child != null) {
-                    parsePropertyDescChildElement (p, child, iostatus);
-                    child = child.getNextSibling();
-                }
-                // right here we should add some validation of the new
-                // propertydesc...
-                desc.addPropertyDesc (p);
-            }
-            else if (name.equalsIgnoreCase ("help")) {
-                String h = "";
-                child = doc.getFirstChild();
-                while (child != null) {
-                    switch (child.getNodeType()) {
-                    case Node.TEXT_NODE:
-                        h = h + child.getNodeValue();
-                        break;
-                    default:
-                        iostatus.addWarning (
-                            "Unexpected element '" + child.getNodeValue() + 
-                            "' in ChunkDesc help text element.");
-                    }
-                    child = child.getNextSibling();
-                }
-                desc.setHelp (h);
-            }
-            else if (name.equalsIgnoreCase ("Defaults")) {
-                child = doc.getFirstChild();
-                while (child != null) {
-                    switch (child.getNodeType()) {
-                    case Node.ELEMENT_NODE:
-                        // we can't parse the chunk until we're done building
-                        // the desc and stick it into the ChunkFactory's DescDB.
-                        desc.setDefaultChunk (child);
-                        break;
-                    case Node.COMMENT_NODE:
-                    case Node.NOTATION_NODE:
-                    case Node.PROCESSING_INSTRUCTION_NODE:
-                    case Node.TEXT_NODE:
-                        // it's just white space & crap like that.
-                        break;
-                    default:
-                        iostatus.addWarning ("Unrecognized DOM Node type...");
-                    }
-                    child = child.getNextSibling();
-                }
-            }
-            else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.");
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unrecognized DOM Node type...");
-        }
-    }
-
-
-
-    /** Parses the child Nodes of a PropertyDesc.
-     *  Utility function for parseChunkDescChildElement.
-     *  The children of a PropertyDesc node include label, enumeration,
-     *  and help nodes.
-     */
-    private void parsePropertyDescChildElement (PropertyDesc p, Node doc,
-                                                ConfigIOStatus iostatus) {
-        String name = doc.getNodeName();
-        String value = doc.getNodeValue();
-        Node child;
-        String childname;
-        String childval;
-        NamedNodeMap attributes;
-        int attrcount;
-        int valindex = 0;
-
-        switch (doc.getNodeType()) {
-        case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("label")) {
-                String enumname = "";
-                attributes = doc.getAttributes();
-                attrcount = attributes.getLength();
-                for (int i = 0; i < attrcount; i++) {
-                    child = attributes.item(i);
-                    childname = child.getNodeName();
-                    if (childname.equalsIgnoreCase ("name"))
-                        enumname = child.getNodeValue();
-                    else
-                        iostatus.addError ("Unidentified attribute: '" +
-                                           childname + "' in value label.");
-                }
-                if (!enumname.equals(""))
-                    p.appendValueLabel (enumname);
-
-            }
-            else if (name.equalsIgnoreCase ("enumeration")) {
-                // parse attributes
-                String enumname = "", enumval = "";
-                attributes = doc.getAttributes();
-                attrcount = attributes.getLength();
-                for (int i = 0; i < attrcount; i++) {
-                    child = attributes.item(i);
-                    childname = child.getNodeName();
-                    if (childname.equalsIgnoreCase ("name"))
-                        enumname = child.getNodeValue();
-                    else if (childname.equalsIgnoreCase ("value"))
-                        enumval = child.getNodeValue();
-                    else
-                        iostatus.addError ("Unidentified attribute: '" +
-                                           childname + "' in enumeration label.");
-                }
-                if (!enumname.equals(""))
-                    p.appendEnumeration (enumname, enumval);
-
-            }
-            else if (name.equalsIgnoreCase ("help")) {
-                String h = "";
-                child = doc.getFirstChild();
-                while (child != null) {
-                    switch (child.getNodeType()) {
-                    case Node.TEXT_NODE:
-                        h = h + child.getNodeValue();
-                        break;
-                    default:
-                        iostatus.addWarning (
-                            "Unexpected element '" + child.getNodeValue() + 
-                            "' in PropertyDesc help text element.");
-                    }
-                    child = child.getNextSibling();
-                }
-                p.setHelp (h);
-            }
-            else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.");
-            break;
-        case Node.COMMENT_NODE:
-        case Node.NOTATION_NODE:
-        case Node.PROCESSING_INSTRUCTION_NODE:
-        case Node.TEXT_NODE:
-            break;
-        default:
-            iostatus.addWarning ("Unrecognized DOM Node type...");
-        }
-    }
-
-
-
+      }
+      else if ( name.equals("help") )
+      {
+         p.setHelp(doc.getText());
+      }
+      else
+      {
+         iostatus.addWarning("Unrecognized element '" + name + "'.");
+      }
+   }
 }

@@ -54,48 +54,36 @@ import java.io.*;
  */
 public class PropertyDesc implements Cloneable {
 
-    private String name;
-    private String token;
-    private String help;
-    private int num;
-    private ValType valtype;
-    private int enumval; // for assigning numeric defaults to enum entries
+   private String name = "";
+   private String token = "";
+   private String help = "";
+   private int num = 1;
+   private ValType valtype = ValType.INVALID;
+   private Vector mItems = new Vector();
+   private int enumval = 0; // for assigning numeric defaults to enum entries
 
-    // items for assisting in GUI displays of chunks.
+   // items for assisting in GUI displays of chunks.
 
-    /** User level - 0 for beginner, 1 for expert.  default = 0. */
-    private int user_level;
+   /** User level - 0 for beginner, 1 for expert.  default = 0. */
+   private int user_level = 0;
 
-    /** Contains a fixed set of possible values with string labels. */
-    private ArrayList enums;
-
-    /** Assigns an individual label to each value of a property. */
-    private ArrayList valuelabels;
-
+   /** Contains a fixed set of possible values with string labels. */
+   private ArrayList enums = new ArrayList();
 
     public Object clone () throws CloneNotSupportedException {
         PropertyDesc p = (PropertyDesc)super.clone();
-        p.valuelabels = (ArrayList)valuelabels.clone(); // safe; it's a list of strings
-        p.enums = new ArrayList();
-        int i, n = enums.size();
-        for (i = 0; i < n; i++) {
-            p.enums.add (((DescEnum)enums.get(i)).clone());
-        }
+        p.mItems = (Vector) mItems.clone(); // safe; it's a list of strings
+        p.enums = (ArrayList) enums.clone();
+//        int i, n = enums.size();
+//        for (i = 0; i < n; i++) {
+//            p.enums.add (((DescEnum)enums.get(i)).clone());
+//        }
         return p;
     }
 
 
+    /** Creates an "empty" PropertyDesc */
     public PropertyDesc () {
-	/* creates an "empty" PropertyDesc */
-	name = "";
-	token = "";
-	help = "";
-	enums = new ArrayList();
-	valuelabels = new ArrayList();
-	num = 1;
-	valtype = ValType.INVALID;
-        enumval = 0;
-        user_level = 0;
     }
 
 
@@ -111,7 +99,6 @@ public class PropertyDesc implements Cloneable {
 	 */
 
 	try {
-            user_level = 0;
 	    st.nextToken();
 	    token = st.sval;
 	    st.nextToken();
@@ -121,9 +108,6 @@ public class PropertyDesc implements Cloneable {
 	    st.nextToken();
 	    name = st.sval;
             enumval = 0;
-
-            enums = new ArrayList();
-            valuelabels = new ArrayList();
 
 	    //System.out.println ("reading property desc: " + name + " " + token);
 
@@ -143,8 +127,6 @@ public class PropertyDesc implements Cloneable {
 		}
 		parseValueLabels (st);
 	    }
-	    else
-		valuelabels = new ArrayList();
 
 	    if ((st.ttype == StreamTokenizer.TT_WORD) 
 		&& st.sval.equalsIgnoreCase ("vj_enumeration"))
@@ -200,6 +182,61 @@ public class PropertyDesc implements Cloneable {
         return valtype;
     }
 
+   public void addItem (Item item)
+   {
+      mItems.add(item);
+   }
+
+   public Vector getItems ()
+   {
+      return mItems;
+   }
+
+   public void setItem (int index, Item item)
+   {
+      if ( index >= mItems.size() )
+      {
+         mItems.add(index, item);
+      }
+      else
+      {
+         mItems.set(index, item);
+      }
+   }
+
+   /**
+    * Returns a reference to the default value at the given index.  If there
+    * is no such value, null is returned.
+    */
+   public VarValue getDefaultValue (int index)
+   {
+      VarValue val = null;
+      if ( index < mItems.size() )
+      {
+         val = ((Item) mItems.get(index)).getDefaultValue();
+      }
+
+      return val;
+   }
+
+   /**
+    * Returns a copy of the default value at the given index.  If there is
+    * no such default value, null is returned.
+    */
+   public VarValue getDefaultValueCopy (int index)
+   {
+      VarValue val = getDefaultValue(index);
+      VarValue val_copy = null;
+
+      // If we do have a default value at the given index, make the copy.
+      if ( val != null )
+      {
+         val_copy = new VarValue(val);
+      }
+
+      return val_copy;
+   }
+
     public void setHasVariableNumberOfValues (boolean b) {
         if (b)
             num = -1;
@@ -228,31 +265,18 @@ public class PropertyDesc implements Cloneable {
     }
 
     public void appendValueLabel (String label) {
-        valuelabels.add (label);
+        mItems.add(new Item(label, new VarValue(this.getValType())));
     }
 
     public int getValueLabelsSize () {
-        return valuelabels.size();
+        return mItems.size();
     }
 
     public String getValueLabel (int i) {
-        if (i < valuelabels.size())
-            return (String)valuelabels.get(i);
+        if (i < mItems.size())
+            return ((Item) mItems.get(i)).getLabel();
         else
             return "";
-    }
-
-    public String[] getValueLabels () {
-        String[] e = new String[valuelabels.size()];
-        return (String[])valuelabels.toArray(e);
-    }
-
-    /* c had better be a collection of String, or things will get
-     * real ugly real fast.
-     */
-    public void setValueLabels (Collection c) {
-        valuelabels.clear();
-        valuelabels.addAll (c);
     }
 
     public void appendEnumeration (String label, String value) {
@@ -346,11 +370,11 @@ public class PropertyDesc implements Cloneable {
 	    + " \"" + name + "\"";
 
 	/* value labels: */
-	if (valuelabels.size() > 0) {
+	if (mItems.size() > 0) {
 	    DescEnum e;
 	    s += " vj_valuelabels { ";
-	    for (int i = 0; i < valuelabels.size(); i++) {
-		s += "\"" + (String)valuelabels.get(i) + "\" ";
+	    for (int i = 0; i < mItems.size(); i++) {
+		s += "\"" + ((Item)mItems.get(i)).getLabel() + "\" ";
 	    }
 	    s += "}";
 	}
@@ -406,15 +430,24 @@ public class PropertyDesc implements Cloneable {
             retval.append(XMLConfigIOHandler.escapeString(help));
             retval.append("</help>\n");
         }
-        n = valuelabels.size();
-        if (n > 0) {
-            for (i = 0; i < n; i++) {
-                retval.append(newpad);
-                retval.append("<label name=\"");
-                retval.append(XMLConfigIOHandler.escapeString((String)valuelabels.get(i)));
-                retval.append("\"/>\n");
-            }
-        }
+
+      // Loop over each of the items defined for this description.  The format
+      // is <item label="..." defaultvalue="..."/>
+      for (i = 0; i < mItems.size(); i++)
+      {
+         retval.append(newpad);
+         retval.append("<item label=\"");
+         retval.append(XMLConfigIOHandler.escapeString(((Item) mItems.get(i)).getLabel()));
+
+         if ( this.valtype != ValType.EMBEDDEDCHUNK )
+         {
+            retval.append("\" defaultvalue=\"");
+            retval.append(((Item) mItems.get(i)).getDefaultValue().toString());
+         }
+
+         retval.append("\"/>\n");
+      }
+
         n = enums.size();
         if (n > 0) {
             for (i = 0; i < n; i++) {
@@ -547,7 +580,57 @@ public class PropertyDesc implements Cloneable {
 	}
     }
 
+   /**
+    * This is used to contain the attributes of a <ProprtyDesc>'s <item>
+    * child(ren).
+    */
+   public static class Item
+   {
+      public Item (String label, VarValue defaultValue)
+      {
+         mLabel        = label;
+         mDefaultValue = defaultValue;
+      }
 
+      public Item (String label, String value, ValType type)
+      {
+         mLabel = label;
+         mDefaultValue = new VarValue(type);
+         mDefaultValue.set(value);
+      }
+
+      public Object clone () throws CloneNotSupportedException
+      {
+         Item new_item          = (Item) super.clone();
+         new_item.mLabel        = mLabel;
+         new_item.mDefaultValue = mDefaultValue;
+
+         return new_item;
+      }
+
+      public String getLabel ()
+      {
+         return mLabel;
+      }
+
+      public void setLabel (String label)
+      {
+         mLabel = label;
+      }
+
+      public VarValue getDefaultValue ()
+      {
+         return mDefaultValue;
+      }
+
+      public void setDefaultValue (VarValue value)
+      {
+         mDefaultValue = value;
+      }
+
+      private String   mLabel        = "";
+      private VarValue mDefaultValue = null;
+   }
 }
 
 

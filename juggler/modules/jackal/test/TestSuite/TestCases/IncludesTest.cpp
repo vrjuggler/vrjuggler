@@ -7,7 +7,6 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
-#include <jccl/Config/VarValue.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ChunkDescDB.h>
@@ -67,22 +66,22 @@ namespace jcclTest
 
 
 
-    void IncludesTest::XMLChunkIncludeTest () {
+    void IncludesTest::XMLChunkIncludeTest () 
+    {
         jccl::ChunkDescPtr desc;
         jccl::ConfigChunkPtr chunk;
         jccl::ConfigChunkDB chunkdb;
 
-
         std::string file_path(TESTFILES_PATH);
-        chunkdb.load (file_path + "IncludesTest/xml_chunk_include.config");
+        chunkdb.load(file_path + "IncludesTest/xml_chunk_include.config");
 
-        chunk = chunkdb.getChunk ("chunk_using_included_desc");
-        CPPUNIT_ASSERT (chunk.get() != NULL);
+        chunk = chunkdb.get("chunk_using_included_desc");
+        CPPUNIT_ASSERT(chunk.get() != NULL);
 
-        chunk = chunkdb.getChunk ("chunk_superceded_included_chunk");
-        CPPUNIT_ASSERT (chunk.get() != NULL);
-        int i = chunk->getProperty ("int_prop", 0);
-        CPPUNIT_ASSERT ((i == 2) && "value from include has been superceded");
+        chunk = chunkdb.get("chunk_superceded_included_chunk");
+        CPPUNIT_ASSERT(chunk.get() != NULL);
+        int i = chunk->getProperty<int> ("int_prop", 0);
+        CPPUNIT_ASSERT((i == 2) && "value from include has been superceded");
     }
         
 

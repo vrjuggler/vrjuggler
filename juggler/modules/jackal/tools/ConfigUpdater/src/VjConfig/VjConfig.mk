@@ -53,6 +53,7 @@ VJCONFIG_SOURCES = \
 	VjConfig/ConfigIOHandler.java		\
 	VjConfig/ConfigIOStatus.java		\
         VjConfig/ConfigStreamTokenizer.java	\
+        VjConfig/ConfigTokens.java		\
         VjConfig/DescDBEvent.java		\
         VjConfig/DescDBListener.java		\
         VjConfig/DescEnum.java			\

@@ -43,24 +43,26 @@ import org.vrjuggler.jccl.vjcontrol.*;
 
 
 /** Core Module for ChunkOrgTrees
- *  This module provides ChunkOrgTrees, which several UI components use 
+ *  This module provides ChunkOrgTrees, which several UI components use
  *  for displaying ConfigChunks in a categorized tree.
  *  <p>
  *  This module is separate from the ConfigModule because only certain
  *  UI components need it.
- * 
+ *
  *  @version $Revision$
  */
-public class ChunkOrgTreeModule extends DefaultCoreModule {
+public class ChunkOrgTreeModule extends DefaultCoreModule
+{
 
-    protected ChunkOrgTree active_tree;
+   protected ChunkOrgTree active_tree;
 
 
-    public ChunkOrgTreeModule () {
-        super();
-        component_name = "Unconfigured ChunkOrgTreeModule";
-        active_tree = new ChunkOrgTree();
-    }
+   public ChunkOrgTreeModule ()
+   {
+      super();
+      component_name = "Unconfigured ChunkOrgTreeModule";
+      active_tree = new ChunkOrgTree();
+   }
 
 
 //      public String getComponentName () {
@@ -68,147 +70,175 @@ public class ChunkOrgTreeModule extends DefaultCoreModule {
 //      }
 
 
-    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
-        int i;
-        boolean autoload = true;
-        String orgtreename = null;
+   public void setConfiguration (ConfigChunk ch) throws VjComponentException {
+      int i;
+      boolean autoload = true;
+      String orgtreename = null;
 
-        component_name = ch.getName();
+      component_name = ch.getName();
 
-        // check command-line arguments stored in Core
-        String[] args = Core.getCommandLine();
-	for (i = 0; i < args.length; i++) {
-	    if (args[i].startsWith ("-o")) {
-                if (args[i].length() == 2)
-                    orgtreename = args[++i];
-                else
-                    orgtreename = args[i].substring(2);
-	    }
-	    else if (args[i].equalsIgnoreCase ("-noautoload")) {
-		autoload = false;
-	    }
-        }
-
-        // if autoloading is ok, and we haven't been superceded by the
-        // command line anyway, check the global prefs...
-        if (autoload && (orgtreename == null)) {
-            List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
-            for (i = 0; i < v.size(); i++) {
-                ConfigChunk chunk = (ConfigChunk)v.get(i);
-                VarValue val = chunk.getValueFromToken ("orgtreefile", 0);
-                if (val != null)
-                    orgtreename = val.getString();
+      // check command-line arguments stored in Core
+      String[] args = Core.getCommandLine();
+      for( i = 0; i < args.length; i++ )
+      {
+         if( args[i].startsWith ("-o") )
+         {
+            if ( args[i].length() == 2 )
+            {
+               orgtreename = args[++i];
             }
-        }
-
-	if (orgtreename == null && autoload) {
-	    loadMainChunkOrgTree();
-	}
-	else if (orgtreename != null) {
-            loadChunkOrgTree (active_tree, orgtreename);
-	}
-    }
-
-
-    public void initialize () throws VjComponentException {
-        // strictly, loading orgtree files should happen here instead of
-        // the end of configure.
-    }
-
-
-
-    public ChunkOrgTree getOrgTree () {
-        return active_tree;
-    }
-
-    public void setOrgTree (ChunkOrgTree ot) {
-        active_tree = ot;
-    }
-
-
-    /************************* OrgTree Methods **************************/
-
-
-
-    public void loadMainChunkOrgTree () {
-	FileReader r;
-	ConfigStreamTokenizer st;
-	File f1;
-	String homedir;
-
-        try {
-            f1 = new File (Core.file.mangleFileName ("${HOME}/.vjconfig/orgtree.org"));
-            r = new FileReader (f1);
-        }
-        catch (FileNotFoundException e) {
-            try {
-                f1 = new File (Core.file.mangleFileName ("${VJ_SHARE_DIR}/data/orgtree.org"));
-                r = new FileReader(f1);
+            else
+            {
+               orgtreename = args[i].substring(2);
             }
-            catch (FileNotFoundException e2) {
-                Core.consoleErrorMessage (component_name, "Couldn't find default orgtree $VJ_SHARE_DIR/data/orgtree.org");
-                return;
+         }
+         else if( args[i].equalsIgnoreCase ("-noautoload") )
+         {
+            autoload = false;
+         }
+      }
+
+      // if autoloading is ok, and we haven't been superceded by the
+      // command line anyway, check the global prefs...
+      if( autoload && (orgtreename == null) )
+      {
+         List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
+         for( i = 0; i < v.size(); i++ )
+         {
+            ConfigChunk chunk = (ConfigChunk)v.get(i);
+            VarValue val = chunk.getProperty("orgtreefile", 0);
+
+            if ( val != null )
+            {
+               orgtreename = val.getString();
             }
-        }
-            
-        Core.consoleInfoMessage (component_name, "Loading organization tree: " + f1);
-        st = new ConfigStreamTokenizer (r);
-        active_tree.setName (f1.getName());
-        active_tree.setFile (f1);
-        active_tree.read(st);
-        //--- BUG ---
-        //Core.rebuildAllTrees();
-    }
+         }
+      }
+
+      if( orgtreename == null && autoload )
+      {
+         loadMainChunkOrgTree();
+      }
+      else if( orgtreename != null )
+      {
+         loadChunkOrgTree (active_tree, orgtreename);
+      }
+   }
 
 
-    public boolean loadChunkOrgTree (ChunkOrgTree orgtree, String name) {
-        name = Core.file.mangleFileName (name);
-        File f = new File (name);
-        return loadChunkOrgTree (orgtree, f);
-    }
-
-
-    public boolean loadChunkOrgTree (ChunkOrgTree orgtree, File f) {
-	FileReader r;
-	ConfigStreamTokenizer st;
-            
-        try {
-            r = new FileReader (f);
-            Core.consoleInfoMessage (component_name, "Loading organization tree: " + f);
-                st = new ConfigStreamTokenizer (r);
-                orgtree.setName (f.getName());
-                orgtree.setFile (f);
-                orgtree.read(st);
-                //Core.rebuildAllTrees();
-                return true;
-        }
-        catch (FileNotFoundException e) {
-            Core.consoleErrorMessage (component_name, "File not found: " + f);
-            return false;
-        }
-    }
+   public void initialize () throws VjComponentException {
+      // strictly, loading orgtree files should happen here instead of
+      // the end of configure.
+   }
 
 
 
-    public String saveChunkOrgTree (ChunkOrgTree ot, File f) {
-	if (f == null)
-	    return "";
+   public ChunkOrgTree getOrgTree ()
+   {
+      return active_tree;
+   }
 
-	try {
-	    DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
-	    out.writeBytes(ot.toString());
-	    Core.consoleInfoMessage (component_name, "Saved ChunkOrgTree file: " + f);
-
-	    /* do some fixing up if the name changed */
-	    ot.setFile (f);
-	    ot.setName (f.getName());
-	    return f.getName();
-	}
-	catch (IOException e) {
-	    Core.consoleErrorMessage (component_name, "IOerror saving file " + f);
-	    return "";
-	}
-    }
+   public void setOrgTree (ChunkOrgTree ot)
+   {
+      active_tree = ot;
+   }
 
 
+   /************************* OrgTree Methods **************************/
+
+
+
+   public void loadMainChunkOrgTree ()
+   {
+      FileReader r;
+      ConfigStreamTokenizer st;
+      File f1;
+      String homedir;
+
+      try
+      {
+         f1 = new File (Core.file.mangleFileName ("${HOME}/.vjconfig/orgtree.org"));
+         r = new FileReader (f1);
+      }
+      catch( FileNotFoundException e )
+      {
+         try
+         {
+            f1 = new File (Core.file.mangleFileName ("${VJ_SHARE_DIR}/data/orgtree.org"));
+            r = new FileReader(f1);
+         }
+         catch( FileNotFoundException e2 )
+         {
+            Core.consoleErrorMessage (component_name, "Couldn't find default orgtree $VJ_SHARE_DIR/data/orgtree.org");
+            return;
+         }
+      }
+
+      Core.consoleInfoMessage (component_name, "Loading organization tree: " + f1);
+      st = new ConfigStreamTokenizer (r);
+      active_tree.setName (f1.getName());
+      active_tree.setFile (f1);
+      active_tree.read(st);
+      //--- BUG ---
+      //Core.rebuildAllTrees();
+   }
+
+
+   public boolean loadChunkOrgTree (ChunkOrgTree orgtree, String name)
+   {
+      name = Core.file.mangleFileName (name);
+      File f = new File (name);
+      return loadChunkOrgTree (orgtree, f);
+   }
+
+
+   public boolean loadChunkOrgTree (ChunkOrgTree orgtree, File f)
+   {
+      FileReader r;
+      ConfigStreamTokenizer st;
+
+      try
+      {
+         r = new FileReader (f);
+         Core.consoleInfoMessage (component_name, "Loading organization tree: " + f);
+         st = new ConfigStreamTokenizer (r);
+         orgtree.setName (f.getName());
+         orgtree.setFile (f);
+         orgtree.read(st);
+         //Core.rebuildAllTrees();
+         return true;
+      }
+      catch( FileNotFoundException e )
+      {
+         Core.consoleErrorMessage (component_name, "File not found: " + f);
+         return false;
+      }
+   }
+
+
+
+   public String saveChunkOrgTree (ChunkOrgTree ot, File f)
+   {
+      if ( f == null )
+      {
+         return "";
+      }
+
+      try
+      {
+         DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+         out.writeBytes(ot.toString());
+         Core.consoleInfoMessage (component_name, "Saved ChunkOrgTree file: " + f);
+
+         /* do some fixing up if the name changed */
+         ot.setFile (f);
+         ot.setName (f.getName());
+         return f.getName();
+      }
+      catch( IOException e )
+      {
+         Core.consoleErrorMessage (component_name, "IOerror saving file " + f);
+         return "";
+      }
+   }
 }
