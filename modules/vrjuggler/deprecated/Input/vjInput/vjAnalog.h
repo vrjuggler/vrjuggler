@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_ANALOG
 #define COMPATIBILITY_HEADER_VJ_ANALOG
 
-#include <vrj/Input/Type/Analog.h>
+#include <gadget/Type/Analog.h>
 
-typedef vrj::Analog vjAnalog;
+typedef gadget::Analog vjAnalog;
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_FINGER
 #define COMPATIBILITY_HEADER_VJ_FINGER
 
-#include <vrj/Input/Type/Finger.h>
+#include <gadget/Type/Finger.h>
 
-typedef vrj::Finger vjFinger;
+typedef gadget::Finger vjFinger;
 
 #endif

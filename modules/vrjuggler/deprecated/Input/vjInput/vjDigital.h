@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_DIGITAL
 #define COMPATIBILITY_HEADER_VJ_DIGITAL
 
-#include <vrj/Input/Type/Digital.h>
+#include <gadget/Type/Digital.h>
 
-typedef vrj::Digital vjDigital;
+typedef gadget::Digital vjDigital;
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_HAND
 #define COMPATIBILITY_HEADER_VJ_HAND
 
-#include <vrj/Input/Type/Hand.h>
+#include <gadget/Type/Hand.h>
 
-typedef vrj::Hand vjHand;
+typedef gadget::Hand vjHand;
 
 #endif

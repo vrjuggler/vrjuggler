@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_GESTURE
 #define COMPATIBILITY_HEADER_VJ_GESTURE
 
-#include <vrj/Input/Type/Gesture.h>
+#include <gadget/Type/Gesture.h>
 
-typedef vrj::Gesture vjGesture;
+typedef gadget::Gesture vjGesture;
 
 #endif
