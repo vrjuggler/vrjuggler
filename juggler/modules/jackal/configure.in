@@ -495,9 +495,6 @@ AC_CONFIG_FILES([
    test/TestSuite/test.defs.mk
    test/TestSuite/TestCases/Makefile
    test/TestSuite/java/Makefile
-   tools/Makefile
-   tools/ConfigUpdater/build.xml
-   tools/ConfigUpdater/Makefile
    mtree/JCCL.data.dist
    mtree/JCCL.include.dist
    mtree/JCCL.install.dist
