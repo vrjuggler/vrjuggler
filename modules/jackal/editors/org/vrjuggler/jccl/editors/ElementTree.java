@@ -43,6 +43,19 @@ import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.undo.ConfigElementNameEdit;
 
+
+/**
+ * Simple factory-like helper class that centralizes the creation of the
+ * data flavors that are needed for copy/paste and drag-and-drop support.
+ */
+class DataFlavorFactory
+{
+   static DataFlavor makeConfigElementFlavor()
+   {
+      return new DataFlavor(ConfigElement.class, "VR Juggler Config Element");
+   }
+}
+
 /**
  * Wraps a ConfigElement to allow us to transfer it from on context to another
  * either using copy/past or drag and drop methods.
@@ -108,7 +121,7 @@ class ConfigElementSelection
 
    /** Array of valid DataFlavors for transfering a ConfigElement. */
    private DataFlavor[] flavors =
-      { new DataFlavor(ConfigElement.class, "VR Juggler Config Element") };
+      { DataFlavorFactory.makeConfigElementFlavor() };
 }
 
 /**
@@ -545,8 +558,7 @@ class ElementTree
             ConfigContextModel config_model = (ConfigContextModel)model;
 
             // Get the ConfigElement to paste out of the clipboard.
-            DataFlavor my_flavor = new DataFlavor(ConfigElement.class,
-                                                  "VR Juggler Config Element");
+            DataFlavor my_flavor = DataFlavorFactory.makeConfigElementFlavor();
             Transferable tr = clipboard.getContents(this);
 
             // If this JTree has a valid JTreeModel and the incoming paste
@@ -656,8 +668,7 @@ class ElementTree
          TreeModel model = this.getModel();
          if(model instanceof ConfigContextModel)
          {
-            DataFlavor my_flavor = new DataFlavor(ConfigElement.class,
-                                                  "VR Juggler Config Element");
+            DataFlavor my_flavor = DataFlavorFactory.makeConfigElementFlavor();
 
             try
             {
@@ -728,8 +739,7 @@ class ElementTree
       {
          TreeModel model = this.getModel();
          ConfigContextModel config_model = (ConfigContextModel)model;
-         DataFlavor my_flavor = new DataFlavor(ConfigElement.class,
-                                               "VR Juggler Config Element");
+         DataFlavor my_flavor = DataFlavorFactory.makeConfigElementFlavor();
          Transferable tr = e.getTransferable();
 
          // If this JTree has a valid JTreeModel and the incoming drop supports
