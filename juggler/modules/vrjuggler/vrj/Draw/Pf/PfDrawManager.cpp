@@ -31,6 +31,13 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
    for (int i=0;i<numPipes;i++)
    {
       pipeStrs.push_back(sgiChunk->getProperty("xpipes", i));
+      if(strcmp(pipeStrs[i], "-1") == 0)    // Use display env
+      {
+         char* display_env = getenv("DISPLAY");
+         char* xpipe_name  = new char[strlen(display_env)+1];
+         strcpy(xpipe_name, display_env);
+         pipeStrs[i] = xpipe_name;
+      }
       vjDEBUG(0) << "Pipe:" << i << ": " << pipeStrs[i] << endl << vjDEBUG_FLUSH;
    }
 
@@ -92,7 +99,6 @@ void vjPfDrawManager::initDrawing()
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(numPipes);
    pfMultiprocess(PFMP_APP_CULL_DRAW);
-
 
    initLoaders();          // Must call before pfConfig
 
@@ -258,8 +264,8 @@ void vjPfDrawManager::initSimulator()
 
 void vjPfDrawManager::updateSimulator(vjSimulator* sim)
 {
-   pfMatrix head_mat = sim->getHeadPos().getPfMatrix();
-   pfMatrix wand_mat = sim->getWandPos().getPfMatrix();
+   pfMatrix head_mat = vjGetPfMatrix(sim->getHeadPos());
+   pfMatrix wand_mat = vjGetPfMatrix(sim->getWandPos());
    mHeadDCS->setMat(head_mat);
    mWandDCS->setMat(wand_mat);
 }

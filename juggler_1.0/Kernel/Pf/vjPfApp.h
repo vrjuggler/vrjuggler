@@ -7,6 +7,7 @@
 //#include <Kernel/vjKernel.h>
 class vjKernel;
 #include <Kernel/Pf/vjPfDrawManager.h>
+#include <Kernel/Pf/vjPfUtil.h>
 
 //-------------------------------------------------------------
 //: Encapulates an actual Performer application.
