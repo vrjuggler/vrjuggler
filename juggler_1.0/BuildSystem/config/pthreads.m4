@@ -44,7 +44,7 @@ dnl     _PTHREADS_DRAFT_10 - The POSIX thread implementation is Draft 10.
 dnl     _PTHREADS_DRAFT_4  - The POSIX thread implementation is Draft 4.
 dnl ===========================================================================
 
-dnl pthreads.m4,v 1.11 2001/01/23 19:59:11 patrick Exp
+dnl pthreads.m4,v 1.12 2001/01/26 21:43:37 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that POSIX threads are needed for compiling.
@@ -289,7 +289,7 @@ AC_DEFUN(DPP_GET_POSIX_SEMAPHORE_LIB,
     dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
     dnl # with a fatal error.  If we are using POSIX threads, we need to have
     dnl # working POSIX semaphores too.
-    AC_CHECK_FUNC(sem_init, ,
+    AC_CHECK_FUNC(sem_init, $1,
         AC_CHECK_LIB(posix4, sem_init,
             [ SEM_LIB='-lposix4'
               $1 ],

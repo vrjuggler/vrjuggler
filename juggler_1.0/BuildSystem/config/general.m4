@@ -9,10 +9,10 @@ dnl     DPP_INIT          - Initialize Doozer++.
 dnl     DPP_VERSION_CHECK - Compare two version numbers.
 dnl ===========================================================================
 
-dnl general.m4,v 1.6 2001/01/24 02:20:49 patrick Exp
+dnl general.m4,v 1.7 2001/01/26 21:43:58 patrick Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.2)
+define(DPP_DPPVERSION, 1.2.1)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
