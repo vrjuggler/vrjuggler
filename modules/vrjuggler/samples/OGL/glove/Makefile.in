@@ -63,7 +63,7 @@ EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @
 
 OBJECTS		= main.@OBJEXT@			\
                   gloveApp.@OBJEXT@		\
-                  vjStdCaveNavigator.@OBJEXT@	\
+                  navigation.@OBJEXT@	\
                   Scene.@OBJEXT@
 
 # -----------------------------------------------------------------------------
@@ -76,8 +76,8 @@ all: glove@EXEEXT@
 glove@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-main.@OBJEXT@: gloveApp.h
-gloveApp.@OBJEXT@: gloveApp.h vjStdCaveNavigator.h
+main.@OBJEXT@: gloveApp.h defines.h navigation.h
+gloveApp.@OBJEXT@: gloveApp.h defines.h navigation.h
 
 .cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
