@@ -103,8 +103,8 @@ private:
 
    gmtl::Matrix44f  mDesktopMatrix;  /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
-   gmtl::Tri<float> mDesktopUL;
-   gmtl::Tri<float> mDesktopLR;
+   //gmtl::Tri<float> mDesktopUL;
+   //gmtl::Tri<float> mDesktopLR;
 
    bool mDesktopWandIsect;
    bool mDesktopGrabbed;
