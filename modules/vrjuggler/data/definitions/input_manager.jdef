@@ -44,14 +44,14 @@
                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                          xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
            
-           <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
-           <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
            
-           <xsl:template match="/">
+            <xsl:template match="/">
                 <xsl:apply-templates />
-           </xsl:template>
+            </xsl:template>
            
-           <xsl:template match="jconf:input_manager">
+            <xsl:template match="jconf:input_manager">
                <xsl:element namespace="{$jconf}" name="input_manager_mine">
                   <xsl:attribute name="name">
                      <xsl:value-of select="@name"/>
@@ -98,8 +98,6 @@
                </xsl:element>
             </xsl:template>
 
-            <xsl:template match="jconf:dso_file_extension" />
-            
             <xsl:template name="get-path">
                <xsl:param name="original"/>
                <xsl:param name="path_sep"/>
@@ -111,7 +109,7 @@
                </xsl:variable>
                <xsl:value-of select="substring-before($original, $driver_name)"/>
             </xsl:template>
-            
+
             <xsl:template name="strip-path">
                <xsl:param name="original"/>
                <xsl:param name="path_sep"/>
