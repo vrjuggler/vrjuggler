@@ -33,6 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vpr/vpr.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
 
 #include <gadget/Type/EventWindow.h>
@@ -155,6 +156,32 @@ std::string EventWindow::getKeyName(gadget::Keys keyId)
 
    // If all of the above fell through ...
    return std::string("Unknown key");
+}
+
+std::queue<gadget::EventPtr> EventWindow::getEventQueue()
+{
+   vpr::Guard<vpr::Mutex> guard(mCurEventQueueLock);
+   return mCurEventQueue;
+}
+
+void EventWindow::addEvent(gadget::EventPtr e)
+{
+   vpr::Guard<vpr::Mutex> guard(mWorkingEventQueueLock);
+   mWorkingEventQueue.push(e);
+}
+
+void EventWindow::updateEventQueue()
+{
+   vpr::Guard<vpr::Mutex> work_guard(mWorkingEventQueueLock);
+   {
+      vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
+      mCurEventQueue = mWorkingEventQueue;
+   }
+
+   while ( ! mWorkingEventQueue.empty() )
+   {
+      mWorkingEventQueue.pop();
+   }
 }
 
 } // End of gadget namespcae

@@ -30,87 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYS_H_
-#define _GADGET_KEYS_H_
+#ifndef _GADGET_KEY_EVENT_PTR_H_
+#define _GADGET_KEY_EVENT_PTR_H_
+
+#include <boost/smart_ptr.hpp>
+
 
 namespace gadget
 {
-
-/// Names of defined keys.
-enum Keys
-{
-   KEY_NONE,
-   KEY_UP,
-   KEY_DOWN,
-   KEY_LEFT,
-   KEY_RIGHT,
-   KEY_SHIFT,
-   KEY_CTRL,
-   KEY_ALT,
-   KEY_1,
-   KEY_2,
-   KEY_3,
-   KEY_4,
-   KEY_5,
-   KEY_6,
-   KEY_7,
-   KEY_8,
-   KEY_9,
-   KEY_0,
-   KEY_A,
-   KEY_B,
-   KEY_C,
-   KEY_D,
-   KEY_E,
-   KEY_F,
-   KEY_G,
-   KEY_H,
-   KEY_I,
-   KEY_J,
-   KEY_K,
-   KEY_L,
-   KEY_M,
-   KEY_N,
-   KEY_O,
-   KEY_P,
-   KEY_Q,
-   KEY_R,
-   KEY_S,
-   KEY_T,
-   KEY_U,
-   KEY_V,
-   KEY_W,
-   KEY_X,
-   KEY_Y,
-   KEY_Z,
-   KEY_ESC,
-
-   // XXX: Mouse information probably shouldn't be here in the long term.
-   MOUSE_POSX,
-   MOUSE_NEGX,
-   MOUSE_POSY,
-   MOUSE_NEGY,
-   MBUTTON1,
-   MBUTTON2,
-   MBUTTON3
-};
-
-enum ModiferMask
-{
-   SHIFT_MASK = (1 << 0),
-   ALT_MASK   = (1 << 1),
-   CTRL_MASK  = (1 << 2)
-};
-
-enum ButtonMask
-{
-   BUTTON1_MASK = (1 << 3),
-   BUTTON2_MASK = (1 << 4),
-   BUTTON3_MASK = (1 << 5),
-   BUTTON4_MASK = (1 << 6),
-   BUTTON5_MASK = (1 << 7)
-};
-
+   class KeyEvent;
+   typedef boost::shared_ptr<KeyEvent> KeyEventPtr;
 } // End of gadget namespace
 
-#endif /* _GADGET_KEYS_H_ */
+
+#endif /* _GADGET_KEY_EVENT_PTR_H_ */

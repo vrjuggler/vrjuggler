@@ -158,11 +158,57 @@ private:
    int onlyModifier(int);
    //@}
 
+   /** @name Event handling utility methods. */
+   //@{
    /**
     * Handles any events in the system.
     * Copies mKeys to mCurKeys.
     */
    void HandleEvents();
+
+   /**
+    * Adds a new key press/release event to the event queue for this window.
+    *
+    * @post A new event (gadget::KeyEvent) is added to the event queue.
+    *
+    * @param key        The key whose state changed.
+    * @param isKeyPress Flag stating whether this is a key press or a key
+    *                   release event.
+    */
+   void addKeyEvent(gadget::Keys key, const bool& isKeyPress, const int& state,
+                    const Time& time);
+
+   /**
+    * Adds a new mouse motion event to the event queue for this window.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param event The X11 motion event object.
+    */
+   void addMouseEvent(const XMotionEvent& event);
+
+   /**
+    * Adds a new mouse button press/release event to the event queue for this
+    * window.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param event         The X11 button event object.
+    * @param isButotnPress Flag stating whether this is a button press or a
+    *                      button release event.
+    */
+   void addMouseEvent(const XButtonEvent& event, const bool& isButtonPress);
+
+   /**
+    * Constructs a windowing system-independent mask of modifier keys and
+    * mouse buttons from the given X11 state value.
+    *
+    * @param state An integer value from the X Window System that gives the
+    *              current state of depressed keyboard modifiers and mouse
+    *              buttons.
+    */
+   int getMask(const int& state);
+   //@}
 
    /** @name X-Window System utility functions */
    //@{
@@ -170,7 +216,7 @@ private:
     * Converts X Window key to Key.
     * @note Keypad keys are transformed ONLY to number keys.
     */
-   int xKeyToKey(::KeySym xKey);
+   gadget::Keys xKeyToKey(::KeySym xKey);
 
    /** Opens the X window to sample from. */
    int openTheWindow();

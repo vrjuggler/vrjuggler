@@ -38,6 +38,9 @@
 
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
+#include <gadget/Type/EventWindow/KeyEvent.h>
+#include <gadget/Type/EventWindow/MouseEvent.h>
+
 #include <gadget/Devices/EventWindow/EventWindowXWin.h> // my header
 
 
@@ -258,14 +261,16 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array
    {
       mKeys[j] = mRealkeys[j];
    }
+
+   updateEventQueue();
 }
 
 void EventWindowXWin::HandleEvents()
 {
    XEvent event;
    KeySym key;
-   int    vj_key;          // The key in vj space
-   bool   have_events_to_check(true);  // Used by the while loop below
+   gadget::Keys vj_key;          // The key in vj space
+   bool have_events_to_check(true);  // Used by the while loop below
 
    // XXX: Need to add to mask to get more events for subclasses
    const long event_mask = (KeyPressMask | KeyReleaseMask | ButtonPressMask |
@@ -294,7 +299,6 @@ void EventWindowXWin::HandleEvents()
 // array.
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array for the duration of this function
 
-
    // Loop while the event queue contains events for mWindow that are part
    // of the given event mask.
    while(have_events_to_check)
@@ -310,6 +314,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          vj_key = xKeyToKey(key);
          mRealkeys[vj_key] = 1;
          mKeys[vj_key] += 1;
+
+         addKeyEvent(vj_key, true, event.xkey.state, event.xkey.time);
 
          // -- Update lock state -- //
          // Any[key == ESC]/unlock(ifneeded) -> Unlocked
@@ -376,8 +382,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          }
 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)    //vprDBG_HVERB_LVL
-            << "KeyPress:  " << std::hex << key
-            << " state:" << ((XKeyEvent*)&event)->state
+            << "KeyPress: " << std::hex << key
+            << " state: " << ((XKeyEvent*)&event)->state
             << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
 
          break;
@@ -389,6 +395,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          key = XLookupKeysym((XKeyEvent*)&event,0);
          vj_key = xKeyToKey(key);
          mRealkeys[vj_key] = 0;
+
+         addKeyEvent(vj_key, false, event.xkey.state, event.xkey.time);
 
          // -- Update lock state -- //
          // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
@@ -421,7 +429,11 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
             cur_x = event.xmotion.x;
             cur_y = event.xmotion.y;
 
-            vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "MotionNotify: x:"  << std::setw(6) << cur_x << "  y:" << std::setw(6) << cur_y << std::endl << vprDEBUG_FLUSH;
+            addMouseEvent(event.xmotion);
+
+            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+               << "MotionNotify: x:"  << std::setw(6) << cur_x << "  y:"
+               << std::setw(6) << cur_y << std::endl << vprDEBUG_FLUSH;
 
             if(mLockState == Unlocked)
             {
@@ -474,14 +486,17 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          case Button1:
             mRealkeys[gadget::MBUTTON1] = 1;
             mKeys[gadget::MBUTTON1] += 1;
+            addMouseEvent(event.xbutton, true);
             break;
          case Button2:
             mRealkeys[gadget::MBUTTON2] = 1;
             mKeys[gadget::MBUTTON2] += 1;
+            addMouseEvent(event.xbutton, true);
             break;
          case Button3:
             mRealkeys[gadget::MBUTTON3] = 1;
             mKeys[gadget::MBUTTON3] += 1;
+            addMouseEvent(event.xbutton, true);
             break;
          }
 
@@ -493,12 +508,15 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          {
          case Button1:
             mRealkeys[gadget::MBUTTON1] = 0;
+            addMouseEvent(event.xbutton, false);
             break;
          case Button2:
             mRealkeys[gadget::MBUTTON2] = 0;
+            addMouseEvent(event.xbutton, false);
             break;
          case Button3:
             mRealkeys[gadget::MBUTTON3] = 0;
+            addMouseEvent(event.xbutton, false);
             break;
          }
 
@@ -511,6 +529,105 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
       have_events_to_check = XCheckWindowEvent(mDisplay, mWindow, event_mask,
                                                &event);
    }
+}
+
+void EventWindowXWin::addKeyEvent(gadget::Keys key, const bool& isKeyPress,
+                                  const int& state, const Time& time)
+{
+   gadget::EventPtr key_event(new gadget::KeyEvent(key, isKeyPress,
+                                                   getMask(state), time));
+   addEvent(key_event);
+}
+
+void EventWindowXWin::addMouseEvent(const XMotionEvent& event)
+{
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(getMask(event.state),
+                                                       false, event.x,
+                                                       event.y, event.x_root,
+                                                       event.y_root,
+                                                       event.time));
+   addEvent(mouse_event);
+}
+
+void EventWindowXWin::addMouseEvent(const XButtonEvent& event,
+                                    const bool& isButtonPress)
+{
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(getMask(event.state),
+                                                       isButtonPress, event.x,
+                                                       event.y, event.x_root,
+                                                       event.y_root,
+                                                       event.time));
+   addEvent(mouse_event);
+}
+
+int EventWindowXWin::getMask(const int& state)
+{
+   int mask(0);
+
+   if ( state & ShiftMask )
+   {
+      mask |= gadget::SHIFT_MASK;
+   }
+
+   if ( state & ControlMask )
+   {
+      mask |= gadget::CTRL_MASK;
+   }
+
+   // At least with XFree86, Mod1 is the Alt key.
+   if ( state & Mod1Mask )
+   {
+      mask |= gadget::ALT_MASK;
+   }
+
+/*
+   if ( state & Mod2Mask )
+   {
+      std::cout << "Mod2 is pressed\n";
+   }
+
+   if ( state & Mod3Mask )
+   {
+      std::cout << "Mod3 is pressed\n";
+   }
+
+   if ( state & Mod4Mask )
+   {
+      std::cout << "Mod4 is pressed\n";
+   }
+
+   if ( state & Mod5Mask )
+   {
+      std::cout << "Mod5 is pressed\n";
+   }
+*/
+
+   if ( state & Button1Mask )
+   {
+      mask |= gadget::BUTTON1_MASK;
+   }
+
+   if ( state & Button2Mask )
+   {
+      mask |= gadget::BUTTON2_MASK;
+   }
+
+   if ( state & Button3Mask )
+   {
+      mask |= gadget::BUTTON3_MASK;
+   }
+
+   if ( state & Button4Mask )
+   {
+      mask |= gadget::BUTTON4_MASK;
+   }
+
+   if ( state & Button5Mask )
+   {
+      mask |= gadget::BUTTON5_MASK;
+   }
+
+   return mask;
 }
 
 int EventWindowXWin::stopSampling()
@@ -537,7 +654,7 @@ int EventWindowXWin::stopSampling()
    return 1;
 }
 
-int EventWindowXWin::xKeyToKey(KeySym xKey)
+gadget::Keys EventWindowXWin::xKeyToKey(KeySym xKey)
 {
    switch (xKey)
    {
@@ -638,9 +755,8 @@ int EventWindowXWin::xKeyToKey(KeySym xKey)
    case XK_y         : return gadget::KEY_Y;
    case XK_z         : return gadget::KEY_Z;
    case XK_Escape    : return gadget::KEY_ESC;
-   default: return 255;
+   default           : return gadget::KEY_NONE;  // XXX: Is this right?
    }
-
 }
 
 /*****************************************************************/
@@ -732,8 +848,6 @@ int EventWindowXWin::openTheWindow()
 
    return 1;
 }
-
-
 
 /* Sets basic window manager hints for a window. */
 void EventWindowXWin::setHints(Window window, char* window_name,
