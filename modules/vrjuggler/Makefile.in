@@ -457,20 +457,19 @@ _build_dbg_lib_static:
 	@echo "Building static debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          EXTRA_LDOPTS="${LDOPTS_DBG}" ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
+          ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          EXTRA_LDOPTS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
-          ${_DBG_LIBDIR}/${GL_LIB_STATIC}
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          EXTRA_LDOPTS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
-          ${_DBG_LIBDIR}/${PF_LIB_STATIC}
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${PF_LIB_STATIC}
 endif
 
 # Build the shared libraries with the debugging flags enabled.
 _build_dbg_lib_shared:
+ifneq (@OS_TYPE@, Win32)
 	@echo "================================================"
 	@echo "Building shared debugging libraries"
 	@echo "================================================"
@@ -485,6 +484,11 @@ ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
           EXTRA_LDOPTS="${LDOPTS_OPT}" LIBDIR="${_DBG_LIBDIR}"		\
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}
+endif
+else
+	@echo "================================================"
+	@echo "Cannot build shared libs on Win32 yet!"
+	@echo "================================================"
 endif
 
 # Build the static libraries with the optimization flags enabled.
@@ -505,6 +509,7 @@ endif
 
 # Build the shared libraries with the optimization flags enabled.
 _build_opt_lib_shared:
+ifneq (@OS_TYPE@, Win32)
 	@echo "================================================"
 	@echo "Building shared optmized libraries"
 	@echo "================================================"
@@ -518,6 +523,12 @@ ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
           LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}
 endif
+else
+	@echo "================================================"
+	@echo "Cannot build shared libs on Win32 yet!"
+	@echo "================================================"
+endif
+
 
 # --------------------------------------------------------------------
 # Build only the object files using the default values for ${OBJDIR}.
@@ -542,7 +553,7 @@ ${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.o
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
-	${AR} $@ ${OBJDIR}/*.o
+	${AR} ${AR_NAME_FLAG}$@ ${OBJDIR}/*.o
 	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"

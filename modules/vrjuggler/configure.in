@@ -224,6 +224,7 @@ AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
 
 AR=''			dnl # Archive library command (generally ar(1))
 ARFLAGS=''		dnl # Flags for $AR
+AR_NAME_FLAG=''		dnl # Extra flag used to allow $AR to name its output
 DEP_GEN_FLAG='-M'	dnl # Flag for the compiler to generate dependencies
 LD=''			dnl # Shared library command (usually ld(1))
 LDOPTS=''		dnl # More options for shared library generator
@@ -428,8 +429,9 @@ case $target_os in
             _thread_pkg='WIN32'
         fi
 
-        AR='cl'
-        ARFLAGS="$ARFLAGS -nologo -o"
+        AR='link -lib'
+        ARFLAGS="$ARFLAGS -nologo"
+        AR_NAME_FLAG='-out:'
         CFLAGS="-nologo"
         CXXFLAGS="-nologo"
         DBG_FLAGS='-Od -GZ'
@@ -1081,6 +1083,7 @@ AC_SUBST(VJ_SRCDIR)
 
 AC_SUBST(AR)
 AC_SUBST(ARFLAGS)
+AC_SUBST(AR_NAME_FLAG)
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEP_GEN_FLAG)
