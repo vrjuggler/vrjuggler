@@ -213,6 +213,39 @@ public class ConfigBrokerProxy
    }
 
    /**
+    * Adds the given listener to receive config events from this broker.
+    */
+   public void addConfigListener(ConfigListener listener)
+   {
+      broker.addConfigListener(listener);
+   }
+
+   /**
+    * Removes the given listener from receiving config events from this broker.
+    */
+   public void removeConfigListener(ConfigListener listener)
+   {
+      broker.removeConfigListener(listener);
+   }
+
+   /**
+    * Adds the given listener to receive config broker events from this broker.
+    */
+   public void addConfigBrokerListener(ConfigBrokerListener listener)
+   {
+      broker.addConfigBrokerListener(listener);
+   }
+
+   /**
+    * Removes the given resource listener from receiving confi broker events
+    * from this broker.
+    */
+   public void removeConfigBrokerListener(ConfigBrokerListener listener)
+   {
+      broker.removeConfigBrokerListener(listener);
+   }
+
+   /**
     * The config broker instance this object is proxy to.
     */
    private ConfigBroker broker;
