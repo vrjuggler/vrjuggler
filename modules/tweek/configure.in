@@ -292,7 +292,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 DPP_PATH_JAVA( ,
    DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
       getNamespace(uri), [String uri = new String("test")], BUILD_JAVA='Y',
-      [ AC_MSG_WARN(*** JDOM required for Tweek ***)
+      [ AC_MSG_WARN(*** JDOM required for Tweek Java API ***)
         BUILD_JAVA='N' ],
       $JDOM_JAR),
    BUILD_JAVA='N')
@@ -315,7 +315,7 @@ AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH(0.15.0, , AC_MSG_ERROR(*** VPR required for Tweek ***))
+VPR_PATH(0.15.0, , AC_MSG_ERROR(*** VPR required for Tweek C++ API ***))
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 
 # Find omniORB.  This one is a beast.
@@ -342,21 +342,24 @@ setup_omniORB ( )
 
    AC_CHECK_HEADER(omniORB$OMNI_VER/omniORB.h,
       tweek_omni_inc="$cxx_orb_root/include",
-      [AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])])
+      [AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
+       BUILD_CXX='N'
+      ])
 
-   LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
-   LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
+   if test "x$BUILD_CXX" != "xN" ; then
+      LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
+      LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
 
-   if test "x$OMNI_VER" = "x3" ; then
-      LIBS="$LIBS -lomniGK_stub"
-   fi
+      if test "x$OMNI_VER" = "x3" ; then
+         LIBS="$LIBS -lomniGK_stub"
+      fi
 
-   DPP_LANG_SAVE
-   DPP_LANG_CPLUSPLUS
+      DPP_LANG_SAVE
+      DPP_LANG_CPLUSPLUS
 
-   AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
-      [tweek_cv_CORBA__ORB_init_in_omniORB],
-      AC_TRY_LINK([
+      AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
+         [tweek_cv_CORBA__ORB_init_in_omniORB],
+         AC_TRY_LINK([
 #include <omniORB$OMNI_VER/CORBA.h>
 
 int omni_main_i(int argc, char** const argv)
@@ -364,44 +367,49 @@ int omni_main_i(int argc, char** const argv)
    CORBA::ORB_init(argc, argv, "omniORB$OMNI_VER");
    return 0;
 }],
-                  [omni_main_i(0, NULL);],
-                  [ tweek_cv_CORBA__ORB_init_in_omniORB='yes'
-                    rm -rf ./ii_files ],
-                  [tweek_cv_CORBA__ORB_init_in_omniORB='no']))
+                     [omni_main_i(0, NULL);],
+                     [ tweek_cv_CORBA__ORB_init_in_omniORB='yes'
+                       rm -rf ./ii_files ],
+                     [tweek_cv_CORBA__ORB_init_in_omniORB='no']))
 
-   AC_PATH_PROG(CXX_IDL, omniidl, no, [${OMNI_BIN_DIR}:$PATH])
+      DPP_LANG_RESTORE
 
-   if test "x$CXX_IDL" = "xno" ; then
-      AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])
-   fi               
+      AC_PATH_PROG(CXX_IDL, omniidl, no, [${OMNI_BIN_DIR}:$PATH])
 
-   CXX_IDL_OPTS='-bcxx -Wbh=.h,s=.cpp'
-   CXX_IDL_GENDIR_OPT='-C'
-   CXX_IDL_INCFLAG='-I'
+      if test "x$CXX_IDL" = "xno" ; then
+         AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
+         BUILD_CXX='N'
+      else
+         CXX_IDL_OPTS='-bcxx -Wbh=.h,s=.cpp'
+         CXX_IDL_GENDIR_OPT='-C'
+         CXX_IDL_INCFLAG='-I'
 
-   if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
-      CXX_ORB_INCLUDES="-I$tweek_omni_inc"
-      CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER"
-      CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
+         if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
+            BUILD_CXX='Y'
 
-      if test "x$OMNI_VER" = "x3" ; then
-	 CXX_ORB_LIB="$CXX_ORB_LIB -lomniGK_stub"
+            CXX_ORB_INCLUDES="-I$tweek_omni_inc"
+            CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER"
+            CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
+
+            if test "x$OMNI_VER" = "x3" ; then
+               CXX_ORB_LIB="$CXX_ORB_LIB -lomniGK_stub"
+            fi
+
+            CXX_ORB_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
+            CXX_ORB_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
+
+            CXX_ORB_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib omniDynamic$OMNI_VER.lib omniGK_stub.lib"
+            CXX_ORB_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
+
+            AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
+            AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H, <omniORB$OMNI_VER/CORBA.h>)
+            AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER")
+         else
+            AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
+            BUILD_CXX='N'
+         fi
       fi
-
-      CXX_ORB_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
-      CXX_ORB_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
-
-      CXX_ORB_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib omniDynamic$OMNI_VER.lib omniGK_stub.lib"
-      CXX_ORB_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
-
-      AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
-      AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H, <omniORB$OMNI_VER/CORBA.h>)
-      AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER")
-   else
-      AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])
    fi
-
-   DPP_LANG_RESTORE
 }
 
 # --------------------
@@ -495,7 +503,7 @@ case $java_orb_name in
             ],
             [$JAVA_ORB_JAR])
       else
-         AC_MSG_WARN([*** $java_orb_name required for Tweek ***])
+         AC_MSG_WARN([*** $java_orb_name required for Tweek Java API ***])
          BUILD_JAVA='N'
       fi
       ;;
@@ -691,6 +699,7 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SAFE_TWEEKROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
+AC_SUBST(BUILD_CXX)
 AC_SUBST(CXX_IDL_OPTS)
 AC_SUBST(CXX_IDL_GENDIR_OPT)
 AC_SUBST(CXX_IDL_INCFLAG)
