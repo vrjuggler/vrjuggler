@@ -1,0 +1,17 @@
+#! /bin/sh
+#
+#
+# Do cool stuff
+# Note: Do not hold Allen accountable for any damages incurred
+#
+
+# If the script succeeds, then we fail.
+if perl $CVSROOT/CVSROOT/cmd.verify.pl ${1+"$@"}
+then
+  exit 0
+else
+  echo "cmd.verify: Executed command"
+  exit 1
+fi
+
+exit 0		# Lets do it!
