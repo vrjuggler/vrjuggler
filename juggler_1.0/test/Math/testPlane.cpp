@@ -70,7 +70,7 @@ int main(void)
 
    hit = zy_plane.isect(seg_through,&t_dist);
    std::cout << "Testing isect (through): ";
-   if(hit && VJ_IS_ZERO(t_dist - 1.0f))
+   if(hit && vjMath::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
@@ -93,14 +93,14 @@ int main(void)
    // Test isect with a line
    hit = zy_plane.isectLine(seg_through,&t_dist);
    std::cout << "Testing isectLine (through): ";
-   if(hit && VJ_IS_ZERO(t_dist - 1.0f))
+   if(hit && vjMath::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
 
    hit = zy_plane.isectLine(seg_toward,&t_dist);
    std::cout << "Testing isectLine (toward): ";
-   if(hit && VJ_IS_ZERO(t_dist - 1.0f))
+   if(hit && vjMath::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
