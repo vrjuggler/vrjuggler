@@ -128,7 +128,9 @@ $(PARAM_HEADER):
 
 # Things to do after the object files and library are built.
 afterbuild:
+ifeq ($(BUILD_JAVA),Y)
 	@$(MAKE) -C tools/ConfigUpdater
+endif
 	@$(MAKE) links
 
 # -----------------------------------------------
