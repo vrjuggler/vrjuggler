@@ -22,7 +22,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 		link="app.basics/application_objects_overview.html"
 		info="Application objects overview">
 	<item title="App obj benefits"
-		link="app.basics/application_object_benefits.html"
+		link="app.basics/application_objects_benefits.html"
 		info="Application object benefits">
 	<item title="Startup"
 		link="app.basics/vr_juggler_startup.html"
@@ -30,10 +30,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 	<item title="App obj details"
 		link="app.basics/application_object_details.html"
 		info="Application object details">	
-	<item title="App obj details - vjApp"
+	<item title="App obj details"
 		link="app.basics/details_base_app_object_interface.html"
 		info="Base application object details">
-	<item title="App obj details - vj*App"
+	<item title="Draw Mgr App obj details"
 		link="app.basics/details_drawmgr_app_object_interfaces.html"
 		info="Draw manager specific application object details">
 </folder>
@@ -96,10 +96,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 			link="app.construction/opengl/opengl_apps-context_data.html"
 			info="What is Context Data?">
 		<item title="Initializing context data"
-			link="app.construction/opengl/opengl_apps-contextInit.html"
+			link="app.construction/opengl/opengl_apps-context_data-contextInit.html"
 			info="How do I initialize OpenGL context data?">
 		<item title="How does context data work?"
-			link="app.construction/opengl/opengl"
+			link="app.construction/opengl/opengl_apps-context_data-how_works.html"
 			info="How does context data work?">
 		<item title="Tutorial: Context data tutorial"
 			link="app.construction/opengl/opengl_context_data-tutorial.html"

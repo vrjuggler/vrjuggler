@@ -9,8 +9,7 @@
 
 <body>
 
-<h1>Application Object Details</h1>
-<h2>Overview</h2>
+<h2>Application Object Details</h2>
 <h3>The functions that are called</h3>
 <p>The base interface of the application object defines the following functions: init(), apiInit(), preFrame(), 
 
@@ -34,11 +33,11 @@ a frame is.</p>
    vjKernel* kernel = vjKernel::instance();
    simpleApp* app = new simpleApp(); 
 
-   kernel->loadConfigFile(...);
+   kernel-&gt;loadConfigFile(...);
 
-   <font color="#FF0000"><b>kernel->start();</b></font>
+   <font color="#FF0000"><b>kernel-&gt;start();</b></font>
 
-   kernel->setApplication(app);
+   kernel-&gt;setApplication(app);
 
    while(!exit)
    {
