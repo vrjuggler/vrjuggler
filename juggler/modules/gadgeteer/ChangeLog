@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-29-2003 patrickh    Extended gadget::EventWndow so that it can act as an
+                        event source.  At this time, only the X11 windows are
+                        filling the event queue.
+                        NEW VERSION: 0.10.2
 Apr-29-2003 patrickh    Use gadget::Keys instead of int wherever possible.
                         NEW VERSION: 0.10.1
 Apr-28-2003 patrickh    Renamed all keyboard-related classes to reflect that

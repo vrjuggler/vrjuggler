@@ -30,87 +30,49 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYS_H_
-#define _GADGET_KEYS_H_
+#ifndef _GADGET_EVENT_H_
+#define _GADGET_EVENT_H_
+
 
 namespace gadget
 {
 
-/// Names of defined keys.
-enum Keys
+class Event
 {
-   KEY_NONE,
-   KEY_UP,
-   KEY_DOWN,
-   KEY_LEFT,
-   KEY_RIGHT,
-   KEY_SHIFT,
-   KEY_CTRL,
-   KEY_ALT,
-   KEY_1,
-   KEY_2,
-   KEY_3,
-   KEY_4,
-   KEY_5,
-   KEY_6,
-   KEY_7,
-   KEY_8,
-   KEY_9,
-   KEY_0,
-   KEY_A,
-   KEY_B,
-   KEY_C,
-   KEY_D,
-   KEY_E,
-   KEY_F,
-   KEY_G,
-   KEY_H,
-   KEY_I,
-   KEY_J,
-   KEY_K,
-   KEY_L,
-   KEY_M,
-   KEY_N,
-   KEY_O,
-   KEY_P,
-   KEY_Q,
-   KEY_R,
-   KEY_S,
-   KEY_T,
-   KEY_U,
-   KEY_V,
-   KEY_W,
-   KEY_X,
-   KEY_Y,
-   KEY_Z,
-   KEY_ESC,
+public:
+   /// Possible event types.
+   enum Type
+   {
+      None       = 0,  /**< No event */
+      KeyEvent   = 1,  /**< Keyboard event */
+      MouseEvent = 2   /**< Mouse event */
+   };
 
-   // XXX: Mouse information probably shouldn't be here in the long term.
-   MOUSE_POSX,
-   MOUSE_NEGX,
-   MOUSE_POSY,
-   MOUSE_NEGY,
-   MBUTTON1,
-   MBUTTON2,
-   MBUTTON3
+   const Type& type() const
+   {
+      return mType;
+   }
+
+   const unsigned long& time() const
+   {
+      return mTime;
+   }
+
+   virtual ~Event()
+   {
+   }
+
+protected:
+   Event(const Type& type, const unsigned long& time)
+      : mType(type), mTime(time)
+   {
+   }
+
+   Type          mType; /**< The event type. */
+   unsigned long mTime; /**< Time at which the event occurred. */
 };
 
-enum ModiferMask
-{
-   SHIFT_MASK = (1 << 0),
-   ALT_MASK   = (1 << 1),
-   CTRL_MASK  = (1 << 2)
-};
+}
 
-enum ButtonMask
-{
-   BUTTON1_MASK = (1 << 3),
-   BUTTON2_MASK = (1 << 4),
-   BUTTON3_MASK = (1 << 5),
-   BUTTON4_MASK = (1 << 6),
-   BUTTON5_MASK = (1 << 7)
-};
 
-} // End of gadget namespace
-
-#endif /* _GADGET_KEYS_H_ */
+#endif /* _GADGET_EVENT_H_ */

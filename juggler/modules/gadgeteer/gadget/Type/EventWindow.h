@@ -36,11 +36,14 @@
 #include <gadget/gadgetConfig.h>
 
 #include <string>
+#include <queue>
 
 #include <vpr/IO/SerializableObject.h>
+#include <vpr/Sync/Mutex.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 #include <gadget/Type/EventWindow/Keys.h>
+#include <gadget/Type/EventWindow/EventPtr.h>
 
 
 namespace gadget
@@ -61,6 +64,8 @@ const unsigned short MSG_DATA_KEYBOARD = 420;
 class GADGET_CLASS_API EventWindow : public vpr::SerializableObject
 {
 public:
+   typedef std::queue<gadget::EventPtr> EventQueue;
+
    EventWindow()
    {
       /* Do nothing. */ ;
@@ -102,7 +107,23 @@ public:
 
    std::string getKeyName(gadget::Keys keyId);
 
+   /**
+    * Returns a copy of the current queue of events for this window.
+    */
+   EventQueue getEventQueue();
+
    int mCurKeys[256]; /**< (0,*): Copy of m_keys that the user reads from between updates. */
+
+protected:
+   void addEvent(gadget::EventPtr e);
+
+   void updateEventQueue();
+
+   EventQueue mCurEventQueue;
+   vpr::Mutex mCurEventQueueLock;
+
+   EventQueue mWorkingEventQueue;
+   vpr::Mutex mWorkingEventQueueLock;
 };
 
 } // end namespace
