@@ -138,13 +138,10 @@ public:
     *        (i.e., finishes its root function).  This routine may return
     *        immediately if this thread has already exited.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned upon succeedful completion.  -1 is returned if
+    *         an error occurred.
     */
-   virtual int join (void** status = NULL)
-   {
-      return PR_JoinThread(mThread);
-   }
+   virtual int join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -155,8 +152,8 @@ public:
     * @post This thread is sent the SIGCONT signal and is allowed to begin
     *        executing again.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned upon succeedful completion.  -1 is returned if
+    *         an error occurred.
     */
    virtual int resume (void)
    {
