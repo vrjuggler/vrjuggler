@@ -120,9 +120,6 @@ public:
       }
    }
    
-   std::vector<xdl::Library> mPlugins;
-   
-   
    void loadPlugins( std::vector<std::string> filelist )
    {
       unloadPlugins();
@@ -136,8 +133,8 @@ public:
          if (regPlugin != NULL)
             regPlugin();
       }
-   }   
-   
+   }
+
    void unloadPlugins()
    {
       for (int x = 0; x < mPlugins.size(); ++x)
@@ -179,6 +176,7 @@ public:
    }
    
    std::map< std::string, snx::SoundImplementation* > mRegisteredImplementations;
+   std::vector<xdl::Library> mPlugins;
 private:  
    /** @link dependency */
    /*#  snx::SoundImplementation lnkSoundImplementation; */
