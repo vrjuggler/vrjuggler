@@ -38,7 +38,7 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(GMTL/gmtl/Version.h)
+AC_INIT([ant/lib/ant.jar])
 AC_CONFIG_AUX_DIR(../share/config)
 DPP_PREREQ([1.5.1])
 DPP_INIT
