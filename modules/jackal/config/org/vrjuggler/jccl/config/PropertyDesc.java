@@ -263,8 +263,7 @@ public class PropertyDesc
          {
             System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
             String chunk_type = this.getEnumAt(0).getName();
-            ChunkDesc desc = ChunkFactory.getChunkDescByToken(chunk_type);
-            ConfigChunk emb_chunk = new ConfigChunk(desc);
+            ConfigChunk emb_chunk = ChunkFactory.createConfigChunk(chunk_type);
             emb_chunk.setName(item_child.getAttribute("label").getValue());
             val.set(emb_chunk);
          }
@@ -274,9 +273,7 @@ public class PropertyDesc
       {
          System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
          String chunk_type = this.getEnumAt(0).getName();
-         System.out.println("Getting desc for chunk type: "+chunk_type);
-         ChunkDesc desc = ChunkFactory.getChunkDescByToken(chunk_type);
-         ConfigChunk emb_chunk = new ConfigChunk(desc);
+         ConfigChunk emb_chunk = ChunkFactory.createConfigChunk(chunk_type);
          emb_chunk.setName(this.getName());
          val.set(emb_chunk);
       }
@@ -698,8 +695,7 @@ public class PropertyDesc
                String desc_token = desc_node.getAttributeValue(name_TOKEN);
 
                // Get the default config chunk for the found desc
-               ChunkDesc desc = ChunkFactory.getChunkDescByToken(desc_token);
-               default_value.set(new ConfigChunk(desc));
+               default_value.set(ChunkFactory.createConfigChunk(desc_token));
             }
          }
 
