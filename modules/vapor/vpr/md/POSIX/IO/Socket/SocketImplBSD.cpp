@@ -241,9 +241,6 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     vpr::Status retval;
     int status;
 
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
-
     // Attempt to connect to the address in m_addr.
     status = ::connect(m_handle->m_fdesc,
                        (struct sockaddr*) &m_remote_addr.m_addr,
@@ -257,7 +254,13 @@ SocketImplBSD::connect (vpr::Interval timeout) {
         // if it's safe to set m_connected and m_blocking_fixed at this
         // point, but they have to be set sometime.
         if ( errno == EINPROGRESS && getNonBlocking() ) {
-            retval.setCode(vpr::Status::InProgress);
+            if ( vpr::Interval::NoWait == timeout ) {
+                retval.setCode(vpr::Status::InProgress);
+            }
+            else {
+                retval = m_handle->isWriteable(timeout);
+            }
+
             m_connected      = true;
             m_blocking_fixed = true;
         }
