@@ -36,6 +36,7 @@
 #include <Input/vjGlove/vjCyberGlove.h>
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Input/vjPosition/logiclass.h>
+#include <Input/vjPosition/vjMotionStar.h>
 #else
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
@@ -64,6 +65,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjSimRelativePosition>* sim_relative = new vjDeviceConstructor<vjSimRelativePosition>;
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
+   vjDeviceConstructor<vjMotionStar>* motion_star = new vjDeviceConstructor<vjMotionStar>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
