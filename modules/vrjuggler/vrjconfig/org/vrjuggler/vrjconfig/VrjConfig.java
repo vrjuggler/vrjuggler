@@ -88,7 +88,7 @@ public class VrjConfig
 
    /**
     * Responding to notification that from the toolbar that a configuration has
-    * been opened or a new configuration has been created, this * method creates
+    * been opened or a new configuration has been created, this method creates
     * a new configuration window to hold it.
     */
    private ConfigIFrame toolbarContextChanged()
@@ -105,6 +105,7 @@ public class VrjConfig
    private void addFrame(JInternalFrame frame)
    {
       frame.addInternalFrameListener(activationListener);
+      frame.addInternalFrameListener(closeListener);
       frame.pack();
       frame.setVisible(true);
       desktop.add(frame);
@@ -122,6 +123,7 @@ public class VrjConfig
    {
       desktop.remove(frame);
       frame.removeInternalFrameListener(activationListener);
+      frame.removeInternalFrameListener(closeListener);
    }
 
    /**
@@ -175,6 +177,11 @@ public class VrjConfig
    private InternalFrameListener activationListener = new ActivationListener();
 
    /**
+    * Our listener for close notifications from the internal frames.
+    */
+   private InternalFrameListener closeListener = new CloseListener();
+
+   /**
     * The special internal frame used to hold configuration editors.
     */
    private class ConfigIFrame
@@ -189,6 +196,7 @@ public class VrjConfig
                true);
          getContentPane().setLayout(new BorderLayout());
          getContentPane().add(editor, BorderLayout.CENTER);
+         setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
       }
 
       /**
@@ -219,6 +227,39 @@ public class VrjConfig
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
          toolbar.setConfigContext(new ConfigContext());
+      }
+   }
+
+   /**
+    * The special internal frame listener detects when a frame has been closed
+    * and cleans up the files that are open.
+    */
+   private class CloseListener
+      extends InternalFrameAdapter
+   {
+      /**
+       * User wants to close the frame. Check if there are any unsaved changes
+       * first.
+       */
+      public void internalFrameClosing(InternalFrameEvent evt)
+      {
+         JInternalFrame src = evt.getInternalFrame();
+         src.dispose();
+      }
+
+      /**
+       * The frame has closed. Clean up after all the files that were open.
+       */
+      public void internalFrameClosed(InternalFrameEvent evt)
+      {
+         ConfigIFrame frm = (ConfigIFrame)evt.getInternalFrame();
+         ConfigContext ctx = frm.getEditor().getConfigContext();
+         for (Iterator itr = ctx.getResources().iterator(); itr.hasNext(); )
+         {
+            // Close the resource
+            String resource = (String)itr.next();
+            System.err.println("Closing resource "+resource+": Not yet implemented.");
+         }
       }
    }
 }
