@@ -105,11 +105,14 @@ void vjPfDrawManager::initDrawing()
    // --- FORKS HERE --- //
    pfConfig();
 
+   // ------ OPEN/ALLOCATE Pipes ------- //
    for (int pipeNum = 0; pipeNum < numPipes; pipeNum++)
    {
       vjDEBUG(0) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
       vjDEBUG(0) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
 
+      if(pipes.size() < pipeNum)    // Make sure there is room for the pipe
+         pipes.push_back(NULL);
       pipes[pipeNum] = pfGetPipe(pipeNum);
       pipes[pipeNum]->setWSConnectionName(pipeStrs[pipeNum]);
       pipes[pipeNum]->setScreen(pipeNum);
@@ -142,6 +145,7 @@ void vjPfDrawManager::initDrawing()
 
       int xo, yo, xs, ys;
       pfPipe* localPipe = pipes[tempPfDisp.disp->pipe()];
+      vjASSERT(NULL != localPipe);        // Make sure we have a good pipe
 
       // --- Setup pWin --- //
       tempPfDisp.pWin = new pfPipeWindow(localPipe);
@@ -188,7 +192,7 @@ void vjPfDrawManager::initDrawing()
    pfChannel* masterChan = disps[0].chans[0];
 
    // Setup all Shared properties
-   masterChan->setTravFunc(PFTRAV_DRAW, vgPfDrawFunc);
+   masterChan->setTravFunc(PFTRAV_DRAW, vjPfDrawFunc);
    masterChan->setNearFar(0.05, 10000.0f);
 
    if (masterChan == NULL)
@@ -377,7 +381,7 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 
 
 // --- Traversal functions --- //
-void vgPfDrawFunc(pfChannel *chan, void* chandata)
+void vjPfDrawFunc(pfChannel *chan, void* chandata)
 {
    vjPfDrawManager* dm = vjPfDrawManager::instance();
    vjPfDrawManager::pfDisp* cur_pf_disp = dm->getPfDisp(chan);
