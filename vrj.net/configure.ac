@@ -89,12 +89,17 @@ VJ_COMPILER_SETUP
 case $cli_impl in
    mono)
       csc_prog='mcs'
+      AC_DEFINE([USE_MONO], , [Define if we are compiling against Mono])
       ;;
    clr)
       csc_prog='csc'
+      AC_DEFINE([USE_CLR], ,
+                [Define if we are compiling against Microsoft's CLR])
       ;;
    pnet)
       csc_prog='cscc'
+      AC_DEFINE([USE_PNET], ,
+                [Define if we are compiling against Portable.NET])
       ;;
    *)
       AC_MSG_ERROR([Unrecognized CLI implementation named $cli_impl])
