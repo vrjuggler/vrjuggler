@@ -1,5 +1,5 @@
 
-#include "vjNetworkConnect.h"
+#include <Environment/vjNetworkConnect.h>
 #include <Kernel/vjKernel.h>
 #include <iostream.h>
 #include <fstream.h>

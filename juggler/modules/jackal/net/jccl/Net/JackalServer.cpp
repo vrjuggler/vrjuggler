@@ -1,6 +1,6 @@
 
 
-#include "vjEnvironmentManager.h"
+#include <Environment/vjEnvironmentManager.h>
 #include <Kernel/vjKernel.h>
 #include <iostream.h>
 #include <fstream.h>
