@@ -110,6 +110,7 @@ SocketImpNSPR::bind () {
     }
     // Otherwise, return success.
     else {
+        m_bound = true;
         retval = true;
     }
 
@@ -127,6 +128,12 @@ SocketImpNSPR::connect () {
     bool retval;
     PRStatus status;
 
+    if(m_bound)
+    {
+        vprDEBUG(0,0) << "SocketImpNSPR::connect: Socket alreay bound.  Can't connect" << vprDEBUG_FLUSH; 
+        return false;
+    }
+
     // Attempt to connect to the address in m_addr.
     status = PR_Connect(m_handle, m_remote_addr.getPRNetAddr(), PR_INTERVAL_NO_TIMEOUT);
 
@@ -136,7 +143,9 @@ SocketImpNSPR::connect () {
        retval = false;
     }
     // Otherwise, return success.
-    else {
+    else
+    {
+        m_bound = true;
         retval = true;
     }
 
@@ -152,7 +161,7 @@ SocketImpNSPR::connect () {
 // defaults.
 // ----------------------------------------------------------------------------
 SocketImpNSPR::SocketImpNSPR ()
-    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
+    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL), m_bound(false)
 {
     /* Do nothing. */ ;
 }
@@ -167,7 +176,7 @@ SocketImpNSPR::SocketImpNSPR (const InetAddr& local_addr,
                             const InetAddr& remote_addr,
                             const SocketTypes::Type sock_type)
     : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
-      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type)
+      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type), m_bound(false)
 {;}
 
 // ----------------------------------------------------------------------------

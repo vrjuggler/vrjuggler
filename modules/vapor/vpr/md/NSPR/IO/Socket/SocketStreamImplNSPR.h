@@ -39,6 +39,7 @@
 
 #include <md/NSPR/SocketImpNSPR.h>
 #include <IO/Socket/SocketStreamOpt.h>
+#include <Utils/Debug.h>
 
 namespace vpr {
 
@@ -68,11 +69,8 @@ public:
     // Copy constructor.
     // XXX: We need to have a reference count here
     // ------------------------------------------------------------------------
-    SocketStreamImpNSPR (const SocketStreamImpNSPR& sock) {
-        m_local_addr      = sock.m_local_addr;
-        m_remote_addr     = sock.m_remote_addr;
-        m_handle          = sock.m_handle;
-    }
+    SocketStreamImpNSPR (const SocketStreamImpNSPR& sock) : SocketImpNSPR(sock)
+    { /* Just call base class */ }
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.
