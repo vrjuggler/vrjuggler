@@ -40,41 +40,43 @@
 #include <vpr/IO/Port/SerialTypes.h>
 
 
-int
-main (int argc, char* argv[]) {
-    vpr::SerialPort* port;
+int main (int argc, char* argv[])
+{
+   vpr::SerialPort* port;
 
-    port = new vpr::SerialPort(argv[1]);
+   port = new vpr::SerialPort(argv[1]);
 
-    port->setOpenReadWrite();
-    port->setOpenBlocking();
+   port->setOpenReadWrite();
+   port->setOpenBlocking();
 
-    if ( port->open().success() ) {
-        char read_buffer[10], write_buffer[10];
-        vpr::Uint32 bytes;
-        int val;
+   if ( port->open().success() )
+   {
+      char read_buffer[10], write_buffer[10];
+      vpr::Uint32 bytes;
+      int val;
 
-        std::cerr << "Port opened\n";
+      std::cerr << "Port opened\n";
 
-        port->disableCanonicalInput();
-        port->setUpdateAction(vpr::SerialTypes::NOW);
-        port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-        port->enableRead();
+      port->disableCanonicalInput();
+      port->setUpdateAction(vpr::SerialTypes::NOW);
+      port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+      port->enableRead();
 
-        for ( int i = 0; i < 10; i++ ) {
-            memset((void*) &read_buffer, '\0', sizeof(read_buffer));
-            port->read(read_buffer, sizeof(read_buffer), bytes);
-            std::cerr << "Read '" << read_buffer << "'\n";
+      for ( int i = 0; i < 10; i++ )
+      {
+         memset((void*) &read_buffer, '\0', sizeof(read_buffer));
+         port->read(read_buffer, sizeof(read_buffer), bytes);
+         std::cerr << "Read '" << read_buffer << "'\n";
 
-            val = atoi(read_buffer);
-            val++;
+         val = atoi(read_buffer);
+         val++;
 
-            memset((void*) &write_buffer, '\0', sizeof(write_buffer));
-            sprintf(write_buffer, "%d", val);
-            port->write(write_buffer, strlen(write_buffer) + 1, bytes);
-            std::cerr << "Wrote '" << write_buffer << "' (" << bytes << " bytes)\n";
-        }
-    }
+         memset((void*) &write_buffer, '\0', sizeof(write_buffer));
+         sprintf(write_buffer, "%d", val);
+         port->write(write_buffer, strlen(write_buffer) + 1, bytes);
+         std::cerr << "Wrote '" << write_buffer << "' (" << bytes << " bytes)\n";
+      }
+   }
 
-    return 0;
+   return 0;
 }
