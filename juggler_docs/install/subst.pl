@@ -59,6 +59,7 @@ $path_subst{"FAQ"} = 'html/misc/faq.html';
 $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
 $path_subst{"SITEMAP"} = 'html/misc/sitemap.html';
 $path_subst{"USERSITEMAP"} = 'html/misc/usertype.sitemap.html';
+$path_subst{"CREDITS"} = 'html/misc/contributors.html';
 
 
 
