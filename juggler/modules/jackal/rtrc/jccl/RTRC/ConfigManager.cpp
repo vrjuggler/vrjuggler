@@ -180,7 +180,7 @@ int vjConfigManager::scanForLostDependencies()
 
          // Add the pending re-addition
          vjConfigChunk* copy_of_chunk;          // Need a copy so that the remove can delete the chunk
-         (*copy_of_chunk) = (*chunks[i]);       // Make the copy
+         copy_of_chunk = new vjConfigChunk (*chunks[i]);
          pending.mType = vjPendingChunk::ADD;
          pending.mChunk = copy_of_chunk;
          addPending(pending);                   // Add the add item
