@@ -147,7 +147,8 @@ endif
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR=		vpr/DynLoad	\
+SUBDIR=		external	\
+		vpr/DynLoad	\
 		vpr/IO		\
 		vpr/Sync	\
 		vpr/Thread	\

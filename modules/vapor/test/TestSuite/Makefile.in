@@ -47,11 +47,7 @@ default: debug
 DEFAULT_SET=	1
 
 # Set to "Y" to enable usage of the qt test runner
-USE_QTRUNNER = N
-
-CPPDOM_ROOT = ${JUGGLERROOT_ABS}/external/cppdom
-EXTRA_SRCS_PATH = ${CPPDOM_ROOT}/cppdom
-EXTRA_INCLUDES += ${CPPDOM_ROOT}
+USE_QTRUNNER=	N
 
 include test.defs.mk
 
@@ -72,9 +68,9 @@ CPPUNIT_LINK_FLAGS = @CPPUNIT_LDFLAGS@ @LIBCPPUNIT@
 # Add on stuff for qt
 #
 ifeq ($(USE_QTRUNNER), Y)
-   EXTRA_CXXFLAGS += -DUSE_QT_TESTRUNNER
-   EXTRA_INCLUDES += -I$(QTDIR)/include
-   CPPUNIT_LINK_FLAGS += -lqttestrunner
+   EXTRA_CXXFLAGS+=	-DUSE_QT_TESTRUNNER
+   EXTRA_INCLUDES+=	-I$(QTDIR)/include
+   CPPUNIT_LINK_FLAGS+=	-lqttestrunner
 endif
 
 # -----------------------------------------------------------------------------
@@ -102,8 +98,7 @@ LINKALL_OFF=	@APP_LINKALL_OFF@
 # -----------------------------------------------------------------------------
 # Build stuff.
 # -----------------------------------------------------------------------------
-CPPDOM_SRCS= cppdom.cpp version.cpp xmlparser.cpp xmltokenizer.cpp
-SRCS=		main.cpp ${CPPDOM_SRCS}
+SRCS=		main.cpp
 ALL_OBJS=	$(OBJDIR)/*.@OBJEXT@
 SUBDIR=		TestCases
 
