@@ -1382,6 +1382,8 @@ else
     AC_CHECK_TYPE(u_int, unsigned int)
 fi
 
+AC_CHECK_TYPE(caddr_t, char*)
+
 dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
