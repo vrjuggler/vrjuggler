@@ -2,10 +2,10 @@
 <beanlist>
   <viewer name="Tree Viewer">
     <file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
-          entry="org/vrjuggler/tweek/treeviewer/BeanTreeViewer" />
+          class="org.vrjuggler.tweek.treeviewer.BeanTreeViewer" />
   </viewer>
   <viewer name="Icon Viewer">
     <file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
-          entry="org/vrjuggler/tweek/iconviewer/BeanIconViewer" />
+          class="org.vrjuggler.tweek.iconviewer.BeanIconViewer" />
   </viewer>
 </beanlist>

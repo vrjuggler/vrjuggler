@@ -2,7 +2,7 @@
 <beanlist>
   <guipanel name="Test Bean">
     <file name="${TWEEK_BASE_DIR}/bin/beans/TestBean.jar" 
-          entry="testbean/TestBean" />
+          class="testbean.TestBean" />
     <tree path="/Beans" />
   </guipanel>
 </beanlist>
