@@ -6,52 +6,70 @@
 
 namespace vpr
 {
+   /**
+    * Class used to represent the status of a function or method upon its
+    * return.
+    *
+    * @author Kevin Meinert
+    */
    class VPR_CLASS_API Status
    {
    public:
+      /// Possible status codes
       enum Code
       {
-         Success, Failure, WouldBlock, Timeout, InProgress
+         Success,          /**< Successful status */
+         Failure,          /**< Failure status */
+         WouldBlock,       /**< Operation would block */
+         Timeout,          /**< Timeout occurred */
+         InProgress        /**< Operation is still in progress */
       };
-         
-      //: default constructor.  Success is default
+
+      /// Default constructor.  vpr::Status:;Success is default
       Status() : mStatus( Success )
       {
       }
 
-      //: copy()
-      // RESULT: this = status
-      void copy( const Status& status )
+      /**
+       * Copies the given object into this object.
+       * RESULT: this = status
+       *
+       * @param status The <code>vpr::Status</code> object to be copied.
+       */
+      void copy( const vpr::Status& status )
       {
          mStatus = status.mStatus;
       }
-      
-      //: set the status code
-      // RESULT: set status to code
-      void setCode( const Code& code )
+
+      /**
+       * Sets the status code.
+       * RESULT: set status to code
+       */
+      void setCode( const vpr::Status::Code& code )
       {
          mStatus = code;
       }
-      
-      //: get status code
-      // RESULT: set status to code
-      const Code& code() const
+
+      /**
+       * Gets status code
+       */
+      const vpr::Status::Code& code() const
       {
          return mStatus;
       }
-      
-      //: copy constructor
-      Status( const Status& status )
+
+      /// copy constructor
+      Status( const vpr::Status& status )
       {
          this->copy( status );
       }
-      
-      //: Status::Code constructor
-      Status( const Code& code )
+
+      /// Status::Code constructor
+      Status( const vpr::Status::Code& code )
       {
          this->setCode( code );
       }
-      
+
       //: operator=
       // RESULT: this = status
       Status& operator=( const Status& status )
@@ -59,7 +77,7 @@ namespace vpr
          this->copy( status );
          return *this;
       }
-      
+
       //: operator=
       // RESULT: this = status
       Status& operator=( const Code& code )
@@ -74,7 +92,7 @@ namespace vpr
       {
          return status.mStatus == mStatus;
       }
-      
+
       //: operator==
       // RESULT: return true if equal, false if not
       bool operator==( const Code& code ) const
@@ -88,21 +106,21 @@ namespace vpr
       {
          return status.mStatus != mStatus;
       }
-      
+
       //: operator!=
       // RESULT: return false if equal, true if not
       bool operator!=( const Code& code ) const
       {
          return code != mStatus;
       }
-      
+
    public:
       bool success() const { return mStatus == Success; }
       bool failure() const { return mStatus == Failure; }
       bool wouldBlock() const { return mStatus == WouldBlock; }
       bool inProgress() const { return mStatus == InProgress; }
       bool timeout() const { return mStatus == Timeout; }
-      
+
    private:
       Status::Code mStatus;
    };
