@@ -439,7 +439,8 @@ void vjPfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
                         PFCHAN_STATS_DRAWMODE);
    unsigned turn_off = (   PFCHAN_FOV |
                            PFCHAN_VIEW |
-                           PFCHAN_VIEW_OFFSETS);
+                           PFCHAN_VIEW_OFFSETS |
+                           PFCHAN_DRAWFUNC );
 
    masterChan->setShare((cur_share | turn_on) &(~turn_off));
 
