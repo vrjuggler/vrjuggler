@@ -45,20 +45,18 @@
 namespace vrj
 {
 
-/** Draw a basic cone wand
-*/ 
+/** Draw a basic cone wand. */ 
 class GlDrawConeWandFunctor : public GlDrawObjectFunctor
 {
 public:
-   /* Called to initialize any context specific information
-   */
+   /** Called to initialize any context specific information. */
    virtual void contextInit()
    {;}
    
-   /** Callback function for drawing
-   * Called when the object should be drawn
-   * @pre GL context is set and ready to go
-   */
+   /**
+    * Callback function for drawing.  Called when the object should be drawn.
+    * @pre GL context is set and ready to go.
+    */
    virtual void draw()
    {
       const float base = 0.2f;
@@ -67,7 +65,9 @@ public:
       const int stacks = 1;
    
       if (mQuadObj == NULL)
+      {
          mQuadObj = gluNewQuadric();
+      }
 
       glColor3f(0.0f, 1.0f, 0.0f);
       gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
@@ -80,20 +80,18 @@ protected:
 };
 
 
-/** Draw a wand with a right angle
-*/ 
+/** Draw a wand with a right angle. */ 
 class GlDrawRightAngleWandFunctor : public GlDrawObjectFunctor
 {
 public:
-   /* Called to initialize any context specific information
-   */
+   /** Called to initialize any context specific information. */
    virtual void contextInit()
    {;}
    
-   /** Callback function for drawing
-   * Called when the object should be drawn
-   * @pre GL context is set and ready to go
-   */
+   /**
+    * Callback function for drawing.  Called when the object should be drawn.
+    * @pre GL context is set and ready to go.
+    */
    virtual void draw()
    {
       static GLfloat VertexData[] = {
