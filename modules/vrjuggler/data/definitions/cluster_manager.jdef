@@ -8,7 +8,7 @@
    <definition_version version="1" label="ClusterJuggler Configuration">
       <help>All ClusterJuggler configuration settings.</help>
       <parent />
-      <category>/Cluster</category>
+      <category>/Cluster Juggler</category>
       <property valuetype="string" variable="true" name="plugin">
          <help>The names of the cluster plugins to load.</help>
          <value label="Plugin" defaultvalue="" />
