@@ -38,7 +38,6 @@
 
 APPS	= analog	\
           combo		\
-          cones		\
           cubes		\
           digitalGlove	\
           simpleGlove	\
