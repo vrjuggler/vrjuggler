@@ -1,0 +1,5 @@
+The classes in this directory provide a simple interface for drawing and interacting with a VNC desktop viewer in a VR Juggler application.
+
+The interface is defined in VNCDesktop.h.
+
+An example using this interface is available in the /example subdirectory.
