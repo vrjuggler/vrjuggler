@@ -184,24 +184,36 @@ public class ConfigChunkDB {
 
 	remove(c.name);
 
-	// (slightly hacked to make sure includes are first in file)
-	if (!c.getDescToken().equalsIgnoreCase("vjIncludeFile")) {
-	    for (; i < chunks.size(); i++) {
+        if (c.getDescToken().equalsIgnoreCase("vjIncludeDescFile")) {
+            chunks.insertElementAt(c, 0);
+        }
+        else if (c.getDescToken().equalsIgnoreCase("vjIncludeFile")) {
+	    for (i = 0; i < chunks.size(); i++) {
+		t = (ConfigChunk)chunks.elementAt(i);
+		if (!t.getDescToken().equalsIgnoreCase("vjIncludeDescFile")
+                    && !t.getDescToken().equalsIgnoreCase("vjIncludeFile")) 
+                    break;                          
+	    }
+            chunks.insertElementAt(c,i);
+        }
+        else {
+            // all other chunks...
+	    for (i = 0; i < chunks.size(); i++) {
 		t = (ConfigChunk)chunks.elementAt(i);
 		if (t.getDescToken().equalsIgnoreCase(c.getDescToken())) 
 		    break;
 	    }
-	}
-	if (i == size())
-	    chunks.addElement(c);
-	else {
-	    for ( ; i < size(); i++) {
-		t = (ConfigChunk)chunks.elementAt(i);
-		if (!t.getDescToken().equalsIgnoreCase(c.getDescToken()))
-		    break;
-	    }
-	    chunks.insertElementAt(c, i);
-	}
+            if (i == size())
+                chunks.addElement(c);
+            else {
+                for ( ; i < size(); i++) {
+                    t = (ConfigChunk)chunks.elementAt(i);
+                    if (!t.getDescToken().equalsIgnoreCase(c.getDescToken()))
+                        break;
+                }
+                chunks.insertElementAt(c, i);
+            }
+        }
 
 	ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.INSERT, null, c);
 	notifyChunkDBTargets (e);
