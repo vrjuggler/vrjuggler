@@ -168,6 +168,8 @@ public:   // ----- PENDING LIST ----- //
    /** Add an entry to the pending list.
     *  The pending list must not be locked.
     *  A copy of the pendingElement is placed on the pending list.
+    *
+    * @pre - mPendingLock mutex must be locked.
     */
    void addPending(PendingElement& pendingElement);
 

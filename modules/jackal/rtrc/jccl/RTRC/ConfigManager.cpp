@@ -358,10 +358,10 @@ bool ConfigManager::isPendingStale()
 
 void ConfigManager::addPending(PendingElement& pendingElement)
 {
-   vprASSERT(0 == mPendingLock.test());
-   lockPending();
+   // Assert that the pending list is locked prior to calling this method.
+   vprASSERT(1 == mPendingLock.test());
+   
    mPendingConfig.push_back(pendingElement);
-   unlockPending();
 
    refreshPendingList();
 }
@@ -408,14 +408,18 @@ int ConfigManager::scanForLostDependencies()
          PendingElement pending;
          pending.mType = PendingElement::REMOVE;
          pending.mElement = elements[i];
+         lockPending();
          addPending(pending);
+         unlockPending();
 
          // Add the pending re-addition
 //         ConfigElementPtr copy_of_element;          // Need a copy so that the remove can delete the element
 //         copy_of_element = new ConfigElement(*elements[i]);
          pending.mType = PendingElement::ADD;
          pending.mElement = elements[i];//copy_of_element;
+         lockPending();
          addPending(pending);                   // Add the add item
+         unlockPending();
       }
    }
 
