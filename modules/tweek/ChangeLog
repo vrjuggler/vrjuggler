@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-10-11 patrickh    For new users of the Tweek GUI, the default Viewer Bean
+                       is now the Tree Viewer.
 2002-10-10 patrickh    Made the IIOP version used when making the initial
                        Naming Service connection a configurable option in the
                        Java GUI.
