@@ -33,7 +33,11 @@ vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
                               u_int priority, void* stack_addr,
                               size_t stack_size)
 {
-    vjThreadManager::instance()->lock();
+    vjThreadManager* vj_tm_inst;
+
+    vj_tm_inst = vjThreadManager::instance();
+
+    vj_tm_inst->lock();
     {
         int ret_val;
         vjThreadNonMemberFunctor* NonMemFunctor;
@@ -44,7 +48,7 @@ vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
                         stack_size);
         checkRegister(ret_val);
     }
-    vjThreadManager::instance()->unlock();
+    vj_tm_inst->unlock();
 }
 
 // ---------------------------------------------------------------------------
@@ -56,14 +60,18 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
                               u_int priority, void* stack_addr,
                               size_t stack_size)
 {
-    vjThreadManager::instance()->lock();
+    vjThreadManager* vj_tm_inst;
+
+    vj_tm_inst = vjThreadManager::instance();
+
+    vj_tm_inst->lock();
     {
         int ret_val;
 
         ret_val = spawn(functorPtr, flags, priority, stack_addr, stack_size);
         checkRegister(ret_val);
     }
-    vjThreadManager::instance()->unlock();
+    vj_tm_inst->unlock();
 }
 
 // ---------------------------------------------------------------------------
@@ -256,6 +264,7 @@ vjThreadPosix::gettid (void) {
     vjPthreadObj me;
     hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread>::iterator i;
 
+    // Find me in the local thread hash.
     me.obj = pthread_self();
     i = mPthreadHash.find((addr_t) &me);
 
