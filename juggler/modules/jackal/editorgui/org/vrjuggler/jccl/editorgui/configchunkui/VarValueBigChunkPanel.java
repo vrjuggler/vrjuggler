@@ -107,7 +107,7 @@ public class VarValueBigChunkPanel
     public void setValue (VarValue v) {
 	// sets the displayed value.
 	ValType tp = v.getValType();
-	if (!tp.equals (ValType.t_embeddedchunk)) {
+	if (tp != ValType.EMBEDDEDCHUNK) {
 	    Core.consoleErrorMessage ("VarValuePanel", "Unexpected type mismatch");
 	    return;
 	}

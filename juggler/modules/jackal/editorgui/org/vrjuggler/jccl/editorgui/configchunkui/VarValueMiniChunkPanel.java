@@ -109,7 +109,7 @@ public class VarValueMiniChunkPanel
 
 
     public void setValue (VarValue v) {
-	if (v.getValType().equals (ValType.t_embeddedchunk)) {
+	if (v.getValType() == ValType.EMBEDDEDCHUNK) {
 	    chunk = new ConfigChunk (v.getEmbeddedChunk());
 	    VarValue v2;
 	    Property p;

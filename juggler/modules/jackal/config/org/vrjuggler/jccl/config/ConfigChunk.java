@@ -161,7 +161,7 @@ public class ConfigChunk {
         ConfigChunk ch;
         for (i = 0; i < props.size(); i++) {
             p = (Property)props.get(i);
-            if (p.valtype.equals(ValType.t_embeddedchunk)) {
+            if (p.valtype == ValType.EMBEDDEDCHUNK) {
                 for (k = 0; k < p.getNum(); k++) {
                     ch = p.getValue(k).getEmbeddedChunk();
                     // set name will also cause recursive validation.
@@ -288,7 +288,7 @@ public class ConfigChunk {
         int i, j;
         for (i = 0; i < props.size(); i++) {
             p = (Property)props.get(i);
-            if (p.valtype.equals (ValType.t_embeddedchunk)) {
+            if (p.valtype == ValType.EMBEDDEDCHUNK) {
                 for (j = 0; j < p.getNum(); j++) {
                     v.add (p.getValue(j).getEmbeddedChunk());
                 }
@@ -400,14 +400,14 @@ public class ConfigChunk {
 
 	for (j = 0; j < props.size(); j++) {
 	    p = (Property)props.get(j);
-	    if (p.valtype.equals (ValType.t_chunk)) {
+	    if (p.valtype == ValType.CHUNK) {
 		for (k = 0; k < p.vals.size(); k++) {
 		    s = ((VarValue)p.vals.get(k)).getString();
                     if (!s.equals(""))
                         results.add (s);
                 }
 	    }
-	    else if (p.valtype.equals (ValType.t_embeddedchunk)) {
+	    else if (p.valtype == ValType.EMBEDDEDCHUNK) {
 		for (k = 0; k < p.vals.size(); k++) {
 		    ch2 = ((VarValue)p.vals.get(k)).getEmbeddedChunk();
                     List results2 = ch2.getDependencyNames();

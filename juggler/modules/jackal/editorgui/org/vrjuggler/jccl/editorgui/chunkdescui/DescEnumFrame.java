@@ -234,9 +234,9 @@ public class DescEnumFrame extends JFrame
 	    data.clear();
 	    VarValue val;
 	    
-	    if (pdtype.equals (ValType.t_embeddedchunk) || 
-                pdtype.equals (ValType.t_chunk))
-		val = new VarValue(new ValType(ValType.t_string));
+	    if (pdtype == ValType.EMBEDDEDCHUNK || 
+                pdtype == ValType.CHUNK)
+		val = new VarValue(ValType.STRING);
 	    else
 		val = new VarValue (pdtype);
 
@@ -249,8 +249,8 @@ public class DescEnumFrame extends JFrame
 		if (s == null || s.equals (""))
 		    continue; 
 
-		if (pdtype.equals (ValType.t_chunk) || 
-                    pdtype.equals (ValType.t_embeddedchunk)) {
+		if (pdtype == ValType.CHUNK || 
+                    pdtype == ValType.EMBEDDEDCHUNK) {
                     String s2 = Core.descdb.getTokenFromName(p.getName());
           
                     if (s2 != null) {
@@ -259,7 +259,7 @@ public class DescEnumFrame extends JFrame
                     }
 		}
 
-		if (pdtype.equals (ValType.t_int) || pdtype.equals (ValType.t_float)) {
+		if (pdtype == ValType.INT || pdtype == ValType.FLOAT) {
 		    if (p.getVal().equals("")) {
 			val.set (unused++);
 		    }
@@ -267,9 +267,9 @@ public class DescEnumFrame extends JFrame
 			unused = (unused > val.getInt())?(unused):(val.getInt()+1);
 		}
 
-		if (pdtype.equals (ValType.t_string) || 
-                    pdtype.equals (ValType.t_chunk) || 
-                    pdtype.equals (ValType.t_embeddedchunk))
+		if (pdtype == ValType.STRING ||
+                    pdtype == ValType.CHUNK ||
+                    pdtype == ValType.EMBEDDEDCHUNK)
 		    if (p.getVal().equals(""))
 			val.set (s);
 

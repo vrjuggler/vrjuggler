@@ -93,7 +93,7 @@ public class PropertyDesc implements Cloneable {
 	enums = new ArrayList();
 	valuelabels = new ArrayList();
 	num = 1;
-	valtype = new ValType ("int");
+	valtype = ValType.INVALID;
         enumval = 0;
         user_level = 0;
     }
@@ -115,7 +115,7 @@ public class PropertyDesc implements Cloneable {
 	    st.nextToken();
 	    token = st.sval;
 	    st.nextToken();
-	    valtype = new ValType (st.sval);
+	    valtype = ValType.getValType (st.sval);
 	    st.nextToken();
 	    num = Integer.parseInt(st.sval);
 	    st.nextToken();
@@ -150,7 +150,7 @@ public class PropertyDesc implements Cloneable {
 		&& st.sval.equalsIgnoreCase ("vj_enumeration"))
 		st.nextToken();
 	    if (st.ttype == '{') {
-		parseEnumerations (st, valtype);
+		parseEnumerations (st);
 	    }
 
 	    help = st.sval;
@@ -260,13 +260,11 @@ public class PropertyDesc implements Cloneable {
         VarValue v;
         if (value == "") {
             /* no explicit value */
-            if (valtype.equals (ValType.t_string) || 
-                valtype.equals (ValType.t_chunk) ||
-                valtype.equals (ValType.t_embeddedchunk))
-                //d = new DescEnum (label, label);
+            if (valtype == ValType.STRING ||
+                valtype == ValType.CHUNK ||
+                valtype == ValType.EMBEDDEDCHUNK)
                 v = new VarValue(label);
             else
-                //d = new DescEnum (label, enumval++);
                 v = new VarValue(enumval++);
         }
         else {
@@ -316,7 +314,7 @@ public class PropertyDesc implements Cloneable {
 	    return false;
 	if (num != d.num)
 	    return false;
-	if (!valtype.equals(d.valtype))
+	if (valtype != d.valtype)
 	    return false;
 
 	/* KLUDGE: This next part returns false if both
@@ -343,8 +341,8 @@ public class PropertyDesc implements Cloneable {
 
 
     public String toString() {
-	String s = token + " " + valtype.toString() + " " 
-	    + Integer.toString(num) 
+	String s = token + " " + valtype + " " 
+	    + num 
 	    + " \"" + name + "\"";
 
 	/* value labels: */
@@ -363,9 +361,9 @@ public class PropertyDesc implements Cloneable {
 	    s += " vj_enumeration { ";
 	    for (int i = 0; i < enums.size(); i++) {
 		e = (DescEnum) enums.get(i);
-		if (valtype.equals(ValType.t_string) || 
-		    valtype.equals(ValType.t_chunk) ||
-		    valtype.equals(ValType.t_embeddedchunk))
+                if (valtype == ValType.STRING ||
+                    valtype == ValType.CHUNK ||
+                    valtype == ValType.EMBEDDEDCHUNK)
 		    s += "\"" + e.str + "\" ";
 		else
 		    s += "\"" + e.str + "=" + e.val + "\" ";
@@ -424,9 +422,9 @@ public class PropertyDesc implements Cloneable {
                 retval.append(newpad);
                 retval.append("<enumeration name=\"");
                 retval.append(XMLConfigIOHandler.escapeString(e.str));
-		if (valtype.equals(ValType.t_string) || 
-		    valtype.equals(ValType.t_chunk) ||
-		    valtype.equals(ValType.t_embeddedchunk))
+                if (valtype == ValType.STRING ||
+                    valtype == ValType.CHUNK ||
+                    valtype == ValType.EMBEDDEDCHUNK)
                     retval.append("\"/>\n");
                 else {
                     retval.append("\" value=\"");
@@ -478,7 +476,7 @@ public class PropertyDesc implements Cloneable {
 
 
 
-    private void parseEnumerations (ConfigStreamTokenizer st, ValType vt) {
+    private void parseEnumerations (ConfigStreamTokenizer st) {
 	/* Parses a list of enumerations or valuelabels from
 	 * st.  We assume that the opening '{' has already
 	 * been read, and we go until we read and consume the

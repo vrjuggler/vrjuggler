@@ -298,7 +298,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             if (p != null) {
                 child = doc.getFirstChild();
                 while (child != null) {
-                    if (p.valtype.equals(ValType.t_embeddedchunk)) {
+                    if (p.getValType() == ValType.EMBEDDEDCHUNK) {
                         ch = buildConfigChunk (child, true);
                         if (ch != null)
                             p.setValue (new VarValue(ch), valindex++);
@@ -395,28 +395,25 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         VarValue v;
         boolean retval = true;
 
-        switch (p.valtype.getInt()) {
-        case ValType.t_string:
-        case ValType.t_chunk:
+        ValType vt = p.getValType();
+        if (vt == ValType.STRING || vt == ValType.CHUNK) {
             while ((s = stringTokenizer (buf)) != null) {
                 v = p.desc.getEnumValue (s);
                 p.setValue (v, startval++);
             }
-            break;
-        case ValType.t_int:
-        case ValType.t_float:
-        case ValType.t_bool:
+        }
+        else if (vt == ValType.INT || vt == ValType.FLOAT || 
+                 vt == ValType.BOOL) {
             while ((s = stringTokenizer (buf)) != null) {
                 v = p.desc.getEnumValue (s);
                 p.setValue (v, startval++);
             }
-            break;
-        case ValType.t_embeddedchunk:
+        }
+        else if (vt == ValType.EMBEDDEDCHUNK) {
             System.out.println ("strange parsing error...");
-            break;
-        default:
+        }
+        else {
             System.out.println ("what the heck type is this anyway?");
-            break;
         }
 
         return retval;
@@ -649,7 +646,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                     else if (childname.equalsIgnoreCase ("name"))
                         p.setName (childval);
                     else if (childname.equalsIgnoreCase ("type"))
-                        p.setValType (new ValType(childval));
+                        p.setValType (ValType.getValType(childval));
                     else if (childname.equalsIgnoreCase ("num")) {
                         if (childval.equalsIgnoreCase ("var") ||
                             childval.equalsIgnoreCase ("variable"))
