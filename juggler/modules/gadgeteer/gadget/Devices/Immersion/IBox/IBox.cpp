@@ -23,7 +23,7 @@ vjIBox::vjIBox(vjConfigChunk *c) : vjAnalog(c), vjDigital(c), vjInput(c)
   vjDEBUG(5) << "   Creating an IBox.. params: " << endl
              << "	   portnum: " << port_id << endl
              << "        baud   : " << baudRate << endl
-             << "   instanceName: " << instName << endl << endl << flush;
+             << "   instanceName: " << instName << endl << endl << vjDEBUG_FLUSH;
 }
 
 /**********************************************************
@@ -64,7 +64,7 @@ int vjIBox::StartSampling()
       if (result == SUCCESS)
       {
   	    active = 1;
-	    vjDEBUG(4) << "     Connected to IBox.\n" << flush;
+	    vjDEBUG(4) << "     Connected to IBox.\n" << flush << vjDEBUG_FLUSH;
       }
       else
       {
@@ -72,7 +72,7 @@ int vjIBox::StartSampling()
 	    vjDEBUG(5) << "   FAILED TO CONNECT to the Ibox named " << instName << endl
 	     << "     Ibox settings were: " << endl
 	     << "	     port : " << port_id << endl
-	     << "	  baudRate: " << baudRate << endl << endl << flush;
+	     << "	  baudRate: " << baudRate << endl << endl << vjDEBUG_FLUSH;
 	    return 0;
       }
       hci_std_cmd(&thingie, 0,0,0);

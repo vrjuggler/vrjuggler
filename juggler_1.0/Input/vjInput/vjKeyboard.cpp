@@ -148,7 +148,7 @@ if (myThreadID == 0) {
   XRaiseWindow(m_display,m_window);
   
 
-  vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl;
+  vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
   
   //UnUsed// vjKeyboard* devicePtr = this;
   void Samplem_keys(void*);
@@ -268,7 +268,7 @@ void vjKeyboard::UpdateData()
   for (i = 0; i < 4; i++)
   {
     vjDEBUG(6) << "Digital " << i << ": " << m_digdata[i]
-               << "\tAnalog  " << i << ": " << m_anadata[i] << endl;
+               << "\tAnalog  " << i << ": " << m_anadata[i] << endl << vjDEBUG_FLUSH;
   }
  
 }

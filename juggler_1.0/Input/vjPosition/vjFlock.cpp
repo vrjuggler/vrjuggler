@@ -26,7 +26,7 @@ static void set_group(int port);
 
 vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
 {
-  vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl;
+  vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
   port_id = -1;
   active = 0;
   myThreadID = NULL;
@@ -42,7 +42,7 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
   if ((r != 'Q') && (r != 'R') &&
       (r != 'S') && (r != 'T'))
   {
-     vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl;
+     vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
      repRate = 'R';
   }
   else
@@ -50,12 +50,12 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
   
   vjDEBUG(0)   << "	  Flock Settings: " << endl
                << "	        theTransmitter: " << theTransmitter << endl
-	       << "             numBirds      : " << numBirds << endl
+	            << "             numBirds      : " << numBirds << endl
                << "	        baudRate      : " << baudRate << endl
                << "	        deviceAbilities:" << deviceAbilities << endl
                << "	        sPort         : " << sPort << endl
                << "		instance name : " << instName << endl
-               << endl; 
+               << endl << vjDEBUG_FLUSH;
   
   InitCorrectionTable(c->getProperty("calfile")); 
 }
@@ -64,9 +64,9 @@ vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
       BIRD_HEMI hemi, BIRD_FILT filt,
       char report, char* calfile) : vjPosition(), vjInput()
 {
-  vjDEBUG(0)   << "        vjFlock::vjFlock(" << sync << "," << block <<
-		"," << numBrds << "," << transmit
-               << "," << hemi << "," << report << "," << calfile << ") " << endl;
+  vjDEBUG(0)   << "        vjFlock::vjFlock(" << sync << "," << block << ","
+               << numBrds << "," << transmit
+               << "," << hemi << "," << report << "," << calfile << ") " << endl << vjDEBUG_FLUSH;
        
   port_id = -1; active = 0;
   syncStyle = sync;
@@ -83,7 +83,7 @@ vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
 
 vjFlock::~vjFlock()
 {
-  vjDEBUG(0)  << "	vjFlock::~vjFlock()" << endl;
+  vjDEBUG(0)  << "	vjFlock::~vjFlock()" << endl << vjDEBUG_FLUSH;
   StopSampling();
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
@@ -95,7 +95,7 @@ static void SampleBirds(void* pointer)
    //struct timeval tv;
    //double start_time, stop_time;
    
-   vjDEBUG(0) << "vjFlock: Spawned SampleBirds starting" << endl;
+   vjDEBUG(0) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
 
    vjFlock* devPointer = (vjFlock*) pointer;
    for (;;)
@@ -132,7 +132,7 @@ int vjFlock::StartSampling()
       valid = 1;
       progress = 2;
 
-      vjDEBUG(0) << "    Getting flock ready....\n";
+      vjDEBUG(0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
 
       port_id = open_port(sPort, baudRate);
       if (port_id == -1) return 0;
@@ -149,7 +149,7 @@ int vjFlock::StartSampling()
 
 //  cout << "port_id:" << port_id << endl;
 
-      vjDEBUG(0)  << "vjFlock ready to go.." << endl;
+      vjDEBUG(0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
 
       vjFlock* devicePtr = this;
 
@@ -244,7 +244,7 @@ int vjFlock::StopSampling()
       sginap(1);
       char   bird_command[4];
 
-      vjDEBUG(0) << "Stopping the flock...";
+      vjDEBUG(0) << "Stopping the flock..." << vjDEBUG_FLUSH;
 
       bird_command[0] = 'B'; 
       write(port_id, bird_command, 1);
@@ -257,7 +257,7 @@ int vjFlock::StopSampling()
       close(port_id);
       port_id = -1;
 
-      vjDEBUG(0) << "stopped." << endl;
+      vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
    }
    return 1;
 }
@@ -283,7 +283,7 @@ void vjFlock::UpdateData()
 void vjFlock::SetHemisphere(BIRD_HEMI h)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change the hemisphere\n";
+      vjDEBUG(0) << "Cannot change the hemisphere\n" << vjDEBUG_FLUSH;
       return;  
    }
    hemisphere = h;
@@ -292,7 +292,7 @@ void vjFlock::SetHemisphere(BIRD_HEMI h)
 void vjFlock::SetFilters(BIRD_FILT f)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change filters while active\n";
+      vjDEBUG(0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
       return;
   }
   filter = f;
@@ -301,7 +301,7 @@ void vjFlock::SetFilters(BIRD_FILT f)
 void vjFlock::SetReportRate(char rRate)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change report rate while active\n";
+      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
   }
   repRate = rRate;
@@ -310,7 +310,7 @@ void vjFlock::SetReportRate(char rRate)
 void vjFlock::SetTransmitter(int Transmit)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change transmitter while active\n";
+      vjDEBUG(0) << "Cannot change transmitter while active\n" << vjDEBUG_FLUSH;
       return;
   }
   theTransmitter = Transmit;
@@ -318,7 +318,7 @@ void vjFlock::SetTransmitter(int Transmit)
 void vjFlock::SetNumBirds(int n)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change num birds while active\n";
+      vjDEBUG(0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
       return;
   }
   numBirds = n;
@@ -326,7 +326,7 @@ void vjFlock::SetNumBirds(int n)
 void vjFlock::SetSync(int sync)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change report rate while active\n";
+      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
   }
   syncStyle = sync;
@@ -335,7 +335,7 @@ void vjFlock::SetSync(int sync)
 void vjFlock::SetBlocking(int blVal)
 {
   if (active) {
-      vjDEBUG(0) << "Cannot change report rate while active\n";
+      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
   }
   blocking = blVal;
@@ -400,14 +400,14 @@ void vjFlock::InitCorrectionTable(char* fName)
   ifstream inFile;
 
   vjDEBUG(0) << "	  Initializing calibration table ... " << endl 
-             << "	    " << fName << endl;
+             << "	    " << fName << endl << vjDEBUG_FLUSH;
   inFile.open(fName);
   if (!inFile)
   {
-	vjDEBUG(0) << "Unable to open calibration.table\n";
+	vjDEBUG(0) << "Unable to open calibration.table\n" << vjDEBUG_FLUSH;
         return;
   } else {
-     vjDEBUG(0) << "   Calibration table opened sucessfully." << endl;
+     vjDEBUG(0) << "   Calibration table opened sucessfully." << endl << vjDEBUG_FLUSH;
   }
 
   inFile >> caltable.xmin >> caltable.xmax
@@ -502,23 +502,23 @@ static int open_port(char* serialPort, int baud)
    ///////////////////////////////////////////////////////////////////
    int port_id = open(serialPort, O_RDWR | O_NDELAY);
    if (port_id == -1)
-   {vjDEBUG(0) << "!!vjFlock port open failed\n"; 
+   {vjDEBUG(0) << "!!vjFlock port open failed\n" << vjDEBUG_FLUSH ;
       return port_id; 
    }
    else
    {
-      vjDEBUG(0) << "vjFlock port opened successfully\n";
+      vjDEBUG(0) << "vjFlock port opened successfully\n" << vjDEBUG_FLUSH;
    }
    sleep(2);
    close(port_id);
    port_id = open(serialPort,O_RDWR | O_NDELAY);
    if (port_id == -1)
-   {vjDEBUG(0) << "!!vjFlock port open failed\n"; 
+   {vjDEBUG(0) << "!!vjFlock port open failed\n" << vjDEBUG_FLUSH;
       return port_id; 
    }
    else
    {
-      vjDEBUG(0) << "vjFlock port opened successfully\n";
+      vjDEBUG(0) << "vjFlock port opened successfully\n" << vjDEBUG_FLUSH;
    }
 
    //////////////////////////////////////////////////////////////////
