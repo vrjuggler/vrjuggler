@@ -64,6 +64,7 @@
 #include <prenv.h>
 #include <prthread.h>      /* For PR_Sleep() */
 #include <prsystem.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
@@ -127,6 +128,7 @@ public:
 
    static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
    {
+      boost::ignore_unused_variable_warning(tzp);
       PRTime now = PR_Now();
 
       tp->tv_sec  = now / 1000000;
