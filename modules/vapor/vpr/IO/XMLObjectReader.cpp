@@ -43,6 +43,7 @@
 
 #include <vector>
 
+#include <boost/concept_check.hpp>
 #include <boost/static_assert.hpp>
 #include <vpr/IO/ObjectReader.h>
 
@@ -167,7 +168,10 @@ void XMLObjectReader::initCppDomTree(std::vector<vpr::Uint8> data)
 
    mRootNode = new_node;
 
+#ifdef VPR_DEBUG
    std::string root_name = mRootNode->getName();   // Debugging
+   boost::ignore_unused_variable_warning(root_name);
+#endif
 
    mCurNodeStack.clear();
 }
