@@ -73,6 +73,14 @@ dnl    done
         fi
     fi
 
+    if test "x$VPR_BASE_DIR" != "x" ; then
+        vpr_config_args="$vpr_config_args --prefix=$VPR_BASE_DIR"
+
+        if test x${VPR_CONFIG+set} != xset ; then
+            VPR_CONFIG=$VPR_BASE_DIR/bin/vpr-config
+        fi
+    fi
+
     AC_PATH_PROG(VPR_CONFIG, vpr-config, no)
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
 dnl    AC_MSG_CHECKING(for VPR - version >= $min_vpr_version)
