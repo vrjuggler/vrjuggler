@@ -290,9 +290,15 @@ install-data:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(datadir)
-	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/data		\
           -v "$(topdir)/VARS.pl"
+
+install-tools:
+	@echo "------------------------------------------------"
+	@echo "Installing tools"
+	@echo "------------------------------------------------"
+	@echo " doing nothing... "
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
