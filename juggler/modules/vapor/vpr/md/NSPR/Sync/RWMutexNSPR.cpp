@@ -47,24 +47,21 @@
 namespace vpr
 {
 
-//----------------------------------------------------------
-// Try to acquire a read mutex.
-//----------------------------------------------------------
-int RWMutexNSPR::tryAcquireRead ()
+vpr::ReturnStatus RWMutexNSPR::tryAcquireRead ()
 {
-   int retVal = -1;
+   vpr::ReturnStatus retVal(vpr::ReturnStatus::Fail);
 
 /*
-   if (stateLock.acquire() != -1)
+   if (stateLock.acquire().success())
    {
       if (refCount == -1 || numWaitingWriters >0)
       {
-         retVal = -1;
+         retVal.setCode(vpr::ReturnStatus::Fail);
       }
       else
       {
          refCount++;
-         retVal = 0;
+         retVal.setCode(vpr::ReturnStatus::Succeed);
       }
       stateLock.release();
    }
@@ -72,24 +69,17 @@ int RWMutexNSPR::tryAcquireRead ()
    return retVal;
 }
 
-//----------------------------------------------------------
-// Try to acquire a write mutex.
-//----------------------------------------------------------
-int RWMutexNSPR::tryAcquireWrite ()
+vpr::ReturnStatus RWMutexNSPR::tryAcquireWrite ()
 {
-   int retVal = -1;
+   vpr::ReturnStatus retVal(vpr::ReturnStatus::Fail);
 
 /*
-   if (stateLock.acquire() != -1)
+   if (stateLock.acquire().success())
    {
-      if(refCount != 0)
-      {
-        retVal = -1;
-      }
-      else
+      if ( retCount == 0 )
       {
          refCount = -1;
-         retVal = 0;
+         retVal.setCode(vpr::ReturnStatus::Succeed);
       }
       stateLock.release();
    }
@@ -98,4 +88,4 @@ int RWMutexNSPR::tryAcquireWrite ()
    return retVal;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace

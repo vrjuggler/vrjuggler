@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-05-29 patrickh Fixed API for vpr::RWMutexNSPR to match vpr::RWMutex.
+                    NEW VERSION: 0.14.1
 2002-05-24 allenb   Updated Debug to have a disallowed category list.  This
                     lets the user specify categories to ignore.
 2002-05-23 patrickh In an effort to get the Juggler suite of tools compiling
