@@ -37,6 +37,7 @@
 
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/smart_ptr.hpp>
 
 #include <plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/SerializableData.h>
@@ -48,33 +49,36 @@
 
 namespace cluster
 {
-/* 
-- If MyType all ready derives from vpr::SerializableObject you can use the following:
-
-               cluster::UserData<MyType> mMyData;
-
-- Otherwise you can use the SerializableObjectMixing and templete specializations to
-  add the readObject() and writeObject() functions to use for your datatype.
-
-         cluster::UserData<vpr::SerializableObjectMixin<MyType> > mMyData;
-         
-         template<class MyType> 
-         vpr::ReturnStatus 
-         vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer) 2 
-         {
-            writer->writeUint16(something); 
-            writer->writeBool(drawBool); 
-         }
-          
-         template<class MyType> 
-         vpr::ReturnStatus
-         vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* reader)3 
-         { 
-            something = reader->readUint16();
-            drawBool = reader->readBool(); 
-         }
-- For more detailed documentation refer to the VR Juggler documentation at http://www.vrjuggler.org/
-*/
+/**
+ * If MyType all ready derives from vpr::SerializableObject you can
+ * use the following:
+ * 
+ *                cluster::UserData<MyType> mMyData;
+ *                
+ * - Otherwise you can use the SerializableObjectMixin and templete 
+ * specializations to add the readObject() and writeObject() functions
+ * to use for your existing datatype.
+ * 
+ *      cluster::UserData<vpr::SerializableObjectMixin<MyType> > mMyData;
+ *      
+ *      template<class MyType>
+ *      vpr::ReturnStatus
+ *      vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
+ *      {
+ *         writer->writeUint16(something);
+ *         writer->writeBool(drawBool);
+ *      }
+ *
+ *      template<class MyType>
+ *      vpr::ReturnStatus
+ *      vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* reader)
+ *      {
+ *         something = reader->readUint16();
+ *         drawBool = reader->readBool();
+ *      }
+ *
+ * - For more detailed documentation refer to the VR Juggler documentation at http://www.vrjuggler.org/
+ */
 template<class BASE>
 class AppDataMixin : public BASE, public ApplicationData
 {
@@ -104,7 +108,8 @@ private:
 #endif
 };
 
-/* Allows the user to have a copy constructor
+/** 
+ * Allows the user to have a copy constructor
  * and also not have to know the exact type
  */
 template <class TYPE>
@@ -112,74 +117,66 @@ class UserData
 {
 public:
    typedef TYPE Type;
+   typedef boost::shared_ptr< AppDataMixin<TYPE> > AppDataPtr; 
    
    UserData()
-   {
-      mAppData = NULL;
-   }
+   {;}
    
-   /** Copy Constructor */
+   /**
+    * Copy Constructor
+    */
    UserData(UserData& userdata) : mAppData(userdata.mAppData)
-   {
-//      *this = userdata;
-   }
+   {;}
    
-   bool operator== (const UserData& userdata) const
-   {
-      // Make sure user_data is valid also
-      if (NULL == mAppData)
-      {
-         return false;
-      }  // Not valid
-      return (mAppData == userdata.mAppData);
-   }
-   
-   bool operator!= (const UserData& userdata) const
-   {
-      return !(*this == userdata);
-   }
-
    UserData& operator=(const UserData& userdata)
    {
-      //if (! (this == &userdata) )    // Different objects
-      //{
-         mAppData = userdata.mAppData;
-      //}
-   
+      if (this == &userdata)
+      {
+         return *this;
+      }
+      
+      mAppData = AppDataPtr(userdata.mAppData);
       return *this;
    }
 
-
+   /**
+    * Initialize the ApplicationData object.
+    *
+    * @param id         unique id associated with this ApplicationData object.
+    * @param host_name  network address of cluster node responsible for 
+    *                   updating the ApplicationData object
+    */
    void init(vpr::GUID id, std::string host_name = std::string(""))
    {
-      mAppData = new AppDataMixin<TYPE>(id, host_name);
+      mAppData = AppDataPtr(new AppDataMixin<TYPE>(id, host_name));
    }
    
    virtual ~UserData()
-   {
-      delete mAppData;
-   }
-   
+   {}
+  
+   /**
+    * Returns wether this cluster node is responsible for updating 
+    * this ApplicationData object.
+    */
    bool isLocal()
    {
       return(mAppData->isLocal());
    }
    
    TYPE* operator->()
-   { return mAppData; }
+   { return mAppData.operator->(); }
    
    TYPE& operator*()
-   { return *(mAppData); }
+   { return mAppData.operator*(); }
 #ifndef _MSC_VER
 private:      
-   // Make sure that we are wrapping a type that is derived from ApplicationData
+   // Make sure that we are wrapping a type that is derived from SerializableObject.
    BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,TYPE>::value));
 #endif
 private:
-   cluster::AppDataMixin<TYPE>*    mAppData;
+   AppDataPtr mAppData;
 };
-
    
-} // end namespace gadget
+} // end namespace cluster
 
 #endif

@@ -74,9 +74,6 @@ public:
       }
    }
 
-   ApplicationData()
-   {;}
-
    virtual ~ApplicationData()
    {
       ;
