@@ -61,7 +61,7 @@ KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
 # -----------------------------------------------------------------------------
 all dbg opt dso ddso obj: ${KERNEL_OBJECTS} 
 	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZIER}"	\
-            OBJDIR="${OBJDIR}" recursive
+            BASE_OBJDIR="${BASE_OBJDIR}" recursive
 
 install-recursive depend-recursive newdepend-recursive:
 	target=`echo $@ | sed s/-recursive//` ;		\
