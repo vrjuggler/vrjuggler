@@ -66,7 +66,7 @@ namespace gadget{
    class GADGET_CLASS_API RemoteInputManager
    {
    protected:
-      int                           mIncomingConnections;
+      unsigned                      mIncomingConnections;
       int                           mNumMachines;
       ClusterSync                   mClusterSync;
       bool                          mListenWasInitialized;
