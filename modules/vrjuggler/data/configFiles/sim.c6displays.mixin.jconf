@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
-               name="Configuration">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_window xmlns="" name="Right Surface" version="2">
+      <display_window name="Right Surface" version="2">
          <origin>400</origin>
          <origin>400</origin>
          <size>200</size>
@@ -36,6 +33,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -77,11 +75,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="Front Surface" version="2">
+      <display_window name="Front Surface" version="2">
          <origin>200</origin>
          <origin>400</origin>
          <size>200</size>
@@ -112,6 +110,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -153,11 +152,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="Left Surface" version="2">
+      <display_window name="Left Surface" version="2">
          <origin>0</origin>
          <origin>400</origin>
          <size>200</size>
@@ -188,6 +187,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -229,11 +229,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="Floor Surface" version="2">
+      <display_window name="Floor Surface" version="2">
          <origin>200</origin>
          <origin>200</origin>
          <size>200</size>
@@ -264,6 +264,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -305,11 +306,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="Ceiling Surface" version="2">
+      <display_window name="Ceiling Surface" version="2">
          <origin>200</origin>
          <origin>600</origin>
          <size>200</size>
@@ -340,6 +341,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -381,11 +383,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="Entrance Surface" version="2">
+      <display_window name="Entrance Surface" version="2">
          <origin>600</origin>
          <origin>400</origin>
          <size>200</size>
@@ -416,6 +418,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -457,11 +460,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="rightSurfaceAngled" version="2">
+      <display_window name="rightSurfaceAngled" version="2">
          <origin>400</origin>
          <origin>200</origin>
          <size>200</size>
@@ -492,6 +495,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -533,11 +537,11 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window xmlns="" name="Ceiling Surface Angled" version="2">
+      <display_window name="Ceiling Surface Angled" version="2">
          <origin>200</origin>
          <origin>800</origin>
          <size>200</size>
@@ -568,6 +572,7 @@
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -595,23 +600,24 @@
                <corners>
                   <vec3 name="upper right" version="1">
                      <x>1.524</x>
-                     <y>3.836880312</y>
-                     <z>1.42014196032</z>
+                     <y>3.8368802</y>
+                     <z>1.4201419</z>
                   </vec3>
                </corners>
                <corners>
                   <vec3 name="upper left" version="1">
                      <x>-1.524</x>
-                     <y>3.836880312</y>
-                     <z>1.42014196032</z>
+                     <y>3.8368802</y>
+                     <z>1.4201419</z>
                   </vec3>
                </corners>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
       </display_window>
    </elements>
 </configuration>
+

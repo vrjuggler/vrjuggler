@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
-               name="Configuration">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <event_window_proxy xmlns="" name="SimEventWindow Proxy" version="1">
+      <event_window_proxy name="SimEventWindow Proxy" version="1">
          <device>SimWindow/event_window_device/Event window configuration 0</device>
       </event_window_proxy>
-      <alias xmlns="" name="VJWand" version="1">
+      <alias name="VJWand" version="1">
          <proxy>Wand Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJButton0" version="1">
+      <alias name="VJButton0" version="1">
          <proxy>Button0Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJButton1" version="1">
+      <alias name="VJButton1" version="1">
          <proxy>Button1Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJButton2" version="1">
+      <alias name="VJButton2" version="1">
          <proxy>Button2Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJButton3" version="1">
+      <alias name="VJButton3" version="1">
          <proxy>Button3Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJButton4" version="1">
+      <alias name="VJButton4" version="1">
          <proxy>Button4Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJButton5" version="1">
+      <alias name="VJButton5" version="1">
          <proxy>Button5Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJHead" version="1">
+      <alias name="VJHead" version="1">
          <proxy>Head Proxy</proxy>
       </alias>
-      <alias xmlns="" name="VJKeyboard" version="1">
+      <alias name="VJKeyboard" version="1">
          <proxy>SimEventWindow Proxy</proxy>
       </alias>
-      <simulated_positional_device xmlns="" name="SimWandOffsetPos" version="2">
+      <simulated_positional_device name="SimWandOffsetPos" version="2">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
@@ -139,7 +135,7 @@
             </position_transform_filter>
          </position_filters>
       </simulated_positional_device>
-      <simulated_positional_device xmlns="" name="SimHeadPos" version="2">
+      <simulated_positional_device name="SimHeadPos" version="2">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
@@ -242,7 +238,7 @@
             </position_transform_filter>
          </position_filters>
       </simulated_positional_device>
-      <position_proxy xmlns="" name="Wand Proxy" version="1">
+      <position_proxy name="Wand Proxy" version="1">
          <device>SimWandRelativePos</device>
          <unit>0</unit>
          <position_filters>
@@ -264,12 +260,12 @@
             </position_transform_filter>
          </position_filters>
       </position_proxy>
-      <position_proxy xmlns="" name="Head Proxy" version="1">
+      <position_proxy name="Head Proxy" version="1">
          <device>SimHeadPos</device>
          <unit>0</unit>
          <position_filters>
-         <position_transform_filter name="Position Filters" version="1">
-            <pre_translate>0.0</pre_translate>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
                <pre_rotation>0.0</pre_rotation>
@@ -283,10 +279,10 @@
                <post_rotation>0.0</post_rotation>
                <post_rotation>0.0</post_rotation>
                <post_rotation>0.0</post_rotation>
-               </position_transform_filter>
-            </position_filters>
+            </position_transform_filter>
+         </position_filters>
       </position_proxy>
-      <position_proxy xmlns="" name="SimCamera Proxy" version="1">
+      <position_proxy name="SimCamera Proxy" version="1">
          <device>Sim Cam Relative Position</device>
          <unit>0</unit>
          <position_filters>
@@ -308,7 +304,7 @@
             </position_transform_filter>
          </position_filters>
       </position_proxy>
-      <position_proxy xmlns="" name="RelativeWand Proxy" version="1">
+      <position_proxy name="RelativeWand Proxy" version="1">
          <device>SimWandOffsetPos</device>
          <unit>0</unit>
          <position_filters>
@@ -330,31 +326,31 @@
             </position_transform_filter>
          </position_filters>
       </position_proxy>
-      <digital_proxy xmlns="" name="Button0Proxy" version="1">
+      <digital_proxy name="Button0Proxy" version="1">
          <device>SimWandButtons</device>
          <unit>0</unit>
       </digital_proxy>
-      <digital_proxy xmlns="" name="Button2Proxy" version="1">
+      <digital_proxy name="Button2Proxy" version="1">
          <device>SimWandButtons</device>
          <unit>2</unit>
       </digital_proxy>
-      <digital_proxy xmlns="" name="Button1Proxy" version="1">
+      <digital_proxy name="Button1Proxy" version="1">
          <device>SimWandButtons</device>
          <unit>1</unit>
       </digital_proxy>
-      <digital_proxy xmlns="" name="Button3Proxy" version="1">
+      <digital_proxy name="Button3Proxy" version="1">
          <device>SimWandButtons</device>
          <unit>3</unit>
       </digital_proxy>
-      <digital_proxy xmlns="" name="Button4Proxy" version="1">
+      <digital_proxy name="Button4Proxy" version="1">
          <device>SimWandButtons</device>
          <unit>4</unit>
       </digital_proxy>
-      <digital_proxy xmlns="" name="Button5Proxy" version="1">
+      <digital_proxy name="Button5Proxy" version="1">
          <device>SimWandButtons</device>
          <unit>5</unit>
       </digital_proxy>
-      <display_system xmlns="" name="Pipe Setup" version="1">
+      <display_system name="Pipe Setup" version="1">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
          <x11_pipes>:0.1</x11_pipes>
@@ -365,11 +361,11 @@
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
       </display_system>
-      <user xmlns="" name="User1" version="1">
+      <user name="User1" version="1">
          <head_position>VJHead</head_position>
          <interocular_distance>0.069</interocular_distance>
       </user>
-      <simulated_digital_device xmlns="" name="SimWandButtons" version="1">
+      <simulated_digital_device name="SimWandButtons" version="1">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
@@ -426,7 +422,7 @@
             </key_modifier_pair>
          </key_pair>
       </simulated_digital_device>
-      <display_window xmlns="" name="SimWindow" version="2">
+      <display_window name="SimWindow" version="2">
          <origin>50</origin>
          <origin>100</origin>
          <size>800</size>
@@ -455,9 +451,9 @@
                <mouse_sensitivity>1.0</mouse_sensitivity>
                <display_number>0</display_number>
                <lock_key>0</lock_key>
-               <start_locked>0</start_locked>
+               <start_locked>false</start_locked>
                <sleep_time>0</sleep_time>
-               <device_host/>
+               <device_host />
             </event_window>
          </event_window_device>
          <active>true</active>
@@ -479,14 +475,14 @@
                      <surface_color>0.7</surface_color>
                      <surface_color>0.7</surface_color>
                      <surface_color>1.0</surface_color>
-                     <sim_head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</sim_head_model>
-                     <sim_wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</sim_wand_model>
+                     <head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</head_model>
+                     <wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</wand_model>
                   </default_simulator>
                </simulator_plugin>
             </simulator_viewport>
          </simulator_viewports>
       </display_window>
-      <simulated_positional_device xmlns="" name="Sim Cam Offset" version="2">
+      <simulated_positional_device name="Sim Cam Offset" version="2">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
@@ -589,11 +585,11 @@
             </position_transform_filter>
          </position_filters>
       </simulated_positional_device>
-      <simulated_relative_position xmlns="" name="Sim Cam Relative Position" version="1">
+      <simulated_relative_position name="Sim Cam Relative Position" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Sim Cam Offset Proxy</relative_proxy>
       </simulated_relative_position>
-      <position_proxy xmlns="" name="Sim Cam Offset Proxy" version="1">
+      <position_proxy name="Sim Cam Offset Proxy" version="1">
          <device>Sim Cam Offset</device>
          <unit>0</unit>
          <position_filters>
@@ -615,15 +611,15 @@
             </position_transform_filter>
          </position_filters>
       </position_proxy>
-      <digital_proxy xmlns="" name="VJSystemStopKernelProxy" version="1">
+      <digital_proxy name="VJSystemStopKernelProxy" version="1">
          <device>DigitalSystemControls</device>
          <unit>0</unit>
       </digital_proxy>
-      <digital_proxy xmlns="" name="VJAppExitProxy" version="1">
+      <digital_proxy name="VJAppExitProxy" version="1">
          <device>AppDigitalSim</device>
          <unit>0</unit>
       </digital_proxy>
-      <simulated_digital_device xmlns="" name="DigitalSystemControls" version="1">
+      <simulated_digital_device name="DigitalSystemControls" version="1">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
@@ -632,7 +628,7 @@
             </key_modifier_pair>
          </key_pair>
       </simulated_digital_device>
-      <simulated_digital_device xmlns="" name="AppDigitalSim" version="1">
+      <simulated_digital_device name="AppDigitalSim" version="1">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
@@ -659,15 +655,16 @@
             </key_modifier_pair>
          </key_pair>
       </simulated_digital_device>
-      <alias xmlns="" name="VJAppExit" version="1">
+      <alias name="VJAppExit" version="1">
          <proxy>VJAppExitProxy</proxy>
       </alias>
-      <alias xmlns="" name="VJSystemStopKernel" version="1">
+      <alias name="VJSystemStopKernel" version="1">
          <proxy>VJSystemStopKernelProxy</proxy>
       </alias>
-      <simulated_relative_position xmlns="" name="SimWandRelativePos" version="1">
+      <simulated_relative_position name="SimWandRelativePos" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>RelativeWand Proxy</relative_proxy>
       </simulated_relative_position>
    </elements>
 </configuration>
+
