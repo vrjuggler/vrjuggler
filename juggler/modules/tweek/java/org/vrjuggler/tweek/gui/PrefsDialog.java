@@ -252,9 +252,10 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mLafLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mLafLabel.setLabelFor(mLafBox);
       mLafLabel.setText("Look and Feel");
-      mCorbaPortField.setMaximumSize(new Dimension(2147483647, 15));
-      mCorbaPortField.setMinimumSize(new Dimension(85, 17));
-      mCorbaPortField.setPreferredSize(new Dimension(85, 17));
+      mCorbaPortField.setMaximumSize(new Dimension(15, 17));
+      mCorbaPortField.setMinimumSize(new Dimension(15, 17));
+      mCorbaPortField.setPreferredSize(new Dimension(15, 17));
+      mCorbaPortField.setToolTipText("The port number of the CORBA Naming Service");
       mCorbaPortField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -262,12 +263,17 @@ public class PrefsDialog extends JDialog implements TableModelListener
             corbaPortFieldChanged(e);
          }
       });
+      mCorbaPortLabel.setMaximumSize(new Dimension(77, 13));
+      mCorbaPortLabel.setMinimumSize(new Dimension(77, 13));
+      mCorbaPortLabel.setPreferredSize(new Dimension(77, 13));
       mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mCorbaPortLabel.setLabelFor(mCorbaPortField);
       mCorbaPortLabel.setText("Port Number");
       mCorbaPanel.setLayout(mCorbaLayout);
+      mCorbaHostField.setMaximumSize(new Dimension(120, 17));
       mCorbaHostField.setMinimumSize(new Dimension(85, 17));
       mCorbaHostField.setPreferredSize(new Dimension(85, 17));
+      mCorbaHostField.setToolTipText("The hostname for the CORBA Naming Service");
       mCorbaHostField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -278,8 +284,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mCorbaHostLabel.setLabelFor(mCorbaHostField);
       mCorbaHostLabel.setText("Host Name");
-      mCorbaLayout.setColumns(2);
-      mCorbaLayout.setRows(0);
 
       mWinSizeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mWinSizeLabel.setText("Window Size");
@@ -311,10 +315,14 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mGenConfigPanel.add(mWinSizeLabel,    new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 0, 23));
       mContentPane.add(mCorbaPanel,   "CORBA");
-      mCorbaPanel.add(mCorbaHostLabel, null);
-      mCorbaPanel.add(mCorbaHostField, null);
-      mCorbaPanel.add(mCorbaPortLabel, null);
-      mCorbaPanel.add(mCorbaPortField, null);
+      mCorbaPanel.add(mCorbaHostLabel,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 40, 9));
+      mCorbaPanel.add(mCorbaHostField,            new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 4), 112, 9));
+      mCorbaPanel.add(mCorbaPortLabel,             new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(4, 0, 1, 2), 40, 9));
+      mCorbaPanel.add(mCorbaPortField,                new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(4, 0, 1, 1), 45, 9));
 
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mFileChooserPanel.add(mFcConfigPanel, BorderLayout.CENTER);
@@ -639,7 +647,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private JPanel mCorbaPanel = new JPanel();
    private JTextField mCorbaHostField = new JTextField();
    private JLabel mCorbaHostLabel = new JLabel();
-   private GridLayout mCorbaLayout = new GridLayout();
+   private GridBagLayout mCorbaLayout = new GridBagLayout();
    private JLabel mWinSizeLabel = new JLabel();
    private JTable mWinSizeTable = null;
    private JScrollPane mWinSizeTablePane = new JScrollPane();
