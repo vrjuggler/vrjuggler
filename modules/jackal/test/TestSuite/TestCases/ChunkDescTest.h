@@ -28,7 +28,7 @@ namespace jcclTest
       {
       }
 
-      void BasicFunctions() 
+      void basicFunctions() 
       {
          std::string name = "test desc 1";
          std::string token = "test_desc_1";
@@ -56,15 +56,15 @@ namespace jcclTest
          CPPUNIT_ASSERT( desc2 == desc );
       }
 
-      void PropertyDescTests()
+      void propertyDescTests()
       {
       }
 
       static CppUnit::Test* suite()
       {
           CppUnit::TestSuite* test_suite = new CppUnit::TestSuite( "ChunkDescTest" );
-          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "BasicFunctions", &ChunkDescTest::BasicFunctions ) );
-          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "PropertyDescTests", &ChunkDescTest::PropertyDescTests ) );
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "basicFunctions", &ChunkDescTest::basicFunctions ) );
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "propertyDescTests", &ChunkDescTest::propertyDescTests ) );
 
           return test_suite;
       }
