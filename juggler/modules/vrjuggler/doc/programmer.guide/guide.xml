@@ -1369,7 +1369,16 @@ public:
             <section>
                <title>Examining the Device Data: <methodname>vjApp::preFrame()</methodname></title>
                <para>The following member function implementation gives an example of how to examine the input data using the device interface member variables.</para>
-               <programlisting linenumbering="numbered">virtual void preFrame()
+               <programlistingco>
+                  <areaspec>
+                     <areaset coords="" id="button.reads">
+                        <area coords="3" id="mButton0.read"/>
+                        <area coords="7" id="mButton1.read"/>
+                     </areaset>
+                     <area coords="12" id="button.print"/>
+                     <area coords="19" id="position.get"/>
+                  </areaspec>
+                  <programlisting linenumbering="numbered">virtual void preFrame()
 {
    if ( mButton0-&gt;getData() )
    {
@@ -1390,7 +1399,18 @@ public:
    wand_matrix = *(mWand-&gt;getData());
    std::cout &lt;&lt; "Wand pos: \n" &lt;&lt; wand_matrix &lt;&lt; std::endl;
 }</programlisting>
-               <para>The first several statements check the status of the two digital buttons and write out a line if the button has been pressed. The next line writes out the current state of both buttons. The final section prints out the current location of the wand in the VR environment.</para>
+                  <calloutlist>
+                     <callout arearefs="button.reads">
+                        <para>These statements check the status of the two digital buttons and write out a line if the button has been pressed.</para>
+                     </callout>
+                     <callout arearefs="button.print">
+                        <para>This writes out the current state of both buttons.</para>
+                     </callout>
+                     <callout arearefs="position.get">
+                        <para>The final section prints out the current location of the wand in the VR environment.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
             </section>
          </section>
       </section>
@@ -1483,7 +1503,13 @@ public:
             <section>
                <title>The <methodname>draw()</methodname> Member Function</title>
                <para>The implementation of <methodname>draw()</methodname> is located in <filename>simpleApp.cpp</filename>. Its job is to draw the environment. A partial implementation follows.</para>
-               <programlisting linenumbering="numbered">void simpleApp::draw()
+               <programlistingco>
+                  <areaspec>
+                     <area coords="5" id="box-offset.init"/>
+                     <area coords="11" id="box-offset.push"/>
+                     <area coords="13" id="draw.cube"/>
+                  </areaspec>
+                  <programlisting linenumbering="numbered">void simpleApp::draw()
 {
    ...
    // Create box offset matrix
@@ -1499,7 +1525,19 @@ public:
    glPopMatrix();
    ...
 }</programlisting>
-               <para>In the above, there is no projection code in the function. When the function is called by VR Juggler, the projection matrix has already been correctly set up for the system. All the user application must do is draw the environment; VR Juggler handles the rest. In this example, the <methodname>draw()</methodname> function renders a cube at an offset location. The first section of the function creates a <classname>vjMatrix</classname> object that defines the offset of the cube in the virtual world. This matrix is pushed onto the OpenGL modelview matrix stack, and then a cube is drawn.</para>
+                  <calloutlist>
+                     <callout arearefs="box-offset.init">
+                        <para>This creates a <classname>vjMatrix</classname> object that defines the offset of the cube in the virtual world.</para>
+                     </callout>
+                     <callout arearefs="box-offset.push">
+                        <para>The new matrix is pushed onto the OpenGL modelview matrix stack.</para>
+                     </callout>
+                     <callout arearefs="draw.cube">
+                        <para>Finally, and then a cube is drawn.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
+               <para>In the above, there is no projection code in the function. When the function is called by VR Juggler, the projection matrix has already been correctly set up for the system. All the user application must do is draw the environment; VR Juggler handles the rest. In this example, the <methodname>draw()</methodname> function renders a cube at an offset location.</para>
             </section>
             <section>
                <title>Exercise</title>
@@ -1835,7 +1873,17 @@ public:
             <section>
                <title>The <methodname>initScene()</methodname> Member Function</title>
                <para>The implementation of <methodname>initScene()</methodname> is in <filename>simplePfApp.cpp</filename>. Within this method, we create the scene graph root node, the lighting node, and load a user-specified model. The implementation follows:</para>
-               <programlisting linenumbering="numbered">void simplePfApp::initScene ()
+               <programlistingco>
+                  <areaspec>
+                     <area coords="4" id="rootnode.create"/>
+                     <area coords="7" id="light.source.create"/>
+                     <area coords="17" id="model.load"/>
+                     <areaset coords="" id="scenegraph.add.all">
+                        <area coords="20" id="scenegraph.add.model"/>
+                        <area coords="21" id="scenegraph.add.light"/>
+                     </areaset>
+                  </areaspec>
+                  <programlisting linenumbering="numbered">void simplePfApp::initScene ()
 {
    // Allocate all the nodes needed
    mRootNode = new pfGroup;
@@ -1857,7 +1905,21 @@ public:
    mRootNode-&gt;addChild(mModelRoot);
    mRootNode-&gt;addChild(mLightGroup);
 }</programlisting>
-               <para>In the above, the root node is constructed as a <classname>pfGroup</classname> object. Following this, some steps are taken to create a light source for the application. Finally, the model is loaded using <function>pfdLoadFile()</function>, and the model scene graph root node is stored in <varname>mModelRoot</varname>. (The model loader must be initialized prior to calling <function>pfdLoadFile()</function>. This is done in <methodname>preForkInit()</methodname>.)</para>
+                  <calloutlist>
+                     <callout arearefs="rootnode.create">
+                        <para>First, the root node is constructed as a <classname>pfGroup</classname> object.</para>
+                     </callout>
+                     <callout arearefs="light.source.create">
+                        <para>Next, some steps are taken to create a light source for the application.</para>
+                     </callout>
+                     <callout arearefs="model.load">
+                        <para>Finally, the model is loaded using <function>pfdLoadFile()</function>, and the model scene graph root node is stored in <varname>mModelRoot</varname>. (The model loader must be initialized prior to calling <function>pfdLoadFile()</function>. This is done in <methodname>preForkInit()</methodname>.)</para>
+                     </callout>
+                     <callout arearefs="scenegraph.add.all">
+                        <para>Finally, the model and the light source nodes are added as children of the root.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
             </section>
             <section>
                <title>The <methodname>getScene()</methodname> Member Function</title>
