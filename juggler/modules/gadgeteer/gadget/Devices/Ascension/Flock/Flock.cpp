@@ -247,9 +247,16 @@ int Flock::sample()
       return 0;
 
    int i;
-   jccl::TimeStamp sampletime;
+
    mFlockOfBirds.sample();
-   sampletime.set();
+
+   // get an initial timestamp for this entire sample. we'll copy it into
+   // each PositionData for this sample.
+   int firstindex;
+   if (mFlockOfBirds.getNumBirds() > 0) {
+       firstindex = getBirdIndex (0, progress);
+       mData[firstindex].setTime();
+   }
 
    vpr::Thread::yield();
 
@@ -268,9 +275,7 @@ int Flock::sample()
       mData[index].getPositionData()->setTrans(mFlockOfBirds.xPos( i+1 ),
                                                mFlockOfBirds.yPos( i+1 ),
                                                mFlockOfBirds.zPos( i+1 ));
-      mData[index].setTimeStamp (sampletime);
-
-//        mDataTimes[index] = sampletime;
+      mData[index].setTime (mData[firstindex].getTime());
 
 
       //if (i==1)
