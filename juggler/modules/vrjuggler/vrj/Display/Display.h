@@ -1,15 +1,12 @@
-#ifndef _VJ_DISPLAY_
-#define _VJ_DISPLAY_
+#ifndef _VJ_DISPLAY_H_
+#define _VJ_DISPLAY_H_
 
-class vjProjection;
 #include <vjConfig.h>
-class vjDisplayManager;		    // Because prev include includes us
 
 #include <Math/vjVec3.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Kernel/vjUser.h>
-class vjSimulator;
 
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
@@ -17,13 +14,9 @@ class vjSimulator;
 //---------------------------------------------------------------------
 //: Base class for Display windows.
 //
-//	Responsible for encapsulating all display window information.
-//  Since this captures all machine/OS/Window System specific stuff,
-//  no API specific details should be added to this area.  API specific
-//  window information should stay in the DrawManager which is API
-//  specific. <br>
+// Base class for all window system independant data about a display.
 //
-// Display also knows what type of display it is: Normal, Simulator, ... <br>
+// Stores location of window and projection data used.
 //
 // @author Allen Bierbaum
 //  Date: 9-8-97
@@ -31,9 +24,12 @@ class vjSimulator;
 class vjDisplay
 {
 public:
-   vjDisplay();
+   vjDisplay() : mUser(NULL)
+   {
+      _xo = _yo = _xs = _ys = -1;
+   }
 
-   enum DisplayType { PROJ, SIM};      // What type of display is it
+   enum DisplayType { SURFACE, SIM};      // What type of display is it
 
 public:
       //: Takes a display chunk and configures the display based one it.
@@ -43,7 +39,11 @@ public:
       //+       and "fix" the error.
       //! NOTE: All derived display classes MUST call this function
       //+       after doing local configuration.
-   void config(vjConfigChunk* chunk);
+   virtual void config(vjConfigChunk* chunk);
+
+   //: Updates the projection data for this display
+   // Uses the data for the head position for this window
+   virtual void updateProjections() = 0;
 
 public:
    DisplayType getType()
@@ -52,66 +52,56 @@ public:
    bool isSimulator()
    { return (mType == SIM); }
 
-   void setName(const char* name)
-   {
-      if (name != NULL)
-         strncpy(mName, name, 99);
-   }
+   bool isSurface()
+   { return (mType == SURFACE); }
+
+   void setName(std::string name)
+   { mName = name; }
 
    //: Get the name of the display
-   char* getName()
+   std::string getName()
    { return mName;}
 
-   bool  drawBorder()
+   bool  shouldDrawBorder()
    { return mBorder;}
 
    //!NOTE: If we are in simulator, we can not be in stereo
    bool inStereo()
-   { return (mStereo && (mType != SIM)); }
+   { return mStereo; }
 
    void setOriginAndSize(int xo, int yo, int xs, int ys)
    { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
-   void originAndSize(int& xo, int& yo, int& xs, int& ys)
-   { xo = _xo; yo = _yo; xs = _xs; ys = _ys;}
+   void getOriginAndSize(int& xo, int& yo, int& xs, int& ys)
+   {
+      vjASSERT(xo != -1);     // Make sure we have been configured
+      xo = _xo; yo = _yo; xs = _xs; ys = _ys;
+   }
 
    void setPipe(int pipe)
    { mPipe = pipe; }
-   int pipe()
+   int getPipe()
    { return mPipe; }
 
-   vjConfigChunk* configChunk()
+   vjConfigChunk* getConfigChunk()
    { return displayChunk; }
 
-      //: Updates the projection data for this display
-      //    Normally just calls the projection class
-      // Uses the data for the head position for this window
-   void updateProjections();
-
+   vjUser*  getUser()
+   { return mUser;}
 
    friend ostream& operator<<(ostream& out, vjDisplay& disp);
 
-public:
-   /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
-   vjProjection*   leftProj;              // Left eye
-   vjProjection*   rightProj;             // Right eye
-   vjProjection*   cameraProj;            // Camera projection. (For sim, etc.)
-
-   vjSimulator*      mSim;                // Simulator. if we are one.
-   //vjPosInterface    mHeadInterface;      //: The proxy interface for the head
-   vjUser*           mUser;               //: The user being rendered by this window
-
+protected:
+   vjUser*           mUser;         //: The user being rendered by this window
 
 protected:
    DisplayType mType;                  //: The type of display
-   char        mName[100];             //: Name of the display
+   std::string mName;                  //: Name of the display
    int         _xo, _yo, _xs, _ys;     //: X and Y origin and size of the view
    bool        mBorder;                //: Should we have a border
    int         mPipe;                  //: Hardware pipe. Index of the rendering hardware
    bool        mStereo;                //: Do we want stereo
 
    vjConfigChunk* displayChunk;        //: The chunk data for this display
-
-   //vjDisplayManager* dispMgr;       //: My parent DisplayManager.  Needed to get headPostion on update.
 };
 
 ostream& operator<<(ostream& out,  vjDisplay& disp);

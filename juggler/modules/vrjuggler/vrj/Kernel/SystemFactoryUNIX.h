@@ -3,14 +3,13 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
-#include <Kernel/GL/vjGlWindow.h>
 
 class vjDisplayManager;
 
 //---------------------------------------------------
 //: Concrete class for SGI System specific Factory.
-// 
-//	Concrete class to create SGI system specific objects. 
+//
+//	Concrete class to create SGI system specific objects.
 //
 // @author Allen Bierbaum
 //  Date: 9-9-97
@@ -29,7 +28,7 @@ public:
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
    vjSGISystemFactory()   // Do nothing, but hide
-   {;} 
+   {;}
 
 public:
    /// Get instance of singleton object
@@ -42,7 +41,7 @@ public:
 
 private:
    /// The instance
-   static vjSGISystemFactory* _instance; 
+   static vjSGISystemFactory* _instance;
 };
 
 #endif

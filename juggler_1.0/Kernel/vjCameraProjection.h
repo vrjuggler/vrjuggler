@@ -10,6 +10,11 @@ class vjMatrix;
 class vjCameraProjection : public vjProjection
 {
 public:
+   vjCameraProjection()
+   {
+      mType = vjProjection::SIM;
+   }
+
    virtual void config(vjConfigChunk* chunk)
    {
       vjProjection::config(chunk);
@@ -18,14 +23,18 @@ public:
    virtual void calcViewMatrix(vjMatrix& cameraPos)
    {
       viewMat = cameraPos;
-      frustum.set(-0.6, 0.6, -0.6, 0.6, 0.1, 1000);
+      frustum.set(-0.6, 0.6, -0.6, 0.6, mNearDist, mFarDist);
+   }
+
+   virtual ostream& outStream(ostream& out)
+   {
+      out << "vjCameraProjection:\n";
+      return out;
    }
 
 protected:
    virtual void surfaceSet()
-   {
-      ;
-   }
+   {;}
 };
 
 #endif

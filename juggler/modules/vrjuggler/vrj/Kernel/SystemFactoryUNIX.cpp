@@ -1,6 +1,5 @@
 #include <vjConfig.h>
 #include <Kernel/vjSGISystemFactory.h>
-#include <Kernel/vjDisplayManager.h>
 #include <Kernel/GL/vjGlxWindow.h>
 
 

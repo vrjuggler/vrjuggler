@@ -20,66 +20,44 @@
 class vjProjection
 {
 public:
+   // Eye and type
    enum
-   {LEFT = 1, RIGHT = 2, FRONT, FLOOR, BACK, CEILING, USER, SIM};
+   {LEFT = 1, RIGHT = 2, SURFACE, SIM};
 
 public:
    vjProjection()
    {
-      surface = -1;
+      mType = -1;
+      mFocusPlaneDist = 1.0f;
    }
 
    virtual void config(vjConfigChunk* chunk)
-   {
-      char* proj  = chunk->getProperty("projectiontype");
-      vjASSERT(proj != NULL);    // Check for a seg fault error
-      setSurface(proj);
-   }
-
-   void setSurface(char* projStr)
-   {
-      vjDEBUG(2) << "vjProjection::setSurface: Setting surface:" << projStr << endl << vjDEBUG_FLUSH;
-      if (strcasecmp(projStr, "left") == 0)
-         setSurface(vjProjection::LEFT);
-      else if (strcasecmp(projStr, "right") == 0)
-         setSurface(vjProjection::RIGHT);
-      else if (strcasecmp(projStr, "front") == 0)
-         setSurface(vjProjection::FRONT);
-      else if (strcasecmp(projStr, "floor") == 0)
-         setSurface(vjProjection::FLOOR);
-      else if (strcasecmp(projStr, "back") == 0)
-         setSurface(vjProjection::BACK);
-      else if (strcasecmp(projStr, "ceiling") == 0)
-         setSurface(vjProjection::CEILING);
-      else if (strcasecmp(projStr, "user") == 0)
-         setSurface(vjProjection::USER);
-   }
-
-   virtual void setSurface(int _surface)
-   {
-      surface = _surface;
-      this->surfaceSet();
-   }
-
-   int   getSurface()
-   { return surface;}
+   {;}
 
    void setEye(int _eye)
-   {
-      eye = _eye;
-   }
+   { mEye = _eye; }
 
    int getEye()
-   { return eye;}
+   { return mEye;}
 
    virtual void calcViewMatrix(vjMatrix& eyePos) = 0;
+
+   //: Helper to the frustum apex and corners in model coordinates
+   //!NOTE: This function is meant for debugging purposes
+   //!POST: The given vars contain the values of the frustums
+   //+ corners in model space.
+   void getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr, vjVec3& ul, vjVec3& ll);
+
+   //: Virtual output oporators.
+   // Every class derived from us shoudl just define this, and
+   // the opertetor<< will "just work"
+   virtual ostream& outStream(ostream& out);
 
    friend ostream& operator<<(ostream& out, vjProjection& proj);
 
 protected:
-   /**  Must be Called whenever surface is changed by class.
-    *	Used by sub-classes to do any updates that need to happen.
-    */
+   //:  Must be Called whenever surface is changed by class.
+   //	Used by sub-classes to do any updates that need to happen.
    virtual void surfaceSet() = 0;
 
 public:
@@ -87,9 +65,23 @@ public:
    vjFrustum   frustum;
 
 protected:
-   int surface;
-   int eye;
+   int mEye;
+   int mType;
+
+   float       mFocusPlaneDist;     // Basically the distance to the surface.  Needed for drawing.
+
+protected:     // Statics
+   static float mNearDist;
+   static float mFarDist;    // Near far distances
+
+public:
+   static void setNearFar(float _near, float _far)
+   {
+      mNearDist = _near;
+      mFarDist = _far;
+   }
 };
+
 
 
 #endif

@@ -1,6 +1,8 @@
 #include <vjConfig.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDisplay.h>
+#include <Kernel/vjSurfaceDisplay.h>
+#include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
@@ -20,12 +22,19 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(1) << "------- vjDisplayManager::configAdd() Entering -------\n" << vjDEBUG_FLUSH;
 
 
-   if((std::string)(char*)chunk->getType() == std::string("display"))      // DISPLAY
+   if((std::string)(char*)chunk->getType() == std::string("surfaceDisplay"))      // Surface DISPLAY
    {
-      vjDisplay* newDisp = new vjDisplay();     // Create display
+      vjDisplay* newDisp = new vjSurfaceDisplay();     // Create display
       newDisp->config(chunk);                   // Config it
       addDisplay(newDisp);      // Add it
+      vjDEBUG(1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
+   }
 
+   if((std::string)(char*)chunk->getType() == std::string("simDisplay"))      // Surface DISPLAY
+   {
+      vjDisplay* newDisp = new vjSimDisplay();     // Create display
+      newDisp->config(chunk);                   // Config it
+      addDisplay(newDisp);      // Add it
       vjDEBUG(1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
@@ -46,7 +55,8 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
 //+          false - We don't
 bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 {
-   return (((std::string)(char*)chunk->getType()) == std::string("display"));
+   return ((((std::string)(char*)chunk->getType()) == std::string("surfaceDisplay"))
+            || (((std::string)(char*)chunk->getType()) == std::string("simDisplay")));
 }
 
 
