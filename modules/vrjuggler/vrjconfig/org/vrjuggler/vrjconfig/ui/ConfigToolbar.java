@@ -71,6 +71,8 @@ public class ConfigToolbar
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
          saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
+         undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
+         redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
          expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
       }
       catch (Exception e)
@@ -81,6 +83,8 @@ public class ConfigToolbar
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
          saveAllBtn.setText("Save All");
+         undoBtn.setText("Undo");
+         redoBtn.setText("Redo");
          expandBtn.setText("Expand");
       }
    }
@@ -286,12 +290,12 @@ public class ConfigToolbar
             // all the URLs on a stack and read them one at a time in the order
             // that we come across them
             Stack urls = new Stack();
-            urls.push(file.getAbsolutePath());
+            urls.push(file);
             while (! urls.isEmpty())
             {
                // Expand env vars in the URL
-               String res_name = (String)urls.pop();
-               res_name = expandEnvVars(res_name);
+               File res_file = (File)urls.pop();
+               String res_name = expandEnvVars(res_file.getAbsolutePath());
 
                FileDataSource data_source = new FileDataSource(res_name,
                                                                FileDataSource.ELEMENTS);
@@ -303,7 +307,10 @@ public class ConfigToolbar
                java.util.List includes = data_source.getIncludes();
                for (Iterator itr = includes.iterator(); itr.hasNext(); )
                {
-                  urls.push(itr.next());
+                  // Make sure the file reference it created relative to the
+                  // current file
+                  urls.push(new File(res_file.getParentFile().getAbsolutePath(),
+                                     (String)itr.next()));
                }
             }
 
@@ -354,6 +361,22 @@ public class ConfigToolbar
    {
       System.err.println("ConfigToolbar.doSaveAs(): not implemented");
       return false;
+   }
+
+   /**
+    * Programmatically execute an undo action.
+    */
+   public void doUndo()
+   {
+      System.err.println("Undo not yet implemented");
+   }
+
+   /**
+    * Programmatically execte a redo action.
+    */
+   public void doRedo()
+   {
+      System.err.println("Redo not yet implemented");
    }
 
    /**
@@ -505,6 +528,14 @@ public class ConfigToolbar
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
+      undoBtn.setEnabled(false);
+      undoBtn.setToolTipText("Undo");
+      undoBtn.setActionCommand("Undo");
+      undoBtn.setFocusPainted(false);
+      redoBtn.setEnabled(false);
+      redoBtn.setToolTipText("Redo");
+      redoBtn.setActionCommand("Redo");
+      redoBtn.setFocusPainted(false);
       expandBtn.setEnabled(false);
       expandBtn.setToolTipText("Expand Toolbar");
       expandBtn.setActionCommand("Expand");
@@ -544,6 +575,20 @@ public class ConfigToolbar
 //            saveAll();
          }
       });
+      undoBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doUndo();
+         }
+      });
+      redoBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doRedo();
+         }
+      });
       expandBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -558,6 +603,9 @@ public class ConfigToolbar
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
       toolbar.add(saveAllBtn, null);
+      toolbar.addSeparator();
+      toolbar.add(undoBtn, null);
+      toolbar.add(redoBtn, null);
       toolbar.add(Box.createHorizontalGlue(), null);
       toolbar.add(expandBtn, null);
    }
@@ -570,6 +618,8 @@ public class ConfigToolbar
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
+   private JButton undoBtn = new JButton();
+   private JButton redoBtn = new JButton();
    private JToggleButton expandBtn = new JToggleButton();
    private JFileChooser fileChooser = new JFileChooser();
 
