@@ -36,9 +36,11 @@ public class ChunkDBPanel extends JPanel
 
 
     int controls_on_side; // 0 for left, 1 for right;
-    ChunkDBTreeModel current_treemodel, empty_treemodel;
+    ChunkDBTreeModel dbt;
+    ConfigChunkDB chunkdb;
     Vector chunk_frames;
     DependencyFrame dependency_frame;
+    private ChunkDBPanel sendacross_target; // target for the >>, >all> buttons
 
     private JButton load_button;
     private JButton save_button;
@@ -60,18 +62,23 @@ public class ChunkDBPanel extends JPanel
     JPopupMenu chunktreeitem_menu;
     JMenuItem help1_mi, help2_mi, remove_mi, insert_mi;
 
+    private static ChunkDBTreeModelFactory dbt_factory;
+
     public ChunkDBPanel (int _controls_on_side) {
 	super();
+
+	if (dbt_factory == null)
+	    dbt_factory = new ChunkDBTreeModelFactory();
 
 	JPanel south_panel;
 	JPanel side_panel; 
 	Box center_panel;
 
-
 	dependency_frame = null;
 	chunk_frames = new Vector();
-	current_treemodel = null;
-	empty_treemodel = new ChunkDBTreeModel (null, Core.chunkorgtree);
+	chunkdb = null;
+	dbt = null;
+	sendacross_target = null;
 
 	controls_on_side = _controls_on_side;
 	setBorder (new EmptyBorder (5,5,5,5));
@@ -145,10 +152,21 @@ public class ChunkDBPanel extends JPanel
 	center_panel = new Box (BoxLayout.Y_AXIS);
 	center_panel.add (db_combobox = new JComboBox());
 	buildDBList();
+
 	scroll_pane = new JScrollPane (JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				       JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 	center_panel.add (scroll_pane);
 	add (center_panel, "Center");
+
+	// set up initial tree viewing stuff. can't use selectDB() for this
+	// because it sees the chunkdb is already null and decides not to do
+	// anything.
+	dbt = dbt_factory.getTreeModel (chunkdb);
+	scroll_pane.setViewportView (dbt.tree);
+	dbt.tree.addMouseListener(this);
+	db_combobox.setSelectedItem (dbt.getName());
+	setButtonsEnabled (false);
 
 	// setup event handling
 	db_combobox.addActionListener (this);
@@ -164,6 +182,7 @@ public class ChunkDBPanel extends JPanel
 	close_button.addActionListener (this);
 	chunkhelp_button.addActionListener (this);
 
+	// tooltips
 	new_button.setToolTipText ("Create a new Config file");
 	load_button.setToolTipText ("Load another Config file");
 	save_button.setToolTipText ("Save this Config file");
@@ -176,6 +195,7 @@ public class ChunkDBPanel extends JPanel
 	remove_button.setToolTipText ("Remove all selected chunks");
 	chunkhelp_button.setToolTipText ("Information about the insert selection");
 
+	// initialize popup menus
 	treeitem_menu_path = null;
 	desctreeitem_menu = new JPopupMenu ();
 	desctreeitem_menu.add (help1_mi = new JMenuItem ("Chunk Help"));
@@ -189,16 +209,22 @@ public class ChunkDBPanel extends JPanel
 	remove_mi.addActionListener (this);
 	insert_mi.addActionListener (this);
 
+	// listen for new/delete chunkdb events from Core
 	Core.addCoreDBListener (this);
+
     }
 
 
+    public void setSendAcrossTarget (ChunkDBPanel _target) {
+	sendacross_target = _target;
+    }
 
-    public void buildDBList () {
+
+    private void buildDBList () {
 	int i;
 	db_combobox.addItem ("No Selection");
 	for (i = 0; i < Core.chunkdbs.size(); i++) {
-	    db_combobox.addItem (((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).getName());
+	    db_combobox.addItem (((ConfigChunkDB)Core.chunkdbs.elementAt(i)).getName());
 	}
     }
 
@@ -206,46 +232,40 @@ public class ChunkDBPanel extends JPanel
 
     public void selectDB (String name) {
 	/* changes the currently displayed db in the panel to name... */
-	ChunkDBTreeModel dbt;
-	dbt = Core.getChunkDBTree (name);
-	if (dbt == null || name.equals("") || name.equalsIgnoreCase ("No Selection")) {
-	    dbt = empty_treemodel;
-	    name = "No Selection";
-	}
-	if (dbt == current_treemodel)
+	ConfigChunkDB newchunkdb = Core.getChunkDB (name);
+	if (newchunkdb == chunkdb)
 	    return;
-	if (!dbt.inuse) {
-	    destroyFrames();
-	    dbt.inuse = true;
-	    if (current_treemodel != null) {
-		current_treemodel.tree.removeMouseListener(this);
-		current_treemodel.inuse = false;   // possible sync bug?
-	    }
-	    current_treemodel = dbt;
-	    if (!db_combobox.getSelectedItem().equals(dbt.getName()))
-		db_combobox.setSelectedItem (dbt.getName());
-	    scroll_pane.setViewportView(dbt.tree);
-	    dbt.tree.addMouseListener(this);
-	    validate();
-	    scroll_pane.repaint();
-	}
-	else {
-	    db_combobox.setSelectedItem (current_treemodel.getName());
-	}
+	chunkdb = newchunkdb;
 
-	if (current_treemodel == empty_treemodel)
-	    setButtonsEnabled(false);
-	else
-	    setButtonsEnabled(true);
+	if (dbt != null) {
+	    destroyFrames();
+	    dbt.tree.removeMouseListener (this);
+	    dbt_factory.releaseTreeModel (dbt);
+	}
+	    
+	dbt = dbt_factory.getTreeModel (chunkdb);
+	scroll_pane.setViewportView (dbt.tree);
+	dbt.tree.addMouseListener(this);
+	db_combobox.setSelectedItem (dbt.getName());
+	validate();
+	scroll_pane.repaint();
+
+	if (dbt == null)
+	    System.out.println ("dbt is null & shouldn't be");
+	if (dbt.tree == null)
+	    System.out.println ("dbt tree is null & shouldn't be");
+
+	setButtonsEnabled (chunkdb != null);
+
     }
 
 
 
     public void addChunks (ConfigChunkDB newdb) {
-	if (current_treemodel == empty_treemodel)
+	if (chunkdb == null)
 	    return;
 	for (int i = 0; i < newdb.size(); i++)
-	    current_treemodel.insertNode ((ConfigChunk)newdb.elementAt(i));
+	    chunkdb.addElement ((ConfigChunk)newdb.elementAt(i));
     }
 
 	
@@ -278,6 +298,7 @@ public class ChunkDBPanel extends JPanel
     }
 
 
+    // public, as the saying goes, as an implementation detail
     public void actionPerformed (ActionEvent e) {
 	int i,j;
 	String s;
@@ -288,7 +309,7 @@ public class ChunkDBPanel extends JPanel
 	ConfigChunk ch;
 
 	if (source == send_button) {
-	    tp = current_treemodel.tree.getSelectionPaths();
+	    tp = dbt.tree.getSelectionPaths();
 	    if (tp == null)
 		return;
 	    v = new ConfigChunkDB();
@@ -299,35 +320,37 @@ public class ChunkDBPanel extends JPanel
 			v.addElement (ni.ch);
 		}
 	    }
-	    Core.ui.configure_pane.sendAcross (v, this);
+	    if (sendacross_target != null)
+		sendacross_target.addChunks (v);
 	}
 	else if (source == send_all_button) {
-	    Core.ui.configure_pane.sendAcross (current_treemodel.chunkdb, this);
+	    if (sendacross_target != null)
+		sendacross_target.addChunks (chunkdb);
 	}
 	else if (source == new_button) {
 	    selectDB (Core.addChunkDB (new ConfigChunkDB()));
 	}
 	else if (source == close_button) {
-	    Core.closeChunkDB (current_treemodel);
+	    Core.closeChunkDB (chunkdb);
 	}
 	else if (source == checkdepend_button) {
-	    Vector vec = current_treemodel.chunkdb.getDependencies();
+	    Vector vec = chunkdb.getDependencies();
 	    for (i = 0; i < Core.chunkdbs.size(); i++) {
-		ConfigChunkDB db = ((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).chunkdb;
-		if (db != current_treemodel.chunkdb)
+		ConfigChunkDB db = (ConfigChunkDB)Core.chunkdbs.elementAt(i);
+		if (db != chunkdb)
 		    db.searchDependencies (vec);
 	    }
 	    if (dependency_frame == null)
-		dependency_frame = new DependencyFrame(this, current_treemodel.chunkdb, vec);
+		dependency_frame = new DependencyFrame(this, chunkdb, vec);
 	    else
 		dependency_frame.refreshData (vec);
 	    dependency_frame.setVisible (true);
 	}
 	else if (source == remove_button) {
-	    tp = current_treemodel.tree.getSelectionPaths();
+	    tp = dbt.tree.getSelectionPaths();
 	    if (tp == null)
 		return;
-	    if (current_treemodel == Core.active_treemodel) {
+	    if (chunkdb == Core.active_chunkdb) {
 		ConfigChunkDB db = new ConfigChunkDB ();
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
@@ -341,7 +364,7 @@ public class ChunkDBPanel extends JPanel
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
 		    if (ni.ch != null) {
-			current_treemodel.removeNode(ni.ch.getName());
+			chunkdb.remove(ni.ch.getName());
 		    }
 		}
 	    }
@@ -349,8 +372,8 @@ public class ChunkDBPanel extends JPanel
 	else if (source == insert_button) {
 	    ch = ChunkFactory.createChunkWithDescName ((String)insert_type.getSelectedItem());
 	    if (ch != null) {
-		ch.name = (current_treemodel.chunkdb.getNewName(ch.getDescName()));
-		current_treemodel.insertNode (ch);
+		ch.name = (chunkdb.getNewName(ch.getDescName()));
+		chunkdb.addElement (ch);
 	    }
 	}
 	else if (source == chunkhelp_button) {
@@ -359,7 +382,7 @@ public class ChunkDBPanel extends JPanel
 		Core.ui.loadDescHelp (cd.getToken());
 	}
 	else if (source == duplicate_button) {
-	    tp = current_treemodel.tree.getSelectionPaths();
+	    tp = dbt.tree.getSelectionPaths();
 	    if (tp == null)
 		return;
 	    for (i = 0; i < tp.length; i++) {
@@ -368,21 +391,21 @@ public class ChunkDBPanel extends JPanel
 		    // create a copy of this node...
 		    ch = new ConfigChunk (ni.ch);
 		    ch.name = "copy of " + ch.name;
-		    current_treemodel.insertNode (ch);
+		    chunkdb.addElement (ch);
 		}
 	    }
 	}
 	else if (source == load_button) {
-	    if (current_treemodel == empty_treemodel)
+	    if (chunkdb == null)
 		s = FileControl.loadNewChunkDBFile ("", true);
 	    else
-		s = FileControl.loadNewChunkDBFile (current_treemodel.chunkdb.file.getParent(), true);
+		s = FileControl.loadNewChunkDBFile (chunkdb.file.getParent(), true);
 	    if (s != null)
 		selectDB(s);
 	}
 	else if (source == save_button) {
-	    if (current_treemodel != empty_treemodel)
-		selectDB (FileControl.saveChunkDBFile(current_treemodel.chunkdb));
+	    if (chunkdb != null)
+		selectDB (FileControl.saveChunkDBFile(chunkdb));
 	}
 	else if (source == db_combobox) {
 	    selectDB ((String)db_combobox.getSelectedItem());
@@ -401,23 +424,23 @@ public class ChunkDBPanel extends JPanel
 	else if (source == remove_mi) {
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	    if (ni.isChunkNode()) {
-		if (current_treemodel == Core.active_treemodel) {
+		if (chunkdb == Core.active_chunkdb) {
 		    ConfigChunkDB db = new ConfigChunkDB();
 		    db.addElement (ni.ch);
 		    Core.net.removeChunks (db);
 		} 
 		else
-		    current_treemodel.removeNode (ni.ch.getName());
+		    chunkdb.remove (ni.ch.getName());
 	    }
 	}
 	else if (source == insert_mi) {
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	    if (ni.isDescNode()) {
 		ch = ChunkFactory.createChunkWithDescName (ni.toString());
-		ch.name = (current_treemodel.chunkdb.getNewName(ni.toString()));
-		current_treemodel.insertNode (ch);
+		ch.name = (chunkdb.getNewName(ni.toString()));
+		chunkdb.addElement (ch);
 	    }
-	    current_treemodel.tree.expandPath(treeitem_menu_path);
+	    dbt.tree.expandPath(treeitem_menu_path);
 	}
     }
 
@@ -426,10 +449,13 @@ public class ChunkDBPanel extends JPanel
     public void mouseClicked(MouseEvent e) {
 	ConfigChunkFrame f;
 
-	int selRow = current_treemodel.tree.getRowForLocation(e.getX(), e.getY());
+	if (dbt == null)
+	    return;
+
+	int selRow = dbt.tree.getRowForLocation(e.getX(), e.getY());
 	if (selRow == -1)
 	    return;
-	treeitem_menu_path = current_treemodel.tree.getPathForLocation(e.getX(), e.getY());
+	treeitem_menu_path = dbt.tree.getPathForLocation(e.getX(), e.getY());
 	ChunkTreeNodeInfo ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 
 
@@ -453,8 +479,10 @@ public class ChunkDBPanel extends JPanel
 
 
 
+    // public because our child Chunkframes might wish to call it to
+    // display their embedded chunks
     public void openChunkFrame (String name) {
-	ConfigChunk ch = current_treemodel.chunkdb.get (name);
+	ConfigChunk ch = chunkdb.get (name);
 	openChunkFrame (ch);
     }
 
@@ -474,7 +502,7 @@ public class ChunkDBPanel extends JPanel
 
 
 
-    public ConfigChunkFrame getChunkFrame (String name) {
+    private ConfigChunkFrame getChunkFrame (String name) {
 	int i;
 	ConfigChunkFrame f;
 	for (i = 0; i < chunk_frames.size(); i++) {
@@ -487,7 +515,7 @@ public class ChunkDBPanel extends JPanel
 
 
 
-    public void destroyFrames () {
+    private void destroyFrames () {
 	// destroys child frames of this chunkdbpanel (dependency frames
 	// and chunkframes
 	int i;
@@ -513,11 +541,13 @@ public class ChunkDBPanel extends JPanel
     public void mouseExited(MouseEvent e) {}
 
     public void mousePressed(MouseEvent e) {
-	int selRow = current_treemodel.tree.getRowForLocation(e.getX(), 
-							      e.getY());
+	if (dbt == null)
+	    return;
+
+	int selRow = dbt.tree.getRowForLocation(e.getX(), e.getY());
 	if (selRow == -1)
 	    return;
-	treeitem_menu_path = current_treemodel.tree.getPathForLocation(e.getX(), e.getY());
+	treeitem_menu_path = dbt.tree.getPathForLocation(e.getX(), e.getY());
 	ChunkTreeNodeInfo ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	
 	int mod = e.getModifiers();
@@ -526,9 +556,9 @@ public class ChunkDBPanel extends JPanel
 		DefaultMutableTreeNode n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
 		ChunkTreeNodeInfo info = (ChunkTreeNodeInfo)n.getUserObject();
 		if (info.isDescNode())
-		    desctreeitem_menu.show (current_treemodel.tree, e.getX(), e.getY());
+		    desctreeitem_menu.show (dbt.tree, e.getX(), e.getY());
 		if (info.isChunkNode())
-		    chunktreeitem_menu.show (current_treemodel.tree, e.getX(), e.getY());
+		    chunktreeitem_menu.show (dbt.tree, e.getX(), e.getY());
 	    }
 	}
     }
@@ -542,7 +572,7 @@ public class ChunkDBPanel extends JPanel
 	    ConfigChunk newc, oldc;
 	    oldc = f.getOldValue();
 	    newc = f.getValue();
-	    if (current_treemodel == Core.active_treemodel) {
+	    if (chunkdb == Core.active_chunkdb) {
 		if (oldc.getName().equals (newc.getName()))
 		    Core.net.sendChunk(newc);
 		else {
@@ -551,7 +581,7 @@ public class ChunkDBPanel extends JPanel
 		}
 	    }
 	    else {
-		current_treemodel.replaceNode (oldc, newc);
+		chunkdb.replace (oldc, newc);
 	    }
 	}
 	chunk_frames.removeElement(f);
@@ -566,7 +596,7 @@ public class ChunkDBPanel extends JPanel
     }
 
     public void removeChunkDB (CoreDBEvent e) {
-	if (current_treemodel.chunkdb == e.getChunkDB())
+	if (chunkdb == e.getChunkDB())
 	    selectDB ("");
 	db_combobox.removeItem (e.getChunkDB().getName());
     }

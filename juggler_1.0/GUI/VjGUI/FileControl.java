@@ -140,7 +140,8 @@ public class FileControl {
 	Core.chunkorgtree.setName (f1.getName());
 	Core.chunkorgtree.setFile (f1);
 	Core.chunkorgtree.read(st);
-	Core.rebuildAllTrees();
+	//--- BUG ---
+	//Core.rebuildAllTrees();
     }
 
 

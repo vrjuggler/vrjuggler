@@ -31,7 +31,7 @@ package VjGUI;
 import java.lang.String;
 import java.lang.StringBuffer;
 import java.util.Vector;
-import java.awt.Color;
+//import java.awt.Color;
 import javax.swing.*;
 import VjGUI.*;
 import VjConfig.*;
@@ -42,10 +42,10 @@ public class Core {
     static Core instance;
 
     static public ChunkOrgTree chunkorgtree;
-    static public Vector chunkdbs;        // actually, a vector of ChunkDBTreeModel
+    static public Vector chunkdbs;
     static public Vector descdbs;
     static public ChunkDescDB descdb;
-    static public ChunkDBTreeModel active_treemodel;
+    static public ConfigChunkDB active_chunkdb;
     static public NetControl net;
     static public ControlUI ui;
     static public ConfigChunkDB gui_chunkdb;
@@ -82,7 +82,7 @@ public class Core {
 	ConfigChunkDB db;
 	int i, j;
 	for (i = 0; i < chunkdbs.size(); i++) {
-	    db = ((ChunkDBTreeModel)chunkdbs.elementAt(i)).chunkdb;
+	    db = (ConfigChunkDB)chunkdbs.elementAt(i);
 	    for (j = 0; j < db.size(); j++) {
 		ch = (ConfigChunk)db.elementAt(j);
 		if (name.startsWith (ch.getName()))
@@ -114,7 +114,7 @@ public class Core {
 	gui_chunkdb = new ConfigChunkDB ();
 	db = new ConfigChunkDB();
 	db.setName ("Active Configuration");
-	active_treemodel = new ChunkDBTreeModel (db, chunkorgtree);
+	active_chunkdb = new ConfigChunkDB ();
 	net = new NetControl();
 
 
@@ -139,23 +139,23 @@ public class Core {
 
 
     static public void enableActiveDB () {
-	chunkdbs.addElement (active_treemodel);
-	notifyCoreDBTargets (ADD_CHUNKDB, active_treemodel.chunkdb, null);
+	chunkdbs.addElement (active_chunkdb);
+	notifyCoreDBTargets (ADD_CHUNKDB, active_chunkdb, null);
     }
 
 
 
     static public void disableActiveDB () {
-	notifyCoreDBTargets (REMOVE_CHUNKDB, active_treemodel.chunkdb, null);
-	chunkdbs.removeElement (active_treemodel);
+	notifyCoreDBTargets (REMOVE_CHUNKDB, active_chunkdb, null);
+	chunkdbs.removeElement (active_chunkdb);
     }
 
 
-    static public void closeChunkDB (ChunkDBTreeModel dbt) {
-	if (dbt == null || dbt == active_treemodel || dbt.getName().equalsIgnoreCase ("No Selection"))
+    static public void closeChunkDB (ConfigChunkDB db) {
+	if (db == null || db == active_chunkdb)
 	    return;
-	notifyCoreDBTargets (REMOVE_CHUNKDB, dbt.chunkdb, null);
-	chunkdbs.removeElement (dbt);
+	notifyCoreDBTargets (REMOVE_CHUNKDB, db, null);
+	chunkdbs.removeElement (db);
     }
 
 
@@ -176,11 +176,11 @@ public class Core {
 	int i;
 	String name;
 
-	if (getChunkDBTree (base) == null)
+	if (getChunkDB (base) == null)
 	    return base;
 	for (i = 2; true; i++) {
 	    name = base + " <" + i + ">";
-	    if (getChunkDBTree (name) == null)
+	    if (getChunkDB (name) == null)
 		return name;
 	}
     }
@@ -204,7 +204,6 @@ public class Core {
 	if (_db.name.equals (newbase))
 	    return newbase;
 	newbase = createUniqueChunkDBName (newbase);
-	ChunkDBTreeModel dbt = getChunkDBTree (_db.name);
 	notifyCoreDBTargets (REMOVE_CHUNKDB, _db, null);
 	_db.setName (newbase);
 	notifyCoreDBTargets (ADD_CHUNKDB, _db, null);
@@ -224,8 +223,7 @@ public class Core {
 
     static public String addChunkDB (ConfigChunkDB _chunkdb) {
 	_chunkdb.setName (createUniqueChunkDBName (_chunkdb.name));
-	ChunkDBTreeModel ctm = new ChunkDBTreeModel (_chunkdb, chunkorgtree);
-	chunkdbs.addElement (ctm);
+	chunkdbs.addElement (_chunkdb);
 	notifyCoreDBTargets (ADD_CHUNKDB, _chunkdb, null);
 	return _chunkdb.name;
     }
@@ -242,23 +240,23 @@ public class Core {
 
 
 
-    static public void rebuildAllTrees () {
-	// rebuilds all the trees in chunkdbs...
-	ChunkDBTreeModel dbt;
+//      static public void rebuildAllTrees () {
+//  	// rebuilds all the trees in chunkdbs...
+//  	ChunkDBTreeModel dbt;
+//  	for (int i = 0; i < chunkdbs.size(); i++) {
+//  	    dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
+//  	    dbt.buildTree();
+//  	}
+//      }
+
+
+
+    static ConfigChunkDB getChunkDB (String name) {
+	ConfigChunkDB db;
 	for (int i = 0; i < chunkdbs.size(); i++) {
-	    dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
-	    dbt.buildTree();
-	}
-    }
-
-
-
-    static ChunkDBTreeModel getChunkDBTree (String name) {
-	ChunkDBTreeModel dbt;
-	for (int i = 0; i < chunkdbs.size(); i++) {
-	    dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
-	    if (dbt.getName().equalsIgnoreCase(name))
-		return dbt;
+	    db = (ConfigChunkDB)chunkdbs.elementAt(i);
+	    if (db.getName().equalsIgnoreCase(name))
+		return db;
 	}
 	return null;
     }
@@ -321,6 +319,7 @@ public class Core {
     }
 
 
+    /************************ Logging Routines ******************************/
 
    
     public static void consoleTempMessage (String s) {

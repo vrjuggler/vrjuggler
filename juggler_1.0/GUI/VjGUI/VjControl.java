@@ -135,9 +135,6 @@ public class VjControl {
 	    FileControl.loadChunkOrgTree(orgtreename, false, Core.chunkorgtree);
 	}
 	
-	Core.ui.selectLeftDB ("Active Configuration");
-	Core.ui.selectRightDB (lastfname);
-	Core.ui.selectDescDB (lastdname);
 	Core.ui.refreshPerfData();
 
 	

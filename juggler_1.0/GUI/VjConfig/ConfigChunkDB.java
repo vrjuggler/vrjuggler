@@ -27,6 +27,7 @@ import VjConfig.*;
 public class ConfigChunkDB {
 
     private Vector chunks;
+    private Vector targets;
     public String name;
     public File file;
 
@@ -39,6 +40,7 @@ public class ConfigChunkDB {
     public ConfigChunkDB () {
 	super();
 	chunks = new Vector();
+	targets = new Vector();
 	name = "Untitled";
 	file = new File("Untitled");
     }
@@ -89,10 +91,13 @@ public class ConfigChunkDB {
 
     public void removeAll () {
 	chunks.removeAllElements();
+	notifyChunkDBTargets (new ChunkDBEvent (this, ChunkDBEvent.REMOVEALL, null, null));
     }
 
     public void removeElementAt (int i) {
+	ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.REMOVE, (ConfigChunk)chunks.elementAt(i), null);
 	chunks.removeElementAt(i);
+	notifyChunkDBTargets (e);
     }
 
 
@@ -100,7 +105,9 @@ public class ConfigChunkDB {
     public boolean remove(String name) {
 	for (int i = 0; i < size(); i++) {
 	    if (elementAt(i).getName().equalsIgnoreCase(name)) {
+		ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.REMOVE, (ConfigChunk)chunks.elementAt(i), null);
 		removeElementAt(i);
+		notifyChunkDBTargets (e);
 		return true;
 	    }
 	}
@@ -180,6 +187,10 @@ public class ConfigChunkDB {
 	    }
 	    chunks.insertElementAt(c, i);
 	}
+
+	ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.INSERT, null, c);
+	notifyChunkDBTargets (e);
+
     }
 
 
@@ -261,6 +272,8 @@ public class ConfigChunkDB {
 	    if (t.getName().equals(o.getName())) {
 		chunks.removeElementAt(i);
 		chunks.insertElementAt(n,i);
+		ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.REPLACE, o, n);
+		notifyChunkDBTargets (e);
 		return;
 	    }
 	}
@@ -366,6 +379,47 @@ public class ConfigChunkDB {
 	s = s + "End\n";
 	return s;
     }
+
+
+
+    /******************** ChunkDB Target Stuff *********************/
+
+    public synchronized void addChunkDBListener (ChunkDBListener l) {
+	synchronized (targets) {
+	    targets.addElement (l);
+	}
+    }
+
+    public void removeChunkDBListener (ChunkDBListener l) {
+	synchronized (targets) {
+	    targets.removeElement (l);
+	}
+    }
+
+    protected void notifyChunkDBTargets (ChunkDBEvent e) {
+	Vector l;
+	synchronized (targets) {
+	    l = (Vector) targets.clone();
+	}
+	for (int i = 0; i < l.size(); i++) {
+	    ChunkDBListener lis = (ChunkDBListener)l.elementAt (i);
+	    switch (e.getAction()) {
+	    case e.INSERT:
+		lis.addChunk (e);
+		break;
+	    case e.REMOVE:
+		lis.removeChunk (e);
+		break;
+	    case e.REPLACE:
+		lis.replaceChunk (e);
+		break;
+	    case e.REMOVEALL:
+		lis.removeAllChunks (e);
+		break;
+	    }
+	}
+    }
+
 }
 
 

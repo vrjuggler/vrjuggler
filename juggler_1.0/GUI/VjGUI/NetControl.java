@@ -351,7 +351,7 @@ public class NetControl implements Runnable {
 		instream.nextToken();
 		if (instream.sval.equalsIgnoreCase("all")) {
 		    /* remove old chunks */
-		    Core.active_treemodel.removeAllChunkNodes();
+		    Core.active_chunkdb.removeAll();
 		}
 		else
 		    instream.pushBack();
@@ -362,10 +362,10 @@ public class NetControl implements Runnable {
 		
 		
 		for (;;) {
-		    c = Core.active_treemodel.chunkdb.readAChunk(instream);
+		    c = Core.active_chunkdb.readAChunk(instream);
 		    if (c != null) {
 			//System.out.println ("read chunk: \n" + c.toString());
-			Core.active_treemodel.insertNode (c);
+			Core.active_chunkdb.addElement (c);
 		    }
 		    else
 			break;

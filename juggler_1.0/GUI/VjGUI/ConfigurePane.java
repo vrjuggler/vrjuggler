@@ -45,27 +45,13 @@ public class ConfigurePane extends JSplitPane implements MouseListener {
 	leftpanel.setMinimumSize (new Dimension (0, 50));
 	rightpanel.setMinimumSize (new Dimension (0, 50));
 	//setDividerLocation (.5);
+
+	leftpanel.setSendAcrossTarget (rightpanel);
+	rightpanel.setSendAcrossTarget (leftpanel);
 	
 	leftpanel.addMouseListener (leftpanel);
 	rightpanel.addMouseListener (rightpanel);
 	
-    }
-
-
-
-    public void sendAcross (ConfigChunkDB db, ChunkDBPanel panel) {
-	ChunkDBPanel destpanel;
-
-	if (db == null)
-	    return;
-	if (panel == leftpanel)
-	    destpanel = rightpanel;
-	else
-	    destpanel = leftpanel;
-	if (destpanel.current_treemodel == Core.active_treemodel)
-	    Core.net.sendChunks(db);
-	else
-	    destpanel.addChunks(db);
     }
 
 
