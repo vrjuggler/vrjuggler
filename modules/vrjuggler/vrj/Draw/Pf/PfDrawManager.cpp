@@ -312,10 +312,14 @@ void PfDrawManager::addDisplay(Display* disp)
    unsigned int i;
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::addDisplay: Got Stereo FB config\n" << vprDEBUG_FLUSH;
    for(i=0;i<stereo_fb_config.size();i++)
+   {
       vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << stereo_fb_config[i] << vprDEBUG_FLUSH;
+   }
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "\nPfDrawManager::addDisplay: Got Mono FB config\n" << vprDEBUG_FLUSH;
-   for(i=0;i<mono_fb_config.size();i++)
+   for(j=0;j<mono_fb_config.size();j++)
+   {
       vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vprDEBUG_FLUSH;
+   }
    vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << std::endl << vprDEBUG_FLUSH;
 
    //  For the display
