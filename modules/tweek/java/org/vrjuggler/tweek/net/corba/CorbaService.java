@@ -113,6 +113,28 @@ public class CorbaService
       }
    }
 
+   /**
+    * Shuts down the ORB created by this object.  Depending on the given
+    * argument, this call will (or will not) block until all pending events
+    * are completed.
+    *
+    * @post If an ORB has been initialized, it will be shut down, its thread
+    *       will stop running, and the references will be set to null.
+    *
+    * @param wait_for_completion If true, the shutdown process for this
+    *                            service will block until pending events are
+    *                            completed.
+    */
+   public void shutdown (boolean wait_for_completion)
+   {
+      if ( m_orb_thread != null && m_orb != null )
+      {
+         m_orb.shutdown(wait_for_completion);
+         m_orb        = null;
+         m_orb_thread = null;
+      }
+   }
+
    public String toString ()
    {
       return nameServiceHost + ":" + nameServicePort + "/" + namingSubcontext;

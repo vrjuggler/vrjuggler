@@ -331,6 +331,11 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          m_bean_container.fireFrameClosed();
       }
 
+      for ( int i = 0; i < m_orbs.size(); i++ )
+      {
+         ((CorbaService) m_orbs.elementAt(i)).shutdown(true);
+      }
+
       System.exit(0);
    }
 
