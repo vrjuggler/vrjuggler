@@ -68,13 +68,18 @@ void AwSoundEngine::init()
    system( commandRm.c_str() );
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"Issuing system() command:")  << command.c_str() << "\n" << vjDEBUG_FLUSH;
    system( command.c_str() );
-   
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"Done with command\n") << vjDEBUG_FLUSH;
       
    mInitialized = false;  //set it to true at the end of this func...
    
    // initialize the AudioWorks system
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"initialize the AudioWorks system\n") << vjDEBUG_FLUSH;
+   
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awOpenAWD\n" << vjDEBUG_FLUSH;
    awOpenAWD("");
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awOpenEP\n" << vjDEBUG_FLUSH;
    awOpenEP(0, AWEP_SHARE);
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awEPReset,awEPFlush,awCloseEP,awCloseAWD\n" << vjDEBUG_FLUSH;
    awEPReset();
    awEPFlush();
    awCloseEP();
@@ -83,11 +88,12 @@ void AwSoundEngine::init()
 
    // The three stages in setting up a AudioWorks application are
    // - Initialization
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awInitSys\n" << vjDEBUG_FLUSH;
    vjASSERT( awInitSys() != -1 );
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
-   cout<<"[aw] Loading: "<<tmpFile.c_str()<<"\n"<<flush;
+   cout<<"[aw] Loading: "<<flush<<tmpFile.c_str()<<"\n"<<flush;
    int result = awDefineSys( tmpFile.c_str() );
    if (result == -1)
    {
@@ -106,8 +112,10 @@ void AwSoundEngine::init()
    // the list.  Passing in a value of 0 will skip all of the mapping
    // function calls.  These functions must be called by the application 
    // for each sound and engine that will be used in the same simulation.
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awConfigSys\n" << vjDEBUG_FLUSH;
    vjASSERT( awConfigSys( 1 ) == 0 );
-
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"done\n") << vjDEBUG_FLUSH;
+   
    // use a separate process for the sound engine.
    // OFF is default
    //awProp( awGetSys(), AWSYS_MPMODE, AW_ON );
@@ -118,11 +126,11 @@ void AwSoundEngine::init()
    mObserver = awFindObs( "you" );
    if (mObserver == NULL)
    {
-      cout<<"[aw] \n"
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) <<"[aw] \n"
           <<"[aw] !!! WARNING !!!: could not find in "<<tmpFile.c_str()<<" file the \"observer\" named \"you\".  \n"
           <<"[aw] !!!         !!!: This *has* to be there, or else none of the sound localization \n"
           <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
-          <<"[aw] \n"<<flush;
+          <<"[aw] \n"<<vjDEBUG_FLUSH;
    }
    
    // default...
