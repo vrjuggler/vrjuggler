@@ -64,9 +64,13 @@ bool vjUser::config(vjConfigChunk* chunk)
    std::string head_alias = (std::string)chunk->getProperty("headPos");
    mHead.init(head_alias);
 
+   // Initialize interocular distance
+   mInterocularDist = chunk->getProperty("interocular_distance");
+
    vjDEBUG(vjDBG_KERNEL,3) << "id: " << mUserId << "   Name:" << mName.c_str()
-                           << "   headPos:" << head_alias.c_str() << std::endl
-                           << vjDEBUG_FLUSH;
+                           << "   headPos:" << head_alias.c_str()
+                           << "   interocular_distance:" << mInterocularDist
+                           << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_END(vjDBG_KERNEL,3) << "\n" << vjDEBUG_FLUSH;
    return true;
 }
