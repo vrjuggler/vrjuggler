@@ -170,10 +170,10 @@ private:
    float            mOriginalHeight;   /**< Original height of desktop.  Used in roll up */
 
    /** Transform matrix of the desktop.
-   * This is from world to desktop.
+   * This is from virtual world to desktop.
    * In only captures the local transformations (not any app nav matrix stuff)
    */
-   gmtl::Matrix44f  m_world_M_desktop;
+   gmtl::Matrix44f  m_vworld_M_desktop;
 
    gmtl::AABoxf     mDesktopBox;
    gmtl::Rayf       mWandRay;          /**< The wand ray to draw (clipped to length) */

@@ -95,8 +95,8 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    updateDesktopParameters();       // Initial update of desktop parameters
 
    // Set initial transform
-   gmtl::setTrans( m_world_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
-   m_world_M_desktop *= gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(-0.4f, -0.05f, 0.0f));
+   gmtl::setTrans( m_vworld_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
+   m_vworld_M_desktop *= gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(-0.4f, -0.05f, 0.0f));
 
    // Request the first update.
    mVncIf.sendFramebufferUpdateRequest(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
@@ -291,7 +291,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // Compute the wand xform in the local desktop coordinate frame
    const gmtl::Matrix44f wand_mat_world(*(mWand->getData()));
    gmtl::Matrix44f desktop_M_world;
-   gmtl::invert(desktop_M_world, m_world_M_desktop);
+   gmtl::invert(desktop_M_world, m_vworld_M_desktop);
    gmtl::Matrix44f wand_mat = desktop_M_world * wand_mat_world;
 
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
@@ -336,7 +336,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          float delta_h = -(roll_inc*mOriginalHeight);
          mDesktopHeight = mOriginalHeight*(1.0f-mRollUpPercent);
-         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+         m_vworld_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
       }
 
       updateDesktopParameters();
@@ -353,7 +353,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          float delta_h = (roll_inc*mOriginalHeight);
          mDesktopHeight = mOriginalHeight*(1.0f-mRollUpPercent);
-         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+         m_vworld_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
       }
       updateDesktopParameters();
    }
@@ -534,7 +534,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
          // Transform opposite of change in height to make it look right
-         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+         m_vworld_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
          mDesktopWidth += delta_w;
          mDesktopHeight += delta_h;
 
@@ -548,7 +548,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
          // Transform opposite of change in height and width to look right
-         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-delta_w, -delta_h, 0.0f));
+         m_vworld_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-delta_w, -delta_h, 0.0f));
          mDesktopWidth += delta_w;
          mDesktopHeight += delta_h;
          // Don't reset grab point. Both stay same since we transformed to get them to be the same
@@ -560,7 +560,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          // Compute desired pos and then figure out how to get the desktop to there
          gmtl::Matrix44f desired_pos = (wand_mat * m_wandMdesktop_grab);
-         m_world_M_desktop *= desired_pos;
+         m_vworld_M_desktop *= desired_pos;
       }
 
       // Get out of grab states if possible
@@ -591,7 +591,7 @@ void VNCDesktop::draw()
    glPushMatrix();
    {
       // Get into the desktop coordinate frame
-      glMultMatrixf(m_world_M_desktop.mData);
+      glMultMatrixf(m_vworld_M_desktop.mData);
 
       // XXX: Should probably use an attribute stack or something here.
       glDisable(GL_BLEND);
