@@ -71,6 +71,10 @@ use_linker='no'
 
 usage()
 {
+    if test "x$2" != "x" ; then
+       echo "Unrecognized option '$2'"
+    fi
+
     cat <<EOF
 Usage: tweek-config [OPTIONS] [LIBRARIES]
 Options:
@@ -89,6 +93,15 @@ Options:
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
+        [--idl cxx|java]        Print path to the IDL compiler used for
+                                generating C++ or Java based on the given
+                                parameter
+        [--idlflags cxx|java]   Print flags passed to the IDL compiler for
+                                generating C++ or Java based on the given
+                                parameter
+        [--idlgendir cxx|java]  Print flag passed to IDL compiler to specify
+                                where the generated files (either C++ or Java
+                                based on the given parameter) are written
         [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
@@ -204,11 +217,26 @@ while test $# -gt 0; do
         --linker)
             use_linker='yes'
             ;;
+        --idl)
+            echo_idl="$2"
+            shift
+            shift
+            ;;
+        --idlflags)
+            echo_idlflags="$2"
+            shift
+            shift
+            ;;
+        --idlgendir)
+            echo_idlgendir="$2"
+            shift
+            shift
+            ;;
         --static)
             echo_static='yes'
             ;;
         *)
-            usage 1 1>&2
+            usage 1 $1 1>&2
             ;;
     esac
     shift
@@ -277,4 +305,49 @@ if test "x$echo_extra_libs" = "xyes"; then
     tweek_extra_ldflags="@tweek_extra_ldflags@"
     tweek_extra_libs="@tweek_extra_libs@"
     echo $tweek_extra_ldflags $tweek_extra_libs
+fi
+
+if test "x$echo_idl" != "x" ; then
+    if test "$echo_idl" = "cxx" ; then
+       echo "@CXX_IDL@"
+    elif test "$echo_idl" = "java" ; then
+       echo "@JAVA_IDL@"
+    else
+       echo "ERROR: Unrecognized IDL flag type '$echo_idl'!"
+       usage 1 1>&2
+    fi
+fi
+
+if test "x$echo_idlflags" != "x" ; then
+    # XXX: This is a hack and should not be mimicked by other scripts of this
+    # nature.  A better solution should be devised.
+    if test "$use_base_dir" != "yes" ; then
+       TWEEK_BASE_DIR="$prefix"
+    fi
+
+    if test "$echo_idlflags" = "cxx" ; then
+       echo "@tweek_idlflags_cxx@"
+    elif test "$echo_idlflags" = "java" ; then
+       echo "@tweek_idlflags_java@"
+    else
+       echo "ERROR: Unrecognized IDL flag type '$echo_idlflags'!"
+       usage 1 1>&2
+    fi
+fi
+
+if test "x$echo_idlgendir" != "x" ; then
+    # XXX: This is a hack and should not be mimicked by other scripts of this
+    # nature.  A better solution should be devised.
+    if test "$use_base_dir" != "yes" ; then
+       TWEEK_BASE_DIR="$prefix"
+    fi
+
+    if test "$echo_idlgendir" = "cxx" ; then
+       echo "@tweek_idlgendir_cxx@"
+    elif test "$echo_idlgendir" = "java" ; then
+       echo "@tweek_idlgendir_java@"
+    else
+       echo "ERROR: Unrecognized IDL flag type '$echo_idlgendir'!"
+       usage 1 1>&2
+    fi
 fi

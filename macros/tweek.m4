@@ -33,8 +33,16 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl TWEEK_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for Tweek and then define TWEEK_CXXFLAGS, TWEEK_LIBS_LD,
-dnl TWEEK_LIBS_STATIC_LD, TWEEK_LIBS_CC, and TWEEK_LIBS_STATIC_CC.
+dnl Test for Tweek and then define the following variables:
+dnl     TWEEK_CXXFLAGS
+dnl     TWEEK_LIBS_LD
+dnl     TWEEK_LIBS_STATIC_LD
+dnl     TWEEK_LIBS_CC
+dnl     TWEEK_LIBS_STATIC_CC
+dnl     TWEEK_CXX_IDL_OPTS
+dnl     TWEEK_CXX_IDL_GENDIR_OPT
+dnl     TWEEK_JAVA_IDL_OPTS
+dnl     TWEEK_JAVA_IDL_GENDIR_OPT
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(TWEEK_PATH,
 [
@@ -96,6 +104,13 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS"
         TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS"
         TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS"
+        TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
+        TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
+        TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
+        TWEEK_JAVA_IDL="`$TWEEK_CONFIG $tweek_config_args --idl java`"
+        TWEEK_JAVA_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags java`"
+        TWEEK_JAVA_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
+
         TWEEK_VERSION=`$TWEEK_CONFIG --version`
         DPP_VERSION_CHECK_MSG(TWEEK, $TWEEK_VERSION, $min_tweek_version,
                               tweek_cv_tweek_version, $2, $3)
@@ -113,6 +128,12 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_LIBS_STATIC_LD=""
         TWEEK_LIBS_CC=""
         TWEEK_LIBS_STATIC_CC=""
+        TWEEK_CXX_IDL=""
+        TWEEK_CXX_IDL_OPTS=""
+        TWEEK_CXX_IDL_GENDIR_OPT=""
+        TWEEK_JAVA_IDL=""
+        TWEEK_JAVA_IDL_OPTS=""
+        TWEEK_JAVA_IDL_GENDIR_OPT=""
         ifelse([$3], , :, [$3])
     fi
 
@@ -121,4 +142,10 @@ AC_DEFUN(TWEEK_PATH,
     AC_SUBST(TWEEK_LIBS_STATIC_LD)
     AC_SUBST(TWEEK_LIBS_CC)
     AC_SUBST(TWEEK_LIBS_STATIC_CC)
+    AC_SUBST(TWEEK_CXX_IDL)
+    AC_SUBST(TWEEK_JAVA_IDL)
+    AC_SUBST(TWEEK_CXX_IDL_OPTS)
+    AC_SUBST(TWEEK_CXX_IDL_GENDIR_OPT)
+    AC_SUBST(TWEEK_JAVA_IDL_OPTS)
+    AC_SUBST(TWEEK_JAVA_IDL_GENDIR_OPT)
 ])
