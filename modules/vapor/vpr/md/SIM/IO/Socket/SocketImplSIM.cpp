@@ -152,9 +152,8 @@ vpr::ReturnStatus SocketImplSIM::connect(vpr::Interval timeout)
 // - Set to connected state.
 vpr::ReturnStatus SocketImplSIM::completeConnection(SocketImplSIM* connectedPeer)
 {
-   mPeer = connectedPeer;
+   setConnectState(connectedPeer);
    mRemoteAddr = connectedPeer->getLocalAddr();
-   mConnected = true;
 
    return vpr::ReturnStatus::Succeed;
 }
@@ -519,8 +518,8 @@ vpr::ReturnStatus SocketImplSIM::inExceptState()
 // ============================================================================
 
 SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
-   : mOpen(false), mBound(false), mConnected(false), mOpenBlocking(false),
-     mBlocking(false), mType(sock_type), mReuseAddr(false), mPeer(NULL)
+   : mOpen(false), mBound(false), mOpenBlocking(false), mBlocking(false),
+     mType(sock_type), mReuseAddr(false), mConnected(false), mPeer(NULL)
 {
    /* Do nothing. */ ;
 }
@@ -528,9 +527,9 @@ SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
 SocketImplSIM::SocketImplSIM(const vpr::InetAddr& local_addr,
                              const vpr::InetAddr& remote_addr,
                              const vpr::SocketTypes::Type sock_type)
-   : mOpen(false), mBound(false), mConnected(false), mOpenBlocking(false),
-     mBlocking(false), mLocalAddr(local_addr), mRemoteAddr(remote_addr),
-     mType(sock_type), mPeer(NULL)
+   : mOpen(false), mBound(false), mOpenBlocking(false), mBlocking(false),
+     mLocalAddr(local_addr), mRemoteAddr(remote_addr), mType(sock_type),
+     mConnected(false), mPeer(NULL)
 {
    /* Do nothing. */ ;
 }
@@ -539,8 +538,7 @@ void SocketImplSIM::disconnect()
 {
    // XXX: This is potentially not the best way to disconnect, but it's the
    // best I have come up with so far.
-   mPeer = NULL;
-   mConnected = false;
+   setConnectState(NULL);
 }
 
 } // End of vpr namespace
