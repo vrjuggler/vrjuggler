@@ -73,8 +73,8 @@ namespace SerialTypes {
     };
 
     enum ParityType {
-        PARITY_EVEN = 0, // Even parity
-        PARITY_ODD  = 1  // Odd parity
+        PORT_PARITY_EVEN = 0, // Even parity
+        PORT_PARITY_ODD  = 1  // Odd parity
     };
 };
 
