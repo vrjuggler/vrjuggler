@@ -22,8 +22,9 @@ CPPUNIT_TEST( ShortConversions );
 CPPUNIT_TEST( LongConversions );
 CPPUNIT_TEST( LongLongConversions );
 CPPUNIT_TEST( GetSetEnvTest );
+CPPUNIT_TEST( getStackTrace );
 CPPUNIT_TEST_SUITE_END();
-public:   
+public:
 
    void ShortConversions();
 
@@ -32,6 +33,14 @@ public:
    void LongLongConversions();
 
    void GetSetEnvTest();
+
+   /** Simple test for getting a stack trace.
+   * Just calls the method, doesn't analyze the feedback
+   */
+   void getStackTrace();
+
+   void stack_trace_1();
+   void stack_trace_2();
 };
 
 }

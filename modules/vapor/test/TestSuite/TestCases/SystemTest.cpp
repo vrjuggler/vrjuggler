@@ -64,4 +64,22 @@ void SystemTest::GetSetEnvTest()
    CPPUNIT_ASSERT(set_value == result_value);
 }
 
+void SystemTest::getStackTrace()
+{
+   stack_trace_1();
+}
+
+void SystemTest::stack_trace_1()
+{
+   stack_trace_2();
+}
+
+void SystemTest::stack_trace_2()
+{
+   std::string stack_trace = vpr::System::getCallStack();
+   ///*
+   std::cout << "\n\nStacktrace test:\n" << stack_trace << "---------\n\n\n" << std::endl;
+   //*/
+}
+
 } // End of vprTest namespace
