@@ -162,6 +162,7 @@ void KeyboardWin32::handleEvents()
       if (retval == -1) return; // for opt mode...
       have_events_to_check = true;
    }
+   // check for event, if none, then exit.
    else if (::PeekMessage( &msg, m_hWnd, 0, 0, PM_REMOVE ))
    {
       have_events_to_check = true;
@@ -169,6 +170,8 @@ void KeyboardWin32::handleEvents()
    else
    {
       have_events_to_check = false;
+      return; // don't wait on the lock since there is nothing 
+              // afterwards that will be called when this is false.
    }
 
 // GUARD m_keys for duration of loop
@@ -183,7 +186,10 @@ vpr::Guard<vpr::Mutex> guard( mKeysLock );
       // TranslateAccelerator here.
       ::TranslateMessage( &msg );
 
-      // send the message to the updKeys event handler
+      // do our own special handling of kb/mouse...
+      this->updKeys( msg.message, msg.wParam, msg.lParam );
+
+      // send the message to the registered event handler
       ::DispatchMessage( &msg );
 
       // see if there is more messages immediately waiting 
@@ -710,9 +716,6 @@ LONG APIENTRY MenuWndProc( HWND hWnd, UINT message, UINT wParam, LONG lParam )
          break;
 
       default:
-         KeyboardWin32* devPtr = (KeyboardWin32*)GetWindowLong( hWnd, GWL_USERDATA );
-         if (devPtr)
-            devPtr->updKeys( message, wParam, lParam );
          return DefWindowProc( hWnd, message, wParam, lParam );
    }
    return 0;
@@ -781,12 +784,13 @@ BOOL KeyboardWin32::MenuInit (HINSTANCE hInstance)
 }
 
 
-// process the current x-events
-// Called repeatedly by the controlLoop
+// process the current window events
+// Called repeatedly by 
+// - the controlLoop when "we own the window", 
+// - the GlWindow if we "dont own the window"
 int KeyboardWin32::sample() 
 { 
-   //if (mWeOwnTheWindow)
-      this->handleEvents();
+   this->handleEvents();
    return 1; 
 }
 
