@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-11-2002 nonchocoboy Superceded vjInclude chunks with an XML processing
+                        instruction for including files. Bumped config file
+                        version to 2.1
+                        NEW VERSION: 0.8.6
 Sep-09-2002 patrickh    Added an XSLT stylesheet that can upgrade chunk
                         description files using version 2.0 of the file
                         format to version 2.1.
