@@ -319,25 +319,6 @@ DPP_LANG_RESTORE
 AC_TYPE_SIZE_T
 
 # -----------------------------------------------------------------------------
-# Checks for library functions.
-# -----------------------------------------------------------------------------
-
-# In a Win32 environment with MS Visual C++ as the compiler, these math
-# functions are not in any special library.  Test for them normally.
-if test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
-# Otherwise, they are in libmath if they are anywhere.
-else
-    AC_CHECK_LIB([m], [sinf], [AC_DEFINE(HAVE_SINF)])
-    AC_CHECK_LIB([m], [cosf], [AC_DEFINE(HAVE_COSF)])
-    AC_CHECK_LIB([m], [sqrtf], [AC_DEFINE(HAVE_SQRTF)])
-    AC_CHECK_LIB([m], [asinf], [AC_DEFINE(HAVE_ASINF)])
-    AC_CHECK_LIB([m], [acosf], [AC_DEFINE(HAVE_ACOSF)])
-    AC_CHECK_LIB([m], [atan2f], [AC_DEFINE(HAVE_ATAN2F)])
-    AC_CHECK_LIB([m], [fabsf], [AC_DEFINE(HAVE_FABSF)])
-fi
-
-# -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------
 DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
