@@ -105,7 +105,7 @@ void vjConfigChunkDB::addChunks(std::vector<vjConfigChunk*> new_chunks) {
     // no! must make copies of all chunks. sigh...
     //chunks.insert(chunks.end(), new_chunks.begin(), new_chunks.end());
     for (unsigned int i = 0; i < new_chunks.size(); i++)
-        chunks.push_back (new vjConfigChunk (*new_chunks[i]));
+        addChunk (new vjConfigChunk (*new_chunks[i]));
 }
 
 
@@ -117,6 +117,7 @@ void vjConfigChunkDB::addChunks(vjConfigChunkDB *db) {
 
 
 void vjConfigChunkDB::addChunk(vjConfigChunk* new_chunk) {
+    removeNamed (new_chunk->getProperty("Name")); 
     chunks.push_back (new_chunk);
 }
 
@@ -291,7 +292,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
         }
 
         if (dep_pass) {        // If all dependencies are accounted for
-            chunks.push_back(*cur_item);        // Copy src to dst
+            addChunk(*cur_item);        // Copy src to dst
             src_chunks.erase(cur_item);         // Erase it from source
             cur_item = src_chunks.begin();      // Goto first item
         } else
@@ -404,12 +405,8 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
                 vjChunkFactory::instance()->addDescs (&newdb);
             }
             else {
-                /* OK.  If this chunk has the same instancename as a chunk
-                 * already in self, we want to remove the old one
-                 */
-                if (ch->getNum ("name"))
-                    self.removeMatching ("name", (std::string)ch->getProperty ("name"));
-                self.chunks.push_back(ch);
+                // just a plain old chunk to add in...
+                self.addChunk(ch);
             }
         }
     } while (!in.eof());
@@ -474,6 +471,6 @@ void vjConfigChunkDB::removeAll() {
 
 
 int vjConfigChunkDB::removeNamed (const std::string& name) {
-    return removeMatching ("name", name);
+    return removeMatching ("Name", name);
 }
 
