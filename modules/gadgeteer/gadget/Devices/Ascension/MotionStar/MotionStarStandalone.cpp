@@ -486,9 +486,11 @@ void MotionStarStandalone::stop() throw(mstar::CommandException)
    // Close the socket.
    if ( m_socket != NULL )
    {
-       m_socket->close();
+      m_socket->close();
+      // XXX: Memory leak!!  Why is this not deleted here?  The memory is
+      // allocated in start(), so it would make sense to release it here.
 //       delete m_socket;
-       m_socket = NULL;
+      m_socket = NULL;
    }
 
    // We reset the sequence number to 0 so that if the driver is restarted
