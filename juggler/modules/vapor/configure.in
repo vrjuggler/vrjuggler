@@ -50,7 +50,7 @@ AC_REVISION($Revision$)
 AC_INIT(vpr/vprConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vpr/vprDefines.h)
-DPP_PREREQ(1.4.92)
+DPP_PREREQ(1.4.98)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -206,6 +206,8 @@ esac
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+VJ_PROG_CC_PROF_FLAG(yes)
+VJ_PROG_CXX_PROF_FLAG(yes)
 DPP_PROG_CC_NOSTDINC
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
