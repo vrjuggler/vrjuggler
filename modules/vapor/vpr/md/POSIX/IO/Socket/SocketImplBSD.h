@@ -351,13 +351,9 @@ public:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus read_i (void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytes_read,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      m_blocking_fixed = true;
-      return m_handle->read_i(buffer, length, bytes_read, timeout);
-   }
+   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
+                            vpr::Uint32& bytes_read,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the <code>readn</code> template method.  This reads
@@ -387,13 +383,9 @@ public:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus readn_i (void* buffer, const vpr::Uint32 length,
-                              vpr::Uint32& bytes_read,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      m_blocking_fixed = true;
-      return m_handle->readn_i(buffer, length, bytes_read, timeout);
-   }
+   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& bytes_read,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the <code>write</code> template method.  This writes
@@ -422,13 +414,9 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write operation
     *         failed.
     */
-   vpr::ReturnStatus write_i (const void* buffer, const vpr::Uint32 length,
-                              vpr::Uint32& bytes_written,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      m_blocking_fixed = true;
-      return m_handle->write_i(buffer, length, bytes_written, timeout);
-   }
+   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& bytes_written,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::Uint32 availableBytes (void)
    {
