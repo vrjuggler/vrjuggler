@@ -29,6 +29,10 @@ listserv/vrjuggler?</a></li>
 	  <li><a href="#WhatIsNot">What is VR Juggler not?</a></li>
 	  <li><a href="#getstarted">Great, where do I begin?</a></li>
      <li><a href="#whatdoineed">What do I need to run juggler?</a></li>
+     <li>
+       <a href="#supported_compilers">What C++ compilers are
+       supported?</a>
+     </li>
      <li><a href="#compilejugglerwin32">How do I compile the juggler source code under Win32?</a></li>
    </ul>
 	<li><a href="#applications"> VjControl</a></LI>
@@ -41,6 +45,8 @@ listserv/vrjuggler?</a></li>
       my way when I run in simulator mode?</A></LI>
       <li><a href="#cavelib2dxform"> 2D Projections </a></li>
       <li><a href="#portingcaveapps"> How do I port a CAVElib application to Juggler? </a></li>
+      <li><a href="#c++compiler">When I compile, the file <TT>vector</TT>
+      (or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be found</a>
    </ul>
 	<li><a href="#dev"> Juggler Development</a></LI>
 	<li>
@@ -130,6 +136,29 @@ listserv/vrjuggler?</a></li>
    <b><a name="whatdoineed">What do I need to run juggler?</a></b>
 		<p>For a very specific answer to this question, check out the downloads page.  There will be requirements next to each juggler distribution.  Generally you will need OpenGL or Performer as your image generator.  Juggler will run by itself otherwise (you will not need any other display driver such as CAVElib, or WTK). </p><BR> 
       
+    <b><a name="supported_compilers">What C++ compilers are supported?</a></b>
+
+      <UL>
+        <LI>
+	  <B>IRIX</B>: we require the MIPSpro Compilers, version 7.3.1.1m
+	  or higher and the associated STL implementation.  Previous
+	  versions had bugs that caused VR Juggler to crash.
+        </LI>
+        <LI>
+	  <B>Win32</B>: we only support Microsoft Visual C++ 6.0 with
+	  Service Pack 4.  You can use Service Pack 3, but it is recommended
+	  that you upgrade if possible.  There have been reports of VR
+	  Juggler compiling with Visual C++ 5.0, but we do not officially
+	  support that version.
+        </LI>
+        <LI>
+	  <B>Other platforms</B>: we support the latest versions of GCC
+	  only.  You must use at least GCC 2.91 (EGCS 1.1.2) or a newer
+	  version.  GCC 2.95.2 is recommended if it is available to you.
+	  When GCC 3.0 is released, we will only support that version.
+        </LI>
+      </UL>
+
     <b><a name="compilejugglerwin32">How do I compile the juggler source code under Win32?</a></b>
 		<p>You really don't need to do this, unless you plan to modify the code and submit the changes to us.  You can find binaries for Win32 on our downloads page.  <BR>
       To compile the source code to Juggler on win32 platforms, you will want to download <a target="${NEW_WINDOW}" href="${GETCYGWIN}">Cygnus's set of UNIX tools</a>, and <a target="${NEW_WINDOW}" href="${GETAUTOCONF}">GNU Autoconf</a>.<BR>
@@ -280,6 +309,21 @@ listserv/vrjuggler?</a></li>
 
    Hope this gives you a better Idea of what is happening in your juggler/opengl application.<BR>
    </li>
+
+   <li><a name="c++compiler"><B>When I compile, the file <TT>vector</TT>
+      (or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be
+      found</B></a>
+
+      <P>
+	VR Juggler depends on the C++ compiler implementing the latest
+	C++ standard.  This is especially true in the case of Standard
+	Template Library support.  The latest VR Juggler code also uses
+	the standard <TT>iostream</TT> classes (part of the <TT>std</TT>
+	namespace).  If your compiler does not support these features,
+	it cannot be used to compile VR Juggler or any VR Juggler
+	applications.  Make sure that you are using one of the supported
+	compilers.  If not, you will need to upgrade.
+      </P>
 
    <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
    </blockquote>
