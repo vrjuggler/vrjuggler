@@ -7,7 +7,8 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Linux Joystick">
       <help>Element for configuring a Linux joystick input device</help>
-      <parent/>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port_name">
          <help>Port that the joystick is attached to.</help>
