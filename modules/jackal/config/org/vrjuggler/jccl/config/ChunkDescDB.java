@@ -47,6 +47,10 @@ public class ChunkDescDB
    implements PropertyChangeListener
             , ChunkDescListener
 {
+   public static final double DESC_VERSION_VALUE = 2.1;
+
+   private static final String DESC_VERSION_ATTR = "desc.db.version";
+
    /**
     * Creates a new ChunkDesc database with initially no ChunkDescs contained
     * within it. The name defaults to "Unnamed".
@@ -658,6 +662,7 @@ public class ChunkDescDB
 
    private void makeDocument(Document doc)
    {
+      addVersion(doc);
       Element root = new Element(ConfigTokens.chunk_desc_db_TOKEN);
       doc.setRootElement(root);
 
@@ -672,6 +677,23 @@ public class ChunkDescDB
          cur_desc.getNode().detach();
          root.addContent(cur_desc.getNode());
       }
+   }
+
+   /**
+    * Adds the version processing directive to the given Document instance.
+    */
+   private void addVersion(Document doc)
+   {
+      // Create a map to hold the attributes for the processing instruction
+      // to be created.
+      java.util.Map pi_attrs = new java.util.HashMap();
+
+      // Set the version information.
+      pi_attrs.put(DESC_VERSION_ATTR, String.valueOf(DESC_VERSION_VALUE));
+
+      ProcessingInstruction ver =
+         new ProcessingInstruction(ConfigTokens.SETTINGS_INSTRUCTION, pi_attrs);
+      doc.addContent(ver);
    }
 
    /**
