@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="Driver - TweekGadget"
+	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug - DLL|Win32"
+			OutputDirectory="DebugDLL"
+			IntermediateDirectory="DebugDLL"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL;..\..\..\modules\tweek;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\CORBA"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4311;4312"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/TweekGadget_drv_d.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VPR\DebugDLL"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/TweekGadget_drv_d.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)/TweekGadget_drv_d.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="Generate C++ code from CORBA IDL"
+				CommandLine="$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\gadgeteer\drivers\Open\Tweek ..\..\..\modules\gadgeteer\drivers\Open\Tweek\idl\TweekAnalogSubject.idl
+$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\gadgeteer\drivers\Open\Tweek ..\..\..\modules\gadgeteer\drivers\Open\Tweek\idl\TweekDigitalSubject.idl
+$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\gadgeteer\drivers\Open\Tweek ..\..\..\modules\gadgeteer\drivers\Open\Tweek\idl\TweekPositionSubject.idl
+"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release - DLL|Win32"
+			OutputDirectory="ReleaseDLL"
+			IntermediateDirectory="ReleaseDLL"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				OmitFramePointers="TRUE"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL;..\..\..\modules\tweek;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\CORBA"
+				PreprocessorDefinitions="WIN32;_OPT;NDEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4311;4312"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="omniORB402_rt.lib omnithread30_rt.lib omniDynamic402_rt.lib gadget.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/TweekGadget_drv.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VPR\ReleaseDLL"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/TweekGadget_drv.pdb"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/TweekGadget_drv.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="Generate C++ code from CORBA IDL"
+				CommandLine="$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\gadgeteer\drivers\Open\Tweek ..\..\..\modules\gadgeteer\drivers\Open\Tweek\idl\TweekAnalogSubject.idl
+$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\gadgeteer\drivers\Open\Tweek ..\..\..\modules\gadgeteer\drivers\Open\Tweek\idl\TweekDigitalSubject.idl
+$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\gadgeteer\drivers\Open\Tweek ..\..\..\modules\gadgeteer\drivers\Open\Tweek\idl\TweekPositionSubject.idl
+"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
+			<File
+				RelativePath="TweekAnalogSubject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekAnalogSubjectImpl.cpp">
+			</File>
+			<File
+				RelativePath="TweekDigitalSubject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekDigitalSubjectImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekGadget.cpp">
+			</File>
+			<File
+				RelativePath="TweekPositionSubject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekPositionSubjectImpl.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="TweekAnalogSubject.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekAnalogSubjectImpl.h">
+			</File>
+			<File
+				RelativePath="TweekDigitalSubject.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekDigitalSubjectImpl.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekGadget.h">
+			</File>
+			<File
+				RelativePath="TweekPositionSubject.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\Tweek\TweekPositionSubjectImpl.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
