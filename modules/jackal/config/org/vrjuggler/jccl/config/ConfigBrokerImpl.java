@@ -37,14 +37,49 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.services.EnvironmentService;
+
 /**
- * Implementation of the ConfigBroker interface for the server side.
+ * Implementation of the ConfigBroker interface for the server side. This
+ * particular implementation will try to load in the default VRJuggler Chunk
+ * description if they are available.
  *
  * @see ConfigBroker
  */
 public class ConfigBrokerImpl
    implements ConfigBroker
 {
+   /**
+    * Creates a new ConfigBroker service. This will try to load the VRJuggler
+    * chunk desc file by default upon initialization.
+    *
+    * <b>TODO: This is the wrong place to be auto-loading the VRJuggler chunk
+    * desc file. Look to put this elsewhere.</b>
+    */
+   public ConfigBrokerImpl()
+   {
+      String desc_filename = EnvironmentService.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
+      File desc_file = new File(desc_filename);
+
+      try
+      {
+         if (desc_file.exists() && desc_file.canRead())
+         {
+            // File exists and is readable. Lets see if we can load it.
+            System.out.println("Trying to load "+desc_filename);
+            InputStream in = new BufferedInputStream(new FileInputStream(desc_file));
+
+            String res_name = "VRJuggler Configuration Definitions";
+            open(new ConfigContext(), res_name, in);
+         }
+      }
+      catch (IOException ioe)
+      {
+         System.err.println("Failed to load base VRJuggler Chunk Descriptions: "+ioe.getMessage());
+      }
+   }
+
    /**
     * Opens a new configuration resource using the given unique name from the
     * given input stream.
