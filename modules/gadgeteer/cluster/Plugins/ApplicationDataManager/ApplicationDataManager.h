@@ -36,6 +36,7 @@
 #include <vpr/Util/Singleton.h>
 
 #include <gadget/gadgetConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
@@ -44,6 +45,8 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 
 #include <map>
+
+extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
 namespace cluster
 {

@@ -47,6 +47,7 @@ sub usage($);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
 sub make_LDFLAGS($;$$$);
+sub make_PLUGIN_PATH($;$$$);
 sub make_EXTRA_LDFLAGS($;$$$);
 sub handleOptArg($$);
 sub stripDuplicateCompilerArgs($);
@@ -136,6 +137,7 @@ my $echo_version   = 0;
 my $echo_static    = 0;
 my $echo_profiled  = 0;
 my $use_linker     = 0;
+my $plugin_path    = 0;
 
 my $cxxflags_arg   = '';
 my $libs_arg       = '';
@@ -147,7 +149,7 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
            'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
            'linker' => \$use_linker, 'static' => \$echo_static,
-           'profiled' => \$echo_profiled);
+           'profiled' => \$echo_profiled, 'plugin-path' => \$plugin_path);
 
 usage(0) if $script_help;
 
@@ -163,6 +165,13 @@ if ( $ECHO_CXXFLAGS || $echo_includes )
    my $includes = make_INCLUDES("$cxxflags");
    print "$cxxflags\n" if $ECHO_CXXFLAGS;
    print "$includes\n" if $echo_includes;
+}
+
+if ( $plugin_path )
+{
+   my $ldflags = make_PLUGIN_PATH("$libs_arg", $echo_static, $echo_profiled,
+                              $use_linker);
+   print "$ldflags\n";
 }
 
 if ( $ECHO_LIBS )
@@ -209,6 +218,7 @@ Options:
                                 linking flags
         [--profiled]            Print the profiled library names
         [--subsystem]           Print the VPR OS abstraction layer being used
+        [--plugin-path]         Print the location of the ClusterJuggler plugins.
 EOF
 
     exit($_[0]);
@@ -274,6 +284,43 @@ sub make_INCLUDES ($)
 {
    my(@compiler_flags) = split(/\s+/, "$_[0]");
    return join(" ", grep(/^-I/, @compiler_flags));
+}
+
+sub make_PLUGIN_PATH ($;$$$)
+{
+   my $libs_arg      = shift;
+   my $echo_static   = shift || 0;  # Echo static linking flags
+   my $echo_profiled = shift || 0;  # Echo profiled libraries
+   my $use_linker    = shift || 0;  # Use flags for direct use of the linker
+
+   my $static_begin = '';
+   my $static_end   = '';
+
+   if ( $echo_static )
+   {
+      $static_begin = qq(-Wl,-Bstatic);
+      $static_end   = qq(-Wl,-Bdynamic);
+   }
+
+   my $ldflags = '';
+
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$gadget_n32_flags $GADGET_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$gadget_64_flags $GADGET_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$GADGET_ABI_FLAGS $GADGET_ISA_FLAGS";
+   }
+
+   $ldflags .= qq( -L$prefix/lib$LIBBITSUF/gadgeteer/plugins );
+   return $ldflags;
 }
 
 sub make_LDFLAGS ($;$$$)

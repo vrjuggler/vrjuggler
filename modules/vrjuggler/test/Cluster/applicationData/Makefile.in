@@ -39,6 +39,11 @@ all: applicationData@EXEEXT@
 
 APP_NAME=	applicationData@EXEEXT@
 
+APP_NAME=	applicationData
+GADGET_CONFIG=		gadgeteer-config
+GADGET_LIBS_PARAM?=	Gadgeteer
+EXTRA_LIBS +=   $(shell $(GADGET_CONFIG) $(GADGET_LIBS_PARAM) --plugin-path) -lApplicationDataManager_drv
+
 # Basic options.
 srcdir=		@srcdir@
 SRCS=		main.cpp applicationDataApp.cpp

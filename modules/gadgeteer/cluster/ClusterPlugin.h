@@ -72,7 +72,6 @@ public:
    virtual void recoverFromLostNode(ClusterNode* lost_node)
    {;}
 
-   virtual void load();
    void setActive(bool active);
    bool isActive();
 
