@@ -1,6 +1,10 @@
+#
+#
+#
+
 import sys
 
-class RemoteNavFacade():
+class RemoteNavFacade:
    """ Base interface for remote nav facade """
    
    def setPosition(self,x,y,z):
