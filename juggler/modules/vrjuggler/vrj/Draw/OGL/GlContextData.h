@@ -37,6 +37,7 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Util/Debug.h>
+#include <vpr/Thread/TSObjectProxy.h>
 
 namespace vrj
 {
@@ -121,34 +122,51 @@ public:
    }
 
 protected:
+   /** Container for the thread specific context data
+   */
+   template<class DataType>
+   struct ThreadContextData
+   {
+   public:
+      ThreadContextData()
+         : mContextDataVector()
+      {;}
+
+      /* Makes sure that the vector is at least requiredSize large */
+      void checkSize(unsigned requiredSize)
+      {
+         if(requiredSize > mContextDataVector.size())
+         {
+            mContextDataVector.reserve(requiredSize);          // Resize smartly
+            while(mContextDataVector.size() < requiredSize)    // Add any new items needed
+            {  mContextDataVector.push_back(new DataType()); }
+         }
+      }
+
+      std::vector<DataType*> mContextDataVector;   /**< Vector of user data */
+   };
+
+
    /**
     * Returns a ptr to the correct data element in the current context.
     *
     * @pre We are in the draw function.
     * @sync Synchronized.
+    * @note ASSERT: Same context is rendered by same thread each time.
     */
    ContextDataType*  getPtrToCur()
    {
-   vpr::Guard<vpr::Mutex>  guard(mDataVectorMutex);      // Only allow a single thread in (protect resize and addition)
-
       // Get current context
       int context_id = getCurContext();
+      ThreadContextData<ContextDataType>* thread_specific_context_data = &(*mThreadSpecificContextData);    // Cache ref for better performance
 
-      // Make sure that we will reference a valid element
-      while((int)mContextDataVector.size() <= context_id)
-      {
-         mContextDataVector.push_back(new ContextDataType());
-         vprDEBUG(vrjDBG_DRAW_MGR,3)
-            << "Adding ContextDataVector element: size now: "
-            << mContextDataVector.size() << std::endl << vprDEBUG_FLUSH;
-      }
+      thread_specific_context_data->checkSize(context_id+1);     // Make sure we are large enough (+1 since we have index)
 
-      return mContextDataVector[context_id];
+      return thread_specific_context_data->mContextDataVector[context_id];
    }
 
 private:
-   std::vector<ContextDataType*> mContextDataVector;   /**< Vector of user data */
-   vpr::Mutex                   mDataVectorMutex;     /**< Mutex to protect that data vector */
+   vpr::TSObjectProxy<ThreadContextData<ContextDataType> >  mThreadSpecificContextData;
 };
 
 };
