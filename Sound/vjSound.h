@@ -38,12 +38,13 @@
 #include <Math/vjVec3.h>
 
 class vjSoundEngine;
+
 class vjSound
 {  
 public:
    vjSound( vjSoundEngine& engine )
-     : mLooping( 0 ),  mEngine(&engine), mPosition( 0.0f, 0.0f, 0.0f ),
-       mVolume( 1.0f ), mFalloff( 20.0f ), mEnabled( true )
+     : mLooping( 0 ),  mEngine(&engine), mEnabled( true ),
+       mPosition( 0.0f, 0.0f, 0.0f ), mVolume( 1.0f ), mFalloff( 20.0f )
    {
    }
    
