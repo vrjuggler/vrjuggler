@@ -65,16 +65,26 @@ namespace vrj
       std::string api_to_use = element->getProperty<std::string>( "api" );
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Use API: " << api_to_use
                                               << "\n" << vprDEBUG_FLUSH;
+
       float listener_position[3];
-      listener_position[0] = (float)element->getProperty<float>( "listener_position", 0 );
-      listener_position[1] = (float)element->getProperty<float>( "listener_position", 1 );
-      listener_position[2] = (float)element->getProperty<float>( "listener_position", 2 );
+      listener_position[0] = element->getProperty<float>("listener_position", 0);
+      listener_position[1] = element->getProperty<float>("listener_position", 1);
+      listener_position[2] = element->getProperty<float>("listener_position", 2);
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Listener Position: " << listener_position[0] << ","
-         << listener_position[1] << "," << listener_position[2] << "\n" << vprDEBUG_FLUSH;
-      std::string file_search_path = element->getProperty<std::string>( "file_search_path" );
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-         << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
+         << listener_position[1] << "," << listener_position[2] << std::endl
+         << vprDEBUG_FLUSH;
+
+      std::vector<std::string> file_search_path(element->getNum("file_search_path"));
+
+      for ( unsigned int i = 0; i < file_search_path.size(); ++i )
+      {
+         file_search_path[i] =
+            vpr::replaceEnvVars(element->getProperty<std::string>("file_search_path", i));
+      }
+
+//      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+//         << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
 
       // configure sonix
       snx::sonix::instance()->changeAPI(api_to_use);
