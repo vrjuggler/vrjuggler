@@ -49,21 +49,21 @@ public class IntegerTextField extends JTextField {
 
     protected void processKeyEvent (KeyEvent e) {
 
-	if (e.getModifiers() == 0) {
-	    int key = e.getKeyCode();
-	    if (key == KeyEvent.VK_BACK_SPACE 
-		|| key == KeyEvent.VK_DELETE
-		|| key == KeyEvent.VK_LEFT
-		|| key == KeyEvent.VK_RIGHT)
-		super.processKeyEvent (e);
+        //System.out.println (e.getKeyModifiersText(e.getModifiers()) + "," + e.getKeyText(e.getKeyCode()) + "\n");
 
-	    int keyChar = e.getKeyChar();
-	    if ((keyChar >= '0' && keyChar <= '9') ||
-		keyChar == '+' || keyChar == '-' 
-		|| keyChar == '\n'
-		)
-		super.processKeyEvent (e);
-	}
+        int key = e.getKeyCode();
+        if (key == KeyEvent.VK_BACK_SPACE 
+            || key == KeyEvent.VK_DELETE
+            || key == KeyEvent.VK_LEFT
+            || key == KeyEvent.VK_RIGHT)
+            super.processKeyEvent (e);
+        
+        int keyChar = e.getKeyChar();
+        if ((keyChar >= '0' && keyChar <= '9') ||
+            keyChar == '+' || keyChar == '-' 
+            || keyChar == '\n'
+            )
+            super.processKeyEvent (e);
     }
 
 }

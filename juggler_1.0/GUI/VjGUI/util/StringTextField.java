@@ -50,12 +50,9 @@ public class StringTextField extends JTextField {
     }
 
     protected void processKeyEvent (KeyEvent e) {
-
-	if (e.getModifiers() == 0) {
-	    int keyChar = e.getKeyChar();
-	    if (keyChar != '"')
-		super.processKeyEvent (e);
-	}
+        int keyChar = e.getKeyChar();
+        if (keyChar != '"')
+            super.processKeyEvent (e);
     }
 
 }

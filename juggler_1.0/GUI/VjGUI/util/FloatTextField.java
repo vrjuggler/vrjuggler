@@ -55,13 +55,11 @@ public class FloatTextField extends JTextField {
 	    || key == KeyEvent.VK_RIGHT)
 	    super.processKeyEvent (e);
 
-	if (e.getModifiers() == 0) {
 	    int keyChar = e.getKeyChar();
 	    if ((keyChar >= '0' && keyChar <= '9') ||
 		keyChar == '+' || keyChar == '-' || keyChar == '.'
 		|| keyChar == '\n')
 		super.processKeyEvent (e);
-	}
     }
 
 }
