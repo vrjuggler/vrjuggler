@@ -136,7 +136,7 @@ namespace gadget
          for (int i=0;i<numNodes;i++)
          {
             std::string node = chunk->getProperty<std::string>("cluster_nodes",i);
-            if (mMachineTable[node] != NULL)
+            if (mMachineTable[node].get() != NULL)
             {
                mClusterTable[node] = mMachineTable[node];
             }
