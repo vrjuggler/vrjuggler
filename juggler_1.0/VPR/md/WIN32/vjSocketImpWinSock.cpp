@@ -174,6 +174,33 @@ vjSocketImpWinSock::connect () {
     return retval;
 }
 
+ssize_t
+vjSocketImpWinSock::readn (void* buffer, const size_t length) {
+    size_t count;
+    ssize_t bytes;
+
+    count = length;
+
+    while ( count > 0 ) {
+        bytes = recv(buffer, length);
+
+        // Read error.
+        if ( bytes < 0 ) {
+            break;
+        }
+        // May have read EOF, so return bytes read so far.
+        else if ( bytes == 0 ) {
+            bytes = length - count;
+        }
+        else {
+            buffer = (void*) ((char*) buffer + bytes);
+            count  -= bytes;
+        }
+    }
+
+    return bytes;
+}
+
 // ----------------------------------------------------------------------------
 // Receive the specified number of bytes from the remote site to which the
 // local side is connected.

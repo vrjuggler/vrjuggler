@@ -146,11 +146,17 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t readn(std::string& buffer, const size_t length = 0);
+    virtual ssize_t
+    readn (std::string& buffer, const size_t length = 0) {
+        return readn((void*) &buffer[0], length);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t readn(std::vector<char>& buffer, const size_t length = 0);
+    virtual ssize_t
+    readn (std::vector<char>& buffer, const size_t length = 0) {
+        return readn((void*) &buffer[0], length);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
