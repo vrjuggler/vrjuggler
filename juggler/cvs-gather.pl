@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# $Id$
+# cvs-gather.pl,v 1.21 2002/08/16 21:17:57 patrickh Exp
 
 use 5.005;
 
@@ -60,7 +60,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.1.5';
+my $VERSION = '0.1.6';
 # *********************************************************************
 
 my $cfg_file      = '';
