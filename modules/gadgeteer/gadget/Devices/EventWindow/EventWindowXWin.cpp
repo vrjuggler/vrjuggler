@@ -552,7 +552,27 @@ void EventWindowXWin::addMouseEvent(const XMotionEvent& event)
 void EventWindowXWin::addMouseEvent(const XButtonEvent& event,
                                     const bool& isButtonPress)
 {
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(getMask(event.state),
+   //XXX: This doesn't seem right because AFAICT, the button member can contain
+   //     only one button at a time which would preclude the ability to press
+   //     multiple buttons at the same time (chording). HOWEVER, this fixes the
+   //     bug whereby on a button down event, the state was 0 (no buttons).
+   //     -- Ben Scott
+   int state(0);
+   if (event.button == Button1)
+   {
+      state |= gadget::BUTTON1_MASK;
+   }
+   if (event.button == Button2)
+   {
+      state |= gadget::BUTTON2_MASK;
+   }
+   if (event.button == Button3)
+   {
+      state |= gadget::BUTTON3_MASK;
+   }
+
+//   gadget::EventPtr mouse_event(new gadget::MouseEvent(getMask(event.state),
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(state,
                                                        isButtonPress, event.x,
                                                        event.y, event.x_root,
                                                        event.y_root,
@@ -626,6 +646,10 @@ int EventWindowXWin::getMask(const int& state)
    {
       mask |= gadget::BUTTON5_MASK;
    }
+
+   vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+      << "EventWindowXWin::getMask(" << state << ") => " << mask << "\n"
+      << vprDEBUG_FLUSH;
 
    return mask;
 }
