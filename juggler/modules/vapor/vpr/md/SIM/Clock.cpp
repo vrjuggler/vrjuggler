@@ -39,53 +39,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SIM_CLOCK_H_
-#define _VPR_SIM_CLOCK_H_
-
 #include <vpr/vprConfig.h>
-#include <vpr/vprTypes.h>
+
+#include <vpr/Util/Interval.h>
 
 
 namespace vpr
 {
 
-class Interval;
-
 namespace sim
 {
 
-/**
- * Simulated clock for use with the socket simulation code.  The basic unit
- * of time is tens of microseconds since that is what vpr::Interval uses.
- */
-class Clock
+void Clock::setCurrentTime (const vpr::Interval& time)
 {
-public:
-   Clock (void)
-      : mTensOfUsec(0)
-   {
-      /* Do nothing. */ ;
-   }
-
-   const vpr::Uint32& getCurrentTime (void) const
-   {
-      return mTensOfUsec;
-   }
-
-   void setCurrentTime (const vpr::Uint32 time)
-   {
-      mTensOfUsec = time;
-   }
-
-   void setCurrentTime(const vpr::Interval& time);
-
-private:
-   vpr::Uint32 mTensOfUsec;
-};
+   mTensOfUsec = time.usec() / 10;
+}
 
 } // End of sim namespace
 
 } // End of vpr namespace
-
-
-#endif /* _VPR_SIM_CLOCK_H_ */
