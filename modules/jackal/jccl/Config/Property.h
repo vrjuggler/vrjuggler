@@ -132,7 +132,7 @@ public:
     //! ARGS: ind - integer index of value to return (default 0)
     //! RETURNS: v - indth element of value, or a T_INVALID VarValue
     //+          if ind is out of bounds
-    vjVarValue& getValue (int ind = 0);
+    vjVarValue& getValue (unsigned int ind = 0);
 
 
 
@@ -195,7 +195,7 @@ private:
     //+          (after padding).
     //! RETURNS: false if ind is out of bounds.
     //! ARGS: ind - index into the values vector.
-    bool preSet (int ind);
+    bool preSet (unsigned int index);
 
 };
 

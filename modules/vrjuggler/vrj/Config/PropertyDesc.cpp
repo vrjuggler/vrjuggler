@@ -39,7 +39,7 @@
 
 
 
-vjPropertyDesc::vjPropertyDesc () : enumv(), valuelabels() {
+vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
     name = "";
     token = "";
     num = 0;
@@ -49,14 +49,14 @@ vjPropertyDesc::vjPropertyDesc () : enumv(), valuelabels() {
 
 
 
-vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d) {
+vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d): valuelabels(), enumv() {
     *this = d;
 }
 
 
 
 vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t, 
-            const std::string& h):enumv(), valuelabels () {
+            const std::string& h): valuelabels(), enumv() {
     name = n;
     token = n;
     help = h;
@@ -69,42 +69,43 @@ vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
 vjPropertyDesc::~vjPropertyDesc () {
     unsigned int i;
     for (i = 0; i < enumv.size(); i++)
-   delete enumv[i];
+        delete enumv[i];
     for (i = 0; i < valuelabels.size(); i++)
-   delete valuelabels[i];
+        delete valuelabels[i];
 }
 
 
 
-std::string vjPropertyDesc::getValueLabel (int i) {
+std::string vjPropertyDesc::getValueLabel (unsigned int i) {
     if (i < valuelabels.size())
-   return (std::string)"";
+        return (std::string)"";
     else
-   return valuelabels[i]->getName();
+        return valuelabels[i]->getName();
 }
 
 
 
 vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
     for (unsigned int i = 0; i < enumv.size(); i++) {
-   if (!vjstrcasecmp (enumv[i]->getName(), s))
-       return enumv[i];
+        if (!vjstrcasecmp (enumv[i]->getName(), s))
+            return enumv[i];
     }
     return NULL;
 }
 
 
-vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (int index) {
-    if ((enumv.size() > index) && (index >= 0))
-   return enumv[index];
+vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (unsigned int index) {
+    if (enumv.size() > index)
+        return enumv[index];
     else
-   return NULL;
+        return NULL;
 }
 
+
 vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
-    for (int i = 0; i < enumv.size(); i++) {
-   if (enumv[i]->getValue() == val)
-       return enumv[i];
+    for (unsigned int i = 0; i < enumv.size(); i++) {
+        if (enumv[i]->getValue() == val)
+            return enumv[i];
     }
     return NULL;
 }
@@ -112,25 +113,25 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
 
 ostream& operator << (ostream& out, vjPropertyDesc& self) {
     out << self.token.c_str() << " " << typeString(self.type) << " "
-   << self.num << " \"" << self.name.c_str() << "\"";
+        << self.num << " \"" << self.name.c_str() << "\"";
 
     /* print valuelabels if we have 'em */
     if (self.valuelabels.size() > 0) {
-   vjEnumEntry *e;
-   out << " vj_valuelabels { ";
-   for (unsigned int i = 0; i < self.valuelabels.size(); i++) {
-       e = self.valuelabels[i];
-       out << '"' << e->getName().c_str() << "\" ";
-   }
-   out << "}";
+        vjEnumEntry *e;
+        out << " vj_valuelabels { ";
+        for (unsigned int i = 0; i < self.valuelabels.size(); i++) {
+            e = self.valuelabels[i];
+            out << '"' << e->getName().c_str() << "\" ";
+        }
+        out << "}";
     }
 
     /* print enumeration only if we have values. */
     if (self.enumv.size() > 0) {
-   out << " vj_enumeration { ";
-   for (unsigned int i = 0; i < self.enumv.size(); i++)
-       out << *(self.enumv[i]) << ' ';
-   out << "}";
+        out << " vj_enumeration { ";
+        for (unsigned int i = 0; i < self.enumv.size(); i++)
+            out << *(self.enumv[i]) << ' ';
+        out << "}";
     }
 
     /* print help string - always quoted. */
@@ -151,71 +152,70 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
     //cout << "read propertydesc token " << str << endl;
     self.token = str;
     if (!strcasecmp (str, "end"))
-   return in;
+        return in;
 
     self.type = readType(in);
     in >> self.num;
     readString (in,str,size);
-
+    
     self.name = str;
 
     readString (in, str, size);
 
     /* parsing value labels, if there are any */
     if (!strcasecmp (str, "vj_valuelabels")) {
-   //cout << "reading valuelabels" << endl;
-   readString (in,str,size);
-   if (strcasecmp (str, "{"))
-       vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
+        //cout << "reading valuelabels" << endl;
+        readString (in,str,size);
+        if (strcasecmp (str, "{"))
+            vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
    
-   vjEnumEntry *e;
-   readString (in, str, size);
-   while (strcasecmp (str, "}") && !in.eof()) {
-       e = new vjEnumEntry (str, T_STRING);
-       self.valuelabels.push_back (e);
-       readString (in, str, size);
-   }
-   readString (in, str, size);
+        vjEnumEntry *e;
+        readString (in, str, size);
+        while (strcasecmp (str, "}") && !in.eof()) {
+            e = new vjEnumEntry (str, T_STRING);
+            self.valuelabels.push_back (e);
+            readString (in, str, size);
+        }
+        readString (in, str, size);
     }
 
     /* parsing enumerations, if there are any */
     if (!strcasecmp (str, "vj_enumeration"))
-   readString (in, str, size);
+        readString (in, str, size);
     if (!strcasecmp (str, "{")) {
-   //cout << "parsing enumerations" << endl;
-   int j, i = 0;
-   vjEnumEntry *e;
-   readString (in, str, size);
-   while (strcmp (str, "}") && !in.eof()) {
-       vjVarValue *v;
-       // this is slightly kludgey.  We make a varvalue to store the enumeration
-       // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
-       // name type...
-       if ((self.type == T_CHUNK) || (self.type == T_EMBEDDEDCHUNK))
-      v = new vjVarValue (T_STRING);
-       else
-      v = new vjVarValue (self.type);
-
-       char* c = strstr (str, "=");
-       if (c) {
-      *c = '\0';
-      *v = (c+1);
-       }
-       else {
-      if (self.type == T_STRING || self.type == T_CHUNK || 
-          self.type == T_EMBEDDEDCHUNK)
-          *v = str;
-      else
-          *v = i++;
-       }
-       self.enumv.push_back (new vjEnumEntry (str, *v));
-       delete v;
-       readString (in, str, size);
-   }
-   readString (in, str, size);
+        //cout << "parsing enumerations" << endl;
+        int i = 0;
+        readString (in, str, size);
+        while (strcmp (str, "}") && !in.eof()) {
+            vjVarValue *v;
+            // this is slightly kludgey.  We make a varvalue to store the enumeration
+            // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
+            // name type...
+            if ((self.type == T_CHUNK) || (self.type == T_EMBEDDEDCHUNK))
+                v = new vjVarValue (T_STRING);
+            else
+                v = new vjVarValue (self.type);
+            
+            char* c = strstr (str, "=");
+            if (c) {
+                *c = '\0';
+                *v = (c+1);
+            }
+            else {
+                if (self.type == T_STRING || self.type == T_CHUNK || 
+                    self.type == T_EMBEDDEDCHUNK)
+                    *v = str;
+                else
+                    *v = i++;
+            }
+            self.enumv.push_back (new vjEnumEntry (str, *v));
+            delete v;
+            readString (in, str, size);
+        }
+        readString (in, str, size);
     }
     self.help = str;
-
+    
     return in;
 }
 
@@ -223,7 +223,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
     unsigned int i;
     if (&pd == this)
-   return *this;
+        return *this;
     name = pd.name;
     token = pd.token;
     help = pd.help;
@@ -231,15 +231,15 @@ vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
     num = pd.num;
 
     for (i = 0; i < valuelabels.size(); i++)
-   delete valuelabels[i];
+        delete valuelabels[i];
     for (i = 0; i < enumv.size(); i++)
-   delete enumv[i];
+        delete enumv[i];
     valuelabels.erase (valuelabels.begin(), valuelabels.end());
     enumv.erase (enumv.begin(), enumv.end());
     for (i = 0; i < pd.valuelabels.size(); i++)
-   valuelabels.push_back (new vjEnumEntry(*(pd.valuelabels[i])));
+        valuelabels.push_back (new vjEnumEntry(*(pd.valuelabels[i])));
     for (i = 0; i < pd.enumv.size(); i++)
-   enumv.push_back (new vjEnumEntry(*(pd.enumv[i])));
+        enumv.push_back (new vjEnumEntry(*(pd.enumv[i])));
     return *this;
 }
 
