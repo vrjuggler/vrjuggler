@@ -37,9 +37,11 @@ package org.vrjuggler.tweek.wizard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Map;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -82,11 +84,11 @@ public class WizardViewerBean
     */
    public WizardStep getCurrentWizardStep()
    {
-      if (currentStep == null)
+      if (mCurrentStep == null)
       {
          throw new NoSuchElementException();
       }
-      return currentStep;
+      return mCurrentStep;
    }
 
    /**
@@ -100,12 +102,12 @@ public class WizardViewerBean
    public boolean moveNext()
    {
       // First try to get the next step since this might throw an exception
-      WizardStep destStep = wizardIterator.next();
+      WizardStep destStep = mWizardIterator.next();
       if (! visit(destStep))
       {
          // The next step didn't want to be exited. Roll back our changes
          // to the iterator.
-         wizardIterator.previous();
+         mWizardIterator.previous();
          return false;
       }
       backBtn.setEnabled(hasPrev());
@@ -133,12 +135,12 @@ public class WizardViewerBean
    public boolean movePrev()
    {
       // First try to get the previous step since this might throw an exception
-      WizardStep destStep = wizardIterator.previous();
+      WizardStep destStep = mWizardIterator.previous();
       if (! visit(destStep))
       {
          // The previous step didn't want to be exited. Roll back our changes
          // to the iterator.
-         wizardIterator.next();
+         mWizardIterator.next();
          return false;
       }
       backBtn.setEnabled(hasPrev());
@@ -158,18 +160,18 @@ public class WizardViewerBean
    private boolean visit(WizardStep nextStep)
    {
       // Only exit the current step if we're actually in a step
-      if (currentStep != null)
+      if (mCurrentStep != null)
       {
          // Exit the current step
-         if (! currentStep.onExiting())
+         if (! mCurrentStep.onExiting())
          {
             // The step didn't want to be exited. Put the iterator back where
             // it was to rollback our changes.
-            wizardIterator.next();
+            mWizardIterator.next();
             return false;
          }
          // TODO: don't assume the step is a pane
-         WizardPane pane = (WizardPane)currentStep;
+         WizardPane pane = (WizardPane)mCurrentStep;
          this.remove(pane.getGUI());
 
          // Revalidate the layout since this is not done automagically for us
@@ -177,22 +179,24 @@ public class WizardViewerBean
          // with the new wizard pane component contained within.
          revalidate();
          repaint();
-         currentStep.onExited();
+         mCurrentStep.onExited();
       }
 
       // Enter the next step
-      currentStep = nextStep;
+      mCurrentStep = nextStep;
 
       // Only enter the next step if there actually is one. We need this test
       // for the case where we're leaving the last step from the user clicking
       // the Finish button and visit(null) is called.
-      if (currentStep != null)
+      if (mCurrentStep != null)
       {
-         currentStep.onEntering();
+         mCurrentStep.setMap(mWhiteBoard);
+
+         mCurrentStep.onEntering();
          // TODO: don't assume the step is a pane
          WizardPane pane = (WizardPane)nextStep;
          this.add(pane.getGUI(), BorderLayout.CENTER);
-         currentStep.onEntered();
+         mCurrentStep.onEntered();
       }
 
       return true;
@@ -205,7 +209,7 @@ public class WizardViewerBean
     */
    public boolean hasPrev()
    {
-      return wizardIterator.hasPrevious();
+      return mWizardIterator.hasPrevious();
    }
 
    /**
@@ -215,7 +219,7 @@ public class WizardViewerBean
     */
    public boolean hasNext()
    {
-      return wizardIterator.hasNext();
+      return mWizardIterator.hasNext();
    }
 
    /**
@@ -228,13 +232,13 @@ public class WizardViewerBean
       this.wizard = wizard;
       if (wizard != null)
       {
-         wizardIterator = wizard.iterator();
+         mWizardIterator = wizard.iterator();
          backBtn.setEnabled(false);
          nextBtn.setEnabled(false);
          finishBtn.setEnabled(false);
 
          // Display the first step if the wizard is not empty
-         if (wizardIterator.hasNext())
+         if (mWizardIterator.hasNext())
          {
             moveNext();
          }
@@ -260,7 +264,7 @@ public class WizardViewerBean
     */
    public void setSidebarImage(ImageIcon img)
    {
-      this.sidebarImage = img;
+      this.mSidebarImage = img;
       imageLbl.setIcon(img);
    }
 
@@ -269,7 +273,7 @@ public class WizardViewerBean
     */
    public ImageIcon getSidebarImage()
    {
-      return sidebarImage;
+      return mSidebarImage;
    }
 
    /**
@@ -335,17 +339,22 @@ public class WizardViewerBean
    /**
     * The iterator being used to traverse the wizard.
     */
-   private WizardStepIterator wizardIterator = null;
+   private WizardStepIterator mWizardIterator = null;
+
+   /**
+    * Used to share information between wizard steps.
+    */
+   private Map mWhiteBoard = new HashMap();
 
    /**
     * Cache of the current step being viewed.
     */
-   private WizardStep currentStep = null;
+   private WizardStep mCurrentStep = null;
 
    /**
     * The image that amkes up this wizard viewer's sidebar.
     */
-   private ImageIcon sidebarImage = null;
+   private ImageIcon mSidebarImage = null;
 
    /**
     * The objects listening to this wizard view.

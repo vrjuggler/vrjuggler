@@ -38,6 +38,7 @@ package org.vrjuggler.tweek.wizard;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class provides a skeletal implementation of the WizardStep interface to
@@ -60,9 +61,26 @@ public abstract class AbstractWizardStep
       // -1 which will give us a substring from 0 - exactly what we want.
       mName = className.substring(className.lastIndexOf('.') + 1);
    }
+   
+   /**
+    * Called when this step is about to be entered. This whiteboard allows
+    * information to be passed between WizardSteps.
+    */
+   public void setMap(Map whiteboard)
+   {
+      mWhiteBoard = whiteboard;
+   }
 
    /**
-    * Called when this step is about to been entered. Custom processing that
+    * Helper function to allow each Wizard Step's GUI panel access to the Map.
+    */
+   public Map getMap()
+   {
+      return mWhiteBoard;
+   }
+
+   /**
+    * Called when this step is about to be entered. Custom processing that
     * needs to be done on entry before the step is entered may be done here.
     */
    public void onEntering()
@@ -214,6 +232,11 @@ public abstract class AbstractWizardStep
          }
       }
    }
+
+   /**
+    * Used to pass information between WizardSteps.
+    */
+   protected Map mWhiteBoard;
 
    /**
     * The name of this step.
