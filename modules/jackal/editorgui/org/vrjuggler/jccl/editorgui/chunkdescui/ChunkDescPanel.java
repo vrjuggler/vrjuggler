@@ -41,7 +41,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import VjConfig.*;
-import VjControl.Core;
+import VjControl.*;
 import VjComponents.UI.Widgets.*;
 import VjComponents.UI.EditorPanel;
 import VjComponents.ConfigEditor.*;
@@ -309,9 +309,16 @@ public class ChunkDescPanel
     public void showHelp () {
     }
 
+
+    public void setComponentName (String _name) {
+        ; // determined by the description assigned to this panel.
+    }
+
+
     public String getComponentName () {
         return desc.getName();
     }
+
 
     public boolean addConfig (ConfigChunk ch) {
         return false;
@@ -328,8 +335,13 @@ public class ChunkDescPanel
     }
 
 
-    public boolean configure (ConfigChunk ch) {
-        return true;
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
+        ;
+    }
+
+
+    public void initialize () throws VjComponentException {
+        ;
     }
 
 

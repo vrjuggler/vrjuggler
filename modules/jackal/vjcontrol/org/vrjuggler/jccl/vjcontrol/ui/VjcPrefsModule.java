@@ -40,9 +40,7 @@ import java.util.*;
 
 import VjComponents.UI.*;
 import VjComponents.UI.Widgets.EasyMenuBar;
-import VjControl.Core;
-import VjControl.VjComponent;
-import VjControl.DefaultCoreModule;
+import VjControl.*;
 import VjComponents.UI.ControlUIModule;
 import VjComponents.ConfigEditor.ConfigUIHelper;
 import VjConfig.*;
@@ -78,43 +76,14 @@ public class VjcPrefsModule
     }
 
 
-//      public vjComponent[] getVjComponents (ConfigChunk ch, Class[] interfaces) {
-//          // get pointers to the modules we need.
-//          int length = interfaces.length;
-//          int i, j;
-//          vjComponent[] comps = new vjComponent[length];
-//          for (i = 0; i < length; i++)
-//              comps[i] = null;
-//          Property p = ch.getPropertyFromToken ("Dependencies");
-//          if (p != null) {
-//              int n = p.getNum();
-//              String s;
-//              VjComponent c;
-//              for (i = 0; i < n; i++) {
-//                  s = p.getValue(i).toString();
-//                  c = Core.getComponentFromRegistry(s);
-//                  if (c != null) {
-//                      for (j = 0; j < comps.length; j++)
-//                          if (c instanceof (interfaces[j]))
-//                              comps[j] = c;
-//                  }
-//              }
-//          }
-//      }
+    public ConfigChunk getConfiguration () {
+        return component_chunk;
+    }
 
-    public boolean configure (ConfigChunk ch) {
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
-
-//          Class[] interfaces = new Class[3];
-//          interfaces[0] = ControlUIModule;
-//          interfaces[1] = ConfigModule;
-//          interfaces[2] = ConfigUIHelper;
-//          vjComponent[] comps = gtVjComponents (ch, interfaces);
-//          ui_module = (ControlUIModule)comps[0];
-//          config_module = (ConfigModule)comps[1];
-//          confighelper_module = (ConfigUIHelper)comps[2];
-
 
         // get pointers to the modules we need.
         Property p = ch.getPropertyFromToken ("Dependencies");
@@ -134,14 +103,12 @@ public class VjcPrefsModule
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (confighelper_module == null)
-            confighelper_module = (ConfigUIHelper)Core.getComponentFromRegistry ("ConfigUIHelper Module");
-        if ((ui_module == null) || (confighelper_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if (ui_module == null || confighelper_module == null)
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
 
         EasyMenuBar mb = ui_module.getEasyMenuBar();
         editgprefs_mi = mb.addMenuItem ("Options/Edit Global Preferences...");
@@ -149,16 +116,7 @@ public class VjcPrefsModule
 
         editgprefs_mi.addActionListener (this);
         saveprefs_mi.addActionListener (this);
-
-        return true;
     }
-
-
-
-    public ConfigChunk getConfiguration () {
-        return component_chunk;
-    }
-
 
 
     public boolean addConfig (ConfigChunk ch) {

@@ -44,7 +44,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.Dimension;
 
-import VjControl.Core;
+import VjControl.*;
 import VjComponents.UI.PlugPanel;
 import VjComponents.UI.PlugPanelContainer;
 import VjConfig.*;
@@ -201,10 +201,6 @@ JScrollPane sp;
         sp.setViewportView (nav_tree);
         setLeftComponent (sp);
 
-        nav_tree.addMouseListener (this);
-
-        setOneTouchExpandable (true);
-        setDividerLocation (0.16d);
     }
 
 
@@ -365,18 +361,31 @@ JScrollPane sp;
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
         defaultpanel_name = ch.getValueFromToken("default_panel",0).getString();
-        //System.out.println ("default panel name: '" + defaultpanel_name + "'");
-        return true;
     }
 
     
     public ConfigChunk getConfiguration () {
         return component_chunk;
+    }
+
+
+    public void initialize () throws VjComponentException {
+        // should add the rest of UI initialization code here...
+
+        nav_tree.addMouseListener (this);
+
+        setOneTouchExpandable (true);
+        setDividerLocation (0.16d);
     }
 
 

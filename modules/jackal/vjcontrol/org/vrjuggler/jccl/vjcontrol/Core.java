@@ -131,7 +131,7 @@ public class Core
 
 
 
-    static public void initialize () {
+    static public void initInstance () {
 
 	instance = new Core();
 	
@@ -483,11 +483,13 @@ public class Core
         return component_name;
     }
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
 
-    public boolean configure (ConfigChunk ch) {
-        System.out.println ("Core doesn't really configure itself you putz." +
-                            "Why is this even getting called?");
-        return true;
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
+        // dummy; never called
     }
 
 
@@ -496,18 +498,20 @@ public class Core
     }
 
 
+    public void initialize () throws VjComponentException {
+        // dummy; never called
+    }
+
+
     public boolean addConfig (ConfigChunk ch) {
         try {
             String classname = ch.getValueFromToken ("classname", 0).getString();
             VjComponent vjc = component_factory.createComponent(classname);
-            if (vjc.configure(ch)) {
-                modules.add (vjc);
-                registerComponent (vjc);
-                return true;
-            }
-            else {
-                return false;
-            }
+            vjc.setConfiguration (ch);
+            vjc.initialize ();
+            modules.add (vjc);
+            registerComponent (vjc);
+            return true;
         }
         catch (Exception e) {
             e.printStackTrace();

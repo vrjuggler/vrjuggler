@@ -88,16 +88,19 @@ public class NetworkModule
 
     //---------------- VjComponent CoreModule Methods ------------------------
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
+        component_name = ch.getName();
+        component_chunk = ch;
+    }
+
+    
+    public void initialize () throws VjComponentException {
         boolean hostset = false;
         String hostname = "", argument;
         int portnum = 0;
-        int i;
-
-        component_name = ch.getName();
 
         String[] args = Core.getCommandLine();
-	for (i = 0; i < args.length; i++) {
+	for (int i = 0; i < args.length; i++) {
 	    if (args[i].startsWith ("-n") && (!args[i].equalsIgnoreCase ("-noautoload"))) {
                 if (args[i].length() == 2)
                     argument = args[++i];
@@ -120,8 +123,6 @@ public class NetworkModule
             setRemoteHost (hostname, portnum);
             connect();
         }
-
-        return true;
     }
 
 
@@ -136,7 +137,8 @@ public class NetworkModule
             }
             else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.Network.NetCommunicator")) {
                 NetCommunicator nc = (NetCommunicator) Core.component_factory.createComponent(classname);
-                nc.configure (ch);
+                nc.setConfiguration (ch);
+                nc.initialize ();
                 addCommunicator (nc);
                 return true;
             }

@@ -38,9 +38,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import VjControl.LogMessageListener;
-import VjControl.LogMessageEvent;
-import VjControl.Core;
+import VjControl.*;
 import VjComponents.UI.PlugPanel;
 import VjConfig.ConfigChunk;
 
@@ -69,7 +67,6 @@ public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener
 //  	textarea.setEditable (false);
 //  	add (sp = new JScrollPane (textarea), "Center");
 
-	Core.addLogMessageListener (this);
     }
 
 
@@ -101,20 +98,29 @@ public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     public ImageIcon getComponentIcon () {
         return null;
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
-        return true;
     }
 
     
     public ConfigChunk getConfiguration () {
         return component_chunk;
+    }
+
+
+    public void initialize () throws VjComponentException {
+	Core.addLogMessageListener (this);
     }
 
 

@@ -229,8 +229,8 @@ public class ControlUIModule
 
 	//show();
 
-	Core.vjcontrol_chunkdb.addChunkDBListener (this);
-	Core.addLogMessageListener (this);
+	//Core.vjcontrol_chunkdb.addChunkDBListener (this);
+	//Core.addLogMessageListener (this);
 
         icon_factory.registerIcon ("new file", 0,
                                    ClassLoader.getSystemResource ("VjFiles/new.gif"));
@@ -242,7 +242,6 @@ public class ControlUIModule
                                    ClassLoader.getSystemResource ("VjFiles/close.gif"));
 
 
-        show();
     }
 
 
@@ -294,8 +293,12 @@ public class ControlUIModule
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
 
-    public boolean configure (ConfigChunk ch) {
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -305,8 +308,6 @@ public class ControlUIModule
             ConfigChunk chunk = (ConfigChunk)v.get(0);
             reconfigure (chunk);
         }
-
-        return true;
     }
 
 
@@ -315,6 +316,13 @@ public class ControlUIModule
         return component_chunk;
     }
 
+
+    public void initialize () throws VjComponentException {
+        // GUI initialization from constructor should go here.
+	Core.vjcontrol_chunkdb.addChunkDBListener (this);
+	Core.addLogMessageListener (this);
+        show();
+    }
 
 
     public boolean addConfig (ConfigChunk ch) {
@@ -327,34 +335,30 @@ public class ControlUIModule
             }
             else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanel")) {
                 PlugPanel pp = (PlugPanel) Core.component_factory.createComponent(classname);
-                if (pp.configure(ch)) {
-                    child_panels.add (pp);
-                    if (panel_container != null)
-                        panel_container.insertPanel(pp);
-                    Core.registerComponent (pp);
-                    return true;
-                }
-                else
-                    return false;
+                pp.setConfiguration (ch);
+                pp.initialize ();
+                child_panels.add (pp);
+                if (panel_container != null)
+                    panel_container.insertPanel(pp);
+                Core.registerComponent (pp);
+                return true;
             }
             else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanelContainer")) {
                 PlugPanelContainer pc = (PlugPanelContainer) Core.component_factory.createComponent (classname);
-                if (pc.configure(ch)) {
-                    if (panel_container != null) {
-                        ((JComponent)panel_container).removeAll();
-                        main_panel.remove ((Component)panel_container);
-                    }
-                    panel_container = pc;
-                    int n = child_panels.size();
-                    for (int i = 0; i < n; i++) {
-                        PlugPanel pp = (PlugPanel)child_panels.get(i);
-                        pc.insertPanel (pp);
-                    }
-                    main_panel.add ((Component)panel_container, "Center");
-                    return true;
+                pc.setConfiguration (ch);
+                pc.initialize ();
+                if (panel_container != null) {
+                    ((JComponent)panel_container).removeAll();
+                    main_panel.remove ((Component)panel_container);
                 }
-                else
-                    return false;
+                panel_container = pc;
+                int n = child_panels.size();
+                for (int i = 0; i < n; i++) {
+                    PlugPanel pp = (PlugPanel)child_panels.get(i);
+                    pc.insertPanel (pp);
+                }
+                main_panel.add ((Component)panel_container, "Center");
+                return true;
             }
             else {
                 Core.consoleErrorMessage ("ControlUI", "Unrecognized component: " + classname);

@@ -36,8 +36,7 @@ package VjComponents.PerfMonitor;
 import java.io.*;
 import VjConfig.*;
 import VjComponents.Network.DefaultNetCommunicator;
-import VjControl.Core;
-import VjControl.VjComponent;
+import VjControl.*;
 import VjComponents.PerfMonitor.PerformanceModule;
 import VjComponents.Network.NetworkModule;
 
@@ -69,7 +68,7 @@ public class PerformanceCommunicator
 
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -89,12 +88,12 @@ public class PerformanceCommunicator
                 }
             }
         }
-        if (perf_module == null) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
-        
-        return true;
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if (perf_module == null)
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
      }
 
 

@@ -36,6 +36,7 @@ package VjComponents.UI;
 import javax.swing.*;
 
 import VjControl.Core;
+import VjControl.VjComponentException;
 import VjComponents.UI.PlugPanel;
 import VjComponents.UI.PlugPanelContainer;
 import VjConfig.*;
@@ -64,31 +65,18 @@ public class TabPaneContainer
 //                          if (tabs_config[i].equalsIgnoreCase(ch.getName()))
 //                              index = 0; // tmp kludge
 //                  }
-        try {
-            int index = 0;
-            insertTab (p.getComponentName(), 
-                       p.getComponentIcon(), 
-                       (JComponent)p, 
-                       null, index);
-        }
-        catch (ClassCastException e) {
-            Core.consoleErrorMessage ("GUI", "PlugPanel '" + 
-                                      p.getComponentName() +
-                                      "' isn't a JComponent!");
-        }
+
+        int index = 0;
+        insertTab (p.getComponentName(), 
+                   p.getComponentIcon(), 
+                   p.getUIComponent(), 
+                   null, index);
     }
 
 
 
     public void removePanel (PlugPanel p) {
-        try {
-            remove ((JComponent)p);
-        }
-        catch (ClassCastException e) {
-            Core.consoleErrorMessage ("GUI", "PlugPanel '" + 
-                                      p.getComponentName() +
-                                      "' isn't a JComponent!");
-        }
+        remove (p.getUIComponent());
     }
 
 
@@ -108,15 +96,24 @@ public class TabPaneContainer
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
-        return true;
     }
 
 
     public ConfigChunk getConfiguration () {
         return component_chunk;
+    }
+
+
+    public void initialize () throws VjComponentException {
+        ;
     }
 
 

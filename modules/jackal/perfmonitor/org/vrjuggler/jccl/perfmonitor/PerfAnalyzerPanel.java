@@ -441,12 +441,22 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     public ImageIcon getComponentIcon () {
         return null;
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public ConfigChunk getConfiguration () {
+        return component_chunk;
+    }
+
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -468,10 +478,12 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
                 }
             }
         }
-        if ((perf_module == null) || (ui_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if (perf_module == null || ui_module == null)
+            throw new VjComponentException (component_name + ": Instantiated with unmet dependencies.");
 
 	perf_module.addActionListener (this);
 
@@ -479,13 +491,6 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
         ui_module.getEasyFileDialog().addFilter (perf_filter, "PerfData");
 
         refreshDisplay();
-
-        return true;
-    }
-
-
-    public ConfigChunk getConfiguration () {
-        return component_chunk;
     }
 
 
