@@ -120,11 +120,12 @@ namespace sim
             status = remote_stream_socket->addConnector(localSock);
             vprASSERT(!status.failure() && "Failed to add connector");
          }
-                 else
+         else
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: Cannot connect, no one listening on "
                << remoteName << std::endl << vprDEBUG_FLUSH;
+            vprASSERT(false && "Tried to connect to a non-listening node");
             status.setCode(vpr::ReturnStatus::Fail);
          }
       }
@@ -316,14 +317,16 @@ namespace sim
       vpr::sim::NetworkGraph& net_graph =
          vpr::sim::Controller::instance()->getNetworkGraph();
 
+      /*
       if ( LocalHostIpAddrValue == dest_addr.getAddressValue() )
       {
          dest_node = getLocalhostVertex();
       }
       else
       {
+      */
          status = net_graph.getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
-      }
+      //}
 
       if ( status.success() )
       {
@@ -380,14 +383,14 @@ namespace sim
       local_addr = handle->getLocalAddr();
 
       // If any addr, then set it to local host
-      // Case localAddr = InetAddr::Any  ==> "localhost" with random port
-      // Case localhost = ip addr        ==> "localhost" ip address
-      // Keep old port num around so that 127.0.0.1:num is a valid assignment
-      if((local_addr == vpr::InetAddr::AnyAddr) ||
-         (local_addr.getAddressValue() == LocalHostIpAddrValue) )
+      // Case localAddr = InetAddr::Any  ==> "localhost" with random port      
+      //if((local_addr == vpr::InetAddr::AnyAddr) ||
+      //   (local_addr.getAddressValue() == LocalHostIpAddrValue) )
+      if(local_addr == vpr::InetAddr::AnyAddr )
       {
          //local_addr.setAddress(LocalHostIpAddrValue, 0);
-         local_addr.setAddress(getLocalhostIpAddrValue(), local_addr.getPort());
+         //local_addr.setAddress(getLocalhostIpAddrValue(), local_addr.getPort());
+         local_addr.setAddress(LocalHostIpAddrValue, 0);     
       }
 
       // Make sure that we know about the node of the given address
@@ -456,7 +459,7 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
       NetworkGraph net_graph = Controller::instance()->getNetworkGraph();
 
       ret_stat = net_graph.getNodeWithAddr(ipAddr, node_vertex);
-      vprASSERT(ret_stat.success());
+      vprASSERT(ret_stat.success() && "Specified IP address does not actually exist in the sim net graph.");
 
       NetworkNodePtr node_prop = net_graph.getNodeProperty(node_vertex);
       vprASSERT(node_prop.get() != NULL);
@@ -468,6 +471,7 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
 }
 
 
+   /*
    vpr::sim::NetworkGraph::net_vertex_t SocketManager::getLocalhostVertex ()
    {
       vpr::sim::NetworkGraph& net_graph =
@@ -485,6 +489,7 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
       NetworkNodePtr node_prop = net_graph.getNodeProperty(getLocalhostVertex());
       return node_prop->getIpAddress();
    }
+   */
 
 
 } // End of sim namespace
