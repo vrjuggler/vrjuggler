@@ -82,8 +82,10 @@ namespace cluster
 
          if(packet->getPacketType() == cluster::Header::RIM_START_BLOCK)
          {
-            StartBlock* temp_start_block = dynamic_cast<StartBlock*>(packet);
-            vprASSERT(NULL != temp_start_block && "Dynamic cast failed!");
+            //We are not actually using any data in this packet for now.
+            
+            //StartBlock* temp_start_block = dynamic_cast<StartBlock*>(packet);
+            //vprASSERT(NULL != temp_start_block && "Dynamic cast failed!");
             if (isBarrierMaster())
             {
                removePendingBarrierSlave(node->getHostname());

@@ -145,13 +145,14 @@ namespace cluster
          {
             return;
          }
-   
-         //node->setState(mNewState);
-         EndBlock* temp_end_block = dynamic_cast<EndBlock*>(packet);
-         vprASSERT(NULL != temp_end_block && "Dynamic cast failed!");
          
-//	     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
-//            << "Recv EndBlock: " << temp_end_block->getTempVar() << std::endl << vprDEBUG_FLUSH;           
+         //We don't actually use the temp_end_block for anything here.
+         // 
+         //EndBlock* temp_end_block = dynamic_cast<EndBlock*>(packet);
+         //vprASSERT(NULL != temp_end_block && "Dynamic cast failed!");
+         
+	 //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+         //   << "Recv EndBlock: " << temp_end_block->getTempVar() << std::endl << vprDEBUG_FLUSH;           
          
          node->setUpdated(true);
          return;
