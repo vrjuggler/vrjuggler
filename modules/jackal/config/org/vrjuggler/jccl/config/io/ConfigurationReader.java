@@ -56,6 +56,14 @@ public class ConfigurationReader
       mDefinitionRepos = repos;
    }
 
+   public ConfigurationReader(String in, ConfigDefinitionRepository repos)
+      throws IOException
+   {
+      super(new StringReader(in));
+      mDefinitionRepos = repos;
+   }
+
+
    /**
     * Reads a configuration from the XML document stream.
     */
