@@ -1,6 +1,7 @@
 #include <CppUnit/framework/TestSuite.h>
 #include <CppUnit/textui/TestRunner.h>
 #include <TestCases/Socket/SocketTest.h>
+#include <TestCases/Socket/NonBlockingSocketsTest.h>
 #include <TestCases/Socket/SocketCopyConstructorTest.h>
 #include <TestCases/Thread/ThreadTest.h>
 #include <TestCases/IO/Socket/InetAddrTest.h>
@@ -29,6 +30,7 @@ int main (int ac, char **av)
    noninteractive_suite->addTest(vprTest::StatusTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
+   noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
 //   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
    noninteractive_suite->addTest(vprTest::SelectorTest::suite());
