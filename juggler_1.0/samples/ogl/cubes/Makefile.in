@@ -18,7 +18,7 @@ VPATH		= @srcdir@
 
 # This test program requires the following libraries to be linked:
 #
-#     -lGLU -lGL -lXext -lXmu -lX11 -lm -lC
+#     -lGLU -lGL -lXext -lXmu -lX11 -lm
 #
 # If the library uses POSIX threads, "-lpthread" must also be added to the
 # list of libraries.
