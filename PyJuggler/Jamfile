@@ -1,3 +1,11 @@
+# PyJuggler is (C) Copyright 2002-2004 by Patrick Hartling
+# Distributed under the GNU Lesser General Public License 2.1.  (See
+# accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
+
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+
 # Jamfile for compiling the PyJuggler Python extension module.  This
 # depends on working installations of Python, Boost.Python, VR Juggler,
 # CppDOM, (for some platforms) NSPR, and (optionally) Open Scene Graph.
@@ -9,8 +17,6 @@
 #    http://www.sourceforge.net/projects/xml-cppdom/
 #    http://www.mozilla.org/projects/nspr/
 #    http://www.openscenegraph.org/
-#
-# $Id$
 
 # Specify our location in the boost project hierarchy
 subproject libs/python/pyjuggler ;
