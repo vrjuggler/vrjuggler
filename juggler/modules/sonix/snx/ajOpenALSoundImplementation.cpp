@@ -142,7 +142,7 @@ void ajOpenALSoundImplementation::getPosition( const std::string& alias, float& 
 /**
  * set the position of the listener
  */
-void ajOpenALSoundImplementation::setListenerPosition( const vjMatrix& mat )
+void ajOpenALSoundImplementation::setListenerPosition( const ajMatrix44& mat )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
@@ -173,7 +173,7 @@ void ajOpenALSoundImplementation::setListenerPosition( const vjMatrix& mat )
 /**
  * get the position of the listener
  */
-void ajOpenALSoundImplementation::getListenerPosition( vjMatrix& mat ) const
+void ajOpenALSoundImplementation::getListenerPosition( ajMatrix44& mat ) const
 {
    ajSoundImplementation::getListenerPosition( mat );
 }

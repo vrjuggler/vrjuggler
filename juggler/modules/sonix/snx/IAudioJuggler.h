@@ -82,12 +82,12 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vjMatrix& mat ) = 0;
+   virtual void setListenerPosition( const ajMatrix44& mat ) = 0;
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vjMatrix& mat ) = 0;
+   virtual void getListenerPosition( ajMatrix44& mat ) = 0;
 
    virtual void changeAPI( const std::string& apiName ) = 0;
    

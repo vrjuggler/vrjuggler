@@ -80,12 +80,12 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vjMatrix& mat );
+   virtual void setListenerPosition( const ajMatrix44& mat );
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vjMatrix& mat ) const;
+   virtual void getListenerPosition( ajMatrix44& mat ) const;
    
 public:
    /**

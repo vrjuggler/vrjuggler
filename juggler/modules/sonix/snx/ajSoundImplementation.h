@@ -147,7 +147,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vjMatrix& mat )
+   virtual void setListenerPosition( const ajMatrix44& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
@@ -159,7 +159,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vjMatrix& mat ) const
+   virtual void getListenerPosition( ajMatrix44& mat ) const
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
