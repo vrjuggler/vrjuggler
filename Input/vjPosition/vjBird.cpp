@@ -468,7 +468,9 @@ static int open_port(char* serialPort, int baud)
 
    // Set the new attributes
     tcsetattr(port_id, TCSANOW, &port_a);
+# ifndef VJ_OS_HPUX /* HP:HACK - HP didn't like this. */
     ioctl(port_id,TIOCNOTTY);
+# endif
     return port_id;
   }
 

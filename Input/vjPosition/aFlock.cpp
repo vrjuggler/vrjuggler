@@ -648,7 +648,9 @@ int aFlock::open_port( const char* const serialPort,
 	
 #ifndef _POSIX_SOURCE
 	case 57600: magicBaudRate = B57600; break;
-	case 76800: magicBaudRate = B76800; break;
+        #ifdef B76800
+	    case 76800: magicBaudRate = B76800; break;
+        #endif
 	case 115200: magicBaudRate = B115200; break;
 #endif
 
@@ -684,6 +686,7 @@ int aFlock::open_port( const char* const serialPort,
 
 void aFlock::set_blocking( const int& port, const int& blocking )
 {
+#ifdef FNDELAY /* HP:HACK - HP doesn't like FNDELAY */
     //////////////////////////////////////////////////////////////////
     // Setup a non/blocked port & Flush port
     //////////////////////////////////////////////////////////////////
@@ -705,6 +708,7 @@ void aFlock::set_blocking( const int& port, const int& blocking )
     tcflush(port, TCIOFLUSH);
 
     usleep( 1000 * aFlock::mSleepFactor );
+#endif
 }
 
 void aFlock::set_sync( const int& port, const int& sync )

@@ -410,8 +410,13 @@ case $target_os in
             AC_DEFINE(IRIXREL, "IRIX6")
         fi
         ;;
-    dnl # HP PA-RISC machine running HP-UX 10.20.
-    hpux10.20)
+    dnl # HP PA-RISC machine running HP-UX 10.x.  These are not supported
+    dnl # because they lack a complete POSIX.4 real-time implementation.
+    hpux10*)
+        AC_MSG_ERROR(HP-UX 10.x is not supported.  Please upgrade to 11.00!)
+        ;;
+    dnl # HP PA-RISC machine running HP-UX 11.x.
+    hpux11*)
         dnl # If no ABI has been set yet, default to HP PA-RISC.
         if test "$ABI" = "" ; then
             VJ_ABI_CFG('HP', 'PA-RISC')
@@ -419,13 +424,13 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='ru'
-        CFLAGS="-Aa $CFLAGS"
-        CXXFLAGS="+p $CXXFLAGS"
-        LD='ld'
-        LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
+        CXXFLAGS="-AA -mt $CXXFLAGS"
+        DEP_GEN_FLAG='-E +m'
+        LD='aCC'
+        LDFLAGS="$LDFLAGS -mt -L/usr/lib/X11R6"
         LDOPTS='-b'
         DBG_FLAGS='-g'
-        OPT_FLAGS='+inline_level 3'
+        OPT_FLAGS=''
         SHAREDLIB_EXT='sl'
 
         dnl # We have to use POSIX threads on HP-UX.
@@ -435,10 +440,6 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_HPUX,)
-        AC_DEFINE(_HPUX_SOURCE,)
-        AC_DEFINE(_INCLUDE_TERMIO,)
-        AC_DEFINE(_CMA_NOWRAPPERS_,)
-        AC_DEFINE(notdef,)
         ABI_LIST='HP'
         PLATFORM='HP'
         ;;
@@ -680,8 +681,12 @@ _vjsave_CXXFLAGS="$CXXFLAGS"
 dnl # If no alternate C compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cc}" = "xnone" ; then
+    dnl # On HP-UX, we have to use the aCC C++ compiler.
+    if test "$PLATFORM" = "HP" ; then
+        AC_CHECK_PROG(CC, cc, cc,
+            AC_MSG_ERROR(*** The library requires the HP-UX aCC C++ compiler ***))
     dnl # On IRIX, we have to use cc (not gcc).
-    if test "$PLATFORM" = "IRIX" ; then
+    elif test "$PLATFORM" = "IRIX" ; then
         AC_CHECK_PROG(CC, cc, cc,
             AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
     fi
@@ -779,16 +784,8 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         ])
 fi
 
-dnl # Ensure that the C++ compiler we've found is capable of compiling the
-dnl # newer C++ features that we need.
-_vjsave_CC="$CC"
-CC="$CXX"
-
-dnl # When compiling on Windows, we need to force the compiler to treat the
-dnl # source file as a .cpp file even though it will end in .c.
-if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    CC="$CC -TP"
-fi
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
 
 AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
     ac_cv_CXX_is_current,
@@ -798,7 +795,7 @@ AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
                    [ ac_cv_CXX_is_current='no' ;
                      AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
 
-CC="${_vjsave_CC}"
+AC_LANG_RESTORE
 
 AC_PROG_CPP
 AC_PROG_CXXCPP
@@ -908,19 +905,16 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         LDFLAGS="$LDFLAGS -pthread"
     fi
 
+    dnl # On HP-UX 11.00, HP hides the pthread library from configure.
+    dnl # This forces its use with the -mt flag.
+    if test "$PLATFORM" = "HP" ; then
+        THREADS='POSIX'
+    fi
+
     AC_CHECK_LIB(pthread, pthread_create,
         AC_CHECK_HEADER(pthread.h,
             [ THREADS='POSIX' _pthread_lib='-lpthread'; ],
             AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-
-    dnl # On HP-UX 10.20, the pthreads library is in the cma library rather
-    dnl # than pthreads, so test for that if $THREADS was not set above.
-    if test "x$THREADS" = "x" ; then
-        AC_CHECK_LIB(cma, pthread_create,
-            AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX' _pthread_lib='-lcma'; ],
-                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-    fi
 
     dnl # On FreeBSD, the pthreads stuff is in libc_r.
     if test "x$THREADS" = "x" ; then
@@ -948,10 +942,16 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
         LIBS="${_vjsave_LIBS}"
 
-        if test "$ac_cv_pthread_version" = "Draft 10" ; then
+        dnl # HP once again, not playing by the rules.  Forcing draft level 10.
+        if test "$PLATFORM" = "HP" ; then
+            AC_MSG_WARN(*** Forcing Pthreads Draft 10 on HP ***)
             AC_DEFINE(_PTHREADS_DRAFT_10,)
         else
-            AC_DEFINE(_PTHREADS_DRAFT_4,)
+            if test "$ac_cv_pthread_version" = "Draft 10" ; then
+                AC_DEFINE(_PTHREADS_DRAFT_10,)
+            else
+                AC_DEFINE(_PTHREADS_DRAFT_4,)
+            fi
         fi
 
         dnl # Define the default thread scope depending on the platform.  On
@@ -965,7 +965,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
         dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
         dnl # platform.
-        if test "$PLATFORM" = "IRIX" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" ; then
+        if test "$PLATFORM" = "IRIX" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" -o "$PLATFORM" = "HP"; then
             AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
@@ -1041,7 +1041,11 @@ if test "$THREADS" = "POSIX" ; then
             [ _sem_lib='-lposix4' SEMAPHORE_SYS='POSIX' ;
               AC_DEFINE(VJ_POSIX_SEMAPHORES,)
             ],
-            AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***)))
+            AC_CHECK_LIB(rt, sem_init,
+                 [ _sem_lib='-lrt' SEMAPHORE_SYS='POSIX' ;
+                   AC_DEFINE(VJ_POSIX_SEMAPHORES,)
+                 ],
+                 AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***))))
 
     CFLAGS="${_vjsave_CFLAGS}"
     LIBS="${_vjsave_LIBS}"

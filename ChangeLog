@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-17-2001 patrick   Added support for HP-UX 11.00 (submitted by Daniel Heath
+                      <DHeath@fueltechnv.com>)
+
 [Version 1.0.0 - 4.13.2001]====================================================
 Apr-13-2001 patrick   Polhemus Fastrack driver added (IRIX SPROC only)
 Apr-12-2001 patrick   The MotionStar driver now supports setting the

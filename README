@@ -74,6 +74,10 @@ Table of contents:
              or 
             OpenGL 1.2 drivers
 
+        * HP-UX 11.00
+            aCC A.03.30
+            OpenGL
+
         * Win32
             Microsoft Visual Studio 6.0 (SP4 or SP5)
             Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)

@@ -43,7 +43,7 @@
 
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
-    defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD)
+    defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
 #include <Kernel/vjSGISystemFactory.h>
 #elif defined(VJ_OS_Win32)
 #include <Kernel/vjWin32SystemFactory.h>
@@ -277,7 +277,7 @@ void vjKernel::initConfig()
 #ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 #elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || defined(VJ_OS_AIX) || \
-      defined(VJ_OS_FreeBSD)
+      defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #elif defined(VJ_OS_Win32)
    mSysFactory = vjWin32SystemFactory::instance();
