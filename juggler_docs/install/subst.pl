@@ -96,4 +96,4 @@ $alias_subst{"OPENGLREDBOOK"} = 'http://www.amazon.com/exec/obidos/ASIN/02016045
 $alias_subst{"PERFORMERBOOK"} = 'http://techpubs.sgi.com';
 
 # Miscellaneous
-$alias_subst{'CONFIGURE_REV'} = '1.164';
+$alias_subst{'CONFIGURE_REV'} = '1.182';
