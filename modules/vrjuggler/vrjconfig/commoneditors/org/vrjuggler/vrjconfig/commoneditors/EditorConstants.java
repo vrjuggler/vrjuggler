@@ -167,6 +167,9 @@ public interface EditorConstants
    /** Property type hide_mouse. */
    public static final String HIDE_MOUSE_PROPERTY = "hide_mouse";
 
+   /** Property type hide_mouse. */
+   public static final String KEY_PAIR_PROPERTY = "key_pair";
+
    /** Property type keyboard_mouse_proxy. */
    public static final String KEYBOARD_MOUSE_PROXY_PTR_PROPERTY =
       "keyboard_mouse_proxy";
