@@ -12,6 +12,10 @@
 #include <Math/vjQuat.h>
 #include <Kernel/vjDebug.h>
 
+#include <Input/InputManager/vjPosInterface.h>
+#include <Input/InputManager/vjAnalogInterface.h>
+#include <Input/InputManager/vjDigitalInterface.h>
+
 class UserData
 {
 public:
@@ -43,14 +47,10 @@ public:
    // Execute any initialization needed before the API is started
    virtual void init()
    {
-      wandIndex = kernel->getInputManager()->GetProxyIndex("VJWand");
-      wandEndIndex = kernel->getInputManager()->GetProxyIndex("VJWandEnd");
-
-      if(wandIndex == -1)
-         cerr << "Wand not found\n";
-
-      if(wandEndIndex == -1)
-         cerr << "Wand end not found\n";
+      cout << "---------- App:init() ---------------" << endl;
+         // Initialize devices
+      mWand.init("VJWand");
+      mWandEnd.init("VJWandEnd");
    }
 
    // Execute any initialization needed <b>after</b> API is started
@@ -133,7 +133,7 @@ private:
       source_rot.makeQuat(transformIdent);
 
       vjMatrix* wand_matrix;
-      wand_matrix = kernel->getInputManager()->GetPosData(wandIndex);
+      wand_matrix = mWand->GetData();
       
       cout << "===================================\n";
       cout << "Wand:\n" << *wand_matrix << endl;
@@ -162,7 +162,7 @@ private:
    
    void myDraw()
    {
-      vjDEBUG(2) << "\n--- myDraw() ---\n" << flush;
+      vjDEBUG(2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
       
       //static const float SCALE = 100;
       static const float SCALE = 10;
@@ -199,7 +199,7 @@ private:
                {
                   //glColor3f(x,y,z);    // Set the color
                   glColor3f(1.0, 0.0,  0.0f);
-		  glPushMatrix();
+		            glPushMatrix();
                   {
                      glTranslatef( (x-0.5)*SCALE, (y-0.0)*SCALE, (z-0.5)*SCALE);
                      glScalef(2.0f, 2.0f, 2.0f);
@@ -215,8 +215,8 @@ private:
       
       vjMatrix* wandMatrix;
       vjMatrix* wandEndMatrix;
-      wandMatrix = kernel->getInputManager()->GetPosData(wandIndex);
-      wandEndMatrix = kernel->getInputManager()->GetPosData(wandEndIndex);
+      wandMatrix = mWand->GetData();
+      wandEndMatrix = mWandEnd->GetData();
 
       glPushMatrix();         
          // cout << "wand:\n" << *wandMatrix << endl;
@@ -347,8 +347,8 @@ private:
    }
 
 public:
-   int   wandIndex;     // the index of the wand
-   int   wandEndIndex;  // The index to the end of the wand
+   vjPosInterface    mWand;      // the Wand
+   vjPosInterface    mWandEnd;   // The index to the end of the wand
 
    vjMatrix    navMatrix;     // Matrix for navigation in the application
 
