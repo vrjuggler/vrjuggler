@@ -54,12 +54,6 @@ Input::Input()
    lock(),
    mBaudRate(0)
 {
-   //vprDEBUG(vprDBG_ALL,4)<<"*** Input::Input()\n"<< vprDEBUG_FLUSH;
-   /*
-   mPort = NULL;
-   mThread = NULL;
-   mActive = true;
-   */
 }
 
 Input::~Input()
@@ -114,50 +108,5 @@ void Input::setBaudRate(int baud)
      mBaudRate = baud;
 }
 
-/*
-int Input::fDeviceSupport(int devAbility)
-{
-    return (deviceAbilities & devAbility);
-}
-*/
-
-//: Reset the Index Holders
-// Sets to (0,1,2) in that order
-void Input::resetIndexes()
-{
-    current = 0;
-    valid = 1;
-    progress = 2;
-    assertIndexes();
-}
-
-//: Swap the current and valid indexes (thread safe)
-void Input::swapCurrentIndexes()
-{
-   vprASSERT(lock.test());       // Make sure that we have the lock when we are called
-   assertIndexes();
-   int tmp = current;
-   current = valid;
-   valid = tmp;
-}
-
-//: Swap the valid and progress indexes (thread safe)
-void Input::swapValidIndexes()
-{
-   lock.acquire();
-   int tmp = valid;
-   valid= progress;
-   progress = tmp;
-   assertIndexes();
-   lock.release();
-}
-
-void Input::assertIndexes()
-{
-   vprASSERT((current != progress) && (current != valid) && (progress != valid));
-   vprASSERT((current >= 0) && (current <= 3));
-   vprASSERT((progress >= 0) && (progress <= 3));
-   vprASSERT((valid >= 0) && (valid <= 3));
-}
 
 };

@@ -39,6 +39,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vrj/Math/Vec3.h>
 
 #include <gadget/Devices/Ascension/Bird.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -80,18 +81,14 @@ bool Bird::config(jccl::ConfigChunkPtr c)
       return false;
 
   strncpy(mPort,"/dev/ttyd3", 30);
-  initCorrectionTable();
-  mData = new PositionData[3];
+  initCorrectionTable();  
 
   return true;
 }
 
 Bird::~Bird()
 {
-  stopSampling();
-    if (mData != NULL)
-      delete[] mData;
-       //getMyMemPool()->deallocate((void*)theData);
+  stopSampling();    
 }
 
 static void sampleBirds(void* pointer)
@@ -121,10 +118,6 @@ int Bird::startSampling()
    if (mThread == NULL) {
       //int processID;
       //int i;
-
-  current = 0;
-  valid = 1;
-  progress = 2;
 
   mPortId = open_port(mPort, mBaudRate);
   set_blocking(mPortId, blocking);
@@ -160,14 +153,16 @@ int Bird::startSampling()
 
 int Bird::sample()
 {
-     //int i;
-     int tmp;
+   std::vector< gadget::PositionData > cur_samples(1);
+
+   //int i;
+   //  int tmp;
 
      //for(i=1; i < theTransmitter; i++)
      {
    //int subNum;
-        getReading(mData[progress].getPositionData(), mPortId);
-        mData[progress].setTime();
+        getReading( cur_samples[0].getPositionData(), mPortId);
+        cur_samples[0].setTime();
    /* XXX:
    positionCorrect(theData[progress].pos[0],
           theData[progress].pos[1],
@@ -175,13 +170,12 @@ int Bird::sample()
    */
      }
 
-     lock.acquire();
-     tmp = valid;
-     valid = progress;
-     progress = tmp;
-     lock.release();
+   // Locks and then swaps the indices.
+   mPosSamples.lock();
+   mPosSamples.addSample(cur_samples);
+   mPosSamples.unlock();
 
-     return 1;
+   return 1;
 }
 
 int Bird::stopSampling()
@@ -213,24 +207,12 @@ int Bird::stopSampling()
 }
 
 
-PositionData* Bird::getPositionData (int dev) {
-    if (this->isActive() == false)
-        return NULL;
-    else
-        return &mData[current];
-}
-
-
 
 void Bird::updateData()
 {
   // swap the indicies for the pointers
 
-  lock.acquire();
-  int tmp = current;
-  current = valid;
-  valid = tmp;
-  lock.release();
+  mPosSamples.swapBuffers();
 
   return;
 }
