@@ -31,13 +31,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.editors;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.*;
 import java.beans.PropertyEditor;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -51,7 +53,7 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
  */
 public class ConfigChunkDBEditor
    extends JPanel
-   implements ChunkDBListener
+   implements ContextListener
 {
    /**
     * The ID used to reference the generic ConfigChunk editor panel in the
@@ -152,7 +154,9 @@ public class ConfigChunkDBEditor
    protected String convertFullNameToTreePath(String fullname)
    {
       StringTokenizer tokenizer = new StringTokenizer(fullname, "/");
-      ConfigChunk root_chunk = getConfigChunkDB().get(tokenizer.nextToken());
+      List chunks = getConfigBroker().getChunks(context);
+      List matches = ConfigUtilities.getChunksWithName(chunks, tokenizer.nextToken());
+      ConfigChunk root_chunk = (ConfigChunk)matches.get(0);
       ConfigChunk chunk = root_chunk;
 
       StringBuffer path = new StringBuffer(chunk.getName());
@@ -166,7 +170,7 @@ public class ConfigChunkDBEditor
          }
          else
          {
-            java.util.List emb_chunks = chunk.getEmbeddedChunks();
+            List emb_chunks = chunk.getEmbeddedChunks();
             for (Iterator itr = emb_chunks.iterator(); itr.hasNext(); )
             {
                ConfigChunk child = (ConfigChunk)itr.next();
@@ -184,33 +188,33 @@ public class ConfigChunkDBEditor
    }
 
    /**
-    * Sets the config chunk DB that this panel should edit.
+    * Sets the context in which this panel is editing descriptions.
     */
-   public void setConfigChunkDB(ConfigChunkDB chunkDB)
+   public void setConfigContext(ConfigContext context)
    {
-      // remove everything from the root
-      DefaultMutableTreeNode root = (DefaultMutableTreeNode)treeModel.getRoot();
-      root.removeAllChildren();
+      System.out.println("Setting context: "+context);
+      if (this.context != null)
+      {
+         this.context.removeContextListener(this);
+         getConfigBroker().removeConfigListener(configListener);
+      }
+      this.context = context;
+      if (this.context != null)
+      {
+         this.context.addContextListener(this);
+         getConfigBroker().addConfigListener(configListener);
+      }
 
-      // rebuild the tree, firing off the node structure changed event
-      if (configChunkDB != null)
-      {
-         configChunkDB.removeChunkDBListener(this);
-      }
-      configChunkDB = chunkDB;
-      if (configChunkDB != null)
-      {
-         configChunkDB.addChunkDBListener(this);
-      }
+      // rebuild the tree
       rebuildTree();
    }
 
    /**
-    * Gets the config chunk DB that this panel is editing.
+    * Gets the context that this panel is using to edit descriptions.
     */
-   public ConfigChunkDB getConfigChunkDB()
+   public ConfigContext getConfigContext()
    {
-      return configChunkDB;
+      return context;
    }
 
    /**
@@ -239,12 +243,14 @@ public class ConfigChunkDBEditor
 
       // Get the root chunk.
       String name = (new StringTokenizer(path, "/")).nextToken();
-      ConfigChunk root = getConfigChunkDB().get(name);
-      if (root == null)
+      List chunks = getConfigBroker().getChunks(context);
+      List matches = ConfigUtilities.getChunksWithName(chunks, name);
+      if (matches.size() == 0)
       {
          System.out.println("ERROR: Can't find the root ConfigChunk");
          return;
       }
+      ConfigChunk root = (ConfigChunk)matches.get(0);
 
       // Get the category name in which the root chunk belongs
       ChunkDesc desc = root.getDesc();
@@ -305,27 +311,45 @@ public class ConfigChunkDBEditor
     */
    private void rebuildTree()
    {
-      // Add each chunk as a child of each category it is a member of
-      for (int i=0; i<configChunkDB.size(); ++i)
-      {
-         ConfigChunk chunk = configChunkDB.get(i);
+      // First clear out all the old nodes from the tree.
+      ((DefaultMutableTreeNode)treeModel.getRoot()).removeAllChildren();
 
-         // Add the chunk to each of its categories
-         for (Iterator itr = chunk.getDesc().getCategories(); itr.hasNext(); )
-         {
-            // Get the node for the chunk's category
-            String category = (String)itr.next();
-            DefaultMutableTreeNode categoryNode = getCategoryNode(category);
-
-            // Add the chunk to the category
-            addChunk(categoryNode, chunk);
-         }
-
-      }
+      // Run through all chunk descs in the context
+      List chunks = getConfigBroker().getChunks(context);
+      addChunks(chunks);
 
       // Expand the root node
       TreePath path = new TreePath(treeModel.getPathToRoot((TreeNode)treeModel.getRoot()));
       chunkPropTree.expandPath(path);
+   }
+
+   /**
+    * Adds all of the config chunks in the given list into the tree in all of
+    * their categories.
+    */
+   private void addChunks(List chunks)
+   {
+      for (Iterator itr = chunks.iterator(); itr.hasNext(); )
+      {
+         addChunk((ConfigChunk)itr.next());
+      }
+   }
+
+   /**
+    * Adds the given config chunk to the tree in all of its categories.
+    */
+   private void addChunk(ConfigChunk chunk)
+   {
+      // Add the chunk to each of its categories
+      for (Iterator itr = chunk.getDesc().getCategories(); itr.hasNext(); )
+      {
+         // Get the node for the chunk's category
+         String category = (String)itr.next();
+         DefaultMutableTreeNode categoryNode = getCategoryNode(category);
+
+         // Add the chunk to the category
+         addChunk(categoryNode, chunk);
+      }
    }
 
    /**
@@ -577,29 +601,25 @@ public class ConfigChunkDBEditor
       return catNode;
    }
 
-   public void configChunkAdded(ChunkDBEvent evt)
+   /**
+    * Removes all of the config chunks in the given list from all of their
+    * locations in the tree.
+    */
+   private void removeChunks(List chunks)
    {
-      ConfigChunk chunk = evt.getChunk();
-      ChunkDesc desc = chunk.getDesc();
-
-      // Add the chunk to each of its categories
-      for (Iterator itr = desc.getCategories(); itr.hasNext(); )
+      for (Iterator itr = chunks.iterator(); itr.hasNext(); )
       {
-         // Get the node for the desc's category
-         String category = (String)itr.next();
-         DefaultMutableTreeNode cat_node = getCategoryNode(category);
-
-         // Add the config chunk to the category
-         DefaultMutableTreeNode chunk_node = addChunk(cat_node, chunk);
+         removeChunk((ConfigChunk)itr.next());
       }
    }
 
-   public void configChunkRemoved(ChunkDBEvent evt)
+   /**
+    * Removes the given config chunk from all of its locations in the tree.
+    */
+   private void removeChunk(ConfigChunk chunk)
    {
-      ConfigChunk chunk = evt.getChunk();
-
       // Get the nodes for the chunk
-      java.util.List chunk_nodes = getNodesFor(chunk);
+      List chunk_nodes = getNodesFor(chunk);
       for (Iterator itr = chunk_nodes.iterator(); itr.hasNext(); )
       {
          // Remove the config chunk node from its parent. In this case, the
@@ -609,21 +629,29 @@ public class ConfigChunkDBEditor
       }
    }
 
-   public void configChunkReplaced(ChunkDBEvent evt)
+   /**
+    * Called by the current context when a resource has been added to it.
+    */
+   public void resourceAdded(ContextEvent evt)
    {
+      System.out.println("ConfigChunkDB.resourceAdded()");
+      String resource = evt.getResource();
+      addChunks(getConfigBroker().getChunksIn(resource));
    }
 
-   public void configChunksCleared(ChunkDBEvent evt)
+   /**
+    * Called by the current context when a resource has been removed from it.
+    */
+   public void resourceRemoved(ContextEvent evt)
    {
-      DefaultMutableTreeNode root = (DefaultMutableTreeNode)treeModel.getRoot();
-      root.removeAllChildren();
-      treeModel.reload();
+      String resource = evt.getResource();
+      removeChunks(getConfigBroker().getChunksIn(resource));
    }
 
    /**
     * Gets a list of all the tree nodes that contain the given Object.
     */
-   protected java.util.List getNodesFor(Object obj)
+   protected List getNodesFor(Object obj)
    {
       return getNodesFor(obj, (DefaultMutableTreeNode)treeModel.getRoot());
    }
@@ -633,9 +661,9 @@ public class ConfigChunkDBEditor
     *
     * @see #getNodesFor(Object)
     */
-   private java.util.List getNodesFor(Object obj, DefaultMutableTreeNode node)
+   private List getNodesFor(Object obj, DefaultMutableTreeNode node)
    {
-      java.util.List results = new ArrayList();
+      List results = new ArrayList();
 
       // Check if we found a match
       if (node.getUserObject() == obj)
@@ -676,11 +704,12 @@ public class ConfigChunkDBEditor
       if (result == ChunkDescChooser.APPROVE_OPTION)
       {
          ConfigChunk chunk = new ConfigChunk(chooser.getSelectedChunkDesc());
-         chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
-         configChunkDB.add(chunk);
+//         chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
+         chunk.setName(chunk.getDesc().getName()); // TODO: Compute a unique name
+         getConfigBroker().add(context, chunk);
 
          // Make sure the new node gets selected
-         java.util.List chunk_nodes = getNodesFor(chunk);
+         List chunk_nodes = getNodesFor(chunk);
          if (chunk_nodes.size() > 0)
          {
             TreeNode chunk_node = (TreeNode)chunk_nodes.get(0);
@@ -700,8 +729,20 @@ public class ConfigChunkDBEditor
 
       if (node.getUserObject() instanceof ConfigChunk)
       {
-         configChunkDB.remove((ConfigChunk)node.getUserObject());
+         getConfigBroker().remove(context, (ConfigChunk)node.getUserObject());
       }
+   }
+
+   /**
+    * Gets the cached config broker proxy instance.
+    */
+   private ConfigBroker getConfigBroker()
+   {
+      if (broker == null)
+      {
+         broker = new ConfigBrokerProxy();
+      }
+      return broker;
    }
 
    /**
@@ -763,9 +804,19 @@ public class ConfigChunkDBEditor
    private DefaultTreeModel treeModel;
 
    /**
-    * The config chunk database that this editor is editing.
+    * The context that provides our view into the active configuration.
     */
-   private ConfigChunkDB configChunkDB;
+   private ConfigContext context = new ConfigContext();
+
+   /**
+    * The listener for changes to the configuration.
+    */
+   private ConfigListener configListener = new ConfigChunkConfigListener();
+
+   /**
+    * We cache the config broker proxy for speed.
+    */
+   private ConfigBroker broker;
 
    /**
     * The generic property sheet editor for ConfigChunks.
@@ -799,6 +850,32 @@ public class ConfigChunkDBEditor
    private JPanel editorPane = new JPanel();
    private BorderLayout propsLayout = new BorderLayout();
    private CardLayout editorPaneLayout = new CardLayout();
+
+   /**
+    * Specialized listener for changes to the configuration.
+    */
+   class ConfigChunkConfigListener
+      implements ConfigListener
+   {
+      public void configChunkAdded(ConfigEvent evt)
+      {
+         if (getConfigContext().contains(evt.getResource()))
+         {
+            addChunk(evt.getConfigChunk());
+         }
+      }
+
+      public void configChunkRemoved(ConfigEvent evt)
+      {
+         if (getConfigContext().contains(evt.getResource()))
+         {
+            removeChunk(evt.getConfigChunk());
+         }
+      }
+
+      public void chunkDescAdded(ConfigEvent evt) {}
+      public void chunkDescRemoved(ConfigEvent evt) {}
+   }
 
    /**
     * Specialized renderer for a ConfigChunk tree.

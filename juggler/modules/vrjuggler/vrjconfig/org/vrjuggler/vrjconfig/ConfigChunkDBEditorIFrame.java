@@ -26,6 +26,7 @@
 package org.vrjuggler.vrjconfig;
 
 import javax.swing.*;
+import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.editors.*;
 import java.awt.*;
 
@@ -72,12 +73,23 @@ public class ConfigChunkDBEditorIFrame
       setTitle("Configuration Collection: "+filename);
    }
 
+   public ConfigContext getConfigContext()
+   {
+      return context;
+   }
+
+   public void setConfigContext(ConfigContext context)
+   {
+      this.context = context;
+   }
+
    public ConfigChunkDBEditor getEditor()
    {
       return editor;
    }
 
    private String filename = "";
+   private ConfigContext context = new ConfigContext();
 
    // JBuilder GUI variables.
    private ConfigChunkDBEditor editor = new ConfigChunkDBEditor();

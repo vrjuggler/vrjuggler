@@ -71,7 +71,8 @@ public class ConfigBrokerImpl
             System.out.println("Trying to load "+desc_filename);
             InputStream in = new BufferedInputStream(new FileInputStream(desc_file));
 
-            String res_name = "VRJuggler Configuration Definitions";
+//            String res_name = "VRJuggler Configuration Definitions";
+            String res_name = desc_file.getAbsolutePath();
             open(new ConfigContext(), res_name, in);
          }
       }
@@ -165,8 +166,17 @@ public class ConfigBrokerImpl
    public void close(String name)
      throws IOException
    {
-      throw new IOException("not implemented");
-      //fireResourceClosed(name);
+      // Check if a resource is actually open under that name
+      if (resources.containsKey(name))
+      {
+         throw new IllegalArgumentException(name + " is not open");
+      }
+
+      // Close the resource
+      resources.remove(name);
+
+      // Let listeners know the resource was closed
+      fireResourceClosed(name);
    }
 
    /**
@@ -179,8 +189,30 @@ public class ConfigBrokerImpl
    public void save(String name)
      throws IOException
    {
-      throw new IOException("not implemented");
-      //fireResourceSaved(name);
+      // Check if a resource is actually open under that name
+      if (! resources.containsKey(name))
+      {
+         throw new IllegalArgumentException(name + " is not open");
+      }
+
+      System.out.println("Saving resource: "+name);
+
+      // Try to save the resource
+      OutputStream out = new BufferedOutputStream(new FileOutputStream(name));
+      Object resource = resources.get(name);
+      if (resource instanceof ChunkDescDB)
+      {
+         ((ChunkDescDB)resource).write(out);
+      }
+      else if (resource instanceof ConfigChunkDB)
+      {
+         ((ConfigChunkDB)resource).write(out);
+      }
+      else
+      {
+         throw new IOException("Unkown resource type");
+      }
+      fireResourceSaved(name);
    }
 
    /**
@@ -370,6 +402,42 @@ public class ConfigBrokerImpl
       }
 
       return all_chunks;
+   }
+
+   /**
+    * Gets a list of all the configuration descriptions within the given
+    * resource.
+    *
+    * @param resource   the name of the resource in which to get descriptions
+    *
+    * @return  a list of the chunk descs in the resource if it has any
+    */
+   public List getDescsIn(String resource)
+   {
+      Object res = resources.get(resource);
+      if (res != null && (res instanceof ChunkDescDB))
+      {
+         return ((ChunkDescDB)res).getAll();
+      }
+      return new ArrayList();
+   }
+
+   /**
+    * Gets a list of all the configuration elements within the given
+    * resource.
+    *
+    * @param resource   the name of the resource in which to get elements
+    *
+    * @return  a list of the config chunks in the resource if it has any
+    */
+   public List getChunksIn(String resource)
+   {
+      Object res = resources.get(resource);
+      if (res != null && (res instanceof ConfigChunkDB))
+      {
+         return ((ConfigChunkDB)res).getAll();
+      }
+      return new ArrayList();
    }
 
    /**
