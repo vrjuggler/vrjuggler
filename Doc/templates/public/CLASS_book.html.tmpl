@@ -123,31 +123,6 @@
       </DL>
   {endif}
 
-  {if membervar public}
-    <!-- Index of non-private class member variable(s). -->
-    <FONT SIZE="+1"><B>Member Variable Summary</B></FONT>
-
-      <DL>
-	{foreach member all}
-	  {if mpublic}
-	    {if !func}
-	      <DT>{include ../common/member_type.html.inc}
-		  <TT><B>{name}</B></TT>
-		  {if enum}
-		  <FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
-		  {endif}
-		{if brief}
-		  <DD>
-		    {brief}
-		    <P> </P>
-		  </DD>
-		{endif}
-	    {endif}
-	  {endif}
-	{next member}
-      </DL>
-  {endif}
-
   <HR>
 
   {if constructor !private}
