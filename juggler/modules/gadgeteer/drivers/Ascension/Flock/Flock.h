@@ -43,7 +43,7 @@ class vjFlock : public vjPosition {
 	//@{
 	vjFlock();
 	vjFlock(int sync, int block, int numBrds, int transmit, BIRD_HEMI
-		hemi, BIRD_FILT filt, char report, char* calfile);
+		hemi, BIRD_FILT filt, char report, const char* calfile);
 	~vjFlock();
 	//@}
 
@@ -115,7 +115,7 @@ class vjFlock : public vjPosition {
 
      private:
 	void Position_Correct(float&x,float&y,float&z);
-	void InitCorrectionTable(char*);
+	void InitCorrectionTable(const char*);
 	vjThread*   myThread;      // The thread doing the flock sampling
 	CalStruct caltable;
    int theTransmitter, syncStyle, blocking;
