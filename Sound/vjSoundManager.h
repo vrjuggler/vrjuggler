@@ -40,12 +40,6 @@
 
 class vjSoundManager : public vjConfigChunkHandler
 {
-public:
-   vjSoundManager()
-   {
-      mSoundEngine = NULL;
-   }
-
 public:     // --- Config stuff -- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
@@ -88,6 +82,10 @@ public:
          _instance = new vjSoundManager;
       return _instance;
    }
+
+protected:
+   //: Constructor.
+   vjSoundManager();
 
 private:
    static vjSoundManager* _instance;   //: The instance
