@@ -52,10 +52,11 @@ namespace vpr
 class BlockIO;    // forward declare
 
 /**
- * Base interface for IO Stat collection
+ * Base interface for IO Stat collection.
  *
  * This is the interface that the BlockIO class expects to deal with.
- * We add on other stats features using mixins that are added by a template composition adapter
+ * We add on other stats features using mixins that are added by a template
+ * composition adapter.
  */
 class VPR_CLASS_API BaseIOStatsStrategy
 {
@@ -93,9 +94,10 @@ protected:
 };
 
 /**
- * NULL strategy
+ * NULL strategy.
  *
- * NOTE: Must derive from BaseIOStatsStrategy because the compiler still expects that interface
+ * @note Must derive from BaseIOStatsStrategy because the compiler still
+ *       expects that interface.
  */
 class NullIOStatsStrategy : public BaseIOStatsStrategy
 {

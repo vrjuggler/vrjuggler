@@ -54,8 +54,8 @@ namespace vpr
 {
 
 /**
- * Strategy for collecting bandwidth data about the block IO device
- * Holds all stats for Bandwidth collection
+ * Strategy for collecting bandwidth data about the block IO device.
+ * Holds all stats for Bandwidth collection.
  */
 class BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
 {
@@ -67,7 +67,7 @@ public:
    {;}
 
    /**
-    * @pre  read must have already occured
+    * @pre  read must have already occured.
     */
   virtual void read_s(ReturnStatus& status,
                void* buffer, const vpr::Uint32 length,
@@ -79,7 +79,7 @@ public:
   }
 
    /**
-    * @pre  read must have already occured
+    * @pre  read must have already occured.
     */
   virtual void readn_s(ReturnStatus& status,
                 void* buffer, const vpr::Uint32 length,
@@ -91,7 +91,7 @@ public:
   }
 
    /**
-    * @pre  write must have already occured
+    * @pre  write must have already occured.
     */
   virtual void write_s(ReturnStatus& status,
                 const void* buffer, const vpr::Uint32 length,
@@ -113,8 +113,7 @@ private:
    vpr::StatCollector<vpr::Uint32, true> mWriteStats;
 };
 
-}; //namespace vpr
+} //namespace vpr
+
 
 #endif //BWIOSTATS_H
-
-

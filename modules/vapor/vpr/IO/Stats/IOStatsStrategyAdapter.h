@@ -49,16 +49,13 @@ namespace vpr
 {
 
 /**
- * This is a template adapter that combines two IO Stats strategies together into a single class
- *
- * It multiply inherits a new class from the two classes to create a single new class
- *
- * It overrides the virtual functions read_i, readn_i, and write_i to create new functions that call
- * the parent functions in the order that they were specified as template parameters
- *
- * It does this by over riding the virtual functions read_i, readn_i, and write_i.
- *
- * All types here must be based on the BaseIOStatsStrategy_i interface
+ * This is a template adapter that combines two IO Stats strategies together
+ * into a single class.  It multiply inherits a new class from the two classes
+ * to create a single new class.  It overrides the virtual functions read_i,
+ * readn_i, and write_i to create new functions that call the parent functions
+ * in the order that they were specified as template parameters.  It does this
+ * by over riding the virtual functions read_i, readn_i, and write_i.
+ * All types here must be based on the BaseIOStatsStrategy_i interface.
  */
 template < class BASE_ONE, class BASE_TWO >
 class IOStatsStrategyAdapter : public BASE_ONE, public BASE_TWO
@@ -94,7 +91,7 @@ public:
    }
 };
 
-}; // namespace vpr
+} // namespace vpr
+
 
 #endif //BANDWIDTHSTATADAPTER_H
-
