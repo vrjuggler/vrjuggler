@@ -14,11 +14,15 @@ vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
          m_realkeys[i] = m_keys[i] = 0;
     m_realkeys[0] = m_keys[0] = 1;
 
+    // Get size and position
     m_width = (int)c->getProperty("width");
     m_height = (int)c->getProperty("height");
-
     if (m_width == 0) m_width = 400;
     if (m_height == 0) m_height = 400;
+
+    m_x = c->getProperty("origin", 0);
+    m_y = c->getProperty("origin", 1);
+
 
     m_toggleoff = c->getProperty("toggleoff");
     m_anastep   = c->getProperty("anastep");
@@ -96,8 +100,6 @@ if (myThread == NULL) {
   valid = 1;
   progress = 2;
 
-  m_x = 100; m_y = 200;
-
   m_display = XOpenDisplay(NULL);
   if (m_display == NULL)
   {
@@ -129,16 +131,15 @@ if (myThread == NULL) {
   }
 
   m_swa.colormap = XCreateColormap(m_display,
-                              RootWindow(m_display,m_visual->screen),
-
-				m_visual->visual, AllocNone);
+                                   RootWindow(m_display,m_visual->screen),
+                                   m_visual->visual, AllocNone);
   m_swa.border_pixel = 0;
   m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
   CheckGeometry();
 
   m_window = CreateWindow ( DefaultRootWindow(m_display) ,
-		1, BlackPixel(m_display,m_screen),
-                WhitePixel(m_display,m_screen), ExposureMask |
+		       1, BlackPixel(m_display,m_screen),
+             WhitePixel(m_display,m_screen), ExposureMask |
 		StructureNotifyMask |
 		KeyPressMask | KeyReleaseMask | ButtonPressMask |
 		ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
