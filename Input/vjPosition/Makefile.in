@@ -27,15 +27,17 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
-VJPOS_SRCS	:= logiclass.cpp	\
+VJPOS_SRCS	:= vjDummyPosition.cpp	\
+                   vjPosition.cpp
+
+ifneq (@OS_TYPE@, Win32)
+VJPOS_SRCS	+= logiclass.cpp	\
                    vjBird.cpp		\
-                   vjDummyPosition.cpp	\
                    aFlock.cpp		\
                    vjFlock.cpp		\
-                   vjPosition.cpp       \
 		   vjMotionStar.cpp     \
 		   aMotionStar.cpp
-                  
+endif
 
 VJPOS_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJPOS_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${VJPOS_SRCS:.cpp=.d}
