@@ -85,6 +85,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
 
    // Set initial transform
    gmtl::setTrans( m_world_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
+   m_world_M_desktop *= gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(-0.4f, -0.05f, 0.0f));
 
    // Request the first update.
    mVncIf.updateFramebuffer(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
@@ -477,6 +478,7 @@ void VNCDesktop::draw()
       // XXX: Should probably use an attribute stack or something here.
       glDisable(GL_BLEND);
       glEnable(GL_LIGHTING);
+      glEnable(GL_NORMALIZE);
 
       // -- Draw the desktop "objects" -- //
       // Draw isect point
