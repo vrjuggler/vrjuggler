@@ -39,7 +39,6 @@
 #include <vpr/Util/Singleton.h>
 
 #include <vrj/Kernel/SystemFactory.h>
-#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 #include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/Sync/CondVar.h>
 
@@ -253,10 +252,6 @@ protected:
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
    DisplayManager*            mDisplayManager;        /**< The Display Manager we are currently using */
    EnvironmentManager*        environmentManager;     /**< The Environment Manager object  */
-
-   /// Performance information
-   jccl::PerfDataBuffer*   mPerfBuffer;          /** store perfdata for kernel main */
-   //bool                  performanceEnabled;
 
    /// Multi-user information
    std::vector<vrj::User*>   mUsers;         /** A list of user objects in system */
