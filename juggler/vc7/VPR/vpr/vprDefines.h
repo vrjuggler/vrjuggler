@@ -111,10 +111,6 @@
 /* Define if building on a Win32 platform. */
 #define VPR_OS_Win32 
 
-/* Define to 1 if neither uuid_create(3) nor uuid_generate(3) are available.
-   */
-#define VPR_USE_LEACH_UUID 1
-
 /* Define if using the Netscape Portable Runtime. */
 #define VPR_USE_NSPR 
 
