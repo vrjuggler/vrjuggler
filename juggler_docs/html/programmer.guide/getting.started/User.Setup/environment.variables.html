@@ -65,7 +65,9 @@ not want to destroy the current value, just append the new path to it.
 Otherwise something else could stop working.
 
 <p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib</tt>
-<p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib:$LD_LIBRARY_PATH</tt>
+<p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib $LD_LIBRARY_PATH</tt>
+<p><strong>NOTE: </strong> On some SGI systems, users of the MIPSpro compiler (version 7.3) will need to add another directory as follows: <br>
+<p><tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib:/usr/lib32/cmplrs</tt>
 
 <p>Irix supports several Application Binary Interfaces (ABIs).  VR Juggler
 supports the N32 and 64 formats.  There are different library path variables 
