@@ -1,7 +1,11 @@
 DATE        AUTHOR      CHANGE
------------ ---------   -------------------------------------------------------
-Oct-14-2002 browner     Modified Sonix to use vapor for output.  And updated the
-                        build system accordingly
+----------- ----------- -------------------------------------------------------
+Oct-25-2002 patrickh    Replaced use of snx::Singleton<T> with the thread-safe
+                        vpr::Singleton<T>.  The header snx/Singleton.h has
+                        been removed from the source tree.
+                        NEW VERSION: 0.2.1
+Oct-14-2002 browner     Modified Sonix to use VPR for output.  And updated the
+                        build system accordingly.
                         NEW VERSION: 0.2.0
 Sep-13-2002 patrickh    Fixed a nasty segmentation fault, most likely caused
                         by a stack overrrun.
