@@ -30,12 +30,31 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+# -----------------------------------------------------------------------------
+# This file provides all the settings and targets needed to generate HTML and
+# PDF documents from DocBook XML and SGML input.  It requires GNU make 3.78 or
+# newer.
+#
+# This makefile uses many paths that are specific to the computer systems at
+# the Virtual Reality Applications Center, but it can be customized for local
+# installations.  Editing the version numbers and base directory paths below
+# should be sufficient.
+# -----------------------------------------------------------------------------
+
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
+# Software and stylesheet versions.
 DOCBOOK_XSL_VERSION?=	1.56.1
 XALAN_VERSION?=		20020214
 SAXON_VERSION?=		6.5.2
 
+# Installation paths.
+DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
+SGML_ROOT?=	/usr/share/sgml/docbook
+TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
+TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
+
+# Application paths.
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
 FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
@@ -52,8 +71,6 @@ RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.5/svgrasterizer
 RM=		rm -f
 SAXON_DIR?=	$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)
 SAXON?=		$(SAXON_DIR)/saxon.sh
-TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
-TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 TEX_ENV?=	PATH=$(TEX_BINDIR):$(PATH) VARTEXMF=$(TEX_DIR)/texmf-var
 XALAN_DIR?=	$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)
 XALAN?=		$(XALAN_DIR)/bin/xalan.sh
@@ -90,9 +107,6 @@ XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 			-PARAM page.margin.outer "0in"	\
 			-PARAM page.margin.top "0in"	\
 			-PARAM paper.type "A5"
-
-DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
-SGML_ROOT?=	/usr/share/sgml/docbook
 
 DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
