@@ -40,6 +40,7 @@ import javax.swing.table.*;
 import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.ConfigChunk;
 import org.vrjuggler.jccl.config.PropertyDesc;
+import org.vrjuggler.jccl.config.ValType;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.ui.JTreeTable;
 
@@ -185,8 +186,15 @@ public class ConfigChunkPropertySheet
 
       if (value instanceof PropertyDesc)
       {
-         // Property descs are only editable if they are not expanded
-         return ! getTree().isExpanded(path);
+         if (((PropertyDesc)value).getValType() != ValType.EMBEDDEDCHUNK)
+         {
+            // Property descs are only editable if they are not expanded
+            return ! getTree().isExpanded(path);
+         }
+         else
+         {
+            return false;
+         }
       }
       else
       {
@@ -253,8 +261,6 @@ public class ConfigChunkPropertySheet
          }
          else
          {
-            System.out.println("ConfigChunk: "+((ConfigChunk)value).getName());
-            System.out.println("\tParent: "+parent_node.getUserObject());
             return (PropertyDesc)parent_node.getUserObject();
          }
       }
