@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-29-2002 patrickh  The Input Manager can now scan a list of directories to
+                      find driver DSOs.  Scanning is performed in addition to
+                      the individual driver loading added in version 0.5.0.
+		      NEW VERSION: 0.6.2
 Oct-29-2002 allenb    Migrated Positional devices to use new PositionFilter
                       interface for all data transformations.  This removes
 		      all transformation code from the devices drivers and
