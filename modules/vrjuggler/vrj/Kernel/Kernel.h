@@ -49,6 +49,7 @@ class vjApp;
 #include <Kernel/vjSystemData.h>
 #include <Performance/vjPerfDataBuffer.h>
 #include <Kernel/vjUser.h>
+#include <Sound/vjSoundManager.h>
 
     // Config stuff
 //#include <Config/vjConfigChunkDB.h>
@@ -207,6 +208,7 @@ protected:
    vjDrawManager*    mDrawManager;         //: The Draw Manager we are currently using
    vjDisplayManager* mDisplayManager;      //: The Display Manager we are currently using
    vjEnvironmentManager* environmentManager; //: The Environment Manager object
+	vjSoundManager*	mSoundManager;
 
    /// Performance information
    vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
