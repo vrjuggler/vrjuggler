@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <unistd.h>        // for sleep, and ioctl
-#include <vpr/Util/Assert.h> /* for vprASSERT */
+#include <assert.h>        // for assert
 
 #include <gadget/Devices/Ascension/FlockStandalone.h>
 
@@ -80,7 +80,7 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
       (_reportRate != 'S') && (_reportRate != 'T'))
   {
      // illegal report rate, defaulting to "every other cycle" (R)
-     vprASSERT(false);
+     assert(false);
      _reportRate = 'R';
   }
 
@@ -96,18 +96,19 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
 //: Destructor
 FlockStandalone::~FlockStandalone()
 {
-    if (_active)
-        this->stop();
-    if ( _serial_port != NULL ) {
-        delete _serial_port;
-        _serial_port = NULL;
-    }
+  if (_active)
+    this->stop();
+
+  if ( _serial_port != NULL ) {
+    delete _serial_port;
+    _serial_port = NULL;
+  }
 }
 
 //: see if the flock is active or not
 const bool& FlockStandalone::isActive() const
 {
-   return _active;
+	return _active;
 }
 
 //: set the port to use
@@ -118,8 +119,8 @@ void FlockStandalone::setPort(const char* const serialPort)
 {
     if (_active)
     {
-   std::cout << "Flock: Cannot change the serial Port while active\n";
-   return;
+	std::cout << "Flock: Cannot change the serial Port while active\n";
+	return;
     }
 
     if ( serialPort != NULL ) {
@@ -148,10 +149,10 @@ void FlockStandalone::setBaudRate(const int& baud)
 {
     if (_active)
     {
-   std::cerr << "Flock: Cannot change the baud rate while active\n";
-   return;
+	std::cerr << "Flock: Cannot change the baud rate while active\n";
+	return;
     } else {
-   _baud = baud;
+	_baud = baud;
     }
 }
 
@@ -170,44 +171,44 @@ int FlockStandalone::start()
                       << (_blocking ? "" : "non-") << "blocking)\n"
                       << std::flush;
             set_blocking();
-            sleep(1);
-       
+	    sleep(1);
+
             std::cout << "[FlockStandalone] Setting sync\n" << std::flush;
             set_sync();
-       sleep(1);
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting group\n" << std::flush;
             set_group();
-       sleep(1);
-
+	    sleep(1);
+ 
             std::cout << "[FlockStandalone] Setting autoconfig\n" << std::flush;
             set_autoconfig();
-       sleep(1);
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting transmitter\n" << std::flush;
             set_transmitter();
-       sleep(1);
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting filter\n" << std::flush;
             set_filter();
-       sleep(1);
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting hemisphere\n" << std::flush;
             set_hemisphere();
-       sleep(1);
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting pos_angles\n" << std::flush;
             set_pos_angles();
-       sleep(1);
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting pickBird\n" << std::flush;
             pickBird(_xmitterUnitNumber);
-            sleep(1);
-       
+	    sleep(1);
+ 
             std::cout << "[FlockStandalone] Setting rep_and_stream\n" << std::flush;
             set_rep_and_stream();
-            sleep(1);
-       
+	    sleep(1);
+ 
             std::cout  << "[FlockStandalone] Ready to go!\n\n" << std::flush;
 
             // flock is active.
@@ -229,7 +230,7 @@ int FlockStandalone::start()
 int FlockStandalone::sample()
 {
      // can't sample when not active.
-     vprASSERT( _active == true );
+     assert( _active == true );
      int i;
      int loopCount = _numBirds + 1;
      if (_xmitterUnitNumber <= _numBirds) {loopCount++;} 
@@ -237,30 +238,30 @@ int FlockStandalone::sample()
      // for [1..n] birds, get their reading:
      int j = 0;
      for (i=1; i < loopCount && i < MAX_SENSORS; i++)
-   {
-   	j++;
+	{
+		j++;
 // If the transmitter number is less than or equal to the number of birds, we need to ignore it.
 
           if (i == _xmitterUnitNumber)
-     { 
+	  { 
                 j--;
-   	continue;
+		continue;
           }
  	
 // However, we need to still copy the data into consecutive values in the wrapper class, so we
 // introduce "j" to account for that correction.  It is equal to "i" while we haven't encountered
 // the transmitter, but equal to "i-1" afterwards.
 
-   // you can never go above the maximum number of sensors.
-   vprASSERT( i < MAX_SENSORS );
-   getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
+	// you can never go above the maximum number of sensors.
+	assert( i < MAX_SENSORS );
+	getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
 
-   if (_usingCorrectionTable)
-   {
-       this->positionCorrect( this->xPos(j),
-   		    this->yPos(j),
-   		    this->zPos(j) );
-   }
+	if (_usingCorrectionTable)
+	{
+	    this->positionCorrect( this->xPos(j),
+			    this->yPos(j),
+			    this->zPos(j) );
+	}
      }
 
      return 1;
@@ -308,10 +309,10 @@ void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
 {
     if (_active)
     {
-   std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
-   return;
+	std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
+	return;
     } else {
-   // Set it.
+	// Set it.
         _hemisphere = h;
     }
 }
@@ -322,12 +323,12 @@ void FlockStandalone::setFilterType( const BIRD_FILT& f )
 {
     if (_active)
     {
-   std::cout << "Flock: Cannot change filter type while active\n"
+	std::cout << "Flock: Cannot change filter type while active\n"
                   << std::flush;
-   return;
+	return;
     } else {
-   // Set it.
-   _filter = f;
+	// Set it.
+	_filter = f;
     }
 }
 
@@ -337,12 +338,12 @@ void FlockStandalone::setReportRate( const char& rRate )
 {
     if (_active)
     {
-   std::cout << "Flock: Cannot change report rate while active\n"
+	std::cout << "Flock: Cannot change report rate while active\n"
                   << std::flush;
-   return;
+	return;
     } else {
-   // Set it.
-   _reportRate = rRate;
+	// Set it.
+	_reportRate = rRate;
     }
 }
 
@@ -371,12 +372,12 @@ void FlockStandalone::setNumBirds( const int& n )
 {
     if (_active)
     {
-   std::cout << "Flock: Cannot change num birds while active\n"
+	std::cout << "Flock: Cannot change num birds while active\n"
                   << std::flush;
-   return;
+	return;
     } else {
-   // Set it.
-   _numBirds = n;
+	// Set it.
+	_numBirds = n;
     }
 }
 
@@ -474,7 +475,7 @@ void FlockStandalone::initCorrectionTable( const char* const fName )
   inFile.open( fName );
   if (!inFile)
   {
-   std::cout << "Unable to open calibration.table\n" << std::flush;
+	std::cout << "Unable to open calibration.table\n" << std::flush;
         return;
   } else {
      std::cout << "   Calibration table opened sucessfully." << std::endl
@@ -493,21 +494,21 @@ void FlockStandalone::initCorrectionTable( const char* const fName )
     for (j = 0; j < ysize; j++)
       for (k = 0; k < zsize; k++)
          {
-       inFile >> dump >> dump >> dump
-   	   >> caltable.xloc[i][j][k]
-   	   >> caltable.yloc[i][j][k]
-   	   >> caltable.zloc[i][j][k];
-    }
+	    inFile >> dump >> dump >> dump
+		   >> caltable.xloc[i][j][k]
+		   >> caltable.yloc[i][j][k]
+		   >> caltable.zloc[i][j][k];
+	 }
 
    inFile.close();
 }
 
- float& FlockStandalone::xPos( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _position[i][0]; }
- float& FlockStandalone::yPos( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _position[i][1]; }
- float& FlockStandalone::zPos( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _position[i][2]; }
- float& FlockStandalone::zRot( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _orientation[i][0]; }
- float& FlockStandalone::yRot( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _orientation[i][1]; }
- float& FlockStandalone::xRot( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _orientation[i][2]; }
+ float& FlockStandalone::xPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][0]; }
+ float& FlockStandalone::yPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][1]; }
+ float& FlockStandalone::zPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][2]; }
+ float& FlockStandalone::zRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][0]; }
+ float& FlockStandalone::yRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][1]; }
+ float& FlockStandalone::xRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][2]; }
 
 
 ///////////////////////////////////////////////////////////////////
@@ -522,60 +523,57 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
                                  float& zPos, float& zRot, float& yRot,
                                  float& xRot)
 {
-    int addr;
-    vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
-    vpr::Uint32 num_read;
-    if ( _serial_port != NULL ) {
-        char buff[12], group;
-        int  c, i;
+  int addr;
+  vpr::Uint32 num_read;
+  vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
 
-        do {
-            c = i = 0;
+  if ( _serial_port != NULL ) {
+    char buff[12], group;
+    int  c, i, bytes;
 
-            while ( ! i && c < 99999 ) {
-                c++;
-                _serial_port->readn(&buff[0], 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
-                if ( (num_read == 1) )
-                    i = 1;
-            }
+    do {
+      c = i = 0; 
+      
+      while ( ! i && c < 99999 ) {
+	c++;
+	_serial_port->readn(&buff[0], 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
+	if (num_read == 1)
+	  i = 1;
+      }
 
+      while ( i != 12 && c < 99999 ) {
+	c++;
+	_serial_port->read(&buff[i], 12 - i, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
+	i += num_read;
+      }
 
-            while ( i != 12 && c < 99999 ) {
-                c++;
-                _serial_port->read(&buff[i], 12 - i, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
-                i += num_read;
-            }
+      _serial_port->read(&group, 1,num_read, vpr::Interval(timeout, vpr::Interval::Msec));
+      while ( (num_read == 0) &&
+	      (c < 99999) )
+	{
+	  usleep(100 * mSleepFactor);
+	  c++;
+	  _serial_port->read(&group, 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
+	}
 
-            _serial_port->read(&group, 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
-            while ( (num_read == 0) &&
-                   (c < 99999) )
-            {
-                usleep(100 * mSleepFactor);
-                c++;
-                _serial_port->read(&group, 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
-            }
+      addr = group;
+    } while ( addr != n );
 
-            addr = group;
-        } while ( addr != n );
+    // Position
+    xPos = rawToFloat(buff[1], buff[0]) * POSITION_RANGE;
+    yPos = rawToFloat(buff[3], buff[2]) * POSITION_RANGE;
+    zPos = rawToFloat(buff[5], buff[4]) * POSITION_RANGE;
 
-        //std::cout << "addr: " << addr << std::endl;
+    // Orientation
+    zRot = rawToFloat(buff[7], buff[6])   * ANGLE_RANGE;
+    yRot = rawToFloat(buff[9], buff[8])   * ANGLE_RANGE;
+    xRot = rawToFloat(buff[11], buff[10]) * ANGLE_RANGE;
+  }
+  else {
+    addr = -1;
+  }
 
-        // Position
-        xPos = rawToFloat(buff[1], buff[0]) * POSITION_RANGE;
-        yPos = rawToFloat(buff[3], buff[2]) * POSITION_RANGE;
-        zPos = rawToFloat(buff[5], buff[4]) * POSITION_RANGE;
-
-
-        // Orientation
-        zRot = rawToFloat(buff[7], buff[6])   * ANGLE_RANGE;
-        yRot = rawToFloat(buff[9], buff[8])   * ANGLE_RANGE;
-        xRot = rawToFloat(buff[11], buff[10]) * ANGLE_RANGE;
-    }
-    else {
-        addr = -1;
-    }
-
-    return addr;
+  return addr;
 }
 
 float FlockStandalone::rawToFloat (char& r1, char& r2)
@@ -637,26 +635,30 @@ int FlockStandalone::open_port ()
                 retval = -1;
             }
             else {
-                _serial_port->clearAll();
-                _serial_port->enableRead();
-                _serial_port->enableLocalAttach();
-                _serial_port->enableBreakByteIgnore();
-
- 
-   	    
-   	          std::cout << "[FlockStandalone] Port opened successfully\n"
+                std::cout << "[FlockStandalone] Port opened successfully\n"
                           << std::flush;
 
-                _serial_port->setUpdateAction(vpr::SerialTypes::NOW);
+		// ---- Begin almighty code ----
+		vpr::IOSys::Handle handle = _serial_port->getHandle();
+		struct termios tty;
+		tcgetattr(handle, &tty);
+	        tty.c_iflag |=  IGNBRK;
+		tty.c_iflag &=  ~IXON & ~ICRNL;
+		tty.c_lflag &= ~ISIG & ~ECHO & ~ECHOE & ~ECHOK & ~ECHOCTL & ~ECHOKE & ~IEXTEN & ~ICANON;
+		tty.c_oflag &= ~OPOST & ~ONLCR;
+		tty.c_cflag &= ~HUPCL;
+		tcsetattr(handle, TCSANOW, &tty);
+		// ---- End almighty code
+		
+		_serial_port->setUpdateAction(vpr::SerialTypes::NOW);
 
                 // Setup the port.
                 std::cout << "[FlockStandalone] Setting new baud rate: "
                           << _baud << " bits per second\n" << std::flush;
+
                 _serial_port->setInputBaudRate(_baud);
-                
                 std::cout << "Setting output baud rate\n" << std::flush;
                 _serial_port->setOutputBaudRate(_baud);
-                
                 std::cout << "Setting character size\n" << std::flush;
                 _serial_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 /*
@@ -665,6 +667,7 @@ int FlockStandalone::open_port ()
 */
                 std::cout << "Setting read stuff\n" << std::flush;
                 if (_serial_port->enableRead().failure()) retval = -1;
+
             }    
         }
     }
@@ -884,7 +887,8 @@ void FlockStandalone::set_autoconfig ()
     //
     // Must wait 300 milliseconds before and after this command
     ///////////////////////////////////////////////////////////////
-    vpr::Uint32 written;
+
+   vpr::Uint32 written;
     if ( _serial_port != NULL ) {
         char buff[3];
 
@@ -892,10 +896,10 @@ void FlockStandalone::set_autoconfig ()
         buff[1] = 0x32;
         buff[2] = _numBirds + 1;  //number of input devices + 1 for transmitter
 
-   sleep(3);
+	sleep(3);
         _serial_port->write(buff, sizeof(buff), written);
         _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-        sleep(2);
+        sleep(3);
     }
 }
 
@@ -925,6 +929,56 @@ void FlockStandalone::set_group ()
  * Begin testing functions
  *
  ****************************************************/
+void FlockStandalone::read_data(){
+//    char exam1[1];
+//    exam1[0] = 'B';  // POINT mode
+    vpr::Uint32 buf=0, buf1=0;
+    char in[1];
+    int j = 0, i = 0, k=0, thirteencount = 0;
+
+    int currBytes = 0, lastBytes = 0;
+    int timeout = 10000;
+ 
+    vpr::IOSys::Handle handle = _serial_port->getHandle();
+
+    i = 0;
+    while(true){
+        j++;
+	
+	lastBytes = currBytes;
+
+	// Wait until something comes in
+	do{
+	  ioctl(handle, FIONREAD, &currBytes);
+	}while(! currBytes);
+
+	_serial_port->readn(in, sizeof(in), buf1);
+	showbits(in[k]);
+
+    	if (timeout)
+	  usleep(timeout); 
+	
+	
+	std::cout << " t/o: " << timeout << " Buffer: "<< currBytes;
+
+	if (currBytes > 3000 && timeout > 50)
+	  timeout -= 50;
+
+	if (hextoint(in[k]) == 1 || hextoint(in[k]) == 2){
+	  std::cout << " j = " << j;
+	  if (j == 13)
+	    thirteencount++;
+	  else{
+	    std::cout << " 13count = " << thirteencount;
+	    thirteencount = 0;
+	  }
+	  j = 0;
+	}
+
+	std::cout << std::endl;
+    }
+}
+
 
 void FlockStandalone::check_group(){
    char exam1[1], exam2[1];
@@ -1022,18 +1076,13 @@ void FlockStandalone::check_data_ready_char()
     usleep(500 * mSleepFactor);
 }
 
-
-
-
-
-
 void FlockStandalone::examine_value(char exam, int data, int reps, int format)
 {  
     char exam1[1];
     char exam2[1];
     exam1[0] = 'O';
     exam2[0] = exam;
-    vpr::Uint32 buf=0;
+    vpr::Uint32 buf=0, buf1=0;
     char in[1] = {'a'};
     int i = 0, j = 0;
 
@@ -1097,9 +1146,11 @@ void FlockStandalone::set_value(char exam, char setdata, int reps)
     exam1[0] = 'P';
     exam2[0] = exam;
     data[0] = setdata;
-    vpr::Uint32 buf=0;
-    int i = 1;
-    
+    vpr::Uint32 buf=0, buf1=0;
+    char in[1] = {'a'};
+    int i = 0, j = 0;
+
+    i = 1;
     while(i < reps){
         i++;
         _serial_port->write(exam1, sizeof(char), buf);
