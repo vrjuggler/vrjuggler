@@ -52,14 +52,14 @@ static std::string errorPrep(const std::string& who, const std::string& msg)
    return who + ": " + msg;
 }
 
-LoaderError::LoaderError(const std::string& who, const std::string& msg)
-   : std::runtime_error(errorPrep(who, msg)), mWho(who)
+LoaderError::LoaderError(const std::string& w, const std::string& msg)
+   : std::runtime_error(errorPrep(w, msg)), mWho(w)
 {
 }
 
-LoaderError::LoaderError(const std::string& who, const std::string& msg,
-                         LoaderError::Code error)
-   : std::runtime_error(errorPrep(who, msg)), mWho(who), mError(error)
+LoaderError::LoaderError(const std::string& w, const std::string& msg,
+                         LoaderError::Code e)
+   : std::runtime_error(errorPrep(w, msg)), mWho(w), mError(e)
 {
 }
 
