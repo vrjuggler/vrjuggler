@@ -50,7 +50,7 @@ JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 
 #@SET_MAKE@
 
-SUBDIR		= @JUGGLER_PROJECTS@
+DIRS		= @JUGGLER_PROJECTS@
 
 debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso release	\
 world install-debug install-optim install-profiled links clean-links:
@@ -69,6 +69,6 @@ clean cleandepend clobber:
 	rm -rf instlinks
 
 recursive:
-	@for dir in $(SUBDIR) ; do \
+	@for dir in $(DIRS) ; do \
             $(MAKE) -C $$dir $(RECTARGET) || exit 1; \
           done
