@@ -212,13 +212,13 @@ namespace ajMath
    template <class dataType>
    inline static dataType Min( const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return aj::Min( aj::Min( x, y ), z );
+      return ajMath::Min( ajMath::Min( x, y ), z );
    }
    //: min returns the minimum of 4 values
    template <class dataType>
    inline static dataType Min( const dataType& w, const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return aj::Min( aj::Min( w, x ), aj::Min( y, z ) );
+      return ajMath::Min( ajMath::Min( w, x ), ajMath::Min( y, z ) );
    }
    
    //: max returns the maximum of 2 values
@@ -232,13 +232,13 @@ namespace ajMath
    template <class dataType>
    inline static dataType Max( const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return aj::Max( aj::Max( x, y ), z );
+      return ajMath::Max( ajMath::Max( x, y ), z );
    }
    //: max returns the maximum of 4 values
    template <class dataType>
    inline static dataType Max( const dataType& w, const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return aj::Max( aj::Max( w, x ), aj::Max( y, z ) );
+      return ajMath::Max( ajMath::Max( w, x ), ajMath::Max( y, z ) );
    }
 
    //: Linear Interpolation between number [a] and [b]
@@ -256,7 +256,7 @@ namespace ajMath
    template <class dataType>
    inline static bool isEqual( const dataType& a, const dataType& b, const dataType& tolerance )
    {
-      return aj::abs( a - b ) <= tolerance;
+      return ajMath::abs( a - b ) <= tolerance;
    }
 };
 

@@ -31,9 +31,9 @@
 #ifndef CFILEIO_INCLUDED
 #define CFILEIO_INCLUDED
 
-#include <fstream.h>
 #include <string>
 #include <vector>
+#include <fstream.h>
 #include <stdio.h> // for FILE
 
 #include "aj/Endian.h" //needed for ajEndian::isBig, ajEndian::isLittle funcs
@@ -120,8 +120,8 @@ namespace ajFileIO
 		int size = ::fread( &data, sizeof(typeT), 1, fp );
 
 		// if we're not on a little endian machine (intel is little endian) then reverse the bytes.
-		if (fileByteOrdering == LITTLE && ajEndian::isBig() ||
-         fileByteOrdering == BIG && ajEndian::isLittle())
+		if (fileByteOrdering == ajFileIO::LITTLE && ajEndian::isBig() ||
+         fileByteOrdering == ajFileIO::BIG && ajEndian::isLittle())
       {
          ajEndian::byteReverse( data );
 		}
@@ -222,6 +222,7 @@ namespace ajFileIO
 	   //cout<<"]\n"<<flush;
       //cout << "Gcount == " << f.gcount() << "\n"<<flush;
    }
-};
+   
+}; //end namespace.
 
 #endif
