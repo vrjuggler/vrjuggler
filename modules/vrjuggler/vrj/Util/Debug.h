@@ -41,8 +41,8 @@
 #include <vpr/Util/Debug.h>
 
 // Juggler categories
-const vpr::DebugCategory vrjDBG_KERNEL("9cce60c9-9cf9-44e6-a852-1cac224d8b4c", "DBG_KERNEL", "vjKERN:");      /* Kernel output */
-const vpr::DebugCategory vrjDBG_DRAW_MGR("04caf702-1886-4ef8-9686-4c0fe234dc68", "DBG_DRAW_MGR", "vjDRAW:");
-const vpr::DebugCategory vrjDBG_DISP_MGR("934dc95e-6d5d-4db6-9941-c8fabbcc8995", "DBG_DISP_MGR", "vjDISP:");
+const vpr::DebugCategory vrjDBG_KERNEL(vpr::GUID("9cce60c9-9cf9-44e6-a852-1cac224d8b4c"), "DBG_KERNEL", "vjKERN:");      /* Kernel output */
+const vpr::DebugCategory vrjDBG_DRAW_MGR(vpr::GUID("04caf702-1886-4ef8-9686-4c0fe234dc68"), "DBG_DRAW_MGR", "vjDRAW:");
+const vpr::DebugCategory vrjDBG_DISP_MGR(vpr::GUID("934dc95e-6d5d-4db6-9941-c8fabbcc8995"), "DBG_DISP_MGR", "vjDISP:");
 
 #endif

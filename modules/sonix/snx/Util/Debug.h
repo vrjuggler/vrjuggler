@@ -48,6 +48,7 @@
 #include <vpr/vpr.h>
 
 // snx categories
-const vpr::DebugCategory snxDBG("863c7fc3-1997-51e4-0772-724cd577d2a5", "SNX_DBG", "snx:");  
+const vpr::DebugCategory snxDBG(vpr::GUID("863c7fc3-1997-51e4-0772-724cd577d2a5"),
+                                "SNX_DBG", "snx:");  
 
 #endif
