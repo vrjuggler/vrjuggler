@@ -47,13 +47,13 @@
 #include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
-#include <vpr/Util/ReturnStatus.h>	
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
 namespace cluster
 {
    vprSingletonImp( ClusterNetwork );
-	
+
    ClusterNetwork::ClusterNetwork()
    {
       mAcceptThread = NULL;
@@ -65,7 +65,7 @@ namespace cluster
    {
       shutdown();
    }
-   
+
    /**
     * Determine if the given hostname matches the local machine's hostname.
     */
@@ -76,7 +76,7 @@ namespace cluster
 
       // Get the hostname to check against.
       test.setAddress(test_host_name, 0);
-      
+
       // Get the localhost name.
       vpr::InetAddr::getLocalHost(local);
 
@@ -86,9 +86,9 @@ namespace cluster
          << test.getHostname() << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << test.getAddressString() << std::endl << vprDEBUG_FLUSH;
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "+================= Local Hostnames ==================+" 
+         << "+================= Local Hostnames ==================+"
          << std::endl << vprDEBUG_FLUSH;
       std::vector<std::string> names = local.getHostnames();
       for(std::vector<std::string>::iterator itr = names.begin() ; itr != names.end() ; ++itr)
@@ -97,12 +97,12 @@ namespace cluster
          temp.setAddress((*itr), 0);
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << "| Name: " << std::setw(25) << (*itr) << " | "
-            << std::setw(16) << temp.getAddressString() << " | " 
+            << std::setw(16) << temp.getAddressString() << " | "
             << std::endl << vprDEBUG_FLUSH;
       }
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "+================= Test Hostnames ===================+" 
+         << "+================= Test Hostnames ===================+"
          << std::endl << vprDEBUG_FLUSH;
       std::vector<std::string> test_names = test.getHostnames();
       for(std::vector<std::string>::iterator itr = test_names.begin() ; itr != test_names.end() ; ++itr)
@@ -111,14 +111,14 @@ namespace cluster
          temp.setAddress((*itr), 0);
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << "| Name: " << std::setw(25) << (*itr) << " | "
-            << std::setw(16) << temp.getAddressString() << " | " 
+            << std::setw(16) << temp.getAddressString() << " | "
             << std::endl << vprDEBUG_FLUSH;
       }
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "+====================================================+" 
+         << "+====================================================+"
          << std::endl << vprDEBUG_FLUSH;
-     
+
       bool result = false;
       if(local.getAddressString() == test.getAddressString())
       {
@@ -130,14 +130,14 @@ namespace cluster
       else
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << "| NO match.                                          |" 
+            << "| NO match.                                          |"
             << std::endl << vprDEBUG_FLUSH;
             result = false;
       }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "+====================================================+" 
+         << "+====================================================+"
          << std::endl << vprDEBUG_FLUSH;
-      
+
       return result;
    }
 
@@ -150,10 +150,10 @@ namespace cluster
          ConnectionRequest* temp_connection_request = dynamic_cast<ConnectionRequest*>(packet);
          vprASSERT(NULL != temp_connection_request && "Dynamic cast failed!");
          vprASSERT(NULL != node && "We can not handle a packet if we do not know which node it is coming from");
-         
+
          std::string host_name   = temp_connection_request->getHostname();
          vpr::Uint16 port        = temp_connection_request->getPort();
-         
+
          // If difference warn us
          node->setHostname(host_name);
          node->setPort(port);
@@ -167,9 +167,9 @@ namespace cluster
          // Get the localhost name.
          vpr::InetAddr local;
          vpr::InetAddr::getLocalHost(local);
-         
+
          ConnectionAck* responce_packet = new ConnectionAck(local.getHostname(),
-                                                            mListenAddr.getPort(),true); 
+                                                            mListenAddr.getPort(),true);
 
          // Try to send a responce packet
          try
@@ -186,7 +186,7 @@ namespace cluster
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrRED,"ERROR:")
-               << "ClusterNetwork::acceptLoop() Could not send responce packet: " 
+               << "ClusterNetwork::acceptLoop() Could not send responce packet: "
                << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
 
             node->setConnected(ClusterNode::DISCONNECTED);
@@ -195,7 +195,7 @@ namespace cluster
 
          delete responce_packet;
          responce_packet = NULL;
-         
+
          // Start updating the ClusterNode
          node->start();
 
@@ -205,7 +205,7 @@ namespace cluster
       {
          ConnectionAck* temp_connection_ack = dynamic_cast<ConnectionAck*>(packet);
          vprASSERT(NULL != temp_connection_ack && "Dynamic cast failed!");
-         
+
          if (node == NULL)
          {
             return;
@@ -214,7 +214,7 @@ namespace cluster
          if ( temp_connection_ack->getAck() )
          {
             std::string host_name   = temp_connection_ack->getHostname();
-            
+
             //node->setConnected(ClusterNode::CONNECTED);
             node->setConnected(ClusterNode::NEWCONNECTION);
             node->setHostname(host_name);
@@ -229,18 +229,18 @@ namespace cluster
       }
    }
 
-   
-   vpr::ReturnStatus ClusterNetwork::addClusterNode(const std::string& name, const std::string& host_name, 
+
+   vpr::ReturnStatus ClusterNetwork::addClusterNode(const std::string& name, const std::string& host_name,
                                                     const vpr::Uint16& port, vpr::SocketStream* socket_stream)
    {
       // -Create a new ClusterNode using the given information
       // -Add the new node to the ClusterNetwork
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
-   
+
       cluster::ClusterNode* temp_node = new ClusterNode(name, host_name, port, socket_stream);
-      
+
       mClusterNodes.push_back(temp_node);
-   
+
       return(vpr::ReturnStatus::Succeed);
    }
 
@@ -248,14 +248,14 @@ namespace cluster
    {
       // -Add the given node to the ClusterNetwork
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
-      
+
       mClusterNodes.push_back(node);
    }
 
    void ClusterNetwork::removeClusterNode(const std::string& node_hostname)
    {
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
-      
+
       // -Find the ClusterNode with the given hostname
       // -Remove it from the list of cluster nodes
       for (std::vector<cluster::ClusterNode*>::iterator i = mClusterNodes.begin();
@@ -268,17 +268,17 @@ namespace cluster
          }
       }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Removing node: " << node_hostname
-	     << std::endl << vprDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
    }
 
    //XXX: ClusterNode hostname match.
    ClusterNode* ClusterNetwork::getClusterNodeByHostname(const std::string& host_name)
-   { 
+   {
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
-      
+
       vpr::InetAddr searching_for_node;
       searching_for_node.setAddress(host_name, 0);
-      
+
       // -Find ClusterNode with given hostname and return a pointer to it.
       // -If we do not find one, return NULL
       for (std::vector<cluster::ClusterNode*>::iterator i = mClusterNodes.begin();
@@ -286,7 +286,7 @@ namespace cluster
       {
          vpr::InetAddr testing_node;
          testing_node.setAddress((*i)->getHostname(),0);
-         
+
          if (searching_for_node.getAddressString() == testing_node.getAddressString())
          {
             return(*i);
@@ -294,11 +294,11 @@ namespace cluster
       }
       return(NULL);
    }
-   
+
    ClusterNode* ClusterNetwork::getClusterNodeByName(const std::string& node_name)
-   { 
+   {
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
-      
+
       // -Find ClusterNode with given name and return a pointer to it.
       // -If we do not find one, return NULL
       for (std::vector<cluster::ClusterNode*>::iterator i = mClusterNodes.begin();
@@ -318,14 +318,14 @@ namespace cluster
       {
          vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
-            << "[ClusterNetwork] Adding Pending ClusterNode: " << node->getHostname() 
+            << "[ClusterNetwork] Adding Pending ClusterNode: " << node->getHostname()
             << "\n"<< vprDEBUG_FLUSH;
          mPendingNodes.push_back(node);
       }
    }
-   
+
    ClusterNode* ClusterNetwork::getPendingNode(std::string host_name)
-   {      
+   {
       // -If we can get a pending node with the given hostname
       //  return a pointer to the node.
       // -Else return NULL
@@ -343,13 +343,13 @@ namespace cluster
       return NULL;
    }
 
-   
+
    void ClusterNetwork::removePendingNode(std::string host_name)
-   {      
+   {
       vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
          << "[ClusterNetwork] Removing Pending Host: " << host_name << "\n"<< vprDEBUG_FLUSH;
-      
+
       for (std::vector<cluster::ClusterNode*>::iterator i = mPendingNodes.begin();
            i != mPendingNodes.end() ; i++)
       {
@@ -360,7 +360,7 @@ namespace cluster
          }
       }
    }
-   
+
    vpr::Uint16 ClusterNetwork::getNumPendingNodes()
    {
       vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
@@ -371,13 +371,13 @@ namespace cluster
    bool ClusterNetwork::attemptPendingNodes()
    {
       vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
-      
+
       bool ret_val = false;
 
       for (std::vector<cluster::ClusterNode*>::iterator i = mPendingNodes.begin();
            i != mPendingNodes.end() ; i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
             << "Attempting to connect to: " << (*i)->getHostname()
             << std::endl << vprDEBUG_FLUSH;
          if ( (*i)->attemptConnect().success() )
@@ -386,17 +386,17 @@ namespace cluster
             // then we should return true
             ret_val = true;
          }
-      }      
+      }
       return(ret_val);
    }
 
    bool ClusterNetwork::startListening(const int& listen_port)
    {
       // If we haven't already started the listening thread
-      if ( mAcceptThread == NULL )  
-      {  
+      if ( mAcceptThread == NULL )
+      {
          // If the listen port is valid
-         if ( listen_port > 0 )     
+         if ( listen_port > 0 )
          {
             mListenAddr.setPort(listen_port);
 
@@ -408,7 +408,7 @@ namespace cluster
             vpr::ThreadMemberFunctor<ClusterNetwork>* memberFunctor =
             new vpr::ThreadMemberFunctor<ClusterNetwork>
             (this, &ClusterNetwork::acceptLoop, NULL);
-            
+
             mAcceptThread = new vpr::Thread(memberFunctor);
             vprASSERT(mAcceptThread->valid());
             return true;
@@ -464,31 +464,31 @@ namespace cluster
       }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-         << " Listening on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;      
+         << " Listening on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
 
-      
+
       // Create a socketstream for new socket
       vpr::SocketStream* client_sock = new vpr::SocketStream;
-      
+
       // Wait for an incoming connection.
       while ( 1 )
-      {  
+      {
          vpr::ReturnStatus status = sock.accept(*client_sock, vpr::Interval::NoTimeout);
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
             << " Receiving a connection request on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
-         
+
          if ( status.success() )
-         {               
+         {
             // Optimize new socket for low latency communication
-            client_sock->setNoDelay(true);  
+            client_sock->setNoDelay(true);
 
             std::string remote_host_name = client_sock->getRemoteAddr().getHostname();
-            
+
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
                << " Receiving a connection request from: " << remote_host_name << std::endl << vprDEBUG_FLUSH;
-            
+
             // See if we already have a ClusterNode with the same hostname
             ClusterNode* requesting_node = getClusterNodeByHostname(remote_host_name);
 
@@ -500,10 +500,10 @@ namespace cluster
                   << " ClusterNode does not exist in ClusterNetwork."
                   << " Creating new ClusterNode."
                   << " Starting ClusterNode."
-                  << " Adding new node to ClusterNetwork..." << std::endl << vprDEBUG_FLUSH;           
-               
+                  << " Adding new node to ClusterNetwork..." << std::endl << vprDEBUG_FLUSH;
+
                // Create a new ClusterNode and pass it the new SocketStream
-               requesting_node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), client_sock);                              
+               requesting_node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), client_sock);
                // Add the new node to the cluster
                ClusterNetwork::instance()->addClusterNode(requesting_node);
             }
@@ -512,12 +512,12 @@ namespace cluster
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                   << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
                   << " ClusterNode already exists in ClusterNetwork."
-                  << " Setting the SocketStream." << std::endl << vprDEBUG_FLUSH;                          
-               
+                  << " Setting the SocketStream." << std::endl << vprDEBUG_FLUSH;
+
                // Set the SocketStream to use for this ClusterNode.
-               requesting_node->setSockStream(client_sock);                              
+               requesting_node->setSockStream(client_sock);
             }
-            
+
             // -Try to receive a Packet
             // -If we catch an exception then
             //  -Print error message
@@ -536,17 +536,17 @@ namespace cluster
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                   << clrOutBOLD(clrRED,"ERROR:")
-                  << "ClusterNetwork::acceptLoop() Caught an exception: " 
+                  << "ClusterNetwork::acceptLoop() Caught an exception: "
                   << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
 
                delete client_sock;
                client_sock = new vpr::SocketStream;
                continue;
             }
-            
-            //vprASSERT(remote_host_name == connection_request->getHostname() && 
+
+            //vprASSERT(remote_host_name == connection_request->getHostname() &&
             //          "We have the wrong node since we got a different hostname from the InetAddr...");
-            
+
             //connection_request->printData(vprDBG_CONFIG_LVL);
             this->handlePacket(temp_packet,requesting_node);
 
@@ -554,21 +554,21 @@ namespace cluster
             ClusterDelta cluster_delta;
             cluster_delta.clientClusterDelta(requesting_node->getSockStream());
 
-                        
+
             // We need to create a new SocketStream since the to
             // hold the value of the next recieved socketstream since
             // the old one is now being used by the new ClusterNode
             client_sock = new vpr::SocketStream;
-            
+
             // Since we have just recieved a new connection,
-            // set the connected status as so. We are not 
+            // set the connected status as so. We are not
             // in a fully connected state until the begining
             // of the next frame in ClusterNetwork::updateNewConnetions()
             // this is becuase we only want to start using a
             // new connection at the start of a new frame.
             requesting_node->setConnected(ClusterNode::NEWCONNECTION);
             // Print the new state information about this node.
-            requesting_node->debugDump(vprDBG_CONFIG_LVL);            
+            requesting_node->debugDump(vprDBG_CONFIG_LVL);
          }
          else if ( status == vpr::ReturnStatus::Timeout )
          {
@@ -577,13 +577,13 @@ namespace cluster
             delete client_sock;
             client_sock = new vpr::SocketStream;
          }
-      }   // end infinite while      
+      }   // end infinite while
    }
 
 
    void ClusterNetwork::shutdown()
-   {  
-      // Kill thread used to listen for incoming 
+   {
+      // Kill thread used to listen for incoming
       // connection requests
 
       // TODO: Make this actually shutdown the Accepting thread, this will require
@@ -598,7 +598,7 @@ namespace cluster
       for(std::vector<ClusterNode*>::iterator j = mClusterNodes.begin(); j != mClusterNodes.end(); j++)
       {
           (*j)->shutdown();
-      }  
+      }
    }
 
 
@@ -606,20 +606,20 @@ namespace cluster
    {
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
-													std::string("-------------- Cluster Network --------------\n"),
-													std::string("---------------------------------------------\n"));
-		for(std::vector<ClusterNode*>::iterator j = mClusterNodes.begin(); j != mClusterNodes.end(); j++)
-		{
-			(*j)->debugDump(debug_level);
-		}  
+         std::string("-------------- Cluster Network --------------\n"),
+         std::string("---------------------------------------------\n"));
+      for(std::vector<ClusterNode*>::iterator j = mClusterNodes.begin(); j != mClusterNodes.end(); j++)
+      {
+         (*j)->debugDump(debug_level);
+      }
    }
-   
+
    ////////////////// Config Functions ///////////////
    bool ClusterNetwork::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
    {
       return(element->getID() == ClusterNetwork::getMachineSpecificElementType());
    }
-   
+
    bool ClusterNetwork::configCanHandle(jccl::ConfigElementPtr element)
    {
        return( recognizeClusterMachineConfig(element) );
@@ -646,32 +646,26 @@ namespace cluster
                  i != machine_specific_elements.end();
                  i++)
             {
-               jccl::ConfigManager::PendingElement pending;
-               pending.mType = jccl::ConfigManager::PendingElement::ADD;
-               pending.mElement = (*i);
-               
-               // Do not lock the pending list since the ConfigManager locked it
-               // before calling our configAdd() method.
-               jccl::ConfigManager::instance()->addPending(pending);
-               
+               jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
+
                vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
                   << "[ClusterNetwork] Adding Machine specific ConfigElement: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }
-            
+
             const int listen_port = element->getProperty<int>("listen_port");
             startListening(listen_port);
          }
          else
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterNetwork] ")
-               << "Adding Node: " << element->getName() 
+               << "Adding Node: " << element->getName()
                << " to the Cluster Network\n" << vprDEBUG_FLUSH;
 
             std::string    name        = element->getName();
             std::string    host_name   = element->getProperty<std::string>("host_name");
             vpr::Uint16    listen_port = element->getProperty<int>("listen_port");
-            
+
             addClusterNode(name, host_name, listen_port);
          }
          return true;
@@ -684,7 +678,7 @@ namespace cluster
      if (recognizeClusterMachineConfig(element))
      {
         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-           << "[ClusterNetwork] Removing the Node: " << element->getName() 
+           << "[ClusterNetwork] Removing the Node: " << element->getName()
            << " from the Cluster Network\n" << vprDEBUG_FLUSH;
         return(true);
      }
@@ -708,14 +702,14 @@ namespace cluster
          if(attemptPendingNodes())
          {
             // -If the pending list is stale
-            //   - refresh the list               
+            //   - refresh the list
             if(jccl::ConfigManager::instance()->isPendingStale())
             {
                jccl::ConfigManager::instance()->refreshPendingList();
             }
          }
       }
-      
+
       // This fuction is needed in order to gurantee that all cluster
       // nodes become active at the same time, the beginning of the frame
       //
@@ -740,4 +734,4 @@ namespace cluster
       // no pending connection requests
       return (0 == mPendingNodes.size());
    }
-}	// end namespace cluster
+}   // end namespace cluster

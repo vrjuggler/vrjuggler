@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-05-2004 patrickh    Updated to JCCL 0.17.0.
 Apr-01-2004 patrickh    Fixed MotionStar crashing bugs on Windows and array
             aronb       initialization problems in gadget::EventWindow on all
                         platforms.

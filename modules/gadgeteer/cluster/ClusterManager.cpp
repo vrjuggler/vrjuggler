@@ -86,7 +86,7 @@ namespace cluster
       bool operator()(void* func)
       {
          void (*init_func)(ClusterManager*);
-   
+
          // Cast the entry point function to the correct signature so that we can
          // call it.  All dynamically loaded drivers must have an entry point
          // function that takes a pointer to a cluster::ClusterManager instance and
@@ -107,7 +107,7 @@ namespace cluster
       jccl::ConfigManager::instance()->addConfigElementHandler(ClusterNetwork::instance());
       jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
    }
-   
+
    ClusterManager::~ClusterManager()
    {;}
 
@@ -124,8 +124,7 @@ namespace cluster
 
       if (mClusterActive && !mClusterReady)
       {
-         if (!jccl::ConfigManager::instance()->isElementTypeInActiveList("start_barrier_plugin") &&
-             !jccl::ConfigManager::instance()->isElementTypeInPendingList("start_barrier_plugin"))
+         if ( ! jccl::ConfigManager::instance()->hasElementType("start_barrier_plugin") )
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrRED, "StartBarrier config element does not exist. ")
@@ -427,7 +426,7 @@ namespace cluster
            {
               std::string host_name = device_host_ptr->getProperty<std::string>("host_name");
               if (!ClusterNetwork::isLocalHost(host_name))
-              { 
+              {
                  return true;
               }// Device is on the local machine
            }// Could not find the deviceHost in the configuration
@@ -456,7 +455,7 @@ namespace cluster
       vprASSERT(configCanHandle(element));
 
       bool ret_val = false;      // Flag to return success
-   
+
       if (recognizeClusterManagerConfig(element))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
@@ -649,7 +648,7 @@ namespace cluster
       cfg_mgr->unlockActive();
       return(temp);
    }
-   
+
    /**
     * Dump the current Status of the InputManager, listing all
     * the devices, proxies and internal settings
