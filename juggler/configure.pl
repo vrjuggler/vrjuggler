@@ -65,6 +65,7 @@ sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
 sub getPlatform();
+sub getRelativePath($$);
 
 %MODULES = ();
 
@@ -354,8 +355,18 @@ sub configureModule ($)
          $src_root = "$cwd/$base_dir";
       }
 
-      print "Running $shell $src_root/$mod_path/configure @ARGV\n";
-      system("$shell $src_root/$mod_path/configure @ARGV 2>&1") == 0
+      # Ensure $src_root isn't terminated with a '/'.
+      $src_root =~ s/\/$//;
+
+      # If we're being run in Win32, force a relative path for $src_root
+      my $cfg_exec = "$src_root/$mod_path/configure";
+      if ($Win32)
+      {
+         $cfg_exec = getRelativePath(getcwd(), $cfg_exec);
+      }
+
+      print "Running $shell $cfg_exec @ARGV\n";
+      system("$shell $cfg_exec @ARGV 2>&1") == 0
          or die "Configuration of $module_name in $ENV{'PWD'} failed\n" .
                 "Check $ENV{'PWD'}/config.log for details\n";
 
@@ -775,6 +786,33 @@ sub getHostname ()
    }
 
    return $hostname;
+}
+
+#
+# getRelativePath(wd, target)
+# Given a working directory, returns the relative path to the target file.
+#
+sub getRelativePath ($$)
+{
+   my ($wd, $target) = @_;
+
+   my @wd = split(/\//, $wd);
+   my @target = split(/\//, $target);
+
+   # Remove matching directory elements from both @wd and @target
+   while ((scalar(@wd) > 0) && (scalar(@target) > 0) && ($wd[0] eq $target[0]))
+   {
+      shift(@wd);
+      shift(@target);
+   }
+
+   # For each remaining part of the wd, prefix a .. to the target
+   foreach my $dir (@wd)
+   {
+      unshift(@target, '..');
+   }
+
+   return join('/', @target);
 }
 
 __END__
