@@ -127,10 +127,14 @@ $(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 cxx-idl:
+ifeq ($(BUILD_CXX), Y)
 	@$(MAKE) RECTARGET="cxx_idl" DO_IDL=1 recursive
+endif
 
 java-idl:
+ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C java DO_IDL=1 java_idl
+endif
 
 # Things to do after the object files and library are built.
 afterbuild:
