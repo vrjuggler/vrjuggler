@@ -66,6 +66,10 @@ public:
     */
 	static	ProfileIterator*	   getIterator( void ){ return new ProfileIterator(&mRoot); }
 
+	static	ProfileNode*	      getRootNode( void ){ return &mRoot; }
+
+   static   void                 printTree(void ) { if(mRoot.getChild() != NULL) {mRoot.printTree(mRoot.getChild());} }
+
    /**
     * @post Iterator has been deleted
     */
@@ -114,7 +118,7 @@ public:
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define	VPR_PROFILE_RESULTS( )			*vpr::ProfileManager::getIterator()->printTree(*vpr::ProfileManager::getIterator());
+#define	VPR_PROFILE_RESULTS( )			vpr::ProfileManager::printTree( )
 #else
 #define	VPR_PROFILE_RESULTS( )
 #endif

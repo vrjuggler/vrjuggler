@@ -9,6 +9,7 @@
 
 #include <vpr/Util/Interval.h>
 #include <vpr/vprTypes.h>
+#include <vpr/vpr.h>
 #include <deque>
 #include <map>
 
