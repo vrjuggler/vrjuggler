@@ -153,8 +153,17 @@ public class ControlPanelParser
          throw new MissingAttributeException(ICON);
       }
 
-      ClassLoader loader = getClass().getClassLoader();
-      Icon icon = new ImageIcon(loader.getResource(icon_path));
+      Icon icon = null;
+
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         icon = new ImageIcon(loader.getResource(icon_path));
+      }
+      catch (Exception ex)
+      {
+      }
+
       return(new CategoryNode(label, title, icon));
    }
    
@@ -193,9 +202,18 @@ public class ControlPanelParser
       {
          throw new MissingAttributeException(ICON);
       }
-      
-      ClassLoader loader = getClass().getClassLoader();
-      Icon icon = new ImageIcon(loader.getResource(icon_path));
+
+      Icon icon = null;
+
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         icon = new ImageIcon(loader.getResource(icon_path));
+      }
+      catch (Exception ex)
+      {
+      }
+
       return(new TypeNode(label, title, token, icon));
    }
    
@@ -228,9 +246,18 @@ public class ControlPanelParser
       {
          throw new MissingAttributeException(ICON);
       }
-      
-      ClassLoader loader = getClass().getClassLoader();
-      Icon icon = new ImageIcon(loader.getResource(icon_path));
+
+      Icon icon = null;
+
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         icon = new ImageIcon(loader.getResource(icon_path));
+      }
+      catch (Exception ex)
+      {
+      }
+
       return(new EditorNode(label, class_name, icon));
    }
    
@@ -263,9 +290,18 @@ public class ControlPanelParser
       {
          throw new MissingAttributeException(ICON);
       }
-      
-      ClassLoader loader = getClass().getClassLoader();
-      Icon icon = new ImageIcon(loader.getResource(icon_path));
+
+      Icon icon = null;
+
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         icon = new ImageIcon(loader.getResource(icon_path));
+      }
+      catch (Exception ex)
+      {
+      }
+
       return(new WizardNode(label, wizard_location, icon));
    }
 
