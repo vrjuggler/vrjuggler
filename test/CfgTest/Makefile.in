@@ -33,8 +33,6 @@ all: CfgTest
 CfgTest: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-CfgTest.o: CfgTest.cpp
-
 .cpp.o:
 	${COMPILE} -c $<
 

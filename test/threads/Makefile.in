@@ -38,17 +38,11 @@ all: test
 test: test.o
 	${COMPILE} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-test.o: test.cpp
-
 stlTest: stlTest.o
 	${COMPILE} -o $@ stlTest.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-stlTest.o: stlTest.cpp
-
 testPool: testPool.o
 	${COMPILE} -o $@ testPool.o ${VJ_LIBS} ${EXTRA_LIBS}
-
-testPool.o: testPool.cpp
 
 .cpp.o:
 	${COMPILE} -c $<

@@ -37,8 +37,8 @@ all: combo
 combo: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-combo.o: combo.cpp torusApp.h wandApp.h cubesApp.h
-torusApp.o: torusApp.cpp torusApp.h
+combo.o: torusApp.h wandApp.h cubesApp.h
+torusApp.o: torusApp.h
 
 .cpp.o:
 	${COMPILE} -c $<
