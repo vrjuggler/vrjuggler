@@ -43,6 +43,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="build/juggler/quick.start.html" 
 					info="No info, just step by step instructions."
 					image="Leaf_Script2.gif" >
+					<item title="Win32 Caveats"
+					link="build/juggler/win32.caveats.html"
+					info="Getting started with Win32 development"
+					image="Leaf_Script2.gif">
 					<item title="Configuring"
 					link="build/juggler/use.configure.html"
 					info="How to use the configure script"
