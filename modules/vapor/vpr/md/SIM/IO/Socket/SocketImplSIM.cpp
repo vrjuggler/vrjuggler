@@ -164,8 +164,7 @@ vpr::Uint32 SocketImplSIM::availableBytes ()
 
    if ( ! mArrivedQueue.empty() )
    {
-      std::vector<vpr::sim::MessagePtr>::iterator i = mArrivedQueue.begin();
-      bytes = (*i)->getSize();
+      bytes = mArrivedQueue.front()->getSize();
    }
 
    return bytes;
@@ -189,7 +188,7 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
          size_t copy_len, msg_size;
 
          // Remove the message from the arrival queue.
-         message = mArrivedQueue[0];
+         message = mArrivedQueue.front();
 
          msg_size = message->getSize();
 
@@ -201,9 +200,11 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
          memcpy(buffer, message->getBody(), copy_len);
          data_read = copy_len;
 
+         // If there was no resizing performed on the message (the resize value
+         // is 0), then we have read the entire message into our buffer.
          if ( message->resize(copy_len) == 0 )
          {
-            mArrivedQueue.erase(mArrivedQueue.begin());
+            mArrivedQueue.pop_front();
          }
       }
       // Nothing is in the queue, so we tell the caller that the operation is
@@ -237,9 +238,9 @@ vpr::ReturnStatus SocketImplSIM::read_i( vpr::sim::Message::MessageDataPtr& msgD
       {
          // Get copy of message data, then
          // Remove the message from the arrival queue.
-         msgData = mArrivedQueue[0]->getMessageData();
+         msgData = mArrivedQueue.front()->getMessageData();
          data_read = msgData->size();
-         mArrivedQueue.erase(mArrivedQueue.begin());
+         mArrivedQueue.pop_front();
       }
       // Nothing is in the queue, so we tell the caller that the operation is
       // in progress.
