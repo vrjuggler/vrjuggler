@@ -44,8 +44,9 @@
 #include <vpr/Util/Assert.h>
 
 namespace jccl {
-   
-Property::Property (PropertyDesc *pd): mValues() {
+
+Property::Property (PropertyDesc *pd): mValues()
+{
     //cout << "Property(): desc is '" << flush << *pd << "'" << endl;
     int j;
     VarValue *v;
@@ -81,7 +82,8 @@ Property::Property (PropertyDesc *pd): mValues() {
 
 
 
-Property::Property (const Property& p):mValues() {
+Property::Property (const Property& p):mValues()
+{
     mDescription = NULL;
     mValidation = 1;
     *this = p;
@@ -89,7 +91,8 @@ Property::Property (const Property& p):mValues() {
 
 
 
-VarValue *Property::createVarValue (int i) {
+VarValue *Property::createVarValue (int i)
+{
     assertValid();
 
     // if i == -1, we're just tacking onto the end
@@ -109,7 +112,8 @@ VarValue *Property::createVarValue (int i) {
 }
 
 
-Property::~Property () {
+Property::~Property ()
+{
 
     unsigned int i;
 
@@ -122,7 +126,8 @@ Property::~Property () {
 
 
 #ifdef JCCL_DEBUG
-void Property::assertValid () const {
+void Property::assertValid () const
+{
     vprASSERT (mValidation == 1 && "Trying to use deleted Property");
 
     for (unsigned int i = 0; i < mValues.size(); i++)
@@ -135,7 +140,8 @@ void Property::assertValid () const {
 
 
 
-Property& Property::operator= (const Property& p) {
+Property& Property::operator= (const Property& p)
+{
     assertValid();
     p.assertValid();
 
@@ -164,7 +170,8 @@ Property& Property::operator= (const Property& p) {
 
 
 
-bool Property::operator== (const Property& p) const {
+bool Property::operator== (const Property& p) const
+{
     assertValid();
     p.assertValid();
 
@@ -180,7 +187,8 @@ bool Property::operator== (const Property& p) const {
 
 
 
-bool Property::applyUnits (CfgUnit u) {
+bool Property::applyUnits (CfgUnit u)
+{
     assertValid();
 
     if (mType == T_DISTANCE) {
@@ -197,7 +205,8 @@ bool Property::applyUnits (CfgUnit u) {
 
 
 
-std::ostream& operator << (std::ostream &out, Property& p) {
+std::ostream& operator << (std::ostream &out, Property& p)
+{
     p.assertValid();
 
     ConfigIO::instance()->writeProperty (out, p);
@@ -206,10 +215,12 @@ std::ostream& operator << (std::ostream &out, Property& p) {
 
 
 
-const VarValue& Property::getValue (unsigned int ind) const {
+const VarValue& Property::getValue (unsigned int ind) const
+{
     assertValid();
 
-    if (ind >= mValues.size()) {
+    if (ind >= mValues.size())
+    {
         return VarValue::getInvalidInstance();
     }
     return *((mValues)[ind]);
@@ -217,7 +228,8 @@ const VarValue& Property::getValue (unsigned int ind) const {
 
 
 
-int Property::getNum () const {
+int Property::getNum () const
+{
     assertValid();
 
     return mValues.size();
@@ -225,21 +237,24 @@ int Property::getNum () const {
 
 
 
-const std::string& Property::getName () const {
+const std::string& Property::getName () const
+{
     assertValid();
 
     return mDescription->getName();
 }
 
 
-const std::string& Property::getToken () const {
+const std::string& Property::getToken () const
+{
     assertValid();
 
     return mDescription->getToken();
 }
 
 
-bool Property::preSet (unsigned int ind) {
+bool Property::preSet (unsigned int ind)
+{
     assertValid();
 
     unsigned int i;
@@ -261,7 +276,8 @@ bool Property::preSet (unsigned int ind) {
 
 
 
-bool Property::setValue (int val, int ind ) {
+bool Property::setValue (int val, int ind )
+{
     assertValid();
 
     if (!preSet(ind))
@@ -272,7 +288,8 @@ bool Property::setValue (int val, int ind ) {
 
 
 
-bool Property::setValue (float val, int ind ) {
+bool Property::setValue (float val, int ind )
+{
     assertValid();
 
     if (!preSet(ind))
@@ -283,7 +300,8 @@ bool Property::setValue (float val, int ind ) {
 
 
 
-bool Property::setValue (const std::string& val, int ind) {
+bool Property::setValue (const std::string& val, int ind)
+{
     assertValid();
 
     if (!preSet(ind))
@@ -294,7 +312,8 @@ bool Property::setValue (const std::string& val, int ind) {
 
 
 
-bool Property::setValue (ConfigChunkPtr val, int ind) {
+bool Property::setValue (ConfigChunkPtr val, int ind)
+{
     assertValid();
 
     if (!preSet(ind)) {
@@ -307,7 +326,8 @@ bool Property::setValue (ConfigChunkPtr val, int ind) {
 
 
 
-bool Property::setValue (const VarValue& val, int ind) {
+bool Property::setValue (const VarValue& val, int ind)
+{
     assertValid();
 
     if (!preSet (ind))
@@ -318,7 +338,8 @@ bool Property::setValue (const VarValue& val, int ind) {
 
 
 
-bool Property::tryAssign (int index, const char* val) {
+bool Property::tryAssign (int index, const char* val)
+{
     assertValid();
 
     /* This does some type-checking and translating before just
