@@ -12,6 +12,7 @@ import VjGUI.*;
 import VjGUI.util.JFrameParent;
 import VjGUI.configchunk.ConfigChunkFrame;
 import VjConfig.*;
+import VjPerf.*;
 
 public class ControlUI  extends JFrame 
     implements ActionListener, WindowListener, JFrameParent {
@@ -23,6 +24,7 @@ public class ControlUI  extends JFrame
     DescDBPanel descdb_pane;
     ConsolePane console_pane;
     ChunkOrgTreePane orgtree_pane;
+    PerfAnalyzerPanel perfanalyze_pane;
 
     JMenuBar    main_menubar;
     JMenu       file_menu, 
@@ -90,6 +92,9 @@ public class ControlUI  extends JFrame
 
 	console_pane = new ConsolePane();
 	tabpane.add ("Messages", console_pane);
+
+	perfanalyze_pane = new PerfAnalyzerPanel(Core.perf_collection);
+	tabpane.add ("Performance", perfanalyze_pane);
 
 	// --------------------- MENUS -------------------------------------------
 
@@ -343,6 +348,7 @@ public class ControlUI  extends JFrame
 		Core.vjcontrol_preferences = newc;
 		Core.reconfigure();
 	    }
+	    f.dispose();
 	    prefs_frame = null;
 	}
     }
@@ -473,6 +479,9 @@ public class ControlUI  extends JFrame
     }
 
 
+    public void refreshPerfData() {
+	perfanalyze_pane.refresh();
+    }
 
     public static void changeFont(Component cmp, Font font) {
 	cmp.setFont(font);

@@ -247,56 +247,104 @@ public class FileControl {
 
     public static String loadNewDescDBFile (String currentdir, 
 					    boolean showrequester) {
-    File f;
-    FileReader r;
-    ConfigStreamTokenizer st;
+	File f;
+	FileReader r;
+	ConfigStreamTokenizer st;
 
-    if (showrequester) {
-      f = requestOpenFile(currentdir);
-      if (f == null)
-	return null;
+	if (showrequester) {
+	    f = requestOpenFile(currentdir);
+	    if (f == null)
+		return null;
+	}
+	else {
+	    f = new File (currentdir);
+	}
+	Core.consoleInfoMessage ("FileControl", 
+				 "Loading Descriptions file: " + f);
+	try {
+	    r = new FileReader (f);
+	    st = new ConfigStreamTokenizer(r);
+	    ChunkDescDB descdb = new ChunkDescDB();
+	    descdb.setName(f.getName());
+	    descdb.setFile (f);
+	    descdb.read(st);
+	    Core.addDescDB (descdb);
+	    return descdb.name;
+	}
+	catch (FileNotFoundException e) {
+	    Core.consoleErrorMessage ("FileControl", "File not found: " + e);
+	    return null;
+	}
     }
-    else {
-      f = new File (currentdir);
-    }
-    Core.consoleInfoMessage ("FileControl", "Loading Descriptions file: " + f);
-    try {
-      r = new FileReader (f);
-      st = new ConfigStreamTokenizer(r);
-      ChunkDescDB descdb = new ChunkDescDB();
-      descdb.setName(f.getName());
-      descdb.setFile (f);
-      descdb.read(st);
-      Core.addDescDB (descdb);
-      return descdb.name;
-    }
-    catch (FileNotFoundException e) {
-      Core.consoleErrorMessage ("FileControl", "File not found: " + e);
-      return null;
-    }
-  }
 
 
-  public static String saveDescDBFile (ChunkDescDB db) {
-    File f = requestSaveFile (db.file);
-    if (f == null)
-      return db.name;
-
-    try {
-      DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
-      out.writeBytes(db.fileRep());
-      Core.consoleInfoMessage ("FileControl", "Saved ChunkDesc File: " + f);
-
-      /* do some fixing up if the name changed */
-      db.setFile (f);
-      return Core.renameDescDB (db, f.getName());
+    public static String saveDescDBFile (ChunkDescDB db) {
+	File f = requestSaveFile (db.file);
+	if (f == null)
+	    return db.name;
+	
+	try {
+	    DataOutputStream out = 
+		new DataOutputStream(new FileOutputStream(f));
+	    out.writeBytes(db.fileRep());
+	    Core.consoleInfoMessage ("FileControl", 
+				     "Saved ChunkDesc File: " + f);
+	    /* do some fixing up if the name changed */
+	    db.setFile (f);
+	    return Core.renameDescDB (db, f.getName());
+	}
+	catch (IOException e) {
+	    Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
+	    return db.name;
+	}
     }
-    catch (IOException e) {
-      Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
-      return db.name;
-    }
-  }
 
+
+    //---------------- PERF FILE STUFF ------------------------
+
+    public static String loadNewPerfDataFile (String currentdir, 
+					      boolean showrequester) {
+	File f;
+	FileReader r;
+	StreamTokenizer st;
+
+	if (showrequester) {
+	    f = requestOpenFile(currentdir);
+	    if (f == null)
+		return null;
+	}
+	else {
+	    f = new File (currentdir);
+	}
+	Core.consoleInfoMessage ("FileControl", 
+				 "Loading Timing Data file: " + f);
+
+	try {
+	    r = new FileReader(f);
+	    st = new StreamTokenizer(r);
+	    st.eolIsSignificant (true);
+
+	    do {
+		st.nextToken();
+		//System.out.println ("foo" + st.ttype);
+	    } while (st.ttype != '\n');
+
+	    st.eolIsSignificant(false);
+	    st.quoteChar('"');
+
+	    Core.perf_collection.read (st);
+	    return new String ("unnamed perf data file");
+	}
+	catch (FileNotFoundException e) {
+	    Core.consoleErrorMessage ("FileControl", "File not found: " + e);
+	    return null;
+	}
+	catch (IOException e) {
+	    Core.consoleErrorMessage ("FileControl", "Loading error: " + e);
+	    return null;
+	}
+    }
+    
 
 
 }
