@@ -287,7 +287,7 @@ endif
 # ------------------------------------------------------------
 # Make the optimized version of the libraries that uses DSOs.
 # ------------------------------------------------------------
-dso: beforebuild _opt _check_gui afterbuild
+dso: beforebuild _dso _check_gui afterbuild
 
 _dso: _build_opt
 	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
