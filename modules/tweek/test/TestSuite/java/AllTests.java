@@ -18,6 +18,7 @@ public class AllTests
       TestSuite suite = new TestSuite("All Tweek JUnit tests");
 
       suite.addTest(BeanRegistryTest.suite());
+      suite.addTest(BeanLoaderTest.suite());
       suite.addTest(GlobalPreferencesServiceTest.suite());
 
       return suite;
