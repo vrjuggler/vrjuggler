@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-03-2004 pallindo    Tracked surfaces now track any positional device
+                        correctly.
+                        NEW VERSION: 1.1.149
 Dec-07-2003 allenb      Added vrj::App::latePreFrame()
                         NEW VERSION: 1.1.148
 Oct-06-2003 allenb      Fixed bug where resizing of glx windows was not
