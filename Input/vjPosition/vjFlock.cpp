@@ -5,6 +5,8 @@
 #include <Input/vjPosition/aFlock.h>
 #include <Input/vjPosition/vjFlock.h>
 
+#include <Math/vjCoord.h>
+
 #include <Kernel/vjDebug.h>
 
 //: Configure Constructor
@@ -20,26 +22,26 @@
 //   report - flock report rate.                         <BR>
 //   calfile - a calibration file, if "", then use none. <BR>
 //                                                       <BR>
-// Result: configures internal data members, 
+// Result: configures internal data members,
 //         doesn't actually talk to the FOB yet.
-vjFlock::vjFlock(const char* const port, 
-		const int& baud, 
-		const int& sync, 
-		const int& block, 
-		const int& numBrds, 
-		const int& transmit, 
-		const BIRD_HEMI& hemi, 
-		const BIRD_FILT& filt, 
-		const char& report, 
-		const char* const calfile) : mFlockOfBirds(port, 
-						    baud, 
-						    sync, 
-						    block, 
-						    numBrds, 
-						    transmit, 
-						    hemi, 
-						    filt, 
-						    report, 
+vjFlock::vjFlock(const char* const port,
+		const int& baud,
+		const int& sync,
+		const int& block,
+		const int& numBrds,
+		const int& transmit,
+		const BIRD_HEMI& hemi,
+		const BIRD_FILT& filt,
+		const char& report,
+		const char* const calfile) : mFlockOfBirds(port,
+						    baud,
+						    sync,
+						    block,
+						    numBrds,
+						    transmit,
+						    hemi,
+						    filt,
+						    report,
 						    calfile)
 {
 }
@@ -48,18 +50,18 @@ bool vjFlock::config(vjConfigChunk *c)
 {
     port_id = -1;
     myThread = NULL;
-    
+
     vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
-    
+
     // read in vjPosition's config stuff,
     // --> this will be the port and baud fields
     if (!vjPosition::config(c))
      return false;
-    
+
     // keep aFlock's port and baud members in sync with vjInput's port and baud members.
     mFlockOfBirds.setPort( vjInput::GetPort() );
     mFlockOfBirds.setBaudRate( vjInput::GetBaudRate() );
-    
+
     // set mFlockOfBirds with the config info.
     mFlockOfBirds.setSync( static_cast<int>(c->getProperty("sync")) );
     mFlockOfBirds.setBlocking( static_cast<int>(c->getProperty("blocking")) );
@@ -78,7 +80,7 @@ bool vjFlock::config(vjConfigChunk *c)
     }
     else
 	mFlockOfBirds.setReportRate( r );
-    
+
     // output what was read.
     vjDEBUG(0) << "	  Flock Settings: " << endl
 	       << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << endl
@@ -88,10 +90,10 @@ bool vjFlock::config(vjConfigChunk *c)
 	       << "	        aFlock::getPort()         : " << mFlockOfBirds.getPort() << endl
 	       << "		instance name : " << instName << endl
 	       << endl << vjDEBUG_FLUSH;
-    
+
     // init the correction table with the calibration file.
     mFlockOfBirds.initCorrectionTable( c->getProperty("calfile") );
- 
+
     return true;
 }
 
@@ -121,8 +123,8 @@ int vjFlock::StartSampling()
     {
 	vjDEBUG(0)  << "vjFlock was already started." << endl << vjDEBUG_FLUSH;
 	return 0;
-    } 
-    
+    }
+
     if (myThread == NULL)
     {
 	if (theData != NULL)
@@ -144,7 +146,7 @@ int vjFlock::StartSampling()
 	{
 	    vjDEBUG(0)  << "vjFlock failed to start.." << endl << vjDEBUG_FLUSH;
 	    return 0;
-	} 
+	}
 	
 	vjDEBUG(0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
 	
@@ -152,13 +154,13 @@ int vjFlock::StartSampling()
 	
 	myThread = new vjThread(SampleBirds, (void*) devicePtr, 0);
 	
-	if ( myThread == NULL ) 
+	if ( myThread == NULL )
 	{
 	    return 0;	// Fail
 	} else {
 	    return 1;   // success
 	}
-    } else 
+    } else
 	return 0; // already sampling
 
 }
@@ -167,7 +169,7 @@ int vjFlock::Sample()
 {
      if (this->isActive() == false)
      	return 0;
-     
+
      int i;
      int tmp;
 
@@ -181,11 +183,11 @@ int vjFlock::Sample()
       	int index = progress*(mFlockOfBirds.getNumBirds()+1)+i-1;
 	// Sets index to current read buffer
 
-      	theData[index].makeZYXEuler(mFlockOfBirds.zRot( i ), 
-				mFlockOfBirds.yRot( i ), 
+      	theData[index].makeZYXEuler(mFlockOfBirds.zRot( i ),
+				mFlockOfBirds.yRot( i ),
 				mFlockOfBirds.xRot( i ));
    	theData[index].setTrans(mFlockOfBirds.xPos( i ),
-				mFlockOfBirds.yPos( i ), 
+				mFlockOfBirds.yPos( i ),
 				mFlockOfBirds.zPos( i ));
       	
          if(i==1)
@@ -203,6 +205,8 @@ int vjFlock::Sample()
          if(i==1)
          {
              //cout << "\torig or:" << theData[index].orient;
+            //vjDEBUG(2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+
          }
 
 
@@ -218,6 +222,7 @@ int vjFlock::Sample()
 
          if(i==1)
          {
+            //vjDEBUG(2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
                 /*
                 cout << "\nnew or:" << theData[index].orient << flush;
 
@@ -244,7 +249,7 @@ int vjFlock::StopSampling()
 {
     if (this->isActive() == false)
 	return 0;
-    
+
     if (myThread != NULL)
     {
 	vjDEBUG(0) << "Stopping the flock thread..." << vjDEBUG_FLUSH;
@@ -266,7 +271,7 @@ int vjFlock::StopSampling()
 	
 	vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
     }
-    
+
     return 1;
 }
 
@@ -296,7 +301,7 @@ void vjFlock::UpdateData()
 
 void vjFlock::setHemisphere(const BIRD_HEMI& h)
 {
-    if (this->isActive()) 
+    if (this->isActive())
     {
 	vjDEBUG(0) << "Cannot change the hemisphere while active\n" << vjDEBUG_FLUSH;
 	return;
@@ -306,7 +311,7 @@ void vjFlock::setHemisphere(const BIRD_HEMI& h)
 
 void vjFlock::setFilterType(const BIRD_FILT& f)
 {
-  if (this->isActive()) 
+  if (this->isActive())
   {
       vjDEBUG(0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
       return;
@@ -316,7 +321,7 @@ void vjFlock::setFilterType(const BIRD_FILT& f)
 
 void vjFlock::setReportRate(const char& rRate)
 {
-  if (this->isActive()) 
+  if (this->isActive())
   {
       vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
@@ -326,7 +331,7 @@ void vjFlock::setReportRate(const char& rRate)
 
 void vjFlock::setTransmitter(const int& Transmit)
 {
-  if (this->isActive()) 
+  if (this->isActive())
   {
       vjDEBUG(0) << "Cannot change transmitter while active\n" << vjDEBUG_FLUSH;
       return;
@@ -335,7 +340,7 @@ void vjFlock::setTransmitter(const int& Transmit)
 }
 void vjFlock::setNumBirds(const int& n)
 {
-  if (this->isActive()) 
+  if (this->isActive())
   {
       vjDEBUG(0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
       return;
@@ -344,7 +349,7 @@ void vjFlock::setNumBirds(const int& n)
 }
 void vjFlock::setSync(const int& sync)
 {
-  if (this->isActive()) 
+  if (this->isActive())
   {
       vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
@@ -354,7 +359,7 @@ void vjFlock::setSync(const int& sync)
 
 void vjFlock::setBlocking(const int& blVal)
 {
-  if (this->isActive()) 
+  if (this->isActive())
   {
       vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
@@ -368,14 +373,14 @@ void vjFlock::setBlocking(const int& blVal)
 //  NOTE: flock.isActive() must be false to use this function
 void vjFlock::setPort( const char* const serialPort )
 {
-    if (this->isActive()) 
+    if (this->isActive())
     {
       vjDEBUG(0) << "Cannot change port while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mFlockOfBirds.setPort( serialPort );
-    
-    // keep vjInput's port and baud members in sync 
+
+    // keep vjInput's port and baud members in sync
     // with aFlock's port and baud members.
     vjInput::SetPort( serialPort );
 }
@@ -385,14 +390,14 @@ void vjFlock::setPort( const char* const serialPort )
 //  NOTE: flock.isActive() must be false to use this function
 void vjFlock::setBaudRate( const int& baud )
 {
-    if (this->isActive()) 
+    if (this->isActive())
     {
       vjDEBUG(0) << "Cannot change baud rate while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mFlockOfBirds.setBaudRate( baud );
-    
-    // keep vjInput's port and baud members in sync 
+
+    // keep vjInput's port and baud members in sync
     // with aFlock's port and baud members.
     vjInput::SetBaudRate( baud );
 }
