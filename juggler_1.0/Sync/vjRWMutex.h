@@ -2,7 +2,7 @@
 #define _VJRWMutex_h_
 
 #include <vjConfig.h>
-#include <Sync/vjSempahore.h>
+#include <Sync/vjSemaphore.h>
 #include <Sync/vjCond.h>
 #include <Sync/vjMutex.h>
 
@@ -22,8 +22,8 @@
 class vjRWMutex
 {
 public:
-    vjRWMutex () : waitingReaders(&lock),
-        waitingWriters(&lock),
+    vjRWMutex () : waitingReaders(&stateLock),
+        waitingWriters(&stateLock),
         refCount(0),
         numWaitingWriters(0),
         numWaitingReaders(0)
@@ -40,7 +40,7 @@ public:
     //! RETVAL:   1 - Aquired
     //! RETVAL:  -1 - Error
     //---------------------------------------------------------
-    int acquire() const
+    int acquire()
     {
         return aquireWrite();
     }
@@ -48,7 +48,7 @@ public:
     //----------------------------------------------------------
     //:  Aquire a read mutex
     //----------------------------------------------------------
-    int acquireRead() const
+    int acquireRead()
     {
         int retVal = 0;
         if (stateLock.aquire() == -1)
@@ -75,7 +75,7 @@ public:
     //----------------------------------------------------------
     //:  Aquire a write mutex
     //----------------------------------------------------------
-    int acquireWrite() const
+    int acquireWrite()
     {
         int retVal = 0;
         if (stateLock.aquire() == -1)
@@ -111,7 +111,7 @@ public:
     //!RETVAL:   1 - Aquired
     //!RETVAL:   0 - Not Aquired
     //---------------------------------------------------------
-    int tryAcquire () const
+    int tryAcquire ()
     {
         return tryAcquireWrite();
     }
@@ -119,7 +119,7 @@ public:
     //----------------------------------------------------------
     //:  Try to aquire a read mutex
     //----------------------------------------------------------
-    int tryAcquireRead () const
+    int tryAcquireRead ()
     {
         int retVal = -1;
 
@@ -140,7 +140,7 @@ public:
     //----------------------------------------------------------
     //:  Try to aquire a write mutex
     //----------------------------------------------------------
-    int tryAcquireWrite () const
+    int tryAcquireWrite ()
     {
         int retVal = -1;
 
@@ -153,7 +153,7 @@ public:
                 refCount = -1;
                 retVal = 0;
             }
-            lock.release();
+            stateLock.release();
         }
         return retVal;
     }
@@ -167,7 +167,7 @@ public:
     //!RETVAL:   0 - Success
     //!RETVAL:  -1 - Error
     //---------------------------------------------------------
-    int release() const
+    int release()
     {
         if (stateLock.acquire() == -1)
             return -1;
@@ -209,7 +209,7 @@ public:
     //------------------------------------------------------
     int test()
     {
-        return ustestlock(mutex);
+        return stateLock.test();
     }
 
 
@@ -221,7 +221,7 @@ public:
     //---------------------------------------------------------
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-        usdumplock(mutex, dest, message);
+        stateLock.dump();
     }
 
 
