@@ -35,17 +35,14 @@
 
 #include <string>
 
-#include <IO/Socket/SocketDatagramImp.h>
 #include <md/POSIX/SocketImpBSD.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpBSD : virtual public SocketImpBSD,
-                             virtual public SocketDatagramImp_i
-{
+class SocketDatagramImpBSD : public SocketImpBSD {
 public:
-    typedef SocketImpBSD parent;
+    typedef SocketImpBSD Parent;
 
     // ========================================================================
     // vpr::SocketDatagram implementation.

@@ -38,7 +38,7 @@
 #include <string>
 #include <vector>
 
-#include <IO/Socket/SocketImp.h>
+#include <IO/BlockIO.h>
 #include <md/POSIX/FileHandleUNIX.h>
 #include <IO/Socket/InetAddr.h>
 
@@ -51,7 +51,7 @@ typedef int socklen_t;
 
 namespace vpr {
 
-class SocketImpBSD : virtual public SocketImp_i {
+class SocketImpBSD : public BlockIO {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -242,7 +242,10 @@ protected:
     // ------------------------------------------------------------------------
     virtual ~SocketImpBSD(void);
 
-    FileHandleUNIX* m_handle;       //:
+    FileHandleUNIX*   m_handle;      //:
+    InetAddr          m_local_addr;  //: The local site's address structure
+    InetAddr          m_remote_addr; //: The remote site's address structure
+    SocketTypes::Type m_type;        //:
 };
 
 }; // End of vpr namespace
