@@ -213,8 +213,8 @@ links:
 	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_STATIC} ./
 	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_DYNAMIC} ./
 	${scriptdir}/mkinstalldirs ${instlinks}/bin
-	${INSTALL} -m 644 ${topdir}/GUI/VjCfg.jar ${instlinks}/bin
-	${INSTALL} -m 755 ${VJROOT_ABS}/GUI/editconfig ${instlinks}/bin/vjConfig
+	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjCfg.jar ./
+	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/editconfig ./vjConfig
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
