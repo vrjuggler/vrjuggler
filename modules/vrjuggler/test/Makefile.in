@@ -3,66 +3,22 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
-SHELL		= /bin/sh
-
-topdir		= @topdir@
-top_srcdir	= @top_srcdir@
-VJROOT		= ${top_srcdir}
-VJROOT_ABS	= @VJROOT_ABS@
-VJ_SRCDIR	= @VJ_SRCDIR@/test
-WORKDIR		= ${topdir}/test
-
-include @topdir@/Makefile.base
-
-SUBDIRS		= CfgTest input ogl pfNav Sync Quat
-
-@SET_MAKE@
-
 # -----------------------------------------------------------------------------
-# Library targets.
+# Build targets.
 # -----------------------------------------------------------------------------
-
 default: all
 
-all-recursive install-recursive depend-recursive newdepend-recursive	\
-CfgTest input ogl pfNav:
-	@set fnord ${MAKEFLAGS}; amf=$$2;				\
-            list='${SUBDIRS}';						\
-            for subdir in $$list; do					\
-                target=`echo $@ | sed s/-recursive//`;			\
-                echo "Making $$target in test/$$subdir";		\
-                (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
-                                    OBJDIR=${OBJDIR} $$target)		\
-                    || case "$$amf" in					\
-                         *=*) exit 1;;					\
-                         *k*) fail=yes;;				\
-                         *) exit 1;; esac;				\
-            done && test -z "$$fail"
+all: CfgTest input ogl pfNav Quat
 
-all: all-recursive
-
-depend: depend-recursive
-
-newdepend: newdepend-recursive
+CfgTest input ogl pfNav Quat::
+	cd $@ && ${MAKE} all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean-recursive:
-	@set fnord ${MAKEFLAGS}; amf=$$2;		\
-            rev=''; list='${SUBDIRS}';			\
-            for subdir in $$list; do			\
-                rev="$$subdir $$rev";			\
-            done;					\
-            for subdir in $$rev; do			\
-                target=`echo $@ | sed s/-recursive//`;	\
-                echo "Making $$target in $$subdir";	\
-                (cd $$subdir && ${MAKE} $$target)	\
-                    || case "$$amf" in			\
-                         *=*) exit 1;;			\
-                         *k*) fail=yes;;		\
-                         *) exit 1;;			\
-                       esac;				\
-            done && test -z "$$fail"
-
-clean: clean-recursive
+clean:
+	-cd CfgTest && ${MAKE} clean
+	-cd input   && ${MAKE} clean
+	-cd ogl     && ${MAKE} clean
+	-cd pfNav   && ${MAKE} clean
+	-cd Quat    && ${MAKE} clean
