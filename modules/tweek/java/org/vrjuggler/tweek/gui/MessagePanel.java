@@ -36,6 +36,7 @@
 
 package org.vrjuggler.tweek;
 
+import java.awt.event.*;
 import java.awt.Color;
 import java.util.Vector;
 import javax.swing.*;
@@ -140,7 +141,17 @@ public class MessagePanel
    private void jbInit ()
    {
       m_text_pane.setEditable(false);
+      m_text_pane.addMouseListener(new PopupListener());
+      mPopupClearItem.setText("Clear Messages");
+      mPopupClearItem.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            popupClearSelected(e);
+         }
+      });
       panel.getViewport().add(m_text_pane, null);
+      mMsgPanelMenu.add(mPopupClearItem);
    }
 
    private void initStyles ()
@@ -194,6 +205,31 @@ public class MessagePanel
       }
    }
 
+   void popupClearSelected (ActionEvent e)
+   {
+      clear();
+   }
+
+   // =========================================================================
+   // Private classes.
+   // =========================================================================
+
+   private class PopupListener extends MouseAdapter
+   {
+      public void mousePressed (MouseEvent e)
+      {
+         maybeShowPopup(e);
+      }
+
+      private void maybeShowPopup (MouseEvent e)
+      {
+         if ( e.isPopupTrigger() )
+         {
+            mMsgPanelMenu.show(e.getComponent(), e.getX(), e.getY());
+         }
+      }
+   }
+
    // =========================================================================
    // Private member variables.
    // =========================================================================
@@ -205,4 +241,7 @@ public class MessagePanel
    private int         m_last_index = 0;
 
    private SimpleAttributeSet[] m_styles = new SimpleAttributeSet[MSG_TYPE_COUNT];
+
+   private JPopupMenu mMsgPanelMenu   = new JPopupMenu();
+   private JMenuItem  mPopupClearItem = new JMenuItem();
 }
