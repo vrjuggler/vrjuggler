@@ -32,10 +32,12 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
 
    bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
 
-   int initial_num_pending = cfg_mgr->getNumPending();
+   // We need to track the number vefore and after to know if we changed anything
+   int num_pending_before = cfg_mgr->getNumPending();
+   int num_pending_after(0);
 
-   vjDEBUG_BEGIN(vjDBG_ALL,0) << typeid(*this).name() << "::configProcessPending: Entering: "
-                              << initial_num_pending << " items pending.\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_STATE_LVL) << typeid(*this).name() << "::configProcessPending: Entering: "
+                              << num_pending_before << " items pending.\n" << vjDEBUG_FLUSH;
 
    if(lockIt)
       cfg_mgr->lockPending();     // We need to lock the pending first
@@ -44,21 +46,18 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
       current = cfg_mgr->getPendingBegin();
       end = cfg_mgr->getPendingEnd();
 
+      // --- For each item in pending list --- //
       while(current != end)
       {
-         vjConfigChunk* cur_chunk = (*current).mChunk;
-
-         vjDEBUG_BEGINlg(vjDBG_ALL,1,false,true) << "Processing: item: " << cur_chunk->getProperty("name")
-                                                 << " type: " << ((std::string)cur_chunk->getType()).c_str() << vjDEBUG_FLUSH;
+         vjConfigChunk* cur_chunk = (*current).mChunk;         
          
-         // If we know about it
+         // If the current handler (this) knows about the chunk
          if(this->configCanHandle(cur_chunk))
          {                        
             // ---- HANDLE THE CHUNK ---- //
             switch ((*current).mType)
             {
-            case vjConfigManager::vjPendingChunk::ADD:         // CONFIG ADD
-               vjDEBUGlg(vjDBG_ALL,1,false,false) << " --> Config Add.\n" << vjDEBUG_FLUSH;
+            case vjConfigManager::vjPendingChunk::ADD:         // CONFIG ADD              
                if(dep_mgr->depSatisfied(cur_chunk))            // Are all the dependencies satisfied
                {
                   bool added = this->configAdd(cur_chunk);
@@ -68,18 +67,27 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                      current++;                          // Goto next item
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_chunk);      // Add it to the current config                     
-                     vjDEBUGlg(vjDBG_ALL,1,false,true) << "Successfully added." << vjDEBUG_FLUSH;
+                     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) 
+                                                 << "Pending item [ADD]: " << cur_chunk->getProperty("name")
+                                                 << " type: " << (std::string)cur_chunk->getType()
+                                                 << "  --> Successfully added.\n\n" << vjDEBUG_FLUSH;
                   }
                   else  // Failed to add
                   {
-                     vjDEBUGlg(vjDBG_ALL,1,false,true) << "failed to add correctly." << vjDEBUG_FLUSH;
+                     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) 
+                                                 << "Pending item [ADD]: " << cur_chunk->getProperty("name")
+                                                 << " type: " << (std::string)cur_chunk->getType()
+                                                 << "  --> failed to add correctly.\n\n" << vjDEBUG_FLUSH;
                      current++;
                   }
                }
                else     // Dependency failed
                {
-                  vjDEBUGlg(vjDBG_ALL,1,false,true) << "Dependencies are not loaded yet." << vjDEBUG_FLUSH;
-                  dep_mgr->debugOutDependencies(cur_chunk,1);
+                  vjDEBUG(vjDBG_ALL,vjDBG_WARNING_LVL) 
+                                                 << "Pending item [ADD]: " << cur_chunk->getProperty("name")
+                                                 << " type: " << (std::string)cur_chunk->getType()
+                                                 << "  -->  Config Add: Dependencies are not loaded yet.\n\n" << vjDEBUG_FLUSH;
+                  dep_mgr->debugOutDependencies(cur_chunk,vjDBG_WARNING_LVL);
                   current++;
                }
                break;
@@ -108,31 +116,35 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
             }            
          }    
          // ---- CAN'T HANDLE THE CHUNK --- //
-         else
+         else           // if(can_handle)
          {
-            vjDEBUGlg(vjDBG_ALL,1,false,false) << " --> Not handled by this handler." << vjDEBUG_FLUSH;
+            vjDEBUGlg(vjDBG_ALL,vjDBG_STATE_LVL,false,true) 
+                                                 << "Pending item: " << cur_chunk->getProperty("name")
+                                                 << " type: " << (std::string)cur_chunk->getType()
+                                                 << " --> Not handled by this handler.\n" << vjDEBUG_FLUSH;
             current++;
          }
-         
-         // Close of the processing begin
-         vjDEBUG_ENDlg(vjDBG_ALL,1,false,false) << endl << vjDEBUG_FLUSH;
-
+                  
       }        // END: while(current != end)
 
    }
    if(lockIt)
       cfg_mgr->unlockPending();   // Unlock it
 
-   vjDEBUG_END(vjDBG_ALL,0) << typeid(*this).name() << "::configProcessPending: Exiting: "
-                            << cfg_mgr->getNumPending() << " items now pending ==> We processed "
-                            << (initial_num_pending-cfg_mgr->getNumPending()) << " items.\n" << vjDEBUG_FLUSH;
+   num_pending_after = cfg_mgr->getNumPending();
 
+   vjDEBUG_END(vjDBG_ALL,vjDBG_STATE_LVL) 
+                                        << "              Exiting: "
+                                        << num_pending_after << " items now pending ==> We processed "
+                                        << (num_pending_before-num_pending_after) << " items.\n" << vjDEBUG_FLUSH;
+
+   // Check for items that have lost their dependencies dues to a remove item being processed
    if(scan_for_lost_dependants)
    {
-
+      cfg_mgr->scanForLostDependencies();
    }
 
-   return (initial_num_pending-cfg_mgr->getNumPending());
+   return (num_pending_before-num_pending_after);
 }
 
 

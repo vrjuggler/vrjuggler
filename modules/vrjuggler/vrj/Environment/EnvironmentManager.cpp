@@ -381,12 +381,12 @@ bool vjEnvironmentManager::acceptConnections() {
 
     listen_socket = new vjSocket ();
     if (!listen_socket->listen (Port)) {
-   vjDEBUG(vjDBG_ERROR,0) << "ERROR: Environment Manager couldn't open socket\n"
+   vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << "ERROR: Environment Manager couldn't open socket\n"
                 << vjDEBUG_FLUSH;
    return false;
     }
     else
-   vjDEBUG(vjDBG_ALL,0) << "Environment Manager accepting connections on port "
+   vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << "LISTENING: Environment Manager accepting connections on PORT "
          << Port << '\n' << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */

@@ -104,6 +104,14 @@ public:  // --- DEfault config handlers: (inherited from vjConfigChunkHandler) -
    // Default to not handling anything
    virtual bool configCanHandle(vjConfigChunk* chunk)
    { return false; }
+
+   //: Are any application dependencies satisfied
+   // If the application requires anything special of the system for successful 
+   // initialization, check it here.
+   // If retval == false, then the application will not be started yet
+   //    retval == true, application will be allowed to enter the system
+   virtual bool depSatisfied()
+   { return true; }
    
 protected:
    //! NOTE: Inherited from vjConfigChunkHandler

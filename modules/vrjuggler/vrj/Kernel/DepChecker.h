@@ -78,7 +78,7 @@ public:
    }
 
    // Write out the dependencies to the vjDEBUG macro
-   virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=1)
+   virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
    {
       vjDEBUG_BEGINlg(vjDBG_ALL,dbg_lvl,false,true) << "\n------------ Dependencies for: item: " << chunk->getProperty("name")
                                                  << " type: " << (std::string)chunk->getType()

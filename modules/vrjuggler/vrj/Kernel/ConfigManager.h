@@ -88,44 +88,10 @@ public:   // ----- PENDING LIST ----- //
    // Implements some logic that allows the pending list to become "stale"
    // If the pending list has been check a bunch of times and has had no
    // changes in size, then we start telling people not to check it because
-   bool pendingNeedsChecked()
-   { 
-      const int pending_repeat_limit(4);
-      int cur_pending_size(0);
-      bool ret_val(false);
+   bool pendingNeedsChecked();
 
-      mPendingCountMutex.acquire();
-      {
-         cur_pending_size = mPendingConfig.size();
-         if(cur_pending_size != mLastPendingSize)
-         {
-            ret_val = true;                           // Flag it for a check
-            mPendingCheckCount=0;                     // Reset the counter
-            mLastPendingSize = cur_pending_size;      // Keep track of size
-         }
-         else if(mPendingCheckCount < pending_repeat_limit)
-         {
-            ret_val = true;         // Less than count, so do a check
-            mPendingCheckCount++;   // Increment it
-            if(mPendingCheckCount == pending_repeat_limit)
-            {
-               vjDEBUG_BEGIN(vjDBG_ALL,0) << "vjConfigManager::pendingNeedsChecked: Pending list is now STALE."
-                                          << cur_pending_size << " items still in pending\n" << vjDEBUG_FLUSH;
-               lockPending();
-               debugDumpPending();     // Output the stale pending list
-               unlockPending();              
-            }
-         }
-         else
-         {
-            ret_val = false;
-         }         
-      }
-      mPendingCountMutex.release();
-
-      return ret_val;
-   }
-
+   //: Get the size of the pending list
+   //! CONCURRENCY: concurrent
    int getNumPending()
    { return mPendingConfig.size(); }
 
@@ -275,8 +241,12 @@ public:
    //: Scan the active list for items that don't have their dependencies filled
    //! POST: Any chunks in active with dependencies not filled are added to the 
    //+       the pending list. (A remove and an add are added to the pending)
-   void scanForLostDependencies();
-
+   //+       The remove item configChunk* == active configChunk*
+   //+       The add item configChunk* points to a copy of the chunk
+   //! NOTE: We add an add after the removal to allow for the object
+   //+       to re-enter the system after its dependencies have been satisfied
+   //! RETURNS: The number of lost dependencies found
+   int scanForLostDependencies();
 
 private:
    vjConfigChunkDB            mActiveConfig;   //: List of current configuration
