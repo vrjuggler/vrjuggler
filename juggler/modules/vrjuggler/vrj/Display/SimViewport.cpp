@@ -89,7 +89,7 @@ void SimViewport::updateProjections()
 void SimViewport::updateInternalData()
 {
    mHeadPos = *(mUser->getHeadPos());
-   mWandPos = *(mWand->getData());
+   mWandPos = *(mWand->getData());   
 
    mCameraPos = *(mCamera->getData());
    gmtl::invert(mCameraPos);

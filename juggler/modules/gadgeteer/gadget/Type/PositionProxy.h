@@ -49,6 +49,7 @@
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
+#include <gmtl/Output.h>
 
 
 namespace gadget
@@ -64,7 +65,7 @@ namespace gadget
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
-   PositionProxy() :  mUnitNum(-1), mETrans(false)   // , mFilter(NULL)
+   PositionProxy() :  mUnitNum(-1)
    {;}
 
    virtual ~PositionProxy() {}
@@ -79,8 +80,12 @@ public:
       {
           mPositionData = (mTypedDevice->getPositionData (mUnitNum));
 
+          //vprDEBUG(vprDBG_ALL,0) << "Proxy::updateData: mPosData:" << *(mPositionData.getPosition()) << "\n" << vprDEBUG_FLUSH;
+
+         /*
          if(mETrans)
             transformData();
+            */
 
          // Filter the data if there is an active filters
          /*
@@ -125,6 +130,8 @@ public:
          gmtl::identity(*mPositionData.getPosition());
       }
 
+      //vprDEBUG(vprDBG_ALL,0) << "Proxy::getData: mPosData:" << *(mPositionData.getPosition()) << "\n" << vprDEBUG_FLUSH;
+
       return mPositionData.getPosition();
    }
 
@@ -148,8 +155,10 @@ public:
    }
 
    /// Gets the transform being using by this proxy.
+   /*
    gmtl::Matrix44f& getTransform()
    { return mMatrixTransform; }
+   */
 
    /**
     * Transforms the data in mPosData.
@@ -164,7 +173,7 @@ public:
    void transformData()
    {
       //mPositionData.getPosition()->postMult(mMatrixTransform);
-      *(mPositionData.getPosition()) *= mMatrixTransform;   // post multiply
+      //*(mPositionData.getPosition()) *= mMatrixTransform;   // post multiply
    }
 
    static std::string getChunkType() { return "PosProxy"; }
@@ -185,9 +194,9 @@ public:
 
 private:
    PositionData      mPositionData;
-   gmtl::Matrix44f   mMatrixTransform; /**< reciever_t_modifiedReciever */
+   //gmtl::Matrix44f   mMatrixTransform; /**< reciever_t_modifiedReciever */
    int               mUnitNum;
-   bool              mETrans;          /**< Are transformation enabled? */
+   //bool              mETrans;          /**< Are transformation enabled? */
    //PositionFilter*   mFilter;          /**< A possible position filter to use */
 };
 

@@ -546,6 +546,7 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
          glEnable(GL_LIGHTING);
       // Draw the user's head
       glPushMatrix();
+         vprDEBUG(vprDBG_ALL,0) << "GLSim: headPos:" << sim_vp->getHeadPos() << "\n" << vprDEBUG_FLUSH;
          glMultMatrixf(sim_vp->getHeadPos().mData);
 
          //glEnable(GL_BLEND);
