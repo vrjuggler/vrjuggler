@@ -106,5 +106,9 @@ public class PropertyComponent extends JPanel
    {
       mColor = new_color;
    }
+   public Color getColor()
+   {
+      return mColor;
+   }
    protected Color mColor;
 }

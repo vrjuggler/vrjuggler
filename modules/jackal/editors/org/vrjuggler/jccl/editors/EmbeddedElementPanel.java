@@ -23,7 +23,8 @@ public class EmbeddedElementPanel extends ExpandablePanel
       mTypeButton.setIcon(mTypeIcon);
       
       // Create a panel for the embedded element.
-      PropertySheet new_sheet = new PropertySheet(elm, getNextColor());
+      //PropertySheet new_sheet = new PropertySheet(elm, getNextColor());
+      PropertySheet new_sheet = PropertySheetFactory.instance().makeSheet(elm, getNextColor());
       mComponent = new_sheet;
       
       // Set the border for an embedded element.
