@@ -78,6 +78,8 @@ vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& host_addr)
    char local_host_name[MAXHOSTNAMELEN + 1];
    vpr::ReturnStatus status;
 
+   bzero(local_host_name, sizeof(local_host_name));
+
    if ( gethostname(local_host_name, MAXHOSTNAMELEN) == 0 )
    {
       host_addr.setAddress(std::string(local_host_name), 0);
