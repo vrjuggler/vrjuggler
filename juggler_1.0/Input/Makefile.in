@@ -5,6 +5,10 @@
 
 default: all
 
+# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
+# '_clean' target to be run besides the standard 'clean' target.
+_LOCAL_CLEAN	= 1
+
 # Include common definitions.
 include @topdir@/Makefile.base
 
@@ -14,10 +18,6 @@ top_srcdir	= @top_srcdir@
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Input
 WORKDIR		= ${topdir}/Input
-
-# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
-# '_clean' target to be run besides the standard 'clean' target.
-_LOCAL_CLEAN	= 1
 
 # Prefix for recursive stuff.
 DIRPRFX		= Input/
