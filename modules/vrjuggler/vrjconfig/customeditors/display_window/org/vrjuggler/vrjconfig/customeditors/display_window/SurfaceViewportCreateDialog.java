@@ -125,19 +125,19 @@ public class SurfaceViewportCreateDialog
 
          if ( ll_corner[0] == lr_corner[0] )
          {
-            mPlaneChooser.setSelectedIndex(YZ_PLANE);
+            mPlaneChooser.setSelectedIndex(BACK_PLANE);
             wall_width  = ll_corner[2] - lr_corner[2];
             wall_height = ul_corner[1] - ll_corner[1];
          }
          else if ( ll_corner[2] == lr_corner[2] )
          {
-            mPlaneChooser.setSelectedIndex(XY_PLANE);
+            mPlaneChooser.setSelectedIndex(FRONT_PLANE);
             wall_width  = lr_corner[0] - ll_corner[0];
             wall_height = ul_corner[1] - ll_corner[1];
          }
          else if ( ll_corner[1] == ul_corner [1] )
          {
-            mPlaneChooser.setSelectedIndex(XZ_PLANE);
+            mPlaneChooser.setSelectedIndex(LEFT_PLANE);
             wall_width  = lr_corner[0] - ll_corner[0];
             wall_height = ll_corner[2] - lr_corner[2];
          }
@@ -191,17 +191,29 @@ public class SurfaceViewportCreateDialog
 
       Plane surface_plane = new Plane(wall_width, wall_height);
 
-      if ( mPlaneChooser.getSelectedIndex() == XY_PLANE )
+      if ( mPlaneChooser.getSelectedIndex() == FRONT_PLANE )
       {
          surface_plane.setOrientation(0.0, 0.0, 0.0);
       }
-      else if ( mPlaneChooser.getSelectedIndex() == YZ_PLANE )
+      else if ( mPlaneChooser.getSelectedIndex() == BACK_PLANE )
+      {
+         surface_plane.setOrientation(0.0, 180.0, 0.0);
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == LEFT_PLANE )
       {
          surface_plane.setOrientation(0.0, 90.0, 0.0);
       }
-      else if ( mPlaneChooser.getSelectedIndex() == XZ_PLANE )
+      else if ( mPlaneChooser.getSelectedIndex() == RIGHT_PLANE )
+      {
+         surface_plane.setOrientation(0.0, -90.0, 0.0);
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == BOTTOM_PLANE )
       {
          surface_plane.setOrientation(-90.0, 0.0, 0.0);
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == BOTTOM_PLANE )
+      {
+         surface_plane.setOrientation(90.0, 0.0, 0.0);
       }
       else
       {
@@ -269,13 +281,25 @@ public class SurfaceViewportCreateDialog
 
       try
       {
-         mPlaneImages[0] =
-            new ImageIcon(loader.getResource(img_base + "/xy-plane-icon.png"));
-         mPlaneImages[1] =
-            new ImageIcon(loader.getResource(img_base + "/yz-plane-icon.png"));
-         mPlaneImages[2] =
-            new ImageIcon(loader.getResource(img_base + "/xz-plane-icon.png"));
-         mPlaneImages[3] =
+         mPlaneImages[FRONT_PLANE] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/front-plane-icon.png"));
+         mPlaneImages[BACK_PLANE] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/back-plane-icon.png"));
+         mPlaneImages[LEFT_PLANE] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/left-plane-icon.png"));
+         mPlaneImages[RIGHT_PLANE] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/right-plane-icon.png"));
+         mPlaneImages[BOTTOM_PLANE] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/bottom-plane-icon.png"));
+         mPlaneImages[TOP_PLANE] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/top-plane-icon.png"));
+         mPlaneImages[CUSTOM_PLANE] =
             new ImageIcon(loader.getResource(img_base +
                                              "/custom-plane-icon.png"));
       }
@@ -315,39 +339,73 @@ public class SurfaceViewportCreateDialog
 
       try
       {
-         mCornerIcons[XY_PLANE][Plane.LL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xy-plane-ll.png"));
-         mCornerIcons[XY_PLANE][Plane.LR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xy-plane-lr.png"));
-         mCornerIcons[XY_PLANE][Plane.UR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xy-plane-ur.png"));
-         mCornerIcons[XY_PLANE][Plane.UL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xy-plane-ul.png"));
-         mCornerIcons[YZ_PLANE][Plane.LL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/yz-plane-ll.png"));
-         mCornerIcons[YZ_PLANE][Plane.LR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/yz-plane-lr.png"));
-         mCornerIcons[YZ_PLANE][Plane.UR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/yz-plane-ur.png"));
-         mCornerIcons[YZ_PLANE][Plane.UL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/yz-plane-ul.png"));
-         mCornerIcons[XZ_PLANE][Plane.LL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xz-plane-ll.png"));
-         mCornerIcons[XZ_PLANE][Plane.LR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xz-plane-lr.png"));
-         mCornerIcons[XZ_PLANE][Plane.UR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xz-plane-ur.png"));
-         mCornerIcons[XZ_PLANE][Plane.UL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/xz-plane-ul.png"));
+         mCornerIcons[FRONT_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/front-plane-ll.png"));
+         mCornerIcons[FRONT_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/front-plane-lr.png"));
+         mCornerIcons[FRONT_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/front-plane-ur.png"));
+         mCornerIcons[FRONT_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/front-plane-ul.png"));
+         mCornerIcons[BACK_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/back-plane-ll.png"));
+         mCornerIcons[BACK_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/back-plane-lr.png"));
+         mCornerIcons[BACK_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/back-plane-ur.png"));
+         mCornerIcons[BACK_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/back-plane-ul.png"));
+         mCornerIcons[LEFT_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/left-plane-ll.png"));
+         mCornerIcons[LEFT_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/left-plane-lr.png"));
+         mCornerIcons[LEFT_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/left-plane-ur.png"));
+         mCornerIcons[LEFT_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/left-plane-ul.png"));
+         mCornerIcons[RIGHT_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/right-plane-ll.png"));
+         mCornerIcons[RIGHT_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/right-plane-lr.png"));
+         mCornerIcons[RIGHT_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/right-plane-ur.png"));
+         mCornerIcons[RIGHT_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/right-plane-ul.png"));
+         mCornerIcons[BOTTOM_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/bottom-plane-ll.png"));
+         mCornerIcons[BOTTOM_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/bottom-plane-lr.png"));
+         mCornerIcons[BOTTOM_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/bottom-plane-ur.png"));
+         mCornerIcons[BOTTOM_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base +
+                                             "/bottom-plane-ul.png"));
+         mCornerIcons[TOP_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/top-plane-ll.png"));
+         mCornerIcons[TOP_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/top-plane-lr.png"));
+         mCornerIcons[TOP_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/top-plane-ur.png"));
+         mCornerIcons[TOP_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/top-plane-ul.png"));
          mCornerIcons[CUSTOM_PLANE][Plane.LL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/custom-plane-ll.png"));
+            new ImageIcon(loader.getResource(img_base +
+                                             "/custom-plane-ll.png"));
          mCornerIcons[CUSTOM_PLANE][Plane.LR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/custom-plane-lr.png"));
+            new ImageIcon(loader.getResource(img_base +
+                                             "/custom-plane-lr.png"));
          mCornerIcons[CUSTOM_PLANE][Plane.UR_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/custom-plane-ur.png"));
+            new ImageIcon(loader.getResource(img_base +
+                                             "/custom-plane-ur.png"));
          mCornerIcons[CUSTOM_PLANE][Plane.UL_CORNER] =
-            new ImageIcon(loader.getResource(img_base + "/custom-plane-ul.png"));
-         mCornerLabel.setIcon(mCornerIcons[mPlaneChooser.getSelectedIndex()][mCornerChooser.getSelectedIndex()]);
+            new ImageIcon(loader.getResource(img_base +
+                                             "/custom-plane-ul.png"));
+         mCornerLabel.setIcon(
+            mCornerIcons[mPlaneChooser.getSelectedIndex()][mCornerChooser.getSelectedIndex()]
+         );
       }
       catch(NullPointerException ex)
       {
@@ -426,12 +484,10 @@ public class SurfaceViewportCreateDialog
       mWallHeightField.setMinimumSize(new Dimension(40, 19));
       mWallHeightField.setPreferredSize(new Dimension(60, 19));
       mWallHeightField.addPropertyChangeListener(new SurfaceViewportCreateDialog_mWallHeightField_propertyChangeAdapter(this));
-      mCornerLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mCornerLabel.setHorizontalTextPosition(SwingConstants.LEADING);
       mCornerLabel.setLabelFor(mCornerPanel);
       mCornerLabel.setText("Set Single Corner");
-      mCornerLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-      mCornerLabel.setVerticalTextPosition(javax.swing.SwingConstants.CENTER);
+      mCornerLabel.setVerticalTextPosition(SwingConstants.TOP);
       mUnitsComboBox.addActionListener(new SurfaceViewportCreateDialog_mUnitsComboBox_actionAdapter(this));
       mPlaneChooser.addActionListener(new SurfaceViewportCreateDialog_mPlaneChooser_actionAdapter(this));
       mUnitsComboBox.setToolTipText("The units of measurement used for physical locations to be entered below");
@@ -565,15 +621,19 @@ public class SurfaceViewportCreateDialog
       }
    }
 
-   private static final int XY_PLANE = 0;
-   private static final int YZ_PLANE = 1;
-   private static final int XZ_PLANE = 2;
-   private static final int CUSTOM_PLANE = 3;
+   private static final int FRONT_PLANE  = 0;
+   private static final int BACK_PLANE   = 1;
+   private static final int LEFT_PLANE   = 2;
+   private static final int RIGHT_PLANE  = 3;
+   private static final int BOTTOM_PLANE = 4;
+   private static final int TOP_PLANE    = 5;
+   private static final int CUSTOM_PLANE = 6;
 
    private java.util.List mUnitsList = new java.util.ArrayList();
    private Double mConversionFactor = null;
 
-   private String[]    mPlaneLabels = {"XY", "YZ", "XZ", "Custom"};
+   private String[]    mPlaneLabels = {"Front", "Back", "Left", "Right",
+                                       "Bottom", "Top", "Custom"};
    private Integer[]   mIntArray    = new Integer[mPlaneLabels.length];
    private ImageIcon[] mPlaneImages = new ImageIcon[mPlaneLabels.length];
 
@@ -583,7 +643,7 @@ public class SurfaceViewportCreateDialog
 
    private String[] mCorners = new String[4];
 
-   private ImageIcon[][] mCornerIcons = new ImageIcon[4][4];
+   private ImageIcon[][] mCornerIcons = new ImageIcon[mPlaneLabels.length][4];
 
    private TitledBorder mBoundsPanelBorder;
    private TitledBorder mUserPanelBorder;
