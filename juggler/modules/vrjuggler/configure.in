@@ -768,9 +768,19 @@ LIBS="$LIBS -l$XERCES_LIB"
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-AC_CHECK_HEADER(util/PlatformUtils.hpp, ,
+AC_CHECK_HEADER(util/XercesDefs.hpp, ,
     AC_MSG_ERROR(*** Xerces-C headers not found ***))
 
+# Extract the full Xerces version number and transform it into the form x.y.z.
+changequote(<<, >>)
+xerces_ver_str=`grep gXercesFullVersionStr $XERCESROOT/include/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
+changequote([, ])
+
+DPP_VERSION_CHECK_MSG(Xerces C++, $xerces_ver_str, 1.5.1,
+                      acp_cv_xerces_c_version_okay, ,
+                      AC_MSG_ERROR(*** Xerces-C version too old ***))
+
+# Finally, check that the library actually exists where we expect it to be.
 AC_CACHE_CHECK(for XMLPlatformUtils::Initialize in $XERCES_LIB,
     ac_cv_initialize_in_xerces_c,
     AC_TRY_LINK([#include <util/PlatformUtils.hpp> ],
