@@ -202,7 +202,7 @@ all-abi:
           done
 
 # Make the debugging version of the libraries.
-dbg: _build_dbg gui
+dbg: _build_dbg _check_gui
 	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -216,7 +216,7 @@ endif
 	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
 
 # Make the debugging version of the libraries that uses DSOs.
-ddso: _build_dbg gui
+ddso: _build_dbg _check_gui
 	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -230,7 +230,7 @@ endif
 	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
 
 # Make the optimized version of the libraries.
-opt: _build_opt gui
+opt: _build_opt _check_gui
 	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -244,7 +244,7 @@ endif
 	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
 
 # Make the optimized version of the libraries that uses DSOs.
-dso: _build_opt gui
+dso: _build_opt _check_gui
 	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -294,6 +294,11 @@ obj:
 	@echo "------------------------------------------------"
 
 # Build the Java-based configuration GUI.
+_check_gui:
+	@if [ ! -e ${topdir}/GUI/VjCfg.jar ] ; then	\
+            ${MAKE} gui					\
+        fi
+
 gui:
 ifeq (@BUILD_GUI@, yes)
 	@echo "------------------------------------------------"
@@ -545,7 +550,7 @@ install-data:
 	@echo "------------------------------------------------"
 	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -o ${prefix}/Data
 
-install-gui: gui
+install-gui: _check_gui
 ifeq (@BUILD_GUI@, yes)
 	@echo "------------------------------------------------"
 	@echo "Installing vjConfig"
