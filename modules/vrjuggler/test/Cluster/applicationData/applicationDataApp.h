@@ -104,7 +104,6 @@ private:
    void initGLState();
 
    void drawCube();
-
 private:
    gadget::PositionInterface    mWand;
    gadget::PositionInterface    mHead;
@@ -120,6 +119,7 @@ private:
     * writeObject functions somewhere in our application.
     */
    cluster::UserData< vpr::SerializableObjectMixin<MyType> >  mMyData;
+   cluster::UserData< vpr::SerializableObjectMixin<MyType> >  mMyDataCopy;
    std::vector<gmtl::Vec3f>     mHeadHistory;
 };
 

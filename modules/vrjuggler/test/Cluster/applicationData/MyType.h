@@ -31,7 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vpr/IO/SerializableObject.h>
-
+namespace vrjTest
+{
+   
 struct MyType
 {
    int something;
@@ -40,7 +42,7 @@ struct MyType
    bool drawBool;
 };
 
-template<class MyType>
+/*template<class MyType>
 vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
 { 
    writer->writeUint16(something);  
@@ -52,5 +54,5 @@ vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectRe
 {
    something = reader->readUint16();
    drawBool = reader->readBool();
+}*/
 }
-

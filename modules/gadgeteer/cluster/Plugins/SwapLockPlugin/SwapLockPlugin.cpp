@@ -34,7 +34,6 @@
 
 #include <cluster/Plugins/SwapLockPlugin/SwapLockPlugin.h> // my header...
 #include <cluster/Plugins/SwapLockPlugin/ClusterBarrier.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>

@@ -33,6 +33,8 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <cluster/ClusterManager.h>
+
 #ifdef HAVE_EXT_FUNCTIONAL
 #include <ext/functional>
 #else
@@ -1267,7 +1269,7 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
 
     // Barrier for Cluster
     //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
-//    gadget::InputManager::instance()->getRemoteInputManager()->createBarrier();
+   cluster::ClusterManager::instance()->createBarrier();
     //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
     pw->swapBuffers();
