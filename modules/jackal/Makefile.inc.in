@@ -376,12 +376,12 @@ install-data:
 install-vjcontrol:
 ifdef NO_JAVA
 	@echo "------------------------------------------------"
-	@echo "Skipping installation of VjControl (not built)"
+	@echo "Skipping installation of editor Beans (not built)"
 	@echo "------------------------------------------------"
 else
 ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
-	@echo "Installing VjControl"
+	@echo "Installing configuration editor Beans"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
