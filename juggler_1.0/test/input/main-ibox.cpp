@@ -1,18 +1,20 @@
 #include <iostream.h>
 #include <iomanip.h>
+#include <unistd.h>
 
 #include <SharedMem/vjMemPool.h>
 //#include <SharedMem/vjSharedType.h>
-//#include <Input/C2Position/Birdy.h>
+#include <Input/vjInput/vjIbox.h>
+#include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
 
 int main()
 {
   vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
   
-  IBox* t1 = new(anSgiPool) IBox;
+  vjIBox* t1 = new(anSgiPool) vjIBox;
  
-  C2IBOX_DATA *data;
+  vjIBOX_DATA *data;
 
   char achar;
   cout << "U - Update\n"
