@@ -51,13 +51,6 @@ DPP_STD_CPP(yes)
 # Define the binary format.
 DPP_ABI_SETUP
 
-# Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER(5.004)
-
-dnl ignore the nasty paths appended by the config scripts...
-saveCXXFLAGS="$CXXFLAGS"
-saveINCLUDES="$INCLUDES"
-
 # -----------------------------------------------------------------------------
 # Path setup.
 # -----------------------------------------------------------------------------
@@ -71,33 +64,6 @@ SNXROOT_ABS=`pwd`
 cd "$SNXROOT_ABS/../.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
-
-# -----------------------------------------------------------------------------
-# Checks for libraries.
-# -----------------------------------------------------------------------------
-#VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for sonix***))
-#CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
-
-dnl ignore the nasty paths appended by the config scripts...
-#CXXFLAGS="$saveCXXFLAGS"
-#INCLUDES="-I${VJ_BASE_DIR}/include -I${VPR_BASE_DIR}/include  $saveINCLUDES"
-#if test "x$PLATFORM" = "xIRIX" ; then
-#   INCLUDES="-I${VPR_BASE_DIR}/include/boost/compatibility/cpp_c_headers $INCLUDES"
-#fi
-
-# find and append GMTL flags...
-vjsave_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.0.5, [$JUGGLERROOT_ABS/external/GMTL],
-          [$JUGGLERROOT_ABS/external/GMTL], ,
-          [AC_MSG_ERROR([*** GMTL required for sonix ***])])
-CPPFLAGS="$vjsave_CPPFLAGS"
-CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
-
-DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
-
-DPP_SYSTEM_SUBST
-DPP_SUBST
 
 dnl ===========================================================================
 dnl Define macros useful when working in a Win32/DOS-based environment.
@@ -146,9 +112,6 @@ DPP_SYSTEM_SETUP
 # -----------------------------------------------------------------------------
 CC_ERR=''
 CXX_ERR=''
-
-_snx_save_CFLAGS="$CFLAGS"
-_snx_save_CXXFLAGS="$CXXFLAGS"
 
 # If no alternate C compiler was specified, check to see if it is necessary
 # to force the use of a specific compiler on a given platform.
@@ -206,7 +169,37 @@ if test "x$GXX" = "xyes" ; then
     DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** project requires a modern G++ ***))
 fi
 
+# -----------------------------------------------------------------------------
+# Checks for libraries.
+# -----------------------------------------------------------------------------
+
+dnl ignore the nasty paths appended by the config scripts...
+saveCXXFLAGS="$CXXFLAGS"
+saveINCLUDES="$INCLUDES"
+
+#VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for sonix***))
+#CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
+
+dnl ignore the nasty paths appended by the config scripts...
+#CXXFLAGS="$saveCXXFLAGS"
+#INCLUDES="-I${VJ_BASE_DIR}/include -I${VPR_BASE_DIR}/include  $saveINCLUDES"
+#if test "x$PLATFORM" = "xIRIX" ; then
+#   INCLUDES="-I${VPR_BASE_DIR}/include/boost/compatibility/cpp_c_headers $INCLUDES"
+#fi
+
+# find and append GMTL flags...
+vjsave_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $STDFLAGS"
+GMTL_PATH(0.0.5, [$JUGGLERROOT_ABS/external/GMTL],
+          [$JUGGLERROOT_ABS/external/GMTL], ,
+          [AC_MSG_ERROR([*** GMTL required for sonix ***])])
+CPPFLAGS="$vjsave_CPPFLAGS"
+CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
+
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
+
+# Ensure that a version of Perl greater than or equal to 5.004 is available.
+DPP_PERL_VER(5.004)
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
