@@ -71,7 +71,7 @@ char* filename = NULL;
 class pfNavJugglerApplication : public vjPfApp
 {
 public:
-   pfNavJugglerApplication( vjKernel* kern ) : mFpsEmitCount(0), vjPfApp( kern )
+   pfNavJugglerApplication( vjKernel* kern ) : mStatusMessageEmitCount(0), vjPfApp( kern )
    {
       // get a valid time on the stopwatch...
       stopWatch.stop();
@@ -132,23 +132,24 @@ public:
       pfDCS*  world_model_dcs = new pfDCS;
 
       // CONFIG PARAMS
-      std::string    pf_file_path("");
-      const float    world_dcs_scale(1.0f);
-      const pfVec3   world_dcs_trans(0.0,5.0,0.0f);
-      vjVec3         initial_nav_pos(0,6,0);
-      bool           use_gravity(true);
+      std::string    pf_file_path( "" );
+      const float    world_dcs_scale( 1.0f );
+      const pfVec3   world_dcs_trans( 0.0f, 0.0f, 0.0f );
+      vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f );
+      bool           use_gravity( true );
 
       // Create the SUN
       sun1 = new pfLightSource;
-      sun1->setPos(0.3f, 0.0f, 0.3f, 0.0f);
-      sun1->setColor(PFLT_DIFFUSE,0.3f,0.0f,0.95f);
-      sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.4f);
-      sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
+      sun1->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
+      sun1->setColor( PFLT_DIFFUSE,0.3f,0.0f,0.95f );
+      sun1->setColor( PFLT_AMBIENT,0.4f,0.4f,0.4f );
+      sun1->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
       sun1->on();
 
       /// Load SIMPLE geometry
-      pfFileIO::addFilePath(".:/usr/share/Performer/data:/usr/share/Performer/data/town");
-      pfFileIO::addFilePath(pf_file_path);
+      // add some common file paths.
+      pfFileIO::addFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town");
+      pfFileIO::addFilePath( pf_file_path );
 
       // LOAD file
       world_model = pfFileIO::autoloadFile( filename );
@@ -158,11 +159,11 @@ public:
       // rootNode -- mNavigationDCS -- world_model_dcs -- world_model
       //
       rootNode->addChild( mNavigationDCS );
-      world_model_dcs->addChild(world_model);
-      world_model_dcs->setScale(world_dcs_scale);
-      world_model_dcs->setTrans(world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
-      mNavigationDCS->addChild(sun1);
-      mNavigationDCS->addChild(world_model_dcs);
+      world_model_dcs->addChild( world_model);
+      world_model_dcs->setScale( world_dcs_scale);
+      world_model_dcs->setTrans( world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
+      mNavigationDCS->addChild( sun1 );
+      mNavigationDCS->addChild( world_model_dcs );
 
       // Configure the Navigator DCS node:
       vjMatrix initial_nav;              // Initial navigation position
@@ -231,10 +232,6 @@ public:
 
       // tell the navigator to update itself with any new instructions just given to it.
       mNavigator.update();
-
-      // Output current position in environment
-      vjVec3 cur_pos = mNavigator.getTrans();
-      cout << "Cur pos:" << cur_pos << endl;
    }
 
    /// Function called after pfSync and before pfDraw
@@ -252,15 +249,21 @@ public:
       mNavigationDCS->setMat( mNavigator_pf );
 
       // output the FPS so the team artist can get metrics on their model
-      ++mFpsEmitCount;
-      if (mFpsEmitCount >= 15)
+      ++mStatusMessageEmitCount;
+      if (mStatusMessageEmitCount >= 15)
       {
+         // output FPS...
          cout<<"FPS: "<<stopWatch.fpsAverage<<"\n"<<flush;
-         mFpsEmitCount = 0;
+         
+         // Output current position in environment
+         vjVec3 cur_pos = mNavigator.getTrans();
+         cout << "Cur pos:" << cur_pos << endl;
+         
+         mStatusMessageEmitCount = 0;
       }
    }
 
-   int mFpsEmitCount;
+   int mStatusMessageEmitCount;
    StopWatch stopWatch;
 
    /// Function called after pfDraw
