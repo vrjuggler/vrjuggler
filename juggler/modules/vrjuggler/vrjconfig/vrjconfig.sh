@@ -48,6 +48,14 @@ if test "x$TWEEK_BASE_DIR" = "x" ; then
     export TWEEK_BASE_DIR
 fi
 
+# If $JCCL_BASE_DIR is not set, fall back on the value of $VJ_BASE_DIR.  This
+# is a reasonable default.
+if test "x$JCCL_BASE_DIR" = "x" ; then
+    echo "NOTE: Setting JCCL_BASE_DIR to $VJ_BASE_DIR"
+    JCCL_BASE_DIR="$VJ_BASE_DIR"
+    export JCCL_BASE_DIR
+fi
+
 # If $JCCL_DEFINITION_PATH is not set, use the standard location for .jdef
 # files used by VR Juggler.
 if test "x$JCCL_DEFINITION_PATH" = "x" ; then
@@ -56,7 +64,7 @@ if test "x$JCCL_DEFINITION_PATH" = "x" ; then
     export JCCL_DEFINITION_PATH
 fi
 
-EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
+EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
 
 . $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean="Configuration Editor" "$@"
 
