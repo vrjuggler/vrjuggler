@@ -36,6 +36,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.config.DescEnum;
 import org.vrjuggler.jccl.config.PropertyDesc;
 import org.vrjuggler.jccl.config.ValType;
 
@@ -88,6 +89,20 @@ public class PropertyValueRenderer
             btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             comp = btn;
+         }
+
+         // If the value has enumerated values, render the name instead
+         else if (desc.getNumEnums() > 0 && desc.getValType() != ValType.CHUNK)
+         {
+            for (int i=0; i<desc.getNumEnums(); ++i)
+            {
+               DescEnum de = desc.getEnumAt(i);
+               if (de.getValue().get().equals(value))
+               {
+                  setText(de.getName());
+                  break;
+               }
+            }
          }
       }
       return comp;
