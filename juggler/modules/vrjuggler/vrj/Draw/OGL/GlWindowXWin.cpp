@@ -178,7 +178,9 @@ int GlWindowXWin::open()
             << std::endl << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
-   
+
+      createEmptyCursor(mXDisplay, mXWindow);
+
       /***************** Set Window Name/Class/Size/Pos *********************/
    
       /* Before we map the window, we need a name for it (this is also useful for
