@@ -47,7 +47,7 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
 #TWEEK_JARS	= @TWEEK_JARS@
 #JCCL_JARS	= @JCCL_JARS@
-TWEEK_JARS = $(shell $(TWEEK_BASE_DIR/bin/tweek-config --jars)
+TWEEK_JARS = $(shell $(TWEEK_BASE_DIR)/bin/tweek-config --jars)
 JCCL_JARS = $(JCCL_BASE_DIR)/bin/beans/jccl_config.jar$(JCPS)$(JCCL_BASE_DIR)/bin/beans/jccl_editors.jar
 CLASSPATH	= $(JCCL_JARS)$(JCPS)$(TWEEK_JARS)
 
