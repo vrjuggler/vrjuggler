@@ -98,6 +98,9 @@ public:
    {
       newSceneViewer->setDefaults();
       newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+      // Needed for stereo to work.
+      newSceneViewer->setDrawBufferValue(GL_NONE);
    }
 
    /**
