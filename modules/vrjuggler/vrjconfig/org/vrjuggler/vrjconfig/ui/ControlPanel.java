@@ -115,6 +115,7 @@ public class ControlPanel
     */
    public void setWatermark(Icon watermark)
    {
+      System.out.println("Setting watermark.");
       Icon old = getWatermark();
       this.watermark.setIcon(watermark);
       firePropertyChange("watermark", old, watermark);
@@ -190,7 +191,7 @@ public class ControlPanel
       // Add in the new items
       for (int i=0; i<model.getSize(); ++i)
       {
-         ControlPanelItem item = new ControlPanelItem(model.getElementAt(i),
+         ControlPanelItem item = new ControlPanelItem(model.getLabelAt(i),
                                                       model.getIconAt(i));
          item.addActionListener(actionListener);
          iconPanel.add(item);
@@ -208,7 +209,6 @@ public class ControlPanel
          int h = watermark.getIcon().getIconHeight();
          watermark.setLocation(newSize.width - w, newSize.height - h);
       }
-
       super.setSize(newSize);
    }
 
@@ -220,12 +220,12 @@ public class ControlPanel
    {
       actionBox = Box.createVerticalBox();
       this.setLayout(baseLayout);
-//      defaultLayer.setLayout(defaultLayerLayout);
+      defaultLayer.setLayout(defaultLayerLayout);
       titleLbl.setFont(new Font("sans serif", Font.BOLD, 32));
       titleLbl.setText("");
       titleLbl.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 0));
       titleLbl.setForeground(Color.black);
-      iconPanel.setOpaque(true);
+      iconPanel.setOpaque(false);
       iconPanel.setBackground(Color.white);
       actionPanel.setLayout(actionPanelLayout);
       actionPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)));
@@ -235,21 +235,107 @@ public class ControlPanel
       iconPanelLayout.setVerticalGap(15);
       iconPanel.setLayout(iconPanelLayout);
       iconPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-//      this.add(layeredPane, BorderLayout.CENTER);
-//      layeredPane.add(defaultLayer, JLayeredPane.DEFAULT_LAYER);
-      this.add(actionPanel,  BorderLayout.WEST);
+      this.add(layeredPane, BorderLayout.CENTER);
+      //layeredPane.add(defaultLayer, JLayeredPane.DEFAULT_LAYER);
+      //this.add(actionPanel,  BorderLayout.WEST);
       actionPanel.add(actionBox, BorderLayout.NORTH);
-      this.add(iconBasePanel, BorderLayout.CENTER);
+
+
+        Point origin = new Point(10, 20);
+        /*
+
+        //This is the offset for computing the origin for the next label.
+        int offset = 35;
+        */
+
+        //Add several overlapping, colored labels to the layered pane
+        //using absolute positioning/sizing.
+        ClassLoader loader = BeanJarClassLoader.instance();
+        
+        //Icon icon = new
+        //   ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png"));
+        s_image.setImageFile(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png"));
+        //watermark.setIcon(icon);
+        //watermark.setVerticalAlignment(JLabel.CENTER);
+        //watermark.setHorizontalAlignment(JLabel.CENTER);
+        //watermark.setOpaque(true);
+        //watermark.setBounds(0, 0, 500, 500);
+        s_image.setOpaque(true);
+        s_image.setBounds(0, 0, 500, 500);
+        
+        //layeredPane.add(defaultLayer, JLayeredPane.DEFAULT_LAYER);
+        //layeredPane.add(watermark, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(s_image, JLayeredPane.DEFAULT_LAYER);
+
+
+      
       iconBasePanel.add(titleLbl, BorderLayout.NORTH);
       iconBasePanel.add(iconPanel, BorderLayout.CENTER);
-//      layeredPane.add(watermark, new Integer(-1));
+      iconBasePanel.setOpaque(false);
+      iconBasePanel.setBounds(0, 0, 500, 500);
+      layeredPane.add(iconBasePanel, JLayeredPane.DRAG_LAYER);
+    
+      
+        //defaultLayer.setOpaque(true);
+        //defaultLayer.setBounds(0, 0, getWidth(), getHeight());
+
+        //defaultLayer.add(watermark);
+        /*
+        for (int i = 0; i < layerStrings.length; i++) {
+            JLabel label = createColoredLabel(layerStrings[i],
+                                              layerColors[i], origin);
+            layeredPane.add(label, new Integer(i));
+            origin.x += offset;
+            origin.y += offset;
+        }
+        */
+      addComponentListener(new ComponentAdapter()
+            {
+               public void componentShown(ComponentEvent e)
+               {
+                  fixme();
+                  System.out.println("Calling fixme");
+               }
+            });
+   }
+   private void fixme()
+   {
+      Image im =
+         ((ImageIcon)watermark.getIcon()).getImage().getScaledInstance(this.getWidth(),
+                                                             this.getHeight(),
+                                                             Image.SCALE_FAST);
+      ((ImageIcon)watermark.getIcon()).setImage(im);
    }
 
+    private String[] layerStrings = { "Yellow (0)", "Magenta (1)",
+                                      "Cyan (2)",   "Red (3)",
+                                      "Green (4)" };
+    private Color[] layerColors = { Color.yellow, Color.magenta,
+                                    Color.cyan,   Color.red,
+                                    Color.green };
+       //Create and set up a colored label.
+    private JLabel createColoredLabel(String text,
+                                      Color color,
+                                      Point origin) {
+        JLabel label = new JLabel(text);
+        label.setVerticalAlignment(JLabel.TOP);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setOpaque(true);
+        label.setBackground(color);
+        label.setForeground(Color.black);
+        label.setBorder(BorderFactory.createLineBorder(Color.black));
+        label.setBounds(origin.x, origin.y, 140, 140);
+
+        return label;
+    }
+
+
+   
    //--- JBuilder automatically generated UI variables ---//
    private BorderLayout baseLayout = new BorderLayout();
-//   private JLayeredPane layeredPane = new JLayeredPane();
-//   private BorderLayout defaultLayerLayout = new BorderLayout();
-//   private JPanel defaultLayer = new JPanel();
+   private JLayeredPane layeredPane = new JLayeredPane();
+   private BorderLayout defaultLayerLayout = new BorderLayout();
+   private JPanel defaultLayer = new JPanel();
    private JLabel titleLbl = new JLabel();
    private JPanel actionPanel = new JPanel();
    private BorderLayout actionPanelLayout = new BorderLayout();
@@ -259,7 +345,8 @@ public class ControlPanel
    private JPanel iconPanel = new JPanel();
    private ControlPanelLayout iconPanelLayout = new ControlPanelLayout();
    private JLabel watermark = new JLabel();
-
+   private SImage s_image = new SImage();
+   
    /**
     * The data model describing this control panel.
     */
@@ -292,7 +379,7 @@ public class ControlPanel
       {
          for (int i=evt.getIndex0(); i<=evt.getIndex1(); ++i)
          {
-            ControlPanelItem item = new ControlPanelItem(model.getElementAt(i),
+            ControlPanelItem item = new ControlPanelItem(model.getLabelAt(i),
                                                          model.getIconAt(i));
             item.addActionListener(actionListener);
             iconPanel.add(item, i);
@@ -314,7 +401,7 @@ public class ControlPanel
          for (int i=evt.getIndex0(); i<=evt.getIndex1(); ++i)
          {
             ControlPanelItem item = (ControlPanelItem)iconPanel.getComponent(i);
-            item.setValue(model.getElementAt(i));
+            item.setLabel(model.getLabelAt(i));
             item.setIcon(model.getIconAt(i));
          }
       }
@@ -329,7 +416,7 @@ public class ControlPanel
       public void actionPerformed(ActionEvent evt)
       {
          ControlPanelItem item = (ControlPanelItem)evt.getSource();
-         int idx = model.getIndexOf(item.getValue());
+         int idx = model.getIndexOf(item.getLabel());
 
          // Sanity check that the item we got an event for is in the model
          if (idx != -1)
@@ -346,7 +433,7 @@ public class ControlPanel
    private class ControlPanelItem
       extends JComponent
    {
-      public ControlPanelItem(Object value, Icon icon)
+      public ControlPanelItem(String label, Icon icon)
       {
          // init the UI
          setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -365,7 +452,7 @@ public class ControlPanel
             public void actionPerformed(ActionEvent evt)
             {
                // Forward on to interested parties
-               fireAction(String.valueOf(ControlPanelItem.this.value));
+               fireAction(String.valueOf(ControlPanelItem.this.label));
             }
          });
          labelBtn.addActionListener(new ActionListener()
@@ -373,7 +460,7 @@ public class ControlPanel
             public void actionPerformed(ActionEvent evt)
             {
                // Forward on to interested parties
-               fireAction(String.valueOf(ControlPanelItem.this.value));
+               fireAction(String.valueOf(ControlPanelItem.this.label));
             }
          });
 
@@ -383,19 +470,19 @@ public class ControlPanel
          add(labelBtn);
 
          // setup the default values
-         setValue(value);
+         setLabel(label);
          setIcon(icon);
       }
 
-      public Object getValue()
+      public String getLabel()
       {
-         return value;
+         return label;
       }
 
-      public void setValue(Object newValue)
+      public void setLabel(String newLabel)
       {
-         this.value = newValue;
-         labelBtn.setText((this.value == null) ? "" : this.value.toString());
+         this.label = newLabel;
+         labelBtn.setText((this.label == null) ? "" : this.label);
       }
 
       public Icon getIcon()
@@ -438,7 +525,7 @@ public class ControlPanel
       /**
        * The value object being represented by this item.
        */
-      private Object value;
+      private String label;
 
       private JButton iconBtn = new JButton();
       private JButton labelBtn = new JButton();
