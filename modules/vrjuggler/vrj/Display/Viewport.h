@@ -37,7 +37,7 @@
 
 #include <vrj/Math/Vec3.h>
 #include <vrj/Kernel/User.h>
-#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
+#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vrj/Kernel/Kernel.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
@@ -65,26 +65,23 @@ class Viewport
 public:
    Viewport()
       : mUser(NULL), mDisplay(NULL), mViewportChunk(NULL),
-        mLeftProj(NULL), mRightProj(NULL)
+        mLeftProj(NULL), mRightProj(NULL), mLatencyMeasure ()
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = Viewport::UNDEFINED;
       mActive = false;
-      mLatencyMeasure = 0;
    }
 
    virtual ~Viewport()
-   {
-       if (mLatencyMeasure)
-           Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->releasePerfDataBuffer(mLatencyMeasure);
+   {;}
+
+
+   void recordLatency (int trackertimeindex, int currenttimeindex) {
+      vpr::Interval it = mUser->getHeadUpdateTime();
+      mLatencyMeasure.set (jcclPERF_ALL, "Head tracking timestamp (ignore)",
+                           it);
+      mLatencyMeasure.set (jcclPERF_ALL, "tracking latency");
    }
-
-
-    void recordLatency (int trackertimeindex, int currenttimeindex) {
-        jccl::TimeStamp ts = mUser->getHeadUpdateTime();
-        mLatencyMeasure->set (trackertimeindex, ts);
-        mLatencyMeasure->set (currenttimeindex);
-    }
 
    enum Type { UNDEFINED, SURFACE, SIM};                  // What type of viewport is it
    enum View { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
@@ -171,7 +168,7 @@ protected:
    Display*          mDisplay;            /**< The parent display */
 
    jccl::ConfigChunkPtr mViewportChunk;        /**< The chunk data for this display */
-   jccl::PerfDataBuffer* mLatencyMeasure;
+   jccl::LabeledPerfDataBuffer mLatencyMeasure;
 
    /** @name Location and size of viewport
    * ASSERT: all values are >= 0.0 and <= 1.0
