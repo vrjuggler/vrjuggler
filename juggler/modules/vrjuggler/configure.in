@@ -838,7 +838,7 @@ DPP_CHECK_TYPE_POSIX
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod)
+AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod strtok_r)
 
 # All of the above function checks may not be necessary ...
 
