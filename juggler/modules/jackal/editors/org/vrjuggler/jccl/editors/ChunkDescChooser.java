@@ -36,6 +36,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.Border;
@@ -93,6 +94,10 @@ public class ChunkDescChooser
       // Setup the browse list
       browseList.setModel(browseListModel);
       browseList.setCellRenderer(new ChunkDescCellRenderer());
+
+      // Setup the search results list
+      searchList.setModel(searchListModel);
+      searchList.setCellRenderer(new ChunkDescCellRenderer());
    }
 
    public int showDialog(Component parent)
@@ -280,6 +285,48 @@ public class ChunkDescChooser
    }
 
    /**
+    * This method takes the text in the text field in the search tab and does a
+    * simple pattern match of all the ChunkDescs available to see if any of
+    * their names have the search string. Those that do match are added to the
+    * search results list.
+    */
+   private void updateSearchResults()
+   {
+      List results = new ArrayList();
+
+      final String search_str = searchSearchTextField.getText();
+      for (int i=0; i<browseListModel.getSize(); ++i)
+      {
+         // Yes, I do want to get the desc from the browse list model
+         ChunkDesc desc = (ChunkDesc)browseListModel.getElementAt(i);
+         if (desc.getName().indexOf(search_str) != -1)
+         {
+            results.add(desc);
+         }
+      }
+
+      Collections.sort(results, new Comparator()
+      {
+         public int compare(Object o1, Object o2)
+         {
+            ChunkDesc cd1 = (ChunkDesc)o1;
+            ChunkDesc cd2 = (ChunkDesc)o2;
+
+            return cd1.getName().compareTo(cd2.getName());
+         }
+      });
+
+      searchListModel.setResults(results);
+
+      // Make sure the first result is selected
+      if (searchListModel.getSize() > 0)
+      {
+         searchList.setSelectedIndex(0);
+         searchList.ensureIndexIsVisible(0);
+      }
+   }
+
+   /**
     * JBuilder GUI initialization.
     */
    private void jbInit()
@@ -290,6 +337,8 @@ public class ChunkDescChooser
       browseSearchBoxSpacer = Box.createHorizontalStrut(8);
       buttonBoxGlue = Box.createGlue();
       buttonBoxSpacer = Box.createHorizontalStrut(8);
+      searchSearchBox = Box.createHorizontalBox();
+      searchSearchBoxSpacer = Box.createHorizontalStrut(8);
       this.setLayout(baseLayout);
       browseTab.setLayout(browseTabLayout);
       browseSearchLbl.setText("Chunk Desc Name:");
@@ -298,6 +347,9 @@ public class ChunkDescChooser
       cancelBtn.setText("Cancel");
       browseTab.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
       browseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      searchTab.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+      searchSearchLbl.setText("Search for: ");
+      searchList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       browseSearchTextField.getDocument().addDocumentListener(new DocumentListener()
       {
          public void changedUpdate(DocumentEvent evt)
@@ -354,6 +406,62 @@ public class ChunkDescChooser
             }
          }
       });
+      searchSearchTextField.getDocument().addDocumentListener(new DocumentListener()
+      {
+         public void changedUpdate(DocumentEvent evt)
+         {
+            updateSearchResults();
+         }
+
+         public void insertUpdate(DocumentEvent evt)
+         {
+            updateSearchResults();
+         }
+
+         public void removeUpdate(DocumentEvent evt)
+         {
+            updateSearchResults();
+         }
+      });
+      searchSearchTextField.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            // If an item in the browse list is selected, approve it
+            if (searchList.getSelectedIndex() != -1)
+            {
+               approveSelection();
+            }
+         }
+      });
+      searchList.addListSelectionListener(new ListSelectionListener()
+      {
+         public void valueChanged(ListSelectionEvent evt)
+         {
+            if (! evt.getValueIsAdjusting())
+            {
+               JList list = (JList)evt.getSource();
+               ChunkDesc desc = (ChunkDesc)list.getSelectedValue();
+               setSelectedChunkDesc(desc);
+            }
+         }
+      });
+      searchList.addMouseListener(new MouseAdapter()
+      {
+         public void mouseClicked(MouseEvent evt)
+         {
+            // Double-clicking a list item approves it
+            if (evt.getClickCount() == 2)
+            {
+               JList list = (JList)evt.getSource();
+               int idx = list.locationToIndex(evt.getPoint());
+               if (idx != -1)
+               {
+                  approveSelection();
+               }
+            }
+         }
+      });
       approveBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -368,6 +476,7 @@ public class ChunkDescChooser
             cancelSelection();
          }
       });
+      searchTab.setLayout(searchTabLayout);
       this.add(tabPane,  BorderLayout.CENTER);
       tabPane.add(browseTab,  "Browse");
       tabPane.add(searchTab,  "Search");
@@ -382,6 +491,12 @@ public class ChunkDescChooser
       buttonBox.add(cancelBtn, null);
       browseTab.add(browseListScrollPane,  BorderLayout.CENTER);
       browseListScrollPane.setViewportView(browseList);
+      searchTab.add(searchSearchBox, BorderLayout.NORTH);
+      searchSearchBox.add(searchSearchLbl, null);
+      searchSearchBox.add(searchSearchBoxSpacer, null);
+      searchSearchBox.add(searchSearchTextField, null);
+      searchTab.add(searchListScrollPane,  BorderLayout.CENTER);
+      searchListScrollPane.setViewportView(searchList);
   }
 
    // JBuilder UI variables
@@ -401,6 +516,13 @@ public class ChunkDescChooser
    private JButton cancelBtn = new JButton();
    private JScrollPane browseListScrollPane = new JScrollPane();
    private JList browseList = new JList();
+   private BorderLayout searchTabLayout = new BorderLayout();
+   private Box searchSearchBox;
+   private JLabel searchSearchLbl = new JLabel();
+   private Component searchSearchBoxSpacer;
+   private JTextField searchSearchTextField = new JTextField();
+   private JScrollPane searchListScrollPane = new JScrollPane();
+   private JList searchList = new JList();
 
    /**
     * The ChunkDescDB containing the allowable ChunkDescs.
@@ -436,6 +558,11 @@ public class ChunkDescChooser
     * The list model for the browse list.
     */
    private ChunkDescListModel browseListModel = new ChunkDescListModel();
+
+   /**
+    * The list model for the search results list.
+    */
+   private SearchResultsListModel searchListModel = new SearchResultsListModel();
 
    /**
     * A specialized list model for the ChunkDesc list.
@@ -484,6 +611,55 @@ public class ChunkDescChooser
       }
 
       private ChunkDescDB chunkDescDB;
+   }
+
+   /**
+    * A specialized list model for the search results list.
+    */
+   class SearchResultsListModel
+      extends AbstractListModel
+   {
+      /**
+       * Creates a new list model with an empty results list.
+       */
+      public SearchResultsListModel()
+      {
+         results = new ArrayList();
+      }
+
+      public void setResults(List results)
+      {
+         int index1 = this.results.size() - 1;
+         this.results = results;
+
+         // Notify listeners that everything was removed
+         if (index1 >= 0)
+         {
+            fireIntervalRemoved(this, 0, index1);
+         }
+         // Notify listeners of the new results
+         if (this.results.size() > 0)
+         {
+            fireIntervalAdded(this, 0, this.results.size()-1);
+         }
+      }
+
+      public List getResults()
+      {
+         return results;
+      }
+
+      public Object getElementAt(int idx)
+      {
+         return results.get(idx);
+      }
+
+      public int getSize()
+      {
+         return results.size();
+      }
+
+      private List results;
    }
 
    /**
