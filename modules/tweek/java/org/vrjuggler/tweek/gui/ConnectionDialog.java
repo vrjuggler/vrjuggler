@@ -152,7 +152,6 @@ public class ConnectionDialog extends JDialog
       mNSConnectPanel.setLayout(mNSConnectLayout);
       mNSConnectPanel.setBorder(mNSConnectBorder);
       mNSConnectPanel.setMinimumSize(new Dimension(450, 175));
-      mNSConnectPanel.setPreferredSize(new Dimension(450, 175));
 
       mNSHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mNSHostLabel.setText("Naming Service Host");
@@ -178,9 +177,6 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrPanel.setLayout(mSubjectMgrLayout);
       mSubjectMgrSplitPane.setDividerSize(7);
       mNSConnectButton.setEnabled(false);
-      mNSConnectButton.setMaximumSize(new Dimension(91, 26));
-      mNSConnectButton.setMinimumSize(new Dimension(91, 26));
-      mNSConnectButton.setPreferredSize(new Dimension(91, 26));
       mNSConnectButton.setText("Connect");
       mNSConnectButton.addActionListener(new java.awt.event.ActionListener()
       {
