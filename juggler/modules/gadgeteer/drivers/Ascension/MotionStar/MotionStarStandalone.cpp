@@ -256,7 +256,7 @@ aMotionStar::start () {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::stop () {
-    command.sequence = sequenceNumber;
+    command.sequence = htons(sequenceNumber);
     command.type     = MSG_STOP_DATA;
     numberBytes      = send(s, (void*) lpCommand, sizeof(command), 0);
 } // end void aMotionStar::stop()
@@ -300,7 +300,7 @@ aMotionStar::sample () {
         lpBuffer = (char *)lpBuffer + bytesReceived;
       }
     }
-    sequenceNumber = response.header.sequence;
+    sequenceNumber = ntohs(response.header.sequence);
 
     //        printf("\n#%6d bytes received:%3d",n ,bytesReceived);
     /*        printf("\ntype:%3d seq:%6d #bytes:%4d",response.header.type,
@@ -327,17 +327,19 @@ aMotionStar::sample () {
 #endif
 
     /*  printf(" TIME: %10d ", timeSeconds);     */
-    if(response.header.milliseconds>999)
-      {
-        response.header.milliseconds = response.header.milliseconds - 1000;
-      }
+    if ( ntohs(response.header.milliseconds) > 999 ) {
+	short new_ms;
+
+	new_ms = ntohs(response.header.milliseconds) - 1000;
+        response.header.milliseconds = htons(new_ms);
+    }
     /* printf(" %.19s.%3.3d ", timeChar, response.header.milliseconds);
      */
     /* printf(" %3.3d ",  response.header.milliseconds);
      */
 
     totalBytesReceived = 0;
-    totalBytesNeeded = response.header.number_bytes;
+    totalBytesNeeded = ntohs(response.header.number_bytes);
     lpBuffer = (char*)lpResponse + 16;
 
     if (runMode == 0) {
@@ -409,7 +411,7 @@ aMotionStar::sendWakeup () {
   /***** send a command to the server wakeup *****/
 //  printf("WAKEUP:");
 
-  command.sequence             = sequenceNumber++;
+  command.sequence             = htons(sequenceNumber++);
   command.type                 = MSG_WAKE_UP;
   command.xtype                = 0;
   command.protocol             = 1;
@@ -436,7 +438,7 @@ aMotionStar::runContinuous () {
 
   command.type     = MSG_RUN_CONTINUOUS;
   command.xtype    = 0;
-  command.sequence = sequenceNumber++;
+  command.sequence = htons(sequenceNumber++);
   n++;
   numberBytes   = send(s, (void*)lpCommand, sizeof(command), 0);
 
@@ -475,7 +477,7 @@ aMotionStar::singleShot () {
   /* send a request for a single shot packet */
   command.type     = MSG_SINGLE_SHOT;
   command.xtype    = 0;
-  command.sequence = sequenceNumber++;
+  command.sequence = htons(sequenceNumber++);
   numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
 
     //printf("bytes sent = %d errno %d\n", numberBytes,errno);
@@ -515,12 +517,12 @@ aMotionStar::getSystemStatus () {
     }
 
   dataBytes = 0;
-  while(dataBytes<(response.header.number_bytes))
-    {
-      bytesReceived = recv(s, (void*)lpBuffer, response.header.number_bytes, 0);
+  while ( dataBytes < ntohs(response.header.number_bytes) ) {
+      bytesReceived = recv(s, (void*)lpBuffer,
+                           ntohs(response.header.number_bytes), 0);
       dataBytes = dataBytes + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
-    }
+  }
 
   statusSize = headerBytes + dataBytes;
 //  printf("\nSYSTEM STATUS RECEIVED - number bytes received = %5d,", bytesReceived);
@@ -552,8 +554,7 @@ aMotionStar::getSystemStatus () {
   chassisNumber = response.buffer[11];
   chassisDevices = response.buffer[12];
   firstAddress = response.buffer[13];
-  softwareRevision = (((unsigned short)(response.buffer[14])<<8) & 0xFF00)
-    | ((unsigned short)(response.buffer[15]));
+  softwareRevision = toShort(response.buffer[14], response.buffer[15]);
   mRate = atoi(szRate);
   realRate = (double)(mRate)/1000;
 
@@ -607,7 +608,7 @@ aMotionStar::setSystemStatus () {
      int i;
      response.header.type         = MSG_SEND_SETUP;
      response.header.xtype        = 0;
-     response.header.number_bytes = statusSize-16;
+     response.header.number_bytes = htons(statusSize - 16);
 
      for(i=0;i<6;i++)
         {
@@ -655,12 +656,12 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
     }
 
   dataBytes = 0;
-  while(dataBytes<(response.header.number_bytes))
-    {
-      bytesReceived = recv(s, (void*)lpBuffer, response.header.number_bytes, 0);
+  while ( dataBytes < ntohs(response.header.number_bytes) ) {
+      bytesReceived = recv(s, (void*)lpBuffer,
+                           ntohs(response.header.number_bytes), 0);
       dataBytes = dataBytes + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
-    }
+  }
 
   bytesReceived = dataBytes + headerBytes;
 
@@ -679,7 +680,7 @@ void
 aMotionStar::setBirdStatus (unsigned char fbb_addr) {
   response.header.type         = MSG_SEND_SETUP;
   response.header.xtype        = fbb_addr;
-  response.header.number_bytes = 70;
+  response.header.number_bytes = htons(70);
 
   numberBytes = send(s, (void*) lpResponse, 86, 0);
 
