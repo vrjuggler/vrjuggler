@@ -156,7 +156,9 @@ public:
 
 protected:
    vjDisplayManager() : mDrawManager(NULL)
-   {;}
+   {
+       mDisplaySystemChunk = NULL;
+   }
 
    virtual ~vjDisplayManager()
    {;}
