@@ -116,15 +116,16 @@
          <section>
             <title>Structure of a <function>main()</function> Function</title>
             <para>The following is a typical example of a <function>main()</function> function that will start the VR Juggler kernel and hand it an instance of a user application object. The specifics of what is happening in this code are described below.</para>
-            <para><programlistingco>
-                  <areaspec>
-                     <area coords="5" id="simpleApp.main.body.create-kernel"/>
-                     <area coords="6" id="simpleApp.main.body.app-instantiate"/>
-                     <area coords="8" id="simpleApp.main.body.loadConfigFile"/>
-                     <area coords="9" id="simpleApp.main.body.start"/>
-                     <area coords="10" id="simpleApp.main.body.setApp"/>
-                  </areaspec>
-                  <programlisting>#include &lt;simpleApp.h&gt;
+            <para></para>
+            <programlistingco>
+               <areaspec>
+                  <area coords="5" id="simpleApp.main.body.create-kernel"/>
+                  <area coords="6" id="simpleApp.main.body.app-instantiate"/>
+                  <area coords="8" id="simpleApp.main.body.loadConfigFile"/>
+                  <area coords="9" id="simpleApp.main.body.start"/>
+                  <area coords="10" id="simpleApp.main.body.setApp"/>
+               </areaspec>
+               <programlisting linenumbering="numbered">#include &lt;simpleApp.h&gt;
 
 int main (int argc, char* argv[])
 {
@@ -140,50 +141,50 @@ int main (int argc, char* argv[])
      // sleep
    }
 }</programlisting>
-                  <calloutlist>
-                     <callout arearefs="simpleApp.main.body.create-kernel">
-                        <para>This line finds (and may create) the VR Juggler kernel. The kernel reference is stored in the handle so that we can use it later.</para>
-                     </callout>
-                     <callout arearefs="simpleApp.main.body.app-instantiate">
-                        <para>We instantiate a copy of the user application object (simpleApp) here. Notice that we include the header file that defines the simpleApp class.</para>
-                     </callout>
-                     <callout arearefs="simpleApp.main.body.loadConfigFile">
-                        <para>This statement represents the code that will be in the <function>main()</function> function for passing configuration files to the kernel's loadConfigFile() method. These config files may come from the command line or some other source. If reading the files from the command line, it can be as simple as looping through all the arguments and passing each one to the kernel.</para>
-                     </callout>
-                     <callout arearefs="simpleApp.main.body.start">
-                        <para>As a result of this statement, the VR Juggler kernel begins running. It creates a new thread of execution for the kernel, and the kernel begins its internal processing. From this point on, any changes made reconfigure the kernel. These changes can come in the form of more configuration files or in the form of an application object to execute.At this point, it is important to notice that the kernel knows nothing about the application. Moreover, it needs to know nothing about the configuration files either. This demonstrates how the VR Juggler kernel executes independently from the user application. The kernel will simply work on its own controlling and configuring the system even without an application to run.</para>
-                     </callout>
-                     <callout arearefs="simpleApp.main.body.setApp">
-                        <para>This statement finally tells the kernel what application it should run. The method call reconfigures the kernel so that it will now start invoking the application object's member functions. It is at this time that the application is now running in the VR system.</para>
-                     </callout>
-                  </calloutlist>
-               </programlistingco></para>
+               <calloutlist>
+                  <callout arearefs="simpleApp.main.body.create-kernel">
+                     <para>This line finds (and may create) the VR Juggler kernel. The kernel reference is stored in the handle so that we can use it later.</para>
+                  </callout>
+                  <callout arearefs="simpleApp.main.body.app-instantiate">
+                     <para>We instantiate a copy of the user application object (simpleApp) here. Notice that we include the header file that defines the simpleApp class.</para>
+                  </callout>
+                  <callout arearefs="simpleApp.main.body.loadConfigFile">
+                     <para>This statement represents the code that will be in the <function>main()</function> function for passing configuration files to the kernel's loadConfigFile() method. These config files may come from the command line or some other source. If reading the files from the command line, it can be as simple as looping through all the arguments and passing each one to the kernel.</para>
+                  </callout>
+                  <callout arearefs="simpleApp.main.body.start">
+                     <para>As a result of this statement, the VR Juggler kernel begins running. It creates a new thread of execution for the kernel, and the kernel begins its internal processing. From this point on, any changes made reconfigure the kernel. These changes can come in the form of more configuration files or in the form of an application object to execute.At this point, it is important to notice that the kernel knows nothing about the application. Moreover, it needs to know nothing about the configuration files either. This demonstrates how the VR Juggler kernel executes independently from the user application. The kernel will simply work on its own controlling and configuring the system even without an application to run.</para>
+                  </callout>
+                  <callout arearefs="simpleApp.main.body.setApp">
+                     <para>This statement finally tells the kernel what application it should run. The method call reconfigures the kernel so that it will now start invoking the application object's member functions. It is at this time that the application is now running in the VR system.</para>
+                  </callout>
+               </calloutlist>
+            </programlistingco>
             <section>
                <title>Get the kernel handle</title>
-               <para><programlisting>vjKernel* kernel = vjKernel::instance();  // Get the kernel</programlisting></para>
+               <programlisting>vjKernel* kernel = vjKernel::instance();  // Get the kernel</programlisting>
                <para>This line finds (and may create) the VR Juggler kernel. The kernel reference is stored in the handle so that we can use it later.</para>
             </section>
             <section>
                <title>Create the application object</title>
-               <para><programlisting>#include &lt;simpleApp.h&gt;
+               <programlisting>#include &lt;simpleApp.h&gt;
 ...
-simpleApp* app = new simpleApp();    // Create the app object</programlisting></para>
+simpleApp* app = new simpleApp();    // Create the app object</programlisting>
                <para>We instantiate a copy of the user application object (simpleApp) here. Notice that we include the header file that defines the simpleApp class.</para>
             </section>
             <section>
                <title>Give configuration files to the kernel</title>
-               <para><programlisting>kernel-&gt;loadConfigFile(...);         // Configure the kernel</programlisting></para>
+               <programlisting>kernel-&gt;loadConfigFile(...);         // Configure the kernel</programlisting>
                <para>This statement represents the code that will be in the <function>main()</function> function for passing configuration files to the kernel's <methodname>loadConfigFile()</methodname> method. These config files may come from the command line or some other source. If reading the files from the command line, it can be as simple as looping through all the arguments and passing each one to the kernel.</para>
             </section>
             <section>
                <title>Start the kernel thread</title>
-               <para><programlisting>kernel-&gt;start();                    // Start the kernel thread</programlisting></para>
+               <programlisting>kernel-&gt;start();                    // Start the kernel thread</programlisting>
                <para>As a result of this statement, the VR Juggler kernel begins running. It creates a new thread of execution for the kernel, and the kernel begins its internal processing. From this point on, any changes made reconfigure the kernel. These changes can come in the form of more configuration files or in the form of an application object to execute.</para>
                <para>At this point, it is important to notice that the kernel knows nothing about the application. Moreover, it needs to know nothing about the configuration files either. This demonstrates how the VR Juggler kernel executes independently from the user application. The kernel will simply work on its own controlling and configuring the system even without an application to run.</para>
             </section>
             <section>
                <title>Give the kernel an application to run</title>
-               <para><programlisting>kernel-&gt;setApplication(app);</programlisting></para>
+               <programlisting>kernel-&gt;setApplication(app);</programlisting>
                <para>This statement finally tells the kernel what application it should run. The method call reconfigures the kernel so that it will now start invoking the application object's member functions. It is at this time that the application is now running in the VR system.</para>
             </section>
          </section>
@@ -1203,13 +1204,15 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
          <section>
             <title>Using <classname>vjDeviceInterface</classname></title>
             <para>VR Juggler applications do not usually use <classname>vjDeviceInterface</classname> directly. Instead, the subclasses mentioned above will be used. Within this section, we will refer to subclasses of <classname>vjDeviceInterface</classname> as "device interfaces". The high-level description has already made use of this convention.</para>
-            <para>Before using a device interface, some must be declared. Programmers must choose the type that is appropriate for the type of devices relevant to a given application. All device interface objects must be initialized in the application object's <methodname>init()</methodname> method. Each device interface object inherits a method called <methodname>init()</methodname> from <classname>vjDeviceInterface</classname>. This method takes a single string argument naming the proxy to which the interface will connect. Example names are "VJHead", "VJWand", and "VJButton0". These are all symbolic names specified in VR Juggler configuration files. This makes them easier to remember, and it also contributes to hiding the details about the physical device. With this system, no one needs to care how transformation information from the user's head is generated. VR Juggler cares, but there is no need for it to tell anyone else. All developers care about is the head transformation matrix. An example of initializing a <classname>vjPosInterface</classname> that connects with the user head proxy is:<programlisting>vjPosInterface head;
+            <para>Before using a device interface, some must be declared. Programmers must choose the type that is appropriate for the type of devices relevant to a given application. All device interface objects must be initialized in the application object's <methodname>init()</methodname> method. Each device interface object inherits a method called <methodname>init()</methodname> from <classname>vjDeviceInterface</classname>. This method takes a single string argument naming the proxy to which the interface will connect. Example names are "VJHead", "VJWand", and "VJButton0". These are all symbolic names specified in VR Juggler configuration files. This makes them easier to remember, and it also contributes to hiding the details about the physical device. With this system, no one needs to care how transformation information from the user's head is generated. VR Juggler cares, but there is no need for it to tell anyone else. All developers care about is the head transformation matrix. An example of initializing a <classname>vjPosInterface</classname> that connects with the user head proxy is:</para>
+            <programlisting>vjPosInterface head;
 
-head.init("VJHead");</programlisting></para>
+head.init("VJHead");</programlisting>
             <para>Remember that this is to be done in an application object's <classname>init()</classname> method. The actual object used would be a member variable of the application class. Note that here, the normal syntax for calling the method of a C++ object is used rather than using the dereference operator. Until it is initialized, the device interface object cannot act as a smart pointer.</para>
-            <para>Once device interface objects are all initialized and ready to use, it is time to start using them as smart pointers. This is best part! VR Juggler is already working hard in the background to update device proxies, and the application is free to access them. (It is usually best to reference them in the <methodname>preFrame()</methodname> method, but this may not necessarily be true for all proxies.) Continuing with our example of a <classname>vjPosInterface</classname> to the user head proxy, the following code shows how to read the transformation matrix for the user's head: <programlisting>vjMatrix* head_mat;
+            <para>Once device interface objects are all initialized and ready to use, it is time to start using them as smart pointers. This is best part! VR Juggler is already working hard in the background to update device proxies, and the application is free to access them. (It is usually best to reference them in the <methodname>preFrame()</methodname> method, but this may not necessarily be true for all proxies.) Continuing with our example of a <classname>vjPosInterface</classname> to the user head proxy, the following code shows how to read the transformation matrix for the user's head: </para>
+            <programlisting>vjMatrix* head_mat;
 
-head_mat = head-&gt;getData();</programlisting></para>
+head_mat = head-&gt;getData();</programlisting>
             <para>But wait, that was easy! The code really is that simple, though. Simply use the overloaded dereference operator to get access to the position proxy object hidden in <classname>vjPosInterface</classname> to read data from the proxy. Of course, we have not explained the <methodname>getData()</methodname> method at all yet. That comes from the position proxy class, and that is documented elsewhere.</para>
          </section>
          <section>
@@ -1247,18 +1250,20 @@ head_mat = head-&gt;getData();</programlisting></para>
          <para>Before getting into too much detail, we present this section as a review from earlier chapters. There is no new information here, it is simply a quick overview of the basics of VR Juggler applications.</para>
          <section>
             <title>Basic Application Information</title>
-            <para>As described in previous chapters (see <xref linkend="ch1"/>, for example), all VR Juggler applications derive from a base VR Juggler application object class (<classname>vjApp</classname>). This class defines the basic interface that VR Juggler expects from all application objects. This means that when constructing an application, the user-defined application object must inherit from <classname>vjApp</classname> or from a draw manager-specific application class that has <classname>vjApp</classname> as a superclass. For example:<programlisting>class userApp : public vjApp
+            <para>As described in previous chapters (see <xref linkend="ch1"/>, for example), all VR Juggler applications derive from a base VR Juggler application object class (<classname>vjApp</classname>). This class defines the basic interface that VR Juggler expects from all application objects. This means that when constructing an application, the user-defined application object must inherit from <classname>vjApp</classname> or from a draw manager-specific application class that has <classname>vjApp</classname> as a superclass. For example:</para>
+            <programlisting>class userApp : public vjApp
 {
 public:
    init();
    preFrame();
    postFrame();
-}</programlisting></para>
+}</programlisting>
             <para>This defines a new application class (<classname>userApp</classname>), instances of which can be used anywhere that VR Juggler expects an application object.</para>
          </section>
          <section>
             <title>Draw Manager-Specific Application Classes</title>
-            <para>A user application does not have to (and in most cases does not) derive from <classname>vjApp</classname>. In most cases, an application class is derived from a draw manager-specific application class. For example:<programlisting>class userGlApp : public vjGlApp
+            <para>A user application does not have to (and in most cases does not) derive from <classname>vjApp</classname>. In most cases, an application class is derived from a draw manager-specific application class. For example: </para>
+            <programlisting>class userGlApp : public vjGlApp
 {
 public:
    init();
@@ -1266,7 +1271,7 @@ public:
    postFrame();
    
    draw();
-}</programlisting></para>
+}</programlisting>
             <para>This is an example of an OpenGL application. The application class (<classname>userGlApp</classname>) has derived directly from the OpenGL draw manager-specific <classname>vjGlApp</classname> application base class. This class provides extra definitions in the interface that are custom for OpenGL applications.</para>
          </section>
       </section>
@@ -1365,7 +1370,7 @@ wand_pos = *(mWand-&gt;getData());
             <section>
                <title>Class Declaration and Data Members</title>
                <para>In the following class declaration, note the data members (<varname>mWand</varname>, <varname>mHead</varname>, etc.). This application has four device interface member variables: two for positional input (<varname>mHead</varname> and <varname>mWand</varname>) and two for digital input (<varname>mButton0</varname> and <varname>mButton1</varname>). Each of these member variables will act as a handle to a "real" device from which we will read data in <methodname>preFrame()</methodname>.</para>
-               <programlisting>class simpleInput : public vjGlApp
+               <programlisting linenumbering="numbered">class simpleInput : public vjGlApp
 {
 public:
    virtual void init();
@@ -1381,7 +1386,7 @@ public:
             <section>
                <title>Initializing the Device Interfaces: <methodname>vjApp::init()</methodname></title>
                <para>The devices are initialized in the <methodname>init()</methodname> member function of the application. For each device interface member variable, the application calls the variable's own <methodname>init()</methodname> method. The argument passed is the symbolic name of the configured device from which data will be read. From this point on in the application, the member variables are handles to the named device.</para>
-               <programlisting>virtual void init()
+               <programlisting linenumbering="numbered">virtual void init()
 {
    // Initialize devices
    mWand.init("VJWand");
@@ -1393,7 +1398,7 @@ public:
             <section>
                <title>Examining the Device Data: <methodname>vjApp::preFrame()</methodname></title>
                <para>The following member function implementation gives an example of how to examine the input data using the device interface member variables.</para>
-               <programlisting>virtual void preFrame()
+               <programlisting linenumbering="numbered">virtual void preFrame()
 {
    if ( mButton0-&gt;getData() )
    {
@@ -1490,7 +1495,7 @@ public:
             <section>
                <title>Class Declaration</title>
                <para>The following application class is called <classname>simpleApp</classname>. It is derived from <classname>vjGlApp</classname> and has custom <methodname>init()</methodname> and <methodname>draw()</methodname> methods declared. Note that the application declares several device interface members that are used by the application for getting device data.</para>
-               <programlisting>class simpleApp : public vjGlApp
+               <programlisting linenumbering="numbered">class simpleApp : public vjGlApp
 {
 public:
    simpleApp();
@@ -1507,7 +1512,7 @@ public:
             <section>
                <title>The <methodname>draw()</methodname> Member Function</title>
                <para>The implementation of <methodname>draw()</methodname> is located in <filename>simpleApp.cpp</filename>. Its job is to draw the environment. A partial implementation follows.</para>
-               <programlisting>void simpleApp::draw()
+               <programlisting linenumbering="numbered">void simpleApp::draw()
 {
    ...
    // Create box offset matrix
@@ -1575,7 +1580,8 @@ userApp::draw()
             </section>
             <section>
                <title>Context-Specific Variables in VR Juggler</title>
-               <para>The following shows how a context-specific variable appears in a VR Juggler application:<programlisting>class userApp : public vjGlApp
+               <para>The following shows how a context-specific variable appears in a VR Juggler application:</para>
+               <programlisting>class userApp : public vjGlApp
 {
 public:
   draw();
@@ -1586,7 +1592,7 @@ public:
 userApp::draw()
 {
    glCallList(*mDispListId);
-}</programlisting></para>
+}</programlisting>
                <para>This code looks nearly the same as the previous example. In this case, <varname>mDispListId</varname> is treated as a pointer, and it has a special template-based type that tells VR Juggler it is context-specific data. When defining a context-specific data member, use the <classname>vjGlContextData&lt;&gt;</classname> template class and pass the "true" type of the variable to the template definition. From then on, it can be treated as a normal pointer.<note>
                      <para>The types that are used for context-specific data must provide default constructors. The user cannot directly call the constructor for the data item because VR Juggler has to allocate new items on the fly as new contexts are created.</para>
                   </note></para>
@@ -1612,7 +1618,8 @@ userApp::draw()
                   <title>Rule 2: Initialize static context data in <methodname>contextInit()</methodname></title>
                   <para>The place to allocate static context-specific data is the <methodname>vjGlApp::contextInit()</methodname> member function. "Static" context data refers to context data that does not change during the application's execution. An example of static context data would be a display list to render an object model that is preloaded by the application and never changes. It is static because the display list only has to be generated once for each context, and the application can generate the display list as soon as the it starts execution.</para>
                   <para>The <methodname>contextInit()</methodname> member function is called immediately after creation of any <emphasis>new</emphasis> OpenGL contexts. In other words, it is called whenever new windows open. When it is called, the newly created context is active. This method is the perfect place to allocate static context data because it is only called when we have a new context that we need to prepare (and also because that is what it is designed for).</para>
-                  <para>The following code snippet shows a possible use of the application object's <methodname>contextInit()</methodname> method:<programlisting>void userApp::contextInit()
+                  <para>The following code snippet shows a possible use of the application object's <methodname>contextInit()</methodname> method:</para>
+                  <programlisting linenumbering="numbered">void userApp::contextInit()
 {
    // Allocate context specific data
    (*mDispListId) = glGenLists(1);
@@ -1623,20 +1630,21 @@ userApp::draw()
       drawCube();
    glEndList();
    ...
-}</programlisting></para>
+}</programlisting>
                   <para>This shows the normal way that display lists should be allocated in VR Juggler. Allocate the display list, store it to a context-specific data member, and then fill the display list. Texture objects and other context-specific data are created in exactly the same manner.</para>
                </section>
                <section>
                   <title>Rule 3: Allocate and update dynamic context data in <methodname>contextPreDraw()</methodname></title>
                   <para>The place to allocate dynamic context-specific data is the <methodname>contextPreDraw()</methodname> member function. "Dynamic" context data differs from static context data in that dynamic data may change during the application's execution. An example of dynamic data would be a display list for rendering an object from a data set that changes as the applications executes. This requires dynamic context data because the display list has to be regenerated every time the application changes the data set.</para>
                   <para>Consider also the following example. While running an application, the user requests to load a new model from a file. After the model data is loaded, it may be best to put the drawing functions into a fresh display list for rendering the model. In this case, <methodname>vjGlApp::contextInit()</methodname> cannot be used because it is only called when a new context is created. Here, all the windows have already been created. What we need, then, is a callback that is called once per existing context so that we can add and change the context-specific data. That is what <methodname>contextPreDraw()</methodname> does. It is called once per context for each VR Juggler frame with the current context active.</para>
-                  <para>Please notice, however, that since this method is called often and is called in performance-critical areas, you should not do much work in it. Any time taken by this method directly decreases the draw performance of the application. In most cases, we recommend trying to make the function have a very simple early exit clause such as in the following example. This makes the average cost only that of a single comparison operation.<programlisting>userApp::contextInit()
+                  <para>Please notice, however, that since this method is called often and is called in performance-critical areas, you should not do much work in it. Any time taken by this method directly decreases the draw performance of the application. In most cases, we recommend trying to make the function have a very simple early exit clause such as in the following example. This makes the average cost only that of a single comparison operation.</para>
+                  <programlisting>userApp::contextInit()
 {
    if(have work to do)
    {
      // Do it
    }
-}</programlisting></para>
+}</programlisting>
                </section>
             </section>
          </section>
@@ -1705,7 +1713,7 @@ userApp::draw()
             <section>
                <title>Class Declaration and Data Members</title>
                <para>The following code example shows the basics of declaring the class interface and data members for an application that will use context-specific data. This is an extension of the simple OpenGL application presented in <xref linkend="simple-ogl-app-sect"/>. Note the addition of the <methodname>contextInit()</methodname> declaration and the use of the context-specific data member <varname>mCubeDlId</varname>.</para>
-               <programlisting>class contextApp : public vjGlApp
+               <programlisting linenumbering="numbered">class contextApp : public vjGlApp
 {
 public:
    contextApp() {;}
@@ -1722,7 +1730,7 @@ public:
             <section>
                <title>The <methodname>contextInit()</methodname> Member Function</title>
                <para>We now show the implementation of <methodname>contextApp::contextInit()</methodname> where the display list is created and stored using context-specific data. Recall the code example shown as part of Rule 2 in <xref linkend="using-csdata-sec"/>. That example was based on this tutorial application.</para>
-               <programlisting>void contextApp::contextInit()
+               <programlisting linenumbering="numbered">void contextApp::contextInit()
 {
    // Allocate context specific data
    (*mCubeDlId) = glGenLists(1);
@@ -1738,7 +1746,7 @@ public:
             <section>
                <title>The <methodname>draw()</methodname> Member Function</title>
                <para>Now that we have a display list ID in context-specific data, we can use it in the <methodname>draw()</methodname> member function. We render the display list by dereferencing the context-specific display list ID.</para>
-               <programlisting>void contextApp::draw()
+               <programlisting linenumbering="numbered">void contextApp::draw()
 {
    // Get Wand matrix
    vjMatrix wand_matrix;
@@ -1833,7 +1841,7 @@ public:
             <section>
                <title>Class Declaration</title>
                <para>The following application class is called <classname>simplePfApp</classname>. It is derived from <classname>vjPfApp</classname> and has custom <methodname>initScene()</methodname> and <methodname>getScene()</methodname> methods declared. Note that this application uses <methodname>preForkInit()</methodname> which will be discussed later. Refer to simplePfApp.h for the implementations of <methodname>preForkInit()</methodname> and <methodname>setModel()</methodname>.</para>
-               <programlisting>class simplePfApp : public vjPfApp
+               <programlisting linenumbering="numbered">class simplePfApp : public vjPfApp
 {
 public:
    simplePfApp();
@@ -1856,7 +1864,7 @@ public:
             <section>
                <title>The <methodname>initScene()</methodname> Member Function</title>
                <para>The implementation of <methodname>initScene()</methodname> is in <filename>simplePfApp.cpp</filename>. Within this method, we create the scene graph root node, the lighting node, and load a user-specified model. The implementation follows:</para>
-               <programlisting>void simplePfApp::initScene ()
+               <programlisting linenumbering="numbered">void simplePfApp::initScene ()
 {
    // Allocate all the nodes needed
    mRootNode = new pfGroup;
@@ -2005,10 +2013,11 @@ pfDraw();</programlisting>
             </section>
             <section>
                <title>In VR Juggler</title>
-               <para>With VR Juggler, no C function pointers are necessary, but a pointer to an application object must be given to the VR Juggler kernel. As described in earlier sections of this chapter, the first step is to derive a new application class from <classname>vjGlApp</classname>. For more information on application objects, it may be helpful to review <xref linkend="ch2"/>. Briefly, the application class definition would appear similar to the following:<programlisting>class MyApplication : public vjGlApp
+               <para>With VR Juggler, no C function pointers are necessary, but a pointer to an application object must be given to the VR Juggler kernel. As described in earlier sections of this chapter, the first step is to derive a new application class from <classname>vjGlApp</classname>. For more information on application objects, it may be helpful to review <xref linkend="ch2"/>. Briefly, the application class definition would appear similar to the following:</para>
+               <programlisting>class MyApplication : public vjGlApp
 {
    ...
-};</programlisting></para>
+};</programlisting>
                <para>The draw, frame, and initialize routine concepts in VR Juggler are presented in the following list.</para>
                <itemizedlist>
                   <listitem>
@@ -2126,7 +2135,7 @@ pfDraw();</programlisting>
             <para>This final section is the heart of the porting discussion. We present some source code as a means to illustrate how <trademark>CAVElib</trademark> concepts map to VR Juggler.</para>
             <section>
                <title>The Form of a Basic <trademark>CAVElib</trademark> Program</title>
-               <programlisting>void app_shared_init();
+               <programlisting linenumbering="numbered">void app_shared_init();
 void app_compute_init();
 void app_init_gl();
 void app_draw();
@@ -2149,7 +2158,7 @@ void main(int argc, char **argv)
             </section>
             <section>
                <title>The Form of a Basic VR Juggler Program</title>
-               <programlisting>class MyApplication : public vjGlApp
+               <programlisting linenumbering="numbered">class MyApplication : public vjGlApp
 {
 public:
 // Data callbacks  (Do not put OpenGL code here)
@@ -2217,10 +2226,11 @@ int main(int argc, char* argv[])
             </section>
             <section>
                <title>In VR Juggler</title>
-               <para>With VR Juggler, no C function pointers are necessary, but a pointer to an application object must be given to the VR Juggler kernel. As described in earlier sections of this chapter, the first step is to derive a new application class from <classname>vjGlApp</classname>. For more information on application objects, it may be helpful to review <xref linkend="ch2"/>. Briefly, the application class definition would appear similar to the following:<programlisting>class MyApplication : public vjGlApp
+               <para>With VR Juggler, no C function pointers are necessary, but a pointer to an application object must be given to the VR Juggler kernel. As described in earlier sections of this chapter, the first step is to derive a new application class from <classname>vjGlApp</classname>. For more information on application objects, it may be helpful to review <xref linkend="ch2"/>. Briefly, the application class definition would appear similar to the following:</para>
+               <programlisting>class MyApplication : public vjGlApp
 {
    ...
-};</programlisting></para>
+};</programlisting>
                <para>The draw, frame, and initialize routine concepts in VR Juggler are presented in the following list.</para>
                <itemizedlist>
                   <listitem>
@@ -2335,7 +2345,7 @@ int main(int argc, char* argv[])
             <para>This final section is the heart of the porting discussion. We present some source code as a means to illustrate how GLUT concepts map to VR Juggler.</para>
             <section>
                <title>The Form of a Basic GLUT Program</title>
-               <programlisting>void main(int argc, char* argv[])
+               <programlisting linenumbering="numbered">void main(int argc, char* argv[])
 {
    /* initialize the application data here */
    OnApplicationInit();
@@ -2382,7 +2392,7 @@ int main(int argc, char* argv[])
             </section>
             <section>
                <title>The Form of a Basic VR Juggler Program</title>
-               <programlisting>class MyApplication : public vjGlApp
+               <programlisting linenumbering="numbered">class MyApplication : public vjGlApp
 {
 public:
 // Data callbacks  (Do not put OpenGL code here)
@@ -2495,12 +2505,15 @@ int main(int argc, char* argv[])
                </section>
                <section>
                   <title>Creating <classname>vjThread</classname>s</title>
-                  <para>The following example illustrates how to create a thread that will execute a function called <function>run()</function> that takes no arguments. The prototype for <function>run()</function> is: <programlisting>void run(void* args);</programlisting></para>
-                  <para>This will be the same across all platforms. The thread creation code is then:<programlisting>vjThread* thread;
+                  <para>The following example illustrates how to create a thread that will execute a function called <function>run()</function> that takes no arguments. The prototype for <function>run()</function> is: </para>
+                  <programlisting>void run(void* args);</programlisting>
+                  <para>This will be the same across all platforms. The thread creation code is then:</para>
+                  <programlisting>vjThread* thread;
 
-thread = new vjThread(run);</programlisting></para>
+thread = new vjThread(run);</programlisting>
                   <para>At this point, a newly spawned thread is executing the code in <function>run()</function>. It is advisable to hang onto the variable <varname>thread</varname> so that the thread may be controlled as necessary.</para>
-                  <para>That was pretty easy. What if you want to pass one or more arguments to <function>run()</function> so that its behavior can be modified based on some variables? Not surprisingly, that is fairly easy too. As mentioned above, if there is more than one argument to pass to the thread function, they will have to be collected into a <type>struct</type>, and pointer to that struct will have to be passed. A common way to do this is as follows: <programlisting>struct ThreadArgs
+                  <para>That was pretty easy. What if you want to pass one or more arguments to <function>run()</function> so that its behavior can be modified based on some variables? Not surprisingly, that is fairly easy too. As mentioned above, if there is more than one argument to pass to the thread function, they will have to be collected into a <type>struct</type>, and pointer to that struct will have to be passed. A common way to do this is as follows: </para>
+                  <programlisting>struct ThreadArgs
 {
    int id;
    char name[40];
@@ -2519,12 +2532,13 @@ void someFunc ()
    // Fill in the elements of args ...
 
    thread = new vjThread(run, (void*) args);
-}</programlisting></para>
+}</programlisting>
                   <para>When creating a single thread, this works beautifully. If multiple threads are needed, all taking the same type of argument, there must be a separate argument structure instance for each one. A bunch of pointers can be declared, or the same pointer can be reused over and over. The address passed to each thread will be unique either way. Using this method requires that the argument memory be released before the thread exits, of course.</para>
                </section>
                <section>
                   <title>Waiting for a Thread to Complete</title>
-                  <para> Once we have a thread running, it is often useful to synchronize another thread so that its execution halts until the running thread has completed. This is called "joining threads". The following example illustrates how this can be done: <programlisting>vjThread* thread;
+                  <para> Once we have a thread running, it is often useful to synchronize another thread so that its execution halts until the running thread has completed. This is called "joining threads". The following example illustrates how this can be done: </para>
+                  <programlisting>vjThread* thread;
 
 thread = new vjThread(run);
 
@@ -2532,48 +2546,55 @@ thread = new vjThread(run);
 
 thread-&gt;join();
 
-// Now that the thread is done, continue.</programlisting></para>
+// Now that the thread is done, continue.</programlisting>
                   <para>Here, the creator of thread can be another <classname>vjThread</classname>, or it can be the main thread of execution (though it will not be that way in a VR Juggler application). In other words, any thread can create more threads and control them. What happens in this example is that thread is created and begins running. Meanwhile, the creator thread continues to do some more work and then must wait for <varname>thread</varname> to finish its work before continuing. It calls the <methodname>join()</methodname> method, a blocking call, and it will not return until <varname>thread</varname> has completed.</para>
                   <para>While it is not demonstrated here, the <methodname>join()</methodname> method can take a single argument of type <type>void**</type>. It is a pointer to a pointer where the exit status of the joined thread is stored. The operating system fills the pointed to pointer with the exit status when the thread exits.</para>
                   <para>It is very important to note that in VR Juggler 1.0, the implementation of thread joining is incomplete for IRIX SPROC threads. The next major release of VR Juggler will have this corrected.</para>
                </section>
                <section>
                   <title>Suspending and Resuming a Thread's Execution</title>
-                  <para>Sometimes, it may be necessary to suspend the execution of a running thread and resume it again later. There are two methods in the vjThread interface that do just this. Assuming that there is already a running thread pointed to by the object <varname>thread</varname>, it can be suspended as follows:<programlisting>thread-&gt;suspend();</programlisting></para>
-                  <para>Resuming execution of the suspended thread is just as easy:<programlisting>thread-&gt;resume();</programlisting></para>
+                  <para>Sometimes, it may be necessary to suspend the execution of a running thread and resume it again later. There are two methods in the vjThread interface that do just this. Assuming that there is already a running thread pointed to by the object <varname>thread</varname>, it can be suspended as follows:</para>
+                  <programlisting>thread-&gt;suspend();</programlisting>
+                  <para>Resuming execution of the suspended thread is just as easy:</para>
+                  <programlisting>thread-&gt;resume();</programlisting>
                   <para>On successful completion, both methods return 0. If the operation could not be performed for some reason, -1 is returned to indicate error status.</para>
                </section>
                <section>
                   <title>Getting and Setting a Thread's Priority</title>
                   <para>Changing the priority of a thread tells the underlying operating system how important a thread is and gives it hints about how to schedule the threads. If no value for the priority is given to the constructor, all <classname>vjThread</classname>s are created with the default priority for all threads. Values higher than 0 for the priority request a higher priority when the thread is created.</para>
-                  <para>Besides being able to set the priority when the thread is created, it is possible to query and to adjust the priority of a running thread. Assuming that there is already a running thread pointed to by the object <varname>thread</varname>, its priority can be requested as follows: <programlisting>int prio;
+                  <para>Besides being able to set the priority when the thread is created, it is possible to query and to adjust the priority of a running thread. Assuming that there is already a running thread pointed to by the object <varname>thread</varname>, its priority can be requested as follows: </para>
+                  <programlisting>int prio;
 
-thread-&gt;getPrio(&amp;prio);</programlisting></para>
-                  <para>The thread's priority is stored in <varname>prio</varname> and returned via the pointer passed to the <methodname>getPrio()</methodname> method. Setting that thread's priority is also easy:<varname></varname><programlisting>int prio;
+thread-&gt;getPrio(&amp;prio);</programlisting>
+                  <para>The thread's priority is stored in <varname>prio</varname> and returned via the pointer passed to the <methodname>getPrio()</methodname> method. Setting that thread's priority is also easy:<varname></varname></para>
+                  <programlisting>int prio;
 
 // Assign some priority value to prio ...
 
-thread-&gt;setPrio(prio);</programlisting></para>
+thread-&gt;setPrio(prio);</programlisting>
                   <para>On successful completion, both methods return 0. If the operation could not be performed for some reason, -1 is returned to indicate error status.</para>
                </section>
                <section>
                   <title>Sending Signals to a Thread</title>
                   <para>On UNIX-based systems, a signal is sent to a process using the <function>kill(2)</function> system call. With POSIX threads, signals are sent using <function>pthread_kill(3)</function>. VR Juggler's thread interface implements these ideas using a <methodname>kill()</methodname><methodname></methodname> method. There are two ways to call this method: with an argument naming the signal to be delivered to the thread or without an argument which cancels the thread's execution. The first of these is described in this section, and the second is described in the next section.</para>
                   <para>A problem does arise here, unfortunately. Signals are not supported on all operating systems (notably, Win32). The interface is consistent, but code written on IRIX will not compile on Win32 if, for example, it sends a <varname>SIGHUP</varname> to a thread. An improved thread interface is being designed to overcome problems such as this one. For now, we describe this part of the interface as though it is supported completely on all platforms.</para>
-                  <para>As usual, assume there is a running thread, a pointer to which is stored in <varname>thread</varname>. To send it a signal (<varname>SIGINT</varname>, for example), use the following:<programlisting>thread-&gt;kill(SIGINT);</programlisting></para>
+                  <para>As usual, assume there is a running thread, a pointer to which is stored in <varname>thread</varname>. To send it a signal (<varname>SIGINT</varname>, for example), use the following:</para>
+                  <programlisting>thread-&gt;kill(SIGINT);</programlisting>
                   <para>The signal will be delivered to the thread by the operating system, and the thread is expected to handle it properly. This version of the <methodname>kill()</methodname> method returns 0 if the signal is sent successfully. Otherwise, -1 is returned to indicate that an error occurred.</para>
                </section>
                <section>
                   <title>Canceling a Thread's Execution</title>
-                  <para>As described in the previous section, using the <methodname>kill()</methodname> method with no argument cancels the execution of the thread. When using POSIX threads, this is actually implemented using <methodname>pthread_cancel(3)</methodname>. On IRIX with SPROC threads, a <varname>SIGKILL</varname> is sent to the thread to end its execution forcibly. The syntax for using this method is basically the same as in the previous section, but it is repeated to make that clear. Again assuming that there is a running thread with a pointer to its <classname>vjThread</classname> object stored in <varname>thread</varname>, use the following:<programlisting>thread-&gt;kill();</programlisting></para>
+                  <para>As described in the previous section, using the <methodname>kill()</methodname> method with no argument cancels the execution of the thread. When using POSIX threads, this is actually implemented using <methodname>pthread_cancel(3)</methodname>. On IRIX with SPROC threads, a <varname>SIGKILL</varname> is sent to the thread to end its execution forcibly. The syntax for using this method is basically the same as in the previous section, but it is repeated to make that clear. Again assuming that there is a running thread with a pointer to its <classname>vjThread</classname> object stored in <varname>thread</varname>, use the following:</para>
+                  <programlisting>thread-&gt;kill();</programlisting>
                   <para>Unlike the syntax used to send a signal to a thread, this version of <methodname>kill()</methodname> does not have a return value.</para>
                   <para>Users of POSIX threads may be wondering if the <classname>vjThread</classname> API provides a way to set cancellation points in the code. Unfortunately, it does not at this time. Extending the interface in this way is being considered, but cancellation points do not have meaning with all thread implementations.</para>
                </section>
                <section>
                   <title>Requesting the Current Thread's Identifier</title>
-                  <para>Lastly, it is common to request the currently running thread's identifier. This only makes sense when called from a point on that thread's flow of execution. (In POSIX threads, this is the notion of "self". For IRIX SPROC threads, this means getting the process ID.) The <classname>vjThread</classname> API provides a static method that can be called at any time in the thread that is currently running. It returns a pointer to a <classname>vjBaseThread</classname> (the basic type from which <classname>vjThread</classname> inherits its interface). The syntax is as follows:<programlisting>vjBaseThread* my_id;
+                  <para>Lastly, it is common to request the currently running thread's identifier. This only makes sense when called from a point on that thread's flow of execution. (In POSIX threads, this is the notion of "self". For IRIX SPROC threads, this means getting the process ID.) The <classname>vjThread</classname> API provides a static method that can be called at any time in the thread that is currently running. It returns a pointer to a <classname>vjBaseThread</classname> (the basic type from which <classname>vjThread</classname> inherits its interface). The syntax is as follows:</para>
+                  <programlisting>vjBaseThread* my_id;
 
-my_id = vjThread::self();</programlisting></para>
+my_id = vjThread::self();</programlisting>
                   <para>The returned pointer can then be used to perform all of the previously described operations on the current thread.</para>
                </section>
                <section>
@@ -2609,9 +2630,11 @@ my_id = vjThread::self();</programlisting></para>
                </section>
                <section>
                   <title><classname>vjThreadMemberFunctor</classname></title>
-                  <para>This implementation of <classname>vjBaseThreadFunctor</classname> is for all functions that fall into the rather elite category of being non-static class member functions. To be more specific, those member functions (heretofore referred to as "methods") must have the following prototype: <programlisting>void methodName(void* arg);</programlisting></para>
+                  <para>This implementation of <classname>vjBaseThreadFunctor</classname> is for all functions that fall into the rather elite category of being non-static class member functions. To be more specific, those member functions (heretofore referred to as "methods") must have the following prototype: </para>
+                  <programlisting>void methodName(void* arg);</programlisting>
                   <para>Those readers with experience in multi-threaded programming will recognize this prototype instantly. It is no different than that used in common threading implementations. Constructing the functor to use this method, however, is quite different than what readers may have seen before.</para>
-                  <para>Say there is a class <classname>MyObject</classname> with a method <methodname>run()</methodname> having the appropriate prototype that will be executed by a <classname>vjThread</classname> object. In this case, <methodname>run()</methodname> takes an argument that is a pointer to a pre-defined type <type>thread_args_t</type>. Also assume that there is an instance of <classname>MyObject</classname> pointed to by the variable <varname>my_obj</varname>. The following code creates the <classname>vjThreadMemberFunctor</classname> object that will encapsulate the method:<programlisting>vjThreadMemberFunctor&lt;MyObject&gt;* my_functor;
+                  <para>Say there is a class <classname>MyObject</classname> with a method <methodname>run()</methodname> having the appropriate prototype that will be executed by a <classname>vjThread</classname> object. In this case, <methodname>run()</methodname> takes an argument that is a pointer to a pre-defined type <type>thread_args_t</type>. Also assume that there is an instance of <classname>MyObject</classname> pointed to by the variable <varname>my_obj</varname>. The following code creates the <classname>vjThreadMemberFunctor</classname> object that will encapsulate the method:</para>
+                  <programlisting>vjThreadMemberFunctor&lt;MyObject&gt;* my_functor;
 thread_args_t* args;
 vjThread* thread;
 
@@ -2620,13 +2643,14 @@ args = new thread_args_t();
 // Fill in the arguments to be passed to the thread...
 
 my_functor = new vjThreadMemberFunctor&lt;MyObject&gt;(my_obj, &amp;MyObject::run, (void*) args);
-thread = new vjThread(my_functor);</programlisting></para>
+thread = new vjThread(my_functor);</programlisting>
                   <para>The important thing to note in this example is that <classname>vjThreadMemberFunctor</classname> is a template class. When creating the functor instance, the class must be specified as the template parameter. (If you do not understand this syntax, take a look at a C++ book that covers the current C++ standard.) Also note that when creating the new <classname>vjThread</classname> object, the argument structure is not passed to the constructor. The argument to <methodname>run()</methodname> is packaged up with the function in the functor object <varname>my_functor</varname>. Once this code has executed, a new thread is spawned that will run the <methodname>run()</methodname> method given the provided argument structure.</para>
-                  <para>The <classname>vjBaseThreadFunctor</classname> interface defines an extra method <methodname>setArg()</methodname> that allows the function's argument to be set after the functor object is created. The argument to the constructor providing the function's argument is optional and will default to <varname>NULL</varname> if not specified. At a later time, should there be an argument to provide, the following can be used:<programlisting>thread_args_t* args = new thread_args_t();
+                  <para>The <classname>vjBaseThreadFunctor</classname> interface defines an extra method <methodname>setArg()</methodname> that allows the function's argument to be set after the functor object is created. The argument to the constructor providing the function's argument is optional and will default to <varname>NULL</varname> if not specified. At a later time, should there be an argument to provide, the following can be used:</para>
+                  <programlisting>thread_args_t* args = new thread_args_t();
 
 // Fill in args ...
 
-my_functor-&gt;setArg(args);</programlisting></para>
+my_functor-&gt;setArg(args);</programlisting>
                   <para>This assumes that there is already a functor object instantiated called <varname>my_functor</varname>. Alternatively, <methodname>setArg()</methodname> could be used to remove a previously defined argument by passing <varname>NULL</varname>.</para>
                   <para>The last thing to note is that a lot of memory is being allocated dynamically in the example code. Be careful to deallocate the memory when it is no longer needed.</para>
                </section>
@@ -2662,18 +2686,22 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Creating a <classname>vjSemaphore</classname></title>
-                  <para>When creating a <classname>vjSemaphore</classname> object, give the initial value that represents the number of resources being controlled by the semaphore. If no value is given, the default is 1 which of course gives a binary semaphore. Binary semaphores are better known as mutexes (see <xref linkend="using-vjMutex-sect"/> for more information about mutex use in VR Juggler). An example of creating a simple semaphore to control access to five resources is as follows:<programlisting>vjSemaphore sema(5);</programlisting></para>
-                  <para>This creates a semaphore capable of controlling concurrent access to five resources. At some point, if there is a need to change the number of resources, a method called <methodname>reset()</methodname> is provided. Pass the new number of resources, and the semaphore object is updated appropriately:<programlisting>sema.reset(4);</programlisting></para>
+                  <para>When creating a <classname>vjSemaphore</classname> object, give the initial value that represents the number of resources being controlled by the semaphore. If no value is given, the default is 1 which of course gives a binary semaphore. Binary semaphores are better known as mutexes (see <xref linkend="using-vjMutex-sect"/> for more information about mutex use in VR Juggler). An example of creating a simple semaphore to control access to five resources is as follows:</para>
+                  <programlisting>vjSemaphore sema(5);</programlisting>
+                  <para>This creates a semaphore capable of controlling concurrent access to five resources. At some point, if there is a need to change the number of resources, a method called <methodname>reset()</methodname> is provided. Pass the new number of resources, and the semaphore object is updated appropriately:</para>
+                  <programlisting>sema.reset(4);</programlisting>
                   <para>The semaphore <varname>sema</varname> now controls access to only four resources.</para>
                </section>
                <section>
                   <title>Locking a Semaphore</title>
-                  <para>When a thread needs to acquire access to shared data, it locks a semaphore. In the <classname>vjSemaphore</classname> interface, this is accomplished using the <methodname>acquire()</methodname> method: <programlisting>sema.acquire();</programlisting></para>
+                  <para>When a thread needs to acquire access to shared data, it locks a semaphore. In the <classname>vjSemaphore</classname> interface, this is accomplished using the <methodname>acquire()</methodname> method: </para>
+                  <programlisting>sema.acquire();</programlisting>
                   <para>As expected, <methodname>acquire()</methodname> is a blocking call, so if the semaphore's value is less than or equal to 0, the thread requesting the lock will block until the semaphore's value is greater than 0. Note that the return value of <methodname>acquire()</methodname> is a little different than most calls. If the lock is acquired, 1 is returned. If the attempt to lock the semaphore fails for some reason, -1 is returned. The newer API associated with VR Juggler 2.0 resolves this inconsistency.</para>
                </section>
                <section>
                   <title>Releasing a Locked Semaphore</title>
-                  <para>Finally, when access to the critical section is complete, the semaphore is released using the <methodname>release()</methodname> method:<programlisting>sema.release();</programlisting></para>
+                  <para>Finally, when access to the critical section is complete, the semaphore is released using the <methodname>release()</methodname> method:</para>
+                  <programlisting>sema.release();</programlisting>
                   <para>If the locked semaphore is released successfully, 0 is returned. Otherwise, -1 is returned.</para>
                </section>
                <section>
@@ -2704,27 +2732,32 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Creating a <classname>vjMutex</classname></title>
-                  <para>When creating a <classname>vjMutex</classname> object, there are no special parameters to pass or considerations to be made. An example of creating a mutex is as follows: <programlisting>vjMutex mutex;</programlisting></para>
+                  <para>When creating a <classname>vjMutex</classname> object, there are no special parameters to pass or considerations to be made. An example of creating a mutex is as follows: </para>
+                  <programlisting>vjMutex mutex;</programlisting>
                   <para>There is nothing more to say this time.</para>
                </section>
                <section>
                   <title>Locking a Mutex</title>
-                  <para>When a thread needs to acquire access to shared data, it can lock a mutex. In the <classname>vjMutex</classname> interface, this is accomplished using the <methodname>acquire()</methodname> method:<programlisting>mutex.acquire();</programlisting></para>
+                  <para>When a thread needs to acquire access to shared data, it can lock a mutex. In the <classname>vjMutex</classname> interface, this is accomplished using the <methodname>acquire()</methodname> method:</para>
+                  <programlisting>mutex.acquire();</programlisting>
                   <para>As expected, <methodname>acquire()</methodname> is a blocking call, so if the mutex is already locked by another thread, the thread requesting the lock will block until the mutex is released by the other thread. Note that the return value of <methodname>acquire()</methodname> is a little different than most calls. If the lock is acquired, 1 is returned. If the attempt to lock the semaphore fails for some reason, -1 is returned. The newer API associated with VR Juggler 2.0 resolves this inconsistency.</para>
                </section>
                <section>
                   <title>Attempting to Lock a Mutex</title>
-                  <para>If there is a need to lock a mutex only when the call would <emphasis>not</emphasis> block, a method is provided to do this. It is called <methodname>tryAcquire()</methodname>, and it will not block if the mutex is already locked. It works as follows:<programlisting>mutex.tryAcquire();</programlisting></para>
+                  <para>If there is a need to lock a mutex only when the call would <emphasis>not</emphasis> block, a method is provided to do this. It is called <methodname>tryAcquire()</methodname>, and it will not block if the mutex is already locked. It works as follows:</para>
+                  <programlisting>mutex.tryAcquire();</programlisting>
                   <para>If the mutex is locked, 1 is returned. Otherwise, 0 is returned. The call does not block.</para>
                </section>
                <section>
                   <title>Testing the State of a Mutex</title>
-                  <para>In addition to conditional locking, the state of a mutex can be tested to see if it is locked or unlocked. This is done using the <methodname>test()</methodname> method as follows:<programlisting>int state = mutex.test();</programlisting></para>
+                  <para>In addition to conditional locking, the state of a mutex can be tested to see if it is locked or unlocked. This is done using the <methodname>test()</methodname> method as follows:</para>
+                  <programlisting>int state = mutex.test();</programlisting>
                   <para>If the mutex is <emphasis>not</emphasis> locked, 0 is returned. Otherwise, 1 is returned.</para>
                </section>
                <section>
                   <title>Releasing a Locked Mutex</title>
-                  <para>When access to the critical section is complete, a locked mutex is released using the <methodname>release()</methodname> method:<programlisting>sema.release();</programlisting></para>
+                  <para>When access to the critical section is complete, a locked mutex is released using the <methodname>release()</methodname> method:</para>
+                  <programlisting>sema.release();</programlisting>
                   <para>If the locked mutex is released successfully, 0 is returned. Otherwise, -1 is returned.</para>
                </section>
                <section>
@@ -2785,12 +2818,13 @@ thread = new vjThread(my_functor);</programlisting>
                   <orderedlist>
                      <listitem>
                         <para><methodname>virtual bool configCanHandle(vjConfigChunk* chunk)</methodname></para>
-                        <para>This function should simply return a Boolean (true or false) depending on whether this object knows how to deal with the ConfigChunk passed to it. If this Chunk uses an application-custom ChunkDescs, this should return true. For example:<programlisting>std::string s = chunk-&gt;getType();
+                        <para>This function should simply return a Boolean (true or false) depending on whether this object knows how to deal with the ConfigChunk passed to it. If this Chunk uses an application-custom ChunkDescs, this should return true. For example:</para>
+                        <programlisting>std::string s = chunk-&gt;getType();
 
 if ( !vjstrcasecmp(s, "my_custom_chunk_type") )
 {
    return true;
-}</programlisting></para>
+}</programlisting>
                      </listitem>
                      <listitem>
                         <para><methodname>virtual bool configAdd(vjConfigChunk* chunk)</methodname></para>
@@ -2817,7 +2851,8 @@ if ( !vjstrcasecmp(s, "my_custom_chunk_type") )
                         <para><methodname>vjVarValue&amp; vjConfigChunk::getProperty (std::string&amp; property_token, int num)</methodname></para>
                         <para>This is the key method for getting the information contained in a ConfigChunk. Its arguments are the token associated with a property, and a numeric index. For example, a property might store a coordinate with three values, each of which can be accessed separately by using the numbers 0, 1, or 2 for the <varname>num</varname> parameter.</para>
                         <para>The return value for this method needs some explanation. <classname>vjVarValue</classname> is a placeholder class designed to be cast safely to one of a variety of data types. Basically, the return value of <methodname>getProperty()</methodname> is cast to whichever type the caller expects to receive. It is assumed that the caller knows the types of values stored in a given property.</para>
-                        <para><classname>vjVarValue</classname> tries to coax the data in a variety of ways for convenience. For example, the VarValue returned from an integer, float, or boolean property can be safely cast to a string or <type>char*</type>. Booleans can be cast to integers and vice versa. The following code fragment gives a few examples of this usage:<programlisting>std::string s1 = (std::string) chunk-&gt;getProperty("name", 0);
+                        <para><classname>vjVarValue</classname> tries to coax the data in a variety of ways for convenience. For example, the VarValue returned from an integer, float, or boolean property can be safely cast to a string or <type>char*</type>. Booleans can be cast to integers and vice versa. The following code fragment gives a few examples of this usage:</para>
+                        <programlisting>std::string s1 = (std::string) chunk-&gt;getProperty("name", 0);
 char* s2 = (char*) chunk-&gt;getProperty("name");
 // NOTE: the cast allocates new memory for s2, which you are
 // responsible for deleting.
@@ -2828,7 +2863,7 @@ std::string s3 = (std::string) chunk-&gt;getProperty("enabled");
 
 vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
 // ch is a copy of the embedded chunk. Once again, the caller
-// of getProperty() is responsible for freeing this memory.</programlisting></para>
+// of getProperty() is responsible for freeing this memory.</programlisting>
                      </listitem>
                   </itemizedlist>
                   <itemizedlist>
@@ -2872,8 +2907,10 @@ vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
                   <para><classname>vjGlove</classname>, <classname>vjSimDigitalGlove</classname>, <classname>vjGloveGesture</classname></para>
                </listitem>
             </itemizedlist>
-            <para>For example, to make a driver that registers button presses, derive from <classname>vjDigital</classname>:<programlisting>class MyNewButtonDevice : public vjDigital</programlisting></para>
-            <para>Supposed that a joystick driver supporting buttons and movement is needed. In this case, an additional component, this one for analog input, is needed for the X and Y axes. Since the device is both digital and analog, its class must derive from both <classname>vjDigital</classname> and <classname>vjAnalog</classname> using C++ multiple inheritance:<programlisting>class MyNewJoystickDevice : public vjDigital, public vjAnalog</programlisting></para>
+            <para>For example, to make a driver that registers button presses, derive from <classname>vjDigital</classname>:</para>
+            <programlisting>class MyNewButtonDevice : public vjDigital</programlisting>
+            <para>Supposed that a joystick driver supporting buttons and movement is needed. In this case, an additional component, this one for analog input, is needed for the X and Y axes. Since the device is both digital and analog, its class must derive from both <classname>vjDigital</classname> and <classname>vjAnalog</classname> using C++ multiple inheritance:</para>
+            <programlisting>class MyNewJoystickDevice : public vjDigital, public vjAnalog</programlisting>
             <note>
                <para>NOTE: To use the joystick in place of a tracker, it should derive instead from <classname>vjPosition</classname>. This way, you can replace real trackers with your joystick "pseudo tracker". The main idea is that to be able to replace one device with another, the alternate device class must derive from the same base classes as the original device.</para>
             </note>
@@ -2883,19 +2920,21 @@ vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
                <orderedlist>
                   <listitem>
                      <para><methodname>virtual int startSampling()</methodname></para>
-                     <para>Within this function, a new thread is started. This thread is used to sample the data from the device. The thread creation step may look something like the following:<programlisting>vjThreadMemberFunctor&lt;MyNewButtonDevice&gt;* functor =
+                     <para>Within this function, a new thread is started. This thread is used to sample the data from the device. The thread creation step may look something like the following:</para>
+                     <programlisting>vjThreadMemberFunctor&lt;MyNewButtonDevice&gt;* functor =
    new vjThreadMemberFunctor&lt;MyNewButtonDevice&gt;(this,
                                                 &amp;MyNewButtonDevice::sampleFunction,
                                                 NULL);
-mThread = new vjThread(functor);</programlisting></para>
-                     <para>The above creates a thread that will execute <methodname>MyNewButtonDevice::sampleFunction()</methodname>, a non-static member function in the class <classname>MyNewButtonDevice</classname>. The implementation of that method would be similar to the following in most cases<programlisting>void MyNewButtonDevice::sampleFunction (void* arg)
+mThread = new vjThread(functor);</programlisting>
+                     <para>The above creates a thread that will execute <methodname>MyNewButtonDevice::sampleFunction()</methodname>, a non-static member function in the class <classname>MyNewButtonDevice</classname>. The implementation of that method would be similar to the following in most cases</para>
+                     <programlisting>void MyNewButtonDevice::sampleFunction (void* arg)
 {
    // Keep working until someone kills mThread.
    while ( 1 )
    {
       this-&gt;sample();
    }
-}</programlisting></para>
+}</programlisting>
                      <para>The thread can be tested for validity using the method <methodname>vjBaseThread::valid()</methodname>. For more information on VR Juggler threads, refer to <xref linkend="using-vjThread-sect"/>.</para>
                   </listitem>
                   <listitem>
@@ -2905,11 +2944,13 @@ mThread = new vjThread(functor);</programlisting></para>
                   <listitem>
                      <para><methodname>virtual int sample()</methodname></para>
                      <para>This method reads data from the device and stores it for later use by <methodname>getDigitalData()</methodname>. Note that <methodname>MyNewButtonDevice::sampleFunction()</methodname>, defined above, invokes this method.</para>
-                     <para>VR Juggler devices typically use triple-buffered data management. This is done to ensure that data is not being written into a buffer when the Input Manager is trying to read the most recent value. The <classname>vjInput</classname> class defines three variables to help programmers keep track of which buffer is in use at any given time: <varname>vjInput::current</varname>, <varname>vjInput::valid</varname>, and <varname>vjInput::progress</varname>. The sampled data would be read into a three-element array of the correct type (this is driver-specific). When writing the freshly sampled data into the array, use <varname>vjInput::progress</varname>:<programlisting>mSampledDigitalData[vjInput::progress] = sampled_digital_value;</programlisting></para>
+                     <para>VR Juggler devices typically use triple-buffered data management. This is done to ensure that data is not being written into a buffer when the Input Manager is trying to read the most recent value. The <classname>vjInput</classname> class defines three variables to help programmers keep track of which buffer is in use at any given time: <varname>vjInput::current</varname>, <varname>vjInput::valid</varname>, and <varname>vjInput::progress</varname>. The sampled data would be read into a three-element array of the correct type (this is driver-specific). When writing the freshly sampled data into the array, use <varname>vjInput::progress</varname>:</para>
+                     <programlisting>mSampledDigitalData[vjInput::progress] = sampled_digital_value;</programlisting>
                   </listitem>
                   <listitem>
                      <para><methodname>virtual void updateData()</methodname></para>
-                     <para>Triple-buffered device drivers use this method to swap the data indices. The member function is usually implemented as follows:<programlisting>void MyNewButtonDevice::updateData()
+                     <para>Triple-buffered device drivers use this method to swap the data indices. The member function is usually implemented as follows:</para>
+                     <programlisting>void MyNewButtonDevice::updateData()
 {
    vjGuard&lt;vjMutex&gt; updateGuard(lock);
 
@@ -2918,40 +2959,45 @@ mThread = new vjThread(functor);</programlisting></para>
 
    // swap the indices for the tri-buffer pointers
    vjInput::swapCurrentIndexes();
-}</programlisting></para>
+}</programlisting>
                      <para>Note the use of a <classname>vjGuard&lt;&gt;</classname> object to synchronize access to the <varname>mSampledDigitalData</varname> array. This is needed because the sampling and the reading are occurring in separate threads, but both threads need access to <varname>mSampledDigitalData</varname>.</para>
                   </listitem>
                   <listitem>
                      <para><methodname>static std::string getChunkType()</methodname></para>
-                     <para>In the <methodname>getChunkType()</methodname> function, the <firstterm>chunk type</firstterm> of the device must be returned. Its name must be as it appears in the chunk description file for the driver. For example, the implementation for the simple button driver would appear as:<programlisting>std::string MyNewButtonDevice::getChunkType()
+                     <para>In the <methodname>getChunkType()</methodname> function, the <firstterm>chunk type</firstterm> of the device must be returned. Its name must be as it appears in the chunk description file for the driver. For example, the implementation for the simple button driver would appear as:</para>
+                     <programlisting>std::string MyNewButtonDevice::getChunkType()
 {
    return std:string("MyNewButtonDevice");
-}</programlisting></para>
+}</programlisting>
                      <para>At this time, it is useful to point out that every VR Juggler device needs a <firstterm>chunk type</firstterm> associated with it. A chunk type is similar to a struct in C or C++. The data structure is defined in a chunk description file (which usually has the extension <filename>.desc</filename>). Once defined, the type for a new driver can be used in VR Juggler configuration files.</para>
                   </listitem>
                   <listitem>
                      <para><methodname>virtual int getDigitalData(int devNum = 0)</methodname></para>
-                     <para>The VR Juggler Input Manager uses this method to read digital data sampled by the driver. This is when the triple-buffered data scheme becomes especially valuable. To provide the Input Manager with the most up-to-date sample, use <varname>vjInput::current</varname> as the index, as shown below:<programlisting>int MyNewJoystickDevice::getDigitalData(int devNum)
+                     <para>The VR Juggler Input Manager uses this method to read digital data sampled by the driver. This is when the triple-buffered data scheme becomes especially valuable. To provide the Input Manager with the most up-to-date sample, use <varname>vjInput::current</varname> as the index, as shown below:</para>
+                     <programlisting>int MyNewJoystickDevice::getDigitalData(int devNum)
 {
   return mSampledDigitalData[current];
-}</programlisting></para>
+}</programlisting>
                      <para>Note that in this example, the parameter <varname>devNum</varname> is ignored. This is not always the case. Indeed, this button driver would likely have support for more than one button, and in that case, we would use <varname>devNum</varname> as the index into an array or vector containing data sampled from all the buttons.</para>
                   </listitem>
                </orderedlist>
-               <para>There are other methods that must be implemented depending on the classes from which a given driver class derives. In the joystick example given earlier, the method <methodname>getAnalogData()</methodname> would have to be implemented in addition to <methodname>getDigitalData()</methodname>. The prototype for <methodname>getAnalogData()</methodname> is:<programlisting>virtual float getAnalogData(int devNum = 0)</programlisting></para>
-               <para>The joystick driver would use this to return values for the X and Y axes. The data here is more complex because it would be for triple-buffered two-dimensional samples. An implementation might look similar to the following:<programlisting>float MyNewJoystickDevice::getAnalogData(int axis)
+               <para>There are other methods that must be implemented depending on the classes from which a given driver class derives. In the joystick example given earlier, the method <methodname>getAnalogData()</methodname> would have to be implemented in addition to <methodname>getDigitalData()</methodname>. The prototype for <methodname>getAnalogData()</methodname> is:</para>
+               <programlisting>virtual float getAnalogData(int devNum = 0)</programlisting>
+               <para>The joystick driver would use this to return values for the X and Y axes. The data here is more complex because it would be for triple-buffered two-dimensional samples. An implementation might look similar to the following:</para>
+               <programlisting>float MyNewJoystickDevice::getAnalogData(int axis)
 {
    vjASSERT(axis &gt;= 0 &amp;&amp; axis &lt;= 1 &amp;&amp; "only 2 axes (x and y) available");
    return mSampledAnalogData[current][axis];
-}</programlisting></para>
+}</programlisting>
                <para>In this driver, the integer argument to the method is used to represent either the X or the Y axis. The assertion ensures that a valid axis index is passed.</para>
             </section>
             <section>
                <title>Register the Device Driver with VR Juggler</title>
-               <para>Device driver registration is done through a templated constructor called <classname>vjDeviceConstructor</classname>. It is used as follows:<programlisting>#include &lt;Input/InputManager/vjDeviceFactory.h&gt;
+               <para>Device driver registration is done through a templated constructor called <classname>vjDeviceConstructor</classname>. It is used as follows:</para>
+               <programlisting>#include &lt;Input/InputManager/vjDeviceFactory.h&gt;
 
 vjDeviceConstructor&lt;MyNewButtonDevice&gt;* this_ptr_not_used =
-   new vjDeviceConstructor&lt;MyNewButtonDevice&gt;;</programlisting></para>
+   new vjDeviceConstructor&lt;MyNewButtonDevice&gt;;</programlisting>
                <para>The new device driver can be compiled along with the vjDeviceConstructor call into a standalone library (<filename>.a</filename>, <filename>.so</filename>, <filename>.lib</filename>, and <filename>.dll</filename> are common). This library can then be linked with applications. In this way, there is no need to modify the VR Juggler source code to add a new driver. The driver code can be centralized into a single, neat driver that can be distributed as a "plug-in" for VR Juggler.</para>
                <note>
                   <para>When linking, it is important that the linker include <emphasis>all</emphasis> library symbols. On IRIX with the MIPSpro Compilers, the <parameter>-all</parameter> option informs the linker of this need. The GNU linker uses <parameter>--whole-archive</parameter>. Refer to your compiler documentation for more detailed information.</para>
@@ -2971,16 +3017,18 @@ vjDeviceConstructor&lt;MyNewButtonDevice&gt;* this_ptr_not_used =
             </orderedlist>
             <section>
                <title>Configuration Files</title>
-               <para>Before configuring a device, a new configuration chunk description must be created. We recommend that this be done using VjControl. For the button device, the chunk description will look similar to the following:<programlisting>chunk MyButtonDevice "MyButtonDevice" "Configuration for my one-button device"
+               <para>Before configuring a device, a new configuration chunk description must be created. We recommend that this be done using VjControl. For the button device, the chunk description will look similar to the following:</para>
+               <programlisting>chunk MyButtonDevice "MyButtonDevice" "Configuration for my one-button device"
    Name String 1 "Name" "Unique name of an instance of this chunk type"
    port String 1 "Port" "Serial port this device is connected to"
    baud Int 1 "Baud Rate" "Serial port speed"
-   end</programlisting></para>
+   end</programlisting>
                <para>For a real device, all of these parameters may or may not be needed. (In VR Juggler 1.0, vjInput requires <varname>baud</varname> and <varname>port</varname>, but this has been corrected in newer versions.) Again, the VjControl chunk description editor simplifies the creation of this description so that only the required elements are present.</para>
                <note>
                   <para>If the new driver is for a positional device, its name must be added to the enumeration in the <varname>PosProxy</varname> chunk description. VjControl aids this addition.</para>
                </note>
-               <para>Once the chunk description is in place, a new configuration chunk can be created. Once again, VjControl makes the step easier. The following is an example configuration file that configures the one-button device we have been using thus far:<programlisting>vjincludedescfile
+               <para>Once the chunk description is in place, a new configuration chunk can be created. Once again, VjControl makes the step easier. The following is an example configuration file that configures the one-button device we have been using thus far:</para>
+               <programlisting>vjincludedescfile
   Name "mybuttondevice.desc"
   end
 MyButtonDevice
@@ -2988,7 +3036,7 @@ MyButtonDevice
   port { "/dev/ttyd4" }
   baud { "9600" }
   end
-End</programlisting></para>
+End</programlisting>
             </section>
             <section>
                <title>Writing Code that Accepts the Configuration</title>
@@ -3000,7 +3048,8 @@ End</programlisting></para>
                   </listitem>
                   <listitem>
                      <para><methodname>virtual bool vjInput::config(vjConfigChunk* c)</methodname></para>
-                     <para>When the system detects a configuration change for a given driver, it will pass the new <classname>vjConfigChunk</classname> object to this method. For more information about how to access config chunk objects, refer to the <emphasis>Programmer's Reference</emphasis>. The following is a simple example for the basic button device we have used thus far:<programlisting>bool MyNewButtonDevice::config( vjConfigChunk *c )
+                     <para>When the system detects a configuration change for a given driver, it will pass the new <classname>vjConfigChunk</classname> object to this method. For more information about how to access config chunk objects, refer to the <emphasis>Programmer's Reference</emphasis>. The following is a simple example for the basic button device we have used thus far:</para>
+                     <programlisting>bool MyNewButtonDevice::config( vjConfigChunk *c )
 {
    if (!vjDigital::config(c))
       return false;
@@ -3009,7 +3058,7 @@ End</programlisting></para>
    baudRate = c-&gt;getProperty("baud");
 
    return true;
-}</programlisting></para>
+}</programlisting>
                   </listitem>
                </orderedlist>
             </section>
@@ -3017,7 +3066,7 @@ End</programlisting></para>
          <section>
             <title>Example Code</title>
             <para>Now that we have explained the concepts involved in adding a device driver to VR Juggler, we can show some code. The following example is for a fictitious piece of hardware that has only one button.</para>
-            <programlisting>#include &lt;Input/vjInput/vjDigital.h&gt;
+            <programlisting linenumbering="numbered">#include &lt;Input/vjInput/vjDigital.h&gt;
 #include &lt;Input/InputManager/vjDeviceFactory.h&gt;
 #include &lt;Threads/vjThread.h&gt;
 #include &lt;Sync/vjGuard.h&gt;
