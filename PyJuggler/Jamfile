@@ -161,6 +161,6 @@ extension vrj
    <find-library>vpr
    <find-library>jccl
    <find-library>gadget
-   <find-library>Juggler
-   <find-library>Juggler_ogl
+   <find-library>vrj
+   <find-library>vrj_ogl
   ;
