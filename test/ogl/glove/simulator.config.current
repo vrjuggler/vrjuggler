@@ -1,0 +1,224 @@
+displaySystem
+  Name "Pipe Setup"
+  numpipes { 1 }
+  xpipes { "-1" ":1.0" ":1.0" ":0.0" ":0.0" ":0.0" ":0.0" ":0.0" }
+  end
+InputManager
+  Name "InputManager"
+  dummyPos { -3.0 5.0 -2.0 }
+  dummyOr { 0.0 0.0 0.0 }
+  end
+DummyPosition
+  Name "Dummy 1"
+  position { 0.0 0.0 0.0 }
+  ori { 90.0 90.0 0.0 }
+  end
+PosProxy
+  Name "Head Proxy"
+  device { "Head and Wand Keyboard" }
+  unit { 0 }
+  etrans { 0 }
+  translate { 0.0 0.0 0.0 }
+  rotate { 0.0 0.0 0.0 }
+  end
+PosProxy
+  Name "Wand Proxy"
+  device { "Head and Wand Keyboard" }
+  unit { 1 }
+  etrans { 0 }
+  translate { 0.0 0.0 0.0 }
+  rotate { 0.0 0.0 0.0 }
+  end
+PosProxy
+  Name "Simulator Camera Proxy"
+  device { "Sim View Camera Control" }
+  unit { 0 }
+  etrans { 0 }
+  translate { 0.0 0.0 0.0 }
+  rotate { 0.0 0.0 0.0 }
+  end
+PosProxy
+  Name "Simulator Camera Proxy 2"
+  device { "Sim View Camera Control" }
+  unit { 1 }
+  etrans { 0 }
+  translate { 0.0 0.0 0.0 }
+  rotate { 0.0 0.0 0.0 }
+  end
+PosProxy
+  Name "GlovePosition"
+  device { "Glove Keyboard" }
+  unit { 0 }
+  etrans { 0 }
+  translate { 0.0 0.0 0.0 }
+  rotate { 0.0 0.0 0.0 }
+  end
+proxyAlias
+  Name "VJHead"
+  aliasName { "VJHead" }
+  proxyPtr { "Head Proxy" }
+  end
+proxyAlias
+  Name "VJWand"
+  aliasName { "VJWand" }
+  proxyPtr { "Wand Proxy" }
+  end
+proxyAlias
+  Name "VJGesture"
+  aliasName { "VJGesture" }
+  proxyPtr { "MyGesture" }
+  end
+proxyAlias
+  Name "VJButton0"
+  aliasName { "VJButton0" }
+  proxyPtr { "Button0Proxy" }
+  end
+proxyAlias
+  Name "VJButton1"
+  aliasName { "VJButton1" }
+  proxyPtr { "Button1Proxy" }
+  end
+proxyAlias
+  Name "VJButton2"
+  aliasName { "VJButton2" }
+  proxyPtr { "Button2Proxy" }
+  end
+proxyAlias
+  Name "VJKeyboard"
+  aliasName { "VJKeyboard" }
+  proxyPtr { "MainKeyboard" }
+  end
+proxyAlias
+  Name "VJGlove"
+  aliasName { "VJGlove" }
+  proxyPtr { "myGlove" }
+  end
+AnaProxy
+  Name "AnaProxy 0"
+  device { "Keyboard 1" }
+  unit { 0 }
+  end
+AnaProxy
+  Name "AnaProxy 1"
+  device { "Head and Wand Keyboard" }
+  unit { 1 }
+  end
+DigProxy
+  Name "Button0Proxy"
+  device { "Head and Wand Keyboard" }
+  unit { 0 }
+  end
+DigProxy
+  Name "Button1Proxy"
+  device { "Head and Wand Keyboard" }
+  unit { 1 }
+  end
+DigProxy
+  Name "Button2Proxy"
+  device { "Head and Wand Keyboard" }
+  unit { 2 }
+  end
+apiPerformer
+  Name "Performer Config"
+  simHeadModel { "/home/selab/Juggler/Data/models/head.flt" }
+  simWandModel { "/home/selab/Juggler/Data/models/wand.flt" }
+  end
+display
+  Name "Sim Window"
+  projectiontype { "" }
+  origin { 0 0 }
+  size { 640 480 }
+  pipe { 0 }
+  stereo { False }
+  border { True }
+  lowerleft { 0.0 0.0 0.0 }
+  lowerright { 0.0 0.0 0.0 }
+  upperleft { 0.0 0.0 0.0 }
+  ScreenPos { 0.0 0.0 0.0 0.0 0.0 }
+  simulator { True }
+  simCamera { "Simulator Camera Proxy" }
+  headPos { "Head Proxy" }
+  end
+Keyboard
+  Name "Head and Wand Keyboard"
+  Pos0Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
+  Pos0Mods { NONE NONE NONE NONE CTRL CTRL CTRL CTRL CTRL CTRL CTRL CTRL }
+  Pos1Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
+  Pos1Mods { ALT ALT ALT ALT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT }
+  digkeys { KEY_1 KEY_2 KEY_3 KEY_4 }
+  digmods { NONE NONE NONE NONE }
+  anaKeysup { KEY_1 KEY_2 KEY_3 KEY_4 }
+  anaModsup { CTRL CTRL CTRL CTRL }
+  anaKeysdn { KEY_1 KEY_2 KEY_3 KEY_4 }
+  anaModsdn { ALT ALT ALT ALT }
+  anastep { 0 }
+  dtrans { 0.01 }
+  drot { 0.5 }
+  msens { 1.0 }
+  toggleoff { 0 }
+  width { 400 }
+  height { 200 }
+  end
+Keyboard
+  Name "Sim View Camera Control"
+  Pos0Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
+  Pos0Mods { NONE NONE NONE NONE CTRL CTRL CTRL CTRL CTRL CTRL CTRL CTRL }
+  Pos1Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
+  Pos1Mods { ALT ALT ALT ALT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT }
+  digkeys { KEY_1 KEY_2 KEY_3 KEY_4 }
+  digmods { NONE NONE NONE NONE }
+  anaKeysup { KEY_NONE KEY_NONE KEY_NONE KEY_NONE }
+  anaModsup { NONE NONE NONE NONE }
+  anaKeysdn { KEY_NONE KEY_NONE KEY_NONE KEY_NONE }
+  anaModsdn { NONE NONE NONE NONE }
+  anastep { 0 }
+  dtrans { 0.04 }
+  drot { 0.6 }
+  msens { 1.0 }
+  toggleoff { 0 }
+  width { 400 }
+  height { 200 }
+  end
+Keyboard
+  Name "Glove Keyboard"
+  Pos0Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
+  Pos0Mods { NONE NONE NONE NONE CTRL CTRL CTRL CTRL CTRL CTRL CTRL CTRL }
+  Pos1Keys { KEY_8 KEY_2 KEY_4 KEY_6 KEY_7 KEY_9 KEY_6 KEY_4 KEY_2 KEY_8 KEY_1 KEY_3 }
+  Pos1Mods { ALT ALT ALT ALT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT SHIFT }
+  digkeys { KEY_1 KEY_2 KEY_3 KEY_4 }
+  digmods { NONE NONE NONE NONE }
+  anaKeysup { KEY_NONE KEY_NONE KEY_NONE KEY_NONE }
+  anaModsup { NONE NONE NONE NONE }
+  anaKeysdn { KEY_NONE KEY_NONE KEY_NONE KEY_NONE }
+  anaModsdn { NONE NONE NONE NONE }
+  anastep { 0 }
+  dtrans { 0.04 }
+  drot { 0.5 }
+  msens { 1.0 }
+  toggleoff { 0 }
+  width { 400 }
+  height { 200 }
+  end
+KeyboardProxy
+  Name "GloveKeyProxy"
+  device { "Glove Keyboard" }
+  end
+SimGloveGesture
+  Name "SimGloveGesture"
+  keyboardProxy { "GloveKeyProxy" }
+  modKeys { ALT ALT ALT }
+  keys { KEY_8 KEY_9 KEY_0 }
+  trainedFilename { "/home/users/kevn/juggler/juggler/Data/gesture/simpleSimGestures.dat" }
+  glovePos { "GlovePosition" }
+  end
+GestureProxy
+  Name "MyGesture"
+  device { "SimGloveGesture" }
+  end
+GloveProxy
+  Name "myGlove"
+  device { "SimGloveGesture" }
+  unit { 0 }
+  visible { True }
+  end
+End
