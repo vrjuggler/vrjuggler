@@ -256,19 +256,19 @@ class ElementTree extends JTree implements DragGestureListener,
       mi = new JMenuItem("Cut", cut_icon);
       mi.addActionListener(this);
       mi.setActionCommand("cut");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_CUT, InputEvent.CTRL_MASK));
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
       popup.add(mi);
       
       mi = new JMenuItem("Copy", copy_icon);
       mi.addActionListener(this);
       mi.setActionCommand("copy");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, InputEvent.CTRL_MASK));
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
       popup.add(mi);
 
       mi = new JMenuItem("Paste", paste_icon);
       mi.addActionListener(this);
       mi.setActionCommand("paste");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE, InputEvent.CTRL_MASK));
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
       popup.add(mi);
 
       popup.setOpaque(true);
@@ -534,13 +534,13 @@ class ElementTree extends JTree implements DragGestureListener,
       }
    }
    public void dragEnter(DragSourceDragEvent e) 
-   {}
+   {;}
    public void dragExit(DragSourceEvent e) 
-   {}
+   {;}
    public void dragOver(DragSourceDragEvent e) 
-   {}
+   {;}
    public void dropActionChanged(DragSourceDragEvent e) 
-   {}
+   {;}
 
    /**
     * Attept to handle the dropping of a ConfigElement into this JTree.
