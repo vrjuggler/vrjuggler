@@ -1,5 +1,7 @@
-
 rem
+rem ************* <auto-copyright.pl BEGIN do not edit this line> *************
+rem
+rem VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
 rem VRJuggler
 rem   Copyright (C) 1997,1998,1999,2000
 rem   Iowa State University Research Foundation, Inc.
@@ -31,6 +33,6 @@ rem Date modified: $Date$
 rem Version:       $Revision$
 rem -----------------------------------------------------------------
 rem
-
+rem ************** <auto-copyright.pl END do not edit this line> **************
 
 java -DVJ_BASE_DIR=%VJ_BASE_DIR% -cp %VJ_BASE_DIR%/bin/VjControl.jar VjGUI.VjControl %1 %2 %3 %4 %5 %6 %7 %8 %9
