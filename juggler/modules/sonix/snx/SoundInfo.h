@@ -75,7 +75,7 @@ struct SoundInfo
                  pitchbend( 1.0f ),
                  cutoff( 1.0f ),
                  volume( 1.0f ),
-                 streaming( true ),
+                 streaming( false ),
                  triggerOnNextBind( false ), 
                  repeatCountdown( 0 )
    {
