@@ -39,19 +39,29 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_ERROR_H_
-#define _VPR_ERROR_H_
-
 #include <vpr/vprConfig.h>
+#include <string.h>
+#include <errno.h>
+#include <vpr/md/POSIX/Util/ErrorImplPosix.h>
 
-// include base class
-#include <vpr/Util/ErrorBase.h>
 
-// make the connection
-#ifdef VPR_USE_NSPR
-#   include <vpr/md/NSPR/Util/ErrorImplNSPR.h>
-#else
-#   include <vpr/md/POSIX/Util/ErrorImplPosix.h>
-#endif
+namespace vpr
+{
 
-#endif  /* _VPR_ERROR_H_ */
+void ErrorImplPosix::outputCurrentError (std::ostream& out,
+                                         const std::string& prefix)
+{
+   extern int errno;
+   const char* err_str = strerror(errno);
+
+   out << "Error (POSIX): " << prefix << " (" << errno;
+
+   if ( err_str != NULL )
+   {
+      out << ", " << err_str;
+   }
+
+   out << ")" << std::endl;
+}
+
+}

@@ -39,19 +39,47 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_ERROR_H_
-#define _VPR_ERROR_H_
+#ifndef _VPR_ERROR_IMPL_POSIX_H_
+#define _VPR_ERROR_IMPL_POSIX_H_
 
 #include <vpr/vprConfig.h>
-
-// include base class
+#include <iostream>
+#include <string>
 #include <vpr/Util/ErrorBase.h>
 
-// make the connection
-#ifdef VPR_USE_NSPR
-#   include <vpr/md/NSPR/Util/ErrorImplNSPR.h>
-#else
-#   include <vpr/md/POSIX/Util/ErrorImplPosix.h>
-#endif
 
-#endif  /* _VPR_ERROR_H_ */
+namespace vpr
+{
+
+/**
+ * POSIX Implementation of ---> Cross-platform Error reporting class.
+ */
+class VPR_CLASS_API ErrorImplPosix : public ErrorBase
+{
+public:
+   
+   static void outputCurrentError(std::ostream& out, const std::string& prefix);
+
+   static ErrorType getCurrentError()
+   {
+      return NoError;
+   }
+
+protected:
+/*
+   static int convertErrorVprToNspr(ErrorType mask)
+   {
+      return 0;
+   }
+
+   static ErrorType convertErrorNsprToVpr(int mask)
+   {
+      return NoError;
+   }
+*/
+};
+
+} // End of vpr namespace
+
+
+#endif  /* _VPR_ERROR_IMPL_POSIX_H_ */
