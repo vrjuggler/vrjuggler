@@ -39,6 +39,9 @@ books: $(PDF_BOOKS)
 	@echo "Done."
 
 install-books:
+	@if test ! -d $(prefix)/pub/books ; then	\
+            mkdir -p $(prefix)/pub/books ;		\
+        fi
 	@for book in $(PDF_BOOKS) ; do			\
             echo "$$book --> $(prefix)/pub/books" ;	\
             cp $$book $(prefix)/pub/books ;		\
