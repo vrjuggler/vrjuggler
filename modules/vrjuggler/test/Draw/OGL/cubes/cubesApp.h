@@ -84,7 +84,7 @@ public:
    // Takes the string names of the devices to use
    // NOTE: This means that we cannot construct a user until the input manager is loaded
    //       Ex. The Init function
-   UserData(User* user, std::string wandName, std::string incButton,
+   UserData(vrj::User* user, std::string wandName, std::string incButton,
             std::string decButton, std::string stopButton)
    {
       mCurVelocity = 0.0;
@@ -105,16 +105,16 @@ public:
 
 public:
       // Devices to use for the given user
-   PosInterface       mWand;                  // the Wand
-   DigitalInterface   mIncVelocityButton;     // Button for velocity
-   DigitalInterface   mDecVelocityButton;
-   DigitalInterface   mStopButton;            // Button to stop
+   vrj::PosInterface       mWand;                  // the Wand
+   vrj::DigitalInterface   mIncVelocityButton;     // Button for velocity
+   vrj::DigitalInterface   mDecVelocityButton;
+   vrj::DigitalInterface   mStopButton;            // Button to stop
 
       // Navigation info for the user
    float                mCurVelocity;  // The current velocity
-   Matrix             mNavMatrix;    // Matrix for navigation in the application
+   vrj::Matrix          mNavMatrix;    // Matrix for navigation in the application
 
-   User*              mUser;         // The user we hold data for
+   vrj::User*           mUser;         // The user we hold data for
 };
 
 //--------------------------------------------------
@@ -122,10 +122,10 @@ public:
 //
 // This application simply renders a field of cubes.
 //---------------------------------------------------
-class cubesApp : public GlApp
+class cubesApp : public vrj::GlApp
 {
 public:
-   cubesApp(Kernel* kern) : GlApp(kern)
+   cubesApp(vrj::Kernel* kern) : vrj::GlApp(kern)
    {
       ;
    }
@@ -189,7 +189,7 @@ public:
    {
       initGLState();    // This should really be in another function
 
-      myDraw(GlDrawManager::instance()->currentUserData()->getUser());
+      myDraw(vrj::GlDrawManager::instance()->currentUserData()->getUser());
    }
 
    // Clear the buffer each frame
@@ -220,7 +220,7 @@ public:
    {
       // We can't start until there are users registered wth the system
       // We rely upon users to keep track of the multi-user data structure
-      int num_users = Kernel::instance()->getUsers().size();
+      int num_users = vrj::Kernel::instance()->getUsers().size();
       return (num_users > 0);
    }
 
@@ -229,7 +229,7 @@ private:
    //----------------------------------------------
    //  Draw the scene.  A bunch of boxes of differing color and stuff
    //----------------------------------------------
-   void myDraw(User* user);
+   void myDraw(vrj::User* user);
    void initGLState();
 
    void drawCube()
@@ -242,8 +242,8 @@ private:
                 GLdouble z0, GLdouble z1, GLenum type);
 
 public:
-   GlContextData<ContextData>  mDlData;       // Data for display lists
-   GlContextData<ContextData>  mDlDebugData;  // Data for debugging display lists
+   vrj::GlContextData<ContextData>  mDlData;      // Data for display lists
+   vrj::GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
    std::vector<UserData*>        mUserData;     // All the users in the program
 };
 
