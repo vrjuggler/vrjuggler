@@ -61,7 +61,7 @@
         <help>Unique name of an instance of this chunk type</help>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="vjc_ChunkPanelComponent" name="VjControl Chunk Editor Component">
+  <ChunkDesc token="vjc_ChunkPanelComponent" name="VjControl ConfigChunk Editor Component">
     <PropertyDesc token="Name" name="Name" type="String" num="1">
         <help>Unique name of an instance of this chunk type</help>
     </PropertyDesc>
@@ -76,8 +76,29 @@
     <PropertyDesc token="UsedFor" name="Associated Chunks" type="String" num="variable">
         <help>ConfigChunks which should be editted with this Editor Frame</help>
     </PropertyDesc>
+    <PropertyDesc token="user_level" name="Complexity of this interface:" type="Int" num="1">
+        <enumeration name="Beginner" value="0"/>
+        <enumeration name="Expert" value="10"/>
+    </PropertyDesc>
+    <PropertyDesc token="user_type" name="User tasks this interface is for:" type="Bool" num="5">
+        <label name="Always Display"/>
+        <label name="Config Editing"/>
+        <label name="Dynamic Reconfiguration"/>
+        <label name="Perf Analysis"/>
+        <label name="Advanced Config"/>
+    </PropertyDesc>
+    <Defaults>
+      <vjc_ChunkPanelComponent name="">
+        <ClassName>"" </ClassName>
+        <Dependencies></Dependencies>
+        <ParentComp>"" </ParentComp>
+        <UsedFor></UsedFor>
+        <user_level>"0" </user_level>
+        <user_type>"True" "False" "False" "False" "False" </user_type>
+      </vjc_ChunkPanelComponent>
+    </Defaults>
   </ChunkDesc>
-  <ChunkDesc token="vjc_plugpanelcontainer" name="VjControl ControlUI Panel Container">
+  <ChunkDesc token="vjc_PlugPanelContainer" name="VjControl ControlUI Panel Container">
     <PropertyDesc token="Name" name="Name" type="String" num="1">
         <help>Unique name of an instance of this chunk type</help>
     </PropertyDesc>
@@ -91,14 +112,35 @@
     </PropertyDesc>
     <PropertyDesc token="default_panel" name="Default Panel" type="String" num="1">
     </PropertyDesc>
+    <PropertyDesc token="user_level" name="Complexity of this interface:" type="Int" num="1">
+        <enumeration name="Beginner" value="0"/>
+        <enumeration name="Expert" value="10"/>
+    </PropertyDesc>
+    <PropertyDesc token="user_type" name="User tasks this interface is for:" type="Bool" num="5">
+        <label name="Always Display"/>
+        <label name="Config Editing"/>
+        <label name="Dynamic Reconfiguration"/>
+        <label name="Perf Analysis"/>
+        <label name="Advanced Config"/>
+    </PropertyDesc>
+    <Defaults>
+      <vjc_PlugPanelContainer name="">
+        <ClassName>"" </ClassName>
+        <Dependencies></Dependencies>
+        <ParentComp>"" </ParentComp>
+        <default_panel>"" </default_panel>
+        <user_level>"0" </user_level>
+        <user_type>"True" "False" "False" "False" "False" </user_type>
+      </vjc_PlugPanelContainer>
+    </Defaults>
   </ChunkDesc>
-  <ChunkDesc token="vjc_component" name="VjControl Extension Component">
+  <ChunkDesc token="vjc_Component" name="VjControl Component Class Registration">
     <help>Registers a VjControl Extension Component class (usually found in contents.config of extension .jars)</help>
     <PropertyDesc token="Name" name="Name" type="String" num="1">
         <help>Unique name of an instance of this chunk type</help>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="vjc_plugpanel" name="VjControl PlugPanel Instance">
+  <ChunkDesc token="vjc_PlugPanel" name="VjControl PlugPanel Instance">
     <help>Configuration information for a VjControl PlugPanel.</help>
     <PropertyDesc token="Name" name="Name" type="String" num="1">
         <help>Unique name of an instance of this chunk type</help>
@@ -125,8 +167,19 @@
         <label name="Perf Analysis"/>
         <label name="Advanced Config"/>
     </PropertyDesc>
+    <Defaults>
+      <vjc_PlugPanel name="">
+        <ClassName>"" </ClassName>
+        <Dependencies></Dependencies>
+        <ParentComp>"" </ParentComp>
+        <Category></Category>
+        <Hints></Hints>
+        <user_level>"0" </user_level>
+        <user_type>"True" "False" "False" "False" "False" </user_type>
+      </vjc_PlugPanel>
+    </Defaults>
   </ChunkDesc>
-  <ChunkDesc token="vjc_genericinstance" name="VjControl Component Instance">
+  <ChunkDesc token="vjc_GenericInstance" name="VjControl Component Instance">
     <PropertyDesc token="Name" name="Name" type="String" num="1">
         <help>Unique name of an instance of this chunk type</help>
     </PropertyDesc>
@@ -137,6 +190,26 @@
     <PropertyDesc token="ParentComp" name="Parent Component" type="Chunk" num="1">
         <help>Component to which to add this</help>
     </PropertyDesc>
+    <PropertyDesc token="user_level" name="Complexity of this interface:" type="Int" num="1">
+        <enumeration name="Beginner" value="0"/>
+        <enumeration name="Expert" value="10"/>
+    </PropertyDesc>
+    <PropertyDesc token="user_type" name="User tasks this interface is for:" type="Bool" num="5">
+        <label name="Always Display"/>
+        <label name="Config Editing"/>
+        <label name="Dynamic Reconfiguration"/>
+        <label name="Perf Analysis"/>
+        <label name="Advanced Config"/>
+    </PropertyDesc>
+    <Defaults>
+      <vjc_GenericInstance name="">
+        <ClassName>"" </ClassName>
+        <Dependencies></Dependencies>
+        <ParentComp>"" </ParentComp>
+        <user_level>"0" </user_level>
+        <user_type>"True" "False" "False" "False" "False" </user_type>
+      </vjc_GenericInstance>
+    </Defaults>
   </ChunkDesc>
   <ChunkDesc token="PerfData" name="Performance Data Display">
     <help>Information for displaying data from perfbuffers with a matching name.</help>
