@@ -399,7 +399,9 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
                 // the descs could be needed by everybody else in this file,
                 // so load 'em now...
                 std::string s = ch->getProperty ("Name");
-                vjChunkFactory::instance()->loadDescs (s);
+                vjChunkDescDB newdb;
+                newdb.load (s, self.file_name);
+                vjChunkFactory::instance()->addDescs (&newdb);
             }
             else {
                 /* OK.  If this chunk has the same instancename as a chunk
@@ -419,85 +421,6 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 
 
 
-//: Returns a copy of s with all environment variable names replaced
-//+ with their values.
-std::string replaceEnvVars (const std::string& s) {
-    unsigned int i, j;
-    int lastpos = 0;
-    std::string result = "";
-    for (i = 0; i < s.length(); i++) {
-        if (s[i] == '$') {
-            //process an env var
-            result += std::string(s, lastpos, i - lastpos);
-            i++; // skip $
-            if (s[i] == '{') {
-                for (j = i; j < s.length(); j++)
-                    if (s[j] == '}')
-                        break;
-                std::string var(s,i+1,j-i-1);
-                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-                std::string res = getenv (var.c_str());
-                result += res;
-                i = j+1;
-                lastpos = i;
-            }
-            else {
-                for (j = i; j < s.length(); j++)
-                    if (s[j] == '/' || s[j] == '\\')
-                        break;
-                std::string var(s,i,j-i);
-                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-                std::string res = getenv (var.c_str());
-                result += res;
-                i = j;
-                lastpos = i;
-            }
-        }
-    }
-    result += std::string(s, lastpos, s.length() - lastpos);
-    return result;
-}
-
-
-
-//: is n an absolute path name?
-bool isAbsolutePathName (const std::string& n) {
-#ifdef WIN32
-    return ((n.length() > 0) && (n[0] == '\\'))
-        || ((n.length() > 2) && (n[1] == ':') && (n[2] == '\\'));
-#else
-    return (n.length() > 0) && (n[0] == '/');
-#endif
-}
-
-
-
-std::string vjConfigChunkDB::demangleFileName (const std::string& n, std::string parentfile) {
-
-    std::string fname = replaceEnvVars (n);
-
-    if (!isAbsolutePathName(fname)) {
-        // it's a relative pathname... so we have to add in the path part
-        // of parentfile...
-//         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
-//              << parentfile.c_str() << "'\n" << endl;
-        int lastslash = 0;
-        for (unsigned int i = 0; i < parentfile.length(); i++) {
-            if (parentfile[i] == '/')
-                lastslash = i;
-#ifdef WIN32
-            if (parentfile[i] == '\\')
-                lastslash = i;
-#endif
-		}
-        if (lastslash) {
-            std::string s(parentfile, 0, lastslash+1);
-            fname = s + n;
-        }
-    }
-
-    return fname;
-}
 
 
 
