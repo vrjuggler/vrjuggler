@@ -132,7 +132,7 @@ private:
 private:
    std::vector<vjDeviceConstructorBase*> mConstructors;  //: List of the device constructors
 
-vjSingletonHeader(vjDeviceFactory);
+vjSingletonHeaderWithInitFunc(vjDeviceFactory, hackLoadKnownDevices);
 /*
 public:     // ------ SINGLETON ----- ///
    //: Return singleton instance of the class
