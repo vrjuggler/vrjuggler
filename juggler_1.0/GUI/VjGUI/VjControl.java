@@ -44,6 +44,8 @@ public class VjControl {
 	FileControl.loadVjControlConfig();
 	configure();
 
+	Core.reconfigure();
+
 	/* read & parse command line arguments
 	 *
 	 * command line is this: VjControl host port -d descriptfile -c cfgfile
@@ -121,7 +123,6 @@ public class VjControl {
 	Core.ui.selectDescDB (lastdname);
 	Core.ui.refreshPerfData();
 
-	Core.reconfigure();
 	
 	Core.consoleInfoMessage ("VjControl 1.0", "VR Juggler Control and Configuration Program");
 	
@@ -142,11 +143,8 @@ public class VjControl {
 	    Core.consoleErrorMessage ("Config", "VjControl's own config file seems messed up. Making a guess...");
 	ConfigChunk ch;
 	if (v.size() == 0 || ((ch = (ConfigChunk)v.elementAt(0)) == null)) {
-	    //ConfigChunk ch = (ConfigChunk)v.elementAt(0);
-	    //if (ch == null) {
 	    System.err.println ("didn't get chunk");
 	    ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
-	    //ch = new ConfigChunk (Core.descdb.getByToken ("vjcontrol"), Core.descdb);
 	    ch.setPropertyFromToken ("fontname", "Courier", 0);
 	    ch.setPropertyFromToken ("fontsize", 12, 0);
 	    ch.setPropertyFromToken ("looknfeel", "Java", 0);
@@ -154,6 +152,8 @@ public class VjControl {
 	    Core.gui_chunkdb.addElement (ch);
 	}
 	Core.vjcontrol_preferences = ch;
+
+	//p = ch.getPropertyFromToken ("
 
 	p = ch.getPropertyFromToken ("descfiles");
 	for (i = 0; i < p.getNum(); i++) {
