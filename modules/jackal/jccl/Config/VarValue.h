@@ -166,6 +166,13 @@ public:
     }
 
 
+    /** Returns true if the VarValue's type is anything but VJ_T_INVALID.
+     */
+    inline bool isValid () const {
+        return (type != VJ_T_INVALID);
+    }
+
+
     /*  Cast Operators
      *  These operators are used whenever a VarValue is cast to another
      *  type.  They do some amount of type checking and coercion,
