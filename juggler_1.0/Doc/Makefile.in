@@ -63,6 +63,8 @@ else
 DIRS		= ${addprefix ${top_srcdir}/, ${SUBDIRS}}
 endif
 
+@SET_MAKE@
+
 # -----------------------------------------------------------------------------
 # Documentation generation targets.
 # -----------------------------------------------------------------------------
@@ -74,9 +76,41 @@ doc-internal:
 	cp ${JAVA_CLASS}/*.class ${OUT_INT}
 
 doc-public:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${OUT_PUB} -F ${FILTERS}	\
-          -t ${TEMPLATES_PUB} ${DIRS}
-	cp ${JAVA_CLASS}/*.class ${OUT_PUB}
+	${MAKE} BASE_OUT="${OUT_PUB}" TEMPLATES="${TEMPLATES_PUB}"	\
+          all-doc ${GROUPS}
+
+all-doc:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT} -F ${FILTERS}	\
+          -t ${TEMPLATES} ${DIRS}
+	cp ${JAVA_CLASS}/*.class ${BASE_OUT}
+
+Config:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${CONFIG_GROUP_DIRS}
+
+Input:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${INPUT_GROUP_DIRS}
+
+Kernel:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${KERNEL_GROUP_DIRS}
+
+Math:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${MATH_GROUP_DIRS}
+
+Primitives:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${PRIMITIVES_GROUP_DIRS}
+
+Sound:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${SOUND_GROUP_DIRS}
+
+Utils:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
+          -F ${FILTERS} -t ${TEMPLATES}_xml ${UTILS_GROUP_DIRS}
 
 # -----------------------------------------------------------------------------
 # Clean-up.
