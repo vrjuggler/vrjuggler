@@ -186,7 +186,7 @@ SUBDIRS		= Math Config Kernel Environment Performance Input	\
 # installing.
 SAMPLE_SUBDIRS	= . ogl ogl/combo ogl/cubes ogl/glove ogl/simpleGlove	\
                   ogl/torus ogl/wand pfNav
-TEST_SUBDIRS	= . CfgTest Math Matrix Quat Sync input			\
+TEST_SUBDIRS	= . CfgTest GLWindow Math Matrix Quat Sync input	\
                   testDynamicCastSTL threads
 
 # The list of ABIs supported on this platform.
