@@ -14,15 +14,17 @@ private:
    void operator= (const NetworkManager& na)
    {;}
 public:
-   NetworkManager() : mAcceptor(this)
+   NetworkManager()
+      : AbstractNetworkManager(),
+        mAcceptor(this)
    {;}
    virtual vpr::ReturnStatus attemptConnect(Node* node)
    {
       return(mConnector.attemptConnect(node));
    }
-   virtual void startListening(int listen_port)
+   virtual void startListening(int listen_port, bool accept_anonymous)
    {
-      mAcceptor.startListening(listen_port);
+      mAcceptor.startListening(listen_port, accept_anonymous);
    }
 private:
    A mAcceptor;

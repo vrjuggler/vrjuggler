@@ -55,7 +55,7 @@ public:
    /**
     * Construct an empty TCP/IP acceptor.
     */
-   Acceptor( AbstractNetworkManager* network );
+   Acceptor( AbstractNetworkManager* network);
 
    /**
     * Deconstruct object and release memory.
@@ -65,7 +65,7 @@ public:
    /**
     * Start the listening thread on the given port.
     */
-   bool startListening( const int& listen_port );
+   bool startListening( const int& listen_port, bool accept_anonymous );
 
    /**
     * Stop the listen thread.
@@ -80,6 +80,7 @@ private:
    AbstractNetworkManager*      mNetworkManager;     /**< Network we are accepting connections on. */
    vpr::Thread*                 mAcceptThread;       /**< Thread that listens for incoming connections. */
    vpr::InetAddr                mListenAddr;         /**< Address to listen for incoming connections on. */
+   bool                         mAcceptAnonymous;
 };
 
 } // end namespace gadget
