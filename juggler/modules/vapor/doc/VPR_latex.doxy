@@ -50,6 +50,14 @@ SHOW_INCLUDE_FILES     = NO
 
 GENERATE_TODOLIST      = YES
 
+# If the GENERATE_TREEVIEW tag is set to YES, a side pannel will be
+# generated containing a tree-like index structure (just like the one that 
+# is generated for HTML Help). For this to work a browser that supports 
+# JavaScript and frames is required (for instance Netscape 4.0+ 
+# or Internet explorer 4.0+). 
+
+GENERATE_TREEVIEW      = NO
+
 # We are only generating LaTeX with this file.
 GENERATE_HTML          = NO
 GENERATE_MAN           = NO
