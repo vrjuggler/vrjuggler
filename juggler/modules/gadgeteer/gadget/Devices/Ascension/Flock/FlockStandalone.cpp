@@ -644,10 +644,9 @@ int aFlock::open_port( const char* const serialPort,
     termios termIoPort;
     tcgetattr(portId, &termIoPort);
 
-    // set the flags to 0.  why???
-    termIoPort.c_iflag =
-	termIoPort.c_oflag =
-	termIoPort.c_lflag = 0;
+    // Set the flags to 0 to clear out any cruft and to ensure that we are
+    // setting fresh values.
+    termIoPort.c_iflag = termIoPort.c_oflag = termIoPort.c_lflag = 0;
 
     // get the B* format baud rate
     // i.e.: B38400 is baud = 38400
@@ -693,17 +692,6 @@ int aFlock::open_port( const char* const serialPort,
     // make sure we're not going off the end
     assert( NCCS >= 16 );
 
-    // set the control-character array to 0's and 1's
-    /*
-    termIoPort.c_cc[0] =
-	termIoPort.c_cc[1] =
-	termIoPort.c_cc[2] =
-	termIoPort.c_cc[3] = 0;
-	
-    termIoPort.c_cc[4] =
-	termIoPort.c_cc[5] = 1;
-    */
-
     // Set the new attributes
     int result = 0;
     cout << "  Setting new term setting: "<<baud<<" baud..." << flush;
@@ -742,12 +730,6 @@ void aFlock::set_blocking( const int& port, const int& blocking )
     tcflush(port, TCIOFLUSH);
 
     usleep( 1000 * aFlock::mSleepFactor );
-
-    // read 1kb of junk
-    char junk[1024];
-    read( port, junk, 1024 );
-
-    sleep( 1 );
 }
 
 void aFlock::set_sync( const int& port, const int& sync )
