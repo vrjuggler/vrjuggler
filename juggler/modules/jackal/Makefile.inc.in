@@ -290,10 +290,11 @@ hier:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.install.dist -p $(prefix)
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.include.dist -p $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.lib.dist -p $(prefix)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.java.dist -p $(projdatadir)
 #	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.samples.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.test.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(projdatadir)

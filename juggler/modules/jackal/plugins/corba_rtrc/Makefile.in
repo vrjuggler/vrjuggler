@@ -91,7 +91,7 @@ ifeq ($(HAVE_TWEEK_JAVA), Y)
    JARS=		jccl_rtrc.jar
    POST_INSTALL=	install-bean
    BEAN_INSTALL_FILES=	$(JARS) $(addprefix $(srcdir)/, $(JARS:.jar=.xml))
-   BEAN_INSTALL_PATH=	$(bindir)/beans
+   BEAN_INSTALL_PATH=	$(projdatadir)/beans
 
    AFTERBUILD=		java-build
 endif
