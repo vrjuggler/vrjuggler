@@ -168,10 +168,17 @@ if test "x$test_tweek_cxx" = "xY" ; then
 fi
 
 if test "x$BUILD_JAVA" = "xY" ; then
-   JCCL_PATH_JAVA([0.14.0], [HAVE_TWEEK_JAVA='Y'],
+   JCCL_PATH_JAVA([0.14.0], [test_tweek_java='Y'],
       [AC_MSG_WARN([*** JCCL Java API required for JCCL Java plug-ins ***])
-       HAVE_TWEEK_JAVA='N'
+       test_tweek_java='N'
       ])
+
+   if test "x$test_tweek_java" = "xY" ; then
+      TWEEK_PATH_JAVA([0.15.0], [HAVE_TWEEK_JAVA='Y'],
+         [AC_MSG_WARN([*** Tweek Java required for remote reconfig JavaBean ***])
+          HAVE_TWEEK_JAVA='N'
+         ])
+   fi
 fi
 
 # -----------------------------------------------------------------------------
