@@ -67,6 +67,7 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DATA_PACKET,
                                       Header::RIM_PACKET_HEAD_SIZE 
+                                      + 16 /* Plugin GUID */
                                       + 16 /* GUID */
                                       + 0 /*mDeviceData->size()*/,
                                       0/* Frame ID*/);
@@ -79,7 +80,7 @@ namespace cluster
       return(vpr::ReturnStatus::Fail);
    }
 
-   void DataPacket::send(vpr::SocketStream* socket, vpr::GUID device_id, std::vector<vpr::Uint8>* device_data)
+   void DataPacket::send(vpr::SocketStream* socket, const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* device_data)
    {
       // - Send header data
       // - Send Device ID
@@ -91,6 +92,7 @@ namespace cluster
 
       vpr::Uint32 bytes_written;
       mHeader->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
+                                      + 16 /* Plugin GUID*/
                                       + 16 /* GUID*/
                                       + device_data->size());
       mHeader->serializeHeader();
@@ -99,24 +101,22 @@ namespace cluster
       // Send the device ID
       ////////////////////////////////
 
+      mPluginId = plugin_id;
       mId = device_id;
       
       vpr::BufferObjectWriter temp_writer;
+      
+      // Serialize the Plugin GUID
+      mPluginId.writeObject((vpr::ObjectWriter*)&temp_writer);
+      
+      // Serialize the Device GUID
       mId.writeObject((vpr::ObjectWriter*)&temp_writer);
-      /////
 
-//      std::vector<vpr::Uint8> val(2);
+      // Send 32 bits since we are sending two GUIDs
+      socket->send(*temp_writer.getData(),32,bytes_written);
 
-//      vpr::Uint16 nw_val = vpr::System::Htons(device_id);
-   
-//      val[0] = ((vpr::Uint8*)&nw_val)[0];
-//      val[1] = ((vpr::Uint8*)&nw_val)[1];
-      /////////////////////////////////
-
-      //socket->send(val,2,bytes_written);
-      socket->send(*temp_writer.getData(),16,bytes_written);
-
-      socket->send(*device_data,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE-16,bytes_written);
+      // Send 32 bits less then the packet size since we have already sent two GUIDs
+      socket->send(*device_data,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE-32,bytes_written);
    }
    void DataPacket::serialize()
    {
@@ -125,7 +125,10 @@ namespace cluster
    }
    void DataPacket::parse()
    {
-      //mVirtualId = mPacketReader->readUint16();
+      // De-Serialize the plugin ID
+      mPluginId.readObject(mPacketReader);
+
+      // De-Serialize the device ID
       mId.readObject(mPacketReader);
    
       // WE MUST KEEP IN MIND THAT mData is not simply the device data but the device data with the
@@ -142,25 +145,6 @@ namespace cluster
    
    bool DataPacket::action(ClusterNode* node)
    {
-      if (node == NULL)
-      {
-         return false;
-      }
-
-      gadget::Input* virtual_device = RemoteInputManager::instance()->getVirtualDevice(mId);
-      if (virtual_device != NULL)
-      {
-         mPacketReader->setAttrib("rim.timestamp.delta", node->getDelta());
-         virtual_device->readObject(mPacketReader);
-         return true;
-      }
-      ApplicationData* user_data = ApplicationDataManager::instance()->getRemoteApplicationData(mId);
-      if (user_data != NULL)
-      {
-         user_data->readObject(mPacketReader);
-         return true;
-      }
-      
       return false;
    }
    
@@ -172,22 +156,14 @@ namespace cluster
       Packet::printData(vprDBG_VERB_LVL);
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
-         << clrOutBOLD(clrYELLOW, "Virtual ID: ") << mId.toString()
+         << clrOutBOLD(clrYELLOW, "Plugin ID: ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
+         << clrOutBOLD(clrYELLOW, "Object ID: ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) 
          <<  clrOutBOLD(clrYELLOW,"============================\n") << vprDEBUG_FLUSH;
-
-
-      /*
-      Packet::printData();
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-      << clrOutBOLD(clrCYAN,"\n==== Device Request Packet Data ====")
-      //<< "\nVirtual(Remote) ID:    " << mVirtualId
-      //<< "\nDevice Name: " << mDeviceName
-      //<< "\nData Size:   " << mDeviceData->size() << std::endl
-      << vprDEBUG_FLUSH;      
-      */
    }
 
 }   // end namespace gadget

@@ -79,7 +79,9 @@ public:
     *
     * Create a device request to be sent
     */
-   ApplicationDataAck(vpr::GUID id, bool ack);
+   ApplicationDataAck(const vpr::GUID& plugin_guid, 
+                      const vpr::GUID& id, 
+                      const bool ack);
    
    //
    // =============== Packet Specific =================

@@ -38,13 +38,13 @@
 
 namespace cluster
 {
-   Packet::Packet()
+   Packet::Packet() : mPluginId()
    {
       //mData = new std::vector<vpr::Uint8>(RIM_PACKET_HEAD_SIZE);
       mPacketReader = new vpr::BufferObjectReader(&mData);
       mPacketWriter= new vpr::BufferObjectWriter(&mData);
    }
-   Packet::Packet(std::vector<vpr::Uint8>* data)
+   Packet::Packet(std::vector<vpr::Uint8>* data) : mPluginId()
    {
       //We must Copy
       mData = *(data);
@@ -62,6 +62,10 @@ namespace cluster
 	  //delete mData;
    }
 
+   vpr::Uint16 Packet::getPacketType() 
+   { 
+      return mHeader->getPacketType(); 
+   }
 
    void Packet::recv(Header* packet_head, vpr::SocketStream* stream) throw(cluster::ClusterException)
    {

@@ -51,7 +51,11 @@
 // ApplicationData
 #include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataServer.h>
+
+#include <cluster/Packets/Packet.h>
 #include <cluster/Packets/ApplicationDataRequest.h>
+#include <cluster/Packets/ApplicationDataAck.h>
+#include <cluster/Packets/DataPacket.h>
 
 
 namespace cluster
@@ -59,6 +63,7 @@ namespace cluster
    vprSingletonImp( ApplicationDataManager );
 
 	ApplicationDataManager::ApplicationDataManager()
+         : mPluginGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")
 	{
        // This is done by the ClusterManager
 	   //jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
@@ -68,6 +73,62 @@ namespace cluster
 	{
 		;
 	}
+
+   void ApplicationDataManager::handlePacket(Packet* packet, ClusterNode* node)
+   {
+      if ( NULL != packet && NULL != node )
+      {
+         switch ( packet->getPacketType() )
+         {
+         case cluster::Header::RIM_DATA_PACKET:
+            {
+               DataPacket* temp_data_packet = dynamic_cast<DataPacket*>(packet);
+               vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
+               ApplicationData* user_data = getRemoteApplicationData(temp_data_packet->getId());
+               if (user_data != NULL)
+               {
+                  user_data->readObject(temp_data_packet->getPacketReader());
+               }
+               break;
+            }
+         case cluster::Header::RIM_APPDATA_REQ:
+         {
+            ApplicationDataRequest* temp_request = dynamic_cast<ApplicationDataRequest*>(packet);
+
+            ApplicationDataServer* temp_app_data_server = getApplicationDataServer(temp_request->getId());
+            ApplicationDataAck* temp_ack = NULL;
+            if (temp_app_data_server != NULL)
+            {
+               temp_app_data_server->addClient(node);
+               temp_ack = new ApplicationDataAck(getPluginGUID(), temp_request->getId(), true);
+               node->send(temp_ack);
+            }
+            else
+            {
+               temp_ack = new ApplicationDataAck(getPluginGUID(), temp_request->getId(), false);
+               node->send(temp_ack);
+            }
+            delete temp_ack;
+            break;
+         }
+         case cluster::Header::RIM_APPDATA_ACK:
+         {
+            ApplicationDataAck* temp_ack = dynamic_cast<ApplicationDataAck*>(packet);
+            if (temp_ack->getAck())
+            {
+               removePendingApplicationDataRequest(temp_ack->getId());
+            }         
+            break;
+         }
+         default:
+            {
+               std::cout << "ADM DOES NOT HANDLE THIS PACKET TYPE" << packet->getPacketType() << std::endl;
+               break;
+            }
+         } // End switch
+      } // End if                 
+    }
+
 
 	/** Add the pending chunk to the configuration.
 	 *  PRE: configCanHandle (chunk) == true.
@@ -268,7 +329,7 @@ namespace cluster
             
             // Adding a new ApplicationData server
             vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
-            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id,new_app_data);                        
+            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mPluginGUID);                        
             mApplicationDataServers[id] = new_appdata_server;
          }
          else
@@ -277,7 +338,7 @@ namespace cluster
             new_app_data->setIsLocal(false);
 
                // Create a ApplicationDataRequest
-            ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(id);
+            ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(getPluginGUID() ,id);
             addPendingApplicationDataRequest(new_appdata_req, hostname);
              
                // Add ApplicationData to Remote Vector

@@ -47,6 +47,8 @@
 namespace cluster
 {
    class ClusterPlugin;
+   class Packet;
+   class ClusterNode;
 
 class GADGET_CLASS_API ClusterManager : public jccl::ConfigChunkHandler
 {      
@@ -57,6 +59,7 @@ public:
 
    // ClusterPlugin Interface
 public:
+   void handlePacket(Packet* packet, ClusterNode* node);
    void addPlugin(ClusterPlugin* new_manager);
    void removePlugin(ClusterPlugin* old_manager);
    bool doesPluginExist(ClusterPlugin* old_manager);
@@ -135,6 +138,8 @@ public:
       }
    }
 
+   ClusterPlugin* getPluginByGUID(const vpr::GUID& plugin_guid);
+
    //General helper functions
 public:
    jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
@@ -150,7 +155,7 @@ private:
    bool                          mRunning;
    bool                          mBarrierMaster;
    std::string                   mBarrierMasterHostname;
-
+   std::map<vpr::GUID, ClusterPlugin*>                   mPluginMap;
 };
 
 } // end namespace

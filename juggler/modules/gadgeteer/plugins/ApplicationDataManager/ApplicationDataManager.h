@@ -52,6 +52,7 @@ namespace cluster
    class ApplicationData;
    class ApplicationDataRequest;
    class ApplicationDataServer;
+   class Packet;
 
 class GADGET_CLASS_API ApplicationDataManager : public cluster::ClusterPlugin
 {
@@ -60,6 +61,19 @@ class GADGET_CLASS_API ApplicationDataManager : public cluster::ClusterPlugin
 public:
    ApplicationDataManager();
    virtual ~ApplicationDataManager();
+   
+   /**
+    * Get the GUID associated with this plugin.
+    */
+   vpr::GUID getPluginGUID()
+   {
+      return mPluginGUID;
+   }
+
+   /**
+    * Handle a incoming packet.
+    */
+   void handlePacket(Packet* packet, ClusterNode* node);
    
    virtual void preDraw();
    virtual void postPostFrame();
@@ -164,6 +178,7 @@ private:
    vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
 
    vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */
+   vpr::GUID                                       mPluginGUID;
 };
 
 } // end namespace

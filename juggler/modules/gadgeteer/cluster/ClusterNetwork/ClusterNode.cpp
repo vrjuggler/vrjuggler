@@ -38,8 +38,6 @@
 //#include <jccl/Config/ConfigChunk.h>
 //#include <vpr/Util/Error.h>
 
-#include <gadget/Util/Debug.h>
-//#include <gadget/RemoteInputManager/NetDevice.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/ConnectionRequest.h>
@@ -49,12 +47,11 @@
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
+#include <cluster/ClusterManager.h>
 #include <cluster/ClusterDelta.h>
+
+#include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
-//#include <gadget/Type/DeviceFactory.h>
-//#include <gadget/InputManager.h>
-//#include <gadget/RemoteInputManager/RIM.h>
-//#include <gadget/Type/BaseTypeFactory.h>
 
 #include <jccl/RTRC/ConfigManager.h>
 
@@ -369,7 +366,12 @@ namespace cluster
 
       // Print Packet Information
       temp_packet->printData(vprDBG_CONFIG_LVL);
-      temp_packet->action(this);
+      
+      //Moving the handling from the next line to the plugins
+      //temp_packet->action(this);
+
+      ClusterManager::instance()->handlePacket(temp_packet,this);
+
       delete temp_packet;
    }
    void ClusterNode::controlLoop(void* nullParam)

@@ -79,17 +79,24 @@ public:
    /**
     * Directly read the needed header data from socket(blocking), and parse the header 
     */
-   Packet(vpr::SocketStream* stream);
+//   Packet(vpr::SocketStream* stream);
 
    virtual ~Packet();
    
    void recv(Header* packet_head, vpr::SocketStream* stream) throw(cluster::ClusterException);
    virtual vpr::ReturnStatus send(vpr::SocketStream* socket);
    void dump();
+
+   vpr::Uint16 getPacketType();
    
    virtual bool action(ClusterNode* node) = 0;
    virtual void printData(int debug_level) = 0;
-
+   
+   vpr::ObjectReader* getPacketReader()
+   {
+      return mPacketReader;
+   }
+   vpr::GUID getPluginId() { return mPluginId; }
 protected:
    Header* mHeader;
    
@@ -97,6 +104,7 @@ protected:
    vpr::BufferObjectReader* mPacketReader;	
    vpr::BufferObjectWriter* mPacketWriter;
    std::vector<vpr::Uint8> mData;
+   vpr::GUID mPluginId;
 };
 }
 

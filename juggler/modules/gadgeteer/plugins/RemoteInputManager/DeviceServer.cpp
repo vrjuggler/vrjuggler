@@ -39,12 +39,15 @@
 
 namespace cluster
 {
-   DeviceServer::DeviceServer(const std::string& name, gadget::Input* device) : deviceServerTriggerSema(0), deviceServerDoneSema(0)
+   DeviceServer::DeviceServer(const std::string& name, gadget::Input* device, const vpr::GUID& plugin_guid) 
+         : deviceServerTriggerSema(0), deviceServerDoneSema(0)
    {
       mId.generate();   // Generate a unique ID for this device
       mThreadActive = false;
       mName = name;
       mDevice = device;
+      mPluginGUID = plugin_guid;
+
       mDataPacket = new DataPacket();
       mDeviceData = new std::vector<vpr::Uint8>;      
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
@@ -86,7 +89,7 @@ namespace cluster
 
          try
          {
-            mDataPacket->send((*i)->getSockStream(), mId, mDeviceData);
+            mDataPacket->send((*i)->getSockStream(), mPluginGUID, mId, mDeviceData);
          }
          catch(cluster::ClusterException cluster_exception)
          {

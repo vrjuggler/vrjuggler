@@ -47,7 +47,7 @@ namespace cluster
 {
    vprSingletonImp( SwapLockPlugin );
    
-   SwapLockPlugin::SwapLockPlugin()
+   SwapLockPlugin::SwapLockPlugin() : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644")
    {
       // This is done by the ClusterManager
       //jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
