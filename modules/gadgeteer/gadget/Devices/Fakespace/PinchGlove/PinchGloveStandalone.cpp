@@ -262,7 +262,6 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
    vpr::Uint32 written;
    int numbytes = 0;
    unsigned char buf[2048];
-   clock_t t1, t2;
    vpr::ReturnStatus status;
 
 #define START_BYTE_DATA 0x80
