@@ -37,6 +37,7 @@ public class NetControl implements Runnable {
 
 
     public void setHost(String s) {
+	//System.out.println ("Set host '" + s + "'");
 	remote_name = s;
     }
 
