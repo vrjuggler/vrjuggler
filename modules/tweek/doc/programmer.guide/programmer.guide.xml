@@ -192,14 +192,14 @@
             <para>All JavaBeans loaded by the Tweek Java GUI are describe by at least one <glossterm linkend="gloss.xml.main">XML</glossterm> file<indexterm>
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
-            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>entry</literal> element gives the entry within the JAR file of the class that will be instantiated. The value must be specified using a /-separated list giving the path to the class entry within the JAR file. The extension <filename>.class</filename> must not be specified, however. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
+            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
             <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, there may be zero or more <sgmltag>&lt;dependency&gt;</sgmltag> elements. These list dependencies of the Bean named as other external JAR files. The <sgmltag>&lt;dependency&gt;</sgmltag> element has two attributes: <literal>file</literal> and <literal>path</literal>. The attribute <literal>file</literal> names the JAR file; <literal>path</literal> gives the path (a semi-colon separated list of directories) where the JAR file may be found.</para>
             <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
                <title>PlexusGraphView.xml snippet</title>
                <programlisting>&lt;guipanel name="Graph View"&gt;
   &lt;file name="${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar" 
-        entry="plx/graphview/GraphView" /&gt;
+        class="plx.graphview.GraphView" /&gt;
   &lt;tree path="/" /&gt;
   &lt;dependency file="openjgraph.jar" path="${PLX_BASE_DIR}/bin" /&gt;
   &lt;dependency file="jgraph.jar" path="${PLX_BASE_DIR}/bin" /&gt;
@@ -216,11 +216,11 @@
 &lt;beanlist&gt;
   &lt;viewer name="Tree Viewer"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
-          entry="org/vrjuggler/tweek/treeviewer/BeanTreeViewer" /&gt;
+          class="org.vrjuggler.tweek.treeviewer.BeanTreeViewer" /&gt;
   &lt;/viewer&gt;
   &lt;viewer name="Icon Viewer"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
-          entry="org/vrjuggler/tweek/iconviewer/BeanIconViewer" /&gt;
+          class="org.vrjuggler.tweek.iconviewer.BeanIconViewer" /&gt;
   &lt;/viewer&gt;
 &lt;/beanlist&gt;</programlisting>
             </example>
@@ -1119,7 +1119,7 @@ public void connectionStateChanged (CommunicationEvent e)
 &lt;beanlist&gt;
 &lt;guipanel name="Network Tester"&gt;
 &lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"
-      entry="networktest/NetworkTest" /&gt;
+      class="networktest.NetworkTest" /&gt;
 &lt;tree path="/Beans" /&gt;
 &lt;/guipanel&gt;
 &lt;/beanlist&gt;</programlisting>
@@ -1134,7 +1134,7 @@ public void connectionStateChanged (CommunicationEvent e)
                               <para>The Bean we have been developing is a GUI Panel Bean, and this indicates that fact.</para>
                            </callout>
                            <callout arearefs="NetworkTestBean.xml.file">
-                              <para>To find the Bean, a path must be specified. In this example, we will put the XML and JAR files in <filename>$TWEEK_BASE_DIR/bin/beans</filename>. Note the use of curly braces around the environment variable. This is required. The entry attribute names the class that will be instantiated, and in this case, that is <filename>networktest/NetworkTest</filename>. This name corresponds more to the file system entry within the JAR file (thus the use of the '<filename>/</filename>' separator) than the fully qualified class name, though the two spellings are directly related.</para>
+                              <para>To find the Bean, a path must be specified. In this example, we will put the XML and JAR files in <filename>$TWEEK_BASE_DIR/bin/beans</filename>. Note the use of curly braces around the environment variable. This is required. The class attribute names the class that will be instantiated, and in this case, that is <filename>networktest.NetworkTest</filename>. This name corresponds more to the fully qualified name of the class stored within the JAR file.</para>
                            </callout>
                            <callout arearefs="NetworkTestBean.xml.tree">
                               <para>Panel Beans are loaded into a tree data structure and visualized using a viewer. This specifies the path within the tree using a UNIX-style path. The path is arbitrary and will be constructed as needed when the Bean is loaded.</para>
@@ -1429,7 +1429,7 @@ public int getOpenFileCount ()
 &lt;beanlist&gt;
   &lt;guipanel name="File Open Test Bean"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/FileOpenTestBean.jar" 
-          entry="fileopentestbean/FileOpenTestBean" /&gt;
+          class="fileopentestbean.FileOpenTestBean" /&gt;
     &lt;tree path="/" /&gt;
   &lt;/guipanel&gt;
 &lt;/beanlist&gt;</programlisting>
