@@ -44,8 +44,12 @@ endif
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
 
-VPR_LIBS	= @APP_VPR_LIBS_BEGIN@ @APP_VPR_LIBS_BASIC@ @APP_VPR_LIBS_END@ @APP_LIBS_BASIC@
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
+VPR_LIBS	= @APP_VPR_LIBS_BEGIN@ @APP_VPR_LIBS_BASIC@		\
+                  @APP_VPR_LIBS_END@ @APP_LIBS_BASIC@			\
+                  $(NULL)
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@		\
+                  @APP_EXTRA_LIBS_END@					\
+                  $(NULL)
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
@@ -57,18 +61,23 @@ CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # SRC Files
 TEST_SRCS = 
 CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
-CPPUNIT_SRCS = TestCase.cpp \
-               TestResult.cpp \
-               TestFailure.cpp \
-               TestSuite.cpp
-RUNNER_SRCS = main.cpp
-SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(RUNNER_SRCS)
+CPPUNIT_SRCS	= TestCase.cpp		\
+                  TestResult.cpp	\
+                  TestFailure.cpp	\
+                  TestSuite.cpp
+
+RUNNER_SRCS	= main.cpp
+SRCS		= $(TEST_SRCS)			\
+                  $(CPPUNIT_TEXTUI_SRCS)	\
+                  $(CPPUNIT_SRCS)		\
+                  $(RUNNER_SRCS)
 
 OBJDIR = .
 DEPDIR = 
 
 INCLUDE_PATHS = 
-PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases $(srcdir)/CppUnit/framework $(srcdir)/CppUnit/textui
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
+               $(srcdir)/CppUnit/framework $(srcdir)/CppUnit/textui
 MK_DIR = $(srcdir)/mk
 
 include $(MK_DIR)/objs.mk
