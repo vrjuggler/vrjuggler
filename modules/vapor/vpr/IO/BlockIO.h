@@ -602,6 +602,17 @@ protected:
         /* Do nothing. */ ;
     }
 
+    //: Copy constructor
+    BlockIO (const BlockIO& other)
+    {
+        m_name          = other.m_name;          
+        m_open_mode     = other.m_open_mode;     
+        m_open_blocking = other.m_open_blocking; 
+        m_open          = other.m_open;
+        m_blocking      = other.m_blocking;
+    }
+
+
     // ------------------------------------------------------------------------
     //: Destructor.
     //
