@@ -30,4 +30,38 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+BUILD_JAVA=	@BUILD_JAVA@
+
+rtrc-java:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@echo "------------------------------------------------"
+	@echo "Building Java code for the JCCL RTRC"
+	@echo "------------------------------------------------"
+	@$(MAKE) java
+else
+	@echo "------------------------------------------------"
+	@echo "JCCL RTRC build skipped"
+	@echo "------------------------------------------------"
+endif
+endif	# ifndef NO_JAVA
+
+# Build the JARs
+rtrc-jar:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@$(MAKE) jars
+else
+	@echo "------------------------------------------------"
+	@echo "JCCL RTRC JAR file creation skipped"
+	@echo "------------------------------------------------"
+endif
+endif	# ifndef NO_JAVA
+
+
 java-install:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@$(MAKE) rtrc-install
+endif
+endif

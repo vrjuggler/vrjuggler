@@ -59,13 +59,25 @@ ifeq ($(BUILD_PROF_CXX), Y)
 endif
 endif
 
+beandir=		$(bindir)/beans
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
-EXTRA_JAVA_SRCS_PATH=	$(srcdir)
+EXTRA_SRCS_PATH=	$(srcdir)/jccl/RTRC
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
+JAVA_IDL_OPTS=		@TWEEK_JAVA_IDL_OPTS@ @TWEEK_JAVA_IDL_GENDIR_OPT@$(srcdir)
 
 #include $(MKPATH)/dpp.compile.mk
+
+# -----------------------------------------------------------------------------
+# Java-related setup
+# -----------------------------------------------------------------------------
+JARS=		jccl_rtrc.jar
+BEANS=
+
+IDL_JAVA_FILES=	RTRCInterfaceSubject.java
+
+_LOCAL_CLEAN=1
 
 # -----------------------------------------------------------------------------
 # C++-related setup
@@ -86,6 +98,8 @@ JCCL_RTRC_PROF_LIB_DYNAMIC=	$(JCCL_RTRC_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 include $(MKPATH)/dpp.libs-basic.mk
 include $(MKPATH)/dpp.obj-common.mk
+include $(MKPATH)/dpp.idl.mk
+include $(MKPATH)/dpp.clean.mk
 
 # -----------------------------------------------------------------------------
 # Recursive make setup
@@ -127,6 +141,49 @@ $(LIBDIR)/$(JCCL_RTRC_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_RTRC_PROF_LIB_DYNAMIC): $(OB
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
+
+# -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+java:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
+
+RTRCInterfaceSubject.java: RTRCInterfaceSubject.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
+
+# -----------------------------------------------------------------------------
+# Extra targets.
+# -----------------------------------------------------------------------------
+# This cannot be named 'install' because Doozer++ already defines that.
+rtrc-install:
+	@echo "------------------------------------------------"
+	@echo "Installing the JCCL config Java code base"
+	@echo "------------------------------------------------"
+ifneq ($(JARS), )
+	for jar in $(JARS) ; \
+          do \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/rtrc/$$jar $(bindir) \
+              || exit 1; \
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ; \
+          do \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/rtrc/$$bean.jar $(beandir) \
+              || exit 1; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+                $(EXTRA_INSTALL_ARGS) $(top_srcdir)/rtrc/$$bean.xml \
+                  $(beandir) || exit 1; \
+          done
+endif
 
 
 ifdef GLOBAL_BUILD
