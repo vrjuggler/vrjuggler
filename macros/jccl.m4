@@ -296,7 +296,7 @@ dnl     JCCL_PROF_LIBS_STATIC_CC
 dnl     JCCL_PROF_LIBS_STATIC_CC_MIN
 dnl     JCCL_JARS
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(JCCL_PATH,
+AC_DEFUN([JCCL_PATH],
 [
    JCCL_PATH_CXX($1, [jccl_have_cxx='yes'], $3, $4)
 
