@@ -13,7 +13,7 @@
          <help>The name of the host computer where the CORBA Naming Service is running.</help>
          <value label="Naming Service host" defaultvalue="localhost"/>
       </property>
-      <property valuetype="int" variable="false" name="naming_service_port">
+      <property valuetype="integer" variable="false" name="naming_service_port">
          <help>The port on which the CORBA Naming Service is listening for incoming connections.</help>
          <value label="Naming Service port number" defaultvalue="2809"/>
       </property>
