@@ -149,6 +149,7 @@
 #define vjDEBUG_END(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, -1)
 #define vjDEBUG_ENDlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, -1)
 #define vjDEBUG_CONT(cat,val) vjDEBUGlg(cat,val,false,false)
+#define vjDEBUG_CONT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,false)
 #define vjDEBUG_NEXT(cat,val) vjDEBUGlg(cat,val,false,true)
 #define vjDEBUG_NEXT_BEGIN(cat,val) vjDEBUG_BEGINlg(cat,val,false,true)
 #define vjDEBUG_NEXT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,true)
