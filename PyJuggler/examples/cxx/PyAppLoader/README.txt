@@ -24,13 +24,15 @@ PyAppLoader
       qualified class name per -m argument).
 
       For example, to run PyAppLoader with the VR Juggler configuration
-      files sim.base.config and sim.wand.mixin.config and the Python
+      files sim.base.jconf and sim.wand.mixin.jconf and the Python
       class app.SimpleGlApp (found in app.py), use the following command:
 
-   ./pyAppLoader -c sim.base.config -c sim.wand.mixin.config -m app.SimpleGlApp
+   ./pyAppLoader -c sim.base.jconf -c sim.wand.mixin.jconf -m app.SimpleGlApp
 
-      Note that it is necessary to specify the full path to the
-      configuration files.  Typically, they will be found in the directory
+      Note that it is not necessary to specify the full path to the
+      configuration files if they are in the default directory or can be
+      found via your $VJ_CFG_PATH environment variable.  The default search
+      path for VR Juggler configuration files is the directory
       $VJ_BASE_DIR/share/vrjuggler/data/configFiles.
 
 $Id$
