@@ -19,7 +19,8 @@ EXTRA_XALAN_HTML_PARAMS=	-PARAM show.comments "0"
 EXTRA_SAXON_FO_PARAMS=		show.comments=0
 EXTRA_SAXON_HTML_PARAMS=	show.comments=0
 
-SVG_IMAGES=	figures/AppPulloutCode.svg			\
+SVG_IMAGES=	figures/AppHierarchy.svg			\
+		figures/AppPulloutCode.svg        		\
 		figures/ConfigChunkHandlerHierarchy.svg		\
 		figures/ConfigManagerStructure.svg		\
 		figures/DependencyCheckingClasses.svg		\
@@ -31,7 +32,6 @@ SVG_IMAGES=	figures/AppPulloutCode.svg			\
 		figures/MicrokernelClassDiagram.svg		\
 		figures/RuntimeConfigurationSequence.svg	\
 		figures/userOglApp_hierarchy.svg		\
-		figures/VjAppHierarchy-PfOgl.svg		\
 		figures/VP_APP_sepLine.svg
 
 IMAGES=		$(SVG_IMAGES:%.svg=%.png)
