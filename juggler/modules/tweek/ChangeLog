@@ -1,0 +1,4 @@
+DATE       AUTHOR   CHANGE
+---------- -------- -----------------------------------------------------------
+2001-11-13 patrickh Encourage the use of OpenORB over JDK 1.4 so that this
+                    software can be used with JDK 1.2 and 1.3.
