@@ -134,7 +134,7 @@ exit 0;
 # Arguments:
 #     $curfile - The name of the current file in the recursion process.
 # -----------------------------------------------------------------------------
-sub recurseAction ($) {
+sub recurseAction {
     my $curfile = shift;
 
     # List of installable file extensions.  These are checked with a
