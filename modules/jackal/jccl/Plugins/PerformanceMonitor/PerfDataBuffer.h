@@ -99,11 +99,10 @@ class JCCL_CLASS_API PerfDataBuffer {
 
     bool        active;
 
-public:
     std::string name;
     int         nindex;
 
- public:
+public:
 
     /** Constructor.
      *  Creates a new, inactive PerfDataBuffer.  The caller is 
@@ -146,7 +145,7 @@ public:
     /** Returns whether the buffer is active.
      *  @return True iff the buffer is active.
      */
-    bool isActive();
+    bool isActive() const;
 
 
     /** Records a new data point.
@@ -212,7 +211,7 @@ public:
 
 
     /** Empties the buffer and throws away the data. */
-    void dumpData();
+    void clear ();
 
 private:
    

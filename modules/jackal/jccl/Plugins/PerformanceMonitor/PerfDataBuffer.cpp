@@ -50,8 +50,6 @@ PerfDataBuffer::PerfDataBuffer (const std::string& _name, int _numbufs,
 
 
 
-//: destructor
-//: POST: all memory & buffers have been freed.
 PerfDataBuffer::~PerfDataBuffer () {
     active = false;
     delete[] buffer;
@@ -59,10 +57,6 @@ PerfDataBuffer::~PerfDataBuffer () {
 
 
 
-//: activates the buffer
-//! POST: once this call is made, the buffer will start
-//+       storing data whenever a set() is made and
-//+       writing available data when requested.
 void PerfDataBuffer::activate() {
     active = true;
     vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
@@ -71,11 +65,6 @@ void PerfDataBuffer::activate() {
 
 
 
-//: deactivates the buffer
-//! POST: once this call is made, the buffer will,
-//+       essentially, do nothing.  set() will not store
-//+       any information and the write calls won't
-//+       write anything.
 void PerfDataBuffer::deactivate() {
     active = false;
     /* deactivate maybe should reset the buffer so it's reactivated
@@ -91,21 +80,12 @@ void PerfDataBuffer::deactivate() {
 
 
 
-bool PerfDataBuffer::isActive() {
+bool PerfDataBuffer::isActive() const {
     return active;
 }
 
 
 
-//: writes a new time entry to the buffer
-//! POST: if a buffer is available, it is stamped with
-//+       the current time and _phase.  If not, the
-//+       'lost' counter is incremented.
-//! ARGS: _phase - an integer index used to differentiate
-//+       between different stamping points in the process
-//+       that calls set. e.g. 1 = point right before
-//+       entering some big computation, and 2 = point
-//+       right after.
 void PerfDataBuffer::set(int _phase) {
     int tw;
 
@@ -156,19 +136,7 @@ void PerfDataBuffer::set (int _phase, TimeStamp& _value) {
 }
 
 
-    // for below: need a version w/ max # buffers to write
 
-    //: writes buffer contents to an ostream
-    //! POST: As many buffers as available are written to
-    //+       the ostream out and released so they can be
-    //+       used again by the writer.
-    //! ARGS: out - an ostream to write contents to.
-    //! NOTE: The format for a buffer is 'ind timestamp\n',
-    //+       e.g.: (for four buffers, say we have 3 indices)
-    //+       <br>1 15
-    //+       <br>2 25
-    //+       <br>3 27
-    //+       <br>1 42
 void PerfDataBuffer::write (std::ostream& out) {
     // the only tricky part of this is that the region we
     // want to print out might wrap back around to the
@@ -308,7 +276,7 @@ void PerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, fl
 }
 
 
-void PerfDataBuffer::dumpData() {
+void PerfDataBuffer::clear () {
 
     lost_lock.acquire();
     read_begin = 0;

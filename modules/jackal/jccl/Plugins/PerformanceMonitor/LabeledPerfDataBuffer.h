@@ -96,10 +96,9 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
 
     bool        active;
 
-public:
     std::string name;
 
- public:
+public:
 
 
     /** Constructor.
@@ -145,7 +144,7 @@ public:
     /** Returns whether the buffer is active.
      *  @return True iff the buffer is active.
      */
-    bool isActive();
+    bool isActive() const;
 
 
 
