@@ -486,7 +486,6 @@ public class ConfigBrokerImpl
       {
          // Check if this part of the path is a valid directory we can read
          String dir_name = (String)itr.next();
-         System.out.println("ARON: Checking dir: " + dir_name);
          File dir = new File(dir_name);
          if (dir.exists() && dir.isDirectory() && dir.canRead())
          {
@@ -495,11 +494,9 @@ public class ConfigBrokerImpl
             {
                public boolean accept(File dir, String file)
                {
-                  System.out.println("ARON: Filter " + file);
                   // Only accept files with a .jdef extension
                   if (file.endsWith(".jdef"))
                   {
-                     System.out.println("ARON: Found " + file);
                      File def_file = new File(dir, file);
                      if (def_file.canRead())
                      {
@@ -525,14 +522,11 @@ public class ConfigBrokerImpl
          {
             // Attempt to load in the definitions in the file
             File def_file = (File)itr.next();
-            System.out.println("Attempting to read jdef file: " + def_file.getName());
             ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
             List defs = reader.readDefinition();
-            System.out.println("Successfully read jdef file: " + def_file.getName());
             for (Iterator def_itr = defs.iterator(); def_itr.hasNext(); )
             {
                ConfigDefinition def = (ConfigDefinition)def_itr.next();
-               System.out.println("Loading Definition: " + def.getName());
                mRepos.add(def);
             }
          }
