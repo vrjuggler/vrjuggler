@@ -39,7 +39,6 @@
 
       // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
-#include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
@@ -59,8 +58,7 @@ int main(int argc, char* argv[])
       //- App KernelConfig function
       //- Load user local config
 
-   while(1)
-   {
-      vpr::System::usleep (250000);
-   }
+   kernel->waitForKernelStop();
+
+   return 0;
 }

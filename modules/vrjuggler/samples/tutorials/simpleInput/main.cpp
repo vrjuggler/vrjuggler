@@ -39,7 +39,7 @@
 
 // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
-#include <vpr/System.h>
+
 
 using namespace vrj;
 
@@ -59,8 +59,10 @@ int main(int argc, char* argv[])
    }
 
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    // Start the kernel running
    kernel->start();
@@ -69,10 +71,7 @@ int main(int argc, char* argv[])
    kernel->setApplication(application);
 
    // Keep thread alive and waiting
-   // If the developer makes a way to request that the application exits,
-   // then this loop can check for that
-   while(1)
-   {
-      vpr::System::usleep(250000);
-   }
+   kernel->waitForKernelStop();
+
+   return 0;
 }
