@@ -1124,11 +1124,50 @@ bool reconfigApp::readdSimPos_check()
 bool reconfigApp::repointProxy_exec()
 {
    std::cout << "Beginning test for repointing a proxy to something else...\n" << std::flush;
-   return true;
+
+   return swapChunkFiles( "./Chunks/sim.positiondeviceproxy.config",
+                          "./Chunks/sim.positiondeviceproxy.repoint.config" );
 }
 
 bool reconfigApp::repointProxy_check()
 {
+   //Load the repoint config file, get its device property, match that name
+   //with the gadget::Proxy's instance name
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.positiondeviceproxy.repoint.config" );
+   std::vector<jccl::ConfigChunkPtr> fileChunks;
+   fileDB.getByType( "PosProxy", fileChunks );
+
+
+   if (fileChunks.size() != 1)
+   {
+      std::cout << "\tError: there are " << fileChunks.size() << " proxies in the config file (should be 1)\n" << std::flush;
+      return false;
+   }
+
+   if (fileChunks[0]->getNum( "device" ) != 1)
+   {
+      std::cout << "\tError: there are " << fileChunks[0]->getNum("device") << " device properties in the config file (should be 1)\n" << std::flush;
+      return false;
+   }
+
+   //Get the proxy's name from the file
+   std::string proxyname = fileChunks[0]->getName();
+
+   gadget::PositionProxy* proxy = (gadget::PositionProxy*)gadget::InputManager::instance()->getProxy( proxyname );
+
+   if (proxy == NULL)
+   {
+      std::cout << "\tError: Could not find proxy named " << proxyname << " in the Input Manager\n" << std::flush;
+      return false;
+   }
+
+   if (fileChunks[0]->getProperty<std::string>("device", 0) != proxy->getDeviceName())
+   {
+      std::cout << "\tError: the proxy points at device named " << proxy->getDeviceName() 
+                << ", but should point at " << fileChunks[0]->getProperty<std::string>("device", 0) << "\n" << std::flush;
+      return false;
+   }
+
    return true;
 }
 
