@@ -637,10 +637,7 @@ int FlockStandalone::open_port ()
                 retval = -1;
             }
             else {
-
-                termios tty;
-                vpr::IOSys::Handle handle = _serial_port->getHandle();
-   	          _serial_port->clearAll();
+                _serial_port->clearAll();
                 _serial_port->enableRead();
                 _serial_port->enableLocalAttach();
                 _serial_port->enableBreakByteIgnore();
@@ -1036,7 +1033,7 @@ void FlockStandalone::examine_value(char exam, int data, int reps, int format)
     char exam2[1];
     exam1[0] = 'O';
     exam2[0] = exam;
-    vpr::Uint32 buf=0, buf1=0;
+    vpr::Uint32 buf=0;
     char in[1] = {'a'};
     int i = 0, j = 0;
 
@@ -1100,11 +1097,9 @@ void FlockStandalone::set_value(char exam, char setdata, int reps)
     exam1[0] = 'P';
     exam2[0] = exam;
     data[0] = setdata;
-    vpr::Uint32 buf=0, buf1=0;
-    char in[1] = {'a'};
-    int i = 0, j = 0;
-
-    i = 1;
+    vpr::Uint32 buf=0;
+    int i = 1;
+    
     while(i < reps){
         i++;
         _serial_port->write(exam1, sizeof(char), buf);
