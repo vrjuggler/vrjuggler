@@ -251,6 +251,13 @@ public class ConfigChunkCellEditor
             stopCellEditing();
          }
       });
+      txtField.addFocusListener(new FocusAdapter()
+      {
+         public void focusLost(FocusEvent evt)
+         {
+            stopCellEditing();
+         }
+      });
       return txtField;
    }
 
