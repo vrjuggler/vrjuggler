@@ -117,10 +117,11 @@ struct hash<vpr::Uint64>
 
 #endif   /* ifdef VPR_HASH_MAP_INCLUDE */
 
-// XXX: The following is a hack to deal with GCC on IRIX not knowing how to
-// deal with an unsigned long long being passed to operator<<.  This code
+// XXX: The following is a hack to deal with GCC 3.0.1 on IRIX not knowing how
+// to deal with an unsigned long long being passed to operator<<.  This code
 // should be removed as soon as possible!
-#if defined(VPR_OS_IRIX) && defined(__GNUC__)
+#if defined(VPR_OS_IRIX) && defined(__GNUC__) &&                        \
+    __GNUC__ == 3 && __GNUC_MINOR__ == 0 && __GNUC_PATCHLEVEL__ <= 1
 
 #include <iostream>
 
