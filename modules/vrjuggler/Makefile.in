@@ -266,7 +266,7 @@ info:
 	@echo "Default ABI: $(ABI)"
 	@echo "Default instruction set architecture: $(ISA)"
 	@echo "ABI list: $(ABI_LIST)"
-	@echo "vjDBG_BUILDDIR: $(vjDBG_BUILDDIR)"
+	@echo "DBG_BUILDDIR: $(DBG_BUILDDIR)"
 	@echo "OPT_BUILDDIR: $(OPT_BUILDDIR)"
 	@echo "Installation prefix: $(prefix)"
 	@echo "includedir: $(includedir)"
