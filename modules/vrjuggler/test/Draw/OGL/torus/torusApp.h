@@ -84,9 +84,12 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
+      //static long count=0;
+      //count++;
+      
       // Did we ask for an app exit
-      vprDEBUG(vprDBG_ALL, 0) << "VJAppExit: " << mAppExit->getData() << std::endl << vprDEBUG_FLUSH;
-      if(mAppExit->getData())
+      //vprDEBUG(vprDBG_ALL, 0) << "VJAppExit: " << mAppExit->getData() << std::endl << vprDEBUG_FLUSH;
+      if(mAppExit->getData() )
       {
          vprDEBUG(vprDBG_ALL, 0) << "APP EXIT KEY PRESSED: Stopping kernel and exiting.\n" << vprDEBUG_FLUSH;
          mKernel->stop();     // trigger a kernel stop
