@@ -17,7 +17,6 @@
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjDisplay.h>
 #include <Kernel/Pf/vjPfApp.h>
-//#include <Kernel/vjProjection.h>
 class vjProjection;
 class vjConfigChunkDB;
 class vjSimulator;

@@ -1,22 +1,6 @@
 #ifndef _VJDebug_h_
 #define _VJDebug_h_
-
-#include <config.h>
-#include <iostream.h>
-#include <iomanip.h>
-
-#include <stdlib.h>
-
-#include <assert.h>
-
-#include <Threads/vjThread.h>
-#include <Sync/vjMutex.h>
-#include <Sync/vjNullMutex.h>
-
-#include <Kernel/vjStreamLock.h>
-
-// NOTE: Quick Hack for now.  Need to really design something nice. :)
-extern vjMutex DebugLock;
+#pragma once
 
 #define DEBUG_VJ
 #define LOCK_DEBUG_STREAM
@@ -41,13 +25,37 @@ extern vjMutex DebugLock;
    #define vjDEBUG_FLUSH flush
 #endif
 
-   // -- ASSERT -- //
-
+// -- ASSERT -- //
 #ifdef DEBUG_VJ
    #define vjASSERT(val) assert((val))
 #else
    #define vjASSERT(val) ((void)0)
 #endif
+
+// --------------- //
+// --- Headers --- //
+// --------------- //
+#include <config.h>
+#include <iostream.h>
+#include <iomanip.h>
+
+#include <stdlib.h>
+
+#include <assert.h>
+
+#include <Sync/vjMutex.h>
+#include <Threads/vjThread.h>
+#include <Kernel/vjStreamLock.h>
+
+//#include <Sync/vjNullMutex.h>
+
+
+
+// NOTE: Quick Hack for now.  Need to really design something nice. :)
+extern vjMutex DebugLock;
+
+
+   
 
 //------------------------------------------
 //: Class to support debug output
