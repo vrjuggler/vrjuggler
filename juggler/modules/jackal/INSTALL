@@ -1,5 +1,5 @@
 ==============================================================================
-This file contains instructions on how to build VR Juggler from the source
+This file contains instructions on how to build Jackal from the source
 code.  For a detailed description of this process, please refer to
 http://www.vrjuggler.org/html/juggler.team.guide/build/juggler/index.html
 before sending email to the mailing lists.
@@ -12,7 +12,7 @@ Table of contents:
     1. Getting started
         A. Supported platforms
         B. Minimum requirements (compiler, libraries, etc.)
-    2. Compiling VR Juggler
+    2. Compiling Jackal
 
 ==============================================================================
 1. Getting started
@@ -20,14 +20,14 @@ Table of contents:
 
     A. Supported platforms
 
-        VR Juggler is officially supported on the following platforms:
+        Jackal is officially supported on the following platforms:
 
             IRIX 6.5
             RedHat Linux 6.1, 6.2, 7.1, and newer
             Windows NT 4.0 and 2000
             Windows 98/Me
 
-        VR Juggler is known to work on the following platforms (but is
+        Jackal is known to work on the following platforms (but is
         not officially supported):
 
             HP-UX 11.00
@@ -128,7 +128,7 @@ Table of contents:
 
                     gmake
 
-          v. Set the environment variable $VJ_BASE_DIR.  This is *required*
+          v. Set the environment variable $JCCL_BASE_DIR.  This is *required*
              by VR Juggler's application makefiles and runtime environment.
 
              NOTES:
@@ -142,7 +142,7 @@ Table of contents:
                     line your $HOME/.tcshrc or $HOME/.cshrc file (assuming
                     the use of tcsh for your shell):
 
-                        setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler/instlinks
+                        setenv JCCL_BASE_DIR [BUILD_DIR]/instlinks
 
                     Use whatever is appropriate for your shell (BASH, ksh,
                     DOS, etc.)
