@@ -49,7 +49,8 @@ top_srcdir	= @top_srcdir@
 # Prefix for recursive stuff.
 DIRPRFX		= TestCases/
 
-SUBDIR		= IO		\
+SUBDIR		= DynLoad	\
+                  IO		\
                   Simulator	\
                   Socket	\
                   Thread	\

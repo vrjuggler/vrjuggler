@@ -478,6 +478,11 @@ AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
     [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
 LIBS="${_vpr_save_LIBS}"
 
+_vpr_save_LIBS="$LIBS"
+AC_CHECK_FUNC([dlopen], [DL_LOAD_LIB=''],
+    [AC_CHECK_LIB([dl], [dlopen], [DL_LOAD_LIB='-ldl'])])
+LIBS="${_vpr_save_LIBS}"
+
 # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
 # synchronization friends are in libposix4.
 _vpr_save_LIBS="$LIBS"
@@ -569,7 +574,7 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -617,7 +622,7 @@ fi
 case $SUBSYSTEM in
     SPROC)
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$SEM_LIB $SOCKET_LIB"
+        subsystem_libs="$SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
@@ -629,7 +634,7 @@ case $SUBSYSTEM in
         ;;
     POSIX)
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
 
         if test "x$PLATFORM" != "xDarwin" ; then
             if test "x$GXX" = "xyes" ; then
@@ -660,7 +665,7 @@ case $SUBSYSTEM in
             vpr_prof_libs='vpr.lib'
         else
             subsystem_cxxflags="$INCLUDES"
-            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
             vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
@@ -755,12 +760,14 @@ AC_OUTPUT(vpr-config
           vpr/Makefile
           vpr/md/Makefile
           vpr/md/NSPR/Makefile
+          vpr/md/NSPR/DynLoad/Makefile
           vpr/md/NSPR/IO/Makefile
           vpr/md/NSPR/IO/Socket/Makefile
           vpr/md/NSPR/Sync/Makefile
           vpr/md/NSPR/Thread/Makefile
           vpr/md/NSPR/Util/Makefile
           vpr/md/POSIX/Makefile
+          vpr/md/POSIX/DynLoad/Makefile
           vpr/md/POSIX/IO/Makefile
           vpr/md/POSIX/IO/Port/Makefile
           vpr/md/POSIX/IO/Socket/Makefile
@@ -778,6 +785,7 @@ AC_OUTPUT(vpr-config
           vpr/md/WIN32/Makefile
           vpr/md/WIN32/IO/Makefile
           vpr/md/WIN32/IO/Port/Makefile
+          vpr/DynLoad/Makefile
           vpr/IO/Makefile
           vpr/IO/Port/Makefile
           vpr/IO/Socket/Makefile
@@ -791,6 +799,8 @@ AC_OUTPUT(vpr-config
           test/TestSuite/Makefile
           test/TestSuite/test.defs.mk
           test/TestSuite/TestCases/Makefile
+          test/TestSuite/TestCases/DynLoad/Makefile
+          test/TestSuite/TestCases/DynLoad/modules/Makefile
           test/TestSuite/TestCases/IO/Makefile
           test/TestSuite/TestCases/IO/Port/Makefile
           test/TestSuite/TestCases/IO/Socket/Makefile

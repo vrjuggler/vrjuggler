@@ -5,6 +5,7 @@
 #include <cppunit/extensions/MetricRegistry.h>
 
 // Common (sim and real) tests.
+#include <TestCases/DynLoad/LibraryTest.h>
 #include <TestCases/Socket/SocketTest.h>
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
 #include <TestCases/Socket/SocketCopyConstructorTest.h>
@@ -131,6 +132,7 @@ int main (int ac, char **av)
    // Common tests (both real and simulator).
    noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
    noninteractive_suite->addTest(vprTest::BoostTest::suite());
+   noninteractive_suite->addTest(vprTest::LibraryTest::suite());
    noninteractive_suite->addTest(vprTest::FactoryTest::suite());
    noninteractive_suite->addTest(vprTest::SystemTest::suite());
    noninteractive_suite->addTest(vprTest::FileUtilsTest::suite());
