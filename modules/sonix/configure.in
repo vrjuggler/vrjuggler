@@ -180,9 +180,9 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="-all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
+    CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
 fi
 
 DPP_SYSTEM_SUBST
