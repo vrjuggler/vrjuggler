@@ -60,6 +60,7 @@ public abstract class PropertyEditorPanel extends JPanel
    {
       // Populate the box with the tags
       JComboBox box = new JComboBox(mEditor.getTags());
+      box.setBorder(BorderFactory.createLoweredBevelBorder());
       box.setSelectedItem(mEditor.getAsText());
       box.setFont(box.getFont().deriveFont(Font.PLAIN));
       box.addActionListener(new ActionListener()
