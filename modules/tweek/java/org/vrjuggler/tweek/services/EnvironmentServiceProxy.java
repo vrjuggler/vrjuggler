@@ -98,6 +98,11 @@ public class EnvironmentServiceProxy
       return mEnvService.getAppDataDir();
    }
 
+   public int getOS()
+   {
+      return mEnvService.getOS();
+   }
+
    /** The EnvironmentService instance to which this object is proxy. */
    private EnvironmentService mEnvService = null;
 }
