@@ -44,6 +44,7 @@ import javax.swing.tree.TreeModel;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
+import org.vrjuggler.tweek.net.corba.*;
 
 
 /**
@@ -123,12 +124,10 @@ public class BeanContainer extends JScrollPane
       m_comm_listeners.removeElement(listener);
    }
 
-   public void fireConnectionEvent (String node_addr, int node_port,
-                                    org.vrjuggler.tweek.net.PlexusNodeInterface node_if)
+   public void fireConnectionEvent (CorbaService corba_if)
    {
       CommunicationEvent e =
-         new CommunicationEvent(this, CommunicationEvent.CONNECT, node_addr,
-                                node_port, node_if);
+         new CommunicationEvent(this, CommunicationEvent.CONNECT, corba_if);
 
       CommunicationListener l = null;
       Vector listeners;
@@ -145,32 +144,11 @@ public class BeanContainer extends JScrollPane
       }
    }
 
-   public void fireUpdateEvent ()
-   {
-      CommunicationEvent e = new CommunicationEvent(this,
-                                                    CommunicationEvent.UPDATE,
-                                                    "", 0, null);
-
-      CommunicationListener l = null;
-      Vector listeners;
-
-      synchronized (this)
-      {
-         listeners = (Vector) m_comm_listeners.clone();
-      }
-
-      for ( int i = 0; i < listeners.size(); i++ )
-      {
-         l = (CommunicationListener) listeners.elementAt(i);
-         l.communication(e);
-      }
-   }
-
-   public void fireDisconnectionEvent ()
+   public void fireDisconnectionEvent (CorbaService corba_if)
    {
       CommunicationEvent e = new CommunicationEvent(this,
                                                     CommunicationEvent.DISCONNECT,
-                                                    "", 0, null);
+                                                    corba_if);
 
       CommunicationListener l = null;
       Vector listeners;
