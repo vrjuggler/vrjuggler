@@ -6,7 +6,7 @@
 # Date modified: $Date$
 # Version:       $Revision$
 
-AC_INIT([PyJuggler], [0.9], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([PyJuggler], [0.10], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([PyJuggler is (C) Copyright 2002-2004 by Patrick Hartling])
 AC_REVISION([$Revision$])
@@ -337,7 +337,7 @@ fi
 VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
 JCCL_PATH_CXX([0.12], ,
               [AC_MSG_ERROR([*** JCCL is required for PyJuggler ***])])
-GADGETEER_PATH([0.13], ,
+GADGETEER_PATH([0.17], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for PyJuggler ***])])
 VRJUGGLER_PATH([1.1.148], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])

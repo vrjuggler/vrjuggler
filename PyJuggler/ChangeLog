@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-24-2004 patrickh    Sync up with Gadgeteer 0.17.0.
+                        NEW VERSION: 0.10.0
 Sep-22-2004 patrickh    Exposed gadget::InputManager.
                         NEW VERSION: 0.9.3
 Jul-14-2004 patrickh    NEW VERSION: 0.9.2
