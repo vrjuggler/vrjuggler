@@ -6,7 +6,7 @@ Still needs much cleaning, but this (the CaveNavigator class) does
 actually navigate like the old CAVE apps now (like terry's code did).
 
 CaveNavigator is the class to use - it uses vjMatrix which *if* you're
-using performer, you'll need to convert and copy to a pfDCS.
+using performer, you'll need to convert and then copy to a pfDCS.
 
 CaveNavigator also works under OpenGL because of this.  Only the
 planeCollider will work under OpenGL though, since it is the only collider

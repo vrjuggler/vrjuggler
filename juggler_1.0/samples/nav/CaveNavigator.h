@@ -166,6 +166,7 @@ int CaveNavigator::update()
 
    if (true == mNowAccelerating)
    {
+      // magic number!  acceleration of 10 units per second
       mVNav.accelerateForward( 10.0f );
    }
    
@@ -176,16 +177,19 @@ int CaveNavigator::update()
    
    if (true == mNowBraking)
    {
+      // magic number!  i tweaked it to work well. (dampened stop)
       mVNav.setDamping( 0.85 );
    }
    
    if (false == mNowStopping && false == mNowBraking)
    {
+      // magic number!  total damping (instant stop.)
       mVNav.setDamping( 1.0f );
    }
    
    if (true == mNowReversing)
    {
+      // magic number!  decceleration of .9 units per second
       mVNav.accelerateBackward( 0.9f );
    }
    
