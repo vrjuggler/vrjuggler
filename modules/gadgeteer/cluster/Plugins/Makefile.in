@@ -49,4 +49,7 @@ SUBDIR=		ApplicationDataManager	\
 		RemoteInputManager	\
 		SwapLockPlugin
 
+$(RECTARGET): recursive
+
 include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.clean.mk
