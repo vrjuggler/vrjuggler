@@ -128,6 +128,15 @@ public class BeanLoader
                                               " failed (" + e.getMessage() +
                                               ")");
       }
+      catch (NoClassDefFoundError e)
+      {
+         System.err.println("ERROR: Could not instantiate Bean of type " +
+                            bean_class);
+//          e.printStackTrace();
+         throw new BeanInstantiationException("Instantiation of " + bean_class +
+                                              " failed (" + e.getMessage() +
+                                              ")");
+      }
 
       return obj;
    }
