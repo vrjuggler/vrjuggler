@@ -133,7 +133,7 @@ links:
           for bean in $(BEANS) ;					\
           do								\
               $(LN_S) $(topdir)/java/$$bean.jar ./ ;			\
-              $(LN_S) $(topdir)/java/$$bean.xml ./ ;			\
+              $(LN_S) $(TWEEKROOT_ABS)/java/$$bean.xml ./ ;		\
           done
 	cd $(instlinks)/bin &&						\
           for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
