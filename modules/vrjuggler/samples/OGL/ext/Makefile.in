@@ -31,28 +31,23 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OGL
+# Makefile.in for vrjuggler/samples/OGL/ext
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
-
-DIRS=	simple advanced ext
 
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(DIRS)
+all: proceduralApp
 
-$(DIRS)::
-	cd $@ && $(MAKE)
+proceduralApp::
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	@for dir in $(DIRS) ; do		\
-            cd $$dir && $(MAKE) clean ;		\
-            cd .. ;				\
-        done
+clean:	
+	-cd proceduralApp && $(MAKE) clean
