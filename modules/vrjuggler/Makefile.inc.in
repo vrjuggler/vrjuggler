@@ -158,7 +158,19 @@ $(PARAM_SOURCE): $(PARAM_HEADER) $(VJROOT_ABS)/$(PARAM_SOURCE).in
 
 # Things to do after the object files and library are built.
 afterbuild:
+ifdef BUILD_PROF_LIBS
+ifeq ($(CALLER), world)
+	@$(MAKE) links-prof-libs
+endif
+endif
 	@$(MAKE) links
+	@echo ""
+	@echo "---------------------------------------------------------------"
+	@echo 'You must now set $$VJ_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo ""
+	@echo 'and extend your path to include $$VJ_BASE_DIR/bin'
+	@echo "---------------------------------------------------------------"
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
@@ -324,13 +336,6 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) links-dbg
 endif
-	@echo ""
-	@echo "---------------------------------------------------------------"
-	@echo 'You must now set $$VJ_BASE_DIR to:'
-	@cd $(instlinks) && echo "  `pwd`"
-	@echo ""
-	@echo 'and extend your path to include $$VJ_BASE_DIR/bin'
-	@echo "---------------------------------------------------------------"
 
 links-all:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
@@ -343,6 +348,10 @@ links-opt:
 
 links-prof:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
+
+links-prof-libs:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof-dso
 
 # Remove the links in $(instlinks).
 clean-links:
