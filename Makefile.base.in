@@ -63,6 +63,7 @@
 # LDFLAGS         - Flags for ${LD}.
 # LDOPTS          - Extra, often platform-specific, options for the linker.
 # LIBS            - Extra external libraries needed at link time.
+# LN_S            - Working 'ln -s' command.
 # MKPATH          - Path to shared vj.*.mk file directory.
 # MTREE_CMD       - Path to a BSD-compatible mtree.
 # OBJ_FILE_SUFFIX - Suffix for object file names (e.g., "o" or "obj").
@@ -138,6 +139,7 @@ LDOPTS		= @LDOPTS@ ${EXTRA_LDOPTS}
 LDOPTS_DBG	= @LDOPTS_DBG@
 LDOPTS_OPT	= @LDOPTS_OPT@
 LIBS		= @LIBS@
+LN_S		= @LN_S@
 MAKEFLAGS	+= --no-print-directory
 MKPATH		= ${VJROOT_ABS}/mk
 MTREE_CMD	= @MTREE_CMD@
