@@ -29,6 +29,8 @@ use lib("$path");
 use Getopt::Std;
 use InstallWeb;
 
+$| = 1;
+
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
 if ( $#ARGV < 3 ) 
