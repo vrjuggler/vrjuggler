@@ -12,8 +12,8 @@
  *                            Carolina Cruz-Neira
  *                               Albert Baker
  *
- *                         Copyright - 1997,1998,1999
- *                Iowa State University Research Foundation, Inc.
+ *                  Copyright (C) - 1997, 1998, 1999, 2000
+ *              Iowa State University Research Foundation, Inc.
  *                            All Rights Reserved
  */
 
