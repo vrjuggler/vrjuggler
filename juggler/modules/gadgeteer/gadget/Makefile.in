@@ -53,7 +53,8 @@ SUBDIR		= Filter	\
                   vjInput	\
                   vjKeyboard	\
                   vjPosition	\
-                  vjSim
+                  vjSim         \
+		  vjDTK
 
 # This is a hack until I can figure out a better way to do this automatically
 # in Doozer++.  The problem is that GNU make doesn't offer much in the way

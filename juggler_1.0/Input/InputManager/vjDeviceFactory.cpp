@@ -60,6 +60,11 @@
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
 
+/* PThread Dependant Driver */
+#ifdef VJ_USE_PTHREADS
+#include <Input/vjDTK/vjDTK.h>
+#endif
+
 #include <typeinfo>
 
 // Initialize the singleton ptr
@@ -102,10 +107,13 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
-
 #else
 
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
+#endif
+
+#ifdef VJ_USE_PTHREADS
+   vjDeviceConstructor<vjDTK>* dtk_wrapper = new vjDeviceConstructor<vjDTK>;
 #endif
 }
 

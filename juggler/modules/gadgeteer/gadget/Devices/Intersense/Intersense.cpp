@@ -67,6 +67,7 @@ int vjIsense::getStationIndex(int stationNum, int bufferIndex)
 }
 
 
+
 vjIsense::vjIsense()
 {
     vjDEBUG(vjDBG_INPUT_MGR,1) << "*** vjIsense::vjIsense() ***\n" << vjDEBUG_FLUSH;
@@ -238,6 +239,14 @@ int vjIsense::sample()
     int stationIndex;
     int min, num;
 
+//: vjThread::yield()
+// XXX: Give up CPU time so that this thread doesn't bog down the processor.
+// This is really important when using PThreads since for some reason Pthreads
+// isn't dumping these threads onto other processors.  Therefore, some of these
+// threads are killing application frame-rates.
+
+    myThread->yield();
+
     for (i = 0 ; i < (mTracker.NumStations()); i++)
     {
 	int index = getStationIndex(i,progress);
@@ -259,6 +268,7 @@ int vjIsense::sample()
 			     mTracker.wQuat( stationIndex ));
 	    theData[index].makeQuaternion(quatValue);
 	}
+	mDataTimes[index] = sampletime;
 
 // We start at the index of the first digital item (set in the config files)
 // and we copy the digital data from this station to the vjIsense device for range (min -> min+count-1)
@@ -266,16 +276,15 @@ int vjIsense::sample()
 	num = min + stations[i].dig_num;
 	if(stations[i].useDigital) {
 	    for( j = 0, k = min; (j < MAX_NUM_BUTTONS) && (k < IS_BUTTON_NUM) && (k < num); j++, k++) 
-		mInput[current].digital[k] = mTracker.buttonState(stationIndex, j);
+		mInput[progress].digital[k] = mTracker.buttonState(stationIndex, j);
 	}
 // Analog works the same as the digital
 	min = stations[i].ana_min;
 	num = min + stations[i].ana_num;
 	if(stations[i].useAnalog) {
 	    for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++)
-		mInput[current].analog[k] = mTracker.analogData(stationIndex, j);
+		mInput[progress].analog[k] = mTracker.analogData(stationIndex, j);
 	}
-	mDataTimes[index] = sampletime;
 
 // Transforms between the cord frames
 // See transform documentation and VR System pg 146
@@ -366,6 +375,7 @@ void vjIsense::updateData()
 {
     if (this->isActive() == false)
 	return;
+    int i;
 
 // this unlocks when this object is destructed (upon return of the function)
     vjGuard<vjMutex> updateGuard(lock);
@@ -373,8 +383,12 @@ void vjIsense::updateData()
     
 // TODO: modify the datagrabber to get correct data
 // Copy the valid data to the current data so that both are valid
-    for(int i=0;i<mTracker.NumStations();i++)
+    for(i=0;i<mTracker.NumStations();i++)
         theData[getStationIndex(i,current)] = theData[getStationIndex(i,valid)];   // first hand
+    for(i=0;i<IS_BUTTON_NUM;i++)
+	mInput[current].digital[i] = mInput[valid].digital[i];
+    for(i=0;i<IS_ANALOG_NUM;i++)
+	mInput[current].analog[i] = mInput[valid].analog[i];
 
 // Locks and then swap the indicies
     swapCurrentIndexes();

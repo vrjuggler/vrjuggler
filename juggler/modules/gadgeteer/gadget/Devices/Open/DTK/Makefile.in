@@ -31,35 +31,44 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input.  It requires GNU make.
+# Makefile.in for juggler/Input/vjDTK.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+default: all
+
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-# Prefix for recursive stuff.
-DIRPRFX		= Input/
+DTKINCLUDES     = $(shell dtk-config --include)
 
-# Subdirectories to compile.
-SUBDIR		= Filter	\
-                  InputManager	\
-                  Multi		\
-                  ibox		\
-                  intersense    \
-                  vjGesture	\
-                  vjGlove	\
-                  vjInput	\
-                  vjKeyboard	\
-                  vjPosition	\
-                  vjSim         \
-		  vjDTK
+includedir	= @includedir@/Input/vjDTK
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
+SUBOBJDIR	= $(VJ_LIBRARY)
+VJROOT		= $(top_srcdir)
+VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjDTK
 
-# This is a hack until I can figure out a better way to do this automatically
-# in Doozer++.  The problem is that GNU make doesn't offer much in the way
-# of execution logic, and when recursion gets to this point, I don't know a
-# good way to tell it to continue recursing with the given arguments.
-$(RECTARGET): recursive
+CFLAGS          += $(DTKCFLAGS)
+LIBS            += $(DTKLIBS)
+INCLUDES        += $(DTKINCLUDES)
 
-include $(MKPATH)/dpp.subdir.mk
+SRCS		=
+
+ifeq (@THREAD_SYS@,POSIX)
+SRCS		+= vjDTK.cpp                    \
+		   vjDTKMemorySegment.cpp
+endif
+
+include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    include $(DEPEND_FILES)
+endif
+endif

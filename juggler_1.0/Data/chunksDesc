@@ -295,6 +295,7 @@ chunk TrackdController "TrackdController" "Configure the interface to a trackd c
   shm_key Int 1 "SharedMemoryKey" "This is the shared memory key for the trackd information."
   end
 chunk ISenseStation "Station" "Settings for an Intersense Tracker Station"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
   enabled Bool 1 "Enabled" ""
   stationIndex Int 1 "Station Number" ""
   useDigital Bool 1 "Use Digital" ""
@@ -315,5 +316,21 @@ chunk Isense "Isense" "Intersense Tracking Devices"
   script String 1 "Script File" "File path of script sent to the tracker on startup."
   min Float 1 "min" "the actual analog data values range - lower bound"
   max Float 1 "max" "the actual analog data values range - upper bound"
+  end
+chunk DTKsegment "DTK Memory Segment" "Configuration for a DTK memory segment"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  segmentName String 1 "Segment Name" ""
+  remoteHost String 1 "Host Name" ""
+  dataType Int 1 "Data Type" vj_enumeration { "Integers=1" "Floats=2" "Bytes=3" "CString=4" } "Only used when Input Type is set to Custom"
+  itemCount Int 1 "Item Count" "Only used when Input Type is set to Custom"
+  inputType Int 1 "Input Type" vj_enumeration { "Position Euler ZYX=1" "Position Euler XYZ=2" "Position Quat=3" "Digital=4" "Analog=5" "Custom=6" } "This determines the type of input expected at this memory segment."
+  end
+chunk DTK "DTK" "Provides input services multiple machines"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  translate Float 3 "Translation" "(world_T_transmitter) Translation of the transmitter from Juggler coord system."
+  rotate Float 3 "Rotation" "(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system."
+  min Float 1 "min" "the actual analog data values range - lower bound"
+  max Float 1 "max" "the actual analog data values range - upper bound"
+  segments EmbeddedChunk -1 "Segments" vj_enumeration { "DTKsegment" } "Configuration for a shared memory segment."
   end
 End
