@@ -24,7 +24,8 @@ Table of contents:
     c.) Probe the system for capabilities, generate Makefiles, etc...
         this "configures" the source tree for the current system
     d.) "Make" the distribution using gnu-make. 
-
+6.) Popular build hacks
+    a.) Send compiler output to a different directory than the source tree.
 
 --------------------------------------------------------------------------
 
@@ -62,9 +63,20 @@ autoconf
     
     c.) Probe the system for capabilities, generate Makefiles, etc...
         this "configures" the source tree for the current system
-configure
+"$source_code_dir"/juggler/configure
 
     d.) "Make" the distribution using gnu-make.  
         This compiles, links, and creates the final distribution tree 
         (in the form of sym-links).
 gmake
+
+
+6.) Build hacks
+    a.) Send compiler output to a different directory than the source tree.
+        Run this in the directory you want compiler output to go to.
+	NOTE: You can change the word "myBuildDirectory" to a name of 
+	      your choice.
+setenv a_different_build_dir myBuildDirectory
+mkdir "$source_code_dir"/juggler/"$a_different_build_dir"
+cd "$source_code_dir"/juggler/"$a_different_build_dir"
+"$source_code_dir"/juggler/configure
