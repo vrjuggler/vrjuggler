@@ -406,7 +406,6 @@ AC_OUTPUT(
           snx/plugins/OpenAL/Makefile
           snx/plugins/Subsynth/Makefile
           snx/Util/Makefile
-          snx/snxParam.h
           samples/Makefile
           samples/opengl/Makefile
           test/Makefile
