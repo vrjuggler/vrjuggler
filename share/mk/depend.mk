@@ -16,13 +16,10 @@
 # OBJECT_EXT  - Suffix for object file names (e.g., "o" or "obj").
 # OBJS        - The list of object files that will be compiled.  We use this
 #               for the suffix change because there is only one suffix for
-#               object files ($(OBJECT_EXT)).
+#               object files ($(OBJEXT)).
 # -----------------------------------------------------------------------------
 
-# XXX: Not every compiler uses -M to generate depedencies.  This needs to be
-# generalized.
-DEP_GEN_FLAG	= -M
-DEPEND_FILES	= $(OBJS:.$(OBJ_FILE_SUFFIX)=.d)
+DEPEND_FILES	= $(OBJS:.$(OBJEXT)=.d)
 OBJDIR ?= .
 
 # These expressions reformat the output from the dependency text to be of the
@@ -34,17 +31,17 @@ OBJDIR ?= .
 # from the C and C++ compilers which prints only the object file to be
 # created ($*).  The second handles output from makedepend(1) which includes
 # the path leading to the source file in the object file name.
-_CC_SED_EXP	= '\''s/\($*\)\.$(OBJ_FILE_SUFFIX)[ :]*/$$(OBJDIR)\/\1.$(OBJ_FILE_SUFFIX) $@: /g'\''
-_MKDEP_SED_EXP	= '\''s/.*\($*\)\.$(OBJ_FILE_SUFFIX)[ :]*/$$(OBJDIR)\/\1.$(OBJ_FILE_SUFFIX) $@: /g'\''
+_CC_SED_EXP	= '\''s/\($*\)\.$(OBJEXT)[ :]*/$$(OBJDIR)\/\1.$(OBJEXT) $@: /g'\''
+_MKDEP_SED_EXP	= '\''s/.*\($*\)\.$(OBJEXT)[ :]*/$$(OBJDIR)\/\1.$(OBJEXT) $@: /g'\''
 
 # Determine, based on the C compiler, how to generate the dependencies.  If
 # the compiler is cl (Windows only), use makedepend(1).  Otherwise, we can use
 # the compiler itself to do the job.
 ifeq ($(CC), cl)
-    _C_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJ_FILE_SUFFIX)    \
+    _C_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJEXT)    \
                       $(DEPENDFLAGS) -- $(DEPEND_EXTRAS) -- $< |	\
                       sed $(_MKDEP_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
-    _CXX_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJ_FILE_SUFFIX)	\
+    _CXX_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJEXT)	\
                       $(DEPENDFLAGS) -- $(DEPEND_EXTRAS) -- $< |	\
                       sed $(_MKDEP_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
 else

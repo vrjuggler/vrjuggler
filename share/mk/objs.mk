@@ -5,9 +5,9 @@ DEPDIR		?= .
 # Define the list of supported source file suffixes.
 _suffix_list = c C CC cc cpp c++ cxx
 
-# Loop over the suffixes, translate them to $(OBJECT_EXT) and store the
+# Loop over the suffixes, translate them to $(OBJEXT) and store the
 # result in $(OBJS).
-makeobjs = $(filter %.$(OBJ_FILE_SUFFIX), $(foreach _suffix, $(_suffix_list), $(1:.$(_suffix)=.$(OBJ_FILE_SUFFIX))))
+makeobjs = $(filter %.$(OBJEXT), $(foreach _suffix, $(_suffix_list), $(1:.$(_suffix)=.$(OBJEXT))))
 
 # add a directory prefix to each source file
 # OBJS := ${addprefix ${OBJDIR}/,$(SRCS)}
@@ -15,28 +15,28 @@ makeobjs = $(filter %.$(OBJ_FILE_SUFFIX), $(foreach _suffix, $(_suffix_list), $(
 OBJS = $(call makeobjs, $(SRCS))
 
 # Rules for compiling
-CREATE_OBJ_FILE_COMMAND = $(CXX_COMPILE) $(CXX_FLAGS) $(DEFS) $(WARNINGS_FLAGS) $(INCLUDE_PATHS) $< $(OUTPUT_OBJ_FLAG)$@
-CREATE_OBJ_FILE_COMMAND_C = $(C_COMPILE) $(C_FLAGS) $(DEFS) $(WARNINGS_FLAGS) $(INCLUDE_PATHS) $< $(OUTPUT_OBJ_FLAG)$@
+CREATE_OBJ_FILE_COMMAND = $(CXX_COMPILE) $(WARNINGS_FLAGS) $(OBJ_NAME_FLAG) -c $<
+CREATE_OBJ_FILE_COMMAND_C = $(C_COMPILE) $(WARNINGS_FLAGS) $(OBJ_NAME_FLAG) -c $<
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.c
+$(OBJDIR)/%.$(OBJEXT): %.c
 	$(CREATE_OBJ_FILE_COMMAND_C)
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.cxx
+$(OBJDIR)/%.$(OBJEXT): %.cxx
 	$(CREATE_OBJ_FILE_COMMAND)
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.c++
+$(OBJDIR)/%.$(OBJEXT): %.c++
 	$(CREATE_OBJ_FILE_COMMAND)
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.cc
+$(OBJDIR)/%.$(OBJEXT): %.cc
 	$(CREATE_OBJ_FILE_COMMAND)
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.C
+$(OBJDIR)/%.$(OBJEXT): %.C
 	$(CREATE_OBJ_FILE_COMMAND)
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.cpp
+$(OBJDIR)/%.$(OBJEXT): %.cpp
 	$(CREATE_OBJ_FILE_COMMAND)
 
-$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.C
+$(OBJDIR)/%.$(OBJEXT): %.C
 	$(CREATE_OBJ_FILE_COMMAND)
 
 # Search path for source code and object files.
@@ -47,4 +47,4 @@ vpath %.cpp ${PATH_TO_SRCS}
 vpath %.cxx ${PATH_TO_SRCS}
 vpath %.c++ ${PATH_TO_SRCS}
 vpath %.cc ${PATH_TO_SRCS}
-vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
+vpath %.${OBJEXT} ${OBJDIR}
