@@ -260,7 +260,11 @@ sealed(Coord4dAxisAngle)
 # Free functions.
 # -----------------------------------------------------------------------------
 gmtl_free_types = FreeTypesHolder(mod, 'Gmtl', 'gmtl-free-types.h')
+gmtl_free_types.addEnum('gmtl::VectorIndex')
 gmtl_free_types.addEnum('gmtl::PlaneSide')
+gmtl_free_types.addConstant('gmtl::GMTL_EPSILON')
+gmtl_free_types.addConstant('gmtl::GMTL_MAT_EQUAL_EPSILON')
+gmtl_free_types.addConstant('gmtl::GMTL_VEC_EQUAL_EPSILON')
 gmtl_free_types.addFunction('gmtl::add')
 gmtl_free_types.addFunction('gmtl::center')
 gmtl_free_types.addFunction('gmtl::conj')
