@@ -25,6 +25,7 @@ class vjGlApp;
 
 class vjConfigChunkDB;
 class vjSimulator;
+class vjGloveProxy;
 
 #include <Sync/vjCond.h>
 #include <Sync/vjSemaphore.h>
@@ -76,6 +77,10 @@ public:
    //: Draw all the ogl pipes/windows
    void drawAllPipes();
 
+   //: Draw any objects that the manager needs to display
+   // i.e. Gloves, etc
+   void drawObjects();
+
    //: Draw a simulator using OpenGL commands
    //! NOTE: This is called internally by the library
    void drawSimulator(vjSimulator* sim);
@@ -92,11 +97,13 @@ public:
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
+   void drawLine(vjVec3& start, vjVec3& end);
    void drawSphere(float radius, int slices, int stacks);
    void drawCone(float base, float height, int slices, int stacks);
    void drawBox(float size, GLenum type);
    void drawWireCube(float size);
    void drawSolidCube(float size);
+   void drawGlove(vjGloveProxy* gloveProxy);
 
    GLUquadricObj* mQuadObj;
 

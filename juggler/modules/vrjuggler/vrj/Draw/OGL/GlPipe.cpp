@@ -126,7 +126,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
 {
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjGlDrawManager::instance()->currentContext() = win->getId();     // Set TSS data of context id
-   vjDEBUG(1) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
+   vjDEBUG(4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
 
    win->makeCurrent();                       // Set correct context
    theApp->contextPreDraw();                 // Do any context pre-drawing
@@ -134,11 +134,13 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    if (!win->getDisplay()->isSimulator())      // NON-SIMULATOR
    {
       win->setLeftEye();
+      glManager->drawObjects();
       theApp->draw();
 
       if (win->isStereo())
       {
          win->setRightEye();
+         glManager->drawObjects();
          theApp->draw();
       }
    }
@@ -146,6 +148,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    {
       win->setCameraEye();
       theApp->draw();
+      glManager->drawObjects();
       glManager->drawSimulator(win->getDisplay()->mSim);
    }
 
