@@ -99,7 +99,7 @@ OpenALSoundImplementation::~OpenALSoundImplementation()
  * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
  * @semantics Triggers a sound
  */
-void OpenALSoundImplementation::trigger( const std::string& alias, const unsigned int& looping )
+void OpenALSoundImplementation::trigger( const std::string& alias, const int& looping )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
@@ -114,7 +114,24 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const unsigne
    // if data is bound (bind() succeeded), then play it.
    if (mBindLookup.count( alias ) > 0)
    {
-      alSourcePlay( mBindLookup[alias].source );
+      bool retriggerable = this->isRetriggerable( alias );
+      bool is_not_playing = !this->isPlaying( alias );
+      bool is_paused = this->isPaused( alias );
+      if (is_paused || retriggerable || is_not_playing)
+      {
+         // @todo: handle ability to loop openal sounds n number of times.  
+         //        only once or infinite is supported by OpenAL.
+         if (looping == -1 || looping > 1)
+         {
+            alSourcei( mBindLookup[alias].source, AL_LOOPING, true );
+         }
+         else
+         {
+            alSourcei( mBindLookup[alias].source, AL_LOOPING, false );
+         }
+         
+         alSourcePlay( mBindLookup[alias].source );
+      }
    }
 }
 
@@ -143,6 +160,52 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
    return false;
 }
 
+/** if the sound is paused, then return true. */
+bool OpenALSoundImplementation::isPaused( const std::string& alias )
+{
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
+   if (mBindLookup.count( alias ) > 0)
+   {
+      assert( alIsSource( mBindLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
+      ALint state( AL_INITIAL ); // initialized
+      alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
+      //std::cout<<"state: "<<state<<(AL_PAUSED == state)<<(AL_PLAYING == state)<<(AL_STOPPED == state)<<std::endl;
+      return bool( AL_PAUSED == state );
+   }
+
+   return false;
+}
+
+/**
+ * pause the sound, use unpause to return playback where you left off...
+ */
+void OpenALSoundImplementation::pause( const std::string& alias )
+{
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
+   if (mBindLookup.count( alias ) > 0)
+   {
+      alSourcePause( mBindLookup[alias].source );
+   }
+}
+
+/**
+ * resume playback from a paused state.  does nothing if sound was not paused.
+ */
+void OpenALSoundImplementation::unpause( const std::string& alias )
+{
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
+   if (mBindLookup.count( alias ) > 0)
+   {
+      if (this->isPaused( alias ))
+      {
+         alSourcePlay( mBindLookup[alias].source );
+      }
+   }
+}
+
 /**
  * @semantics stop the sound
  * @input alias of the sound to be stopped
@@ -156,6 +219,32 @@ void OpenALSoundImplementation::stop( const std::string& alias )
    if (mBindLookup.count( alias ) > 0)
    {
       alSourceStop( mBindLookup[alias].source );
+   }
+}
+
+/**
+ * ambient or positional sound.
+ * is the sound ambient - attached to the listener, doesn't change volume
+ * when listener moves...
+ * or is the sound positional - changes volume as listener nears or retreats..
+ */
+void OpenALSoundImplementation::setAmbient( const std::string& alias, bool ambient )
+{
+   snx::SoundImplementation::setAmbient( alias, ambient );
+   if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
+   {
+      // if positional
+      if (ambient == false)
+      {
+         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, true );
+      }
+      // if ambient
+      else
+      {
+         float pos[3] = { 0, 0, 0 };
+         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, false );
+         alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
+      }      
    }
 }
 
@@ -180,8 +269,12 @@ void OpenALSoundImplementation::setPosition( const std::string& alias, float x, 
 
    if (mBindLookup.count( alias ) > 0)
    {
-      float pos[3] = { x, y, z };
-      alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
+      if (this->isAmbient( alias ) == false)
+      {
+         float pos[3] = { x, y, z };
+         alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
+         // @todo: update AL_VELOCITY based on position over time...
+      }
    }
 }
 
@@ -233,6 +326,41 @@ void OpenALSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }
+
+/** 1 is no change.  2 is really high, 0 is really low. */
+void OpenALSoundImplementation::setPitchBend( const std::string& alias, float amount )
+{
+   snx::SoundImplementation::setPitchBend( alias, amount );
+   if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
+   {
+      // zero or less is not legal.
+      if (amount <= 0.0f) 
+         amount = 0.001f;
+      
+      alSourcef( mBindLookup[alias].source, AL_PITCH, amount );
+   }
+}
+
+/** 0 - 1.  use 0 for mute, use 1 for unmute... */
+void OpenALSoundImplementation::setVolume( const std::string& alias, float amount )
+{
+   snx::SoundImplementation::setVolume( alias, amount );
+   if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
+   {
+      alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
+   }
+}
+
+/** 1 is no change.  0 is total cutoff. */
+void OpenALSoundImplementation::setCutoff( const std::string& alias, float amount )
+{
+   snx::SoundImplementation::setCutoff( alias, amount );
+   if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
+   {
+      // @todo: cutoff is not implemented in openal, use gain instead... :(
+      alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
+   }
+}  
 
 
 /**
@@ -437,6 +565,9 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          }
          alSourcei( sourceID, AL_BUFFER, bufferID );
          alSourcei( sourceID, AL_LOOPING, AL_FALSE );
+         alSourcef( sourceID, AL_MIN_GAIN, 0.0f ); // off
+         alSourcef( sourceID, AL_MAX_GAIN, 1.0f ); // full
+         alSourcef( sourceID, AL_SOURCE_RELATIVE, true ); // positional
 
          this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
          
