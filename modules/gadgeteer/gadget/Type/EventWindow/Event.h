@@ -92,12 +92,14 @@ public:
    {
       writer->writeUint8(mType);
       writer->writeUint64(mTime);
+      return vpr::ReturnStatus::Succeed;
    }
 
    vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
       mType = (EventType)reader->readUint8();
       mTime = reader->readUint64();
+      return vpr::ReturnStatus::Succeed;
    }
 
 protected:
