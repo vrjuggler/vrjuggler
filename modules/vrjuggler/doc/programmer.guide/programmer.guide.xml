@@ -6728,9 +6728,7 @@ last_frame = current_frame; // You can get the delta in microseconds from
                   multi-processing when the Cluster Manager is active.</para>
                 </answer>
               </qandaentry>
-            </qandadiv>
 
-            <qandadiv>
               <qandaentry>
                 <question>
                   <para>Why is my application navigating differently on every
