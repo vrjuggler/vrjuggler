@@ -1,3 +1,4 @@
+
 /*
     struct termio {
 	tcflag_t    c_iflag;     // input modes
@@ -17,7 +18,7 @@
 #define _OLD_TERMIOS
 
 #include <termio.h>        // for definition of NCCS
-//#include <sys/termio.h>    // for termio structure used by some ioctls
+#include <sys/termio.h>    // for termio structure used by some ioctls
 #include <sys/types.h>     // for open
 #include <sys/stat.h>      // for open
 #include <fcntl.h>         // for open
@@ -30,7 +31,6 @@
 
 #include <Input/vjPosition/aFlock.h>
 
-#define sginap(x) (usleep(x * 333333))
 
 const int aFlock::MAXCHARSTRINGSIZE = 256;
 
@@ -201,30 +201,42 @@ int aFlock::sample()
 {
      // can't sample when not active.
      assert( _active == true );
-
      int i;
+     int loopCount = _numBirds + 1;
+     if (_xmitterUnitNumber <= _numBirds) {loopCount++;} 
 
      // for [1..n] birds, get their reading:
-     for (i=1; i < (_numBirds+1) && i < MAX_SENSORS; i++)
-     {
-	if (i == _xmitterUnitNumber)
+     int j = 0;
+     for (i=1; i < loopCount && i < MAX_SENSORS; i++)
+	{
+		j++;
+// If the transmitter number is less than or equal to the number of birds, we need to ignore it.
+
+          if (i == _xmitterUnitNumber)
+	  { 
+                j--;
 		continue;
-	
+          }
+ 	
+// However, we need to still copy the data into consecutive values in the wrapper class, so we
+// introduce "j" to account for that correction.  It is equal to "i" while we haven't encountered
+// the transmitter, but equal to "i-1" afterwards.
+
 	// you can never go above the maximum number of sensors.
 	assert( i < MAX_SENSORS );
 	aFlock::getReading(i, _portId,
-		this->xPos(i),
-		this->yPos(i),
-		this->zPos(i),
-		this->zRot(i),
-		this->yRot(i),
-		this->xRot(i));	
+		this->xPos(j),
+		this->yPos(j),
+		this->zPos(j),
+		this->zRot(j),
+		this->yRot(j),
+		this->xRot(j));	
 		
 	if (_usingCorrectionTable)
 	{
-	    this->positionCorrect( this->xPos(i),
-			    this->yPos(i),
-			    this->zPos(i) );
+	    this->positionCorrect( this->xPos(j),
+			    this->yPos(j),
+			    this->zPos(j) );
 	}
      }
 
@@ -506,7 +518,7 @@ int aFlock::getReading( const int& n, const int& port,
 	}
 	
 	if (c >= 5000)
-	    cout << "aFlock: tracker " << n << " timeout (" << c << ")" << endl << flush;
+	    cout << "aFlock: tracker timeout (" << c << ")" << endl << flush;
 	
 	addr = group;
     } while (addr != n);
@@ -671,15 +683,14 @@ int aFlock::open_port( const char* const serialPort,
     else
 	cout<<" failed\n"<<flush;
 
+    cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
+    result = ioctl( portId, TIOCNOTTY );
 
-//     cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
-//     result = ioctl( portId, TIOCNOTTY );
-
-//     // did it succeed?
-//     if (result == 0)
-// 	cout<<" success\n"<<flush;
-//     else
-// 	cout<<" failed\n"<<flush;
+    // did it succeed?
+    if (result == 0)
+	cout<<" success\n"<<flush;
+    else
+	cout<<" failed\n"<<flush;
 	
     // return the portID
     return portId;
