@@ -4,7 +4,8 @@ module networktest
 {
    interface WhiteboardSubject : tweek::Subject
    {
-      void addText(in string text);
+      void insertText(in long offset, in long length, in string text);
+      void getLastChange(out long offset, out long length, out string text);
       string getAllText();
    };
 };
