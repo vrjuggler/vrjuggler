@@ -509,7 +509,7 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_HPUX,)
-        ABI_LIST='HP'
+        ABI_LIST='HP HP64'
         PLATFORM='HP'
         ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
