@@ -210,23 +210,11 @@ if test "$echo_static" = "yes" ; then
 fi
 
 if test "$echo_libs" = "yes"; then
-    my_subsystem_libs=
-
     if test "$use_base_dir" = "yes"; then
         ldflags="-L$VJ_BASE_DIR/lib@LIBBITSUF@"
     else
         ldflags='@vrj_ldflags@'
     fi
-
-    for i in $subsystem_libs ; do
-        if test $i != -L@libdir@ ; then
-            if test -z "$my_subsystem_libs" ; then
-                my_subsystem_libs="$i"
-            else
-                my_subsystem_libs="$my_subsystem_libs $i"
-            fi
-        fi
-    done
 
     if test "x$lib_Juggler_all" = "xyes" ; then
         vrj_libs="@vrj_libs@"
@@ -256,7 +244,7 @@ if test "$echo_libs" = "yes"; then
         fi
     fi
 
-    echo $ldflags $static_begin $vrj_libs $static_end $my_subsystem_libs
+    echo $ldflags $static_begin $vrj_libs $static_end
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
