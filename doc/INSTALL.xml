@@ -127,13 +127,6 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       interested in methods for compiling the code with Visual Studio 6.
       However, due to VC6&#39;s poor support for templates and the C++
       standard in general, users need to be aware that it may not be possible.</para>
-
-      <para>To build VR Juggler on Windows, you must use the Visual Studio
-      solution. After getting the dependencies needed to compile VR Juggler
-      (see the next section), refer to the <ulink url="vc7/README.html">README.html</ulink>
-      file located in the <filename>vc7</filename> subdirectory of this
-      directory. Do not bother to read <xref linkend="compile.section" /> in
-      this document.</para>
     </section>
   </section>
 
@@ -348,7 +341,8 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       <para>You have downloaded <emphasis>developmental</emphasis> code. It
       may not be stable, and it may not even compile. Compiling VR Juggler
       itself can be a little complicated for anyone who does not have some
-      background in Autoconf, C++, and <command>make</command>.</para>
+      background in using CVS, Autoconf, C++, and <command>make</command> or
+      Visual Studio.</para>
     </section>
 
     <section>
@@ -358,6 +352,12 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       the tools that make up VR Juggler. Each tool compiles to its own library
       and can be installed individually. (Refer to the <filename>README</filename>
       file in this directory for more information about the specific modules.)</para>
+
+      <para>To build VR Juggler on Windows, you must use the Visual Studio
+      solution. After getting the dependencies needed to compile VR Juggler
+      (see the next section), refer to the <ulink url="vc7/README.html">README.html</ulink>
+      file located in the <filename>vc7</filename> subdirectory of this
+      directory. Do not bother to the rest of this document.</para>
 
       <section id="config.vrjuggler.section">
         <title>Configuring VR Juggler</title>
