@@ -320,9 +320,9 @@ void gloveApp::postFrame()
           mCubePos = glovePos;
    }
 
-   float cubeDistance   = gmtl::length(glovePos - mCubePos);
-   float sphereDistance = gmtl::length(glovePos - mSpherePos);
-   float coneDistance   = gmtl::length(glovePos - mConePos);
+   float cubeDistance   = gmtl::length(gmtl::Vec3f(glovePos - mCubePos));
+   float sphereDistance = gmtl::length(gmtl::Vec3f(glovePos - mSpherePos));
+   float coneDistance   = gmtl::length(gmtl::Vec3f(glovePos - mConePos));
    float min = nMin( cubeDistance, sphereDistance, coneDistance);
 
    //: If the distance between hand and object is too far

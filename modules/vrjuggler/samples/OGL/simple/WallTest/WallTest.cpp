@@ -165,8 +165,9 @@ void WallTest::drawC6()
 void WallTest::drawWall(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur)
 {
    gmtl::Matrix44f rotate=calculateSurfaceRotation(ll,lr,ul,ur);
-   gmtl::Vec3f origin=(ll+lr+ul+ur)/4.0;
-   gmtl::Vec3f scale(gmtl::length(lr-ll),gmtl::length(ur-lr),1);
+   gmtl::Vec3f origin=(ll+lr+ul+ur)/4.0f;
+   gmtl::Vec3f scale(gmtl::length(gmtl::Vec3f(lr - ll)),
+                     gmtl::length(gmtl::Vec3f(ur - lr)), 1);
    scale[2]=scale[0]; // To keep the cubes and tetrahedrons happy
    scale*=0.1f;
    

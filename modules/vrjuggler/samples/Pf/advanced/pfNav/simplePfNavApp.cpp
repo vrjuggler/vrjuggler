@@ -291,7 +291,7 @@ void simplePfNavApp::preFrame()
 
             std::cout << "You: " << cur_pos << " :|: " << quat << std::endl;
 
-            cur_pos = -1 * cur_pos;
+            cur_pos = -1.0f * cur_pos;
             gmtl::invert( quat );
             std::cout << "World: " << cur_pos << " :|: " << quat << std::endl
                       << std::endl;
@@ -307,7 +307,10 @@ void simplePfNavApp::preFrame()
    // magic number, yay... this is for the box collider.
    gmtl::Vec3f c;
    if (mNavigationDCS->getNavigator()->numColliders() > 0)
-      c = mNavigationDCS->getNavigator()->getCorrection( 0 ) / mStopWatch.timeInstant;
+   {
+      c = mNavigationDCS->getNavigator()->getCorrection( 0 ) / (float) mStopWatch.timeInstant;
+   }
+
    if (gmtl::length( c ) > 0.0001)
    {
       if (mColliding == false)
@@ -326,7 +329,10 @@ void simplePfNavApp::preFrame()
    // did ride collide?
    gmtl::Vec3f c2;
    if (mNavigationDCS->getNavigator()->numColliders() > 1)
-      c2 = mNavigationDCS->getNavigator()->getCorrection( 1 ) / mStopWatch.timeInstant;
+   {
+      c2 = mNavigationDCS->getNavigator()->getCorrection( 1 ) / (float) mStopWatch.timeInstant;
+   }
+
    if (gmtl::length( c2 ) > 0.0001f)
    {
       // if it was false
