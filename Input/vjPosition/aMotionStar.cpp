@@ -52,29 +52,29 @@
 // Constructor.  This initializes member variables and determines the
 // endianness of the host machine.
 // ----------------------------------------------------------------------------
-aMotionStar::aMotionStar(char* _address, const unsigned short port,
-                         int _hemisphere, unsigned int _birdFormat,
-                         unsigned int _birdsRequired, int _runMode,
-                         double _birdRate, unsigned char _reportRate)
+aMotionStar::aMotionStar(char* address, const unsigned short port,
+                         int hemisphere, unsigned int birdFormat,
+                         unsigned int birdsRequired, int runMode,
+                         double birdRate, unsigned char reportRate)
 {
   union {
     char c[sizeof(short)];
     short value;
   } endian;
 
-  m_port        = port;
-  active        = false;
-  hemisphere    = _hemisphere;
-  birdFormat    = _birdFormat;
-  birdsRequired = _birdsRequired;
-  runMode       = _runMode;
-  birdRate      = _birdRate;
-  reportRate    = _reportRate;
+  mPort        = port;
+  mActive        = false;
+  mHemisphere    = hemisphere;
+  mBirdFormat    = birdFormat;
+  mBirdsRequired = birdsRequired;
+  mRunMode       = runMode;
+  mBirdRate      = birdRate;
+  mReportRate    = reportRate;
 
-  if ( _address != NULL ) {
-    address = strdup(_address);
+  if ( address != NULL ) {
+    mAddress = strdup(address);
   } else {
-    address = NULL;
+    mAddress = NULL;
   }
 
   m_xmtr_pos_scale = 288.0;
@@ -97,9 +97,9 @@ aMotionStar::aMotionStar(char* _address, const unsigned short port,
 aMotionStar::~aMotionStar() {
   this->stop();
 
-  if ( address != NULL ) {
-    free(address);
-    address = NULL;
+  if ( mAddress != NULL ) {
+    free(mAddress);
+    mAddress = NULL;
   }
 } // end aMotionStar::~aMotionStar()
 
@@ -109,45 +109,47 @@ aMotionStar::~aMotionStar() {
 int
 aMotionStar::start () {
   struct hostent* host_ent;
+  unsigned int format;
+  struct sockaddr_in server_addr;
+  int rtn;
 
 //  cout << "In start" << endl;
-  assert(!active);
+  assert(!mActive);
 
-  rate[0] = 57; // 48
-  rate[1] = 48; // 50
-  rate[2] = 48;
-  rate[3] = 48;
-  rate[4] = 48;
-  rate[5] = 48;
+  mRate[0] = 57; // 48
+  mRate[1] = 48; // 50
+  mRate[2] = 48;
+  mRate[3] = 48;
+  mRate[4] = 48;
+  mRate[5] = 48;
 
-  switch(birdFormat)
-    {
+  switch (mBirdFormat) {
     case 1:
-      format = birdFormat | 0x30;
+      format = mBirdFormat | 0x30;
       break;
 
     case 2:
-      format = birdFormat | 0x30;
+      format = mBirdFormat | 0x30;
       break;
 
     case 3:
-      format = birdFormat | 0x90;
+      format = mBirdFormat | 0x90;
       break;
 
     case 4:
-      format = birdFormat | 0x60;
+      format = mBirdFormat | 0x60;
       break;
 
     case 5:
-      format = birdFormat | 0xC0;
+      format = mBirdFormat | 0xC0;
       break;
 
     case 7:
-      format = birdFormat | 0x40;
+      format = mBirdFormat | 0x40;
       break;
 
     case 8:
-      format = birdFormat | 0x70;
+      format = mBirdFormat | 0x70;
       break;
 
     default:
@@ -159,9 +161,9 @@ aMotionStar::start () {
    * Open a TCP socket.
    */
 
-  printf("\nConnecting to %s ...\n", address);
+  printf("\nConnecting to %s ...\n", mAddress);
 
-  if ( (s = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
+  if ( (mSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
     perror("client: can't open stream socket");
     return -1;
   }
@@ -170,39 +172,36 @@ aMotionStar::start () {
    * server that we want to connect to.
    */
 
-  bzero((char *)&server, sizeof(server));
-  server.sin_family = AF_INET;
-  server.sin_port   = htons(m_port);		// Server port number
+  bzero((char *) &server_addr, sizeof(server_addr));
+  server_addr.sin_family = AF_INET;
+  server_addr.sin_port   = htons(mPort);		// Server port number
 
   // Try to look up address by name.  This will work for an IP address too,
   // but we fall back on inet_addr(3) below just to be safe.
-  host_ent = gethostbyname(address);
+  host_ent = gethostbyname(mAddress);
 
   // If host_ent is non-NULL, we found an IP address for the hostname in
   // address.  Move that address into the server struct.
   if ( host_ent != NULL ) {
-    memmove((void*) &server.sin_addr.s_addr, (void*) host_ent->h_addr,
-            sizeof(server.sin_addr.s_addr));
+    memmove((void*) &server_addr.sin_addr.s_addr, (void*) host_ent->h_addr,
+            sizeof(server_addr.sin_addr.s_addr));
   }
   // Otherwise, assume that the value in address is already an IP address
   // and use inet_addr(3) on it.
   else {
-    server.sin_addr.s_addr = inet_addr(address);
+    server_addr.sin_addr.s_addr = inet_addr(mAddress);
   }
 
-  rtn = connect(s, (struct sockaddr *) &server, sizeof(server));
+  rtn = connect(mSocket, (struct sockaddr*) &server_addr, sizeof(server_addr));
 /*
   printf("connect = %4d, connect error = %4d, ", rtn, errno);
   perror(NULL);
   printf("\n");
 */
 
-  newptr =(char*)(&response);
-  lpCommand = &command;
-  lpRspGetStatAll=(struct BIRDNET::RSP_GET_STATUS_all*)(newptr);
-  lpResponse = &response;
-  Size = sizeof(server);
-  lpSize = &Size;
+  mNewptr     = (char*) &mResponse;
+  mLpCommand  = &mCommand;
+  mLpResponse = &mResponse;
 
   /* send the wake up call */
   sendWakeup();
@@ -218,47 +217,46 @@ aMotionStar::start () {
   /* modify the appropriate contents            */
   /* send the individual bird status packet back        */
 
-  for(unsigned int flock=1;flock<=chassisDevices;flock++)
-    {
+  for ( unsigned int flock = 1; flock<= mChassisDevices; flock++ ) {
       /* get the status of an individual bird */
       getBirdStatus(flock);
 
-                /* change the data format to something new for all birds */
-      if(flock<=birdsRequired)
-        {
-          response.buffer[6] = format;
-        }
-      else
-        {
-          response.buffer[6] = 0;
-        }
+      /* change the data format to something new for all birds */
+      if( flock <= mBirdsRequired ) {
+          mResponse.buffer[6] = format;
+      }
+      else {
+          mResponse.buffer[6] = 0;
+      }
 
       /* set new report rate for all birds */
-      response.buffer[7] = reportRate;
-      response.buffer[26] = hemisphere;
+      mResponse.buffer[7]  = mReportRate;
+      mResponse.buffer[26] = mHemisphere;
+
       /* set the status of an individual bird */
       setBirdStatus(flock);
-    }
+  }
 
-  if (runMode == 0) {
+  if ( mRunMode == 0 ) {
       runContinuous();
   }
   else {
       singleShot();
   }
-  active = true;
+
+  mActive = true;
 
   return 0;
-} // end void aMotionStar::start()
+}
 
 // ----------------------------------------------------------------------------
 // Stops the driver.
 // ----------------------------------------------------------------------------
 void
 aMotionStar::stop () {
-    command.sequence = htons(sequenceNumber);
-    command.type     = BIRDNET::MSG_STOP_DATA;
-    numberBytes      = send(s, (void*) lpCommand, sizeof(command), 0);
+    mCommand.sequence = htons(mSequenceNumber);
+    mCommand.type     = BIRDNET::MSG_STOP_DATA;
+    mNumberBytes      = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 } // end void aMotionStar::stop()
 
 // ----------------------------------------------------------------------------
@@ -268,7 +266,9 @@ aMotionStar::stop () {
 void
 aMotionStar::sample () {
 //    cout << "Sampling..." << endl;
-    if (runMode == 1) {singleShot();}
+    if ( mRunMode == 1 ) {
+        singleShot();
+    }
 //    cout << "After singleShot() " << endl;
 /*
     double        x;
@@ -279,93 +279,99 @@ aMotionStar::sample () {
     int           cpos;
 
 */
-    int           totalBytesNeeded, totalBytesReceived;
-    char          *lpBuffer;
-    int           headerBytesReceived;
+    int total_bytes_needed, total_bytes_received;
+    char* lp_buffer;
+    int header_bytes_received;
+    time_t time_seconds;
+    char time_char[64];
+    struct tm newtime;
 
        /* receive the header */
 
-    if (runMode == 0) {
+    if ( mRunMode == 0 ) {
+      header_bytes_received = 0;
+      lp_buffer = (char*) mLpResponse;
 
-      headerBytesReceived = 0;
-      lpBuffer = (char*)lpResponse;
-      while(headerBytesReceived != 16) {
-        bytesReceived = recv(s, (void*) lpBuffer, 16, 0);
+      while ( header_bytes_received != 16 ) {
+        mBytesReceived = recv(mSocket, (void*) lp_buffer, 16, 0);
 
-      /*  if (bytesReceived < 0){
+      /*  if ( mBytesReceived < 0 ) {
           perror("recv1"), exit(1);
           } */
 
-        headerBytesReceived = headerBytesReceived + bytesReceived;
-        lpBuffer = (char *)lpBuffer + bytesReceived;
+        header_bytes_received = header_bytes_received + mBytesReceived;
+        lp_buffer             = (char*) lp_buffer + mBytesReceived;
       }
     }
-    sequenceNumber = ntohs(response.header.sequence);
 
-    //        printf("\n#%6d bytes received:%3d",n ,bytesReceived);
-    /*        printf("\ntype:%3d seq:%6d #bytes:%4d",response.header.type,
-			response.header.sequence,response.header.number_bytes); */
+    mSequenceNumber = ntohs(mResponse.header.sequence);
+
+    //        printf("\n#%6d bytes received:%3d", , mBytesReceived);
+    /*        printf("\ntype:%3d seq:%6d #bytes:%4d",mResponse.header.type,
+			mResponse.header.sequence,mResponse.header.number_bytes); */
 
     /*  printf("\n#%6d:",n);
      */
 
     /*      for (i=0;i<16;++i)
             {
-            printf("%3x",*(newptr+i));
+            printf("%3x",*(mNewptr+i));
             }
     */
 
-    timeSeconds = (unsigned int)(response.header.time[0]) << 24;
-    timeSeconds = timeSeconds | (unsigned int)(response.header.time[1]) << 16;
-    timeSeconds = timeSeconds | (unsigned int)(response.header.time[2]) <<  8;
-    timeSeconds = timeSeconds | (unsigned int)(response.header.time[3]);
-    localtime_r(&timeSeconds, &newtime);
+    time_seconds = (unsigned int)(mResponse.header.time[0]) << 24;
+    time_seconds = time_seconds | (unsigned int)(mResponse.header.time[1]) << 16;
+    time_seconds = time_seconds | (unsigned int)(mResponse.header.time[2]) <<  8;
+    time_seconds = time_seconds | (unsigned int)(mResponse.header.time[3]);
+    localtime_r(&time_seconds, &newtime);
 #ifdef __sun__
-    asctime_r(&newtime, timeChar, sizeof(timeChar));
+    asctime_r(&newtime, time_char, sizeof(time_char));
 #else
-    asctime_r(&newtime, timeChar);
+    asctime_r(&newtime, time_char);
 #endif
 
-    /*  printf(" TIME: %10d ", timeSeconds);     */
-    if ( ntohs(response.header.milliseconds) > 999 ) {
-	short new_ms;
+    /*  printf(" TIME: %10d ", time_seconds);     */
 
-	new_ms = ntohs(response.header.milliseconds) - 1000;
-        response.header.milliseconds = htons(new_ms);
+    if ( ntohs(mResponse.header.milliseconds) > 999 ) {
+        short new_ms;
+
+        new_ms = ntohs(mResponse.header.milliseconds) - 1000;
+        mResponse.header.milliseconds = htons(new_ms);
     }
-    /* printf(" %.19s.%3.3d ", timeChar, response.header.milliseconds);
+    /* printf(" %.19s.%3.3d ", time_char, mResponse.header.milliseconds);
      */
-    /* printf(" %3.3d ",  response.header.milliseconds);
+    /* printf(" %3.3d ",  mResponse.header.milliseconds);
      */
 
-    totalBytesReceived = 0;
-    totalBytesNeeded = ntohs(response.header.number_bytes);
-    lpBuffer = (char*)lpResponse + 16;
+    total_bytes_received = 0;
+    total_bytes_needed   = ntohs(mResponse.header.number_bytes);
+    lp_buffer            = (char*) mLpResponse + 16;
 
-    if (runMode == 0) {
+    if ( mRunMode == 0 ) {
       struct timeval first, second;
 
-      while(totalBytesReceived != totalBytesNeeded){
+      while ( total_bytes_received != total_bytes_needed ) {
         gettimeofday(&first, NULL);
-        bytesReceived = recv(s, (void*) lpBuffer,
-                             (totalBytesNeeded - totalBytesReceived), 0);
+        mBytesReceived = recv(mSocket, (void*) lp_buffer,
+                              (total_bytes_needed - total_bytes_received), 0);
         gettimeofday(&second, NULL);
 
-        if (bytesReceived < 0)
-          perror("recv2"), exit(1);
+        if ( mBytesReceived < 0 ) {
+          perror("recv2");
+          exit(1);
+        }
 
         if ( second.tv_usec - first.tv_usec > 5000 ) {
             fprintf(stderr,
                     "aMotionStar WARNING: Packet took longer than 5 ms\n");
         }
 
-        totalBytesReceived = totalBytesReceived + bytesReceived;
-        lpBuffer = (char*)lpBuffer + bytesReceived;
-
+        total_bytes_received = total_bytes_received + mBytesReceived;
+        lp_buffer            = (char*) lp_buffer + mBytesReceived;
       }
 
-      if ( response.header.error_code != 0 ) {
-        printError(response.header.error_code);
+      if ( mResponse.header.error_code != 0 ) {
+        printError(mResponse.header.error_code);
       }
     }
     //    printf(" .....received data #bytes = %d", totalBytesReceived);
@@ -373,30 +379,29 @@ aMotionStar::sample () {
     //    printf("\n");
 
     int o; // Offset -- 14 * bird number (bnum)
-    for (unsigned int bnum = 0; bnum < birdsRequired; bnum++)
-    {
+    for ( unsigned int bnum = 0; bnum < mBirdsRequired; bnum++ ) {
       o = 14*bnum;
-      posinfo[bnum][0] = getXPos(o) / 12.0;	// X translation
-      posinfo[bnum][1] = getYPos(o) / 12.0;	// Y translation
-      posinfo[bnum][2] = getZPos(o) / 12.0;	// Z translation
-      posinfo[bnum][3] = getZRot(o);		// Z rotation
-      posinfo[bnum][4] = getYRot(o);		// Y rotation
-      posinfo[bnum][5] = getXRot(o);		// X rotation
-    } // end for loop
-} // end void aMotionStar::sample()
+      mPosinfo[bnum][0] = getXPos(o) / 12.0;	// X translation
+      mPosinfo[bnum][1] = getYPos(o) / 12.0;	// Y translation
+      mPosinfo[bnum][2] = getZPos(o) / 12.0;	// Z translation
+      mPosinfo[bnum][3] = getZRot(o);		// Z rotation
+      mPosinfo[bnum][4] = getYRot(o);		// Y rotation
+      mPosinfo[bnum][5] = getXRot(o);		// X rotation
+    }
+}
 
 // ----------------------------------------------------------------------------
 // Set the address (either IP address or hostname) for the server.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::setAddress (const char* n) {
-  if ( n != NULL ) {
+aMotionStar::setAddress (const char* addr) {
+  if ( addr != NULL ) {
     // Free the old memory before duplicating the new address string.
-    if ( address != NULL ) {
-      free(address);
+    if ( mAddress != NULL ) {
+      free(mAddress);
     }
 
-    address = strdup(n);
+    mAddress = strdup(addr);
   }
 }
 
@@ -412,20 +417,20 @@ aMotionStar::sendWakeup () {
   /***** send a command to the server wakeup *****/
 //  printf("WAKEUP:");
 
-  command.sequence             = htons(sequenceNumber++);
-  command.type                 = BIRDNET::MSG_WAKE_UP;
-  command.xtype                = 0;
-  command.protocol             = 1;
-  command.number_bytes         = 0;
-  command.error_code           = 0;
-  command.error_code_extension = 0;
+  mCommand.sequence             = htons(mSequenceNumber++);
+  mCommand.type                 = BIRDNET::MSG_WAKE_UP;
+  mCommand.xtype                = 0;
+  mCommand.protocol             = 1;
+  mCommand.number_bytes         = 0;
+  mCommand.error_code           = 0;
+  mCommand.error_code_extension = 0;
 
   /*n++;*/
-  numberBytes = send(s,(void*)lpCommand, sizeof(command), 0);
+  mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
 //  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
 
-  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
+  mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
 
 //  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 }
@@ -437,15 +442,15 @@ void
 aMotionStar::runContinuous () {
 //  cout << "runContinous" << endl;
 
-  command.type     = BIRDNET::MSG_RUN_CONTINUOUS;
-  command.xtype    = 0;
-  command.sequence = htons(sequenceNumber++);
-  n++;
-  numberBytes   = send(s, (void*)lpCommand, sizeof(command), 0);
+  mCommand.type     = BIRDNET::MSG_RUN_CONTINUOUS;
+  mCommand.xtype    = 0;
+  mCommand.sequence = htons(mSequenceNumber++);
+//  n++;
+  mNumberBytes   = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
 //    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
 
-  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
+  mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
 
 //    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 
@@ -456,7 +461,7 @@ aMotionStar::runContinuous () {
    char          *lpBuffer;
 
     headerBytesReceived = 0;
-    lpBuffer = (char*)lpResponse;
+    lpBuffer = (char*) mLpResponse;
     while(headerBytesReceived != 16) {
       bytesReceived = recv(s, (void*)lpBuffer, 16, 0);
 
@@ -468,7 +473,7 @@ aMotionStar::runContinuous () {
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
 */
-} // end aMotionStar::runContinuous()
+}
 
 // ----------------------------------------------------------------------------
 // Request a single sampling of the MotionStar server.
@@ -476,126 +481,127 @@ aMotionStar::runContinuous () {
 void
 aMotionStar::singleShot () {
   /* send a request for a single shot packet */
-  command.type     = BIRDNET::MSG_SINGLE_SHOT;
-  command.xtype    = 0;
-  command.sequence = htons(sequenceNumber++);
-  numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
+  mCommand.type     = BIRDNET::MSG_SINGLE_SHOT;
+  mCommand.xtype    = 0;
+  mCommand.sequence = htons(mSequenceNumber++);
+  mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
     //printf("bytes sent = %d errno %d\n", numberBytes,errno);
 
   /* wait for the packet to come back */
 
-  bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+  mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
 
-    //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,response.header.sequence
-	//	,response.header.type, bytesReceived);
-} // end void aMotionStar::singleShot()
+    //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,mResponse.header.sequence
+	//	,mResponse.header.type, bytesReceived);
+}
 
 // ----------------------------------------------------------------------------
 // Get the system status.
 // ----------------------------------------------------------------------------
 void
 aMotionStar::getSystemStatus () {
-  void                  *lpBuffer;
-  int                   headerBytes, dataBytes;
-  int                   bytesReceived;
+  void* lp_buffer;
+  int header_bytes, data_bytes;
+  int bytes_received;
+  unsigned char all, FBBerror, flock_number;
+  char sz_rate[7];
+  int rate;
 
-  command.type  = BIRDNET::MSG_GET_STATUS;
-  command.xtype = 0;
-  numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
+  mCommand.type  = BIRDNET::MSG_GET_STATUS;
+  mCommand.xtype = 0;
+  mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
 //  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
-  headerBytes = 0;
-  lpBuffer = lpResponse;
-  while(headerBytes<16)
-    {
-      bytesReceived = recv(s, (void*) lpBuffer, 16, 0);
-      headerBytes = headerBytes + bytesReceived;
-      lpBuffer = (char *)lpBuffer + bytesReceived;
-    }
+  header_bytes = 0;
+  lp_buffer    = mLpResponse;
 
-  dataBytes = 0;
-  while ( dataBytes < ntohs(response.header.number_bytes) ) {
-      bytesReceived = recv(s, (void*)lpBuffer,
-                           ntohs(response.header.number_bytes), 0);
-      dataBytes = dataBytes + bytesReceived;
-      lpBuffer = (char *)lpBuffer + bytesReceived;
+  while( header_bytes < 16 ) {
+      bytes_received = recv(mSocket, (void*) lp_buffer, 16, 0);
+      header_bytes   = header_bytes + bytes_received;
+      lp_buffer      = (char*) lp_buffer + bytes_received;
   }
 
-  statusSize = headerBytes + dataBytes;
+  data_bytes = 0;
+
+  while ( data_bytes < ntohs(mResponse.header.number_bytes) ) {
+      bytes_received = recv(mSocket, (void*) lp_buffer,
+                            ntohs(mResponse.header.number_bytes), 0);
+      data_bytes     = data_bytes + bytes_received;
+      lp_buffer      = (char*) lp_buffer + bytes_received;
+  }
+
+  mStatusSize = header_bytes + data_bytes;
 //  printf("\nSYSTEM STATUS RECEIVED - number bytes received = %5d,", bytesReceived);
-//  printf("  type %d\n",response.header.type);
+//  printf("  type %d\n",mResponse.header.type);
 
   printf("\n============================================================\n\n");
 
   /* now print out the details of the status packet */
 
-  all = response.buffer[0];
+  all          = mResponse.buffer[0];
+  FBBerror     = mResponse.buffer[1];
+  flock_number = mResponse.buffer[2];
+  printf("Number of FBB devices in system = %d\n", flock_number);
 
-  FBBerror = response.buffer[1];
+  mTransmitterNumber = (mResponse.buffer[4]>>4) & 0x0F;
+  printf("Transmitter is at FBB address %d\n", mTransmitterNumber);
 
-  flockNumber = response.buffer[2];
-  printf("Number of FBB devices in system = %d\n", flockNumber);
+  sz_rate[0] = mResponse.buffer[5];
+  sz_rate[1] = mResponse.buffer[6];
+  sz_rate[2] = mResponse.buffer[7];
+  sz_rate[3] = mResponse.buffer[8];
+  sz_rate[4] = mResponse.buffer[9];
+  sz_rate[5] = mResponse.buffer[10];
+  sz_rate[6] = 0;
 
-  transmitterNumber = (response.buffer[4]>>4) & 0x0F;
-  printf("Transmitter is at FBB address %d\n", transmitterNumber);
+  mServerNumber     = mResponse.buffer[3];
+  mChassisNumber    = mResponse.buffer[11];
+  mChassisDevices   = mResponse.buffer[12];
+  mFirstAddress     = mResponse.buffer[13];
+  mSoftwareRevision = toShort(mResponse.buffer[14], mResponse.buffer[15]);
+  rate              = atoi(sz_rate);
+  mRealRate         = ((double) rate) / 1000.0;
 
-  szRate[0] = response.buffer[5];
-  szRate[1] = response.buffer[6];
-  szRate[2] = response.buffer[7];
-  szRate[3] = response.buffer[8];
-  szRate[4] = response.buffer[9];
-  szRate[5] = response.buffer[10];
-  szRate[6] = 0;
-
-  serverNumber = response.buffer[3];
-  chassisNumber = response.buffer[11];
-  chassisDevices = response.buffer[12];
-  firstAddress = response.buffer[13];
-  softwareRevision = toShort(response.buffer[14], response.buffer[15]);
-  mRate = atoi(szRate);
-  realRate = (double)(mRate)/1000;
-
-  printf("Measurement rate = %6.1f\n", realRate);
-  printf("Number of chassis in system = %d\n", serverNumber);
-  printf("Chassis# = %d\n", chassisNumber);
-  printf("Number of FBB devices in this chassis = %d\n", chassisDevices);
-  printf("First FBB device in this chassis = %d\n", firstAddress);
-  printf("SERVER Software Version = %d\n\n", softwareRevision);
+  printf("Measurement rate = %6.1f\n", mRealRate);
+  printf("Number of chassis in system = %d\n", mServerNumber);
+  printf("Chassis# = %d\n", mChassisNumber);
+  printf("Number of FBB devices in this chassis = %d\n", mChassisDevices);
+  printf("First FBB device in this chassis = %d\n", mFirstAddress);
+  printf("SERVER Software Version = %d\n\n", mSoftwareRevision);
   printf("============================================================\n\n");
 
 /*
-  for(i= 0;i<16;i++) printf(" %2x", response.buffer[i]);
+  for(i= 0;i<16;i++) printf(" %2x", mResponse.buffer[i]);
   printf("  |  ");
-  for(i=16;i<48;i++) printf(" %2x", response.buffer[i]);
+  for(i=16;i<48;i++) printf(" %2x", mResponse.buffer[i]);
 
   printf("\n\n");
 */
 
-  for(i=0;i<flockNumber;i++)
-    {
-      Bird[i].status.status             = response.buffer[16+i*8];
-      Bird[i].status.id                 = response.buffer[17+i*8];
-      Bird[i].status.softwareRev        = response.buffer[18+i*8] +
-        (response.buffer[19+i*8]*256);
-      //      Bird[i].status.FBBStatus  = response.buffer[20+i*8];
-      Bird[i].status.errorCode  = response.buffer[21+i*8];
-      Bird[i].status.setup              = response.buffer[22+i*8] +
-        (response.buffer[23+i*8]*256);
+  for ( int i = 0; i < flock_number; i++ ) {
+      mBird[i].status.status             = mResponse.buffer[16+i*8];
+      mBird[i].status.id                 = mResponse.buffer[17+i*8];
+      mBird[i].status.softwareRev        = mResponse.buffer[18+i*8] +
+                                               (mResponse.buffer[19+i*8]*256);
+      //      mBird[i].status.FBBStatus  = mResponse.buffer[20+i*8];
+      mBird[i].status.errorCode  = mResponse.buffer[21+i*8];
+      mBird[i].status.setup              = mResponse.buffer[22+i*8] +
+        (mResponse.buffer[23+i*8]*256);
       // Lew
-      Bird[i].status.hemisphere = response.buffer[26+i*8];
-//      printf("Bird hemisphere = %2x \n", Bird[i].status.hemisphere);
-    }
+      mBird[i].status.hemisphere = mResponse.buffer[26+i*8];
+//      printf("Bird hemisphere = %2x \n", mBird[i].status.hemisphere);
+  }
 
 //  printf("");
 
   /*
     for (i=0;i<bytesReceived;++i)
     {
-    printf("%4d,",*(newptr+i));
+    printf("%4d,",*(mNewptr+i));
     }
     printf("\n");
 */
@@ -607,25 +613,24 @@ aMotionStar::getSystemStatus () {
 void
 aMotionStar::setSystemStatus () {
      int i;
-     response.header.type         = BIRDNET::MSG_SEND_SETUP;
-     response.header.xtype        = 0;
-     response.header.number_bytes = htons(statusSize - 16);
+     mResponse.header.type         = BIRDNET::MSG_SEND_SETUP;
+     mResponse.header.xtype        = 0;
+     mResponse.header.number_bytes = htons(mStatusSize - 16);
 
-     for(i=0;i<6;i++)
-        {
-        response.buffer[5+i] = rate[i];
-        }
+     for ( i = 0; i < 6; i++ ) {
+        mResponse.buffer[5+i] = mRate[i];
+     }
 
-     numberBytes = send(s,(void*) lpResponse, statusSize, 0);
+     mNumberBytes = send(mSocket,(void*) mLpResponse, mStatusSize, 0);
 
 //     printf("\nSEND STATUS - number bytes sent = %5d errorNumber %d", numberBytes,errno);
 
      /***** Receive packet from the server *****/
 
-     bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+     mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
 
 //     printf("\nSEND STATUS ACK - number bytes received = %5d,", bytesReceived);
-//     printf("  type %d\n",response.header.type);
+//     printf("  type %d\n",mResponse.header.type);
 
 }
 
@@ -634,43 +639,44 @@ aMotionStar::setSystemStatus () {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::getBirdStatus (unsigned char fbb_addr) {
-  int headerBytes, dataBytes;
-  void * lpBuffer;
+  int header_bytes, data_bytes;
+  void* lp_buffer;
 
-  command.type         = BIRDNET::MSG_GET_STATUS;
-  command.xtype        = fbb_addr;
-  command.number_bytes = 0;
+  mCommand.type         = BIRDNET::MSG_GET_STATUS;
+  mCommand.xtype        = fbb_addr;
+  mCommand.number_bytes = 0;
 
-  numberBytes = send(s, (void*) lpCommand, sizeof(command), 0);
+  mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
 //  printf("\n\nGET STATUS #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
-  headerBytes = 0;
-  lpBuffer = lpResponse;
-  while(headerBytes<16)
-    {
-      bytesReceived = recv(s, (void*) lpBuffer, 16, 0);
-      headerBytes = headerBytes + bytesReceived;
-      lpBuffer = (char *)lpBuffer + bytesReceived;
-    }
+  header_bytes = 0;
+  lp_buffer    = mLpResponse;
 
-  dataBytes = 0;
-  while ( dataBytes < ntohs(response.header.number_bytes) ) {
-      bytesReceived = recv(s, (void*)lpBuffer,
-                           ntohs(response.header.number_bytes), 0);
-      dataBytes = dataBytes + bytesReceived;
-      lpBuffer = (char *)lpBuffer + bytesReceived;
+  while ( header_bytes < 16 ) {
+      mBytesReceived = recv(mSocket, (void*) lp_buffer, 16, 0);
+      header_bytes   = header_bytes + mBytesReceived;
+      lp_buffer      = (char*) lp_buffer + mBytesReceived;
   }
 
-  bytesReceived = dataBytes + headerBytes;
+  data_bytes = 0;
+
+  while ( data_bytes < ntohs(mResponse.header.number_bytes) ) {
+      mBytesReceived = recv(mSocket, (void*) lp_buffer,
+                           ntohs(mResponse.header.number_bytes), 0);
+      data_bytes     = data_bytes + mBytesReceived;
+      lp_buffer      = (char*) lp_buffer + mBytesReceived;
+  }
+
+  mBytesReceived = data_bytes + header_bytes;
 
 /*
   printf("\nSTATUS RECEIVED - number bytes received = %5d ", bytesReceived);
-  printf("type %d ",response.header.type);
+  printf("type %d ",mResponse.header.type);
   for (i=0;i<bytesReceived;++i)
-    printf("%4d",*(newptr+i));
+    printf("%4d",*(mNewptr+i));
 */
 }
 
@@ -679,23 +685,23 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::setBirdStatus (unsigned char fbb_addr) {
-  response.header.type         = BIRDNET::MSG_SEND_SETUP;
-  response.header.xtype        = fbb_addr;
-  response.header.number_bytes = htons(70);
+  mResponse.header.type         = BIRDNET::MSG_SEND_SETUP;
+  mResponse.header.xtype        = fbb_addr;
+  mResponse.header.number_bytes = htons(70);
 
-  numberBytes = send(s, (void*) lpResponse, 86, 0);
+  mNumberBytes = send(mSocket, (void*) mLpResponse, 86, 0);
 
 //  printf("\nSEND SETUP #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
-  bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+  mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
 
 /*
   printf("\nSETUP ACKNOWLEDGED - number bytes received = %5d ", bytesReceived);
-  printf("type %d ",response.header.type);
+  printf("type %d ",mResponse.header.type);
   for (i=0;i<bytesReceived;++i)
-    printf("%4d",*(newptr+i));
+    printf("%4d",*(mNewptr+i));
 */
 }
 
@@ -707,12 +713,12 @@ aMotionStar::printInfo () {
   int i;
 
   for (i = 0; i < 3; i++){
-    printf("P = %f, %f, %f  A = %f, %f, %f \n", posinfo[i][0], posinfo[i][1],
-           posinfo[i][2], posinfo[i][3], posinfo[i][4],posinfo[i][5]);
+    printf("P = %f, %f, %f  A = %f, %f, %f \n", mPosinfo[i][0], mPosinfo[i][1],
+           mPosinfo[i][2], mPosinfo[i][3], mPosinfo[i][4],mPosinfo[i][5]);
   }
-  printf ("\n");
 
-} // end void aMotionStar::printinfo()
+  printf ("\n");
+}
 
 // ----------------------------------------------------------------------------
 // Print out the MotionStar's header information.
@@ -720,7 +726,7 @@ aMotionStar::printInfo () {
 void
 aMotionStar::displayHdr () {
   /*printf("sequence=%6d time= %8d milliseconds=%6d type= %4d "
-	,response.header.sequence);*/
+	,mResponse.header.sequence);*/
 }
 
 // ----------------------------------------------------------------------------
@@ -747,7 +753,7 @@ aMotionStar::printError (const unsigned char err_code) {
       case 6:
         fprintf(stderr, "WARNING: Unexpected packet type received (error 6)\n");
 //        fprintf(stderr, "         Illegal packet sequence number: %hu\n",
-//                response.header.error_code_extension);
+//                mResponse.header.error_code_extension);
         fprintf(stderr, "         Re-syncing may be necessary!\n");
         break;
       case 7:
