@@ -179,7 +179,7 @@ std::vector<std::string> InetAddrNSPR::getHostnames () const
 }
 
 // ----------------------------------------------------------------------------
-// Look up the address in m_name and store the address in m_remote_addr.
+// Look up the address in mName and store the address in mAddr.
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus InetAddrNSPR::lookupAddress (const std::string& address)
 {

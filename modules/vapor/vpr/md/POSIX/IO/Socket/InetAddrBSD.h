@@ -78,7 +78,7 @@ public:
     * address structure.
     *
     * @pre None.
-    * @post The m_addr structure has its memory zeroed, and the port and
+    * @post The mAddr structure has its memory zeroed, and the port and
     *       internet address are set to wildcard values.
     *
     * @param port An unsigned 16-bit integer port number for this address in
@@ -86,7 +86,7 @@ public:
     */
    InetAddrBSD (const Uint16 port = 0)
    {
-      memset(&m_addr, 0, sizeof(m_addr));
+      memset(&mAddr, 0, sizeof(mAddr));
       setAddressValue(INADDR_ANY);
       setPort(port);
       setFamily(SocketTypes::INET);
@@ -167,7 +167,7 @@ public:
    unsigned char getLength (void) const
    {
 #ifdef _HAVE_SIN_LEN
-      return m_addr.sin_len;
+      return mAddr.sin_len;
 #else
       return 0;
 #endif
@@ -186,7 +186,7 @@ public:
    void setLength (const unsigned char length)
    {
 #ifdef _HAVE_SIN_LEN
-      m_addr.sin_len = length;
+      mAddr.sin_len = length;
 #endif
    }
 
@@ -226,7 +226,7 @@ public:
     */
    vpr::Uint16 getPort (void) const
    {
-      return ntohs(m_addr.sin_port);
+      return ntohs(mAddr.sin_port);
    }
 
    /**
@@ -240,7 +240,7 @@ public:
     */
    void setPort (const vpr::Uint16 port)
    {
-      m_addr.sin_port = htons(port);
+      mAddr.sin_port = htons(port);
    }
 
    /**
@@ -256,7 +256,7 @@ public:
     */
    vpr::Uint32 getAddressValue (void) const
    {
-      return ntohl(m_addr.sin_addr.s_addr);
+      return ntohl(mAddr.sin_addr.s_addr);
    }
 
    /**
@@ -306,9 +306,9 @@ public:
     */
    bool operator== (const InetAddrBSD& addr) const
    {
-      return((m_addr.sin_addr.s_addr == addr.m_addr.sin_addr.s_addr) &&
-             (m_addr.sin_port == addr.m_addr.sin_port) &&
-             (m_addr.sin_family == addr.m_addr.sin_family));
+      return((mAddr.sin_addr.s_addr == addr.mAddr.sin_addr.s_addr) &&
+             (mAddr.sin_port == addr.mAddr.sin_port) &&
+             (mAddr.sin_family == addr.mAddr.sin_family));
    }
 
    /**
@@ -330,7 +330,7 @@ protected:
     * important internally.
     *
     * @pre The given pointer points to a valid sockaddr struct.
-    * @post The memory pointed to by addr is copied into m_addr.
+    * @post The memory pointed to by addr is copied into mAddr.
     *
     * @param addr A pointer to a sockaddr struct containing a valid address.
     */
@@ -354,8 +354,8 @@ protected:
    void copyAddressValue (const char* addr_value)
    {
       vprASSERT(addr_value != NULL);
-      memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
-             sizeof(m_addr.sin_addr.s_addr));
+      memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addr_value,
+             sizeof(mAddr.sin_addr.s_addr));
    }
 
    /**
@@ -370,21 +370,21 @@ protected:
     */
    void setAddressValue (const vpr::Uint32 addr_value)
    {
-      m_addr.sin_addr.s_addr = htonl(addr_value);
+      mAddr.sin_addr.s_addr = htonl(addr_value);
    }
 
    /**
     * Gets the size of this object's encapsulated address structure.
     *
     * @pre None.
-    * @post The static size of m_addr is returned to the caller.
+    * @post The static size of mAddr is returned to the caller.
     *
     * @return A value of type size_t giving the size of the encapsualted
     *         address structure.
     */
    size_t size (void) const
    {
-      return sizeof(m_addr);
+      return sizeof(mAddr);
    }
 
    /**
@@ -398,7 +398,7 @@ protected:
     */
    size_t addressSize (void) const
    {
-      return sizeof(m_addr.sin_addr.s_addr);
+      return sizeof(mAddr.sin_addr.s_addr);
    }
 
    /**
@@ -406,14 +406,14 @@ protected:
     * sockaddr* object.  This will overwrite a previously set address.
     *
     * @post The memory pointed to by the given object is copied into this
-    *       object's m_addr structure.
+    *       object's mAddr structure.
     *
     * @param addr A pointer to the sockaddr object being used to initialize
     *             this object's address.
     */
    void setSockaddr (const struct sockaddr* addr)
    {
-      memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
+      memcpy((void*) &mAddr, (void*) addr, sizeof(mAddr));
    }
 
    /**
@@ -425,36 +425,36 @@ protected:
     */
    struct sockaddr_in toSockaddrInet (void)
    {
-      return m_addr;
+      return mAddr;
    }
 
    /**
     * Makes a copy of the given vpr::InetAddrBSD object in this object.
     *
     * @pre None.
-    * @post The memory in m_addr is overwritten with that of the given
-    *       object's m_addr structure.
+    * @post The memory in mAddr is overwritten with that of the given
+    *       object's mAddr structure.
     *
     * @param addr The vpr::InetAddrBSD object to be copied into this object.
     */
    void copy (const InetAddrBSD& addr)
    {
-      memcpy((void*) &m_addr, (void*) &addr.m_addr, sizeof(m_addr));
+      memcpy((void*) &mAddr, (void*) &addr.mAddr, sizeof(mAddr));
    }
 
    /**
-    * Looks up the given address and store the value in m_addr.
+    * Looks up the given address and store the value in mAddr.
     *
     * @pre None.
     * @post The given address string is converted into a 32-bit INET
-    *       address.  The m_addr member variable is populated accordingly.
+    *       address.  The mAddr member variable is populated accordingly.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the address lookup was
     *         successful.  vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus lookupAddress(const std::string& addr);
 
-   struct sockaddr_in m_addr;    /**< The Ineternet address structure */
+   struct sockaddr_in mAddr;    /**< The Ineternet address structure */
 };
 
 } // End of vpr namespace

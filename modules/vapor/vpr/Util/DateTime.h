@@ -61,7 +61,7 @@ public:
      * @see setNow
      */
     DateTime (void)
-        : m_seconds(0), m_micro_seconds(0)
+        : mSeconds(0), mMicroSeconds(0)
     {
         /* Do nothing. */ ;
     }
@@ -78,8 +78,8 @@ public:
         struct timeval tv;
 
         vpr::System::gettimeofday(&tv);
-        m_seconds       = tv.tv_sec;
-        m_micro_seconds = tv.tv_usec;
+        mSeconds       = tv.tv_sec;
+        mMicroSeconds = tv.tv_usec;
     }
 
     /**
@@ -91,7 +91,7 @@ public:
      */
     inline vpr::Uint32
     getSeconds (void) {
-        return m_seconds;
+        return mSeconds;
     }
 
     /**
@@ -105,8 +105,8 @@ public:
     getSecondsf (void) {
         double sec_f, usec_f, usec_f_div;
 
-        sec_f      = (double) m_seconds;
-        usec_f     = (double) m_micro_seconds;
+        sec_f      = (double) mSeconds;
+        usec_f     = (double) mMicroSeconds;
         usec_f_div = usec_f / 1000000.0f;
 
         return sec_f + usec_f_div;
@@ -121,7 +121,7 @@ public:
      */
     inline vpr::Uint32
     getMinutes (void) {
-        return m_seconds / 60;
+        return mSeconds / 60;
     }
 
     /**
@@ -146,7 +146,7 @@ public:
      */
     inline vpr::Uint32
     getHours (void) {
-        return m_seconds / 3600;
+        return mSeconds / 3600;
     }
 
     /**
@@ -171,7 +171,7 @@ public:
      */
     inline vpr::Uint32
     getDays (void) {
-        return m_seconds / 86400;
+        return mSeconds / 86400;
     }
 
     /**
@@ -196,7 +196,7 @@ public:
      */
     inline vpr::Uint32
     getWeeks (void) {
-        return m_seconds / 608400;
+        return mSeconds / 608400;
     }
 
     /**
@@ -218,8 +218,8 @@ public:
      */
     inline DateTime
     operator+ (const DateTime& o) const {
-        return DateTime(m_seconds + o.m_seconds,
-                        m_micro_seconds + o.m_micro_seconds);
+        return DateTime(mSeconds + o.mSeconds,
+                        mMicroSeconds + o.mMicroSeconds);
     }
 
     /**
@@ -228,8 +228,8 @@ public:
      */
     inline DateTime
     operator- (const DateTime& o) const {
-        return DateTime(m_seconds - o.m_seconds,
-                        m_micro_seconds - o.m_micro_seconds);
+        return DateTime(mSeconds - o.mSeconds,
+                        mMicroSeconds - o.mMicroSeconds);
     }
 
 private:
@@ -239,23 +239,23 @@ private:
      * details.
      *
      * @pre None.
-     * @post m_seconds and m_micro_seconds are initialized using the given
+     * @post mSeconds and mMicroSeconds are initialized using the given
      *       parameters.
      *
      * @param seconds       Seconds since the Epoch.
      * @param micro_seconcd Microseconds value for the given seconds value.
      */
     DateTime (const vpr::Uint32 seconds, const vpr::Uint32 micro_seconds)
-        : m_seconds(seconds), m_micro_seconds(micro_seconds)
+        : mSeconds(seconds), mMicroSeconds(micro_seconds)
     {
         /* Do nothing. */ ;
     }
 
-    vpr::Uint32 m_seconds;       /**< Seconds since the Epoch */
-    vpr::Uint32 m_micro_seconds; /**< Microseconds value */
+    vpr::Uint32 mSeconds;       /**< Seconds since the Epoch */
+    vpr::Uint32 mMicroSeconds;  /**< Microseconds value */
 };
 
 } // End of vpr namespace
 
 
-#endif	/* _VPR_DATE_TIME_H_ */
+#endif  /* _VPR_DATE_TIME_H_ */

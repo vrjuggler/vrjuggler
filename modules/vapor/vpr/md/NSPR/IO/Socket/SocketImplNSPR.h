@@ -78,7 +78,7 @@ public:
      */
     inline const std::string&
     getName (void) {
-        return m_name;
+        return mName;
     }
 
     /**
@@ -91,7 +91,7 @@ public:
      */
     inline void
     setOpenBlocking (void) {
-        m_open_blocking = true;
+        mOpenBlocking = true;
     }
 
     /**
@@ -105,14 +105,14 @@ public:
      */
     inline void
     setOpenNonBlocking (void) {
-        m_open_blocking = false;
+        mOpenBlocking = false;
     }
 
     // ------------------------------------------------------------------------
     // Open the socket.  This creates a new socket using the domain and type
     // options set through member variables.
     //
-    // PRE: m_domain and m_type have been set to values recognized
+    // PRE: mDomain and mType have been set to values recognized
     // POST: A new socket is created
     //
     // Returns:
@@ -127,7 +127,7 @@ public:
     //
     //! PRE: The socket is open.
     //! POST: An attempt is made to close the socket.  The resulting status is
-    //+       returned to the caller.  If the socket is closed, m_open is set
+    //+       returned to the caller.  If the socket is closed, mOpen is set
     //+       to false.
     //
     //! RETURNS: true  - The socket was closed successfully.
@@ -147,23 +147,23 @@ public:
      */
     inline bool
     isOpen (void) {
-        return m_open;
+        return mOpen;
     }
 
     bool isBound() const
-   {  return m_bound; }
+   {  return mBound; }
 
 
     // ------------------------------------------------------------------------
     // Bind this socket to the address in the host address member variable.
     //
-    // PRE: The socket is open, and m_host_addr has been initialized properly.
-    // POST: The socket is bound to the address in m_host_addr.
+    // PRE: The socket is open, and mLocalAddr has been initialized properly.
+    // POST: The socket is bound to the address in mLocalAddr.
     //
     // Returns:
     //     true  - The socket was bound to the address successfully.
     //     false - The socket could not be bound to the address in
-    //             m_host_addr.  An error message is printed explaining what
+    //             mLocalAddr.  An error message is printed explaining what
     //             went wrong.
     // ------------------------------------------------------------------------
     vpr::ReturnStatus bind(void);
@@ -173,7 +173,7 @@ public:
     // --------------------------------------
     vpr::IOSys::Handle getHandle()
     {
-       return m_handle;
+       return mHandle;
     }
 
     /**
@@ -182,7 +182,7 @@ public:
      */
     inline bool
     isBlockingFixed (void) {
-        return m_blocking_fixed;
+        return mBlockingFixed;
     }
 
     // ------------------------------------------------------------------------
@@ -201,7 +201,7 @@ public:
      */
     inline bool
     getBlocking (void) const {
-        return m_blocking;
+        return mBlocking;
     }
 
     /**
@@ -212,7 +212,7 @@ public:
      */
     inline bool
     getNonBlocking (void) const {
-        return ! m_blocking;
+        return ! mBlocking;
     }
 
     // ========================================================================
@@ -226,10 +226,10 @@ public:
     // the effect of establishing a connection with the destination.
     //
     // PRE: The socket is open.
-    // POST: The socket is connected to the address in m_host_addr.  For a
+    // POST: The socket is connected to the address in mLocalAddr.  For a
     //       stream socket, this means that a connection for future
     //       communication has been established.  For a datagram socket, the
-    //       default destination for all packets is now m_host_addr.
+    //       default destination for all packets is now mLocalAddr.
     //
     // Returns:
     //     true  - The connection was made.
@@ -247,13 +247,13 @@ public:
     // -----------------------------------------------------------------
     bool isConnected()
     {
-        if(m_connected)        // If it is not open, then it can't be connected
+        if(mConnected)        // If it is not open, then it can't be connected
         {
-            int num_avail = PR_Available(m_handle);
+            int num_avail = PR_Available(mHandle);
             if(num_avail == 0)
             {
                 PRPollDesc poll_desc;
-                poll_desc.fd = m_handle;
+                poll_desc.fd = mHandle;
                 poll_desc.in_flags = PR_POLL_READ;
 
                 PR_Poll(&poll_desc, 1, PR_INTERVAL_NO_WAIT);
@@ -271,34 +271,34 @@ public:
     //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
     //
     //! PRE: The socket implementation pointer is valid.
-    //! POST: The socket type for m_socket_imp is returned to the caller.
+    //! POST: The socket type for this socket is returned to the caller.
     //
     //! RETURNS: A vpr::SocketTypes::Type value giving the socket type for
     //+          this socket.
     // ------------------------------------------------------------------------
     inline const SocketTypes::Type&
     getType (void) const {
-        return m_type;
+        return mType;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline const InetAddr&
     getLocalAddr (void) const {
-        return m_local_addr;
+        return mLocalAddr;
     }
 
     ReturnStatus setLocalAddr(const InetAddr& addr)
     {
        ReturnStatus status;
 
-      if (m_bound)
+      if (mBound)
        {
           vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
           status.setCode(ReturnStatus::Fail);
        }
        else
-          m_local_addr = addr;
+          mLocalAddr = addr;
 
        return status;
     }
@@ -307,20 +307,20 @@ public:
     // ------------------------------------------------------------------------
     inline const InetAddr&
     getRemoteAddr (void) const {
-        return m_remote_addr;
+        return mRemoteAddr;
     }
 
     ReturnStatus setRemoteAddr(const InetAddr& addr)
     {
        ReturnStatus status;
 
-       if (m_connected)
+       if (mConnected)
        {
            vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
            status.setCode(ReturnStatus::Fail);
        }
        else
-          m_remote_addr = addr;
+          mRemoteAddr = addr;
 
        return status;
     }
@@ -345,7 +345,7 @@ public:
 
     vpr::Uint32 availableBytes()
     {
-      return PR_Available( m_handle );
+      return PR_Available( mHandle );
     }
 
     /**
@@ -413,32 +413,32 @@ protected:
     // ------------------------------------------------------------------------
     SocketImplNSPR (const SocketImplNSPR& sock)
     {
-        m_local_addr      = sock.m_local_addr;
-        m_remote_addr     = sock.m_remote_addr;
-        m_handle          = sock.m_handle;
-        m_type            = sock.m_type;
-        m_open            = sock.m_open;
-        m_open_blocking   = sock.m_open_blocking;
-        m_bound           = sock.m_bound;
-        m_connected       = sock.m_connected;
-        m_blocking        = sock.m_blocking;
-        m_blocking_fixed  = sock.m_blocking_fixed;
+        mLocalAddr      = sock.mLocalAddr;
+        mRemoteAddr     = sock.mRemoteAddr;
+        mHandle          = sock.mHandle;
+        mType            = sock.mType;
+        mOpen            = sock.mOpen;
+        mOpenBlocking   = sock.mOpenBlocking;
+        mBound           = sock.mBound;
+        mConnected       = sock.mConnected;
+        mBlocking        = sock.mBlocking;
+        mBlockingFixed  = sock.mBlockingFixed;
     }
 
-    std::string       m_name;
-    PRFileDesc*       m_handle;      //: Handle to the socket
-    vpr::InetAddr     m_local_addr;  //: The local site's address structure
-    vpr::InetAddr     m_remote_addr; //: The remote site's address structure
+    std::string       mName;
+    PRFileDesc*       mHandle;      //: Handle to the socket
+    vpr::InetAddr     mLocalAddr;  //: The local site's address structure
+    vpr::InetAddr     mRemoteAddr; //: The remote site's address structure
 
-    vpr::SocketTypes::Type m_type;        //:
+    vpr::SocketTypes::Type mType;        //:
 
-    bool m_open;
-    bool m_open_blocking;
-    bool m_bound;          /**< Is the socket bound to a port yet (connect
+    bool mOpen;
+    bool mOpenBlocking;
+    bool mBound;          /**< Is the socket bound to a port yet (connect
                                 and bind do this */
-    bool m_connected;
-    bool m_blocking;
-    bool m_blocking_fixed;
+    bool mConnected;
+    bool mBlocking;
+    bool mBlockingFixed;
 };
 
 }; // End of vpr namespace

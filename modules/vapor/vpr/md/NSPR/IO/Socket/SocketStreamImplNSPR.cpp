@@ -91,7 +91,7 @@ SocketStreamImplNSPR::listen (const int backlog)
     vpr::ReturnStatus retval;
     PRStatus status;
 
-    if(!m_bound)        // To listen, we must be bound
+    if(!mBound)        // To listen, we must be bound
     {
         vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
@@ -100,7 +100,7 @@ SocketStreamImplNSPR::listen (const int backlog)
     else {
         // Put the socket into listning mode.  If that fails, print an error
         // and return error status.
-        status = PR_Listen(m_handle, backlog);
+        status = PR_Listen(mHandle, backlog);
 
         if (PR_FAILURE == status) {
            NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
@@ -120,7 +120,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
     vpr::ReturnStatus retval;
     vpr::InetAddr addr;
 
-    if(!m_bound)        // To listen, we must be bound
+    if(!mBound)        // To listen, we must be bound
     {
         vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
@@ -130,11 +130,11 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
        PRFileDesc* accept_sock = NULL;
 
        // PR_Accept() is a potentially blocking call.
-       m_blocking_fixed = true;
+       mBlockingFixed = true;
 
        // Accept an incoming connection request.
-       vprASSERT(m_handle != NULL);
-       accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(),
+       vprASSERT(mHandle != NULL);
+       accept_sock = PR_Accept(mHandle, addr.getPRNetAddr(),
                                NSPR_getInterval(timeout) );
 
        if (NULL == accept_sock) {
@@ -153,13 +153,13 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
        }
        // Otherwise, put the new socket in the passed socket object.
        else {
-          sock.m_handle = accept_sock;
+          sock.mHandle = accept_sock;
           sock.setRemoteAddr(addr);
-          sock.m_open = true;
-          sock.m_bound = true;
-          sock.m_connected = true;
-          sock.m_blocking = m_blocking;
-          sock.m_blocking_fixed = true;
+          sock.mOpen = true;
+          sock.mBound = true;
+          sock.mConnected = true;
+          sock.mBlocking = mBlocking;
+          sock.mBlockingFixed = true;
        }
     }
 

@@ -68,13 +68,13 @@ public:
     * defaults and stores the given file name for later use.
     *
     * @pre None.
-    * @post All member variables are initialized including m_name that is
+    * @post All member variables are initialized including mName that is
     *       assigned the string in file_name.
     *
     * @param file_name The name of the file to be handled.
     */
    FileHandle_t (const std::string& file_name)
-      : BlockIO(file_name), m_open_mode(READ_WRITE), m_handle_impl(file_name)
+      : BlockIO(file_name), mOpenMode(READ_WRITE), mHandleImpl(file_name)
    {
       /* Do nothing. */ ;
    }
@@ -94,14 +94,14 @@ public:
     * Gets the name of this file.
     *
     * @pre None.
-    * @post A constant reference to the m_name object is returned to the
+    * @post A constant reference to the mName object is returned to the
     *       caller.
     *
     * @return An object containing the name of this file.
     */
    virtual const std::string& getName (void)
    {
-      return m_handle_impl.getName();
+      return mHandleImpl.getName();
    }
 
    /**
@@ -119,7 +119,7 @@ public:
     */
    virtual vpr::ReturnStatus open (void)
    {
-      return m_handle_impl.open();
+      return mHandleImpl.open();
    }
 
    /**
@@ -137,7 +137,7 @@ public:
     */
    virtual vpr::ReturnStatus close (void)
    {
-      return m_handle_impl.close();
+      return mHandleImpl.close();
    }
 
    /**
@@ -153,7 +153,7 @@ public:
     */
    virtual vpr::ReturnStatus enableBlocking (void)
    {
-      return m_handle_impl.enableBlocking();
+      return mHandleImpl.enableBlocking();
    }
 
    /**
@@ -169,13 +169,13 @@ public:
     */
    virtual vpr::ReturnStatus enableNonBlocking (void)
    {
-      return m_handle_impl.enableNonBlocking();
+      return mHandleImpl.enableNonBlocking();
    }
 
    /**
     * Gets the current blocking state for the file.
     *
-    * @pre <code>m_blocking</code> is set correctly
+    * @pre <code>mBlocking</code> is set correctly
     * @post
     *
     * @return <code>true</code> is returned when the file is in blocking
@@ -185,13 +185,13 @@ public:
     */
    bool getBlocking (void) const
    {
-      return m_handle_impl.getBlocking();
+      return mHandleImpl.getBlocking();
    }
 
    /**
     * Gets the current non-blocking state for the file.
     *
-    * @pre <code>m_blocking</code> is set correctly
+    * @pre <code>mBlocking</code> is set correctly
     * @post
     *
     * @return <code>true</code> is returned when the file is in non-blocking
@@ -201,7 +201,7 @@ public:
     */
    bool getNonBlocking (void) const
    {
-      return m_handle_impl.getNonBlocking();
+      return mHandleImpl.getNonBlocking();
    }
 
    /**
@@ -213,7 +213,7 @@ public:
     */
    virtual IOSys::Handle getHandle (void)
    {
-      return m_handle_impl.getHandle();
+      return mHandleImpl.getHandle();
    }
 
    // ========================================================================
@@ -230,7 +230,7 @@ public:
     */
    void setOpenReadOnly (void)
    {
-      m_handle_impl.setOpenReadOnly();
+      mHandleImpl.setOpenReadOnly();
    }
 
    /**
@@ -244,7 +244,7 @@ public:
     */
    void setOpenWriteOnly (void)
    {
-      m_handle_impl.setOpenWriteOnly();
+      mHandleImpl.setOpenWriteOnly();
    }
 
    /**
@@ -258,7 +258,7 @@ public:
     */
    void setOpenReadWrite (void)
    {
-      m_handle_impl.setOpenReadWrite();
+      mHandleImpl.setOpenReadWrite();
    }
 
    /**
@@ -273,7 +273,7 @@ public:
     */
    vpr::ReturnStatus enableAppend (void)
    {
-      return m_handle_impl.enableAppend();
+      return mHandleImpl.enableAppend();
    }
 
    /**
@@ -289,7 +289,7 @@ public:
     */
    vpr::ReturnStatus disableAppend (void)
    {
-      return m_handle_impl.disableAppend();
+      return mHandleImpl.disableAppend();
    }
 
    /**
@@ -305,7 +305,7 @@ public:
     */
    vpr::ReturnStatus enableSynchronousWrite (void)
    {
-      return m_handle_impl.enableSynchronousWrite();
+      return mHandleImpl.enableSynchronousWrite();
    }
 
    /**
@@ -321,7 +321,7 @@ public:
     */
    vpr::ReturnStatus enableAsynchronousWrite (void)
    {
-      return m_handle_impl.enableAsynchronousWrite();
+      return mHandleImpl.enableAsynchronousWrite();
    }
 
    /**
@@ -336,7 +336,7 @@ public:
     */
    bool isReadOnly (void)
    {
-      return m_handle_impl.isReadOnly();
+      return mHandleImpl.isReadOnly();
    }
 
    /**
@@ -351,7 +351,7 @@ public:
     */
    bool isWriteOnly (void)
    {
-      return m_handle_impl.isWriteOnly();
+      return mHandleImpl.isWriteOnly();
    }
 
    /**
@@ -366,7 +366,7 @@ public:
     */
    bool isReadWrite (void)
    {
-      return m_handle_impl.isReadWrite();;
+      return mHandleImpl.isReadWrite();;
    }
 
 protected:
@@ -401,7 +401,7 @@ protected:
                              vpr::Uint32& bytes_read,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_handle_impl.read_i(buffer, length, bytes_read, timeout);
+      return mHandleImpl.read_i(buffer, length, bytes_read, timeout);
    }
 
    /**
@@ -432,7 +432,7 @@ protected:
                               vpr::Uint32& bytes_read,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_handle_impl.readn_i(buffer, length, bytes_read, timeout);
+      return mHandleImpl.readn_i(buffer, length, bytes_read, timeout);
    }
 
    /**
@@ -464,14 +464,14 @@ protected:
                               vpr::Uint32& bytes_written,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_handle_impl.write_i(buffer, length, bytes_written, timeout);
+      return mHandleImpl.write_i(buffer, length, bytes_written, timeout);
    }
 
    /// Platform-specific file hanlde implementation instance.
-   RealFileHandleImpl m_handle_impl;
+   RealFileHandleImpl mHandleImpl;
 };
 
 } // End of vpr namespace
 
 
-#endif	/* _VPR_FILE_HANDLE_H_ */
+#endif  /* _VPR_FILE_HANDLE_H_ */

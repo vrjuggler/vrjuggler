@@ -66,7 +66,7 @@ public:
      * port name and sets the update action to happen immediately.
      *
      * @pre None.
-     * @post m_handle is allocated and connected to port_name, and the update
+     * @post mHandle is allocated and connected to port_name, and the update
      *       action is set to vpr::SerialTypes::NOW.
      *
      * @param port_name The name of the serial port that will be accessed.
@@ -77,7 +77,7 @@ public:
      * Destructor.  If the file handle is non-NULL, its memory is released.
      *
      * @pre None.
-     * @post If m_handle is non-NULL, its memory is released.
+     * @post If mHandle is non-NULL, its memory is released.
      */
     ~SerialPortImplTermios(void);
 
@@ -95,7 +95,7 @@ public:
      */
     const std::string&
     getName (void) {
-        return m_handle->getName();
+        return mHandle->getName();
     }
 
     /**
@@ -109,7 +109,7 @@ public:
      */
     inline void
     setOpenReadOnly (void) {
-        m_handle->setOpenReadOnly();
+        mHandle->setOpenReadOnly();
     }
 
     /**
@@ -123,7 +123,7 @@ public:
      */
     inline void
     setOpenWriteOnly (void) {
-        m_handle->setOpenWriteOnly();
+        mHandle->setOpenWriteOnly();
     }
 
     /**
@@ -137,7 +137,7 @@ public:
      */
     inline void
     setOpenReadWrite (void) {
-        m_handle->setOpenReadWrite();
+        mHandle->setOpenReadWrite();
     }
 
     /**
@@ -151,7 +151,7 @@ public:
      */
     inline void
     setOpenBlocking (void) {
-        m_handle->setOpenBlocking();
+        mHandle->setOpenBlocking();
     }
 
     /**
@@ -165,7 +165,7 @@ public:
      */
     inline void
     setOpenNonBlocking (void) {
-        m_handle->setOpenNonBlocking();
+        mHandle->setOpenNonBlocking();
     }
 
     /**
@@ -195,7 +195,7 @@ public:
      */
     inline vpr::ReturnStatus
     close (void) {
-        return m_handle->close();
+        return mHandle->close();
     }
 
     /**
@@ -209,7 +209,7 @@ public:
      */
     inline vpr::ReturnStatus
     enableBlocking (void) {
-       return m_handle->enableBlocking();
+       return mHandle->enableBlocking();
     }
 
     /**
@@ -223,33 +223,33 @@ public:
      */
     inline vpr::ReturnStatus
     enableNonBlocking (void) {
-       return m_handle->enableNonBlocking();
+       return mHandle->enableNonBlocking();
     }
 
     /**
      * Get the current blocking state for the serial port.
      *
-     * @pre m_blocking is set correctly
+     * @pre mBlocking is set correctly
      *
      * @return true is returned if the port is in blocking mode.<br>
      *         false is returned if the port is in non-blocking mode.
      */
     inline bool
     getBlocking (void) const {
-        return m_handle->getBlocking();
+        return mHandle->getBlocking();
     }
 
     /**
      * Gets the current non-blocking state for the serial port.
      *
-     * @pre <code>m_blocking</code> is set correctly<br>
+     * @pre mBlocking is set correctly.
      *
      * @return <code>true</code> is returned if the port is in non-blocking
      *         mode.   Otherwise, <code>false</code> is returned.
      */
     inline bool
     getNonBlocking (void) const {
-        return m_handle->getNonBlocking();
+        return mHandle->getNonBlocking();
     }
 
     /**
@@ -257,7 +257,7 @@ public:
      */
     inline vpr::IOSys::Handle
     getHandle (void) {
-       return m_handle->getHandle();
+       return mHandle->getHandle();
     }
 
     /**
@@ -272,7 +272,7 @@ public:
      */
     inline bool
     isReadOnly (void) {
-        return m_handle->isReadOnly();
+        return mHandle->isReadOnly();
     }
 
     /**
@@ -287,7 +287,7 @@ public:
      */
     inline bool
     isWriteOnly (void) {
-        return m_handle->isWriteOnly();
+        return mHandle->isWriteOnly();
     }
 
     /**
@@ -302,7 +302,7 @@ public:
      */
     inline bool
     isReadWrite (void) {
-        return m_handle->isReadWrite();
+        return mHandle->isReadWrite();
     }
 
     // ========================================================================
@@ -944,7 +944,7 @@ public:
     read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle->read_i(buffer, length, bytes_read, timeout);
+        return mHandle->read_i(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -979,7 +979,7 @@ public:
     readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle->readn_i(buffer, length, bytes_read, timeout);
+        return mHandle->readn_i(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -1012,7 +1012,7 @@ public:
              vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle->write_i(buffer, length, bytes_written, timeout);
+        return mHandle->write_i(buffer, length, bytes_written, timeout);
     }
 
 protected:
@@ -1021,10 +1021,10 @@ protected:
      * termios struct.
      */
     enum _term_flag {
-        IFLAG,		/**< Input flag */
-        OFLAG,		/**< Output flag */
-        CFLAG,		/**< Control flag */
-        LFLAG		/**< Local flag */
+        IFLAG,      /**< Input flag */
+        OFLAG,      /**< Output flag */
+        CFLAG,      /**< Control flag */
+        LFLAG       /**< Local flag */
     };
 
     /**
@@ -1072,11 +1072,11 @@ protected:
      */
     speed_t intToBaud(const vpr::Uint32 speed_int);
 
-    FileHandleImplUNIX*	m_handle;    /**< File handle for the serial port */
-    int			m_actions;
+    FileHandleImplUNIX* mHandle;    /**< File handle for the serial port */
+    int                 mActions;
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SERIAL_PORT_IMPL_TERMIOS_H_ */
+#endif  /* _VPR_SERIAL_PORT_IMPL_TERMIOS_H_ */

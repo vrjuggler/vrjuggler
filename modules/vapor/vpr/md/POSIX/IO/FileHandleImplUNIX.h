@@ -75,11 +75,11 @@ public:
     * variables to reasonable defaults and stores the given file name for
     * later use.
     *
-    * @post All member variables are initialized except m_name.
+    * @post All member variables are initialized except mName.
     */
    FileHandleImplUNIX (void)
-      : m_open(false), m_open_blocking(true), m_blocking(true), m_fdesc(-1),
-        m_open_mode(O_RDWR)
+      : mOpen(false), mOpenBlocking(true), mBlocking(true), mFdesc(-1),
+        mOpen_mode(O_RDWR)
    {
       /* Do nothing. */ ;
    }
@@ -88,7 +88,7 @@ public:
     * Constructor.  This initializes the member variables to reasonable
     * defaults and stores the given file name for later use.
     *
-    * @post All member variables are initialized including m_name that is
+    * @post All member variables are initialized including mName that is
     *       assigned the string in file_name.
     *
     * @param file_name The name of the file to be handled.
@@ -115,7 +115,7 @@ public:
     */
    const std::string& getName (void)
    {
-      return m_name;
+      return mName;
    }
 
    /**
@@ -128,7 +128,7 @@ public:
     */
    void setOpenBlocking (void)
    {
-      m_open_blocking = true;
+      mOpenBlocking = true;
    }
 
    /**
@@ -142,7 +142,7 @@ public:
     */
    void setOpenNonBlocking (void)
    {
-      m_open_blocking = false;
+      mOpenBlocking = false;
    }
 
    /**
@@ -150,7 +150,7 @@ public:
     *
     * @pre The file handle is not already open.
     * @post An attempt is made to open the file.  The resulting status is
-    *       returned to the caller.  If the file is opened, m_open is set to
+    *       returned to the caller.  If the file is opened, mOpen is set to
     *       true.
     *
     * @return vpr::ReturnStatus;:Succeed is returned if the file handle was
@@ -164,7 +164,7 @@ public:
     *
     * @pre The file handle is open.
     * @post An attempt is made to close the file.  The resulting status is
-    *       returned to the caller.  If the file is closed, m_open is set to
+    *       returned to the caller.  If the file is closed, mOpen is set to
     *       false.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the file handle was
@@ -185,7 +185,7 @@ public:
     */
    bool isOpen (void)
    {
-      return m_open;
+      return mOpen;
    }
 
    /**
@@ -220,14 +220,14 @@ public:
           << "ERROR: Cannot get handle for UNIX file descriptor with NSPR!\n";
       return vpr::IOSys::NullHandle;
 #else
-      return m_fdesc;
+      return mFdesc;
 #endif
    }
 
    /**
     * Gets the current blocking state for the file handle.
     *
-    * @pre m_blocking is set correctly.
+    * @pre mBlocking is set correctly.
     * @post
     *
     * @return true is returned if the file handle is in blocking mode.
@@ -235,13 +235,13 @@ public:
     */
    bool getBlocking (void) const
    {
-      return m_blocking;
+      return mBlocking;
    }
 
    /**
     * Gets the current non-blocking state for the file handle.
     *
-    * @pre m_blocking is set correctly.
+    * @pre mBlocking is set correctly.
     * @post
     *
     * @return true is returned if the file handle is in non-blocking mode.
@@ -249,7 +249,7 @@ public:
     */
    bool getNonBlocking (void) const
    {
-      return ! m_blocking;
+      return ! mBlocking;
    }
 
    // ========================================================================
@@ -266,7 +266,7 @@ public:
     */
    void setOpenReadOnly (void)
    {
-      m_open_mode = O_RDONLY;
+      mOpen_mode = O_RDONLY;
    }
 
    /**
@@ -279,7 +279,7 @@ public:
     */
    void setOpenWriteOnly (void)
    {
-      m_open_mode = O_WRONLY;
+      mOpen_mode = O_WRONLY;
    }
 
    /**
@@ -292,7 +292,7 @@ public:
     */
    void setOpenReadWrite (void)
    {
-      m_open_mode = O_RDWR;
+      mOpen_mode = O_RDWR;
    }
 
    /**
@@ -359,7 +359,7 @@ public:
     */
    bool isReadOnly (void)
    {
-      return (m_open_mode == O_RDONLY);
+      return (mOpen_mode == O_RDONLY);
    }
 
    /**
@@ -374,7 +374,7 @@ public:
     */
    bool isWriteOnly (void)
    {
-      return (m_open_mode == O_WRONLY);
+      return (mOpen_mode == O_WRONLY);
    }
 
    /**
@@ -389,7 +389,7 @@ public:
     */
    bool isReadWrite (void)
    {
-      return (m_open_mode == O_RDWR);
+      return (mOpen_mode == O_RDWR);
    }
 
    /**
@@ -402,7 +402,7 @@ public:
    {
       vpr::ReturnStatus status;
 
-      if ( ioctl(m_fdesc, FIONREAD, &buffer) == -1 )
+      if ( ioctl(mFdesc, FIONREAD, &buffer) == -1 )
       {
          status.setCode(vpr::ReturnStatus::Fail);
       }
@@ -511,7 +511,7 @@ public:
    {
       int result;
 
-      if ( ioctl(m_fdesc, FIONREAD, &result) < 0 )
+      if ( ioctl(mFdesc, FIONREAD, &result) < 0 )
       {
          result = 0;
       }
@@ -562,13 +562,13 @@ protected:
     */
    vpr::ReturnStatus isWriteable(const vpr::Interval timeout);
 
-   std::string m_name;           /**< The name of this file */
-   bool        m_open;           /**< Open state of this file */
-   bool        m_open_blocking;
-   bool        m_blocking;       /**< Blocking state of this file */
+   std::string mName;           /**< The name of this file */
+   bool        mOpen;           /**< Open state of this file */
+   bool        mOpenBlocking;
+   bool        mBlocking;       /**< Blocking state of this file */
 
-   int m_fdesc;      /**< File descriptor */
-   int m_open_mode;  /**< The open mode of the device */
+   int mFdesc;      /**< File descriptor */
+   int mOpen_mode;  /**< The open mode of the device */
 };
 
 } // End of vpr namespace
