@@ -223,10 +223,10 @@ chunk PerfData "Performance Data Display" "Information for displaying data from 
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   labels String -1 "Labels" "Labels for Perf Buffer phases"
   end
-chunk motionstar "Motion Star" "Ascension Wireless Motion Tracker"
+chunk MotionStar "Motion Star" "Ascension Wireless Motion Tracker"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  format Int 1 "Format" ""
-  bformat Int 1 "Bird Format" ""
+  hemisphere Int 1 "Hemisphere" vj_enumeration { "Front=0" "Aft=1" "Upper=2" "Lower=3" "Left=4" "Right=5" } ""
+  bformat Int 1 "Bird Format" vj_enumeration { "No Data=0" "Position=1" "Angles=2" "Matrix=3" "Position And Angles=4" "Position And Matrix=5" "Quaternions=6" "Position And Quaternions=7" } ""
   num Int 1 "Number of Birds" ""
   brate Float 1 "Bird Rate" ""
   mode Int 1 "Run Mode" vj_enumeration { "Run Continuous=0" "Sample Individually=1" } ""
