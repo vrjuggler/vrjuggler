@@ -82,10 +82,7 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
 
-   // XXX: There should be no need to check mConnected and mPeer.  If mPeer is
-   // non-NULL, it should imply that mConnected is true, but that is not the
-   // case for some reason...
-   if ( mConnected || mPeer != NULL )
+   if ( isConnected() )
    {
       vprASSERT(mPeer != NULL && "I am connected to a NULL peer");
 
