@@ -74,7 +74,7 @@ vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 */
 
 
-vprSingletonImp(Debug);
+vprSingletonImpWithInitFunc(Debug, init);
 
 Debug::Debug()
 {
@@ -110,8 +110,11 @@ Debug::Debug()
                 << std::flush;
       std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
                 << std::endl << std::flush;
-   }
+   }   
+}
 
+void Debug::init()
+{
    // --- Register primitive categories --- //
    addCategory(vprDBG_ALL, "DBG_ALL", "DBG:");
    addCategory(vprDBG_ERROR, "DBG_ERROR", "ERR:");
@@ -184,9 +187,13 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
 
 void Debug::addCategory(const vpr::GUID& catId, std::string name, std::string prefix)
 {
-   std::cout << "Adding category named '" << name << "'  -- prefix: " << prefix << std::endl;
+   std::cout << "\nAdding category named '" << name << "'  -- prefix: " << prefix <<  " -- guid: " << catId
+             << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
    mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, prefix, false)));
-   updateAllowedCategories();   
+   std::cout << "new size: " << mCategories.size() << std::endl;
+   debugDump();
+   updateAllowedCategories();
+   debugDump();
 }
 
 
@@ -219,15 +226,19 @@ void Debug::updateAllowedCategories()
    // Get the environment variable
    char* dbg_cats_env = getenv("VPR_DEBUG_CATEGORIES");
 
+   std::cout << "updateAllowedCategories" << std::endl;
+   std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL << "] " << std::endl;
+
    Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL);
-   vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category 
+   vprASSERT(!mCategories.empty() && "Empty category list");
+   vprASSERT((cat_all != mCategories.end()) && "Could not fine vprDBG_ALL in category list");    // ASSERT: We have a valid category 
 
    // 
    if(dbg_cats_env != NULL)
    {
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 
-      std::cout << "vprDEBUG::Found VPR_DEBUG_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+      std::cout << "   vprDEBUG::Found VPR_DEBUG_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
       std::string dbg_cats(dbg_cats_env);
 
       // For each currently known category name
@@ -237,7 +248,7 @@ void Debug::updateAllowedCategories()
          std::string cat_name = (*i).second.mName;
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
          {
-            std::cout << "vprDEBUG::updateAllowedCategories: Allowing: "
+            std::cout << "   vprDEBUG::updateAllowedCategories: Allowing: "
                       << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
                       << std::endl << std::flush;            
             (*i).second.mAllowed = true;
@@ -252,7 +263,7 @@ void Debug::updateAllowedCategories()
    }
    else
    {
-      std::cout << "vprDEBUG::VPR_DEBUG_CATEGORIES not found:\n"
+      std::cout << "   vprDEBUG::VPR_DEBUG_CATEGORIES not found:\n"
                 << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
       (*cat_all).second.mAllowed = true;       // Disable the showing of all for now      
    }   
@@ -282,6 +293,22 @@ void Debug::popThreadLocalColor()
       (*gVprDebugCurColor).pop_back();
 }
 
+
+void Debug::debugDump()
+{
+   std::cout << "--- vpr::Debug Status ----" << std::endl;
+   Debug::category_map_t::iterator i;
+
+   for(i=mCategories.begin(); i != mCategories.end(); ++i)
+   {
+      CategoryInfo cat_info = (*i).second;
+      std::cout << "    cat [" << (*i).first << "]  "
+                << " name [" << cat_info.mName << "]  "
+                << " prefix [" << cat_info.mPrefix << "]  "
+                << " allowed [" << cat_info.mAllowed << "] " << std::endl;
+   }
+
+}
 
 
 
