@@ -5,7 +5,6 @@
 #include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
 
-class vjChunkDescDB;
 
 //------------------------------------------------------------------
 //: Database of ConfigChunks
@@ -23,9 +22,6 @@ class vjChunkDescDB;
 class vjConfigChunkDB {
 
 private:
-    //: We need access to a ChunkDescDB for the >> operator.
-    vjChunkDescDB *descs;
-
     //: vector of ConfigChunks
     std::vector<vjConfigChunk*> chunks;
 
@@ -34,9 +30,7 @@ public:
     //: Constructor
     //! PRE: true
     //! POST: self is created. Chunks is empty.
-    //! ARGS: d - a pointer to a vjChunkDescDB.  Note that
-    //+       files cannot be read until a ChunkDescDB is supplied.
-    vjConfigChunkDB (vjChunkDescDB *d = NULL);
+    vjConfigChunkDB ();
 
 
 
@@ -56,22 +50,6 @@ public:
 
     //: Assignment operator
     vjConfigChunkDB& operator = (vjConfigChunkDB& db);
-
-
-
-    //: Sets the vjChunkDescDB that self uses for creating Chunks
-    //! PRE: d points to a vjChunkDescDB
-    //! POST: self uses d for all vjChunkDesc lookups
-    //! NOTE: Using this function on a nonempty ConfigChunkDB
-    //+       might be dangerous.
-    void setChunkDescDB (vjChunkDescDB *d);
-
-
-
-    //: Returns a pointer to self's ChunkDescDB
-    //! PRE: true
-    //! RETURNS: d - the value of desc (remember, this could be NULL)
-    vjChunkDescDB* getChunkDescDB();
 
 
 

@@ -115,7 +115,7 @@ vjVarValue::operator int() {
 
 vjVarValue::operator vjConfigChunk*() {
     if ((type == T_EMBEDDEDCHUNK))
-	//	return new vjConfigChunk (*val.embeddedchunkval);
+	//return new vjConfigChunk (*val.embeddedchunkval);
 	return val.embeddedchunkval;
     if (type != T_INVALID)
 	cerr << "Type error in cast!\n";

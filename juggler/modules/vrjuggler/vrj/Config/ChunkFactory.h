@@ -35,6 +35,11 @@ public:
 	    nulldesc = new vjChunkDesc();
     }
 
+
+    static vjChunkDescDB* getChunkDescDB () {
+	return descdb;
+    }
+
     static vjChunkDesc* getChunkDesc (const std::string& token) {
 	return descdb->getChunkDesc (token);
     }
@@ -47,14 +52,14 @@ public:
     static vjConfigChunk* createChunk (const std::string& desctoken) {
 	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
 	if (desc)
-	    return new vjConfigChunk (desc, descdb);
+	    return new vjConfigChunk (desc);
 	else
-	    return new vjConfigChunk (nulldesc, descdb);
+	    return new vjConfigChunk (nulldesc);
     }
 
     //: Creates a Chunk using the given description
     static vjConfigChunk* createChunk (vjChunkDesc* d) {
-	return new vjConfigChunk (d, descdb);
+	return new vjConfigChunk (d);
     }
 
 private:
