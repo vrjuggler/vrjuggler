@@ -220,6 +220,19 @@ public class TweekCore
    public void findAndLoadBeans( String path )
       throws BeanPathException
    {
+      // Get the beans in the given path and add them to the dependency manager
+      XMLBeanFinder finder = new XMLBeanFinder(mValidateXML);
+      loadBeans(finder.find(path));
+   }
+
+   public void loadBeans(List beans)
+   {
+      // Just to be safe...
+      if ( null == beans )
+      {
+         return;
+      }
+
       BeanRegistry registry = BeanRegistry.instance();
 
       // This service is loaded statically, so we do not have to worry about
@@ -227,9 +240,6 @@ public class TweekCore
       GlobalPreferencesService prefs =
          (GlobalPreferencesService) registry.getBean("GlobalPreferences");
 
-      // Get the beans in the given path and add them to the dependency manager
-      XMLBeanFinder finder = new XMLBeanFinder(mValidateXML);
-      List beans = finder.find( path );
       for ( Iterator itr = beans.iterator(); itr.hasNext(); )
       {
          TweekBean bean = (TweekBean)itr.next();
