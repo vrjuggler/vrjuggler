@@ -114,13 +114,25 @@ public:
       this->impl().setAmbient( alias, setting );
    }
 
+   /** is the sound ambient? */
+   virtual bool isAmbient( const std::string& alias )
+   {
+      return this->impl().isAmbient( alias );
+   }
+
+   /** alters the frequency of the sample, 0 is no change. */
+   virtual void setPitchBend( const std::string& alias, float amount )
+   {
+      this->impl().setPitchBend( alias, amount );
+   }
+
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop( const std::string& name )
+   virtual void stop( const std::string& alias )
    {
-      this->impl().stop( name );
+      this->impl().stop( alias );
    }
 
    /**
