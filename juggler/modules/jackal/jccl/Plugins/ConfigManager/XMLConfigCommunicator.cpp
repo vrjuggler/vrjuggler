@@ -152,7 +152,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
                 child = child.getNextSibling();
             }
             if (retval) {
-                config_manager->addChunkDB(&newchunkdb);
+                config_manager->addPending(&newchunkdb);
             }
         }
         else if (!strcasecmp (name, "remove_chunks")) {
@@ -164,7 +164,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
                 child = child.getNextSibling();
             }
             if (retval) {
-                config_manager->removeChunkDB (&newchunkdb);
+                config_manager->removePending (&newchunkdb);
             }
         }
         else if (!strcasecmp (name, "remove_descs")) {
