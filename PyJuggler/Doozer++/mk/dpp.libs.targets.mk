@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2003/10/06 17:17:51
-# Version:       1.34
+# Date modified: 2004/02/28 19:51:49
+# Version:       1.36
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.34 2003/10/06 17:17:51 patrickh Exp
+# dpp.libs.targets.mk,v 1.36 2004/02/28 19:51:49 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -504,7 +504,8 @@ obj.dbg.build:
               $(SHELL) $(MKINSTALLDIRS) $(DBG_BUILDDIR)/$$lib ;		\
           done
 	@$(MAKE) RECTARGET="dbg" OPTIMIZER="$(DBG_FLAGS)"		\
-          DBG_OBJ_BUILD=1 BASE_OBJDIR="$(DBG_BUILDDIR)" recursive
+          DBG_OBJ_BUILD=1 BASE_OBJDIR="$(DBG_BUILDDIR)"			\
+          BUILD_TYPE="dbg" recursive
 ifdef EXTRA_OBJ_TARGETS
 	@$(MAKE) OPTIMIZER="$(DBG_FLAGS)" DBG_OBJ_BUILD=1		\
           BASE_OBJDIR="$(DBG_BUILDDIR)" $(EXTRA_OBJ_TARGETS)
@@ -519,7 +520,8 @@ obj.opt.build:
               $(SHELL) $(MKINSTALLDIRS) $(OPT_BUILDDIR)/$$lib ;		\
           done
 	@$(MAKE) RECTARGET="opt" OPTIMIZER="$(OPT_FLAGS)"		\
-          OPT_OBJ_BUILD=1 BASE_OBJDIR="$(OPT_BUILDDIR)" recursive
+          OPT_OBJ_BUILD=1 BASE_OBJDIR="$(OPT_BUILDDIR)"			\
+          BUILD_TYPE="opt" recursive
 ifdef EXTRA_OBJ_TARGETS
 	@$(MAKE) OPTIMIZER="$(OPT_FLAGS)" OPT_OBJ_BUILD=1		\
           BASE_OBJDIR="$(OPT_BUILDDIR)" $(EXTRA_OBJ_TARGETS)
@@ -534,7 +536,8 @@ obj.prof.build:
               $(SHELL) $(MKINSTALLDIRS) $(PROF_BUILDDIR)/$$lib ;	\
           done
 	@$(MAKE) RECTARGET="prof" OPTIMIZER="$(PROF_OPT_FLAGS)"		\
-          PROF_OBJ_BUILD=1 BASE_OBJDIR="$(PROF_BUILDDIR)" recursive
+          PROF_OBJ_BUILD=1 BASE_OBJDIR="$(PROF_BUILDDIR)"		\
+          BUILD_TYPE="prof" recursive
 ifdef EXTRA_OBJ_TARGETS
 	@$(MAKE) OPTIMIZER="$(PROF_OPT_FLAGS)" PROF_OBJ_BUILD=1		\
           BASE_OBJDIR="$(PROF_BUILDDIR)" $(EXTRA_OBJ_TARGETS)

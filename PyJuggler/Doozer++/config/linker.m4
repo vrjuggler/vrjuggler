@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          linker.m4,v
-dnl Date modified: 2003/11/23 17:31:13
-dnl Version:       1.7
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.9
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,7 +43,7 @@ dnl                            GNU ld (as determined by DPP_LINKER_IS_GNU_LD).
 dnl                            It will be set to "no" otherwise.
 dnl ===========================================================================
 
-dnl linker.m4,v 1.7 2003/11/23 17:31:13 patrickh Exp
+dnl linker.m4,v 1.9 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Finds the platform-specific tool used for linking object files.  The
@@ -65,7 +65,7 @@ dnl     action-if-not-found - The action(s) to take if platform-specific
 dnl                           linker is not found.   This argument is
 dnl                           optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_LINKER,
+AC_DEFUN([DPP_PROG_LINKER],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    AC_REQUIRE([AC_PROG_CC])
@@ -143,7 +143,7 @@ dnl     action-if-not-gnu-ld - The action(s) to take if the given command is
 dnl                            not a GNU ld executable.  This argument is
 dnl                            optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_LINKER_IS_GNU_LD,
+AC_DEFUN([DPP_LINKER_IS_GNU_LD],
 [
    AC_MSG_CHECKING([whether $LINKER is GNU ld])
    dpp_linker_ver_cmd='$LINKER --version | grep GNU 1>&AC_FD_CC'

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          general.m4,v
-dnl Date modified: 2003/11/23 17:56:27
-dnl Version:       1.65
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.68
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,10 +43,10 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.65 2003/11/23 17:56:27 patrickh Exp
+dnl general.m4,v 1.68 2004/07/02 11:35:54 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.99.14)
+define(DPP_DPPVERSION, 1.99.15)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
@@ -91,7 +91,7 @@ dnl
 dnl Arguments:
 dnl     VERSION - The Doozer++ version number of the form major.minor[.patch]
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PREREQ,
+AC_DEFUN([DPP_PREREQ],
 [DPP_PREREQ_COMPARE(DPP_PREREQ_CANON(DPP_PREREQ_SPLIT(DPP_DPPVERSION)),
 DPP_PREREQ_CANON(DPP_PREREQ_SPLIT([$1])), [$1])])
 
@@ -149,7 +149,7 @@ dnl     action-if-not-found - The action to take if the known version number
 dnl                           is not at least the required version number.
 dnl                           This is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_VERSION_CHECK,
+AC_DEFUN([DPP_VERSION_CHECK],
 [
    split_known_ver=`echo $1 | sed -e 's/\./ /g'`
    split_req_ver=`echo $2 | sed -e 's/\./ /g'`
@@ -198,7 +198,7 @@ dnl     action-if-not-found - The action to take if the known version number
 dnl                           is not at least the required version number.
 dnl                           This is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_VERSION_CHECK_MSG,
+AC_DEFUN([DPP_VERSION_CHECK_MSG],
 [
    AC_CACHE_CHECK([whether $1 version is >= $3], [$4],
       [DPP_VERSION_CHECK([$2], [$3], [$4="$2"],
@@ -224,7 +224,7 @@ dnl
 dnl Usage:
 dnl     DPP_INIT
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_INIT,
+AC_DEFUN([DPP_INIT],
 [
    topdir=`pwd`
 ])
@@ -232,7 +232,7 @@ AC_DEFUN(DPP_INIT,
 dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
 dnl DPP_ACLOCAL_INCLUDE(macrodir)
-AC_DEFUN(DPP_ACLOCAL_INCLUDE,
+AC_DEFUN([DPP_ACLOCAL_INCLUDE],
 [
    test -n "$ACLOCAL_FLAGS" && ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
@@ -245,7 +245,7 @@ dnl
 dnl Usage:
 dnl     DPP_SUBST
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_SUBST,
+AC_DEFUN([DPP_SUBST],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    AC_REQUIRE([DPP_WIN32_SETUP])
@@ -268,7 +268,7 @@ dnl
 dnl Usage:
 dnl     DPP_GET_PROJECTDIR
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GET_PROJECTDIR,
+AC_DEFUN([DPP_GET_PROJECTDIR],
 [
    AC_REQUIRE([DPP_INIT])
    AC_REQUIRE([DPP_SUBST])
@@ -296,7 +296,7 @@ dnl
 dnl Usage:
 dnl     DPP_GEN_RECONFIG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GEN_RECONFIG,
+AC_DEFUN([DPP_GEN_RECONFIG],
 [
    dnl Create a script for handy reconfiguration of a build tree.  It removes
    dnl configure's cache and status files and then runs configure with the

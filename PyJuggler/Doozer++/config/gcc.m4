@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          gcc.m4,v
-dnl Date modified: 2003/06/23 19:56:47
-dnl Version:       1.16
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.18
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -56,7 +56,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.16 2003/06/23 19:56:47 patrickh Exp
+dnl gcc.m4,v 1.18 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.
@@ -68,7 +68,7 @@ dnl Arguments:
 dnl     default-GCC-use - "yes" to default to using GCC or "no" to default to
 dnl                       not using GCC.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_WITH_GCC,
+AC_DEFUN([DPP_WITH_GCC],
 [
    dnl Force the use of GCC as the compiler.
    AC_ARG_WITH(gcc,
@@ -83,7 +83,7 @@ dnl
 dnl Usage:
 dnl     DPP_SETUP_GCC
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_SETUP_GCC,
+AC_DEFUN([DPP_SETUP_GCC],
 [
    AR='ar'
    ARFLAGS='-ruv'
@@ -120,7 +120,7 @@ dnl     minimum-version     - The minimum allowable version number.
 dnl     action-if-not-found - The action to take if the version is less than
 dnl                           that specified.  Optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GPLUSPLUS_VER,
+AC_DEFUN([DPP_GPLUSPLUS_VER],
 [
    AC_REQUIRE([DPP_PROG_CXX])
 
@@ -139,7 +139,7 @@ dnl
 dnl     action-if-not-found - The action to take if the version is less than
 dnl                           that specified.  Optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GPLUSPLUS_MODERN,
+AC_DEFUN([DPP_GPLUSPLUS_MODERN],
 [
    DPP_GPLUSPLUS_VER([2.91],
       [AC_CHECK_PROG([CC], [egcc], [egcc], [$1])

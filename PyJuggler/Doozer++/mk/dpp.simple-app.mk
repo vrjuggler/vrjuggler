@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.simple-app.mk,v
-# Date modified: 2003/02/22 03:31:59
-# Version:       1.5
+# Date modified: 2004/04/04 16:38:04
+# Version:       1.7
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.simple-app.mk,v 1.5 2003/02/22 03:31:59 patrickh Exp
+# dpp.simple-app.mk,v 1.7 2004/04/04 16:38:04 patrickh Exp
 #
 # This file <dpp.simple-app.mk> defines many targets for use in compiling a
 # single application.
@@ -124,7 +124,7 @@
 # DBG_FLAGS           - Compiler debugging flags.  If not specified, it
 #                       defaults to -D_DEBUG.
 # OPT_FLAGS           - Compiler optimizing flags.  If not specified, it
-#                       defaults to -D_OPT.
+#                       defaults to "-D_OPT -DNDEBUG".
 # PROF_OPT_FLAGS      - Compiler optimizing flags to use when building profiled
 #                       binaries.  If not specified, it defaults to
 #                       $(OPT_FLAGS).
@@ -173,7 +173,7 @@
 
 MKINSTALLDIRS?=		mkinstalldirs
 DBG_FLAGS?=		-D_DEBUG
-OPT_FLAGS?=		-D_OPT
+OPT_FLAGS?=		-D_OPT -DNDEBUG
 PROF_OPT_FLAGS?=	$(OPT_FLAGS)
 
 # =============================================================================

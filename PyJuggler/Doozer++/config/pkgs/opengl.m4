@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          opengl.m4,v
-dnl Date modified: 2003/05/26 16:24:50
-dnl Version:       1.27
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.30
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -60,7 +60,7 @@ dnl     X_INCLUDES   - Extra include path for the X11 header directory.
 dnl     X_LDFLAGS    - Extra linker flags for the X11 library directory.
 dnl ===========================================================================
 
-dnl opengl.m4,v 1.27 2003/05/26 16:24:50 patrickh Exp
+dnl opengl.m4,v 1.30 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This
@@ -86,7 +86,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an OpenGL implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_OPENGL,
+AC_DEFUN([DPP_HAVE_OPENGL],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -133,7 +133,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
       LDFLAGS="-L$OGLROOT/lib$LIBBITSUF $LDFLAGS"
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLAGS"
 
    dnl On HP-UX, we have to compile the test code with the C++ compiler
    dnl because the HP-UX OpenGL 1.1 implementation mandates this.

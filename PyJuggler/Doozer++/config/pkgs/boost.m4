@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2003/02/22 03:31:58
-dnl Version:       1.15
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.23
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -33,20 +33,21 @@ dnl Macros:
 dnl     DPP_HAVE_BOOST - Determine if the target system has Boost installed.
 dnl
 dnl Command-line options added:
-dnl     --with-boostroot - Give the root directory of the Boost implementation
+dnl     --with-boost   - Give the root directory of the Boost implementation
 dnl                      installation.
 dnl
 dnl Variables defined:
 dnl     BOOST          - do we have boost on the system?
 dnl     BOOST_ROOT     - The Boost installation directory.
 dnl     BOOST_INCLUDES - Extra include path for the Boost header directory.
+dnl     BOOST_LDFLAGS  - Extra library path for the Boost libraries.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.15 2003/02/22 03:31:58 patrickh Exp
+dnl boost.m4,v 1.23 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
-dnl command-line argument --with-boostroot.
+dnl command-line argument --with-boost.
 dnl
 dnl Usage:
 dnl     DPP_HAVE_BOOST(version, boost-root [, boost-inc, [, action-if-found [, action-if-not-found]]])
@@ -59,7 +60,7 @@ dnl                           contain an include/boost directory with the Boost
 dnl                           headers and a lib (with appropriate bit suffix)
 dnl                           directory with the Boost libraries.  The value
 dnl                           given is used as the default value of the
-dnl                           --with-boostroot command-line argument.
+dnl                           --with-boost command-line argument.
 dnl     boost-inc           - The directory where the Boost headers can be
 dnl                           found.  This is used to override the use of
 dnl                           <boost-root>/include as the default path to
@@ -69,7 +70,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an Boost implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_BOOST,
+AC_DEFUN([DPP_HAVE_BOOST],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    
@@ -79,15 +80,15 @@ AC_DEFUN(DPP_HAVE_BOOST,
    dpp_have_boost='no'
 
    dnl Define the root directory for the Boost installation.
-   AC_ARG_WITH(boostroot,
-               [  --with-boostroot=<PATH> Boost installation directory    [default=$2]],
+   AC_ARG_WITH([boost],
+               [  --with-boost=<PATH>     Boost installation directory    [default=$2]],
                [BOOST_ROOT="$withval"], [BOOST_ROOT=$2])
 
    AC_ARG_WITH(boost-includes,
                [  --with-boost-includes=<DIR>
                           Boost header file directory     [default=$2/include]],
                [_with_boost_inc="$withval"],
-               ifelse([$3], , [_with_boost_inc=$2/include], [_with_boost_inc=$3]))
+               ifelse([$3], , [_with_boost_inc=no], [_with_boost_inc=$3]))
 
    dnl Save these values in case they need to be restored later.
    dpp_save_CPPFLAGS="$CPPFLAGS"
@@ -116,24 +117,30 @@ AC_DEFUN(DPP_HAVE_BOOST,
 
    DPP_LANG_RESTORE
 
-   if test "x$dpp_have_boost" = "xyes" ; then
+   boost_version="$dpp_boost_incdir/boost/version.hpp"
+
+   if test "x$dpp_have_boost" = "xyes" -a -r "$boost_version" ; then
       dnl This expression passed to grep(1) is not great.  It could stand to
       dnl test for one or more whitespace characters instead of just one for
       dnl book-ending BOOST_VERSION.
-      BOOST_VERSION=`grep 'define BOOST_VERSION ' $dpp_boost_incdir/boost/version.hpp | awk '{ print $[3] }' -`
+      dnl NOTE: Using sed(1) here is done to avoid problems with version.hpp
+      dnl being a Windows text file instead of a UNIX text file.
+      changequote(<<, >>)
+      BOOST_VERSION=`grep 'define BOOST_VERSION ' "$boost_version" | sed -e 's/^[^0-9]*\([0-9][0-9]*\)[^0-9]*$/\1/'`
+      changequote([, ])
       dpp_boost_patch=`expr $BOOST_VERSION % 100`
       dpp_boost_minor=`expr $BOOST_VERSION / 100 % 1000`
       dpp_boost_major=`expr $BOOST_VERSION / 100000`
       dpp_boost_version="$dpp_boost_major.$dpp_boost_minor.$dpp_boost_patch"
 
-      DPP_VERSION_CHECK_MSG([Boost], [$dpp_boost_version], [$1],
-                            dpp_cv_boost_version_okay, ,
-                            [dpp_have_boost='no'
-                            $5])
-   fi
-
-   if test "x$dpp_have_boost" = "xyes" ; then
-      ifelse([$4], , :, [$4])
+      AC_MSG_CHECKING([whether Boost version is >= $1])
+      AC_MSG_RESULT([$dpp_boost_version])
+      DPP_VERSION_CHECK([$dpp_boost_version], [$1], , [dpp_have_boost=no])
+   else
+      dpp_have_boost='no'
+      AC_MSG_WARN([$boost_version is not readable.
+Using the option --with-boost-includes may help fix this.])
+      ifelse([$5], , :, [$5])
    fi
 
    dnl If Boost API files were found, define this extra stuff that may be
@@ -143,7 +150,16 @@ AC_DEFUN(DPP_HAVE_BOOST,
          BOOST_INCLUDES="-I$dpp_boost_incdir"
       fi
 
+      if test "x$BOOST_ROOT" != "x/usr" ; then
+         BOOST_LDFLAGS="-L$BOOST_ROOT/lib"
+      fi
+
+      BOOST_LDFLAGS_LINK_EXE="/libpath:$BOOST_ROOT/lib"
       BOOST='yes'
+
+      ifelse([$4], , :, [$4])
+   else
+      ifelse([$5], , :, [$5])
    fi
 
    dnl Extend the include path for the Boost C++ C compatibility headers if
@@ -158,4 +174,6 @@ AC_DEFUN(DPP_HAVE_BOOST,
    dnl Export all of the output vars for use by makefiles and configure script.
    AC_SUBST(BOOST_ROOT)
    AC_SUBST(BOOST_INCLUDES)
+   AC_SUBST(BOOST_LDFLAGS)
+   AC_SUBST(BOOST_LDFLAGS_LINK_EXE)
 ])

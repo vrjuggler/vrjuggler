@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.obj.mk,v
-# Date modified: 2003/02/22 03:31:58
-# Version:       1.11
+# Date modified: 2004/01/29 04:28:00
+# Version:       1.12
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.obj.mk,v 1.11 2003/02/22 03:31:58 patrickh Exp
+# dpp.obj.mk,v 1.12 2004/01/29 04:28:00 patrickh Exp
 #
 # This file <dpp.obj.mk> is intended to be used by makefiles that need to
 # build object files.  It defines variables and targets that are common to all

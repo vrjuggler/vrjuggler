@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # cygcl -- wrap the Microsoft Visual Studio command-line tools to look like GCC
-# Copyright (C) 2003
+# Copyright (C) 2003, 2004
 # Patrick Hartling
 
 # This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 # 02111-1307, USA.
 
 #
-# cygcl.pl,v 1.3 2003/02/27 14:16:04 patrickh Exp
+# cygcl.pl,v 1.4 2004/01/29 04:27:50 patrickh Exp
 #
 
 use strict 'vars';

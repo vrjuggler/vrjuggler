@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2003/06/17 23:14:51
-dnl Version:       1.13
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -44,7 +44,7 @@ dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.13 2003/06/17 23:14:51 patrickh Exp
+dnl openal.m4,v 1.17 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -66,7 +66,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an OpenAL implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_OPENAL,
+AC_DEFUN([DPP_HAVE_OPENAL],
 [
    dnl initialize returned data...
    OPENAL='no'
@@ -86,6 +86,8 @@ AC_DEFUN(DPP_HAVE_OPENAL,
       dnl This is here just to be safe
       true
    fi
+
+   AC_REQUIRE([DPP_CHECK_DYNLOAD_LIB])
 
    dnl Define the root directory for the OpenAL installation.
    AC_ARG_WITH(openal,
@@ -111,7 +113,7 @@ AC_DEFUN(DPP_HAVE_OPENAL,
       fi
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLAGS"
 
    dnl Win32 test.
    if test "x$OS_TYPE" = "xWin32" ; then
@@ -123,7 +125,7 @@ AC_DEFUN(DPP_HAVE_OPENAL,
       dnl appear in path names ...
 dnl      LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
       LDFLAGS="-L\"$OALROOT/libs\" $LDFLAGS"
-      LIBS="$LIBS ALut.lib OpenAL32.lib"
+      LIBS="$LIBS ALut.lib OpenAL32.lib $DYN_LOAD_LIB"
 
       AC_CACHE_CHECK([for alEnable in OpenAL32.lib],
                      [dpp_cv_alEnable_openal_lib],
@@ -162,7 +164,7 @@ dnl      LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
          [AC_CHECK_HEADER([AL/al.h], [dpp_have_openal='yes'],
             [dpp_have_openal='no'])],
          [dpp_have_openal='no'],
-         [-lm])
+         [$DYN_LOAD_LIB -lm])
 
       dnl This is necessary because AC_CHECK_LIB() adds -lopenal to
       dnl $LIBS.  We want to do that ourselves later.

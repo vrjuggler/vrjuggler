@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          performer.m4,v
-dnl Date modified: 2003/07/07 17:04:53
-dnl Version:       1.15
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -70,7 +70,7 @@ dnl                             directory for use with Microsoft Visual C++j
 dnl                             LINK.EXE.
 dnl ===========================================================================
 
-dnl performer.m4,v 1.15 2003/07/07 17:04:53 patrickh Exp
+dnl performer.m4,v 1.19 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has IRIS/OpenGL Performer installed.  This
@@ -86,8 +86,8 @@ dnl                           contain an include/Performer directory with the
 dnl                           Performer headers and a lib (with appropriate
 dnl                           bit suffix) directory with the Performer
 dnl                           libraries.  The value given is used as the
-dnl                           default value of the --with-prfroot command-line
-dnl                           argument.
+dnl                           default value of the --with-performer
+dnl                           command-line argument.
 dnl     version             - Specify which version of Performer will be used.
 dnl                           The value given is used as the default value of
 dnl                           the --with-pfver command-line argument.  This
@@ -98,7 +98,7 @@ dnl                           argument is optional.
 dnl     action-if-not-found - The action to take if Performer is not found.
 dnl                           This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_PERFORMER,
+AC_DEFUN([DPP_HAVE_PERFORMER],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -129,7 +129,7 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
       fi
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLABS"
 
    dnl Default to OpenGL Performer 2.4 if nothing was given for the default
    dnl argument.

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          perl.m4,v
-dnl Date modified: 2003/11/23 17:47:48
-dnl Version:       1.9
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.11
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -47,9 +47,9 @@ dnl Variables defined:
 dnl     PERL - The full path to the Perl binary meeting the requirements.
 dnl ===========================================================================
 
-dnl perl.m4,v 1.9 2003/11/23 17:47:48 patrickh Exp
+dnl perl.m4,v 1.11 2004/07/02 11:35:54 patrickh Exp
 
-AC_DEFUN(DPP_EXTRACT_PERL_VER,
+AC_DEFUN([DPP_EXTRACT_PERL_VER],
 [
    perl_ver_line=`$1 -v | grep -i 'this is perl'`
    changequote(<<, >>)
@@ -78,7 +78,7 @@ dnl     alternate-path - Alternate path(s) to check for the Perl installation.
 dnl                      For more than one path value, the path list should be
 dnl                      space-separated.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PERL_VER,
+AC_DEFUN([DPP_PERL_VER],
 [
    dnl Specify a directory containing a working Perl 5.004 (or newer) binary.
    dnl There is no default since standard locations are always available.

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          install.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.10
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.12
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -56,7 +56,7 @@ dnl     EXEC_PERMS - The UNIX-style octal permissions of executable files.
 dnl     DIR_PERMS  - The UNIX-style octal permissions of directories.
 dnl ===========================================================================
 
-dnl install.m4,v 1.10 2003/02/22 03:31:57 patrickh Exp
+dnl install.m4,v 1.12 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Set up the installer configuration.  This adds command line options for
@@ -77,7 +77,7 @@ dnl                  and other files with the execute bit set.
 dnl     dir-perms  - The UNIX-style permissions of directories created when
 dnl                  installing.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_INSTALLER,
+AC_DEFUN([DPP_INSTALLER],
 [
    dnl -----------------------------------------------------------------------
    dnl Name the user who will own installed files.
@@ -195,7 +195,7 @@ dnl others because it is fully compatible with BSD install(1) but has a few
 dnl extended features.  To disable the use of bsd-install.pl, pass [no] as the
 dnl macro argument.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_INSTALL,
+AC_DEFUN([DPP_PROG_INSTALL],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 

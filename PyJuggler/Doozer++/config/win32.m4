@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          win32.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.16
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.18
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -55,7 +55,7 @@ dnl     DPP_USING_MSVCCC - Set to either 'yes' or 'no' depending on whether
 dnl                        msvccc will be used as the compiler.
 dnl ===========================================================================
 
-dnl win32.m4,v 1.16 2003/02/22 03:31:57 patrickh Exp
+dnl win32.m4,v 1.18 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define path conversion (DOS to UNIX and UNIX to DOS) subroutines.
@@ -63,7 +63,7 @@ dnl
 dnl Usage:
 dnl     DPP_WIN32_SETUP
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_WIN32_SETUP,
+AC_DEFUN([DPP_WIN32_SETUP],
 [
    AC_PATH_PROG([CYGPATH], [cygpath], [no])
 
@@ -176,7 +176,7 @@ dnl                           argument is optional.
 dnl     action-if-not-found - Any action(s) to take if cygcl is not found.
 dnl                           This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CYGCL,
+AC_DEFUN([DPP_PROG_CYGCL],
 [
    AC_CHECK_PROG([dpp_cygcl], [cygcl], [cygcl], [no], $1)
 
@@ -214,7 +214,7 @@ dnl                           argument is optional.
 dnl     action-if-not-found - Any action(s) to take if msvccc is not found.
 dnl                           This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_MSVCCC,
+AC_DEFUN([DPP_PROG_MSVCCC],
 [
    AC_CHECK_PROG([dpp_msvccc], [msvccc], [msvccc], [no], $1)
 

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          lang.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.5
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.7
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -38,27 +38,27 @@ dnl     DPP_LANG_CPLUSPLUS - Set the current language to C++.
 dnl     DPP_LANG_JAVA      - Set the current language to Java.
 dnl ===========================================================================
 
-dnl lang.m4,v 1.5 2003/02/22 03:31:57 patrickh Exp
+dnl lang.m4,v 1.7 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Save the current language state.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_LANG_SAVE, [ AC_LANG_SAVE ])
+AC_DEFUN([DPP_LANG_SAVE], [ AC_LANG_SAVE ])
 
 dnl ---------------------------------------------------------------------------
 dnl Restore the previous language state.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_LANG_RESTORE, [ AC_LANG_RESTORE ])
+AC_DEFUN([DPP_LANG_RESTORE], [ AC_LANG_RESTORE ])
 
 dnl ---------------------------------------------------------------------------
 dnl Set the current language to C.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_LANG_C, [ AC_LANG_C ])
+AC_DEFUN([DPP_LANG_C], [ AC_LANG_C ])
 
 dnl ---------------------------------------------------------------------------
 dnl Set the current language to C++.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_LANG_CPLUSPLUS,
+AC_DEFUN([DPP_LANG_CPLUSPLUS],
 [
    AC_LANG_CPLUSPLUS
    ac_ext='cpp'
@@ -67,6 +67,6 @@ AC_DEFUN(DPP_LANG_CPLUSPLUS,
 dnl ---------------------------------------------------------------------------
 dnl Set the current language to Java.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_LANG_JAVA,
+AC_DEFUN([DPP_LANG_JAVA],
 [
 ])

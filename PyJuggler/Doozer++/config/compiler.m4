@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2003/11/23 17:45:42
-dnl Version:       1.37
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.40
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -132,7 +132,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.37 2003/11/23 17:45:42 patrickh Exp
+dnl compiler.m4,v 1.40 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for
@@ -146,7 +146,7 @@ dnl     compiler  - The compiler to use for the check.
 dnl     flag      - The flag to check.
 dnl     cache-var - The cache variable used to store the result of the test.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_COMPILER_FLAG,
+AC_DEFUN([DPP_COMPILER_FLAG],
 [
    AC_CACHE_CHECK([whether $1 accepts $2], $3,
 [echo 'void f(){;}' > conftest.$ac_ext
@@ -166,7 +166,7 @@ dnl
 dnl Usage:
 dnl     DPP_SETUP_COMPILER
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_SETUP_COMPILER,
+AC_DEFUN([DPP_SETUP_COMPILER],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -547,12 +547,12 @@ dnl                           found or does not work.  This is optional.
 dnl     path                - Extra path information for finding the C
 dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CC,
+AC_DEFUN([DPP_PROG_CC],
 [
    AC_REQUIRE([DPP_SETUP_COMPILER])
 
    dpp_save_CFLAGS="$CFLAGS"
-   CFLAGS="$CFLAGS $2 ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $2 $ABI_FLAGS"
 
    dnl Get the platform-specific compiler hint value.
    dpp_cc_var="CC_$dpp_platform"
@@ -625,7 +625,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CC_NOSTDINC
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CC_NOSTDINC,
+AC_DEFUN([DPP_PROG_CC_NOSTDINC],
 [
    DPP_COMPILER_FLAG([${CC-cc}], [-nostdinc], [dpp_cv_prog_cc_nostdinc])
 
@@ -656,7 +656,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CC_ANSI
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CC_ANSI,
+AC_DEFUN([DPP_PROG_CC_ANSI],
 [
    DPP_COMPILER_FLAG([${CC-cc}], [-ansi], [dpp_cv_prog_cc_ansi])
 
@@ -676,7 +676,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CC_PIPE
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CC_PIPE,
+AC_DEFUN([DPP_PROG_CC_PIPE],
 [
    DPP_COMPILER_FLAG([${CC-cc}], [-pipe], [dpp_cv_prog_cc_pipe])
 
@@ -696,7 +696,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CC_PROF_P
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CC_PROF_P,
+AC_DEFUN([DPP_PROG_CC_PROF_P],
 [
    DPP_COMPILER_FLAG([${CC-cc}], [-p], [dpp_cv_prog_cc_prof_p])
 
@@ -718,7 +718,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CC_PROF_PG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CC_PROF_PG,
+AC_DEFUN([DPP_PROG_CC_PROF_PG],
 [
    DPP_COMPILER_FLAG([${CC-cc}], [-pg], [dpp_cv_prog_cc_prof_pg])
 
@@ -740,7 +740,7 @@ dnl
 dnl Usage:
 dnl     DPP_GET_EXT
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GET_EXT,
+AC_DEFUN([DPP_GET_EXT],
 [
    AC_REQUIRE([DPP_PROG_CC])
 
@@ -773,12 +773,12 @@ dnl                           found or does not work.  This is optional.
 dnl     path                - Extra path information for finding the C++
 dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CXX,
+AC_DEFUN([DPP_PROG_CXX],
 [
    AC_REQUIRE([DPP_SETUP_COMPILER])
 
    dpp_save_CXXFLAGS="$CXXFLAGS"
-   CXXFLAGS="$CXXFLAGS $2 ${_EXTRA_FLAGS}"
+   CXXFLAGS="$CXXFLAGS $2 $ABI_FLAGS"
 
    dnl Get the platform-specific compiler hint value.
    dpp_cxx_var="CXX_$dpp_platform"
@@ -851,7 +851,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CXX_NOSTDINCXX
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CXX_NOSTDINCXX,
+AC_DEFUN([DPP_PROG_CXX_NOSTDINCXX],
 [
    DPP_LANG_SAVE
    DPP_LANG_CPLUSPLUS
@@ -874,7 +874,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CXX_ANSI
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CXX_ANSI,
+AC_DEFUN([DPP_PROG_CXX_ANSI],
 [
    DPP_COMPILER_FLAG([${CXX-c++}], [-ansi], [dpp_cv_prog_cxx_ansi])
 
@@ -894,7 +894,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CXX_PIPE
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CXX_PIPE,
+AC_DEFUN([DPP_PROG_CXX_PIPE],
 [
    DPP_COMPILER_FLAG([${CXX-c++}], [-pipe], [dpp_cv_prog_cxx_pipe])
 
@@ -914,7 +914,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CXX_PROF_P
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CXX_PROF_P,
+AC_DEFUN([DPP_PROG_CXX_PROF_P],
 [
    DPP_COMPILER_FLAG([${CXX-c++}], [-p], [dpp_cv_prog_cxx_prof_p])
 
@@ -936,7 +936,7 @@ dnl
 dnl Usage:
 dnl     DPP_PROG_CXX_PROF_PG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PROG_CXX_PROF_PG,
+AC_DEFUN([DPP_PROG_CXX_PROF_PG],
 [
    DPP_COMPILER_FLAG([${CXX-c++}], [-pg], [dpp_cv_prog_cxx_prof_pg])
 

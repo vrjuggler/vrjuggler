@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          pthreads.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.23
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.25
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -79,7 +79,7 @@ dnl     _PTHREADS_DRAFT_10 - The POSIX thread implementation is Draft 10.
 dnl     _PTHREADS_DRAFT_4  - The POSIX thread implementation is Draft 4.
 dnl ===========================================================================
 
-dnl pthreads.m4,v 1.23 2003/02/22 03:31:57 patrickh Exp
+dnl pthreads.m4,v 1.25 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that POSIX threads are needed for compiling.
@@ -92,7 +92,7 @@ dnl     default-pthread-enableval - The default value for enabling or
 dnl                                 disabling pthreads.  This should be either
 dnl                                 "yes" or "no".  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ENABLE_PTHREADS,
+AC_DEFUN([DPP_ENABLE_PTHREADS],
 [
    AC_ARG_ENABLE(pthreads,
                  [  --enable-pthreads       Use of pthreads are needed      [default=$1]],
@@ -107,7 +107,7 @@ dnl
 dnl Usage:
 dnl     DPP_CC_PTHREAD_ARG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_CC_PTHREAD_ARG,
+AC_DEFUN([DPP_CC_PTHREAD_ARG],
 [
    AC_REQUIRE([DPP_PROG_CC])
    AC_BEFORE([$0], [DPP_GET_PTHREAD_LIB])
@@ -146,7 +146,7 @@ dnl
 dnl Usage:
 dnl     DPP_CC_PTHREADS_ARG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_CC_PTHREADS_ARG,
+AC_DEFUN([DPP_CC_PTHREADS_ARG],
 [
    AC_REQUIRE([DPP_PROG_CC])
    AC_BEFORE([$0], [DPP_GET_PTHREAD_LIB])
@@ -192,7 +192,7 @@ dnl                     for the pthreads library.  The names passed should be
 dnl                     that used with the linker such as -l<name>.  In other
 dnl                     words, only <name> should be passed.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GET_PTHREAD_LIB,
+AC_DEFUN([DPP_GET_PTHREAD_LIB],
 [
    AC_REQUIRE([DPP_CC_PTHREAD_ARG])
    AC_REQUIRE([DPP_CC_PTHREADS_ARG])
@@ -247,7 +247,7 @@ dnl                were passed, it would be #define'd to the value appropriate
 dnl                for the pthreads version found, and _POSIX_C_SOURCE should
 dnl                then be #define'd to MY_SYM.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GET_PTHREAD_VER,
+AC_DEFUN([DPP_GET_PTHREAD_VER],
 [
    AC_REQUIRE([DPP_GET_PTHREAD_LIB])
 
@@ -311,7 +311,7 @@ dnl                           found.  This argument is optional.
 dnl     action-if-not-found - The action to take if the semaphore library can
 dnl                           not be found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_GET_POSIX_SEMAPHORE_LIB,
+AC_DEFUN([DPP_GET_POSIX_SEMAPHORE_LIB],
 [
    AC_REQUIRE([DPP_CC_PTHREAD_ARG])
    AC_REQUIRE([DPP_CC_PTHREADS_ARG])
@@ -357,7 +357,7 @@ dnl
 dnl Usage:
 dnl     DPP_PTHREAD_FINISH
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PTHREAD_FINISH,
+AC_DEFUN([DPP_PTHREAD_FINISH],
 [
    AC_REQUIRE([DPP_CC_PTHREAD_ARG])
    AC_REQUIRE([DPP_CC_PTHREADS_ARG])
