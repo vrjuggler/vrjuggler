@@ -10,8 +10,8 @@
       <parent/>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="visual_id">
-         <help>The specific GLX visual ID to be used.  This causes the remaining values to be ignored.  The value given here must be entered in base 10 as an integer.  It will be converted internally to the base 16 value needed by GLX.  A value of -1 indicates that this setting should be ignored.</help>
-         <value label="ID" defaultvalue="-1"/>
+         <help>The specific GLX or WGL visual ID to be used.  Setting a value other than -1 causes the remaining frame buffer settings to be ignored.  The value given for this property must be one of the available visuals named in the output from glxinfo or wglinfo.  The value must be entered in base 10 as an integer.  A value of -1 indicates that this setting should be ignored.</help>
+         <value label="Visual ID" defaultvalue="-1"/>
       </property>
       <property valuetype="integer" variable="false" name="red_size">
          <help>The minimum number of bits to use per pixel for the red channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
