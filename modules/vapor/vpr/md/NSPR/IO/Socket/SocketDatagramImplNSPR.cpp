@@ -93,7 +93,7 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::recvfrom: Could not read from socket");
-            retval.setCode(ReturnStatus::Failure);
+            retval.setCode(ReturnStatus::Fail);
         }
     }
     else {
@@ -130,7 +130,7 @@ SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
-            retval.setCode(ReturnStatus::Failure);
+            retval.setCode(ReturnStatus::Fail);
         }
     }
     else {

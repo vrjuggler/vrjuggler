@@ -220,7 +220,7 @@ public:
     //! POST: The semaphore is released and the thread at the haed of the
     //+       wait queue is allowed to execute again.
     //
-    //! RETURNS:  0 - Success
+    //! RETURNS:  0 - Succeed
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
@@ -243,7 +243,7 @@ public:
     //
     //! ARGS: val - The value to which the semaphore is reset.
     //
-    //! RETURNS:  0 - Success
+    //! RETURNS:  0 - Succeed
     //! RETURNS: -1 - Error
     //
     //! NOTE: If processes are waiting on the semaphore, the results are

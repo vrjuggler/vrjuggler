@@ -95,7 +95,7 @@ SocketStreamImplNSPR::listen (const int backlog)
     {
         vprDEBUG(0,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
     }
     else {
         // Put the socket into listning mode.  If that fails, print an error
@@ -104,7 +104,7 @@ SocketStreamImplNSPR::listen (const int backlog)
 
         if (PR_FAILURE == status) {
            NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
-           retval.setCode(vpr::ReturnStatus::Failure);
+           retval.setCode(vpr::ReturnStatus::Fail);
         }
     }
 
@@ -124,7 +124,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
     {
         vprDEBUG(0,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
     }
     else {
        PRFileDesc* accept_sock = NULL;
@@ -148,7 +148,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
           }
           else {
              NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
-             retval.setCode(vpr::ReturnStatus::Failure);
+             retval.setCode(vpr::ReturnStatus::Fail);
           }
        }
        // Otherwise, put the new socket in the passed socket object.

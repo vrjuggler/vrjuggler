@@ -207,7 +207,7 @@ public:
     //! PRE: The mutex variable must be locked.
     //! POST: The mutex variable is unlocked.
     //
-    //! RETURNS:  0 - Success
+    //! RETURNS:  0 - Succeed
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int

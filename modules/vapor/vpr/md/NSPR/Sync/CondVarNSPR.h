@@ -114,7 +114,7 @@ public:
     //! POST: The condition variable is locked.  If it was previously
     //+       locked, the caller blocks until signaled.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
@@ -137,7 +137,7 @@ public:
     //! POST: The condition variable is unlocked, and a signal is sent to a
     //+       thread waiting on it.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
@@ -159,7 +159,7 @@ public:
     //! POST: The condition variable is unlocked, and all waiting threads
     //+       are signaled of this event.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
@@ -183,7 +183,7 @@ public:
     //+      the mutex variable.  If it was previously locked, the caller
     //+      blocks until it is unlocked.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
@@ -200,7 +200,7 @@ public:
     //+       obtains a lock on it.  If it is already locked, the routine
     //+       returns immediately to the caller.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int

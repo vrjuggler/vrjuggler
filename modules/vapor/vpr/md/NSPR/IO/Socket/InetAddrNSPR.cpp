@@ -148,15 +148,15 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
    if(ret_status == PR_FAILURE)
    {
       setAddressValue(0);           // Error on lookup, so zero the address
-      std::string error_msg("[InetAddrNSPR::setAddress] Failure to look up host: ");
+      std::string error_msg("[InetAddrNSPR::setAddress] Fail to look up host: ");
       error_msg += address;
 
       NSPR_PrintError(error_msg);
-      retval.setCode(ReturnStatus::Failure);
+      retval.setCode(ReturnStatus::Fail);
    }
    else {
       if ( PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr) == -1 ) {
-         retval.setCode(ReturnStatus::Failure);
+         retval.setCode(ReturnStatus::Fail);
       }
 
       if ( retval.failure() ) {

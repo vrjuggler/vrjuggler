@@ -127,7 +127,7 @@ public:
             result = val;
         }
         else {
-            status.setCode(ReturnStatus::Failure);
+            status.setCode(ReturnStatus::Fail);
         }
 
         return status;

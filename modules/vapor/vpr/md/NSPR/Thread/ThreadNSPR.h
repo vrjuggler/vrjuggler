@@ -114,7 +114,7 @@ public:
     //! ARGS: priority - Priority of created thread (optional).
     //! ARGS: stack_size - Size for thread's stack (optional).
     //
-    //! RETURNS: 0 - Successful thread creation
+    //! RETURNS: 0 - Succeedful thread creation
     //! RETURNS: Nonzero - Error
     // -----------------------------------------------------------------------
     int spawn(BaseThreadFunctor* functor_ptr,
@@ -131,7 +131,7 @@ public:
     //+       (i.e., finishes its root function).  This routine may return
     //+       immediately if this thread has already exited.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline virtual int
@@ -148,7 +148,7 @@ public:
     //! POST: This thread is sent the SIGCONT signal and is allowed to begin
     //+       executing again.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline virtual int
@@ -164,7 +164,7 @@ public:
     //! POST: This thread is sent the SIGSTOP signal and is thus suspended
     //+       from execution until the member function resume() is called.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline virtual int
@@ -183,7 +183,7 @@ public:
     //! ARGS: prio - Pointer to an int variable that will have the thread's
     //+              priority stored in it.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline virtual int
@@ -201,7 +201,7 @@ public:
     //
     //! ARGS: prio - The new priority for this thread.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Invalid priority given
     //
     //! NOTE: The priority must correspond to a value in the PRThreadPriority
@@ -217,7 +217,7 @@ public:
     //
     //! ARGS: signum - The signal to send to the specified thread.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline virtual int

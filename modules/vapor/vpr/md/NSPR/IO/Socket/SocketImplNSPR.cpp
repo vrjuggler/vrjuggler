@@ -66,7 +66,7 @@ SocketImplNSPR::open () {
    PRFileDesc* new_sock = NULL;
 
    if(NULL != m_handle) {
-      retval.setCode(vpr::ReturnStatus::Failure);
+      retval.setCode(vpr::ReturnStatus::Fail);
    }
    else {
       // NSPR has not concept of domain in socket creation
@@ -89,7 +89,7 @@ SocketImplNSPR::open () {
       // If socket(2) failed, print an error message and return error status.
       if ( new_sock == NULL ) {
          NSPR_PrintError("[vpr::SocketImplNSPR] Could not create socket");
-         retval.setCode(vpr::ReturnStatus::Failure);
+         retval.setCode(vpr::ReturnStatus::Fail);
       }
       // Otherwise, return success.
       else {
@@ -110,7 +110,7 @@ SocketImplNSPR::open () {
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus
 SocketImplNSPR::close () {
-    vpr::ReturnStatus retval(vpr::ReturnStatus::Success);      // Default to success
+    vpr::ReturnStatus retval(vpr::ReturnStatus::Succeed);      // Default to success
     PRStatus status;
 
     if(NULL != m_handle)
@@ -126,10 +126,10 @@ SocketImplNSPR::close () {
        if (status == PR_SUCCESS) {
           //m_open = false;
           //m_bound = false;
-          retval.setCode(vpr::ReturnStatus::Success);
+          retval.setCode(vpr::ReturnStatus::Succeed);
        }
        else {
-          retval.setCode(vpr::ReturnStatus::Failure);
+          retval.setCode(vpr::ReturnStatus::Fail);
        }
     }
 
@@ -153,7 +153,7 @@ SocketImplNSPR::bind () {
     // If that fails, print an error and return error status.
     if ( status == PR_FAILURE )
     {
-       retval.setCode(vpr::ReturnStatus::Failure);
+       retval.setCode(vpr::ReturnStatus::Fail);
        NSPR_PrintError("SocketImplNSPR::bind: Failed to bind.");
     }
     // Otherwise, return success.
@@ -184,7 +184,7 @@ SocketImplNSPR::enableBlocking () {
    if ( status == PR_FAILURE )
    {
       NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
-      retval.setCode(vpr::ReturnStatus::Failure);
+      retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
@@ -214,7 +214,7 @@ SocketImplNSPR::enableNonBlocking () {
    if ( status == PR_FAILURE )
    {
       NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
-      retval.setCode(vpr::ReturnStatus::Failure);
+      retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
@@ -242,7 +242,7 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
    {
       vprDEBUG(0,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
                     << vprDEBUG_FLUSH;
-      retval.setCode(vpr::ReturnStatus::Failure);
+      retval.setCode(vpr::ReturnStatus::Fail);
    }
    else {
       // Attempt to connect to the address in m_addr.
@@ -286,7 +286,7 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
          }
          else {
             NSPR_PrintError("SocketImplNSPR::connect: Failed to connect.");
-            retval.setCode(vpr::ReturnStatus::Failure);
+            retval.setCode(vpr::ReturnStatus::Fail);
          }
       }
       // Otherwise, return success.
@@ -347,7 +347,7 @@ SocketImplNSPR::read_i (void* buffer, const vpr::Uint32 length,
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else {
-         retval.setCode(vpr::ReturnStatus::Failure);
+         retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
    else {
@@ -384,7 +384,7 @@ SocketImplNSPR::readn_i (void* buffer, const vpr::Uint32 length,
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else {
-         retval.setCode(vpr::ReturnStatus::Failure);
+         retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
    else {
@@ -420,7 +420,7 @@ SocketImplNSPR::write_i (const void* buffer, const vpr::Uint32 length,
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else {
-         retval.setCode(vpr::ReturnStatus::Failure);
+         retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
    else {
@@ -559,12 +559,12 @@ SocketImplNSPR::getOption (const vpr::SocketOptions::Types option,
             }
         }
         else {
-            retval.setCode(vpr::ReturnStatus::Failure);
+            retval.setCode(vpr::ReturnStatus::Fail);
             NSPR_PrintError("[vpr::SocketImplNSPR] ERROR: Could not get socket option for socket");
         }
     }
     else {
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
     }
 
     return retval;
@@ -664,14 +664,14 @@ SocketImplNSPR::setOption (const vpr::SocketOptions::Types option,
 
     vprASSERT((m_handle != NULL) && "Trying to set option on NULL handle");
     if(m_handle == NULL) {
-        return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
+        return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
     }
     else {
         if ( PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS ) {
             return vpr::ReturnStatus();
         }
         else {
-            return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
+            return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
         }
     }
 }
