@@ -144,6 +144,7 @@ public: // Model and sound member classes
 public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
       mInitialNavPos( 0.0f, 0.0f, 0.0f ),
+      mBoundingSize(0.0f),
       mUseDriveMode( true ),
       mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
@@ -295,8 +296,8 @@ public:  // Configure the application
    void addSound(Sound s)
    { mSoundList.push_back(s); }
 
-   void addFilePath(const std::string path)     
-   { 
+   void addFilePath(const std::string path)
+   {
       // initScene could be called already,
       // so, delegate to the the static fileIO func
       pfFileIO::addFilePath( mFilePath );
@@ -306,24 +307,24 @@ public:  // Configure the application
       // initScene could be called already,
       // so, delegate to the the static fileIO func
       mFilePath = path;
-      
+
       // set some common paths first...
       pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
       pfFileIO::addFilePath( mFilePath );
-   }   
-   void setInitialNavPos(const vjVec3 initialPos) 
-   { 
+   }
+   void setInitialNavPos(const vjVec3 initialPos)
+   {
       mInitialNavPos = initialPos;
-      
-      // if the navigator is already created, 
+
+      // if the navigator is already created,
       // then initScene has been called,
-      // so we need to set the home pos in the nav, 
+      // so we need to set the home pos in the nav,
       // not just the member var.
       // FIXME: some code duplication here.
       if (mVelNavDrive != NULL)
       {
          vjDEBUG(vjDBG_ALL,0) << "setting pos\n" <<flush;
-      
+
          vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
 
@@ -345,6 +346,7 @@ public:
    // CONFIG PARAMS
    std::string    mFilePath;
    vjVec3         mInitialNavPos;
+   float          mBoundingSize;       // XXX: This is a hack and should be refactored
    bool           mUseDriveMode;
 
    int mStatusMessageEmitCount;
@@ -484,7 +486,7 @@ void simplePfNavApp::initScene()
    //mWorldDCS             = new pfDCS;
 
    mRootNode->addChild( mNoNav );
-   
+
    // Create the SUN
    mLightGroup = new pfGroup;
    mSun = new pfLightSource;

@@ -4,6 +4,7 @@ chunk pf_basic_nav_app "Basic nav app" "A basic performer navigation application
   file_path String 1 "File Paths" "Paths to search for files"
   Sound EmbeddedChunk -1 "Sounds" vj_enumeration { "Sound" } "specify a sound here.  usually used "
   Model EmbeddedChunk -1 "Models" vj_enumeration { "Model" } ""
+  bounding_size Float 1 "Bounding Sphere size" ""
   end
 chunk Model "Model" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"

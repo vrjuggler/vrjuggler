@@ -172,11 +172,13 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
       mSoundList.push_back( s );
    }
 
-   this->setFilePath( file_path );
-   this->setInitialNavPos( initial_pos );
+   setFilePath( file_path );
+   setInitialNavPos( initial_pos );
+   mBoundingSize = chunk->getProperty("bounding_size");
 
-   vjDEBUG_NEXT(vjDBG_ALL,0) << "filepath: " << file_path << endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << "   filepath: " << file_path << endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_ALL,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << " bound size: " << mBoundingSize << endl << vjDEBUG_FLUSH;
    vjDEBUG_END(vjDBG_ALL,0) << "========================================\n" << vjDEBUG_FLUSH;
 
    // Initialize the models and sounds
