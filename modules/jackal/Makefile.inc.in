@@ -206,9 +206,7 @@ ifeq (@BUILD_JAVA@, Y)
             $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
           chmod $(EXEC_PERMS) cfgupdater
 endif
-	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
-            -v $(JCCLROOT_ABS)/VERSION -o $(instlinks)/bin/jccl-config -x
+	cd $(instlinks)/bin && cp -p $(topdir)/jccl-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$JCCL_BASE_DIR to:'
