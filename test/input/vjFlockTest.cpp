@@ -7,7 +7,7 @@
 
 int main()
 {
-  vjMemPool* anSgiPool = new vjMemPoolSGI(1024*1024);
+  vjMemPool* aMemPool = new vjSharedPool(1024*1024);
   
   const char* port = "/dev/ttyd3";
     const int baud = 38400;
@@ -19,7 +19,7 @@ int main()
     const int blocking = 0;
     const char report = 'R';
     const int transmitter = 3; 
-    vjFlock* flock = new(anSgiPool) vjFlock
+    vjFlock* flock = new(aMemPool) vjFlock
     		(   port, 
 		    baud, 
 		    sync, 
@@ -71,6 +71,6 @@ int main()
   flock->StopSampling();
   
   delete flock;
-  delete anSgiPool;
+  delete aMemPool;
   return 0;
 }
