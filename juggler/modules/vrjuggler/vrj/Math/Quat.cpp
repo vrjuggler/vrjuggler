@@ -306,7 +306,7 @@ std::ostream& vjQuat::outStreamReadable( std::ostream& out ) const
 }
 
 //: output operator
-std::ostream& operator<<( std::ostream& out, const vjQuat& q )
+VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const vjQuat& q )
 {
    q.outStreamReadable( out );
    //q.outStreamRaw( out );
