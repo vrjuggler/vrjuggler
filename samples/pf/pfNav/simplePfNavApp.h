@@ -26,13 +26,15 @@
 
 #include "fileIO.h"
 
-/*
+//#define USESOUND
+
+#ifdef USESOUND
 #include "SoundFactory.h"
-#include "pjSoundNode.h" //performer-juggler sound node.
-#include "pjSoundReplaceTrav.h"
+#include "../../Sound/pf/pjSoundNode.h" //performer-juggler sound node.
+#include "../../Sound/pf/pjSoundReplaceTrav.h"
 
 SoundEngine* gSoundEngine = NULL;
-*/
+#endif
 
 // nav includes
 #include <pfNavDCS.h>
@@ -130,8 +132,12 @@ public:
          cur_pos = mVelNavDrive->getCurPos().getTrans();
          cout << "Cur pos:" << cur_pos << endl;
       }
+      
+      #ifdef USESOUND
+      // sound manager should call this...
+      gSoundEngine->update();
+      #endif
 
-      // Update stats stuff
       if(mUseStats)
          mStats.preFrame();
    }
@@ -266,9 +272,18 @@ void simplePfNavApp::initScene()
 
    mNavigationDCS->setNavigator(mVelNavDrive);
 
+   // replace all nodes with _Sound_ with pjSoundNodes...
+#ifdef USESOUND
+   std::string extension = "_Sound_";
+   cout<<"[pfNav] Checking graph for soundnodes (nodes with the "<<extension.c_str()<<" extension...\n"<<flush;
+   pjSoundReplaceTrav::traverse( collidable_modelGroup, gSoundEngine, extension );
+   //assert( NULL);
+#endif
+   
+
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
-   cout << "Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n" << flush;
+   cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
    pfuTravPrintNodes( mRootNode, "lastscene.out" );
    pfdStoreFile( mRootNode, "lastscene.pfb" );
 }
