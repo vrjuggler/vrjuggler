@@ -48,6 +48,33 @@ public class VrjConfig
 {
    public VrjConfig()
    {
+      // Load in the VR Juggler chunk definitions if it has not already been
+      // loaded.
+      String desc_filename = EnvironmentService.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
+      File desc_file = new File(desc_filename);
+
+      try
+      {
+         System.out.println("Trying to load VR Juggler configuration definitions ...");
+         System.out.println("\tExamining '" + desc_filename + "'");
+         if (desc_file.exists() && desc_file.canRead())
+         {
+            // File exists and is readable. Lets see if we can load it.
+            FileDataSource data_source = new FileDataSource(desc_filename);
+            String res_name = desc_file.getAbsolutePath();
+            getConfigBroker().add(res_name, data_source);
+         }
+         else
+         {
+            System.out.println("\tFAILED: File is unreadable.");
+         }
+      }
+      catch (IOException ioe)
+      {
+         System.out.println("\tFAILED: "+ioe.getMessage());
+      }
+
+      // Init the GUI
       try
       {
          jbInit();
@@ -89,7 +116,7 @@ public class VrjConfig
       ConfigIFrame frame = new ConfigIFrame();
       String default_desc_file = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
       default_desc_file = expandEnvVars(default_desc_file);
-      if (getConfigBroker().isOpen(default_desc_file))
+      if (getConfigBroker().containsDataSource(default_desc_file))
       {
          frame.getEditor().getConfigContext().add(default_desc_file);
       }

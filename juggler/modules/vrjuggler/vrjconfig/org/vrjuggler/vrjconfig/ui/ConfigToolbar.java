@@ -137,8 +137,9 @@ public class ConfigToolbar
             ConfigBroker broker = new ConfigBrokerProxy();
             String res_name = file.getAbsolutePath();
 
-            InputStream in = new BufferedInputStream(new FileInputStream(file));
-            broker.open(context, res_name, in);
+            ChunkFactory.setDescs(broker.getDescs(context));
+            FileDataSource data_source = new FileDataSource(res_name);
+            broker.add(res_name, data_source);
             context.add(res_name);
             success = true;
          }
@@ -164,7 +165,8 @@ public class ConfigToolbar
          ConfigBroker broker = new ConfigBrokerProxy();
          for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
          {
-            broker.save((String)itr.next());
+            DataSource data_source = broker.get((String)itr.next());
+            data_source.commit();
          }
          success = true;
       }
