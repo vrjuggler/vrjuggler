@@ -171,6 +171,7 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/jccl
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(JCCL_SHARE_DIR)
 	for dir in $(SUBDIR); do \
 		$(MAKE) -C $$dir instlinks=$(instlinks) links; \
 	done
@@ -186,12 +187,10 @@ endif
 		for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'`; do \
 			$(RM_LN) ./`basename $$jar` && $(LN_S) $$jar ./; \
 		done
-#	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&		\
-#          $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
-#	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./data &&		\
-#          ln -s $(JCCLROOT_ABS)/data ./data
-#	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
-#          ln -s $(JCCLROOT_ABS)/samples ./samples
+	cd $(instlinks)/$(JCCL_SHARE_DIR) && \
+		$(RM_LN) ./data && $(LN_S) $(JCCLROOT_ABS)/data ./data
+	cd $(instlinks)/$(JCCL_SHARE_DIR) && \
+		$(RM_LN) ./samples && $(LN_S) $(JCCLROOT_ABS)/samples ./samples
 #ifndef NO_JAVA_GUI
 #ifeq ($(BUILD_VJCONTROL), Y)
 #	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
