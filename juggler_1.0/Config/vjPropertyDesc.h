@@ -113,7 +113,7 @@ public:
 
 
     //: Returns the ith value label
-    std::string getValueLabel (int i);
+    std::string getValueLabel (unsigned int index);
 
 
 
@@ -121,7 +121,7 @@ public:
     //! ARGS: index - index of EnumEntry to retrieve (0-base)
     //! RETURNS: NULL - if index is < 0 or out of range
     //! RETURNS: enumentry* - otherwise 
-    vjEnumEntry* getEnumEntryAtIndex (int index);
+    vjEnumEntry* getEnumEntryAtIndex (unsigned int index);
 
 
     //: Returns an enumentry with val matching val...

@@ -416,7 +416,7 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 //: Returns a copy of s with all environment variable names replaced
 //+ with their values.
 std::string replaceEnvVars (const std::string& s) {
-    int i, j;
+    unsigned int i, j;
     int lastpos = 0;
     std::string result = "";
     for (i = 0; i < s.length(); i++) {
@@ -476,7 +476,7 @@ std::string vjConfigChunkDB::demangleFileName (const std::string& n, std::string
 //         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
 //              << parentfile.c_str() << "'\n" << endl;
         int lastslash = 0;
-        for (int i = 0; i < parentfile.length(); i++) {
+        for (unsigned int i = 0; i < parentfile.length(); i++) {
             if (parentfile[i] == '/')
                 lastslash = i;
 #ifdef WIN32

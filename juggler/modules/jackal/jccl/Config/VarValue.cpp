@@ -411,7 +411,7 @@ ostream& operator << (ostream& out, const vjVarValue& v) {
 	    out << *(v.embeddedchunkval);
 	return out;
     default:
-	out << "[can't print value for type " << v.type << " ]";
+	out << "[can't print value for type " << (int)v.type << " ]";
 	return out;
     }
 }
