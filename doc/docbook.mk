@@ -14,6 +14,7 @@ JADETEX?=	$(TEX_BINDIR)/jadetex
 PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
+RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.1.1/svgrasterizer
 RM=		rm -f
 SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
@@ -89,6 +90,14 @@ ifeq ($(FO_VERSION), PASSIVE_TEX)
 pdfxmltex.fmt:
 	ln -s $(DOCBOOK_ROOT)/latex/base/pdfxmltex.fmt ./
 endif
+
+# Image conversions -----------------------------------------------------------
+
+%.png: %.svg
+	$(RASTERIZER) -m png $<
+
+%.jpg %.jpeg: %.svg
+	$(RASTERIZER) -m jpg $<
 
 # Basic XSL conversions -------------------------------------------------------
 
