@@ -236,6 +236,86 @@ public:
 	//  result - initializes the correction table with the file's info
 	void        initCorrectionTable( const char* const );
 
+// testing functions
+public:
+	//: check the group state
+	//  result - group state is output to screen
+	void check_group();
+
+	//: check configuration
+	//  results - outputs each bit of the config character to screen
+	void check_config();
+
+	//: check positiona angles
+	//  NOT IMPLEMENTED
+	void check_pos_angles();
+
+	//: check rep and stream
+	//  NOT IMPLEMENTED
+	void check_rep_and_stream();
+
+	//: showbits(char)
+	//  give - character value
+	//  results - the binary representation of char
+	void showbits(char var);
+
+	//: convert from hex to int
+	//  give - character
+	//  returns - integer value of char
+	int hextoint(char var);
+
+	//: check the data ready char
+	//  results - outputs to screen "I= " some number when 
+	//  flock returns the data ready character
+	void check_data_ready_char();
+
+	//: examine an attribute 
+	//  give - parameter values
+	//  	exam - attribute to query for - see flock manual
+	//  	format - (1)regular output (0)binary output
+	//  	reps - number of reports
+	//  	data - not currently used 
+	//  result - streamed data is output to screen
+	void examine_value(char exam, int data, int reps, int format);
+
+// additional set functions
+public:
+	//: set to run mode
+	void set_run_mode();
+
+	//: set to sleep mode
+	void set_sleep_mode();
+
+	//: set Value
+	//  give - examine paramater - see manual pg 37
+	//         data to set the paramater to
+	//         number of repitions
+	//  result - flock is set
+	void set_value(char exam, char setdata, int reps);
+
+	//: set to position mode
+	void set_pos_mode();
+
+	//: set to poition and angle mode
+	void set_pos_ang_mode();
+
+	//: set to stream mode
+	void set_stream_mode();
+
+	//: set to point mode
+	void set_point_mode();
+
+	//: set the report rate
+	//  give - rate to new report rate
+	//  results - rate is set
+	void set_report_rate(char rate);
+
+	//: clear the reads bytes till buffer is zeroed
+	void clear_buffer();
+
+
+
+	
 // Private data members
 private:
 	CalStruct   caltable;
