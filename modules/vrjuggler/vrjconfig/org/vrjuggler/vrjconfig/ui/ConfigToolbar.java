@@ -138,7 +138,8 @@ public class ConfigToolbar
             String res_name = file.getAbsolutePath();
 
             ChunkFactory.setDescs(broker.getDescs(context));
-            FileDataSource data_source = new FileDataSource(res_name);
+            FileDataSource data_source = new FileDataSource(res_name,
+                                                            FileDataSource.ELEMENTS);
             broker.add(res_name, data_source);
             context.add(res_name);
             success = true;
