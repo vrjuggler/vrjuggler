@@ -3,6 +3,8 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
@@ -36,7 +38,9 @@ PerfDataBufferTest: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 PerfDataBufferTest.o: PerfDataBufferTest.cpp nullApp.h
-	${COMPILE} -c -o $@ ${srcdir}/PerfDataBufferTest.cpp
+
+.cpp.o:
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
