@@ -92,123 +92,148 @@ case $target_os in
       AC_DEFINE(__aix__)
       AC_DEFINE(__powerpc__)
       AC_DEFINE(__OSVERSION__, 4)
+      EXTRA_DEFS="$EXTRA_DEFS -D__aix__ -D__powerpc__ -D__OSVERSION__=4"
       ;;
    # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
    cygwin)
-      AC_DEFINE(__x86__)
       AC_DEFINE(__WIN32__)
+      AC_DEFINE(__x86__)
+      EXTRA_DEFS="$EXTRA_DEFS -D__WIN32__ -D__x86__"
 
       if test "x$PLATFORM" = "xWinNT" ; then
          AC_DEFINE(__NT__)
+         EXTRA_DEFS="$EXTRA_DEFS -D__NT__"
 
          _sys_name=`uname -s`
          case "${_sys_name}" in
             *NT-4*)
                AC_DEFINE(__OSVERSION__, 4)
+               EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=4"
                ;;
             *NT-5*)
                AC_DEFINE(__OSVERSION__, 5)
+               EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=5"
                ;;
          esac
       fi
       ;;
-   # Unkown operating system (to config.guess).
+   # Darwin 1.x (aka MacOS X).
    darwin1.*)
-      AC_DEFINE(__powerpc__)
       AC_DEFINE(__darwin__)
+      AC_DEFINE(__powerpc__)
       AC_DEFINE(__OSVERSION__, 1)
+      EXTRA_DEFS="$EXTRA_DEFS -D__darwin__ -D__powerpc__ -D__OSVERSION__=1"
       ;;
    # A machine running FreeBSD.
    freebsd*)
+      AC_DEFINE(__freebsd__)
+      EXTRA_DEFS="$EXTRA_DEFS -D__freebsd__"
+
       case $target_cpu in
          *86)
             AC_DEFINE(__x86__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
             ;;
          alpha)
             AC_DEFINE(__alpha__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__alpha__"
             ;;
       esac
-
-      AC_DEFINE(__freebsd__)
 
       case $target_os in
          # FreeBSD 3.x.
          freebsd3*)
             AC_DEFINE(__OSVERSION__, 3)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=3"
          ;;
          # FreeBSD 4.x.
          freebsd4*)
             AC_DEFINE(__OSVERSION__, 4)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=4"
          ;;
          # FreeBSD 5.x.
          freebsd5*)
             AC_DEFINE(__OSVERSION__, 5)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=5"
          ;;
       esac
 
       ;;
    # HP PA-RISC machine running HP-UX.20.
    hpux*)
-      AC_DEFINE(__hppa__)
       AC_DEFINE(__hpux__)
+      AC_DEFINE(__hppa__)
+      EXTRA_DEFS="$EXTRA_DEFS -D__hpux__ -D__hppa__"
 
       case $target_os in
          # HP-UX 10.20.
          hpux10.20)
             AC_DEFINE(__OSVERSION__, 10)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=10"
          ;;
          # HP-UX 11.
          hpux11*)
             AC_DEFINE(__OSVERSION__, 11)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=11"
          ;;
       esac
 
       ;;
    # SGI running IRIX 6.*.
    irix6*)
-      AC_DEFINE(__mips__)
       AC_DEFINE(__irix__)
+      AC_DEFINE(__mips__)
       AC_DEFINE(__OSVERSION__, 6)
+      EXTRA_DEFS="$EXTRA_DEFS -D__irix__ -D__mips__ -D__OSVERSION__=6"
       ;;
    # A machine running Linux.
    linux*)
+      AC_DEFINE(__linux__)
+      AC_DEFINE(__OSVERSION__, 2)
+      EXTRA_DEFS="$EXTRA_DEFS -D__linux__ -D__OSVERSION__=2"
+
       case $target_cpu in
          *86)
             AC_DEFINE(__x86__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
             ;;
          alpha)
             AC_DEFINE(__alpha__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__alpha__"
             ;;
          sparc)
             AC_DEFINE(__sparc__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__sparc__"
             ;;
          mips)
             AC_DEFINE(__mips__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__mips__"
             ;;
       esac
-
-      AC_DEFINE(__linux__)
-      AC_DEFINE(__OSVERSION__, 2)
       ;;
    # DEC Alpha running Digital UNIX 4.x.
    osf4*)
-      AC_DEFINE(__alpha__)
       AC_DEFINE(__osf1__)
+      AC_DEFINE(__alpha__)
       AC_DEFINE(__OSVERSION__, 4)
+      EXTRA_DEFS="$EXTRA_DEFS -D__osf1__ -D__alpha__ -D__OSVERSION__=4"
       ;;
    # A machine running Solaris 2.x (aka SunOS 5.x).
    solaris2*)
+      AC_DEFINE(__sunos__)
+      AC_DEFINE(__OSVERSION__, 5)
+      EXTRA_DEFS="$EXTRA_DEFS -D__sunos__ -D__OSVERSION__=5"
+
       case $target_cpu in
          *86)
             AC_DEFINE(__x86__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
             ;;
          sparc)
             AC_DEFINE(__sparc__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__sparc__"
             ;;
       esac
-
-      AC_DEFINE(__sunos__)
-      AC_DEFINE(__OSVERSION__, 5)
       ;;
 esac
 
@@ -394,7 +419,7 @@ fi
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                TWEEK_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+                TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT,
               TWEEK_BASE_DIR, tweek, $APP_EXTRA_LIBS)
 
@@ -478,6 +503,7 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SAFE_TWEEKROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
+AC_SUBST(EXTRA_DEFS)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(BUILD_JAVA)
