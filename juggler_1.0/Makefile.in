@@ -81,7 +81,6 @@ include ${topdir}/Makefile.base
 include ${MKPATH}/vj.rec.mk
 
 # Extra compiler and linker options needed only by this file.
-LDOPTS		= @LDOPTS@
 OPT_FLAGS	= -O @OPT_FLAGS@
 
 # SGI-specific dynamic-shared-object information.
@@ -198,8 +197,7 @@ lib-dynamic ${LIB_DYNAMIC}:
 	@echo "Creating ${LIB_DYNAMIC}"
 	@echo "------------------------------------------------"
 	cd ${OBJDIR} && 						\
-          ${LD} ${LIBOPTS} ${DSOREGFILE} ${DSOVERSIONOPTS} ${LDOPTS}	\
-            *.o -o ${LIB_DYNAMIC}
+          ${LD} ${DSOREGFILE} ${DSOVERSIONOPTS} ${LDOPTS} *.o -o ${LIB_DYNAMIC}
 	@echo "------------------------------------------------"
 	@echo "${LIB_DYNAMIC} done"
 	@echo "------------------------------------------------"

@@ -53,7 +53,7 @@
 # INCLUDES       - Additions to the include path (-I/path/to/include).
 # LD             - Path to ld(1) (or equivalent program).
 # LDFLAGS        - Flags for ${LD}.
-# LIBOPTS        - Extra, often platform-specific, options for the linker.
+# LDOPTS         - Extra, often platform-specific, options for the linker.
 # LIBS           - Extra external libraries needed at link time.
 # MKPATH         - Path to shared vj.*.mk file directory.
 # OBJDIR         - Path to the directory where the object files will be built.
@@ -113,7 +113,7 @@ INCLUDES	= @INCLUDES@ -I${VJROOT} -I${topdir}
 INSTALL		= @INSTALL@
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
-LIBOPTS		= @LIBOPTS@
+LDOPTS		= @LDOPTS@
 LIBS		= @LIBS@
 MKPATH		= ${VJROOT_ABS}/mk
 OBJDIR		= .
