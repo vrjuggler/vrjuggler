@@ -40,13 +40,13 @@ import sys
 import time
 import traceback
 
-ErrorImportingTkinter = True
+gHaveTk = False
 try:
    import Tkinter
    import tkMessageBox
    import tkFileDialog
    import threading
-   ErrorImportingTkinter = False
+   gHaveTk = True
 except ImportError, ex:
    print ex
 
@@ -1025,8 +1025,6 @@ def installVRJConfig(prefix):
       for e in editors:
          jar_file = os.path.join(jardir, e[1] + '.jar')
          xml_file = os.path.join(editor_src, e[0], e[1] + '.xml')
-         print "jar_file:", jar_file
-         print "xml_file:", xml_file
          if os.path.exists(jar_file):
             shutil.copy2(xml_file, destdir)
             shutil.copy2(jar_file, destdir)
@@ -1533,7 +1531,7 @@ class Win32SetupFrontEnd:
       generateAntBuildFiles()
       devenv_cmd = None
       for p in str.split(os.getenv('PATH', ''), os.pathsep):
-   #      print "Searching in", p
+#         print "Searching in", p
          if os.path.exists(os.path.join(p, 'devenv.exe')):
             devenv_cmd = os.path.join(p, 'devenv.exe')
             break
@@ -1572,15 +1570,22 @@ class Win32SetupFrontEnd:
          sys.exit(3)
 
 def main():
-   if ErrorImportingTkinter:
-      print "Tkinter dependencies not found switching to command-line mode."
+   disable_tk = True
+
+   # If the user passed in -c on the command line, disable use of the GUI.
+   if '-c' in sys.argv[1:]:
+      disable_tk = False
+
+   # If Tkinter is not available or the user disabled the Tk frontend, use
+   # the text-based interface.
+   if not gHaveTk or disable_tk:
       options = setVars()
       generateVersionHeaders()
       generateAntBuildFiles()
 
       devenv_cmd = None
       for p in str.split(os.getenv('PATH', ''), os.pathsep):
-   #      print "Searching in", p
+#         print "Searching in", p
          if os.path.exists(os.path.join(p, 'devenv.exe')):
             devenv_cmd = os.path.join(p, 'devenv.exe')
             break
