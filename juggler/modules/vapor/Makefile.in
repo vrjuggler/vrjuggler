@@ -266,8 +266,7 @@ PROCS	= 1
 
 test:
 	$(MAKE) -C test/TestSuite -j $(PROCS) runner
-	VPR_TEST_DIR=$(VPRROOT_ABS)/test/TestSuite		\
-            test/TestSuite/runner noninteractive
+	test/TestSuite/runner noninteractive
 
 # =============================================================================
 # Automatically generated documentation.
