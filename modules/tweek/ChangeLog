@@ -1,5 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-08-23 patrickh    Added the JGoodies Looks Swing look and feel.
 2003-08-16 patrickh    Refactored the built-in Tweek Service Beans to be
                        accessed via proxies.  This makes acquisition of the
                        service reference dramatically simpler.
