@@ -88,7 +88,7 @@ public:
    * This function must be defined so that the performer draw manager
    * can get a scene graph to draw.
    * @note Do NOT put model loading and manipulation in this function
-   *       instead, put that type of think in initScene()
+   *       instead, put that type of thing in initScene()
    * @note Make sure that the node returned is NOT a pfScene.
    *       If it is, then lighting will NOT work.
    */
@@ -144,7 +144,7 @@ public:
 
 public: // -- Factory Function -- //
    /** Get the DrawManager to use
-   * Returns the ogl draw manager
+   * Returns the Performer draw manager
    */
    virtual DrawManager* getDrawManager()
    { return PfDrawManager::instance(); }
