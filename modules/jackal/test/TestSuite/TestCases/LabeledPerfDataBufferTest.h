@@ -44,8 +44,9 @@ public:
         int i, n;
         i = n = 100000;
 
+        jccl::LabeledPerfDataBuffer::activate();
+
         jccl::LabeledPerfDataBuffer buffer1("testSetOverhead buffer 1", n+1);
-        buffer1.activate();
 
         jccl::TimeStamp ts1, ts2;
 
@@ -63,7 +64,6 @@ public:
         std::cout << "\tOverhead = " << average << " us per call" << std::endl;
 
         vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer> tsbuffer;
-        tsbuffer->activate();
 
         i = n;
 
