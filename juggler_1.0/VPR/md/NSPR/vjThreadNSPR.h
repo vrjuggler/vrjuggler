@@ -58,7 +58,7 @@ public:
     // -----------------------------------------------------------------------
     vjThreadNSPR(vj_thread_func_t func, void* arg = 0,
                  VJThreadPriority priority = VJ_PRIORITY_NORMAL,
-                 VJThreadScope scope = VJ_LOCAL_THREAD,
+                 VJThreadScope scope = VJ_GLOBAL_THREAD,
                  VJThreadState state = VJ_JOINABLE_THREAD,
                  PRUint32 stack_size = 0);
 
@@ -69,7 +69,7 @@ public:
     // -----------------------------------------------------------------------
     vjThreadNSPR(vjBaseThreadFunctor* functor_ptr,
                  VJThreadPriority priority = VJ_PRIORITY_NORMAL,
-                 VJThreadScope scope = VJ_LOCAL_THREAD,
+                 VJThreadScope scope = VJ_GLOBAL_THREAD,
                  VJThreadState state = VJ_JOINABLE_THREAD,
                  PRUint32 stack_size = 0);
 
@@ -100,7 +100,7 @@ public:
     // -----------------------------------------------------------------------
     int spawn(vjBaseThreadFunctor* functor_ptr,
               VJThreadPriority priority = VJ_PRIORITY_NORMAL,
-              VJThreadScope scope = VJ_LOCAL_THREAD,
+              VJThreadScope scope = VJ_GLOBAL_THREAD,
               VJThreadState state = VJ_JOINABLE_THREAD,
               size_t stack_size = 0);
 
