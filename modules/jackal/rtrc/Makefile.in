@@ -65,7 +65,11 @@ top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/jccl/RTRC
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
-JAVA_IDL_OPTS=		@TWEEK_JAVA_IDL_OPTS@ @TWEEK_JAVA_IDL_GENDIR_OPT@$(srcdir)
+
+IDL_GENDIR=		.
+JAVA_IDL_OPTS=		@TWEEK_JAVA_IDL_OPTS@ @TWEEK_JAVA_IDL_GENDIR_OPT@$(IDL_GENDIR)
+
+EXTRA_JAVA_SRCS_PATH=	$(IDL_GENDIR)/jccl
 
 #include $(MKPATH)/dpp.compile.mk
 
@@ -77,7 +81,7 @@ BEANS=
 
 IDL_JAVA_FILES=	RTRCInterfaceSubject.java
 
-_LOCAL_CLEAN=1
+_LOCAL_CLEAN=	1
 
 # -----------------------------------------------------------------------------
 # C++-related setup
