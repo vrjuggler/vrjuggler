@@ -53,6 +53,7 @@ int vjGlWinWin32::open()
 
 	HMODULE hMod = GetModuleHandle(NULL);
         DWORD style;
+        int root_height;
 
         // OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS.
         style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
@@ -72,10 +73,13 @@ int vjGlWinWin32::open()
             style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
         }
 
+        root_height = GetSystemMetrics(SM_CYSCREEN);
+
 	// Create the main application window
         hWnd = CreateWindow(glWinWin32Classname, glWinWin32Classname, style,
-                            origin_x, origin_y, window_width, window_height,
-                            NULL, NULL, hMod, NULL);
+                            origin_x, root_height - origin_y - window_height,
+                            window_width, window_height, NULL, NULL, hMod,
+                            NULL);
 
 	// If window was not created, quit
 	if(NULL == hWnd)
