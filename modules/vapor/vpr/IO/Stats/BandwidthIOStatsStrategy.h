@@ -24,8 +24,8 @@ public:
       mSendCount = mReadCount = 0;
       mSentBytes = mReadBytes = 0;
 
-      mAvSendBW = mInstSendBW = mSTASendBW = mSTASendMaxBW = 0.0f;
-      mAvReadBW = mInstReadBW = mSTAReadBW = mSTAReadMaxBW = 0.0f;
+      mInstSendBW = mSTASendBW = mSTASendMaxBW = 0.0f;
+      mInstReadBW = mSTAReadBW = mSTAReadMaxBW = 0.0f;
       mBWBurstiness = 0.0f;
    }
 
@@ -78,10 +78,10 @@ public:
       { return mSentBytes; }
    vpr::Uint32 getTotalBytesRead()
       { return mReadBytes; }
-   double getAverageSendBW()
-      { return mAvSendBW;}
-   double getAverageReadBW()
-      { return mAvReadBW;}
+   
+   double getAverageSendBW();         
+   double getAverageReadBW();
+   
    double getSTASendBW()
       { return mSTASendBW;}
    double getSTAReadBW()
@@ -101,8 +101,8 @@ private:
    vpr::Uint32 mSendCount, mReadCount;
    vpr::Uint32 mSentBytes, mReadBytes;
 
-   double mAvSendBW, mInstSendBW, mSTASendBW, mSTASendMaxBW;
-   double mAvReadBW, mInstReadBW, mSTAReadBW, mSTAReadMaxBW;
+   double mInstSendBW, mSTASendBW, mSTASendMaxBW;
+   double mInstReadBW, mSTAReadBW, mSTAReadMaxBW;
    double mBWBurstiness;
 
    vpr::DateTime  mInitialSendTime, mInitialReadTime;
