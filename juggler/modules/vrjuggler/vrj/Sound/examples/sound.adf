@@ -66,15 +66,23 @@ env Default {
 }
 
 
-//player pendulumplayer {
-//	awstate	on;
-//	position	0	0	0;
-//	euler	0	0	0;
-//	csref	2;
-//	plyrref	pendulumplayer;
-//	sound	testSound;
-//}
+player sound3 {
+	awstate	on;
+	position	0	0	0;
+	euler	0	0	0;
+	csref	2;
+	plyrref	sound3;
+	sound	sound3;
+}
 
+awPlayer sound2 {
+	awstate	on;
+	position	0	0	0;
+	euler	0	0	0;
+	csref	2;
+	plyrref	sound2;
+	sound	sound2;
+}
 
 awSound sound3 {
 	awstate	off;
