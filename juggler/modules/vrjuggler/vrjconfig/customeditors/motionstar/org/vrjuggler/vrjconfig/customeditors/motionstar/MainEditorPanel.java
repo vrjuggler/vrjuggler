@@ -86,7 +86,7 @@ public class MainEditorPanel
       throws Exception
    {
       mHelpScrollPanel.setMinimumSize(new Dimension(0, 0));
-      mHelpScrollPanel.setPreferredSize(new Dimension(175, 600));
+      mHelpScrollPanel.setPreferredSize(new Dimension(225, 600));
       mContentPanel.setMinimumSize(new Dimension(600, 600));
       mContentPanel.setPreferredSize(new Dimension(600, 600));
       mMainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
