@@ -44,14 +44,6 @@
 
 #include <vpr/vprConfig.h>
 
-// XXX: I don't know why this is necessary, but I think something is being
-// defined incorrectly somewhere.  This must be included before netinet/in.h
-// or else _BIG_ENDIAN and _LITTLE_ENDIAN end up being defined to the same
-// value.  This causes tons of warnings from the MIPSpro Compilers.
-#ifdef VPR_OS_IRIX
-#  include <sys/endian.h>
-#endif
-
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
@@ -99,7 +91,7 @@ public:
     *
     * @param addr The vpr::InetAddrBSD object to be copied into this object.
     */
-   InetAddrBSD (const InetAddrBSD& addr)
+   InetAddrBSD(const InetAddrBSD& addr)
    {
       copy(addr);
    }
@@ -181,7 +173,7 @@ public:
     * @return A vpr::SocketTypes::Domain value representing this object's
     *         protocol family.
     */
-   vpr::SocketTypes::Domain getFamily(void) const;
+   vpr::SocketTypes::Domain getFamily() const;
 
    /**
     * Sets the protocol family of this address.
@@ -242,18 +234,18 @@ public:
     * @return A std::string object containing this structure's IP address in
     *         the human-readable "dotted-decimal" notation.
     */
-   std::string getAddressString(void) const;
+   std::string getAddressString() const;
 
    /**
     * Returns the fully qualified hostname for this address.
     */
-   std::string getHostname(void) const;
+   std::string getHostname() const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
     */
-   std::vector<std::string> getHostnames(void) const;
+   std::vector<std::string> getHostnames() const;
 
    /**
     * Overloaded assignment operator to ensure that assignments work
@@ -276,12 +268,7 @@ public:
    /**
     * Overloaded equality operator.
     */
-   bool operator== (const InetAddrBSD& addr) const
-   {
-      return((mAddr.sin_addr.s_addr == addr.mAddr.sin_addr.s_addr) &&
-             (mAddr.sin_port == addr.mAddr.sin_port) &&
-             (mAddr.sin_family == addr.mAddr.sin_family));
-   }
+   bool operator== (const InetAddrBSD& addr) const;
 
    /**
     * Overloaded inequality operator.
@@ -306,7 +293,7 @@ protected:
     *
     * @param addr A pointer to a sockaddr struct containing a valid address.
     */
-   InetAddrBSD (const struct sockaddr* addr)
+   InetAddrBSD(const struct sockaddr* addr)
    {
       setSockaddr(addr);
    }

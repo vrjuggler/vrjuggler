@@ -72,7 +72,7 @@ InetAddrBSD::InetAddrBSD()
    setFamily(SocketTypes::INET);
 }
 
-vpr::ReturnStatus InetAddrBSD::getLocalHost (vpr::InetAddrBSD& host_addr)
+vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& host_addr)
 {
    char local_host_name[MAXHOSTNAMELEN + 1];
    vpr::ReturnStatus status;
@@ -94,7 +94,7 @@ vpr::ReturnStatus InetAddrBSD::getLocalHost (vpr::InetAddrBSD& host_addr)
  * form <address>:<port> where <address> can be a hostname or a
  * dotted-decimal IP address.
  */
-vpr::ReturnStatus InetAddrBSD::setAddress (const std::string& address)
+vpr::ReturnStatus InetAddrBSD::setAddress(const std::string& address)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
@@ -156,7 +156,7 @@ void InetAddrBSD::setLength(const unsigned char length)
 /**
  * Gets the protocol family of this address structure.
  */
-vpr::SocketTypes::Domain InetAddrBSD::getFamily (void) const
+vpr::SocketTypes::Domain InetAddrBSD::getFamily() const
 {
    vpr::SocketTypes::Domain family;
 
@@ -197,7 +197,7 @@ vpr::SocketTypes::Domain InetAddrBSD::getFamily (void) const
 /**
  * Sets the protocol family of this address structure.
  */
-void InetAddrBSD::setFamily (const vpr::SocketTypes::Domain family)
+void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
 {
    switch ( family )
    {
@@ -255,7 +255,7 @@ vpr::Uint32 InetAddrBSD::getAddressValue() const
  * Get the IP address associated with this structure as a human-readable
  * string.
  */
-std::string InetAddrBSD::getAddressString (void) const
+std::string InetAddrBSD::getAddressString() const
 {
    char ip_addr[sizeof("255.255.255.255")];
    std::string ip_str;
@@ -274,7 +274,7 @@ std::string InetAddrBSD::getAddressString (void) const
    return ip_str;
 }
 
-std::string InetAddrBSD::getHostname () const
+std::string InetAddrBSD::getHostname() const
 {
    std::string hostname;
    struct hostent* entry;
@@ -294,7 +294,7 @@ std::string InetAddrBSD::getHostname () const
    return hostname;
 }
 
-std::vector<std::string> InetAddrBSD::getHostnames () const
+std::vector<std::string> InetAddrBSD::getHostnames() const
 {
    std::vector<std::string> names;
    struct hostent* entry;
@@ -313,6 +313,14 @@ std::vector<std::string> InetAddrBSD::getHostnames () const
    }
 
    return names;
+}
+
+// Overloaded equality operator.
+bool InetAddrBSD::operator== (const InetAddrBSD& addr) const
+{
+   return (mAddr.sin_addr.s_addr == addr.mAddr.sin_addr.s_addr) &&
+          (mAddr.sin_port == addr.mAddr.sin_port) &&
+          (mAddr.sin_family == addr.mAddr.sin_family);
 }
 
 void InetAddrBSD::copyAddressValue(const char* addr_value)
@@ -355,7 +363,7 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
 /**
  * Look up the given address and store the address in mAddr.
  */
-vpr::ReturnStatus InetAddrBSD::lookupAddress (const std::string& address)
+vpr::ReturnStatus InetAddrBSD::lookupAddress(const std::string& address)
 {
    vpr::ReturnStatus retval;
    struct hostent* host_entry;
