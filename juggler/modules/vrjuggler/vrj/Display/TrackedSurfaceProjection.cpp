@@ -32,9 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Display/TrackedSurfaceProjection.h>
-#include <gadget/Type/Position/PositionUnitConversion.h>
-
+#include <iomanip>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -42,6 +40,8 @@
 #include <gmtl/Output.h>
 #include <gmtl/Xforms.h>
 
+#include <gadget/Type/Position/PositionUnitConversion.h>
+#include <vrj/Display/TrackedSurfaceProjection.h>
 
 
 namespace vrj

@@ -32,11 +32,14 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <iomanip>
+
 #include <jccl/Config/ConfigElement.h>
-#include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Display/Display.h>
+
 
 namespace vrj
 {
