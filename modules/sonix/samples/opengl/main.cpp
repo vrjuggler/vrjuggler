@@ -27,7 +27,7 @@
 
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Juggler Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert
@@ -69,6 +69,13 @@ public:
 };
 int AppWindow::width = 0, AppWindow::height = 0;
 int AppWindow::mainWin_contextID = -1;
+std::string currentalias;
+
+struct bokbok
+{
+   snx::SoundHandle sound;
+};
+std::map<int, bokbok> aliases;
 
 StopWatch stopWatch;
 
@@ -218,6 +225,12 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       sonix::instance()->changeAPI( "Stub" );
    }
    break;
+   
+   case '0': aliases[0].sound.trigger(); break;
+   case '9': aliases[9].sound.trigger(); break;
+   case '8': aliases[8].sound.trigger(); break;
+   case '7': aliases[7].sound.trigger(); break;
+   
       case 'a':
    {
       snx::SoundInfo si;
@@ -444,6 +457,22 @@ static void OnApplicationInit()
    // even before the API is initialized 
    // (like before a graphics context is obtained)
    
+   aliases[0].sound.init( "sep" );
+   aliases[9].sound.init( "sol" );
+   aliases[8].sound.init( "attack" );
+   aliases[7].sound.init( "drum" );
+   
+   snx::SoundInfo si;
+   si.ambient = false;
+   si.datasource = snx::SoundInfo::FILESYSTEM;
+   si.filename = "sep.wav";
+   aliases[0].sound.configure( si );
+   si.filename = "sol.wav";
+   aliases[9].sound.configure( si );
+   si.filename = "attack.wav";
+   aliases[8].sound.configure( si );
+   si.filename = "drum44100.wav";
+   aliases[7].sound.configure( si );
    
    kevinSound.init( "kevin" );
    stopWatch.pulse();
