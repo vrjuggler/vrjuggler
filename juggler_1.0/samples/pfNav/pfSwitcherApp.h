@@ -45,6 +45,7 @@
 #include <Performer/pf/pfLightSource.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 #include <StopWatch.h>
+#include <pfBasicConfigNavApp.h>
 
 // Wrapper around a pfApp
 class pfAppHandle
@@ -299,9 +300,11 @@ public:
    virtual void reset() {;}
 
 public:  // --- CONFIG HANDLERS ---> (inherited from vjConfigChunkHandler) --- //
-   // Default to not handling anything
+   // We can handle chunks for creating config apps
    virtual bool configCanHandle(vjConfigChunk* chunk)
-   { return false; }
+   {
+      return pfBasicConfigNavApp::configCanHandleChunk(chunk);
+   }
 
    //: Are any application dependencies satisfied
    // If the application requires anything special of the system for successful
@@ -312,9 +315,9 @@ public:  // --- CONFIG HANDLERS ---> (inherited from vjConfigChunkHandler) --- /
    { return true; }
 
 protected:
-   //! NOTE: Inherited from vjConfigChunkHandler
-   virtual bool configAdd(vjConfigChunk* chunk)
-   { vjASSERT(false);  return false; }
+   // Configure new application to be put in switcher
+   virtual bool configAdd(vjConfigChunk* chunk);
+
    //! NOTE: INherited from vjConfigChunkHandler
    virtual bool configRemove(vjConfigChunk* chunk)
    { vjASSERT(false); return false; }

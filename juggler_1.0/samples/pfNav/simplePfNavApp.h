@@ -505,8 +505,10 @@ void simplePfNavApp::initScene()
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
    //cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
+   /*
    pfuTravPrintNodes( mRootNode, "lastscene.out" );
    pfdStoreFile( mRootNode, "lastscene.pfb" );
+   */
 }
 
 #endif
