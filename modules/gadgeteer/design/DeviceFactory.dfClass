@@ -1,0 +1,45 @@
+package id429uhcyax23xmcyaznr38;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#gadget::DeviceConstructor:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceConstructor#$$constructor$$#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::DeviceConstructor#getChunkType#(##)#:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#gadget::DeviceFactory:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceFactory#mConstructors:oiref> 
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceFactory#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceFactory#hackLoadKnownDevices#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceFactory#findConstructor#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceFactory#debugDump#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::DeviceFactory#instance#(##)#:oiref>
+*/
+class reference50 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#gadget::DeviceFactory:oiref>=10,60,210,140,0:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::DeviceConstructor#gadget::DeviceConstructorBase:oiref>=:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::DeviceFactory#lnkgadget::DeviceConstructor:oiref>=180,110,250,110:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::DeviceConstructor:oiref>=250,60,193,130,0:oigroup>
+*/
+class __positions {
+}
