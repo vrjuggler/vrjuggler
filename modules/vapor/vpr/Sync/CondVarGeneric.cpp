@@ -53,27 +53,27 @@
  * @post The condition has been modifed, but may not be satisfied.
  * @note The call blocks until a condition has been signaled
  */
-vpr::ReturnStatus vpr::CondVarGeneric::wait(vpr::Interval time_to_wait)
+vpr::ReturnStatus vpr::CondVarGeneric::wait(vpr::Interval timeToWait)
 {
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
-   if ( condMutex->test() == 0 )    // Not locked
+   if ( mCondMutex->test() == 0 )    // Not locked
    {
       std::cerr << " vpr::CondVarGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
                 << std::endl;
    }
 
-   waiters++;              // We have lock already
+   mWaiters++;              // We have lock already
 
-   condMutex->release();   // Release it
+   mCondMutex->release();   // Release it
 
-   sema.acquire();         // Wait for a while
-   sema.dump();
+   mSema.acquire();         // Wait for a while
+   mSema.dump();
 
    // We must now regain the lock so that the condition can be re checked upon exit
    // We also need it to decrement waiters
-   condMutex->acquire();
-   waiters--;
+   mCondMutex->acquire();
+   mWaiters--;
 
    std::cerr << std::setw(5) << getpid() << "  Wait: end:" << std::endl;
    return vpr::ReturnStatus();
