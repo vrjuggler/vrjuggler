@@ -43,7 +43,7 @@
 #include <iostream>
 
 #include "NavGrabApp.h"
-//#include <TestCases/FailureTestCase.h>
+#include <TestCases/FailureTestCase.h>
 
 
 void NavGrabApp::init()
@@ -206,12 +206,8 @@ void NavGrabApp::initTesting()
 {
    mTestRunner = new vrj::test::TestRunner;
 
-   /*
-   FailureTestCase* test;
-   vrj::test::TestCase* test_case = new FailureTestCase;
-   mTestRunner->addTest(new test_case);
-   */
-
+   mTestRunner->addTest(new FailureTestCase);
+      
    mTestRunner->initialize(this);
 }
 
