@@ -74,7 +74,7 @@ if ( $#ARGV < 3 || $#ARGV > 9 ) {
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopt('g:i:m:o:u:');
+getopts('g:i:m:o:u:');
 
 my $dest_dir = "$opt_o";
 
@@ -140,7 +140,7 @@ sub recurseAction {
     # List of installable file extensions.  These are checked with a
     # case-insensitive regular expression.
     my (@exts) = qw(.txt .c .h .cxx .cpp .pl .desc .dsc .mk .htm .html .gif
-                    .jpg .dsw .dsp .java .jar .config .cfg);
+                    .jpg .dsw .dsp .java .jar .config .cfg .MF .jpx .xml .idl);
 
     my $installed = 0;
 
