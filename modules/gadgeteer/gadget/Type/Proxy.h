@@ -120,7 +120,7 @@ namespace gadget
 
 
    template <class DEV_TYPE>
-   class GADGET_CLASS_API TypedProxy : public Proxy
+   class TypedProxy : public Proxy
    {
    public:
       TypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)
