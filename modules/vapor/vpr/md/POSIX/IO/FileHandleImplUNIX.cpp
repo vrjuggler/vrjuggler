@@ -287,70 +287,6 @@ FileHandleUNIX::read (void* buffer, const size_t length) {
 }
 
 // ----------------------------------------------------------------------------
-// Read the specified number of bytes from the file handle into the given
-// buffer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::read (std::string& buffer, const size_t length) {
-    ssize_t bytes;
-    char* temp_buf;
-    size_t buf_len;
-
-    if ( length == 0 ) {
-        buf_len = buffer.size();
-    }
-    else {
-        buf_len = length;
-    }
-
-    temp_buf = (char*) malloc(buf_len);
-    bytes    = read(temp_buf, buf_len);
-
-    // If anything was read into temp_buf, copy it into buffer.
-    if ( bytes > -1 ) {
-        buffer = temp_buf;
-    }
-
-    free(temp_buf);
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Read the specified number of bytes from the file handle into the given
-// bufer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::read (std::vector<char>& buffer, const size_t length) {
-    ssize_t bytes;
-    char* temp_buf;
-    size_t buf_len;
-
-    if ( length == 0 ) {
-        buf_len = buffer.size();
-    }
-    else {
-        buf_len = length;
-    }
-
-    temp_buf = (char*) malloc(buf_len);
-    bytes    = read(temp_buf, buf_len);
-
-    // If anything was read into temp_buf, copy it into buffer.
-    if ( bytes > -1 ) {
-       if(bytes > buffer.size());      // Check to make sure we have enough space
-            buffer.resize(bytes);
-       for ( ssize_t i = 0; i < bytes; i++ ) {
-            buffer[i] = temp_buf[i];
-        }
-    }
-
-    free(temp_buf);
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
 // Read exactly the specified number of bytes from the file handle into the
 // given buffer.  This is baesd on the readn() function given on pages 51-2 of
 // _Effective TCP/IP Programming_ by Jon D. Snader.
@@ -391,62 +327,6 @@ FileHandleUNIX::readn (void* buffer, const size_t length) {
 }
 
 // ----------------------------------------------------------------------------
-// Read exactly the specified number of bytes from the file handle into the
-// given buffer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::readn (std::string& buffer, const size_t length) {
-    size_t buf_len;
-    char* temp_buf;
-    ssize_t bytes;
-
-    buf_len  = (length == 0) ? buffer.size() : length;
-    temp_buf = (char*) malloc(buf_len);
-    bytes    = readn(temp_buf, buf_len);
-
-    // If anything was read into temp_buf, copy it into buffer.
-    if ( bytes > -1 ) {
-        buffer = temp_buf;
-    }
-
-    free(temp_buf);
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Read exactly the specified number of bytes from the file handle into the
-// given buffer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::readn (std::vector<char>& buffer, const size_t length) {
-    ssize_t bytes;
-    char* temp_buf;
-    size_t buf_len;
-
-    if ( length == 0 ) {
-        buf_len = buffer.size();
-    }
-    else {
-        buf_len = length;
-    }
-
-    temp_buf = (char*) malloc(buf_len);
-    bytes    = readn(temp_buf, buf_len);
-
-    // If anything was read into temp_buf, copy it into buffer.
-    if ( bytes > -1 ) {
-        for ( ssize_t i = 0; i < bytes; i++ ) {
-            buffer[i] = temp_buf[i];
-        }
-    }
-
-    free(temp_buf);
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 ssize_t
@@ -460,46 +340,6 @@ FileHandleUNIX::write (const void* buffer, const size_t length) {
                 "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
                 m_name.c_str(), strerror(errno));
     }
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Write the buffer to the file handle.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::write (const std::string& buffer, const size_t length) {
-    return write(buffer.c_str(), ((length == 0) ? buffer.size() : length));
-}
-
-// ----------------------------------------------------------------------------
-// Write the buffer to the file handle.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::write (const std::vector<char>& buffer, const size_t length)
-{
-    size_t bytes;
-    char* temp_buf;
-    size_t buf_len;
-
-    if ( length == 0 ) {
-        buf_len = buffer.size();
-    }
-    else {
-        buf_len = length;
-    }
-
-    temp_buf = (char*) malloc(buf_len);
-
-    // Copy the contents of buffer into temp_buf.
-    for ( size_t i = 0; i < buf_len; i++ ) {
-        temp_buf[i] = buffer[i];
-    }
-
-    // Write temp_buf to the file handle.
-    bytes = write(temp_buf, buf_len);
-
-    free(temp_buf);
 
     return bytes;
 }
