@@ -251,7 +251,7 @@ static std::ostream& operator<<(std::ostream& out,
 // Constructor.  This initializes member variables and determines the
 // endianness of the host machine.
 // ----------------------------------------------------------------------------
-MotionStarStandalone::MotionStarStandalone(const std::string& address,
+MotionStarStandalone::MotionStarStandalone(const char* address,
                                            const unsigned short port,
                                            const BIRDNET::protocol proto,
                                            const bool master,
@@ -276,9 +276,13 @@ MotionStarStandalone::MotionStarStandalone(const std::string& address,
 
    m_address.setPort(port);
 
-   if ( address.length() > 0 )
+   if ( NULL != address )
    {
-      m_address.setAddress(address);
+      std::string addr(address);
+      if ( addr.length() > 0 )
+      {
+         m_address.setAddress(addr);
+      }
    }
 
    // These are hard-coded because they are always going to be the same

@@ -462,7 +462,7 @@ public:
     * @param birdsRequested    The number of birds whose data will be
     *                          sampled.
     */
-   MotionStarStandalone(const std::string& address, const unsigned short port,
+   MotionStarStandalone(const char* address, const unsigned short port,
                         const BIRDNET::protocol proto, const bool master,
                         const FLOCK::hemisphere hemisphere,
                         const FLOCK::data_format birdFormat,
