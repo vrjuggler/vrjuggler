@@ -47,10 +47,10 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(vpr/vprConfig.h)
-AC_CONFIG_AUX_DIR(../../share/config)
-AC_CONFIG_HEADER(vpr/vprDefines.h)
-DPP_PREREQ(1.4.103)
+AC_INIT([vpr/vprConfig.h])
+AC_CONFIG_AUX_DIR([../../share/config])
+AC_CONFIG_HEADER([vpr/vprDefines.h])
+DPP_PREREQ([1.4.103])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -70,14 +70,14 @@ DPP_STD_CPP(yes)
 # Define which threading model to use.  Possible values are "SPROC", "POSIX",
 # or "NSPR".
 # The default is "SPROC".
-AC_ARG_ENABLE(subsystem,
+AC_ARG_ENABLE([subsystem],
               [  --enable-subsystem=<SPROC|POSIX|NSPR>
                           Define OS abstraction subsystem],
-              SUBSYSTEM="$enableval", SUBSYSTEM='none')
+              [SUBSYSTEM="$enableval"], [SUBSYSTEM='none'])
 
-AC_ARG_ENABLE(simulator,
+AC_ARG_ENABLE([simulator],
               [  --enable-simulator      Compile simulated sockets layer ],
-              SIMULATOR="$enableval", SIMULATOR='no')
+              [SIMULATOR="$enableval"], [SIMULATOR='no'])
 
 # Rudimentary spell checking based on the first letter in the $SUBSYSTEM name.
 case $SUBSYSTEM in
@@ -123,9 +123,9 @@ AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
 # These are used on all platforms.
-AC_DEFINE_UNQUOTED(VPR_OS_RELEASE, "$OS_REL_STR")
-AC_DEFINE_UNQUOTED(VPR_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
-AC_DEFINE_UNQUOTED(VPR_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
+AC_DEFINE_UNQUOTED([VPR_OS_RELEASE], ["$OS_REL_STR"])
+AC_DEFINE_UNQUOTED([VPR_OS_RELEASE_MAJOR], [$OS_REL_NUM_MAJOR])
+AC_DEFINE_UNQUOTED([VPR_OS_RELEASE_MINOR], [$OS_REL_NUM_MINOR])
 
 # Depending on the target operating system, set various command options and
 # such.
@@ -133,7 +133,7 @@ case $target_os in
     # IBM RS/6000 running AIX.
     aix*)
         if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
             SUBSYSTEM='POSIX'
         fi
 
@@ -143,7 +143,7 @@ case $target_os in
     cygwin)
         # We have to use Win32 subsystem on Win32.
         if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
             SUBSYSTEM='NSPR'
         fi
 
@@ -152,7 +152,7 @@ case $target_os in
     # Unkown operating system (to config.guess).
     darwin1.*)
         if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
             SUBSYSTEM='NSPR' 
         fi
 
@@ -162,7 +162,7 @@ case $target_os in
     # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
         if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
             SUBSYSTEM='POSIX'
         fi
 
@@ -178,7 +178,7 @@ case $target_os in
     hpux10.20)
         # We have to use the NSPR subsystem on HP-UX 10.20.
         if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
             SUBSYSTEM='NSPR'
         fi
 
@@ -201,7 +201,7 @@ case $target_os in
         fi
 
         if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of SPROC subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of SPROC subsystem ***])
             SUBSYSTEM='SPROC'
         fi
 
@@ -211,7 +211,7 @@ case $target_os in
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
             SUBSYSTEM='POSIX'
         fi
 
@@ -225,7 +225,7 @@ case $target_os in
     # to work.
     solaris*)
         if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
             SUBSYSTEM='NSPR' 
         fi
 
@@ -260,11 +260,11 @@ DPP_PROG_CC_NOSTDINC
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
-DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
+DPP_CXX_NAMESPACE([AC_MSG_ERROR([*** The library requires C++ namesapce support ***])])
 DPP_CXX_HAVE_STD
-DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
-DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
-DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
+DPP_CXX_INLINE([AC_MSG_ERROR([*** The library requires C++ inline support ***])])
+DPP_CXX_RTTI([AC_MSG_ERROR([*** The library requires C++ RTTI support ***])])
+DPP_CXX_STATIC_CAST([AC_MSG_ERROR([*** The library requires C++ static_cast<> ***])])
 
 # Now check to see if the compiler accepts the -pthread option.
 if test "x$SUBSYSTEM" != "xSPROC" -a "x$NSPR_THREADS_ENABLED" = "xno" ; then
@@ -278,11 +278,11 @@ fi
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
-AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
+AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 
-DPP_HAVE_GNU_MAKE(3.78, ,
-    AC_MSG_ERROR(*** The build system requires GNU make 3.78 or newer ***))
-DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
+DPP_HAVE_GNU_MAKE([3.78], ,
+    [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
+DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -306,7 +306,7 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
     # used.  This is done by determining if pthread_kill() is in the library.
     # If it is, Draft 10 is in use.  Otherwise, assume it is Draft 4.
     if test "$xPTHREAD_LIB" != "x" ; then
-        DPP_GET_PTHREAD_VER($PLATFORM, VPR_POSIX_C_SOURCE)
+        DPP_GET_PTHREAD_VER([$PLATFORM], [VPR_POSIX_C_SOURCE])
 
         # Define the default thread scope depending on the platform.  On IRIX,
         # only process scope is avaiable without special configuration options.
@@ -340,8 +340,8 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
 # If we are not using POSIX threads, we must be using the IRIX sproc(2) model,
 # but we test $SUBSYSTEM just to be sure it is set right.
 elif test "x$SUBSYSTEM" = "xSPROC" ; then
-    AC_CHECK_HEADERS(sys/prctl.h, ,
-        AC_MSG_ERROR(*** IRIX sproc(2) threading will not be used (no headers found) ***))
+    AC_CHECK_HEADERS([sys/prctl.h], ,
+        [AC_MSG_ERROR([*** IRIX sproc(2) threading will not be used (no headers found) ***])])
 
     AC_DEFINE(VPR_USE_IRIX_SPROC,)
 
@@ -358,14 +358,14 @@ else
     if test "x$NSPR_THREADS_ENABLED" = "xno" -a "x$OS_TYPE" = "xUNIX" ; then
         DPP_GET_PTHREAD_LIB
         DPP_GET_POSIX_SEMAPHORE_LIB( ,
-            AC_MSG_ERROR(*** POSIX semaphores are required for NSPR subsystem ***))
+            [AC_MSG_ERROR([*** POSIX semaphores are required for NSPR subsystem ***])])
         USE_PTHREADS='yes'
     else
         USE_PTHREADS='no'
     fi
 
-    DPP_HAVE_NSPR(4.0, "$USE_PTHREADS",
-        AC_MSG_ERROR(*** NSPR requried for compiling ***))
+    DPP_HAVE_NSPR([4.0], ["$USE_PTHREADS"],
+        [AC_MSG_ERROR([*** NSPR requried for compiling ***])])
 
     AC_DEFINE(VPR_USE_NSPR,)
 
@@ -402,11 +402,11 @@ DPP_TYPE_SOCKLEN_T
 
 # The following checks for availability of the sigset_t type.  Since it is
 # is included through signal.h, the usual AC_CHECK_TYPE method will not work.
-AC_CACHE_CHECK(for sigset_t, ac_cv_has_sigset_t,
-    AC_TRY_COMPILE([#include <signal.h> ],
-                   [ sigset_t var; ],
-                   ac_cv_has_sigset_t='yes',
-                   ac_cv_has_sigset_t='no'))
+AC_CACHE_CHECK([for sigset_t], [ac_cv_has_sigset_t],
+    [AC_TRY_COMPILE([#include <signal.h> ],
+                    [ sigset_t var; ],
+                    [ac_cv_has_sigset_t='yes'],
+                    [ac_cv_has_sigset_t='no'])])
 
 if test "x$ac_cv_has_sigset_t" = "xno" ; then
     AC_DEFINE(sigset_t, unsigned int)
@@ -416,12 +416,12 @@ fi
 # supposed to be defined in netinet/in.h, the usual AC_CHECK_TYPE method will
 # not work.
 if test "x$SUBSYSTEM" != "xNSPR" ; then
-    AC_CACHE_CHECK(for in_addr_t, ac_cv_has_in_addr_t,
-        AC_TRY_COMPILE([#include <sys/types.h>
-                        #include <netinet/in.h> ],
-                       [ in_addr_t var; ],
-                       ac_cv_has_in_addr_t='yes',
-                       ac_cv_has_in_addr_t='no'))
+    AC_CACHE_CHECK([for in_addr_t], [ac_cv_has_in_addr_t],
+        [AC_TRY_COMPILE([#include <sys/types.h>
+                         #include <netinet/in.h> ],
+                        [ in_addr_t var; ],
+                        [ac_cv_has_in_addr_t='yes'],
+                        [ac_cv_has_in_addr_t='no'])])
 
     if test "x$ac_cv_has_in_addr_t" = "xno" ; then
         AC_DEFINE(in_addr_t, int)
@@ -443,17 +443,18 @@ fi
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
+AC_CHECK_HEADERS([bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
                  sys/filio.h sys/ioctl.h sys/sysinfo.h sys/time.h \
-                 termios.h unistd.h sys/capability.h sys/stdsyms.h)
+                 termios.h unistd.h sys/capability.h sys/stdsyms.h])
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
-AC_CHECK_HEADERS(hash_map ext/hash_map hash_map.h)
+AC_CHECK_HEADERS([hash_map ext/hash_map hash_map.h])
 DPP_LANG_RESTORE
 
-DPP_HAVE_BOOST($JUGGLERROOT_ABS/external/boost, $JUGGLERROOT_ABS/external/boost,
-               , AC_MSG_ERROR(*** Boost is required for VPR ***))
+DPP_HAVE_BOOST([$JUGGLERROOT_ABS/external/boost],
+               [$JUGGLERROOT_ABS/external/boost], ,
+               [AC_MSG_ERROR([*** Boost is required for VPR ***])])
 
 if test "x$BOOST_ROOT" != "x$JUGGLERROOT_ABS/external/boost" ; then
     LOCAL_BOOST='Y'
@@ -462,20 +463,21 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday sigaction sigemptyset sigfillset sigaddset \
-               sigdelset sigismember snprintf socket strerror)
+AC_CHECK_FUNCS([gettimeofday sigaction sigemptyset sigfillset sigaddset \
+               sigdelset sigismember snprintf socket strerror])
 
 _vpr_save_LIBS="$LIBS"
-AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
-    AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
+AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
+    [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
 LIBS="${_vpr_save_LIBS}"
 
 # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
 # synchronization friends are in libposix4.
 _vpr_save_LIBS="$LIBS"
-AC_CHECK_FUNC(sched_yield, AC_DEFINE(HAVE_SCHED_YIELD),
-              AC_CHECK_LIB(posix4, sched_yield,
-                  [ _sched_lib='-lposix4' ; AC_DEFINE(HAVE_SCHED_YIELD) ]))
+AC_CHECK_FUNC([sched_yield], [AC_DEFINE([HAVE_SCHED_YIELD])],
+              [AC_CHECK_LIB([posix4], [sched_yield],
+                  [ _sched_lib='-lposix4'
+                    AC_DEFINE([HAVE_SCHED_YIELD]) ])])
 LIBS="${_vpr_save_LIBS}"
 
 # -----------------------------------------------------------------------------
