@@ -422,70 +422,81 @@ void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, con
 
          if (view_port->isSurface())
          {
-            // Get a pointer to the surface
-            SurfaceViewport* surf_vp = dynamic_cast<SurfaceViewport*>(view_port);
-            vprASSERT(surf_vp != NULL);
-            proj = surf_vp->getLeftProj();
-
-            // Create color values that are unique
-            // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
-            int red_on = (i & 0x1); int green_on = ((i >> 1) & 0x1); int blue_on = ((i >> 2) & 0x1);
-
-            float red(0.0f), green(0.0f), blue(0.0f);
-            if (red_on > 0) red = 1.0f;
-            if (green_on > 0) green = 1.0f;
-            if (blue_on > 0) blue = 1.0f;
-
-            if ((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
-               red = blue = green = 0.75f;
-
-            gmtl::Vec3f surf_color;
-            if (drawFrustum)
+            for(unsigned proj_num=0;proj_num<2;++proj_num)
             {
-               surf_color = gmtl::Vec3f(red,blue,green);
+               // Get a pointer to the surface
+               SurfaceViewport* surf_vp = dynamic_cast<SurfaceViewport*>(view_port);
+               vprASSERT(surf_vp != NULL);
+               proj = NULL;
+               if(0 == proj_num)
+                  proj = surf_vp->getLeftProj();
+               else
+                  proj = surf_vp->getRightProj();
+
+               // Create color values that are unique
+               // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
+               int red_on = (i & 0x1); int green_on = ((i >> 1) & 0x1); int blue_on = ((i >> 2) & 0x1);
+
+               float red(0.0f), green(0.0f), blue(0.0f);
+               if (red_on > 0) red = 1.0f;
+               if (green_on > 0) green = 1.0f;
+               if (blue_on > 0) blue = 1.0f;
+
+               if ((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
+                  red = blue = green = 0.75f;
+
+               gmtl::Vec3f surf_color;
+               if (drawFrustum)
+               {
+                  surf_color = gmtl::Vec3f(red,blue,green);
+               }
+               else
+               {
+                  surf_color = surfColor;
+               }
+               if(1 == proj_num) // Right eye
+               {
+                  surf_color = gmtl::Vec3f(1.0f, 1.0f, 1.0f) - surf_color;    // Invert it
+               }
+
+               // Compute scaled colors for the corners
+               // ll is going to be lighter and upper right is going to be darker
+               const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
+               gmtl::Vec4f ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
+               gmtl::Vec4f ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+               gmtl::Vec4f lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+               gmtl::Vec4f ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
+
+               // Draw the thingy
+               proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "apex: " << apex
+                                                           << std::endl << vprDEBUG_FLUSH;
+
+               glColor4fv(&(ur_clr[0]));
+               glPushMatrix();
+                  if (drawFrustum)
+                  {
+                     drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
+                  }
+
+                  // Draw the outline
+                  drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
+
+                  // Draw the surface
+                  glEnable(GL_BLEND);
+                  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                  glBegin(GL_TRIANGLES);
+                  glColor4fv(ll_clr.mData);  glVertex3fv(ll.mData);
+                  glColor4fv(lr_clr.mData);  glVertex3fv(lr.mData);
+                  glColor4fv(ur_clr.mData);  glVertex3fv(ur.mData);
+
+                  glColor4fv(ur_clr.mData); glVertex3fv(ur.mData);
+                  glColor4fv(ul_clr.mData); glVertex3fv(ul.mData);
+                  glColor4fv(ll_clr.mData); glVertex3fv(ll.mData);
+                  glEnd();
+                  glDisable(GL_BLEND);
+               glPopMatrix();
             }
-            else
-            {
-               surf_color = surfColor;
-            }
-
-            // Compute scaled colors for the corners
-            // ll is going to be lighter and upper right is going to be darker
-            const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
-            gmtl::Vec4f ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
-            gmtl::Vec4f ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-            gmtl::Vec4f lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-            gmtl::Vec4f ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
-
-            // Draw the thingy
-            proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
-            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "apex: " << apex
-                                                        << std::endl << vprDEBUG_FLUSH;
-
-            glColor4fv(&(ur_clr[0]));
-            glPushMatrix();
-            if (drawFrustum)
-            {
-               drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
-            }
-
-            // Draw the outline
-            drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
-
-            // Draw the surface
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glBegin(GL_TRIANGLES);
-            glColor4fv(ll_clr.mData);  glVertex3fv(ll.mData);
-            glColor4fv(lr_clr.mData);  glVertex3fv(lr.mData);
-            glColor4fv(ur_clr.mData);  glVertex3fv(ur.mData);
-
-            glColor4fv(ur_clr.mData); glVertex3fv(ur.mData);
-            glColor4fv(ul_clr.mData); glVertex3fv(ul.mData);
-            glColor4fv(ll_clr.mData); glVertex3fv(ll.mData);
-            glEnd();
-            glDisable(GL_BLEND);
-            glPopMatrix();
          }  // if surface
       }  // for viewports
    }  // for disps
@@ -500,11 +511,13 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp, const float scaleFactor)
    // All units are in meters
    // Note: All the wand and head data in the sim viewport class
    // has already had the scale factor applied to it
-   const float head_radius(0.18f*scaleFactor);      // 7.2 inches
-   const float eye_vertical(0.067f*scaleFactor);
-   const float eye_horizontal(0.21f*scaleFactor);
-   const float interocular(0.08f*scaleFactor);
-   const float eye_radius(0.024f*scaleFactor);
+   const float head_height(0.254f*scaleFactor);      // 10 inches
+   const float head_width_scale(0.7f);
+   const float head_depth_scale(0.8f);
+   //const float eye_vertical(0.067f*scaleFactor);
+   //const float eye_horizontal(0.21f*scaleFactor);
+   const float interocular( sim_vp->getUser()->getInterocularDistance()*scaleFactor);
+   const float eye_radius(0.0254f*0.5f*scaleFactor);      // 0.5 in
 
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
@@ -560,15 +573,24 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp, const float scaleFactor)
       glPushMatrix();
          glMultMatrixf(sim_vp->getHeadPos().mData);
 
-         //glEnable(GL_BLEND);
-         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
-         drawSphere(head_radius, 10, 10);             // Head
-         glDisable(GL_BLEND);
-
          glPushMatrix();
-            glColor3f(0.2f, 0.2f, 0.2f);
-            glTranslatef(0.0f, eye_vertical, -eye_horizontal);
+            // Head pos is the center of the eyes, so we need to move the head offset a bit
+            // to get it positioned correctly.  We will do this by measuring the distance from center
+            // of head to forehead and then translate by the negative of that
+            gmtl::Vec3f forehead_offset(0.0f, head_height*0.17f, -(head_depth_scale*head_height)*0.45f);
+            glTranslatef(-forehead_offset[0], -forehead_offset[1], -forehead_offset[2]);
+            glScalef(head_width_scale, 1.0f, head_depth_scale);      // Scale to get an ellipsoid head
+            //glEnable(GL_BLEND);
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
+            drawSphere(head_height/2.0f, 10, 10);             // Head
+            //glDisable(GL_BLEND);
+         glPopMatrix();
+
+         // --- Draw the eyes --- //
+         glPushMatrix();
+            glColor3f(0.8f, 0.4f, 0.2f);
+            //glTranslatef(0.0f, eye_vertical, -eye_horizontal);
             glPushMatrix();                     // Right eye
                glTranslatef((interocular/2.0f), 0.0f, 0.0f);
                drawSphere(eye_radius, 5, 5);
