@@ -59,7 +59,7 @@ public:
          jccl::ConfigChunkPtr chunk_multi = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
          chunk_multi->setProperty( "test prop multi", 2, 0 );
          chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
-         chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
+         chunk_multi->setProperty( "test prop multi", "chunky munky", 0 );
       }
 
       // make sure they succeed with a desc
@@ -86,14 +86,14 @@ public:
          // set multiple types of props on one chunk...
          jccl::ConfigChunkPtr chunk_multi = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
          
-         retval = chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
+         retval = chunk_multi->setProperty( "test prop multi", "chunky munky", 0 );
          CPPUNIT_ASSERT( retval == true );
-         CPPUNIT_ASSERT( std::string( "bahamas mamas" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+         CPPUNIT_ASSERT( std::string( "chunky munky" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
 
          retval = chunk_multi->setProperty( "test prop multi", 2, 0 );
          CPPUNIT_ASSERT( retval == true );
          // @todo this test currently fails, but it shouldn't
-         CPPUNIT_ASSERT( std::string( "bahamas mamas" ) != (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+         CPPUNIT_ASSERT( std::string( "chunky munky" ) != (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
          CPPUNIT_ASSERT( 2 == (int)chunk_multi->getProperty( "test prop multi", 0 ) );
          
          retval = chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
@@ -102,11 +102,11 @@ public:
          CPPUNIT_ASSERT( 2 != (int)chunk_multi->getProperty( "test prop multi", 0 ) );
          CPPUNIT_ASSERT( 678.098f == (float)chunk_multi->getProperty( "test prop multi", 0 ) );
          
-         retval = chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
+         retval = chunk_multi->setProperty( "test prop multi", "chunky munky", 0 );
          CPPUNIT_ASSERT( retval == true );
          // @todo this test currently fails, but it shouldn't
          CPPUNIT_ASSERT( 678.098f != (float)chunk_multi->getProperty( "test prop multi", 0 ) );
-         CPPUNIT_ASSERT( std::string( "bahamas mamas" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+         CPPUNIT_ASSERT( std::string( "chunky munky" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
       }
    }
 
