@@ -42,15 +42,16 @@
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfTraverser.h>
 
+#include <Kernel/vjDisplayManager.h>
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
 #include <Utils/vjDebug.h>
-#include <Kernel/vjDisplayManager.h>
+
 #include <Kernel/vjProjection.h>
 #include <Kernel/vjCameraProjection.h>
-#include <Config/vjConfigChunk.h>
-#include <Kernel/vjSimDisplay.h>
-#include <Kernel/vjSurfaceDisplay.h>
+
+#include <Kernel/vjSimViewport.h>
+#include <Kernel/vjSurfaceViewport.h>
 
 #include <Config/vjConfigChunk.h>
 
@@ -94,6 +95,9 @@ bool vjPfDrawManager::configAdd(vjConfigChunk* chunk)
 }
 
 
+// Configure the Performer display settings that are needed
+// - Number of pipes to allow
+// - The xpipe strings to use
 bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
 {
    vjASSERT(chunk != NULL);
@@ -133,7 +137,7 @@ bool vjPfDrawManager::configPerformerAPI(vjConfigChunk* chunk)
 {
    vjASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << clrOutNORM(clrRED,"vjPfDrawManager::configPerformerAPI:")
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI:"
                                             << " Configuring Performer\n" << vjDEBUG_FLUSH;
 
    // --- Get simulator model info --- //
@@ -183,20 +187,19 @@ void vjPfDrawManager::draw()
 // XXX: Hack for now
 void vjPfDrawManager::callAppChanFuncs()
 {
-   for(unsigned int dispIndex=0;dispIndex<mSurfDisps.size();dispIndex++)
+   // for(each display)
+   //    for(each viewport)
+   //       for(each channel)
+   for(unsigned int dispIndex=0;dispIndex<mDisplays.size();dispIndex++)
    {
-      if (mSurfDisps[dispIndex].chans[pfDisp::PRIMARY] != NULL)
-         app->appChanFunc(mSurfDisps[dispIndex].chans[pfDisp::PRIMARY]);
-      if (mSurfDisps[dispIndex].chans[pfDisp::SECONDARY] != NULL)
-         app->appChanFunc(mSurfDisps[dispIndex].chans[pfDisp::SECONDARY]);
-   }
-
-   for(unsigned int dispIndex=0;dispIndex<mSimDisps.size();dispIndex++)
-   {
-      if (mSimDisps[dispIndex].chans[pfDisp::PRIMARY] != NULL)
-         app->appChanFunc(mSimDisps[dispIndex].chans[pfDisp::PRIMARY]);
-      if (mSimDisps[dispIndex].chans[pfDisp::SECONDARY] != NULL)
-         app->appChanFunc(mSimDisps[dispIndex].chans[pfDisp::SECONDARY]);
+      for(unsigned vp=0;vp<mDisplays[dispIndex].viewports.size();vp++)
+      {
+         for(unsigned ch=0;ch<2;ch++)
+         {
+            if(mDisplays[dispIndex].viewports[vp].chans[ch] != NULL)
+               app->appChanFunc(mDisplays[dispIndex].viewports[vp].chans[ch]);
+         }
+      }
    }
 }
 
@@ -205,9 +208,18 @@ void vjPfDrawManager::callAppChanFuncs()
 //! PRE: none
 //! POST: dynamic_cast of the app to a pf app
 void vjPfDrawManager::setApp(vjApp* _app)
-{ app = dynamic_cast<vjPfApp*>(_app);}
+{
+   //vjASSERT(app != NULL);
+   app = dynamic_cast<vjPfApp*>(_app);
+   if(mPfHasForked)
+      initAppGraph();         // If pf is already started, then intialize the app scene graph
 
-//! POST: Calls pfInit()
+}
+
+//! POST: Calls pfInit() and sets up the system
+// - Configures multiprocessing mode
+// - Configures number of pipes
+// - Forks off the processes
 void vjPfDrawManager::initAPI()
 {
    pfInit();
@@ -229,26 +241,67 @@ void vjPfDrawManager::initAPI()
 
    // --- FORKS HERE --- //
    pfConfig();
+   mPfHasForked = true;
 
-   initSimulator();        // Call here to load the scene graph
-   initPerformerApp();
+   initSimulatorGraph();        // Create the simulator scene graph nodes
+   initPerformerGraph();        // Create the other scene graph nodes
+   if(app != NULL)
+      initAppGraph();           // App was already set, but pf was not loaded.  So load graph now
+
+
+   vjASSERT(mSceneRoot != NULL && "We have a NULL root scene in vjPfDrawManager");
+   vjASSERT(mRootWithSim != NULL && "We have a NULL sim root scene in vjPfDrawManager");
+
+   //pfFrame();
+
+   // Dump the state
+//   debugDump(vjDBG_CONFIG_LVL);
+
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << std::endl << vjDEBUG_FLUSH;
+}
+
+// Get a performer pipe
+//! PRE: pipe_num < mNumPipes
+//       Fork must have happend
+pfPipe* vjPfDrawManager::getPfPipe(unsigned pipe_num)
+{
+   vjASSERT((mPfHasForked) && "Tried to get pipe before forking happened");
+   vjASSERT((pipe_num < mNumPipes) && "Tried to request out of bounds pipe");
 
    // ------ OPEN/ALLOCATE Pipes ------- //
-   for (unsigned int pipeNum = 0; pipeNum < mNumPipes; pipeNum++)
+   // Make sure there is room for the pipe.  The check must be made using
+   // less than or equal because pipe numbering may start from 0, and an
+   // empty vector has size 0 but still needs room for a pipe entry.
+   //while(pipes.size() <= pipe_num)
+   //   mPipes.push_back(NULL);
+
+   // If need more room, then resize the vector
+   if(mPipes.size() < (pipe_num + 1))
+      mPipes.resize((pipe_num+1), NULL);
+
+   // Does the pipe need allocated???
+   if(NULL == mPipes[pipe_num])
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Opening Pipe." << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipeNum << ": " << mPipeStrs[pipeNum] << std::endl << vjDEBUG_FLUSH;
+      vjASSERT((mPipeStrs.size() > pipe_num) && "Don't have xpipes entry for pipe num");
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::getPfPipe: Opening Pipe." << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl << vjDEBUG_FLUSH;
 
-      // Make sure there is room for the pipe.  The check must be made using
-      // less than or equal because pipe numbering may start from 0, and an
-      // empty vector has size 0 but still needs room for a pipe entry.
-      while(pipes.size() <= pipeNum)
-         pipes.push_back(NULL);
-
-      pipes[pipeNum] = pfGetPipe(pipeNum);
-      pipes[pipeNum]->setWSConnectionName(mPipeStrs[pipeNum]);
-      pipes[pipeNum]->setScreen(pipeNum);
+      mPipes[pipe_num] = pfGetPipe(pipe_num);
+      mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num]);
+      mPipes[pipe_num]->setScreen(pipe_num);
    }
+
+   // Return the actual pipe
+   vjASSERT((NULL != mPipes[pipe_num]) && "Have NULL pipe");
+   return mPipes[pipe_num];
+}
+
+
+//: Callback when display is added to display manager
+//! PRE: Must be in kernel controlling thread
+void vjPfDrawManager::addDisplay(vjDisplay* disp)
+{
+   vjASSERT(disp != NULL);    // Can't add a null display
 
    // Get frame buffer config
    std::vector<int> stereo_fb_config = getStereoFBConfig();
@@ -264,159 +317,205 @@ void vjPfDrawManager::initAPI()
       vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << std::endl << vjDEBUG_FLUSH;
 
-   //  For each display:
+   //  For the display
    //     -Create a pWin for it
-   //     -Create the channels to put it the pWin
-   std::vector<vjDisplay*> displays = mDisplayManager->getActiveDisplays();
-   for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
-       dispIter != displays.end(); dispIter++)
+   //     - For each viewport
+   //        - Create viewport
+   //        - Create channels for the viewports
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << std::endl << vjDEBUG_FLUSH;
+
+   pfDisplay pf_disp;            // The pfDisplay to use
+   pf_disp.disp = disp;
+
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(disp) << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << (*disp) << vjDEBUG_FLUSH;
+
+   int xo, yo, xs, ys;
+   pfPipe* pipe = getPfPipe(disp->getPipe());      // Get the pipe
+   vjASSERT(NULL != pipe);                         // Make sure we have a good pipe
+
+   // --- SETUP PWIN --- //
+   pf_disp.pWin = new pfPipeWindow(pipe);
+   vjASSERT(NULL != pf_disp.pWin);
+
+   disp->getOriginAndSize(xo, yo, xs, ys);
+   pf_disp.pWin->setOriginSize(xo, yo, xs, ys);
+
+   // Setup window border
+   if (disp->shouldDrawBorder())
+      pf_disp.pWin->setName(disp->getName().c_str()); // Give the window a name
+   else
+      pf_disp.pWin->setMode(PFWIN_NOBORDER, 1);          // Get rid of that border
+
+   // Setup Frame Buffer config
+   if (disp->inStereo())                            // If we need stereo
    {
-      vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Configuring stereo window attribs.\n" << vjDEBUG_FLUSH;
+      pf_disp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
+   }
+   else
+   {
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Configuring mono window attribs.\n" << vjDEBUG_FLUSH;
+      pf_disp.pWin->setFBConfigAttrs(&(mono_fb_config[0]));       // Configure a "norm" window
+   }
 
-      pfDisp tempPfDisp;
-      tempPfDisp.disp = (*dispIter);
+   // -- Set config info -- //
+   pf_disp.pWin->setConfigFunc(vjPFconfigPWin); // Set config function
+   pf_disp.pWin->config();                      // Next pfFrame, config Func will be called
 
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(*dispIter) << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << (*dispIter) << vjDEBUG_FLUSH;
+   // --- SETUP VIEWPORTS --- //
+   // for(each viewport)
+   //   - Allocate channels
+   //   - Set draw functions
+   //   - Setup master chans
+   vjViewport* viewport = NULL;
+   unsigned num_vps = disp->getNumViewports();
 
-      int xo, yo, xs, ys;
-      pfPipe* localPipe = pipes[tempPfDisp.disp->getPipe()];
-      vjASSERT(NULL != localPipe);        // Make sure we have a good pipe
+   for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
+   {
+      viewport = disp->getViewport(vp_num);
+      vjViewport::View view = viewport->getView();
+      pfViewport pf_viewport;                         // The viewport to build up
+      pf_viewport.viewport = viewport;
+      float vp_ox, vp_oy, vp_sx, vp_sy;
 
-      // --- Setup pWin --- //
-      tempPfDisp.pWin = new pfPipeWindow(localPipe);
-      vjASSERT(NULL != tempPfDisp.pWin);
-
-      tempPfDisp.disp->getOriginAndSize(xo, yo, xs, ys);
-      tempPfDisp.pWin->setOriginSize(xo, yo, xs, ys);
-
-      // Setup window border
-      if (tempPfDisp.disp->shouldDrawBorder())
-         tempPfDisp.pWin->setName(tempPfDisp.disp->getName().c_str()); // Give the window a name
-      else
-         tempPfDisp.pWin->setMode(PFWIN_NOBORDER, 1);          // Get rid of that border
-
-      // Setup Frame Buffer config
-      if (tempPfDisp.disp->inStereo())                            // If we need stereo
-      {
-         vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Configuring stereo window attribs.\n" << vjDEBUG_FLUSH;
-         tempPfDisp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
-      }
-      else
-      {
-         vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Configuring mono window attribs.\n" << vjDEBUG_FLUSH;
-         tempPfDisp.pWin->setFBConfigAttrs(&(mono_fb_config[0]));       // Configure a "norm" window
-      }
-
-      // -- Set pwin config info -- //
-      tempPfDisp.pWin->setConfigFunc(vjPFconfigPWin); // Set config function
-      tempPfDisp.pWin->config();                      // Next pfFrame, config Func will be called
-
-      // --- Setup Channels --- //
+      // Get channel info
       // Primary channel - (Left in stereo)
-      tempPfDisp.chans[pfDisp::PRIMARY] = new pfChannel(localPipe);
-      tempPfDisp.chans[pfDisp::PRIMARY]->setViewport(0.0f, 1.0f, 0.0f, 1.0f);
-      tempPfDisp.pWin->addChan(tempPfDisp.chans[pfDisp::PRIMARY]);
+      viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+      pf_viewport.chans[pfViewport::PRIMARY] = new pfChannel(pipe);
+      pf_viewport.chans[pfViewport::PRIMARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
+      pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::PRIMARY]);
 
       // Secondary channel - (Right in stereo)
-      if(tempPfDisp.disp->inStereo())
+      if(disp->inStereo())
       {
-         tempPfDisp.chans[pfDisp::SECONDARY] = new pfChannel(localPipe);
-         tempPfDisp.chans[pfDisp::SECONDARY]->setViewport(0.0f, 1.0f, 0.0f, 1.0f);
-         tempPfDisp.pWin->addChan(tempPfDisp.chans[pfDisp::SECONDARY]);
+         pf_viewport.chans[pfViewport::SECONDARY] = new pfChannel(pipe);
+         pf_viewport.chans[pfViewport::SECONDARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
+         pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::SECONDARY]);
+      }
+
+      // Set draw function
+      if(disp->inStereo() && (!viewport->isSimulator()))
+      {
+         pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoLeft);
+         pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoRight);
+      }
+      else if(viewport->isSimulator())
+      {
+         pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncSimulator);
       }
       else
       {
-         tempPfDisp.chans[pfDisp::SECONDARY] = NULL;
+         pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncMonoBackbuffer);
       }
 
-      // ----- SET DRAW FUNC ------ //
-      if(tempPfDisp.disp->inStereo() && (!tempPfDisp.disp->isSimulator()))
+      // if surface ==> Setup surface channels
+      if (viewport->isSurface())
       {
-         tempPfDisp.chans[pfDisp::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoLeft);
-         tempPfDisp.chans[pfDisp::SECONDARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoRight);
+         vjASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
+
+         // Primary
+         if(NULL == mSurfMasterChan)      // If NULL, then add us as the new one
+         {
+            mSurfMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
+            mSurfMasterChan->setScene(mSceneRoot);
+            initChanGroupAttribs(mSurfMasterChan);
+            mSurfChannels.push_back(mSurfMasterChan);
+         }
+         else
+         {
+            mSurfChannels.push_back(pf_viewport.chans[pfViewport::PRIMARY]);
+            mSurfMasterChan->attach(pf_viewport.chans[pfViewport::PRIMARY]);
+         }
+
+         // Secondary
+         if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+         {
+            mSurfChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
+            mSurfMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
+         }
+
       }
-      else if(tempPfDisp.disp->isSimulator())
+      // if sim ==> setup sim channels
+      else if(viewport->isSimulator())
       {
-         tempPfDisp.chans[pfDisp::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncSimulator);
+         vjASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
+
+         // Primary
+         if(NULL == mSimMasterChan)        // If NULL, then make us the master
+         {
+            mSimMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
+            mSimMasterChan->setScene(mRootWithSim);       // Set the shared "normal" scene
+            initChanGroupAttribs(mSimMasterChan);       // Setup the channel group attribs
+            mSimChannels.push_back(mSimMasterChan);
+         }
+         else
+         {
+            mSimChannels.push_back(pf_viewport.chans[pfViewport::PRIMARY]);
+            mSimMasterChan->attach(pf_viewport.chans[pfViewport::PRIMARY]);
+         }
+
+         // Secondary
+         if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+         {
+            mSimChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
+            mSimMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
+         }
       }
-      else
-      {
-         tempPfDisp.chans[pfDisp::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncMonoBackbuffer);
-      }
 
-      // -- Add new pfDisp to disp Vector -- //
-      // This should make a COPY
-      if(tempPfDisp.disp->isSimulator())
-         mSimDisps.push_back(tempPfDisp);
-      else
-         mSurfDisps.push_back(tempPfDisp);
+      // Add viewport to the display list
+      pf_disp.viewports.push_back(pf_viewport);
+   }     // for each viewport
 
-      vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vjDEBUG_FLUSH;
-   }
-
-   // ----- SETUP Surface MASTER CHANNEL ----- //
-   if(mSurfDisps.size() > 0)
-   {
-      mSurfMasterChan = mSurfDisps[0].chans[pfDisp::PRIMARY];
-      vjASSERT(mSurfMasterChan != NULL);
-
-      mSurfMasterChan->setScene(mSceneRoot);       // Set the shared "normal" scene
-
-      initChanGroupAttribs(mSurfMasterChan);       // Setup the channel group attribs
-
-            // Attach channel groups
-      for (unsigned dispIndex=0; dispIndex<mSurfDisps.size(); dispIndex++)
-      {
-         pfChannel* primary_ch = mSurfDisps[dispIndex].chans[pfDisp::PRIMARY];
-         pfChannel* secondary_ch = mSurfDisps[dispIndex].chans[pfDisp::SECONDARY];
-         vjASSERT(NULL != primary_ch);
-
-         if (dispIndex != 0)                    // XXX: Assumes that all displays will have a valid primary channel
-            mSurfMasterChan->attach(primary_ch);
-         if(secondary_ch != NULL)
-            mSurfMasterChan->attach(secondary_ch);
-      }
-   }
-   else
-      mSurfMasterChan = NULL;
-
-   // ----- SETUP Sim MASTER CHANNEL ----- //
-   if(mSimDisps.size() > 0)
-   {
-      mSimMasterChan = mSimDisps[0].chans[pfDisp::PRIMARY];
-      vjASSERT(mSimMasterChan != NULL);
-
-      mSimMasterChan->setScene(mRootWithSim);       // Set the shared "normal" scene
-      initChanGroupAttribs(mSimMasterChan);       // Setup the channel group attribs
-
-            // Attach channel groups
-      for (unsigned dispIndex=0; dispIndex<mSimDisps.size(); dispIndex++)
-      {
-         pfChannel* primary_ch = mSimDisps[dispIndex].chans[pfDisp::PRIMARY];
-         pfChannel* secondary_ch = mSimDisps[dispIndex].chans[pfDisp::SECONDARY];
-         vjASSERT(NULL != primary_ch);
-
-         if (dispIndex != 0)                    // XXX: Assumes that all displays will have a valid primary channel
-            mSimMasterChan->attach(primary_ch);
-         if(secondary_ch != NULL)
-            mSimMasterChan->attach(secondary_ch);
-      }
-   }
-   else
-      mSimMasterChan = NULL;
+   // -- Add new pfDisp to disp Vector -- //
+   mDisplays.push_back(pf_disp);
 
 
-   vjASSERT(mSceneRoot != NULL && "We have a NULL root scene in vjPfDrawManager");
-   vjASSERT(mRootWithSim != NULL && "We have a NULL sim root scene in vjPfDrawManager");
-
-   //pfFrame();
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vjDEBUG_FLUSH;
 
    // Dump the state
-   debugDump(vjDBG_CONFIG_LVL);
-
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, 1) << "Reconfiged the pfDrawManager.\n" << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_DRAW_MGR, 1) << (*this) << vjDEBUG_FLUSH;
+   debugDump(1);
 }
+
+
+//: Callback when display is removed to display manager
+//! PRE: disp must be a valid display that we have
+//! POST: window for disp is removed from the draw manager and child pipes
+/*
+void vjPfDrawManager::removeDisplay(vjDisplay* disp)
+{
+   vjGlPipe* pipe;  pipe = NULL;
+   vjGlWindow* win; win = NULL;     // Window to remove
+
+   for(unsigned int i=0;i<mWins.size();i++)
+   {
+      if(mWins[i]->getDisplay() == disp)      // FOUND it
+      {
+         win = mWins[i];
+         pipe = pipes[win->getDisplay()->getPipe()];
+      }
+   }
+
+   // Remove the window from the pipe and our local list
+   if(win != NULL)
+   {
+      vjASSERT(pipe != NULL);
+      vjASSERT(isValidWindow(win));
+      pipe->removeWindow(win);                                                   // Remove from pipe
+      mWins.erase(std::remove(mWins.begin(),mWins.end(),win), mWins.end());      // Remove from draw manager
+      vjASSERT(!isValidWindow(win));
+   }
+   else
+   {
+      vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vjDEBUG_FLUSH;
+      vjASSERT(false);
+   }
+
+}
+*/
+
 
 // Initialize the parameters of the master channel
 // Sets the attribs to share
@@ -496,26 +595,6 @@ std::vector<int> vjPfDrawManager::getStereoFBConfig()
    return stereo_fb;
 }
 
-
-
-//: Callback when display is added to display manager
-void vjPfDrawManager::addDisplay(vjDisplay* disp)
-{
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager:addDisplay\n" << disp << std::endl << vjDEBUG_FLUSH;
-}
-
-
-// Initializes the application's scene <br>
-// Set's the sceneRoot
-void vjPfDrawManager::initPerformerApp()
-{
-   app->initScene();
-   mSceneRoot = new pfScene;
-   mSceneGroup = app->getScene();
-   mSceneRoot->addChild(mSceneGroup);        // Create the base scene without sim
-   mRootWithSim->addChild(mSceneGroup);      // Create base scene with sim
-}
-
 void vjPfDrawManager::initLoaders()
 {
    if(!mHeadModel.empty())
@@ -524,7 +603,33 @@ void vjPfDrawManager::initLoaders()
       pfdInitConverter(mWandModel.c_str());
 }
 
-void vjPfDrawManager::initSimulator()
+
+// Initializes the application's scene <br>
+// Set's the sceneRoot
+void vjPfDrawManager::initPerformerGraph()
+{
+   mSceneRoot = new pfScene;
+   mSceneGroup = new pfGroup;                // (Placeholder until app loads theirs)
+   mSceneRoot->addChild(mSceneGroup);        // Create the base scene without sim
+   mRootWithSim->addChild(mSceneGroup);      // Create base scene with sim
+}
+
+// Initialize the application graph
+// - init scene
+// - Remove old app scene child
+// - replace with new app scene child
+void vjPfDrawManager::initAppGraph()
+{
+   app->initScene();
+   if(mSceneGroup != NULL)
+      mSceneRoot->removeChild(mSceneGroup);
+
+   mSceneGroup = app->getScene();
+   mSceneRoot->addChild(mSceneGroup);
+}
+
+
+void vjPfDrawManager::initSimulatorGraph()
 {
    pfNode* head_node(NULL);
    pfNode* wand_node(NULL);
@@ -566,10 +671,10 @@ void vjPfDrawManager::initSimulator()
    }
 }
 
-void vjPfDrawManager::updateSimulator(vjSimDisplay* sim)
+void vjPfDrawManager::updateSimulator(vjSimViewport* sim_vp)
 {
-   vjMatrix vj_head_mat = sim->getHeadPos();          // Get Juggler matrices
-   vjMatrix vj_wand_mat = sim->getWandPos();
+   vjMatrix vj_head_mat = sim_vp->getHeadPos();          // Get Juggler matrices
+   vjMatrix vj_wand_mat = sim_vp->getWandPos();
    pfMatrix head_mat = vjGetPfMatrix(vj_head_mat);    // Convert to Performer
    pfMatrix wand_mat = vjGetPfMatrix(vj_wand_mat);
    mHeadDCS->setMat(head_mat);                        // Set the DCS nodes
@@ -588,41 +693,66 @@ void vjPfDrawManager::updateProjections()
 
    // --- Update the channel projections --- //
    //for(each pfDisp)
-   //    update Performer specific stuff.
-   for (std::vector<pfDisp>::iterator i = mSurfDisps.begin(); i != mSurfDisps.end(); i++)
+   //   for(each viewport)
+   //       update Performer specific stuff.
+   for (unsigned disp_id=0;disp_id<mDisplays.size();disp_id++)
    {
-      vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>((*i).disp);
-      vjASSERT(surf_disp != NULL && "Could not cast supposedly surface display to vjSurfaceDisplay.");
-      vjDisplay::DisplayView view = surf_disp->getView();
+      pfDisplay* cur_disp = &(mDisplays[disp_id]);
 
-      if(vjDisplay::LEFT_EYE == view)
+      vjASSERT(cur_disp->disp != NULL);
+      for(unsigned vp=0;vp<cur_disp->viewports.size();vp++)
       {
-         updatePfProjection((*i).chans[pfDisp::PRIMARY], surf_disp->getLeftProj(),false);
-      }
-      else if(vjDisplay::RIGHT_EYE == view)
-      {
-         updatePfProjection((*i).chans[pfDisp::PRIMARY], surf_disp->getRightProj(),false);
-      }
-      else if(vjDisplay::STEREO == view)
-      {
-         updatePfProjection((*i).chans[pfDisp::PRIMARY], surf_disp->getLeftProj(),false);
-         updatePfProjection((*i).chans[pfDisp::SECONDARY], surf_disp->getRightProj(),false);
-      }
-      else
-      {
-         vjASSERT(false && "vjPfDrawManager::updateProjections(): We don't have a valid display type, don't know what to do");
+         pfViewport* pf_vp = &(cur_disp->viewports[vp]);
+         vjASSERT(pf_vp != NULL);
+         vjASSERT(pf_vp->viewport != NULL);
+
+         vjSurfaceViewport* surf_vp(NULL);
+         vjSimViewport* sim_vp(NULL);
+         vjViewport::View view;
+
+         // FIND Type of viewport and do stuff
+         switch(pf_vp->viewport->getType())
+         {
+            // Surface viewport
+         case vjViewport::SURFACE:
+            surf_vp = dynamic_cast<vjSurfaceViewport*>(pf_vp->viewport);
+            vjASSERT(surf_vp != NULL && "Could not cast supposedly surface display to vjSurfaceDisplay.");
+            view = surf_vp->getView();
+
+            if(vjViewport::LEFT_EYE == view)
+            {
+               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], surf_vp->getLeftProj(),false);
+            }
+            else if(vjViewport::RIGHT_EYE == view)
+            {
+               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], surf_vp->getRightProj(),false);
+            }
+            else if(vjViewport::STEREO == view)
+            {
+               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], surf_vp->getLeftProj(),false);
+               updatePfProjection(pf_vp->chans[pfViewport::SECONDARY], surf_vp->getRightProj(),false);
+            }
+            else
+            {
+               vjASSERT(false && "vjPfDrawManager::updateProjections(): We don't have a valid display type, don't know what to do");
+            }
+            break;
+
+            // Sim viewport
+         case vjViewport::SIM:
+               sim_vp = dynamic_cast<vjSimViewport*>(pf_vp->viewport);
+               vjASSERT(sim_vp != NULL && "Could not cast supposedly simulator display to vjSimDisplay.");
+
+               updateSimulator(sim_vp);
+               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], sim_vp->getCameraProj(), true);
+               break;
+         default:
+            vjASSERT(false && "Viewport type not found");
+            break;
+         }
+
       }
    }
-
-   for(std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
-   {
-      vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>((*i).disp);
-      vjASSERT(sim_disp != NULL && "Could not cast supposedly simulator display to vjSimDisplay.");
-
-      updateSimulator(sim_disp);
-      updatePfProjection((*i).chans[pfDisp::PRIMARY], sim_disp->getCameraProj(), true);
-   }
-
 }
 
 //! POST: chan has it's view matrix set to the Performer
@@ -675,6 +805,7 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
 // looking for one that contains the channel.  When it is found, it is
 // returned.
 // NOTE: The "cool" STL functor search didn't work for some reason
+/*
 vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 {
    // Search surface displays
@@ -697,6 +828,7 @@ vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 
    return NULL;
 }
+*/
 
 void vjPfDrawManager::debugDump(int debugLevel)
 {
@@ -704,13 +836,8 @@ void vjPfDrawManager::debugDump(int debugLevel)
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)app << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mSceneRoot << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "Surf Disps:" << mSurfDisps.size() << std::endl << vjDEBUG_FLUSH;
-   for (std::vector<pfDisp>::iterator i = mSurfDisps.begin(); i != mSurfDisps.end(); i++)
-   {
-      debugDumpPfDisp(&(*i),debugLevel);
-   }
-   vjDEBUG(vjDBG_DRAW_MGR,debugLevel)       << "Sim Disps:" << mSimDisps.size() << std::endl << vjDEBUG_FLUSH;
-   for (std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "Disps:" << mDisplays.size() << std::endl << vjDEBUG_FLUSH;
+   for (std::vector<pfDisplay>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)
    {
       debugDumpPfDisp(&(*i),debugLevel);
    }
@@ -719,36 +846,36 @@ void vjPfDrawManager::debugDump(int debugLevel)
 }
 
 
-void vjPfDrawManager::debugDumpPfDisp(pfDisp* pf_disp, int debugLevel)
+void vjPfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "Display:" << (void*)(pf_disp->disp) << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::dec << std::endl << vjDEBUG_FLUSH;
 
-   pfChannel* l_chan = (pf_disp->chans[pfDisp::PRIMARY]);
-   pfChannel* r_chan = (pf_disp->chans[pfDisp::SECONDARY]);
-   unsigned lc_mask(0),rc_mask(0);
-   if (l_chan != NULL)
-      lc_mask = l_chan->getShare();
-   if (r_chan != NULL)
-      rc_mask = r_chan->getShare();
+   for(int vp=0;vp<pf_disp->viewports.size();vp++)
+   {
+      vjASSERT((pf_disp->viewports[vp].viewport != NULL) && "NULL viewport in pf_disp. Check if it was ever set.");
 
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)
-         << "chans: L:" << (void*)l_chan
-         << "  shared: FOV:" << (lc_mask & PFCHAN_FOV)
-         << " Scene:" << (lc_mask & PFCHAN_SCENE)
-         << " AppFunc:" << (lc_mask & PFCHAN_APPFUNC)
-         << " SwapBuff:" << (lc_mask & PFCHAN_SWAPBUFFERS)
-         << " SwapBuff-HW:" << (lc_mask & PFCHAN_SWAPBUFFERS_HW)
-         << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)
-         << "       R:" << (void*)r_chan
-         << "  shared: FOV:" << (rc_mask & PFCHAN_FOV)
-         << " Scene:" << (rc_mask & PFCHAN_SCENE)
-         << " AppFunc:" << (rc_mask & PFCHAN_APPFUNC)
-         << " SwapBuff:" << (rc_mask & PFCHAN_SWAPBUFFERS)
-         << " SwapBuff-HW:" << (rc_mask & PFCHAN_SWAPBUFFERS_HW)
-         << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel) << "Viewport: " << vp << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel) << "      vp: " << *(pf_disp->viewports[vp].viewport) << vjDEBUG_FLUSH;
+
+      for(int ch=0;ch<2;ch++)
+      {
+         pfChannel* cur_chan = pf_disp->viewports[vp].chans[ch];
+         unsigned chan_mask(0);
+         if(cur_chan != NULL)
+            chan_mask = cur_chan->getShare();
+         vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)
+              << "chan:" << ch << " -- " << (void*)cur_chan
+              << "  shared: FOV:" << (chan_mask & PFCHAN_FOV)
+              << " Scene:" << (chan_mask & PFCHAN_SCENE)
+              << " AppFunc:" << (chan_mask & PFCHAN_APPFUNC)
+              << " SwapBuff:" << (chan_mask & PFCHAN_SWAPBUFFERS)
+              << " SwapBuff-HW:" << (chan_mask & PFCHAN_SWAPBUFFERS_HW)
+              << std::endl << vjDEBUG_FLUSH;
+      }
+   }
+
    vjDEBUG_CONT_END(vjDBG_DRAW_MGR,debugLevel) << vjDEBUG_FLUSH;
 }
 
