@@ -64,19 +64,15 @@ void PFconfigPWin(pfPipeWindow* pWin);
 void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
 void PfAppFunc(pfChannel *chan, void* chandata);
 
-//------------------------------------------------------------
-//: Concrete singleton class for API specific Draw Manager.
-//
-// Responsible for all Performer rendering and windowing
-//
-// @author Allen Bierbaum
-//  Date: 9-7-97
-//------------------------------------------------------------
+/** Concrete singleton class for API specific Draw Manager.
+*
+* Responsible for all Performer rendering and windowing
+*/
 class PfDrawManager : public DrawManager
 {
 protected:
 
-   // The channels associated with a viewport
+   /** The channels associated with a viewport */
    struct pfViewport
    {
       // Identifier for the channels
@@ -89,8 +85,8 @@ protected:
          viewport = NULL;
       }
 
-      pfChannel*  chans[2];         // The channels
-      Viewport* viewport;         // The viewport that we are rendering
+      pfChannel*  chans[2];      /**< The channels */
+      Viewport* viewport;        /**< The viewport that we are rendering */
    };
 
    struct pfDisplay
@@ -127,51 +123,55 @@ public:
     // Takes a chunkDB and extracts API specific stuff
    //virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
 
-    //: Blocks until the end of the frame
-    //! PRE: none
-    //! POST: The frame has been drawn
+    /** Blocks until the end of the frame
+    * @pre none
+    * @post The frame has been drawn
+    */
    virtual void sync();
 
-   //: Enable a frame to be drawn
-   //! PRE: none
-   //! POST: Frame has been triggered to begin drawing
+   /** Enable a frame to be drawn
+   * @pre none
+   * @post Frame has been triggered to begin drawing
+   */
    virtual void draw();
 
 
-   //: Set the app the draw whould interact with.
-   //! PRE: none
-   //! POST: self'.app = _app
+   /** Set the app the draw whould interact with.
+   * @pre none
+   * @post self'.app = _app
+   */
    virtual void setApp(App* _app);
 
-
-   //: Initialize the drawing API (if not already running)
-   //  should call pfInit()
-   //
-   // Configure process model
-   // Configure multi-pipe model
-   // Then call pfConfig to start the MP stuff
-   // Sets up channels and pWins.
-   //
-   //!NOTE: Fork happens here
+   /** Initialize the drawing API (if not already running)
+   *  should call pfInit()
+   *
+   * Configure process model
+   * Configure multi-pipe model
+   * Then call pfConfig to start the MP stuff
+   * Sets up channels and pWins.
+   *
+   * @note Fork happens here
+   */
    virtual void initAPI();
 
-   // Initialize the parameters of the master channel
+   /** Initialize the parameters of the master channel */
    void initChanGroupAttribs(pfChannel* masterChan);
 
-   //: Callback when display is added to display manager
+   /** Callback when display is added to display manager */
    virtual void addDisplay(Display* disp);
 
-   //: Callback when display is removed to display manager
+   /** Callback when display is removed to display manager */
    virtual void removeDisplay(Display* disp);
 
-      //: Shutdown the drawing API
+   /** Shutdown the drawing API */
    virtual void closeAPI();
 
-      //: Update all the projections for the displays
-      //!POST: All windows have the projections correctly set.
+   /** Update all the projections for the displays
+   * @post All windows have the projections correctly set.
+   */
    virtual void updateProjections();
 
-   //: dumps the object's internal state
+   /** dumps the object's internal state */
    void debugDump(int debugLevel);
 
    void debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel);
@@ -181,54 +181,58 @@ public:
    friend void PfAppFunc(pfChannel *chan, void* chandata);
 
 public: // Chunk handlers
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
+   /** Can the handler handle the given chunk?
+   * @returns true - Can handle it
+   *          false - Can't handle it
+   */
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
 protected:     // --- Config handling functions --- //
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
+   /** Add the chunk to the configuration
+   * @pre configCanHandle(chunk) == true
+   * @returns success
+   */
    virtual bool configAdd(jccl::ConfigChunkPtr chunk);
 
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
+   /** Remove the chunk from the current configuration
+   * @pre  configCanHandle(chunk) == true
+   * @returns success
+   */
    virtual bool configRemove(jccl::ConfigChunkPtr chunk)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vprDEBUG_FLUSH;
       return false;
    }
 
-   //: Setup display system related attributes
-   //! PRE: chunk is a chunks of the "dispaySystem" type
-   //! NOTE: MUST be called before initDrawing
-   //! NOTE: This must be called by the draw manager
-   //        because the chunk must be gotten from the draw manager
+   /** Setup display system related attributes
+   * @pre chunk is a chunks of the "dispaySystem" type
+   * @note  MUST be called before initDrawing
+   * @note This must be called by the draw manager
+   *        because the chunk must be gotten from the draw manager
+   */
    bool configDisplaySystem(jccl::ConfigChunkPtr chunk);
 
-   //: Configure pfAPI stuff
-   //! PRE: chunk.type == "apiPerformer"
-   //! NOTE: MUST be called before initDrawing
+   /** Configure pfAPI stuff
+   * @pre chunk.type == "apiPerformer"
+   * @note MUST be called before initDrawing
+   */
    bool configPerformerAPI(jccl::ConfigChunkPtr chunk);
 
 protected:
-   //: Call all the application channel callbacks
+   /** Call all the application channel callbacks */
    void callAppChanFuncs();
 
-   //: Helper to set channel view params from a Projection
+   /** Helper to set channel view params from a Projection */
    void updatePfProjection(pfChannel* chan, Projection* proj, bool simulator=false);
 
-   //: Helper function to create the base scene graph stuff
+   /** Helper function to create the base scene graph stuff */
    void initPerformerGraph();
 
-   //: Helper to initialize the Performer simulato
+   /** Helper to initialize the Performer simulation */
    void initSimulatorGraph();
 
-   //: Helper that (re)loads the application's scene graph into the active scene(s)
+   /** Helper that (re)loads the application's scene graph into the active scene(s) */
    void initAppGraph();
-
 
    void initLoaders();
    void updateSimulator(SimViewport* simVp);
@@ -237,23 +241,28 @@ protected:
    //! RETURNS: NULL - Not found
    //**//pfDisp* getPfDisp(pfChannel* chan);
 
-   // Init all the pipes that may need to be used
+   /** Init all the pipes that may need to be used */
    void initPipes();
 
-   // Get a performer pipe
-   //! PRE: pipe_num < mNumPipes
-   //       Fork must have happend
+   /** Get a performer pipe
+   * @pre pipe_num < mNumPipes
+   *       Fork must have happend
+   */
    pfPipe* getPfPipe(unsigned pipe_num);
 
-   // Helpers for releasing a display and the associated cruft
+   /** @name Display helpers
+   * Helpers for releasing a display and the associated cruft
+   */
+   //@{
    void releaseDisplay(pfDisplay& disp);
    void releaseViewport(pfDisplay& disp, pfViewport& vp);
    pfPipeWindow* allocatePipeWin(unsigned pipeNum);
    void releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum);
+   //@}
 
-   //: Return the needed mono frame buffer config
+   /** Return the needed mono frame buffer config */
    std::vector<int> getMonoFBConfig();
-   //: Return the needed stereo frame buffer config
+   /** Return the needed stereo frame buffer config */
    std::vector<int> getStereoFBConfig();
 
 protected:
@@ -263,48 +272,55 @@ protected:
    // correctly.
 
    // --- Config Data --- //
-   unsigned int mNumPipes;    // The number of Performer pipes
+   unsigned int mNumPipes;    /**< The number of Performer pipes */
 
    // --- Performer State --- //
-   PfApp*                app;              // There User applications
-   std::vector<pfDisplay>  mDisplays;        // All Performer displays
+   PfApp*                app;              /**< The User applications */
+   std::vector<pfDisplay>  mDisplays;        /**< All Performer displays */
 
    std::vector<pfChannel*> mSurfChannels;
-   std::vector<pfChannel*> mSimChannels;        // List of sim displays
-   pfChannel*              mSurfMasterChan;  // Master channel
-   pfChannel*              mSimMasterChan;   // Master channel for simulators
+   std::vector<pfChannel*> mSimChannels;        /**< List of sim displays */
+   pfChannel*              mSurfMasterChan;  /**< Master channel */
+   pfChannel*              mSimMasterChan;   /**< Master channel for simulators */
 
-   std::vector<pfPipe*>    mPipes;            // Performer pipes we have opened
-   std::vector<char*>      mPipeStrs;        // The X-Strs of the pipes
-   bool                    mPfHasForked;     // Performer has forked it processes already
+   std::vector<pfPipe*>    mPipes;            /**< Performer pipes we have opened */
+   std::vector<char*>      mPipeStrs;        /**< The X-Strs of the pipes */
+   bool                    mPfHasForked;     /**< Performer has forked it processes already */
 
-   // List of (available) pipe windows grouped by pipe num
-   // This is used as a repository of previously allocated but unused pipe windows
-   // We do this because Performer does not allow the deletion of pfPipeWindows
+   /** List of (available) pipe windows grouped by pipe num
+   * This is used as a repository of previously allocated but unused pipe windows
+   * We do this because Performer does not allow the deletion of pfPipeWindows
+   */
    std::vector< std::vector<pfPipeWindow*> > mPipeWindows;
 
-   //   mRoot
-   //       |
-   //     mSceneGroup -- mSceneRoot -- app scene
-   //       /
-   // mRootWithSim   mHeadDCS
-   //       \       /
-   //       mSimTree
-   //              |
-   //              mWandDCS
-   pfScene*          mRoot;            // Root of performer tree to render
-   pfGroup*          mSceneRoot;       // Root of scene to render (changes at run-time)
-   pfGroup*          mSceneGroup;      // The group node with only sceneRoot under it
-   pfScene*          mRootWithSim;  // The root with the simulator group & the sceneRoot
+   /** @name Scene graph nodes
+   * <pre>
+   *       mRoot
+   *        |
+   *     mSceneGroup -- mSceneRoot -- app scene
+   *       /
+   * mRootWithSim   mHeadDCS
+   *       \       /
+   *       mSimTree
+   *              |
+   *              mWandDCS
+   * </pre>
+   */
+   //@{
+   pfScene*          mRoot;            /**< Root of performer tree to render */
+   pfGroup*          mSceneRoot;       /**< Root of scene to render (changes at run-time) */
+   pfGroup*          mSceneGroup;      /**< The group node with only sceneRoot under it */
+   pfScene*          mRootWithSim;     /**< The root with the simulator group & the sceneRoot */
+   //@}
 
-
-   // ---- Simulator stuff --- //
-   pfGroup*          mSimTree;      // The simulator scene graph
-   pfDCS*            mHeadDCS;      // The DCS above the head
-   pfDCS*            mWandDCS;      // The DCS above the wand
-   std::string       mHeadModel;    // The head model file path
-   std::string       mWandModel;    // The wand model file path
-
+   /** @name Simulator stuff */
+   //@{
+   pfGroup*          mSimTree;      /**< The simulator scene graph */
+   pfDCS*            mHeadDCS;      /**< The DCS above the head */
+   pfDCS*            mWandDCS;      /**< The DCS above the wand */
+   std::string       mHeadModel;    /**< The head model file path */
+   std::string       mWandModel;    /**< The wand model file path */
+   //@}
 
 protected:
 
