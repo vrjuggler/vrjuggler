@@ -92,7 +92,7 @@ public:  // --- Internal helper class ----- //
     * opened by other system components but that we still want to get input
     * from.
     */
-   class WindowRegistry : public vpr::Singleton<WindowRegistry>
+   class WindowRegistry
    {
    public:
       struct WindowInfo
@@ -120,6 +120,7 @@ public:  // --- Internal helper class ----- //
       typedef std::map<std::string,WindowInfo> window_map_t;
       window_map_t    mWindowMap;    /**< Map Window name to the data needed for it. */
 
+      vprSingletonHeader(WindowRegistry);
    };
 
 public:

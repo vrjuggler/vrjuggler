@@ -50,6 +50,8 @@
 namespace gadget
 {
 
+vprSingletonImp(EventWindowXWin::WindowRegistry);
+
 std::string EventWindowXWin::getElementType()
 {
    return std::string("event_window");
