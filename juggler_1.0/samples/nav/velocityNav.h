@@ -50,7 +50,7 @@ public:
 
    // Update the navigation position
    virtual void update();
-
+   
    // Set the action buttons that can be used
    void setActionButtons(std::vector<std::string> action_btn_names);
 
@@ -253,7 +253,7 @@ void velocityNav::updateInteraction()
 
    // Resetting
    if(mResetting)
-      navigator::reset();
+      this->reset();
 
    // Rotating
    vjMatrix rot_mat = *(mNavWand->getData());
