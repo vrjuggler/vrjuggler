@@ -58,6 +58,11 @@ vpr::Uint32 Message::resize (const vpr::Uint32 bytes_read)
 
    // Only resize the message if 0 < bytes_read < mMessageSize.
    if ( resize_amount > 0 && resize_amount != getSize() ) {
+
+      mMsg->erase(mMsg->begin(), mMsg->begin()+bytes_read);
+      vprASSERT(resize_amount == mMsg->size());    // Must be this size
+
+      /*
       char* data;
       vpr::Uint32 i;
 
@@ -70,6 +75,7 @@ vpr::Uint32 Message::resize (const vpr::Uint32 bytes_read)
 
       data[i]  = '\0';
       mMsgSize = resize_amount;
+      */
    }
 
    return resize_amount;
