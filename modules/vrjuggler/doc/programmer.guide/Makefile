@@ -17,7 +17,7 @@ SVG_IMAGES=	figures/Kernel_Loop_Call_Sequence.svg		\
 IMAGES=		$(SVG_IMAGES:%.svg=%.png)
 
 # Fill these in!!  Together, they make up the installation prefix.
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 instdir=	vrjuggler/1.0/programmer.guide
 
 prefix=		$(webroot)/$(instdir)

@@ -39,7 +39,7 @@
 # =============================================================================
 
 # ******** Fill this in!! ********
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 # ********************************
 
 SUBDIR=		docs/team.guide					\
