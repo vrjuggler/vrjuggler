@@ -132,16 +132,9 @@ vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction ()
 
 vpr::ReturnStatus SerialPortImplTermios::clearAll ()
 {
-<<<<<<< SerialPortImplTermios.cpp
     struct termios term;
     vpr::ReturnStatus retval;
     if ( (retval = getAttrs(&term)).success() )
-=======
-    std::cout << "Clear ALL" << std::endl;
-    struct termios term;
-    vpr::ReturnStatus retval;
-    if ( (retval = getAttrs(&term)).success() )
->>>>>>> 1.46
     {
         std::string msg;
         term.c_cflag = 0;
