@@ -52,6 +52,7 @@
 #elif defined(VPR_OS_Darwin) && ! defined(GADGET_USE_X11)
 #  include <gadget/Devices/EventWindow/EventWindowOSX.h>
 #else
+#  include <jccl/RTRC/DependencyManager.h>
 #  include <gadget/Devices/EventWindow/EventWindowXWin.h>
 #  include <gadget/Devices/EventWindow/EventWindowDepCheckerXWin.h>
 #endif
