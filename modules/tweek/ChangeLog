@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-11-13 patrickh    Added org.vrjuggler.tweek.event.EventListenerRegistry.
+                       NEW VERSION: 0.20.1
 2004-11-13 patrickh    Refactored the handling of TweekFrameListener so that
                        all window events are delivered to the listeners.
                        NEW VERSION: 0.20.0
