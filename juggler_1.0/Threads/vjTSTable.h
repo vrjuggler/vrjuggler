@@ -4,6 +4,7 @@
 
 #include <Threads/vjTSObject.h>
 #include <Kernel/vjDebug.h>
+#include <vector.h>
 
 //-----------------------------------------------------------------
 //: This class is the actual TS Table
