@@ -39,7 +39,7 @@
  ** and .cpp file before any other headers because it includes system headers.
  ** ----------------------------------------------------------------------------
  **/
-/* This should always be included first. */
+/* Must get defines first. */
 #include <jccl/jcclDefines.h>          // Defines for jccl
 
 /* Get rid of symbols added by Autoconf 2.5x. */
@@ -58,13 +58,13 @@
 // Windows
 #ifdef WIN32 
 /* Go with only minimal files */
-#define WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN
  
 /* Turn off: identifier truncated to 255 characters in the debug information */
-#pragma warning(disable:4786)
-#include <windows.h>
-#endif
-
+#   pragma warning(disable:4786)
+#   include <windows.h>
+#endif /* WIN32 */
+ 
 /**
  ** ----------------------------------------------------------------------------
  ** DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -72,11 +72,10 @@
  ** ----------------------------------------------------------------------------
  **/
 #ifdef WIN32
-
 #if defined(__GNUC__)
 #    undef _declspec
 #    define _declspec(x) __declspec(x)
-#endif
+#endif /* GNUC */
  
 #define JCCL_EXPORT(__type)      _declspec(dllexport) __type
 #define JCCL_EXPORT_CLASS        _declspec(dllexport)
