@@ -270,15 +270,20 @@ public class ChunkDBPanel extends JPanel
     }
 
 
-
-    public void addChunks (ConfigChunkDB newdb) {
+    // typically, one chunkdbpanel will call this on another to perform a 
+    // sendacross action
+    private void addChunks (ConfigChunkDB newdb) {
 	if (chunkdb == null)
 	    return;
-	for (int i = 0; i < newdb.size(); i++)
-	    chunkdb.addElement ((ConfigChunk)newdb.elementAt(i));
-    }
-
-	
+	else if (chunkdb == Core.active_chunkdb) {
+	    for (int i = 0; i < newdb.size(); i++)
+		Core.net.sendChunk ((ConfigChunk)newdb.elementAt(i));
+	}
+	else {
+	    for (int i = 0; i < newdb.size(); i++)
+		chunkdb.addElement ((ConfigChunk)newdb.elementAt(i));
+	}
+    }	
 
     private void updateInsertTypes () {
 	int i, j;
