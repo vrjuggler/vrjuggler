@@ -184,7 +184,7 @@ protected:
     static int* attachedCounter;
 };
 
-MemPoolWin32* vjMutexWin32::mutexPool = NULL;
+vjMemPoolWin32* vjMutexWin32::mutexPool = NULL;
 int* vjMutexWin32::attachedCounter = NULL;
 
 #endif
