@@ -30,6 +30,22 @@
       <property valuetype="string" variable="true" name="driver">
          <help>The base name of a dynamically loadable driver object.  For example: PinchGlove_drv</help>
          <value label="Driver module" defaultvalue=""/>
+         <enumeration editable="true">
+            <enum label="DataGlove_drv" value="DataGlove_drv"/>
+            <enum label="DirectXJoystick_drv" value="DirectXJoystick_drv"/>
+            <enum label="Fastrak_drv" value="Fastrak_drv"/>
+            <enum label="Flock_drv" value="Flock_drv"/>
+            <enum label="IBox_drv" value="IBox_drv"/>
+            <enum label="IS900_drv" value="IS900_drv"/>
+            <enum label="IntersenseAPI_drv" value="IntersenseAPI_drv"/>
+            <enum label="LinuxJoydev_drv" value="LinuxJoydev_drv"/>
+            <enum label="MSFTSpeechRecog_drv" value="MSFTSpeechRecog_drv"/>
+            <enum label="MotionStar_drv" value="MotionStar_drv"/>
+            <enum label="PinchGlove_drv" value="PinchGlove_drv"/>
+            <enum label="SerialEncoder_drv" value="SerialEncoder_drv"/>
+            <enum label="ThreeDMouse_drv" value="ThreeDMouse_drv"/>
+            <enum label="Trackd_drv" value="Trackd_drv"/>
+         </enumeration>
       </property>
       <property valuetype="string" variable="true" name="driver_scan_path">
          <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded.</help>
