@@ -57,17 +57,6 @@ namespace vpr {
 #   include <vpr/md/SPROC/Thread/ThreadSGI.h>
 #   include <vpr/md/SPROC/Thread/ThreadKeySGI.h>
 
-/* Win32 */
-#elif defined(VPR_USE_WIN32)
-#   include <process.h>
-#   include <vpr/md/WIN32/Thread/ThreadWin32.h>
-#   include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
-
-namespace vpr {
-    typedef ThreadWin32    Thread;
-    typedef ThreadKeyWin32 KeyId;
-};
-
 /* POSIX */
 #elif defined(VPR_USE_PTHREADS)
 namespace vpr {

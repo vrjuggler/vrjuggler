@@ -52,12 +52,6 @@ namespace vpr {
 namespace vpr {
     typedef CondVarPosix CondVar;
 };
-#elif defined(VPR_USE_WIN32)
-#    include <vpr/Sync/CondVarGeneric.h>
- 
-namespace vpr {
-    typedef CondVarGeneric CondVar;
-};
 #else
 #   include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 

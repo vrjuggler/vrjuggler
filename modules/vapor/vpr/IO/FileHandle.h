@@ -48,12 +48,6 @@ namespace vpr {
   typedef FileHandle_t<FileHandleImplNSPR> Socket;
 }
 
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/FileHandleImplWinSock.h>
-namespace vpr {
-  typedef FileHandle_t<FileHandleImplWinSock> FileHandle;
-}
-
 #else
 #   include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 namespace vpr {

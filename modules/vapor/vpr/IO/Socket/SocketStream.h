@@ -48,12 +48,6 @@ namespace vpr {
     typedef SocketStream_t<SocketStreamImplNSPR, SocketImplNSPR> SocketStream;
 };
 
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/Socket/SocketStreamImplWinSock.h>
-namespace vpr {
-    typedef SocketStream_t<SocketStreamImplWinSock, SocketImplWinSock> SocketStream;
-};
-
 #else
 #   include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 namespace vpr {

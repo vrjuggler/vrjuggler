@@ -140,12 +140,10 @@ public:
     //---------------------------------------------------------
     //: Dump the mutex debug stuff and current state.
     //---------------------------------------------------------
-#ifndef VPR_USE_WIN32
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
        std::cerr << message << "NULL Mutex\n";
     }
-#endif
 
 protected:
     // = Prevent assignment and initialization.

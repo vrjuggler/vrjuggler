@@ -42,12 +42,6 @@
 namespace vpr {
     typedef SemaphoreSGI Semaphore;
 };
-#elif defined(VPR_USE_WIN32)
-#  include <vpr/md/WIN32/Sync/SemaphoreWin32.h>
-
-namespace vpr {
-   typedef SemaphoreWin32 Semaphore;
-};
 #elif defined(VPR_POSIX_SEMAPHORES)
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE

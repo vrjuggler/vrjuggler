@@ -45,12 +45,6 @@ namespace vpr {
   typedef Selector_t<SelectorImplNSPR> Selector;
 };
 
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/SelectorImplWinSock.h>
-namespace vpr {
-  typedef Selector_t<SelectorImplWinSock> Selector;
-};
-
 #else
 #   include <vpr/md/POSIX/IO/SelectorImplBSD.h>
 namespace vpr {

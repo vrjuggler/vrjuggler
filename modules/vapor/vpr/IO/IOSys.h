@@ -48,12 +48,6 @@ namespace vpr {
 namespace vpr {
     typedef IOSysUnix IOSys;
 };
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/IOSysWin32.h>
-
-namespace vpr {
-    typedef IOSysWin32 IOSys;
-};
 #endif
 
 #endif   /* _VPR_IOSYS_FAKE_H_ */

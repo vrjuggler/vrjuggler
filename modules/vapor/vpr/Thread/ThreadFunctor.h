@@ -134,8 +134,6 @@ public:
 //---------------------------------------------
 #if defined(VPR_USE_IRIX_SPROC)	/* ---- SGI IPC Barrier ------ */
     extern "C" void vprThreadFunctorFunction(void* args);
-#elif defined(VPR_USE_WIN32)
-    unsigned int __stdcall vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)
 #   ifdef _PTHREADS_DRAFT_4
         extern "C" void
