@@ -364,6 +364,8 @@ endif
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/COPYING ${prefix}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/KNOWN_BUGS ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/README ${prefix}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/RELEASE_NOTES ${prefix}
