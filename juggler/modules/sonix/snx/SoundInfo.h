@@ -62,11 +62,12 @@ struct SoundInfo
                  datasource( FILESYSTEM ), 
                  filename(),
                  data(),
-                 ambient( true ),
+                 ambient( false ),
                  retriggerable( false ),
                  repeat( 1 ),
                  triggerOnNextBind( false ), 
-                 repeatCountdown( 0 )
+                 repeatCountdown( 0 ),
+                 pitchbend( 0.0f )
    {
       //position.makeIdent();
       position[0] = 0.0f;
@@ -107,6 +108,8 @@ struct SoundInfo
    bool retriggerable;  // can the sound be retriggered while playing?
    int repeat;           // number of times to repeat (static), -1 is infinite
 
+   bool pitchbend;
+   
    // -----------------------------------------------
    bool triggerOnNextBind;
    int repeatCountdown; // number of times left to repeat (changes during play)
