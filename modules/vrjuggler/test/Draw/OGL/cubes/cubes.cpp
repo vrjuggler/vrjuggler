@@ -38,8 +38,8 @@
 #include <cubesApp.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
-#include <Kernel/vjProjection.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/Projection.h>
 #include <vpr/System.h>
 
 int main(int argc, char* argv[])
