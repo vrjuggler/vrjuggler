@@ -172,7 +172,7 @@ public class ConfigIO {
                 return iostatus;
             }
             catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure ("Couldn't determine file format.");
                 iostatus.addFailure (e);
                 return iostatus;
             }
@@ -182,7 +182,7 @@ public class ConfigIO {
             handler = getHandler (handler_type);
 
         if (handler == null)
-            iostatus.addFailure ("Can't get protocol handler for ConfigIO.\n");
+            iostatus.addFailure ("Can't get protocol handler for ConfigIO.");
         else
             handler.readConfigChunkDB (file, db, iostatus);
 
@@ -210,7 +210,7 @@ public class ConfigIO {
                 input.reset();
             }
             catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure ("Couldn't determine file format.");
                 iostatus.addFailure (e);
                 return iostatus;
             }
@@ -219,7 +219,7 @@ public class ConfigIO {
             handler = getHandler (handler_type);
 
         if (handler == null)
-            iostatus.addFailure ("Can't get protocol handler for ConfigIO.\n");
+            iostatus.addFailure ("Can't get protocol handler for ConfigIO.");
         else
             handler.readConfigChunkDB (input, db, iostatus);
 
@@ -274,7 +274,7 @@ public class ConfigIO {
                 return iostatus;
             }
             catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure ("Couldn't determine file format.");
                 iostatus.addFailure (e);
                 return iostatus;
             }
@@ -310,7 +310,7 @@ public class ConfigIO {
                 input.reset();
             }
             catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure ("Couldn't determine file format.");
                 iostatus.addFailure (e);
                 return iostatus;
             }
