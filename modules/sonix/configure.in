@@ -39,14 +39,15 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_INIT
+AC_REVISION($Revision$)
+AC_INIT(snx/snxConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
+AC_CONFIG_HEADER(snx/snxDefines.h)
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
 dnl make the nice reconfig script.
 DPP_GEN_RECONFIG
-
 
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
