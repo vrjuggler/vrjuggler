@@ -64,6 +64,11 @@ public abstract class TweekBean
    {
       return attrs.getName();
    }
+   
+   public String toString ()
+   {
+      return getName();
+   }
 
    /**
     * Convenience method for getting the JAR URL string out of the
