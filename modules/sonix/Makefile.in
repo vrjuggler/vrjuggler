@@ -239,8 +239,6 @@ afterinstall:
 #PREINSTALL	= pre-install
 POSTINSTALL	= post-install
 
-
-
 # Do everything needed after installing the library binaries.
 post-install:
 	@$(MAKE) install-share
@@ -249,9 +247,14 @@ post-install:
           $(EXTRA_INSTALL_ARGS) $(topdir)/sonix-config $(bindir)
 
 install-share:
-	cp -r $(ROOT_ABS)/data/*.wav $(projdatadir)/data
-	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(projdatadir)/src
-	cp $(ROOT_ABS)/README.txt $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/data/*.wav $(projdatadir)/data
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/src -e ".wav"
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/samples/Makefile $(projdatadir)/src
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/README.txt $(projdatadir)
 
 install-test:
 
