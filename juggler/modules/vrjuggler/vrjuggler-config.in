@@ -446,7 +446,17 @@ sub make_EXTRA_LDFLAGS ($;$$$)
                                     : qq(@vrj_extra_ldflags_compiler@));
 
    my $full_extra_ldflags = "$extra_ldflags $extra_libs $dep_extra_libs";
-   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   # Make sure the option to link with pthreads (-pthread, -pthreads,
+   # -lpthread, or -lpthreads) appears only once at the very end of the
+   # list of extra libraries.
+   # XXX: Generalize this!
+   if ( $full_extra_ldflags =~ s/(-l?pthreads?)//g )
+   {
+      $full_extra_ldflags .= " $1";
+   }
+
+   $full_extra_ldflags =~ s/\s{2,}/ /g;
 
    return "$full_extra_ldflags";
 }
