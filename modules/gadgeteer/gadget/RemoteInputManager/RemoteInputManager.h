@@ -81,9 +81,6 @@ namespace gadget{
       std::list<NetConnection*>     mTransmittingConnections;           /**< network connections to other juggler instances */
       std::list<NetConnection*>     mReceivingConnections;           /**< network connections to other juggler instances */
       
-      std::list<NetDevice*>         mTransmittingDevices;   /**< devices/proxies that we transmit from */
-      std::list<NetDevice*>         mReceivingDevices;      /**< devices/proxies that we receive from */
-
       std::vector<jccl::ConfigChunkPtr>                  mPendingDeviceChunks;
       std::map<std::string, jccl::ConfigChunkPtr>        mMachineTable;
       std::map<std::string, jccl::ConfigChunkPtr>        mClusterTable;
@@ -105,61 +102,28 @@ namespace gadget{
       RemoteInputManager(InputManager* input_manager);
 
       virtual ~RemoteInputManager();
-
-      void debugDump();
-      
-      static std::string getChunkType() { return std::string( "RIMChunk" ); }
-      static std::string getMachineSpecificChunkType() { return std::string( "MachineSpecific" ); }
-
-      vpr::ReturnStatus configSerialPort();
-      bool configAdd(jccl::ConfigChunkPtr chunk);
-      bool configRemove(jccl::ConfigChunkPtr chunk);
-      bool configCanHandle(jccl::ConfigChunkPtr chunk);
-      bool configureRIM();
-      bool configureCluster(jccl::ConfigChunkPtr chunk);
-      bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
-      bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk);
-      bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
-      void createBarrier();
-      NetConnection* findReceivingDevice(const std::string device_name);
-      NetConnection* findTransmittingDevice(const std::string device_name);
-      
-      /**
-       * If there is not already a thread for listening and the local listening
-       * port is valid, then create a new thread and startListening on it.
-       * 
-       *	@post	A thread that is running the acceptLoop function, and receiving
-       * 		connection requests.
-       */
-      bool startListening();
-
-      /**
-       * Open a socket and accept incoming connections. When a connection is 
-       * initiated we try to recieve a handshake. If we do then try to create
-       * a new NetConnection. If successful respond by sending a handshake back.
-       *
-       * @post	A NetConnection to a machine that has requested a connection.
-       */
-      virtual void acceptLoop(void* nullParam);
-
+            
       /**
        * Kills the local listening thread and removes all connections.
        */
       void shutdown();
       
-      bool isActive()
-      {return mActive;}
 
-      bool isConfigured()
-      {return mConfigured;}
 
-      /**
-       * Sends and receives data for all NetDevices
-       * @post All cluster systems have the same device data.
-       */
-      void updateAll();
 
-      /**
+      void debugDump();
+      
+      //-------------------- Remote Input Manager Configuration --------------------
+
+      bool configAdd(jccl::ConfigChunkPtr chunk);
+      bool configRemove(jccl::ConfigChunkPtr chunk);
+      bool configCanHandle(jccl::ConfigChunkPtr chunk);
+      bool configureRIM();
+      bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
+      bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk);
+      bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
+     
+     /**
       * Adds machines to a table of cluster machines, and configures the RIM 
       * if the chunk is for the local machine
       * @param	chunk The chunk that contains information about a cluster machine.
@@ -178,22 +142,49 @@ namespace gadget{
        */
       bool configureDevice(jccl::ConfigChunkPtr chunk);
 
-      /**
-       * Locks the configureation of RIM.
-       */
-      void acquireConfigMutex()
-      {
-         mConfigMutex.acquire();
-      }
+      static std::string getChunkType() { return std::string( "RIMChunk" ); }
+      static std::string getMachineSpecificChunkType() { return std::string( "MachineSpecific" ); }
+
+      //END-------------------- Remote Input Manager Configuration --------------------
+
+      
+      //-------------------- Remote Input Manager Syncronization --------------------
+      void createBarrier();
+      //END-------------------- Remote Input Manager Syncronization --------------------
+      
+      //-------------------- Remote Input Manager Flags --------------------
+      bool isActive()
+      {return mActive;}
+      
+      bool isConfigured()
+      {return mConfigured;}
 
       /**
-       * Unlocks the configureation of RIM.
+       * Returns the state of a flag that indicates if listening on the local
+       * machine has been started
        */
-      void releaseConfigMutex()
+      bool listenWasInitialized()
       {
-         mConfigMutex.release();
+         return mListenWasInitialized;
       }
+      /* Searches through all of the NetConnection to determine if they have
+       * received all of their data
+       *
+       * @return	TRUE if all connections have received their data.
+       *			FALSE if the haven't.
+       */
+      bool allDataReceived();
+      void markDataUnreceived();
+
+      //END-------------------- Remote Input Manager Flags --------------------
       
+      
+      
+      //-------------------- Remote Input Manager Getters/Setters --------------------
+      
+      NetConnection* findReceivingDevice(const std::string device_name);
+      NetConnection* findTransmittingDevice(const std::string device_name);
+
       /**
        * Get a pointer to a "virtual" device in the RIM
        *
@@ -210,30 +201,56 @@ namespace gadget{
          return(mShortHostname);
       }
 
+
+      //END-------------------- Remote Input Manager Getters/Setters --------------------
+      
+
+      //-------------------- Remote Input Manager Mutex --------------------
+      
       /**
-       * Returns the state of a flag that indicates if listening on the local
-       * machine has been started
+       * Locks the configureation of RIM.
        */
-      bool listenWasInitialized()
+      void acquireConfigMutex()
       {
-         return mListenWasInitialized;
+         mConfigMutex.acquire();
       }
 
-
-      //------------------- INTER-JUGGLER CONNECTION MANAGEMENT ---------------
-
-      /*	Add connection to the list
-       * @param	sync_delta 	calculated difference between the local and remote clock
-       * @param	hostname		remote machine's hostname
-       * @param	port			port that the machine is connected on
-       * @param	manager_id	remote machines manager id
-       * @param sock_stream	stream that is used to transfer data to/from remote machine 
-       *
-       * @post	A new NetConnection to the machine that we specified.
-       * @return	NetConnection* to the new NetConnection.
-       *				NULL if it could not be created
+      /**
+       * Unlocks the configureation of RIM.
        */
-      NetConnection* addConnection(vpr::Interval sync_delta, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
+      void releaseConfigMutex()
+      {
+         mConfigMutex.release();
+      }
+      
+      //END-------------------- Remote Input Manager Mutex --------------------
+
+      //-------------------- Remote Input Manager Connection Management --------------------
+      
+      /**
+       * Sends and receives data for all NetDevices
+       * @post All cluster systems have the same device data.
+       */
+      void updateAll();
+
+      /**
+       * If there is not already a thread for listening and the local listening
+       * port is valid, then create a new thread and startListening on it.
+       * 
+       *	@post	A thread that is running the acceptLoop function, and receiving
+       * 		connection requests.
+       */
+      bool startListening();
+
+      /**
+       * Open a socket and accept incoming connections. When a connection is 
+       * initiated we try to recieve a handshake. If we do then try to create
+       * a new NetConnection. If successful respond by sending a handshake back.
+       *
+       * @post	A NetConnection to a machine that has requested a connection.
+       */
+      virtual void acceptLoop(void* nullParam);
+
 
       /* Opens a connection to a remote machine's RIM
        * @param hostname	hostname of the remote machine
@@ -244,43 +261,6 @@ namespace gadget{
        *				NULL if it could not be created
        */
       NetConnection* makeConnection(const std::string &hostname, const int port);
-
-      vpr::SocketStream* makeSyncConnection(const std::string& connection_hostname, const int connection_port);
-
-
-      /**
-       * Configures a new NetDevice for a device on a remote machine.
-       *
-       * @param   chunk    configuration chunk for the device that 
-       *                   we are trying to access
-       * @param   connection  NetConnection that the NetDevice is using to 
-       *                      connect to the remote device
-       * @return  TRUE  - if the configuration was successful
-       *          FALSE - if the configuration was un-successful
-       */
-      bool configureReceivingNetDevice(jccl::ConfigChunkPtr chunk, NetConnection* connection);  // requests a connection to the device
-      
-      /**
-       * Adds a NetDevice to the list of NetDevices in the RIM and the 
-       * NetConnection that it uses.
-       *
-       * @param   net_device     NetDevice we are adding
-       * @param   net_connection NetConnection that it is using
-       */
-      void addReceivingNetDevice(NetDevice* net_device);
-
-      /**
-       * Configures a new NetDevice for sending data from a local device.
-       *
-       * @param   device_name       name of the local device
-       * @param   requester_device_id  the unique ID for this device on the
-       *                               remote machine
-       * @param   net_connection    NetConnection that the NetDevice is using
-       */
-      bool configureTransmittingNetDevice(std::string device_name, VJ_NETID_TYPE requester_device_id, NetConnection* net_connection);
-
-      NetDevice* createTransmittingNetDevice(const std::string& device_name, Input* input_ptr, VJ_NETID_TYPE requester_device_id);
-      void addTransmittingNetDevice(NetDevice* net_device, NetConnection* net_connection);
 
       /**
        * Send local data to all connected remote machines.
@@ -293,48 +273,25 @@ namespace gadget{
        */
       void receiveReceivingConnectionData();
       void receiveTransmittingConnectionData();
-      
-      /**
-       * Parse incoming packets.
-       *
-       * @param net_connection   NetConnection that it is getting the packets on.
-       */
-      void receiveNetworkPacket(NetConnection* net_connection);
-
-      /* Searches through all of the NetConnection to determine if they have
-       * received all of their data
-       *
-       * @return	TRUE if all connections have received their data.
-       *			FALSE if the haven't.
-       */
-      bool allDataReceived();
-      void markDataUnreceived();
-
-     /**
-      * Finds a local NetDevice that is transmitting data.
-      *
-      * @param device_name device that we are looking for
-      *
-      * @return Pointer to the transmitting NetDevice
-      */
-      NetDevice* findTransmittingNetDevice(const std::string& device_name);
 
       NetConnection* getTransmittingConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
       NetConnection* getTransmittingConnectionByManagerId(const vpr::GUID& manager_id);
 
       NetConnection* getReceivingConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
       NetConnection* getReceivingConnectionByManagerId(const vpr::GUID& manager_id);
-
-      // returns unsigned short by default
-      VJ_NETID_TYPE generateLocalId()
-      {
-         return mLocalIdGen.generateNewId();
-      }
-
+      
       NetDevice* findNetDeviceByLocalId(VJ_NETID_TYPE local_id);
 
       void resendRequestsForNackedDevices();
       
+      //END-------------------- Remote Input Manager Connection Management --------------------
+
+      //-------------------- Remote Input Manager Helper Functions --------------------
+      
+         // returns unsigned short by default
+      VJ_NETID_TYPE generateLocalId()
+      { return mLocalIdGen.generateNewId(); }
+
       std::string getShortHostnameFromLong(std::string long_name)
       {
          int first_period_pos = long_name.find(".");
@@ -417,6 +374,7 @@ namespace gadget{
 
          return false;
       }
+      //END-------------------- Remote Input Manager Helper Functions --------------------
 
    };
 
