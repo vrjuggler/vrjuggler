@@ -144,7 +144,7 @@ protected:
 
 private:
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
-   SampleBuffer_t                mPosSamples;   /**< Position samples */
+   SampleBuffer_t                mPosSamples;         /**< Position samples */
 
 };
 

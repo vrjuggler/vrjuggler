@@ -61,6 +61,10 @@ bool Position::config(jccl::ConfigChunkPtr c)
    // --- Configure filters --- //
    unsigned num_filters = c->getNum("position_filters");
 
+   vprDEBUG_OutputGuard(vprDBG_ALL, 0, 
+                        std::string("Position::config: ") + c->getName() + std::string(":") + c->getDescToken(),
+                        std::string("Position::config: done.\n") );
+
    vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
 
    jccl::ConfigChunkPtr cur_filter;
@@ -219,11 +223,11 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* d
 void Position::addPositionSample(std::vector< PositionData > posSample)
 {
    // Apply all the positional filters
-   for(std::vector<PositionFilter*>::iterator i=mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
+   for(std::vector<PositionFilter*>::iterator i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
    {
       (*i)->apply(posSample);
    }
-   
+      
    // Locks and then swaps the indices.
    mPosSamples.lock();
    mPosSamples.addSample(posSample);
