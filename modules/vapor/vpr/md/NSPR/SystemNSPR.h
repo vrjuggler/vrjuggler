@@ -63,10 +63,12 @@
 #include <vpr/SystemBase.h>
 
 #ifndef HAVE_GETTIMEOFDAY
+#ifndef VPR_OS_Win32
 struct timeval {
     long tv_sec;           /* seconds since Jan. 1, 1970 */
     long tv_usec;          /* and microseconds */
 };
+#endif
 
 struct timezone {
     int tv_minuteswest;    /* minutes west of Greenwich */
