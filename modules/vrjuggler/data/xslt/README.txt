@@ -34,26 +34,26 @@ your specific configuration.
 
    Fill in your input filename and output filename appropriately.
 
-2.0a2-2.0b1.xsl
+2.0a2-2.0a4.xsl
 ---------------
    An XSLT stylesheet that provides the upgrade path for configuration
    files created for VR Juggler 2.0 Alpha 2 or VR Juggler 2.0 Alpha 3
-   to VR Juggler 2.0 Beta 1.  Simply use this stylesheet with an XSLT
+   to VR Juggler 2.0 Alpha 4.  Simply use this stylesheet with an XSLT
    processor to update old configuration files.
 
    To use this stylesheet with the xsltproc command, run xsltproc as
    follows:
 
-      xsltproc -o <output>.jconf 2.0a2-2.0b1.xsl <input.cfg>
+      xsltproc -o <output>.jconf 2.0a2-2.0a4.xsl <input.cfg>
 
    To use it with Xalan, run the xalan wrapper (shell script or batch
    file) as follows:
 
-      xalan -in <input.cfg> -out <output>.jconf -xsl 2.0a2-2.0b1.xsl
+      xalan -in <input.cfg> -out <output>.jconf -xsl 2.0a2-2.0a4.xsl
 
    Fill in your input filename and output filename appropriately.  Note
    that the output file should end with the extension ".jconf" for 2.0
-   Beta 1 and beyond.
+   Alpha 4 and beyond.
 
 Patrick Hartling <patrick@vrjuggler.org>
 $Id$
