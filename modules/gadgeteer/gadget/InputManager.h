@@ -151,11 +151,16 @@ public:
    /**
     * Updates the data in all the devices.
     * This calls updateData() on all the devices in the device table.
-    * It also updates all proxies.
     *
     * @modifies Instances pointed to by device table.
     */
-   void updateAllData();
+   void updateAllDevices();
+
+   /**
+    * Updates all proxies by grabbing the correct data and 
+    * transforming it using the PositionFilters.
+    */
+   void updateAllProxies();
 
 public:
    /**
