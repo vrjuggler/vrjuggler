@@ -122,7 +122,8 @@ public class DisplayPlacer
    {
       // Create the new window
       ChunkDescDB all_descs = getConfigManager().getAllChunkDescs();
-      ChunkDesc display_desc = all_descs.getByToken("displayWindow");
+      ChunkDesc display_desc = (ChunkDesc)ConfigUtilities.getDescsWithToken(
+                                    all_descs.getAll(), "displayWindow").get(0);
       ConfigChunk display_chunk = new ConfigChunk(display_desc);
 
       // Add the window to the database
