@@ -86,17 +86,6 @@ SNX_PLUGIN_EXPORT(snx::ISoundImplementation*) newPlugin()
    return new snx::AudiereSoundImplementation;
 }
 
-SNX_PLUGIN_EXPORT(void) deletePlugin(snx::ISoundImplementation* &p)
-{
-   if (NULL == p)
-   {
-      return;
-   }
-
-   delete p;
-   p = NULL;
-}
-
 }
 #endif
 /////////////////////////

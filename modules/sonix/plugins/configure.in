@@ -154,7 +154,7 @@ DPP_PROG_LINKER
 VPR_PATH([0.32.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
          [AC_MSG_ERROR([*** VPR required for Sonix plug-ins ***])])
 
-SNX_PATH([0.2.2], [BUILD_PLUGINS='Y'],
+SNX_PATH([0.4.0], [BUILD_PLUGINS='Y'],
          [AC_MSG_WARN([*** Sonix required for Sonix plug-ins ***])
           BUILD_PLUGINS='N'
          ])
