@@ -79,11 +79,11 @@ namespace gadget
  */
 Flock::Flock(const char* const port, const int& baud,
              const int& numBrds, const int& transmit)
-   : mThread(NULL),
-     mFlockOfBirds(port, baud)
-
+   : mThread(NULL)
+   , mFlockOfBirds(port, baud)
 {
-   ;
+   boost::ignore_unused_variable_warning(numBrds);
+   boost::ignore_unused_variable_warning(transmit);
 }
 
 std::string Flock::getElementType()
