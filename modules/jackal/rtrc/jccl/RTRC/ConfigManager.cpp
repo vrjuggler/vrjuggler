@@ -123,6 +123,12 @@ void ConfigManager::loadRemoteReconfig()
    {
       if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
       {
+         vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+            << "Neither JCCL_BASE_DIR nor VJ_BASE_DIR is set, so the remote"
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+            << "run-time reconfiguration plug-in cannot be found."
+            << std::endl << vprDEBUG_FLUSH;
          return;
       }
    }
