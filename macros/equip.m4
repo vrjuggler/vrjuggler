@@ -64,8 +64,8 @@ AC_DEFUN(EQUIP_PATH,
 
     dso_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$CPPFLAGS $VPR_CXXFLAGS -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
-    AC_CHECK_HEADER(EquipExt/VectorStream.h, ,
-                    AC_MSG_ERROR(*** Equip standalone required for DSO ***))
+    AC_CHECK_HEADER([EquipExt/VectorStream.h], ,
+                    [AC_MSG_ERROR(*** Equip standalone required for DSO ***)])
     CPPFLAGS="$dso_save_CPPFLAGS"
     INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
 

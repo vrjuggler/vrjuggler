@@ -127,9 +127,9 @@ dnl                          test Tweek program], , enable_tweektest=yes)
 
         TWEEK_VERSION=`$TWEEK_CONFIG --version`
 
-        AC_MSG_CHECKING(whether Tweek version is >= $min_tweek_version)
-        AC_MSG_RESULT($TWEEK_VERSION)
-        DPP_VERSION_CHECK($TWEEK_VERSION, $min_tweek_version, $2, $3)
+        AC_MSG_CHECKING([whether Tweek version is >= $min_tweek_version])
+        AC_MSG_RESULT([$TWEEK_VERSION])
+        DPP_VERSION_CHECK([$TWEEK_VERSION], [$min_tweek_version], $2, $3)
     fi
 
     if test "x$no_tweek" != x ; then

@@ -120,8 +120,9 @@ dnl                          test Plexus program], , enable_plexustest=yes)
         PLEXUS_LIBS_STATIC_CC="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static` $PLEXUS_EXTRA_LIBS"
         PLEXUS_LIBS_STATIC_CC_ALL="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static --all` $PLEXUS_EXTRA_LIBS"
         PLEXUS_VERSION=`$PLEXUS_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(Plexus, $PLEXUS_VERSION, $min_plexus_version,
-                              plexus_cv_plexus_version, $2, $3)
+        DPP_VERSION_CHECK_MSG([Plexus], [$PLEXUS_VERSION],
+                              [$min_plexus_version],
+                              [plexus_cv_plexus_version], $2, $3)
     fi
 
     if test "x$no_plexus" != x ; then
