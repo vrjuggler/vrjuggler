@@ -75,7 +75,7 @@ std::string vjFileIO::resolvePathForName( const char* const filename )
    std::string stdstring_name = filename;
    std::string demangled_name = demangleFileName( stdstring_name, "" );
 	
-   for (int x = 0; x < vjFileIO::mPaths.size(); ++x)
+   for (unsigned int x = 0; x < vjFileIO::mPaths.size(); ++x)
    {
       std::string slash = "/";
       std::string temp  = vjFileIO::mPaths[x] + slash + demangled_name;
