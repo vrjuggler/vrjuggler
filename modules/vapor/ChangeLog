@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-01-27 patrickh Updated to require an installed build of Boost 1.31.0.
+                    Boost.Filesystem is no longer compiled into VPR.
+                    NEW VERSION: 0.33.0
 2004-01-15 allenb   Refactored MutexPosix to use an error checking mutex on
                     Linux when compiled debug.
                     NEW VERSION: 0.32.5
