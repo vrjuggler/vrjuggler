@@ -37,6 +37,7 @@ package org.vrjuggler.tweek.wizard;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for a step within a wizard sequence. This is the basic type that
@@ -46,7 +47,13 @@ public interface WizardStep
    extends Serializable
 {
    /**
-    * Called when this step is about to been entered. Custom processing that
+    * Called when this step is about to be entered. This whiteboard allows
+    * information to be passed between WizardSteps.
+    */
+   public void setMap(Map whiteboard);
+   
+   /**
+    * Called when this step is about to be entered. Custom processing that
     * needs to be done on entry before the step is entered may be done here.
     */
    public void onEntering();
