@@ -65,7 +65,7 @@
 # version of the libraries.
 # -----------------------------------------------------------------------------
 
-default: dbg
+default: dbg ddso
 
 # Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
 # '_clean' target to be run besides the standard 'clean' target.  This must
