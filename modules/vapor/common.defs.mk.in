@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.11 2001/04/22 20:26:28 patrickh Exp
+# common.defs.mk.in,v 1.12 2001/04/26 19:20:26 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.
@@ -82,6 +82,8 @@
 # JAVAC           - Java compiler.
 # JAVAH           - javah utility.
 # JDK_HOME        - Base Java installation directory.
+# JNI_INC         - The include paths necessary for JNI.
+# JNI_LIB         - The library which needs to be statically linked for JNI.
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for $(LD).
 # LDOPTS          - Extra, often platform-specific, options for the linker.
@@ -148,6 +150,8 @@ JAR		= @JAR@
 JAVAC		= @JAVAC@
 JAVAH		= @JAVAH@
 JDK_HOME	= @JDK_HOME@
+JNI_INC		= @JNI_INC@
+JNI_LIB		= @JNI_LIB@
 LD		= @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
 LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
