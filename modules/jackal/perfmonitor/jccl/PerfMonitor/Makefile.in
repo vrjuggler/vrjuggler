@@ -47,8 +47,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_LIBRARY)
 
-SRCS		= vjPerfDataBuffer.cpp	\
-                  vjTimeStamp.cpp
+SRCS		= PerfDataBuffer.cpp	\
+                  TimeStamp.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

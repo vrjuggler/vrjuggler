@@ -47,14 +47,11 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_LIBRARY)
 
-# Prefix for recursive stuff.
-#DIRPRFX		= Utils/
-
-SRCS 		= vjXercesStreamInputSource.cpp	\
-                  vjXercesStreamInputStream.cpp	\
-                  vjXercesXMLError.cpp		\
-                  vjXercesXMLParser.cpp		\
-                  vjXercesXMLParserPool.cpp
+SRCS 		= XercesStreamInputSource.cpp	\
+                  XercesStreamInputStream.cpp	\
+                  XercesXMLError.cpp		\
+                  XercesXMLParser.cpp		\
+                  XercesXMLParserPool.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
