@@ -369,7 +369,7 @@ void ConfigManagerTest::clearPendingList()
 
 void ConfigManagerTest::clearActiveList()
 {
-   std::vector<jccl::ConfigElementPtr>::iterator i, active_end;
+   std::vector<jccl::ConfigElementPtr>::iterator i;
 
    // Clear out the active list.
    while ( ! jccl::ConfigManager::instance()->isActiveEmpty() )
