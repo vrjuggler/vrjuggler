@@ -997,7 +997,12 @@ void FlockStandalone::printFlockStatus()
       label += "]";
 
       std::cout << boost::format("  %s: %|-14|  master:%s accessible:%s  running:%s error:%s init:%s") % i
-                                 % label % unit.mIsMaster % unit.mAccessible % unit.mIsRunning % unit.mHasError % unit.mHasBeenInitialized << std::endl;
+                                 % label % (bool) unit.mIsMaster
+                                 % (bool) unit.mAccessible
+                                 % (bool) unit.mIsRunning
+                                 % (bool) unit.mHasError
+                                 % (bool) unit.mHasBeenInitialized
+                << std::endl;
    }
 
    std::ostringstream x_indices_oss;
@@ -1396,7 +1401,9 @@ void FlockStandalone::readInitialFlockConfiguration()
 
       // Get the addressing mode
       mAddrMode = queryAddressingMode();
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: " << getAddressingModeString(mAddrMode) << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: "
+         << Flock::getAddressingModeString(mAddrMode) << std::endl
+         << vprDEBUG_FLUSH;
 
       // Get the address of the master
       mMasterAddr = queryAddress();
