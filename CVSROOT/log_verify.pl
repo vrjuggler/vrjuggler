@@ -90,7 +90,7 @@ chomp $junk;
 
 if ( $junk eq "COMMAND" )
 {
-   print "We have a command in cmd.verify.pl\n";
+   print "We have a command in log_verify.pl\n";
 
    my $addrs = <CMDFILE>;
 

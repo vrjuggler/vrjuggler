@@ -6,11 +6,11 @@
 #
 
 # If the script succeeds, then we fail.
-if perl $CVSROOT/CVSROOT/cmd.verify.pl ${1+"$@"}
+if perl $CVSROOT/CVSROOT/log_verify.pl ${1+"$@"}
 then
   exit 0
 else
-  echo "cmd.verify: Executed command"
+  echo "log_verify: Executed command"
   exit 1
 fi
 
