@@ -38,8 +38,13 @@ OGL_API		:= @OPENGL_API@
 
 GL_SRCS 	:= vjGlDrawManager.cpp	\
                    vjGlPipe.cpp		\
-                   vjGlWindow.cpp       \
-                   vjGlxWindow.cpp
+                   vjGlWindow.cpp
+
+ifeq (@OS_TYPE@, Win32)
+    GL_SRCS	+= vjGlWinWin32.cpp
+else
+    GL_SRCS	+= vjGlxWindow.cpp
+endif
 
 GL_OBJECTS	:= ${addprefix ${OBJDIR}/,${GL_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${GL_SRCS:.cpp=.d}
