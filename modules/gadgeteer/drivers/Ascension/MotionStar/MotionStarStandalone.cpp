@@ -288,9 +288,9 @@ void aMotionStar::runContinuous() {
                                0,
                                (struct sockaddr *)&server,
                                lpSize);
-      /*  if (bytesReceived < 0){
+      if (bytesReceived < 0) {
           perror("recv1"), exit(1);
-          } 
+      } 
  
       headerBytesReceived = headerBytesReceived + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
