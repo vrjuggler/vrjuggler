@@ -131,7 +131,7 @@ public:
 
    virtual void init()
    {
-      vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL, 1) << "simplePfNavApp::init\n" << vjDEBUG_FLUSH;
       vjProjection::setNearFar( 0.4f, 200000 );
 
       mStats.setToggleButton("VJButton5");
@@ -139,7 +139,7 @@ public:
 
    virtual void apiInit()
    {
-      vjDEBUG(vjDBG_ALL,1) << "simplePfNavApp::apiInit\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,1) << "simplePfNavApp::apiInit\n" << vjDEBUG_FLUSH;
    }
 
    virtual void preForkInit()
@@ -150,7 +150,7 @@ public:
       // Initialize loaders
       for (int x = 0; x < mModelList.size(); ++x)
       {
-         cout<<"initing converter for types like: "<<mModelList[x].filename<<"\n"<<flush;
+         cout<<"simplePfNavAPP: Initializing performer file loaders for types like: "<<mModelList[x].filename<<"\n"<<flush;
 
          if (!mModelList[x].filename.empty())
             pfdInitConverter( mModelList[x].filename.c_str() );
@@ -201,11 +201,14 @@ public:
    /// Function called after pfSync and before pfDraw
    virtual void preFrame()
    {
-      if (0 == (mStatusMessageEmitCount++ % 60))
+      if(haveFocus())
       {
-         vjVec3 cur_pos;
-         cur_pos = mVelNavDrive->getCurPos().getTrans();
-         cout << "Cur pos:" << cur_pos << endl;
+         if (0 == (mStatusMessageEmitCount++ % 60))
+         {
+            vjVec3 cur_pos;
+            cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
+            cout << "Cur pos:" << cur_pos << endl;
+         }
       }
 
       if(mUseStats)
@@ -215,6 +218,30 @@ public:
    /// Function called after pfDraw
    virtual void intraFrame()
    {;}
+
+   //: Reset the application to initial state
+   virtual void reset()
+   {
+      mNavigationDCS->getNavigator()->reset();        // Reset navigation
+   }
+
+   //: Called when the focus state changes
+   // If an application has focus:
+   // - The user may be attempting to interact with it, so the app should process input
+   // If not,
+   // - The user is not interating with it, so ignore all input
+   // - BUT, the user may still be viewing it, so render and update any animations, etc.
+   //
+   // This is akin to the way a user can only interact with a GUI window that has focus
+   // (ie.The mouse is over the window)
+   virtual void focusChanged()
+   {
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << endl << vjDEBUG_FLUSH;
+      if(haveFocus())
+      { mNavigationDCS->setActive(true); }
+      else
+      { mNavigationDCS->setActive(false); }
+   }
 
 public:  // Configure the application
    // These must be set before the kernel starts calling the application
