@@ -1334,8 +1334,10 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           samples/ogl/torus/Makefile samples/ogl/wand/Makefile
           VARS.pl)
 
-echo
-echo  Remember that you need to build Juggler with gnu-make.
-echo  Gnu-make is called \'gmake\' on most systems.
-echo  See the file README for more details on compiling the Juggler distribution.
-echo
+cat <<BUILD_INFO
+
+ Remember that you need to build Juggler with GNU make.
+ GNU make is called 'gmake' on most systems.
+ See the file README for more details on compiling the Juggler distribution.
+
+BUILD_INFO
