@@ -20,6 +20,8 @@ Released: ??? ??, 2001
           viewing.  A recommended value for most cases is 0.229.  This is
           set in the JugglerUser chunk.
         * Link Juggler_utils when compiling applications.
+        * The method vjQuat::unit() is now called vjQuat::normalizeFast().
+        * The method vjQuat::makeQuat() is now called vjQuat::makeRot().
         * Update the descfiles property in ~/.vjconfig/vjcontrol.cfg (if one
           exists) to point to "$VJ_SHARE_DIR/Data/chunksDesc".  This is
           necessary because the extra VR Juggler files are now installed in
