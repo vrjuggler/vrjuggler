@@ -6,6 +6,19 @@
 #include <Input/InputManager/vjInputManager.h>
 #include <Kernel/vjDebug.h>
 
+// Sims
+#include <Input/vjSim/vjSimGloveGesture.h>
+
+// Physical devices
+#ifndef WIN32
+#include <Input/vjPosition/vjFlock.h>
+#include <Input/vjInput/vjIbox.h>
+#include <Input/vjGlove/vjCyberGlove.h>
+#include <Input/vjKeyboard/vjXWinKeyboard.h>
+#include <Input/vjPosition/logiclass.h>
+#else
+#include <Input/vjInput/vjKeyboardWin32.h>
+#endif
 
 
 /**********************************************************
