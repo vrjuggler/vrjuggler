@@ -604,29 +604,6 @@ SerialPortImpTermios::disableStartStopOutput () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getNoFlushState () {
-    return getBit(NOFLSH, SerialPortImpTermios::LFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableNoFlush () {
-    return setBit(NOFLSH, SerialPortImpTermios::LFLAG, true,
-                  "Could not enable no flushing at signal generation");
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableNoFlush () {
-    return setBit(NOFLSH, SerialPortImpTermios::LFLAG, false,
-                  "Could not disable no flushing at signal generation");
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-bool
 SerialPortImpTermios::getParityGenerationState () {
     return getBit(PARENB, SerialPortImpTermios::CFLAG);
 }
