@@ -45,7 +45,7 @@
 
 # Software and stylesheet versions.
 DOCBOOK_XSL_VERSION?=	1.57.0
-XALAN_VERSION?=		2_4_0
+XALAN_VERSION?=		2_4_1
 SAXON_VERSION?=		6.5.2
 
 # Installation paths.
