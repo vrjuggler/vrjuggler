@@ -105,6 +105,27 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             <title>Compiling individual tools in the Juggler suite</title>
             <para>Sometimes you do not want to build everything in the Juggler suite. Here are steps for configuring/building each package individually.</para>
             <section>
+               <title>Sonix (individual)</title>
+               <para>Sonix requires a third-party software package called GMTL (ggt.sf.net).  Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or audioworks (multigen.com).  One of these subsystems are required in order to hear sound.  Here is how you build sonix:</para>
+               <orderedlist>
+                  <listitem>
+                     <para><command>cd modules/sonix</command></para>
+                  </listitem>
+                  <listitem>
+                     <para><emphasis>Choose one of the following depending on which subsystem (or both) you want to enable in sonix...</emphasis></para>
+                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0 --with-gmtl-include=/yourhomedir/juggler/modules/GMTL --enable-openal --with-oalroot=/usr/local</command></para>
+                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0 --with-gmtl-include=/yourhomedir/juggler/modules/GMTL --enable-audioworks</command></para>
+                  </listitem>
+                  <listitem>
+                     <para><command>gmake debug install</command></para>
+                  </listitem>
+                  <listitem>
+                     <para><command>setenv SNX_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+                  </listitem>
+               </orderedlist>
+               <para>Depending on the version of Xerces C++ available, an extra argument may be required to find the actual library. For example, if Xerces C++ 1.6.0 is installed, add <option>--with-xerceslib=xerces-c1_6_0</option> to the command line for running <command>configure</command>. Check the Xerces C++ <filename>lib</filename> directory for the exact name (without <filename>.so</filename> or <filename>.a</filename>).</para>
+            </section>
+            <section>
                <title>JCCL (individual)</title>
                <para>JCCL requires VPR, and a third-party software package called Xerces C++. Xerces can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. Once Xerces C++ is built and installed, the JCCL configure script can find it:</para>
                <orderedlist>
