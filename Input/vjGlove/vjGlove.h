@@ -41,7 +41,7 @@ public:
    vjGloveData();
 
    //: From the given angle data, calculate the xforms
-   calcXforms();
+   int calcXforms();
 
 public:  // --- I/O Functions --- //
    //: Output the angles
