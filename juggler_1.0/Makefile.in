@@ -13,6 +13,7 @@
 # dso             - Build a dynamic shared object version of the library.
 # obj             - Build the object files using the default value for
 #                   ${OBJDIR}.
+# gui             - Build the Java-based configuration GUI.
 #
 # links           - Define links (for developer use only) that provide
 #                   functionality allowing the use of the $VJ_BASE_DIR
@@ -29,9 +30,10 @@
 #                   default value is set in Makefile.base).
 #
 # install-all     - Install all versions of the library, all header files,
-#                   the Data directory and the test code.
+#                   the Data directory, the configuration GUI and the test
+#                   code.
 # install         - Install the library, all header files, the Data
-#                   directory and the test code.
+#                   directory, the configuration GUI and the test code.
 # install-dbg     - Install the debugging, static version of the library.
 # install-ddso    - Install the debugging, dynamic shared object version of
 #                   the library.
@@ -40,6 +42,7 @@
 # install-headers - Install only the header files.
 # install-test    - Install only the test code.
 # install-data    - Install only the Data directory.
+# install-gui     - Install only the configuration GUI.
 #
 # depend          - Recursively build the dependencies for the source files.
 # newdepend       - Recursively (and forcibly) rebuild the dependencies for
@@ -108,22 +111,22 @@ TEST_SUBDIRS	= . CfgTest Quat input ogl ogl/cubes ogl/wand pfNav
 all: dbg ddso opt dso
 
 # Make a debugging version of the library.
-dbg: _build_dbg
+dbg: _build_dbg gui
 	${MAKE} OBJDIR="${DBG_BUILDDIR}" lib-static
 	${MAKE} OBJDIR="${DBG_BUILDDIR}" links
 
 # Make a debugging version of the library that uses DSOs.
-ddso: _build_dbg
+ddso: _build_dbg gui
 	${MAKE} OBJDIR="${DBG_BUILDDIR}" lib-dynamic
 	${MAKE} OBJDIR="${OPT_BUILDDIR}" links
 
 # Make an optimized version of the library.
-opt: _build_opt
+opt: _build_opt gui
 	${MAKE} OBJDIR="${OPT_BUILDDIR}" lib-static
 	${MAKE} OBJDIR="${OPT_BUILDDIR}" links
 
 # Make an optimized version of the library that uses DSOs.
-dso: _build_opt
+dso: _build_opt gui
 	${MAKE} OBJDIR="${OPT_BUILDDIR}" lib-dynamic
 	${MAKE} OBJDIR="${OPT_BUILDDIR}" links
 
@@ -163,6 +166,16 @@ obj:
 	@echo "Object files built"
 	@echo "------------------------------------------------"
 
+# Build the Java-based configuration GUI.
+gui:
+	@echo "------------------------------------------------"
+	@echo "Building GUI"
+	@echo "------------------------------------------------"
+	cd GUI && ${MAKE} all
+	@echo "------------------------------------------------"
+	@echo "Done"
+	@echo "------------------------------------------------"
+
 # Construct the static version of the library from the object files.
 lib-static ${LIB_STATIC}:
 	@echo "------------------------------------------------"
@@ -199,6 +212,9 @@ links:
 	cd ${instlinks}/include && ln -sf ${topdir}/config.h ./config.h
 	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_STATIC} ./
 	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_DYNAMIC} ./
+	${scriptdir}/mkinstalldirs ${instlinks}/bin
+	${INSTALL} -m 644 ${topdir}/GUI/VjCfg.jar ${instlinks}/bin
+	${INSTALL} -m 755 ${VJROOT_ABS}/GUI/editconfig ${instlinks}/bin/vjConfig
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
@@ -210,19 +226,21 @@ clean-links:
 	@echo "------------------------------------------------"
 	@echo "Removing developer installation links"
 	@echo "------------------------------------------------"
+	-cd ${instlinks} && rm -rf bin
 	-cd ${instlinks}/lib && rm -f ${LIB_DYNAMIC} ${LIB_STATIC}
 	-cd ${instlinks}/include && rm -f ./config.h
 	-cd ${instlinks} && rm -f ./include ./lib
 	rmdir ${instlinks}
 
 # Installation targets.
-install-all: install-header install-test install-data install-dbg	\
-             install-ddso install-opt install-dso
+install-all: install-header install-test install-data install-gui	\
+             install-dbg install-ddso install-opt install-dso
 
 install: install-dbg
 	${MAKE} install-header
 	${MAKE} install-test
 	${MAKE} install-data
+	${MAKE} install-gui
 	@echo "------------------------------------------------"
 	@echo "Install done"
 	@echo "------------------------------------------------"
@@ -279,6 +297,14 @@ install-data:
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
 	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -o ${prefix}/Data
+
+install-gui: gui
+	@echo "------------------------------------------------"
+	@echo "Installing vjConfig"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${bindir}
+	${INSTALL} -m 644 ${topdir}/GUI/VjCfg.jar ${bindir}
+	${INSTALL} -m 755 ${VJROOT_ABS}/GUI/editconfig ${bindir}/vjConfig
 
 # Dependency generation.
 depend: .depend_done
