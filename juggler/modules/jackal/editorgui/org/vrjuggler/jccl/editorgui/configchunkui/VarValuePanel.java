@@ -38,6 +38,8 @@ import javax.swing.JPanel;
 import java.awt.event.ActionListener;
 
 import VjConfig.VarValue;
+import VjConfig.PropertyDesc;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 
 
 /* VarValuePanel is just a little panel that we'll stick several of 
@@ -61,6 +63,9 @@ abstract public class VarValuePanel extends JPanel {
 
     abstract public void setValue (VarValue v);
     abstract public VarValue getValue ();
+
+    abstract public void setConfigUIHelper (ConfigUIHelper ui_helper);
+    abstract public void setPropertyDesc (PropertyDesc desc);
 
     abstract public void addActionListener (ActionListener l);
     abstract public void removeActionListener (ActionListener l);
