@@ -110,14 +110,14 @@ public:
       vpr::GUID guid1;
 
       vpr::Interval time_in, time_out;
-      time_in.setNow();
+      time_in.setNowReal();
 
       while(loops--)
       {
         guid1.generate();    // = *(vpr::GUIDFactory::createRandomGUID());
       }
 
-      time_out.setNow();
+      time_out.setNowReal();
       vpr::Interval diff = time_out - time_in;
 
       double per_call;      // Num ms per call

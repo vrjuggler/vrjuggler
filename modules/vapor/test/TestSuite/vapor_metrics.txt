@@ -8,3 +8,5 @@ gfxn2/GUIDTest/CreationOverhead                                                 
 gfxn2/Main/MetricTest                                                  1221.75
 gfxn3/GUIDTest/CreationOverhead                                                  0.97
 gfxn3/Main/MetricTest                                                  1221.75
+simba/Debug/Sim/GUIDTest/CreationOverhead                                                  1.39
+simba/Debug/Sim/Main/MetricTest                                                  1221.75
