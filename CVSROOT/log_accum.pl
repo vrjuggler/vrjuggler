@@ -19,6 +19,7 @@
 #
 
 #require 5.001;		# might work with older perl5
+require "find.pl";
 
 ############################################################
 #
@@ -66,6 +67,40 @@ $CVSROOT       = $ENV{'CVSROOT'} || "/home/vr/Juggler/CVSRepos";
 # Subroutines
 #
 ############################################################
+
+sub cleanup_lockfiles {
+    my $module = (split(/\s/, "$ARGV[0]"))[0];
+    print "Cleaing up garbage CVS locks in $module...\n";
+    find("$CVSROOT/$module");
+}
+
+sub wanted {
+    (($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_)) &&
+    -d _ &&
+    -M _ > 0.08 &&
+    ($uid == $<) &&
+    /^#cvs\.lock$/ &&
+    &exec(0, 'rmdir','{}');
+}
+
+sub exec {
+    local($ok, @cmd) = @_;
+    foreach $word (@cmd) {
+	$word =~ s#{}#$name#g;
+    }
+    if ($ok) {
+	local($old) = select(STDOUT);
+	$| = 1;
+	print "@cmd";
+	select($old);
+	return 0 unless <STDIN> =~ /^y/;
+    }
+    chdir $cwd;         # sigh
+    print "@cmd\n";
+    system @cmd;
+    chdir $dir;
+    return !$?;
+}
 
 sub cleanup_tmpfiles {
     local($wd, @files);
@@ -476,6 +511,7 @@ if ($ARGV[0] =~ /New directory/) {
     &do_changes_file(@text);
     #&mail_notification(@text);
     &cleanup_tmpfiles();
+    &cleanup_lockfiles();
     exit 0;
 }
 
@@ -500,6 +536,7 @@ if ($ARGV[0] =~ /Imported sources/) {
 
     &mail_notification(@text);
     &cleanup_tmpfiles();
+    &cleanup_lockfiles();
     exit 0;
 }    
 
@@ -683,4 +720,5 @@ if ($rcsidinfo == 1) {
 #
 &mail_notification(@text);
 &cleanup_tmpfiles();
+&cleanup_lockfiles();
 exit 0;
