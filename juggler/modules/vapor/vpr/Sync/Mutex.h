@@ -55,12 +55,6 @@
 namespace vpr {
     typedef MutexSGI Mutex;
 };
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/Sync/MutexWin32.h>
-
-namespace vpr {
-    typedef MutexWin32 Mutex;
-};
 #elif defined(VPR_USE_PTHREADS)
 #   include <vpr/md/POSIX/Sync/MutexPosix.h>
 

@@ -51,12 +51,6 @@ namespace vpr {
   typedef Socket_t<SocketImplNSPR> Socket;
 };
 
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/Socket/SocketImplWinSock.h>
-namespace vpr {
-  typedef Socket_t<SocketImplWinSock> Socket;
-};
-
 #else
 #   include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 namespace vpr {

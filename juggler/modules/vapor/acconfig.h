@@ -60,9 +60,6 @@
 /* Define to use the NSPR subsystem. */
 #undef VPR_USE_NSPR
 
-/* Define to use the Win32 subsystem. */
-#undef VPR_USE_WIN32
-
 /* Define all of the following if building on IRIX. */
 #undef VPR_OS_IRIX
 #undef _BSD_TYPES

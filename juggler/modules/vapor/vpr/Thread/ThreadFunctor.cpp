@@ -46,13 +46,6 @@ namespace vpr {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
         func();	// Call the functor's operator ()
     }
-#elif defined(VPR_USE_WIN32)	/* ----- Using Win32 ---- */
-    unsigned int __stdcall
-    vprThreadFunctorFunction (void* args) {
-         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
-         func();
-         return 0;
-    }
 #elif defined(VPR_USE_PTHREADS)
 #   ifdef _PTHREADS_DRAFT_4
         void

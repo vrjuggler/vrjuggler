@@ -47,12 +47,6 @@
 namespace vpr {
   typedef SocketDatagram_t<SocketDatagramImplNSPR, SocketImplNSPR> SocketDatagram;
 };
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/Socket/SocketDatagramImplWinSock.h>
-
-namespace vpr {
-  typedef SocketDatagram_t<SocketDatagramImplWinSock, SocketImplWinSock> SocketDatagram;
-};
 #else
 #   include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
 

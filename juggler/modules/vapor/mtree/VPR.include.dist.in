@@ -84,12 +84,6 @@
                     IO
                         Port
                         ..
-                        Socket
-                        ..
-                    ..
-                    Sync
-                    ..
-                    Thread
                     ..
                 ..
             ..

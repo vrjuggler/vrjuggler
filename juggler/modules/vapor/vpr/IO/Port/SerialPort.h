@@ -53,12 +53,6 @@ namespace vpr {
 };
 #   endif	/* VPR_OS_Win32 */
 
-#elif defined(VPR_USE_WIN32)
-#   include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
-namespace vpr {
-  typedef SerialPort_t<SerialPortImplWin32> SerialPort;
-};
-
 #else
 #   include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 namespace vpr {
