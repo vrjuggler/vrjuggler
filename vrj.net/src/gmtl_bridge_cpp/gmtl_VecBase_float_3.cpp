@@ -30,7 +30,6 @@
 
 
 #include "sharppy.h"
-#include <gmtl/Matrix.h>
 #include <gmtl/VecBase.h>
 
 extern "C"

@@ -25,13 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
-#include <gmtl/Matrix.h>
-#include <gmtl/VecBase.h>
 #include <gmtl/Vec.h>
 
 extern "C"
@@ -86,11 +84,6 @@ extern "C"
    {
       delete self_;
    }
-
-
-
-
-
 
 } // extern "C" for gmtl::Vec3d
 

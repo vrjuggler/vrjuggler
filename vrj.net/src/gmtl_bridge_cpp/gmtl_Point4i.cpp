@@ -30,10 +30,6 @@
 
 
 #include "sharppy.h"
-#include <gmtl/Matrix.h>
-#include <gmtl/VecBase.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Quat.h>
 #include <gmtl/Point.h>
 
 extern "C"

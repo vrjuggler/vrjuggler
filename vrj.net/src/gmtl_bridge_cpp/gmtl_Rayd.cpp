@@ -30,15 +30,6 @@
 
 
 #include "sharppy.h"
-#include <gmtl/Matrix.h>
-#include <gmtl/VecBase.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Quat.h>
-#include <gmtl/Point.h>
-#include <gmtl/EulerAngle.h>
-#include <gmtl/AxisAngle.h>
-#include <gmtl/Sphere.h>
-#include <gmtl/AABox.h>
 #include <gmtl/Ray.h>
 
 extern "C"
