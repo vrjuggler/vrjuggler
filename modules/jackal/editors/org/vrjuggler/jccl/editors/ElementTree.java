@@ -233,10 +233,22 @@ class ElementTree extends JTree implements DragGestureListener,
 
       // Load the icons for the popup menu.
       ClassLoader loader = getClass().getClassLoader();
-      ImageIcon cut_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Cut16.gif"));
-      ImageIcon copy_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Copy16.gif"));
-      ImageIcon paste_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Paste16.gif"));
-      ImageIcon remove_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Delete16.gif"));
+      ImageIcon cut_icon = null;
+      ImageIcon copy_icon = null;
+      ImageIcon paste_icon = null;
+      ImageIcon remove_icon = null;
+      
+      try
+      {
+         cut_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Cut16.gif"));
+         copy_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Copy16.gif"));
+         paste_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Paste16.gif"));
+         remove_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Delete16.gif"));
+      }
+      catch(Exception ex)
+      {
+         ex.printStackTrace();
+      }
       
       // Set up the pop up menu
       popup = new JPopupMenu();
