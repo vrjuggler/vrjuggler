@@ -1,19 +1,35 @@
 package org.vrjuggler.jccl.editors;
 
-import javax.swing.JPanel;
-import org.vrjuggler.jccl.config.*;
-import java.awt.event.*;
-import javax.swing.*;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.Font;
 import java.awt.Insets;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+import javax.swing.*;
+import org.vrjuggler.jccl.config.*;
 
-public abstract class PropertyEditorPanel extends PropertyComponent 
+public class PropertyEditorPanel extends PropertyComponent 
 {   
-   public abstract void set(Object value, PropertyDefinition prop_def, ConfigElement elm, int prop_num);
+   public PropertyEditorPanel(Object value, PropertyDefinition prop_def, ConfigElement elm, 
+                              int prop_num, Color color)
+   {
+      mPropName = prop_def.getToken();
+      mConfigElement = elm;
+      mPropNum = prop_num;
+      mColor = color;
+
+      fillEditorComponent(value, prop_def);
+      
+      this.setLayout(new BorderLayout());
+      this.add(mEditorComponent, BorderLayout.CENTER);
+   }
+
    public void refresh()
    {
       updateMyRow();
@@ -85,12 +101,12 @@ public abstract class PropertyEditorPanel extends PropertyComponent
       final JTextField txtField = new JTextField(mEditor.getAsText());
       //txtField.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
       txtField.setBorder(BorderFactory.createLoweredBevelBorder());
-      txtField.setBackground(getParent().getBackground());
+      txtField.setBackground(mColor);
       txtField.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            txtField.setBackground(getParent().getBackground());
+            txtField.setBackground(mColor);
             // Force the focus to be lost.
             txtField.transferFocusUpCycle();
             // Force the focus to be transfered to the next component.
@@ -110,7 +126,7 @@ public abstract class PropertyEditorPanel extends PropertyComponent
          }
          public void focusLost(FocusEvent evt)
          {
-            txtField.setBackground(getParent().getBackground());
+            txtField.setBackground(mColor);
             stopCellEditing();
          }
       });
