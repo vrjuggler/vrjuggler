@@ -140,7 +140,7 @@ namespace snxFileIO
       data.resize( size );
       
       FILE* fh = fopen( filename, "rb" );
-      int file_length = fread( &data[0], 1, data.size(), fh );
+      unsigned int file_length = fread( &data[0], 1, data.size(), fh );
       assert( file_length == data.size() );
       fclose( fh );
    }
