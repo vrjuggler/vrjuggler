@@ -9,16 +9,21 @@
 <!-- install-web toc-begin -->
 Table of Contents:
 <ul>
-   <li> <a href="#indepth">In depth</a></li>
+   <li> <a href="#indepth">In Depth Driver Guide</a></li>
    <ul>
-      <li> <a href="#impl">Implementing the device driver</a></li>
-      <li> <a name="register">Register the device driver</a></li>
+      <li> <a href="#impl">Implementation</a></li>
+      <li> <a href="#register">Registration of the device driver</a></li>
    </ul>
-   <li> <a href="#code">Code example </a></li>
+   <li> <a href="#config">Configuration</a></li>
+   <ul>
+      <li> <a href="#config-files">Files</a></li>
+      <li> <a href="#config-code">Code</a></li>
+   </ul>
+   <li> <a href="#code">Driver Code example </a></li>
 </ul>
 <!-- install-web toc-end -->
 
-<h3><a name="#indepth">In depth explaination of how to write a VR Juggler driver</a></h3>
+<h3><a name="indepth">In Depth Driver Guide for VR Juggler</a></h3>
 
 <p>
 To create a new device, you must declare a new class that derives 
@@ -202,6 +207,83 @@ with your applications.  This way you don't need to modify the juggler source
 code, and can centralize all your driver module code into one area.
 </p>
 
+<h3> <a name="config">Configure your device driver</a> </h3>
+To configure your device, you will need 2 things:
+<ul>
+<li><a href="#config-files">Configuration Files</a>
+<li><a href="#config-code">To write code in your driver to accept the config info</a>
+</ul>
+
+<ul>
+   <a name="config-files"><h4>Configuration Files</h4>
+
+   Before configuring your device you will need to first create 
+   a new <b>configuration chunk description</b>.  We recommend you create the 
+   new configuration chunk description using <a href="${VJCONTROL}">VJControl</a>.<BR>
+   <BR>
+   For the button device your chunk will look something like this:<BR>
+   <br>
+   File mybuttondevice.desc:
+   <pre>
+   chunk MyButtonDevice "MyButtonDevice" "Configuration for my one button thingie"
+     Name String 1 "Name" "Unique name of an instance of this chunk type"
+     port String 1 "Port" "Serial port this device is connected to"
+     baud Int 1 "Baud Rate" "Serial port speed"
+     end
+   </pre>
+   Of course, depending on your hardware configuration, 
+   you may or may not need all these parameters.<BR>
+   <BR>
+   Next, you need to configure your device by creating a <b>configuration chunk</b>:
+   (like before, we suggest you use <a href="${VJCONTROL}">VJControl</a> to 
+   create this configuration file)<BR>
+   <BR>
+   File mybutton.config:
+   <pre>
+   vjincludedescfile
+      Name "mybuttondevice.desc"
+     end
+   MyButtonDevice
+     Name "buttonthingie"
+     port { "/dev/ttyd4" }
+     baud { "9600" }
+     end
+   </pre>
+
+   <a name="config-code"><h4>How to write the code in your driver that accepts configuration</h4>
+
+   In your driver, overload these functions: <BR>
+   <ul>
+      <li><tt>virtual char* vjInput::getDeviceName();</tt>
+      When the VR system configuration changes (for example, when you
+      load a new config file into the kernel), the system asks every registered
+      driver for their chunk type, and if it matches the new config chunk passed
+      into the system, then the system calls your driver's config(...) method...<BR>
+      <BR>
+      To implement, just return your device's name as it appears in the config 
+      chunk description.
+
+      <li><tt>virtual bool vjInput::config( vjConfigChunk* c );</tt>
+      When the system detects a configuration change for your driver, it will
+      pass the new vjConfigChunk into this function.  See the documentation
+      on config chunks, for information on how to access them.<BR>
+      <BR>
+      Example:<BR>
+      <pre>
+      bool MyButtonDevice::config( vjConfigChunk *c )
+      {
+        if (!vjDigital::config(c))
+           return false;
+
+        port_id = c->getProperty( "port" );
+        baudRate = c->getProperty( "baud" );
+
+        return true;
+      }
+      </pre>
+   </ul>
+</ul>
+
 <h3> <a name="code">Code Example</a> </h3>
 
 <p>
@@ -228,6 +310,9 @@ private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
    vjThread*     mSampleThread;
+   
+   // configuration data set by config()
+   int           mPortId, mBaud;
 };
 
 vjDeviceConstructor&lt;MyButtonDevice&gt;* this_ptr_not_used = new vjDeviceConstructor<MyButtonDevice>;
@@ -293,6 +378,20 @@ void MyButtonDevice::threadedSampleFunction( void* classPointer )
      this_ptr-&gt;sample();
      sleep(1); //specify some time here, so you don't waste CPU cycles
    }
+}
+
+//: When the system detects a configuration change for your driver, it will
+//  pass the new vjConfigChunk into this function.  See the documentation
+//  on config chunks, for information on how to access them.
+bool MyButtonDevice::config( vjConfigChunk *c )
+{
+  if (!vjDigital::config(c))
+     return false;
+
+  mPortId = c->getProperty( "port" );
+  mBaud = c->getProperty( "baud" );
+
+  return true;
 }
 </pre>
 </body>
