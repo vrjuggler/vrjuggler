@@ -13,6 +13,7 @@
     <LI><A HREF="#quick">General Quick Start</A>
     <LI><A HREF="#autoconf">Autoconf and Autoheader</A>
     <LI><A HREF="#usage">Usage</A>
+    <LI><A HREF="#deubg">Debugging Configuration Errors</A>
     <LI><A HREF="#template">Template (<TT>.in</TT>) Files</A>
   </OL>
 
@@ -545,6 +546,20 @@
       build environment is rooted and how the path to <TT>configure</TT>
       is specified.
     </P>
+
+<A NAME="debug"><H4>Debugging Configuration Errors</H4></A>
+
+  <P>
+    When <TT>configure</TT> runs, a file called <TT>config.log</TT> is
+    constantly updated in the working directory.  When something goes
+    wrong with the configuration process, the first thing to do is refer
+    to the bottom of this file to see what was happening at the time of
+    the error and why that step failed.  Debugging the actual script is
+    more difficult.  Interested readers should refer to the documentation
+    on <A HREF="${TEAMGUIDE}/update.configure.html">maintaining and
+    updating the configure script</A> for more information on this
+    particular topic.
+  </P>
 
 <A NAME="template"><H4>Template (<TT>.in</TT>) Files</H4></A>
 
