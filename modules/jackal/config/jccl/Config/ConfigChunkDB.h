@@ -50,6 +50,16 @@ private:
 
 public:
 
+    typedef std::vector<vjConfigChunk*>::iterator iterator;
+
+    iterator begin() {
+	return chunks.begin();
+    }
+
+    iterator end() {
+	return chunks.end();
+    }
+
     //: Constructor
     //! PRE: true
     //! POST: self is created. Chunks is empty.

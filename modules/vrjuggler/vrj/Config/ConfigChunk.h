@@ -80,16 +80,16 @@ public:
 
 
     //: tests for equality of two vjConfigChunks
-    bool operator== (const vjConfigChunk& c);
+    bool operator == (const vjConfigChunk& c) const;
 
     //: tests for inequality of two vjConfigChunks
-    inline bool operator != (const vjConfigChunk& c) {
+    inline bool operator != (const vjConfigChunk& c) const {
 	return !(*this == c);
     }
 
 
     //: Compares two vjConfigChunks based on their instance names
-    bool operator< (vjConfigChunk& c);
+    bool operator < (const vjConfigChunk& c) const;
 
 
 
@@ -117,7 +117,7 @@ public:
     //!RETURNS: s - a C string containing the token for this
     //+          chunk's vjChunkDesc.
     //!NOTE: this is the same as a call of getProperty ("type",0)
-    vjVarValue& getType ();
+    const vjVarValue& getType () const;
 
 
 
@@ -129,7 +129,7 @@ public:
     //+         given name.
     //!NOTE: This should always be used before looking at any
     //+      vjProperty that can have a variable number of values.
-    int getNum (const std::string& property);
+    int getNum (const std::string& property) const;
 
 
 
@@ -140,7 +140,7 @@ public:
     //+      values in the vjProperty to return.
     //!RETURNS: v - a vjVarValue that can be cast directly if
     //+         its type is known (float, int, etc).
-    vjVarValue& getProperty (const std::string& property, int ind = 0);
+    const vjVarValue& getProperty (const std::string& property, int ind = 0) const;
 
 
     //: Return all the values for a given property
@@ -189,12 +189,12 @@ public:
     //: Return a list of chunk names dependant upon this one
     // Returns a list of the names of all the chunks
     // that are pointed to by chunk ptrs of this chunk
-    std::vector<std::string> getDependencies();
+    std::vector<std::string> getDependencies() const;
 
 private:
-    vjProperty *getPropertyPtrFromName (const std::string& name);
+    vjProperty *getPropertyPtrFromName (const std::string& name) const;
     
-    vjProperty *getPropertyPtrFromToken (const std::string& token);
+    vjProperty *getPropertyPtrFromToken (const std::string& token) const;
 
     //: Attempts to assign a value (in tok) to the vjProperty's ith value.
     //!NOTE:  This function does a certain amount of type-mangling, and also
