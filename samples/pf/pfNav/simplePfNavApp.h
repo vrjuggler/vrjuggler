@@ -52,14 +52,19 @@ SoundEngine* gSoundEngine = NULL;
 class simplePfNavApp : public vjPfApp
 {
 public:
-   simplePfNavApp( vjKernel* kern ) : mStatusMessageEmitCount(0), vjPfApp( kern )
+   simplePfNavApp() : mStatusMessageEmitCount(0)
    {
       mSun = NULL;
       mRootNode = NULL;
       mWorldModel = NULL;
       mWorldDCS = NULL;
       mCollidableModelGroup = NULL;
-      enableStats();
+      mUseDriveMode = true;
+
+      mVelNavDrive = NULL;
+       mNavigationDCS = NULL;
+
+       enableStats();
    }
 
    virtual void init()
@@ -153,6 +158,7 @@ public:  // Configure the application
    void setWorldDcsScale(const float scale)     {mWorldDcsScale = scale;}
    void setWorldDcsTrans(const vjVec3 trans)       {mWorldDcsTrans = trans;}
    void setInitialNavPos(const vjVec3 initialPos)  { mInitialNavPos = initialPos; }
+   void setUseDriveMode(const bool val=true)  { mUseDriveMode = val;}
 
    void enableStats() { mUseStats = true;}
    void disableStats() {mUseStats = false;}
@@ -164,6 +170,7 @@ public:
    float          mWorldDcsScale;
    vjVec3         mWorldDcsTrans;
    vjVec3         mInitialNavPos;
+   bool           mUseDriveMode;
 
    int mStatusMessageEmitCount;
 
@@ -258,7 +265,10 @@ void simplePfNavApp::initScene()
    mVelNavDrive = new velocityNav;
    mVelNavDrive->setHomePosition(initial_nav);
    mVelNavDrive->setCurPos(initial_nav);
-   mVelNavDrive->setMode(velocityNav::DRIVE);
+   if(mUseDriveMode)
+      mVelNavDrive->setMode(velocityNav::DRIVE);
+   else
+      mVelNavDrive->setMode(velocityNav::FLY);
 
    // --- COLLISION DETECTORS --- //
    // Terrain collider
