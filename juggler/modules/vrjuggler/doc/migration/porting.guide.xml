@@ -309,7 +309,7 @@ q.makeRot(q);</programlisting>
          <para>It even has simulated sockets (using a discrete-event simulator for sockets). What does this mean for you? What will you need to port? </para>
          <itemizedlist>
             <listitem>
-               <para>Every place you used a thread in your VR Juggler 1.0 application, you'll need to replace <classname>vjThread</classname> with <classname>vpr::Thread</classname>.</para>
+               <para>Every place you used a thread in your VR Juggler 1.0 application, you'll need to replace <classname>vjThread</classname> with <classname>vpr::Thread</classname>. After constructing the <classname>vpr::Thread</classname> object, invoke the <methodname>start()</methodname> on the thread object to spawn the thread.</para>
             </listitem>
             <listitem>
                <para>Replace <classname>vjMutex</classname> with <classname>vpr::Mutex</classname>.</para>
