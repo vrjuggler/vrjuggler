@@ -52,13 +52,14 @@
 #include <Kernel/vjDebug.h>
 
 
+//XXX: Should be replaced by vjDEBUG filtering and levels
 //#define VJSOUNDTRAV_VERBOSE 1
 
 //: This is a Performer traverser that will replace any node ending in mKeyName
 //  in your scene graph with a pjSoundNode.
 //
 //  For example, if mKeyName == _Sound_, and your nodename == Gong_Sound_
-//  then that node will be replaced with a new pjSoundNode of a sound 
+//  then that node will be replaced with a new pjSoundNode of a sound
 //  called "Gong"
 //
 // REQUIRED!!! You must call pjSoundReplaceTrav::preForkInit() in your juggler app's
@@ -70,15 +71,15 @@ public:
    // preForkInit() member function.  Your app is likely to crash otherwise!!
    static void preForkInit()
    {
-      vjDEBUG(vjDBG_ALL,1)<<"[pjSoundReplaceTrav] pjSoundReplaceTrav::preForkInit()\n"<<vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1)<<"[pjSoundReplaceTrav] pjSoundReplaceTrav::preForkInit(): Initializing sound node type with performer\n"<<vjDEBUG_FLUSH;
       pjSoundNode::init();
    }
-   
+
    static void traverse( pfNode* node, const std::string& keyName = "_Sound_" )
    {
       //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrMAGENTA,"[SoundReplacer] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
-   
+      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrGREEN,"pjSoundReplaceTrav: ") <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
+
       // use the performer traversal mechanism
        pfuTraverser trav;
        pfuInitTraverser( &trav );
@@ -88,12 +89,12 @@ public:
 
        pfuTraverse( node, &trav );
    }
-   
+
    static void on( pfNode* node )
    {
       //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrMAGENTA,"[SoundOn] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<" Turning sounds on in subgraph.\n"<<vjDEBUG_FLUSH;
-   
+      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrGREEN,"pjSoundReplaceTrav: [soundOn]")<<" Turning sounds on in subgraph.\n"<<vjDEBUG_FLUSH;
+
       // use the performer traversal mechanism
        pfuTraverser trav;
        pfuInitTraverser( &trav );
@@ -103,12 +104,12 @@ public:
 
        pfuTraverse( node, &trav );
    }
-   
+
    static void off( pfNode* node )
    {
       //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrMAGENTA,"[SoundOff] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<" Turning sounds off in subgraph.\n"<<vjDEBUG_FLUSH;
-   
+      vjDEBUG(vjDBG_ALL,1)<< clrOutNORM(clrGREEN,"pjSoundReplaceTrav: [soundOff]") <<" Turning sounds off in subgraph.\n"<<vjDEBUG_FLUSH;
+
       // use the performer traversal mechanism
        pfuTraverser trav;
        pfuInitTraverser( &trav );
@@ -119,7 +120,7 @@ public:
        pfuTraverse( node, &trav );
    }
 
-   
+
 protected:
    static int turnSoundNodesOn( pfuTraverser* trav )
    {
@@ -129,13 +130,13 @@ protected:
          pjSoundNode* soundNode = static_cast<pjSoundNode*>( currentNode );
          soundNode->sound().trigger();
          vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundOn] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to on\n"<<vjDEBUG_FLUSH;
-      }      
+      }
       else
       {
-         cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pjSoundNode::getClassType()<<"\n"<<flush;
+         //cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pjSoundNode::getClassType()<<"\n"<<flush;
       }
-      
-      return PFTRAV_CONT;	    // Return continue 
+
+      return PFTRAV_CONT;      // Return continue
    }
 
    static int turnSoundNodesOff( pfuTraverser* trav )
@@ -149,12 +150,12 @@ protected:
       }
       else
       {
-         cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pjSoundNode::getClassType()<<"\n"<<flush;
+         //cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pjSoundNode::getClassType()<<"\n"<<flush;
       }
-      
-      return PFTRAV_CONT;	    // Return continue   
+
+      return PFTRAV_CONT;      // Return continue
    }
-   
+
    // used to traverse - don't call
    static int processNode( pfuTraverser* trav )
    {
@@ -163,21 +164,21 @@ protected:
       pfNode* currentNode = trav->node;
       if (currentNode == NULL)
       {
-         return PFTRAV_CONT;	    // Return continue 
+         return PFTRAV_CONT;      // Return continue
       }
-      
+
       std::string nodeName = currentNode->getName();
       if (nodeName.size() <= keyName.size())
       {
          // name was too short to even be a match, discard it.
-         return PFTRAV_CONT;	    // Return continue 
+         return PFTRAV_CONT;      // Return continue
       }
-      
+
       // for verbose output (outputs every node's name.)
       #ifdef VJSOUNDTRAV_VERBOSE
       vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
       #endif
-      
+
       int startOfKeyWord = nodeName.size() - keyName.size();
       int endOfKeyWord = nodeName.size() - 1;
       std::string isThisOurKeyWord = nodeName.substr( startOfKeyWord, endOfKeyWord );
@@ -185,7 +186,7 @@ protected:
       {
 #ifndef VJSOUNDTRAV_VERBOSE
          vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
-#endif   
+#endif
          vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer]     Substring "<<keyName<<" matched, "<<vjDEBUG_FLUSH;
          pfGroup* parent = currentNode->getParent( 0 ); // FIXME?? will 0 work for all cases (instanced nodes?)
          if (parent != NULL)
@@ -193,7 +194,7 @@ protected:
             std::string soundName = nodeName.substr( 0, startOfKeyWord );
             vjDEBUG_CONT(vjDBG_ALL,0)<<"extracted sound named \""<<soundName<<"\"\n"<<vjDEBUG_FLUSH;
             vjSound* sound = vjSoundManager::instance()->getHandle( soundName.c_str() );
-            
+
             // replace the found node with a sound node.
             // note: only replace if the sound is valid.
             //        this way, the users can see where the sounds are.
@@ -217,13 +218,13 @@ protected:
             {
                vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrRED,"[SoundReplacer] !!! WARNING !!! ") <<"SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<vjDEBUG_FLUSH;
                vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrRED,"[SoundReplacer] !!!         !!! ") <<"You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<vjDEBUG_FLUSH;
-               return PFTRAV_CONT;	    // Return continue                
+               return PFTRAV_CONT;      // Return continue
             }
          }
          else
          {
             vjDEBUG_CONT(vjDBG_ALL,0)<<"but Parent is NULL (nowhere to hang the pjSoundNode!)\n"<<vjDEBUG_FLUSH;
-         }         
+         }
       }
       // for very verbose output...
 #ifdef VJSOUNDTRAV_VERBOSE
@@ -231,9 +232,9 @@ protected:
       {
          vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer]     Substring not matched: \""<<isThisOurKeyWord.c_str()<<"\" != \""<<keyName<<"\"\n"<<vjDEBUG_FLUSH;
       }
-#endif      
-      return PFTRAV_CONT;	    // Return continue 
+#endif
+      return PFTRAV_CONT;      // Return continue
    }
 };
 
-#endif	/* _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_ */
+#endif   /* _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_ */
