@@ -46,8 +46,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
-#include <vrj/Display/WallProjection.h>
-#include <vrj/Display/TrackedWallProjection.h>
+#include <vrj/Display/SurfaceProjection.h>
+#include <vrj/Display/TrackedSurfaceProjection.h>
 #include <vrj/Display/SurfaceViewport.h>
 
 namespace vrj
@@ -98,20 +98,20 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
    //rot_inv.invert(mSurfaceRotation);
    if(!mTracked)
    {
-      mLeftProj = new WallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+      mLeftProj = new SurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
                                     mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
                                     mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt]);
-      mRightProj = new WallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+      mRightProj = new SurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
                                     mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
                                     mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt]);
    }
    else
    {
-      mLeftProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+      mLeftProj = new TrackedSurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
                                     mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
                                     mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt],
                                               mTrackerProxyName);
-      mRightProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+      mRightProj = new TrackedSurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
                                     mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
                                     mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt],
                                                mTrackerProxyName);
@@ -193,18 +193,18 @@ void SurfaceViewport::calculateSurfaceRotation()
 
    // Calculate the surfaceRotMat using law of cosines
    mSurfaceRotation = gmtl::makeDirCos<gmtl::Matrix44f>(x_base, y_base, z_base );
-   gmtl::invert(mSurfaceRotation);
-
-   //mSurfaceRotation.makeDirCos(x_base,y_base,z_base);      // surfMbase
-   //mSurfaceRotation.invert(mSurfRotInv);              // baseMsurf
 }
 
 void SurfaceViewport::calculateCornersInBaseFrame()
 {
-   mxLLCorner = mSurfaceRotation * mLLCorner;
-   mxLRCorner = mSurfaceRotation * mLRCorner;
-   mxURCorner = mSurfaceRotation * mURCorner;
-   mxULCorner = mSurfaceRotation * mULCorner;
+   // Convert the coordinates over to surface coordinate system
+   gmtl::Matrix44f surf_M_base;
+   gmtl::invert(surf_M_base, mSurfaceRotation);
+
+   mxLLCorner = surf_M_base * mLLCorner;
+   mxLRCorner = surf_M_base * mLRCorner;
+   mxURCorner = surf_M_base * mURCorner;
+   mxULCorner = surf_M_base * mULCorner;
 
    // Verify that they are all in the same x,y plane
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << std::setprecision(10)

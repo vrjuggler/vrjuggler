@@ -48,14 +48,14 @@
 //#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 
-#include <vrj/Display/WallProjection.h>
+#include <vrj/Display/SurfaceProjection.h>
 
 namespace vrj
 {
 
 
 // Just call the base class constructor
-void WallProjection::config(jccl::ConfigChunkPtr chunk)
+void SurfaceProjection::config(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT( (chunk->getDescToken() == std::string("surfaceDisplay")) ||
               (chunk->getDescToken() == std::string("surfaceViewport")) );
@@ -77,7 +77,7 @@ void WallProjection::config(jccl::ConfigChunkPtr chunk)
  * @pre eyePos is scaled by position factor.
  * @pre scaleFactor is the scale current used
  */
-void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleFactor )
+void SurfaceProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleFactor )
 {
    calcViewFrustum(eyePos, scaleFactor);
 
@@ -85,7 +85,8 @@ void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleF
    gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
 
    // Need to post translate to get the view matrix at the position of the eye
-   mViewMat = mWallRotationMatrix * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
+   // View mat = base_M_
+   mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
 }
 
 
@@ -98,10 +99,10 @@ void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleF
  * By adjusting the wall rotation matrix, this method can be used for
  * the general case of a rectangular screen in 3-space.
  *
- * @pre WallRotation matrix must be set correctly.
+ * @pre m_base_M_surface and m_surface_M_base matrices must be set correctly.
  * @pre mOrigin*'s must all be set correctly.
  */
-void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor)
+void SurfaceProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor)
 {
    float near_dist, far_dist;
    near_dist = mNearDist;
@@ -115,28 +116,23 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleF
    // Distances in near plane, in near plane from origin.  (Similar to above)
    float n_eye_to_right, n_eye_to_left, n_eye_to_top, n_eye_to_bottom;
 
-
-   //Coord eye_coord(eyePos);
-   gmtl::Point3f   eye_pos;             // Non-xformed pos
-   eye_pos = gmtl::makeTrans<gmtl::Point3f>(eyePos);
-   gmtl::Point3f   eye_xformed;         // Xformed position of eyes
-
-   // Convert eye coords into the wall's coord system
-   eye_xformed = mWallRotationMatrix * eye_pos;
+   // Compute transformed eye position
+   // - Converts eye coords into the surface's coord system
+   gmtl::Point3f   eye_surface;         // Xformed position of eyes
+   eye_surface = m_surface_M_base * gmtl::makeTrans<gmtl::Point3f>(eyePos);
 
    vprDEBUG(vrjDBG_DISP_MGR,7)
-      //<< "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
-      << "vjWallProjection::calcWallProjection:    Base eye:" << eye_pos
-      << "  Xformed eye:" << eye_xformed
+      << "SurfaceProjection::calcviewFrustum:    Base eye:" << gmtl::makeTrans<gmtl::Point3f>(eyePos)
+      << "  Xformed eye:" << eye_surface
       << std::endl << vprDEBUG_FLUSH;
 
    // Compute dist from eye to screen/edges
    // Take into account scale since all origin to anythings are in meters
-   eye_to_screen = (scaleFactor * mOriginToScreen) + eye_xformed[gmtl::Zelt];
-   eye_to_right =  (scaleFactor * mOriginToRight) - eye_xformed[gmtl::Xelt];
-   eye_to_left =   (scaleFactor * mOriginToLeft) + eye_xformed[gmtl::Xelt];
-   eye_to_top =    (scaleFactor * mOriginToTop) - eye_xformed[gmtl::Yelt];
-   eye_to_bottom = (scaleFactor * mOriginToBottom) + eye_xformed[gmtl::Yelt];
+   eye_to_screen = (scaleFactor * mOriginToScreen) + eye_surface[gmtl::Zelt];
+   eye_to_right =  (scaleFactor * mOriginToRight) - eye_surface[gmtl::Xelt];
+   eye_to_left =   (scaleFactor * mOriginToLeft) + eye_surface[gmtl::Xelt];
+   eye_to_top =    (scaleFactor * mOriginToTop) - eye_surface[gmtl::Yelt];
+   eye_to_bottom = (scaleFactor * mOriginToBottom) + eye_surface[gmtl::Yelt];
 
    // Find dists on near plane using similar triangles
    float near_distFront = near_dist/eye_to_screen;      // constant factor
@@ -153,16 +149,12 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleF
    mFocusPlaneDist = eye_to_screen;    // Needed for drawing
 
    vprDEBUG(vrjDBG_DISP_MGR,7)
-      << "vjWallProjection::calcWallProjection: \n\tFrustum: " << mFrustum
+      << "SurfaceProjection::calcWallProjection: \n\tFrustum: " << mFrustum
       << std::endl << vprDEBUG_FLUSH;
-   /*
-   vprDEBUG(vrjDBG_DISP_MGR,7)
-      << "vjWallProjection::calcWallProjection: B4 Trans:\n"
-      << mWallRotationMatrix << std::endl << vprDEBUG_FLUSH;
-      */
+
 }
 
-std::ostream& WallProjection::outStream(std::ostream& out,
+std::ostream& SurfaceProjection::outStream(std::ostream& out,
                                         const unsigned int indentLevel)
 {
    const int pad_width_dot(20 - indentLevel);
@@ -171,7 +163,7 @@ std::ostream& WallProjection::outStream(std::ostream& out,
    const std::string indent_text(indentLevel, ' ');
 
    out << indent_text << std::setw(pad_width_dot)
-       << "Type " << " vrj::WallProjection\n";
+       << "Type " << " vrj::SurfaceProjection\n";
 
    return Projection::outStream(out, indentLevel);
 }
