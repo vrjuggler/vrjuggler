@@ -80,7 +80,7 @@ void NetPosition::updateFromLocalSource(){
    for(unsigned int n = 0; n < mNetworkMatrices.size();  n++){
       for(unsigned int j = 0; j < DATA_SIZE; j++)  // one byte at a time 
          mSendBuffer[2 + DATA_TIME_SIZE*n + j ] = ( (char*)(mNetworkMatrices[n].getFloatPtr()) )[j];
-      float net_float = vj_htonf(pos_data_sample[n].getTime().usecs());
+      float net_float = vj_htonf(pos_data_sample[n].getTime().usecf());
       floatTo4Bytes((char*)(&(mSendBuffer[2 + DATA_TIME_SIZE*n + DATA_SIZE])), net_float);   // copy the timestamp
    }
 
@@ -111,7 +111,9 @@ void NetPosition::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
 
       float dev_time;
       bytes4ToFloat(dev_time, recv_buffer + 2 + DATA_TIME_SIZE*k + DATA_SIZE );
-      pos_data_sample[k].setTime(jccl::TimeStamp(vj_ntohf(dev_time)));       // get timestamp from buffer
+      vpr::Interval dev_time_interval;
+      dev_time_interval.usecf(vj_ntohf(dev_time));
+      pos_data_sample[k].setTime(dev_time_interval);
 
       // convert network data to local data
       for(int i = 0; i < 16; i++)

@@ -1,7 +1,6 @@
 #include <gadget/Type/NetDigital.h>
 
 #include <vrj/Util/Debug.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 
 namespace gadget{
 
@@ -75,7 +74,7 @@ void NetDigital::updateFromLocalSource(){
    for( ; j < mNetworkShortDigitalValues.size(); j++){
       for(unsigned int i = 0; i < DATA_SIZE; i++)  // 
          mSendBuffer[2 + DATA_TIME_SIZE*j + i] = ((char*)(& (mNetworkShortDigitalValues[j]) ))[i];   // copy the number byte by byte
-      float net_float = vj_htonf(digital_data_sample[j].getTime().usecs());
+      float net_float = vj_htonf(digital_data_sample[j].getTime().usecf());
       floatTo4Bytes((char*)(&(mSendBuffer[2 + DATA_TIME_SIZE*j + DATA_SIZE])), net_float);   // copy the timestamp
    }
 
@@ -102,7 +101,10 @@ void NetDigital::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
 
       float dev_time;
       bytes4ToFloat(dev_time, recv_buffer + 2 + DATA_TIME_SIZE*k + DATA_SIZE );
-      digital_data_sample[k].setTime(jccl::TimeStamp(vj_ntohf(dev_time)));       // get timestamp from buffer
+      vpr::Interval dev_time_interval;
+      dev_time_interval.usecf(vj_ntohf(dev_time));
+      digital_data_sample[k].setTime(dev_time_interval);
+//       digital_data_sample[k].setTime(vpr::Interval((vpr::Uint64)vj_ntohf(dev_time)));       // get timestamp from buffer
 
       // convert network data to local data
       digital_data_sample[k] = (short) ntohs(mNetworkShortDigitalValues[k]);
