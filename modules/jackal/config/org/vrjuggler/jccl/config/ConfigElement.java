@@ -210,9 +210,18 @@ public class ConfigElement implements ConfigElementPointerListener
 
       // TODO: Validate that value is of the correct type for this property.
       Object old_value = values.get(index);
-      
-      // Set the value in the list
-      values.set(index, value);
+
+      if (old_value instanceof ConfigElementPointer)
+      {
+         ConfigElementPointer cep = (ConfigElementPointer)old_value;
+         old_value = cep.getTarget();
+         cep.setTarget((String)value);
+      }
+      else
+      {      
+         // Set the value in the list
+         values.set(index, value);
+      }
 
       // Notify listeners of the change
       firePropertyValueChanged(name, index, old_value);
@@ -413,6 +422,12 @@ public class ConfigElement implements ConfigElementPointerListener
       // Get the new value of the changed property.
       List values = getPropertyValues(prop_token);
       Object new_value = values.get(index);
+      
+      if (new_value instanceof ConfigElementPointer)
+      {
+         new_value = ((ConfigElementPointer)new_value).getTarget();
+      }
+
 
       // If the value did not actually change, then do not fire the change
       // event.
@@ -481,9 +496,9 @@ public class ConfigElement implements ConfigElementPointerListener
 
    public void targetChanged(ConfigElementPointerEvent evt)
    {
-      //TODO:  Find a way that we can relay an event when a ConfigElementPointer
-      //       changes.
-      //firePropertyValueChanged("Pointer Changed", 0, evt.getSource());
+      // XXX: Relaying this event should not be needed anymore
+      //      since all target changes should be treated just
+      //      like property changes.
    }
 
    /** The name of this element. */
