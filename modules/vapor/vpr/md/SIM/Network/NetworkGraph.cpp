@@ -271,6 +271,11 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    boost::property_map<net_graph_t, network_node_t>::const_type node_prop_map;
    boost::property_map<net_graph_t, boost::edge_weight_t>::const_type weight_map;
 
+   // NOTE: There is no default constructor for this type.  The copy
+   // constructor must be used.
+   boost::property_map<net_graph_t, boost::vertex_index_t>::const_type vertex_map
+      = boost::get(boost::vertex_index_t(), mGraph);
+
    node_prop_map = boost::get(network_node_t(), mGraph);
    weight_map    = boost::get(boost::edge_weight_t(), mGraph);
 
@@ -285,8 +290,8 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
 //   boost::dijkstra_shortest_paths(mGraph, src,
 //                                  boost::distance_map(&dist[0]).predecessor_map(&pred[0]));
    boost::dijkstra_shortest_paths(mGraph, src, &pred[0], &dist[0], weight_map,
-                                  boost::get(boost::vertex_index_t(), mGraph),
-                                  std::less<int>(), boost::closed_plus<int>(),
+                                  vertex_map, std::less<int>(),
+                                  boost::closed_plus<int>(),
                                   std::numeric_limits<int>::max(), 0,
                                   boost::default_dijkstra_visitor());
 
