@@ -14,43 +14,8 @@
 <P>
 
 {if class}
-  {if membervar !private}
-    <!-- Index of non-private class member variable(s). -->
-    <TABLE BORDER="1" WIDTH="100%">
-      <TR>
-	<TH COLSPAN="2" BGCOLOR="#0062b2">
-	  <FONT SIZE="+3" COLOR="#ffffff">Member Variable Summary</FONT>
-	</TH>
-      </TR>
-      {foreach member all}
-	{if !mprivate}
-	  {include ../common/member_var_index_table_body.html.inc}
-	  {if !func}
-	    <TR>
-	      <TD ALIGN="RIGHT" VALIGN="TOP" WIDTH="20%">
-		{include ../common/member_type.html.inc}
-	      </TD>
-	      <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%">
-		<TT><B>{name}</B></TT><BR>
-		{if enum}
-		  <FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
-		{endif}
-		{if brief}
-		  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{brief}
-		  <BR>
-		{endif}
-	      </TD>
-	    </TR>
-	  {endif}
-	{endif}
-      {next member}
-    </TABLE>
-
-    <P>
-  {endif}
-
-  {if constructor !private}
-    <!-- Index of non-private class constructor(s). -->
+  {if constructor public}
+    <!-- Index of public class constructor(s). -->
     <TABLE BORDER="1" WIDTH="100%">
       <TR>
 	<TH BGCOLOR="#0062b2">
@@ -58,7 +23,7 @@
 	</TH>
       </TR>
       {foreach member}
-	{if !mprivate}
+	{if mpublic}
 	  {if mconstructor}
 	    <TR>
 	      <TD ALIGN="LEFT" VALIGN="TOP">
@@ -84,7 +49,7 @@
     <P>
   {endif}
 
-  {if method !private}
+  {if method public}
     <!-- Index of non-private class method(s). -->
     <TABLE BORDER="1" WIDTH="100%">
       <TR>
@@ -93,7 +58,7 @@
 	</TH>
       </TR>
       {foreach member all}
-	{if !mprivate}
+	{if mpublic}
 	  {if func}
 	    {if !mconstructor}
 	      {if !inherited}
@@ -119,6 +84,41 @@
 		{endif}
 	      {endelse}
 	    {endif}
+	  {endif}
+	{endif}
+      {next member}
+    </TABLE>
+
+    <P>
+  {endif}
+
+  {if membervar public}
+    <!-- Index of public class member variable(s). -->
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH COLSPAN="2" BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff">Member Variable Summary</FONT>
+	</TH>
+      </TR>
+      {foreach member all}
+	{if mpublic}
+	  {include ../common/member_var_index_table_body.html.inc}
+	  {if !func}
+	    <TR>
+	      <TD ALIGN="RIGHT" VALIGN="TOP" WIDTH="20%">
+		{include ../common/member_type.html.inc}
+	      </TD>
+	      <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%">
+		<TT><B>{name}</B></TT><BR>
+		{if enum}
+		  <FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
+		{endif}
+		{if brief}
+		  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{brief}
+		  <BR>
+		{endif}
+	      </TD>
+	    </TR>
 	  {endif}
 	{endif}
       {next member}
