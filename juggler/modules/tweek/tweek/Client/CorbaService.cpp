@@ -167,10 +167,9 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
          << "Caught CORBA::Exception during initialization.\n"
          << vprDEBUG_FLUSH;
    }
+#ifdef TWEEK_USE_OMNIORB
    catch (omniORB::fatalException& fe)
    {
-      boost::ignore_unused_variable_warning(fe);
-
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
@@ -181,6 +180,7 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
       vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "  mesg: " << fe.errmsg() << std::endl << vprDEBUG_FLUSH;
    }
+#endif
    catch(...)
    {
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)

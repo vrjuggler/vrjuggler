@@ -41,7 +41,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Tweek], [0.20], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Tweek], [0.21], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([tweek/tweekDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
@@ -86,7 +86,7 @@ AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
 AC_ARG_WITH(cxx-orb,
             [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB4]
                           Allowed values are:
-                            omniORB3, omniORB4],
+                            omniORB3, omniORB4, TAO],
             cxx_orb_name="$withval", cxx_orb_name='omniORB4')
 
 AC_ARG_WITH(cxx-orb-root,
@@ -370,6 +370,9 @@ fi
 VJ_COMPILER_SETUP
 VJ_PROG_CC_PROF_FLAG(yes)
 VJ_PROG_CXX_PROF_FLAG(yes)
+DPP_CC_PTHREAD_ARG
+DPP_CC_PTHREADS_ARG
+DPP_GET_PTHREAD_LIB
 
 if test "x$DPP_USING_MSVCCC" = "xyes" ; then
    AR='$(CXX) /link /lib'
@@ -464,6 +467,11 @@ fi
 # -----------------------------------------------------------------------------
 VPR_PATH([0.36.0], , [AC_MSG_ERROR([*** VPR required for Tweek C++ API ***])])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+
+AH_TEMPLATE([TWEEK_INCLUDE_CORBA_H],
+   [Define to include the main CORBA header file -- for example: <omniORB3/CORBA.h>])
+AH_TEMPLATE([TWEEK_ORB_VER_STRING],
+   [Define to an ORB identifier string used to initialized the ORB -- for example: "omniORB3"])
 
 # Find omniORB.  This one is a beast.
 setup_omniORB_cxx ( )
@@ -576,7 +584,7 @@ setup_omniORB_cxx ( )
 
       CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include $EXTRA_DEFS"
       CFLAGS="$CFLAGS $ABI_FLAGS"
-      LDFLAGS="$LDFLAGS $ABI_FLAGS"
+      LDFLAGS="$LDFLAGS $PTHREAD_ARG $ABI_FLAGS"
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
          [tweek_cv_CORBA__ORB_init_in_omniORB],
@@ -622,6 +630,10 @@ int omni_main_i(int argc, char** const argv)
          CXX_IDL_GENDIR_OPT='-C'
          CXX_IDL_INCFLAG='-I'
 
+         IDL_SERVER_EXT=''
+         IDL_SERVER_TMPL_EXT=''
+         IDL_CLIENT_EXT=''
+
          if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
             BUILD_CXX='Y'
 
@@ -642,13 +654,13 @@ int omni_main_i(int argc, char** const argv)
             CXX_ORB_LIB_LINK_EXE="$omni_win32_link_args"
             CXX_ORB_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
 
+            AC_DEFINE_UNQUOTED([TWEEK_USE_OMNIORB], ,
+               [Define if using omniORB as the C++ CORBA implementation.])
             AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER,
                [If using omniORB, define to the major version number (3, 4, etc.).])
-            AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H,
-               [<omniORB$OMNI_VER/CORBA.h>],
-               [Define to include the file CORBA.h -- for example: <omniORB3/CORBA.h>])
-            AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER",
-               [Define to an ORB version string used to initialized the ORB -- for example: "omniORB3"])
+            AC_DEFINE_UNQUOTED([TWEEK_INCLUDE_CORBA_H],
+               [<omniORB$OMNI_VER/CORBA.h>])
+            AC_DEFINE_UNQUOTED([TWEEK_ORB_VER_STRING], "omniORB$OMNI_VER")
          else
             AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
             BUILD_CXX='N'
@@ -657,6 +669,123 @@ int omni_main_i(int argc, char** const argv)
    fi
 }
 
+# Find TAO.
+setup_TAO ( )
+{
+   if test "x$cxx_orb_bin_dir" = "xnone" ; then
+      TAO_BIN_DIR="$cxx_orb_root/bin"
+   else
+      TAO_BIN_DIR="$cxx_orb_bin_dir"
+   fi
+
+   if test "x$cxx_orb_lib_dir" = "xnone" ; then
+      TAO_LIB_DIR="$cxx_orb_root/lib"
+   else
+      TAO_LIB_DIR="$cxx_orb_lib_dir"
+   fi
+
+   tweek_save_CPPFLAGS="$CPPFLAGS"
+
+   if test "x$cxx_orb_root" != "x/usr" ; then
+      CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include"
+   fi
+
+   DPP_LANG_SAVE
+   DPP_LANG_CPLUSPLUS
+
+   AC_CHECK_HEADER(tao/corba.h, ,
+      [AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
+       BUILD_CXX='N'])
+
+   DPP_LANG_RESTORE
+
+   CPPFLAGS="$tweek_save_CPPFLAGS"
+
+   if test "x$BUILD_CXX" != "xN" ; then
+      tweek_save_LDFLAGS="$LDFLAGS"
+      tweek_save_LIBS="$LIBS"
+
+      if test "x$TAO_LIB_DIR" != "x/usr/lib" ; then
+         LDFLAGS="$LDFLAGS -L$TAO_LIB_DIR"
+      fi
+
+      LIBS="$LIBS -lTAO"
+
+      DPP_LANG_SAVE
+      DPP_LANG_CPLUSPLUS
+
+      tweek_save_CPPFLAGS="$CPPFLAGS"
+      tweek_save_CFLAGS="$CFLAGS"
+
+      CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include $EXTRA_DEFS"
+      CFLAGS="$CFLAGS $ABI_FLAGS"
+      LDFLAGS="$LDFLAGS $PTHREAD_ARG $ABI_FLAGS"
+
+      AC_CACHE_CHECK([for CORBA::ORB_init in -lTAO],
+         [tweek_cv_CORBA__ORB_init_in_TAO],
+         [AC_TRY_LINK([
+#include <tao/corba.h>
+
+int omni_main_i(int argc, char** const argv)
+{
+   CORBA::ORB_init(argc, argv, "omniORB$OMNI_VER");
+   return 0;
+}],
+                     [omni_main_i(0, NULL);],
+                     [ tweek_cv_CORBA__ORB_init_in_TAO='yes'
+                       rm -rf ./ii_files ],
+                     [tweek_cv_CORBA__ORB_init_in_TAO='no'])])
+
+      # We're done testing things now, so we can restore the original flags.
+      CFLAGS="$tweek_save_CFLAGS"
+      CPPFLAGS="$tweek_save_CPPFLAGS"
+      LDFLAGS="$tweek_save_LDFLAGS"
+      LIBS="$tweek_save_LIBS"
+
+      DPP_LANG_RESTORE
+
+      CXX_ORB_BIN_DIR="$OMNI_BIN_DIR"
+      CXX_ORB_LIB_DIR="$OMNI_LIB_DIR"
+      tao_idl_search_path="${OMNI_BIN_DIR}:${PATH}"
+
+      AC_PATH_PROG(CXX_IDL, tao_idl, no, [$tao_idl_search_path])
+
+      if test "x$CXX_IDL" = "xno" ; then
+         AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
+         BUILD_CXX='N'
+      else
+         CXX_IDL_CMD='tao_idl'
+         CXX_IDL_OPTS='-hs .h -ss .cpp'
+         CXX_IDL_GENDIR_OPT='-o '
+         CXX_IDL_INCFLAG='-I'
+
+         IDL_SERVER_EXT=''
+         IDL_SERVER_TMPL_EXT='S_T'
+         IDL_CLIENT_EXT='C'
+
+         if test "x$tweek_cv_CORBA__ORB_init_in_TAO" = "xyes" ; then
+            BUILD_CXX='Y'
+
+            if test "x$cxx_orb_root" != "x/usr" ; then
+               CXX_ORB_INCLUDES="-I$cxx_orb_root/include"
+            fi
+
+            CXX_ORB_LIB="-lTAO"
+            CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
+
+            AC_DEFINE_UNQUOTED([TWEEK_USE_TAO], ,
+               [Define if using TAO as the C++ CORBA implementation.])
+            AC_DEFINE_UNQUOTED([TWEEK_INCLUDE_CORBA_H], [<tao/corba.h>])
+            AC_DEFINE_UNQUOTED([TWEEK_ORB_VER_STRING], "TAO")
+         else
+            AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
+            BUILD_CXX='N'
+         fi
+      fi
+   fi
+}
+
+# Find omniPython.
 setup_omniORB_python ( )
 {
 #   OMNI_PY_VER="$1"
@@ -674,9 +803,7 @@ setup_omniORB_python ( )
       omniidl_search_path="${OMNI_PY_BIN_DIR}:${PATH}"
    fi
 
-   # We can just use $CXX_IDL here because omniORBpy depends on an existing
-   # omniORB (C++) installation.
-   PYTHON_IDL="$CXX_IDL"
+   AC_PATH_PROG(PYTHON_IDL, omniidl, no, [$omniidl_search_path])
 
    if test "x$PYTHON_IDL" = "xno" ; then
       AC_MSG_WARN([*** $python_orb_name required for Tweek Python API ***])
@@ -790,7 +917,7 @@ setup_PyORBit ( )
 # omniORB requires pthreads, and that conflicts with IRIX SPROC threads.
 if test "x$VPR_SUBSYSTEM" = "xSPROC" ; then
    case $cxx_orb_name in
-      omniORB*)
+      omniORB*|TAO)
          AC_MSG_WARN([*** Tweek C++ API will not run with SPROC threads ***])
          BUILD_CXX='N'
          ;;
@@ -811,6 +938,9 @@ if test "x$BUILD_CXX" != "xN" ; then
          ;;
       omniORB4)
          setup_omniORB_cxx 4
+         ;;
+      TAO)
+         setup_TAO
          ;;
       *)
          AC_MSG_ERROR([Unsupported C++ ORB $cxx_orb_name!])
@@ -956,7 +1086,15 @@ tweek_idl_incflag_cxx="$CXX_IDL_INCFLAG"
 tweek_idl_incflag_java="$JAVA_IDL_INCFLAG"
 tweek_idl_incflag_python="$PYTHON_IDL_INCFLAG"
 
-idl_gen_dirs="tweek/CORBA"
+case $cxx_orb_name in
+   omniORB*)
+      idl_gen_dirs="tweek/idl"
+      ;;
+   *)
+      idl_gen_dirs=''
+      ;;
+esac
+
 #idl_src_dirs=''
 
 for dir in "$idl_gen_dirs" ; do
@@ -1129,6 +1267,9 @@ AC_SUBST(CXX_IDL_CMD)
 AC_SUBST(CXX_IDL_OPTS)
 AC_SUBST(CXX_IDL_GENDIR_OPT)
 AC_SUBST(CXX_IDL_INCFLAG)
+AC_SUBST(IDL_SERVER_EXT)
+AC_SUBST(IDL_SERVER_TMPL_EXT)
+AC_SUBST(IDL_CLIENT_EXT)
 AC_SUBST(EXTRA_DEFS)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)

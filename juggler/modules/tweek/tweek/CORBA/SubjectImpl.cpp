@@ -48,7 +48,7 @@
 namespace tweek
 {
 
-void SubjectImpl::attach (Observer_ptr o)
+void SubjectImpl::attach(Observer_ptr o) throw(CORBA::SystemException)
 {
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Attaching observer\n"
@@ -72,7 +72,7 @@ struct RemovePred
    T obj;
 };
 
-void SubjectImpl::detach (Observer_ptr o)
+void SubjectImpl::detach(Observer_ptr o) throw(CORBA::SystemException)
 {
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
    observer_vec_t::iterator i;
@@ -89,7 +89,7 @@ void SubjectImpl::detach (Observer_ptr o)
    m_observers.erase(i, m_observers.end());
 }
 
-void SubjectImpl::notify ()
+void SubjectImpl::notify() throw(CORBA::SystemException)
 {
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
    observer_vec_t::iterator i;
@@ -112,9 +112,12 @@ void SubjectImpl::notify ()
 
 SubjectImpl::SubjectImpl(const SubjectImpl& s)
    :
-#ifdef OMNIORB_VER
+#if defined(TWEEK_USE_OMNIORB)
      omniServant(s)
    , tweek::_impl_Subject(s)
+   ,
+#elif defined(TWEEK_USE_TAO)
+     TAO_Abstract_ServantBase(s)
    ,
 #endif
      PortableServer::ServantBase(s)

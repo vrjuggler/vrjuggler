@@ -45,39 +45,19 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir=		@includedir@/tweek/CORBA
-srcdir=			@srcdir@
-top_srcdir=		@top_srcdir@
-IDL_GENDIR=		.
-CXX_IDL_OPTS=		@CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(IDL_GENDIR)
-CXX_IDL_INCLUDES=	@CXX_IDL_INCFLAG@$(top_srcdir)
-EXTRA_INCLUDES+=	-I$(IDL_GENDIR)
-EXTRA_SRCS_PATH=	$(srcdir)/../idl
-INSTALL=		@INSTALL@
-SUBOBJDIR=		$(TWEEK_LIBRARY)
+includedir=	@includedir@/tweek/CORBA
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(TWEEK_LIBRARY)
 
-IDL_CXX_FILES=	SubjectManager.cpp SubjectManager.h		\
-		Subject.cpp Subject.h				\
-		Observer.cpp Observer.h				\
-		BeanDeliverySubject.cpp BeanDeliverySubject.h
-
-SRCS=		BeanDeliverySubject.cpp		\
-		BeanDeliverySubjectImpl.cpp	\
+SRCS=		BeanDeliverySubjectImpl.cpp	\
 		CorbaHelpers.cpp		\
 		CorbaManager.cpp		\
-		Observer.cpp			\
-		SubjectManager.cpp		\
 		SubjectManagerImpl.cpp		\
-		Subject.cpp			\
 		SubjectImpl.cpp
 
 include $(MKPATH)/dpp.obj.mk
-
-ifneq ($(srcdir), $(IDL_GENDIR))
-   INSTALL_FILES+=	$(IDL_GENDIR)/*.h
-endif
-
-CLEAN_FILES+=		$(addprefix $(IDL_GENDIR)/, $(IDL_CXX_FILES))
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
