@@ -78,14 +78,13 @@ void registerSomeApps(pfSwitcherApp* switcher)
    std::string file_path1( "/home/users/allenb/Data/Models/collision" );
    const float dcs_scale1( 1.0f );
    const vjVec3 dcs_trans1( 0.0f, 0.0f, 0.0f );
+   const vjVec3 dcs_rot1(0.0,0.0,0.0f);
    const vjVec3 initial_pos1( 0.0f, 0.0f, 0.0f );
    bool  drive_mode1(false);
 
    // Configure that application
-   app1->addModel( filename1 );
+   app1->addModel( simplePfNavApp::Model(filename1,filename1,dcs_scale1,dcs_trans1,dcs_rot1,true ));
    app1->setFilePath( file_path1 );
-   //app1->setWorldDcsScale( dcs_scale1 );
-   //app1->setWorldDcsTrans( dcs_trans1 );
    app1->setInitialNavPos( initial_pos1 );
    app1->setUseDriveMode(drive_mode1);
 
@@ -96,19 +95,36 @@ void registerSomeApps(pfSwitcherApp* switcher)
    std::string file_path2( "/usr/share/Performer/data" );
    const float dcs_scale2( 1.0f );
    const vjVec3 dcs_trans2( 0.0f, 0.0f, 0.0f );
+   const vjVec3 dcs_rot2(0.0,0.0,0.0f);
    const vjVec3 initial_pos2( 0.0f, 0.0f, 0.0f );
    bool  drive_mode2(false);
 
    // Configure that application
-   app2->addModel( filename2 );
+   app2->addModel( simplePfNavApp::Model(filename2,filename2,dcs_scale2,dcs_trans2,dcs_rot2,true ));
    app2->setFilePath( file_path2 );
-   //app2->setWorldDcsScale( dcs_scale2 );
-   //app2->setWorldDcsTrans( dcs_trans2 );
    app2->setInitialNavPos( initial_pos2 );
    app2->setUseDriveMode(drive_mode2);
 
+   // APPLICATION 3
+   simplePfNavApp* app3 = new simplePfNavApp();
+
+   std::string filename3("/home/vr/miller/Data/pfb_fastload/pantheon_rel.pfb");
+   std::string file_path3( "" );
+   const float dcs_scale3( 1.0f );
+   const vjVec3 dcs_trans3( 0.0f, 0.0f, 0.0f );
+   const vjVec3 dcs_rot3(0.0,0.0,0.0f);
+   const vjVec3 initial_pos3( 0.0f, 0.0f, 0.0f );
+   bool  drive_mode3(false);
+
+   // Configure that application
+   app3->addModel( simplePfNavApp::Model(filename3,filename3,dcs_scale3,dcs_trans3,dcs_rot3,true ));
+   app3->setFilePath( file_path3 );
+   app3->setInitialNavPos( initial_pos3 );
+   app3->setUseDriveMode(drive_mode3);
+
    switcher->registerApp(pfAppHandle(app1,std::string("app1")));
    switcher->registerApp(pfAppHandle(app2,std::string("app2")));
+   switcher->registerApp(pfAppHandle(app3,std::string("app3")));
 }
 
 
