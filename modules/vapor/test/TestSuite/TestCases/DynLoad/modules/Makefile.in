@@ -52,6 +52,8 @@ DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
 SRCS=		DsoLoaderModule1.c	\
 		DsoLoaderModule2.c	\
+		LibraryLoaderModule1.c	\
+		LibraryLoaderModule2.c	\
 		c_module.c		\
 		cxx_module.cpp
 
@@ -61,6 +63,9 @@ libs:
 	-mkdir -p $(OBJDIR)
 	$(MAKE) $(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT)		\
           $(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT)		\
+          loadermod1.$(DYNAMICLIB_EXT)				\
+          loadermod1_d.$(DYNAMICLIB_EXT)			\
+          loadermod2.$(DYNAMICLIB_EXT)				\
           $(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT)			\
           $(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT)
 
@@ -71,6 +76,18 @@ $(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
 $(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
 	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
           $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
+
+loadermod1.$(DYNAMICLIB_EXT): $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+
+loadermod1_d.$(DYNAMICLIB_EXT): $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+
+loadermod2.$(DYNAMICLIB_EXT): $(OBJDIR)/LibraryLoaderModule2.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/LibraryLoaderModule2.$(OBJEXT)
 
 $(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT): $(OBJDIR)/c_module.$(OBJEXT)
 	$(C_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.$(OBJEXT)
