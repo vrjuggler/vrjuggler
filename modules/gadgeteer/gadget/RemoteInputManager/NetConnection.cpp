@@ -347,7 +347,7 @@ namespace gadget
    
          if ( recv_net_device != NULL ) // NetDevice was created successfully
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << "Successful, now adding to receiveing NetDevices\n"<< vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << "Successful, now adding to receiving NetDevices\n"<< vprDEBUG_FLUSH;
             //addReceivingNetDevice(recv_net_device);                     // Add NetDevice to mReceivingNetDevices
             addReceivingNetDevice(recv_net_device);     // Add NetDevice to NetConnection
             sendDeviceRequest(recv_net_device);         // Send a request to the device server
@@ -383,7 +383,7 @@ namespace gadget
          
          if (net_device != NULL)    // Successfully created transmitting NetDevice
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Successful, now adding to receiveing NetDevices\n"<< vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Successful, now adding to transmitting NetDevices\n"<< vprDEBUG_FLUSH;
             //addTransmittingNetDevice(net_device, net_connection);
             addTransmittingNetDevice(net_device);
          }
@@ -546,7 +546,13 @@ namespace gadget
             << device_id << "==================\n" << clrRESET << vprDEBUG_FLUSH;
          
             // Must also read 2 fewer bytes since we just read two
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN) 
+            << "Reading Device Data Size: " << length-RIM_HEAD_LENGTH-2 << "\n" << clrRESET << vprDEBUG_FLUSH;
+         
          status = mSockStream->recvn(packet_data,length-RIM_HEAD_LENGTH-2,bytes_read);
+         
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN) 
+            << "DONE Reading Device Data Size: " << bytes_read << "\n" << clrRESET << vprDEBUG_FLUSH;
       }
       else
       {
@@ -653,7 +659,7 @@ namespace gadget
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Receiving data for: " << net_device_recvr->getSourceName() << "\n" << vprDEBUG_FLUSH;
    
                //std::cout << "READ: " << net_device_recvr->getSourceName() << std::endl;
-               mMsgPackage.recieveDeviceDataPacket(data_reader,
+               mMsgPackage.receiveDeviceDataPacket(data_reader,
                                                     net_device_recvr->getRealDevice(),
                                                     this->getDelta());
             }
