@@ -160,15 +160,15 @@ SHLIB_MAJOR	= 1
 SHLIB_MINOR	= 0
 
 # Full names of the static and dynamic versions of the libraries.
-VJ_LIB_STATIC	= ${VJ_LIBRARY}.a
+VJ_LIB_STATIC	= ${VJ_LIBRARY}.@STATICLIB_EXT@
 VJ_LIB_DYNAMIC	= ${VJ_LIBRARY}.@SHAREDLIB_EXT@
 
 GL_API		= @OPENGL_API@
-GL_LIB_STATIC	= ${GL_LIBRARY}.a
+GL_LIB_STATIC	= ${GL_LIBRARY}.@STATICLIB_EXT@
 GL_LIB_DYNAMIC	= ${GL_LIBRARY}.@SHAREDLIB_EXT@
 
 PF_API		= @PERFORMER_API@
-PF_LIB_STATIC	= ${PF_LIBRARY}.a
+PF_LIB_STATIC	= ${PF_LIBRARY}.@STATICLIB_EXT@
 PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 
 # =============================================================================
