@@ -80,10 +80,60 @@ public class DeviceProxyGraphEditor
    implements EditorConstants
             , ConfigListener
 {
+   /**
+    * Creates a new instance of the device/proxy graph editor that allows
+    * editing of all known types of device and proxy config elements.
+    */
    public DeviceProxyGraphEditor()
+   {
+      this(null);
+   }
+
+   /**
+    * Creates a new instance of the device/proxy graph editor that allows
+    * editing of only the given config element types.  If
+    * <code>allowedTypes</code> is null, then the editor will allow editing
+    * of all known types of device and proxy config elements.
+    *
+    * @param allowedTypes       a list of <code>ConfigDefinition</code>
+    *                           objects that identifies which types of device
+    *                           and proxy config elements will be edited by
+    *                           this editor instance or null to indicate that
+    *                           all device and proxy elements will be edited
+    */
+   public DeviceProxyGraphEditor(List allowedTypes)
    {
       mBroker = new ConfigBrokerProxy();
       mBroker.addConfigListener(this);
+
+      if ( allowedTypes == null )
+      {
+         List base_types = new ArrayList(2);
+         base_types.add(0, PROXY_TYPE);
+         base_types.add(1, INPUT_DEVICE_TYPE);
+         ConfigDefinitionRepository repos = mBroker.getRepository();
+         List all_defs = repos.getAllLatest();
+
+         for ( Iterator d = all_defs.iterator(); d.hasNext(); )
+         {
+            ConfigDefinition def = (ConfigDefinition) d.next();
+            if ( ! def.isAbstract() )
+            {
+               for ( Iterator t = base_types.iterator(); t.hasNext(); )
+               {
+                  if ( def.isOfType((String) t.next()) )
+                  {
+                     this.allowedTypes.add(def);
+                     break;
+                  }
+               }
+            }
+         }
+      }
+      else
+      {
+         this.allowedTypes.addAll(allowedTypes);
+      }
 
       try
       {
@@ -131,151 +181,73 @@ public class DeviceProxyGraphEditor
    }
 
    /**
-    * Populates the graph with all devices and proxies in the given context.
-    *
-    * <p>
-    * <b>NOTE:</b>
-    * <blockquote>
-    * One overload of <code>setConfig()</code> may be invoked <i>at most</i>
-    * once per object lifetime.
-    * </blockquote>
-    * </p>
-    *
-    * @param context    the context in which device and proxy config elements
-    *                   will be discovered and edited
-    *
-    * @see #setConfig(List,ConfigContext)
-    * @see #setConfig(ConfigContext,ConfigElement)
-    */
-   public void setConfig(ConfigContext context)
-   {
-      setConfig(null, context);
-   }
-
-   /**
-    * Populates the graph with all devices and proxies in the given context
-    * that have definitions appearing in <code>allowedTypes</code>.  If
-    * <code>allowedTypes</code> is null, then all devices and proxies in
-    * <code>context</code> are added to the graph.
-    *
-    * <p>
-    * <b>NOTE:</b>
-    * <blockquote>
-    * One overload of <code>setConfig()</code> may be invoked <i>at most</i>
-    * once per object lifetime.
-    * </blockquote>
-    * </p>
-    *
-    * @param allowedTypes       a list of <code>ConfigDefinition</code>
-    *                           objects that identifies which device and proxy
-    *                           config elements will be edited by this editor
-    *                           instance or null to indicate that all device
-    *                           and proxy elements will be edited
-    * @param context            the context in which device and proxy config
-    *                           elements will be discovered and edited
-    *
-    * @see #setConfig(ConfigContext)
-    * @see #setConfig(ConfigContext,ConfigElement)
-    */
-   public void setConfig(List allowedTypes, ConfigContext context)
-   {
-      mContext = context;
-      this.allowedTypes.clear();
-
-      if ( allowedTypes == null )
-      {
-         List base_types = new ArrayList(2);
-         base_types.add(0, PROXY_TYPE);
-         base_types.add(1, INPUT_DEVICE_TYPE);
-         ConfigDefinitionRepository repos = mBroker.getRepository();
-         List all_defs = repos.getAllLatest();
-
-         for ( Iterator d = all_defs.iterator(); d.hasNext(); )
-         {
-            ConfigDefinition def = (ConfigDefinition) d.next();
-            if ( ! def.isAbstract() )
-            {
-               for ( Iterator t = base_types.iterator(); t.hasNext(); )
-               {
-                  if ( def.isOfType((String) t.next()) )
-                  {
-                     this.allowedTypes.add(def);
-                     break;
-                  }
-               }
-            }
-         }
-      }
-      else
-      {
-         this.allowedTypes.addAll(allowedTypes);
-      }
-
-      List device_elts = new ArrayList(), proxy_elts = new ArrayList();
-      List all_elts = mBroker.getElements(mContext);
-
-      for ( Iterator d = this.allowedTypes.iterator(); d.hasNext(); )
-      {
-         ConfigDefinition cur_def = (ConfigDefinition) d.next();
-
-         List cur_elts = ConfigUtilities.getElementsWithDefinition(all_elts,
-                                                                   cur_def);
-
-         if ( cur_def.isOfType(INPUT_DEVICE_TYPE) )
-         {
-            device_elts.addAll(cur_elts);
-         }
-         else if ( cur_def.isOfType(PROXY_TYPE) )
-         {
-            proxy_elts.addAll(cur_elts);
-         }
-      }
-
-      populateGraph(proxy_elts, device_elts, all_elts, true);
-   }
-
-   /**
     * Initializes the graph will the given proxy and all devices at which it
     * is allowed to point (including the device it currently points at if it
-    * is so configured.
+    * is so configured.  If the given proxy config element is null, then all
+    * allowed types of device and proxy config elements will be used to
+    * populate the graph.
     *
     * <p>
     * <b>NOTE:</b>
     * <blockquote>
-    * One overload of <code>setConfig()</code> may be invoked <i>at most</i>
-    * once per object lifetime.
+    * This method may be invoked <i>at most</i> once per object lifetime.
     * </blockquote>
     * </p>
     *
     * @param ctx        the context containing the given config element and
     *                   any devices to which that config element may refer
     * @param proxyElt   the config element for the single proxy that will be
-    *                   edited in this editor instance.  It must be of type
-    *                   <code>EditorConstants.PROXY_TYPE</code>.
+    *                   edited in this editor instance (it must be non-null
+    *                   and of type <code>EditorConstants.PROXY_TYPE</code>)
+    *                   or null to edit all proxies in the given context
     *
-    * @see #setConfig(ConfigContext)
-    * @see #setConfig(List,ConfigContext)
     * @see org.vrjuggler.vrjconfig.commoneditors.EditorConstants
     */
    public void setConfig(ConfigContext ctx, ConfigElement proxyElt)
    {
-      if ( proxyElt.getDefinition().isOfType(PROXY_TYPE) )
-      {
-         mContext = ctx;
+      mContext = ctx;
 
-         this.allowedTypes.add(proxyElt.getDefinition());
+      List device_elts = new ArrayList(), proxy_elts = new ArrayList();
+      List all_elts = null;
+
+      if ( proxyElt == null )
+      {
+         all_elts = mBroker.getElements(mContext);
+
+         for ( Iterator d = this.allowedTypes.iterator(); d.hasNext(); )
+         {
+            ConfigDefinition cur_def = (ConfigDefinition) d.next();
+
+            List cur_elts = ConfigUtilities.getElementsWithDefinition(all_elts,
+                                                                      cur_def);
+
+            if ( cur_def.isOfType(INPUT_DEVICE_TYPE) )
+            {
+               device_elts.addAll(cur_elts);
+            }
+            else if ( cur_def.isOfType(PROXY_TYPE) )
+            {
+               proxy_elts.addAll(cur_elts);
+            }
+         }
+      }
+      else if ( proxyElt.getDefinition().isOfType(PROXY_TYPE) )
+      {
+         if ( ! this.allowedTypes.contains(proxyElt.getDefinition()) )
+         {
+            this.allowedTypes.add(proxyElt.getDefinition());
+         }
 
          // For this proxy, we need to find all the device config elements at
          // which it is allowed to point.
          PropertyDefinition device_prop_def =
             proxyElt.getDefinition().getPropertyDefinition(DEVICE_PROPERTY);
 
-         ConfigBroker broker = new ConfigBrokerProxy();
-         List all_defs = broker.getRepository().getAllLatest();
+         all_elts    = mBroker.getElements(mContext);
+         device_elts = new ArrayList();
 
          List allowed_dev_types = device_prop_def.getAllowedTypes();
-         List all_elts          = broker.getElements(mContext);
-         List device_elts       = new ArrayList();
+         List all_defs = mBroker.getRepository().getAllLatest();
 
          // Find all the non-astract config defiitions that are allowed types
          // for the proxy we were given.  Use those definitions to find all
@@ -300,9 +272,7 @@ public class DeviceProxyGraphEditor
             }
          }
 
-         List proxy_elts = new ArrayList(1);
          proxy_elts.add(0, proxyElt);
-         populateGraph(proxy_elts, device_elts, all_elts, true);
       }
       else
       {
@@ -311,6 +281,8 @@ public class DeviceProxyGraphEditor
             proxyElt.getDefinition().getToken()
          );
       }
+
+      populateGraph(proxy_elts, device_elts, all_elts, true);
    }
 
    public void editorClosing()
