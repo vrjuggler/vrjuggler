@@ -235,6 +235,13 @@ Table of contents:
 
   4.  Running sonix test and sample applications
   
+  when using audioworks, there is some variables you can set:
+
+  o). setting the AW sound daemon hostname.
+      this is the address of the computer that audioworks daemon is running on
+      set the env variable SNX_AW_HOSTNAME, or create $HOME/.sonix-aw with
+      a single string in it that is your hostname.
+  
   Make sure you have your LD_LIBRARY_PATHs set...
   
   for Linux:
