@@ -7,11 +7,11 @@
 
 int main()
 {
-  vjMemPool* anSgiPool = new MemPoolSGI(1024*1024);
+  vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
   
-  ThreeDMouse* t1 = new(anSgiPool) ThreeDMouse;
+  vjThreeDMouse* t1 = new(anSgiPool) vjThreeDMouse;
 
-  C2POS_DATA *data;
+  vjPOS_DATA *data;
 
   char achar;
   cout << "U - Update\n"
@@ -33,12 +33,12 @@ int main()
          t1->GetData(data);
          
          cout << endl 
-              << "Data: x:" << setw(10) << data->x << endl
-              << "      y:" << setw(10) << data->y << endl
-              << "      z:" << setw(10) << data->z << endl
-              << "    azi:" << setw(10) << data->azi  << endl //lr
-              << "   elev:" << setw(10) << data->elev  << endl //ud
-              << "   roll:" << setw(10) <<data->roll << endl
+              << "Data: x:" << setw(10) << data->pos.vec[0] << endl
+              << "      y:" << setw(10) << data->pos.vec[1] << endl
+              << "      z:" << setw(10) << data->pos.vec[2] << endl
+              << "    azi:" << setw(10) << data->orient.vec[0]  << endl //lr
+              << "   elev:" << setw(10) << data->orient.vec[1]  << endl //ud
+              << "   roll:" << setw(10) <<data->orient.vec[2] << endl
               << endl;
          cout << endl; 
          sleep(2);
