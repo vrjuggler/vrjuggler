@@ -179,7 +179,7 @@ beforeinstall:
         fi
 
 # We are not installing anything for the drivers yet :)
-#POSTINSTALL=	post-install
+POSTINSTALL=	post-install
 
 # Do everything needed after installing the library binaries.
 post-install:
@@ -190,12 +190,10 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(projdatadir)
-	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
-          -v "$(topdir)/VARS.pl"
-
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(projdatadir)" --vars="$(topdir)/VARS.pl"		\
+          --files="$(top_srcdir)/gadget.driver.mk.in" $(_GROUP_OPT_PL)	\
+          --srcdir="."
 
 # =============================================================================
 # Clean-up targets. '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME)
