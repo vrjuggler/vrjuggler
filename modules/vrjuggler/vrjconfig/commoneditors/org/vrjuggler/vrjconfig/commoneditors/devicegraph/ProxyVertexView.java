@@ -413,8 +413,6 @@ public class ProxyVertexView
          );
 */
 
-         final int row = mMainLayout.getNumRow();
-
          final JButton edit_btn = new JButton();
          final JButton cut_btn = new JButton();
          final JButton remove_btn = new JButton();
@@ -529,7 +527,7 @@ public class ProxyVertexView
                   JComponent[] components = new JComponent[]{name_field,
                                                              edit_btn, cut_btn,
                                                              remove_btn};
-                  removeAliasRow(components, row);
+                  removeAliasRow(components);
                   removeAlias(aliasElt);
                }
             }
@@ -568,7 +566,7 @@ public class ProxyVertexView
                   JComponent[] components = new JComponent[]{name_field,
                                                              edit_btn, cut_btn,
                                                              remove_btn};
-                  removeAliasRow(components, row);
+                  removeAliasRow(components);
                   removeAlias(aliasElt);
                }
             }
@@ -582,6 +580,7 @@ public class ProxyVertexView
              remove_btn_start = BUTTON2_START_COLUMN,
              remove_btn_end   = BUTTON2_END_COLUMN;
 
+         int row = mMainLayout.getNumRow();
          mMainLayout.insertRow(row, TableLayoutConstraints.PREFERRED);
          this.add(name_field,
                   new TableLayoutConstraints(LABEL_START_COLUMN, row,
@@ -642,7 +641,7 @@ public class ProxyVertexView
          }
       }
 
-      private void removeAliasRow(JComponent[] components, int row)
+      private void removeAliasRow(JComponent[] components)
       {
          // Get the preferred size of the renderer so that we can modify it
          // after the row is removed.
@@ -653,6 +652,12 @@ public class ProxyVertexView
          int width = pref_size.width;
          int height =
             pref_size.height - components[0].getPreferredSize().height;
+
+         // Find the row containing the components being removed.  We expect
+         // that all the components in the given array are in the same row.
+         // XXX: Is there a more robust way to do this?
+         TableLayoutConstraints tlc = mMainLayout.getConstraints(components[0]);
+         int row = tlc.row1;
 
          // Remove all the components in this row (at least as far as we know).
          for ( int i = 0; i < components.length; ++i )
