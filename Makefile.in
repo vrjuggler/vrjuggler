@@ -269,6 +269,7 @@ links:
 	cd ${instlinks}/include &&					\
           dir_list='${SUBDIRS}' ;					\
             for dir in $$dir_list ; do					\
+                rm -f ./$$dir ;						\
                 ln -s ${VJROOT_ABS}/$$dir ./$$dir ;			\
             done
 	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
