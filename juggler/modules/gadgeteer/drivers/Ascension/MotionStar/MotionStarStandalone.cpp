@@ -424,8 +424,8 @@ vpr::ReturnStatus MotionStarStandalone::start()
                   if ( ! status.success() )
                   {
                      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-                        << "[MotionStarStandalone] WARNING: Failed to set system status"
-                        << std::endl << vprDEBUG_FLUSH;
+                        << "[MotionStarStandalone] WARNING: Failed to set "
+                        << "system status" << std::endl << vprDEBUG_FLUSH;
                   }
                   else
                   {
@@ -438,8 +438,8 @@ vpr::ReturnStatus MotionStarStandalone::start()
             catch(mstar::CommandException&)
             {
                vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-                  << "[MotionStarStandalone] WARNING: Failed to read system status"
-                  << std::endl << vprDEBUG_FLUSH;
+                  << "[MotionStarStandalone] WARNING: Failed to read system "
+                  << "status" << std::endl << vprDEBUG_FLUSH;
             }
 
             // Configure each of the birds.
@@ -460,8 +460,8 @@ vpr::ReturnStatus MotionStarStandalone::start()
                catch(mstar::CommandException&)
                {
                   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-                     << "[MotionStarStandalone] WARNING: Continuous data request failed!"
-                     << std::endl << vprDEBUG_FLUSH;
+                     << "[MotionStarStandalone] WARNING: Continuous data "
+                     << "request failed!" << std::endl << vprDEBUG_FLUSH;
                }
             }
 
@@ -472,8 +472,8 @@ vpr::ReturnStatus MotionStarStandalone::start()
             if ( m_xmtr_pos_scale == -1.0 )
             {
                vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                  << "[MotionStarStandalone] FATAL ERROR: Position scaling factor unknown!"
-                  << std::endl << vprDEBUG_FLUSH;
+                  << "[MotionStarStandalone] FATAL ERROR: Position scaling "
+                  << "factor unknown!" << std::endl << vprDEBUG_FLUSH;
                throw mstar::ScaleFactorUnknownException();
             }
             else
@@ -556,8 +556,8 @@ void MotionStarStandalone::sample()
       catch(mstar::NetworkWriteException&)
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[MotionStarStandalone]: Failed to send single-shot device request header"
-            << std::endl << vprDEBUG_FLUSH;
+            << "[MotionStarStandalone]: Failed to send single-shot device "
+            << "request header" << std::endl << vprDEBUG_FLUSH;
          return;
       }
    }
@@ -618,8 +618,9 @@ void MotionStarStandalone::sample()
                {
                   resp_status.setCode(vpr::ReturnStatus::Fail);  // Retry read
                   vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                     << "[MotionStarStandalone] ERROR: MotionStarException caught: "
-                     << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
+                     << "[MotionStarStandalone] ERROR: MotionStarException "
+                     << "caught: " << ex.getMessage() << std::endl
+                     << vprDEBUG_FLUSH;
                }
                // Any other exceptions are rethrown to the caller.  Basically,
                // anything less specific than a mstar::MotionStarException is
@@ -627,7 +628,8 @@ void MotionStarStandalone::sample()
                catch (...)
                {
                   vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                     << "[MotionStarStandalone] ERROR: Generic xception occurred when reading bird data, rethrowing"
+                     << "[MotionStarStandalone] ERROR: Generic exception "
+                     << "occurred when reading bird data.  Rethrowing..."
                      << std::endl << vprDEBUG_FLUSH;
                   throw;
                }
@@ -826,7 +828,8 @@ void MotionStarStandalone::sample()
 }
 
 // Stops the data flow if it is in continuous mode.
-vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException)
+vpr::ReturnStatus MotionStarStandalone::stopData()
+   throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
 
@@ -855,8 +858,8 @@ vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException
          catch(mstar::NetworkReadException& ex)
          {
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "[MotionStarStandalone] WARNING: Could not stop continuous data"
-               << std::endl << vprDEBUG_FLUSH;
+               << "[MotionStarStandalone] WARNING: Could not stop continuous "
+               << "data" << std::endl << vprDEBUG_FLUSH;
             throw mstar::CommandException(ex.getMessage());
          }
       }
@@ -873,7 +876,8 @@ vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException
 }
 
 // Shut down the server chassis.
-vpr::ReturnStatus MotionStarStandalone::shutdown() throw(mstar::CommandException)
+vpr::ReturnStatus MotionStarStandalone::shutdown()
+   throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
 
@@ -898,8 +902,8 @@ vpr::ReturnStatus MotionStarStandalone::shutdown() throw(mstar::CommandException
       catch(mstar::NetworkReadException& ex)
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "[MotionStarStandalone] WARNING: Could not shutdown server chassis"
-            << std::endl << vprDEBUG_FLUSH;
+            << "[MotionStarStandalone] WARNING: Could not shutdown server "
+            << "chassis" << std::endl << vprDEBUG_FLUSH;
          throw mstar::CommandException(ex.getMessage());
       }
    }
@@ -1624,9 +1628,9 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
          catch(mstar::NetworkReadException&)
          {
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << "[MotionStarStandalone] ERROR: Could not read status data buffer for device "
-               << (unsigned int) device << " from server" << std::endl
-               << vprDEBUG_FLUSH;
+               << "[MotionStarStandalone] ERROR: Could not read status data "
+               << "buffer for device " << (unsigned int) device
+               << " from server" << std::endl << vprDEBUG_FLUSH;
          }
       }
       catch(mstar::NetworkReadException&)
@@ -1707,16 +1711,18 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
       catch(mstar::NetworkReadException&)
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "[MotionStarStandalone] WARNING: Could not read server response to device "
-            << (unsigned int) device << " setup" << std::endl
+            << "[MotionStarStandalone] WARNING: Could not read server "
+            << "response to device " << (unsigned int) device << " setup"
+            << std::endl
             << vprDEBUG_FLUSH;
       }
    }
    catch(mstar::NetworkWriteException&)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "[MotionStarStandalone] WARNING: Could not set device status for device "
-         << (unsigned int) device << std::endl << vprDEBUG_FLUSH;
+         << "[MotionStarStandalone] WARNING: Could not set device status "
+         << "for device " << (unsigned int) device << std::endl
+         << vprDEBUG_FLUSH;
    }
 
    return status;
