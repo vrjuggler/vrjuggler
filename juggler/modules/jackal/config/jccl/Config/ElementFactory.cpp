@@ -80,7 +80,8 @@ namespace jccl
          const std::string dir_str = demangleFileName(*itr, "");
          try
          {
-            fs::path dir(dir_str);
+            fs::path dir(dir_str, boost::filesystem::native);
+
             if (fs::exists(dir) && fs::is_directory(dir))
             {
                fs::directory_iterator end_itr;
