@@ -57,11 +57,11 @@ world install-debug install-optim install-profiled links clean-links:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@"				\
           instlinks="$(topdir)/instlinks" recursive
 
-build:
+build buildworld:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="buildworld"			\
           instlinks="$(topdir)/instlinks" recursive
 
-install:
+install installworld:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
 
 clean cleandepend clobber:
