@@ -8,7 +8,7 @@ void vjDeviceInterface::init(std::string proxyName)
    mProxyIndex = vjKernel::instance()->getInputManager()->GetProxyIndex(proxyName);
    if (mProxyIndex == -1)
    {
-      vjDEBUG(0) << "ERROR: could not find proxy: " << proxyName << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "ERROR: could not find proxy: " << proxyName << endl << vjDEBUG_FLUSH;
       vjASSERT(false);
       exit(1);
    }

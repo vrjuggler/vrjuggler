@@ -4,7 +4,7 @@
 
 bool vjDigitalProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(1) << "----------------- DIG PROXY ----------------------\n"
+   vjDEBUG_BEGIN(vjDBG_ALL,1) << "----------------- DIG PROXY ----------------------\n"
                  << "vjInputManager::ConfigureDigProxy" << endl << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "DigProxy");
 
@@ -17,12 +17,12 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(1) << "   DigProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   DigProxy config()'ed" << endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG_END(1) << "   DigProxy config() failed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   DigProxy config() failed" << endl << vjDEBUG_FLUSH;
       return false;
    }
 }
