@@ -47,7 +47,7 @@ SUBDIR=		Display	\
 		Draw	\
 		Kernel	\
 		Sound	\
-      Test \
+		Test	\
 		Util
 
 $(RECTARGET): recursive
