@@ -118,7 +118,7 @@ _DEFAULT_DIR	= ${_DEBUG_DIR}
 _UMASK		= 002
 _FILE_PERMS	= 664
 _EXEC_PERMS	= 775
-_GROUP_NAME	= c2dev
+_GROUP_NAME	= vrjuggler
 
 # ------------------------------------------------
 # Object file build and installation directories.
