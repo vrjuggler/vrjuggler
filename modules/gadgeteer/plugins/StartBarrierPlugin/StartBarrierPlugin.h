@@ -48,8 +48,6 @@
 
 #include <map>
 
-extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
-
 namespace cluster
 {
    class ClusterBarrier;
@@ -57,8 +55,6 @@ namespace cluster
 class GADGET_CLUSTER_PLUGIN_CLASS_API StartBarrierPlugin
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( StartBarrierPlugin );
-
 public:
    StartBarrierPlugin();
    virtual ~StartBarrierPlugin();
