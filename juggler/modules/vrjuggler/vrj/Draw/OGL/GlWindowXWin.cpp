@@ -340,7 +340,11 @@ void GlWindowXWin::config(vrj::Display* disp)
    if(mXDisplayName == neg_one_STRING)    // Use display env
    {
        const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
-       mXDisplayName = std::string(getenv(DISPLAY_str.c_str()));
+       const char* d = getenv(DISPLAY_str.c_str());
+       if (NULL != d)
+       {
+          mXDisplayName = std::string( d );
+       }
    }
    vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
                              << mXDisplayName << std::endl << vprDEBUG_FLUSH;
@@ -415,7 +419,7 @@ void GlWindowXWin::checkEvents()
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
 /***********************************************************/
-::XVisualInfo* GlWindowXWin::GetGlxVisInfo (::Display *display, int screen)
+::XVisualInfo* GlWindowXWin::GetGlxVisInfo( ::Display *display, int screen )
 {
    /* pre:  screen is a screen on the current XDisplay, and
     *       XDisplay is already defined and valid.
