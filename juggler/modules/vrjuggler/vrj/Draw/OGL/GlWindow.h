@@ -36,7 +36,12 @@
 
 #include <vjConfig.h>
 #include <stdio.h>
-#include <GL/gl.h>
+
+#ifdef VJ_OS_MACOSX
+#   include <OpenGL/gl.h>
+#else
+#   include <GL/gl.h>
+#endif
 
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjViewport.h>
