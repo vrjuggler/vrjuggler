@@ -43,10 +43,15 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Singleton.h>
 
-
 namespace jccl {
 
-/** Singleton for category information of all PerfDataBuffers. */
+class LabeledPerfDataBuffer;
+
+/** Singleton for category information of all PerfDataBuffers. 
+ *  Since it already involves activation & a central registration
+ *  of all buffers, this is an increasingly innacurately named
+ *  class.  but there'll be time for renaming after it works.
+ */
 class PerformanceCategories {
 private:
 
@@ -65,6 +70,10 @@ private:
     
     bool mActive;
     
+
+    std::vector<LabeledPerfDataBuffer*> mBuffers;
+    vpr::Mutex mBuffersLock;
+
 protected:
     PerformanceCategories () {
         mActive = false;
@@ -125,6 +134,15 @@ public:
         return (*cat).second.mActive;   
     }
     
+
+
+    void addBuffer (LabeledPerfDataBuffer* buffer);
+
+    void removeBuffer (LabeledPerfDataBuffer* buffer);
+
+    void writeAllBuffers (std::ostream& out, const std::string& pad = "");
+
+
     vprSingletonHeader (PerformanceCategories);
 
 private:

@@ -34,6 +34,7 @@
 
 #include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 
 namespace jccl {
 
@@ -55,6 +56,26 @@ namespace jccl {
 
 
     /*virtual*/ const std::string& CommandWritePerfData::getProtocolName () const {
+        return protocol_name;
+    }
+
+
+
+    // CommandLabeledWritePerfData
+
+    /*static*/ const std::string CommandWriteLabeledPerfData::protocol_name ("jccl_performance");
+    
+
+    CommandWriteLabeledPerfData::CommandWriteLabeledPerfData (float _refresh_time) :PeriodicCommand (_refresh_time) {
+    }
+
+    
+    /*virtual*/ void CommandWriteLabeledPerfData::call (std::ostream& out) const {
+        PerformanceCategories::instance()->writeAllBuffers (out, "  ");
+    }
+
+
+    /*virtual*/ const std::string& CommandWriteLabeledPerfData::getProtocolName () const {
         return protocol_name;
     }
     
