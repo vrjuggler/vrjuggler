@@ -102,7 +102,6 @@
 #                     libraries.
 # install-headers   - Install only the header files.
 # install-samples   - Install only the sample code.
-# install-test      - Install only the test code.
 # install-data      - Install only the Data directory.
 #
 # docs              - Build the internal and the public documentation.
