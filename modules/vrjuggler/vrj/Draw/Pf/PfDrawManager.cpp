@@ -69,6 +69,7 @@
 #include <vrj/Display/SurfaceViewport.h>
 
 #include <jccl/Config/ConfigElement.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 #include <boost/concept_check.hpp>
 
@@ -217,9 +218,18 @@ void PfDrawManager::initAPI()
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
 
-   // XXX: One and only one of the next two lines should be uncommented
-   pfMultiprocess(PFMP_APP_CULL_DRAW);    // XXX: Uncomment this line for normal operation
-   //pfMultiprocess(PFMP_APPCULLDRAW);    // XXX: Uncomment this line to get synchronization on the cluster
+   // If we are running in a cluster then we must run in single process mode.
+   if(jccl::ConfigManager::instance()->isElementTypeInPendingList("cluster_manager") ||
+      jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager"))
+   {
+      // Single process mode.
+      pfMultiprocess(PFMP_APPCULLDRAW);
+   }
+   else
+   {
+      // Multiple process mode.
+      pfMultiprocess(PFMP_APP_CULL_DRAW);
+   }
 
 // We can not init head and wand model loaders since they are loaded in PfBasicSimInterface
 //   initLoaders();          // Must call before pfConfig
