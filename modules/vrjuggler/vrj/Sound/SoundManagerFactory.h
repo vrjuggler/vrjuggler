@@ -1,12 +1,14 @@
 #ifndef SOUNDMANAGER_FACTORY
 #define SOUNDMANAGER_FACTORY
 
+#include <vjConfig.h>
+
 #include <Sound/SoundManager.h>
 
 namespace vrj
 {
 
-class SoundManagerFactory
+class VJ_CLASS_API SoundManagerFactory
 {
 public:
    // singleton function to get an instance of a soundmanager
