@@ -58,6 +58,7 @@
 # install-headers - Install only the header files.
 # install-sample  - Install only the sample applications.
 # install-test    - Install only the test code.
+# install-tools   - Install only the user tools code.
 # install-data    - Install only the Data directory.
 # install-gui     - Install only the configuration GUI.
 #
@@ -676,6 +677,7 @@ hier:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -733,6 +735,7 @@ _install_post_libs:
 	@${MAKE} install-headers
 	@${MAKE} install-sample
 	@${MAKE} install-test
+	@${MAKE} install-tools
 	@${MAKE} install-data
 	@${MAKE} install-gui
 
@@ -933,6 +936,15 @@ install-test:
           --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
           --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
           ${_GROUP_OPT_PL} --srcdir="."
+
+# Install the user tools code.
+install-tools:
+	@echo "------------------------------------------------"
+	@echo "Installing user tools"
+	@echo "------------------------------------------------"
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
+	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/tools	\
+          -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/tools
 
 # Install the standard data files.
 install-data:
