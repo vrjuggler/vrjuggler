@@ -36,6 +36,9 @@ int main (int ac, char **av)
     srandom(random_seed);
     srand(random_seed);
 
+   const std::string file_path(TESTFILES_PATH);
+   jccl::ElementFactory::instance()->loadDefs(file_path + "definitions");
+
    CppUnit::TextUi::TestRunner runner;
 
    //------------------------------------
