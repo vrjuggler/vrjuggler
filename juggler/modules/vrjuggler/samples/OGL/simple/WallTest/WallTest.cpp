@@ -42,6 +42,7 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
 
 #include "WallTest.h"
 
