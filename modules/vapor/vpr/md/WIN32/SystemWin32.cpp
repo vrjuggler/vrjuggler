@@ -30,66 +30,61 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * NOTES:
- *    - This file (vprSystemWin32.h) MUST be included by vprSystemBase.h,
- *      not the other way around.
- * --------------------------------------------------------------------------
- */
-
-#ifndef _VPR_SYSTEM_WIN32_H_
-#define _VPR_SYSTEM_WIN32_H_
-
 #include <vpr/vprConfig.h>
-
 #include <stdlib.h>
-#include <string>
-#include <windows.h>
-#include <winsock2.h>
+#include <vpr/md/WIN32/SystemWin32.h>
 
-#include <vpr/Util/Status.h>
-#include <vpr/SystemBase.h>
-
-
-#ifndef HAVE_GETTIMEOFDAY
-struct timezone {
-    int tv_minuteswest;    /* minutes west of Greenwich */
-    int tv_dsttime;        /* type of dst correction */
-};
-#endif
 
 namespace vpr {
 
-class SystemWin32 : public SystemBase {
-public:
-    static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL);
+// ----------------------------------------------------------------------------
+// NOTE:
+//     The manual construction of the struct timeval pointer's contents is
+//     based on ACE_OS::gettimeofday().
+// ----------------------------------------------------------------------------
+int
+SystemWin32::gettimeofday (struct timeval* tp, struct timezone* tzp) {
+#ifdef HAVE_GETTIMEOFDAY
+    return ::gettimeofday(tp, tzp);
+#else
+    FILETIME file_time, tfile;
+    GetSystemTimeAsFileTime(&tfile);
 
-    // ----- Host to network byte order conversions ---- //
-    inline static vpr::Uint16
-    Ntohs (vpr::Uint32 conversion) {
-        return ntohs(conversion);
+    //  Initializes the ACE_Time_Value object from a Win32 FILETIME
+    ULARGE_INTEGER _100ns =
+    {
+        file_time.dwLowDateTime,
+        file_time.dwHighDateTime
+    };
+
+    // Static constant to remove time skew between FILETIME and POSIX
+    // time.
+    _100ns.QuadPart -= 0x19db1ded53e8000;
+
+    // Convert 100ns units to seconds;
+    tp->tv_sec = (long) (_100ns.QuadPart / (10000 * 1000));
+    // Convert remainder to microseconds;
+    tp->tv_usec = (long) ((_100ns.QuadPart % (10000 * 1000)) / 10);
+
+    return 0;
+#endif
+}
+
+Status
+SystemWin32::getenv (const std::string& name, std::string& result) {
+    char* val;
+    Status status;
+
+    val = ::getenv(name.c_str());
+
+    if ( val != NULL ) {
+        result = val;
+    }
+    else {
+        status.setCode(Status::Failure);
     }
 
-    inline static vpr::Uint32
-    Ntohl (vpr::Uint32 conversion) {
-        return ntohl(conversion);
-    }
+    return status;
+}
 
-    inline static vpr::Uint16
-    Htons (vpr::Uint16 conversion) {
-        return htons(conversion);
-    }
-
-    inline static vpr::Uint32
-    Htonl (vpr::Uint32 conversion) {
-        return htonl(conversion);
-    }
-
-    static Status getenv(const std::string& name, std::string& result);
-};
-
-}; // End of vpr namespace
-
-
-#endif   /* _VPR_SYSTEM_WIN32_H_ */
+} // End of vpr namespace

@@ -57,7 +57,7 @@ SUBDIR		= IO		\
                   Thread
 
 ifeq (@SUBSYSTEM@, WIN32)
-#SRCS		=
+SRCS		= SystemWin32.cpp
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk
@@ -65,8 +65,8 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-#ifndef DO_CLEANDEPEND
-#ifndef DO_BEFOREBUILD
-#    include $(DEPEND_FILES)
-#endif
-#endif
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    include $(DEPEND_FILES)
+endif
+endif
