@@ -38,6 +38,8 @@
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 
+#include <vrj/Display/CameraProjection.h>
+
 #include <osg/Vec3>
 #include <osg/Matrix>
 #include <osg/Transform>
@@ -180,24 +182,51 @@ inline void OsgApp::draw()
    // Copy the matrix
    Projection* project = userData->getProjection();
    float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
-   osg::Matrix osgMat;
-   osgMat.set( vj_proj_view_mat );
+   osg::Matrix osg_proj_xform_mat;
+   osg_proj_xform_mat.set( vj_proj_view_mat );
 
    //Get the frustrum
    Frustum frustum = project->mFrustum;
 
+   // Get the viewport
+   Viewport* vp = userData->getViewport();
+
    //Reset the camera
    osg::Camera* the_cam = sv->getCamera();
-   the_cam->home();
+   CameraProjection* sim_cam_proj(NULL);     // Sim camera.  Used if we need it.
+   
+   switch(vp->getType())
+   {
+   case Viewport::SURFACE:
+      the_cam->home();
+      the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
+   
+      //Set the frustrum (this is set with the matrix below)
+      //float near_val = frustum[Frustum::VJ_NEAR];
+      the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
+                          frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
+                          frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
+      break;
 
-   //Set the frustrum (this is set with the matrix below)
-   float near_val = frustum[Frustum::VJ_NEAR];
-   the_cam->setFrustum(frustum[Frustum::VJ_LEFT]*near_val,   frustum[Frustum::VJ_RIGHT]*near_val,
-                       frustum[Frustum::VJ_BOTTOM]*near_val,  frustum[Frustum::VJ_TOP]*near_val,
-                       frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
+   case Viewport::SIM:
+      sim_cam_proj = dynamic_cast<CameraProjection*>(project);
+      vprASSERT(sim_cam_proj != NULL && "Trying to use non-camera projection for simulator");
+      the_cam->home();
+      the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_HORIZONTAL);
+      //chan->setNearFar(frustum[Frustum::VJ_NEAR], frustum[Frustum::VJ_FAR]);
+      //chan->setFOV(0.0f, cam_proj->mVertFOV);
+      the_cam->setPerspective( sim_cam_proj->mVertFOV, sim_cam_proj->mAspectRatio,
+                               frustum[Frustum::VJ_NEAR], frustum[Frustum::VJ_FAR]);
+      break;
+
+   default:
+      vprASSERT(false);
+      break;
+   }
 
    //Set the look at
-   the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);
+   // NOTE: This is on the wrong stack !!!!
+   the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osg_proj_xform_mat);
 
    //Draw the scene
    sv->app();
