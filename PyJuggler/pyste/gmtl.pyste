@@ -493,38 +493,43 @@ Function('gmtlWrapper::makeScaleMatrix44', 'gmtl-wrappers.h')
 Function('gmtlWrapper::makeAxesMatrix44', 'gmtl-wrappers.h')
 
 set_policy(Function('gmtl::setRot', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 Function('gmtl::makeVec', 'gmtl-functions.h')
 Function('gmtl::makeNormal', 'gmtl-functions.h')
 set_policy(Function('gmtl::setTrans', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 set_policy(Function('gmtl::setPure', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 Function('gmtl::makePure', 'gmtl-functions.h')
 Function('gmtl::makeConj', 'gmtl-functions.h')
 Function('gmtl::makeInvert', 'gmtl-functions.h')
 set_policy(Function('gmtl::set', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 set_policy(Function('gmtl::setScale', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 
 Function('gmtl::makeYRot', 'gmtl-functions.h')
 Function('gmtl::makeXRot', 'gmtl-functions.h')
 Function('gmtl::makeZRot', 'gmtl-functions.h')
 set_policy(Function('gmtl::setDirCos', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 set_policy(Function('gmtl::setAxes', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 Function('gmtl::makeTranspose', 'gmtl-functions.h')
+
+set_policy(Function('gmtl::setFrustum', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::setPerspective', 'gmtl-functions.h'),
+           return_internal_reference())
 # ======================================================== Generator operations
 
 # Containment operations ======================================================
 Function('gmtl::isInVolume', 'gmtl-functions.h')
 set_policy(Function('gmtl::extendVolume', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 Function('gmtl::isOnVolume', 'gmtl-functions.h')
 set_policy(Function('gmtl::makeVolume', 'gmtl-functions.h'),
-                    return_internal_reference())
+           return_internal_reference())
 # ====================================================== Containment operations
 
 # Intersection operations =====================================================

@@ -455,6 +455,16 @@ namespace gmtl
    template gmtl::EulerAngleZXYf& setRot(gmtl::EulerAngleZXYf&,
                                          const gmtl::Matrix44f&);
 
+   template gmtl::Matrix44f& setFrustum(gmtl::Matrix44f&, float, float, float,
+                                        float, float, float);
+   template gmtl::Matrix44d& setFrustum(gmtl::Matrix44d&, double, double,
+                                        double, double, double, double);
+
+   template gmtl::Matrix44f& setPerspective(gmtl::Matrix44f&, float,
+                                            float, float, float);
+   template gmtl::Matrix44d& setPerspective(gmtl::Matrix44d&, double,
+                                            double, double, double);
+
    template gmtl::Matrix44f& setTrans(gmtl::Matrix44f&, const gmtl::Vec3f&);
    template gmtl::Matrix44d& setTrans(gmtl::Matrix44d&, const gmtl::Vec3d&);
 

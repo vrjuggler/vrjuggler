@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-02-2003 patrickh    Exposed gmtl::setFrustum() and gmtl::setPerspective().
+                        NEW VERSION: 0.4.12
 May-02-2003 patrickh    gmtl.intersect() now returns a tuple with varying
                         information depending on the intersection test being
                         performed.
