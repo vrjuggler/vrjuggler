@@ -26,8 +26,7 @@
 rtrc-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
-rtrc-pkg-install:
-	@$(MAKE) rtrc-install
+java-install:
 
 links:
 	@$(MAKE) -C jccl instlinks="$(instlinks)" links

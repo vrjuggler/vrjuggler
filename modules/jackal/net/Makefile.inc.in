@@ -55,7 +55,7 @@ endif	# ifndef NO_JAVA
 net-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
-net-pkg-install:
+java-install:
 	@$(MAKE) net-install
 
 links:
