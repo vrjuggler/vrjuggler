@@ -376,18 +376,21 @@
           perspective. The math will work out the same either way, so think
           about it whichever way seems more comfortable.</para>
 
-          <para>Where this notation gets interesting is what if I want to move
-          from frame1 to frame3 and I have the following matrices:</para>
+          <para>Where this notation gets interesting is what if we want to
+          move from frame1 to frame3 and we have the following matrices:</para>
 
-          <para>frame1Mframe2, frame3Mframe2</para>
+          <para><subscript>frame1</subscript>M<subscript>frame2</subscript>,
+          <subscript>frame3</subscript>M<subscript>frame2</subscript></para>
 
-          <para>I know that the matrix I want is frame1Mframe3 so the correct
-          matrix is:</para>
+          <para>We know that the matrix we want is <subscript>frame1</subscript>M<subscript>frame3</subscript>
+          so the correct matrix is:</para>
 
-          <para>frame1Mframe3 = frame1Mframe2 * frame2Mframe3</para>
+          <para><subscript>frame1</subscript>M<subscript>frame3</subscript> =
+          <subscript>frame1</subscript>M<subscript>frame2</subscript> *
+          <subscript>frame2</subscript>M<subscript>frame3</subscript></para>
 
-          <para>which means that I need to invert the frame3Mframe2 matrix
-          that I have to use it.</para>
+          <para>which means that I need to invert the<subscript> frame3</subscript>M<subscript>frame2</subscript>
+          matrix that I have to use it.</para>
 
           <para>This notation makes things like this easy to &#34;see&#34;
           since the frames of reference are right there as part of the matrix
@@ -409,17 +412,134 @@
             </mediaobject>
           </figure>
 
-          <para>The figure above shows....</para>
+          <para>The figure above shows a generic view of the coordinate frames
+          a work in a standard tracking system setup.</para>
 
-          <para>We want to...</para>
+          <para></para>
 
-          <para>Position filters do this...</para>
+          <itemizedlist>
+            <listitem>
+              <para>World coordinate system: The world coordinate system is
+              the base coordinates of the real world system. In other words
+              this is the physical space that you are actually in when you are
+              using the VR system. The coordinate system used depends upon
+              your local preferences, but normally for VR Juggler systems axis
+              are: X-right, Y-up, and Z-ou</para>
+            </listitem>
 
-          <para>So imagine we had...</para>
+            <listitem>
+              <para>Tracker: The is the base frame of reference for the
+              tracking system. This is normally defined by the &#34;base
+              unit&#34; of the tracking system. For example with an ascension
+              flock of bird tracking system this coordinate frame is defined
+              by the location of the transmitter (the large black cube).</para>
+            </listitem>
 
-          <para>We configure it by...</para>
+            <listitem>
+              <para>Receiver: The is the coordinate system of the physical
+              tracker (ex. a bird in a flock of birds). Normally people do not
+              think of the reciever as having a coordinate system but instead
+              think of it as having a position relative to the base tracker
+              system. While this is true, that transformation actually defines
+              another local coordinate frame for the receiver.</para>
+            </listitem>
 
-          <para>And that&#39;s all folks.</para>
+            <listitem>
+              <para>Tracked Object: The tracked object frame is a general name
+              for the actual location that you are trying to track. In some
+              cases this is exactly the same as the Receiver, but it can be
+              different. A common example of this is tracking the position of
+              the user&#39;s eyes. Normally people do not put a reciever
+              exactly at the position of the user&#39;s eyes (this would make
+              it very hard to see the screen if you did). Instead, the
+              receiver is normally mounted on the side of a pair of glasses or
+              a hat or some other object that the user puts on their head. In
+              this case the tracked object coordinate frame is at the location
+              of the eyes.</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>When we configure a tracking system (and the associated
+          positional proxies) we want to configure the system to return the
+          correct tracked locations for the tracked objects in the
+          environment. Computing this position involves the combination of
+          multiple transformations. Just in the common case above, there are
+          several transformations.<itemizedlist><listitem><para><subscript>world</subscript>M<subscript>tracker</subscript>:
+          This is the transformation that captures the location of the tracker
+          base system in the real world.</para></listitem><listitem><para><subscript>tracker</subscript>M<subscript>receiver</subscript>:
+          This is the reported transformation of the receiver. This is the
+          only transformation that normally varies as an application is
+          running and is the value that is returned by the tracking system.</para></listitem><listitem><para><subscript>receiver</subscript>M<subscript>tracked_object</subscript>:
+          This is the transformation from the position reported by the
+          tracking system to the actual location that we want to track.</para></listitem></itemizedlist></para>
+
+          <para>The value that the we want to configure the system to return
+          is: <subscript>world</subscript>M<subscript>tracked_object</subscript></para>
+
+          <para>This transformation is the location of the tracked object
+          within the realworld. To return this value we must compute:</para>
+
+          <para><subscript>world</subscript>M<subscript>tracked_object</subscript>
+          = <subscript>world</subscript>M<subscript>tracker</subscript> *
+          <subscript>tracker</subscript>M<subscript>receiver</subscript> *
+          <subscript>receiver</subscript>M<subscript>tracked_objec</subscript>t</para>
+
+          <para>VR Juggler takes care of computing this value at run-time, but
+          as we have already said the position of the tracker within the
+          tracking coordinate system (ie. <subscript>tracker</subscript>M<subscript>receiver</subscript>)
+          is the only value that normally varies at run-time. The other two
+          values must be configured in the tracking system setup. Lucky for
+          you, we have made this very easy to do in VR Juggler and it actually
+          sounds much more difficult then it is.</para>
+
+          <para>Each object that can return position information within a VR
+          Juggler system (ex: positional devices, positional proxies) can be
+          configured with a set of Position Filters. The Position Filters are
+          stored in an embeded list of filters within the position
+          object&#39;s configuration element. So for example there is a
+          Position Filter property in the MotionStart configuration element.
+          The system is setup to allow multiple filters, but for now the only
+          filter we are concerned about is called the &#34;Pos Xform
+          Filter&#34;. This filter is used to add transformations to the
+          positional object in a VR Juggler configuration. You can configure
+          the filter to pre-multiply or post-multiply the returned positional
+          value by a set transformation matrix. This is exactly what we need
+          to configure a tracking system.</para>
+
+          <para>We will start by configuring the tracking device. As we can
+          see from the equation above, we need to pre-transform the value
+          returned from the tracking system (<subscript>tracker</subscript>M<subscript>receiver</subscript>)
+          by the position of the tracking system within the virtual world (<subscript>world</subscript>M<subscript>tracker</subscript>).
+          We configure this by adding a Pos Xform Filter to the tracking
+          device and setting the values of the pre-translation and
+          pre-rotation to this value.</para>
+
+          <para>To configure the tracked object positions, we need to
+          configure the transformation applied to the position proxy for the
+          tracked object (ex: the user head proxy). In this case though, the
+          transformation we need to apply is a post-transform of the value.
+          You just add a post-transformation Pos Xform Filter to the
+          associated positional proxy and set the post-translation and
+          post-rotation to the offset of the tracked object relative to the
+          reciever being used to track the object.</para>
+
+          <para>Once those two transformation values are configured, the
+          tracking system should be setup and ready to run.</para>
+
+          <para>In the best of all worlds, the above method would work
+          flawlessly everytime. Unfortunately this doesn&#39;t always happen.
+          So a couple of ideas to use when you run into trouble. First, we
+          find that drawing a picture of the transformations within the system
+          can frequently help. Just create a diagram that shows all the
+          coordinate frames and the transformations between them. This can
+          often help to find the one transformation that is not quite set
+          correctly. Second, configure the system one step at a time.
+          Don&#39;t try to get both the tracking system transformation and the
+          proxy transformation set the first time. Instead, just work on
+          getting the transformation correct for the tracking system. Once
+          this value is set, you can start working on the proxy
+          transformation. It is much easier to work on configuration a
+          tracking system if only one value is changing at a time.</para>
         </section>
       </section>
 
