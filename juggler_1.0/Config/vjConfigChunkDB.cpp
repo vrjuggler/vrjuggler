@@ -192,10 +192,10 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
 
 int vjConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
 
-    int i = 0;
+    int i = 0;   
     std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
     while (begin != chunks.end()) {
-	vjVarValue v = (*begin)->getProperty(property);
+	vjVarValue v = ((*begin)->getProperty(property));
 	if (((v.getType() == T_STRING) || (v.getType() == T_STRING))
 	    &&  (!vjstrcasecmp (value, (std::string)v))) {
 	    //delete (*begin);

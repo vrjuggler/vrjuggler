@@ -95,11 +95,18 @@ public:
     }
 
     //: Copy constructor.
-    vjVarValue (vjVarValue &v);
+    vjVarValue (const vjVarValue &v);
 
 
     //: Constructor - creates a T_EMBEDDEDCHUNK vjVarValue containing ch
-    vjVarValue (vjConfigChunk* ch);
+    //!NOTE: This is explicit for safety's sake.  I already encountered a bug
+    //+      where some chunkdb code was interpreting
+    //+          vjVarValue v1 = chunk.getProperty(blah)
+    //+      as casting the result of getProperty to a chunk* and then calling
+    //+      this constructor instead of using the vjVarValue copy constructor
+    //+      becuase getProperty returns a const vjVarValue and the copy const
+    //+      didn't expect a const (since fixed).
+    explicit vjVarValue (vjConfigChunk* ch);
 
 
     //: Creates a new vjVarValue of type t.
