@@ -1,5 +1,7 @@
 #!/usr/local/bin/perl
 #
+# $FreeBSD: CVSROOT/log_accum.pl,v 1.41 2000/02/13 04:04:28 peter Exp $
+#
 # $Id$
 #
 # Perl filter to handle the log messages from the checkin of files in
@@ -54,7 +56,7 @@ $SUMMARY_FILE  = "/tmp/#cvs.files.summary";
 $MAIL_FILE     = "/tmp/#cvs.files.mail";
 $SUBJ_FILE     = "/tmp/#cvs.files.subj";
 
-$CVSROOT       = "$ENV{'CVSROOT'}";
+$CVSROOT       = $ENV{'CVSROOT'} || "/home/selab/Juggler/CVSRepos";
 
 ############################################################
 #
@@ -102,14 +104,15 @@ sub read_line {
 }
 
 sub read_logfile {
-    local(@text);
+    local(@text) = ();
     local($filename, $leader) = @_;
-    open(FILE, "<$filename");
-    while (<FILE>) {
-	chop;
-	push(@text, $leader.$_);
-    }
-    close(FILE);
+    open(FILE, "<$filename") and do {
+	while (<FILE>) {
+	    chop;
+	    push(@text, $leader.$_);
+	}
+	close(FILE);
+    };
     @text;
 }
 
@@ -228,8 +231,9 @@ sub change_summary_changed {
 		@revline = split(' ', $_);
 		$rev = $revline[2];
 		$rcsfile = $revline[3];
-		$rcsfile =~ s,^$CVSROOT/,,;
+		$rcsfile =~ s,^$CVSROOT[/]+,,;
 		$rcsfile =~ s/,v$//;
+		last;
 	    }
 	}
 	close(RCS);
@@ -242,6 +246,7 @@ sub change_summary_changed {
 		    $delta = $_;
 		    $delta =~ s/^.*;//;
 		    $delta =~ s/^[\s]+lines://;
+		    last;
 		}
 	    }
 	    close(RCS);
@@ -298,24 +303,17 @@ sub do_changes_file {
 
 sub mail_notification {
     local(@text) = @_;
-    local($line, $word, $subjlines, $subjwords, @mailaddrs, $host, $dom);
-    local(%unique);
+    local($line, $word, $subjlines, $subjwords, @mailaddrs);
+#    local(%unique);
 
-    $host = `hostname`;
-    if ($host =~ /\.freebsd\.org$/i) {
-	$dom = '@FreeBSD.org';
-    } else {
-	$dom = '';
-    }
+#    %unique = ();
 
     print "Mailing the commit message...\n";
-
-    %unique = ();
 
     @mailaddrs = &read_logfile("$MAIL_FILE.$id", "");
 
     if ($debug) {
-	open(MAIL, "| /usr/lib/sendmail -odb -oem peter");
+	open(MAIL, "| /usr/lib/sendmail -odb -oem patrick");
     } else {
 	open(MAIL, "| /usr/lib/sendmail -odb -oem -t");
     }
@@ -471,7 +469,8 @@ while (<STDIN>) {
 	if (/^PR:$/i ||
 	    /^Reviewed by:$/i ||
 	    /^Submitted by:$/i ||
-	    /^Obtained from:$/i) {
+	    /^Obtained from:$/i ||
+	    /^Approved by:$/i) {
 	    next;
 	}
 	push (@log_lines,     $_);
@@ -593,7 +592,7 @@ for ($i = 0; ; $i++) {
 	    push(@text, &read_logfile("$SUMMARY_FILE.$i.$id", "  "));
 	}
     }
-    push(@text, "");
+    push(@text, "", "");
 }
 #
 # Put the log message at the beginning of the Changes file
