@@ -29,4 +29,6 @@ Import("__vrj.pyste")
 
 # This requires that OSG be available when Pyste is run.  If it is not, just
 # comment out this line.
-Class('vrj::OsgApp', 'vrj/Draw/OSG/OsgApp.h')
+OsgApp = Class('vrj::OsgApp', 'vrj/Draw/OSG/OsgApp.h')
+exclude(OsgApp.getDrawManager)
+exclude(OsgApp.getSoundManager)
