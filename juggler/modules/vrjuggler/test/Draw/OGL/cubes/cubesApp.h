@@ -182,7 +182,8 @@ private:
       else if(mStopButton->GetData())
          mCurVelocity = 0.0f;
 
-      vjDEBUG(0) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
+      if(mIncVelocityButton->GetData() || mDecVelocityButton->GetData())
+         vjDEBUG(0) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
 
       if(mIncVelocityButton->GetData() == vjDigital::TOGGLE_ON)
          vjDEBUG(0) << "-- Toggle ON --" << endl << vjDEBUG_FLUSH;
@@ -191,7 +192,7 @@ private:
       if(mIncVelocityButton->GetData() == vjDigital::ON)
          vjDEBUG(0) << "-- ON --" << endl << vjDEBUG_FLUSH;
       if(mIncVelocityButton->GetData() == vjDigital::OFF)
-         vjDEBUG(0) << "-- OFF --" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "-- OFF --" << endl << vjDEBUG_FLUSH;
 
       // Find direction vector
       vjVec3   forward(0.0f, 0.0f, -1.0f);
