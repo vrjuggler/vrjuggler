@@ -420,8 +420,7 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
    }
 }
 
-/**** Static Helpers *****/
-/* static */ bool GlWindowXWin::createHardwareSwapGroup(std::vector<GlWindow*> wins)
+bool GlWindowXWin::createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins)
 {
    // Convert to glx windows
    std::vector<GlWindowXWin*> glx_wins;
