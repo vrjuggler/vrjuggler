@@ -92,9 +92,24 @@ public class ConfigContextEditor
       {
          ConfigElement elt = (ConfigElement)elts.get(0);
          mElementPropSheet.setElement(elt);
+         selectConfigElement(elt);
       }
 
       mElementTree.expandPath(new TreePath(mContextModel.getRoot()));
+   }
+
+   /**
+    * Selects the path to the given ConfigElement in the ElementTree.
+    */
+   public void selectConfigElement(ConfigElement elm)
+   {
+      java.util.List element_nodes = mContextModel.getNodesFor(elm);
+      if (element_nodes.size() > 0)
+      {
+         TreeNode element_node = (TreeNode)element_nodes.get(0);
+         TreePath path = new TreePath(mContextModel.getPathToRoot(element_node));
+         mElementTree.setSelectionPath(path);
+      } 
    }
 
    /**
@@ -221,7 +236,7 @@ public class ConfigContextEditor
       // the chosen ConfigDefinition.
       if (result == ConfigDefinitionChooser.APPROVE_OPTION)
       {
-         ConfigElementFactory tempfac = new ConfigElementFactory(defs);
+         ConfigElementFactory temp_factory = new ConfigElementFactory(defs);
          
          // TODO: Compute a unique name
          // -We used to use the following to get a unique name, but it is gone now :(
@@ -233,7 +248,7 @@ public class ConfigContextEditor
          
          // -Our temporary Solution is to try to make it obvious to the user that they 
          // need to change it.
-         ConfigElement element = tempfac.create("CHANGEME", chooser.getSelectedDefinition());
+         ConfigElement element = temp_factory.create("CHANGEME", chooser.getSelectedDefinition());
          
 
          // Make sure this add goes through successfully
@@ -246,15 +261,8 @@ public class ConfigContextEditor
             return;
          }
 
-// TODO: Make this work again
          // Make sure the new node gets selected
-//         List chunk_nodes = getNodesFor(chunk);
-//         if (chunk_nodes.size() > 0)
-//         {
-//            TreeNode chunk_node = (TreeNode)chunk_nodes.get(0);
-//            TreePath path = new TreePath(treeModel.getPathToRoot(chunk_node));
-//            mElementTree.setSelectionPath(path);
-//         }
+         selectConfigElement(element);
       }
    }
       
