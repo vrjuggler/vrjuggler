@@ -135,14 +135,13 @@ private:
    //gadget::Keys VKKeyToKey(int vkKey);
    //static void doInternalError( const std::string& msg );
    
-   //XXX: This is not being used anywhere.
+protected:
    /** Do any extra event processing needed. */
    virtual void processEvent(::XEvent event)
    {
       boost::ignore_unused_variable_warning(event);
    }
 
-protected:
    ::Display*           mXDisplay;
    ::Window             mXWindow;
    
