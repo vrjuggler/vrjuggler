@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: torus$(EXE_EXT)
+all: torus@EXEEXT@
 
-APP_NAME=	torus$(EXE_EXT)
+APP_NAME=	torus@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -49,5 +49,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-torus$(EXE_EXT): $(OBJS)
+torus@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

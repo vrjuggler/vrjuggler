@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: combo$(EXE_EXT)
+all: combo@EXEEXT@
 
-APP_NAME=	combo$(EXE_EXT)
+APP_NAME=	combo@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -54,5 +54,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-combo$(EXE_EXT): $(OBJS)
+combo@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: analog$(EXE_EXT)
+all: analog@EXEEXT@
 
-APP_NAME=	analog$(EXE_EXT)
+APP_NAME=	analog@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -50,5 +50,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-analog$(EXE_EXT): $(OBJS)
+analog@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

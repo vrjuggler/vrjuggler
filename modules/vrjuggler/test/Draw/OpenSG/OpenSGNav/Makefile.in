@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: OpenSGNav$(EXE_EXT)
+all: OpenSGNav@EXEEXT@
 
-APP_NAME=	OpenSGNav$(EXE_EXT)
+APP_NAME=	OpenSGNav@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -55,5 +55,5 @@ EXTRA_LIBS+=		$(OPENSG_LIBS)
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-OpenSGNav$(EXE_EXT): $(OBJS)
+OpenSGNav@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
