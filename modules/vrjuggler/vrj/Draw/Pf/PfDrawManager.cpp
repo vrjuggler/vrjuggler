@@ -176,9 +176,16 @@ void vjPfDrawManager::initDrawing()
       pipes[pipeNum]->setScreen(pipeNum);
    }
 
-   // Get frame vuffer config
+   // Get frame buffer config
    std::vector<int> stereo_fb_config = getStereoFBConfig();
    std::vector<int> mono_fb_config = getMonoFBConfig();
+
+   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Got Stereo FB config\n" << vjDEBUG_FLUSH;
+   for(int i=0;i<stereo_fb_config.size();i++)
+      vjDEBUG(vjDBG_DRAW_MGR,1) << "  " << stereo_fb_config[i] << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Got Mono FB config\n" << vjDEBUG_FLUSH;
+   for(i=0;i<mono_fb_config.size();i++)
+      vjDEBUG(vjDBG_DRAW_MGR,1) << "  " << mono_fb_config[i] << endl << vjDEBUG_FLUSH;
 
    //  For each display:
    //	    -Create a pWin for it
@@ -343,6 +350,8 @@ std::vector<int> vjPfDrawManager::getMonoFBConfig()
    mono_fb.insert(mono_fb.end(), app_fb.begin(), app_fb.end());
 
    mono_fb.push_back(None);
+
+   return mono_fb;
 }
 
 //: Return the needed stereo frame buffer config
@@ -363,6 +372,7 @@ std::vector<int> vjPfDrawManager::getStereoFBConfig()
    stereo_fb.insert(stereo_fb.end(), app_fb.begin(), app_fb.end());
 
    stereo_fb.push_back(None);
+   return stereo_fb;
 }
 
 
