@@ -28,7 +28,6 @@ vjPosition::vjPosition(vjConfigChunk *c) : vjInput(c) , xformMat()
       // to the vj coord system.
     rotMat.makeXYZEuler(xr, yr, zr);
 
-
     xformMat.makeTrans(xt, yt, zt);
     xformMat.postMult(rotMat);         // xformMat = T*R
   }
