@@ -90,11 +90,10 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-if [ "x$date" = "x-1" -o "x$subsystem" = "x-1" -o "x$input" = "x-1" -o	\
-     "x$output" = "x-1" ]
-then
-    echo "Usage: $0 [-b branch] -d <date> -i <input file> -o <output file>"
-    echo "       -s <subsystem> [ -f <VERSION file> | -v <version> ]"
+if [ "x$date" = "x-1" -o "x$input" = "x-1" -o "x$output" = "x-1" ]; then
+    echo "Usage: $0"
+    echo "       [-b branch] -d <date> -i <input file> -o <output file>"
+    echo "       [-s <subsystem> -f <VERSION file> | -v <version> ]"
     echo "       [-n <name>]"
     exit 1
 fi
