@@ -111,6 +111,14 @@ public:
          return mTypedDevice->getGestureString(gestureId);
    }
 
+   /** Returns time of last update. */
+   vpr::Interval getTimeStamp() const
+   {
+      // XXX: Broken for now, this is a case similar to the EventWindow type in that
+      //      it does not point to one data element like digital, analog, and position.
+      return vpr::Interval();
+   }
+
    /** Returns a pointer to the device held by this proxy. */
    Gesture* getGesturePtr()
    {
