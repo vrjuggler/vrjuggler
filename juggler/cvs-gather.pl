@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.24 2002/10/25 16:00:49 patrickh
+# cvs-gather.pl,v 1.26 2002/12/16 18:03:44 patrickh Exp
 
 use 5.005;
 
@@ -60,7 +60,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.1.7';
+my $VERSION = '0.1.8';
 # *********************************************************************
 
 my $cfg_file      = '';
@@ -743,8 +743,21 @@ sub updateModule ($$$$$$)
    {
       my $cmd_line = "cvs update ";
 
-      $cmd_line .= "-r $tag " if $tag;
-      $cmd_line .= "-D \"$date\" " if $date;
+      # If we are updating on the HEAD branch and no date is specified, use
+      # 'cvs update -A' to remove any sticky tags that may exist from an
+      # earlier update or checkout.
+      if ( "$tag" eq "HEAD" && ! $date )
+      {
+         $cmd_line .= "-A ";
+      }
+      # If we are not updating on the HEAD branch or a date is given, then we
+      # need extra arguments to get sticky tags put into place.
+      else
+      {
+         # Do not use -r when the tag name is HEAD.  CVS doesn't like this.
+         $cmd_line .= "-r $tag " if $tag && "$tag" ne "HEAD";
+         $cmd_line .= "-D \"$date\" " if $date;
+      }
 
       $status = runCvsCommand("$cmd_line");
    }
