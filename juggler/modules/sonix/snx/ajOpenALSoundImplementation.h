@@ -19,7 +19,12 @@ public:
    virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
    {
       ajSoundImplementation::trigger( alias, looping );
-      // do nothing
+
+      int id = this->_allookup( alias );
+      if (id >= 0)
+      {
+         alSourcePlay( id );
+      }
    }
 
    /**
@@ -29,7 +34,11 @@ public:
    virtual void stop(const std::string & name)
    {
       ajSoundImplementation::stop( name );
-      // do nothing
+      int id = this->_allookup( alias );
+      if (id >= 0)
+      {
+         alSourceStop( id );
+      }
    }
 
    /**
@@ -40,7 +49,34 @@ public:
    virtual void step( const float & timeElapsed )
    {
       ajSoundImplementation::step( timeElapsed );
-      // do nothing
+      
+      static ALfloat position[] = { 10.0, 0.0, 4.0 };
+           static ALfloat movefactor = 4.5;
+           static time_t then = 0;
+           time_t now;
+           ALint size;
+
+           now = time( NULL );
+
+           /* Switch between left and right stereo sample every two seconds. */
+           if( now - then > 2 ) {
+                   then = now;
+
+                   movefactor *= -1.0;
+           }
+
+           position[0] += movefactor;
+           alSourcefv( moving_source, AL_POSITION, position );
+
+      micro_sleep( 500000 );
+
+           ALint byteloki;
+           alGetSourceiv( moving_source, AL_BYTE_LOKI, &byteloki );
+           alGetBufferi( resourceID,     AL_SIZE,      &size );
+
+           //fprintf(stderr, "byteloki = %d size = %d\n", byteloki, size);
+
+           return;
    }
 
 
@@ -71,6 +107,15 @@ public:
    virtual void setPosition( const std::string& alias, float x, float y, float z )
    {
       ajSoundImplementation::setPosition( alias, x, y, z );
+
+      float pos[3];
+      pos[0] = x; pos[1] = y; pos[2] = z;
+
+      int id = this->_allookup( alias );
+      if (id >= 0)
+      {
+         alSourcefv( id, AL_POSITION, pos );
+      }
    }
 
    /**
@@ -89,6 +134,14 @@ public:
    virtual void setListenerPosition( const float& x, const float& y, const float& z )
    {
       ajSoundImplementation::setListenerPosition( x, y, z );
+
+//      #define ALMAXDISTANCE 60.0f
+//      clamp( x, -ALMAXDISTANCE, ALMAXDISTANCE );
+//      clamp( y, -ALMAXDISTANCE, ALMAXDISTANCE );
+//      clamp( z, -ALMAXDISTANCE, ALMAXDISTANCE );
+
+      ALfloat lispos[] = { x, y, z };
+      alListenerfv( AL_POSITION, lispos );
    }
 
    /**

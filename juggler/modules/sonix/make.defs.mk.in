@@ -93,7 +93,7 @@ MKPATH		?= @srcdir_absolute@/Doozer++/mk
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
-MKINSTALLDIRS = @topdir@/hack
+MKINSTALLDIRS = @srcdir_absolute@/mkinstalldirs
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
