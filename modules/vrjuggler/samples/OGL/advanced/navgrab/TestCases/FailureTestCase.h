@@ -38,7 +38,15 @@ public:
    */
    virtual void processTest()
    {
-      /* VRJTEST_ASSERT(false && "This is supposed to fail"); */
+      VRJTEST_ASSERT(false && "This is supposed to fail");
+
+      /*
+      vrj::test::Asserter::failIf( !(false), this,                         \
+                                 vrj::test::Message( "assertion failed",  \
+                                                      "Expression: "),    \
+                                 __FILE__, __LINE__ );
+                                 */
+
    }
 
    /** Return true when the test is done processing
