@@ -839,7 +839,7 @@ public:
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle->read(buffer, length, bytes_read, timeout);
+        return m_handle->read_i(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -874,7 +874,7 @@ public:
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle->readn(buffer, length, bytes_read, timeout);
+        return m_handle->readn_i(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -905,7 +905,7 @@ public:
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle->write(buffer, length, bytes_written, timeout);
+        return m_handle->write_i(buffer, length, bytes_written, timeout);
     }
 
 protected:
