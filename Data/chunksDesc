@@ -296,6 +296,7 @@ chunk TrackdController "TrackdController" "Configure the interface to a trackd c
   max Float 1 "max" "the actual analog data values range - upper bound"
   end
 chunk ISenseStation "Station" "Settings for an Intersense Tracker Station"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
   enabled Bool 1 "Enabled" ""
   stationIndex Int 1 "Station Number" ""
   useDigital Bool 1 "Use Digital" ""
@@ -316,8 +317,8 @@ chunk Isense "Isense" "Intersense Tracking Devices"
   script String 1 "Script File" "File path of script sent to the tracker on startup."
   min Float 1 "min" "the actual analog data values range - lower bound"
   max Float 1 "max" "the actual analog data values range - upper bound"
-  vjUnits Int 1 "Juggler Units" vj_enumeration { "Inches=0" "Feet" "Centimeters" "Meters" } ""
-  isUnits Int 1 "Intersense Units" vj_enumeration { "Inches=0" "Feet" "Centimeters" "Meters" } ""
+  vjUnits Int 1 "Juggler Units" vj_enumeration { "Inches=0" "Feet=1" "Centimeters=2" "Meters=3" } ""
+  isUnits Int 1 "Intersense Units" vj_enumeration { "Inches=0" "Feet=1" "Centimeters=2" "Meters=3" } ""
   end
 chunk Fastrack "Fastrack" "Fastrack 3D polhemus"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
