@@ -310,13 +310,6 @@ public:  // ----- Various other thread functions ------
    }
 
    /**
-    * Causes the calling thread to sleep for the given number of microseconds.
-    *
-    * @param micro The number of microseconds to sleep.
-    */
-   static int usleep(vpr::Uint32 micro);
-
-   /**
     * Sends the specified signal to this thread (not necessarily SIGKILL).
     *
     * @pre None.
