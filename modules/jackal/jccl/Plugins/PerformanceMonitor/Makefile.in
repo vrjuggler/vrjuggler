@@ -49,6 +49,7 @@ SUBOBJDIR	= $(JCCL_LIBRARY)
 
 SRCS		= PerformanceMonitor.cpp \
 		  PerfDataBuffer.cpp	\
+		  LabeledPerfDataBuffer.cpp \
 		  PerfCommand.cpp	\
                   TimeStamp.cpp
 
