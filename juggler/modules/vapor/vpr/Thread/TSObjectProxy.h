@@ -90,16 +90,24 @@ public:
    { return *getSpecific();}
 
 private:
-   //-----------------------------------------------------------------
-   //: Get the correct version for current thread
-   // - Find the correct table
-   // - Make sure that object exists locally
-   // - Get the obj pointer
-   // - Attempts a dynamic cast
-   //-----------------------------------------------------------------
+   /** Get the correct version for current thread.
+    * - Find the correct table
+    * - Make sure that object exists locally
+    * - Get the obj pointer
+    * - Attempts a dynamic cast
+    */
    T* getSpecific()
    {
-      TSTable* table = Thread::self()->getTSTable();
+      TSTable* table(NULL);
+
+      // Get the correct TS data table
+      // - If have self, get mine.  Otherwise use global one
+      vpr::BaseThread* thread_self(NULL);
+      thread_self = Thread::self();
+      if(NULL != thread_self)
+      {  table = Thread::self()->getTSTable(); }
+      else
+      {  table = Thread::getGlobalTSTable(); }
 
       // ---- DOES OBJECT EXIST --- //
       // If not, Create the object and add it to the table
