@@ -2,11 +2,12 @@
 
 <title>An introduction to VR Juggler configuration files</title>
 
-<body>
+<body bgcolor="#ffffcc">
 
 <!--NewPage-->
 <h1>An introduction to VR Juggler configuration files</h1>
 
+<!-- install-web book-ignore-begin -->
 <h2>Contents</h2>
 <ul>
 <li><a href="#basic">Basic information</a>
@@ -15,9 +16,9 @@
 <li><a href="#includes">Referencing other configuration files</a>
 <li><a href="#next">Where should I go from here?</a>
 </ul>
+<!-- install-web book-ignore-end -->
 
-<a name="basic">
-<h2>Basic information</h2>
+<h2><a name="basic">Basic information</h2>
 
 Configuring VR software for a particular hardware system can be a 
 daunting task due to the complexity and diversity of the environments 
@@ -46,8 +47,9 @@ configuration files.  The GUI can prevent many kinds of errors and
 make the user's task easier by presenting the available options, 
 valid arguments, help information, and so on.
 
-<a name="loading">
-<h2>Loading configuration files</h2>
+
+
+<h2><a name="loading">Loading configuration files</h2>
 
 When a VR Juggler application is initialized, it creates an internal
 database of configuration information.  This database will contain information
@@ -85,8 +87,7 @@ hardware.  For example, VRAC keeps local configurations in the directory <tt>/ho
 
 
 
-<a name="modular">
-<h2>Using modular configuration files</h2>
+<h2><a name="modular">Using modular configuration files</h2>
 
 <p>
 One of the difficulties of managing a VR system is the rapid 
@@ -127,8 +128,7 @@ Other files could be used to change the basic configuration.  For example, to us
 
 
 
-<a name="includes">
-<h2> Referencing other configuration files</h2>
+<h2><a name="includes">Referencing other configuration files</h2>
 
 <p>
 While modular configuration files provide a lot of flexibility, users
@@ -149,15 +149,20 @@ in the system repository.  He only needs to keep track of the single
 file's name, but when any of the included files are updated, he 
 automatically sees the changes.
 
-<a name="next">
-<h2>Where should I go from here?</h2>
+
+
+<h2><a name="next">Where should I go from here?</h2>
 
 <p>
-To find out what's inside a VR Juggler configuration file, proceed to the <a href="chunkprimer.html">Introduction to ConfigChunks</a>.
+To find out what's inside a VR Juggler configuration file, proceed 
+to the <a href="chunkprimer.html">Introduction to ConfigChunks</a>.
+
 <p>
 To try running a sample application and learn how the default 
 simulator configuration works, check out the Getting Started section
 of the VR Juggler Programmer's Guide.
+
+
 </body>
 
 </html>

@@ -30,16 +30,52 @@ Each Chunk name is a hyperlink to a detailed description.
 For many chunks,
 it is reasonable and useful to have multiple instances in
 your configuration (displays are an obvious example).  Others are 
-``singletons'' - they provide some sort of global information, and it
+"singletons" - they provide some sort of global information, and it
 wouldn't make sense to have multiple definitions.  Singleton Chunks
 are noted in the descriptions.  If a Juggler configuration does contain
 multiple instances of a singleton Chunk - multiple EnvironmentManager Chunks,
 for example - the most recently read Chunk will supercede older ConfigChunks.
 </p>
 
+<!-- install-web book-ignore-begin -->
+<h2>Jump to:</h2>
+<ul>
+<li><a href="#meta">"Meta" Chunks</a>
+<li><a href="#display">Display Chunks</a>
+<li><a href="#input">Input Chunks</a>
+<li><a href="#env">Environment Manager Chunks</a>
+<li><a href="#misc">Miscellaneous Chunks</a>
+<li><a href="#vjcontrol">VjControl-specific Chunks</a>
+</ul>
+<!-- install-web book-ignore-end -->
 
-<h2>Display Chunks</h2>
+<h2><a name="meta">"Meta" Chunks</a></h2>
 
+<p>
+VR Juggler defines two ConfigChunks which don't correspond to components 
+of the VR system itself, but rather impact how configuration files are
+loaded in the first place.
+
+<dl>
+
+<dt><a href="DescHelp/vjIncludeFile.html">Config File Include</a>
+<dd>The Config File Include chunk gives the name
+of an additional config file which should be loaded whenever this chunk
+is encountered.
+
+<dt><a href="DescHelp/vjIncludeDescFile.html">ChunkDesc File Include</a>
+<dd>The ChunkDesc File Include chunk gives the name
+of an additional chunk descriptions file which should be loaded whenever 
+this chunk is encountered.  ChunkDesc Include Chunks are particularly
+useful in configuration files that include application-defined ConfigChunk
+types.
+
+</dl>
+
+
+<h2><a name="display">Display Chunks</a></h2>
+
+<p>
 VR Juggler gives you a great deal of latitude in defining displays. 
 For example, you can use a combination of surface displays and 
 simulator displays, or maybe just one or
@@ -66,7 +102,7 @@ video channels on a machine, and how they map to X Window displays.
 
 </dl>
 
-<h2>Input</h2>
+<h2><a name="input">Input</a></h2>
 
 Any input devices that are defined in your config file will be initialized 
 at application startup. So, to add a new device, all you have to do is add 
@@ -145,15 +181,17 @@ position and orientation.
 
 </dl>
 
-<p><li><h3>Proxies and Proxy Aliases</h3>
-</p>
+<h3><li>Proxies and Proxy Aliases</h3>
 
+<p>
 Proxies are the mechanism for making access to input devices generic.
 A Configuration file should include a proxy for every possible input
 source.  Each proxy is defined with the name of the device it accesses
 and a unit number (for devices that provide multiple inputs).
+</p>
 
 <dl>
+
 <dt><a href="DescHelp/DigProxy.html">Digital Proxy</a>
 <dd>Proxy for digital devices.
 
@@ -181,7 +219,9 @@ proxies.
 
 </ul>
 
-<h2>Environment Manager</h2>
+
+
+<p><h2><a name="env">Environment Manager</a></h2>
 
 The Environment Manager(EM) is the part of VR Juggler that controls communications
 with the GUI program, vjcontrol.  It also controls Juggler's performance
@@ -208,7 +248,7 @@ performance data.
 </dl>
 
 
-<p><h2>Miscellaneous</h2>
+<p><h2><a name="misc">Miscellaneous</a></h2>
 </p>
 
 <dl>
@@ -225,30 +265,21 @@ Performer-based
 Juggler applications.  If you aren't using Performer, you don't need to
 worry about this one.
 
-<dt><a href="DescHelp/vjIncludeFile.html">Config File Include</a>
-<dd>This is kind of a meta-chunk.  The File Include chunk gives the name
-of an additional config file which should be loaded whenever this chunk
-is encountered.
-
-<dt><a href="DescHelp/vjIncludeDescFile.html">Chunkdesc File Include</a>
-<dd>This is kind of a meta-chunk.  The File Include chunk gives the name
-of an additional chunk descriptions file which should be loaded whenever 
-this chunk is encountered.
-
 </dl>
 
-<h2>VjControl-specific chunks</h2>
+<h2><a name="vjcontrol">VjControl-specific chunks</a></h2>
 
+<p>
 The VR Juggler control program, vjcontrol, also uses some ConfigChunks
 for its own configuration.  Generally, these will be kept in a separate
 file (<TT>~/.vjconfig/vjcontrol.config</TT>).
 
 <dl>
-<dt><a href="DescHelp/vjcontrol.html">vjcontrol Configuration</a>
-<dd>This chunk stores vjcontrol's preferences information.
+<dt><a href="DescHelp/vjcontrol.html">VjControl Configuration</a>
+<dd>This chunk stores VjControl's preferences information.
 
 <dt><a href="DescHelp/PerfData.html">Performance Data Display</a>
-<dd>Chunks of this type give vjcontrol information on how to display
+<dd>Chunks of this type give VjControl information on how to display
 and interpret performance data gathered from a Juggler application
 or a performance log file.
 
@@ -256,5 +287,7 @@ or a performance log file.
 
 
 </body>
+
+
 </html>
 
