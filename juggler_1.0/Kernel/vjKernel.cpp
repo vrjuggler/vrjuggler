@@ -65,7 +65,7 @@ int vjKernel::start()
    // Create a new thread to handle the control
    vjThreadMemberFunctor<vjKernel>* memberFunctor =
    new vjThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
-   
+
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
    new_thread = new vjThread(memberFunctor, 0);
 
@@ -81,7 +81,7 @@ void vjKernel::controlLoop(void* nullParam)
 
    while (0 == vjThread::self());
    mControlThread = (vjThread*) vjThread::self();
-   
+
    vjTimeStamp::initialize();
    // Do any initial configuration
    initConfig();
@@ -155,7 +155,7 @@ void vjKernel::checkForReconfig()
    // ---- RECONFIGURATION --- //
    int total_chunks_processed(0);
    int local_chunks_processed(0);
-   
+
    // This loop will keep processing the pending list
    // until there is an iteration where no chunks are processed.
    do
@@ -164,13 +164,13 @@ void vjKernel::checkForReconfig()
       total_chunks_processed += local_chunks_processed;
    }
    while(local_chunks_processed > 0);
-   
+
    // If we changed the active configuration, then the environment manager needs to refresh
    if((total_chunks_processed > 0) && (environmentManager != NULL))
    {
       environmentManager->sendRefresh();
    }
-      
+
    // ---- APP SWITCH ---- //
    // check for a new applications
    if(mNewAppSet)
@@ -249,7 +249,7 @@ void vjKernel::initConfig()
    // --- CREATE SHARED MEMORY --- //
    vjSharedPool::init();         // Try to init the pool stuff
    sharedMemPool = new vjSharedPool(1024*1024);      // Create shared memory pool
-   
+
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
    mInputManager = new (sharedMemPool) vjInputManager;
@@ -259,7 +259,7 @@ void vjKernel::initConfig()
    //setupEnvironmentManager();
    environmentManager = new vjEnvironmentManager();
 
-   //??// processPending() // Should I do this here   
+   //??// processPending() // Should I do this here
 
 #ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
@@ -288,18 +288,19 @@ void vjKernel::updateFrameData()
 // CHUNK Handler
 // -------------------------------
 //: Process any pending reconfiguration that we can deal with
-//  
+//
 //  For all dependant managers, call process pending.
 //  and call it on our selves
 int vjKernel::configProcessPending(bool lockIt)
 {
    int chunks_processed(0);     // Needs to return this value
-   
-   if(vjConfigManager::instance()->pendingNeedsChecked())
+
+   vjConfigManager* cfg_mgr = vjConfigManager::instance();
+   if(cfg_mgr->pendingNeedsChecked())
    {
       vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
-      
-      chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks   
+
+      chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
       chunks_processed += getInputManager()->configProcessPending(lockIt);
       chunks_processed += mDisplayManager->configProcessPending(lockIt);
       if(NULL != mDrawManager)
@@ -308,7 +309,7 @@ int vjKernel::configProcessPending(bool lockIt)
          chunks_processed += environmentManager->configProcessPending(lockIt);
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
-      
+
       vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << endl << vjDEBUG_FLUSH;
    }
    return chunks_processed;
@@ -357,10 +358,10 @@ bool vjKernel::configRemove(vjConfigChunk* chunk)
 bool vjKernel::addUser(vjConfigChunk* chunk)
 {
    vjASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
-   
+
    vjUser* new_user = new vjUser;
    bool success = new_user->config(chunk);
-   
+
    if(!success)
    {
       vjDEBUG(vjDBG_CONFIG,vjDBG_CRITICAL_LVL)
@@ -395,13 +396,13 @@ void vjKernel::loadConfigFile(std::string filename)
    // ------- OPEN Program specified Config file ------ //
    if(filename.empty())   // We have a filename
      return;
-   
+
    if (!chunk_db.load(filename.c_str()))
    {
      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjConfigManager::loadConfigFile: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
      exit(1);
    }
-   
+
    // Put them all in pending
    vjConfigManager::instance()->addChunkDB(&chunk_db);
 
