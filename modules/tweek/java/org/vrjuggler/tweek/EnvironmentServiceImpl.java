@@ -200,7 +200,7 @@ class EnvironmentServiceImpl
          }
          else
          {
-            value = System.getProperty(env_var);
+            value = getenv(env_var);
          }
 
          if ( value != null )
