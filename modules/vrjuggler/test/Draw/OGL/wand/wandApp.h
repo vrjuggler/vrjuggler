@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <iostream>
-#include <iomanip.h>
+#include <iomanip>
 
 #include <vrj/Draw/OGL/GlApp.h>
 
