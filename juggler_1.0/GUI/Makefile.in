@@ -75,6 +75,13 @@ CLEAN_FILES	+= ${VJCONFIG_OBJS} VjConfig/*~ ${VJGUI_OBJS} VjGUI/*~	\
                    ${VJGUICONFIGCHUNK_OBJS} VjGUI/configchunk/*~	\
                    ${VJGUIUTIL_OBJS} VjGUI/util/*~
 
+# Append VjFiles to ${CLEAN_DIRS} only if ${srcdir} is not the current
+# directory.  If ${srcdir} is the current directory, removing VjFiles would
+# blow away the VjFiles directory in the source tree.
+ifneq (${srcdir}, .)
+    CLEAN_DIRS	+= VjFiles
+endif
+
 clobber:
 	${MAKE} clean
 	rm VjControl.jar
