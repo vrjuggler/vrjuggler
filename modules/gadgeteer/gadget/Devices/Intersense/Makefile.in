@@ -29,13 +29,11 @@ vpath %.c @srcdir@
 vpath %.C @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
-ifneq (@OS_TYPE@, Win32)
 INTERSENSE_SRCS	:= isdriver.c	\
                    isense.c 	\
                    itcom.c 	\
                    timer.c 	\
                    serial.c
-endif
 
 INTERSENSE_OBJECTS	:= ${addprefix ${OBJDIR}/,${INTERSENSE_SRCS:.c=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${INTERSENSE_SRCS:.c=.d}
