@@ -43,6 +43,8 @@
 #define _vprNullMutex_h_
 
 #include <vpr/vprConfig.h>
+#include <vpr/Util/ReturnStatus.h>
+
 
 
 namespace vpr {
@@ -65,19 +67,19 @@ public:
      * @return 1 is returned if the mutex is acquired.<br>
      *         -1 is returned if an error occurs.
      */
-    int acquire() const
+    vpr::ReturnStatus acquire() const
     {
-        return 1;
+        return vpr::ReturnStatus();
     }
 
     /// Acquires a read mutex.
-    int acquireRead() const
+    vpr::ReturnStatus acquireRead() const
     {
         return this->acquire();	    // No special "read" semaphore -- For now
     }
 
     /// Acquires a write mutex.
-    int acquireWrite() const
+    vpr::ReturnStatus acquireWrite() const
     {
         return this->acquire();	    // No special "write" semaphore -- For now
     }
@@ -89,19 +91,19 @@ public:
      * @return 1 is returned if the mutex is acquired.<br>
      *         0 is returned if the mutex is not acquired.
      */
-    int tryAcquire () const
+    vpr::ReturnStatus tryAcquire () const
     {
-        return 1;	    // Try 100 spins.
+        return vpr::ReturnStatus();
     }
 
     /// Tries to acquire a read mutex.
-    int tryacquire_read () const
+    vpr::ReturnStatus tryacquire_read () const
     {
         return this->tryAcquire();
     }
 
     /// Tries to acquire a write mutex.
-    int tryacquire_write () const
+    vpr::ReturnStatus tryacquire_write () const
     {
         return this->tryAcquire();
     }
@@ -111,9 +113,9 @@ public:
      *
      * @return 0 is returned on success; -1 is returned otherwise.
      */
-    int release() const
+    vpr::ReturnStatus release() const
     {
-        return 0;
+        return vpr::ReturnStatus();
     }
 
     /**
