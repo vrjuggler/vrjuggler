@@ -25,7 +25,7 @@ void _Export_Matrix_float_4_4()
         .def("__getitem__", (gmtl::Matrix<float,4,4>::RowAccessor (gmtl::Matrix<float,4,4>::*)(const unsigned) )&gmtl::Matrix<float,4,4>::operator[])
     );
 
-    class_< gmtl::Matrix<float,4,4>::RowAccessor, boost::noncopyable >("RowAccessor", no_init)
+    class_< gmtl::Matrix<float,4,4>::RowAccessor >("RowAccessor", no_init)
        .def("__getitem__", &gmtl::Matrix<float,4,4>::RowAccessor::operator[], return_value_policy<copy_non_const_reference>())
        .def("__setitem__", (void (*)(gmtl::Matrix<float,4,4>::RowAccessor*, const unsigned, float)) &gmtlWrapper::setArrayElement)
     ;
