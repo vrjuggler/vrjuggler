@@ -71,6 +71,12 @@ class ThreadSGI : public BaseThread
 public:
    /***** CONSTRUCTORS ******/
 
+   /** Non-spawning constructor.  This will not start a new thread. */
+   ThreadSGI(BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
+             BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
+             BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
+             size_t stackSize = 0);
+
    /**
     * Spawning constructor.
     * This will actually start a new thread that will execute the specified
@@ -96,6 +102,23 @@ public:
    virtual ~ThreadSGI()
    {;}
 
+   /**
+    * Sets the functor that this thread will execute.
+    *
+    * @pre The thread is not already running.  The functor is valid.
+    */
+   virtual void setFunctor(BaseThreadFunctor* functorPtr);
+
+   /**
+    * Starts this thread's execution.
+    *
+    * @pre The functor to execute has been set.  The thread is not already
+    *      running.
+    * @post A thread (with any specified attributes) is created that begins
+    *       executing our functor.  Depending on the scheduler, it may begin
+    *       execution immediately, or it may block for a short time before
+    *       beginning execution.
+    */
    virtual vpr::ReturnStatus start();
 
 private:
@@ -130,6 +153,7 @@ private:
     * The functor to call from startThread
     */
    BaseThreadFunctor* mUserThreadFunctor;
+   bool               mRunning;
    VPRThreadPriority  mPriority;
 
 public:

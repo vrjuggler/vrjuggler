@@ -66,47 +66,46 @@ namespace vpr
 ThreadPosix::staticWrapper ThreadPosix::statics;
 
 
-// ---------------------------------------------------------------------------
-//: Spawning constructor
-//
-// This will actually start a new thread that will execute the specified
-// function.
-// ---------------------------------------------------------------------------
+// Non-spawning constructor.  This will not start a new thread.
+ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
+                         VPRThreadState state, size_t stackSize)
+   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
+     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
+{
+   mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
+}
+
+// Spawning constructor with arguments.  This will start a new thread that will
+// execute the specified function.
 ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
                          VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false),
+   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
 {
    mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
 
    // Create the thread functor to start.  This will be deleted in the
    // destructor.
-   mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
+   setFunctor(new ThreadNonMemberFunctor(func, arg));
    mDeleteThreadFunctor = true;
+   start();
 }
 
-// ---------------------------------------------------------------------------
-// Spawning constructor with arguments (functor version).
-//
-// This will start a new thread that will execute the specified function.
-// ---------------------------------------------------------------------------
+// Spawning constructor.  This will start a new thread that will execute the
+// specified function.
 ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
                          VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(functorPtr), mDeleteThreadFunctor(false),
+   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
 {
    mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
+   setFunctor(functorPtr);
+   start();
 }
 
-// ---------------------------------------------------------------------------
 // Destructor.
-//
-// PRE: None.
-// POST: This thread is removed from the thread table and from the local
-//       thread hash.
-// ---------------------------------------------------------------------------
 ThreadPosix::~ThreadPosix()
 {
    if ( mDeleteThreadFunctor )
@@ -115,41 +114,62 @@ ThreadPosix::~ThreadPosix()
    }
 }
 
+void ThreadPosix::setFunctor(BaseThreadFunctor* functorPtr)
+{
+   vprASSERT(! mRunning && "Thread already running.");
+   vprASSERT(functorPtr->isValid() && "Invalid functor.");
+
+   mUserThreadFunctor = functorPtr;
+}
+
 vpr::ReturnStatus ThreadPosix::start()
 {
-   ThreadManager* vpr_tm_inst = ThreadManager::instance();
+   vpr::ReturnStatus status;
 
-   // XXX: Memory leak.
-   ThreadMemberFunctor<ThreadPosix>* start_functor =
-      new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
-                                           NULL);
-
-   // Spawn the thread.
-   // NOTE: Automagically registers thread (inside ThreadPosix::startThread)
-   // UNLESS failure.
-   vpr::ReturnStatus status = spawn(start_functor);
-
-   if ( ! status.success() )
+   if ( mRunning )
    {
-      vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
+      vprASSERT(false && "Thread already started");
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else if ( NULL == mUserThreadFunctor )
+   {
+      vprASSERT(false && "No functor set");
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      // XXX: Memory leak.
+      ThreadMemberFunctor<ThreadPosix>* start_functor =
+         new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
+                                              NULL);
+
+      // Spawn the thread.
+      // NOTE: Automagically registers thread (inside ThreadPosix::startThread)
+      // UNLESS failure.
+      status = spawn(start_functor);
+
+      if ( status.success() )
       {
-         registerThread(false);
+         mRunning = true;
       }
-      vpr_tm_inst->unlock();
+      else
+      {
+         ThreadManager* vpr_tm_inst = ThreadManager::instance();
+
+         // Need to lock thread manager before I register the thread with them.
+         // XXX: Is this still needed?
+         vpr_tm_inst->lock();
+         {
+            registerThread(false);
+         }
+         vpr_tm_inst->unlock();
+      }
    }
 
    return status;
 }
 
-// ---------------------------------------------------------------------------
-// Create a new thread that will execute functorPtr.
-//
-// PRE: None.
-// POST: A thread (with any specified attributes) is created that begins
-//       executing func().  Depending on the scheduler, it may begin
-//       execution immediately, or it may block for a short time before
-//       beginning execution.
-// ---------------------------------------------------------------------------
+// Creates a new thread that will execute functorPtr.
 vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
 {
    vpr::ReturnStatus status;

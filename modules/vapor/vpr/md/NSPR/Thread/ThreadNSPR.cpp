@@ -39,9 +39,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <vpr/vprConfig.h>
 
+#include <vpr/Util/Assert.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
@@ -53,94 +53,104 @@ namespace vpr
 ThreadTable<PRThread*> ThreadNSPR::mThreadTable;
 PRUint32 ThreadNSPR::mTicksPerSec = PR_TicksPerSecond();
 
-// ---------------------------------------------------------------------------
-//: Spawning constructor
-//
-// This will actually start a new thread that will execute the specified
-// function.
-// ---------------------------------------------------------------------------
+// Non-spawning constructor.  This will not start a thread.
+ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
+                       VPRThreadState state, PRUint32 stackSize)
+   : mThread(NULL), mUserThreadFunctor(NULL), mPriority(priority),
+     mScope(scope), mState(state), mStackSize(stackSize)
+{
+}
+
+// Spawning constructor with arguments.  This will start a new thread that
+// will execute the specified function.
 ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
                        VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
-   : mUserThreadFunctor(NULL), mPriority(priority), mScope(scope),
-     mState(state), mStackSize(stackSize)
+   : mThread(NULL), mUserThreadFunctor(NULL), mPriority(priority),
+     mScope(scope), mState(state), mStackSize(stackSize)
 {
    // XXX: Memory leak.
-   mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
+   setFunctor(new ThreadNonMemberFunctor(func, arg));
+   start();
 }
 
-// ---------------------------------------------------------------------------
-// Spawning constructor with arguments (functor version).
-//
-// This will start a new thread that will execute the specified function.
-// ---------------------------------------------------------------------------
+// Spawning constructor (functor version).  This will start a new thread that
+// will execute the specified function.
 ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
                        VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
-   : mUserThreadFunctor(functorPtr), mPriority(priority), mScope(scope),
-     mState(state), mStackSize(stackSize)
+   : mThread(NULL), mUserThreadFunctor(NULL), mPriority(priority),
+     mScope(scope), mState(state), mStackSize(stackSize)
 {
-   vprASSERT(functorPtr->isValid());
+   setFunctor(functorPtr);
+   start();
 }
 
-// ---------------------------------------------------------------------------
 // Destructor.
-//
-// PRE: None.
-// POST: This thread is removed from the thread table and from the local
-//       thread hash.
-// ---------------------------------------------------------------------------
 ThreadNSPR::~ThreadNSPR()
 {
    mThreadTable.removeThread(gettid());
 }
 
-// ---------------------------------------------------------------------------
-// Create a new thread that will execute functorPtr.
-//
-// PRE: None.
-// POST: A thread (with any specified attributes) is created that begins
-//       executing func().  Depending on the scheduler, it may begin
-//       execution immediately, or it may block for a short time before
-//       beginning execution.
-// ---------------------------------------------------------------------------
+void ThreadNSPR::setFunctor(BaseThreadFunctor* functorPtr)
+{
+   vprASSERT(mThread == NULL && "Thread already running");
+   vprASSERT(functorPtr->isValid());
+
+   mUserThreadFunctor = functorPtr;
+}
+
+// Creates a new thread that will execute functorPtr.
 vpr::ReturnStatus ThreadNSPR::start()
 {
-   PRThreadPriority nspr_prio;
-   PRThreadScope nspr_scope;
-   PRThreadState nspr_state;
    vpr::ReturnStatus status;
 
-   nspr_prio  = vprThreadPriorityToNSPR(mPriority);
-   nspr_scope = vprThreadScopeToNSPR(mScope);
-   nspr_state = vprThreadStateToNSPR(mState);
-
-   // Store the member functor and create the functor for spawning to our
-   // start routine.
-   vprASSERT(mUserThreadFunctor->isValid());
-
-   // XXX: Memory leak.
-   ThreadMemberFunctor<ThreadNSPR>* start_functor =
-         new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
-                                             NULL);
-   
-   // Finally create the thread.
-   mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
-                             (void*) start_functor, nspr_prio, nspr_scope,
-                             nspr_state, (PRUint32) mStackSize);
-
-   // Inform the caller if the thread was not created successfully.
-   // 
-   if ( mThread == NULL )
+   if ( NULL != mThread )
    {
-      ThreadManager::instance()->lock();
-      {
-         registerThread(false);
-      }
-      ThreadManager::instance()->unlock();
-            
-      NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
+      vprASSERT(false && "Thread already running");
       status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else if ( NULL == mUserThreadFunctor )
+   {
+      vprASSERT(false && "No functor set");
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      PRThreadPriority nspr_prio;
+      PRThreadScope nspr_scope;
+      PRThreadState nspr_state;
+
+      nspr_prio  = vprThreadPriorityToNSPR(mPriority);
+      nspr_scope = vprThreadScopeToNSPR(mScope);
+      nspr_state = vprThreadStateToNSPR(mState);
+
+      vprASSERT(mUserThreadFunctor->isValid());
+
+      // Store the member functor and create the functor for spawning to our
+      // start routine.
+      // XXX: Memory leak.
+      ThreadMemberFunctor<ThreadNSPR>* start_functor =
+            new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
+                                                NULL);
+      
+      // Finally create the thread.
+      mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
+                                (void*) start_functor, nspr_prio, nspr_scope,
+                                nspr_state, (PRUint32) mStackSize);
+
+      // Inform the caller if the thread was not created successfully.
+      if ( NULL == mThread )
+      {
+         ThreadManager::instance()->lock();
+         {
+            registerThread(false);
+         }
+         ThreadManager::instance()->unlock();
+               
+         NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
    }
 
    return status;

@@ -72,15 +72,13 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
 
    // Spawn acceptor thread
    vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>* acceptor_functor =
-        new vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor );
-   vpr::Thread acceptor_thread( acceptor_functor);
-   acceptor_thread.start();
+      new vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>(this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor);
+   vpr::Thread acceptor_thread(acceptor_functor);
 
    // Spawn connector thread
    vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector );
-   vpr::Thread connector_thread( connector_functor);
-   connector_thread.start();
+      new vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>(this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector);
+   vpr::Thread connector_thread(connector_functor);
 
    CPPUNIT_ASSERT( acceptor_thread.valid() && "Invalid acceptor thread");
    CPPUNIT_ASSERT( connector_thread.valid() && "Invalid connector thread");

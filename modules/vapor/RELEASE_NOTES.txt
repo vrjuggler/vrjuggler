@@ -11,6 +11,15 @@ For all versions:
  Version: 1.0.0
 Released: <month> <day>, 2003
 
+ Version: 0.22.0
+Released: January 6, 2003
+    Required changes when upgrading from version 0.21.0:
+        * The existing vpr::Thread constructors are once again auto-spawning
+          constructors.  Hence, the start() method must not be invoked after
+          constructring a new thread.  To create a thread that does not
+          spawn automatically, use the new constructor that does not take a
+          functor argument.
+
  Version: 0.21.0
 Released: December 24, 2002
     Required changes when upgrading from all previous versions:

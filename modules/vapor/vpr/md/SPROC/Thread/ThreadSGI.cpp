@@ -50,7 +50,16 @@
 #include <vpr/md/SPROC/Thread/ThreadSGI.h>
 
 
-namespace vpr {
+namespace vpr
+{
+
+// Non-spawning constructor.  This will not start a thread.
+ThreadSGI::ThreadSGI(BaseThread::VPRThreadPriority priority,
+                     BaseThread::VPRThreadScope scope,
+                     BaseThread::VPRThreadState state, size_t stackSize)
+   : mUserThreadFunctor(NULL), mRunning(false)
+{
+}
 
 /**
  * Spawning constructor.  This will actually start a new thread that will
@@ -60,12 +69,13 @@ ThreadSGI::ThreadSGI(thread_func_t func, void* arg,
                      BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
+   : mUserThreadFunctor(NULL), mRunning(false)
 {
-   // Create the thread functor to start
-   mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
+   // Create the thread functor to start.
+   // XXX: Memory leak.
+   setFunctor(new ThreadNonMemberFunctor(func, arg));
+   start();
 }
-
 
 /**
  * Spawning constructor with arguments (functor version).  This will start a
@@ -75,29 +85,58 @@ ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
                      BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(functorPtr)
+   : mUserThreadFunctor(NULL), mRunning(false)
 {
+   setFunctor(functorPtr);
+}
+
+void ThreadSGI::setFunctor(BaseThreadFunctor* functorPtr)
+{
+   vprASSERT(! mRunning && "Thread already running");
+   vprASSERT(functorPtr->isValid());
+
+   mUserThreadFunctor = functorPtr;
 }
 
 vpr::ReturnStatus ThreadSGI::start()
 {
-   // XXX: Memory leak.
-   ThreadMemberFunctor<ThreadSGI>* start_functor
-               = new ThreadMemberFunctor<ThreadSGI>(this,
-                                                    &ThreadSGI::startThread,
-                                                    NULL);
+   vpr::ReturnStatus status;
 
-   // START THREAD
-   // NOTE: Automagically registers UNLESS failure
-   vpr::ReturnStatus status = spawn(start_functor);
-
-   if ( ! status.success() )
+   if ( mRunning )
    {
-      ThreadManager::instance()->lock();
+      vprASSERT(false && "Thread already running");
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else if ( NULL == mUserThreadFunctor )
+   {
+      vprASSERT(false && "No functor set");
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      // XXX: Memory leak.
+      ThreadMemberFunctor<ThreadSGI>* start_functor
+                  = new ThreadMemberFunctor<ThreadSGI>(this,
+                                                       &ThreadSGI::startThread,
+                                                       NULL);
+
+      // START THREAD
+      // NOTE: Automagically registers UNLESS failure
+      status = spawn(start_functor);
+
+      if ( status.success() )
       {
-         registerThread(false);     // Failed to create
+         mRunning = true;
       }
-      ThreadManager::instance()->unlock();
+      else
+      {
+         ThreadManager::instance()->lock();
+         {
+            registerThread(false);     // Failed to create
+         }
+         ThreadManager::instance()->unlock();
+      }
+      else
    }
 
    return status;
