@@ -515,6 +515,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Open/Makefile
           gadget/Devices/Open/DTK/Makefile
           gadget/Devices/Open/Trackd/Makefile
+          gadget/Devices/Polhemus/Makefile
           gadget/Devices/Sim/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
           gadget/RemoteInputManager/Makefile
