@@ -103,6 +103,11 @@ protected:
       if (!newStream.isOpen())
       {
           status = newStream.open();
+
+          if(!status.success())
+          {
+             vprDEBUG(0,vprDBG_CRITICAL_LVL) << "vpr::Connector:CheckOpen: Failed to open socket\n" << vprDEBUG_FLUSH;
+          }
       }
 
       return status.success();
