@@ -263,7 +263,7 @@ public class ConfigContextEditor
    private JScrollPane mCustomConfigElementEditorScrollPane = new JScrollPane();
    private java.util.List mCustomEditors = null;
    
-   private ConfigElementPropertySheet mElementPropSheet = new ConfigElementPropertySheet();
+   private PropertySheet mElementPropSheet = new PropertySheet();
    
    private BorderLayout treeLayout = new BorderLayout();
    private JPanel treePane = new JPanel();
