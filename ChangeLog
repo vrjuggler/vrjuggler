@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-26-2001 cjust     Improved Navigation in VjControl help.
+Jan-20-2001 cjust     VjControl now recommends JDK1.3 (1.2 still minimum).
 Jan-09-2001 patrick   RELENG_1_0 CVS branch created in preparation for 1.0
                       release.  The branch point is the same as for RELENG_0_2,
                       and all changes on RELENG_0_2 were merged onto this
