@@ -16,20 +16,29 @@
 #include "timer.h"
 
 #if defined UNIX 
-#include <sys/timeb.h>
+#include <sys/time.h>
 #else
 #include <sys\timeb.h>
 #endif
 
+#ifdef UNIX
+static struct timeval t;
+#else
 static struct timeb t;
+#endif
 static unsigned long initialTime;
 
 
 /************************************************************************/
 void initTimer()
 {
+#ifdef UNIX
+    gettimeofday(&t, NULL);
+    initialTime = t.tv_sec;
+#else
     ftime(&t);
     initialTime = t.time;
+#endif
 }
 
 
@@ -37,8 +46,13 @@ void initTimer()
 /* Returns current time in seconds */
 float timeNow()
 {
+#ifdef UNIX
+    gettimeofday(&t, NULL);
+    return ((float)(t.tv_sec - initialTime) + (float)t.tv_usec);
+#else
     ftime(&t);
     return ((float)(t.time - initialTime) + (float)t.millitm/1000.0f);
+#endif
 }
 
 
