@@ -288,8 +288,8 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad) {
                 out << b->index;
             else if (b->index_cstring)
                 out << b->index_cstring;
-            else
-                out << "jccl_begin_cycle";
+//              else
+//                  out << "jccl_begin_cycle";
             out << "\" time=\""
                 << std::setiosflags(std::ios::fixed) << b->stamp.usec() << "\" />\n";
 
@@ -303,8 +303,8 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad) {
                 out << b->index;
             else if (b->index_cstring)
                 out << b->index_cstring;
-            else
-                out << "jccl_begin_cycle";
+//              else
+//                  out << "jccl_begin_cycle";
             out << "\" time=\""
                 << std::setiosflags(std::ios::fixed) << b->stamp.usec() << "\" />\n";
          }
@@ -315,8 +315,8 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad) {
                 out << b->index;
             else if (b->index_cstring)
                 out << b->index_cstring;
-            else
-                out << "jccl_begin_cycle";
+//              else
+//                  out << "jccl_begin_cycle";
             out << "\" time=\""
                 << std::setiosflags(std::ios::fixed) << b->stamp.usec() << "\" />\n";
          }

@@ -345,9 +345,11 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
                     }
                     else if (child.getNodeName().equals ("time")) {
                         time = Double.parseDouble (child.getNodeValue());
+                        System.out.println("read timestamp " + time);
                     }
                 }
-                addDataElem (label, category, time);
+                if (!label.equals(""))
+                    addDataElem (label, category, time);
 
             }
             else {
