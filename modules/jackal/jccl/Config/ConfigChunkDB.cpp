@@ -463,6 +463,16 @@ bool vjConfigChunkDB::load (const std::string& filename, const std::string& pare
 // we use ";", and on everything else, we use ":".
 #ifdef VJ_OS_Win32
             char elem_sep[] = ";";
+            char ostype_var[] = "OSTYPE";
+            char* ostype;
+
+            // If we are in a Cygwin environment, use ":" as the element
+            // separator.
+            if ( (ostype = getenv(ostype_var)) != NULL ) {
+                if ( strcmp(ostype, "cygwin") == 0 ) {
+                    elem_sep[0] = ':';
+                }
+            }
 #else
             char elem_sep[] = ":";
 #endif
