@@ -206,6 +206,39 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          << vprDEBUG_FLUSH;
       ret_val = false;
    }
+   else if (element->getID() == std::string( "input_window" ))
+   {
+      // Get the KeyboardMouseDevice that this window should send events to.
+      std::string keyboard_mouse_device_name = 
+         element->getProperty<std::string>( "keyboard_mouse_device_name" );
+
+      // Get the KeyboardMouseDevice ConfigElement.
+      // NOTE: We can assume that this config element is in the active
+      //       list since the DependancyManager requires that all
+      //       ConfigElementPointers be resolved first.
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+      cfg_mgr->lockActive();
+      jccl::ConfigElementPtr keyboard_mouse_element
+         = cfg_mgr->getActiveConfig()->get( keyboard_mouse_device_name );
+      cfg_mgr->unlockActive();
+      
+      // If a KeyboardMouseDevice with this name exists and is remote, we do not want
+      // to start this device and open a window since this KeyboardMouseDevice will
+      // be invalid.
+      if (NULL != keyboard_mouse_element.get() && 
+         cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( keyboard_mouse_element ))
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "InputManager::configAdd() InputWindow not being opened "
+            << "since it points to a remote KeyboardMouseDevice."
+            << vprDEBUG_FLUSH;
+         ret_val = true;
+      }
+      else
+      {
+         ret_val = configureDevice( element );
+      }
+   }
    else if(DeviceFactory::instance()->recognizeDevice(element))
    {
       ret_val = configureDevice(element);
