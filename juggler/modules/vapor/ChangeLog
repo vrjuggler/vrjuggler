@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-02-02 allenb   Added test() method to condition variables.
+                    NEW VERSION: 0.34.1
 2004-01-28 patrickh Updated to require an installed build of CppDOM.  This
                     library is no longer compiled into VPR.
                     NEW VERSION: 0.34.0
