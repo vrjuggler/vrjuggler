@@ -222,26 +222,33 @@ public class VarValueStandardPanel
 	VarValue v = new VarValue(desc.getValType());
 	if (choice != null) {
 	    /* enumeration */
-            String s = null;
             String item = (String)choice.getSelectedItem();
-            if (item != null)
-                s = desc.getEnumValue(item).toString();
-	    if ((s == null) || (s.equals("<No Selection>")))
-		s = "";
+            if (item.equals("<No Selection>"))
+                return v;  // return 'default' varvalue 
 
 	    if (desc.getValType() == ValType.CHUNK) {
 		// remove the "filename: " prefix if it's there...
-		int i = s.indexOf(": ");
+		int i = item.indexOf(": ");
 		if (i != -1)
-		    s = s.substring(i+2);
+		    v.set(item.substring(i+2));
+                else
+                    v.set(item);
+                return v;
 	    }
 
-	    v.set(s);
+            VarValue v2 = desc.getEnumValue(item);
+            if (v2 != null) {
+                v.set(v2);
+                return v;
+            }
+
+            v.set(item);
+            return v;
 	}
-	else
+	else {
 	    v.set (text.getText());
-	
-	return v;
+            return v;
+        }
     }
 
 
