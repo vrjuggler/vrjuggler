@@ -85,8 +85,6 @@ public:
       return mSceneRoot;
    }
 
-   void initRenderer();
-
    virtual void draw();
 
    virtual void contextInit();
