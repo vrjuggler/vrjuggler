@@ -139,6 +139,9 @@ public class TweekCore
    {
       Vector services = BeanCollectionBuilder.instance().getServices();
 
+      ServiceRegistry.instance().registerService("Environment",
+                                                 new EnvironmentService());
+
       for ( int i = 0; i < services.size(); i++ )
       {
          ServiceBean service = (ServiceBean) services.elementAt(i);
