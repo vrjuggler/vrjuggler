@@ -1747,7 +1747,7 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
     int status;
 
     // Get the packet from the server.
-    bytes = recv(m_socket, packet, packet_size, 0);
+    bytes = recvn(packet, packet_size);
 
     // Nothing was read.
     if ( bytes == 0 ) {
@@ -1767,6 +1767,44 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
     }
 
     return status;
+}
+
+// ----------------------------------------------------------------------------
+// Read exactly packet_size bytes from the server.
+// ----------------------------------------------------------------------------
+ssize_t
+aMotionStar::recvn (void* packet, const size_t packet_size, const int flags) {
+    size_t count;
+    ssize_t bytes;
+
+    count = packet_size;
+
+    while ( count > 0 ) {
+        bytes = ::recv(m_socket, packet, packet_size, flags);
+
+        // Read error.
+        if ( bytes < 0 ) {
+            // Restart the read process if we were interrupted by the OS.
+            if ( errno == EINTR ) {
+                continue;
+            }
+            // Otherwise, we have an error situation, so return the value
+            // returned by recv(2).
+            else  {
+                break;
+            }
+        }
+        // May have read EOF, so return bytes read so far.
+        else if ( bytes == 0 ) {
+            bytes = packet_size - count;
+        }
+        else {
+            packet = (void*) ((char*) packet + bytes);
+            count -= bytes;
+        }
+    }
+
+    return bytes;
 }
 
 // ----------------------------------------------------------------------------
