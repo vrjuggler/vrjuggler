@@ -76,11 +76,10 @@ class VPR_CLASS_API SystemNSPR
 public:
     inline static int
     gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
-        PRExplodedTime time;
-        memset((void*) &time, 0, sizeof(PRExplodedTime));
-        PR_ExplodeTime(PR_Now(), PR_LocalTimeParameters, &time);
-        tp->tv_sec  = time.tm_sec;
-        tp->tv_usec = time.tm_usec;
+        PRTime now = PR_Now();
+
+        tp->tv_sec  = now / 1000000;
+        tp->tv_usec = now % 1000000;
 
         return 0;
     }
