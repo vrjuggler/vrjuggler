@@ -31,18 +31,18 @@
  * -----------------------------------------------------------------
  */
 
-#include <Math/vjVec3.h>
+#include <vjVec3.h>
 
-#ifndef _COLLIDOR_H_
-#define _COLLIDOR_H_
+#ifndef _COLLIDER_H_
+#define _COLLIDER_H_
 
 //: Base class for collision detection
 //
 // All it does is test movements to see if they are valid.
-//  Any motion (nav) model can make use of a collidor to
+//  Any motion (nav) model can make use of a collider to
 // check for collisions and to modify the motion
 //
-class collidor
+class collider
 {
 public:
 

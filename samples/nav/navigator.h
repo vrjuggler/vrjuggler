@@ -31,9 +31,9 @@
  * -----------------------------------------------------------------
  */
 
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjCoord.h>
+#include <vjVec3.h>
+#include <vjMatrix.h>
+#include <vjCoord.h>
 
 
 #ifndef _NAVIGATOR_H_
@@ -43,13 +43,24 @@
 class navigator
 {
 public:
-   navigator()
+   navigator() : mAllowRot( true ), mAllowTrans( true )
    {
       allowAxis[0] = allowAxis[1] = allowAxis[2] = true;    // Initialize to rot in all axes
    }
 
-   virtual void update(vjMatrix mat, bool allowTrans, bool allowRot) = 0;
+   virtual void update() = 0;
    void setRotAxis(bool allowX, bool allowY, bool allowZ);
+
+   void allowTrans( const bool& state = true ){mAllowTrans = state;}
+   void allowRot( const bool& state = true ){mAllowRot = state;}
+   
+   virtual void heading( float& pitch, float& yaw, float& roll )
+   {
+      mCurPos.getXYZEuler( pitch, yaw, roll );
+      pitch = -pitch;
+      yaw = -yaw;
+      roll = -roll;
+   }   
 
    vjMatrix getCurPos()
    { return mCurPos; }
@@ -58,64 +69,41 @@ public:
    { mCurPos = pos; }
 
 protected:
-   bool navTranslate(vjVec3 trans);
-   void navRotate(vjMatrix rot_mat);
+      
+   // give a translation vector in local coordinates
+   // i.e. if you want to move forward in the scene, just give (0,0,-1).
+   // NOTE: the direction "forward" would be relative to current rotation
+   bool navTranslate( vjVec3 trans );
+   void navRotate( vjMatrix rot_mat );
 
 protected:
+   bool mAllowRot, mAllowTrans;
    vjMatrix    mCurPos;       // The current position or the user- In Juggler coords
-   bool        allowAxis[3];  // The collidor to use
+   bool        allowAxis[3];  // The collider to use
 };
 
 bool navigator::navTranslate(vjVec3 trans)
 {
    bool ret_val(false);
    vjCoord cur_pos(mCurPos);
-   cerr << "Cur P: " << cur_pos.pos << endl;
-   cerr << "Trans: " << trans << endl;
-   cerr << "    =: " << cur_pos.pos+trans << endl;
+   //cerr << "Cur P: " << cur_pos.pos << endl;
+   //cerr << "Trans: " << trans << endl;
+   //cerr << "    =: " << cur_pos.pos+trans << endl;
 
    // Pre mult cur_mat by the trans we need to do
    //trans *= -1;
-   vjMatrix trans_mat;  trans_mat.makeTrans(trans[0],trans[1],trans[2]);
+   vjMatrix trans_mat;  
+   trans_mat.makeTrans(trans[0],trans[1],trans[2]);
    mCurPos.postMult(trans_mat);
    return ret_val;
 }
 
-void navigator::navRotate(vjMatrix rot_mat)
-{
-   // Restrict the rotation to only the axis specified
-   float xRot, yRot, zRot;
-   vjVec3 xAxis(1,0,0),yAxis(0,1,0),zAxis(0,0,1);
 
-   if(!allowAxis[0]) // We don't want X
-   {
-      vjMatrix mx,mxInv;
-      rot_mat.getXYZEuler(xRot,yRot,zRot);
-      mx.makeRot(xRot,xAxis);
-      mxInv.invert(mx);
-      rot_mat.preMult(mxInv);                // Now we don't have X???
-   }
-   if(!allowAxis[1])    // We don't want Y
-   {
-      vjMatrix my,myInv;
-      rot_mat.getZXYEuler(zRot,xRot,yRot);
-      my.makeRot(yRot,yAxis);
-      myInv.invert(my);
-      rot_mat.postMult(myInv);                // Now we don't have Y???
-   }
-   if(!allowAxis[2])    // We don't want Z
-   {
-      vjMatrix mz,mzInv;
-      rot_mat.getZYXEuler(zRot,yRot,xRot);
-      mz.makeRot(zRot,zAxis);
-      mzInv.invert(mz);
-      rot_mat.preMult(mzInv);                // Now we don't have Z???
-   }
 
-   // Transform by inverse because we want to move the world, not us
-   //vjMatrix inv_rot_mat;
-   //inv_rot_mat.invert(rot_mat);
-   mCurPos.postMult(rot_mat);
+void navigator::navRotate( vjMatrix rot_mat )
+{  
+   mCurPos.postMult( rot_mat );
+   mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
 }
 
 
