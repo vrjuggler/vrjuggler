@@ -654,6 +654,7 @@ def installTweekJava(prefix):
       # Install various look and feel implementations.
       laf_jars = [
          r'jgoodies-looks\looks.jar',
+         r'liquid\liquidlnf.jar',
          r'metouia\metouia.jar'
       ]
 
