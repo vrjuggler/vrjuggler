@@ -152,23 +152,29 @@ public:
     */
    virtual void changeAPI( const std::string& apiName )
    {
-      aj::SoundImplementation* oldImpl = mImplementation;
+      aj::SoundImplementation& oldImpl = this->impl();
+      assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
+      
+      std::cout<<"changing from "<<oldImpl.name();
+      
+      // change the current api to the newly requested one.
       aj::SoundFactory::instance().createImplementation( apiName, mImplementation );
 
-      // copy sound state (doesn't do binding here)
-      mImplementation->copy( *oldImpl );
+      std::cout<<" to "<<mImplementation->name()<<"\n"<<std::flush;
+      
+      
+      // copy sound state from old to current (doesn't do binding yet)
+      mImplementation->copy( oldImpl );
 
-      if (oldImpl != NULL)
-      {
          // unload all sound data
-         oldImpl->unbindAll();
-         
-         // shutdown old api if exists
-         oldImpl->shutdownAPI();
-         delete oldImpl;
-         oldImpl = NULL;
-      }
+         oldImpl.unbindAll();
 
+         // shutdown old api if exists
+         oldImpl.shutdownAPI();
+
+         // delete old api, we're done with it...
+         delete &oldImpl;
+      
       // startup the new API
       mImplementation->startAPI();
 

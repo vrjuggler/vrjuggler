@@ -13,7 +13,7 @@ namespace aj
  */
 struct SoundInfo
 {
-   SoundInfo() : ambient( true ), isPlaying( false ), datasource( FILESYSTEM ), repeat( 1 ), repeat_countdown( 0 ), data(), filename()
+   SoundInfo() : ambient( true ), triggerOnNextBind( false ), datasource( FILESYSTEM ), repeat( 1 ), repeatCountdown( 0 ), data(), filename()
    {
       //position.makeIdent();
    }
@@ -32,11 +32,11 @@ struct SoundInfo
    float position[3];
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
-   
-   // might not need (or use) these 3 following vars...
-   bool isPlaying;
    int repeat;           // number of times to repeat (static)
-   int repeat_countdown; // number of times left to repeat (changes during play)
+
+   // -----------------------------------------------
+   bool triggerOnNextBind;
+   int repeatCountdown; // number of times left to repeat (changes during play)
 };
 
 }; // end namespace

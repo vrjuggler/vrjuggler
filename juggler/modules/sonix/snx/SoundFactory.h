@@ -16,18 +16,29 @@ public:
 
    /**
     * @input name of api to create
-    * @output an implementation is returned for you to use
+    * @output an implementation is returned for you to use (new memory, you delete)
     * @postconditions if apiName is not known, then a stub implementation is returned
     * @semantics factory function used to create an implementation of a sound API 
     */
    void createImplementation( const std::string& apiName,
                               aj::SoundImplementation* &mImplementation );
 
-   // pass NULL to unregister/delete an API...
+   // pass valid pointer to a sound implementation with a name it's refered to
+   // or... pass NULL to unregister/delete apiName...
    void reg( const std::string& apiName, aj::SoundImplementation* impl )
    {
-      std::cout<<"loading plugin: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
-      mRegisteredImplementations[apiName] = impl;
+      if (impl != NULL)
+      {
+         impl->setName( apiName );
+         mRegisteredImplementations[apiName] = impl;
+         std::cout<<"Loading sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
+      }
+      else
+      {
+         std::cout<<"Removed sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
+         mRegisteredImplementations.erase( apiName );
+      }      
+      
    }
    
    std::map< std::string, aj::SoundImplementation* > mRegisteredImplementations;

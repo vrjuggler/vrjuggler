@@ -10,7 +10,8 @@ aj::SoundFactoryReg<AudioWorksSoundImplementation> audioworksRegistrator( "Audio
 /**
  * constructor for the OpenAL implementation 
  */
-AudioWorksSoundImplementation::AudioWorksSoundImplementation() : aj::SoundImplementation(), mTotalTimeElapsed( 0.0f )
+AudioWorksSoundImplementation::AudioWorksSoundImplementation() : 
+      aj::SoundImplementation(), mTotalTimeElapsed( 0.0f ), mIsStarted( false )
 {
    // TODO: set up the defaults for aw...
    //mSoundAPIInfo.
@@ -46,7 +47,7 @@ void AudioWorksSoundImplementation::trigger( const std::string & alias, const un
 
    if (mBindTable.count( alias ) > 0)
    {
-      awProp(mBindTable[alias].mySound, AWSND_STATE, AW_ON);
+      awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
    }
 }
 
@@ -62,9 +63,9 @@ void AudioWorksSoundImplementation::setRetriggerable( const std::string& alias, 
    if (mBindTable.count( alias ) > 0)
    {
       if (onOff == true)
-         awProp(mBindTable[alias].mySound, AWSND_RETRIGGER, AW_ON);    //Set retriggering ON
+         awProp(mBindTable[alias].mSound, AWSND_RETRIGGER, AW_ON);    //Set retriggering ON
       else
-         awProp(mBindTable[alias].mySound, AWSND_RETRIGGER, AW_OFF);   //Set retriggering ON
+         awProp(mBindTable[alias].mSound, AWSND_RETRIGGER, AW_OFF);   //Set retriggering ON
    }
 }   
 
@@ -84,10 +85,10 @@ void AudioWorksSoundImplementation::setAmbient( const std::string& alias, bool i
       {
          // attaches the player to observer
          awProp( mBindTable[alias].mPlayer, AWPLYR_CSREF, AWPLYR_OBS );
-         awPlyrObsRef( mBindTable[alias].mPlayer, myObs );
+         awPlyrObsRef( mBindTable[alias].mPlayer, mObs );
 
          //float xyz[3] = { 0.0f, 0.0f, 0.0f }, hpr[3] = { 0.0f, 0.0f, 0.0f };
-         //awXYZHPR(si.mySound, xyz, hpr);               //Set sound at origin
+         //awXYZHPR(si.mSound, xyz, hpr);               //Set sound at origin
       }
 
       else
@@ -113,7 +114,7 @@ void AudioWorksSoundImplementation::mute( const std::string& alias )
 
    if (mBindTable.count( alias ) > 0)
    {
-      awProp( mBindTable[alias].mySound, AWSND_ENABLE, AW_OFF ); //Enable the sound
+      awProp( mBindTable[alias].mSound, AWSND_ENABLE, AW_OFF ); //Enable the sound
    }
 }
 
@@ -126,7 +127,7 @@ void AudioWorksSoundImplementation::unmute( const std::string& alias )
 
    if (mBindTable.count( alias ) > 0)
    {
-      awProp( mBindTable[alias].mySound, AWSND_ENABLE, AW_ON ); // Disable the sound
+      awProp( mBindTable[alias].mSound, AWSND_ENABLE, AW_ON ); // Disable the sound
    }
 }
 
@@ -140,7 +141,7 @@ void AudioWorksSoundImplementation::stop( const std::string& alias )
 
    if (mBindTable.count( alias ) > 0)
    {
-      awProp(mBindTable[alias].mySound, AWSND_STATE, AW_ON);
+      awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
    }
 }
 
@@ -155,7 +156,7 @@ void AudioWorksSoundImplementation::setPosition( const std::string& alias, float
    if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
       float hpr[3] = { 0.0f, 0.0f, 0.0f };
-      awXYZHPR( mBindTable[alias].mySound, mSounds[alias].position, hpr );  //Set sound at origin
+      awXYZHPR( mBindTable[alias].mSound, mSounds[alias].position, hpr );  //Set sound at origin
    }
 }
 
@@ -208,55 +209,55 @@ void AudioWorksSoundImplementation::startAPI()
    }
 
    //Initialize the engine
-   myEngine = awNewEng();         //Define the new engine
-   awProp(myEngine, AWENG_VOLUME, 1.0);   //Set its volume to maximum output
-   if (awAttachEng(myEngine) != 0)      //Attach the engine to the system
+   mEngine = awNewEng();         //Define the new engine
+   awProp(mEngine, AWENG_VOLUME, 1.0);   //Set its volume to maximum output
+   if (awAttachEng(mEngine) != 0)      //Attach the engine to the system
    {
        std::cerr << "\nfailed to attach to engine\nengine dump:\n" << std::flush;
-       awPrint(myEngine);
+       awPrint(mEngine);
        return;
    }
 
    //Set up the channel
-   myChannel = awNewChan();            //Define the new channel
-   awChanEng(myChannel, myEngine);         //Associate the channel with the engine
+   mChannel = awNewChan();            //Define the new channel
+   awChanEng(mChannel, mEngine);         //Associate the channel with the engine
 
-   awProp(myChannel, AWCHAN_MODEL, AWIF_QUAD);   //Set QUAD sound imaging model
-   awProp(myChannel, AWCHAN_NVOICES, 16);      //Set 16 voices at once
-   awProp(myChannel, AWCHAN_ENABLE, AW_ON);      //Enable the channel imaging
+   awProp(mChannel, AWCHAN_MODEL, AWIF_QUAD);   //Set QUAD sound imaging model
+   awProp(mChannel, AWCHAN_NVOICES, 16);      //Set 16 voices at once
+   awProp(mChannel, AWCHAN_ENABLE, AW_ON);      //Enable the channel imaging
 
 
    //Set up scene object and add the sound objects to it
-   myScene = awNewScene();            //Define new scene
+   mScene = awNewScene();            //Define new scene
 
    //Set up environment object
-   myEnv = awNewEnv();            //Define new environment
-   awProp(myEnv, AWENV_SOS, 330.0);         //Set the speed of sound
+   mEnv = awNewEnv();            //Define new environment
+   awProp(mEnv, AWENV_SOS, 330.0);         //Set the speed of sound
 
    //Set up observer object
-   myObs = awNewObs();                  //Define new observer
+   mObs = awNewObs();                  //Define new observer
 
-   awProp(myObs, AWOBS_STATE,       AW_ON);      //Enable the observer
-   awProp(myObs, AWOBS_TETHERCOORD,       AWOBS_TABSOLUTE);   //Set coords to absolute
-   awProp(myObs, AWOBS_CSREF,       AWOBS_ABSOLUTE);   //Set coords to absolute
-   awProp(myObs, AWOBS_SPLMIN,       40.0);         //Minimum SPL heard
-   awProp(myObs, AWOBS_SPLMAX,       200.0);      //Maximum SPL heard
-   awProp(myObs, AWOBS_CALCVEL,       AW_ON);      //Calculate the observer velocity
-   awProp(myObs, AWOBS_ATTENUATION,       AW_ON);      //Sound drops volume at distance
-   awProp(myObs, AWOBS_DELAY,       AW_ON);      //Sound takes time to travel
-   awProp(myObs, AWOBS_DOPPLER,       AW_ON);      //Sound movement doppler effect
-   awProp(myObs, AWOBS_PRIORITY,       AW_OFF);      //Sound playing priority
-   awProp(myObs, AWOBS_WCMAP,       AW_ON);      //World Coordinate Mapping ON
+   awProp(mObs, AWOBS_STATE,       AW_ON);      //Enable the observer
+   awProp(mObs, AWOBS_TETHERCOORD,       AWOBS_TABSOLUTE);   //Set coords to absolute
+   awProp(mObs, AWOBS_CSREF,       AWOBS_ABSOLUTE);   //Set coords to absolute
+   awProp(mObs, AWOBS_SPLMIN,       40.0);         //Minimum SPL heard
+   awProp(mObs, AWOBS_SPLMAX,       200.0);      //Maximum SPL heard
+   awProp(mObs, AWOBS_CALCVEL,       AW_ON);      //Calculate the observer velocity
+   awProp(mObs, AWOBS_ATTENUATION,       AW_ON);      //Sound drops volume at distance
+   awProp(mObs, AWOBS_DELAY,       AW_ON);      //Sound takes time to travel
+   awProp(mObs, AWOBS_DOPPLER,       AW_ON);      //Sound movement doppler effect
+   awProp(mObs, AWOBS_PRIORITY,       AW_OFF);      //Sound playing priority
+   awProp(mObs, AWOBS_WCMAP,       AW_ON);      //World Coordinate Mapping ON
 
 
    // set up the observer (audiojuggler API only supports one for now)
-   awAddObsChan(myObs, myChannel);      //Associate observer with the channel
-   awObsScene(myObs, myScene);      //Associate observer with the scene
-   awObsEnv(myObs, myEnv);         //Associate observer with the environment
+   awAddObsChan(mObs, mChannel);      //Associate observer with the channel
+   awObsScene(mObs, mScene);      //Associate observer with the scene
+   awObsEnv(mObs, mEnv);         //Associate observer with the environment
 
 //   float xyz[3] = { 0.0f, 0.0f, 0.0f };
 //   float hpr[3] = { 0.0f, 0.0f, 0.0f };
-//   awXYZHPR(myObs, xyz, hpr);      //Set the observer at the origin
+//   awXYZHPR(mObs, xyz, hpr);      //Set the observer at the origin
    // init the listener...
    this->setListenerPosition( mListenerPos );
   //End observer setup
@@ -264,9 +265,11 @@ void AudioWorksSoundImplementation::startAPI()
   if (awConfigSys(1) != 0)         //Attempt to configure the system
   {    
     std::cout << "ConfigSys() failed!\n" << std::flush;
-    awPrint(myEngine);
+    awPrint(mEngine);
     return;
   }
+  
+  mIsStarted = true; //success
 }   
 
 /**
@@ -277,6 +280,7 @@ void AudioWorksSoundImplementation::startAPI()
 void AudioWorksSoundImplementation::shutdownAPI()
 {
    awExit();
+   mIsStarted = false;
 }   
 
 /**
@@ -285,7 +289,7 @@ void AudioWorksSoundImplementation::shutdownAPI()
   */
 bool AudioWorksSoundImplementation::isStarted() const
 {
-   return false;
+   return mIsStarted;
 }
 
 /**
@@ -358,49 +362,49 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
 
 
    // Set up waves and load files
-   si.myWave = awNewWav();                      //Define the wave form
-   awName( si.myWave, sinfo.filename.c_str() ); //Set the aifc filename
-   if (awLoadWav(si.myWave) != 0)               //Load the aifc file
+   si.mWave = awNewWav();                      //Define the wave form
+   awName( si.mWave, sinfo.filename.c_str() ); //Set the aifc filename
+   if (awLoadWav(si.mWave) != 0)               //Load the aifc file
    {
        std::cout << "\nfailed to open wave file\nwave dump:\n" << std::flush;
-       awPrint( si.myWave );
+       awPrint( si.mWave );
        return;
    }
-   awMapWavToSE( si.myWave, myEngine );                    //Associate the wave with the engine
-   awFlushWavToSE( si.myWave );                            //Flush the changes to the engine
+   awMapWavToSE( si.mWave, mEngine );                    //Associate the wave with the engine
+   awFlushWavToSE( si.mWave );                            //Flush the changes to the engine
 
    // Set up sounds and associate them with waves
-   si.mySound = awNewSnd();                                //Define new sound
-   awSndWave( si.mySound, si.myWave );                     //Associate the sound with the wave
-   awMakeSnd( si.mySound);                                 //Necessary to change the wave form
+   si.mSound = awNewSnd();                                //Define new sound
+   awSndWave( si.mSound, si.mWave );                     //Associate the sound with the wave
+   awMakeSnd( si.mSound);                                 //Necessary to change the wave form
 
-   awProp( si.mySound, AWSND_ENABLE,      AW_ON );         //Enable the sound
-   awProp( si.mySound, AWSND_STATE,       AW_OFF );        //Turn it off for now
-   awProp( si.mySound, AWSND_RETRIGGER,   AW_ON );         //Set retriggering ON
+   awProp( si.mSound, AWSND_ENABLE,      AW_ON );         //Enable the sound
+   awProp( si.mSound, AWSND_STATE,       AW_OFF );        //Turn it off for now
+   awProp( si.mSound, AWSND_RETRIGGER,   AW_ON );         //Set retriggering ON
 
-   awProp( si.mySound, AWSND_ABSORPTION,  AWSND_INHERIT ); //Inherit modeling settings
-   awProp( si.mySound, AWSND_ATTENUATION, AWSND_INHERIT ); //from the observer
-   awProp( si.mySound, AWSND_DOPPLER,     AWSND_INHERIT ); // ...
-   awProp( si.mySound, AWSND_DELAY,       AWSND_INHERIT ); // ...
-   awProp( si.mySound, AWSND_WCMAP,       AWSND_INHERIT ); // ...
-   awProp( si.mySound, AWSND_PRIORITY,    AWSND_INHERIT ); // ...
-   awProp( si.mySound, AWSND_EXPUNGE,     AW_OFF );        //Don't delete it once it plays
-   awProp( si.mySound, AWSND_PBEND,       1.0 );           //Pitch Bend
-   awProp( si.mySound, AWSND_SPL,         60.0 );          //Sound Pressure Level
-   awProp( si.mySound, AWSND_SPLLO,       60.0);           //SPL Fade LO
-   awProp( si.mySound, AWSND_SPLHI,       160.0);          //SPL Fade HI
-   awProp( si.mySound, AWSND_PBENDLO,     1.0);            //Pitch Bend LO
-   awProp( si.mySound, AWSND_PBENDHI,     1.0);            //Pitch Bend HI
-   awProp( si.mySound, AWSND_LOPASS,      22050.0);        //Lo Pass cutoff
-   awProp( si.mySound, AWSND_LOPASSLO,    22050.0);        //Lo Pass Fade LO
-   awProp( si.mySound, AWSND_LOPASSHI,    22050.0);        //Lo Pass Fade HI
+   awProp( si.mSound, AWSND_ABSORPTION,  AWSND_INHERIT ); //Inherit modeling settings
+   awProp( si.mSound, AWSND_ATTENUATION, AWSND_INHERIT ); //from the observer
+   awProp( si.mSound, AWSND_DOPPLER,     AWSND_INHERIT ); // ...
+   awProp( si.mSound, AWSND_DELAY,       AWSND_INHERIT ); // ...
+   awProp( si.mSound, AWSND_WCMAP,       AWSND_INHERIT ); // ...
+   awProp( si.mSound, AWSND_PRIORITY,    AWSND_INHERIT ); // ...
+   awProp( si.mSound, AWSND_EXPUNGE,     AW_OFF );        //Don't delete it once it plays
+   awProp( si.mSound, AWSND_PBEND,       1.0 );           //Pitch Bend
+   awProp( si.mSound, AWSND_SPL,         60.0 );          //Sound Pressure Level
+   awProp( si.mSound, AWSND_SPLLO,       60.0);           //SPL Fade LO
+   awProp( si.mSound, AWSND_SPLHI,       160.0);          //SPL Fade HI
+   awProp( si.mSound, AWSND_PBENDLO,     1.0);            //Pitch Bend LO
+   awProp( si.mSound, AWSND_PBENDHI,     1.0);            //Pitch Bend HI
+   awProp( si.mSound, AWSND_LOPASS,      22050.0);        //Lo Pass cutoff
+   awProp( si.mSound, AWSND_LOPASSLO,    22050.0);        //Lo Pass Fade LO
+   awProp( si.mSound, AWSND_LOPASSHI,    22050.0);        //Lo Pass Fade HI
 
    // set the player
    si.mPlayer = awNewPlyr();
-   awAddPlyrSnd( si.mPlayer, si.mySound );
+   awAddPlyrSnd( si.mPlayer, si.mSound );
 
    //Set up scene object and add the sound objects to it
-   awAddSceneSnd(myScene, si.mySound);         //Add the sounds to it
+   awAddSceneSnd(mScene, si.mSound);         //Add the sounds to it
 
    mBindTable[alias] = si;
 
@@ -418,11 +422,11 @@ void AudioWorksSoundImplementation::unbind( const std::string& alias )
       AWSoundInfo si;
       si = mBindTable[alias];
 
-      awRemSceneSnd( myScene, si.mySound );  // detach from the scene
-      //awUnMapWavToSE( si.myWave, myEngine ); // detach it from the engine
-      awUnMapWavToSE( si.myWave );           // detach it from the engine
-      awDelete( si.mySound );
-      awDelete( si.myWave );
+      awRemSceneSnd( mScene, si.mSound );  // detach from the scene
+      //awUnMapWavToSE( si.mWave, mEngine ); // detach it from the engine
+      awUnMapWavToSE( si.mWave );           // detach it from the engine
+      awDelete( si.mSound );
+      awDelete( si.mWave );
    }
 }
 
@@ -442,11 +446,11 @@ void AudioWorksSoundImplementation::step( const float & timeElapsed )
    awFrame(total_time_elapsed);
 
    /*
-   int num = awGetNumEngWav( myEngine );       // how many wavs do i have loaded in AW
-   int num2 = awGetNumFreeEngWav( myEngine );  // how many wavs can be loaded yet into AW
+   int num = awGetNumEngWav( mEngine );       // how many wavs do i have loaded in AW
+   int num2 = awGetNumFreeEngWav( mEngine );  // how many wavs can be loaded yet into AW
    int onOrOff( AW_OFF ), onOrOff2, onOrOff3;
-   awGetProp( si.mySound, AWSND_EMITTING, onOrOff2 );
-   awGetProp( si.mySound, AWSND_PROPAGATING, onOrOff3 );
+   awGetProp( si.mSound, AWSND_EMITTING, onOrOff2 );
+   awGetProp( si.mSound, AWSND_PROPAGATING, onOrOff3 );
 
    if (onOrOff2 == AW_ON || onOrOff3 == AW_ON)
       onOrOff = AW_ON;

@@ -137,7 +137,7 @@ break;
    case 'a':
 {
 aj::SoundInfo si;
-   si.filename = "../../data/sample.wav";
+   si.filename = "../../../data/sample.wav";
    si.datasource = aj::SoundInfo::FILESYSTEM;
 audJ.configure( "kevin", si );
 }
@@ -145,14 +145,36 @@ break;
    case 'b':
 {
 aj::SoundInfo si;
-   si.filename = "../../data/sample-drumsolo-2bars.wav";
+   si.filename = "../../../data/sample-drumsolo-2bars.wav";
    si.datasource = aj::SoundInfo::FILESYSTEM;
 audJ.configure( "kevin", si );
 }
 break;
-      case 'p':
+      case 't':
 {
 audJ.trigger( "kevin" );
+}
+break;
+case 'p':
+{
+audJ.pause( "kevin" );
+}
+break;
+case 's':
+{
+audJ.stop( "kevin" );
+}
+break;
+
+case ',':
+{
+audJ.setPosition( "kevin", -60, 0, 0 );
+}
+break;
+
+case '.':
+{
+audJ.setPosition( "kevin", 60, 0, 0 );
 }
 break;
 

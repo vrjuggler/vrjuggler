@@ -4,7 +4,7 @@ PROJECT_NAME = sample
 
 OBJECTS		= main.@OBJEXT@
 APP_INCLUDES	= @application_includes@ -I/home/users/kevn/include
-APP_LIBS		= @application_libs@ -L/home/users/kevn/lib -lglut -lGLU -lGL -lXmu -lXext -lX11 -lXi -lm
+APP_LIBS		= @application_libs@ -L/home/users/kevn/lib -lglut -lGLU -lGL -L/usr/X11R6/lib -lXmu -lXext -lX11 -lXi -lm
 APP_LDFLAGS		= @application_ldflags@
 VPATH		= @srcdir@
 
