@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-06-21 patrick  Completed work needed to build a DLL on Win32.
 2001-06-21 browner  Added a wrapper around the serial device API on Win32.
                     This completes what is needed to allow writing
                     cross-platform serial device drivers.
