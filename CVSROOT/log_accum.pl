@@ -76,12 +76,14 @@ sub cleanup_lockfiles {
 }
 
 sub wanted {
+print "file: $_\n";
     (($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_)) &&
     -d _ &&
     -M _ > 0.08 &&
     ($uid == $<) &&
     /^#cvs\.lock$/ &&
     &exec(0, 'rmdir','{}');
+print "$< --> $uid\n";
 }
 
 sub exec {
