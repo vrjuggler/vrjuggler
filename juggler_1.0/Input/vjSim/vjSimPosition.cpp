@@ -47,6 +47,8 @@ void vjSimPosition::UpdateData()
                      // Used to keep from calling checkKey twice on success
       // NOTE: Could have implemented using side effects of assignment
       //       and used less lines, but this is more explicit
+   mUpdateTime.set();
+
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt)
       MoveFor( 1 * amt);

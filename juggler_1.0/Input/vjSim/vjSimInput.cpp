@@ -8,7 +8,7 @@ std::vector<vjSimInput::vjKeyModPair> vjSimInput::readKeyList(std::vector<vjVarV
    {
 #ifdef VJ_DEBUG
       vjConfigChunk* first_chunk = (vjConfigChunk*)(*(keyList[0]));
-      std::string chunk_type = (std::string)(char*)first_chunk->getType();
+      std::string chunk_type = first_chunk->getType();
       vjASSERT(chunk_type == std::string("KeyModPair"));
 #endif
 
@@ -36,7 +36,7 @@ std::vector<vjSimInput::vjKeyModPair> vjSimInput::readKeyList(std::vector<vjVarV
 // Grabs it out of the given config chunk
 bool vjSimInput::config(vjConfigChunk* chunk)
 {
-   std::string keyboardName = (char*)chunk->getProperty("keyboardProxy");    // Get the event source
+   std::string keyboardName = chunk->getProperty("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);
 
    return true;
