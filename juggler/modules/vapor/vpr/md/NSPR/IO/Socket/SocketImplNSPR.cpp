@@ -232,6 +232,9 @@ SocketImpNSPR::connect () {
          if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
             retval.setCode(Status::WouldBlock);
          }
+         else if (PR_GetError() == PR_IN_PROGRESS_ERROR) {
+            retval.setCode( Status::InProgress );
+         }
          else {
             NSPR_PrintError("SocketImpNSPR::connect: Failed to connect.");
             retval.setCode(Status::Failure);
