@@ -41,15 +41,17 @@
 #include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Sync/CondVar.h>
 
-#include <gadget/InputManager.h>
 #include <gadget/Type/DigitalInterface.h>
 
-//class gadget::InputManager;
+namespace gadget
+{
+   class InputManager;
+}
 
 namespace vpr
 {
    class BaseThread;
-};
+}
 
 namespace vrj
 {

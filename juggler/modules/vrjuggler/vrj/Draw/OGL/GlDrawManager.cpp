@@ -35,6 +35,8 @@
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 
+#include <gadget/InputManager.h>
+
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/Kernel.h>
