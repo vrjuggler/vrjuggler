@@ -208,6 +208,13 @@ protected:
    bool removeProxy(std::string proxyName);
    bool removeProxy(jccl::ConfigChunkPtr chunk);
 
+   /**
+    * Loads the Gadgeteer driver from the given vpr::LibraryPtr object.
+    *
+    * @pre vpr::LibraryPtr contains a pointer to a valid vpr::Library object.
+    */
+   vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
+
 protected:
    std::vector<vpr::LibraryPtr> mDeviceDrivers;
 
