@@ -870,6 +870,7 @@ AC_OUTPUT(tweek-config
           extensions/java/build.xml
           extensions/java/Makefile
           extensions/java/Makefile.inc
+          java/build.xml
           java/Makefile
           java/Makefile.inc
           java/tweek-base.sh
