@@ -154,9 +154,9 @@ namespace cluster
          vprASSERT(NULL != node && "We can not handle a packet if we do not know which node it is coming from");
 
          std::string host_name   = temp_connection_request->getHostname();
-         vpr::Uint16 port        = temp_connection_request->getPort();
+         //vpr::Uint16 port        = temp_connection_request->getPort();
 
-         // Send back a responce
+         // Send back a response
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                         << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
                         << "Creating a new ConnectionAck Packet" << std::endl << vprDEBUG_FLUSH;
@@ -167,32 +167,32 @@ namespace cluster
          std::string local_host_name;
 
          local.getHostname(local_host_name);
-         ConnectionAck* responce_packet =
+         ConnectionAck* response_packet =
             new ConnectionAck(local_host_name, mListenAddr.getPort(), true);
 
-         // Try to send a responce packet
+         // Try to send a response packet
          try
          {
             vprASSERT(NULL != node && "Node is null");
-            vprASSERT(NULL != responce_packet && "Responce Packet is null");
+            vprASSERT(NULL != response_packet && "Response Packet is null");
             vprASSERT(NULL != node->getSockStream() && "SocketStream is null");
 
-            // Send the responce
-            responce_packet->printData(vprDBG_CONFIG_LVL);
-            node->send(responce_packet);
+            // Send the response
+            response_packet->printData(vprDBG_CONFIG_LVL);
+            node->send(response_packet);
          }
          catch(cluster::ClusterException cluster_exception)
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrRED,"ERROR:")
-               << "ClusterNetwork::acceptLoop() Could not send responce packet: "
+               << "ClusterNetwork::acceptLoop() Could not send response packet: "
                << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
 
             node->setConnected(ClusterNode::DISCONNECTED);
          }
 
-         delete responce_packet;
-         responce_packet = NULL;
+         delete response_packet;
+         response_packet = NULL;
 
          // Start updating the ClusterNode
          node->start();
@@ -444,7 +444,7 @@ namespace cluster
       //       -Set the socketstream
       //     -Else
       //       -Create a new node using this socketstream
-      //     -Send responce packet
+      //     -Send response packet
       //     -Get Cluster Delta
       //   -Close and delete socket
 
