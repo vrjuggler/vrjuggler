@@ -67,7 +67,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
 {
    mSelectState = Nothing;
    mActiveState = Normal;
-   mTexObjId = 0;
+   mHasRectUpdate = false;
 
    mVncWidth = mVncIf.getWidth();                                 // Get real size of the desktop
    mVncHeight = mVncIf.getHeight();
@@ -93,6 +93,13 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    std::cout << "min size: " << mMinSize << std::endl;
 
    updateDesktopParameters();       // Initial update of desktop parameters
+
+   // Allocate texture data
+   vprASSERT( NULL == mTextureData );
+   const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
+   const size_t tex_size(mTexWidth*mTexHeight*bytes_per_pixel);
+   mTextureData = (char*) malloc(tex_size);
+   memset(mTextureData, 0, tex_size);     // Zero out the texture data.
 
    // Set initial transform
    gmtl::setTrans( m_vworld_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
@@ -514,12 +521,144 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    updateDesktopParameters();
 
+
+   // - While there are rectangle updates to process
+   //    - Combine the retangles
+   mHasRectUpdate = false;
+   if(mVncIf.getFramebufferUpdate(mUpdateRect))
+   {
+      mHasRectUpdate = true;
+      Rectangle temp_rect;
+      while( mVncIf.getFramebufferUpdate(temp_rect))
+      {
+         mUpdateRect.merge(temp_rect);
+      }
+   }
+
    // Check status of focus
    enum Focus focus_val(NOT_IN_FOCUS);
    if(mSelectState != Nothing)
       focus_val = IN_FOCUS;
 
    return focus_val;
+}
+
+/** Update the desktop texture
+* @pre The texture is currently bound
+*/
+void VNCDesktop::updateDesktopTexture()
+{
+#if 1
+   const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
+   // - If have update
+   // - Get the source buffer pointer and compute any other params
+   // - Set the correct pixel transfer params
+   // - Load the texture
+   // - Add to texture stats
+   if(mHasRectUpdate)
+   {
+      const char* src = mVncIf.getFramebuffer() +
+                        (((mUpdateRect.y * mVncWidth) + mUpdateRect.x)*bytes_per_pixel);    // Start of source buffer
+
+      // Set the OpenGL row length.  This is used to skip data after each line
+      // of pixels is read.
+      //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, mVncWidth);
+
+      // Subload the texture
+      glTexSubImage2D(GL_TEXTURE_2D, 0,
+                      (GLint)mUpdateRect.x, (GLint)mUpdateRect.y,
+                      (GLsizei)mUpdateRect.width, (GLsizei)mUpdateRect.height,
+                      GL_RGBA, GL_UNSIGNED_BYTE, src);
+
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);      // Reset to default since this is a "strange" param
+
+      // Add stats
+      // Compute texture stats
+      const double one_mb(1024.0*1024.0);
+      double tex_size_mb = (mUpdateRect.width*mUpdateRect.height*8.0*1.0)/one_mb;
+      mTextureUploadRate.addSample(tex_size_mb);
+      mTextureUpdateCount.addSample(tex_size_mb);
+   }
+
+#else
+
+   // If there are updates, consume them and then update the entire buffer
+   Rectangle bogus_rect;
+   if(mVncIf.getFramebufferUpdate(bogus_rect))
+   {
+      while( mVncIf.getFramebufferUpdate(bogus_rect))
+      { /* Nothing */; }
+
+      // Initial texture load
+      // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
+      // actually use 8 bytes per pixel.
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
+            (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+            (GLubyte*) mTextureData);
+
+      // Add stats
+      // Compute texture stats
+      const double one_mb(1024.0*1024.0);
+      double tex_size_mb = (mTexWidth*mTexHeight*8.0*1.0)/one_mb;
+      mTextureUploadRate.addSample(tex_size_mb);
+      mTextureUpdateCount.addSample(tex_size_mb);
+   }
+
+#endif
+
+   GLenum err = glGetError();
+
+   if ( err != GL_NO_ERROR )
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "OpenGL ERROR") << ": "
+         << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
+   }
+}
+
+
+void VNCDesktop::contextPreDraw()
+{
+   glPushAttrib(GL_TEXTURE_BIT);
+
+   // Draw the desktop surface
+   glEnable(GL_TEXTURE_2D);
+
+   // Check if we need to allocate a texture object
+   // XXX: This should really move to contextInit or somewhere like that
+   if(0 == (*mTexInfo).id)
+   {
+      // Allocate texture data
+      vprASSERT( NULL != mTextureData );     // Already allocated
+
+      // Create and bind texture object
+      glGenTextures(1, &((*mTexInfo).id));
+      glBindTexture(GL_TEXTURE_2D, mTexInfo->id);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+      vprASSERT(glIsTexture(mTexInfo->id) && "Invalid texture");
+
+      // Initial texture load
+      // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
+      // actually use 8 bytes per pixel.
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
+            (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+            (GLubyte*) mTextureData);
+   }
+   else
+   {
+      vprASSERT(glIsTexture(mTexInfo->id) && "Invalid texture");
+      glBindTexture(GL_TEXTURE_2D, mTexInfo->id);
+   }
+
+   // Update the texture
+   updateDesktopTexture();
+
+   glPopAttrib();
 }
 
 void VNCDesktop::draw()
@@ -542,9 +681,10 @@ void VNCDesktop::draw()
       // Get into the desktop coordinate frame
       glMultMatrixf(m_vworld_M_desktop.mData);
 
-      // XXX: Should probably use an attribute stack or something here.
+      // Save attributes
+      glPushAttrib(GL_ALL_ATTRIB_BITS);
       glDisable(GL_BLEND);
-      glEnable(GL_LIGHTING);
+      //glEnable(GL_LIGHTING);      // Only use lighting if it is already on
       glEnable(GL_NORMALIZE);
 
       // -- Draw the desktop "objects" -- //
@@ -592,48 +732,9 @@ void VNCDesktop::draw()
          glPopMatrix();
       }
 
-      // Draw the desktop surface
+      // --- DRAW DESKTOP --- //
       glEnable(GL_TEXTURE_2D);
-
-      // Check if we need to allocate a texture object
-      // XXX: This should really move to contextInit or somewhere like that
-      if(0 == mTexObjId)
-      {
-         // Allocate texture data
-         vprASSERT ( NULL == mTextureData );
-         const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
-         const size_t tex_size(mTexWidth*mTexHeight*bytes_per_pixel);
-         mTextureData = (char*) malloc(tex_size);
-
-         // Zero out the texture data.
-         memset(mTextureData, 0, tex_size);
-
-         // Create and bind texture object
-         glGenTextures(1, &mTexObjId);
-         glBindTexture(GL_TEXTURE_2D, mTexObjId);
-         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-         vprASSERT(glIsTexture(mTexObjId) && "Invalid texture");
-
-         // Initial texture load
-         // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
-         // actually use 8 bytes per pixel.
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
-               (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               (GLubyte*) mTextureData);
-      }
-      else
-      {
-         vprASSERT(glIsTexture(mTexObjId) && "Invalid texture");
-         glBindTexture(GL_TEXTURE_2D, mTexObjId);
-      }
-
-      // Update the texture
-      updateDesktopTexture();
-
+      glBindTexture(GL_TEXTURE_2D, mTexInfo->id);
       glColor3f(1.0f, 1.0f, 1.0f);
 
       // --- COMPUTE TEX Coords --- //
@@ -668,95 +769,12 @@ void VNCDesktop::draw()
 
       // Set back to default texture
       glBindTexture(GL_TEXTURE_2D, 0);
-
       glDisable(GL_TEXTURE_2D);
+
+      // Set back to original attribute state
+      glPopAttrib();
    }
    glPopMatrix();
-
-   glEnable(GL_LIGHTING);
-}
-
-/** Update the desktop texture
-* @pre The texture is currently bound
-*/
-void VNCDesktop::updateDesktopTexture()
-{
-#if 1
-   const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
-   Rectangle update_rect;   // The rectangle for the update
-
-   // - While there are rectangle updates to process
-   //    - Combine the retangles
-   // - Get the source buffer pointer and compute any other params
-   // - Set the correct pixel transfer params
-   // - Load the texture
-   // - Add to texture stats
-   if(mVncIf.getFramebufferUpdate(update_rect))
-   {
-      Rectangle temp_rect;
-      while( mVncIf.getFramebufferUpdate(temp_rect))
-      {
-         update_rect.merge(temp_rect);
-      }
-
-      const char* src = mVncIf.getFramebuffer() +
-                        (((update_rect.y * mVncWidth) + update_rect.x)*bytes_per_pixel);    // Start of source buffer
-
-      // Set the OpenGL row length.  This is used to skip data after each line
-      // of pixels is read.
-      //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, mVncWidth);
-
-      // Subload the texture
-      glTexSubImage2D(GL_TEXTURE_2D, 0,
-                      (GLint)update_rect.x, (GLint)update_rect.y,
-                      (GLsizei)update_rect.width, (GLsizei)update_rect.height,
-                      GL_RGBA, GL_UNSIGNED_BYTE, src);
-
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);      // Reset to default since this is a "strange" param
-
-      // Add stats
-      // Compute texture stats
-      const double one_mb(1024.0*1024.0);
-      double tex_size_mb = (update_rect.width*update_rect.height*8.0*1.0)/one_mb;
-      mTextureUploadRate.addSample(tex_size_mb);
-      mTextureUpdateCount.addSample(tex_size_mb);
-   }
-
-#else
-
-   // If there are updates, consume them and then update the entire buffer
-   Rectangle bogus_rect;
-   if(mVncIf.getFramebufferUpdate(bogus_rect))
-   {
-      while( mVncIf.getFramebufferUpdate(bogus_rect))
-      { /* Nothing */; }
-
-      // Initial texture load
-      // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
-      // actually use 8 bytes per pixel.
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
-            (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-            (GLubyte*) mTextureData);
-
-      // Add stats
-      // Compute texture stats
-      const double one_mb(1024.0*1024.0);
-      double tex_size_mb = (mTexWidth*mTexHeight*8.0*1.0)/one_mb;
-      mTextureUploadRate.addSample(tex_size_mb);
-      mTextureUpdateCount.addSample(tex_size_mb);
-   }
-
-#endif
-
-   GLenum err = glGetError();
-
-   if ( err != GL_NO_ERROR )
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "OpenGL ERROR") << ": "
-         << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
-   }
 }
 
 
