@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-11-21 allenb   Modified StatCollector to allow for time based and discrete
+                    stat collection.
 2001-11-20 allenb   Created standards StatCollector class for collecting
                     IO statistics.  Replaced the old BandwidthIOStats
 					collection method with the new collector class.
