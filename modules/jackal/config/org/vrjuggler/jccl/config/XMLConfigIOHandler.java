@@ -155,15 +155,11 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
 
     public boolean writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db) {
         try {
-            long time = System.currentTimeMillis();
-            db.xmlRep();
-            time = System.currentTimeMillis()-time;
-            System.out.println ("ConfigChunkDB.xmlRep took " + time + " ms.");
-
             out.writeBytes (db.xmlRep());
             return true;
         }
         catch (Exception e) {
+            e.printStackTrace();
             return false;
         }    
     }
@@ -176,6 +172,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             return true;
         }
         catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -496,6 +493,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             return true;
         }
         catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
