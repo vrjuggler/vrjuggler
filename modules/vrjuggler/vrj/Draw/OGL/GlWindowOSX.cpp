@@ -60,7 +60,9 @@ GlWindowOSX::~GlWindowOSX() {
 }
 
 void GlWindowOSX::swapBuffers() {
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL) << "vjGlWindowOSX::swapBuffers()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)
+      << "vrj::GlWindowOSX::swapBuffers()" << std::endl << vprDEBUG_FLUSH;
+
     if(aglContext)
     {
         aglSwapBuffers (aglContext);
@@ -131,7 +133,7 @@ int GlWindowOSX::open() {
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes | kWindowNoShadowAttribute | kWindowLiveResizeAttribute, &rectWin, &gpWindow))
     {
         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-           << "vjGlWindowOSX::open()    Window failed to open!" << std::endl
+           << "[vrj::GlWindowOSX::open()] Window failed to open!" << std::endl
            << vprDEBUG_FLUSH;
         return false;
     }
@@ -208,7 +210,8 @@ int GlWindowOSX::close() {
 }
 
 bool GlWindowOSX::makeCurrent() {
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL) << "vjGlWindowOSX::makeCurrent()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)
+      << "vrj::GlWindowOSX::makeCurrent()" << std::endl << vprDEBUG_FLUSH;
     if(!aglContext) return false;
     aglSetCurrentContext (aglContext);
     return true;
