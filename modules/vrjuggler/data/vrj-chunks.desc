@@ -1073,10 +1073,10 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Rot Y" defaultvalue="0.0" />
       <item label="Rot Z" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Scale" token="scalar" type="float" variable="0">
+    <PropertyDesc name="Custom scale" token="custom_scale" type="float" variable="0">
       <help>This is the value used if the device units are set to custom.
             When the device data is scaled by this value, it should result in units of meters (which is what VR Juggler uses internally).</help>
-      <item label="" defaultvalue="" />
+      <item label="" defaultvalue="1.0" />
     </PropertyDesc>
     <PropertyDesc name="Device Units" token="dev_units" type="float" variable="0">
       <enumeration name="Custom" value="0.0" />
