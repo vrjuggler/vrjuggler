@@ -132,18 +132,21 @@ Modules
     Description
 
    JCCL provides the configuration layer for VR Juggler and other modules.
-   The config chunks and configuration editor VjControl come from JCCL. In
-   essence, JCCL is the VR Juggler 1.0 Config directory with many new
-   features including XML-based config files.
+   The config chunks and reusable configuration editor JavaBeans come from
+   JCCL. These JavaBeans are used by the VR Juggler configuration editor
+   tool, VRJConfig. In essence, JCCL is the VR Juggler 1.0 Config directory
+   with many new features including XML-based config files.
 
-   To build the JCCL C++ library, Xerces-C is required for parsing XML. As of
-   this writing, version 1.5.1 has been used for testing. Newer versions may
-   work. Xerces-C can be downloaded from http://xml.apache.org/xerces-c/.
+   To build the JCCL C++ library, CppDOM is required for parsing XML. CppDOM
+   is a lightweight XML parser written in C++ and designed to provide an
+   interface similar to JDOM. More information can be found at
+   http://xml-cppdom.sourceforge.net/.
 
-   To build VjControl, the Java API for XML Parsing (JAXP) is required. JAXP
-   is distributed with JDK 1.4, and it is available for earlier versions as a
-   separately distributed library. More information and downloads can be
-   found at http://java.sun.com/xml/jaxp/index.html.
+   To build the configuration editor JavaBeans, JDOM and the Tweek Java API
+   are required. JDOM can be downloaded from http://www.jdom.org/. We require
+   version B7 or newer, and we recommend version B8. Tweek is another module
+   in the Juggler Project, and it will be built automatically as a dependency
+   of JCCL.
 
   Gadgeteer
 
@@ -223,7 +226,7 @@ Modules
    Java-based GUI to interact with a complex C++ library or application. The
    Tweek GUI can be run in virtual environments, external on a palm top, or
    on the desktop next to a running application. Each of these methods gives
-   a familier 2D widget set that can control applications flexibly. To
+   a familiar 2D widget set that can control applications flexibly. To
    provide this capability, it uses CORBA.
 
    The Java code in Tweek includes the Tweek Java API and the Tweek JavaBean
