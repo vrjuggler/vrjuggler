@@ -131,7 +131,7 @@ int vjXWinKeyboard::OnlyModifier(int mod)
 
 void vjXWinKeyboard::UpdateData()
 {
-  int i;
+  //int i;
   UpdKeys();
 }
 

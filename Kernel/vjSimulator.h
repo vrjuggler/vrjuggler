@@ -23,7 +23,7 @@ public:
       proxy_str  = chunk->getProperty("simCamera");
 
       std::string wand_proxy_str = chunk->getProperty("simWand");
-      std::string user_name = (string)(char*)chunk->getProperty("user");
+      std::string user_name = (std::string)(char*)chunk->getProperty("user");
 
       mUser = vjKernel::instance()->getUser(user_name);
 
