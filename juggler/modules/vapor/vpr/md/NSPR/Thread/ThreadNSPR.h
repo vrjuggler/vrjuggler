@@ -59,7 +59,7 @@ public:
     // -----------------------------------------------------------------------
     ThreadNSPR(thread_func_t func, void* arg = 0,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-               VPRThreadScope scope = VPR_LOCAL_THREAD,
+               VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                PRUint32 stack_size = 0);
 
@@ -70,7 +70,7 @@ public:
     // -----------------------------------------------------------------------
     ThreadNSPR(BaseThreadFunctor* functor_ptr,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-               VPRThreadScope scope = VPR_LOCAL_THREAD,
+               VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                PRUint32 stack_size = 0);
 
@@ -101,7 +101,7 @@ public:
     // -----------------------------------------------------------------------
     int spawn(BaseThreadFunctor* functor_ptr,
               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-              VPRThreadScope scope = VPR_LOCAL_THREAD,
+              VPRThreadScope scope = VPR_GLOBAL_THREAD,
               VPRThreadState state = VPR_JOINABLE_THREAD,
               size_t stack_size = 0);
 

@@ -238,7 +238,7 @@ public:
     //: Overloaded equality operator.
     // ------------------------------------------------------------------------
     bool
-    operator== (const InetAddrNSPR& addr) {
+    operator== (const InetAddrNSPR& addr) const {
         return ((mAddr.inet.family == addr.mAddr.inet.family) &&
                 (mAddr.inet.port == addr.mAddr.inet.port) &&
                 (mAddr.inet.ip == addr.mAddr.inet.ip));
@@ -248,7 +248,7 @@ public:
     //: Overloaded inequality operator.
     // ------------------------------------------------------------------------
     bool
-    operator!= (const InetAddrNSPR& addr) {
+    operator!= (const InetAddrNSPR& addr) const {
         return ! (*this == addr);
     }
 
