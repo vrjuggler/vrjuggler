@@ -11,8 +11,11 @@
 	</ol>
 	<li><a href="#adding">Adding your own documentation</a></li>
 	<ol>
+		<li><a href="#jexplorer">JExplorer Tree Control</a></li>
 		<li><a href="#filetypes">File types handled by the build script</a></li>
 		<li><a href="#subst">Using Aliases and Path substitutions</a></li>
+		<li><a href="#install-web">Other install-web script commands</a></li>
+		
 	</ol>
 </ul>
 
@@ -138,11 +141,18 @@ that you can then use to build the project (this is recommended).<BR>
 <a name="adding">
 <H4> Adding your own documentation: </H4>
 </a>
+<a name="jexplorer">
+<H5> JExplorer Tree Control </H5>
+</a>
+Be sure to check out the .XML files.  This is where the tree control is specified.  
+Note that each book has it's own .xml tree specification in the book's root directory.  
+These are dynamically loaded using the <pre><jitfolder></pre> XML tag.  
+For more info see the <a href="${JEXPLORER_DOCS}">JExplorer documentation</a>.
+
 <a name="filetypes">
 <H5> File types handled by the build script </H5>
 </a>
-
-install-web.pl does 3 different operations depending on filetype.<BR>
+<b>install-web.pl</b> does 3 different operations depending on filetype.<BR>
 <li>copied - only does a straight copy if time stamps are different.</li>
 <li>renamed - renames file, for example .placeholder files strip off the extension</li>
 <li>filtered - filters the file, replacing any alias or path variable with one specified in the -w parameter of install-web.pl</li>
@@ -165,5 +175,25 @@ Style sheets: <b>css</b> - <i>copied</i><BR>
 With the -w parameter, you can specify a file that defines path and alias substitutions.  In this file, using normal perl syntax, you add stuff to two hash tables: $path_subst, $alias_subst.<br>
 <BR>
 Example:<BR>
-$path_subst{"HTML"} = 'html/';<BR>
-$alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';<BR>
+<b>$path_subst{"HTML"} = 'html/';</b><BR>
+<b>$alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';</b><BR>
+
+
+<a name="install-web">
+<H5> Other install-web script commands </H5>
+</a>
+When specifying an install-web command, place it within the comment brackets
+<b>&lt;!--install-web include <i>[filename]</i> --&gt;</b>
+<LI> Inserts a file named <i>[filename]</i> at this location.</b>
+
+<b>&lt;!--install-web no-css --&gt;</b>
+<LI> Tell the install script to <i>not</i> include the default <i>style sheet</i>. (the -c option to install-web)</li>
+
+<b>&lt;!--install-web no-header --&gt;</b>
+<LI> Tell the install script to <i>not</i> include the default <i>header</i>. (the -e option to install-web)</li>
+
+<b>&lt;!--install-web no-footer --&gt;</b>
+<LI> Tell the install script to <i>not</i> include the default <i>footer</i>. (the -f option to install-web)</li>
+
+<b>&lt;!--install-web ignore --&gt;</b>
+<LI> Tell the install script to simply install (copy) the file, <i>ignoring</i> any tags or other script-recognized things.</li>
