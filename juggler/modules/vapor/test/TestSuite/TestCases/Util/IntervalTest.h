@@ -82,8 +82,13 @@ public:
       vpr::Interval val;
 
       val.secf(12.345678);
-      assertTest(val.secf()  == 12.345678);
-      assertTest(val.msecf() == 12345.678);
+
+      float val_sec = val.secf();
+      float val_msec = val.msecf();
+      float val_usec = val.usecf();
+
+      assertTest(val.secf()  == 12.345678f);
+      assertTest(val.msecf() == 12345.678f);
       assertTest(val.usecf() == 12345678.0f);
    }
 
@@ -102,8 +107,13 @@ public:
       vpr::Interval val;
 
       val.msecf(12345.678f);
-      assertTest(val.secf()  == 12.345678);
-      assertTest(val.msecf() == 12345.678);
+
+      float val_sec = val.secf();
+      float val_msec = val.msecf();
+      float val_usec = val.usecf();
+
+      assertTest(val.secf()  == 12.345678f);
+      assertTest(val.msecf() == 12345.678f);
       assertTest(val.usecf() == 12345678.0f);
    }
 
@@ -112,9 +122,9 @@ public:
       vpr::Interval val;
 
       val.usecf(1234567);
-      assertTest(val.secf()  == 1);
-      assertTest(val.msecf() == 1234);
-      assertTest(val.usecf() == 1234567);
+      assertTest(val.sec()  == 1);
+      assertTest(val.msec() == 1234);
+      assertTest(val.usec() == 1234567);
    }
 
    void testUsecf()
@@ -122,8 +132,14 @@ public:
       vpr::Interval val;
 
       val.usecf(12345678.0f);
-      assertTest(val.secf()  == 12.345678);
-      assertTest(val.msecf() == 12345.678);
+
+      float val_sec = val.secf();
+      float val_msec = val.msecf();
+      float val_usec = val.usecf();
+
+
+      assertTest(val.secf()  == 12.345678f);
+      assertTest(val.msecf() == 12345.678f);
       assertTest(val.usecf() == 12345678.0f);
       //assertTest(false && "Got here");
    }
