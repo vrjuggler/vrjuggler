@@ -194,7 +194,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    if (on.children.get(i) instanceof String) {
 		s = (String)(on.children.get(i));
 		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.DESC_FOLDER, db, s), true);
-		// get all chunks in db of type s & add as childrne of newtn
+		// get all chunks in db of type s & add as children of newtn
 		v = db.getOfDescName(s);
 		for (j = 0; j < v.size(); j++) {
 		    ch = (ConfigChunk)v.get(j);
@@ -316,7 +316,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    if (ni.isDescNode() && 
 		ni.toString().equalsIgnoreCase(ch.getDescName())) {
                 child = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, chunkdb, ch.getName()), false);
-		addedChildCount(parent);	
+		addedChildCount(parent);
                 insertNodeInto (child, parent, parent.getChildCount());
 	    } 
 	}
