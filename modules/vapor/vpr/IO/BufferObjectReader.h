@@ -74,6 +74,10 @@ public:
    unsigned getCurPos()
    { return mCurHeadPos; }
 
+   /** Reset the reading head to the start position. */
+   virtual void resetReading()
+   { setCurPos(0); }
+
    /** @name Tag and attribute handling */
    //@{
    /** Starts a new section/element of name tagName.

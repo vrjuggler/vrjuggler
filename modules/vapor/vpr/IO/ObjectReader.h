@@ -67,7 +67,7 @@ public:
    virtual ~ObjectReader()
    {;}
 
-   /** @name Tag and attribute handling 
+   /** @name Tag and attribute handling
    * ObjectReader and ObjectWriter support an interface that allows for using tags and attributes
    * in the written output data.  This allows support for formats such as XML where there is
    * a logical grouping of the data.
@@ -77,7 +77,7 @@ public:
    * properties of the most recently started tag.
    *
    * The structure looks something like (based on XML):
-   *  
+   *
    * <tag1>
    *   <tag2 attrib1="XXX">
    *   </tag2>
@@ -97,6 +97,8 @@ public:
    /** Ends the most recently named attribute */
    virtual vpr::ReturnStatus endAttribute() = 0;
    //@}
+
+   virtual void resetReading() = 0;
 
    virtual vpr::Uint8 readUint8() = 0;
    virtual vpr::Uint16 readUint16() = 0;
@@ -124,6 +126,10 @@ public:
    { str = this->readString(); }
    virtual void readBool(bool& val)
    { val = this->readBool(); }
+
+   /** Reset the reading to the initial reading state.
+   * @post The reader can be reused and will function as if it were just initialized.
+   */
 };
 
 } // namespace vpr
