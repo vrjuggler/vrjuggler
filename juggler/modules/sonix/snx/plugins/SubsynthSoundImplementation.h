@@ -57,6 +57,8 @@
 #include "snx/SoundAPIInfo.h"
 
 #include <syn/Core/Module.h>
+#include <syn/Stream/PortAudioOStream.h>
+#include <syn/Module/MixerModule.h>
 #include <syn/Module/InstrumentModule.h>
 #include <syn/Module/WaveTableOscModule.h>
 #include <syn/Module/OperatorModule.h>
@@ -201,8 +203,7 @@ public:
      */
    virtual bool isStarted() const
    {
-      if (NULL == mSink.get()) return false;
-      return mSink->isOpen();
+      return mIsOpen;
    }
 
    virtual void configure( const snx::SoundAPIInfo& sai )
@@ -278,6 +279,7 @@ private:
          // connect them like so...
          // source --> gain --> filter -->
          syn::TerminalPtr output, input;
+         bool result = false;
          result = source->getOutput( "mono audio", output );
          result = velocity->getInput( "mono audio0", input );
          syn::Terminal::connect( input, output );
@@ -286,26 +288,26 @@ private:
          result = filter->getInput( "mono audio", input );
          syn::Terminal::connect( input, output );
          
-         inst->addModule( source );
-         inst->addModule( velocity );
-         inst->addModule( filter );
+         i->addModule( source );
+         i->addModule( velocity );
+         i->addModule( filter );
 
          // these are the params we care about
-         inst->exposeParam( "freq", source, "freq" );
-         inst->exposeParam( "loop", source, "loop" );
-         inst->exposeParam( "samplebased", source, "samplebased" );
-         inst->exposeParam( "basefreq", source, "basefreq" );
-         inst->exposeParam( "retrig", source, "retrig" );
-         inst->exposeParam( "interp", source, "interp" );
-         inst->exposeParam( "freqcontrol", source, "freqcontrol" );
-         inst->exposeParam( "trigger", source, "trigger" );
-         inst->exposeParam( "release", source, "release" );
-         inst->exposeParam( "filename", source, "filename" );
-         inst->exposeParam( "velocity", velocity, "constant" );
-         inst->exposeParam( "cutoff", filter, "cutoff" );
-         inst->exposeParam( "cutoffLo", filter, "cutoffLo" );
-         inst->exposeParam( "cutoffHi", filter, "cutoffHi" );
-         inst->exposeOutput( "mono audio", filter, "mono audio" );
+         i->exposeParam( "freq", "source", "freq" );
+         i->exposeParam( "loop", "source", "loop" );
+         i->exposeParam( "samplebased", "source", "samplebased" );
+         i->exposeParam( "basefreq", "source", "basefreq" );
+         i->exposeParam( "retrig", "source", "retrig" );
+         i->exposeParam( "interp", "source", "interp" );
+         i->exposeParam( "freqcontrol", "source", "freqcontrol" );
+         i->exposeParam( "trigger", "source", "trigger" );
+         i->exposeParam( "release", "source", "release" );
+         i->exposeParam( "filename", "source", "filename" );
+         i->exposeParam( "velocity", "velocity", "constant" );
+         i->exposeParam( "cutoff", "filter", "cutoff" );
+         i->exposeParam( "cutoffLo", "filter", "cutoffLo" );
+         i->exposeParam( "cutoffHi", "filter", "cutoffHi" );
+         i->exposeOutput( "mono audio", "filter", "mono audio" );
       }
 
       syn::ModulePtr inst;
@@ -316,6 +318,7 @@ private:
    syn::ModulePtr mMixer;
    void reschedule();
    syn::Runner mRunner;
+   bool mIsOpen;
 
    /** @link dependency */
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
