@@ -96,7 +96,7 @@ public:
    }
 
    //: Is the vector normalized
-   bool isNormalized()
+   bool isNormalized() const
    {
       float len = lengthSquared();
       float diff = len-1.0f;
@@ -122,7 +122,7 @@ public:
 
 
    //: Calculate the cross product of me X _v
-   const vjVec3 cross(const vjVec3&  _v)
+   vjVec3 cross(const vjVec3&  _v) const
    {
       return vjVec3( ((vec[1]*_v.vec[2]) - (vec[2]*_v.vec[1])),
                      ((vec[2]*_v.vec[0]) - (vec[0]*_v.vec[2])),
