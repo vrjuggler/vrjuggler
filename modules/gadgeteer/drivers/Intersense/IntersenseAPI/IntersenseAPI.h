@@ -190,7 +190,7 @@ protected:
    }
 
 private:
-    int getStationIndex(int stationNum, int bufferIndex);
+    unsigned int getStationIndex(unsigned int stationNum, int bufferIndex);
 
     IntersenseAPIStandalone mTracker;
 
