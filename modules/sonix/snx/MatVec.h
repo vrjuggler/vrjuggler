@@ -16,7 +16,7 @@ inline void xform( float* result, const aj::Matrix44& mat, const float* vec )
 		   result[j] += vec[k] * mat( k, j );
 }
 
-inline aj::Vec3 xformPoint( const aj::Matrix44& mat, const aj::Vec3& vec )
+inline aj::Vec3 xformFull( const aj::Matrix44& mat, const aj::Vec3& vec )
 {
    float vec4[4] = { vec[0], vec[1], vec[2], 1.0f };
    float result[4];
