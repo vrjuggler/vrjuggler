@@ -56,9 +56,9 @@ SUBDIR=		doc/build.system				\
 		modules/vrjuggler/doc/getting.started.guide	\
 		modules/vrjuggler/doc/programmer.guide
 
-JAVADOC_SUBDIR=	modules/tweek/java	\
-		modules/jackal		\
-		modules/vrjuggler
+JAVADOC_SUBDIR=	modules/tweek/java		\
+		modules/jackal			\
+		modules/vrjuggler/vrjconfig
 
 all:
 	for dir in $(SUBDIR) ; do				\

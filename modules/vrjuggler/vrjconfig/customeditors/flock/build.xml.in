@@ -15,7 +15,7 @@
    </path>
 
    <path id="commoneditors.classpath">
-      <pathelement path="${topdir}/vrjconfig/commoneditors/CommonEditors.jar" />
+      <pathelement path="${topdir}/commoneditors/CommonEditors.jar" />
    </path>
 
    <property name="tweek.classpath" refid="tweek.classpath" />

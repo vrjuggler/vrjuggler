@@ -46,12 +46,6 @@ instlinks=	$(topdir)/instlinks
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
-ifndef NO_JAVA
-   BUILD_JAVA=	@BUILD_JAVA@
-else
-   BUILD_JAVA=	N
-endif
-
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
 OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
@@ -153,7 +147,6 @@ AFTERBUILD=	afterbuild
 beforebuild:
 	@$(MAKE) $(PARAM_HEADER)
 	@$(MAKE) $(PARAM_SOURCE)
-	@$(MAKE) vrjconfig-java
 
 $(PARAM_HEADER): $(VJROOT_ABS)/$(PARAM_HEADER).in $(VJROOT_ABS)/VERSION
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
@@ -318,25 +311,6 @@ endif
 	@echo "------------------------------------------------"
 
 # =============================================================================
-# VRJConfig targets
-# =============================================================================
-# Build the VRJConfig code base and the JAR files
-vrjconfig-gui:
-	@$(MAKE) vrjconfig-java
-
-# Build the java code and the JAR files
-vrjconfig-java:
-ifeq ($(BUILD_JAVA), Y)
-	@echo "===> vrjconfig"
-	$(MAKE) -C vrjconfig $@
-	@echo "<=== vrjconfig"
-else
-	@echo "------------------------------------------------"
-	@echo "VRJConfig build skipped"
-	@echo "------------------------------------------------"
-endif
-
-# =============================================================================
 # Make links for developer use that provide the needed functionality for
 # the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
 # should be set to $(instlinks).
@@ -389,7 +363,6 @@ endif
 #     3) Install the header files.
 #     4) Install the test programs.
 #     5) Install the contents of the data directory.
-#     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
 BEFOREINSTALL=	beforeinstall
@@ -411,6 +384,7 @@ hier:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.java.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(projdatadir)
@@ -430,7 +404,6 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
-	@$(MAKE) install-java
 	@$(MAKE) install-samples
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
@@ -452,11 +425,6 @@ install-headers-deprecated:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -o $(includedir)/deprecated		\
           -i $(VJROOT_ABS)/deprecated $(EXTRA_INSTALL_ARGS)
-
-install-java:
-ifeq ($(BUILD_JAVA), Y)
-	@$(MAKE) -C vrjconfig vrjconfig-install
-endif
 
 # Install the sample applications.
 install-samples:
