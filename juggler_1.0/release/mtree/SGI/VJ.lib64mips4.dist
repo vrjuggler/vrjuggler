@@ -1,0 +1,16 @@
+# This file defines the specification for the VR Juggler lib64/mips4 diretory
+# tree for machines running IRIX.
+#
+# $Id$
+
+/set type=dir mode=0775 gname=c2dev
+.
+    lib64
+	mips4
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+    ..
+..
