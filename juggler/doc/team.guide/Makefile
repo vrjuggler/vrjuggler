@@ -11,6 +11,8 @@ XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
 PDF_FILES=	$(NAME).pdf
 
+XSLT_TOOL=	Saxon
+
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
 instdir=	docs/juggler.team.guide
