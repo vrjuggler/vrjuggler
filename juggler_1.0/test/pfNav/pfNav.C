@@ -12,7 +12,7 @@
 
     // --- New Lib Stuff --- //
 #include <Kernel/vjKernel.h>
-#include <Kernel/vjPfApp.h>
+#include <Kernel/Pf/vjPfApp.h>
 
 #include <pfNaver.h>
 
