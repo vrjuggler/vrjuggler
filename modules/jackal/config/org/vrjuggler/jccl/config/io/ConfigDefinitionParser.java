@@ -163,7 +163,7 @@ public class ConfigDefinitionParser
       }
 
       // Get the parent and the icon location.
-      Element parent = root.getParent();
+      Element parent = (Element) root.getParent();
       String icon_location;
       if(null == parent)
       {

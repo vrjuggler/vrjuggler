@@ -114,13 +114,13 @@ public class ConfigurationReader
          ProcessingInstruction pi = (ProcessingInstruction)itr.next();
          if (pi.getTarget().equals(SETTINGS_INSTRUCTION))
          {
-            if (pi.getNames().contains(CONFIGURATION_VERSION_ATTR))
+            if (pi.getPseudoAttributeNames().contains(CONFIGURATION_VERSION_ATTR))
             {
-               return pi.getValue(CONFIGURATION_VERSION_ATTR);
+               return pi.getPseudoAttributeValue(CONFIGURATION_VERSION_ATTR);
             }
-            if (pi.getNames().contains(CONFIG_DB_VERSION_ATTR))
+            if (pi.getPseudoAttributeNames().contains(CONFIG_DB_VERSION_ATTR))
             {
-               return pi.getValue(CONFIG_DB_VERSION_ATTR);
+               return pi.getPseudoAttributeValue(CONFIG_DB_VERSION_ATTR);
             }
          }
       }

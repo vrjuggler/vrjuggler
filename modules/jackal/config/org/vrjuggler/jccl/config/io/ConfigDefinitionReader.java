@@ -122,13 +122,13 @@ public class ConfigDefinitionReader
          ProcessingInstruction pi = (ProcessingInstruction)itr.next();
          if (pi.getTarget().equals(SETTINGS_INSTRUCTION))
          {
-            if (pi.getNames().contains(DEF_VERSION_ATTR))
+            if (pi.getPseudoAttributeNames().contains(DEF_VERSION_ATTR))
             {
-               return pi.getValue(DEF_VERSION_ATTR);
+               return pi.getPseudoAttributeValue(DEF_VERSION_ATTR);
             }
-            if (pi.getNames().contains(DESC_DB_VERSION_ATTR))
+            if (pi.getPseudoAttributeNames().contains(DESC_DB_VERSION_ATTR))
             {
-               return pi.getValue(DESC_DB_VERSION_ATTR);
+               return pi.getPseudoAttributeValue(DESC_DB_VERSION_ATTR);
             }
          }
       }
