@@ -49,6 +49,18 @@
 /* Define to be either IRIX5 or IRIX6 depending on your system. */
 #undef IRIXREL
 
+// /* Define to match the output of running 'uname -r. */
+// #undef JCCL_OS_RELEASE
+
+// /*
+//  * Define to match the numeric version number of the target operating system.
+//  * For example, on HP-UX 10.20:
+//  *     #define JCCL_OS_RELEASE_MAJOR 10
+//  *     #define JCCL_OS_RELEASE_MINOR 20
+//  */
+// #undef JCCL_OS_RELEASE_MAJOR
+// #undef JCCL_OS_RELEASE_MINOR
+
 /* Define all of the following if building on HP-UX. */
 #undef JCCL_OS_HPUX
 #undef JCCL_HPUX_VERSION
