@@ -44,7 +44,7 @@ namespace jccl {
 
 //: Object used for creating devices
 //!NOTE: Singleton
-class DependencyManager
+class JCCL_CLASS_API DependencyManager
 {
 private:
    // Singleton so must be private

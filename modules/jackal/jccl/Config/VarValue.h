@@ -229,7 +229,7 @@ public:
     //+      in a reasonable way.  ints & floats are printed as numbers,
     //+      bools as the strings "true" and "false", strings and 
     //+      chunks as their string reps, etc.
-    friend std::ostream& operator << (std::ostream& out, const VarValue& v);
+    friend JCCL_API(std::ostream&) operator << (std::ostream& out, const VarValue& v);
     
 };
 
