@@ -41,6 +41,10 @@
 
 #include <vpr/vprConfig.h>
 
+#include <stdlib.h>
+#include <string.h>
+#include <sys/utsname.h>
+
 #include <vpr/md/POSIX/SystemPosix.h>
 
 
@@ -68,6 +72,109 @@ int SystemPosix::msleep(vpr::Uint32 milli)
 
    // Then we finish off by sleeping for (N mod 1000) milliseconds.
    return SystemPosix::usleep((milli % 1000) * 1000);
+}
+
+vpr::Uint64 SystemPosix::Ntohll(vpr::Uint64 conversion)
+{
+   vpr::Uint64 ret_val;
+   
+   if (isLittleEndian())
+   {
+      *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   else
+   {
+      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   return ret_val;
+}
+
+vpr::Uint64 SystemPosix::Htonll(vpr::Uint64 conversion)
+{
+   vpr::Uint64 ret_val;
+   if (isLittleEndian())
+   {
+      *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   else
+   {
+      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   return ret_val;
+}
+
+vpr::ReturnStatus SystemPosix::getenv(const std::string& name,
+                                      std::string& result)
+{
+   char* val;
+   ReturnStatus status;
+
+   val = ::getenv(name.c_str());
+
+   if ( val != NULL )
+   {
+      result = val;
+   }
+   else
+   {
+      status.setCode(ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus SystemPosix::setenv(const std::string& name,
+                                      const std::string& value)
+{
+   std::string set_value(name);
+   set_value += "=";
+   set_value += value;
+
+   ReturnStatus status;
+
+   // Purposely leak memory since putenv(3) may want to hold on to the
+   // pointer we pass.
+   char* env_str = strdup(set_value.c_str());
+   int ret_val = ::putenv(env_str);
+
+   if ( ret_val == 0 )
+   {
+      status.setCode(ReturnStatus::Succeed);
+   }
+   else
+   {
+      status.setCode(ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+std::string SystemPosix::getHostname()
+{
+   struct utsname buffer;
+
+   if ( uname(&buffer) == 0 )
+   {
+      char* temp;
+      temp = strchr(buffer.nodename, '.');
+
+      // If the node name contains the full host, dots and all, truncate it
+      // at the first dot.
+      if ( temp != NULL )
+      {
+         *temp = '\0';
+      }
+
+      return std::string(buffer.nodename);
+   }
+   else
+   {
+      return std::string("<hostname-lookup failed>");
+   }
 }
 
 } // End of vpr namespace
