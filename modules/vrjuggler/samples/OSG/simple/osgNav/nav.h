@@ -78,10 +78,10 @@ public:
    gmtl::Matrix44f mCurPos;      /**< Current position */
 };
 
-/** Class to control all navigation. 
-*
-*/
-class OsgNavigater
+/**
+ * Class to control all navigation. 
+ */
+class OsgNavigator
 {
    /** Navigation mode */
    enum NavMode
@@ -91,7 +91,7 @@ class OsgNavigater
    };
 
 public:
-   OsgNavigater() : mActive(false), mMode(FLY)
+   OsgNavigator() : mActive(false), mMode(FLY)
    {;}
 
    void init()

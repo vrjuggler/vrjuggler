@@ -10,7 +10,7 @@ class RemoteNavSubjectImpl
    , public tweek::SubjectImpl
 {
 public:
-   RemoteNavSubjectImpl(OsgNavigater* nav) : mNavigater(nav)
+   RemoteNavSubjectImpl(OsgNavigator* nav) : mNavigator(nav)
    {;}
 
    virtual ~RemoteNavSubjectImpl()
@@ -18,14 +18,14 @@ public:
 
    void setPosition(CORBA::Float xPos, CORBA::Float yPos, CORBA::Float zPos)
    {
-      gmtl::Matrix44f temp_pos = mNavigater->getCurPos();
+      gmtl::Matrix44f temp_pos = mNavigator->getCurPos();
       gmtl::setTrans(temp_pos, gmtl::Vec3f(xPos, yPos, zPos));
-      mNavigater->setCurPos(temp_pos);
+      mNavigator->setCurPos(temp_pos);
    }
 
    void getPosition(CORBA::Float& xPos, CORBA::Float& yPos, CORBA::Float& zPos)
    {
-      gmtl::Vec3f pos = gmtl::makeTrans<gmtl::Vec3f>(mNavigater->getCurPos());
+      gmtl::Vec3f pos = gmtl::makeTrans<gmtl::Vec3f>(mNavigator->getCurPos());
       xPos = pos[0];
       yPos = pos[1];
       zPos = pos[2];
@@ -34,7 +34,7 @@ public:
    void getOrientation(CORBA::Float& pitch, CORBA::Float& heading,
                        CORBA::Float& roll)
    {
-      gmtl::Matrix44f pos = mNavigater->getCurPos();
+      gmtl::Matrix44f pos = mNavigator->getCurPos();
       gmtl::EulerAngleXYZf euler;
       gmtl::set(euler,pos);
       pitch = euler[0];
@@ -50,9 +50,9 @@ public:
                        CORBA::Float roll)
    {
       gmtl::EulerAngleXYZf euler( pitch, heading, roll );
-      gmtl::Matrix44f pos = mNavigater->getCurPos();
+      gmtl::Matrix44f pos = mNavigator->getCurPos();
       gmtl::setRot(pos, euler);
-      mNavigater->setCurPos(pos);
+      mNavigator->setCurPos(pos);
    }
 
    void setVelocity(CORBA::Float xDelta, CORBA::Float yDelta,
@@ -62,7 +62,7 @@ public:
                         << "X: " << xDelta
                         << "Y: " << yDelta
                         << "Z: " << zDelta << std::endl << vprDEBUG_FLUSH;
-      mNavigater->setVelocity(gmtl::Vec3f(xDelta, yDelta, zDelta));
+      mNavigator->setVelocity(gmtl::Vec3f(xDelta, yDelta, zDelta));
    }
 
    void setRotationalVelocity(CORBA::Float pitchDelta,
@@ -77,12 +77,12 @@ public:
       				  gmtl::Math::deg2Rad(rollDelta) );
       //gmtl::EulerAngleXYZf euler( 0.0, headingDelta, 0.0 );
       gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler );
-      mNavigater->setRotationalVelocity(real);
+      mNavigator->setRotationalVelocity(real);
    }
 
    void setWalkMode(CORBA::Boolean walk)
    {
-      mNavigater->setWalkMode(walk);
+      mNavigator->setWalkMode(walk);
    }
 
    vrj::RemoteNavSubject_ptr _this()
@@ -91,7 +91,7 @@ public:
    }
 
 private:
-   OsgNavigater* mNavigater;
+   OsgNavigator* mNavigator;
 };
 
 
