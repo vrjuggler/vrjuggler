@@ -46,6 +46,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import org.vrjuggler.tweek.net.corba.CorbaService;
+import tweek.SubjectManagerPackage.SubjectMgrInfoItem;
 
 
 public class DisconnectionDialog extends JDialog
@@ -195,12 +196,13 @@ public class DisconnectionDialog extends JDialog
 
             try
             {
-               table_model.addRow(new Object[]{"Hostname",
-                                               subj_mgr.getHostName()});
-               table_model.addRow(new Object[]{"Application",
-                                               subj_mgr.getApplicationName()});
-               table_model.addRow(new Object[]{"User",
-                                               subj_mgr.getUserName()});
+               SubjectMgrInfoItem[] subj_mgr_info = subj_mgr.getInfo();
+
+               for ( int i = 0; i < subj_mgr_info.length; ++i )
+               {
+                  table_model.addRow(new Object[]{subj_mgr_info[i].key,
+                                                  subj_mgr_info[i].value});
+               }
 
                mSubjectMgrInfo.setModel(table_model);
                mDisconnectButton.setEnabled(true);
