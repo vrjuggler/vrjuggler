@@ -361,59 +361,16 @@ namespace vpr
    };
 
    /** Helper class that outputs debug information at creation and destruction of the object */
-   struct DebugOutputGuard
+   struct VPR_CLASS_API DebugOutputGuard
    {
       DebugOutputGuard(const vpr::DebugCategory& cat, const int level,
                       std::string entryText, std::string exitText,
-                      bool indent = true)
-         : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(exitText), mIndent(indent)
-      {
-         if(mIndent)
-         {
-            vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
-         }
-      }
-      
-      DebugOutputGuard(const vpr::DebugCategory& cat, const int level, 
-                       std::string entryText, bool indent = true)
-         : mCat(cat), mLevel(level), mEntryText(entryText), mIndent(indent)
-         {
-            if(mIndent)
-            {
-               vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
-            }
-            else
-            {
-               vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
-            }
-            mExitText=std::string("");
-         }
+                      bool indent = true);
 
-      ~DebugOutputGuard()
-      {
-         if(mIndent)
-         {
-            if(mExitText == std::string(""))
-            {
-               vprDEBUG_DECREMENT_INDENT();
-            }
-            else
-            {     
-               vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
-            }
-         }
-         else
-         {
-            if(mExitText != std::string(""))
-            {
-               vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
-            }
-         }
-      }
+      DebugOutputGuard(const vpr::DebugCategory& cat, const int level, 
+                       std::string entryText, bool indent = true);
+
+      ~DebugOutputGuard();
 
       const vpr::DebugCategory& mCat;
       int                       mLevel;
@@ -422,8 +379,7 @@ namespace vpr
       bool                      mIndent;
    };
 
-
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 namespace vpr
@@ -438,7 +394,7 @@ namespace vpr
       }
    };
    */
-}; // namespace
+} // namespace
 
 /** Helper macro for registering category
 * Defines a (file) unique variable that create a registrator in the file prive namespace
