@@ -27,7 +27,7 @@
 # -----------------------------------------------------------------------------
 
 ifndef FILE_PERMS
-    FILE_PERMS	= 664
+    FILE_PERMS	= 644
 endif
 
 ifdef GROUP_NAME
