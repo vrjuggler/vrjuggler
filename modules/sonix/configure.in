@@ -236,7 +236,7 @@ fi
 dnl -------------------------------------------------------------
 dnl project specific stuff....
 dnl -------------------------------------------------------------
-application_includes="\$(AJ_BASE_DIR)/include $INCLUDES"
+application_includes="-I\$(AJ_BASE_DIR)/include $INCLUDES"
 application_ldflags="$LDFLAGS"
 if test "x$dpp_os_type" = "xWin32" ; then
    application_libs="/LIBPATH:\$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS"
@@ -267,6 +267,7 @@ AC_SUBST(EXTRA_LINK_FLAGS)
 AC_OUTPUT(vj/Makefile 
           aj/Makefile
           samples/Makefile
+          samples/opengl/Makefile
           TestSuite/Makefile
           Makefile 
           make.defs.mk
