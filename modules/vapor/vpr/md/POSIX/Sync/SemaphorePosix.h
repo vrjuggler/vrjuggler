@@ -52,7 +52,7 @@
 #include <stdio.h>
 
 
-namespace  {
+namespace vpr {
 
 //: Semaphore wrapper for POSIX.4-compliant systems.
 
