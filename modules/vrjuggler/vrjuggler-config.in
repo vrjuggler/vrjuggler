@@ -382,16 +382,16 @@ sub make_EXTRA_LDFLAGS ($;$$$)
    unless ( $print_min )
    {
       my @dep_scripts = qw(@vrj_dep_scripts@);
-      my $extra_arg   = ($use_linker ? '--linker' : '');
+      my $linker_arg  = ($use_linker ? '--linker' : '');
       my $static_arg  = ($use_static ? '--static' : '');
 
       foreach ( @dep_scripts )
       {
-         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg $static_arg`;
+         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $linker_arg $static_arg`;
          chomp($cur_dep_libs);
          $dep_libs .= " $cur_dep_libs";
 
-         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $extra_arg`;
+         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $linker_arg $static_arg`;
          chomp($cur_dep_extra_libs);
          $dep_extra_libs .= " $cur_dep_extra_libs";
       }
