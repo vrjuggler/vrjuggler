@@ -87,7 +87,17 @@ public class EnvironmentService implements java.io.Serializable
          }
 
          env_var  = input_str.substring(index + 2, end_index);
-         value    = System.getProperty(env_var);
+
+         // Treat $HOME as a special case since we can actually get its value
+         // from the JVM without any aggrivating hacks.
+         if ( env_var.equals("HOME") )
+         {
+            value = getUserHome();
+         }
+         else
+         {
+            value = System.getProperty(env_var);
+         }
 
          if ( value != null )
          {
