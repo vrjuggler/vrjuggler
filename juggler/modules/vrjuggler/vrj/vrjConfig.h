@@ -24,7 +24,10 @@
 #include <iostream.h>
 #include <iomanip.h>
 #include <fstream.h>
-#include <mstring.h>
+#include <string>
+
+using std::string;
+using std::wstring;
 #endif
 
 /* --- Macros ---- */
