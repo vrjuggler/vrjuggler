@@ -6,12 +6,7 @@ package id1nydkcnklvuq4cnkm0v1j;
 @__modelType diagram 
 */
 class diagram {
-/**
-@__ref <oiref:cpp#Class#vjSoundManager:oiref><oihard>
-@__modelType reference 
-*/
-class reference {
-}}/**
+}/**
 @__tags
 @shapeType ClassDiagram 
 */
