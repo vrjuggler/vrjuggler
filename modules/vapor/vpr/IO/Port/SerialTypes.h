@@ -91,7 +91,7 @@ namespace SerialTypes
       PORT_PARITY_EVEN = 0, /**< Even parity */
       PORT_PARITY_ODD  = 1  /**< Odd parity */
    };
-};
+}
 
 } // End of namespace
 
