@@ -137,7 +137,7 @@ case $target_os in
             SUBSYSTEM='POSIX'
         fi
 
-        AC_DEFINE(VPR_OS_AIX)
+        AC_DEFINE(VPR_OS_AIX,)
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
