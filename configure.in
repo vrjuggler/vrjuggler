@@ -764,7 +764,7 @@ JAR=''
 
 dnl # Check for the JDK (specifically try to find javac(1) in $JDK_HOME or
 dnl # in ${_JDK_HOME_ALT_LIST}).
-AC_PATH_PROG(JAVAC, javac, no, $PATH:${JDK_HOME}/bin:${_JDK_HOME_ALT_LIST})
+AC_PATH_PROG(JAVAC, javac, no, ${JDK_HOME}/bin:$PATH:${_JDK_HOME_ALT_LIST})
 
 dnl # If there is still no value in $JAVAC, then warn that the GUI will not be
 dnl # built.
