@@ -63,7 +63,7 @@ public class GlobalPreferencesService
    public GlobalPreferencesService (BeanAttributes attr)
    {
       super(attr);
-      m_prefs_file = new File(getUserHome() + File.separator + ".tweekrc");
+      mPrefsFile = new File(getUserHome() + File.separator + ".tweekrc");
       BeanRegistry.instance().addBeanRegistrationListener( this );
    }
 
@@ -115,12 +115,12 @@ public class GlobalPreferencesService
    {
       userLevel = level;
 
-      Element e = m_prefs_doc_root.getChild("user");
+      Element e = mPrefsDocRoot.getChild("user");
 
       if ( e == null )
       {
          e = new Element("user");
-         m_prefs_doc_root.addContent(e);
+         mPrefsDocRoot.addContent(e);
       }
 
       e.setAttribute("level", String.valueOf(level));
@@ -135,12 +135,12 @@ public class GlobalPreferencesService
    {
       lookAndFeel = laf;
 
-      Element e = m_prefs_doc_root.getChild("laf");
+      Element e = mPrefsDocRoot.getChild("laf");
 
       if ( e == null )
       {
          e = new Element("laf");
-         m_prefs_doc_root.addContent(e);
+         mPrefsDocRoot.addContent(e);
       }
 
       e.setAttribute("name", laf);
@@ -165,12 +165,12 @@ public class GlobalPreferencesService
    {
       beanViewer = v;
 
-      Element e = m_prefs_doc_root.getChild("viewer");
+      Element e = mPrefsDocRoot.getChild("viewer");
 
       if ( e == null )
       {
          e = new Element("viewer");
-         m_prefs_doc_root.addContent(e);
+         mPrefsDocRoot.addContent(e);
       }
 
       e.setAttribute("name", v);
@@ -192,12 +192,12 @@ public class GlobalPreferencesService
    {
       chooserStartDir = d;
 
-      Element e = m_prefs_doc_root.getChild("chooser");
+      Element e = mPrefsDocRoot.getChild("chooser");
 
       if ( e == null )
       {
          e = new Element("chooser");
-         m_prefs_doc_root.addContent(e);
+         mPrefsDocRoot.addContent(e);
       }
 
       // XXX: It might be good to validate d before saving, but how?
@@ -223,12 +223,12 @@ public class GlobalPreferencesService
    {
       chooserOpenStyle = style;
 
-      Element e = m_prefs_doc_root.getChild("chooser");
+      Element e = mPrefsDocRoot.getChild("chooser");
 
       if ( e == null )
       {
          e = new Element("chooser");
-         m_prefs_doc_root.addContent(e);
+         mPrefsDocRoot.addContent(e);
       }
 
       switch (style)
@@ -257,12 +257,12 @@ public class GlobalPreferencesService
    {
       lazyPanelBeanInstantiation = enabled;
 
-      Element e = m_prefs_doc_root.getChild("lazyinst");
+      Element e = mPrefsDocRoot.getChild("lazyinst");
 
       if ( e == null )
       {
          e = new Element("lazyinst");
-         m_prefs_doc_root.addContent(e);
+         mPrefsDocRoot.addContent(e);
       }
 
       e.setAttribute("enabled", enabled ? "true" : "false");
@@ -286,7 +286,7 @@ public class GlobalPreferencesService
     */
    public void setFile (File prefs_file)
    {
-      m_prefs_file = prefs_file;
+      mPrefsFile = prefs_file;
    }
 
    /**
@@ -296,34 +296,34 @@ public class GlobalPreferencesService
     */
    public synchronized void load ()
    {
-      if ( m_prefs_file.exists() )
+      if ( mPrefsFile.exists() )
       {
          org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
 
          try
          {
-            m_prefs_doc      = builder.build(m_prefs_file);
-            m_prefs_doc_root = m_prefs_doc.getRootElement();
+            mPrefsDoc      = builder.build(mPrefsFile);
+            mPrefsDocRoot = mPrefsDoc.getRootElement();
 
             // Handle the elements.
-            Element ui_element = m_prefs_doc_root.getChild("laf");
+            Element ui_element = mPrefsDocRoot.getChild("laf");
 
             if ( ui_element != null )
             {
                lookAndFeel = ui_element.getAttribute("name").getValue();
             }
 
-            Element viewer_element = m_prefs_doc_root.getChild("viewer");
+            Element viewer_element = mPrefsDocRoot.getChild("viewer");
             beanViewer = viewer_element.getAttribute("name").getValue();
 
-            Element user_element = m_prefs_doc_root.getChild("user");
+            Element user_element = mPrefsDocRoot.getChild("user");
 
             if ( user_element != null )
             {
                userLevel = Integer.parseInt(user_element.getAttribute("level").getValue());
             }
 
-            Element chooser_element = m_prefs_doc_root.getChild("chooser");
+            Element chooser_element = mPrefsDocRoot.getChild("chooser");
 
             if ( chooser_element != null )
             {
@@ -341,7 +341,7 @@ public class GlobalPreferencesService
                }
             }
 
-            Element lazyinst_element = m_prefs_doc_root.getChild("lazyinst");
+            Element lazyinst_element = mPrefsDocRoot.getChild("lazyinst");
 
             if ( lazyinst_element != null )
             {
@@ -356,12 +356,12 @@ public class GlobalPreferencesService
       // Build the preferences document by hand using defaults.
       else
       {
-         m_prefs_doc_root = new Element("tweekrc");
-         m_prefs_doc      = new Document(m_prefs_doc_root);
+         mPrefsDocRoot = new Element("tweekrc");
+         mPrefsDoc      = new Document(mPrefsDocRoot);
 
          Element ui_element = new Element("laf");
          ui_element.setAttribute("name", lookAndFeel);
-         m_prefs_doc_root.addContent(ui_element);
+         mPrefsDocRoot.addContent(ui_element);
 
          Element viewer_element = new Element("viewer");
 
@@ -375,11 +375,11 @@ public class GlobalPreferencesService
          }
 
          beanViewer = viewer_element.getAttribute("name").getValue();
-         m_prefs_doc_root.addContent(viewer_element);
+         mPrefsDocRoot.addContent(viewer_element);
 
          Element user_element = new Element("user");
          user_element.setAttribute("level", String.valueOf(userLevel));
-         m_prefs_doc_root.addContent(user_element);
+         mPrefsDocRoot.addContent(user_element);
 
          Element chooser_element = new Element("chooser");
          chooser_element.setAttribute("start", chooserStartDir);
@@ -400,7 +400,7 @@ public class GlobalPreferencesService
                                       lazyPanelBeanInstantiation ? "true"
                                                                  : "false");
 
-         m_prefs_doc_root.addContent(chooser_element);
+         mPrefsDocRoot.addContent(chooser_element);
 
          save(true);
       }
@@ -415,8 +415,8 @@ public class GlobalPreferencesService
 
       try
       {
-         FileWriter writer = new FileWriter(m_prefs_file);
-         outputter.output(m_prefs_doc, writer);
+         FileWriter writer = new FileWriter(mPrefsFile);
+         outputter.output(mPrefsDoc, writer);
          writer.close();
       }
       catch (java.io.IOException e)
@@ -458,16 +458,16 @@ public class GlobalPreferencesService
    // Private data members
    // =========================================================================
 
-   private File     m_prefs_file     = null;
-   private Document m_prefs_doc      = null;
-   private Element  m_prefs_doc_root = null;
+   private File     mPrefsFile    = null;
+   private Document mPrefsDoc     = null;
+   private Element  mPrefsDocRoot = null;
 
    private Vector beanViewers = new Vector();
 
-   private int    userLevel        = 1;
-   private String lookAndFeel      = javax.swing.UIManager.getSystemLookAndFeelClassName();
-   private String beanViewer       = null;
-   private String chooserStartDir  = CWD_START;
-   private int    chooserOpenStyle = WINDOWS_CHOOSER;
+   private int     userLevel        = 1;
+   private String  lookAndFeel      = javax.swing.UIManager.getSystemLookAndFeelClassName();
+   private String  beanViewer       = null;
+   private String  chooserStartDir  = CWD_START;
+   private int     chooserOpenStyle = WINDOWS_CHOOSER;
    private boolean lazyPanelBeanInstantiation = true;
 }
