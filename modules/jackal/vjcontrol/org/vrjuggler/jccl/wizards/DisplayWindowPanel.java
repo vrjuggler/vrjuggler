@@ -421,7 +421,7 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
                 }
                 else {
                     height = newheight;
-                    window_layout_panel.moveWindow (window_name, x, y, height, height);
+                    window_layout_panel.moveWindow (window_name, x, y, width, height);
                     results_dirty = true;
                 }
             }
