@@ -199,18 +199,12 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
     <para>In the following subsections, we describe how to get all of the
     above except Boost, CppDOM, the JDK, OpenORB, omniORB, and NSPR. These
-    must be downloaded separately from the sites listed above. You may also
+    must be downloaded individually from the sites listed above. You may also
     have to compile one or more of the packages if binary distributions are
     not available. Which packages you download depends on what you already
     have installed. Note carefully which packages are needed based on the
     software you have installed and what versions of tools (such as the JDK)
     that you download.</para>
-
-    <para>This remainder of this section is <emphasis>only</emphasis> for
-    those users who want to get the Juggler Project source code from the CVS
-    repository on SourceForge. Those users who have downloaded a pre-packaged
-    version of the source should skip ahead to <xref
-    linkend="using.configure.pl" />.</para>
 
     <section>
       <title>How to Get the Juggler Suite from CVS</title>
@@ -274,9 +268,10 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         <para>Our operating system abstraction, VPR, can make use of NSPR for
         operating system primitives. On some platforms (IRIX, FreeBSD, Linux),
         the use of NSPR is strictly optional. On others (Win32, Mac OS X, and
-        Solaris), it is required. Based on your local system you should decide
-        whether you need NSPR. Binary versions of NSPR can be downloaded from
-        <ulink url="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</ulink>.
+        Solaris), it is required. Based on your local system, you should
+        decide whether you need NSPR. Binary versions of NSPR can be
+        downloaded from <ulink
+        url="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</ulink>.
         At this time, we recommend the use of version 4.2 or newer.</para>
       </section>
 
