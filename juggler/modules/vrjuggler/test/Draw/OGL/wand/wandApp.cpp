@@ -72,6 +72,7 @@ void wandApp::contextInit()
 
 void wandApp::preFrame()
 {
+    /*
     std::cout  << "Wand Buttons:"
            << " 0:" << mButton0->getData()
            << " 1:" << mButton1->getData()
@@ -79,6 +80,7 @@ void wandApp::preFrame()
            << " 3:" << mButton3->getData()
            << " 4:" << mButton4->getData()
            << " 5:" << mButton5->getData() << std::endl;
+   */
 
    mHeadHistory.push_back(gmtl::makeTrans<gmtl::Vec3f>(mHead->getData()));
 }
