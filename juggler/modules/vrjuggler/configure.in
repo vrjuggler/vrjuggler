@@ -226,8 +226,8 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for VR Juggler ***))
-
 JCCL_PATH(0.0.1, , AC_MSG_ERROR(*** Jackal required for VR Juggler ***))
+GADGETEER_PATH(0.0.1, , AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***))
 
 # ------------
 # OpenGL API.
@@ -489,7 +489,7 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $SNX_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
@@ -530,9 +530,9 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $JCCL_LIBS_LD $SNX_LIBS_LD comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $JCCL_LIBS_LD $GADGET_LIBS_LD $SNX_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $SNX_LIBS_CC $LIBS $DTK_LDFLAGS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $GADGET_LIBS_CC $SNX_LIBS_CC $LIBS $DTK_LDFLAGS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
