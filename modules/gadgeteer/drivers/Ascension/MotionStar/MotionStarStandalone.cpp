@@ -68,7 +68,7 @@ const unsigned char TRANSMITTER_RUNNING = 0x01;
 // Convert the given Flock data format into a human-readable string that
 // names the format.
 // ----------------------------------------------------------------------------
-std::string getFormatName (const data_format format)
+std::string getFormatName(const data_format format)
 {
    std::string name;
 
@@ -108,7 +108,7 @@ std::string getFormatName (const data_format format)
 // Convert the given Flock hemisphere ID into a human-readable string that
 // names the hemisphere.
 // ----------------------------------------------------------------------------
-std::string getHemisphereName (const hemisphere hemi)
+std::string getHemisphereName(const hemisphere hemi)
 {
    std::string name;
 
@@ -186,8 +186,8 @@ const unsigned char BN_PROTOCOL = 3;
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-static std::ostream& operator<< (std::ostream& out,
-                                 const BIRDNET::SINGLE_BIRD_STATUS& device)
+static std::ostream& operator<<(std::ostream& out,
+                                const BIRDNET::SINGLE_BIRD_STATUS& device)
 {
    out << " FBB address: " << (unsigned int) device.FBBaddress << "\n";
 //   out << " Accessible: " << (m_birds[i]->accessible ? "YES" : "NO") << "\n";
@@ -213,16 +213,16 @@ MotionStarStandalone::MotionStarStandalone(const std::string& address,
                                            const BIRDNET::protocol proto,
                                            const bool master,
                                            const FLOCK::hemisphere hemisphere,
-                                           const FLOCK::data_format bird_format,
-                                           const BIRDNET::run_mode run_mode,
-                                           const unsigned char report_rate,
-                                           const double measurement_rate,
-                                           const unsigned int birds_requested)
+                                           const FLOCK::data_format birdFormat,
+                                           const BIRDNET::run_mode runMode,
+                                           const unsigned char reportRate,
+                                           const double measurementRate,
+                                           const unsigned int birdsRequested)
    : m_active(false), m_address(port), m_socket(NULL), m_proto(proto),
      m_master(master), m_seq_num(0), m_cur_mrate(0.0),
-     m_measurement_rate(measurement_rate), m_run_mode(run_mode),
-     m_hemisphere(hemisphere), m_bird_format(bird_format),
-     m_report_rate(report_rate), m_birds_requested(birds_requested),
+     m_measurement_rate(measurementRate), m_run_mode(runMode),
+     m_hemisphere(hemisphere), m_bird_format(birdFormat),
+     m_report_rate(reportRate), m_birds_requested(birdsRequested),
      m_birds_active(0), m_unit_conv(1.0)
 {
    union
@@ -258,7 +258,7 @@ MotionStarStandalone::MotionStarStandalone(const std::string& address,
 // ----------------------------------------------------------------------------
 // Destructor.
 // ----------------------------------------------------------------------------
-MotionStarStandalone::~MotionStarStandalone ()
+MotionStarStandalone::~MotionStarStandalone()
 {
    unsigned int i;
 
@@ -281,7 +281,7 @@ MotionStarStandalone::~MotionStarStandalone ()
 // ----------------------------------------------------------------------------
 // Initializes the driver, setting the status for each bird.
 // ----------------------------------------------------------------------------
-int MotionStarStandalone::start ()
+int MotionStarStandalone::start()
 {
    int retval = 0;
 
@@ -454,7 +454,7 @@ int MotionStarStandalone::start ()
 // Stop the data flow (if it is in continuous mode), shut down the server and
 // close the connection to it.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::stop ()
+void MotionStarStandalone::stop()
 {
    stopData();
    shutdown();
@@ -478,7 +478,7 @@ void MotionStarStandalone::stop ()
 // BIRDNET::SINGLE_SHOT), or continuous samples are taken (run mode is
 // BIRDNET::CONTINUOUS).
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::sample ()
+void MotionStarStandalone::sample()
 {
    BIRDNET::DATA_PACKET recv_pkt;
 
@@ -613,7 +613,7 @@ void MotionStarStandalone::sample ()
 // ----------------------------------------------------------------------------
 // Stops the data flow if it is in continuous mode.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::stopData ()
+vpr::ReturnStatus MotionStarStandalone::stopData()
 {
    vpr::ReturnStatus status;
 
@@ -662,7 +662,7 @@ vpr::ReturnStatus MotionStarStandalone::stopData ()
 // ----------------------------------------------------------------------------
 // Shut down the server chassis.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::shutdown ()
+vpr::ReturnStatus MotionStarStandalone::shutdown()
 {
    BIRDNET::HEADER msg(BIRDNET::MSG_SHUT_DOWN), rsp;
    vpr::ReturnStatus status;
@@ -702,7 +702,7 @@ vpr::ReturnStatus MotionStarStandalone::shutdown ()
 // ----------------------------------------------------------------------------
 // Get the current server address for the device.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::setRunMode (const BIRDNET::run_mode mode)
+void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
 {
    // If the driver is already active, we may need to do some communication
    // with the server before changing the run mode.
@@ -762,7 +762,7 @@ void MotionStarStandalone::setRunMode (const BIRDNET::run_mode mode)
 // ----------------------------------------------------------------------------
 // Get the x position of the i'th bird.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::getXPos (const unsigned int i) const
+float MotionStarStandalone::getXPos(const unsigned int i) const
 {
    float x_pos;
    FLOCK::data_format format;
@@ -792,7 +792,7 @@ float MotionStarStandalone::getXPos (const unsigned int i) const
 // ----------------------------------------------------------------------------
 // Get the y position of the i'th bird.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::getYPos (const unsigned int i) const
+float MotionStarStandalone::getYPos(const unsigned int i) const
 {
    float y_pos;
    FLOCK::data_format format;
@@ -822,7 +822,7 @@ float MotionStarStandalone::getYPos (const unsigned int i) const
 // ----------------------------------------------------------------------------
 // Get the z position of the i'th bird.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::getZPos (const unsigned int i) const
+float MotionStarStandalone::getZPos(const unsigned int i) const
 {
    float z_pos;
    FLOCK::data_format format;
@@ -852,7 +852,7 @@ float MotionStarStandalone::getZPos (const unsigned int i) const
 // ----------------------------------------------------------------------------
 // Get the z rotation of the i'th bird.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::getZRot (const unsigned int i) const
+float MotionStarStandalone::getZRot(const unsigned int i) const
 {
    float z_rot;
    FLOCK::data_format format;
@@ -881,7 +881,7 @@ float MotionStarStandalone::getZRot (const unsigned int i) const
 // ----------------------------------------------------------------------------
 // Get the y rotation of the i'th bird.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::getYRot (const unsigned int i) const
+float MotionStarStandalone::getYRot(const unsigned int i) const
 {
    float y_rot;
    FLOCK::data_format format;
@@ -910,7 +910,7 @@ float MotionStarStandalone::getYRot (const unsigned int i) const
 // ----------------------------------------------------------------------------
 // Get the x rotation of the i'th bird.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::getXRot (const unsigned int i) const
+float MotionStarStandalone::getXRot(const unsigned int i) const
 {
    float x_rot;
    FLOCK::data_format format;
@@ -940,8 +940,8 @@ float MotionStarStandalone::getXRot (const unsigned int i) const
 // Get the rotation angles of the requested bird as matrix elements that are
 // then stored in the given array.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::getMatrixAngles (const unsigned int bird,
-                                            float angles[3])
+void MotionStarStandalone::getMatrixAngles(const unsigned int bird,
+                                           float angles[3])
    const
 {
    FLOCK::data_format format;
@@ -1020,8 +1020,7 @@ void MotionStarStandalone::getMatrixAngles (const unsigned int bird,
 // Get the rotation angles of the i'th bird as quaternion parameters that are
 // then stored in the given array.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::getQuaternion (const unsigned int bird,
-                                          float quat[4])
+void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
    const
 {
    FLOCK::data_format format;
@@ -1066,7 +1065,7 @@ void MotionStarStandalone::getQuaternion (const unsigned int bird,
 // ----------------------------------------------------------------------------
 // Send a wake-up call to the MotionStar server.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::sendWakeUp ()
+vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
 {
    BIRDNET::HEADER msg(BIRDNET::MSG_WAKE_UP), rsp;
    vpr::ReturnStatus status;
@@ -1113,7 +1112,7 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp ()
 // ----------------------------------------------------------------------------
 // Get the system status.
 // ----------------------------------------------------------------------------
-BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus ()
+BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
 {
    BIRDNET::DATA_PACKET* sys_status;
    BIRDNET::SYSTEM_STATUS* status_info;
@@ -1207,16 +1206,16 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus ()
 // ----------------------------------------------------------------------------
 // Set the system status.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
-                                                         const unsigned char xmtr_num,
-                                                         const char data_rate[6])
+vpr::ReturnStatus MotionStarStandalone::setSystemStatus(BIRDNET::SYSTEM_STATUS* sysStatus,
+                                                        const unsigned char xmtrNum,
+                                                        const char dataRate[6])
 {
-   if ( sys_status->transmitterNumber != xmtr_num )
+   if ( sysStatus->transmitterNumber != xmtrNum )
    {
-      sys_status->transmitterNumber = xmtr_num;
+      sysStatus->transmitterNumber = xmtrNum;
       fprintf(stderr,
               "[MotionStarStandalone] Settting active transmitter to %u\n",
-              xmtr_num);
+              xmtrNum);
    }
 
    // Copy the contents of data_rate into the measuermentRate block.
@@ -1224,11 +1223,11 @@ vpr::ReturnStatus MotionStarStandalone::setSystemStatus (BIRDNET::SYSTEM_STATUS*
    // sufficient.
    for ( int i = 0; i < 6; i++ )
    {
-      sys_status->measurementRate[i] = data_rate[i];
+      sysStatus->measurementRate[i] = dataRate[i];
    }
 
    // Set the system status by setting the status for device 0.
-   return setDeviceStatus(0, (char*) sys_status,
+   return setDeviceStatus(0, (char*) sysStatus,
                           sizeof(BIRDNET::SYSTEM_STATUS));
 }
 
@@ -1236,7 +1235,7 @@ vpr::ReturnStatus MotionStarStandalone::setSystemStatus (BIRDNET::SYSTEM_STATUS*
 // Read the configurations of all the birds and send our configuration data
 // to them.
 // ----------------------------------------------------------------------------
-unsigned int MotionStarStandalone::configureBirds ()
+unsigned int MotionStarStandalone::configureBirds()
 {
    BIRDNET::SINGLE_BIRD_STATUS* bird_status;
    unsigned int bird_count;
@@ -1383,7 +1382,7 @@ unsigned int MotionStarStandalone::configureBirds ()
 // ----------------------------------------------------------------------------
 // Get the status of an individual bird.
 // ----------------------------------------------------------------------------
-BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus (const unsigned char bird)
+BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned char bird)
 {
    BIRDNET::DATA_PACKET* status;
    BIRDNET::SINGLE_BIRD_STATUS* bird_status;
@@ -1487,8 +1486,8 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus (const unsigned
 // ----------------------------------------------------------------------------
 // Set the status of an individual bird.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::setBirdStatus (const unsigned char bird,
-                                                       BIRDNET::SINGLE_BIRD_STATUS* status)
+vpr::ReturnStatus MotionStarStandalone::setBirdStatus(const unsigned char bird,
+                                                      BIRDNET::SINGLE_BIRD_STATUS* status)
 {
    // The value in bird is the index into the m_birds vector.  Using that
    // entry, we get the actual FBB address.
@@ -1502,7 +1501,7 @@ vpr::ReturnStatus MotionStarStandalone::setBirdStatus (const unsigned char bird,
 // interpreted as a request for the overall system status.  The birds are
 // addressed from 1 through 120.
 // ----------------------------------------------------------------------------
-BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus (const unsigned char device)
+BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char device)
 {
    vpr::ReturnStatus status;
    BIRDNET::HEADER msg(BIRDNET::MSG_GET_STATUS);
@@ -1560,9 +1559,9 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus (const unsigned char
 // Bird Bus.  Thus, a value of 0 is interpreted as a configuation block for
 // the overall system.  The birds are addressed from 1 through 120.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::setDeviceStatus (const unsigned char device,
-                                                         const char* buffer,
-                                                         const unsigned short buffer_size)
+vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char device,
+                                                        const char* buffer,
+                                                        const unsigned short bufferSize)
 {
    BIRDNET::DATA_PACKET msg;
    BIRDNET::HEADER rsp;
@@ -1571,15 +1570,15 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus (const unsigned char dev
 
    // Get the total size of the packet that we construct based on the size
    // of the header and the size of the passed buffer.
-   total_size = sizeof(BIRDNET::HEADER) + buffer_size;
+   total_size = sizeof(BIRDNET::HEADER) + bufferSize;
 
    // Fill in the header bits.
    msg.header.type         = BIRDNET::MSG_SEND_SETUP;
    msg.header.xtype        = device;
-   msg.header.number_bytes = vpr::System::Htons(buffer_size);
+   msg.header.number_bytes = vpr::System::Htons(bufferSize);
 
    // Copy the given buffer into the packet's data buffer.
-   memcpy((void*) &msg.buffer[0], (void*) buffer, buffer_size);
+   memcpy((void*) &msg.buffer[0], (void*) buffer, bufferSize);
 
    // Send the constructed packet to the server.
    status = sendMsg(&msg, total_size);
@@ -1608,7 +1607,7 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus (const unsigned char dev
 // ----------------------------------------------------------------------------
 // Tell the MotionStar server to sample continuously.
 // ----------------------------------------------------------------------------
-int MotionStarStandalone::setContinuous ()
+int MotionStarStandalone::setContinuous()
 {
    BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
    int status = -1;
@@ -1636,7 +1635,7 @@ int MotionStarStandalone::setContinuous ()
 // into a single word in host byte order.  This is used for reading bytes from
 // the packets and converting them into usable values.
 // ----------------------------------------------------------------------------
-short MotionStarStandalone::toShort (const char high_byte, const char low_byte)
+short MotionStarStandalone::toShort(const char highByte, const char lowByte)
    const
 {
    union
@@ -1649,15 +1648,15 @@ short MotionStarStandalone::toShort (const char high_byte, const char low_byte)
    // result.value and the low byte in the second byte.
    if ( m_big_endian )
    {
-      result.c[0] = high_byte;
-      result.c[1] = low_byte;
+      result.c[0] = highByte;
+      result.c[1] = lowByte;
    }
    // Otherwise, put the low byte in the first byte and the high byte in the
    // second byte.
    else
    {
-      result.c[0] = low_byte;
-      result.c[1] = high_byte;
+      result.c[0] = lowByte;
+      result.c[1] = highByte;
    }
 
    return result.value;
@@ -1668,15 +1667,15 @@ short MotionStarStandalone::toShort (const char high_byte, const char low_byte)
 // that falls within a defined range.  This is documented in the MotionStar
 // Operation and Installation Guide.
 // ----------------------------------------------------------------------------
-float MotionStarStandalone::toFloat (const unsigned char high_byte,
-                                     const unsigned char low_byte)
+float MotionStarStandalone::toFloat(const unsigned char highByte,
+                                    const unsigned char lowByte)
    const
 {
    unsigned short input;
    float result;
 
    // Construct the input from the given bytes.
-   input = toShort(high_byte, low_byte);
+   input = toShort(highByte, lowByte);
 
    // Use the values documented on page 92 of the MotionStar Installation and
    // Operation Guide.
@@ -1710,7 +1709,7 @@ float MotionStarStandalone::toFloat (const unsigned char high_byte,
 // Convert the given 6-byte array of characters to a double-precision
 // floating-point number representing the data rate.
 // ----------------------------------------------------------------------------
-double MotionStarStandalone::convertMeasurementRate (const unsigned char rate[6])
+double MotionStarStandalone::convertMeasurementRate(const unsigned char rate[6])
 {
    double data_rate;
    char data_rate_a[7];
@@ -1738,8 +1737,8 @@ double MotionStarStandalone::convertMeasurementRate (const unsigned char rate[6]
 // Convert the given double-precision floating-point number to a 6-byte array
 // of characters representing the data rate.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::convertMeasurementRate (const double rate,
-                                                   std::string& str_rate)
+void MotionStarStandalone::convertMeasurementRate(const double rate,
+                                                  std::string& strRate)
 {
    char rate_a[7];
 
@@ -1748,20 +1747,20 @@ void MotionStarStandalone::convertMeasurementRate (const double rate,
 #else
    sprintf(rate_a, "%06.0f", rate * 1000.0);
 #endif
-   str_rate = rate_a;
+   strRate = rate_a;
 }
 
 // ----------------------------------------------------------------------------
 // Extract the information regarding the measurement units (e.g., inches) and
 // the position scaling factor.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::getUnitInfo (const unsigned int bird,
-                                        const BIRDNET::SINGLE_BIRD_STATUS* bird_status)
+void MotionStarStandalone::getUnitInfo(const unsigned int bird,
+                                       const BIRDNET::SINGLE_BIRD_STATUS* birdStatus)
 {
    unsigned char high_byte, low_byte, units;
 
-   high_byte = bird_status->scaling[0];
-   low_byte  = bird_status->scaling[1];
+   high_byte = birdStatus->scaling[0];
+   low_byte  = birdStatus->scaling[1];
 
    // The highest four bits of the high byte tell the measurement system
    // being used.
@@ -1789,14 +1788,14 @@ void MotionStarStandalone::getUnitInfo (const unsigned int bird,
 // ----------------------------------------------------------------------------
 // Send the given message to the server.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::sendMsg (const void* packet,
-                                                 const size_t packet_size)
+vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
+                                                const size_t packetSize)
 {
    vpr::Uint32 bytes;
    vpr::ReturnStatus status;
 
    // Send the packet to the server.
-   status = m_socket->send(packet, packet_size, bytes);
+   status = m_socket->send(packet, packetSize, bytes);
 
    // An error occurred while trying to send the packet.
    if ( status.failure() )
@@ -1818,14 +1817,14 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg (const void* packet,
 // ----------------------------------------------------------------------------
 // Get the server's response to a sent message.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus MotionStarStandalone::getRsp (void* packet,
-                                                const size_t packet_size)
+vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
+                                               const size_t packetSize)
 {
    vpr::Uint32 bytes;
    vpr::ReturnStatus status;
 
    // Get the packet from the server.
-   status = m_socket->recvn(packet, packet_size, bytes);
+   status = m_socket->recvn(packet, packetSize, bytes);
 
    // An error occurred while trying to receive the packet.
    if ( status.failure() )
@@ -1848,7 +1847,7 @@ vpr::ReturnStatus MotionStarStandalone::getRsp (void* packet,
 // ----------------------------------------------------------------------------
 // Print the system status as read from the server.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status)
+void MotionStarStandalone::printSystemStatus(const BIRDNET::SYSTEM_STATUS* status)
 {
    unsigned char erc_addr, xmtr_num;
    unsigned int pad_width_full, pad_width_dot;
@@ -1914,7 +1913,7 @@ void MotionStarStandalone::printSystemStatus (const BIRDNET::SYSTEM_STATUS* stat
 // ----------------------------------------------------------------------------
 // Print the status for all the devices that have not been disabled.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::printDeviceStatus ()
+void MotionStarStandalone::printDeviceStatus()
 {
    unsigned int pad_width_full, pad_width_dot;
 
@@ -1973,11 +1972,11 @@ void MotionStarStandalone::printDeviceStatus ()
 // Print the error message that corresponds to the given error code.  The
 // message is based on the table on page 140 of the MotionStar manual.
 // ----------------------------------------------------------------------------
-void MotionStarStandalone::printError (const unsigned char err_code)
+void MotionStarStandalone::printError(const unsigned char errCode)
 {
    // Map the error code to a human-readable string.  These messages are
    // based on the table on page 140 of the MotionStar manual.
-   switch (err_code)
+   switch (errCode)
    {
       case 1:
          fprintf(stderr, "WARNING: Single packet missing (error 1)\n");

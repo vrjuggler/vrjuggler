@@ -67,41 +67,39 @@ namespace gadget
  *   example, if you have recievers 1,2, and 4 with transmitter on 3, then
  *   you can access the data, in order, as 0, 1, 2.
  *
- * See also: Position
+ * @see Position
  */
 class MotionStar : public Input, public Position
 {
 public:
 
    /**
-    *  Constructor.  This invokes the MotionStarStandalone constructor and
-    *  initializes member variables.
+    * Constructor.  This invokes the MotionStarStandalone constructor and
+    * initializes member variables.
     *
-    * @pre None.
-    * @post m_motion_star is initialized, and mThread is set to NULL.
+    * @post mMotionStar is initialized, and mThread is set to NULL.
     *
-    * @param address           The IP address or hostname of the MotionStar
-    *                           PC to which we are connecting.  This defaults
-    *                           to NULL.
-    * @param port              The server port to which we are connecting.
-    *                           The default is 6000.
-    * @param proto             The transmission protocol to use in
-    *                           communicating with the server.  The default
-    *                           is BIRDNET::TCP which matches the default
-    *                           port number 6000.
-    * @param master            A flag stating whether or not this server
-    *                           chassis is a master or a slave.  The default
-    *                           is slave (false).
-    * @param hemisphere        The hemisphere in use on the transmitter.
-    *                           The default is FLOCK::FRONT_HEMISPHERE.
-    * @param bird_format       The bird format.  The default is
-    *                           FLOCK::POSITION_ANGLES.
-    * @param run_mode          The run mode for the device.  The default is
-    *                           BIRDNET::CONTINUOUS.
-    * @param report_rate      
-    * @param measurement_rate 
-    * @param birds_required    The number of birds required.  The default is
-    *                           10.
+    * @param address          The IP address or hostname of the MotionStar
+    *                         PC to which we are connecting.  This defaults
+    *                         to NULL.
+    * @param port             The server port to which we are connecting.
+    *                         The default is 6000.
+    * @param proto            The transmission protocol to use in
+    *                         communicating with the server.  The default
+    *                         is BIRDNET::TCP which matches the default
+    *                         port number 6000.
+    * @param master           A flag stating whether or not this server
+    *                         chassis is a master or a slave.  The default
+    *                         is slave (false).
+    * @param hemisphere       The hemisphere in use on the transmitter.
+    *                         The default is FLOCK::FRONT_HEMISPHERE.
+    * @param bird_format      The bird format.  The default is
+    *                         FLOCK::POSITION_ANGLES.
+    * @param run_mode         The run mode for the device.  The default is
+    *                         BIRDNET::CONTINUOUS.
+    * @param report_rate
+    * @param measurement_rate
+    * @param birds_required   The number of birds required.  The default is 10.
     */
    MotionStar(const char* address = NULL, const unsigned short port = 6000,
               const enum BIRDNET::protocol proto = BIRDNET::TCP,
@@ -114,44 +112,43 @@ public:
               const unsigned int birds_required = 10);
 
    /**
-    *  Destructor.  Sampling is stopped, and the data pool is deallocated.
+    * Destructor.  Sampling is stopped, and the data pool is deallocated.
     *
     * @pre None.
     * @post Sampling is stopped, and the data pool is deallocated.
     */
-   virtual ~MotionStar(void);
+   virtual ~MotionStar();
 
    // ========================================================================
    // Input overrides (or methods with the same name anyway).
    // ========================================================================
 
    /**
-    *  Return what chunk type is associated with this class.
+    * Returns what chunk type is associated with this class.
     *
     * @pre None.
     * @post A std::string constructed from a static constant string is
-    *        returned to the caller.
+    *       returned to the caller.
     *
     * @return A std::string containing the chunk type for this device.
     */
-   static std::string getChunkType (void)
+   static std::string getChunkType()
    {
       return std::string("MotionStar");
    }
 
    /**
-    *  See if the device is active or not.
+    * Checks to see if the device is active or not.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The active state of the MotionStar driver is returned to the
-    *        caller.
+    *       caller.
     *
-    * @return true - The MotionStar driver is active.
-    * @return false - The MotionStar driver is inactive.
+    * @return true if the MotionStar driver is active; false otherwise.
     */
-   bool isActive (void)
+   bool isActive()
    {
-      return m_motion_star.isActive();
+      return mMotionStar.isActive();
    }
 
    // ========================================================================
@@ -159,130 +156,128 @@ public:
    // ========================================================================
 
    /**
-    *  Configure the MotionStar with the given config chunk.
+    * Configures the MotionStar with the given config chunk.
     *
     * @pre None.
     * @post If c is a valid config chunk, the device is configured using its
     *        contents.  Otherwise, configuration fails and false is returned
     *        to the caller.
     *
-    * @param c  A pointer to a MotionStar config chunk.
+    * @param c A pointer to a MotionStar config chunk.
     *
-    * @return true - The device was configured succesfully.
-    * @return false - The config chunk is invalid.
+    * @return true if the device was configured succesfully; false otherwise.
     */
    virtual bool config(jccl::ConfigChunkPtr c);
 
    /**
-    *  Begin sampling.
+    * Begins sampling.
     *
-    * @pre m_my_thread is either NULL or points to a valid vpr::Thread object.
+    * @pre mMyThread is either NULL or points to a valid vpr::Thread object.
     * @post If the driver is not already active and a thread has not already
-    *        been created, an attempt is made to activate the device.  First,
-    *        a connection attempt to the server is made.  If successful, the
-    *        device is started.  If that too succeeds, a new threada is
-    *        created for sampling the device.
+    *       been created, an attempt is made to activate the device.  First,
+    *       a connection attempt to the server is made.  If successful, the
+    *       device is started.  If that too succeeds, a new threada is
+    *       created for sampling the device.
     *
-    * @return 0 - Sampling was unable to begin for some reason.
-    * @return 1 - Sampling was started successfully.
+    * @return 0 if sampling was unable to begin for some reason; 1 otherwise.
     */
-   virtual int startSampling(void);
+   virtual int startSampling();
 
    /**
-    *  Stop sampling.
+    * Stops sampling.
     *
-    * @pre m_my_thread is either NULL or points to a valid vpr::Thread object.
+    * @pre mMyThread is either NULL or points to a valid vpr::Thread object.
     * @post If the driver is not currently active, no stop attempt is made.
-    *        Otherwise, if m_my_thread is non-NULL (assumed to point to a
-    *        valid vpr::Thread object), the thread is killed and deleted, and a
-    *        stop attempt is made on the device.
+    *       Otherwise, if mMyThread is non-NULL (assumed to point to a
+    *       valid vpr::Thread object), the thread is killed and deleted, and a
+    *       stop attempt is made on the device.
     *
-    * @return 0 - Sampling could not be stopped.  This will occur if the
-    *               device is not active or the stop attempt failed.
-    * @return 1 - Sampling was stopped successfully.
+    * @return 0 if sampling could not be stopped.  This will occur if the
+    *         device is not active or the stop attempt failed.  1 is returned
+    *         if sampling was stopped successfully.
     */
-   virtual int stopSampling(void);
+   virtual int stopSampling();
 
    /**
-    *  Sample data.
+    * Samples data.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is active, a sample is made from it.  Data are
-    *        read from each of the birds into the current read buffer, and
-    *        transforms are constructed based on what was received.  Once
-    *        this is done, the valid index is swapped for the next round of
-    *        sampling.
+    *       read from each of the birds into the current read buffer, and
+    *       transforms are constructed based on what was received.  Once
+    *       this is done, the valid index is swapped for the next round of
+    *       sampling.
     *
-    * @return 0 - No sample could be made.
+    * @return 0 if no sample could be made.
     */
-   virtual int sample(void);
+   virtual int sample();
 
    /**
-    *  Update to the sampled data.
+    * Updates the sampled data.
     *
     * @pre None.
     * @post If the device is active, the valid data for all the birds are
-    *        copied into the current data so that both are valid.  The
-    *        current indices are then swapped.
+    *       copied into the current data so that both are valid.  The
+    *       current indices are then swapped.
     */
-   virtual void updateData(void);
-    
+   virtual void updateData();
+
 
    // ========================================================================
    // MotionStar-specific methods.
    // ========================================================================
 
    /**
-    *  Set the address (either IP address or hostname) for the server.
+    * Sets the address (either IP address or hostname) for the server.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the address is set to the given
-    *        value.
+    *       value.
     *
-    * @param n  The new value for the server address.
+    * @param n The new value for the server address.
     */
    void setAddressName(const char* n);
 
    /**
-    *  Get the current server address for the device.
+    * Gets the current server address for the device.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current server address is returned to the caller.
     *
     * @return A character array naming the server address.
     */
-   std::string getAddressName (void) const
+   std::string getAddressName() const
    {
-      return m_motion_star.getAddressName();
+      return mMotionStar.getAddressName();
    }
 
    /**
-    *  Set the port on the server to which we connect.
+    * Sets the port on the server to which we connect.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the port is set to the given value.
     *
-    * @param port  The new value for the server port.
+    * @param port The new value for the server port.
     */
    void setServerPort(const unsigned short port);
 
    /**
-    *  Get the server port.
+    * Gets the server port.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current server port is returned to the caller.
     *
     * @return An unsigned short integer containing the server port number.
     */
-   unsigned short getServerPort (void) const
+   unsigned short getServerPort() const
    {
-      return m_motion_star.getServerPort();
+      return mMotionStar.getServerPort();
    }
 
-   //:
-   //
    /**
- * @pre m_motion_star has been initialized.
+    * Sets the transmission protocol used between the client and the server.
+    *
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the transmission protocol is set to
     *        the given value.
     *
@@ -291,296 +286,296 @@ public:
    void setProtocol(const enum BIRDNET::protocol proto);
 
    /**
-    *  Get the transmission protocol used between the client and the server.
+    * Gets the transmission protocol used between the client and the server.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current transmission protocol is returned to the caller.
     *
     * @return
     */
-   enum BIRDNET::protocol getProtocol (void) const
+   enum BIRDNET::protocol getProtocol() const
    {
-      return m_motion_star.getProtocol();
+      return mMotionStar.getProtocol();
    }
 
-   //
    /**
- * @pre m_motion_star has been initialized.
+    * Sets the master status for this server chassis.
+    *
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the master status is set to the
     *        given value.
     *
-    * @param msater  The new value for the master status.
+    * @param msater The new value for the master status.
     */
    void setMasterStatus(const bool master);
 
    /**
-    *  Get the master status for this server chassis.
+    * Gets the master status for this server chassis.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current master status for this chassis is returned to the
     *        caller.
     *
-    * @return  true - This server chassis is a master.
-    * @return false - This server chassis is a slave.
+    * @return true if this server chassis is a master; false if it is a slave.
     */
-   bool getMasterStatus (void) const
+   bool getMasterStatus() const
    {
-      return m_motion_star.getMasterStatus();
+      return mMotionStar.getMasterStatus();
    }
 
    /**
-    *  Change the hemisphere of the transmitter.
+    * Changes the hemisphere of the transmitter.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the hemisphere for it is reset to
     *        the given value.
     *
-    * @param i  The new hemisphere to use.
+    * @param i The new hemisphere to use.
     */
    void setHemisphere(const unsigned char hemisphere);
 
    /**
-    *  Get the transmitter hemisphere currently in use by the device.
+    * Gets the transmitter hemisphere currently in use by the device.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current hemisphere value is returned to the caller.
     *
     * @return An integer value for the hemisphere in use.
     */
-   unsigned char getHemisphere (void) const
+   unsigned char getHemisphere() const
    {
-      return m_motion_star.getHemisphere();
+      return mMotionStar.getHemisphere();
    }
 
    /**
-    *  Set the bird format to the given value.
+    * Sets the bird format to the given value.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the bird format is updated to the
     *        new value.
     *
-    * @param n  The new bird format to use.
+    * @param n The new bird format to use.
     */
    void setBirdFormat(const unsigned int format);
 
    /**
-    *  Get the bird format currently in use.
+    * Gets the bird format currently in use.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current bird format value is returned to the caller.
     *
     * @return An unsigned integer value for the bird format.
     */
-   unsigned int getBirdFormat (void) const
+   unsigned int getBirdFormat() const
    {
-      return m_motion_star.getBirdFormat();
+      return mMotionStar.getBirdFormat();
    }
 
    /**
-    *  Set the number of birds connected to the flock.
+    * Sets the number of birds connected to the flock.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the number of birds is updated to
     *        the new value.
     *
-    * @param n  The new value for the number of birds in use.
+    * @param n The new value for the number of birds in use.
     */
    void setNumBirds(const unsigned int n);
 
    /**
-    *  Get the number of bird currently connected to the flock.
+    * Gets the number of bird currently connected to the flock.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current number of connected birds is returned to the caller.
     *
     * @return An unsigned integer value for the number of connected birds.
     */
-   unsigned int getNumBirds (void) const
+   unsigned int getNumBirds() const
    {
-      return m_motion_star.getNumBirds();
+      return mMotionStar.getNumBirds();
    }
 
    /**
-    *  Set the run mode for the device.
+    * Sets the run mode for the device.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the run mode is set to the given
-    *        value.
+    *       value.
     *
-    * @param i  The new value for the run mode.
+    * @param i The new value for the run mode.
     */
    void setRunMode(const unsigned int i);
 
    /**
-    *  Get the current run mode for the device.
+    * Gets the current run mode for the device.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current run mode is returned to the caller.
     *
     * @return An integer value for run mode.
     */
-   int getRunMode (void) const
+   int getRunMode() const
    {
-      return m_motion_star.getRunMode();
+      return mMotionStar.getRunMode();
    }
 
    /**
-    *  Set the report rate for the birds.
+    * Sets the report rate for the birds.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the bird report rate is set to the
     *        given byte value.
     *
-    * @param rate  The new value for the bird report rate.
+    * @param rate The new value for the bird report rate.
     */
    void setReportRate(const unsigned char rate);
 
    /**
-    *  Get the current report rate for the device.
+    * Gets the current report rate for the device.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current report rate is returned to the caller.
     *
     * @return An unsigned character value for report rate.
     */
-   unsigned char getReportRate (void) const
+   unsigned char getReportRate() const
    {
-      return m_motion_star.getReportRate();
+      return mMotionStar.getReportRate();
    }
 
    /**
-    *  Set the data measurement rate for the chassis.
+    * Sets the data measurement rate for the chassis.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post If the device is not active, the chassis data measurement rate
-    *        is set to the given double value.
+    *       is set to the given double value.
     *
-    * @param rate  The new value for the measurement rate.
+    * @param rate The new value for the measurement rate.
     */
    void setMeasurementRate(const double rate);
 
    /**
-    *  Get the current data measurement rate for the chassis.
+    * Gets the current data measurement rate for the chassis.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The current data measurement rate is returned to the caller.
     *
     * @return A double-precision floating-point value for data measurement
-    *           rate.
+    *         rate.
     */
-   double getMeasurementRate (void) const
+   double getMeasurementRate() const
    {
-      return m_motion_star.getMeasurementRate();
+      return mMotionStar.getMeasurementRate();
    }
 
    /**
-    *  Get the x position of the i'th reciever.
+    * Gets the x position of the i'th reciever.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The x position for the given bird number is returned to the
-    *        caller.
+    *       caller.
     *
     * @return A floating-point value for the current x position of the
-    *           given bird.
+    *         given bird.
     */
-   float getXPos (const unsigned int i) const
+   float getXPos(const unsigned int i) const
    {
-      return m_motion_star.getXPos(i);
+      return mMotionStar.getXPos(i);
    }
 
    /**
-    *  Get the y position of the i'th reciever.
+    * Gets the y position of the i'th reciever.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The y position for the given bird number is returned to the
-    *        caller.
+    *       caller.
     *
     * @return A floating-point value for the current y position of the
-    *           given bird.
+    *         given bird.
     */
-   float getYPos (const unsigned int i) const
+   float getYPos(const unsigned int i) const
    {
-      return m_motion_star.getYPos(i);
+      return mMotionStar.getYPos(i);
    }
 
    /**
-    *  Get the z position of the i'th reciever.
+    * Gets the z position of the i'th reciever.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The z position for the given bird number is returned to the
-    *        caller.
+    *       caller.
     *
     * @return A floating-point value for the current z position of the
-    *           given bird.
+    *         given bird.
     */
-   float getZPos (const unsigned int i) const
+   float getZPos(const unsigned int i) const
    {
-      return m_motion_star.getZPos(i);
+      return mMotionStar.getZPos(i);
    }
 
    /**
-    *  Get the z rotation of the i'th reciever.
+    * Gets the z rotation of the i'th reciever.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The z rotation for the given bird number is returned to the
-    *        caller.
+    *       caller.
     *
     * @return A floating-point value for the current z rotation of the
-    *           given bird.
+    *         given bird.
     */
-   float getZRot (const unsigned int i) const
+   float getZRot(const unsigned int i) const
    {
-      return m_motion_star.getZRot(i);
+      return mMotionStar.getZRot(i);
    }
 
    /**
-    *  Get the y rotation of the i'th reciever.
+    * Gets the y rotation of the i'th reciever.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The y rotation for the given bird number is returned to the
-    *        caller.
+    *       caller.
     *
     * @return A floating-point value for the current y rotation of the
-    *           given bird.
+    *         given bird.
     */
-   float getYRot (const unsigned int i) const
+   float getYRot(const unsigned int i) const
    {
-      return m_motion_star.getYRot(i);
+      return mMotionStar.getYRot(i);
    }
 
    /**
-    *  Get the x rotation of the i'th reciever.
+    * Gets the x rotation of the i'th reciever.
     *
-    * @pre m_motion_star has been initialized.
+    * @pre mMotionStar has been initialized.
     * @post The x rotation for the given bird number is returned to the
-    *        caller.
+    *       caller.
     *
     * @return A floating-point value for the current x rotation of the
-    *           given bird.
+    *         given bird.
     */
-   float getXRot (const unsigned int i) const
+   float getXRot(const unsigned int i) const
    {
-      return m_motion_star.getXRot(i);
+      return mMotionStar.getXRot(i);
    }
 
 private:
    /**
-    *  Unimplemented!
+    * Unimplemented!
     */
    void positionCorrect(float& x, float& y, float& z);
 
    /**
-    *  Unimplemented!
+    * Unimplemented!
     */
    void initCorrectionTable(const char*);
 
-   vpr::Thread*         m_my_thread;   /**<  The thread doing the flock sampling */
-   MotionStarStandalone m_motion_star; /**<  Actual MotionStar device driver */
+   vpr::Thread*         mMyThread;   /**< The thread doing the flock sampling */
+   MotionStarStandalone mMotionStar; /**< Actual MotionStar device driver */
 
     //PositionData*       mData;
 };
 
+} // gadget namespace
 
-};
 
 #endif   /* _GADGET_ASCENSION_MOTION_STAR_H_ */

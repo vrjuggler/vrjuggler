@@ -49,16 +49,16 @@ namespace gadget
 // Helper functions speccfic to this file.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// Continuously sample the device.
-//
-// PRE: The given argument is pointer to a valid MotionStar object.
-// POST: MotionStar::sample() is executed repeated until the thread is
-//       stopped.
-//
-// ARGS: arg - A pointer to a MotionStar object cast to a void*.
-// ----------------------------------------------------------------------------
-static void sampleBirds (void* arg)
+/**
+ * Continuously samples the device.
+ *
+ * @pre The given argument is pointer to a valid MotionStar object.
+ * @post MotionStar::sample() is executed repeated until the thread is
+ *       stopped.
+ *
+ * @param arg A pointer to a MotionStar object cast to a void*.
+ */
+static void sampleBirds(void* arg)
 {
    MotionStar* devPointer = (MotionStar*) arg;
 
@@ -66,7 +66,8 @@ static void sampleBirds (void* arg)
       << "gadget::MotionStar: Spawned SampleBirds starting\n"
       << vprDEBUG_FLUSH;
 
-   for (;;) {
+   for (;;)
+   {
       devPointer->sample();
    }
 }
@@ -79,25 +80,26 @@ static void sampleBirds (void* arg)
 // Constructor.  This invokes the MotionStarStandalone constructor and
 // initializes member variables.
 // ----------------------------------------------------------------------------
-MotionStar::MotionStar (const char* address, const unsigned short port,
-                            const BIRDNET::protocol proto,
-                            const bool master,
-                            const FLOCK::hemisphere hemisphere,
-                            const FLOCK::data_format bird_format,
-                            const BIRDNET::run_mode run_mode,
-                            const unsigned char report_rate,
-                            const double measurement_rate,
-                            const unsigned int birds_required)
-   : m_motion_star(address, port, proto, master, hemisphere, bird_format,
-                   run_mode, report_rate, measurement_rate, birds_required)
+MotionStar::MotionStar(const char* address, const unsigned short port,
+                       const BIRDNET::protocol proto, const bool master,
+                       const FLOCK::hemisphere hemisphere,
+                       const FLOCK::data_format bird_format,
+                       const BIRDNET::run_mode run_mode,
+                       const unsigned char report_rate,
+                       const double measurement_rate,
+                       const unsigned int birds_required)
+   : mMyThread(NULL),
+     mMotionStar(address, port, proto, master, hemisphere, bird_format,
+                 run_mode, report_rate, measurement_rate, birds_required)
+
 {
-    m_my_thread = NULL;
+    ;
 }
 
 // ----------------------------------------------------------------------------
 // Destructor.  Sampling is stopped, and the data pool is deallocated.
 // ----------------------------------------------------------------------------
-MotionStar::~MotionStar ()
+MotionStar::~MotionStar()
 {
    stopSampling();
 }
@@ -105,11 +107,9 @@ MotionStar::~MotionStar ()
 // ----------------------------------------------------------------------------
 // Configure the MotionStar with the given config chunk.
 // ----------------------------------------------------------------------------
-bool MotionStar::config (jccl::ConfigChunkPtr c)
+bool MotionStar::config(jccl::ConfigChunkPtr c)
 {
-   bool retval;
-
-   retval = false;
+   bool retval(false);
 
    if ( Input::config(c) &&  Position::config(c) )
    {
@@ -117,7 +117,7 @@ bool MotionStar::config (jccl::ConfigChunkPtr c)
          << "       MotionStar::config(jccl::ConfigChunkPtr)\n"
          << vprDEBUG_FLUSH;
 
-      // Configure m_motion_star with the config info.
+      // Configure mMotionStar with the config info.
       setAddressName(c->getProperty<std::string>("address").c_str());
       setServerPort((unsigned short) c->getProperty<int>("serverPort"));
       setMasterStatus(c->getProperty<bool>("serverType"));
@@ -136,7 +136,7 @@ bool MotionStar::config (jccl::ConfigChunkPtr c)
 // ----------------------------------------------------------------------------
 // Begin sampling.
 // ----------------------------------------------------------------------------
-int MotionStar::startSampling ()
+int MotionStar::startSampling()
 {
    int retval;
 
@@ -149,14 +149,14 @@ int MotionStar::startSampling ()
    }
    else
    {
-      if ( m_my_thread == NULL )
+      if ( mMyThread == NULL )
       {
          int start_status;
 
          vprDEBUG(gadgetDBG_INPUT_MGR, 1)
             << "    Getting MotionStar ready ...\n" << vprDEBUG_FLUSH;
 
-         start_status = m_motion_star.start();
+         start_status = mMotionStar.start();
 
          switch (start_status)
          {
@@ -207,9 +207,9 @@ int MotionStar::startSampling ()
             vprDEBUG(gadgetDBG_INPUT_MGR, 1)
                << "gadget::MotionStar ready to go.\n" << vprDEBUG_FLUSH;
 
-            m_my_thread = new vpr::Thread(sampleBirds, (void*) this);
+            mMyThread = new vpr::Thread(sampleBirds, (void*) this);
 
-            if ( m_my_thread == NULL )
+            if ( mMyThread == NULL )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, 0)
                   << "gadget::MotionStar could not create sampling thread.\n"
@@ -235,7 +235,7 @@ int MotionStar::startSampling ()
 // ----------------------------------------------------------------------------
 // Stop sampling.
 // ----------------------------------------------------------------------------
-int MotionStar::stopSampling ()
+int MotionStar::stopSampling()
 {
    int retval;
 
@@ -245,18 +245,18 @@ int MotionStar::stopSampling ()
       retval = 0;
    }
    // If the sampling thread was started, stop it and the device.
-   else if ( m_my_thread != NULL )
+   else if ( mMyThread != NULL )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "Stopping the MotionStar thread ...\n"
                                        << vprDEBUG_FLUSH;
-      m_my_thread->kill();
-      delete m_my_thread;
-      m_my_thread = NULL;
+      mMyThread->kill();
+      delete mMyThread;
+      mMyThread = NULL;
 
       vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "  Stopping the MotionStar ...\n"
                                        << vprDEBUG_FLUSH;
 
-      m_motion_star.stop();
+      mMotionStar.stop();
 
       // sanity check: did the device actually stop?
       if ( isActive() == true )
@@ -284,10 +284,10 @@ int MotionStar::stopSampling ()
 // ----------------------------------------------------------------------------
 // Sample data.
 // ----------------------------------------------------------------------------
-int MotionStar::sample ()
+int MotionStar::sample()
 {
    int retval;
-   std::vector< gadget::PositionData > cur_samples(m_motion_star.getNumBirds());
+   std::vector< gadget::PositionData > cur_samples(mMotionStar.getNumBirds());
 
    retval = 0;
 
@@ -308,7 +308,7 @@ int MotionStar::sample ()
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       gmtl::Matrix44f world_T_transmitter, transmitter_T_receiver, world_T_receiver;
-      m_motion_star.sample();
+      mMotionStar.sample();
 
       // get an initial timestamp for this entire sample. we'll copy it into
       // each PositionData for this sample.
@@ -318,72 +318,75 @@ int MotionStar::sample ()
       }
 
       // For each bird
-      for ( unsigned int i = 0; i < m_motion_star.getNumBirds(); ++i )
+      for ( unsigned int i = 0; i < mMotionStar.getNumBirds(); ++i )
       {
          // Get the index to the current read buffer
          cur_samples[i].setTime( cur_samples[i].getTime() );
          gmtl::identity(transmitter_T_receiver);
 
-         format = m_motion_star.getBirdDataFormat(i);
+         format = mMotionStar.getBirdDataFormat(i);
          gmtl::EulerAngleZYXf euler;
-         
+
          switch (format)
          {
             case FLOCK::NO_BIRD_DATA:
             case FLOCK::INVALID:
                break;
             case FLOCK::POSITION:
-               gmtl::setTrans (transmitter_T_receiver,
-                               gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i)) );
+               gmtl::setTrans(transmitter_T_receiver,
+                              gmtl::Vec3f( mMotionStar.getXPos(i), mMotionStar.getYPos(i), mMotionStar.getZPos(i)));
                break;
             case FLOCK::ANGLES:
-               euler.set( gmtl::Math::deg2Rad(m_motion_star.getZRot(i)),
-                          gmtl::Math::deg2Rad(m_motion_star.getYRot(i)),
-                          gmtl::Math::deg2Rad(m_motion_star.getXRot(i)) );
-               gmtl::setRot( transmitter_T_receiver, euler);
+               euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
+                         gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
+                         gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
+               gmtl::setRot(transmitter_T_receiver, euler);
                break;
             case FLOCK::MATRIX:
-               m_motion_star.getMatrixAngles(i, angles);
+               mMotionStar.getMatrixAngles(i, angles);
 
-               euler.set( gmtl::Math::deg2Rad(angles[0]),
-                          gmtl::Math::deg2Rad(angles[1]),
-                          gmtl::Math::deg2Rad(angles[2]) );
+               euler.set(gmtl::Math::deg2Rad(angles[0]),
+                         gmtl::Math::deg2Rad(angles[1]),
+                         gmtl::Math::deg2Rad(angles[2]));
                gmtl::setRot( transmitter_T_receiver, euler );
 
                break;
             case FLOCK::POSITION_ANGLES:
-               gmtl::setTrans( trans_mat,
-                                gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i) ) );
-               
-               euler.set( gmtl::Math::deg2Rad(m_motion_star.getZRot(i)),
-                          gmtl::Math::deg2Rad(m_motion_star.getYRot(i)),
-                          gmtl::Math::deg2Rad(m_motion_star.getXRot(i)) );
-               gmtl::setRot( rot_mat, euler );
+               gmtl::setTrans(trans_mat, gmtl::Vec3f(mMotionStar.getXPos(i),
+                                                     mMotionStar.getYPos(i),
+                                                     mMotionStar.getZPos(i)));
+
+               euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
+                         gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
+                         gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
+               gmtl::setRot(rot_mat, euler);
                transmitter_T_receiver = (trans_mat * rot_mat);
                break;
             case FLOCK::POSITION_MATRIX:
-               gmtl::setTrans( trans_mat,
-                                gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i) ) );
+               gmtl::setTrans(trans_mat, gmtl::Vec3f(mMotionStar.getXPos(i),
+                                                     mMotionStar.getYPos(i),
+                                                     mMotionStar.getZPos(i)));
 
-               m_motion_star.getMatrixAngles(i, angles);
+               mMotionStar.getMatrixAngles(i, angles);
 
-               euler.set( gmtl::Math::deg2Rad(angles[2]),
-                          gmtl::Math::deg2Rad(angles[1]),
-                          gmtl::Math::deg2Rad(angles[0]) );
-               gmtl::setRot( rot_mat, euler );
+               euler.set(gmtl::Math::deg2Rad(angles[2]),
+                         gmtl::Math::deg2Rad(angles[1]),
+                         gmtl::Math::deg2Rad(angles[0]));
+               gmtl::setRot(rot_mat, euler);
                transmitter_T_receiver = trans_mat * rot_mat;
                break;
             case FLOCK::QUATERNION:
-               m_motion_star.getQuaternion(i, quat);
-               gmtl::set( transmitter_T_receiver, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+               mMotionStar.getQuaternion(i, quat);
+               gmtl::set(transmitter_T_receiver, gmtl::Quatf(quat[1], quat[2],
+                                                             quat[3], quat[0]));
                break;
             case FLOCK::POSITION_QUATERNION:
-               gmtl::setTrans( trans_mat, gmtl::Vec3f(m_motion_star.getXPos(i),
-                                                      m_motion_star.getYPos(i),
-                                                      m_motion_star.getZPos(i)) );
+               gmtl::setTrans(trans_mat, gmtl::Vec3f(mMotionStar.getXPos(i),
+                                                     mMotionStar.getYPos(i),
+                                                     mMotionStar.getZPos(i)));
 
-               m_motion_star.getQuaternion(i, quat);
-               gmtl::set( rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+               mMotionStar.getQuaternion(i, quat);
+               gmtl::set(rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
 
                transmitter_T_receiver = trans_mat * rot_mat;
                break;
@@ -417,7 +420,7 @@ int MotionStar::sample ()
 // ----------------------------------------------------------------------------
 // Update to the sampled data.
 // ----------------------------------------------------------------------------
-void MotionStar::updateData ()
+void MotionStar::updateData()
 {
    // If the device is not active, we cannot update the data.
    if ( isActive() == false )
@@ -438,7 +441,7 @@ void MotionStar::updateData ()
 // ----------------------------------------------------------------------------
 // Set the address (either IP address or hostname) for the server.
 // ----------------------------------------------------------------------------
-void MotionStar::setAddressName (const char* n)
+void MotionStar::setAddressName(const char* n)
 {
    // If the device active, we cannot change the server address.
    if ( isActive() )
@@ -448,14 +451,14 @@ void MotionStar::setAddressName (const char* n)
          << vprDEBUG_FLUSH;
    } else
    {
-      m_motion_star.setAddressName(n);
+      mMotionStar.setAddressName(n);
    }
 }
 
 // ----------------------------------------------------------------------------
 // Set the port on the server to which we connect.
 // ----------------------------------------------------------------------------
-void MotionStar::setServerPort (const unsigned short port)
+void MotionStar::setServerPort(const unsigned short port)
 {
    // If the device active, we cannot change the server port.
    if ( isActive() )
@@ -466,7 +469,7 @@ void MotionStar::setServerPort (const unsigned short port)
    }
    else
    {
-      m_motion_star.setServerPort(port);
+      mMotionStar.setServerPort(port);
 
       switch (port)
       {
@@ -480,7 +483,7 @@ void MotionStar::setServerPort (const unsigned short port)
             vprDEBUG(gadgetDBG_INPUT_MGR, 1)
                << "MotionStar: Unexpected port number " << port << " given!\n"
                << "            Defaulting to TCP port.\n" << vprDEBUG_FLUSH;
-            m_motion_star.setProtocol(BIRDNET::TCP);
+            mMotionStar.setProtocol(BIRDNET::TCP);
             break;
       }
    }
@@ -489,7 +492,7 @@ void MotionStar::setServerPort (const unsigned short port)
 // ----------------------------------------------------------------------------
 //
 // ----------------------------------------------------------------------------
-void MotionStar::setProtocol (const enum BIRDNET::protocol proto)
+void MotionStar::setProtocol(const enum BIRDNET::protocol proto)
 {
    // If the device active, we cannot change the transmission protocol.
    if ( isActive() )
@@ -500,14 +503,14 @@ void MotionStar::setProtocol (const enum BIRDNET::protocol proto)
    }
    else
    {
-      m_motion_star.setProtocol(proto);
+      mMotionStar.setProtocol(proto);
    }
 }
 
 // ----------------------------------------------------------------------------
 //
 // ----------------------------------------------------------------------------
-void MotionStar::setMasterStatus (const bool master)
+void MotionStar::setMasterStatus(const bool master)
 {
    // If the device active, we cannot change the master status.
    if ( isActive() )
@@ -518,14 +521,14 @@ void MotionStar::setMasterStatus (const bool master)
    }
    else
    {
-      m_motion_star.setMasterStatus(master);
+      mMotionStar.setMasterStatus(master);
    }
 }
 
 // ----------------------------------------------------------------------------
 // Change the hemisphere of the transmitter.
 // ----------------------------------------------------------------------------
-void MotionStar::setHemisphere (const unsigned char hemisphere)
+void MotionStar::setHemisphere(const unsigned char hemisphere)
 {
    // If the device active, we cannot change the hemisphere.
    if ( isActive() )
@@ -539,29 +542,29 @@ void MotionStar::setHemisphere (const unsigned char hemisphere)
       switch (hemisphere)
       {
          case 0:
-            m_motion_star.setHemisphere(FLOCK::FRONT_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::FRONT_HEMISPHERE);
             break;
          case 1:
-            m_motion_star.setHemisphere(FLOCK::REAR_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::REAR_HEMISPHERE);
             break;
          case 2:
-            m_motion_star.setHemisphere(FLOCK::UPPER_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::UPPER_HEMISPHERE);
             break;
          case 3:
-            m_motion_star.setHemisphere(FLOCK::LOWER_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::LOWER_HEMISPHERE);
             break;
          case 4:
-            m_motion_star.setHemisphere(FLOCK::LEFT_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::LEFT_HEMISPHERE);
             break;
          case 5:
-            m_motion_star.setHemisphere(FLOCK::RIGHT_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::RIGHT_HEMISPHERE);
             break;
          default:
             vprDEBUG(gadgetDBG_INPUT_MGR, 1)
                << "gadget::MotionStar: Unknown hemisphere " << hemisphere
                << " given!\n              Defaulting to front hemisphere.\n"
                << vprDEBUG_FLUSH;
-            m_motion_star.setHemisphere(FLOCK::FRONT_HEMISPHERE);
+            mMotionStar.setHemisphere(FLOCK::FRONT_HEMISPHERE);
             break;
       }
    }
@@ -570,7 +573,7 @@ void MotionStar::setHemisphere (const unsigned char hemisphere)
 // ----------------------------------------------------------------------------
 // Set the bird format to the given value.
 // ----------------------------------------------------------------------------
-void MotionStar::setBirdFormat (const unsigned int format)
+void MotionStar::setBirdFormat(const unsigned int format)
 {
    // If the device active, we cannot change the bird format.
    if ( isActive() )
@@ -584,35 +587,35 @@ void MotionStar::setBirdFormat (const unsigned int format)
       switch (format)
       {
          case 0:
-            m_motion_star.setBirdFormat(FLOCK::NO_BIRD_DATA);
+            mMotionStar.setBirdFormat(FLOCK::NO_BIRD_DATA);
             break;
          case 1:
-            m_motion_star.setBirdFormat(FLOCK::POSITION);
+            mMotionStar.setBirdFormat(FLOCK::POSITION);
             break;
          case 2:
-            m_motion_star.setBirdFormat(FLOCK::ANGLES);
+            mMotionStar.setBirdFormat(FLOCK::ANGLES);
             break;
          case 3:
-            m_motion_star.setBirdFormat(FLOCK::MATRIX);
+            mMotionStar.setBirdFormat(FLOCK::MATRIX);
             break;
          case 4:
-            m_motion_star.setBirdFormat(FLOCK::POSITION_ANGLES);
+            mMotionStar.setBirdFormat(FLOCK::POSITION_ANGLES);
             break;
          case 5:
-            m_motion_star.setBirdFormat(FLOCK::POSITION_MATRIX);
+            mMotionStar.setBirdFormat(FLOCK::POSITION_MATRIX);
             break;
          case 6:
             vprDEBUG(gadgetDBG_INPUT_MGR, 1)
                << "gadget::MotionStar: Invalid bird format 6 given!\n"
                << "                    Defaulting to position/angles.\n"
                << vprDEBUG_FLUSH;
-            m_motion_star.setBirdFormat(FLOCK::POSITION_ANGLES);
+            mMotionStar.setBirdFormat(FLOCK::POSITION_ANGLES);
             break;
          case 7:
-            m_motion_star.setBirdFormat(FLOCK::QUATERNION);
+            mMotionStar.setBirdFormat(FLOCK::QUATERNION);
             break;
          case 8:
-            m_motion_star.setBirdFormat(FLOCK::POSITION_QUATERNION);
+            mMotionStar.setBirdFormat(FLOCK::POSITION_QUATERNION);
             break;
          default:
             vprDEBUG(gadgetDBG_INPUT_MGR, 1)
@@ -620,7 +623,7 @@ void MotionStar::setBirdFormat (const unsigned int format)
                << " given!\n"
                << "                    Defaulting to position/angles.\n"
                << vprDEBUG_FLUSH;
-            m_motion_star.setBirdFormat(FLOCK::POSITION_ANGLES);
+            mMotionStar.setBirdFormat(FLOCK::POSITION_ANGLES);
             break;
       }
    }
@@ -629,7 +632,7 @@ void MotionStar::setBirdFormat (const unsigned int format)
 // ----------------------------------------------------------------------------
 // Set the number of birds connected to the flock.
 // ----------------------------------------------------------------------------
-void MotionStar::setNumBirds (unsigned int i)
+void MotionStar::setNumBirds(unsigned int i)
 {
    // If the device active, we cannot change the number of birds.
    if ( isActive() )
@@ -640,14 +643,14 @@ void MotionStar::setNumBirds (unsigned int i)
    }
    else
    {
-      m_motion_star.setNumBirds(i);
+      mMotionStar.setNumBirds(i);
    }
 }
 
 // ----------------------------------------------------------------------------
 // Set the run mode for the device.
 // ----------------------------------------------------------------------------
-void MotionStar::setRunMode (const unsigned int mode)
+void MotionStar::setRunMode(const unsigned int mode)
 {
    // If the device active, we cannot change the run mode.
    if ( isActive() )
@@ -661,10 +664,10 @@ void MotionStar::setRunMode (const unsigned int mode)
       switch (mode)
       {
          case 0:
-            m_motion_star.setRunMode(BIRDNET::CONTINUOUS);
+            mMotionStar.setRunMode(BIRDNET::CONTINUOUS);
             break;
          case 1:
-            m_motion_star.setRunMode(BIRDNET::SINGLE_SHOT);
+            mMotionStar.setRunMode(BIRDNET::SINGLE_SHOT);
             break;
          default:
             vprDEBUG(gadgetDBG_INPUT_MGR, 1)
@@ -672,7 +675,7 @@ void MotionStar::setRunMode (const unsigned int mode)
                << " given!\n"
                << "                    Defaulting to continuous.\n"
                << vprDEBUG_FLUSH;
-            m_motion_star.setRunMode(BIRDNET::CONTINUOUS);
+            mMotionStar.setRunMode(BIRDNET::CONTINUOUS);
             break;
       }
    }
@@ -681,7 +684,7 @@ void MotionStar::setRunMode (const unsigned int mode)
 // ----------------------------------------------------------------------------
 // Set the report rate for the device.
 // ----------------------------------------------------------------------------
-void MotionStar::setReportRate (const unsigned char rate)
+void MotionStar::setReportRate(const unsigned char rate)
 {
    // If the device active, we cannot change the report rate.
    if (isActive())
@@ -692,14 +695,14 @@ void MotionStar::setReportRate (const unsigned char rate)
    }
    else
    {
-      m_motion_star.setReportRate(rate);
+      mMotionStar.setReportRate(rate);
    }
 }
 
 // ----------------------------------------------------------------------------
 // Set the measurement rate for the chassis.
 // ----------------------------------------------------------------------------
-void MotionStar::setMeasurementRate (const double rate)
+void MotionStar::setMeasurementRate(const double rate)
 {
    // If the device active, we cannot change the measurement rate.
    if (isActive())
@@ -710,7 +713,7 @@ void MotionStar::setMeasurementRate (const double rate)
    }
    else
    {
-      m_motion_star.setMeasurementRate(rate);
+      mMotionStar.setMeasurementRate(rate);
    }
 }
 
@@ -721,7 +724,7 @@ void MotionStar::setMeasurementRate (const double rate)
 // ----------------------------------------------------------------------------
 // Unimplemented!
 // ----------------------------------------------------------------------------
-void MotionStar::positionCorrect (float& x, float& y, float& z)
+void MotionStar::positionCorrect(float& x, float& y, float& z)
 {
    /* Implement me! */ ;
 }
@@ -729,7 +732,7 @@ void MotionStar::positionCorrect (float& x, float& y, float& z)
 // ----------------------------------------------------------------------------
 // Unimplemented!
 // ----------------------------------------------------------------------------
-void MotionStar::initCorrectionTable (const char* table_file)
+void MotionStar::initCorrectionTable(const char* table_file)
 {
    /* Implement me! */ ;
 }
