@@ -71,7 +71,7 @@ namespace vrj
 //vjKernel* Kernel::_instance = NULL;
 vprSingletonImp(Kernel);
 
-//: Start the Kernel loop running
+/// Starts the Kernel loop running.
 int Kernel::start()
 {
    if(mControlThread != NULL) // Have already started
@@ -89,7 +89,7 @@ int Kernel::start()
    new vpr::ThreadMemberFunctor<Kernel>(this, &Kernel::controlLoop, NULL);
 
    //vpr::Thread* new_thread;   // I set mControlThread in Kernel::controlLoop
-   //new_thread = 
+   //new_thread =
    new vpr::Thread(memberFunctor);
    //vprASSERT(new_thread->valid());
 
@@ -208,9 +208,11 @@ void Kernel::setApplication(App* newApp)
    mNewAppSet = true;
 }
 
-//: Checks to see if there is reconfiguration to be done
-//! POST: Any reconfiguration needed has been completed
-//! NOTE: Can only be called by the kernel thread
+/**
+ * Checks to see if there is reconfiguration to be done.
+ * @post Any reconfiguration needed has been completed.
+ * @note Can only be called by the kernel thread.
+ */
 void Kernel::checkForReconfig()
 {
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
@@ -455,7 +457,7 @@ bool Kernel::configRemove(jccl::ConfigChunkPtr chunk)
       return false;
 }
 
-//: Add a new user to the kernel
+/** Adds a new user to the kernel. */
 bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(chunk->getDescToken() == std::string("JugglerUser"));
@@ -517,15 +519,19 @@ void Kernel::loadConfigFile(std::string filename)
    //vprDEBUG(vrjDBG_KERNEL,5) << (*mInitialChunkDB) << vprDEBUG_FLUSH;
 }
 
-//: Load a chunk description file
-//! POST: The chunk factory can now manage chunks with the given types
+/**
+ * Loads a chunk description file.
+ * @post The chunk factory can now manage chunks with the given types.
+ */
 void Kernel::loadChunkDescFile(std::string filename)
 {
    jccl::ChunkFactory::instance()->loadDescs(filename);
 }
 
-// This starts up the draw manager given
-//!POST: All processes and data should have been created by draw manager
+/**
+ * This starts up the Draw Manager given.
+ * @post All processes and data should have been created by Draw Manager.
+ */
 void Kernel::startDrawManager(bool newMgr)
 {
    vprASSERT((mApp != NULL) && (mDrawManager != NULL) && (mDisplayManager != NULL));
@@ -567,7 +573,7 @@ void Kernel::stopDrawManager()
 }
 
 
-//: Get the input manager
+/** Gets the Input Manager. */
 gadget::InputManager* Kernel::getInputManager()
 { return mInputManager; }
 

@@ -48,28 +48,34 @@
 #include <vrj/Sound/pf/pfSoundNode.h>
 #include <vrj/Util/Debug.h>
 
-//: This is a collection of Performer traversers...
-//
-// REQUIRED!!! You must call pfSoundTraverser::preForkInit() in your juggler app's
-//              preForkInit() member function.  Your app is likely to crash otherwise!!
-//!PUBLIC_API:
+
+/**
+ * This is a collection of Performer traversers...
+ *
+ * REQUIRED!!! You must call pfSoundTraverser::preForkInit() in your juggler app's
+ *              preForkInit() member function.  Your app is likely to crash otherwise!!
+ */
 class pfSoundTraverser
 {
 public:
-   // This function must be called pfSoundTraverser::preForkInit() in your juggler app's
-   // preForkInit() member function.  Your app is likely to crash otherwise!!
+   /**
+    * This function must be called pfSoundTraverser::preForkInit() in your
+    * VR Juggler app's preForkInit() member function.  Your app is likely to
+    * crash otherwise!!
+    */
    static void preForkInit()
    {
       vprDEBUG( vprDBG_ALL, 1 )<<"[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node class type with performer\n"<<vprDEBUG_FLUSH;
       pfSoundNode::init();
    }
 
-   // This is a Performer traverser that will replace any node ending in keyName
-   //  in your scene graph with a pfSoundNode.
-   //  For example, if mKeyName == _Sound_, and your nodename == Gong_Sound_
-   //  then that node will be replaced with a new pfSoundNode of a sound
-   //  called "Gong"
-   //
+   /**
+    * This is a Performer traverser that will replace any node ending in keyName
+    * in your scene graph with a pfSoundNode.
+    * For example, if mKeyName == _Sound_, and your nodename == Gong_Sound_
+    * then that node will be replaced with a new pfSoundNode of a sound
+    * called "Gong"
+    */
    static void replace( pfNode* node, const std::string& keyName = "_Sound_" )
    {
       vprDEBUG( vprDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: " ) <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vprDEBUG_FLUSH;
@@ -84,7 +90,9 @@ public:
        pfuTraverse( node, &trav );
    }
 
-   // enable the sound, keeping the state whether it is triggered or stopped.
+   /**
+    * Enables the sound, keeping the state whether it is triggered or stopped.
+    */
    static void enable( pfNode* node )
    {
       vprDEBUG( vprDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: [enable]" ) << " Enabling sounds in subgraph.\n"<<vprDEBUG_FLUSH;
@@ -99,8 +107,10 @@ public:
        pfuTraverse( node, &trav );
    }
 
-   // disable the sound, keeping the state whether it is triggered or stopped.
-   // after this, an enable would respect the previous triggered/stopped state.
+   /**
+    * Disables the sound, keeping the state whether it is triggered or stopped.
+    * after this, an enable would respect the previous triggered/stopped state.
+    */
    static void disable( pfNode* node )
    {
       vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [disable]" ) <<" Disabling sounds in subgraph.\n"<<vprDEBUG_FLUSH;
@@ -114,8 +124,8 @@ public:
 
        pfuTraverse( node, &trav );
    }
-   
-   // trigger the sound
+
+   /** Triggers the sound. */
    static void trigger( pfNode* node )
    {
       vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [soundOn]" ) << " Triggering sounds in subgraph.\n"<<vprDEBUG_FLUSH;
@@ -130,7 +140,7 @@ public:
        pfuTraverse( node, &trav );
    }
 
-   // stop the sound
+   /** Stops the sound. */
    static void stop( pfNode* node )
    {
       vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN,"pfSoundTraverser: [soundOff]" ) << " Stopping sounds in subgraph.\n"<<vprDEBUG_FLUSH;
@@ -147,14 +157,14 @@ public:
 
 
 protected:
-   // triggers every Sound in the graph.
+   /** Triggers every Sound in the graph. */
    static int soundNodesTrigger( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         
+
          // get the name
          const char* nodeNameChar = soundNode->getName();
          std::string nodeName;
@@ -162,7 +172,7 @@ protected:
               nodeName = "";
          else
               nodeName = nodeNameChar;
-         
+
          // unpause the sound, unmute it too
          #ifdef USE_SONIX
          sonix::instance().trigger( nodeName );
@@ -179,14 +189,14 @@ protected:
       return PFTRAV_CONT;      // Return continue
    }
 
-   // stops every Sound in the graph.
+   /** Stops every Sound in the graph. */
    static int soundNodesStop( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         
+
          // get the name
          const char* nodeNameChar = soundNode->getName();
          std::string nodeName;
@@ -194,12 +204,12 @@ protected:
               nodeName = "";
          else
               nodeName = nodeNameChar;
-         
+
          // unpause the sound, unmute it too
          #ifdef USE_SONIX
          sonix::instance().stop( nodeName );
          #endif
-         
+
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
             << "Setting the " << nodeName
             << " sound to <stopped>\n" << vprDEBUG_FLUSH;
@@ -212,14 +222,14 @@ protected:
       return PFTRAV_CONT;      // Return continue
    }
 
-   // enables every Sound in the graph.
+   /** Enables every Sound in the graph. */
    static int soundNodesEnable( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         
+
          // get the name
          const char* nodeNameChar = soundNode->getName();
          std::string nodeName;
@@ -227,13 +237,13 @@ protected:
               nodeName = "";
          else
               nodeName = nodeNameChar;
-         
+
          // unpause the sound, unmute it too
          #ifdef USE_SONIX
          sonix::instance().unpause( nodeName );
          sonix::instance().unmute( nodeName );
          #endif
-            
+
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
             << "Setting the " << nodeName
             << " sound to <enabled>\n" << vprDEBUG_FLUSH;
@@ -246,14 +256,14 @@ protected:
       return PFTRAV_CONT;      // Return continue
    }
 
-   // disables every Sound in the graph.
+   /** Disables every Sound in the graph. */
    static int soundNodesDisable( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         
+
          // get the name
          const char* nodeNameChar = soundNode->getName();
          std::string nodeName;
@@ -261,13 +271,13 @@ protected:
               nodeName = "";
          else
               nodeName = nodeNameChar;
-         
+
          // pause the sound, mute it too in case it is triggered again
          #ifdef USE_SONIX
          sonix::instance().pause( nodeName );
          sonix::instance().mute( nodeName );
          #endif
-         
+
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
             << "Setting the " << nodeName
             << " sound to <disabled>\n" << vprDEBUG_FLUSH;
@@ -279,8 +289,8 @@ protected:
 
       return PFTRAV_CONT;      // Return continue
    }
-   
-   // used to traverse - don't call
+
+   /** Used to traverse - don't call. */
    static int nodesReplaceWithSound( pfuTraverser* trav )
    {
       // get the keyname, usually it is "_Sound_"
@@ -321,7 +331,7 @@ protected:
             vprDEBUG_CONT( vprDBG_ALL, vprDBG_STATE_LVL )
                << "extracted sound named \"" << soundName.c_str()
                << "\"\n" << vprDEBUG_FLUSH;
-            
+
             // replace the found node with a sound node.
             // note: only replace if the sound is valid.
             //        this way, the users can see where the sounds are (in case the geoset is a sphere)
@@ -341,7 +351,7 @@ protected:
                #ifdef USE_SONIX
                sonix::instance().trigger( soundName );
                #endif
-               
+
                vprDEBUG( vprDBG_ALL, vprDBG_CONFIG_LVL )
                    << clrOutNORM( clrGREEN,"[SoundReplacer]     " )
                    << "Replaced " << clrOutNORM(clrGREEN, sn->getName())
