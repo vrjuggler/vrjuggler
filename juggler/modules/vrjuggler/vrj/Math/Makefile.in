@@ -29,9 +29,10 @@ vpath %.o ${OBJDIR}
 MATH_SRCS	:= vjCoord.cpp  \
                    vjMatrix.cpp	\
                    vjQuat.cpp	\
+		   vjSeg.cpp    \
                    vjVec3.cpp	\
                    vjVec4.cpp
-                  
+
 MATH_OBJECTS	:= ${addprefix ${OBJDIR}/,${MATH_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${MATH_SRCS:.cpp=.d}
 
