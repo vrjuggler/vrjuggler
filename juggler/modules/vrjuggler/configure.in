@@ -756,26 +756,19 @@ AC_CONFIG_FILES([
    vrjconfig/Makefile.inc
    vrjconfig/commoneditors/build.xml
    vrjconfig/commoneditors/Makefile
-   vrjconfig/commoneditors/Makefile.inc
    vrjconfig/customeditors/Makefile
    vrjconfig/customeditors/display_window/build.xml
    vrjconfig/customeditors/display_window/Makefile
-   vrjconfig/customeditors/display_window/Makefile.inc
    vrjconfig/customeditors/intersense/build.xml
    vrjconfig/customeditors/intersense/Makefile
-   vrjconfig/customeditors/intersense/Makefile.inc
    vrjconfig/customeditors/motionstar/build.xml
    vrjconfig/customeditors/motionstar/Makefile
-   vrjconfig/customeditors/motionstar/Makefile.inc
    vrjconfig/customeditors/pinchglove/build.xml
    vrjconfig/customeditors/pinchglove/Makefile
-   vrjconfig/customeditors/pinchglove/Makefile.inc
    vrjconfig/customeditors/proxyeditor/build.xml
    vrjconfig/customeditors/proxyeditor/Makefile
-   vrjconfig/customeditors/proxyeditor/Makefile.inc
    vrjconfig/customeditors/surfacedisplayeditor/build.xml
    vrjconfig/customeditors/surfacedisplayeditor/Makefile
-   vrjconfig/customeditors/surfacedisplayeditor/Makefile.inc
    samples/Makefile
    samples/OGL/Makefile
    samples/OGL/advanced/Makefile
