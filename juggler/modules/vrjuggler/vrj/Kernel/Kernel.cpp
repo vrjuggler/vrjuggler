@@ -558,37 +558,30 @@ void Kernel::stopDrawManager()
    }
 }
 
-
 /** Gets the Input Manager. */
 gadget::InputManager* Kernel::getInputManager()
-{ return mInputManager; }
-
-
-User* Kernel::getUser(std::string userName)
 {
-   for(unsigned int i=0;i<mUsers.size();i++)
+   return mInputManager;
+}
+
+User* Kernel::getUser(const std::string& userName)
+{
+   for(unsigned int i = 0; i < mUsers.size(); ++i)
+   {
       if(userName == mUsers[i]->getName())
+      {
          return mUsers[i];
+      }
+   }
 
    return NULL;
 }
 
 Kernel::Kernel()
+   : mApp(NULL), mNewApp(NULL), mNewAppSet(false), mIsRunning(false),
+     mExitFlag(false), mControlThread(NULL), mInputManager(NULL),
+     mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL)
 {
-   mApp        = NULL;
-   mNewApp     = NULL;
-   mNewAppSet  = false;
-   mExitFlag      = false;
-   mIsRunning     = false;
-   mControlThread = NULL;
-   mInputManager  = NULL;
-   mDrawManager   = NULL;
-   mSoundManager  = NULL;
-   mDisplayManager = NULL;
-
-   //mInitialChunkDB = NULL;
-   //mChunkDB = NULL;
-
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
                            << std::endl << vprDEBUG_FLUSH;
