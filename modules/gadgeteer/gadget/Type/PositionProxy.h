@@ -54,7 +54,7 @@ public:
                       float xrot, float yrot, float zrot);   // Rotate
 
    //: Set the vjPosProxy to now point to another device and subDevicenumber
-   void Set(vjPosition* posPtr, int unitNum, int useTransform = 0);
+   void Set(vjPosition* posPtr, int unitNum);
 
    //: Get the data
    vjMatrix* GetData()
@@ -76,9 +76,9 @@ public:
    //: Transform the data in m_posData
    //! PRE: m_posData needs to have most recent data
    //! POST: m_posData is transformed by the xform matrix
-   //+       m_posData = old(m_posData).post(xformMatrix)
-   //!NOTE: This moves the position data by the amount
-   //+      specified in SetTransform
+   //+       m_posData = old(m_posData).pre(xformMatrix)
+   //!NOTE: This moves the wMr to the modifed reciever system wMmr
+   //+  where w = world, mr = world of the reciever, and r = reciever
    void TransformData()
    { m_posData.postMult(m_matrixTransform); }
 
