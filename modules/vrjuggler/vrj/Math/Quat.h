@@ -1,3 +1,22 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
 #ifndef _VJ_QUAT_H_
 #define _VJ_QUAT_H_
 
@@ -8,17 +27,18 @@
 
 #define VJ_QUAT_EPSILON	    0.00001f
 
-// ---------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 //: Class to encapsulate quaternion behaviors.
 //
-// Note: The code for most of these routines was borrowed from the the folling sources.
+// Note: The code for most of these routines was borrowed from the the folling
+// sources.
 //
 //    Game Developer Magazine: Feb 98, pg.34-42                   <br>
 //    Advanced Animation and Rendering Techniques: pp363-365      <br>
 //    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989  <br>
 //    Animating Rotation with Quaternion Curves,  Ken Shoemake <br>
 //		   SIGGRAPH Proceedings Vol 19, Number 3, 1985           <br>
-//----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //!PUBLIC_API:
 class vjQuat : public vjVec4
 {

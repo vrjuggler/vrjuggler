@@ -1,11 +1,30 @@
-/* CyberGloveBasic */
-#include <Input/vjGlove/CyberGloveBasic.h>
-#include <sys/time.h>
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
+#include <vjConfig.h>
 
 // need stdio for sprintf
 #include <stdio.h>
-#include <iostream.h>
+#include <sys/time.h>
 
+/* CyberGloveBasic */
+#include <Input/vjGlove/CyberGloveBasic.h>
 #include <Input/vjGlove/vt_globals.h>
 #include <Input/vjGlove/vt_types.h>
 #include <Input/vjGlove/vt_error.h>
@@ -202,4 +221,3 @@ void CyberGloveBasic::readSurfaceModel (int resolution, char *dir, char *name) {
   else  // hires
     vt_read_hand_model (filename, hand, dir);
 }
-

@@ -1,5 +1,20 @@
-/* vjConfigChunk.cpp */
-
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
 
 
 #include <vjConfig.h>
@@ -423,11 +438,3 @@ bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
 	return false;
     return setProperty (property, val, p->value.size());
 }
-
-
-
-
-
-
-
-

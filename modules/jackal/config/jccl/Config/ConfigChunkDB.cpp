@@ -1,5 +1,22 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
 
-// vjConfigChunkDB.cpp
+
 // Implementation of vjConfigChunk DB
 //
 // Author: Christopher Just
@@ -460,6 +477,3 @@ void vjConfigChunkDB::removeAll() {
 int vjConfigChunkDB::removeNamed (const std::string& name) {
     return removeMatching ("name", name);
 }
-
-
-
