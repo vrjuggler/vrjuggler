@@ -164,15 +164,7 @@ namespace vrj
     */
    bool SoundManagerSonix::configCanHandle(jccl::ConfigElementPtr element)
    {
-      const std::string element_type(element->getID());
-      if(std::string("sound_manager") == element_type)
-      {
-         return true;
-      }
-      else
-      {
-         return false;
-      }
+      return std::string("sound_manager_sonix") == element->getID();
    }
 
    /** Enables a frame to be drawn. */
