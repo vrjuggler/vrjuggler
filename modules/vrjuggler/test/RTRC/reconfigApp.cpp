@@ -558,7 +558,7 @@ bool reconfigApp::verifyDisplayProps(  vrj::Display* disp,
       ok = false;
    }
 
-   if (disp->inStereo() != stereo)
+   if (disp->isStereoRequested() != stereo)
    {
       ok = false;
    }
