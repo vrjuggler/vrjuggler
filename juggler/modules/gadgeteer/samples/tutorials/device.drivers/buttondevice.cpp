@@ -57,15 +57,15 @@ extern "C" GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
    new DeviceConstructor<ButtonDevice>(inputMgr);
 }
 
-/** Returns a string that matches this device's configuration element type. */
+// Returns a string that matches this device's configuration element type.
 std::string ButtonDevice::getElementType()
 {
    return std::string("button_device");
 }
 
-//: When the system detects a configuration change for your driver, it will
-//  pass the new jccl::ConfigElement into this function.  See the documentation
-//  on config elements, for information on how to access them.
+// When the system detects a configuration change for your driver, it will
+// pass the jccl::ConfigElementPtr into this function.  See the documentation
+// on config elements, for information on how to access them.
 bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
   if (!Digital::config(e))
@@ -87,9 +87,7 @@ void ButtonDevice::updateData()
    }
 }
 
-/**
- * Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
- */
+// Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
 bool ButtonDevice::startSampling()
 {
    mRunning = true;
@@ -106,10 +104,8 @@ bool ButtonDevice::startSampling()
    }
 }
 
-/**
- * Records (or samples) the current data.  This is called repeatedly by the
- * sample thread created by startSampling().
- */
+// Records (or samples) the current data.  This is called repeatedly by the
+// sample thread created by startSampling().
 bool ButtonDevice::sample()
 {
    bool status(false);
@@ -129,7 +125,7 @@ bool ButtonDevice::sample()
    return status;
 }
 
-/** Kills the sample thread. */
+// Kills the sample thread.
 bool ButtonDevice::stopSampling()
 {
    mRunning = false;
@@ -144,11 +140,9 @@ bool ButtonDevice::stopSampling()
    return true;
 }
 
-/**
- * Our sampling function that is executed by the spawned sample thread.
- * This function is declared as a static member of ButtonDevice.  It simply
- * calls ButtonDevice::sample() over and over.
- */
+// Our sampling function that is executed by the spawned sample thread.
+// This function is declared as a static member of ButtonDevice.  It simply
+// calls ButtonDevice::sample() over and over.
 void ButtonDevice::threadedSampleFunction(void* classPointer)
 {
    ButtonDevice* this_ptr = static_cast<ButtonDevice*>( classPointer );
