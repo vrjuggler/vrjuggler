@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-
 package VjComponents.PerfMonitor;
 
 import java.awt.*;
@@ -65,19 +64,6 @@ public class PerfAnalyzerPanel
                PerformanceModuleListener {
 
 
-    protected class NumberedPanelButton extends JButton {
-	public PerfDataCollector collector;
-	public int phase;
-
-	public NumberedPanelButton (PerfDataCollector _collector, 
-                               int _phase,
-                               String text) {
-	    super (text);
-	    collector = _collector;
-	    phase = _phase;
-	}
-    }
-
 
     protected interface DataPanelElem 
         extends ActionListener {
@@ -87,118 +73,6 @@ public class PerfAnalyzerPanel
 	public void update();
 
         public PerfDataCollector getPerfDataCollector();
-    }
-
-
-    protected class NumberedDataPanelElem 
-        implements DataPanelElem {
-
-	public NumberedPerfDataCollector col;
-	public JLabel sep_label;
-	public JLabel colname_label;
-	public NumberedPanelButton colsummary_button;
-	public JLabel avgs_label;
-	public JLabel[] phase_labels;
-	public JLabel[] avg_labels;
-	public NumberedPanelButton[] graph_buttons;
-	public NumberedPanelButton[] anomalies_buttons;
-	public int num;
-
-        public NumberedDataPanelElem (NumberedPerfDataCollector _col) {
-            col = _col;
-        }
-
-	public void initialize (JPanel panel, 
-			      GridBagLayout gblayout, GridBagConstraints gbc) {
-	    Insets insets = new Insets (1,1,1,1);
-	    num = col.getNumPhases();
-	    phase_labels = new JLabel[num];
-	    avg_labels = new JLabel[num];
-	    graph_buttons = new NumberedPanelButton[num];
-	    anomalies_buttons = new NumberedPanelButton[num];
-
-	    col.generateAverages(preskip, postskip);
-	    gbc.gridwidth = gbc.REMAINDER;
-	    sep_label = new JLabel ("----------------------------------------------");
-	    gblayout.setConstraints (sep_label, gbc);
-	    panel.add (sep_label);
-
-	    colname_label = new JLabel (col.getName());
-	    gbc.gridwidth = 1;
-	    gblayout.setConstraints (colname_label, gbc);
-	    panel.add (colname_label);
-
-	    colsummary_button = new NumberedPanelButton (col, -1, "Graph");
-            colsummary_button.setActionCommand ("Graph");
-	    colsummary_button.addActionListener (PerfAnalyzerPanel.this);
-	    gbc.gridwidth = gbc.REMAINDER;
-	    gblayout.setConstraints (colsummary_button, gbc);
-	    panel.add (colsummary_button);
-
-	    avgs_label = new JLabel ("Average times in milliseconds:");
-	    gblayout.setConstraints(avgs_label, gbc);
-	    panel.add (avgs_label);
-
-	    JLabel l;
-	    JButton b;
-	    for (int j = 0; j < num; j++) {
-		double avg = col.getAverageForPhase(j);
-		// this below will cause trouble
-		if (avg == 0.0)
-		    continue;
-		gbc.gridwidth = 1;
-		l = phase_labels[j] = new JLabel (j + ": " + col.getLabelForPhase(j));
-		gblayout.setConstraints (l, gbc);
-		panel.add(l);
-		l = avg_labels[j] = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
-		gblayout.setConstraints (l, gbc);
-		panel.add(l);
-		b = graph_buttons[j] = new NumberedPanelButton (col, j, "Graph");
-                b.setActionCommand ("Graph");
-		b.addActionListener (PerfAnalyzerPanel.this);
-		b.setMargin(insets);
-		gblayout.setConstraints (b, gbc);
-		panel.add(b);
-		b = anomalies_buttons[j] = new NumberedPanelButton (col, j, "Anomalies");
-                b.setActionCommand ("Anomalies");
-		b.setEnabled(false);
-		b.addActionListener (PerfAnalyzerPanel.this);
-		b.setMargin(insets);
-		gbc.gridwidth = gbc.REMAINDER;
-		gblayout.setConstraints (b, gbc);
-		panel.add(b);
-	    }
-
-            col.addActionListener (this);
-	}
-
-        public void destroy () {
-            col.removeActionListener (this);
-        }
-
-	public void update() {
-	    col.generateAverages(preskip, postskip);
-	    for (int i = 0; i < num; i++) {
-		double avg = col.getAverageForPhase(i);
-		if (avg_labels[i] != null)
-		    avg_labels[i].setText(padFloat(avg/1000.0));
-		else
-		    ; // we should probably add something in this case...
-	    }
-	}
-
-
-        public PerfDataCollector getPerfDataCollector() {
-            return col;
-        }
-
-
-        public void actionPerformed (ActionEvent e) {
-            if (e.getActionCommand().equals ("Update")) {
-                update();
-            }
-        }
-
     }
 
 
@@ -424,16 +298,16 @@ public class PerfAnalyzerPanel
 
     public void addDataPanelElem (PerfDataCollector col) {
         DataPanelElem dpe;
-        if (col instanceof NumberedPerfDataCollector) {
-            dpe = new NumberedDataPanelElem ((NumberedPerfDataCollector)col);
-	    if (ui_initialized)
-		((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
-	}
-        else {
+//          if (col instanceof NumberedPerfDataCollector) {
+//              dpe = new NumberedDataPanelElem ((NumberedPerfDataCollector)col);
+//  	    if (ui_initialized)
+//  		((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
+//  	}
+//          else {
             dpe = new LabeledDataPanelElem ((LabeledPerfDataCollector)col, root);
 	    if (ui_initialized)
 		((LabeledDataPanelElem)dpe).initialize ();
-	}
+//  	}
         datapanel_elems.add(dpe);
     }
 
@@ -446,23 +320,6 @@ public class PerfAnalyzerPanel
             GenericGraphFrame f = (GenericGraphFrame)source;
             child_frames.removeElement(f);
             f.destroy();
-        }
-        else if (source instanceof NumberedPanelButton) {
-            NumberedPanelButton b = (NumberedPanelButton)e.getSource();
-            if (e.getActionCommand().equals ("Graph")) {
-                GenericGraphPanel gp = new SummaryGraphPanel ((NumberedPerfDataCollector)b.collector, b.phase);
-                String title = "Graph of " + b.collector.getName();
-                if (b.phase >= 0)
-                    title = title + " phase " + b.phase;
-                GenericGraphFrame gf = new GenericGraphFrame (gp, title);
-                gf.addActionListener (this);
-                
-                child_frames.addElement(gf);
-                gf.show();
-            }
-            else if (e.getActionCommand().equals ("Anomalies")) {
-                System.out.println ("Not implemented");
-            }
         }
         else if (source instanceof PerfTreeNodeInfo.LabeledPanelButton) {
             PerfTreeNodeInfo.LabeledPanelButton b = (PerfTreeNodeInfo.LabeledPanelButton)e.getSource();
