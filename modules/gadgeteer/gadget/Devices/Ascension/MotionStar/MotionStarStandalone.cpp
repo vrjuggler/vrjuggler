@@ -712,14 +712,6 @@ void aMotionStar::set_status_fbb(unsigned char fbb_addr)
 */
 } // end void aMotionStar::set_status_fbb()
 
-
-void aMotionStar::setHemisphere (int n) { hemisphere = n; }
-void aMotionStar::setBirdFormat (unsigned int n) { birdFormat = n; }
-void aMotionStar::setNumBirds (unsigned int n) { birdsRequired = n; }
-void aMotionStar::setBirdRate (double n) { birdRate = n; }
-void aMotionStar::setRunMode ( int n ) { runMode = n; }
-void aMotionStar::setReportRate (unsigned char n) { reportRate = n; }
-
 // ----------------------------------------------------------------------------
 // Set the address (either IP address or hostname) for the server.
 // ----------------------------------------------------------------------------
@@ -734,13 +726,6 @@ aMotionStar::setAddress (const char* n) {
     address = strdup(n);
   }
 }
-
-float aMotionStar::xPos( int i) {return posinfo[i][0];}
-float aMotionStar::yPos( int i) {return posinfo[i][1];}
-float aMotionStar::zPos( int i) {return posinfo[i][2];}
-float aMotionStar::zRot( int i) {return posinfo[i][3];}
-float aMotionStar::yRot( int i) {return posinfo[i][4];}
-float aMotionStar::xRot( int i) {return posinfo[i][5];}
 
 // ============================================================================
 // Private methods.
