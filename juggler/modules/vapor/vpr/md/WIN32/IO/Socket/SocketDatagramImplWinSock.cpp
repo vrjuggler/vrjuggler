@@ -57,7 +57,6 @@ namespace vpr {
 SocketDatagramImpWinSock::SocketDatagramImpWinSock ()
     : SocketImpWinSock()
 {
-fprintf(stderr, "vpr::SocketDatagramImpWinSock default constructor\n");
     /* Do nothing. */ ;
 }
 
@@ -70,18 +69,6 @@ SocketDatagramImpWinSock::SocketDatagramImpWinSock (const InetAddr& local_addr,
                                                     const InetAddr& remote_addr)
     : SocketImpWinSock(local_addr, remote_addr, SocketTypes::DATAGRAM)
 {
-fprintf(stderr, "vpr::SocketDatagramImpBSD(local, remote) constructor\n");
-fprintf(stderr, "    Local Address: %s -> %s\n",
-        local_addr.getAddressString().c_str(), m_name.c_str());
-fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
-        m_local_addr.getPort());
-fprintf(stderr, "    Remote Address: %s -> %s\n",
-        remote_addr.getAddressString().c_str(), m_name.c_str());
-fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
-        m_remote_addr.getPort());
-fprintf(stderr, "    Domain: %d -> %d\n", local_addr.getFamily(),
-        m_local_addr.getFamily());
-fprintf(stderr, "    Type: %d\n", m_type);
     /* Do nothing. */ ;
 }
 
