@@ -76,9 +76,10 @@ void SlSound::pitchBend( float amount )
 
 // allows a user to enable or disable a sound without worring about its state set by start or stop.
 // NOTE: to hear a sound enable() and play() must be active.
-//       default is ON
-void SlSound::enable( vjSound::BinaryState state )
+//       default is true
+void SlSound::enable( const bool& state )
 {
+   vjSound::enabled( state );
    assert( mSample != NULL );
    cout<<"[SL] Not implemented: enable\n"<<flush;
 }
@@ -88,27 +89,26 @@ void SlSound::trigger()
    assert( mSample != NULL );
    SlSoundEngine& engine = dynamic_cast<SlSoundEngine&> (*mEngine);
    
-   // set the flag... TODO, this is inelegant.  maybe tell the engine to play based on some handle.
-   //engine.playFlag = true;
-   
-   switch (mLooping)
-   {   
-      float volume;
-      this->getPercievedVolume( volume );
-      
-      // this affects the actual sound *data*! (yeah that's bad)
-      //mSample->adjustVolume( volume );
-      
-      case 0:
-         cout<<"[SL] Playing audio "<<mSoundName.data()<<"\n"<<flush;
-         engine.mScheduler.playSample( mSample );
-         break;
-         
-      default:
-      case -1:
-         cout<<"[SL] Looping audio "<<mSoundName.data()<<"\n"<<flush;
-         engine.mScheduler.loopSample( mSample );
-         break;
+   if (this->isEnabled())
+   {
+      switch (mLooping)
+      {   
+         // this affects the actual sound *data*! (yeah that's bad)
+         //float volume;
+         //this->getPercievedVolume( volume );
+         //mSample->adjustVolume( volume );
+
+         case 0:
+            cout<<"[SL] Playing audio "<<mSoundName.data()<<"\n"<<flush;
+            engine.mScheduler.playSample( mSample );
+            break;
+
+         default:
+         case -1:
+            cout<<"[SL] Looping audio "<<mSoundName.data()<<"\n"<<flush;
+            engine.mScheduler.loopSample( mSample );
+            break;
+      }
    }
 }  
 
