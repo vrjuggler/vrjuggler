@@ -93,10 +93,10 @@ void ConfigIO::releaseHandler (ConfigIOHandler* handler) {
 
 
 // file name should already be mangled.
-bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db,
+bool ConfigIO::readConfigChunkDB (std::string _file_name, ConfigChunkDB& db,
                                     const std::string& handler_name /*= ""*/) {
 
-    //std::string file_name = demangleFileName (_file_name);
+    std::string file_name = demangleFileName (_file_name);
     std::ifstream in (file_name.c_str());
     if (!in) {
         file_name = findFileUsingPathVar (in, file_name, "VJ_CFG_PATH");
@@ -165,10 +165,10 @@ bool ConfigIO::writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db
 
 //--------------------- ChunkDescDB Methods --------------------
 
-bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db,
+bool ConfigIO::readChunkDescDB (std::string _file_name, ChunkDescDB& db,
                                     const std::string& handler_name /*= ""*/) {
 
-    //std::string file_name = demangleFileName (_file_name);
+    std::string file_name = demangleFileName (_file_name);
     std::ifstream in (file_name.c_str());
     if (!in) {
         file_name = findFileUsingPathVar (in, file_name, "VJ_CFG_PATH");
