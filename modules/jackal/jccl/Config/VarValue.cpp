@@ -101,9 +101,10 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
     floatval = v.floatval;
     boolval = v.boolval;
     strval = v.strval;
-    if (v.embeddedchunkval)
+    if (v.embeddedchunkval) {
+        
 	embeddedchunkval = new vjConfigChunk (*v.embeddedchunkval);
-
+    }
     return *this;
 }
 
@@ -166,7 +167,11 @@ vjVarValue::operator vjConfigChunk*() const {
     case T_EMBEDDEDCHUNK:
 	// we need to make a copy because if the value is deleted, it deletes
 	// its embeddedchunk
-	return new vjConfigChunk (*embeddedchunkval);
+        if (embeddedchunkval)
+            return new vjConfigChunk (*embeddedchunkval);
+        else {
+            return NULL;
+        }
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2 
 			       << endl << vjDEBUG_FLUSH;
@@ -307,15 +312,6 @@ vjVarValue &vjVarValue::operator = (float i) {
 
 vjVarValue &vjVarValue::operator = (const std::string& s) {
     return *this = s.c_str();
-//      switch (type) {
-//      case T_STRING:
-//      case T_CHUNK:
-//          strval = s;
-//  	break;
-//      default:
-//  	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
-//      }
-//      return *this;
 }
 
 
@@ -326,6 +322,10 @@ vjVarValue &vjVarValue::operator = (const char *val) {
     int i;
     float f;
     bool b;
+
+    if (val == NULL) {
+        val = "";
+    }
 
     switch (type) {
     case T_STRING:
@@ -361,7 +361,7 @@ vjVarValue &vjVarValue::operator = (const char *val) {
 	break; 
     default:
         vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = string/char*.\n" << vjDEBUG_FLUSH;
-    for (;;);
+        break;
     }
     if (err) 
         vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: couldn't assign string '" 
