@@ -199,11 +199,11 @@ public class PinchGlovePanel extends JPanel
       return(true);
    }
 
-   public boolean createPinchGloveConfigChunk()
+   public boolean createPinchGloveConfigElement()
    {
       if (ConfigUtilities.getElementsWithName(mBroker.getElements(mContext), mName.getText()).size() != 0)
       {
-         int result = JOptionPane.showConfirmDialog(this, "ConfigChunk by this name already exists. "
+         int result = JOptionPane.showConfirmDialog(this, "ConfigElement by this name already exists. "
             +"Do you want to replace it?.", "ClusterWizard", JOptionPane.YES_NO_OPTION);
          
          if(result == JOptionPane.NO_OPTION)
@@ -211,7 +211,7 @@ public class PinchGlovePanel extends JPanel
             return false;
          }
 
-         //Remove all old chunks by this name
+         //Remove all old elements by this name
          java.util.List old_list =
             ConfigUtilities.getElementsWithName(mBroker.getElements(mContext), mName.getText());
 

@@ -280,7 +280,8 @@ public class ControlPanelView
    }
 
    /**
-    * Displays a panel containing all of the chunks that have the given token.
+    * Displays a panel containing all of the elements that have the given
+    * token.
     */
    private ControlPanel createPanelWithElementsOfType(String token)
    {

@@ -78,8 +78,9 @@ public class ProxyChooser
          e.printStackTrace();
       }
 
-      // Make sure the focus and selected chunk desc get updated appropriately
-      // for the currently visible tab when the tab selection changes.
+      // Make sure the focus and selected config definition get updated
+      // appropriately for the currently visible tab when the tab selection
+      // changes.
       browseTab.addComponentListener(new ComponentAdapter()
       {
          public void componentShown(ComponentEvent evt)

@@ -189,7 +189,7 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
    public void setActiveViewPort(ViewPort viewport)
    {
       mActiveViewPort = viewport;  	
-      mSheet.setElement(mActiveViewPort.getConfigChunk());
+      mSheet.setElement(mActiveViewPort.getConfigElement());
 
       for (Iterator s = mViewPorts.iterator() ; s.hasNext() ; )
       {
@@ -331,12 +331,12 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
    {
       if (elm.getDefinition().getToken().equals("display_window")) 
       {
-         java.util.List embedded_chunks = elm.getPropertyValues("surface_viewports");
+         java.util.List embedded_elts = elm.getPropertyValues("surface_viewports");
  
-         for (Iterator e = embedded_chunks.iterator(); e.hasNext();) 
+         for (Iterator e = embedded_elts.iterator(); e.hasNext();) 
          {
-            ConfigElement disp_chunk = (ConfigElement) e.next();
-            addSurfaceViewport(disp_chunk);
+            ConfigElement disp_elt = (ConfigElement) e.next();
+            addSurfaceViewport(disp_elt);
          }
       } 
    }
@@ -344,9 +344,9 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
    private void addConfigContext()
    {
       // Get all elements from the two files
-      //java.util.List all_chunks = mBroker.getElements(mCtx);
+      //java.util.List all_elts = mBroker.getElements(mCtx);
 
-      //for (Iterator i = all_chunks.iterator(); i.hasNext();) 
+      //for (Iterator i = all_elts.iterator(); i.hasNext();) 
       //{
       //ConfigElement mConfigElement = (ConfigElement) i.next();
       //addDisplayWindow();

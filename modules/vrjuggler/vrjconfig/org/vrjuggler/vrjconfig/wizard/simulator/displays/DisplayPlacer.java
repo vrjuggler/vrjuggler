@@ -317,7 +317,7 @@ class DisplayPlacerModel
          ConfigElement elt = (ConfigElement)itr.next();
          elt.addConfigElementListener(mChangeListener);
       }
-//      chunkDB.addChunkDBListener(this);
+//      chunkDB.addConfigurationListener(this);
 //    fireTableContentsChanged();
    }
 
@@ -367,7 +367,7 @@ class DisplayPlacerModel
    public void setSizeOf(int idx, Dimension size)
    {
       ConfigElement window_elt = (ConfigElement)getElement(idx);
-      System.out.println("--- Chunk "+window_elt.getName()+" new size=("+size.width+", "+size.height+")");
+      System.out.println("--- Element "+window_elt.getName()+" new size=("+size.width+", "+size.height+")");
       System.out.println("\thashcode="+window_elt.hashCode());
       window_elt.setProperty("size", 0, new Integer(size.width));
       window_elt.setProperty("size", 1, new Integer(size.height));

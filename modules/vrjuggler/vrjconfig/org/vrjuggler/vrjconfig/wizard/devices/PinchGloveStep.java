@@ -72,7 +72,7 @@ public class PinchGloveStep
 
    public boolean onExiting()
    {
-     return(cwp.createPinchGloveConfigChunk() && cwp.saveFile());
+     return(cwp.createPinchGloveConfigElement() && cwp.saveFile());
    }
 
 
