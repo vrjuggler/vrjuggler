@@ -81,6 +81,8 @@ bool DataGlove::startSampling()
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "[dataglove] Begin sampling\n"
          << vprDEBUG_FLUSH;
+
+   
    if (mThread == NULL)
    {
       int maxAttempts=0;
@@ -106,7 +108,8 @@ bool DataGlove::startSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] Successfully connected, Now sampling dataglove data."
          << vprDEBUG_FLUSH;
-      // Create a new thread to handle the control
+      // Create a new thread to handle the control and set exit flag to false
+      mExitFlag = false;
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] Spawning control thread\n" << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<DataGlove>* memberFunctor =
@@ -140,8 +143,8 @@ void DataGlove::controlLoop(void* nullParam)
          << "[dataglove] Entered control thread\n"
          << vprDEBUG_FLUSH;
 
-   // XXX: I can never exit!
-   while(1)
+   // Go until mExitFlag is set to true
+   while(!mExitFlag)
    {
       sample();
    }
@@ -178,16 +181,19 @@ void DataGlove::updateData()
 
 bool DataGlove::stopSampling()
 {
-   if (mThread != NULL)
+   if(mThread != NULL)
    {
-      mThread->kill();
+      mExitFlag = true;
+   
+      //Wait for thread to exit normally after setting exit flag
+      mThread->join();
       delete mThread;
       mThread = NULL;
-      vpr::System::usleep(100);
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] stopping DataGlove.." << std::endl << vprDEBUG_FLUSH;
    }
+
    return true;
 }
 

@@ -167,6 +167,8 @@ private:
 
    void readLoop(void *nullParam);
 
+   bool mExitFlag;
+
 
    gmtl::Matrix44f getSensorPos(int d);
    gadget::DigitalData getDigitalData(int d);

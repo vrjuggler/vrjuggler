@@ -247,6 +247,7 @@ private:
 
     std::string  mPortName;
     int           mBaudRate;
+    bool          mExitFlag;
 
 };
 

@@ -139,6 +139,7 @@ protected:
 private:
    vpr::Thread*      mThread;      /**< The thread doing the flock sampling */
    FlockStandalone   mFlockOfBirds; /**< The actual Flock device object */
+   bool              mExitFlag;
 };
 
 } // End of gadget namespace

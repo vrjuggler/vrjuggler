@@ -112,6 +112,7 @@ bool PinchGlove::startSampling()
          << mPortName << std::endl << vprDEBUG_FLUSH;
 
       // Create a new thread to handle the control
+      mExitFlag = false;
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "[PinchGlove] Spawning control thread\n"
                                        << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
@@ -144,8 +145,8 @@ void PinchGlove::controlLoop(void* nullParam)
       << "[PinchGlove] Entered control thread\n"
       << vprDEBUG_FLUSH;
 
-   // XXX: I can never exit!
-   while ( 1 )
+   // Looping till our flag is set
+   while ( !mExitFlag )
    {
       sample();
    }
@@ -206,7 +207,10 @@ bool PinchGlove::stopSampling()
 {
    if ( mThread != NULL )
    {
-      mThread->kill();
+      //Signal to thread that it should exit
+      mExitFlag = true;
+
+      mThread->join();
       delete mThread;
       mThread = NULL;
 

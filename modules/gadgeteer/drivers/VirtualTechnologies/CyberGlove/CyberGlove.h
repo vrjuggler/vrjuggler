@@ -99,6 +99,7 @@ protected:
    char*             mCalDir;             /**< Calibration file directory */
    std::string       mPortName;
    int               mBaudRate;
+   bool              mExitFlag;
 };
 
 } // End of gadget namespace

@@ -71,7 +71,7 @@ class DataGlove : public InputMixer<Input,Analog>
 {
 public:
    /** Construct */
-   DataGlove() : mGlove( NULL ), mAnalogData(9)
+   DataGlove() : mGlove( NULL ), mAnalogData(9), mExitFlag(false)
    {;}
 
    /** Destroy the glove */
@@ -117,6 +117,8 @@ protected:
    // Hand left, right;
    std::vector<AnalogData> mAnalogData;   /**< analogs for each finger */
    //std::vector<DigitalData> mDigitalData; /**< digital for gesture */
+   
+   bool           mExitFlag;
 
 };
 

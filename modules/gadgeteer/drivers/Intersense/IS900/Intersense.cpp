@@ -167,7 +167,7 @@ void Intersense::controlLoop(void* nullParam)
     }
 
 // Loop through and keep sampling
-    for (;;)
+    while (!mExitFlag)
     {
         this->sample();
     }
@@ -204,10 +204,12 @@ bool Intersense::startSampling()
       return 0;
       }
 
-// Create a new thread to handle the control
-        vpr::ThreadMemberFunctor<Intersense>* memberFunctor =
+// Create a new thread to handle the control and set flag to loop
+
+      mExitFlag = false;
+      vpr::ThreadMemberFunctor<Intersense>* memberFunctor =
             new vpr::ThreadMemberFunctor<Intersense>(this, &Intersense::controlLoop, NULL);
-        mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(memberFunctor);
 
         if ( ! mThread->valid() )
         {
@@ -321,11 +323,13 @@ bool Intersense::stopSampling()
 
    if (mThread != NULL)
    {
+      // Signal thread to stop looping
+      mExitFlag = true;
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "gadget::Intersense::stopSampling(): Stopping the intersense thread... "
          << vprDEBUG_FLUSH;
 
-      mThread->kill();
+      mThread->join();
       delete mThread;
       mThread = NULL;
 
