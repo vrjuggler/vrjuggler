@@ -36,7 +36,7 @@ VJGLOVE_SRCS	+= CyberGloveBasic.cpp		\
                    vjCyberGlove.cpp		\
                    fsPinchGlove.cpp		\ 
                    vt_glove.cpp			\
-        	   vt_error.cpp			\
+				   vt_error.cpp			\
                    vt_init.cpp			\
                    vt_math3d.cpp		\
                    vt_read_hand_model.cpp	\
