@@ -156,7 +156,7 @@ float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
             </listitem>
          </itemizedlist>
          <para>It even has simulated sockets (using a discrete-event simulator for sockets). What does this mean for you? What will you need to port? </para>
-         <orderedlist numeration="lowerroman">
+         <orderedlist>
             <listitem>
                <para>Every place you used a thread in your VR Juggler 1.0 application, you'll need to replace <classname>vjThread</classname> with <classname>vpr::Thread</classname>.</para>
             </listitem>
@@ -250,14 +250,25 @@ if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
 }</programlisting>
             </listitem>
             <listitem>
-               <para>Your configuration file formats have changed to XML. This allows you to use standard XML editors as well as the included VjControl configuration editor. We have included a converter from 1.0 format to 1.1 format. You can find it in: <filename>juggler/modules/vrjuggler/scripts/chunk_cvt.pl</filename>. This converter can handle all chunks except VR Juggler 1.1 <type>displayWindow</type> chunks. A more extensive converter written in Java can be found in <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>.</para>
+               <para>Your configuration file formats have changed to XML. This allows you to use standard XML editors as well as the included VjControl configuration editor. We have included a converter from VR Juggler 1.0 format to 1.1/2.0 format. You can find the source in <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If you have a binary distribution of VR Juggler, a compiled version can be run using the script <command>cfgupdater</command>, found in <filename>$VJ_BASE_DIR/bin</filename>. It is run as follows:</para>
+               <screen>cfgupdater file1 file2 ...</screen>
+               <para>The listed files can be config chunks (those with the extension <filename>.cfg</filename> or <filename>.config</filename>) or chunk descriptions (<filename>.desc</filename>). The utility figures out the file type and makes the appropriate conversions.</para>
             </listitem>
             <listitem>
-               <para>In application configuration, the 1.0 use of <classname>vjConfigChunk*</classname> is shown below:</para>
+               <para>In application configuration, the VR Juggler 1.0 use of <classname>vjConfigChunk*</classname> is shown below:</para>
                <programlisting>bool myapp::configAdd( vjConfigChunk* chunk )</programlisting>
                <para>For VR juggler 1.1, you'll change the "vj" to <classname>jccl::</classname>, and the * to a <classname>Ptr</classname>:</para>
                <programlisting>bool myapp::configAdd( jccl::ConfigChunkPtr chunk )</programlisting>
                <para>The above illustrates the changes with the VR Juggler configuration system that affect application programmers. To summarize, everything is now in the <classname>jccl::</classname> namespace, and a special "smart-pointer" type is used instead of C/C++ pointers. Porting your config code should be very straight forward: just search and replace <classname>vjConfigChunk*</classname> with <classname>jccl::ConfigChunkPtr</classname>.</para>
+            </listitem>
+            <listitem>
+               <para>Once you have a <classname>jccl::ConfigChunkPtr</classname> object, the signature of the <methodname>getProperty()</methodname> method has changed. In VR Juggler 1.0 code, a property value of type <type>int</type> would have been requested as follows:</para>
+               <programlisting>int prop_value = static_cast&lt;int&gt;(chunk-&gt;getProperty("someInt"));</programlisting>
+               <para>or as:</para>
+               <programlisting>int prop_value = (int) chunk-&gt;getProperty("someInt");</programlisting>
+               <para>In the new API, the desired type is passed as a template parameter, as shown below:</para>
+               <programlisting>int prop_value = chunk-&gt;getProperty&lt;int&gt;("someInt");</programlisting>
+               <para>All the types you would have used with the cast operator including <classname>std::string</classname> and <classname>jccl::ConfigChunkPtr</classname> (formerly <classname>vjConfigChunk*</classname>) can be used for the template parameter. Other types such as <type>unsigned int</type>, <type>short</type>, etc. that were not directly supported by the old <classname>vjVarValue</classname> class can be used as well.</para>
             </listitem>
             <listitem>
                <para>The JCCL library is located in <filename>libjccl</filename>, and the headers are in <filename>include/jccl</filename>.</para>
