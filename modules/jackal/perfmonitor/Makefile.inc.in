@@ -24,41 +24,36 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# -----------------------------------------------------------------------------
-# Makefile.in for perfmonitor/jccl/PerfMonitor.  It requires GNU make.
-#
-# Generated for use on @PLATFORM@
-# -----------------------------------------------------------------------------
-default: all
+BUILD_JAVA	= @BUILD_JAVA@
 
-# Include common definitions here.
-include @topdir@/make.defs.mk
-
-includedir	= @includedir@/jccl/PerfMonitor
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(JCCL_PERFMONITOR_LIBRARY)
-
-SRCS		= \
-	LabeledPerfDataBuffer.cpp \
-	PerfCommand.cpp \
-	PerformanceCategories.cpp \
-	PerformanceMonitor.cpp
-
-EXTRA_INCLUDES = \
-	-I$(top_srcdir)/config \
-	-I$(top_srcdir)/common \
-	-I$(top_srcdir)/net \
-	-I$(top_srcdir)/rtrc \
-	-I$(top_srcdir)/perfmonitor \
-	-I$(topdir)/common
-
-include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-    -include $(DEPEND_FILES)
+perfmonitor-java:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@echo "------------------------------------------------"
+	@echo "Building Java code for the JCCL perfmonitor"
+	@echo "------------------------------------------------"
+	@$(MAKE) java
+else
+	@echo "------------------------------------------------"
+	@echo "JCCL perfmonitor build skipped"
+	@echo "------------------------------------------------"
 endif
+endif	# ifndef NO_JAVA
+
+# Build the JAR files for the Tweek GUI.
+perfmonitor-jar:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@$(MAKE) jars
+else
+	@echo "------------------------------------------------"
+	@echo "JCCL perfmonitor JAR file creation skipped"
+	@echo "------------------------------------------------"
+endif
+endif	# ifndef NO_JAVA
+
+perfmonitor-pkg-links:
+	@$(MAKE) instlinks="$(instlinks)" links
+
+perfmonitor-pkg-install:
+	@$(MAKE) perfmonitor-install
