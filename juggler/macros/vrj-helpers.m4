@@ -203,3 +203,129 @@ END_ISA_DIST
 END_DIST
     fi
 ])
+
+dnl ---------------------------------------------------------------------------
+dnl Variables set in Makefiles found in the application trees.  All variables
+dnl listed are for use only in the Makefile.in's found in that tree unless
+dnl otherwise noted.  They are used in the following way:
+dnl
+dnl     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl
+dnl Usage
+dnl     VJ_APP_COMPILER(C-compiler, C-flags, C++-compiler, C++-flags, debug-flags, optimization-flags, base-dir, defs, includes, extra-flags)
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_APP_COMPILER,
+[
+    if test "$OS_TYPE" = "UNIX" ; then
+        APP_CC="$1"
+        APP_CXX="$3"
+    elif test "$OS_TYPE" = "Win32" ; then
+        if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+            APP_CC='cl'
+            APP_CXX='cl'
+        else
+            APP_CC="$1"
+            APP_CXX="$3"
+        fi
+    fi
+
+    APP_CFLAGS="$2"
+    APP_CXXFLAGS="$4"
+    APP_DEBUG_FLAGS="$5"
+    APP_OPTIM_FLAGS="$6"
+    APP_DEFS="$8"
+    APP_INCLUDES=ifelse([$7], , "$9", "-I\$($7)/include $9")
+    APP_EXTRA_FLAGS="$10"
+
+    AC_SUBST(APP_CC)
+    AC_SUBST(APP_CFLAGS)
+    AC_SUBST(APP_CXX)
+    AC_SUBST(APP_CXXFLAGS)
+    AC_SUBST(APP_DEBUG_FLAGS)
+    AC_SUBST(APP_OPTIM_FLAGS)
+    AC_SUBST(APP_DEFS)
+    AC_SUBST(APP_INCLUDES)
+    AC_SUBST(APP_EXTRA_FLAGS)
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Variables set in Makefiles found in the application trees.  All variables
+dnl listed are for use only in the Makefile.in's found in that tree unless
+dnl otherwise noted.  They are used in the following way:
+dnl
+dnl     * APP_BASIC_LIBS: The basic libraries being built in this system.
+dnl     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list of
+dnl       extra libraries.
+dnl     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
+dnl       libraries.
+dnl     * APP_EXTRA_LIBS: A basic set of extra libraries and linker flags
+dnl       needed for compiling.  These are put after those listed in the
+dnl       previous variables in the compile line.
+dnl
+dnl Usage
+dnl     VJ_APP_LINKER(linker, link-flags, base-dir-name, basic-libs, extra-libs)
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_APP_LINKER,
+[
+    if test "$OS_TYPE" = "UNIX" ; then
+        APP_LINK="$1"
+        APP_LINK_FLAGS="$2"
+
+        for lib in $4 ; do
+            APP_BASIC_LIBS="$APP_BASIC_LIBS -l$lib"
+        done
+
+        APP_EXTRA_LIBS="$5"
+
+        if test "$PLATFORM" = "IRIX" ; then
+            APP_BASIC_LIBS_BEGIN="-B static -L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END='-B dynamic'
+            APP_BASIC_LIBS_BEGIN_INST="-B dynamic -L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($3)/lib$LIBBITSUF"
+
+            APP_EXTRA_LIBS_BEGIN='-B dynamic'
+            APP_EXTRA_LIBS_END=''
+        elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xMacOSX" ; then
+            APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic -L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END="-Wl,-Bdynamic"
+            APP_BASIC_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($3)/lib$LIBBITSUF"
+
+            APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
+            APP_EXTRA_LIBS_END=''
+        else
+            # For now, we are disabling static linking for the sample
+            # applications when compiled in a developer's build tree.  This
+            # is only the case on non-IRIX platforms and non-GCC compilers.
+            APP_BASIC_LIBS_BEGIN="-L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
+        fi
+    elif test "$OS_TYPE" = "Win32" ; then
+        if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+            APP_LINK='link'
+        else
+            APP_lINK="$1"
+        fi
+
+        for lib in $4 ; do
+            APP_BASIC_LIBS="$APP_BASIC_LIBS ${lib}.lib"
+        done
+
+        APP_BASIC_LIBS_BEGIN="-libpath:\$($3)/lib/debug"
+        APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
+    fi
+
+    AC_SUBST(APP_LINK)
+    AC_SUBST(APP_LINK_FLAGS)
+    AC_SUBST(APP_BASIC_LIBS_BEGIN)
+    AC_SUBST(APP_BASIC_LIBS_END)
+    AC_SUBST(APP_BASIC_LIBS_BEGIN_INST)
+    AC_SUBST(APP_BASIC_LIBS_END_INST)
+    AC_SUBST(APP_BASIC_LIBS)
+    AC_SUBST(APP_BASIC_EXT_LIBS)
+    AC_SUBST(APP_EXTRA_LIBS_BEGIN)
+    AC_SUBST(APP_EXTRA_LIBS_END)
+    AC_SUBST(APP_EXTRA_LIBS_BEGIN_INST)
+    AC_SUBST(APP_EXTRA_LIBS_END_INST)
+    AC_SUBST(APP_EXTRA_LIBS)
+])

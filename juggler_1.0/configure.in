@@ -754,11 +754,11 @@ EXTRA_LINK_FLAGS=''
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
-    EXTRA_LINK_FLAGS="-all"
+    EXTRA_LINK_FLAGS="$STDFLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
+    EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS /MTd"
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
 fi
@@ -790,37 +790,30 @@ cd "$srcdir"
 VJROOT_ABS=`pwd`
 cd "$topdir"
 
-# Define the base path to the source directory using ${VJROOT_ABS} as an
-# alternative to using ${srcdir}.
+# Define the base path to the source directory using $(VJROOT_ABS) as an
+# alternative to using $(srcdir).
 VJ_SRCDIR='$(VJROOT_ABS)'
 UNIX_VJROOT_ABS="$VJROOT_ABS"
+
+if test "x$OS_TYPE" = "xWin32" ; then
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+else
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
+fi
 
 # Variables set in Makefiles found in the application trees.  All variables
 # listed are for use only in the Makefile.in's found in that tree unless
 # otherwise noted.  They are used in the following way:
 #
-#     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
 #     * APP_EXTRA_FLAGS_PF: Extra flags for the compiler and linker when
 #       building Performer applications.
 #     * APP_VJ_INC_AW: The include path for the AudioWorks header files.
 #     * APP_VJ_INC_SL: The include path for hte SL header files.
-#     * APP_VJ_LIBS_BASIC: The basic VR Juggler library.
-#     * APP_VJ_LIBS_BASIC_INST: Same as the above but is for installed
-#       Makefiles.
 #     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 #     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
 #     * APP_VJ_LIBS_AW: The VR Juggler AudioWorks API library.
 #     * APP_VJ_LIBS_SL: The VR Juggler SL API library.
 #     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
-#     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for compiling
-#       (e.g., -lm).
-#     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list of
-#       extra libraries.
-#     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
-#       libraries.
-#     * APP_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
-#       needed for compiling.  These are put after those listed in the previous
-#       variables in the compile line.
 #     * APP_EXTRA_LIBS_GL: The OpenGL libraries needed for compiling with the
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
@@ -829,8 +822,17 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 #       the AudioWorks sound system.
 #     * APP_EXTRA_LIBS_SL: The SL libraries needed for compiling with the SL
 #       sound libraries.
-#
-APP_EXTRA_FLAGS="${_EXTRA_FLAGS} $X_INCLUDES"
+
+# Put together the basic information needed to compile VR Juggler applications.
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
+                VJ_BASE_DIR, $DEFS, $INCLUDES $X_INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, VJ_BASE_DIR, Juggler Juggler_utils,
+              $APP_EXTRA_LIBS)
+
+# FreeBSD needs to use libcompat for linking.
+if test "x$PLATFORM" = "xFreeBSD" ; then
+    APP_EXTRA_LIBS="$APP_EXTRA_LIBS -lcompat"
+fi
 
 # If we have AudioWorks, make it available in the application makefiles.
 if test "$AUDIO_WORKS" = "Y" ; then
@@ -857,52 +859,9 @@ if test "$SL" = "Y" ; then
 fi
 
 if test "$OS_TYPE" = "UNIX" ; then
-    if test "$PLATFORM" = "IRIX" ; then
-        APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END='-lJuggler_utils'
-        APP_VJ_LIBS_BASIC='-lJuggler'
-
-        APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
-        APP_VJ_LIBS_BASIC_INST='-lJuggler'
-
-        APP_EXTRA_LIBS_BEGIN='-B dynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
-    elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xMacOSX" ; then
-        APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END='-lJuggler_utils'
-        APP_VJ_LIBS_BASIC='-lJuggler'
-
-        APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
-        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
-
-        APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
-    else
-        # For now, we are disabling static linking for the sample
-        # applications when compiled in a developer's build tree.  This
-        # is only the case on non-IRIX platforms and non-GCC compilers.
-        APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END='-lJuggler_utils'
-        APP_VJ_LIBS_BASIC='-lJuggler'
-
-        APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
-        APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
-        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
-
-        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
-    fi
-
-    # FreeBSD needs to use libcompat for linking.
-    if test "x$PLATFORM" = "xFreeBSD" ; then
-        APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
-    fi
-
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
-    APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS"
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xMacOSX" ; then
@@ -924,17 +883,9 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
-    APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
-    APP_VJ_LIBS_END='Juggler_utils.lib'
-    APP_VJ_LIBS_BASIC='Juggler.lib'
-    APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
-    APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
-    APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
-    APP_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
-    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
     APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
 fi
@@ -1085,31 +1036,20 @@ AC_SUBST(SL)
 AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
-AC_SUBST(APP_EXTRA_FLAGS)
+AC_SUBST(DYLIB_DEPS)
+
 AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_EXTRA_INC_AW)
 AC_SUBST(APP_EXTRA_INC_SL)
-AC_SUBST(APP_VJ_LIBS_BEGIN)
-AC_SUBST(APP_VJ_LIBS_END)
-AC_SUBST(APP_VJ_LIBS_BASIC)
-AC_SUBST(APP_VJ_LIBS_BEGIN_INST)
-AC_SUBST(APP_VJ_LIBS_END_INST)
-AC_SUBST(APP_VJ_LIBS_BASIC_INST)
 AC_SUBST(APP_VJ_LIBS_GL)
 AC_SUBST(APP_VJ_LIBS_PF)
 AC_SUBST(APP_VJ_LIBS_AW)
 AC_SUBST(APP_VJ_LIBS_SL)
 AC_SUBST(APP_VJ_LIBS_UTILS)
-AC_SUBST(APP_LIBS_BASIC)
-AC_SUBST(APP_EXTRA_LIBS_BEGIN)
-AC_SUBST(APP_EXTRA_LIBS_END)
-AC_SUBST(APP_EXTRA_LIBS_BASIC)
 AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_AW)
 AC_SUBST(APP_EXTRA_LIBS_SL)
-
-AC_SUBST(DYLIB_DEPS)
 
 AC_SUBST(subsystem_cflags)
 AC_SUBST(subsystem_cxxflags)
