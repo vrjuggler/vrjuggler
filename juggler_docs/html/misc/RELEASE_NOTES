@@ -8,6 +8,20 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+ Version: 1.0.2
+Released: August 6, 2001
+
+    Major bug fixes:
+        * The config chunk for TrackdSensor and TrackdController have been
+          fixed so that the min and max settings are correctly associated
+          with TrackdController.
+        * Linking errors related to the use of pthread_attr_setstackaddr()
+          on newer versions of Linux have been fixed.
+        * Redraw problems in VjControl related to updating the active
+          application configuration have been fixed.
+
+===============================================================================
+
  Version: 1.0.1
 Released: June 14, 2001
 
