@@ -28,7 +28,6 @@
 
 #include <vjConfig.h>
 #include <stdio.h>
-#include <iostream.h>
 #include <unistd.h>
 #include <ulocks.h>
 //#include <Kernel/vjDebug.h>

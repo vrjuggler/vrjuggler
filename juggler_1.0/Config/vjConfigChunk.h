@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <iostream.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>

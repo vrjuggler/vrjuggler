@@ -18,7 +18,6 @@
 
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <pthread.h>
 #include <Sync/vjMutexPosix.h>
 
