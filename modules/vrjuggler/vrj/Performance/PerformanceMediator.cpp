@@ -145,22 +145,24 @@ void PerformanceMediator::loadPerfPlugin()
 
    // In the long run, we may not want to hard-code the base name of the
    // plug-in we load.  If we ever reach a point where we have multiple ways
-   // of implementing remote run-time reconfiguration, we could have options
+   // of implementing remote performance monitoring, we could have options
    // for which plug-in to load.
-   const std::string reconfig_dso("corba_perf_mon");
+   const std::string perf_mon_dso("corba_perf_mon");
    const std::string init_func("initPlugin");
    Callable functor(this);
-   mPluginLoader.findAndInitDSO(reconfig_dso, search_path, init_func, functor);
+   mPluginLoader.findAndInitDSO(perf_mon_dso, search_path, init_func, functor);
 }
 
 void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
 {
-   // If we already have a remote reconfig plug-in, discard it first.
+   // If we already have a remote performance monitoring plug-in, discard it
+   // first.
    if ( NULL != mPerfIf )
    {
       vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
          << "[PerformanceMediator::setPerfPlugin()] "
-         << "Removing old remote reconfig plug-in\n" << vprDEBUG_FLUSH;
+         << "Removing old remote performance monitoring plug-in\n"
+         << vprDEBUG_FLUSH;
 
       if ( mPerfIf->isEnabled() )
       {
@@ -172,20 +174,21 @@ void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
 
    vprDEBUG(jcclDBG_RECONFIG, vprDBG_VERB_LVL)
       << "[PerformanceMediator::setPerfPlugin()] "
-      << "Enabling new remote reconfig plug-in\n" << vprDEBUG_FLUSH;
+      << "Enabling new remote performance monitoring plug-in\n"
+      << vprDEBUG_FLUSH;
    mPerfIf = plugin;
 
    if ( NULL != mPerfIf )
    {
-      // Attempt to initialize the remote run-time reconfiguration component.
+      // Attempt to initialize the remote performance monitoring component.
       if ( mPerfIf->init().success() )
       {
-         // Now, attempt to enable remote run-time reconfiguration.
+         // Now, attempt to enable remote performance monitoring hooks.
          if ( ! mPerfIf->enable().success() )
          {
             vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING:")
-               << " Failed to enable remote run-time reconfiguration.\n"
+               << " Failed to enable remote performance monitoring hooks.\n"
                << vprDEBUG_FLUSH;
             delete mPerfIf;
             mPerfIf = NULL;
@@ -196,7 +199,7 @@ void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
       {
          vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Failed to initialize remote run-time reconfiguration.\n"
+            << " Failed to initialize remote performance monitoring hooks.\n"
             << vprDEBUG_FLUSH;
          delete mPerfIf;
          mPerfIf = NULL;
