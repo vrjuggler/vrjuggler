@@ -133,7 +133,7 @@ public class StationTable
             //String s = value.toString();
             //setText(s);
             //setIcon((s.length() > 10) ? longIcon : shortIcon);
-         if (isSelected)
+         if (isSelected || cellHasFocus)
          {
             mEditor.setBackground(table.getSelectionBackground());
             mEditor.setForeground(table.getSelectionForeground());
