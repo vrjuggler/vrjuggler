@@ -45,6 +45,7 @@ public:
    {
       mMinDist = 0.0f;
       mMaxDist = 0.05f;
+      mMaxThreshold = 10000000.0f;        // Just set to some huge number
    }
 
    // Get the position to use
@@ -61,19 +62,29 @@ public:
    void setMaxDist(float val) { mMaxDist = val;}
    float maxDist() { return mMaxDist;}
 
+   void setMaxThreshold(float val) { mMaxThreshold = val; }
+   float maxTheshold() { return mMaxThreshold; }
 
 private:
    vjMatrix mLastReturnedPos;
+
+   // These parameters influence the sigmoid
    float    mMinDist;            // Mininum distance parameter
    float    mMaxDist;            // Maximum distance parameter
+
+   float    mMaxThreshold;       // Maximum distance that the tracker is allowed to move.
+                                 // Anything farther is just ignored and is not interpolated to
 };
 
 
 //
 //  Uses a linear sigmoid function with minimum and
 // maximum threshholds.
-//           max
-//            /------  --- 1.0
+//
+//     maxThreshold    --- 0.0
+//            |         |
+//           max        |
+//            /----------- 1.0
 //           /          |
 //          /           |
 //         /            |
@@ -106,6 +117,12 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    dist = trans_diff.length();
 
    vjDEBUG(vjDBG_ALL,2) << "sigmoid: dist: " << dist << endl << vjDEBUG_FLUSH;
+
+   // Check max threshold
+   if(dist > mMaxThreshold)
+   {
+      return mLastReturnedPos;      // If outside of threshold, just return old data
+   }
 
    // Get scale factor
    scale_factor = getScaleFactor(dist);
