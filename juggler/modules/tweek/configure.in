@@ -34,20 +34,46 @@
 # 
 # ************** <auto-copyright.pl END do not edit this line> ****************
 
+# -----------------------------------------------------------------------------
+# Base configure.in for Tweek.
+# -----------------------------------------------------------------------------
+# This file is "compiled" by GNU autoconf to generate the configure script
+# that is actually run.
+# -----------------------------------------------------------------------------
+
+AC_INIT([Tweek], [0.13], [vrjuggler-devel@lists.sourceforge.net])
+AC_CONFIG_HEADERS([tweek/tweekDefines.h])
+AC_PREREQ([2.53])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
+AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
-AC_INIT(tweek/tweekConfig.h)
-AC_CONFIG_AUX_DIR(../../share/config)
-AC_CONFIG_HEADER(tweek/tweekDefines.h)
+AC_CONFIG_AUX_DIR([../../share/config])
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
 DPP_GEN_RECONFIG
+
+# -----------------------------------------------------------------------------
+# Command-line arguments (--enable-option, --with-pkg=package_name).
+# -----------------------------------------------------------------------------
+
+# ------------------------------------------------------ #
+# --enable-feature[=arg] and --disable-feature arguments #
+# ------------------------------------------------------ #
 
 DPP_STD_CPP(yes)
 
 #AC_ARG_ENABLE(jdk-orb,
 #              [  --enable-jdk-orb        Use Java IDL (requires JDK 1.4) [default=no]],
 #              _enable_jdk_orb="$enable_val", _enable_jdk_orb='no')
+
+AC_ARG_ENABLE(extensions,
+              [  --enable-extensions     Build in Tweek extensions       [default=yes]],
+              use_tweek_extensions="$enableval", use_tweek_extensions='yes')
+
+# -------------------------------------------- #
+# --with-pkg[=arg] and --without-pkg arguments #
+# -------------------------------------------- #
 
 # Override the C compiler that configure would otherwise find itself.
 AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
@@ -100,10 +126,6 @@ AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
 AC_ARG_WITH(junit, [  --with-junit=<PATH>     Path to JUnit JAR file(s) ],
             JUNIT_JAR="$withval", JUNIT_JAR='none')
 
-AC_ARG_ENABLE(extensions,
-              [  --enable-extensions     Build in Tweek extensions       [default=yes]],
-              use_tweek_extensions="$enableval", use_tweek_extensions='yes')
-
 DPP_ABI_SETUP
 
 # -----------------------------------------------------------------------------
@@ -119,24 +141,34 @@ DPP_WIN32_SETUP
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
+# Templates for Autoheader.
+AH_TEMPLATE([__OSVERSION__],
+            [Define to the major number of the target operating system.])
+AH_TEMPLATE([__alpha__], [Define to 1 if building on the Alpha architecture.])
+AH_TEMPLATE([__hppa__], [Define to 1 if building on HP PA-RISC architecture.])
+AH_TEMPLATE([__mips__], [Define to 1 if building on MIPS architecture.])
+AH_TEMPLATE([__powerpc__], [Define to 1 if building on PowerPC architecture.])
+AH_TEMPLATE([__sparc__], [Define to 1 if building on the SPARC architecture.])
+AH_TEMPLATE([__x86__], [Define to 1 if building on Intel x86 architecture.])
+
 # Depending on the target operating system, set various command options and
 # such.
 case $target_os in
    # IBM RS/6000 running AIX.
    aix4*)
-      AC_DEFINE(__aix__)
+      AC_DEFINE(__aix__, 1, [Define to 1 if building on AIX.])
       AC_DEFINE(__powerpc__)
       AC_DEFINE(__OSVERSION__, 4)
       EXTRA_DEFS="$EXTRA_DEFS -D__aix__ -D__powerpc__ -D__OSVERSION__=4"
       ;;
    # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
    cygwin)
-      AC_DEFINE(__WIN32__)
+      AC_DEFINE(__WIN32__, 1, [Define to 1 if building on a Win32 platform.])
       AC_DEFINE(__x86__)
       EXTRA_DEFS="$EXTRA_DEFS -D__WIN32__ -D__x86__"
 
       if test "x$PLATFORM" = "xWinNT" ; then
-         AC_DEFINE(__NT__)
+         AC_DEFINE(__NT__, 1, [Define only on Windows NT/2000/XP.])
          EXTRA_DEFS="$EXTRA_DEFS -D__NT__"
 
          _sys_name=`uname -s`
@@ -154,7 +186,7 @@ case $target_os in
       ;;
    # Darwin (aka MacOS X).
    darwin*)
-      AC_DEFINE(__darwin__)
+      AC_DEFINE(__darwin__, 1, [Define to 1 if building on Darwin/Mac OS X.])
       EXTRA_DEFS="$EXTRA_DEFS -D__darwin__"
 
       case $target_cpu in
@@ -181,7 +213,7 @@ case $target_os in
       ;;
    # A machine running FreeBSD.
    freebsd*)
-      AC_DEFINE(__freebsd__)
+      AC_DEFINE(__freebsd__, 1, [Define to 1 if building on FreeBSD.])
       EXTRA_DEFS="$EXTRA_DEFS -D__freebsd__"
 
       case $target_cpu in
@@ -220,7 +252,7 @@ case $target_os in
       ;;
    # HP PA-RISC machine running HP-UX.20.
    hpux*)
-      AC_DEFINE(__hpux__)
+      AC_DEFINE(__hpux__, 1, [Define to 1 if building on HP-UX.])
       AC_DEFINE(__hppa__)
       EXTRA_DEFS="$EXTRA_DEFS -D__hpux__ -D__hppa__"
 
@@ -240,14 +272,14 @@ case $target_os in
       ;;
    # SGI running IRIX 6.*.
    irix6*)
-      AC_DEFINE(__irix__)
+      AC_DEFINE(__irix__, 1, [Define to 1 if building on IRIX.])
       AC_DEFINE(__mips__)
       AC_DEFINE(__OSVERSION__, 6)
       EXTRA_DEFS="$EXTRA_DEFS -D__irix__ -D__mips__ -D__OSVERSION__=6"
       ;;
    # A machine running Linux.
    linux*)
-      AC_DEFINE(__linux__)
+      AC_DEFINE(__linux__, 1, [Define to 1 if building on Linux.])
       AC_DEFINE(__OSVERSION__, 2)
       EXTRA_DEFS="$EXTRA_DEFS -D__linux__ -D__OSVERSION__=2"
 
@@ -272,14 +304,15 @@ case $target_os in
       ;;
    # DEC Alpha running Digital UNIX 4.x.
    osf4*)
-      AC_DEFINE(__osf1__)
+      AC_DEFINE(__osf1__, 1,
+                [Define to 1 if building on OSF1/Digital UNIX/TRU64.])
       AC_DEFINE(__alpha__)
       AC_DEFINE(__OSVERSION__, 4)
       EXTRA_DEFS="$EXTRA_DEFS -D__osf1__ -D__alpha__ -D__OSVERSION__=4"
       ;;
    # A machine running Solaris 2.x (aka SunOS 5.x).
    solaris2*)
-      AC_DEFINE(__sunos__)
+      AC_DEFINE(__sunos__, 1, [Define if building on SunOS/Solaris.])
       AC_DEFINE(__OSVERSION__, 5)
       EXTRA_DEFS="$EXTRA_DEFS -D__sunos__ -D__OSVERSION__=5"
 
@@ -360,7 +393,7 @@ if test "x$tweek_have_java" = "xY" ; then
    if test "x$BUILD_JAVA" = "xY" ; then
       DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
          getNamespace(uri), [String uri = new String("test")], ,
-         [ AC_MSG_WARN(*** JDOM required for Tweek Java API ***)
+         [ AC_MSG_WARN([*** JDOM required for Tweek Java API ***])
            BUILD_JAVA='N' ],
          $JDOM_JAR)
    fi
@@ -370,7 +403,7 @@ if test "x$tweek_have_java" = "xY" ; then
    if test "x$BUILD_JAVA" = "xY" ; then
       DPP_CHECK_JAVA_STATIC_METHOD(junit.framework.Assert, assertTrue(true), ,
          BUILD_JAVA_TEST_SUITE='Y',
-         [ AC_MSG_WARN(*** JUnit required for Tweek Java test suite ***)
+         [ AC_MSG_WARN([*** JUnit required for Tweek Java test suite ***])
            BUILD_JAVA_TEST_SUITE='N' ],
          $JUNIT_JAR)
    fi
@@ -524,9 +557,13 @@ int omni_main_i(int argc, char** const argv)
             CXX_ORB_LIB_LINK_EXE="$omni_win32_link_args"
             CXX_ORB_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
 
-            AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
-            AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H, <omniORB$OMNI_VER/CORBA.h>)
-            AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER")
+            AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER,
+               [If using omniORB, define to the major version number (3, 4, etc.).])
+            AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H,
+               [<omniORB$OMNI_VER/CORBA.h>],
+               [Define to include the file CORBA.h -- for example: <omniORB3/CORBA.h>])
+            AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER",
+               [Define to an ORB version string used to initialized the ORB -- for example: "omniORB3"])
          else
             AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
             BUILD_CXX='N'
@@ -915,46 +952,42 @@ AC_SUBST(tweek_ext_jars)
 
 VJ_MTREE_LIB_GEN(TWEEK, mtree, $PLATFORM, $ISA)
 
-AC_OUTPUT(tweek-config
-          Makefile
-          Makefile.inc
-          common.defs.mk
-          make.defs.mk
-          tweek.appdefs.mk
-          extensions/Makefile
-          extensions/java/build.xml
-          extensions/java/Makefile
-          extensions/java/Makefile.inc
-          java/build.xml
-          java/Makefile
-          java/Makefile.inc
-          java/tweek-base.sh
-          tweek/Makefile
-          tweek/CORBA/Makefile
-          tweek/Client/Makefile
-          tweek/Util/Makefile
-          tweek/idl/Makefile
-          test/Makefile
-          test/BeanDeliveryTest/Makefile
-          test/CxxClient/Makefile
-          test/FileOpenTestBean/Makefile
-          test/NetworkTestBean/Makefile
-          test/PrefsTestBean/Makefile
-          test/TestBean/Makefile
-          test/TestSuite/Makefile
-          test/TestSuite/java/Makefile
-          test/corba/Makefile
-          mtree/TWEEK.data.dist
-          mtree/TWEEK.include.dist
-          mtree/TWEEK.install.dist
-          mtree/TWEEK.test.dist
-          VARS.pl,
+AC_CONFIG_FILES([
+   tweek-config
+   Makefile
+   Makefile.inc
+   common.defs.mk
+   make.defs.mk
+   tweek.appdefs.mk
+   extensions/Makefile
+   extensions/java/build.xml
+   extensions/java/Makefile
+   extensions/java/Makefile.inc
+   java/build.xml
+   java/Makefile
+   java/Makefile.inc
+   java/tweek-base.sh
+   tweek/Makefile
+   tweek/CORBA/Makefile
+   tweek/Client/Makefile
+   tweek/Util/Makefile
+   tweek/idl/Makefile
+   test/Makefile
+   test/BeanDeliveryTest/Makefile
+   test/CxxClient/Makefile
+   test/FileOpenTestBean/Makefile
+   test/NetworkTestBean/Makefile
+   test/PrefsTestBean/Makefile
+   test/TestBean/Makefile
+   test/TestSuite/Makefile
+   test/TestSuite/java/Makefile
+   test/corba/Makefile
+   mtree/TWEEK.data.dist
+   mtree/TWEEK.include.dist
+   mtree/TWEEK.install.dist
+   mtree/TWEEK.test.dist
+   VARS.pl
+   ],
    [chmod a+x tweek-config])
 
-cat <<BUILD_INFO
-
- Remember that you need to build Tweek with GNU make.
- GNU make is called 'gmake' on most systems.
- See the file README for more details on compiling the Tweek distribution.
-
-BUILD_INFO
+AC_OUTPUT
