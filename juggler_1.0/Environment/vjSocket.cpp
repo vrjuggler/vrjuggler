@@ -31,6 +31,7 @@
  * -----------------------------------------------------------------
  */
 
+#include <vjConfig.h>
 
 #include <Environment/vjSocket.h>
 
@@ -118,11 +119,7 @@ bool vjSocketPosix::listen (int port) {
 vjSocketPosix* vjSocketPosix::accept () {
     sockaddr_in servaddr;
     int servsock;
-#if defined(__FreeBSD__) || defined(__linux__) || defined(_AIX)
     socklen_t len = sizeof (struct sockaddr_in);
-#else
-    int len = sizeof (struct sockaddr_in);
-#endif
     servsock = ::accept (sockid,
                          (sockaddr*)&servaddr, &len);
     if (servsock != -1)
