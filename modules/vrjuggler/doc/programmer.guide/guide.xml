@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>The Programmer's Guide</subtitle>
-      <releaseinfo>Version 0.0.1</releaseinfo>
+      <releaseinfo>Version 1.0.5</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <part id="intro.part">
