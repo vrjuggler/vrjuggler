@@ -34,15 +34,8 @@ default: all
 # Include common definitions here.
 include @topdir@/make.defs.mk
 
-# If we are using a local CppDOM, there is nothing to build or install.
-# Otherwise, we need to build CppDOM into JCCL and install its headers
-# ourselves.
-ifeq (@LOCAL_CPPDOM@, Y)
+# There is nothing to install from this directory.
 INSTALL_FILES	=
-else
-includedir	= @includedir@/cppdom
-INSTALL_FILES	= @CPPDOM_ROOT@/cppdom/*.h
-endif
 
 srcdir		= @CPPDOM_ROOT@/cppdom
 top_srcdir	= @top_srcdir@
