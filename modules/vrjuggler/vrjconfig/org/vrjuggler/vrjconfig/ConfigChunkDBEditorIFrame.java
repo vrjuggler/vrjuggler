@@ -57,7 +57,7 @@ public class ConfigChunkDBEditorIFrame
       this.setIconifiable(true);
       this.setMaximizable(true);
       this.setResizable(true);
-      this.setTitle("ConfigChunkDB Editor");
+      this.setTitle("Configuration Collection: ");
       this.getContentPane().add(editor,  BorderLayout.CENTER);
    }
 

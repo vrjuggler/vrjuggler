@@ -55,7 +55,6 @@ public class VrjConfig
       try
       {
          ClassLoader loader = BeanJarClassLoader.instance();
-         newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/new.gif")));
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
@@ -64,18 +63,56 @@ public class VrjConfig
       catch (Exception e)
       {
          // Ack! No icons. Use text labels instead
-         newBtn.setText("New");
          openBtn.setText("Open");
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
          saveAllBtn.setText("Save All");
       }
+
+
+      // Get some of the icons we care about
+      ImageIcon newChunkIcon = null;
+      ImageIcon newDescIcon = null;
+      try
+      {
+         ClassLoader loader = BeanJarClassLoader.instance();
+         newChunkIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif"));
+         newDescIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newdesc.gif"));
+      }
+      catch (Exception e)
+      {
+         newChunkIcon = new ImageIcon();
+         newDescIcon = new ImageIcon();
+      }
+
+      // Setup the new popup button
+      JPopupMenu new_popup = new JPopupMenu();
+      JMenuItem chunk_menu_item = new JMenuItem("New Config Collection", newChunkIcon);
+      JMenuItem desc_menu_item = new JMenuItem("New Config Format", newDescIcon);
+      chunk_menu_item.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            createNewConfigChunkDB();
+         }
+      });
+      desc_menu_item.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            createNewChunkDescDB();
+         }
+      });
+      new_popup.add(chunk_menu_item);
+      new_popup.add(desc_menu_item);
+      newPopupBtn.setPopupMenu(new_popup);
    }
 
    /**
     * JBuilder GUI initialization.
     */
-   private void jbInit() throws Exception
+   private void jbInit()
+      throws Exception
    {
       titleLbl.setBackground(UIManager.getColor("textHighlight"));
       titleLbl.setFont(new java.awt.Font("Serif", 1, 18));
@@ -90,6 +127,17 @@ public class VrjConfig
       toolbar.setFloatable(false);
       openBtn.setToolTipText("Open Configuration");
       openBtn.setActionCommand("Open");
+      openBtn.setFocusPainted(false);
+      saveBtn.setToolTipText("Save Configuration");
+      saveBtn.setActionCommand("Save");
+      saveBtn.setFocusPainted(false);
+      saveAsBtn.setToolTipText("Save Configuration As");
+      saveAsBtn.setActionCommand("SaveAs");
+      saveAsBtn.setFocusPainted(false);
+      saveAllBtn.setToolTipText("Save All Open Configurations");
+      saveAllBtn.setActionCommand("SaveAll");
+      saveAllBtn.setFocusPainted(false);
+      desktop.setBorder(BorderFactory.createEtchedBorder());
       openBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -118,18 +166,10 @@ public class VrjConfig
             saveAllBtn_actionPerformed(evt);
          }
       });
-      newBtn.setToolTipText("New Configuration");
-      newBtn.setActionCommand("New");
-      saveBtn.setToolTipText("Save Configuration");
-      saveBtn.setActionCommand("Save");
-      saveAsBtn.setToolTipText("Save Configuration As");
-      saveAsBtn.setActionCommand("SaveAs");
-      desktop.setBorder(BorderFactory.createEtchedBorder());
-      saveAllBtn.setActionCommand("SaveAll");
       this.add(titleLbl,  BorderLayout.NORTH);
       this.add(mainPnl, BorderLayout.CENTER);
       mainPnl.add(toolbar, BorderLayout.NORTH);
-      toolbar.add(newBtn, null);
+      toolbar.add(newPopupBtn, null);
       toolbar.add(openBtn, null);
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
@@ -143,15 +183,53 @@ public class VrjConfig
    private JPanel mainPnl = new JPanel();
    private BorderLayout mainLayout = new BorderLayout();
    private JToolBar toolbar = new JToolBar();
-   private JButton newBtn = new JButton();
    private JButton openBtn = new JButton();
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
    private JDesktopPane desktop = new JDesktopPane();
    private JFileChooser fileChooser = new JFileChooser();
+   private PopupButton newPopupBtn = new PopupButton();
 
-   void openBtn_actionPerformed(ActionEvent e)
+   protected void createNewConfigChunkDB()
+   {
+      ConfigChunkDB new_db = new ConfigChunkDB();
+
+      ConfigManagerService mgr = (ConfigManagerService)BeanRegistry.instance().getBean("ConfigManager").getBean();
+      mgr.add(new_db);
+
+      ConfigChunkDBEditorIFrame frame = new ConfigChunkDBEditorIFrame();
+      frame.getEditor().setConfigChunkDB(new_db);
+      frame.pack();
+      frame.setVisible(true);
+      desktop.add(frame);
+      try
+      {
+         frame.setSelected(true);
+      }
+      catch (java.beans.PropertyVetoException pve) { /*ignore*/ }
+   }
+
+   protected void createNewChunkDescDB()
+   {
+      ChunkDescDB new_db = new ChunkDescDB();
+
+      ConfigManagerService mgr = (ConfigManagerService)BeanRegistry.instance().getBean("ConfigManager").getBean();
+      mgr.add(new_db);
+
+      ChunkDescDBEditorIFrame frame = new ChunkDescDBEditorIFrame();
+      frame.getEditor().setChunkDescDB(new_db);
+      frame.pack();
+      frame.setVisible(true);
+      desktop.add(frame);
+      try
+      {
+         frame.setSelected(true);
+      }
+      catch (java.beans.PropertyVetoException pve) { /*ignore*/ }
+   }
+
+   protected void openBtn_actionPerformed(ActionEvent evt)
    {
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
@@ -210,83 +288,97 @@ public class VrjConfig
       }
    }
 
-   void saveBtn_actionPerformed(ActionEvent evt)
+   protected void saveBtn_actionPerformed(ActionEvent evt)
    {
       JInternalFrame sel_frame = desktop.getSelectedFrame();
       if (sel_frame != null)
       {
-         if (sel_frame instanceof ConfigChunkDBEditorIFrame)
+         save(sel_frame);
+      }
+   }
+
+   protected void saveAsBtn_actionPerformed(ActionEvent evt)
+   {
+      JInternalFrame sel_frame = desktop.getSelectedFrame();
+      if (sel_frame != null)
+      {
+         saveAs(sel_frame);
+      }
+   }
+
+   protected void save(JInternalFrame saveFrame)
+   {
+      if (saveFrame instanceof ConfigChunkDBEditorIFrame)
+      {
+         ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)saveFrame;
+         ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
+         if (frame.getFilename().equals(""))
          {
-            ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)sel_frame;
-            ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
+            saveAs(frame);
+         }
+         else
+         {
             saveConfigChunkDB(chunk_db, frame.getFilename());
          }
-         else if (sel_frame instanceof ChunkDescDBEditorIFrame)
+      }
+      else if (saveFrame instanceof ChunkDescDBEditorIFrame)
+      {
+         ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)saveFrame;
+         ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
+         // Check if we need to force a save as action
+         if (frame.getFilename() == "")
          {
-            ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)sel_frame;
-            ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
+            saveAs(frame);
+         }
+         else
+         {
             saveChunkDescDB(desc_db, frame.getFilename());
          }
       }
    }
 
-   void saveAsBtn_actionPerformed(ActionEvent evt)
+   protected void saveAs(JInternalFrame saveFrame)
    {
-      JInternalFrame sel_frame = desktop.getSelectedFrame();
-      if (sel_frame != null)
+      if (saveFrame instanceof ConfigChunkDBEditorIFrame)
       {
-         if (sel_frame instanceof ConfigChunkDBEditorIFrame)
-         {
-            ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)sel_frame;
-            ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
-            fileChooser.setSelectedFile(new File(frame.getFilename()));
-            int result = fileChooser.showSaveDialog(this);
+         ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)saveFrame;
+         ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
+         fileChooser.setSelectedFile(new File(frame.getFilename()));
+         int result = fileChooser.showSaveDialog(this);
 
-            if (result == JFileChooser.APPROVE_OPTION)
+         if (result == JFileChooser.APPROVE_OPTION)
+         {
+            String filename = fileChooser.getSelectedFile().getPath();
+            if (saveConfigChunkDB(chunk_db, filename))
             {
-               String filename = fileChooser.getSelectedFile().getPath();
-               if (saveConfigChunkDB(chunk_db, filename))
-               {
-                  frame.setFilename(filename);
-               }
+               frame.setFilename(filename);
             }
          }
-         else if (sel_frame instanceof ChunkDescDBEditorIFrame)
-         {
-            ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)sel_frame;
-            ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
-            fileChooser.setSelectedFile(new File(frame.getFilename()));
-            int result = fileChooser.showSaveDialog(this);
+      }
+      else if (saveFrame instanceof ChunkDescDBEditorIFrame)
+      {
+         ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)saveFrame;
+         ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
+         fileChooser.setSelectedFile(new File(frame.getFilename()));
+         int result = fileChooser.showSaveDialog(this);
 
-            if (result == JFileChooser.APPROVE_OPTION)
+         if (result == JFileChooser.APPROVE_OPTION)
+         {
+            String filename = fileChooser.getSelectedFile().getPath();
+            if (saveChunkDescDB(desc_db, filename))
             {
-               String filename = fileChooser.getSelectedFile().getPath();
-               if (saveChunkDescDB(desc_db, filename))
-               {
-                  frame.setFilename(filename);
-               }
+               frame.setFilename(filename);
             }
          }
       }
    }
 
-   void saveAllBtn_actionPerformed(ActionEvent evt)
+   protected void saveAllBtn_actionPerformed(ActionEvent evt)
    {
       JInternalFrame[] frames = desktop.getAllFrames();
       for (int i=0; i<frames.length; ++i)
       {
-         if (frames[i] instanceof ConfigChunkDBEditorIFrame)
-         {
-            ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)frames[i];
-            ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
-            saveConfigChunkDB(chunk_db, frame.getFilename());
-         }
-         else if (frames[i] instanceof ChunkDescDBEditorIFrame)
-         {
-            ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)frames[i];
-            ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
-            saveChunkDescDB(desc_db, frame.getFilename());
-         }
+         save(frames[i]);
       }
    }
 
@@ -322,5 +414,42 @@ public class VrjConfig
          return false;
       }
       return true;
+   }
+
+   /**
+    * Customized renderer for the New combo box in the toolbar.
+    */
+   class IconCellRenderer
+      extends JLabel
+      implements ListCellRenderer
+   {
+      public IconCellRenderer()
+      {
+         setOpaque(true);
+      }
+
+      public Component getListCellRendererComponent(JList list,
+                                                    Object value,
+                                                    int idx,
+                                                    boolean selected,
+                                                    boolean focused)
+      {
+         if (selected)
+         {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+         }
+         else
+         {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+         }
+
+         ImageIcon icon = (ImageIcon)value;
+         setIcon(icon);
+         setText(icon.getDescription());
+
+         return this;
+      }
    }
 }
