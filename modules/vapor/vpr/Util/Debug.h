@@ -60,13 +60,14 @@
 // Suggested use of val/debugLevel
 //
 // 0 - Critical messages (always need to be seen)
-// 1 - Configuration of system
-// 2 - Warnings and potential problems
-// 3 - State changes & who is doing what
-// 4 - Verbose (don't need source) ex
-// 5 - Highly verbose (may need source)
-// 6 - Very detailed: i.e. Function entry and exit
-// 7 - You will be reading hexidecimal
+// 1 - Warnings and potential problems
+// 2 - Results of system configuration
+// 3 - Configuration of system
+// 4 - State changes & who is doing what
+// 5 - Verbose (don't need source) ex
+// 6 - Highly verbose (may need source)
+// 7 - Very detailed: i.e. Function entry and exit
+// 8 - You will be reading hexidecimal
 #define vprDBG_CRITICAL_LVL 0
 #define vprDBG_WARNING_LVL 1
 #define vprDBG_CONFIG_STATUS_LVL 2
