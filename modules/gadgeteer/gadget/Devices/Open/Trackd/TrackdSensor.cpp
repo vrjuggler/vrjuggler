@@ -64,7 +64,7 @@ namespace gadget
  // -Create the trackdSensor based on config info
  // -set to active
  // -grow the vector to however many values we need
- bool TrackdSensor::config(ConfigChunk* c)
+ bool TrackdSensor::config(jccl::ConfigChunk* c)
  {
     if(! (Input::config(c) && Position::config(c)))
        return false;
@@ -116,7 +116,7 @@ namespace gadget
  //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
  //+  then you can access them, in order, as 0,1,2.
  // ------------------------------------------------------------------------
- Matrix* TrackdSensor::getPosData(int dev)
+ vrj::Matrix* TrackdSensor::getPosData(int dev)
  {
     vprASSERT((unsigned)dev < mCurSensorValues.size() && "getPosData() index out of range");
     return &(mCurSensorValues[dev]);

@@ -46,7 +46,7 @@ namespace gadget
 {
 
    //: Constructor
-bool KeyboardOSX::config(ConfigChunk *c)
+bool KeyboardOSX::config(jccl::ConfigChunk *c)
 {
    if(! (Input::config(c) && Keyboard::config(c)))
       return false;

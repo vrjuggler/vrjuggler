@@ -55,7 +55,7 @@ public:
       mGloveProxy = NULL;
    }
 
-   virtual bool config(ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunk* c)
    { return Gesture::config(c);}
 
 public:

@@ -52,7 +52,7 @@ namespace gadget
 // The message loop
 void samplem_keys(void*);
 
-bool KeyboardWin32::config(ConfigChunk *c)
+bool KeyboardWin32::config(jccl::ConfigChunk *c)
 {
     vprDEBUG_BEGIN(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL)
                      << "vjKeyboardWin32::config " << std::endl
@@ -460,7 +460,7 @@ VOID APIENTRY HandlePaint (HWND hwnd)
     char ln4[255] = "line4";
     char ln5[255] = "line5";
     char ln6[255] = "line6";
-    //vjMatrix* McurrData = devPtr->GetPosData();
+    //vjvrj::Matrix* McurrData = devPtr->GetPosData();
 
     //vjCoord coord(*McurrData);
     //ThreeDouble2String(ln1, coord.pos[0], coord.pos[1], coord.pos[2]);

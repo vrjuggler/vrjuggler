@@ -46,7 +46,7 @@
 namespace gadget
 {
 
-bool PinchGlove::config(ConfigChunk *c)
+bool PinchGlove::config(jccl::ConfigChunk *c)
 {
    if(! (Input::config(c) && Glove::config(c) ))
       return false;

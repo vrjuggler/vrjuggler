@@ -65,7 +65,7 @@ public:
 
    //: Takes a config chunk
    //  The Juggler API calls this
-   virtual bool config( ConfigChunk* chunk );
+   virtual bool config( jccl::ConfigChunk* chunk );
 
    //: Get the digital data for the given "finger"
    //  Returns digital 0 or 1, if "finger" makes sense.<BR>

@@ -93,7 +93,7 @@ public:
       myThreadID = NULL;
    }
 
-   virtual bool config(vrj::ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    /** Input pure virtual functions **/
    int startSampling();

@@ -79,9 +79,9 @@ Intersense::Intersense()
     //vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
 }
 
-bool Intersense::config(ConfigChunk *c)
+bool Intersense::config(jccl::ConfigChunk *c)
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "         Intersense::Intersense(ConfigChunk*)"
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "         Intersense::Intersense(jccl::ConfigChunk*)"
                                << std::endl << vprDEBUG_FLUSH;
 
 // read in Position's, Digital's, and Analog's config stuff,
@@ -91,17 +91,17 @@ bool Intersense::config(ConfigChunk *c)
 
 // keep IntersenseStandalone's port and baud members in sync with Input's port
 // and baud members.
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Intersense::Intersense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Intersense::Intersense(jccl::ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vprDEBUG_FLUSH;
     mTracker.setPortName( Input::getPort() );
     mTracker.rBaudRate() = Input::getBaudRate();
     mTracker.rNumStations() = c->getNum("stations");
 
     if(stations != NULL) delete [] stations;
     stations = new ISStationConfig[mTracker.rNumStations()];
-    ConfigChunk* stationConfig = NULL;
+    jccl::ConfigChunk* stationConfig = NULL;
     for( int i = 0; i < mTracker.rNumStations(); i++)
     {
-    stationConfig = static_cast<ConfigChunk*>(c->getProperty("stations", i));
+    stationConfig = static_cast<jccl::ConfigChunk*>(c->getProperty("stations", i));
     stations[i].enabled = static_cast<bool>(stationConfig->getProperty("enabled"));
     stations[i].stationIndex = static_cast<int>(stationConfig->getProperty("stationIndex"));
     stations[i].useDigital = static_cast<bool>(stationConfig->getProperty("useDigital"));
@@ -147,8 +147,8 @@ void Intersense::controlLoop(void* nullParam)
         delete mDataTimes;
 
     int numbuffs = (mTracker.NumStations())*3;
-    theData = (Matrix*) new Matrix[numbuffs];
-    mDataTimes = new TimeStamp[numbuffs];
+    theData = (vrj::Matrix*) new vrj::Matrix[numbuffs];
+    mDataTimes = new jccl::TimeStamp[numbuffs];
 
 // Configure the stations used by the configuration
     int j = 0;
@@ -227,7 +227,7 @@ int Intersense::sample()
         return 0;
 
     int i,  j;
-    TimeStamp sampletime;
+    jccl::TimeStamp sampletime;
 
 
     sampletime.set();
@@ -255,7 +255,7 @@ int Intersense::sample()
                                mTracker.zPos( stationIndex ));
    } else {
 
-       Quat quatValue(mTracker.xQuat( stationIndex ),
+       vrj::Quat quatValue(mTracker.xQuat( stationIndex ),
               mTracker.yQuat( stationIndex ),
               mTracker.zQuat( stationIndex ),
               mTracker.wQuat( stationIndex ));
@@ -284,7 +284,7 @@ int Intersense::sample()
 // Since we want the reciver in the world system, Rw
 // wTr = wTt*tTr
 
-        Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+        vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
         world_T_transmitter = xformMat;                    // Set transmitter offset from local info
         transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
@@ -330,7 +330,7 @@ int Intersense::stopSampling()
 
 
 //d == station#
-Matrix* Intersense::getPosData( int d )
+vrj::Matrix* Intersense::getPosData( int d )
 {
     if (this->isActive() == false)
         return NULL;
@@ -356,7 +356,7 @@ float Intersense::getAnalogData( int d )
     return newValue;
 }
 
-TimeStamp* Intersense::getPosUpdateTime (int d)
+jccl::TimeStamp* Intersense::getPosUpdateTime (int d)
 {
     if (this->isActive() == false)
         return NULL;

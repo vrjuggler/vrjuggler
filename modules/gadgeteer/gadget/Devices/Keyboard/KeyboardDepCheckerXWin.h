@@ -36,16 +36,16 @@
 #include <gadget/gadgetConfig.h>
 
 // Dependency checker includes
-#include <vrj/Kernel/DependencyManager.h>
 #include <vrj/Display/DisplayManager.h>
-#include <vrj/Kernel/DepChecker.h>
+#include <jccl/Plugins/ConfigManager/DependencyManager.h>
+#include <jccl/Plugins/ConfigManager/DepChecker.h>
 
 namespace gadget
 {
    //: Dependency checker for XWin keyboard
 // Implement the basic stuff plus a check for wether
 // the system knows about the system display windows yet
-class KeyboardDepCheckerXWin : public DepChecker
+class KeyboardDepCheckerXWin : public jccl::DepChecker
 {
 public:
    KeyboardDepCheckerXWin()
@@ -57,7 +57,7 @@ public:
    { return std::string("gadget::KeyboardXWin Checker"); }
 
    // We can handle only keyboard configuration information
-   virtual bool canHandle(ConfigChunk* chunk)
+   virtual bool canHandle(jccl::ConfigChunk* chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
       return (chunk_type == KeyboardXWin::getChunkType());      // Return true if we have a KeyboardXWin chunk type
@@ -66,21 +66,21 @@ public:
    //: Are the dependencies satisfied?
    //! RETURNS: true - default dependencies are satisfied && display manager has display system chunk
    // Check wether the display system chunk is in the active config
-   virtual bool depSatisfied(ConfigChunk* chunk)
+   virtual bool depSatisfied(jccl::ConfigChunk* chunk)
    {
-      bool pass = DepChecker::depSatisfied(chunk);   // Run default check
+      bool pass = jccl::DepChecker::depSatisfied(chunk);   // Run default check
 
       // If we can pass normal check and we have a display system chunk
-      if(DisplayManager::instance()->getDisplaySystemChunk() != NULL)
+      if(vrj::DisplayManager::instance()->getDisplaySystemChunk() != NULL)
          return pass;
       else
          return false;
    }
 
    // Write out the dependencies to the vprDEBUG macro
-   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
+   virtual void debugOutDependencies(jccl::ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
-      DepChecker::debugOutDependencies(chunk,dbg_lvl);
+      jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
 
       vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: " << vprDEBUG_FLUSH;
       if(depSatisfied(chunk) == false)

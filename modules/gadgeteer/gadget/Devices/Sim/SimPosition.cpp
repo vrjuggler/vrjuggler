@@ -43,7 +43,7 @@
 namespace gadget
 {
 
-bool SimPosition::config(ConfigChunk* chunk)
+bool SimPosition::config(jccl::ConfigChunk* chunk)
 {
    if(! (Input::config(chunk) && Position::config(chunk) && SimInput::config(chunk) ))
       return false;
@@ -54,7 +54,7 @@ bool SimPosition::config(ConfigChunk* chunk)
    mTransCoordSystem = chunk->getProperty("transCoordSystem");
    mRotCoordSystem = chunk->getProperty("rotCoordSystem");
 
-   std::vector<VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
    std::vector<KeyModPair> key_pairs = readKeyList(key_list);
 
 
@@ -139,7 +139,7 @@ void SimPosition::updateData()
 // Forward is in th -Z direction
 void SimPosition::moveFor(const float amt)
 {
-   Vec3 move_forward(0.0,0.0,-1.0);  // Base movement
+   vrj::Vec3 move_forward(0.0,0.0,-1.0);  // Base movement
    move_forward *= (amt*mDTrans);
 
    if(isTransAllowed(move_forward))
@@ -157,7 +157,7 @@ void SimPosition::moveFor(const float amt)
 // Left is -X dir
 void SimPosition::moveLeft(const float amt)
 {
-   Vec3 move_left(-1.0,0.0,0.0);  // Base movement
+   vrj::Vec3 move_left(-1.0,0.0,0.0);  // Base movement
    move_left *= (amt*mDTrans);
 
    if(isTransAllowed(move_left))
@@ -175,7 +175,7 @@ void SimPosition::moveLeft(const float amt)
 // Up is in th +Y dir
 void SimPosition::moveUp(const float amt)
 {
-   Vec3 move_up(0.0,1.0,0.0);  // Base movement
+   vrj::Vec3 move_up(0.0,1.0,0.0);  // Base movement
    move_up *= (amt*mDTrans);
 
    if(isTransAllowed(move_up))
@@ -192,7 +192,7 @@ void SimPosition::moveUp(const float amt)
 // Pitch up - rot +x axis
 void SimPosition::rotUp(const float amt)
 {
-   static Vec3 x_axis(1.0,0.0,0.0);
+   static vrj::Vec3 x_axis(1.0,0.0,0.0);
    if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, x_axis);
    else
@@ -201,10 +201,10 @@ void SimPosition::rotUp(const float amt)
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
       mPos.getTrans(x,y,z);      // Get translation
-      Matrix trans;
+      vrj::Matrix trans;
       trans.makeTrans(x,y,z);
 
-      Matrix delta_rot;        // make delta rot
+      vrj::Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, x_axis);
 
       mPos.setTrans(0,0,0);      // Get to rotation only
@@ -216,7 +216,7 @@ void SimPosition::rotUp(const float amt)
 // Yaw left - rot +Y axis
 void SimPosition::rotLeft(const float amt)
 {
-   static Vec3 y_axis(0.0, 1.0, 0.0);
+   static vrj::Vec3 y_axis(0.0, 1.0, 0.0);
 
    if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, y_axis);
@@ -226,10 +226,10 @@ void SimPosition::rotLeft(const float amt)
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
       mPos.getTrans(x,y,z);      // Get translation
-      Matrix trans;
+      vrj::Matrix trans;
       trans.makeTrans(x,y,z);
 
-      Matrix delta_rot;        // make delta rot
+      vrj::Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, y_axis);
 
       mPos.setTrans(0,0,0);      // Get to rotation only
@@ -241,7 +241,7 @@ void SimPosition::rotLeft(const float amt)
 // Roll Left - rot -z axis
 void SimPosition::rotRollCCW(const float amt)
 {
-   static Vec3 neg_z_axis(0.0, 0.0, -1.0);
+   static vrj::Vec3 neg_z_axis(0.0, 0.0, -1.0);
 
    if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, neg_z_axis);
@@ -251,10 +251,10 @@ void SimPosition::rotRollCCW(const float amt)
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
       mPos.getTrans(x,y,z);      // Get translation
-      Matrix trans;
+      vrj::Matrix trans;
       trans.makeTrans(x,y,z);
 
-      Matrix delta_rot;        // make delta rot
+      vrj::Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, neg_z_axis);
 
       mPos.setTrans(0,0,0);      // Get to rotation only
@@ -265,15 +265,15 @@ void SimPosition::rotRollCCW(const float amt)
 
 //: Check if movement is allowed
 //! NOTE: It is not allowed if it hits a simulated wall, etc.
-bool SimPosition::isTransAllowed(Vec3 trans)
+bool SimPosition::isTransAllowed(vrj::Vec3 trans)
 {
    // check if the movement is goign to intersect with any of the surface displays
    // If it does, then return false
    /*
-   Vec3 ll, lr, ur, ul;
+   vrj::Vec3 ll, lr, ur, ul;
    Seg trans_seg;
    float t_dist;
-   Vec3 src_pt;
+   vrj::Vec3 src_pt;
    mPos.getTrans(src_pt[0],src_pt[1], src_pt[2]);
    trans_seg.makePts(src_pt, (src_pt+trans));
 

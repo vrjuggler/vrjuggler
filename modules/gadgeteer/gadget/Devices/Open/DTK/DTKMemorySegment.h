@@ -66,7 +66,7 @@ public:
     ~DTKMemorySegment();
 
     //: configure the flock with a config chunk
-    bool config(ConfigChunk* c);
+    bool config(jccl::ConfigChunk* c);
 
     //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("DTKMemorySegment");}

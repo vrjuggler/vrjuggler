@@ -61,7 +61,7 @@ namespace gadget
 //! NOTE: Some functions still remain for changing the options of the
 //+       MotionStar when its not in Sampling mode, but in order to stay
 //+       consistent with the Input/vjPosition functionality these are only
-//+       left for building apps without ConfigChunks.
+//+       left for building apps without jccl::ConfigChunks.
 //! NOTE: A note on reciever access:
 //+  Clients of Juggler should access tracker recievers as [0-n].  For
 //+  example, if you have recievers 1,2, and 4 with transmitter on 3, then
@@ -172,7 +172,7 @@ public:
    //! RETURNS: true - The device was configured succesfully.
    //! RETURNS: false - The config chunk is invalid.
    // ------------------------------------------------------------------------
-   virtual bool config(ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    // ------------------------------------------------------------------------
    //: Begin sampling.
@@ -245,12 +245,12 @@ public:
    //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
    //+  then you can access them, in order, as 0,1,2.
    // ------------------------------------------------------------------------
-   virtual Matrix* getPosData(int dev = 0);
+   virtual vrj::Matrix* getPosData(int dev = 0);
 
    // ------------------------------------------------------------------------
    //: Not used currently -- needed for interface.
    // ------------------------------------------------------------------------
-   virtual TimeStamp* getPosUpdateTime(int d);
+   virtual jccl::TimeStamp* getPosUpdateTime(int d);
 
    // ========================================================================
    // MotionStar-specific methods.

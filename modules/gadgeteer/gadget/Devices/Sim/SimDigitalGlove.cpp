@@ -50,7 +50,7 @@ SimDigitalGlove::~SimDigitalGlove()
   // vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimDigitalGlove::config( ConfigChunk* chunk )
+bool SimDigitalGlove::config( jccl::ConfigChunk* chunk )
 {
    //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::config\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk) && Glove::config(chunk)))
@@ -61,7 +61,7 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
    //if ((!Digital::config( chunk )) || (!SimInput::config( chunk )))
    //   return false;
 
-   std::vector< VarValue* > key_list = chunk->getAllProperties( "keyPairs" );
+   std::vector< jccl::VarValue* > key_list = chunk->getAllProperties( "keyPairs" );
    mSimKeys = readKeyList( key_list );
 
    int num_pairs = mSimKeys.size();

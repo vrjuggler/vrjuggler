@@ -106,7 +106,7 @@ MotionStar::~MotionStar ()
 // ----------------------------------------------------------------------------
 // Configure the MotionStar with the given config chunk.
 // ----------------------------------------------------------------------------
-bool MotionStar::config (ConfigChunk* c)
+bool MotionStar::config (jccl::ConfigChunk* c)
 {
    bool retval;
 
@@ -115,7 +115,7 @@ bool MotionStar::config (ConfigChunk* c)
    if ( Input::config(c) &&  Position::config(c) )
    {
       vprDEBUG(vrjDBG_INPUT_MGR, 3)
-         << "       MotionStar::config(ConfigChunk*)\n" << vprDEBUG_FLUSH;
+         << "       MotionStar::config(jccl::ConfigChunk*)\n" << vprDEBUG_FLUSH;
 
       // Configure m_motion_star with the config info.
       setAddressName(static_cast<std::string>(c->getProperty("address")).c_str());
@@ -161,7 +161,7 @@ int MotionStar::startSampling ()
 
          // Allocate buffer space for birds.
          num_buffs = (m_motion_star.getNumBirds() + 1) * 3;
-         theData   = new Matrix[num_buffs];
+         theData   = new vrj::Matrix[num_buffs];
 
          // Reset current, progress, and valid indices.
          resetIndexes();
@@ -312,7 +312,7 @@ int MotionStar::sample ()
    else
    {
       int index;
-      Matrix trans_mat, rot_mat, quat_mat;
+      vrj::Matrix trans_mat, rot_mat, quat_mat;
       float quat[4], angles[3];
       FLOCK::data_format format;
 
@@ -320,7 +320,7 @@ int MotionStar::sample ()
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
-      Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
       m_motion_star.sample();
 
@@ -437,7 +437,7 @@ void MotionStar::updateData ()
 // Get the reciever transform for the given bird number.  The birds are
 // zero-based.
 // ----------------------------------------------------------------------------
-Matrix* MotionStar::getPosData (int d)
+vrj::Matrix* MotionStar::getPosData (int d)
 {
    if ( isActive() == false )
    {
@@ -451,7 +451,7 @@ Matrix* MotionStar::getPosData (int d)
 // ----------------------------------------------------------------------------
 // Not used currently -- needed for interface.
 // ----------------------------------------------------------------------------
-TimeStamp* MotionStar::getPosUpdateTime (int d)
+jccl::TimeStamp* MotionStar::getPosUpdateTime (int d)
 {
    return (&mDataTimes[getBirdIndex(d,current)]);
 }

@@ -62,7 +62,7 @@ public:
    virtual ~Gesture()
    {;}
 
-   virtual bool config(ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunk* c)
    { return true;}
 
 

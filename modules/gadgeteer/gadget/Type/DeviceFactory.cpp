@@ -129,7 +129,7 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
    DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
    DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>;
-   DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
+   jccl::DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
    DeviceConstructor<ThreeDMouse>* threed_mouse = new DeviceConstructor<ThreeDMouse>;
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||

@@ -36,12 +36,13 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/KeyboardInterface.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/VarValue.h>
+
 
 namespace gadget
 {
 
-class ConfigChunk;
 
 //: Base class for all simulated input devices
 //
@@ -86,7 +87,7 @@ public:
 
    //: Configure the simulated input device
    //! POST: Keyboard proxy is configured <br>
-   virtual bool config(ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunk* chunk);
 
 protected:
    //: Check the given keypair
@@ -103,7 +104,7 @@ protected:
    //! PRE: keyList must be full of var values containing chunks of the type "KeyModPair"
    //+      The KeyModPair chunk type must have fields name key and modKey
    //! RETURNS: vector of KeyModPairs
-   std::vector<KeyModPair> readKeyList(std::vector<VarValue*>& keyList);
+   std::vector<KeyModPair> readKeyList(std::vector<jccl::VarValue*>& keyList);
 
 private:
    KeyboardInterface     mKeyboard;        //: The keyboard we are getting events from

@@ -41,10 +41,13 @@
 #include <Carbon/Carbon.h>
 #include <vrj/Kernel/OSXSystemFactory.h>
 
+namespace jccl {
+    class ConfigChunk;
+};
+
+
 namespace gadget
 {
-
-   class ConfigChunk;
 
 //---------------------------------------------------------------
 //: XWin Keyboard class
@@ -82,7 +85,7 @@ public:
    }
    ~KeyboardOSX() { stopSampling();}
 
-   virtual bool config(ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    // Main thread of control for this active object
    void controlLoop(void* nullParam);

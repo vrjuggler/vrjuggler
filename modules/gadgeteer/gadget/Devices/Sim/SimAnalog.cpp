@@ -49,14 +49,14 @@ SimAnalog::~SimAnalog()
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimAnalog::config(ConfigChunk* chunk)
+bool SimAnalog::config(jccl::ConfigChunk* chunk)
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Analog::config(chunk) && SimInput::config(chunk)))
       return false;
 
-   std::vector<VarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
-   std::vector<VarValue*> key_dec_list = chunk->getAllProperties("keyPairsDec");
+   std::vector<jccl::VarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
+   std::vector<jccl::VarValue*> key_dec_list = chunk->getAllProperties("keyPairsDec");
 
    mSimKeysUp = readKeyList(key_inc_list);
    mSimKeysDown = readKeyList(key_dec_list);

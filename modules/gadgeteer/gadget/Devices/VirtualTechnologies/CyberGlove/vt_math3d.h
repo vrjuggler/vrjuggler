@@ -2,7 +2,7 @@
 #define VT_MATH3D_H
 /*  FILE: vt_math3d.h --                                        */
 /*                                                              */
-/*  Header file for vt_math3d.c: 3D Matrix and Vector           */
+/*  Header file for vt_math3d.c: 3D vrj::Matrix and Vector           */
 /*  operations                                                  */
 /*                                                              */
 /*  ==========================================================  */

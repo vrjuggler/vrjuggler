@@ -67,7 +67,7 @@ void BaseDeviceInterface::refresh()
    if(!mNameSet)
    { return; }
 
-   mProxyPtr = Kernel::instance()->getInputManager()->getProxy(mProxyName);
+   mProxyPtr = NULL; //XXX: Kernel::instance()->getInputManager()->getProxy(mProxyName);
 
    if (NULL == mProxyPtr)
    {

@@ -87,7 +87,7 @@ public:
    //! RETURNS: true - The device was configured succesfully.
    //! RETURNS: false - The config chunk is invalid.
    // ------------------------------------------------------------------------
-   virtual bool config(ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    //: Begin sampling
    int startSampling() { return 1;}
