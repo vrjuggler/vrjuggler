@@ -82,11 +82,11 @@ void OpenSGNav::preFrame()
    if(mButton0->getData() == gadget::Digital::ON)
    {
      velocity += inc_vel;
-     cout << "vel: " << velocity << std::endl;
+     std::cout << "vel: " << velocity << std::endl;
    }
    else if(velocity > 0)
    {
-      cout << "vel: " << velocity << std::endl;
+      std::cout << "vel: " << velocity << std::endl;
       velocity -= inc_vel;
    }
 
