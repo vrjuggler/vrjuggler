@@ -181,7 +181,7 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_VJ)
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIB_DYNAMIC).* .
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
@@ -197,7 +197,7 @@ $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_PROF_DEPS_VJ)
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC).* .
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY)$(PROFLIB_EXT).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
@@ -213,7 +213,7 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_GL)
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIB_DYNAMIC).* .
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIBRARY).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
@@ -229,7 +229,7 @@ $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_PROF_DEPS_GL)
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC).* .
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIBRARY)$(PROFLIB_EXT).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
@@ -245,7 +245,7 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_PF)
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_LIB_DYNAMIC).* .
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_LIBRARY).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
@@ -261,7 +261,7 @@ $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_PROF_DEPS_PF)
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC).* .
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_LIBRARY)$(PROFLIB_EXT).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
