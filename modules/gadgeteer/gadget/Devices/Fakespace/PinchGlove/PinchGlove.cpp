@@ -146,7 +146,6 @@ int PinchGlove::sample()
    std::string gesture;
    gesture = mGlove->getGestureFromHardware();
    //std::cout << "PinchGlove::sample() " << gesture << std::endl;
-
    int num;
    int i;
    //std::cout << "DigitalData: ";

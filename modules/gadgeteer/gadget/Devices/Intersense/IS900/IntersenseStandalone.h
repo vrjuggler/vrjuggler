@@ -104,7 +104,7 @@ public:
     
     const std::string setPortName()
     { return mPortName; }
-    const int setBaudRate()
+    int setBaudRate()
     { return mBaudRate; }
 
     int& rNumStations() {return mNumStations;}
