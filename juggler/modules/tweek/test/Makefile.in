@@ -43,9 +43,9 @@
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
-default: corba
+default: all
 
-SUBDIRS	= corba
+SUBDIRS	= corba NetworkTestBean TestBean
 
 all: $(SUBDIRS)
 
@@ -59,4 +59,10 @@ clean:
 	@for dir in $(SUBDIRS) ; do			\
             echo "==> Cleaning in $$dir"       ;	\
             cd $$dir && $(MAKE) clean && cd .. ;	\
+        done
+
+clobber:
+	@for dir in $(SUBDIRS) ; do			\
+            echo "==> Cleaning in $$dir"         ;	\
+            cd $$dir && $(MAKE) clobber && cd .. ;	\
         done
