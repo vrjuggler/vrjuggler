@@ -102,6 +102,12 @@ public:
 	return 0.0;
     }
 
+    
+ public:
+
+    // needed for VC++
+    TimeStampNone (const TimeStampNone&) {;}
+
 };
 
 }; // namespace jccl
