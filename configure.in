@@ -262,7 +262,6 @@ case $target_os in
 
         AR='${CXX}'
         ARFLAGS='-J6 -ar -WR,-v -o'
-        CFLAGS="$CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
