@@ -47,8 +47,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= API.cpp			\
-                  App.cpp			\
+SRCS		= App.cpp			\
                   ConfigManager.cpp		\
                   ConfigChunkHandler.cpp	\
                   DependencyManager.cpp		\
