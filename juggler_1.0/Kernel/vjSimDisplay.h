@@ -36,6 +36,12 @@ public:
          vjDEBUG(0) << "ERROR: vjSimDisplay:: Fatal Error: Camera not found named: " << camera_proxy_str << endl;
          exit(1);
       }
+
+      // Get drawing parameters
+      mDrawProjections = chunk->getProperty("drawProjections");
+      mSurfaceColor[0] = chunk->getProperty("surfaceColor", 0);
+      mSurfaceColor[1] = chunk->getProperty("surfaceColor", 1);
+      mSurfaceColor[2] = chunk->getProperty("surfaceColor", 2);
    }
 
    virtual void updateProjections()
@@ -55,9 +61,14 @@ public:
    { return mWandPos; }
 
    vjProjection* getCameraProj()
-   {
-      return mCameraProj;
-   }
+   { return mCameraProj; }
+
+public:  // Sim Drawing parameters
+   bool shouldDrawProjections()
+   { return mDrawProjections; }
+
+   vjVec3 getSurfaceColor()
+   { return mSurfaceColor; }
 
 protected:
     //: Update internal simulator data
@@ -71,6 +82,10 @@ protected:
    }
 
 private:
+   // Drawing attributes
+   bool     mDrawProjections;    //: Should we draw projections
+   vjVec3   mSurfaceColor;       //: Color to draw surfaces
+
    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
    vjProjection*   mCameraProj;            // Camera projection. (For sim, etc.)
 
