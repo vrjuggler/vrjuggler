@@ -432,16 +432,19 @@ public class PropertySheet extends PropertyComponent
          }
       }
       
-      // Ask the user to choose a base ChunkDesc
+      // Ask the user to choose a base ConfigDefinition.
       ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
       chooser.setDefinitions(allowed_types);
       int result = chooser.showDialog(this);
 
       // If the user did not cancel their choice, make a new ConfigChunk for
-      // the chose ChunkDesc
+      // the chosen ConfigDefinition.
       if (result == ConfigDefinitionChooser.APPROVE_OPTION)
       {
-         ConfigElementFactory temp_factory = new ConfigElementFactory(allowed_types);
+         // Get a list of all known ConfigDefinitions
+         java.util.List defs = def_repos.getAllLatest();
+      
+         ConfigElementFactory temp_factory = new ConfigElementFactory(defs);
          
          // TODO: Compute a unique name
          new_value = temp_factory.create("CHANGEME", chooser.getSelectedDefinition());
