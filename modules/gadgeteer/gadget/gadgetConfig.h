@@ -61,10 +61,6 @@
 
 #include <windows.h>
 
-#ifndef HAVE_STRCASECMP
-#define strcasecmp _stricmp
-#endif
-
 #endif   /* WIN32 */
 
 
