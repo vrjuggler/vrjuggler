@@ -418,7 +418,7 @@ int ConfigManager::scanForLostDependencies()
       if ( !dep_mgr->isSatisfied(elements[i]) )     // We are not satisfied
       {
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << elements[i]->getProperty<std::string>("name")
+            << elements[i]->getName()
             << " type: " << elements[i]->getID()
             << " has lost dependencies.\n" << vprDEBUG_FLUSH;
 
