@@ -114,17 +114,18 @@ template<class PROXY_TYPE>
 class DeviceInterface : public BaseDeviceInterface
 {
 public:
-    DeviceInterface(DeviceInterface& other)
-    {
-        if(other->mTypeSpecificProxy != NULL)
-        {
-            mTypeSpecificProxy=other->mTypeSpecificProxy;
-        }
-        else
-        {
-            mTypeSpecificProxy=&mDummyProxy;
-        }
-    }
+   DeviceInterface(DeviceInterface& other)
+   {
+      if (other.mTypeSpecificProxy != NULL)
+      {
+         mTypeSpecificProxy = other.mTypeSpecificProxy;
+      }
+      else
+      {
+         mTypeSpecificProxy = &mDummyProxy;
+      }
+   }
+
 public:
    DeviceInterface()
    {
