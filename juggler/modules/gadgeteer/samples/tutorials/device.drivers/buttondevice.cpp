@@ -68,17 +68,17 @@ std::string ButtonDevice::getElementType()
 // on config elements, for information on how to access them.
 bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
-  // Configure all our base classes first.  If any of those fail, we cannot
-  // finish configuring ourself.
-  if ( ! Input::config(e) && ! Digital::config(e) )
-  {
-     return false;
-  }
+   // Configure all our base classes first.  If any of those fail, we cannot
+   // finish configuring ourself.
+   if ( ! Input::config(e) && ! Digital::config(e) )
+   {
+      return false;
+   }
 
-  mPort = e->getProperty<std::string>("port");
-  mBaud = e->getProperty<int>("baud");
+   mPort = e->getProperty<std::string>("port");
+   mBaud = e->getProperty<int>("baud");
 
-  return true;
+   return true;
 }
 
 // Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
