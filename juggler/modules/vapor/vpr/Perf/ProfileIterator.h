@@ -76,8 +76,14 @@ public:
     */
 	const char*	getCurrentParentName( void )			{ return mCurrentParent->getName(); }
 
+   /**
+    * @return tree structure is printed out
+    */
    void printTree(ProfileNode* node) {node->printTree(node);}
 
+   /*
+    * @return The current size of history it is keeping track of
+    */
    const ProfileNode::NodeHistoryRange getNodeHistoryRange() { return mCurrentChild->getNodeHistoryRange();}
 
    /**

@@ -62,24 +62,6 @@ void	ProfileIterator::enterParent( void )
 
 VPR_API(std::ostream&) operator<< (std::ostream& out, ProfileIterator& iter)
 {
-   /* out << iter.getCurrentName() << " total calls: " << iter.getCurrentTotalCalls()
-       << " total time: " << iter.getCurrentTotalTime() << " ave: " 
-       << iter.getCurrentTotalCalls() /iter.getCurrentTotalTime() << " history: ";
-
-       */
-
-   //ProfileNode::NodeHistoryRange p = iter.getNodeHistoryRange();
-   /* for(; p.first != p.second; p.first++)
-      { out << *(p.first) << " "; }
-
-      out << std::endl;
-
-      ProfileIterator* c = iter.getChild();
-      out << *c;
-      ProfileIterator* d = iter.getSibling();
-      out << *d;
-      */
-
     while(!iter.isDone())
     {
       out << iter.getCurrentName() << " total calls: " << iter.getCurrentTotalCalls()
@@ -94,22 +76,6 @@ VPR_API(std::ostream&) operator<< (std::ostream& out, ProfileIterator& iter)
       iter.next();
       }
   
-
-/*
-   while(!iter.isDone())
-    {
-      out << iter.getCurrentName() << " total calls: " << iter.getCurrentTotalCalls()
-          << " total time: " << iter.getCurrentTotalTime() << " ave: " 
-          << iter.getCurrentTotalCalls() /iter.getCurrentTotalTime() << " history: ";
-
-      ProfileNode::NodeHistoryRange p = iter.getNodeHistoryRange();
-      for(; p.first != p.second; p.first++)
-         { out << *(p.first) << " "; }
-
-      out << std::endl;
-      iter.next();
-      }
-      */
    return out;
 }
 
