@@ -9,6 +9,7 @@
 //: Provides a simplified user interface to an analog device
 //
 // See also: vjDeviceInterface
+//!PUBLIC_API
 class vjAnalogInterface : public vjDeviceInterface
 {
 public:

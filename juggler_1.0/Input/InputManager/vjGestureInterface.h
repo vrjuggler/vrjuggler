@@ -9,6 +9,7 @@
 //: Provides a simplified user interface to an gesture device
 //
 // See also: vjDeviceInterface
+//!PUBLIC_API
 class vjGestureInterface : public vjDeviceInterface
 {
 public:
