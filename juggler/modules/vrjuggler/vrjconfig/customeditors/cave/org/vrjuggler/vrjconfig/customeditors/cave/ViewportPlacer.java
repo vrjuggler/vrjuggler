@@ -66,14 +66,39 @@ public class ViewportPlacer
       this.setBorder(BorderFactory.createLineBorder(java.awt.Color.black));
 
       calcPanelSize();
+
+      Iterator i;
+      for ( i = elt.getPropertyValues("simulator_viewports").iterator(); i.hasNext(); )
+      {
+         ((ConfigElement)i.next()).addConfigElementListener(mChangeListener);
+      }
+
+      for ( i = elt.getPropertyValues("surface_viewports").iterator(); i.hasNext(); )
+      {
+         ((ConfigElement)i.next()).addConfigElementListener(mChangeListener);
+      }
+
       
+      mConfigElement.addConfigElementListener(mChangeListener);
+
+      // Make sure to add listener to all added embedded elements.
       mConfigElement.addConfigElementListener(new ConfigElementAdapter()
          {
-            public void propertyValueChanged(ConfigElementEvent event)
+            public void propertyValueAdded(ConfigElementEvent event)
             {
-               if ( event.getProperty().equals("size") )
+               if ( event.getProperty().equals("simulator_viewports") ||
+                    event.getProperty().equals("surface_viewports") )
                {
-                  calcPanelSize();
+                  ((ConfigElement)event.getValue()).addConfigElementListener(mChangeListener);
+               }
+            }
+
+            public void propertyValueRemoved(ConfigElementEvent event)
+            {
+               if ( event.getProperty().equals("simulator_viewports") ||
+                    event.getProperty().equals("surface_viewports") )
+               {
+                  ((ConfigElement)event.getValue()).addConfigElementListener(mChangeListener);
                }
             }
          });
@@ -91,6 +116,20 @@ public class ViewportPlacer
       wndPlacer.setModel(model);
       wndPlacer.setRenderer(new ViewportRenderer());
    }
+   
+   private class ChangeListener extends ConfigElementAdapter
+   {
+      public void propertyValueChanged(ConfigElementEvent event)
+      {
+         if ( event.getProperty().equals("size") ||
+              event.getProperty().equals("origin") )
+         {
+            calcPanelSize();
+         }
+      }
+   }
+
+   ChangeListener mChangeListener = new ChangeListener();
    
    private void calcPanelSize()
    {
