@@ -39,6 +39,7 @@
 #include <string>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/SelectorBase.h>
+#include <vpr/Util/Status.h>
 #include <vpr/Util/Interval.h>
 
 
