@@ -166,7 +166,7 @@ SerialPortImpTermios::enableLocalAttach () {
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableLocalAttach () {
-    return setBit(CLOCAL, SerialPortImpTermios::CFLAG, true,
+    return setBit(CLOCAL, SerialPortImpTermios::CFLAG, false,
                   "Could not disable local attachment");
 }
 
