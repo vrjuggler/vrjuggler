@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Sep-19-2002 patrickh  Fixed bug that prevented TrackdController from working
+                      with the sample buffers.  This fix was submitted by
+                      Dr. Anthony Steed (A.Steed@cs.ucl.ac.uk).
+                      NEW VERSION: 0.4.2
 Sep-17-2002 aronb     Fixed data collection bugs in Pinch Glove driver.
                       NEW VERSION: 0.4.1
 Sep-13-2002 aronb     gadget::Input no longer defines member variables for the
