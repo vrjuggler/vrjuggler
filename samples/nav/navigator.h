@@ -53,6 +53,11 @@ public:
       allowAxis[0] = allowAxis[1] = allowAxis[2] = true;    // Initialize to rot in all axes
    }
 
+   // Empty virtual destructor to make GCC happy.
+   virtual ~navigator (void) {
+      /* Do nothing. */ ;
+   }
+
    // Updates the state of the navigator that influences the nav update
    virtual void updateInteraction() = 0;
 
@@ -253,7 +258,7 @@ bool navigator::checkForAction(std::vector<vjDigitalInterface*> btns, std::vecto
    bool ret_val;
 
    // Check state of all the required combos
-   for(int i=0;i<state_combo.size();i++)
+   for(unsigned int i=0;i<state_combo.size();i++)
    {
       if(state_combo[i] == navigator::ON)
       {

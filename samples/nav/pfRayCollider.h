@@ -114,7 +114,7 @@ bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouRe
       std::cout<<"testRayCollision: Collided\n"<<std::flush;
 
       pfHitQueryResult isectResult;
-      uint query[] = {PFQHIT_FLAGS, PFQHIT_SEGNUM, PFQHIT_POINT, PFQHIT_NORM, NULL};
+      uint query[] = {PFQHIT_FLAGS, PFQHIT_SEGNUM, PFQHIT_POINT, PFQHIT_NORM, 0};
       hit[0][0]->mQuery( query, &isectResult );
       if(isectResult.flags & PFHIT_XFORM)
       {

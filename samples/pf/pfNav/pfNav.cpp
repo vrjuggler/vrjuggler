@@ -59,6 +59,11 @@ public:
    myPfNavApp()
    {
    }
+
+   // Empty virtual destructor.
+   virtual ~myPfNavApp (void) {
+      /* Do nothing. */ ;
+   }
 };
 
 int main(int argc, char* argv[])

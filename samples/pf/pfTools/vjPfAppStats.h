@@ -56,6 +56,10 @@ public:
    };
 
 public:
+   // Empty virtual destructor to make GCC happy.
+   virtual ~vjPfAppStats (void) {
+      /* Do nothing. */ ;
+   }
 
    // Must be called in preForkInit
    // -Allocates the shared data buffer
