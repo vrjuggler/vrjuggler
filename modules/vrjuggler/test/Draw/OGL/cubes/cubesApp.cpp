@@ -140,6 +140,15 @@ void UserData::updateNavigation()
                         << std::endl << vprDEBUG_FLUSH;
 }
 
+void UserData::updateShapeSetting()
+{
+   if ( mToggleButton->getData() == gadget::Digital::TOGGLE_ON )
+   {
+      // Toggle back and forth between cone and cube rendering.
+      mShapeSetting = ((mShapeSetting == CUBE) ? CONE : CUBE);
+   }
+}
+
 // ----------------------------------------------------------------------------
 // cubesApp methods.
 // ----------------------------------------------------------------------------
@@ -161,12 +170,12 @@ void cubesApp::init()
    {
    case (2):
       new_user = new UserData(users[1],"VJWand1", "VJButton0_1", "VJButton1_1",
-                              "VJButton2_1");
+                              "VJButton2_1", "VJButton3_1");
       mUserData[1] = new_user;
       vprASSERT(users[1]->getId() == 1);
    case (1):
       new_user = new UserData(users[0],"VJWand", "VJButton0", "VJButton1",
-                              "VJButton2");
+                              "VJButton2", "VJButton3");
       mUserData[0] = new_user;
       vprASSERT(users[0]->getId() == 0);
       break;
@@ -188,24 +197,35 @@ void cubesApp::contextInit()
 
    // Generate the display list to be used for the cube faces.  This is the
    // important one.
-   mDlData->dlIndex = glGenLists(1);
+   mDlCubeData->dlIndex = glGenLists(1);
+
+   // Generate the display list to be used for the cones.
+   mDlConeData->dlIndex = glGenLists(1);
 
    // Verify that we got a valid display list index.
-   if ( glIsList(mDlData->dlIndex) == GL_FALSE ) {
-       vprASSERT(false && "glGenLists() returned an invalid display list!");
+   if ( glIsList(mDlCubeData->dlIndex) == GL_FALSE )
+   {
+      vprASSERT(false && "glGenLists() returned an invalid display list!");
    }
-   else {
-       glNewList(mDlData->dlIndex, GL_COMPILE);
-          drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
-       glEndList();
+   else
+   {
+      glNewList(mDlCubeData->dlIndex, GL_COMPILE);
+         drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
+      glEndList();
 
-       vprDEBUG(vprDBG_ALL,0) << "Creating DL:" << mDlData->dlIndex
-                            << std::endl << vprDEBUG_FLUSH;
-       std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
-                 << std::endl;
+      glNewList(mDlConeData->dlIndex, GL_COMPILE);
+         drawCone(1.1f, 2.0f, 20, 10);
+      glEndList();
 
-       initGLState();
-    }
+      vprDEBUG(vprDBG_ALL,0) << "Created cube DL:" << mDlCubeData->dlIndex
+                             << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << "Created cone DL:" << mDlConeData->dlIndex
+                             << std::endl << vprDEBUG_FLUSH;
+      std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
+                << std::endl;
+
+      initGLState();
+   }
 }
 
 //: Called immediately upon closing an OpenGL context
@@ -214,15 +234,25 @@ void cubesApp::contextInit()
 void cubesApp::contextClose()
 {
    // Deallocate the random display lists used for debugging.
-   if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE ) {
+   if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE )
+   {
       vprDEBUG(vprDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
-                            << " display lists\n" << vprDEBUG_FLUSH;
+                              << " display lists\n" << vprDEBUG_FLUSH;
       glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
    }
 
    // Deallocate the cube face geometry data from the video hardware.
-   if ( glIsList(mDlData->dlIndex) == GL_TRUE ) {
-      glDeleteLists(mDlData->dlIndex, 1);
+   if ( glIsList(mDlCubeData->dlIndex) == GL_TRUE )
+   {
+      glDeleteLists(mDlCubeData->dlIndex, 1);
+   }
+
+   // Deallocate the cone geometry data from the video hardware.
+   if ( glIsList(mDlConeData->dlIndex) == GL_TRUE )
+   {
+      vprDEBUG(vprDBG_ALL, 0) << "Deallocating cone display list\n"
+                              << vprDEBUG_FLUSH;
+      glDeleteLists(mDlConeData->dlIndex, 1);
    }
 }
 
@@ -252,15 +282,30 @@ void cubesApp::myDraw(vrj::User* user)
       
       //---- Main box loop -----///
       for (float x=0;x<1;x += INCR)
+      {
          for (float y=0;y<1; y += INCR)
+         {
             for (float z=0;z<1;z += INCR)
             {
                glColor3f(x, y, z);     // Set the Color
                glPushMatrix();
                glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
-               drawCube();
+
+               switch (mUserData[user->getId()]->getShapeSetting())
+               {
+                  case UserData::CONE:
+                     drawCone();
+                     break;
+                  case UserData::CUBE:
+                  default:
+                     drawCube();
+                     break;
+               }
+
                glPopMatrix();
             }
+         }
+      }
 
 
      /*
