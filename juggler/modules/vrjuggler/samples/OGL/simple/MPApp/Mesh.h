@@ -165,7 +165,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i][j+1] - local_vert;
             v1 = mVerts[i-1][j] - local_vert;
-            temp_normal = cross(v0, v1);
+            cross(temp_normal, v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -174,7 +174,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i+1][j] - local_vert;
             v1 = mVerts[i][j+1] - local_vert;
-            temp_normal = cross(v0, v1);
+            cross(temp_normal, v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -183,7 +183,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i-1][j] - local_vert;
             v1 = mVerts[i][j-1] - local_vert;
-            temp_normal = cross(v0, v1);
+            cross(temp_normal, v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -192,7 +192,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i][j-1] - local_vert;
             v1 = mVerts[i+1][j] - local_vert;
-            temp_normal = cross(v0, v1);
+            cross(temp_normal, v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
