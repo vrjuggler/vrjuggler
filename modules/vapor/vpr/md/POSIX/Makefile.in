@@ -50,23 +50,23 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/POSIX
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/POSIX
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/POSIX/
+DIRPRFX=	vpr/md/POSIX/
 
-SUBDIR		= DynLoad	\
-                  IO		\
-                  Sync		\
-                  Thread	\
-                  Util
+SUBDIR=		DynLoad		\
+		IO		\
+		Sync		\
+		Thread		\
+		Util
 
 ifeq (@SUBSYSTEM@, POSIX)
-SRCS		= SystemPosix.cpp
+   SRCS=	SystemPosix.cpp
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk
