@@ -40,6 +40,7 @@
 #include <vpr/Util/ReturnStatus.h>
 #include <tweek/CORBA/CorbaManager.h>
 #include <jccl/RTRC/RemoteReconfig.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 
 
 namespace jccl 
@@ -61,7 +62,9 @@ class RemoteReconfigSubjectImpl;
  *
  * @date July 31, 2002
  */
-class CorbaRemoteReconfig : public jccl::RemoteReconfig
+class CorbaRemoteReconfig
+   : public jccl::RemoteReconfig
+   , public jccl::ConfigElementHandler
 {
 
 public:
@@ -69,14 +72,16 @@ public:
 
    virtual ~CorbaRemoteReconfig();
 
-   /**
-    * Initializes the RTRC interface.
-    */
+   bool configCanHandle(jccl::ConfigElementPtr e);
+
+   bool configAdd(jccl::ConfigElementPtr e);
+
+   bool configRemove(jccl::ConfigElementPtr e);
+
+   /** Stubbed out function required by the jccl::RemoteReconfig interface. */
    vpr::ReturnStatus init();
 
-   /**
-    * Turns on the interface to RTRC (allow incoming connections).
-    */   
+   /** Stubbed out function required by the jccl::RemoteReconfig interface. */
    vpr::ReturnStatus enable();
 
    bool isEnabled() const;
@@ -102,6 +107,31 @@ protected:
    }
 
 private:
+   /**
+    * Initializes and activates the local CORBA instance that we need for
+    * handling remote reconfiguration requests.
+    *
+    * @param nsHost  The name of the host computer where the CORBA Naming
+    *                Service is running.
+    * @param nsport  The port number on which the CORBA Naming Service is
+    *                listening for incoming connections.
+    * @param iiopVer The version of IIOP the Naming Service is using.  This
+    *                is normally 1.0 or 1.2.
+    */
+   vpr::ReturnStatus startCorba(const std::string& nsHost,
+                                const vpr::Uint16 nsPort,
+                                const std::string& iiopVer);
+
+   /**
+    * Disables the local CORBA instance and releases the resources allocated
+    * in startCorba().  The CORBA instance is only disabled if isEnabled()
+    * returns true.
+    *
+    * @post The local CORBA instance is running, and the memory allocated for
+    *       it (held in mCorbaManager and mInterface) is released.
+    */
+   void stopCorba();
+
    // XXX: We hold a pointer to the Config Manager because we can get into a
    // deadlock state by trying to access the Config Manager through its
    // singleton interface.
