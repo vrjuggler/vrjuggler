@@ -193,7 +193,7 @@ bool ConfigManager::pendingNeedsChecked()
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "      This may be an error in the configuration OR\n"
+            << "      This may be a problem in the configuration OR\n"
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "      it may be waiting for more configuration information.\n"
