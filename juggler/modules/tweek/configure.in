@@ -289,28 +289,33 @@ DPP_HAVE_GNU_MAKE(3.78, ,
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
 # Check for the JDK.
-DPP_PATH_JAVA( ,
-   [DPP_JDK_VERSION([$JDK_HOME], [1.3], [BUILD_JAVA='Y'],
+DPP_PATH_JAVA( , [tweek_have_java='Y'],
+              [tweek_have_java='N'
+               BUILD_JAVA='N'])
+
+if test "x$tweek_have_java" = "xY" ; then
+   DPP_JDK_VERSION([$JDK_HOME], [1.3], [BUILD_JAVA='Y'],
       [ BUILD_JAVA='N'
         AC_MSG_WARN([*** JDK 1.3 or newer required for Tweek Java API ***])
-      ])])
+      ])
 
-if test "x$BUILD_JAVA" = "xY" ; then
-   DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
-      getNamespace(uri), [String uri = new String("test")], BUILD_JAVA='Y',
-      [ AC_MSG_WARN(*** JDOM required for Tweek Java API ***)
-        BUILD_JAVA='N' ],
-      $JDOM_JAR)
-fi
+   if test "x$BUILD_JAVA" = "xY" ; then
+      DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
+         getNamespace(uri), [String uri = new String("test")], BUILD_JAVA='Y',
+         [ AC_MSG_WARN(*** JDOM required for Tweek Java API ***)
+           BUILD_JAVA='N' ],
+         $JDOM_JAR)
+   fi
 
-# If we are building the Tweek Java code, we should try to enable building the
-# Java test suite too.
-if test "x$BUILD_JAVA" = "xY" ; then
-   DPP_CHECK_JAVA_STATIC_METHOD(junit.framework.Assert, assertTrue(true), ,
-      BUILD_JAVA_TEST_SUITE='Y',
-      [ AC_MSG_WARN(*** JUnit required for Tweek Java test suite ***)
-        BUILD_JAVA_TEST_SUITE='N' ],
-      $JUNIT_JAR)
+   # If we are building the Tweek Java code, we should try to enable building
+   # the Java test suite too.
+   if test "x$BUILD_JAVA" = "xY" ; then
+      DPP_CHECK_JAVA_STATIC_METHOD(junit.framework.Assert, assertTrue(true), ,
+         BUILD_JAVA_TEST_SUITE='Y',
+         [ AC_MSG_WARN(*** JUnit required for Tweek Java test suite ***)
+           BUILD_JAVA_TEST_SUITE='N' ],
+         $JUNIT_JAR)
+   fi
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
