@@ -33,6 +33,8 @@
 #include <boost/python/extract.hpp>
 #include <boost/python/converter/registry.hpp>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Kernel/App.h>
 
