@@ -3,22 +3,17 @@
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/System.h>
 
-#include <LibraryFinderTest.h>
+#include <TestCases/DynLoad/LibraryFinderTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( LibraryFinderTest );
 
 static const std::string C_MOD("libcmod.so");
 
 LibraryFinderTest::LibraryFinderTest()
-   : CppUnit::TestCase(), mModuleDir(MODULE_DIR)
-{
-   ;
-}
-
-LibraryFinderTest::LibraryFinderTest(std::string name)
-   : CppUnit::TestCase(name), mModuleDir(MODULE_DIR)
+   :  mModuleDir(MODULE_DIR)
 {
    ;
 }

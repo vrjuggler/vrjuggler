@@ -19,7 +19,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 
-#include <SocketBandwidthIOStatsTest.h>
+#include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
 
 
 namespace vprTest

@@ -1,15 +1,30 @@
+#ifndef _MY_SUITES_H_
+#define _MY_SUITES_H_
 
 // MySuites.h
 #include <string>
 
-namespace MySuites {
-   std::string metric() 
+namespace vprTest
+{
+   namespace MySuites 
+   {
+   inline std::string metric() 
    { 
      return "metric";
    }
    
-   std::string noninteractive() 
+   inline std::string noninteractive() 
    { 
      return "noninteractive";
    }
+
+   inline std::string interactive() 
+   { 
+     return "interactive";
+   }
+
  }
+}
+
+#endif
+

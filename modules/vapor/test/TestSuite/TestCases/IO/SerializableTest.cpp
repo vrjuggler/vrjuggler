@@ -8,11 +8,12 @@
 // Serializable objects to test
 //#include <plx/Router/PlxAddr.h>
 //#include <plx/Router/RouterInfo.h>
-#include <SerializableTest.h>
+#include <TestCases/IO/SerializableTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( SerializableTest );
 
 void SerializableTest::testReaderWriter()
 {
@@ -276,19 +277,5 @@ void SerializableTest::testReadWriteRouterInfo()
 }
 */
 
-CppUnit::Test* SerializableTest::suite()
-{
-   CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("SerializableTest");
-   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWriteSimple", &SerializableTest::testReadWriteSimple));
-   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWriteNested", &SerializableTest::testReadWriteNested));
-   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReaderWriter", &SerializableTest::testReaderWriter));
-   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testDataOffsets", &SerializableTest::testDataOffsets));
-
-
-//   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWritePlxAddr", &SerializableTest::testReadWritePlxAddr));
-//   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWriteRouterInfo", &SerializableTest::testReadWriteRouterInfo));
-
-   return test_suite;
-}
 
 }

@@ -5,11 +5,14 @@
 
 #include <vpr/Util/Debug.h>
 
-#include <GUIDTest.h>
+#include <TestCases/Util/GUIDTest.h>
 
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_REGISTRATION( GUIDTest );
+CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( GUIDMetricTest, MySuites::metric() );
 
 void GUIDTest::testConstructor ()
 {
@@ -78,7 +81,7 @@ void GUIDTest::testCompare ()
    CPPUNIT_ASSERT(guid6 == guid3);
 }
 
-void GUIDTest::testCreationOverhead()
+void GUIDMetricTest::testCreationOverhead()
 {
    const vpr::Uint32 iters(1000);
    vpr::Uint32 loops = iters;
@@ -95,7 +98,7 @@ void GUIDTest::testCreationOverhead()
    CPPUNIT_ASSERT_METRIC_TIMING_LE("GUIDTest/CreationOverhead", iters, 0.05f, 0.1f);
 }
 
-void GUIDTest::testDebugOutput()
+void GUIDMetricTest::testDebugOutput()
 {
     /*
     if (0>100)

@@ -1,36 +1,25 @@
 #ifndef _VPR_TEST_INET_ADDR_TEST_H_
 #define _VPR_TEST_INET_ADDR_TEST_H_
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 
 #include <vpr/IO/Socket/InetAddr.h>
 
 namespace vprTest
 {
 
-class InetAddrTest : public CppUnit::TestCase
+class InetAddrTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(InetAddrTest);
+CPPUNIT_TEST( testEqual );
+CPPUNIT_TEST( testSets );
+CPPUNIT_TEST( testAddressLookup );
+CPPUNIT_TEST( testLocalAddressLookup );
+CPPUNIT_TEST_SUITE_END();
+
 public:
-   InetAddrTest()
-   : CppUnit::TestCase ()
-   {;}
-
-   InetAddrTest(std::string name)
-   : CppUnit::TestCase (name)
-   {;}
-
-   virtual ~InetAddrTest()
-   {}
-
-   virtual void setUp()
-   {;}
-
-   virtual void tearDown()
-   {
-   }
-
    void testCreation()
    {
       vpr::InetAddr any_addr;
@@ -46,30 +35,6 @@ public:
    void testAddressLookup();
 
    void testLocalAddressLookup();
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("NoninteractiveInetAddrTest");
-
-      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testCreation", &InetAddrTest::testCreation));
-      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testEqual", &InetAddrTest::testEqual));
-      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
-      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testAddressLookup",
-                                                                 &InetAddrTest::testAddressLookup));
-      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testLocalAddressLookup",
-                                                                 &InetAddrTest::testLocalAddressLookup));
-
-      return test_suite;
-   }
-
-   static CppUnit::Test* interactiveSuite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("InteractiveInetAddrTest");
-      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
-      return test_suite;
-   }
-
-protected:
 
 };
 

@@ -2,41 +2,30 @@
 #define _VPRTEST_LIBRARY_FINDER_TEST_H_
 
 #include <string>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
-
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 
 namespace vprTest
 {
 
-class LibraryFinderTest : public CppUnit::TestCase
+class LibraryFinderTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(LibraryFinderTest);
+CPPUNIT_TEST( scanTest );
+CPPUNIT_TEST( scanAndLoadTest );
+CPPUNIT_TEST_SUITE_END();
+
 public:
    LibraryFinderTest();
-
-   LibraryFinderTest(std::string name);
-
+      
    virtual ~LibraryFinderTest()
-   {
-      ;
-   }
+   {;}
 
    virtual void setUp();
 
    void scanTest();
    void scanAndLoadTest();
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite =
-         new CppUnit::TestSuite("LibraryFinderTest");
-
-      test_suite->addTest(new CppUnit::TestCaller<LibraryFinderTest>("scanTest", &LibraryFinderTest::scanTest));
-      test_suite->addTest(new CppUnit::TestCaller<LibraryFinderTest>("scanAndLoadTest", &LibraryFinderTest::scanAndLoadTest));
-
-      return test_suite;
-   }
 
 private:
    std::string mModuleDir;
@@ -46,5 +35,5 @@ private:
 
 }
 
-
 #endif /* _VPRTEST_LIBRARY_FINDER_TEST_H_ */
+

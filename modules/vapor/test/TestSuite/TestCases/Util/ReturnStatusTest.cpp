@@ -1,10 +1,11 @@
 #include <vpr/Util/ReturnStatus.h>
 
-#include <ReturnStatusTest.h>
+#include <TestCases/Util/ReturnStatusTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( ReturnStatusTest );
 
 void ReturnStatusTest::basic()
 {

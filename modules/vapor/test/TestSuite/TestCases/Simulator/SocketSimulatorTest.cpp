@@ -21,11 +21,13 @@
 
 #include <vpr/md/SIM/Controller.h>
 
-#include <SocketSimulatorTest.h>
+#include <TestCases/Simulator/SocketSimulatorTest.h>
 
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_REGISTRATION( GUIDTest );
 
 void SocketSimulatorTest::graphConstructionTest ()
 {

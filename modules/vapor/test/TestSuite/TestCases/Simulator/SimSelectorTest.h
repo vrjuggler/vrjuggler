@@ -1,41 +1,22 @@
 #ifndef _VPRTEST_SIM_SELECTOR_TEST_H_
 #define _VPRTEST_SIM_SELECTOR_TEST_H_
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 
 
 namespace vprTest
 {
 
-class SimSelectorTest : public CppUnit::TestCase
+class SimSelectorTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(SimSelectorTest);
+CPPUNIT_TEST( singleThreadTest );
+CPPUNIT_TEST_SUITE_END();
+
 public:
-   SimSelectorTest (std::string name) : CppUnit::TestCase(name)
-   {
-      /* Do nothing. */;
-   }
-
-   SimSelectorTest () : CppUnit::TestCase()
-   {
-      /* Do nothing. */;
-   }
-
-   virtual ~SimSelectorTest (void)
-   {
-      /* Do nothing. */;
-   }
-
-   void singleThreadTest(void);
-
-   static CppUnit::Test* suite (void)
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("SimSelectorTest");
-      test_suite->addTest( new CppUnit::TestCaller<SimSelectorTest>("singleThreadTest", &SimSelectorTest::singleThreadTest));
-
-      return test_suite;
-   }
+   void singleThreadTest(void);   
 };
 
 }
