@@ -49,6 +49,7 @@
 #include <gmtl/Output.h>
 
 #include <drivers/Ascension/Flock/FlockStandalone.h>
+#include <vpr/System.h>
 
 // Declarations
 void printSettings();
@@ -56,6 +57,8 @@ void changeSettings();
 void printBirdDetails();
 void setRtsValue();
 void printSamples();
+
+void readTest();
 
 FlockStandalone flock("/dev/ttyS0");
 
@@ -118,6 +121,8 @@ int main()
          << "8 - Configure the flock.\n"
          << "9 - Toggle streaming mode.\n"
          << "a - Print samples.\n"
+         << "   -- Test modes --.\n"
+         << "r - Read in 10 OK's from bird (test mode 1)\n"
          << "Q - Quit\n";
          
       std::cin >> achar;
@@ -177,6 +182,9 @@ int main()
       break;
       case 'a':
          printSamples();
+         break;
+      case 'r':
+         readTest();
          break;
       default:
          std::cout << "Unrecognized option: " << achar << std::endl;
@@ -300,6 +308,106 @@ void printSamples()
       std::cout << s << ":  p:" << coord.mPos << "  r:" << coord.mRot << std::endl;
    }
    
+}
+
+void readTest()
+{
+   unsigned bytes_read;
+   vpr::SerialPort ser(flock.getPort());
+
+   ser.setOpenReadWrite();
+
+   if (!(ser.open().success() ))
+   {
+      std::cerr << "ERROR: Could not open serial port.\n";
+      return;
+   }
+
+   // Reset the port by opening it and then closing it
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting bird port:\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port open" << vprDEBUG_FLUSH;
+   for(unsigned i=0;i<5;++i)
+   {
+      vpr::System::msleep(40);
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+   }
+   vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
+
+   ser.close();
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port closed" << vprDEBUG_FLUSH;
+   for(unsigned i=0;i<5;++i)
+   {
+      vpr::System::msleep(40);
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+   }
+   vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
+   
+   if (!(ser.open().success() ))
+   {
+      std::cerr << "ERROR: Could not open serial port.\n";
+      return;
+   }
+   
+   ser.setUpdateAction(vpr::SerialTypes::NOW);  // Changes apply immediately
+   ser.clearAll();
+   ser.setBlocking(true);              // Open in blocking mode
+   ser.setCanonicalInput(false);              // enable binary reading and timeouts
+   ser.setTimeout(10);                       // Set to 1 inter-byte read second timeout
+   ser.setRead(true);                        // Allow reading from port
+   ser.setLocalAttach(true);                 // Say we are directly attached
+   ser.setBreakByteIgnore(true);             // Ignore terminal breaks
+
+   ser.setInputBaudRate(flock.getBaudRate());
+   ser.setOutputBaudRate(flock.getBaudRate());
+
+   ser.setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+   ser.setHardwareFlowControl(false);     // No hardware flow control
+   ser.setParityGeneration(false);        // No parity checking
+
+   /*
+   ser.setInputBaudRate(flock.getBaudRate());
+   ser.setOutputBaudRate(flock.getBaudRate());
+   ser.setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+   ser.setHardwareFlowControl(false);     // No hardware flow control
+   ser.setParityGeneration(false);        // No parity checking
+   */
+
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting flock (using RTS signal)." << vprDEBUG_FLUSH;
+   ser.setRequestToSend(true);
+   for(unsigned i=0;i<5;++i)
+   {
+      vpr::System::msleep(200);
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+   }
+
+   ser.setRequestToSend(false);              // Set RTS low to allow the flock to start back up
+   for(unsigned i=0;i<5;++i)
+   {
+      vpr::System::msleep(200);
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+   }
+   vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " done.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup completed.\n" << vprDEBUG_FLUSH;
+
+/*
+   std::cout << "Setting RTS off.";
+   ser.setRequestToSend(false);
+   vpr::System::msleep(800);
+   std::cout << "done.\n";
+   */
+
+   ser.flushQueue(vpr::SerialTypes::IO_QUEUES);
+      
+   for (unsigned i=0;i<10;++i)
+   {
+      std::cout << "Sample " << i << ": ";
+      std::string in_str;
+      ser.read(in_str, 4, bytes_read, vpr::Interval(2,vpr::Interval::Sec));
+      std::cout << in_str << std::endl;
+   }
+
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Closing the port.\n" << vprDEBUG_FLUSH;
+   ser.close();
 }
 
 
