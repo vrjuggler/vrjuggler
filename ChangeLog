@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Feb-14-2001 cjust     Fixed VjControl problems with recognizing backspace
+	              on linux.
 Feb-07-2001 patrick   The extra VR Juggler data files, sample applications,
                       sample config files, etc. now install in
                       $VJ_BASE_DIR/share by default.  This includes the
