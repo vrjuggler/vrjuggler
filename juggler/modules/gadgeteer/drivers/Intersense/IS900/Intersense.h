@@ -66,11 +66,6 @@
 namespace gadget
 {
 
-struct Isense_Data {
-    DigitalData digital[IS_BUTTON_NUM];
-    AnalogData analog[IS_ANALOG_NUM];
-};
-
 typedef struct {
     int stationIndex;
     bool enabled;
@@ -114,7 +109,34 @@ typedef struct {
 //!PUBLIC_API:
 class Intersense :  public Input, public Position,  public Digital,  public Analog
 {
-    public:
+protected:
+   struct IsenseData
+   {
+      /** Constructor
+       * Init digital with IS_BUTTON_NUM values
+       * Init analog with IS_ANALOG_NUM values
+       */
+      IsenseData()
+         : digital( IS_BUTTON_NUM ), analog(IS_ANALOG_NUM)
+      {;}
+
+      // Helper function to set all the times
+      // @todo Replace this with a for_each function call
+      // XXX
+      void setTime()
+      {
+         digital[0].setTime();
+         for(std::vector<DigitalData>::iterator d=digital.begin(); d != digital.end(); ++d)
+         {  (*d).setTime(digital[0].getTime()); }
+         for(std::vector<AnalogData>::iterator a=analog.begin(); a != analog.end(); ++a)
+         {  (*a).setTime(digital[0].getTime()); }
+      }
+
+      std::vector<DigitalData> digital;
+      std::vector<AnalogData>  analog;
+   };
+
+public:
    Intersense();
    virtual ~Intersense();
 
@@ -166,27 +188,26 @@ class Intersense :  public Input, public Position,  public Digital,  public Anal
 //+   Most configurations have the wand on port 2... so the device number is 1
 //+   The rest button layout is described in the Intersense Manual
 //+     (this value is set in the juggler config files)
-    DigitalData* getDigitalData(int d = 0);
-    AnalogData* getAnalogData(int d = 0);
+//    DigitalData* getDigitalData(int d = 0);
+//    AnalogData* getAnalogData(int d = 0);
 
 
 //: see if the flock is active or not
     inline bool isActive() { return mTracker.isActive(); };
 
 private:
-
     int getStationIndex(int stationNum, int bufferIndex);
 
     IntersenseStandalone mTracker;
 
-    Isense_Data mInput[3];
+    //Isense_Data mInput[3];
 
     ISStationConfig* stations;
 
-    PositionData* mData;
+    //PositionData* mData;
 
     std::vector<DigitalData> mDigitalData;
-    std::vector<AnalogData> mAnalogData;
+    std::vector<AnalogData>  mAnalogData;
 
 //KLUDGE: work around the inherent difference between Position and Digital (and Analog)
 // Motivation: Positional expects multiple positional devices to be connected to the same
