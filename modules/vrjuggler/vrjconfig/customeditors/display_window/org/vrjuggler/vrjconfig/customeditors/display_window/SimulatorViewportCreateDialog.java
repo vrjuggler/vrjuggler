@@ -37,7 +37,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 import info.clearthought.layout.*;
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 
@@ -51,54 +50,39 @@ public class SimulatorViewportCreateDialog
 
    public SimulatorViewportCreateDialog(ConfigElement viewportElt)
    {
-      super("Basic Simulator Viewport Parameters", viewportElt);
+      super("Basic Simulator Viewport Parameters", viewportElt,
+            "simulator_viewport");
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get("default_simulator");
+      ConfigDefinition sim_def = broker.getRepository().get("default_simulator");
 
-      ConfigElement sim_elt;
-
-      if ( viewportElt == null )
+      if ( mViewportElement.getPropertyValues("simulator_plugin").size() == 0 )
       {
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
-         sim_elt = factory.create("Junk", vp_def);
+         mSimElt = factory.create("Default Simulator Plug-in", sim_def);
+         mViewportElement.addProperty("simulator_plugin", mSimElt);
       }
       else
       {
-         sim_elt =
-            (ConfigElement) viewportElt.getProperty("simulator_plugin", 0);
+         mSimElt =
+            (ConfigElement) mViewportElement.getProperty("simulator_plugin", 0);
       }
 
-      sim_elt.addConfigElementListener(this);
+      mSimElt.addConfigElementListener(this);
 
       mCameraPosEditor =
-         new PropertyEditorPanel(sim_elt.getProperty("camera_pos", 0),
-                                 vp_def.getPropertyDefinition("camera_pos"),
-                                 sim_elt, 0, Color.white);
+         new PropertyEditorPanel(mSimElt.getProperty("camera_pos", 0),
+                                 sim_def.getPropertyDefinition("camera_pos"),
+                                 mSimElt, 0, Color.white);
       mWandPosEditor =
-         new PropertyEditorPanel(sim_elt.getProperty("wand_pos", 0),
-                                 vp_def.getPropertyDefinition("wand_pos"),
-                                 sim_elt, 0, Color.white);
+         new PropertyEditorPanel(mSimElt.getProperty("wand_pos", 0),
+                                 sim_def.getPropertyDefinition("wand_pos"),
+                                 mSimElt, 0, Color.white);
 
       initUI();
+      validateUserInput();
       this.pack();
-   }
-
-   public void propertyValueChanged(ConfigElementEvent e)
-   {
-      super.propertyValueChanged(e);
-
-      if ( e.getProperty().equals("camera_pos") )
-      {
-         mCameraPos = e.getValue();
-         validateUserInput();
-      }
-      else if ( e.getProperty().equals("wand_pos") )
-      {
-         mWandPos = e.getValue();
-         validateUserInput();
-      }
    }
 
    public Double getVertialFOV()
@@ -108,12 +92,12 @@ public class SimulatorViewportCreateDialog
 
    public Object getCameraPosition()
    {
-      return mCameraPos;
+      return mSimElt.getProperty("camera_pos", 0);
    }
 
    public Object getWandPosition()
    {
-      return mWandPos;
+      return mSimElt.getProperty("wand_pos", 0);
    }
 
    protected boolean validateCustomInput()
@@ -121,8 +105,8 @@ public class SimulatorViewportCreateDialog
       boolean valid_fov, camera_set, wand_set;
 
       valid_fov  = ((Double) mVertFOVField.getValue()).doubleValue() > 0.0;
-      camera_set = mCameraPos != null;
-      wand_set   = mWandPos != null;
+      camera_set = (((ConfigElementPointer) getCameraPosition()).getTarget() != null);
+      wand_set   = (((ConfigElementPointer) getWandPosition()).getTarget() != null);
 
       return valid_fov && camera_set && wand_set;
    }
@@ -202,8 +186,7 @@ public class SimulatorViewportCreateDialog
                                                 TableLayout.FULL));
    }
 
-   private Object mCameraPos = null;
-   private Object mWandPos   = null;
+   private ConfigElement mSimElt = null;
 
    private TitledBorder mBoundsPanelBorder;
    private TitledBorder mUserPanelBorder;
