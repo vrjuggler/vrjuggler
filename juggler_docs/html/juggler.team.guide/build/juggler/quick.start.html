@@ -35,7 +35,7 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 <li><a href="#one"> Choose a directory to put Juggler.</a></li>
 <li><a href="#two"> Goto that directory and checkout juggler using CVS</a></li>
 <li><a href="#three"> Enter the newly checked out Juggler source directory</a></li>
-<li><a href="#four"> Set the environment variable VJ_BASE_DIR</a></li>
+<li><a href="#four"> Set the environment variable <TT>VJ_BASE_DIR</TT></a></li>
 <li><a href="#five"> Compile juggler (using the autoconf system, and gnu-make):</a></li>
 	<ol>
 	    <li> Auto-Generate Headers</li>
@@ -75,7 +75,7 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 <BR>
 
 <a name="four">
-<li> Set the environment variable VJ_BASE_DIR </a> <BR>
+<li> Set the environment variable <TT>VJ_BASE_DIR</TT></a> <BR>
     NOTE: This is required by Juggler's build system (makefiles, etc..) <BR>
     NOTE: 1.) The directory "instlinks" is semi-important. <BR>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What does the word "instlinks" mean? <BR>
@@ -86,7 +86,7 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Juggler files will be created in (some-directory)/instlinks/..<BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(in other words, files are created one dir back from instlinks)<BR>
     NOTE: Make sure this line is in your .tcshrc or .cshrc file.<BR><BR>
-<b><font color="#ff0000">setenv VJ_BASE_DIR <span class=blue>[JUGGLER_DIR]</span>/juggler/instlinks</font></b><BR>
+<b><font color="#ff0000">VJ_BASE_DIR&nbsp;=&nbsp;<span class=blue>[JUGGLER_DIR]</span>/juggler/instlinks</font></b><BR>
 <BR>
 </li>
 <BR>
