@@ -567,7 +567,7 @@ inline bool vjQuat::isEqual( const vjQuat& quat, float tol ) const
 // WARNING: not implemented (do not use)
 inline void vjQuat::meanTangent( const vjQuat &q1, const vjQuat &q2, const vjQuat &q3 )
 {
-   assert( false && "not implemented" ); 
+   // assert( false && "not implemented" ); 
 }   
 
 //: compose two rotations (multiplication operator) 
