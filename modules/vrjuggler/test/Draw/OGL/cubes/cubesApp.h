@@ -83,7 +83,7 @@ class ContextTimingData
 {
 public:
    ContextTimingData()
-      : dlist_wait(vpr::Interval::Usec, 4000000)
+      : dlist_wait(vpr::Interval::Usec, 400000)
    {;}
 
    vpr::DurationStatCollector dlist_wait;
