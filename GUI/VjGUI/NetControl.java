@@ -27,7 +27,6 @@ public class NetControl implements Runnable {
     private Thread                  thread;
 
 
-
     public NetControl() {
 	remote_name = new String ("localhost");
 	port = 4450;
@@ -57,7 +56,7 @@ public class NetControl implements Runnable {
 
 
     public void run() {
-	for (;;) {
+	while (connected) {
 	    System.out.println ("a");
 	    if (!read())
 		break;
@@ -120,10 +119,10 @@ public class NetControl implements Runnable {
 	    return true;
 	try {
 	    Core.disableActiveDB();
-	    thread.stop();
+	    connected = false;
+	    //thread.stop(); // deprecated
 	    out.close();
 	    sock.close();
-	    connected = false;
 	    Core.consoleInfoMessage ("Net", "Disconnected from " + remote_name
 				     + ":" + port);
 	    return true;
@@ -216,35 +215,35 @@ public class NetControl implements Runnable {
 
 
 
-    public boolean startTimedUpdate (String id, int time) {
-	/* id is something like "position" */
-	if (!connected)
-	    return false;
-	try {
-	    out.writeBytes ("update start " + id + " " + time + " all\n");
-	    out.flush();
-	    return true;
-	}
-	catch (IOException io) {
-	    return false;
-	}
-    }
+//     public boolean startTimedUpdate (String id, int time) {
+// 	/* id is something like "position" */
+// 	if (!connected)
+// 	    return false;
+// 	try {
+// 	    out.writeBytes ("update start " + id + " " + time + " all\n");
+// 	    out.flush();
+// 	    return true;
+// 	}
+// 	catch (IOException io) {
+// 	    return false;
+// 	}
+//     }
 
 
 
-    public boolean stopTimedUpdate (String id) {
-	/* id is something like "position" */
-	if (!connected)
-	    return false;
-	try {
-	    out.writeBytes ("update stop " + id + " all\n");
-	    out.flush();
-	    return true;
-	}
-	catch (IOException io) {
-	    return false;
-	}
-    }
+//     public boolean stopTimedUpdate (String id) {
+// 	/* id is something like "position" */
+// 	if (!connected)
+// 	    return false;
+// 	try {
+// 	    out.writeBytes ("update stop " + id + " all\n");
+// 	    out.flush();
+// 	    return true;
+// 	}
+// 	catch (IOException io) {
+// 	    return false;
+// 	}
+//     }
 
 
 
@@ -379,8 +378,13 @@ public class NetControl implements Runnable {
 	    //return true;
 	}
 	catch (IOException io) {
-	    System.err.println ("IOException in NetControl.read(): " +io);
-	    disconnect();
+	    // if connected is true, then the IOE is an error; otherwise,
+	    // it's probably just that disconnect() shut down the socket
+	    // to take us out of our read loop.
+	    if (connected) {
+		System.err.println ("IOException in NetControl.read(): " +io);
+		disconnect();
+	    }
 	    return false;
 	}
     }
