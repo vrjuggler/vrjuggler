@@ -64,7 +64,9 @@ public class CorbaService
 
    public void init (String[] args) throws SystemException
    {
-      m_orb      = ORB.init(args, null);
+      m_orb = ORB.init(args, null);
+      m_orb_thread = new OrbThread(m_orb);
+      m_orb_thread.start();
 
       try
       {
@@ -171,6 +173,23 @@ public class CorbaService
       }
    }
 
+   private class OrbThread extends Thread
+   {
+      public OrbThread (ORB orb)
+      {
+         m_orb = orb;
+      }
+
+      public void run ()
+      {
+         System.out.println("ORB thread starting");
+         m_orb.run();
+         System.out.println("ORB thread exiting");
+      }
+
+      private ORB m_orb = null;
+   }
+
    private String nameServiceHost = null;
    private int    nameServicePort = 2809;
    private String nameServiceURI  = null;
@@ -181,4 +200,6 @@ public class CorbaService
    private POA           m_root_poa   = null;
    private NamingContext rootContext  = null;
    private NamingContext localContext = null;
+
+   private OrbThread m_orb_thread = null;
 }
