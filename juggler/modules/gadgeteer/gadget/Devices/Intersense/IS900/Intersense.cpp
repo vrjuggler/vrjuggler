@@ -47,6 +47,7 @@
 #include <gadget/Util/Debug.h>
 
 #include <gadget/Devices/Intersense/IS900/Intersense.h>
+#include <boost/concept_check.hpp>
 
 void initDevice(gadget::InputManager* inputMgr)
 {
@@ -140,7 +141,7 @@ Intersense::~Intersense()
 // Main thread of control for this active object
 void Intersense::controlLoop(void* nullParam)
 {
-
+    boost::ignore_unused_variable_warning(nullParam);
     // Configure the stations used by the configuration
     int j = 0;
     for( int i = 0; i < mTracker.NumStations(); i++ )

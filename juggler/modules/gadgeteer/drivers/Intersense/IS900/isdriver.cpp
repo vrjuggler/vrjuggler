@@ -29,6 +29,8 @@
 #include "timer.h"
 #include "serial.h"
 
+#include <boost/concept_check.hpp>
+
 #define ISD_INTERTRAX_SAMPLE_MODE  IT_COM_SYS_CONTINUOUS
 
 static BOOL ISD_detectTrackerOld(InterSenseTrackerType *tracker/*, DWORD commPort*/);
@@ -609,6 +611,10 @@ void ISD_initTracker(InterSenseTrackerType *tracker)
 BOOL ISD_openTrackerOld(InterSenseTrackerType *tracker,
                      DWORD commPort, BOOL infoScreen, BOOL verbose)
 {
+   boost::ignore_unused_variable_warning(commPort);
+   boost::ignore_unused_variable_warning(infoScreen);
+   boost::ignore_unused_variable_warning(verbose);
+
     WORD i;
     BOOL status;
     ISD_STATION_INFO_TYPE Station;
@@ -685,6 +691,9 @@ BOOL ISD_openTrackerOld(InterSenseTrackerType *tracker,
 BOOL ISD_openTracker(InterSenseTrackerType *tracker,
                      std::string commPort, int baudRate, BOOL infoScreen, BOOL verbose)
 {
+   boost::ignore_unused_variable_warning(infoScreen);
+   boost::ignore_unused_variable_warning(verbose);
+
     WORD i;
     BOOL status;
     ISD_STATION_INFO_TYPE Station;
@@ -1367,6 +1376,8 @@ BOOL ISD_allowUserCommand ( char *cmd )
 /***************************************************************************/
 void ISD_printf ( InterSenseTrackerType *tracker, char *fs,... )
 {
+   boost::ignore_unused_variable_warning(tracker);
+
     char sbuf[256];
     va_list argptr;
 

@@ -30,6 +30,8 @@
 #include "isdriver.h"
 #include "timer.h"
 
+#include <boost/concept_check.hpp>
+
 static BOOL setCommStateBYTE(COMM_PORT *port, DCB *dcb, BYTE *target, BYTE value);
 static BOOL setCommStateDWORD(COMM_PORT *port, DCB *dcb, DWORD *target, DWORD value);
 static void errorMessage(char *message);
@@ -802,6 +804,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 /****************************************************************************/
 int rs232RxFlush(COMM_PORT *port, WORD numBytes)
 {
+   //boost::ignore_unused_variable_warning(numBytes);
     port->dwRead = 0;
     port->dwReturned = 0;
     if( tcflush(port->desc, TCIFLUSH ) == -1 )
