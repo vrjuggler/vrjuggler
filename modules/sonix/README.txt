@@ -30,6 +30,8 @@ Table of contents:
       B. Details
       C. Advanced topics
    4. Running sonix tests, and sample apps...
+   5. Trouble shooting
+      LD paths
 
 
 ==============================================================================
@@ -196,6 +198,9 @@ Table of contents:
       set the env variable SNX_AW_HOSTNAME, or create $HOME/.sonix-aw with
       a single string in it that is your hostname.
   
+  5.  Trouble shooting
+      LD paths
+      
   Make sure you have your LD_LIBRARY_PATHs set...
   
   for Linux:
