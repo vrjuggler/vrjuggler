@@ -29,22 +29,73 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include <vrj/vrjConfig.h>
-
-#include <math.h>
+#include "wandApp.h"
+#include <iostream>
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
-
-#include <wandApp.h>
 
 namespace vrjTest
 {
+
+// Utility function to draw a cube
+void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
+             GLdouble z0, GLdouble z1, GLenum type);
+
+
+wandApp::wandApp(vrj::Kernel* kernel)
+   : vrj::GlApp(kernel)
+{}
+
+wandApp::~wandApp()
+{}
+
+void wandApp::init()
+{
+   //std::cout << "---------- App:init() ---------------" << std::endl;
+   // Initialize devices
+   mWand.init("VJWand");
+   mHead.init("VJHead");
+   mButton0.init("VJButton0");
+   mButton1.init("VJButton1");
+   mButton2.init("VJButton2");
+   mButton3.init("VJButton3");
+   mButton4.init("VJButton4");
+   mButton5.init("VJButton5");
+
+   mLoggerPlayButton.init("LoggerPlayButton");
+}
+
+void wandApp::contextInit()
+{
+   // Initialize the GL state information. (lights, shading, etc)
+   initGLState();
+}
+
+void wandApp::preFrame()
+{
+    std::cout  << "Wand Buttons:"
+           << " 0:" << mButton0->getData()
+           << " 1:" << mButton1->getData()
+           << " 2:" << mButton2->getData()
+           << " 3:" << mButton3->getData()
+           << " 4:" << mButton4->getData()
+           << " 5:" << mButton5->getData() << std::endl;
+
+   mHeadHistory.push_back(gmtl::makeTrans<gmtl::Vec3f>(mHead->getData()));
+
+   // Check logger play button
+   if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
+   {
+      std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
+      gadget::InputManager* input_mgr = gadget::InputManager::instance();
+      gadget::InputLoggerPtr logger = input_mgr->getInputLogger();
+
+      vprASSERT(logger.get() != NULL);
+      logger->load("test_logging.xml");
+      logger->play();
+   }
+}
 
 void wandApp::bufferPreDraw()
 {
@@ -52,18 +103,13 @@ void wandApp::bufferPreDraw()
    glClear(GL_COLOR_BUFFER_BIT);
 }
 
-
-//----------------------------------------------
-//  Draw the scene.  A box on the end of the wand
-//----------------------------------------------
-
-void wandApp::myDraw()
+void wandApp::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
    //std::cout << "\n--- myDraw() ---\n";
 
-   //std::cout << "HeadPos:" << vrj::Coord(*mHead->getData()).pos << "\t"
-   //          << "WandPos:" << vrj::Coord(*mWand->getData()).pos << std::endl;
+//   std::cout << "HeadPos:" << gmtl::makeTrans<gmtl::Vec3f>(mHead->getData()) << "\t"
+//             << "WandPos:" << gmtl::makeTrans<gmtl::Vec3f>(mWand->getData()) << std::endl;
 
    glMatrixMode(GL_MODELVIEW);
 
@@ -74,21 +120,34 @@ void wandApp::myDraw()
       // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
          glMultMatrixf(wandMatrix.mData);  // Push the wand matrix on the stack
+
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
-         if(mButton0->getData() == gadget::Digital::ON)
+         if (mButton0->getData() == gadget::Digital::ON)
+         {
             wand_color[0] += 0.5f;
-         if(mButton1->getData() == gadget::Digital::ON)
+         }
+         if (mButton1->getData() == gadget::Digital::ON)
+         {
             wand_color[1] += 0.5f;
-         if(mButton2->getData() == gadget::Digital::ON)
+         }
+         if (mButton2->getData() == gadget::Digital::ON)
+         {
             wand_color[2] += 0.5f;
-         if(mButton3->getData() == gadget::Digital::ON)
+         }
+         if (mButton3->getData() == gadget::Digital::ON)
+         {
             wand_color[0] += 0.5f;
-         if(mButton4->getData() == gadget::Digital::ON)
+         }
+         if (mButton4->getData() == gadget::Digital::ON)
+         {
             wand_color[1] += 0.5f;
-         if(mButton5->getData() == gadget::Digital::ON)
+         }
+         if (mButton5->getData() == gadget::Digital::ON)
+         {
             wand_color[2] += 0.5f;
+         }
          glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
@@ -127,15 +186,14 @@ void wandApp::myDraw()
    // Draw the head history
    glLineWidth(1.0f);
    glPushMatrix();
-    glBegin(GL_LINES);
-        glColor3f(0.0f, 0.8f, 0.8f);
+      glBegin(GL_LINES);
+         glColor3f(0.0f, 0.8f, 0.8f);
 
-        for(unsigned i=0;i<mHeadHistory.size();++i)
-        {
+         for(unsigned i=0; i<mHeadHistory.size(); ++i)
+         {
             glVertex3fv(mHeadHistory[i].mData);
-        }
-    glEnd();
-
+         }
+      glEnd();
    glPopMatrix();
 
 }
@@ -173,7 +231,12 @@ void wandApp::initGLState()
    glShadeModel(GL_SMOOTH);
 }
 
-//: Utility function for drawing a cube
+void wandApp::drawCube()
+{
+   drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+}
+
+/** Utility function for drawing a cube. */
 void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
              GLdouble z0, GLdouble z1, GLenum type)
 {
@@ -222,5 +285,4 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    }
 }
 
-}; // namespace vrjTest
-
+}

@@ -29,25 +29,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-//----------------------------------------
-// Test OpenGL VR Juggler program
-//
-// main.cpp
-//----------------------------------------
-#include <iostream>
-#include <stdlib.h>
-#include <wandApp.h>
-
-      // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
+#include <iostream>
+#include "wandApp.h"
 
-
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
-   vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
-   vrjTest::wandApp* application = new vrjTest::wandApp(kernel);       // Instantiate an instance of the app
+   // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();
 
+   // Instantiate an instance of the app
+   vrjTest::wandApp* application = new vrjTest::wandApp(kernel);
+
+   // Check if the user specified at least one config file to use
    if (argc <= 1)
    {
       // display some usage info (holding the user by the hand stuff)
@@ -62,23 +56,15 @@ int main(int argc, char* argv[])
    }
 
    // Load any config files specified on the command line
-   for ( int i = 1; i < argc; ++i )
+   for (int i = 1; i < argc; ++i)
    {
       kernel->loadConfigFile(argv[i]);
    }
 
    kernel->start();
-
-   /*
-   for ( int i = 0; i < 20; ++i )
-   {
-      vpr::System::usleep(50000);
-      std::cout << i << "." << std::flush;
-   }
-   */
-
    kernel->setApplication(application);
 
+   // Block until the kernel exits
    kernel->waitForKernelStop();
 
    return 0;
