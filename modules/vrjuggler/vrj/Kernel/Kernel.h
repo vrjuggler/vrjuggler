@@ -258,7 +258,7 @@ public:      // Global "get" interface
       return mUsers;
    }
 
-   const vpr::BaseThread* getThread()
+   const vpr::Thread* getThread()
    {
       return mControlThread;
    }
@@ -270,7 +270,7 @@ protected:
 
    bool               mIsRunning;               /**< Flag for wether the kernel is currently running */
    bool               mExitFlag;                /**< Set true when the kernel should exit */
-   vpr::BaseThread*   mControlThread;           /**< The thread in control of me */
+   vpr::Thread*       mControlThread;           /**< The thread in control of me */
    vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
 
    /** @name Factories and Managers */
