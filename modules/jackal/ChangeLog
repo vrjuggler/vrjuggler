@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-12-2002 nonchocoboy Use Ant to build the java sources.
+                        NEW VERSION: 0.8.7
 Sep-11-2002 nonchocoboy Superceded vjInclude chunks with an XML processing
                         instruction for including files. Bumped config file
                         version to 2.1
