@@ -167,7 +167,7 @@ JCCL_PATH_CXX([0.2.0], ,
 
 gadsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.0.5, [$JUGGLERROOT_ABS/external/GMTL],
+GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
           [$JUGGLERROOT_ABS/external/GMTL], ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 CPPFLAGS="$gadsave_CPPFLAGS"
