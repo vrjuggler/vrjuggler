@@ -97,7 +97,7 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
    if ((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), neg_one_STRING) == 0))    // Use display env
    {
       const std::string DISPLAY_str("DISPLAY");
-      mXDisplayString = (std::string)getenv(DISPLAY_str.c_str());
+      vpr::System::getenv(DISPLAY_str, mXDisplayString);
    }
 
    // Get the lock information
