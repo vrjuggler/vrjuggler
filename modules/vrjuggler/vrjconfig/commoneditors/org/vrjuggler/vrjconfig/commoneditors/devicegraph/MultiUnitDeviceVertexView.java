@@ -307,9 +307,10 @@ public class MultiUnitDeviceVertexView
                if ( prop_def.getToken().equals(evt.getProperty()) )
                {
                   ConfigElement elt = mDeviceInfo.getElement();
-                  int count = elt.getPropertyValueCount(prop_def.getToken()) - 1;
+                  int unit_num =
+                     elt.getPropertyValueCount(prop_def.getToken()) - 1;
                   DefaultPort port =
-                     new DefaultPort(new UnitInfo(type, new Integer(count)));
+                     new DefaultPort(new UnitInfo(type, new Integer(unit_num)));
                   ((DefaultGraphCell) mView.getCell()).add(port);
                   addUnitRow(port, true);
 
@@ -325,13 +326,54 @@ public class MultiUnitDeviceVertexView
 
       public void propertyValueRemoved(ConfigElementEvent evt)
       {
-/*
-         PropertyDefinition prop_def = mDeviceInfo.getUnitPropertyDefinition();
-         if ( mVariableUnits && prop_def.getToken().equals(evt.getProperty) )
+         if ( mVariableUnits )
          {
-            removeUnitRow(evt.getIndex());
+            Collection unit_types = mDeviceInfo.getUnitTypes();
+
+            for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+            {
+               Integer type = (Integer) t.next();
+               PropertyDefinition prop_def =
+                  mDeviceInfo.getUnitPropertyDefinition(type);
+
+               // mVariableUnits == true iff prop_def != null
+               if ( prop_def.getToken().equals(evt.getProperty()) )
+               {
+                  ConfigElement elt = mDeviceInfo.getElement();
+                  int old_unit = evt.getIndex();
+                  UnitInfo old_info = new UnitInfo(type, new Integer(old_unit));
+
+                  List children =
+                     ((DefaultGraphCell) mView.getCell()).getChildren();
+                  DefaultPort port = null;
+
+                  for ( Iterator c = children.iterator(); c.hasNext(); )
+                  {
+                     Object child = c.next();
+                     if ( child instanceof DefaultPort )
+                     {
+                        UnitInfo unit_info =
+                           (UnitInfo) ((DefaultPort) child).getUserObject();
+                        if ( old_info.equals(unit_info) )
+                        {
+                           port = (DefaultPort) child;
+                           break;
+                        }
+                     }
+                  }
+
+                  if ( port != null )
+                  {
+                     List components =
+                        (List) mUnitRowMap.get(port.getUserObject());
+                     removeUnitRow(port, components);
+                     mUnitRowMap.remove(port.getUserObject());
+                  }
+
+                  break;
+               }
+            }
          }
-*/
       }
 
       private String getUnitTypeName(Integer unitType)
@@ -393,13 +435,12 @@ public class MultiUnitDeviceVertexView
          UnitInfo unit_info = (UnitInfo) unitPort.getUserObject();
          final Integer unit_type = unit_info.getUnitType();
 
-         final PortComponent port_widget = new PortComponent(this.graph,
-                                                             unitPort);
+         PortComponent port_widget = new PortComponent(this.graph, unitPort);
          port_widget.setMinimumSize(new Dimension(5, 5));
          port_widget.setPreferredSize(new Dimension(5, 5));
          port_widget.setForeground(nameLabel.getForeground());
 
-         final JLabel name_field = new JLabel();
+         JLabel name_field = new JLabel();
 
          PropertyDefinition unit_def =
             mDeviceInfo.getUnitPropertyDefinition(unit_type);
@@ -471,7 +512,7 @@ public class MultiUnitDeviceVertexView
 
          if ( mVariableUnits )
          {
-            final JButton remove_btn = new JButton();
+            JButton remove_btn = new JButton();
             remove_btn.setEnabled(true);
             remove_btn.setToolTipText("Delete this input source");
 
@@ -502,22 +543,31 @@ public class MultiUnitDeviceVertexView
                {
                   public void actionPerformed(ActionEvent evt)
                   {
-                     JComponent[] components = new JComponent[]{port_widget,
-                                                                name_field,
-                                                                remove_btn};
-
-                     int row = removeUnitRow(components);
+                     JComponent button = (JComponent) evt.getSource();
                      UnitTypeGroup ug =
                         (UnitTypeGroup) mUnitGroups.get(unit_type);
-                     TableLayoutConstraints c =
+                     TableLayoutConstraints my_tlc =
+                        mMainLayout.getConstraints(button);
+                     TableLayoutConstraints add_btn_tlc =
                         mMainLayout.getConstraints(ug.addButton);
-                     removeUnit(row - c.row1 - 1, unit_type);
+
+                     // This changes a new property value in our config
+                     // element which results in a ConfigElementEvent being
+                     // fired.  It is in the handling of that event that we
+                     // remove the row from the layout.
+                     removeUnit(my_tlc.row1 - add_btn_tlc.row1 - 1, unit_type);
 
                      // Account for the unit removal from this group.
                      ug.unitCount--;
                   }
                }
             );
+
+            List components = new ArrayList(3);
+            components.add(0, port_widget);
+            components.add(1, name_field);
+            components.add(2, remove_btn);
+            mUnitRowMap.put(unit_info, components);
 
             this.add(remove_btn,
                      new TableLayoutConstraints(BUTTON0_START_COLUMN, row,
@@ -596,9 +646,8 @@ public class MultiUnitDeviceVertexView
 
       /**
        *
-       * @return the index of the row that was removed
        */
-      private int removeUnitRow(JComponent[] components)
+      private void removeUnitRow(DefaultPort port, List components)
       {
          // Get the preferred size of the renderer so that we can modify it
          // after the row is removed.
@@ -613,23 +662,20 @@ public class MultiUnitDeviceVertexView
          // Find the row containing the components being removed.  We expect
          // that all the components in the given array are in the same row.
          // XXX: Is there a more robust way to do this?
-         TableLayoutConstraints tlc = mMainLayout.getConstraints(components[0]);
+         TableLayoutConstraints tlc =
+            mMainLayout.getConstraints((JComponent) components.get(0));
          int row = tlc.row1;
 
-         DefaultPort port = null;
-         for ( int i = 0; i < components.length; ++i )
+         for ( Iterator c = components.iterator(); c.hasNext(); )
          {
-            if ( port == null && components[i] instanceof PortComponent )
+            JComponent component = (JComponent) c.next();
+
+            if ( max_height < component.getPreferredSize().height )
             {
-               port = ((PortComponent) components[i]).getPort();
+               max_height = component.getPreferredSize().height;
             }
 
-            if ( max_height < components[i].getPreferredSize().height )
-            {
-               max_height = components[i].getPreferredSize().height;
-            }
-
-            this.remove(components[i]);
+            this.remove(component);
          }
 
          // The height of the renderer will be decreased by the component
@@ -752,8 +798,6 @@ public class MultiUnitDeviceVertexView
 
          // Resize the cell view now that the renderer has changed.
          GraphHelpers.autoSizeCellView(this.graph, pref_size, mView);
-
-         return row;
       }
 
       private void removeUnit(int unitNumber, Integer unitType)
@@ -769,9 +813,16 @@ public class MultiUnitDeviceVertexView
       private transient DeviceInfo mDeviceInfo = null;
       private transient Map        mUnitGroups = new HashMap();
 
+      /**
+       * Maps from a UnitInfo object to a List object.  The List instance
+       * contains the JComponents in the row that is identified uniquely by
+       * the UnitInfo key.
+       */
+      private transient Map mUnitRowMap = new HashMap();
+
       private boolean mVariableUnits = false;
 
-      private TableLayout mMainLayout    = null;
+      private TableLayout mMainLayout = null;
 
       private static class UnitTypeGroup
       {
