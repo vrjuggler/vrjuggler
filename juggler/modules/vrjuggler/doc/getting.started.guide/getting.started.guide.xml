@@ -62,7 +62,7 @@
             <title>Open WinZip Window</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/Window.WinZip.png" format="PNG"/>
+                  <imagedata align="center" fileref="figures/Window.WinZip.png" format="PNG" scalefit="1"/>
                </imageobject>
             </mediaobject>
          </figure>
@@ -252,10 +252,10 @@ value</screen>
                </note>
             </listitem>
             <listitem>
-               <para>Cones: A 10x10x10 array of cones in space. The cones are created using GLU quadrics. Navigation is done using quaternions and is not recommended as a basis for navigation in most applications.</para>
+               <para>Cones: A 10×10×10 array of cones in space. The cones are created using GLU quadrics. Navigation is done using quaternions and is not recommended as a basis for navigation in most applications.</para>
             </listitem>
             <listitem>
-               <para>Cubes: A 10x10x10 array of cubes in space. The cubes are created using OpenGL display lists. This is the best example of using display in VR Juggler and should be studied carefully. Navigation is done using quaternions and is not recommended as a basis for navigation in most applications.</para>
+               <para>Cubes: A 10×10×10 array of cubes in space. The cubes are created using OpenGL display lists. This is the best example of using display in VR Juggler and should be studied carefully. Navigation is done using quaternions and is not recommended as a basis for navigation in most applications.</para>
             </listitem>
             <listitem>
                <para>Torus: A very, very simple that renders a purple torus at a key point in space. That is, the torus is positioned such that in a CAVE-like device, the center of the torus is at the lower left corner of the device where the front wall, left wall, and floor meet. It is designed specifically to test VR Juggler's handling of multiple walls and projection alignment (in an extremely crude manner). Lighting of the torus is done with a flashlight on the wand but should not be used as an example of doing lighting in VR Juggler. The behavior of the flashlight is very hard to predict.</para>
