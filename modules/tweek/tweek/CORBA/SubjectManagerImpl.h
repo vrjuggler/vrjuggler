@@ -181,7 +181,8 @@ protected:
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
    SubjectManagerImpl(const SubjectManagerImpl& sm)
-      : mCorbaMgr(sm.mCorbaMgr), mInfoMap(sm.mInfoMap)
+      : POA_tweek::SubjectManager(sm), PortableServer::RefCountServantBase(sm),
+        mCorbaMgr(sm.mCorbaMgr), mInfoMap(sm.mInfoMap)
    {
       /* Do nothing. */ ;
    }
