@@ -83,22 +83,24 @@ public:
    void setVelocity(const gmtl::Vec3f& vel)
    {
       mVelocity = vel;
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Trans Vel: " << mVelocity << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << ": Trans Vel: " << mVelocity << std::endl << vprDEBUG_FLUSH;
    }
    void setRotationalVelocity(const gmtl::Matrix44f& rot_vel)
    {
       mRotVelocity = rot_vel;
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Trans Vel: " << mRotVelocity << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Rot Vel: " << mRotVelocity << std::endl << vprDEBUG_FLUSH;
    }
    void update(float delta)
    {
       // Don't update if not active or we have a very large delta
       if(delta > 2.0 || !mActive)
       {
+         std::cout << "Delta big or not active, returning.\n";
          return;
       }
       if(!mNavData.isLocal())
       {
+         std::cout << "Data is NOT local, returning.\n";
          return;
       }
       // Clamp delta

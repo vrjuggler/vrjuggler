@@ -51,9 +51,11 @@ OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 
 void OsgNav::latePreFrame()
 {
+   gmtl::Matrix44f world_transform;
+   gmtl::invertFull(world_transform, mNavigator.getCurPos());
    // Update the scene graph
    osg::Matrix osg_current_matrix;
-   osg_current_matrix.set(mNavigater->getCurPos().getData());
+   osg_current_matrix.set(world_transform.getData());
    mNavTrans->setMatrix(osg_current_matrix);
 }
 
@@ -61,6 +63,8 @@ void OsgNav::preFrame()
 {
    vpr::Interval cur_time = mWand->getTimeStamp();
    vpr::Interval diff_time(cur_time-mLastPreFrameTime);
+   if (mLastPreFrameTime.getBaseVal() >= cur_time.getBaseVal())
+   {  diff_time.secf(0.0f); }
 
    float time_delta = diff_time.secf();
 
@@ -80,33 +84,35 @@ void OsgNav::preFrame()
    if ( mButton0->getData() == gadget::Digital::ON )
    {
       gmtl::Vec3f direction;
-      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, 10.0f);
+      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, -10.0f);
       gmtl::xform(direction, wandMatrix, Zdir);
 
-      mNavigater->setVelocity(direction);
+      mNavigator.setVelocity(direction);
    }  // Make sure to reset the velocity when we stop pressing the button.
    else if ( mButton0->getData() == gadget::Digital::TOGGLE_OFF)
    {
-      mNavigater->setVelocity(gmtl::Vec3f(0.0, 0.0, 0.0));
+      mNavigator.setVelocity(gmtl::Vec3f(0.0, 0.0, 0.0));
    }
 
    if ( mButton1->getData() == gadget::Digital::TOGGLE_ON)
    {
-      std::cout << "Cur Pos: " << mNavigater->getCurPos() << std::endl;
+      std::cout << "Cur Pos: " << mNavigator.getCurPos() << std::endl;
    }
 
    // If we are pressing button 2 then rotate in the direction the wand is
    // pointing.
    if ( mButton2->getData() == gadget::Digital::ON )
    {
-      mNavigater->setRotationalVelocity(mWand->getData());
+      gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot(mWand->getData()), 0.0f );// Only allow Yaw (rot y)
+      gmtl::Matrix44f rot_mat = gmtl::makeRot<gmtl::Matrix44f>( euler );
+      mNavigator.setRotationalVelocity(rot_mat);
    } // Make sure to reset the rotational velocity when we stop pressing the button.
    else if(mButton2->getData() == gadget::Digital::TOGGLE_OFF)
    {
-      mNavigater->setRotationalVelocity(gmtl::Matrix44f());
+      mNavigator.setRotationalVelocity(gmtl::Matrix44f());
    }
    // Update the navigation using the time delta between
-   mNavigater->update(time_delta);
+   mNavigator.update(time_delta);
 }
 
 void OsgNav::bufferPreDraw()
@@ -127,11 +133,8 @@ void OsgNav::myInit()
    mNoNav    = new osg::Group();
    mNavTrans = new osg::MatrixTransform();
 
-   // We need to create a new navigater before calling initTweek because we pass
-   // it to the RemoteNavSubjectImpl.
-   mNavigater = new OsgNavigater();
 
-   mNavigater->init();
+   mNavigator.init();
 
    //vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
    //std::string hostname = "crash";
@@ -189,7 +192,7 @@ void OsgNav::initTweek( int& argc, char* argv[] )
             if ( mCorbaManager.createSubjectManager().success() )
             {
                RemoteNavSubjectImpl* remote_nav_interface =
-                  new RemoteNavSubjectImpl(mNavigater);
+                  new RemoteNavSubjectImpl(&mNavigator);
 
                mCorbaManager.getSubjectManager()->addInfoItem("OsgNav","RemoteNav");
                try
