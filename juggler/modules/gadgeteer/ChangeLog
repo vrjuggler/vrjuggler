@@ -1,5 +1,11 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-30-2002 allenb    Added a new interface to PosProxy for specifying what
+                      units to return position data in.  This also completes
+		      the change over to using positional filters and
+		      converting gadgeteer to using meters as the common unit
+		      for all internal positional data and all configuration
+		      units.
 Oct-30-2002 allenb    PositionXformFilter now supports pre and post transforms
                       This will allow it to be used for pos devices and for
 		      position proxies.
