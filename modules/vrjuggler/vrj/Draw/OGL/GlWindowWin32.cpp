@@ -32,6 +32,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlWinWin32.h>
+#include <Kernel/vjAssert.h>
 
 #define glWinWin32Classname "vjOGLWin32"
 
@@ -81,7 +82,7 @@ int vjGlWinWin32::open()
 
 	// Create the rendering context and make it current
 	hRC = wglCreateContext(hDC);
-	assert(hRC != NULL);
+	vjASSERT(hRC != NULL);
 	wglMakeCurrent(hDC, hRC);
 		
 	// Register the window with the window list
@@ -116,7 +117,7 @@ int vjGlWinWin32::close()
 //! POST: this.context is active context
 bool vjGlWinWin32::makeCurrent()
 {
-	assert((hDC != NULL) && (hRC != NULL));
+	vjASSERT((hDC != NULL) && (hRC != NULL));
 	wglMakeCurrent(hDC, hRC);		// Make our context current
 	return true;
 }
@@ -125,7 +126,7 @@ bool vjGlWinWin32::makeCurrent()
 // Process events here
 void vjGlWinWin32::swapBuffers()
 {
-	assert(hDC != NULL);
+	vjASSERT(hDC != NULL);
 	SwapBuffers(hDC);
 }
 
@@ -156,7 +157,7 @@ LRESULT vjGlWinWin32::handleEvent(HWND 	hWnd,
 	{
 		// ---- Window creation, setup for OpenGL ---- //
 	case WM_CREATE:
-		assert(false);								// Should never get called because 
+		vjASSERT(false);								// Should never get called because 
 														//we are not registered when this gets called
 
 		hDC = GetDC(hWnd);			         // Store the device context		
@@ -346,12 +347,12 @@ bool vjGlWinWin32::registerWindowClass()
 //----------------------//
 void vjGlWinWin32::addWindow(HWND handle, vjGlWinWin32* glWin)
 {
-	assert(glWin != NULL);
+	vjASSERT(glWin != NULL);
 
 	if(glWinMap.find(handle) == glWinMap.end())		// Not already there
 		glWinMap[handle] = glWin;
 	//else
-	// assert(false);
+	// vjASSERT(false);
 }
 
 void vjGlWinWin32::removeWindow(HWND handle)
@@ -369,4 +370,3 @@ vjGlWinWin32* vjGlWinWin32::getGlWin(HWND handle)
 	else
 		return (*glWinIter).second;					// Return the found window
 }
-
