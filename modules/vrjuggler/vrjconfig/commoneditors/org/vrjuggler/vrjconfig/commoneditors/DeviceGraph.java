@@ -70,11 +70,18 @@ public class DeviceGraph
     * Initializes this JGraph specialization to use a model of type
     * <code>DeviceGraphModel</code>, a graph layout cache of type
     * <code>DeviceGraphLayoutCache</code>, and a cell view factory of type
-    * <code>ProxiedDeviceCellViewFactory</code>.
+    * <code>ProxiedDeviceCellViewFactory</code>.  An instance of
+    * <code>DefaultDeviceGraphCellCreator</code> is registered with
+    * <code>GraphHelpers</code> to allow those helper functions to do their
+    * job.  Custom (or overriding) device graph cell creators should be
+    * registered <i>after</i> creating an instance of this class to ensure
+    * that they are no overwritten as a side effect of this constructor.
     *
     * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel
     * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphLayoutCache
     * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxiedDeviceCellViewFactory
+    * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DefaultDeviceGraphCellCreator
+    * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.GraphHelpers
     */
    public DeviceGraph()
    {
@@ -89,12 +96,15 @@ public class DeviceGraph
       // Input device types.
       List device_types =
          ConfigUtilities.getDefinitionsOfType(all_defs, INPUT_DEVICE_TYPE);
+      DefaultDeviceGraphCellCreator creator =
+         new DefaultDeviceGraphCellCreator();
 
       for ( Iterator d = device_types.iterator(); d.hasNext(); )
       {
          ConfigDefinition def = (ConfigDefinition) d.next();
          if ( ! def.isAbstract() )
          {
+            GraphHelpers.registerGraphCellCreator(def, creator);
             factory.registerCreator(def, MultiUnitDeviceVertexView.class);
          }
       }
