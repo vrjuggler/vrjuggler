@@ -56,25 +56,45 @@ public class ControlPanelView
 
       // Init the icons in the model
       ClassLoader loader = BeanJarClassLoader.instance();
-      model.add("Display",   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/display64.gif")));
-      model.add("Simulator", new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/simulator64.gif")));
-      model.add("Cluster",   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/cluster64.gif")));
-      model.add("Devices",   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/devices64.gif")));
-      model.add("Audio",     new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/audio64.gif")));
+      model.add("D i s p l a y",   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/display64.png")));
+      model.add("S i m u l a t o r", new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/simulator64.png")));
+      model.add("C l u s t e r",   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/cluster64.png")));
+      model.add("D e v i c e s",   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/devices64.png")));
+      model.add("A u d i o",     new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/audio64.png")));
+
+      // Init the watermark in the control panel
+      control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
+
       control.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
             Object value = control.getModel().getElementAt(evt.getID());
             String item = (String)value;
-//            if (item.equals("Simulator"))
+            if (item.equals("Devices"))
+            {
+               JDialog dlg = new JDialog(
+                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+                     "Sim Device Editor",
+                     true);
+               dlg.getContentPane().setLayout(new BorderLayout());
+               SimPosDeviceEditor editor = new SimPosDeviceEditor();
+
+               ConfigManagerService mgr = getConfigManager();
+               ConfigChunk device = mgr.getActiveConfig().get("SimHeadPos");
+               editor.setDevice(device);
+               dlg.getContentPane().add(editor, BorderLayout.CENTER);
+               dlg.pack();
+               dlg.setVisible(true);
+            }
+//            else if (item.equals("Simulator"))
 //            {
 //               showSimEditor();
 //            }
-//            else
-//            {
+            else
+            {
                JOptionPane.showMessageDialog(ControlPanelView.this, "Selected "+String.valueOf(value));
-//            }
+            }
          }
       });
    }
@@ -90,6 +110,15 @@ public class ControlPanelView
 //      dlg.pack();
 //      dlg.setVisible(true);
 //   }
+
+   /**
+    * Helper class for getting the config manager serivce.
+    */
+   private ConfigManagerService getConfigManager()
+   {
+      Object bean = BeanRegistry.instance().getBean("ConfigManager").getBean();
+      return (ConfigManagerService)bean;
+   }
 
    private void createNewChunkDB()
    {

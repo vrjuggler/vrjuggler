@@ -103,6 +103,24 @@ public class ControlPanel
       return titleLbl.getText();
    }
 
+   /**
+    * Sets the watermark.
+    */
+   public void setWatermark(Icon watermark)
+   {
+      Icon old = getWatermark();
+      this.watermark.setIcon(watermark);
+      firePropertyChange("watermark", old, watermark);
+   }
+
+   /**
+    * Gets the watermark.
+    */
+   public Icon getWatermark()
+   {
+      return watermark.getIcon();
+   }
+
    public void addActionListener(ActionListener listener)
    {
       listenerList.add(ActionListener.class, listener);
@@ -130,6 +148,26 @@ public class ControlPanel
       }
    }
 
+//   protected void paintComponent(Graphics g)
+//   {
+//      // Do the normal paint thing
+//      super.paintComponent(g);
+//
+//      // Paint the watermark first if we have one
+//      if (watermark != null)
+//      {
+//         int w = watermark.getIconWidth();
+//         int h = watermark.getIconHeight();
+//         Dimension size = this.getSize();
+//
+//         System.out.println("Drawing the watermark at ("+(size.width-w)+", "+(size.height - h)+")");
+//         g.drawImage(watermark.getImage(),
+//                     size.width - w,
+//                     size.height - h,
+//                     null);
+//      }
+//   }
+
    private void rebuildUI()
    {
       // First clear the listener status on all the component we don't care
@@ -152,6 +190,19 @@ public class ControlPanel
       }
    }
 
+   public void setSize(Dimension newSize)
+   {
+      // Paint the watermark first if we have one
+      if (watermark != null)
+      {
+         int w = watermark.getIcon().getIconWidth();
+         int h = watermark.getIcon().getIconHeight();
+         watermark.setLocation(newSize.width - w, newSize.height - h);
+      }
+
+      super.setSize(newSize);
+   }
+
    /**
     * JBuilder automatically generated UI initialization.
     */
@@ -160,9 +211,11 @@ public class ControlPanel
    {
       actionBox = Box.createVerticalBox();
       this.setLayout(baseLayout);
-      titleLbl.setFont(new Font("serif", Font.BOLD, 32));
+//      defaultLayer.setLayout(defaultLayerLayout);
+      titleLbl.setFont(new Font("sans serif", Font.BOLD, 32));
       titleLbl.setText("");
       titleLbl.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 0));
+      titleLbl.setForeground(Color.black);
       iconPanel.setOpaque(true);
       iconPanel.setBackground(Color.white);
       actionPanel.setLayout(actionPanelLayout);
@@ -172,16 +225,22 @@ public class ControlPanel
       iconPanelLayout.setHorizontalGap(15);
       iconPanelLayout.setVerticalGap(15);
       iconPanel.setLayout(iconPanelLayout);
-      iconPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+      iconPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+//      this.add(layeredPane, BorderLayout.CENTER);
+//      layeredPane.add(defaultLayer, JLayeredPane.DEFAULT_LAYER);
       this.add(actionPanel,  BorderLayout.WEST);
       actionPanel.add(actionBox, BorderLayout.NORTH);
       this.add(iconBasePanel, BorderLayout.CENTER);
       iconBasePanel.add(titleLbl, BorderLayout.NORTH);
       iconBasePanel.add(iconPanel, BorderLayout.CENTER);
+//      layeredPane.add(watermark, new Integer(-1));
    }
 
    //--- JBuilder automatically generated UI variables ---//
    private BorderLayout baseLayout = new BorderLayout();
+//   private JLayeredPane layeredPane = new JLayeredPane();
+//   private BorderLayout defaultLayerLayout = new BorderLayout();
+//   private JPanel defaultLayer = new JPanel();
    private JLabel titleLbl = new JLabel();
    private JPanel actionPanel = new JPanel();
    private BorderLayout actionPanelLayout = new BorderLayout();
@@ -190,11 +249,17 @@ public class ControlPanel
    private JPanel iconBasePanel = new JPanel();
    private JPanel iconPanel = new JPanel();
    private ControlPanelLayout iconPanelLayout = new ControlPanelLayout();
+   private JLabel watermark = new JLabel();
 
    /**
     * The data model describing this control panel.
     */
    private ControlPanelModel model;
+
+   /**
+    * The watermark image.
+    */
+//   private ImageIcon watermark;
 
    /**
     * The listener for the data model so that we can update the UI when the
@@ -283,7 +348,7 @@ public class ControlPanel
          iconBtn.setPreferredSize(new Dimension(64, 64));
          labelBtn.setOpaque(false);
          labelBtn.setBorder(BorderFactory.createEmptyBorder());
-         labelBtn.setFont(new Font("serif", Font.BOLD, 16));
+         labelBtn.setFont(new Font("sans serif", Font.BOLD, 16));
 
          // setup listeners
          iconBtn.addActionListener(new ActionListener()
