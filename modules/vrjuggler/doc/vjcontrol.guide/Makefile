@@ -22,4 +22,4 @@ INSTALL_FILES=	$(webroot)/base_style.css
 $(NAME).html: $(NAME).xml
 $(NAME).pdf: $(NAME).xml $(NAME).fo
 
-include ../../../../docs/doc$(NAME).mk
+include ../../../../docs/docbook.mk
