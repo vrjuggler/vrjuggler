@@ -96,7 +96,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      vjDEBUG(vjDBG_ALL,0) << "---- cubes:App:apiInit() ----\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "---- cubesApp::apiInit() ----\n" << vjDEBUG_FLUSH;
    }
 
    // Called immediately upon opening a new OpenGL context
