@@ -43,12 +43,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/InputMixer.h>
-
-//TODO: Add glove support to PinchGlove driver.
-//#include <gadget/Type/Finger.h>
-//#include <gadget/Type/Glove.h>
-//#include <gadget/Type/Hand.h>
-
+#include <gadget/Type/Glove.h>
 
 namespace gadget
 {
@@ -56,7 +51,7 @@ namespace gadget
 /**
  * Fakespace Pinchglove Device.
  */
-class PinchGlove : public InputMixer<Input,Digital>
+class PinchGlove : public InputMixer<Input,InputMixer<Glove,Digital> >
 {
 public:
    /**
