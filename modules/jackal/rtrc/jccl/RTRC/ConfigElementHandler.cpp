@@ -68,6 +68,8 @@ int ConfigElementHandler::configProcessPending()
       << typeid(*this).name() << "::configProcessPending: Entering: "
       << num_pending_before << " items pending.\n" << vprDEBUG_FLUSH;
 
+   // Perform the work of processing pending config elements.
+   {
       std::list<ConfigManager::PendingElement>::iterator current, end, remove_me;
       current = cfg_mgr->getPendingBegin();
       end = cfg_mgr->getPendingEnd();
@@ -88,7 +90,7 @@ int ConfigElementHandler::configProcessPending()
          // If the current handler (this) knows about the element
          if(this->configCanHandle(cur_element))
          {
-            // ---- HANDLE THE CHUNK ---- //
+            // ---- HANDLE THE ELEMENT ---- //
             switch ((*current).mType)
             {
             case ConfigManager::PendingElement::ADD:         // -- CONFIG ADD -- //
@@ -147,7 +149,7 @@ int ConfigElementHandler::configProcessPending()
                break;
             }
          }
-         // ---- CAN'T HANDLE THE CHUNK --- //
+         // ---- CAN'T HANDLE THE ELEMENT --- //
          else           // if(can_handle)
          {
             vprDEBUG_NEXT(vprDBG_ALL,vprDBG_STATE_LVL)
@@ -156,16 +158,19 @@ int ConfigElementHandler::configProcessPending()
                << " --> Not handled by this handler.\n" << vprDEBUG_FLUSH;
             current++;
          }
-         vprDEBUG_END(vprDBG_ALL,vprDBG_VERB_LVL) << "==== End item =====\n" << vprDEBUG_FLUSH;
 
+         vprDEBUG_END(vprDBG_ALL,vprDBG_VERB_LVL) << "==== End item =====\n"
+                                                  << vprDEBUG_FLUSH;
       }        // END: while(current != end)
+   }
 
    num_pending_after = cfg_mgr->getNumPending();
 
    vprDEBUG_END(vprDBG_ALL,vprDBG_STATE_LVL)
-                                        << "              Exiting: "
-                                        << num_pending_after << " items now pending ==> We processed "
-                                        << (num_pending_before-num_pending_after) << " items.\n" << vprDEBUG_FLUSH;
+      << "              Exiting: "
+      << num_pending_after << " items now pending ==> We processed "
+      << (num_pending_before-num_pending_after) << " items.\n"
+      << vprDEBUG_FLUSH;
 
    // Check for items that have lost their dependencies dues to a remove item being processed
    if(scan_for_lost_dependants)
@@ -175,8 +180,6 @@ int ConfigElementHandler::configProcessPending()
 
    return (num_pending_before-num_pending_after);
 }
-
-
 
 void outputPendingItemState(int debugLevel, const std::string& elementName,
                             const std::string& elementType,
