@@ -229,7 +229,7 @@ int get_new_controller_data(int numButtons,int numValuators)
 
 
 
-main(int argc,char **argv)
+int main(int argc,char **argv)
 {
    int numSensors=0, numButtons=0, numValuators=0;
    int trackerKey=0, controllerKey=0;
@@ -286,4 +286,6 @@ main(int argc,char **argv)
       }
       usleep(100);
    }
+
+   return 1;
 }
