@@ -113,8 +113,9 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_EXTRA_LIBS=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI`
         GADGET_EXTRA_LIBS_ALL=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --all`
         GADGET_VERSION=`$GADGETEER_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(Gadgeteer, $GADGET_VERSION, $min_gadget_version,
-                              gadget_cv_gadget_version, $2, $3)
+        DPP_VERSION_CHECK_MSG([Gadgeteer], [$GADGET_VERSION],
+                              [$min_gadget_version],
+                              [gadget_cv_gadget_version], $2, $3)
     fi
 
     if test "x$no_gadgeteer" != x ; then

@@ -103,8 +103,10 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static`"
         VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
         VPR_VERSION=`$VPR_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(VPR, $VPR_VERSION, $min_vpr_version,
-                              vpr_cv_vpr_version, $2, $3)
+
+        AC_MSG_CHECKING([whether VPR version is >= $min_vpr_version])
+        AC_MSG_RESULT([$VPR_VERSION])
+        DPP_VERSION_CHECK([$VPR_VERSION], [$min_vpr_version], $2, $3)
     fi
 
     if test "x$no_vpr" != x ; then
