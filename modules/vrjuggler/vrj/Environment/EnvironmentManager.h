@@ -75,9 +75,14 @@ public:
     //: constructor
     //! PRE: None
     //! POST: Object is constructed
-    EnvironmentManager();
+    EnvironmentManager ()
+    {
+       jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
+       jccl::JackalServer::instance()->addJackalControl(jccl::PerformanceMonitor::instance());
 
-
+       jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
+       jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::PerformanceMonitor::instance());
+    }
 
     virtual ~EnvironmentManager()
     {
@@ -86,12 +91,12 @@ public:
 
     jccl::ConfigManager* getConfigManager ()
     {
-       return config_manager;
+       return jccl::ConfigManager::instance();
     }
 
     jccl::PerformanceMonitor* getPerformanceMonitor ()
     {
-       return performance_monitor;
+       return jccl::PerformanceMonitor::instance();
     }
 
     //: jccl::ConfigChunkHandler stuff
@@ -119,10 +124,6 @@ public:
     }
 
 private:
-
-    jccl::JackalServer*             jackal_server;
-    jccl::ConfigManager*            config_manager;
-    jccl::PerformanceMonitor*       performance_monitor;
 
     // These are needed to appease Visual C++ in its creation of DLLs.
     EnvironmentManager(const EnvironmentManager&) {;}
