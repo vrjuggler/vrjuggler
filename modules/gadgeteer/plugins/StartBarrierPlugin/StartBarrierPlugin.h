@@ -34,19 +34,18 @@
 #define _CLUSTER_START_BARRIER_PLUGIN_H
 
 #include <cluster/PluginConfig.h>
+#include <cluster/ClusterPlugin.h>
+#include <cluster/Packets/Packet.h>
 
 #include <vpr/Util/Singleton.h>
-
-// Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
-#include <cluster/ClusterPlugin.h>
-
-// Remove these includes when we move the handlePacket method to the cpp file.
-#include <cluster/Packets/Packet.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
-
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <map>
+
+namespace gadget
+{
+   class Node;
+}
 
 namespace cluster
 {
@@ -62,15 +61,15 @@ public:
    /**
     * Get the GUID associated with this plugin.
     */
-   vpr::GUID getPluginGUID()
+   vpr::GUID getHandlerGUID()
    {
-      return mPluginGUID;
+      return mHandlerGUID;
    }
 
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, ClusterNode* node);
+   void handlePacket(Packet* packet, gadget::Node* node);
 
    virtual void preDraw();
    virtual void postPostFrame();
@@ -79,6 +78,16 @@ public:
    virtual std::string getPluginName()
    {
       return(std::string("StartBarrierPlugin"));
+   }
+   
+   virtual std::string getHandlerName()
+   {
+      return(std::string("StartBarrierPlugin"));
+   }
+   
+   virtual void recoverFromLostNode(gadget::Node* lost_node)
+   {
+      boost::ignore_unused_variable_warning(lost_node);
    }
 
    /** Add the pending element to the configuration.
@@ -161,9 +170,7 @@ private:
    std::string                   mBarrierMasterHostname;
    std::string                   mBarrierMachineElementName;
    bool                          mComplete;
-   bool                          mSlaveWaitingOnPlugins;
-   int                           mSlowDownMaster;
-   vpr::GUID                     mPluginGUID;
+   vpr::GUID                     mHandlerGUID;
 };
 
 } // end namespace

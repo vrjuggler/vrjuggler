@@ -34,29 +34,29 @@
 #define _CLUSTER_SWAP_LOCK_TCP_PLUGIN_H
 
 #include <cluster/PluginConfig.h>
-
-#include <map>
-#include <vpr/Util/Singleton.h>
-
-// Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
-
-// Remove these includes when we move the handlePacket method to the cpp file.
 #include <cluster/Packets/Packet.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 
+#include <vpr/Util/Singleton.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 
+#include <map>
+
+namespace gadget
+{
+   class Node;
+}
 
 namespace cluster
 {
+   
 class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockTCPPlugin
    : public cluster::ClusterPlugin
 {
 public:
-   SwapLockTCPPlugin()  : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644"),
+   SwapLockTCPPlugin()  : mHandlerGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644"),
       SYNC_SIGNAL('G'), read_timeout(1000,vpr::Interval::Msec), mIsMaster(false), mActive(false)
    {;}
 
@@ -68,15 +68,15 @@ public:
    /**
     * Get the GUID associated with this plugin.
     */
-   vpr::GUID getPluginGUID()
+   vpr::GUID getHandlerGUID()
    {
-      return mPluginGUID;
+      return mHandlerGUID;
    }
 
    /**
     * Handle a incoming packet.
     */
-   virtual void handlePacket(Packet* packet, ClusterNode* node);
+   virtual void handlePacket(Packet* packet, gadget::Node* node);
 
    /**
     * Virtual function that is unused by this plug since we are only 
@@ -109,6 +109,16 @@ public:
    virtual std::string getPluginName()
    {
       return(std::string("SwapLockTCPPlugin"));
+   }
+   
+   virtual std::string getHandlerName()
+   {
+      return(std::string("SwapLockTCPPlugin"));
+   }
+
+   virtual void recoverFromLostNode(gadget::Node* lost_node)
+   {
+      boost::ignore_unused_variable_warning(lost_node);
    }
 
    /** Add the pending element to the configuration.
@@ -193,7 +203,7 @@ private:
    std::string                      mBarrierMasterHostname; /**< Hostname of the sync master. */
    vpr::Uint16                      mTCPport;               /**< TCP Port that the sync master is listening on. */
 
-   vpr::GUID                        mPluginGUID;         /**< GUID for this ClusterPlugin */
+   vpr::GUID                        mHandlerGUID;         /**< GUID for this ClusterPlugin */
 
    const vpr::Uint8                 SYNC_SIGNAL;         /**< Character that will be sent for each signal. */
    const vpr::Interval              read_timeout;        /**< Maximum time to wait for the barrier before slipping. */

@@ -32,11 +32,11 @@
 
 #include <cluster/PluginConfig.h>
 
-#include <plugins/ApplicationDataManager/ApplicationDataManager.h> // my header...
+#include <plugins/ApplicationDataManager/ApplicationDataManager.h>
 
 #include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/ClusterNetwork.h>
+#include <gadget/Node.h>
 #include <cluster/Packets/EndBlock.h>
 
 #include <gadget/Type/DeviceFactory.h>
@@ -44,12 +44,9 @@
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
 
-//#include <jccl/Config/ConfigElement.h>
-//#include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
 
-// ApplicationData
 #include <plugins/ApplicationDataManager/ApplicationData.h>
 #include <plugins/ApplicationDataManager/ApplicationDataServer.h>
 
@@ -69,7 +66,7 @@ extern "C"
 namespace cluster
 {
    ApplicationDataManager::ApplicationDataManager()
-      : mPluginGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"),
+      : mHandlerGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"),
       mFrameNumber(0)
    {;}
 
@@ -83,7 +80,7 @@ namespace cluster
       return(0 == mPendingApplicationDataRequests.size());
    }    
 
-   void ApplicationDataManager::handlePacket(Packet* packet, ClusterNode* node)
+   void ApplicationDataManager::handlePacket(Packet* packet, gadget::Node* node)
    {
       if ( NULL != packet && NULL != node )
       {
@@ -125,11 +122,11 @@ namespace cluster
             if (temp_app_data_server != NULL)
             {
                temp_app_data_server->addClient(node);
-               temp_ack = new ApplicationDataAck(getPluginGUID(), temp_request->getId(), true);
+               temp_ack = new ApplicationDataAck(getHandlerGUID(), temp_request->getId(), true);
             }
             else
             {
-               temp_ack = new ApplicationDataAck(getPluginGUID(), temp_request->getId(), false);
+               temp_ack = new ApplicationDataAck(getHandlerGUID(), temp_request->getId(), false);
             }
             node->send(temp_ack);
             delete temp_ack;
@@ -206,7 +203,7 @@ namespace cluster
 
                      // Adding a new ApplicationData server.
                      vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock); 
-                     ApplicationDataServer* new_appdata_server = new ApplicationDataServer(guid, (*i), mPluginGUID);
+                     ApplicationDataServer* new_appdata_server = new ApplicationDataServer(guid, (*i), mHandlerGUID);
                      mApplicationDataServers[guid] = new_appdata_server;
                   }
                   else
@@ -215,7 +212,7 @@ namespace cluster
                      (*i)->setIsLocal(false);
 
                      // Create a ApplicationDataRequest.
-                     ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(getPluginGUID(), guid);
+                     ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(getHandlerGUID(), guid);
 
                      // Add ApplicationData request to pending list.
                      addPendingApplicationDataRequest(new_appdata_req, hostname);
@@ -340,13 +337,13 @@ namespace cluster
       // For each pending ApplicationData request
       for (i = begin ; i != end ; i++)
       {
-         // Get the ClusterNode that the request is for.
-         ClusterNode* temp_node = ClusterNetwork::instance()->getClusterNodeByHostname((*i).second);
+         // Get the Node that the request is for.
+         gadget::Node* temp_node = ClusterManager::instance()->getNetwork()->getNodeByHostname((*i).second);
 
          // If the node exists in the ClusterNetwork
          if (temp_node != NULL)
          {
-            // If the ClusterNode is connected
+            // If the Node is connected
             if (temp_node->isConnected())
             {
                // Send the request
@@ -354,8 +351,8 @@ namespace cluster
             }
             else
             {
-               // Else add the ClusterNode to the list of pending ClusterNodes so that we will connect to it.
-               ClusterNetwork::instance()->addPendingNode(temp_node);
+               // Else add the Node to the list of pending Nodes so that we will connect to it.
+               temp_node->setStatus(gadget::Node::PENDING);
             } // End if
          } // End if
       } // End for
@@ -442,7 +439,7 @@ namespace cluster
             
             // Adding a new ApplicationData server.
             vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
-            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mPluginGUID);
+            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mHandlerGUID);
             mApplicationDataServers[id] = new_appdata_server;
          }
          else
@@ -451,7 +448,7 @@ namespace cluster
             new_app_data->setIsLocal(false);
 
             // Create a ApplicationDataRequest.
-            ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(getPluginGUID() ,id);
+            ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(getHandlerGUID() ,id);
 
             // Add ApplicationData request to pending list.
             addPendingApplicationDataRequest(new_appdata_req, hostname);

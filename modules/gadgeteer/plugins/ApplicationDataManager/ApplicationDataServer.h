@@ -40,10 +40,14 @@ namespace vpr
    class BufferObjectWriter;
 }
 
+namespace gadget
+{
+   class Node;
+}
+
 namespace cluster
 {
    class ApplicationData;
-   class ClusterNode;
    class DataPacket;
 
    class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
@@ -78,16 +82,16 @@ namespace cluster
       void serializeAndSend();
 
       /**
-       * Add a ClusterNode to the list of clients that should receive data for this ApplicationData.
+       * Add a Node to the list of clients that should receive data for this ApplicationData.
        *
-       * @param new_client_node -ClusterNode that will be added to the list
+       * @param new_client_node -Node that will be added to the list
        */
-      void addClient(ClusterNode* new_client_node);
+      void addClient(gadget::Node* new_client_node);
 
       /**
-       * Remove a ClusterNode from the list of clients that should receive data for this ApplicationData.
+       * Remove a Node from the list of clients that should receive data for this ApplicationData.
        *
-       * @param new_client_node -Hostname of the ClusterNode that will be removed from the list
+       * @param new_client_node -Hostname of the Node that will be removed from the list
        */
       void removeClient(const std::string& host_name);
 
@@ -103,7 +107,7 @@ namespace cluster
        */
       vpr::GUID getId();
    private:
-      std::vector<cluster::ClusterNode*>           mClients;            /**< Vecor of nodes that this server needs to send data to. */
+      std::vector<gadget::Node*>           mClients;            /**< Vecor of nodes that this server needs to send data to. */
       vpr::Mutex                                   mClientsLock;        /**< Lock for the list of clients. */   
       
       ApplicationData*                             mApplicationData;    /**< Structure that is being shared across the cluster. */

@@ -34,29 +34,29 @@
 #define _CLUSTER_SWAP_LOCK_WIRED_PLUGIN_H
 
 #include <cluster/PluginConfig.h>
-
-#include <map>
-#include <vpr/Util/Singleton.h>
-
-// Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
-
-// Remove these includes when we move the handlePacket method to the cpp file.
 #include <cluster/Packets/Packet.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 
+#include <vpr/Util/Singleton.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 
+#include <map>
+
+namespace gadget
+{
+   class Node;
+}
 
 namespace cluster
 {
+
 class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockWiredPlugin
    : public cluster::ClusterPlugin
 {
 public:
-   SwapLockWiredPlugin() : mWire(-1), mPluginGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
+   SwapLockWiredPlugin() : mWire(-1), mHandlerGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
       mIsMaster(false), mActive(false), mMasterWaitByte(0)
    {;}
 
@@ -66,15 +66,15 @@ public:
    /**
     * Get the GUID associated with this plugin.
     */
-   vpr::GUID getPluginGUID()
+   vpr::GUID getHandlerGUID()
    {
-      return mPluginGUID;
+      return mHandlerGUID;
    }
 
    /**
     * Handle a incoming packet.
     */
-   virtual void handlePacket(Packet* packet, ClusterNode* node);
+   virtual void handlePacket(Packet* packet, gadget::Node* node);
 
    /**
     * Virtual function that is unused by this plug since we are only 
@@ -109,6 +109,16 @@ public:
       return(std::string("SwapLockWiredPlugin"));
    }
 
+   virtual std::string getHandlerName()
+   {
+      return(std::string("SwapLockWiredPlugin"));
+   }
+   
+   virtual void recoverFromLostNode(gadget::Node* lost_node)
+   {
+      boost::ignore_unused_variable_warning(lost_node);
+   }
+   
    /** Add the pending element to the configuration.
     *  PRE: configCanHandle (element) == true.
     *  @return true iff element was successfully added to configuration.
@@ -183,7 +193,7 @@ private:
    std::string                      mBarrierMasterHostname; /**< Hostname of the sync master. */
 
    int                              mWire;
-   vpr::GUID                        mPluginGUID;         /**< GUID for this ClusterPlugin */
+   vpr::GUID                        mHandlerGUID;         /**< GUID for this ClusterPlugin */
 
    bool                             mIsMaster;           /**< Are we the sync master? */
    bool                             mActive;             /**< Is the plugin ready to be used? */
