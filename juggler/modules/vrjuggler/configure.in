@@ -576,7 +576,7 @@ if test "x${_enable_perf}" = "xyes" ; then
     AC_CHECK_LIB(pf, pfInit,
         AC_CHECK_HEADER(Performer/pf.h,
             PERFORMER_API="Y";	\
-            _PFOGLLIB='-ignore_unresolved -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
+            _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
             AC_DEFINE(VJ_API_PERFORMER,),
             AC_MSG_WARN(*** Performer API will not be used (pfChannel.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
