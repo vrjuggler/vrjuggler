@@ -95,8 +95,12 @@ public:
 
    //: Load configuration data for Kernel
    //! POST: Config data has been read into initial buffer
-   //! NOTE: Designed ONLY to specify initial configuration
    void loadConfigFile(std::string filename);
+
+   //: Load a chunk description file
+   //! POST: The chunk factory can now manage chunks with the given types
+   void loadChunkDescFile(std::string filename);
+
 
 protected:  // -- CHUNK HANDLER
    //: Can the handler handle the given chunk?
@@ -105,9 +109,9 @@ protected:  // -- CHUNK HANDLER
    virtual bool configCanHandle(vjConfigChunk* chunk);
 
    //: Process any pending reconfiguration that we can deal with
-   //  
-   //  Process pending reconfiguration of the kernel and 
-   //  it's dependant managers (basically all of them 
+   //
+   //  Process pending reconfiguration of the kernel and
+   //  it's dependant managers (basically all of them
    //  that don't have a control thread)
    //
    // It just calls process pending for dependant processes
@@ -149,7 +153,7 @@ protected:
    //! NOTE: This can only be called from the kernel thread
    void changeApplication(vjApp* _app);
 
-protected:      // --- DRAW MGR ROUTINES --- //       
+protected:      // --- DRAW MGR ROUTINES --- //
    // Starts the draw manager running
    // Calls the app callbacks for the draw manager
    //! ARGS: newMgr - Is this a new manager, or the same one
@@ -171,10 +175,10 @@ public:      // Global "get" interface
    { return mInputManager; }
 
     //: Get the Environment Manager
-    
+
     vjEnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
-    
+
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
@@ -240,7 +244,7 @@ protected:
 
       //mInitialChunkDB = NULL;
       //mChunkDB = NULL;
-     
+
       sharedMemPool = NULL;
    }
 
