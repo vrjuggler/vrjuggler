@@ -58,9 +58,9 @@ public:
      * Constructor.  This initializes the member variables to reasonable
      * defaults and stores the given file name for later use.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> All member variables are initialized including m_name that
-     *              is assigned the string in file_name.
+     * @pre None.
+     * @post All member variables are initialized including m_name that is
+     *       assigned the string in file_name.
      *
      * @param file_name The name of the file to be handled.
      */
@@ -73,8 +73,8 @@ public:
     /**
      * Destructor.  This does nothing.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> None.
+     * @pre None.
+     * @post None.
      */
     virtual ~FileHandle_t (void) {
         /* Do nothing. */ ;
@@ -83,9 +83,9 @@ public:
     /**
      * Gets the name of this file.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> A constant reference to the m_name object is returned to
-     *              the caller.
+     * @pre None.
+     * @post A constant reference to the m_name object is returned to the
+     *       caller.
      *
      * @return An object containing the name of this file.
      */
@@ -97,10 +97,10 @@ public:
     /**
      * Opens the file.
      *
-     * <b>PRE:</b> This file handle has not already been opened.<br>
-     * <b>POST:</b> An attempt is made to open the file.  The resulting status
-     *              is returned to the caller.  If opened successfully, this
-     *              file is ready for use.
+     * @pre This file handle has not already been opened.
+     * @post An attempt is made to open the file.  The resulting status is
+     *       returned to the caller.  If opened successfully, this file is
+     *       ready for use.
      *
      * @return <code>vpr::Status::Success</code> is returned when the file was
      *         opened successfully.<br>
@@ -116,9 +116,9 @@ public:
      * Closes the file.  All pending operatings (as queued by the OS) are
      * completed.
      *
-     * <b>PRE:</b> This file handle is open.<br>
-     * <b>POST:</b> An attempt is made to close the file.  The resulting
-     *              status is returned to the caller.
+     * @pre This file handle is open.
+     * @post An attempt is made to close the file.  The resulting status is
+     *       returned to the caller.
      *      
      * @return <code>vpr::Status::Success</code> is returned if the file was
      *         closed successfully.<br>
@@ -133,8 +133,8 @@ public:
     /**
      * Reconfigures the file handle so that it is in blocking mode.
      *
-     * <b>PRE:</b> The file handle is open.<br>
-     * <b>POST:</b> Processes may block when accessing the file.
+     * @pre The file handle is open.
+     * @post Processes may block when accessing the file.
      *
      * @return <code>vpr::Status::Success</code> will be returned if the
      *         blocking mode was changed successfully.<br>
@@ -149,8 +149,8 @@ public:
     /**
      * Reconfigures the file handle so that it is in non-blocking mode.
      *
-     * <b>PRE:</b> The file handle is open.<br>
-     * <b>POST:</b> Processes will not block when accessing the file.
+     * @pre The file handle is open.
+     * @post Processes will not block when accessing the file.
      *
      * @return <code>vpr::Status::Success</code> will be returned if the
      *         blocking mode was changed successfully.<br>
@@ -165,8 +165,8 @@ public:
     /**
      * Gets the current blocking state for the file.
      *
-     * <b>PRE:</b> <code>m_blocking</code> is set correctly<br>
-     * <b>POST:</b>
+     * @pre <code>m_blocking</code> is set correctly
+     * @post
      *
      * @return <code>true</code> is returned when the file is in blocking
      *         mode.<br>
@@ -181,8 +181,8 @@ public:
     /**
      * Gets the current non-blocking state for the file.
      *
-     * <b>PRE:</b> <code>m_blocking</code> is set correctly<br>
-     * <b>POST:</b>
+     * @pre <code>m_blocking</code> is set correctly
+     * @post
      *
      * @return <code>true</code> is returned when the file is in non-blocking
      *         mode.<br>
@@ -213,8 +213,8 @@ public:
     /**
      * Reconfigures the file handle to be in append mode.
      *
-     * <b>PRE:</b> The file handle is open.<br>
-     * <b>POST:</b> The file handle's write mode is set to append.
+     * @pre The file handle is open.
+     * @post The file handle's write mode is set to append.
      *
      * @return <code>vpr::Status::Success</code> is returned if the write mode
      *         was changed successfully.<br>
@@ -228,8 +228,8 @@ public:
     /**
      * Reconfigures the file handle so that it is not in append mode.
      *
-     * <b>PRE:</b> The file handle is open.<br>
-     * <b>POST:</b> The file handle's write mode is set so that writes are
+     * @pre The file handle is open.
+     * @post The file handle's write mode is set so that writes are
      *              appended.
      *
      * @return <code>vpr::Status::Success</code> is returned if the write mode
