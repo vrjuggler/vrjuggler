@@ -134,6 +134,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
+				RelativePath="..\pfTools\FileIO.cpp">
+			</File>
+			<File
 				RelativePath="..\pfTools\pfFileIO.cpp">
 			</File>
 			<File
@@ -199,6 +202,9 @@
 			</File>
 			<File
 				RelativePath="KeyFramerImporter.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\FileIO.h">
 			</File>
 			<File
 				RelativePath="..\pfTools\PfAppStats.h">

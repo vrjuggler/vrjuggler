@@ -137,6 +137,9 @@
 				RelativePath="pfBasicConfigNav.cpp">
 			</File>
 			<File
+				RelativePath="..\pfTools\FileIO.cpp">
+			</File>
+			<File
 				RelativePath="..\pfTools\pfFileIO.cpp">
 			</File>
 			<File
@@ -190,6 +193,9 @@
 			</File>
 			<File
 				RelativePath="..\pfTools\PfAppStats.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\FileIO.h">
 			</File>
 			<File
 				RelativePath="StopWatch.h">
