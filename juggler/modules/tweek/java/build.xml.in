@@ -12,6 +12,7 @@
       <pathelement path="@JDOM_JAR@" />
       <pathelement path="@JAVA_ORB_JAR@" />
       <pathelement path="${lafdir}/metouia/metouia.jar" />
+      <pathelement path="${lafdir}/jgoodies-looks/looks.jar" />
    </path>
 
    <property name="tweek.classpath" refid="tweek.classpath" />
