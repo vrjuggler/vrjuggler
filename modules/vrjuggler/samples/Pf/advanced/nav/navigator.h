@@ -34,6 +34,7 @@
 #define _NAVIGATOR_H_
 
 #include <gmtl/Vec.h>
+#include <gmtl/Point.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Output.h>
 #include <gmtl/Matrix.h>
@@ -126,7 +127,7 @@ protected:
    // Checks the given translation (in model cordinate space) against
    // the collidors given
    // Returns the corrected trans in trans, also returns the totalCorrection used
-   void navCollideTransCorrect(gmtl::Vec3f& trans, bool& didCollide, gmtl::Vec3f& totalCorrection);
+   void navCollideTransCorrect(gmtl::Point3f& trans, bool& didCollide, gmtl::Vec3f& totalCorrection);
 
    // HELPER
    // returns true if the action state is true
@@ -160,8 +161,8 @@ inline void navigator::navTranslate(gmtl::Vec3f trans, bool& didCollide, gmtl::V
    // Mtrans_model = model_M_user * Mtrans_user
    gmtl::Matrix44f cur_rotation = mCurPos;      // Get rotation only part of model_M_user
    gmtl::setTrans(cur_rotation, gmtl::Vec3f(0.0f, 0.0f, 0.0f)); // zero out the translation...
-   gmtl::Vec3f trans_in_modelspace;
-   gmtl::xform( trans_in_modelspace, cur_rotation, trans );
+   gmtl::Point3f trans_in_modelspace;
+   trans_in_modelspace = cur_rotation * trans;
 
    // Get correction for collision detection
    // This func returns the totalCorrection
@@ -171,7 +172,7 @@ inline void navigator::navTranslate(gmtl::Vec3f trans, bool& didCollide, gmtl::V
    // Convert back to trans_in_modelspace back into local space
    gmtl::Matrix44f inv_cur_rotation;
    gmtl::invert(inv_cur_rotation, cur_rotation);
-   gmtl::xform(trans, inv_cur_rotation, trans_in_modelspace);
+   trans = inv_cur_rotation * trans_in_modelspace;
 
    // Post mult cur_mat by the trans we need to do
    // model_M_new-user = model_M_user*user_M_new-user
@@ -207,7 +208,7 @@ inline void navigator::navRotate( gmtl::Matrix44f rot_mat )
 // Checks the given translation (in model cordinate space) against
 // the collidors given
 // returns the modified trans, and the total correction that was applied
-inline void navigator::navCollideTransCorrect(gmtl::Vec3f& trans, bool& didCollide, gmtl::Vec3f& totalCorrection)
+inline void navigator::navCollideTransCorrect(gmtl::Point3f& trans, bool& didCollide, gmtl::Vec3f& totalCorrection)
 {
    didCollide = false;
    totalCorrection.set(0,0,0);
