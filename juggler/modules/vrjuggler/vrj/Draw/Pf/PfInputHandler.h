@@ -33,21 +33,32 @@
 #ifndef _VRJ_PF_INPUT_HANDLER_H_
 #define _VRJ_PF_INPUT_HANDLER_H_
 
-#include <X11/Xlib.h>
+#include <vrj/vrjConfig.h>
+#include <vpr/vprConfig.h>
+#include <string>
+
+#ifndef VPR_OS_Win32
+#  include <X11/Xlib.h>
+#endif
 
 #include <Performer/pf.h>
 #include <Performer/pf/pfChannel.h>
 
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
-#include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
+
+#ifdef VPR_OS_Win32
+#  include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
+#else
+#  include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
+#endif
+
 #include <vrj/Display/Display.h>
 
-#include <string>
 
 namespace vrj
 {
-class PfInputHandler : public gadget::InputAreaXWin
+class PfInputHandler : public gadget::InputAreaWin32
 {
 public:
    /**
@@ -81,7 +92,11 @@ public:
     * Forward the recieved platform independent event to
     * the base class to be handled.
     */
+#ifdef VPR_OS_Win32
+   void handlePerformerEvent(MSG message);
+#else
    void handlePerformerEvent(::XEvent& event);
+#endif
 };
 }
 

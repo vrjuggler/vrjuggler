@@ -47,6 +47,12 @@
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vrj/Util/Debug.h>
 
+#ifdef VPR_OS_Win32
+#  define WINKEY HWND
+#else
+#  define WINKEY ::Window
+#endif
+
 namespace vrj
 {
 
@@ -124,16 +130,16 @@ protected:
    // Helper functions that keep track of the PfInputHandlers.
 public:
    /** Adds a PfInputHandler to the map. */
-   static void addPfInputHandler(::Window win, PfInputHandler* pf_handler);
+   static void addPfInputHandler(WINKEY win, PfInputHandler* pf_handler);
 
    /** Removes a PfInputHandler from the map. */
-   static void removePfInputHandler(::Window win);
+   static void removePfInputHandler(WINKEY win);
 
    /** Gets the PfInputHandler we are dealing with. */
-   static PfInputHandler* getPfInputHandler(::Window win);
+   static PfInputHandler* getPfInputHandler(WINKEY win);
 
 protected:
-   static std::map< ::Window, PfInputHandler* > mPfInputMap; /**< Map of all PfInputHandlers */   
+   static std::map< WINKEY, PfInputHandler* > mPfInputMap; /**< Map of all PfInputHandlers */
 
 public:
    /**

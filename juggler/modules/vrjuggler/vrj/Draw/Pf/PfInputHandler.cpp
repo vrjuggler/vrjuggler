@@ -37,17 +37,29 @@ namespace vrj
 
 PfInputHandler::PfInputHandler(pfPipeWindow* pWin, const std::string& displayName)
 {
+#ifdef VPR_OS_Win32
+   mWinHandle = pWin->getWSWindow();
+#else
    // Get the XWindow from that we are going to recieve events from.
    mXWindow = pWin->getWSWindow();
 
    // Create a new display connection to the X server.
    mXDisplay = XOpenDisplay( displayName.c_str());
+#endif
 }
 
+#ifdef VPR_OS_Win32
+void PfInputHandler::handlePerformerEvent(MSG message)
+{
+   // Forward events on to subclass. The magic of inheritance :)
+   InputAreaWin32::updKeys( message );
+}
+#else
 void PfInputHandler::handlePerformerEvent(::XEvent& event)
 {
    // Forward events on to subclass. The magic of inheritance :)
-   InputAreaXWin::handleEvent(event);
+   InputAreaXWin::handleEvent( event );
 }
+#endif
 
 } // End of vrj namespace
