@@ -50,7 +50,6 @@ public:
 
     void setTarget (vjConnect* _target) {
 	// this maybe ought to stop/restart process if running...
-	cout << "----------------------------------------------------------vjTUsetTarget: targ is " << _target << endl;
 	target = _target;
     }
 
