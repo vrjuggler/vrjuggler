@@ -161,6 +161,8 @@ bool VarValue::operator == (const VarValue& v) const {
         }
         else
             return (!v.embeddedchunkval.get());
+    case VJ_T_INVALID:
+        return (v.type == VJ_T_INVALID);
     default:
         return false;
     }
