@@ -7,6 +7,8 @@ class SoundImplementation
 {
 public:
 
+
+
    /**
     * @semantics default constructor 
     */
