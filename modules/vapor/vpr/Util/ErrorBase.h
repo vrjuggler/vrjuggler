@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 #include <iostream>
 #include <string>
+#include <boost/concept_check.hpp>
 
 
 namespace vpr
@@ -63,10 +64,15 @@ public:
    };
 
    static void outputCurrentError(std::ostream& out, const std::string& prefix)
-   {;}
+   {
+      boost::ignore_unused_variable_warning(out);
+      boost::ignore_unused_variable_warning(prefix);
+   }
 
    static ErrorType getCurrentError()
-   { return NoError; }
+   {
+      return NoError;
+   }
 };
 
 } // End of vpr namespace
