@@ -54,7 +54,7 @@ INSTALL_FILES=
 
 srcdir=		@UNIX_CPPDOM_ROOT@/cppdom
 top_srcdir=	@top_srcdir@
-SUBOBJDIR=	$(VPR_LIBRARY)
+SUBOBJDIR=	$(VPR_LIBRARY)/ext/cppdom
 
 SRCS=		version.cpp xmlparser.cpp cppdom.cpp xmltokenizer.cpp
 
