@@ -65,9 +65,9 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DigitalProxy::getData()
-   SHARPPY_API int gadget_DigitalProxy_getData__(gadget::DigitalProxy* self_)
+   SHARPPY_API gadget::Digital::State gadget_DigitalProxy_getData__(gadget::DigitalProxy* self_)
    {
-      int result;
+      gadget::Digital::State result;
       result = self_->getData();
 
       return result;
