@@ -34,7 +34,6 @@ class vjPthreadObj
 public:
     thread_id_t	id;		//: Non-decreasing, unique ID for this thread
     pthread_t	obj;		//: pthread_t data structure for this thread
-    bool	exited;
 };
 
 

@@ -43,8 +43,6 @@ vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
         ret_val = spawn(NonMemFunctor, flags, priority, stack_addr,
                         stack_size);
         checkRegister(ret_val);
-
-        mThread.exited = false;
     }
     vjThreadManager::instance()->unlock();
 }
@@ -64,8 +62,6 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
 
         ret_val = spawn(functorPtr, flags, priority, stack_addr, stack_size);
         checkRegister(ret_val);
-
-        mThread.exited = false;
     }
     vjThreadManager::instance()->unlock();
 }
@@ -78,14 +74,14 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
 //       thread hash.
 // ---------------------------------------------------------------------------
 vjThreadPosix::~vjThreadPosix (void) {
-    // If the thread has not already exited (which is likely if we have
-    // reached this stage of execution), call the exit() method.
-    if ( ! mThread.exited ) {
-        int status;
+    int status;
 
-        status = 0;
-        exit((void*) &status);
-    }
+    mThreadTable.removeThread(gettid());
+    me.obj = pthread_self();
+    mThreadHash.erase((addr_t) &me);
+
+    status = 0;
+    pthread_exit((void*) &status);
 }
 
 // ---------------------------------------------------------------------------
