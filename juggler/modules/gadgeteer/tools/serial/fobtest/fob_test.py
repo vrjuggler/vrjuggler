@@ -65,8 +65,11 @@ def printBasicFlockInfo():
     print "  bird status: ", bird_status
     fob.printFlockSystemStatus()
     
-    print "Auto-configing the flock...."
-    fob.autoConfig(3)
+    if(0 == bird_addr):
+        print "Standalone mode.  Can't autoconfig"
+    else:
+        print "Auto-configing the flock...."
+        fob.autoConfig(3)
     
     fob.printFlockSystemStatus()
     
