@@ -64,6 +64,25 @@ protected:
    std::string mMsg;
 };
 
+/**
+ * Exception type thrown when an attempt to query the Direct Input device
+ * object fails.
+ */
+class DirectXJoystickQueryException : public DirectXJoystickException
+{
+public:
+   DirectXJoystickQueryException(const std::string& msg)
+      : DirectXJoystickException(msg)
+   {
+      ;
+   }
+
+   virtual ~DirectXJoystickQueryException() throw()
+   {
+      ;
+   }
+};
+
 class DirectXJoystickDataFormatException : public DirectXJoystickException
 {
 public:

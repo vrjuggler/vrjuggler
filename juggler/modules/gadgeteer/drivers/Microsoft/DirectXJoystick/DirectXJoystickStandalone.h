@@ -58,6 +58,46 @@ public:
 
    const std::string& getProductName() const;
 
+   /**
+    * Returns the number of axes on this joystick.
+    *
+    * @pre init() has completed successfully.
+    */
+   DWORD getNumAxes() const
+   {
+      return mCapabilities.dwAxes;
+   }
+
+   /**
+    * Returns the number of buttons on this joystick.
+    *
+    * @pre init() has completed successfully.
+    */
+   DWORD getNumButtons() const
+   {
+      return mCapabilities.dwButtons;
+   }
+
+   /**
+    * Returns the firmware revision number for this joystick.
+    *
+    * @pre init() has completed successfully.
+    */
+   DWORD getFirmwareRev() const
+   {
+      return mCapabilities.dwFirmwareRevision;
+   }
+
+   /**
+    * Returns the hardware revision number for this joystick.
+    *
+    * @pre init() has completed successfully.
+    */
+   DWORD getHardwareRev() const
+   {
+      return mCapabilities.dwHardwareRevision;
+   }
+
    /** @name Direct Input callbacks */
    //@{
    BOOL enumerateJoysticks(const DIDEVICEINSTANCE* dInstance);
@@ -77,8 +117,9 @@ public:
 private:
    /** @name Direct Input data */
    //@{
-   LPDIRECTINPUT8       mDxObject;    /**< DirectInput object */
-   LPDIRECTINPUTDEVICE8 mDxJoystick;  /**< DirectInput device */
+   LPDIRECTINPUT8       mDxObject;     /**< DirectInput object */
+   LPDIRECTINPUTDEVICE8 mDxJoystick;   /**< DirectInput device */
+   DIDEVCAPS            mCapabilities; /**< Device capabilities */
    //@}
 
    /** @name Data format information */
