@@ -613,7 +613,8 @@ AC_SUBST(vrj_64_flags)
 
 VJ_MTREE_LIB_GEN(VJ, mtree, $PLATFORM, $ISA)
 
-AC_OUTPUT(Makefile
+AC_OUTPUT(vrjuggler-config
+          Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
