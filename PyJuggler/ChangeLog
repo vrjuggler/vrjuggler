@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-01-2003 patrickh    NEW VERSION: 0.9.0
 Mar-12-2004 patrickh    Fixed conditional handling of vrj.OsgApp so that we do
                         not require that users have OSG installed just to be
                         able to use PyJuggler.
