@@ -332,10 +332,6 @@ void EventWindow::updateEventQueue()
       mCurEventQueue = mWorkingEventQueue;
    }
    
-   /*std::cout << "updateEventQueue" << std::endl;
-   std::cout << "Current " << mCurEventQueue.size() << " events." << std::endl;
-   std::cout << "Working " << mWorkingEventQueue.size() << " events." << std::endl;
-   */
    while ( ! mWorkingEventQueue.empty() )
    {
       mWorkingEventQueue.pop();
