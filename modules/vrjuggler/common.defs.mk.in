@@ -28,21 +28,25 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2001/06/29 23:47:52
-# Version:       1.20
+# Date modified: 2001/10/12 14:58:44
+# Version:       1.22
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.20 2001/06/29 23:47:52 patrickh Exp
+# common.defs.mk.in,v 1.22 2001/10/12 14:58:44 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
-# results of running a Doozer++-aware configure script.
+# results of running a Doozer++-aware configure script.  It is distributed
+# with Doozer++ as a means for users to get quick, effortless access to all
+# these variables.  It is recommended that user build systems include this
+# file in their own local definitions file and override settings therein as
+# necessary.
+#
+# All makefiles in a source tree should include this file through some means
+# for maximum information sharing.
 #
 # Generated for use on @PLATFORM@
-# -----------------------------------------------------------------------------
-# All makefiles in a source tree should include this file for maximum
-# information sharing.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
@@ -91,6 +95,7 @@
 # DYLIB_NAME_FLAG - Flag passed to the linker to name a dynamic library.
 # EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
 # INCLUDES        - Additions to the include path (-I/path/to/include).
+# JCPS            - The Java classpath separator character for this platform.
 # JAR             - Command for creating Java JAR files.
 # JAVAC           - Java compiler.
 # JAVAH           - javah utility.
@@ -167,6 +172,7 @@ DYLIB_NAME_FLAG	= @DYLIB_NAME_FLAG@
 EXE_NAME_FLAG	= @EXE_NAME_FLAG@
 INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
+JCPS		= @JCPS@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
 JAVAH		= @JAVAH@
