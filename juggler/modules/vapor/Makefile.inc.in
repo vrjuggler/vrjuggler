@@ -142,9 +142,17 @@ $(PARAM_SOURCE): $(PARAM_HEADER) $(VPRROOT_ABS)/$(PARAM_SOURCE).in
 
 # Things to do after the object files and library are built.
 afterbuild:
-ifdef GLOBAL_BUILD
-	@$(MAKE) links
+ifdef BUILD_PROF_LIBS
+ifeq ($(CALLER), world)
+	@$(MAKE) links-prof-libs
 endif
+endif
+	@$(MAKE) links
+	@echo ""
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$VPR_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
@@ -202,11 +210,6 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) links-dbg
 endif
-	@echo ""
-	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$VPR_BASE_DIR to:'
-	@cd $(instlinks) && echo "  `pwd`"
-	@echo "---------------------------------------------------------------"
 
 links-all:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
@@ -219,6 +222,10 @@ links-opt:
 
 links-prof:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
+
+links-prof-libs:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof-dso
 
 # Remove the links in $(instlinks).  We cannot do this in the global build,
 # however, because it would blow away links set up by our dependencies.
