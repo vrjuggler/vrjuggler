@@ -1927,10 +1927,6 @@ AC_OUTPUT(Makefile
           samples/pf/pfNav/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/TestSuite/mk/mk.defs
-          test/TestSuite/mk/mk.objs
-          test/TestSuite/mk/mk.depend
-          test/TestSuite/mk/mk.hosttype
           test/old/Makefile 
           test/old/CfgTest/Makefile 
           test/old/GLWindow/Makefile
