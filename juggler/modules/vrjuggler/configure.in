@@ -642,6 +642,8 @@ AC_OUTPUT(Makefile
           test/Draw/OGL/texture/Makefile
           test/Draw/OGL/torus/Makefile
           test/Draw/OGL/wand/Makefile
+		  test/Draw/OpenSG/Makefile
+		  test/Draw/OpenSG/OpenSGNav/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
           test/Quat/Makefile
