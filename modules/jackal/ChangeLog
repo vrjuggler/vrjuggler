@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-10-2003 patrickh    Removed the ConfigUpdater utility.
 Jul-10-2003 nonchocoboy Merged everything from jccl_config_refactor_branch.
                         Among other things, this officially renames "config
                         chunk" to "config element" and "chunk desc" to

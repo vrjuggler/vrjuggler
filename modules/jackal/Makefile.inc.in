@@ -150,9 +150,6 @@ $(PARAM_HEADER):
 
 # Things to do after the object files and library are built.
 afterbuild:
-ifeq ($(BUILD_JAVA),Y)
-	@$(MAKE) -C tools/ConfigUpdater
-endif
 	@$(MAKE) links
 
 # -----------------------------------------------
@@ -384,20 +381,6 @@ install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing user tools"
 	@echo "------------------------------------------------"
-ifndef NO_JAVA
-ifeq (@OS_TYPE@, UNIX)
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh		\
-	  $(bindir)/cfgupdater
-else
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
-          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.bat		\
-	  $(bindir)/cfgupdater.bat
-endif	# if OS_TYPE == UNIX
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS)						\
-          $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar $(bindir)
-endif	# ifndef NO_JAVA
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -i $(top_srcdir)/tools/xmlupdate		\
           -o $(projdatadir)/tools/xmlupdate -v "$(topdir)/VARS.pl"
