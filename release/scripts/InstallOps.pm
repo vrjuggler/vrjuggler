@@ -127,11 +127,15 @@ sub newDir ($$) {
 # 
 # Syntax:
 #     $filename: The file to install.
+#          $uid: The ID of the user who will own the file.
+#          $gid: The ID of the group that will own the file.
 #         $mode: The mode bits for the file.
 #     $dest_dir: The destination directory for the file.
 # -----------------------------------------------------------------------------
-sub installFile ($$$) {
+sub installFile ($$$$$) {
     my $filename = shift;
+    my $uid = shift;
+    my $gid = shift;
     my $mode = shift;
     my $dest_dir = shift;
 
@@ -148,7 +152,8 @@ sub installFile ($$$) {
     umask(002);
     mkpath("$inst_dir", 0, 0755) or "mkpath: $!\n";
     copy("$src_file", "$inst_dir") or "copy: $!\n";
-    chmod($mode, "$inst_dir/$filename") or "chmod: $!\n";
+    chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+    chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
 }
 
 # -----------------------------------------------------------------------------
