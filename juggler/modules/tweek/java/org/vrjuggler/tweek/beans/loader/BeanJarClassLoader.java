@@ -71,7 +71,6 @@ public class BeanJarClassLoader extends ClassLoader
    {
       if ( path != null && path.length() > 0 )
       {
-         System.out.println("Addition to path: " + path);
          int begin_index = 0;
          int end_index   = path.indexOf(';');
 
