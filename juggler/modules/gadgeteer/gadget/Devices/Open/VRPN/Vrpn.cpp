@@ -57,6 +57,8 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
@@ -206,6 +208,8 @@ namespace gadget
 
   void Vrpn::readLoop(void *nullParam)
   {
+    boost::ignore_unused_variable_warning(nullParam);
+
     vrpn_Tracker_Remote *tracker;
     vrpn_Button_Remote *button;
     
