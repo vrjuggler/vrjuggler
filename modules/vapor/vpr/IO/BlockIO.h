@@ -452,6 +452,12 @@ public:
       return status;
    }
 
+   /** Return the number of avaiable bytes for reading */
+   virtual vpr::Uint32 availableBytes()
+   {
+      return 0;
+   }
+
    /**
     * Write the buffer to the I/O device.
     *
