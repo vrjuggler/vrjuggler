@@ -38,9 +38,10 @@
 # This makefile requires the use of GNU make.
 # =============================================================================
 
-# ******** Fill this in!! ********
+# ******** Fill these in!! ********
 webroot=	$(HOME)/public_html/jugglerweb
-# ********************************
+distroot=	$(HOME)/vrj-docs.dist
+# *********************************
 
 SUBDIR=		doc/build.system				\
 		doc/team.guide					\
@@ -71,6 +72,14 @@ install:
             $(MAKE) -C $$dir webroot=$(webroot) install-docs || exit 1;	\
           done
 	$(MAKE) -C modules/tweek/java -f Makefile.docs install-docs
+
+.PHONY: release
+
+release:
+	-[ ! -d "$(distroot)" ] && mkdir -p "$(distroot)"
+	cp doc/dist/index.html "$(distroot)/"
+	cp "$(webroot)/base_style.css" "$(distroot)/"
+	$(MAKE) -f Makefile.docs webroot="$(distroot)" install
 
 clobber:
 	for dir in $(SUBDIR) ; do		\
