@@ -125,7 +125,7 @@ public:
     virtual void bufferPreDraw()
    {
       glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT);
    }
 
 
@@ -236,6 +236,8 @@ inline void OpenSGApp::contextPostDraw()
 
 inline void OpenSGApp::draw()
 {
+   glClear(GL_DEPTH_BUFFER_BIT);
+
    context_data* c_data = &(*mContextData);
 
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
