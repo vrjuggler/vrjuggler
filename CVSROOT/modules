@@ -24,6 +24,7 @@
 # character to interpose another module into the current module.  This
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
-vapor     &juggler/modules/vapor     &juggler/external/cppunit &juggler/external/leach-uuid &juggler/external/md5-c &juggler/macros &juggler/release &juggler/share
-tweek     &juggler/modules/tweek     &juggler/README.html &juggler/README.txt &juggler/Gatherrc &juggler/cvs-gather.pl &juggler/external/ant &juggler/external/cppunit &juggler/external/JacORB &juggler/external/swing-laf &juggler/macros &juggler/release &juggler/share/config
+vapor     &juggler/modules/vapor     &juggler/README.html &juggler/README.txt &juggler/INSTALL.html &juggler/INSTALL.txt &juggler/Gatherrc &juggler/cvs-gather.pl &juggler/doc &juggler/external &juggler/macros &juggler/release &juggler/share/config
+tweek     &juggler/modules/tweek     &juggler/README.html &juggler/README.txt &juggler/INSTALL.html &juggler/INSTALL.txt &juggler/Gatherrc &juggler/cvs-gather.pl &juggler/doc &juggler/external/ant &juggler/external/JacORB &juggler/external/swing-laf &juggler/macros &juggler/release &juggler/share/config
+gadgeteer &juggler/modules/gadgeteer &juggler/README.html &juggler/README.txt &juggler/INSTALL.html &juggler/INSTALL.txt &juggler/Gatherrc &juggler/cvs-gather.pl &juggler/doc &juggler/macros &juggler/release &juggler/share/config
 vrjuggler juggler
