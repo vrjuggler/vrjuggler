@@ -50,13 +50,11 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 # Prefix for recursive stuff.
 DIRPRFX		= Kernel/
 
+SUBDIR		= OSG
+
 # Subdirectories to compile.
 ifeq (@OPENGL_API@, Y)
     SUBDIR	+= GL
-endif
-
-ifeq (@OSG_API@, Y)
-    SUBDIR	+= OSG
 endif
 
 ifeq (@PERFORMER_API@, Y)
