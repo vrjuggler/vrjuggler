@@ -134,7 +134,20 @@ fi
 # -----------------------------------------------------------------------------
 AC_CANONICAL_HOST
 
-RELEASE=`uname -r`	# Operating system version number
+# Operating system release information.  This may contain anything and should
+# be treated as a string.
+_OS_REL_STR=`uname -r`
+
+# Operating system version number only (any miscellaneous text is stripped).
+# This will only contain a number and can be treated as a float-point value.
+# NOTE: It is currently not used in config.h.
+_OS_REL_NUM=`uname -r | sed -e 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\)[^0-9]*$/\1/'`
+
+# Major and minor version numbers from $_OS_REL_NUM separated for use with
+# the C preprocessor.  Using cut(1) is kind of a hack, but at least it's a
+# clean one.
+_OS_REL_NUM_MAJOR=`echo "$_OS_REL_NUM" | cut -f1 -d'.'`
+_OS_REL_NUM_MINOR=`echo "$_OS_REL_NUM" | cut -f2 -d'.'`
 
 AR=''			# Archive library command (generally ar(1))
 ARFLAGS=''		# Flags for $AR
@@ -154,12 +167,6 @@ PLATFORM=''		# Platform name
 case $host in
     # SGI running IRIX [56].*.
     mips-sgi-irix*)
-        if test $RELEASE -lt 6.2 ; then
-            AC_DEFINE(IRIXREL, "IRIX5")
-        else
-            AC_DEFINE(IRIXREL, "IRIX6")
-        fi
-
         # Set compiler flags and the location of $DSOREGFILE depending on
         # $ABI.
         if test "$ABI" = "64" ; then
@@ -191,7 +198,16 @@ case $host in
         PLATFORM='SGI'
 
         AC_DEFINE(VJ_OS_SGI,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$_OS_REL_STR")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $_OS_REL_NUM_MAJOR)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $_OS_REL_NUM_MINOR)
         AC_DEFINE(_BSD_TYPES,)
+
+        if test $_OS_REL_NUM_MAJOR -lt 6 ; then
+            AC_DEFINE(IRIXREL, "IRIX5")
+        else
+            AC_DEFINE(IRIXREL, "IRIX6")
+        fi
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hppa*hpux10.20)
@@ -214,6 +230,9 @@ case $host in
         PLATFORM='HP'
 
         AC_DEFINE(VJ_OS_HPUX,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$_OS_REL_STR")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $_OS_REL_NUM_MAJOR)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $_OS_REL_NUM_MINOR)
         AC_DEFINE(_HPUX_SOURCE,)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
@@ -222,17 +241,26 @@ case $host in
     # DEC Alpha running Digital UNIX 4.0.
     alpha-[a-z]*-osf4.0)
         AC_DEFINE(VJ_OS_DUX,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$_OS_REL_STR")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $_OS_REL_NUM_MAJOR)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $_OS_REL_NUM_MINOR)
         PLATFORM='alpha-DUX'
         ;;
     # i386-class machine running FreeBSD.
     i386-[a-z]*-freebsd*)
         AC_DEFINE(VJ_OS_FreeBSD,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$_OS_REL_STR")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $_OS_REL_NUM_MAJOR)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $_OS_REL_NUM_MINOR)
         ABI_LIST='AOUT ELF'
         PLATFORM='i386-FBSD'
         ;;
     # Unkown operating system (to config.guess).
     *-unknown)
         AC_DEFINE(VJ_OS_GENERIC,)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$_OS_REL_STR")
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $_OS_REL_NUM_MAJOR)
+        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $_OS_REL_NUM_MINOR)
         PLATFORM='UNKNOWN'
         ;;
 esac
