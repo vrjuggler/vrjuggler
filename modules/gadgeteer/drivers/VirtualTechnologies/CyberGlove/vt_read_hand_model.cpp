@@ -15,12 +15,12 @@
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 
-#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gadget/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
-#include <gadget/Devices/VirtualTechnologies/vt_read_object-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_read_user_cal-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_virtual_hand-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_read_object-types.h>
 
 
 static void

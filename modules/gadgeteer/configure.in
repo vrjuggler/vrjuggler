@@ -211,10 +211,10 @@ if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
         AC_PATH_PROG(DTK_CONFIG, dtk-config, no, "${_with_dtk}/bin")
     fi
 
-    $ If dtk-config was not found, we cannot proceed with the DTK checks.
+    # If dtk-config was not found, we cannot proceed with the DTK checks.
     if test "x$DTK_CONFIG" = "xno" ; then
         AC_MSG_WARN(*** Cannot build DTK wrapper without dtk-config ***)
-    $ If dtk-config was found, $DTK_CONFIG has the path to it, so we can
+    # If dtk-config was found, $DTK_CONFIG has the path to it, so we can
     # set things up to compile with DTK.
     else
         DPP_LANG_SAVE
@@ -253,7 +253,6 @@ void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
 
         if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
             HAVE_DTK='Y'
-            AC_DEFINE(GADGET_HAVE_DTK)
             DTK_INCLUDES=`$DTK_CONFIG --include`
             DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
         else
@@ -378,7 +377,9 @@ APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
 DYLIB_DEPS="$APP_EXTRA_LIBS"
 DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
 
-if test "$OS_TYPE" = "UNIX" ; then
+if test "x$OS_TYPE" = "xUNIX" ; then
+    DSO_DRIVER_DEPS="-L\$(LIBDIR) -lgadget $DYLIB_DEPS"
+
     if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
         INCLUDES="$INCLUDES -I$x_includes"
         gadget_cxxflags="$gadget_cxxflags -I$x_includes"
@@ -389,6 +390,8 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 
     APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+elif test "x$OS_TYPE" = "xWin32" ; then
+    DSO_DRIVER_DEPS="-libpath:\$(LIBDIR) gadget.lib $DYLIB_DEPS"
 fi
 
 # Translate paths from UNIX-style to Win32.
@@ -476,6 +479,7 @@ AC_SUBST(APP_BASE_DIR_INST)
 
 AC_SUBST(DYLIB_DEPS)
 AC_SUBST(DYLIB_PROF_DEPS)
+AC_SUBST(DSO_DRIVER_DEPS)
 
 AC_SUBST(APP_EXTRA_LIBS_X11)
 
@@ -509,18 +513,28 @@ AC_OUTPUT(gadgeteer-config
           gadget/Makefile
           gadget/Devices/Makefile
           gadget/Devices/5DT/Makefile
+          gadget/Devices/5DT/DataGlove/Makefile
           gadget/Devices/Ascension/Makefile
+          gadget/Devices/Ascension/Flock/Makefile
+          gadget/Devices/Ascension/MotionStar/Makefile
           gadget/Devices/Fakespace/Makefile
+          gadget/Devices/Fakespace/PinchGlove/Makefile
           gadget/Devices/Immersion/Makefile
+          gadget/Devices/Immersion/IBox/Makefile
           gadget/Devices/Intersense/Makefile
+          gadget/Devices/Intersense/IS900/Makefile
           gadget/Devices/Keyboard/Makefile
           gadget/Devices/Logitech/Makefile
+          gadget/Devices/Logitech/ThreeDMouse/Makefile
           gadget/Devices/Open/Makefile
           gadget/Devices/Open/DTK/Makefile
           gadget/Devices/Open/Trackd/Makefile
+          gadget/Devices/Open/TrackdAPI/Makefile
           gadget/Devices/Polhemus/Makefile
+          gadget/Devices/Polhemus/Fastrack/Makefile
           gadget/Devices/Sim/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
+          gadget/Devices/VirtualTechnologies/CyberGlove/Makefile
           gadget/RemoteInputManager/Makefile
           gadget/Type/Makefile
           gadget/Util/Makefile

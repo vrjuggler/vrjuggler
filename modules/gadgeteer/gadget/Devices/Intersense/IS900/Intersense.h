@@ -45,7 +45,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Intersense/IntersenseStandalone.h>
+#include <gadget/Devices/Intersense/IS900/IntersenseStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
 // box.
@@ -63,6 +63,13 @@
 
 #define IS_BUTTON_NUM MAX_NUM_BUTTONS*MAX_NUM_STATIONS
 #define IS_ANALOG_NUM MAX_ANALOG_CHANNELS*MAX_NUM_STATIONS
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
@@ -196,6 +203,25 @@ public:
 
 //: see if the flock is active or not
     inline bool isActive() { return mTracker.isActive(); };
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
 
 private:
     int getStationIndex(int stationNum, int bufferIndex);

@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 
-#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_error.h>
 
 static int new_error = FALSE;
 static char routine_with_error[256];

@@ -30,53 +30,53 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_CYBER_GLOVE_H_
-#define _GADGET_CYBER_GLOVE_H_
+#ifndef _GADGET_DEVICE_CONSTRUCTOR_BASE_H_
+#define _GADGET_DEVICE_CONSTRUCTOR_BASE_H_
+//#pragma once
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Glove.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGloveBasic.h>
+#include <string>
+#include <jccl/Config/ConfigChunkPtr.h>
+
+#include <vpr/Util/Debug.h>
+
 
 namespace gadget
 {
 
-//: Cyberglove device
-//!PUBLIC_API:
-class CyberGlove : virtual public Input, public Glove
+class Input;
+
+/**
+ * Base class for virtual construction of devices.
+ * Implementations of this class are registered with the device factory
+ * for each device in the system.
+ */
+class DeviceConstructorBase
 {
 public:
-   //: Construct using chunk
-   CyberGlove() : mGlove( NULL ), mCalDir( NULL )
+   /**
+    * Constructor.
+    * @post Device is registered.
+    */
+   DeviceConstructorBase() {;}
+
+   /** Creates the device. */
+   virtual Input* createDevice(jccl::ConfigChunkPtr chunk)
    {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "ERROR: DeviceConstructorBase::createDevice: Should never be called\n"
+         << vprDEBUG_FLUSH;
+      return NULL;
    }
 
-   //: Destroy the glove
-   virtual ~CyberGlove();
-
-   virtual bool config(jccl::ConfigChunkPtr c);
-
-   static std::string getChunkType() { return std::string("CyberGlove");}
-
-   virtual int startSampling();
-   virtual int stopSampling();
-   virtual int sample();
-   virtual void updateData ();
-
-
-protected:
-   //: The main control loop for the object
-   void controlLoop(void* nullParam);
-
-   void copyDataFromGlove();
-
-protected:
-   CyberGloveBasic*  mGlove;              // The actual glove
-   char*             mCalDir;             // Calibration file directory
-   std::string       mPortName;
-   int               mBaudRate;
+   /** Gets the string desc of the type of chunk we can create. */
+   virtual std::string getChunkType()
+   {
+      return std::string("BaseConstructor: Invalid type");
+   }
 };
 
 } // End of gadget namespace
 
-#endif   /* _GADGET_CYBER_GLOVE_H_ */
+
+#endif

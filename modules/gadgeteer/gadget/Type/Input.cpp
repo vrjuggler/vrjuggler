@@ -51,10 +51,6 @@ Input::Input()
 {
 }
 
-Input::~Input()
-{
-}
-
 bool Input::config( jccl::ConfigChunkPtr c)
 {
   //if((!mPort.empty()) && (!mInstName.empty()))

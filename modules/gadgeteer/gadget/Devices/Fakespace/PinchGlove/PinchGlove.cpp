@@ -34,13 +34,21 @@
 
 #include <string>
 #include <stdio.h>                      /* need stdio for sprintf */
+
+#include <vpr/vpr.h>
 #include <vpr/System.h>
-
-#include <gadget/Devices/Fakespace/PinchGloveStandalone.h> /* Fakespace pinch driver */
-#include <gadget/Devices/Fakespace/PinchGlove.h> /* Gadgeteer pinch driver */
-#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/DeviceConstructor.h>
 
+#include <gadget/Devices/Fakespace/PinchGlove/PinchGloveStandalone.h> /* Fakespace pinch driver */
+#include <gadget/Devices/Fakespace/PinchGlove/PinchGlove.h> /* Gadgeteer pinch driver */
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::PinchGlove>(inputMgr);
+}
 
 namespace gadget
 {

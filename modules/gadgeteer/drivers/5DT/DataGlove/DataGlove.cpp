@@ -36,8 +36,15 @@
 #include <vpr/System.h>
 
 #include <jccl/Config/ConfigChunk.h>
-#include <gadget/Devices/5DT/DataGloveStandalone.h> /* standalone dataglove driver */
-#include <gadget/Devices/5DT/DataGlove.h> /* Gadgeteer dataglove driver */
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Devices/5DT/DataGlove/DataGloveStandalone.h> /* standalone dataglove driver */
+#include <gadget/Devices/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::DataGlove>(inputMgr);
+}
 
 namespace gadget
 {

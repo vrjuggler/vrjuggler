@@ -37,10 +37,10 @@
 #include <sys/time.h>
 
 /* CyberGloveBasic */
-#include <gadget/Devices/VirtualTechnologies/CyberGloveBasic.h>
-#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGloveBasic.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_error.h>
 
 char version_string[] = "2.0.2";
 int vt_error_code = 0;

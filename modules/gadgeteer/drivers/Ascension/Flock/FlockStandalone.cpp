@@ -39,7 +39,7 @@
 #include <gadget/Util/Debug.h>
 #include <vpr/System.h>
 
-#include <gadget/Devices/Ascension/FlockStandalone.h>
+#include <gadget/Devices/Ascension/Flock/FlockStandalone.h>
 
 
 //: Configure Constructor

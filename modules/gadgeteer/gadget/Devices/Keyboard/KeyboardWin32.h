@@ -109,7 +109,25 @@ public:
    // catch the actual number..
    int isKeyPressed( int Key );
 
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
 protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   void destroy()
+   {
+      delete this;
+   }
+
    virtual void processEvent( UINT message, UINT wParam, LONG lParam ){}
    void lockMouse();
    void unlockMouse();

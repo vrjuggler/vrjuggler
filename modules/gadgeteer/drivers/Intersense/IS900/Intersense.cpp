@@ -47,17 +47,23 @@
 #include <sstream>
 #include <fstream>
 
-#include <gadget/Devices/Intersense/Intersense.h>
-#include <gmtl/Quat.h>
-#include <gadget/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
-
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 #include <gmtl/EulerAngle.h>
+#include <gmtl/Quat.h>
 
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
+
+#include <gadget/Devices/Intersense/IS900/Intersense.h>
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::Intersense>(inputMgr);
+}
 
 namespace gadget
 {

@@ -35,7 +35,7 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <gadget/Util/Debug.h>
-#include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
+#include <gadget/Devices/Fakespace/PinchGlove/PinchGloveStandalone.h>
 
 const std::string PinchGloveStandalone::mOpenHandString = "00000.00000";
    

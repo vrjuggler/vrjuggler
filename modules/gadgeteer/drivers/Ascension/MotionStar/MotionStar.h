@@ -41,7 +41,15 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Ascension/MotionStarStandalone.h>
+#include <gadget/Devices/Ascension/MotionStar/MotionStarStandalone.h>
+
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
@@ -557,6 +565,25 @@ public:
    float getXRot(const unsigned int i) const
    {
       return mMotionStar.getXRot(i);
+   }
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
    }
 
 private:

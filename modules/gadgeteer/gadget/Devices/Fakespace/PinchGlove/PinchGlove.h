@@ -40,10 +40,18 @@
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
+#include <gadget/Devices/Fakespace/PinchGlove/PinchGloveStandalone.h>
 
 #include <gadget/Type/Finger.h>
 #include <gadget/Type/Hand.h>
+
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
@@ -80,8 +88,25 @@ public:
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
 
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
 
 protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
+
    /** The main control loop for this device. */
    void controlLoop( void* nullParam );
 

@@ -42,18 +42,10 @@ include @topdir@/make.defs.mk
 # Prefix for recursive stuff.
 DIRPRFX		= gadget/Devices/
 
+include $(top_srcdir)/drivers.mk
+
 # Subdirectories to compile.
-SUBDIR		= 5DT                   \
-                  Ascension		\
-                  Fakespace		\
-                  Immersion		\
-                  Intersense		\
-                  Keyboard		\
-                  Logitech		\
-                  Open			\
-                  Polhemus		\
-                  Sim			\
-                  VirtualTechnologies
+SUBDIR=		$(DRIVERS)
 
 # This is a hack until I can figure out a better way to do this automatically
 # in Doozer++.  The problem is that GNU make doesn't offer much in the way

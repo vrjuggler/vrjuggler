@@ -41,6 +41,9 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/vpr.h>
+#include <vpr/DynLoad/Library.h>
+
 #include <vpr/Util/Singleton.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <map>
@@ -53,6 +56,7 @@ namespace gadget
 class Proxy;
 class Input;
 class RemoteInputManager;
+class DeviceFactory;
 
 /**
  * The Input Manager holds an manages all Gadgeteer Input devices.
@@ -148,6 +152,8 @@ public:
     */
    Input* getDevice(std::string deviceName);
 
+   DeviceFactory* getDeviceFactory();
+
    /**
     * Adds a device to InputManager.
     * Adds the devPtr to the device table.  devPtr should not already be in
@@ -203,18 +209,20 @@ protected:
    bool removeProxy(jccl::ConfigChunkPtr chunk);
 
 protected:
+   std::vector<vpr::LibraryPtr> mDeviceDrivers;
+
    typedef std::map<std::string,Input*> tDevTableType;
 
    tDevTableType                        mDevTable;
    std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */
    std::map<std::string, std::string>   mProxyAliases;  /**< List of alias names for proxies */
-   
+
    // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
    // the proxy name is not found in mProxyTable, then search mProxyAliases
    // for it.
 
    jccl::ConfigChunkPtr    mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
-	std::string localHostName;
+    std::string localHostName;
 private:
    /** Function to configure the proxy Alias array. */
    bool configureProxyAlias(jccl::ConfigChunkPtr chunk);
