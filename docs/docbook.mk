@@ -33,7 +33,7 @@
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
 XALAN_VERSION?=	20020214
-SAXON_VERSION?=	6.5.1
+SAXON_VERSION?=	6.5.2
 
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
