@@ -575,7 +575,23 @@ int vjXWinKeyboard::openTheWindow()
 
    // Verify that we got at least one visual from XGetVisualInfo(3).
    if ( vis_infos != NULL && nVisuals >= 1 ) {
-      m_visual = vis_infos;
+      XVisualInfo* p_visinfo;
+
+      // Try to find a visual with color depth higher than 8 bits.  Having
+      // such a visual ensures that the keyboard windows at least have a
+      // black background.
+      for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ ) {
+         if ( p_visinfo->depth > 8 ) {
+            m_visual = p_visinfo;
+            break;
+         }
+      }
+
+      // If we couldn't find a visual with better than 8-bit color, just use
+      // the first one in the list.
+      if ( i == nVisuals ) {
+          m_visual = vis_infos;
+      }
    }
    // If we didn't get a matching visual, we're in trouble.
    else {
