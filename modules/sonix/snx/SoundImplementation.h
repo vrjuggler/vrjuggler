@@ -103,13 +103,13 @@ public:
 
 public:
 
-   /**
+   /** trigger a sound.
     * @input alias of the sound to trigger, and number of times to play, -1 is repeat infinately
     * @preconditions alias does not have to be associated with a loaded sound.
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string & alias, const unsigned int & repeat = 1 )
+   virtual void trigger( const std::string & alias, const int & repeat = 1 )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
@@ -124,18 +124,58 @@ public:
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff )
    {
-      // todo, maybe set a flag within snx::SoundInfo?
+      this->lookup( alias ).retriggerable = onOff;
+   }
+   
+   /**
+    * is the sound retriggerable?
+    */
+   virtual bool isRetriggerable( const std::string& alias )
+   {
+      return bool( this->lookup( alias ).retriggerable == true );
    }
 
+   /**
+    * @semantics stop the sound
+    * @input alias of the sound to be stopped
+    */
+   virtual void stop( const std::string& alias )
+   {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      this->lookup( alias ).repeatCountdown = 0;
+   }
+
+   /**
+    * pause the sound, use unpause to return playback where you left off...
+    */
+   virtual void pause( const std::string& alias )
+   {
+      this->stop( alias );
+   }
+
+   /**
+    * resume playback from a paused state.  does nothing if sound was not paused.
+    */
+   virtual void unpause( const std::string& alias )
+   {
+      this->trigger( alias, this->lookup( alias ).repeat );
+   }
+
+   /** if the sound is paused, then return true. */
+   virtual bool isPaused( const std::string& alias )
+   {
+      return false;
+   }   
+   
    /**
     * ambient or positional sound.
     * is the sound ambient - attached to the listener, doesn't change volume
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   virtual void setAmbient( const std::string& alias, bool setting = false )
+   virtual void setAmbient( const std::string& alias, bool ambient = false )
    {
-      this->lookup( alias ).ambient = setting;
+      this->lookup( alias ).ambient = ambient;
    }
    
    /**
@@ -167,46 +207,6 @@ public:
       this->lookup( alias ).cutoff = amount;
    }
    
-   /**
-    * @semantics stop the sound
-    * @input alias of the sound to be stopped
-    */
-   virtual void stop( const std::string& alias )
-   {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      this->lookup( alias ).repeatCountdown = 0;
-   }
-
-   /**
-    * pause the sound, use unpause to return playback where you left off...
-    */
-   virtual void pause( const std::string& alias )
-   {
-      this->stop( alias );
-   }
-
-   /**
-    * resume playback from a paused state.  does nothing if sound was not paused.
-    */
-   virtual void unpause( const std::string& alias )
-   {
-      this->trigger( alias, 1 );
-   }
-
-   /**
-    * mute, sound continues to play, but you can't hear it...
-    */
-   virtual void mute( const std::string& alias )
-   {
-   }
-
-   /**
-    * unmute, let the muted-playing sound be heard again
-    */
-   virtual void unmute( const std::string& alias )
-   {
-   }
-
    /**
     * set sound's 3D position 
     */

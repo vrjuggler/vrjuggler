@@ -89,26 +89,65 @@ protected:
 public:
 
    /**
-    * @input alias of the sound to trigger, and number of times to play
+    * @input alias of the sound to trigger, and number of times to play, -1 to 
+    *        repeat infinately, 1 (single shot) is default.
     * @preconditions alias does not have to be associated with a loaded sound.
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string& alias, const unsigned int& repeat = 1 )
+   virtual void trigger( const std::string& alias, const int& repeat = 1 )
    {
       this->impl().trigger( alias, repeat );
    }
-
+   
    /*
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?
-    * (if a tree falls and no one is around to hear it, does it make sound?)
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff )
    {
       this->impl().setRetriggerable( alias, onOff );
    }
 
+   /**
+    * is the sound retriggerable?
+    */
+   virtual bool isRetriggerable( const std::string& alias )
+   {
+      return this->impl().isRetriggerable( alias );
+   }
+
+   /**
+    * @semantics stop the sound
+    * @input alias of the sound to be stopped
+    */
+   virtual void stop( const std::string& alias )
+   {
+      this->impl().stop( alias );
+   }
+
+   /**
+    * pause the sound, use unpause to return playback where you left off...
+    */
+   virtual void pause( const std::string& alias )
+   {
+      this->impl().pause( alias );
+   }
+
+   /**
+    * resume playback from a paused state.  does nothing if sound was not paused.
+    */
+   virtual void unpause( const std::string& alias )
+   {
+      this->impl().unpause( alias );
+   }
+   
+   /** if the sound is paused, then return true. */
+   virtual bool isPaused( const std::string& alias )
+   {
+      return this->impl().isPaused( alias );
+   } 
+   
    /**
     * ambient or positional sound.
     * is the sound ambient - attached to the listener, doesn't change volume
@@ -150,47 +189,6 @@ public:
       this->impl().setCutoff( alias, amount );
    }
    
-   /**
-    * @semantics stop the sound
-    * @input alias of the sound to be stopped
-    */
-   virtual void stop( const std::string& alias )
-   {
-      this->impl().stop( alias );
-   }
-
-   /**
-    * pause the sound, use unpause to return playback where you left off...
-    */
-   virtual void pause( const std::string& alias )
-   {
-      this->impl().pause( alias );
-   }
-
-   /**
-    * resume playback from a paused state.  does nothing if sound was not paused.
-    */
-   virtual void unpause( const std::string& alias )
-   {
-      this->impl().unpause( alias );
-   }
-
-   /**
-    * mute, sound continues to play, but you can't hear it...
-    */
-   virtual void mute( const std::string& alias )
-   {
-      this->impl().mute( alias );
-   }
-
-   /**
-    * unmute, let the muted-playing sound be heard again
-    */
-   virtual void unmute( const std::string& alias )
-   {
-      this->impl().unmute( alias );
-   }
-
    /**
     * set sound's 3D position 
     * @input x,y,z are in OpenGL coordinates.  alias is a name that has been associate()d with some sound data
