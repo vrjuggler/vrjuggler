@@ -531,6 +531,8 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 #       needed for compiling.  These are put after those listed in the previous
 #       variables in the compile line.
 #
+APP_BASE_DIR='$(topdir)/instlinks'
+APP_BASE_DIR_INST='$(VPR_BASE_DIR)'
 APP_EXTRA_FLAGS="${_EXTRA_FLAGS} $X_INCLUDES"
 
 if test "$OS_TYPE" = "UNIX" ; then
@@ -686,6 +688,8 @@ AC_SUBST(HANDLE_ABS)
 AC_SUBST(SERIAL_PORT_ABS)
 AC_SUBST(SOCKET_ABS)
 
+AC_SUBST(APP_BASE_DIR)
+AC_SUBST(APP_BASE_DIR_INST)
 AC_SUBST(APP_EXTRA_FLAGS)
 AC_SUBST(APP_VPR_LIBS_BEGIN)
 AC_SUBST(APP_VPR_LIBS_END)
