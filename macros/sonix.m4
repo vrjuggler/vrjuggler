@@ -97,11 +97,12 @@ dnl                          test SNX program], , enable_sonixtest=yes)
         no_sonix=yes
     else
         SNX_CXXFLAGS=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI`
-        SNX_EXTRA_LIBS=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
-        SNX_LIBS_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker` $SNX_EXTRA_LIBS"
-        SNX_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker --static` $SNX_EXTRA_LIBS"
-        SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI` $SNX_EXTRA_LIBS"
-        SNX_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static` $SNX_EXTRA_LIBS"
+        SNX_EXTRA_LIBS_CC=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
+        SNX_EXTRA_LIBS_LD=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
+        SNX_LIBS_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker` $SNX_EXTRA_LIBS_LD"
+        SNX_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker --static` $SNX_EXTRA_LIBS_LD"
+        SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI` $SNX_EXTRA_LIBS_CC"
+        SNX_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static` $SNX_EXTRA_LIBS_CC"
         SNX_VERSION=`$SNX_CONFIG --version`
         DPP_VERSION_CHECK_MSG([SNX], [$SNX_VERSION], [$min_sonix_version],
                               [sonix_cv_sonix_version], $2, $3)
