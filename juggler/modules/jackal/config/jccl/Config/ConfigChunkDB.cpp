@@ -78,6 +78,7 @@ void ConfigChunkDB::getByType(const std::string& typeName, std::vector<ConfigChu
 bool ConfigChunkDB::remove(const std::string& name)
 {
    vprASSERT(false && "Not implemented yet");
+   return false;
 }
 
 //: Sorts the chunks based on dependancies of chunk ptrs
