@@ -121,6 +121,7 @@ FlockStandalone::FlockStandalone(std::string port, const int& baud,
    , mAddrMode(Flock::UnknownAddressing)
    , mSwRevision(0.0f)
    , mNumSensors(0)
+   , mMaxPos(3.0f)
    , mReportRate(report)
    , mHemisphere(hemi)
    , mFilter(filt)
@@ -817,11 +818,6 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
    float x,y,z,xr,yr,zr, q0,q1,q2,q3;
 
    const float max_angle(gmtl::Math::PI);    // 180 degree max
-   float max_pos(3.0f);      // Max of 36 inches in default standard mode
-   if(Flock::ExtendedRange == mMode)
-   {
-      max_pos = 12.0f;       // Max of 144 inches in extended range mode
-   }
 
    switch(mOutputFormat)
    {
@@ -852,15 +848,15 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       }
       break;
    case Flock::Output::Position:
-      x = rawToFloat(buff[1], buff[0]) * max_pos;
-      y = rawToFloat(buff[3], buff[2]) * max_pos;
-      z = rawToFloat(buff[5], buff[4]) * max_pos;
+      x = rawToFloat(buff[1], buff[0]) * mMaxPos;
+      y = rawToFloat(buff[3], buff[2]) * mMaxPos;
+      z = rawToFloat(buff[5], buff[4]) * mMaxPos;
       gmtl::setTrans(ret_mat, gmtl::Vec3f(x,y,z));
       break;
    case Flock::Output::PositionAngle:
-      x = rawToFloat(buff[1], buff[0]) * max_pos;
-      y = rawToFloat(buff[3], buff[2]) * max_pos;
-      z = rawToFloat(buff[5], buff[4]) * max_pos;
+      x = rawToFloat(buff[1], buff[0]) * mMaxPos;
+      y = rawToFloat(buff[3], buff[2]) * mMaxPos;
+      z = rawToFloat(buff[5], buff[4]) * mMaxPos;
       zr = rawToFloat(buff[7], buff[6])   * max_angle;
       yr = rawToFloat(buff[9], buff[8])   * max_angle;
       xr = rawToFloat(buff[11], buff[10]) * max_angle;
@@ -872,9 +868,9 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       float m11, m12, m13,
             m21, m22, m23,
             m31, m32, m33;
-      x = rawToFloat(buff[1], buff[0]) * max_pos;
-      y = rawToFloat(buff[3], buff[2]) * max_pos;
-      z = rawToFloat(buff[5], buff[4]) * max_pos;
+      x = rawToFloat(buff[1], buff[0]) * mMaxPos;
+      y = rawToFloat(buff[3], buff[2]) * mMaxPos;
+      z = rawToFloat(buff[5], buff[4]) * mMaxPos;
       m11 = rawToFloat(buff[7], buff[6]);
       m21 = rawToFloat(buff[9], buff[8]);
       m31 = rawToFloat(buff[11], buff[10]);
@@ -891,9 +887,9 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       }
       break;
    case Flock::Output::PositionQuaternion:
-      x = rawToFloat(buff[1], buff[0]) * max_pos;
-      y = rawToFloat(buff[3], buff[2]) * max_pos;
-      z = rawToFloat(buff[5], buff[4]) * max_pos;
+      x = rawToFloat(buff[1], buff[0]) * mMaxPos;
+      y = rawToFloat(buff[3], buff[2]) * mMaxPos;
+      z = rawToFloat(buff[5], buff[4]) * mMaxPos;
       q0 = rawToFloat(buff[7], buff[6]);
       q1 = rawToFloat(buff[9], buff[8]);
       q2 = rawToFloat(buff[11], buff[10]);
@@ -1481,6 +1477,40 @@ std::pair<vpr::Uint8,vpr::Uint8> FlockStandalone::queryExpandedErrorCode()
    return std::make_pair(resp[0], resp[1]);
 }
 
+vpr::Uint8 FlockStandalone::queryPositionScaleFactor()
+{
+   std::vector<vpr::Uint8> resp(2);
+   vpr::Uint8 scale_factor;
+
+   if ( Flock::ExtendedRange == mMode )
+   {
+      scale_factor = 144;
+   }
+   else
+   {
+      // Find a non-ERT sensor to query the scaling factor.
+      for(unsigned int u=0;u<mActiveUnitEndIndex;++u)
+      {
+         const FlockUnit& unit = mFlockUnits[u];
+         if( Transmitter::isErt(unit.mTransmitterType) )
+         {
+            continue;
+         }
+
+         // Send command after picking bird
+         pickBird(unit.mAddr);
+         getAttribute(Flock::Parameter::PositionScaling, 2, resp);
+         break;
+      }
+
+      scale_factor = (resp[1] == 0 ? 36 : 72);
+   }
+
+   std::cout << "Scaling factor is " << (unsigned int) scale_factor <<
+      std::endl;
+   return scale_factor;
+}
+
 void FlockStandalone::setErrorModeIgnore()
 {
    std::vector<vpr::Uint8> param(1);
@@ -1608,6 +1638,9 @@ void FlockStandalone::readInitialFlockConfiguration()
             mNumSensors += 1;
          }
       }
+
+      // This driver will return all values in feet.
+      mMaxPos = ((float) queryPositionScaleFactor()) / 12.0f;
 
       if(mMode == Flock::Standalone)
       {
