@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.13 2001/05/04 05:57:43 patrickh Exp
+# common.defs.mk.in,v 1.15 2001/05/23 22:39:46 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.
@@ -90,6 +90,7 @@
 # LDOPTS          - Extra, often platform-specific, options for the linker.
 # LIBS            - Extra external libraries needed at link time.
 # LN_S            - Working 'ln -s' command.
+# MAKEDEPEND      - The makedepend(1) program (if needed).
 # MKPATH          - Path to shared dpp.*.mk file directory.
 # OBJEXT          - Suffix for object file names (e.g., "o" or "obj").
 # OBJ_NAME_FLAG   - Flag passed to the compiler to name an object file.
@@ -99,6 +100,9 @@
 # RANLIB          - Path to ranlib(1) binary if it is available.  ':'
 #                   otherwise.
 # RMIC            - Java RMI compiler utility.
+#
+# USE_MAKEDEPEND  - Tell the dependency-generation code whether to use
+#                   makedepend(1).  The value will be either 'Y' or 'N'.
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
@@ -162,6 +166,7 @@ LDOPTS_DBG	= @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
 LDOPTS_OPT	= @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
 LIBS		= @LIBS@ $(EXTRA_LIBS)
 LN_S		= @LN_S@
+MAKEDEPEND	= @MAKEDEPEND@
 MKPATH		?=
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
@@ -174,6 +179,8 @@ RMIC		= @RMIC@
 DSOREGFILE	= @DSOREGFILE@
 DSOVERSION	= @DSOVERSION@
 DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+
+USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 
 # Installation information (permissions, ownership).
 OWNER_NAME	= @OWNER_NAME@
