@@ -113,7 +113,6 @@ public class BeanLoader
       try
       {
          obj = java.beans.Beans.instantiate(loader, bean_class);
-         System.out.println("Bean: " + obj.getClass());
       }
       catch (IOException e)
       {

@@ -200,7 +200,6 @@ public class XMLBeanFinder
    protected TweekBean handleGuiPanel (Element bean)
    {
       BeanAttributes attrs = BeanAttributes.parseXMLElement( bean );
-      System.out.println("Working on " + attrs.getJarURL());
 
       EnvironmentService env = new EnvironmentServiceProxy();
 
