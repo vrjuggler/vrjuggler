@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -53,6 +53,11 @@ public class WriteableObjectMarshaler : ICustomMarshaler
    private class DummyWriteableObject : vpr.WriteableObject
    {
       protected internal IntPtr mRawObject = IntPtr.Zero;
+
+      internal IntPtr RawObject
+      {
+         get { return mRawObject; }
+      }
 
       public DummyWriteableObject(IntPtr rawObject)
       {
@@ -124,7 +129,7 @@ public class WriteableObjectMarshaler : ICustomMarshaler
       return mInstance;
    }
 
-   private static vpr.ReturnStatusMarshaler mInstance = new vpr.ReturnStatusMarshaler();
+   private static WriteableObjectMarshaler mInstance = new WriteableObjectMarshaler();
 }
 
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -104,6 +104,7 @@ public abstract class ObjectReader
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of virtual methods.
    // Delegate for the beginTag() callback.
@@ -542,7 +543,7 @@ public class ObjectReaderMarshaler : ICustomMarshaler
       return mInstance;
    }
 
-   private static vpr.ReturnStatusMarshaler mInstance = new vpr.ReturnStatusMarshaler();
+   private static ObjectReaderMarshaler mInstance = new ObjectReaderMarshaler();
 }
 
 
