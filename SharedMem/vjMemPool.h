@@ -49,31 +49,27 @@ public:
 
 };
 
-#ifdef VJ_SGI_IPC
+#if defined(VJ_SGI_IPC)
 #   include <SharedMem/vjMemPoolSGI.h>
 #   include <SharedMem/vjMemPoolHeap.h>
 
     typedef vjMemPoolSGI vjSharedPool;
     typedef vjMemPoolHeap vjHeapPool;
     typedef vjMemPoolSGI vjSyncPool;
-#else
-#ifdef WIN32
+#elif defined(VJ_OS_Win32)
 #	include <SharedMem/vjMemPoolWin32.h>
 #	include <SharedMem/vjMemPoolHeap.h>
                                              // Everything is heap!!!
 	typedef vjMemPoolHeap vjSharedPool;
 	typedef vjMemPoolHeap  vjHeapPool;
 	typedef vjMemPoolHeap vjSyncPool;
-#else
-#if defined(VJ_OS_HPUX) || defined(VJ_USE_PTHREADS)
+#elif defined(VJ_OS_HPUX) || defined(VJ_USE_PTHREADS)
 #   include <SharedMem/vjMemPool_malloc.h>
 #   include <SharedMem/vjMemPoolHeap.h>
 
     typedef vjMemPool_malloc	vjSharedPool;
     typedef vjMemPoolHeap	vjHeapPool;
     typedef vjMemPool_malloc	vjSyncPool;
-#endif	// if defined(VJ_OS_HPUX) || defined(VJ_USE_PTHREADS)
-#endif // ifdef WIN32
-#endif // if defined(VJ_OS_SGI) && ! defined(VJ_USE_PTHREADS)
+#endif	/* VJ_SGI_IPC */
 
 #endif // ifdef vjMemPool_h
