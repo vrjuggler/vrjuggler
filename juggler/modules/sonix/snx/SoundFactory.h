@@ -59,6 +59,10 @@
 namespace snx
 {
 
+/** \class SoundFactory SoundFactory.h snx/SoundFactory.h
+ *
+ * Sound factory.
+ */
 class SNX_CLASS_API SoundFactory
 {
 public:

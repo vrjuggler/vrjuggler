@@ -59,6 +59,10 @@
 namespace snx
 {
 
+/** \class sonix sonix.h snx/sonix.h
+ *
+ * Singelton entry point to the Sonix API.
+ */
 class SNX_CLASS_API sonix
 {
 protected:
