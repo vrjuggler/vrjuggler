@@ -37,6 +37,4 @@ package org.vrjuggler.vrjconfig;
  */
 public interface VrjConfigConstants
 {
-   public static final String DEFAULT_DEFINITION_FILE =
-                        "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
 }
