@@ -40,6 +40,7 @@
 #include <tweek/tweekConfig.h>
 
 #include <stdlib.h>
+#include <string>
 #include <omnithread.h>
 #include <omniORB3/CORBA.h>
 #include <vpr/Thread/Thread.h>
@@ -66,7 +67,8 @@ public:
     * Gets CORBA ready.
     * Creates a thread and runs the CORBA server.
     */
-   vpr::ReturnStatus init(int argc = 0, char** argv = NULL);
+   vpr::ReturnStatus init(const std::string& local_id, int argc = 0,
+                          char** argv = NULL);
 
    /**
     * Checks the validity of this service object to ensure that initialization
@@ -77,7 +79,7 @@ public:
     */
    bool isValid (void)
    {
-      return ! (CORBA::is_nil(m_orb) || CORBA::is_nil(m_poa));
+      return ! (CORBA::is_nil(m_orb) || CORBA::is_nil(m_root_poa));
    }
 
    /**
@@ -85,12 +87,21 @@ public:
     */
    vpr::ReturnStatus registerSubjectManager(tweek::SubjectManagerImpl* mgr);
 
-   const PortableServer::POA_var& getPOA (void)
+   const PortableServer::POA_var& getRootPOA (void)
    {
-      return m_poa;
+      return m_root_poa;
    }
 
 private:
+   vpr::ReturnStatus createChildPOA(const std::string& local_id);
+
+   /**
+    * Gets the root context for the naming service and ensures that a
+    * sub-context exists for this memory space.
+    */
+   vpr::ReturnStatus initNamingService(const std::string& ref_name,
+                                       const std::string& local_id);
+
    /**
     * Runs the server.
     */
@@ -99,7 +110,8 @@ private:
    vpr::Thread* m_my_thread;
 
    CORBA::ORB_var m_orb;
-   PortableServer::POA_var m_poa;
+   PortableServer::POA_var m_root_poa;
+   PortableServer::POA_var m_child_poa;
    PortableServer::ObjectId_var m_subj_mgr_id;
    CosNaming::NamingContext_var m_root_context;
    CosNaming::NamingContext_var m_local_context;
