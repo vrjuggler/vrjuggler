@@ -567,7 +567,7 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSurfChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vprDEBUG(0,0) << "Trying to remove a non-existant pfChannel\n" << vprDEBUG_FLUSH;
+               vprDEBUG(vrjDBG_DRAW_MGR, 0) << "Trying to remove a non-existant pfChannel\n" << vprDEBUG_FLUSH;
             }
 
             // Check if we were the master
@@ -588,7 +588,7 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSimChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vprDEBUG(0,0) << "Trying to remove a non-existant pfChannel";
+               vprDEBUG(vrjDBG_DRAW_MGR, 0) << "Trying to remove a non-existant pfChannel";
             }
 
             // Check if we were the master

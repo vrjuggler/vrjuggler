@@ -40,8 +40,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_COMMON_LIBRARY)
 
-SRCS		= \
-	Debug.cpp
+SRCS		= 
 
 EXTRA_INCLUDES = \
 	-I$(top_srcdir)/common \

@@ -47,8 +47,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS 		= Debug.cpp			\
-                  FileIO.cpp
+SRCS 		= FileIO.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
