@@ -81,7 +81,11 @@ void NavGrabApp::preFrame()
 
 void NavGrabApp::updateGrabbing()
 {
-   gmtl::Matrix44f wand_matrix = mWand->getData();
+   // Get wand matrix in the virtual world coordinate system
+   // wand_vw = vw_M_w * wand_w
+   gmtl::Matrix44f vw_M_w;
+   gmtl::invert(vw_M_w, mNavMatrix);      // Nav matrix is: w_M_vw.  So invert it
+   gmtl::Matrix44f wand_matrix = vw_M_w * mWand->getData();
 
    // Get the point in space where the wand is located.
    gmtl::Point3f wand_point = gmtl::makeTrans<gmtl::Point3f>(wand_matrix);
@@ -215,6 +219,9 @@ void NavGrabApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    glPushMatrix();
+      // Move world for navigation
+      glMultMatrixf(mNavMatrix.mData);
+
       drawSphere(mSphere, mSphereIsect, mSphereSelected);
       drawCube(mCube, mCubeIsect, mCubeSelected);
       drawFloor();
