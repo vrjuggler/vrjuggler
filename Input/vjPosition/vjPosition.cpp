@@ -35,12 +35,13 @@ bool vjPosition::config(vjConfigChunk *c)
   return true;
 }
 
-vjPosition::vjPosition() : xformMat()
+vjPosition::vjPosition()
 {
   cerr << "    vjPosition::vjPosition()" << endl;
   deviceAbilities = deviceAbilities | DEVICE_POSITION;
   theData = NULL;
   mDataTimes = NULL;
+  xformMat.makeIdent();
 }
 
 vjPosition::~vjPosition()

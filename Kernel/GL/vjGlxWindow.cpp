@@ -16,6 +16,7 @@ vjGlxWindow::vjGlxWindow() {
    window_width = window_height = -1;
    x_display = NULL;
    visual_info = NULL;
+   glx_context = NULL;
 }
 
 void vjGlxWindow::swapBuffers() {
@@ -110,7 +111,7 @@ int vjGlxWindow::open() {
       Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
       if (vjMotifHints == None)
       {
-         vjDEBUG(vjDBG_ALL,2) << "ERROR: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1) << "ERROR: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
       }
       else
       {
@@ -147,14 +148,15 @@ int vjGlxWindow::open() {
 
    vjDEBUG(vjDBG_ALL,2) << "vjGlxWindow: done map" << endl << vjDEBUG_FLUSH;
 
-   if (! (glx_context = glXCreateContext (x_display,
-                                          visual_info, NULL, True)))
+   glx_context = glXCreateContext (x_display,visual_info, NULL, True);
+   if (NULL == glx_context)
    {
       vjDEBUG(vjDBG_ALL,0) << "ERROR: Couldn't create GlxContext for " << display_name << vjDEBUG_FLUSH
       << endl;
       return false;
    }
 
+   vjASSERT(NULL != glx_context);
    if (!glXMakeCurrent ( x_display, x_window, glx_context  ))
    {
       vjDEBUG(vjDBG_ALL,0) << "ERROR: Couldn't set GlxContext for " << display_name << endl << vjDEBUG_FLUSH;
@@ -188,9 +190,10 @@ int vjGlxWindow::close() {
 
    if (glx_context)
    {
-      makeCurrent();
+      makeCurrent();    // Might not need this
+      //glFlush();      // This is done by the changing context
+      glXMakeCurrent ( x_display, None, NULL);     // Release the context, and don't assign a new one
       glXDestroyContext (x_display,  glx_context);
-      glFlush();
       glx_context = NULL;
    }
    if (x_window)
@@ -221,6 +224,7 @@ bool vjGlxWindow::makeCurrent() {
    if (!window_is_open)
       return false;
 
+   vjASSERT(glx_context != NULL);
    return glXMakeCurrent ( x_display, x_window, glx_context  );
 }
 
