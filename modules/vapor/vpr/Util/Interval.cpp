@@ -75,6 +75,8 @@ void Interval::setNowReal()
 {
 #if defined(VPR_OS_Win32)
    LARGE_INTEGER count;
+   PRIntn _nt_bitShift  = 0;
+   PRInt32 _nt_highMask = 0;
 
    // XXX: Implement this
    /* Sadly; nspr requires the interval to range from 1000 ticks per second
@@ -87,16 +89,20 @@ void Interval::setNowReal()
       top = top << (32 - _nt_bitShift);
       count.LowPart = count.LowPart >> _nt_bitShift;   
       count.LowPart = count.LowPart + top; 
-      return(PRUint32)count.LowPart;
-   } //else
-   
-    //#if defined(__MINGW32__)
-    //        return time();
-    //#elif defined(WIN16)
-    //        return clock();        /* milliseconds since application start */
-    //#else
-    // return GetTickCount();  /* milliseconds since system start */
-    //#endif
+      mMicroSeconds = count.LowPart;
+   }
+/*
+   else
+   {
+#if defined(__MINGW32__)
+      mMicroSeconds = time();
+#elif defined(WIN16)
+      mMicroSeconds = clock();        // milliseconds since application start
+#else
+      mMicroSeconds = GetTickCount();  // milliseconds since system start
+#endif
+   }
+*/
 #else    // Default to POSIX time setting
    
    timeval cur_time;
