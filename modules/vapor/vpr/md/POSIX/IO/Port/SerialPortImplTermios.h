@@ -185,7 +185,7 @@ public:
     *         opened successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus ope();
+   vpr::ReturnStatus open();
 
    /**
     * Clears all of the serial port's flags
