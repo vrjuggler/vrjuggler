@@ -171,6 +171,7 @@ case $target_os in
         fi
 
         AC_DEFINE(VPR_OS_IRIX,)
+        AC_DEFINE(_BSD_TYPES,)
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
