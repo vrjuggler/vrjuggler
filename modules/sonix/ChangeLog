@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ---------   ---------------------------------------------------------
+Sep-04-2002 nonchocoboy AudioWorks plugin now actually works.
+                        NEW VERSION: 0.1.1
 Aug-29-2002 nonchocoboy Changed the build so that the sonix implementations are
                         built as individual shared libraries ready to be loaded
                         dynamically at runtime via the plugin system that was
