@@ -55,7 +55,7 @@ bool DepChecker::canHandle(ConfigElementPtr element)
 
 bool DepChecker::depSatisfied(ConfigElementPtr element)
 {
-   bool pass=true;
+   bool pass = true;
 
    ConfigManager* cfg_mgr = ConfigManager::instance();
 
@@ -64,10 +64,12 @@ bool DepChecker::depSatisfied(ConfigElementPtr element)
       element->getElementPtrDependencies();
 
    // Check to see if they are loaded already
-   for(unsigned int i=0;i<dependencies.size();i++)
+   for (unsigned int i = 0 ; i < dependencies.size() ; i++)
    {
-      if(!cfg_mgr->isElementInActiveList(dependencies[i]))
+      if (!cfg_mgr->isElementInActiveList(dependencies[i]))
+      {
          pass = false;
+      }
    }
    return pass;
 }
@@ -85,12 +87,12 @@ void DepChecker::debugOutDependencies(ConfigElementPtr element, int dbg_lvl)
    std::vector<std::string> dependencies = element->getElementPtrDependencies();
 
    // Check to see if they are loaded already
-   for(unsigned int i=0;i<dependencies.size();i++)
+   for (unsigned int i = 0 ; i < dependencies.size() ; i++)
    {
       vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl) << i << ": "
-                                        << dependencies[i].c_str()
-                                        << " ==> " << vprDEBUG_FLUSH;
-      if(!cfg_mgr->isElementInActiveList(dependencies[i]))
+          << dependencies[i].c_str()
+          << " ==> " << vprDEBUG_FLUSH;
+      if (!cfg_mgr->isElementInActiveList(dependencies[i]))
       {
          vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "not available.\n" << vprDEBUG_FLUSH;
       }
