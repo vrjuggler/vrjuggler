@@ -34,6 +34,7 @@ package org.vrjuggler.vrjconfig.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
@@ -477,45 +478,70 @@ public class ContextToolbar
     */
    public boolean doSaveAs()
    {
-       try
-       {
-          fileChooser.setDialogTitle("Save As...");
-          fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-          fileChooser.setFileFilter( new ConfigFileFilter() );
-          fileChooser.setFileView( new ConfigFileView() );
-          fileChooser.setFileHidingEnabled(false);
-          fileChooser.setAcceptAllFileFilterUsed(false);
-          ConfigBroker broker = new ConfigBrokerProxy();
-          for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-          {
-              String old_name = (String)itr.next();
-              DataSource current_resource = broker.get( old_name );
-              if (! current_resource.isReadOnly())
-              {
-                 int result = fileChooser.showSaveDialog(this);
-                 if (result == JFileChooser.APPROVE_OPTION)
-                 {
-                    /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
-                    ///       and then add it in again with a new name.
-                    String new_name = fileChooser.getSelectedFile().getAbsolutePath();
-                    if (!old_name.equals(new_name))
-                    {
-                       context.remove(old_name);
-                       getBroker().remove(old_name);
-                       FileDataSource new_resource = FileDataSource.create(new_name, getBroker().getRepository());
-                       getBroker().add(new_name, new_resource);
-                       context.add(new_name);
-                       new_resource.commit();
-                    }
-                 }
-              }
-          }
-          return true;
-       }
+      try
+      {
+         fileChooser.setDialogTitle("Save As...");
+         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+         fileChooser.setFileFilter( new ConfigFileFilter() );
+         fileChooser.setFileView( new ConfigFileView() );
+         fileChooser.setFileHidingEnabled(false);
+         fileChooser.setAcceptAllFileFilterUsed(false);
+         ConfigBroker broker = new ConfigBrokerProxy();
+         ArrayList removed_sources = new ArrayList();
+         ArrayList added_sources = new ArrayList();
+         for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+         {
+            String old_name = (String)itr.next();
+            DataSource current_resource = broker.get( old_name );
+            if (! current_resource.isReadOnly())
+            {
+               ///Where is os.path.split when you need it?
+               String[] paths = old_name.split(File.separator);
+               int length = java.lang.reflect.Array.getLength(paths);
+               String title_name = paths[length - 1];
+               fileChooser.setDialogTitle(title_name + " -- Save As...");
+               int result = fileChooser.showSaveDialog(this);
+               if (result == JFileChooser.APPROVE_OPTION)
+               {
+                  /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
+                  ///       and then add it in again with a new name.
+                  String new_name = fileChooser.getSelectedFile().getAbsolutePath();
+                  ///       JFileChooser implements File Filters, but if the user types in a name, the JFile Chooser
+                  ///       does NOT automatically add the selected file extension to the name.  Go figure.
+                  if ( !new_name.matches(".*\\.jconf") )
+                  {
+                     new_name = new_name + ".jconf";
+                  }
+                  if (!old_name.equals(new_name))
+                  {
+                     /// We have to buffer the adds and removes to avoid ConcurrentModificationExceptions.
+                     removed_sources.add(old_name);
+                     added_sources.add(new_name);
+                  }
+               }
+            }
+            
+         }
+         for (Iterator itr = removed_sources.iterator(); itr.hasNext(); )
+         {
+            String cur = (String)itr.next();
+            context.remove(cur);
+            getBroker().remove(cur);
+         }
+         for (Iterator itr = added_sources.iterator(); itr.hasNext(); )
+         {
+            String cur = (String)itr.next();
+            FileDataSource new_resource = FileDataSource.create(cur, getBroker().getRepository());
+            getBroker().add(cur, new_resource);
+            context.add(cur);
+            new_resource.commit();
+         }
+         return true;
+      }
       catch(IOException ioe)
       {
          JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
-                                       JOptionPane.ERROR_MESSAGE);
+         JOptionPane.ERROR_MESSAGE);
          ioe.printStackTrace();
       }
       return false;
