@@ -50,7 +50,21 @@ public:
    }
 
    //: Initialize the scene graph
+   // Called after pfInit & pfConfig but before apiInit
    virtual void initScene() = 0;
+
+   //: Called between pfInit and pfConfig
+   // This function allows the user application to do any processing that needs
+   // to happen before performer forks its processes off but after
+   // pfInit()
+   //! NOTE: Using this function leads to applications that are
+   //+ not "switchable"
+   virtual void preForkInit() {;}
+
+   //: Function called in application process for each active channel each frame
+   // Called immediately before draw (pfFrame())
+   // XXX: Should maybe only call this for one "master" channel each frame
+   virtual void appChanFunc(pfChannel* chan) {;}
 
    //: Return the current scene graph
    // This function must be defined so that the performer draw manager
@@ -60,10 +74,15 @@ public:
    virtual pfGroup* getScene() = 0;
 
    //: Init a pWin
+   // Called by the pf draw manager as soon as the pwin
+   // is opened.
    virtual void configPWin(pfPipeWindow* pWin)
-   {
-     ;
-   }
+   {;}
+
+   //: Return the needed parameters for the performer framebuffer
+   //! NOTE: Stereo, doublebuffer, depth buffer, and rgba are all requested by default
+   virtual std::vector<int> getFrameBufferAttrs()
+   {;}
 
    //: Function called in the channel draw function to do the actual drawing
    //
@@ -82,6 +101,7 @@ public:
    //! POST: Channel should be drawn
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
+      vjDEBUG_BEGIN(vjDBG_DRAW_MGR, 4) << "--- drawChan: Entered ---.\n" << vjDEBUG_FLUSH;
       this->preDrawChan(chan,chandata);
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel
