@@ -39,11 +39,13 @@
 #include <Utils/vjDebug.h>
 
 
-
+namespace vrj
+{
+   
  // ------------------------------------------------------------------------
  //: Constructor.
  // ------------------------------------------------------------------------
- vjTrackdSensor::vjTrackdSensor(): mTrackdSensors(NULL)
+ TrackdSensor::TrackdSensor(): mTrackdSensors(NULL)
  {;}
 
  // ------------------------------------------------------------------------
@@ -52,7 +54,7 @@
  //! PRE: None.
  //! POST: Shared memory is released
  // ------------------------------------------------------------------------
- vjTrackdSensor::~vjTrackdSensor()
+ TrackdSensor::~TrackdSensor()
  {
     delete mTrackdSensors;
  }
@@ -63,9 +65,9 @@
  // -Create the trackdSensor based on config info
  // -set to active
  // -grow the vector to however many values we need
- bool vjTrackdSensor::config(vjConfigChunk* c)
+ bool TrackdSensor::config(ConfigChunk* c)
  {
-    if(! (vjInput::config(c) && vjPosition::config(c)))
+    if(! (Input::config(c) && Position::config(c)))
        return false;
 
     // Create sensor
@@ -93,10 +95,10 @@
  //! PRE: None.
  //! POST: Most recent value is copied over to temp area
  // ------------------------------------------------------------------------
- void vjTrackdSensor::updateData()
+ void TrackdSensor::updateData()
  {
-    vjASSERT(mTrackdSensors != NULL && "Make sure that trackd sensors has been initialized");
-    vjASSERT((unsigned)mTrackdSensors->numSensors() <= mCurSensorValues.size());
+    vprASSERT(mTrackdSensors != NULL && "Make sure that trackd sensors has been initialized");
+    vprASSERT((unsigned)mTrackdSensors->numSensors() <= mCurSensorValues.size());
 
     for(int i=0;i<mTrackdSensors->numSensors();i++)
     {
@@ -115,10 +117,11 @@
  //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
  //+  then you can access them, in order, as 0,1,2.
  // ------------------------------------------------------------------------
- vjMatrix* vjTrackdSensor::getPosData(int dev)
+ Matrix* TrackdSensor::getPosData(int dev)
  {
-    vjASSERT((unsigned)dev < mCurSensorValues.size() && "getPosData() index out of range");
+    vprASSERT((unsigned)dev < mCurSensorValues.size() && "getPosData() index out of range");
     return &(mCurSensorValues[dev]);
  }
 
 
+};

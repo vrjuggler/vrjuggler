@@ -43,17 +43,20 @@
 
 #include <Kernel/GL/vjGlOSXWindow.h>
 
-AGLContext vjGlOSXWindow::aglShareContext = NULL;
+namespace vrj
+{
+   
+AGLContext GlOSXWindow::aglShareContext = NULL;
 
-vjGlOSXWindow::vjGlOSXWindow():vjGlWindow() {
+GlOSXWindow::GlOSXWindow():GlWindow() {
 
 }
 
-vjGlOSXWindow::~vjGlOSXWindow() {
+GlOSXWindow::~GlOSXWindow() {
     close();
 }
 
-void vjGlOSXWindow::swapBuffers() {
+void GlOSXWindow::swapBuffers() {
     vjDEBUG(vjDBG_INPUT_MGR,7) << "vjGlOSXWindow::swapBuffers()" << std::endl << vjDEBUG_FLUSH;
     if(aglContext)
     {
@@ -81,7 +84,7 @@ void vjGlOSXWindow::swapBuffers() {
     }
 }
 
-int vjGlOSXWindow::open() {
+int GlOSXWindow::open() {
     vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlOSXWindow::open()" << std::endl << vjDEBUG_FLUSH;
     
     GDHandle hGDWindow;
@@ -134,7 +137,7 @@ int vjGlOSXWindow::open() {
     return true;
 }
 
-int vjGlOSXWindow::close() {
+int GlOSXWindow::close() {
     vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlOSXWindow::close()" << std::endl << vjDEBUG_FLUSH;
     if(!gpWindow) return false;
     
@@ -149,32 +152,32 @@ int vjGlOSXWindow::close() {
     return true;
 }
 
-bool vjGlOSXWindow::makeCurrent() {
+bool GlOSXWindow::makeCurrent() {
     vjDEBUG(vjDBG_INPUT_MGR,7) << "vjGlOSXWindow::makeCurrent()" << std::endl << vjDEBUG_FLUSH;
     if(!aglContext) return false;
     aglSetCurrentContext (aglContext);
     return true;
 }
 
-void vjGlOSXWindow::config(vjDisplay* _display)
+void GlOSXWindow::config(Display* _display)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlOSXWindow::config(vjDisplay* _display)" << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlOSXWindow::config(Display* _display)" << std::endl << vjDEBUG_FLUSH;
    
-   vjGlWindow::config(_display);
+   GlWindow::config(_display);
 
     // Get the vector of display chunks
-   vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
-   vjConfigChunk* displayChunk = _display->getConfigChunk();
+   ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   ConfigChunk* displayChunk = _display->getConfigChunk();
    
    mPipe = _display->getPipe();
-   vjASSERT(mPipe >= 0);
+   vprASSERT(mPipe >= 0);
    
    window_title = CFStringCreateWithCString(NULL, _display->getName().c_str(), kCFStringEncodingMacRoman);
 }
 
 
 /**** Static Helpers *****/
-/* static */ bool vjGlOSXWindow::createHardwareSwapGroup(std::vector<vjGlWindow*> wins)
+/* static */ bool GlOSXWindow::createHardwareSwapGroup(std::vector<GlWindow*> wins)
 {
    return true; // This is not supported, just stubbed out.
 }
@@ -199,7 +202,7 @@ void vjGlOSXWindow::config(vjDisplay* _display)
 // if fail to allocate: paglContext will be NULL
 // if error: will return error and paglContext will be NULL
 // ----------------------------------------------------------------------------
-OSStatus vjGlOSXWindow::BuildGLFromWindow (WindowPtr pWindow,
+OSStatus GlOSXWindow::BuildGLFromWindow (WindowPtr pWindow,
                                            AGLContext* paglContext,
                                            structGLWindowInfo* pcontextInfo)
 {
@@ -208,7 +211,7 @@ OSStatus vjGlOSXWindow::BuildGLFromWindow (WindowPtr pWindow,
    return BuildGLonWindow(pWindow, paglContext, pcontextInfo);
 }
 
-OSStatus vjGlOSXWindow::BuildGLonWindow (WindowPtr pWindow,
+OSStatus GlOSXWindow::BuildGLonWindow (WindowPtr pWindow,
                                          AGLContext* paglContext,
                                          structGLWindowInfo* pcontextInfo)
 {
@@ -301,7 +304,7 @@ OSStatus vjGlOSXWindow::BuildGLonWindow (WindowPtr pWindow,
 // Destroys context that waas allocated with BuildGLFromWindow
 // Ouputs: *paglContext should be NULL on exit
 // ----------------------------------------------------------------------------
-OSStatus vjGlOSXWindow::DestroyGLFromWindow (AGLContext* paglContext,
+OSStatus GlOSXWindow::DestroyGLFromWindow (AGLContext* paglContext,
                                              structGLWindowInfo* pcontextInfo)
 {
 	OSStatus err;
@@ -327,7 +330,7 @@ OSStatus vjGlOSXWindow::DestroyGLFromWindow (AGLContext* paglContext,
 	return err;
 }
 
-short vjGlOSXWindow::FindGDHandleFromWindow (WindowPtr pWindow,
+short GlOSXWindow::FindGDHandleFromWindow (WindowPtr pWindow,
                                              GDHandle* phgdOnThisDevice)
 {
    GrafPtr pgpSave;
@@ -399,7 +402,7 @@ short vjGlOSXWindow::FindGDHandleFromWindow (WindowPtr pWindow,
 //
 // Returns: true if renderer for the requested device complies, false otherwise
 // ----------------------------------------------------------------------------
-Boolean vjGlOSXWindow::CheckRenderer (GDHandle hGD, long* pVRAM,
+Boolean GlOSXWindow::CheckRenderer (GDHandle hGD, long* pVRAM,
                                       long* pTextureRAM,
                                       GLint* pDepthSizeSupport,
                                       Boolean fAccelMust)
@@ -488,7 +491,7 @@ Boolean vjGlOSXWindow::CheckRenderer (GDHandle hGD, long* pVRAM,
 // Returns: true if any renderer for on each device complies (not necessarily
 // the same renderer), false otherwise
 //-----------------------------------------------------------------------------
-Boolean vjGlOSXWindow::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
+Boolean GlOSXWindow::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
                                                 GLint* pDepthSizeSupport,
                                                 Boolean fAccelMust)
 {
@@ -574,7 +577,7 @@ Boolean vjGlOSXWindow::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
    return false; //at least one device failed to have mins
 }
 
-void vjGlOSXWindow::ReportError (const char * strError)
+void GlOSXWindow::ReportError (const char * strError)
 {
    char errMsgCStr [256];
    Str255 strErr = "\0";
@@ -595,10 +598,12 @@ void vjGlOSXWindow::ReportError (const char * strError)
 #endif // kVerboseErrors
 }
 
-GLenum vjGlOSXWindow::aglReportError () {
+GLenum GlOSXWindow::aglReportError () {
    GLenum err = aglGetError();
    if (AGL_NO_ERROR != err)    
       ReportError ((char *)aglErrorString(err));
 
    return err;
 }
+
+};

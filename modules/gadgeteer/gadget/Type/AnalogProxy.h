@@ -44,25 +44,28 @@
 #include <Input/vjInput/vjAnalog.h>
 #include <Input/InputManager/vjProxy.h>
 
-//: A proxy class to analog devices, used by the vjInputManager.
+namespace vrj
+{
+   
+//: A proxy class to analog devices, used by the InputManager.
 //
-//  A vjAnalogProxy always points to an analog device and subUnit number,
+//  A AnalogProxy always points to an analog device and subUnit number,
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as analog devices which only return a single
 //  subDevice's amount of data.  (one int)
 //
-// See also: vjAnalog
+// See also: Analog
 //
 //!PUBLIC_API:
-class VJ_CLASS_API vjAnalogProxy : public vjTypedProxy<vjAnalog>
+class VJ_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
 
 public:
    //: Constructor
-   vjAnalogProxy() : m_unitNum(-1), m_data(-1.0f)
+   AnalogProxy() : m_unitNum(-1), m_data(-1.0f)
    {;}
 
-   virtual ~vjAnalogProxy() {}
+   virtual ~AnalogProxy() {}
 
    //: Update the cached data copy from the device
    virtual void updateData()
@@ -84,7 +87,7 @@ public:
          return m_data;
    }
 
-   vjAnalog* getAnalogPtr()
+   Analog* getAnalogPtr()
    {
       if(mStupified)
          return NULL;
@@ -97,21 +100,23 @@ public:
 
    static std::string getChunkType() { return "AnaProxy";}
 
-   bool config(vjConfigChunk* chunk);
+   bool config(ConfigChunk* chunk);
 
-   virtual vjInput* getProxiedInputDevice()
+   virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
          return NULL;
 
-      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
-      vjASSERT((ret_val != NULL) && "Cross-cast in vjAnalogProxy failed");
+      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
+      vprASSERT((ret_val != NULL) && "Cross-cast in AnalogProxy failed");
       return ret_val;
    }
 
 private:
    int         m_unitNum;
    float       m_data;
+};
+
 };
 
 #endif

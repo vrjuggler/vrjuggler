@@ -47,7 +47,10 @@
 
 #include <Kernel/vjConfigManager.h>
 
-vjEnvironmentManager::vjEnvironmentManager():
+namespace vrj
+{
+   
+EnvironmentManager::EnvironmentManager():
                           connections(),
                           perf_buffers(),
                           connections_mutex(),
@@ -67,7 +70,7 @@ vjEnvironmentManager::vjEnvironmentManager():
 
 
 
-vjEnvironmentManager::~vjEnvironmentManager() {
+EnvironmentManager::~EnvironmentManager() {
     rejectConnections();
     connections_mutex.acquire();
     killConnections();
@@ -76,13 +79,13 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 
 
 
-bool vjEnvironmentManager::isAccepting() {
+bool EnvironmentManager::isAccepting() {
     return (listen_thread != NULL);
 }
 
 
 
-void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
+void EnvironmentManager::addPerfDataBuffer (PerfDataBuffer *b) {
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
                                    << vjDEBUG_FLUSH;
     perf_buffers_mutex.acquire();
@@ -94,8 +97,8 @@ void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
 
 
 
-void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
-    std::vector<vjPerfDataBuffer*>::iterator it;
+void EnvironmentManager::removePerfDataBuffer (PerfDataBuffer *b) {
+    std::vector<PerfDataBuffer*>::iterator it;
 
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
                                    << "\n" << vjDEBUG_FLUSH;
@@ -119,21 +122,21 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
 
 //: tells EM that a connection has died (ie by gui disconnecting)
 //  not for the case of removal by configRemove
-void vjEnvironmentManager::connectHasDied (vjConnect* con) {
+void EnvironmentManager::connectHasDied (Connect* con) {
     std::string s = con->getName();
 
     connections_mutex.acquire();
     removeConnect(con);
     connections_mutex.release();
-    vjConfigManager::instance()->lockActive();
-    vjConfigManager::instance()->getActiveConfig()->removeNamed(s);
-    vjConfigManager::instance()->unlockActive();
+    ConfigManager::instance()->lockActive();
+    ConfigManager::instance()->getActiveConfig()->removeNamed(s);
+    ConfigManager::instance()->unlockActive();
     sendRefresh();
 }
 
 
 
-void vjEnvironmentManager::sendRefresh() {
+void EnvironmentManager::sendRefresh() {
    connections_mutex.acquire();
    for (unsigned int i = 0; i < connections.size(); i++) {
        connections[i]->sendRefresh();
@@ -146,7 +149,7 @@ void vjEnvironmentManager::sendRefresh() {
 //: ConfigChunkHandler stuff
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
+bool EnvironmentManager::configAdd(ConfigChunk* chunk) {
     bool networkingchanged = false;
     int newport;
 
@@ -162,7 +165,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
         connections_mutex.acquire();
 
-        vjConnect* new_perf_target = getConnect(perf_target_name);
+        Connect* new_perf_target = getConnect(perf_target_name);
         if (new_perf_target != perf_target)
             setPerformanceTarget (NULL);
 
@@ -182,7 +185,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
         return true;
     }
     else if (!vjstrcasecmp (s, "PerfMeasure")) {
-        current_perf_config = new vjConfigChunk (*chunk);
+        current_perf_config = new ConfigChunk (*chunk);
         perf_buffers_mutex.acquire();
         activatePerfBuffers();
         perf_buffers_mutex.release();
@@ -197,7 +200,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
         // to a named pipe) we're still broken
         if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
             // it's new to us
-            vjConnect* vn = new vjConnect (chunk);
+            Connect* vn = new Connect (chunk);
             vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
                                        << vjDEBUG_FLUSH;
             connections_mutex.acquire();
@@ -217,7 +220,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
+bool EnvironmentManager::configRemove(ConfigChunk* chunk) {
 
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "EnvironmentManager")) {
@@ -245,7 +248,7 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
         vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: "
                                   << chunk->getProperty ("Name") << '\n' << vjDEBUG_FLUSH;
         connections_mutex.acquire();
-        vjConnect* c = getConnect (chunk->getProperty ("Name"));
+        Connect* c = getConnect (chunk->getProperty ("Name"));
         if (c) {
             removeConnect (c);
         }
@@ -262,7 +265,7 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
-bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
+bool EnvironmentManager::configCanHandle(ConfigChunk* chunk) {
     std::string s = chunk->getType();
     return (!vjstrcasecmp (s, "EnvironmentManager") ||
             !vjstrcasecmp (s, "PerfMeasure") ||
@@ -274,12 +277,12 @@ bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 // should only be called when we own connections_mutex
-void vjEnvironmentManager::removeConnect (vjConnect* con) {
+void EnvironmentManager::removeConnect (Connect* con) {
     if (!con)
         return;
     if (con == perf_target)
         setPerformanceTarget (NULL);
-    std::vector<vjConnect*>::iterator i;
+    std::vector<Connect*>::iterator i;
     for (i = connections.begin(); i != connections.end(); i++)
         if (con == *i) {
             connections.erase (i);
@@ -291,7 +294,7 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 
 
 // should only be called when we own connections_mutex
-void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
+void EnvironmentManager::setPerformanceTarget (Connect* con) {
     if (con == perf_target)
         return;
     perf_buffers_mutex.acquire();
@@ -304,7 +307,7 @@ void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
 
 
 // should only be called when we own connections_mutex
-vjConnect* vjEnvironmentManager::getConnect (const std::string& s) {
+Connect* EnvironmentManager::getConnect (const std::string& s) {
     for (unsigned int i = 0; i < connections.size(); i++)
         if (s == connections[i]->getName())
             return connections[i];
@@ -313,12 +316,12 @@ vjConnect* vjEnvironmentManager::getConnect (const std::string& s) {
 
 
 
-void vjEnvironmentManager::controlLoop (void* nullParam) {
+void EnvironmentManager::controlLoop (void* nullParam) {
     // Child process used to listen for new network connections
     //struct sockaddr_in servaddr;
-    vjSocket* servsock;
+    Socket* servsock;
     //int len;
-    vjConnect* connection;
+    Connect* connection;
 
     vjDEBUG(vjDBG_ENV_MGR,4) << "vjEnvironmentManager started control loop.\n"
           << vjDEBUG_FLUSH;
@@ -329,7 +332,7 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
         //sprintf (name, "Network Connect %d", servsock->getID());
         vjDEBUG(vjDBG_ENV_MGR,vjDBG_CONFIG_LVL) << "vjEnvironmentManager: Accepted connection: id: "
                                                 << servsock->getID() << " on port: N/A\n" << vjDEBUG_FLUSH;
-        connection = new vjConnect (servsock, (std::string)name);
+        connection = new Connect (servsock, (std::string)name);
         connections_mutex.acquire();
         connections.push_back( connection );
         connection->startProcess();
@@ -340,8 +343,8 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 
 
 // should only be called while we have the connections mutex...
-void vjEnvironmentManager::deactivatePerfBuffers () {
-    std::vector<vjPerfDataBuffer*>::iterator i;
+void EnvironmentManager::deactivatePerfBuffers () {
+    std::vector<PerfDataBuffer*>::iterator i;
     for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
         (*i)->deactivate();
         if (perf_target)
@@ -352,7 +355,7 @@ void vjEnvironmentManager::deactivatePerfBuffers () {
 
 
 // should only be called while we own connections_mutex
-void vjEnvironmentManager::activatePerfBuffers () {
+void EnvironmentManager::activatePerfBuffers () {
     // activates all perf buffers configured to do so
     // this is still a bit on the big and bulky side.
 
@@ -364,11 +367,11 @@ void vjEnvironmentManager::activatePerfBuffers () {
         return;
     }
 
-    std::vector<vjVarValue*> v = current_perf_config->getAllProperties ("TimingTests");
-    std::vector<vjPerfDataBuffer*>::const_iterator b;
-    std::vector<vjVarValue*>::const_iterator val;
+    std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
+    std::vector<PerfDataBuffer*>::const_iterator b;
+    std::vector<VarValue*>::const_iterator val;
     bool found;
-    vjConfigChunk* ch;
+    ConfigChunk* ch;
 
     for (b = perf_buffers.begin(); b != perf_buffers.end(); b++) {
         found = false;
@@ -396,12 +399,12 @@ void vjEnvironmentManager::activatePerfBuffers () {
 
 
 
-bool vjEnvironmentManager::acceptConnections() {
+bool EnvironmentManager::acceptConnections() {
 
     if (listen_thread != NULL)
         return true;
 
-    listen_socket = new vjSocket ();
+    listen_socket = new Socket ();
     if (!listen_socket->listen (Port)) {
         vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
                                                 << vjDEBUG_FLUSH;
@@ -414,9 +417,9 @@ bool vjEnvironmentManager::acceptConnections() {
             << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
-    vpr::ThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
-        new vpr::ThreadMemberFunctor<vjEnvironmentManager>(this,
-                                                        &vjEnvironmentManager::controlLoop,
+    vpr::ThreadMemberFunctor<EnvironmentManager>* memberFunctor =
+        new vpr::ThreadMemberFunctor<EnvironmentManager>(this,
+                                                        &EnvironmentManager::controlLoop,
                                                         NULL);
     listen_thread = new vpr::Thread(memberFunctor);
 
@@ -426,7 +429,7 @@ bool vjEnvironmentManager::acceptConnections() {
 
 
 
-bool vjEnvironmentManager::rejectConnections () {
+bool EnvironmentManager::rejectConnections () {
     if (listen_thread) {
         listen_thread->kill();
         listen_thread = NULL;
@@ -439,7 +442,7 @@ bool vjEnvironmentManager::rejectConnections () {
 
 
 // should only be called while we own connections_mutex
-void vjEnvironmentManager::killConnections() {
+void EnvironmentManager::killConnections() {
     unsigned int i;
 
     //connections_mutex.acquire();
@@ -453,3 +456,4 @@ void vjEnvironmentManager::killConnections() {
 
 
 
+};

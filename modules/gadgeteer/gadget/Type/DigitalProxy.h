@@ -42,43 +42,46 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/InputManager/vjProxy.h>
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 
+namespace vrj
+{
+   
 //--------------------------------------------------------------------------
-//: A proxy class to digital devices, used by the vjInputManager.
+//: A proxy class to digital devices, used by the InputManager.
 //
-//  A vjDigitalProxy always points to a digital device and subUnit number,
+//  A DigitalProxy always points to a digital device and subUnit number,
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as digital devices which only return a single
 //  subDevice's amount of data.  (one int)
 //!PUBLIC_API:
 //--------------------------------------------------------------------------
-class VJ_CLASS_API vjDigitalProxy : public vjTypedProxy<vjDigital>
+class VJ_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
 
 public:
    /** @name Construction/Destruction */
-   vjDigitalProxy() {
+   DigitalProxy() {
       m_unitNum = -1;
       m_data = 0;
    }
 
-   virtual ~vjDigitalProxy() {}
+   virtual ~DigitalProxy() {}
    virtual void updateData();
 
 
    //: Get the digital data
-   // vjDigital::OFF - Button not pressed, and was not pressed last update either
-   // vjDigital::ON  - Button on, and was on last frame as well
-   // vjDigital::TOGGLE_ON - Button was off, now it is on
-   // vjDigital::TOGGLE_OFF - Button was on, now it is going off
+   // Digital::OFF - Button not pressed, and was not pressed last update either
+   // Digital::ON  - Button on, and was on last frame as well
+   // Digital::TOGGLE_ON - Button was off, now it is on
+   // Digital::TOGGLE_OFF - Button was on, now it is going off
    //
    // The identifiers are defined so that a simple test for non-zero means the button is
    // pressed in some way.  NOTE: Because of how TOGGLE_OFF is defined, testing for non-zero
    // will result in a one update lag in detecting the button not being pressed
    int getData()
    {
-      const int defaultDigital(vjDigital::OFF);
+      const int defaultDigital(Digital::OFF);
 
       if(mStupified)
          return defaultDigital;
@@ -86,7 +89,7 @@ public:
          return m_data;
    }
 
-   vjDigital* getDigitalPtr()
+   Digital* getDigitalPtr()
    {
       if(mStupified)
          return NULL;
@@ -101,15 +104,15 @@ public:
 
    static std::string getChunkType() { return "DigProxy"; }
 
-   bool config(vjConfigChunk* chunk);
+   bool config(ConfigChunk* chunk);
 
-   virtual vjInput* getProxiedInputDevice()
+   virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
          return NULL;
 
-      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
-      vjASSERT(ret_val != NULL);
+      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
+      vprASSERT(ret_val != NULL);
       return ret_val;
    }
 
@@ -119,6 +122,8 @@ private:
       //: Copy of the digital data we are dealing with
       // See also: GetData - for definition of values for the data item
    int         m_data;
+
+};
 
 };
 

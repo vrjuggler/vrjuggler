@@ -1,8 +1,11 @@
 #include <Kernel/vjViewport.h>
 
-void vjViewport::config(vjConfigChunk* chunk)
+namespace vrj
 {
-   vjASSERT(chunk != NULL);
+   
+void Viewport::config(ConfigChunk* chunk)
+{
+   vprASSERT(chunk != NULL);
 
    // -- Get config info from chunk -- //
     float originX = chunk->getProperty("origin", 0);
@@ -10,7 +13,7 @@ void vjViewport::config(vjConfigChunk* chunk)
     float sizeX   = chunk->getProperty("size", 0);
     float sizeY   = chunk->getProperty("size", 1);
     std::string name  = chunk->getProperty("name");
-    mView    = (vjViewport::View)(int)chunk->getProperty("view");
+    mView    = (Viewport::View)(int)chunk->getProperty("view");
     mActive  = chunk->getProperty("active");
 
    // -- Check for error in configuration -- //
@@ -36,32 +39,35 @@ void vjViewport::config(vjConfigChunk* chunk)
 
     // Get the user for this display
     std::string user_name = chunk->getProperty("user");
-    mUser = vjKernel::instance()->getUser(user_name);
+    mUser = Kernel::instance()->getUser(user_name);
 
     if(NULL == mUser)
     {
        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " User not found named: "
                               << user_name.c_str() << std::endl
                               << vjDEBUG_FLUSH;
-      vjASSERT(false && "User not found in vjViewport::config");
+      vprASSERT(false && "User not found in Viewport::config");
     }
 
     setName(name);
     mViewportChunk = chunk;        // Save the chunk for later use
 }
 
-std::ostream& operator<<(std::ostream& out, vjViewport& viewport)
+std::ostream& operator<<(std::ostream& out, Viewport& viewport)
 {
    return viewport.outStream(out);
 }
 
-std::ostream& vjViewport::outStream(std::ostream& out)
+std::ostream& Viewport::outStream(std::ostream& out)
 {
    out << "user: " << getName()
        << "  org:" << mXorigin << ", " << mYorigin
        << "  sz:" << mXsize << ", " << mYsize
-       << "  view:" << ((mView == vjViewport::LEFT_EYE) ? "Left" : ((mView==vjViewport::RIGHT_EYE)?"Right" : "Stereo") )
+       << "  view:" << ((mView == Viewport::LEFT_EYE) ? "Left" : ((mView==Viewport::RIGHT_EYE)?"Right" : "Stereo") )
        << std::flush;
 
    return out;
 }
+
+
+};

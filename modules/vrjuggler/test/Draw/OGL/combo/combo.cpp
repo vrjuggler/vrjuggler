@@ -48,9 +48,9 @@
 
 int main(int argc, char* argv[])
 {
-   vjProjection::setNearFar(0.01, 10000.0f);
+   Projection::setNearFar(0.01, 10000.0f);
 
-   vjKernel* kernel = vjKernel::instance();        // Get the kernel
+   Kernel* kernel = Kernel::instance();        // Get the kernel
    torusApp* torus_app = new torusApp(kernel);   // Declare an instance of the app
    wandApp*  wand_app = new wandApp(kernel);
    cubesApp* cubes_app = new cubesApp(kernel);

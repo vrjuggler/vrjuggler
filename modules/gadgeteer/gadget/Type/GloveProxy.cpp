@@ -36,10 +36,13 @@
 #include <Input/InputManager/vjGloveProxy.h>
 #include <Config/vjConfigChunk.h>
 
-bool vjGloveProxy::config(vjConfigChunk* chunk)
+namespace vrj
+{
+   
+bool GloveProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "GloveProxy");
+   vprASSERT(((std::string)chunk->getType()) == "GloveProxy");
 
    mUnitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
@@ -48,3 +51,5 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
 
    return true;
 }
+
+};

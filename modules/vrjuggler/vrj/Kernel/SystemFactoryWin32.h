@@ -36,9 +36,12 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 
-class vjDisplayManager;
+namespace vrj
+{
+   
+class DisplayManager;
 
 //---------------------------------------------------
 //: Concrete class for SGI System specific Factory.
@@ -48,17 +51,18 @@ class vjDisplayManager;
 // @author Allen Bierbaum
 //  Date: 9-9-97
 //----------------------------------------------------
-class vjWin32SystemFactory : public vjSystemFactory
+class Win32SystemFactory : public SystemFactory
 {
 public:
 
    // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
-   vjWin32SystemFactory()   // Do nothing, but hide
+   Win32SystemFactory()   // Do nothing, but hide
    {;}
 
-   vjSingletonHeader(vjWin32SystemFactory);
+   vprSingletonHeader(Win32SystemFactory);
 };
 
+};
 #endif

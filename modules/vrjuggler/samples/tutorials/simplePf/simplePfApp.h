@@ -51,7 +51,7 @@
 #include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
 
 // Declare my application class
-class simplePfApp : public vjPfApp
+class simplePfApp : public PfApp
 {
 public:
    simplePfApp() :

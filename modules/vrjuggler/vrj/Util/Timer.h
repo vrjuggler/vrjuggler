@@ -37,13 +37,16 @@
 #include <sys/time.h>
 #endif
 
+namespace vrj
+{
+   
 //: Simple class to take timings and give averages
 // NOTE: All times are in seconds
-// XXX: Should use vjTimeStamp for the time info in the future
-class vjTimer
+// XXX: Should use TimeStaMp for the time info in the future
+class Timer
 {
 public:
-	vjTimer()
+	Timer()
 	{
 		totalTime = 0;
 		timeCount = 0;
@@ -113,6 +116,8 @@ private:		// Timing stuff
 	double  lastTiming;		 // The last timing recieved
 	double  totalTime;	    // The total time
 	long    timeCount;	    // The count on the number of times	
+};
+
 };
 
 #endif 

@@ -36,10 +36,13 @@
 #include <Input/InputManager/vjGestureProxy.h>
 #include <Config/vjConfigChunk.h>
 
-bool vjGestureProxy::config(vjConfigChunk* chunk)
+namespace vrj
+{
+   
+bool GestureProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GESTURE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "GestureProxy");
+   vprASSERT(((std::string)chunk->getType()) == "GestureProxy");
 
    mDeviceName = (std::string)chunk->getProperty("device");
 
@@ -47,3 +50,4 @@ bool vjGestureProxy::config(vjConfigChunk* chunk)
 
    return true;
 }
+};

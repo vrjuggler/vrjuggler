@@ -38,7 +38,9 @@
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
-
+namespace vrj
+{
+   
 // ============================================================================
 // Helper functions speccfic to this file.
 // ============================================================================
@@ -46,15 +48,15 @@
 // ----------------------------------------------------------------------------
 // Continuously sample the device.
 //
-// PRE: The given argument is pointer to a valid vjMotionStar object.
-// POST: vjMotionStar::sample() is executed repeated until the thread is
+// PRE: The given argument is pointer to a valid MotionStar object.
+// POST: MotionStar::sample() is executed repeated until the thread is
 //       stopped.
 //
-// ARGS: arg - A pointer to a vjMotionStar object cast to a void*.
+// ARGS: arg - A pointer to a MotionStar object cast to a void*.
 // ----------------------------------------------------------------------------
 static void
 sampleBirds (void* arg) {
-   vjMotionStar* devPointer = (vjMotionStar*) arg;
+   MotionStar* devPointer = (MotionStar*) arg;
 
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjMotionStar: Spawned SampleBirds starting\n"
                               << vjDEBUG_FLUSH;
@@ -72,7 +74,7 @@ sampleBirds (void* arg) {
 // Constructor.  This invokes the aMotionStar constructor and initializes
 // member variables.
 // ----------------------------------------------------------------------------
-vjMotionStar::vjMotionStar (const char* address, const unsigned short port,
+MotionStar::MotionStar (const char* address, const unsigned short port,
                             const BIRDNET::protocol proto,
                             const bool master,
                             const FLOCK::hemisphere hemisphere,
@@ -90,7 +92,7 @@ vjMotionStar::vjMotionStar (const char* address, const unsigned short port,
 // ----------------------------------------------------------------------------
 // Destructor.  Sampling is stopped, and the data pool is deallocated.
 // ----------------------------------------------------------------------------
-vjMotionStar::~vjMotionStar () {
+MotionStar::~MotionStar () {
    stopSampling();
 
    if (theData != NULL)
@@ -104,14 +106,14 @@ vjMotionStar::~vjMotionStar () {
 // Configure the MotionStar with the given config chunk.
 // ----------------------------------------------------------------------------
 bool
-vjMotionStar::config (vjConfigChunk* c) {
+MotionStar::config (ConfigChunk* c) {
    bool retval;
 
    retval = false;
 
-   if ( vjInput::config(c) &&  vjPosition::config(c) ) {
+   if ( Input::config(c) &&  Position::config(c) ) {
       vjDEBUG(vjDBG_INPUT_MGR, 3)
-         << "       vjMotionStar::config(vjConfigChunk*)\n" << vjDEBUG_FLUSH;
+         << "       MotionStar::config(ConfigChunk*)\n" << vjDEBUG_FLUSH;
 
       // Configure m_motion_star with the config info.
       setAddress(static_cast<std::string>(c->getProperty("address")).c_str());
@@ -133,7 +135,7 @@ vjMotionStar::config (vjConfigChunk* c) {
 // Begin sampling.
 // ----------------------------------------------------------------------------
 int
-vjMotionStar::startSampling () {
+MotionStar::startSampling () {
    int retval;
 
    // Make sure the device isn't already started.
@@ -153,7 +155,7 @@ vjMotionStar::startSampling () {
 
          // Allocate buffer space for birds.
          num_buffs = (m_motion_star.getNumBirds() + 1) * 3;
-         theData   = new vjMatrix[num_buffs];
+         theData   = new Matrix[num_buffs];
 
          // Reset current, progress, and valid indices.
          resetIndexes();
@@ -186,7 +188,7 @@ vjMotionStar::startSampling () {
             // made.
             case -3:
                vjDEBUG(vjDBG_INPUT_MGR, 0)
-                  << "No server address set for vjMotionStar\n"
+                  << "No server address set for MotionStar\n"
                   << vjDEBUG_FLUSH;
                retval = 1;
                break;
@@ -215,7 +217,7 @@ vjMotionStar::startSampling () {
                vjDEBUG(vjDBG_INPUT_MGR, 0)
                   << "vjMotionStar could not create sampling thread.\n"
                   << vjDEBUG_FLUSH;
-                vjASSERT(false);  // Fail
+                vprASSERT(false);  // Fail
             }
             else {
                 retval = 1;   // success
@@ -235,7 +237,7 @@ vjMotionStar::startSampling () {
 // Stop sampling.
 // ----------------------------------------------------------------------------
 int
-vjMotionStar::stopSampling () {
+MotionStar::stopSampling () {
    int retval;
 
    // If we are not active, we cannot stop the device.
@@ -279,7 +281,7 @@ vjMotionStar::stopSampling () {
 // Sample data.
 // ----------------------------------------------------------------------------
 int
-vjMotionStar::sample () {
+MotionStar::sample () {
    int retval;
 
    retval = 0;
@@ -291,7 +293,7 @@ vjMotionStar::sample () {
    }
    else {
       int index;
-      vjMatrix trans_mat, rot_mat, quat_mat;
+      Matrix trans_mat, rot_mat, quat_mat;
       float quat[4], angles[3];
       FLOCK::data_format format;
 
@@ -299,7 +301,7 @@ vjMotionStar::sample () {
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
-      vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
       m_motion_star.sample();
 
@@ -385,7 +387,7 @@ vjMotionStar::sample () {
 // Update to the sampled data.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::updateData () {
+MotionStar::updateData () {
    // If the device is not active, we cannot update the data.
    if ( isActive() == false ) {
       vjDEBUG(vjDBG_ALL, 0) << clrSetNORM(clrRED) << "MotionStar ("
@@ -410,8 +412,8 @@ vjMotionStar::updateData () {
 // Get the reciever transform for the given bird number.  The birds are
 // zero-based.
 // ----------------------------------------------------------------------------
-vjMatrix*
-vjMotionStar::getPosData (int d) {
+Matrix*
+MotionStar::getPosData (int d) {
     if ( isActive() == false ) {
         vjDEBUG(vjDBG_ALL,0) << "Not active in getPosData()\n" << vjDEBUG_FLUSH;
         return NULL;
@@ -422,8 +424,8 @@ vjMotionStar::getPosData (int d) {
 // ----------------------------------------------------------------------------
 // Not used currently -- needed for interface.
 // ----------------------------------------------------------------------------
-vjTimeStamp*
-vjMotionStar::getPosUpdateTime (int d) {
+TimeStaMp*
+MotionStar::getPosUpdateTime (int d) {
     return (&mDataTimes[getBirdIndex(d,current)]);
 }
 
@@ -431,7 +433,7 @@ vjMotionStar::getPosUpdateTime (int d) {
 // Set the address (either IP address or hostname) for the server.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setAddress (const char* n) {
+MotionStar::setAddress (const char* n) {
    // If the device active, we cannot change the server address.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -446,7 +448,7 @@ vjMotionStar::setAddress (const char* n) {
 // Set the port on the server to which we connect.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setServerPort (const unsigned short port) {
+MotionStar::setServerPort (const unsigned short port) {
    // If the device active, we cannot change the server port.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -477,7 +479,7 @@ vjMotionStar::setServerPort (const unsigned short port) {
 //
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setProtocol (const enum BIRDNET::protocol proto) {
+MotionStar::setProtocol (const enum BIRDNET::protocol proto) {
    // If the device active, we cannot change the transmission protocol.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -493,7 +495,7 @@ vjMotionStar::setProtocol (const enum BIRDNET::protocol proto) {
 //
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setMasterStatus (const bool master) {
+MotionStar::setMasterStatus (const bool master) {
    // If the device active, we cannot change the master status.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -509,7 +511,7 @@ vjMotionStar::setMasterStatus (const bool master) {
 // Change the hemisphere of the transmitter.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setHemisphere (const unsigned char hemisphere) {
+MotionStar::setHemisphere (const unsigned char hemisphere) {
    // If the device active, we cannot change the hemisphere.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -550,7 +552,7 @@ vjMotionStar::setHemisphere (const unsigned char hemisphere) {
 // Set the bird format to the given value.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setBirdFormat (const unsigned int format) {
+MotionStar::setBirdFormat (const unsigned int format) {
    // If the device active, we cannot change the bird format.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -604,7 +606,7 @@ vjMotionStar::setBirdFormat (const unsigned int format) {
 // Set the number of birds connected to the flock.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setNumBirds (unsigned int i) {
+MotionStar::setNumBirds (unsigned int i) {
    // If the device active, we cannot change the number of birds.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -619,7 +621,7 @@ vjMotionStar::setNumBirds (unsigned int i) {
 // Set the run mode for the device.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setRunMode (const unsigned int mode) {
+MotionStar::setRunMode (const unsigned int mode) {
    // If the device active, we cannot change the run mode.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -647,7 +649,7 @@ vjMotionStar::setRunMode (const unsigned int mode) {
 // Set the report rate for the device.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setReportRate (const unsigned char rate) {
+MotionStar::setReportRate (const unsigned char rate) {
    // If the device active, we cannot change the report rate.
    if (isActive()) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -662,7 +664,7 @@ vjMotionStar::setReportRate (const unsigned char rate) {
 // Set the measurement rate for the chassis.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setMeasurementRate (const double rate) {
+MotionStar::setMeasurementRate (const double rate) {
    // If the device active, we cannot change the measurement rate.
    if (isActive()) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)
@@ -681,7 +683,7 @@ vjMotionStar::setMeasurementRate (const double rate) {
 // Unimplemented!
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::positionCorrect (float& x, float& y, float& z) {
+MotionStar::positionCorrect (float& x, float& y, float& z) {
    /* Implement me! */ ;
 }
 
@@ -689,7 +691,7 @@ vjMotionStar::positionCorrect (float& x, float& y, float& z) {
 // Unimplemented!
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::initCorrectionTable (const char* table_file) {
+MotionStar::initCorrectionTable (const char* table_file) {
    /* Implement me! */ ;
 }
 
@@ -700,9 +702,11 @@ vjMotionStar::initCorrectionTable (const char* table_file) {
 // XXX: We are going to say the birds are 0 based.
 // ----------------------------------------------------------------------------
 unsigned int
-vjMotionStar::getBirdIndex (int bird_num, int buffer_index) {
+MotionStar::getBirdIndex (int bird_num, int buffer_index) {
    unsigned int ret_val = (bird_num * 3) + buffer_index;
-   vjASSERT(ret_val < ((getNumBirds() + 1) * 3));
+   vprASSERT(ret_val < ((getNumBirds() + 1) * 3));
 
    return ret_val;
 }
+
+};

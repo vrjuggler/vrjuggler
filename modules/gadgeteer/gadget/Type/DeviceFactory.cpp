@@ -45,61 +45,64 @@
 
 /* Physical devices */
 #ifndef WIN32
-#include <Input/vjPosition/vjFlock.h>
-#include <Input/vjPosition/vjIsense.h>
+#   include <Input/vjPosition/vjFlock.h>
+#   include <Input/vjPosition/vjIsense.h>
 
-#ifdef VJ_OS_Darwin
-#   include <Input/vjKeyboard/vjOSXKeyboard.h>
-#else
-#   include <Input/vjInput/vjIbox.h>
-#   include <Input/vjGlove/vjCyberGlove.h>
-#   include <Input/vjGlove/vjPinchGlove.h>
-#   include <Input/vjKeyboard/vjXWinKeyboard.h>
-#   include <Input/vjKeyboard/vjXWinKBDepChecker.h>
-#   include <Input/Multi/vjTrackdController.h>
-#   include <Input/Multi/vjTrackdSensor.h>
-#endif
+#   ifdef VJ_OS_Darwin
+#      include <Input/vjKeyboard/vjOSXKeyboard.h>
+#   else
+#      include <Input/vjInput/vjIbox.h>
+#      include <Input/vjGlove/vjCyberGlove.h>
+#      include <Input/vjGlove/vjPinchGlove.h>
+#      include <Input/vjKeyboard/vjXWinKeyboard.h>
+#      include <Input/vjKeyboard/vjXWinKBDepChecker.h>
+#      include <Input/Multi/vjTrackdController.h>
+#      include <Input/Multi/vjTrackdSensor.h>
+#   endif
 
-#include <Input/vjPosition/logiclass.h>
-#include <Input/vjPosition/vjMotionStar.h>
+#   include <Input/vjPosition/logiclass.h>
+#   include <Input/vjPosition/vjMotionStar.h>
 #else
-#include <Input/vjKeyboard/vjKeyboardWin32.h>
+#   include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
 
 /* PThread Dependant Driver */
 #ifdef VJ_HAVE_DTK
-#include <Input/vjDTK/vjDTK.h>
+#   include <Input/vjDTK/vjDTK.h>
 #endif
 
 #include <typeinfo>
 
+namespace vrj
+{
+   
 // Initialize the singleton ptr
-//vjDeviceFactory* vjDeviceFactory::mInstance = NULL;
-//vjSingletonImp( vjDeviceFactory ); //kevin
-vjSingletonImpWithInitFunc( vjDeviceFactory, hackLoadKnownDevices );
+//vjDeviceFactory* DeviceFactory::mInstance = NULL;
+//vjSingletonImp( DeviceFactory ); //kevin
+vprSingletonImpWithInitFunc( DeviceFactory, hackLoadKnownDevices );
 
 template <class DEV>
-vjDeviceConstructor<DEV>::vjDeviceConstructor()
+DeviceConstructor<DEV>::DeviceConstructor()
 {
-   vjASSERT(vjDeviceFactory::instance() != NULL);
-   vjDeviceFactory::instance()->registerDevice(this);
+   vprASSERT(DeviceFactory::instance() != NULL);
+   DeviceFactory::instance()->registerDevice(this);
 }
 
 
 // Register all the devices that I know about
 //!NOTE: This should really be moved to dynamic library loading code.
-void vjDeviceFactory::hackLoadKnownDevices()
+void DeviceFactory::hackLoadKnownDevices()
 {
    // NOTE: These will all given unused variable errors in compiling.
    // That is okay, because the don't actually have to do anything.
    // They just register themselves in their constructor.
-   vjDeviceConstructor<vjSimAnalog>* sim_analog = new vjDeviceConstructor<vjSimAnalog>;
-   vjDeviceConstructor<vjSimDigital>* sim_digital = new vjDeviceConstructor<vjSimDigital>;
-   vjDeviceConstructor<vjSimPosition>* sim_position = new vjDeviceConstructor<vjSimPosition>;
-   vjDeviceConstructor<vjSimGloveGesture>* sim_glove = new vjDeviceConstructor<vjSimGloveGesture>;
-   //vjDeviceConstructor<vjSimKeyboardDigital>* sim_keyboard_digital = new vjDeviceConstructor<vjSimKeyboardDigital>;
-   vjDeviceConstructor<vjSimRelativePosition>* sim_relative = new vjDeviceConstructor<vjSimRelativePosition>;
-   vjDeviceConstructor<vjSimDigitalGlove>* simpinch_glove = new vjDeviceConstructor<vjSimDigitalGlove>;
+   DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
+   DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
+   DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
+   DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
+   //vjDeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
+   DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>;
+   DeviceConstructor<SimDigitalGlove>* simpinch_glove = new DeviceConstructor<SimDigitalGlove>;
 
    if( (NULL == sim_analog)   ||
        (NULL == sim_digital)  ||
@@ -113,21 +116,21 @@ void vjDeviceFactory::hackLoadKnownDevices()
 
 #ifndef WIN32
 #ifdef VJ_OS_Darwin
-   vjDeviceConstructor<vjOSXKeyboard>* osx_keyboard = new vjDeviceConstructor<vjOSXKeyboard>;
+   DeviceConstructor<OSXKeyboard>* osx_keyboard = new DeviceConstructor<OSXKeyboard>;
    if( (NULL == osx_keyboard) )
    {
       vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
    }
 
 #else
-   vjDeviceConstructor<vjTrackdSensor>* trackd_sensor = new vjDeviceConstructor<vjTrackdSensor>;
-   vjDeviceConstructor<vjTrackdController>* trackd_controller = new vjDeviceConstructor<vjTrackdController>;
-   vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
-   vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
-   vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
-   vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
-   vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
-   vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
+   DeviceConstructor<TrackdSensor>* trackd_sensor = new DeviceConstructor<TrackdSensor>;
+   DeviceConstructor<TrackdController>* trackd_controller = new DeviceConstructor<TrackdController>;
+   DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
+   DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
+   DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
+   DeviceConstructor<XWinKeyboard>* xwin_key = new DeviceConstructor<XWinKeyboard>;
+   DependencyManager::instance()->registerChecker(new XWinKBDepChecker());
+   DeviceConstructor<ThreeDMouse>* threed_mouse = new DeviceConstructor<ThreeDMouse>;
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||
        (NULL == ibox)         ||
@@ -140,19 +143,19 @@ void vjDeviceFactory::hackLoadKnownDevices()
    }
    
 #endif
-   vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
-   vjDeviceConstructor<vjIsense>* intersense = new vjDeviceConstructor<vjIsense>;
-   vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
+   DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
+   DeviceConstructor<Isense>* intersense = new DeviceConstructor<Isense>;
+   DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
 
    if( (NULL == flock)        ||
        (NULL == intersense)   ||
-       (NULL == MotionStar)   )
+       (NULL == motion_star)   )
    {
       vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
    }
 #else
 
-   vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
+   DeviceConstructor<KeyboardWin32>* key_win32 = new DeviceConstructor<KeyboardWin32>;
    if( (NULL == key_win32))
    {
       vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
@@ -160,7 +163,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
 
 #endif
 #ifdef VJ_HAVE_DTK
-   vjDeviceConstructor<vjDTK>* dtk_wrapper = new vjDeviceConstructor<vjDTK>;
+   DeviceConstructor<DTK>* dtk_wrapper = new DeviceConstructor<DTK>;
    if( (NULL == dtk_wrapper))
    {
       vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
@@ -168,9 +171,9 @@ void vjDeviceFactory::hackLoadKnownDevices()
 #endif
 }
 
-void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
+void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
 {
-   vjASSERT(constructor != NULL);
+   vprASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory: Registered: "
               << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType() << std::setiosflags(std::ios::right)
@@ -181,7 +184,7 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
 
 // Simply query all device constructors registered looking
 // for one that knows how to load the device
-bool vjDeviceFactory::recognizeDevice(vjConfigChunk* chunk)
+bool DeviceFactory::recognizeDevice(ConfigChunk* chunk)
 {
    if(findConstructor(chunk) == -1)
       return false;
@@ -194,14 +197,14 @@ bool vjDeviceFactory::recognizeDevice(vjConfigChunk* chunk)
 //!ARGS: chunk - specification of the device to load
 //!RETURNS: null - Device failed to load
 //+         other - Pointer to the loaded device
-vjInput* vjDeviceFactory::loadDevice(vjConfigChunk* chunk)
+Input* DeviceFactory::loadDevice(ConfigChunk* chunk)
 {
-   vjASSERT(recognizeDevice(chunk));
+   vprASSERT(recognizeDevice(chunk));
 
    int index = findConstructor(chunk);
 
-   vjInput* new_dev;
-   vjDeviceConstructorBase* constructor = mConstructors[index];
+   Input* new_dev;
+   DeviceConstructorBase* constructor = mConstructors[index];
 
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjDeviceFactory::loadDevice: Loading device: "
               << chunk->getType() << "  with: "
@@ -211,7 +214,7 @@ vjInput* vjDeviceFactory::loadDevice(vjConfigChunk* chunk)
    return new_dev;
 }
 
-int vjDeviceFactory::findConstructor(vjConfigChunk* chunk)
+int DeviceFactory::findConstructor(ConfigChunk* chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();
@@ -219,8 +222,8 @@ int vjDeviceFactory::findConstructor(vjConfigChunk* chunk)
    for(unsigned int i=0;i<mConstructors.size();i++)
    {
       // Get next constructor
-      vjDeviceConstructorBase* construct = mConstructors[i];
-      vjASSERT(construct != NULL);
+      DeviceConstructorBase* construct = mConstructors[i];
+      vprASSERT(construct != NULL);
 
       if(construct->getChunkType() == chunk_type)
          return i;
@@ -230,14 +233,14 @@ int vjDeviceFactory::findConstructor(vjConfigChunk* chunk)
 }
 
 
-void vjDeviceFactory::debugDump()
+void DeviceFactory::debugDump()
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,0) << "vjDeviceFactory::debugDump\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,0) << "num constructors:" << mConstructors.size() << "\n" << vjDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
    {
-      vjDeviceConstructorBase* dev_constr = mConstructors[cNum];
+      DeviceConstructorBase* dev_constr = mConstructors[cNum];
       vjDEBUG(vjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr
                  << "   type:" << typeid(*dev_constr).name() << "\n" << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
@@ -245,3 +248,5 @@ void vjDeviceFactory::debugDump()
 
    vjDEBUG_END(vjDBG_INPUT_MGR,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;
 }
+
+};

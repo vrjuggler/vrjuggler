@@ -37,8 +37,11 @@
 
 #include <vjConfig.h>
 
+namespace vrj
+{
+   
 //---------------------------------------------------------
-// vjAPI: Encapulates interfaces to graphics APIs.
+// API: Encapulates interfaces to graphics APIs.
 //
 // PURPOSE:
 //	 This class is used for the application to tell the
@@ -47,7 +50,7 @@
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //--------------------------------------------------------
-class vjAPI
+class API
 {
 public:
    enum
@@ -55,7 +58,7 @@ public:
 
    //: Constructor
    //!ARGS: api - enum of the API to set too
-   vjAPI(int api = UNKNOWN)
+   API(int api = UNKNOWN)
    { mApi = api;}
 
    // ---  API QUERY  --- //
@@ -86,5 +89,6 @@ private:
 
 };
 
+};
 
 #endif

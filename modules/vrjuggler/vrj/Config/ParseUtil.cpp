@@ -38,6 +38,9 @@
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigTokens.h>
 
+namespace vrj
+{
+   
 /* a utility function that probably belongs elsewhere */
 bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
     /* reads a string from in.  a string is either " delimited
@@ -243,9 +246,9 @@ bool vjstrcasecmp (const std::string& a, const std::string& b) {
 
 bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
-    int n = vjMath::Min (a.size(), b.size());
+    int n = Math::Min (a.size(), b.size());
     if (_n >= 0)
-        n = vjMath::Min (n, _n);
+        n = Math::Min (n, _n);
 
     for (int i = 0; i < n; i++)
         if (toupper(a[i]) != toupper(b[i]))
@@ -257,9 +260,9 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
 bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
 
-    int n = vjMath::Min (a.size(), b.size());
+    int n = Math::Min (a.size(), b.size());
     if (_n >= 0)
-        n = vjMath::Min (n, _n);
+        n = Math::Min (n, _n);
 
     for (int i = 0; i < n; i++)
         if (a[i] != b[i])
@@ -447,3 +450,4 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     return retval;
 }
 
+};

@@ -41,13 +41,13 @@
 
 int main()
 {
-   vjMemPool* shared_pool = new vjSharedPool(1024*1024);
-   vjMatrix pos_data;
-   vjInputManager* input_manager = new(shared_pool) vjInputManager ;
+   MemPool* shared_pool = new SharedPool(1024*1024);
+   Matrix pos_data;
+   InputManager* input_manager = new(shared_pool) InputManager ;
 
       // --- Create Dummy -- //
-   std::cout << "\nCreating myDummy: vjDummyPosition w/X=5.0" << std::endl;
-   vjDummyPosition* myDummy = new(shared_pool) vjDummyPosition;
+   std::cout << "\nCreating myDummy: DummyPosition w/X=5.0" << std::endl;
+   DummyPosition* myDummy = new(shared_pool) DummyPosition;
    myDummy->SetX(5.0);
 
       // -- get default pos data -- //
@@ -90,7 +90,7 @@ int main()
    std::cin.get();
 
 #ifdef TRACKERS
-   vjFlock* aFlock = new (shared_pool) vjFlock;
+   Flock* aFlock = new (shared_pool) Flock;
    aFlock->startSampling();
    devNum = input_manager->fAddDevice(aFlock);
    input_manager->SetPosProxy(1,devNum,0);
@@ -99,7 +99,7 @@ int main()
    std::cout << "Trackers set up.. " << std::endl;
    //vjSystem::sleep(5);
 
-   vjPOS_DATA *data1,*data2,*data0;
+   POS_DATA *data1,*data2,*data0;
 
    for (int i = 0; i < 5; i++)
    {
@@ -119,7 +119,7 @@ int main()
    aFlock->stopSampling();
 #endif
    
-   vjIBox *myibox = new (shared_pool) vjIBox;
+   IBox *myibox = new (shared_pool) IBox;
    myibox->StartSampling();
    std::cout << "ibox is: " << myibox->getDeviceName();
    C2Dinput_manageritalProxy dp1(myibox,0);

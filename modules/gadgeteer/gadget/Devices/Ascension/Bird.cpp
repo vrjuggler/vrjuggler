@@ -31,20 +31,25 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <termios.h>
 
-#include <Input/vjPosition/vjBird.h>
-#include <Config/vjConfigChunk.h>
+#include <vjConfig.h>
+
 #include <vpr/System.h>
 
+#include <Input/vjPosition/vjBird.h>
+#include <Config/vjConfigChunk.h>
 
-inline int getReading(vjMatrix* data, int port);
-inline float rawToFloat(char& r1, char& r2);
-inline void  pickBird(int sensor, int port_id);
+
+namespace vrj
+{
+
+int getReading(Matrix* data, int port);
+float rawToFloat(char& r1, char& r2);
+void  pickBird(int sensor, int port_id);
 static int open_port(char* serialPort, int baud);
 static void set_blocking(int port, int blocking);
 static void set_sync(int port, int sync);
@@ -56,7 +61,9 @@ static void set_transmitter(int port, int transmitter);
 static void set_autoconfig(int port, int transmitter);
 static void set_group(int port);
 
-vjBird::vjBird()
+
+   
+Bird::Bird()
 {
    syncStyle = 1;
   blocking = 0;
@@ -67,20 +74,20 @@ vjBird::vjBird()
   myThread = NULL;
 }
 
-bool vjBird::config(vjConfigChunk *c)
+bool Bird::config(ConfigChunk *c)
 {
-   if(! (vjInput::config(c) && vjPosition::config(c)))
+   if(! (Input::config(c) && Position::config(c)))
       return false;
 
   strncpy(sPort,"/dev/ttyd3", 30);
   initCorrectionTable();
-  //theData = (vjMatrix*)allocate(3*sizeof(vjMatrix));
-  theData = new vjMatrix[3];
+  //theData = (Matrix*)allocate(3*sizeof(Matrix));
+  theData = new Matrix[3];
 
   return true;
 }
 
-vjBird::~vjBird()
+Bird::~Bird()
 {
   stopSampling();
     if (theData != NULL)
@@ -94,7 +101,7 @@ static void sampleBirds(void* pointer)
   struct timeval tv;
   double start_time, stop_time;
 
-   vjBird* devPointer = (vjBird*) pointer;
+   Bird* devPointer = (Bird*) pointer;
    for (;;) {
 
      gettimeofday(&tv,0);
@@ -110,7 +117,7 @@ static void sampleBirds(void* pointer)
 
 }
 
-int vjBird::startSampling()
+int Bird::startSampling()
 {
    if (myThread == NULL) {
       //int processID;
@@ -137,7 +144,7 @@ int vjBird::startSampling()
 
   std::cout << "vjBird ready to go.." << std::endl;
 
-  vjBird* devicePtr = this;
+  Bird* devicePtr = this;
 
   myThread = new vpr::Thread(sampleBirds,(void*)devicePtr);
 
@@ -152,7 +159,7 @@ int vjBird::startSampling()
 
 }
 
-int vjBird::sample()
+int Bird::sample()
 {
      //int i;
      int tmp;
@@ -177,7 +184,7 @@ int vjBird::sample()
      return 1;
 }
 
-int vjBird::stopSampling()
+int Bird::stopSampling()
 {
    if (myThread != NULL)
    {
@@ -206,12 +213,12 @@ int vjBird::stopSampling()
 }
 
 // XXX: Bad Bad Bad
-vjMatrix* vjBird::getPosData( int d) // d is 0 based
+Matrix* Bird::getPosData( int d) // d is 0 based
 {
-  return (vjMatrix*)&theData[current];
+  return (Matrix*)&theData[current];
 }
 
-void vjBird::updateData()
+void Bird::updateData()
 {
   // swap the indicies for the pointers
 
@@ -224,7 +231,7 @@ void vjBird::updateData()
   return;
 }
 
-void vjBird::setHemisphere(BIRD_HEMI h)
+void Bird::setHemisphere(BIRD_HEMI h)
 {
   if (active) {
       std::cerr << "Cannot change the hemisphere\n";
@@ -233,7 +240,7 @@ void vjBird::setHemisphere(BIRD_HEMI h)
    hemisphere = h;
 }
 
-void vjBird::setFilters(BIRD_FILT f)
+void Bird::setFilters(BIRD_FILT f)
 {
   if (active) {
       std::cerr << "Cannot change filters while active\n";
@@ -242,7 +249,7 @@ void vjBird::setFilters(BIRD_FILT f)
   filter = f;
 }
 
-void vjBird::setReportRate(char rRate)
+void Bird::setReportRate(char rRate)
 {
   if (active) {
       std::cerr << "Cannot change report rate while active\n";
@@ -251,7 +258,7 @@ void vjBird::setReportRate(char rRate)
   repRate = rRate;
 }
 
-void vjBird::setSync(int sync)
+void Bird::setSync(int sync)
 {
   if (active) {
       std::cerr << "Cannot change report rate while active\n";
@@ -260,7 +267,7 @@ void vjBird::setSync(int sync)
   syncStyle = sync;
 }
 
-void vjBird::setBlocking(int blVal)
+void Bird::setBlocking(int blVal)
 {
   if (active) {
       std::cerr << "Cannot change report rate while active\n";
@@ -269,7 +276,7 @@ void vjBird::setBlocking(int blVal)
   blocking = blVal;
 }
 
-void vjBird::positionCorrect(float&x,float&y,float&z) {
+void Bird::positionCorrect(float&x,float&y,float&z) {
   int xlo,ylo,zlo,xhi,yhi,zhi;
   float a,b,c,a1,b1,c1;
 
@@ -321,7 +328,7 @@ void vjBird::positionCorrect(float&x,float&y,float&z) {
     return;
 }
 
-void vjBird::initCorrectionTable()
+void Bird::initCorrectionTable()
 {
   int i,j,k, xsize,ysize,zsize;
   float dump;
@@ -358,9 +365,9 @@ void vjBird::initCorrectionTable()
 
 
 ///////////////////////////////////////////////////////////////////
-// Local functions to vjBird.cpp
+// Local functions to Bird.cpp
 //////////////////////////////////////////////////////////////////
-inline int getReading(vjMatrix *data, int port)
+inline int getReading(Matrix *data, int port)
 {
   char buff[12];
   //char group;
@@ -388,7 +395,7 @@ inline int getReading(vjMatrix *data, int port)
 
   //vjPOS_DATA *dataPtr = data + addr - 1;
 
-  vjVec3 pos_data, or_data;
+  Vec3 pos_data, or_data;
 
   pos_data[0] = rawToFloat(buff[1],buff[0]) * POSITION_RANGE;       // X
   pos_data[1] = rawToFloat(buff[3],buff[2]) * POSITION_RANGE;       // Y
@@ -671,3 +678,6 @@ static void set_group(int port)
   vpr::System::sleep(2);
 
 }
+
+
+};

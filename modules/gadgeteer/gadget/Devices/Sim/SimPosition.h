@@ -41,12 +41,15 @@
 #include <Input/vjPosition/vjPosition.h>
 
 
+namespace vrj
+{
+   
 //: Simulated positional device
 // Simulates a positional device from a keyboard device.
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimPosition : public vjInput, public vjPosition, public vjSimInput
+class SimPosition : public Input, public Position, public SimInput
 {
 public:
    /* constants for the key array */
@@ -72,19 +75,19 @@ public:
       GLOBAL = 1
    };
 public:
-   vjSimPosition() {;}
-   virtual ~vjSimPosition() {;}
+   SimPosition() {;}
+   virtual ~SimPosition() {;}
 
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
    //: Return position data
-   vjMatrix* getPosData(int devNum=0)
+   Matrix* getPosData(int devNum=0)
    {
-      vjASSERT(devNum == 0);    // Make sure we have a valid dev
+      vprASSERT(devNum == 0);    // Make sure we have a valid dev
       return &mPos;
    }
 
-    vjTimeStamp* getPosUpdateTime (int devNum = 0) {
+    TimeStaMp* getPosUpdateTime (int devNum = 0) {
    return &mUpdateTime;
     }
 
@@ -119,18 +122,20 @@ private:
 
    //: Check if movement is allowed
    //! NOTE: It is not allowed if it hits a simulated wall, etc.
-   bool isTransAllowed(vjVec3 trans);
+   bool isTransAllowed(Vec3 trans);
 
 
 private:
    int            mTransCoordSystem;                 //: What coord system for translations?
    int            mRotCoordSystem;              //: What coord system for rotations?
-   vjMatrix       mPos;                         //: The current position being simulated
-   vjKeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
+   Matrix       mPos;                         //: The current position being simulated
+   KeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
    float          mDTrans;                      //: Delta translation
    float          mDRot;                        //: Delta rotation
 
-    vjTimeStamp   mUpdateTime;                  //: Time of last update
+    TimeStaMp   mUpdateTime;                  //: Time of last update
+};
+
 };
 
 #endif

@@ -38,12 +38,14 @@
 
 #include <Utils/vjDebug.h>
 
-
+namespace vrj
+{
+   
 
  // ------------------------------------------------------------------------
  //: Constructor.
  // ------------------------------------------------------------------------
- vjTrackdController::vjTrackdController(): mTrackdController(NULL)
+ TrackdController::TrackdController(): mTrackdController(NULL)
  {;}
 
  // ------------------------------------------------------------------------
@@ -52,7 +54,7 @@
  //! PRE: None.
  //! POST: Shared memory is released
  // ------------------------------------------------------------------------
- vjTrackdController::~vjTrackdController()
+ TrackdController::~TrackdController()
  {
     delete mTrackdController;
  }
@@ -63,9 +65,9 @@
 // -Create the trackdSensor based on config info
 // -set to active
 // -grow the vector to however many values we need
-bool vjTrackdController::config(vjConfigChunk* c)
+bool TrackdController::config(ConfigChunk* c)
 {
-   if(! (vjInput::config(c) && vjDigital::config(c) && vjAnalog::config(c)))
+   if(! (Input::config(c) && Digital::config(c) && Analog::config(c)))
       return false;
 
    // Create sensor
@@ -94,11 +96,11 @@ bool vjTrackdController::config(vjConfigChunk* c)
 //! PRE: None.
 //! POST: Most recent value is copied over to temp area
 // ------------------------------------------------------------------------
-void vjTrackdController::updateData()
+void TrackdController::updateData()
 {
-   vjASSERT(mTrackdController != NULL && "Make sure that trackd controller has been initialized");
-   vjASSERT((unsigned)mTrackdController->numButtons() <= mCurButtons.size());
-   vjASSERT((unsigned)mTrackdController->numValuators() <= mCurValuators.size() );
+   vprASSERT(mTrackdController != NULL && "Make sure that trackd controller has been initialized");
+   vprASSERT((unsigned)mTrackdController->numButtons() <= mCurButtons.size());
+   vprASSERT((unsigned)mTrackdController->numValuators() <= mCurValuators.size() );
 
    for (int i=0;i<mTrackdController->numButtons();i++)
    {
@@ -111,3 +113,5 @@ void vjTrackdController::updateData()
    }
 }
 
+
+};

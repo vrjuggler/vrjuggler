@@ -38,6 +38,9 @@
 #include <Utils/vjDebug.h>
 #include <typeinfo>
 
+namespace vrj
+{
+   
 namespace {
    enum PendItemResult
    { SUCCESS, FAILED, NEED_DEPS };
@@ -47,11 +50,10 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 }
 
 
-
-int vjConfigChunkHandler::configProcessPending(bool lockIt)
+int ConfigChunkHandler::configProcessPending(bool lockIt)
 {
-   vjConfigManager*     cfg_mgr = vjConfigManager::instance();
-   vjDependencyManager* dep_mgr = vjDependencyManager::instance();
+   ConfigManager*     cfg_mgr = ConfigManager::instance();
+   DependencyManager* dep_mgr = DependencyManager::instance();
 
    bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
 
@@ -65,7 +67,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
    if(lockIt)
       cfg_mgr->lockPending();     // We need to lock the pending first
    {
-      std::list<vjConfigManager::vjPendingChunk>::iterator current, end, remove_me;
+      std::list<ConfigManager::PendingChunk>::iterator current, end, remove_me;
       current = cfg_mgr->getPendingBegin();
       end = cfg_mgr->getPendingEnd();
 
@@ -73,8 +75,8 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
       while(current != end)
       {
          // Get information about the current chunk
-         vjConfigChunk* cur_chunk = (*current).mChunk;
-         vjASSERT(cur_chunk != NULL && "Trying to use an invalid chunk");
+         ConfigChunk* cur_chunk = (*current).mChunk;
+         vprASSERT(cur_chunk != NULL && "Trying to use an invalid chunk");
          std::string chunk_name = cur_chunk->getProperty("name");
          std::string chunk_type = cur_chunk->getType();
 
@@ -86,7 +88,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
             // ---- HANDLE THE CHUNK ---- //
             switch ((*current).mType)
             {
-            case vjConfigManager::vjPendingChunk::ADD:         // -- CONFIG ADD -- //
+            case ConfigManager::PendingChunk::ADD:         // -- CONFIG ADD -- //
                if(dep_mgr->depSatisfied(cur_chunk))            // Are all the dependencies satisfied
                {
                   bool added = this->configAdd(cur_chunk);
@@ -124,7 +126,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                }
                break;
 
-            case vjConfigManager::vjPendingChunk::REMOVE:      // Config remove
+            case ConfigManager::PendingChunk::REMOVE:      // Config remove
                {
                   bool removed = this->configRemove(cur_chunk);
                   if(removed)      // Was there success adding
@@ -223,3 +225,4 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 
 
 
+};

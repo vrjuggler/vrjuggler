@@ -35,8 +35,11 @@
 
 #include <vjConfig.h>
 
-
-class VJ_CLASS_API sockstreambuf:public std::streambuf {
+namespace vrj
+{
+   
+class VJ_CLASS_API sockstreambuf : public std::streambuf 
+{
 public:
 
 #if defined(__GNUC_MINOR__) && __GNUC_MINOR__ < 97
@@ -69,4 +72,5 @@ public:
 };
 
 
+};
 #endif

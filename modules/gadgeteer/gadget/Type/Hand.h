@@ -35,16 +35,19 @@
 
 #include <Input/vjGlove/vjFinger.h>
 
-//  DIJ = Distal Interphalangeal Joint  --- vjFinger tip
+namespace vrj
+{
+   
+//  DIJ = Distal Interphalangeal Joint  --- Finger tip
 //  PIJ = Proximal "              "     --- Middle joint
-//  MPJ = Metacarpo "             "     --- closest to vjHand
-//  ABDUCT = spread of vjFingers
+//  MPJ = Metacarpo "             "     --- closest to Hand
+//  ABDUCT = spread of Fingers
 //
 // YAW and PITCH apply only to WRIST
-class vjHand
+class Hand
 {
 public:
-   vjHand( const float& yaw = 0, const float& pitch = 0 ) : 
+   Hand( const float& yaw = 0, const float& pitch = 0 ) : 
          mPinky( -15, -45, -45, 0 ), 
          mRing( -15, -45, -45, 0 ), 
          mMiddle( -15, -45, -45, 0 ), 
@@ -55,18 +58,18 @@ public:
    {
    }   
    
-   inline vjFinger& pinky() { return mPinky; }
-   inline vjFinger& ring() { return mRing; }
-   inline vjFinger& middle() { return mMiddle; }
-   inline vjFinger& index() { return mIndex; }
-   inline vjFinger& thumb() { return mThumb; }
+   inline Finger& pinky() { return mPinky; }
+   inline Finger& ring() { return mRing; }
+   inline Finger& middle() { return mMiddle; }
+   inline Finger& index() { return mIndex; }
+   inline Finger& thumb() { return mThumb; }
    inline const float& pitch() const { return mPitch; }
    inline const float& yaw() const { return mYaw; }
    
    inline void setPitch( const float& pitch ) { mPitch = pitch; }
    inline void setYaw( const float& yaw ) { mYaw = yaw; }
    
-   // set vjFingers based on digital information.
+   // set Fingers based on digital information.
    void setFingers( const bool& pinky, const bool& ring, const bool& middle, const bool& index, const bool& thumb )
    {
       if (pinky) 
@@ -96,9 +99,11 @@ public:
    }
 
 private:  
-   vjFinger mPinky, mRing, mMiddle, mIndex, mThumb;
+   Finger mPinky, mRing, mMiddle, mIndex, mThumb;
    float mYaw, mPitch;
 };
 
+
+};
 
 #endif

@@ -37,24 +37,27 @@
 
 #include <vjConfig.h>
 
+namespace vrj
+{
+   
 //-----------------------------------------
 //:Dummy time recorder
 //
-//     This version of vjTimeStamp is simply a dummy,
+//     This version of TimeStaMp is simply a dummy,
 //     meant for use on systems where neither the SGI
 //     or Posix versions will work, or where absolutely
 //     no performance-measurement overhead is acceptable.
 //     All functions are empty and inlined, and should
 //     be completely eliminated by any decent compiler.
 //
-//     vjTimeStampPosix should never be instantiated directly.
-//     Instead, use vjTimeStamp, which will be typedefed to
+//     TimeStaMpPosix should never be instantiated directly.
+//     Instead, use TimeStaMp, which will be typedefed to
 //     the correct implementation.
 //
 // @author  Christopher Just
 //-----------------------------------------
 
-class VJ_CLASS_API vjTimeStampNone {
+class VJ_CLASS_API TimeStaMpNone {
 
 public:
 
@@ -63,7 +66,7 @@ public:
 
 
     //: Constructor
-    inline vjTimeStampNone() {;}
+    inline TimeStaMpNone() {;}
 
 
     //: does nothing - this is the null performance monitor, remember?
@@ -71,7 +74,7 @@ public:
 
 
     //: returns 0.0
-    inline float operator - (const vjTimeStampNone& t2) const {
+    inline float operator - (const TimeStaMpNone& t2) const {
 	return 0.0;
     }
 
@@ -83,13 +86,13 @@ public:
 
 
     //: assignment operator
-    inline vjTimeStampNone& operator= (vjTimeStampNone& t2) {
+    inline TimeStaMpNone& operator= (TimeStaMpNone& t2) {
 	return *this;
     }
 
 
     inline friend std::ostream& operator << (std::ostream& out,
-                                             vjTimeStampNone& ts)
+                                             TimeStaMpNone& ts)
     {
 	return out;
     }
@@ -101,5 +104,8 @@ public:
     }
 
 };
+
+};
+
 
 #endif

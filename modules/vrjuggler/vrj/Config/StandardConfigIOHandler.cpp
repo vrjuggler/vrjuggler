@@ -37,15 +37,18 @@
 //#include <Config/vjConfigIOHandler.h>
 //#include <Config/vjConfigChunkDB.h>
 
-//      vjStandardConfigIOHandler () { 
+//      StandardConfigIOHandler () { 
 //          ;
 //      }
 
-//      virtual ~vjStandardConfigIOHandler () {
+//      virtual ~StandardConfigIOHandler () {
 //          ;
 //      }
 
-/*virtual*/ bool vjStandardConfigIOHandler::readConfigChunkDB (const std::string& filename, vjConfigChunkDB& db) {
+namespace vrj
+{
+   
+/*virtual*/ bool StandardConfigIOHandler::readConfigChunkDB (const std::string& filename, ConfigChunkDB& db) {
     std::ifstream in(filename.c_str());
     if (!in)
         return false;
@@ -53,19 +56,19 @@
     return true;
 }
 
-//      virtual bool readConfigChunkDB (std::istream& input, vjConfigChunkDB& db) {
+//      virtual bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db) {
 //          input >> db;
 //          return true;
 //      }
 
-//      virtual bool writeConfigChunkDB (std::ostream& output, const vjConfigChunkDB& db) {
+//      virtual bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db) {
 //          output << db;
 //          return true;
 //      }
 
 //------------------- ChunkDescDB methods -------------
 
-/*virtual*/ bool vjStandardConfigIOHandler::readChunkDescDB (const std::string& filename, vjChunkDescDB& db) {
+/*virtual*/ bool StandardConfigIOHandler::readChunkDescDB (const std::string& filename, ChunkDescDB& db) {
     std::ifstream in(filename.c_str());
     if (!in)
         return false;
@@ -73,17 +76,18 @@
     return true;
 }
 
-/*virtual*/ bool vjStandardConfigIOHandler::readChunkDescDB (std::istream& input, vjChunkDescDB& db) {
+/*virtual*/ bool StandardConfigIOHandler::readChunkDescDB (std::istream& input, ChunkDescDB& db) {
         input >> db;
         return true;
     }
 
-/*virtual*/ bool vjStandardConfigIOHandler::writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db) {
+/*virtual*/ bool StandardConfigIOHandler::writeChunkDescDB (std::ostream& output, const ChunkDescDB& db) {
         output << db;
         return true;
     }
 
-/*virtual*/ bool vjStandardConfigIOHandler::writeChunkDesc (std::ostream& output, const vjChunkDesc& ch, const std::string& pad) {
+/*virtual*/ bool StandardConfigIOHandler::writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad) {
         output << ch;
         return true;
     }
+};

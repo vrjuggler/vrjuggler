@@ -40,7 +40,7 @@ namespace vrj
 {
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
-   bool ajSoundManager::configAdd( vjConfigChunk* chunk )
+   bool ajSoundManager::configAdd( ConfigChunk* chunk )
    {
       if (!configCanHandle( chunk ))
       {
@@ -66,7 +66,7 @@ namespace vrj
       int size = chunk->getNum( "Sound" );
       for (int x = 0; x < size; ++x)
       {
-         vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+         ConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
          std::string alias = (std::string)sound_chunk->getProperty( "Name" );
          std::string filename = (std::string)sound_chunk->getProperty( "filename" );
          bool ambient = (bool)sound_chunk->getProperty( "ambient" );
@@ -95,13 +95,13 @@ namespace vrj
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
-   bool ajSoundManager::configRemove(vjConfigChunk* chunk)
+   bool ajSoundManager::configRemove(ConfigChunk* chunk)
    {
       // remove any specified sounds...
       int size = chunk->getNum( "Sound" );
       for (int x = 0; x < size; ++x)
       {
-         vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+         ConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
          std::string alias = (std::string)sound_chunk->getProperty( "Name" );
          AudioJuggler::instance().remove( alias );
       }
@@ -112,7 +112,7 @@ namespace vrj
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   bool ajSoundManager::configCanHandle( vjConfigChunk* chunk )
+   bool ajSoundManager::configCanHandle( ConfigChunk* chunk )
    {
       std::string chunk_type = (std::string)chunk->getType();
 

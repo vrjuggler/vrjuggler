@@ -36,22 +36,22 @@
 #include <Math/vjVec3.h>
 #include <Math/vjSeg.h>
 
-// Program to test the functionality of the vjPlane class
+// Program to test the functionality of the Plane class
 //
 //
 int main(void)
 {
    // Create some planes and segs to use in the tests
-   const vjVec3 x_axis(1,0,0);
-   const vjVec3 y_axis(0,1,0);
-   const vjVec3 z_axis(0,0,1);
-   const vjVec3 origin(0,0,0);
-   vjPlane zy_plane; zy_plane.makePts(z_axis,origin,y_axis);
+   const Vec3 x_axis(1,0,0);
+   const Vec3 y_axis(0,1,0);
+   const Vec3 z_axis(0,0,1);
+   const Vec3 origin(0,0,0);
+   Plane zy_plane; zy_plane.makePts(z_axis,origin,y_axis);
 
    // Test finding nearest point
-   vjVec3 near_pt;
+   Vec3 near_pt;
    float dist;
-   dist = zy_plane.findNearestPt(vjVec3(1,0,0), near_pt);
+   dist = zy_plane.findNearestPt(Vec3(1,0,0), near_pt);
 
    std::cout << "Testing findNearestPt: ";
    if((dist > 0.0f) && (near_pt == origin))
@@ -60,7 +60,7 @@ int main(void)
       std::cout << "FAILED!!!\n";
 
    // Test isect with a seg
-   vjSeg seg_through, seg_toward, seg_parallel;
+   Seg seg_through, seg_toward, seg_parallel;
    float t_dist;
    bool hit;
 
@@ -70,7 +70,7 @@ int main(void)
 
    hit = zy_plane.isect(seg_through,&t_dist);
    std::cout << "Testing isect (through): ";
-   if(hit && vjMath::isZero(t_dist - 1.0f))
+   if(hit && Math::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
@@ -93,14 +93,14 @@ int main(void)
    // Test isect with a line
    hit = zy_plane.isectLine(seg_through,&t_dist);
    std::cout << "Testing isectLine (through): ";
-   if(hit && vjMath::isZero(t_dist - 1.0f))
+   if(hit && Math::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
 
    hit = zy_plane.isectLine(seg_toward,&t_dist);
    std::cout << "Testing isectLine (toward): ";
-   if(hit && vjMath::isZero(t_dist - 1.0f))
+   if(hit && Math::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";

@@ -32,34 +32,36 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjProjection.h>
-
-float vjProjection::mNearDist = 0.1f;
-float vjProjection::mFarDist = 10000.0f;
+namespace vrj
+{
+   
+float Projection::mNearDist = 0.1f;
+float Projection::mFarDist = 10000.0f;
 
 
 //: Helper to the frustum apex and corners in model coordinates
 //!NOTE: The normal frustum is in camera (clip) coordinates
 //+      and the model is in model (eye) coordinates.
 //+      The matrix viewMat transforms from eye to clip
-void vjProjection::getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr, vjVec3& ul, vjVec3& ll)
+void Projection::getFrustumApexAndCorners(Vec3& apex, Vec3& ur, Vec3& lr, Vec3& ul, Vec3& ll)
 {
-   vjMatrix view_mat_inv;
+   Matrix view_mat_inv;
    view_mat_inv.invert(mViewMat);   // Get the inverse matrix
 
    //float near_dist = mFocusPlaneDist;
    // User like triangles to get the params for the focus surface
-   float mult_factor = mFocusPlaneDist/mFrustum[vjFrustum::VJ_NEAR];
-   float bot = mFrustum[vjFrustum::VJ_BOTTOM]*mult_factor;
-   float left = mFrustum[vjFrustum::VJ_LEFT]*mult_factor;
-   float top = mFrustum[vjFrustum::VJ_TOP]*mult_factor;
-   float right = mFrustum[vjFrustum::VJ_RIGHT]*mult_factor;
+   float mult_factor = mFocusPlaneDist/mFrustum[Frustum::VJ_NEAR];
+   float bot = mFrustum[Frustum::VJ_BOTTOM]*mult_factor;
+   float left = mFrustum[Frustum::VJ_LEFT]*mult_factor;
+   float top = mFrustum[Frustum::VJ_TOP]*mult_factor;
+   float right = mFrustum[Frustum::VJ_RIGHT]*mult_factor;
 
    // Create points in clip space
-   vjVec3 apexClip(0.0f, 0.0f, 0.0f);
-   vjVec3 urClip(right, top, -mFocusPlaneDist);
-   vjVec3 lrClip(right, bot, -mFocusPlaneDist);
-   vjVec3 ulClip(left, top, -mFocusPlaneDist);
-   vjVec3 llClip(left, bot, -mFocusPlaneDist);
+   Vec3 apexClip(0.0f, 0.0f, 0.0f);
+   Vec3 urClip(right, top, -mFocusPlaneDist);
+   Vec3 lrClip(right, bot, -mFocusPlaneDist);
+   Vec3 ulClip(left, top, -mFocusPlaneDist);
+   Vec3 llClip(left, bot, -mFocusPlaneDist);
 
    apex.xformFull(view_mat_inv, apexClip);
    ur.xformFull(view_mat_inv, urClip);
@@ -69,15 +71,15 @@ void vjProjection::getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr
 }
 
 
-std::ostream& vjProjection::outStream(std::ostream& out)
+std::ostream& Projection::outStream(std::ostream& out)
 {
    out << "eye: ";
    switch(mEye)
    {
-   case vjProjection::LEFT:
+   case Projection::LEFT:
       out << "Left";
       break;
-   case vjProjection::RIGHT:
+   case Projection::RIGHT:
       out << "Right";
       break;
    }
@@ -85,7 +87,7 @@ std::ostream& vjProjection::outStream(std::ostream& out)
    return out;
 }
 
-void vjProjection::setNearFar(float near_val, float far_val)
+void Projection::setNearFar(float near_val, float far_val)
 {
    vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
                            << "near: " << near_val << " far:" << far_val
@@ -94,7 +96,9 @@ void vjProjection::setNearFar(float near_val, float far_val)
    mFarDist = far_val;
 }
 
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjProjection& proj)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, Projection& proj)
 {
    return proj.outStream(out);
 }
+
+};

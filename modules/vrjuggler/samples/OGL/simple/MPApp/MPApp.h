@@ -28,7 +28,7 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 // It also has basic code that draws a box centered on
 // the origin
 //----------------------------------------------------
-class MPApp : public vjGlApp
+class MPApp : public GlApp
 {
 public:
    MPApp() : mCurTime(0.0f)
@@ -128,10 +128,10 @@ public:
    float             mCurTime;
    Mesh              mMesh;         // The mesh to draw
 
-   vjPosInterface    mWand;         // Positional interface for Wand position
-   vjPosInterface    mHead;         // Positional interface for Head position
-   vjDigitalInterface   mButton0;   // Digital interface for button 0
-   vjDigitalInterface   mButton1;   // Digital interface for button 1
+   PosInterface    mWand;         // Positional interface for Wand position
+   PosInterface    mHead;         // Positional interface for Head position
+   DigitalInterface   mButton0;   // Digital interface for button 0
+   DigitalInterface   mButton1;   // Digital interface for button 1
 };
 
 

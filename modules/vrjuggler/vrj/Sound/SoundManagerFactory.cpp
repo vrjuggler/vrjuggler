@@ -15,7 +15,7 @@ SoundManager&    SoundManagerFactory::get()
     static vrj::ajSoundManager temp;
     return temp;
    #else
-    static vrj::SoundManager temp;
+    static SoundManager temp;
     return temp;
    #endif
 }

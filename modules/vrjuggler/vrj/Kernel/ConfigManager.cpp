@@ -38,11 +38,14 @@
 #include <Utils/vjDebug.h>
 #include <stdlib.h>
 
+namespace vrj
+{
+   
 /*
-vjConfigManager* vjConfigManager::_instance = NULL;
-vpr::Mutex  vjConfigManager::_inst_lock;
+ConfigManager* ConfigManager::_instance = NULL;
+vpr::Mutex  ConfigManager::_inst_lock;
 */
-vjSingletonImp(vjConfigManager);
+vprSingletonImp(ConfigManager);
 
 //: Do we need to check the pending list
 //! CONCURRENCY: concurrent
@@ -50,7 +53,7 @@ vjSingletonImp(vjConfigManager);
 // each time it is called.
 // if it goes pending_repeat_limit calls without
 // changing size, then it returns false until mLastPendingSize changes
-bool vjConfigManager::pendingNeedsChecked()
+bool ConfigManager::pendingNeedsChecked()
 {
    const int pending_repeat_limit = 1;    // Must be one or greater.  1 means only allow one time of no changes
    int cur_pending_size = 0;
@@ -114,15 +117,15 @@ bool vjConfigManager::pendingNeedsChecked()
 
 
 // Add the given chunk db to the pending list as adds
-void vjConfigManager::addChunkDB(vjConfigChunkDB* db)
+void ConfigManager::addChunkDB(ConfigChunkDB* db)
 {
-   vjASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
+   vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
    lockPending();
    {
-      vjPendingChunk pending;
-      pending.mType = vjPendingChunk::ADD;
+      PendingChunk pending;
+      pending.mType = PendingChunk::ADD;
 
-      for(std::vector<vjConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
+      for(std::vector<ConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
       {
          pending.mChunk = (*i);
          mPendingConfig.push_back(pending);
@@ -136,15 +139,15 @@ void vjConfigManager::addChunkDB(vjConfigChunkDB* db)
    mPendingCountMutex.release();
 }
 
-void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
+void ConfigManager::removeChunkDB(ConfigChunkDB* db)
 {
-   vjASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
+   vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
    lockPending();
    {
-      vjPendingChunk pending;
-      pending.mType = vjPendingChunk::REMOVE;
+      PendingChunk pending;
+      pending.mType = PendingChunk::REMOVE;
 
-      for(std::vector<vjConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
+      for(std::vector<ConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
       {
          pending.mChunk = (*i);
          mPendingConfig.push_back(pending);
@@ -163,14 +166,14 @@ void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
 //! POST: Any chunks in active with dependencies not filled are added to the
 //+       the pending list. (A remove and an add are added to the pending)
 //! RETURNS: The number of lost dependencies found
-int vjConfigManager::scanForLostDependencies()
+int ConfigManager::scanForLostDependencies()
 {
-   vjASSERT(0 == mActiveLock.test());        // We can't hold the lock upon entry
+   vprASSERT(0 == mActiveLock.test());        // We can't hold the lock upon entry
 
    vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjConfigManager::scanForLostDependencies: Entered: \n" << vjDEBUG_FLUSH;
 
-   vjDependencyManager* dep_mgr = vjDependencyManager::instance();
-   std::vector<vjConfigChunk*> chunks;
+   DependencyManager* dep_mgr = DependencyManager::instance();
+   std::vector<ConfigChunk*> chunks;
    int num_lost_deps(0);
 
    // NOTE: can't hold this lock because the depSatisfied routines make use of the activeLock as well
@@ -192,15 +195,15 @@ int vjConfigManager::scanForLostDependencies()
          num_lost_deps++;              // Keep a count of the number lost deps found
 
          // Add the pending removal
-         vjPendingChunk pending;
-         pending.mType = vjPendingChunk::REMOVE;
+         PendingChunk pending;
+         pending.mType = PendingChunk::REMOVE;
          pending.mChunk = chunks[i];
          addPending(pending);
 
          // Add the pending re-addition
-         vjConfigChunk* copy_of_chunk;          // Need a copy so that the remove can delete the chunk
-         copy_of_chunk = new vjConfigChunk (*chunks[i]);
-         pending.mType = vjPendingChunk::ADD;
+         ConfigChunk* copy_of_chunk;          // Need a copy so that the remove can delete the chunk
+         copy_of_chunk = new ConfigChunk (*chunks[i]);
+         pending.mType = PendingChunk::ADD;
          pending.mChunk = copy_of_chunk;
          addPending(pending);                   // Add the add item
       }
@@ -212,24 +215,24 @@ int vjConfigManager::scanForLostDependencies()
 }
 
 
-void vjConfigManager::debugDumpPending(int debug_level)
+void ConfigManager::debugDumpPending(int debug_level)
 {
-   vjASSERT(1 == mPendingLock.test());
+   vprASSERT(1 == mPendingLock.test());
    vjDEBUG(vjDBG_ALL,debug_level)
          << clrSetNORM(clrGREEN)
          << "---- Pending list: " << mPendingConfig.size() << " items ----\n"
          << clrRESET << vjDEBUG_FLUSH;
-   std::list<vjConfigManager::vjPendingChunk>::iterator current, end;
+   std::list<ConfigManager::PendingChunk>::iterator current, end;
    current = getPendingBegin();
    end = getPendingEnd();
 
    while(current != end)
    {
-      vjConfigChunk* cur_chunk = (*current).mChunk;
+      ConfigChunk* cur_chunk = (*current).mChunk;
 
-      if((*current).mType == vjPendingChunk::ADD)
+      if((*current).mType == PendingChunk::ADD)
          vjDEBUG_NEXT(vjDBG_ALL,debug_level) << "   ADD -->" << vjDEBUG_FLUSH;
-      else if((*current).mType == vjPendingChunk::REMOVE)
+      else if((*current).mType == PendingChunk::REMOVE)
          vjDEBUG_NEXT(vjDBG_ALL,debug_level) << "REMOVE -->" << vjDEBUG_FLUSH;
 
       vjDEBUG_CONT(vjDBG_ALL,debug_level) << cur_chunk->getProperty("name")
@@ -241,3 +244,5 @@ void vjConfigManager::debugDumpPending(int debug_level)
    vjDEBUG_NEXT(vjDBG_ALL,debug_level)
        << "----------------------------------\n" << vjDEBUG_FLUSH;
 }
+
+};

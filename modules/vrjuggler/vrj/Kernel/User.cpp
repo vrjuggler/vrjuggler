@@ -38,19 +38,22 @@
 #include <Config/vjConfigChunk.h>
 
 
-int vjUser::mNextUserId = 0;
+namespace vrj
+{
+   
+int User::mNextUserId = 0;
 
 
-int vjUser::getId()
+int User::getId()
 { return mUserId; }
 
-std::string vjUser::getName()
+std::string User::getName()
 { return mName; }
 
-bool vjUser::config(vjConfigChunk* chunk)
+bool User::config(ConfigChunk* chunk)
 {
-   vjASSERT(chunk != NULL);
-   vjASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
+   vprASSERT(chunk != NULL);
+   vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
    vjDEBUG_BEGIN(vjDBG_KERNEL,3) << "vjUser::config: Creating a new user\n" << vjDEBUG_FLUSH;
 
@@ -79,3 +82,6 @@ bool vjUser::config(vjConfigChunk* chunk)
 
    return true;
 }
+
+
+};

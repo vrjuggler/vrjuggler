@@ -49,8 +49,10 @@
 //! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
 // XXX: We are going to say the cubes are 0 based 
 
-
-int vjDTK::getStationIndex(int stationNum, int bufferIndex)
+namespace vrj
+{
+   
+int DTK::getStationIndex(int stationNum, int bufferIndex)
 {
     // We could assert here to check that bufferIndex is valid.  As far as station index, there are several
     // places which we have different ranges of values for it.  So we can't really assert to see if it is valid.
@@ -59,18 +61,18 @@ int vjDTK::getStationIndex(int stationNum, int bufferIndex)
 }
 
 
-vjDTK::vjDTK()
+DTK::DTK()
 {
     _dtkSegments = NULL;
     port = NULL;
 }
 
-bool vjDTK::config(vjConfigChunk *c)
+bool DTK::config(ConfigChunk *c)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "	 vjDTK::config(vjConfigChunk*)"
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "	 DTK::config(ConfigChunk*)"
 			       << std::endl << vjDEBUG_FLUSH;
 
-    if (!vjPosition::config(c) || !vjDigital::config(c) || !vjAnalog::config(c))
+    if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
 	return false;
     
     
@@ -82,7 +84,7 @@ bool vjDTK::config(vjConfigChunk *c)
 //     String: segmentName
 //        int: dataType
 
-    vjConfigChunk* embeddedChunk = NULL;
+    ConfigChunk* embeddedChunk = NULL;
     int i = 0;
     
 /* Dynamically Load the DTK Library
@@ -98,12 +100,12 @@ bool vjDTK::config(vjConfigChunk *c)
     numSegments = c->getNum("segments");
     if(numSegments > 0)
     {
-	_dtkSegments = new vjDTKMemorySegmentHandle[numSegments];
+	_dtkSegments = new DTKMemorySegmentHandle[numSegments];
 	
 	for(i = 0; i < numSegments; i++)
 	{
-	    embeddedChunk = static_cast<vjConfigChunk*>(c->getProperty("segments", i));
-	    _dtkSegments[i] = new vjDTKMemorySegment;
+	    embeddedChunk = static_cast<ConfigChunk*>(c->getProperty("segments", i));
+	    _dtkSegments[i] = new DTKMemorySegment;
 	    if(embeddedChunk != NULL)
 	    {
 		if(!(_dtkSegments[i]->config(embeddedChunk)))
@@ -130,7 +132,7 @@ bool vjDTK::config(vjConfigChunk *c)
     return true;
 }
 
-vjDTK::~vjDTK()
+DTK::~DTK()
 {
     this->stopSampling();  
     int i = 0;  
@@ -154,7 +156,7 @@ vjDTK::~vjDTK()
 }
 
 // Main thread of control for this active object
-void vjDTK::controlLoop(void* nullParam)
+void DTK::controlLoop(void* nullParam)
 {
 
     
@@ -168,8 +170,8 @@ void vjDTK::controlLoop(void* nullParam)
 	delete [] mDigitalData;
      
     int numbuffs = numPositional*3;
-    theData = (vjMatrix*) new vjMatrix[numbuffs];
-    mDataTimes = new vjTimeStamp[numbuffs];
+    theData = (Matrix*) new Matrix[numbuffs];
+    mDataTimes = new TimeStaMp[numbuffs];
 
     numbuffs = numDigital*3;
     mDigitalData = new int[numbuffs];
@@ -187,7 +189,7 @@ void vjDTK::controlLoop(void* nullParam)
     }
 }
 
-int vjDTK::startSampling()
+int DTK::startSampling()
 {
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
@@ -203,7 +205,7 @@ int vjDTK::startSampling()
 	vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
 						<< "vjIsense: startSampling called, when already sampling.\n"
 						<< vjDEBUG_FLUSH;
-	vjASSERT(false);
+	vprASSERT(false);
 	
     } else {
     	if (!this->startDTK()) {
@@ -214,8 +216,8 @@ int vjDTK::startSampling()
     	}
 
 // Create a new thread to handle the control
-	vpr::ThreadMemberFunctor<vjDTK>* memberFunctor =
-	    new vpr::ThreadMemberFunctor<vjDTK>(this, &vjDTK::controlLoop, NULL);
+	vpr::ThreadMemberFunctor<DTK>* memberFunctor =
+	    new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
 	vpr::Thread* new_thread;
 	new_thread = new vpr::Thread(memberFunctor);
 	myThread = new_thread;
@@ -232,19 +234,19 @@ int vjDTK::startSampling()
     return 0;
 }
 
-int vjDTK::sample()
+int DTK::sample()
 {
     if (this->isActive() == false)
 	return 0;
 
     int i;
     int index;
-    vjDTKMemorySegment* segment = NULL;
+    DTKMemorySegment* segment = NULL;
     float *floatData;
     int   *intData;
 
-    vjTimeStamp sampletime;
-    vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+    TimeStaMp sampletime;
+    Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
     sampletime.set();
 
@@ -316,7 +318,7 @@ int vjDTK::sample()
     return 1;
 }
 
-int vjDTK::stopSampling()
+int DTK::stopSampling()
 {
     if (this->isActive() == false)
 	return 0;
@@ -338,7 +340,7 @@ int vjDTK::stopSampling()
     return 1;
 }
 
-vjMatrix* vjDTK::getPosData( int d )
+Matrix* DTK::getPosData( int d )
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
 	return NULL;
@@ -347,7 +349,7 @@ vjMatrix* vjDTK::getPosData( int d )
 }
 
 
-int vjDTK::getDigitalData( int d )
+int DTK::getDigitalData( int d )
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numDigital) )
 	return 0;
@@ -355,7 +357,7 @@ int vjDTK::getDigitalData( int d )
     return mDigitalData[getStationIndex(d,current)];
 }
 
-float vjDTK::getAnalogData( int d )
+float DTK::getAnalogData( int d )
 {
  
     if( (this->isActive() == false) || (d < 0) || (d >= numAnalog) )
@@ -365,7 +367,7 @@ float vjDTK::getAnalogData( int d )
  
 }  
 
-vjTimeStamp* vjDTK::getPosUpdateTime (int d) 
+TimeStaMp* DTK::getPosUpdateTime (int d) 
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
 	return NULL;
@@ -373,7 +375,7 @@ vjTimeStamp* vjDTK::getPosUpdateTime (int d)
     return (&mDataTimes[getStationIndex(d,current)]);
 }
 
-void vjDTK::updateData()
+void DTK::updateData()
 {
     if (this->isActive() == false)
 	return;
@@ -397,7 +399,7 @@ void vjDTK::updateData()
     swapCurrentIndexes();
 }
 
-bool vjDTK::startDTK()
+bool DTK::startDTK()
 {
     int i = 0;
     
@@ -416,7 +418,7 @@ bool vjDTK::startDTK()
     return true;
 }
 
-bool vjDTK::stopDTK()
+bool DTK::stopDTK()
 {
     if( !active || _client == NULL) return false;
     delete _client;	
@@ -424,3 +426,5 @@ bool vjDTK::stopDTK()
     
     return true;
 }
+
+};

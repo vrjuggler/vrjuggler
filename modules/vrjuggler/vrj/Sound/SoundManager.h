@@ -8,21 +8,21 @@ namespace vrj
 {
    //: vrjuggler sound manager
    //!PUBLIC_API:
-   class SoundManager : public vjConfigChunkHandler   
+   class SoundManager : public ConfigChunkHandler   
    {
    public:
       //: Add the chunk to the configuration
       //! PRE: configCanHandle(chunk) == true
-      virtual bool configAdd( vjConfigChunk* chunk ) { return false; }
+      virtual bool configAdd( ConfigChunk* chunk ) { return false; }
 
       //: Remove the chunk from the current configuration
       //! PRE: configCanHandle(chunk) == true
-      virtual bool configRemove( vjConfigChunk* chunk ) { return false; }
+      virtual bool configRemove( ConfigChunk* chunk ) { return false; }
 
       //: Can the handler handle the given chunk?
       //! RETURNS: true - Can handle it
       //+          false - Can't handle it
-      virtual bool configCanHandle( vjConfigChunk* chunk ) { return false; }
+      virtual bool configCanHandle( ConfigChunk* chunk ) { return false; }
 
    public:
       //: Enable a frame to be drawn

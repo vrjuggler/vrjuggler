@@ -2,7 +2,7 @@
 #include <Input/InputManager/vjDeviceFactory.h>
 #include <vpr/System.h>
 
-class MyButtonDevice : public vjDigital
+class MyButtonDevice : public Digital
 {
 public:
    MyButtonDevice() : mSampleThread( NULL ) {}
@@ -22,7 +22,7 @@ private:
    int           mPortId, mBaud;
 };
 
-vjDeviceConstructor<MyButtonDevice>* this_ptr_not_used = new vjDeviceConstructor<MyButtonDevice>;
+DeviceConstructor<MyButtonDevice>* this_ptr_not_used = new DeviceConstructor<MyButtonDevice>;
 
 //: What is the name of this device?
 //  This function returns a string that should match this device's 
@@ -65,7 +65,7 @@ int MyButtonDevice::stopSampling()
 }
 
 //: function for users to get the digital data.
-//  here we overload vjDigital::getDigitalData
+//  here we overload Digital::getDigitalData
 int MyButtonDevice::getDigitalData(int d)
 {
    // only one button, so we ignore "d"
@@ -88,11 +88,11 @@ void MyButtonDevice::threadedSampleFunction( void* classPointer )
 }
 
 //: When the system detects a configuration change for your driver, it will
-//  pass the new vjConfigChunk into this function.  See the documentation
+//  pass the new ConfigChunk into this function.  See the documentation
 //  on config chunks, for information on how to access them.
-bool MyButtonDevice::config( vjConfigChunk *c )
+bool MyButtonDevice::config( ConfigChunk *c )
 {
-  if (!vjDigital::config(c))
+  if (!Digital::config(c))
      return false;
 
   mPortId = c->getProperty( "port" );

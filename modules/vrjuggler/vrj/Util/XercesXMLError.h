@@ -37,14 +37,18 @@
 #include <sax/ErrorHandler.hpp>
 #include <iostream.h>
 
-class vjXercesXMLError : public ErrorHandler
+namespace vrj
+{
+   
+
+class XercesXMLError : public ErrorHandler
 {
 public:
-    vjXercesXMLError()
+    XercesXMLError()
     {
     }
 
-    ~vjXercesXMLError()
+    ~XercesXMLError()
     {
     } 
 
@@ -53,6 +57,8 @@ public:
     void error(const SAXParseException& toCatch);
     void fatalError(const SAXParseException& toCatch);
     void resetErrors();
+};
+
 };
 
 #endif

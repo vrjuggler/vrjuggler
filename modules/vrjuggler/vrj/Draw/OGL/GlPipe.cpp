@@ -49,16 +49,19 @@
 #   include <GL/gl.h>
 #endif
 
+namespace vrj
+{
+   
 
 //: Start the pipe running
 //! POST: The pipe has it's own thread of control and is ready to operate
-int vjGlPipe::start()
+int GlPipe::start()
 {
-    vjASSERT(mThreadRunning == false);        // We should not be running yet
+    vprASSERT(mThreadRunning == false);        // We should not be running yet
 
     // Create a new thread to handle the control loop
-    vpr::ThreadMemberFunctor<vjGlPipe>* memberFunctor =
-         new vpr::ThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
+    vpr::ThreadMemberFunctor<GlPipe>* memberFunctor =
+         new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
 
     mActiveThread = new vpr::Thread(memberFunctor);
 
@@ -69,9 +72,9 @@ int vjGlPipe::start()
 
 //: Trigger rendering of the pipe to start
 //! POST: The pipe has be told to start rendering
-void vjGlPipe::triggerRender()
+void GlPipe::triggerRender()
 {
-   //vjASSERT(mThreadRunning == true);      // We must be running
+   //vprASSERT(mThreadRunning == true);      // We must be running
    while(!mThreadRunning)
    {
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
@@ -83,31 +86,31 @@ void vjGlPipe::triggerRender()
 
 //: Blocks until rendering of the windows is completed
 //! POST: The pipe has completed its rendering
-void vjGlPipe::completeRender()
+void GlPipe::completeRender()
 {
-   vjASSERT(mThreadRunning == true);      // We must be running
+   vprASSERT(mThreadRunning == true);      // We must be running
 
    renderCompleteSema.acquire();
 }
 
 //: Trigger swapping of all pipe's windows
-void vjGlPipe::triggerSwap()
+void GlPipe::triggerSwap()
 {
-   vjASSERT(mThreadRunning == true);
+   vprASSERT(mThreadRunning == true);
    swapTriggerSema.release();
 }
 
 //: Blocks until swapping of the windows is completed
-void vjGlPipe::completeSwap()
+void GlPipe::completeSwap()
 {
-   vjASSERT(mThreadRunning == true);
+   vprASSERT(mThreadRunning == true);
    swapCompleteSema.acquire();
 }
 
 
 /// Add a GLWindow to the window list
 // Control loop must now open the window on the next frame
-void vjGlPipe::addWindow(vjGlWindow* win)
+void GlPipe::addWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardNew(newWinLock);       // Protect the data
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum
@@ -118,7 +121,7 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 
 //: Remove a GLWindow from the window list
 //! NOTE: The window is not actually removed until the next draw trigger
-void vjGlPipe::removeWindow(vjGlWindow* win)
+void GlPipe::removeWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
@@ -138,11 +141,11 @@ void vjGlPipe::removeWindow(vjGlWindow* win)
 // - Swap all windows <br>
 // - Signal swap completed <br>
 //
-void vjGlPipe::controlLoop(void* nullParam)
+void GlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running so set flag
    // this should really not be here...
-   vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
+   Kernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
 
    while (!controlExit)
    {
@@ -161,7 +164,7 @@ void vjGlPipe::controlLoop(void* nullParam)
       {
          renderTriggerSema.acquire();
 
-         vjGlApp* theApp = glManager->getApp();
+         GlApp* theApp = glManager->getApp();
 
             mPerfBuffer->set(mPerfPhase = 0);
          // --- pipe PRE-draw function ---- //
@@ -194,7 +197,7 @@ void vjGlPipe::controlLoop(void* nullParam)
 // Closes all the windows in the list of windows to close
 //! POST: The window to close is removed from the list of open windows
 //+       and the list of newWins
-void vjGlPipe::checkForWindowsToClose()
+void GlPipe::checkForWindowsToClose()
 {
    if(mClosingWins.size() > 0)   // If there are windows to close
    {
@@ -204,11 +207,11 @@ void vjGlPipe::checkForWindowsToClose()
 
       for(unsigned int i=0;i<mClosingWins.size();i++)
       {
-         vjGlWindow* win = mClosingWins[i];
+         GlWindow* win = mClosingWins[i];
 
          // Call contextClose
-         vjGlApp* theApp = glManager->getApp();       // Get application for easy access
-         vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+         GlApp* theApp = glManager->getApp();       // Get application for easy access
+         Display* theDisplay = win->getDisplay();   // Get the display for easy access
          //theDisplay->recordLatency (0, 1);
 
          glManager->setCurrentContext(win->getId());     // Set TS data of context id
@@ -232,13 +235,13 @@ void vjGlPipe::checkForWindowsToClose()
       }
 
       mClosingWins.erase(mClosingWins.begin(), mClosingWins.end());
-      vjASSERT(mClosingWins.size() == 0);;
+      vprASSERT(mClosingWins.size() == 0);;
    }
 }
 
 //:  Checks for any new windows to add to the pipe
 //! POST: Any new windows will be opened and added to the pipe's rendering list
-void vjGlPipe::checkForNewWindows()
+void GlPipe::checkForNewWindows()
 {
    if (newWins.size() > 0)  // If there are new windows added
    {
@@ -265,24 +268,24 @@ void vjGlPipe::checkForNewWindows()
       }
 
       newWins.erase(newWins.begin(), newWins.end());
-      vjASSERT(newWins.size() == 0);
+      vprASSERT(newWins.size() == 0);
    }
 }
 
 //: Renders the window using OpenGL
 //! POST: win is rendered (In stereo if it is a stereo window)
-void vjGlPipe::renderWindow(vjGlWindow* win)
+void GlPipe::renderWindow(GlWindow* win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
-   vjViewport::View  view;                      // The view for the active viewport
+   Viewport::View  view;                      // The view for the active viewport
 
-   vjGlApp* theApp = glManager->getApp();       // Get application for easy access
-   vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+   GlApp* theApp = glManager->getApp();       // Get application for easy access
+   Display* theDisplay = win->getDisplay();   // Get the display for easy access
 
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vjDEBUG(vjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
-                             << vjGlDrawManager::instance()->getCurrentContext()
+                             << GlDrawManager::instance()->getCurrentContext()
                              << std::endl << vjDEBUG_FLUSH;
       mPerfBuffer->set(++mPerfPhase);
 
@@ -296,9 +299,9 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    // BUFFER PRE DRAW: Check if we need to clear stereo buffers
    if(win->isStereo())
    {
-      win->setViewBuffer(vjViewport::RIGHT_EYE);
+      win->setViewBuffer(Viewport::RIGHT_EYE);
       theApp->bufferPreDraw();
-      win->setViewBuffer(vjViewport::LEFT_EYE);
+      win->setViewBuffer(Viewport::LEFT_EYE);
       theApp->bufferPreDraw();
    }
    else
@@ -322,7 +325,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       mPerfBuffer->set(++mPerfPhase);
 
    // --- FOR EACH VIEWPORT -- //
-   vjViewport* viewport = NULL;
+   Viewport* viewport = NULL;
    unsigned num_vps = theDisplay->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
@@ -344,11 +347,11 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          // ---- SURFACE --- //
          if (viewport->isSurface())
          {
-            vjSurfaceViewport* surface_vp = dynamic_cast<vjSurfaceViewport*>(viewport);
+            SurfaceViewport* surface_vp = dynamic_cast<SurfaceViewport*>(viewport);
 
-            if((vjViewport::STEREO == view) || (vjViewport::LEFT_EYE == view))      // LEFT EYE
+            if((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
             {
-               win->setViewBuffer(vjViewport::LEFT_EYE);
+               win->setViewBuffer(Viewport::LEFT_EYE);
                win->setProjection(surface_vp->getLeftProj());
                glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
 
@@ -359,9 +362,9 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
                glManager->drawObjects();
                   mPerfBuffer->set(++mPerfPhase);
             }
-            if ((vjViewport::STEREO == view) || (vjViewport::RIGHT_EYE == view))    // RIGHT EYE
+            if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
             {
-               win->setViewBuffer(vjViewport::RIGHT_EYE);
+               win->setViewBuffer(Viewport::RIGHT_EYE);
                win->setProjection(surface_vp->getRightProj());
                glManager->currentUserData()->setProjection(surface_vp->getRightProj());
 
@@ -378,7 +381,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          // ---- SIMULATOR ---------- //
          else if(viewport->isSimulator())
          {
-            vjSimViewport* sim_vp = dynamic_cast<vjSimViewport*>(viewport);
+            SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
 
             win->setCameraProjection(sim_vp->getCameraProj());
             glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
@@ -400,10 +403,12 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
 
 //: Swaps the buffers of the given window
 // Make the context current, and swap the window
-void vjGlPipe::swapWindowBuffers(vjGlWindow* win)
+void GlPipe::swapWindowBuffers(GlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
    //vjDisplayWindow* theDisplay = win->getDisplay();   // Get the display for easy access
    //theDisplay->recordLatency (2, 3);
 }
+
+};

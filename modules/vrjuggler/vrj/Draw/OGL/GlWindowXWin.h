@@ -35,16 +35,21 @@
 #define _VJ_GLX_WIN_H
 //#pragma once
 
-#include <vjConfig.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
+
+#include <vjConfig.h>
 
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/vjKernel.h>
 #include <Utils/vjDebug.h>
 #include <Kernel/vjDisplay.h>
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
+
+
+namespace vrj
+{
 
 // this simple motif-esqe definition was taken from GLUT
 typedef struct {
@@ -55,8 +60,7 @@ typedef struct {
   long input_mode;
 } MotifWmHints;
 
-
-
+   
 //------------------------------------
 //: A GLX specific glWindow
 //------------------------------------
@@ -64,46 +68,48 @@ typedef struct {
 // to dealing with a GLX window
 // in OpenGL
 //------------------------------------
-class vjGlxWindow: public vjGlWindow, public vjXWinKeyboard
+class GlxWindow: public vrj::GlWindow, public vrj::XWinKeyboard
 {
 public:
-    vjGlxWindow();
-    ~vjGlxWindow();
+    GlxWindow();
+    ~GlxWindow();
 
     void swapBuffers();
     int open();
     int close();
     bool makeCurrent();
 
-   void config(vjDisplay* disp);
+   void config(vrj::Display* disp);
 
 public:  /**** Static Helpers *****/
-   /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins);
+   /* static */ virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
 
 protected:
       /* private member functions.  these get profoundly painful */
-   XVisualInfo *GetGlxVisInfo (Display *display, int screen);
+   XVisualInfo *GetGlxVisInfo (::Display *display, int screen);
 
    //!PRE:  window is an xwindow under display
    //!POST: returns true if e is a mapnotify event for window, else false
    //!NOTE: this is a utility function for InitGfx,  used to wait
    //+       until a window has actually been mapped.
-   static int EventIsMapNotify (Display *display,  XEvent *e,  XPointer window);
+   static int EventIsMapNotify (::Display *display,  ::XEvent *e,  ::XPointer window);
 
    //: Called with any x-events to process
    // From X-win keyboard
    // Called from seperate process (keyboard device update)
-   virtual void processEvent(XEvent event);
+   virtual void processEvent(::XEvent event);
 
 private:
-   Display*       x_display;
-   XVisualInfo*   visual_info;
-   GLXContext     glx_context;
-   Window         x_window;
+   ::Display*       x_display;
+   ::XVisualInfo*   visual_info;
+   ::GLXContext     glx_context;
+   ::Window         x_window;
    std::string    window_name;
    int            mPipe;
    std::string    mXDisplayName;       //: Name of the x display to use
    bool           mAreKeyboardDevice;  // Should we act as a keyboard device to
 };
 
+
+} // end namespace
 #endif

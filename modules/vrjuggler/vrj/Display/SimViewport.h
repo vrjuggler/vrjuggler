@@ -44,24 +44,27 @@
 
 #include <Config/vjConfigChunk.h>
 
-class vjSimViewport : public vjViewport
+namespace vrj
+{
+   
+class SimViewport : public Viewport
 {
 public:
-   vjSimViewport() {
+   SimViewport() {
       mCameraProj = NULL;
    }
 
 public:
    //: Configure the simulator
-   virtual void config(vjConfigChunk* chunk)
+   virtual void config(ConfigChunk* chunk)
    {
-      vjASSERT(chunk != NULL);
-      vjASSERT((std::string)chunk->getType() == std::string("simViewport"));
+      vprASSERT(chunk != NULL);
+      vprASSERT((std::string)chunk->getType() == std::string("simViewport"));
 
-      vjViewport::config(chunk);
+      Viewport::config(chunk);
 
       mType = SIM;
-      mCameraProj = new vjCameraProjection;
+      mCameraProj = new CameraProjection;
       mCameraProj->config(chunk);
 
       std::string camera_proxy_str = chunk->getProperty("cameraPos");
@@ -89,27 +92,27 @@ public:
    virtual void updateProjections()
    {
       updateInternalData();
-      vjMatrix camera_pos = getCameraPos();
+      Matrix camera_pos = getCameraPos();
       mCameraProj->calcViewMatrix(camera_pos);
    }
 
-   vjMatrix getCameraPos()
+   Matrix getCameraPos()
    { return mCameraPos; }
 
-   vjMatrix getHeadPos()
+   Matrix getHeadPos()
    { return mHeadPos; }
 
-   vjMatrix getWandPos()
+   Matrix getWandPos()
    { return mWandPos; }
 
-   vjCameraProjection* getCameraProj()
+   CameraProjection* getCameraProj()
    { return mCameraProj; }
 
 public:  // Sim Drawing parameters
    bool shouldDrawProjections()
    { return mDrawProjections; }
 
-   vjVec3 getSurfaceColor()
+   Vec3 getSurfaceColor()
    { return mSurfaceColor; }
 
 protected:
@@ -126,17 +129,18 @@ protected:
 private:
    // Drawing attributes
    bool     mDrawProjections;    //: Should we draw projections
-   vjVec3   mSurfaceColor;       //: Color to draw surfaces
+   Vec3   mSurfaceColor;       //: Color to draw surfaces
 
    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
-   vjCameraProjection*   mCameraProj;            // Camera projection. (For sim, etc.)
+   CameraProjection*   mCameraProj;            // Camera projection. (For sim, etc.)
 
-   vjPosInterface mCamera;     // Prosy interfaces to devices needed
-   vjPosInterface mWand;
+   PosInterface mCamera;     // Prosy interfaces to devices needed
+   PosInterface mWand;
 
-   vjMatrix    mCameraPos;    // The data about the position of all this stuff
-   vjMatrix    mHeadPos;
-   vjMatrix    mWandPos;
+   Matrix    mCameraPos;    // The data about the position of all this stuff
+   Matrix    mHeadPos;
+   Matrix    mWandPos;
 };
 
+};
 #endif

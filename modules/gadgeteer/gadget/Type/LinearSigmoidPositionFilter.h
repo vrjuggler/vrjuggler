@@ -38,11 +38,14 @@
 #include <Input/Filter/vjPosFilter.h>
 #include <Math/vjQuat.h>
 
+namespace vrj
+{
+   
 //: A pos filter class that uses a linear sigmoid
-class vjLinearSigmoidPosFilter : public vjPosFilter
+class LinearSigmoidPosFilter : public PosFilter
 {
 public:
-   vjLinearSigmoidPosFilter()
+   LinearSigmoidPosFilter()
    {
       mMinDist = 0.0f;
       mMaxDist = 0.05f;
@@ -51,7 +54,7 @@ public:
 
    // Get the position to use
    // ARGS: newPos - The new postion this frame of the physical device
-   vjMatrix getPos(const vjMatrix newPos);
+   Matrix getPos(const Matrix newPos);
 
    // Given a distance, return the scale factor
    // based upon the minDist and maxDist values
@@ -67,7 +70,7 @@ public:
    float maxTheshold() { return mMaxThreshold; }
 
 private:
-   vjMatrix mLastReturnedPos;
+   Matrix mLastReturnedPos;
 
    // These parameters influence the sigmoid
    float    mMinDist;            // Mininum distance parameter
@@ -98,7 +101,7 @@ private:
 // If the scale factor is 0.0 or 1.0, then just return the matrix directly
 // Else, perform a quaternion slerp on the rotation and linear calculation
 // on position and return that matrix.
-vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
+Matrix LinearSigmoidPosFilter::getPos(const Matrix newPos)
 {
    // If value is the same, then return immediately
    if(newPos == mLastReturnedPos)
@@ -107,9 +110,9 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    const float eps(0.001);         // An epsilon value because of numerical precision as we approach zero difference
    float scale_factor(0.0f);
    float dist;
-   vjVec3 last_returned_trans;
-   vjVec3 new_trans;
-   vjVec3 trans_diff;
+   Vec3 last_returned_trans;
+   Vec3 new_trans;
+   Vec3 trans_diff;
 
    // Get difference in translation
    last_returned_trans = mLastReturnedPos.getTrans();
@@ -141,10 +144,10 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
       vjDEBUG(vjDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor
                            << std::endl << vjDEBUG_FLUSH;
 
-      vjASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
+      vprASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 
-      vjVec3 ret_trans;
-      vjMatrix ret_val;
+      Vec3 ret_trans;
+      Matrix ret_val;
 
       ret_trans = last_returned_trans + (trans_diff * scale_factor);
 
@@ -153,7 +156,7 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
                            << " * " << scale_factor << " )\n" << vjDEBUG_FLUSH;
 
       // Compute scaled rotation
-      vjQuat      source_rot, goal_rot, slerp_rot;
+      Quat      source_rot, goal_rot, slerp_rot;
       source_rot.makeRot( mLastReturnedPos );          // Create source
       goal_rot.makeRot( newPos );                      // Create goal
 
@@ -167,7 +170,7 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    }
 }
 
-float vjLinearSigmoidPosFilter::getScaleFactor(const float distance)
+float LinearSigmoidPosFilter::getScaleFactor(const float distance)
 {
    if(distance < mMinDist)
    {
@@ -179,11 +182,13 @@ float vjLinearSigmoidPosFilter::getScaleFactor(const float distance)
    }
    else
    {
-      vjASSERT(mMaxDist >= mMinDist);
+      vprASSERT(mMaxDist >= mMinDist);
       float range = mMaxDist - mMinDist;
       float scale_factor = (distance-mMinDist)/range;
       return scale_factor;
    }
 }
+
+};
 
 #endif

@@ -46,13 +46,16 @@
 #include <Config/vjConfigChunk.h>
 #include <vpr/System.h>
 
-bool vjCyberGlove::config(vjConfigChunk *c)
+namespace vrj
 {
-   if(! (vjInput::config(c) && vjGlove::config(c) ))
+   
+bool CyberGlove::config(ConfigChunk *c)
+{
+   if(! (Input::config(c) && Glove::config(c) ))
       return false;
 
 
-   vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
+   vprASSERT(myThread == NULL);      // This should have been set by Input(c)
 
     char* home_dir = c->getProperty("calDir").cstring();
     if (home_dir != NULL)
@@ -64,19 +67,19 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " vjCyberglove has no posProxy."
+       vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
                                   << std::endl << vjDEBUG_FLUSH;
        return false;
     }
 
     // init glove proxy interface
     /* XXX: Doesn't appear to be used
-    int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
+    int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
-       mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
+       mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
        vjDEBUG(vjDBG_INPUT_MGR,0)
-          << clrOutNORM(clrRED, "ERROR:") << " vjCyberGlove::vjCyberGlove: Can't find posProxy."
+          << clrOutNORM(clrRED, "ERROR:") << " CyberGlove::CyberGlove: Can't find posProxy."
           << std::endl << std::endl << vjDEBUG_FLUSH;
     */
 
@@ -86,15 +89,15 @@ bool vjCyberGlove::config(vjConfigChunk *c)
 };
 
 int
-vjCyberGlove::startSampling()
+CyberGlove::startSampling()
 {
    if (myThread == NULL)
    {
       resetIndexes();
 
       // Create a new thread to handle the control
-      vpr::ThreadMemberFunctor<vjCyberGlove>* memberFunctor =
-         new vpr::ThreadMemberFunctor<vjCyberGlove>(this, &vjCyberGlove::controlLoop, NULL);
+      vpr::ThreadMemberFunctor<CyberGlove>* memberFunctor =
+         new vpr::ThreadMemberFunctor<CyberGlove>(this, &CyberGlove::controlLoop, NULL);
 
       myThread = new vpr::Thread(memberFunctor);
 
@@ -115,7 +118,7 @@ vjCyberGlove::startSampling()
 
 // -Opens the glove port
 // -Starts sampling the glove
-void vjCyberGlove::controlLoop(void* nullParam)
+void CyberGlove::controlLoop(void* nullParam)
 {
    // Open the port and run with it
    if(mGlove->open() == 0)
@@ -131,7 +134,7 @@ void vjCyberGlove::controlLoop(void* nullParam)
    }
 }
 
-int vjCyberGlove::sample()
+int CyberGlove::sample()
 {
    mGlove->sample();       // Tell the glove to sample
 
@@ -142,7 +145,7 @@ int vjCyberGlove::sample()
    return 1;
 }
 
-void vjCyberGlove::updateData()
+void CyberGlove::updateData()
 {
 vpr::Guard<vpr::Mutex> updateGuard(lock);
    // Copy the valid data to the current data so that both are valid
@@ -154,7 +157,7 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
   return;
 }
 
-int vjCyberGlove::stopSampling()
+int CyberGlove::stopSampling()
 {
    if (myThread != NULL)
    {
@@ -164,12 +167,12 @@ int vjCyberGlove::stopSampling()
       vpr::System::usleep(100);
 
       mGlove->close();
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjCyberGlove.." << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping CyberGlove.." << std::endl << vjDEBUG_FLUSH;
    }
    return 1;
 }
 
-vjCyberGlove::~vjCyberGlove ()
+CyberGlove::~CyberGlove ()
 {
    stopSampling();      // Stop the glove
    delete mGlove;       // Delete the glove
@@ -177,15 +180,17 @@ vjCyberGlove::~vjCyberGlove ()
 
 
 
-void vjCyberGlove::copyDataFromGlove()
+void CyberGlove::copyDataFromGlove()
 {
    CYBER_GLOVE_DATA* glove_data = mGlove->getData();     // Get ptr to data
 
-   for(int i=0;i<vjGloveData::NUM_COMPONENTS;i++)
-      for(int j=0;j<vjGloveData::NUM_JOINTS;j++)
+   for(int i=0;i<GloveData::NUM_COMPONENTS;i++)
+      for(int j=0;j<GloveData::NUM_JOINTS;j++)
          mTheData[0][progress].angles[i][j] = glove_data->joints[i][j];
 
-   vjASSERT(mTheData[0][progress].angles[vjGloveData::MIDDLE][vjGloveData::MPJ]
+   vprASSERT(mTheData[0][progress].angles[GloveData::MIDDLE][GloveData::MPJ]
              == glove_data->joints[MIDDLE][MCP]);
 }
 
+
+};

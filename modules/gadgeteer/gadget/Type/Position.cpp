@@ -37,10 +37,13 @@
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
-// Set up the transformation information
-bool vjPosition::config(vjConfigChunk *c)
+namespace vrj
 {
-  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition(vjConfigChunk*)" << vjDEBUG_FLUSH;
+   
+// Set up the transformation information
+bool Position::config(ConfigChunk *c)
+{
+  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::Position(ConfigChunk*)" << vjDEBUG_FLUSH;
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
     // These are the transforms from the base tracker coord system
@@ -68,21 +71,21 @@ bool vjPosition::config(vjConfigChunk *c)
   return true;
 }
 
-vjTimeStamp* vjPosition::getPosUpdateTime (int devNum)
+TimeStaMp* Position::getPosUpdateTime (int devNum)
 {
       vjDEBUG(vjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vjDEBUG_FLUSH;
    return NULL;
 }
 
-vjPosition::vjPosition()
+Position::Position()
 {
-  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition()" << vjDEBUG_FLUSH;
+  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::Position()" << vjDEBUG_FLUSH;
   theData = NULL;
   mDataTimes = NULL;
   xformMat.makeIdent();
 }
 
-vjPosition::~vjPosition()
+Position::~Position()
 {
     /*  I didn't allocate it, so I should not deallocate it
     if (theData != NULL)
@@ -92,3 +95,4 @@ vjPosition::~vjPosition()
    delete mDataTimes;
 }
 
+};

@@ -39,9 +39,12 @@
 #include <Kernel/vjDisplay.h>
 #include <Config/vjConfigChunk.h>
 
-bool vjSimPosition::config(vjConfigChunk* chunk)
+namespace vrj
 {
-   if(! (vjInput::config(chunk) && vjPosition::config(chunk) && vjSimInput::config(chunk) ))
+   
+bool SimPosition::config(ConfigChunk* chunk)
+{
+   if(! (Input::config(chunk) && Position::config(chunk) && SimInput::config(chunk) ))
       return false;
 
    mDTrans = chunk->getProperty("dtrans");
@@ -50,12 +53,12 @@ bool vjSimPosition::config(vjConfigChunk* chunk)
    mTransCoordSystem = chunk->getProperty("transCoordSystem");
    mRotCoordSystem = chunk->getProperty("rotCoordSystem");
 
-   std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
-   std::vector<vjKeyModPair> key_pairs = readKeyList(key_list);
+   std::vector<VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<KeyModPair> key_pairs = readKeyList(key_list);
 
 
    // Create keypairs
-   vjASSERT(key_pairs.size() == NUM_POS_CONTROLS);
+   vprASSERT(key_pairs.size() == NUM_POS_CONTROLS);
    for(int i=0;i<NUM_POS_CONTROLS;i++)
    {
       mSimKeys[i] = key_pairs[i];
@@ -79,7 +82,7 @@ bool vjSimPosition::config(vjConfigChunk* chunk)
 }
 
 
-void vjSimPosition::updateData()
+void SimPosition::updateData()
 {
    int amt = 0;      // Number of times key pressed
                      // Used to keep from calling checkKey twice on success
@@ -133,9 +136,9 @@ void vjSimPosition::updateData()
 
 // Move forward the given amount on position data n
 // Forward is in th -Z direction
-void vjSimPosition::moveFor(const float amt)
+void SimPosition::moveFor(const float amt)
 {
-   vjVec3 move_forward(0.0,0.0,-1.0);  // Base movement
+   Vec3 move_forward(0.0,0.0,-1.0);  // Base movement
    move_forward *= (amt*mDTrans);
 
    if(isTransAllowed(move_forward))
@@ -151,9 +154,9 @@ void vjSimPosition::moveFor(const float amt)
 
 // Move left the given amount on position data n
 // Left is -X dir
-void vjSimPosition::moveLeft(const float amt)
+void SimPosition::moveLeft(const float amt)
 {
-   vjVec3 move_left(-1.0,0.0,0.0);  // Base movement
+   Vec3 move_left(-1.0,0.0,0.0);  // Base movement
    move_left *= (amt*mDTrans);
 
    if(isTransAllowed(move_left))
@@ -169,9 +172,9 @@ void vjSimPosition::moveLeft(const float amt)
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
-void vjSimPosition::moveUp(const float amt)
+void SimPosition::moveUp(const float amt)
 {
-   vjVec3 move_up(0.0,1.0,0.0);  // Base movement
+   Vec3 move_up(0.0,1.0,0.0);  // Base movement
    move_up *= (amt*mDTrans);
 
    if(isTransAllowed(move_up))
@@ -186,9 +189,9 @@ void vjSimPosition::moveUp(const float amt)
 }
 
 // Pitch up - rot +x axis
-void vjSimPosition::rotUp(const float amt)
+void SimPosition::rotUp(const float amt)
 {
-   static vjVec3 x_axis(1.0,0.0,0.0);
+   static Vec3 x_axis(1.0,0.0,0.0);
    if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, x_axis);
    else
@@ -197,10 +200,10 @@ void vjSimPosition::rotUp(const float amt)
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
       mPos.getTrans(x,y,z);      // Get translation
-      vjMatrix trans;
+      Matrix trans;
       trans.makeTrans(x,y,z);
 
-      vjMatrix delta_rot;        // make delta rot
+      Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, x_axis);
 
       mPos.setTrans(0,0,0);      // Get to rotation only
@@ -210,9 +213,9 @@ void vjSimPosition::rotUp(const float amt)
 }
 
 // Yaw left - rot +Y axis
-void vjSimPosition::rotLeft(const float amt)
+void SimPosition::rotLeft(const float amt)
 {
-   static vjVec3 y_axis(0.0, 1.0, 0.0);
+   static Vec3 y_axis(0.0, 1.0, 0.0);
 
    if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, y_axis);
@@ -222,10 +225,10 @@ void vjSimPosition::rotLeft(const float amt)
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
       mPos.getTrans(x,y,z);      // Get translation
-      vjMatrix trans;
+      Matrix trans;
       trans.makeTrans(x,y,z);
 
-      vjMatrix delta_rot;        // make delta rot
+      Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, y_axis);
 
       mPos.setTrans(0,0,0);      // Get to rotation only
@@ -235,9 +238,9 @@ void vjSimPosition::rotLeft(const float amt)
 }
 
 // Roll Left - rot -z axis
-void vjSimPosition::rotRollCCW(const float amt)
+void SimPosition::rotRollCCW(const float amt)
 {
-   static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
+   static Vec3 neg_z_axis(0.0, 0.0, -1.0);
 
    if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, neg_z_axis);
@@ -247,10 +250,10 @@ void vjSimPosition::rotRollCCW(const float amt)
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
       mPos.getTrans(x,y,z);      // Get translation
-      vjMatrix trans;
+      Matrix trans;
       trans.makeTrans(x,y,z);
 
-      vjMatrix delta_rot;        // make delta rot
+      Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, neg_z_axis);
 
       mPos.setTrans(0,0,0);      // Get to rotation only
@@ -261,26 +264,26 @@ void vjSimPosition::rotRollCCW(const float amt)
 
 //: Check if movement is allowed
 //! NOTE: It is not allowed if it hits a simulated wall, etc.
-bool vjSimPosition::isTransAllowed(vjVec3 trans)
+bool SimPosition::isTransAllowed(Vec3 trans)
 {
    // check if the movement is goign to intersect with any of the surface displays
    // If it does, then return false
    /*
-   vjVec3 ll, lr, ur, ul;
-   vjSeg trans_seg;
+   Vec3 ll, lr, ur, ul;
+   Seg trans_seg;
    float t_dist;
-   vjVec3 src_pt;
+   Vec3 src_pt;
    mPos.getTrans(src_pt[0],src_pt[1], src_pt[2]);
    trans_seg.makePts(src_pt, (src_pt+trans));
 
-   std::vector<vjDisplay*> disps = vjDisplayManager::instance()->getAllDisplays();
+   std::vector<Display*> disps = DisplayManager::instance()->getAllDisplays();
 
    for(unsigned int i=0;i<disps.size();i++)
    {
       if(disps[i]->isSurface())
       {
-         vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
-         vjASSERT(surf_disp != NULL);
+         SurfaceDisplay* surf_disp = dynamic_cast<SurfaceDisplay*>(disps[i]);
+         vprASSERT(surf_disp != NULL);
 
          // Get corners
          surf_disp->getCorners(ll,lr,ur,ul);
@@ -301,3 +304,4 @@ bool vjSimPosition::isTransAllowed(vjVec3 trans)
 
 }
 
+};

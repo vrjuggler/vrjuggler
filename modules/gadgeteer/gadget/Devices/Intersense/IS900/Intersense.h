@@ -32,7 +32,7 @@
 
 
 //===============================================================
-// vjIsense (a Wrapper for aFlock)
+// Isense (a Wrapper for aFlock)
 //
 // Purpose:
 //      VR Juggler Ascention Flock of birds tracking class
@@ -42,8 +42,8 @@
 //
 // Last Modified: 4-22-99
 //===============================================================
-#ifndef vjIsense_h
-#define vjIsense_h
+#ifndef VJISENSE_H
+#define VJISENSE_H
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
@@ -71,7 +71,10 @@
 #define IS_BUTTON_NUM MAX_NUM_BUTTONS*MAX_NUM_STATIONS
 #define IS_ANALOG_NUM MAX_ANALOG_CHANNELS*MAX_NUM_STATIONS
 
-struct vjIsense_Data {
+namespace vrj
+{
+   
+struct Isense_Data {
     int digital[IS_BUTTON_NUM];
     float analog[IS_ANALOG_NUM];
 };
@@ -84,48 +87,48 @@ typedef struct {
     int ana_min, ana_num;
 
     bool useDigital, useAnalog;
-} vjISStationConfig;
+} ISStationConfig;
 
 
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
-//class vjIsense : virtual public vjPosition, virtual public vjDigital, virtual public vjAnalog
+//class Isense : virtual public Position, virtual public Digital, virtual public Analog
 
 //----------------------------------------------------------------------------
 //: Position derived class for running an IS900 tracking system.
 //
 //  Wraps the isIntersense driver.
 //
-//  vjIsense is a positional device driver for the Flock of Birds, the config
+//  Isense is a positional device driver for the Flock of Birds, the config
 //  chunk in the constructor should set up all the settings, for these to be
 //  changed the Flock has to be deleted and a new instance created with an
 //  updated configchunk.
 //  <br>
-//! NOTE: vjIsense inherits from vjDigital and vjAnalog.  These base classes,
+//! NOTE: Isense inherits from Digital and Analog.  These base classes,
 //+ however, can not handle multiple receivers in the same way as
-//+ vjPosition.  Therefore, to access buttons 0-3 on station 0,
+//+ Position.  Therefore, to access buttons 0-3 on station 0,
 //+ call for button 0-3. but to access buttons 0-3 on station 1,
 //+ you must ask for units 4-7, and so on.
 //! NOTE: Some functions still remain for changing the options of
 //+    the flock when its not in Sampling mode, but in order to stay
-//+    consistent with the vjInput/vjPosition functionality these
-//+    are only left for building apps without vjConfigChunks
+//+    consistent with the Input/vjPosition functionality these
+//+    are only left for building apps without ConfigChunks
 //! NOTE: A note on receiver access:
 //+  Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
 //+  then you can access the data, in order, as 0,1,2.
 //
-// See also: vjPosition
+// See also: Position
 //---------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjIsense :  public vjInput, public vjPosition,  public vjDigital,  public vjAnalog
+class Isense :  public Input, public Position,  public Digital,  public Analog
 {
     public:
-   vjIsense();
-   virtual ~vjIsense();
+   Isense();
+   virtual ~Isense();
 
 
 //: configure the flock with a config chunk
-    virtual bool config(vjConfigChunk* c);
+    virtual bool config(ConfigChunk* c);
 
 //: begin sampling
     int startSampling();
@@ -151,7 +154,7 @@ class vjIsense :  public vjInput, public vjPosition,  public vjDigital,  public 
 //! NOTE: Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
 //+  then you can access them, in order, as 0,1,2.
-    vjMatrix* getPosData( int dev = 0); // 0 base
+    Matrix* getPosData( int dev = 0); // 0 base
 
 //: Get the digital and analog data
 //! ARGS: d - the button number
@@ -173,7 +176,7 @@ class vjIsense :  public vjInput, public vjPosition,  public vjDigital,  public 
 //: Get time of last update for this receiver
 //! ARGS: dev - is the reciever number
 //! POST: returns a pointer to the reciever's timestamp
-    vjTimeStamp* getPosUpdateTime (int dev = 0);
+    TimeStaMp* getPosUpdateTime (int dev = 0);
 
 //: see if the flock is active or not
     inline bool isActive() { return mTracker.isActive(); };
@@ -184,21 +187,23 @@ private:
 
     isIntersense mTracker;
 
-    vjIsense_Data mInput[3];
+    Isense_Data mInput[3];
 
-    vjISStationConfig* stations;
+    ISStationConfig* stations;
 
     std::vector<int> mDigitalData;
     std::vector<int> mAnalogData;
 
-//KLUDGE: work around the inherent difference between vjPosition and vjDigital (and vjAnalog)
-// Motivation: vjPositional expects multiple positional devices to be connected to the same
+//KLUDGE: work around the inherent difference between Position and Digital (and Analog)
+// Motivation: Positional expects multiple positional devices to be connected to the same
 // port and provides a means for accesses each positional device.  So, if there are four wands
 // there is one tracker unit that allows access to each wand...  For digital devices, there
 // may be limitless input, but each digital button is attached to the same digital device
 // The tracker with digital io uses its natural subset of positional devices to encapsulate
 // the digital IO as well. Therefore what is needed with four wands is a digital device that allows
 // access to subsets of digital buttons.
+
+};
 
 };
 

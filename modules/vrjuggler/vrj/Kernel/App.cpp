@@ -31,15 +31,20 @@
 #include <Kernel/vjApp.h>
 #include <Kernel/vjKernel.h>
 
-vjApp::vjApp(vjKernel* kern)
+namespace vrj
 {
-   vjASSERT(kern != NULL);    // We don't want a NULL Kernel
+   
+App::App(Kernel* kern)
+{
+   vprASSERT(kern != NULL);    // We don't want a NULL Kernel
    kernel = kern;
    mHaveFocus = true;
 }
 
-vjApp::vjApp()
+App::App()
 {
-   kernel = vjKernel::instance();
+   kernel = Kernel::instance();
    mHaveFocus = true;
 }
+
+};

@@ -35,20 +35,22 @@
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjInputManager.h>
 
-
-vjBaseDeviceInterface::vjBaseDeviceInterface()
+namespace vrj
+{
+   
+BaseDeviceInterface::BaseDeviceInterface()
 : mProxyPtr(NULL), mProxyName("UnInitialized"), mNameSet(false)
 {
-   vjBaseDeviceInterface::addDevInterface(this);    // Keep referense to the interface
+   BaseDeviceInterface::addDevInterface(this);    // Keep referense to the interface
 }
 
-vjBaseDeviceInterface::~vjBaseDeviceInterface()
+BaseDeviceInterface::~BaseDeviceInterface()
 {
    removeDevInterface(this);     // Remove it from the list of active interfaces;
 }
 
 
-void vjBaseDeviceInterface::init(std::string proxyName)
+void BaseDeviceInterface::init(std::string proxyName)
 {
    mProxyName = proxyName;    // Set the name
    mNameSet = true;
@@ -57,20 +59,20 @@ void vjBaseDeviceInterface::init(std::string proxyName)
 
 
 //! NOTE: If the interface does not have an initialized mProxyName, then don't try to refresh it
-void vjBaseDeviceInterface::refresh()
+void BaseDeviceInterface::refresh()
 {
-   vjProxy* prev_proxy_ptr = mProxyPtr;    // Keep track of previous value
+   Proxy* prev_proxy_ptr = mProxyPtr;    // Keep track of previous value
 
    // If it is not initialized, then don't try
    if(!mNameSet)
    { return; }
 
-   mProxyPtr = vjKernel::instance()->getInputManager()->getProxy(mProxyName);
+   mProxyPtr = Kernel::instance()->getInputManager()->getProxy(mProxyName);
 
    if (NULL == mProxyPtr)
    {
       vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
-         << "WARNING: vjBaseDeviceInterface::refresh: could not find proxy: "
+         << "WARNING: BaseDeviceInterface::refresh: could not find proxy: "
          << mProxyName.c_str() << std::endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
          << "         Make sure the proxy exists in the current configuration."
@@ -88,19 +90,21 @@ void vjBaseDeviceInterface::refresh()
 }
 
 
-void vjBaseDeviceInterface::addDevInterface(vjBaseDeviceInterface* dev)
+void BaseDeviceInterface::addDevInterface(BaseDeviceInterface* dev)
 { mAllocatedDevices.push_back(dev); }
 
-void vjBaseDeviceInterface::removeDevInterface(vjBaseDeviceInterface* dev)
+void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
 { mAllocatedDevices.push_back(dev); }
 
-void vjBaseDeviceInterface::refreshAllDevices()
+void BaseDeviceInterface::refreshAllDevices()
 {
    for(unsigned int i=0;i<mAllocatedDevices.size();i++)
    {
-      vjBaseDeviceInterface* dev = mAllocatedDevices[i];
+      BaseDeviceInterface* dev = mAllocatedDevices[i];
       dev->refresh();
    }
 }
 
-std::vector<vjBaseDeviceInterface*> vjBaseDeviceInterface::mAllocatedDevices = std::vector<vjBaseDeviceInterface*>();
+std::vector<BaseDeviceInterface*> BaseDeviceInterface::mAllocatedDevices = std::vector<BaseDeviceInterface*>();
+
+};

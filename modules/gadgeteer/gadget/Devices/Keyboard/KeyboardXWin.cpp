@@ -29,27 +29,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <vjConfig.h>
-
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
+#include <vjConfig.h>
 #include <Utils/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Config/vjConfigChunk.h>
 
-#include <Input/vjKeyboard/vjXWinKeyboard.h>
+#include <Input/vjKeyboard/vjXWinKeyboard.h> // my header
 
-
-//: Constructor
-bool vjXWinKeyboard::config(vjConfigChunk *c)
+namespace vrj
 {
-   if(! (vjInput::config(c) && vjKeyboard::config(c)))
+   
+//: Constructor
+bool XWinKeyboard::config(ConfigChunk *c)
+{
+   if(! (Input::config(c) && Keyboard::config(c)))
       return false;
 
    const char neg_one_STRING[] = "-1";
 
-   // Done in vjInput --- myThread = NULL;
+   // Done in Input --- myThread = NULL;
    int i;
    for (i =0; i < 256; i++)
       m_realkeys[i] = m_keys[i] = 0;
@@ -66,7 +67,7 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 
    // Get the X display string
    int x_disp_num = c->getProperty("display_number");
-   vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
+   ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
 
    if ((x_disp_num >= 0) && dispSysChunk)
       mXDisplayString = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
@@ -105,7 +106,7 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 }
 
 // Main thread of control for this active object
-void vjXWinKeyboard::controlLoop(void* nullParam)
+void XWinKeyboard::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
@@ -145,25 +146,25 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    if(mWeOwnTheWindow)
    {
       XDestroyWindow(m_display,m_window);
-      XCloseDisplay((Display*) m_display);
+      XCloseDisplay((::Display*) m_display);
    }
 }
 
 
-int vjXWinKeyboard::startSampling()
+int XWinKeyboard::startSampling()
 {
    if(myThread != NULL)
    {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                                               << "vjXWinKeyboard: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
-      vjASSERT(false);
+      vprASSERT(false);
    }
 
    resetIndexes();      // Reset the buffering variables
 
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<vjXWinKeyboard>* memberFunctor =
-      new vpr::ThreadMemberFunctor<vjXWinKeyboard>(this, &vjXWinKeyboard::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<XWinKeyboard>* memberFunctor =
+      new vpr::ThreadMemberFunctor<XWinKeyboard>(this, &XWinKeyboard::controlLoop, NULL);
 
    vpr::Thread* new_thread;
    new_thread = new vpr::Thread(memberFunctor);
@@ -172,7 +173,7 @@ int vjXWinKeyboard::startSampling()
    return 1;
 }
 
-int vjXWinKeyboard::onlyModifier(int mod)
+int XWinKeyboard::onlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
@@ -184,12 +185,12 @@ int vjXWinKeyboard::onlyModifier(int mod)
      case VJKEY_ALT:
         return (!m_curKeys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
      default:
-       vjASSERT(false);
+       vprASSERT(false);
        return 0;
   }
 }
 
-void vjXWinKeyboard::updateData()
+void XWinKeyboard::updateData()
 {
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
    if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
@@ -222,7 +223,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
    }
 }
 
-void vjXWinKeyboard::HandleEvents()
+void XWinKeyboard::HandleEvents()
 {
    XEvent event;
    KeySym key;
@@ -257,7 +258,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          // Convert the pressed key from the event to a VJ key.
          // And store in the array of key presses
          key = XLookupKeysym((XKeyEvent*)&event,0);
-         vj_key = xKeyTovjKey(key);
+         vj_key = xKeyToKey(key);
          m_realkeys[vj_key] = 1;
          m_keys[vj_key] += 1;
 
@@ -311,7 +312,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
 
          vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyPress:  " << std::hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
-                    << " ==> " << xKeyTovjKey(key) << std::endl
+                    << " ==> " << xKeyToKey(key) << std::endl
                     << vjDEBUG_FLUSH;
          break;
 
@@ -320,7 +321,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
       case KeyRelease:
          // Convert the released key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
-         vj_key = xKeyTovjKey(key);
+         vj_key = xKeyToKey(key);
          m_realkeys[vj_key] = 0;
 
          // -- Update lock state -- //
@@ -334,7 +335,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
 
          vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyRelease:" << std::hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
-                    << " ==> " << xKeyTovjKey(key) << std::endl
+                    << " ==> " << xKeyToKey(key) << std::endl
                     << vjDEBUG_FLUSH;
          break;
 
@@ -441,7 +442,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
 
 }
 
-int vjXWinKeyboard::stopSampling()
+int XWinKeyboard::stopSampling()
 {
   if (myThread != NULL)
   {
@@ -452,7 +453,7 @@ int vjXWinKeyboard::stopSampling()
   return 1;
 }
 
-int vjXWinKeyboard::xKeyTovjKey(KeySym xKey)
+int XWinKeyboard::xKeyToKey(KeySym xKey)
 {
    switch (xKey)
    {
@@ -554,7 +555,7 @@ int vjXWinKeyboard::xKeyTovjKey(KeySym xKey)
 /*****************************************************************/
 /*****************************************************************/
 // Open the X window to sample from
-int vjXWinKeyboard::openTheWindow()
+int XWinKeyboard::openTheWindow()
 {
    int i;
 
@@ -641,7 +642,7 @@ int vjXWinKeyboard::openTheWindow()
 
 
 /* Sets basic window manager hints for a window. */
-void vjXWinKeyboard::setHints(Window window,
+void XWinKeyboard::setHints(Window window,
     char*  window_name,
     char*  icon_name,
     char*  class_name,
@@ -702,7 +703,7 @@ void vjXWinKeyboard::setHints(Window window,
 
 }
 
-Window vjXWinKeyboard::createWindow (Window parent, unsigned int border, unsigned long
+Window XWinKeyboard::createWindow (Window parent, unsigned int border, unsigned long
      fore, unsigned long back, unsigned long event_mask)
 {
   Window window;
@@ -733,7 +734,7 @@ Window vjXWinKeyboard::createWindow (Window parent, unsigned int border, unsigne
 
 // Called when locking states
 // - Recenter the mouse
-void vjXWinKeyboard::lockMouse()
+void XWinKeyboard::lockMouse()
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
@@ -765,7 +766,7 @@ void vjXWinKeyboard::lockMouse()
 }
 
 // Called when locking ends
-void vjXWinKeyboard::unlockMouse()
+void XWinKeyboard::unlockMouse()
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: UN-LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
@@ -777,3 +778,5 @@ void vjXWinKeyboard::unlockMouse()
 
    vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "un-lock finished.\n" << vjDEBUG_FLUSH;
 }
+
+} // end namespace

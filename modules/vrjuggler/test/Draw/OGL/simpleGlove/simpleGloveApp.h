@@ -55,12 +55,12 @@
 // This application draws a glove and some rays and spheres
 // on the glove
 //----------------------------------------------------
-class simpleGloveApp : public vjGlApp
+class simpleGloveApp : public GlApp
 {
 public:
    // Constructor.
-   simpleGloveApp(vjKernel* kern)
-      : vjGlApp(kern)            // Initialize base class
+   simpleGloveApp(Kernel* kern)
+      : GlApp(kern)            // Initialize base class
    {
       mQuadObj = NULL;
    }
@@ -144,7 +144,7 @@ private:
    void initGLState();
 
 protected:
-   void drawLine(vjVec3& start, vjVec3& end)
+   void drawLine(Vec3& start, Vec3& end)
    {
       glBegin(GL_LINES);
          glVertex3fv(start.vec);
@@ -166,8 +166,8 @@ protected:
 
 public:
       
-   vjGestureInterface  mGesture;
-   vjGloveInterface    mGlove;      // the glove
+   GestureInterface  mGesture;
+   GloveInterface    mGlove;      // the glove
 };
 
 

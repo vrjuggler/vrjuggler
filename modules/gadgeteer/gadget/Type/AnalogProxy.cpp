@@ -36,10 +36,13 @@
 #include <Input/InputManager/vjAnalogProxy.h>
 #include <Config/vjConfigChunk.h>
 
-bool vjAnalogProxy::config(vjConfigChunk* chunk)
+namespace vrj
+{
+   
+bool AnalogProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "AnaProxy");
+   vprASSERT(((std::string)chunk->getType()) == "AnaProxy");
 
    m_unitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
@@ -49,3 +52,4 @@ bool vjAnalogProxy::config(vjConfigChunk* chunk)
    return true;
 }
 
+};

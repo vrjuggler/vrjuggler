@@ -47,17 +47,20 @@
 
 //#include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/Pf/vjPfUtil.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 
+namespace vrj
+{
+   
 
-class vjPfApp;
-class vjProjection;
-class vjConfigChunkDB;
+class PfApp;
+class Projection;
+class ConfigChunkDB;
 
     // Performer Config function called in draw proc after window is set up
-void vjPFconfigPWin(pfPipeWindow* pWin);
-void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
-void vjPfAppFunc(pfChannel *chan, void* chandata);
+void PFconfigPWin(pfPipeWindow* pWin);
+void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
+void PfAppFunc(pfChannel *chan, void* chandata);
 
 //------------------------------------------------------------
 //: Concrete singleton class for API specific Draw Manager.
@@ -67,7 +70,7 @@ void vjPfAppFunc(pfChannel *chan, void* chandata);
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //------------------------------------------------------------
-class vjPfDrawManager : public vjDrawManager
+class PfDrawManager : public DrawManager
 {
 protected:
 
@@ -85,7 +88,7 @@ protected:
       }
 
       pfChannel*  chans[2];         // The channels
-      vjViewport* viewport;         // The viewport that we are rendering
+      Viewport* viewport;         // The viewport that we are rendering
    };
 
    struct pfDisplay
@@ -96,14 +99,14 @@ protected:
          pWin = NULL;
       }
 
-      vjDisplay*              disp;
+      Display*              disp;
       pfPipeWindow*           pWin;
       std::vector<pfViewport> viewports;
    };
 
-   struct pfDisplay_disp : public std::unary_function<pfDisplay,vjDisplay*>
+   struct pfDisplay_disp : public std::unary_function<pfDisplay,Display*>
    {
-     vjDisplay* operator()(const pfDisplay disp) const { return disp.disp; }
+     Display* operator()(const pfDisplay disp) const { return disp.disp; }
    };
 
    /*
@@ -120,7 +123,7 @@ protected:
 public:
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   //virtual void configInitial(vjConfigChunkDB*  chunkDB);
+   //virtual void configInitial(ConfigChunkDB*  chunkDB);
 
     //: Blocks until the end of the frame
     //! PRE: none
@@ -136,7 +139,7 @@ public:
    //: Set the app the draw whould interact with.
    //! PRE: none
    //! POST: self'.app = _app
-   virtual void setApp(vjApp* _app);
+   virtual void setApp(App* _app);
 
 
    //: Initialize the drawing API (if not already running)
@@ -154,10 +157,10 @@ public:
    void initChanGroupAttribs(pfChannel* masterChan);
 
    //: Callback when display is added to display manager
-   virtual void addDisplay(vjDisplay* disp);
+   virtual void addDisplay(Display* disp);
 
    //: Callback when display is removed to display manager
-   virtual void removeDisplay(vjDisplay* disp);
+   virtual void removeDisplay(Display* disp);
 
       //: Shutdown the drawing API
    virtual void closeAPI();
@@ -171,26 +174,26 @@ public:
 
    void debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel);
 
-   friend void vjPFconfigPWin(pfPipeWindow* pWin);
-   friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
-   friend void vjPfAppFunc(pfChannel *chan, void* chandata);
+   friend void PFconfigPWin(pfPipeWindow* pWin);
+   friend void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
+   friend void PfAppFunc(pfChannel *chan, void* chandata);
 
 public: // Chunk handlers
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk);
+   virtual bool configCanHandle(ConfigChunk* chunk);
 
 protected:     // --- Config handling functions --- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk);
+   virtual bool configAdd(ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk)
+   virtual bool configRemove(ConfigChunk* chunk)
    {
       vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vjDEBUG_FLUSH;
       return false;
@@ -201,19 +204,19 @@ protected:     // --- Config handling functions --- //
    //! NOTE: MUST be called before initDrawing
    //! NOTE: This must be called by the draw manager
    //        because the chunk must be gotten from the draw manager
-   bool configDisplaySystem(vjConfigChunk* chunk);
+   bool configDisplaySystem(ConfigChunk* chunk);
 
    //: Configure pfAPI stuff
    //! PRE: chunk.type == "apiPerformer"
    //! NOTE: MUST be called before initDrawing
-   bool configPerformerAPI(vjConfigChunk* chunk);
+   bool configPerformerAPI(ConfigChunk* chunk);
 
 protected:
    //: Call all the application channel callbacks
    void callAppChanFuncs();
 
-   //: Helper to set channel view params from a vjProjection
-   void updatePfProjection(pfChannel* chan, vjProjection* proj, bool simulator=false);
+   //: Helper to set channel view params from a Projection
+   void updatePfProjection(pfChannel* chan, Projection* proj, bool simulator=false);
 
    //: Helper function to create the base scene graph stuff
    void initPerformerGraph();
@@ -226,7 +229,7 @@ protected:
 
 
    void initLoaders();
-   void updateSimulator(vjSimViewport* simVp);
+   void updateSimulator(SimViewport* simVp);
 
    //: Helper to get the pfDisp given a channel
    //! RETURNS: NULL - Not found
@@ -261,7 +264,7 @@ protected:
    unsigned int mNumPipes;    // The number of Performer pipes
 
    // --- Performer State --- //
-   vjPfApp*                app;              // There User applications
+   PfApp*                app;              // There User applications
    std::vector<pfDisplay>  mDisplays;        // All Performer displays
 
    std::vector<pfChannel*> mSurfChannels;
@@ -303,7 +306,7 @@ protected:
 
 protected:
 
-   vjPfDrawManager() {
+   PfDrawManager() {
       mSurfMasterChan = NULL;
       mSimMasterChan = NULL;
       mRoot         = NULL;
@@ -316,25 +319,27 @@ protected:
       mPfHasForked = false;
    }
 
-   virtual ~vjPfDrawManager() {}
+   virtual ~PfDrawManager() {}
 
-   vjSingletonHeader(vjPfDrawManager);
+   vprSingletonHeader(PfDrawManager);
 /*
    // --- Singleton Stuff --- //
 public:
-   static vjPfDrawManager* instance()
+   static PfDrawManager* instance()
    {
       if (_instance == NULL)
       {
-         _instance = new vjPfDrawManager();
+         _instance = new PfDrawManager();
       }
       return _instance;
    }
 
 private:
-   static vjPfDrawManager* _instance;
+   static PfDrawManager* _instance;
    */
 };
 
+
+};
 
 #endif

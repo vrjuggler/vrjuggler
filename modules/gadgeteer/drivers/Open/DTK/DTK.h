@@ -39,19 +39,22 @@
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/vjDTK/vjDTKMemorySegment.h>
 
-class vjDTKMemorySegment;
-typedef vjDTKMemorySegment* vjDTKMemorySegmentHandle;
+namespace vrj
+{
+   
+class DTKMemorySegment;
+typedef DTKMemorySegment* DTKMemorySegmentHandle;
 
 class dtkClient;
 
-class VJ_CLASS_API vjDTK : public vjInput, public vjPosition, public vjDigital,
-                           public vjAnalog
+class VJ_CLASS_API DTK : public Input, public Position, public Digital,
+                           public Analog
 {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.
     // ------------------------------------------------------------------------
-    vjDTK();
+    DTK();
 
     // ------------------------------------------------------------------------
     //: Destructor.
@@ -59,10 +62,10 @@ public:
     //! PRE: None.
     //! POST: Shared memory is released
     // ------------------------------------------------------------------------
-   virtual ~vjDTK();
+   virtual ~DTK();
    
 //: configure the flock with a config chunk
-    virtual bool config(vjConfigChunk* c);
+    virtual bool config(ConfigChunk* c);
 
 //: begin sampling
     int startSampling();
@@ -91,7 +94,7 @@ public:
 //! NOTE: Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
 //+  then you can access them, in order, as 0,1,2.
-    vjMatrix* getPosData( int dev = 0); // 0 base
+    Matrix* getPosData( int dev = 0); // 0 base
 
 //: Get the digital and analog data
 //! ARGS: d - the button number
@@ -103,7 +106,7 @@ public:
 //: Get time of last update for this receiver
 //! ARGS: dev - is the reciever number
 //! POST: returns a pointer to the reciever's timestamp
-    vjTimeStamp* getPosUpdateTime (int dev = 0);
+    TimeStaMp* getPosUpdateTime (int dev = 0);
 
 //: see if the DTK is active or not
     inline bool isActive() { return active; };
@@ -122,7 +125,7 @@ private:
     int numAnalog; 
     int numSegments;
     
-    vjDTKMemorySegmentHandle *_dtkSegments;
+    DTKMemorySegmentHandle *_dtkSegments;
     int	*mDigitalData;
     float *mAnalogData;
     char*		port;
@@ -133,6 +136,8 @@ private:
 //: Stop the DTK Client Connection
     bool stopDTK();
     
+};
+
 };
 
 #endif

@@ -86,17 +86,17 @@ void digitalGloveApp::myDraw()
    int finger;
 
       // -- Draw box on wand --- //
-   vjMatrix finger_matrix;
+   Matrix finger_matrix;
 
    // Draw green balls on finger tips
    glColor3f(0.0f, 1.0f, 0.0f);
    glPushMatrix();
    {
-      for(finger=vjGloveData::INDEX;finger<=vjGloveData::PINKY;finger++)
+      for(finger=GloveData::INDEX;finger<=GloveData::PINKY;finger++)
       {
       glPushMatrix();
          finger_matrix =
-            mGlove->getPos((vjGloveData::vjGloveComponent)finger);
+            mGlove->getPos((GloveData::GloveComponent)finger);
          glMultMatrixf(finger_matrix.getFloatPtr());
          drawSphere((0.1f*(1.0f/12.0f)), 4, 4);
       glPopMatrix();
@@ -110,14 +110,14 @@ void digitalGloveApp::myDraw()
    glColor3f(1.0f, 0.0f, 0.0f);
    glPushMatrix();
    {
-      for(finger=vjGloveData::INDEX;finger<=vjGloveData::PINKY;finger++)
+      for(finger=GloveData::INDEX;finger<=GloveData::PINKY;finger++)
       {
       glPushMatrix();
-         vjVec3   origin(0,0,0);    // Base of the vector
+         Vec3   origin(0,0,0);    // Base of the vector
          finger_matrix =
-            mGlove->getPos((vjGloveData::vjGloveComponent)finger);
+            mGlove->getPos((GloveData::GloveComponent)finger);
          origin.xformFull(finger_matrix, origin);     // Go to new coord system
-         vjVec3 end = origin + (0.25 * mGlove->getVector((vjGloveData::vjGloveComponent)finger));
+         Vec3 end = origin + (0.25 * mGlove->getVector((GloveData::GloveComponent)finger));
          drawLine(origin, end);
       glPopMatrix();
       }

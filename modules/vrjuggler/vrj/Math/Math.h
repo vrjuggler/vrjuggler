@@ -43,7 +43,7 @@
 
 
 
-/* vjMath constants */
+/* Math constants */
 
 //: PI
 extern const float VJ_PI;
@@ -58,8 +58,11 @@ extern const float VJ_PI_4;
 //extern const float VJ_EPSILON_DEFAULT;
 #define VJ_EPSILON_DEFAULT 1e-6f
 
+namespace vrj
+{
+   
 //: x-platform standard math routines.
-class VJ_CLASS_API vjMath 
+class VJ_CLASS_API Math 
 {
 public:
    //: sin returns the trigonometric sin of the radian argument x
@@ -245,13 +248,13 @@ public:
    template <class dataType>
    inline static dataType Min( const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return vjMath::Min( vjMath::Min( x, y ), z );
+      return Math::Min( Math::Min( x, y ), z );
    }
    //: min returns the minimum of 4 values
    template <class dataType>
    inline static dataType Min( const dataType& w, const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return vjMath::Min( vjMath::Min( w, x ), vjMath::Min( y, z ) );
+      return Math::Min( Math::Min( w, x ), Math::Min( y, z ) );
    }
    
    //: max returns the maximum of 2 values
@@ -265,13 +268,13 @@ public:
    template <class dataType>
    inline static dataType Max( const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return vjMath::Max( vjMath::Max( x, y ), z );
+      return Math::Max( Math::Max( x, y ), z );
    }
    //: max returns the maximum of 4 values
    template <class dataType>
    inline static dataType Max( const dataType& w, const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return vjMath::Max( vjMath::Max( w, x ), vjMath::Max( y, z ) );
+      return Math::Max( Math::Max( w, x ), Math::Max( y, z ) );
    }
 
 // non-standard but useful math funcs
@@ -304,7 +307,7 @@ public:
    template <class dataType>
    inline static bool isEqual( const dataType& a, const dataType& b, const dataType& tolerance )
    {
-      return vjMath::abs( a - b ) <= tolerance;
+      return Math::abs( a - b ) <= tolerance;
    }
    
    //: return a random number between 0.0f and 1.0f
@@ -322,7 +325,7 @@ public:
    //! RETURNS: random number between x1 and x2
    inline float random( float x1, float x2 )
    {
-      float r = vjMath::random();
+      float r = Math::random();
       float size = x2 - x1;
       return r * size + x1;
    }
@@ -335,7 +338,7 @@ public:
    template <class dataType>
    inline static dataType zero_clamp( const dataType& number, const dataType& epsilon = VJ_EPSILON_DEFAULT ) 
    {
-      return ( vjMath::abs( number ) < epsilon ) ? 0.0f : number;
+      return ( Math::abs( number ) < epsilon ) ? 0.0f : number;
    }
    // is a number close to zero? (within specified epsilon)
    // usage: isZero( number )       /* use default VJ_EPSILON_DEFAULT for epsilon */
@@ -343,7 +346,7 @@ public:
    template <class dataType>
    inline static bool isZero( const dataType& number, const dataType& epsilon = VJ_EPSILON_DEFAULT ) 
    {
-      return vjMath::abs( number ) < epsilon;
+      return Math::abs( number ) < epsilon;
    }
 
    //: clamp a number to some value
@@ -355,4 +358,5 @@ public:
    }
 };
 
+};
 #endif

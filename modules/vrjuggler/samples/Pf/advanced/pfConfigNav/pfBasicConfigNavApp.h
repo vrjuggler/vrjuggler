@@ -74,14 +74,14 @@ public:
    }
 
 public:     // RECONFIG STUFF
-   virtual bool configCanHandle(vjConfigChunk* chunk)
+   virtual bool configCanHandle(ConfigChunk* chunk)
    {
       return configCanHandleChunk(chunk);
    }
 
    // This function is so that others can query this object to
    // see if it can be configured with the given information
-   static bool configCanHandleChunk(vjConfigChunk* chunk)
+   static bool configCanHandleChunk(ConfigChunk* chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
 
@@ -101,31 +101,31 @@ public:     // RECONFIG STUFF
    { return true; }
 
 protected:
-   //! NOTE: Inherited from vjConfigChunkHandler
-   virtual bool configAdd(vjConfigChunk* chunk);
+   //! NOTE: Inherited from ConfigChunkHandler
+   virtual bool configAdd(ConfigChunk* chunk);
 
-   //! NOTE: INherited from vjConfigChunkHandler
-   virtual bool configRemove(vjConfigChunk* chunk)
-   { vjASSERT(false); return false; }
+   //! NOTE: INherited from ConfigChunkHandler
+   virtual bool configRemove(ConfigChunk* chunk)
+   { vprASSERT(false); return false; }
 
 protected:
-   vjConfigChunk* mCurrentConfig;      // config chunk that is current configuring this thingie
+   ConfigChunk* mCurrentConfig;      // config chunk that is current configuring this thingie
 };
 
 // Get the properties from the chunks
 // XXX: Smart update
 // Set the properties
 // Load with new settings
-bool pfBasicConfigNavApp::configAdd( vjConfigChunk* chunk )
+bool pfBasicConfigNavApp::configAdd( ConfigChunk* chunk )
 {
    int x;
 
-   vjASSERT(std::string("pf_basic_nav_app") == (std::string)chunk->getType());
+   vprASSERT(std::string("pf_basic_nav_app") == (std::string)chunk->getType());
 
    // Set the properties based on the chunk values
    std::string app_name = chunk->getProperty("Name");
    std::string file_path = chunk->getProperty("file_path");
-   vjVec3 initial_pos;
+   Vec3 initial_pos;
    initial_pos.set((float)chunk->getProperty("start_location",0),
                    (float)chunk->getProperty("start_location",1),
                    (float)chunk->getProperty("start_location",2));
@@ -168,7 +168,7 @@ bool pfBasicConfigNavApp::configAdd( vjConfigChunk* chunk )
    mModelList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Model" ); ++x)
    {
-      vjConfigChunk* model_chunk = chunk->getProperty( "Model", x );
+      ConfigChunk* model_chunk = chunk->getProperty( "Model", x );
       Model m;
       m.description = (std::string)model_chunk->getProperty( "Name" );
       m.filename = (std::string)model_chunk->getProperty( "filename" );
@@ -188,7 +188,7 @@ bool pfBasicConfigNavApp::configAdd( vjConfigChunk* chunk )
    mSoundList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Sound" ); ++x)
    {
-      vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+      ConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
       Sound s;
       s.name = (std::string)sound_chunk->getProperty( "Name" );
       s.alias = (std::string)sound_chunk->getProperty( "soundAlias" );

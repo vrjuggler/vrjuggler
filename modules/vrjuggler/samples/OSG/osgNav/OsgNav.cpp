@@ -75,7 +75,7 @@ cout  << "Wand Buttons:"
 	mModelTrans->getMatrix().setTrans(mPos);
 
    // -- Get wand info -- //
-	vjMatrix* wandMatrix;
+	Matrix* wandMatrix;
 	wandMatrix = mWand->getData();		// Get the wand matrix
 	
 	osg::Matrix osgWandMat;
@@ -83,18 +83,18 @@ cout  << "Wand Buttons:"
 	osgWandMat.set(wandMatrix->getFloatPtr());
 		
    	
-   if(mButton0->getData() == vjDigital::ON)
+   if(mButton0->getData() == Digital::ON)
 	{
       //Move in the direction of the wand
 		speed = speed + inc;
       cout << "speed: " << speed << std::endl;
 	}
-	if(mButton1->getData() == vjDigital::ON)
+	if(mButton1->getData() == Digital::ON)
 	{
 		//joint->preRotate(5.0f, 0.0f, 0.0f, 1.0f);
       speed = 0;
 	}
-	if(mButton2->getData() == vjDigital::ON)
+	if(mButton2->getData() == Digital::ON)
 	{
 		//joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
 		speed = speed - inc;
@@ -103,8 +103,8 @@ cout  << "Wand Buttons:"
 
 
 	//Navigation	
-	vjVec3 direction;
-	vjVec3 Zdir = vjVec3(0.0f, 0.0f, speed);
+	Vec3 direction;
+	Vec3 Zdir = Vec3(0.0f, 0.0f, speed);
 	direction.xformVec(*wandMatrix, Zdir);
 	mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
 }

@@ -116,8 +116,8 @@ main () {
             std::cout << z << ":\n";
             std::cout << "\t      X\t\t  Y\t     Z\t\tA\t    E\t\tR\n";
             for ( int bird=0; bird < motionstar->getNumBirds(); bird++ ) {
-            //   vjVec3 pos0 = vjCoord( *motionstar->getPosData(bird) ).pos;
-            //   vjVec3 ori0 = vjCoord( *motionstar->getPosData(bird) ).orient;
+            //   Vec3 pos0 = Coord( *motionstar->getPosData(bird) ).pos;
+            //   Vec3 ori0 = Coord( *motionstar->getPosData(bird) ).orient;
                /*
                std::cout << "Bird " << bird << ":\n"
                  << setiosflags(ios::right | ios::fixed | ios::showpoint)

@@ -45,32 +45,35 @@
 #include <typeinfo>
 
 
+namespace vrj
+{
+   
 // Initialize the singleton ptr
-//vjProxyFactory* vjProxyFactory::mInstance = NULL;
-//vjSingletonImp( vjProxyFactory ); // kevin
-vjSingletonImpWithInitFunc( vjProxyFactory, loadKnownProxies );
+//vjProxyFactory* ProxyFactory::mInstance = NULL;
+//vjSingletonImp( ProxyFactory ); // kevin
+vprSingletonImpWithInitFunc( ProxyFactory, loadKnownProxies );
 
 template <class PROXY>
-vjProxyConstructor<PROXY>::vjProxyConstructor()
+ProxyConstructor<PROXY>::ProxyConstructor()
 {
-   vjProxyFactory::instance()->registerProxy(this);
+   ProxyFactory::instance()->registerProxy(this);
 }
 
 
 // Register all the proxies that I know about
-void vjProxyFactory::loadKnownProxies()
+void ProxyFactory::loadKnownProxies()
 {
-   vjProxyConstructor<vjAnalogProxy>* analog_proxy = new vjProxyConstructor<vjAnalogProxy>;
-   vjProxyConstructor<vjDigitalProxy>* digital_proxy = new vjProxyConstructor<vjDigitalProxy>;
-   vjProxyConstructor<vjPosProxy>* pos_proxy = new vjProxyConstructor<vjPosProxy>;
-   vjProxyConstructor<vjGloveProxy>* glove_proxy = new vjProxyConstructor<vjGloveProxy>;
-   vjProxyConstructor<vjGestureProxy>* gesture_proxy = new vjProxyConstructor<vjGestureProxy>;
-   vjProxyConstructor<vjKeyboardProxy>* keyboard_proxy = new vjProxyConstructor<vjKeyboardProxy>;
+   ProxyConstructor<AnalogProxy>* analog_proxy = new ProxyConstructor<AnalogProxy>;
+   ProxyConstructor<DigitalProxy>* digital_proxy = new ProxyConstructor<DigitalProxy>;
+   ProxyConstructor<PosProxy>* pos_proxy = new ProxyConstructor<PosProxy>;
+   ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
+   ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
+   ProxyConstructor<KeyboardProxy>* keyboard_proxy = new ProxyConstructor<KeyboardProxy>;
 
-   vjDependencyManager::instance()->registerChecker(new vjProxyDepChecker());
+   DependencyManager::instance()->registerChecker(new ProxyDepChecker());
 }
 
-void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)
+void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjProxyFactory: Constructor registered for: "
@@ -82,7 +85,7 @@ void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)
 
 // Simply query all proxy constructors registered looking
 // for one that knows how to load the proxy
-bool vjProxyFactory::recognizeProxy(vjConfigChunk* chunk)
+bool ProxyFactory::recognizeProxy(ConfigChunk* chunk)
 {
    if(findConstructor(chunk) == -1)
       return false;
@@ -95,14 +98,14 @@ bool vjProxyFactory::recognizeProxy(vjConfigChunk* chunk)
 //!ARGS: chunk - specification of the proxy to load
 //!RETURNS: null - Proxy failed to load
 //+         other - Pointer to the loaded proxy
-vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
+Proxy* ProxyFactory::loadProxy(ConfigChunk* chunk)
 {
-   vjASSERT(recognizeProxy(chunk));
+   vprASSERT(recognizeProxy(chunk));
 
    int index = findConstructor(chunk);
 
-   vjProxy* new_dev;
-   vjProxyConstructorBase* constructor = mConstructors[index];
+   Proxy* new_dev;
+   ProxyConstructorBase* constructor = mConstructors[index];
 
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjProxyFactory::loadProxy: Loading proxy: "
               << chunk->getType() << "  with: "
@@ -111,7 +114,7 @@ vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
    return new_dev;
 }
 
-int vjProxyFactory::findConstructor(vjConfigChunk* chunk)
+int ProxyFactory::findConstructor(ConfigChunk* chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();
@@ -123,3 +126,5 @@ int vjProxyFactory::findConstructor(vjConfigChunk* chunk)
 
    return -1;
 }
+
+};

@@ -43,16 +43,16 @@
 
 int main()
 {
-  vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
+  MemPool* anSgiPool = new SharedPool(1024*1024);
   
-  vjFlock* flock = new(anSgiPool) vjFlock;
-  vjIBox* anIbox = new(anSgiPool) vjIBox;
-  vjCyberGlove* aGlove = new(anSgiPool) 
-          vjCyberGlove("/home/vr/CAVE/glove","/dev/ttyd45",38400);
+  Flock* flock = new(anSgiPool) Flock;
+  IBox* anIbox = new(anSgiPool) IBox;
+  CyberGlove* aGlove = new(anSgiPool) 
+          CyberGlove("/home/vr/CAVE/glove","/dev/ttyd45",38400);
 
-  vjPOS_DATA *data,*data2;
+  POS_DATA *data,*data2;
  
-  vjIBOX_DATA *iboxData;
+  IBOX_DATA *iboxData;
 
   char achar;
   std::cout << "U - Update\n"

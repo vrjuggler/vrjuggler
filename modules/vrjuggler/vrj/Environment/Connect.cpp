@@ -36,9 +36,10 @@
 // author: Christopher Just
 
 
+#include <vpr/System.h>
+
 #include <vjConfig.h>
 
-#include <Environment/vjConnect.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkFactory.h>
@@ -46,14 +47,17 @@
 #include <Environment/vjTimedUpdate.h>
 #include <Kernel/vjConfigManager.h>
 #include <Config/vjConfigTokens.h>
-#include <vpr/System.h>
 //#include <Config/vjXMLConfigIO.h>
 
 #include <Environment/vjXMLConfigCommunicator.h>
+#include <Environment/vjConnect.h>
 
-vjConnect::vjConnect(vjSocket* s, const std::string& _name,
-           vjConnectMode _mode): name(""), filename(""), commands_mutex(), communicators() {
-    vjDEBUG(vjDBG_ENV_MGR,4) << "EM: Creating vjConnect to file or socket\n"
+namespace vrj
+{
+   
+Connect::Connect(Socket* s, const std::string& _name,
+           ConnectMode _mode): name(""), filename(""), commands_mutex(), communicators() {
+    vjDEBUG(vjDBG_ENV_MGR,4) << "EM: Creating Connect to file or socket\n"
           << vjDEBUG_FLUSH;
     sock = s;
     mode = _mode;
@@ -66,24 +70,24 @@ vjConnect::vjConnect(vjSocket* s, const std::string& _name,
     read_die = write_die = false;
 
     // populate communicators vector here.
-    communicators.push_back (new vjXMLConfigCommunicator());
+    communicators.push_back (new XMLConfigCommunicator());
 
     outstream = sock->getOutputStream();
     instream = sock->getInputStream();
 
     // we need to add a chunk describing ourself
-    vjConfigChunk* ch = vjChunkFactory::instance()->createChunk ("FileConnect");
+    ConfigChunk* ch = ChunkFactory::instance()->createChunk ("FileConnect");
     if (ch) {
         ch->setProperty ("Name", name);
         ch->setProperty ("Mode", VJC_INTERACTIVE);
         ch->setProperty ("filename", filename);
         ch->setProperty ("Enabled", true);
-        vjConfigManager::instance()->addActive(ch);              // Add to active config
+        ConfigManager::instance()->addActive(ch);              // Add to active config
     }
 
     // communicators initialize connection
     // send initconnections...
-    std::vector<vjNetCommunicator*>::iterator i;
+    std::vector<NetCommunicator*>::iterator i;
     for (i = communicators.begin(); i != communicators.end(); i++) {
         (*i)->initConnection(this);
     }
@@ -91,12 +95,12 @@ vjConnect::vjConnect(vjSocket* s, const std::string& _name,
 
 
 
-vjConnect::vjConnect(vjConfigChunk* c): commands_mutex(), communicators() {
+Connect::Connect(ConfigChunk* c): commands_mutex(), communicators() {
 
     sock = NULL;
     filename = (std::string)c->getProperty ("FileName");
     name = (std::string)c->getProperty ("Name");
-    mode = (vjConnectMode)(int)c->getProperty ("Mode");
+    mode = (ConnectMode)(int)c->getProperty ("Mode");
 
     read_die = write_die = false;
     read_connect_thread = NULL;
@@ -132,7 +136,7 @@ vjConnect::vjConnect(vjConfigChunk* c): commands_mutex(), communicators() {
 
     // populate communicators vector
     // send initconnections...
-    std::vector<vjNetCommunicator*>::iterator i;
+    std::vector<NetCommunicator*>::iterator i;
     for (i = communicators.begin(); i != communicators.end(); i++) {
         (*i)->initConnection(this);
     }
@@ -140,9 +144,9 @@ vjConnect::vjConnect(vjConfigChunk* c): commands_mutex(), communicators() {
 
 
 
-vjConnect::~vjConnect() {
+Connect::~Connect() {
     // send shutdownconnections...
-    std::vector<vjNetCommunicator*>::iterator i;
+    std::vector<NetCommunicator*>::iterator i;
     for (i = communicators.begin(); i != communicators.end(); i++) {
         (*i)->shutdownConnection();
     }
@@ -153,7 +157,7 @@ vjConnect::~vjConnect() {
 
 
 
-bool vjConnect::startProcess() {
+bool Connect::startProcess() {
    if (write_connect_thread)
       return true;
 
@@ -163,18 +167,18 @@ bool vjConnect::startProcess() {
 
    if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE)
    {
-      vpr::ThreadMemberFunctor<vjConnect> *writeMemberFunctor =
-      new vpr::ThreadMemberFunctor<vjConnect>(this,
-                                           &vjConnect::writeControlLoop,
+      vpr::ThreadMemberFunctor<Connect> *writeMemberFunctor =
+      new vpr::ThreadMemberFunctor<Connect>(this,
+                                           &Connect::writeControlLoop,
                                            NULL);
       write_connect_thread = new vpr::Thread (writeMemberFunctor);
       success = success && write_connect_thread;
    }
    if (mode == VJC_INPUT || mode == VJC_INTERACTIVE)
    {
-      vpr::ThreadMemberFunctor<vjConnect> *readMemberFunctor =
-      new vpr::ThreadMemberFunctor<vjConnect>(this,
-                                           &vjConnect::readControlLoop,
+      vpr::ThreadMemberFunctor<Connect> *readMemberFunctor =
+      new vpr::ThreadMemberFunctor<Connect>(this,
+                                           &Connect::readControlLoop,
                                            NULL);
       read_connect_thread = new vpr::Thread (readMemberFunctor);
       success = success && read_connect_thread;
@@ -186,7 +190,7 @@ bool vjConnect::startProcess() {
 
 
 
-bool vjConnect::stopProcess() {
+bool Connect::stopProcess() {
 //      sendDisconnect();
     read_die = write_die = true;
     if (read_connect_thread) {
@@ -216,55 +220,55 @@ bool vjConnect::stopProcess() {
 }
 
 
-void vjConnect::sendDescDB (vjChunkDescDB* db) {
+void Connect::sendDescDB (ChunkDescDB* db) {
     if (mode != VJC_INPUT)
-        commands.push (new vjCommandSendDescDB (db));
+        commands.push (new CommandSendDescDB (db));
 }
 
 
-void vjConnect::sendDisconnect () {
+void Connect::sendDisconnect () {
     std::cerr << "vjConnect::sendDisconnect not implemented!!!" << std::endl;
     //    if (mode != VJC_INPUT)
-    //   commands.push (new vjCommandDisconnect());
+    //   commands.push (new CommandDisconnect());
 }
 
 
-void vjConnect::sendChunkDB (vjConfigChunkDB* db, bool all) {
+void Connect::sendChunkDB (ConfigChunkDB* db, bool all) {
     if (mode != VJC_INPUT)
-        commands.push (new vjCommandSendChunkDB (db, all));
+        commands.push (new CommandSendChunkDB (db, all));
 }
 
 
-void vjConnect::sendRefresh () {
+void Connect::sendRefresh () {
     if (mode == VJC_INTERACTIVE)
-        commands.push (new vjCommandRefresh);
+        commands.push (new CommandRefresh);
 }
 
 
 
-//! ARGS: _tu - a vjTimedUpdate*
+//! ARGS: _tu - a TimedUpdate*
 //! ARGS: _refresh_time - time between refreshes, in milliseconds
-void vjConnect::addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
+void Connect::addTimedUpdate (TimedUpdate* _tu, float _refresh_time) {
     if (mode != VJC_INPUT) {
         commands_mutex.acquire();
-        timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
+        timed_commands.push (new CommandTimedUpdate (_tu, _refresh_time));
         commands_mutex.release();
     }
 }
 
 
 
-void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
+void Connect::removeTimedUpdate (TimedUpdate* _tu) {
     // this better not be called often - it's gotta be nlogn or something.
     // still, there'll probably never be more than a couple dozen
     // items in the timed_commands queue anyway.
-    std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp> newq;
-    vjCommandTimedUpdate* ctu2;
-    vjCommand* ctu1;
+    std::priority_queue<Command*, std::vector<Command*>, CommandPtrCmp> newq;
+    CommandTimedUpdate* ctu2;
+    Command* ctu1;
     commands_mutex.acquire();
     while (!timed_commands.empty()) {
         ctu1 = timed_commands.top();
-        ctu2 = dynamic_cast<vjCommandTimedUpdate*>(ctu1);
+        ctu2 = dynamic_cast<CommandTimedUpdate*>(ctu1);
         timed_commands.pop();
         if (ctu2 && (ctu2->timed_update == _tu))
             continue;
@@ -278,7 +282,7 @@ void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
 //----------------- PRIVATE utility functions ---------------------------
 
 
-void vjConnect::readControlLoop(void* nullParam) {
+void Connect::readControlLoop(void* nullParam) {
    vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
              << " started read control loop.\n"
              << vjDEBUG_FLUSH;
@@ -293,14 +297,14 @@ void vjConnect::readControlLoop(void* nullParam) {
 
    read_connect_thread = NULL;
    read_die = write_die = true;
-//**//   vjKernel::instance()->getEnvironmentManager()->connectHasDied(this);
+//**//   Kernel::instance()->getEnvironmentManager()->connectHasDied(this);
 }
 
 
 
-void vjConnect::writeControlLoop(void* nullParam) {
+void Connect::writeControlLoop(void* nullParam) {
     /* this probably needs considerable revision */
-    vjCommand*  cmd;
+    Command*  cmd;
     write_alive = true;
 
 //              *outstream << "another test : ( \n" << flush;
@@ -351,14 +355,14 @@ void vjConnect::writeControlLoop(void* nullParam) {
     write_alive = false;
 }
 
-bool vjConnect::readCommand(std::istream& fin) {
+bool Connect::readCommand(std::istream& fin) {
     const int buflen(512);
     char buf[buflen];
     char *c1, *c2;
     char* protocol_start_string = "<protocol handler=\"";
     int protocol_start_string_len = strlen (protocol_start_string);
     char* protocol_name;
-    vjNetCommunicator *communicator = 0;
+    NetCommunicator *communicator = 0;
 
     // this is a little inflexible, but nice & quick.
     if (!fin.getline (buf, buflen, '\n'))
@@ -387,7 +391,7 @@ bool vjConnect::readCommand(std::istream& fin) {
 //      cout << "using protocol " << protocol_name << std::endl;
         
     // find a communicator for this protocol.
-    std::vector<vjNetCommunicator*>::iterator i;
+    std::vector<NetCommunicator*>::iterator i;
     for (i = communicators.begin(); i != communicators.end(); i++) {
         if ((*i)->acceptsStreamIdentifier(protocol_name)) {
             communicator = *i;
@@ -406,7 +410,7 @@ bool vjConnect::readCommand(std::istream& fin) {
 }
 
 
-//  bool vjConnect::readCommand(std::istream& fin) {
+//  bool Connect::readCommand(std::istream& fin) {
 //      // reads one command.  called from controlloop
 //      const int   buflen = 512;
 //      char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
@@ -420,22 +424,22 @@ bool vjConnect::readCommand(std::istream& fin) {
 
 //      s = strtok (rbuf, " \t\n");
 //      if (!s) {
-//          vjDEBUG(vjDBG_ERROR,1) << "couldn't get a token.  something's really wrong in vjConnect\n"
+//          vjDEBUG(vjDBG_ERROR,1) << "couldn't get a token.  something's really wrong in Connect\n"
 //                                 << vjDEBUG_FLUSH;
 //      }
 
 //      if (!strcasecmp (s, get_TOKEN)) {
 //          s = strtok (NULL, " \t\n");
 //          if (!strcasecmp (s, descriptions_TOKEN)) {
-//              vjChunkDescDB* db = vjChunkFactory::instance()->getChunkDescDB();
+//              ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
 //              vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
 //              vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
 //              sendDescDB (db);
 //          }
 //          else if (!strcasecmp (s,chunks_TOKEN)) {
-//              vjConfigManager::instance()->lockActive();
-//              vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
-//              vjConfigManager::instance()->unlockActive();
+//              ConfigManager::instance()->lockActive();
+//              ConfigChunkDB* db = new ConfigChunkDB((*(ConfigManager::instance()->getActiveConfig())));   // Make a copy
+//              ConfigManager::instance()->unlockActive();
 
 //              vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
 //              vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
@@ -443,7 +447,7 @@ bool vjConnect::readCommand(std::istream& fin) {
 //          }
 //          else {
 //              vjDEBUG(vjDBG_ERROR,1)
-//                 << "Error: vjConnect:: Received unknown GET: " << s
+//                 << "Error: Connect:: Received unknown GET: " << s
 //                 << std::endl << vjDEBUG_FLUSH;
 //          }
 //      }
@@ -474,16 +478,16 @@ bool vjConnect::readCommand(std::istream& fin) {
 //          //   chunkdb->removeAll()
 //          vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
 
-//          vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
+//          ConfigChunkDB* newchunkdb = new ConfigChunkDB;
 //          // new cool xml testing stuff.
-//          vjXMLConfigIO configio;
+//          XMLConfigIO configio;
 //          configio.readConfigChunkDB (fin, *newchunkdb);
 //          //fin >> *newchunkdb;
 //          vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vjDEBUG_FLUSH;
 //          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
 //          // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
-//          vjConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
-//          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Added chunks to vjConfigManager pending list to add\n" << vjDEBUG_FLUSH;
+//          ConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
+//          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Added chunks to ConfigManager pending list to add\n" << vjDEBUG_FLUSH;
 //      }
 
 //      else if (!strcasecmp (s, remove_TOKEN)) {
@@ -496,7 +500,7 @@ bool vjConnect::readCommand(std::istream& fin) {
 //              }
 //          }
 //          else if (!strcasecmp (s, chunks_TOKEN)) {
-//              vjConfigChunkDB* remove_chunk_db = new vjConfigChunkDB();
+//              ConfigChunkDB* remove_chunk_db = new ConfigChunkDB();
 
 //              vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
 
@@ -506,16 +510,19 @@ bool vjConnect::readCommand(std::istream& fin) {
 //                                       << vjDEBUG_FLUSH;
 
 //              // Tell config manager to remove the chunks
-//              vjConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
-//              vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to vjConfigManager pending list\n" << vjDEBUG_FLUSH;
+//              ConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
+//              vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to ConfigManager pending list\n" << vjDEBUG_FLUSH;
 //          }
 //          else
-//              vjDEBUG(vjDBG_ERROR,3) << "Error: vjConnect: Unknown remove type: "
+//              vjDEBUG(vjDBG_ERROR,3) << "Error: Connect: Unknown remove type: "
 //                                     << s << std::endl << vjDEBUG_FLUSH;
 //      }
 //      else {
-//          vjDEBUG(vjDBG_ERROR,0) << "Error: vjConnect:: Unknown command '"
+//          vjDEBUG(vjDBG_ERROR,0) << "Error: Connect:: Unknown command '"
 //                                 << s << "'\n" << vjDEBUG_FLUSH;
 //      }
 //      return true;
 //  }
+
+
+};

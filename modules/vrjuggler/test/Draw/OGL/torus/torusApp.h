@@ -57,10 +57,10 @@
 //
 // This application simply renders a torus in the corner of a C2.
 //---------------------------------------------------
-class torusApp : public vjGlApp
+class torusApp : public GlApp
 {
 public:
-   torusApp(vjKernel* kern) : vjGlApp(kern)
+   torusApp(Kernel* kern) : GlApp(kern)
    {;}
 
    virtual ~torusApp (void) {
@@ -113,7 +113,7 @@ private:
    void initGLState();
 
 private:
-   vjPosInterface    mWand;
+   PosInterface    mWand;
 };
 
 #endif

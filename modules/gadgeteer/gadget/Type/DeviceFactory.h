@@ -38,25 +38,28 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Config/vjConfigChunk.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 
 #include <Utils/vjDebug.h>
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 
+namespace vrj
+{
+   
 //: Base class for virtual construction of devices
 // Implementations of this class are registered with the device factory
 // for each device in the system
-class vjDeviceConstructorBase
+class DeviceConstructorBase
 {
 public:
    //: Constructor
    //! POST: Device is registered
-   vjDeviceConstructorBase() {;}
+   DeviceConstructorBase() {;}
 
    //: Create the device
-   virtual vjInput* createDevice(vjConfigChunk* chunk)
+   virtual Input* createDevice(ConfigChunk* chunk)
    {
-      vjDEBUG(vjDBG_ALL,0) << "ERROR: vjDeviceConstructorBase::createDevice: Should never be called" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vjDEBUG_FLUSH;
       return NULL;
    }
 
@@ -67,12 +70,12 @@ public:
 
 
 template <class DEV>
-class vjDeviceConstructor : public vjDeviceConstructorBase
+class DeviceConstructor : public DeviceConstructorBase
 {
 public:
-   vjDeviceConstructor();
+   DeviceConstructor();
 
-   vjInput* createDevice(vjConfigChunk* chunk)
+   Input* createDevice(ConfigChunk* chunk)
    {
       DEV* new_dev = new DEV;
       bool success = new_dev->config(chunk);
@@ -91,14 +94,14 @@ public:
 
 //: Object used for creating devices
 //!NOTE: Singleton
-class vjDeviceFactory
+class DeviceFactory
 {
 private:
    // Singleton so must be private
-   vjDeviceFactory()
+   DeviceFactory()
    {
-      mConstructors = std::vector<vjDeviceConstructorBase*>(0);
-      vjASSERT(mConstructors.size() == 0);
+      mConstructors = std::vector<DeviceConstructorBase*>(0);
+      vprASSERT(mConstructors.size() == 0);
    }
 
    // This should be replaced with device plugins
@@ -106,52 +109,37 @@ private:
    void hackLoadKnownDevices();
 
 public:
-   void registerDevice(vjDeviceConstructorBase* constructor);
+   void registerDevice(DeviceConstructorBase* constructor);
 
    //: Query if the factory knows about the given device
    //!PRE: chunk != NULL, chunk is a valid chunk
    //!ARGS: chunk - chunk we are requesting about knowledge to create
    //!RETURNS: true - factory knows how to create the device
    //+          false - factory does not know how to create the device
-   bool recognizeDevice(vjConfigChunk* chunk);
+   bool recognizeDevice(ConfigChunk* chunk);
 
    //: Load the specified device
    //!PRE: recognizeDevice(chunk) == true
    //!ARGS: chunk - specification of the device to load
    //!RETURNS: null - Device failed to load
    //+         other - Pointer to the loaded device
-   vjInput* loadDevice(vjConfigChunk* chunk);
+   Input* loadDevice(ConfigChunk* chunk);
 
 private:
    //: Find a constructor for the given device type
    //!RETURNS: -1 - Not found
    //+            - Index of the constructorck
-   int   findConstructor(vjConfigChunk* chunk);
+   int   findConstructor(ConfigChunk* chunk);
 
    void debugDump();
 
 
 private:
-   std::vector<vjDeviceConstructorBase*> mConstructors;  //: List of the device constructors
+   std::vector<DeviceConstructorBase*> mConstructors;  //: List of the device constructors
 
-vjSingletonHeaderWithInitFunc(vjDeviceFactory, hackLoadKnownDevices);
-/*
-public:     // ------ SINGLETON ----- ///
-   //: Return singleton instance of the class
-   static vjDeviceFactory* instance()
-   {
-      if(mInstance == NULL)
-      {
-         mInstance = new vjDeviceFactory();
-         mInstance->hackLoadKnownDevices();
-      }
-
-      return mInstance;
-   }
-
-private:
-   static vjDeviceFactory* mInstance;
-   */
+   vprSingletonHeaderWithInitFunc(DeviceFactory, hackLoadKnownDevices);
 };
+
+} // end namespace vrj
 
 #endif

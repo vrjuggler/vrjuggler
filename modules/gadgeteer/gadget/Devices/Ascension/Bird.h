@@ -45,26 +45,29 @@
 #include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/vjFlock.h>
 
+namespace vrj
+{
+   
 //: A start at a standalone bird derice driver.
 //
-//  vjBird is based off of vjFlock, but for one bird only, the
+//  Bird is based off of Flock, but for one bird only, the
 //  group mode things have been stripped, and should be close to
 //  a working implementation, but has not been tested a standalone
 //  bird.
-class vjBird : public vjInput, public vjPosition
+class Bird : public Input, public Position
 {
 public:
    /** @name Construction/Destruction */
    //@{
-   vjBird();
-   ~vjBird();
+   Bird();
+   ~Bird();
    //@}
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(ConfigChunk* c);
 
-   /** @name vjInput pure virtual functions
+   /** @name Input pure virtual functions
     *
-    *  pure virtual functions required from vjInput
+    *  pure virtual functions required from Input
     */
    //@{
    int startSampling();
@@ -74,19 +77,19 @@ public:
    //@}
 
 
-   /** @name vjPosition pure virtual functions
+   /** @name Position pure virtual functions
     *
-    *  pure virtual functions required by vjPosition
+    *  pure virtual functions required by Position
     */
    //@{
    //old function
-   //void getData(vjPOS_DATA* &data);
+   //void getData(POS_DATA* &data);
    // XXX: Bad things live here
-   vjMatrix* getPosData(int dev = 0); // 0 base
+   Matrix* getPosData(int dev = 0); // 0 base
    //@}
 
 
-   /** @name vjBird settings functions
+   /** @name Bird settings functions
     *
     *  Functions for chaning the Bird settings, set functions can only be
     *  called when the device is not in sampling mode.  These functions
@@ -123,6 +126,8 @@ private:
    char repRate;
    BIRD_HEMI hemisphere;
    BIRD_FILT filter;
+};
+
 };
 
 #endif

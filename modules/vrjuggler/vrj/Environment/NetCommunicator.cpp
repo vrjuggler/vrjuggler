@@ -34,15 +34,18 @@
 //#include <iostream.h>
 //#include <string>
 
-//class vjConnect;
+//class Connect;
 
+namespace vrj
+{
+   
 //: Constructor
-vjNetCommunicator::vjNetCommunicator () {
+NetCommunicator::NetCommunicator () {
     connection = NULL;
 }
 
 //: Destructor
-/*virtual*/ vjNetCommunicator::~vjNetCommunicator () {
+/*virtual*/ NetCommunicator::~NetCommunicator () {
     ;
 }
 
@@ -55,7 +58,7 @@ vjNetCommunicator::vjNetCommunicator () {
 //! PRE: _connection is open & valid for writing to; connection
 //+      is NULL.
 //! POST: true.
-/*virtual*/ void vjNetCommunicator::initConnection(vjConnect* _connection) {
+/*virtual*/ void NetCommunicator::initConnection(Connect* _connection) {
     connection = _connection;
 }
 
@@ -65,7 +68,7 @@ vjNetCommunicator::vjNetCommunicator () {
 //  (at least on vjcontrol's side).
 //! PRE: connection != NULL.
 //! POST: connection = NULL.
-/*virtual*/ void vjNetCommunicator::shutdownConnection() {
+/*virtual*/ void NetCommunicator::shutdownConnection() {
     connection = 0;
 }
 
@@ -77,13 +80,13 @@ vjNetCommunicator::vjNetCommunicator () {
 //  this is useful for backwards compatibility.
 //! RETURNS: True - if self knows how to parse this stream.
 //! RETURNS: False - otherwise.
-/*virtual*/ bool vjNetCommunicator::acceptsStreamIdentifier (const std::string& id) {
+/*virtual*/ bool NetCommunicator::acceptsStreamIdentifier (const std::string& id) {
     return false;
 }
 
 
 //: Reads data from a communications stream.
-//  This should only be called by the vjConnect object self is
+//  This should only be called by the Connect object self is
 //  owned by.
 //  The Communicator should read data until it reaches the end of
 //  the protocol stream (signified by the character string
@@ -93,8 +96,9 @@ vjNetCommunicator::vjNetCommunicator () {
 //! PRE: connection != NULL;
 //! RETURNS: true - if reading the protocol stream was succesful.
 //! RETURNS: false - if EOF or a fatal error occurs.  This will
-//+                  kill the vjConnect.
-/*virtual*/ bool vjNetCommunicator::readStream (std::istream& instream, const std::string& id) {
+//+                  kill the Connect.
+/*virtual*/ bool NetCommunicator::readStream (std::istream& instream, const std::string& id) {
     return false;
 }
 
+};

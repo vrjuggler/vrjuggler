@@ -38,20 +38,22 @@
 #include <Input/Filter/vjPosFilter.h>
 #include <Input/Filter/vjLinearSigmoidPosFilter.h>
 
-
-//: Set the transform for this vjPosProxy
+namespace vrj
+{
+   
+//: Set the transform for this PosProxy
 // Sets the transformation matrix to
 //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
 //! NOTE: This means that to set transform, you specific the translation
 //+       followed by rotation that takes the device from where it physically
 //+       is in space to where you want it to be.
-void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Translate
+void PosProxy::setTransform( float xoff, float yoff, float zoff,    // Translate
                    float xrot, float yrot, float zrot)   // Rotate
 {
    mETrans = true;
    mMatrixTransform.makeIdent();
-   vjMatrix trans_mat; trans_mat.makeIdent();
-   vjMatrix rot_mat; rot_mat.makeIdent();
+   Matrix trans_mat; trans_mat.makeIdent();
+   Matrix rot_mat; rot_mat.makeIdent();
 
    if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
       trans_mat.makeTrans(xoff, yoff, zoff);
@@ -63,10 +65,10 @@ void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Transla
 
 
 
-bool vjPosProxy::config(vjConfigChunk* chunk)
+bool PosProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "PosProxy");
+   vprASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    mUnitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
@@ -94,10 +96,10 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    {
       vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
                                       << std::endl << vjDEBUG_FLUSH;
-      vjLinearSigmoidPosFilter* sig_filter;
-      sig_filter = new vjLinearSigmoidPosFilter();
+      LinearSigmoidPosFilter* sig_filter;
+      sig_filter = new LinearSigmoidPosFilter();
 
-      vjConfigChunk* sigmoid_params = (vjConfigChunk*)chunk->getProperty("sigmoidParams");
+      ConfigChunk* sigmoid_params = (ConfigChunk*)chunk->getProperty("sigmoidParams");
       if(sigmoid_params == NULL)
       { vjDEBUG(vjDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vjDEBUG_FLUSH; }
 
@@ -117,3 +119,5 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
 
    return true;
 }
+
+};

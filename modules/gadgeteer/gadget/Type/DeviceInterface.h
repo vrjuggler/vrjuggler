@@ -35,13 +35,16 @@
 #include <vjConfig.h>
 #include <Utils/vjDebug.h>
 
-class vjProxy;
-class vjAnalogProxy;
-class vjDigitalProxy;
-class vjGestureProxy;
-class vjGloveProxy;
-class vjKeyboardProxy;
-class vjPosProxy;
+namespace vrj
+{
+   
+class Proxy;
+class AnalogProxy;
+class DigitalProxy;
+class GestureProxy;
+class GloveProxy;
+class KeyboardProxy;
+class PosProxy;
 
 //: Base class for simplified proxy interfaces
 //
@@ -55,15 +58,15 @@ class vjPosProxy;
 //+         application
 //!PUBLIC_API:
 //------------------------------------------------------------------------------
-class VJ_CLASS_API vjBaseDeviceInterface
+class VJ_CLASS_API BaseDeviceInterface
 {
 protected:
-   vjBaseDeviceInterface(const vjBaseDeviceInterface& other) {;}
+   BaseDeviceInterface(const BaseDeviceInterface& other) {;}
 
 public:
-   vjBaseDeviceInterface();
+   BaseDeviceInterface();
 
-   virtual ~vjBaseDeviceInterface();
+   virtual ~BaseDeviceInterface();
 
    //: Initialize the object
    //! ARGS: proxyName - String name of the proxy to connect to
@@ -82,7 +85,7 @@ public:
    { return (NULL != mProxyPtr); }
 
 protected:
-   vjProxy*    mProxyPtr;     //: Ptr to the proxy
+   Proxy*    mProxyPtr;     //: Ptr to the proxy
    std::string mProxyName;    //: The name of the proxy (or alias) we are looking at
    bool        mNameSet;      //: Has the user set a name??
 
@@ -93,23 +96,23 @@ private:    // Static information
    /* We need to keep track of all the allocated device interfaces
     * so we can update them when the system reconfigures itself
     */
-   static void addDevInterface(vjBaseDeviceInterface* dev);
-   static void removeDevInterface(vjBaseDeviceInterface* dev);
+   static void addDevInterface(BaseDeviceInterface* dev);
+   static void removeDevInterface(BaseDeviceInterface* dev);
 
-   static std::vector<vjBaseDeviceInterface*> mAllocatedDevices;
+   static std::vector<BaseDeviceInterface*> mAllocatedDevices;
 };
 
 
 // ---- Type specific interfaces ----
 
 template<class PROXY_TYPE>
-class VJ_CLASS_API vjDeviceInterface : public vjBaseDeviceInterface
+class VJ_CLASS_API DeviceInterface : public BaseDeviceInterface
 {
 protected:
-   vjDeviceInterface(vjDeviceInterface& other) {;}
+   DeviceInterface(DeviceInterface& other) {;}
 
 public:
-   vjDeviceInterface() : mTypeSpecificProxy(NULL)
+   DeviceInterface() : mTypeSpecificProxy(NULL)
    {;}
 
    PROXY_TYPE* operator->()
@@ -120,7 +123,7 @@ public:
 
    virtual void refresh()
    {
-      vjBaseDeviceInterface::refresh();
+      BaseDeviceInterface::refresh();
       if(mProxyPtr != NULL)
       {
          mTypeSpecificProxy = dynamic_cast<PROXY_TYPE*>(mProxyPtr);
@@ -143,11 +146,13 @@ private:
 
 
 // --- Typedefs to the old types --- //
-typedef vjDeviceInterface<vjAnalogProxy>     vjAnalogInterface;
-typedef vjDeviceInterface<vjDigitalProxy>    vjDigitalInterface;
-typedef vjDeviceInterface<vjGestureProxy>    vjGestureInterface;
-typedef vjDeviceInterface<vjGloveProxy>      vjGloveInterface;
-typedef vjDeviceInterface<vjKeyboardProxy>   vjKeyboardInterface;
-typedef vjDeviceInterface<vjPosProxy>        vjPosInterface;
+typedef DeviceInterface<AnalogProxy>     AnalogInterface;
+typedef DeviceInterface<DigitalProxy>    DigitalInterface;
+typedef DeviceInterface<GestureProxy>    GestureInterface;
+typedef DeviceInterface<GloveProxy>      GloveInterface;
+typedef DeviceInterface<KeyboardProxy>   KeyboardInterface;
+typedef DeviceInterface<PosProxy>        PosInterface;
+
+} // end namespace
 
 #endif

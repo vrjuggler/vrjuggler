@@ -60,11 +60,11 @@
 
 //: VR Juggler application demonstration to show you 
 //  how to do texturing in an OpenGL juggler application
-class AnalogDemoApplication : public vjGlApp
+class AnalogDemoApplication : public GlApp
 {
 public:
    //: Constructor
-   AnalogDemoApplication( vjKernel* kern );
+   AnalogDemoApplication( Kernel* kern );
 
    //: destructor
    virtual ~AnalogDemoApplication();
@@ -96,9 +96,9 @@ public:
 private:
    float x;
 
-   // use the type: vjGlContextData<ResourceID>
+   // use the type: GlContextData<ResourceID>
    // to store your OpenGL texture object and display list IDs
-   // i.e. vjGlContextData<ResourceID>  mTexObj;
+   // i.e. GlContextData<ResourceID>  mTexObj;
    class ResourceID
    {
    public:
@@ -109,13 +109,13 @@ private:
    };
    
    cubeGeometry                  mCubeGeometry;
-   vjGlContextData<ResourceID>   mCubeDisplayList;
+   GlContextData<ResourceID>   mCubeDisplayList;
 
    // interface to analog input.
-   vjAnalogInterface             mAnalog0;
+   AnalogInterface             mAnalog0;
 
    // timer
-   vjTimer timer;
+   Timer timer;
 };   
 
 

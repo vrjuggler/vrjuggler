@@ -31,23 +31,25 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <Kernel/GL/vjGlxWindow.h>
-#include <vjConfig.h>
-
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
 
+#include <vjConfig.h>
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/vjKernel.h>
 #include <Utils/vjDebug.h>
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjDisplayManager.h>
-
 #include <Config/vjConfigChunk.h>
 
+#include <Kernel/GL/vjGlxWindow.h>
 
-vjGlxWindow::vjGlxWindow():vjGlWindow() {
+
+namespace vrj
+{
+   
+GlxWindow::GlxWindow():GlWindow() {
    window_is_open = false;
    window_width = window_height = -1;
    x_display = NULL;
@@ -61,19 +63,19 @@ vjGlxWindow::vjGlxWindow():vjGlWindow() {
 
 
 
-vjGlxWindow::~vjGlxWindow() {
+GlxWindow::~GlxWindow() {
     close();
 }
 
 
 
-void vjGlxWindow::swapBuffers() {
+void GlxWindow::swapBuffers() {
    glXSwapBuffers (x_display,  x_window);
 }
 
 
 
-int vjGlxWindow::open() {
+int GlxWindow::open() {
     /* attempts to open the glxWindow & create the gl context.  Does nothing
      * if the window is already open (& returns true).
      * returns true for success, false for failure.
@@ -81,12 +83,12 @@ int vjGlxWindow::open() {
      * current gl context.
      */
 
-    XEvent fooevent;
-    XSetWindowAttributes w_attrib;
+    ::XEvent fooevent;
+    ::XSetWindowAttributes w_attrib;
     int screen;
     char* foo;
-    XSizeHints *sizehints;
-    XClassHint *classhint;
+    ::XSizeHints *sizehints;
+    ::XClassHint *classhint;
 
     vjDEBUG(vjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vjDEBUG_FLUSH;
 
@@ -98,7 +100,7 @@ int vjGlxWindow::open() {
         return false;
     }
 
-    if (! (x_display = XOpenDisplay (mXDisplayName.c_str()))) {
+    if (! (x_display = ::XOpenDisplay (mXDisplayName.c_str()))) {
         vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Unable to open display '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
         return false;
     }
@@ -112,7 +114,7 @@ int vjGlxWindow::open() {
     }
 
     // window attributes.
-    if ((w_attrib.colormap = XCreateColormap (x_display,
+    if ((w_attrib.colormap = ::XCreateColormap (x_display,
                                               RootWindow(x_display, screen),
                                               visual_info->visual,
                                               AllocNone)) == 0) {
@@ -126,15 +128,15 @@ int vjGlxWindow::open() {
 
 
     // get screen dimensions for translating window origin.
-    XWindowAttributes winattrs;
-    XGetWindowAttributes (x_display, RootWindow (x_display, screen), &winattrs);
+    ::XWindowAttributes winattrs;
+    ::XGetWindowAttributes (x_display, RootWindow (x_display, screen), &winattrs);
 //    std::cout << "------------------------------------------------------------------\n"
 //          << "    screen dims: " << winattrs.width << ", " << winattrs.height
 //          << "    win pos: " << origin_x << ", " <<  winattrs.height - origin_y - window_height << std::endl;
 
 
     // create window
-    if ((x_window = XCreateWindow (x_display, RootWindow(x_display, screen),
+    if ((x_window = ::XCreateWindow (x_display, RootWindow(x_display, screen),
                                    origin_x, winattrs.height - origin_y - window_height,
                                    window_width, window_height,
                                    0, visual_info->depth,
@@ -157,16 +159,16 @@ int vjGlxWindow::open() {
     /* Before we map the window, we need a name for it (this is also useful for
      * the resource cruft that'll get rid of the borders).
      */
-    classhint = XAllocClassHint();
+    classhint = ::XAllocClassHint();
     classhint->res_name = (char*)window_name.c_str();
     classhint->res_class = "vj GLX";
     //XSetClassHint (x_display, x_window, classhint);
 
     // InSoc makes things simple
     // X makes things complicated
-    XTextProperty w_name;
+    ::XTextProperty w_name;
     foo = (char*)window_name.c_str();
-    XStringListToTextProperty(&foo, 1, &w_name);
+    ::XStringListToTextProperty(&foo, 1, &w_name);
 
     /* The next few lines of crud are needed to get it through the window
      * manager's skull that yes, we DO have a REASON for wanting the window
@@ -177,12 +179,12 @@ int vjGlxWindow::open() {
     sizehints = XAllocSizeHints();
     sizehints->flags = USPosition;
 
-    XSetWMProperties (x_display, x_window, &w_name, &w_name,
+    ::XSetWMProperties (x_display, x_window, &w_name, &w_name,
                       NULL, 0, sizehints, NULL, classhint);
 
-    XFree (w_name.value);
-    XFree (classhint);
-    XFree (sizehints);
+    ::XFree (w_name.value);
+    ::XFree (classhint);
+    ::XFree (sizehints);
 
     /***************** Border Stuff ***************************/
 
@@ -196,8 +198,8 @@ int vjGlxWindow::open() {
     if (!border) {
         vjDEBUG(vjDBG_DRAW_MGR,5) << "attempting to make window borderless"
                                   << std::endl << vjDEBUG_FLUSH;
-        Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
-        if (vjMotifHints == None) {
+        Atom MotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
+        if (MotifHints == None) {
             vjDEBUG(vjDBG_DRAW_MGR,0)
                << clrOutNORM(clrRED,"ERROR:")
                << "vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS."
@@ -208,7 +210,7 @@ int vjGlxWindow::open() {
             hints.flags = MWM_HINTS_DECORATIONS;
             hints.decorations = 0;
             XChangeProperty(x_display, x_window,
-                            vjMotifHints, vjMotifHints, 32,
+                            MotifHints, MotifHints, 32,
                             PropModeReplace, (unsigned char *) &hints, 4);
         }
     }
@@ -220,9 +222,9 @@ int vjGlxWindow::open() {
      * it's actually on screen.
      */
 
-    XMapWindow (x_display, x_window);
-    XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
-    XSync(x_display,0);
+    ::XMapWindow (x_display, x_window);
+    ::XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
+    ::XSync(x_display,0);
 
     vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlxWindow: done mapping window\n" << vjDEBUG_FLUSH;
 
@@ -240,23 +242,23 @@ int vjGlxWindow::open() {
     if(true == mAreKeyboardDevice)     // Are we going to act like a keyboard device
     {
        // Set the parameters that we will need to get events
-       vjXWinKeyboard::m_window = x_window;
-       vjXWinKeyboard::m_visual = visual_info;
-       vjXWinKeyboard::m_display = x_display;
+       vrj::XWinKeyboard::m_window = x_window;
+       vrj::XWinKeyboard::m_visual = visual_info;
+       vrj::XWinKeyboard::m_display = x_display;
 
        // Start up the device
-       vjXWinKeyboard::startSampling();
+       vrj::XWinKeyboard::startSampling();
 
-       vjInput* dev_ptr = dynamic_cast<vjInput*>(this);
+       vrj::Input* dev_ptr = dynamic_cast<vrj::Input*>(this);
 
-       vjKernel::instance()->getInputManager()->addDevice(dev_ptr);
+       vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
     }
 
     return true;
 
  OPEN_FAIL:
     // close() is coincidentally safe to call on a partially-opened
-    // vjGlxWindow, and will deallocate all the stuff we might have
+    // GlxWindow, and will deallocate all the stuff we might have
     // allocated above.
     close();
     return false;
@@ -266,7 +268,7 @@ int vjGlxWindow::open() {
 
 //: Closes the window given
 //! NOTE: this function mucks with the current rendering context */
-int vjGlxWindow::close() {
+int GlxWindow::close() {
 //     if (!window_is_open)
 //         return true;
 
@@ -280,17 +282,17 @@ int vjGlxWindow::close() {
    }
    if (x_window)
    {
-      XDestroyWindow (x_display, x_window);
+      ::XDestroyWindow (x_display, x_window);
       x_window = 0;
    }
    if (visual_info)
    {
-      XFree (visual_info);
+      ::XFree (visual_info);
       visual_info = NULL;
    }
    if (x_display)
    {
-      XCloseDisplay (x_display);
+      ::XCloseDisplay (x_display);
       x_display = NULL;
    }
 
@@ -301,33 +303,33 @@ int vjGlxWindow::close() {
 
 
 
-bool vjGlxWindow::makeCurrent() {
+bool GlxWindow::makeCurrent() {
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
     */
    if (!window_is_open)
       return false;
 
-   vjASSERT(glx_context != NULL);
+   vprASSERT(glx_context != NULL);
    return glXMakeCurrent ( x_display, x_window, glx_context  );
 }
 
-void vjGlxWindow::config(vjDisplay* disp)
+void GlxWindow::config(vrj::Display* disp)
 {
    vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlxWindow::config: _display: " << (*disp)
                               << "\nConfig chunk:\n" << (*(disp->getConfigChunk()))
                               << std::endl << vjDEBUG_FLUSH;
 
    const char neg_one_STRING[] = "-1";
-   vjGlWindow::config(disp);
+   vrj::GlWindow::config(disp);
 
     // Get the vector of display chunks
-   vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
-   vjConfigChunk* displayChunk = disp->getConfigChunk();
+   vrj::ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   vrj::ConfigChunk* displayChunk = disp->getConfigChunk();
 
    window_name = disp->getName();
    mPipe = disp->getPipe();
-   vjASSERT(mPipe >= 0);
+   vprASSERT(mPipe >= 0);
 
    mXDisplayName = (std::string)dispSysChunk->getProperty("xpipes", mPipe);
    if(mXDisplayName == neg_one_STRING)    // Use display env
@@ -345,16 +347,16 @@ void vjGlxWindow::config(vjDisplay* disp)
       mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
 
       // Configure keyboard device portion
-      vjConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
+      ConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
       //keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
 
-      vjXWinKeyboard::config(keyboard_chunk);
+      XWinKeyboard::config(keyboard_chunk);
 
       // Custom configuration
-      vjXWinKeyboard::m_width = vjGlxWindow::window_width;
-      vjXWinKeyboard::m_height = vjGlxWindow::window_height;
+      XWinKeyboard::m_width = GlxWindow::window_width;
+      XWinKeyboard::m_height = GlxWindow::window_height;
 
       mWeOwnTheWindow = false;      // Keyboard device does not own window
    }
@@ -362,10 +364,10 @@ void vjGlxWindow::config(vjDisplay* disp)
 
 
 /**** Static Helpers *****/
-/* static */ bool vjGlxWindow::createHardwareSwapGroup(std::vector<vjGlWindow*> wins)
+/* static */ bool GlxWindow::createHardwareSwapGroup(std::vector<GlWindow*> wins)
 {
    // Convert to glx windows
-   std::vector<vjGlxWindow*> glx_wins;
+   std::vector<GlxWindow*> glx_wins;
    unsigned int i;
 
    if(wins.size() <= 0)
@@ -373,8 +375,8 @@ void vjGlxWindow::config(vjDisplay* disp)
 
    for(i=0;i<wins.size();i++)
    {
-      vjGlxWindow* glx_win = dynamic_cast<vjGlxWindow*>(wins[i]);
-      vjASSERT(glx_win != NULL);    // Make sure we have the right type
+      GlxWindow* glx_win = dynamic_cast<GlxWindow*>(wins[i]);
+      vprASSERT(glx_win != NULL);    // Make sure we have the right type
       glx_wins.push_back(glx_win);
    }
 
@@ -398,7 +400,7 @@ void vjGlxWindow::config(vjDisplay* disp)
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
 /***********************************************************/
-XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
+::XVisualInfo* GlxWindow::GetGlxVisInfo (::Display *display, int screen)
 {
    /* pre:  screen is a screen on the current XDisplay, and
     *       XDisplay is already defined and valid.
@@ -412,7 +414,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
     */
 
 
-   XVisualInfo *vi;
+   ::XVisualInfo *vi;
    const int MaxAttributes = 32;
    int viattrib[MaxAttributes] = {
       GLX_DOUBLEBUFFER,
@@ -489,22 +491,24 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 //!POST: returns true if e is a mapnotify event for window, else false
 //!NOTE: this is a utility function for InitGfx,  used to wait
 //+       until a window has actually been mapped.
-int vjGlxWindow::EventIsMapNotify (Display *display,  XEvent *e,  XPointer window) {
+int GlxWindow::EventIsMapNotify (::Display *display,  ::XEvent *e,  ::XPointer window) {
 
     return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
 
-void vjGlxWindow::processEvent(XEvent event)
+void GlxWindow::processEvent(::XEvent event)
 {
-   switch(event.type)
+   switch (event.type)
    {
    case ConfigureNotify:
-      updateOriginSize(vjGlWindow::origin_x, vjGlWindow::origin_y,
-                       event.xconfigure.width, event.xconfigure.height);
-      vjGlWindow::setDirtyViewport(true);
+      updateOriginSize( vrj::GlWindow::origin_x, vrj::GlWindow::origin_y,
+                        event.xconfigure.width, event.xconfigure.height );
+      vrj::GlWindow::setDirtyViewport(true);
       break;
 
    default:
       break;
    }
 }
+
+} // namespace bokbokbokbok

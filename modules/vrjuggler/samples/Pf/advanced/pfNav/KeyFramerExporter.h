@@ -39,12 +39,12 @@ namespace kev
          {
             const kev::KeyFramer::Key& key = (*it1).second;
             const float& time = key.time();
-            const vjVec3& pos = key.position();
-            const vjQuat& quat = key.rotation();
+            const Vec3& pos = key.position();
+            const Quat& quat = key.rotation();
             float deg;
-            vjVec3 vec;
+            Vec3 vec;
             quat.getRot( deg, vec[0], vec[1], vec[2] );
-            deg = vjMath::rad2deg( deg ); 
+            deg = Math::rad2deg( deg ); 
             frames_file<<time<<" "<<pos[0]<<" "<<pos[1]<<" "
                        <<pos[2]<<" "<<deg<<" "<<vec[0]<<" "
                        <<vec[1]<<" "<<vec[2]<<"\n";

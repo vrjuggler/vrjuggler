@@ -34,14 +34,17 @@
 #include <vjConfig.h>
 #include <Kernel/vjDependencyManager.h>
 
-// Initialize the singleton ptr
-//vjDependencyManager* vjDependencyManager::mInstance = NULL;
-vjSingletonImp(vjDependencyManager);
-
-
-vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
+namespace vrj
 {
-   vjASSERT(NULL != chunk);
+   
+// Initialize the singleton ptr
+//vjDependencyManager* DependencyManager::mInstance = NULL;
+vprSingletonImp(DependencyManager);
+
+
+DepChecker* DependencyManager::findDepChecker(ConfigChunk* chunk)
+{
+   vprASSERT(NULL != chunk);
 
    //std::string chunk_type;
    //chunk_type = (std::string)chunk->getType();
@@ -49,8 +52,8 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
    for(unsigned int i=0;i<mDepCheckers.size();i++)
    {
       // Get next constructor
-      vjDepChecker* checker = mDepCheckers[i];
-      vjASSERT(checker != NULL);
+      DepChecker* checker = mDepCheckers[i];
+      vprASSERT(checker != NULL);
 
       if(checker->canHandle(chunk))
          return checker;
@@ -60,7 +63,7 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
 }
 
 
-void vjDependencyManager::debugDump()
+void DependencyManager::debugDump()
 {
    //vjDEBUG_BEGIN(vjDBG_KERNEL, vjDBG_CONFIG_LVL) << "vjDepChecker::debugDump\n" << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vjDEBUG_FLUSH;
@@ -69,7 +72,7 @@ void vjDependencyManager::debugDump()
 
    for(unsigned int cNum=0;cNum<mDepCheckers.size();cNum++)
    {
-      vjDepChecker* checker = mDepCheckers[cNum];
+      DepChecker* checker = mDepCheckers[cNum];
       vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL)
                  << cNum << ": Checker:" << (void*)checker
                  << "   type:" << typeid(*checker).name()
@@ -79,3 +82,5 @@ void vjDependencyManager::debugDump()
    vjDEBUG_END(vjDBG_KERNEL,vjDBG_STATE_LVL) << "---------------------\n" << vjDEBUG_FLUSH;
 }
 
+
+};

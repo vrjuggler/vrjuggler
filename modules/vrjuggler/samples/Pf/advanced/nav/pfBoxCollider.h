@@ -59,7 +59,7 @@ public:
    //!ARGS: delta - The amount we want to move
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta = false);
+   virtual bool testMove(Vec3 whereYouAre, Vec3 delta, Vec3& correction, bool whereYouAreWithDelta = false);
 
 public:
    pfNode* mWorldNode;        // The world to collide with
@@ -67,10 +67,10 @@ public:
 };
 
 
-bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool whereYouAreWithDelta)
+bool pfBoxCollider::testMove( Vec3 feetPosition, Vec3 feetDelta, Vec3& correction, bool whereYouAreWithDelta)
 {
-   pfVec3 pf_feet_position = vjGetPfVec(feetPosition);
-   pfVec3 pf_feet_delta = vjGetPfVec(feetDelta);
+   pfVec3 pf_feet_position = GetPfVec(feetPosition);
+   pfVec3 pf_feet_delta = GetPfVec(feetDelta);
    pfVec3 pf_feet_destination = (pf_feet_position + pf_feet_delta);
    pfVec3 pf_correction;         // Needs to be set
    
@@ -99,7 +99,7 @@ bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& cor
    
    if (terryCollide.collide( pf_correction, mWorldNode, pf_step_destination) )
    {
-      correction = vjGetVjVec(pf_correction);
+      correction = GetVjVec(pf_correction);
 
       setDidCollide(true);
       return true;

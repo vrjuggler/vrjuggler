@@ -42,19 +42,22 @@
 
 #include <Config/vjConfigChunk.h>
 
-//vjDisplayManager* vjDisplayManager::_instance = NULL;
-vjSingletonImp(vjDisplayManager);
-
-std::vector<vjDisplay*> vjDisplayManager::getAllDisplays()
+namespace vrj
 {
-   std::vector<vjDisplay*> ret_val;
+   
+//vjDisplayManager* DisplayManager::_instance = NULL;
+vprSingletonImp(DisplayManager);
+
+std::vector<Display*> DisplayManager::getAllDisplays()
+{
+   std::vector<Display*> ret_val;
    ret_val.insert(ret_val.end(), mActiveDisplays.begin(), mActiveDisplays.end());
    ret_val.insert(ret_val.end(), mInactiveDisplays.begin(), mInactiveDisplays.end());
    return ret_val;
 }
 
 
-void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
+void DisplayManager::setDrawManager(DrawManager* drawMgr)
 {
    vjDEBUG(vjDBG_DISP_MGR,3) << "vjDisplayManager: Setting draw manager.\n" << vjDEBUG_FLUSH;
 
@@ -73,9 +76,9 @@ void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
 
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
-bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
+bool DisplayManager::configAdd(ConfigChunk* chunk)
 {
-   vjASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(chunk));
 
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -102,9 +105,9 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
 
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
-bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
+bool DisplayManager::configRemove(ConfigChunk* chunk)
 {
-   vjASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(chunk));
 
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -134,7 +137,7 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
 //: Is it a display chunk?
 //! RETURNS: true - We have a display chunk
 //+          false - We don't
-bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
+bool DisplayManager::configCanHandle(ConfigChunk* chunk)
 {
    return (    ((std::string)chunk->getType() == std::string("surfaceDisplay"))
             || ((std::string)chunk->getType() == std::string("simDisplay"))
@@ -151,16 +154,16 @@ bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 //! POST: (display of same name already loaded) ==> old display closed, new one opened
 //+       (display is new) ==> (new display is added)
 //+       draw manager is notified of the display change
-bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
+bool DisplayManager::configAddDisplay(ConfigChunk* chunk)
 {
-   vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
+   vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configAddDisplay -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay -------\n" << vjDEBUG_FLUSH;
 
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
    // This basically allows re-configuration of a window
-   vjDisplay* cur_disp = findDisplayNamed(chunk->getProperty("name"));
+   Display* cur_disp = findDisplayNamed(chunk->getProperty("name"));
    if(cur_disp != NULL)                         // We have an old display
    {
       vjDEBUG(vjDBG_DISP_MGR,vjDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vjDEBUG_FLUSH;
@@ -170,31 +173,31 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
    // --- Add a display (of the correct type) ---- //
    if((std::string)chunk->getType() == std::string("displayWindow"))       // Display window
    {
-      vjDisplay* newDisp = new vjDisplay();        // Create the display
+      Display* newDisp = new Display();        // Create the display
       newDisp->config(chunk);
       addDisplay(newDisp,true);                    // Add it
       vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Adding display: " << newDisp->getName().c_str() << std::endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Display: "  << newDisp << std::endl << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
    return true;
 }
 
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool vjDisplayManager::configRemoveDisplay(vjConfigChunk* chunk)
+bool DisplayManager::configRemoveDisplay(ConfigChunk* chunk)
 {
-   vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
+   vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configRemoveDisplay -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay -------\n" << vjDEBUG_FLUSH;
 
    bool success_flag(false);
 
    if((std::string)chunk->getType() == std::string("displayWindow"))      // It is a display
    {
-      vjDisplay* remove_disp = findDisplayNamed(chunk->getProperty("name"));
+      Display* remove_disp = findDisplayNamed(chunk->getProperty("name"));
       if(remove_disp != NULL)
       {
          closeDisplay(remove_disp, true);                            // Remove it
@@ -202,7 +205,7 @@ bool vjDisplayManager::configRemoveDisplay(vjConfigChunk* chunk)
       }
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configRemoveDisplay done. --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay done. --------\n" << vjDEBUG_FLUSH;
    return success_flag;
 }
 
@@ -210,7 +213,7 @@ bool vjDisplayManager::configRemoveDisplay(vjConfigChunk* chunk)
 
 
 // notifyDrawMgr = 0; Defaults to 0
-int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
+int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
 {
    vjDEBUG(vjDBG_DISP_MGR,4) << "vjDisplayManager::addDisplay \n" << vjDEBUG_FLUSH;
 
@@ -234,9 +237,9 @@ int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
 //! POST: disp has been removed from the list of displays
 //+   (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
 //+   ==> Draw manager has been told to clode the window for the display
-int vjDisplayManager::closeDisplay(vjDisplay* disp, bool notifyDrawMgr)
+int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
 {
-   vjASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
+   vprASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
 
    vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "closeDisplay: Closing display named: " << disp->getName() << std::endl<< vjDEBUG_FLUSH;
 
@@ -251,7 +254,7 @@ int vjDisplayManager::closeDisplay(vjDisplay* disp, bool notifyDrawMgr)
                           mActiveDisplays.end());
    mInactiveDisplays.erase( std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp),
                             mInactiveDisplays.end());
-   vjASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
+   vprASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
 
    // Delete the object
    // XXX: Memory leak.  Can't delete display here because the draw manager
@@ -264,9 +267,9 @@ int vjDisplayManager::closeDisplay(vjDisplay* disp, bool notifyDrawMgr)
 
 
 // Is the display a member of the display manager
-bool vjDisplayManager::isMemberDisplay(vjDisplay* disp)
+bool DisplayManager::isMemberDisplay(Display* disp)
 {
-   std::vector<vjDisplay*>::iterator i;
+   std::vector<Display*>::iterator i;
 
    i = std::find(mActiveDisplays.begin(),mActiveDisplays.end(),disp);
    if(i != mActiveDisplays.end())
@@ -281,9 +284,9 @@ bool vjDisplayManager::isMemberDisplay(vjDisplay* disp)
 
 //: Find a display given the display name
 //! RETURNS: NULL - not found
-vjDisplay* vjDisplayManager::findDisplayNamed(std::string name)
+Display* DisplayManager::findDisplayNamed(std::string name)
 {
-   std::vector<vjDisplay*>::iterator i;
+   std::vector<Display*>::iterator i;
 
    for(i = mActiveDisplays.begin();i!=mActiveDisplays.end();i++)
       if((*i)->getName() == name)
@@ -297,13 +300,13 @@ vjDisplay* vjDisplayManager::findDisplayNamed(std::string name)
 }
 
 
-void vjDisplayManager::updateProjections()
+void DisplayManager::updateProjections()
 {
    // for (all displays) update the projections
-   for (std::vector<vjDisplay*>::iterator i = mActiveDisplays.begin(); i != mActiveDisplays.end(); i++)
+   for (std::vector<Display*>::iterator i = mActiveDisplays.begin(); i != mActiveDisplays.end(); i++)
       (*i)->updateProjections();
 
-   for (std::vector<vjDisplay*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
+   for (std::vector<Display*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
       (*j)->updateProjections();
 
    if(mDrawManager != NULL)
@@ -311,3 +314,4 @@ void vjDisplayManager::updateProjections()
 }
 
 
+};

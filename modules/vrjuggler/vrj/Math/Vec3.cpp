@@ -35,10 +35,12 @@
 #include <Math/vjMatrix.h>
 #include <Math/vjVec4.h>
 
-
-void vjVec3::xformFull(const vjMatrix& _m, const vjVec3& _v)
+namespace vrj
 {
-    vjVec4 tempVec(_v[0], _v[1], _v[2], 1.0f);
+   
+void Vec3::xformFull(const Matrix& _m, const Vec3& _v)
+{
+    Vec4 tempVec(_v[0], _v[1], _v[2], 1.0f);
     tempVec.xform(_m, tempVec);
 
     float w_coord_div = 1.0f / tempVec.vec[3];
@@ -48,9 +50,9 @@ void vjVec3::xformFull(const vjMatrix& _m, const vjVec3& _v)
     vec[2] = (tempVec.vec[2]* w_coord_div);
 }
 
-void vjVec3::xformVec(const vjMatrix& _m, const vjVec3& _v)
+void Vec3::xformVec(const Matrix& _m, const Vec3& _v)
 {
-    vjVec4 tempVec(_v[0], _v[1], _v[2], 0.0f);
+    Vec4 tempVec(_v[0], _v[1], _v[2], 0.0f);
     tempVec.xform(_m, tempVec);
 
     vec[0] = tempVec.vec[0];
@@ -58,26 +60,26 @@ void vjVec3::xformVec(const vjMatrix& _m, const vjVec3& _v)
     vec[2] = tempVec.vec[2];
 }
 
-VJ_IMPLEMENT(vjVec3) operator *(float _s, const vjVec3& _v) {
-    return vjVec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
+VJ_IMPLEMENT(Vec3) operator *(float _s, const Vec3& _v) {
+    return Vec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
 }
 
-VJ_IMPLEMENT(vjVec3) operator *(const vjVec3& _v, float _s) {
-    return vjVec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
+VJ_IMPLEMENT(Vec3) operator *(const Vec3& _v, float _s) {
+    return Vec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
 }
 
-VJ_IMPLEMENT(vjVec3) operator /(const vjVec3& _v, float _s) {
+VJ_IMPLEMENT(Vec3) operator /(const Vec3& _v, float _s) {
     _s = 1.0f/_s;
-    return vjVec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
+    return Vec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
 }
 
-//vjVec3 operator *(const vjVec3& _v, const vjMatrix&  _m) {
+//vjVec3 operator *(const Vec3& _v, const Matrix&  _m) {
 //    // transform as point (w=1), assuming affine transformation
 //    // i.e. does not use slower dst.xformFullPt().
-//    vjVec3 dst; dst.xformPt(_v, _m); return dst;
+//    Vec3 dst; dst.xformPt(_v, _m); return dst;
 //}
 
-VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const vjVec3& _v )
+VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const Vec3& _v )
 {
     for(int j=0;j<3;j++)
     {
@@ -86,3 +88,4 @@ VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const vjVec3& _v )
 
     return out;	
 }
+};

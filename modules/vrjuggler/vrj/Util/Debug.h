@@ -41,29 +41,29 @@
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
+#include <vpr/Util/Singleton.h>
 #include <Utils/vjStreamLock.h>
-#include <Utils/vjSingleton.h>
 
 // Debug output categories
 #define vjDBG_BASE 0
 #define vjDBG_ALL (vjDBG_BASE+0)         /* Use if you always want it ouput */
-const std::string vjDBG_ALLstr("DBG_ALL");
+const std::string vjDBG_ALLstr("vjDBG_ALL");
 #define vjDBG_ERROR (vjDBG_BASE+1)       /* Error output */
-const std::string vjDBG_ERRORstr("DBG_ERROR");
+const std::string vjDBG_ERRORstr("vjDBG_ERROR");
 #define vjDBG_KERNEL (vjDBG_BASE+2)      /* Kernel output */
-const std::string vjDBG_KERNELstr("DBG_KERNEL");
+const std::string vjDBG_KERNELstr("vjDBG_KERNEL");
 #define vjDBG_INPUT_MGR (vjDBG_BASE+3)       /* Input output */
-const std::string vjDBG_INPUT_MGRstr("DBG_INPUT_MGR");
+const std::string vjDBG_INPUT_MGRstr("vjDBG_INPUT_MGR");
 #define vjDBG_DRAW_MGR (vjDBG_BASE+4)
-const std::string vjDBG_DRAW_MGRstr("DBG_DRAW_MGR");
+const std::string vjDBG_DRAW_MGRstr("vjDBG_DRAW_MGR");
 #define vjDBG_DISP_MGR (vjDBG_BASE+5)
-const std::string vjDBG_DISP_MGRstr("DBG_DISP_MGR");
+const std::string vjDBG_DISP_MGRstr("vjDBG_DISP_MGR");
 #define vjDBG_ENV_MGR (vjDBG_BASE+6)
-const std::string vjDBG_ENV_MGRstr("DBG_ENV_MGR");
+const std::string vjDBG_ENV_MGRstr("vjDBG_ENV_MGR");
 #define vjDBG_PERFORMANCE (vjDBG_BASE+7)
-const std::string vjDBG_PERFORMANCEstr("DBG_PERFORMANCE");
+const std::string vjDBG_PERFORMANCEstr("vjDBG_PERFORMANCE");
 #define vjDBG_CONFIG (vjDBG_BASE+8)
-const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
+const std::string vjDBG_CONFIGstr("vjDBG_CONFIGDB");
 
 #define vjDBG_USER 100
 
@@ -122,14 +122,14 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 
 
 #ifdef VJ_DEBUG
-//#   define vjDEBUG(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val)
-//#   define vjDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, 1)
-//#   define vjDEBUG_END(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, -1)
+//#   define vjDEBUG(cat,val) if (0) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val)
+//#   define vjDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, true, 1)
+//#   define vjDEBUG_END(cat,val) if (0) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, true, -1)
 #  define LOCK_DEBUG_STREAM
-#  define MAX_DBG_LEVEL 100
+#  define MAX_vjDBG_LEVEL 100
 #else
 #  define LOCK_DEBUG_STREAM
-#  define MAX_DBG_LEVEL vjDBG_WARNING_LVL
+#  define MAX_vjDBG_LEVEL vjDBG_WARNING_LVL
 //#   define vjDEBUG(cat,val) if (1) ; else std::cout
 //#   define vjDEBUG_BEGIN(cat,val) if (1) ; else std::cout
 //#   define vjDEBUG_END(cat,val) if (1) ; else std::cout
@@ -146,12 +146,12 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 // vjDEBUG_NEXT - Outputing more info on next line (no thread info)
 // vjDEBUG_NEXT_BEGIN - Output more infor on next line AND indent one level more
 // vjDEBUG_NEXT_END - Ouput more info on the next line AND decrease indent one level
-#define vjDEBUG(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true)
-#define vjDEBUGlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, 0, lockIt)
-#define vjDEBUG_BEGIN(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, 1)
-#define vjDEBUG_BEGINlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, 1, lockIt)
-#define vjDEBUG_END(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, -1)
-#define vjDEBUG_ENDlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, -1, lockIt)
+#define vjDEBUG(cat,val) if (val>MAX_vjDBG_LEVEL) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, true)
+#define vjDEBUGlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_vjDBG_LEVEL) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, show_thread, use_indent, 0, lockIt)
+#define vjDEBUG_BEGIN(cat,val) if (val>MAX_vjDBG_LEVEL) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, true, true, 1)
+#define vjDEBUG_BEGINlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_vjDBG_LEVEL) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, show_thread, use_indent, 1, lockIt)
+#define vjDEBUG_END(cat,val) if (val>MAX_vjDBG_LEVEL) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, true, true, -1)
+#define vjDEBUG_ENDlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_vjDBG_LEVEL) ; else if((val <= vrj::Debug::instance()->getLevel()) && (vrj::Debug::instance()->isCategoryAllowed(cat))) vrj::Debug::instance()->getStream(cat, val, show_thread, use_indent, -1, lockIt)
 
 #define vjDEBUG_CONT(cat,val) vjDEBUGlg(cat,val,false,false,true)
 #define vjDEBUG_CONT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,false,true)
@@ -172,8 +172,8 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 
 
 #ifdef LOCK_DEBUG_STREAM
-#   define vjDEBUG_STREAM_LOCK vjStreamLock(vjDebug::instance()->debugLock())
-#   define vjDEBUG_STREAM_UNLOCK vjStreamUnLock(vjDebug::instance()->debugLock())
+#   define vjDEBUG_STREAM_LOCK vrj::StreamLock(vrj::Debug::instance()->debugLock())
+#   define vjDEBUG_STREAM_UNLOCK vrj::StreamUnLock(vrj::Debug::instance()->debugLock())
 #   define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << std::flush
 #else
 #   define vjDEBUG_STREAM_LOCK std::flush
@@ -182,81 +182,68 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 #endif
 
 
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 
-
-//------------------------------------------
-//: Class to support debug output
-//
-//!PUBLIC_API:
-//-----------------------------------------
-class VJ_CLASS_API vjDebug
+namespace vrj
 {
-protected:
-   // Set default values
-   // Set up default categories
-   // Get debug config from environment
-   vjDebug();
-
-   // This must be here so that Visual C++ does not try to export them.
-   vjDebug(const vjDebug& o) {;}
-   void operator=(const vjDebug& o) {;}
-
-public:
-   // Get the debug stream to use
-   std::ostream& getStream(int cat, int level, bool show_thread_info = true,
-                           bool use_indent = true, int indentChange = 0, bool lockStream = true);
-
-   int getLevel()
-   { return debugLevel; }
-
-   vpr::Mutex& debugLock()
-   { return mDebugLock; }
-
-   // Add a category name
-   void addCategoryName(std::string name, int cat);
-
-   // Allow the given category
-   void addAllowedCategory(int cat);
-
-   // Are we allowed to print this category??
-   bool isCategoryAllowed(int cat);
-
-   // Setup the default categories
-   void setDefaultCategoryNames();
-
-   // Configure the allowed categories from the users environment
-   void getAllowedCatsFromEnv();
-
-   void growAllowedCategoryVector(int newSize);
-
-private:
-   int debugLevel;      // Debug level to use
-   int indentLevel;     // Amount to indent
-
-   vpr::Mutex          mDebugLock;
-
-   std::vector<bool> mAllowedCategories;      //: The categories we allow
-   std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
-
-/*
-public:
-   static vjDebug* instance()
+   
+   //------------------------------------------
+   //: Class to support debug output
+   //
+   //!PUBLIC_API:
+   //-----------------------------------------
+   class VJ_CLASS_API Debug
    {
-      if(_instance == NULL)                     // First check
-      {
-         vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
-         if (_instance == NULL)                 // Second check
-            _instance = new vjDebug;
-      }
-      vjASSERT(_instance != NULL && "vjDEBUG has NULL _instance");
-      return _instance;
-   }
-private:
-   static vjDebug* _instance;
-   static vpr::Mutex _inst_lock;
-   */
-vjSingletonHeader(vjDebug);
-};
+   protected:
+      // Set default values
+      // Set up default categories
+      // Get debug config from environment
+      Debug();
+
+      // This must be here so that Visual C++ does not try to export them.
+      Debug(const Debug& o) {;}
+      void operator=(const Debug& o) {;}
+
+   public:
+      // Get the debug stream to use
+      std::ostream& getStream(int cat, int level, bool show_thread_info = true,
+                              bool use_indent = true, int indentChange = 0, bool lockStream = true);
+
+      int getLevel()
+      { return debugLevel; }
+
+      vpr::Mutex& debugLock()
+      { return mDebugLock; }
+
+      // Add a category name
+      void addCategoryName(std::string name, int cat);
+
+      // Allow the given category
+      void addAllowedCategory(int cat);
+
+      // Are we allowed to print this category??
+      bool isCategoryAllowed(int cat);
+
+      // Setup the default categories
+      void setDefaultCategoryNames();
+
+      // Configure the allowed categories from the users environment
+      void getAllowedCatsFromEnv();
+
+      void growAllowedCategoryVector(int newSize);
+
+   private:
+      int debugLevel;      // Debug level to use
+      int indentLevel;     // Amount to indent
+
+      vpr::Mutex          mDebugLock;
+
+      std::vector<bool> mAllowedCategories;      //: The categories we allow
+      std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
+
+      vprSingletonHeader( Debug );
+   };
+
+} // end namespace
 
 #endif

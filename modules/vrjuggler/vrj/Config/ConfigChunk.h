@@ -40,27 +40,30 @@
 #include <Config/vjVarValue.h>
 
 
+namespace vrj
+{
+   
 struct VJCFGToken;
 
 
 //------------------------------------------------------------------
 //: A container for configuration information
 //
-// A vjConfigChunk stores a number of vjPropertys that describe
+// A ConfigChunk stores a number of Propertys that describe
 // the configuration of a particular component of the system.
-// It has an associated vjChunkDesc which describes its type
-// and the vjPropertys that belong to it.
+// It has an associated ChunkDesc which describes its type
+// and the Propertys that belong to it.
 //
 // @author  Christopher Just
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class VJ_CLASS_API vjConfigChunk {
+class VJ_CLASS_API ConfigChunk {
 
 private:
-    vjChunkDesc* desc;
-    std::vector<vjProperty*> props;       // Stores the set of properties
-    vjVarValue type_as_varvalue;
+    ChunkDesc* desc;
+    std::vector<Property*> props;       // Stores the set of properties
+    VarValue type_as_varvalue;
     unsigned int validation;  // flag for testing validity of self
 
     static const std::string embedded_separator;
@@ -76,31 +79,31 @@ public:
 
 public:
 
-    //: Constructs a vjConfigChunk with no given description.
+    //: Constructs a ConfigChunk with no given description.
     //! NOTE: a ConfigChunk created with this function is essentially
     //+       useless until a description has been assigned with
     //+       associateDesc() or the Chunk is assigned into with =, 
     //+       but I want this so I can have vectors of
     //+       ConfigChunks, instead of ptrs...
-    vjConfigChunk ();
+    ConfigChunk ();
 
 
-    //: Constructs a vjConfigChunk matching the given description.
-    //!PRE: desc points to a valid vjChunkDesc
-    //!POST: self has been created, and all its vjPropertys
+    //: Constructs a ConfigChunk matching the given description.
+    //!PRE: desc points to a valid ChunkDesc
+    //!POST: self has been created, and all its Propertys
     //+      initialized to their default values.
-    vjConfigChunk (vjChunkDesc *_desc, bool use_defaults = true);
+    ConfigChunk (ChunkDesc *_desc, bool use_defaults = true);
 
 
 
-    //: Destroys a vjConfigChunk and all related memory.
+    //: Destroys a ConfigChunk and all related memory.
     //!POST:  self has been destroyed, and all memory associated
     //+       with it and its properties is freed (but not the
-    //+       memory associated with its vjChunkDesc).
-    ~vjConfigChunk ();
+    //+       memory associated with its ChunkDesc).
+    ~ConfigChunk ();
 
 
-    vjConfigChunk (const vjConfigChunk& c);
+    ConfigChunk (const ConfigChunk& c);
 
 
     #ifdef VJ_DEBUG
@@ -115,29 +118,29 @@ public:
     //!NOTE:  When this function is called, any previous properties etc.
     //+       of this Chunk are destroyed, and new (blank) properties are
     //+       created.
-    void associateDesc (vjChunkDesc* d, bool use_defaults = true);
+    void associateDesc (ChunkDesc* d, bool use_defaults = true);
 
 
-    vjConfigChunk& operator = (const vjConfigChunk& c);
+    ConfigChunk& operator = (const ConfigChunk& c);
 
 
 
-    //: tests for equality of two vjConfigChunks
-    bool operator == (const vjConfigChunk& c) const;
+    //: tests for equality of two ConfigChunks
+    bool operator == (const ConfigChunk& c) const;
 
-    //: tests for inequality of two vjConfigChunks
-    inline bool operator != (const vjConfigChunk& c) const {
+    //: tests for inequality of two ConfigChunks
+    inline bool operator != (const ConfigChunk& c) const {
         return !(*this == c);
     }
 
 
-    //: Compares two vjConfigChunks based on their instance names
-    bool operator < (const vjConfigChunk& c) const;
+    //: Compares two ConfigChunks based on their instance names
+    bool operator < (const ConfigChunk& c) const;
 
 
 
-    typedef std::vector<vjProperty*>::iterator iterator;
-    typedef std::vector<vjProperty*>::const_iterator const_iterator;
+    typedef std::vector<Property*>::iterator iterator;
+    typedef std::vector<Property*>::const_iterator const_iterator;
 
     inline iterator begin() {
         return props.begin();
@@ -157,7 +160,7 @@ public:
 
 
     // used for dependency resolution
-    vjConfigChunk* getEmbeddedChunk (const std::string &path);
+    ConfigChunk* getEmbeddedChunk (const std::string &path);
 
 
     //: writes self to out
@@ -165,9 +168,9 @@ public:
     //+      in the ConfigFileFormats document.
     //!RETURNS: out - the output stream
     //!ARGS: out - a valid ostream.
-    //!ARGS: self - a valid vjConfigChunk
+    //!ARGS: self - a valid ConfigChunk
     friend VJ_API(std::ostream&) operator << (std::ostream& out,
-                                              const vjConfigChunk& self);
+                                              const ConfigChunk& self);
 
 
 
@@ -176,17 +179,17 @@ public:
     //+      read from in.
     //!RETURNS: in - the input stream
     //!ARGS: in - a valid input stream
-    //!ARGS: self - a valid vjConfigChunk
+    //!ARGS: self - a valid ConfigChunk
     friend VJ_API(std::istream&) operator >> (std::istream& in,
-                                              vjConfigChunk& self);
+                                              ConfigChunk& self);
 
 
 
     //: Returns the name of a chunk's type.
     //!RETURNS: s - a C string containing the token for this
-    //+          chunk's vjChunkDesc.
+    //+          chunk's ChunkDesc.
     //!NOTE: this is the same as a call of getProperty ("type",0)
-    const vjVarValue& getType () const;
+    const VarValue& getType () const;
 
 
 
@@ -197,7 +200,7 @@ public:
     //!RETURNS: 0 - if self does not contain a property with the
     //+         given name.
     //!NOTE: This should always be used before looking at any
-    //+      vjProperty that can have a variable number of values.
+    //+      Property that can have a variable number of values.
     int getNum (const std::string& property) const;
 
 
@@ -217,16 +220,16 @@ public:
     //!ARGS: property - a non-NULL C string, the token of a property
     //!ARGS: ind - an integer index, in the range from 0 to
     //+      getNum(property) -1.  Determines which of the
-    //+      values in the vjProperty to return.
-    //!RETURNS: v - a vjVarValue that can be cast directly if
+    //+      values in the Property to return.
+    //!RETURNS: v - a VarValue that can be cast directly if
     //+         its type is known (float, int, etc).
-    const vjVarValue& getProperty (const std::string& property, int ind = 0) const;
+    const VarValue& getProperty (const std::string& property, int ind = 0) const;
 
 
     //: Return all the values for a given property
     // This is just a simple helper function
     //! NOTE: The vector has COPIES of the var values.
-    std::vector<vjVarValue*> getAllProperties (const std::string& property) const;
+    std::vector<VarValue*> getAllProperties (const std::string& property) const;
 
 
     //: Sets a value for the given property.
@@ -246,16 +249,16 @@ public:
     bool setProperty (const std::string& property, int val, int ind=0);
     bool setProperty (const std::string& property, float val, int ind=0);
     bool setProperty (const std::string& property, const std::string& val,  int ind=0);
-    bool setProperty (const std::string& property, vjConfigChunk *val,  int ind=0);
+    bool setProperty (const std::string& property, ConfigChunk *val,  int ind=0);
 
 
 
-    //: Appends val to the set of values for the named vjProperty
+    //: Appends val to the set of values for the named Property
     //!NOTE: This can be considered a convenience function for
     //+      "setValue (property, val, getNum(property))"
     //!ARGS: property - non-NULL C string, token for a property.
     //!ARGS: val - a value to be appended to the named property.
-    //!POST: The given vjProperty has the new value appended to
+    //!POST: The given Property has the new value appended to
     //+      the end of its list of values.
     //!RETURNS: true - success
     //!RETURNS: false - failure. (no such property, or it
@@ -263,7 +266,7 @@ public:
     bool addValue (const std::string& property, int val);
     bool addValue (const std::string& property, float val);
     bool addValue (const std::string& property, const std::string& val);
-    bool addValue (const std::string& property, vjConfigChunk* val);
+    bool addValue (const std::string& property, ConfigChunk* val);
 
 
     //: check to see if a property exists within a config chunk.
@@ -277,13 +280,14 @@ public:
     // that are pointed to by chunk ptrs of this chunk
     std::vector<std::string> getChunkPtrDependencies() const;
 
-    vjProperty *getPropertyPtrFromName (const std::string& name) const;
+    Property *getPropertyPtrFromName (const std::string& name) const;
     
-    vjProperty *getPropertyPtrFromToken (const std::string& token) const;
+    Property *getPropertyPtrFromToken (const std::string& token) const;
 
 
 };
 
+} // namespace
 #endif
 
 

@@ -35,13 +35,18 @@
 
 #include <Math/vjMatrix.h>
 
+namespace vrj
+{
+   
 //: Base class for all position filters in VR Juggler
-class vjPosFilter
+class PosFilter
 {
 public:
    // Get the position to use
    // ARGS: newPos - The new postion this frame of the physical device
-   virtual vjMatrix getPos(const vjMatrix newPos) = 0;
+   virtual Matrix getPos(const Matrix newPos) = 0;
+
+};
 
 };
 

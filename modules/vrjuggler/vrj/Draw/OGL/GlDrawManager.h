@@ -34,6 +34,11 @@
 #ifndef _VJ_GL_DRAW_MANAGER_
 #define _VJ_GL_DRAW_MANAGER_
 
+//#include <vpr/Sync/CondVar.h>
+#include <vpr/Sync/Semaphore.h>
+#include <vpr/Util/Singleton.h>
+#include <vpr/Thread/TSObjectProxy.h>
+
 #include <vjConfig.h>
 
 #ifdef VJ_OS_Darwin
@@ -46,26 +51,23 @@
 
 #include <Kernel/vjDrawManager.h>
 //#include <Kernel/GL/vjGlApp.h>
-class vjGlApp;
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlPipe.h>
-#include <vpr/Thread/TSObjectProxy.h>
 #include <Kernel/GL/vjGlUserData.h>
 
-class vjConfigChunkDB;
-class vjGloveProxy;
-class vjSimViewport;
-
-//#include <vpr/Sync/CondVar.h>
-#include <vpr/Sync/Semaphore.h>
-#include <Utils/vjSingleton.h>
+namespace vrj
+{
+   class GlApp;
+   class ConfigChunkDB;
+   class GloveProxy;
+   class SimViewport;
 
 //-----------------------------------------------
 //: Concrete Singleton Class for OpenGL drawing
 //
 //    Responsible for all OGL based rendering.
 //
-//  vjGlDrawManager is an active object.  It manages
+//  GlDrawManager is an active object.  It manages
 // ogl pipes and windows.  In addition, it triggers
 // rendering, swapping, and syncing of the windows
 // under it's control.
@@ -80,15 +82,15 @@ class vjSimViewport;
 //  Date: 1-7-98
 //------------------------------------------------
 //! PUBLIC_API:
-class VJ_CLASS_API vjGlDrawManager : public vjDrawManager
+class VJ_CLASS_API GlDrawManager : public DrawManager
 {
 public:
-   friend class vjGlPipe;
-   friend class vjGlContextDataBase;
+   friend class GlPipe;
+   friend class GlContextDataBase;
 
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   //**//virtual void configInitial(vjConfigChunkDB*  chunkDB);
+   //**//virtual void configInitial(ConfigChunkDB*  chunkDB);
 
    //: Start the control loop
    virtual void start();
@@ -111,10 +113,10 @@ public:
    //+      functioning in the kernel thread to signal a new display added
    //+      This guarantees that we are not rendering currently.
    //+      We will most likely be waiting for a render trigger.
-   virtual void addDisplay(vjDisplay* disp);
+   virtual void addDisplay(Display* disp);
 
    //: Callback when display is removed to display manager
-   virtual void removeDisplay(vjDisplay* disp);
+   virtual void removeDisplay(Display* disp);
 
    //: Shutdown the drawing API
    virtual void closeAPI();
@@ -126,28 +128,28 @@ public:
    void drawAllPipes();
 
    //: Set the app the draw should interact with.
-   virtual void setApp(vjApp* _app);
+   virtual void setApp(App* _app);
 
    //: Return the app we are rendering
-   vjGlApp* getApp();
+   GlApp* getApp();
 
-   //void setDisplayManager(vjDisplayManager* _dispMgr);
+   //void setDisplayManager(DisplayManager* _dispMgr);
 
 public: // Chunk handlers
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk);
+   virtual bool configAdd(ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk);
+   virtual bool configRemove(ConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk);
+   virtual bool configCanHandle(ConfigChunk* chunk);
 
 
 public:  // Drawing functions used by library
@@ -156,18 +158,18 @@ public:  // Drawing functions used by library
    void drawObjects();
 
    //: Draw projections in Opengl
-   void drawProjections(bool drawFrustum, vjVec3 surfColor);
+   void drawProjections(bool drawFrustum, Vec3 surfColor);
 
    //: Draw a simulator using OpenGL commands
    //! NOTE: This is called internally by the library
-   void drawSimulator(vjSimViewport* sim);
+   void drawSimulator(SimViewport* sim);
 
 public:
    //: Get ptr to the current user data
    // Should be used in the draw function
    //! NOTE: This user data is valid ONLY
    //+ in draw().  It is not valid anywhere else.
-   vjGlUserData* currentUserData()
+   GlUserData* currentUserData()
    { return &(*mUserData); }
 
    //: Returns a unique identifier for the current context
@@ -178,20 +180,20 @@ public:
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
-   void drawLine(vjVec3& start, vjVec3& end);
+   void drawLine(Vec3& start, Vec3& end);
    void drawSphere(float radius, int slices, int stacks);
    void drawCone(float base, float height, int slices, int stacks);
    void drawBox(float size, GLenum type);
    void drawWireCube(float size);
    void drawSolidCube(float size);
-   void drawGlove(vjGloveProxy* gloveProxy);
+   void drawGlove(GloveProxy* gloveProxy);
 
    GLUquadricObj* mQuadObj;
 
 protected:
    //: Factory function to get system specific OpenGL window
 	//! POST: Returns an OpenGL window for the current system
-   vjGlWindow* getGLWindow();
+   GlWindow* getGLWindow();
 
    void setCurrentContext(int val)
    { (*mContextId) = val; }
@@ -200,7 +202,7 @@ protected:
    void dirtyAllWindows();
 
    //: Is the window a valid window for the draw manager
-   bool isValidWindow(vjGlWindow* win);
+   bool isValidWindow(GlWindow* win);
 
 
 protected:
@@ -208,13 +210,13 @@ protected:
    int      numPipes;     //: The number of pipes in the system
 
    // --- API data --- //
-   vjGlApp*                 mApp;      //: The OpenGL application
-   std::vector<vjGlWindow*> mWins;     //: A list of the windows in the system
-   std::vector<vjGlPipe*>   pipes;    //: A list of the pipes in the system
+   GlApp*                 mApp;      //: The OpenGL application
+   std::vector<GlWindow*> mWins;     //: A list of the windows in the system
+   std::vector<GlPipe*>   pipes;    //: A list of the pipes in the system
 
    // --- Helper field data --- //
    vpr::TSObjectProxy<int>             mContextId;    //: TS Data for context id
-   vpr::TSObjectProxy<vjGlUserData>    mUserData;     //: User data for draw func
+   vpr::TSObjectProxy<GlUserData>    mUserData;     //: User data for draw func
 
    // --- MP Stuff -- //
    vpr::Semaphore    drawTriggerSema;  // Semaphore for draw trigger
@@ -223,30 +225,19 @@ protected:
                                        //+ is acquired can run-time config occur
 
 protected:
-   vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
+   GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
    {
       mQuadObj = NULL;
    }
 
-   virtual ~vjGlDrawManager() {}
+   virtual ~GlDrawManager() {}
 
-   vjGlDrawManager(const vjGlDrawManager& o) {;}
-   void operator=(const vjGlDrawManager& o) {;}
+   GlDrawManager(const GlDrawManager& o) {;}
+   void operator=(const GlDrawManager& o) {;}
 
-   vjSingletonHeader(vjGlDrawManager);
-/*
-   // --- Singleton Stuff --- //
-public:
-   static vjGlDrawManager* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjGlDrawManager();
-      return _instance;
-   }
-
-private:
-   static vjGlDrawManager* _instance;
-   */
+   vprSingletonHeader(GlDrawManager);
 };
+
+} // end namespace
 
 #endif

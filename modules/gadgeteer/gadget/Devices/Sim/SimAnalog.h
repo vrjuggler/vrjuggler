@@ -41,25 +41,28 @@
 #include <Input/vjSim/vjSimInput.h>
 #include <Utils/vjDebug.h>
 
+namespace vrj
+{
+   
 //: Simulated analog device
 // Simulates an analog device from a keyboard device.
 // It allows any number of simulated analog devices to be created.
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimAnalog : public vjInput, public vjAnalog, public vjSimInput
+class SimAnalog : public Input, public Analog, public SimInput
 {
 public:
-   vjSimAnalog();
+   SimAnalog();
 
-   virtual ~vjSimAnalog();
+   virtual ~SimAnalog();
 
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
    //: Return analog data
    virtual float getAnalogData(int devNum=0)
    {
-      vjASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
+      vprASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
 
       float value = static_cast<float>( mAnaData[devNum] );
       float normalized;
@@ -79,9 +82,11 @@ public:
 
 private:
    std::vector<float>          mAnaData;     //: The analog data that we have
-   std::vector<vjKeyModPair> mSimKeysUp;   //: The keys to press for moving analog up
-   std::vector<vjKeyModPair> mSimKeysDown; //: The keys to press for moving analog up
+   std::vector<KeyModPair> mSimKeysUp;   //: The keys to press for moving analog up
+   std::vector<KeyModPair> mSimKeysDown; //: The keys to press for moving analog up
    float                     mAnaStep;      //: The analog step size
+};
+
 };
 
 #endif

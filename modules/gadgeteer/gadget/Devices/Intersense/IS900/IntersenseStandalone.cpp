@@ -84,7 +84,7 @@ bool isIntersense::updateData()
 
 
 //TODO: verify that data is in euler angle form. or quaternion
-//FIX:  this is done in the vjIsense
+//FIX:  this is done in the Isense
 float& isIntersense::xPos( const int& i ) { return mData.Station[i].Position[0]; }
 float& isIntersense::yPos( const int& i ) { return mData.Station[i].Position[1]; }
 float& isIntersense::zPos( const int& i ) { return mData.Station[i].Position[2]; }

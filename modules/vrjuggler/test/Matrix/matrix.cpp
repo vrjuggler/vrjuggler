@@ -37,18 +37,18 @@
 
 bool testMakeXYZ(float x, float y, float z);
 bool testMakeZYX(float z, float y, float x);
-bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat);
+bool compareMats(Matrix mat1, Matrix mat2, Matrix& difMat);
 
 #define testIt(test_desc, test_case) std::cout << test_desc; if((test_case)) { std::cout << "\t [ok]\n"; } else { std::cout << "\t [FAILED]\n";}
 
 int main(void)
 {
-   vjMatrix testMat;
-   vjMatrix testMat2;
-   vjMatrix diff_mat;
-   const vjVec3 x_axis(1.0f,0.0f,0.0f);
-   const vjVec3 y_axis(0.0f,1.0f,0.0f);
-   const vjVec3 z_axis(0.0f,0.0f,1.0f);
+   Matrix testMat;
+   Matrix testMat2;
+   Matrix diff_mat;
+   const Vec3 x_axis(1.0f,0.0f,0.0f);
+   const Vec3 y_axis(0.0f,1.0f,0.0f);
+   const Vec3 z_axis(0.0f,0.0f,1.0f);
 
    bool     tests_pass(false);
    long x;
@@ -116,7 +116,7 @@ int main(void)
 
    // --------------------------------------- //
    float x_deg, y_deg, z_deg;
-   vjMatrix XYZMat;
+   Matrix XYZMat;
 
    XYZMat.makeXYZEuler(0, 90, 90);
    std::cout << "makeXYZEuler(0, 90, 90):" << std::endl << XYZMat << std::endl;
@@ -220,13 +220,13 @@ int main(void)
    // --------------------------------------- //
    //  Tracker coord system
    //    x right, y out, z down
-   vjMatrix rotMat;                            // Matrix to rotate the tracker coord system to C2 coord system
-   //rotMat.makeDirCos(vjVec3(1,0,0), vjVec3(0,0,-1), vjVec3(0,1,0));
+   Matrix rotMat;                            // Matrix to rotate the tracker coord system to C2 coord system
+   //rotMat.makeDirCos(Vec3(1,0,0), Vec3(0,0,-1), Vec3(0,1,0));
    rotMat.makeZYXEuler(0,0,90);
 
    std::cout << "--- The rotMat ----\n" << rotMat << std::endl;
 
-   vjMatrix transRotMat;               // Need the transpose for Eulers
+   Matrix transRotMat;               // Need the transpose for Eulers
    transRotMat.transpose(rotMat);
 
    std::cout << "---- The transpose rotMat ----\n" << transRotMat << std::endl;
@@ -234,7 +234,7 @@ int main(void)
    // ------------------------------------- //
    // ----  Test transform tracker axis --- //
    // ------------------------------------- //
-   vjVec3 tracker_x_axis, tracker_y_axis,tracker_z_axis, temp_axis;
+   Vec3 tracker_x_axis, tracker_y_axis,tracker_z_axis, temp_axis;
    tracker_x_axis.set(1.0, 0.0, 0.0);
    tracker_y_axis.set(0.0, 1.0, 0.0);
    tracker_z_axis.set(0.0, 0.0, 1.0);
@@ -261,12 +261,12 @@ int main(void)
    // ----------------------------------------- //
    // ------ Test Or tranformation ------------ //
    // ----------------------------------------- //
-   vjVec3 tracker_base_dir, new_dir;
+   Vec3 tracker_base_dir, new_dir;
    tracker_base_dir.set(1.0f, 0.0f, 0.0f);         // Set the same base dir in both coord systems
 
-   vjMatrix tTr;     // Transformation of the reciever in tracker coord system
-   vjMatrix wTt;     // Transformation of the world coord system to the tracker coord system
-   vjMatrix wTr;     // Transformation of the reciever in the world coord system
+   Matrix tTr;     // Transformation of the reciever in tracker coord system
+   Matrix wTt;     // Transformation of the world coord system to the tracker coord system
+   Matrix wTr;     // Transformation of the reciever in the world coord system
 
    wTt = rotMat;     // Set the World to tracker coord system rotation matrix
 
@@ -299,7 +299,7 @@ int main(void)
    std::cout << "\n\nGet ZYX Euler: z:" << rot_z << "\ty:" << rot_y << "\tx:"
              << rot_x << std::endl;
 
-   vjMatrix test_mat;
+   Matrix test_mat;
    test_mat.makeZYXEuler(rot_z, rot_y, rot_x);
 
    std::cout << "Test extraction of same matrix: ";
@@ -314,7 +314,7 @@ int main(void)
    std::cout << std::endl;
 
 
-   vjMatrix known_mat;
+   Matrix known_mat;
    known_mat.makeZYXEuler(90, 0, 90);
    std::cout << "Test against known matrix: ";
 
@@ -332,7 +332,7 @@ int main(void)
    // ---------------------------------- //
    // ----- Test Pt transformation  ---- //
    // ---------------------------------- //
-   vjVec3   original_pt, transformed_pt;
+   Vec3   original_pt, transformed_pt;
 
    std::cout << "\n---- Test pt conversion ----\n";
 
@@ -344,23 +344,23 @@ int main(void)
 
    // ------------------------------------------ //
 
-   vjMatrix dir_cos_test;
-   dir_cos_test.makeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1));
-   std::cout << "\nmakeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1))"
+   Matrix dir_cos_test;
+   dir_cos_test.makeDirCos(Vec3(0,1,0), Vec3(-1,0,0), Vec3(0,0,1));
+   std::cout << "\nmakeDirCos(Vec3(0,1,0), Vec3(-1,0,0), Vec3(0,0,1))"
              << std::endl << dir_cos_test << std::endl;
 
    // -----------------------------------
    // Test get?Rot funcs
    //
-   testMat2.makeRot(47.0,vjVec3(1,0,0));
+   testMat2.makeRot(47.0,Vec3(1,0,0));
    testIt("getXRot..",((testMat2.getXRot() == 47.0f) && (testMat2.getYRot() == 0.0f) && (testMat2.getZRot() == 0.0f)));
 
-   testMat2.makeRot(-56.0,vjVec3(0,1,0));
+   testMat2.makeRot(-56.0,Vec3(0,1,0));
    testIt("getYRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == -56.0f) && (testMat2.getZRot() == 0.0f)));
    std::cout << "x: " << testMat2.getXRot() << ", y:" << testMat2.getYRot()
              << ", z:" << testMat2.getZRot() << std::endl;
 
-   testMat2.makeRot(78.0, vjVec3(0,0,1));
+   testMat2.makeRot(78.0, Vec3(0,0,1));
    testIt("getZRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == 0.0f) && (testMat2.getZRot() == 78.0f)));
    /*
    std::cout << "roll  only: " << "y:" << testMat2.getYaw()
@@ -449,9 +449,9 @@ int main(void)
 
 bool testMakeXYZ(float x, float y, float z)
 {
-   vjMatrix XYZMat;
-   vjMatrix temp_mat;
-   vjMatrix diff_mat;
+   Matrix XYZMat;
+   Matrix temp_mat;
+   Matrix diff_mat;
    float x_deg, y_deg, z_deg;
 
    XYZMat.makeXYZEuler(x, y, z);
@@ -473,9 +473,9 @@ bool testMakeXYZ(float x, float y, float z)
 
 bool testMakeZYX(float z, float y, float x)
 {
-   vjMatrix ZYXMat;
-   vjMatrix temp_mat;
-   vjMatrix diff_mat;
+   Matrix ZYXMat;
+   Matrix temp_mat;
+   Matrix diff_mat;
    float x_deg, y_deg, z_deg;
 
    ZYXMat.makeZYXEuler(z, y, x);
@@ -498,7 +498,7 @@ bool testMakeZYX(float z, float y, float x)
 // Compares the matrices
 // If equal (within tolerance), then returns true
 // Else returns false and sets the diff matrix
-bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
+bool compareMats(Matrix mat1, Matrix mat2, Matrix& difMat)
 {
    if(mat1 == mat2)
    {
@@ -507,14 +507,14 @@ bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
    else
    {
       //std::cout << "\tDifferent.";
-      vjMatrix diff_mat;
+      Matrix diff_mat;
       diff_mat = mat1 - mat2;
 
       int i=0;
       float* mat;
       mat = diff_mat.getFloatPtr();    // Get the matrix
 
-      while( (vjMath::abs(mat[i]) < 1e-5) && (i<16) )
+      while( (Math::abs(mat[i]) < 1e-5) && (i<16) )
       {
          i++;
       }

@@ -24,11 +24,11 @@ void simpleApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //
-   vjMatrix wand_matrix;
+   Matrix wand_matrix;
    wand_matrix = *(mWand->getData());
 
    // -- Create box offset matrix -- //
-   vjMatrix box_offset;
+   Matrix box_offset;
    box_offset.makeXYZEuler(-90,0,0);
    box_offset.setTrans(0.0,1.0f,0.0f);
 
@@ -52,10 +52,10 @@ void simpleApp::draw()
       glPushMatrix();
          glMultMatrixf(box_offset.getFloatPtr());    // Goto wand position
 
-         vjVec3 x_axis(7.0f,0.0f,0.0f);
-         vjVec3 y_axis(0.0f, 7.0f, 0.0f);
-         vjVec3 z_axis(0.0f, 0.0f, 7.0f);
-         vjVec3 origin(0.0f, 0.0f, 0.0f);
+         Vec3 x_axis(7.0f,0.0f,0.0f);
+         Vec3 y_axis(0.0f, 7.0f, 0.0f);
+         Vec3 z_axis(0.0f, 0.0f, 7.0f);
+         Vec3 origin(0.0f, 0.0f, 0.0f);
 
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);

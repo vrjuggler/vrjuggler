@@ -35,16 +35,21 @@
 
 #include <Kernel/vjFrustum.h>
 
-// ---- FRIEND FUNCTIONS ---- //
-std::ostream& operator<<(std::ostream& out, vjFrustum& _frust)
+namespace vrj
 {
-    out << "l: " << _frust[vjFrustum::VJ_LEFT]
-	<< "r: " << _frust[vjFrustum::VJ_RIGHT]
-	<< "b: " << _frust[vjFrustum::VJ_BOTTOM]
-	<< "t: " << _frust[vjFrustum::VJ_TOP]
-	<< "n: " << _frust[vjFrustum::VJ_NEAR]
-	<< "f: " << _frust[vjFrustum::VJ_FAR];
+   
+// ---- FRIEND FUNCTIONS ---- //
+std::ostream& operator<<(std::ostream& out, Frustum& _frust)
+{
+    out << "l: " << _frust[Frustum::VJ_LEFT]
+	<< "r: " << _frust[Frustum::VJ_RIGHT]
+	<< "b: " << _frust[Frustum::VJ_BOTTOM]
+	<< "t: " << _frust[Frustum::VJ_TOP]
+	<< "n: " << _frust[Frustum::VJ_NEAR]
+	<< "f: " << _frust[Frustum::VJ_FAR];
     out << std::endl;
 
     return out;	
 }
+
+};

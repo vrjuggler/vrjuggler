@@ -35,26 +35,29 @@
 #include <Input/vjSim/vjSimAnalog.h>
 #include <Config/vjConfigChunk.h>
 
-//: Default Constructor
-vjSimAnalog::vjSimAnalog() : vjAnalog(), vjSimInput()
+namespace vrj
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::vjSimPinchGlove()\n"<< vjDEBUG_FLUSH;
+   
+//: Default Constructor
+SimAnalog::SimAnalog() : Analog(), SimInput()
+{
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vjDEBUG_FLUSH;
 }
 
 //: Destructor
-vjSimAnalog::~vjSimAnalog()
+SimAnalog::~SimAnalog()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::~vjSimPinchGlove()\n"<< vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vjDEBUG_FLUSH;
 }
 
-bool vjSimAnalog::config(vjConfigChunk* chunk)
+bool SimAnalog::config(ConfigChunk* chunk)
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::config()\n"<< vjDEBUG_FLUSH;
-   if(! (vjInput::config(chunk) && vjAnalog::config(chunk) && vjSimInput::config(chunk)))
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::config()\n"<< vjDEBUG_FLUSH;
+   if(! (Input::config(chunk) && Analog::config(chunk) && SimInput::config(chunk)))
       return false;
 
-   std::vector<vjVarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
-   std::vector<vjVarValue*> key_dec_list = chunk->getAllProperties("keyPairsDec");
+   std::vector<VarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
+   std::vector<VarValue*> key_dec_list = chunk->getAllProperties("keyPairsDec");
 
    mSimKeysUp = readKeyList(key_inc_list);
    mSimKeysDown = readKeyList(key_dec_list);
@@ -67,9 +70,9 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
    return true;
 }
 
-void vjSimAnalog::updateData()
+void SimAnalog::updateData()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::updateData()\n"<< vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::updateData()\n"<< vjDEBUG_FLUSH;
 
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); i++)
@@ -81,3 +84,5 @@ void vjSimAnalog::updateData()
       if (mAnaData[i] > 255.0f) mAnaData[i] = 255.0f;
    }
 }
+
+};

@@ -43,9 +43,12 @@
 #include <Performer/pr/pfLinMath.h>
 #include <Math/vjMatrix.h>
 
+namespace vrj
+{
+   
 
 //: Convert Performer matrix to Juggler matrix
-vjMatrix vjGetVjMatrix( const pfMatrix& perfMat ); //TODO!!! FIXME!!! change VJ to Vj
+vrj::Matrix GetVjMatrix( const pfMatrix& perfMat ); //TODO!!! FIXME!!! change VJ to Vj
 
 #define featureChange(var)\
    std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
@@ -60,18 +63,20 @@ vjMatrix vjGetVjMatrix( const pfMatrix& perfMat ); //TODO!!! FIXME!!! change VJ 
    std::cout<<"Exiting...\n"<<std::flush;\
    exit(-1);
    
-inline vjMatrix vjGetVJMatrix( const pfMatrix& perfMat )
+inline vrj::Matrix GetVJMatrix( const pfMatrix& perfMat )
 {
-   featureChange("Please change all references to vjGetVJMatrix to vjGetVjMatrix (lower case j)")
-   return vjMatrix();
+   featureChange("Please change all references to GetVJMatrix to GetVjMatrix (lower case j)")
+   return Matrix();
 }
 
 //: Convert Juggler Matrix to Pf Matrix
-pfMatrix vjGetPfMatrix( const vjMatrix& mat );
+pfMatrix GetPfMatrix( const Matrix& mat );
 
 
-vjVec3 vjGetVjVec( const pfVec3& vec );
-pfVec3 vjGetPfVec( const vjVec3& vec );
+Vec3 GetVjVec( const pfVec3& vec );
+pfVec3 GetPfVec( const Vec3& vec );
 
+
+};
 
 #endif

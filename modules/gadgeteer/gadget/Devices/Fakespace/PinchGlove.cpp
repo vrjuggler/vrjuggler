@@ -41,12 +41,16 @@
 #include <Config/vjConfigChunk.h>
 #include <vpr/System.h>
 
-bool vjPinchGlove::config(vjConfigChunk *c)
+
+namespace vrj
 {
-   if(! (vjInput::config(c) && vjGlove::config(c) ))
+   
+bool PinchGlove::config(ConfigChunk *c)
+{
+   if(! (Input::config(c) && Glove::config(c) ))
       return false;
 
-    vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
+    vprASSERT(myThread == NULL);      // This should have been set by Input(c)
 
     /*
     char* home_dir = c->getProperty("calDir").cstring();
@@ -63,19 +67,19 @@ bool vjPinchGlove::config(vjConfigChunk *c)
     if(glove_pos_proxy == std::string(""))
     {
        vjDEBUG(vjDBG_INPUT_MGR,0)
-          << "[vjPinch] ERROR: fsPinchGlove has no posProxy." << std::endl
+          << "[Pinch] ERROR: fsPinchGlove has no posProxy." << std::endl
           << vjDEBUG_FLUSH;
        return false;
     }
 
     // init glove proxy interface
     /*
-    int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
+    int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
-       mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
+       mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
        vjDEBUG(vjDBG_INPUT_MGR,0)
-          << "[vjPinch] ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy."
+          << "[Pinch] ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy."
           << std::endl << std::endl << vjDEBUG_FLUSH;
           */
 
@@ -84,15 +88,15 @@ bool vjPinchGlove::config(vjConfigChunk *c)
     return true;
 }
 
-vjPinchGlove::~vjPinchGlove ()
+PinchGlove::~PinchGlove ()
 {
    stopSampling();      // Stop the glove
    delete mGlove;       // Delete the glove
 }
 
-int vjPinchGlove::startSampling()
+int PinchGlove::startSampling()
 {
-   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Begin sampling\n"
+   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
                                << vjDEBUG_FLUSH;
 
    if (myThread == NULL)
@@ -100,10 +104,10 @@ int vjPinchGlove::startSampling()
       resetIndexes();
 
       // Create a new thread to handle the control
-      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Spawning control thread\n"
+      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
                                   << vjDEBUG_FLUSH;
-      vpr::ThreadMemberFunctor<vjPinchGlove>* memberFunctor =
-         new vpr::ThreadMemberFunctor<vjPinchGlove>(this, &vjPinchGlove::controlLoop, NULL);
+      vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
+         new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
 
       myThread = new vpr::Thread(memberFunctor);
 
@@ -113,7 +117,7 @@ int vjPinchGlove::startSampling()
       }
       else
       {
-         vjDEBUG(vjDBG_INPUT_MGR,1) << "[vjPinch] vjPinchGlove is active "
+         vjDEBUG(vjDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
                                     << std::endl << vjDEBUG_FLUSH;
          active = 1;
          return 1;
@@ -123,26 +127,26 @@ int vjPinchGlove::startSampling()
      return 0; // already sampling
 }
 
-void vjPinchGlove::controlLoop(void* nullParam)
+void PinchGlove::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Entered control thread\n"
+   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
                                << vjDEBUG_FLUSH;
 
    bool result = false;
    while (result == false)
    {
-      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Connecting to "
+      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
                                             << sPort << "...\n"
                                             << vjDEBUG_FLUSH;
       result = mGlove->connectToHardware( sPort );
       if (result == false)
       {
-         vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] ERROR: Can't open or it is already opened." << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vjDEBUG_FLUSH;
          vpr::System::usleep(14500);
       }
    }
 
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] Successfully connected, Now sampling pinch data." << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "[Pinch] Successfully connected, Now sampling pinch data." << vjDEBUG_FLUSH;
 
    while(1)
    {
@@ -155,7 +159,7 @@ void vjPinchGlove::controlLoop(void* nullParam)
 //  Returns -1 if function fails or if devNum is out of range.<BR>
 //  NOTE: If devNum is out of range, function will fail, possibly issueing
 //  an error to a log or console - but will not ASSERT.<BR>
-int vjPinchGlove::getDigitalData(int devNum)
+int PinchGlove::getDigitalData(int devNum)
 {
    // get the fakespace "gesture", it's a string like this "00000.00000"
    std::string gesture;
@@ -180,14 +184,14 @@ int vjPinchGlove::getDigitalData(int devNum)
    {
       // DONT assert!  just notify system that there was a user error.
       // asserting could bring the system down, and that's bad.
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] Assertion: application requested a digital ID out of range.  Valid range is [0.."<<gesture.size() <<"]\n"<< vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "[Pinch] Assertion: application requested a digital ID out of range.  Valid range is [0.."<<gesture.size() <<"]\n"<< vjDEBUG_FLUSH;
    }
 
    // function failed
    return -1;
 }
 
-int vjPinchGlove::sample()
+int PinchGlove::sample()
 {
     // Tell the glove to resample
     mGlove->updateStringFromHardware();
@@ -203,7 +207,7 @@ int vjPinchGlove::sample()
     return 1;
 }
 
-void vjPinchGlove::updateData()
+void PinchGlove::updateData()
 {
 vpr::Guard<vpr::Mutex> updateGuard(lock);
 
@@ -218,7 +222,7 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
     return;
 }
 
-int vjPinchGlove::stopSampling()
+int PinchGlove::stopSampling()
 {
    if (myThread != NULL)
    {
@@ -229,15 +233,15 @@ int vjPinchGlove::stopSampling()
 
       // XXX: there is no "close"
       //mGlove->Close();
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "[vjPinch] stopping vjPinchGlove.."
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "[Pinch] stopping PinchGlove.."
                                  << std::endl << vjDEBUG_FLUSH;
    }
    return 1;
 }
 
 
-//TODO: move this function up the hierarchy, since vjPinchGlove also has this one.
-void vjPinchGlove::updateFingerAngles()
+//TODO: move this function up the hierarchy, since PinchGlove also has this one.
+void PinchGlove::updateFingerAngles()
 {
     std::string gesture;
     // the the fakespace "gesture", it's a string like this "00000.00000"
@@ -268,75 +272,77 @@ void vjPinchGlove::updateFingerAngles()
     if ( RIGHT_HAND >= VJ_MAX_GLOVE_DEVS )
     {
        // Right Pinky
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::MPJ] = right.pinky().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::PIJ] = right.pinky().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::DIJ] = right.pinky().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::ABDUCT] = right.pinky().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = right.pinky().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = right.pinky().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::DIJ] = right.pinky().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::ABDUCT] = right.pinky().abduct();
 
        // Right Ring
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::MPJ] = right.ring().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::PIJ] = right.ring().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::DIJ] = right.ring().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::ABDUCT] = right.ring().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::MPJ] = right.ring().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::PIJ] = right.ring().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::DIJ] = right.ring().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::ABDUCT] = right.ring().abduct();
 
        // Right Middle
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::MPJ] = right.middle().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::PIJ] = right.middle().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::DIJ] = right.middle().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::ABDUCT] = right.middle().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::MPJ] = right.middle().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::PIJ] = right.middle().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::DIJ] = right.middle().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::ABDUCT] = right.middle().abduct();
 
        // Right Index
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::MPJ] = right.index().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::PIJ] = right.index().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::DIJ] = right.index().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::ABDUCT] = right.index().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::MPJ] = right.index().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::PIJ] = right.index().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::DIJ] = right.index().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::ABDUCT] = right.index().abduct();
 
        // Right Thumb
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::MPJ] = right.thumb().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::PIJ] = right.thumb().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::DIJ] = right.thumb().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::ABDUCT] = right.thumb().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::MPJ] = right.thumb().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::PIJ] = right.thumb().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::DIJ] = right.thumb().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::ABDUCT] = right.thumb().abduct();
 
        // Right Wrist
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = right.yaw();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = right.pitch();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::WRIST][GloveData::YAW] = right.yaw();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = right.pitch();
     }
 
     // if that assert failed, then at least the code will still run...
     if ( LEFT_HAND >= VJ_MAX_GLOVE_DEVS )
     {
        // Left Pinky
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::MPJ] = left.pinky().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::PIJ] = left.pinky().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::DIJ] = left.pinky().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::ABDUCT] = left.pinky().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = left.pinky().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = left.pinky().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::DIJ] = left.pinky().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::ABDUCT] = left.pinky().abduct();
 
        // Left Ring
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::MPJ] = left.ring().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::PIJ] = left.ring().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::DIJ] = left.ring().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::ABDUCT] = left.ring().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::MPJ] = left.ring().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::PIJ] = left.ring().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::DIJ] = left.ring().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::ABDUCT] = left.ring().abduct();
 
        // Left Middle
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::MPJ] = left.middle().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::PIJ] = left.middle().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::DIJ] = left.middle().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::ABDUCT] = left.middle().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::MPJ] = left.middle().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::PIJ] = left.middle().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::DIJ] = left.middle().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::ABDUCT] = left.middle().abduct();
 
        // Left Index
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::MPJ] = left.index().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::PIJ] = left.index().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::DIJ] = left.index().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::ABDUCT] = left.index().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::MPJ] = left.index().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::PIJ] = left.index().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::DIJ] = left.index().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::ABDUCT] = left.index().abduct();
 
        // Left Thumb
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::MPJ] = left.thumb().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::PIJ] = left.thumb().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::DIJ] = left.thumb().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::ABDUCT] = left.thumb().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::MPJ] = left.thumb().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::PIJ] = left.thumb().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::DIJ] = left.thumb().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::ABDUCT] = left.thumb().abduct();
 
        // Left Wrist
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = left.yaw();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = left.pitch();
+       mTheData[LEFT_HAND][progress].angles[GloveData::WRIST][GloveData::YAW] = left.yaw();
+       mTheData[LEFT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = left.pitch();
     }
 }
+
+};

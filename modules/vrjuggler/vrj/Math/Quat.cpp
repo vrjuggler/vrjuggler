@@ -35,8 +35,11 @@
 #include <Math/vjQuat.h>
 #include <Math/vjMath.h>
 
+namespace vrj
+{
+   
 // set self to the rotation in the given rotation matrix
-void vjQuat::makeRot( const vjMatrix& mat )
+void Quat::makeRot( const Matrix& mat )
 {
    float tr, s;
    //static int nxt[3] = {VJ_Y, VJ_Z, VJ_X};
@@ -46,7 +49,7 @@ void vjQuat::makeRot( const vjMatrix& mat )
    // Check the diagonal
    if (tr > 0.0)
    {
-      s = vjMath::sqrt( tr + 1.0 );
+      s = Math::sqrt( tr + 1.0 );
       vec[VJ_W] = s/2.0;
       s = 0.5/s;
 
@@ -73,7 +76,7 @@ void vjQuat::makeRot( const vjMatrix& mat )
       j = nxt[i];
       k = nxt[j];
 
-      s = vjMath::sqrt( (mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0 );
+      s = Math::sqrt( (mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0 );
 
       vec[i] = s * 0.5;
 
@@ -90,19 +93,19 @@ void vjQuat::makeRot( const vjMatrix& mat )
 }
 
 //: make a quat from a twist (radians) about a vector (normalized)
-void vjQuat::makeRot( const float& rad, const float& x, const float& y, const float& z )
+void Quat::makeRot( const float& rad, const float& x, const float& y, const float& z )
 {
    // q = [ cos(rad/2), sin(rad/2) * [x,y,z] ]
-   vjVec3 vec_normalized( x, y, z );
+   Vec3 vec_normalized( x, y, z );
    if (vec_normalized.length() > VJ_QUAT_EPSILON)
    {
       vec_normalized.normalize();
    }
    
    float half_angle = rad * 0.5f;
-   float sin_half_angle = vjMath::sin( half_angle );
+   float sin_half_angle = Math::sin( half_angle );
    
-   vec[VJ_W] = vjMath::cos( half_angle );
+   vec[VJ_W] = Math::cos( half_angle );
    vec[VJ_X] = sin_half_angle * vec_normalized[0];
    vec[VJ_Y] = sin_half_angle * vec_normalized[1];
    vec[VJ_Z] = sin_half_angle * vec_normalized[2];
@@ -111,24 +114,24 @@ void vjQuat::makeRot( const float& rad, const float& x, const float& y, const fl
 }
 
 //: get the quat's twist (radians) and vector
-void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
+void Quat::getRot( float& rad, float& xx, float& yy, float& zz ) const
 {
    // make sure we don't get a NaN result from acos...
-   vjQuat quat( *this );
-   if (vjMath::abs( quat.vec[VJ_W] ) > 1.0f)
+   Quat quat( *this );
+   if (Math::abs( quat.vec[VJ_W] ) > 1.0f)
    {
       quat.normalize();
    }
-   assert( vjMath::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
+   assert( Math::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
    
    
    // [acos( w ) * 2.0, v / (asin( w ) * 2.0)]
    
    // get the rotation:
-   rad = vjMath::acos( quat.vec[VJ_W] ) * 2.0f;
+   rad = Math::acos( quat.vec[VJ_W] ) * 2.0f;
    
    // get the axis: (use sin(rad) instead of asin(w))
-   float sin_half_angle = vjMath::sin( rad * 0.5f );
+   float sin_half_angle = Math::sin( rad * 0.5f );
    if (sin_half_angle >= VJ_QUAT_EPSILON)
    {
       float sin_half_angle_inv = 1.0f / sin_half_angle;
@@ -148,7 +151,7 @@ void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
 
 // Multiply the two quaternions
 // From gdmag
-void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
+void Quat::mult( const Quat& q1, const Quat& q2 )
 {
    // Here is the easy to understand equation: (grassman product)
    // scalar_component = q1.s * q2.s - dot(q1.v, q2.v)
@@ -161,10 +164,10 @@ void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
    // Here it is, implemented using vector algebra (grassman product)
    /*
    const float& w1( q1[VJ_W] ), w2( q2[VJ_W] );
-   vjVec3 v1( q1[VJ_X], q1[VJ_Y], q1[VJ_Z] ), v2( q2[VJ_X], q2[VJ_Y], q2[VJ_Z] );
+   Vec3 v1( q1[VJ_X], q1[VJ_Y], q1[VJ_Z] ), v2( q2[VJ_X], q2[VJ_Y], q2[VJ_Z] );
    
    float w = w1 * w2 - v1.dot( v2 );
-   vjVec3 v = (w1 * v2) + (w2 * v1) + v1.cross( v2 );
+   Vec3 v = (w1 * v2) + (w2 * v1) + v1.cross( v2 );
    
    vec[VJ_W] = w;
    vec[VJ_X] = v[0];
@@ -173,7 +176,7 @@ void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
    */
          
    // Here is the same, only expanded... (grassman product)
-   vjQuat temporary; 
+   Quat temporary; 
    temporary[VJ_X] = q1[VJ_W]*q2[VJ_X] + q1[VJ_X]*q2[VJ_W] + q1[VJ_Y]*q2[VJ_Z] - q1[VJ_Z]*q2[VJ_Y];
    temporary[VJ_Y] = q1[VJ_W]*q2[VJ_Y] + q1[VJ_Y]*q2[VJ_W] + q1[VJ_Z]*q2[VJ_X] - q1[VJ_X]*q2[VJ_Z];
    temporary[VJ_Z] = q1[VJ_W]*q2[VJ_Z] + q1[VJ_Z]*q2[VJ_W] + q1[VJ_X]*q2[VJ_Y] - q1[VJ_Y]*q2[VJ_X];
@@ -190,9 +193,9 @@ void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
 }
 
 // From Adv Anim and Rendering Tech. Pg 364
-void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
+void Quat::slerp(float t, const Quat& p, const Quat& q)
 {
-   vjQuat to;
+   Quat to;
    double omega, cosom, sinom, sclp, sclq;
    //int i;
 
@@ -219,10 +222,10 @@ void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
    if ((1.0 - cosom) > VJ_QUAT_EPSILON)
    {
       // Standard case (slerp)
-      omega = vjMath::acos(cosom);
-      sinom = vjMath::sin(omega);
-      sclp  = vjMath::sin((1.0 - t)*omega)/sinom;
-      sclq  = vjMath::sin(t*omega)/sinom;
+      omega = Math::acos(cosom);
+      sinom = Math::sin(omega);
+      sclp  = Math::sin((1.0 - t)*omega)/sinom;
+      sclq  = Math::sin(t*omega)/sinom;
    }
    else
    {
@@ -238,7 +241,7 @@ void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
 
 }
 
-void vjQuat::squad(float _t, const vjQuat& _q1, const vjQuat& _q2, const vjQuat& _a, const vjQuat& _b)
+void Quat::squad(float _t, const Quat& _q1, const Quat& _q2, const Quat& _a, const Quat& _b)
 { 
    assert( false && "not implemented" ); 
 }
@@ -246,37 +249,37 @@ void vjQuat::squad(float _t, const vjQuat& _q1, const vjQuat& _q2, const vjQuat&
 //: complex exponentiation 
 //!POST: sets self to the exponentiation of quat
 // NOTE: safe to pass self as argument
-void vjQuat::exp( const vjQuat& quat )
+void Quat::exp( const Quat& quat )
 {
    float len1, len2;
 
-   len1 = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
+   len1 = Math::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
                           quat.vec[VJ_Y] * quat.vec[VJ_Y] + 
                           quat.vec[VJ_Z] * quat.vec[VJ_Z] );
    if (len1 > 0.0f)
-      len2 = vjMath::sin( len1 ) / len1;
+      len2 = Math::sin( len1 ) / len1;
    else
       len2 = 1.0f;
 
    vec[VJ_X] = quat.vec[VJ_X] * len2;
    vec[VJ_Y] = quat.vec[VJ_Y] * len2;
    vec[VJ_Z] = quat.vec[VJ_Z] * len2;
-   vec[VJ_W] = vjMath::cos( len1 );
+   vec[VJ_W] = Math::cos( len1 );
 }
 
 //: complex logarithm
 //!POST: sets self to the log of quat
-void vjQuat::log( const vjQuat& quat ) 
+void Quat::log( const Quat& quat ) 
 {
    float length;
 
-   length = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
+   length = Math::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
                             quat.vec[VJ_Y] * quat.vec[VJ_Y] + 
                             quat.vec[VJ_Z] * quat.vec[VJ_Z] );
 
    // avoid divide by 0
    if (quat.vec[VJ_W] != 0.0)
-      length = vjMath::atan( length / quat.vec[VJ_W] );
+      length = Math::atan( length / quat.vec[VJ_W] );
    else 
       length = VJ_PI / 2.0f; // or VJ_PI_2...
 
@@ -287,7 +290,7 @@ void vjQuat::log( const vjQuat& quat )
 }
 
 //: output method
-std::ostream& vjQuat::outStreamRaw( std::ostream& out ) const
+std::ostream& Quat::outStreamRaw( std::ostream& out ) const
 {
    //out << "w: " << vec[VJ_W] << "  x: " << vec[VJ_X] << "  y: " << vec[VJ_Y] << "  z: " << vec[VJ_Z];
    out << vec[VJ_W] << ", " << vec[VJ_X] << ", " << vec[VJ_Y] << ", " << vec[VJ_Z];
@@ -295,20 +298,22 @@ std::ostream& vjQuat::outStreamRaw( std::ostream& out ) const
 }
 
 //: output method
-std::ostream& vjQuat::outStreamReadable( std::ostream& out ) const
+std::ostream& Quat::outStreamReadable( std::ostream& out ) const
 {
    float rad;
    float x, y, z;
    this->getRot( rad, x, y, z );
 
-   out << vjMath::rad2deg( rad ) << " deg, " << x << ", " << y << ", " << z;
+   out << Math::rad2deg( rad ) << " deg, " << x << ", " << y << ", " << z;
    return out;
 }
 
 //: output operator
-VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const vjQuat& q )
+VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const Quat& q )
 {
    q.outStreamReadable( out );
    //q.outStreamRaw( out );
    return out;
 }
+
+};

@@ -50,12 +50,15 @@
 #include <Utils/vjXercesXMLError.h>
 #include <Utils/vjDebug.h>
 
-vjXercesXMLParser::vjXercesXMLParser () {
+namespace vrj
+{
+   
+XercesXMLParser::XercesXMLParser () {
     // Xerces will have been initialized by the parser pool.
     parser = new DOMParser;
     parser->setValidationScheme(DOMParser::Val_Auto);
     parser->setDoNamespaces(false);
-    error_handler = new vjXercesXMLError();
+    error_handler = new XercesXMLError();
     parser->setErrorHandler(error_handler);
     parser->setCreateEntityReferenceNodes(false);
     parser->setToCreateXMLDeclTypeNode(true);
@@ -63,13 +66,13 @@ vjXercesXMLParser::vjXercesXMLParser () {
 }
 
 
-/*virtual*/ vjXercesXMLParser::~vjXercesXMLParser () {
+/*virtual*/ XercesXMLParser::~XercesXMLParser () {
     delete parser;
     delete error_handler;
 }
 
 
-bool vjXercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
+bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
     // we duplicate a lot of code in readFile & readStream just so we can
     // always use the 'best' version of parse - if we give it an actual
     // file name, we get better error messages from the exceptions.
@@ -116,8 +119,8 @@ bool vjXercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
 }
 
 
-bool vjXercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
-    vjXercesStreamInputSource input_source (input, "</protocol>");
+bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
+    XercesStreamInputSource input_source (input, "</protocol>");
     bool retval = true;
     try {
         parser->parse(input_source);
@@ -159,15 +162,15 @@ bool vjXercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
 }
 
 // used for the writer...
-class vjDOMPrintFormatTarget: public XMLFormatTarget {
+class DOMPrintFormatTarget: public XMLFormatTarget {
 private:
     std::ostream* out;
 public:
-    vjDOMPrintFormatTarget (std::ostream& _out) {
+    DOMPrintFormatTarget (std::ostream& _out) {
         out = &_out;
     }
 
-    virtual ~vjDOMPrintFormatTarget () {
+    virtual ~DOMPrintFormatTarget () {
     }
 
     void writeChars (const XMLByte* const buf, const unsigned int buflen,
@@ -177,7 +180,7 @@ public:
 };
 
 
-bool vjXercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
+bool XercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
     std::ofstream out (file_name.c_str());
     if (!out)
         return false;
@@ -186,8 +189,9 @@ bool vjXercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) 
 }
 
 
-bool vjXercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
+bool XercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
     output << "<Not_Implemented/>" << endl;
     return false;
 }
 
+};
