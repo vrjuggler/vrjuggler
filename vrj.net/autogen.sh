@@ -43,6 +43,8 @@ if [ -n "$VJ_MACRO_PATH" ]; then
 	ACLOCAL_FLAGS="-I $VJ_MACRO_PATH $ACLOCAL_FLAGS"
 fi
 
+ACLOCAL_FLAGS="-I external/macros $ACLOCAL_FLAGS"
+
 : ${ACLOCAL=aclocal}
 : ${AUTOCONF=autoconf}
 : ${AUTOHEADER=autoheader}
