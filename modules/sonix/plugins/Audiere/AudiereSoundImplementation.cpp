@@ -38,6 +38,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <snx/PluginConfig.h>
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -55,14 +57,14 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
-#include "snx/xdl.h"
-#include "snx/FileIO.h"
-#include "snx/SoundImplementation.h"
-#include "snx/SoundInfo.h"
-#include "snx/SoundFactory.h"
-#include "snx/plugins/Audiere/AudiereSoundImplementation.h"
+#include <snx/xdl.h>
+#include <snx/FileIO.h>
+#include <snx/SoundImplementation.h>
+#include <snx/SoundInfo.h>
+#include <snx/SoundFactory.h>
+#include <snx/Util/Debug.h>
 
-#include "snx/Util/Debug.h"
+#include "AudiereSoundImplementation.h"
 
 /////////////////////////
 // plugin API:

@@ -44,6 +44,8 @@
 #ifndef SNXOPENALSOUNDIMPLEMENTATION_H
 #define SNXOPENALSOUNDIMPLEMENTATION_H
 
+#include <snx/PluginConfig.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -54,9 +56,9 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
-#include "snx/SoundImplementation.h"
-#include "snx/SoundInfo.h"
-#include "snx/SoundAPIInfo.h"
+#include <snx/SoundImplementation.h>
+#include <snx/SoundInfo.h>
+#include <snx/SoundAPIInfo.h>
 
 #ifdef WIN32
 #  include <al.h>
@@ -275,6 +277,6 @@ private:
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
 };
 
-}; // end namespace
+} // end namespace
 
 #endif //SNXOPENALSOUNDIMPLEMENTATION_H

@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-27-2003 patrickh    Moved the plug-in code from snx/plugins into plugins
+                        and gave the plug-ins their own build system.
 Nov-27-2003 patrickh    Rewrote the build system.
 Jul-24-2003 browner     Added the audiere plugin.  this required the
                         modification of the SoundInfo struct for a streaming
