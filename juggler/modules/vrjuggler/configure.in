@@ -293,7 +293,18 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
-VJ_COMPILER_SETUP($SUBSYSTEM)
+VJ_COMPILER_SETUP
+
+# Now check to see if the compiler accepts the -pthread option.
+if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "WIN32" -a \
+        "x$NSPR_THREADS_ENABLED" != "xyes"
+then
+    DPP_CC_PTHREAD_ARG
+
+    if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
+        DPP_CC_PTHREADS_ARG
+    fi
+fi
 
 # Check for the JDK.
 DPP_PATH_JAVA
