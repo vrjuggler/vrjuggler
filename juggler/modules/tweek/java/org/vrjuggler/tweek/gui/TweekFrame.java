@@ -776,11 +776,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private void networkConnectAction (ActionEvent e)
    {
       ConnectionDialog dialog = new ConnectionDialog(this, "ORB Connections");
-      Dimension dlgSize = dialog.getPreferredSize();
-      Dimension frmSize = getSize();
-      Point loc = getLocation();
-      dialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
-                         (frmSize.height - dlgSize.height) / 2 + loc.y);
+      positionDialog(dialog);
       dialog.show();
 
       if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
@@ -804,11 +800,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    {
       DisconnectionDialog dialog =
          new DisconnectionDialog(this, "Disconnect from CORBA Service", mORBs);
-      Dimension dlgSize = dialog.getPreferredSize();
-      Dimension frmSize = getSize();
-      Point loc = getLocation();
-      dialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
-                         (frmSize.height - dlgSize.height) / 2 + loc.y);
+      positionDialog(dialog);
       dialog.show();
 
       if ( dialog.getStatus() == DisconnectionDialog.DISCONNECT_OPTION )
@@ -853,21 +845,13 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       PrefsDialog dialog = new PrefsDialog(this, "Global Preferences", prefs);
       dialog.addGlobalPrefsUpdateListener(this);
-      Dimension dlgSize = dialog.getPreferredSize();
-      Dimension frmSize = getSize();
-      Point loc = getLocation();
-      dialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
-                         (frmSize.height - dlgSize.height) / 2 + loc.y);
+      positionDialog(dialog);
       dialog.show();
    }
 
    private void prefsEditBean (ActionEvent e)
    {
-      Dimension dlgSize = mBeanPrefsDialog.getPreferredSize();
-      Dimension frmSize = getSize();
-      Point loc = getLocation();
-      mBeanPrefsDialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
-                                   (frmSize.height - dlgSize.height) / 2 + loc.y);
+      positionDialog(mBeanPrefsDialog);
       mBeanPrefsDialog.show();
    }
 
@@ -918,12 +902,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     */
    private void helpAboutAction(ActionEvent e)
    {
-      AboutBox dlg      = new AboutBox(this);
-      Dimension dlgSize = dlg.getPreferredSize();
-      Dimension frmSize = getSize();
-      Point loc = getLocation();
-      dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
-                      (frmSize.height - dlgSize.height) / 2 + loc.y);
+      AboutBox dlg = new AboutBox(this);
+      positionDialog(dlg);
       dlg.setModal(true);
       dlg.show();
    }
@@ -974,6 +954,21 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mMenuFileSave.setEnabled(false);
       mMenuFileClose.setText("Close ...");
       mMenuFileClose.setEnabled(false);
+   }
+
+   /**
+    * Positions the given Dialog object relative to this window frame.
+    */
+   private void positionDialog(Dialog dialog)
+   {
+      Dimension dlg_size   = dialog.getPreferredSize();
+      Dimension frame_size = this.getSize();
+      Point loc            = this.getLocation();
+
+      // Set the location of the dialog so that it is centered with respect
+      // to this frame.
+      dialog.setLocation((frame_size.width - dlg_size.width) / 2 + loc.x,
+                         (frame_size.height - dlg_size.height) / 2 + loc.y);
    }
 
    // ========================================================================
