@@ -32,7 +32,7 @@
 
 package org.vrjuggler.vrjconfig.commoneditors;
 
-public abstract class EditorConstants
+public interface EditorConstants
 {
    public static final String ANALOG_PROXY_TYPE  = "analog_proxy";
 
