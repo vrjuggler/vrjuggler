@@ -729,6 +729,15 @@ AC_OUTPUT(vpr-config
           vpr/Util/uuid/Makefile
           test/Makefile
           test/TestSuite/Makefile
+          test/TestSuite/test.defs.mk
+          test/TestSuite/TestCases/Makefile
+          test/TestSuite/TestCases/IO/Makefile
+          test/TestSuite/TestCases/IO/Socket/Makefile
+          test/TestSuite/TestCases/IO/Stats/Makefile
+          test/TestSuite/TestCases/Simulator/Makefile
+          test/TestSuite/TestCases/Socket/Makefile
+          test/TestSuite/TestCases/Thread/Makefile
+          test/TestSuite/TestCases/Util/Makefile
           test/SerialPort/Makefile
           test/Socket/Makefile
           test/Sync/Makefile
