@@ -865,6 +865,11 @@ F<acdefaults.cfg> (see B<--cfg> above).
 If both F<acdefaults.cfg> and F<acdefaults.pl> exist, F<acdefaults.pl> is
 used, and F<acdefaults.cfg> is ignored.
 
+=item B<--noargs>
+
+Turns off the use of any default argument loading mechanism (see B<--args>
+and B<--argsmod> above).
+
 =item B<--os>=name
 
 Define the host operating system.  This can be any string.  It will be used
@@ -915,7 +920,7 @@ this subroutine through a global variable in its scope:
 I<$main::CFG_LOAD_FUNC>.
 
 Assign a reference to the module's subroutine as the first step in the
-module.  For example, consider the case where a subroutine called
+module.  For example, consider the case where we have a subroutine called
 C<&loader>.  The loading module would be informed of this subroutine as
 shown below:
 
