@@ -412,6 +412,20 @@ bool GlDrawManager::configCanHandle(jccl::ConfigElementPtr element)
    return false;
 }
 
+GlUserData* GlDrawManager::currentUserData()
+{
+   return &(*mUserData);
+}
+
+int GlDrawManager::getCurrentContext()
+{
+   return (*mContextId);
+}
+
+void GlDrawManager::setCurrentContext(int val)
+{
+   (*mContextId) = val;
+}
 
 /**
  * Sets the dirty bits off all the gl windows.
