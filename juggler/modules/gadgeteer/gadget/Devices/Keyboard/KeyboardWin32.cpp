@@ -94,9 +94,6 @@ bool vjKeyboardWin32::config(vjConfigChunk *c)
 int vjKeyboardWin32::startSampling()
 {
    if (myThread == NULL) {
-      int processID;
-      int i;
-
       resetIndexes();
 
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
