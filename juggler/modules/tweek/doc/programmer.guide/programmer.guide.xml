@@ -94,11 +94,11 @@
     <para>The only remaining piece was CORBA support. Another student, Andrew
     Schwantes, had been experimenting with CORBA in a smaller system, and his
     C++ CORBA code was used as a starting point for the Tweek C++ API. After
-    much discussion with Allen Bierbaum, the code was re-implemented to make
-    use of the Observer design pattern, and the Subject Manager was added.
-    After all of that, the Java CORBA code was relatively trivial to add. And
-    thus, the foundation for Tweek was in place by November 2001. By this
-    time, it was already in use by the Fall 2001 Plexus class project.</para>
+    much discussion with Allen Bierbaum, the code was re-written entirely to
+    make use of the Observer design pattern, and the Subject Manager was
+    added. After all of that, the Java CORBA code was relatively trivial to
+    add. And thus, the foundation for Tweek was in place by November 2001. By
+    this time, it was already in use by the Fall 2001 Plexus class project.</para>
   </preface>
 
   <part>
@@ -367,9 +367,8 @@
           written so that developers can use Python and Qt for making GUI
           panels instead of Java. There is no restriction, other than time and
           resources, that prevents the addition of support for other
-          languages. In this section, we explain how C++ and Java are used in
-          Tweek. As the Python support evolves, more documentation about its
-          use will be added.</para>
+          languages. In this section, we explain how C++, Java, and Python are
+          used in Tweek.</para>
 
           <section>
             <title>C++</title>
@@ -428,6 +427,21 @@
             Beans may be as simple or as complex as necessary to meet the
             needs of individual projects. More information about JavaBeans is
             provided in <xref linkend="intro.javabeans.chapter" />.</para>
+          </section>
+
+          <section>
+            <title>Python</title>
+
+            <para>With Python, we use PyQt <xref linkend="Pyq03" /> as the GUI
+            interface. PyQt is highly portable, and a GPL version makes it
+            easy to develop non-commercial, high-performance user interfaces.
+            Because PyQt wraps Qt which in turn utilizes the native windowing
+            system, user interfaces developed with PyQt tend to perform much
+            better than Swing-based Java GUIs. Of course, natively compiled
+            C++ that uses Qt directly would perform better still, but Python
+            provides a degree of portability not offered (directly) by C++. We
+            have used PyQt successfully to develop GUIs that run on desktops
+            as well as on PDAs that include Qtopia.</para>
           </section>
         </section>
       </section>
@@ -1551,16 +1565,6 @@ id="TweekApp.cpp.loop" linkends="TweekApp.cpp.loop.co" />
           can be handled as though they were loaded from the local disk.</para>
         </section>
       </section>
-    </chapter>
-
-    <chapter>
-      <title>Python</title>
-
-      <indexterm>
-        <primary>Python client API</primary>
-      </indexterm>
-
-      <para></para>
     </chapter>
 
     <chapter id="prog.all.chapter">
@@ -3278,8 +3282,8 @@ linkends="FileOpenTestBean.java.openRequested.open-inc.co" />
       </indexterm>
 
       <para>As of Tweek version 0.13.0, users can write C++ clients in
-      addition to Java clients. As of this writing, the interface is
-      relatively low-level. The C++ counterpart of the Java class
+      addition to Java and Python clients. As of this writing, the interface
+      is relatively low-level. The C++ counterpart of the Java class
       <classname>org.vrjuggler.tweek.net.corba.CorbaService</classname><indexterm><primary>org.vrjuggler.tweek.net.CorbaService</primary></indexterm>
       is used to communicate with a remote C++ server. The class is
       <classname>tweek::CorbaService</classname><indexterm><primary>tweek::CorbaService</primary></indexterm>,
@@ -4313,6 +4317,16 @@ linkends="client.cpp.chooseSubjectManager.done.co" />
         </section>
       </section>
     </chapter>
+
+    <chapter>
+      <title>Python</title>
+
+      <indexterm>
+        <primary>Python client API</primary>
+      </indexterm>
+
+      <para></para>
+    </chapter>
   </part>
 
   <part>
@@ -4533,14 +4547,15 @@ clobber:
       <title>CORBA Implementations</title>
 
       <para>In order to use CORBA, a CORBA implementation must be available.
-      As of this writing, Tweek uses omniORB 3.0.4 <xref linkend="Omn02" />
-      for a C++ ORB. Since Tweek uses POA, any C++ ORB may be used with only a
-      few changes to the code.</para>
+      As of this writing, Tweek uses omniORB 3.0.4 and newer <xref
+      linkend="Omn02" /> for a C++ ORB. Since Tweek uses the POA, any C++ ORB
+      may be used with only a few changes to the code.</para>
 
-      <para>For the Java side, OpenORB 1.2.0 <xref linkend="Ope02" /> has been
-      used. Java IDL <xref linkend="Jid02" />, the CORBA implementation that
-      comes with the Java Development Kit (JDK), does not fully implement POA
-      as of JDK 1.3.1. With the release of JDK 1.4.0, Java IDL has a complete
+      <para>For the Java side, OpenORB 1.2.0 <xref linkend="Ope02" /> and
+      newer <xref linkend="Ope03" /> have been used. Java IDL <xref
+      linkend="Jid02" />, the CORBA implementation that comes with the Java
+      Development Kit (JDK), does not fully implement the POA as of JDK 1.3.1.
+      With the release of JDK 1.4.0, Java IDL has a complete, working POA
       implementation and can be used without taking any special steps.</para>
 
       <para>To use an alternate ORB with Java, two arguments must be passed to
@@ -4562,6 +4577,16 @@ clobber:
       <classname>ORBClass</classname> and the <classname>ORBSingletonClass</classname>.
       Refer to the documentation of the specific ORB to find out more about
       using it instead of Java IDL.</para>
+
+      <para>For Python, most testing thus far has been done with omniORBpy 2.0
+      and newer. Using ominORBpy requires that omniORB be installed since
+      omniORBpy is primarily just a Python wrapper wround the C++ CORBA
+      implementation. We are watching the development of Fnorb <xref
+      linkend="Fno03" /> as an alternative to omniORBpy. Fnorb offers a
+      pure-Python implementation of CORBA. In other words, it requires no
+      natively compiled code to operate. Prior to December 2003, Fnorb lacked
+      a POA implementation, so it was not a viable option, but work is still
+      under way to provide a complete CORBA 2.3 implementation.</para>
     </appendix>
 
     <appendix>
@@ -4602,6 +4627,12 @@ clobber:
   </part>
 
   <bibliography>
+    <biblioentry id="Fno03">
+      <biblioset relation="website">
+        <address><otheraddr><ulink url="http://www.fnorb.org/">Fnorb website</ulink></otheraddr></address>
+      </biblioset>
+    </biblioentry>
+
     <biblioentry id="Gam95">
       <biblioset relation="book">
         <authorgroup>
@@ -4701,6 +4732,19 @@ url="http://www.uk.research.att.com/omniORB/">omniORB website</ulink></otheraddr
     <biblioentry id="Ope02">
       <biblioset relation="website">
         <address><otheraddr><ulink url="http://www.openorb.com/">OpenORB website</ulink></otheraddr></address>
+      </biblioset>
+    </biblioentry>
+
+    <biblioentry id="Ope03">
+      <biblioset relation="website">
+        <address><otheraddr><ulink url="http://openorb.sourceforge.net/">OpenORB community website</ulink></otheraddr></address>
+      </biblioset>
+    </biblioentry>
+
+    <biblioentry id="Pyq03">
+      <biblioset relation="website">
+        <address><otheraddr><ulink
+url="http://www.riverbankcomputing.co.uk/pyqt/index.php">PyQt website</ulink></otheraddr></address>
       </biblioset>
     </biblioentry>
   </bibliography>
