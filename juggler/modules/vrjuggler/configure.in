@@ -528,7 +528,7 @@ VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 # VR Juggler.
 case $OS_TYPE in
     UNIX)
-        vrj_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_ogl'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
