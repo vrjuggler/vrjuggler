@@ -179,6 +179,20 @@ public:
    }
 
    /**
+    * Gets the bound state of this socket.
+    *
+    * @pre None.
+    * @post The boolean value giving the bound state is returned
+    *
+    * @return true is returned if this socket is bound;
+    *         false otherwise.
+    */
+   bool isBound (void)
+   {
+      return m_socket_imp->isBound();
+   }
+
+   /**
     * Gets the status of a possibly connected socket
     *
     * @pre None
