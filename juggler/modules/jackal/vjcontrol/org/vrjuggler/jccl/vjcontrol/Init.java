@@ -91,6 +91,7 @@ public class Init {
 	if (v.size() == 0 || ((ch = (ConfigChunk)v.elementAt(0)) == null)) {
 	    System.err.println ("didn't get chunk");
 	    ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
+            ch.setName ("VjControl global preferences");
 	    ch.setPropertyFromToken ("fontname", new VarValue ("Courier"), 0);
 	    ch.setPropertyFromToken ("fontsize", new VarValue (12), 0);
 	    ch.setPropertyFromToken ("looknfeel", new VarValue ("Java"), 0);
