@@ -41,7 +41,7 @@ SUBDIRS	= \
 all: $(SUBDIRS)
 
 $(SUBDIRS)::
-	cd $@ && $(MAKE) all
+	cd $@ && $(MAKE) default
 
 # -----------------------------------------------------------------------------
 # Clean-up.
