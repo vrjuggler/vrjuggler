@@ -30,15 +30,32 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+
+#include <jccl/Config/ConfigChunk.h>
+
 #include <vrj/vrjConfig.h>
-#include <vrj/Draw/OGL/GlWindowWin32.h>
-#include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlWindowWin32.h>
 
 #define GL_WINDOW_WIN32_CLASSNAME "vrj::GlWindowWin32"
 
 namespace vrj
 {
+
+GlWindowWin32::GlWindowWin32()
+   : mMatch(NULL), mWinHandle(NULL), mRenderContext(NULL),
+      mDeviceContext(NULL), mAreKeyboardDevice( false )
+{
+}
+GlWindowWin32::~GlWindowWin32()
+{
+   this->close();
+}
 
 // Open the window
 // - Creates a window
@@ -94,6 +111,9 @@ int GlWindowWin32::open()
    {
       return 0;
    }
+   
+   // Attach a pointer to the device for use from the WNDPROC
+   SetWindowLong( mWinHandle, GWL_USERDATA, (LPARAM)this );
 
    // We have a valid window, so... Create the context
    //case WM_CREATE:
@@ -116,9 +136,50 @@ int GlWindowWin32::open()
    UpdateWindow(mWinHandle);             // Tell the window to paint
    window_is_open = true;
 
+   // ----------- Keyboard device starting -------------- //
+   // Are we going to act like a keyboard device?
+   if (true == mAreKeyboardDevice)     
+   {
+      this->becomeKeyboardDevice();
+   }
+
    return 1;
 }
 
+/** do the stuff needed to become a keyboard device. */
+void GlWindowWin32::becomeKeyboardDevice()
+{
+   // Set the parameters that we will need to get events
+   gadget::KeyboardWin32::m_hWnd = mWinHandle;
+
+   // Start up the device
+   /*   Do it in out check event function
+   gadget::KeyboardWin32::startSampling();
+   */
+
+   gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
+   vprASSERT( dev_ptr != NULL );
+
+   // @todo Possibly not the best way to add this to input manager
+   // - What happens when the keyboard is removed at run-time???
+   // - What happens when this is called again?
+   vrj::Kernel::instance()->getInputManager()->addDevice( dev_ptr );
+}
+
+void GlWindowWin32::removeKeyboardDevice()
+{
+   gadget::KeyboardWin32::m_hWnd = 0;
+
+   gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
+   vprASSERT( dev_ptr != NULL );
+
+   // @todo Possibly not the best way to add this to input manager
+   // - What happens when the keyboard is removed at run-time???
+   // - What happens when this is called again?
+
+   // @todo reenable this when InputManager::removeDevice(Input*) is public
+   //vrj::Kernel::instance()->getInputManager()->removeDevice( dev_ptr );
+}
 
 /**
  * Closes the OpenGL window.
@@ -126,9 +187,20 @@ int GlWindowWin32::open()
  */
 int GlWindowWin32::close()
 {
+   //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
+   // Assert that we have not impllemented correct shutdown for the case that we
+   // are a keyboard window as well
+   //vprASSERT( !mAreKeyboardDevice  && "Need to implement win32 window close with gadget-keyboard window" );
+
+   // if not open, then don't bother.
    if ( !window_is_open )
    {
       return false;
+   }
+
+   if (mAreKeyboardDevice)
+   {
+      this->removeKeyboardDevice();
    }
 
    // Remove window from window list
@@ -161,26 +233,106 @@ void GlWindowWin32::swapBuffers()
 
 void GlWindowWin32::checkEvents()
 {
-   MSG win_message;
-
-   while ( PeekMessage(&win_message,NULL,0,0,PM_REMOVE) )
+   if (true == mAreKeyboardDevice)
    {
-      // Test if quit
-      if ( win_message.message == WM_QUIT )
+      /** Sample from the window */
+      gadget::KeyboardWin32::sample();   
+      // if keyboard device, use its event processor
+      // it will pass all events up to this->processEvent()
+      // when done, so that we can see the messages.
+   }
+   else
+   {
+      // not a keyboard device, so pump our own events
+      MSG win_message;
+      while (PeekMessage( &win_message, NULL, 0, 0, PM_REMOVE ))
       {
-         break;
-      }
+         // Test if quit
+         if (win_message.message == WM_QUIT)
+         {
+            break;
+         }
 
-      TranslateMessage(&win_message);     // Translate the accelerator keys
-      DispatchMessage(&win_message);      // Send to the WinProc
+         TranslateMessage( &win_message );     // Translate the accelerator keys
+         DispatchMessage( &win_message );      // Send to the WinProc
+      }
+   }   
+}
+
+void GlWindowWin32::processEvent( UINT message, UINT wParam, LONG lParam )
+{
+   
+}
+
+void GlWindowWin32::config( vrj::Display* disp )
+{
+   const char neg_one_STRING[] = "-1";
+   vprASSERT( disp != NULL );
+   vrj::GlWindow::config( disp );
+
+    // Get the vector of display chunks
+   jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunkPtr displayChunk = disp->getConfigChunk();
+
+   window_name = disp->getName();
+   mPipe = disp->getPipe();
+   vprASSERT( mPipe >= 0 );
+
+   mXDisplayName = dispSysChunk->getProperty<std::string>("xpipes", mPipe);
+   if (mXDisplayName == neg_one_STRING)    // Use display env
+   {
+       const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
+       const char* d = getenv(DISPLAY_str.c_str());
+       if (NULL != d)
+       {
+          mXDisplayName = std::string( d );
+       }
+   }
+   vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
+                             << mXDisplayName << std::endl << vprDEBUG_FLUSH;
+
+   bool was_i_a_keyboard = mAreKeyboardDevice;
+   mAreKeyboardDevice = displayChunk->getProperty<bool>( "act_as_keyboard_device" );
+
+   // if i'm being configured to NOT be a keyboard device, 
+   // and I was one already.
+   if (false == mAreKeyboardDevice && true == was_i_a_keyboard)
+   {
+      this->removeKeyboardDevice();
+   }
+
+   // if i'm being configured to be a keyboard device, 
+   // and I wasn't one already.
+   else if (true == mAreKeyboardDevice && false == was_i_a_keyboard)
+   {
+      // Configure keyboard device portion
+      jccl::ConfigChunkPtr keyboard_chunk =
+         displayChunk->getProperty<jccl::ConfigChunkPtr>( "keyboard_device_chunk" );
+
+      // Set the name of the chunk to the same as the parent chunk (so we can point at it)
+      //keyboard_chunk->setProperty("name", displayChunk->getName();
+
+      gadget::KeyboardWin32::config( keyboard_chunk );
+
+      // Custom configuration
+      gadget::KeyboardWin32::m_width = GlWindowWin32::window_width;
+      gadget::KeyboardWin32::m_height = GlWindowWin32::window_height;
+
+      mWeOwnTheWindow = false;      // Keyboard device does not own window
+
+      // if the window is already open, then make it a keyboard device
+      // otherwise, this will be called once the window opens.
+      if (window_is_open)
+      {
+         this->becomeKeyboardDevice();
+      }
    }
 }
 
-
 // WindowProcedure to deal with the events generated.
 // Called only for the window that we are controlling
-LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
-                                   LPARAM lParam)
+LRESULT GlWindowWin32::handleEvent( HWND hWnd, UINT message, WPARAM wParam,
+                                    LPARAM lParam )
 {
    switch ( message )
    {
@@ -301,7 +453,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 }
 
 // the user has changed the size of the window
-void GlWindowWin32::sizeChanged(long width, long height)
+void GlWindowWin32::sizeChanged( long width, long height )
 {
    window_width = width;
    window_height = height;
@@ -331,6 +483,7 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
 
    if ( glWin != NULL )       // Message for one of ours
    {
+      glWin->processEvent( message, wParam, lParam );
       return glWin->handleEvent(hWnd, message, wParam, lParam);
    }
    else
