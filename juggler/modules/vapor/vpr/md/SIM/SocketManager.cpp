@@ -43,18 +43,15 @@
 
 #include <stdlib.h>
 #include <boost/utility.hpp>
-#include <vpr/vpr.h>
-#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
-#include <vpr/Sync/Guard.h>
 
 #include <vpr/md/SIM/Controller.h>
-#include <vpr/md/SIM/SocketManager.h>
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
 #include <vpr/md/SIM/IO/Socket/SocketStreamImplSIM.h>
 #include <vpr/md/SIM/IO/Socket/SocketDatagramImplSIM.h>
 #include <vpr/md/SIM/Network/NetworkGraph.h>
+#include <vpr/md/SIM/SocketManager.h>
 
 
 namespace vpr
