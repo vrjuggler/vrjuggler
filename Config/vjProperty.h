@@ -4,7 +4,7 @@
 
 #include <Config/vjVarValue.h>
 #include <Config/vjChunkDesc.h>
-
+#include <Config/vjChunkDescDB.h>
 
 //------------------------------------------------------------------
 //: Stores a property and all its values
@@ -45,7 +45,11 @@ public:
     //: Vector containing the actual vjVarValues.
     vector<vjVarValue*> value;        
 
+    //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
+    vjChunkDesc *embeddesc;
 
+    //: ChunkDescDB (for creating embedded chunks)
+    vjChunkDescDB *descdb;
 
     //: Constructor
     //! PRE: true
@@ -55,7 +59,7 @@ public:
     //! ARGS: pd - a pointer to a valid vjPropertyDesc. 
     //! NOTE: Self stores a pointer to its PropertyDesc pd.  pd
     //+       should not be deleted while self exists.
-    vjProperty (vjPropertyDesc *pd);
+    vjProperty (vjPropertyDesc *pd, vjChunkDescDB *_descdb);
 
 
 
@@ -108,12 +112,18 @@ public:
     bool setValue (int val, int ind = 0);
     bool setValue (float val, int ind = 0);
     bool setValue (char* val, int ind = 0);
+    bool setValue (vjConfigChunk* val, int ind = 0);
 
 
 
   vjEnumEntry* getEnumEntry (char *n);
   vjEnumEntry* getEnumEntry (int val);
 
+
+    //: creates a vjVarValue of the correct type for this property
+    //! ARGS: i - position of this value.  Useful for giving 
+    //+           embedded chunks names based on valuelabels.
+    vjVarValue *createVarValue (int i = -1);
 
 
   /** Converts the values in this property from units of u to units of feet.
@@ -132,7 +142,7 @@ public:
 
 private:
 
-  //: Utility function for setValue(val, ind)
+  //: Utility function for setValue(val, ind) functions
   //! POST: If self has a variable number of values, and ind
   //+       is greater than the current size of the value
   //+       vector, the vector is padded with new default-valued
