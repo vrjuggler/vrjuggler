@@ -95,7 +95,7 @@ void doFunc(void* TSCounterPtr)
    while((*ts_counter) < 1000)
    {
       for(i=0;i<1000;i++)
-         float x = sin(i);
+         float x = sin((float) i);
       (*ts_counter)++;
    }
 
