@@ -30,15 +30,10 @@
 import sys
 from OpenGL.GL import *
 
-# XXX: I think it would be better if the modules existed in the PyJuggler
-# namespace, but I don't know how to set that up.
-#from PyJuggler import *
+# NOTE: If you import the individual modules from PyJuggler, make sure to
+# import PyJuggler.vrj first.
+from PyJuggler import *
 
-# NOTE: The order of these seems to be important.  Put 'import vrj' first.
-import vrj
-import gadget
-import jccl
-import gmtl
 
 class SimplGlApp(vrj.GlApp):
    mButton0 = gadget.DigitalInterface()

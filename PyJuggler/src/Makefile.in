@@ -40,7 +40,7 @@ PYTHON=		@PYTHON@
 PYSTE=		$(PYTHON) @PYSTE@ $(INCLUDES)
 
 PYTHON_VERSION=		@PYTHON_VERSION@
-PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages
+PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/PyJuggler
 
 PYTHON_LDFLAGS=		@PYTHON_LDFLAGS@ @PYTHON_LIB@ @PYTHON_LIB_DEPS@
 BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
@@ -123,6 +123,7 @@ modules: $(MODS)
 
 install:
 	-[ ! -d $(PYTHON_PACKAGES) ] && mkdir -p $(PYTHON_PACKAGES)
+	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
 	for mod in $(MODS) ; do			\
             cp -p $$mod $(PYTHON_PACKAGES) ;	\
           done
