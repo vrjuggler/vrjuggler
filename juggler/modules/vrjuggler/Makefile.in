@@ -784,8 +784,6 @@ ifndef NO_JAVA_GUI
           ${LN_S} ${topdir}/GUI/VjControl.jar ./
 	cd ${instlinks}/bin && rm -f ./vjcontrol &&			\
           ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
-	cd ${instlinks}/bin && rm -f ./vjcontrol1.1 &&			\
-          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
