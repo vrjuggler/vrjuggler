@@ -118,7 +118,7 @@ public:
    void makeRot( const float& rad, const float& x, const float& y, const float& z )
    {
       float halfRad = rad * 0.5f;
-	   float sinHalfRad = sinf( halfRad );
+	   float sinHalfRad = vjSystem::sin( halfRad );
 	   vjVec3 vecNormalized;
          
       if (rad == 0.0f || (x == 0.0f && y == 0.0f && z == 0.0f))
@@ -130,7 +130,7 @@ public:
          vecNormalized.set( x, y, z );
 	      vecNormalized.normalize();
       }
-	   vec[VJ_W] = cosf( halfRad );
+	   vec[VJ_W] = vjSystem::cos( halfRad );
 	   vec[VJ_X] = sinHalfRad * vecNormalized[0];
 	   vec[VJ_Y] = sinHalfRad * vecNormalized[1];
 	   vec[VJ_Z] = sinHalfRad * vecNormalized[2];
