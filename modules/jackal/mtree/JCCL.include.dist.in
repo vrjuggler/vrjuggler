@@ -49,9 +49,9 @@
                 PerformanceMonitor
                 ..
             ..
-            XMLUtil
-            ..
             Util
+            ..
+            XMLUtil
             ..
         ..
     ..

@@ -49,6 +49,18 @@
                     ..
                 ..
             ..
+            DisplayWindowEditor
+                src
+                    DisplayWindowEditor
+                    ..
+                ..
+            ..
+            PlxViewComponent
+                plx
+                    viewer
+                    ..
+                ..
+            ..
         ..
     ..
 ..
