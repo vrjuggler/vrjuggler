@@ -44,7 +44,7 @@
 
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Proxy.h>
-//#include <gadget/Type/PositionFilter.h>
+#include <gadget/Type/PositionFilter.h>
 #include <gadget/Type/PositionData.h>
 
 #include <gmtl/Matrix.h>
@@ -157,6 +157,8 @@ public:
 private:
    PositionData      mPositionData;
    int               mUnitNum;
+
+   std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
    
 public:
    /** Sets the scale factor to be applied to all positional

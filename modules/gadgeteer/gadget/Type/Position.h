@@ -145,7 +145,6 @@ protected:
 private:
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
    SampleBuffer_t                mPosSamples;         /**< Position samples */
-
 };
 
 } // End of gadget namespace
