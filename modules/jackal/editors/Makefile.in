@@ -62,7 +62,6 @@ endif
 beandir=		$(bindir)/beans
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
-EXTRA_JAVA_SRCS_PATH=	$(srcdir)
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
 
@@ -70,19 +69,6 @@ INSTALL_FILES=
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JDOM_JAR=	@JDOM_JAR@
-TWEEK_JARS=	@TWEEK_JARS@
-TWEEK_EXT_JARS=	@TWEEK_EXT_JARS@
-CLASSPATH=	$(JDOM_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(TWEEK_EXT_JARS)$(JCPS)$(topdir)/config
-JAVA_SRC_PATH=	
-
-EDITORS_PKG=		org.vrjuggler.jccl.editors
-EDITORS_DIR=		$(subst .,/,$(EDITORS_PKG))
-EDITORS_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(EDITORS_DIR)/*.java))
-EDITORS_CLASSES=	$(EDITORS_SRCS:.java=.class)
-
-JAVA_SRCS=		$(EDITORS_SRCS)
-JAVA_CLASSES=		$(EDITORS_CLASSES)
 JARS=			
 BEANS=			jccl_editors
 
@@ -93,24 +79,26 @@ instdir=	jccl/editors/1.0
 doc_prefix=	$(webroot)/$(instdir)
 DOC_ROOT=	programmer.reference.java
 
-JAVA_AFTERBUILD=	jars
+_LOCAL_CLEAN=1
+JAVA_AFTERBUILD=java_afterbuild
 
-override OBJDIR=.
 include $(MKPATH)/dpp.obj.mk
 
-# Hack to get java to compile the classes into the current dir
-override OBJDIR=.
+# -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+java_afterbuild:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
 
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS) $(addsuffix .jar, $(BEANS))
-
-jccl_editors.jar: $(JAVA_CLASSES)
-	$(JAR) cvf $@ $(EDITORS_DIR)/*.class
-	cd $(srcdir) && $(JAR) uvf $(topdir)/editors/$@ \
-		$(EDITORS_DIR)/images/*.gif
-
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
           -classpath $(CLASSPATH) $(DOC_PKGS)
@@ -118,13 +106,13 @@ docs:
 # This cannot be named 'install' because Doozer++ already defines that.
 editors-install:
 	@echo "------------------------------------------------"
-	@echo "Installing the JCCL vjcontrol Java code base"
+	@echo "Installing the JCCL config editors"
 	@echo "------------------------------------------------"
 ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(EXTRA_INSTALL_ARGS) $(topdir)/vjcontrol/$$jar $(bindir) \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/editors/$$jar $(bindir) \
                   || exit 1; \
           done
 endif
@@ -135,7 +123,7 @@ ifneq ($(BEANS), )
 		  $(EXTRA_INSTALL_ARGS) $(top_srcdir)/editors/$$bean.xml \
                   $(beandir) || exit 1; \
 	  	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-		  $(EXTRA_INSTALL_ARSGS) $(topdir)/editors/$$bean.jar \
+		  $(EXTRA_INSTALL_ARGS) $(topdir)/editors/$$bean.jar \
                   $(beandir) || exit 1; \
 	  done
 endif
@@ -144,8 +132,6 @@ install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES+=	$(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin

@@ -62,23 +62,12 @@ endif
 beandir=		$(bindir)/beans
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
-EXTRA_JAVA_SRCS_PATH=	$(srcdir)
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
 
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JDOM_JAR=	@JDOM_JAR@
-TWEEK_JARS=	@TWEEK_JARS@
-CLASSPATH=	$(JDOM_JAR)$(JCPS)$(TWEEK_JARS)
-
-CONFIG_PKG=	org.vrjuggler.jccl.config
-CONFIG_DIR=	$(subst .,/,$(CONFIG_PKG))
-CONFIG_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.java))
-CONFIG_CLASSES=	$(CONFIG_SRCS:.java=.class)
-
-JAVA_SRCS=	$(CONFIG_SRCS)
 JARS=		
 BEANS=		jccl_config
 
@@ -89,9 +78,7 @@ instdir=	jccl/config/1.0
 doc_prefix=	$(webroot)/$(instdir)
 DOC_ROOT=	programmer.reference.java
 
-JAVA_AFTERBUILD=	jars
-
-include $(MKPATH)/dpp.compile.mk
+_LOCAL_CLEAN=1
 
 # -----------------------------------------------------------------------------
 # C++-related setup
@@ -111,6 +98,7 @@ JCCL_CONFIG_PROF_LIB_DYNAMIC=	$(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_
 
 include $(MKPATH)/dpp.libs-basic.mk
 include $(MKPATH)/dpp.obj-common.mk
+include $(MKPATH)/dpp.clean.mk
 
 # -----------------------------------------------------------------------------
 # Recursive make setup
@@ -155,29 +143,19 @@ $(LIBDIR)/$(JCCL_CONFIG_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_CONFIG_PROF_LIB_DYNAMIC): 
 
 
 # -----------------------------------------------------------------------------
-# Duplicate from dpp.obj.mk
+# Uses ant to build the java classes and JARs
 # -----------------------------------------------------------------------------
-java: do-beforebuild
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-ifdef JAVA_BEFOREBUILD
-	@$(MAKE) $(JAVA_BEFOREBUILD)
-endif
-	@$(MAKE) do-java-build OBJDIR=.
-ifdef JAVA_AFTERBUILD
-	@$(MAKE) $(JAVA_AFTERBUILD)
-endif
+java:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
 
-
+_clean:
+	$(ANT) clean
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS) $(addsuffix .jar, $(BEANS))
-
-jccl_config.jar: $(CONFIG_CLASSES)
-	$(JAR) cvf $@ $(CONFIG_DIR)/*.class
-
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
           -classpath $(CLASSPATH) $(DOC_PKGS)
@@ -206,18 +184,11 @@ ifneq ($(BEANS), )
                   $(beandir) || exit 1; \
           done
 endif
-	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
-          do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(EXTRA_INSTALL_ARGS) $$jar $(bindir) || exit 1; \
-          done
 
 install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES+=	$(JARS) $(CONFIG_CLASSES)
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
