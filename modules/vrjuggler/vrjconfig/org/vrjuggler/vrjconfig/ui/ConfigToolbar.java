@@ -217,6 +217,9 @@ public class ConfigToolbar
             return false;
          }
 
+         // Make sure descs are available
+         ChunkFactory.setDescs(getConfigBroker().getDescs(ctx));
+
          setConfigContext(ctx);
          fireAction("New");
          return true;
@@ -240,7 +243,10 @@ public class ConfigToolbar
             return false;
          }
 
+         // Make sure any new descs are available
          ChunkFactory.setDescs(getConfigBroker().getDescs(ctx));
+
+         // Add in the new data source
          FileDataSource new_data_source = new FileDataSource(filename,
                                                              FileDataSource.ELEMENTS);
          getConfigBroker().add(filename, new_data_source);
