@@ -45,6 +45,7 @@ use Getopt::Long;
 
 sub usage($);
 sub normalizePath($);
+sub runDepScript($$$);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
 sub make_LDFLAGS($;$$$);
@@ -54,9 +55,13 @@ sub stripDuplicateCompilerArgs($);
 sub stripDuplicateLibraryArgs($);
 sub groupLibdirArgs($);
 
-# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
-
 usage(1) if $#ARGV == -1;
+
+my @DEP_SCRIPTS = (['sonix-config', 'SNX_BASE_DIR'],
+                   ['gadgeteer-config', 'GADGET_BASE_DIR'],
+                   ['jccl-config', 'JCCL_BASE_DIR'],
+                   ['vpr-config', 'VPR_BASE_DIR']
+                  );
 
 my $vrj_default_abi = qq(@ABI@);
 my $vrj_default_isa = qq(@ISA@);
@@ -90,8 +95,6 @@ if ( $use_gcc !~ /^y/i && $vrj_default_isa =~ /^mips[34]/ )
 # important when this script has been installed.
 $Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
 
-my $base_dir = '';
-
 # Set the location of the collection of dependencies.  If $VJ_DEPS_DIR is
 # not defined, then $deps_dir will be an empty string.  If the dependencies
 # are installed in $VJ_BASE_DIR, then the user gets the right compiler and
@@ -100,21 +103,14 @@ my $base_dir = '';
 my $deps_dir = "$ENV{'VJ_DEPS_DIR'}" if defined($ENV{'VJ_DEPS_DIR'});
 
 # Get the directory where this script is located.
-if ( defined($ENV{'VJ_BASE_DIR'}) )
-{
-   $base_dir = "$ENV{'VJ_BASE_DIR'}";
-}
-else
-{
-   $base_dir = (fileparse("$0"))[1];
+my $base_dir = (fileparse("$0"))[1];
 
-   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
-   # Otherwise, we use / for the path separator.
-   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+# If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+# Otherwise, we use / for the path separator.
+my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
 
-   $base_dir =~ s|${path_sep}+$||o;     # Strip off the trailing slash(es)
-   $base_dir =~ s|${path_sep}+bin$||io; # If the path ends in "/bin", strip it
-}
+$base_dir =~ s|${path_sep}+$||o;     # Strip off the trailing slash(es)
+$base_dir =~ s|${path_sep}+bin$||io; # If the path ends in "/bin", strip it
 
 # Strip extra slashes from $base_dir.
 normalizePath(\$base_dir);
@@ -267,6 +263,36 @@ sub normalizePath($)
    $$path_ref =~ s|${path_sep}+$||go;
 }
 
+sub runDepScript($$$)
+{
+   my $script_name = shift;
+   my $base_dir    = shift;
+   my $args        = shift;
+
+   my $result = `$script_name $args`;
+   my $status = $?;
+
+   if ( $status != 0 )
+   {
+      if ( -x "$base_dir/bin/$script_name" )
+      {
+         $result = `$base_dir/bin/$script_name $args`;
+         $status = $?;
+      }
+   }
+
+   if ( $status == 0 )
+   {
+      chomp($result);
+   }
+   else
+   {
+      warn "WARNING: Could not find $script_name to execcute!\n";
+   }
+
+   return $result or undef;
+}
+
 sub make_CXXFLAGS ($;$)
 {
    my $cxxflags_arg = shift;
@@ -276,13 +302,12 @@ sub make_CXXFLAGS ($;$)
 
    unless ( $print_min )
    {
-      my @dep_scripts = qw(@vrj_dep_scripts@);
-
-      foreach ( @dep_scripts )
+      my $script_info;
+      foreach $script_info ( @DEP_SCRIPTS )
       {
-         my $cur_dep_cxxflags = `$_ --min --cxxflags $cxxflags_arg`;
-         chomp($cur_dep_cxxflags);
-         $dep_cxxflags = "$cur_dep_cxxflags $dep_cxxflags";
+         my $result = runDepScript($$script_info[0], $ENV{"$$script_info[1]"},
+                                   "--min --cxxflags $cxxflags_arg");
+         $dep_cxxflags = "$result $dep_cxxflags" if $result;
       }
    }
 
@@ -404,18 +429,20 @@ sub make_EXTRA_LDFLAGS ($;$$$)
 
    unless ( $print_min )
    {
-      my @dep_scripts = qw(@vrj_dep_scripts@);
-      my $linker_arg  = ($use_linker ? '--linker' : '');
-      my $static_arg  = ($use_static ? '--static' : '');
+      my $linker_arg = ($use_linker ? '--linker' : '');
+      my $static_arg = ($use_static ? '--static' : '');
 
-      foreach ( @dep_scripts )
+      my $script_info;
+      foreach $script_info ( @DEP_SCRIPTS )
       {
-         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $linker_arg $static_arg`;
-         chomp($cur_dep_libs);
+         my $cur_dep_libs =
+            runDepScript($$script_info[0], $ENV{"$$script_info[1]"},
+                         "--min --libs $extra_libs_arg $linker_arg $static_arg");
          $dep_libs .= " $cur_dep_libs";
 
-         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $linker_arg $static_arg`;
-         chomp($cur_dep_extra_libs);
+         my $cur_dep_extra_libs =
+            runDepScript($$script_info[0], $ENV{"$$script_info[1]"},
+                         "--min --extra-libs $extra_libs_arg $linker_arg $static_arg");
          $dep_extra_libs .= " $cur_dep_extra_libs";
       }
    }

@@ -226,11 +226,6 @@ BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $JCCL_INCLUDES_MIN $GMTL_INCLUDES"
 gadget_cxxflags="$STDFLAGS"
 
-# List the scripts gadgeteer-config will call to get flags.  This should be
-# in the order used for linking.  That means the dependencies are satisfied
-# right to left.
-gadget_dep_scripts='jccl-config vpr-config'
-
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -w2"
@@ -395,7 +390,6 @@ AC_SUBST(APP_EXTRA_LIBS_X11)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(gadget_dep_scripts)
 AC_SUBST(gadget_cxxflags)
 AC_SUBST(gadget_extra_cxxflags)
 AC_SUBST(gadget_ldflags_compiler)

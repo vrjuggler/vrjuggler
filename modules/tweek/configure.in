@@ -1145,11 +1145,6 @@ tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
 INCLUDES="$INCLUDES $CXX_ORB_INCLUDES"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 
-# List the scripts vrjuggler-config will call to get flags.  This should be
-# in the order used for linking.  That means the dependencies are satisfied
-# right to left.
-tweek_dep_scripts="vpr-config"
-
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
 #   CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
@@ -1354,7 +1349,6 @@ AC_SUBST(DYLIB_PROF_DEPS)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(tweek_cxx_orb_root)
-AC_SUBST(tweek_dep_scripts)
 AC_SUBST(tweek_cxxflags)
 AC_SUBST(tweek_ldflags_compiler)
 AC_SUBST(tweek_ldflags_linker)
