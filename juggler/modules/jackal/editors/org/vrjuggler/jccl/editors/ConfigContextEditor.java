@@ -104,15 +104,7 @@ public class ConfigContextEditor
                   return;
                }
 
-               Color start_color = UIManager.getColor("Tree.selectionBackground");
-
-               if ( null == start_color )
-               {
-                  start_color = new Color(160, 160, 180);
-                  System.out.println("Could not get the color " +
-                                     "'Tree.selectionBackground' from the " +
-                                     "UIManager.");
-               }
+               Color start_color = getStartColor();
 
                // Create a new PropertySheet for the given ConfigElement.
                ConfigElement elt = (ConfigElement)value;
@@ -126,9 +118,11 @@ public class ConfigContextEditor
                mElementTypeLabel.setText(def.getName() + " <" +
                                          def.getToken() + ">");
                mElementPropSheet =
-                  PropertySheetFactory.instance().makeSheet(getContext(), elt, start_color);
+                  PropertySheetFactory.instance().makeSheet(getContext(), elt,
+                                                            start_color);
                mElementPropSheetScrollPane.getViewport().removeAll();
-               mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
+               mElementPropSheetScrollPane.getViewport().add(mElementPropSheet,
+                                                             null);
                
                // Display the help information about the selected configuration element.
                getHelpPane().setText(elt.getDefinition().getHelp());
@@ -173,15 +167,7 @@ public class ConfigContextEditor
          ConfigElement elt = (ConfigElement)elts.get(0);
 
          // Create a PropertySheet for the default selected ConfigElement.
-         Color start_color = UIManager.getColor("Tree.selectionBackground");
-
-         if ( null == start_color )
-         {
-            start_color = new Color(160, 160, 180);
-            System.out.println("Could not get the color " +
-                               "'Tree.selectionBackground' from the " +
-                               "UIManager.");
-         }
+         Color start_color = getStartColor();
 
          // Create a new PropertySheet for the given ConfigElement.
          if (null != mElementPropSheet)
@@ -189,8 +175,9 @@ public class ConfigContextEditor
             mElementPropSheet.finalize();
          }
          mElementPropSheet =
-            PropertySheetFactory.instance().makeSheet(getContext(), elt, start_color);
-               
+            PropertySheetFactory.instance().makeSheet(getContext(), elt,
+                                                      start_color);
+
          selectConfigElement(elt);
       }
 
@@ -454,7 +441,34 @@ public class ConfigContextEditor
       mElementPropSheet.revalidate();
       mElementPropSheet.repaint();
    }
-    
+
+   private Color getStartColor()
+   {
+      Color color = UIManager.getColor("Tree.selectionBackground");
+
+      if ( null == color )
+      {
+         color = new Color(160, 160, 180);
+         System.out.println("Could not get the color " +
+                            "'Tree.selectionBackground' from the " +
+                            "UIManager.");
+      }
+      float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(),
+                                   color.getBlue(), null);
+
+      System.out.println("HSB before: " + hsb[0] + " " + hsb[1] + " " + hsb[2]);
+
+      // Make sure that the color is bright enough to allow good contrast
+      // between the background color and the text (foreground) color.
+      // XXX: There is probably a better way to handle this... -PH 12/24/2004
+      if ( hsb[2] < 0.8 )
+      {
+         color = Color.getHSBColor(hsb[0], hsb[1], 0.9f);
+      }
+
+      return color;
+   }
+
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
    private JScrollPane mElementTreeScrollPane = new JScrollPane();
@@ -548,6 +562,7 @@ class ConfigContextCellRenderer
 
       return this;
    }
+
    private Icon mElementIcon;
    private Icon mPropertyIcon;
    private Icon mCategoryIcon;
