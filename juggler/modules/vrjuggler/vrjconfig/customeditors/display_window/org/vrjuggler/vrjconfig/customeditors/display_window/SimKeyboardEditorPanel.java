@@ -56,6 +56,7 @@ public class SimKeyboardEditorPanel
    implements EditorConstants
 {
    private static Map sSimDevProxyTypeMap;
+   private static Map sSimDevEditorMap;
 
    static
    {
@@ -63,6 +64,8 @@ public class SimKeyboardEditorPanel
       sSimDevProxyTypeMap.put(SIM_ANALOG_DEVICE_TYPE, ANALOG_PROXY_TYPE);
       sSimDevProxyTypeMap.put(SIM_DIGITAL_DEVICE_TYPE, DIGITAL_PROXY_TYPE);
       sSimDevProxyTypeMap.put(SIM_POS_DEVICE_TYPE, POSITION_PROXY_TYPE);
+
+      sSimDevEditorMap = new HashMap();
    }
 
    public SimKeyboardEditorPanel()
@@ -295,7 +298,6 @@ public class SimKeyboardEditorPanel
    private Map           mSimDevProxyDefMap    = new HashMap();
    private String        mDataSourceName       = null;
 
-   private Map mSimEditorMap = new HashMap();
    private SimDeviceEditor mCurSimEditor = null;
    private KeyboardEditorPanel mKeyboardEditor = new KeyboardEditorPanel();
 
@@ -417,7 +419,8 @@ public class SimKeyboardEditorPanel
          ConfigElement dev_elt       = sim_dev_cfg.getDevice();
 
          // Look up the editor for this config element's type.
-         Object value = mSimEditorMap.get(dev_elt.getDefinition());
+         Object value =
+            sSimDevEditorMap.get(dev_elt.getDefinition().getToken());
 
          if ( value != null )
          {
