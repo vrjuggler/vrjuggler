@@ -120,23 +120,23 @@ public:
    {;}
 
    /**
-    * Function called before juggler frame starts.
+    * Function called before the Juggler frame starts.
     * Called after tracker update but before start of a new frame.
     */
    virtual void preFrame()
    {;}
 
-   /** Function called after preFrame and ApplicationData syncronization, but
-    * before draw function.
+   /**
+    * Function called after preFrame() and ApplicationData syncronization, but
+    * before draw() function.
     *
-    * NOTE: This is required because we can not update data in the draw function
-    * since it might be called more than once.
+    * @note This is required because we cannot update data in the draw()
+    *       function since it might be called more than once.
     */
    virtual void latePreFrame()
    {;}
 
-   /** Function called <b>during</b> the application's drawing time
-    */
+   /** Function called <b>during</b> the application's drawing time. */
    virtual void intraFrame()
    {;}
 
