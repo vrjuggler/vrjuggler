@@ -46,6 +46,8 @@
 #include <cluster/ClusterManager.h>
 #include <cluster/Packets/EndBlock.h>
 
+#include <jccl/Config/ConfigDefinitionPtr.h>
+#include <jccl/Config/ConfigDefinition.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
 
@@ -387,25 +389,26 @@ namespace cluster
 
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )
    {
-     if ( gadget::DeviceFactory::instance()->recognizeDevice(element) &&  element->getNum("device_host") > 0 )
-     {
-        std::string device_host = element->getProperty<std::string>( "device_host" );
-        //std::cout << "Checking: " << element->getName() << std::endl;
-        if ( !device_host.empty() )
-        {
-           // THIS IS A HACK: find a better way to do this
-           jccl::ConfigElementPtr device_host_ptr = getConfigElementPointer( device_host );
-           if ( device_host_ptr.get() != NULL )
-           {
-              std::string host_name = device_host_ptr->getProperty<std::string>( "host_name" );
-              if ( !cluster::ClusterNetwork::isLocalHost( host_name ) )
-              {
-                 return true;
-              }// Device is on the local machine
-           }// Could not find the deviceHost in the configuration
-        }// Device is not a remote device since there is no name in the deviceHost field
-     }// Else it is not a device, or does not have a deviceHost property
-     return false;
+      std::string tp("input_parent");
+      if ( element->getConfigDefinition()->isParent("input_device") && element->getNum("device_host") > 0 )
+      {
+         std::string device_host = element->getProperty<std::string>( "device_host" );
+         //std::cout << "Checking: " << element->getName() << std::endl;
+         if ( !device_host.empty() )
+         {
+            // THIS IS A HACK: find a better way to do this
+            jccl::ConfigElementPtr device_host_ptr = getConfigElementPointer( device_host );
+            if ( device_host_ptr.get() != NULL )
+            {
+               std::string host_name = device_host_ptr->getProperty<std::string>( "host_name" );
+               if ( !cluster::ClusterNetwork::isLocalHost( host_name ) )
+               {
+                  return true;
+               }// Device is on the local machine
+            }// Could not find the deviceHost in the configuration
+         }// Device is not a remote device since there is no name in the deviceHost field
+      }// Else it is not a device, or does not have a deviceHost property
+      return false;
    }
 
    bool ClusterManager::recognizeClusterManagerConfig( jccl::ConfigElementPtr element )
