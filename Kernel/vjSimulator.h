@@ -22,7 +22,7 @@ public:
       char* proxy_str = NULL;
       proxy_str  = chunk->getProperty("simCamera");
 
-      string user_name = (string)(char*)chunk->getProperty("user");
+      std::string user_name = (std::string)(char*)chunk->getProperty("user");
       mUser = vjKernel::instance()->getUser(user_name);
 
       mCamera.init(proxy_str);

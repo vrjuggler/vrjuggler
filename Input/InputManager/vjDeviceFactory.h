@@ -24,8 +24,8 @@ public:
    }
 
    //: Get the string desc of the type of chunk we can create
-   virtual string    getChunkType()
-   { return string("BaseConstructor: Invalid type"); }
+   virtual std::string    getChunkType()
+   { return std::string("BaseConstructor: Invalid type"); }
 };
 
 
@@ -48,7 +48,7 @@ public:
       }
    }
 
-   virtual string getChunkType()
+   virtual std::string getChunkType()
    { return DEV::getChunkType(); }
 };
 

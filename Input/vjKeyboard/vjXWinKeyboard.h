@@ -55,7 +55,7 @@ public:
    void UpdateData();
 
    char* GetDeviceName() { return "vjXwinKeyboard";}
-   static string getChunkType() { return string("Keyboard");}
+   static std::string getChunkType() { return std::string("Keyboard");}
 
    // returns the number of times the key was pressed during the
    // last frame, so you can put this in an if to check if was

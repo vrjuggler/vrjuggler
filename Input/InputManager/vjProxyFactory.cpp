@@ -66,7 +66,7 @@ vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
    vjProxyConstructorBase* constructor = mConstructors[index];
 
    vjDEBUG(1) << "vjProxyFactory::loadProxy: Loading proxy: "
-              << (string)(char*)chunk->getType() << "  with: "
+              << (std::string)(char*)chunk->getType() << "  with: "
               << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
    new_dev = constructor->createProxy(chunk);
    return new_dev;
@@ -74,8 +74,8 @@ vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
 
 int vjProxyFactory::findConstructor(vjConfigChunk* chunk)
 {
-   string chunk_type;
-   chunk_type = (string)(char*)chunk->getType();
+   std::string chunk_type;
+   chunk_type = (std::string)(char*)chunk->getType();
    for(int i=0;i<mConstructors.size();i++)
    {
       if(mConstructors[i]->getChunkType() == chunk_type)

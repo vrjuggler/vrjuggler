@@ -61,7 +61,7 @@ public:
    //: Get the name of the digital device
    char* GetDeviceName() { return "vjSimPosition";}
 
-   static string getChunkType() { return string("SimPosition"); }
+   static std::string getChunkType() { return std::string("SimPosition"); }
 
 private:
    //: Move forward (-z) the given amount on position data n

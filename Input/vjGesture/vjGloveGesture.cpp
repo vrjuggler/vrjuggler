@@ -4,20 +4,20 @@
 //: Get a gesture name
 //! RETURNS: (gestureId in range) - string desc of gesture
 //! RETURNS: (gesture not in range) - empty string
-string vjGloveGesture::getGestureString(int gestureId)
+std::string vjGloveGesture::getGestureString(int gestureId)
 {
    if(gestureId < 0)
       return getGestureString(this->getGesture());    // Get string of current gesture
    else if(gestureId < mGestureNames.size())
       return mGestureNames[gestureId];
    else
-      return string("");
+      return std::string("");
 }
 
 //: Create a new gesture
 // Pushes the gesture onto the list of gesture names
 // Also pushes an example on the vector
-int vjGloveGesture::createGesture(string gestureName)
+int vjGloveGesture::createGesture(std::string gestureName)
 {
    mGestureNames.push_back(gestureName);        // Push it back
    mGestureExamples.push_back(vjGloveData());  // Push back an empty vector of floats
@@ -53,11 +53,11 @@ void vjGloveGesture::loadFileHeader(ifstream& infile)
    int i;
    char gest_name[512];
 
-   mGestureNames = vector<string>(num_gestures);
+   mGestureNames = vector<std::string>(num_gestures);
    for(i=0;i<num_gestures;i++)
    {
       infile.getline(gest_name,512);
-      mGestureNames[i] = string(gest_name);
+      mGestureNames[i] = std::string(gest_name);
    }
 
    mGestureExamples = vector<vjGloveData>(num_gestures);
@@ -94,7 +94,7 @@ void vjGloveGesture::saveFileHeader(ofstream& outFile)
 }
 
 //: Return the gesture identifier of the gesture.
-int vjGloveGesture::getGestureIndex(string gestureName)
+int vjGloveGesture::getGestureIndex(std::string gestureName)
 {
    int i = 0;
    int found = -1;

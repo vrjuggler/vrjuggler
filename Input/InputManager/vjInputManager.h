@@ -104,7 +104,7 @@ private:
 public:
    //: Function to get an index to the proxy/alias given in str
    //! RETURNS: -1 - Not Found
-   int  GetProxyIndex(string proxyName);
+   int  GetProxyIndex(std::string proxyName);
 
 
    /* ------------------------------- //
@@ -178,7 +178,7 @@ public:
    //! POST: pos proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddPosProxy(string devName, int subNum, string proxyName, vjPosProxy* posProxy);
+   int AddPosProxy(std::string devName, int subNum, std::string proxyName, vjPosProxy* posProxy);
 
    //: Turn the position proxy at index ProxyNum to point back
    // to the default dummy proxy. <br>
@@ -208,7 +208,7 @@ public:
    //! POST: dig proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddDigProxy(string devName, int subNum, string proxyName, vjDigitalProxy* digitalProxy);
+   int AddDigProxy(std::string devName, int subNum, std::string proxyName, vjDigitalProxy* digitalProxy);
 
    //: Turn the digital proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
@@ -238,7 +238,7 @@ public:
    //! POST: analog proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddAnaProxy(string devName, int subNum, string proxyName, vjAnalogProxy* anaProxy);
+   int AddAnaProxy(std::string devName, int subNum, std::string proxyName, vjAnalogProxy* anaProxy);
 
    //: Turn the analog proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
@@ -268,7 +268,7 @@ public:
    //! POST: glove proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddGloveProxy(string devName, int subNum, string proxyName, vjGloveProxy* gloveProxy);
+   int AddGloveProxy(std::string devName, int subNum, std::string proxyName, vjGloveProxy* gloveProxy);
 
    //: Turn the glove proxy at index ProxyNum to point back
    // to the default dummy glove proxy. <br>
@@ -302,7 +302,7 @@ public:
    //! POST: keyboard proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddKeyboardProxy(string devName, int subNum, string proxyName, vjKeyboardProxy* kbProxy);
+   int AddKeyboardProxy(std::string devName, int subNum, std::string proxyName, vjKeyboardProxy* kbProxy);
 
    //: Turn the keyboard proxy at index ProxyNum to point back
    // to the default dummy keyboard proxy. <br>
@@ -331,7 +331,7 @@ public:
    //! POST: gesture proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddGestureProxy(string devName, int subNum, string proxyName, vjGestureProxy* gestureProxy);
+   int AddGestureProxy(std::string devName, int subNum, std::string proxyName, vjGestureProxy* gestureProxy);
 
    //: Turn the gesture proxy at index ProxyNum to point back
    // to the default dummy gesture proxy. <br>
@@ -360,14 +360,14 @@ protected:
 
    vjPosProxy*      m_dummyPosProxy;      // Proxy to the dummy pos
 
-   map<string, int>    proxyAliases;      // List of alias indices for proxies
+   map<std::string, int> proxyAliases;    // List of alias indices for proxies
 
 private:
    //: Function to configure the proxy Alias array
    bool ConfigureProxyAlias(vjConfigChunk* chunk);
 
    //: Add a proxy alias
-   void AddProxyAlias(string str, int proxyIndex);
+   void AddProxyAlias(std::string str, int proxyIndex);
 };
 
 #endif

@@ -20,7 +20,7 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(1) << "------- vjDisplayManager::configAdd() Entering -------\n" << vjDEBUG_FLUSH;
 
 
-   if((string)(char*)chunk->getType() == string("display"))      // DISPLAY
+   if((std::string)(char*)chunk->getType() == std::string("display"))      // DISPLAY
    {
       vjDisplay* newDisp = new vjDisplay();     // Create display
       newDisp->config(chunk);                   // Config it
@@ -46,7 +46,7 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
 //+          false - We don't
 bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 {
-   return (((string)(char*)chunk->getType()) == string("display"));
+   return (((std::string)(char*)chunk->getType()) == std::string("display"));
 }
 
 

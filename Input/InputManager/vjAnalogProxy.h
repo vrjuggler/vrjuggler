@@ -60,7 +60,7 @@ public:
    int GetUnit()
    { return m_unitNum;}
 
-   static string getChunkType() { return "AnaProxy";}
+   static std::string getChunkType() { return "AnaProxy";}
 
    bool config(vjConfigChunk* chunk);
 
