@@ -255,8 +255,9 @@ chunk SimRelativePosition "SimRelativePosition" "A positional device simulator f
   end
 chunk sigmoid_linear_pos_filter "SigmoidLinearPosFilter" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  minDist Float 1 "minDist" ""
-  maxDist Float 1 "maxDist" ""
+  minDist Float 1 "minDist" "Low point of the sigmoid.  Anything below this is ignored.  Anything larger is interpolated."
+  maxDist Float 1 "maxDist" "high point of the sigmoid.  Anything beyond this is just treated as normal"
+  maxThreshold Float 1 "maxThreshold" "Maximum distance value allowed.  Anything larger than this is just ignored."
   end
 chunk AwSoundEngine "Audioworks Sound Engine" "Use an audioworks sound engine."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
