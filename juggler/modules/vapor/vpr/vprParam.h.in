@@ -53,7 +53,10 @@
  * This is the "human-readable" VPR version _string_.  It is of the form
  * <major>.<minor>.<days since last major release>.
  */
-#define VPR_VERSION @VER_STRING@
+namespace vpr
+{
+   const char* VPR_VERSION  = @VER_STRING@;
+}
 
 
 #endif	/* _VPR_PARAM_H_ */
