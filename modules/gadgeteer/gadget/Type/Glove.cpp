@@ -31,7 +31,7 @@ vjGloveData::vjGloveData()
 // I am just rotating around single axis for fingers, not taking abduct into account
 // The thumb is a complete fudge.
 // Wrist is not being done at all
-vjGloveData::calcXforms()
+int vjGloveData::calcXforms()
 {
    vjVec3 xAxis(1.0f, 0.0f, 0.0f);
    vjVec3 yAxis(0.0f, 1.0f, 0.0f);
