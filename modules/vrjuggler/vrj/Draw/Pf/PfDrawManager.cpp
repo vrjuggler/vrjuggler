@@ -460,10 +460,10 @@ void vjPfDrawManager::updateProjections()
 void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bool simulator)
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
-                    << proj->viewMat << endl << vjDEBUG_FLUSH;
+                    << proj->mViewMat << endl << vjDEBUG_FLUSH;
 
    pfMatrix pfViewMat;
-   pfViewMat.set(proj->viewMat.getFloatPtr());      // Hmm...
+   pfViewMat.set(proj->mViewMat.getFloatPtr());      // Hmm...
 
       // Basically, Performer does a Rotate of 90 around X
       // first thing in modelview.  So, we have to undo that, put
@@ -480,19 +480,19 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
    if(!simulator)
    {
       chan->setAutoAspect(PFFRUST_CALC_NONE);         // No auto aspect
-      chan->setNearFar(proj->frustum[vjFrustum::VJ_NEAR], proj->frustum[vjFrustum::VJ_FAR]);
-      chan->makePersp(proj->frustum[vjFrustum::VJ_LEFT], proj->frustum[vjFrustum::VJ_RIGHT],
-                      proj->frustum[vjFrustum::VJ_BOTTOM], proj->frustum[vjFrustum::VJ_TOP]);
+      chan->setNearFar(proj->mFrustum[vjFrustum::VJ_NEAR], proj->mFrustum[vjFrustum::VJ_FAR]);
+      chan->makePersp(proj->mFrustum[vjFrustum::VJ_LEFT], proj->mFrustum[vjFrustum::VJ_RIGHT],
+                      proj->mFrustum[vjFrustum::VJ_BOTTOM], proj->mFrustum[vjFrustum::VJ_TOP]);
    } else {
       chan->setAutoAspect(PFFRUST_CALC_VERT);
-      chan->setNearFar(proj->frustum[vjFrustum::VJ_NEAR], proj->frustum[vjFrustum::VJ_FAR]);
+      chan->setNearFar(proj->mFrustum[vjFrustum::VJ_NEAR], proj->mFrustum[vjFrustum::VJ_FAR]);
       chan->setFOV(80.0f, 0.0f);
    }
 
-   vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->frustum[vjFrustum::VJ_LEFT]
-              << "   r: " << proj->frustum[vjFrustum::VJ_RIGHT]
-              << "   b: " << proj->frustum[vjFrustum::VJ_BOTTOM]
-              << "   t: " << proj->frustum[vjFrustum::VJ_TOP] << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[vjFrustum::VJ_LEFT]
+              << "   r: " << proj->mFrustum[vjFrustum::VJ_RIGHT]
+              << "   b: " << proj->mFrustum[vjFrustum::VJ_BOTTOM]
+              << "   t: " << proj->mFrustum[vjFrustum::VJ_TOP] << endl << vjDEBUG_FLUSH;
 
    vjDEBUG_END(vjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vjDEBUG_FLUSH;
 }

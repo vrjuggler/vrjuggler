@@ -189,7 +189,7 @@ protected:
    // correctly.
 
    // --- Config Data --- //
-   int numPipes;    // The number of Performer pipes
+   unsigned int numPipes;    // The number of Performer pipes
 
    // --- Performer State --- //
    vjPfApp*             app;        // There User applications
