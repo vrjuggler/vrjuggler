@@ -29,20 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 package VjConfig;
 
 import VjConfig.*;
 import java.lang.Cloneable;
 
-public final class VarValue {
+public final class VarValue
+{
   /* of course, this can't do any of the leet things the C++ varvalue
    * class does, because Sun would track us down and kill us for doing
    * things like that in Java ;)
    */
-
    private String       strval;
    private int         intval;
    private float        floatval;
@@ -51,23 +48,25 @@ public final class VarValue {
 
    private ValType      valtype;
 
-
-
-   public VarValue (VarValue v) {
+   public VarValue(VarValue v)
+   {
       valtype = v.valtype;
       strval = v.strval;
       intval = v.intval;
       floatval = v.floatval;
       boolval = v.boolval;
       if (v.embeddedchunkval == null)
+      {
          embeddedchunkval = null;
+      }
       else
-         embeddedchunkval = new ConfigChunk (v.embeddedchunkval);
+      {
+         embeddedchunkval = new ConfigChunk(v.embeddedchunkval);
+      }
    }
 
-
-
-   public VarValue (ValType t) {
+   public VarValue(ValType t)
+   {
       valtype = t;
       strval = "";
       intval = 0;
@@ -76,160 +75,216 @@ public final class VarValue {
       embeddedchunkval = null;
    }
 
-   public VarValue (int v) {
+   public VarValue(int v)
+   {
       valtype = ValType.INT;
       intval = v;
    }
 
-   public VarValue (float v) {
+   public VarValue(float v)
+   {
       valtype = ValType.FLOAT;
       floatval = v;
    }
 
-   public VarValue (boolean v) {
+   public VarValue(boolean v)
+   {
       valtype = ValType.BOOL;
       boolval = v;
    }
 
-   public VarValue (String v) {
+   public VarValue(String v)
+   {
       valtype = ValType.STRING;
       strval = v;
    }
 
-   public VarValue (ConfigChunk v) {
+   public VarValue(ConfigChunk v)
+   {
       valtype = ValType.EMBEDDEDCHUNK;
       embeddedchunkval = v;
    }
 
-
-
-   public boolean equals(VarValue v) {
+   public boolean equals(VarValue v)
+   {
       if (v == null)
+      {
          return false;
+      }
       if (valtype != v.valtype)
+      {
          return false;
+      }
       else if (valtype == ValType.INT)
+      {
          return (intval == v.intval);
+      }
       else if (valtype == ValType.FLOAT)
+      {
          return (floatval == v.floatval);
+      }
       else if (valtype == ValType.BOOL)
+      {
          return (boolval == v.boolval);
+      }
       else if (valtype == ValType.EMBEDDEDCHUNK)
-         return (embeddedchunkval.equals (v.embeddedchunkval));
+      {
+         return (embeddedchunkval.equals(v.embeddedchunkval));
+      }
       else if (valtype == ValType.STRING || valtype == ValType.CHUNK)
+      {
          return (strval.equals(v.strval));
+      }
       else
+      {
          return false;
+      }
    }
 
-
-
-   public String toString() {
+   public String toString()
+   {
       String s = null;
-      if (valtype == ValType.BOOL) {
+      if (valtype == ValType.BOOL)
+      {
          s = (boolval)?"True":"False";
       }
-      else if (valtype == ValType.STRING) {
+      else if (valtype == ValType.STRING)
+      {
          s = strval;
       }
-      else if (valtype == ValType.CHUNK) {
+      else if (valtype == ValType.CHUNK)
+      {
          s = strval;
       }
-      else if (valtype == ValType.INT) {
+      else if (valtype == ValType.INT)
+      {
          s = String.valueOf(intval);
       }
-      else if (valtype == ValType.FLOAT) {
+      else if (valtype == ValType.FLOAT)
+      {
          s = String.valueOf(floatval);
       }
-      else if (valtype == ValType.EMBEDDEDCHUNK) {
+      else if (valtype == ValType.EMBEDDEDCHUNK)
+      {
          s = embeddedchunkval.toString();
       }
       return s;
    }
    
-
-
-   public ValType getValType () {
+   public ValType getValType()
+   {
       return valtype;
    }
-
-
 
    /* I've decided life will be a lot easier if set is a bit smarter about
     * converting strings into different things
     */
-   public void set (String s) {
+   public void set(String s)
+   {
       try {
          if (valtype == ValType.STRING ||
-            valtype == ValType.CHUNK)
-              strval = s;
+             valtype == ValType.CHUNK)
+         {
+            strval = s;
+         }
          else if (valtype == ValType.BOOL)
-              boolval = s.equalsIgnoreCase("true")? true:false;
+         {
+            boolval = s.equalsIgnoreCase("true") ? true : false;
+         }
          else if (valtype == ValType.INT)
-              intval = Integer.parseInt(s);
+         {
+            intval = Integer.parseInt(s);
+         }
          else if (valtype == ValType.FLOAT)
+         {
             floatval = Float.parseFloat(s);
-         else if (valtype == ValType.EMBEDDEDCHUNK) {
-              embeddedchunkval = null;
-              throw (new VarValueException ("Error assigning string to " +
-                                            "embeddedchunk VarValue"));
+         }
+         else if (valtype == ValType.EMBEDDEDCHUNK)
+         {
+            embeddedchunkval = null;
+            throw new VarValueException("Error assigning string to " +
+                                        "embeddedchunk VarValue");
          }
       }
-      catch (NumberFormatException e) {
+      catch (NumberFormatException e)
+      {
          /* just so it's defined: if an error occurred, we set the numeric
           * values to 0
           */
          intval = 0;
          floatval = 0.0f;
          if (s.equals (""))
+         {
             return;
-         throw (new VarValueException ("Error assigning '" + s 
-                                       + "' to VarValue"));
+         }
+         throw new VarValueException("Error assigning '" + s 
+                                     + "' to VarValue");
       }
    }
 
-
-
-   public void set (boolean s) {
+   public void set(boolean s)
+   {
       if (valtype == ValType.BOOL)
+      {
          boolval = s;
+      }
       else
-         throw (new VarValueException ("Error assigning to Boolean VarValue"));
+      {
+         throw new VarValueException("Error assigning to Boolean VarValue");
+      }
    }
 
-
-   public void set (int s) {
+   public void set(int s)
+   {
       if (valtype == ValType.INT)
+      {
          intval = s;
+      }
       else if (valtype == ValType.FLOAT)
+      {
          floatval = (float)s;
+      }
       else if (valtype == ValType.BOOL)
-         boolval = (s==0)?false:true;
+      {
+         boolval = (s==0) ? false : true;
+      }
       else
-         throw (new VarValueException ("Error assigning to Integer VarValue"));
+      {
+         throw new VarValueException("Error assigning to Integer VarValue");
+      }
    }
 
-
-   public void set (float s) {
+   public void set(float s)
+   {
       if (valtype == ValType.FLOAT)
+      {
          floatval = s;
+      }
       else
-         throw (new VarValueException ("Error assigning to Float VarValue"));
+      {
+         throw new VarValueException("Error assigning to Float VarValue");
+      }
    }
 
-
-   public void set (ConfigChunk ch) {
+   public void set(ConfigChunk ch)
+   {
       if (valtype == ValType.EMBEDDEDCHUNK)
+      {
          embeddedchunkval = ch;
+      }
       else
-         throw (new VarValueException ("Error assigning to EmbeddedChunk VarValue"));
+      {
+         throw new VarValueException("Error assigning to EmbeddedChunk VarValue");
+      }
    }
 
-
-   public void set (VarValue s) {
+   public void set(VarValue s)
+   {
       /* so we can copy one varvalue into another */
       if (valtype != s.getValType())
-         throw (new VarValueException ("Incompatible types assigning one VarValue to another."));
+      {
+         throw new VarValueException("Incompatible types assigning one VarValue to another.");
+      }
       boolval = s.boolval;
       intval = s.intval;
       floatval = s.floatval;
@@ -237,70 +292,102 @@ public final class VarValue {
       embeddedchunkval = s.embeddedchunkval;
    }
 
-
-   public int getInt() {
+   public int getInt()
+   {
       if (valtype == ValType.INT)
+      {
          return intval;
+      }
       if (valtype == ValType.FLOAT)
+      {
          return (int)floatval;
+      }
       if (valtype == ValType.BOOL)
-         return boolval?1:0;
-      throw (new VarValueException ("Error in getInt()"));
+      {
+         return boolval? 1 : 0;
+      }
+      throw new VarValueException("Error in getInt()");
    }
 
-
-   public float getFloat() {
+   public float getFloat()
+   {
       if (valtype == ValType.FLOAT)
+      {
          return floatval;
+      }
       if (valtype == ValType.INT)
+      {
          return (float)intval;
-      throw (new VarValueException ("Error in getFloat()"));
+      }
+      throw new VarValueException("Error in getFloat()");
    }
 
-
-
-   public boolean getBoolean() {
+   public boolean getBoolean()
+   {
       if (valtype == ValType.BOOL)
+      {
          return boolval;
+      }
       else
-         throw (new VarValueException ("Error in getBool()"));
+      {
+         throw new VarValueException("Error in getBool()");
+      }
    }
 
-
-   public String getString() {
+   public String getString()
+   {
       if (valtype == ValType.STRING ||
-         valtype == ValType.CHUNK)
+          valtype == ValType.CHUNK)
+      {
          return strval;
+      }
       else
-         throw (new VarValueException ("Error in getInt()"));
+      {
+         throw new VarValueException("Error in getInt()");
+      }
    }
 
-
-   public ConfigChunk getEmbeddedChunk() {
+   public ConfigChunk getEmbeddedChunk()
+   {
       if (valtype == ValType.EMBEDDEDCHUNK)
+      {
          return embeddedchunkval;
+      }
       else
-         throw (new VarValueException ("Error in getEmbeddedChunk()"));
+      {
+         throw new VarValueException("Error in getEmbeddedChunk()");
+      }
    }
 
-
-   public Object get() {
+   public Object get()
+   {
       if (valtype == ValType.STRING)
+      {
          return strval;
+      }
       else if (valtype == ValType.CHUNK)
+      {
          return strval;
+      }
       else if (valtype == ValType.INT)
+      {
          return new Integer(intval);
+      }
       else if (valtype == ValType.FLOAT)
+      {
          return new Float(floatval);
+      }
       else if (valtype == ValType.BOOL)
+      {
          return new Boolean(boolval);
+      }
       else if (valtype == ValType.EMBEDDEDCHUNK)
+      {
          return embeddedchunkval;
+      }
       else
-         throw (new VarValueException ("Error in get()"));
+      {
+         throw new VarValueException("Error in get()");
+      }
    }
-
-
 }
-
