@@ -44,7 +44,7 @@ include @topdir@/make.defs.mk
 
 DRIVER_NAME=	IntersenseAPI
 
-srcdir=		@srcdir@/../../../gadget/Devices/Intersense/IntersenseAPI
+srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	

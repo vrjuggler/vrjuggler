@@ -50,7 +50,7 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
-#include <gadget/Devices/Intersense/IntersenseAPI/IntersenseAPI.h>
+#include <drivers/Intersense/IntersenseAPI/IntersenseAPI.h>
 
 
 extern "C"

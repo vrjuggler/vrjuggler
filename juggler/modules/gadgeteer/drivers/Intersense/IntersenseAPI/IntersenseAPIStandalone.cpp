@@ -33,7 +33,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctype.h>
-#include <gadget/Devices/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
+#include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
 
 bool IntersenseAPIStandalone::open(const std::string& dso_location)
 {
