@@ -92,6 +92,14 @@ public:
    {
       vprASSERT(false && "Implement me");
    }
+
+   /**
+    * Returns the local host's address.
+    */
+   static vpr::ReturnStatus getLocalHost (vpr::InterAddr& host_addr)
+   {
+      vprASSERT(false && "Implement me");
+   }
 #endif
 
    /**
