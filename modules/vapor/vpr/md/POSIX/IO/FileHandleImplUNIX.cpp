@@ -405,6 +405,10 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i (void* buffer,
          bytes_read = bytes;
       }
    }
+   else
+   {
+      bytes_read = 0;
+   }
 
    return status;
 }
