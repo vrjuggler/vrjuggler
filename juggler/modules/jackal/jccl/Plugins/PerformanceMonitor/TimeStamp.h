@@ -39,6 +39,8 @@
 #define _JCCL_TIMESTAMP_
 
 #include <jccl/jcclConfig.h>
+#include <vpr/Util/Singleton.h>
+
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 
@@ -62,6 +64,23 @@ typedef class TimeStampNone TimeStamp;
 }
 
 #endif
+
+
+namespace jccl {
+
+    class TimeStampInitializer {
+
+    public:
+        TimeStampInitializer () {
+            TimeStamp::initialize();
+        }
+
+vprSingletonHeader(TimeStampInitializer);
+
+    };
+
+};
+
 
 
 #endif
