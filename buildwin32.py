@@ -82,11 +82,13 @@ def guessBoostToolset(reattempt = False):
       cl_minor = int(ver_string_match.group(3))
 
       if cl_major == 13 and cl_minor < 10:
-         print "It appears that we will be using Visual Studio .NET 2002"
+         vs_ver = '.NET 2002'
          boost_tool_guess = 'vc7'
       else:
-         print "It appears that we will be using Visual Studio .NET 2003"
+         vs_ver = '.NET 2003'
          boost_tool_guess = 'vc71'
+
+      printStatus("It appears that we will be using Visual Studio " + vs_ver)
    else:
       boost_tool_guess = ''
 
@@ -108,8 +110,8 @@ def guessBoostToolset(reattempt = False):
 
          for d in vs_dirs:
             if os.path.exists(d):
-               print "NOTE: Using Visual Studio installation in"
-               print "      " + d
+               printStatus("NOTE: Using Visual Studio installation in")
+               printStatus("      " + d)
                vs_path = [os.path.join(d, r'Common7\IDE'),
                           os.path.join(d, r'VC7\BIN'),
                           os.path.join(d, r'Common7\Tools'),
@@ -131,6 +133,14 @@ def guessBoostToolset(reattempt = False):
          noVisualStudioError()
 
    return boost_tool_guess
+
+def printStatus(msg):
+   '''
+   This is a simple wrapper around the standard Python print function.
+   We will use a wrapper function for key status messages so that they
+   can be redirected either to the console or to a GUI easily.
+   '''
+   print msg
 
 def noVisualStudioError():
    print "ERROR: Visual Studio commands are not in your path!"
@@ -382,14 +392,14 @@ def generateVersionHeaders():
                elif self.verstr_re.search(line):
                   input_lines[i] = self.verstr_re.sub(version_string, line)
 
-            print "Generating updated", self.header
+            printStatus("Generating updated " + self.header)
             param_header = open(self.header, 'w')
             param_header.writelines(input_lines)
             param_header.close()
          except IOError, ex:
-            print "ERROR: Could not read from %s" % self.header_template
-            print ex
-            print "Cannot continue; exiting with error status."
+            printStatus("ERROR: Could not read from %s" % self.header_template)
+            printStatus(ex)
+            printStatus("Cannot continue; exiting with error status.")
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
@@ -419,7 +429,7 @@ def generateAntBuildFiles():
          if not os.path.exists(self.module_name):
             os.mkdir(self.module_name)
          elif not os.path.isdir(self.module_name):
-            print "ERROR: %s exists, but it is not a directory!" % self.module_name
+            printStatus("ERROR: %s exists, but it is not a directory!" % self.module_name)
             sys.exit(EXIT_STATUS_INVALID_PATH)
 
       # This form of regular expressions appears to be necessary because
@@ -661,13 +671,13 @@ def installLibs(srcRoot, destdir,
 
 def installExternal(prefix):
    # Install Doozer (even though it probably won't be used).
-   print "Installing Doozer ..."
+   printStatus("Installing Doozer ...")
    destdir = os.path.join(prefix, 'share', 'Doozer')
    srcdir  = os.path.join(gJugglerDir, 'external', 'Doozer')
    installDir(srcdir, destdir, ['.mk'])
 
 def installVPR(prefix):
-   print "Installing VPR headers and libraries ..."
+   printStatus("Installing VPR headers and libraries ...")
 
    destdir = os.path.join(prefix, 'include', 'vpr')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'vpr')
@@ -692,7 +702,7 @@ def installVPR(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installTweek(prefix):
-   print "Installing Tweek C++ headers, libraries, and data files ..."
+   printStatus("Installing Tweek C++ headers, libraries, and data files ...")
 
    destdir = os.path.join(prefix, 'include', 'tweek')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'tweek')
@@ -724,7 +734,7 @@ def installTweekJava(prefix):
    srcdir = os.path.join(gJugglerDir, 'vc7', 'Tweek_Java')
 
    if os.path.exists(os.path.join(srcdir, 'Tweek.jar')):
-      print "Installing Tweek Java libraries and data files ..."
+      printStatus("Installing Tweek Java libraries and data files ...")
 
       jars = [
          'Tweek.jar',
@@ -796,10 +806,10 @@ def installTweekJava(prefix):
       for j in laf_jars:
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
-      print "Tweek Java API not built.  Skipping."
+      printStatus("Tweek Java API not built.  Skipping.")
 
 def installJCCL(prefix):
-   print "Installing JCCL C++ headers, libraries, and tools ..."
+   printStatus("Installing JCCL C++ headers, libraries, and tools ...")
 
    destdir = os.path.join(prefix, 'include', 'jccl')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'common', 'jccl')
@@ -838,7 +848,7 @@ def installJCCL(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installJCCLPlugins(prefix):
-   print "Installing JCCL C++ plug-ins ..."
+   printStatus("Installing JCCL C++ plug-ins ...")
 
    destdir = os.path.join(prefix, 'lib', 'jccl', 'plugins')
    srcroot = os.path.join(gJugglerDir, 'vc7', 'JCCL', 'RTRC_Plugin_CXX')
@@ -848,7 +858,7 @@ def installJCCLJava(prefix):
    srcdir = os.path.join(gJugglerDir, 'vc7', 'JCCL_Java')
 
    if os.path.exists(os.path.join(srcdir, 'jccl_config.jar')):
-      print "Installing JCCL Java libraries and data files ..."
+      printStatus("Installing JCCL Java libraries and data files ...")
 
       destdir = os.path.join(prefix, 'bin', 'beans')
 
@@ -858,13 +868,13 @@ def installJCCLJava(prefix):
       srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'config')
       shutil.copy2(os.path.join(srcdir, 'jccl_config.xml'), destdir)
    else:
-      print "JCCL Java API not built.  Skipping."
+      printStatus("JCCL Java API not built.  Skipping.")
 
 def installJCCLPluginsJava(prefix):
    srcdir = os.path.join(gJugglerDir, 'vc7', 'JCCL_Java', 'RTRC_Plugin_Java')
 
    if os.path.exists(os.path.join(srcdir, 'jccl_rtrc.jar')):
-      print "Installing JCCL Java plug-ins ..."
+      printStatus("Installing JCCL Java plug-ins ...")
 
       destdir = os.path.join(prefix, 'bin', 'beans')
       shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
@@ -873,10 +883,10 @@ def installJCCLPluginsJava(prefix):
                             'corba_rtrc')
       shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.xml'), destdir)
    else:
-      print "JCCL Java plug-ins not built.  Skipping."
+      printStatus("JCCL Java plug-ins not built.  Skipping.")
 
 def installSonix(prefix):
-   print "Installing Sonix headers, libraries, and samples ..."
+   printStatus("Installing Sonix headers, libraries, and samples ...")
 
    destdir = os.path.join(prefix, 'include', 'snx')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'snx')
@@ -905,7 +915,7 @@ def installSonix(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installSonixPlugins(prefix):
-   print "Installing Sonix plug-ins ..."
+   printStatus("Installing Sonix plug-ins ...")
 
    destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbg')
    destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
@@ -919,7 +929,7 @@ def installSonixPlugins(prefix):
    installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
 
 def installGadgeteer(prefix):
-   print "Installing Gadgeteer headers, libraries, and samples ..."
+   printStatus("Installing Gadgeteer headers, libraries, and samples ...")
 
    destdir = os.path.join(prefix, 'include', 'gadget')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'gadget')
@@ -960,7 +970,7 @@ def installGadgeteer(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installGadgeteerDrivers(prefix):
-   print "Installing Gadgeteer device drivers ..."
+   printStatus("Installing Gadgeteer device drivers ...")
 
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
    srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
@@ -974,7 +984,7 @@ def installGadgeteerDrivers(prefix):
       installLibs(srcdir, destdir, extensions = ['.dll'])
 
 def installGadgeteerPlugins(prefix):
-   print "Installing Gadgeteer cluster plug-ins ..."
+   printStatus("Installing Gadgeteer cluster plug-ins ...")
 
    destdir = os.path.join(prefix, 'include', 'plugins',
                           'ApplicationDataManager')
@@ -993,7 +1003,7 @@ def installGadgeteerPlugins(prefix):
       installLibs(srcdir, destdir, extensions = ['.dll'])
 
 def installVRJuggler(prefix):
-   print "Installing VR Juggler headers, libraries, and samples ..."
+   printStatus("Installing VR Juggler headers, libraries, and samples ...")
 
    destdir = os.path.join(prefix, 'include', 'vrj')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'vrj')
@@ -1041,7 +1051,7 @@ def installVRJConfig(prefix):
    jardir = os.path.join(gJugglerDir, 'vc7', 'VRJConfig')
 
    if os.path.exists(os.path.join(jardir, 'VRJConfig.jar')):
-      print "Installing VRJConfig ..."
+      printStatus("Installing VRJConfig ...")
 
       # XXX: Enumerating these JAR files is really a pain.  These lists should
       # be constructed using a glob.
@@ -1116,10 +1126,10 @@ def installVRJConfig(prefix):
       for j in dep_jars:
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
-      print "VRJConfig not built.  Skipping."
+      printStatus("VRJConfig not built.  Skipping.")
 
 def installVRJugglerPlugins(prefix):
-   print "Installing VR Juggler C++ plug-ins ..."
+   printStatus("Installing VR Juggler C++ plug-ins ...")
 
    destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'plugins')
    srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJugglerPlugins',
@@ -1136,7 +1146,7 @@ def installVRJugglerPluginsJava(prefix):
       name = p[0]
       dir  = p[1]
       if os.path.exists(os.path.join(srcdir, name + '.jar')):
-         print "Installing VR Juggler Java plug-ins ..."
+         printStatus("Installing VR Juggler Java plug-ins ...")
 
          destdir = os.path.join(prefix, 'bin', 'beans')
          shutil.copy2(os.path.join(srcdir, name + '.jar'), destdir)
@@ -1145,7 +1155,7 @@ def installVRJugglerPluginsJava(prefix):
                                dir)
          shutil.copy2(os.path.join(srcdir, name + '.xml'), destdir)
       else:
-         print "VR Juggler %s Java plug-ins not built.  Skipping." % name
+         printStatus("VR Juggler %s Java plug-ins not built.  Skipping." % name)
 
    # Install JFreeChart.
    destdir = os.path.join(prefix, 'bin')
@@ -1153,7 +1163,7 @@ def installVRJugglerPluginsJava(prefix):
    installDir(srcdir, destdir, ['.jar'])
 
 def installMsvcRT(prefix):
-   print "Installing MSVC runtime DLLs"
+   printStatus("Installing MSVC runtime DLLs")
 
    try:
       srcroot = os.environ['SystemRoot']
@@ -1166,7 +1176,7 @@ def installMsvcRT(prefix):
       for d in dlls:
          shutil.copy2(d, destdir)
    except KeyError, ex:
-      print "WARNING: Could not install MSVC runtime DLLs"
+      printStatus("WARNING: Could not install MSVC runtime DLLs")
       print ex
 
 def doDependencyInstall(prefix):
@@ -1183,7 +1193,7 @@ def simpleInstall(name, root, prefix, optional = False):
    if optional and root == '':
       return
 
-   print "Installing", name
+   printStatus("Installing " + name)
 
    # Install all header files.
    srcdir = os.path.join(root, 'include')
@@ -1215,7 +1225,7 @@ def installCppDOM(prefix):
                  prefix)
 
 def installBoost(prefix):
-   print "Installing Boost headers and libraries"
+   printStatus("Installing Boost headers and libraries")
 
    srcroot = os.environ['BOOST_ROOT']
 
@@ -1241,7 +1251,7 @@ def installAudiere(prefix):
                  os.getenv('AUDIERE_ROOT', ''), prefix, True)
 
 def installOpenAL(prefix):
-   print "Installing OpenAL DLL"
+   printStatus("Installing OpenAL DLL")
    srcdir  = os.environ['OPENAL_ROOT']
    if srcdir != "":
        destdir = os.path.join(prefix, 'bin')
@@ -1307,6 +1317,12 @@ class GuiFrontEnd:
       self.mRoot.protocol("WM_DELETE_WINDOW", self.cleanup)
       self.mRoot.bind("<Destroy>", lambda e: self.cleanup)
 
+      self.createUI()
+
+      # Replace the console version of printStatus() with our own version.
+      global printStatus
+      printStatus = self.printMessage
+
       required, optional, options = getDefaultVars()
       self.mOptions = {}
 
@@ -1315,6 +1331,7 @@ class GuiFrontEnd:
          self.mOptions[k] = self.__str2TkinterStrVar(options[k])
 
       self.makeOptionsInterface(required, optional)
+      self.update()
 
    def __str2TkinterStrVar(self, inputStr):
       temp = Tkinter.StringVar()
@@ -1330,14 +1347,14 @@ class GuiFrontEnd:
 
    def printMessage(self, msg):
       self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, msg, "a")
+      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, msg + "\n", "a")
       self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
 
    def cleanup(self):
       self.__writeCacheFile()
       self.mRoot.destroy()
 
-   def makeOptionsInterface(self, required, optional):
+   def createUI(self):
       # Set up the frames.
       pad_amount = 10
 
@@ -1410,6 +1427,34 @@ class GuiFrontEnd:
                                                           sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W)
       self.mRoot.SettingsFrame.OptionalSettingsFrame.SettingsRows = {}
 
+      #OutputFrame Innards
+      self.mRoot.OutputFrame.MessageText = Tkinter.Text(self.mRoot.OutputFrame,
+                                                        height = 20,
+                                                        width = 100,
+                                                        state = 'disabled')
+      self.mRoot.OutputFrame.MessageText.grid(row = 0, column = 0)
+      self.mRoot.OutputFrame.MessageText.tag_config("a", foreground = "blue")
+
+      self.mRoot.OutputFrame.MessageText.ScrollBar = \
+         Tkinter.Scrollbar(self.mRoot.OutputFrame)
+      self.mRoot.OutputFrame.MessageText.ScrollBar.grid(row = 0, column = 1,
+                                                        sticky = Tkinter.W + Tkinter.N + Tkinter.S)
+
+      self.mRoot.OutputFrame.MessageText.config(yscrollcommand = self.mRoot.OutputFrame.MessageText.ScrollBar.set)
+      self.mRoot.OutputFrame.MessageText.ScrollBar.config(command = self.mRoot.OutputFrame.MessageText.yview)
+
+      #StatusFrame Innards
+      self.mRoot.StatusFrame.Label = Tkinter.Label(self.mRoot.StatusFrame,
+                                                   text = "Status: ")
+      self.mRoot.StatusFrame.Label.grid(row=0, column=0, rowspan=2)#, sticky="W")
+      self.mRoot.StatusFrame.StatusLabel = Tkinter.Label(self.mRoot.StatusFrame,
+                                                         text = "Test",
+                                                         anchor = Tkinter.W)
+      self.mRoot.StatusFrame.StatusLabel.grid(row = 0, column = 1,
+                                              sticky = Tkinter.EW)
+      self.mRoot.StatusFrame.columnconfigure(1, weight = 1)
+
+   def makeOptionsInterface(self, required, optional):
       # RequiredSettingsFrame
       next_row = 0
       self.mRoot.SettingsFrame.RequiredSettingsFrame.Label = \
@@ -1423,7 +1468,7 @@ class GuiFrontEnd:
       self.mRoot.SettingsFrame.RequiredSettingsFrame.columnconfigure(0, weight = 1)
       next_row = next_row + 1
       self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "Instalation Prefix:", 'prefix', next_row)
+                        "Installation Prefix:", 'prefix', next_row)
       next_row = next_row + 1
 
       for opt in required:
@@ -1446,7 +1491,7 @@ class GuiFrontEnd:
       next_row = next_row + 1
 
       self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "Dependency instalation prefix:", 'deps-prefix',
+                        "Dependency installation prefix:", 'deps-prefix',
                         next_row, False)
       next_row = next_row + 1
 
@@ -1510,35 +1555,6 @@ class GuiFrontEnd:
                                                       sticky = Tkinter.EW,
                                                       pady = 4)
       next_row = next_row + 1
-
-      #OutputFrame Innards
-      self.mRoot.OutputFrame.MessageText = Tkinter.Text(self.mRoot.OutputFrame,
-                                                        height = 20,
-                                                        width = 100,
-                                                        state = 'disabled')
-      self.mRoot.OutputFrame.MessageText.grid(row = 0, column = 0)
-      self.mRoot.OutputFrame.MessageText.tag_config("a", foreground = "blue")
-
-      self.mRoot.OutputFrame.MessageText.ScrollBar = \
-         Tkinter.Scrollbar(self.mRoot.OutputFrame)
-      self.mRoot.OutputFrame.MessageText.ScrollBar.grid(row = 0, column = 1,
-                                                        sticky = Tkinter.W + Tkinter.N + Tkinter.S)
-
-      self.mRoot.OutputFrame.MessageText.config(yscrollcommand = self.mRoot.OutputFrame.MessageText.ScrollBar.set)
-      self.mRoot.OutputFrame.MessageText.ScrollBar.config(command = self.mRoot.OutputFrame.MessageText.yview)
-
-      #StatusFrame Innards
-      self.mRoot.StatusFrame.Label = Tkinter.Label(self.mRoot.StatusFrame,
-                                                   text = "Status: ")
-      self.mRoot.StatusFrame.Label.grid(row=0, column=0, rowspan=2)#, sticky="W")
-      self.mRoot.StatusFrame.StatusLabel = Tkinter.Label(self.mRoot.StatusFrame,
-                                                         text = "Test",
-                                                         anchor = Tkinter.W)
-      self.mRoot.StatusFrame.StatusLabel.grid(row = 0, column = 1,
-                                              sticky = Tkinter.EW)
-      self.mRoot.StatusFrame.columnconfigure(1, weight = 1)
-
-      self.update()
 
    def update(self):
          self.updateRequiredOptions()
@@ -1679,21 +1695,21 @@ class GuiFrontEnd:
       print self.mRoot.CommandFrame.InstallJugglerDepsCheck['state']
 
       if self.mRoot.CommandFrame.InstallJugglerCheck.Variable.get() == "Yes":
-         self.printMessage("Installing Juggler...\n")
+         self.printMessage("Installing Juggler...")
          doInstall(self.mOptions['prefix'].get())
 
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
-         self.printMessage("Installing Juggler Dependencies...\n")
+         self.printMessage("Installing Juggler Dependencies...")
          doDependencyInstall(self.mOptions['deps-prefix'].get())
 
-      self.printMessage("Build and Installation Finished.\n")
+      self.printMessage("Build and Installation Finished.")
       self.updateCommandFrame()
 
    def runVisualStudio(self):
       #print "generateVersionHeaders()"
-      self.printMessage("Generating Version Headers.\n")
+      self.printMessage("Generating Version Headers.")
       generateVersionHeaders()
-      self.printMessage("Generating Ant Build Files.\n")
+      self.printMessage("Generating Ant Build Files.")
       generateAntBuildFiles()
 
       devenv_cmd = getVSCmd()
@@ -1725,7 +1741,7 @@ class GuiFrontEnd:
       else:
          cmd = devenv_cmd_no_exe + ' ' + solution_file
          try:
-            self.printMessage("Visual Studio has been opened.  Build the Solution and then exit Visual Studio to continue the Instalation\n")
+            self.printMessage("Visual Studio has been opened.  Build the Solution and then exit Visual Studio to continue the Installation.")
             status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
          except OSError, osEx:
             print "Could not execute %s: %s" % (cmd, osEx)
