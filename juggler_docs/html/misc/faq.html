@@ -380,15 +380,17 @@ F.A.Q.</H2>
 	an overview:
 
 	<BLOCKQUOTE>
-	  In a VR Juggler vjApp class, there are 5 functions which you'll
-	  find immediately important: one for initialization, one for
-	  drawing (OpenGL only), and two for computation (I usually use
-	  only one of these).
+	  <P>
+	    In a VR Juggler vjApp class, there are 5 functions which you'll
+	    find immediately important: one for initialization, one for
+	    drawing (OpenGL only), and two for computation (I usually use
+	    only one of these).
+	  </P>
 
 	  <P>
-
-	  The two initializationfunctions are called once on execution of
-	  the application:
+	    The two initializationfunctions are called once on execution of
+	    the application:
+	  </P>
 
 	  <OL>
 	    <LI>
@@ -400,7 +402,9 @@ F.A.Q.</H2>
 	    </LI>
 	  </OL>
 
-	  The other three are called repeatedly in this order:
+	  <P>
+	    The other three are called repeatedly in this order:
+	  </P>
 
 	  <OL>
 	    <LI>
@@ -414,8 +418,10 @@ F.A.Q.</H2>
 	    </LI>
 	  </OL>
 
-	  These are the conceptual steps your application will take and
-	  should thus influence the structure of your application:
+	  <P>
+	    These are the conceptual steps your application will take and
+	    should thus influence the structure of your application:
+	  </P>
 
 	  <OL>
 	    <LI>
@@ -441,9 +447,11 @@ F.A.Q.</H2>
 	    </LI>
 	  </OL>
 
-	  Note that <TT>draw()</TT> is threaded, so may be called during
-	  <TT>preFrame()</TT> or during <TT>postFrame()</TT>.
-	  <TT>contextInit()</TT> is similar.
+	  <P>
+	    Note that <TT>draw()</TT> is threaded, so may be called during
+	    <TT>preFrame()</TT> or during <TT>postFrame()</TT>.
+	    <TT>contextInit()</TT> is similar.
+	  </P>
 	</BLOCKQUOTE>
 
 	<P> </P>
