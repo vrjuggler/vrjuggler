@@ -39,6 +39,8 @@
 #include <string>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 
 #include <tweek/Util/Debug.h>
 #include <tweek/CORBA/CorbaHelpers.h>
