@@ -182,7 +182,7 @@ public:
     *
     * @return A constant pointer to this object's sigset_t variable.
     */
-   const sigset_t* const getMask (void) const
+   const sigset_t* getMask() const
    {
       return &mSigSet;
    }
