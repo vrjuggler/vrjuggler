@@ -186,8 +186,17 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	// sets the displayed value.
 	ValType tp = v.getValType();
 
-	if (choice != null)
+	if (desc.valtype.equals(ValType.t_chunk)) {
+            // this is kludgey
+            String s = v.toString();
+            choice.addItem (s);
+            choice.setSelectedItem(s);
+        }
+	else 
+        if (choice != null) {
+            System.out.println ("setting value to " + desc.getEnumString(v));
 	    choice.setSelectedItem(desc.getEnumString(v));
+        }
 	else
 	    /* set text in textbox */
 	    text.setText(v.toString());
