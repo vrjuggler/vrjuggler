@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/beanlist.xsd">
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <service name="ChunkPanelFactory">
       <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_editors.jar"
             class="org.vrjuggler.jccl.editors.ChunkPanelFactoryService"/>
-<!--
-      <dependency bean="Config"/>
--->
-      <dependency file="jccl_config.jar" path="${TWEEK_BASE_DIR}/bin"/>
+      <dependencies>
+         <bean>Config</bean>
+      </dependencies>
    </service>
 </beanlist>
