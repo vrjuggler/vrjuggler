@@ -237,9 +237,15 @@ bool vjGlWinWin32::setPixelFormat(HDC hDC)
 	/* Defaults. */
 	pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
 
-        if ( mDisplay->inStereo() ) {
-            pfd.dwFlags |= PFD_STEREO;
-        }
+   if ( mDisplay->inStereo()) 
+   {
+      in_stereo = true;
+     pfd.dwFlags |= PFD_STEREO;
+   }
+   else
+   {
+      in_stereo = false;
+   }
 
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
