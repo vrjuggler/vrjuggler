@@ -149,13 +149,7 @@ sub recurseAction {
 
 	my $infile = "Makefile.in";
 
-	my $workfile;
-
-	if ( $Win32 ) {
-	    $workfile = "C:/temp/Makefile.in";
-	} else {
-	    $workfile = "/tmp/Makefile.in";
-	}
+	my $workfile = "working.in-$$";
 
 	# Make a working copy of the input file to be safe.
 	copy("$infile", "$workfile") unless "$infile" eq "$workfile";
