@@ -41,9 +41,11 @@
 #include <strings.h>
 #include <assert.h>
 #include <time.h>
+#include <netdb.h>
+
 #include <Input/vjPosition/aMotionStar.h>
 
-aMotionStar::aMotionStar(char* _ipAddress,
+aMotionStar::aMotionStar(char* _address,
 			 int _hemisphere,
 			 unsigned int _birdFormat,
 			 unsigned int _birdsRequired,
@@ -58,8 +60,10 @@ aMotionStar::aMotionStar(char* _ipAddress,
 				birdRate(_birdRate),
 				reportRate(_reportRate)
 {
-  if ( _ipAddress != NULL ) {
-    strncpy(ipAddress, _ipAddress, sizeof(ipAddress));
+  if ( _address != NULL ) {
+    address = strdup(_address);
+  } else {
+    address = NULL;
   }
 } // end aMotionStar::aMotionStar()
 
@@ -69,10 +73,17 @@ aMotionStar::~aMotionStar() {
 
   this->stop();
 
+  if ( address != NULL ) {
+    free(address);
+    address = NULL;
+  }
+
 } // end aMotionStar::~aMotionStar()
 
 
 void aMotionStar::start () {
+
+  struct hostent* host_ent;
 
   cout << "In start" << endl;
   assert(!active);
@@ -133,7 +144,24 @@ void aMotionStar::start () {
   bzero((char *)&server, sizeof(server));
   server.sin_family=AF_INET;
   server.sin_port=htons(TCP_PORT);                              /* Server port number */
-  server.sin_addr.s_addr=inet_addr(ipAddress);         /* Server address */
+
+printf("Looking up %s\n", address);
+
+  // Try to look up address by name.  This will work for an IP address too,
+  // but we fall back on inet_addr(3) below just to be safe.
+  host_ent = gethostbyname(address);
+
+  // If host_ent is non-NULL, we found an IP address for the hostname in
+  // address.  Move that address into the server struct.
+  if ( host_ent != NULL ) {
+    memmove((void*) &server.sin_addr.s_addr, (void*) host_ent->h_addr,
+            sizeof(server.sin_addr.s_addr));
+  }
+  // Otherwise, assume that the value in address is already an IP address
+  // and use inet_addr(3) on it.
+  else {
+    server.sin_addr.s_addr = inet_addr(address);
+  }
 
   cout << "connecting..." << endl;
   rtn = connect(s, (struct sockaddr *) &server, sizeof(server));
@@ -696,7 +724,13 @@ void aMotionStar::setNumBirds (unsigned int n) { birdsRequired = n; }
 void aMotionStar::setBirdRate (double n) { birdRate = n; }
 void aMotionStar::setRunMode ( int n ) { runMode = n; }
 void aMotionStar::setReportRate (unsigned char n) { reportRate = n; }
-void aMotionStar::setIpAddress (const char* n) { strcpy(ipAddress, n); }
+
+void
+aMotionStar::setAddress (const char* n) {
+  if ( n != NULL ) {
+    address = strdup(n);
+  }
+}
 
 float aMotionStar::xPos( int i) {return posinfo[i][0];}
 float aMotionStar::yPos( int i) {return posinfo[i][1];}

@@ -91,9 +91,9 @@ bool vjMotionStar::config(vjConfigChunk *c)
    mMotionStar.setNumBirds((unsigned int)(static_cast<int> (c->getProperty("num"))));
    mMotionStar.setBirdRate((double)(static_cast<int>(c->getProperty("brate"))));
    mMotionStar.setRunMode((static_cast<int> (c->getProperty("mode"))));
-   mMotionStar.setIpAddress(static_cast<std::string>(c->getProperty("ipaddress")).c_str());
-//   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) );
-
+   mMotionStar.setAddress(static_cast<std::string>(c->getProperty("ipaddress")).c_str());
+//   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) ); 
+ 
 /*
    // output what was read.
    vjDEBUG(vjDBG_INPUT_MGR,1) << "        Flock Settings: " << endl
@@ -363,12 +363,12 @@ void vjMotionStar::setReportRate (unsigned char ch)
     mMotionStar.setReportRate ( ch );
 }
 
-void vjMotionStar::setIpAddress (const char* n)
+void vjMotionStar::setAddress (const char* n)    
 {
     if (this->isActive())
     {
       vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change ip address while active\n" << vjDEBUG_FLUSH;
       return;
     }
-    mMotionStar.setIpAddress ( n );
+    mMotionStar.setAddress ( n );
 }
