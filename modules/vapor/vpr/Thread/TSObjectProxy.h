@@ -119,21 +119,35 @@ public:
       return *getSpecific();
    }
 
+   /** Return the thread specific object pointer for the given thread.
+    * NOTE: This should only be used by expert users.  It can cause
+    *        MAJOR synchronization issues and even data corruption.
+    */
+   T* getObjPtrForThread(vpr::BaseThread* thread)
+   {
+      return getSpecific(thread);
+   }
+
+
 private:
    /** Get the correct version for current thread.
+    * @param reqThread - Request for this specific thread.
     * - Find the correct table<br>
     * - Make sure that object exists locally<br>
     * - Get the obj pointer<br>
     * - Attempts a dynamic cast<br>
     */
-   T* getSpecific()
+   T* getSpecific(vpr::BaseThread* reqThread=NULL)
    {
       TSTable* table(NULL);
 
       // --- GET TS TABLE --- //
       // - If have self, get mine.  Otherwise use global one
-      vpr::BaseThread* thread_self(NULL);
-      thread_self = Thread::self();
+      vpr::BaseThread* thread_self(reqThread);
+      if(NULL == thread_self)       // If didn't request specific thread, then get for current thread
+      {
+         thread_self = Thread::self();
+      }
 
       if(NULL != thread_self)
       {
