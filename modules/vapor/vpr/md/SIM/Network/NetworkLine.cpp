@@ -163,6 +163,48 @@ void NetworkLine::addMessageToQueue (vpr::sim::MessagePtr msg, msg_queue_t& queu
    queue.push_back(std::pair<vpr::Interval, vpr::sim::MessagePtr>(msg->whenArrivesFully(), msg));
 }
 
+template<class T>
+struct RemovePred
+{
+   RemovePred (const vpr::SocketImplSIM* o)
+      : sock(o)
+   {
+      ;
+   }
+
+   bool operator() (T thingy)
+   {
+      return thingy.second->getDestinationSocket() == sock;
+   }
+
+   const vpr::SocketImplSIM* sock;
+};
+
+void NetworkLine::removeMessagesFromQueue (const vpr::SocketImplSIM* sock,
+                                           std::vector<vpr::Interval>& event_times,
+                                           msg_queue_t& queue)
+{
+   msg_queue_t::iterator i = std::remove_if(queue.begin(), queue.end(),
+                                            RemovePred<msg_queue_entry_t>(sock));
+
+#ifdef VPR_DEBUG
+   if ( i != queue.end() )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "NetworkLine::removeMessagesFromQueue() [" << mNetworkIPStr
+         << "]: Removing messages\n" << vprDEBUG_FLUSH;
+   }
+#endif
+
+   // It might be possible to do this faster.
+   for ( msg_queue_t::iterator j = i; j != queue.end(); j++ )
+   {
+      event_times.push_back((*j).first);
+   }
+
+   queue.erase(i, queue.end());
+}
+
 } // End of sim namespace
 
 } // End of vpr namespace
