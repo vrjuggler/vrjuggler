@@ -6,6 +6,18 @@
 
 <h1>An introduction to VR Juggler configuration files</h1>
 
+<h2>Contents</h2>
+<ul>
+<li><a href="#basic">Basic information</a>
+<li><a href="#loading">Loading configuration files</a>
+<li><a href="#modular">Using modular configuration files</a>
+<li><a href="#includes">Referencing other configuration files</a>
+<li><a href="#next">Where should I go from here?</a>
+</ul>
+
+<a name="basic">
+<h2>Basic information</h2>
+
 Configuring VR software for a particular hardware system can be a daunting task due to the complexity and diversity of the environments and hardware in use. In addition to this, many users will need to switch between immersive VR hardware and desktop simulators during development, or between one hardware system or another.
 
 <p>
@@ -14,6 +26,7 @@ VR Juggler's inherent flexibility increases this complexity. Juggler components 
 <p>
 VR Juggler's configuration system was designed to simplify this task as much as possible.  While Juggler uses plain text configuration files, these files are heavily structured and organized.  Juggler's config files can be written in a modular fashion, so that different components or hardware features can be easily mixed together.  Finally, VR Juggler provides a GUI tool, VjControl, for editing configuration files.  The GUI can prevent many kinds of errors and make the user's task easier by presenting the available options, valid arguments, help information, and so on.
 
+<a name="loading">
 <h2>Loading configuration files</h2>
 
 When a VR Juggler application is initialized, it creates an internal
