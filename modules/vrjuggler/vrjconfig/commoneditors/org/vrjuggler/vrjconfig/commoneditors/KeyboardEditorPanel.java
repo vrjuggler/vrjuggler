@@ -48,7 +48,6 @@ import info.clearthought.layout.*;
 public class KeyboardEditorPanel extends JPanel
 {
    private HashMap mKeyMap = new HashMap();
-   private ArrayList mButtonList = new ArrayList();
 
    private JToggleButton A = new JToggleButton();
    private JToggleButton B = new JToggleButton();
@@ -140,7 +139,7 @@ public class KeyboardEditorPanel extends JPanel
    private JToggleButton B3 = new JToggleButton();
    private JToggleButton B2 = new JToggleButton();
    private JToggleButton B1 = new JToggleButton();
-   private JToggleButton Tildy = new JToggleButton();
+   private JToggleButton Tilde = new JToggleButton();
    private JToggleButton F12 = new JToggleButton();
    private JToggleButton F11 = new JToggleButton();
    private JToggleButton F10 = new JToggleButton();
@@ -154,7 +153,6 @@ public class KeyboardEditorPanel extends JPanel
    private JToggleButton F2 = new JToggleButton();
    private JToggleButton F1 = new JToggleButton();
    private JToggleButton Esc = new JToggleButton();
-   private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
    private void setup()
    {
@@ -404,9 +402,9 @@ public class KeyboardEditorPanel extends JPanel
       B1.setText("1");
       B1.setRequestFocusEnabled(false);
       B1.setMargin(new Insets(2, 2, 2, 2));
-      Tildy.setText("`");
-      Tildy.setRequestFocusEnabled(false);
-      Tildy.setMargin(new Insets(2, 2, 2, 2));
+      Tilde.setText("`");
+      Tilde.setRequestFocusEnabled(false);
+      Tilde.setMargin(new Insets(2, 2, 2, 2));
       F12.setText("F12");
       F12.setRequestFocusEnabled(false);
       F12.setMargin(new Insets(2, 2, 2, 2));
@@ -459,7 +457,7 @@ public class KeyboardEditorPanel extends JPanel
       this.add(F10, "11, 1");
       this.add(F11, "12, 1");
       this.add(F12, "13, 1");
-      this.add(Tildy, "1, 2");
+      this.add(Tilde, "1, 2");
       this.add(B1, "2, 2");
       this.add(B2, "3, 2");
       this.add(B3, "4, 2");
@@ -537,7 +535,7 @@ public class KeyboardEditorPanel extends JPanel
       mKeyMap.put(new Integer(KeyEvent.VK_F12), F12);
 
       // Row Two
-      mKeyMap.put(new Integer(KeyEvent.VK_BACK_QUOTE), Tildy);
+      mKeyMap.put(new Integer(KeyEvent.VK_BACK_QUOTE), Tilde);
       mKeyMap.put(new Integer(KeyEvent.VK_1), B1);
       mKeyMap.put(new Integer(KeyEvent.VK_2), B2);
       mKeyMap.put(new Integer(KeyEvent.VK_3), B3);
