@@ -100,18 +100,20 @@ public:
          if(!(cur_value >= hard_limit_value))
          {
             std::cout << "HardLimit [" << hard_limit_value << "] failed on metric: "
-                      << test_key << "  value:" << cur_value << std::endl;
+                      << test_key << " cur value:" << cur_value << "  good value:" << old_sample
+                      << "  difference of:" << 100.0f*(cur_value-old_sample)/old_sample << " percent" << std::endl;
             CPPUNIT_ASSERT(false);
          }
          else if(!(cur_value >= soft_limit_value))
          {
             std::cout << "SoftLimit [" << soft_limit_value << "] failed on metric: "
-                      << test_key << "  value:" << cur_value << std::endl;
+                      << test_key << " cur value:" << cur_value << "  good value:" << old_sample
+                      << "  difference of:" << 100.0f*(cur_value-old_sample)/old_sample << " percent" << std::endl;
          }
          else if(cur_value > old_sample)
          {
-            std::cout << "New metric for [" << test_key << "]  new value:" << cur_value
-                      << " --- increase of [" << (cur_value-old_sample)/old_sample << "] percent." << std::endl;
+            std::cout << "New metric for [" << test_key << "]  new value:" << cur_value << "  old value:" << old_sample
+                      << " --- increase of [" << 100.0f*(cur_value-old_sample)/old_sample << "] percent." << std::endl;
             setMetric(test_key, cur_value);
          }
       }
@@ -138,13 +140,15 @@ public:
          if(!(cur_value <= hard_limit_value))
          {
             std::cout << "HardLimit [" << hard_limit_value << "] failed on metric: "
-                      << test_key << "  value:" << cur_value << std::endl;
+                      << test_key << " cur value:" << cur_value << "  good value:" << old_sample
+                      << "  difference of:" << 100.0f*(old_sample-cur_value)/old_sample << " percent" << std::endl;
             CPPUNIT_ASSERT(false);
          }
          else if(!(cur_value <= soft_limit_value))
          {
             std::cout << "SoftLimit [" << soft_limit_value << "] failed on metric: "
-                      << test_key << "  value:" << cur_value << std::endl;
+                      << test_key << " cur value:" << cur_value << "  good value:" << old_sample
+                      << "  difference of:" << 100.0f*(old_sample-cur_value)/old_sample << " percent" << std::endl;
          }
          else if(cur_value < old_sample)
          {
