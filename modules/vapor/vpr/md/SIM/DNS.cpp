@@ -73,8 +73,13 @@ vpr::Uint32 DNS::lookupAddress (const std::string& addr_str)
       } addr;
       int retval;
 
-      retval = sscanf(addr_str.c_str(), "%3u.%3u.%3u.%3u", &addr.bytes[0],
-                      &addr.bytes[1], &addr.bytes[2], &addr.bytes[3]);
+      vpr::Uint32 temp1, temp2, temp3, temp4;
+      retval = sscanf(addr_str.c_str(), "%3u.%3u.%3u.%3u", &temp1, &temp2,
+                      &temp3, &temp4);
+      addr.bytes[0] = (vpr::Uint8) temp1;
+      addr.bytes[1] = (vpr::Uint8) temp2;
+      addr.bytes[2] = (vpr::Uint8) temp3;
+      addr.bytes[3] = (vpr::Uint8) temp4;
 
       if ( retval == 4 )
       {
