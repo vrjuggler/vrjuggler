@@ -3,7 +3,7 @@ all: docs
 default: html
 
 docs: html pdf
-install install-docs: install-html install-ps install-pdf
+install-docs: install-html install-pdf
 
 DOXYGEN_FILE=		sonix.doxy
 HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
