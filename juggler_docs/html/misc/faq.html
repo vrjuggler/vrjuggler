@@ -73,6 +73,7 @@ F.A.Q.</H2>
    <ul>
       <li><a href="#dev-patches"> How can I submit changes/patches?
       <li><a href="#dev-join"> How do I join the VR Juggler Development Team? 
+      <li><a href="#dash-all"> I wrote and registered my device driver correctly, but juggler can't find it.
    </ul>
    <li><a href="#troubleshooting"> Troubleshooting</a> 
    <ul>
@@ -505,6 +506,20 @@ F.A.Q.</H2>
 	with your thoughts, ideas, and be ready to work on a cool and
 	upcoming player in the world of VR! (shameless plug)
 
+	<P> </P>
+      </DD>
+      
+      <DT><b><a name="dash-all">I wrote and registered my device driver correctly, but juggler can't find it.</b>
+      <DD>
+<pre>
+   #include &lt;Input/InputManager/vjDeviceFactory.h&gt;
+   vjDeviceConstructor&lt;MyButtonDevice&gt;* this_ptr_not_used = new vjDeviceConstructor&lt;MyButtonDevice&gt;;
+</pre>
+         When the compiler sees this line, it thinks that no one is using the code, and so 
+         optimizes it out when you link against your library.<BR><BR>
+         
+	         Solution: Make sure you tell your compiler to include <i>all</i> library symbols.<BR>
+             For example on IRIX you'll need a -all option, check your compiler documentation for more info.
 	<P> </P>
       </DD>
 

@@ -148,13 +148,21 @@ With this class definition, you also need to define 6 member functions:
    }
 </pre>
 
-   <li><tt> virtual char* getDeviceName() </tt><BR>
+   <li><tt> static std::string  MyButtonDevice::getChunkType() </tt><BR>
       <p>
-      Here you just need to return the name of your device as you want it to appear
-      in the .config file:
+      In the getChunkType function you need to return the <i>chunk type</i> of your device as it to appears 
+      in the .desc file.
+      
       <tt>return "MyNewJoystickDevice";</tt>
       </p>
-
+      
+      <p>
+      <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif">Every VR Juggler device needs a <i>chunk type</i> 
+      associated with it.  A <i>chunk type</i> is kind of like a struct in C/C++.  This data structure is 
+      defined in a .desc file.  Then, you can use this new type inside of your .config files to specify to 
+      Juggler that you want to include that type in the active configuration.
+      </p>
+      
    <li><tt> virtual int   getDigitalData( int devNum = 0 )</tt><BR>
       <p>
       NOTE: It is wise to use <a href="${GLOSSARY}#triple buffered data">triple buffered data</a> here, 
@@ -205,7 +213,10 @@ You can compile your device driver code along with the vjDeviceConstructor call
 into a library (.a .so .lib or .dll for example) that you then link 
 with your applications.  This way you don't need to modify the juggler source 
 code to add a new driver, plus you can centralize all your driver code into
-a single neat driver module that you can then distribute as a "plugin".
+a single neat driver module that you can then distribute as a "plugin".<BR>
+<BR>
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif"><B>Make sure you tell your compiler to include <i>all</i> library symbols.  <BR>
+             For example on IRIX you'll need a -all option, check your compiler documentation for more info.  <a href="${FAQ}#dash-all">See the FAQ for more info...</a></b><BR>
 </p>
 
 <h3> <a name="config">Configure your device driver</a> </h3>
@@ -256,14 +267,25 @@ See also: <a href="${PROGRAMMERGUIDE}/adv.topics/run.time.config/run-time-how-to
 
    In your driver, overload these functions: <BR>
    <ul>
-      <li><tt>virtual char* vjInput::getDeviceName();</tt>
+   
+   
+      <li><tt>static std::string  MyButtonDevice::getChunkType();</tt>
       When the VR system configuration changes (for example, when you
       load a new config file into the kernel), the system asks every registered
       driver for their chunk type, and if it matches the new config chunk passed
       into the system, then the system calls your driver's config(...) method...<BR>
       <BR>
       To implement, just return your device's name as it appears in the config 
-      chunk description.
+      chunk description - this way, juggler can match the configuration chunk with the driver.
+      
+      <p>
+      <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif">Every VR Juggler device needs a 
+      <i>chunk type</i> associated with it.  A <i>chunk type</i> is kind of like a struct in C/C++.  
+      This data structure is defined in a .desc file.  Then, you can use this new 
+      type inside of your .config files to specify to Juggler that you want to include that type in the 
+      active configuration.
+      </p>
+      
 
       <li><tt>virtual bool vjInput::config( vjConfigChunk* c );</tt>
       When the system detects a configuration change for your driver, it will
@@ -307,7 +329,7 @@ public:
    virtual void  startSampling();
    virtual void  sample();
    virtual void  stopSampling();
-   virtual char* getDeviceName();
+   static std::string getChunkType();
 private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
@@ -322,9 +344,9 @@ vjDeviceConstructor&lt;MyButtonDevice&gt;* this_ptr_not_used = new vjDeviceConst
 //: What is the name of this device?
 //  This function returns a string that should match this device's 
 //  configchunk name.
-char* MyButtonDevice::getDeviceName()
+static std::string  MyButtonDevice::getChunkType() 
 { 
-   return "MyButtonDevice"; 
+   return std::string( "MyButtonDevice" );
 }
 
 // spawn a sample thread, 

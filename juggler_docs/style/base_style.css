@@ -21,12 +21,12 @@ a
 
 p, ul, ol, li, table, td, dl, dt, dd
 {
-   font-family: Century Gothic, Arial, Helvetica;
+   font-family: Arial, Helvetica;
 }
 
 BODY, .BODY, BODY:text, noframes
 {
-   font-family: Century Gothic, Arial, Helvetica;
+   font-family: Arial, Helvetica;
    background-color: rgb(255, 255, 255);
    color: rgb(0, 0, 0);
 }
