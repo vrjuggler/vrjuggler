@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-09-19 patrickh    Removed the Emacs/Windows file chooesr open style
+                       preference.  Changed the semantics of
+                       GlobalPreferencesService.getChooserStartDir() to return
+                       a path instead of a symbolic string.
+                       NEW VERSION: 0.16.0
 2003-08-25 aronb       Added a BeanStatus dialog box that shows all loaded beans
                        and beans that are waiting for dependancies. It also
                        shows details such as JAR URL, Class Name, and deps.

@@ -110,7 +110,12 @@ public interface GlobalPreferencesService
 
    /**
     * Returns the user's current preferred starting directory.  This may be
-    * one of the default list, or it may be a user-defined setting.
+    * one of the default list, or it may be a user-defined setting.  The path
+    * itself is returned as the actual preferred path rather than the
+    * internal preference setting.
+    *
+    * @return A string that represents a path on the local system.  This can
+    *         be passed directly to the java.io.File constructor, for example.
     */
    public String getChooserStartDir();
 
