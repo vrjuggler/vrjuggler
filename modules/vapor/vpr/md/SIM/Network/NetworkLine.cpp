@@ -71,9 +71,13 @@ NetworkLine::NetworkLine (const double miles, const double Mbps,
    {
       mNetworkType = NetworkLine::MAN;
    }
-   else
+   else if ( net_type.compare("LAN") == 0 )
    {
       mNetworkType = NetworkLine::LAN;
+   }
+   else
+   {
+      mNetworkType = NetworkLine::LOOPBACK;
    }
 }
 
