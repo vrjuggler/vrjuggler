@@ -121,6 +121,14 @@ bool vjIsense::config(vjConfigChunk *c)
     }
     else
     {
+        // Conversion table to convert from (units) to meters
+        float vjIsense_Conversion_Factors[vjIsense_Units_COUNT] = { 
+            0.0254, // Inches to meters
+            0.3048, // Feet to meters
+            0.01, // Centimeters to meters
+            1.0, // Meters to meters
+        };
+
 	curConvFactor = vjIsense_Conversion_Factors[intersenseUnits]/vjIsense_Conversion_Factors[jugglerUnits];
     }
 

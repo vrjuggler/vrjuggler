@@ -95,15 +95,6 @@ enum {
     vjIsense_Units_COUNT
 };
 
-// Conversion table to convert from (units) to meters
-float vjIsense_Conversion_Factors[vjIsense_Units_COUNT] = { 
-	0.0254, // Inches to meters
-	0.3048, // Feet to meters
-	0.01, // Centimeters to meters
-	1.0, // Meters to meters
-};
-
-
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
 //class vjIsense : virtual public vjPosition, virtual public vjDigital, virtual public vjAnalog
 
