@@ -501,6 +501,17 @@ case $target_os in
         ABI_LIST='ELF'
         PLATFORM='Solaris'
         ;;
+    dnl # IBM RS/6000 running AIX.
+    aix*)
+        dnl # We have to use POSIX threads on AIX.
+        if test "x${_thread_pkg}" != "xPOSIX" ; then
+            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            _thread_pkg='POSIX'
+        fi
+
+        AC_DEFINE(VJ_OS_AIX)
+        PLATFORM='AIX'
+        ;;
     dnl # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
         dnl # If no ABI has been set yet, default to WIN32 with whatever the
@@ -908,10 +919,15 @@ if test "$THREADS" = "POSIX" ; then
     dnl # when compiling on IRIX.  Instead, define that in the source files
     dnl # where appropriate.
     AC_DEFINE(VJ_USE_PTHREADS,)
-    AC_DEFINE(_THREAD_SAFE,)
     AC_DEFINE(RWSTD_MULTI_THREAD,)
     AC_DEFINE(RW_MULTI_THREAD,)
 
+    dnl # On AIX, it is redundant to define _THREAD_SAFE.
+    if test "x$PLATFORM" != "xAIX" ; then
+        AC_DEFINE(_THREAD_SAFE,)
+    fi
+
+    AC_DEFINE(_THREAD_SAFE,)
     dnl # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT,
     dnl # so we will not define both.
     if test "x$PLATFORM" != "xLinux" ; then
