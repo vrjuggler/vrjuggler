@@ -1,0 +1,463 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Base configure.in for Gadgeteer.
+# -----------------------------------------------------------------------------
+# This file is "compiled" by GNU autoconf to generate the configure script
+# that is actually run.
+# -----------------------------------------------------------------------------
+
+AC_REVISION($Revision$)
+AC_INIT(gad/gadConfig.h)
+AC_CONFIG_HEADER(gad/gadDefines.h)
+DPP_PREREQ(1.4)
+DPP_INIT
+
+# Generate the reconfig script first so that it's easy to run configure again
+# if it fails later on.
+DPP_GEN_RECONFIG
+
+# -----------------------------------------------------------------------------
+# Command-line arguments (--enable-option, --with-pkg=package_name).
+# -----------------------------------------------------------------------------
+
+# ------------------------------------------------------ #
+# --enable-feature[=arg] and --disable-feature arguments #
+# ------------------------------------------------------ #
+
+DPP_STD_CPP(yes)
+
+# -------------------------------------------- #
+# --with-pkg[=arg] and --without-pkg arguments #
+# -------------------------------------------- #
+
+# Force the use of GCC as the compiler.
+# NOTE: This is not fully implemented yet for any platform, but it is partially
+# usable on Windows.
+DPP_WITH_GCC(no)
+
+# Build the DTK wrapper using the DTK installation found at the given path.
+# There is default path.
+AC_ARG_WITH(dtk,
+            [  --with-dtk=<PATH>       DTK installation],
+            _with_dtk="$withval", _with_dtk='no')
+
+# Define the binary format.
+DPP_ABI_SETUP
+
+# -----------------------------------------------------------------------------
+# System-dependent stuff.
+# -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
+
+# We use AC_CANONICAL SYSTEM so that we can find out information about the
+# build, target and host platforms rather than only the host.
+AC_CANONICAL_SYSTEM
+DPP_SYSTEM_SETUP
+
+# Depending on the target operating system, set various command options and
+# such.
+case $target_os in
+    # SGI running IRIX 6.*.
+    irix6*)
+        DBG_FLAGS="$DBG_FLAGS -gslim"
+
+        AC_DEFINE(_BSD_TYPES,)
+        ;;
+    # HP PA-RISC machine running HP-UX 10.20.
+    hpux10.20)
+        AC_DEFINE(GAD_HPUX_VERSION, 10)
+        AC_DEFINE(_INCLUDE_TERMIO,)
+        AC_DEFINE(_CMA_NOWRAPPERS_,)
+        ;;
+    # HP PA-RISC machine running HP-UX 11.x.
+    hpux11*)
+        AC_DEFINE(GAD_HPUX_VERSION, 11)
+        AC_DEFINE(_INCLUDE_TERMIO,)
+        AC_DEFINE(_CMA_NOWRAPPERS_,)
+        ;;
+    # A machine running FreeBSD.  Currently only i386 is known to compile.
+    freebsd*)
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        ;;
+    # A machine running Linux.  Currently only i386 is known to work.
+    linux*)
+        # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        ;;
+    # A machine running Solaris (aka SunOS).  Currently only i386 is known to
+    # work.
+    solaris*)
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        ;;
+    darwin1.*)
+        AC_DEFINE(_BSD_TYPES,) 
+        ;;
+esac
+
+# -----------------------------------------------------------------------------
+# Checks for programs.
+# -----------------------------------------------------------------------------
+VJ_COMPILER_SETUP
+
+# Ensure that the C++ compiler we've found is capable of compiling the newer
+# newer C++ features that we need.
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
+DPP_CXX_HAVE_STD
+DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
+DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
+DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
+
+# Ensure that a version of Perl greater than or equal to 5.004 is available.
+DPP_PERL_VER(5.004)
+
+AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
+
+DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
+
+# -----------------------------------------------------------------------------
+# Checks for libraries.
+# -----------------------------------------------------------------------------
+VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Gadgeteer ***))
+
+AC_PATH_X
+
+# ----
+# DTK
+# ----
+try_dtk='no'
+vpr_subsystem=`$VPR_CONFIG --subsystem`
+SUBSYSTEM="$vpr_subsystem"
+
+# We can use DTK in one of the following two situations:
+#     1) If the NSPR subsystem is enabled, the target platform is UNIX-based,
+#        and NSPR threads are not being used.
+#     2) If the POSIX subsystem is enabled.
+case $vpr_subsystem in
+    NSPR)
+        if test "x$OS_TYPE" = "xUNIX"; then
+            try_dtk='yes'
+        fi
+        ;;
+    POSIX)
+        try_dtk='yes'
+        ;;
+esac
+
+# The user requested that the DTK wrapper be built, and the subsystem
+# configuration is right for use with DTK.
+if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
+    # Try to find dtk-config unless the user has already set a value for
+    # $DTK_CONFIG in their environment.
+    if test "x$DTK_CONFIG" = "x" ; then
+        AC_PATH_PROG(DTK_CONFIG, dtk-config, no, "${_with_dtk}/bin")
+    fi
+
+    $ If dtk-config was not found, we cannot proceed with the DTK checks.
+    if test "x$DTK_CONFIG" = "xno" ; then
+        AC_MSG_WARN(*** Cannot build DTK wrapper without dtk-config ***)
+    $ If dtk-config was found, $DTK_CONFIG has the path to it, so we can
+    # set things up to compile with DTK.
+    else
+        DPP_LANG_SAVE
+        DPP_LANG_CPLUSPLUS
+
+        _vjsave_CXXFLAGS="$CXXFLAGS"
+        _vjsave_CPPFLAGS="$CPPFLAGS"
+        _vjsave_LDFLAGS="$LDFLAGS"
+        _vjsave_LIBS="$LIBS"
+
+        # Based on the default ABI, tell $DTK_CONFIG 
+        if test "x$ABI" = "xN32" ; then
+            bits='n32'
+        elif test "x$ABI" = "x64" ; then
+            bits='64'
+        fi
+
+        DTK_ROOT=`$DTK_CONFIG --root`
+        CXXFLAGS="$CXXFLAGS `$DTK_CONFIG --cflags $bits`"
+        CPPFLAGS="$CPPFLAGS `$DTK_CONFIG --include`"
+        LDFLAGS="$LDFLAGS -L`$DTK_CONFIG --lib-dir $bits`"
+        LIBS="$LIBS -ldtk"
+
+        HAVE_DTK='N'
+
+        # Determine if the installed DTK library is usable.
+        AC_CACHE_CHECK(for dtkMath_matrixPrint in -ldtk,
+            ac_cv_dtkMath_matrixPrint_in_dtk,
+            AC_TRY_LINK([
+#include <dtk.h>
+void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
+                        [ dtkMath_matrixPrint(0, 0); ],
+                        [ ac_cv_dtkMath_matrixPrint_in_dtk='yes'
+                          rm -rf ./ii_files ],
+                        ac_cv_dtkMath_matrixPrint_in_dtk='no'))
+
+        if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
+            HAVE_DTK='Y'
+            AC_DEFINE(GAD_HAVE_DTK)
+            DTK_INCLUDES=`$DTK_CONFIG --include`
+            DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
+        else
+            AC_MSG_WARN(*** Cannot find DTK ***)
+        fi
+
+        CXXFLAGS="${_vjsave_CXXFLAGS}"
+        CPPFLAGS="${_vjsave_CPPFLAGS}"
+        LDFLAGS="${_vjsave_LDFLAGS}"
+        LIBS="${_vjsave_LIBS}"
+
+        DPP_LANG_RESTORE
+    fi
+# If the user wanted to compile the DTK wrapper but this script determined that
+# the subsystem configuation would not allow its use, warn the user.
+elif test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xno" ; then
+    AC_MSG_WARN(*** DTK cannot be used with this subsystem ***)
+fi
+
+# -----------------------------------------------------------------------------
+# Checks for header files.
+# -----------------------------------------------------------------------------
+AC_HEADER_STDC
+AC_HEADER_TIME
+AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
+                 sys/time.h termios.h unistd.h sys/z8530.h sys/stdsyms.h)
+
+# -----------------------------------------------------------------------------
+# Checks for typedefs, structures, and compiler characteristics.
+# -----------------------------------------------------------------------------
+AC_TYPE_SIZE_T
+
+# -----------------------------------------------------------------------------
+# Checks for library functions.
+# -----------------------------------------------------------------------------
+AC_CHECK_FUNCS(socket strcasecmp strdup strerror strtod strtok_r)
+
+# -----------------------------------------------------------------------------
+# Miscellaneous checks.
+# -----------------------------------------------------------------------------
+
+DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
+
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+if test "x$X_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $X_INCLUDES"
+fi
+
+if test "x$DTK_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $DTK_INCLUDES"
+fi
+
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
+EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
+    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
+    CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
+    DBG_FLAGS="$DBG_FLAGS /MTd"
+    OPT_FLAGS="$OPT_FLAGS /MT"
+fi
+
+DPP_SYSTEM_SUBST
+
+# For makedepend(1) to work properly on HP-UX with aCC, we have to include
+# these extra paths.
+if test "x$PLATFORM" = "xHP" ; then
+    _aCC_ROOT="/opt/aCC"
+    DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
+elif test "x$OS_TYPE" = "xWin32" ; then
+    DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
+fi
+
+# $srcdir is the root directory of the juggler source tree.  To get a value for
+# $GADROOT_ABS, we cd there and save the value of running pwd.  Then return to
+# the directory where configure is being run ($topdir).
+cd "$srcdir"
+GADROOT_ABS=`pwd`
+cd "$GADROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+# Define the base path to the source directory using $(GADROOT_ABS) as an
+# alternative to using $(srcdir).
+UNIX_GADROOT_ABS="$GADROOT_ABS"
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+
+if test "x$OS_TYPE" = "xWin32" ; then
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+else
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $DTK_LDFLAGS"
+fi
+
+# Put together the basic information needed to compile Gadgeteer applications.
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
+                GAD_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, GAD_BASE_DIR,
+              gad, $APP_EXTRA_LIBS)
+
+APP_BASE_DIR='$(topdir)/instlinks'
+APP_BASE_DIR_INST='$(GAD_BASE_DIR)'
+
+if test "$OS_TYPE" = "UNIX" ; then
+    DYLIB_DEPS="$APP_EXTRA_LIBS"
+
+    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+elif test "$OS_TYPE" = "Win32" ; then
+    DYLIB_DEPS="$APP_EXTRA_LIBS"
+fi
+
+# Translate paths from UNIX-style to Win32.
+if test "x$OS_TYPE" = "xWin32" ; then
+    GADROOT_ABS=`unix2dos -p "$GADROOT_ABS"`
+    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+
+    DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+    INCLUDES=`unix2dos "$INCLUDES"`
+    LIBS=`unix2dos "$LIBS"`
+    LN_S='cp'
+    MTREE_CMD=`unix2dos "$MTREE_CMD"`
+
+    JDK_HOME=`unix2dos -p "$JDK_HOME"`
+
+#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
+    APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
+    APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
+    APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
+else
+    GADROOT_ABS="$GADROOT_ABS"
+    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+fi
+
+# Information needed to generate gadgeteer-config.
+case $OS_TYPE in
+    UNIX)
+        if test "x$GXX" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+        fi
+
+        gad_ldflags="-L\$prefix/lib$LIBBITSUF"
+        gad_libs='-lgad'
+
+        Gadgeteer_lib='-lgad'
+        ;;
+    WIN32)
+        gad_ldflags="/link /libpath:\$prefix/lib/debug "
+        gad_libs='gad.lib'
+
+        Gadgeteer_lib='gad.lib'
+        ;;
+esac
+
+gad_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+gad_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
+
+DPP_SUBST
+
+AC_SUBST(topdir)
+AC_SUBST(UNIX_GADROOT_ABS)
+AC_SUBST(UNIX_JUGGLERROOT_ABS)
+AC_SUBST(GADROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
+AC_SUBST(GAD_SHARE_DIR)
+AC_SUBST(SUBSYSTEM)
+
+AC_SUBST(EXTRA_LINK_FLAGS)
+
+AC_SUBST(DTK_CONFIG)
+AC_SUBST(HAVE_DTK)
+
+AC_SUBST(APP_BASE_DIR)
+AC_SUBST(APP_BASE_DIR_INST)
+
+AC_SUBST(DYLIB_DEPS)
+
+AC_SUBST(APP_EXTRA_LIBS_X11)
+
+AC_SUBST(static_begin)
+AC_SUBST(static_end)
+AC_SUBST(gad_ldflags)
+AC_SUBST(gad_libs)
+AC_SUBST(Gadgeteer_lib)
+AC_SUBST(gad_extra_ldflags)
+AC_SUBST(gad_extra_libs)
+
+# -----------------------------------------------------------------------------
+# Final file generation step.
+# -----------------------------------------------------------------------------
+
+VJ_MTREE_LIB_GEN(GAD, mtree, $PLATFORM, $ISA)
+
+AC_OUTPUT(Makefile
+          Makefile.inc
+          common.defs.mk
+          make.defs.mk
+          gad/Makefile
+          gad/Devices/Makefile
+          gad/Devices/Ascension/Makefile
+          gad/Devices/Fakespace/Makefile
+          gad/Devices/Immersion/Makefile
+          gad/Devices/Intersense/Makefile
+          gad/Devices/Keyboard/Makefile
+          gad/Devices/Logitech/Makefile
+          gad/Devices/Open/Makefile
+          gad/Devices/Open/DTK/Makefile
+          gad/Devices/Open/Trackd/Makefile
+          gad/Devices/Sim/Makefile
+          gad/Devices/VirtualTechnologies/Makefile
+          gad/Type/Makefile
+          doc/Makefile
+          mtree/GAD.data.dist
+          mtree/GAD.include.dist
+          mtree/GAD.install.dist
+          mtree/GAD.samples.dist
+          mtree/GAD.test.dist
+          VARS.pl)
+
+cat <<BUILD_INFO
+
+ Remember that you need to build Gadgeteer with GNU make.
+ GNU make is called 'gmake' on most systems.
+ See the file README for more details on compiling the Gadgeteer distribution.
+
+BUILD_INFO

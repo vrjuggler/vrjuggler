@@ -1,0 +1,12 @@
+                           Gadgeteer Release Notes
+                           -----------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
