@@ -41,12 +41,17 @@ APP_NAME=	combo@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		combo.cpp cubesApp.cpp torusApp.cpp wandApp.cpp
+SRCS=		combo.cpp	\
+		cubesApp.cpp	\
+		torusApp.cpp	\
+		wandApp.cpp	\
+		PerfProbe.cpp
+		Text.cpp
 
 EXTRA_INCLUDES=		-I$(srcdir)/../cubes -I$(srcdir)/../torus	\
-			-I$(srcdir)/../wand
+			-I$(srcdir)/../wand -I$(srcdir)/../perfAddon 
 EXTRA_PATH_FOR_SOURCES=	$(srcdir)/../cubes $(srcdir)/../torus		\
-			$(srcdir)/../wand 
+			$(srcdir)/../wand $(srcdir)/../perfAddon
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
