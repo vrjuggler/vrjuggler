@@ -31,7 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+#include <iostream>
+#include <iomanip>
 #include <string>
+#include <boost/concept_check.hpp>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -46,6 +49,11 @@ namespace vrj
 float Projection::mNearDist = 0.1f;
 float Projection::mFarDist = 10000.0f;
 
+
+void Projection::config(jccl::ConfigChunkPtr chunk)
+{
+   boost::ignore_unused_variable_warning(chunk);
+}
 
 /**
  * Helper to the frustum apex and corners in model coordinates.
