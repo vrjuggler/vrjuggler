@@ -96,6 +96,7 @@ public class ConfigContextEditor
                   (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
                if(null == node)
                {
+                  removeBtn.setEnabled(false);
                   emptyPropertySheet();
                   return;
                }
@@ -105,6 +106,7 @@ public class ConfigContextEditor
                if (value == null || !(value instanceof ConfigElement))
                {
                   System.out.println("Selecting a node that is not a ConfigElement");
+                  removeBtn.setEnabled(false);
                   emptyPropertySheet();
                   // Empty the help information
                   getHelpPane().setText("");
@@ -112,6 +114,7 @@ public class ConfigContextEditor
                   return;
                }
 
+               removeBtn.setEnabled(true);
                Color start_color = getStartColor();
 
                // Create a new PropertySheet for the given ConfigElement.
