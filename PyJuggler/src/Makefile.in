@@ -34,8 +34,16 @@ top_srcdir=	@top_srcdir@
 MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
-CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
-		-I$(top_srcdir) -I$(srcdir) $(DEFS)
+
+ifeq (@OS_TYPE@, Win32)
+   CXXFLAGS=	$(shell vrjuggler-config --includes) /Zm800 /Z7 /Od	\
+		/Ob0 /GX /GR /Op /DBOOST_PYTHON_DYNAMIC_LIB		\
+		/Zc:wchar_t,forScope
+else
+   CXXFLAGS=	$(shell vrjuggler-config --cxxflags)
+endif
+
+CXXFLAGS+=	@PYTHON_INCLUDES@ -I$(top_srcdir) -I$(srcdir) $(DEFS)
 CXX_PLUGIN=	@CXX_PLUGIN@
 #DEFS=		@DEFS@
 INCLUDES=	$(shell vrjuggler-config --includes) -I$(top_srcdir)	\
@@ -61,6 +69,10 @@ BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 # Linker flags needed by all extension modules.
 LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
 			$(PYTHON_LDFLAGS)
+
+ifeq (@OS_TYPE@, Win32)
+   LDFLAGS+=		/DEBUG /subsystem:console /INCREMENTAL:NO
+endif
 
 PYJUTIL_LIB=		@PYJUTIL_LDFLAGS@
 
@@ -168,7 +180,7 @@ install:
 
 # Rule for generating a .cpp file from a .pyste file.
 %.cpp: %.pyste
-	$(PYSTE) --module=$(basename $(@F)) $<
+	$(PYSTE) --python-ns=pyj --module=$(basename $(@F)) $<
 
 %.$(OBJEXT): %.cpp
 	$(CXX) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
