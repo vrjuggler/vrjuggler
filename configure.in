@@ -605,7 +605,7 @@ case $target_os in
         dnl # somewhat annoying names.
         case ${_sys_name} in
             dnl # Windows NT 4.0.
-            *NT-4.0)
+            *NT-[[45]].0)
                 PLATFORM='WinNT'
                 ;;
             dnl # Windows 95 and 98.
