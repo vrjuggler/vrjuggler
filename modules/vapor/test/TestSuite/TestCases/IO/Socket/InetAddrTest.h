@@ -43,12 +43,12 @@ public:
       assertTest(addr1 != addr2);
       assertTest(addr1 == addr3);
 
-      addr1.setAddressValue(23);
-      addr3.setAddressValue(23);
+      addr1.setAddress(23, addr1.getPort());
+      addr3.setAddress(23, addr3.getPort());
 
       assertTest(addr1 == addr3);
 
-      addr3.setAddressValue(17);
+      addr3.setAddress(17, addr3.getPort());
 
       assertTest(addr1 != addr3);
    }
@@ -61,18 +61,26 @@ public:
 
       assertTest(23 == addr1.getPort());
 
-      addr1.setAddressValue(1221);
+      addr1.setAddress(vpr::System::Ntohs(1221), addr1.getPort());
 
-      assertTest(1221 == addr1.getAddressValue());
+      assertTest(vpr::System::Ntohs(1221) == addr1.getAddressValue());
    }
 
    void testAddressLookup () {
-      vpr::InetAddr addr1("192.49.3.2", 13768);
-      vpr::InetAddr addr2( vpr::System::Ntohl((vpr::Uint32)3224437506u), 13768);
-      vpr::InetAddr addr3("cruncher.vrac.iastate.edu", 13768);
-      vpr::InetAddr addr4("129.186.232.58", 13768);
-      vpr::InetAddr addr5("cruncher.vrac.iastate.edu:13768");
-      vpr::InetAddr local_addr("localhost");
+      vpr::InetAddr addr1;
+      vpr::InetAddr addr2;
+      vpr::InetAddr addr3;
+      vpr::InetAddr addr4;
+      vpr::InetAddr addr5;
+      vpr::InetAddr local_addr;
+
+      assertTest(addr1.setAddress("192.49.3.2", 13768));
+      assertTest(addr2.setAddress(vpr::System::Ntohl((vpr::Uint32)3224437506u),
+                                  13768));
+      assertTest(addr3.setAddress("cruncher.vrac.iastate.edu", 13768));
+      assertTest(addr4.setAddress("129.186.232.58", 13768));
+      assertTest(addr5.setAddress("cruncher.vrac.iastate.edu:13768"));
+      assertTest(local_addr.setAddress("localhost", 0));
 
       assertTest(local_addr.getAddressValue() > 0);
       assertTest(addr1.getAddressValue() == vpr::System::Ntohl(3224437506u));
