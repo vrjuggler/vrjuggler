@@ -55,12 +55,12 @@ use Getopt::Long;
 sub usage($);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
-sub make_LDFLAGS($;$$);
-sub make_EXTRA_LDFLAGS($;$$);
+sub make_LDFLAGS($;$$$);
+sub make_EXTRA_LDFLAGS($;$$$);
 sub handleOptArg($$);
-sub stripDuplicateArgs($);
-
-# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
+sub stripDuplicateCompilerArgs($);
+sub stripDuplicateLibraryArgs($);
+sub groupLibdirArgs($);
 
 usage(1) if $#ARGV == -1;
 
@@ -138,9 +138,9 @@ $ECHO_EXTRA_LIBS  = 0;
 my $script_help    = 0;
 my $print_min      = 0;
 my $echo_includes  = 0;
-my $echo_subsystem = 0;
 my $echo_version   = 0;
 my $echo_static    = 0;
+my $echo_profiled  = 0;
 my $use_linker     = 0;
 
 my $cxxflags_arg   = '';
@@ -148,18 +148,18 @@ my $libs_arg       = '';
 my $extra_libs_arg = '';
 
 GetOptions('help|?' => \$script_help, 'min' => \$print_min,
-           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'version' => \$echo_version,
            'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
            'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
            'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
-           'linker' => \$use_linker, 'static' => \$echo_static);
+           'linker' => \$use_linker, 'static' => \$echo_static,
+           'profiled' => \$echo_profiled);
 
 usage(0) if $script_help;
 
 # Print out the requested information.
 print "$prefix\n" if $ECHO_PREFIX;
 print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
-print "maybe OpenAL or possibly AudioWorks\n" if $echo_subsystem;
 print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
 
 if ( $ECHO_CXXFLAGS || $echo_includes )
@@ -172,14 +172,15 @@ if ( $ECHO_CXXFLAGS || $echo_includes )
 
 if ( $ECHO_LIBS )
 {
-   my $ldflags = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
+   my $ldflags = make_LDFLAGS("$libs_arg", $echo_static, $echo_profiled,
+                              $use_linker);
    print "$ldflags\n";
 }
 
 if ( $ECHO_EXTRA_LIBS )
 {
    my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
-                                          $print_min);
+                                          $echo_static, $print_min);
    print "$extra_ldflags\n";
 }
 
@@ -209,7 +210,9 @@ Options:
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
-        [--subsystem]           Print the VPR OS abstraction layer being used
+        [--static]              Print the library arguments using static
+                                linking flags
+        [--profiled]            Print the profiled library names
 EOF
 
     exit($_[0]);
@@ -251,25 +254,24 @@ sub make_CXXFLAGS ($;$)
    }
 
    my $snx_extra_includes     = '';
-   my $snx_extra_include_dirs = qq(@snx_extra_include_dirs@);
+#   my $snx_extra_include_dirs = qq(@snx_extra_include_dirs@);
 
-   if ( "$snx_extra_include_dirs" ne "" )
-   {
-      my $dir;
-      foreach $dir ( split(/\s+/, "$snx_extra_include_dirs") )
-      {
-         $snx_extra_includes .= " -I@includedir@/$dir";
-      }
-   }
+#   if ( "$snx_extra_include_dirs" ne "" )
+#   {
+#      my $dir;
+#      foreach $dir ( split(/\s+/, "$snx_extra_include_dirs") )
+#      {
+#         $snx_extra_includes .= " -I@includedir@/$dir";
+#      }
+#   }
 
-   # XXX: No @snx_cxxflags@ defined by configure!
-   my $cxxflags = "$dep_cxxflags $snx_extra_cxxflags " .
+   my $cxxflags = qq(@snx_cxxflags@ $dep_cxxflags $snx_extra_cxxflags ) .
                   qq(-I@includedir@ $snx_extra_includes);
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
 
-   return stripDuplicateArgs("$cxxflags");
+   return stripDuplicateCompilerArgs("$cxxflags");
 }
 
 sub make_INCLUDES ($)
@@ -278,11 +280,12 @@ sub make_INCLUDES ($)
    return join(" ", grep(/^-I/, @compiler_flags));
 }
 
-sub make_LDFLAGS ($;$$)
+sub make_LDFLAGS ($;$$$)
 {
-   my $libs_arg     = shift;
-   my $echo_static  = shift || 0;  # Echo static linking flags
-   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
+   my $libs_arg      = shift;
+   my $echo_static   = shift || 0;  # Echo static linking flags
+   my $echo_profiled = shift || 0;  # Echo profiled libraries
+   my $use_linker    = shift || 0;  # Use flags for direct use of the linker
 
    my $static_begin = '';
    my $static_end   = '';
@@ -313,16 +316,19 @@ sub make_LDFLAGS ($;$$)
    $ldflags .= ($use_linker ? qq( @snx_ldflags_linker@)
                             : qq( @snx_ldflags_compiler@));
 
-   my $full_ldflags = qq($ldflags $static_begin @snx_libs@ $static_end);
+   my $snx_libs  = ($echo_profiled ? qq(@snx_prof_libs@)
+                                   : qq(@snx_libs@));
+   my $full_ldflags = "$ldflags $static_begin $snx_libs $static_end";
    $full_ldflags    =~ s/\s{2,}/ /g;
 
-   return "$full_ldflags";
+   return groupLibdirArgs(stripDuplicateLibraryArgs("$full_ldflags"));
 }
 
-sub make_EXTRA_LDFLAGS ($;$$)
+sub make_EXTRA_LDFLAGS ($;$$$)
 {
    my $extra_libs_arg = shift;
    my $use_linker     = shift || 0;
+   my $use_static     = shift || 0;
    my $print_min      = shift || 0;
 
    my $dep_libs       = '';
@@ -331,15 +337,16 @@ sub make_EXTRA_LDFLAGS ($;$$)
    unless ( $print_min )
    {
       my @dep_scripts = qw(@snx_dep_scripts@);
-      my $extra_arg = ($use_linker ? '--linker' : '');
+      my $linker_arg  = ($use_linker ? '--linker' : '');
+      my $static_arg  = ($use_static ? '--static' : '');
 
       foreach ( @dep_scripts )
       {
-         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg`;
+         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $linker_arg $static_arg`;
          chomp($cur_dep_libs);
          $dep_libs .= " $cur_dep_libs";
 
-         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $extra_arg`;
+         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $linker_arg $static_arg`;
          chomp($cur_dep_extra_libs);
          $dep_extra_libs .= " $cur_dep_extra_libs";
       }
@@ -354,16 +361,18 @@ sub make_EXTRA_LDFLAGS ($;$$)
       $LIBBITSUF = '64';
    }
 
-   # XXX: Fix me!!!
-   my $extra_ldflags = qq(@snx_extra_ldflags@);
-#   my $extra_ldflags = ($use_linker ? qq(@snx_extra_ldflags_linker@)
-#                                    : qq(@snx_extra_ldflags_compiler@));
+   my $extra_ldflags = ($use_linker ? qq(@snx_extra_ldflags_linker@)
+                                    : qq(@snx_extra_ldflags_compiler@));
+
+   # Add the full set of extra flags if the user specified --min on the
+   # command line.
+   my $snx_extra_libs_addtl = ($print_min ? '' : "$dep_libs $dep_extra_libs");
 
    my $full_extra_ldflags = qq($extra_ldflags @snx_extra_libs@ ) .
-                            "$dep_libs $dep_extra_libs";
+                            "$snx_extra_libs_addtl";
    $full_extra_ldflags    =~ s/\s{2,}/ /g;
 
-   return "$full_extra_ldflags";
+   return groupLibdirArgs(stripDuplicateLibraryArgs("$full_extra_ldflags"));
 }
 
 # Subroutine for handling command-line parameters that have an optional
@@ -445,7 +454,7 @@ sub handleOptArg ($$)
 # passed to the linker where functionality can be turned on and off (for
 # example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
 # static linking).
-sub stripDuplicateArgs ($)
+sub stripDuplicateCompilerArgs($)
 {
    my @arg_list   = split(/\s+/, "$_[0]");
    my %known_args = ();
@@ -459,4 +468,67 @@ sub stripDuplicateArgs ($)
    }
 
    return join(" ", @new_args);
+}
+
+# This function processes the given list of linker arguments and removes
+# duplicate references to libraries.  Library dependencies are identified as
+# -l arguments, *.lib file references, or -pthread(s) arguments.  The
+# duplicates are removed in reverse order so that the last appearance of an
+# argument is the version that is retained.
+sub stripDuplicateLibraryArgs($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   my $arg;
+   foreach $arg ( reverse(@arg_list) )
+   {
+      # Only look at arguments that name library dependencies.  All others
+      # will be retained no matter what.
+      if ( $arg =~ /^-l/ || $arg =~ /\.lib$/ || $arg =~ /^-pthread/ )
+      {
+         next if exists($known_args{"$arg"});
+         $known_args{"$arg"} = 1;
+      }
+
+      unshift(@new_args, "$arg");
+   }
+
+   return join(" ", @new_args);
+}
+
+# This function processes the given list of linker arguments and does two
+# things:
+#
+#    1. Removes duplicate paths to library directories.
+#    2. Groups all paths to library directories so that they are at the
+#       beginning of the link line.
+#
+# All other arguments are retained exactly as they came in.
+sub groupLibdirArgs($)
+{
+   my @arg_list    = split(/\s+/, "$_[0]");
+   my %known_args  = ();
+   my @libdir_args = ();
+   my @new_args    = ();
+
+   my $arg;
+   foreach $arg ( @arg_list )
+   {
+      # Only look at arguments that name library directories.  All others
+      # will be retained no matter what.
+      if ( $arg =~ /^-L/ || $arg =~ /^[-\/]libpath/i )
+      {
+         next if exists($known_args{"$arg"});
+         $known_args{"$arg"} = 1;
+         push(@libdir_args, "$arg");
+      }
+      else
+      {
+         push(@new_args, "$arg");
+      }
+   }
+
+   return join(" ", @libdir_args, @new_args);
 }

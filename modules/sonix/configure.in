@@ -98,9 +98,7 @@ AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler],
 # Define the binary format.
 DPP_ABI_SETUP
 
-# Force the use of GCC as the compiler.
-# NOTE: This is not fully implemented yet for any platform, but it is
-# partially usable on Windows.
+# Allow forcing the use of GCC as the compiler.
 DPP_WITH_GCC(no)
 
 # -----------------------------------------------------------------------------
@@ -151,16 +149,13 @@ DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
+DPP_PROG_LINKER
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH([0.19.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
          [AC_MSG_ERROR([*** VPR required for sonix***])])
-INCLUDES="$INCLUDES $VPR_INCLUDES"
-LIBS="$LIBS $VPR_LIBS"
-
-CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
 
 # find and append GMTL flags...
 snx_save_CPPFLAGS="$CPPFLAGS"
@@ -169,8 +164,6 @@ GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
           [$JUGGLERROOT_ABS/external/GMTL], ,
           [AC_MSG_ERROR([*** GMTL required for sonix ***])])
 CPPFLAGS="$snx_save_CPPFLAGS"
-
-CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
 
 if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
    LOCAL_GMTL='Y'
@@ -182,85 +175,7 @@ DPP_CHECK_DYNLOAD_LIB
 
 DPP_HAVE_CPPUNIT([1.9.10])
 
-# -----------------------------------------------------------------------------
-# Miscellaneous checks.
-# -----------------------------------------------------------------------------
-
-# Macros:
-#     DPP_INSTALLER - Set up the installer configuration. 
-# Variables defined:
-#     OWNER_NAME - The owner of everything installed.
-#     GROUP_NAME - The group of everything installed.
-#     FILE_PERMS - The UNIX-style octal permissions of normal files.
-#     EXEC_PERMS - The UNIX-style octal permissions of executable files.
-#     DIR_PERMS  - The UNIX-style octal permissions of directories.
-DPP_INSTALLER(sonix, 0644, 0755, 0755)
-
-# For use in linking applications.
-BASE_APP_LINK_FLAGS=''
-
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-#    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -w2"
-    BASE_APP_LINK_FLAGS="-all"
-elif test "x$PLATFORM" = "xDarwin" ; then
-    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
-    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
-    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
-elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    vc_cflags='/QIfdiv /QI0f'
-    vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
-    CFLAGS="$CFLAGS $vc_cflags"
-    CXXFLAGS="$CXXFLAGS $vc_cxxflags"
-    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS /MTd"
-    DBG_FLAGS="$DBG_FLAGS /MDd"
-    OPT_FLAGS="$OPT_FLAGS /MD"
-fi
-
-# For makedepend(1) to work properly on HP-UX with aCC, we have to include
-# these extra paths.
-if test "x$PLATFORM" = "xHP" -a "x$USE_GCC" != "xyes" ; then
-    _aCC_ROOT="/opt/aCC"
-    DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
-elif test "x$OS_TYPE" = "xWin32" ; then
-    DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
-fi
-
-# Define the base path to the source directory using $SNXROOT_ABS as an
-# alternative to using $srcdir.
-SNX_SRCDIR='$(SNXROOT_ABS)'
-UNIX_SNXROOT_ABS="$SNXROOT_ABS"
-
-# Translate paths from UNIX-style to Win32.
-if test "x$OS_TYPE" = "xWin32" ; then
-    LN_S='cp -pr'
-    RM_LN='rm -rf'
-    SAFE_SNXROOT_ABS=`dospath -p "$SNXROOT_ABS"`
-    SAFE_JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
-    SNX_SRCDIR=`dospath "$SNX_SRCDIR"`
-
-    if test "x$DEPEND_EXTRAS" != "x" ; then
-        DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
-    fi
-
-    if test "x$INCLUDES" != "x" ; then
-        INCLUDES=`dospath "$INCLUDES"`
-    fi
-
-    if test "x$LIBS" != "x" ; then
-        LIBS=`dospath "$LIBS"`
-    fi
-
-    MTREE_CMD=`dospath "$MTREE_CMD"`
-
-    APP_EXTRA_LIBS_BASIC=`dospath "$APP_EXTRA_LIBS_BASIC"`
-else
-    RM_LN='rm -f'
-    SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
-    SAFE_SNXROOT_ABS="$SNXROOT_ABS"
-fi
-
-# Append the OpenAl stuff...
+# Append the OpenAL stuff.
 OPENAL_API='N'
 if test "x$OPENAL_ENABLED" = "xyes" ; then
    snx_save_LIBS="$LIBS"
@@ -281,15 +196,14 @@ if test "x$OPENAL_ENABLED" = "xyes" ; then
    fi
 fi
 
-# Append the Subsynth stuff...
+# Append the Subsynth stuff.
 SUBSYNTH_API='N'
 if test "x$SUBSYNTH_ENABLED" = "xyes" ; then
-   snx_dep_scripts="vpr-config"
    DPP_HAVE_SUBSYNTH([/usr], SUBSYNTH_API='Y',
       [AC_MSG_WARN([*** Subsynth plug-in cannot be built. ***])])
 fi
 
-dnl append the openal stuff...
+# Append the AudioWorks stuff.
 AUDIOWORKS_API='N'
 if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
    DPP_HAVE_AUDIOWORKS([/usr], ,
@@ -304,7 +218,7 @@ if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
    fi
 fi
 
-# Append the Audiere stuff...
+# Append the Audiere stuff.
 AUDIERE_API='N'
 if test "x$AUDIERE_ENABLED" = "xyes" ; then
    DPP_HAVE_AUDIERE([/usr], ,
@@ -316,105 +230,206 @@ if test "x$AUDIERE_ENABLED" = "xyes" ; then
       else
          AC_MSG_WARN([*** Audiere connot be used with a VPR installation that does not use POSIX. ***])
       fi
-   fi 
+   fi
 fi
 
-dnl -------------------------------------------------------------
-dnl external stuff (like sample apps, also for those who use sonix-config)....
-dnl -------------------------------------------------------------
-sample_application_includes="$sample_application_includes -I\${SNX_BASE_DIR}/include $INCLUDES"
-sample_application_ldflags="$sample_application_ldflags $LDFLAGS"
+# -----------------------------------------------------------------------------
+# Miscellaneous checks.
+# -----------------------------------------------------------------------------
 
+# Macros:
+#     DPP_INSTALLER - Set up the installer configuration.
+# Variables defined:
+#     OWNER_NAME - The owner of everything installed.
+#     GROUP_NAME - The group of everything installed.
+#     FILE_PERMS - The UNIX-style octal permissions of normal files.
+#     EXEC_PERMS - The UNIX-style octal permissions of executable files.
+#     DIR_PERMS  - The UNIX-style octal permissions of directories.
+DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
-APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
-APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
 
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $GMTL_INCLUDES"
+BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
+DEPEND_FLAGS="$VPR_INCLUDES_MIN $GMTL_INCLUDES"
+snx_cxxflags="$STDFLAGS"
+
+# List the scripts sonix-config will call to get flags.  This should be in the
+# order used for linking.  That means the dependencies are satisfied right to
+# left.
+snx_dep_scripts="vpr-config"
+
+if test "x$LOCAL_GMTL" = "xY" ; then
+   snx_cxxflags="$snx_cxxflags $GMTL_INCLUDES"
+fi
+
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+#   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+   CXXFLAGS="$CXXFLAGS -w2"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -J4 -all"
+elif test "x$PLATFORM" = "xDarwin" ; then
+   CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
+   CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
+elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
+   vc_cflags='/QIfdiv /QI0f'
+   vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
+   CFLAGS="$CFLAGS $vc_cflags"
+   CXXFLAGS="$CXXFLAGS $vc_cxxflags"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS /nologo /incremental:no"
+   DBG_FLAGS="$DBG_FLAGS /MDd"
+   OPT_FLAGS="$OPT_FLAGS /MD"
+   snx_cxxflags="$vc_cxxflags $snx_cxxflags"
+fi
+
+# For makedepend(1) to work properly on HP-UX with aCC, we have to include
+# these extra paths.
+if test "x$PLATFORM" = "xHP" -a "x$USE_GCC" != "xyes" ; then
+   _aCC_ROOT="/opt/aCC"
+   DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
+elif test "x$OS_TYPE" = "xWin32" ; then
+   DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
+fi
+
+# Define the base path to the source directory using $SNXROOT_ABS as an
+# alternative to using $srcdir.
+UNIX_SNXROOT_ABS="$SNXROOT_ABS"
+
+# $APP_EXTRA_LIBS must list all the libraries need to link a Sonix-based
+# application.
 if test "x$OS_TYPE" = "xWin32" ; then
-   snx_ldflags_compiler="$snx_ldflags_compiler /link /libpath:\$prefix/lib"
-   snx_ldflags_linker="$snx_ldflags_linker /libpath:\$prefix/lib"
-   snx_lib='sonix.lib'
-   snx_libs="$snx_libs sonix.lib"
-   sample_application_libs="$sample_application_libs /LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
-
-   DYLIB_DEPS='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
-   DYLIB_PROF_DEPS="$DYLIB_DEPS"
+   APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+   APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
 else
-   if test "x$GXX" = "xyes" ; then
-      static_begin="-Wl,-Bstatic"
-      static_end="-Wl,-Bdynamic"
-   else
-      static_begin="-B static"
-      static_end="-B dynamic"
+   APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
+   APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
+fi
+
+# Put together the basic information needed to compile Sonix applications.
+VJ_APP_COMPILER([$CC], [$CFLAGS], [$CXX], [$CXXFLAGS], [$DBG_FLAGS],
+                [$OPT_FLAGS], [SNX_BASE_DIR], [$DEFS], [$INCLUDES],
+                [${_EXTRA_FLAGS}])
+VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
+              [SNX_BASE_DIR], [snx], [$APP_EXTRA_LIBS])
+
+APP_BASE_DIR='$(topdir)/instlinks'
+APP_BASE_DIR_INST='$(SNX_BASE_DIR)'
+
+DYLIB_DEPS="$APP_EXTRA_LIBS"
+DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
+
+# Translate paths from UNIX-style to Win32.
+if test "x$OS_TYPE" = "xWin32" ; then
+   SNXROOT_ABS=`dospath -p "$SNXROOT_ABS"`
+   JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
+
+   if test "x$DEPEND_EXTRAS" != "x" ; then
+      DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
    fi
 
-   snx_ldflags_compiler="$snx_ldflags_compiler -L\$prefix/lib$LIBBITSUF"
-   snx_ldflags_linker="$snx_ldflags_compiler"
-   snx_lib='-lsonix'
-   snx_libs="$snx_libs -lsonix"
-   sample_application_libs="$sample_application_libs -L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS $VPR_LIBS_CC -lm"
+   if test "x$INCLUDES" != "x" ; then
+      INCLUDES=`dospath "$INCLUDES"`
+   fi
 
-   DYLIB_DEPS=''
-   DYLIB_PROF_DEPS="$DYLIB_DEPS"
+   if test "x$LIBS" != "x" ; then
+      LIBS=`dospath "$LIBS"`
+   fi
+
+   LN_S='cp -r'
+   RM_LN='rm -rf'
+   MTREE_CMD=`dospath "$MTREE_CMD"`
+
+#   APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
+    APP_EXTRA_LIBS_BASIC=`dospath "$APP_EXTRA_LIBS_BASIC"`
+else
+   RM_LN='rm -f'
+   SNXROOT_ABS="$SNXROOT_ABS"
+   JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
-DYLIB_DEPS="$DYLIB_DEPS $APP_EXTRA_LIBS"
-DYLIB_PROF_DEPS="$DYLIB_PROF_DEPS $APP_EXTRA_LIBS"
 
-#sample_application_libs="$sample_application_libs"
+
+# Information needed to generate sonix-config.
+case $OS_TYPE in
+    UNIX)
+        if test "x$GNU_LD" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+            snx_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF -Wl,--export-dynamic"
+            snx_ldflags_linker="-L\$prefix/lib\$LIBBITSUF --export-dynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+            snx_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
+            snx_ldflags_linker="$snx_ldflags_compiler"
+        fi
+
+        snx_libs='-lsonix'
+        snx_prof_libs='-lsonix_p'
+        snx_extra_libs="$LDFLAGS $LIBS"
+
+        Sonix_lib='-lsonix'
+        ;;
+    Win32)
+        snx_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
+        snx_ldflags_linker="/libpath:\$prefix/lib/debug "
+        snx_libs='sonix.lib'
+        snx_prof_libs='sonix.lib'
+        snx_extra_libs="$LDFLAGS $LIBS"
+
+        Sonix_lib='sonix.lib'
+        ;;
+esac
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     snx_n32_flags='-n32'
     snx_64_flags='-64'
 fi
 
-dnl ===================================================
-dnl  Just extra stuff here (non-sonic stuff)
-dnl ===================================================
-if test "x$LOCAL_GMTL" = "xY" ; then
-   snx_extra_cxxflags="$snx_extra_cxxflags $GMTL_INCLUDES"
-fi
-
-snx_extra_ldflags="$snx_extra_ldflags $APP_EXTRA_LIBS_BEGIN"
-#snx_extra_libs="$snx_extra_libs $LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
-snx_extra_libs="$snx_extra_libs $LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
-
-# -----------------------------------------------------------------------------
-# Do Makefile substitutions.
-# -----------------------------------------------------------------------------
+snx_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
+snx_extra_ldflags_linker="$snx_extra_ldflags_compiler"
 
 VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
 DPP_GET_PROJECTDIR
 
+AC_SUBST(topdir)
+AC_SUBST(UNIX_SNXROOT_ABS)
+AC_SUBST(UNIX_JUGGLERROOT_ABS)
+AC_SUBST(SNXROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
+
+AC_SUBST(EXTRA_LDFLAGS)
+AC_SUBST(RM_LN)
+
+AC_SUBST(APP_BASE_DIR)
+AC_SUBST(APP_BASE_DIR_INST)
+
 AC_SUBST(DYLIB_DEPS)
 AC_SUBST(DYLIB_PROF_DEPS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(snx_lib)
-AC_SUBST(snx_libs)
-AC_SUBST(snx_n32_flags)
-AC_SUBST(snx_64_flags)
+AC_SUBST(snx_dep_scripts)
+AC_SUBST(snx_cxxflags)
 AC_SUBST(snx_extra_cxxflags)
-AC_SUBST(snx_extra_include_dirs)
-AC_SUBST(snx_extra_ldflags)
-AC_SUBST(snx_extra_libs)
 AC_SUBST(snx_ldflags_compiler)
 AC_SUBST(snx_ldflags_linker)
-AC_SUBST(sample_application_includes)
-AC_SUBST(sample_application_ldflags)
-AC_SUBST(sample_application_libs)
-AC_SUBST(snx_dep_scripts)
+AC_SUBST(snx_libs)
+AC_SUBST(snx_prof_libs)
+AC_SUBST(Sonix_lib)
+AC_SUBST(snx_extra_ldflags_compiler)
+AC_SUBST(snx_extra_ldflags_linker)
+AC_SUBST(snx_extra_libs)
+AC_SUBST(snx_n32_flags)
+AC_SUBST(snx_64_flags)
+
 AC_SUBST(AUDIERE_API)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
 AC_SUBST(SUBSYNTH_API)
-AC_SUBST(SAFE_SNXROOT_ABS)
-AC_SUBST(SAFE_JUGGLERROOT_ABS)
-
-# Export variables defined above.
-AC_SUBST(topdir)
-AC_SUBST(RM_LN)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -424,7 +439,8 @@ VJ_MTREE_LIB_GEN(SNX, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    sonix-config
-   Makefile 
+   Makefile
+   Makefile.inc
    common.defs.mk
    make.defs.mk
    snx/Makefile
@@ -438,8 +454,12 @@ AC_CONFIG_FILES([
    samples/opengl/Makefile
    test/Makefile
    test/TestSuite/Makefile
+   mtree/SNX.data.dist
    mtree/SNX.include.dist
    mtree/SNX.install.dist
+   mtree/SNX.samples.dist
+   mtree/SNX.test.dist
+   VARS.pl
    ],
    [chmod a+x sonix-config])
 
