@@ -56,6 +56,9 @@ public:
     //: registers a buffer containing perf data... 
     void addPerfDataBuffer (vjPerfDataBuffer *v);
 
+    //: unregisters a buffer of perf data
+    void removePerfDataBuffer (vjPerfDataBuffer *v);
+
 
 private:
     //: allows the Environment Manager to accept connections.
