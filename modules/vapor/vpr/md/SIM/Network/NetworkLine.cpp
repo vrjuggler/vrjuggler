@@ -90,12 +90,12 @@ vpr::ReturnStatus NetworkLine::getArrivedMessageFromQueue (const vpr::Interval& 
    vprASSERT(! queue.empty() && "Queue must have an event!");
 
    msg = queue.front().second;
-   vprASSERT(msg->whenArrivesFully() <= event_time && "This must be the event on the front of the queue");
+   vprASSERT(msg->whenArrivesFully() == event_time && "This event must be the message on the front of the queue");
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "NetworkLine::getArrivedMessage() [" << mNetworkIPStr
-      << "]: Next event occurs at "
-      << msg->whenArrivesFully().getBaseVal() << ", event time is "
+      << "]: Message arrived at "
+      << msg->whenArrivesFully().getBaseVal() << ", current event time is "
       << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
    queue.pop_front();
