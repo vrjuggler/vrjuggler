@@ -74,7 +74,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
     if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
-            if (lost_lock.acquire() != -1) {
+            if (lost_lock.acquire().success()) {
                 lost++;
                 lost_lock.release();
             }
@@ -106,7 +106,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
     if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
-            if (lost_lock.acquire() != -1) {
+            if (lost_lock.acquire().success()) {
                 lost++;
                 lost_lock.release();
             }
@@ -136,7 +136,7 @@ void LabeledPerfDataBuffer::setBeginCycle (const vpr::GUID &category) {
     if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
-            if (lost_lock.acquire() != -1) {
+            if (lost_lock.acquire().success()) {
                 lost++;
                 lost_lock.release();
             }
