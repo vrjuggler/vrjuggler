@@ -211,6 +211,12 @@ DPP_INSTALLER(, 0644, 0755, 0755)
 # Finalize substitution settings.
 # -----------------------------------------------------------------------------
 
+if test "x$OS_TYPE" = "xWin32" ; then
+   PLATFORM_TYPE='WIN32'
+else
+   PLATFORM_TYPE='UNIX'
+fi
+
 # Compiler-specific settings when GCC is not being used.
 if test "x$USE_GCC" != "xyes" ; then
    if test "x$PLATFORM" = "xIRIX" ; then
@@ -233,6 +239,8 @@ DPP_PTHREAD_FINISH
 # -----------------------------------------------------------------------------
 
 DPP_SUBST
+
+AC_SUBST(PLATFORM_TYPE)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(VRJNET_UTIL_LDFLAGS_DBG)

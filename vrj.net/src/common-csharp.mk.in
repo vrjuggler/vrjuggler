@@ -28,14 +28,15 @@
 include @topdir@/src/common.mk
 
 CSC=		@CSC@
+CSC_FLAGS=      /define:@PLATFORM_TYPE@
 ASSEMBLY=	$(LIBDIR)/$(MOD_NAME).dll
 
 SRC_LIST=	$(addprefix $(srcdir)/, $(SRCS)) 
 
 ifeq ($(BUILD_TYPE), DEBUG)
-CSC_FLAGS=	/debug
+CSC_FLAGS+=	/debug
 else
-CSC_FLAGS=	
+CSC_FLAGS+=	
 endif
 
 @SET_MAKE@
