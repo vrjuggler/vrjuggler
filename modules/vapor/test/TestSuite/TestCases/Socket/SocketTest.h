@@ -39,7 +39,7 @@ typedef struct _thread_args thread_args_t;
 class SocketTest : public TestCase
 {
 public:
-   SocketTest( std::string name ) : mThreadAssertTest(true), TestCase (name), testSendRecv_buffer( "we're sending DATA!!!" )
+   SocketTest( std::string name ) : TestCase (name), mThreadAssertTest(true), testSendRecv_buffer( "we're sending DATA!!!" )
    {
       mOpenServerSuccess=0;
       mNumSServer=2;
@@ -73,7 +73,7 @@ public:
    {
       int num_of_times_to_test = 100;
       vpr::Uint16 port = 6970;
-      const int backlog = 5;
+      //const int backlog = 5;
       bool result = 0;
       
       // make a new socket that will connect to port "port"
@@ -104,9 +104,9 @@ public:
       vpr::Uint16 port = 6970;
       const int backlog = 5;
       bool result = 0;
-      
+
       // make a new socket listening on port "port"
-      vpr::SocketStream	acceptor_socket( vpr::InetAddr(port), vpr::InetAddr::AnyAddr );
+      vpr::SocketStream	acceptor_socket( vpr::InetAddr((int)port), vpr::InetAddr::AnyAddr );
       
       // start/stop the acceptor many times...
       for (int x = 0; x < num_of_times_to_test; ++x)
@@ -194,7 +194,7 @@ public:
    {
       int num_of_times_to_test = 10;
       vpr::Uint16 port = 6940;
-      const int backlog = 5;
+      //const int backlog = 5;
       bool result = 0;
       
       // make a new socket that will connect to port "port"
@@ -241,9 +241,9 @@ public:
       vpr::Uint16 port = 6940;
       const int backlog = 5;
       bool result = 0;
-      
+
       // make a new socket listening on port "port"
-      vpr::SocketStream	acceptor_socket( vpr::InetAddr(port), vpr::InetAddr::AnyAddr );
+      vpr::SocketStream	acceptor_socket( vpr::InetAddr((int)port), vpr::InetAddr::AnyAddr );
       
       // open socket
       result = acceptor_socket.open();
@@ -274,7 +274,7 @@ public:
             
             // send the data...
             amount_sent = child_socket->write( &buffer[0], buffer.size() );
-            threadAssertTest( amount_sent == buffer.size() && "write didn't send all" );
+            threadAssertTest( amount_sent == (int)buffer.size() && "write didn't send all" );
             
             //std::cout<<"Sent buffer: "<<buffer<<"\n"<<std::flush;
             std::cout<<"+"<<std::flush;
@@ -444,7 +444,7 @@ public:
       std::cout<<"]==================================================\n"<<std::flush; 
       std::cout<<" Reuse Address Test (simple version)"<<endl;
       vpr::InetAddr addr1(13768);
-      vpr::InetAddr addr2("129.186.232.58", 5438);
+      //vpr::InetAddr addr2("129.186.232.58", 5438);
       vpr::SocketStream*	sock1;
       vpr::SocketStream*	sock2;
       vpr::SocketStream*	sock3;
@@ -627,7 +627,7 @@ public:
       int   amount_read (0);
       
       // make a new socket listening on port "port"
-      vpr::SocketStream	acceptor_socket( vpr::InetAddr(port), vpr::InetAddr::AnyAddr );
+      vpr::SocketStream	acceptor_socket( vpr::InetAddr((int)port), vpr::InetAddr::AnyAddr );
       acceptor_socket.setOpenBlocking();
       
       // open socket
@@ -862,7 +862,9 @@ public:
       }
       ss_sock->close();
       delete ss_sock;
-      delete arg;
+      
+      // Deleting void* is not "good"
+      //delete arg;
    }
 
    // =========================================================================
@@ -883,7 +885,7 @@ public:
 
    void testReadn () {
       vpr::Uint16 server_port = 55446;
-      vpr::SocketStream server_sock(vpr::InetAddr(server_port),
+      vpr::SocketStream server_sock(vpr::InetAddr((int)server_port),
                                     vpr::InetAddr::AnyAddr);
       const unsigned int pkt_size = 5;
       ssize_t bytes;
@@ -899,7 +901,7 @@ public:
 
       // Start the client thread.
       vpr::ThreadMemberFunctor<SocketTest> func =
-          vpr::ThreadMemberFunctor<SocketTest>(this, testReadnClient,
+          vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testReadnClient,
                                                (void*) &server_port);
       vpr::Thread* client_thread = new vpr::Thread(&func);
       assertTest(client_thread->valid() && "Server could not create client thread");
