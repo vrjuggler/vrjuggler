@@ -43,12 +43,12 @@
 namespace tweek
 {
 
-TWEEK_IMPLEMENT(std::string) getVersionString ()
+std::string getVersionString()
 {
    return std::string(TWEEK_VERSION);
 }
 
-TWEEK_IMPLEMENT(vpr::Uint32) getVersionNumber ()
+vpr::Uint32 getVersionNumber()
 {
    return __TWEEK_version;
 }
