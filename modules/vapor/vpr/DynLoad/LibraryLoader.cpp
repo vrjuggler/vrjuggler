@@ -209,9 +209,6 @@ vpr::ReturnStatus LibraryLoader::findEntryPoint(vpr::LibraryPtr dso,
 
    if ( dso->isLoaded() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "Loaded DSO successfully.\n" << vprDEBUG_FLUSH;
-
       // Look up the named function in the DSO and store it in the pointer
       // called "entry_point".
       void* entry_point = dso->findSymbol(funcName);
@@ -242,7 +239,7 @@ vpr::ReturnStatus LibraryLoader::findEntryPoint(vpr::LibraryPtr dso,
          // Only print this closing thing if we had to load the DSO ourselves.
          if ( had_to_load )
          {
-            vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
                << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET
                << " ]\n" << vprDEBUG_FLUSH;
          }
