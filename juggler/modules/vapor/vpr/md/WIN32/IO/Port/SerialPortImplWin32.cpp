@@ -122,6 +122,16 @@ vpr::SerialTypes::UpdateActionOption getUpdateAction(void)
    return update;
 }
 
+// ----------------------------------------------------------------------------
+// Clear all flags by setting them to 0. This is mainly needed by Linux
+// because IRIX does this automatically.
+// ----------------------------------------------------------------------------
+
+vpr::ReturnStatus SerialPortImplTermios::clearAll ()
+{
+    // Do Nothing
+}
+
 
 void SerialPortImplWin32::setUpdateAction (SerialTypes::UpdateActionOption action)
 {
@@ -380,6 +390,57 @@ vpr::ReturnStatus SerialPortImplWin32::disableInputParityCheck ()
    SetCommState(mHandle,&dcb);
    return s;
 }
+
+// ----------------------------------------------------------------------------
+// Get the current CLOCAL state, if the device is locally attached.
+// ----------------------------------------------------------------------------
+bool SerialPortImplTermios::getLocalAttachState ()
+{
+   //Do Nothing
+}
+
+// ----------------------------------------------------------------------------
+// Enable CLOCAL, that is the device is locally attached
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::enableLocalAttach ()
+{
+    //Do Nothing
+}
+
+// ----------------------------------------------------------------------------
+// Disable CLOCAL, that is the device is not locally attached
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::disableLocalAttach ()
+{
+    //Do Nothing    
+}
+
+// ----------------------------------------------------------------------------
+// Get the current state of ignoring BREAK bytes
+// 
+// ----------------------------------------------------------------------------
+bool SerialPortImplTermios::getBreakByteIgnoreState ()
+{
+    //Do Nothing
+}
+
+// ----------------------------------------------------------------------------
+// Enable ignoring of received BREAK bytes
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore ()
+{
+    //Do Nothing
+}
+
+// ----------------------------------------------------------------------------
+// Disable ignoring of received BREAK bytes 
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore ()
+{
+    //Do Nothing
+}
+
+
 
 // ----------------------------------------------------------------------------
 // Get the current parity checking type (either odd or even).

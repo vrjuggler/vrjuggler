@@ -347,6 +347,20 @@ public:
    void setUpdateAction (vpr::SerialTypes::UpdateActionOption action);
 
    /**
+    * Clears all of the serial port's flags
+    *
+    * @pre This serial port is already open.
+    * @post An attempt is made to change the flags.  If it is successful, the
+    *       port's flags are initaialized to 0.  The resulting status is
+    *       returned to the caller.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the serial port was opened
+    *         successfully.
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus clearAll (void);
+
+   /**
     * Queries the serial port for the maximum buffer size.
     *
     * @pre The serial port is open.
@@ -478,6 +492,74 @@ public:
    {
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
+   
+   /**
+    * Get the local attach state.  That is, test if the device is attached       
+    * locally.       
+    *
+    * @pre The serial port is open.       
+    * @post The local attach state is returned to the caller.       
+    * @return true  - The device is attached locally.
+    *         false - The device is not attached locally, and opening the       
+    *                 device will usually block until there is a response.
+    */
+   bool getLocalAttachState(void);
+
+   /**
+    * Mark the device as locally attached.
+    *
+    * @pre This serial port is open.
+    * @post The device has its local attachment state enabled.       
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
+   vpr::ReturnStatus enableLocalAttach(void);
+
+   /**
+    * Mark the device as not locally attached.       
+    *
+    * @pre This serial port is open.
+    * @post The device has its local attachment state disabled.       
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
+   vpr::ReturnStatus disableLocalAttach(void);
+    
+   /**
+    * Get the current state of ignoring BREAK bytes
+    * 
+    *
+    * @pre This serial port is open.
+    * @post The BREAK byte ignore state is returned to the caller.
+    *
+    * @return true  - Bad bytes are ignored.
+    * @return false - Bad bytes are not ignored.
+    */
+   bool SerialPortImplTermios::getBreakByteIgnoreState ();
+   
+   /**
+    * Enable ignoring of received BREAK bytes
+    *
+    *
+    * @pre This serial port is open.
+    * @post BREAK byte ignoring is enabled.
+    * 
+    * @return A vpr::ReturnStatus object describing the results of the operation.
+    */
+   vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore ();
+
+   /** 
+    * Disable ignoring of received BREAK bytes
+    *
+    *
+    * @pre This serial port is open.
+    * @post BREAK byte ignoring is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the operation.
+    */
+   vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore ();
 
    // ------------------------------------------------------------------------
    //: Get the number of stop bits in use.  This will be either 1 or 2.
