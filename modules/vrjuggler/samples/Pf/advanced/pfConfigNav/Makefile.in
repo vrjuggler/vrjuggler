@@ -58,6 +58,14 @@ VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
 
+
+ifeq (@USE_AUDIOJUGGLER@, Y)
+    VJ_INCLUDES +=  -I$(AJ_BASE_DIR)/include
+    VJ_LIBS += -L$(AJ_BASE_DIR)/lib@LIBBITSUF@ -lAudioJuggler
+    CXXFLAGS += -DUSE_AUDIOJUGGLER
+endif
+
+
 # Uncomment all of the following lines if you have AudioWorks and your
 # application needs audio.
 #AW_INCLUDES 	= @APP_EXTRA_INC_AW@
