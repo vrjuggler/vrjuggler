@@ -29,8 +29,6 @@
 %{
 %}
 
-#subsystem_cxxflags="@subsystem_cxxflags@"
-#subsystem_libs="@subsystem_libs@"
 jccl_extra_cxxflags="@jccl_extra_cxxflags@"
 jccl_libs="@jccl_libs@"
 jccl_lib="@jccl_lib@"
@@ -62,13 +60,6 @@ exec_prefix=@exec_prefix@
 exec_prefix_set='no'
 print_all='no'
 use_linker='no'
-
-#if [ "x$jccl_extra_include_dirs" != "x" ]; then
-#    for dir in $jccl_extra_include_dirs ; do
-#        jccl_extra_includes="$jccl_extra_includes -I@includedir@/$dir"
-#        jccl_basedir_extra_includes="$jccl_basedir_extra_includes -I$JCCL_BASE_DIR/include/$dir"
-#    done
-#fi
 
 usage()
 {
@@ -241,10 +232,8 @@ if test "$echo_cxxflags" = "yes"; then
 
     if test "$use_base_dir" = "yes"; then
         echo $jccl_cxxflags_addtl $jccl_extra_cxxflags @XERCES_INCLUDES@ -I$JCCL_BASE_DIR/include
-#        echo @CXXFLAGS@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
     else
         echo $jccl_cxxflags_addtl $jccl_extra_cxxflags @XERCES_INCLUDES@ -I@includedir@
-#        echo @CXXFLAGS $jccl_extra_cxxflags -I@includedir@
     fi
 fi
 
@@ -264,18 +253,7 @@ if test "$echo_libs" = "yes"; then
         fi
     fi
 
-#    for i in $subsystem_libs ; do
-#        if test $i != -L@libdir@ ; then
-#            if test -z "$my_subsystem_libs" ; then
-#                my_subsystem_libs="$i"
-#            else
-#                my_subsystem_libs="$my_subsystem_libs $i"
-#            fi
-#        fi
-#    done
-
     echo $ldflags $static_begin $jccl_libs $static_end 
-#$my_subsystem_libs
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
