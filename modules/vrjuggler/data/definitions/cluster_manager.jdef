@@ -42,11 +42,6 @@
          <value label="Machine" />
          <allowed_type>machine_specific</allowed_type>
       </property>
-      <property valuetype="configelementpointer" variable="false" name="barrier_master">
-         <help>The node in the cluster that is responsible for synchronizing all other nodes.</help>
-         <value label="Barrier Master" />
-         <allowed_type>machine_specific</allowed_type>
-      </property>
       <upgrade_transform>
          <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -118,7 +113,6 @@
             </xsl:template>
 
             <xsl:template match="jconf:barrier_master">
-               <xsl:copy-of select="."/>
             </xsl:template>
 
             <xsl:template name="get-path">
