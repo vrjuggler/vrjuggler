@@ -74,12 +74,12 @@ public class SimpleApp : vrj.GlApp
    {
       Console.WriteLine("SimpleApp.preFrame()");
 
-      if ( mButton0.getProxy().getData() != (int) gadget.Digital.State.OFF )
+      if ( mButton0.getProxy().getData() != gadget.Digital.State.OFF )
       {
          Console.WriteLine("Button 0 pressed");
       }
 
-      if ( mButton1.getProxy().getData() != (int) gadget.Digital.State.OFF )
+      if ( mButton1.getProxy().getData() != gadget.Digital.State.OFF )
       {
          Console.WriteLine("Button 1 pressed");
       }
