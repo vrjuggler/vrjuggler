@@ -77,6 +77,4 @@ void doFunc(void* TSCounterPtr)
                                 << vjDEBUG_FLUSH;
       }
    create_mutex.release();
-
-   (vjThread::self())->exit();
 }
