@@ -12,6 +12,7 @@
          <jar path="${TWEEK_BASE_DIR}/bin">Devices.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ClusterWizard.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">Simulator.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">NewDevice.jar</jar>
       </dependencies>
       <tree path="/Wizards/" />
    </guipanel>
