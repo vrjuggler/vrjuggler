@@ -99,7 +99,7 @@ public:
     *
     * @return An object containing the name of this file.
     */
-   virtual const std::string& getName()
+   virtual const std::string& getName() const
    {
       return mHandleImpl.getName();
    }
@@ -176,7 +176,7 @@ public:
     *         has no handle or if the handle could not be returned for some
     *         reason.
     */
-   virtual IOSys::Handle getHandle()
+   virtual IOSys::Handle getHandle() const
    {
       return mHandleImpl.getHandle();
    }
@@ -275,7 +275,7 @@ public:
     * @return <code>true</code> is returned if the device is in read-only
     *         mode; <code>false</code> otherwise.
     */
-   bool isReadOnly()
+   bool isReadOnly() const
    {
       return mHandleImpl.isReadOnly();
    }
@@ -290,7 +290,7 @@ public:
     * @return <code>true</code> is returned if the device is in write-only
     *         mode; <code>false</code> otherwise.
     */
-   bool isWriteOnly()
+   bool isWriteOnly() const
    {
       return mHandleImpl.isWriteOnly();
    }
@@ -305,7 +305,7 @@ public:
     * @return <code>true</code> is returned if the device is in read/write
     *         mode; <code>false</code> otherwise.
     */
-   bool isReadWrite()
+   bool isReadWrite() const
    {
       return mHandleImpl.isReadWrite();;
    }

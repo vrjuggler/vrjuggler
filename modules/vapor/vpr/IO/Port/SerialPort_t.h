@@ -96,7 +96,7 @@ public:
     *
     * @return An object containing the name of this serial port.
     */
-   virtual const std::string& getName()
+   virtual const std::string& getName() const
    {
       return mSioImpl.getName();
    }
@@ -187,7 +187,7 @@ public:
     * @return vpr::IOSys::NullHandle is returned if the port has no handle or
     *         if the handle could not be returned for some reason.
     */
-   virtual IOSys::Handle getHandle()
+   virtual IOSys::Handle getHandle() const
    {
       return mSioImpl.getHandle();
    }
@@ -249,7 +249,7 @@ public:
     *
     * @see vpr::SerialTypes::UpdateActionOption
     */
-   vpr::SerialTypes::UpdateActionOption getUpdateAction()
+   vpr::SerialTypes::UpdateActionOption getUpdateAction() const
    {
       return mSioImpl.getUpdateAction();
    }
@@ -288,7 +288,7 @@ public:
     *         otherwise.
     * @see getTimeout
     */
-   vpr::ReturnStatus getMinInputSize(vpr::Uint16& size)
+   vpr::ReturnStatus getMinInputSize(vpr::Uint16& size) const
    {
       return mSioImpl.getMinInputSize(size);
    }
@@ -328,7 +328,7 @@ public:
     *         retrieved successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus getTimeout(vpr::Uint8& timeout)
+   vpr::ReturnStatus getTimeout(vpr::Uint8& timeout) const
    {
       return mSioImpl.getTimeout(timeout);
    }
@@ -369,7 +369,7 @@ public:
     *
     * @see vpr::SerialTypes::CharacterSizeOption
     */
-   vpr::ReturnStatus getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
+   vpr::ReturnStatus getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
    {
       return mSioImpl.getCharacterSize(size);
    }
@@ -405,7 +405,7 @@ public:
     * @return true is returned if bytes can be read from the device.<br>
     *         false is returned otherwise.
     */
-   bool getReadState()
+   bool getReadState() const
    {
       return mSioImpl.getReadState();
    }
@@ -437,7 +437,7 @@ public:
     * @return true is returned if local attachment is set.
     *         false is returned otherwise.
     */
-   bool getLocalAttachState()
+   bool getLocalAttachState() const
    {
       return mSioImpl.getLocalAttachState();
    }
@@ -472,7 +472,7 @@ public:
     *         stop bits was retrieved successfully.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus getStopBits(vpr::Uint8& num_bits)
+   vpr::ReturnStatus getStopBits(vpr::Uint8& num_bits) const
    {
       return mSioImpl.getStopBits(num_bits);
    }
@@ -514,7 +514,7 @@ public:
     * @see getMinInputSize
     * @see getTimeout
     */
-   bool getCanonicalState()
+   bool getCanonicalState() const
    {
       return mSioImpl.getCanonicalState();
    }
@@ -546,7 +546,7 @@ public:
     * @return true is returned if bad bytes are ignored.
     *         false is returned if bad bytes are not ignored.
     */
-   bool getBadByteIgnoreState()
+   bool getBadByteIgnoreState() const
    {
       return mSioImpl.getBadByteIgnoreState();
    }
@@ -579,7 +579,7 @@ public:
     * @return true is returned if BREAK bytes are ignored.
     *         false is returned if BREAK bytes are not ignored.
     */
-   bool getBreakByteIgnoreState()
+   bool getBreakByteIgnoreState() const
    {
       return mSioImpl.getBreakByteIgnoreState();
    }
@@ -610,7 +610,7 @@ public:
     * @return true is returned if input parity checking is enabled.  false is
     *         returned if input parity checking is disabled.
     */
-   bool getInputParityCheckState()
+   bool getInputParityCheckState() const
    {
       return mSioImpl.getInputParityCheckState();
    }
@@ -642,7 +642,7 @@ public:
     * @return true is returned if input bytes are stripped to seven bits.
     *         false is returned if input bytes are not stripped.
     */
-   bool getBitStripState()
+   bool getBitStripState() const
    {
       return mSioImpl.getBitStripState();
    }
@@ -679,7 +679,7 @@ public:
     * @return true is returned if start-stop input control is enabled.  false
     *         is returned if start-stop input control is not enabled.
     */
-   bool getStartStopInputState()
+   bool getStartStopInputState() const
    {
       return mSioImpl.getStartStopInputState();
    }
@@ -715,7 +715,7 @@ public:
     * @return true is returned if start-stop output control is enabled.  false
     *         is returned if start-stop output control is not enabled.
     */
-   bool getStartStopOutputState()
+   bool getStartStopOutputState() const
    {
       return mSioImpl.getStartStopOutputState();
    }
@@ -752,7 +752,7 @@ public:
     *         for outgoing and incoming bytes respectively.  false is returned
     *         if parity generation and checking are disabled.
     */
-   bool getParityGenerationState()
+   bool getParityGenerationState() const
    {
       return mSioImpl.getParityGenerationState();
    }
@@ -783,7 +783,7 @@ public:
     * @return true is returned if parity error marking is enabled.  false is
     *         returned if parity error masking is disabled.
     */
-   bool getParityErrorMarkingState()
+   bool getParityErrorMarkingState() const
    {
       return mSioImpl.getParityErrorMarkingState();
    }
@@ -821,7 +821,7 @@ public:
     * @return A vpr::SerialTypes::ParityType value giving the parity
     *         checking being done.
     */
-   vpr::SerialTypes::ParityType getParity()
+   vpr::SerialTypes::ParityType getParity() const
    {
       return mSioImpl.getParity();
    }
@@ -855,7 +855,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus getInputBaudRate(vpr::Uint32& rate)
+   vpr::ReturnStatus getInputBaudRate(vpr::Uint32& rate) const
    {
       return mSioImpl.getInputBaudRate(rate);
    }
@@ -889,7 +889,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     * operation.
     */
-   vpr::ReturnStatus getOutputBaudRate(vpr::Uint32& rate)
+   vpr::ReturnStatus getOutputBaudRate(vpr::Uint32& rate) const
    {
       return mSioImpl.getOutputBaudRate(rate);
    }
@@ -951,7 +951,7 @@ public:
     *
     * @see controlFlow
     */
-   bool getHardwareFlowControlState()
+   bool getHardwareFlowControlState() const
    {
       return mSioImpl.getHardwareFlowControlState();
    }
@@ -1018,37 +1018,37 @@ public:
    * @return - May be platform dependent, but will at least be as follows.
    *           0 - not high, 1 - high, -1 - Not supported
    */
-   int getCarrierDetect()
+   int getCarrierDetect() const
    {
       return mSioImpl.getCarrierDetect();
    }
 
    /**
-   * Return the status of the data set ready line.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getDataSetReady()
+    * Returns the status of the data set ready line.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported
+    */
+   int getDataSetReady() const
    {
       return mSioImpl.getDataSetReady();
    }
 
    /**
-   * Return the status of the clear to send.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getClearToSend()
+    * Returns the status of the clear to send.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported
+    */
+   int getClearToSend() const
    {
       return mSioImpl.getRequestToSend();
    }
 
    /**
-   * Return the status of the ring indicator line.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getRingIndicator()
+    * Returns the status of the ring indicator line.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported
+    */
+   int getRingIndicator() const
    {
       return mSioImpl.getRingIndicator();
    }

@@ -97,11 +97,9 @@ public:
     * Gets the "name" of this socket.  It is typically the address of the peer
     * host.
     *
-    * @post
-    *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName()
+   const std::string& getName() const
    {
       return mName;
    }
@@ -162,7 +160,7 @@ public:
    vpr::ReturnStatus close();
 
    /// Gets the handle to this socket.
-   vpr::IOSysSIM::Handle getHandle()
+   vpr::IOSysSIM::Handle getHandle() const
    {
       return this;
    }
@@ -290,7 +288,7 @@ public:
    /**
     * Returns the number of bytes currently available for reading.
     */
-   virtual vpr::Uint32 availableBytes();
+   virtual vpr::Uint32 availableBytes() const;
 
    /**
     * Implementation of the read template method.  This reads at

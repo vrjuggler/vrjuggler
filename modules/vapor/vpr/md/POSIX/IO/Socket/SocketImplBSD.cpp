@@ -63,7 +63,7 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-const std::string& SocketImplBSD::getName()
+const std::string& SocketImplBSD::getName() const
 {
    return mHandle->getName();
 }
@@ -312,7 +312,7 @@ vpr::ReturnStatus SocketImplBSD::connect(vpr::Interval timeout)
    return retval;
 }
 
-bool SocketImplBSD::isConnected ()
+bool SocketImplBSD::isConnected() const
 {
    bool connected(false);
 
@@ -344,7 +344,7 @@ bool SocketImplBSD::isConnected ()
    return connected;
 }
 
-vpr::ReturnStatus SocketImplBSD::setLocalAddr (const InetAddr& addr)
+vpr::ReturnStatus SocketImplBSD::setLocalAddr(const InetAddr& addr)
 {
    vpr::ReturnStatus status;
 
@@ -363,7 +363,7 @@ vpr::ReturnStatus SocketImplBSD::setLocalAddr (const InetAddr& addr)
    return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::setRemoteAddr (const InetAddr& addr)
+vpr::ReturnStatus SocketImplBSD::setRemoteAddr(const InetAddr& addr)
 {
    vpr::ReturnStatus status;
 
@@ -379,10 +379,10 @@ vpr::ReturnStatus SocketImplBSD::setRemoteAddr (const InetAddr& addr)
    return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::read_i (void* buffer,
-                                         const vpr::Uint32 length,
-                                         vpr::Uint32& bytes_read,
-                                         const vpr::Interval timeout)
+vpr::ReturnStatus SocketImplBSD::read_i(void* buffer,
+                                        const vpr::Uint32 length,
+                                        vpr::Uint32& bytes_read,
+                                        const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    mBlockingFixed = true;
@@ -396,10 +396,10 @@ vpr::ReturnStatus SocketImplBSD::read_i (void* buffer,
    return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::readn_i (void* buffer,
-                                          const vpr::Uint32 length,
-                                          vpr::Uint32& bytes_read,
-                                          const vpr::Interval timeout)
+vpr::ReturnStatus SocketImplBSD::readn_i(void* buffer,
+                                         const vpr::Uint32 length,
+                                         vpr::Uint32& bytes_read,
+                                         const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    mBlockingFixed = true;
@@ -413,10 +413,10 @@ vpr::ReturnStatus SocketImplBSD::readn_i (void* buffer,
    return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::write_i (const void* buffer,
-                                          const vpr::Uint32 length,
-                                          vpr::Uint32& bytes_written,
-                                          const vpr::Interval timeout)
+vpr::ReturnStatus SocketImplBSD::write_i(const void* buffer,
+                                         const vpr::Uint32 length,
+                                         vpr::Uint32& bytes_written,
+                                         const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    mBlockingFixed = true;
@@ -447,11 +447,8 @@ union sockopt_data
    Uint8          mcast_loop;
 };
 
-/**
- *
- */
-vpr::ReturnStatus SocketImplBSD::getOption (const vpr::SocketOptions::Types option,
-                                            struct vpr::SocketOptions::Data& data)
+vpr::ReturnStatus SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
+                                           struct vpr::SocketOptions::Data& data) const
 {
    int opt_name, opt_level, status;
    vpr::ReturnStatus retval;
@@ -626,11 +623,8 @@ vpr::ReturnStatus SocketImplBSD::getOption (const vpr::SocketOptions::Types opti
    return retval;
 }
 
-/**
- *
- */
-vpr::ReturnStatus SocketImplBSD::setOption (const vpr::SocketOptions::Types option,
-                                            const struct vpr::SocketOptions::Data& data)
+vpr::ReturnStatus SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
+                                           const struct vpr::SocketOptions::Data& data)
 {
    int opt_name, opt_level;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)

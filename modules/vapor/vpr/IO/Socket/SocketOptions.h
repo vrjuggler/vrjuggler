@@ -121,7 +121,7 @@ protected:
     *         vpr::ReturnStatus;:Fail is returned otherwise.
     */
    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data) = 0;
+                                       struct vpr::SocketOptions::Data& data) const = 0;
 
    /**
     * Sets a value for the given option on the socket using the given data
