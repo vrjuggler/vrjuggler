@@ -59,6 +59,7 @@ public class ConfigTokens
    public static final String num_TOKEN           = "num";
    public static final String type_TOKEN          = "type";
    public static final String help_TOKEN          = "help";
+   public static final String category_TOKEN      = "category";
 
    public static final String chunk_desc_db_TOKEN = "ChunkDescDB";
    public static final String chunk_db_TOKEN      = "ConfigChunkDB";

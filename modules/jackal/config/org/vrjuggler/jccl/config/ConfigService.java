@@ -59,7 +59,7 @@ public class ConfigService
       ChunkFactory.setChunkDescDB(descDB);
       ConfigChunkDB chunk_db = new ConfigChunkDB();
       chunk_db.build(input);
-      ChunkFactory.setChunkDescDB(null);
+//      ChunkFactory.setChunkDescDB(null);
       return chunk_db;
    }
 
@@ -95,6 +95,7 @@ public class ConfigService
       // Read in the config chunks
       ChunkDescDB desc_db = new ChunkDescDB();
       desc_db.build(input);
+      ChunkFactory.setChunkDescDB(desc_db);
       return desc_db;
    }
 

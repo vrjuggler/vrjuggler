@@ -1,0 +1,247 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editors;
+
+import java.util.*;
+import javax.swing.table.*;
+import org.vrjuggler.jccl.config.*;
+
+/**
+ * A table model for config chunks. This two-column model will return property
+ * names for the first column and property values for the second column.
+ */
+public class ConfigChunkTableModel
+   extends AbstractTableModel
+{
+   /**
+    * Sets the config chunk this table model represents.
+    */
+   public void setConfigChunk(ConfigChunk chunk)
+   {
+      mChunk = chunk;
+      fireTableDataChanged();
+   }
+
+   /**
+    * Gets the config chunk this table model represents.
+    */
+   public ConfigChunk getConfigChunk()
+   {
+      return mChunk;
+   }
+
+   /**
+    * Gets the name of the given column.
+    */
+   public String getColumnName(int col)
+   {
+      return mColumnNames[col];
+   }
+
+   /**
+    * Gets the number of rows in this model.
+    */
+   public int getRowCount()
+   {
+      int size = 0;
+      if (mChunk != null)
+      {
+         List prop_descs = mChunk.getDesc().getPropertyDescs();
+         for (Iterator itr = prop_descs.iterator(); itr.hasNext(); )
+         {
+            PropertyDesc desc = (PropertyDesc)itr.next();
+            size += mChunk.getNumPropertyValues(desc.getToken());
+         }
+      }
+      return size;
+   }
+
+   /**
+    * Gets the number of columns in this model.
+    */
+   public int getColumnCount()
+   {
+      return mColumnNames.length;
+   }
+
+   /**
+    * Tests if the cell at the given (col,row) position in the table is
+    * editable. In this case, only cells in the column 1 are editable.
+    */
+   public boolean isCellEditable(int row, int col)
+   {
+      // Can't edit the names column
+      if (col == 0)
+      {
+         return false;
+      }
+      // Can't edit embedded ConfigChunks directly
+//      PropertyDesc desc = getPropertyDesc(row);
+//      if (desc.getValType() == ValType.EMBEDDEDCHUNK)
+//      {
+//         return false;
+//      }
+      return true;
+   }
+
+   /**
+    * Gets the PropertyDesc for the property at the given row index. This method
+    * takes into account the number of values in each property.
+    *
+    * @return the requested property desc, null if row is invalid
+    */
+   public PropertyDesc getPropertyDesc(int row)
+   {
+      // We move our cur_row cursor along based on the number of values a
+      // property has. Once we pass the row we're looking for, we've found the
+      // PropertyDesc we want.
+      int cur_row = 0;
+      List prop_descs = mChunk.getDesc().getPropertyDescs();
+      for (Iterator itr = prop_descs.iterator(); itr.hasNext(); )
+      {
+         // Move the cur_row cursor along by the number of values the current
+         // property has
+         PropertyDesc cur_desc = (PropertyDesc)itr.next();
+         int num_values = mChunk.getNumPropertyValues(cur_desc.getToken());
+         cur_row += num_values;
+
+         // If we've passed the row we're looking for, return that desc.
+         if (row < cur_row)
+         {
+            return cur_desc;
+         }
+      }
+      return null;
+   }
+
+   /**
+    * Gets the row for the given property description's first value.
+    */
+   public int getRowFor(PropertyDesc desc)
+   {
+      int cursor = 0;
+      List prop_descs = mChunk.getDesc().getPropertyDescs();
+      for (Iterator itr = prop_descs.iterator(); itr.hasNext(); )
+      {
+         PropertyDesc cur_desc = (PropertyDesc)itr.next();
+         // If this is not the desc we are looking for, move the cursor by the
+         // number of values in the property
+         if (! cur_desc.equals(desc))
+         {
+            cursor += mChunk.getNumPropertyValues(cur_desc.getToken());
+         }
+         // If we found the desc we're looking for, add in the index and quit
+         else
+         {
+            break;
+         }
+      }
+      return cursor;
+   }
+
+   /**
+    * Gets the value at the given (col,row) position in the table.
+    */
+   public Object getValueAt(int row, int col)
+   {
+      PropertyDesc desc = getPropertyDesc(row);
+      if (col == 0)
+      {
+         return desc.getName();
+      }
+      else
+      {
+         // Get the right property value based on the offset of the base row for
+         // the property to the index into that property
+         int base_row = getRowFor(desc);
+         int value_idx = row - base_row;
+         return mChunk.getProperty(desc.getToken(), value_idx).get();
+      }
+   }
+
+   /**
+    * Sets the value at the given (col,row) position in the table.
+    */
+   public void setValueAt(Object value, int row, int col)
+   {
+      PropertyDesc desc = getPropertyDesc(row);
+
+      // We can only set values in the column zero
+      if (col == 1)
+      {
+         VarValue varVal;
+         if (value instanceof Boolean)
+         {
+            varVal = new VarValue(((Boolean)value).booleanValue());
+         }
+         else if (value instanceof Integer)
+         {
+            varVal = new VarValue(((Integer)value).intValue());
+         }
+         else if (value instanceof Float)
+         {
+            varVal = new VarValue(((Float)value).floatValue());
+         }
+         else if (value instanceof String)
+         {
+            varVal = new VarValue(value.toString());
+         }
+         else if (value instanceof ConfigChunk)
+         {
+            varVal = new VarValue((ConfigChunk)value);
+         }
+         else
+         {
+            // ACK!
+            varVal = null;
+         }
+
+         // Figure out which property value we're editing
+         int base_row = getRowFor(desc);
+         int value_idx = row - base_row;
+
+         // Modify the value and notify listeners
+         mChunk.setProperty(desc.getToken(), value_idx, varVal);
+         fireTableCellUpdated(row, col);
+      }
+   }
+
+   /**
+    * The name of the columns.
+    */
+   private String[] mColumnNames = { "Property", "Value" };
+
+   /**
+    * The config chunk this table model is representing.
+    */
+   private ConfigChunk mChunk = null;
+}

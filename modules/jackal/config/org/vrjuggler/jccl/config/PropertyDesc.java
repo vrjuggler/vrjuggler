@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.beans.*;
 import java.util.*;
 import java.io.*;
 import org.jdom.Element;
@@ -59,14 +60,15 @@ public class PropertyDesc
    public PropertyDesc (Element root)
    {
       mDomElement = root;
+      changeSupport = new PropertyChangeSupport(this);
    }
 
    public PropertyDesc ()
    {
       mDomElement = new Element(ConfigTokens.property_desc_TOKEN);
+      changeSupport = new PropertyChangeSupport(this);
       this.setName("");
       this.setToken("");
-      this.setNumAllowed(1);
    }
 
    public Object clone ()
@@ -79,7 +81,9 @@ public class PropertyDesc
 
    public void setName (String newName)
    {
+      String old = getName();
       mDomElement.setAttribute("name", newName);
+      changeSupport.firePropertyChange("name", old, newName);
    }
 
    /**
@@ -102,7 +106,9 @@ public class PropertyDesc
 
    public void setToken (String newToken)
    {
+      String old = getToken();
       mDomElement.setAttribute("token", newToken);
+      changeSupport.firePropertyChange("token", old, newToken);
    }
 
    /**
@@ -133,7 +139,9 @@ public class PropertyDesc
          mDomElement.addContent(help_child);
       }
 
+      String old = getHelp();
       help_child.setText(helpText);
+      changeSupport.firePropertyChange("help", old, helpText);
    }
 
    public String getHelp()
@@ -151,7 +159,9 @@ public class PropertyDesc
 
    public void setValType (ValType t)
    {
+      ValType old = getValType();
       mDomElement.setAttribute("type", t.toString());
+      changeSupport.firePropertyChange("type", old, t);
    }
 
    public ValType getValType()
@@ -173,6 +183,16 @@ public class PropertyDesc
    public void addItem (Item item)
    {
       mDomElement.addContent(item.getNode());
+      changeSupport.firePropertyChange("item", null, null);
+   }
+
+   /**
+    * Removes the given Item object from this property description.
+    */
+   public void removeItem(Item item)
+   {
+      mDomElement.removeContent(item.getNode());
+      changeSupport.firePropertyChange("item", null, null);
    }
 
    public Vector getItems ()
@@ -188,6 +208,14 @@ public class PropertyDesc
       }
 
       return items;
+   }
+
+   /**
+    * Gets the number of items in this property description.
+    */
+   public int getItemsSize()
+   {
+      return mDomElement.getChildren(ConfigTokens.item_TOKEN).size();
    }
 
    public void setItem (int index, Item item)
@@ -207,6 +235,7 @@ public class PropertyDesc
          item_elem.setAttribute(ConfigTokens.default_value_TOKEN,
                                 item.getDefaultValue().toString());
       }
+      changeSupport.firePropertyChange("item", null, null);
    }
 
    /**
@@ -231,12 +260,24 @@ public class PropertyDesc
          // XXX: Default values for embedded chunks are not yet supported.
          else if ( ValType.EMBEDDEDCHUNK == val_type )
          {
-            String chunk_type = this.getEnumAtIndex(0).str;
+            System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
+            String chunk_type = this.getEnumAt(0).getName();
             ChunkDesc desc = ChunkFactory.getChunkDescByToken(chunk_type);
             ConfigChunk emb_chunk = new ConfigChunk(desc);
             emb_chunk.setName(item_child.getAttribute("label").getValue());
             val.set(emb_chunk);
          }
+      }
+      // Support embedded chunks for property descs that don't have items
+      else if (ValType.EMBEDDEDCHUNK == val_type)
+      {
+         System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
+         String chunk_type = this.getEnumAt(0).getName();
+         System.out.println("Getting desc for chunk type: "+chunk_type);
+         ChunkDesc desc = ChunkFactory.getChunkDescByToken(chunk_type);
+         ConfigChunk emb_chunk = new ConfigChunk(desc);
+         emb_chunk.setName(this.getName());
+         val.set(emb_chunk);
       }
 
       return val;
@@ -262,14 +303,16 @@ public class PropertyDesc
 
    public void setHasVariableNumberOfValues (boolean allowsVariable)
    {
+      boolean old = hasVariableNumberOfValues();
       if ( allowsVariable )
       {
-         mDomElement.setAttribute("num", ConfigTokens.var_num_TOKEN);
+         mDomElement.setAttribute("variable", "1");
       }
       else
       {
-         mDomElement.setAttribute("num", "1");
+         mDomElement.setAttribute("variable", "0");
       }
+      changeSupport.firePropertyChange("variable", old, allowsVariable);
    }
 
    /**
@@ -281,50 +324,30 @@ public class PropertyDesc
       boolean result;
 
       // If, for some weird reason, this property description does not have a
-      // num attribute, this is a good place to add it.  The default is 1, so
-      // that's the value we'll use.
-      if ( mDomElement.getAttribute("num") == null )
+      // variable attribute, this is a good place to add it. The default is 
+      // 0 (false), so that's the value we'll use.
+      if ( mDomElement.getAttribute("variable") == null )
       {
          result = false;
-         mDomElement.setAttribute("num", "1");
+         mDomElement.setAttribute("variable", "0");
       }
       // Otherwise, we test the attribute value against the variable number
       // token.
       else
       {
-         String value = mDomElement.getAttribute("num").getValue();
-         result = value.equals(ConfigTokens.var_num_TOKEN);
+         String value = mDomElement.getAttribute("variable").getValue();
+         result = value.equals("1");
       }
 
       return result;
    }
 
-   public void setNumAllowed (int n)
-   {
-      mDomElement.setAttribute("num", String.valueOf(n));
-   }
-
-   public int getNumAllowed()
-   {
-      int num = 0;
-      String value = mDomElement.getAttribute("num").getValue();
-
-      if ( value.equals(ConfigTokens.var_num_TOKEN) )
-      {
-         num = -1;
-      }
-      else
-      {
-         num = Integer.valueOf(value.trim()).intValue();
-      }
-
-      return num;
-   }
-
    public void setUserLevel(int level)
    {
+      int old = getUserLevel();
       mDomElement.setAttribute(ConfigTokens.user_level_TOKEN,
                                String.valueOf(level));
+      changeSupport.firePropertyChange("level", old, level);
    }
 
    public int getUserLevel()
@@ -393,6 +416,7 @@ public class PropertyDesc
                                (String) i.next());
          mDomElement.addContent(new_elem);
       }
+      changeSupport.firePropertyChange("item", null, null);
    }
 
    /**
@@ -407,119 +431,87 @@ public class PropertyDesc
       Element new_item = new Element(ConfigTokens.item_TOKEN);
       new_item.setAttribute(ConfigTokens.item_label_TOKEN, label);
       mDomElement.addContent(new_item);
+      changeSupport.firePropertyChange("item", null, null);
    }
 
-   public void appendEnumeration(String label, String value)
-   {
-      VarValue v;
-      ValType valtype = this.getValType();
-
-      if ( value.equals("") )
-      {
-         /* no explicit value */
-         if (valtype == ValType.STRING ||
-             valtype == ValType.CHUNK ||
-             valtype == ValType.EMBEDDEDCHUNK)
-         {
-            v = new VarValue(label);
-         }
-         // XXX: This seems incredibly unsafe.  Basically, no constant mapping
-         // is being retained between the enumeration ID and the value.
-         // (PH 5/9/2002)
-         else
-         {
-            v = new VarValue(enumval++);
-         }
-      }
-      else
-      {
-         v = new VarValue(valtype);
-         v.set (value);
-      }
-
-      Element enum_elem = new Element(ConfigTokens.prop_enum_TOKEN);
-      enum_elem.setAttribute("name", label);
-      enum_elem.setAttribute("value", v.toString());
-      mDomElement.addContent(enum_elem);
-   }
-
-   /* c had better be a collection of DescEnums, or things will get
-    * real ugly real fast.
+   /**
+    * Adds the given enumeration to this PropertyDesc at the end of the list of
+    * enumerations.
+    *
+    * @param newEnum    the enumeration to add
     */
-   public void setEnumerations (Collection c)
+   public void addEnum(DescEnum newEnum)
    {
-      mDomElement.removeChildren(ConfigTokens.prop_enum_TOKEN);
-
-      Iterator i = c.iterator();
-      while ( i.hasNext() )
-      {
-         DescEnum enum     = (DescEnum) i.next();
-         Element enum_elem = new Element(ConfigTokens.prop_enum_TOKEN);
-
-         // Fill in the enumeration element's attributes.
-         enum_elem.setAttribute("name", enum.str);
-
-         // Dang special cases...
-         if ( this.getValType() != ValType.EMBEDDEDCHUNK )
-         {
-            enum_elem.setAttribute("value", enum.val.toString());
-         }
-
-         // Add the new element to the DOM tree.
-         mDomElement.addContent(enum_elem);
-      }
+      mDomElement.addContent(newEnum.getNode());
+      newEnum.addPropertyChangeListener(enumChangeListener);
+      changeSupport.firePropertyChange("enumeration", null, null);
    }
 
-   public DescEnum[] getEnumerations()
+   /**
+    * Removes the given enumeration from this PropertyDesc.
+    *
+    * @param @targetEnum   the enumeration to remove
+    */
+   public void removeEnum(DescEnum targetEnum)
    {
-      List enums = mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN);
-      DescEnum[] e = new DescEnum[enums.size()];
-      String name;
-      VarValue value;
-
-      for ( int i = 0; i < enums.size(); ++i )
-      {
-         Element enum_elem = (Element) enums.get(i);
-         name  = enum_elem.getAttribute("name").getValue();
-         value = new VarValue(this.getValType());
-
-         if ( enum_elem.getAttribute("value") != null )
-         {
-            value.set(enum_elem.getAttribute("value").getValue());
-         }
-
-         e[i] = new DescEnum(name, value);
-      }
-
-      return e;
+      mDomElement.removeContent(targetEnum.getNode());
+      targetEnum.removePropertyChangeListener(enumChangeListener);
+      changeSupport.firePropertyChange("enumeration", null, null);
    }
 
-   public int getEnumerationsSize()
+   /**
+    * Gets the number of enumerations assocated with this PropertyDesc.
+    */
+   public int getNumEnums()
    {
       return mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).size();
    }
 
-   public DescEnum getEnumAtIndex (int index)
+   /**
+    * Gets the i'th enumeration associated with this PropertyDesc.
+    *
+    * @param idx     the index of the enumeration to retrieve
+    *
+    * @throws ArrayIndexOutOfBoundsException
+    *             if the index is invalid
+    */
+   public DescEnum getEnumAt(int idx)
+      throws ArrayIndexOutOfBoundsException
    {
-      DescEnum enum_val = null;
-      List enums = mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN);
-
-      if ( index < enums.size() )
+      // Verify that idx is a valid index
+      if ((idx < 0) || (idx >= getNumEnums()))
       {
-         Element enum_element = (Element) enums.get(index);
-
-         String name = enum_element.getAttribute("name").getValue();
-         VarValue value = new VarValue(this.getValType());
-
-         if ( enum_element.getAttribute("value") != null )
-         {
-            value.set(enum_element.getAttribute("value").getValue());
-         }
-
-         enum_val = new DescEnum(name, value);
+         throw new ArrayIndexOutOfBoundsException("Index, "+idx+", is out of bounds");
       }
 
-      return enum_val;
+      // Construct a new DescEnum object for the enum we care about
+      Element desc_elt =
+         (Element)mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).get(idx);
+      DescEnum desc_enum = new DescEnum(desc_elt, getValType());
+      desc_enum.addPropertyChangeListener(enumChangeListener);
+
+      return desc_enum;
+   }
+
+   /**
+    * Gets a list of all the enumerations contained in this PropertyDesc.
+    *
+    * @return  the list of enumerations; an empty list if it contains no enums
+    */
+   public List getEnums()
+   {
+      List enums = new ArrayList();
+      Iterator itr =
+         mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).iterator();
+
+      while (itr.hasNext())
+      {
+         DescEnum de = new DescEnum((Element)itr.next(), getValType());
+         de.addPropertyChangeListener(enumChangeListener);
+         enums.add(de);
+      }
+
+      return enums;
    }
 
    public boolean equals (PropertyDesc d)
@@ -621,6 +613,24 @@ public class PropertyDesc
    }
 
    /**
+    * Registers the given listener to receive notifications when this object's
+    * properties change.
+    */
+   public void addPropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.addPropertyChangeListener(listener);
+   }
+
+   /**
+    * Unregisters the given listener so that it no longer receives notifications
+    * when this object's properties change.
+    */
+   public void removePropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.removePropertyChangeListener(listener);
+   }
+
+   /**
     * This is used to contain the attributes of a <ProprtyDesc>'s <item>
     * child(ren).
     */
@@ -668,10 +678,28 @@ public class PropertyDesc
       {
          VarValue default_value = null;
 
+         // If the item actually has a default value, return it
          if ( mNode.getAttribute(ConfigTokens.default_value_TOKEN) != null )
          {
             default_value = new VarValue(mValType);
             default_value.set(mNode.getAttribute(ConfigTokens.default_value_TOKEN).getValue());
+         }
+         // Otherwise, create a new value for the default
+         else
+         {
+            default_value = new VarValue(mValType);
+            // If the type is an embedded chunk, create the chunk needed
+            if (mValType == ValType.EMBEDDEDCHUNK)
+            {
+               // Get the enumeration containing the chunk desc token
+               Element parent = mNode.getParent();
+               Element desc_node = parent.getChild(ConfigTokens.prop_enum_TOKEN);
+               String desc_token = desc_node.getAttributeValue(ConfigTokens.name_TOKEN);
+
+               // Get the default config chunk for the found desc
+               ChunkDesc desc = ChunkFactory.getChunkDescByToken(desc_token);
+               default_value.set(new ConfigChunk(desc));
+            }
          }
 
          return default_value;
@@ -699,5 +727,32 @@ public class PropertyDesc
       private ValType mValType = null;
    }
 
+   /**
+    * A specialized listener specifically for handling DescEnum property
+    * changes.
+    */
+   class EnumChangeListener
+      implements PropertyChangeListener
+   {
+      public void propertyChange(PropertyChangeEvent evt)
+      {
+         // TODO: do something about this ;)
+      }
+   }
+
+   /**
+    * The DOM element that maintains the content for this PropertyDesc.
+    */
    private Element mDomElement = null;
+
+   /**
+    * This helps manage property change notification to listeners.
+    */
+   private PropertyChangeSupport changeSupport = null;
+
+   /**
+    * Listener for enumeration property changes.
+    */
+   private EnumChangeListener enumChangeListener = new EnumChangeListener();
+
 }

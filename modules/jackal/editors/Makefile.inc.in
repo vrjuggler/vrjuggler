@@ -32,53 +32,52 @@
 
 BUILD_JAVA	= @BUILD_JAVA@
 
-config-java:
+editors-java:
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
-	@echo "Building Java code for the JCCL config"
+	@echo "Building Java code for the JCCL editors"
 	@echo "------------------------------------------------"
 	@$(MAKE) java
 else
 	@echo "------------------------------------------------"
-	@echo "JCCL config build skipped"
+	@echo "JCCL editors build skipped"
 	@echo "------------------------------------------------"
 endif
 endif	# ifndef NO_JAVA
 
-# Build the JAR files for the Tweek GUI.
-config-jar:
+# Build the JAR files for the JCCL editors
+editors-jar:
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) jars
 else
 	@echo "------------------------------------------------"
-	@echo "JCCL config JAR file creation skipped"
+	@echo "JCCL editors JAR file creation skipped"
 	@echo "------------------------------------------------"
 endif
 endif	# ifndef NO_JAVA
 
-config-pkg-links:
+editors-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
 java-install:
-	@$(MAKE) config-install
+	@$(MAKE) editors-install
 
 links:
-	@$(MAKE) -C jccl instlinks="$(instlinks)" links
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 ifneq ($(JARS), )
 	cd $(instlinks)/bin && \
 		for jar in $(JARS); do \
-			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/config/$$jar ./$$jar; \
+			$(RM_LN) $$jar && $(LN_S) $(topdir)/editors/$$jar ./$$jar; \
 		done
 endif
 ifneq ($(BEANS), )
 	cd $(instlinks)/bin/beans && \
 		for bean in $(BEANS); do \
-			$(RM_LN) $$bean.xml && $(LN_S) $(top_srcdir)/config/$$bean.xml . ; \
-			$(RM_LN) $$bean.jar && $(LN_S) $(topdir)/config/$$bean.jar . ; \
+			$(RM_LN) $$bean.xml && $(LN_S) $(top_srcdir)/editors/$$bean.xml . ; \
+			$(RM_LN) $$bean.jar && $(LN_S) $(topdir)/editors/$$bean.jar . ; \
 		done
 endif
 endif
