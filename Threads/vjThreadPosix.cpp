@@ -33,10 +33,15 @@
 
 
 #include <vjConfig.h>
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <pthread.h>
+
+#ifdef HAVE_SYS_CAPABILITY_H
+#   include <sys/capability.h>
+#endif
 
 #include <Threads/vjThread.h>
 
@@ -144,7 +149,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
         }
 #   endif   /* _POSIX_THREAD_REALTIME_SCHEDULING */
 
-#else
+#else	/* ! _PTHREADS_DRAFT_4 */
     sched_param_t prio_param;
 
     pthread_attr_init(&thread_attrs);
@@ -160,6 +165,16 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
     // If thread priority scheduling is available, set the thread's priority
     // if it is set to be higher than 0.
 #   ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
+#   ifdef HAVE_SYS_CAPABILITY_H
+        cap_t capabilities = cap_get_proc();
+
+        // If we have the capability to do so, set the scope of the threads
+        // to system scope.
+        if ( capabilities->cap_effective & CAP_SCHED_MGT ) {
+            mScope = PTHREAD_SCOPE_SYSTEM;
+        }
+#   endif	/* HAVE_SYS_CAPABILITY_H */
+
         pthread_attr_setscope(&thread_attrs, mScope);
 
         if ( priority > 0 ) {
