@@ -44,7 +44,6 @@
 %{
 %}
 
-subsystem_cflags="@subsystem_cflags@"
 subsystem_cxxflags="@subsystem_cxxflags@"
 subsystem_libs="@subsystem_libs@"
 vpr_libs="@vpr_libs@"
@@ -67,7 +66,6 @@ Options:
         [--libs]              Print the basic VPR libraries
         [--extra-libs]        Print the extra linker options needed for
                               making an executable
-        [--cflags]            Print the flags for the C compiler
         [--cxxflags]          Print the flags for the C++ compiler
         [--subsystem]         Print the OS abstraction layer being used
 Libraries:
@@ -112,9 +110,6 @@ while test $# -gt 0; do
         --version)
             echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
             ;;
-        --cflags)
-            echo_cflags=yes
-            ;;
         --cxxflags)
             echo_cxxflags=yes
             ;;
@@ -153,14 +148,6 @@ if test "$echo_exec_prefix" = "yes"; then
         echo $VPR_BASE_DIR
     else
         echo $exec_prefix
-    fi
-fi
-
-if test "$echo_cflags" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo @CFLAGS@ -I$VPR_BASE_DIR/include $subsystem_cflags
-    else
-        echo @CFLAGS@ -I@includedir@ $subsystem_cflags
     fi
 fi
 
