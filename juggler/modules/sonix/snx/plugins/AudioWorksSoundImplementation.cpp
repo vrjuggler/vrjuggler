@@ -43,9 +43,11 @@
 
 
 
+#include <stdlib.h>
 #include "AudioWorksSoundImplementation.h"
 
 #include "snx/SoundFactory.h"
+
 namespace snx
 {
    snx::SoundFactoryReg<AudioWorksSoundImplementation> audioworksRegistrator( "AudioWorks" );
@@ -134,6 +136,7 @@ namespace snx
 
             //float xyz[3] = { 0.0f, 0.0f, 0.0f }, hpr[3] = { 0.0f, 0.0f, 0.0f };
             //awXYZHPR(si.mSound, xyz, hpr);               //Set sound at origin
+            awRemPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
          }
 
          else
@@ -145,6 +148,9 @@ namespace snx
             float hpr[3] = { 0.0f, 0.0f, 0.0f };
             // convert xyz to performer coords...
             awPlyrCSRef( mBindTable[alias].mPlayer, xyz, hpr );
+
+            awAddPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
+
          }
       }
    }
@@ -244,13 +250,13 @@ namespace snx
       snx::SoundImplementation::setPitchBend( alias, amount );
       if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
       {
-         if (this->isAmbient( alias ) == true)
-            awProp( mBindTable[alias].mSound, AWSND_PBEND, amount );
-         else
-            awProp( mBindTable[alias].mPlayer, AWSND_PBEND, amount );
+         //if (this->isAmbient( alias ) == true)
+         awProp( mBindTable[alias].mSound, AWSND_PBEND, amount );
+         //else
+         awProp( mBindTable[alias].mPlayer, AWSND_PBEND, amount );
       }
    }   
-   
+      
    /**
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
@@ -258,6 +264,31 @@ namespace snx
     */
    void AudioWorksSoundImplementation::startAPI()
    {
+      // figure out what host to connect to if any:
+      std::string hostname = getenv( "SNX_AW_HOSTNAME" );
+
+      // if no hostname set, then look for an rc file
+      if (hostname == "")
+      {
+         hostname = "localhost";
+         std::string rc_filepath = getenv( "HOME" );
+         rc_filepath += "/.sonix-aw";
+         std::cerr << "[snx]AudioWorks| Reading "<<rc_filepath<<" for hostname\n" << std::flush;
+         std::ifstream rc_file;
+         rc_file.open( rc_filepath.c_str(), std::ifstream::in );
+         if (rc_file.good())
+         {
+            rc_file>>hostname;
+         }
+         else
+         {
+            
+         }
+         rc_file.close();
+      }
+      std::cerr << "[snx]AudioWorks| hostname="<<hostname<<"\n" << std::flush;
+        
+      
       // setup the hardware system
       awOpenAWD("");
       awOpenEP(0, AWEP_SHARE); // multiusers can use audio works at the same time...
@@ -275,6 +306,12 @@ namespace snx
 
       //Initialize the engine
       mEngine = awNewEng();         //Define the new engine
+      
+      // if hostname is set, then set it in AW
+      if (hostname != "localhost")
+      {
+         awEngAWD( mEngine, hostname.c_str() );
+      }
       assert( mEngine != NULL );
       awProp(mEngine, AWENG_VOLUME, 1.0);   //Set its volume to maximum output
       int result = awAttachEng(mEngine);
@@ -499,7 +536,6 @@ namespace snx
 
       // set the player
       si.mPlayer = awNewPlyr();
-      awAddPlyrSnd( si.mPlayer, si.mSound );
 
       //Set up scene object and add the sound objects to it
       awAddSceneSnd(mScene, si.mSound);         //Add the sounds to it
@@ -520,6 +556,7 @@ namespace snx
    {
       if (mBindTable.count( alias ) > 0)
       {
+         awRemPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
          awRemSceneSnd( mScene, mBindTable[alias].mSound );  // detach from the scene
          awUnMapWavToSE( mBindTable[alias].mWave );           // detach it from the engine
          awDelete( mBindTable[alias].mSound );
@@ -546,7 +583,7 @@ namespace snx
 
          snx::SoundImplementation::step( timeElapsed );
          double total_time_elapsed = mTotalTimeElapsed;
-         //total_time_elapsed = awGetClockSecs();
+         total_time_elapsed = awGetClockSecs(); // @todo remove me...
          awFrame(total_time_elapsed);
 
          /*
