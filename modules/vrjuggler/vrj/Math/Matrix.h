@@ -24,7 +24,7 @@ class vjCoord;
 
 
 //-----------------------------------------------------------------------------
-//: vjMatrix: Scene graph matrix optimized for OpenGL.
+//: vjMatrix: 4x4 Matrix class (OpenGL ordering)
 //
 // C/C++ uses matrices in row major order.  In other words the access
 // indices look like: <br>
@@ -141,10 +141,11 @@ public:
    //+      secYAxis - The y-axis of the secondary coord system in terms of the first
    //+      secZAxis - The z-axis of the secondary coord system in terms of the first
    //
+   //!PRE: The axis must be normalized
    //!POST: mat = direction cosine matrix
    //!NOTE: Based on "Virtual Reality Sytems" pg. 26
    //+      The matrix created is able to transform a pt in the first coord
-   //+      system to the second coord system. pt'= Mat*pt
+   //+      system to the second coord system. Ps = sMf*Pf
    void makeDirCos(vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis);
 
    //: Make matrix from given quaternion
