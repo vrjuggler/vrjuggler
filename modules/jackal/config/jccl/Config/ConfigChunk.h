@@ -34,6 +34,7 @@
 #define _JCCL_CONFIG_CHUNK_H_
 
 #include <jccl/jcclConfig.h>
+#include <vector>
 
 #include <sstream>
 #include <cppdom/cppdom.h>

@@ -34,6 +34,7 @@
 #define _JCCL_CHUNKDESC_H_
 
 #include <jccl/jcclConfig.h>
+#include <vector>
 #include <jccl/Config/PropertyDesc.h>
 #include <jccl/Config/ChunkDescPtr.h>
 #include <jccl/Config/ConfigChunkPtr.h>
