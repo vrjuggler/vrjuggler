@@ -72,7 +72,7 @@ public class PrefsDialog extends JDialog
          e.printStackTrace();
       }
 
-      this.populateComboBoxes();
+      this.configComboBoxes();
 
       switch ( chooserOpenStyle )
       {
@@ -121,27 +121,13 @@ public class PrefsDialog extends JDialog
 
    private void jbInit() throws Exception
    {
-      java.util.Vector viewers = mPrefs.getBeanViewers();
-
-      for ( int i = 0; i < viewers.size(); i++ )
-      {
-         mViewerBox.addItem(viewers.elementAt(i));
-      }
-
       mFileChooserBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"File Chooser Configuration");
       mGenBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"General Configuration");
       mViewerBox.setMinimumSize(new Dimension(126, 10));
       mViewerBox.setPreferredSize(new Dimension(130, 10));
-      mViewerBox.setSelectedItem(mPrefs.getBeanViewer());
-
-      for ( int i = 1; i <= 10; i++ )
-      {
-         mLevelBox.addItem(String.valueOf(i));
-      }
 
       mLevelBox.setMinimumSize(new Dimension(126, 10));
       mLevelBox.setPreferredSize(new Dimension(130, 10));
-      mLevelBox.setSelectedIndex(mPrefs.getUserLevel() - 1);
 
       mOkButton.setMnemonic('O');
       mOkButton.setText("OK");
@@ -243,65 +229,19 @@ public class PrefsDialog extends JDialog
       mContentPanel.add(mFileChooserPanel, null);
 
       mLevelLabel.setText("User Level");
-      mLevelBox.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               userLevel = mLevelBox.getSelectedIndex() + 1;
-            }
-         });
+
       mGenConfigPanel.add(mLevelLabel,     new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
       mGenConfigPanel.add(mLevelBox,   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
       mLafLabel.setText("Look and Feel");
-      mLafBox.addItem("Metal");
-      mLafBox.addItem("Motif");
-      mLafBox.addItem("Windows");
-      mLafBox.addItem("Mac");
-      mLafBox.addItem("System");
-      mLafBox.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               String val = (String) mLafBox.getSelectedItem();
-
-               if ( val.equals("Metal") )
-               {
-                  lookAndFeel = "javax.swing.plaf.metal.MetalLookAndFeel";
-               }
-               else if ( val.equals("Motif") )
-               {
-                  lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-               }
-               else if ( val.equals("Windows") )
-               {
-                  lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-               }
-               else if ( val.equals("Macintosh") )
-               {
-                  lookAndFeel = "com.sun.java.swing.plaf.mac.MacLookAndFeel";
-               }
-               else
-               {
-                  lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-               }
-            }
-         });
       mGenConfigPanel.add(mLafLabel,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
       mGenConfigPanel.add(mLafBox,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
       mViewerLabel.setText("Bean Viewer");
-      mViewerBox.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               beanViewer = (String) mViewerBox.getSelectedItem();
-            }
-         });
       mGenConfigPanel.add(mViewerLabel,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
       mGenConfigPanel.add(mViewerBox,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
@@ -335,9 +275,84 @@ public class PrefsDialog extends JDialog
     * to a combo box will be made.  These can include setting the default
     * selected value and/or adding action listeners.
     */
-   private void populateComboBoxes ()
+   private void configComboBoxes ()
    {
-      Iterator i      = GlobalPreferencesService.getStartDirList().iterator();
+      // ----------------------------------------------------------------------
+      // Add all the known Bean viewers to mViewerBox.
+      java.util.Vector viewers = mPrefs.getBeanViewers();
+
+      for ( int i = 0; i < viewers.size(); i++ )
+      {
+         mViewerBox.addItem(viewers.elementAt(i));
+      }
+
+      mViewerBox.setSelectedItem(mPrefs.getBeanViewer());
+      mViewerBox.addActionListener(new ActionListener()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               beanViewer = (String) mViewerBox.getSelectedItem();
+            }
+         });
+      // ----------------------------------------------------------------------
+
+      // ----------------------------------------------------------------------
+      // Add user level options to mLevelBox.
+      for ( int i = 1; i <= 10; i++ )
+      {
+         mLevelBox.addItem(String.valueOf(i));
+      }
+
+      mLevelBox.setSelectedIndex(mPrefs.getUserLevel() - 1);
+      mLevelBox.addActionListener(new ActionListener()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               userLevel = mLevelBox.getSelectedIndex() + 1;
+            }
+         });
+      // ----------------------------------------------------------------------
+
+      // ----------------------------------------------------------------------
+      // Handle the Look-and-Feel box.
+      mLafBox.addItem("Metal");
+      mLafBox.addItem("Motif");
+      mLafBox.addItem("Windows");
+      mLafBox.addItem("Mac");
+      mLafBox.addItem("System");
+      mLafBox.addActionListener(new ActionListener()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               String val = (String) mLafBox.getSelectedItem();
+
+               if ( val.equals("Metal") )
+               {
+                  lookAndFeel = "javax.swing.plaf.metal.MetalLookAndFeel";
+               }
+               else if ( val.equals("Motif") )
+               {
+                  lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+               }
+               else if ( val.equals("Windows") )
+               {
+                  lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+               }
+               else if ( val.equals("Macintosh") )
+               {
+                  lookAndFeel = "com.sun.java.swing.plaf.mac.MacLookAndFeel";
+               }
+               else
+               {
+                  lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+               }
+            }
+         });
+      // ----------------------------------------------------------------------
+
+      // ----------------------------------------------------------------------
+      // Handle the file chooser starting directory box stuff.
+      Iterator i = GlobalPreferencesService.getStartDirList().iterator();
 
       boolean has_start_dir = false;
 
@@ -367,6 +382,7 @@ public class PrefsDialog extends JDialog
                chooserStartDir = (String) mFcStartDirBox.getSelectedItem();
             }
          });
+      // ----------------------------------------------------------------------
    }
 
    private void okButtonAction (ActionEvent e)
