@@ -35,12 +35,14 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Devices/Fakespace/PinchGlove.h>
-#include <gadget/Devices/Sim/SimInput.h>
 
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Glove.h>
 #include <gadget/Type/Finger.h>
 #include <gadget/Type/Hand.h>
+
+#include <gadget/Devices/Sim/SimInput.h>
 
 namespace gadget
 {
