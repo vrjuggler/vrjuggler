@@ -202,9 +202,10 @@ vjDeviceConstructor.
 
 <p>
 You can compile your device driver code along with the vjDeviceConstructor call
-into a library (.a .so .lib or .dll for example) that you staticly link 
+into a library (.a .so .lib or .dll for example) that you then link 
 with your applications.  This way you don't need to modify the juggler source 
-code, and can centralize all your driver module code into one area.
+code to add a new driver, plus you can centralize all your driver code into
+a single neat driver module that you can then distribute as a "plugin".
 </p>
 
 <h3> <a name="config">Configure your device driver</a> </h3>
@@ -213,6 +214,7 @@ To configure your device, you will need 2 things:
 <li><a href="#config-files">Configuration Files</a>
 <li><a href="#config-code">To write code in your driver to accept the config info</a>
 </ul>
+See also: <a href="${PROGRAMMERGUIDE}/adv.topics/run.time.config/run-time-how-to.html">Detailed description of adding runtime reconfiguration to VR Juggler applications</a>
 
 <ul>
    <a name="config-files"><h4>Configuration Files</h4>

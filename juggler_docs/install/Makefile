@@ -9,7 +9,7 @@ default: books
 # ----------------------------------------------------------------------------
 # Variables.
 # ----------------------------------------------------------------------------
-prefix		= !!FILL ME IN!!
+prefix		= /home/users/kevn/public_html/vrj
 book_srcdir	= $(prefix)/html/books
 book_distdir	= $(book_srcdir)
 
