@@ -69,7 +69,7 @@ public:
 
 
     //:Copy Constructor
-    vjPropertyDesc (vjPropertyDesc& d);
+    vjPropertyDesc (const vjPropertyDesc& d);
 
 
 
@@ -84,31 +84,41 @@ public:
 
 
 
+    #ifdef VJ_DEBUG
+    void assertValid () const;
+    #else
+    inline void assertValid () const {
+        ;
+    }
+    #endif
+
+
+
     //: returns the token string for
     inline std::string& getToken () {
-   return token;
+        return token;
     }
 
 
     inline std::string& getName () {
-   return name;
+        return name;
     }
 
 
 
     inline VarType getType () {
-   return type;
+        return type;
     }
 
 
     inline int getNumAllowed () {
-   return num;
+        return num;
     }
 
 
     //: Returns the number of individual value labels
     inline int getValueLabelsSize () {
-   return valuelabels.size();
+        return valuelabels.size();
     }
 
 
@@ -146,7 +156,7 @@ public:
     friend std::istream& operator >> (std::istream& in, vjPropertyDesc& self);
 
 
-    vjPropertyDesc& operator= (vjPropertyDesc& pd);
+    vjPropertyDesc& operator= (const vjPropertyDesc& pd);
 
     //: Equality Operator
     // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
@@ -187,6 +197,8 @@ private:
     //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
     //  means _all_ chunk types are accepted
     std::vector<vjEnumEntry*> enumv;
+
+    unsigned int validation;
 
 };
 

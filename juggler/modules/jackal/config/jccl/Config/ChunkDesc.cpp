@@ -36,6 +36,7 @@
 #include <Config/vjParseUtil.h>
 
 vjChunkDesc::vjChunkDesc () :plist() {
+    validation = 1;
     name = "unnamed";
     token = "unnamed";
     help = "";
@@ -45,7 +46,8 @@ vjChunkDesc::vjChunkDesc () :plist() {
 
 
 
-vjChunkDesc::vjChunkDesc (vjChunkDesc& desc): plist() {
+vjChunkDesc::vjChunkDesc (const vjChunkDesc& desc): plist() {
+    validation = 1;
     *this = desc;
 }
 
@@ -54,17 +56,30 @@ vjChunkDesc::vjChunkDesc (vjChunkDesc& desc): plist() {
 vjChunkDesc::~vjChunkDesc() {
     /* XXX: Leave it for now
     for (unsigned int i = 0; i < plist.size(); i++)
-       delete plist[i];
+        delete plist[i];
     */
+    validation = 0;
 }
+
+
+#ifdef VJ_DEBUG
+void vjChunkDesc::assertValid () const {
+    assert (validation == 1 && "Trying to use deleted vjChunkDesc");
+     for (unsigned int i = 0; i < plist.size(); i++)
+         plist[i]->assertValid();
+}
+#endif
 
 
 
 vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
+    assertValid();
+    other.assertValid();
+
     unsigned int i;
 
     if (&other == this)
-   return *this;
+        return *this;
 
     /* XXX: Leave it alone for now
     for (i = 0; i < plist.size(); i++)
@@ -80,10 +95,9 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     help = other.help;
 
     plist.reserve (other.plist.size());
-    for (i = 0; i < other.plist.size(); i++)
-    {
-       //plist.push_back ( other.plist[i]);
-       plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
+    for (i = 0; i < other.plist.size(); i++) {
+        //plist.push_back ( other.plist[i]);
+        plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
     }
 
     return *this;
@@ -92,39 +106,53 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
 
 
 void vjChunkDesc::setName (const std::string& _name) {
+    assertValid();
+
     name = _name;
 }
 
 
 
 void vjChunkDesc::setToken (const std::string& _token) {
+    assertValid();
+
     token = _token;
 }
 
 
 
 void vjChunkDesc::setHelp (const std::string& _help) {
+    assertValid();
+
     help = _help;
 }
 
 
 
 std::string vjChunkDesc::getName () {
+    assertValid();
+
     return name;
 }
 
 
 std::string vjChunkDesc::getToken () {
+    assertValid();
+
     return token;
 }
 
 
 std::string vjChunkDesc::getHelp () {
+    assertValid();
+
     return help;
 }
 
 
 void vjChunkDesc::add (vjPropertyDesc *pd) {
+    assertValid();
+
     remove(pd->getToken());
     plist.push_back(pd);
 }
@@ -132,9 +160,11 @@ void vjChunkDesc::add (vjPropertyDesc *pd) {
 
 
 vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) {
+    assertValid();
+
     for (unsigned int i = 0; i < plist.size(); i++)
-   if (!vjstrcasecmp (_token, plist[i]->getToken()))
-       return plist[i];
+        if (!vjstrcasecmp (_token, plist[i]->getToken()))
+            return plist[i];
     return NULL;
 }
 
@@ -142,79 +172,78 @@ vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) {
 
 bool vjChunkDesc::remove (const std::string& _token)
 {
-   std::vector<vjPropertyDesc*>::iterator cur_desc = plist.begin();
-   while (cur_desc != plist.end())
-   {
-      if (!vjstrcasecmp ((*cur_desc)->getToken(), _token))
-      {
-         /* XXX:
-         delete (*cur_desc);
-         *cur_desc = NULL;
-         */
-         cur_desc = plist.erase(cur_desc);
-         return true;
-      }
-      cur_desc++;
-   }
-   return false;
+    assertValid();
+
+    std::vector<vjPropertyDesc*>::iterator cur_desc = plist.begin();
+    while (cur_desc != plist.end()) {
+        if (!vjstrcasecmp ((*cur_desc)->getToken(), _token)) {
+            /* XXX:
+               delete (*cur_desc);
+               *cur_desc = NULL;
+               */
+            cur_desc = plist.erase(cur_desc);
+            return true;
+        }
+        cur_desc++;
+    }
+    return false;
 }
 
 
 
 std::ostream& operator << (std::ostream& out, vjChunkDesc& self) {
-    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \""
-   << self.help.c_str() << '"' << std::endl;
+    self.assertValid();
+
+    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
+        << self.help.c_str() << '"' << std::endl;
     for (unsigned int i = 0; i < self.plist.size(); i++)
-   out << "  " << *(self.plist[i]) << std::endl;
+        out << "  " << *(self.plist[i]) << std::endl;
     out << "  end" << std::endl;
     return out;
 }
 
 
-
 std::istream& operator >> (std::istream& in, vjChunkDesc& self)
 {
-   const int buflen = 512;
-   char str[buflen];
-   vjPropertyDesc *p;
+    self.assertValid();
 
-   readString (in, str, buflen);
-   self.token = str;
+    const int buflen = 512;
+    char str[buflen];
+    vjPropertyDesc *p;
+    
+    readString (in, str, buflen);
+    self.token = str;
 
-   readString (in, str, buflen);
-   self.name = str;
+    readString (in, str, buflen);
+    self.name = str;
 
-   readString (in, str, buflen);
-   self.help = str;
+    readString (in, str, buflen);
+    self.help = str;
 
-   for (unsigned int i = 0; i < self.plist.size(); i++)
-   {
-      /* XXX: Leave the memory for now.  Need to fix
-      delete self.plist[i];
-      self.plist[i] = NULL;                  // Get rid of dangling pointer
-      */
-   }
-   //self.plist.erase (self.plist.begin(), self.plist.end());
-   self.plist.clear();
-
-   // this could use improvement
-   do
-   {
-      p = new vjPropertyDesc();
-      in >> *p;
-      if (!vjstrcasecmp (p->getToken(),std::string("end")))
-      {
-         /* XXX:
-         delete p;
-         */
-         break;
-      }
-      self.add(p);
-   } while (!in.eof());
-
-   if (!self.getPropertyDesc ("name"))
-      self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
-   return in;
+    for (unsigned int i = 0; i < self.plist.size(); i++) {
+        /* XXX: Leave the memory for now.  Need to fix
+           delete self.plist[i];
+           self.plist[i] = NULL;                  // Get rid of dangling pointer
+        */
+    }
+    self.plist.clear();
+    
+    // this could use improvement
+    do {
+        p = new vjPropertyDesc();
+        in >> *p;
+        if (!vjstrcasecmp (p->getToken(),std::string("end"))) {
+            /* XXX:
+               delete p;
+            */
+            break;
+        }
+        self.add(p);
+    } while (!in.eof());
+    
+    if (!self.getPropertyDesc ("name"))
+        self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
+    return in;
 }
 
 
@@ -223,13 +252,16 @@ std::istream& operator >> (std::istream& in, vjChunkDesc& self)
 // a little stricter than it needs to be.. it shouldn't care about the order of
 // propertydescs...
 bool vjChunkDesc::operator== (const vjChunkDesc& d) {
+    assertValid();
+    d.assertValid();
+
     if (vjstrcasecmp (token, d.token))
         return false;
     if (vjstrcasecmp (name, d.name))
         return false;
     if (plist.size() != d.plist.size())
         return false;
-    for (int i = 0; i < plist.size(); i++)
+    for (unsigned int i = 0; i < plist.size(); i++)
         if ((*plist[i]) != (*plist[i]))
             return false;
     return true;

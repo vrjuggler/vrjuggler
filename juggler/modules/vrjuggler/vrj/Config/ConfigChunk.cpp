@@ -71,7 +71,7 @@ vjConfigChunk::~vjConfigChunk () {
 
 
 
-vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
+vjConfigChunk::vjConfigChunk (const vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
     validation = 1;
     *this = c;
 }
@@ -81,7 +81,7 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRI
 #ifdef VJ_DEBUG
 void vjConfigChunk::assertValid () const {
     assert (validation == 1 && "Trying to use deleted config chunk");
-    for (int i = 0; i < props.size(); i++)
+    for (unsigned int i = 0; i < props.size(); i++)
         props[i]->assertValid();
 }
 #endif
@@ -100,7 +100,6 @@ void vjConfigChunk::associateDesc (vjChunkDesc* d) {
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
     */
-    //props.erase (props.begin(), props.end());
     props.clear();
 
     for (i = 0; i < desc->plist.size(); i++) {
@@ -127,7 +126,6 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
         */
-    //props.erase (props.begin(), props.end());
     props.clear();
 
     for (i = 0; i < c.props.size(); i++) {

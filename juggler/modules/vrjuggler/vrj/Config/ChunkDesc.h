@@ -38,10 +38,10 @@
 #include <vjConfig.h>
 #include <Config/vjPropertyDesc.h>
 
-#ifdef VJ_OS_HPUX
-#   include <float.h>
-#   include <stddef.h>
-#endif
+// #ifdef VJ_OS_HPUX
+// #   include <float.h>
+// #   include <stddef.h>
+// #endif
 
 
 
@@ -72,6 +72,7 @@ public:
     //:Container for this vjChunkDesc's vjPropertyDescs
     std::vector<vjPropertyDesc*> plist;
 
+    unsigned int validation;
 
     //:equality operator
     // a little stricter than it needs to be.. it shouldn't care about the order of
@@ -91,13 +92,24 @@ public:
 
 
     //:Copy Constructor
-    vjChunkDesc (vjChunkDesc& desc);
+    vjChunkDesc (const vjChunkDesc& desc);
 
 
 
     //:Desctructor
     //!POST: Destroys self and frees all allocated memory.
     ~vjChunkDesc ();
+
+
+
+    #ifdef VJ_DEBUG
+    void assertValid () const;
+    #else
+    inline void assertValid () const {
+        ;
+    }
+    #endif
+
 
 
     //:Assignment operator
@@ -156,7 +168,7 @@ public:
     vjPropertyDesc *getPropertyDesc (const std::string& _token);
 
 
-
+ 
     //: Writes self to the given output stream
     friend std::ostream& operator << (std::ostream& out, vjChunkDesc& self);
 

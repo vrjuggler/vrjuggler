@@ -136,7 +136,7 @@ public:
 
 
     #ifdef VJ_DEBUG
-    inline void assertValid () const;
+    void assertValid () const;
     #else
     inline void assertValid () const {
         ;
