@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <jccl/Performance/PerfDataBuffer.h>
+#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 //#include <vpr/Util/Debug.h>
 
 namespace jccl {

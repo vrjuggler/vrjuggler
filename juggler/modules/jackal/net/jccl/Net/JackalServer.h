@@ -35,7 +35,7 @@
 #define _JCCL_JACKAL_SERVER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 #include <jccl/JackalServer/Socket.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>

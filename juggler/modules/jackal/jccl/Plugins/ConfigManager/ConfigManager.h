@@ -38,7 +38,7 @@
 #include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
-#include <jccl/ConfigManager/XMLConfigCommunicator.h>
+#include <jccl/Plugins/ConfigManager/XMLConfigCommunicator.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <jccl/Util/Debug.h>

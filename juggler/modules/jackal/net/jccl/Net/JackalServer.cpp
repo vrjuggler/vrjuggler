@@ -43,7 +43,7 @@
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ParseUtil.h>
 
-#include <jccl/ConfigManager/ConfigManager.h>
+#include <jccl/Plugins/ConfigManager/ConfigManager.h>
 
 namespace jccl {
 

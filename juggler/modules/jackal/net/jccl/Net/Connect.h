@@ -39,7 +39,7 @@
 #include <jccl/JackalServer/Socket.h>
 #include <jccl/JackalServer/NetCommunicator.h>
 #include <vpr/Thread/Thread.h>
-#include <jccl/Performance/TimeStamp.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <jccl/JackalServer/Command.h>
 
 namespace jccl {

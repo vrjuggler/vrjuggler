@@ -37,7 +37,7 @@
 #define _JCCL_PERF_DATA_BUFFER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Performance/TimeStamp.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <vpr/Sync/Mutex.h>
 #include <jccl/Util/Debug.h>
 
