@@ -55,6 +55,9 @@ SocketImpNSPR::open () {
     bool retval;
     PRFileDesc* new_sock = NULL;
 
+    if(NULL != m_handle)
+        return false;
+
     // NSPR has not concept of domain in socket creation
     // switch (m_local_addr.getFamily())
 

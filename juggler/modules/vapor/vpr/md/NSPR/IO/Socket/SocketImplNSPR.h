@@ -122,7 +122,7 @@ public:
        // If that fails, print an error and return error status.
        if ( status == PR_FAILURE )
        {
-          NSPR_PrintError("SocketImpNSPR::bind: Failed to bind.");
+          NSPR_PrintError("SocketImpNSPR::enableBlocking: Failed to set.");
           return false;
        }
        return true;
@@ -142,7 +142,7 @@ public:
        // If that fails, print an error and return error status.
        if ( status == PR_FAILURE )
        {
-          NSPR_PrintError("SocketImpNSPR::bind: Failed to bind.");
+          NSPR_PrintError("SocketImpNSPR::enableNonBlocking: Failed to set.");
           return false;
        }
        return true;
