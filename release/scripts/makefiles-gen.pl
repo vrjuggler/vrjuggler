@@ -32,6 +32,8 @@
 #         --DEFS=<Compile-time defs>
 #         --CPPFLAGS=<C preprocessor flags>
 #         --CXXFLAGS=<C++ compiler flags>
+#         --DBG_FLAGS=<Compiler debugging flags>
+#         --OBJ_NAME_FLAG=<Flag used for naming a compiled object file>
 #         --INCLUDES=<Extra include dirs>
 #         --TEST_VJ_LIBS_BASIC=<Basic Juggler libraries needed for test code>
 #         --TEST_VJ_LIBS_GL=<OpenGL API libraries needed for test code>
@@ -81,6 +83,8 @@ Usage:
         --DEFS=<Compile-time defs>
         --CPPFLAGS=<C preprocessor flags>
         --CXXFLAGS=<C++ compiler flags>
+        --DBG_FLAGS=<Compiler debugging flags>
+        --OBJ_NAME_FLAG=<Flag used for naming a compiled object file>
         --INCLUDES=<Extra include dirs>
         --srcdir=<Location of source code>
         --prefix=<Base directory where Makefile will go>
@@ -102,6 +106,8 @@ USAGE_EOF
 GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "CPPFLAGS:s" => \$VARS{'CPPFLAGS'},
 	   "CXXFLAGS:s" => \$VARS{'CXXFLAGS'},
+	   "DBG_FLAGS:s" => \$VARS{'DBG_FLAGS'},
+	   "OBJ_NAME_FLAG:s" => \$VARS{'OBJ_NAME_FLAG'},
 	   "INCLUDES:s" => \$VARS{'INCLUDES'},
 	   "TEST_VJ_LIBS_BASIC=s" => \$VARS{'TEST_VJ_LIBS_BASIC'},
 	   "TEST_VJ_LIBS_GL=s" => \$VARS{'TEST_VJ_LIBS_GL'},
