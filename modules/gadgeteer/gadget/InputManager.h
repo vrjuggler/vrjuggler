@@ -43,6 +43,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/Library.h>
+#include <vpr/DynLoad/LibraryLoader.h>
 
 #include <vpr/Util/Singleton.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
@@ -225,13 +226,6 @@ protected:
    bool removeProxy(std::string proxyName);
    bool removeProxy(jccl::ConfigElementPtr element);
 
-   /**
-    * Loads the Gadgeteer driver from the given vpr::LibraryPtr object.
-    *
-    * @pre vpr::LibraryPtr contains a pointer to a valid vpr::Library object.
-    */
-   vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
-
 public:
    /** Get the input logger connected to the system */
    gadget::InputLoggerPtr getInputLogger();
@@ -240,7 +234,7 @@ public:
    friend class InputLogger;  /**< Make input logger a friend */
 
 protected:
-   std::vector<vpr::LibraryPtr> mDeviceDrivers;
+   vpr::LibraryLoader<gadget::InputManager> mDriverLoader;
 
    typedef std::map<std::string,Input*> tDevTableType;
 
