@@ -209,6 +209,7 @@ if test "x$OPENAL_ENABLED" = "xyes" ; then
       INCLUDES="$INCLUDES $AL_INCLUDES"
       LDFLAGS="$LDFLAGS $AL_LDFLAGS"
       LIBS="$LIBS $LIBOPENAL"
+      OPENAL_API='Y'
       echo "+ added OpenAL to the compile and link paths"
    else
       AC_MSG_ERROR(*** you've requested to use OpenAL as one of your audio subsystems, but it was not found ***)
@@ -225,6 +226,7 @@ if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
       INCLUDES="$INCLUDES $AW_INCLUDES"
       LDFLAGS="$LDFLAGS $AW_LDFLAGS"
       LIBS="$LIBS $LIBAUDIOWORKS"
+      AUDIOWORKS_API='Y'
       echo "+ added AudioWorks to the compile and link paths"
    else
       AC_MSG_ERROR(*** you've requested to use AudioWorks as one of your audio subsystems, but it was not found ***)
@@ -240,6 +242,8 @@ aj_libs=$LIBS
 AC_SUBST(aj_includes)
 AC_SUBST(aj_ldflags)
 AC_SUBST(aj_libs)
+AC_SUBST(AUDIOWORKS_API)
+AC_SUBST(OPENAL_API)
 
 dnl debugging output...
 dnl echo "+ setting aj_includes == $aj_includes"
