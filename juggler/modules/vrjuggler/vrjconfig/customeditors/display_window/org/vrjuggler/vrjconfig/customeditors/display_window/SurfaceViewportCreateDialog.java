@@ -190,38 +190,9 @@ public class SurfaceViewportCreateDialog
       float wall_height = ((Number) mWallHeightField.getValue()).floatValue();
 
       Plane surface_plane = new Plane(wall_width, wall_height);
-
-      if ( mPlaneChooser.getSelectedIndex() == FRONT_PLANE )
-      {
-         surface_plane.setOrientation(0.0, 0.0, 0.0);
-      }
-      else if ( mPlaneChooser.getSelectedIndex() == BACK_PLANE )
-      {
-         surface_plane.setOrientation(0.0, 180.0, 0.0);
-      }
-      else if ( mPlaneChooser.getSelectedIndex() == LEFT_PLANE )
-      {
-         surface_plane.setOrientation(0.0, 90.0, 0.0);
-      }
-      else if ( mPlaneChooser.getSelectedIndex() == RIGHT_PLANE )
-      {
-         surface_plane.setOrientation(0.0, -90.0, 0.0);
-      }
-      else if ( mPlaneChooser.getSelectedIndex() == BOTTOM_PLANE )
-      {
-         surface_plane.setOrientation(-90.0, 0.0, 0.0);
-      }
-      else if ( mPlaneChooser.getSelectedIndex() == BOTTOM_PLANE )
-      {
-         surface_plane.setOrientation(90.0, 0.0, 0.0);
-      }
-      else
-      {
-         float x_angle = ((Number) mCustomPlaneXField.getValue()).floatValue();
-         float y_angle = ((Number) mCustomPlaneYField.getValue()).floatValue();
-         float z_angle = ((Number) mCustomPlaneZField.getValue()).floatValue();
-         surface_plane.setOrientation(x_angle, y_angle, z_angle);
-      }
+      float[] orientation = getSelectedOrientation();
+      surface_plane.setOrientation(orientation[0], orientation[1],
+                                   orientation[2]);
 
       // Pull the value for the corner that the user entered.  This information
       // will be used to reposition surface_plane relative to the selected
@@ -611,6 +582,56 @@ public class SurfaceViewportCreateDialog
       return wall_width_set && wall_height_set && tracker_set;
    }
 
+   private float[] getSelectedOrientation()
+   {
+      float[] orientation = new float[3];
+
+      if ( mPlaneChooser.getSelectedIndex() == FRONT_PLANE )
+      {
+         orientation[0] = 0.0f;
+         orientation[1] = 0.0f;
+         orientation[2] = 0.0f;
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == BACK_PLANE )
+      {
+         orientation[0] = 0.0f;
+         orientation[1] = 180.0f;
+         orientation[2] = 0.0f;
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == LEFT_PLANE )
+      {
+         orientation[0] = 0.0f;
+         orientation[1] = 90.0f;
+         orientation[2] = 0.0f;
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == RIGHT_PLANE )
+      {
+         orientation[0] = 0.0f;
+         orientation[1] = -90.0f;
+         orientation[2] = 0.0f;
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == BOTTOM_PLANE )
+      {
+         orientation[0] = -90.0f;
+         orientation[1] = 0.0f;
+         orientation[2] = 0.0f;
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == BOTTOM_PLANE )
+      {
+         orientation[0] = 90.0f;
+         orientation[1] = 0.0f;
+         orientation[2] = 0.0f;
+      }
+      else
+      {
+         orientation[0] = ((Number) mCustomPlaneXField.getValue()).floatValue();
+         orientation[1] = ((Number) mCustomPlaneYField.getValue()).floatValue();
+         orientation[2] = ((Number) mCustomPlaneZField.getValue()).floatValue();
+      }
+
+      return orientation;
+   }
+
    private void changeCornerIcon()
    {
       int plane = mPlaneChooser.getSelectedIndex();
@@ -749,6 +770,15 @@ public class SurfaceViewportCreateDialog
       mCustomPlaneYField.setEnabled(enabled);
       mCustomPlaneZLabel.setEnabled(enabled);
       mCustomPlaneZField.setEnabled(enabled);
+
+      if ( mPlaneChooser.getSelectedIndex() != CUSTOM_PLANE )
+      {
+         float[] orientation = getSelectedOrientation();
+         mCustomPlaneXField.setValue(new Float(orientation[0]));
+         mCustomPlaneYField.setValue(new Float(orientation[1]));
+         mCustomPlaneZField.setValue(new Float(orientation[2]));
+      }
+
       changeCornerIcon();
    }
 
