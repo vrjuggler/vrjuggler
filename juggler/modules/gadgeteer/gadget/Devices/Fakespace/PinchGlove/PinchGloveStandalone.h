@@ -54,37 +54,28 @@ public:
    PinchGloveStandalone();
    ~PinchGloveStandalone();
 
+   
    /** Connects to the pinch glove hardware. */
    vpr::ReturnStatus connectToHardware();
-
-   /**
-    * Call updateStringFromHardware to get the most current pinch data.
-    */
-   void updateStringFromHardware();
-
-   /**
-    * Gets the last sampled string.
-    *
-    * @note call updateStringFromHardware to get most current pinch data.
-    */
-   void getSampledString( std::string& gestureString );
+   
+   std::string getGestureFromHardware();
 
    void setPort(const std::string& port_name)
-   {
-       mPortName=port_name;
-   }
+   { mPortName=port_name; }
    const std::string& getPort()
-   {
-       return(mPortName);
-   }
+   { return(mPortName); }
    void setBaudRate(int baud_rate)
-   {
-      mBaudRate = baud_rate;
-   }
+   { mBaudRate = baud_rate; }
    int getBaudRate()
-   {
-      return(mBaudRate);
-   }
+   { return(mBaudRate); }
+   
+   /*
+   void setTimeStamp(bool time_stamps)
+   { mTimeStamps = time_stamps; }
+   bool getTimeStamp()
+   { return(mTimeStamps); }
+   */
+   
 
    /**
     * Uses one of these indices to index the string returned by
@@ -98,7 +89,6 @@ public:
 
 protected:
    std::string         mGestureString;
-   std::string         mPreviousGestureString;
    std::string         mPortName;
    int                 mBaudRate;
    vpr::SerialPort*    mPort;
@@ -106,17 +96,13 @@ protected:
    /// equal to "00000.00000"
    static const std::string    mOpenHandString;
 
-   /* functions provided by fakespace */
-   //int       mConnectToHardware( const unsigned char* const ttyPort = "/dev/ttyd3" );
-   vpr::ReturnStatus     mConnectToHardware();
-   int     mSendCommandToHardware( const char* const command, unsigned char *reply );
-
-   int     mReadRecordsFromHardware( const int& rec_max_len, unsigned char *records );
-   void    mGetStringFromHardware( char string[12] );
+   vpr::ReturnStatus       mSendCommandToHardware( const char* command );
+   std::vector<vpr::Uint8> mGetDataAndTimeStampFromHardware();
+   
+   std::string mGetStringFromHardware();
 
 private:
-   char mGestureStringTemp[12];
-   int  first;
+   //bool mTimeStamps;
 };
 
 #endif
