@@ -21,66 +21,37 @@ class TestResult;
 
 
 
-/*
- * A test case defines the fixture to run multiple tests. To define a test case
- * 1) implement a subclass of TestCase
- * 2) define instance variables that store the state of the fixture
- * 3) initialize the fixture state by overriding setUp
- * 4) clean-up after a test by overriding tearDown.
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * Each test runs in its own fixture so there
- * can be no side effects among test runs.
- * Here is an example:
- * 
- * class MathTest : public TestCase {
- *     protected: int m_value1;
- *     protected: int m_value2;
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
- *     public: MathTest (string name)
- *                 : TestCase (name) {
- *     }
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
  *
- *     protected: void setUp () {
- *         m_value1 = 2;
- *         m_value2 = 3;
- *     }
- * }
- * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * For each test implement a method which interacts
- * with the fixture. Verify the expected results with assertions specified
- * by calling assert on the expression you want to test:
- * 
- *    protected: void testAdd () {
- *        int result = value1 + value2;
- *        assert (result == 5);
- *    }
- * 
- * Once the methods are defined you can run them. To do this, use
- * a TestCaller.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
  *
- * Test *test = new TestCaller<MathTest>("testAdd", MathTest::testAdd);
- * test->run ();
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
  *
- * The tests to be run can be collected into a TestSuite. CppUnit provides
- * different test runners which can run a test suite and collect the results.
- * The test runners expect a static method suite as the entry
- * point to get a test to run.
- * 
- * public: static MathTest::suite () {
- *      TestSuite *suiteOfTests = new TestSuite;
- *      suiteOfTests->addTest(new TestCaller<MathTest>("testAdd", testAdd));
- *      suiteOfTests->addTest(new TestCaller<MathTest>("testDivideByZero", testDivideByZero));
- *      return suiteOfTests;
- *  }
- * 
- * Note that the caller of suite assumes lifetime control
- * for the returned suite.
- *
- * see TestResult, TestSuite and TestCaller
- *
- */
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
 class TestCase : public Test 

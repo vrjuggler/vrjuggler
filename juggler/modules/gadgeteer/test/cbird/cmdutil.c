@@ -1,43 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-    cmdutil.c       - Bird Command Utilities Routine
-
-    written for:    Ascension Technology Corporation
-		    PO Box 527
-		    Burlington, Vermont  05402
-		    802-655-7879
-
-    by:             Jeff Finkelstein
-		    802-985-2535
-
-
-    Modification History:
-			4/29/91        jf  - created from BIRDCMDS.c
-			5/20/91            jf  - fixed row/col order in printmatrix
-	    9/16/91        jf  - added showfbbconfig
-	    2/25/92        jf  - removed showfbbconfig
-	    4/7/92         jf  - added fprintmatrix
-	    4/20/92        mo  - added fprintquaternions() and
-				 printquaternions().
-	    10/12/92       jf  - modified to display 3 sig. digits for Matrix
-	    12/23/92       jf  - updated readbirddata to be CPU independent
-				 by using C types to define byte ordering
-	    1/26/93        jf  - added functions to print/file for all
-				 output modes
-			   jf  - modified readbirddata to read an extra
-				 character if in fbbgroupdata mode
-	    2/26/93        jf  - added getsystemstatus
-	    3/1/93         jf  - added checkerrorstatus
-			       - added displayerror
-			       - added getsystemstatus
-	    3/22/93        jf  - added expanded error 'Note'
-	    6/22/94        ssw - modified getaddmode to include setting IRQ 0
-				 fix to stop lockout
-
-	   <<<< Copyright 1990 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <math.h>           /* trig math funcs */
 #include "asctech.h"        /* general definitions */
 #include "compiler.h"       /* Compiler Specific Header */

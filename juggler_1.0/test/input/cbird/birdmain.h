@@ -1,59 +1,34 @@
-/*
-    birdmain.h      -   Bird Main
-
-    Modification History
-		10/18/90    jf  -   created
-		4/23/91         jf      - added KNR prototypes
-	7/19/91     jf  - add operate menu and config menu
-	12/22/91    jf  - updated prototypes
-	10/20/93    jf  - added BIRDMAIN definition
-	1/5/94      sw  - added alltests definition
-*/
-
-#ifndef BIRDMAIN
-#define BIRDMAIN
-
-#ifdef KNR
-/*
-    Prototypes
-*/
-int main();
-int get_output_mode();
-int serialinit();
-int nextxmtrcmd();
-int nextmastercmd();
-int alltests();
-int systests();
-int hostechotest();
-int hostreadtest();
-int hostreadblocktest();
-int setxmtrtype();
-int birdoutputtest();
-int birdechotest();
-int getbirddata();
-int displistinit();
-
-#else
-
-int main(void);
-int get_output_mode(void);
-int serialinit(void);
-int nextxmtrcmd(void);
-int nextmastercmd(void);
-int alltests(void);
-int systests(void);
-int hostechotest(void);
-int hostreadtest(void);
-int hostreadblocktest(void);
-int setxmtrtype(void);
-int birdoutputtest(void);
-int birdechotest(void);
-int getbirddata(unsigned char datamode, short buttonmode);
-int displistinit(void);
-
-#endif
-extern short little_endian;
-#endif /* BIRDMAIN */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
 

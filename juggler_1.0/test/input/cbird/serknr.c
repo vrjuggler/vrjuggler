@@ -1,46 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-    serknr.c        - Serial Routines, Kernighan and Ritchie Compatible
-
-    written for:    Ascension Technology Corporation
-                    PO Box 527
-                    Burlington, Vermont  05402
-
-                    802-655-7879
-
-
-    written by:     Jeff Finkelstein
-
-    Modification History:
-    4/8/91      jf  - created
-    4/9/91      jf  - added COMPORT1 and COMPORT2 strings for DOS
-    4/13/91     jf  - added system command for Com configuration
-    4/15/91     jf  - simplified get_serial_record
-    4/23/91     jf  - removed IO.h for KNR systems
-                jf  - removed O_BINARY
-    4/30/91     jf  - removed references to DOS.. SERKNR.c is no longer
-                      DOS compatible..DOS is NOT capabable of reasonable
-                      serial communication control!!!
-    11/3/92     jf  - baudspeedbits now initialized to B9600 for UNIX
-    12/22/92    jf  - updated for SGI compatibility..note that
-                      get_serial_record has been modified to return
-                      the most recent (newest) record from the BIRD
-    12/29/92    jf  - moved all #ifdefs and #defines to column 1 for
-                      compiler compatibility
-    1/8/93      jf  - added DEBUG_VIEWSERIAL ifdefs to allow serial
-                      characters received to appear on the console
-                jf  - added DEBUG_SKIPSERIAL ifdefs to skip opening
-                      and read/writes to the serial port if TRUE
-    1/12/93     jf  - open now use O_NDELAY for all systems to disregard
-                      the state of the Carrier Detect signal
-    1/31/93     jf  - send_serial_cmd modified to be able to send out
-                      rs232 to fbb commands to addr 30
-    5/13/97     sw  - Changed comport open to work with IRIX 6.2 
-
-           <<<< Copyright 1990 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <string.h>         /* for string commands */
 #include "asctech.h"        /* Ascension Technology Definitions */
 #include "compiler.h"       /* Compiler Definitions */

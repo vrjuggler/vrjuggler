@@ -1,36 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-    serdpcpl.c      - Serial Routines - DOS PC Compatible
-
-    written for:    Ascension Technology Corporation
-                    PO Box 527
-                    Burlington, Vermont  05402
-
-                    802-655-7879
-
-
-    written by:     Jeff Finkelstein
-
-    Modification History:
-
-    10/18/90        jf  - released
-    11/12/90        jf  - add getdosticks() to allow Polled mode operation
-                          at 19200 even on a pretty slow machine
-    4/16/91         jf  - renamed file to serdpcpl.c
-    6/18/91         jf  - added FOB baudrates
-    12/5/93         jf  - fixed bug in getserialrecord to assure that a
-                          character with an error does not get into the
-                          rxbuffer
-    12/23/92        jf  - added baudratebit definitions to allow
-                          for compatibility with UNIX
-    1/31/93         jf  - send_serial_cmd modified to be able to send out
-                          rs232 to fbb commands to addr 30
-    10/21/93        jf  - remove getdosticks() and replaced with GETTICKS
-
-           <<<< Copyright 1990 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <time.h>           /* clock functions */
 #include <dos.h>            /* int86 call */
 #include "asctech.h"

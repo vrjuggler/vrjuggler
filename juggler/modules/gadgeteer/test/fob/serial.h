@@ -1,32 +1,34 @@
-/*
-    serial.h    - Serial Include File
-
-    Modification History
-
-	10/18/90    jf  - created
-	4/23/91     jf  - added baudratetable,baudratestring
-		    jf  - added NOPROTOTYPES compiler directive for K&R
-			  compatibility
-		4/25/91     jf  - modified saveserialconfig to be an int routine
-		4/30/91         jf  - added baudspeedbits,baudspeedbittable[]
-					jf  - removed baudratestring
-	3/27/92     jf  - added rs232tofbbaddr
-	12/23/92    jf  - removed UNIX ifdefs for baudratebittable
-			  since serdpcin and serdpcpl now have the
-			  definitions
-		    jf  - added send_serial_char prototype
-	1/13/93     jf  - added sys_com_port[] external definition
-	10/20/93    jf  - added SERIAL definition
-			- removed PC PIC definitions
-*/
-
-#ifndef SERIAL
-#define SERIAL
-
-/*
-    Misc
-*/
-#define RXTIMEOUTINSECS 4       /* approximately 4 seconds */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #define CLOCKTICKSPERSEC 18.2   /* DOS tick (IRQ0) frequency */
 
 /*

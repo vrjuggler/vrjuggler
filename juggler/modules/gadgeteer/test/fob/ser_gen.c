@@ -1,33 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-    ser_gen.c       Generic Serial Routines for
-		    RS232 PC Compatible and
-		    RS485 Quatech Card (w/16550 UART Support)
-
-    written for:    Ascension Technology Corporation
-		    PO Box 527
-		    Burlington, Vermont  05402
-		    802-655-7879
-
-
-    written by:     Jeff Finkelstein
-		    Microprocessor Designs, Inc
-		    PO Box 160
-		    Shelburne, Vermont  05482
-		    802-985-2535
-
-    Modification History:
-
-    9/16/93         jf  - created from serdpcin.c
-    12/30/93        jf  - updated to allow this module to send data
-			  out the RS232 port if the comport is configured for
-			  an RS232 port
-    1/8/94          jf  - restore comport now disables the FIFO
-
-	   <<<< Copyright 1993 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <time.h>           /* clock functions */
 #include <dos.h>            /* needed for SETVECT/GETVECT */
 #include "compiler.h"

@@ -1,11 +1,8 @@
 #!/usr/local/bin/perl
 
-
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VRJuggler
-#   Copyright (C) 1997,1998,1999,2000
-#   Iowa State University Research Foundation, Inc.
-#   All Rights Reserved
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -33,6 +30,7 @@
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
+# *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
 # Install a source (i.e., software source) directory to a specified

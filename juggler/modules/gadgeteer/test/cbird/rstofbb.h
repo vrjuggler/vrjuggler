@@ -1,56 +1,34 @@
-/*
-    rstofbb.h       - RS232 to FBB Command Header
-
-    Modification History
-     1/26/93  jf    - created from previous version of MULTI232
-     7/7/93   jf    - updated the prototype for getmultirecords
-     10/20/93 jf    - added RSTOFBB definition
-
-*/
-
-#ifndef RSTOFBB
-#define RSTOFBB
-
-/*
-    Prototypes
-*/
-#ifdef KNR
-
-int rs232tofbbcmd();
-int rstofbbmenu();
-int displaymultidata();
-int setdatamode();
-int getfbbdestaddress();
-int getmultibirddata();
-int getmultirecords();
-int getsampletime();
-int getmaxrs232tofbbrate();
-
-#else
-
-int rs232tofbbcmd(void);
-int rstofbbmenu(void);
-int displaymultidata(unsigned char datamode,short buttonmode,
-                     unsigned char displayon, unsigned char startaddr,
-                     unsigned char stopaddr,unsigned char * birddata,
-                     FILE * datafilestream);
-int setdatamode(unsigned char startaddr,unsigned char stopaddr,
-                unsigned char datamode);
-int getfbbdestaddress(unsigned char * startaddrptr,
-                      unsigned char * stopaddrptr);
-int getmultirecords(short outputmode, short buttonmode, unsigned char datamode,
-                 unsigned char startaddr, unsigned char stopaddr,
-                 unsigned char * recorddataptr);
-int getmultibirddata(short outputmode,unsigned char datamode,
-                     unsigned char displayon,short buttonmode);
-int getsampletime(void);
-int getmaxrs232tofbbrate(void);
-
-
-
-#endif
-
-#endif /* RSTOFBB */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
 

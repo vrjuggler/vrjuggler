@@ -1,8 +1,6 @@
+dnl # ************ <auto-copyright.pl BEGIN do not edit this line> ************
 dnl #
-dnl # VRJuggler
-dnl #   Copyright (C) 1997,1998,1999,2000
-dnl #   Iowa State University Research Foundation, Inc.
-dnl #   All Rights Reserved
+dnl # VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
 dnl #
 dnl # Original Authors:
 dnl #   Allen Bierbaum, Christopher Just,
@@ -30,6 +28,7 @@ dnl # Date modified: $Date$
 dnl # Version:       $Revision$
 dnl # -----------------------------------------------------------------
 dnl #
+dnl # ************* <auto-copyright.pl END do not edit this line> *************
 
 dnl # -------------------------------------------------------------------------
 dnl # Base configure.in for VR Juggler.

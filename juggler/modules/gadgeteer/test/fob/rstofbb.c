@@ -1,33 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-
-    rstofbb.c       RS232 to FBB C Commands
-
-    written for:    Ascension Technology Corporation
-		    PO Box 527
-		    Burlington, Vermont  05402
-
-		    802-655-7879
-
-    written by:     Jeff Finkelstein
-
-    Modification History:
-       4/22/92   jf.. POSK36 changed to posk, posk declared external
-       6/16/92   jf.. modified angle output format to 0.1 degree resol.
-       8/17/92   jf.. modified for Group Data Mode
-       10/3/92   jf.. fixed bug in POS/MATRIX display
-       10/12/92  jf.. fixed bug in Group Data Mode Display of Info
-       1/27/92   jf.. integrated with CBIRD
-       7/7/93    jf.. updated to allow the display of button data from
-		      multiple units in both the RS232 PASS through mode
-		      and Group Mode
-       10/20/93  jf.. modified to use GETTICKS
-
-	   <<<< Copyright 1992 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "asctech.h"        /* Ascension Technology definitions */
 #include "compiler.h"       /* Compiler Specific Header */
 #include "menu.h"           /* Ascension Technology Menu Routines */
