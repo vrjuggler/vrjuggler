@@ -1,4 +1,3 @@
-
 # ***************** <SNX heading BEGIN do not edit this line> *****************
 #
 # sonix
@@ -13,6 +12,7 @@
 # -----------------------------------------------------------------
 #
 # ****************** <SNX heading END do not edit this line> ******************
+
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -41,6 +41,7 @@
 
 AC_INIT
 AC_CONFIG_HEADER(simple_config.h)
+DPP_PREREQ([1.4.106])
 DPP_INIT
 
 dnl make the nice reconfig script.
@@ -201,10 +202,10 @@ GMTL_PATH(0.0.5, [$JUGGLERROOT_ABS/external/GMTL],
 CPPFLAGS="$vjsave_CPPFLAGS"
 CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
 
-DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
-
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER(5.004)
+DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
+DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
+DPP_PROG_INSTALL(no)
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
