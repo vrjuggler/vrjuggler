@@ -45,7 +45,8 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir			= $(bindir)/beans
+beandir			= $(projdatadir)/beans
+javadir			= $(projdatadir)/java
 srcdir			= @srcdir@
 top_srcdir		= @top_srcdir@
 INSTALL			= @INSTALL@
@@ -97,11 +98,12 @@ extensions-install:
 	@echo "------------------------------------------------"
 	@echo "Installing the Tweek extensions"
 	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.java.dist -p $(projdatadir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-              $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar $(bindir) ; \
+              $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar $(javadir) ; \
           done
 endif
 ifneq ($(BEANS), )
