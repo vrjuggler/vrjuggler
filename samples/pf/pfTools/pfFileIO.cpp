@@ -14,7 +14,7 @@
 
 #include "pfFileIO.h" // my header.
 
-std::string pfFileIO::filePath = ".";
+std::string pfFileIO::filePath = ".:";
 
 // trys to make performer load whatever filename is given
 // uses pfFileIO:filePath as the current path

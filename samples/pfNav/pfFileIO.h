@@ -6,6 +6,7 @@
 #include <string>
 #include <assert.h>
 #include "fileIO.h" // bool fileExists()
+#include <Performer/pf/pfDCS.h>
 
 // use this class to store your filepath etc...
 // if you don't use this then the pfFileIO funcs will set the path
@@ -20,7 +21,7 @@ public:
 
    // == "." by default
    static std::string filePath;
-   static void setFilePath( const std::string& filepath = "." )
+   static void setFilePath( const std::string& filepath = ".:" )
    {
       filePath = filepath;
       //cout << "pfFileIO::setFilePath: path now: " << filePath << endl;
@@ -29,6 +30,7 @@ public:
    static void addFilePath( const std::string& filepath)
    {
       filePath += filepath;
+      filePath += std::string(":");    // Add on trailing seperator
       //cout << "pfFileIO::addFilePath: path now: " << filePath << endl;
    }
 
