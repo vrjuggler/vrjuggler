@@ -23,8 +23,8 @@ template <class LOCK>
 class vjGuard
 {
 public:
-   //: Aquire the lock implicitly.
-   // If block = 1 then use a blocking aquire
+   //: Acquire the lock implicitly.
+   // If block = 1 then use a blocking acquire
    vjGuard(LOCK &lock, int block = 1)
    : theLock(&lock)
    {
@@ -40,19 +40,19 @@ public:
       }
    }
 
-   // 1 - Locked
-   // 0 - Not locked
+   //! RETURNS: 1 - Locked
+   //! RETURNS: 0 - Not locked
    int locked() {
       return (lockStatus >= 0);  // != -1
    }
 
-   //: Aquire the lock
+   //: Acquire the lock
    int acquire()
    {
       return theLock->acquire();
    }
 
-   //: Try to aquire lock
+   //: Try to acquire lock
    int tryAcquire()
    {
       return theLock->tryAcquire();
@@ -66,8 +66,8 @@ public:
 
 
 private:
-   LOCK* theLock;   // The lock that we are using
-   int    lockStatus;  // Are we locked or not
+   LOCK* theLock;	//: The lock that we are using
+   int   lockStatus;	//: Are we locked or not
 };
 
 #endif
