@@ -4,7 +4,11 @@
 #include <config.h>
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjMutex.h>
+#include <Kernel/vjDebug.h>
 
+#include <sys/types.h>
+#include <unistd.h>
+     
 //----------------------------------------------
 //  vjCondGeneric
 //
@@ -29,14 +33,18 @@ class  vjCondGeneric
 public:
    //: Constructor
    //! ARGS: mutex - a pointer to a user specified mutex
-   //+               if not specified, uses internal mutex
-    vjCondGeneric(vjMutex* mutex = NULL)
+   //+               if not specified, uses internal mutex   
+   vjCondGeneric(vjMutex* mutex = NULL)
    {
       if (mutex == NULL)
          mutex = &defaultMutex;
 
       condMutex = mutex;
       waiters = 0;
+
+      cerr << "-----------------------------------\n"
+           << "  vjCondGeneric: DOES NOT WORK\n"
+           << "-----------------------------------\n";
    }
 
 
@@ -45,21 +53,24 @@ public:
    //! NOTE: The call blocks until a condition has been signaled
    int wait()
    {
+      cerr << setw(5) << getpid() << "  Wait: Begin:" << endl;
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
          cerr << " vjCondGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!" << endl;
 
-      waiters++;    // We have lock already
+      waiters++;              // We have lock already
 
-      condMutex->release();  // Release it
+      condMutex->release();   // Release it
 
-      sema.acquire();     // Wait for a while
-
+      sema.acquire();         // Wait for a while
+      sema.dump();
+            
       // We must now regain the lock so that the condition can be re checked upon exit
       // We also need it to decrement waiters
       condMutex->acquire();
       waiters--;
 
+      cerr << setw(5) << getpid() << "  Wait: end:" << endl;
       return 0;
    }
 
@@ -68,12 +79,16 @@ public:
    // They can then check to see if it now sarisfies the condition
    int signal ()
    {
+      cerr << setw(5) << getpid() << "  Signal" << endl;
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
          cerr << " vjCondGeneric::signal: Mutex was not locked when signal called!!!" << endl;
 
       if (waiters > 0)
-         return sema.release();
+      {
+         int ret_val = sema.release();
+         return ret_val;
+      }
       else
          return 0;
    }
@@ -120,21 +135,24 @@ public:
 
    void dump (void) const
    {
-      cerr << "-------------  vjCondGeneric::Dump ---------\nNot Implemented yet." << endl;
+      vjDEBUG_BEGIN(0) << "-------------  vjCondGeneric::Dump ---------\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "waiters: " << waiters << endl << vjDEBUG_FLUSH;
+      condMutex->dump();
+      vjDEBUG_END(0) << "-----------------------------------\n" << vjDEBUG_FLUSH;
    }
 
 
 private:
    // --- These make up the "condition variable" ---- ///
-   vjSemaphore sema;        // Condition variable.
-   long waiters;          // The number of processes waiting
+   vjSemaphore sema;          // Condition variable.
+   long waiters;              // The number of processes waiting
 
-   vjMutex* condMutex;       // Mutex for the condition variable - User specified
-   vjMutex defaultMutex;     // One to use if user does not specify one
+   vjMutex* condMutex;        // Mutex for the condition variable - User specified
+   vjMutex defaultMutex;      // One to use if user does not specify one
 
    // = Prevent assignment and initialization.
    void operator= (const  vjCondGeneric&) {}
-    vjCondGeneric (const  vjCondGeneric &c) {;}    
+   vjCondGeneric (const  vjCondGeneric &c) {;}    
 };
 
 #endif
