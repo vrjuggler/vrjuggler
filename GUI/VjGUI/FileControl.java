@@ -119,7 +119,7 @@ public class FileControl {
 	}
 	catch (FileNotFoundException e2) {
 	    try {
-		f1 = new File (mangleFileName ("$VJ_BASE_DIR/Data/vjcontrol.cfg"));
+		f1 = new File (mangleFileName ("$VJ_BASE_DIR/share/Data/vjcontrol.cfg"));
 		Core.gui_chunkdb.setName (f1.getName());
 		Core.gui_chunkdb.setFile (f1);
 		r = new FileReader (f1);
@@ -146,7 +146,7 @@ public class FileControl {
 	}
 	catch (FileNotFoundException e) {
 	    try {
-		f1 = new File (mangleFileName ("$VJ_BASE_DIR/Data/orgtree.org"));
+		f1 = new File (mangleFileName ("$VJ_BASE_DIR/share/Data/orgtree.org"));
 		r = new FileReader(f1);
 	    }
 	    catch (FileNotFoundException e2) {
