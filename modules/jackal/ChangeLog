@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-14-2002 patrickh    Added an XSLT stylesheet that can upgrade configuration
+                        files using version 2.0 of the file format to version
+                        2.1.
 Sep-12-2002 nonchocoboy Use Ant to build the java sources.
                         NEW VERSION: 0.8.7
 Sep-11-2002 nonchocoboy Superceded vjInclude chunks with an XML processing
