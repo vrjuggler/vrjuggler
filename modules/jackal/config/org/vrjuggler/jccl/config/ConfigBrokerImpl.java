@@ -216,6 +216,19 @@ public class ConfigBrokerImpl
    }
 
    /**
+    * Tests if the given resource is currently open and being managed by this
+    * broker.
+    *
+    * @param name    the name of the resource to check
+    *
+    * @return  true if the resource is open, false otherwise
+    */
+   public boolean isOpen(String name)
+   {
+      return resources.containsKey(name);
+   }
+
+   /**
     * Adds the given config chunk to the current context. If the context
     * contains more than one resource, a dialog will prompt the user for which
     * resource they wish to add the chunk to.
@@ -241,9 +254,25 @@ public class ConfigBrokerImpl
       // want to add it to.
       if (chunk_res.size() > 1)
       {
-         // TODO: ask the user which file they want to add to, for now pick the
-         // first
-         target = (ConfigChunkDB)chunk_res.get(0);
+         // Present the user with a dialog from which to choose a resource
+         ResourceChooser chooser = new ResourceChooser();
+         chooser.setDialogTitle("Choose a Configuration resource");
+         List res_names = new ArrayList();
+         for (Iterator itr = chunk_res.iterator(); itr.hasNext(); )
+         {
+            res_names.add(getNameFor(itr.next()));
+         }
+         chooser.setResources(res_names);
+         int result = chooser.showDialog(null);
+         if (result == ResourceChooser.APPROVE_OPTION)
+         {
+            target = (ConfigChunkDB)resources.get(chooser.getSelectedResource());
+         }
+         else
+         {
+            // The user cancelled the action
+            return false;
+         }
       }
       else
       {
@@ -312,9 +341,25 @@ public class ConfigBrokerImpl
       // want to add it to.
       if (desc_res.size() > 1)
       {
-         // TODO: ask the user which file they want to add to, for now pick the
-         // first
-         target = (ChunkDescDB)desc_res.get(0);
+         // Present the user with a dialog from which to choose a resource
+         ResourceChooser chooser = new ResourceChooser();
+         chooser.setDialogTitle("Choose a Configuration Definition resource");
+         List res_names = new ArrayList();
+         for (Iterator itr = desc_res.iterator(); itr.hasNext(); )
+         {
+            res_names.add(getNameFor(itr.next()));
+         }
+         chooser.setResources(res_names);
+         int result = chooser.showDialog(null);
+         if (result == ResourceChooser.APPROVE_OPTION)
+         {
+            target = (ChunkDescDB)resources.get(chooser.getSelectedResource());
+         }
+         else
+         {
+            // The user cancelled the action
+            return false;
+         }
       }
       else
       {
