@@ -7,12 +7,12 @@
       <parent/>
       <category>/Display/Simulator</category>
       <property valuetype="float" variable="false" name="origin">
-         <help>Window origin (lower left is 0.0,0.0)</help>
+         <help>Viewport origin.  The lower left corner is (0.0,0.0), and the placement must be within the range [0.0,1.0].</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="size">
-         <help>Window size ( must be in range [0.0,1.0] )</help>
+         <help>Viewport size.  The size must be within the range [0.0,1.0].</help>
          <value label="Width" defaultvalue="1.0"/>
          <value label="Height" defaultvalue="1.0"/>
       </property>
