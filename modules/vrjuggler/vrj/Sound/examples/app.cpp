@@ -6,7 +6,7 @@
 #include "fileIO.h"
 
 SoundEngine* gSoundEngine = NULL;
-Sound* sound1 = NULL, *sound2 = NULL, *sound3 = NULL;
+Sound* longPan = NULL, *fastPan = NULL, *shortTriggeredSound = NULL;
 
 void usage(char** argv)
 {
@@ -87,14 +87,14 @@ void main(int argc, char** argv)
    assert( gSoundEngine != NULL );
    assert( success == true );
    
-   sound1 = gSoundEngine->getHandle( "sound1" );
-   sound1->print();
+   longPan = gSoundEngine->getHandle( "longPan" );
+   longPan->print();
    
-   sound2 = gSoundEngine->getHandle( "sound2" );
-   sound2->print();
+   fastPan = gSoundEngine->getHandle( "fastPan" );
+   fastPan->print();
    
-   sound3 = gSoundEngine->getHandle( "sound3" );
-   sound3->print();
+   shortTriggeredSound = gSoundEngine->getHandle( "shortTriggeredSound" );
+   shortTriggeredSound->print();
 
    // Find players
    //pendulumplayer = awFindPlyr("pendulumplayer");
@@ -103,90 +103,111 @@ void main(int argc, char** argv)
    //you = awFindObs("you");
  
    /*gSoundEngine->setPosition( 10, 0, 0 );
-   sound1->trigger();
+   longPan->trigger();
    gSoundEngine->update();
    usleep( 1 );
    
    gSoundEngine->setPosition( 0, 5, 0 );
-   sound2->trigger();
+   fastPan->trigger();
    gSoundEngine->update();
    usleep( 1 );
    
    gSoundEngine->setPosition( 0, 5, 5 );
-   sound3->trigger();
+   shortTriggeredSound->trigger();
    gSoundEngine->update();
    usleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 20 );
-   sound2->trigger();
+   fastPan->trigger();
    gSoundEngine->update();
    sleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 10 );
-   sound1->trigger();
+   longPan->trigger();
    gSoundEngine->update();
    sleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 5 );
-   sound3->trigger();
+   shortTriggeredSound->trigger();
    gSoundEngine->update();
    sleep( 1 );
    
    gSoundEngine->setPosition( -5, -5, -4 );
-   sound1->trigger();
+   longPan->trigger();
    gSoundEngine->update();
    sleep( 1 );
    
    gSoundEngine->setPosition( 30, 0, 0 );
-   sound2->trigger();
+   fastPan->trigger();
    gSoundEngine->update();
    sleep( 1 );
    */
 
    gSoundEngine->setPosition( 0, 0, 0 );
+  
+   // NOTES:  AW messes up when you call trigger, and setPosition every frame.
+   //         if that happens, then you'll only hear sound when it's at 0,0,0
+   //         this shouldn't be a problem though, since in a real app
+   //         sounds are triggered infrequently compared to the number 
+   //         of frames occuring.
    
+   // fastPan positional test.
+   // real fast panning
+   cout<<"Fast panning\n"<<flush;
+   for (int yy = 0; yy < 5; ++yy)
+   {
+      fastPan->trigger();
+      for ( int x = 0; x < 100; ++x )  
+      {
+         cout<<"Position: "<<x - 50<<"\n"<<flush;
+         //longPan->stop();
+         //gSoundEngine->update();
+         fastPan->setPosition( x - 50, 0, 0 );
+         //gSoundEngine->update();
+         gSoundEngine->update();
+         usleep( 25000 );
+      }
+   }
+   sleep( 1 );
+
+   // positional test, for when longPan has looppoints.
+   // nice long panning.
+   cout<<"Slow panning left to right, back to front\n"<<flush;
+   for ( int x = 0; x < 5; ++x)
+   {
+      longPan->trigger(); // just to test out triggering, 
+                         // and to have a predictable beginning.
    
-   sound1->setPosition( 10, 0, 0 );
-   sound1->trigger();
-   gSoundEngine->update();
-   usleep( 1 );
-   
-   sound2->setPosition( 0, 5, 0 );
-   sound2->trigger();
-   gSoundEngine->update();
-   usleep( 1 );
-   
-   sound3->setPosition( 0, 5, 5 );
-   sound3->trigger();
-   gSoundEngine->update();
-   usleep( 1 );
-   
-   sound2->setPosition( 0, 0, 20 );
-   sound2->trigger();
-   gSoundEngine->update();
+      // pan back ...
+      for ( int z = 0; z < 100; ++z )  
+      {
+         longPan->setPosition( z - 50, 0, x * 10 - 50 );
+         gSoundEngine->update();
+         usleep( 50000 );
+      }
+      
+      // ... and forth
+      for ( z = 100; z > 0; --z )  
+      {
+         longPan->setPosition( z - 50, 0, x * 10 - 50 );
+         gSoundEngine->update();
+         usleep( 50000 );
+      }
+   }
+  
    sleep( 1 );
    
-   sound1->setPosition( 0, 0, 10 );
-   sound1->trigger();
+   // or just trigger a sound, no panning...
+   cout<<"Triggering a short sound....\n"<<flush;
+   shortTriggeredSound->trigger();
    gSoundEngine->update();
-   sleep( 1 );
    
-   sound3->setPosition( 0, 0, 5 );
-   sound3->trigger();
+   sleep( 3 );
+  
    gSoundEngine->update();
-   sleep( 1 );
-   
-   sound1->setPosition( -5, -5, -4 );
-   sound1->trigger();
-   gSoundEngine->update();
-   sleep( 1 );
-   
-   sound2->setPosition( 30, 0, 0 );
-   sound2->trigger();
-   gSoundEngine->update();
-   sleep( 1 );
-   
-   sound1->stop();
+   longPan->stop();
+   fastPan->stop();
+   shortTriggeredSound->stop();
    gSoundEngine->update();
   
    usleep( 30000 );
@@ -197,7 +218,7 @@ void main(int argc, char** argv)
    
    
    delete gSoundEngine;
-   delete sound1;
+   delete longPan;
    
    
    usleep( 1 );

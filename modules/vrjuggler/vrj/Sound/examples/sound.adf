@@ -54,10 +54,11 @@ observer you {
 }
 
 
+// put sounds here, not players
 scene main {
-	sound	sound3;
-   sound	sound2;
-   sound	sound1;
+	sound	fastPan;
+   sound	longPan;
+   sound	shortTriggeredSound;
 }
 
 
@@ -65,28 +66,41 @@ env Default {
 	sos	330;
 }
 
-
-player sound3 {
+// make players to refer to the sounds.
+// sounds don't positoin without a player.
+// you can attach as many sounds as you want (i think)
+// NOTE: the juggler soundengine, uses the same name for 
+// the player and for the sound, so if your player is sound1, then your player's sound must be sound1 also.
+player shortTriggeredSound {
 	awstate	on;
 	position	0	0	0;
 	euler	0	0	0;
 	csref	2;
-	plyrref	sound3;
-	sound	sound3;
+	plyrref	shortTriggeredSound;
+	sound	shortTriggeredSound;
 }
 
-awPlayer sound2 {
+player fastPan {
 	awstate	on;
 	position	0	0	0;
 	euler	0	0	0;
 	csref	2;
-	plyrref	sound2;
-	sound	sound2;
+	plyrref	fastPan;
+	sound	fastPan;
 }
 
-awSound sound3 {
-	awstate	off;
-	wave	testSound.aiff;
+player longPan {
+	awstate	on;
+	position	0	0	0;
+	euler	0	0	0;
+	csref	2;
+	plyrref	longPan;
+	sound	longPan;
+}
+
+awSound shortTriggeredSound {
+	awstate	on;
+	wave	boink.aiff;
 	position	0	0	0	0	0	0;
 	spl	154.97;
 	pitchbend	1;
@@ -99,13 +113,13 @@ awSound sound3 {
 	doppler	0;
 	propagation	2;
 	absorption	2;
-	attenuation	2;
+	attenuation	1;
 	wcmap	2;
 }
 
-awSound sound2 {
-	awstate	off;
-	wave	testSound.aiff;
+awSound fastPan {
+	awstate	on;
+	wave	nin.aiff;
 	position	0	0	0	0	0	0;
 	spl	154.97;
 	pitchbend	1;
@@ -118,18 +132,18 @@ awSound sound2 {
 	doppler	0;
 	propagation	2;
 	absorption	2;
-	attenuation	2;
+	attenuation	1;
 	wcmap	2;
 }
 
-awSound sound1 {
-	awstate	off;
-	wave	testSound.aiff;
+awSound longPan {
+	awstate	on;
+	wave	wind_huge.aiff;
 	position	0	0	0	0	0	0;
-	spl	154.97;
+	spl	90.07;
 	pitchbend	1;
 	lopass	22050;
-	splhi	197.35;
+	splhi	120.53;
 	pitchbendhi	1;
 	lopasshi	22050;
 	expunge	0;

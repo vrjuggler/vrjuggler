@@ -1,5 +1,5 @@
 AliasMapperDatabaseVer1.0.0.0
 
-sound1 hail.wav
-sound2 nin.wav
-sound3 boink.wav
+fastPan nin.wav
+longPan wind_huge.wav
+shortTriggeredSound boink.wav
