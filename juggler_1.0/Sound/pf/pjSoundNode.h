@@ -139,7 +139,10 @@ int pjSoundNode::app(pfTraverser *trav)
       // set my sound's position.
       vjVec3 soundPosition = vjGetVjVec( pf_soundPosition );
       mSound->setPosition( soundPosition[0], soundPosition[1], soundPosition[2] );
-      cout<<"sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
+   
+      // TODO: call engine's update here???
+      
+      //cout<<"sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
    }
       
    return pfDCS::app(trav);  // call the parent class's app()
