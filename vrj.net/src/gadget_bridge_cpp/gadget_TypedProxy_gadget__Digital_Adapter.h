@@ -45,16 +45,14 @@ public:
    virtual ~gadget_TypedProxy_gadget__Digital_Adapter()
    {;}
 
-   struct holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
-   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement*);
+   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
    config_callback_boost_shared_ptr_jccl__ConfigElement_t config_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function gadget::Proxy::config.
    virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement;
-      h_p0->mPtr = p0;
-      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
+      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
       return result;
    }
 

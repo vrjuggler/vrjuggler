@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.17 of RCSfile: class_cxx_adapter.tmpl,v
+// Generated from Revision: 1.18 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __JCCL_CONFIGELEMENTHANDLER_ADAPTER__
@@ -44,16 +44,14 @@ public:
    virtual ~jccl_ConfigElementHandler_Adapter()
    {;}
 
-   struct holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
-   typedef bool (*configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement*);
+   typedef bool (*configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
    configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function jccl::ConfigElementHandler::configCanHandle.
    virtual bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement;
-      h_p0->mPtr = p0;
-      bool result = configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
+      bool result = configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
       return result;
    }
 
@@ -67,29 +65,25 @@ public:
       return result;
    }
 
-   struct holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
-   typedef bool (*configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement*);
+   typedef bool (*configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
    configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t configAdd_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function jccl::ConfigElementHandler::configAdd.
    virtual bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement;
-      h_p0->mPtr = p0;
-      bool result = configAdd_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
+      bool result = configAdd_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
       return result;
    }
 
-   struct holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
-   typedef bool (*configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement*);
+   typedef bool (*configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
    configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t configRemove_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function jccl::ConfigElementHandler::configRemove.
    virtual bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement;
-      h_p0->mPtr = p0;
-      bool result = configRemove_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
+      bool result = configRemove_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
       return result;
    }
 

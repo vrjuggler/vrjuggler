@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -33,55 +33,41 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DeviceInterface.h>
 
-struct gadget_AnalogInterface_Holder
-{
-   gadget::AnalogInterface mPtr;
-};
-
 extern "C"
 {
-   SHARPPY_API gadget_AnalogInterface_Holder* new_gadget_AnalogInterface_Holder(gadget::AnalogInterface ptr)
-   {
-      gadget_AnalogInterface_Holder* h = new gadget_AnalogInterface_Holder;
-      h->mPtr = ptr;
-      return h;
-   }
-
    // Constructor wrapper.
-   SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface1(const gadget::AnalogInterface* p0)
+   SHARPPY_API gadget::AnalogInterface* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface1(const gadget::AnalogInterface* p0)
    {
       const gadget::AnalogInterface& marshal_p0 = *p0;
-      gadget_AnalogInterface_Holder* obj = new gadget_AnalogInterface_Holder;
-      obj->mPtr = gadget::AnalogInterface(marshal_p0);
+      gadget::AnalogInterface* obj = new gadget::AnalogInterface(gadget::AnalogInterface(marshal_p0));
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__0()
+   SHARPPY_API gadget::AnalogInterface* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__0()
    {
-      gadget_AnalogInterface_Holder* obj = new gadget_AnalogInterface_Holder;
-      obj->mPtr = gadget::AnalogInterface();
+      gadget::AnalogInterface* obj = new gadget::AnalogInterface(gadget::AnalogInterface());
       return obj;
    }
 
-   SHARPPY_API void delete_gadget_AnalogInterface(gadget_AnalogInterface_Holder* self_)
+   SHARPPY_API void delete_gadget_AnalogInterface(gadget::AnalogInterface* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method gadget::DeviceInterface<gadget::AnalogProxy>::getProxy()
-   SHARPPY_API gadget::AnalogProxy* gadget_DeviceInterface_gadget_AnalogProxy__getProxy__0(gadget_AnalogInterface_Holder* self_)
+   SHARPPY_API gadget::AnalogProxy* gadget_DeviceInterface_gadget_AnalogProxy__getProxy__0(gadget::AnalogInterface* self_ptr)
    {
       gadget::AnalogProxy* result;
-      result = self_->mPtr.getProxy();
+      result = (*self_ptr).getProxy();
       return result;
    }
 
 
    // Wrapper for virtual method gadget::DeviceInterface<gadget::AnalogProxy>::refresh()
-   SHARPPY_API void gadget_DeviceInterface_gadget_AnalogProxy__refresh__0(gadget_AnalogInterface_Holder* self_)
+   SHARPPY_API void gadget_DeviceInterface_gadget_AnalogProxy__refresh__0(gadget::AnalogInterface* self_ptr)
    {
-      self_->mPtr.refresh();
+      (*self_ptr).refresh();
    }
 
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -33,55 +33,41 @@
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/DeviceInterface.h>
 
-struct gadget_DigitalInterface_Holder
-{
-   gadget::DigitalInterface mPtr;
-};
-
 extern "C"
 {
-   SHARPPY_API gadget_DigitalInterface_Holder* new_gadget_DigitalInterface_Holder(gadget::DigitalInterface ptr)
-   {
-      gadget_DigitalInterface_Holder* h = new gadget_DigitalInterface_Holder;
-      h->mPtr = ptr;
-      return h;
-   }
-
    // Constructor wrapper.
-   SHARPPY_API gadget_DigitalInterface_Holder* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__gadget_DigitalInterface1(const gadget::DigitalInterface* p0)
+   SHARPPY_API gadget::DigitalInterface* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__gadget_DigitalInterface1(const gadget::DigitalInterface* p0)
    {
       const gadget::DigitalInterface& marshal_p0 = *p0;
-      gadget_DigitalInterface_Holder* obj = new gadget_DigitalInterface_Holder;
-      obj->mPtr = gadget::DigitalInterface(marshal_p0);
+      gadget::DigitalInterface* obj = new gadget::DigitalInterface(gadget::DigitalInterface(marshal_p0));
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_DigitalInterface_Holder* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__0()
+   SHARPPY_API gadget::DigitalInterface* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__0()
    {
-      gadget_DigitalInterface_Holder* obj = new gadget_DigitalInterface_Holder;
-      obj->mPtr = gadget::DigitalInterface();
+      gadget::DigitalInterface* obj = new gadget::DigitalInterface(gadget::DigitalInterface());
       return obj;
    }
 
-   SHARPPY_API void delete_gadget_DigitalInterface(gadget_DigitalInterface_Holder* self_)
+   SHARPPY_API void delete_gadget_DigitalInterface(gadget::DigitalInterface* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method gadget::DeviceInterface<gadget::DigitalProxy>::getProxy()
-   SHARPPY_API gadget::DigitalProxy* gadget_DeviceInterface_gadget_DigitalProxy__getProxy__0(gadget_DigitalInterface_Holder* self_)
+   SHARPPY_API gadget::DigitalProxy* gadget_DeviceInterface_gadget_DigitalProxy__getProxy__0(gadget::DigitalInterface* self_ptr)
    {
       gadget::DigitalProxy* result;
-      result = self_->mPtr.getProxy();
+      result = (*self_ptr).getProxy();
       return result;
    }
 
 
    // Wrapper for virtual method gadget::DeviceInterface<gadget::DigitalProxy>::refresh()
-   SHARPPY_API void gadget_DeviceInterface_gadget_DigitalProxy__refresh__0(gadget_DigitalInterface_Holder* self_)
+   SHARPPY_API void gadget_DeviceInterface_gadget_DigitalProxy__refresh__0(gadget::DigitalInterface* self_ptr)
    {
-      self_->mPtr.refresh();
+      (*self_ptr).refresh();
    }
 
 

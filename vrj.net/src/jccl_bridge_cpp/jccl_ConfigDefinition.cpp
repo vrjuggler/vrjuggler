@@ -25,113 +25,107 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <jccl/Config/ConfigDefinition.h>
 
-struct jccl_ConfigDefinition_Holder
-{
-   boost::shared_ptr< jccl::ConfigDefinition > mPtr;
-};
-
 extern "C"
 {
-   SHARPPY_API jccl_ConfigDefinition_Holder* new_jccl_ConfigDefinition_Holder(boost::shared_ptr< jccl::ConfigDefinition > ptr)
-   {
-      jccl_ConfigDefinition_Holder* h = new jccl_ConfigDefinition_Holder;
-      h->mPtr = ptr;
-      return h;
-   }
-
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigDefinition_Holder* jccl_ConfigDefinition_ConfigDefinition__0()
+   SHARPPY_API boost::shared_ptr< jccl::ConfigDefinition >* jccl_ConfigDefinition_ConfigDefinition__0()
    {
-      jccl_ConfigDefinition_Holder* obj = new jccl_ConfigDefinition_Holder;
-      obj->mPtr = boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition());
+      boost::shared_ptr< jccl::ConfigDefinition >* obj = new boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition());
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigDefinition_Holder* jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(const char* p0, cppdom_boost::shared_ptr<cppdom::Node> p1)
+   SHARPPY_API boost::shared_ptr< jccl::ConfigDefinition >* jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(const char* p0, cppdom_boost::shared_ptr<cppdom::Node>* p1)
    {
-      jccl_ConfigDefinition_Holder* obj = new jccl_ConfigDefinition_Holder;
-      obj->mPtr = boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition(p0, p1));
+      boost::shared_ptr< jccl::ConfigDefinition >* obj = new boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition(p0, *p1));
       return obj;
    }
 
-   SHARPPY_API void delete_jccl_ConfigDefinition(jccl_ConfigDefinition_Holder* self_)
+   // Constructor wrapper.
+   SHARPPY_API boost::shared_ptr< jccl::ConfigDefinition >* jccl_ConfigDefinition_ConfigDefinition__jccl_ConfigDefinition1(const jccl::ConfigDefinition* p0)
+   {
+      const jccl::ConfigDefinition& marshal_p0 = *p0;
+      boost::shared_ptr< jccl::ConfigDefinition >* obj = new boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition(marshal_p0));
+      return obj;
+   }
+
+   SHARPPY_API void delete_jccl_ConfigDefinition(boost::shared_ptr< jccl::ConfigDefinition >* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::assertValid()
-   SHARPPY_API void jccl_ConfigDefinition_assertValid__0(jccl_ConfigDefinition_Holder* self_)
+   SHARPPY_API void jccl_ConfigDefinition_assertValid__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
-      self_->mPtr->assertValid();
+      (*self_ptr)->assertValid();
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::getName()
-   SHARPPY_API char* jccl_ConfigDefinition_getName__0(jccl_ConfigDefinition_Holder* self_)
+   SHARPPY_API char* jccl_ConfigDefinition_getName__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
       char* result;
-      temp_result = self_->mPtr->getName();
+      temp_result = (*self_ptr)->getName();
       result = strdup(temp_result.c_str());
       return result;
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::getToken()
-   SHARPPY_API char* jccl_ConfigDefinition_getToken__0(jccl_ConfigDefinition_Holder* self_)
+   SHARPPY_API char* jccl_ConfigDefinition_getToken__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
       char* result;
-      temp_result = self_->mPtr->getToken();
+      temp_result = (*self_ptr)->getToken();
       result = strdup(temp_result.c_str());
       return result;
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::getVersion()
-   SHARPPY_API unsigned int jccl_ConfigDefinition_getVersion__0(jccl_ConfigDefinition_Holder* self_)
+   SHARPPY_API unsigned int jccl_ConfigDefinition_getVersion__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
       unsigned int result;
-      result = self_->mPtr->getVersion();
+      result = (*self_ptr)->getVersion();
       return result;
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::getHelp()
-   SHARPPY_API char* jccl_ConfigDefinition_getHelp__0(jccl_ConfigDefinition_Holder* self_)
+   SHARPPY_API char* jccl_ConfigDefinition_getHelp__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
       char* result;
-      temp_result = self_->mPtr->getHelp();
+      temp_result = (*self_ptr)->getHelp();
       result = strdup(temp_result.c_str());
       return result;
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::operator ==()
-   SHARPPY_API bool jccl_ConfigDefinition_equal__jccl_ConfigDefinition1(jccl_ConfigDefinition_Holder* self_, const jccl::ConfigDefinition* p0)
+   SHARPPY_API bool jccl_ConfigDefinition_equal__jccl_ConfigDefinition1(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr, const jccl::ConfigDefinition* p0)
    {
       const jccl::ConfigDefinition& marshal_p0 = *p0;
       bool result;
-      result = self_->mPtr->operator==(marshal_p0);
+      result = (*self_ptr)->operator==(marshal_p0);
       return result;
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigDefinition::operator !=()
-   SHARPPY_API bool jccl_ConfigDefinition_not_equal__jccl_ConfigDefinition1(jccl_ConfigDefinition_Holder* self_, const jccl::ConfigDefinition* p0)
+   SHARPPY_API bool jccl_ConfigDefinition_not_equal__jccl_ConfigDefinition1(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr, const jccl::ConfigDefinition* p0)
    {
       const jccl::ConfigDefinition& marshal_p0 = *p0;
       bool result;
-      result = self_->mPtr->operator!=(marshal_p0);
+      result = (*self_ptr)->operator!=(marshal_p0);
       return result;
    }
 

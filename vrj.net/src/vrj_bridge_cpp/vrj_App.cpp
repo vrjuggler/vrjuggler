@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -177,10 +177,10 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::App::configCanHandle()
-   SHARPPY_API bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->vrj::App::configCanHandle(p0);
+      result = self_->vrj::App::configCanHandle(*p0);
       return result;
    }
 
@@ -195,19 +195,19 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::App::configAdd()
-   SHARPPY_API bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->configAdd_wrapper(p0);
+      result = self_->configAdd_wrapper(*p0);
       return result;
    }
 
 
    // Wrapper for virtual method vrj::App::configRemove()
-   SHARPPY_API bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->configRemove_wrapper(p0);
+      result = self_->configRemove_wrapper(*p0);
       return result;
    }
 

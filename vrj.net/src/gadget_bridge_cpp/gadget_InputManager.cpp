@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,10 +44,10 @@ extern "C"
 
 
    // Wrapper for non-virtual method gadget::InputManager::configureDevice()
-   SHARPPY_API bool gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->configureDevice(p0);
+      result = self_->configureDevice(*p0);
       return result;
    }
 
@@ -130,28 +130,28 @@ extern "C"
 
 
    // Wrapper for virtual method gadget::InputManager::configAdd()
-   SHARPPY_API bool gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->configAdd(p0);
+      result = self_->configAdd(*p0);
       return result;
    }
 
 
    // Wrapper for virtual method gadget::InputManager::configRemove()
-   SHARPPY_API bool gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->configRemove(p0);
+      result = self_->configRemove(*p0);
       return result;
    }
 
 
    // Wrapper for virtual method gadget::InputManager::configCanHandle()
-   SHARPPY_API bool gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->configCanHandle(p0);
+      result = self_->configCanHandle(*p0);
       return result;
    }
 

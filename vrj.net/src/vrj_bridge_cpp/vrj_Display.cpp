@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -55,16 +55,16 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::Display::configDisplayWindow()
-   SHARPPY_API void vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API void vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
-      self_->configDisplayWindow(p0);
+      self_->configDisplayWindow(*p0);
    }
 
 
    // Wrapper for non-virtual method vrj::Display::configViewports()
-   SHARPPY_API void vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API void vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
-      self_->configViewports(p0);
+      self_->configViewports(*p0);
    }
 
 
@@ -107,6 +107,15 @@ extern "C"
    {
       bool result;
       result = self_->shouldDrawBorder();
+      return result;
+   }
+
+
+   // Wrapper for non-virtual method vrj::Display::shouldHideMouse()
+   SHARPPY_API bool vrj_Display_shouldHideMouse__0(vrj::Display* self_)
+   {
+      bool result;
+      result = self_->shouldHideMouse();
       return result;
    }
 
@@ -184,9 +193,9 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::Display::config()
-   SHARPPY_API void vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API void vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
-      self_->config(p0);
+      self_->config(*p0);
    }
 
 

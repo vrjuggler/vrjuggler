@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -94,10 +94,10 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::User::config()
-   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement1(vrj::User* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement1(vrj::User* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->config(p0);
+      result = self_->config(*p0);
       return result;
    }
 

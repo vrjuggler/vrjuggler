@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -68,28 +68,28 @@ extern "C"
    }
 
    // Wrapper for virtual method vrj::SoundManager::configAdd()
-   SHARPPY_API bool vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->vrj::SoundManager::configAdd(p0);
+      result = self_->vrj::SoundManager::configAdd(*p0);
       return result;
    }
 
 
    // Wrapper for virtual method vrj::SoundManager::configRemove()
-   SHARPPY_API bool vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->vrj::SoundManager::configRemove(p0);
+      result = self_->vrj::SoundManager::configRemove(*p0);
       return result;
    }
 
 
    // Wrapper for virtual method vrj::SoundManager::configCanHandle()
-   SHARPPY_API bool vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
    {
       bool result;
-      result = self_->vrj::SoundManager::configCanHandle(p0);
+      result = self_->vrj::SoundManager::configCanHandle(*p0);
       return result;
    }
 
