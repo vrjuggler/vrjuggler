@@ -60,7 +60,7 @@
 #                   build and install/release process.
 # topdir          - The top of the build tree.
 # VPRROOT_ABS     - The absolute path to the root of the VPR source tree.
-# JUGGLERROOT_ABS - The absolute path to the root of the VPR source tree.
+# JUGGLERROOT_ABS - The absolute path to the root of the Juggler source tree.
 #
 # DPP_SCRIPTDIR   - The directory containing Doozer++ helper scripts.
 # MKDEPS_CC       - Compiler for C dependencies.
