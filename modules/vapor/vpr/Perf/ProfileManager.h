@@ -71,7 +71,7 @@ namespace vpr
    public:
 
       ///Convenience typedef; for use by the Performance Monitor Plugin
-      typedef std::map<std::string, float> SampleTimeMap;
+      typedef std::map<std::string, vpr::Interval> ProfileSampleResult;
       
       /**
       * Steps one level deeper into the tree, if a child already exists with 
@@ -173,14 +173,14 @@ namespace vpr
 
       
       /**
-       * @return Returns a SampleTimeMap that has the names in the profile
+       * @return Returns a ProfileSampleResult that has the names in the profile
        *         and their last sample.
        */
-      static SampleTimeMap getValueMap( )
+      static ProfileSampleResult getSampleResult( )
       {
-         SampleTimeMap sample_time_map;
+         ProfileSampleResult sample_time_map;
          mTreeLock.acquire();
-            getValueMapRecursively(sample_time_map, &mRoot);
+            getSampleResultRecursively(sample_time_map, &mRoot);
          mTreeLock.release();
          return sample_time_map;
       }
@@ -233,17 +233,18 @@ namespace vpr
          getNamesRecursively(nameList, node->getChild());
        }
 
-      static void getValueMapRecursively( SampleTimeMap& sampleTimeMap,
+      static void getSampleResultRecursively( ProfileSampleResult& sampleTimeMap,
                                           ProfileNode* node )
       {
          if ( NULL == node )
          { return; }
 
-         getValueMapRecursively(sampleTimeMap, node->getSibling());
-         float last_sample = node->getNodeHistoryRange().first->msecf();
+         getSampleResultRecursively(sampleTimeMap, node->getSibling());
+         vpr::Interval last_sample;
+         last_sample.msecf( node->getNodeHistoryRange().first->msecf());
          std::string name = node->getName();
          sampleTimeMap[name] = last_sample;
-         getValueMapRecursively(sampleTimeMap, node->getChild());
+         getSampleResultRecursively(sampleTimeMap, node->getChild());
       }
    };
 
