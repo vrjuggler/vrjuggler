@@ -20,7 +20,7 @@
 
 #ifndef _VJ_PLANE_H_
 #define _VJ_PLANE_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Kernel/vjDebug.h>

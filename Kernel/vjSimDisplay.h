@@ -20,7 +20,7 @@
 
 #ifndef _VJ_SIM_DISPLAY_H_
 #define _VJ_SIM_DISPLAY_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Math/vjMatrix.h>

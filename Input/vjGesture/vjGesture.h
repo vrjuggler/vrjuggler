@@ -20,7 +20,7 @@
 
 #ifndef _VJ_GESTURE_H_
 #define _VJ_GESTURE_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>

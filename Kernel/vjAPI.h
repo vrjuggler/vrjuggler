@@ -20,7 +20,7 @@
 
 #ifndef _VJ_API_
 #define _VJ_API_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 

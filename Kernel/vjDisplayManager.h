@@ -20,7 +20,7 @@
 
 #ifndef _VJ_DISPLAY_MANAGER_
 #define _VJ_DISPLAY_MANAGER_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 

@@ -20,7 +20,7 @@
 
 #ifndef _VJ_KERNEL_
 #define _VJ_KERNEL_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Kernel/vjApp.h>

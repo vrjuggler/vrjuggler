@@ -20,7 +20,7 @@
 
 #ifndef _VJDebug_h_
 #define _VJDebug_h_
-#pragma once
+//#pragma once
 
 // #define VJ_DEBUG  Defined in vjConfig.h
 #include <vjConfig.h>

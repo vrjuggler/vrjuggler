@@ -20,7 +20,7 @@
 
 #ifndef _VJ_GLOVE_H_
 #define _VJ_GLOVE_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>

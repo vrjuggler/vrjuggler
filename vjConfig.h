@@ -20,7 +20,7 @@
 
 #ifndef _VJ_CONFIG_H_
 #define _VJ_CONFIG_H_
-#pragma once
+/* #pragma once */
 
 /*
  * ----------------------------------------------------------------------------
