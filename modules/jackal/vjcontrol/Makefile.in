@@ -115,7 +115,11 @@ ifdef GLOBAL_BUILD
 endif
 
 jccl_vjcontrol.jar: $(JAVA_CLASSES)
-	$(JAR) cvf $@ $(JAVA_CLASSES)
+	$(JAR) cvf $@ $(JAVA_CLASSES) \
+			 $(WIZARDS_DIR)/gfx \
+			 $(WIZARDS_DIR)/data \
+			 VjFiles \
+			 contents.config
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
