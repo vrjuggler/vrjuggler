@@ -60,7 +60,7 @@ public class PropertyPanel extends BorderedPanel implements ActionListener {
 
 	/* add help message, if there is one */
 	if (!pr.desc.help.equals("")) {
-	    /*
+	    
 	    TextArea helparea;
 	    if (pr.desc.help.length() < 50)
 		helparea = new TextArea(pr.desc.help,2,10,
@@ -70,10 +70,15 @@ public class PropertyPanel extends BorderedPanel implements ActionListener {
 					TextArea.SCROLLBARS_HORIZONTAL_ONLY);
 	    helparea.setEditable(false);
 	    add(helparea, "South");
+	    
+	    /* this fixed the vertical sizing problem, where the bottoms
+	     * of letters were getting cut off, but the field wants to resize 
+	     * itself horizontally to display all the text...
+	     *
+	     TextField helpfield = new TextField (pr.desc.help);
+	     helpfield.setEditable(false);
+	     add(helpfield, "South");
 	    */
-	    TextField helpfield = new TextField (pr.desc.help);
-	    helpfield.setEditable(false);
-	    add(helpfield, "South");
 	}
 	
 	/* east panel holds the individual PropertyPanels */
