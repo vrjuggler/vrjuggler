@@ -2709,17 +2709,13 @@ private:
       <classname>vpr::ProfileManager</classname>).</para>
 
       <para>The Profile Manager keeps a one-to-many tree of the different
-      metrics (instances of</para>
-
-      <para><classname>vpr::ProfileSample</classname>) being used. When the
-      Profile Manager starts profiling a section of code, it is given a name
-      to associate with the newly started profile. If you want to stop the
-      profiling before the end of the function or by making a
-      <classname>vpr::ProfileSample</classname> and giving it a name as its
-      argument that upon the completion of execution will be destructed and in
-      its destructor asks the Profile Manager to stop profiling. If you were
-      just sampling part of the code you can ask the Profile Manager to stop
-      profiling.</para>
+      metrics (instances of <classname>vpr::ProfileSample</classname>) being
+      used. When the Profile Manager starts profiling a section of code, it
+      looks to see if it had been profiled before and if so adds another
+      sample to that profile otherwise it is added to the tree . Upon the
+      completion of the function the destructor asks the Profile Manager to
+      stop profiling. If you were just sampling part of the code you can ask
+      the Profile Manager to stop profiling.</para>
 
       <para>Along with being able to keep track of the named profiles, you can
       also keep a specified number of samples so you can keep more than just
@@ -2734,6 +2730,13 @@ private:
       obtained by using the <classname>vpr::Interval</classname> class to
       measure the time spent in a particular piece of code using the highest
       precision timer available to the VPR.</para>
+
+      <para>An iterator class is provided to allow the user to use the
+      captured data for statistics, printing out, etc. For profiles that
+      contain more than one sample there are functions provided to get the
+      short term average. Also, to quickly just print out the statistics at
+      any point the user may call <function>VPR_PROFILE_RESULTS()</function>
+      and the current status of all profiles will be printed out.</para>
     </chapter>
   </part>
 
