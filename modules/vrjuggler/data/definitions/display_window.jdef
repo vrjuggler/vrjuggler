@@ -222,6 +222,25 @@
                   <xsl:for-each select="./jconf:surface_viewports">
                      <xsl:copy-of select="."/>
                   </xsl:for-each>
+                  <xsl:variable name="is_event_source">
+                     <xsl:value-of select="./jconf:act_as_event_source"/>
+                  </xsl:variable>
+                  <xsl:element namespace="{$jconf}" name="keyboard_mouse_device_name">
+                     <xsl:choose>
+                        <xsl:when test="$is_event_source = 'true'">
+                           <xsl:value-of select="./jconf:event_window_device/jconf:event_window/@name" /><xsl:text> KM Dev</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$is_event_source = '1'">
+                           <xsl:value-of select="./jconf:event_window_device/jconf:event_window/@name" /><xsl:text> KM Dev</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <xsl:text/>
+                        </xsl:otherwise>
+                     </xsl:choose>
+                  </xsl:element>
+                  <xsl:copy-of select="./jconf:event_window_device/jconf:event_window/jconf:lock_key"/>
+                  <xsl:copy-of select="./jconf:event_window_device/jconf:event_window/jconf:start_locked"/>
+                  <xsl:copy-of select="./jconf:event_window_device/jconf:event_window/jconf:sleep_time"/>
                </xsl:element>
             </xsl:template>
          </xsl:stylesheet>
