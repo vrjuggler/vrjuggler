@@ -91,6 +91,8 @@ public:
       ;
    }
 
+   virtual ~cubesApp() {}
+
    // Execute any initialization needed before the API is started
    virtual void init();
 
@@ -137,7 +139,7 @@ public:
    {
        vjDEBUG(vjDBG_ALL,2) << "cubesApp::preFrame()" << endl << vjDEBUG_FLUSH;
 
-       for(int i=0;i<mUserData.size();i++)
+       for(unsigned int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
    }
 
@@ -151,6 +153,16 @@ public:
    virtual void postFrame()
    {
       vjDEBUG(vjDBG_ALL,2) << "cubesApp::postFrame" << endl << vjDEBUG_FLUSH;
+   }
+
+   //: Make sure that all our dependencies are satisfied
+   // Make sure that there are vjUsers registered with the system 
+   virtual bool depSatisfied()
+   {
+      // We can't start until there are users registered wth the system
+      // We rely upon users to keep track of the multi-user data structure
+      int num_users = vjKernel::instance()->getUsers().size();
+      return (num_users > 0);
    }
 
 private:

@@ -26,7 +26,7 @@
 // Set up the transformation information
 bool vjPosition::config(vjConfigChunk *c)
 {
-  vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition(vjConfigChunk*)" << endl;
+  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition(vjConfigChunk*)" << endl;
   if(!vjInput::config(c))
      return false;
 
@@ -59,7 +59,7 @@ bool vjPosition::config(vjConfigChunk *c)
 
 vjPosition::vjPosition()
 {
-  vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition()" << endl;
+  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition()" << endl;
   deviceAbilities = deviceAbilities | DEVICE_POSITION;
   theData = NULL;
   mDataTimes = NULL;
@@ -71,6 +71,6 @@ vjPosition::~vjPosition()
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
     if (mDataTimes != NULL)
-	delete mDataTimes;
+   delete mDataTimes;
 }
 

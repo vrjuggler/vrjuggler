@@ -51,13 +51,13 @@ void vjDeviceInterface::refresh()
    mProxyIndex = vjKernel::instance()->getInputManager()->getProxyIndex(mProxyName);
    if (mProxyIndex == -1)
    {
-      vjDEBUG(vjDBG_ALL,0) << "WARNING: vjDeviceInterface::refresh: could not find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,0) << "         Make sure the proxy exists in the current configuration." << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,0) << "   referencing device interface will be stupified to point at dummy device." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "WARNING: vjDeviceInterface::refresh: could not find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "         Make sure the proxy exists in the current configuration." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "   referencing device interface will be stupified to point at dummy device." << endl << vjDEBUG_FLUSH;
    }
    else if((mProxyIndex != -1) && (prev_proxy_index == -1))   // ASSERT: We have just gotten a valid proxy to point to
    {
-      vjDEBUG(vjDBG_ALL,0) << "vjDeviceInterface::refresh: Success: Now able to find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjDeviceInterface::refresh: Success: Now able to find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
    }
 }
 
