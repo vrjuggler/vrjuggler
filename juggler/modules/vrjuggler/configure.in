@@ -635,22 +635,32 @@ CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
 AC_PROG_CC
 AC_PROG_CXX
 
-dnl # On FreeBSD, we need to use egcs 1.1.2-release or newer for the C and C++
-dnl # compilers (especially for C++).
-if test "$PLATFORM" = "FreeBSD" ; then
-    AC_CACHE_CHECK(if $CC is egcs 1.1.2 or newer,
-        ac_cv_CC_is_egcs,
-        [ _val=`$CC -v 2>&1 | grep -e '^gcc version' | cut -f4 -d' '` ;
-          if test $_val -ge 19990314 ; then
-              ac_cv_CC_is_egcs='yes' ;
-          else
-              ac_cv_CC_is_egcs='no' ;
-          fi
+dnl # If we are using GCC as the compiler, we need to be using at least egcs
+dnl # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
+if test "x$GXX" = "xyes" ; then
+    AC_CACHE_CHECK(if $CXX is egcs 1.1.2 or newer,
+        ac_cv_CXX_is_egcs,
+        [ case `$CXX -dumpversion 2>&1` in
+              egcs-2.9*)
+                  ac_cv_CXX_is_egcs='yes'
+                  ;;
+              2.9*)
+                  ac_cv_CXX_is_egcs='yes'
+                  ;;
+              *)
+                  _val=`$CXX -v 2>&1 | grep -e '^gcc version' | cut -f4 -d' '`
+                  if test ${_val} -ge 19990314 ; then
+                      ac_cv_CXX_is_egcs='yes'
+                  else
+                      ac_cv_CXX_is_egcs='no'
+                  fi
+                  ;;
+          esac
         ])
 
-    dnl # If the $CC binary is not egcs 1.1.2 or newer, check for egcc.  If
-    dnl # it exists, we will assume that it is new enough.
-    if test "$ac_cv_CC_is_egcs" = "no" ; then
+    dnl # If the $CXX binary is not egcs 1.1.2 or newer, check for egcc and
+    dnl # eg++.  If it exists, we will assume that it is new enough.
+    if test "x$ac_cv_CXX_is_egcs" = "xno" ; then
         AC_CHECK_PROG(CC, egcc, egcc,
             AC_MSG_ERROR(*** The library requires the egcc C compiler ***))
         AC_CHECK_PROG(CXX, eg++, eg++,
