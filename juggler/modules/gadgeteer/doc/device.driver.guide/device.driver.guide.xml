@@ -7,7 +7,7 @@
 
     <subtitle>Device Driver Authoring Guide</subtitle>
 
-    <releaseinfo>Version 0.3</releaseinfo>
+    <releaseinfo>Version 0.4</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -58,7 +58,55 @@
           <secondary>goals</secondary>
         </indexterm>
 
-        <para></para>
+        <para>Gadgeteer serves to hide input device hardware from programmers
+        so that immersive software may be written that can take advantage of a
+        wide variety of devices. This goal arises from previous experience
+        with software toolkits that tied immersive applications to specific
+        devices, thereby limiting the portability of the applications between
+        immersive hardware configurations. With Gadgeteer, applications can be
+        written that migrate transparently between different hardware
+        configurations with no required knowledge on the part of the
+        application author relating to vendors, models, drivers, etc.</para>
+
+        <para>Gadgeteer categorizes input devices based on abstract input
+        types. The categories are the following:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Position</para>
+          </listitem>
+
+          <listitem>
+            <para>Analog</para>
+          </listitem>
+
+          <listitem>
+            <para>Digital</para>
+          </listitem>
+
+          <listitem>
+            <para>Glove</para>
+          </listitem>
+
+          <listitem>
+            <para>Gesture</para>
+          </listitem>
+
+          <listitem>
+            <para>Simulator</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Each of these is described in more detail below in <xref
+        linkend="device.types.section" />.</para>
+
+        <para>In this categorization, devices from different vendors may
+        return data that maps to the same abstract form. A single piece of
+        hardware may even map to multiple input types, and more device types
+        can be added as new hardware becomes available. Application authors
+        write their code in terms of abstract input types, so as long as a
+        device is available that provides the needed input, the application
+        can function.</para>
       </section>
 
       <section id="driver.goals.section">
@@ -526,7 +574,39 @@
             <secondary>digital</secondary>
           </indexterm>
 
-          <para></para>
+          <para>Digital input comes in discrete forms, as its name suggests.
+          However, a digital device in Gadgeteer terms corresponds most
+          closely with a button device that has an <quote>on</quote> state and
+          an <quote>off</quote> state. In that regard, a more appropriate name
+          for a digital device within Gadgeteer would be a Boolean device,
+          except that Gadgeteer provides more than just two values for input
+          from a digital device. Due to its frame-based nature, Gadgeteer can
+          tell users when the state of a digital device has changed since the
+          last frame, thereby allowing for up to four values to be returned
+          from a digital device:</para>
+
+          <orderedlist>
+            <listitem>
+              <para>On: The device is in the on state.</para>
+            </listitem>
+
+            <listitem>
+              <para>Off: The device is in the off state.</para>
+            </listitem>
+
+            <listitem>
+              <para>Toggle on: The device was in the off state during the last
+              frame and changed to the on state this frame.</para>
+            </listitem>
+
+            <listitem>
+              <para>Toggle off: The device was in the on state during the last
+              frame and changed to the off state this frame.</para>
+            </listitem>
+          </orderedlist>
+
+          <para>The management of the toggle states is handled by Gadgeteer;
+          devices simply need to collect the raw on and off values.</para>
         </section>
 
         <section>
@@ -538,7 +618,17 @@
             <secondary>analog</secondary>
           </indexterm>
 
-          <para></para>
+          <para>Analog input represents a continuous range of values. Of
+          course, with digital computers, analog values can only be simulated.
+          In Gadgeteer, this simulation is performed using floating-point
+          values.</para>
+
+          <para>At the application level, programmers get values from an
+          analog device in the range 0.0 to 1.0 inclusive. In other words,
+          values returned by an analog device are normalized before they are
+          returned to the application. This allows applications to get analog
+          input from a variety of analog devices without depending on a
+          specific range of values returned by any given device.</para>
         </section>
 
         <section>
@@ -548,6 +638,18 @@
             <primary>device types</primary>
 
             <secondary>glove</secondary>
+          </indexterm>
+
+          <para></para>
+        </section>
+
+        <section>
+          <title>Gesture</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>gesture</secondary>
           </indexterm>
 
           <para></para>
@@ -742,7 +844,47 @@
           <tertiary>standalone driver</tertiary>
         </indexterm>
 
-        <para></para>
+        <para>The standalone device driver makes use of <emphasis>nothing</emphasis>
+        in Gadgeteer. It can utilize dependencies of Gadgeteer including VPR
+        and GMTL, however. Reusing code from those projects is encouraged. In
+        particular, writing the driver on top of VPR allows it to be much more
+        portable than it would be if all the cross-platform code were written
+        from scratch. The reason that the standalone driver does not use
+        Gadgeteer is so that it can be tested without needing any of the
+        complexity of the Input Manager, thereby allowing easier, more direct
+        debugging.</para>
+
+        <para>In most cases the standalone driver should be an implementation
+        of the hardware communication protocol and nothing more. The
+        standalone driver is written as a single C++ class that provides an
+        interface that the Gadgeteer wrapper class can call. The interface
+        normally has methods such as <methodname>open()</methodname>,
+        <methodname>sample()</methodname>, and <methodname>close()</methodname>
+        for opening the connection to the hardware, collecting a single
+        sample, and closing the connection to the hardware respectively.</para>
+
+        <para>The standalone driver class should return data it is most raw
+        form in the majority of cases, but the data should be meaningful. For
+        example, if logic is needed to convert four bytes read from the
+        hardware into a single floating-point value (a <type>float</type>),
+        that should be performed in the standalone driver. That sort of data
+        processing is part of implementing the communication protocol.
+        However, processing such as unit conversion should not be done in the
+        standalone driver in most cases. Instead, such conversions should be
+        handled by the Gadgeteer wrapper class since that is where the unit
+        configuration is done.</para>
+
+        <para>Typically, the standalone driver will not be multi-threaded.
+        Instead, a method with a name such as <methodname>sample()</methodname>
+        should be provided that returns a single sample. Then, test code and
+        the Gadgeteer wrapper class can call the sampling method in a loop
+        which may or may not be run in a thread.</para>
+
+        <para>With this design, the standalone driver class can be tested by
+        writing a simple console application that makes an instance of the
+        class and invokes each of the methods. The application can be
+        interactive so that users can configure aspects of the driver and take
+        samples. This makes debugging and data validation easy.</para>
       </section>
 
       <section>
@@ -1271,13 +1413,13 @@ linkends="MyButtonDevice.config.hostelement.value.co" />
 &#60;/configuration&#62;</programlisting>
 
           <calloutlist>
-            <callout
-            arearefs="MyButtonDevice.config.InputManager MyButtonDevice.config.driver"
+            <callout arearefs="MyButtonDevice.config.InputManager"
             id="MyButtonDevice.config.driver.co">
-              <para>The <literal>InputManager</literal> element configures the
-              Gadgeteer Input Manager. In this case, we are telling the Input
-              Manager about a driver plug-in, found at <filename>${HOME}/ButtonDevice_drv.so</filename>,
-              that should be loaded at runtime.</para>
+              <para>The <sgmltag>input_manager</sgmltag> element configures
+              the Gadgeteer Input Manager. In this case, we are telling the
+              Input Manager about a driver plug-in, found at
+              <filename>${HOME}/ButtonDevice_drv.so</filename>, that should be
+              loaded at runtime.</para>
             </callout>
 
             <callout arearefs="MyButtonDevice.config.ButtonDevice"
@@ -1648,17 +1790,17 @@ void ButtonDevice::threadedSampleFunction(void* classPointer)
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-DRIVER_NAME=	ButtonDevice
+DRIVER_NAME=    ButtonDevice
 
-srcdir=		@srcdir@
-top_srcdir=	@top_srcdir@
-INSTALL=	@INSTALL@
-INSTALL_FILES=	
-SUBOBJDIR=	$(DRIVER_NAME)
-C_AFTERBUILD=	driver-dso
+srcdir=         @srcdir@
+top_srcdir=     @top_srcdir@
+INSTALL=        @INSTALL@
+INSTALL_FILES=
+SUBOBJDIR=      $(DRIVER_NAME)
+C_AFTERBUILD=   driver-dso
 
-SRCS=		ButtonDevice.cpp		\
-		DriverStandalone.cpp
+SRCS=           ButtonDevice.cpp \
+                DriverStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/driver.defs.mk
