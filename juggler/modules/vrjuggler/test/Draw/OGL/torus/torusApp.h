@@ -37,7 +37,7 @@
 
 #include <vrj/Draw/OGL/GlApp.h>
 
-#include <vrj/Input/Type/PosInterface.h>
+#include <gadget/Type/PositionInterface.h>
 
 
 //--------------------------------------------------
@@ -101,7 +101,7 @@ private:
    void initGLState();
 
 private:
-   vrj::PosInterface    mWand;
+   gadget::PositionInterface    mWand;
 };
 
 #endif

@@ -42,6 +42,10 @@
 #include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 #include <vrj/Environment/EnvironmentManager.h>
 
+#include <gadget/InputManager.h>
+
+//class gadget::InputManager;
+
 namespace vpr
 {
    class BaseThread;
@@ -51,7 +55,6 @@ namespace vrj
 {
 class DisplayManager;
 class DrawManager;
-class InputManager;
 class SoundManager;
 class User;
 class App;
@@ -178,7 +181,7 @@ public:      // Global "get" interface
    { return mSysFactory; }
 
    //: Get the input manager
-   vrj::InputManager* getInputManager();
+   gadget::InputManager* getInputManager();
 
     //: Get the Environment Manager
    vrj::EnvironmentManager* getEnvironmentManager()
@@ -204,11 +207,11 @@ protected:
 
    /// Factories and Managers
    vrj::SystemFactory*        mSysFactory;            //: The current System factory
-   InputManager*         mInputManager;          //: The input manager for the system
-   DrawManager*          mDrawManager;           //: The Draw Manager we are currently using
-   SoundManager*      mSoundManager;          //: The Audio Manager we are currently using
-   DisplayManager*       mDisplayManager;        //: The Display Manager we are currently using
-   EnvironmentManager*   environmentManager;     //: The Environment Manager object
+   gadget::InputManager*      mInputManager;          //: The input manager for the system
+   DrawManager*               mDrawManager;           //: The Draw Manager we are currently using
+   SoundManager*              mSoundManager;          //: The Audio Manager we are currently using
+   DisplayManager*            mDisplayManager;        //: The Display Manager we are currently using
+   EnvironmentManager*        environmentManager;     //: The Environment Manager object
 
    /// Performance information
    jccl::PerfDataBuffer* perfBuffer;          //: store perfdata for kernel main

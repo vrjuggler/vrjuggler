@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/WallProjection.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Input/Type/PosInterface.h>
+#include <gadget/Type/PositionInterface.h>
 
 namespace vrj
 {
@@ -109,7 +109,7 @@ private:
    // Screen configuration
    float mOriginToScreen_bak, mOriginToRight_bak, mOriginToLeft_bak, mOriginToTop_bak, mOriginToBottom_bak;
 
-   PosInterface    mTracker;
+   gadget::PositionInterface    mTracker;
 };
 
 };

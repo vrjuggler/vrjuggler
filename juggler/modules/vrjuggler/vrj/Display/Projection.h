@@ -38,7 +38,8 @@
 #include <vrj/Display/Frustum.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Vec3.h>
-#include <vrj/Input/Type/Position.h>
+
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {

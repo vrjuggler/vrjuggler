@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 //#include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Type/PosInterface.h>
+#include <gadget/Type/PositionInterface.h>
 
 namespace jccl {
     class ConfigChunk;
@@ -96,7 +96,7 @@ public:
 private:
    int               mUserId;    //: the id of the user
    std::string       mName;      //: The string name of the user
-   PosInterface    mHead;      //: The head positon
+   gadget::PositionInterface    mHead;      //: The head positon
    float             mInterocularDist;    //: Eye seperation
 
 private:

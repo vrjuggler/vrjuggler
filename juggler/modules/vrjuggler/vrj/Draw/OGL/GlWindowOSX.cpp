@@ -57,7 +57,7 @@ GlWindowOSX::~GlWindowOSX() {
 }
 
 void GlWindowOSX::swapBuffers() {
-    vprDEBUG(vrjDBG_INPUT_MGR,7) << "vjGlWindowOSX::swapBuffers()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,7) << "vjGlWindowOSX::swapBuffers()" << std::endl << vprDEBUG_FLUSH;
     if(aglContext)
     {
         aglSwapBuffers (aglContext);
@@ -85,7 +85,7 @@ void GlWindowOSX::swapBuffers() {
 }
 
 int GlWindowOSX::open() {
-    vprDEBUG(vrjDBG_INPUT_MGR,2) << "vjGlWindowOSX::open()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,2) << "vjGlWindowOSX::open()" << std::endl << vprDEBUG_FLUSH;
 
     GDHandle hGDWindow;
 
@@ -96,7 +96,7 @@ int GlWindowOSX::open() {
 
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes | kWindowNoShadowAttribute | kWindowLiveResizeAttribute, &rectWin, &gpWindow))
     {
-        vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()    Window failed to open!" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::open()    Window failed to open!" << std::endl << vprDEBUG_FLUSH;
         return false;
     }
     SetWindowTitleWithCFString(gpWindow,window_title);
@@ -122,7 +122,7 @@ int GlWindowOSX::open() {
     if (!aglContext)
     {
         DestroyGLFromWindow (&aglContext, &glInfo);
-        vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()    Window could not create GL Context!" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::open()    Window could not create GL Context!" << std::endl << vprDEBUG_FLUSH;
         return false;
     }
     Rect rectPort;
@@ -138,7 +138,7 @@ int GlWindowOSX::open() {
 }
 
 int GlWindowOSX::close() {
-    vprDEBUG(vrjDBG_INPUT_MGR,2) << "vjGlWindowOSX::close()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,2) << "vjGlWindowOSX::close()" << std::endl << vprDEBUG_FLUSH;
     if(!gpWindow) return false;
 
     DestroyGLFromWindow (&aglContext, &glInfo);
@@ -153,7 +153,7 @@ int GlWindowOSX::close() {
 }
 
 bool GlWindowOSX::makeCurrent() {
-    vprDEBUG(vrjDBG_INPUT_MGR,7) << "vjGlWindowOSX::makeCurrent()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,7) << "vjGlWindowOSX::makeCurrent()" << std::endl << vprDEBUG_FLUSH;
     if(!aglContext) return false;
     aglSetCurrentContext (aglContext);
     return true;
@@ -161,7 +161,7 @@ bool GlWindowOSX::makeCurrent() {
 
 void GlWindowOSX::config(Display* _display)
 {
-   vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vprDEBUG_FLUSH;
 
    GlWindow::config(_display);
 

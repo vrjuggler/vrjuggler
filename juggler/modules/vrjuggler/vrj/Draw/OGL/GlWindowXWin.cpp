@@ -250,14 +250,14 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
     if(true == mAreKeyboardDevice)     // Are we going to act like a keyboard device
     {
        // Set the parameters that we will need to get events
-       vrj::KeyboardXWin::m_window = x_window;
-       vrj::KeyboardXWin::m_visual = visual_info;
-       vrj::KeyboardXWin::m_display = x_display;
+       gadget::KeyboardXWin::m_window = x_window;
+       gadget::KeyboardXWin::m_visual = visual_info;
+       gadget::KeyboardXWin::m_display = x_display;
 
        // Start up the device
-       vrj::KeyboardXWin::startSampling();
+       gadget::KeyboardXWin::startSampling();
 
-       vrj::Input* dev_ptr = dynamic_cast<vrj::Input*>(this);
+       gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
 
        // XXX: Possibly not the best way to add this to input manager
        vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
