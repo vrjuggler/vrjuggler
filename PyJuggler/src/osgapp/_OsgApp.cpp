@@ -350,13 +350,13 @@ struct vrj_OsgApp_Wrapper: vrj::OsgApp
 
     void intraFrame() {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
-                                 "vrj_OsgApp_Wrapper::postFrame()\n",
-                                 "vrj_OsgApp_Wrapper::postFrame() done.\n");
+                                 "vrj_OsgApp_Wrapper::intraFrame()\n",
+                                 "vrj_OsgApp_Wrapper::intraFrame() done.\n");
         PyJuggler::InterpreterGuard guard;
 
         try
         {
-            call_method< void >(self, "postFrame");
+            call_method< void >(self, "intraFrame");
         }
         catch(error_already_set)
         {

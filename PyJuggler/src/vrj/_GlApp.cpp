@@ -294,13 +294,13 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
 
     void intraFrame() {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
-                                 "vrj_GlApp_Wrapper::postFrame()\n",
-                                 "vrj_GlApp_Wrapper::postFrame() done.\n");
+                                 "vrj_GlApp_Wrapper::intraFrame()\n",
+                                 "vrj_GlApp_Wrapper::intraFrame() done.\n");
         PyJuggler::InterpreterGuard guard;
 
         try
         {
-            call_method< void >(self, "postFrame");
+            call_method< void >(self, "intraFrame");
         }
         catch(error_already_set)
         {
