@@ -37,9 +37,8 @@
 /*
  * ----------------------------------------------------------------------------
  * This file (vprConfig.h) includes header files common to most, if not all,
- * files in the VR Juggler source tree.  It must be included at the top of
- * every .h and .cpp file before any other headers because it includes system
- * headers.
+ * files in the VPR source tree.  It must be included at the top of every .h
+ * and .cpp file before any other headers because it includes system headers.
  * ----------------------------------------------------------------------------
  */
 

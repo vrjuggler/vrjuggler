@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # This file defines the specification for the test code directory tree for
-# the VR Juggler installation.
+# the VR Juggler Portable Runtime installation.
 
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
