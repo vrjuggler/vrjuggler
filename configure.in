@@ -950,6 +950,9 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
                 ac_cv_pthread_version='Draft 10',
                 ac_cv_pthread_version='Draft 4'))
 
+        AC_CHECK_FUNC(pthread_attr_setstack,
+            AC_DEFINE(HAVE_PTHREAD_ATTR_SETSTACK, 1))
+
         LIBS="${_vjsave_LIBS}"
 
         dnl # HP once again, not playing by the rules.  Forcing draft level 10.
@@ -1024,6 +1027,8 @@ if test "$THREADS" = "POSIX" ; then
     dnl # so we will not define both.
     if test "x$PLATFORM" != "xLinux" ; then
         AC_DEFINE(_REENTRANT,)
+    else
+        AC_DEFINE(_GNU_SOURCE,)
     fi
 
     dnl # Use POSIX threading, mutexes and shared memory.

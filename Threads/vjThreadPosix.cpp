@@ -173,7 +173,11 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
     // is specified, set the stack address for the thread.
 #   ifdef _POSIX_THREAD_ATTR_STACKADDR
         if ( stack_addr != NULL && stack_addr > 0 ) {
+#ifdef HAVE_PTHREAD_ATTR_SETSTACK
+            pthread_attr_setstack(&thread_attrs, stack_addr, stack_size);
+#else
             pthread_attr_setstackaddr(&thread_attrs, stack_addr);
+#endif
         }
 #   endif   /* _POSIX_THREAD_ATTR_STACKADDR */
 
