@@ -40,9 +40,9 @@
 void digitalGloveApp::init()
 {
    //std::cout<<"digitalGloveApp::init()"<<std::flush;
-      
+
    mGlove.init("VJGlove");
-      
+
    // for the digital glove fingers.
    mLeftThumb.init("PinchLeftThumb");
    mLeftIndex.init("PinchLeftIndex");
@@ -54,7 +54,7 @@ void digitalGloveApp::init()
    mRightMiddle.init("PinchRightMiddle");
    mRightRing.init("PinchRightRing");
    mRightPinky.init("PinchRightPinky");
-      
+
    //std::cout<<" --- done\n"<<std::flush;
 }
 
@@ -62,8 +62,8 @@ void digitalGloveApp::init()
 // calculations and state modifications here.
 void digitalGloveApp::preFrame()
 {
-  //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush; 
-   
+  //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush;
+
     std::cout<<mLeftThumb->getData()
              <<mLeftIndex->getData()
              <<mLeftMiddle->getData()
@@ -78,8 +78,8 @@ void digitalGloveApp::preFrame()
 
 void digitalGloveApp::myDraw()
 {
-	//cout<<"digitalGloveApp::myDraw()\n"<<flush;
-   
+    //cout<<"digitalGloveApp::myDraw()\n"<<flush;
+
    // Clear the scene
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -115,12 +115,11 @@ void digitalGloveApp::myDraw()
       for(finger=gadget::GloveData::INDEX;finger<=gadget::GloveData::PINKY;finger++)
       {
       glPushMatrix();
-         gmtl::Vec3f origin(0,0,0);    // Base of the vector
+         gmtl::Point3f origin(0,0,0);    // Base of the vector
          finger_matrix =
             mGlove->getPos((gadget::GloveData::GloveComponent)finger);
          origin = finger_matrix * origin;     // Go to new coord system
-//         origin.xformFull(finger_matrix, origin);
-         gmtl::Vec3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
+         gmtl::Point3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
          drawLine(origin, end);
       glPopMatrix();
       }
@@ -131,7 +130,7 @@ void digitalGloveApp::myDraw()
 void digitalGloveApp::initGLState()
 {
    //cout<<"digitalGloveApp::initGLState()\n"<<flush;
-   
+
    GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
    GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};

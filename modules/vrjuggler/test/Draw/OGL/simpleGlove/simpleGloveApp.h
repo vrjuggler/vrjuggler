@@ -39,7 +39,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <gmtl/Vec.h>
+#include <gmtl/Point.h>
 #include <vrj/Draw/OGL/GlApp.h>
 
 #include <gadget/Type/PositionInterface.h>
@@ -142,7 +142,7 @@ private:
    void initGLState();
 
 protected:
-   void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
+   void drawLine(gmtl::Point3f& start, gmtl::Point3f& end)
    {
       glBegin(GL_LINES);
          glVertex3fv(start.mData);
