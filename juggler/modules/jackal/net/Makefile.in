@@ -190,11 +190,6 @@ net-install:
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(topdir)/net/$$jar $(bindir) ; \
           done
-	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
-          do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $$jar $(bindir) ; \
-          done
 
 install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
