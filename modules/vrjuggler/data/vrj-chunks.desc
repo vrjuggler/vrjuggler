@@ -1406,7 +1406,7 @@ The filters are applied in the order that they are specified in this configurati
     <category>Devices/Simulator</category>
     <help>A positional device simulator for one device relative to another.</help>
   </ChunkDesc>
-  <ChunkDesc token="simViewport" name="Simulator Viewport" version="1.0">
+  <ChunkDesc token="simViewport" name="Simulator Viewport" version="1.1">
     <category>Display/Simulator</category>
     <help>This is a viewport surface that simulator images are projected on.</help>
     <PropertyDesc token="origin" name="origin" type="float" variable="0">
