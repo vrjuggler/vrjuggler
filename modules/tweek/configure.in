@@ -681,13 +681,13 @@ setup_omniORB_python ( )
       PYTHON_IDL_INCFLAG='-I'
 
       AC_MSG_CHECKING([for omniidl Python backend])
-      if eval `$PYTHON_IDL $PYTHON_IDL_OPTS -u 1>/dev/null` ; then
-         AC_MSG_RESULT([yes])
-         BUILD_PYTHON='Y'
-      else
+      if ! (eval $PYTHON_IDL $PYTHON_IDL_OPTS -u >/dev/null 2>&1) 2>&1 ; then
          AC_MSG_RESULT([no])
          AC_MSG_WARN([*** $python_orb_name required for Tweek Python API ***])
          BUILD_PYTHON='N'
+      else
+         AC_MSG_RESULT([yes])
+         BUILD_PYTHON='Y'
       fi
    fi
 }
