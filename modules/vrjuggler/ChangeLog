@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-09-2005 patrickh    Added the ability to choose a specific GL visual when
+                        configuring a Performer window.
 Mar-09-2005 patrickh    Extended the OpenGL frame buffer configuration to allow
                         setting preferences for the auxiliary buffers, the
                         stencil buffer, and the accumulation buffer.
