@@ -41,74 +41,82 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Datagram socket interface.
-// ----------------------------------------------------------------------------
-//! PUBLIC_API:
+/**
+ * Datagram socket interface.
+ *
+ * @author Patrick Hartling
+ * @author Allen Bierbaum
+ * @author Kevin Meinert
+ */
 template<class RealSocketDatagramImpl, class RealSocketDatagramImplParent>
 class SocketDatagram_t : public Socket_t<RealSocketDatagramImplParent> {
 public:
-    // ------------------------------------------------------------------------
-    //: Default constructor.
-    // ------------------------------------------------------------------------
+    /**
+     * Default constructor.
+     */
     SocketDatagram_t (void)
         : m_socket_dgram_imp()
     {
         m_socket_imp = &m_socket_dgram_imp;
     }
 
-    // ------------------------------------------------------------------------
-    //: Constructor.  This takes a reference to a vpr::InetAddr object giving
-    //+ the local socket address and a reference to a vpr::InetAddr object
-    //+ giving the remote address.
-    //
-    //! PRE: addr is a reference to a valid vpr::InetAddr object.
-    //! POST: A socket is created using the contents of addr.
-    //
-    //! ARGS: addr - A reference to a vpr::InetAddr object.
-    // ------------------------------------------------------------------------
-    SocketDatagram_t (const InetAddr& local_addr, const InetAddr& remote_addr)
+    /**
+     * Constructor.  This takes a reference to a vpr::InetAddr object giving
+     * the local socket address and a reference to a vpr::InetAddr object
+     * giving the remote address.
+     *
+     * @pre addr is a reference to a valid vpr::InetAddr object.
+     * @post A socket is created using the contents of addr.
+     *
+     * @param addr A reference to a vpr::InetAddr object.
+     */
+    SocketDatagram_t (const vpr::InetAddr& local_addr,
+                      const vpr::InetAddr& remote_addr)
         : Socket_t<RealSocketDatagramImplParent>(),
           m_socket_dgram_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_dgram_imp;
     }
 
-    // ------------------------------------------------------------------------
-    // Copy constructor.
-    // ------------------------------------------------------------------------
-    SocketDatagram_t (const SocketDatagram_t& sock)
+    /**
+     * Copy constructor.
+     *
+     * @param sock The source socket object to be copied.
+     */
+    SocketDatagram_t (const vpr::SocketDatagram_t& sock)
         : m_socket_dgram_imp(sock.m_socket_dgram_imp)
     {
         m_socket_imp = &m_socket_dgram_imp;
     }
 
-    // ------------------------------------------------------------------------
-    //: Destructor.  This currently does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
+    /**
+     * Destructor.  This currently does nothing.
+     *
+     * @pre None.
+     * @post None.
+     */
     virtual ~SocketDatagram_t (void) {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Receives a message from the designated source.
+     */
     inline Status
-    recvfrom (void* msg, const size_t len, const int flags, InetAddr& from,
-              ssize_t& bytes_read,
+    recvfrom (void* msg, const size_t len, const int flags,
+              vpr::InetAddr& from, ssize_t& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read,
                                            timeout);
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Receives a message from the designated source.
+     */
     Status
     recvfrom (std::string& msg, const size_t len, const int flags,
-              InetAddr& from, ssize_t& bytes_read,
+              vpr::InetAddr& from, ssize_t& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         msg.resize(length);
@@ -118,11 +126,12 @@ public:
                         timeout);
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Receives a message from the designated source.
+     */
     Status
     recvfrom (std::vector<vpr::Uint8>& msg, const size_t len, const int flags,
-              InetAddr& from, ssize_t& bytes_read,
+              vpr::InetAddr& from, ssize_t& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         Status retval;
@@ -142,33 +151,36 @@ public:
         return retval;
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Sends a message to the designated recipient.
+     */
     inline Status
     sendto (const void* msg, const size_t len, const int flags,
-            const InetAddr& to, ssize_t& bytes_sent,
+            const vpr::InetAddr& to, ssize_t& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent,
                                          timeout);
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Sends a message to the designated recipient.
+     */
     inline Status
     sendto (const std::string& msg, const size_t len, const int flags,
-            const InetAddr& to, ssize_t& bytes_sent,
+            const vpr::InetAddr& to, ssize_t& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         vprASSERT(length <= msg.size() && "Length is bigger than data given");
         return sendto(msg.c_str(), length, flags, to, bytes_sent, timeout);
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Sends a message to the designated recipient.
+     */
     inline Status
     sendto (const std::vector<vpr::Uint8>& msg, const size_t len,
-            const int flags, const InetAddr& to, ssize_t& bytes_sent,
+            const int flags, const vpr::InetAddr& to, ssize_t& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         vprASSERT(length <= msg.size() && "Length is bigger than data given");
@@ -177,34 +189,36 @@ public:
     }
 
     /**
-     *
+     * Gets the multicast interface for this datagram socket.
      */
     inline bool
-    getMcastInterface (InetAddr& mcast_if) {
+    getMcastInterface (vpr::InetAddr& mcast_if) {
         return m_socket_imp->getMcastInterface(mcast_if);
     }
 
     /**
-     *
+     * Sets the multicast interface for this datagram socket.
      */
     inline bool
-    setMcastInterface (const InetAddr& mcast_if) {
+    setMcastInterface (const vpr::InetAddr& mcast_if) {
         return m_socket_imp->setMcastInterface(mcast_if);
     }
 
     /**
-     *
+     * Gets the multicast time-to-live parameter for packets sent on this
+     * socket.
      */
     inline bool
-    getMcastTimeToLive (Uint8& ttl) {
+    getMcastTimeToLive (vpr::Uint8& ttl) {
         return m_socket_imp->getMcastTimeToLive(ttl);
     }
 
     /**
-     *
+     * Sets the multicast time-to-live parameter for packets sent on this
+     * socket.
      */
     inline bool
-    setMcastTimeToLive (const Uint8 ttl) {
+    setMcastTimeToLive (const vpr::Uint8 ttl) {
         return m_socket_imp->setMcastTimeToLive(ttl);
     }
 
@@ -212,7 +226,7 @@ public:
      *
      */
     inline bool
-    getMcastLoopback (Uint8& loop) {
+    getMcastLoopback (vpr::Uint8& loop) {
         return m_socket_imp->getMcastLoopback(loop);
     }
 
@@ -220,7 +234,7 @@ public:
      *
      */
     inline bool
-    setMcastLoopback (const Uint8 loop) {
+    setMcastLoopback (const vpr::Uint8 loop) {
         return m_socket_imp->setMcastLoopback(loop);
     }
 
@@ -228,7 +242,7 @@ public:
      *
      */
     inline bool
-    addMcastMember (const McastReq& request) {
+    addMcastMember (const vpr::McastReq& request) {
         return m_socket_imp->addMcastMember(request);
     }
 
@@ -236,13 +250,13 @@ public:
      *
      */
     inline bool
-    dropMcastMember (const McastReq& request) {
+    dropMcastMember (const vpr::McastReq& request) {
         return m_socket_imp->dropMcastMember(request);
     }
 
 protected:
-    RealSocketDatagramImpl m_socket_dgram_imp;  //: Platform-specific datagram
-                                                //+ socket implementation object
+    /// Platform-specific datagram socket implementation object
+    RealSocketDatagramImpl m_socket_dgram_imp;
 };
 
 }; // End of vpr namespace

@@ -41,130 +41,135 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Cross-platform stream socket class.
-// ----------------------------------------------------------------------------
-//! PUBLIC_API:
+/**
+ * Cross-platform stream socket class.
+ *
+ * @author Patrick Hartling
+ * @author Allen Bierbaum
+ * @author Kevin Meinert
+ */
 template<class RealSocketStreamImpl, class RealSocketStreamImplParent>
 class SocketStream_t : public Socket_t<RealSocketStreamImplParent> {
 public:
-    // ------------------------------------------------------------------------
-    //: Default constructor.
-    // ------------------------------------------------------------------------
+    /**
+     * Default constructor.
+     */
     SocketStream_t (void)
         : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp()
     {
         m_socket_imp = &m_socket_stream_imp;
     }
 
-    // ------------------------------------------------------------------------
-    //: Constructor.  This takes a reference to a vpr::InetAddr object giving
-    //+ the local socket address and a reference to a vpr::InetAddr object
-    //+ giving the remote address.
-    //
-    //! PRE: addr is a reference to a valid vpr::InetAddr object.
-    //! POST: A socket is created using the contents of addr.
-    //
-    //! ARGS: local_addr  - A reference to a vpr::InetAddr object for the
-    //+                     local socket address.
-    //! ARGS: remote_addr - A reference to a vpr::InetAddr object for the
-    //+                     remote socket address.
-    // ------------------------------------------------------------------------
-    SocketStream_t (InetAddr local_addr, InetAddr remote_addr)
+    /**
+     * Constructor.  This takes a reference to a vpr::InetAddr object giving
+     * the local socket address and a reference to a vpr::InetAddr object
+     * giving the remote address.
+     *
+     * @pre addr is a reference to a valid vpr::InetAddr object.
+     * @post A socket is created using the contents of addr.
+     *
+     * @param local_addr  A reference to a vpr::InetAddr object for the
+     *                     local socket address.
+     * @param remote_addr A reference to a vpr::InetAddr object for the
+     *                     remote socket address.
+     */
+    SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
         : Socket_t<RealSocketStreamImplParent>(),
           m_socket_stream_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_stream_imp;
     }
 
-    // ------------------------------------------------------------------------
-    // Copy constructor.
-    // ------------------------------------------------------------------------
-    SocketStream_t (const SocketStream_t& sock)
+    /**
+     * Copy constructor.
+     *
+     * @param sock The source stream socket to be copied into this object.
+     */
+    SocketStream_t (const vpr::SocketStream_t& sock)
         : m_socket_stream_imp(sock.m_socket_stream_imp)
     {
         m_socket_imp = &m_socket_stream_imp;
     }
 
-    // ------------------------------------------------------------------------
-    //: Destructor.  This currently does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
+    /**
+     * Destructor.  This currently does nothing.
+     *
+     * @pre None.
+     * @post None.
+     */
     virtual ~SocketStream_t (void) {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    //: Listen on the socket for incoming connection requests.
-    //
-    //! PRE: The socket has been opened and bound to the address in m_addr.
-    //! POST: The socket is in a listening state waiting for incoming
-    //+       connection requests.
-    //
-    //! ARGS: backlog - The maximum length of th queue of pending connections.
-    //
-    //! RETURNS: true  - The socket is in a listening state.
-    //! RETURNS: false - The socket could not be put into a listening state.
-    //+                  An error message is printed explaining what went
-    //+                  wrong.
-    // ------------------------------------------------------------------------
+    /**
+     * Listens on the socket for incoming connection requests.
+     *
+     * @pre The socket has been opened and bound to the address in m_addr.
+     * @post The socket is in a listening state waiting for incoming
+     *       connection requests.
+     *
+     * @param backlog The maximum length of th queue of pending connections.
+     *
+     * @return <code>vpr::Status::Success</code> is returned if this socket
+     *         is now in a listening state.<br>
+     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     */
     inline vpr::Status
     listen (const int backlog = 5) {
         return m_socket_stream_imp.listen(backlog);
     }
 
-    // ------------------------------------------------------------------------
-    //: Accept an incoming connection request and return the connected socket
-    //+ to the caller in the given socket object reference.
-    //
-    //! PRE: The socket is open and is in a listening state.
-    //! POST:
-    //
-    //! ARGS: sock    - A reference to a vpr::SocketStream object that will
-    //+                 be used to return the connected socket created.
-    //! ARGS: timeout - The length of time to wait for the accept call to
-    //+                 return.
-    //
-    //! RETURNS: vpr::Status::Success    - The incoming request has been
-    //+                                    handled, and the given SocketStream
-    //+                                    object is a valid, connected
-    //+                                    socket.
-    //! RETURNS: vpr::Status;:WouldBlock - This is a non-blocking socket, and
-    //+                                    there are no waiting connection
-    //+                                    requests.
-    //! RETURNS: vpr::Status::Timeout    - No connection requests arrived
-    //+                                    within the given timeout period.
-    //! RETURNS: vpr::Status::Failure    - The accept failed.  The given
-    //+                                    SocketStream object is not
-    //+                                    modified.
-    // ------------------------------------------------------------------------
-    inline Status
-    accept (SocketStream_t& sock,
+    /**
+     * Accepts an incoming connection request and return the connected socket
+     * to the caller in the given socket object reference.
+     *
+     * @pre The socket is open and is in a listening state.
+     * @post
+     *
+     * @param sock    A reference to a vpr::SocketStream object that will
+     *                be used to return the connected socket created.
+     * @param timeout The length of time to wait for the accept call to
+     *                return.
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the incoming
+     *         request has been handled, and the given SocketStream object is
+     *         a valid, connected socket.<br>
+     *         <code>vpr::Status::WouldBlock</code> is returned if this is a
+     *         non-blocking socket, and there are no waiting connection
+     *         requests.<br>
+     *         <code>vpr::Status::Timeout</code> is returned when no connections
+     *         requests arrived within the given timeout period.<br>
+     *         <code>vpr::Status::Failure</code> is returned if the accept
+     *         failed.  The given vpr::SocketStream object is not modified in
+     *         this case.
+     */
+    inline vpr::Status
+    accept (vpr::SocketStream_t& sock,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
     }
 
-    // ------------------------------------------------------------------------
-    //: Open a socket to be used for the server side communications.  This is
-    //+ provided to automate the repeated tasks executed when a server is
-    //+ set up.  It handles opening the socket, binding the address and going
-    //+ into listening mode.
-    //
-    //! PRE: The member variables have been initialized properly.
-    //! POST: The socket is in the listening state waiting for incoming
-    //+       connection requests.
-    //
-    //! ARGS: reuse_addr - Enable or disable reuse of the address being bound.
-    //+                    This argument is optional and defaults to true.
-    //! ARGS: backlog    - The maximum length of the pending connection queue.
-    //
-    //! RETURNS: true  - The server socket is in the listening state.
-    //! RETURNS: false - The server socket could not be set up.  An error
-    //+                  message is printed explaining what went wrong.
-    // ------------------------------------------------------------------------
+    /**
+     * Opens a socket to be used for the server side communications.  This is
+     * provided to automate the repeated tasks executed when a server is
+     * set up.  It handles opening the socket, binding the address and going
+     * into listening mode.
+     *
+     * @pre The member variables have been initialized properly.
+     * @post The socket is in the listening state waiting for incoming
+     *       connection requests.
+     *
+     * @param reuse_addr Enable or disable reuse of the address being bound.
+     *                   This argument is optional and defaults to true.
+     * @param backlog    The maximum length of the pending connection queue.
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the server
+     *         socket is in the listening state and ready to accept incoming
+     *         connection requests.<br>
+     *         <code>vpr::Status::Failure</code> is returned if the server
+     *         socket could not be set up.
+     */
     inline vpr::Status
     openServer (const bool reuse_addr = true, const int backlog = 5) {
         vpr::Status status;
@@ -193,7 +198,7 @@ public:
      *
      */
     inline vpr::Status
-    getMaxSegmentSize (Int32& size) const {
+    getMaxSegmentSize (vpr::Int32& size) const {
         return m_socket_stream_imp.getMaxSegmentSize(size);
     }
 
@@ -201,12 +206,20 @@ public:
      *
      */
     inline vpr::Status
-    setMaxSegmentSize (const Int32 size) {
+    setMaxSegmentSize (const vpr::Int32 size) {
         return m_socket_stream_imp.setMaxSegmentSize(size);
     }
 
     /**
+     * Gets the current no-delay status for this socket.  If no-delay is true,
+     * then the Nagel algorithm has been disabled.
      *
+     * @param enabled A reference to a <code>bool</code> variable to be used as
+     *                storage for the current no-delay enable state.  If the
+     *                value is <code>true</code>, the Nagel algorithm is
+     *                <i>not</i> being used to delay the transmission of TCP
+     *                segements.  Otherwise, the Nagel alorithm is delaying
+     *                the transmission.
      */
     inline vpr::Status
     getNoDelay (bool& enabled) const {
@@ -214,7 +227,11 @@ public:
     }
 
     /**
+     * Sets the current no-delay status for this socket.  If no-delay is true,
+     * then the Nagel algorithm will be disabled.
      *
+     * @param enable_val The Boolean enable/disable state for no-delay on this
+     *                   socket.
      */
     inline vpr::Status
     setNoDelay (const bool enable_val) {
@@ -222,23 +239,23 @@ public:
     }
 
 protected:
-    // ------------------------------------------------------------------------
-    //: Constructor.  Create a vpr::SocketStream object using the given
-    //+ vpr::SocketStreamImpl object pointer.  This is needed by accept().
-    //
-    //! PRE: sock_imp points to a valid vpr::SocketStreamImpl object.
-    //! POST: sock_imp is copied into m_socket_stream_imp.
-    //
-    //! ARGS: sock_imp - A pointer to a vpr::SocketStreamImpl object.
-    // ------------------------------------------------------------------------
+    /**
+     * Constructor.  Create a vpr::SocketStream object using the given
+     * vpr::SocketStreamImpl object pointer.  This is needed by accept().
+     *
+     * @pre sock_imp points to a valid vpr::SocketStreamImpl object.
+     * @post sock_imp is copied into m_socket_stream_imp.
+     *
+     * @param sock_imp A pointer to a vpr::SocketStreamImpl object.
+     */
     SocketStream_t (RealSocketStreamImpl* sock_imp)
         : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp(*sock_imp)
     {
         m_socket_imp = &m_socket_stream_imp;
     }
 
-    RealSocketStreamImpl m_socket_stream_imp; //: Platform-specific stream
-                                              //+ socket implementation
+    /// Platform-specific stream socket implementation
+    RealSocketStreamImpl m_socket_stream_imp;
 };
 
 }; // End of vpr namespace

@@ -36,24 +36,25 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Socket I/O types.
-// ----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Socket I/O types.
+ *
+ * @author Patrick Hartling
+ */
 namespace SocketTypes {
-    //: Possible socket domains (protocol families).
+    /// Possible socket domains (protocol families).
     enum Domain {
-        LOCAL,    // Local socket (UNIX domain socket)
-        INET,     // IPv4 socket
-        INET6,    // IPv6 socket
-        LINK      // Raw socket
+        LOCAL,    /**< Local socket (UNIX domain socket) */
+        INET,     /**< IPv4 socket */
+        INET6,    /**< IPv6 socket */
+        LINK      /**< Raw socket */
     };
 
-    //: Possible socket types.
+    /// Possible socket types.
     enum Type {
-        STREAM,   // Stream socket
-        DATAGRAM, // Datagram socket
-        RAW       // Raw socket
+        STREAM,   /**< Stream socket */
+        DATAGRAM, /**< Datagram socket */
+        RAW       /**< Raw socket */
     };
 };
 
