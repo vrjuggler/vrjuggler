@@ -256,12 +256,17 @@ sub installFile($$$$$;$)
       copy("$src_file", "$inst_dir") or warn "copy: $!\n";
    }
 
-   if ( ! $Win32 )
+   # Do not try to change file ownership or permissions when we are using
+   # symlinks instead of file copies.
+   if ( ! $make_link )
    {
-      chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
-   }
+      if ( ! $Win32 )
+      {
+         chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+      }
 
-   chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
+      chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
+   }
 }
 
 # -----------------------------------------------------------------------------
