@@ -102,17 +102,18 @@ endif
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
-
+endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
@@ -123,8 +124,14 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
-	$(DYLIB_DEPS_SNX)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+          $(DYLIB_DEPS_SNX)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(SNX_LIB_STATIC) &&		\
+            $(LN_S) $(LIBDIR)/$(SNX_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(SNX_LIBRARY).exp &&		\
+            $(LN_S) $(LIBDIR)/$(SNX_LIBRARY).exp ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -139,7 +146,7 @@ $(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
           $(DYLIB_PROF_DEPS_SNX)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -163,7 +170,7 @@ afterbuild:
    
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
-# the $SNX_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# the $SNX_BASE_DIR environment variable to be used when needed.  $SNX_BASE_DIR
 # should be set to $(instlinks).
 # =============================================================================
 links:
@@ -177,19 +184,23 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	cd $(instlinks)/include &&                                      \
           for dir in $(SUBDIR) ; do                                     \
-              rm -f ./$$dir ;                                           \
-              ln -s $(ROOT_ABS)/$$dir ./$$dir ;                       \
+              $(RM_LN) ./$$dir ;					\
+              $(LN_S) $(ROOT_ABS)/$$dir ./$$dir ;			\
           done
+ifeq (@OS_TYPE@, Win32)
+	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
+else
 	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
+endif
 	cd $(instlinks)/share/sonix &&					\
-           rm -f ./data && ln -s $(ROOT_ABS)/data ./
+           $(RM_LN) ./data && $(LN_S) $(ROOT_ABS)/data ./
 	cd $(instlinks)/share/sonix &&					\
-           rm -f ./src && ln -s $(topdir)/samples ./src
+           $(RM_LN) ./src && $(LN_S) $(ROOT_ABS)/samples ./src
 	cd $(instlinks)/share/sonix &&                          \
-           rm -f ./README.txt && ln -s $(topdir)/README.txt ./
+           $(RM_LN) ./README.txt && $(LN_S) $(ROOT_ABS)/README.txt ./
 	cd $(instlinks)/bin && cp -p $(topdir)/sonix-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
