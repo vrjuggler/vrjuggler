@@ -104,10 +104,10 @@ void pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
    setInitialNavPos(initial_pos);
 
    vjDEBUG(vjDBG_ALL,0) << "pfBasicConfigNav::configApp:  ========= configuration application =========\n" << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_All,0) << "filename: " << file_name << endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_All,0) << "filepath: " << file_path << endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_All,0) << "world scale: " << world_scale << endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_All,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_ALL,0) << "filename: " << file_name << endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_ALL,0) << "filepath: " << file_path << endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_ALL,0) << "world scale: " << world_scale << endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_ALL,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
 
    // Initialize the model
    initializeModel();
