@@ -34,7 +34,7 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Sound/SoundManagerSonix.h>
 #include <snx/sonix.h>
-#include <snx/Matrix44.h>
+#include <vrj/Math/Matrix.h>
 
 namespace vrj
 {
@@ -57,10 +57,10 @@ namespace vrj
       std::string file_search_path = chunk->getProperty( "file_search_path" );
 
       // configure sonix
-      sonix::instance().changeAPI( api_to_use );
-      snx::Matrix44 mat;
+      sonix::instance()->changeAPI( api_to_use );
+      vrj::Matrix mat;
       mat.setTrans( listener_position[0], listener_position[1], listener_position[2] );
-      sonix::instance().setListenerPosition( mat );
+      sonix::instance()->setListenerPosition( mat );
 
       // read the list of sounds
       int size = chunk->getNum( "Sound" );
@@ -87,7 +87,7 @@ namespace vrj
          si.position[0] = position[0];
          si.position[1] = position[1];
          si.position[2] = position[2];
-         sonix::instance().configure( alias, si );
+         sonix::instance()->configure( alias, si );
       }
 
       return true;
@@ -103,7 +103,7 @@ namespace vrj
       {
          jccl::ConfigChunkPtr sound_chunk = chunk->getProperty( "Sound", x );
          std::string alias = (std::string)sound_chunk->getProperty( "Name" );
-         sonix::instance().remove( alias );
+         sonix::instance()->remove( alias );
       }
 
       return true;
@@ -126,7 +126,7 @@ namespace vrj
    void SoundManagerSonix::update()
    {
       float time_delta = 0.1; // TODO: get real time since last frame...
-      sonix::instance().step( time_delta );
+      sonix::instance()->step( time_delta );
    }
 
    //: Blocks until the end of the frame
