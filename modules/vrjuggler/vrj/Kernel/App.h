@@ -35,21 +35,16 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <boost/concept_check.hpp>
-
-#include <vpr/Util/Assert.h>
-#include <vrj/Util/Debug.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
-#include <vrj/Sound/SoundManagerFactory.h>
-
-#include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
+
 
 namespace vrj
 {
 
 class DrawManager;
 class Kernel;
+class SoundManager;
 
 /**
  * Encapsulates the actual application.
@@ -210,11 +205,7 @@ public:
 
 public:  // --- Default config handlers: (inherited from jccl::ConfigElementHandler) --- //
    /** Default to handling nothing. */
-   virtual bool configCanHandle(jccl::ConfigElementPtr element)
-   {
-      boost::ignore_unused_variable_warning(element);
-      return false;
-   }
+   virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
    /**
     * Are any application dependencies satisfied?
@@ -230,20 +221,10 @@ public:  // --- Default config handlers: (inherited from jccl::ConfigElementHand
 
 protected:
    /** @note Inherited from jccl::ConfigElementHandler. */
-   virtual bool configAdd(jccl::ConfigElementPtr element)
-   {
-      boost::ignore_unused_variable_warning(element);
-      vprASSERT(false);
-      return false;
-   }
+   virtual bool configAdd(jccl::ConfigElementPtr element);
 
    /** @note Inherited from jccl::ConfigElementHandler. */
-   virtual bool configRemove(jccl::ConfigElementPtr element)
-   {
-      boost::ignore_unused_variable_warning(element);
-      vprASSERT(false);
-      return false;
-   }
+   virtual bool configRemove(jccl::ConfigElementPtr element);
 
 public:
    Kernel* mKernel;     // The library kernel (here for convienence)
@@ -260,10 +241,7 @@ public:  // --- Factory functions --- //
     * Get the SoundManager to use.
     * @note Each derived app could implement this function if needed.
     */
-   virtual SoundManager* getSoundManager()
-   {
-      return &SoundManagerFactory::get();
-   }
+   virtual SoundManager* getSoundManager();
 };
 
 }
