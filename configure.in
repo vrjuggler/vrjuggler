@@ -1780,7 +1780,7 @@ case $THREADS in
         subsystem_libs="${_sem_lib}"
         static_begin="-B static"
         static_end="-B dynamic"
-        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     POSIX)
@@ -1795,7 +1795,7 @@ case $THREADS in
             static_end="-B dynamic"
         fi
 
-        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     WIN32)
@@ -1811,6 +1811,13 @@ case $OS_TYPE in
         Juggler_lib='-lJuggler'
         Juggler_utils_lib='-lJuggler_utils'
         Juggler_ogl_lib='-lJuggler_ogl'
+
+        if test "x$PLATFORM" = "xIRIX" ; then
+            vrj_n32_flags='-n32'
+            vrj_64_flags='-64'
+            vrj_libbitsuf_n32='32'
+            vrj_libbitsuf_64='64'
+        fi
 
         if test "x$PERFORMER_API" = "xY" ; then
             Juggler_pf_lib='-lJuggler_pf'
@@ -1944,6 +1951,10 @@ AC_SUBST(Juggler_aw_lib)
 AC_SUBST(Juggler_pf_lib)
 AC_SUBST(vrj_extra_ldflags)
 AC_SUBST(vrj_extra_libs)
+AC_SUBST(vrj_n32_flags)
+AC_SUBST(vrj_64_flags)
+AC_SUBST(vrj_libbitsuf_n32)
+AC_SUBST(vrj_libbitsuf_64)
 
 dnl # -------------------------------------------------------------------------
 dnl # Final file generation step.

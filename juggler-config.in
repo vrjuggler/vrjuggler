@@ -44,6 +44,28 @@ Juggler_pf_lib="@Juggler_pf_lib@"
 Juggler_aw_lib="@Juggler_aw_lib@"
 Juggler_sl_lib="@Juggler_sl_lib@"
 
+vrj_default_abi="@ABI@"
+vrj_default_isa="@ISA@"
+vrj_n32_flags="@vrj_n32_flags@"
+vrj_64_flags="@vrj_64_flags@"
+LIBBITSUF='@LIBBITSUF@'
+vrj_libbitsuf_n32="@vrj_libbitsuf_n32@"
+vrj_libbitsuf_64="@vrj_libbitsuf_64@"
+
+if [ "x$vrj_default_abi" = "xN32" ]; then
+    vrj_abi_flags="$vrj_n32_flags"
+elif [ "x$vrj_default_abi" = "x64" ]; then
+    vrj_abi_flags="$vrj_64_flags"
+else
+    vrj_abi_flags=''
+fi
+
+if [ "x$vrj_default_isa" = "xmips3" -o "x$vrj_default_isa" = "xmips4" ]; then
+    vrj_isa_flags="-$vrj_default_isa"
+else
+    vrj_isa_flags=''
+fi
+
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
@@ -53,16 +75,16 @@ usage()
     cat <<EOF
 Usage: juggler-config [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]           Use \$VJ_BASE_DIR when printing paths
-        [--prefix[=DIR]]      Print the installation prefix or set an
-                              alternate prefix to use when printing paths
-        [--exec-prefix[=DIR]] Print the executable prefix or set an alternate
-                              executable prefix to use when printing paths
-        [--libs]              Print the basic VR Juggler libraries
-        [--extra-libs]        Print the extra linker options needed for
-                              making an executable
-        [--cxxflags]          Print the flags for the C++ compiler
-        [--subsystem]         Print the OS abstraction layer being used
+        [--basedir]             Use \$VJ_BASE_DIR when printing paths
+        [--prefix[=DIR]]        Print the installation prefix or set an
+                                alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an alternate
+                                executable prefix to use when printing paths
+        [--libs [N32|64]]       Print the basic VR Juggler libraries
+        [--extra-libs [N32|64]] Print the extra linker options needed for
+                                making an executable
+        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
+        [--subsystem]           Print the OS abstraction layer being used
 
 Libraries (prints the linker options for one or more of these libraries):
         vrj (all basic libraries)
@@ -119,15 +141,56 @@ while test $# -gt 0; do
             ;;
         --cxxflags)
             echo_cxxflags=yes
+            case $2 in
+                N32)
+                    vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_n32_flags $vrj_isa_flags"
+                    shift
+                    ;;
+                64)
+                    vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_64_flags $vrj_isa_flags"
+                    shift
+                    ;;
+                *)
+                    vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_abi_flags $vrj_isa_flags"
+                    ;;
+            esac
             ;;
         --subsystem)
             echo @THREAD_SYS@
             ;;
         --libs)
             echo_libs=yes
+            case $2 in
+                N32)
+                    ldflags="$vrj_n32_flags $vrj_isa_flags"
+                    LIBBITSUF="$vrj_libbitsuf_n32"
+                    shift
+                    ;;
+                64)
+                    ldflags="$vrj_64_flags $vrj_isa_flags"
+                    LIBBITSUF="$vrj_libbitsuf_64"
+                    shift
+                    ;;
+                *)
+                    ldflags="$vrj_abi_flags $vrj_isa_flags"
+                    ;;
+            esac
             ;;
         --extra-libs)
             echo_extra_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+            esac
             ;;
         --static)
             echo_static=yes
@@ -201,9 +264,9 @@ fi
 
 if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        ldflags="-L$VJ_BASE_DIR/lib@LIBBITSUF@"
+        ldflags="-L$VJ_BASE_DIR/lib$LIBBITSUF"
     else
-        ldflags="@vrj_ldflags@"
+        ldflags="$ldflags @vrj_ldflags@"
     fi
 
     if test "x$lib_Juggler_all" = "xyes" ; then
