@@ -46,6 +46,7 @@
 
 #include <list>
 #include <map>
+#include <hash_map>
 #include <string>
 #include <iostream>
 #include <pair.h>
@@ -230,7 +231,7 @@ protected:
     * Used to track which sockets are currently in a listening state
     * XXX: Could move this into the actually socket as a socket state instead.
    */
-   typedef std::map<vpr::InetAddrSIM, vpr::SocketStreamImplSIM* > listener_map_t;
+   typedef std::map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
    listener_map_t mListenerList;
    vpr::Mutex mListenerListMutex;
 
