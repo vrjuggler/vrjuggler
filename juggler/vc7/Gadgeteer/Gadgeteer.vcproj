@@ -21,15 +21,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\external\GMTL;&quot;$(NSPR_ROOT)\include&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_GADGET_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4290"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -74,13 +75,14 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_GADGET_BUILD_;_OPT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4290"/>
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -122,15 +124,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\external\GMTL;&quot;$(NSPR_ROOT)\include&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_GADGET_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4290"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -164,13 +167,14 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_GADGET_BUILD_;_OPT"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4290"/>
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

@@ -21,23 +21,24 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_JCCL_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251;4290"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl_d.dll"
 				Version="0.16.0"
-				LinkIncremental="0"
+				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\DebugDLL"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/jccl_d.pdb"
@@ -74,18 +75,19 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_JCCL_BUILD_;_OPT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251;4290"/>
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib"
+				AdditionalDependencies="vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl.dll"
 				Version="0.16.0"
 				LinkIncremental="0"
@@ -122,15 +124,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_JCCL_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251;4290"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -163,14 +166,15 @@
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_JCCL_BUILD_;_OPT"
 				StringPooling="TRUE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251;4290"/>
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

@@ -21,20 +21,21 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;..\..\external\GMTL;..\..\modules\vapor;..\VPR"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_SNX_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4251;4275"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib libnspr4.lib"
+				AdditionalDependencies="vpr_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix_d.dll"
 				Version="0.4.0"
 				LinkIncremental="2"
@@ -74,18 +75,19 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_SNX_BUILD_;_OPT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251"/>
+				DisableSpecificWarnings="4251;4275"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib libnspr4.lib"
+				AdditionalDependencies="vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix.dll"
 				Version="0.4.0"
 				LinkIncremental="1"
@@ -122,15 +124,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;..\..\external\GMTL;..\..\modules\vapor;..\VPR"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_SNX_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4251;4275"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -164,13 +167,14 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_SNX_BUILD_;_OPT"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251"/>
+				DisableSpecificWarnings="4251;4275"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

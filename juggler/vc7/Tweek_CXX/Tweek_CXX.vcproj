@@ -21,20 +21,20 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;tweek\CORBA;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251;4311;4312"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib vpr_d.lib libnspr4.lib"
+				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_d.dll"
 				Version="0.16.2"
 				LinkIncremental="2"
@@ -82,18 +82,19 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_TWEEK_BUILD_;_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB402_rt.lib omnithread30_rt.lib omniDynamic402_rt.lib vpr.lib libnspr4.lib"
+				AdditionalDependencies="omniORB402_rt.lib omnithread30_rt.lib omniDynamic402_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek.dll"
 				Version="0.16.2"
 				LinkIncremental="1"
@@ -138,15 +139,15 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				Optimization="0"
 				AdditionalIncludeDirectories=".;tweek\CORBA;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4251;4311;4312"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -187,13 +188,14 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_OPT;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4251;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
