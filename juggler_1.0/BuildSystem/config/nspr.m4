@@ -23,7 +23,26 @@ dnl     PLC_LIB_STATIC  - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.1.1.1 2000/12/08 06:16:37 patrick Exp
+dnl nspr.m4,v 1.5 2001/01/07 16:02:02 patrick Exp
+
+dnl ---------------------------------------------------------------------------
+dnl State that NSPR threads are in use within NSPR.
+dnl
+dnl Usage:
+dnl     DPP_ENABLE_NSPR_THREADS([default-nspr-thread-enableval])
+dnl
+dnl Arguments:
+dnl     default-nspr-thread-enableval - The default value for enabling or
+dnl                                     disabling pthreads.  This should be
+dnl                                     either "yes" or "no".  This argument
+dnl                                     is optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_ENABLE_NSPR_THREADS,
+[
+    AC_ARG_ENABLE(nspr-threads,
+                  [  --enable-nspr-threads   Use NSPR threads                [default=$1]],
+                  NSPR_THREADS_ENABLED="$enableval", NSPR_THREADS_ENABLED=$1)
+])
 
 dnl ---------------------------------------------------------------------------
 dnl Verify that the NSPR library and headers are where they are expected to
@@ -42,7 +61,7 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_HAVE_NSPR,
 [
     if test "x$2" = "x" ; then
-        AC_REQUIRE([DPP_ENABLE_PTHREADS])
+        AC_REQUIRE([DPP_ENABLE_NSPR_THREADS])
         true
     fi
 
@@ -68,7 +87,7 @@ AC_DEFUN(DPP_HAVE_NSPR,
     CPPFLAGS="$CPPFLAGS -I$NSPR_ROOT/include"
     LDFLAGS="-L$NSPR_ROOT/lib $LDFLAGS"
 
-    if test "x$2" = "xyes"; then
+    if test "x$PTHREADS_ENABLED" = "xyes" -o "x$2" = "xyes" ; then
         if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
             LDFLAGS="$LDFLAGS -pthread"
         else
@@ -127,8 +146,8 @@ AC_DEFUN(DPP_NSPR_VER,
     dnl at the end of the library names (e.g., libnspr4.so).
     dnl -----------------------------------------------------------------------
     AC_ARG_WITH(nsprver,
-                [  --with-nsprver=<VER>    Minimum NSPR version  [default=$2]],
-                NSPR_VER="$withval", NSPR_VER='$2')
+                [  --with-nsprver=<VER>    Minimum NSPR version            [default=$2]],
+                NSPR_VER="$withval", NSPR_VER=$2)
 
     dpp_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$CPPFLAGS -I$1/include"
@@ -145,7 +164,7 @@ AC_DEFUN(DPP_NSPR_VER,
 
     dpp_nspr_ver="${dpp_nspr_ver_major}.${dpp_nspr_ver_minor}.${dpp_nspr_ver_patch}"
 
-    AC_CACHE_CHECK(NSPR version is >= $2, dpp_cv_nspr_version_okay,
+    AC_CACHE_CHECK(if NSPR version is >= $2, dpp_cv_nspr_version_okay,
         DPP_VERSION_CHECK($dpp_nspr_ver, $2,
           dpp_cv_nspr_version_okay='yes',
           dpp_cv_nspr_version_okay='no'))

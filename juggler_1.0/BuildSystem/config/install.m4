@@ -21,7 +21,7 @@ dnl     EXEC_PERMS - The UNIX-style octal permissions of executable files.
 dnl     DIR_PERMS  - The UNIX-style octal permissions of directories.
 dnl ===========================================================================
 
-dnl install.m4,v 1.1.1.1 2000/12/08 06:16:37 patrick Exp
+dnl install.m4,v 1.2 2001/01/07 16:02:02 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Set up the installer configuration.  This adds command line options for
@@ -58,7 +58,7 @@ AC_DEFUN(DPP_INSTALLER,
     AC_ARG_WITH(install-group,
                 [  --with-install-group=<GROUP NAME>
                           Installed file group name       [default=$1]],
-                dpp_install_group="$withval", dpp_install_group='$1')
+                dpp_install_group="$withval", dpp_install_group=$1)
 
     dnl -----------------------------------------------------------------------
     dnl Provide permissions for installed (normal) files.
@@ -66,7 +66,7 @@ AC_DEFUN(DPP_INSTALLER,
     AC_ARG_WITH(file-perms,
                 [  --with-file-perms=<FILE PERMISSIONS>
                           Installed file permissions      [default=$2]],
-                dpp_file_perms="$withval", dpp_file_perms='$2')
+                dpp_file_perms="$withval", dpp_file_perms=$2)
 
     dnl -----------------------------------------------------------------------
     dnl Provide permissions for installed executable files.
@@ -74,7 +74,7 @@ AC_DEFUN(DPP_INSTALLER,
     AC_ARG_WITH(exec-perms,
                 [  --with-exec-perms=<EXEC PERMISSIONS>
                           Installed executable permisions [default=$3]],
-                dpp_exec_perms="$withval", dpp_exec_perms='$3')
+                dpp_exec_perms="$withval", dpp_exec_perms=$3)
 
     dnl -----------------------------------------------------------------------
     dnl Provide permissions for directories in the installation tree.
@@ -82,7 +82,7 @@ AC_DEFUN(DPP_INSTALLER,
     AC_ARG_WITH(dir-perms,
                 [  --with-dir-perms=<DIRECTORY PERMISSIONS>
                           Installed directory permisions  [default=$4]],
-                dpp_dir_perms="$withval", dpp_dir_perms='$4')
+                dpp_dir_perms="$withval", dpp_dir_perms=$4)
 
     FILE_PERMS="${dpp_file_perms-0644}"
     EXEC_PERMS="${dpp_exec_perms-0755}"

@@ -64,7 +64,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.5 2000/12/30 22:12:26 patrick Exp
+dnl sys.m4,v 1.8 2001/01/08 23:36:59 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given target host and CPU, set up the system-specific
@@ -210,8 +210,8 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             dnl us.  We define our own values because Cygnus' uname(1) returns
             dnl somewhat annoying names.
             case "$dpp_sys_name" in
-                dnl Windows NT 4.0.
-                *NT-4.0)
+                dnl Windows NT 4.0 and 5.0 (aka Windows 2000).
+                *NT-[[45]].0)
                     PLATFORM='WinNT'
                     ;;
                 dnl Windows 95 and 98.
@@ -439,7 +439,7 @@ dnl the rest of the configuration.  Substitution of most variables defined in
 dnl DPP_SYSTEM_SETUP is done here.
 dnl
 dnl Usage:
-dnl     DPP_SUBST_SYS
+dnl     DPP_SYSTEM_SUBST
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_SYSTEM_SUBST,
 [

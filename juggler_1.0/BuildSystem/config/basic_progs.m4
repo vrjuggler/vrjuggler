@@ -5,24 +5,22 @@ dnl ranlib(1) (except on IRIX) and for a working 'ln -s' command.  It also
 dnl determines whether make(1) sets $(MAKE).
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.2 2000/12/29 04:03:30 patrick Exp
+dnl basic_progs.m4,v 1.3 2001/01/10 00:09:27 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.
 dnl
 dnl Usage:
-dnl     DPP_BASIC_PROGS(platform, os-type)
-dnl
-dnl Arguments:
-dnl     platform - The name of the target platform.
-dnl     os-type  - The type of operating system (Win32 or UNIX).
+dnl     DPP_BASIC_PROGS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_BASIC_PROGS,
 [
+    AC_REQUIRE([DPP_SYSTEM_SETUP])
+
     dnl If we are on a Win32 system, use $ac_install_sh for the install(1)
     dnl program.  This prevents problems with paths if an install program is
     dnl found elsewhere on the system.
-    if test "x$2" = "xWin32" ; then
+    if test "x$dpp_os_type" = "xWin32" -o "x$2" = "xWin32" ; then
         dnl XXX: This may not be a safe value to use since it is internal to
         dnl the generated configure script.
         INSTALL="$ac_install_sh"
@@ -37,7 +35,8 @@ AC_DEFUN(DPP_BASIC_PROGS,
     dnl SGIs have a ranlib(1) installed that does very bad things to ar(1)
     dnl archives.  We also do not want to use the Cygwin ranlib(1) with the
     dnl Visual C++ LINK.EXE command.
-    if test "x$1" = "xIRIX" -o "x$2" = "xWin32" ; then
+    if test "x$dpp_platform" = "xIRIX" -o "x$1" = "xIRIX" -o	\
+            "x$dpp_os_type" = "xWin32 -o "x$2" = "xWin32" ; then
         RANLIB=':'
     else
         AC_PROG_RANLIB

@@ -9,7 +9,7 @@ dnl     DPP_INIT          - Initialize Doozer++.
 dnl     DPP_VERSION_CHECK - Compare two version numbers.
 dnl ===========================================================================
 
-dnl general.m4,v 1.3 2000/12/30 21:57:12 patrick Exp
+dnl general.m4,v 1.5 2001/01/10 00:08:27 patrick Exp
 
 dnl Set the version of Doozer++.
 define(DPP_DPPVERSION, 1.0)
@@ -163,6 +163,10 @@ AC_DEFUN(DPP_ACLOCAL_INCLUDE,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Do final substitutions for variables defined in DPP_INIT.
+dnl
+dnl Usage:
+dnl     DPP_SUBST
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_SUBST,
 [
@@ -170,7 +174,7 @@ AC_DEFUN(DPP_SUBST,
     AC_REQUIRE([DPP_WIN32_SETUP])
 
     if test "x$dpp_os_type" = "xWin32"; then
-        topdir=`unix2dos "$topdir"`
+        topdir=`unix2dos -p "$topdir"`
     fi
 
     AC_SUBST(topdir)

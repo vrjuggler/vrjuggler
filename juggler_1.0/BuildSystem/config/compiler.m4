@@ -24,7 +24,7 @@ dnl     CXX    - The C++ compiler.
 dnl     CXXCPP - The C++ compiler's preprocessor.
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.2 2000/12/19 16:58:48 patrick Exp
+dnl compiler.m4,v 1.3 2001/01/07 16:02:02 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Add a command line option to enable or disable the use of standard C++ by
@@ -43,7 +43,7 @@ AC_DEFUN(DPP_STD_CPP,
 
     AC_ARG_ENABLE(std,
                   [  --enable-std            Force the use of standard C++   [default=$1]],
-                  dpp_std="$enableval", dpp_std='$1')
+                  dpp_std="$enableval", dpp_std=$1)
 ])
 
 dnl ---------------------------------------------------------------------------

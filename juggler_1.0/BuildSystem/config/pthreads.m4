@@ -2,15 +2,18 @@ dnl ===========================================================================
 dnl Provide a command-line option to enable a check for the POSIX threads
 dnl library and the associated check.  This is useful because it
 dnl is often installed using a different name from platform to platform.  This
-dnl code also checks to see if -pthread is a valid compiler option and stores
-dnl the result in a cache variable that can be used later.  Several
-dnl preprocessor definitions are made depending on the results of the checks.
+dnl code also checks to see if -pthread or -pthreads is a valid compiler
+dnl option and stores the result in a cache variable that can be used later.
+dnl Several preprocessor definitions are made depending on the results of the
+dnl checks.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
 dnl     DPP_ENABLE_PTHREADS - State that POSIX threads are needed for
 dnl                           compiling.
 dnl     DPP_CC_PTHREAD_ARG  - Determine if the C compiler accepts the -pthread
 dnl                           command-line argument.
+dnl     DPP_CC_PTHREADS_ARG - Determine if the C compiler accepts the
+dnl                           -pthreads command-line argument.
 dnl     DPP_GET_PTHREAD_LIB - Determine the name of the pthread library needed
 dnl                           for linking.
 dnl     DPP_GET_PTHREAD_VER - Check for the pthread draft revision implemented
@@ -22,19 +25,22 @@ dnl     --enable-pthreads  - State that POSIX threads are needed for
 dnl                          compiling.
 dnl
 dnl Variables defined:
-dnl     PTHREAD_LIB        - The name of the POSIX threads library (named as
-dnl                          -l<pthread lib>).
-dnl     CC_ACCEPTS_PTHREAD - A cache variable stating whether or not (i.e.,
-dnl                          'yes' or 'no) the compilers accept -pthread as a
-dnl                          valid argument.
-dnl     EXTRA_LDFLAGS      - Additional flags to pass to $LD when linking.
+dnl     PTHREAD_LIB         - The name of the POSIX threads library (named as
+dnl                           -l<pthread lib>).
+dnl     CC_ACCEPTS_PTHREAD  - A cache variable stating whether or not (i.e.,
+dnl                           'yes' or 'no) the compilers accept -pthread as a
+dnl                           valid argument.
+dnl     CC_ACCEPTS_PTHREADS - A cache variable stating whether or not (i.e.,
+dnl                           'yes' or 'no) the compilers accept -pthreads as
+dnl                           a valid argument.
+dnl     EXTRA_LDFLAGS       - Additional flags to pass to $LD when linking.
 dnl
 dnl Possible preprocessor definitions:
 dnl     _PTHREADS_DRAFT_10 - The POSIX thread implementation is Draft 10.
 dnl     _PTHREADS_DRAFT_4  - The POSIX thread implementation is Draft 4.
 dnl ===========================================================================
 
-dnl pthreads.m4,v 1.3 2000/12/15 23:56:17 patrick Exp
+dnl pthreads.m4,v 1.5 2001/01/16 18:08:26 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that POSIX threads are needed for compiling.
@@ -51,7 +57,7 @@ AC_DEFUN(DPP_ENABLE_PTHREADS,
 [
     AC_ARG_ENABLE(pthreads,
                   [  --enable-pthreads       Use of pthreads are needed      [default=$1]],
-                  PTHREADS_ENABLED="$enableval", PTHREADS_ENABLED='$1')
+                  PTHREADS_ENABLED="$enableval", PTHREADS_ENABLED=$1)
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -90,6 +96,41 @@ AC_DEFUN(DPP_CC_PTHREAD_ARG,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Determine if the C compiler (and by assumption, the C++ compiler) accepts
+dnl the -pthreads command-line argument.  Based on the result of the check,
+dnl the variable $CC_ACCEPTS_PTHREADS is set to "yes" or "no".
+dnl
+dnl Usage:
+dnl     DPP_CC_PTHREADS_ARG
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_CC_PTHREADS_ARG,
+[
+    AC_REQUIRE([DPP_PROG_CC])
+    AC_BEFORE([$0], [DPP_GET_PTHREAD_LIB])
+    AC_BEFORE([$0], [DPP_PTHREAD_FINISH])
+
+    AC_LANG_SAVE
+    AC_LANG_C
+
+    dnl Determine if -pthreads is a valid compiler option.  If it is, set
+    dnl $dpp_cv_CC_accepts_pthread to 'yes'; otherwise, set it to 'no'.
+    AC_CACHE_CHECK(whether $CC accepts -pthreads,
+        dpp_cv_CC_accepts_pthreads,
+        [ echo 'int main(){}' > conftest.c
+          if test -z "`${CC} -pthreads -o conftest conftest.c 2>&1`" ; then
+              dpp_cv_CC_accepts_pthreads='yes'
+          else
+              dpp_cv_CC_accepts_pthreads='no'
+          fi
+          rm -f conftest*
+        ])
+
+    CC_ACCEPTS_PTHREADS="$dpp_cv_CC_accepts_pthreads"
+
+    AC_LANG_RESTORE
+])
+
+dnl ---------------------------------------------------------------------------
 dnl Determine the name of the pthread library needed for linking.  The default
 dnl names to check are pthread, pthreads, cma, and c_r in that order.  Based
 dnl on the result of the check, the variable $PTHREAD_LIB is set to the 
@@ -107,13 +148,15 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_GET_PTHREAD_LIB,
 [
     AC_REQUIRE([DPP_CC_PTHREAD_ARG])
+    AC_REQUIRE([DPP_CC_PTHREADS_ARG])
     AC_BEFORE([$0], [DPP_GET_PTHREAD_VER])
 
     dpp_pthread_lib=''
 
-    dnl If the compiler accepts -pthread, don't bother trying to find the
-    dnl pthreads library.
-    if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
+    dnl If the compiler accepts -pthread or -pthreads, don't bother trying to
+    dnl find the pthreads library.
+    if test "x$CC_ACCEPTS_PTHREAD" = "xno" -a "x$CC_ACCEPTS_PTHREADS" = "xno"
+    then
         AC_LANG_SAVE
         AC_LANG_C
 
@@ -163,6 +206,8 @@ AC_DEFUN(DPP_GET_PTHREAD_VER,
 
     if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
         CFLAGS="$CFLAGS -pthread"
+    elif test "x$CC_ACCEPTS_PTHREADS" = "xyes" ; then
+        CFLAGS="$CFLAGS -pthreads"
     fi
 
     dpp_save_LIBS="$LIBS"
@@ -200,7 +245,9 @@ AC_DEFUN(DPP_GET_PTHREAD_VER,
 dnl ---------------------------------------------------------------------------
 dnl Complete the pthread configuration process.  If the C compiler accepts the
 dnl -pthread argument, "-pthread" is appended to the variable $EXTRA_LDFLAGS.
-dnl Substitution is performed on $EXTRA_LDFLAGS.
+dnl If the C compiler instead accepts the -pthreads argument, "-pthreads" is
+dnl appended to the variable $EXTRA_LDFLAGS.  Substitution is performed on
+dnl $EXTRA_LDFLAGS.
 dnl
 dnl Usage:
 dnl     DPP_PTHREAD_FINISH
@@ -208,9 +255,12 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_PTHREAD_FINISH,
 [
     AC_REQUIRE([DPP_CC_PTHREAD_ARG])
+    AC_REQUIRE([DPP_CC_PTHREADS_ARG])
 
     if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
         EXTRA_LDFLAGS="$EXTRA_LDFLAGS -pthread"
+    elif test "x$CC_ACCEPTS_PTHREADS" = "xyes" ; then
+        EXTRA_LDFLAGS="$EXTRA_LDFLAGS -pthreads"
     fi
 
     AC_SUBST(EXTRA_LDFLAGS)

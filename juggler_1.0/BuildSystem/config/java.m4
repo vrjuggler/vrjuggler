@@ -16,7 +16,7 @@ dnl     JAR      - The path up to and including the jar(1) utility.
 dnl     RMIC     - The RMI stub and skeleton compiler.
 dnl ===========================================================================
 
-dnl java.m4,v 1.2 2000/12/29 04:15:20 patrick Exp
+dnl java.m4,v 1.3 2001/01/09 16:07:25 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -74,7 +74,7 @@ AC_DEFUN(DPP_PATH_JAVA,
     dnl -----------------------------------------------------------------------
     if test "x$JAVAC" != "xno" ; then
         if test "x$temp_os_type" = "xWin32" ; then
-            JAVAC=`unix2dos "$JAVAC"`
+            JAVAC=`unix2dos -p "$JAVAC"`
         fi
 
         JAR=`echo $JAVAC | sed 's/javac$//'`jar

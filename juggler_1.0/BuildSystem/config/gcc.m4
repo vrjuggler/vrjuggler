@@ -16,7 +16,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.1.1.1 2000/12/08 06:16:37 patrick Exp
+dnl gcc.m4,v 1.2 2001/01/07 16:02:02 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.
@@ -33,7 +33,7 @@ AC_DEFUN(DPP_WITH_GCC,
     dnl Force the use of GCC as the compiler.
     AC_ARG_WITH(gcc,
                 [  --with-gcc              Force the use of GCC as the compiler],
-                USE_GCC="$withval", USE_GCC='$1')
+                USE_GCC="$withval", USE_GCC=$1)
 ])
 
 dnl ---------------------------------------------------------------------------
