@@ -1,0 +1,12 @@
+# This file defines the specification for the user tools directory tree for
+# the VR Juggler installation.
+#
+# $Id$
+
+/set type=dir gname=vrjuggler mode=0775
+.
+    tools
+	common
+	..
+    ..
+..
