@@ -277,7 +277,7 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    vprASSERT(boost::out_degree(src, mGraph) > 0 && "No outgoing edges from source");
    vprASSERT(boost::out_degree(dest, mGraph) > 0 && "No outgoing edges from destination");
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL)
       << "NetworkGraph::getShortestPath(): Looking up the shortest path "
       << "between " << node_prop_map[src]->getIpAddressString() << " and "
       << node_prop_map[dest]->getIpAddressString() << "\n" << vprDEBUG_FLUSH;

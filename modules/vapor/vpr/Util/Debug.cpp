@@ -114,6 +114,8 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
 
+   vprASSERT(indentLevel >= 0 && "Decreased indent below 0, look for bad code");
+
    //cout << "VPR " << level << ": ";
 
    // Lock the stream
