@@ -32,9 +32,9 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <cluster/Plugins/PluginConfig.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataServer.h> // my header...
-#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
+#include <cluster/PluginConfig.h>
+#include <plugins/ApplicationDataManager/ApplicationDataServer.h> // my header...
+#include <plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/Packets/DataPacket.h>
 

@@ -33,7 +33,7 @@
 #ifndef CLUSTER_APPLICATION_DATA_SERVER_H
 #define CLUSTER_APPLICATION_DATA_SERVER_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 namespace vpr
 {

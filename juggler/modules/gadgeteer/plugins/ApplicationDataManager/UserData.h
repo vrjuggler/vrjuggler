@@ -33,12 +33,12 @@
 #ifndef _CLUSTER_USER_DATA_H
 #define _CLUSTER_USER_DATA_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 
-#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
+#include <plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/SerializableData.h>
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/ObjectReader.h>
