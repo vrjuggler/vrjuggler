@@ -37,6 +37,7 @@ import re
 import shutil
 import sys
 import time
+import traceback
 
 def setVars():
    def guessBoostToolset(reattempt = False):
@@ -677,4 +678,10 @@ def main():
 
 juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 if __name__ == '__main__':
-   main()
+   try:
+      main()
+   except:
+      info = sys.exc_info()
+      traceback.print_exception(info[0], info[1], info[2])
+      print "An exception was caught.  Press <ENTER> to quit ..."
+      sys.stdin.readline()
