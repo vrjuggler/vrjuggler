@@ -844,13 +844,10 @@ if test "x${_idl_java}" = "xno" ; then
 
    config_jacorb_dir='$prefix/bin'
 
-   # The double $-sign here is needed to prevent the JAVA_HOME expression from
-   # being evaluated by make(1).  All the extra escape characters are needed
-   # because the value of $config_java_idl will be substituted in a Perl
-   # script, so we also have to prevent perl(1) from trying to evaluate the
-   # JAVA_HOME expression.  All this complexity exists to prevent smashing the
-   # user's $JAVA_HOME environment variable with a (possibly) incorrect path.
-   config_java_idl="JAVA_HOME="\\\$\\\${JAVA_HOME-$JDK_HOME}" JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
+   # JAVA_HOME is not set the way that JACORB_PATH is set because we do not
+   # know what version of the JDK/JRE the user will have installed, nor do we
+   # know where it will be installed.
+   config_java_idl="JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
 else
    # XXX: Need to support more than one IDL compiler for Java by recognizing
    # the name of the compiler and defining options for it below.  Blah.
