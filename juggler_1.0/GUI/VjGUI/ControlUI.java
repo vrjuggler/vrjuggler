@@ -382,6 +382,7 @@ public class ControlUI
         String url = "DescHelp/" + s + ".html";
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", null);
         help_frame.setURL (url);
+        help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/VjControlIndex.html"));
 	child_frames.addElement (help_frame);
 	help_frame.show();
     }
@@ -393,7 +394,7 @@ public class ControlUI
 	System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
-        help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/table.of.contents.html"));
+        help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/VjControlIndex.html"));
 	child_frames.addElement (help_frame);
 	help_frame.show();
     }
