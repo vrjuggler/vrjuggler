@@ -14,12 +14,18 @@ public:
    {
    }
 
+   // XXX: It would be nice if the work done by detach() could be done in
+   // the destructor, but that does not seem to satisfy the POA.  Whatever...
    virtual ~StringObserverImpl()
    {
-      mSubject->detach(_this());
    }
 
    virtual void update();
+
+   void detach()
+   {
+      mSubject->detach(_this());
+   }
 
 private:
    CxxClientTest::StringSubject_var mSubject;
