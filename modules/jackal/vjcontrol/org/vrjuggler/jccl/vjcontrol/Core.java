@@ -37,9 +37,7 @@ package VjControl;
 
 import java.lang.String;
 import java.lang.StringBuffer;
-import java.util.Vector;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import VjConfig.*;
 import VjControl.LogMessageListener;
@@ -97,12 +95,12 @@ public class Core
     static protected String component_name;
 
     /** Contains all CoreModules added to self */
-    static private List modules;
+    private List modules;
 
-    static private List pending_chunks;
-    static private List registered_components;
+    private List pending_chunks;
+    private List registered_components;
 
-    static private String[] command_line;
+    private String[] command_line;
 
     /** Dummy instance used as source for CoreDBEvents. */
     static private Core instance;
@@ -125,6 +123,10 @@ public class Core
     static public FileControl file;
 
     private Core() {
+        modules = new Vector();
+        pending_chunks = new Vector();
+        registered_components = new Vector();
+        command_line = new String[0];
     }
 
 
@@ -138,9 +140,6 @@ public class Core
         file = new FileControl();
 
         component_factory = new ComponentFactory();
-        modules = new Vector();
-        pending_chunks = new Vector();
-        registered_components = new Vector();
 
 	window_pos_kludge = false;
 	screenWidth = 800;
@@ -149,8 +148,6 @@ public class Core
 
 	logmessage_targets = new ArrayList();
         no_logmessage_targets = true;
-
-        command_line = new String[0];
 
   	descdb = new ChunkDescDB();
         descdb.setName ("VjControl default Global ChunkDescDB");
@@ -170,8 +167,9 @@ public class Core
     /** Gives a reference to the named module */
     static public CoreModule getModule (String name) {
         CoreModule c;
-        for (int i = 0; i < modules.size(); i++) {
-            c = (CoreModule)modules.get (i);
+        Iterator i = instance.modules.iterator();
+        while (i.hasNext()) {
+            c = (CoreModule)i.next();
             if (c.getComponentName().equalsIgnoreCase (name))
                 return c;
         }
@@ -213,7 +211,7 @@ public class Core
 
 
 
-    //---------------------- Configuration Stuff ----------------------------
+    //-------------- VjControl Component Configuration Stuff -----------------
 
     // All of this code needs to be refactored somewhat to handle removing
     // as well as adding components.  in-place reconfiguration is also a 
@@ -229,9 +227,9 @@ public class Core
      *  details, check the parent class' documentation.
      */
     static public void addPendingChunk (ConfigChunk ch) {
-        pending_chunks.add (ch);
+        instance.pending_chunks.add (ch);
         //System.out.println ("addPendingChunk:\n" + ch.toString());
-        while (configProcessPending())
+        while (instance.configProcessPending())
             ;
     }
 
@@ -241,7 +239,7 @@ public class Core
      *  and calls addComponentConfig.
      *  @return True if any Components were created (or attempted).
      */
-    static protected boolean configProcessPending () {
+    protected boolean configProcessPending () {
         boolean retval = false;
         boolean add_success;
         ConfigChunk ch;
@@ -273,7 +271,7 @@ public class Core
      *
      *  @return true if the component was succesfully added.
      */
-    static protected boolean addComponentConfig (ConfigChunk ch) {
+    protected boolean addComponentConfig (ConfigChunk ch) {
         try {
             Property p = ch.getPropertyFromToken ("parentcomp");
             String parentname = p.getValue(0).getString();
@@ -304,7 +302,7 @@ public class Core
      *
      *  @return true if all dependencies were met.
      */
-    static protected boolean checkDependencies (ConfigChunk ch) {
+    protected boolean checkDependencies (ConfigChunk ch) {
 
         String cn = ch.getValueFromToken ("classname", 0).getString();
         if (!component_factory.isRegistered (cn))
@@ -329,7 +327,7 @@ public class Core
      *  to be parents or dependencies of other components.
      */
     static public void registerComponent (VjComponent vjc) {
-        registered_components.add (vjc);
+        instance.registered_components.add (vjc);
     }
 
 
@@ -337,12 +335,19 @@ public class Core
      */
     static public VjComponent getComponentFromRegistry (String name) {
         VjComponent vjc;
-        int i, n = registered_components.size();
-        for (i = 0; i < n; i++) {
-            vjc = (VjComponent)registered_components.get(i);
+        Iterator i = instance.registered_components.iterator();
+        while (i.hasNext()) {
+            vjc = (VjComponent)i.next();
             if (vjc.getComponentName().equalsIgnoreCase (name))
                 return vjc;
         }
+
+//          int i, n = registered_components.size();
+//          for (i = 0; i < n; i++) {
+//              vjc = (VjComponent)registered_components.get(i);
+//              if (vjc.getComponentName().equalsIgnoreCase (name))
+//                  return vjc;
+//          }
         return null;
     }
 
@@ -350,7 +355,7 @@ public class Core
     //---------------------- Command-line argument handling -----------------
 
     static public void setCommandLine (String[] args) {
-        command_line = args;
+        instance.command_line = args;
     }
 
     /** Gets the command line that VjControl was started with.
@@ -360,7 +365,7 @@ public class Core
      *  Components MUST NOT modify the returned String array in any way.
      */
     static public String[] getCommandLine () {
-        return command_line;
+        return instance.command_line;
     }
 
 
