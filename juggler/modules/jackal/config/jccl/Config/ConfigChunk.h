@@ -31,9 +31,9 @@
 #include <Config/vjChunkDesc.h>
 
 
-/*****************************************************************************
- *                              vjProperty                                     *
- *****************************************************************************/
+/***************************************************************************
+ *                              vjProperty                                 *
+ ***************************************************************************/
 
 /** A vjProperty is a unit of storage inside of a vjConfigChunk.
  *  It has a name, a type, and some number of values.
@@ -124,7 +124,7 @@ struct Token {
 class vjConfigChunk {
 
 private:
-  char *mytypename;                         // typename of chunk
+  vjChunkDesc* desc;
   vector<vjProperty*> props;                  // Stores the set of properties
 
 

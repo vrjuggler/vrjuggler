@@ -8,9 +8,9 @@
 #include <Kernel/vjDebug.h>
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *desc) :props() {
+vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props() {
 
-  mytypename = desc->token;
+  desc = d;
   for (int i = 0; i < desc->plist.size(); i++)
     props.push_back (new vjProperty(desc->plist[i]));
 }
@@ -45,7 +45,7 @@ vjProperty* vjConfigChunk::getPropertyFromToken (char *token) {
 
 
 ostream& operator << (ostream& out, vjConfigChunk& self) {
-  out << self.mytypename << endl;
+  out << self.desc->token << endl;
   for (int i =0; i < self.props.size(); i++) {
     out << "  " << *(self.props[i]) << endl;
   }
@@ -232,7 +232,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
     // We have a string token; assumably a property name.
     if (!(p = self.getPropertyFromToken (tok.strval))) {
       vjDEBUG(3) << "ERROR: Property '" << tok.strval << "' is not found in"
-		 << " Chunk " << self.mytypename << endl;
+		 << " Chunk " << self.desc->name << endl;
       self.getToken(in,tok);
       continue;
     }
@@ -296,7 +296,7 @@ int vjConfigChunk::getNum (char *property) {
 vjVarValue vjConfigChunk::getType () {
 
   vjVarValue v(T_STRING);
-  v = mytypename;
+  v = desc->token;
   return v;
 } 
  
@@ -306,7 +306,7 @@ vjVarValue vjConfigChunk::getProperty (char *property, int ind) {
   
   if (!strcasecmp(property,"type")) {
     vjVarValue v(T_STRING);
-    v = mytypename;
+    v = desc->token;
     return v;
   }
 
