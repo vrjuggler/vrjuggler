@@ -71,10 +71,15 @@ public:
       bool pass = jccl::DepChecker::depSatisfied(chunk);   // Run default check
 
       // If we can pass normal check and we have a display system chunk
-      if(vrj::DisplayManager::instance()->getDisplaySystemChunk().get() != NULL)
+      if(passExtraDependencies(chunk))
          return pass;
       else
          return false;
+   }
+
+   bool passExtraDependencies(jccl::ConfigChunkPtr chunk)
+   {
+      return (vrj::DisplayManager::instance()->getDisplaySystemChunk().get() != NULL);
    }
 
    // Write out the dependencies to the vprDEBUG macro
@@ -83,7 +88,7 @@ public:
       jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
 
       vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: " << vprDEBUG_FLUSH;
-      if(depSatisfied(chunk) == false)
+      if(!passExtraDependencies(chunk))
          vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
       else
          vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
