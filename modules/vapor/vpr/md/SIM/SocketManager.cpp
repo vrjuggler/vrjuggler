@@ -120,8 +120,8 @@ namespace sim
             vprASSERT(NULL != remote_stream_socket && "We should have a stream socket, but don't");
 
             // Queue us up in the listening socket's connection queue.
-            status = remote_stream_socket->addConnector(local_stream_socket);
-            vprASSERT(! status.failure() && "Failed to add connector");
+            status = remote_stream_socket->addConnector(localSock);
+            vprASSERT(!status.failure() && "Failed to add connector");
          }
                  else
          {
@@ -150,11 +150,15 @@ namespace sim
          // only reason dgram_socket exists is for this conditional.
          vprASSERT( remote_dgram_socket != NULL );
 
-         localSock->mPeer = remote_sock;
+         // We have to cast away the const-ness so that we can add the
+         // connector information.
+         localSock->completeConnection( remote_sock );
+         // XXX: Don't tell the other side that it is connected to us
+         //remote_dgram_socket->completeConnection(localSock);
 
          // Now find the shortest path between u and v.
          const NetworkGraph::net_vertex_t& u = localSock->getNetworkNode();
-         const NetworkGraph::net_vertex_t& v = remote_sock->getNetworkNode();
+         const NetworkGraph::net_vertex_t& v = remote_dgram_socket->getNetworkNode();
          path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
       }
 
@@ -185,8 +189,8 @@ namespace sim
 
       vprASSERT( handle->isBound() && "Can't unbind and unbound handle");
 
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-           << "Unbinding handle(" << handle << ")\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 0)
+           << "Unbinding handle(" << handle << ": << " << handle->getLocalAddr() << ")\n" << vprDEBUG_FLUSH;
 
       // -- Unassign from node
       status = unassignFromNode( handle );
@@ -381,10 +385,11 @@ namespace sim
       // If any addr, then set it to local host
       // Case localAddr = InetAddr::Any  ==> "localhost" with random port
       // Case localhost = ip addr        ==> "localhost" ip address
+      // Keep old port num around so that 127.0.0.1:num is a valid assignment
       if((local_addr == vpr::InetAddr::AnyAddr) ||
          (local_addr.getAddressValue() == LocalHostIpAddrValue) )
       {
-         //local_addr.setAddress(LocalHostIpAddrValue, local_addr.getPort());
+         //local_addr.setAddress(LocalHostIpAddrValue, 0);
          local_addr.setAddress(getLocalhostIpAddrValue(), local_addr.getPort());
       }
 
@@ -453,15 +458,7 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
       NetworkGraph::net_vertex_t node_vertex;
       NetworkGraph net_graph = Controller::instance()->getNetworkGraph();
 
-      //if ( LocalHostIpAddrValue == ipAddr )      // If we want local host
-      //{
-      //   node_vertex = getLocalhostVertex();
-      //}
-      //else
-      //{
-         ret_stat = net_graph.getNodeWithAddr(ipAddr, node_vertex);
-      //}
-
+      ret_stat = net_graph.getNodeWithAddr(ipAddr, node_vertex);
       vprASSERT(ret_stat.success());
 
       NetworkNodePtr node_prop = net_graph.getNodeProperty(node_vertex);

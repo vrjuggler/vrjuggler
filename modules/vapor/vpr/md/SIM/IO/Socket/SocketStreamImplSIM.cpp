@@ -65,7 +65,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
    if ( ! mConnectorQueue.empty() )
    {
-      SocketStreamImplSIM* peer_ptr = mConnectorQueue.front();
+      SocketStreamImplSIM* peer_ptr = mConnectorQueue.front();    // The peer requesting the connection
       mConnectorQueue.pop();
 
       mConnectorQueueMutex.release();
@@ -90,16 +90,14 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
       client_sock.bind();                                // Bind to a port (and assign to net node)
 
       // Now define the route for messages between the two sockets.
+      // - Sets the path inside both sockets (path to the other socket)
       sock_mgr.findRoute(peer_ptr, client_sock.getHandle());
 
-      // Finally, tell the connecting socket its peer.  It's okay to do this
-      // cast since getHandle() returns 'this'.
-      peer_ptr->mPeer = (SocketStreamImplSIM*) client_sock.getHandle();
+      peer_ptr->completeConnection( client_sock.getHandle() );
 
-      // Make sure the peer's remote address has the right port number.
+      // Make sure the peer's remote address has the right address.
       // Prior to this point, it has the port of the accepting socket.
-      vprASSERT(peer_ptr->mRemoteAddr.getAddressValue() == client_sock.mLocalAddr.getAddressValue() && "Connector doesn't know peer's IP address");
-      peer_ptr->mRemoteAddr.setPort(client_sock.mLocalAddr.getPort());
+      vprASSERT(peer_ptr->mRemoteAddr == client_sock.mLocalAddr && "Connector doesn't know peer's IP address");
    }
    else
    {
@@ -110,16 +108,22 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
    return status;
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::addConnector (vpr::SocketStreamImplSIM* connector)
+vpr::ReturnStatus SocketStreamImplSIM::addConnector ( vpr::SocketImplSIM* peerSock)
 {
+   SocketStreamImplSIM* stream_remote;
+
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "SocketStreamImplSIM::addConnector() [" << mLocalAddr
-      << "]: Adding connector from " << connector->getLocalAddr() << "\n"
+      << "]: Adding connector from " << peerSock->getLocalAddr() << "\n"
       << vprDEBUG_FLUSH;
+
+   stream_remote   = dynamic_cast<SocketStreamImplSIM*>(peerSock);
+
+   vprASSERT(NULL != stream_remote && "Tried to connect to a non-stream socket!");
 
    mConnectorQueueMutex.acquire();
    {
-      mConnectorQueue.push(connector);
+      mConnectorQueue.push(stream_remote);
    }
    mConnectorQueueMutex.release();
 

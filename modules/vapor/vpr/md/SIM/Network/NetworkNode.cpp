@@ -129,6 +129,8 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
 {
    vpr::Uint32 port = sock->getLocalAddr().getPort();
    vprASSERT( mIpAddr == sock->getLocalAddr().getAddressValue() && "Trying to add socket to node of wrong ip addr");
+   if(! hasSocket(port, sock->getType()))
+      vprDEBUG(vprDBG_ALL, 0) << "NetworkNode::addSocket: Tried to overwrite existing socket: " << sock->getLocalAddr() << std::endl << vprDEBUG_FLUSH;
    vprASSERT(! hasSocket(port, sock->getType()) && "Tried to overwrite an existing socket");
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)

@@ -73,17 +73,21 @@ vpr::ReturnStatus SocketImplSIM::close ()
 {
    vpr::ReturnStatus status;
 
+
+   vprDEBUG(vprDBG_ALL, 0) << "SocketImplSIM::close: Closing: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
+
    if ( mPeer != NULL )
    {
       // We tell our peer that we are disconnecting.  This is a little
       // different than how real sockets work, but since we communicate
       // directly with our peer, this is a reasonable thing to do.
       mPeer->disconnect();
-      mPeer = NULL;
+      disconnect();
    }
 
    if ( mBound )
    {
+      vprDEBUG(vprDBG_ALL, 0) << "SocketImplSIM::close: Unbinding: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
       // Release the node to which we were bound.
       status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
       mBound = false;
@@ -122,7 +126,8 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    vprASSERT(mBound && "We must be bound first");
 
    status = sock_mgr.connect(this, mRemoteAddr, mPathToPeer, timeout);
-   mConnected = status.success();
+   //mConnected = status.success();
+   // NOTE: We are not connected until the other side says so
 
    // Now that we are connected (or queued to get connected), we do not have
    // to manipulate our local address as is done in the real VPR sockets.
@@ -130,6 +135,18 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    // what the Sim Socket Manager does.
 
    return status;
+}
+
+// Complete the connection
+// - Set the peer address and ptr
+// - Set to connected state.
+vpr::ReturnStatus SocketImplSIM::completeConnection( SocketImplSIM* connectedPeer)
+{
+   mPeer = connectedPeer;
+   mRemoteAddr = connectedPeer->getLocalAddr();
+   mConnected = true;
+
+   return vpr::ReturnStatus::Succeed;
 }
 
 vpr::Uint32 SocketImplSIM::availableBytes ()
@@ -369,6 +386,7 @@ void SocketImplSIM::disconnect ()
    // XXX: This is potentially not the best way to disconnect, but it's the
    // best I have come up with so far.
    mPeer = NULL;
+   mConnected = false;
 }
 
 } // End of vpr namespace
