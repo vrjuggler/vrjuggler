@@ -15,12 +15,12 @@
 </a>
 The Juggler Documentation project uses a few Perl scripts to generate and
 install the documentation.  In addition, Juggler uses Perceps to 
-auto-generate it's C++ Class reference.
+auto-generate it's C++ Class reference.  To better understand what you're 
+doing, please read and understand the material in 
+<a href="#required">Required Reading</a>.  <BR><BR>
 
-IMPORTANT: To better understand what you're doing, please understand the 
-concepts listed above in Required Reading.  
-
-To view the documentation, you must first build it.
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> 
+To view the documentation, you must first build it.<BR><BR>
 
 <a name="required">
 <H4> Required Reading </H4>
@@ -31,41 +31,101 @@ To view the documentation, you must first build it.
 <li><a href="http://www.sourcegear.com/CVS">CVS</a> documentation (used for revision control, lets you directly check in and out source)</li>
 </ul>
 
+<a name="building">
 <H4> Building the project: </H4>
+</a>
 To view the documentation, you must first build it.  Many of the HTML files have
 tags which web browsers cannot read - thus you'd get many broken links if you 
 tried load the index.html locally.  The install script (in the install directory) 
 will parse the documentation and install a viewable copy into a location of 
 your choice.  (NOTE: you may have to install the docs into a web server to 
-view, there have been some problems using the tree control locally)
+view, there have been some problems using the tree control locally)<BR><BR>
 
 Build the project by running "install-web.pl" from the install directory.
 If you run this with a -z option, it will save your arguments in a script 
-that you can then use to build the project (this is recommended).
-
-
-<H4> Directory tree description: </H4>
-CVS/           repository directory
-README         project description (this file)
-index.html*    VRJ start page
-pub/           put zip, tar, gz, binaries, pdf, and other downloadable stuff here.
-todo.txt       looking for something to do?  read this file for motivation.
-JExplorer/     information and examples on how to use JExplorer.
-html/          all site content in the form of HTML 
-install/       installation scripts: this will compile the docs using Perl.
-style/         style sheets (.css files)
-LEGAL          The license for the content found in this tree.
-images/        all site images.
-java.class/    all byte code for the java controls (.class files)
-supplemental/  site specific info
-
+that you can then use to build the project (this is recommended).<BR>
+<BR>
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif"> install-web checks for changes by time stamp.  If you notice that one of your files is not getting updated, then you can force a complete rebuild with the -a option.  The build will go much slower with the -a option.<br>
+<BR>
 
 <a name="docs">
 <H5> Step by step build of the Juggler documentation. </H5>
 </a>
-This tutorial is not done, please <a href="${JUGGLER_DEV_MAILING_LIST}">Tell Us</a><BR>
-
+<ol>
+	<li>Run install-web.pl with no arguments from within the install directory.</li>
+	<BR>
+	<li> Read the options that it prints to the screen.<BR>
+	      They should look something like this: <BR>
+	      <BR>
+	      Usage: <i><b>install-web.pl</b> -s [source directory] 
+	      -t [target directory] -i[ignore dir],[ignore dir],.. 
+	      -c [css header] -e [html header] -f [html footer] 
+	      -h [HTML install path] -w [subst file] -a (force all) 
+	      -z [name of script file to output]</i><BR>
+	</li>
+	<BR>
+	<li> Now run install-web.pl with your options, here's an example:<BR>
+	     <BR>
+	     <b>install-web.pl</b>  <i>-s</i> ../. 
+	     <i>-t</i> /home/users/kevn/public_html/vrj/ 
+	     <i>-i</i> __deleteme,JExplorer,install,CVS,ver1.05 
+	     <i>-c</i> html/css_header.html 
+	     <i>-e</i> html/header.html 
+	     <i>-f</i> html/footer.html 
+	     <i>-h</i> http://www.vrac.iastate.edu/~kevn/vrj/ 
+	     <i>-w</i> subst.pl 
+	     <i>-z</i> kevinsMakeScript.pl<BR>
+	</li>
+	<BR>
+	<li> That is a lot to type, luckily the <i>-z</i> option saved your setup into
+	      a script file.  Next time you want to build the project just run that file.<BR>
+	      <BR>
+	      <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> Recommended: Use the -Z option to save your build setup! <BR>
+	</li>
+	<BR>
+	<li> Now run your -Z file (<i>kevinsMakeScript.pl</i>), consider this your 
+	     new install command since you've saved your settings there.
+	</li>
+	<BR>
+	<li> After running, this script will popup a netscape browser with the web 
+	     site loaded into it.<BR>
+	     <BR>
+	     <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> To view this documentation, always run your script.<BR>
+	</li>
+	<BR>
+</ol>
+<small>If this tutorial has errors or is incomplete, please <a href="${JUGGLER_DEV_MAILING_LIST}">Tell Us</a></small><BR>
+<BR>
+<BR>
+	
 <a name="class_ref">
 <H5> Step by step build of the C++ class reference. </H5>
 </a>
-This tutorial is not done, please <a href="${JUGGLER_DEV_MAILING_LIST}">Tell Us</a>
+<ol>
+	<li>Obtain the Juggler project</li>
+	<li>Change directory to the <b>Doc</b> directory</li>
+	<li>Run the make script: <b>make doc-public</b></li>
+	<li>Copy the contents of <b>Doc/public_doc</b> to <b>juggler_docs/html/programmer.reference/classes</b></li>
+</ol>
+<small>If this tutorial has errors or is incomplete, please <a href="${JUGGLER_DEV_MAILING_LIST}">Tell Us</a></small><BR>
+<BR>
+<BR>
+	
+<a name="directories">
+<H4> Directory tree description: </H4>
+</a>
+<b>CVS/           </b>repository directory<br>
+<b>pub/           </b>put zip, tar, gz, binaries, pdf, and other downloadable stuff here.<br>
+<b>JExplorer/     </b>information and examples on how to use JExplorer.<br>
+<b>html/          </b>all site content in the form of HTML <br>
+<b>install/       </b>installation scripts: this will compile the docs using Perl.<br>
+<b>style/         </b>style sheets (.css files)<br>
+<b>LEGAL          </b>The license for the content found in this tree.<br>
+<b>images/        </b>all site images.<br>
+<b>java.class/    </b>all byte code for the java controls (.class files)<br>
+<b>supplemental/  </b>site specific info<br>
+<b>README.html    </b>project description (this file)<br>
+<b>index.html*    </b>VRJ start page<br>
+<b>todo.txt       </b>looking for something to do?  read this file for motivation.<br>
+
+
