@@ -31,28 +31,23 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OGL
-#
-# Generated for use on @PLATFORM@
+# Makefile.in for vrjuggler/samples/OGL/ext/proceduralApp
+# This requires GNU make.
 # -----------------------------------------------------------------------------
 
-DIRS=	simple advanced ext
+all: procApp@EXEEXT@
+
+APP_NAME=	procApp@EXEEXT@
+
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		main.cpp
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 # -----------------------------------------------------------------------------
-# Build targets.
+# Application build targets.
 # -----------------------------------------------------------------------------
-default: all
-
-all: $(DIRS)
-
-$(DIRS)::
-	cd $@ && $(MAKE)
-
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-clean:
-	@for dir in $(DIRS) ; do		\
-            cd $$dir && $(MAKE) clean ;		\
-            cd .. ;				\
-        done
+procApp@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
