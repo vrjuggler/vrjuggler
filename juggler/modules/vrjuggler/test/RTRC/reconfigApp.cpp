@@ -128,7 +128,12 @@ void reconfigApp::preFrame()
          
          case 39:  status =       removeMachineSpecific_exec();  break;
          
-         case 40:  status = true; 
+         case 40:  status =       addStupifiedAnalogProxy_exec();  break;
+         
+         case 41:  status =       removeStupifiedAnalogProxy_exec();  break;
+
+         
+         case 42:  status = true; 
                    mFinished = true; 
                    std::cout << "\n\n[Test battery completed]\n\n" << std::flush; 
                    mKernel->stop();
@@ -232,6 +237,10 @@ void reconfigApp::preFrame()
          //case 39:  status =       reconfigMachineSpecific_check();break;
 
          case 39:  status =       removeMachineSpecific_check();break;
+         
+         case 40:  status =       addStupifiedAnalogProxy_check();break;
+         
+         case 41:  status =       removeStupifiedAnalogProxy_check();break;
          
          default: status = true; break;
 
@@ -671,8 +680,25 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
    //Load up the given file 
    jccl::ConfigChunkDB fileDB ; fileDB.load( filename );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
+   std::vector<jccl::ConfigChunkPtr> machineChunks;
+   std::vector<jccl::ConfigChunkPtr> machineSpecificChunks;
    fileDB.getByType( "displayWindow", windowChunks );
-
+   fileDB.getByType( "machineSpecific", machineChunks );
+   for (int i=0; i < machineChunks.size(); i++)
+   {
+      
+      machineSpecificChunks = windowChunks[i]->getEmbeddedChunks();
+      for (int j=0; i < machineSpecificChunks.size(); i++)
+      {
+         if (machineSpecificChunks[i]->getDescToken() == "displayWindow")
+         {
+            std::cout << "Adding an embedded display to the list to test named: " 
+               << machineSpecificChunks[i]->getName() << std::endl;
+            windowChunks.push_back(machineSpecificChunks[i]);
+         }
+      }
+   }
+   
    //Verify EACH display in the file
    for (int i=0; i < windowChunks.size(); i++)
    {
@@ -1752,3 +1778,62 @@ bool reconfigApp::removeKeyboardProxy_check()
 
    return true;
 }
+
+bool reconfigApp::addStupifiedAnalogProxy_exec()
+{
+   std::cout << "Beginning test for adding a stupified analog proxy...\n" << std::flush;
+   return addChunkFile( mPath + "sim.stupidproxy01.config" );
+}
+
+bool reconfigApp::addStupifiedAnalogProxy_check()
+{
+   //Try to get the new proxy and check its values
+   gadget::Proxy* tempProxy = gadget::InputManager::instance()->getProxy( "StupidAnalogProxy01" );
+   gadget::AnalogProxy* proxy = dynamic_cast<gadget::AnalogProxy*>(tempProxy);
+
+   if (proxy == NULL)
+   {
+      std::cout << "\tError: Could not find the proxy\n" << std::flush;
+      return false;
+   }
+   if (!proxy->isStupified())
+   {
+      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      return false;
+   }
+   if (proxy->getData() != 0.0 )
+   {
+   }
+   if (proxy->getProxiedInputDevice() != NULL)
+   {
+      std::cout << "\tError: Proxy points at a device\n" << std::flush;
+      return false;
+   }
+   if (proxy->getChunkType() != "AnaProxy")
+   {
+      std::cout << "\tError: Proxy has the wrong chunk type: " << proxy->getChunkType() << "   It should be AnaProxy\n" << std::flush;
+      return false;
+   }
+
+   return true;
+}
+bool reconfigApp::removeStupifiedAnalogProxy_exec()
+{
+   std::cout << "Beginning test for removing a stupified analog proxy...\n" << std::flush;
+   return removeChunkFile( mPath + "sim.stupidproxy01.config" );
+}
+
+bool reconfigApp::removeStupifiedAnalogProxy_check()
+{
+
+   //Try to get the new proxy and check its values
+
+   if (gadget::InputManager::instance()->getProxy( "StupidAnalogProxy01" ) != NULL)
+   {
+      std::cout << "\tError: Stupid Proxy 01 still exists\n" << std::flush;
+      return false;
+   }
+
+   return true;
+}
+
