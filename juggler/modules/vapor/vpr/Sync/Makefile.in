@@ -59,13 +59,10 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 SRCS=		
 
 ifeq (@SUBSYSTEM@, SPROC)
-SRCS+=		CondVarGeneric.cpp
+SRCS+=		CondVarGeneric.cpp	\
+		RWMutex.cpp
 else
 SRCS+=		Barrier.cpp
-endif
-
-ifneq (@SUBSYSTEM@, NSPR)
-SRCS+=		RWMutex.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
