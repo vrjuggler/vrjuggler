@@ -385,9 +385,6 @@ void SubsynthSoundImplementation::startAPI()
    // init the listener...
    this->setListenerPosition( mListenerPos );
 
-   // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
-   // alListenerfv( AL_VELOCITY, velocity );
-   
    this->reschedule();
    mRunner.run( 1 );
    mIsOpen = true;
@@ -426,9 +423,6 @@ void SubsynthSoundImplementation::clear()
 
 void SubsynthSoundImplementation::reschedule()
 {
-   // stop execution  (todo, this might cause a click)
-   mRunner.pause();
-   
    // rescan all available modules...
    mRunner.modules().clear();
    std::map< std::string, ImplSoundInfo >::iterator it;
@@ -438,19 +432,18 @@ void SubsynthSoundImplementation::reschedule()
                                 (*it).second.inst->getChildren().begin(), 
                                 (*it).second.inst->getChildren().end() );
    }
-   //std::map< std::string, ImplSoundInfo >::iterator it;
-   //for (it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
-   //{
-   //   mRunner.modules().push_back( (*it).second.inst );
-   //}
+   /*
+   std::map< std::string, ImplSoundInfo >::iterator it;
+   for (it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
+   {
+      mRunner.modules().push_back( (*it).second.inst );
+   }
+   */
    mRunner.modules().push_back( mMixer );
    mRunner.modules().push_back( mSink );
    
    // redo the schedule
    mRunner.reschedule( 1 );
-   
-   // go (todo, this might cause a click)
-   mRunner.unpause();
 }
 
 /**
@@ -501,15 +494,17 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
          this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
 
          // connect the instrument to the mixer...
+         mRunner.pause();
+         
          syn::TerminalPtr output, input;
          bool result = false;
          result = mBindLookup[alias].inst->getOutput( "mono audio", output );
          if (result == false) { std::cout<<"[snx]Subsynth| ERORR: couldn't get inst out-term"<<std::endl; return; }
          mMixer->getInput( alias, input );
          
-         mRunner.pause();
          syn::Terminal::connect( input, output );
          this->reschedule();
+         mRunner.unpause();
          break;
       }
    }
@@ -558,6 +553,7 @@ void SubsynthSoundImplementation::unbind( const std::string& alias )
       mMixer->removeInput( alias );
       mBindLookup.erase( alias );
       this->reschedule();
+      mRunner.unpause();
    }
 
    assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
