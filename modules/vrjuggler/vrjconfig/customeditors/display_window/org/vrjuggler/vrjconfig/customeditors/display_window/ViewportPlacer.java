@@ -148,8 +148,6 @@ public class ViewportPlacer
 
       public ViewportRenderer(URL surfaceIconPath, URL simIconPath)
       {
-         System.out.println("surfaceIconPath: " + surfaceIconPath);
-         System.out.println("simIconPath: " + simIconPath);
          surfaceIcon = new ImageIcon(surfaceIconPath);
          simIcon     = new ImageIcon(simIconPath);
          scaledIcon  = new ImageIcon();
@@ -246,15 +244,11 @@ class ViewportPlacerModel
       for ( i = elt.getPropertyValues("simulator_viewports").iterator(); i.hasNext(); )
       {
          mViewports.add(i.next());
-//         mViewports.add(0, i.next());
-//         fireItemsInserted(new int[] { 0 });
       }
 
       for ( i = elt.getPropertyValues("surface_viewports").iterator(); i.hasNext(); )
       {
          mViewports.add(i.next());
-//         mViewports.add(0, i.next());
-//         fireItemsInserted(new int[] { 0 });
       }
    }
 
@@ -319,9 +313,6 @@ class ViewportPlacerModel
    public void setSizeOf(int idx, Dimension size)
    {
       ConfigElement vp_elt = (ConfigElement) getElement(idx);
-      System.out.println("--- Element " + vp_elt.getName() +
-                         " new size=(" + size.width + ", " + size.height + ")");
-      System.out.println("\thashcode=" + vp_elt.hashCode());
       double vp_width  = (double) size.width / mDesktopSize.getWidth();
       double vp_height = (double) size.height / mDesktopSize.getHeight();
 
@@ -433,9 +424,6 @@ class ViewportPlacerModel
          if ( event.getProperty().equals("simulator_viewports") ||
               event.getProperty().equals("surface_viewports") )
          {
-            ConfigElement elt = (ConfigElement) event.getSource();
-            System.out.println("Source: " + elt);
-            System.out.println("Adding a new " + event.getProperty());
             mViewports.add(0, event.getValue());
             fireItemsInserted(new int[] { 0 });
          }
@@ -447,11 +435,8 @@ class ViewportPlacerModel
               event.getProperty().equals("surface_viewports") )
          {
             int idx = getIndexOf(event.getValue());
-            System.out.println("Source: " + event.getSource());
-            System.out.println("Index: " + idx);
             if (idx != -1)
             {
-               System.out.println("Removed a " + event.getProperty());
                mViewports.remove(idx);
                fireItemsRemoved(new int[] { idx },
                                 new Object[] { event.getValue() });
