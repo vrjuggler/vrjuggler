@@ -11,7 +11,11 @@ following (assuming a csh environment):
 
 For the above to work, you must have the environment variable $PYTHONPATH
 set to include the directory where the PyGMTL extension module is
-installed.
+installed.  It must also include the directory where the application is
+being run so that its subdirectory 'app' will be found correctly.  For
+example, one might run this from the directory where extApp is compiled:
+
+   % setenv PYTHONPATH /usr/local/lib/python2.2/site-packages:`pwd`
 
 If you want to use your own module instead of app.ExampleModule, execute
 the following instead:
