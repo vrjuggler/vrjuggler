@@ -25,7 +25,22 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 import sys
-from =PYTHON_ORB_MODULE= import CORBA, PortableServer
+
+try:
+   # Importing PyORBit is different than other ORBs, particularly because it
+   # performs dynamic handling of IDL files.
+   import os
+   import os.path
+   tweek_idl =  os.path.join(os.environ["TWEEK_BASE_DIR"], "include/tweek/idl")
+   if os.environ["IDLPATH"]:
+      os.environ["IDLPATH"] += ':' + tweek_idl
+   else:
+      os.environ["IDLPATH"] = tweek_idl
+   import ORBit, CORBA, PortableServer
+   ORBit.load_file("SubjectManager.idl")
+except:
+   from =PYTHON_ORB_MODULE= import CORBA, PortableServer
+
 import CosNaming
 from qt import QListBoxItem
 import tweek
