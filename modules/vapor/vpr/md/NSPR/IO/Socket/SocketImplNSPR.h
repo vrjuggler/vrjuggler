@@ -258,7 +258,7 @@ protected:
     virtual ssize_t
     read_i (void* buffer, const size_t length)
     {
-        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_WAIT);
+        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
     }
 
     // ------------------------------------------------------------------------
