@@ -77,9 +77,9 @@
           <para><ulink url="http://www.vrjuggler.org/">VR Juggler</ulink>: The
           cross-platform, cross-VR system virtual platform for which PyJuggler
           provides Python bindings. Without VR Juggler, PyJuggler has no
-          purpose. Releases of PyJuggler shortly after VR Juggler releases.
-          Hence, the latest version of PyJuggler requires the latest version
-          of VR Juggler (2.0 or newer).</para>
+          purpose. Releases of PyJuggler come shortly after VR Juggler
+          releases. Hence, the latest version of PyJuggler requires the latest
+          version of VR Juggler (2.0 or newer).</para>
         </listitem>
 
         <listitem>
