@@ -74,7 +74,12 @@ vjSocketImpUNIX::open () {
         domain = PF_INET;
         break;
       case vjSocketTypes::INET6:
+#ifdef PF_INET6
         domain = PF_INET6;
+#else
+        fprintf(stderr,
+                "[vjSocketImpUNIX] WARNING: IPv6 not supported on this host!\n");
+#endif
         break;
       case vjSocketTypes::LINK:
 #ifdef PF_LINK
