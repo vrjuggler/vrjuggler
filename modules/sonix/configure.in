@@ -41,7 +41,7 @@
 
 AC_INIT
 AC_CONFIG_AUX_DIR(../../share/config)
-DPP_PREREQ([1.4.107])
+DPP_PREREQ([1.4.108])
 DPP_INIT
 
 dnl make the nice reconfig script.
@@ -211,8 +211,6 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
 fi
-
-DPP_SYSTEM_SUBST
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.

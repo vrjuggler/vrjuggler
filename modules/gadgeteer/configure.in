@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(gadget/gadgetConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(gadget/gadgetDefines.h)
-DPP_PREREQ([1.4.107])
+DPP_PREREQ([1.4.108])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -337,8 +337,6 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     OPT_FLAGS="$OPT_FLAGS /MD"
     gadget_cxxflags="$vc_flags $gadget_cxxflags"
 fi
-
-DPP_SYSTEM_SUBST
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
