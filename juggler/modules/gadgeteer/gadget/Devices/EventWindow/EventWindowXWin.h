@@ -267,8 +267,13 @@ private:
     */
    gadget::Keys xKeyToKey(::KeySym xKey);
 
-   /** Opens the X window to sample from. */
-   int openTheWindow();
+   /** Opens the local X window to sample from. */
+   bool openLocalWindow();
+
+   /** Opens the X connection to remote X window to sample from. */
+   bool setupRemoteWindow();
+
+   void setupWindowWidthAndHeight();
 
    ::Window createWindow(::Window parent, const unsigned int borderWidth);
 
