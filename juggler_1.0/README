@@ -149,7 +149,8 @@ Table of contents:
         iii. Enter the newly checked out Juggler source directory
          iv. Compile VR Juggler (using the Autoconf system and GNU make)
 
-              a. Generate aclocal.m4, headers, configure script
+              a. Generate aclocal.m4, header template, and the configure
+                 script
               b. Probe the system for capabilities, generate Makefiles,
                  etc. (this configures the source tree for the current
                  system)
@@ -181,7 +182,8 @@ Table of contents:
 
          iv. Compile VR Juggler (using the Autoconf system and GNU make)
 
-              a. Generate aclocal.m4, headers, configure script
+              a. Generate aclocal.m4, header template (vjDefines.h.in), and
+                 the configure script
 
                     ./autogen.sh
     
