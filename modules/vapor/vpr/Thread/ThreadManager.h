@@ -56,7 +56,7 @@ namespace vpr {
 //
 //-----------------------------------------------------
 //!PUBLIC_API:
-class ThreadManager
+class VPR_CLASS_API ThreadManager
 {
 public:
    //-----------------------------------------------------
@@ -128,6 +128,12 @@ protected:
    //-----------------------------------------------------
    ThreadManager() : mNextTSObjectKey(0)
    {;}
+
+   // These two have to be here because Visual C++ will try to make them
+   // exported public symbols.  This causes problems because copying vpr::Mutex
+   // objects is not allowed.
+   ThreadManager(const ThreadManager& t) {;}
+   void operator=(const ThreadManager& t) {;}
 
 vprSingletonHeader(ThreadManager);
 };

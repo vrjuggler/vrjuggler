@@ -52,7 +52,7 @@ public:
    explicit StreamLock(Mutex& mutex) : mMutex(mutex)
    {;}
 
-   friend std::ostream& operator<<(std::ostream&, const StreamLock&);
+   friend VPR_API(std::ostream&) operator<<(std::ostream&, const StreamLock&);
 
 private:
    Mutex& mMutex;
@@ -72,7 +72,7 @@ public:
    explicit StreamUnLock(Mutex& mutex) : mMutex(mutex)
    {;}
 
-   friend std::ostream& operator<<(std::ostream&, const StreamUnLock&);
+   friend VPR_API(std::ostream&) operator<<(std::ostream&, const StreamUnLock&);
 
 private:
    Mutex& mMutex;
