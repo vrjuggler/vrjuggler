@@ -186,28 +186,9 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                      <para>Configure all the modules making up VR Juggler. This is when you must tell the module configure scripts where all the package dependencies are found. For this description, we will use the term <filename>&lt;JDOMPATH&gt;</filename> to refer to the JDOM installation. Assume that this is an absolute path (e.g., <filename>&lt;JDOMPATH&gt;</filename> = <filename>/home/user1/pkgs/jdom</filename>).</para>
                      <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen>
                      <para>On Win32, remember that the path is given as the full DOS drive path, but <filename>/</filename> should be used instead of <filename>\</filename> as the path separator.</para>
-                                    <para>
-               OPTIONAL: If you need to build vrjuggler with sonix support, here is an example of how to configure, note that you need --module=VRJuggler+Sonix, instead of the default --module=VRJuggler...
-               <screen>
-../configure.pl --module=VRJuggler+Sonix 
-         --cfg=../juggler.cfg 
-         --with-cppdomroot=`pwd`/../external/cppdom 
-         --with-gmtl-include=`pwd`/../external/GMTL 
-         --enable-openal 
-         --with-oalroot=/home/users/kevn/software/linux 
-         --enable-sonix=yes 
-         --with-jdom=/home/users/patrick/src/Tweek/jdom.jar:/home/users/patrick/src/Tweek/xerces.jar 
-         --with-cxx-orb=omniORB3 
-         --with-cxx-orb-root=/home/users/patrick/src/Tweek/omni-3.0.4/omni 
-         --with-cxx-orb-bin=/home/users/patrick/src/Tweek/omni-3.0.4/omni/bin/i586_linux_2.0_glibc 
-         --with-cxx-orb-lib=/home/users/patrick/src/Tweek/omni-3.0.4/omni/lib/i586_linux_2.0_glibc 
-         --with-java-orb=OpenORB 
-         --with-java-orb-jar=/home/users/patrick/src/Tweek/OpenORB-1.2.0/lib/openorb-1.2.0.jar
-                </screen>
-               </para>
-
                   </listitem>
                </orderedlist>
+               <para>By default, the configuration process will configure VR Juggler and all of its dependencies. This includes Sonix, which is an interesting special case. Sonix can make use of OpenAL or AudioWorks to provide spatialized sound in VR Juggler applications. If neither of those packages is found, Sonix will <quote>stub out</quote> its sound APIs. This means that Sonix and the VR Juggler Sound Manager can still be used in applications, but no audio will be heard at run time. See <xref linkend="sonix.compile.section"/> for more information about how to configure Sonix to use OpenAL or AudioWorks.</para>
             </section>
             <section>
                <title>Using locally installed software</title>
@@ -232,124 +213,123 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                </listitem>
             </orderedlist>
          </section>
-         <section id="compile.individual.section">
-            <title>Compiling individual tools in the Juggler Suite</title>
-            <para>Sometimes you do not want to build everything in the Juggler Suite. Here are steps for configuring/building each package individually.</para>
-            <section>
-               <title>VPR (individual)</title>
-               <para>VPR can be configured a number of ways. Except when building on Win32, no external packages are required. For Win32, NSPR (<ulink url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required. To build VPR, do the following from the top-level <filename>juggler</filename> directory:</para>
-               <orderedlist>
-                  <listitem>
-                     <para><screen>mkdir build.vpr 
+      </section>
+      <section id="compile.individual.section">
+         <title>Compiling individual tools in the Juggler Suite</title>
+         <para>Sometimes you do not want to build everything in the Juggler Suite. Here are steps for configuring/building each package individually.</para>
+         <section>
+            <title>VPR (individual)</title>
+            <para>VPR can be configured a number of ways. Except when building on Win32, no external packages are required. For Win32, NSPR (<ulink url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required. To build VPR, do the following from the top-level <filename>juggler</filename> directory:</para>
+            <orderedlist>
+               <listitem>
+                  <para><screen>mkdir build.vpr
 cd build.vpr</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>../configure.pl --module=VPR --prefix=$HOME/vpr-inst</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>gmake debug install-debug</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>setenv VPR_BASE_DIR $HOME/vpr-inst</screen></para>
-                  </listitem>
-               </orderedlist>
-               <para>If you want to use NSPR, make sure a binary version is installed. In step 2, add the arguments <option>--enable-subsystem=NSPR</option> and <option>--with-nspr=&lt;path to NSPR&gt;</option>. Once that is done, proceed with steps 3 and 4 as normal.</para>
-            </section>
-            <section>
-               <title>Sonix (individual)</title>
-               <para>Sonix requires a third-party software package called GMTL (<ulink url="http://ggt.sf.net/">ggt.sf.net</ulink>). Sonix wraps other audio subsystems such as OpenAL (<ulink url="http://www.openal.org/">www.openal.org</ulink>) or AudioWorks (<ulink url="http://www.multigen.com/">multigen.com</ulink>). One of these subsystems are required in order to hear sound. Once you have all the necessary source code and third-party package installations, to the following from the top-level <filename>juggler</filename> directory:</para>
-               <orderedlist>
-                  <listitem>
-                     <para><screen>mkdir build.sonix
+               </listitem>
+               <listitem>
+                  <para><screen>../configure.pl --module=VPR --prefix=$HOME/vpr-inst</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>gmake debug install-debug</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>setenv VPR_BASE_DIR $HOME/vpr-inst</screen></para>
+               </listitem>
+            </orderedlist>
+            <para>If you want to use NSPR, make sure a binary version is installed. In step 2, add the arguments <option>--enable-subsystem=NSPR</option> and <option>--with-nspr=&lt;path to NSPR&gt;</option>. Once that is done, proceed with steps 3 and 4 as normal.</para>
+         </section>
+         <section id="sonix.compile.section">
+            <title>Sonix (individual)</title>
+            <para>Sonix requires a third-party software package called GMTL (<ulink url="http://ggt.sf.net/">ggt.sf.net</ulink>). Sonix wraps other audio subsystems such as OpenAL (<ulink url="http://www.openal.org/">www.openal.org</ulink>) or AudioWorks (<ulink url="http://www.multigen.com/">multigen.com</ulink>). One of these subsystems are required in order to hear sound. Once you have all the necessary source code and third-party package installations, to the following from the top-level <filename>juggler</filename> directory:</para>
+            <orderedlist>
+               <listitem>
+                  <para><screen>mkdir build.sonix
 cd build.sonix</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para>Choose one of the following depending on which subsystem (or both) you want to enable in sonix...</para>
-                     <para><screen>../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+               </listitem>
+               <listitem>
+                  <para>Choose one of the following depending on which subsystem (or both) you want to enable in sonix...</para>
+                  <para><screen>../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
 ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>gmake debug install-debug</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>setenv SNX_BASE_DIR $HOME/sonix-inst</screen></para>
-                  </listitem>
-               </orderedlist>
-               <para>NOTE: you can build sonix support into vrjuggler.  See the VRJuggler section above for information...</para>
-            </section>
-            <section>
-               <title>JCCL (individual)</title>
-               <para>JCCL requires VPR, CppDOM (<ulink url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>), and JDOM B7 or newer (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>). To build JCCL, do the following from the top-level <filename>juggler</filename> directory:</para>
-               <orderedlist>
-                  <listitem>
-                     <para><screen>mkdir build.jccl
+               </listitem>
+               <listitem>
+                  <para><screen>gmake debug install-debug</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>setenv SNX_BASE_DIR $HOME/sonix-inst</screen></para>
+               </listitem>
+            </orderedlist>
+         </section>
+         <section>
+            <title>JCCL (individual)</title>
+            <para>JCCL requires VPR, CppDOM (<ulink url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>), and JDOM B7 or newer (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>). To build JCCL, do the following from the top-level <filename>juggler</filename> directory:</para>
+            <orderedlist>
+               <listitem>
+                  <para><screen>mkdir build.jccl
 cd build.jccl</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>gmake debug install-debug</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>setenv JCCL_BASE_DIR $HOME/jccl-inst</screen></para>
-                  </listitem>
-               </orderedlist>
-            </section>
-            <section>
-               <title>Gadgeteer (individual)</title>
-               <para>Gadgeteer depends on JCCL and on VPR. It also needs the third-party math library GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>). Assuming you have all the source code, do the following from the top-level <filename>juggler</filename> directory:</para>
-               <orderedlist>
-                  <listitem>
-                     <para><screen>mkdir build.gadgeteer
+               </listitem>
+               <listitem>
+                  <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>gmake debug install-debug</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>setenv JCCL_BASE_DIR $HOME/jccl-inst</screen></para>
+               </listitem>
+            </orderedlist>
+         </section>
+         <section>
+            <title>Gadgeteer (individual)</title>
+            <para>Gadgeteer depends on JCCL and on VPR. It also needs the third-party math library GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>). Assuming you have all the source code, do the following from the top-level <filename>juggler</filename> directory:</para>
+            <orderedlist>
+               <listitem>
+                  <para><screen>mkdir build.gadgeteer
 cd build.gadgeteer</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>gmake debug install-debug</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen></para>
-                  </listitem>
-               </orderedlist>
-            </section>
-            <section>
-               <title>Tweek (individual)</title>
-               <para>Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the third-party CORBA implementations omniORB 3.0.4 (C++) and OpenORB 1.2.0 (Java). These packages can be downloaded from the following websites:</para>
-               <itemizedlist>
-                  <listitem>
-                     <para>JDOM: <ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink></para>
-                  </listitem>
-                  <listitem>
-                     <para>omniORB: <ulink url="http://www.jdom.org/">http://www.omniorb.org/</ulink></para>
-                  </listitem>
-                  <listitem>
-                     <para>OpenORB: <ulink url="http://www.jdom.org/">http://www.openorb.org/</ulink></para>
-                  </listitem>
-               </itemizedlist>
-               <para>For the following steps, assume that you have omniORB installed in <filename>&lt;OMNIORBPATH&gt;</filename>, OpenORB is installed in <filename>&lt;OPENORBPATH&gt;</filename>, and JDOM is installed in <filename>&lt;JDOMPATH&gt;</filename>.</para>
-               <para>Assuming you have the external packages installed, do the following from the top-level <filename>juggler</filename> directory:</para>
-               <orderedlist>
-                  <listitem>
-                     <para><screen>mkdir build.tweek
+               </listitem>
+               <listitem>
+                  <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>gmake debug install-debug</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen></para>
+               </listitem>
+            </orderedlist>
+         </section>
+         <section>
+            <title>Tweek (individual)</title>
+            <para>Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the third-party CORBA implementations omniORB 3.0.4 (C++) and OpenORB 1.2.0 (Java). These packages can be downloaded from the following websites:</para>
+            <itemizedlist>
+               <listitem>
+                  <para>JDOM: <ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink></para>
+               </listitem>
+               <listitem>
+                  <para>omniORB: <ulink url="http://www.jdom.org/">http://www.omniorb.org/</ulink></para>
+               </listitem>
+               <listitem>
+                  <para>OpenORB: <ulink url="http://www.jdom.org/">http://www.openorb.org/</ulink></para>
+               </listitem>
+            </itemizedlist>
+            <para>For the following steps, assume that you have omniORB installed in <filename>&lt;OMNIORBPATH&gt;</filename>, OpenORB is installed in <filename>&lt;OPENORBPATH&gt;</filename>, and JDOM is installed in <filename>&lt;JDOMPATH&gt;</filename>.</para>
+            <para>Assuming you have the external packages installed, do the following from the top-level <filename>juggler</filename> directory:</para>
+            <orderedlist>
+               <listitem>
+                  <para><screen>mkdir build.tweek
 cd build.tweek</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&lt;JDOMPATH&gt;/jdom.jar:&lt;JDOMPATH&gt;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&lt;OMNIORBPATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORBPATH&gt;/lib/openorb-1.2.0.jar</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>gmake debug install-debug</screen></para>
-                  </listitem>
-                  <listitem>
-                     <para><screen>setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen></para>
-                  </listitem>
-               </orderedlist>
-               <para>If JDK 1.4.0 is used, you do not need OpenORB (or any other third-party CORBA implementation for Java). In that case, pass <option>--with-java-orb=JDK</option> to <command>configure.pl</command>.</para>
-               <para>Depending on your omniORB installation, you may have to pass extra arguments to <command>configure.pl</command> so that the configuration process can find the <command>omniidl</command> binary and the omniORB libraries. For example, on RedHat Linux 7.2, the following arguments must be specified in addition to the above:</para>
-               <screen>--with-cxx-orb-bin=&lt;OMNIORBPATH&gt;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&lt;OMNIORBPATH&gt;/lib/i586_linux_2.0_glibc</screen>
-            </section>
+               </listitem>
+               <listitem>
+                  <para><screen>../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&lt;JDOMPATH&gt;/jdom.jar:&lt;JDOMPATH&gt;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&lt;OMNIORBPATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORBPATH&gt;/lib/openorb-1.2.0.jar</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>gmake debug install-debug</screen></para>
+               </listitem>
+               <listitem>
+                  <para><screen>setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen></para>
+               </listitem>
+            </orderedlist>
+            <para>If JDK 1.4.0 is used, you do not need OpenORB (or any other third-party CORBA implementation for Java). In that case, pass <option>--with-java-orb=JDK</option> to <command>configure.pl</command>.</para>
+            <para>Depending on your omniORB installation, you may have to pass extra arguments to <command>configure.pl</command> so that the configuration process can find the <command>omniidl</command> binary and the omniORB libraries. For example, on RedHat Linux 7.2, the following arguments must be specified in addition to the above:</para>
+            <screen>--with-cxx-orb-bin=&lt;OMNIORBPATH&gt;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&lt;OMNIORBPATH&gt;/lib/i586_linux_2.0_glibc</screen>
          </section>
       </section>
    </section>
