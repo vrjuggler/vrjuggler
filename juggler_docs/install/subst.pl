@@ -24,6 +24,7 @@
 $path_subst{"ROOT"} = '/';
 $path_subst{"HTML"} = 'html/';
 $path_subst{"IMAGES"} = 'images/';
+$path_subst{"DISTRIBUTIONS"} = 'pub/distributions';
 $path_subst{"CLASS_PATH"} = 'java.class/ver1.07/';
 $path_subst{"JEXPLORER_DOCS"} = 'JExplorer/JEXPLORE.HTM';
 ## put all binaries, tarballs, and pdf's here...
@@ -44,6 +45,7 @@ $path_subst{"PROGRAMMERGUIDE"} = 'html/programmer.guide';
 $path_subst{"PROGRAMMERREF"} = 'html/programmer.reference/';
 $path_subst{"VJCONTROL"} = 'html/vjcontrol';
 $path_subst{"DOCUMENTATION"} = 'html/documentation';
+$path_subst{"FAQ"} = 'html/misc/FAQ.html';
 
 
 # html files
