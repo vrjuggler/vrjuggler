@@ -508,12 +508,9 @@ vjFileHandleUNIX::disableAppend () {
 // ----------------------------------------------------------------------------
 bool
 vjFileHandleUNIX::enableSynchronousWrite () {
-    int retval;
+    bool status = true;
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC)
-    int cur_flags, new_flags;
-    bool status;
-
-    status = true;
+    int cur_flags, new_flags, retval;
 
     // Get the current flags and set O_SYNC.
     cur_flags = getFlags();
