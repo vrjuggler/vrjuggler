@@ -36,6 +36,8 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/EventWindow.h>
+#include <gadget/Type/EventWindow/Event.h>
+#include <gadget/Type/EventWindow/EventPtr.h>
 
 namespace gadget
 {
@@ -59,6 +61,18 @@ public:
       {
          return mTypedDevice;
       }
+   }
+
+   vpr::Interval getTimeStamp()
+   {
+      if ( isStupified() || (mTypedDevice == NULL) )
+      {
+         return vpr::Interval();
+      }
+      else
+      {
+         return mTypedDevice->getSyncTime();
+      }  
    }
 
    /**
