@@ -84,10 +84,10 @@ AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
             _alt_cxx="$withval", _alt_cxx='none')
 
 AC_ARG_WITH(cxx-orb,
-            [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB3]
+            [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB4]
                           Allowed values are:
                             omniORB3, omniORB4],
-            cxx_orb_name="$withval", cxx_orb_name='omniORB3')
+            cxx_orb_name="$withval", cxx_orb_name='omniORB4')
 
 AC_ARG_WITH(cxx-orb-root,
             [  --with-cxx-orb-root=<PATH>                              [default=/usr]
