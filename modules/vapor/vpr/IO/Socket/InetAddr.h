@@ -35,13 +35,10 @@
 
 
 #if defined(VPR_USE_NSPR)
-/*
 #   include <md/NSPR/InetAddrNSPR.h>
-
 namespace vpr {
     typedef InetAddrNSPR InetAddr;
 };
-*/
 #else
 #   include <md/POSIX/InetAddrBSD.h>
 namespace vpr {
