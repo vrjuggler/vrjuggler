@@ -25,7 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_INIT([PyJuggler], [0.5], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([PyJuggler], [0.7], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling])
 AC_REVISION([$Revision$])
