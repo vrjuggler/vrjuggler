@@ -69,6 +69,9 @@
 /* Define to use the NSPR subsystem. */
 #undef VPR_USE_WIN32
 
+/* Define to use simulated sockets. */
+#undef VPR_USE_SIM_SOCKETS
+
 /* Define to use System V semaphores. */
 #undef VPR_SYSV_SEMAPHORES
 
