@@ -76,8 +76,6 @@ public:
    pfNavJugglerApplication( vjKernel* kern ) : mStatusMessageEmitCount(0), vjPfApp( kern )
    {
       // get a valid time on the stopwatch...
-      stopWatch.stop();
-      stopWatch.start();
    }
 
    virtual void init()
@@ -105,42 +103,27 @@ public:
       mStats.preForkInit();
    }
 
-   inline void textures( bool state ) const
-   {
-      if (state == true)
-      {
-         pfEnable( PFEN_TEXTURE );
-         pfOverride(PFSTATE_ENTEXTURE, PF_ON);
-      }
-
-      else
-      {
-         pfDisable( PFEN_TEXTURE );
-         pfOverride(PFSTATE_ENTEXTURE, PF_OFF);
-      }
-   }
-
    /// Initialize the scene graph
    virtual void initScene()
    {
-      // Load the scene
-      vjDEBUG(vjDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vjDEBUG_FLUSH;
-
-      // Allocate all the nodes needed
-      rootNode       = new pfGroup;          // Root of our graph
-      mNavDCS        = new pfNavDCS;      // DCS to navigate with
-      pfNode*  world_model;
-      pfDCS*   world_model_dcs = new pfDCS;
-      pfGroup* collidable_model_group = new pfGroup;
-
       // CONFIG PARAMS
       std::string    pf_file_path( "" );
       const float    world_dcs_scale( 1.0f );
       const pfVec3   world_dcs_trans( 0.0f, 0.0f, -250.0f );   // PF coords
       vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f );      // OGL coords
 
+      // Load the scene
+      vjDEBUG(vjDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vjDEBUG_FLUSH;
+
+      // Allocate all the nodes needed
+      rootNode       = new pfGroup;       // Root of our graph
+      mNavDCS        = new pfNavDCS;      // DCS to navigate with
+      pfNode*  world_model;
+      pfDCS*   world_model_dcs = new pfDCS;
+      pfGroup* collidable_model_group = new pfGroup;
+
       // Create the SUN
-      sun1 = new pfLightSource;
+      pfLightSource* sun1 = new pfLightSource;
       sun1->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
       sun1->setColor( PFLT_DIFFUSE,0.3f,0.0f,0.95f );
       sun1->setColor( PFLT_AMBIENT,0.4f,0.4f,0.4f );
@@ -171,24 +154,24 @@ public:
       vjMatrix initial_nav;              // Initial navigation position
       initial_nav.setTrans(initial_nav_pos);
 
-      mVecNavDrive = new velocityNav;
-      mVecNavDrive->setHomePosition(initial_nav);
-      mVecNavDrive->setCurPos(initial_nav);
-      mVecNavDrive->setMode(velocityNav::DRIVE);
+      mVelNavDrive = new velocityNav;
+      mVelNavDrive->setHomePosition(initial_nav);
+      mVelNavDrive->setCurPos(initial_nav);
+      mVelNavDrive->setMode(velocityNav::DRIVE);
 
-         //mVecNavDrive->setMode(velocityNav::FLY);
+         //mVelNavDrive->setMode(velocityNav::FLY);
 
       // --- COLLISION DETECTORS --- //
       // Terrain collider
       //planeCollider* collide = new planeCollider;
       pfPogoCollider*  ride_collide = new pfPogoCollider(collidable_model_group);
-      mVecNavDrive->addCollider(ride_collide);
+      mVelNavDrive->addCollider(ride_collide);
 
       // Set the navigator's collider.
       pfBoxCollider* correction_collide = new pfBoxCollider( collidable_model_group );
-      mVecNavDrive->addCollider( correction_collide );
+      mVelNavDrive->addCollider( correction_collide );
 
-      mNavDCS->setNavigator(mVecNavDrive);
+      mNavDCS->setNavigator(mVelNavDrive);
 
       // load these files into perfly to see just what your scenegraph
       // looked like. . . . .useful for debugging.
@@ -215,53 +198,30 @@ public:
    // and drawing the next frame (pfFrame())
    virtual void preDrawChan(pfChannel* chan, void* chandata)
    {
-      this->textures( true );     // Override texturing to turn it on;
+      //pfDisable( PFEN_TEXTURE );
+      //pfOverride(PFSTATE_ENTEXTURE, PF_OFF);
       mStats.preDrawChan(chan,chandata);
    }
-
-
 
    /// Function called after pfSync and before pfDraw
    virtual void preFrame()
    {
-      // Keep time, for FPS measurments...
-      stopWatch.stop();
-      stopWatch.start();
-
-      // output the FPS so the team artist can get metrics on their model
-      ++mStatusMessageEmitCount;
-      if (mStatusMessageEmitCount >= 15)
-      {
-         // output FPS...
-         cout<<"FPS: "<<stopWatch.fpsAverage<<"\n"<<flush;
-
-         // Output current position in environment
-         vjVec3 cur_pos = mVecNavDrive->getCurPos().getTrans();
-         cout << "Cur pos:" << cur_pos << endl;
-
-         mStatusMessageEmitCount = 0;
-      }
+      if (0 == (mStatusMessageEmitCount++ % 60))
+      { cout << "Cur pos:" << mVelNavDrive->getCurPos().getTrans() << endl; }
 
       // Update stats stuff
       mStats.preFrame();
    }
 
-   int mStatusMessageEmitCount;
-   StopWatch stopWatch;
-
    /// Function called after pfDraw
    virtual void intraFrame()
-   {
-      //vjDEBUG(vjDBG_ALL,1) << "pfNavJugglerApplication::intraFrame\n" << vjDEBUG_FLUSH;
-   }
-
+   {;}
 
 public:
-   // the sun
-   pfLightSource* sun1;
+   int mStatusMessageEmitCount;
 
    // navigation objects.
-   velocityNav*   mVecNavDrive;
+   velocityNav*   mVelNavDrive;
    pfNavDCS*      mNavDCS;
 
    // scene's root (as far as we're concerned here)
