@@ -636,7 +636,10 @@ namespace cluster
             vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
          }
       }
-
+      
+      vpr::Guard<vpr::Mutex> guard(mClusterActiveLock);
+      mClusterActive = true;
+         
       return ret_val;         // Return the success flag if we added at all
     }
 
