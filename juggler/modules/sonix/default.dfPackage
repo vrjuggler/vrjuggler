@@ -41,17 +41,23 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=371,48,445,48:oigroup>
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=371,70,436,95:oigroup>
 <oigroup:<oiref:cpp#Member#ISoundInterface#remove#(##)#:oiref>=29,116,0,0,1:oigroup>
-<oigroup:<oiref:cpp#Extends#AudioWorksSoundImplementation#ISoundImplementation:oiref>=549,187,549,86:oigroup>
+<oigroup:<oiref:cpp#Extends#AudioWorksSoundImplementation#ISoundImplementation:oiref>=544,187,544,146:oigroup>
 <oigroup:<oiref:cpp#Class#AudioWorksSoundImplementation:oiref>=517,187,203,59,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=414,66,18,15,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=129,117,436,117:oigroup>
 <oigroup:<oiref:cpp#Class#ISoundInterface:oiref>=10,10,119,193,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ISoundInterface#lnkSoundFactory:oiref>=129,47,284,47:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=425,98,7,15,0:oigroup>
 <oigroup:<oiref:cpp#Member#ISoundInterface#setPosition#(##)#:oiref>=48,167,0,0,1:oigroup>
-<oigroup:<oiref:cpp#Extends#OpenALSoundImplementation#ISoundImplementation:oiref>=471,185,471,86:oigroup>
+<oigroup:<oiref:cpp#Extends#OpenALSoundImplementation#ISoundImplementation:oiref>=456,185,456,146:oigroup>
 <oigroup:<oiref:cpp#Class#OpenALSoundImplementation:oiref>=319,185,178,59,1:oigroup>
-<oigroup:<oiref:cpp#Class#ISoundImplementation:oiref>=445,13,136,73,1:oigroup>
+<oigroup:<oiref:cpp#Class#ISoundImplementation:oiref>=436,73,136,73,1:oigroup>
+<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=375,51,7,15,0:oigroup>
 <oigroup:<oiref:cpp#Class#SoundFactory:oiref>=284,11,87,73,1:oigroup>
+<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=133,98,7,15,0:oigroup>
+
 */
 class __positions {
 }

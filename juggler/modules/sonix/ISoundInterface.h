@@ -3,6 +3,7 @@
 #ifndef ISOUNDINTERFACE_H
 #define ISOUNDINTERFACE_H
 #include "SoundFactory.h"
+#include "ISoundImplementation.h"
 
 /** @interface */
 class ISoundInterface {
@@ -48,5 +49,10 @@ private:
 
     /** @link dependency */
     /*#  SoundFactory lnkSoundFactory; */
+
+    /** @link aggregation 
+     * @clientCardinality 1
+     * @supplierCardinality 1*/
+    /*#  ISoundImplementation lnkISoundImplementation; */
 };
 #endif  //ISOUNDINTERFACE_H
