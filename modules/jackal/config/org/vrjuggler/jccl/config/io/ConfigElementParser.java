@@ -55,13 +55,10 @@ public class ConfigElementParser
     * configuration definitions.
     *
     * @param repos         the repository in which to lookup config definitions
-    * @param searchPath    the path in which to look for config definitions when
-    *                      they cannot be found in the repository
     */
-   public ConfigElementParser(ConfigDefinitionRepository repos/*, List searchPath*/)
+   public ConfigElementParser(ConfigDefinitionRepository repos)
    {
       mDefinitionRepos = repos;
-      //mSearchPath = searchPath;
    }
 
    /**
@@ -377,73 +374,12 @@ public class ConfigElementParser
       {
          return def;
       }
-
-      // Go looking for the definition
-      /*
-      File def_file = findDefinition(token);
-      if (def_file != null)
-      {
-         try
-         {
-            // Get the definitions in the file
-            ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
-            List defs = reader.readDefinition();
-            // Make sure the file has the right definition version
-            for (Iterator itr = defs.iterator(); itr.hasNext(); )
-            {
-               def = (ConfigDefinition)itr.next();
-               if (def.getVersion() == version)
-               {
-                  // For now, only add in the definition that we explicitly
-                  // want so that we don't stomp over the other definitions
-                  // that are already in the repository
-                  mDefinitionRepos.add(def);
-                  return def;
-               }
-            }
-         }
-         catch (IOException ioe)
-         {
-            ioe.printStackTrace();
-         }
-         catch (ParseException pe)
-         {
-            pe.printStackTrace();
-         }
-      }
-      */
       return null;
    }
-
-   /**
-    * Given the token for a configuration definition, this method attempts to
-    * find a file named "token".jdef in this parser's search path.
-    */
-   /*private File findDefinition(String token)
-   {
-      String filename = token + ".jdef";
-      for (Iterator itr = mSearchPath.iterator(); itr.hasNext(); )
-      {
-         // Get the next directory
-         String dir = (String)itr.next();
-         dir = EnvironmentService.expandEnvVars(dir);
-         File file = new File(dir, filename);
-
-         // If the file exists, return it
-         if (file.exists())
-         {
-            return file;
-         }
-      }
-
-      return null;
-   }*/
 
    private static final String CONFIGURATION_ELEMENTS = "configuration_elements";
    private static final String NAME                   = "name";
    private static final String VERSION                = "version";
 
    private ConfigDefinitionRepository mDefinitionRepos;
-
-   //private List mSearchPath;
 }
