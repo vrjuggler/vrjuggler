@@ -147,7 +147,6 @@ public class Core
 	window_pos_kludge = false;
 	screenWidth = 800;
 	screenHeight = 600;
-        //user_level = USER_BEGINNER;
         user_profile = new UserProfile();
 
 	logmessage_targets = new ArrayList();
@@ -231,31 +230,34 @@ public class Core
     static public void addPendingChunk (ConfigChunk ch) {
         pending_chunks.add (ch);
         //System.out.println ("addPendingChunk:\n" + ch.toString());
-        for (;;) 
-            if (!configProcessPending())
-                break;
+        while (configProcessPending())
+            ;
     }
 
 
     /** Processes the pending ConfigChunk list.  Util for addPendingChunk(). */
-    static private boolean configProcessPending () {
+    static protected boolean configProcessPending () {
         boolean retval = false;
-        for (int i = 0; i < pending_chunks.size(); i++) {
-            ConfigChunk ch = (ConfigChunk)pending_chunks.get(i);
+        boolean add_success;
+        ConfigChunk ch;
+        for (int i = 0; i < pending_chunks.size(); ) {
+            ch = (ConfigChunk)pending_chunks.get(i);
             if (checkDependencies (ch)) {
-                retval = addComponentConfig (ch);
+                add_success = addComponentConfig (ch);
                 pending_chunks.remove(i);
-                if (retval) 
+                if (add_success) 
                     Core.consoleInfoMessage (component_name, "Add Component: " 
                                              + ch.getName());
                 else
                     Core.consoleErrorMessage (component_name, 
                                               "Add Component failed: " 
                                               + ch.getName());
-                return true;
+                retval = true;
             }
+            else
+                i++;
         }
-        return false;
+        return retval;
     }
 
 
@@ -264,7 +266,7 @@ public class Core
      *  components that are children of Core directly.  addComponentConfig
      *  calls Core.addConfig when necessary.
      */
-    static private boolean addComponentConfig (ConfigChunk ch) {
+    static protected boolean addComponentConfig (ConfigChunk ch) {
         try {
             Property p = ch.getPropertyFromToken ("parentcomp");
             String parentname = p.getValue(0).getString();
@@ -289,7 +291,7 @@ public class Core
 
 
     /** true if dependencies are satisfied */
-    static private boolean checkDependencies (ConfigChunk ch) {
+    static protected boolean checkDependencies (ConfigChunk ch) {
 
         String cn = ch.getValueFromToken ("classname", 0).getString();
         if (!component_factory.isRegistered (cn))
@@ -312,8 +314,10 @@ public class Core
 
 
     static public VjComponent getComponentFromRegistry (String name) {
-        for (int i = 0; i < registered_components.size(); i++) {
-            VjComponent vjc = (VjComponent)registered_components.get(i);
+        VjComponent vjc;
+        int i, n = registered_components.size();
+        for (i = 0; i < n; i++) {
+            vjc = (VjComponent)registered_components.get(i);
             if (vjc.getComponentName().equalsIgnoreCase (name))
                 return vjc;
         }

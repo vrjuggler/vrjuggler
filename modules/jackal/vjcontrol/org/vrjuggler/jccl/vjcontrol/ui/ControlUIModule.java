@@ -225,7 +225,7 @@ public class ControlUIModule
 	// --------------------- FINAL WIN STUFF -----------------
 
 	addWindowListener (this);
-	setSize(950,700);
+	setSize(750,500);
 
 	//show();
 
