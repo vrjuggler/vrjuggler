@@ -15,6 +15,7 @@
 
 /* Define all of the following to use POSIX threads. */
 #undef VJ_USE_PTHREADS
+#undef VJ_THREAD_SCOPE
 #undef _THREAD_SAFE
 #undef RWSTD_MULTI_THREAD
 #undef RW_MULTI_THREAD
