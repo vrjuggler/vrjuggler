@@ -691,7 +691,7 @@ cppdom_patch_ver=`grep 'define CPPDOM_VERSION_PATCH ' $cppdom_root/include/cppdo
 
 # Verify that we have a new enough version of CppDOM.
 cppdom_version="$cppdom_major_ver.$cppdom_minor_ver.$cppdom_patch_ver"
-min_cppdom_version='0.3.0'
+min_cppdom_version='0.3.1'
 AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
 AC_MSG_RESULT([$cppdom_version])
 DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version], ,
