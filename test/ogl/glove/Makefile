@@ -23,7 +23,7 @@ VJ_LIBS		= -B static -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -
 # use -L/usr/lib64.
 EXTRA_LIBS	=   -L/usr/lib32 -limage -L/usr -lGLU -lGL -lXext -lXmu -lX11
 
-OBJECTS		= main.o
+OBJECTS		= main.o navigation.o
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -37,6 +37,9 @@ glove: ${OBJECTS}
 
 main.o: main.cpp application.h
 	${COMPILE} -c -o $@ ${srcdir}/main.cpp
+	
+navigation.o: navigation.cxx navigation.h
+	${COMPILE} -c -o $@ ${srcdir}/navigation.cxx
 
 # -----------------------------------------------------------------------------
 # Clean-up.
