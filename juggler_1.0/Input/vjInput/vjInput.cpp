@@ -40,7 +40,7 @@
 
 vjInput::vjInput()
  : sPort(NULL),
-   instName(NULL),
+   instName(""),
    port_id(0),
    myThread(NULL),
    active(0),
@@ -52,7 +52,6 @@ vjInput::vjInput()
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjInput::vjInput()\n"<< vjDEBUG_FLUSH;
    /*
-   instName = NULL;
    sPort = NULL;
    myThread = NULL;
    active = 0;
@@ -63,15 +62,12 @@ vjInput::~vjInput()
 {
     if (sPort != NULL)
         delete [] sPort;
-    if (instName != NULL)
-        delete [] instName;
-
 }
 
 bool vjInput::config( vjConfigChunk *c)
 {
   //sPort = NULL;
-  if((sPort != NULL) && (instName != NULL))
+  if((sPort != NULL) && (!instName.empty()))
   {
      // ASSERT: We have already been configured
      //         this prevents config from being called multiple times (once for each derived class)
@@ -85,13 +81,8 @@ bool vjInput::config( vjConfigChunk *c)
     sPort = new char[ strlen(t) + 1 ];
     strcpy(sPort,t);
   }
-  t = c->getProperty("name").cstring();
-  if (t != NULL)
-  {
-    instName = new char[ strlen(t) + 1];
-    strcpy(instName,t);
-  }
 
+  instName = (std::string)c->getProperty("name");
   baudRate = c->getProperty("baud");
 
   return true;

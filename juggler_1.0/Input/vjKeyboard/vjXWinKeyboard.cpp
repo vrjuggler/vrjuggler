@@ -612,9 +612,13 @@ int vjXWinKeyboard::openTheWindow()
                               KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
                               ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
    m_window = createWindow ( DefaultRootWindow(m_display) ,
-                             1, BlackPixel(m_display,m_screen),
-                             WhitePixel(m_display,m_screen),event_mask );
-   setHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
+                             1,
+                             BlackPixel(m_display,m_screen),
+                             WhitePixel(m_display, m_screen),
+                             event_mask );
+
+   setHints(m_window, const_cast<char*>(instName.c_str()) , "VJm_keys" , "VJKeyboard2", "VJInputD" );
+
    XSelectInput(m_display, m_window,
                 event_mask );
    XMapWindow(m_display, m_window);
