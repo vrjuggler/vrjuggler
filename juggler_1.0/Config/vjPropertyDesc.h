@@ -106,6 +106,21 @@ public:
     friend istream& operator >> (istream& in, vjPropertyDesc& self);
 
 
+    vjPropertyDesc& operator= (vjPropertyDesc& pd) {
+	cout << "propdesc operator= is called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+	if (&pd == this)
+	    return *this;
+	name = pd.name;
+	token = pd.token;
+	help = pd.help;
+	type = pd.type;
+	valuelabels.erase (valuelabels.begin(), valuelabels.end());
+	enumv.erase (enumv.begin(), enumv.end());
+	return *this;
+    }
+
+
+
 private:
 
     //: Descriptive name of the vjProperty this object describes. Used in GUI.

@@ -83,6 +83,9 @@ vjProperty::vjProperty (vjProperty& p):value() {
 vjProperty& vjProperty::operator= (const vjProperty& p) {
     int i;
 
+    if (&p == this)
+	return *this;
+
     description = p.description;
     type = p.type;
     units = p.units;
