@@ -11,6 +11,7 @@ include @topdir@/Makefile.base
 includedir	= @includedir@/Input/ibox
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Input/ibox
 WORKDIR		= ${topdir}/Input/ibox
