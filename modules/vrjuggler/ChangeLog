@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-03-2003 aronb       Created Draw Manager-specific simulator factories.
+                        NEW VERSION: 1.1.141
 Apr-29-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
 Apr-28-2003 patrickh    Updated to Gadgeteer 0.10.0 API.
                         NEW VERSION: 1.1.140
