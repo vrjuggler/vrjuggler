@@ -150,7 +150,8 @@ SocketStreamImpBSD::accept () {
 // Protected constructor.  This is used when the socket is created by the
 // operating system, typically by the accept(2) system call.
 // ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (const int sock, InetAddr& remote_addr)
+SocketStreamImpBSD::SocketStreamImpBSD (const int sock,
+                                        const InetAddr& remote_addr)
     : SocketImpBSD(), SocketStreamImp_i()
 {
 fprintf(stderr, "Protected vpr::SocketStreamImpBSD constructor\n");
