@@ -134,11 +134,11 @@ GUID::GUID (const GUID& ns_guid, const std::string& name)
 void GUID::generate()
 {
 // DCE 1.1 UUID.
-#if defined(HAVE_UUID_CREATE)
+#if defined(VPR_USE_DCE_1_1_UUID)
    uint32_t status(0);
    uuid_create((uuid_t*) &mGuid.standard, &status);
 // Linux e2fsprogs libuuid.
-#elif defined(HAVE_UUID_GENERATE)
+#elif defined(VPR_USE_LIBUUID)
    uuid_t storage;
    uuid_generate(storage);
    memcpy((void*) &mGuid.standard, storage, sizeof(mGuid));
@@ -151,11 +151,11 @@ void GUID::generate()
 void GUID::generate(const GUID& ns_guid, const std::string& name)
 {
 // DCE 1.1 UUID.
-#if defined(HAVE_UUID_CREATE)
+#if defined(VPR_USE_DCE_1_1_UUID)
    uint32_t status(0);
    uuid_from_string(name.c_str(), (uuid_t*) &mGuid.standard, &status);
 // Linux e2fsprogs libuuid.
-#elif defined(HAVE_UUID_GENERATE)
+#elif defined(VPR_USE_LIBUUID)
    vprASSERT(false && "Unimplemented method!");
 // Leach UUID (see juggler/external/leach-uuid).
 #else
