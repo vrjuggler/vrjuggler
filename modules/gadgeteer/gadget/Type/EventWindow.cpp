@@ -52,6 +52,9 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
       
+   mSyncTime.setNow();
+   writer->writeUint64(mSyncTime.getBaseVal());
+
    // Write Current Keys to a stream using the given ObjectWriter
    writer->writeUint16(gadget::LAST_KEY);
    for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
@@ -91,6 +94,7 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    vpr::Uint16 data_type = reader->readUint16();
    vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()]Not EventWindow Data");
    
+   mSyncTime.set(reader->readUint64(), vpr::Interval::Base);
    
    // Read Current Keys using the given ObjectReader
    unsigned int num_keys = reader->readUint16();

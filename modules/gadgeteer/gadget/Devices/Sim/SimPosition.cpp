@@ -157,7 +157,9 @@ void SimPosition::updateData()
    // Debug output
    //vjCoord pos_data(mPos);
    //vprDEBUG(vprDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vprDEBUG_FLUSH;
-   mPos.setTime();   // Set the time
+   
+   // Set the time for the position data to the EventWindow timestamp
+   mPos.setTime(mEventWin->getTimeStamp());
    addPositionSample(std::vector< gadget::PositionData>(1, mPos) );   
 
    swapPositionBuffers();  // Swap the buffers
