@@ -353,8 +353,13 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "Controller::moveMessage() [time = "
          << mClock.getCurrentTime().getBaseVal()
-         << "]: Delivering message to destination "
-         << msg->getDestinationSocket()->getLocalAddr() << std::endl
+         << "]: Delivering message to destination\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "Controller::moveMessage(): Message path was "
+         << msg->getSourceSocket()->getLocalAddr() << " ("
+         << std::hex << msg->getSourceSocket() << std::dec << ") ==> "
+         << msg->getDestinationSocket()->getLocalAddr() << " ("
+         << std::hex << msg->getDestinationSocket() << std::dec << ")\n"
          << vprDEBUG_FLUSH;
 
       vprASSERT(msg->getDestinationSocket()->isOpen() && "The destination socket has been closed (or possibly destroyed)");
