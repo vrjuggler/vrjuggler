@@ -29,9 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 package VjConfig;
 
 import java.io.*;
@@ -41,36 +38,29 @@ import VjConfig.ChunkDescDB;
 import VjConfig.ChunkFactory;
 import VjConfig.ConfigIOStatus;
 
-public interface ConfigIOHandler {
-
-    public void readConfigChunkDB (File file, ConfigChunkDB db,
-                                   ConfigIOStatus iostatus);
-
-
-    public void readConfigChunkDB (InputStream in, ConfigChunkDB db,
-                                   ConfigIOStatus iostatus);
-
-
-    public void writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db)
-        throws IOException;
-
-    public void writeConfigChunkDB (File file, ConfigChunkDB db)
-        throws IOException;
-
-
-    public void readChunkDescDB (File file, ChunkDescDB db,
+public interface ConfigIOHandler
+{
+   public void readConfigChunkDB(File file, ConfigChunkDB db,
                                  ConfigIOStatus iostatus);
 
-
-    public void readChunkDescDB (InputStream in, ChunkDescDB db,
+   public void readConfigChunkDB(InputStream in, ConfigChunkDB db,
                                  ConfigIOStatus iostatus);
 
+   public void writeConfigChunkDB(DataOutputStream out, ConfigChunkDB db)
+      throws IOException;
 
-    public void writeChunkDescDB (DataOutputStream out, ChunkDescDB db)
-        throws IOException;
+   public void writeConfigChunkDB(File file, ConfigChunkDB db)
+      throws IOException;
 
-    public void writeChunkDescDB (File file, ChunkDescDB db)
-        throws IOException;
+   public void readChunkDescDB(File file, ChunkDescDB db,
+                               ConfigIOStatus iostatus);
 
+   public void readChunkDescDB(InputStream in, ChunkDescDB db,
+                               ConfigIOStatus iostatus);
 
+   public void writeChunkDescDB(DataOutputStream out, ChunkDescDB db)
+      throws IOException;
+
+   public void writeChunkDescDB(File file, ChunkDescDB db)
+      throws IOException;
 }
