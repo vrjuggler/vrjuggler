@@ -3,12 +3,6 @@
 
 #include <vjConfig.h>
 
-#ifndef VJ_OS_HPUX
-#   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
-#       define _PTHREADS
-#   endif
-#endif
-
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlDrawManager.h>
 class vjGlDrawManager;

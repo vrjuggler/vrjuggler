@@ -2,13 +2,6 @@
 #define _VJ_GL_DRAW_MANAGER_
 
 #include <vjConfig.h>
-
-#ifndef VJ_OS_HPUX
-#   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
-#       define _PTHREADS
-#   endif
-#endif
-
 #include <GL/gl.h>
 #include <GL/glu.h>
 

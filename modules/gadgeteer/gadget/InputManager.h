@@ -10,12 +10,6 @@
 #include <vjConfig.h>
 #include <map>
 
-#ifndef VJ_OS_HPUX
-#   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
-#       define _PTHREADS
-#   endif
-#endif
-
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
 

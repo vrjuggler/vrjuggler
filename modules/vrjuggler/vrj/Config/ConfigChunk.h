@@ -16,10 +16,6 @@
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <stddef.h>
-#else
-#   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
-#       define _PTHREADS
-#   endif
 #endif
 
 #include <Config/vjVarValue.h>
