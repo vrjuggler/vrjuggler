@@ -91,66 +91,63 @@ public:
                    const char& report = 'R',
                    const char* const calfile = "");
 
-
    /**  Destructor */
    ~FlockStandalone();
 
-
    /**
-    *  call this to connect to the flock device.
-    *  @note flock.isActive() must be false to use this function
+    * Call this to connect to the Flock device.
+    * @note flock.isActive() must be false to use this function.
     */
    vpr::ReturnStatus start();
 
-   /**  stop the flock */
+   /** Stops the Flock. */
    int stop();
 
    /**
-    *  call this repeatedly to update the data from the birds.
-    *  @note flock.isActive() must be true to use this function
+    * Call this repeatedly to update the data from the birds.
+    * @note flock.isActive() must be true to use this function.
     */
    int sample();
 
-   /**  see if the flock is active or not */
+   /** Checks if the flock is active. */
    const bool& isActive() const;
 
    /**
-    *  set the port to use
-    *  this will be a string in the form of the native OS descriptor <BR>
-    *  ex: unix - "/dev/ttyd3", win32 - "COM3"
-    *  @note flock.isActive() must be false to use this function
+    * Sets the port to use.
+    * This will be a string in the form of the native OS descriptor.<BR>
+    * ex: unix - "/dev/ttyd3", win32 - "COM3"
+    *
+    * @note flock.isActive() must be false to use this function.
     */
    void setPort( const std::string& serialPort );
 
    /**
-    *  get the port used
-    *  this will be a string in the form of the native OS descriptor <BR>
-    *  ex: unix - "/dev/ttyd3", win32 - "COM3"
+    * Gets the port used.
+    * This will be a string in the form of the native OS descriptor.<BR>
+    * ex: unix - "/dev/ttyd3", win32 - "COM3"
     */
    const std::string& getPort() const;
 
-
    /**
-    *  set the baud rate
-    *  this is generally 38400, consult flock manual for other rates.
-    *  @note flock.isActive() must be false to use this function
+    * Sets the baud rate.
+    * This is generally 38400, consult Flock manual for other rates.
+    *
+    * @note flock.isActive() must be false to use this function.
     */
    void setBaudRate( const int& baud );
 
-   /**
-    *  get the baud rate
-    *  this is generally 38400, consult flock manual for other rates. <BR>
-    */
-   inline const int& getBaudRate() const
+   /** Gets the baud rate. */
+   const int& getBaudRate() const
    {
       return mBaud;
    }
 
    /**
-    *  Set the unit number of the transmitter
-    *  give - an integer that is the same as the dip switch
-    *         setting on the transmitter box (for the unit number)
-    *  @note flock.isActive() must be false to use this function
+    * Sets the unit number of the transmitter.
+    * @param Transmit An integer that is the same as the dip switch
+    *                 setting on the transmitter box (for the unit number).
+    *
+    * @note flock.isActive() must be false to use this function.
     */
    void setTransmitter( const int& Transmit );
 
@@ -188,7 +185,7 @@ public:
    /**
     * Sets the video sync type.  This option allows the Flock to syncronize its
     * pulses with your video display.  This will eliminate most flicker caused
-    * by the magnetic distortion.  Refer to your flock manual for what number
+    * by the magnetic distortion.  Refer to your Flock manual for what number
     * to use.
     *
     * @note flock.isActive() must be false to use this function.
@@ -198,7 +195,7 @@ public:
    /**
     * Gets the video sync type.  This option allows the Flock to syncronize its
     * pulses with your video display.  This will eliminate most flicker caused
-    * by the magnetic distortion. Refer to your flock manual for what the
+    * by the magnetic distortion. Refer to your Flock manual for what the
     * returned number means.
     */
    inline const int& getSync() const
@@ -242,7 +239,7 @@ public:
     */
    void setHemisphere( const BIRD_HEMI& h );
 
-   /** Set the hemisphere that the transmitter transmits from. */
+   /** Sets the hemisphere that the transmitter transmits from. */
    inline const BIRD_HEMI& getHemisphere() const
    {
       return mHemisphere;
@@ -282,7 +279,7 @@ public:
 // public methods
 public:
    /**
-    * with the calibration table info, correct a given position.
+    * With the calibration table info, correct a given position.
     *
     * @param x The x position value in Euclidean coordinates.
     * @param y The y position value in Euclidean coordinates.

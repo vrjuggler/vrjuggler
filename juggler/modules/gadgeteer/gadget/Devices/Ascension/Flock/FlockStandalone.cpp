@@ -42,21 +42,7 @@
 #include <gadget/Devices/Ascension/Flock/FlockStandalone.h>
 
 
-//: Configure Constructor
-// Give:                                                 <BR>
-//   port - such as "/dev/ttyd3"                         <BR>
-//   baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
-//   sync - sync type.                                   <BR>
-//   block - blocking                                    <BR>
-//   numBrds - number of birds in flock,                 <BR>
-//   transmit - transmitter unit number,                 <BR>
-//   hemi - hemisphere to track from,                    <BR>
-//   filt - filtering type,                              <BR>
-//   report -                                            <BR>
-//   calfile - a calibration file, if "", then use none. <BR>
-//                                                       <BR>
-// Result: configures internal data members,
-//         doesn't actually talk to the FOB yet.
+/** Configure constructor. */
 FlockStandalone::FlockStandalone(const char* const port, const int& baud,
                                  const int& sync, const bool& block,
                                  const int& numBrds, const int& transmit,
@@ -94,7 +80,6 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
    }
 }
 
-//: Destructor
 FlockStandalone::~FlockStandalone()
 {
    if ( mActive )
@@ -109,16 +94,13 @@ FlockStandalone::~FlockStandalone()
    }
 }
 
-//: see if the flock is active or not
+/** Checks if the flock is active. */
 const bool& FlockStandalone::isActive() const
 {
    return mActive;
 }
 
-//: set the port to use
-//  this will be a string in the form of the native OS descriptor <BR>
-//  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the port to use. */
 void FlockStandalone::setPort(const std::string& serialPort)
 {
    if ( mActive )
@@ -140,17 +122,13 @@ void FlockStandalone::setPort(const std::string& serialPort)
    }
 }
 
-//: get the port used
-//  this will be a string in the form of the native OS descriptor <BR>
-//  ex: unix - "/dev/ttyd3", win32 - "COM3"
+/** Gets the port used. */
 const std::string& FlockStandalone::getPort() const
 {
    return mPort;
 }
 
-//: set the baud rate
-//  this is generally 38400, consult flock manual for other rates. <BR>
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the baud rate. */
 void FlockStandalone::setBaudRate(const int& baud)
 {
    if ( mActive )
@@ -164,8 +142,7 @@ void FlockStandalone::setBaudRate(const int& baud)
    }
 }
 
-//: call this to connect to the flock device.
-//  NOTE: flock.isActive() must be false to use this function
+/** Call this to connect to the Flock device. */
 vpr::ReturnStatus FlockStandalone::start()
 {
    int retval;
@@ -276,8 +253,7 @@ vpr::ReturnStatus FlockStandalone::start()
    }
 }
 
-//: call this repeatedly to update the data from the birds.
-//  NOTE: flock.isActive() must be true to use this function
+/** Call this repeatedly to update the data from the birds. */
 int FlockStandalone::sample()
 {
    // can't sample when not active.
@@ -330,7 +306,7 @@ int FlockStandalone::sample()
    return 1;
 }
 
-//: stop the flock
+/** Stops the Flock. */
 int FlockStandalone::stop ()
 {
    int retval;
@@ -369,8 +345,7 @@ int FlockStandalone::stop ()
    return retval;
 }
 
-//: Set the hemisphere that the transmitter transmits from.
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the hemisphere that the transmitter transmits from. */
 void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
 {
    if ( mActive )
@@ -385,8 +360,7 @@ void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
    }
 }
 
-//: Set the type of filtering that the flock uses
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the type of filtering that the Flock uses. */
 void FlockStandalone::setFilterType( const BIRD_FILT& f )
 {
    if ( mActive )
@@ -402,8 +376,7 @@ void FlockStandalone::setFilterType( const BIRD_FILT& f )
    }
 }
 
-//: Set the report rate that the flock uses
-//  NOTE: flock.isActive() must be false to use this function
+/** Set the report rate that the Flock uses. */
 void FlockStandalone::setReportRate( const char& rRate )
 {
    if ( mActive )
@@ -419,10 +392,7 @@ void FlockStandalone::setReportRate( const char& rRate )
    }
 }
 
-//: Set the unit number of the transmitter
-//  give - an integer that is the same as the dip switch
-//         setting on the transmitter box (for the unit number) <BR>
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the unit number of the transmitter. */
 void FlockStandalone::setTransmitter( const int& Transmit )
 {
    if ( mActive )
@@ -438,10 +408,7 @@ void FlockStandalone::setTransmitter( const int& Transmit )
    }
 }
 
-//: Set the number of birds to use in the flock.
-//  give - an integer number not more than the number of
-//         birds attached to the system <BR>
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the number of birds to use in the Flock. */
 void FlockStandalone::setNumBirds( const int& n )
 {
    if ( mActive )
@@ -457,12 +424,7 @@ void FlockStandalone::setNumBirds( const int& n )
    }
 }
 
-//: set the video sync type
-//  this option allows the Flock to syncronize its pulses with
-//  your video display.  This will eliminate most flicker caused
-//  by the magnetic distortion. <BR>
-//  - Refer to your flock manual for what number to use.
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets the video sync type. */
 void FlockStandalone::setSync(const int& sync)
 {
    if ( mActive )
@@ -478,9 +440,7 @@ void FlockStandalone::setSync(const int& sync)
    }
 }
 
-//: set blocking of flock
-//  see flock manual for details.
-//  NOTE: flock.isActive() must be false to use this function
+/** Sets blocking of Flock. */
 void FlockStandalone::setBlocking( const bool& blVal )
 {
    if ( mActive )
@@ -509,9 +469,7 @@ void FlockStandalone::setExtendedRange( const bool& blVal )
    }
 }
 
-//: with the calibration table info, correct a given position
-//  give - a position in x, y, z euclidian coordinates
-//  returns - a corrected position in x, y, z euclidian coordinates
+/** With the calibration table info, correct a given position. */
 void FlockStandalone::positionCorrect( float& x, float& y, float& z )
 {
    int xlo,ylo,zlo,xhi,yhi,zhi;
@@ -555,9 +513,7 @@ void FlockStandalone::positionCorrect( float& x, float& y, float& z )
    return;
 }
 
-//: init the correction table from a file
-//  give - a file name of the calibration file.
-//  result - initializes the correction table with the file's info
+/** Initializes the correction table from a file. */
 void FlockStandalone::initCorrectionTable( const std::string& fName )
 {
    int i,j,k, xsize,ysize,zsize;
@@ -642,12 +598,12 @@ float& FlockStandalone::xRot( const int& i )
 ///////////////////////////////////////////////////////////////////
 // Local functions to FlockStandalone.cpp
 //////////////////////////////////////////////////////////////////
-//: get a reading
-//  give - n:    the bird unit number  <BR>
-//  give - port: the flock port number <BR>
-//  give - xyz positions               <BR>
-//  give - zyx rotations
 
+/**
+ * Gets a reading.
+ * @param n    The bird unit number.
+ * @param port The flock port number.
+ */
 vpr::ReturnStatus FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
                                  float& zPos, float& zRot, float& yRot,
                                  float& xRot)
@@ -935,7 +891,6 @@ vpr::ReturnStatus FlockStandalone::readStatus(const int birdNum)
       // B8-B15 use buff[1]
 
       // buff[0]           buff[1]
-      // -------------------------
       // B0 ->    0x1      <- B8
       // B1 ->    0x2      <- B9
       // B2 ->    0x4      <- B10

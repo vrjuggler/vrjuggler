@@ -433,10 +433,13 @@ void Flock::setBlocking(const bool& blVal)
 }
 
 
-//: set the port to use
-//  this will be a string in the form of the native OS descriptor <BR>
-//  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
-//  NOTE: flock.isActive() must be false to use this function
+/**
+ * Sets the port to use.
+ * This will be a string in the form of the native OS descriptor.<BR>
+ * ex: unix - "/dev/ttyd3", win32 - "COM3"
+ *
+ * @note this->isActive() must be false to use this function
+ */
 void Flock::setPort( const char* const serialPort )
 {
     if (this->isActive())
@@ -453,9 +456,11 @@ void Flock::setPort( const char* const serialPort )
     mPortName = serialPort;
 }
 
-//: set the baud rate
-//  this is generally 38400, consult flock manual for other rates. <BR>
-//  NOTE: flock.isActive() must be false to use this function
+/**
+ * Gets the port used.
+ * This will be a string in the form of the native OS descriptor.<BR>
+ * ex: unix - "/dev/ttyd3", win32 - "COM3"
+ */
 void Flock::setBaudRate( const int& baud )
 {
    // keep Input's port and baud members in sync

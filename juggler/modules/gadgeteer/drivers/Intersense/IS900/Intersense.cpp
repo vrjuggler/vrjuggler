@@ -30,18 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//===============================================================
-// Intersense (a Wrapper for IntersenseStandalone)
-//
-// Purpose:
-//      VR Juggler Intersense tracking class
-//
-// Author:
-//      Ben Thompson
-//
-// Date: 4-22-99
-//===============================================================
-
 #include <gadget/gadgetConfig.h>
 
 #include <sstream>

@@ -89,9 +89,11 @@ public:
     bool open();
     bool close();
     void init();
-//: new data is taken from the tracker; if a parameter has been changed,
-//: such as baud rate, this will also occur during this frame.
-    bool updateData();
+
+   /** New data is taken from the tracker; if a parameter has been changed,
+    *  such as baud rate, this will also occur during this frame.
+    */
+   bool updateData();
 
 //TODO: Functions are Tracker specific and require an assert of isActive
     
@@ -182,13 +184,15 @@ public:
        return d;
     } // d  i'th station of tracker
 
-//: sendScript
-//+ filename: the name of a file containing an intersense protocol script
-    bool sendScript()
-    {
-       //return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
-       return false;
-    }
+   /**
+    *  sendScript
+    *  filename: the name of a file containing an intersense protocol script
+    */
+   bool sendScript()
+   {
+      //return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
+      return false;
+   }
 
     bool setScript(const char* inscript) {
        if(script != NULL) delete [] script;
@@ -198,35 +202,36 @@ public:
     }
 
 //TODO: check for euler or quat values in the configstate.
-// get the x position of the i'th receiver
-    float& xPos( const int& i );
 
-//: get the y position of the i'th receiver
-    float& yPos( const int& i );
+   /** Gets the x position of the i'th receiver. */
+   float& xPos( const int& i );
 
-//: get the z position of the i'th receiver
-    float& zPos( const int& i );
+   /** Gets the y position of the i'th receiver. */
+   float& yPos( const int& i );
 
-//: get the z rotation of the i'th receiver
-    float& zRot( const int& i );
+   /** Gets the z position of the i'th receiver. */
+   float& zPos( const int& i );
 
-//: get the y rotation of the i'th receiver
-    float& yRot( const int& i );
+   /** Gets the z rotation of the i'th receiver. */
+   float& zRot( const int& i );
 
-//: get the x rotation of the i'th receiver
-    float& xRot( const int& i );
+   /** Gets the y rotation of the i'th receiver. */
+   float& yRot( const int& i );
 
-//: get the x quaternion value of the i'th  receiver
-    float& xQuat( const int& i);
+   /** Gets the x rotation of the i'th receiver. */
+   float& xRot( const int& i );
 
-//: get the y quaternion value of the i'th  receiver
-    float& yQuat( const int& i);
+   /** Gets the x quaternion value of the i'th receiver. */
+   float& xQuat( const int& i);
 
-//: get the z quaternion value of the i'th  receiver
-    float& zQuat( const int& i);
+   /** Gets the y quaternion value of the i'th receiver. */
+   float& yQuat( const int& i);
 
-//: get the w quaternion value of the i'th receiver
-    float& wQuat ( const int& i );
+   /** Gets the z quaternion value of the i'th receiver. */
+   float& zQuat( const int& i);
+
+   /** Gets the w quaternion value of the i'th receiver. */
+   float& wQuat ( const int& i );
 
     int buttonState(const int& i, const int &f);
 

@@ -148,7 +148,7 @@ public:
 
    /**
     * Sets the port to use.
-    * This will be a string in the form of the native OS descriptor <BR>
+    * This will be a string in the form of the native OS descriptor.<BR>
     * ex: unix - "/dev/ttyd3", win32 - "COM3"
     *
     * @pre flock.isActive() must be false to use this function
@@ -157,7 +157,7 @@ public:
 
    /**
     * Gets the port used.
-    * This will be a string in the form of the native OS descriptor <BR>
+    * This will be a string in the form of the native OS descriptor.<BR>
     * ex: unix - "/dev/ttyd3", win32 - "COM3"
     */
    inline const std::string& getPort() const
