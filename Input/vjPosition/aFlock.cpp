@@ -2,22 +2,9 @@
 //#include <sys/ioctl.h>
 //#include <sys/time.h>
 
-#include "aFlock.h"
-#include <Kernel/vjDebug.h>
+#include <Math/vjMatrix.h>
 
-int   getReading(int i, vjMatrix* data, int port);
-float rawToFloat(char& r1, char& r2);
-void  pickBird(int sensor, int port_id);
-int   open_port(char* serialPort, int baud);
-void  set_blocking(int port, int blocking);
-void  set_sync(int port, int sync);
-void  set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds);
-void  set_rep_and_stream(int port, char repRate);
-void  set_pos_angles(int port, int transmitter, int numbirds);
-void  set_filter(int port, BIRD_FILT filter);
-void  set_transmitter(int port, int transmitter);
-void  set_autoconfig(int port, int numbirds);
-void  set_group(int port);
+#include "aFlock.h"
 
 //: Configure Constructor
 // Give:
@@ -80,6 +67,29 @@ aFlock::~aFlock()
        getMyMemPool()->deallocate((void*)theData);
 }
 
+void aFlock::SetPort(const char* serialPort)
+{
+    if (myThread != NULL) {
+     cerr << "Cannot change the serial Port while active\n";
+     return;
+  }
+  strncpy(sPort, serialPort, (size_t)30);
+}
+
+char* aFlock::GetPort()
+{
+  if (sPort == NULL) 
+  	return "No port";
+  else 
+  	return sPort;
+}
+
+void aFlock::SetBaudRate(int baud)
+{
+  if (myThread != NULL)
+     baudRate = baud;
+}
+
 int aFlock::StartSampling()
 {
       if (theData != NULL)
@@ -90,7 +100,7 @@ int aFlock::StartSampling()
       valid = 1;
       progress = 2;
 
-      vjDEBUG(0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
+      cout << "    Getting flock ready....\n" << flush;
 
       port_id = open_port( _port, _baud );
       if (port_id == -1) return 0;
@@ -105,7 +115,7 @@ int aFlock::StartSampling()
       pickBird(_xmitterUnitNumber,port_id);
       set_rep_and_stream(port_id, _reportRate);
 
-      vjDEBUG(0)  << "aFlock ready to go.." << endl << vjDEBUG_FLUSH;
+      cout  << "aFlock ready to go.." << endl << flush;
       
    else return 0; // already sampling
 }
@@ -157,7 +167,7 @@ int aFlock::StopSampling()
 {
   char   bird_command[4];
 
-  vjDEBUG(0) << "Stopping the flock..." << vjDEBUG_FLUSH;
+  cout << "Stopping the flock..." << flush;
 
   bird_command[0] = 'B';
   write(port_id, bird_command, 1);
@@ -170,7 +180,7 @@ int aFlock::StopSampling()
   close(port_id);
   port_id = -1;
 
-  vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
+  cout << "stopped." << endl << flush;
   
    return 1;
 }
@@ -196,7 +206,7 @@ void aFlock::SetHemisphere(BIRD_HEMI h)
 {
     if (active) 
     {
-	vjDEBUG(0) << "Cannot change the hemisphere\n" << vjDEBUG_FLUSH;
+	cout << "Cannot change the hemisphere\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -208,7 +218,7 @@ void aFlock::SetFilters(BIRD_FILT f)
 {
     if (active) 
     {
-	vjDEBUG(0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
+	cout << "Cannot change filters while active\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -220,7 +230,7 @@ void aFlock::SetReportRate(char rRate)
 {
     if (active) 
     {
-	vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+	cout << "Cannot change report rate while active\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -232,7 +242,7 @@ void aFlock::SetTransmitter(int Transmit)
 {
   if (active) 
   {
-      vjDEBUG(0) << "Cannot change transmitter while active\n" << vjDEBUG_FLUSH;
+      cout << "Cannot change transmitter while active\n" << flush;
       return;
   } else {
       // Set it.
@@ -243,7 +253,7 @@ void aFlock::SetNumBirds(int n)
 {
     if (active) 
     {
-	vjDEBUG(0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
+	cout << "Cannot change num birds while active\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -254,7 +264,7 @@ void aFlock::SetSync(int sync)
 {
   if (active) 
   {
-      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+      cout << "Cannot change report rate while active\n" << flush;
       return;
   } else {
       // Set it.
@@ -266,7 +276,7 @@ void aFlock::SetBlocking(int blVal)
 {
   if (active) 
   {
-      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+      cout << "Cannot change report rate while active\n" << flush;
       return;
   } else {
       // Set it.
@@ -323,15 +333,15 @@ void aFlock::InitCorrectionTable(const char* fName)
   float dump;
   ifstream inFile;
 
-  vjDEBUG(0) << "	  Initializing calibration table ... " << endl
-             << "	    " << fName << endl << vjDEBUG_FLUSH;
+  cout << "	  Initializing calibration table ... " << endl
+             << "	    " << fName << endl << flush;
   inFile.open(fName);
   if (!inFile)
   {
-	vjDEBUG(0) << "Unable to open calibration.table\n" << vjDEBUG_FLUSH;
+	cout << "Unable to open calibration.table\n" << flush;
         return;
   } else {
-     vjDEBUG(0) << "   Calibration table opened sucessfully." << endl << vjDEBUG_FLUSH;
+     cout << "   Calibration table opened sucessfully." << endl << flush;
   }
 
   inFile >> caltable.xmin >> caltable.xmax
@@ -386,7 +396,7 @@ int aFlock::getReading(int n, vjMatrix* data, int port)
 	}
 	
       if (c >= 5000)
-         vjDEBUG(0) << "aFlock: tracker timeout (" << c << ")" << endl << vjDEBUG_FLUSH;
+         cout << "aFlock: tracker timeout (" << c << ")" << endl << flush;
 
       addr = group;
    }
@@ -438,24 +448,24 @@ int aFlock::open_port(char* serialPort, int baud)
    int port_id = open(serialPort, O_RDWR | O_NDELAY);
    if (port_id == -1)
    {
-      vjDEBUG(0) << "!!aFlock port open (1 of 2) failed\n" << vjDEBUG_FLUSH ;
+      cout << "!!aFlock port open (1 of 2) failed\n" << flush ;
       return port_id;
    }
    else
    {
-      vjDEBUG(0) << "aFlock port open (1 of 2) successfully\n" << vjDEBUG_FLUSH;
+      cout << "aFlock port open (1 of 2) successfully\n" << flush;
    }
    sleep(2);
    close(port_id);
    port_id = open(serialPort,O_RDWR | O_NDELAY);
    if (port_id == -1)
    {
-      vjDEBUG(0) << "!!aFlock port open (2 of 2) failed\n" << vjDEBUG_FLUSH;
+      cout << "!!aFlock port open (2 of 2) failed\n" << flush;
       return port_id;
    }
    else
    {
-      vjDEBUG(0) << "aFlock port open (2 of 2) successfully\n" << vjDEBUG_FLUSH;
+      cout << "aFlock port open (2 of 2) successfully\n" << flush;
    }
 
    //////////////////////////////////////////////////////////////////
