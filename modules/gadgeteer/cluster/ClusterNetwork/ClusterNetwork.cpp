@@ -52,6 +52,7 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 
 namespace cluster
@@ -459,9 +460,12 @@ namespace cluster
          {
             if(attemptPendingNodes())
             {
-               // If we have a new connection signal RIM in case 
-               // we need to take some action
-               RemoteInputManager::instance()->updateForNewConnection();
+               // -If the pending list is stale
+               //   - refresh the list               
+               if(jccl::ConfigManager::instance()->isPendingStale())
+               {
+                  jccl::ConfigManager::instance()->refreshPendingList();
+               }
             }
          }
          vpr::Thread::yield();

@@ -103,7 +103,8 @@ namespace cluster
 	  else
 	  {
 	     vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
-            << clrOutBOLD(clrRED,"[ClusterManager::ConfigAdd] ERROR, Something is seriously wrong, we should never get here\n")
+            << clrOutBOLD(clrRED,"[ClusterManager::ConfigAdd] ERROR: ")
+            << "Something is seriously wrong, we should not be handling this chunk\n"
 			<< vprDEBUG_FLUSH;
          return(true);
 	  }
@@ -139,8 +140,21 @@ namespace cluster
 	 */
 	bool ClusterManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 	{
-		return( recognizeClusterManagerConfig(chunk) );
+		if (recognizeClusterManagerConfig(chunk))
+        {
+           return true;
+        }
 
+/*        for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+             i != mPlugins.end() ; i++)
+        {
+           if ((*i)->configCanHandle(chunk))
+           {
+              return true ;
+           }
+        }
+*/        
+        return false;
 	}
     
 	bool ClusterManager::recognizeClusterManagerConfig(jccl::ConfigChunkPtr chunk)
