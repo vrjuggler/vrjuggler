@@ -64,11 +64,6 @@
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
-    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="AwSoundEngine" name="Audioworks Sound Engine">
     <category>Audio</category>
@@ -220,11 +215,6 @@
       <help>Keypresses to trigger multiple digital inputs</help>
       <item label="Key Presses" />
       <enumeration name="KeyModPair" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="displaySystem" name="Display System">
@@ -621,11 +611,6 @@
       <help>The position proxy for the glove position.</help>
       <item label="Glove Position" defaultvalue="" />
       <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GloveProxy" name="Glove Proxy">
@@ -1077,6 +1062,7 @@
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1181,11 +1167,6 @@
       <enumeration name="Local" value="0" />
       <enumeration name="Global" value="1" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help>Points to the machine that the device is physically connected to.</help>
-      <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
-    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="proxyAlias" name="Proxy Alias">
     <category>Proxies</category>
@@ -1262,11 +1243,6 @@
       <help>The position proxy for the right hand glove position.</help>
       <item label="Right Glove Position" defaultvalue="" />
       <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimRelativePosition" name="SimRelativePosition">
