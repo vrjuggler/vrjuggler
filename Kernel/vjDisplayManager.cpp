@@ -12,8 +12,11 @@ void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
 
 void vjDisplayManager::setupHeadIndices()
 {
-   headProxyIndex = vjKernel::instance()->getInputManager()->GetProxyIndex("vjHead");
-   vjDEBUG(5) << "      headIndex: " << headProxyIndex << endl;
+   headProxyIndex = vjKernel::instance()->getInputManager()->GetProxyIndex("VJHead");
+   if(headProxyIndex == -1)
+      cerr << "VJ ERROR: VJHead not found. Was it set in the config file." << endl;
+
+   vjDEBUG(0) << "      headIndex: " << headProxyIndex << endl;
 }
 
     // notifyDrawMgr = 0; Defaults to 0
