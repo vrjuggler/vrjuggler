@@ -38,7 +38,7 @@ if [ -n "$MACRO_PATH" ]; then
 fi
 
 if [ -n "$DPP_PATH" ]; then
-   ACLOCAL_FLAGS="-I $DPP_PATH/config $ACLOCAL_FLAGS"
+   ACLOCAL_FLAGS="-I $DPP_PATH/config -I $DPP_PATH/config/pkgs $ACLOCAL_FLAGS"
 fi
 
 : ${AUTOCONF=autoconf}
