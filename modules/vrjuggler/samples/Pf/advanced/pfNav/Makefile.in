@@ -34,9 +34,9 @@
 # Makefile.in for vrjuggler/samples/Pf/advanced/pfNav.  It requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: pfNav$(EXE_EXT)
+all: pfNav@EXEEXT@
 
-APP_NAME=	pfNav$(EXE_EXT)
+APP_NAME=	pfNav@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -66,5 +66,5 @@ EXTRA_INCLUDES+=	-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-pfNav$(EXE_EXT): $(OBJS)
+pfNav@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

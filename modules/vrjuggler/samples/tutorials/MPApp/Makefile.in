@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: MPApp$(EXE_EXT)
+all: MPApp@EXEEXT@
 
-APP_NAME=	MPApp$(EXE_EXT)
+APP_NAME=	MPApp@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -49,5 +49,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-MPApp$(EXE_EXT): $(OBJS)
+MPApp@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: simpleGlove$(EXE_EXT)
+all: simpleGlove@EXEEXT@
 
-APP_NAME=	simpleGlove$(EXE_EXT)
+APP_NAME=	simpleGlove@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -49,5 +49,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-simpleGlove$(EXE_EXT): $(OBJS)
+simpleGlove@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

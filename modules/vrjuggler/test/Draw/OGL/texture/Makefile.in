@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: texture$(EXE_EXT)
+all: texture@EXEEXT@
 
-APP_NAME=	texture$(EXE_EXT)
+APP_NAME=	texture@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -50,5 +50,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-texture$(EXE_EXT): $(OBJS)
+texture@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
