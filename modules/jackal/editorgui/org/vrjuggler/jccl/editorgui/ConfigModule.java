@@ -599,11 +599,11 @@ public class ConfigModule extends DefaultCoreModule {
     protected String createUniqueDescDBName (String base) {
 	int i;
 	String name;
-	if (getChunkDescDB (base) == null)
+	if (getDescDB (base) == null)
 	    return base;
 	for (i = 2; true; i++) {
 	    name = base + " <" + i + ">";
-	    if (getChunkDescDB (name) == null)
+	    if (getDescDB (name) == null)
 		return name;
 	}
     }
@@ -630,7 +630,7 @@ public class ConfigModule extends DefaultCoreModule {
     /** Gets a ChunkDB from self.
      *  @return A chunkDB with matching name (case insensitive), or null.
      */
-    public ChunkDescDB getChunkDescDB (String name) {
+    public ChunkDescDB getDescDB (String name) {
 	ChunkDescDB db;
 	for (int i = 0; i < descdbs.size(); i++) {
 	    db = (ChunkDescDB)descdbs.get(i);
