@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-06-25 allenb   Added timeout interval param to nearly every I/O
+                    method in the library.
 2001-06-24 allenb   Added vpr::Interval class
 2001-06-21 patrick  Completed work needed to build a DLL on Win32.
 2001-06-21 browner  Added a wrapper around the serial device API on Win32.
