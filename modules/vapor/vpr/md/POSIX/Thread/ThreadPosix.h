@@ -375,6 +375,12 @@ private:
    /** CondVar for thread starting. */
    vpr::CondVarPosix mThreadStartCondVar;
 
+   /**
+    * Functor used for calling back vpr::ThreadPosix::startThread().  This
+    * technique helps to ensure proper thread registration.
+    */
+   vpr::ThreadMemberFunctor<ThreadPosix>* mStartFunctor;
+
    /** Converts a VPR thread priority to its Pthread equivalent. */
    int vprThreadPriorityToPOSIX(const VPRThreadPriority priority);
 
