@@ -37,7 +37,7 @@ void vjKernel::controlLoop(void* nullParam)
    initConfig();
 
    // setup performance buffer
-   perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 7);
+   perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 8);
    environmentManager->addPerfDataBuffer (perfBuffer);
 
 
@@ -75,12 +75,14 @@ void vjKernel::controlLoop(void* nullParam)
          // This is the time that reconfig can happen
       mRuntimeConfigSema.acquire();
 
+      perfBuffer->set(5);
+
          vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
       getInputManager()->UpdateAllData();    // Update the trackers
-         perfBuffer->set(5);
+         perfBuffer->set(6);
          vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
-         perfBuffer->set(6);
+         perfBuffer->set(7);
    }
 }
 
@@ -360,10 +362,10 @@ void vjKernel::loadConfigFile(std::string filename)
 
    // Create chunk Data bases
    if(NULL == mInitialChunkDB)
-      mInitialChunkDB = new vjConfigChunkDB(mConfigDesc);      // Create config database
+      mInitialChunkDB = new vjConfigChunkDB();      // Create config database
 
    if(NULL == mChunkDB)
-      mChunkDB = new vjConfigChunkDB(mConfigDesc);      // Create config database
+      mChunkDB = new vjConfigChunkDB();      // Create config database
 
 
 
@@ -445,7 +447,6 @@ void vjKernel::setupEnvironmentManager() {
               << vjDEBUG_FLUSH;
    vjTimeStamp::initialize();
    environmentManager = new vjEnvironmentManager();
-   environmentManager->activate();
    vjDEBUG(vjDBG_KERNEL,1) << "      Environment Manager running\n" << vjDEBUG_FLUSH;
 }
 
