@@ -335,6 +335,7 @@ public:
     * @param var A character value.
     */
    void showbits(char var);
+   void showbits16(float var);
 
    /**
     * Expands the given list of bits to a 32-bit integer.
@@ -404,6 +405,13 @@ public:
     */
    void setDeviceReportRate(char rate);
 
+   vpr::ReturnStatus readStatus(const int birdNum = 1);
+   vpr::ReturnStatus readSoftwareRevision();
+   void printError( unsigned char ErrCode, unsigned char ExpandedErrCode );
+   int checkError();
+   vpr::ReturnStatus readSystemModel();
+   vpr::ReturnStatus readHemisphere();
+
    /** Clears the reads bytes till buffer is zeroed. */
 //  void clearBuffer();
 
@@ -438,15 +446,15 @@ private:
 private:
    int openPort(void);
    void setBlocking(void);
-   void setSync(void);
-   void setGroup(void);
-   void setAutoconfig(void);
-   void setTransmitter(void);
-   void setFilter(void);
-   void setHemisphere(void);
-   void setPosAngles(void);
+   void sendSync(void);
+   void sendGroup(void);
+   void sendAutoconfig(void);
+   void sendTransmitter(void);
+   void sendFilter(void);
+   void sendHemisphere(void);
+   void sendPosAngles(void);
    void pickBird(const int birdID);
-   void setRepAndStream(void);
+   void sendRepAndStream(void);
 
    /**
     * Gets a reading.
