@@ -9,6 +9,21 @@
 
 #include <Kernel/vjDebug.h>
 
+
+// Helper to return the index for theData array
+// given the birdNum we are dealing with and the bufferIndex
+// to get
+//! ARGS: birdNum - The number of the bird we care about
+//! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
+// XXX: We are going to say the birds are 1 based
+int vjFlock::getBirdIndex(int birdNum, int bufferIndex)
+{
+   int ret_val = (birdNum*3)+bufferIndex;
+   vjASSERT((ret_val >= 0) && (ret_val < ((getNumBirds()+1)*3)));
+   assertIndexes();
+   return ret_val;
+}
+
 //: Configure Constructor
 // Give:                                                 <BR>
 //   port - such as "/dev/ttyd3"                         <BR>
@@ -48,53 +63,53 @@ vjFlock::vjFlock(const char* const port,
 
 bool vjFlock::config(vjConfigChunk *c)
 {
-    port_id = -1;
-    myThread = NULL;
+   port_id = -1;
+   myThread = NULL;
 
-    vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
 
-    // read in vjPosition's config stuff,
-    // --> this will be the port and baud fields
-    if (!vjPosition::config(c))
-     return false;
+   // read in vjPosition's config stuff,
+   // --> this will be the port and baud fields
+   if (!vjPosition::config(c))
+      return false;
 
-    // keep aFlock's port and baud members in sync with vjInput's port and baud members.
-    mFlockOfBirds.setPort( vjInput::GetPort() );
-    mFlockOfBirds.setBaudRate( vjInput::GetBaudRate() );
+   // keep aFlock's port and baud members in sync with vjInput's port and baud members.
+   mFlockOfBirds.setPort( vjInput::GetPort() );
+   mFlockOfBirds.setBaudRate( vjInput::GetBaudRate() );
 
-    // set mFlockOfBirds with the config info.
-    mFlockOfBirds.setSync( static_cast<int>(c->getProperty("sync")) );
-    mFlockOfBirds.setBlocking( static_cast<int>(c->getProperty("blocking")) );
-    mFlockOfBirds.setNumBirds( static_cast<int>(c->getProperty("num")) );
-    mFlockOfBirds.setTransmitter( static_cast<int>(c->getProperty("transmitter")) );
-    mFlockOfBirds.setHemisphere( (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi"))) ); //LOWER_HEMI
-    mFlockOfBirds.setFilterType( (BIRD_FILT)(static_cast<int>(c->getProperty("filt"))) ); //
+   // set mFlockOfBirds with the config info.
+   mFlockOfBirds.setSync( static_cast<int>(c->getProperty("sync")) );
+   mFlockOfBirds.setBlocking( static_cast<int>(c->getProperty("blocking")) );
+   mFlockOfBirds.setNumBirds( static_cast<int>(c->getProperty("num")) );
+   mFlockOfBirds.setTransmitter( static_cast<int>(c->getProperty("transmitter")) );
+   mFlockOfBirds.setHemisphere( (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi"))) ); //LOWER_HEMI
+   mFlockOfBirds.setFilterType( (BIRD_FILT)(static_cast<int>(c->getProperty("filt"))) ); //
 
-    // sanity check the report rate
-    char r = static_cast<char*>(c->getProperty("report"))[0];
-    if ((r != 'Q') && (r != 'R') &&
-      (r != 'S') && (r != 'T'))
-    {
-	vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
-	mFlockOfBirds.setReportRate( 'R' );
-    }
-    else
-	mFlockOfBirds.setReportRate( r );
+   // sanity check the report rate
+   char r = static_cast<char*>(c->getProperty("report"))[0];
+   if ((r != 'Q') && (r != 'R') &&
+       (r != 'S') && (r != 'T'))
+   {
+      vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
+      mFlockOfBirds.setReportRate( 'R' );
+   }
+   else
+      mFlockOfBirds.setReportRate( r );
 
-    // output what was read.
-    vjDEBUG(0) << "	  Flock Settings: " << endl
-	       << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << endl
-		    << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << endl
-	       << "	        aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << endl
-	       << "	        deviceAbilities:" << deviceAbilities << endl
-	       << "	        aFlock::getPort()         : " << mFlockOfBirds.getPort() << endl
-	       << "		instance name : " << instName << endl
-	       << endl << vjDEBUG_FLUSH;
+   // output what was read.
+   vjDEBUG(0) << "	  Flock Settings: " << endl
+   << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << endl
+   << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << endl
+   << "	        aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << endl
+   << "	        deviceAbilities:" << deviceAbilities << endl
+   << "	        aFlock::getPort()         : " << mFlockOfBirds.getPort() << endl
+   << "		instance name : " << instName << endl
+   << endl << vjDEBUG_FLUSH;
 
-    // init the correction table with the calibration file.
-    mFlockOfBirds.initCorrectionTable( c->getProperty("calfile") );
+   // init the correction table with the calibration file.
+   mFlockOfBirds.initCorrectionTable( c->getProperty("calfile") );
 
-    return true;
+   return true;
 }
 
 vjFlock::~vjFlock()
@@ -112,191 +127,160 @@ static void SampleBirds(void* pointer)
    vjFlock* devPointer = (vjFlock*) pointer;
    for (;;)
    {
-         devPointer->Sample();
+      devPointer->Sample();
    }
 }
 
 int vjFlock::StartSampling()
 {
-    // make sure birds aren't already started
-    if (this->isActive() == true)
-    {
-	vjDEBUG(0)  << "vjFlock was already started." << endl << vjDEBUG_FLUSH;
-	return 0;
-    }
+   // make sure birds aren't already started
+   if (this->isActive() == true)
+   {
+      vjDEBUG(0)  << "vjFlock was already started." << endl << vjDEBUG_FLUSH;
+      return 0;
+   }
 
-    if (myThread == NULL)
-    {
-	if (theData != NULL)
-	getMyMemPool()->deallocate((void*)theData);
-	
-	theData = (vjMatrix*) new vjMatrix[(mFlockOfBirds.getNumBirds()+1)*3];
-	
-	current = 0;
-	valid = 1;
-	progress = 2;
-	
-	vjDEBUG(0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
-	
-	
-	mFlockOfBirds.start();
-	
-	//sanity check.. make sure birds actually started
-	if (this->isActive() == false)
-	{
-	    vjDEBUG(0)  << "vjFlock failed to start.." << endl << vjDEBUG_FLUSH;
-	    return 0;
-	}
-	
-	vjDEBUG(0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
-	
-	vjFlock* devicePtr = this;
-	
-	myThread = new vjThread(SampleBirds, (void*) devicePtr, 0);
-	
-	if ( myThread == NULL )
-	{
-	    return 0;	// Fail
-	} else {
-	    return 1;   // success
-	}
-    } else
-	return 0; // already sampling
+   if (myThread == NULL)
+   {
+      if (theData != NULL)
+         getMyMemPool()->deallocate((void*)theData);
 
+      // XXX: What is the +1 for
+      // +1 is because birds are 1 based, not zero based
+      theData = (vjMatrix*) new vjMatrix[(mFlockOfBirds.getNumBirds()+1)*3];
+
+      // Reset current, progress, and valid
+      resetIndexes();
+
+      vjDEBUG(0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
+
+
+      mFlockOfBirds.start();
+
+      //sanity check.. make sure birds actually started
+      if (this->isActive() == false)
+      {
+         vjDEBUG(0)  << "vjFlock failed to start.." << endl << vjDEBUG_FLUSH;
+         return 0;
+      }
+
+      vjDEBUG(0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
+
+      vjFlock* devicePtr = this;
+
+      myThread = new vjThread(SampleBirds, (void*) devicePtr, 0);
+
+      if ( myThread == NULL )
+      {
+         return 0;  // Fail
+      }
+      else
+      {
+         return 1;   // success
+      }
+   }
+   else
+      return 0; // already sampling
 }
 
 int vjFlock::Sample()
 {
-     if (this->isActive() == false)
-     	return 0;
+   if (this->isActive() == false)
+      return 0;
 
-     int i;
-     int tmp;
+   int i;
+   int tmp;
 
-    mFlockOfBirds.sample();
-	
-     for (i=1; i < (mFlockOfBirds.getNumBirds()+1); i++)
-     {
-	if (i == mFlockOfBirds.getTransmitter())
-		continue;
+   mFlockOfBirds.sample();
 
-      	int index = progress*(mFlockOfBirds.getNumBirds()+1)+i-1;
-	// Sets index to current read buffer
+   //: XXX: +1 for the transmitter???
+   for (i=1; i < (mFlockOfBirds.getNumBirds()+1); i++)
+   {
+      if (i == mFlockOfBirds.getTransmitter())
+         continue;
 
-      	theData[index].makeZYXEuler(mFlockOfBirds.zRot( i ),
-				mFlockOfBirds.yRot( i ),
-				mFlockOfBirds.xRot( i ));
-   	theData[index].setTrans(mFlockOfBirds.xPos( i ),
-				mFlockOfBirds.yPos( i ),
-				mFlockOfBirds.zPos( i ));
-      	
-         if(i==1)
-         {
-            //cout << "orig pt:" << theData[index].pos;
-         }
+      // int index = progress*(mFlockOfBirds.getNumBirds()+1)+i-1;
+      int index = getBirdIndex(i,progress);
 
-         //theData[index].pos.xformFull(xformMat, theData[index].pos );
-      	
-         if(i==1)
-         {
-               //cout << "\tnew pt:" << theData[index].pos << flush;
-         }
+      // Sets index to current read buffer
+      theData[index].makeZYXEuler(mFlockOfBirds.zRot( i ),
+                                  mFlockOfBirds.yRot( i ),
+                                  mFlockOfBirds.xRot( i ));
+      theData[index].setTrans(mFlockOfBirds.xPos( i ),
+                              mFlockOfBirds.yPos( i ),
+                              mFlockOfBirds.zPos( i ));
 
-         if(i==1)
-         {
-             //cout << "\torig or:" << theData[index].orient;
-            //vjDEBUG(2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
-
-         }
+      //if (i==1)
+         //vjDEBUG(2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
 
 
-            // Transforms between the cord frames
-            // See transform documentation and VR System pg 146
-         vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      // Transforms between the cord frames
+      // See transform documentation and VR System pg 146
+      vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
-         //world_T_transmitter = rotMat;                   // Set transmitter offset from local info
-         world_T_transmitter = xformMat;                   // Set transmitter offset from local info
-         transmitter_T_reciever = theData[index];        // Get reciever data from sampled data
-         world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-         theData[index] = world_T_reciever;                                     // Store corrected xform back into data
+      world_T_transmitter = xformMat;                   // Set transmitter offset from local info
+      transmitter_T_reciever = theData[index];        // Get reciever data from sampled data
+      world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
+      theData[index] = world_T_reciever;                                     // Store corrected xform back into data
 
-         if(i==1)
-         {
-            //vjDEBUG(2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
-                /*
-                cout << "\nnew or:" << theData[index].orient << flush;
+      //if (i==1)
+         //vjDEBUG(2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+   }
 
-                new_dir.xformVec(transmitter_or_reciever, tracker_base_dir);
-                cout << "   Base Tracker dir: " << tracker_base_dir << endl;
-                cout << "\nXformed Tracker dir (in T): " << new_dir << endl;
+   // Locks and then swaps the indices
+   swapValidIndexes();
 
-                new_dir.xformVec(c2_or_reciever, tracker_base_dir);
-                cout << "\nXformed Tracker dir: (in W)" << new_dir << endl;
-                */
-         }
-     }
-	
-     lock.acquire();
-     tmp = valid;
-     valid = progress;
-     progress = tmp;
-     lock.release();
-
-     return 1;
+   return 1;
 }
 
 int vjFlock::StopSampling()
 {
-    if (this->isActive() == false)
-	return 0;
+   if (this->isActive() == false)
+      return 0;
 
-    if (myThread != NULL)
-    {
-	vjDEBUG(0) << "Stopping the flock thread..." << vjDEBUG_FLUSH;
-	
-	myThread->kill();
-	delete myThread;
-	myThread = NULL;
-	
-	vjDEBUG(0) << "  Stopping the flock..." << vjDEBUG_FLUSH;
-	
-	mFlockOfBirds.stop();
-	
-	// sanity check: did the flock actually stop?
-	if (this->isActive() == true)
-	{
-	    vjDEBUG(0) << "Flock didn't stop." << endl << vjDEBUG_FLUSH;
-	    return 0;
-	}
-	
-	vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
-    }
+   if (myThread != NULL)
+   {
+      vjDEBUG(0) << "Stopping the flock thread..." << vjDEBUG_FLUSH;
 
-    return 1;
+      myThread->kill();
+      delete myThread;
+      myThread = NULL;
+
+      vjDEBUG(0) << "  Stopping the flock..." << vjDEBUG_FLUSH;
+
+      mFlockOfBirds.stop();
+
+      // sanity check: did the flock actually stop?
+      if (this->isActive() == true)
+      {
+         vjDEBUG(0) << "Flock didn't stop." << endl << vjDEBUG_FLUSH;
+         return 0;
+      }
+
+      vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
+   }
+
+   return 1;
 }
 
 vjMatrix* vjFlock::GetPosData( int d ) // d is 0 based
 {
   if (this->isActive() == false)
-	return NULL;
+	   return NULL;
 	
-  return (&theData[current*(mFlockOfBirds.getNumBirds()+1)+d]);
+  return (&theData[getBirdIndex(d,current)]);
+  //current*(mFlockOfBirds.getNumBirds()+1)+d]);
 }
 
 void vjFlock::UpdateData()
 {
-    if (this->isActive() == false)
-	return;
-	
-  // swap the indicies for the pointers
+   if (this->isActive() == false)
+      return;
 
-  lock.acquire();
-  int tmp = current;
-  current = valid;
-  valid = tmp;
-  lock.release();
+   // Locks and then swap the indicies
+   swapCurrentIndexes();
 
-  return;
+   return;
 }
 
 void vjFlock::setHemisphere(const BIRD_HEMI& h)
