@@ -36,9 +36,9 @@
 //     February 2001
 // ----------------------------------------------------------------------------
 
-#include <vjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <Input/vjPosition/vjFastrack.h>
+#include <gadget/Devices/Polhemus/Fastrack.h>
 
 static void printError(std::string errorMsg)
 {
@@ -47,21 +47,24 @@ static void printError(std::string errorMsg)
 #endif
 }
 
-vjFastrack::vjFastrack() : sampleThread( NULL )
+namespcae gadget
+{
+
+Fastrack::Fastrack() : sampleThread( NULL )
 {
    ;
 }
 
-vjFastrack::~vjFastrack()
+Fastrack::~Fastrack()
 {
    this->stopSampling();
    trackerFinish();
 }
 
-bool vjFastrack::config( vjConfigChunk *fastrackChunk )
+bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
 {
-   if ( !vjDigital::config(fastrackChunk) )
-      return FALSE;
+   if ( !gadget::Digital::config(fastrackChunk) )
+      return false;
 
    // configFile = "/home/kruger/VRjuggler/juggler/Input/vjPosition/ft_config.dat";
 
@@ -431,12 +434,12 @@ bool vjFastrack::config( vjConfigChunk *fastrackChunk )
    // end trackerInit
    // *****************************************************************************************
 
-   return TRUE;
+   return true;
 }
 
-int vjFastrack::startSampling()
+int Fastrack::startSampling()
 {
-   sampleThread = new vjThread( threadedSampleFunction, (void*)this, 0 );
+   sampleThread = new vpr::Thread( threadedSampleFunction, (void*)this, 0 );
    if ( !sampleThread->valid() )
    {
       return 0; // thread creation failed
@@ -449,7 +452,7 @@ int vjFastrack::startSampling()
 
 // Record (or sample) the current data
 // this is called repeatedly by the sample thread created by startSampling()
-int vjFastrack::sample()
+int Fastrack::sample()
 {
    buttonState[progress] = ::getCoords(15,
                                        &trackersPosition[0][0][progress],
@@ -457,9 +460,9 @@ int vjFastrack::sample()
    return 1;
 }
 
-void vjFastrack::updateData()
+void Fastrack::updateData()
 {
-   vjGuard<vjMutex> updateGuard(lock);
+   vpr::Guard<vpr::Mutex> updateGuard(lock);
 
    // copy the valid data to the current data so that both are valid
    buttonState[current] = buttonState[valid];
@@ -473,11 +476,11 @@ void vjFastrack::updateData()
    }
 
    // swap the indicies for the tri-buffer pointers
-   vjInput::swapCurrentIndexes();
+   gadget::Input::swapCurrentIndexes();
 }
 
 // kill sample thread
-int vjFastrack::stopSampling()
+int Fastrack::stopSampling()
 {
    if ( sampleThread != NULL )
    {
@@ -489,9 +492,9 @@ int vjFastrack::stopSampling()
 }
 
 // function for users to get the digital data.
-// overload vjDigital::getDigitalData
+// overload gadget::Digital::getDigitalData
 // digital data only on the first station
-int vjFastrack::getDigitalData( int station )
+int Fastrack::getDigitalData( int station )
 {
    if ( station != 0 )
    {
@@ -505,11 +508,12 @@ int vjFastrack::getDigitalData( int station )
 }
 
 // function for users to get the position data
-// overload vjPosition::getPosData
-vjMatrix* vjFastrack::getPosData( int station )
+// overload gadget::Position::getPosData
+vrj::Matrix* Fastrack::getPosData( int station )
 {
-   // see vjAnalog.h
-   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using vjAnalog::normalizeMinToMax()
+   // see Analog.h
+   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your
+   // data using gadget::Analog::normalizeMinToMax()
 
    // assert( axis >= 0 && axis <= 2 && "3 (x,y and z) axes available");
    if ( !( (0<=station) && (station<=3) ) )
@@ -519,7 +523,7 @@ vjMatrix* vjFastrack::getPosData( int station )
    }
    else
    {
-      vjMatrix *positionMatrix = new vjMatrix();
+      vrj::Matrix *positionMatrix = new vrj::Matrix();
 
       positionMatrix->makeXYZEuler(trackersOrientation[station][0][current],
                                    trackersOrientation[station][1][current],
@@ -531,9 +535,9 @@ vjMatrix* vjFastrack::getPosData( int station )
    }
 }
 
-void vjFastrack::threadedSampleFunction( void* classPointer )
+void Fastrack::threadedSampleFunction( void* classPointer )
 {
-   vjFastrack* this_ptr = static_cast<vjFastrack*>( classPointer );
+   Fastrack* this_ptr = static_cast<Fastrack*>( classPointer );
 
    while ( 1 )
    {
@@ -542,3 +546,5 @@ void vjFastrack::threadedSampleFunction( void* classPointer )
          sleep(1);
    }
 }
+
+} // End of gadget namespace

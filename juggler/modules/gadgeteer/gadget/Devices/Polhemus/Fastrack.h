@@ -46,27 +46,30 @@
 #include <iostream>
 #include <string.h>
 
-#include <Math/vjMatrix.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjPosition/vjPosition.h>
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+
+#include <vrj/Math/vjMatrix.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Position.h>
 
 #include <gadget/Devices/Polhemus/FastrackStandalone.h>
 
-//! might be defined somewhere else in juggler, but where ?
-#define TRUE 1
-#define FALSE 0
 
-class vjFastrack : public vjPosition, public vjDigital
+namespace gadget
+{
+
+class Fastrack : public Position, public Digital
 {
 public:
-   vjFastrack();                                  // must call vjAnalog()? see vjAnalog.h
-   virtual ~vjFastrack();
+   Fastrack();                                  // must call vjAnalog()? see vjAnalog.h
+   virtual ~Fastrack();
    static std::string getChunkType()
    {
       return std::string("Fastrack");
    }// return what chunk type is associated with this class.
 public:
-   //:vjInput pure virtual functions
+   /// gadget::Input pure virtual functions
    virtual bool config( vjConfigChunk *fastrackChunk);
    virtual int startSampling();                 // start a new thread
    virtual int sample();                        // read data from the fastrack
@@ -80,16 +83,18 @@ public:
    //:vjDigital pure virtual function
    virtual int getDigitalData(int station = 0);
    //:vjPosition pure virtual function
-   virtual vjMatrix* getPosData(int station = 0);
+   virtual vrj::Matrix* getPosData(int station = 0);
 private:
    static void threadedSampleFunction(void* classPointer);
    int buttonState[3];                   // only one button on station 0
    float trackersPosition[4][3][3];      // 4 stations, 3 coordinates, 3 buffers
    float trackersOrientation[4][3][3];   // 4 stations, 3 orientations, 3 buffers
-   vjThread *sampleThread;
+   vpr::Thread *sampleThread;
 
    char *configFile;
 };
+
+} // End of gadget namespace
 
 
 #endif // _GADGET_FASTRACK_
