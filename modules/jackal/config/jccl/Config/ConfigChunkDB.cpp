@@ -324,7 +324,7 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
          {
             // Get the path to the included file relative to the current file
             std::string desc_filename =
-               pi->getAttribute(file_TOKEN).template getValue<std::string>();
+               pi->getAttribute(file_TOKEN).getValue<std::string>();
 
             vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
                << "Including " << desc_filename << std::endl << vprDEBUG_FLUSH;
@@ -337,7 +337,7 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
          {
             // Get the path to the included file relative to the current file
             std::string chunk_filename =
-               pi->getAttribute(file_TOKEN).template getValue<std::string>();
+               pi->getAttribute(file_TOKEN).getValue<std::string>();
 
             vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
                << "Including " << chunk_filename << std::endl

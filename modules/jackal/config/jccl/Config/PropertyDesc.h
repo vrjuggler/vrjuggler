@@ -86,7 +86,7 @@ public:
    /** Returns the token string for the described property. */
    std::string getToken() const
    {
-      return mNode->getAttribute(jccl::token_TOKEN).template getValue<std::string>();
+      return mNode->getAttribute(jccl::token_TOKEN).getValue<std::string>();
    }
 
    void setToken(const std::string& tok)
@@ -120,7 +120,7 @@ public:
 
    int getNumAllowed() const
    {
-      return mNode->getAttribute(jccl::num_TOKEN).template getValue<int>();
+      return mNode->getAttribute(jccl::num_TOKEN).getValue<int>();
    }
 
    void setNumAllowed(int num)
@@ -170,7 +170,7 @@ public:
    }
 
 protected:
-   bool                 mIsValid;   /**< Validation flag */
+   bool              mIsValid;   /**< Validation flag */
    cppdom::NodePtr   mNode;      /**< The xml node for this chunk desc */
 };
 
