@@ -240,7 +240,7 @@ if test "x$have_x" = "xyes" ; then
          gadget_use_x11='yes'
          AC_DEFINE(GADGET_USE_X11,)
       fi
-   elif test "x$OS_TYPE" = "xUNIX" -a "" ; then
+   elif test "x$OS_TYPE" = "xUNIX" ; then
       gadget_use_x11='yes'
       AC_DEFINE(GADGET_USE_X11,)
    fi
