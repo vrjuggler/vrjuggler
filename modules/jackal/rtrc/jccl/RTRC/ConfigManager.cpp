@@ -75,9 +75,14 @@ bool vjConfigManager::pendingNeedsChecked()
             vjDEBUG_BEGIN(vjDBG_ALL,0) << "vjConfigManager::pendingNeedsChecked: Pending list is now "
                                        << clrOutNORM(clrGREEN,"STALE: ")
                                        << cur_pending_size << " items still in pending\n" << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL,0) << "NOTE: These items have been specified in configuration, but have not been loaded\n" << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL,0) << "      This may be an error in the configuration OR\n" << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL,0) << "      It may be waiting for more configuration information.\n"  << vjDEBUG_FLUSH;
             lockPending();
             debugDumpPending(0);     // Output the stale pending list
             unlockPending();
+            vjDEBUG_CONT_END(vjDBG_ALL,0) << vjDEBUG_FLUSH;
+
             ret_val = false;
          }
       }
