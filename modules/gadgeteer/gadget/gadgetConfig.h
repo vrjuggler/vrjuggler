@@ -82,10 +82,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
-
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
