@@ -154,6 +154,9 @@
 			<File
 				RelativePath="..\..\modules\jackal\config\jccl\Config\PropertyDefinition.cpp">
 			</File>
+			<File
+				RelativePath="..\..\modules\jackal\common\jccl\Util\Version.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -211,6 +214,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\jackal\rtrc\jccl\RTRC\RemoteReconfig.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\jackal\common\jccl\Util\Version.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\jackal\common\jccl\jcclConfig.h">
