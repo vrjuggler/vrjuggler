@@ -612,6 +612,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
         LIBS=`unix2dos "$LIBS"`
     fi
 
+    LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
@@ -751,7 +752,7 @@ AC_OUTPUT(Makefile
           vpr/IO/Makefile
           vpr/IO/Port/Makefile
           vpr/IO/Socket/Makefile
-					vpr/IO/Stats/Makefile
+          vpr/IO/Stats/Makefile
           vpr/Sync/Makefile
           vpr/Thread/Makefile
           vpr/Util/Makefile
