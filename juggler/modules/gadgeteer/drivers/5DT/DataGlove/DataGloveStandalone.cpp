@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/Devices/DriverConfig.h>
-
 #include <string.h>        // for strcpy();
 #include <stdio.h>
 #include <stdlib.h>
