@@ -1569,12 +1569,24 @@ TEST_EXTRA_FLAGS="${_EXTRA_FLAGS}"
 
 dnl # If we have AudioWorks, make it available in the application makefiles.
 if test "$AUDIO_WORKS" = "Y" ; then
+    if test "$OS_TYPE" = "Win32" ; then
+        TEST_VJ_LIBS_AW='Juggler_aw.lib'
+    else
+        TEST_VJ_LIBS_AW='-lJuggler_aw'
+    fi
+
     TEST_EXTRA_INC_AW="$AW_INC"
     TEST_EXTRA_LIBS_AW="$AW_LIB ${_aw_libs}"
 fi
 
 dnl # If we have SL, make it available in the application makefiles.
 if test "$SL" = "Y" ; then
+    if test "$OS_TYPE" = "Win32" ; then
+        TEST_VJ_LIBS_SL='Juggler_sl.lib'
+    else
+        TEST_VJ_LIBS_SL='-lJuggler_sl'
+    fi
+
     TEST_EXTRA_INC_SL="$SL_INC"
     TEST_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
 fi
@@ -1708,6 +1720,8 @@ AC_SUBST(TEST_VJ_LIBS_BASIC)
 AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
 AC_SUBST(TEST_VJ_LIBS_GL)
 AC_SUBST(TEST_VJ_LIBS_PF)
+AC_SUBST(TEST_VJ_LIBS_AW)
+AC_SUBST(TEST_VJ_LIBS_SL)
 AC_SUBST(TEST_LIBS_BASIC)
 AC_SUBST(TEST_EXTRA_LIBS_BEGIN)
 AC_SUBST(TEST_EXTRA_LIBS_END)
