@@ -78,7 +78,7 @@ LINK		= @APP_LINK@ $(LINK_FLAGS)
 LINKALL_ON	= @APP_LINKALL_ON@
 LINKALL_OFF	= @APP_LINKALL_OFF@
 
-VPATH	= @srcdir@:@srcdir@/../gadget/Devices/Ascension
+VPATH	= @srcdir@:@srcdir@/../gadget/Devices/Ascension:@srcdir@/../gadget/Devices/Fakespace
 
 aFlockTest_OBJS	= FlockStandalone.@OBJEXT@ aFlockTest.@OBJEXT@
 
@@ -113,7 +113,7 @@ dummyTrackd@EXEEXT@: $(dummyTrackd_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(dummyTrackd_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
 
 fsPinchGloveTest@EXEEXT@: $(fsPinchGloveTest_OBJS)
-	$(LINK) @EXE_NAME_FLAG@ $(fsPinchGloveTest_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
+	$(LINK) @EXE_NAME_FLAG@ $(fsPinchGloveTest_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS) -lm
 
 go@EXEEXT@: $(go_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(go_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
