@@ -72,7 +72,7 @@ public abstract class AbstractCustomVertexRenderer
     * cell view.
     * 
     * @param graph      the graph that that defines the rendering context
-    * @param value      the object that should be rendered
+    * @param view       the object that should be rendered
     * @param selected   whether the object is selected
     * @param hasFocus   whether the object has the focus
     * @param preview    whether we are drawing a preview
@@ -167,7 +167,7 @@ public abstract class AbstractCustomVertexRenderer
       }
       else
       {
-         setForeground(background);
+         setBackground(background);
       }
 
       java.awt.Font font = GraphConstants.getFont(attributes);
