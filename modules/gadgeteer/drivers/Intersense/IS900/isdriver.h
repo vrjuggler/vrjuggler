@@ -229,8 +229,8 @@ typedef struct
 } InterSenseTrackerType;
 
 
-BOOL ISD_openTracker( InterSenseTrackerType *, DWORD, BOOL, BOOL );
-BOOL ISD_openTrackerJuggler( InterSenseTrackerType *, std::string, int, BOOL, BOOL );
+BOOL ISD_openTrackerOld( InterSenseTrackerType *, DWORD, BOOL, BOOL );
+BOOL ISD_openTracker( InterSenseTrackerType *, std::string, int, BOOL, BOOL );
 BOOL ISD_closeTracker( InterSenseTrackerType * );
 BOOL ISD_getCommInfo( InterSenseTrackerType *, ISD_TRACKER_INFO_TYPE * );
 BOOL ISD_getTrackerConfig( InterSenseTrackerType *, ISD_TRACKER_INFO_TYPE *, BOOL );

@@ -572,7 +572,6 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
 #else
     if (fcntl(port->desc, F_SETFL, FNDELAY) < 0)
     {
-        std::cout << "Error setting serial port settings!" << std::endl;
         perror( "Tracker-Port Setup");
         return FALSE;
     }
@@ -580,7 +579,6 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
     
     if( tcflush(port->desc, TCIOFLUSH ) == -1 )
     {
-        std::cout << "Error flushing serial port!" << std::endl;
         perror( "Flushing Port for InterSense Tracker" );
         return FALSE;
     }
@@ -608,23 +606,23 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
 
 #if defined VPR_OS_IRIX
 
-/*#if defined LEGACY_SGI
-
-    terminfo.c_cflag = (baudRate == 1200  ?  B1200 :
-                        baudRate == 9600  ?  B9600 :
-                        baudRate == 19200 ?  B19200 :
-                        baudRate == 38400 ?  B38400 : B115200) |CS8|CREAD|CLOCAL|CNEW_RTSCTS;                        
-
-#else */
-
-    terminfo.c_cflag = CS8|CREAD|CLOCAL|CNEW_RTSCTS;
-    terminfo.c_ospeed = (baudRate == 1200  ?  B1200 :
-                         baudRate == 9600  ?  B9600 :
-                         baudRate == 19200 ?  B19200 :
-                         baudRate == 38400 ?  B38400 : B115200);                        
-    terminfo.c_ispeed = terminfo.c_ospeed;
-
-//#endif
+   #if defined LEGACY_SGI
+   
+       terminfo.c_cflag = (baudRate == 1200  ?  B1200 :
+                           baudRate == 9600  ?  B9600 :
+                           baudRate == 19200 ?  B19200 :
+                           baudRate == 38400 ?  B38400 : B115200) |CS8|CREAD|CLOCAL|CNEW_RTSCTS;                        
+   
+   #else
+   
+       terminfo.c_cflag = CS8|CREAD|CLOCAL|CNEW_RTSCTS;
+       terminfo.c_ospeed = (baudRate == 1200  ?  B1200 :
+                            baudRate == 9600  ?  B9600 :
+                            baudRate == 19200 ?  B19200 :
+                            baudRate == 38400 ?  B38400 : B115200);                        
+       terminfo.c_ispeed = terminfo.c_ospeed;
+   
+   #endif
 
 #else /* other flavors of UNIX, including Linux */
 
