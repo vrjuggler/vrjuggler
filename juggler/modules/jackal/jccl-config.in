@@ -31,7 +31,7 @@
 
 #subsystem_cxxflags="@subsystem_cxxflags@"
 #subsystem_libs="@subsystem_libs@"
-#jccl_extra_cxxflags="@jccl_extra_cxxflags@"
+jccl_extra_cxxflags="@jccl_extra_cxxflags@"
 jccl_libs="@jccl_libs@"
 jccl_lib="@jccl_lib@"
 
@@ -59,7 +59,8 @@ fi
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
-exec_prefix_set=no
+exec_prefix_set='no'
+use_linker='no'
 
 #if [ "x$jccl_extra_include_dirs" != "x" ]; then
 #    for dir in $jccl_extra_include_dirs ; do
@@ -80,10 +81,12 @@ Options:
                                 alternate executable prefix to use when
                                 printing paths
         [--version]             Print the installed JCCL's version number
+        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
         [--libs [N32|64]]       Print the basic JCCL libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
-        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
+        [--linker]              Print libraries as direct arguments to the
+                                linker rather than to the compiler
         [--subsystem]           Print the OS abstraction layer being used
 EOF
 
@@ -193,6 +196,9 @@ while test $# -gt 0; do
                     ;;
             esac
             ;;
+        --linker)
+            use_linker=yes
+            ;;
         --static)
             echo_static=yes
             ;;
@@ -221,11 +227,11 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
-#        echo @CXXFLAGS@ -I$JCCL_BASE_DIR/include $subsystem_cxxflags
+        echo @jccl_cxxflags@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
+#        echo @CXXFLAGS@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
     else
-#        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
-        echo @CXXFLAGS $jccl_extra_cxxflags -I@includedir@
+        echo @jccl_cxxflags@ $jccl_extra_cxxflags -I@includedir@
+#        echo @CXXFLAGS $jccl_extra_cxxflags -I@includedir@
     fi
 fi
 
@@ -236,11 +242,13 @@ fi
 
 if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-#        ldflags="$ldflags -L$JCCL_BASE_DIR/lib$LIBBITSUF"
         ldflags="-L$JCCL_BASE_DIR/lib$LIBBITSUF"
     else
-#        ldflags="$ldflags @jccl_ldflags@"
-        ldfags="-L$jccl_ldflags"
+        if test "$use_linker" = "yes" ; then
+            ldflags="ldflags @jccl_ldflags_linker@"
+        else
+            ldflags="ldflags @jccl_ldflags_compiler@"
+        fi
     fi
 
 #    for i in $subsystem_libs ; do
