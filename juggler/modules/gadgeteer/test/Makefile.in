@@ -78,7 +78,7 @@ LINK		= @APP_LINK@ $(LINK_FLAGS)
 LINKALL_ON	= @APP_LINKALL_ON@
 LINKALL_OFF	= @APP_LINKALL_OFF@
 
-VPATH	= @srcdir@:@srcdir@/../drivers/Ascension/Flock:@srcdir@/../drivers/Fakespace/PinchGlove
+VPATH	= @srcdir@:@srcdir@/../drivers/Ascension/Flock:@srcdir@/../drivers/Fakespace/PinchGlove
 
 aFlockTest_OBJS	= FlockStandalone.@OBJEXT@ aFlockTest.@OBJEXT@
 
