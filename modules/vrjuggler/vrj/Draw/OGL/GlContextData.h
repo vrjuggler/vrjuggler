@@ -149,13 +149,13 @@ protected:
 
 
    /**
-    * Returns a ptr to the correct data element in the current context.
+    * Returns a pointer to the correct data element in the current context.
     *
     * @pre We are in the draw function.
-    * @sync Synchronized.
+    * @post Synchronized.
     * @note ASSERT: Same context is rendered by same thread each time.
     */
-   ContextDataType*  getPtrToCur()
+   ContextDataType* getPtrToCur()
    {
       // Get current context
       int context_id = getCurContext();
