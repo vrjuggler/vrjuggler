@@ -34,11 +34,12 @@
 #define _JCCL_CONFIG_MANGER_H_
 
 #include <jccl/jcclConfig.h>
-//#include <jccl/Net/JackalControl.h>
+#include <vector>
+
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunk.h>
-//#include <jccl/RTRC/XMLConfigCommunicator.h>
+
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <jccl/Util/Debug.h>
