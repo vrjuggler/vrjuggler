@@ -10,7 +10,7 @@
     typedef  vjCondGeneric vjCond;
 #else
 #ifdef VJ_USE_PTHREADS
-#   define _POSIX_C_SOURCE 2
+#   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
 
 #   include <Sync/vjCondPosix.h>
     
