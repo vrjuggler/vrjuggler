@@ -6,14 +6,14 @@
 
 
 #include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
+#include <Config/vjChunkFactory.h>
 #include <Kernel/vjDebug.h>
 
 #include <sys/types.h>
 
 
-vjConfigChunkDB::vjConfigChunkDB (vjChunkDescDB *d): chunks() {
-  descs = d;
+vjConfigChunkDB::vjConfigChunkDB (): chunks() {
+    ;
 }
 
 
@@ -37,20 +37,13 @@ vjConfigChunkDB::vjConfigChunkDB (vjConfigChunkDB& db): chunks() {
 
 vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
     int i;
-    descs = db.descs;
-    for (i = 0; i < chunks.size(); i++)
-	delete chunks[i];
+    //for (i = 0; i < chunks.size(); i++)
+    //    delete chunks[i];
     chunks.erase (chunks.begin(), chunks.end());
     for (i = 0; i < db.chunks.size(); i++) {
         chunks.push_back (new vjConfigChunk(*(db.chunks[i])));
     }
     return *this;
-}
-
-
-
-void vjConfigChunkDB::setChunkDescDB (vjChunkDescDB *d) {
-  descs = d;
 }
 
 
@@ -331,15 +324,7 @@ ostream& operator << (ostream& out, vjConfigChunkDB& self) {
 istream& operator >> (istream& in, vjConfigChunkDB& self) {
 
    char str[512];
-   vjChunkDesc *cd;
    vjConfigChunk *ch;
-
-   if (self.descs == NULL)
-   {
-      vjDEBUG(vjDBG_ALL,1) << "ERROR: vjChunkDescDB::>> - No vjChunkDescDB." << endl
-      << vjDEBUG_FLUSH;
-      return in;
-   }
 
    do
    {
@@ -347,8 +332,8 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
          break; /* eof */
       if (!strcasecmp (str, "end"))
          break;
-      cd = self.descs->getChunkDesc (str);
-      if (cd == NULL)
+      ch = vjChunkFactory::createChunk (str);
+      if (ch == NULL)
       {
          vjDEBUG(vjDBG_ALL,1) << "ERROR!: Unknown Chunk type: " << str << endl
          << vjDEBUG_FLUSH;
@@ -362,7 +347,6 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
       }
       else
       {
-         ch = new vjConfigChunk(cd, self.descs);
          in >> *ch;
          /* OK.  If this chunk has the same instancename as a chunk
           * already in self, we want to remove the old one
@@ -386,10 +370,6 @@ bool vjConfigChunkDB::load (const char *fname) {
     vjDEBUG(vjDBG_ALL,4) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
 
 
-    if (descs == NULL) {
-	vjDEBUG(vjDBG_ALL,1) << "\nERROR: vjConfigChunkDB::load - no vjChunkDescDB" << endl << vjDEBUG_FLUSH;
-	return false;
-    }
     if (!in) {
 	vjDEBUG(vjDBG_ALL,1) << "\nvjConfigChunkDB::load(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
@@ -411,12 +391,6 @@ bool vjConfigChunkDB::save (const char *fname) {
    }
    out << *this;
    return true;
-}
-
-
-
-vjChunkDescDB* vjConfigChunkDB::getChunkDescDB() {
-    return descs;
 }
 
 

@@ -11,7 +11,6 @@
 #endif
 
 #include <Config/vjVarValue.h>
-#include <Config/vjChunkDescDB.h>
 
 
 struct VJCFGToken;
@@ -33,7 +32,6 @@ class vjConfigChunk {
 
 private:
     vjChunkDesc* desc;
-    vjChunkDescDB *descdb;
     std::vector<vjProperty*> props;       // Stores the set of properties
     vjVarValue type_as_varvalue;
 
@@ -43,7 +41,7 @@ public:
     //!PRE: desc points to a valid vjChunkDesc
     //!POST: self has been created, and all its vjPropertys
     //+      initialized to their default values.
-    vjConfigChunk (vjChunkDesc *_desc, vjChunkDescDB *_descdb);
+    vjConfigChunk (vjChunkDesc *_desc);
 
 
 
