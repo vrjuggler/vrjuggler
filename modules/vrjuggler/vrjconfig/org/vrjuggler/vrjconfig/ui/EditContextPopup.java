@@ -43,6 +43,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigContextListener;
 
 /**
  * A specialized toolbar that pays attention to the ConfigManager.
@@ -212,7 +214,7 @@ public class EditContextPopup
     */
    class ContextTableModel
       extends AbstractTableModel
-      implements ContextListener
+      implements ConfigContextListener
    {
       private static final int MIN_ROWS = 5;
 
@@ -220,12 +222,12 @@ public class EditContextPopup
       {
          if (this.context != null)
          {
-            this.context.removeContextListener(this);
+            this.context.removeConfigContextListener(this);
          }
          this.context = context;
          if (this.context != null)
          {
-            this.context.addContextListener(this);
+            this.context.addConfigContextListener(this);
          }
          fireTableDataChanged();
       }
@@ -330,7 +332,7 @@ public class EditContextPopup
       /**
        * Called whenever a resources is added to the context we are modeling.
        */
-      public void resourceAdded(ContextEvent evt)
+      public void resourceAdded(ConfigContextEvent evt)
       {
          int idx = getRowFor(evt.getResource());
          if (idx != -1)
@@ -349,7 +351,7 @@ public class EditContextPopup
       /**
        * Called whenever a resource is removed from the context we are modeling.
        */
-      public void resourceRemoved(ContextEvent evt)
+      public void resourceRemoved(ConfigContextEvent evt)
       {
          int idx = getRowFor(evt.getResource());
          if (idx != -1)

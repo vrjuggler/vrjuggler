@@ -44,12 +44,15 @@ import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
-import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.vrjconfig.PopupButton;
-import org.vrjuggler.vrjconfig.VrjConfigConstants;
 
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigContextListener;
 import org.vrjuggler.jccl.rtrc.*;
+
+import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfig;
+import org.vrjuggler.vrjconfig.VrjConfigConstants;
 
 /**
  * A specialized toolbar for configuration contexts that pays attention to the
@@ -118,7 +121,7 @@ public class ContextToolbar
    private void setConfigContext(ConfigContext ctx)
    {
       this.context.removeUndoableEditListener(this);
-      this.context.removeContextListener(contextListener);
+      this.context.removeConfigContextListener(contextListener);
       this.context = ctx;
 
       boolean nonempty_context = true;
@@ -130,7 +133,7 @@ public class ContextToolbar
       expandBtn.setEnabled(nonempty_context);
       undoBtn.setEnabled(false);
       redoBtn.setEnabled(false);
-      context.addContextListener(contextListener);
+      context.addConfigContextListener(contextListener);
       context.addUndoableEditListener(this);
    }
 
@@ -695,15 +698,15 @@ public class ContextToolbar
     * toolbar buttons.
     */
    private class ContextChangeListener
-      implements ContextListener
+      implements ConfigContextListener
    {
-      public void resourceAdded(ContextEvent evt)
+      public void resourceAdded(ConfigContextEvent evt)
       {
          saveBtn.setEnabled(true);
          expandBtn.setEnabled(true);
       }
 
-      public void resourceRemoved(ContextEvent evt)
+      public void resourceRemoved(ConfigContextEvent evt)
       {
          if (context.getResources().size() == 0)
          {
