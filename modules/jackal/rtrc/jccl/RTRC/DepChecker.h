@@ -42,23 +42,22 @@ namespace jccl
 {
 
 
-/** Base class for dependency checkers.
- *  A dependency checker is responsible for figuring out if
- *  the system has all the required dependencies filled for
- *  a given jccl::ConfigElement.
+/** \class DepChecker DepChecker.h jccl/RTRC/DepChecker.h
  *
- *  This class also implements a default behavior for
- *  dependency checkers, which just looks at any jccl::ConfigElement
- *  pointer properties in the given element and returns true
- *  if all the elements named by those properties exist in the
- *  ConfigManager's current configuration.
+ * Base class for dependency checkers.  A dependency checker is responsible for
+ * figuring out if the system has all the required dependencies filled for a
+ * given jccl::ConfigElement.
  *
- *  Configuration information with special dependency
- *  requirements should specialize this class and register
- *  an instance with the DependencyManager.
+ * This class also implements a default behavior for dependency checkers, which
+ * just looks at any jccl::ConfigElement pointer properties in the given
+ * element and returns true if all the elements named by those properties exist
+ * in the ConfigManager's current configuration.
  *
- *  @note The DepChecker must be registered BEFORE a
- *        element of the given type is checked for dependencies.
+ * Configuration information with special dependency requirements should
+ * specialize this class and register an instance with the Dependency Manager.
+ *
+ * @note The DepChecker must be registered BEFORE a element of the given type
+ *       is checked for dependencies.
  */
 class JCCL_CLASS_API DepChecker
 {

@@ -42,7 +42,8 @@
 namespace jccl
 {
 
-/**
+/** \class Configuration Configuration.h jccl/Config/Configuration.h
+ *
  * List of jccl::ConfigElement objects.
  */
 class JCCL_CLASS_API Configuration

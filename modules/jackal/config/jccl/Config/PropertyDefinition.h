@@ -41,7 +41,8 @@
 namespace jccl
 {
 
-/**
+/** \class PropertyDefinition PropertyDefinition.h jccl/Config/PropertyDefinition.h
+ *
  * Describes properties.  Holds all the information describing a property.
  * Instances of this class are read-only objects.
  *
