@@ -43,7 +43,17 @@ namespace cluster
    DeviceServer::DeviceServer(const std::string& name, gadget::Input* device, const vpr::GUID& plugin_guid)
          : deviceServerTriggerSema(0), deviceServerDoneSema(0)
    {
-      mId.generate();   // Generate a unique ID for this device
+      vpr::GUID temp;
+      temp.generate();
+      
+      do
+      {
+         mId.generate();   // Generate a unique ID for this device
+         vprDEBUG(vprDBG_ALL, VPR_DBG_WARNING_LVL) 
+            << "[DeviceServer] Invalid GUID, generating a new one." 
+            << std::endl << vprDEBUG_FLUSH;
+      }while(temp == mId);
+
       mThreadActive = false;
       mName = name;
       mDevice = device;
