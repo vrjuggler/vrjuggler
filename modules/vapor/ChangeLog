@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-04-06 allenb   Removed template template from generic factory class,
+                    since Irix can't handle template templates.
+2002-04-06 allenb   Smarter testing for invalid char* passed to GUID.
 2002-04-03 allenb   Fixed bug in replaceEnvVars.  Removed ThreadTest from suite
                     because of threading bugs in exception handling.
                     NEW VERSION: 0.13.0
