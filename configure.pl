@@ -319,7 +319,8 @@ sub configureModule ($)
 
       print "Running $src_root/$mod_path/configure @ARGV\n";
       system("$src_root/$mod_path/configure @ARGV 2>&1") == 0
-         or die "Configuration of $module_name in $ENV{'PWD'} failed\n";
+         or die "Configuration of $module_name in $ENV{'PWD'} failed\n" .
+                "Check $ENV{'PWD'}/config.log for details\n";
 
       foreach ( keys(%{$$modref{'env'}}) )
       {
