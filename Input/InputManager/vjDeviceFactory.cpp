@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <vjConfig.h>
 #include <Input/InputManager/vjDeviceFactory.h>
 
@@ -43,6 +42,9 @@
 //#include <Input/vjSim/vjSimKeyboardDigital.h>
 #include <Input/vjSim/vjSimRelativePosition.h>
 #include <Input/vjSim/vjSimDigitalGlove.h>
+
+// Platform-independent devices.
+#include <Input/vjPosition/vjDummyPosition.h>
 
 /* Physical devices */
 #ifndef WIN32
@@ -88,6 +90,9 @@ void vjDeviceFactory::hackLoadKnownDevices()
    //vjDeviceConstructor<vjSimKeyboardDigital>* sim_keyboard_digital = new vjDeviceConstructor<vjSimKeyboardDigital>;
    vjDeviceConstructor<vjSimRelativePosition>* sim_relative = new vjDeviceConstructor<vjSimRelativePosition>;
    vjDeviceConstructor<vjSimDigitalGlove>* simpinch_glove = new vjDeviceConstructor<vjSimDigitalGlove>;
+
+   // Platform-independent devices.
+   vjDeviceConstructor<vjDummyPosition>* dummy_pos = new vjDeviceConstructor<vjDummyPosition>;
 
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
