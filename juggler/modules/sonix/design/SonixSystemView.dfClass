@@ -1,0 +1,75 @@
+package id3ejb0cyd7c8e2cyd7fuwu;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#snx::SoundHandle:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#snx::SoundHandle#getListenerPosition#(#vrj::Matrix&#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#snx::SoundHandle#setListenerPosition#(#const vrj::Matrix&#)#:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#sonix:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#snx::SoundImplementation:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference3 {
+}/**
+@__ref <oiref:cpp#Class#snx::SoundFactory:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#snx::SoundInfo:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#snx::SoundInfo#data:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundInfo#allocBuffers#(#int#int#unsigned int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundInfo#triggerOnNextBind:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundInfo#repeatCountdown:oiref> 
+*/
+class reference5 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.g.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#snx::SoundHandle:oiref>=10,10,250,370,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=540,114,16,13,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation:oiref>=510,534,560,534:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundInfo:oiref>=10,400,250,250,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundInfo:oiref>=310,340,260,450:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation1:oiref>=526,473,30,13,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundImplementation#lnkSoundInfo:oiref>=560,600,260,600:oigroup>
+<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=490,114,16,13,0:oigroup>
+<oigroup:<oiref:cpp#Class#sonix:oiref>=310,10,176,365,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation1:oiref>=510,490,560,490:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundHandle#lnksonix:oiref>=260,155,310,155:oigroup>
+<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation1:oiref>=514,473,16,13,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundFactory:oiref>=398,375,398,460:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundFactory:oiref>=310,460,200,111,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=486,131,560,131:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#snx::SoundImplementation#lnkSoundInfo:oiref>=264,583,30,13,0:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundImplementation:oiref>=560,10,250,620,0:oigroup>
+<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#snx::SoundImplementation#lnkSoundInfo:oiref>=540,583,16,13,0:oigroup>
+*/
+class __positions {
+}

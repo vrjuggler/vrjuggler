@@ -1,0 +1,185 @@
+package idz71ecyd7c8e2cyd82fm1;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#sonix:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes 
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#snx::SoundFactory:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#snx::AudioWorksSoundImplementation:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes 
+*/
+class reference21 {
+}/**
+@__ref <oiref:cpp#Class#snx::OpenALSoundImplementation:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes 
+*/
+class reference22 {
+}/**
+@__ref <oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node23:oiref><oihard>
+@__modelType reference 
+*/
+class reference24 {
+}/**
+@__ref <oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node25:oiref><oihard>
+@__modelType reference 
+*/
+class reference26 {
+}/**
+@__ref <oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node27:oiref><oihard>
+@__modelType reference 
+*/
+class reference28 {
+}/**
+@__ref <oiref:cpp#Class#snx::StubSoundImplementation:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference30 {
+}/**
+@__ref <oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node31:oiref><oihard>
+@__modelType reference 
+*/
+class reference32 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.g.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node25:oiref>=230,580,246,75,0:oigroup>
+<oigroup:<oiref:cpp#Extends#snx::AudioWorksSoundImplementation#snx::SoundImplementation:oiref>=700,490,640,490,640,430:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::OpenALSoundImplementation#lnkSoundInfo:oiref>=390,515,270,515:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node23:oiref>=930,460,106,40,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation:oiref>=590,530,590,430:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundInfo:oiref>=490,288,270,372:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node:oiref>=680,430,91,40,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkStubSoundImplementation:oiref>=600,530,460,480,460,378:oigroup>
+<oigroup:<oiref:cpp#Extends#snx::OpenALSoundImplementation#snx::SoundImplementation:oiref>=350,490,520,490,520,430:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node25.link:oiref>=476,602,540,602:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundImplementation#lnkSoundInfo:oiref>=560,457,270,457:oigroup>
+<oigroup:<oiref:cpp#Class#sonix:oiref>=10,90,176,355,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkOpenALSoundImplementation:oiref>=660,530,660,397:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node23.link:oiref>=983,460,983,420:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation1:oiref>=510,375,560,375:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundHandle#lnksonix:oiref>=260,160,490,160:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundFactory:oiref>=144,445,360,510,540,549:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#StubSoundImplementation:oiref>=590,530,427,378:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node31.link:oiref>=374,430,374,378:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#OpenALSoundImplementation:oiref>=640,530,640,397:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node27.link:oiref>=103,470,103,445:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkAudioWorksSoundImplementation:oiref>=700,530,850,480,850,420:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundFactory:oiref>=540,530,200,95,1:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node.link:oiref>=725,430,725,397:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node27.link29:oiref>=205,542,540,560:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::AudioWorksSoundImplementation#lnkSoundInfo:oiref>=710,455,270,455:oigroup>
+<oigroup:<oiref:cpp#Class#snx::StubSoundImplementation:oiref>=220,10,260,368,0:oigroup>
+<oigroup:<oiref:cpp#Class#snx::OpenALSoundImplementation:oiref>=510,10,290,387,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#AudioWorksSoundImplementation:oiref>=690,530,896,420:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=246,70,460,70:oigroup>
+<oigroup:<oiref:cpp#Class#snx::AudioWorksSoundImplementation:oiref>=810,10,310,410,0:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node27:oiref>=20,470,185,90,0:oigroup>
+<oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node31:oiref>=330,430,88,40,0:oigroup>
+*/
+class __positions {
+}/**
+@shapeType Note
+@__modelType node
+@name Note1
+@text OpenAL back end
+*/
+class node {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#snx::OpenALSoundImplementation:oiref><oihard> 
+*/
+class link {
+}}/**
+@shapeType Note
+@__modelType node
+@name Note2
+@text AudioWorks
+back end 
+*/
+class node23 {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#snx::AudioWorksSoundImplementation:oiref><oihard> 
+*/
+class link {
+}}/**
+@shapeType Note
+@__modelType node
+@name Note3
+@text SoundFactory knows how to create the API back ends.  It returns Stub if if doesn't know how to create what was requested
+*/
+class node25 {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#snx::SoundFactory:oiref><oihard> 
+*/
+class link {
+}}/**
+@shapeType Note
+@__modelType node
+@name Note4
+@text When sonix::changeAPI() is called, sonix asks the SoundFactory for the requested API then it changes to that one.
+*/
+class node27 {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#sonix:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#snx::SoundFactory:oiref><oihard> 
+*/
+class link29 {
+}}/**
+@shapeType Note
+@__modelType node
+@name Note5
+@text Dummy backend 
+*/
+class node31 {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#snx::StubSoundImplementation:oiref><oihard> 
+*/
+class link {
+}}
