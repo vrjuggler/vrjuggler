@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-08-17 nonchocoboy Added support for making beans dependent on other beans
+                       in order to make sure Tweek loads the bean dependencies
+                       first. This includes changes in the beanlist XML format
+                       to support the new bean dependency.
+                       NEW VERSION: 0.10.0
 2002-08-17 patrickh    If the IRIX SPROC threading subsystem is used with VPR,
                        the C++ ABI is disabled because SPROC threads conflict
                        with omniORB.
