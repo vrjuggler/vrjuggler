@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_KEYBOARD
 #define COMPATIBILITY_HEADER_VJ_KEYBOARD
 
-#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/EventWindow.h>
 
-typedef gadget::Keyboard vjKeyboard;
+typedef gadget::EventWindow vjKeyboard;
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_KEYBOARD_PROXY
 #define COMPATIBILITY_HEADER_VJ_KEYBOARD_PROXY
 
-#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/EventWindowProxy.h>
 
-typedef gadget::KeyboardProxy vjKeyboardProxy;
+typedef gadget::EventWindowProxy vjKeyboardProxy;
 
 #endif
