@@ -36,6 +36,7 @@
 #include <windows.h>
 #include <dinput.h>
 #include <string>
+#include <vector>
 
 
 namespace gadget
@@ -98,6 +99,16 @@ public:
       return mCapabilities.dwHardwareRevision;
    }
 
+   LONG getAxisValue(const unsigned int axisIndex)
+   {
+      return *(mAxisValueMap[axisIndex]);
+   }
+
+   BYTE getButtonValue(const unsigned int buttonIndex) const
+   {
+      return mJsData.rgbButtons[buttonIndex];
+   }
+
    /** @name Direct Input callbacks */
    //@{
    BOOL enumerateJoysticks(const DIDEVICEINSTANCE* dInstance);
@@ -131,6 +142,15 @@ private:
    const DIDATAFORMAT* mDataFormatObj;
    size_t              mDataFormatSize;
    //@}
+
+   /**
+    * Maps a Gadgeteer zero-based axis index to the memory containing the
+    * value for that index.  This vector is filled in enumerateAxies() based
+    * on the way that Direct Input iterates over the available axes.
+    *
+    * @see enumerateAxes
+    */
+   std::vector<LONG*> mAxisValueMap;
 
    DWORD mType;
    std::string mProductName;
