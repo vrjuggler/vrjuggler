@@ -9,7 +9,9 @@
 
 #include <vjConfig.h>
 #include <Input/InputManager/vjKeyboardInterface.h>
+#include <Config/vjVarValue.h>
 
+class vjConfigChunk;
 
 //: Base class for all simulated input devices
 //
@@ -23,6 +25,10 @@ protected:
    class vjKeyModPair
    {
    public:
+      vjKeyModPair() : mKey(-1), mModifier(-1)
+      {;}
+
+   public:
       int mKey;
       int mModifier;
    };
@@ -30,6 +36,8 @@ protected:
 public:
    vjSimInput() {;}
 
+   //: Configure the simulated input device
+   //! POST: Keyboard proxy is configured <br>
    bool config(vjConfigChunk* chunk);
 
 protected:
@@ -42,9 +50,15 @@ protected:
    //! RETURNS: Number of time the key is pressed
    int   checkKey(int keyId);
 
+   //: Constructs a vector of key mod pairs
+   // Takes as input a chunk that has a list of KeyModPair embeded chunks
+   //! PRE: keyList must be full of var values containing chunks of the type "KeyModPair"
+   //+      The KeyModPair chunk type must have fields name key and modKey
+   //! RETURNS: vector of KeyModPairs
+   std::vector<vjKeyModPair> readKeyList(std::vector<vjVarValue*>& keyList);
 
 private:
-   vjKeyboardInterface mKeyboard;
+   vjKeyboardInterface     mKeyboard;        //: The keyboard we are getting events from
 };
 
 #endif

@@ -6,22 +6,11 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
    if((!vjDigital::config(chunk)) || (!vjSimInput::config(chunk)))
       return false;
 
-   // Get keyboard pairs
-   int num_keys = chunk->getNum("keys");
-   int num_mods = chunk->getNum("modKeys");
-   int num_pairs = VJ_MIN2(num_keys, num_mods);   // Trim to smaller value
+   std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
+   mSimKeys = readKeyList(key_list);
 
-   // Fill the key pairs
-   for(int i=0;i<num_pairs;i++)
-   {
-      vjKeyModPair key_pair;
-      // Down pair
-      key_pair.mKey      = (int)chunk->getProperty("keys",i);
-      key_pair.mModifier = (int)chunk->getProperty("modKeys",i);
-      mSimKeys.push_back(key_pair);
-   }
-
-   mDigitalData = std::vector<int>(num_pairs,0); // Initialize to all zeros
+   int num_pairs = mSimKeys.size();
+   mDigitalData = std::vector<int>(num_pairs,0);      // Initialize to all zeros
 
    return true;
 }
