@@ -131,26 +131,38 @@ SoundFactory::SoundFactory()
                                           << search_paths[x] << std::endl
                                           << vprDEBUG_FLUSH;
 
-      boost::filesystem::path dirPath(search_paths[x]);
-      if (boost::filesystem::exists(dirPath))
+      try
       {
-         vpr::LibraryFinder finder(search_paths[x], driver_ext);
-         vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-         this->loadPlugins( libs );
+         boost::filesystem::path dirPath(search_paths[x], boost::filesystem::native);
+         if (boost::filesystem::exists(dirPath))
+         {
+            vpr::LibraryFinder finder(search_paths[x], driver_ext);
+            vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+            this->loadPlugins( libs );
 
 #ifdef SNX_DEBUG
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "filelist:\n" << vprDEBUG_FLUSH;
-         for ( unsigned int i = 0; i < libs.size(); ++i )
-         {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << libs[i]
-                                                << std::endl << vprDEBUG_FLUSH;
-         }
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "filelist:\n"
+                                                << vprDEBUG_FLUSH;
+            for ( unsigned int i = 0; i < libs.size(); ++i )
+            {
+               vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << libs[i]
+                                                   << std::endl
+                                                   << vprDEBUG_FLUSH;
+            }
 #endif
+         }
+         else
+         {
+            vprDEBUG(snxDBG, vprDBG_STATE_LVL)
+               << "The directory does not exist: '" << search_paths[x] << "'\n"
+               << vprDEBUG_FLUSH;
+         }
       }
-      else
+      catch (boost::filesystem::filesystem_error& fsEx)
       {
-         vprDEBUG(snxDBG, vprDBG_STATE_LVL)
-            << "The directory does not exist: '" << search_paths[x] << "'\n"
+         vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED, "ERROR:")
+            << " File system exception caught: " << fsEx.what() << std::endl
             << vprDEBUG_FLUSH;
       }
    }
