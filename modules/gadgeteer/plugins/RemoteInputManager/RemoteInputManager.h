@@ -33,7 +33,7 @@
 #ifndef _CLUSTER_REMOTE_INPUT_MANAGER_H
 #define _CLUSTER_REMOTE_INPUT_MANAGER_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 #include <list>
 
