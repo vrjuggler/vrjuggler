@@ -86,6 +86,16 @@ public:
       return *this;
    }
 
+   bool operator== (const AnalogData& o) const
+   {
+      return mAnalogData == o.mAnalogData && mTimeStamp == o.mTimeStamp;
+   }
+
+   bool operator!= (const AnalogData& o) const
+   {
+      return ! (*this == o);
+   }
+
 /*
    operator float() const
    {

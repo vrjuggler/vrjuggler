@@ -35,6 +35,8 @@
 
 #include <gadget/Type/InputData.h>
 #include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+
 
 namespace gadget
 {
@@ -65,6 +67,16 @@ public:
       InputData::copy (pd);
       mPosData = pd.mPosData;
       return *this;
+   }
+
+   bool operator== (const PositionData& o) const
+   {
+      return mPosData == o.mPosData && mTimeStamp == o.mTimeStamp;
+   }
+
+   bool operator!= (const PositionData& o) const
+   {
+      return ! (*this == o);
    }
 
 public:

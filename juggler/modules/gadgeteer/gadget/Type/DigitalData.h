@@ -86,6 +86,16 @@ public:
       return *this;
    }
 
+   bool operator== (const DigitalData& o) const
+   {
+      return mDigitalData == o.mDigitalData && mTimeStamp == o.mTimeStamp;
+   }
+
+   bool operator!= (const DigitalData& o) const
+   {
+      return ! (*this == o);
+   }
+
 /*
    operator int() const
    {
