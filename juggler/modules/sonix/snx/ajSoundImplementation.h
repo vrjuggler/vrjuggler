@@ -2,6 +2,8 @@
 
 #ifndef AJSOUNDIMPLEMENTATION_H
 #define AJSOUNDIMPLEMENTATION_H
+#include <string>
+#include <map>
 #include "ajSoundInfo.h"
 
 class ajSoundImplementation
@@ -27,7 +29,7 @@ public:
    virtual ~ajSoundImplementation()
    {
       // make sure the API has gracefully exited.
-      this->killAPI();
+      this->shutdownAPI();
    }
 
    /**
@@ -36,7 +38,7 @@ public:
    void copy( const ajSoundImplementation & si )
    {
       mSounds = si.mSounds;
-      this->reload();
+      this->_bindAll();
    }
 
    /**
@@ -73,7 +75,7 @@ public:
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop(const std::string & name)
+   virtual void stop( const std::string& alias )
    {
       this->lookup( alias ).isPlaying = false;
       this->lookup( alias ).repeat_countdown = 0;
@@ -83,7 +85,9 @@ public:
     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
     * @input time elapsed since last frame
     */
-   virtual void step(const float & timeElapsed) = 0;
+   virtual void step( const float& timeElapsed )
+   {
+   }   
 
 
    /**
@@ -104,7 +108,7 @@ public:
    virtual void remove( const std::string alias )
    {
       this->_unbind( alias );
-      mSounds.remove( alias );
+      mSounds.erase( alias );
    }
 
    /**
@@ -129,7 +133,26 @@ public:
       z = this->lookup( alias ).position[2];
    }
 
-protected:
+   /**
+    * set the position of the listener
+    */
+   virtual void setListenerPosition( const float& x, const float& y, const float& z )
+   {
+      mListenerPos[0] = x;
+      mListenerPos[1] = y;
+      mListenerPos[2] = z;
+   }
+
+   /**
+    * get the position of the listener
+    */
+   virtual void getListenerPosition( float& x, float& y, float& z )
+   {
+      x = mListenerPos[0];
+      y = mListenerPos[1];
+      z = mListenerPos[2];
+   }
+
    /**
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
@@ -142,7 +165,7 @@ protected:
     * @postconditions sound API is ready to go.
     * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
     */
-   virtual void shutdownAPI() = 0;
+   virtual void shutdownAPI() {}
 
    /**
     * clear all associate()tions.
@@ -150,19 +173,17 @@ protected:
     */
    virtual void clear() = 0;
 
-private:
-   
    /**
     * bind: load (or reload) all associate()d sounds
     * @postconditions all sound associations are buffered by the sound API
     */
-   virtual void _bind() = 0;
+   virtual void _bindAll() = 0;
 
    /**
     * unbind: unload/deallocate all associate()d sounds.
     * @postconditions all sound associations are unbuffered by the sound API
     */
-   virtual void _unbind() = 0;
+   virtual void _unbindAll() = 0;
 
    /**
     * load/allocate the sound data this alias refers to the sound API
@@ -176,12 +197,18 @@ private:
     */
    virtual void _unbind( const std::string& alias ) = 0;
 
-   std::map<std::string, SoundInfo> mSounds;
+private:
+   std::map<std::string, ajSoundInfo> mSounds;
+
+   /*
+    * position of the observer/listener
+    */
+   float mListenerPos[3];
 
    /** This class uses a std::map of sound infos for alias lookup
     * @link aggregation
-    * @clientCardinality 1
-    * @supplierCardinality 0..**/
+    * @supplierCardinality 0..*
+    * @clientCardinality 1*/
    ajSoundInfo lnkSoundInfo_not_used_see_one_above;
 };
 #endif //AJSOUNDIMPLEMENTATION_H

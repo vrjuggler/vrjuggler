@@ -2,6 +2,7 @@
 
 #ifndef AJSTUBSOUNDIMPLEMENTATION_H
 #define AJSTUBSOUNDIMPLEMENTATION_H
+#include <string>
 #include "ajSoundImplementation.h"
 #include "ajSoundInfo.h"
 class ajStubSoundImplementation : public ajSoundImplementation
@@ -15,7 +16,7 @@ public:
     */
    virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
    {
-      SoundImplementation::trigger( alias, looping );
+      ajSoundImplementation::trigger( alias, looping );
       // do nothing
    }
 
@@ -25,7 +26,7 @@ public:
     */
    virtual void stop(const std::string & name)
    {
-      SoundImplementation::stop( name );
+      ajSoundImplementation::stop( name );
       // do nothing
    }
 
@@ -36,7 +37,7 @@ public:
     */
    virtual void step( const float & timeElapsed )
    {
-      SoundImplementation::step( timeElapsed );
+      ajSoundImplementation::step( timeElapsed );
       // do nothing
    }
 
@@ -49,7 +50,7 @@ public:
     */
    virtual void associate( const std::string& alias, const ajSoundInfo& description )
    {
-      SoundImplementation::associate( alias, description );
+      ajSoundImplementation::associate( alias, description );
       // do nothing
    }
 
@@ -58,7 +59,7 @@ public:
     */
    virtual void remove( const std::string alias )
    {
-      SoundImplementation::remove( alias );
+      ajSoundImplementation::remove( alias );
       // do nothing
    }
 
@@ -67,7 +68,7 @@ public:
     */
    virtual void setPosition( const std::string& alias, float x, float y, float z )
    {
-      SoundImplementation::setPosition( alias, x, y, z );
+      ajSoundImplementation::setPosition( alias, x, y, z );
    }
 
    /**
@@ -77,8 +78,84 @@ public:
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
    {
-      SoundImplementation::getPosition( alias, x, y, z );
+      ajSoundImplementation::getPosition( alias, x, y, z );
    }
+   
+   /**
+    * set the position of the listener
+    */
+   virtual void setListenerPosition( const float& x, const float& y, const float& z )
+   {
+      ajSoundImplementation::setListenerPosition( x, y, z );
+   }
+
+   /**
+    * get the position of the listener
+    */
+   virtual void getListenerPosition( float& x, float& y, float& z )
+   {
+      ajSoundImplementation::getListenerPosition( x, y, z );
+   }
+   
+protected:
+   /**
+    * start the sound API, creating any contexts or other configurations at startup
+    * @postconditions sound API is ready to go.
+    * @semantics this function should be called before using the other functions in the class.
+    */
+   virtual void startAPI()
+   {
+   }
+
+   /**
+    * kill the sound API, deallocating any sounds, etc...
+    * @postconditions sound API is ready to go.
+    * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
+    */
+   virtual void shutdownAPI()
+   {
+   }   
+
+   /**
+    * clear all associate()tions.
+    * @semantics any existing aliases will be stubbed. aounds will be unbind()ed
+    */
+   virtual void clear()
+   {
+   }   
+   
+   /**
+    * bind: load (or reload) all associate()d sounds
+    * @postconditions all sound associations are buffered by the sound API
+    */
+   virtual void _bindAll()
+   {
+   }   
+
+   /**
+    * unbind: unload/deallocate all associate()d sounds.
+    * @postconditions all sound associations are unbuffered by the sound API
+    */
+   virtual void _unbindAll()
+   {
+   }
+
+   /**
+    * load/allocate the sound data this alias refers to the sound API
+    * @postconditions the sound API has the sound buffered.
+    */
+   virtual void _bind( const std::string& alias )
+   {
+   }   
+
+   /**
+    * unload/deallocate the sound data this alias refers from the sound API
+    * @postconditions the sound API no longer has the sound buffered.
+    */
+   virtual void _unbind( const std::string& alias )
+   {
+   }
+   
 private:  
 
    /** @link dependency */
