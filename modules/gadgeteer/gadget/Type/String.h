@@ -60,6 +60,13 @@ namespace gadget
     * received commands.  This is similar to the additions made
     * by gadget::Position and gadget::Analog.
     *
+    * @note This interface should be considered as being in an "alpha" state.
+    *       String-oriented device types are very new to Gadgeteer, and they
+    *       have not have the same amount of time to mature as the other
+    *       device types (which have been around since VR Juggler 1.0).  This
+    *       interface may change in a future release of Gadgeteer (such as
+    *       Version 1.2).
+    *
     * @see Input, InputMixer
     */
    class GADGET_CLASS_API String : public vpr::SerializableObject
