@@ -2,7 +2,7 @@ DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 Aug-24-2001 allenb    Moved glWindow factory function to glDrawManager.
                       This removes the dependency that Juggler had on
-					  Juggler_ogl.
+                      Juggler_ogl.
 Aug-22-2001 cjust     Added XML-based configuration file support to the
                       C++ side of Juggler (EnvironmentManager and ConfigIO
                       classes).
