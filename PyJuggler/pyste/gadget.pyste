@@ -68,9 +68,50 @@ exclude(PositionProxy.getProxiedInputDevice)
 # ================================================================= Proxy types
 
 # Smart pointers ==============================================================
-Class('gadget::AnalogInterface', 'gadget/Type/AnalogInterface.h')
-Class('gadget::DigitalInterface', 'gadget/Type/DigitalInterface.h')
-#Class('gadget::GestureInterface', 'gadget/Type/GestureInterface.h')
-#Class('gadget::GloveInterface', 'gadget/Type/GloveInterface.h')
-Class('gadget::PositionInterface', 'gadget/Type/PositionInterface.h')
+Class('gadget::BaseDeviceInterface', 'gadget/Type/DeviceInterface.h')
+
+AnalogInterface = Class('gadgetWrapper::AnalogInterface',
+                         'gadgeteer-wrappers.h')
+set_policy(AnalogInterface.getProxy, return_internal_reference())
+
+DigitalInterface = Class('gadgetWrapper::DigitalInterface',
+                         'gadgeteer-wrappers.h')
+set_policy(DigitalInterface.getProxy, return_internal_reference())
+
+PositionInterface = Class('gadgetWrapper::PositionInterface',
+                          'gadgeteer-wrappers.h')
+set_policy(PositionInterface.getProxy, return_internal_reference())
+
+# XXX: I am not thrilled with this redefinition of DeviceInterface just to
+# get the necessary headers included.  It would be nice if Pyste would allow
+# more than one header to be included at a time.
+#DeviceInterface = Template('gadget::DeviceInterface',
+#                           'gadget/Type/AnalogInterface.h')
+#AnalogInterface = DeviceInterface('gadget::AnalogProxy')
+#rename(AnalogInterface, 'AnalogInterface')
+#set_policy(AnalogInterface.getProxy, return_internal_reference())
+
+#DeviceInterface = Template('gadget::DeviceInterface',
+#                           'gadget/Type/DigitalInterface.h')
+#DigitalInterface = DeviceInterface('gadget::DigitalProxy')
+#rename(DigitalInterface, 'DigitalInterface')
+#set_policy(DigitalInterface.getProxy, return_internal_reference())
+
+#DeviceInterface = Template('gadget::DeviceInterface',
+#                           'gadget/Type/GestureInterface.h')
+#GestureInterface = DeviceInterface('gadget::GestureProxy')
+#rename(GestureInterface, 'GestureInterface')
+#set_policy(GestureInterface.getProxy, return_internal_reference())
+#
+#DeviceInterface = Template('gadget::DeviceInterface',
+#                           'gadget/Type/GloveInterface.h')
+#GloveInterface = DeviceInterface('gadget::GloveProxy')
+#rename(GloveInterface, 'GloveInterface')
+#set_policy(GloveInterface.getProxy, return_internal_reference())
+
+#DeviceInterface = Template('gadget::DeviceInterface',
+#                           'gadget/Type/PositionInterface.h')
+#PositionInterface = DeviceInterface('gadget::PositionProxy')
+#rename(PositionInterface, 'PositionInterface')
+#set_policy(PositionInterface.getProxy, return_internal_reference())
 # ============================================================== Smart pointers
