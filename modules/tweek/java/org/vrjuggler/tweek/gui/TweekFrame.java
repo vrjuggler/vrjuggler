@@ -263,7 +263,7 @@ public class TweekFrame
     * menu is enabled, and the newly focused Bean is set up to receive open
     * requests from the GUI.
     */
-   public void beanFocusChanged (BeanFocusChangeEvent e)
+   public void beanFocusChanged(BeanFocusChangeEvent e)
    {
       if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_FOCUSED )
       {
@@ -296,6 +296,26 @@ public class TweekFrame
          else
          {
             disableFileHandlingItems();
+         }
+
+         if ( panel_bean instanceof HelpProvider )
+         {
+            HelpProvider help_bean = (HelpProvider) panel_bean;
+            String help_desc = help_bean.getHelpDescription();
+
+            if ( help_desc == null || help_desc.equals("") )
+            {
+               help_desc = e.getBean().getName() + " Help";
+            }
+
+            mMenuHelpBean.setText(help_desc);
+            mMenuHelpBean.setEnabled(true);
+
+            mHelpProvider = help_bean;
+         }
+         else
+         {
+            disableHelpProvidingItems();
          }
       }
       else if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_UNFOCUSED )
@@ -792,14 +812,26 @@ public class TweekFrame
             }
          });
 
+      if ( ! mMacOS )
+      {
+         // Define the About option in the Help menu.
+         mMenuHelpAbout.setText("About ...");
+         mMenuHelpAbout.addActionListener(new ActionListener ()
+            {
+               public void actionPerformed(ActionEvent e)
+               {
+                  helpAboutAction(e);
+               }
+            });
+      }
 
-      // Define the About option in the Help menu.
-      mMenuHelpAbout.setText("About ...");
-      mMenuHelpAbout.addActionListener(new ActionListener ()
+      mMenuHelpBean.setEnabled(false);
+      mMenuHelpBean.setText("Bean Help ...");
+      mMenuHelpBean.addActionListener(new ActionListener ()
          {
             public void actionPerformed(ActionEvent e)
             {
-               helpAboutAction(e);
+               beanHelpAction(e);
             }
          });
 
@@ -892,7 +924,11 @@ public class TweekFrame
 
       // Add the About option to the Help menu.
       mMenuHelp.setText("Help");
-      mMenuHelp.add(mMenuHelpAbout);
+      if ( ! mMacOS )
+      {
+         mMenuHelp.add(mMenuHelpAbout);
+      }
+      mMenuHelp.add(mMenuHelpBean);
 
       // Add the menus to the menu bar.
       mMenuBar.add(mMenuFile);
@@ -1206,6 +1242,17 @@ public class TweekFrame
       dlg.show();
    }
 
+   /**
+    * Help | Bean Help action performed.
+    */
+   private void beanHelpAction(ActionEvent e)
+   {
+      if ( mHelpProvider != null )
+      {
+         mHelpProvider.helpRequested();
+      }
+   }
+
    private void statusMessageExpandAction (ActionEvent e)
    {
       if ( mMsgPanelExpanded )
@@ -1244,7 +1291,7 @@ public class TweekFrame
     * files.  This effectively resets the menu items to their state before any
     * Beans were loaded in the GUI.
     */
-   private void disableFileHandlingItems ()
+   private void disableFileHandlingItems()
    {
       mFileLoader = null;
       mMenuFileOpen.setText("Open ...");
@@ -1252,6 +1299,18 @@ public class TweekFrame
       mMenuFileSave.setEnabled(false);
       mMenuFileClose.setText("Close ...");
       mMenuFileClose.setEnabled(false);
+   }
+
+   /**
+    * Disables the Bean-specific menu items in the Help menu related to
+    * providing Bean-specific help.  This effectively resets the menu items to
+    * their state before any Beans were loaded in the GUI.
+    */
+   private void disableHelpProvidingItems()
+   {
+      mHelpProvider = null;
+      mMenuHelpBean.setText("Bean Help");
+      mMenuHelpBean.setEnabled(false);
    }
 
    // ========================================================================
@@ -1297,6 +1356,7 @@ public class TweekFrame
    private JMenuItem mMenuBeansStatus       = new JMenuItem();
    private JMenu mMenuHelp                = new JMenu();
    private JMenuItem mMenuHelpAbout       = new JMenuItem();
+   private JMenuItem mMenuHelpBean        = new JMenuItem();
 
    // Networking stuff.
    private Vector mORBs = new Vector();
@@ -1304,6 +1364,7 @@ public class TweekFrame
    private MessagePanel    mMessagePanel    = null;
    private MessageDocument mMsgDocument     = null;
    private FileLoader      mFileLoader      = null;
+   private HelpProvider    mHelpProvider    = null;
    private BeanPrefsDialog mBeanPrefsDialog = null;
 
    private static boolean mMacOS =
