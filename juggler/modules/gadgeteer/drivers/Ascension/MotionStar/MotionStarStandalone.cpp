@@ -18,10 +18,10 @@
  */
 
  
-#include <Input/vjPosition/aMotionStar.h>
 #include <strings.h>
 #include <iostream.h>
 #include <assert.h>
+#include <Input/vjPosition/aMotionStar.h>
  
 aMotionStar::aMotionStar(unsigned int _format,
 			 unsigned int _birdFormat,
