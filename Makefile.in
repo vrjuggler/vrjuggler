@@ -54,12 +54,12 @@ MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 SUBDIR		= modules/vapor @JUGGLER_PROJECTS@
 
 build:
-	$(MAKE) RECTARGET="buildworld" recursive
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="buildworld" recursive
 
 install:
-	$(MAKE) RECTARGET="installworld" recursive
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
 
 clean cleandepend clobber:
-	$(MAKE) RECTARGET="$@" recursive
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
 
 include $(MKPATH)/dpp.subdir.mk
