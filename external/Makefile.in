@@ -295,14 +295,13 @@ install-omniORB3 install-omniORB4:
 	@for c in $(OMNIORB_CMDS) ; do					\
             $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) $(CXX_ORB_BIN_DIR)/$$c $(deps_prefix)/bin/$$c || exit 1; \
           done
-	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .h					\
-          -i $(CXX_ORB_ROOT)/include/$(CXX_ORB_NAME)			\
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS) -e .h,.hh	\
+          $(GROUP_OPT_UNIX) -i $(CXX_ORB_ROOT)/include/$(CXX_ORB_NAME)	\
           -o $(deps_prefix)/include/$(CXX_ORB_NAME)
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
           $(CXX_ORB_ROOT)/include/omniconfig.h $(deps_prefix)/include
-	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .h -i $(CXX_ORB_ROOT)/include/omnithread	\
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS) -e .h,.hh	\
+          $(GROUP_OPT_UNIX) -i $(CXX_ORB_ROOT)/include/omnithread	\
           -o $(deps_prefix)/include/omnithread
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
           $(CXX_ORB_ROOT)/include/omnithread.h $(deps_prefix)/include
