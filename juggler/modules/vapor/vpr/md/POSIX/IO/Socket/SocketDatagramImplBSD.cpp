@@ -77,7 +77,7 @@ SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
         bytes = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
                            (struct sockaddr*) &from.m_addr, &fromlen);
 
-        if ( bytes_read == -1 ) {
+        if ( bytes == -1 ) {
             bytes_read = 0;
 
             if ( errno == EAGAIN && getNonBlocking() ) {
