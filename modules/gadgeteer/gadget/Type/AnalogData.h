@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _GADGET_ANALOGDATA_H_
-#define _GADGET_ANALOGDATA_H_
+#ifndef _GADGET_ANALOG_DATA_H_
+#define _GADGET_ANALOG_DATA_H_
 
 #include <gadget/Type/InputData.h>
 
@@ -40,10 +39,9 @@ namespace gadget
 {
 
 /** InputData subclass for analog data. */
-class GADGET_CLASS_API AnalogData: public InputData
+class AnalogData : public InputData
 {
 public:
-
    /** Constructor. */
    AnalogData ()
       : InputData()
@@ -91,10 +89,9 @@ public:
 
 protected:
    float mAnalogData;
-
 }; // class AnalogData
 
 } // namespace gadget
 
 
-#endif
+#endif /* _GADGET_ANALOG_DATA_H_ */
