@@ -53,32 +53,17 @@
 //  subDevice's amount of data.  (one int)
 //!PUBLIC_API:
 //--------------------------------------------------------------------------
-class vjDigitalProxy : public vjProxy
+class vjDigitalProxy : public vjTypedProxy<vjDigital>
 {
 
 public:
    /** @name Construction/Destruction */
    vjDigitalProxy() {
-      m_digPtr = NULL;
       m_unitNum = -1;
       m_data = 0;
    }
 
    virtual ~vjDigitalProxy() {}
-
-   void set(vjDigital* digPtr, int subNum)
-   {
-      //vjASSERT( digPtr->fDeviceSupport(DEVICE_DIGITAL) );
-      m_digPtr = digPtr;
-      m_unitNum = subNum;
-      m_data = m_digPtr->getDigitalData(m_unitNum);
-      stupify(false);
-
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "digPtr: " << digPtr << std::endl
-              << "subNum: " << subNum << std::endl << std::endl
-              << vjDEBUG_FLUSH;
-   }
-
    virtual void updateData();
 
 
@@ -103,7 +88,10 @@ public:
 
    vjDigital* getDigitalPtr()
    {
-      return m_digPtr;
+      if(mStupified)
+         return NULL;
+      else
+         return mTypedDevice;
    }
 
    int getUnit()
@@ -117,13 +105,15 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(m_digPtr);
+      if(NULL == mTypedDevice)
+         return NULL;
+
+      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
       vjASSERT(ret_val != NULL);
       return ret_val;
    }
 
 private:
-   vjDigital*  m_digPtr;      //: Pointer to the digital device
    int         m_unitNum;     //: The sub-unit of the device we are working with
 
       //: Copy of the digital data we are dealing with

@@ -39,6 +39,7 @@
 #include <Input/InputManager/vjProxy.h>
 #include <Config/vjConfigChunk.h>
 #include <Utils/vjSingleton.h>
+#include <Kernel/vjDependencyManager.h>
 
 
 //: Base class for virtual construction of proxies

@@ -54,36 +54,24 @@
 // See also: vjAnalog
 //
 //!PUBLIC_API:
-class vjAnalogProxy : public vjProxy
+class vjAnalogProxy : public vjTypedProxy<vjAnalog>
 {
 
 public:
    //: Constructor
-   vjAnalogProxy() : m_anaPtr(NULL), m_unitNum(-1), m_data(-1.0f)
+   vjAnalogProxy() : m_unitNum(-1), m_data(-1.0f)
    {;}
 
    virtual ~vjAnalogProxy() {}
 
-   //: Set the proxy to point to the given analog device
-   //! PRE: anaPtr must be a valid analog device
-   //+      subNum must be a valid subNum for the device
-   //! POST: The proxy now references the analog device
-   //! ARGS: anaPtr - Pointer to the analog device
-   //! ARGS: subNum - The subunit number of the analog device
-   void set(vjAnalog* anaPtr, int subNum)
-   {
-      //vjASSERT( anaPtr->fDeviceSupport(DEVICE_ANALOG) );
-      m_anaPtr = anaPtr;
-      m_unitNum = subNum;
-      stupify(false);
-
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "anaPtr: " << anaPtr << std::endl
-              << "subNum: " << subNum << std::endl << vjDEBUG_FLUSH;
-   }
-
    //: Update the cached data copy from the device
    virtual void updateData()
-   { m_data = m_anaPtr->getAnalogData(m_unitNum);}
+   {
+      if(!mStupified)
+      {
+         m_data = mTypedDevice->getAnalogData(m_unitNum);
+      }
+   }
 
    //: Get the current analog data value
    //! RETURNS: The analog data from the device
@@ -97,7 +85,12 @@ public:
    }
 
    vjAnalog* getAnalogPtr()
-   { return m_anaPtr;}
+   {
+      if(mStupified)
+         return NULL;
+      else
+         return mTypedDevice;
+   }
 
    int getUnit() const
    { return m_unitNum;}
@@ -108,13 +101,15 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(m_anaPtr);
+      if(NULL == mTypedDevice)
+         return NULL;
+
+      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
       vjASSERT((ret_val != NULL) && "Cross-cast in vjAnalogProxy failed");
       return ret_val;
    }
 
 private:
-   vjAnalog*   m_anaPtr;
    int         m_unitNum;
    float       m_data;
 };

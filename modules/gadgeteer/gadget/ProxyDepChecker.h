@@ -29,21 +29,43 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
+#ifndef _VJ_PROXY_DEP_CHECKER_H_
+#define _VJ_PROXY_DEP_CHECKER_H_
 
 #include <vjConfig.h>
-#include <Kernel/vjKernel.h>
-#include <Input/InputManager/vjGloveProxy.h>
 
-bool vjGloveProxy::config(vjConfigChunk* chunk)
+// Dependency checker includes
+#include <Kernel/vjDependencyManager.h>
+#include <Kernel/vjDisplayManager.h>
+#include <Kernel/vjDepChecker.h>
+
+//: Dependency checker for Proxies
+class vjProxyDepChecker : public vjDepChecker
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "GloveProxy");
+public:
+   vjProxyDepChecker()
+   {;}
 
-   mUnitNum = chunk->getProperty("unit");
-   mDeviceName = chunk->getProperty("device");
+   //: Return a string name of the checker
+   // Used to output messages in checker listings
+   virtual std::string getCheckerName()
+   { return std::string("vjProxyChecker Checker"); }
 
-   refresh();
+   // We can handle only keyboard configuration information
+   virtual bool canHandle(vjConfigChunk* chunk);
 
-   return true;
-}
+   //: Are the dependencies satisfied?
+   // Defaults to all being handled for it
+   virtual bool depSatisfied(vjConfigChunk* chunk)
+   {
+      return true;
+   }
+
+   // Write out the dependencies to the vjDEBUG macro
+   virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
+   {
+      ;
+   }
+};
+
+#endif

@@ -40,64 +40,48 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "DigProxy");
 
-   int unitNum = chunk->getProperty("unit");
-   std::string proxy_name = chunk->getProperty("name");
-   std::string dev_name = chunk->getProperty("device");
+   m_unitNum = chunk->getProperty("unit");
+   mDeviceName = chunk->getProperty("device");
 
-   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
-   if(NULL == input_dev)       // Not found, ERROR
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjDigitalProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjDigital* dig_dev = dynamic_cast<vjDigital*>(input_dev);
-   if(NULL == dig_dev)
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjDigitalProxy::config: Device was of wrong type: " << dev_name
-                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   at unit number: " << unitNum << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   DigitalProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
-
-   set(dig_dev,unitNum);    // Set the proxy
+   refresh();
    return true;
 }
 
 
+
 void vjDigitalProxy::updateData()
 {
-    int new_state = m_digPtr->getDigitalData(m_unitNum);
-    int old_state = m_data;
-    if(vjDigital::OFF == old_state)
+   if(!mStupified)
    {
-       if(new_state)     // Button now pressed
-      m_data = vjDigital::TOGGLE_ON;
-       else              // Button now released
-      m_data = vjDigital::OFF;
-   }
-    else if(vjDigital::ON == old_state)
-   {
-       if(new_state)     // Button now pressed
-      m_data = vjDigital::ON;
-       else              // Button now released
-      m_data = vjDigital::TOGGLE_OFF;
-   }
-    else if(vjDigital::TOGGLE_ON == old_state)
-   {
-       if(new_state)     // Button now pressed
-      m_data = vjDigital::ON;
-       else              // Button now released
-      m_data = vjDigital::TOGGLE_OFF;
-   }
-    else if(vjDigital::TOGGLE_OFF == old_state)
-   {
-       if(new_state)     // Button now pressed
-      m_data = vjDigital::TOGGLE_ON;
-       else              // Button now released
-      m_data = vjDigital::OFF;
+      int new_state = mTypedDevice->getDigitalData(m_unitNum);
+       int old_state = m_data;
+       if(vjDigital::OFF == old_state)
+      {
+          if(new_state)     // Button now pressed
+         m_data = vjDigital::TOGGLE_ON;
+          else              // Button now released
+         m_data = vjDigital::OFF;
+      }
+       else if(vjDigital::ON == old_state)
+      {
+          if(new_state)     // Button now pressed
+         m_data = vjDigital::ON;
+          else              // Button now released
+         m_data = vjDigital::TOGGLE_OFF;
+      }
+       else if(vjDigital::TOGGLE_ON == old_state)
+      {
+          if(new_state)     // Button now pressed
+         m_data = vjDigital::ON;
+          else              // Button now released
+         m_data = vjDigital::TOGGLE_OFF;
+      }
+       else if(vjDigital::TOGGLE_OFF == old_state)
+      {
+          if(new_state)     // Button now pressed
+         m_data = vjDigital::TOGGLE_ON;
+          else              // Button now released
+         m_data = vjDigital::OFF;
+      }
    }
 }

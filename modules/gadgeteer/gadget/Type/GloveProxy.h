@@ -49,14 +49,12 @@
 
 //: vjGlove proxy class.
 //!PUBLIC_API:
-class vjGloveProxy : public vjProxy
+class vjGloveProxy : public vjTypedProxy<vjGlove>
 {
 public:
      //: Construct the proxy to point to the given glove device and sub-unit number.
   vjGloveProxy()
   {
-     //Set(glovePtr,unitNum);
-     mGlovePtr = NULL;
      mUnitNum = -1;
      mVisible = true;
   }
@@ -64,25 +62,13 @@ public:
   virtual ~vjGloveProxy()
   {}
 
-  //: Set the gloveProxy to point to another device and subUnit number.
-  void set(vjGlove* glovePtr, int unitNum)
-  {
-     //vjASSERT( glovePtr->fDeviceSupport(DEVICE_GLOVE) );
-     mGlovePtr = glovePtr;
-     mUnitNum = unitNum;
-     stupify(false);
-
-     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "glovePtr: " << glovePtr << std::endl
-              << "unitNum: " << unitNum << std::endl << vjDEBUG_FLUSH;
-  }
-
   float getAngle(vjGloveData::vjGloveComponent component,
                  vjGloveData::vjGloveJoint joint)
   {
     if(mStupified)
        return 0.0f;
     else
-       return mGlovePtr->getGloveAngle(component, joint, mUnitNum);
+       return mTypedDevice->getGloveAngle(component, joint, mUnitNum);
   }
 
 
@@ -91,7 +77,7 @@ public:
      if(mStupified)
         return vjVec3(0,0,0);
      else
-        return mGlovePtr->getGloveVector(component, mUnitNum);
+        return mTypedDevice->getGloveVector(component, mUnitNum);
   }
 
   vjMatrix getPos( vjGloveData::vjGloveComponent component = vjGloveData::WRIST)
@@ -99,7 +85,7 @@ public:
      if(mStupified)
         return vjMatrix();
      else
-      return mGlovePtr->getGlovePos(component, mUnitNum);
+      return mTypedDevice->getGlovePos(component, mUnitNum);
   }
 
 
@@ -108,13 +94,18 @@ public:
      if(mStupified)
         return vjGloveData();
      else
-        return mGlovePtr->getGloveData(mUnitNum);
+        return mTypedDevice->getGloveData(mUnitNum);
   }
 
 
   //: Returns a pointer to the device held by this proxy.
   vjGlove* getGlovePtr()
-  { return mGlovePtr; }
+  {
+     if(mStupified)
+        return NULL;
+     else
+      return mTypedDevice;
+  }
 
 
   //: Returns the subUnit number that this proxy points to.
@@ -130,16 +121,16 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(mGlovePtr);
+      if(NULL == mTypedDevice)
+         return NULL;
+
+      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
       vjASSERT(ret_val != NULL);
       return ret_val;
    }
 
 
 private:
-   //: Pointer to the glove device we are proxying.
-   vjGlove* mGlovePtr;
-
    //: Should we be drawn on the screen
    bool  mVisible;
 
