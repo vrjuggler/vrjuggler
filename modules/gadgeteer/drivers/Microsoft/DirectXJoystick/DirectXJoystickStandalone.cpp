@@ -31,11 +31,17 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <windows.h>
+
+#ifdef _DEBUG
+#  include <iostream>
+#endif
+
 #include <dinput.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <assert.h>
 
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickExceptions.h>
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
@@ -156,6 +162,8 @@ void DirectXJoystickStandalone::init()
       }
    }
 
+   mAxisValueMap.resize(mCapabilities.dwAxes, NULL);
+
    // Enumerate the axes of the joystick and set the range of each axis found.
    mDxJoystick->EnumObjects(enumerateAxesCallback, (void*) this, DIDFT_AXIS);
 
@@ -260,7 +268,8 @@ const std::string& DirectXJoystickStandalone::getProductName() const
 BOOL DirectXJoystickStandalone::enumerateJoysticks(const DIDEVICEINSTANCE* dInstance)
 {
    // Obtain an interface to the enumerated joystick.
-   HRESULT hr = mDxObject->CreateDevice(dInstance->guidInstance, &mDxJoystick, NULL);
+   HRESULT hr = mDxObject->CreateDevice(dInstance->guidInstance, &mDxJoystick,
+                                        NULL);
    return (FAILED(hr) ? DIENUM_CONTINUE : DIENUM_STOP);
 /* // FIXME: allow configurable joystick station
    static int count = 0;
@@ -276,6 +285,14 @@ BOOL DirectXJoystickStandalone::enumerateJoysticks(const DIDEVICEINSTANCE* dInst
 
 BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
 {
+   // The axes appear to be enumerated in reverse order by Direct Input.
+   // XXX: Can we depend on this?  Using DIDFT_GETINSTANCE(doi->dwType) gives
+   // back values that I would not expect in certain cases.  In other words,
+   // the object instance number does not correlate with the memory ordering
+   // in DIJOYSTATE.
+   static int axis_index(getNumAxes() - 1);
+   assert(axis_index >= 0 && "axis_index went negative!");
+
    // For each axis enumrated, this function will set
    // the minimum and maximum range values for it.
    if ( doi->dwType & DIDFT_AXIS )
@@ -293,6 +310,78 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
       {
          return DIENUM_STOP;
       }
+
+      LONG* value_addr(NULL);
+      if ( doi->guidType == GUID_XAxis )
+      {
+         value_addr = &mJsData.lX;
+#ifdef _DEBUG
+         std::cout << "Object for X axis" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_YAxis )
+      {
+         value_addr = &mJsData.lY;
+#ifdef _DEBUG
+         std::cout << "Object for Y axis" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_ZAxis )
+      {
+         value_addr = &mJsData.lZ;
+#ifdef _DEBUG
+         std::cout << "Object for Z axis" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_RxAxis )
+      {
+         value_addr = &mJsData.lRx;
+#ifdef _DEBUG
+         std::cout << "Object for X axis rotation" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_RyAxis )
+      {
+         value_addr = &mJsData.lRy;
+#ifdef _DEBUG
+         std::cout << "Object for Y axis rotation" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_RzAxis )
+      {
+         value_addr = &mJsData.lRz;
+#ifdef _DEBUG
+         std::cout << "Object for Z axis rotation" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_Slider )
+      {
+         // XXX: I do not know the correct way to distinguish between the two
+         // possible sliders.  -PH 2/2/2005
+         if ( DIDFT_GETINSTANCE(doi->dwType) == 2 )
+         {
+            value_addr = &mJsData.rglSlider[0];
+         }
+         else
+         {
+            value_addr = &mJsData.rglSlider[1];
+         }
+#ifdef _DEBUG
+         std::cout << "Object for slider" << std::endl;
+#endif
+      }
+      else if ( doi->guidType == GUID_POV )
+      {
+#ifdef _DEBUG
+         std::cout << "Object for POV" << std::endl;
+#endif
+      }
+
+#ifdef _DEBUG
+      std::cout << "Setting mAxisValueMap[" << axis_index << "]" << std::endl;
+#endif
+      mAxisValueMap[axis_index] = value_addr;
+      axis_index--;
    }
 
    return DIENUM_CONTINUE;
