@@ -1,18 +1,20 @@
 #ifndef _SIMPLE_INPUT
 #define _SIMPLE_INPUT
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <iostream>
 #include <iomanip>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Math/Matrix.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/AnalogInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
+
+using namespace vrj;
 
 //----------------------------------------------------
 //: Simple Input Demonstration application
