@@ -11,7 +11,7 @@ my $dest_dir = "/home/users/allenb/public_html/temp_vrj/";
 my $css_filename = "html/css_header.html";
 my $html_footer_filename = "html/footer.html";
 my $html_install_prefix = "http://www.vrac.iastate.edu/~allenb/temp_vrj/";
-my $web_subst_file = "web_subst.pl";
+my $subst_file = "subst.pl";
 
 
 
@@ -22,7 +22,7 @@ $command .= " -i __deleteme,JExplorer,install";
 $command .= " -c $css_filename";
 $command .= " -f $html_footer_filename";
 $command .= " -h $html_install_prefix";
-$command .= " -w $web_subst_file";
+$command .= " -w $subst_file";
 if($opt_a == 1)
 {
 $command .= " -a";

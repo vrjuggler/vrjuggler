@@ -57,7 +57,7 @@ use InstallOps;
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
 if ( $#ARGV < 3 ) {
-    warn "Usage: $0 -s <source directory> -t <target directory> -i<ignore dir>,<ignore dir>,.. -c <css header> -e <html header> -f <html footer> -h <HTML install path> -w <web_subst file> -a (force all) -z <name of script file to output>\n";
+    warn "Usage: $0 -s <source directory> -t <target directory> -i<ignore dir>,<ignore dir>,.. -c <css header> -e <html header> -f <html footer> -h <HTML install path> -w <subst file> -a (force all) -z <name of script file to output>\n";
     exit 1;
 }
 
@@ -71,7 +71,7 @@ my $css_filename = "$opt_c";
 my $html_header_filename = "$opt_e";
 my $html_footer_filename = "$opt_f";
 my $html_install_prefix = "$opt_h";
-my $web_subst_file = "$opt_w";
+my $subst_file = "$opt_w";
 
 my $check_file_mtime = 1;     # should we check file modification time in recurseAction?
 if($opt_a == 1)
@@ -88,7 +88,7 @@ print "           CSS file: $css_filename\n";
 print "        HTML Header: $html_header_filename\n";
 print "        HTML footer: $html_footer_filename\n";
 print "HTML install prefix: $html_install_prefix\n";
-print "     Web Subst file: $web_subst_file\n\n";
+print "     Web Subst file: $subst_file\n\n";
 
 create_script("$opt_z");
 
@@ -146,23 +146,23 @@ $css_header="";
 $html_header="";
 $html_footer="";
 
-# Fills the %web_subst hash with tags to use
+# Fills the %path_subst hash with tags to use
 # Fills the %alias_subst hash with tags to use
 # for replacing tag entries in the config files.
 sub initWebSubstTags()
 {
    #$file = "someprog.pl";
-   if($web_subst_file)
+   if($subst_file)
    {
-      unless ($return = do $web_subst_file) {
-          warn "couldn't parse $web_subst_file: $@"         if $@;
-          warn "couldn't do $web_subst_file: $!"            unless defined $return;
-          warn "couldn't run $web_subst_file"               unless $return;
+      unless ($return = do $subst_file) {
+          warn "couldn't parse $subst_file: $@"         if $@;
+          warn "couldn't do $subst_file: $!"            unless defined $return;
+          warn "couldn't run $subst_file"               unless $return;
       }
    }
 
-   print "----- web_subst hash values -------------\n";
-   while ( ($k,$v) = each %web_subst ) {
+   print "----- path_subst hash values -------------\n";
+   while ( ($k,$v) = each %path_subst ) {
        print "$k => $v\n";
    }
    print "-----------------------------------------\n";
@@ -426,7 +426,7 @@ sub xmlFilter($$)
 
 # Replace the tags in the file contents passed to the subroutine
 #
-# Each tag in %web_subst is replaced with the tag value prefixed
+# Each tag in %path_subst is replaced with the tag value prefixed
 # by the html_install_directory
 # Each tag in %alias_subst is replace by the tag only
 sub replaceTags($)
@@ -436,8 +436,8 @@ sub replaceTags($)
    #print "File contents???---\n\n";
    #print $$contents_ref;
 
-   # find and web_subst tags and replace with <html_inst_dir>/<tag value>
-   while (($tag,$tag_value) = each(%web_subst))
+   # find and path_subst tags and replace with <html_inst_dir>/<tag value>
+   while (($tag,$tag_value) = each(%path_subst))
    {
       #print "Checking web subst: $tag ==> $tag_value\n";
       # Look for ${tag} or $(tag)
@@ -596,7 +596,7 @@ sub create_script($)
    print OUTFILE "my \$html_header_filename = \"$html_header_filename\";\n";
    print OUTFILE "my \$html_footer_filename = \"$html_footer_filename\";\n";
    print OUTFILE "my \$html_install_prefix = \"$html_install_prefix\";\n";
-   print OUTFILE "my \$web_subst_file = \"$web_subst_file\";\n";
+   print OUTFILE "my \$subst_file = \"$subst_file\";\n";
    print OUTFILE "\n\n\n";
 
    print OUTFILE "my \$command = \"install-web.pl \";\n";
@@ -607,7 +607,7 @@ sub create_script($)
    print OUTFILE "\$command .= \" -f \$html_header_filename\";\n";
    print OUTFILE "\$command .= \" -f \$html_footer_filename\";\n";
    print OUTFILE "\$command .= \" -h \$html_install_prefix\";\n";
-   print OUTFILE "\$command .= \" -w \$web_subst_file\";\n";
+   print OUTFILE "\$command .= \" -w \$subst_file\";\n";
    print OUTFILE "if(\$opt_a == 1)\n{\n";
    print OUTFILE "\$command .= \" -a\";\n}";
    print OUTFILE "\n\n";
