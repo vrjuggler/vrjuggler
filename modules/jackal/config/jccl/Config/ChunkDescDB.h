@@ -10,7 +10,6 @@
 #define _VJ_CHUNKDESCDB_H_
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <Config/vjChunkDesc.h>
 
 //--------------------------------------------------------------
