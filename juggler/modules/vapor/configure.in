@@ -317,7 +317,6 @@ _vpr_save_LDFLAGS="$LDFLAGS"
 # XXX: Should be -I$CPPDOM_ROOT/include
 if test "x$CPPDOM_ROOT" != "x/usr" ; then
     CPPFLAGS="$STDFLAGS -I$CPPDOM_ROOT $CPPFLAGS"
-    INCLUDES="-I$CPPDOM_ROOT $INCLUDES"
     LDFLAGS="-L$CPPDOM_ROOT/lib $LDFLAGS"
 fi
 
@@ -347,7 +346,6 @@ fi
 
 CFLAGS="${_vpr_save_CFLAGS}"
 CPPFLAGS="${_vpr_save_CPPFLAGS}"
-INCLUDES="${_vpr_save_INCLUDES}"
 LDFLAGS="${_vpr_save_LDFLAGS}"
 
 DPP_CHECK_DYNLOAD_LIB
@@ -665,6 +663,7 @@ if test "x$USE_PTHREADS" = "xyes" ; then
     DPP_PTHREAD_FINISH
 fi
 
+subsystem_includes="$subsystem_includes $NSPR_INCLUDES"
 INCLUDES="$INCLUDES $NSPR_INCLUDES"
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
@@ -731,7 +730,7 @@ fi
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
     SPROC)
-        subsystem_cxxflags="$INCLUDES"
+        subsystem_cxxflags="$subsystem_includes"
         subsystem_libs="$SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
@@ -743,7 +742,7 @@ case $SUBSYSTEM in
         vpr_prof_libs='-lvpr_p'
         ;;
     POSIX)
-        subsystem_cxxflags="$INCLUDES"
+        subsystem_cxxflags="$subsystem_includes"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
 
         if test "x$PLATFORM" != "xDarwin" ; then
@@ -765,7 +764,7 @@ case $SUBSYSTEM in
         ;;
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
-            subsystem_cxxflags="$INCLUDES"
+            subsystem_cxxflags="$subsystem_includes"
             subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
             vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
@@ -774,7 +773,7 @@ case $SUBSYSTEM in
             vpr_libs='vpr.lib'
             vpr_prof_libs='vpr.lib'
         else
-            subsystem_cxxflags="$INCLUDES"
+            subsystem_cxxflags="$subsystem_includes"
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
