@@ -467,7 +467,10 @@ else
 fi
 
 if test "x$USE_PTHREADS" = "xyes" ; then
-    AC_DEFINE(_REENTRANT, , [Define if using POSIX threads.])
+    if test "x$PTHREAD_ARG" = "x" ; then
+       AC_DEFINE(_REENTRANT, 1, [Define if using POSIX threads.])
+    fi
+
     AC_DEFINE(_THREAD_SAFE, , [Define if using POSIX threads.])
     AC_DEFINE(RWSTD_MULTI_THREAD, , [Define if using POSIX threads.])
     AC_DEFINE(RW_MULTI_THREAD, , [Define if using POSIX threads.])
@@ -674,6 +677,8 @@ fi
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
+   CXXFLAGS="$CXXFLAGS $PTHREAD_ARG"
+   vpr_cxxflags="$vpr_cxxflags $PTHREAD_ARG"
 
    _vpr_gxx_ver=`$CXX -dumpversion`
 
