@@ -47,13 +47,13 @@ class vjPinchGlove : public vjGlove, public vjDigital
 {
 public:
    //: Construct
-   vjPinchGlove() : mGlove(NULL), mCalDir(NULL)
+   vjPinchGlove() : mGlove( NULL )
    {;}
 
    //: Destroy the glove
-   virtual ~vjPinchGlove ();
+   virtual ~vjPinchGlove();
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config( vjConfigChunk* c );
 
    virtual char* getDeviceName() { return "vjPinchGlove";}
    static std::string getChunkType() { return std::string("PinchGlove");}
@@ -81,22 +81,23 @@ public:
    
 protected:
 	//: The main control loop for the object
-   void controlLoop(void* nullParam);
+   void controlLoop( void* nullParam );
 
    void copyDataFromGlove();
+   void updateFingerAngles();
 
 protected:
    //vjThread*         mControlThread;      // The thread of control for the object
-   fsPinchGlove*     mGlove;              // The actual glove
+   fsPinchGlove*      mGlove;              // The actual glove
 
-   char*             mCalDir;             // Calibration file directory
+   //char*             mCalDir;             // Calibration file directory
 
 private:
     //lookup tables for the finger angles.
    static float	    mOnLookupTable[4][11];
    static float	    mOffLookupTable[4][11];
-   static bool	    mLookupInitialized; // false by default, set true when lookup table has been initialized.
-   static void	    mInitLookupTable();
+   static bool	       mLookupInitialized; // false by default, set true when lookup table has been initialized.
+   static void	       mInitLookupTable();
 };
 
 #endif	/* _VJ_PINCH_GLOVE_H_ */
