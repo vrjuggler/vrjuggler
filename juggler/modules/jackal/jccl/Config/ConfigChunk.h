@@ -47,111 +47,125 @@ struct Token {
 };
 
 
-/*****************************************************************************
- *                             vjConfigChunk                                   *
- *****************************************************************************/
 
-
-/** A vjConfigChunk is essentially a list of properties, each of which has
- *  a specific type and zero or more values (which can be individually
- *  indexed).
- */
-
+//------------------------------------------------------------------
+//: A container for configuration information
+//
+// A vjConfigChunk stores a number of vjPropertys that describe
+// the configuration of a particular component of the system.
+// It has an associated vjChunkDesc which describes its type
+// and the vjPropertys that belong to it.
+//
+//------------------------------------------------------------------
 class vjConfigChunk {
 
 private:
-  vjChunkDesc* desc;
-  vector<vjProperty*> props;                  // Stores the set of properties
+    vjChunkDesc* desc;
+    vector<vjProperty*> props;       // Stores the set of properties
 
 
 public:
 
-  /// Constructs a vjConfigChunk matching the given description.
-  vjConfigChunk (vjChunkDesc *desc);
+    //: Constructs a vjConfigChunk matching the given description.
+    //!PRE: desc points to a valid vjChunkDesc
+    //!POST: self has been created, and all its vjPropertys 
+    //+      initialized to their default values.
+    vjConfigChunk (vjChunkDesc *desc);
 
 
 
-  /// Destroys a vjConfigChunk, freeing all properties and related memory. 
-  ~vjConfigChunk ();
+    //: Destroys a vjConfigChunk and all related memory.
+    //!POST:  self has been destroyed, and all memory associated
+    //+       with it and its properties is freed (but not the
+    //+       memory associated with its vjChunkDesc).
+    ~vjConfigChunk ();
 
 
 
-  /// Writes vjConfigChunk to out.
-  friend ostream& operator << (ostream& out, vjConfigChunk& self);
+    //: writes self to out
+    //!POST: self is written to out.  Format is as defined
+    //+      in the ConfigFileFormats document.
+    //!RETURNS: out - the output stream
+    //!ARGS: out - a valid ostream.
+    //!ARGS: self - a valid vjConfigChunk
+    friend ostream& operator << (ostream& out, vjConfigChunk& self);
 
 
 
-  /// Attempts to read vjConfigChunk from in.
-  friend istream& operator >> (istream& in, vjConfigChunk& self);
+    //: reads a value from in
+    //!POST: the value of self is changed based on what is
+    //+      read from in.
+    //!RETURNS: in - the input stream
+    //!ARGS: in - a valid input stream
+    //!ARGS: self - a valid vjConfigChunk
+    friend istream& operator >> (istream& in, vjConfigChunk& self);
 
 
 
-  /** Returns the name of a chunk's type.
-   *  This is the same as a call to getvjProperty ("type",0).
-   */
-  vjVarValue getType ();
+    //: Returns the name of a chunk's type.
+    //!RETURNS: s - a C string containing the token for this
+    //+          chunk's vjChunkDesc.
+    //!NOTE: this is the same as a call of getProperty ("type",0)
+    vjVarValue getType ();
 
 
 
-  /** @name Functions to query Properties of a vjConfigChunk.
-   */
-  //@{
-  /** returns the number of values in self for the given property.
-   * pre:  property points to a null-terminated string.
-   * post: if property isn't the name of a property in self, we
-   *       just return 0.
-   *       Otherwise, we return the number of values for that
-   *       property.  (So the range of valid indices when querying
-   *       that property is 0 to retval -1 ).
-   */
-  int getNum (char *property);
+    //: returns number of values for the named property
+    //!ARGS: property - a non-NULL C string; the name of a property
+    //!RETURNS: n - the number of values contained by the named
+    //+         property. (could be 0)
+    //!RETURNS: 0 - if self does not contain a property with the
+    //+         given name.
+    //!NOTE: This should always be used before looking at any
+    //+      vjProperty that can have a variable number of values.
+    int getNum (char *property);
 
-  /** returns the value associated with a property.
-   * pre:  property is a non-null string, ind >= 0.
-   * post:
-   *       The idea of returning a vjVarValue is that it gets implicitly
-   *       cast to whatever value it's getting assigned to.
-   *       And my overloads of vjVarValue casts make this typesafe.
-   *       Is that cool or what?
-   */
-  vjVarValue getProperty (char *property, int ind = 0);
-  //@}
 
-  /** @name Functions to Set/Add values of properties.
-   *  Use the setvjProperty functions to change a value at a given index
-   *  for a property, and use addvjProperty to add values to Properties
-   *  that have a variable number of properties.
-   */
-  //@{
-  /** Sets a value for the given property.
-   * pre:  property is a non-null string, ind >= 0.
-   * post: If the named property is in self,  and if the index
-   *       given is valid, then val is assigned to that property
-   *       and we return true.  If the property isn't found, or
-   *       the given index is out of range, we return false.
-   * note: the char* version of setvjProperty allocates its own
-   *       memory for the string.
-   */
-  bool setProperty (char *property, int val, int ind=0);
-  ///
-  bool setProperty (char *property, float val, int ind=0);
-  ///
-  bool setProperty (char *property, char *val,  int ind=0);
 
-  /** Appends val to the set of values for the named property.
-   *  pre:  vjProperty is a non-null string.
-   *  post: If property has a fixed number of values, this
-   *        does nothing and returns false.  Otherwise, we
-   *        attempt to add val to the property.  A false
-   *        return value would indicate a type mismatch or
-   *        memory problem.
-   */
-  bool addValue (char *property, int val);
-  ///
-  bool addValue (char *property, float val);
-  ///
-  bool addValue (char *property, char* val);
-  //@}
+    //: Returns one of the values for a given property.
+    //!ARGS: property - a non-NULL C string, the token of a property
+    //!ARGS: ind - an integer index, in the range from 0 to
+    //+      getNum(property) -1.  Determines which of the
+    //+      values in the vjProperty to return.
+    //!RETURNS: v - a vjVarValue that can be cast directly if
+    //+         its type is known (float, int, etc).
+    vjVarValue getProperty (char *property, int ind = 0);
+
+
+
+    //: Sets a value for the given property.
+    //!PRE:  property is a non-null string, ind >= 0.
+    //!POST: If the named property is in self,  and if the index
+    //+      given is valid, and the types match, then val is 
+    //+      assigned to that value of that property
+    //!RETURNS: true - succesful assignment
+    //!RETURNS: false - failed assignment (type mismatch,
+    //+         no such property, invalid index, etc.)
+    //!NOTE: if ind is higher than the number of values in the
+    //+      property, but the property allows a variable number
+    //+      of values, the property will be padded with values
+    //+      so that the assignment can occure.
+    //+      <p>The char* version of setProperty allocates its
+    //+      own copy of the string value argument.
+    bool setProperty (char *property, int val, int ind=0);
+    bool setProperty (char *property, float val, int ind=0);
+    bool setProperty (char *property, char *val,  int ind=0);
+
+
+
+    //: Appends val to the set of values for the named vjProperty
+    //!NOTE: This can be considered a convenience function for
+    //+      "setValue (property, val, getNum(property))"
+    //!ARGS: property - non-NULL C string, token for a property.
+    //!ARGS: val - a value to be appended to the named property.
+    //!POST: The given vjProperty has the new value appended to 
+    //+      the end of its list of values.  
+    //!RETURNS: true - success
+    //!RETURNS: false - failure. (no such property, or it 
+    //+         does exist but has a fixed number of values
+    bool addValue (char *property, int val);
+    bool addValue (char *property, float val);
+    bool addValue (char *property, char* val);
 
 
 
