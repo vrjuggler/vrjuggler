@@ -55,7 +55,7 @@ public:
    ApplicationData(const vpr::GUID& guid, const std::string& host_name) : mIsLocal(false), mId(guid), mHostname(host_name)
    {
       ClusterPlugin* app_data_mgr =
-         ClusterManager::instance()->getPluginByGUID(vpr::GUID(std::string("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")));
+         ClusterManager::instance()->getPluginByGUID(vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"));
       if (NULL != app_data_mgr)
       {
          app_data_mgr->addSerializableObject(this);
