@@ -130,7 +130,8 @@ implements CommunicationListener, TweekFrameListener, ActionListener
       axis.setAutoRange( true );
       axis.setFixedAutoRange( 60000.0 ); // 60 seconds
       axis = plot.getRangeAxis();
-      axis.setRange( 0.0, 10.0 );
+      axis.setAutoRange( true );
+      //axis.setRange( 0.0, 10.0 );
       return result;
    }
 
