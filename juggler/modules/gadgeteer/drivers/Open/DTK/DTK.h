@@ -158,23 +158,23 @@ protected:
    }
 
 private:
-    int getStationIndex(int stationNum, int bufferIndex);
+   int getStationIndex(int stationNum, int bufferIndex);
 
    /** @name DTK related data (could be in a wrapper, but not necessary) */
    //@{
-    bool active;
+   bool active;
 
-    dtkClient*      _client;
+   dtkClient*      _client;
 
-    int numPositional;
-    int numDigital;
-    int numAnalog;
-    int numSegments;
+   int numPositional;
+   int numDigital;
+   int numAnalog;
+   int numSegments;
 
-    DTKMemorySegmentHandle *_dtkSegments;
-    int *mDigitalData;
-    float *mAnalogData;
-    char*       port;
+   DTKMemorySegmentHandle *_dtkSegments;
+   int *mDigitalData;
+   float *mAnalogData;
+   char*       port;
    //@}
 
    /** Starts the DTK Client Connection. */
