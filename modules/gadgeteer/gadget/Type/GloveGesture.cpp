@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+#include <fstream>
 #include <gadget/Type/GloveGesture.h>
 
 namespace gadget
