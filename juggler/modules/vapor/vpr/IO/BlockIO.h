@@ -33,17 +33,15 @@
 #ifndef _VPR_BLOCK_IO_H_
 #define _VPR_BLOCK_IO_H_
 
-#ifdef __FreeBSD__
-#include <sys/types.h>
-#endif
-
-#if defined __WIN32__ || defined WIN32 || defined _Windows || defined _WIN32
-typedef int ssize_t;
-#endif
+#include <vprConfig.h>
 
 #include <vector>
 #include <string>
 #include <string.h>
+
+#ifdef VPR_OS_FreeBSD
+#include <sys/types.h>
+#endif
 
 
 namespace vpr {
