@@ -48,6 +48,7 @@
 #include <math.h>
 #include <string>
 #include <deque>
+#include <vector>
 #include <utility>
 #include <vpr/vpr.h>
 #include <vpr/Util/Interval.h>
@@ -202,6 +203,21 @@ public:
       }
    }
 
+   void removeActiveMessages (const vpr::SocketImplSIM* sock,
+                              std::vector<vpr::Interval>& event_times,
+                              const LineDirection direction)
+   {
+      switch (direction)
+      {
+         case FORWARD:
+            removeMessagesFromQueue(sock, event_times, mForwardLineQueue);
+            break;
+         case REVERSE:
+            removeMessagesFromQueue(sock, event_times, mReverseLineQueue);
+            break;
+      }
+   }
+
    /**
     */
    vpr::ReturnStatus getArrivedMessage (const vpr::Interval& event_time,
@@ -223,7 +239,8 @@ public:
    }
 
 private:
-   typedef std::deque<std::pair<vpr::Interval, vpr::sim::MessagePtr> > msg_queue_t;
+   typedef std::pair<vpr::Interval, vpr::sim::MessagePtr> msg_queue_entry_t;
+   typedef std::deque<msg_queue_entry_t> msg_queue_t;
 
    vpr::ReturnStatus getArrivedMessageFromQueue(const vpr::Interval& event_time,
                                                 vpr::sim::MessagePtr& msg,
@@ -234,6 +251,10 @@ private:
                                    msg_queue_t& queue);
 
    void addMessageToQueue(vpr::sim::MessagePtr msg, msg_queue_t& queue);
+
+   void removeMessagesFromQueue(const vpr::SocketImplSIM* sock,
+                                std::vector<vpr::Interval>& event_times,
+                                msg_queue_t& queue);
 
    double      mLength;       /**< Length in miles */
    double      mCapacity;     /**< Capacity in Mbps */

@@ -192,6 +192,13 @@ public:
                                   vpr::SocketImplSIM* connector_sock);
 
    /**
+    * Flushes all messages (and associated events) on the given path destined
+    * for the given socket.
+    */
+   void flushPath(const vpr::SocketImplSIM* sock,
+                  vpr::sim::NetworkGraph::VertexListPtr path);
+
+   /**
     * Processes the next event in the event queue no matter how far into the
     * (simulated) future it occurs.  If there is an event in the queue, it will
     * be processed by this method.
@@ -285,6 +292,22 @@ protected:  // --- Data members --- //
          : type(_type), socket(sock)
       {
          ;
+      }
+
+      bool operator== (const EventData& obj) const
+      {
+         bool status = false;
+
+         if ( type == obj.type )
+         {
+            // This may need to be expanded to a full if/else if/else block
+            // if the possible message data types expands beyond the above
+            // four.
+            status = (type == MESSAGE) ? (edge == obj.edge && direction == obj.direction)
+                                       : (socket == obj.socket);
+         }
+
+         return status;
       }
 
       EventType                  type;
