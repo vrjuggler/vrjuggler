@@ -314,7 +314,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          }
          else if(mLockState == Unlocked)
          {
-            if(vj_key != mLockToggleKey)
+            if( (vj_key != mLockToggleKey) &&
+                ((VJKEY_ALT == vj_key) || (VJKEY_CTRL == vj_key) || (VJKEY_SHIFT == vj_key)) )
             {
                mLockState = Lock_KeyDown;       // Switch state
                mLockStoredKey = vj_key;         // Store the VJ key that is down
