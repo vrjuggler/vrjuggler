@@ -121,6 +121,9 @@
 			<File
 				RelativePath="..\..\..\modules\gadgeteer\drivers\USDigital\SerialEncoder\SerialEncoder.cpp">
 			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\USDigital\SerialEncoder\SerialEncoderStandalone.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -133,6 +136,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\gadgeteer\drivers\USDigital\SerialEncoder\SerialEncoder.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\USDigital\SerialEncoder\SerialEncoderStandalone.h">
 			</File>
 		</Filter>
 		<Filter
