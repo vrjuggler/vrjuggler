@@ -110,6 +110,12 @@ public:
                             bool active  );
 
 //TEST SUITE FUNCS
+   bool addMachineSpecific_exec();
+   bool addMachineSpecific_check();
+   
+   bool removeMachineSpecific_exec();
+   bool removeMachineSpecific_check();
+
    bool addGFXWindow_exec();
    bool addGFXWindow_check();
 
