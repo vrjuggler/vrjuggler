@@ -380,6 +380,9 @@ ThreadPosix::vprThreadPriorityToPOSIX (const VPRThreadPriority priority) {
       case VPR_PRIORITY_URGENT:
         posix_prio = max_prio;
         break;
+      default:
+        posix_prio = min_prio;
+        break;
     };
 
     return posix_prio;
@@ -398,6 +401,9 @@ ThreadPosix::vprThreadScopeToPOSIX (const VPRThreadScope scope) {
       case VPR_GLOBAL_THREAD:
         posix_scope = PTHREAD_SCOPE_SYSTEM;
         break;
+      default:
+        posix_scope = VPR_THREAD_SCOPE;
+        break;
     };
 
     return posix_scope;
@@ -415,6 +421,9 @@ ThreadPosix::vprThreadStateToPOSIX (const VPRThreadState state) {
         break;
       case VPR_UNJOINABLE_THREAD:
         posix_state = PTHREAD_CREATE_DETACHED;
+        break;
+      default:
+        posix_state = PTHREAD_CREATE_JOINABLE;
         break;
     };
 

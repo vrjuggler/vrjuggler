@@ -129,6 +129,9 @@ SerialPortImplTermios::getUpdateAction () {
       case TCSAFLUSH:
         action = SerialTypes::FLUSH;
         break;
+      default:
+        action = SerialTypes::NOW;
+        break;
     }
 
     return action;
@@ -773,7 +776,7 @@ SerialPortImplTermios::drainOutput () {
 // ----------------------------------------------------------------------------
 ReturnStatus
 SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOption opt) {
-    int action;
+    int action = -1;
     ReturnStatus retval;
 
     switch (opt) {
@@ -808,7 +811,7 @@ SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOption opt) {
 // ----------------------------------------------------------------------------
 ReturnStatus
 SerialPortImplTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
-    int queue;
+    int queue = -1;
     ReturnStatus retval;
 
     switch (vpr_queue) {
@@ -1010,12 +1013,9 @@ SerialPortImplTermios::getBit (const tcflag_t bit,
                                SerialPortImplTermios::_term_flag flag)
 {
     struct termios term;
-    bool retval;
+    bool retval = false;
 
-    if ( ! getAttrs(&term).success() ) {
-        retval = false;
-    }
-    else {
+    if ( getAttrs(&term).success() ) {
         switch (flag) {
           case IFLAG:
             retval = ((term.c_iflag & bit) != 0);
