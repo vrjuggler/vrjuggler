@@ -457,6 +457,7 @@ AC_CHECK_HEADERS([bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 AC_CHECK_HEADERS([hash_map ext/hash_map hash_map.h])
+AC_CHECK_HEADERS(hash_set ext/hash_set hash_set.h ext/numeric)
 DPP_LANG_RESTORE
 
 DPP_HAVE_BOOST(1.28, [$JUGGLERROOT_ABS/external/boost],
