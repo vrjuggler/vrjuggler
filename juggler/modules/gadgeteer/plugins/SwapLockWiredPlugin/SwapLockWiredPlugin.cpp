@@ -57,16 +57,16 @@
 
 #include <plugins/SwapLockWiredPlugin/SwapLockWiredPlugin.h> // my header...
 
-
-cluster::ClusterPlugin* initPlugin()
+extern "C"
 {
-   return cluster::SwapLockWiredPlugin::instance();
+   GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
+   {
+      mgr->addPlugin(new cluster::SwapLockWiredPlugin());
+   }
 }
 
 namespace cluster
 {
-   vprSingletonImp( SwapLockWiredPlugin );
-
    /** Add the pending element to the configuration.
    *  PRE: configCanHandle (element) == true.
    *  @return true iff element was successfully added to configuration.

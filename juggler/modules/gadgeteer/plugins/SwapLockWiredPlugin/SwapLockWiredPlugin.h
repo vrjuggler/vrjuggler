@@ -50,19 +50,16 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 
 
-extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
-
 namespace cluster
 {
 class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockWiredPlugin
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( SwapLockWiredPlugin );
-private:
+public:
    SwapLockWiredPlugin() : mWire(-1), mPluginGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
       mIsMaster(false), mActive(false), mMasterWaitByte(0)
    {;}
-public:
+
    virtual ~SwapLockWiredPlugin()
    {;}
    
