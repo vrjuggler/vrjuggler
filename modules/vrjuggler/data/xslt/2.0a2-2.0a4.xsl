@@ -59,6 +59,7 @@
    <xsl:template match="/">
      <!-- Add the new version information. -->
      <xsl:processing-instruction name="org-vrjuggler-jccl-settings">configuration.version="3.0"</xsl:processing-instruction>
+      <xsl:value-of select="$newline"/>
 
       <!-- XXX: Need to deal with includes here. -->
       <!-- Create the new XML tree. -->
@@ -167,7 +168,7 @@
 
 
 <!-- AppData =============================================================== -->
-<!--
+   <!-- Rename AppData to application_data. -->
    <xsl:template match="AppData">
       <xsl:element name="application_data">
          <xsl:attribute name="name">
@@ -179,7 +180,6 @@
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
--->
 
 
 <!-- AwSoundEngine ========================================================= -->
@@ -206,7 +206,7 @@
    <!-- ClusterManager property "clusterPlugin". -->
    <xsl:template match="ClusterManager/clusterPlugin">
       <xsl:element name="plugin">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -552,14 +552,14 @@
    </xsl:template>
 
    <!-- EventWindow property "msens". -->
-   <xsl:template match="eventWindow/msens">
+   <xsl:template match="EventWindow/msens">
       <xsl:element name="mouse_sensitivity">
          <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- EventWindow property "deviceHost". -->
-   <xsl:template match="eventWindow/deviceHost">
+   <xsl:template match="EventWindow/deviceHost">
       <xsl:element name="device_host">
          <xsl:value-of select="." />
       </xsl:element>
@@ -995,6 +995,13 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- Intersense property "stations". -->
+   <xsl:template match="Intersense/stations">
+      <xsl:element name="stations">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
    <!-- Intersense property "deviceHost". -->
    <xsl:template match="Intersense/deviceHost">
       <xsl:element name="device_host">
@@ -1076,6 +1083,20 @@
    <xsl:template match="MachineSpecific/serialBaud">
       <xsl:element name="baud">
          <xsl:value-of select="." />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- MachineSpecific property "display_windows". -->
+   <xsl:template match="MachineSpecific/display_windows">
+      <xsl:element name="display_windows">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- MachineSpecific property "display_system". -->
+   <xsl:template match="MachineSpecific/display_system">
+      <xsl:element name="display_system">
+         <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
@@ -1589,8 +1610,8 @@
       </xsl:element>
    </xsl:template>
 
-   <!-- ISenseStation property "digitalCount". -->
-   <xsl:template match="ISenseStation/digitalCount">
+   <!-- ISenseStation property "digitalNum". -->
+   <xsl:template match="ISenseStation/digitalNum">
       <xsl:element name="digital_count">
          <xsl:value-of select="." />
       </xsl:element>
@@ -1603,8 +1624,8 @@
       </xsl:element>
    </xsl:template>
 
-   <!-- ISenseStation property "analogCount". -->
-   <xsl:template match="ISenseStation/analogCount">
+   <!-- ISenseStation property "analogNum". -->
+   <xsl:template match="ISenseStation/analogNum">
       <xsl:element name="analog_count">
          <xsl:value-of select="." />
       </xsl:element>
