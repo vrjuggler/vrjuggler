@@ -12,10 +12,9 @@ has already been installed on your system.
 <h3>System Requirements</h3>
 <p>
 VjControl is a Java application designed to take full advantage of Sun's
-Java Foundation Classes (the "Swing" classes).  For best results, you should 
-have a JDK 1.2 compatible Java runtime installed on your system.  For Unix
-systems, it is possible to run VjControl with Java 1.1 with some extra work;
-refer to the <a href="#jdk1.1note">note</a> at the bottom of this page.
+Java Foundation Classes (the "Swing" classes).  The current version requires
+a JDK 1.2 or higher runtime environment (often referred to as "Java2").
+
 <p>
 If you don't know how to check the version of Java on your system, 
 <a href="javacheck.html">click here</a>
@@ -24,7 +23,9 @@ If you don't know how to check the version of Java on your system,
 <h3>Setup</h3>
 
 Before trying to run VjControl, you should perform the steps discussed
-under "User Setup" in the <i>VR Juggler Programmer Guide</i>.
+under "User Setup" in the <a href="${GETTINGSTARTED}/index.html">
+<i>VR Juggler Getting Started Guide</i></a>.  In particular, make sure all 
+your environment variables are set correctly.
 
 <p>
 It is important that you create a <TT>~/.vjconfig</TT> directory, as this
@@ -42,20 +43,20 @@ config files that you modify to your own tastes.
 
 <h3>Starting VjControl</h3>
 
-On Unix systems with Java 1.2 installed, type:
+On Unix systems, type:
 <pre>
         vjcontrol
 </pre>
-If you are using JDK 1.1 and have performed <a href="#jdk1.1note">the 
-necessary setup</a>, type:
-<pre> 
-        vjcontrol1.1
-</pre>
+
 WinNT users should use the script:
 <pre>
         vjcontrol.bat
 </pre>
 
+(if you did not add <tt>$VJ_BASE_DIR/bin</tt> to your search path, you'll
+need to give the entire path to vjcontrol on the command line).
+
+<p>
 The vjcontrol program will start up and open its main window.  By default,
 vjcontrol will load the main Chunk Description file, 
 <tt>$VJ_BASE_DIR/Data/chunksDesc</tt>.
@@ -126,24 +127,6 @@ For more information, see:
 </ul>
 
 <hr>
-<a name="jdk1.1note">
-<h3>Using VjControl with java 1.1</h3>
-Version 1.2 of Sun's JDK has been available for some time, but some
-platforms are still laggin on porting and deploying it.  It is possible
-to run VjControl on a system with the older JDK 1.1 installed, with a little
-bit of work.
-
-<p>First, you need to download and install the Java Foundation Classes (Swing 
-classes) for JDK 1.1.  Pay particular attention to the location of the
-file <TT>swingall.jar</TT>.
-
-<p>The $VJ_BASE_DIR/bin directory contains script called vjcontrol1.1
-which will start up vjcontrol on systems with JDK1.1 and Swing.  You may
-need to edit the script file to make sure the paths used for classes.zip
-and <TT>swingall.jar</TT> are correct.  In particular, the script expects 
-a copy of the <TT>swingall.jar</TT> file to be copied or linked in the 
-<TT>$VJ_BASE_DIR/bin</TT> directory.
-
 
 
 </body>
