@@ -48,14 +48,17 @@ import org.vrjuggler.vrjconfig.VrjConfigConstants;
 import org.vrjuggler.jccl.rtrc.*;
 
 /**
- * A specialized toolbar that pays attention to the ConfigManager.
+ * A specialized toolbar for configuration contexts that pays attention to the
+ * ConfigManager.
  */
-public class ConfigToolbar
+public class ContextToolbar
    extends JComponent
    implements VrjConfigConstants
 {
-   public ConfigToolbar()
+   public ContextToolbar(File curDir, ConfigContext ctx)
    {
+      this.setConfigContext(ctx);
+
       try
       {
          jbInit();
@@ -65,6 +68,8 @@ public class ConfigToolbar
          e.printStackTrace();
       }
 
+      fileChooser.setCurrentDirectory(curDir);
+
       // Try to get icons for the toolbar buttons
       try
       {
@@ -73,10 +78,9 @@ public class ConfigToolbar
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
-         saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
          undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
          redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
-         RTRCBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/vrjuggler.gif")));
+         expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
       }
       catch (Exception e)
       {
@@ -85,25 +89,9 @@ public class ConfigToolbar
          openBtn.setText("Open");
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
-         saveAllBtn.setText("Save All");
          undoBtn.setText("Undo");
          redoBtn.setText("Redo");
-         RTRCBtn.setText("RTRC");
-      }
-
-      try
-      {
-         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
-
-         // Using the global user preferences from Tweek, set the start
-         // directory for fileChooser.
-         File f = new File(prefs.getChooserStartDir());
-         fileChooser.setCurrentDirectory(f);
-      }
-      catch(Exception ex)
-      {
-         System.err.println("ConfigToolbar(): WARNING: Failed to set file chooser start directory: " +
-                            ex.getMessage());
+         expandBtn.setText("Expand");
       }
    }
 
@@ -112,7 +100,7 @@ public class ConfigToolbar
       toolbar.add(comp);
    }
 
-   public void setConfigContext(ConfigContext ctx)
+   private void setConfigContext(ConfigContext ctx)
    {
       this.context.removeContextListener(contextListener);
       this.context = ctx;
@@ -123,17 +111,13 @@ public class ConfigToolbar
          nonempty_context = false;
       }
       saveBtn.setEnabled(nonempty_context);
+      expandBtn.setEnabled(nonempty_context);
       context.addContextListener(contextListener);
    }
 
    public ConfigContext getConfigContext()
    {
       return context;
-   }
-
-   public File getCurrentDirectory()
-   {
-      return fileChooser.getCurrentDirectory();
    }
 
    public void addActionListener(ActionListener listener)
@@ -163,15 +147,6 @@ public class ConfigToolbar
       }
    }
 
-   /**
-    * Creates the default configuration context used as the base of all
-    * configurations.
-    */
-   private ConfigContext createDefaultConfigContext()
-   {
-      return new ConfigContext();
-   }
-
    private boolean openInContext(String filename, ConfigContext ctx)
    {
       try
@@ -199,10 +174,9 @@ public class ConfigToolbar
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
          // Open all the included files first
-         ConfigContext ctx = new ConfigContext();
          for (Iterator itr = new_dlg.getIncludes().iterator(); itr.hasNext(); )
          {
-            if (! openInContext((String)itr.next(), ctx))
+            if (! openInContext((String)itr.next(), this.context))
             {
                return false;
             }
@@ -215,7 +189,7 @@ public class ConfigToolbar
             String new_filename = new_file.getAbsolutePath();
             FileDataSource data_source = FileDataSource.create(new_filename, getBroker().getRepository());
             getBroker().add(new_filename, data_source);
-            ctx.add(new_filename);
+            this.context.add(new_filename);
          }
          catch (IOException ioe)
          {
@@ -223,7 +197,6 @@ public class ConfigToolbar
             return false;
          }
 
-         setConfigContext(ctx);
          fireAction("New");
          return true;
       }
@@ -231,68 +204,22 @@ public class ConfigToolbar
    }
 
    /**
-    * Programmatically does a new action in the given ConfigContext.
-    */
-   public boolean doNew(ConfigContext ctx)
-   {
-      // Create a new data source and add it to the broker
-      try
-      {
-         // Get the new filename from the user
-         String filename = askUserForNewConfigFile();
-         if (filename == null)
-         {
-            // User cancelled
-            return false;
-         }
-
-         // Add in the new data source
-         FileDataSource new_data_source = FileDataSource.create(filename, getBroker().getRepository());
-         getBroker().add(filename, new_data_source);
-         ctx.add(filename);
-         setConfigContext(ctx);
-
-         return true;
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
-
-      return false;
-   }
-
-   /**
-    * Programmatically does an open action into a new context.
+    * Programmatically does an open action into our context.
     */
    public boolean doOpen()
    {
-      boolean result = doOpen(createDefaultConfigContext());
+      boolean result = doOpenWork();
       if (result)
       {
          fireAction("Open");
       }
       return result;
    }
-
-   public boolean doRTRC()
-   {
-      boolean result = doRTRC(createDefaultConfigContext());
-      if (result)
-      {
-         //XXX: "RTRC"
-         fireAction("Open");
-      }
-
-
-      return result;
-   }
-
 
    /**
-    * Programmatically executes an open action into the given context.
+    * Do the real work of opening a file into our context.
     */
-   public boolean doOpen(ConfigContext ctx)
+   private boolean doOpenWork()
    {
       // Only allow the user to choose files
       fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -328,7 +255,7 @@ public class ConfigToolbar
 
                FileDataSource data_source = FileDataSource.open(res_name, getBroker().getRepository());
                broker.add(res_name, data_source);
-               ctx.add(res_name);
+               this.context.add(res_name);
 
                // Look through the chunks in the newly loaded file and see if
                // any of them are include directives
@@ -342,7 +269,6 @@ public class ConfigToolbar
                }
             }
 
-            setConfigContext(ctx);
             return true;
          }
          catch (IOException ioe)
@@ -355,40 +281,6 @@ public class ConfigToolbar
 
       return false;
    }
-
-   /**
-    * Adds a RTRCDataSource into the given context.
-    */
-   public boolean doRTRC(ConfigContext ctx)
-   {
-         try
-         {
-            ConfigBroker broker = new ConfigBrokerProxy();
-            RTRCDataSourceBroker RTRCBroker = new RTRCDataSourceBrokerProxy();
-            ConnectionDialog dialog = new ConnectionDialog("RTRCDataSources Connections");
-            //XXX: add this function
-            //positionDialog(dialog);
-            dialog.show();
-
-            RTRCDataSource data_src = dialog.getDataSource();
-
-            broker.add(data_src.toString(), data_src);
-            ctx.add(data_src.toString());
-
-            setConfigContext(ctx);
-            return true;
-         }
-         catch (Exception ioe)
-         {
-            JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
-                                          JOptionPane.ERROR_MESSAGE);
-            ioe.printStackTrace();
-         }
-
-      return false;
-   }
-
-
 
    /**
     * Programmatically execute a save action.
@@ -459,6 +351,35 @@ public class ConfigToolbar
       return true;
    }
 
+   protected void toggleContextEditor()
+   {
+      boolean show_editor = expandBtn.isSelected();
+      EditContextPopup contextEditor = getContextEditor();
+      if (! show_editor)
+      {
+         contextEditor.setVisible(false);
+         contextEditor.setPreferredSize(null);
+      }
+      else
+      {
+         contextEditor.setConfigContext(getConfigContext());
+         Dimension pref_size = contextEditor.getPreferredSize();
+         pref_size.width = this.getWidth();
+         contextEditor.setPreferredSize(pref_size);
+         contextEditor.setBackground(Color.pink);
+         contextEditor.show(this, 0, this.getHeight());
+      }
+   }
+
+   private EditContextPopup getContextEditor()
+   {
+      if (contextEditor == null)
+      {
+         contextEditor = new EditContextPopup();
+      }
+      return contextEditor;
+   }
+
    /**
     * Asks the user for a new config filename. If the user does not pick a
     * unique name, they are scolded and told to try again.
@@ -521,24 +442,14 @@ public class ConfigToolbar
       throws Exception
    {
       this.setLayout(new BorderLayout());
-      titleLbl.setBackground(UIManager.getColor("textHighlight"));
-      titleLbl.setFont(new java.awt.Font("Serif", 1, 18));
-      titleLbl.setForeground(Color.black);
-      titleLbl.setBorder(BorderFactory.createRaisedBevelBorder());
-      titleLbl.setOpaque(true);
-      titleLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-      titleLbl.setText("VRJConfig");
       toolbar.setBorder(BorderFactory.createEtchedBorder());
       toolbar.setFloatable(false);
-      newBtn.setToolTipText("New Configuration");
+      newBtn.setToolTipText("Add New File");
       newBtn.setActionCommand("New");
       newBtn.setFocusPainted(false);
-      openBtn.setToolTipText("Open Configuration");
+      openBtn.setToolTipText("Add Existing File");
       openBtn.setActionCommand("Open");
       openBtn.setFocusPainted(false);
-      RTRCBtn.setToolTipText("Run Time ReConfiguration");
-      RTRCBtn.setActionCommand("RTRC");
-      RTRCBtn.setFocusPainted(false);
       saveBtn.setEnabled(false);
       saveBtn.setToolTipText("Save Configuration");
       saveBtn.setActionCommand("Save");
@@ -547,10 +458,6 @@ public class ConfigToolbar
       saveAsBtn.setToolTipText("Save Configuration As");
       saveAsBtn.setActionCommand("SaveAs");
       saveAsBtn.setFocusPainted(false);
-      saveAllBtn.setEnabled(false);
-      saveAllBtn.setToolTipText("Save All Open Configurations");
-      saveAllBtn.setActionCommand("SaveAll");
-      saveAllBtn.setFocusPainted(false);
       undoBtn.setEnabled(false);
       undoBtn.setToolTipText("Undo");
       undoBtn.setActionCommand("Undo");
@@ -559,6 +466,10 @@ public class ConfigToolbar
       redoBtn.setToolTipText("Redo");
       redoBtn.setActionCommand("Redo");
       redoBtn.setFocusPainted(false);
+      expandBtn.setEnabled(false);
+      expandBtn.setToolTipText("Expand Toolbar");
+      expandBtn.setActionCommand("Expand");
+      expandBtn.setFocusPainted(false);
       newBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -587,13 +498,6 @@ public class ConfigToolbar
             doSaveAs();
          }
       });
-      saveAllBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-//            saveAll();
-         }
-      });
       undoBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -608,41 +512,38 @@ public class ConfigToolbar
             doRedo();
          }
       });
-      RTRCBtn.addActionListener(new ActionListener()
+      expandBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doRTRC();
+            toggleContextEditor();
          }
       });
-      this.add(titleLbl, BorderLayout.NORTH);
       this.add(toolbar, BorderLayout.CENTER);
       toolbar.add(newBtn, null);
       toolbar.add(openBtn, null);
-      toolbar.add(RTRCBtn, null);
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
-      toolbar.add(saveAllBtn, null);
       toolbar.addSeparator();
       toolbar.add(undoBtn, null);
       toolbar.add(redoBtn, null);
       toolbar.add(Box.createHorizontalGlue(), null);
+      toolbar.add(expandBtn, null);
    }
 
    // JBuilder GUI variables
-   private JLabel titleLbl = new JLabel();
    private JToolBar toolbar = new JToolBar();
    private JButton newBtn = new JButton();
    private JButton openBtn = new JButton();
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
-   private JButton saveAllBtn = new JButton();
    private JButton undoBtn = new JButton();
    private JButton redoBtn = new JButton();
-   private JButton RTRCBtn = new JButton();
+   private JToggleButton expandBtn = new JToggleButton();
    private JFileChooser fileChooser = new JFileChooser();
 
    private ConfigContext context = new ConfigContext();
+   private EditContextPopup contextEditor;
    private ContextChangeListener contextListener = new ContextChangeListener();
 
    private EnvironmentService mEnvService = new EnvironmentServiceProxy();
@@ -657,6 +558,7 @@ public class ConfigToolbar
       public void resourceAdded(ContextEvent evt)
       {
          saveBtn.setEnabled(true);
+         expandBtn.setEnabled(true);
       }
 
       public void resourceRemoved(ContextEvent evt)
@@ -664,6 +566,7 @@ public class ConfigToolbar
          if (context.getResources().size() == 0)
          {
             saveBtn.setEnabled(false);
+            expandBtn.setEnabled(false);
          }
       }
    }
