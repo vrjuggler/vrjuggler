@@ -436,9 +436,10 @@ AC_TYPE_SIGNAL
 
 # The following checks for availability of the socklen_t type.  Since it is
 # is supposed to be defined in sys/socket.h, the usual AC_CHECK_TYPE method
-# will not work.
+# will not work.  On Linux, it's apparently in unistd.h.  Blah...
 AC_CACHE_CHECK(for socklen_t, ac_cv_has_socklen_t,
     AC_TRY_COMPILE([#include <sys/types.h>
+                    #include<unistd.h>
                     #include<sys/socket.h> ],
                    [ socklen_t var; ],
                    ac_cv_has_socklen_t='yes',
