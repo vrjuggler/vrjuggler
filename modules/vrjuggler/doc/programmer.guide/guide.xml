@@ -2912,7 +2912,7 @@ vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
             <para>Supposed that a joystick driver supporting buttons and movement is needed. In this case, an additional component, this one for analog input, is needed for the X and Y axes. Since the device is both digital and analog, its class must derive from both <classname>vjDigital</classname> and <classname>vjAnalog</classname> using C++ multiple inheritance:</para>
             <programlisting>class MyNewJoystickDevice : public vjDigital, public vjAnalog</programlisting>
             <note>
-               <para>NOTE: To use the joystick in place of a tracker, it should derive instead from <classname>vjPosition</classname>. This way, you can replace real trackers with your joystick "pseudo tracker". The main idea is that to be able to replace one device with another, the alternate device class must derive from the same base classes as the original device.</para>
+               <para>To use the joystick in place of a tracker, it should derive instead from <classname>vjPosition</classname>. This way, you can replace real trackers with your joystick "pseudo tracker". The main idea is that to be able to replace one device with another, the alternate device class must derive from the same base classes as the original device.</para>
             </note>
             <section>
                <title>Implementing the Device Driver</title>
