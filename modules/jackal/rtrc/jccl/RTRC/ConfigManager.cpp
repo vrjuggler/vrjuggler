@@ -39,12 +39,11 @@
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/DependencyManager.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
-/*
-#include <jccl/Net/JackalServer.h>
-#include <jccl/Net/Connect.h>
-*/
 #include <jccl/Util/Debug.h>
 
+#ifdef HAVE_TWEEK_CXX
+#  include <jccl/RTRC/RTRCInterface.h>
+#endif
 
 
 namespace jccl
@@ -54,15 +53,54 @@ vprSingletonImp(ConfigManager);
 
 
 ConfigManager::ConfigManager()
+#ifdef HAVE_TWEEK_CXX
+   : mReconfigIf(NULL)
+#endif
 {
    mPendingCheckCount = 0;
    mLastPendingSize = 0;
-//   mConfigCommunicator = new XMLConfigCommunicator(this);
+
+   enableReconfigInterface();
+}
+
+void ConfigManager::enableReconfigInterface()
+{
+#ifdef HAVE_TWEEK_CXX
+   vprASSERT(NULL == mReconfigIf && "RTRC interface object already instantiated.");
+
+   mReconfigIf = new RTRCInterface();
+
+   if ( mReconfigIf->init().success() )
+   {
+      if ( ! mReconfigIf->enable().success() )
+      {
+         delete mReconfigIf;
+         mReconfigIf = NULL;
+      }
+   }
+   else
+   {
+      delete mReconfigIf;
+      mReconfigIf = NULL;
+   }
+#else
+   /* Do nothing. */ ;
+#endif
 }
 
 ConfigManager::~ConfigManager()
 {
-   ;
+#ifdef HAVE_TWEEK_CXX
+   if ( NULL != mReconfigIf )
+   {
+      mReconfigIf->disable();
+
+      delete mReconfigIf;
+      mReconfigIf = NULL;
+   }
+#else
+   /* Do nothing. */ ;
+#endif
 }
 
 //-------------------- Pending List Stuff -------------------------------
