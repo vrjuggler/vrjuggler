@@ -51,6 +51,7 @@ DPP_GEN_RECONFIG
 # -----------------------------------------------------------------------------
 # Path setup.
 # -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
 
 # $srcdir is the root directory of the juggler source tree.  To get a value for
 # $VJROOT_ABS, we cd there and save the value of running pwd.  Then return to
@@ -59,8 +60,14 @@ cd "$srcdir"
 JCCLROOT_ABS=`pwd`
 
 cd "$JCCLROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
+UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
+else
+   JUGGLERROOT_ABS="$UNIX_JUGGLER_ROOT"
+fi
 
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
@@ -112,7 +119,6 @@ AC_ARG_WITH(junit,
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
-DPP_WIN32_SETUP
 
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 # build, target and host platforms rather than only the host.
@@ -328,7 +334,6 @@ fi
 # Define the base path to the source directory using $(JCCLROOT_ABS) as an
 # alternative to using $(srcdir).
 UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # $APP_EXTRA_LIBS must list all the libraries need to link a JCCL-based
 # application.
@@ -368,7 +373,6 @@ fi
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
     JCCLROOT_ABS=`unix2dos -p "$JCCLROOT_ABS"`
-    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
         DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -390,7 +394,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
 else
     RM_LN='rm -f'
     JCCLROOT_ABS="$JCCLROOT_ABS"
-    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Set up some sed expressions that will help separate the share directory from
