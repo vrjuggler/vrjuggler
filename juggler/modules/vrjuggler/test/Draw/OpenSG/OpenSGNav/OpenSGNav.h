@@ -70,9 +70,12 @@ public:
     // Handle any initialization needed before API
     virtual void init();
 
-    virtual void initAPI()
+    virtual void apiInit()
     {
-       vrj::OpenSGApp::initAPI();
+       vrj::OpenSGApp::apiInit();
+
+       vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initAPI: Called.\n" << vprDEBUG_FLUSH;
+
        this->initRenderer();
        this->initScene();
     }
@@ -85,6 +88,8 @@ public:
     virtual void draw();
 
     virtual void contextInit();
+    virtual void contextPreDraw();
+    virtual void contextPostDraw();
 
     void bufferPreDraw();
 
