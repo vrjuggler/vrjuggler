@@ -586,7 +586,24 @@ void GlWindowXWin::checkEvents()
 
       vinfo_template.visualid = visual_id;
 
-      return XGetVisualInfo(display, mask, &vinfo_template, &nitems);
+      XVisualInfo* vi = XGetVisualInfo(display, mask, &vinfo_template, &nitems);
+
+      // If we got a valid visual using the requested ID, test to see if it
+      // supports stereo.  this->mInStereo needs to be set correctly based on
+      // what is requested of the display window by the configuration and based
+      // on what our chosen visual actually supports.
+      if ( NULL != vi )
+      {
+         int has_stereo;
+
+         if ( glXGetConfig(display, vi, GLX_STEREO, &has_stereo) == 0 )
+         {
+            mInStereo = (mVrjDisplay->isStereoRequested() &&
+                         has_stereo == True);
+         }
+      }
+
+      return vi;
    }
    else
    {
