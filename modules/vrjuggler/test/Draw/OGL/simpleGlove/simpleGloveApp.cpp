@@ -30,7 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Xforms.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/VecOps.h>
 #include <simpleGloveApp.h>
 
 
@@ -39,38 +41,38 @@
 void simpleGloveApp::preFrame()
 {
    //std::cout<<"simpleGloveApp::preFrame()\n"<<std::flush;
-      
+
    // what gesture is happening??
    int currentGesture = mGesture->getGesture();
-       
+
    // lookup the name of that gesture, and output it.
    std::cout << "gestureID[" << currentGesture << "]:"
              << mGesture->getGestureString(currentGesture).c_str()
              << "\n" << std::flush;
-   
+
    if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
    {
       // do openhand stuff.
       //std::cout<<"OpenHand\n"<<std::flush;
    }
-       
+
    if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
    {
       // do closed fist stuff.
       //std::cout<<"Closed Fist\n"<<std::flush;
-   }  
-   
+   }
+
    if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
    {
       // do pointing stuff.
       //std::cout<<"Pointing\n"<<std::flush;
-   }  
-}   
+   }
+}
 
 void simpleGloveApp::myDraw()
 {
-	//cout<<"simpleGloveApp::myDraw()\n"<<flush;
-   
+    //cout<<"simpleGloveApp::myDraw()\n"<<flush;
+
    // Clear the scene
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,7 +81,7 @@ void simpleGloveApp::myDraw()
    int finger;
 
       // -- Draw box on wand --- //
-   vrj::Matrix finger_matrix;
+   gmtl::Matrix44f finger_matrix;
 
    // Draw green balls on finger tips
    glColor3f(0.0f, 1.0f, 0.0f);
@@ -90,7 +92,7 @@ void simpleGloveApp::myDraw()
       glPushMatrix();
          finger_matrix =
             mGlove->getPos((gadget::GloveData::GloveComponent)finger);
-         glMultMatrixf(finger_matrix.getFloatPtr());
+         glMultMatrixf(finger_matrix.mData);
          drawSphere((0.1f*(1.0f/12.0f)), 4, 4);
       glPopMatrix();
       }
@@ -106,11 +108,11 @@ void simpleGloveApp::myDraw()
       for(finger=gadget::GloveData::THUMB;finger<=gadget::GloveData::PINKY;finger++)
       {
       glPushMatrix();
-         vrj::Vec3   origin(0,0,0);    // Base of the vector
+         gmtl::Vec3f origin(0,0,0);    // Base of the vector
          finger_matrix =
             mGlove->getPos((gadget::GloveData::GloveComponent)finger);
-         origin.xformFull(finger_matrix, origin);     // Go to new coord system
-         vrj::Vec3 end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
+         gmtl::xform(origin, finger_matrix, origin);
+         gmtl::Vec3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
          drawLine(origin, end);
       glPopMatrix();
       }
@@ -121,7 +123,7 @@ void simpleGloveApp::myDraw()
 void simpleGloveApp::initGLState()
 {
    //cout<<"simpleGloveApp::initGLState()\n"<<flush;
-   
+
    GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
    GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
