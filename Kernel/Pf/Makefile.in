@@ -49,7 +49,7 @@ all dbg opt dso ddso obj: beforebuild ${PF_OBJECTS}
 
 beforebuild:
 ifeq (${PF_API}, Y)
-	@/bin/sh ${scriptdir}/mkinstalldirs ${OBJDIR}
+	@${SHELL} ${scriptdir}/mkinstalldirs ${OBJDIR}
 endif
 
 # -----------------------------------------------------------------------------
