@@ -80,7 +80,11 @@ public:
    { mCurPos = pos; }
 
    void setHomePosition(vjMatrix pos)
-   { mHomePos = pos; }
+   { 
+      mHomePos = pos;
+      vjVec3 hpos = mHomePos.getTrans();
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ") << hpos << endl << vjDEBUG_FLUSH;
+    }
 
    // Reset to home position and initial navigation state
    virtual void reset()

@@ -244,7 +244,10 @@ void velocityNav::updateInteraction()
    if(mStopping)
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping") << endl << vjDEBUG_FLUSH;
    if(mResetting)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Reseting") << endl << vjDEBUG_FLUSH;
+   {
+      vjVec3 hpos = mHomePos.getTrans();
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "<< hpos << endl << vjDEBUG_FLUSH;
+   }
    if(mRotating)
        vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating") << endl << vjDEBUG_FLUSH;
 }
