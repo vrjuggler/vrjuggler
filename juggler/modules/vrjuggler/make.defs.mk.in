@@ -82,53 +82,53 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-mtreedir	= $(topdir)/mtree
-projdatadir     = $(datadir)/vrjuggler
-releasedir	= @JUGGLERROOT_ABS@/release
-scriptdir	= $(releasedir)/scripts
-topdir		= @topdir@
-top_srcdir	= @top_srcdir@
-DPP_SCRIPTDIR	= $(JUGGLERROOT_ABS)/Doozer++/scripts
-MAKEFLAGS	+= --no-print-directory
-DEPGEN_TOOL_CC	= @CC@
-DEPGEN_TOOL_CXX	= @CXX@
-MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
-MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
-MTREE_CMD	= @MTREE_CMD@
-PROFLIB_EXT	= _p
-PROF_OPT_FLAGS	= $(DBG_FLAGS)
-RM_LN		= @RM_LN@
-VJROOT_ABS	= @VJROOT_ABS@
-JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
-VJ_SHARE_DIR	= @VJ_SHARE_DIR@
+mtreedir=		$(topdir)/mtree
+projdatadir=		$(datadir)/vrjuggler
+releasedir=		@JUGGLERROOT_ABS@/release
+scriptdir=		$(releasedir)/scripts
+topdir=			@topdir@
+top_srcdir=		@top_srcdir@
+DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
+MAKEFLAGS+=		--no-print-directory
+DEPGEN_TOOL_CC=		@CC@
+DEPGEN_TOOL_CXX=	@CXX@
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+MKPATH=			$(JUGGLERROOT_ABS)/Doozer++/mk
+MTREE_CMD=		@MTREE_CMD@
+PROFLIB_EXT=		_p
+PROF_OPT_FLAGS=		$(DBG_FLAGS)
+RM_LN=			@RM_LN@
+VJROOT_ABS=		@VJROOT_ABS@
+JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+VJ_SHARE_DIR=		@VJ_SHARE_DIR@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
-EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
-EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEFS		= -DVJ_SHARE_DIR="\"$(VJ_SHARE_DIR)\"" -D_VRJ_BUILD_
-EXTRA_DEPEND_FLAGS	= -I$(VJROOT_ABS)
-EXTRA_INCLUDES		= -I$(top_srcdir)
+EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
+EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
+EXTRA_DEFS=		-DVJ_SHARE_DIR="\"$(VJ_SHARE_DIR)\"" -D_VRJ_BUILD_
+EXTRA_DEPEND_FLAGS=	-I$(VJROOT_ABS)
+EXTRA_INCLUDES=		-I$(top_srcdir)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
 # -----------------------------------------------------------------------------
-MKDEP_C 	= $(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-MKDEP_CXX	= $(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+MKDEP_C=	$(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEP_CXX=	$(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.
 # -----------------------------------------------------------------------------
 ifdef vjABI
-    dppABI	= $(vjABI)
+    dppABI=	$(vjABI)
 endif
 
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-VJ_LIBRARY	= @LIB_PREFIX@Juggler
-GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
-PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
+VJ_LIBRARY=	@LIB_PREFIX@Juggler
+GL_LIBRARY=	@LIB_PREFIX@Juggler_ogl
+PF_LIBRARY=	@LIB_PREFIX@Juggler_pf
 
 include $(topdir)/common.defs.mk
