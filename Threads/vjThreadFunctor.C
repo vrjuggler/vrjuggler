@@ -48,6 +48,10 @@
             vj_tm_inst->unlock();
 
             func();
+
+#   ifdef _PTHREADS_DRAFT_10
+            return (void*) NULL;
+#   endif
         }
 
 #else
