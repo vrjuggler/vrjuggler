@@ -754,9 +754,11 @@ fi
 dnl # If we are using GCC as the compiler, we need to be using at least egcs
 dnl # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
 if test "x$GXX" = "xyes" ; then
+    gcc_version=`$CXX -dumpversion 2>&1`
+
     AC_CACHE_CHECK([if $CXX is egcs 1.1.2 or newer],
         [ac_cv_CXX_is_egcs],
-        [ case `$CXX -dumpversion 2>&1` in
+        [ case $gcc_version in
               egcs-2.9*)
                   ac_cv_CXX_is_egcs='yes'
                   ;;
@@ -1039,7 +1041,13 @@ if test "$THREADS" = "POSIX" ; then
     if test "x$PLATFORM" != "xLinux" ; then
         AC_DEFINE(_REENTRANT,)
     else
-        AC_DEFINE(_GNU_SOURCE,)
+        if test "x$GXX" = "xyes" ; then
+            case $gcc_version in
+                2.*)
+                    AC_DEFINE(_GNU_SOURCE,)
+                    ;;
+            esac
+        fi
     fi
 
     dnl # Use POSIX threading, mutexes and shared memory.
