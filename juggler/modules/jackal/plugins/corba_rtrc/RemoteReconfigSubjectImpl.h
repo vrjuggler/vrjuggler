@@ -64,28 +64,31 @@ public:
    /**
     * Adds a string containing an XML definition of a configuration.
     */
-   virtual void add(const char* configurationString);
+   virtual void add(const char* configurationString)
+      throw(CORBA::SystemException);
 
    /**
     * Removes a string containing an XML definition of a configuration.
     */
-   virtual void remove(const char* configurationString);
+   virtual void remove(const char* configurationString)
+      throw(CORBA::SystemException);
 
    /** 
     * Swap in/out a string containing XML definitions of configurations.
     */
    virtual void swap(const char* addConfigurationString,
-                     const char* removeConfigurationString);
+                     const char* removeConfigurationString)    
+      throw(CORBA::SystemException);
 
    /**
     * Gets the current elements in the config system.
     */
-   virtual char* getElements();
+   virtual char* getElements() throw(CORBA::SystemException);
 
    /**
     * Get the current configuration definitions in the config system.
     */
-   virtual char* getDefinitions();
+   virtual char* getDefinitions() throw(CORBA::SystemException);
 
    /**
     * This overriding method is needed so that the correct type is returned

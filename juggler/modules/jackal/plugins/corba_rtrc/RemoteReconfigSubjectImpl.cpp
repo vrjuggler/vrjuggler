@@ -48,6 +48,7 @@ namespace jccl
 {
 
 void RemoteReconfigSubjectImpl::add(const char* configurationString)
+   throw(CORBA::SystemException)
 {
    jccl::Configuration new_elements;
    std::string cfg_string(configurationString);
@@ -66,6 +67,7 @@ void RemoteReconfigSubjectImpl::add(const char* configurationString)
 
 
 void RemoteReconfigSubjectImpl::remove(const char* configurationString)
+   throw(CORBA::SystemException)
 {
    jccl::Configuration delete_elements;
    std::string cfg_string(configurationString);
@@ -84,6 +86,7 @@ void RemoteReconfigSubjectImpl::remove(const char* configurationString)
 
 void RemoteReconfigSubjectImpl::swap(const char* addConfigurationString,
                                      const char* removeConfigurationString)
+   throw(CORBA::SystemException)
 {
    jccl::Configuration add_elements, delete_elements;
    std::string add_element_string(addConfigurationString);
@@ -102,6 +105,7 @@ void RemoteReconfigSubjectImpl::swap(const char* addConfigurationString,
 }
 
 char* RemoteReconfigSubjectImpl::getElements()
+   throw(CORBA::SystemException)
 {
    //Lock the config manager
    jccl::ConfigManager::instance()->lockActive();
@@ -125,6 +129,7 @@ char* RemoteReconfigSubjectImpl::getElements()
 }
 
 char* RemoteReconfigSubjectImpl::getDefinitions()
+   throw(CORBA::SystemException)
 {
    // Get the list of definitions from the ElementFactory.
    ConfigDefinitionRepository* defs =

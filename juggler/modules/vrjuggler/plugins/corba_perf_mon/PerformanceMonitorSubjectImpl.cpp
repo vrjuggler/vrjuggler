@@ -45,6 +45,7 @@
 namespace vrj
 {
    PerformanceMonitorSubject::StringList* PerformanceMonitorSubjectImpl::getAllSections()
+      throw(CORBA::SystemException)
    {
       // Create the sequence.
       vrj::PerformanceMonitorSubject::StringList* strings =
@@ -54,11 +55,13 @@ namespace vrj
    }
 
    CORBA::Float PerformanceMonitorSubjectImpl::getValue(CORBA::Float param)
+      throw(CORBA::SystemException)
    {
       return param;
    }
 
    vrj::PerformanceMonitorSubject::SampleValueMap* PerformanceMonitorSubjectImpl::getValueMap()
+      throw(CORBA::SystemException)
    {
       // TODO: Safeguard from changing tree...ask for names to lookup and return them
       // or keep a master list to compare against.

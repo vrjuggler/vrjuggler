@@ -60,16 +60,19 @@ public:
    ~PerformanceMonitorSubjectImpl()
    {;}
 
-   virtual vrj::PerformanceMonitorSubject::StringList* getAllSections();
+   virtual vrj::PerformanceMonitorSubject::StringList* getAllSections()
+      throw(CORBA::SystemException);
 
-   virtual CORBA::Float getValue(CORBA::Float param);
+   virtual CORBA::Float getValue(CORBA::Float param)
+      throw(CORBA::SystemException);
 
    /**
     * This function prepares a map of profiles to samples.
     *
     * @return   the newly created SampleTimeMap
     */
-   virtual vrj::PerformanceMonitorSubject::SampleValueMap* getValueMap();
+   virtual vrj::PerformanceMonitorSubject::SampleValueMap* getValueMap()
+      throw(CORBA::SystemException);
 
    /**
     * This overriding method is needed so that the correct type is returned
