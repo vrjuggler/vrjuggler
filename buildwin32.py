@@ -138,6 +138,7 @@ def setVars():
       'BOOST_TOOL'     : os.getenv('BOOST_TOOL', boost_tool_fallback),
       'NSPR_ROOT'      : os.getenv('NSPR_ROOT', ''),
       'CPPDOM_ROOT'    : os.getenv('CPPDOM_ROOT', ''),
+      'GMTL_ROOT'      : os.getenv('GMTL_ROOT', ''),
 
       # Default values for optional settings.
       'JAVA_HOME'       : os.getenv('JAVA_HOME', r'C:\java'),
@@ -174,6 +175,7 @@ def setVars():
 
    processInput(options, 'NSPR_ROOT', 'NSPR installation directory')
    processInput(options, 'CPPDOM_ROOT', 'CppDOM installation directory')
+   processInput(options, 'GMTL_ROOT', 'GMTL installation directory')
 
    print "+++ Optional Settings"
    processInput(options, 'deps-prefix', 'dependency installation prefix')
@@ -550,12 +552,6 @@ def installLibs(srcRoot, destdir,
          installDir(srcdir, destdir, extensions)
 
 def installExternal(prefix):
-   # Install the GMTL headers.
-   print "Installing GMTL headers ..."
-   destdir = os.path.join(prefix, 'include', 'gmtl')
-   srcdir  = os.path.join(juggler_dir, 'external', 'GMTL', 'gmtl')
-   installDir(srcdir, destdir, ['.h'])
-
    # Install Doozer (even though it probably won't be used).
    print "Installing Doozer ..."
    destdir = os.path.join(prefix, 'share', 'Doozer')
@@ -981,7 +977,8 @@ def doDependencyInstall(prefix):
    makeTree(prefix)
    installNSPR(prefix)
    installCppDOM(prefix)
-#   installBoost(prefix)
+   installBoost(prefix)
+   installGMTL(prefix)
    installAudiere(prefix)
    installOmniORB(prefix)
 
@@ -1032,6 +1029,9 @@ def installBoost(prefix):
    srcdir = os.path.join(srcroot, 'lib')
    destdir = os.path.join(prefix, 'lib')
    installDir(srcdir, destdir)
+
+def installGMTL(prefix):
+   simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix)
 
 def installAudiere(prefix):
    simpleInstall('Audiere headers, libraries, and executables',
