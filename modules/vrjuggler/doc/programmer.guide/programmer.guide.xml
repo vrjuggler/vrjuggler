@@ -199,21 +199,20 @@
                      <area coords="9 75" id="simpleApp.main.body.start"/>
                      <area coords="10 75" id="simpleApp.main.body.setApp"/>
                   </areaspec>
-                  <programlisting linenumbering="numbered">#include &lt;simpleApp.h&gt;
+                  <programlisting linenumbering="numbered">#include &lt;vrj/Kernel/Kernel.h&gt;
+#include &lt;simpleApp.h&gt;
 
-int main (int argc, char* argv[])
+int main(int argc, char* argv[])
 {
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Get the kernel
-   simpleApp* app   = new simpleApp();      // Create the app object
+   simpleApp* app      = new simpleApp();         // Create the app object
 
    kernel-&gt;loadConfigFile(...);             // Configure the kernel
    kernel-&gt;start();                         // Start the kernel thread
    kernel-&gt;setApplication(app);             // Give application to kernel
+   kernel-&gt;waitForKernelStop();             // Block until kernel stops
 
-   while ( ! exit )
-   {
-     // sleep
-   }
+   return 0;
 }</programlisting>
                   <calloutlist>
                      <callout arearefs="simpleApp.main.body.create-kernel">
@@ -1259,10 +1258,9 @@ gmtl::zero(mat1);</programlisting>
                <programlisting>vrj::Matrix mat1;
 float x_rot = 0.4, y_rot = 0.541, z_rot = 0.14221;
 
-gmtl::setRot( mat1, gmtl::EulerAngleXYZf(x_rot, y_rot, z_rot));
-gmtl::setRot( mat1, gmtl::EulerAngleZYXf(z_rot, y_rot, x_rot));
-gmtl::setRot( mat1, gmtl::EulerAngleZXYf(z_rot, x_rot, y_rot));
-</programlisting>
+gmtl::setRot(mat1, gmtl::EulerAngleXYZf(x_rot, y_rot, z_rot));
+gmtl::setRot(mat1, gmtl::EulerAngleZYXf(z_rot, y_rot, x_rot));
+gmtl::setRot(mat1, gmtl::EulerAngleZXYf(z_rot, x_rot, y_rot));</programlisting>
                <para>In every case, the matrix is zeroed before the rotation transformation is stored. The result of the above code is that <varname>mat1</varname> is a ZXY Euler rotation matrix. The previous two operations are destroyed.</para>
             </section>
             <section>
@@ -2650,16 +2648,16 @@ pfDraw();</programlisting>
                            <entry>Member functions</entry>
                            <entry><itemizedlist>
                                  <listitem>
-                                    <para><methodname>vrj::PfApp::initScene()</methodname></para>
+                                    <para><methodname>vrj::OpenSGApp::initScene()</methodname></para>
                                  </listitem>
                                  <listitem>
-                                    <para><methodname>vrj::PfApp::getScene()</methodname></para>
+                                    <para><methodname>vrj::OpenSGApp::getScene()</methodname></para>
                                  </listitem>
                               </itemizedlist></entry>
                         </row>
                         <row>
                            <entry>Directory</entry>
-                           <entry><filename>$VJ_BASE_DIR/share/vrjuggler/test/Draw/OpenSG/OpenSGNav</filename></entry>
+                           <entry><filename>$VJ_BASE_DIR/share/vrjuggler/samples/OpenSG/simple/OpenSGNav</filename></entry>
                         </row>
                         <row>
                            <entry>Files</entry>
