@@ -207,7 +207,8 @@ ifeq (@BUILD_JAVA@, Y)
           chmod $(EXEC_PERMS) cfgupdater
 endif
 	cd $(instlinks)/bin && cp -p $(topdir)/jccl-config .
-	@echo "\n\n"
+	@echo ""
+	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$JCCL_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
