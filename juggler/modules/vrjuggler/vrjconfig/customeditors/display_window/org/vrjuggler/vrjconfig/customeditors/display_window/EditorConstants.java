@@ -33,15 +33,44 @@
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
 
-public abstract class EditorConstants
+interface EditorConstants
 {
-   public static final String resourceBase = "org/vrjuggler/vrjconfig/customeditors/display_window";
+   static final String resourceBase =
+      "org/vrjuggler/vrjconfig/customeditors/display_window";
 
-   public static final String imageBase = resourceBase + "/images";
+   static final String imageBase = resourceBase + "/images";
 
-   public static final String displayWindowType = "display_window";
+   static final String inputAreaType = "input_area";
 
-   public static final String simulatorViewportType = "simulator_viewport";
+   static final String displayWindowType = "display_window";
 
-   public static final String surfaceViewportType = "surface_viewport";
+   static final String simulatorViewportType = "simulator_viewport";
+
+   static final String surfaceViewportType = "surface_viewport";
+
+   static final String inputWindowType = "input_window";
+
+   static final String keyboardMouseType = "keyboard_mouse_device";
+
+   static final String keyboardMouseProxyType = "keyboard_mouse_proxy";
+
+   static final String openglFrameBufferType = "opengl_frame_buffer_config";
+
+   static final String simAnalogDeviceType = "simulated_analog_device";
+
+   static final String simDigitalDeviceType = "simulated_digital_device";
+
+   static final String simPosDeviceType = "simulated_positional_device";
+
+   static final String keyboardMousePtrProperty = "keyboard_mouse_device_name";
+
+   static final String lockKeyProperty = "lock_key";
+
+   static final String startLockedProperty = "start_locked";
+
+   static final String sleepTimeProperty = "sleep_time";
+
+   static final String originProperty = "origin";
+
+   static final String sizeProperty = "size";
 }
