@@ -42,7 +42,7 @@ namespace vpr
 class VPR_CLASS_API Interval
 {
 public:
-   enum Unit { VPR_SEC, VPR_MSEC, VPR_USEC };     // Time times
+   enum Unit { Sec, Msec, Usec };     // Time times
 
 public:
    static const Interval NoWait;
@@ -59,13 +59,13 @@ public:
    {
       switch(timeUnit)
       {
-      case Interval::VPR_SEC:
+      case Interval::Sec:
          mUsecs = (1000000) * num;
          break;
-      case Interval::VPR_MSEC:
+      case Interval::Msec:
          mUsecs = 1000 * num;
          break;
-      case Interval::VPR_USEC:
+      case Interval::Usec:
          mUsecs = num;
          break;
       default:
@@ -78,13 +78,13 @@ public:
    {
       switch(timeUnit)
       {
-      case Interval::VPR_SEC:
+      case Interval::Sec:
          mUsecs = vpr::Uint32(1000000.0f * num);
          break;
-      case Interval::VPR_MSEC:
+      case Interval::Msec:
          mUsecs = vpr::Uint32(1000.0f * num);
          break;
-      case Interval::VPR_USEC:
+      case Interval::Usec:
          mUsecs = vpr::Uint32(num);
          break;
       default:
@@ -94,20 +94,20 @@ public:
    }
 
    void sec(const vpr::Uint32 num)
-   { set(num, Interval::VPR_SEC); }
+   { set(num, Interval::Sec); }
    vpr::Uint32 sec() const
    { return (mUsecs/1000000); }
    void secf(const float num)
-   { setf(num, Interval::VPR_SEC); }
+   { setf(num, Interval::Sec); }
    float secf() const
    { return (float(mUsecs)/1000000.0f); }
 
    void msec(const vpr::Uint32 num)
-   { set(num, Interval::VPR_MSEC); }
+   { set(num, Interval::Msec); }
    vpr::Uint32 msec() const
    { return (mUsecs/1000); }
    void msecf(const float num)
-   { setf(num, Interval::VPR_MSEC); }
+   { setf(num, Interval::Msec); }
    float msecf() const
    { return (float(mUsecs)/1000.0f); }
 
@@ -116,7 +116,7 @@ public:
    vpr::Uint32 usec() const
    { return mUsecs; }
    void usecf(const float num)
-   { setf(num, Interval::VPR_USEC); }
+   { setf(num, Interval::Usec); }
    float usecf() const
    { return mUsecs; }
 
@@ -127,9 +127,9 @@ public:
    { return ! (*this == r); }
 
    Interval operator +(const Interval& r) const
-   { return Interval(mUsecs+r.mUsecs, Interval::VPR_USEC); }
+   { return Interval(mUsecs+r.mUsecs, Interval::Usec); }
    Interval operator -(const Interval& r) const
-   { return Interval(mUsecs-r.mUsecs, Interval::VPR_USEC); }
+   { return Interval(mUsecs-r.mUsecs, Interval::Usec); }
 
 
 private:

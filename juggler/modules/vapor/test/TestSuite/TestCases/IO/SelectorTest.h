@@ -205,7 +205,7 @@ public:
          remote_addr.setAddress("localhost", port_num);
          vpr::SocketStream con_sock;
          std::string       data;
-         ret_val = connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::VPR_SEC) );
+         ret_val = connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec) );
          threadAssertTest((ret_val.success()), "Connector can't connect");
 
          ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
@@ -307,7 +307,7 @@ public:
 
           // Get the events
           vpr::Uint16 num_events;
-          Status ret = selector.select(num_events,vpr::Interval(50000, vpr::Interval::VPR_MSEC));
+          Status ret = selector.select(num_events,vpr::Interval(50000, vpr::Interval::Msec));
 
           threadAssertTest((ret.success()),
                            "Selection did not return successfully");
