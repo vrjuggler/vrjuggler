@@ -108,7 +108,7 @@ public class ConfigurationWriter
       // Create the configuration root element
       Element root = new Element(CONFIGURATION, CFG_NS);
       root.setAttribute(NAME, name);
-      root.setAttribute(SCHEMA_LOCATION, CFG_NS_str, XSI_NS);
+      root.setAttribute(SCHEMA_LOCATION, CFG_NS_str + " " + CFG_SCHEMA, XSI_NS);
       doc.setRootElement(root);
 
       return doc;
