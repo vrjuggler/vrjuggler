@@ -59,7 +59,6 @@ public:
       mDirtyContext = true;      // Always dirty when window first created
 
       mDisplay = NULL;
-      display_name = NULL;
    }
 
    // Cirtual destructor
@@ -150,10 +149,9 @@ protected:
                         // if we wanted a stereo display but couldn't open it
                         // we fall back to mono, and this will be false.
    bool  border;        //: Do we have a border
-   char* display_name;  //: Name of the display to use
    bool window_is_open; //: Is the window open
    int  window_width, window_height;
-   int  origin_x, origin_y;		    //: lower-left corner of window
+   int  origin_x, origin_y;          //: lower-left corner of window
    int  mWindowId;                  //: A unique window id to identify us
 
 private:

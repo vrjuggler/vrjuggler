@@ -51,6 +51,9 @@ vjGlxWindow::vjGlxWindow():vjGlWindow() {
    x_display = NULL;
    visual_info = NULL;
    glx_context = NULL;
+   window_name = std::string("");
+   mPipe = -1;
+   mXDisplayName = std::string("");
 }
 
 
@@ -92,8 +95,8 @@ int vjGlxWindow::open() {
         return false;
     }
 
-    if (! (x_display = XOpenDisplay (display_name))) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Unable to open display '" << display_name << "'.\n" << vjDEBUG_FLUSH;
+    if (! (x_display = XOpenDisplay (mXDisplayName.c_str()))) {
+        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Unable to open display '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
         return false;
     }
 
@@ -110,7 +113,7 @@ int vjGlxWindow::open() {
                                               RootWindow(x_display, screen),
                                               visual_info->visual,
                                               AllocNone)) == 0) {
-        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: XCreateColorMap failed on '" << display_name << "'.\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: XCreateColorMap failed on '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -123,7 +126,7 @@ int vjGlxWindow::open() {
     XWindowAttributes winattrs;
     XGetWindowAttributes (x_display, RootWindow (x_display, screen), &winattrs);
 //    std::cout << "------------------------------------------------------------------\n"
-//          << "    screen dims: " << winattrs.width << ", " << winattrs.height 
+//          << "    screen dims: " << winattrs.width << ", " << winattrs.height
 //          << "    win pos: " << origin_x << ", " <<  winattrs.height - origin_y - window_height << std::endl;
 
 
@@ -141,7 +144,7 @@ int vjGlxWindow::open() {
         {
             vjDEBUG(vjDBG_DRAW_MGR,0)
                << clrOutNORM(clrRED,"ERROR:")
-               << "vjGlxWindow: Couldn't create window for " << display_name
+               << "vjGlxWindow: Couldn't create window for " << mXDisplayName
                << std::endl << vjDEBUG_FLUSH;
             goto OPEN_FAIL;
         }
@@ -223,13 +226,13 @@ int vjGlxWindow::open() {
 
     glx_context = glXCreateContext (x_display,visual_info, NULL, True);
     if (NULL == glx_context) {
-        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '" << mXDisplayName << "'\n" << vjDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
 //     vjASSERT(NULL != glx_context);
 //     if (!glXMakeCurrent ( x_display, x_window, glx_context  )) {
-//         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
+//         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << mXDisplayName << "'\n" << vjDEBUG_FLUSH;
 //         return false;
 //     }
 
@@ -304,6 +307,7 @@ bool vjGlxWindow::makeCurrent() {
 
 void vjGlxWindow::config(vjDisplay* _display)
 {
+   const char neg_one_STRING[] = "-1";
    vjGlWindow::config(_display);
 
     // Get the vector of display chunks
@@ -312,13 +316,16 @@ void vjGlxWindow::config(vjDisplay* _display)
    dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
 
    window_name = _display->getName();
-   pipe = _display->getPipe();
+   mPipe = _display->getPipe();
+   vjASSERT(mPipe >= 0);
 
-   display_name = dispSysChunk->getProperty("xpipes", pipe).cstring();
-   if(strcmp(display_name, "-1") == 0)    // Use display env
-      strcpy(display_name, getenv("DISPLAY"));
+   mXDisplayName = (std::string)dispSysChunk->getProperty("xpipes", mPipe);
+   if(mXDisplayName == neg_one_STRING)    // Use display env
+   {
+      mXDisplayName = std::string(getenv("DISPLAY"));
+   }
    vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
-                             << display_name << std::endl << vjDEBUG_FLUSH;
+                             << mXDisplayName << std::endl << vjDEBUG_FLUSH;
 }
 
 
@@ -400,7 +407,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: Display '"<< display_name <<
+      vjDEBUG(vjDBG_ERROR,0) << "ERROR: X Display '"<< mXDisplayName <<
       "' doesn't support GLX.\n" << vjDEBUG_FLUSH;
       return NULL;
    }
@@ -422,7 +429,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
    // still no luck. if we were going for stereo, let's try without.
    if (mDisplay->inStereo())
    {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << display_name
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << mXDisplayName
                  << "' couldn't get display in stereo - trying mono.\n"
                  << vjDEBUG_FLUSH;
       in_stereo = false;
@@ -432,7 +439,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
    }
 
    // if we reach here, we didn't.  Maybe we should make alpha optional.
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << display_name
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << mXDisplayName
               << "' couldn't get display with alpha channel - trying without.\n"
               << vjDEBUG_FLUSH;
    viattrib[AlphaAttribIndex] = 0;
