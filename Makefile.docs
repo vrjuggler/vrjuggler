@@ -42,7 +42,7 @@
 webroot=	$(HOME)/public_html/jugglerweb
 # ********************************
 
-SUBDIR=		docs/team.guide					\
+SUBDIR=		doc/team.guide					\
 		modules/vrjuggler/doc/configuration.guide	\
 		modules/vrjuggler/doc/faq			\
 		modules/vrjuggler/doc/getting.started.guide	\

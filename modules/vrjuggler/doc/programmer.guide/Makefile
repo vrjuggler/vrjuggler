@@ -29,4 +29,4 @@ NEED_DB_IMAGES=	1
 $(NAME).html: $(NAME).xml $(IMAGES)
 $(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
 
-include ../../../../docs/docbook.mk
+include ../../../../doc/docbook.mk
