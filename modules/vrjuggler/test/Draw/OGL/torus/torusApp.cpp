@@ -37,7 +37,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-//#include <vrj/Math/Coord.h>
+#include <gmtl/Math.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -143,8 +143,8 @@ doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings)
   GLfloat cosTheta1, sinTheta1;
   GLfloat ringDelta, sideDelta;
 
-  ringDelta = 2.0 * M_PI / rings;
-  sideDelta = 2.0 * M_PI / nsides;
+  ringDelta = 2.0 * gmtl::Math::PI / rings;
+  sideDelta = 2.0 * gmtl::Math::PI / nsides;
 
   theta = 0.0;
   cosTheta = 1.0;
