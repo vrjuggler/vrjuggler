@@ -191,6 +191,9 @@ AC_DEFUN(VJ_COMPILER_SETUP,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl This defines a handy little macro that will remove all duplicate strings
+dnl from arg-list and assign the result to variable.
+dnl
 dnl Usage:
 dnl     VJ_STRIP_DUPLICATE_ARGS(variable, arg-list)
 dnl
@@ -208,6 +211,11 @@ AC_DEFUN([VJ_STRIP_DUPLICATE_ARGS],
    j = 0;
    for ( i = 1; i <= NF; i++ )
    {
+      # Here, valid_list acts like a string-based dictionary of all the
+      # command-line arguments passwed to awk(1).  These come in as $1, $2,
+      # etc.  That is the reason for the $i expressions.
+      # On the other hand, arg_list acts as an ordered list and will contain
+      # only those arguments not previously added.
       if ( ! valid_list[$i] )
       {
          valid_list[$i] = 1;
@@ -215,9 +223,14 @@ AC_DEFUN([VJ_STRIP_DUPLICATE_ARGS],
          j++;
       }
    }
+
+   # Now, build result as a space-separated string of everything in arg_list.
    result = arg_list[0]
    for ( i = 1; i < j; i++ )
       result = sprintf("%s %s", result, arg_list[i]);
+
+   # This gives the final argument string that will be assigned to the sh
+   # variable.
    print result
 }' -`>>
 
