@@ -63,7 +63,13 @@ public class CorbaService
       try
       {
          init_ref      = m_orb.resolve_initial_references("NameService");
-         namingContext = NamingContextHelper.narrow(init_ref);
+         rootContext = NamingContextHelper.narrow(init_ref);
+
+         NameComponent[] tweek_name_context = new NameComponent[1];
+         tweek_name_context[0] = new NameComponent("tweek", "context");
+
+         init_ref     = rootContext.resolve(tweek_name_context);
+         localContext = NamingContextHelper.narrow(init_ref);
       }
       catch (UserException user_ex)
       {
@@ -79,6 +85,11 @@ public class CorbaService
    public int getPort ()
    {
       return port;
+   }
+
+   public NamingContext getLocalContext ()
+   {
+      return localContext;
    }
 
    /**
@@ -97,7 +108,7 @@ public class CorbaService
 
       try
       {
-         org.omg.CORBA.Object ref = namingContext.resolve(name_comp);
+         org.omg.CORBA.Object ref = localContext.resolve(name_comp);
          mgr = tweek.SubjectManagerHelper.narrow(ref);
       }
       catch (InvalidName e)
@@ -119,6 +130,7 @@ public class CorbaService
    private String host = null;
    private int    port = 0;
 
-   private ORB           m_orb         = null;
-   private NamingContext namingContext = null;
+   private ORB           m_orb        = null;
+   private NamingContext rootContext  = null;
+   private NamingContext localContext = null;
 }
