@@ -49,6 +49,7 @@ ifneq ($(PYDOC), no)
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.vpr
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.jccl
+	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.snx
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.gadget
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.cluster
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.vrj

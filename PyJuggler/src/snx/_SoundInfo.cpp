@@ -21,7 +21,13 @@ using namespace boost::python;
 void _Export_SoundInfo()
 {
     scope* snx_SoundInfo_scope = new scope(
-    class_< snx::SoundInfo >("SoundInfo", init<  >())
+    class_< snx::SoundInfo >("SoundInfo",
+         "Informational type that describes one sound entry.  Typically, user\n"
+         "code will fill in the properties of an instance and pass it to a\n"
+         "snx.SoundHandle object to configure the sound."
+         ,
+         init<  >()
+        )
         .def(init< const snx::SoundInfo& >())
         .def_readwrite("alias", &snx::SoundInfo::alias)
         .def_readwrite("datasource", &snx::SoundInfo::datasource)
@@ -34,8 +40,6 @@ void _Export_SoundInfo()
         .def_readwrite("cutoff", &snx::SoundInfo::cutoff)
         .def_readwrite("volume", &snx::SoundInfo::volume)
         .def_readwrite("streaming", &snx::SoundInfo::streaming)
-        .def_readwrite("triggerOnNextBind", &snx::SoundInfo::triggerOnNextBind)
-        .def_readwrite("repeatCountdown", &snx::SoundInfo::repeatCountdown)
     );
 
     enum_< snx::SoundInfo::DataSource >("DataSource")
