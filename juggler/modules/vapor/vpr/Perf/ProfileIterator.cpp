@@ -45,81 +45,81 @@ namespace vpr
 {
 
    ProfileIterator::ProfileIterator( ProfileNode* start )
+      : mCurrentParent(NULL), mCurrentNode(NULL), mDepth(0)
    {
-      mCurrentParent = start;
-      mCurrentChild = mCurrentParent->getChild();
-   }
-
-   void  ProfileIterator::first(void)
-   {
-      mCurrentChild = mCurrentParent->getChild();
-   }
-
-   void  ProfileIterator::next(void)
-   {
-      ProfileNode* temp;
-      temp = mCurrentParent;
-      mCurrentParent = mCurrentChild; 
-      mCurrentChild = mCurrentChild->getChild();
-      if ( mCurrentChild == NULL )
+      mCurrentNode = start;
+      if(NULL == mCurrentNode)      // NULL iterator
       {
-         mCurrentChild = mCurrentParent;
-         mCurrentParent = temp;
-         mCurrentChild->getSibling();
+         mCurrentParent = NULL;
+      }
+      else
+      {
+         mCurrentParent = mCurrentNode->getParent();
       }
    }
 
-   bool  ProfileIterator::isDone(void)
+   void ProfileIterator::operator++()
    {
-      return mCurrentChild == NULL;
-   }
+      // If can decend, do so, else ascend until have a sibling.
+      // If no sibling found, then set both to NULL (end iterator)
+      if(mCurrentNode->getChild() != NULL)      // If can descend, do so
+      {
+         mCurrentParent = mCurrentNode;
+         mCurrentNode = mCurrentParent->getChild();
+         mDepth++;
+      }
+      else if(mCurrentNode->getSibling() != NULL)  // No children, try sibling
+      {
+         mCurrentNode = mCurrentNode->getSibling();
+         vprASSERT(mCurrentNode->getParent() == mCurrentParent);
+      }
+      else     // No siblings, so search up for parental sibling
+      {
+         ProfileNode* cur_parent = mCurrentParent;
+         --mDepth;
+         while( (cur_parent != NULL) &&
+                (cur_parent->getSibling() == NULL) )   // While no siblings and not at root
+         {
+            cur_parent = cur_parent->getParent();
+            --mDepth;
+         }
 
-   void  ProfileIterator::enterChild( int index )
-   {
-      mCurrentChild = mCurrentParent->getChild();
-      while ( (mCurrentChild != NULL) && (index != 0) )
-      {
-         index--;
-         mCurrentChild = mCurrentChild->getSibling();
-      }
+         if(mDepth > 10000)  // If overflow
+         {
+            mDepth = 0;
+         }
 
-      if ( mCurrentChild != NULL )
-      {
-         mCurrentParent = mCurrentChild;
-         mCurrentChild = mCurrentParent->getChild();
+         if(NULL == cur_parent)     // At end of iteration
+         {
+            mCurrentNode = NULL;
+            mCurrentParent = NULL;
+            mDepth = 0;
+         }
+         else
+         {
+            mCurrentNode = cur_parent->getSibling();
+            mCurrentParent = mCurrentNode->getParent();
+         }
       }
-      if ( mCurrentChild == NULL )
-      {
-         enterParent();
-         next();
-      }
-   }
-
-   void  ProfileIterator::enterParent( void )
-   {
-      if ( mCurrentParent->getParent() != NULL )
-      {
-         mCurrentParent = mCurrentParent->getParent();
-      }
-      mCurrentChild = mCurrentParent->getChild();
    }
 
    VPR_API(std::ostream&) operator<< (std::ostream& out, ProfileIterator& iter)
    {
-      while ( !iter.isDone() )
+      while ( iter != ProfileIterator(NULL))
       {
-         out << iter.getCurrentName() << " total calls: " << iter.getCurrentTotalCalls()
-         << " total time: " << iter.getCurrentTotalTime().msecf() << " ave: " 
-            << iter.getCurrentTotalTime().msecf() / iter.getCurrentTotalCalls() << " history: ";
+         out << (*iter).getName() << " total calls: " << (*iter).getTotalCalls()
+             << " total time: " << (*iter).getTotalTime().msecf()
+             << " ave: " << (*iter).getAverage().msecf()
+             << " history: ";
 
-         ProfileNode::NodeHistoryRange p = iter.getNodeHistoryRange();
+         ProfileNode::NodeHistoryRange p = (*iter).getNodeHistoryRange();
          for ( ; p.first != p.second; p.first++ )
          {
             out << p.first->msecf() << " ";
          }
 
          out << std::endl;
-         iter.next();
+         ++iter;
       }
 
       return out;

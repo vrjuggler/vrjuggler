@@ -38,16 +38,8 @@
  * Boston, MA 02111-1307, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef VPR_PROFILE_ITERATOR_H
 #define VPR_PROFILE_ITERATOR_H
-
-/**
- * Primarily based on:
- * Real-Time Hierarchical Profiling for Game Programming Gems 3
- * by Greg Hjelstrom & Byon Garrabrant
- */
 
 #include <vpr/Perf/ProfileNode.h>
 
@@ -60,121 +52,49 @@ namespace vpr
    class ProfileIterator
    {
    public:
+      /* Constructor.  Returns iterator starting at "start" node.
+      */
+      ProfileIterator( ProfileNode* start );
 
-      /**
-       * Access the first child of the parent.
-       */
-      void           first(void);
-
-      /**
-       * Access the next child of the parent.
-       */
-      void           next(void);
-
-      ProfileIterator*   getChild(void)
+      /** Copy constructor. */
+      ProfileIterator(const ProfileIterator& rhs)
       {
-         return new ProfileIterator(mCurrentChild->getChild());
+          mCurrentParent = rhs.mCurrentParent;
+          mCurrentNode = rhs.mCurrentNode;
+          mDepth = rhs.mDepth;
       }
 
-      ProfileIterator*   getSibling(void)
+      /** Go to next element. */
+      void operator++();
+
+      ProfileNode& operator*()
+      { return *mCurrentNode; }
+      ProfileNode* operator->()
+      { return mCurrentNode; }
+
+      /** Return the current depth in the traversal. */
+      unsigned depth()
+      { return mDepth; }
+
+      bool operator==(const ProfileIterator& rhs)
       {
-         return new ProfileIterator(mCurrentChild->getSibling());
+         return ( (rhs.mCurrentParent == mCurrentParent) &&
+                  (rhs.mCurrentNode == mCurrentNode) &&
+                  (mDepth == rhs.mDepth) );
       }
 
-      /**
-       * Tells if the there are no more children to iterate through.
-       *
-       * @return true is returned if the next child is NULL.
-       *         false is returned if there is a valid next child.
-       */
-      bool           isDone(void);
+      bool operator!=(const ProfileIterator& rhs)
+      { return !(operator==(rhs)); }
 
-      /**
-       * Make the given child the new parent.
-       */
-      void           enterChild( int index );
-
-      /**
-       * Make the largest child the new parent.
-       */
-      void           enterLargestChild( void );
-
-      /**
-       * Make the current parent's parent the new parent.
-       */
-      void           enterParent( void );
-
-      /**
-       * @return Current childs name is returned.
-       */
-      const char*    getCurrentName( void )
-      {
-         return mCurrentChild->getName();
-      }
-
-      /**
-       * @return Current childs number of total calls is returned.
-       */
-      int            getCurrentTotalCalls( void )
-      {
-         return mCurrentChild->getTotalCalls();
-      }
-
-      /**
-       * @return Current childs total exectuion time is returned.
-       */
-      vpr::Interval          getCurrentTotalTime( void )
-      {
-         return mCurrentChild->getTotalTime();
-      }
-
-      /**
-       * @return Current child's parent name is returned.
-       */
-      const char* getCurrentParentName( void )
-      {
-         return mCurrentParent->getName();
-      }
-
-      /**
-       * @return tree structure is printed out
-       */
-      void printTree(ProfileNode* node)
-      {
-         node->printTree(node);
-      }
-
-      /*
-       * @return The current size of history it is keeping track of
-       */
-      const ProfileNode::NodeHistoryRange getNodeHistoryRange()
-      {
-         return mCurrentChild->getNodeHistoryRange();
-      }
-
-      /**
-       * @return Current child's parent number of total calls is returned.
-       */
-      int            getCurrentParentTotalCalls( void )
-      {
-         return mCurrentParent->getTotalCalls();
-      }
-
-      /**
-       * @return Current child's parent total execution time is returned.
-       */
-      vpr::Interval          getCurrentParentTotalTime( void )
-      {
-         return mCurrentParent->getTotalTime();
-      }
 
    protected:
+      ProfileNode*   mCurrentParent;   /** The current parent of the node we are holding. */
+      ProfileNode*   mCurrentNode;     /** The current node we are holding on to. */
 
-      ProfileNode*   mCurrentParent;
-      ProfileNode*   mCurrentChild;
+      unsigned       mDepth;           /** The current depth in the tree. */
 
-      ProfileIterator( ProfileNode* start );
-      friend   class    ProfileManager;
+      friend class ProfileManager;
+      friend class ProfileNode;
    };
 
 /**
