@@ -65,6 +65,7 @@ public:
          m_realkeys[i] = m_keys[i] = 0;
       m_realkeys[0] = m_keys[0] = 1;
       m_dtrans = 0.1; m_drot = 1;
+      oldMouseX = 0; oldMouseY = 0;
    }
    ~vjXWinKeyboard() { StopSampling();}
 
@@ -157,6 +158,8 @@ private:
 
    float m_dtrans, m_drot;
    float m_mouse_sensitivity;
+   int   oldMouseX, oldMouseY;
+
    int m_toggleoff;  // digital data is toggled or just while key is down
 };
 
