@@ -860,7 +860,7 @@ bool InputManager::removeDevice(const Input* devPtr)
 
 /**
  * InputManager remove instName from the InputManager,
- * currently stupifies all the proxies connected to it.
+ * currently stupefies all the proxies connected to it.
  */
 bool InputManager::removeDevice(const std::string& instName)
 {
@@ -879,16 +879,16 @@ bool InputManager::removeDevice(const std::string& instName)
    }
 
    // Find any proxies connected to the device
-   // Stupify any proxies connected to device
+   // Stupefy any proxies connected to device
    // NOTE: Could just remove it and then refresh all, but this is a little safer
-   //       since we explicitly stupify the one that we don't want anymore
+   //       since we explicitly stupefy the one that we don't want anymore
    for ( std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
         i_p != mProxyTable.end();
         ++i_p )
    {
       if((*i_p).second->getProxiedInputDevice() == dev_ptr)
       {
-         (*i_p).second->stupify(true);
+         (*i_p).second->stupefy(true);
       }
    }
 

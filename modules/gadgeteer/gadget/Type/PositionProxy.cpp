@@ -118,7 +118,7 @@ gmtl::Matrix44f PositionProxy::getData(float scaleFactor) const
 {
    gmtl::Matrix44f ret_mat;
 
-   if(mStupified)
+   if(mStupefied)
    {
       //gmtl::identity(mPositionData.mPosData);
       //ret_mat = mPositionData.mPosData;
@@ -147,7 +147,7 @@ gmtl::Matrix44f PositionProxy::getData(float scaleFactor) const
 
 void PositionProxy::updateData()
 {
-   if((!mStupified) && (mTypedDevice != NULL))
+   if((!mStupefied) && (mTypedDevice != NULL))
    {
       mPositionData = (mTypedDevice->getPositionData (mUnitNum));
 

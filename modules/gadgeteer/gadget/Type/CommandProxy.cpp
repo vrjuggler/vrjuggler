@@ -65,7 +65,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
 void CommandProxy::updateData()
 {
-   if (!isStupified())
+   if (!isStupefied())
    {
       mData = mTypedDevice->getCommandData(mUnitNum);
    }

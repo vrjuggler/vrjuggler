@@ -80,7 +80,7 @@ void BaseDeviceInterface::refresh()
          << "         Make sure the proxy exists in the current configuration."
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "   referencing device interface will be stupified to point at dummy device."
+         << "   referencing device interface will be stupefied to point at dummy device."
          << std::endl << vprDEBUG_FLUSH;
    }
    else if((NULL != mProxyPtr) && (NULL == prev_proxy_ptr))   // ASSERT: We have just gotten a valid proxy to point to

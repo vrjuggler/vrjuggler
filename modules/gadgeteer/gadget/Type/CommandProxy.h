@@ -79,8 +79,8 @@ public:
     */
    int getData() const
    {
-      // If we're stupified, return 0, return the current command value.
-      return (isStupified() ? 0 : mData.getDigital());
+      // If we're stupefied, return 0, return the current command value.
+      return (isStupefied() ? 0 : mData.getDigital());
    }
 
    CommandData* getCommandData()
@@ -93,8 +93,8 @@ public:
     */
    Command* getCommandPtr()
    {
-      // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupified() ? NULL : mTypedDevice);
+      // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
+      return (isStupefied() ? NULL : mTypedDevice);
    }
 
    /**
@@ -112,7 +112,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (mStupified))
+      if((NULL == mTypedDevice) || (mStupefied))
       {
          return NULL;
       }
