@@ -393,6 +393,10 @@ VJ_MTREE_LIB_GEN(SNX, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    sonix-config
+   Makefile 
+   common.defs.mk
+   make.defs.mk
+   snx/Makefile
    snx/plugins/Makefile
    snx/plugins/AudioWorks/Makefile
    snx/plugins/OpenAL/Makefile
@@ -403,9 +407,6 @@ AC_CONFIG_FILES([
    test/Makefile
    test/apps/Makefile
    test/TestSuite/Makefile
-   Makefile 
-   common.defs.mk
-   make.defs.mk
    mtree/SNX.include.dist
    mtree/SNX.install.dist
    ],
