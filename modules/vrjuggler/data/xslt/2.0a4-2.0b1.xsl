@@ -107,6 +107,38 @@
       </xsl:copy>
    </xsl:template>
 
+   <!-- Renames the RemoteInputManager plugin to RIMPlugin. -->
+   <xsl:template match="jconf:cluster_manager">
+      <xsl:element name="cluster_manager">
+         <xsl:attribute name="name">
+            <xsl:value-of select="@name" />
+         </xsl:attribute>
+         <xsl:attribute name="version">
+            <xsl:value-of select="@version" />
+         </xsl:attribute>
+
+         <xsl:copy-of select="./jconf:plugin_path" />
+
+         <xsl:for-each select="./jconf:plugin">
+            <xsl:variable name="plugin_name">
+               <xsl:value-of select="." />
+            </xsl:variable>
+            <xsl:choose>
+               <xsl:when test="$plugin_name = 'RemoteInputManager'">
+                  <xsl:element name="plugin">
+                     <xsl:text>RIMPlugin</xsl:text>
+                  </xsl:element>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:copy-of select="." />
+               </xsl:otherwise>
+            </xsl:choose>
+         </xsl:for-each>
+
+         <xsl:copy-of select="./jconf:cluster_node" />
+      </xsl:element>
+   </xsl:template>
+
    <xsl:template match="jconf:display_window">
       <xsl:choose>
          <xsl:when test="@version = '4'">
