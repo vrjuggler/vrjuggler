@@ -91,7 +91,13 @@ public:
       , mState(state)
    {
    }
-
+   
+   /**
+    * Default constructor needed in order to use the templated EventFactory 
+    * without modification. The EventFactory was needed to allow the 
+    * correct subtype of Event, MouseEvent in this case, to be created 
+    * during de-serialization.
+    */
    MouseEvent()
       : gadget::Event(NoEvent, 0),
       mButton(gadget::NO_MBUTTON), 
@@ -103,6 +109,9 @@ public:
    {
    }
 
+   /**
+    * Get the mouse button that was pressed while generating this event.
+    */
    const gadget::Keys& getButton() const
    {
       return mButton;
