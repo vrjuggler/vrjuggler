@@ -272,6 +272,7 @@ install-test:
 # Clean-up targets.  '_clobber' removes the developer installation links.
 # =============================================================================
 _clobber:
+	@$(MAKE) cleandepend
 	@$(MAKE) clean-links
 
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
