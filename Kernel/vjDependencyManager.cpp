@@ -63,7 +63,7 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
 void vjDependencyManager::debugDump()
 {
    //vjDEBUG_BEGIN(vjDBG_KERNEL, vjDBG_CONFIG_LVL) << "vjDepChecker::debugDump\n" << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_KERNEL,vjDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "num checkers:" << mDepCheckers.size() << "\n" << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" << vjDEBUG_FLUSH;
 
