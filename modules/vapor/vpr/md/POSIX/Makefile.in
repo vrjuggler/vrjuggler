@@ -50,14 +50,15 @@ VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/md/POSIX
 
 ifeq (@SUBSYSTEM@, POSIX)
-SRCS		= MutexPosix.cpp	\
-          ThreadPosix.cpp
+    SRCS	= MutexPosix.cpp	\
+                  ThreadPosix.cpp
 endif
 
 ifneq (@SUBSYSTEM@, WIN32)
 ifneq (@SUBSYSTEM@, NSPR)
     SRCS	+= FileHandleUNIX.cpp		\
                    InetAddrBSD.cpp		\
+                   SelectorImpBSD.cpp		\
                    SerialPortImpTermios.cpp	\
                    SocketDatagramImpBSD.cpp	\
                    SocketImpBSD.cpp		\

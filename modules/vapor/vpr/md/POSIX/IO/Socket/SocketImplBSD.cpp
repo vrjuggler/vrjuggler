@@ -42,6 +42,7 @@
 #include <errno.h>
 
 #include <md/POSIX/SocketImpBSD.h>
+#include <Utils/Debug.h>
 
 #ifndef INADDR_NONE
 #define INADDR_NONE 0xffffffff	/* -1 return */
@@ -63,10 +64,10 @@ namespace vpr {
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpBSD::open () {
     int domain, type, sock;
-    bool retval;
+    Status retval;
 
     switch (m_local_addr.getFamily()) {
       case SocketTypes::LOCAL:
@@ -131,7 +132,7 @@ SocketImpBSD::open () {
         fprintf(stderr,
                 "[vpr::SocketImpBSD] Could not create socket (%s): %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
     // Otherwise, return success.
     else {
@@ -140,16 +141,18 @@ SocketImpBSD::open () {
         }
 
         m_handle->m_fdesc = sock;
-        m_open = retval = true;
+        m_open = true;
     }
 
-    if ( retval != 0 ) {
+/*
+    if ( retval ) {
         // If the value in m_local_addr is the string "INADDR_ANY", use the
         // INADDR_ANY constant.
         if ( m_name == "INADDR_ANY" || m_name == "" ) {
             m_local_addr.setAddressValue(INADDR_ANY);
         }
     }
+*/
 
     return retval;
 }
@@ -157,9 +160,9 @@ SocketImpBSD::open () {
 // ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpBSD::bind () {
-    bool retval;
+    Status retval;
     int status;
 
     // Bind the socket to the address in m_local_addr.
@@ -171,11 +174,10 @@ SocketImpBSD::bind () {
         fprintf(stderr,
                 "[vpr::SocketImpBSD] Cannot bind socket to address: %s\n",
                 strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
-    // Otherwise, return success.
     else {
-        retval = true;
+        m_bound = true;
     }
 
     return retval;
@@ -187,9 +189,9 @@ SocketImpBSD::bind () {
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpBSD::connect () {
-    bool retval;
+    Status retval;
     int status;
 
     // Attempt to connect to the address in m_addr.
@@ -202,14 +204,45 @@ SocketImpBSD::connect () {
     if ( status == -1 ) {
         fprintf(stderr, "[vpr::SocketImpBSD] Error connecting to %s: %s\n",
                 m_remote_addr.getAddressString().c_str(), strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
     // Otherwise, return success.
     else {
-        m_connected = retval = true;
+        m_connected = true;
     }
 
     return retval;
+}
+
+Status
+SocketImpBSD::setLocalAddr (const InetAddr& addr) {
+    Status status;
+
+    if ( m_bound || m_connected ) {
+        vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "SocketImpBSD::setLocalAddr: Can't set address of a "
+            << "bound or connected socket.\n" << vprDEBUG_FLUSH;
+        status.setCode(Status::Failure);
+    }
+    else {
+      m_local_addr = addr;
+    }
+
+    return status;
+}
+
+Status
+SocketImpBSD::setRemoteAddr (const InetAddr& addr) {
+    Status status;
+
+    if ( m_connected ) {
+        status.setCode(Status::Failure);
+    }
+    else {
+        m_remote_addr = addr;
+    }
+
+    return status;
 }
 
 // ============================================================================
@@ -242,12 +275,12 @@ union sockopt_data {
 /**
  *
  */
-bool
+Status
 SocketImpBSD::getOption (const SocketOptions::Types option,
                          struct SocketOptions::Data& data)
 {
     int opt_name, opt_level, status;
-    bool retval;
+    Status retval;
     socklen_t opt_size;
     union sockopt_data opt_data;
 
@@ -319,8 +352,6 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
                         (void*) &opt_data, &opt_size);
 
     if ( status == 0 ) {
-        retval = true;
-
         // This extracts the information from the union passed to getsockopt(2)
         // and puts it in our friendly SocketOptions::Data object.  This code
         // depends on the type of that object being a union!
@@ -383,7 +414,7 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
         }
     }
     else {
-        retval = false;
+        retval.setCode(Status::Failure);
         fprintf(stderr,
                 "[vpr::SocketImpBSD] ERROR: Could not get socket option for socket %s: %s\n",
                 m_handle->getName().c_str(), strerror(errno));
@@ -395,13 +426,14 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
 /**
  *
  */
-bool
+Status
 SocketImpBSD::setOption (const SocketOptions::Types option,
                          const struct SocketOptions::Data& data)
 {
     int opt_name, opt_level;
     socklen_t opt_size;
     union sockopt_data opt_data;
+    Status retval;
 
     switch (option) {
       // Socket-level options.
@@ -519,7 +551,12 @@ SocketImpBSD::setOption (const SocketOptions::Types option,
         break;
     }
 
-    return (setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data, opt_size) == 0);
+    if ( ::setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
+    {
+        retval.setCode(Status::Failure);
+    }
+
+    return retval;
 }
 
 }; // End of vpr namespace

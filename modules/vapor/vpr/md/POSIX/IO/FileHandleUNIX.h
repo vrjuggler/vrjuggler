@@ -79,7 +79,7 @@ public:
     //! RETURNS: true  - The file handle was opened successfully.
     //! RETURNS: false - The file handle could not be opened for some reason.
     // ------------------------------------------------------------------------
-    virtual bool open(void);
+    virtual Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the file handle.
@@ -94,7 +94,7 @@ public:
     //+                  An error message is printed explaining what went
     //+                  wrong.
     // ------------------------------------------------------------------------
-    virtual bool close(void);
+    virtual Status close(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is in blocking mode.
@@ -106,7 +106,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual bool enableBlocking(void);
+    virtual Status enableBlocking(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is in non-blocking mode.
@@ -118,7 +118,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual bool enableNonBlocking(void);
+    virtual Status enableNonBlocking(void);
 
     // ========================================================================
     // vpr::FileHandle implementation.
@@ -133,7 +133,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool enableAppend(void);
+    virtual Status enableAppend(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is not in append mode.
@@ -144,7 +144,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool disableAppend(void);
+    virtual Status disableAppend(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that writes are synchronous.
@@ -155,7 +155,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool enableSynchronousWrite(void);
+    virtual Status enableSynchronousWrite(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that writes are asynchronous.
@@ -166,7 +166,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool enableAsynchronousWrite(void);
+    virtual Status enableAsynchronousWrite(void);
 
 protected:
     // Friends.
@@ -185,15 +185,15 @@ protected:
     //+       handle, and the number of bytes read successfully is returned
     //+       to the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer where the file contents are to
-    //+                be stored.
-    //! ARGS: length - The number of bytes to be read.
+    //! ARGS: buffer     - A pointer to the buffer where the file contents are
+    //+                    to be stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes actually read.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the file
-    //+                handle.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    virtual ssize_t read_i(void* buffer, const size_t length);
+    virtual Status read_i(void* buffer, const size_t length,
+                          ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     //! Read exactly the specified number of bytes from the file handle into
@@ -205,15 +205,15 @@ protected:
     //+       handle, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer where the file contents are to
-    //                 be stored.
-    //! ARGS: length - The number of bytes to be read.
+    //! ARGS: buffer     - A pointer to the buffer where the file contents are
+    //                     to be stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes actually read.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the file
-    //+                handle.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    virtual ssize_t readn_i(void* buffer, const size_t length);
+    virtual Status readn_i(void* buffer, const size_t length,
+                           ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.
@@ -222,14 +222,16 @@ protected:
     //! POST: The given buffer is written to the file handle, and the number
     //+       of bytes written successfully is returned to the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer to be written.
-    //! ARGS: length - The length of the buffer.
+    //! ARGS: buffer        - A pointer to the buffer to be written.
+    //! ARGS: length        - The length of the buffer.
+    //! ARGS: bytes_written - The number of bytes actually written.
     //
     //! RETURNS: >-1 - The number of bytes successfully written to the file
     //+                handle.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t write_i(const void* buffer, const size_t length);
+    virtual Status write_i(const void* buffer, const size_t length,
+                           ssize_t& bytes_written);
 
     // ------------------------------------------------------------------------
     //: Get the current file handle flags.

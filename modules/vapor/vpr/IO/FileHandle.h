@@ -33,6 +33,8 @@
 #ifndef _VPR_FILE_HANDLE_H_
 #define _VPR_FILE_HANDLE_H_
 
+#include <vprConfig.h>
+
 #include <string>
 #include <vector>
 
@@ -57,7 +59,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool enableAppend(void) = 0;
+    virtual Status enableAppend(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is not in append mode.
@@ -68,7 +70,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool disableAppend(void) = 0;
+    virtual Status disableAppend(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that writes are synchronous.
@@ -79,7 +81,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool enableSynchronousWrite(void) = 0;
+    virtual Status enableSynchronousWrite(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that writes are asynchronous.
@@ -90,7 +92,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool enableAsynchronousWrite(void) = 0;
+    virtual Status enableAsynchronousWrite(void) = 0;
 
 protected:
     // ------------------------------------------------------------------------
