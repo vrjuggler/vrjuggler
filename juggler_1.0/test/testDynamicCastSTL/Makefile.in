@@ -1,0 +1,38 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/test/testDynamicCastSTL
+# $Id$
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+
+srcdir		= @srcdir@
+
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
+VPATH		= @srcdir@
+
+OBJECTS		= main.@OBJ_FILE_SUFFIX@
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: run
+
+run: $(OBJECTS)
+	$(LINK) -o $@ $(OBJECTS)
+
+.cpp.@OBJ_FILE_SUFFIX@:
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f Makedepend run *.exe *.ilk $(OBJECTS) *core *.?db so_locations
+	rm -rf ./ii_files
