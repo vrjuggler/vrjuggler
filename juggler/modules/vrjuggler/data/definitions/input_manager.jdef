@@ -28,7 +28,7 @@
       <parent/>
       <category>/Input</category>
       <property valuetype="string" variable="true" name="driver_path">
-         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers</help>
+         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers.  If no values are set for this property, the default search path will be ${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/drivers depending on the compile-time application binary interface (ABI).</help>
          <value label="DSO Path" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="true" name="driver">
