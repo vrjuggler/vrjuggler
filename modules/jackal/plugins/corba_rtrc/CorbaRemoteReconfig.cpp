@@ -40,16 +40,17 @@
 #include <corba_rtrc/RemoteReconfigSubjectImpl.h>
 #include <corba_rtrc/CorbaRemoteReconfig.h>
 
-jccl::RemoteReconfig* initPlugin()
+jccl::RemoteReconfig* initPlugin(jccl::ConfigManager* configMgr)
 {
-   return new jccl::CorbaRemoteReconfig;
+   return new jccl::CorbaRemoteReconfig(configMgr);
 }
 
 namespace jccl
 {
 
-CorbaRemoteReconfig::CorbaRemoteReconfig()
-   : mCorbaManager(NULL)
+CorbaRemoteReconfig::CorbaRemoteReconfig(jccl::ConfigManager* configMgr)
+   : mConfigManager(configMgr)
+   , mCorbaManager(NULL)
    , mInterface(NULL)
    , mEnabled(false)
    , mInterfaceName("CorbaRemoteReconfig")
@@ -59,6 +60,8 @@ CorbaRemoteReconfig::CorbaRemoteReconfig()
 
 CorbaRemoteReconfig::~CorbaRemoteReconfig()
 {
+   mConfigManager = NULL;
+
    //Clean up interface by disconnecting first
    if (mInterface != NULL)
    {
