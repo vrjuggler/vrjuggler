@@ -224,63 +224,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    enum Focus focus_val(NOT_IN_FOCUS);
 
-   // -------- COPY OVER TEXTURE DATA --------- //
-   Rectangle r;      // The dimensions of the fb area to to local texture
-
-   // Default to just copying the entire thing
-   r.x      = 0;
-   r.y      = 0;
-   r.width  = mVncWidth;
-   r.height = mVncHeight;
-
-   const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
-   const size_t update_size(r.width * r.height * bytes_per_pixel);   // Size of update in bytes
-
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "bytes_per_pixel == " << bytes_per_pixel << std::endl
-      << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "update_size == " << update_size << std::endl << vprDEBUG_FLUSH;
-
-   // Allocate mTextureData if it has not already been created.  It is only
-   // allocated once under the assumption that the VNC frame buffer size does
-   // not change.
-   if ( NULL == mTextureData )
-   {
-      const size_t tex_size(mTexWidth*mTexHeight*bytes_per_pixel);
-      mTextureData = (char*) malloc(tex_size);
-
-      // Zero out the texture data.
-      memset(mTextureData, 0, tex_size);
-   }
-
-
-   // Find start point of copy
-   // - start = fbstart + (y line offset) + x offset
-   // XXX: There is a bug here where it should take into account bits per pixel
-   const char* src = mVncIf.getFramebuffer() + (r.y * mVncWidth) + r.x;
-   char* dest = mTextureData + (r.y * mTexWidth) + r.x;
-
-   // Clip the copy so it doesn't go around "edge of screen"
-   const int copy_width  = std::min(mVncWidth - r.x, r.width);
-   const int copy_height = std::min(mVncHeight - r.y, r.height);
-
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "copy_width == " << copy_width << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "copy_height == " << copy_height << std::endl << vprDEBUG_FLUSH;
-
-   // Copy the frame buffer into our texture data buffer.
-   // - Copies one line at a time
-   for ( int i = 0; i < copy_height; ++i )
-   {
-      memcpy(dest, src, copy_width * bytes_per_pixel);
-      src  += (mVncWidth * bytes_per_pixel);          // Move source to next line
-      dest += (mTexWidth * bytes_per_pixel);          // Move dest to next line
-   }
-
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
-
    // Do all intersection testing and stuff in the local coordinate frame so we don't have
    // to deal with rotations and translations of the desktop.
    // Just transform the wand into the local frame and we are set to go with minimal effort.
@@ -647,6 +591,16 @@ void VNCDesktop::draw()
       // XXX: This should really move to contextInit or somewhere like that
       if(0 == mTexObjId)
       {
+         // Allocate texture data
+         vprASSERT ( NULL == mTextureData );
+         const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
+         const size_t tex_size(mTexWidth*mTexHeight*bytes_per_pixel);
+         mTextureData = (char*) malloc(tex_size);
+
+         // Zero out the texture data.
+         memset(mTextureData, 0, tex_size);
+
+         // Create and bind texture object
          glGenTextures(1, &mTexObjId);
          glBindTexture(GL_TEXTURE_2D, mTexObjId);
          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -662,7 +616,6 @@ void VNCDesktop::draw()
          glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
                (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                (GLubyte*) mTextureData);
-
       }
       else
       {
