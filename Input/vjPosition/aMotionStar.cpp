@@ -1627,7 +1627,7 @@ aMotionStar::convertMeasurementRate (const double rate, std::string& str_rate)
 {
     char rate_a[7];
 
-    snprintf(rate_a, 7, "%d", (int) (rate * 1000.0));
+    snprintf(rate_a, 7, "%06.0f", rate * 1000.0);
     str_rate = rate_a;
 }
 
