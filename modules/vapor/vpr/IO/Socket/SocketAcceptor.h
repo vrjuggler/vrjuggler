@@ -44,7 +44,6 @@
 
 #include <vpr/vprConfig.h>
 #include <vpr/Util/ReturnStatus.h>
-#include <vpr/IO/Socket/SocketStream.h>
 
 
 namespace vpr
