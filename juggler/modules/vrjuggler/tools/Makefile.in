@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/tools
+# Makefile.in for vrjuggler/tools
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -42,15 +42,18 @@ default: trackerConfig@EXEEXT@
 
 # Basic options.
 srcdir		= @srcdir@
-CFLAGS		= @APP_CFLAGS@ $(EXTRA_FLAGS) $(INCLUDES) $(DEFS)
-CXXFLAGS	= @APP_CXXFLAGS@ $(EXTRA_FLAGS) $(INCLUDES) $(DEFS)
+CFLAGS		= @APP_CFLAGS@ $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
+CXXFLAGS	= @APP_CXXFLAGS@ $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
 DEFS		= @APP_DEFS@
-EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ $(DEBUG_FLAGS)
-DEBUG_FLAGS	= @APP_DEBUG_FLAGS@
-OPTIM_FLAGS	= @APP_OPTIM_FLAGS@
+EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@ $(DEBUG_CFLAGS)
+DEBUG_CFLAGS	= @APP_DEBUG_CFLAGS@
+OPTIM_CFLAGS	= @APP_OPTIM_CFLAGS@
+EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@ $(DEBUG_LFLAGS)
+DEBUG_LFLAGS	= @APP_DEBUG_LFLAGS@
+OPTIM_LFLAGS	= @APP_OPTIM_LFLAGS@
 INCLUDES	= @APP_INCLUDES@ -I$(srcdir) -I$(srcdir)/common		\
                   $(GLUT_INC) $(GLUI_INC)
-LINK_FLAGS	= @APP_LINK_FLAGS@ $(EXTRA_FLAGS)
+LINK_FLAGS	= @APP_LINK_FLAGS@ $(EXTRA_LFLAGS)
 
 # Paths to GLUT and GLUI.
 GLUT_LIB	= -B static -L/home/users/allenb/Libs/glut/lib32 -lglut
@@ -60,9 +63,13 @@ GLUI_LIB	= -B static -L/home/users/allenb/Libs/glui_v2/lib -lglui
 GLUI_INC 	= -I/home/users/allenb/Libs/glui_v2
 
 # Libraries needed for linking.
-BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@
+BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
+                  @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@		\
+                  $(NULL)
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ $(GLUI_LIB) $(GLUT_LIB)	\
-                  @APP_EXTRA_LIBS_GL@ -lXmu @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@ 
+                  @APP_EXTRA_LIBS_GL@ -lXmu @APP_EXTRA_LIBS@		\
+                  @APP_EXTRA_LIBS_END@					\
+                  $(NULL)
 
 # Commands to execute.
 C_COMPILE	= @APP_CC@ $(CFLAGS)
