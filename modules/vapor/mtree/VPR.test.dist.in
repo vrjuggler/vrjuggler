@@ -52,22 +52,6 @@
         Sync
         ..
         TestSuite
-            CppUnit
-                doc
-                ..
-                framework
-                    extensions
-                    ..
-                ..
-                samples
-                    Multicaster
-                    ..
-                    textui
-                    ..
-                ..
-                textui
-                ..
-            ..
             TestCases
                 IO
                     Socket
