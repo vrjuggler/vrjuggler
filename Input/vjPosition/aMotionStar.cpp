@@ -733,6 +733,10 @@ aMotionStar::setRunMode (const BIRDNET::run_mode mode) {
             if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
                 fprintf(stderr, "[aMotionStar] Continuous data stopped\n");
                 getRsp(&rsp, sizeof(BIRDNET::HEADER));
+
+                if ( rsp.error_code != 0 ) {
+                    printError(rsp.error_code);
+                }
             }
             else {
                 fprintf(stderr,
@@ -754,6 +758,10 @@ aMotionStar::setRunMode (const BIRDNET::run_mode mode) {
             if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
                 fprintf(stderr, "[aMotionStar] Continuous data requested\n");
                 getRsp(&rsp, sizeof(BIRDNET::HEADER));
+
+                if ( rsp.error_code != 0 ) {
+                    printError(rsp.error_code);
+                }
             }
             else {
                 fprintf(stderr,
@@ -1075,6 +1083,7 @@ aMotionStar::sendWakeUp () {
         if ( status == 0 && rsp.error_code != 0 ) {
             BIRDNET::HEADER shutdown_msg(BIRDNET::MSG_SHUT_DOWN);
 
+            printError(rsp.error_code);
             fprintf(stderr,
                     "[aMotionStar] Reinitializing server and sending wake-up "
                     "call again\n");
@@ -1084,6 +1093,10 @@ aMotionStar::sendWakeUp () {
 
             status = sendMsg((void*) &shutdown_msg, sizeof(shutdown_msg));
             status = getRsp((void*) &rsp, sizeof(rsp));
+
+            if ( rsp.error_code != 0 ) {
+                printError(rsp.error_code);
+            }
         }
     }
 
@@ -1504,6 +1517,10 @@ aMotionStar::getDeviceStatus (const unsigned char device) {
         // If that succeeded, read the rest of the response using the size
         // in the header's number_bytes field.
         else {
+            if ( rsp->header.error_code != 0 ) {
+                printError(rsp->header.error_code);
+            }
+
             status = getRsp((void*) &(rsp->buffer),
                             ntohs(rsp->header.number_bytes));
 
@@ -1561,6 +1578,9 @@ aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
             fprintf(stderr,
                     "[aMotionStar] WARNING: Could not read server response to "
                     "device %u setup: %s\n", device, strerror(errno));
+        }
+        else if ( rsp.error_code != 0 ) {
+            printError(rsp.error_code);
         }
     }
 
