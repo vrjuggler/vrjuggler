@@ -1,11 +1,12 @@
 
 package VjConfig;
 
-import VjConfig.PropertyDesc;
 import java.util.Vector;
 import java.io.StreamTokenizer;
 import java.util.NoSuchElementException;
 import java.io.IOException;
+import VjConfig.PropertyDesc;
+import VjConfig.ChunkFactory;
 
 public class Property {
 
@@ -16,7 +17,6 @@ public class Property {
     ValType valtype;
     public Vector vals;
     public ChunkDesc embeddesc; // used only for t_embeddedchunk
-    public ChunkDescDB descdb;
 
 
     public Property (Property p) {
@@ -24,7 +24,6 @@ public class Property {
 	token = p.token;
 	num = p.num;
 	desc = p.desc;
-	descdb = p.descdb;
 	embeddesc = p.embeddesc;
 	valtype = new ValType (p.valtype);
 	vals = new Vector();
@@ -34,17 +33,16 @@ public class Property {
 
 
 
-    public Property (PropertyDesc d, ChunkDescDB db) {
+    public Property (PropertyDesc d) {
 	
 	desc = d;
 	name = d.name;
 	token = d.token;
 	valtype = d.valtype;
 	num = d.num;
-	descdb = db;
 	vals = new Vector();
 	if (valtype.equals (ValType.t_embeddedchunk)) {
-	    embeddesc = db.get (d.getEnumAtIndex(0).str);
+	    embeddesc = ChunkFactory.getChunkDescByToken(d.getEnumAtIndex(0).str);
 	    if (embeddesc == null) {
 		System.err.println ("Big Messup in Property Constructor!!!");
 		embeddesc = new ChunkDesc ();
@@ -65,7 +63,7 @@ public class Property {
 	if (i == -1)
 	    i = vals.size();
 	if (valtype.equals (ValType.t_embeddedchunk)) {
-	    ConfigChunk ch = new ConfigChunk (embeddesc, descdb);
+	    ConfigChunk ch = ChunkFactory.createChunk (embeddesc);
 	    if (desc.valuelabels.size() > i)
 		ch.setName (((DescEnum)desc.valuelabels.elementAt(i)).str);
 	    else
@@ -275,9 +273,8 @@ public class Property {
 	    return null;
 
 	if (valtype.equals (ValType.t_embeddedchunk)) {
-	    ChunkDesc d = descdb.get(st.sval);
-	    if (d != null) {
-		ConfigChunk c = new ConfigChunk(d, descdb);
+	    if (embeddesc != null) {
+		ConfigChunk c = ChunkFactory.createChunk (embeddesc);
 		c.read(st);
 		return new VarValue (c);
 	    }

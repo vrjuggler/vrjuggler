@@ -27,7 +27,7 @@ public class ConfigChunk {
 
 
 
-    public ConfigChunk (ChunkDesc d, ChunkDescDB db) {
+    public ConfigChunk (ChunkDesc d) {
 	desc = d;
 	name = "";
 	props = new Vector();
@@ -35,19 +35,17 @@ public class ConfigChunk {
 	 * the first element in a propertydesc
 	 */
 	for (int i = 1; i < d.props.size(); i++)
-	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i), 
-					   db));
+	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
     }
 
 
 
-    public ConfigChunk (ChunkDesc d, ChunkDescDB db, String n) {
+    public ConfigChunk (ChunkDesc d, String n) {
 	desc = d;
 	name = n;
 	props = new Vector();
 	for (int i = 1; i < d.props.size(); i++)
-	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i), 
-					   db));
+	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
     }
 
 

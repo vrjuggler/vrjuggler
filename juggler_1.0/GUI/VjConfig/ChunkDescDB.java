@@ -37,7 +37,7 @@ public class ChunkDescDB extends Vector {
 
     for (int i = 0; i < d.size(); i++) {
       c1 = (ChunkDesc)d.elementAt(i);
-      c2 = get (c1.token);
+      c2 = getByToken (c1.token);
       if ((c2 == null) || (!c1.equals(c2)))
         newdb.addElement(c1);
     }
@@ -95,7 +95,7 @@ public class ChunkDescDB extends Vector {
 
 
 
-    public ChunkDesc get (String tok) {
+    public ChunkDesc getByToken (String tok) {
 	for (int i = 0; i < size(); i++) {
 	    if (((ChunkDesc)elementAt(i)).token.equalsIgnoreCase(tok)) {
 		return (ChunkDesc)elementAt(i);
