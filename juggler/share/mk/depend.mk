@@ -124,5 +124,5 @@ endif
 # these files, but I do not know of a good way to do the conditional include
 # besides nested, gross conditional statements.
 ifndef DO_CLEANDEPEND
-    include $(DEPEND_FILES)
+    -include $(DEPEND_FILES)
 endif
