@@ -401,7 +401,7 @@ bool Property::tryAssign (int index, const char* val) {
         else if (!strcasecmp (val, false_TOKEN))
             b = false;
         else { // we'll try to accept a numeric value
-            b = strtol (val, &endval, 0);
+            b = strtol (val, &endval, 0) != 0;
             if (endval != '\0') {
                 b = false;
                 vprDEBUG (jcclDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
