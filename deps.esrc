@@ -3,21 +3,11 @@
 
 GMTL
 {
-   Source
-   {
-      CVSROOT: :pserver:anonymous@cvs.ggt.sourceforge.net:/cvsroot/ggt;
-      Module: GGT/modules/GMTL   [modules/GMTL];
-      Tag: HEAD;
-      Path: .;
-   }
-
-   Macros
-   {
-      CVSROOT: :pserver:anonymous@cvs.ggt.sourceforge.net:/cvsroot/ggt;
-      Module: GGT/macros   [macros.GGT];
-      Tag: HEAD;
-      Path: .;
-   }
+   CVSROOT: :pserver:anonymous@cvs.ggt.sourceforge.net:/cvsroot/ggt;
+   Module: GGT/macros         [macros.GGT];
+   Module: GGT/modules/GMTL   [modules/GMTL];
+   Tag: HEAD;
+   Path: .;
 };
 
 Boost
