@@ -153,7 +153,9 @@ while test $# -gt 0; do
                     ;;
                 *)
                     vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_abi_flags $vpr_isa_flags"
-                    shift
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
                     ;;
             esac
             ;;
@@ -178,7 +180,9 @@ while test $# -gt 0; do
                     ;;
                 *)
                     ldflags="$vpr_abi_flags $vpr_isa_flags"
-                    shift
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
                     ;;
             esac
             ;;
@@ -197,7 +201,9 @@ while test $# -gt 0; do
                     shift
                     ;;
                 *)
-                    shift
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
                     ;;
             esac
             ;;
