@@ -79,6 +79,23 @@ public class ControlPanelView
       toolbar.addToToolbar(backBtn);
       toolbar.addToToolbar(forwardBtn);
 
+      // Make sure the toolbar is using our context whenever we become active
+      addComponentListener(new ComponentAdapter()
+      {
+         public void componentShown(ComponentEvent evt)
+         {
+            toolbar.setConfigContext(context);
+         }
+      });
+
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         public void run()
+         {
+            showMainPanel();
+         }
+      });
+
 //      // Init the watermark in the control panel
 //      ClassLoader loader = BeanJarClassLoader.instance();
 //      showMainPanel();
@@ -176,48 +193,15 @@ public class ControlPanelView
    /**
     * Helper class for getting the config manager serivce.
     */
+   private ConfigBroker getConfigBroker()
+   {
+      return new ConfigBrokerProxy();
+   }
+
    private ConfigManagerService getConfigManager()
    {
       Object bean = BeanRegistry.instance().getBean("ConfigManager").getBean();
       return (ConfigManagerService)bean;
-   }
-
-   private void createNewChunkDB()
-   {
-   }
-
-   private void open()
-   {
-      int result = fileChooser.showOpenDialog(this);
-      if (result == JFileChooser.APPROVE_OPTION)
-      {
-         try
-         {
-            File file = fileChooser.getSelectedFile();
-            ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
-            ConfigManagerService mgr = (ConfigManagerService)BeanRegistry.instance().getBean("ConfigManager").getBean();
-
-            if (file.getName().endsWith(".config"))
-            {
-               InputStream in = new BufferedInputStream(new FileInputStream(file));
-               ConfigChunkDB chunk_db = config.loadConfigChunks(in, mgr.getAllChunkDescs());
-               mgr.add(chunk_db);
-               mgr.setActiveConfig(chunk_db);
-               showMainPanel();
-//               this.add(control, BorderLayout.CENTER);
-//               this.updateUI();
-//               control.invalidate();
-            }
-         }
-         catch (IOException ioe)
-         {
-            JOptionPane.showMessageDialog(this,
-                  "Failed to open the file: "+ioe.getMessage(),
-                  "Error",
-                  JOptionPane.ERROR_MESSAGE);
-            ioe.printStackTrace();
-         }
-      }
    }
 
    private void showMainPanel()
@@ -254,8 +238,9 @@ public class ControlPanelView
                dlg.getContentPane().setLayout(new BorderLayout());
                SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor();
 
-               ConfigManagerService mgr = getConfigManager();
-               ConfigChunk device = mgr.getActiveConfig().get("Analog Simulator");
+               List chunks = getConfigBroker().getChunks(context);
+               ConfigChunk device = (ConfigChunk)ConfigUtilities.getChunksWithName(chunks,
+                                                            "Analog Simulator").get(0);
                editor.setDevice(device);
                dlg.getContentPane().add(editor, BorderLayout.CENTER);
                dlg.pack();
@@ -303,8 +288,9 @@ public class ControlPanelView
                      dlg.getContentPane().setLayout(new BorderLayout());
                      SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor();
 
-                     ConfigManagerService mgr = getConfigManager();
-                     ConfigChunk device = mgr.getActiveConfig().get((String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID()));
+                     List chunks = getConfigBroker().getChunks(context);
+                     String device_name = (String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID());
+                     ConfigChunk device = (ConfigChunk)ConfigUtilities.getChunksWithName(chunks, device_name).get(0);
                      editor.setDevice(device);
                      dlg.getContentPane().add(editor, BorderLayout.CENTER);
                      dlg.pack();
@@ -340,9 +326,11 @@ public class ControlPanelView
                      dlg.getContentPane().setLayout(new BorderLayout());
                      SimPosDeviceEditor editor = new SimPosDeviceEditor();
 
-                     ConfigManagerService mgr = getConfigManager();
+                     List chunks = getConfigBroker().getChunks(context);
                      System.out.println("Action Cmd: "+evt.getActionCommand());
-                     ConfigChunk device = mgr.getActiveConfig().get((String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID()));
+
+                     String device_name = (String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID());
+                     ConfigChunk device = (ConfigChunk)ConfigUtilities.getChunksWithName(chunks, device_name).get(0);
                      editor.setDevice(device);
                      dlg.getContentPane().add(editor, BorderLayout.CENTER);
                      dlg.pack();
@@ -376,8 +364,7 @@ public class ControlPanelView
       ClassLoader loader = BeanJarClassLoader.instance();
       DefaultControlPanelModel model = new DefaultControlPanelModel();
       List devices = ConfigUtilities.getChunksWithDescToken(
-                           getConfigManager().getActiveConfig().getAll(),
-                           token);
+                           getConfigBroker().getChunks(context), token);
       for (Iterator itr = devices.iterator(); itr.hasNext(); )
       {
          ConfigChunk chunk = (ConfigChunk)itr.next();
@@ -475,21 +462,6 @@ public class ControlPanelView
    {
       this.setLayout(baseLayout);
 //      control.setModel(model);
-      toolbar.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            String cmd = evt.getActionCommand();
-            if (cmd.equals("New ChunkDB"))
-            {
-               createNewChunkDB();
-            }
-            else if (cmd.equals("Open"))
-            {
-               open();
-            }
-         }
-      });
       this.add(toolbar,  BorderLayout.NORTH);
 //      this.add(control,  BorderLayout.CENTER);
    }
@@ -504,6 +476,11 @@ public class ControlPanelView
     * The data model for the control panel.
     */
 //   private DefaultControlPanelModel model = new DefaultControlPanelModel();
+
+   /**
+    * The context providing a view into the current configuration.
+    */
+   private ConfigContext context = new ConfigContext();
 
    /**
     * The currently viewed component.

@@ -54,7 +54,7 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 public class ConfigChunkDBEditor
    extends JPanel
    implements ContextListener
-            , PropertyChangeListener
+            , ConfigChunkListener
 {
    /**
     * The ID used to reference the generic ConfigChunk editor panel in the
@@ -399,13 +399,12 @@ public class ConfigChunkDBEditor
    private void addChunk(ConfigChunk chunk)
    {
       // Make ourselves a listener to the chunk
-      chunk.addPropertyChangeListener(this);
+      chunk.addConfigChunkListener(this);
       for (Iterator itr = chunk.getEmbeddedChunks().iterator(); itr.hasNext(); )
       {
          ConfigChunk emb_chunk = (ConfigChunk)itr.next();
          System.out.println("Listening to emb chunk: "+emb_chunk.getName());
-         emb_chunk.addPropertyChangeListener(this);
-//         ((ConfigChunk)itr.next()).addPropertyChangeListener(this);
+         emb_chunk.addConfigChunkListener(this);
       }
 
       // Add the chunk to each of its categories
@@ -689,9 +688,9 @@ public class ConfigChunkDBEditor
       // Don't listen to the chunk anymore
       for (Iterator itr = chunk.getEmbeddedChunks().iterator(); itr.hasNext(); )
       {
-         ((ConfigChunk)itr.next()).removePropertyChangeListener(this);
+         ((ConfigChunk)itr.next()).removeConfigChunkListener(this);
       }
-      chunk.removePropertyChangeListener(this);
+      chunk.removeConfigChunkListener(this);
 
       // Get the nodes for the chunk
       List chunk_nodes = getNodesFor(chunk);
@@ -732,25 +731,127 @@ public class ConfigChunkDBEditor
    }
 
    /**
+    * This gets called whenever one of the ConfigChunks we are editing has
+    * changed its name.
+    */
+   public void nameChanged(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      for (Iterator itr = getNodesFor(src).iterator(); itr.hasNext(); )
+      {
+         treeModel.nodeChanged((TreeNode)itr.next());
+      }
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are editing has one
+    * of its property values change.
+    */
+   public void propertyValueChanged(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+
+      // If the property is not an embedded chunk, we don't care about it
+      if (src.getPropertyDesc(evt.getProperty()).getValType() != ValType.EMBEDDEDCHUNK)
+      {
+         return;
+      }
+
+      // Update each chunk node in the tree
+      for (Iterator itr = getNodesFor(src).iterator(); itr.hasNext(); )
+      {
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)itr.next();
+
+         // Go through the children of this node looking for the property that
+         // matches
+         for (Enumeration e = node.children(); e.hasMoreElements(); )
+         {
+            DefaultMutableTreeNode prop_node = (DefaultMutableTreeNode)e.nextElement();
+            if (prop_node.getUserObject() == evt.getValue())
+            {
+               treeModel.nodeChanged(prop_node);
+            }
+         }
+      }
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are editing adds a
+    * new property value.
+    */
+   public void propertyValueAdded(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      // If the property is not an embedded chunk, we don't care about it
+      if (src.getPropertyDesc(evt.getProperty()).getValType() != ValType.EMBEDDEDCHUNK)
+      {
+         return;
+      }
+
+      // Update each chunk node in the tree
+      for (Iterator itr = getNodesFor(src).iterator(); itr.hasNext(); )
+      {
+         DefaultMutableTreeNode chunk_node = (DefaultMutableTreeNode)itr.next();
+
+         // Find the node for the property description
+         for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+         {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode)e.nextElement();
+            PropertyDesc prop_desc = src.getPropertyDesc(evt.getProperty());
+            if (prop_desc.equals(child.getUserObject()))
+            {
+               // Create a new node for the new property value
+               DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(evt.getValue());
+
+               // Add the new node into the tree
+               treeModel.insertNodeInto(new_node, child, evt.getIndex());
+            }
+         }
+      }
+   }
+
+   /**
+    * This gets called whenever one of the ConfigChunks we are editing removes a
+    * property value.
+    */
+   public void propertyValueRemoved(ConfigChunkEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+
+      // If the property is not an embedded chunk, we don't care about it
+      if (src.getPropertyDesc(evt.getProperty()).getValType() != ValType.EMBEDDEDCHUNK)
+      {
+         return;
+      }
+
+      // Update each chunk node in the tree
+      for (Iterator itr = getNodesFor(src).iterator(); itr.hasNext(); )
+      {
+         DefaultMutableTreeNode chunk_node = (DefaultMutableTreeNode)itr.next();
+
+         // Find the node for the property description
+         for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+         {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode)e.nextElement();
+            PropertyDesc prop_desc = src.getPropertyDesc(evt.getProperty());
+            if (prop_desc.equals(child.getUserObject()))
+            {
+               // Get the node for the property value to remove
+               MutableTreeNode prop_node = (MutableTreeNode)child.getChildAt(evt.getIndex());
+
+               // Remove the node from the tree
+               treeModel.removeNodeFromParent(prop_node);
+            }
+         }
+      }
+   }
+
+   /**
     * Gets a list of all the tree nodes that contain the given Object.
     */
    protected List getNodesFor(Object obj)
    {
       return getNodesFor(obj, (DefaultMutableTreeNode)treeModel.getRoot());
-   }
-
-   /**
-    * This gets called whenver one of the ChunkDescs in the ChunkDescDB we are
-    * editing has been modified.
-    */
-   public void propertyChange(PropertyChangeEvent evt)
-   {
-      ConfigChunk src = (ConfigChunk)evt.getSource();
-      System.out.println("ConfigChunk changed: "+src.getName());
-      for (Iterator itr = getNodesFor(src).iterator(); itr.hasNext(); )
-      {
-         treeModel.nodeChanged((TreeNode)itr.next());
-      }
    }
 
    /**

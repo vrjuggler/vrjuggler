@@ -35,6 +35,7 @@ import java.beans.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.*;
+import javax.swing.event.EventListenerList;
 
 import org.jdom.Element;
 import org.jdom.Attribute;
@@ -57,7 +58,6 @@ public class ConfigChunk
    {
       mDomElement = root;
       desc = ChunkFactory.getChunkDescByToken(root.getName());
-      changeSupport = new PropertyChangeSupport(this);
 
       if (null == desc)
       {
@@ -75,7 +75,6 @@ public class ConfigChunk
    {
       desc = srcChunk.desc;
       mDomElement = (Element)srcChunk.mDomElement.clone();
-      changeSupport = new PropertyChangeSupport(this);
    }
 
    /**
@@ -87,7 +86,6 @@ public class ConfigChunk
    {
       desc = d;
       mDomElement = new Element(d.getToken());
-      changeSupport = new PropertyChangeSupport(this);
 
       Iterator i = d.getPropertyDescs().iterator();
       PropertyDesc prop_desc;
@@ -139,7 +137,7 @@ public class ConfigChunk
       // qualified names of embedded chunks.
       String old = getName();
       mDomElement.setAttribute("name", s);
-      changeSupport.firePropertyChange("name", old, s);
+      fireNameChanged(old);
    }
 
    /**
@@ -532,6 +530,9 @@ public class ConfigChunk
             {
                prop.setText(value.toString());
             }
+
+            // Notify listeners of the change
+            firePropertyValueChanged(prop_desc.getToken(), index, value.get());
          }
          // The property does not currently exist, so we'll add it.
          else
@@ -553,15 +554,12 @@ public class ConfigChunk
             }
 
             mDomElement.addContent(prop);
+
+            // Notify listeners of the addition
+            firePropertyValueAdded(prop_desc.getToken(), index, value.get());
          }
 
          status = true;
-      }
-
-      // Notify listeners if this property has changed
-      if (status)
-      {
-         changeSupport.firePropertyChange(prop_desc.getToken(), null, null);
       }
 
       return status;
@@ -579,15 +577,14 @@ public class ConfigChunk
 
       if (index < props.size())
       {
+         VarValue old_value = getProperty(propType, index);
+
          Element del_prop = (Element)props.get(index);
          mDomElement.removeContent(del_prop);
-         status = true;
-      }
 
-      // Notify listeners if this property has changed
-      if (status)
-      {
-         changeSupport.firePropertyChange(propType, null, null);
+         // Notify listeners of the removal
+         firePropertyValueRemoved(prop_desc.getToken(), index, old_value.get());
+         status = true;
       }
 
       return status;
@@ -673,21 +670,105 @@ public class ConfigChunk
    }
 
    /**
-    * Adds the given listener to be notified when this config chunk's properties
-    * change.
+    * Adds the given listener to be notified when this config chunk changes.
     */
-   public void addPropertyChangeListener(PropertyChangeListener listener)
+   public void addConfigChunkListener(ConfigChunkListener listener)
    {
-      changeSupport.addPropertyChangeListener(listener);
+      listenerList.add(ConfigChunkListener.class, listener);
    }
 
    /**
     * Removes the given listener that was registered to be notified when this
-    * config chunk's properties change.
+    * config chunk changed.
     */
-   public void removePropertyChangeListener(PropertyChangeListener listener)
+   public void removeConfigChunkListener(ConfigChunkListener listener)
    {
-      changeSupport.removePropertyChangeListener(listener);
+      listenerList.remove(ConfigChunkListener.class, listener);
+   }
+
+   /**
+    * Notifies listeners that this ConfigChunk's name has changed.
+    */
+   protected void fireNameChanged(String old_name)
+   {
+      ConfigChunkEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigChunkListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigChunkEvent(this, null, 0, old_name);
+            }
+            ((ConfigChunkListener)listeners[i+1]).nameChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that this ConfigChunk's property has changed.
+    */
+   protected void firePropertyValueChanged(String prop_token, int index,
+                                           Object old_value)
+   {
+      ConfigChunkEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigChunkListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigChunkEvent(this, prop_token, index, old_value);
+            }
+            ((ConfigChunkListener)listeners[i+1]).propertyValueChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that a new property value has been added to this
+    * ConfigChunk.
+    */
+   protected void firePropertyValueAdded(String prop_token, int index,
+                                         Object value)
+   {
+      ConfigChunkEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigChunkListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigChunkEvent(this, prop_token, index, value);
+            }
+            ((ConfigChunkListener)listeners[i+1]).propertyValueAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that a new property value has been removed from this
+    * ConfigChunk.
+    */
+   protected void firePropertyValueRemoved(String prop_token, int index,
+                                         Object old_value)
+   {
+      ConfigChunkEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigChunkListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigChunkEvent(this, prop_token, index, old_value);
+            }
+            ((ConfigChunkListener)listeners[i+1]).propertyValueRemoved(evt);
+         }
+      }
    }
 
    /**
@@ -701,7 +782,7 @@ public class ConfigChunk
    private ChunkDesc desc = null;
 
    /**
-    * Property change support for this chunk.
+    * Listeners interested in this ConfigChunk.
     */
-   private PropertyChangeSupport changeSupport = null;
+   private EventListenerList listenerList = new EventListenerList();
 }
