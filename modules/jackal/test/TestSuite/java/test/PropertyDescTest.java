@@ -157,7 +157,7 @@ public class PropertyDescTest
       assertEquals(list.size(), 0);
 
       // add an enum
-      DescEnum enum1 = new DescEnum("Enum1", new VarValue("Val1"));
+      DescEnum enum1 = new DescEnum("Enum1", ValType.STRING, "Val1");
       d.addEnum(enum1);
       assertEquals(d.getNumEnums(), 1);
       assertTrue(d.getEnumAt(0).equals(enum1));
@@ -167,7 +167,7 @@ public class PropertyDescTest
 //      assertTrue(list.get(0).getValue().equals(enum1.getValue()));
 
       // add another enum
-      DescEnum enum2 = new DescEnum("Enum2", new VarValue("Val2"));
+      DescEnum enum2 = new DescEnum("Enum2", ValType.STRING, "Val2");
       d.addEnum(enum2);
       assertEquals(d.getNumEnums(), 2);
       assertTrue(d.getEnumAt(0).equals(enum1));
