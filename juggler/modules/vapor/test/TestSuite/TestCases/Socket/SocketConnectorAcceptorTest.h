@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <TestCase.h>
+#include <ThreadTestCase.h>
 #include <TestSuite.h>
 #include <TestCaller.h>
 
@@ -30,11 +31,11 @@
 namespace vprTest
 {
 
-class SocketConnectorAcceptorTest : public TestCase
+class SocketConnectorAcceptorTest : public ThreadTestCase
 {
 public:
    SocketConnectorAcceptorTest( std::string name )
-   : TestCase (name), mThreadAssertTest(false)
+   : ThreadTestCase (name)
    {;}
 
    virtual ~SocketConnectorAcceptorTest()
@@ -44,26 +45,8 @@ public:
    {;}
 
    virtual void tearDown()
-   {
-   }
-
-   // use this within your threads (CppUnit doesn't catch the assertTest there)
-   // then test mThreadAssertTest with assertTest in your parent func.
-   // then reset it to true.
-   void threadAssertTest( bool testcase, std::string text = std::string("none") )
-   {
-       if(!testcase)
-       {
-           mThreadAssertTest = testcase;
-           std::cerr << "threadAssertTest: " << text << std::endl;
-       }
-       else
-           std::cout << "." << std::flush;
-   }
-   void testAssertReset()
-   { mThreadAssertTest = true; }
-
-
+   {;}
+   
    // Test the acceptor wrapper construction
    // Things to test
    //  -- Opening acceptor
@@ -114,7 +97,7 @@ public:
    // After connection the acceptor sends a message, the connector recieves it and closes the socket
    void testSpawnedAcceptor()
    {
-       testAssertReset();
+       threadAssertReset();
        mRendevousPort = 47000 + (random() % 71);     // Get a partially random port
        mNumItersA = 5;
        mMessageValue = std::string("The Data");
@@ -132,11 +115,19 @@ public:
            connector_functor( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector );
        vpr::Thread connector_thread( &connector_functor);
 
+       assertTest( acceptor_thread.valid() && "Invalid acceptor thread");
+       assertTest( connector_thread.valid() && "Invalid connector thread");
+
+       if(!acceptor_thread.valid())
+          std::cerr << "Invalid acceptor thread\n";
+       if(!connector_thread.valid())
+          std::cerr << "Invalid connector_thread\n";
+
        // Wait for threads
        acceptor_thread.join();
        connector_thread.join();
 
-       assertTest( mThreadAssertTest );
+       checkThreadAssertions();
    }
    void testSpawnedAcceptor_acceptor(void* arg)
    {
@@ -149,7 +140,7 @@ public:
 
        // Open the acceptor
        ret_val = acceptor.open(local_acceptor_addr);
-       threadAssertTest((ret_val.success()), "Acceptor did not open correctly");
+       assertTestThread((ret_val.success()) && "Acceptor did not open correctly");
 
        for(int i=0;i<mNumItersA;i++)
        {
@@ -164,14 +155,14 @@ public:
           // ACCEPT connection
           sock = new vpr::SocketStream;
           ret_val = acceptor.accept(*sock, vpr::Interval::NoTimeout );
-           threadAssertTest((ret_val.success()), "Accepting socket failed");
+           assertTestThread((ret_val.success()) && "Accepting socket failed");
 
-           threadAssertTest((sock->isOpen()), "Accepted socket should be open");
-           //threadAssertTest((sock->isConnected()), "Accepted socket should be connected");
+           assertTestThread((sock->isOpen()) && "Accepted socket should be open");
+           //assertTestThread((sock->isConnected()), "Accepted socket should be connected");
 
            ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
-           threadAssertTest((ret_val.success()), "Problem writing in acceptor");
-           threadAssertTest((bytes_written == mMessageLen), "Didn't send entire messag");
+           assertTestThread((ret_val.success()) && "Problem writing in acceptor");
+           assertTestThread((bytes_written == mMessageLen) && "Didn't send entire messag");
 
            // WAIT for close
            mCondVar.acquire();
@@ -180,10 +171,10 @@ public:
            mCondVar.release();
 
            //ret_val = sock->isConnected();
-           //threadAssertTest((ret_val == false), "Socket should not still be connected");
+           //assertTestThread((ret_val == false), "Socket should not still be connected");
 
            ret_val = sock->close();                                // Close the socket
-           threadAssertTest((ret_val.success()), "Problem closing accepted socket");
+           assertTestThread((ret_val.success()) && "Problem closing accepted socket");
        }
    }
    void testSpawnedAcceptor_connector(void* arg)
@@ -207,14 +198,14 @@ public:
          vpr::SocketStream    con_sock;
          std::string      data;
          ret_val = connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout );
-         threadAssertTest((ret_val.success()), "Connector can't connect");
+         assertTestThread((ret_val.success()) && "Connector can't connect");
 
          ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
-         threadAssertTest((ret_val.success()), "Read failed");
-         threadAssertTest((bytes_read == mMessageLen), "Connector recieved message of wrong size" );
+         assertTestThread((ret_val.success()) && "Read failed");
+         assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
          //ret_val = con_sock.isConnected();
-         //threadAssertTest((ret_val == false), "Socket should still be connected");
+         //assertTestThread((ret_val == false), "Socket should still be connected");
 
          con_sock.close();                                   // Close socket
 
@@ -236,9 +227,6 @@ public:
       test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
       return test_suite;
    }
-
-private:
-   bool             mThreadAssertTest; // true for no error
 
 protected:
     vpr::Uint16     mRendevousPort;     // The port the acceptor will be waiting on

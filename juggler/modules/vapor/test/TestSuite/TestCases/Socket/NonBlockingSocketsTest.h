@@ -158,7 +158,7 @@ public:
    }
 
    void testNonBlockingTransfer () {
-      testAssertReset();
+      threadAssertReset();
 
       mState        = NOT_READY;                        // Initialize
       mAcceptorPort = 34567;
@@ -181,7 +181,7 @@ public:
       acceptor_thread.join();
       connector_thread.join();
 
-      assertTest( mThreadAssertTest );
+      checkThreadAssertions();
    }
 
    void testNonBlockingTransfer_acceptor (void* arg) {
@@ -192,12 +192,12 @@ public:
       vpr::InetAddr acceptor_addr(mAcceptorPort);
 
       status = acceptor.open(acceptor_addr);
-      threadAssertTest(status.success(), "Failed to open acceptor");
+      assertTestThread(status.success() && "Failed to open acceptor");
 
       // The acceptor must be non-blocking so that the connected socket it
       // returns will also be non-blocking.  *sigh*
       status = acceptor.getSocket().enableNonBlocking();
-      threadAssertTest(status.success(),
+      assertTestThread(status.success() &&
                        "Failed to enable non-blocking for accepted socket");
 
       mCondVar.acquire();
@@ -211,15 +211,15 @@ public:
          status = acceptor.accept(client_sock);
       } while ( status == vpr::Status::WouldBlock );
 
-      threadAssertTest(status.success(), "Accept failed");
+      assertTestThread(status.success() && "Accept failed");
 
-      threadAssertTest(client_sock.isOpen(), "Accepted socket should be open");
-      threadAssertTest(client_sock.getNonBlocking(),
+      assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
+      assertTestThread(client_sock.getNonBlocking() &&
                        "Connected client socket should be non-blocking");
 
       client_sock.setNoDelay(true);
       status = client_sock.send(mMessage, mMessageLen, bytes_written);
-      threadAssertTest(! status.failure(),
+      assertTestThread(! status.failure() &&
                        "Failed to send message to client");
 
       mCondVar.acquire();
@@ -230,7 +230,7 @@ public:
       mCondVar.release();
 
       status = client_sock.close();
-      threadAssertTest(status.success(),
+      assertTestThread(status.success() &&
                        "Could not close acceptor side of client socket");
    }
 
@@ -253,17 +253,17 @@ public:
       mCondVar.release();
 
       status = con_sock.open();
-      threadAssertTest(status.success(), "Failed to open connector socket");
+      assertTestThread(status.success() && "Failed to open connector socket");
 
       status = con_sock.enableNonBlocking();
-      threadAssertTest(status.success(),
+      assertTestThread(status.success() &&
                        "Failed to enable non-blocking for connector");
 
       status = connector.connect(con_sock, remote_addr,
                                  vpr::Interval(5, vpr::Interval::Sec));
-      threadAssertTest(status.success(), "Connector can't connect");
+      assertTestThread(status.success() && "Connector can't connect");
 
-      threadAssertTest(con_sock.getNonBlocking(),
+      assertTestThread(con_sock.getNonBlocking() &&
                        "Connector should be non-blocking");
 
       mCondVar.acquire();
@@ -275,7 +275,7 @@ public:
       mCondVar.release();
 
       status = con_sock.recv(data, mMessageLen, bytes_read);
-      threadAssertTest(bytes_read == mMessageLen,
+      assertTestThread(bytes_read == mMessageLen &&
                        "Connector received message of wrong size");
 
       // Make sure we got all the data, then close.
@@ -360,7 +360,7 @@ public:
       {
          if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
          {
-            threadAssertTest( handle == selector.getHandle( j )
+            assertTestThread( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
          }
       }
@@ -377,15 +377,15 @@ public:
       std::string message = "Hi Maynard, My leg hurts";
       int bytes_written;
       status = spawned_socket.write( message, message.size(), bytes_written );
-      threadAssertTest( status.success(), "Problem writing in acceptor" );
+      assertTestThread( status.success() && "Problem writing in acceptor" );
 
       // s:    write the max size...
       int size;
       status = spawned_socket.getSendBufferSize( size );
-      threadAssertTest( status.success(), "couldn't get the max size for sending data with socket" );
+      assertTestThread( status.success() && "couldn't get the max size for sending data with socket" );
       message.resize( size );
       status = spawned_socket.write( message, message.size(), bytes_written );
-      threadAssertTest( status.success(), "maxsize test failed" );
+      assertTestThread( status.success() && "maxsize test failed" );
 
       // block until data is sent
       /*
