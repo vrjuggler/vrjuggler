@@ -23,6 +23,7 @@ Begin "Zelda"
             "3D Mouse"
             "Dummy Position"
             "Flock of Birds"
+            "PinchGlove"
         End
         Begin "Simulated Devices"
             "Position Simulator"

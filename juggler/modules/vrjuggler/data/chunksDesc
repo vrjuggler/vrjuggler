@@ -44,7 +44,7 @@ chunk AnaProxy "Analog Proxy" "Used to access a single analog input source"
   end
 chunk DigProxy "Digital Proxy" "Used to access a single digital (binary) input source"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "SimDigital" "IBox" } "The device this proxy attaches to"
+  device Chunk 1 "Device" vj_enumeration { "SimDigital" "IBox" "PinchGlove" "ThreeDMouse" } "The device this proxy attaches to"
   unit Int 1 "Unit" "The unit in the device this proxy attaches to"
   end
 chunk apiPerformer "Performer API" "This is information for configuring the Performer API.  It only pertains to Performer."
