@@ -107,6 +107,24 @@
   mathematical operations.
 </P>
 
+  <P>
+    <A NAME="mutex"><B>mutex</B></A> - A
+    <A HREF="#mutual_exclusion">mutual exclusion</A> object that allows
+    multiple <A HREF="#thread">threads</A> to synchronize access to shared
+    resources.  A mutex has two states: locked and unlocked.  Once a mutex
+    has been locked by a thread, other threads attempting to lock it will
+    block.  When the locking thread unlocks (releases) the mutex, one of
+    the blocked threads will lock (acquire) it and proceed with its
+    execution.  A mutex is thus a binary <A HREF="#semaphore">semaphore</A>.
+  </P>
+
+  <P>
+    <A NAME="mutual_exclusion"><B>mutual exclusion</B></A> - In computer
+    science: a collection of techniques for sharing resources so that
+    different manipluators of the resources do not conflict and cause
+    unwanted interactions.
+  </P>
+
 <h3><a name="n">[N]</a></h3>
 
 <h3><a name="o">[O]</a></h3>
@@ -153,6 +171,14 @@
 <h3><a name="s">[S]</a></h3>
 
   <P>
+    <A NAME="semaphore"><B>semaphore</B></A> - In computer science: a method
+    for restricting access to shared resources in a multithreaded
+    environment invented by Dijkstra.  Operations on semaphores can be either
+    test or increment.  A semaphore is free if its value is greather than or
+    equal to 1.  It is locked if its value is 0.
+  </P>
+
+  <P>
     <A NAME="smart_pointer"><B>smart pointer</B></A> - Objects that
     encapsulate C++ pointers.  They are a very powerful concept that can
     provide many features over standard pointers include safety in
@@ -161,6 +187,12 @@
   </P>
 
 <h3><a name="t">[T]</a></h3>
+
+  <P>
+    <A NAME="thread"><B>thread</B></A> - In computer science: a portion of
+    a program that can run independently and concurrently with other
+    portions of the same program.
+  </P>
 
 <h3><a name="u">[U]</a></h3>
 
