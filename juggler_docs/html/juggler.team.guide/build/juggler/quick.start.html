@@ -1,0 +1,143 @@
+<head>
+<title>Build System</title>
+</head>
+
+<body>
+<H2><img border=0 src="${IMAGES}/Icons/24x24_Images/Battery.gif"> Juggler Build System </H2>
+
+<H3> Table Of Contents: </H3>
+<ul>
+	<li><a href="#intro">Introduction</a></li>
+	<li><a href="#required">Required Reading</a></li>
+	<li><A href="#beginner">Step by step build of the Juggler distribution</a> </li>
+	<li><A href="#next">What's next?</a></li>
+</ul>
+
+<a name="intro">
+<H4> Introduction </H4>
+</a>
+Of particular interest, The VR Juggler project uses the autoconf utility to stay portable across platforms.  
+This means you will have to 'configure' the project before you make it..<BR>
+To make sense of this documentation, please understand the concepts listed in <a href="#required">Required Reading</a>.  
+Posting about these subjects to the mailing list will probably be ignored.<BR>
+<BR>
+
+<a name="required">
+<H4>Required Reading:</H4>
+</a>
+<!-- install-web include required.reading.html -->
+
+<a name="beginner">
+<H4> Step by step build of the Juggler distribution</H4>
+</a>
+<H5>Table of contents:</H5>
+<ol>
+<li><a href="#one"> Choose a directory to put Juggler.</a></li>
+<li><a href="#two"> Goto that directory and checkout juggler using CVS</a></li>
+<li><a href="#three"> Enter the newly checked out Juggler source directory</a></li>
+<li><a href="#four"> Set the environment variable VJ_BASE_DIR</a></li>
+<li><a href="#five"> Compile juggler (using the autoconf system, and gnu-make):</a></li>
+	<ol>
+	    <li> Auto-Generate Headers</li>
+	    <li> Auto-Generate the configuration script "configure"</li>
+	    <li> Probe the system for capabilities, generate Makefiles, etc...<BR>
+        	     this "configures" the source tree for the current system</li>
+	    <li> "Make" the distribution using gnu-make. </li>
+	</ol>
+<li><a href="#six"> Advanced Topics</a></li>
+	<ol>
+	    <li> Send compiler output to a different directory than the source tree.</li>
+	</ol>
+</ol>
+
+<HR>
+
+
+<ol>
+<a name="one">
+<li> Choose a directory to put Juggler.</a> <BR>
+	setenv source_code_dir /home/users/joeuser/src<BR>
+<BR>
+</li>
+
+<a name="two">
+<li> Goto that directory and checkout juggler using CVS</a><BR>
+    <B>NOTE: make sure CVS is set up, and pointing to the Juggler repository.</b><BR>
+cd "$source_code_dir"<BR>
+cvs checkout juggler<BR>
+<BR>
+</li>
+
+<a name="three">
+<li> Enter the newly checked out Juggler source directory</a><BR>
+cd "$source_code_dir"/juggler
+<BR>
+</li>
+
+<a name="four">
+<li> Set the environment variable VJ_BASE_DIR </a> <BR>
+    NOTE: This is required by Juggler's build system (makefiles, etc..) 
+    NOTE: 1.) The directory "instlinks" is semi-important. 
+              What does the word "instlinks" mean? 
+	      It is a working distribution of the Juggler library.
+	      After "gmake" is done, you'll be able to use this directory 
+	      to compile your code against.
+          2.) It also determines where juggler files will be created:
+	      Juggler files will be created in (some-directory)/instlinks/..
+	      (in other words, files are created one dir back from instlinks)
+    NOTE: Make sure this line is in your .tcshrc or .cshrc file.
+setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks
+<BR>
+</li>
+
+<a name="five">
+<li> Compile juggler (using the autoconf system, and gnu-make):</a><BR>
+	<ol>
+		<li> Auto-Generate Headers<BR>
+		autoheader
+		</li>
+		
+		<li> Auto-Generate the configuration script "configure"<BR>
+		autoconf
+		</li>
+
+		<li> Probe the system for capabilities, generate Makefiles, etc...<BR>
+        		this "configures" the source tree for the current system<BR>
+		"$source_code_dir"/juggler/configure
+		</li>
+
+		<li> "Make" the distribution using gnu-make.<BR>
+        		This compiles, links, and creates the final distribution tree <BR>
+        		(in the form of sym-links).<BR>
+		gmake
+		</li>
+	</ol>
+<BR>
+</li>
+
+<a name="six">
+<li> Advanced Topics</a><BR>
+    a.) Send compiler output to a different directory than the source tree.<BR>
+        Run this in the directory you want compiler output to go to.<BR>
+	NOTE: You can change the word "myBuildDirectory" to a name of
+	      your choice. <BR> <BR>
+setenv a_different_build_dir myBuildDirectory <BR>
+mkdir "$source_code_dir"/juggler/"$a_different_build_dir" <BR>
+cd "$source_code_dir"/juggler/"$a_different_build_dir" <BR>
+"$source_code_dir"/juggler/configure <BR>
+<BR>
+</li>
+<HR>
+
+
+
+<hr>
+
+<p>
+<a name="next">
+<b>What's next? Want to learn more? Where to go from here?</b><BR>
+</a>
+Please see the topics in the "Juggler Team Guide" Book under the build/juggler node.
+</p>
+
+</body>
