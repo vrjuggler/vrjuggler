@@ -51,6 +51,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/Sync/Guard.h>
+#include <vpr/Sync/Mutex.h>
+
 #include <vpr/Perf/ProfileIterator.h>
 #include <vpr/Perf/ProfileNode.h>
 
@@ -123,10 +126,12 @@ namespace vpr
 
       static   void                 printTree(void )
       {
+         mSampleLock.acquire();
          if ( mRoot.getChild() != NULL )
          {
             mRoot.printTree(mRoot.getChild());
          }
+         mSampleLock.release();
       }
 
       /**
@@ -136,6 +141,9 @@ namespace vpr
       {
          delete iterator;
       }
+
+
+      static   vpr::Mutex           mSampleLock;
 
    private:
       static   ProfileNode          mRoot;

@@ -49,39 +49,47 @@ namespace vpr
 
    void  ProfileManager::startProfile( const char * name )
    {
+      mSampleLock.acquire();
       if ( name != mCurrentNode->getName() )
       {
          mCurrentNode = mCurrentNode->getSubNode( name );
       }
 
       mCurrentNode->call();
+      mSampleLock.release();
    }
 
    void  ProfileManager::startProfile( const char * profileName , const unsigned int queueSize)
    {
+      mSampleLock.acquire();
       if ( profileName != mCurrentNode->getName() )
       {
          mCurrentNode = mCurrentNode->getSubNode( profileName, queueSize);
       }
 
       mCurrentNode->call();
+      mSampleLock.release();
    }
 
    void  ProfileManager::stopProfile( void )
    {
+      mSampleLock.acquire();
       // Return will indicate whether we should back up to our parent (we may
       // be profiling a recursive function)
       if ( mCurrentNode->Return() )
       {
          mCurrentNode = mCurrentNode->getParent();
       }
+      mSampleLock.release();
    }
 
    void  ProfileManager::reset( void )
    {
+      mSampleLock.acquire();
       mRoot.reset(); 
       mFrameCounter = 0;
       profileGetTicks(mResetTime);
+      mSampleLock.release();
    }
 
    void ProfileManager::incrementFrameCounter( void )
