@@ -36,6 +36,8 @@
 # (in alphabetical order):
 #
 #     - recurseDir(): Recurse through the given directory tree.
+#     - setRecurseAction(): Set the function callback invoked by recurseDir().
+#       The default is a function named recurseAction() in the calling module.
 #     - newDir(): Create a new directory in a given directory tree.
 #     - installFile(): Install a given file with specified permissions to a
 #       destination directory.
@@ -55,7 +57,7 @@ use File::Path;
 require Exporter;
 
 @ISA = qw(Exporter);
-@EXPORT = qw(recurseDir newDir installFile replaceTags);
+@EXPORT = qw(setRecurseAction recurseDir newDir installFile replaceTags);
 
 @dirstack = ();
 
@@ -130,6 +132,22 @@ sub recurseDir ($$) {
     # Go back to the previous directory so as not to intrude upon the actions
     # of the caller.
     chdir("$prevdir");
+}
+
+# -----------------------------------------------------------------------------
+# Change the callback function used by recurseDir() to the specificed
+# function reference.
+#
+# Syntax:
+#     setRecruseAction($func_ref);
+#
+# Arguments:
+#     $func_ref - A reference to a function that will be used as the callback
+#                 invoked by recurseDir().  This is typically passed using the
+#                 syntax \&funcName.
+# -----------------------------------------------------------------------------
+sub setRecurseAction ($) {
+    $rec_func = shift;
 }
 
 # -----------------------------------------------------------------------------
