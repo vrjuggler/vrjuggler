@@ -91,10 +91,12 @@ public:
       CPPUNIT_ASSERT(local_addr.getAddressValue() > 0);
       CPPUNIT_ASSERT(addr1.getAddressValue() == 3224437506u);
       CPPUNIT_ASSERT(addr1 == addr2);
+#ifndef VPR_SIMULATOR
       CPPUNIT_ASSERT(addr3.getAddressValue() == addr4.getAddressValue());
       CPPUNIT_ASSERT(addr3.getAddressString() == addr4.getAddressString());
       CPPUNIT_ASSERT(addr3 == addr4);
       CPPUNIT_ASSERT(addr3 == addr5);
+#endif
    }
 
    static CppUnit::Test* suite()
