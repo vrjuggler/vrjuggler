@@ -197,13 +197,6 @@ sub replaceTags ($%) {
     my $count = 0;
 
     my $progname = (fileparse("$0"))[0];
-    my $outfile;
-
-    if ( $Win32 ) {
-	$outfile = "C:/temp/$progname.$$";
-    } else {
-	$outfile = "/tmp/$progname.$$";
-    }
 
     # Open the input file, read its contents into @input_file and close it.
     # Once it is in the array, we no longer need to worry about it.
@@ -226,9 +219,11 @@ sub replaceTags ($%) {
 	}
     }
 
-    # Create the output file.
-    if ( ! open(OUTPUT, "> $outfile") ) {
-	warn "WARNING: Cannot create $outfile: $!\n";
+    # Create the output file by overwriting the input file.  The purpose is
+    # to replace the input file anyway, and overwriting it is the easiest way
+    # to accomplish this.
+    if ( ! open(OUTPUT, "> $infile") ) {
+	warn "WARNING: Cannot create $infile: $!\n";
 	return -1;
     }
 
@@ -238,10 +233,7 @@ sub replaceTags ($%) {
 	print OUTPUT;
     }
 
-    close(OUTPUT) or warn "WARNING: Cannot save $outfile: $!\n";
-
-    copy("$outfile", "$infile");
-    unlink("$outfile");
+    close(OUTPUT) or warn "WARNING: Cannot save $infile: $!\n";
 
     return $count;
 }
