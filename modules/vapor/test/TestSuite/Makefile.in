@@ -4,7 +4,7 @@
 ###############################################################################$
 
 # project name...
-PROJECT_NAME = driver
+PROJECT_NAME = runner
 
 default: $(PROJECT_NAME)
 
@@ -58,8 +58,8 @@ CPPUNIT_SRCS = TestCase.cpp \
                TestResult.cpp \
                TestFailure.cpp \
                TestSuite.cpp
-TESTDRIVER_SRCS = testSuite.cpp
-SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(TESTDRIVER_SRCS)
+RUNNER_SRCS = main.cpp
+SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(RUNNER_SRCS)
 
 OBJDIR = .
 DEPDIR = 
