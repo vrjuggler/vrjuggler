@@ -40,6 +40,10 @@
 #include <Kernel/vjDebug.h>
 #include <Sound/vjSoundFactory.h>
 
+
+// Apparently this is needed here so that this will compile with GCC.
+class vjSoundFactory;
+
 //: Base class for virtual construction of sound engines
 // Implementations of this class are registered with the device factory
 // for each device in the system
