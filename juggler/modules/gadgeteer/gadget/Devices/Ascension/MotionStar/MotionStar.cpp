@@ -308,7 +308,7 @@ int MotionStar::sample()
          for ( unsigned int i = 0; i < mMotionStar.getNumBirds(); ++i )
          {
             // Get the index to the current read buffer
-            cur_samples[i].setTime( cur_samples[i].getTime() );
+            cur_samples[i].setTime( cur_samples[0].getTime() );
             gmtl::identity(transmitter_T_receiver);
 
             format = mMotionStar.getBirdDataFormat(i);
