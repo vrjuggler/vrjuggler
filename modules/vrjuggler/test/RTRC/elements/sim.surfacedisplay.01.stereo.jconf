@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd" xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+<elements>
+<display_window name="SimSurfaceX01" version="2">
+<origin>50</origin>
+<origin>50</origin>
+<size>500</size>
+<size>500</size>
+<pipe>0</pipe>
+<frame_buffer_config>
+<opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+<red_size>1</red_size>
+<green_size>1</green_size>
+<blue_size>1</blue_size>
+<alpha_size>1</alpha_size>
+<depth_buffer_size>1</depth_buffer_size>
+<fsaa_enable>0</fsaa_enable>
+</opengl_frame_buffer_config>
+</frame_buffer_config>
+<stereo>1</stereo>
+<border>0</border>
+<act_as_event_source>0</act_as_event_source>
+<event_window_device>
+<event_window name="Keyboard configuration 0" version="1"><width>0</width>
+<height>0</height>
+<origin>0</origin>
+<origin>0</origin>
+<mouse_sensitivity>0.0</mouse_sensitivity><display_number>0</display_number>
+<lock_key>0</lock_key>
+<start_locked>0</start_locked>
+<sleep_time>0</sleep_time>
+<device_host></device_host></event_window></event_window_device>
+<active>1</active>
+<surface_viewports>
+<surface_viewport name="Front Wall" version="1"><origin>0.0</origin>
+<origin>0.0</origin>
+<size>1.0</size>
+<size>1.0</size>
+<view>Stereo</view>
+<corners>
+<vec3 name="lower left" version="1"><x>-1.524</x>
+<y>0.0</y>
+<z>-1.524</z>
+</vec3></corners>
+<corners>
+<vec3 name="lower right" version="1"><x>1.524</x>
+<y>0.0</y>
+<z>-1.524</z>
+</vec3></corners>
+<corners>
+<vec3 name="upper right" version="1"><x>1.524</x>
+<y>3.048</y>
+<z>-1.524</z>
+</vec3></corners>
+<corners>
+<vec3 name="upper left" version="1"><x>-1.524</x>
+<y>3.048</y>
+<z>-1.524</z>
+</vec3></corners>
+<user>User1</user>
+<active>1</active>
+<tracked>0</tracked>
+<tracker_proxy></tracker_proxy></surface_viewport></surface_viewports>
+</display_window>
+</elements>
+</configuration>
