@@ -82,10 +82,16 @@ public class VarListPanel
       // Add title for the list.
       String title = prop_def.getToken();
       JLabel name = new JLabel(title);
-      TableLayoutConstraints c2 = new TableLayoutConstraints(2, 0, 2, 0,
-                                                             TableLayout.LEFT,
-                                                             TableLayout.TOP);
+      TableLayoutConstraints c2 =
+         new TableLayoutConstraints(TITLE_COLUMN, TITLE_ROW,
+                                    TITLE_COLUMN, TITLE_ROW,
+                                    TableLayout.FULL, TableLayout.CENTER);
       add(name, c2);
+
+      // XXX: This is a hack to shrink mTypeButton down since we do not
+      // actually set an icon for it.  If this class did set an icon for
+      // mTypeButton, this could be removed.  -PH 3/31/2005
+      mTypeButton.setPreferredSize(new java.awt.Dimension(16, 16));
    }
 
    /**
