@@ -111,7 +111,7 @@ public:
       }
    }
 
-   const void setStartOnWireTime (const vpr::Interval& time)
+   void setStartOnWireTime (const vpr::Interval& time)
    {
       mStartOnWire = time;
    }
@@ -121,7 +121,7 @@ public:
       return mStartOnWire;
    }
 
-   const void setFullyOnWireTime (const vpr::Interval& time)
+   void setFullyOnWireTime (const vpr::Interval& time)
    {
       mFullyOnWire = time;
    }
@@ -131,7 +131,7 @@ public:
       return mFullyOnWire;
    }
 
-   const void setArrivesFullyTime (const vpr::Interval& time)
+   void setArrivesFullyTime (const vpr::Interval& time)
    {
       mArrivesFully = time;
    }
