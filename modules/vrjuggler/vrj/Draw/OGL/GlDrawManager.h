@@ -70,7 +70,6 @@ namespace vrj
 {
    class GlApp;
    class SimViewport;
-   class DrawSimInterface;
 
 /**
  * Concrete Singleton Class for OpenGL drawing.
@@ -148,9 +147,6 @@ public:
 
    /** Returns the app we are rendering. */
    GlApp* getApp();
-
-   /** Return a default OpenGL simlulator. */
-   virtual DrawSimInterface* createDefaultSimulator();
 
    //void setDisplayManager(DisplayManager* _dispMgr);
 
