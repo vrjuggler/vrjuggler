@@ -63,27 +63,23 @@ fprintf(stderr, "vpr::SocketDatagramImpWinSock default constructor\n");
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketDatagramImpWinSock::SocketDatagramImpWinSock (const std::string& address,
-                                                    const unsigned short port,
-                                                    const SocketTypes::Domain domain)
-    : SocketImpWinSock(address, port, domain, SocketTypes::DATAGRAM),
-      SocketDatagramImp(address, port, domain)
+SocketDatagramImpWinSock::SocketDatagramImpWinSock (const InetAddr& local_addr,
+                                                    const InetAddr& remote_addr)
+    : SocketImpWinSock(local_addr, remote_addr, SocketTypes::DATAGRAM),
+      SocketDatagramImp(local_addr, remote_addr)
 {
-    m_name = address;
-    m_addr.setPort(port);
-    m_addr.setFamily(domain);
-    m_type = SocketTypes::DATAGRAM;
-fprintf(stderr, "vpr::SocketDatagramImpWinSock(address, port, domain) constructor\n");
-fprintf(stderr, "    Address: %s -> %s\n", address.c_str(), m_name.c_str());
-fprintf(stderr, "    Port: %hu -> %hu\n", port, m_addr.getPort());
-fprintf(stderr, "    Domain: %d -> %d\n", domain, m_addr.getFamily());
+fprintf(stderr, "vpr::SocketDatagramImpBSD(local, remote) constructor\n");
+fprintf(stderr, "    Local Address: %s -> %s\n",
+        local_addr.getAddressString().c_str(), m_name.c_str());
+fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
+        m_local_addr.getPort());
+fprintf(stderr, "    Remote Address: %s -> %s\n",
+        remote_addr.getAddressString().c_str(), m_name.c_str());
+fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
+        m_remote_addr.getPort());
+fprintf(stderr, "    Domain: %d -> %d\n", local_addr.getFamily(),
+        m_local_addr.getFamily());
 fprintf(stderr, "    Type: %d\n", m_type);
-}
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketDatagramImpWinSock::~SocketDatagramImpWinSock () {
     /* Do nothing. */ ;
 }
 
@@ -103,29 +99,11 @@ SocketDatagramImpWinSock::recvfrom (void* msg, const size_t len,
     if ( bytes == -1 ) {
         fprintf(stderr,
                 "[vpr::SocketDatagramImpWinSock] ERROR: Could not read from socket (%s:%hu): %s\n",
-                m_addr.getAddressString().c_str(), m_addr.getPort(),
-                strerror(errno));
+                m_remote_addr.getAddressString().c_str(),
+                m_remote_addr.getPort(), strerror(errno));
     }
 
     return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpWinSock::recvfrom (unsigned char* msg, const size_t len,
-                                    const int flags, InetAddr& from)
-{
-    return recvfrom((void*) msg, len, flags, from);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpWinSock::recvfrom (char* msg, const size_t len,
-                                    const int flags, InetAddr& from)
-{
-    return recvfrom((void*) msg, len, flags, from);
 }
 
 // ----------------------------------------------------------------------------
@@ -176,29 +154,11 @@ SocketDatagramImpWinSock::sendto (const void* msg, const size_t len,
         fprintf(stderr,
                 "[vpr::SocketDatagramImpWinSock] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
                 to.getAddressString().c_str(), to.getPort(),
-                m_addr.getAddressString().c_str(), m_addr.getPort(),
-                strerror(errno));
+                m_remote_addr.getAddressString().c_str(),
+                m_remote_addr.getPort(), strerror(errno));
     }
 
     return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpWinSock::sendto (const unsigned char* msg, const size_t len,
-                                  const int flags, const InetAddr& to)
-{
-    return sendto((void*) msg, len, flags, to);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpWinSock::sendto (const char* msg, const size_t len,
-                                  const int flags, const InetAddr& to)
-{
-    return sendto((void*) msg, len, flags, to);
 }
 
 // ----------------------------------------------------------------------------

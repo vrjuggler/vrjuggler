@@ -52,7 +52,7 @@ SocketImpWinSock::open () {
     bool retval;
     int domain, type;
 
-    switch (m_addr.getFamily()) {
+    switch (m_local_addr.getFamily()) {
       case SocketTypes::LOCAL:
 #ifdef PF_LOCAL
         domain = PF_LOCAL;
@@ -130,8 +130,8 @@ SocketImpWinSock::bind () {
     int status;
 
     // Bind the socket to the address in m_addr.
-    status = ::bind(m_sockfd, (struct sockaddr*) &m_addr.m_addr,
-                    m_addr.size());
+    status = ::bind(m_sockfd, (struct sockaddr*) &m_local_addr.m_addr,
+                    m_local_addr.size());
 
     // If that fails, print an error and return error status.
     if ( status == -1 ) {
@@ -160,8 +160,8 @@ SocketImpWinSock::connect () {
     int status;
 
     // Attempt to connect to the address in m_addr.
-    status = ::connect(m_sockfd, (struct sockaddr*) &m_addr.m_addr,
-                       m_addr.size());
+    status = ::connect(m_sockfd, (struct sockaddr*) &m_remote_addr.m_addr,
+                       m_remote_addr.size());
 
     // If connect(2) failed, print an error message explaining why and return
     // error status.
@@ -185,26 +185,6 @@ SocketImpWinSock::connect () {
 ssize_t
 SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
     return ::recv(m_sockfd, (char*) buffer, length, flags);
-}
-
-// ----------------------------------------------------------------------------
-// Receive the specified number of bytes from the remote site to which the
-// local side is connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recv (unsigned char* buffer, const size_t length,
-                          const int flags)
-{
-    return recv((void*) buffer, length, flags);
-}
-
-// ----------------------------------------------------------------------------
-// Receive the specified number of bytes from the remote site to which the
-// local side is connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recv (char* buffer, const size_t length, const int flags) {
-    return recv((void*) buffer, length, flags);
 }
 
 // ----------------------------------------------------------------------------
@@ -266,28 +246,6 @@ SocketImpWinSock::send (const void* buffer, const size_t length,
                         const int flags)
 {
     return ::send(m_sockfd, (char*) buffer, length, flags);
-}
-
-// ----------------------------------------------------------------------------
-// Send the specified number of bytes contained in the given buffer from the
-// local side to the remote site to which we are connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::send (const unsigned char* buffer, const size_t length,
-                        const int flags)
-{
-    return send((void*) buffer, length, flags);
-}
-
-// ----------------------------------------------------------------------------
-// Send the specified number of bytes contained in the given buffer from the
-// local side to the remote site to which we are connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::send (const char* buffer, const size_t length,
-                        const int flags)
-{
-    return send((void*) buffer, length, flags);
 }
 
 // ----------------------------------------------------------------------------
