@@ -128,6 +128,11 @@ ifeq (@BUILD_JAVA@, Y)
    SUBDIR+=	java
 endif
 
+# Only build extensions if requested
+ifeq (@BUILD_EXTENSIONS@, Y)
+   SUBDIR+= extensions
+endif
+
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.
 # =============================================================================
