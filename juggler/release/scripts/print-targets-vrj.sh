@@ -78,6 +78,7 @@ Install targets are:
     install-dso     - Install the dynamic shared object version of the
                       libraries.
     install-headers - Install only the header files.
+    install-sample  - Install only the sample applications.
     install-test    - Install only the test code.
     install-data    - Install only the Data directory.
     install-gui     - Install only the configuration GUI.
