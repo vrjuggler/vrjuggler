@@ -90,7 +90,9 @@ CXX_COMPILE     = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # objects to be included in the project....
 # SRC Files
 TEST_SRCS =
-CPPUNIT_TEXTUI_SRCS = TextTestResult.cpp
+CPPUNIT_TEXTUI_SRCS = TextTestRunner.cpp	\
+                      TextTestResult.cpp
+
 CPPUNIT_SRCS	= Exception.cpp		\
                   NotEqualException.cpp	\
                   TestAssert.cpp	\
