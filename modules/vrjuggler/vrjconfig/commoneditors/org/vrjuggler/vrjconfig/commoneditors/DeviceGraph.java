@@ -68,6 +68,20 @@ public class DeviceGraph
    implements EditorConstants
 {
    /**
+    * Default color attribute used for device cells.
+    *
+    * @see #createDeviceAttributes(int,int,boolean)
+    */
+   public static final Color DEVICE_CELL_COLOR = new Color(68, 90, 249);
+
+   /**
+    * Default color attribute used for proxy cells.
+    *
+    * @see #createProxyAttributes(int,int,boolean)
+    */
+   public static final Color PROXY_CELL_COLOR  = new Color(249, 68, 68);
+
+   /**
     * Initializes this JGraph specialization to use a model of type
     * <code>DeviceGraphModel</code>, a graph layout cache of type
     * <code>DeviceGraphLayoutCache</code>, and a cell view factory of type
@@ -233,8 +247,7 @@ public class DeviceGraph
    public static Map createDeviceAttributes(int x, int y, boolean autoSize)
    {
       Map map = new AttributeMap();
-      map = JGraph.createBounds((AttributeMap) map, x, y,
-                                Color.blue.brighter().brighter());
+      map = JGraph.createBounds((AttributeMap) map, x, y, DEVICE_CELL_COLOR);
 
       GraphConstants.setAutoSize(map, autoSize);
       GraphConstants.setResize(map, true);
@@ -273,8 +286,7 @@ public class DeviceGraph
    public static Map createProxyAttributes(int x, int y, boolean autoSize)
    {
       Map map = new AttributeMap();
-      map = JGraph.createBounds((AttributeMap) map, x, y,
-                                Color.red.brighter().brighter());
+      map = JGraph.createBounds((AttributeMap) map, x, y, PROXY_CELL_COLOR);
 
       GraphConstants.setAutoSize(map, autoSize);
       GraphConstants.setResize(map, true);
