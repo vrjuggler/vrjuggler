@@ -250,7 +250,7 @@ if test "x$OPENAL_ENABLED" = "xno" ; then
 # do nothing...
    true
 else
-   DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL),  )
+   DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL), )
    if test "x$OPENAL" = "xyes" ; then
       INCLUDES="$INCLUDES $AL_INCLUDES"
       LDFLAGS="$LDFLAGS $AL_LDFLAGS"
@@ -277,7 +277,7 @@ if test "x$SUBSYNTH_ENABLED" = "xno" ; then
 else
    VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for subsynth***))
    snx_dep_scripts="vpr-config"
-   DPP_HAVE_SUBSYNTH( /usr, AC_MSG_RESULT(+ Found Subsynth),  )
+   DPP_HAVE_SUBSYNTH( /usr, AC_MSG_RESULT(+ Found Subsynth), AC_MSG_RESULT(+ Subsynth not found) )
    if test "x$SUBSYNTH" = "xyes" ; then
       INCLUDES="$INCLUDES $VPR_INCLUDES $SYN_INCLUDES"
       LDFLAGS="$LDFLAGS $SYN_LDFLAGS"
