@@ -53,9 +53,9 @@
 namespace gadget
 {
 
-    const unsigned short MSG_DATA_ANALOG = 421;
+const unsigned short MSG_DATA_ANALOG = 421;
 
- /**
+/**
  * Analog is the abstract base class that devices with Analog data derive
  * from.
  *
@@ -63,9 +63,6 @@ namespace gadget
  * Analog inherits from Input, so it has pure virtual function
  * constraints from Input in the following functions: StartSampling,
  * StopSampling, Sample, and UpdateData. <br> <br>
- *#include <gadget/RemoteInputManager/StreamReader.h>
-#include <gadget/RemoteInputManager/StreamWriter.h>
-
  * Analog adds one new pure virtual function, GetAnalogData for retreiving
  * the analog data, similar to the addition for Position and Digital.
  */
@@ -82,46 +79,52 @@ public:
     * @note Must be called from all derived classes.
     */
    Analog() : mMin( 0.0f ), mMax( 1.0f )
-   {;}
+   {
+      ;
+   }
 
-   virtual ~Analog() {}
+   virtual ~Analog()
+   {
+   }
 
-    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-    {
-        //std::cout << "[Remote Input Manager] In Analog write" << std::endl;
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {
+      //std::cout << "[Remote Input Manager] In Analog write" << std::endl;
 
       ////////////////////////////////////////////////////
-        SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-        writer->writeUint16(MSG_DATA_ANALOG);                                           // Write out the data type so that we can assert if reading in wrong place
+      SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
+      writer->writeUint16(MSG_DATA_ANALOG);                                           // Write out the data type so that we can assert if reading in wrong place
 
-        if(!stable_buffer.empty())
-        {
-            mAnalogSamples.lock();
-            writer->writeUint16(stable_buffer.size());                                          // Write the # of vectors in the stable buffer
-            for(unsigned j=0;j<stable_buffer.size();j++)                                            // For each vector in the stable buffer
+      if ( !stable_buffer.empty() )
+      {
+         mAnalogSamples.lock();
+         writer->writeUint16(stable_buffer.size());                                          // Write the # of vectors in the stable buffer
+         for ( unsigned j=0;j<stable_buffer.size();j++ )                                            // For each vector in the stable buffer
+         {
+            writer->writeUint16(stable_buffer[j].size());                                   // Write the # of AnalogDatas in the vector
+            //std::cout << "Analog Data Size: "  << stable_buffer.back().size() << std::endl;
+            //std::cout << "ME: ";
+            for ( unsigned i=0;i<stable_buffer[j].size();i++ )                                 // For each AnalogData in the vector
             {
-                writer->writeUint16(stable_buffer[j].size());                                   // Write the # of AnalogDatas in the vector
-                //std::cout << "Analog Data Size: "  << stable_buffer.back().size() << std::endl;
-                //std::cout << "ME: ";
-                for(unsigned i=0;i<stable_buffer[j].size();i++)                                 // For each AnalogData in the vector
-                {
-                    writer->writeFloat(stable_buffer[j][i].getAnalog());    // Write Analog Data(int)
-                    //std::cout << stable_buffer[j][i].getAnalog();
-                    writer->writeUint64(stable_buffer[j][i].getTime().usec());              // Write Time Stamp vpr::Uint64
-                }
-                //std::cout << std::endl;
+               writer->writeFloat(stable_buffer[j][i].getAnalog());    // Write Analog Data(int)
+               //std::cout << stable_buffer[j][i].getAnalog();
+               writer->writeUint64(stable_buffer[j][i].getTime().usec());              // Write Time Stamp vpr::Uint64
             }
-            mAnalogSamples.unlock();
-        }
-        else        // No data or request out of range, return default value
-        {
-            writer->writeUint16(0);
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Analog::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n" << vprDEBUG_FLUSH;
-        }
+            //std::cout << std::endl;
+         }
+         mAnalogSamples.unlock();
+      }
+      else        // No data or request out of range, return default value
+      {
+         writer->writeUint16(0);
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Warning: Analog::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n"
+            << vprDEBUG_FLUSH;
+      }
 
-        return vpr::ReturnStatus::Succeed;
-        ////////////////////////////////////////////////////
-    }
+      return vpr::ReturnStatus::Succeed;
+      ////////////////////////////////////////////////////
+   }
 
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
    {
@@ -137,13 +140,13 @@ public:
       unsigned numVectors = reader->readUint16();
       //std::cout << "Stable Analog Buffer Size: "  << numVectors << std::endl;
       mAnalogSamples.lock();
-      for(unsigned i=0;i<numVectors;i++)
+      for ( unsigned i=0;i<numVectors;i++ )
       {
          numAnalogDatas = reader->readUint16();
          //std::cout << "Analog Data Size: "    << numAnalogDatas << std::endl;
          dataSample.clear();
          //std::cout << "ME: ";
-         for(unsigned j=0;j<numAnalogDatas;j++)
+         for ( unsigned j=0;j<numAnalogDatas;j++ )
          {
             value = reader->readFloat();            //Write Analog Data(int)
             //std::cout << value;
@@ -171,7 +174,7 @@ public:
       mMax = c->getProperty<float>("max");
 
       vprDEBUG(vprDBG_ALL,4) << " SimAnalog::config() min:" << mMin
-                                                 << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
+                             << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
 
       return true;
    }
@@ -204,20 +207,24 @@ public:
    {
       SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
 
-      if((!stable_buffer.empty()) &&
-         (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
+      if ( (!stable_buffer.empty()) &&
+           (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
       {
          return stable_buffer.back()[devNum];
       }
       else        // No data or request out of range, return default value
       {
-         if(stable_buffer.empty())
+         if ( stable_buffer.empty() )
          {
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Analog::getAnalogData: Stable buffer is empty. If this is not the first read, then this is a problem.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "Warning: Analog::getAnalogData: Stable buffer is empty. If this is not the first read, then this is a problem.\n"
+               << vprDEBUG_FLUSH;
          }
          else
          {
-            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: Analog::getAnalogData: Requested devNum is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+               << "Warning: Analog::getAnalogData: Requested devNum is not in the range available.  May have configuration error\n"
+               << vprDEBUG_FLUSH;
          }
          return mDefaultValue;
       }
@@ -227,11 +234,11 @@ public:
    {
       return mAnalogSamples.stableBuffer();
    }
-    virtual std::string getBaseType()
-    {
-        return std::string("Analog");
-    }
 
+   virtual std::string getBaseType()
+   {
+      return std::string("Analog");
+   }
 
 protected:
    /**
@@ -244,13 +251,13 @@ protected:
       float value = plainJaneValue;
 
       // first clamp the value so that min<=value<=max
-      if (value < mMin) value = mMin;
-      if (value > mMax) value = mMax;
+      if ( value < mMin ) value = mMin;
+      if ( value > mMax ) value = mMax;
 
       // slide everything to 0.0 (subtract all by mMin)
       // Then divide by max to get normalized value
       float tmax( mMax - mMin),
-            tvalue(value - mMin);
+         tvalue(value - mMin);
 
       // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
       normedFromMinToMax = tvalue / tmax;
@@ -263,10 +270,22 @@ protected:
     * This value is used to normalize the return value of getAnalogData.
     * @note this function is not needed by an application author.
     */
-   float getMin() const { return mMin; }
-   float getMax() const { return mMax; }
-   void setMin( float mIn ) { mMin = mIn; }
-   void setMax( float mAx ) { mMax = mAx; }
+   float getMin() const
+   {
+      return mMin;
+   }
+   float getMax() const
+   {
+      return mMax;
+   }
+   void setMin( float mIn )
+   {
+      mMin = mIn;
+   }
+   void setMax( float mAx )
+   {
+      mMax = mAx;
+   }
 
 private:
    float mMin, mMax;
