@@ -56,8 +56,10 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
+ifneq (@SIMULATOR@, Y)
 ifeq (@SERIAL_PORT_ABS@, WIN32)
 SRCS		= SerialPortImplWin32.cpp
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk

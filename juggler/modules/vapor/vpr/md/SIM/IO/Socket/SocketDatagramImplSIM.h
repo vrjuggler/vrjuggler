@@ -1,9 +1,9 @@
-/****************** <VPR heading BEGIN do not edit this line> *****************
+/***************** <Plexus heading BEGIN do not edit this line> ***************
  *
- * VR Juggler Portable Runtime
+ * Plexus
  *
  * Original Authors:
- *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
+ *   Allen Bierbaum, Patrick Hartling, Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -11,7 +11,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <VPR heading END do not edit this line> ******************/
+ ***************** <Plexus heading END do not edit this line> ****************/
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
@@ -39,27 +39,45 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
+#ifndef _VPR_SOCKET_DATAGRAM_IMPL_SIM_H_
+#define _VPR_SOCKET_DATAGRAM_IMPL_SIM_H_
 
 #include <vpr/vprConfig.h>
 
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
-
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
+
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
-}
 
-#endif  /* _VPR_SOCKET_H_ */
+class SocketDatagramImplSIM : public vpr::SocketImplSIM
+{
+public:
+   SocketDatagramImplSIM (void)
+      : SocketImplSIM(vpr::SocketTypes::DATAGRAM)
+   {
+      /* Do nothing. */ ;
+   }
+
+   SocketDatagramImplSIM (const vpr::InetAddr& local_addr,
+                          const vpr::InetAddr& remote_addr)
+      : SocketImplSIM(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
+   {
+      /* Do nothing. */ ;
+   }
+
+   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
+                              const int flags, vpr::InetAddr& from,
+                              vpr::Uint32& bytes_read,
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+   vpr::ReturnStatus sendto(void* msg, const vpr::Uint32 length,
+                            const int flags, vpr::InetAddr& to,
+                            vpr::Uint32& bytes_sent,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+};
+
+} // End of vpr namespace
 
 
+#endif /* _VPR_SOCKET_DATAGRAM_IMPL_SIM_H_ */

@@ -39,27 +39,27 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
+#ifndef _VPR_IO_SYS_SIM_H_
+#define _VPR_IO_SYS_SIM_H_
 
 #include <vpr/vprConfig.h>
 
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
+#include <vpr/IO/IOSysBase.h>
 
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
-}
 
-#endif  /* _VPR_SOCKET_H_ */
+class SocketImplSIM; // Forward declare this to avoid circular includes
+
+class VPR_CLASS_API IOSysSIM : public vpr::IOSysBase
+{
+public:
+   typedef class vpr::SocketImplSIM* Handle;
+   static const Handle NullHandle;
+};
+
+} // End of vpr namespace
 
 
+#endif /* _VPR_IO_SYS_SIM_H_ */

@@ -39,27 +39,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
+#ifndef _VPR_SIM_MESSAGE_PTR_H_
+#define _VPR_SIM_MESSAGE_PTR_H_
 
 #include <vpr/vprConfig.h>
-
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
-
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
+#include <boost/smart_ptr.hpp>
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
+
+namespace sim
+{
+
+class Message;
+typedef boost::shared_ptr<Message> MessagePtr;
+
 }
 
-#endif  /* _VPR_SOCKET_H_ */
+}
 
-
+#endif /* _VPR_SIM_MESSAGE_PTR_H_ */

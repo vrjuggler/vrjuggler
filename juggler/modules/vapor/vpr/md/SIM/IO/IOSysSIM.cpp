@@ -39,27 +39,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
-
 #include <vpr/vprConfig.h>
 
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
-
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
+#include <vpr/md/SIM/IO/IOSysSIM.h>
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
+
+const IOSysSIM::Handle IOSysSIM::NullHandle = NULL;
+
 }
-
-#endif  /* _VPR_SOCKET_H_ */
-
-

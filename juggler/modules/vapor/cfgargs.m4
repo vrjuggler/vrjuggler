@@ -6,6 +6,10 @@ AC_ARG_ENABLE(subsystem,
                           Define OS abstraction subsystem],
               SUBSYSTEM="$enableval", SUBSYSTEM='none')
 
+AC_ARG_ENABLE(simulator,
+              [  --enable-simulator      Compile simulated sockets layer ],
+              SIMULATOR="$enableval", SIMULATOR='no')
+
 # Rudimentary spell checking based on the first letter in the $SUBSYSTEM name.
 case $SUBSYSTEM in
     S*)
