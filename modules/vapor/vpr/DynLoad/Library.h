@@ -62,6 +62,9 @@ namespace vpr
 
 #endif
 
-#include <vpr/DynLoad/LibraryPtr.h>
+namespace vpr
+{
+   typedef boost::shared_ptr<Library> LibraryPtr;
+}
 
 #endif /* _VPR_LIBRARY_H_ */

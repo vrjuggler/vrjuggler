@@ -48,7 +48,7 @@
 #include <vector>
 #include <boost/function.hpp>
 
-#include <vpr/DynLoad/LibraryPtr.h>
+#include <vpr/DynLoad/Library.h>
 
 
 namespace vpr
