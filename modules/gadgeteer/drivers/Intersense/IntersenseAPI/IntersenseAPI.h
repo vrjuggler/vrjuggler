@@ -43,23 +43,6 @@
 #include <gadget/Type/InputMixer.h>
 #include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
 
-// maximum number of digital and analog buttons possible on a IS interface
-// box.
-#ifndef MAX_NUM_BUTTONS
-   #define MAX_NUM_BUTTONS 8
-#endif
-
-#ifndef MAX_NUM_STATIONS
-   #define MAX_NUM_STATIONS 8
-#endif
-
-#ifndef MAX_ANALOG_CHANNELS
-   #define MAX_ANALOG_CHANNELS 10
-#endif
-
-#define IS_BUTTON_NUM MAX_NUM_BUTTONS*MAX_NUM_STATIONS
-#define IS_ANALOG_NUM MAX_ANALOG_CHANNELS*MAX_NUM_STATIONS
-
 
 namespace gadget
 {
