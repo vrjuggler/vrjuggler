@@ -8,6 +8,7 @@
   morphon.document.settings.relative.systemids="0"
   morphon.document.settings.endofline.type="2"
   morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.maxlinelength="0"
 ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
@@ -20,7 +21,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.11.0</releaseinfo>
+      <releaseinfo>0.13.0</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -202,7 +203,7 @@
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
             <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
-            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;depedencies&gt; element may be specified. Dependencies of the Bean may be named as external JAR files or other Beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and/or &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the Bean that the current Bean depends on.</para>
+            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;dependencies&gt; element may be specified. Dependencies of the Bean may be named as external JAR files or other Beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and/or &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the Bean that the current Bean depends on.</para>
             <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file&mdash;it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
                <title>PlexusGraphView.xml snippet</title>
@@ -210,11 +211,11 @@
   &lt;file name="${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar" 
         class="plx.graphview.GraphView" /&gt;
   &lt;tree path="/" /&gt;
-  &lt;depedencies&gt;
+  &lt;dependencies&gt;
     &lt;jar path="${PLX_BASE_DIR}/bin"&gt;openjgraph.jar&lt;/jar&gt;
     &lt;jar path="${PLX_BASE_DIR}/bin"&gt;jgraph.jar&lt;/jar&gt;
     &lt;jar path="${PLX_BASE_DIR}/bin"&gt;PlexusComm.jar&lt;/jar&gt;
-  &lt;/depedencies&gt;
+  &lt;/dependencies&gt;
   &lt;icon source="jar:file:${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar!/plx/graphview/icon.gif"
         tooltip="Plexus Network Graph Visualization" /&gt;
 &lt;/guipanel&gt;</programlisting>
@@ -305,6 +306,9 @@ interface CustomSubject : tweek::Subject
       </chapter>
       <chapter id="prog.cplusplus.chapter">
          <title>C++</title>
+         <indexterm>
+            <primary>C++ server API</primary>
+         </indexterm>
          <para>Writing C++ code that makes use of Tweek is not difficult, though it often requires some good planning. With the current code base, the C++ side of things maintains the state information through an implementation of the Tweek <interfacename>Subject</interfacename><indexterm>
                <primary>interfaces</primary>
                <secondary>tweek::Subject</secondary>
@@ -712,6 +716,9 @@ int main(int argc, char* argv[])
       </chapter>
       <chapter id="prog.java.chapter">
          <title>Java</title>
+         <indexterm>
+            <primary>Java client API</primary>
+         </indexterm>
          <para></para>
          <section>
             <title>Java Libraries</title>
@@ -813,7 +820,6 @@ module networktest                           <co linkends="idl.module.block.co" 
 #include &lt;vector&gt;
 
 #include &lt;tweek/CORBA/SubjectImpl.h&gt;                               <co linkends="SliderSubjectImpl.h.includes.co" id="SliderSubjectImpl.h.includes.subjimpl"/>
-#include &lt;tweek/CORBA/Observer.h&gt;                                  <co linkends="SliderSubjectImpl.h.includes.co" id="SliderSubjectImpl.h.includes.obs"/>
 #include &lt;SliderSubject.h&gt;                                         <co linkends="SliderSubjectImpl.h.include.subj.co" id="SliderSubjectImpl.h.include.subj"/>
 
 
@@ -871,7 +877,7 @@ private:
 
 #endif /* _SLIDER_SUBJECT_IMPL_H_ */</programlisting>
                      <calloutlist>
-                        <callout arearefs="SliderSubjectImpl.h.includes.subjimpl SliderSubjectImpl.h.includes.obs" id="SliderSubjectImpl.h.includes.co">
+                        <callout arearefs="SliderSubjectImpl.h.includes.subjimpl" id="SliderSubjectImpl.h.includes.co">
                            <para>These files will always be included by implementations of Tweek subject derived classes. The first contains the declaration for the basic Tweek subject implementation. The second contains the C++ code generated from the Tweek <filename>Observer.idl</filename> file.</para>
                         </callout>
                         <callout arearefs="SliderSubjectImpl.h.include.subj" id="SliderSubjectImpl.h.include.subj.co">
@@ -942,7 +948,7 @@ long SliderSubjectImpl::getValue()
                      <primary>classes</primary>
                      <secondary>tweek.ObserverPOA</secondary>
                   </indexterm> in Java). The method <methodname>update()</methodname> must be implemented. The remainder of the observer implementation is centered around communication with a <interfacename>SliderSubject</interfacename> object reference. All observer code is written in Java. The only C++ code for observers is part of the Tweek library, and it is generated entirely by the <glossterm linkend="gloss.idl-compiler">IDL compiler</glossterm>.</para>
-               <section>
+               <section id="implement.observer.java.section">
                   <title>Implementing the Observer in Java</title>
                   <para>For every subject interface defined in IDL, a corresponding observer class must be written in Java. Without an observer, there is no way for the Java and C++ sides to conduct useful two-way communication. At best, the Java GUI could request a subject reference and manipulate the C++ application through the reference, but the communication would be entirely one-way.</para>
                   <para>In <xref linkend="SliderObserverImpl.java.example"/>, we show the complete Java implementation of an observer corresponding to the <interfacename>tweek::SliderSubject</interfacename> interface defined earlier. (The JavaBean that uses this observer is explained in <xref linkend="slider.subject.bean.section"/>.) The main focus of this observer is to update its contained <classname>JSlider</classname> whenever the state of the corresponding subject changes.</para>
@@ -1019,8 +1025,8 @@ public class SliderObserverImpl extends ObserverPOA                  <co linkend
                   <para>This example demonstrates that observers do not have to be complex to be usable. While this example is purposely simple, it should illustrate that developers of observers do not necessarily have to make their implementations complicated. As will be shown in <xref linkend="slider.subject.bean.section"/>, the JavaBean that uses this observer completes the picture and provides users with a GUI slider that can be manipulated by any number of simultaneous users.</para>
                </section>
             </section>
-            <section>
-               <title>The Application</title>
+            <section id="SliderSubject.server.section">
+               <title lang="SliderSubject.server.section">The Server Application</title>
                <para>Now that we have the subject and observer ready to go, we can make an application that uses them. The following example is a (relatively) simple C++ application that starts the CORBA Manager<indexterm>
                      <primary>CORBA Manager</primary>
                      <secondary>initialization</secondary>
@@ -1671,6 +1677,559 @@ public int getOpenFileCount ()
   &lt;/guipanel&gt;
 &lt;/beanlist&gt;</programlisting>
                </example>
+            </section>
+         </section>
+      </chapter>
+      <chapter id="cxx.client.chapter">
+         <title>C++ as a Client</title>
+         <indexterm>
+            <primary>C++ client API</primary>
+         </indexterm>
+         <para>As of Tweek version 0.13.0, users can write C++ clients in addition to Java clients. As of this writing, the interface is relatively low-level. The C++ counterpart of the Java class <classname>org.vrjuggler.tweek.net.corba.CorbaService</classname><indexterm>
+               <primary>org.vrjuggler.tweek.net.CorbaService</primary>
+            </indexterm> is used to communicate with a remote C++ server. The class is <classname>tweek::CorbaService</classname><indexterm>
+               <primary>tweek::CorbaService</primary>
+            </indexterm>, and its API is almost identical to the Java version. The basic idea is that users familiar with the Java API can easily make use of the C++ version and vice versa.</para>
+         <para>In this chapter, we explain how to write C++ clients. First, we cover the CORBA Service, and then we show how to use it with a C++ client application. The basic ideas are identical to those used in Java clients. The syntax varies slightly due to the differences in the C++ and Java mappings of IDL. Additionally, we do not need to be concerned with JavaBeans because we will be speaking strictly in terms of C++. There is nothing to prevent an ambitious user from developing a C++ counterpart to the Tweek Java GUI, however.</para>
+         <section>
+            <title>The CORBA Service</title>
+            <para></para>
+         </section>
+         <section>
+            <title>Example Client Application</title>
+            <para>To understand how to use the C++ client API, we will examine a simple application. Similar to the Java/C++ application we reviewed in <xref linkend="prog.all.chapter"/>, this application makes use of an IDL-specified interface, and a C++ server. The key differences, then, are that there is no Java code in this case, and we will not need to use XML.</para>
+            <para>All the code shown here, including a GNU makefile, can be found in the directory <filename>$TWEEK_BASE_DIR/share/tweek/test/CxxClient</filename>. In the following sections, we will refer to the specific files and highlight key sections within them. We assume that readers have already read and understood <xref linkend="prog.all.chapter"/>. This is important because we will refer back to concepts illustrated in that chapter. Further, we will not present the server code in this chapter because it is nearly identical to the code for the server discussed previously. Interested readers can review the file <filename>server.cpp</filename>.</para>
+            <section id="StringSubject.interface.section">
+               <title><interfacename>StringSubject</interfacename> Interface</title>
+               <para>As usual, we begin by defining an interface. For this example, we will use an interface that provides access to a simple string object. The server (Subject) will maintain the value of the string, and the clients (Observers) will be able to query and manipulate the string. The interface will be called <interfacename>CxxClientTest::StringSubject</interfacename>. The code for the interface is shown in <xref linkend="StringSubject.idl.example"/>.</para>
+               <example id="StringSubject.idl.example">
+                  <title>StringSubject.idl</title>
+                  <programlisting>#ifndef _CXX_CLIENT_TEST_STRING_SUBJECT_IDL_
+#define _CXX_CLIENT_TEST_STRING_SUBJECT_IDL_
+
+#include &lt;tweek/idl/Subject.idl&gt;
+
+module CxxClientTest
+{
+   interface StringSubject : tweek::Subject   <co linkends="StringSubject.interface.decl.co" id="StringSubject.interface.decl"/>
+   {
+      void setValue(in string val);           <co linkends="StringSubject.accessors.co" id="StringSubject.setValue"/>
+      string getValue();                      <co linkends="StringSubject.accessors.co" id="StringSubject.getValue"/>
+   };
+};
+
+#endif /* _CXX_CLIENT_TEST_STRING_SUBJECT_IDL_ */</programlisting>
+                  <calloutlist>
+                     <callout arearefs="StringSubject.interface.decl" id="StringSubject.interface.decl.co">
+                        <para>As with all user-defined Subjects, we derive our interface from <interfacename>tweek::Subject</interfacename>.</para>
+                     </callout>
+                     <callout arearefs="StringSubject.setValue StringSubject.getValue" id="StringSubject.accessors.co">
+                        <para>These methods define the accessors for the encapsulated string value. Clients will invoke these to query and to manipulate the state of the remote Subject.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+            </section>
+            <section>
+               <title><interfacename>StringSubject</interfacename> Interface Implementation</title>
+               <para>Now that we have our interface defined abstractly, we must provide a C++ implementation of the Subject. This will be done in the files <filename>StringSubjectImpl.cpp</filename> and <filename>StringSubjectImpl.h</filename>. We begin with the header file, shown in <xref linkend="StringSubjectImpl.h.example"/>. While the example code may appear long, there is only slight variation from previous Subject implementation header files. We highlight the important bits, of course.</para>
+               <example id="StringSubjectImpl.h.example">
+                  <title>StringSubjectImpl.h</title>
+                  <programlisting linenumbering="numbered">#ifndef _STRING_SUBJECT_IMPL_H_
+#define _STRING_SUBJECT_IMPL_H_
+
+#include &lt;tweek/tweekConfig.h&gt;
+
+#include &lt;string&gt;
+
+#include &lt;vpr/vpr.h&gt;
+#include &lt;vpr/Sync/Mutex.h&gt;
+#include &lt;tweek/CORBA/SubjectImpl.h&gt;
+#include &lt;StringSubject.h&gt;                                               <co linkends="StringSubjectImpl.h.include.co" id="StringSubjectImpl.h.include"/>
+
+namespace CxxClientTest
+{
+
+/**
+ * This class is an extension to the base Tweek SubjectImpl class.  It uses
+ * multiple inheritance with that class and with the generated CORBA class
+ * corresponding to the IDL for StringSubject.
+ */
+class StringSubjectImpl : public POA_CxxClientTest::StringSubject,       <co linkends="StringSubjectImpl.h.decl.co" id="StringSubjectImpl.h.decl"/>
+                          public tweek::SubjectImpl
+{
+public:
+   StringSubjectImpl() : tweek::SubjectImpl(), mValue("")
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~StringSubjectImpl()
+   {
+      /* Do nothing. */ ;
+   }
+
+   /**
+    * Sets this subject's internal value.
+    */
+   virtual void setValue(const char* value);                             <co linkends="StringSubjectImpl.h.virtuals.co" id="StringSubjectImpl.h.setValue"/>
+
+   /**
+    * Returns this subject's internal value.
+    */
+   virtual char* getValue();                                             <co linkends="StringSubjectImpl.h.virtuals.co" id="StringSubjectImpl.h.getValue"/>
+
+   /**
+    * This overriding method is needed so that the correct type is returned
+    * when the _this() method is invoked.  Without this method, an object of
+    * type tweek::Subject_ptr would be returned.
+    */
+   CxxClientTest::StringSubject_ptr _this()                              <co linkends="StringSubjectImpl.h.this.co" id="StringSubjectImpl.h.this"/>
+   {
+      return POA_CxxClientTest::StringSubject::_this();
+   }
+
+private:
+   std::string mValue;      /**&lt; Our value */                            <co linkends="StringSubjectImpl.h.mValue.co" id="StringSubjectImpl.h.mValue"/>
+   vpr::Mutex  mValueLock;  /**&lt; A mutex to protect mValue accesses */   <co linkends="StringSubjectImpl.h.mutex.co" id="StringSubjectImpl.h.mutex"/>
+};
+
+} // End of CxxClientTest namespace
+
+#endif /* _STRING_SUBJECT_IMPL_H_ */</programlisting>
+                  <calloutlist>
+                     <callout arearefs="StringSubjectImpl.h.include" id="StringSubjectImpl.h.include.co">
+                        <para>We must be sure to include the header that defines the base class from which we will derive our implementation. Remember that this code will be generated by the IDL compiler.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.h.decl" id="StringSubjectImpl.h.decl.co">
+                        <para>As usual, we declare our implementation so that it derives from the class generated by the IDL compiler (<classname>POA_CxxClientTest::StringSubject</classname>) and from the basic Tweek Subject implementation class (<classname>tweek::SubjectImpl</classname>).</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.h.setValue StringSubjectImpl.h.getValue" id="StringSubjectImpl.h.virtuals.co">
+                        <para>These are the pure virtual methods defined by <classname>POA_CxxClientTest::StringSubject</classname> that we must implement. As in previous examples, this is where we will do the work of accessing the encapsulated string value.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.h.this" id="StringSubjectImpl.h.this.co">
+                        <para>As with all C++ Subject implementations, we must override the method <methodname>_this()</methodname> in order to return the correct type. This is critical for proper use of the specific Subject type.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.h.mValue" id="StringSubjectImpl.h.mValue.co">
+                        <para>Here we have the string value that will be encapsulated within the servant instance. For convenience, we use the <classname>std::string</classname> type, though it will require careful handling of the <type>char*</type> data that CORBA actually passes around.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.h.mutex" id="StringSubjectImpl.h.mutex.co">
+                        <para>In this Subject implementation, we are being more paranoid about concurrent accesses to <varname>mValue</varname>, so we will protect it with a mutex.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>Next, we look at the very simple implementations of <methodname>CxxClientTest::StringSubjectImpl::setValue()</methodname> and <methodname>CxxClientTest::StringSubjectImpl::getValue()</methodname>. These are found in the file <filename>StringSubjectImpl.cpp</filename>, and the code is shown in <xref linkend="StringSubjectImpl.cpp.example"/>. It is important to note the use of guards in the method implementations. These provide an exception-safe mechanism for controlling access to the data member <varname>mValue</varname>. When constructed, the guard locks the mutex passed as the argument to the constructor. When the guard goes out of scope, the mutex is automatically unlocked.</para>
+               <example id="StringSubjectImpl.cpp.example">
+                  <title>StringSubjectImpl.cpp</title>
+                  <programlisting linenumbering="numbered">#include &lt;vpr/Sync/Guard.h&gt;
+#include &lt;StringSubjectImpl.h&gt;                              <co linkends="StringSubjectImpl.cpp.include.co" id="StringSubjectImpl.cpp.include"/>
+
+namespace CxxClientTest
+{
+
+void StringSubjectImpl::setValue(const char* value)
+{
+   {
+      vpr::Guard&lt;vpr::Mutex&gt; val_guard(mValueLock);         <co linkends="StringSubjectImpl.cpp.setValue.co" id="StringSubjectImpl.cpp.setValue.guard"/>
+      mValue = std::string(value);                          <co linkends="StringSubjectImpl.cpp.setValue.co" id="StringSubjectImpl.cpp.setValue.assign"/>
+   }
+
+   // Notify any observers that our value has changed.  This is very
+   // important.
+   tweek::SubjectImpl::notify();                            <co linkends="StringSubjectImpl.cpp.notify.co" id="StringSubjectImpl.cpp.setValue.notify"/>
+}
+
+char* StringSubjectImpl::getValue()
+{
+   vpr::Guard&lt;vpr::Mutex&gt; val_guard(mValueLock);            <co linkends="StringSubjectImpl.cpp.getValue.co" id="StringSubjectImpl.cpp.getValue.guard"/>
+   return CORBA::string_dup(mValue.c_str());                <co linkends="StringSubjectImpl.cpp.getValue.co" id="StringSubjectImpl.cpp.getValue.return"/>
+}
+
+} // End CxxClientTest namespace</programlisting>
+                  <calloutlist>
+                     <callout arearefs="StringSubjectImpl.cpp.include" id="StringSubjectImpl.cpp.include.co">
+                        <para>As usual, we must include our header file to get the necessary declarations.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.cpp.setValue.guard StringSubjectImpl.cpp.setValue.assign" id="StringSubjectImpl.cpp.setValue.co">
+                        <para>Within this scoped block, we lock the <varname>mValueLock</varname> using a guard and assign a new value to <varname>mValue</varname>. Upon exiting this block, the guard goes out of scope, and <varname>mValueLock</varname> is unlocked.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.cpp.setValue.notify" id="StringSubjectImpl.cpp.notify.co">
+                        <para>As with all cases where we modify the state of the Subject, we must notify any Observers who are attached to us. Just as the comment notes, this is very important.</para>
+                     </callout>
+                     <callout arearefs="StringSubjectImpl.cpp.getValue.guard StringSubjectImpl.cpp.getValue.return" id="StringSubjectImpl.cpp.getValue.co">
+                        <para>Here, we return the current value of <varname>mValue</varname>. We use a guard again to simplify unlocking the mutex (it happens automatically upon return). Note that we make a copy of the memory contained in <varname>mValue</varname> using <function>CORBA::string_dup()</function>. Making a copy is required by CORBA.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+            </section>
+            <section>
+               <title id="string.observer.section">Observer Implementation</title>
+               <para>With the Subject implemented, we now turn our attention to a C++ Observer implementation. Its implementation we will be very simple. Its <methodname>update()</methodname> method will query the current string value and print it to the console. The goal here is to demonstrate how to write a C++ Observer, not how to write an <emphasis>interesting</emphasis> Observer.</para>
+               <example id="StringObserverImpl.h.example">
+                  <title>StringObserverImpl.h</title>
+                  <programlisting linenumbering="numbered">#ifndef _STRING_OBSERVER_IMPL_H_
+#define _STRING_OBSERVER_IMPL_H_
+
+#include &lt;tweek/CORBA/Observer.h&gt;                        <co linkends="StringObserverImpl.h.includes.co" id="StringObserverImpl.h.Observer.include"/>
+#include &lt;StringSubject.h&gt;                               <co linkends="StringObserverImpl.h.includes.co" id="StringObserverImpl.h.StringSubject.include"/>
+
+class StringObserverImpl : public POA_tweek::Observer    <co linkends="StringObserverImpl.h.decl.co" id="StringObserverImpl.h.decl"/>
+{
+public:
+   StringObserverImpl(CxxClientTest::StringSubject_var subject)
+      : mSubject(subject)
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~StringObserverImpl()
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual void update();                                <co linkends="StringObserverImpl.h.update.co" id="StringObserverImpl.h.update"/>
+
+   void detach()
+   {
+      mSubject-&gt;detach(_this());                         <co linkends="StringObserverImpl.h.detach.co" id="StringObserverImpl.h.detach"/>
+   }
+
+private:
+   CxxClientTest::StringSubject_var mSubject;            <co linkends="StringObserverImpl.h.mSubject.co" id="StringObserverImpl.h.mSubject"/>
+};
+
+#endif /* _STRING_OBSERVER_IMPL_H_ */</programlisting>
+                  <calloutlist>
+                     <callout arearefs="StringObserverImpl.h.Observer.include StringObserverImpl.h.StringSubject.include" id="StringObserverImpl.h.includes.co">
+                        <para>First, we include the headers we need. The first declares the basic <classname>tweek::Observer</classname> C++ interface. The second includes the <classname>tweek::StringSubject</classname> interface. We need this header so that we can hang onto a reference to our Subject.</para>
+                     </callout>
+                     <callout arearefs="StringObserverImpl.h.decl" id="StringObserverImpl.h.decl.co">
+                        <para>Our Observer implementation derives from the basic Tweek Observer class <classname>POA_tweek::Observer</classname>. The Java equivalent is <classname>tweek.ObserverPOA</classname>. Refer to <xref linkend="SliderObserverImpl.java.example"/> in <xref linkend="implement.observer.java.section"/> to see the correspondence.</para>
+                     </callout>
+                     <callout arearefs="StringObserverImpl.h.update" id="StringObserverImpl.h.update.co">
+                        <para>The <methodname>update()</methodname> method must be implemented for all subclasses of <classname>POA_tweek::Observer</classname>. Here, we just declare the method; the implementation will be shown in <xref linkend="StringObserverImpl.cpp.example"/>.</para>
+                     </callout>
+                     <callout arearefs="StringObserverImpl.h.detach" id="StringObserverImpl.h.detach.co">
+                        <para>The <methodname>detach()</methodname> method is provided as an easy way to detach the Observer from its Subject. Ideally, this would be done in the destructor so that the detaching process happens automatically when the Observer servant is deleted. Doing so leads to incorrect deactivation of the servant, however. Instead, we provide this method as a way to perform the detachment before servant deactivation or deletion occurs.</para>
+                     </callout>
+                     <callout arearefs="StringObserverImpl.h.mSubject" id="StringObserverImpl.h.mSubject.co">
+                        <para>Finally, we have a member variable that we will use to retain a reference our Subject. This allows the Observer to be passed around to functions without passing its Subject explicitly. Further, we will see that having a reference to the Subject is required for the <methodname>update()</methodname> method implementation to work.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>Now, we show the implementation of <methodname>StringObserverImpl::update()</methodname>. This method is implemented in <filename>StringObserverImpl.cpp</filename>. While the method body is very short, we use the <filename>.cpp</filename> file to encourage the implementation of methods outside of the class declaration.</para>
+               <example id="StringObserverImpl.cpp.example">
+                  <title>StringObserverImpl.cpp</title>
+                  <programlisting>#include &lt;iostream&gt;
+#include &lt;StringObserverImpl.h&gt;                     <co linkends="StringObserverImpl.cpp.include.co" id="StringObserverImpl.cpp.include"/>
+
+void StringObserverImpl::update()
+{
+   char* cur_value = mSubject-&gt;getValue();          <co linkends="StringObserverImpl.cpp.update.query.co" id="StringObserverImpl.cpp.update.query"/>
+   std::cout &lt;&lt; "Current string value is now '"     <co linkends="StringObserverImpl.cpp.update.query.co" id="StringObserverImpl.cpp.update.print"/>
+             &lt;&lt; cur_value &lt;&lt; "'" &lt;&lt; std::endl;
+   delete cur_value;                                <co linkends="StringObserverImpl.cpp.update.delete.co" id="StringObserverImpl.cpp.update.delete"/>
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="StringObserverImpl.cpp.include" id="StringObserverImpl.cpp.include.co">
+                        <para>As usual, we have to include our header file to get the class declaration information.</para>
+                     </callout>
+                     <callout arearefs="StringObserverImpl.cpp.update.query StringObserverImpl.cpp.update.print" id="StringObserverImpl.cpp.update.query.co">
+                        <para>Since <methodname>update()</methodname> is only called when the state of the Subject changes, we need to query its current state. Once we get the current string value back, we print it to the console. The value is enclosed in single quotes so that any leading or trailing whitespace is displayed clearly.</para>
+                     </callout>
+                     <callout arearefs="StringObserverImpl.cpp.update.delete" id="StringObserverImpl.cpp.update.delete.co">
+                        <para>Lastly, we delete the memory returned by <methodname>CxxClientTest::StringSubject::getValue()</methodname>. The burden for freeing this memory is on the client, as per standard CORBA operating procedure.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+            </section>
+            <section>
+               <title>Client Application</title>
+               <para>Finally, we look at the C++ client application. This brings everything together and makes use of the <classname>tweek::CorbaService</classname> class to contact the remote server. The application shown below is more complicated than the server because more work must done. We must initialize the local CORBA Service (the local ORB); we must pick out the correct Subject Manager reference; and we must get the correct <interfacename>CxxClientTest::StringSubject</interfacename> reference from the Subject Manager. Once all of those steps are completed, we can create an Observer servant (an instance of <classname>StringObserverImpl</classname>) and attach it to the remote Subject.</para>
+               <para>The file containing the complete client application source is client.cpp. We will examine it in three parts: the required headers, the implementation of <function>main()</function>, and the Subject Manager lookup.</para>
+               <example>
+                  <title>client.cpp: Required Header Files</title>
+                  <programlisting>#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+#include &lt;vpr/vpr.h&gt;
+#include &lt;vpr/Util/Debug.h&gt;
+#include &lt;tweek/Client/CorbaService.h&gt;    <co linkends="client.cpp.include.CorbaService.co" id="client.cpp.include.CorbaService"/>
+#include &lt;tweek/CORBA/SubjectManager.h&gt;   <co linkends="client.cpp.include.SubjectManager.co" id="client.cpp.include.SubjectManager"/>
+
+#include &lt;StringObserverImpl.h&gt;           <co linkends="client.cpp.include.StringObserverImpl.co" id="client.cpp.include.StringObserverImpl"/>
+</programlisting>
+                  <calloutlist>
+                     <callout arearefs="client.cpp.include.CorbaService" id="client.cpp.include.CorbaService.co">
+                        <para>The key to the C++ client interface is the CORBA Service. Its declaration is found in <filename>tweek/Client/CorbaService.h</filename>.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.include.SubjectManager" id="client.cpp.include.SubjectManager.co">
+                        <para>As in Java clients, the Subject Manager plays a vital role in getting references to remote Subjects. Note that the file we include here is generated by the IDL compiler and provides only the basic interface. We will not be using the actual Subject Manager C++ implementation here. That is only used on the server side.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.include.StringObserverImpl" id="client.cpp.include.StringObserverImpl.co">
+                        <para>Lastly, we include the implementation of our Observer. We will be creating an instance of this class to act as the servant for an Observer reference. The servant we create will be attached to a remote Subject, just as in all Java clients.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>Next, we look at the implementation of the application's <function>main()</function> function. This is where the bulk of the work is done. Of course, in real-world use, modularizing the code would be much better than dumping most of it in <function>main()</function>. For the purposes of this example, we can get by with having most of the code in <function>main()</function>.</para>
+               <para>Note the use of try/catch blocks in the client application code. As in the case of server applications (refer to <xref linkend="SliderSubject.server.section"/>), we are careful about handling exceptions properly. Remember that CORBA uses exceptions extensively to indicate errors, and thus it is necessary for user code to catch them.</para>
+               <example id="client.cpp.main.example1">
+                  <title>client.cpp: Implementation of main(), Part I</title>
+                  <programlisting linenumbering="numbered">int main(int argc, char* argv[])
+{
+   std::string ns_host, iiop_ver;
+   vpr::Uint16 ns_port;
+
+   std::cout &lt;&lt; "Naming Service host: ";                                  <co linkends="client.cpp.main.naming.info.co" id="client.cpp.main.nshost"/>
+   std::cin &gt;&gt; ns_host;
+
+   std::cout &lt;&lt; "Naming Service port (usually 2809): ";                   <co linkends="client.cpp.main.naming.info.co" id="client.cpp.main.nsport"/>
+   std::cin &gt;&gt; ns_port;
+
+   std::cout &lt;&lt; "IIOP version (usually 1.0): ";                           <co linkends="client.cpp.main.naming.info.co" id="client.cpp.main.iiopver"/>
+   std::cin &gt;&gt; iiop_ver;
+
+   // Create the local CORBA Service using the Naming Service URI information
+   // we just collected.
+   tweek::CorbaService corba_service(ns_host, ns_port, iiop_ver);         <co linkends="client.cpp.main.corba-service.construct.co" id="client.cpp.main.corba-service.construct"/>
+
+   try
+   {
+      // Attempt to initialize the CORBA Service.
+      if ( corba_service.init(argc, argv).success() )                     <co linkends="client.cpp.main.corba-service.init.co" id="client.cpp.main.corba-service.init"/>
+      {
+         // This will hold the reference to the Subject Manager we use.
+         tweek::SubjectManager_var subj_mgr =
+            chooseSubjectManager(corba_service);                          <co linkends="client.cpp.main.SubjectManager.choose.co" id="client.cpp.main.SubjectManager.choose"/>
+
+         // Verify that we actually got a Subject Manager reference back
+         // from chooseSubjectManager.
+         if ( ! CORBA::is_nil(subj_mgr) )                                 <co linkends="client.cpp.main.SubjectManager.choose.co" id="client.cpp.main.SubjectManager.verify"/>
+         {
+            // Request the Subject with which we will communicate.  This
+            // hard-coded Subject name is not necessarily a good thing.
+            tweek::Subject_var subj =
+               subj_mgr-&gt;getSubject("StringSubject");                     <co linkends="client.cpp.main.subject.request.co" id="client.cpp.main.subject.request"/>
+
+            // If the Subject Manager knows about the Subject named above,
+            // then we are good to go.
+            if ( ! CORBA::is_nil(subj) )                                  <co linkends="client.cpp.main.subject.request.co" id="client.cpp.subject.verify"/>
+            {
+               ...  // Shown in the next example block
+            }
+         }
+         // We did not get a Subject Manager reference back for some reason.
+         else
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "No Subject Manager chosen--exiting.\n" &lt;&lt; vprDEBUG_FLUSH;
+         }
+      }
+      // The CORBA Service initialization failed.
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            &lt;&lt; "CORBA Service failed to initialize\n" &lt;&lt; vprDEBUG_FLUSH;
+      }
+   }
+   catch (...)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         &lt;&lt; "Caught an unknown exception!\n" &lt;&lt; vprDEBUG_FLUSH;
+   }
+
+   return 0;
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="client.cpp.main.nshost client.cpp.main.nsport client.cpp.main.iiopver" id="client.cpp.main.naming.info.co">
+                        <para>Here, we query input from the user to get Naming Service information. We need the host name where the Naming Service is running, the port on which it is listening, and the version of <glossterm linkend="gloss.iiop">IIOP</glossterm> to use. Using the values we get from the user, we can construct an instance of <classname>tweek::CorbaService</classname>. Internally, it will use the values to create a URI for looking up the Naming Service reference.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.corba-service.construct" id="client.cpp.main.corba-service.construct.co">
+                        <para>Once we have all the necessary initialization pieces, we can construct an instance of <classname>tweek::CorbaService</classname>. Simply creating an instance of this class does not perform any CORBA-related activities. That is the next step.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.corba-service.init" id="client.cpp.main.corba-service.init.co">
+                        <para>Now we initialize the local CORBA Service. We pass in <varname>argc</varname> and <varname>argv</varname> in case the user provided any CORBA-specific command-line parameters. (Any such parameters will be stripped from <varname>argv</varname>, and <varname>argc</varname> will be decremented accordingly.) If initialization succeeds, we proceed to requesting the Subject Manager reference.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.SubjectManager.choose client.cpp.main.SubjectManager.verify" id="client.cpp.main.SubjectManager.choose.co">
+                        <para>Using the CORBA Service, we choose the Subject Manager through which all Subject requests will be handled. The work for making this choice is offloaded to the helper function <function>chooseSubjectManager()</function>, shown in <xref linkend="client.cpp.chooseSubjectManager.example"/>. For now, we just assume that we got back some reference, possibly nil, to a remote <interfacename>tweek::SubjectManager</interfacename> object. Since we do not know for sure what the state of things is on the server side or what decision the user made, we verify that we did not get back a nil reference. If we got back a valid Subject Manager reference, we can use it just as we would in a Java client to request Subject references by name.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.subject.request client.cpp.subject.verify" id="client.cpp.main.subject.request.co">
+                        <para>Next, we request the reference to the remote Subject. The symbolic name we use here is the same as that specified in the server application (not shown in this chapter). Note that using a hard-coded name in this way is not recommended, but we use it here for the sake of simplicity. Once we have a reference, we verify that it is not nil before trying to use it.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>We now narrow our attention to the handling of the Subject reference that was returned by the Subject Manager. The code shown in <xref linkend="client.cpp.main.example2"/> comes from the <quote>...</quote> block in <xref linkend="client.cpp.main.example1"/>. At this point in the application execution, we know that we have a non-nil <interfacename>tweek::Subject</interfacename> reference, so we need to narrow it to our specific type, create an Observer servant, and attach it to the remote Subject.</para>
+               <example id="client.cpp.main.example2">
+                  <title>client.cpp: Implementation of main(), Part II</title>
+                  <programlisting linenumbering="numbered">StringObserverImpl* string_observer(NULL);
+PortableServer::ObjectId_var observer_id;
+
+try
+{
+   // Attempt to narrow subj to the more specific reference type
+   // CxxClientTest::StringSubject_var.  If this fails, an
+   // exception will be thrown and caught below.
+   CxxClientTest::StringSubject_var string_subj =
+      CxxClientTest::StringSubject::_narrow(subj);               <co linkends="client.cpp.main.subject.narrow.co" id="client.cpp.main.subject.narrow"/>
+
+   // Request the current value before we create the Observer.
+   // In this way, we can see the persistent state maintained
+   // by the Subject.
+   char* cur_value = string_subj-&gt;getValue();
+   std::cout &lt;&lt; "Current string value is '" &lt;&lt; cur_value &lt;&lt; "'"
+             &lt;&lt; std::endl;
+   delete cur_value;
+
+   // Create our Observer servant.
+   string_observer = new StringObserverImpl(string_subj);        <co linkends="client.cpp.main.servant.construct.co" id="client.cpp.main.servant.construct"/>
+
+   // Register the newly created servant with our ORB's POA.
+   observer_id =
+      corba_service.registerObject(string_observer,
+                                   "StringObserver");            <co linkends="client.cpp.main.servant.register.co" id="client.cpp.main.servant.register"/>
+
+   // This could be done in the StringObserverImpl constructor,
+   // but we do it here in this example just to make it clear
+   // that it is important.
+   string_subj-&gt;attach(string_observer-&gt;_this());                <co id="client.cpp.main.observer.attach"/>
+
+   const std::string exit_string("Q");
+   std::string cur_string;
+
+   for ( ;; )                                                    <co linkends="client.cpp.main.loop.co" id="client.cpp.main.loop"/>
+   {
+      std::cout &lt;&lt; "Enter a string (Q to quit): ";
+      std::cin &gt;&gt; cur_string;
+
+      if ( exit_string != cur_string )
+      {
+         string_subj-&gt;setValue(cur_string.c_str());              <co id="client.cpp.main.subject.setValue"/>
+      }
+      else
+      {
+         break;
+      }
+   }
+}
+catch (...)
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      &lt;&lt; "Caught an unknown exception during object interaction!\n"
+      &lt;&lt; vprDEBUG_FLUSH;
+}
+
+// We're done, so now we have to clean up after ourselves.
+// The order of operations here is important.
+if ( NULL != string_observer )
+{
+   string_observer-&gt;detach();                                    <co linkends="client.cpp.main.cleanup.co" id="client.cpp.main.observer.detach"/>
+   corba_service.unregisterObject(observer_id);                  <co linkends="client.cpp.main.cleanup.co" id="client.cpp.main.servant.unregister"/>
+   delete string_observer;                                       <co linkends="client.cpp.main.cleanup.co" id="client.cpp.main.servant.delete"/>
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="client.cpp.main.subject.narrow" id="client.cpp.main.subject.narrow.co">
+                        <para>Given a non-nil Subject reference, we now need to narrow it to our specific Subject type, <interfacename>CxxClientTest::StringSubject</interfacename>. If the narrowing fails, an exception will be thrown. In that case, we are done because we did not get back a reference we can use.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.servant.construct" id="client.cpp.main.servant.construct.co">
+                        <para>If the narrowing succeeded, then we can create an Observer servant (an instance of our class <classname>StringObserverImpl</classname>). In our local ORB, this servant will handle accesses from remote objects&mdash;namely, the Subject to which it is attached.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.servant.register" id="client.cpp.main.servant.register.co">
+                        <para>Next, we register our newly created Observer servant with the POA in the local CORBA Service. We give it an arbitrary name, and it gives us a unique identifier for the servant. We will need this identifier later when the application is shutting down and cleaning up after itself.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.observer.attach" id="client.cpp.main.observer.attach.co">
+                        <para>At long last, we can attach our Observer to the remote Subject. The mechanism for doing this is nearly identical to the Java version. The only difference is the use of the <literal>-&gt;</literal> operator, which is not present in Java. Once the Subject knows about our Observer, it will be informed of all state changes.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.loop" id="client.cpp.main.loop.co">
+                        <para>In this loop, we ask the user for input and then pass that input to the Subject's <methodname>setValue()</methodname> method. We do this until the user enters the string <literal>"Q"</literal>, which denotes that s/he wants to quit the application.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.subject.setValue" id="client.cpp.main.subject.setValue.co">
+                        <para>This is where we modify the state of the remote Subject. We pass the C string version of the user-specified string as the argument to <methodname>CxxClientTest::StringSubject::setValue()</methodname>.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.main.observer.detach client.cpp.main.servant.unregister client.cpp.main.servant.delete" id="client.cpp.main.cleanup.co">
+                        <para>Once the user has requested to quit the application, we need to clean up the servant we constructed earlier. First, we detach the Observer from the remote Subject. Next, we unregister our servant using the ID returned by the local CORBA Service. Finally, we delete the heap memory allocated for the servant. With that, we are done.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>The last part of the client application is the choice of the Subject Manager reference to use. In this example, we put that code in the helper function <function>chooseSubjectManager()</function>. In this function, we request the list of valid Subject Manager references from the local CORBA Service and present the information about each one to the user. Using this information, the user selects one, and that reference is then returned to the caller. In a real-world example, the Subject Manager chooser would be much more sophisticated than what we show in <xref linkend="client.cpp.chooseSubjectManager.example"/>, but for the purposes of explaining the ideas, this will suffice.</para>
+               <example id="client.cpp.chooseSubjectManager.example">
+                  <title>client.cpp: Implementation of chooseSubjectManager()</title>
+                  <programlisting linenumbering="numbered">tweek::SubjectManager_var chooseSubjectManager(tweek::CorbaService&amp; corbaService)
+{
+   tweek::SubjectManager_var subj_mgr;
+
+   // Request all the active Subject Manager references.
+   std::list&lt;tweek::SubjectManager_var&gt; mgrs =
+      corbaService.getSubjectManagerList();                                   <co linkends="client.cpp.chooseSubjectManager.list.co" id="client.cpp.chooseSubjectManager.list"/>
+
+   std::list&lt;tweek::SubjectManager_var&gt;::iterator cur_mgr;
+
+   // Iterate over all the tweek::SubjectManager references we have.
+   for ( cur_mgr = mgrs.begin(); cur_mgr != mgrs.end(); ++cur_mgr )           <co linkends="client.cpp.chooseSubjectManager.loop.co" id="client.cpp.chooseSubjectManager.loop"/>
+   {
+      try
+      {
+         // It is not entirely safe to assume that *cur_mgr is still valid at
+         // this point, even though it was valid when the mgrs list was
+         // constructed.  Hence, we test it again now.
+         if ( ! (*cur_mgr)-&gt;_non_existent() )                                 <co linkends="client.cpp.chooseSubjectManager.verify.co" id="client.cpp.chooseSubjectManager.verify"/>
+         {
+            std::string response;
+            const std::string proceed("y");
+
+            tweek::SubjectManager::SubjectManagerInfoList_var mgr_info =      <co linkends="client.cpp.chooseSubjectManager.info.co" id="client.cpp.chooseSubjectManager.getInfo"/>
+               (*cur_mgr)-&gt;getInfo();
+
+            std::cout &lt;&lt; "\nSubject Manager information:" &lt;&lt; std::endl;
+
+            // Loop over the information items and print each key/value pair
+            // to the screen.
+            for ( CORBA::ULong i = 0; i &lt; mgr_info-&gt;length(); ++i )           <co linkends="client.cpp.chooseSubjectManager.info.co" id="client.cpp.chooseSubjectManager.info-loop"/>
+            {
+               std::cout &lt;&lt; "\t" &lt;&lt; mgr_info[i].key  &lt;&lt; " = "
+                         &lt;&lt; mgr_info[i].value &lt;&lt; std::endl;
+            }
+
+            std::cout &lt;&lt; "Use this Subject Manager (y/n)? ";
+            std::cin &gt;&gt; response;
+
+            if ( proceed == response )
+            {
+               subj_mgr = *cur_mgr;                                           <co linkends="client.cpp.chooseSubjectManager.done.co" id="client.cpp.chooseSubjectManager.done"/>
+               break;
+            }
+         }
+      }
+      catch (...)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            &lt;&lt; "Caught an unknown exception in chooseSubjectManager loop\n"
+            &lt;&lt; vprDEBUG_FLUSH;
+      }
+   }
+
+   return subj_mgr;
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="client.cpp.chooseSubjectManager.list" id="client.cpp.chooseSubjectManager.list.co">
+                        <para>Using the given <classname>tweek::CorbaService</classname> reference, we ask for the current list of valid <interfacename>tweek::SubjectManager</interfacename> references. The references in this list are guaranteed to be valid at the time the list was constructed.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.chooseSubjectManager.loop" id="client.cpp.chooseSubjectManager.loop.co">
+                        <para>We use an STL iterator to loop over the list of returned <interfacename>tweek::SubjectManager</interfacename> references. This loop presents each reference in sequence and asks the user if the current reference is the one s/he wants. The loop completes when the user selects a reference or when no more references are available.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.chooseSubjectManager.verify" id="client.cpp.chooseSubjectManager.verify.co">
+                        <para>While the list of Subject Manager references was guaranteed to have contained valid references when it was constructed, things may have changed since then. That is the nature of asynchronous programming. To be safe, we test the current Subject Manager reference to see if it still refers to an extant object. If so, we continue. If not, we skip it. This invocation of <methodname>tweek::SubjectManager::_non_existent()</methodname> may throw an exception, and for that reason, we enclose the body of the for loop in a try/catch block.</para>
+                     </callout>
+                     <callout arearefs="client.cpp.chooseSubjectManager.getInfo client.cpp.chooseSubjectManager.info-loop" id="client.cpp.chooseSubjectManager.info.co">
+                        <para>It is possible for a single Naming Service to have multiple active Subject Manager references. Each of these has a unique identifier within the Naming Service, but the identifier is not human readable. To work around this, we make use of the method <methodname>tweek::SubjectManager::getInfo()</methodname>. This method returns a sequence of key/value pairs (both are strings) that can be used to identify which Subject Manager reference is the correct one. Here, we request this information sequence and print all the key/value pairs. With this output, the user can (hopefully) determine which Subject Manager reference to use.</para>
+                        <note>
+                           <para>This example is purposefully simple to keep the code small. Readers are strongly encouraged to come up with much more sophisticated choosing mechanisms here. For example, the flexibility of the Subject Manager information sequence would allow choices to be made entirely in code without any interactive user feedback.</para>
+                        </note>
+                     </callout>
+                     <callout arearefs="client.cpp.chooseSubjectManager.done" id="client.cpp.chooseSubjectManager.done.co">
+                        <para>Here, the user has selected the current Subject Manager as the correct one. We copy the reference to the <varname>subj_mgr</varname> variable. Then, we break out of the loop and return <varname>subj_mgr</varname> to the caller.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>With that, we are done with our review of the C++ client API in Tweek. The use of CORBA allows Java and C++ client code to be quite similar, and this can be helpful when migrating between the two. The addition of the C++ client API in Tweek 0.13 also demonstrates one of the basic design philosophies of Tweek: clients can be written in any language without concern for the language the server uses.</para>
             </section>
          </section>
       </chapter>
