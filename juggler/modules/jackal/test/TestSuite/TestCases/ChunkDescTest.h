@@ -10,6 +10,7 @@
 #include <jccl/Config/VarValue.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkDesc.h>
+#include <jccl/Config/ChunkFactory.h>
 
 namespace jcclTest
 {
@@ -58,6 +59,24 @@ namespace jcclTest
 
       void propertyDescTests()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+         
+         std::string file_path( TESTFILES_PATH );
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         CPPUNIT_ASSERT( desc->getName() == "chuck" );
+         CPPUNIT_ASSERT( desc->getToken() == "config-chuck-the-beaver" );
+         CPPUNIT_ASSERT( desc->getHelp() == "wood chuckin'" );
+         
+         jccl::PropertyDesc* p = desc->getPropertyDesc( "test prop multi" );
+         std::cout<<"BIG FIST!!!! " <<  p->getName()<<std::endl;
+         CPPUNIT_ASSERT( p->getName() == "big bad beaver" );
+         CPPUNIT_ASSERT( p->getToken() == "test prop multi" );
+         CPPUNIT_ASSERT( p->getHelp() == "multi beaver" );
+         CPPUNIT_ASSERT( p->getType() == jccl::T_STRING );
+         CPPUNIT_ASSERT( p->getNumAllowed() == 1 );
       }
 
       static CppUnit::Test* suite()

@@ -11,7 +11,7 @@
     <PropertyDesc token="test prop string" type="String" num="1">
         <help>string bikini beaver</help>
     </PropertyDesc>
-    <PropertyDesc token="test prop multi" type="String" num="1">
+    <PropertyDesc token="test prop multi" name="big bad beaver" type="String" num="1">
         <help>multi beaver</help>
     </PropertyDesc>
   </ChunkDesc>
