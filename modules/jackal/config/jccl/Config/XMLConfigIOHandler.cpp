@@ -98,10 +98,10 @@ XMLConfigIOHandler::XMLConfigIOHandler (): ConfigIOHandler () {
     DOM_Node doc;
     XercesXMLParser* p = XercesXMLParserPool::instance()->getParser();
     if (!p) {
-        vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:") 
-                                << " Couldn't get XML Parser; loading '"
-                                << filename.c_str() << "' failed.\n" 
-                                << vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:") 
+            << " Couldn't get XML Parser; loading '"
+            << filename.c_str() << "' failed.\n" << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -113,10 +113,9 @@ XMLConfigIOHandler::XMLConfigIOHandler (): ConfigIOHandler () {
         retval = buildChunkDB (db, doc);
     }
     else
-        vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
-                                << " reading XML file '" 
-                                << filename.c_str() << "' failed.\n" 
-                                << vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:") << " reading XML file '" 
+            << filename.c_str() << "' failed.\n" << vprDEBUG_FLUSH;
 
     return retval;
 }
@@ -128,9 +127,10 @@ XMLConfigIOHandler::XMLConfigIOHandler (): ConfigIOHandler () {
     DOM_Node doc;
     XercesXMLParser* p = XercesXMLParserPool::instance()->getParser();
     if (!p) {
-        vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
-                                << " Couldn't get XML Parser; loading "
-            "ConfigChunkDB failed.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:")
+            << " Couldn't get XML Parser; loading ConfigChunkDB failed.\n" 
+            << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -141,9 +141,9 @@ XMLConfigIOHandler::XMLConfigIOHandler (): ConfigIOHandler () {
         retval = buildChunkDB (db, doc);
     }
     else
-        vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
-                                << " reading XML stream failed.\n" 
-                                << vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:") << " reading XML stream failed.\n" 
+            << vprDEBUG_FLUSH;
     return retval;
 }
 
@@ -289,10 +289,10 @@ bool XMLConfigIOHandler::parseTextValues (Property* p, int& startval, char* text
     }
 
     if (!retval) {
-        vprDEBUG(jcclDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:") << 
-            "XMLConfigIOHandler: failed tryAssign of '" << ch << 
-            "' to property '" << p->getToken() << "'.\n" <<
-            vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:") 
+            << "XMLConfigIOHandler: failed tryAssign of '" << ch 
+            << "' to property '" << p->getToken() << "'.\n" << vprDEBUG_FLUSH;
     }
     
     return retval;
@@ -321,11 +321,11 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
                         if (ch2.get())
                             p->setValue (ch2, valindex++);
                         else {
-                            vprDEBUG(jcclDBG_CONFIG,0) << 
-                                clrOutNORM(clrRED, "ERROR:") << 
-                                "Reading embedded chunk failed: " << 
-                                ch->getDescToken() << "->" << name << 
-                                ".\n" << vprDEBUG_FLUSH;
+                            vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
+                                << clrOutNORM(clrRED, "ERROR:") 
+                                << "Reading embedded chunk failed: " 
+                                << ch->getDescToken() << "->" << name 
+                                << ".\n" << vprDEBUG_FLUSH;
                             retval = false;
                         }
                         break;
@@ -335,7 +335,8 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
                     case DOM_Node::COMMENT_NODE:
                         break;
                     default:
-                        vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::"
+                        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                            << "XMLConfigIOHandler::"
                             "buildProperty: Unexpected DOM_Node.\n" << 
                             vprDEBUG_FLUSH;
                         retval = false;
@@ -348,7 +349,9 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
                         retval = parseTextValues (p, valindex, child.getNodeValue().transcode());
                         break;
                     default:
-                        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::buildProperty(): Unexpected XML Node.\n" << vprDEBUG_FLUSH;
+                        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                            << "Warning: XMLConfigIOHandler::buildProperty(): "
+                            << "Unexpected XML Node.\n" << vprDEBUG_FLUSH;
                         break;
                     }
                 }
@@ -357,10 +360,10 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
         }
         else {
             retval = false;
-            vprDEBUG(jcclDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
-                                    << " Property doesn't exist: '" 
-                                    << ch->getDescToken() << "->"
-                                    << name << "'.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
+                << clrOutNORM(clrRED, "ERROR:") 
+                << " Property doesn't exist: '" << ch->getDescToken() << "->"
+                << name << "'.\n" << vprDEBUG_FLUSH;
         }
         break;
     case DOM_Node::ATTRIBUTE_NODE:
@@ -371,10 +374,10 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
         }
         else {
             retval = false;
-            vprDEBUG(jcclDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
-                                    << " Property doesn't exist: '" 
-                                    << ch->getDescToken() << "->"
-                                    << name << "'.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                << clrOutNORM(clrRED, "ERROR:") 
+                << " Property doesn't exist: '" << ch->getDescToken() << "->"
+                << name << "'.\n" << vprDEBUG_FLUSH;
         }
         break;
     case DOM_Node::TEXT_NODE:
@@ -383,7 +386,8 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
     case DOM_Node::COMMENT_NODE:
         break;
     default:
-        vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::buildProperty:"
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "XMLConfigIOHandler::buildProperty:"
             " Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
 #ifndef JCCL_WIN32_KLUDGE
@@ -428,10 +432,11 @@ ConfigChunkPtr XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool u
             }
         }
         else {
-            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " XMLConfigIOHandler::buildConfigChunk: Creating ConfigChunk"
-                " failed: Couldn't find ChunkDesc '" << name << 
-                "'.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                << clrOutNORM(clrRED, "ERROR:") 
+                << " XMLConfigIOHandler::buildConfigChunk: Creating "
+                "ConfigChunk failed: Couldn't find ChunkDesc '" << name 
+                << "'.\n" << vprDEBUG_FLUSH;
             retval = false;
         }
         break;
@@ -441,8 +446,9 @@ ConfigChunkPtr XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool u
     case DOM_Node::COMMENT_NODE:
         break;
     default:
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
-            "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler::build"
+            << "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
 #ifndef JCCL_WIN32_KLUDGE
     delete[] name;
@@ -451,8 +457,9 @@ ConfigChunkPtr XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool u
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
         if (ch.get()) {
-            vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting ConfigChunk due to errors:\n"
-                                    << *ch << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                << "Rejecting ConfigChunk due to errors:\n"
+                << *ch << vprDEBUG_FLUSH;
             // delete ch;
             ch.reset(0);
         }
@@ -507,9 +514,10 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
         }
         else {
             retval = false;
-            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " XMLConfigIOHandler::buildConfigChunkDB: Couldn't find "
-                "<ConfigChunkDB> tag.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                << clrOutNORM(clrRED, "ERROR:") 
+                << " XMLConfigIOHandler::buildConfigChunkDB: Couldn't find "
+                << "<ConfigChunkDB> tag.\n" << vprDEBUG_FLUSH;
         }
         break;
     case DOM_Node::TEXT_NODE:
@@ -519,8 +527,9 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
         break;
     default:
         retval = false;
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
-            "ConfigChunkDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler::build"
+            << "ConfigChunkDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
 #ifndef JCCL_WIN32_KLUDGE
     delete[] name;
@@ -722,9 +731,10 @@ bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc)
         }
         else {
             retval = false;
-            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " XMLConfigIOHandler::buildChunkDescDB: Couldn't find "
-                "<ChunkDescDB> tag.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                << clrOutNORM(clrRED, "ERROR:") 
+                << " XMLConfigIOHandler::buildChunkDescDB: Couldn't find "
+                << "<ChunkDescDB> tag.\n" << vprDEBUG_FLUSH;
         }
         break;
     case DOM_Node::COMMENT_NODE:
@@ -735,8 +745,9 @@ bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc)
         break;
     default:
         retval = false;
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
-            "ChunkDescDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler::build"
+            << "ChunkDescDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
 #ifndef JCCL_WIN32_KLUDGE
     delete[] name;
@@ -783,9 +794,10 @@ ChunkDescPtr XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
             }
             if (desc->getToken() == "") {
                 retval = false;
-                vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") <<
-                    " XMLConfigIOHandler::buildChunkDesc: ChunkDesc "
-                    "has no Token argument.\n" << vprDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
+                    << clrOutNORM(clrRED, "ERROR:") 
+                    << " XMLConfigIOHandler::buildChunkDesc: ChunkDesc "
+                    << "has no Token argument.\n" << vprDEBUG_FLUSH;
             }
             if (desc->getName() == "")
                 desc->setName(desc->getToken());
@@ -798,9 +810,10 @@ ChunkDescPtr XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
             }
         }
         else {
-            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " XMLConfigIOHandler::buildChunkDesc: Couldn't find "
-                "<ChunkDesc> tag.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                << clrOutNORM(clrRED, "ERROR:") 
+                << " XMLConfigIOHandler::buildChunkDesc: Couldn't find "
+                << "<ChunkDesc> tag.\n" << vprDEBUG_FLUSH;
         }
         break;
     case DOM_Node::COMMENT_NODE:
@@ -810,8 +823,9 @@ ChunkDescPtr XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         // it's just white space & crap like that.
         break;
     default:
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
-            "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler::build"
+            << "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
 #ifndef JCCL_WIN32_KLUDGE
     delete[] name;
@@ -820,8 +834,9 @@ ChunkDescPtr XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
         if (desc.get() != 0) {
-            vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting ChunkDesc due to errors:\n"
-                                    << *desc << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                << "Rejecting ChunkDesc due to errors:\n"
+                << *desc << vprDEBUG_FLUSH;
             // delete desc;
             desc.reset(0);
         }
@@ -867,10 +882,11 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                         p->setNumAllowed (atoi(child_value));
                 }
                 else {
-                    vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
-                        "::parseChunkDescChildElement: Unidentified "
-                        "attribute '" << child_name << "=\"" << child_value <<
-                        "\"'.\n" << vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                        << "Warning: XMLConfigIOHandler"
+                        << "::parseChunkDescChildElement: Unidentified "
+                        <<"attribute '" << child_name << "=\"" << child_value 
+                        << "\"'.\n" << vprDEBUG_FLUSH;
                 }
 #ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
@@ -879,9 +895,10 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
             }
             if (p->getToken() == "") {
                 retval = false;
-                vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") <<
-                    " XMLConfigIOHandler::parseChunkDescChildElem: "
-                    "PropertyDesc has no Token argument.\n" << vprDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
+                    << clrOutNORM(clrRED, "ERROR:") 
+                    << " XMLConfigIOHandler::parseChunkDescChildElem: Property"
+                    << "Desc has no Token argument.\n" << vprDEBUG_FLUSH;
             }
             if (p->getName() == "")
                 p->setName (p->getToken());
@@ -895,9 +912,10 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
             if (retval)
                 desc.add (p);
             else {
-                vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting PropertyDesc in " <<
-                    desc.getToken() << " due to errors:" << *p << 
-                    std::endl << vprDEBUG_FLUSH;
+                vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                    << "Rejecting PropertyDesc in " << desc.getToken() 
+                    << " due to errors:" << *p 
+                    << std::endl << vprDEBUG_FLUSH;
                 delete p;
             }
         }
@@ -916,9 +934,10 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                 case DOM_Node::PROCESSING_INSTRUCTION_NODE:
                     break;
                 default:
-                    vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::"
-                        "parseChunkDescChildElement: Unexpected DOM_Node.\n"<< 
-                        vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                        << "XMLConfigIOHandler::"
+                        << "parseChunkDescChildElement: Unexpected DOM_Node.\n"
+                        << vprDEBUG_FLUSH;
                 }
 #ifndef JCCL_WIN32_KLUDGE
                 delete[] child_value;
@@ -944,23 +963,24 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                     // it's just white space & crap like that.
                     break;
                 default:
-                    vprDEBUG(jcclDBG_CONFIG,2) << 
+                    vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) << 
                         "Warning: XMLConfigIOHandler:"
                         "parsing ChunkDesc defaults value: "
                         "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
                 }
                 child = child.getNextSibling();
             }
-            vprDEBUG(jcclDBG_CONFIG,2) << 
-                "Warning: XMLConfigIOHandler: parsing ChunkDesc Defaults: "
-                "No argument for <Defaults> tag.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                << "Warning: XMLConfigIOHandler: parsing ChunkDesc Defaults: "
+                << "No argument for <Defaults> tag.\n" << vprDEBUG_FLUSH;
         finished:
             ;
         }
         else {
-            vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
-                "::parsing ChunkDesc: Unidentified Element '" <<
-                name << "'.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                << "Warning: XMLConfigIOHandler"
+                << "::parsing ChunkDesc: Unidentified Element '" 
+                << name << "'.\n" << vprDEBUG_FLUSH;
             //retval = false;
         }
         break;
@@ -971,9 +991,9 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
         // it's just white space & crap like that.
         break;
     default:
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
-            "parseChunkDescChildElement: "
-            "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler::parseChunkDescChildElement: "
+            << "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
         break;
     }
 #ifndef JCCL_WIN32_KLUDGE
@@ -1010,10 +1030,10 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                 if (!vjstrcasecmp (child_name, "name"))
                     p.appendValueLabel (child_value);
                 else {
-                    vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
-                        ": Parsing ValueLabel: Unidentified "
-                        "attribute '" << child_name << "=\"" << child_value <<
-                        "\"'.\n" << vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG,vprDBG_WARNING_LVL) 
+                        << "Warning: XMLConfigIOHandler: Parsing ValueLabel: "
+                        << "Unidentified attribute '" << child_name << "=\"" 
+                        << child_value << "\"'.\n" << vprDEBUG_FLUSH;
                 }
 #ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
@@ -1034,10 +1054,10 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                 else if (!vjstrcasecmp (child_name, "value"))
                     enum_value = child.getNodeValue().transcode();
                 else {
-                    vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
-                        ": Parsing Enumeration: Unidentified "
-                        "attribute '" << child_name << "=\"" << child_value <<
-                        "\"'.\n" << vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                        << "Warning: XMLConfigIOHandler: Parsing Enumeration: "
+                        << "Unidentified attribute '" << child_name << "=\"" 
+                        << child_value << "\"'.\n" << vprDEBUG_FLUSH;
                 }
 #ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
@@ -1071,9 +1091,9 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                 case DOM_Node::PROCESSING_INSTRUCTION_NODE:
                     break;
                 default:
-                    vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler: "
-                        "parsing PropertyDesc Help: Unexpected DOM_Node.\n" << 
-                        vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                        << "XMLConfigIOHandler: parsing PropertyDesc Help: "
+                        << "Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
                 }
 #ifndef JCCL_WIN32_KLUDGE
                 delete[] child_value;
@@ -1083,9 +1103,10 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
             p.setHelp (h);
         }
         else {
-            vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
-                ": parsing PropertyDesc: Unidentified Element '" <<
-                name << "'.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+                << "Warning: XMLConfigIOHandler: parsing PropertyDesc: "
+                << "Unidentified Element '" << name << "'.\n" 
+                << vprDEBUG_FLUSH;
             //retval = false;
         }
         break;
@@ -1096,9 +1117,9 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
         // it's just white space & crap like that.
         break;
     default:
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
-            "parsePropertyDescChildElement: "
-            "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler::parsePropertyDescChildElement: "
+            << "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
         break;
     }
 #ifndef JCCL_WIN32_KLUDGE
@@ -1138,9 +1159,9 @@ char* XMLConfigIOHandler::stringTokenizer (char* newstring, char*& tmp) {
     }
     end = strchr (begin+1, '"');
     if (!end) {
-        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler: " <<
-            "Unterminated string '" << begin+1 << "'.\n" <<
-            vprDEBUG_FLUSH;
+        vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL) 
+            << "Warning: XMLConfigIOHandler: Unterminated string '" 
+            << begin+1 << "'.\n" << vprDEBUG_FLUSH;
         return 0;
     }
     *end = 0;
