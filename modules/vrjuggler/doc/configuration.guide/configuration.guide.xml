@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../stylesheet/docbook_ab.css" type="text/css"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article lang="en">
-  <articleinfo>
-    <title>Configuring VR Juggler for an Immersive VR System</title>
-    <subtitle>Course Notes for Open Source VR - IEEEVR 2002</subtitle>
-    <authorgroup>
-      <author>
-        <firstname>Christopher</firstname>
-        <surname>Just</surname>
-      </author>
-    </authorgroup>
-    <pubdate>$Date$</pubdate>
-    <address><email>cjust@vrjuggler.org</email></address>
-  </articleinfo>
-  <section>
+<?xml-stylesheet href="../../../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+   <bookinfo>
+      <title>VR Juggler</title>
+      <subtitle>Configuration Guide</subtitle>
+      <releaseinfo>1.0.0</releaseinfo>
+      <pubdate>$Date$</pubdate>
+   </bookinfo>
+   <preface>
+      <title>Preface</title>
+      <para>This book describes how to create configuration files for VR Juggler.  It discusses many of the details of configuring a VR System from scratch.</para>
+      <para>This book assumes that the user has read the VR Juggler Getting Started Guide.  The VjControl User's Guide may also prove helpful.</para>
+   </preface>
+
+  <chapter>
     <title>Introduction</title>
     <para>Configuring software for an immersive VR system can be a difficult and time consuming process. This is largely because of the size and complexity of the hardware components that make up the system - there may be multiple displays and a multitude of input devices. Furthermore, many systems are unique, or at least highly customized.</para>
     <para>VR Juggler attempts to make the configuration process as simple as possible. It includes a GUI application called VjControl to edit config files. Use of the GUI has many advantages: it can provide an organized view of the configuration information, with help information or suggested values readily available. It can prevent many simple mistakes (such as typos in text-based configuration files) and help resolve others.</para>
     <para>In addition to this, the VR Juggler config files themselves are well-structured, allowing the configurations of various elements of the VR system to be created separately and then combined in various ways.</para>
-  </section>
-  <section>
+  </chapter>
+  <chapter>
     <title>An overview of VR Juggler configuration</title>
     <para>VR Juggler's configuration files are composed of units called ConfigChunks. A ConfigChunk contains the configuration information for a single element of VR Juggler. These elements might be display windows, or device drivers, or even applications. Naturally, the ConfigChunk for a display window contains very different information from that of a device driver.</para>
     <para>All ConfigChunks have individual names, so that multiple chunks for the same kind of element can be distinguished. This means, for example, that a VR Juggler configuration can include several display windows with separate screen coordinates and viewing parameters, each with a unique name. It also means that VR Juggler can use an arbitrary number and variety of displays or devices at any time, limited only by the capabilities of the underlying hardware.</para>
@@ -33,8 +33,8 @@
         </imageobject>
       </mediaobject>
     </figure>
-  </section>
-  <section>
+  </chapter>
+  <chapter>
     <title>Building a configuration file from scratch</title>
     <para>VR Juggler includes a number of sample configuration files for common VR systems. These files are based on the systems readily available to the VR Juggler developers and our contributors, but obviously we cannot provide a comprehensive set of example configurations - the field is simply too diverse.</para>
     <para>In this section we will demonstrate how to create a VR Juggler configuration file from scratch, describing each element and suggesting an order of steps to setup a new VR system in the easiest possible way. Our example system will be a four-walled projection system similar to Iowa State University's C4 device. After the step-by-step example, we will also briefly describe major variations, such as the differences necessary to create a configuration for a Head-Mounted Display, and some specific examples of setting up various input devices.</para>
@@ -346,6 +346,6 @@
         <para>Just like every other input device, simulator devices must be connected to proxies before they can be used by VR Juggler. Simulated devices use the exact same proxy ConfigChunks as real hardware devices, and the proxies are configured with the same combination of (simulated) device name and unit number. Note that position simulators (as well as the glove simulator objects) only supply one set of input data, so the <property>Unit</property> property for any proxy referring to them should be 0. Digital and analog simulators, on the other hand, can be configured to support an arbitrary number of input device units.</para>
       </section>
     </section>
-  </section>
-</article>
+  </chapter>
+</book>
 
