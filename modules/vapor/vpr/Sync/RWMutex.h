@@ -38,13 +38,10 @@
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Mutex.h>
 
-#ifdef VPR_USE_NSPR
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/Sync/RWMutexNSPR.h>
-
-namespace vpr {
-    typedef RWMutexNSPR RWMutex;
-};
-#else
+#elif (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX) || \
+      (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC)
 
 namespace vpr {
 

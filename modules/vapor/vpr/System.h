@@ -36,18 +36,11 @@
 #include <vpr/vprConfig.h>
 
 // determine which implementation of vpr::System to include.
-#if defined(VPR_USE_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
-#   include <vpr/md/POSIX/SystemPosix.h>
-namespace vpr {
-    typedef SystemPosix System;
-};
-
-#else
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/SystemNSPR.h>
-namespace vpr {
-    typedef SystemNSPR System;
-};
-
-#endif  /* VPR_IRIX_SPROC || VPR_USE_PTHREADS */
+#elif (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX) ||  \
+      (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC)
+#   include <vpr/md/POSIX/SystemPosix.h>
+#endif
 
 #endif /* _VPR_SYSTEM_FAKE_H_ */

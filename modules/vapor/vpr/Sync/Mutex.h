@@ -48,26 +48,14 @@
 
 #include <vpr/vprConfig.h>
 
-#if defined(VPR_USE_IRIX_SPROC)
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
 #   include <ulocks.h>
 #   include <vpr/md/SPROC/Sync/MutexSGI.h>    
-    
-namespace vpr {
-    typedef MutexSGI Mutex;
-};
-#elif defined(VPR_USE_PTHREADS)
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/Sync/MutexPosix.h>
-
-namespace vpr {
-    typedef MutexPosix Mutex;
-};
-#elif defined(VPR_USE_NSPR)
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/Sync/MutexNSPR.h>
-
-namespace vpr {
-    typedef MutexNSPR Mutex;
-};
-#endif	/* VPR_IRIX_SPROC */
+#endif
 
 #include <vpr/Sync/NullMutex.h>
 

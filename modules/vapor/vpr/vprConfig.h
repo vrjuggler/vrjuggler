@@ -155,4 +155,6 @@
 #   define VPR_DATA_API(__type)	VPR_IMPORT_DATA(__type)
 #endif
 
+#include <vpr/vprDomain.h>
+
 #endif   /* _VPR_CONFIG_H_ */

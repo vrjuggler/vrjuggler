@@ -34,23 +34,16 @@
 #define _VPR_INET_ADDR_H_
 
 #include <vpr/vprConfig.h>
-#include <iostream>
 
-#if defined(VPR_USE_NSPR)
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
-namespace vpr {
-    typedef InetAddrNSPR InetAddr;
-};
-#else
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
-namespace vpr {
-    typedef InetAddrBSD InetAddr;
-};
 #endif
 
 #if defined(HAVE_HASH_MAP)
 #   include <hash_map>
-#elif defined HAVE_HASH_MAP_H
+#elif defined(HAVE_HASH_MAP_H)
 #   include <hash_map.h>
 #endif
 
