@@ -39,6 +39,74 @@ import sys
 import time
 
 def setVars():
+   def guessBoostToolset(reattempt = False):
+      (cl_stdin, cl_stdout, cl_stderr) = os.popen3('cl')
+      cl_version_line = cl_stderr.readline()
+
+      cl_ver_match = re.compile(r'Compiler Version ((\d+)\.(\d+)\.(\d+)) for') 
+      ver_string_match = cl_ver_match.search(cl_version_line)
+
+      if ver_string_match is not None:
+         cl_major = int(ver_string_match.group(2))
+         cl_minor = int(ver_string_match.group(3))
+
+         if cl_major == 13 and cl_minor < 10:
+            print "It appears that we will be using Visual Studio .NET 2002"
+            boost_tool_guess = 'vc7'
+         else:
+            print "It appears that we will be using Visual Studio .NET 2003"
+            boost_tool_guess = 'vc71'
+      else:
+         boost_tool_guess = ''
+
+      in_status  = cl_stdin.close()
+      out_status = cl_stdout.close()
+      err_status = cl_stderr.close()
+
+      # If there was an error closing any of the streams returned by
+      # os.popen3(), then the command was not opened correctly.  That means
+      # that CL.EXE is not in the user's path.
+      if in_status is not None or out_status is not None or err_status is not None:
+         # If this is not a reattempt to guess the Visual Studio version, then
+         # be nice and extend the user's path to include their Visual Studio
+         # installation.
+         if not reattempt:
+            # Common installation directories for Visual Studio 7.x.
+            vs_dirs = [r'C:\Program Files\Microsoft Visual Studio .NET',
+                       r'C:\Program Files\Microsoft Visual Studio .NET 2003']
+
+            for d in vs_dirs:
+               if os.path.exists(d):
+                  print "NOTE: Using Visual Studio installation in"
+                  print "      " + d
+                  vs_path = [os.path.join(d, r'Common7\IDE'),
+                             os.path.join(d, r'VC7\BIN'),
+                             os.path.join(d, r'Common7\Tools'),
+                             os.path.join(d, r'Common7\Tools\bin\prerelease'),
+                             os.path.join(d, r'Common7\Tools\bin')]
+                  path_add = ';'.join(vs_path)
+                  os.environ['PATH'] = path_add + os.pathsep + os.getenv('PATH', '')
+
+                  # Try again to guess the Visual Studio version.
+                  return guessBoostToolset(True)
+
+            # If execution reaches this point, our attempts to guess the
+            # location of a Visual Studio 7.x installation failed.
+            noVisualStudioError()
+
+         # If this is a reattempt to guess the Visual Studio version, then
+         # something is wrong with the user's Visual Studio installation.
+         else:
+            noVisualStudioError()
+
+      return boost_tool_guess
+
+   def noVisualStudioError():
+      print "ERROR: Visual Studio commands are not in your path!"
+      print "Run vsvars32.bat in this shell or update the %PATH% environment"
+      print "variable on your system."
+      sys.exit(2)
+
    def processInput(optionDict, envVar, inputDesc, required = False):
       default_value = optionDict[envVar]
       print "    Enter %s [%s]: " % (inputDesc, default_value),
@@ -54,31 +122,11 @@ def setVars():
          value_str = input_str
 
       optionDict[envVar] = value_str
-      os.putenv(envVar, value_str)
+      os.environ[envVar] = value_str
 
       return value_str
 
-   cl_ver_match = re.compile(r'Compiler Version ((\d+)\.(\d+)\.(\d+)) for') 
-   (cl_stdin, cl_stdout, cl_stderr) = os.popen3('cl')
-   cl_version_line = cl_stderr.readline()
-
-   ver_string_match = cl_ver_match.search(cl_version_line)
-   if ver_string_match is not None:
-      cl_major = int(ver_string_match.group(2))
-      cl_minor = int(ver_string_match.group(3))
-
-      if cl_major == 13 and cl_minor < 10:
-         print "It appears that we will be using Visual Studio .NET 2002"
-         boost_tool_fallback = 'vc7'
-      else:
-         print "It appears that we will be using Visual Studio .NET 2003"
-         boost_tool_fallback = 'vc71'
-   else:
-      boost_tool_fallback = ''
-
-   cl_stdin.close()
-   cl_stdout.close()
-   cl_stderr.close()
+   boost_tool_fallback = guessBoostToolset()
 
    options = {
       # Default values for required settings.
@@ -602,7 +650,8 @@ def main():
    generateVersionHeaders()
 
    devenv_cmd = None
-   for p in str.split(os.getenv('PATH', ''), ';'):
+   for p in str.split(os.getenv('PATH', ''), os.pathsep):
+      print "Searching in", p
       if os.path.exists(os.path.join(p, 'devenv.exe')):
          devenv_cmd = os.path.join(p, 'devenv.exe')
          break
@@ -614,14 +663,17 @@ def main():
                                         'devenv.exe')
 
    solution_file = r'%s' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
-   status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
 
-   if status == 0:
-      print "Proceed with VR Juggler installation [y]: ",
-      proceed = sys.stdin.readline().strip(" \n")
-      if proceed == '' or proceed.lower().startswith('y'):
-         doInstall(options['prefix'])
+   try:
+      status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
 
+      if status == 0:
+         print "Proceed with VR Juggler installation [y]: ",
+         proceed = sys.stdin.readline().strip(" \n")
+         if proceed == '' or proceed.lower().startswith('y'):
+            doInstall(options['prefix'])
+   except OSError, osEx:
+      print "Could not execute %s: %s" % (devenv_cmd, osEx)
 
 juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 if __name__ == '__main__':
