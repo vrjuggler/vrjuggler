@@ -60,8 +60,7 @@ std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
    catch (cppdom::Error& xml_e)
    {
       cppdom::Location where(chunk_desc_db_node->getContext()->getLocation());
-      std::string errmsg;
-      xml_e.getStrError(errmsg);
+      std::string errmsg = xml_e.getStrError();
 
       // print out where the error occured
       std::cout << "ChunkDescDB::<< XMLError:" << where.getLine() << " "
@@ -90,8 +89,7 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self)
    catch (cppdom::Error& xml_e)
    {
       cppdom::Location where(chunk_desc_db_node->getContext()->getLocation());
-      std::string errmsg;
-      xml_e.getStrError(errmsg);
+      std::string errmsg = xml_e.getStrError();
 
       // print out where the error occured
       std::cout << "ChunkDescDB::>> XMLError:" << where.getLine() << " "
@@ -139,8 +137,7 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
    catch (cppdom::Error& xml_e)
    {
       cppdom::Location where(chunk_desc_doc->getContext()->getLocation());
-      std::string errmsg;
-      xml_e.getStrError(errmsg);
+      std::string errmsg = xml_e.getStrError();
 
       // print out where the error occured
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -177,8 +174,7 @@ bool ChunkDescDB::save (const std::string& file_name)
    catch (cppdom::Error& xml_e)
    {
       cppdom::Location where(chunk_desc_db_doc->getContext()->getLocation());
-      std::string errmsg;
-      xml_e.getStrError(errmsg);
+      std::string errmsg = xml_e.getStrError();
 
       // print out where the error occured
       std::cout << "ChunkDescDB::>> XMLError:" << file_name << ":"
