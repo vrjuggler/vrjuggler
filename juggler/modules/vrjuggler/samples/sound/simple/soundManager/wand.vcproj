@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="wand"
+	Name="soundManager"
 	ProjectGUID="{F050E588-7326-496A-9D60-50C7C3FEEE0C}"
 	SccProjectName=""
 	SccLocalPath="">
@@ -27,7 +27,7 @@
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/wandApp.pch"
+				PrecompiledHeaderFile=".\Debug/soundManagerApp.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -40,16 +40,16 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="Juggler.lib Juggler_ogl.lib sonix.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
-				OutputFile="wand.exe"
+				OutputFile="soundManager.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)/lib&quot;;&quot;$(VJ_BASE_DIR)/lib/debug&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/wand.pdb"
+				ProgramDatabaseFile=".\Debug/soundManager.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/wand.tlb"/>
+				TypeLibraryName=".\Debug/soundManager.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -81,7 +81,7 @@
 				RuntimeLibrary="4"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/wandApp.pch"
+				PrecompiledHeaderFile=".\Release/soundManagerApp.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -94,15 +94,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="Juggler.lib Juggler_ogl.lib sonix.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
-				OutputFile=".\Release/wand.exe"
+				OutputFile=".\Release/soundManager.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)/lib&quot;;&quot;$(VJ_BASE_DIR)/lib/opt&quot;"
-				ProgramDatabaseFile=".\Release/wand.pdb"
+				ProgramDatabaseFile=".\Release/soundManager.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/wand.tlb"/>
+				TypeLibraryName=".\Release/soundManager.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -127,14 +127,14 @@
 				RelativePath=".\main.cpp">
 			</File>
 			<File
-				RelativePath=".\wandApp.cpp">
+				RelativePath=".\soundManagerApp.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath=".\wandApp.h">
+				RelativePath=".\soundManagerApp.h">
 			</File>
 		</Filter>
 		<Filter

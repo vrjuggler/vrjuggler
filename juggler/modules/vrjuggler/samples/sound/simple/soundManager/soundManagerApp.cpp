@@ -40,7 +40,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
 
-#include <wandApp.h>
+#include <soundManagerApp.h>
 
 namespace vrjTest
 {
@@ -48,7 +48,7 @@ namespace vrjTest
 // Function called after tracker update but before start of drawing.
 // Called once before every frame.  Do calculations and state modifications
 // here.
-void wandApp::preFrame()
+void soundManagerApp::preFrame()
 {
    // Put your pre frame computations here.
 
@@ -68,7 +68,7 @@ void wandApp::preFrame()
    }
 }
 
-void wandApp::bufferPreDraw()
+void soundManagerApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,7 +79,7 @@ void wandApp::bufferPreDraw()
 //  Draw the scene.  A box on the end of the wand
 //----------------------------------------------
 
-void wandApp::myDraw()
+void soundManagerApp::myDraw()
 {
    //std::cout << "\n--- myDraw() ---\n";
 
@@ -149,7 +149,7 @@ void wandApp::myDraw()
 
 }
 
-void wandApp::initGLState()
+void soundManagerApp::initGLState()
 {
    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
    GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
@@ -231,5 +231,5 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    }
 }
 
-}; // namespace vrjTest
+} // namespace vrjTest
 
