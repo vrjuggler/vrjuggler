@@ -33,7 +33,7 @@
 #ifndef _vjBarrierSGI_h_DEPRECATED_
 #define _vjBarrierSGI_h_DEPRECATED_
 
-#warn "Sync/vjBarrierSGI.h is deprecated!  Use VPR/Sync/vjBarrierSGI.h"
+#warning "Sync/vjBarrierSGI.h is deprecated!  Use VPR/Sync/vjBarrierSGI.h"
 #include <VPR/Sync/vjBarrierSGI.h>
 
 #endif

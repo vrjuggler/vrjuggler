@@ -33,7 +33,7 @@
 #ifndef _vjMutexSGI_h_DEPRECATED_
 #define _vjMutexSGI_h_DEPRECATED_
 
-#warn "Sync/vjMutexSGI.h is deprecated!  Use VPR/md/SPROC/vjMutexSGI.h"
+#warning "Sync/vjMutexSGI.h is deprecated!  Use VPR/md/SPROC/vjMutexSGI.h"
 #include <VPR/md/SPROC/vjMutexSGI.h>
 
 #endif

@@ -34,7 +34,7 @@
 #ifndef _VJ_THREAD_FUNCTOR_H_DEPRECATED_
 #define _VJ_THREAD_FUNCTOR_H_DEPRECATED_
 
-#warn "Threads/vjThreadFunctor.h is deprecated!  Use VPR/Threads/vjThreadFunctor.h"
+#warning "Threads/vjThreadFunctor.h is deprecated!  Use VPR/Threads/vjThreadFunctor.h"
 #include <VPR/Threads/vjThreadFunctor.h>
 
 #endif

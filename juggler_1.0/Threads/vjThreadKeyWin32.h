@@ -33,7 +33,7 @@
 #ifndef _VJ_THREAD_KEY_WIN_32_H_DEPRECATED_
 #define _VJ_THREAD_KEY_WIN_32_H_DEPRECATED_
 
-#warn "Threads/vjThreadKeyWin32.h is deprecated!  Use VPR/md/WIN32/vjThreadKeyWin32.h"
+#warning "Threads/vjThreadKeyWin32.h is deprecated!  Use VPR/md/WIN32/vjThreadKeyWin32.h"
 #include <VPR/md/WIN32/vjThreadKeyWin32.h>
 
 #endif

@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_TS_TABLE_H_DEPRECATED_
 #define _VJ_TS_TABLE_H_DEPRECATED_
 
-#warn "Threads/vjTSTable.h is deprecated!  Use VPR/Threads/vjTSTable.h"
+#warning "Threads/vjTSTable.h is deprecated!  Use VPR/Threads/vjTSTable.h"
 #include <VPR/Threads/vjTSTable.h>
 
 #endif

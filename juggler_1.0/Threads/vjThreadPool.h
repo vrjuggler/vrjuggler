@@ -33,7 +33,7 @@
 #ifndef _VJTHREAD_POOL_H_DEPRECATED
 #define _VJTHREAD_POOL_H_DEPRECATED
 
-#warn "Threads/vjThreadPool.h is deprecated!  Use VPR/Threads/vjThreadPool.h"
+#warning "Threads/vjThreadPool.h is deprecated!  Use VPR/Threads/vjThreadPool.h"
 #include <VPR/Threads/vjThreadPool.h>
 
 #endif

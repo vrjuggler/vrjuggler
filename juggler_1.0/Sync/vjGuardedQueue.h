@@ -33,7 +33,7 @@
 #ifndef _VJ_GUARDED_QUEUE_DEPRECATED_
 #define _VJ_GUARDED_QUEUE_DEPRECATED_
 
-#warn "Sync/vjGuardedQueue.h is deprecated!  Use VPR/Sync/vjGuardedQueue.h"
+#warning "Sync/vjGuardedQueue.h is deprecated!  Use VPR/Sync/vjGuardedQueue.h"
 #include <VPR/Sync/vjGuardedQueue.h>
 
 #endif

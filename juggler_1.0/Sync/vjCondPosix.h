@@ -33,7 +33,7 @@
 #ifndef _VJ_COND_POSIX_H_DEPCREATED_
 #define _VJ_COND_POSIX_H_DEPCREATED_
 
-#warn "Sync/vjCondPosix.h is deprecated!  Use VPR/md/POSIX/vjCondPosix.h"
+#warning "Sync/vjCondPosix.h is deprecated!  Use VPR/md/POSIX/vjCondPosix.h"
 #include <VPR/md/POSIX/vjCondPosix.h>
 
 #endif

@@ -33,7 +33,7 @@
 #ifndef _VJ_THREAD_KEY_POSIX_H_DEPRECATED_
 #define _VJ_THREAD_KEY_POSIX_H_DEPRECATED_
 
-#warn "Threads/vjThreadKeyPosix.h is deprecated!  Use VPR/md/POSIX/vjThreadKeyPosix.h"
+#warning "Threads/vjThreadKeyPosix.h is deprecated!  Use VPR/md/POSIX/vjThreadKeyPosix.h"
 #include <VPR/md/POSIX/vjThreadKeyPosix.h>
 
 #endif

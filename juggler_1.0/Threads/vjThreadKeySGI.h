@@ -33,7 +33,7 @@
 #ifndef _VJ_THREAD_KEY_SGI_H_DEPRECATED_
 #define _VJ_THREAD_KEY_SGI_H_DEPRECATED_
 
-#warn "Threads/vjThreadKeySGI.h is deprecated!  Use VPR/md/SPROC/vjThreadKeySGI.h"
+#warning "Threads/vjThreadKeySGI.h is deprecated!  Use VPR/md/SPROC/vjThreadKeySGI.h"
 #include <VPR/md/SPROC/vjThreadKeySGI.h>
 
 #endif

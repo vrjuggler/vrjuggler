@@ -33,7 +33,7 @@
 #ifndef _VJ_MUTEX_H_DEPRECATED_
 #define _VJ_MUTEX_H_DEPRECATED_
 
-#warn "Sync/vjMutex.h is deprecated!  Use VPR/Sync/vjMutex.h"
+#warning "Sync/vjMutex.h is deprecated!  Use VPR/Sync/vjMutex.h"
 #include <VPR/Sync/vjMutex.h>
 
 #endif

@@ -33,7 +33,7 @@
 #ifndef _VJSemaphore_h_DEPRECATED_
 #define _VJSemaphore_h_DEPRECATED_
 
-#warn "Sync/vjSemaphore.h is deprecated!  Use VPR/Sync/vjSemaphore.h"
+#warning "Sync/vjSemaphore.h is deprecated!  Use VPR/Sync/vjSemaphore.h"
 #include <VPR/Sync/vjSemaphore.h>
 
 #endif

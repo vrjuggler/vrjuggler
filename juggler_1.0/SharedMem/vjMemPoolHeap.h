@@ -33,7 +33,7 @@
 #ifndef _MemPoolHeap_h_DEPRECATED_
 #define _MemPoolHeap_h_DEPRECATED_
 
-#warn "SharedMem/vjMemPoolHeap.h is deprecated!  Use VPR/SharedMem/vjMemPoolHeap.h"
+#warning "SharedMem/vjMemPoolHeap.h is deprecated!  Use VPR/SharedMem/vjMemPoolHeap.h"
 #include <VPR/SharedMem/vjMemPoolHeap.h>
 
 #endif

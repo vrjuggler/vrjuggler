@@ -33,7 +33,7 @@
 #ifndef _vjCondGeneric_h_DEPRECATED
 #define _vjCondGeneric_h_DEPRECATED
 
-#warn "Sync/vjCondGeneric.h is deprecated!  Use VPR/Sync/vjCondGeneric.h"
+#warning "Sync/vjCondGeneric.h is deprecated!  Use VPR/Sync/vjCondGeneric.h"
 #include <VPR/Sync/vjCondGeneric.h>
 
 #endif

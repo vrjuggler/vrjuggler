@@ -33,7 +33,7 @@
 #ifndef _VJ_MEM_POOL_MALLOC_H_DEPRECATED_
 #define _VJ_MEM_POOL_MALLOC_H_DEPRECATED_
 
-#warn "SharedMem/vjMemPool_malloc.h is deprecated!  Use VPR/md/POSIX/vjMemPoolPosix.h"
+#warning "SharedMem/vjMemPool_malloc.h is deprecated!  Use VPR/md/POSIX/vjMemPoolPosix.h"
 #include <VPR/md/POSIX/vjMemPoolPosix.h>
 
 #endif

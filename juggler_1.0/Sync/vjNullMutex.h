@@ -33,7 +33,7 @@
 #ifndef _vjNullMutex_h_DEPRECATED_
 #define _vjNullMutex_h_DEPRECATED_
 
-#warn "Sync/vjNullMutex.h is deprecated!  Use VPR/Sync/vjNullMutex.h"
+#warning "Sync/vjNullMutex.h is deprecated!  Use VPR/Sync/vjNullMutex.h"
 #include <VPR/Sync/vjNullMutex.h>
 
 #endif

@@ -29,10 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #ifndef _VJ_TS_OBJECT_H_DEPRECATED_
 #define _VJ_TS_OBJECT_H_DEPRECATED_
 
-#warn "Threads/vjTSObject.h is deprecated!  Use VPR/Threads/vjTSObject.h"
+#warning "Threads/vjTSObject.h is deprecated!  Use VPR/Threads/vjTSObject.h"
 #include <VPR/Threads/vjTSObject.h>
 
 #endif

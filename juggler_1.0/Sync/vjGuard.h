@@ -33,7 +33,7 @@
 #ifndef _VJGuard_h_DEPRECATED_
 #define _VJGuard_h_DEPRECATED_
 
-#warn "Sync/vjGuard.h is deprecated!  Use VPR/Sync/vjGuard.h"
+#warning "Sync/vjGuard.h is deprecated!  Use VPR/Sync/vjGuard.h"
 #include <VPR/Sync/vjGuard.h>
 
 #endif

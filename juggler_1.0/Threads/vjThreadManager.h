@@ -33,7 +33,7 @@
 #ifndef _VJ_THREAD_MANAGER_H_DEPRECATED_
 #define _VJ_THREAD_MANAGER_H_DEPRECATED_
 
-#warn "Threads/vjThreadManager.h is deprecated!  Use VPR/Threads/vjThreadManager.h"
+#warning "Threads/vjThreadManager.h is deprecated!  Use VPR/Threads/vjThreadManager.h"
 #include <VPR/Threads/vjThreadManager.h>
 
 #endif

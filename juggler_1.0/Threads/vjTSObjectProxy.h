@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_TS_OBJECT_PROXY_H_DEPRECATED_
 #define _VJ_TS_OBJECT_PROXY_H_DEPRECATED_
 //#pragma once
 
-#warn "Threads/vjTSObjectProxy.h is deprecated!  Use VPR/Threads/vjTSObjectProxy.h"
+#warning "Threads/vjTSObjectProxy.h is deprecated!  Use VPR/Threads/vjTSObjectProxy.h"
 #include <VPR/Threads/vjTSObjectProxy.h>
 
 #endif

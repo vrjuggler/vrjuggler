@@ -33,7 +33,7 @@
 #ifndef _VJ_BASE_THREAD_H_DEPRECATED_
 #define _VJ_BASE_THREAD_H_DEPRECATED_
 
-#warn "Threads/vjBaseThread.h is deprecated!  Use VPR/Threads/vjBaseThread.h"
+#warning "Threads/vjBaseThread.h is deprecated!  Use VPR/Threads/vjBaseThread.h"
 #include <VPR/Threads/vjBaseThread.h>
 
 #endif

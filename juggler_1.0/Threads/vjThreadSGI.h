@@ -33,7 +33,7 @@
 #ifndef _THREAD_SGI_H_DEPRECATED_
 #define _THREAD_SGI_H_DEPRECATED_
 
-#warn "Threads/vjThreadSGI.h is deprecated!  Use VPR/md/SPROC/vjThreadSGI.h"
+#warning "Threads/vjThreadSGI.h is deprecated!  Use VPR/md/SPROC/vjThreadSGI.h"
 #include <VPR/md/SPROC/vjThreadSGI.h>
 
 #endif

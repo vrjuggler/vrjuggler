@@ -33,7 +33,7 @@
 #ifndef _THREAD_WIN32_H_DEPRECATED
 #define _THREAD_WIN32_H_DEPRECATED
 
-#warn "Threads/vjThreadWin32.h is deprecated!  Use VPR/md/WIN32/Threads/vjThreadWin32.h"
+#warning "Threads/vjThreadWin32.h is deprecated!  Use VPR/md/WIN32/Threads/vjThreadWin32.h"
 #include <VPR/md/WIN32/Threads/vjThreadWin32.h>
 
 #endif

@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_THREAD_H_DEPRECATED_
 #define _VJ_THREAD_H_DEPRECATED_
 
-#warn "Threads/vjThread.h is deprecated!  Use VPR/Threads/vjThread.h"
+#warning "Threads/vjThread.h is deprecated!  Use VPR/Threads/vjThread.h"
 #include <VPR/Threads/vjThread.h>
 
 #endif

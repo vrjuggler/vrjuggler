@@ -33,7 +33,7 @@
 #ifndef _MemPoolSGI_h_DEPRECATED_
 #define _MemPoolSGI_h_DEPRECATED_
 
-#warn "SharedMem/vjMemPoolSGI.h is deprecated!  Use VPR/md/SPROC/vjMemPoolSGI.h"
+#warning "SharedMem/vjMemPoolSGI.h is deprecated!  Use VPR/md/SPROC/vjMemPoolSGI.h"
 #include <VPR/md/SPROC/vjMemPoolSGI.h>
 
 #endif

@@ -33,7 +33,7 @@
 #ifndef _vjMutexWin32_h_DEPRECATED_
 #define _vjMutexWin32_h_DEPRECATED_
 
-#warn "Sync/vjMutexWin32.h is deprecated!  Use VPR/md/WIN32/vjMutexWin32.h"
+#warning "Sync/vjMutexWin32.h is deprecated!  Use VPR/md/WIN32/vjMutexWin32.h"
 #include <VPR/md/WIN32/vjMutexWin32.h>
 
 #endif

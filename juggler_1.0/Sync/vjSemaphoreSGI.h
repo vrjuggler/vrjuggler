@@ -33,7 +33,7 @@
 #ifndef _vjSemaphoreSGI_h_DEPRECATED_
 #define _vjSemaphoreSGI_h_DEPRECATED_
 
-#warn "Sync/vjSemaphoreSGI.h is deprecated!  Use VPR/md/SPROC/vjSemaphoreSGI.h"
+#warning "Sync/vjSemaphoreSGI.h is deprecated!  Use VPR/md/SPROC/vjSemaphoreSGI.h"
 #include <VPR/md/SPROC/vjSemaphoreSGI.h>
 
 #endif

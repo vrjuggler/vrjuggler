@@ -33,7 +33,7 @@
 #ifndef _VJ_THREAD_POSIX_H_DEPRECATED_
 #define _VJ_THREAD_POSIX_H_DEPRECATED_
 
-#warn "Threads/vjThreadPosix.h is deprecated!  Use VPR/md/POSIX/vjThreadPosix.h"
+#warning "Threads/vjThreadPosix.h is deprecated!  Use VPR/md/POSIX/vjThreadPosix.h"
 #include <VPR/md/POSIX/vjThreadPosix.h>
  
 #endif

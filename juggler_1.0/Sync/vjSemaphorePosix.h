@@ -33,7 +33,7 @@
 #ifndef _VJ_SEMAPHORE_POSIX_H_DEPRECATED_
 #define _VJ_SEMAPHORE_POSIX_H_DEPRECATED_
 
-#warn "Sync/vjSemaphorePosix.h is deprecated!  Use VPR/md/POSIX/vjSemaphorePosix.h"
+#warning "Sync/vjSemaphorePosix.h is deprecated!  Use VPR/md/POSIX/vjSemaphorePosix.h"
 #include <VPR/md/POSIX/vjSemaphorePosix.h>
 
 #endif
