@@ -63,7 +63,6 @@ namespace vrj
 //vjGlDrawManager* GlDrawManager::_instance = NULL;
 vprSingletonImp(GlDrawManager);
 
-
 GlDrawManager::GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
 {
    mQuadObj = NULL;
@@ -847,7 +846,7 @@ vrj::GlWindow* GlDrawManager::getGLWindow()
 #if  defined(VPR_OS_Win32)
    return new vrj::GlWindowWin32;
 #elif defined(VPR_OS_Darwin)
-   return new vrj::GlWindowOSX
+   return new vrj::GlWindowOSX;
 #else
    return new vrj::GlWindowXWin;
 #endif
