@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pf
+# Makefile.in for vrjuggler/samples/Pf
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -44,11 +44,11 @@ default: all
 all: simple advanced
 
 simple advanced::
-	cd $@ && $(MAKE) all
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
 	-cd advanced && $(MAKE) clean
-	-cd simple       && $(MAKE) clean
+	-cd simple   && $(MAKE) clean
