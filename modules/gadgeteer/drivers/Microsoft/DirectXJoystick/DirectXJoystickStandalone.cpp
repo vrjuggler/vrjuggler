@@ -137,6 +137,25 @@ void DirectXJoystickStandalone::init()
    }
 */
 
+   mCapabilities.dwSize = sizeof(DIDEVCAPS);
+   status = mDxJoystick->GetCapabilities(&mCapabilities);
+
+   if ( FAILED(status) )
+   {
+      if ( status == DIERR_INVALIDPARAM || status == E_POINTER )
+      {
+         throw DirectXJoystickQueryException("Invalid data passed to IDirectInputDevice8::GetCapabilities()");
+      }
+      else if ( status == DIERR_NOTINITIALIZED )
+      {
+         throw DirectXJoystickQueryException("Cannot query capabilities for an uninitialized device");
+      }
+      else
+      {
+         throw DirectXJoystickQueryException("Unknown error when trying to query the joystick capabilities");
+      }
+   }
+
    // Enumerate the axes of the joystick and set the range of each axis found.
    mDxJoystick->EnumObjects(enumerateAxesCallback, (void*) this, DIDFT_AXIS);
 
