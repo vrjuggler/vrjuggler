@@ -756,6 +756,9 @@ if test "x$GXX" = "xyes" ; then
               2.9*)
                   ac_cv_CXX_is_egcs='yes'
                   ;;
+              3.*)
+                  ac_cv_CXX_is_egcs='yes'
+                  ;;
               *)
                   _val=`$CXX -v 2>&1 | grep -e '^gcc version' | cut -f4 -d' '`
                   if test ${_val} -ge 19990314 ; then
