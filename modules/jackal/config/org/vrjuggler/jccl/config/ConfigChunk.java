@@ -318,32 +318,34 @@ public class ConfigChunk
       return desc.getHelp();
    }
 
-   /** This is helpful for the GUI. */
+   /**
+    * Gets a list of all the embedded chunks embedded directly within this
+    * ConfigChunk.
+    *
+    * @return  a list of the embedded ConfigChunk objects.
+    */
    public List getEmbeddedChunks()
    {
       List chunks = new ArrayList();
 
-      Iterator i = this.getDesc().getPropertyDescs().iterator();
-      String full_name = this.getName();
-
-      while ( i.hasNext() )
+      // Iterate over the property descs looking for those that contain embedded
+      // chunks that we want.
+      for (Iterator itr = getDesc().getPropertyDescs().iterator(); itr.hasNext(); )
       {
-         PropertyDesc prop_desc = (PropertyDesc)i.next();
+         PropertyDesc prop_desc = (PropertyDesc)itr.next();
 
+         // If this property desc contains embedded chunks, get the chunks
+         // contained therein.
          if (prop_desc.getValType() == ValType.EMBEDDEDCHUNK)
          {
-            String prop_type = prop_desc.getToken();
-            int prop_count = this.getNumPropertyValues(prop_type);
-            ConfigChunk emb_chunk;
-
-            for (int j = 0; j < prop_count; ++j)
+            // Retrieve all the embedded chunks for the current property
+            String propdesc_token = prop_desc.getToken();
+            for (int i=0; i<getNumPropertyValues(propdesc_token); ++i)
             {
-               emb_chunk = this.getProperty(prop_type, j).getEmbeddedChunk();
-
-               // Do not return null child chunks.
-               if (null != emb_chunk)
+               ConfigChunk embedded_chunk = getProperty(propdesc_token, i).getEmbeddedChunk();
+               if (embedded_chunk != null)
                {
-                  chunks.add(emb_chunk);
+                  chunks.add(embedded_chunk);
                }
             }
          }
