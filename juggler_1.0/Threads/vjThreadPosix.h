@@ -348,14 +348,12 @@ private:
     // -----------------------------------------------------------------------
     inline thread_id_t
     hash (void) {
-#ifdef VJ_OS_IRIX
+#if defined(VJ_OS_IRIX)
         return mThread;
-#else
-#ifdef VJ_OS_HPUX
+#elif defined(VJ_OS_HPUX)
         return mThread.field1;
 #else
         return mThread;
-#endif	/* VJ_OS_HPUX */
 #endif	/* VJ_OS_IRIX */
     }
 
@@ -375,12 +373,10 @@ private:
     hash (pthread_t thread) {
 #ifdef VJ_OS_IRIX
         return thread;
-#else
-#ifdef VJ_OS_HPUX
+#elif defined(VJ_OS_HPUX)
         return thread.field1;
 #else
         return thread;
-#endif	/* VJ_OS_HPUX */
 #endif	/* VJ_OS_IRIX */
     }
 
