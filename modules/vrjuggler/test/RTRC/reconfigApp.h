@@ -36,6 +36,8 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include <gadget/Type/AnalogProxy.h>
+                                         
 
 class reconfigApp : public vrj::GlApp
 {
@@ -229,6 +231,12 @@ public:
 
    bool removeKeyboardProxy_exec();
    bool removeKeyboardProxy_check();
+   
+   bool addStupifiedAnalogProxy_exec();
+   bool addStupifiedAnalogProxy_check();
+   
+   bool removeStupifiedAnalogProxy_exec();
+   bool removeStupifiedAnalogProxy_check();
 
 private:
 
