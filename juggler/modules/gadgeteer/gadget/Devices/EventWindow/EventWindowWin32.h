@@ -65,10 +65,10 @@ class GADGET_CLASS_API EventWindowWin32
 {
 public:
    EventWindowWin32()
-      : mControlLoopDone(false),
-        mExitFlag(false)
+      : mControlLoopDone(false)
+      , mExitFlag(false)
    {
-		mEventDelegate = this;
+      mEventDelegate = this;
    }
 
    virtual ~EventWindowWin32()
@@ -116,7 +116,8 @@ protected:
    {
    }
 
-   friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam);
+   friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam,
+                                    LONG lParam);
 
    HINSTANCE   m_hInst;
    void createWindowWin32();
@@ -129,15 +130,18 @@ protected:
    //@}
 
    // --- Used with remote window --- //
-   std::string							mRemoteDisplayName; /**< Name of the remote display window (index in registry). */
-	InputAreaWin32::InputAreaRegistry::InputAreaInfo	mRemoteInputAreaInfo;     /**< Info structure for remote window. */
+   /** Name of the remote display window (index in registry). */
+   std::string mRemoteDisplayName;
 
-   int          mScreen, mX, mY; /**< screen id, x-origin, y-origin. */
+   /** Info structure for remote window. */
+   InputAreaWin32::InputAreaRegistry::InputAreaInfo mRemoteInputAreaInfo;
 
-   bool     mExitFlag;           /**< Should we exit? */
+   int mScreen, mX, mY;     /**< screen id, x-origin, y-origin. */
+
+   bool  mExitFlag;         /**< Should we exit? */
 
    float mMouseSensitivity;
-   int   mSleepTimeMS;            /**< Amount of time to sleep in milliseconds between updates. */
+   int   mSleepTimeMS;      /**< Amount of time to sleep in milliseconds between updates. */
    bool  mControlLoopDone;
 };
 
