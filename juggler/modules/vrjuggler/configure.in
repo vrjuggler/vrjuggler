@@ -723,7 +723,7 @@ if test "x${_enable_pf_api}" = "xyes" ; then
             PERFORMER_API="Y";	\
             _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
             AC_DEFINE(VJ_API_PERFORMER,),
-            AC_MSG_WARN(*** Performer API will not be used (pfChannel.h not found) ***)),
+            AC_MSG_WARN(*** Performer API will not be used (pf.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
 
     dnl # Restore $CFLAGS now that we are done testing.
