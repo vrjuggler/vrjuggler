@@ -102,6 +102,14 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    InetAddr (const Uint16 port) {
+        m_addr.sin_addr.s_addr = INADDR_ANY;
+        setPort(port);
+        setFamily(SocketTypes::INET);
+    }
+
+    // ------------------------------------------------------------------------
     //: Construct a vpr::InetAddr object from a pointer to a sockaddr struct.
     //
     //! PRE: The given pointer points to a valid sockaddr struct.
