@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,7 +35,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__gadget_AnalogData(const gadget::AnalogData* p0)
+   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__gadget_AnalogData1(const gadget::AnalogData* p0)
    {
       const gadget::AnalogData& marshal_p0 = *p0;
       gadget::AnalogData* obj = new gadget::AnalogData(marshal_p0);
@@ -43,14 +43,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__()
+   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__0()
    {
       gadget::AnalogData* obj = new gadget::AnalogData();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__float(float p0)
+   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__float1(float p0)
    {
       gadget::AnalogData* obj = new gadget::AnalogData(p0);
       return obj;

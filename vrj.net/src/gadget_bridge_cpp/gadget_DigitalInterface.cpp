@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -48,7 +48,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_DigitalInterface_Holder* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__gadget_DigitalInterface(const gadget::DigitalInterface* p0)
+   SHARPPY_API gadget_DigitalInterface_Holder* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__gadget_DigitalInterface1(const gadget::DigitalInterface* p0)
    {
       const gadget::DigitalInterface& marshal_p0 = *p0;
       gadget_DigitalInterface_Holder* obj = new gadget_DigitalInterface_Holder;
@@ -57,7 +57,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_DigitalInterface_Holder* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__()
+   SHARPPY_API gadget_DigitalInterface_Holder* gadget_DeviceInterface_gadget_DigitalProxy__DeviceInterface__0()
    {
       gadget_DigitalInterface_Holder* obj = new gadget_DigitalInterface_Holder;
       obj->mPtr = gadget::DigitalInterface();

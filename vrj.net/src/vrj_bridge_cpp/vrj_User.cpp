@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,7 +35,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj::User* vrj_User_User__()
+   SHARPPY_API vrj::User* vrj_User_User__0()
    {
       vrj::User* obj = new vrj::User();
       return obj;

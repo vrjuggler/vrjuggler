@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -60,72 +60,63 @@ public sealed class GUID
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_GenerateTag([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.GenerateTagMarshaler))] vpr.GUID.GenerateTag p0);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_GenerateTag1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.GenerateTagMarshaler))] vpr.GUID.GenerateTag p0);
 
    public GUID(vpr.GUID.GenerateTag p0)
    {
       allocDelegates();
-      
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_GenerateTag(p0);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_GenerateTag1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__();
+   private extern static IntPtr vpr_GUID_GUID__0();
 
    public GUID()
    {
       allocDelegates();
-      mRawObject   = vpr_GUID_GUID__();
+      mRawObject   = vpr_GUID_GUID__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_StdGUID([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.StdGUIDMarshaler))] vpr.GUID.StdGUID p0);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_StdGUID1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.StdGUIDMarshaler))] vpr.GUID.StdGUID p0);
 
    public GUID(vpr.GUID.StdGUID p0)
    {
       allocDelegates();
-      
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_StdGUID(p0);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_StdGUID1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
+   private extern static IntPtr vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__1(string p0);
 
    public GUID(string p0)
    {
       allocDelegates();
-      mRawObject   = vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(p0);
+      mRawObject   = vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__1(p0);
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0,
-	string p1);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0, string p1);
 
    public GUID(vpr.GUID p0, string p1)
    {
       allocDelegates();
-      
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0, p1);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(p0, p1);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0);
 
    public GUID(vpr.GUID p0)
    {
       allocDelegates();
-      
-      mRawObject   = vpr_GUID_GUID__vpr_GUID(p0);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.
@@ -166,10 +157,8 @@ public sealed class GUID
 
    public static bool operator==(vpr.GUID lhs, vpr.GUID rhs)
    {
-      
       bool result;
       result = vpr_GUID_equal__vpr_GUID(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -179,10 +168,8 @@ public sealed class GUID
 
    public static bool operator!=(vpr.GUID lhs, vpr.GUID rhs)
    {
-      
       bool result;
       result = vpr_GUID_not_equal__vpr_GUID(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -192,10 +179,8 @@ public sealed class GUID
 
    public static bool operator<(vpr.GUID lhs, vpr.GUID rhs)
    {
-      
       bool result;
       result = vpr_GUID_less_than__vpr_GUID(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -317,22 +302,20 @@ public class GenerateTag
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GenerateTag_GenerateTag__vpr_GUID_GenerateTag([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.GenerateTagMarshaler))] vpr.GUID.GenerateTag p0);
+   private extern static IntPtr vpr_GUID_GenerateTag_GenerateTag__vpr_GUID_GenerateTag1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.GenerateTagMarshaler))] vpr.GUID.GenerateTag p0);
 
    public GenerateTag(vpr.GUID.GenerateTag p0)
    {
-      
-      mRawObject   = vpr_GUID_GenerateTag_GenerateTag__vpr_GUID_GenerateTag(p0);
+      mRawObject   = vpr_GUID_GenerateTag_GenerateTag__vpr_GUID_GenerateTag1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GenerateTag_GenerateTag__();
+   private extern static IntPtr vpr_GUID_GenerateTag_GenerateTag__0();
 
    public GenerateTag()
    {
-      mRawObject   = vpr_GUID_GenerateTag_GenerateTag__();
+      mRawObject   = vpr_GUID_GenerateTag_GenerateTag__0();
       mWeOwnMemory = true;
    }
 
@@ -423,22 +406,20 @@ public class StdGUID
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_StdGUID_StdGUID__vpr_GUID_StdGUID([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.StdGUIDMarshaler))] vpr.GUID.StdGUID p0);
+   private extern static IntPtr vpr_GUID_StdGUID_StdGUID__vpr_GUID_StdGUID1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.StdGUIDMarshaler))] vpr.GUID.StdGUID p0);
 
    public StdGUID(vpr.GUID.StdGUID p0)
    {
-      
-      mRawObject   = vpr_GUID_StdGUID_StdGUID__vpr_GUID_StdGUID(p0);
+      mRawObject   = vpr_GUID_StdGUID_StdGUID__vpr_GUID_StdGUID1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_StdGUID_StdGUID__();
+   private extern static IntPtr vpr_GUID_StdGUID_StdGUID__0();
 
    public StdGUID()
    {
-      mRawObject   = vpr_GUID_StdGUID_StdGUID__();
+      mRawObject   = vpr_GUID_StdGUID_StdGUID__0();
       mWeOwnMemory = true;
    }
 
@@ -529,22 +510,20 @@ public class hash
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_hash_hash__vpr_GUID_hash([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.hashMarshaler))] vpr.GUID.hash p0);
+   private extern static IntPtr vpr_GUID_hash_hash__vpr_GUID_hash1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.hashMarshaler))] vpr.GUID.hash p0);
 
    public hash(vpr.GUID.hash p0)
    {
-      
-      mRawObject   = vpr_GUID_hash_hash__vpr_GUID_hash(p0);
+      mRawObject   = vpr_GUID_hash_hash__vpr_GUID_hash1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_hash_hash__();
+   private extern static IntPtr vpr_GUID_hash_hash__0();
 
    public hash()
    {
-      mRawObject   = vpr_GUID_hash_hash__();
+      mRawObject   = vpr_GUID_hash_hash__0();
       mWeOwnMemory = true;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -52,26 +52,24 @@ public sealed class DigitalProxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.DigitalProxyMarshaler))] gadget.DigitalProxy p0);
+   private extern static IntPtr gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.DigitalProxyMarshaler))] gadget.DigitalProxy p0);
 
    public DigitalProxy(gadget.DigitalProxy p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      
-      mRawObject   = gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy(p0);
+      mRawObject   = gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DigitalProxy_DigitalProxy__();
+   private extern static IntPtr gadget_DigitalProxy_DigitalProxy__0();
 
    public DigitalProxy()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_DigitalProxy_DigitalProxy__();
+      mRawObject   = gadget_DigitalProxy_DigitalProxy__0();
       mWeOwnMemory = true;
    }
 

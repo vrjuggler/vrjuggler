@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,35 +54,32 @@ public sealed class ConfigDefinition
    }
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__();
+   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__0();
 
    public ConfigDefinition()
    {
-      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__();
+      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__0();
       mWeOwnMemory = true;
    }
 
 /*
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node(string p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(cppdom.NodeMarshaler))] cppdom.Node p1);
+   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(string p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(cppdom.NodeMarshaler))] cppdom.Node p1);
 
    public ConfigDefinition(string p0, cppdom.Node p1)
    {
-      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node(p0, p1);
+      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(p0, p1);
       mWeOwnMemory = true;
    }
 */
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__jccl_ConfigDefinition([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigDefinitionMarshaler))] jccl.ConfigDefinition p0);
+   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__jccl_ConfigDefinition1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigDefinitionMarshaler))] jccl.ConfigDefinition p0);
 
    public ConfigDefinition(jccl.ConfigDefinition p0)
    {
-      
-      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__jccl_ConfigDefinition(p0);
+      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__jccl_ConfigDefinition1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.
@@ -123,10 +120,8 @@ public sealed class ConfigDefinition
 
    public static bool operator==(jccl.ConfigDefinition lhs, jccl.ConfigDefinition rhs)
    {
-      
       bool result;
       result = jccl_ConfigDefinition_equal__jccl_ConfigDefinition(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -136,10 +131,8 @@ public sealed class ConfigDefinition
 
    public static bool operator!=(jccl.ConfigDefinition lhs, jccl.ConfigDefinition rhs)
    {
-      
       bool result;
       result = jccl_ConfigDefinition_not_equal__jccl_ConfigDefinition(lhs.mRawObject, rhs);
-      
       return result;
    }
 

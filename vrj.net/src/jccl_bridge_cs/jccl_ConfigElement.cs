@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,32 +54,30 @@ public sealed class ConfigElement
    }
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigElement_ConfigElement__();
+   private extern static IntPtr jccl_ConfigElement_ConfigElement__0();
 
    public ConfigElement()
    {
-      mRawObject   = jccl_ConfigElement_ConfigElement__();
+      mRawObject   = jccl_ConfigElement_ConfigElement__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigDefinitionMarshaler))] jccl.ConfigDefinition p0);
+   private extern static IntPtr jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigDefinitionMarshaler))] jccl.ConfigDefinition p0);
 
    public ConfigElement(jccl.ConfigDefinition p0)
    {
-      mRawObject   = jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition(p0);
+      mRawObject   = jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition1(p0);
       mWeOwnMemory = true;
    }
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigElement_ConfigElement__jccl_ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
+   private extern static IntPtr jccl_ConfigElement_ConfigElement__jccl_ConfigElement1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public ConfigElement(jccl.ConfigElement p0)
    {
-      
-      mRawObject   = jccl_ConfigElement_ConfigElement__jccl_ConfigElement(p0);
+      mRawObject   = jccl_ConfigElement_ConfigElement__jccl_ConfigElement1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.
@@ -120,10 +118,8 @@ public sealed class ConfigElement
 
    public static bool operator==(jccl.ConfigElement lhs, jccl.ConfigElement rhs)
    {
-      
       bool result;
       result = jccl_ConfigElement_equal__jccl_ConfigElement(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -133,10 +129,8 @@ public sealed class ConfigElement
 
    public static bool operator!=(jccl.ConfigElement lhs, jccl.ConfigElement rhs)
    {
-      
       bool result;
       result = jccl_ConfigElement_not_equal__jccl_ConfigElement(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -146,10 +140,8 @@ public sealed class ConfigElement
 
    public static bool operator<(jccl.ConfigElement lhs, jccl.ConfigElement rhs)
    {
-      
       bool result;
       result = jccl_ConfigElement_less_than__jccl_ConfigElement(lhs.mRawObject, rhs);
-      
       return result;
    }
 

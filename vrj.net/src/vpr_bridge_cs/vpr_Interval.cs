@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,32 +54,29 @@ public sealed class Interval
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_Interval_Interval__vpr_Interval([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.IntervalMarshaler))] vpr.Interval p0);
+   private extern static IntPtr vpr_Interval_Interval__vpr_Interval1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.IntervalMarshaler))] vpr.Interval p0);
 
    public Interval(vpr.Interval p0)
    {
-      
-      mRawObject   = vpr_Interval_Interval__vpr_Interval(p0);
+      mRawObject   = vpr_Interval_Interval__vpr_Interval1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_Interval_Interval__();
+   private extern static IntPtr vpr_Interval_Interval__0();
 
    public Interval()
    {
-      mRawObject   = vpr_Interval_Interval__();
+      mRawObject   = vpr_Interval_Interval__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit(ulong p0,
-	vpr.Interval.Unit p1);
+   private extern static IntPtr vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(ulong p0, vpr.Interval.Unit p1);
 
    public Interval(ulong p0, vpr.Interval.Unit p1)
    {
-      mRawObject   = vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit(p0, p1);
+      mRawObject   = vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(p0, p1);
       mWeOwnMemory = true;
    }
 
@@ -121,10 +118,8 @@ public sealed class Interval
 
    public static bool operator==(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       bool result;
       result = vpr_Interval_equal__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -134,10 +129,8 @@ public sealed class Interval
 
    public static bool operator!=(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       bool result;
       result = vpr_Interval_not_equal__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -147,10 +140,8 @@ public sealed class Interval
 
    public static bool operator<(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       bool result;
       result = vpr_Interval_less_than__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -160,10 +151,8 @@ public sealed class Interval
 
    public static bool operator<=(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       bool result;
       result = vpr_Interval_less_than_or_equal__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -173,10 +162,8 @@ public sealed class Interval
 
    public static bool operator>(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       bool result;
       result = vpr_Interval_greater_than__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -188,10 +175,8 @@ public sealed class Interval
 
    public static vpr.Interval operator+(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       vpr.Interval result;
       result = vpr_Interval_add__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -203,10 +188,8 @@ public sealed class Interval
 
    public static vpr.Interval operator-(vpr.Interval lhs, vpr.Interval rhs)
    {
-      
       vpr.Interval result;
       result = vpr_Interval_subtract__vpr_Interval(lhs.mRawObject, rhs);
-      
       return result;
    }
 

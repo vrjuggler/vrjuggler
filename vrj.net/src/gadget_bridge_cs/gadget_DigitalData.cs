@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -47,34 +47,32 @@ public class DigitalData
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DigitalData_DigitalData__gadget_DigitalData([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.DigitalDataMarshaler))] gadget.DigitalData p0);
+   private extern static IntPtr gadget_DigitalData_DigitalData__gadget_DigitalData1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.DigitalDataMarshaler))] gadget.DigitalData p0);
 
    public DigitalData(gadget.DigitalData p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gadget_DigitalData_DigitalData__gadget_DigitalData(p0);
+      mRawObject   = gadget_DigitalData_DigitalData__gadget_DigitalData1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DigitalData_DigitalData__();
+   private extern static IntPtr gadget_DigitalData_DigitalData__0();
 
    public DigitalData()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gadget_DigitalData_DigitalData__();
+      mRawObject   = gadget_DigitalData_DigitalData__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DigitalData_DigitalData__int(int p0);
+   private extern static IntPtr gadget_DigitalData_DigitalData__int1(int p0);
 
    public DigitalData(int p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gadget_DigitalData_DigitalData__int(p0);
+      mRawObject   = gadget_DigitalData_DigitalData__int1(p0);
       mWeOwnMemory = true;
    }
 

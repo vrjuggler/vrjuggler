@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Digital_Adapter* gadget_Digital_Digital__(gadget_Digital_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Digital_Adapter::getBaseType_callback_t cb1, gadget_Digital_Adapter::writeObject_callback_vpr_ObjectWriter_t cb2, gadget_Digital_Adapter::readObject_callback_vpr_ObjectReader_t cb3)
+   SHARPPY_API gadget_Digital_Adapter* gadget_Digital_Digital__0(gadget_Digital_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Digital_Adapter::getBaseType_callback_t cb1, gadget_Digital_Adapter::writeObject_callback_vpr_ObjectWriter_t cb2, gadget_Digital_Adapter::readObject_callback_vpr_ObjectReader_t cb3)
    {
       gadget_Digital_Adapter* obj = new gadget_Digital_Adapter();
       obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -69,20 +69,12 @@ public abstract class Input
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Input_Input__([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] sampleDelegate d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] startSamplingDelegate d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] stopSamplingDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d4,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d5,
-	[MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d6,
-	[MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d7,
-	[MarshalAs(UnmanagedType.FunctionPtr)] destroyDelegate d8);
+   private extern static IntPtr gadget_Input_Input__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] sampleDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] startSamplingDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] stopSamplingDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d6, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d7, [MarshalAs(UnmanagedType.FunctionPtr)] destroyDelegate d8);
 
    public Input()
    {
       allocDelegates();
-      mRawObject   = gadget_Input_Input__(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_sampleDelegate, m_startSamplingDelegate, m_stopSamplingDelegate, m_updateDataDelegate, m_getBaseTypeDelegate, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader, m_destroyDelegate);
+      mRawObject   = gadget_Input_Input__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_sampleDelegate, m_startSamplingDelegate, m_stopSamplingDelegate, m_updateDataDelegate, m_getBaseTypeDelegate, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader, m_destroyDelegate);
       mWeOwnMemory = true;
    }
 

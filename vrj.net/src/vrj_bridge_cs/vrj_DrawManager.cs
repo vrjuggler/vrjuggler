@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -59,23 +59,13 @@ public abstract class DrawManager
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_DrawManager_DrawManager__([MarshalAs(UnmanagedType.FunctionPtr)] drawDelegate d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] syncDelegate d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] setAppDelegate_vrj_App d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] initAPIDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] addDisplayDelegate_vrj_Display d4,
-	[MarshalAs(UnmanagedType.FunctionPtr)] removeDisplayDelegate_vrj_Display d5,
-	[MarshalAs(UnmanagedType.FunctionPtr)] closeAPIDelegate d6,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d7,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d8,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d9,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d10);
+   private extern static IntPtr vrj_DrawManager_DrawManager__0([MarshalAs(UnmanagedType.FunctionPtr)] drawDelegate d0, [MarshalAs(UnmanagedType.FunctionPtr)] syncDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] setAppDelegate_vrj_App d2, [MarshalAs(UnmanagedType.FunctionPtr)] initAPIDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] addDisplayDelegate_vrj_Display d4, [MarshalAs(UnmanagedType.FunctionPtr)] removeDisplayDelegate_vrj_Display d5, [MarshalAs(UnmanagedType.FunctionPtr)] closeAPIDelegate d6, [MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d7, [MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d8, [MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d9, [MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d10);
 
    public DrawManager()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = vrj_DrawManager_DrawManager__(m_drawDelegate, m_syncDelegate, m_setAppDelegate_vrj_App, m_initAPIDelegate, m_addDisplayDelegate_vrj_Display, m_removeDisplayDelegate_vrj_Display, m_closeAPIDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_configProcessPendingDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement);
+      mRawObject   = vrj_DrawManager_DrawManager__0(m_drawDelegate, m_syncDelegate, m_setAppDelegate_vrj_App, m_initAPIDelegate, m_addDisplayDelegate_vrj_Display, m_removeDisplayDelegate_vrj_Display, m_closeAPIDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_configProcessPendingDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement);
       mWeOwnMemory = true;
    }
 

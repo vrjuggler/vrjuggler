@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -47,7 +47,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigDefinition_Holder* jccl_ConfigDefinition_ConfigDefinition__()
+   SHARPPY_API jccl_ConfigDefinition_Holder* jccl_ConfigDefinition_ConfigDefinition__0()
    {
       jccl_ConfigDefinition_Holder* obj = new jccl_ConfigDefinition_Holder;
       obj->mPtr = boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition());
@@ -55,7 +55,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigDefinition_Holder* jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node(const char* p0, cppdom_boost::shared_ptr<cppdom::Node> p1)
+   SHARPPY_API jccl_ConfigDefinition_Holder* jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(const char* p0, cppdom_boost::shared_ptr<cppdom::Node> p1)
    {
       jccl_ConfigDefinition_Holder* obj = new jccl_ConfigDefinition_Holder;
       obj->mPtr = boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition(p0, p1));

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -68,59 +68,24 @@ public abstract class App
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_App_App__vrj_Kernel([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.KernelMarshaler))] vrj.Kernel p0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] initDelegate d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] apiInitDelegate d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] exitDelegate d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] preFrameDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] latePreFrameDelegate d4,
-	[MarshalAs(UnmanagedType.FunctionPtr)] intraFrameDelegate d5,
-	[MarshalAs(UnmanagedType.FunctionPtr)] postFrameDelegate d6,
-	[MarshalAs(UnmanagedType.FunctionPtr)] resetDelegate d7,
-	[MarshalAs(UnmanagedType.FunctionPtr)] focusChangedDelegate d8,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getDrawScaleFactorDelegate d9,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d10,
-	[MarshalAs(UnmanagedType.FunctionPtr)] depSatisfiedDelegate d11,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d12,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d13,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getDrawManagerDelegate d14,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getSoundManagerDelegate d15,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d16);
+   private extern static IntPtr vrj_App_App__vrj_Kernel1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.KernelMarshaler))] vrj.Kernel p0, [MarshalAs(UnmanagedType.FunctionPtr)] initDelegate d0, [MarshalAs(UnmanagedType.FunctionPtr)] apiInitDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] exitDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] preFrameDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] latePreFrameDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] intraFrameDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] postFrameDelegate d6, [MarshalAs(UnmanagedType.FunctionPtr)] resetDelegate d7, [MarshalAs(UnmanagedType.FunctionPtr)] focusChangedDelegate d8, [MarshalAs(UnmanagedType.FunctionPtr)] getDrawScaleFactorDelegate d9, [MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d10, [MarshalAs(UnmanagedType.FunctionPtr)] depSatisfiedDelegate d11, [MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d12, [MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d13, [MarshalAs(UnmanagedType.FunctionPtr)] getDrawManagerDelegate d14, [MarshalAs(UnmanagedType.FunctionPtr)] getSoundManagerDelegate d15, [MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d16);
 
    public App(vrj.Kernel p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      
-      mRawObject   = vrj_App_App__vrj_Kernel(p0, m_initDelegate, m_apiInitDelegate, m_exitDelegate, m_preFrameDelegate, m_latePreFrameDelegate, m_intraFrameDelegate, m_postFrameDelegate, m_resetDelegate, m_focusChangedDelegate, m_getDrawScaleFactorDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_depSatisfiedDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement, m_getDrawManagerDelegate, m_getSoundManagerDelegate, m_configProcessPendingDelegate);
+      mRawObject   = vrj_App_App__vrj_Kernel1(p0, m_initDelegate, m_apiInitDelegate, m_exitDelegate, m_preFrameDelegate, m_latePreFrameDelegate, m_intraFrameDelegate, m_postFrameDelegate, m_resetDelegate, m_focusChangedDelegate, m_getDrawScaleFactorDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_depSatisfiedDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement, m_getDrawManagerDelegate, m_getSoundManagerDelegate, m_configProcessPendingDelegate);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_App_App__([MarshalAs(UnmanagedType.FunctionPtr)] initDelegate d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] apiInitDelegate d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] exitDelegate d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] preFrameDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] latePreFrameDelegate d4,
-	[MarshalAs(UnmanagedType.FunctionPtr)] intraFrameDelegate d5,
-	[MarshalAs(UnmanagedType.FunctionPtr)] postFrameDelegate d6,
-	[MarshalAs(UnmanagedType.FunctionPtr)] resetDelegate d7,
-	[MarshalAs(UnmanagedType.FunctionPtr)] focusChangedDelegate d8,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getDrawScaleFactorDelegate d9,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d10,
-	[MarshalAs(UnmanagedType.FunctionPtr)] depSatisfiedDelegate d11,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d12,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d13,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getDrawManagerDelegate d14,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getSoundManagerDelegate d15,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d16);
+   private extern static IntPtr vrj_App_App__0([MarshalAs(UnmanagedType.FunctionPtr)] initDelegate d0, [MarshalAs(UnmanagedType.FunctionPtr)] apiInitDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] exitDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] preFrameDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] latePreFrameDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] intraFrameDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] postFrameDelegate d6, [MarshalAs(UnmanagedType.FunctionPtr)] resetDelegate d7, [MarshalAs(UnmanagedType.FunctionPtr)] focusChangedDelegate d8, [MarshalAs(UnmanagedType.FunctionPtr)] getDrawScaleFactorDelegate d9, [MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d10, [MarshalAs(UnmanagedType.FunctionPtr)] depSatisfiedDelegate d11, [MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d12, [MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d13, [MarshalAs(UnmanagedType.FunctionPtr)] getDrawManagerDelegate d14, [MarshalAs(UnmanagedType.FunctionPtr)] getSoundManagerDelegate d15, [MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d16);
 
    public App()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = vrj_App_App__(m_initDelegate, m_apiInitDelegate, m_exitDelegate, m_preFrameDelegate, m_latePreFrameDelegate, m_intraFrameDelegate, m_postFrameDelegate, m_resetDelegate, m_focusChangedDelegate, m_getDrawScaleFactorDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_depSatisfiedDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement, m_getDrawManagerDelegate, m_getSoundManagerDelegate, m_configProcessPendingDelegate);
+      mRawObject   = vrj_App_App__0(m_initDelegate, m_apiInitDelegate, m_exitDelegate, m_preFrameDelegate, m_latePreFrameDelegate, m_intraFrameDelegate, m_postFrameDelegate, m_resetDelegate, m_focusChangedDelegate, m_getDrawScaleFactorDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_depSatisfiedDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement, m_getDrawManagerDelegate, m_getSoundManagerDelegate, m_configProcessPendingDelegate);
       mWeOwnMemory = true;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -59,12 +59,12 @@ public sealed class User
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_User_User__();
+   private extern static IntPtr vrj_User_User__0();
 
    public User()
    {
       allocDelegates();
-      mRawObject   = vrj_User_User__();
+      mRawObject   = vrj_User_User__0();
       mWeOwnMemory = true;
    }
 

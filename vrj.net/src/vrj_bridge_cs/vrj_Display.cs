@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -59,24 +59,22 @@ public sealed class Display
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_Display_Display__vrj_Display([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.DisplayMarshaler))] vrj.Display p0);
+   private extern static IntPtr vrj_Display_Display__vrj_Display1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.DisplayMarshaler))] vrj.Display p0);
 
    public Display(vrj.Display p0)
    {
       allocDelegates();
-      
-      mRawObject   = vrj_Display_Display__vrj_Display(p0);
+      mRawObject   = vrj_Display_Display__vrj_Display1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_Display_Display__();
+   private extern static IntPtr vrj_Display_Display__0();
 
    public Display()
    {
       allocDelegates();
-      mRawObject   = vrj_Display_Display__();
+      mRawObject   = vrj_Display_Display__0();
       mWeOwnMemory = true;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -60,25 +60,22 @@ public class BaseDeviceInterface
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.BaseDeviceInterfaceMarshaler))] gadget.BaseDeviceInterface p0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
+   private extern static IntPtr gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.BaseDeviceInterfaceMarshaler))] gadget.BaseDeviceInterface p0, [MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
 
    public BaseDeviceInterface(gadget.BaseDeviceInterface p0)
    {
       allocDelegates();
-      
-      mRawObject   = gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface(p0, m_refreshDelegate);
+      mRawObject   = gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface1(p0, m_refreshDelegate);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_BaseDeviceInterface_BaseDeviceInterface__([MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
+   private extern static IntPtr gadget_BaseDeviceInterface_BaseDeviceInterface__0([MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
 
    public BaseDeviceInterface()
    {
       allocDelegates();
-      mRawObject   = gadget_BaseDeviceInterface_BaseDeviceInterface__(m_refreshDelegate);
+      mRawObject   = gadget_BaseDeviceInterface_BaseDeviceInterface__0(m_refreshDelegate);
       mWeOwnMemory = true;
    }
 

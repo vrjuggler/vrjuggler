@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Proxy_Adapter* gadget_Proxy_Proxy__(gadget_Proxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Proxy_Adapter::refresh_callback_t cb1, gadget_Proxy_Adapter::updateData_callback_t cb2, gadget_Proxy_Adapter::getProxiedInputDevice_callback_t cb3, gadget_Proxy_Adapter::isStupified_callback_t cb4)
+   SHARPPY_API gadget_Proxy_Adapter* gadget_Proxy_Proxy__0(gadget_Proxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Proxy_Adapter::refresh_callback_t cb1, gadget_Proxy_Adapter::updateData_callback_t cb2, gadget_Proxy_Adapter::getProxiedInputDevice_callback_t cb3, gadget_Proxy_Adapter::isStupified_callback_t cb4)
    {
       gadget_Proxy_Adapter* obj = new gadget_Proxy_Adapter();
       obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj_App_Adapter* vrj_App_App__vrj_Kernel(vrj::Kernel* p0, vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb12, vrj_App_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
+   SHARPPY_API vrj_App_Adapter* vrj_App_App__vrj_Kernel1(vrj::Kernel* p0, vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb12, vrj_App_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
    {
       vrj_App_Adapter* obj = new vrj_App_Adapter(p0);
       obj->init_callback = cb0;
@@ -60,7 +60,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vrj_App_Adapter* vrj_App_App__(vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb12, vrj_App_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
+   SHARPPY_API vrj_App_Adapter* vrj_App_App__0(vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb12, vrj_App_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
    {
       vrj_App_Adapter* obj = new vrj_App_Adapter();
       obj->init_callback = cb0;

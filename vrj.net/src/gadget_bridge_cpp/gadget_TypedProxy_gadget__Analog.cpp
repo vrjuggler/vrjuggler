@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -37,7 +37,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_TypedProxy_gadget__Analog_Adapter* gadget_TypedProxy_gadget_Analog__TypedProxy__(gadget_TypedProxy_gadget__Analog_Adapter::refresh_callback_t cb0, gadget_TypedProxy_gadget__Analog_Adapter::getDeviceName_callback_t cb1, gadget_TypedProxy_gadget__Analog_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_TypedProxy_gadget__Analog_Adapter::updateData_callback_t cb3, gadget_TypedProxy_gadget__Analog_Adapter::getProxiedInputDevice_callback_t cb4, gadget_TypedProxy_gadget__Analog_Adapter::isStupified_callback_t cb5)
+   SHARPPY_API gadget_TypedProxy_gadget__Analog_Adapter* gadget_TypedProxy_gadget_Analog__TypedProxy__0(gadget_TypedProxy_gadget__Analog_Adapter::refresh_callback_t cb0, gadget_TypedProxy_gadget__Analog_Adapter::getDeviceName_callback_t cb1, gadget_TypedProxy_gadget__Analog_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_TypedProxy_gadget__Analog_Adapter::updateData_callback_t cb3, gadget_TypedProxy_gadget__Analog_Adapter::getProxiedInputDevice_callback_t cb4, gadget_TypedProxy_gadget__Analog_Adapter::isStupified_callback_t cb5)
    {
       gadget_TypedProxy_gadget__Analog_Adapter* obj = new gadget_TypedProxy_gadget__Analog_Adapter();
       obj->refresh_callback = cb0;

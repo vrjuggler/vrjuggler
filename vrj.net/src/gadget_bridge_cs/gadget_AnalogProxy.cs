@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -52,26 +52,24 @@ public sealed class AnalogProxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.AnalogProxyMarshaler))] gadget.AnalogProxy p0);
+   private extern static IntPtr gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.AnalogProxyMarshaler))] gadget.AnalogProxy p0);
 
    public AnalogProxy(gadget.AnalogProxy p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      
-      mRawObject   = gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy(p0);
+      mRawObject   = gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_AnalogProxy_AnalogProxy__();
+   private extern static IntPtr gadget_AnalogProxy_AnalogProxy__0();
 
    public AnalogProxy()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_AnalogProxy_AnalogProxy__();
+      mRawObject   = gadget_AnalogProxy_AnalogProxy__0();
       mWeOwnMemory = true;
    }
 

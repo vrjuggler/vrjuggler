@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -47,34 +47,32 @@ public class AnalogData
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_AnalogData_AnalogData__gadget_AnalogData([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.AnalogDataMarshaler))] gadget.AnalogData p0);
+   private extern static IntPtr gadget_AnalogData_AnalogData__gadget_AnalogData1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.AnalogDataMarshaler))] gadget.AnalogData p0);
 
    public AnalogData(gadget.AnalogData p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gadget_AnalogData_AnalogData__gadget_AnalogData(p0);
+      mRawObject   = gadget_AnalogData_AnalogData__gadget_AnalogData1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_AnalogData_AnalogData__();
+   private extern static IntPtr gadget_AnalogData_AnalogData__0();
 
    public AnalogData()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gadget_AnalogData_AnalogData__();
+      mRawObject   = gadget_AnalogData_AnalogData__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_AnalogData_AnalogData__float(float p0);
+   private extern static IntPtr gadget_AnalogData_AnalogData__float1(float p0);
 
    public AnalogData(float p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gadget_AnalogData_AnalogData__float(p0);
+      mRawObject   = gadget_AnalogData_AnalogData__float1(p0);
       mWeOwnMemory = true;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Position_Adapter* gadget_Position_Position__(gadget_Position_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Position_Adapter::getBaseType_callback_t cb1, gadget_Position_Adapter::writeObject_callback_vpr_ObjectWriter_t cb2, gadget_Position_Adapter::readObject_callback_vpr_ObjectReader_t cb3)
+   SHARPPY_API gadget_Position_Adapter* gadget_Position_Position__0(gadget_Position_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Position_Adapter::getBaseType_callback_t cb1, gadget_Position_Adapter::writeObject_callback_vpr_ObjectWriter_t cb2, gadget_Position_Adapter::readObject_callback_vpr_ObjectReader_t cb3)
    {
       gadget_Position_Adapter* obj = new gadget_Position_Adapter();
       obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;

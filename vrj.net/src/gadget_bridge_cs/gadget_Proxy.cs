@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -64,16 +64,12 @@ public abstract class Proxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Proxy_Proxy__([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d4);
+   private extern static IntPtr gadget_Proxy_Proxy__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d4);
 
    public Proxy()
    {
       allocDelegates();
-      mRawObject   = gadget_Proxy_Proxy__(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_refreshDelegate, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate);
+      mRawObject   = gadget_Proxy_Proxy__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_refreshDelegate, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate);
       mWeOwnMemory = true;
    }
 

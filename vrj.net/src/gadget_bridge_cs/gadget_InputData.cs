@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,22 +54,20 @@ public class InputData
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_InputData_InputData__gadget_InputData([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.InputDataMarshaler))] gadget.InputData p0);
+   private extern static IntPtr gadget_InputData_InputData__gadget_InputData1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.InputDataMarshaler))] gadget.InputData p0);
 
    public InputData(gadget.InputData p0)
    {
-      
-      mRawObject   = gadget_InputData_InputData__gadget_InputData(p0);
+      mRawObject   = gadget_InputData_InputData__gadget_InputData1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_InputData_InputData__();
+   private extern static IntPtr gadget_InputData_InputData__0();
 
    public InputData()
    {
-      mRawObject   = gadget_InputData_InputData__();
+      mRawObject   = gadget_InputData_InputData__0();
       mWeOwnMemory = true;
    }
 

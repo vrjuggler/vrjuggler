@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,7 +35,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__gadget_PositionProxy(const gadget::PositionProxy* p0)
+   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__gadget_PositionProxy1(const gadget::PositionProxy* p0)
    {
       const gadget::PositionProxy& marshal_p0 = *p0;
       gadget::PositionProxy* obj = new gadget::PositionProxy(marshal_p0);
@@ -43,7 +43,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__()
+   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__0()
    {
       gadget::PositionProxy* obj = new gadget::PositionProxy();
       return obj;

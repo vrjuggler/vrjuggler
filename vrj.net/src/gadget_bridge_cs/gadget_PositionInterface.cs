@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -52,26 +52,24 @@ public sealed class PositionInterface
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__gadget_PositionInterface([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.PositionInterfaceMarshaler))] gadget.PositionInterface p0);
+   private extern static IntPtr gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__gadget_PositionInterface1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.PositionInterfaceMarshaler))] gadget.PositionInterface p0);
 
    public PositionInterface(gadget.PositionInterface p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      
-      mRawObject   = gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__gadget_PositionInterface(p0);
+      mRawObject   = gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__gadget_PositionInterface1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__();
+   private extern static IntPtr gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__0();
 
    public PositionInterface()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__();
+      mRawObject   = gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__0();
       mWeOwnMemory = true;
    }
 

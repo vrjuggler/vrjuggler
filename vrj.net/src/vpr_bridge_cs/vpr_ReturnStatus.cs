@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,31 +54,29 @@ public sealed class ReturnStatus
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_ReturnStatus_ReturnStatus__();
+   private extern static IntPtr vpr_ReturnStatus_ReturnStatus__0();
 
    public ReturnStatus()
    {
-      mRawObject   = vpr_ReturnStatus_ReturnStatus__();
+      mRawObject   = vpr_ReturnStatus_ReturnStatus__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))] vpr.ReturnStatus p0);
+   private extern static IntPtr vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))] vpr.ReturnStatus p0);
 
    public ReturnStatus(vpr.ReturnStatus p0)
    {
-      
-      mRawObject   = vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus(p0);
+      mRawObject   = vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus_Code(vpr.ReturnStatus.Code p0);
+   private extern static IntPtr vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus_Code1(vpr.ReturnStatus.Code p0);
 
    public ReturnStatus(vpr.ReturnStatus.Code p0)
    {
-      mRawObject   = vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus_Code(p0);
+      mRawObject   = vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus_Code1(p0);
       mWeOwnMemory = true;
    }
 
@@ -120,10 +118,8 @@ public sealed class ReturnStatus
 
    public static bool operator==(vpr.ReturnStatus lhs, vpr.ReturnStatus rhs)
    {
-      
       bool result;
       result = vpr_ReturnStatus_equal__vpr_ReturnStatus(lhs.mRawObject, rhs);
-      
       return result;
    }
 
@@ -144,10 +140,8 @@ public sealed class ReturnStatus
 
    public static bool operator!=(vpr.ReturnStatus lhs, vpr.ReturnStatus rhs)
    {
-      
       bool result;
       result = vpr_ReturnStatus_not_equal__vpr_ReturnStatus(lhs.mRawObject, rhs);
-      
       return result;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,7 +35,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vpr::Interval* vpr_Interval_Interval__vpr_Interval(const vpr::Interval* p0)
+   SHARPPY_API vpr::Interval* vpr_Interval_Interval__vpr_Interval1(const vpr::Interval* p0)
    {
       const vpr::Interval& marshal_p0 = *p0;
       vpr::Interval* obj = new vpr::Interval(marshal_p0);
@@ -43,14 +43,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr::Interval* vpr_Interval_Interval__()
+   SHARPPY_API vpr::Interval* vpr_Interval_Interval__0()
    {
       vpr::Interval* obj = new vpr::Interval();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr::Interval* vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit(const long long unsigned int p0, const vpr::Interval::Unit p1)
+   SHARPPY_API vpr::Interval* vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(const long long unsigned int p0, const vpr::Interval::Unit p1)
    {
       vpr::Interval* obj = new vpr::Interval(p0, p1);
       return obj;

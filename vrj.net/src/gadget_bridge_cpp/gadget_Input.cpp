@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Input_Adapter* gadget_Input_Input__(gadget_Input_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Input_Adapter::sample_callback_t cb1, gadget_Input_Adapter::startSampling_callback_t cb2, gadget_Input_Adapter::stopSampling_callback_t cb3, gadget_Input_Adapter::updateData_callback_t cb4, gadget_Input_Adapter::getBaseType_callback_t cb5, gadget_Input_Adapter::writeObject_callback_vpr_ObjectWriter_t cb6, gadget_Input_Adapter::readObject_callback_vpr_ObjectReader_t cb7, gadget_Input_Adapter::destroy_callback_t cb8)
+   SHARPPY_API gadget_Input_Adapter* gadget_Input_Input__0(gadget_Input_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Input_Adapter::sample_callback_t cb1, gadget_Input_Adapter::startSampling_callback_t cb2, gadget_Input_Adapter::stopSampling_callback_t cb3, gadget_Input_Adapter::updateData_callback_t cb4, gadget_Input_Adapter::getBaseType_callback_t cb5, gadget_Input_Adapter::writeObject_callback_vpr_ObjectWriter_t cb6, gadget_Input_Adapter::readObject_callback_vpr_ObjectReader_t cb7, gadget_Input_Adapter::destroy_callback_t cb8)
    {
       gadget_Input_Adapter* obj = new gadget_Input_Adapter();
       obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;

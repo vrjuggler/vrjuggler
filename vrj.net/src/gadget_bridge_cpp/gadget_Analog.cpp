@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Analog_Adapter* gadget_Analog_Analog__(gadget_Analog_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, gadget_Analog_Adapter::readObject_callback_vpr_ObjectReader_t cb1, gadget_Analog_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_Analog_Adapter::getBaseType_callback_t cb3)
+   SHARPPY_API gadget_Analog_Adapter* gadget_Analog_Analog__0(gadget_Analog_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, gadget_Analog_Adapter::readObject_callback_vpr_ObjectReader_t cb1, gadget_Analog_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_Analog_Adapter::getBaseType_callback_t cb3)
    {
       gadget_Analog_Adapter* obj = new gadget_Analog_Adapter();
       obj->writeObject_callback_vpr_ObjectWriter = cb0;

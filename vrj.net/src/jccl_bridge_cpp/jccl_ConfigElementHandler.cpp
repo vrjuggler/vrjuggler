@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigElementHandler_Adapter* jccl_ConfigElementHandler_ConfigElementHandler__(jccl_ConfigElementHandler_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, jccl_ConfigElementHandler_Adapter::configProcessPending_callback_t cb1, jccl_ConfigElementHandler_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, jccl_ConfigElementHandler_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb3)
+   SHARPPY_API jccl_ConfigElementHandler_Adapter* jccl_ConfigElementHandler_ConfigElementHandler__0(jccl_ConfigElementHandler_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, jccl_ConfigElementHandler_Adapter::configProcessPending_callback_t cb1, jccl_ConfigElementHandler_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, jccl_ConfigElementHandler_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb3)
    {
       jccl_ConfigElementHandler_Adapter* obj = new jccl_ConfigElementHandler_Adapter();
       obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb0;

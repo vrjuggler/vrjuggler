@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,7 +35,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj::Display* vrj_Display_Display__vrj_Display(const vrj::Display* p0)
+   SHARPPY_API vrj::Display* vrj_Display_Display__vrj_Display1(const vrj::Display* p0)
    {
       const vrj::Display& marshal_p0 = *p0;
       vrj::Display* obj = new vrj::Display(marshal_p0);
@@ -43,7 +43,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vrj::Display* vrj_Display_Display__()
+   SHARPPY_API vrj::Display* vrj_Display_Display__0()
    {
       vrj::Display* obj = new vrj::Display();
       return obj;

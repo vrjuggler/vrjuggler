@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -47,7 +47,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigElement_Holder* jccl_ConfigElement_ConfigElement__()
+   SHARPPY_API jccl_ConfigElement_Holder* jccl_ConfigElement_ConfigElement__0()
    {
       jccl_ConfigElement_Holder* obj = new jccl_ConfigElement_Holder;
       obj->mPtr = boost::shared_ptr< jccl::ConfigElement >(new jccl::ConfigElement());
@@ -55,7 +55,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigElement_Holder* jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition(boost::shared_ptr<jccl::ConfigDefinition> p0)
+   SHARPPY_API jccl_ConfigElement_Holder* jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition1(boost::shared_ptr<jccl::ConfigDefinition> p0)
    {
       jccl_ConfigElement_Holder* obj = new jccl_ConfigElement_Holder;
       obj->mPtr = boost::shared_ptr< jccl::ConfigElement >(new jccl::ConfigElement(p0));

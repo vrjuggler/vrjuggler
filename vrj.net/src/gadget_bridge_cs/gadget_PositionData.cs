@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -47,24 +47,22 @@ public class PositionData
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_PositionData_PositionData__gadget_PositionData([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.PositionDataMarshaler))] gadget.PositionData p0);
+   private extern static IntPtr gadget_PositionData_PositionData__gadget_PositionData1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.PositionDataMarshaler))] gadget.PositionData p0);
 
    public PositionData(gadget.PositionData p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gadget_PositionData_PositionData__gadget_PositionData(p0);
+      mRawObject   = gadget_PositionData_PositionData__gadget_PositionData1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_PositionData_PositionData__();
+   private extern static IntPtr gadget_PositionData_PositionData__0();
 
    public PositionData()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gadget_PositionData_PositionData__();
+      mRawObject   = gadget_PositionData_PositionData__0();
       mWeOwnMemory = true;
    }
 
