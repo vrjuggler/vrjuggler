@@ -30,40 +30,80 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
 #include <gadget/Util/Debug.h>
+
+#include <cluster/Plugins/PluginConfig.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataServer.h> // my header...
-#include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
+#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/Packets/DataPacket.h>
+
+#include <vpr/IO/BufferObjectWriter.h>
 
 #include <boost/concept_check.hpp>
 
 namespace cluster
 {
-   ApplicationDataServer::ApplicationDataServer(vpr::GUID guid,  ApplicationData* user_data, vpr::GUID plugin_guid)
+   ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  ApplicationData* user_data, const vpr::GUID& plugin_guid)
    {
-      mId = guid;
-      mPluginGUID = plugin_guid;
-
       mApplicationData = user_data;
 
+      // mDataPacket and mBufferObjectWriter both use mDeviceData as their data buffer.
       mDeviceData = new std::vector<vpr::Uint8>;
-      mDataPacket = new DataPacket(plugin_guid, mId, mDeviceData);
+      
+      // Create a DataPacket that will be updated and sent continually.
+      mDataPacket = new DataPacket(plugin_guid, guid, mDeviceData);
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
    }
 
    ApplicationDataServer::~ApplicationDataServer()
-   {;}
-
-   void ApplicationDataServer::send()
    {
+      delete mApplicationData;
+      
+      // mDataPacket will clean up the memory that mDeviceData points
+      // to since mDataPacket contains a reference to the ame memory.
+      delete mDataPacket;
+      // vpr::BufferObjectWritter does not release mDeviceData
+      delete mBufferObjectWriter;
+      mDeviceData = NULL;   
+   }
+
+   void ApplicationDataServer::serializeAndSend()
+   {
+      // Clear old data and reset the position of mBufferObjectWriter
+      mBufferObjectWriter->getData()->clear();
+      mBufferObjectWriter->setCurPos(0);
+
+      // This updates the mApplicationData which both mBufferedObjectReader and mDevicePacket point to
+      vpr::ReturnStatus status = mApplicationData->writeObject(mBufferObjectWriter);
+
+      // If we do not successfully serialize the object, don't send it.
+      // This allows the developer to create a object that only gets
+      // sent when a change occurs.
+      if (!status.success())
+      {
+         return;
+      }
+
+      // We must update the size of the actual data that we are going to send
+      mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
+                                       + 16 /*Plugin GUID*/
+                                       + 16 /*Plugin GUID*/
+                                       + mDeviceData->size());
+
+      // We must serialize the header again so that we can reset the size.
+      mDataPacket->getHeader()->serializeHeader();
+
+
+
+      // Send the serialized data to each client
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
       
-      //--send to all nodes in the map
+      // Send DataPacket to all nodes in mClients
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Sending data to: "
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
             << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
          try
          {
@@ -81,87 +121,67 @@ namespace cluster
                "ApplicationDataServer::send() We have lost our connection to: " << (*i)->getName() << ":" << (*i)->getPort()
                << std::endl << vprDEBUG_FLUSH;
 
+            // If we receive an exception because we have lost the connection we need
+            // to flag the ClusterNode as disconnected and print debug information
             (*i)->setConnected(ClusterNode::DISCONNECTED);
             debugDump(vprDBG_CONFIG_LVL);
          }
       }
-   }
-   void ApplicationDataServer::updateLocalData()
-   {
-      // -BufferObjectWriter
-      mBufferObjectWriter->getData()->clear();
-      mBufferObjectWriter->setCurPos(0);
-
-      // This updates the mApplicationData which both mBufferedObjectReader and mDevicePacket point to
-      mApplicationData->writeObject(mBufferObjectWriter);
-
-      // We must update the size of the actual data that we are going to send
-      mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
-                                       + 16 /*Plugin GUID*/
-                                       + 16 /*Plugin GUID*/
-                                       + mDeviceData->size());
-
-      // We must serialize the header again so that we can reset the size.
-      mDataPacket->getHeader()->serializeHeader();
    }
 
    void ApplicationDataServer::addClient(ClusterNode* new_client_node)
    {
       vprASSERT(0 == mClientsLock.test());
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
-      lockClients();
+      
+      // Lock mutex to make this thread safe
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       mClients.push_back(new_client_node);
-
-      unlockClients();
    }
 
-/*   void ApplicationDataServer::removeClient(const std::string& host_name)
+   void ApplicationDataServer::removeClient(const std::string& host_name)
    {
       vprASSERT(0 == mClientsLock.test());
-      lockClients();
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
-      for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ;
+      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
             i!= mClients.end() ; i++)
       {
          if ((*i)->getHostname() == host_name)
          {
             mClients.erase(i);
-            unlockClients();
             return;
          }
       }
-      unlockClients();
    }
 
-*/
    void ApplicationDataServer::debugDump(int debug_level)
    {
-      boost::ignore_unused_variable_warning(debug_level);
-/*      vprASSERT(0 == mClientsLock.test());
-      lockClients();
+      vprASSERT(0 == mClientsLock.test());
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
                                  std::string("-------------- ApplicationDataServer --------------\n"),
                                  std::string("------------------------------------------\n"));
 
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mId.toString() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << getId().toString() << std::endl << vprDEBUG_FLUSH;
 
-      { // Used simply to make the following DebugOutputGuard go out of scope
-         vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
-                           std::string("------------ Clients ------------\n"),
-                           std::string("---------------------------------\n"));
-         for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ;
-               i!= mClients.end() ; i++)
-         {
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "       Hostname: " << (*i).->getHostname() << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "----------------------------------" << std::endl << vprDEBUG_FLUSH;
-         }
+      vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
+                        std::string("------------ Clients ------------\n"),
+                        std::string("---------------------------------\n"));
+      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
+            i!= mClients.end() ; i++)
+      {
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "       Hostname: " << (*i)->getHostname() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "----------------------------------" << std::endl << vprDEBUG_FLUSH;
       }
-      unlockClients();
-
-*/
+   }
+   
+   vpr::GUID ApplicationDataServer::getId() 
+   { 
+      return(mApplicationData->getId()); 
    }
 
-} // End of gadget namespace
+} // End of cluster namespace
