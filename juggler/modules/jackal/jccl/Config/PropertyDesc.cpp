@@ -84,9 +84,9 @@ PropertyDesc::~PropertyDesc () {
 
 
 
-#ifdef VJ_vprDEBUG
+#ifdef JCCL_DEBUG
 void PropertyDesc::assertValid () const {
-    vprAssert (validation == 1 && "Trying to use deleted PropertyDesc");
+    vprASSERT (validation == 1 && "Trying to use deleted PropertyDesc");
 }
 #endif
 

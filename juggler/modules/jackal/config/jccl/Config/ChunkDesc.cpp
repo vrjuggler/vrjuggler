@@ -71,7 +71,7 @@ ChunkDesc::~ChunkDesc() {
 }
 
 
-#ifdef VJ_DEBUG
+#ifdef JCCL_DEBUG
 void ChunkDesc::assertValid () const {
     vprASSERT (validation == 1 && "Trying to use deleted ChunkDesc");
     for (unsigned int i = 0; i < plist.size(); i++)

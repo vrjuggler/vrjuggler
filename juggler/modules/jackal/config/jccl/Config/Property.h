@@ -114,7 +114,7 @@ public:
 
 
 
-    #ifdef VJ_DEBUG
+    #ifdef JCCL_DEBUG
     void assertValid () const;
     #else
     inline void assertValid () const {
