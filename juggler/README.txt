@@ -106,7 +106,7 @@ Compiling
 
    Depending on the version of Xerces C++ available, an extra argument may be
    required to find the actual library. For example, if Xerces C++ 1.6.0 is
-   installed, add --with-xerceslib=libxerces-c1_6_0 to the command line for
+   installed, add --with-xerceslib=xerces-c1_6_0 to the command line for
    running configure. Check the Xerces C++ lib directory for the exact name
    (without .so or .a).
 
