@@ -284,11 +284,11 @@ namespace sim
 
       if (handle->isOpen() &&
           isBound( handle ) == false &&
-          isBound( localName ) == false)
+          isBound(localName, handle->getType()) == false)
       {
          _bind( handle, localName );
          vprASSERT( isBound( handle ) && "_bind failed on handle." );
-         vprASSERT( isBound( localName ) && "_bind failed on address." );
+         vprASSERT(isBound(localName, handle->getType()) && "_bind failed on address.");
       }
       else
       {
@@ -298,7 +298,8 @@ namespace sim
                << "vpr::sim::SocketManager: handle is not open, call open() before bind()\n"
                << vprDEBUG_FLUSH;
          }
-         else if (isBound( localName ) == true && isBound( handle ) == true)
+         else if (isBound( localName, handle->getType() ) == true &&
+                  isBound( handle ) == true)
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: handle(" << handle << ") and address("
@@ -311,7 +312,7 @@ namespace sim
                << "vpr::sim::SocketManager: specified handle already bound to an address\n"
                << vprDEBUG_FLUSH;
          }
-         else if (isBound( localName ) == true)
+         else if (isBound( localName, handle->getType() ) == true)
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: Address " << localName
@@ -649,23 +650,27 @@ namespace sim
    }
 
    // is the address bound to a socket?
-   bool SocketManager::isBound( const vpr::InetAddrSIM& addr )
+   bool SocketManager::isBound( const vpr::InetAddrSIM& addr,
+                                const vpr::SocketTypes::Type addr_type )
    {
-      bool status;
+      bool status = false;
 
-      mBindListAddrMutexTCP.acquire();
+      switch (addr_type)
       {
-         status = mBindListAddrTCP.count(addr) > 0;
-      }
-      mBindListAddrMutexTCP.release();
-
-      if ( ! status )
-      {
-         mBindListAddrMutexUDP.acquire();
-         {
-            status = mBindListAddrUDP.count(addr) > 0;
-         }
-         mBindListAddrMutexUDP.release();
+         case vpr::SocketTypes::DATAGRAM:
+            mBindListAddrMutexUDP.acquire();
+            {
+               status = mBindListAddrUDP.count(addr) > 0;
+            }
+            mBindListAddrMutexUDP.release();
+            break;
+         case vpr::SocketTypes::STREAM:
+            mBindListAddrMutexTCP.acquire();
+            {
+               status = mBindListAddrTCP.count(addr) > 0;
+            }
+            mBindListAddrMutexTCP.release();
+            break;
       }
 
       return status;
@@ -780,7 +785,7 @@ namespace sim
             break;
       }
       vprASSERT( isBound( handle ) == true );
-      vprASSERT( isBound( addr ) == true );
+      vprASSERT( isBound( addr, handle->getType() ) == true );
 
    }
 
@@ -797,7 +802,7 @@ namespace sim
          case vpr::SocketTypes::DATAGRAM:
             mBindListSockMutexUDP.acquire();
             {
-               vprASSERT( isBound( mBindListSockUDP[handle] ) == true );
+               vprASSERT( isBound( mBindListSockUDP[handle], handle->getType() ) == true );
 
                addr = mBindListSockUDP[handle];
                hand = handle;                // Temporary storage ...
@@ -819,7 +824,7 @@ namespace sim
          case vpr::SocketTypes::STREAM:
             mBindListSockMutexTCP.acquire();
             {
-               vprASSERT( isBound( mBindListSockTCP[handle] ) == true );
+               vprASSERT( isBound( mBindListSockTCP[handle], handle->getType() ) == true );
 
                addr = mBindListSockTCP[handle];
                hand = handle;                // Temporary storage ...
@@ -851,7 +856,7 @@ namespace sim
       }
 
       vprASSERT( isBound( hand ) == false );
-      vprASSERT( isBound( addr ) == false );
+      vprASSERT( isBound( addr, hand->getType() ) == false );
 
       return status;
    }
