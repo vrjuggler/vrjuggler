@@ -205,13 +205,13 @@ aMotionStar::start () {
   lpSize = &Size;
 
   /* send the wake up call */
-  send_wakeup();
+  sendWakeup();
 
   /* get the system status */
-  get_status_all();
+  getSystemStatus();
 
   /* send the system setup */
-  set_status_all();
+  setSystemStatus();
 
    /* for 1 to n flock boards                    */
   /* get the individual bird status             */
@@ -221,7 +221,7 @@ aMotionStar::start () {
   for(unsigned int flock=1;flock<=chassisDevices;flock++)
     {
       /* get the status of an individual bird */
-      get_status_fbb(flock);
+      getBirdStatus(flock);
 
                 /* change the data format to something new for all birds */
       if(flock<=birdsRequired)
@@ -237,7 +237,7 @@ aMotionStar::start () {
       response.buffer[7] = reportRate;
       response.buffer[26] = hemisphere;
       /* set the status of an individual bird */
-      set_status_fbb(flock);
+      setBirdStatus(flock);
     }
 
   if (runMode == 0) {
@@ -405,7 +405,7 @@ aMotionStar::setAddress (const char* n) {
 // Send a wakeup call to the MotionStar server.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::send_wakeup () {
+aMotionStar::sendWakeup () {
   /***** send a command to the server wakeup *****/
 //  printf("WAKEUP:");
 
@@ -425,7 +425,7 @@ aMotionStar::send_wakeup () {
   bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
 
 //  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
-} // end void aMotionStar::send_wakeup ()
+}
 
 // ----------------------------------------------------------------------------
 // Tell the MotionStar server to sample continuously.
@@ -492,7 +492,7 @@ aMotionStar::singleShot () {
 // Get the system status.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::get_status_all () {
+aMotionStar::getSystemStatus () {
   void                  *lpBuffer;
   int                   headerBytes, dataBytes;
   int                   bytesReceived;
@@ -597,13 +597,13 @@ aMotionStar::get_status_all () {
     }
     printf("\n");
 */
-} // end void aMotionStar::get_status_all()
+}
 
 // ----------------------------------------------------------------------------
 // Set the system status.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::set_status_all () {
+aMotionStar::setSystemStatus () {
      int i;
      response.header.type         = MSG_SEND_SETUP;
      response.header.xtype        = 0;
@@ -625,13 +625,13 @@ aMotionStar::set_status_all () {
 //     printf("\nSEND STATUS ACK - number bytes received = %5d,", bytesReceived);
 //     printf("  type %d\n",response.header.type);
 
-} // end void aMotionStar::set_status_all()
+}
 
 // ----------------------------------------------------------------------------
 // Get the status of an individual bird.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::get_status_fbb (unsigned char fbb_addr) {
+aMotionStar::getBirdStatus (unsigned char fbb_addr) {
   int headerBytes, dataBytes;
   void * lpBuffer;
 
@@ -670,13 +670,13 @@ aMotionStar::get_status_fbb (unsigned char fbb_addr) {
   for (i=0;i<bytesReceived;++i)
     printf("%4d",*(newptr+i));
 */
-} // end void aMotionStar::get_status_fbb()
+}
 
 // ----------------------------------------------------------------------------
 // Set the status of an individual bird.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::set_status_fbb (unsigned char fbb_addr) {
+aMotionStar::setBirdStatus (unsigned char fbb_addr) {
   response.header.type         = MSG_SEND_SETUP;
   response.header.xtype        = fbb_addr;
   response.header.number_bytes = 70;
@@ -695,7 +695,7 @@ aMotionStar::set_status_fbb (unsigned char fbb_addr) {
   for (i=0;i<bytesReceived;++i)
     printf("%4d",*(newptr+i));
 */
-} // end void aMotionStar::set_status_fbb()
+}
 
 // ----------------------------------------------------------------------------
 // Print out the MotionStar information.
@@ -716,10 +716,10 @@ aMotionStar::printInfo () {
 // Print out the MotionStar's header information.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::display_hdr () {
+aMotionStar::displayHdr () {
   /*printf("sequence=%6d time= %8d milliseconds=%6d type= %4d "
 	,response.header.sequence);*/
-} // end void aMotionStar::display_hdr()
+}
 
 // ----------------------------------------------------------------------------
 // Print the error message that corresponds to the given error code.  The
