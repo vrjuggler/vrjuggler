@@ -190,9 +190,9 @@ case $target_os in
     # A machine running Solaris (aka SunOS).  Currently only i386 is known
     # to work.
     solaris*)
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
-            SUBSYSTEM='POSIX'
+        if test "x$SUBSYSTEM" != "xNSPR" ; then
+            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            SUBSYSTEM='NSPR' 
         fi
 
         AC_DEFINE(VPR_OS_Solaris,)
