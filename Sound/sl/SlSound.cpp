@@ -1,17 +1,15 @@
-#include <vjConfig.h>
-
 #include <assert.h>
 #include <stdio.h>
 #include <string>
-#include <sl.h>            // the SL library
-#include <Sound/SoundEngine.h>   // engine baseclass
+#include "sl.h"                     // the SL library
+#include <Sound/vjSoundEngine.h>    // engine baseclass
 #include <Sound/sl/SlSoundEngine.h> // my engine
-#include <Sound/Sound.h>         // bass class...
+#include <Sound/vjSound.h>          // bass class...
 
 #include <Sound/sl/SlSound.h>       // my header
 
 //specify the sound's name in the adf file...
-SlSound::SlSound( SoundEngine& engine ) : Sound( engine )
+SlSound::SlSound( vjSoundEngine& engine ) : vjSound( engine )
 {
 
 }
@@ -46,7 +44,7 @@ void SlSound::pitchBend( float amount )
 // allows a user to enable or disable a sound without worring about its state set by start or stop.
 // NOTE: to hear a sound enable() and play() must be active.
 //       default is ON
-void SlSound::enable( Sound::BinaryState state )
+void SlSound::enable( vjSound::BinaryState state )
 {
    assert( mSample != NULL );
    cout<<"[SL] Not implemented: enable\n"<<flush;
@@ -93,7 +91,7 @@ void SlSound::stop()
 // change the position of the sound.
 void SlSound::setPosition( float x, float y, float z )
 {
-   Sound::setPosition( x, y, z ); //base functionality
+   vjSound::setPosition( x, y, z ); //base functionality
    assert( mSample != NULL );
    cout<<"[SL] Not implemented: setposition\n"<<flush;
 }

@@ -1,13 +1,10 @@
-#ifndef _AW_SOUNDENGINE_H_
-#define _AW_SOUNDENGINE_H_
-
-#include <vjConfig.h>
-
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
 #include <aw.h> //audio works
-#include <Sound/SoundEngine.h>
+#include <Sound/vjSoundEngine.h>
+#include <Sound/vjSoundEngineConstructor.h>
+class vjConfigChunk;
 
 // you need an Observer node in your .adf file named you
 // usually set it's position to 0,0,0
@@ -19,14 +16,14 @@
 // awSound node's position can only change with observer position change,
 //  so i'd keep it flexible by using awPlayer nodes for each sound you want.
 // Ambient sounds can be defined as plain awSound nodes.
-class AwSoundEngine : public SoundEngine
+class AwSoundEngine : public vjSoundEngine
 {
 public:
    AwSoundEngine();
    virtual ~AwSoundEngine();
 
    // pass the config filename here...
-   virtual void init( const char* const aliasDatabase );
+   virtual void init();
    
    // lookup a filename, given the sound's alias.
    // the "filename" returned can be used in a call to Sound::load()
@@ -41,11 +38,11 @@ public:
    // given an alias, return the handle.
    // TODO: if called twice with name alias, should return same pointer.
    // memory managed by engine...
-   Sound* getHandle( const char* const alias );
+   vjSound* getHandle( const char* const alias );
    
    //: Factory function to create a new sound.
    // memory managed by engine
-   virtual Sound* newSound();
+   virtual vjSound* newSound();
    
    // call this once per main loop.
    //
@@ -53,9 +50,13 @@ public:
 
    virtual void kill();
 
+	virtual bool config( vjConfigChunk* chunk );
+
+	static std::string getChunkType() { return std::string( "AwSoundEngine" ); }
+	
    awPlayer*   mPlayer;
    awObserver* mObserver;
+	std::string mAdfFileName;
 };
 
-
-#endif
+vjSoundEngineConstructor<AwSoundEngine> aw_constructor; 

@@ -1,15 +1,13 @@
-#include <vjConfig.h>
-
 #include <assert.h>
 #include <stdio.h>
 #include <string>
 #include <aw.h> //audio works
-#include <Sound/Sound.h>
+#include <Sound/vjSound.h>
 
 #include <Sound/aw/AwSound.h> // my header
 
 //specify the sound's name in the adf file...
-AwSound::AwSound( SoundEngine& engine ) : Sound( engine ), mSoundPlayer( NULL ), mSound( NULL )
+AwSound::AwSound( vjSoundEngine& engine ) : vjSound( engine ), mSoundPlayer( NULL ), mSound( NULL )
 {
 }
 
@@ -17,7 +15,7 @@ AwSound::AwSound( SoundEngine& engine ) : Sound( engine ), mSoundPlayer( NULL ),
 bool AwSound::load( const char* const alias )
 {
    // default functionality...
-   Sound::load( alias );
+   vjSound::load( alias );
 
    mSoundName = alias;
 
@@ -96,18 +94,18 @@ void AwSound::pitchBend( float amount )
 // allows a user to enable or disable a sound without worring about its state set by start or stop.
 // NOTE: to hear a sound enable() and play() must be active.
 //       default is ON
-void AwSound::enable( Sound::BinaryState state )
+void AwSound::enable( vjSound::BinaryState state )
 {
    assert( mSound != NULL );
    switch (state)
    {
-      case Sound::ON:
+      case vjSound::ON:
          cout<<"[aw] awProp( mSoundPlayer, AWSND_ENABLED, "<<AWSND_ON<<" )\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWSND_ENABLED, AWSND_ON );
          awProp( mSound, AWSND_ENABLED, AWSND_ON );
          break;
-      case Sound::OFF:
+      case vjSound::OFF:
          cout<<"[aw] awProp( mSoundPlayer, AWSND_ENABLED, "<<AWSND_OFF<<" )\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWSND_ENABLED, AWSND_OFF );
@@ -159,7 +157,7 @@ void AwSound::setPosition( float x, float y, float z )
 {
    assert( mSound != NULL );
    // set the base functionality
-   Sound::setPosition( x, y, z );
+   vjSound::setPosition( x, y, z );
    
    // you can set position for a awPlayer object only...
    float xyz[3] = {x, y, z};
