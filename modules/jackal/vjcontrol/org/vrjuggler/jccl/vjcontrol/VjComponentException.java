@@ -29,12 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjControl;
-
-import java.lang.RuntimeException;
+package org.vrjuggler.jccl.vjcontrol;
 
 public class VjComponentException extends RuntimeException {
 

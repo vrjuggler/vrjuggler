@@ -29,23 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-
-
-
-package VjControl;
-
-import java.lang.String;
-import java.lang.StringBuffer;
 import java.util.*;
-
-import VjConfig.*;
-import VjControl.LogMessageListener;
-import VjControl.LogMessageEvent;
-import VjControl.CoreModule;
-import VjControl.VjComponent;
-import VjControl.UserProfile;
-
+import org.vrjuggler.jccl.config.*;
 
 /** Static owner-of-all-vjcontrol-objects.
  *  The primary job of the Core object is to own VjControl's core

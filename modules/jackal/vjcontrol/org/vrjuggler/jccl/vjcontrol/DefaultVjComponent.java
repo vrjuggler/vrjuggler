@@ -29,20 +29,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-
-package VjControl;
-
-import VjConfig.ConfigChunk;
-
+import org.vrjuggler.jccl.config.ConfigChunk;
 
 /** Provides default implementation of VjComponent interface.
  *  A component can choose to subclass from this class in order to get
  *  definitions of core VjComponent functions.
  *
- *  @see VjControl.ComponentFactory
- *  @see VjControl.VjComponent
- *  @author Christopher Just
+ *  @see ComponentFactory
+ *  @see VjComponent
  *  @version $Revision$
  */
 public abstract class DefaultVjComponent

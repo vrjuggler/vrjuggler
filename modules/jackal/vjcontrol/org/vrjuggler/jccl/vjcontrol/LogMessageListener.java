@@ -29,8 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-package VjControl;
+package org.vrjuggler.jccl.vjcontrol;
 
 import java.util.EventListener;
 

@@ -29,23 +29,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-
-package VjControl;
-
-import java.util.List;
-import java.util.ArrayList;
 import java.io.*;
 import java.net.URL;
-import VjControl.*;
-import VjConfig.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** Main executable for VjControl.
  *  This class includes main() for VjControl, and is responsible for initial
  *  startup, configuration, and loading initial components .jars.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class Init {

@@ -29,11 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-
-package VjControl;
-
-import VjConfig.ConfigChunk;
+import org.vrjuggler.jccl.config.ConfigChunk;
 
 /** Base interface for all VjComponents.
  *  VjComponents are dynamically-loadable modules which can be added to
@@ -78,8 +76,7 @@ import VjConfig.ConfigChunk;
  *  initialize() is called.  At this point the component should be
  *  considered "live".
  *
- *  @see VjControl.ComponentFactory
- *  @author Christopher Just
+ *  @see ComponentFactory
  *  @version $Revision$
  */
 public interface VjComponent {

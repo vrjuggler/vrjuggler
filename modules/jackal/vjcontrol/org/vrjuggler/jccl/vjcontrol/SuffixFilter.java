@@ -29,17 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-
-
-package VjControl;
-
-import javax.swing.filechooser.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Vector;
-
-
+import javax.swing.filechooser.*;
 
 /** A convenient FileFilter subclass used by the EasyFileDialog.
  *  SuffixFilter filters files based on a set of suffixes, typically
@@ -49,7 +44,6 @@ import java.util.Vector;
  *  me why there are two different almost identical interfaces in the 
  *  Core APIs...
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class SuffixFilter 

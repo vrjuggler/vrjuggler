@@ -27,19 +27,16 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  */
+package org.vrjuggler.jccl.vjcontrol;
 
-package VjControl;
-
-import java.util.HashMap;
-import java.util.Vector;
+import java.beans.Beans;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.io.*;
-import java.beans.Beans;
+import java.util.HashMap;
+import java.util.Vector;
 
-import VjConfig.*;
-import VjControl.VjComponent;
-import VjControl.VjClassLoader;
+import org.vrjuggler.jccl.config.*;
 
 /** Factory object to create VjComponents and manage loading of .jars.
  *  Extensions to VjControl can be added in the form of external .jar
