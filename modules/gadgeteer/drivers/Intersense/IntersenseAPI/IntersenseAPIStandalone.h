@@ -33,24 +33,10 @@
 #ifndef GADGET_INTERSENSE_API_STANDALONE_H
 #define GADGET_INTERSENSE_API_STANDALONE_H
 
-#include <fstream>
 #include <string>
 
 #include <drivers/Intersense/IntersenseAPI/isense.h>
 
-/*
-struct isConfig {
-    bool State;
-    int InertiaCube;
-    int Enhancement;
-    int Sensitivity;
-    int Prediction;
-    int AngleFormat;
-    bool TimeStamped;
-    bool GetButtons;
-    bool GetAnalogData;
-};
-*/
 
 class IntersenseAPIStandalone
 {
