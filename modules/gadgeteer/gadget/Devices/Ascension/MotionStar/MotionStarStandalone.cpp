@@ -63,6 +63,11 @@ aMotionStar::aMotionStar(char* _address,
 				birdRate(_birdRate),
 				reportRate(_reportRate)
 {
+  union {
+    char c[sizeof(short)];
+    short value;
+  } endian;
+
   if ( _address != NULL ) {
     address = strdup(_address);
   } else {
@@ -72,6 +77,15 @@ aMotionStar::aMotionStar(char* _address,
   m_xmtr_pos_scale = 288.0;
   m_xmtr_rot_scale = 180.0;
   m_xmtr_divisor   = 32767.0;
+
+  // Determine the endianness of the host platform.  A value of true for
+  // m_big_endian means that the host use big endian byte order.  false of
+  // course means that it is little endian.  The way this works is that we
+  // access the first byte of endian.value directly.  If it is 1, the host
+  // treats that as the high-order byte.  Otherwise, it is the low-order
+  // byte.
+  endian.value = 256;
+  m_big_endian = (endian.c[0] ? true : false);
 } // end aMotionStar::aMotionStar()
 
 
@@ -534,7 +548,6 @@ void aMotionStar::get_status_all()
   mRate = atoi(szRate);
   realRate = (double)(mRate)/1000;
   printf("Measurement rate = %6.1f\n", realRate);
-
   printf("Number of chassis in system = %d\n", serverNumber);
   printf("Chassis# = %d\n", chassisNumber);
   printf("Number of FBB devices in this chassis = %d\n", chassisDevices);
