@@ -216,7 +216,8 @@ public class ConfigDefinitionRepositoryEditor
                                                      new ArrayList(),
                                                      "",
                                                      categories,
-                                                     new ArrayList());
+                                                     new ArrayList(),
+                                                     null);
          getRepository().add(def);
       }
       // Check if the user wants to add a new property definition

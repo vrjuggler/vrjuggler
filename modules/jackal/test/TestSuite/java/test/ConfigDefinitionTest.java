@@ -78,7 +78,8 @@ import org.vrjuggler.jccl.config.event.*;
                                   parents,
                                   "A person on the VR Juggler team.",
                                   categories,
-                                  prop_defs);
+                                  prop_defs,
+                                  null);
    }
 
    public void testConstructor()
