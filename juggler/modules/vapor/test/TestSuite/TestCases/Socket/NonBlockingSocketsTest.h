@@ -41,6 +41,11 @@ public:
    {
    }
 
+   NonBlockingSocketTest(std::string name)
+      : CppUnit::ThreadTestCase (name), mAcceptorPort(0)
+   {
+   }
+
    virtual ~NonBlockingSocketTest()
    {
    }
@@ -417,13 +422,17 @@ public:
       CPPUNIT_ASSERT( status.failure() != true );
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite ()
    {
-      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
-      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
-      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
-      suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
-      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("NonBlockingSocketTest");
+
+      test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
+      test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
+      test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
+      test_suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
+      test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
+
+      return test_suite;
    }
 
 protected:

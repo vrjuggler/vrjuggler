@@ -47,13 +47,14 @@ public:
       : CppUnit::ThreadTestCase (),
         testSendRecv_buffer( "we're sending DATA!!!" )
    {
-      mOpenServerSuccess=0;
-      mNumSServer=2;
-      mNumClient=2;
-      mFinishFlag=false;
-      mBlockingFlag=true;
-      mStartFlag=false;
-      mReadnFlag=false;
+      init();
+   }
+
+   SocketTest(std::string name)
+      : CppUnit::ThreadTestCase (name),
+        testSendRecv_buffer( "we're sending DATA!!!" )
+   {
+      init();
    }
 
    virtual ~SocketTest()
@@ -1118,28 +1119,43 @@ public:
    }
 
    // =========================================================================
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
-      suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
-      suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindDestructTest", &SocketTest::sameAddressOpenBindDestructTest));
-      suite->addTest( new CppUnit::TestCaller<SocketTest>("differentAddressOpenBindCloseTest", &SocketTest::differentAddressOpenBindCloseTest));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketTest");
 
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
+      test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
+      test_suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
+      test_suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindDestructTest", &SocketTest::sameAddressOpenBindDestructTest));
+      test_suite->addTest( new CppUnit::TestCaller<SocketTest>("differentAddressOpenBindCloseTest", &SocketTest::differentAddressOpenBindCloseTest));
 
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
 
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
-      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
-      suite->addTest(new CppUnit::TestCaller<SocketTest>("testIsConnected",
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
+
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
+      test_suite->addTest(new CppUnit::TestCaller<SocketTest>("testIsConnected",
                           &SocketTest::testIsConnected));
+
+      return test_suite;
    }
 
 protected:
+   void init ()
+   {
+      mOpenServerSuccess=0;
+      mNumSServer=2;
+      mNumClient=2;
+      mFinishFlag=false;
+      mBlockingFlag=true;
+      mStartFlag=false;
+      mReadnFlag=false;
+   }
+
    vpr::Mutex     mItemProtectionMutex;         // Protect an exclusive item
    vpr::Mutex     mFlagProtectionMutex;         // Protect an flags using in blocking test
    bool           mFinishFlag;

@@ -1,3 +1,6 @@
+#ifndef _VPR_TEST_THREAD_TEST_H_
+#define _VPR_TEST_THREAD_TEST_H_
+
 #include <iostream>
 #include <vector>
 
@@ -23,6 +26,12 @@ class ThreadTest : public CppUnit::TestCase
 public:
    ThreadTest()
    : CppUnit::TestCase ()
+   {
+      mNumRecursions = 0;
+   }
+
+   ThreadTest(std::string name)
+   : CppUnit::TestCase (name)
    {
       mNumRecursions = 0;
    }
@@ -354,12 +363,16 @@ public:
          return;
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
-      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
-      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
-      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ThreadTest");
+
+      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
+      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
+      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
+      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
+
+      return test_suite;
    }
 
    static CppUnit::Test* interactiveSuite()
@@ -382,3 +395,5 @@ protected:
 };
 
 }
+
+#endif

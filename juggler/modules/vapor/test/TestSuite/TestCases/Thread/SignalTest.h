@@ -1,3 +1,6 @@
+#ifndef _VPR_TEST_SIGNAL_TEST_H_
+#define _VPR_TEST_SIGNAL_TEST_H_
+
 #include <iostream>
 #include <string.h>
 
@@ -26,6 +29,12 @@ public:
       /* Do nothing. */ ;
    }
 
+   SignalTest (std::string name)
+      : CppUnit::TestCase(name)
+   {
+      /* Do nothing. */ ;
+   }
+
    virtual ~SignalTest (void)
    {
       /* Do nothing. */ ;
@@ -47,11 +56,17 @@ public:
       CPPUNIT_ASSERT(false);  // Execution should not reach this point
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite ()
    {
+      CppUnit::TestSuite* suite = new CppUnit::TestSuite("SignalTest");
+
       suite->addTest(new CppUnit::TestCaller<SignalTest>("testSegFault",
                                                          &SignalTest::testSegFault));
+
+      return suite;
    }
 };
 
 }
+
+#endif
