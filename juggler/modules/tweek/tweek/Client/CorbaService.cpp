@@ -39,6 +39,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <boost/concept_check.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Assert.h>
@@ -231,6 +232,10 @@ std::list<tweek::SubjectManager_var> CorbaService::getSubjectManagerList()
 PortableServer::ObjectId_var CorbaService::registerObject(PortableServer::ServantBase* servant,
                                                           const std::string& name)
 {
+   // XXX: Why is name unused?  It doesn't seem like it should even be a
+   // parameter.
+   boost::ignore_unused_variable_warning(name);
+
    PortableServer::ObjectId_var obj_id;
 
    try

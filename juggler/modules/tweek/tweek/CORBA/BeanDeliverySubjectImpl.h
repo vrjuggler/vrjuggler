@@ -195,6 +195,7 @@ private:
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
    BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj)
+      : POA_tweek::BeanDeliverySubject(subj), tweek::SubjectImpl()
    {
       /* Do nothing. */ ;
    }
