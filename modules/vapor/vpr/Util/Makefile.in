@@ -50,8 +50,8 @@ VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/vpr/Util
 
 SRCS 		= Debug.cpp		\
-			  Interval.cpp  \
-              StreamLock.cpp
+                  Interval.cpp		\
+                  StreamLock.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
