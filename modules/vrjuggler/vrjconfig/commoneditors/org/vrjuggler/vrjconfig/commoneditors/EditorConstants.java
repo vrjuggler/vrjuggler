@@ -88,6 +88,10 @@ public interface EditorConstants
    public static final String SIM_POS_DEVICE_TYPE =
       "simulated_positional_device";
 
+   /** Config element type simulated_relative_position. */
+   public static final String SIM_RELATIVE_POS_DEVICE_TYPE =
+      "simulated_relative_position";
+
    /** Config element type simulator_viewport. */
    public static final String SIMULATOR_VIEWPORT_TYPE = "simulator_viewport";
 
