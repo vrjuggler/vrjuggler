@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-13-2002 patrickh  Removed vrj::EnvironmentManager.
 May-30-2002 patrickh  Removed the Juggler_utils library.
                       NEW VERSION: 1.1.95
 May-29-2002 patrickh  Installed dynamic libraries are now named based on the
