@@ -363,8 +363,45 @@ aMotionStar::start () {
                         fprintf(stderr, "[aMotionStar] WARNING: Failed to "
                                 "read system status\n");
                     }
+                    // We only try to set the system status if we got a valid
+                    // copy of the current system status.
                     else {
                         fprintf(stderr, "[aMotionStar] Got system status\n");
+
+                        // As long as a positive, non-zero measurement rate is
+                        // given, send it to the MotionStar chassis as a system
+                        // configuration parameter.
+                        if ( m_measurement_rate > 0.0 ) {
+                            std::string str_rate;
+                            int status;
+
+                            // Bounds checking on the measumrent rate.
+                            if ( m_measurement_rate > 144.0 ) {
+                                m_measurement_rate = 144.0;
+                            }
+                            else if ( m_measurement_rate < 20.0 ) {
+                                m_measurement_rate = 20.0;
+                            }
+
+                            convertMeasurementRate(m_measurement_rate,
+                                                   str_rate);
+                            status = setSystemStatus(sys_status,
+                                                     sys_status->transmitterNumber,
+                                                     str_rate.c_str());
+
+                            if ( status != 0 ) {
+                                fprintf(stderr, "[aMotionStar] WARNING: Failed "
+                                        "to set system status\n");
+                            }
+                            else {
+                                // I use std::cerr here so that I don't have
+                                // to deal with fprintf(3)'s float vs. double
+                                // formatting.
+                                std::cerr << "[aMotionStar] Set measurement "
+                                          << "rate to " << m_measurement_rate
+                                          << std::endl;
+                            }
+                        }
                     }
 
                     // Configure each of the birds.
@@ -1121,22 +1158,26 @@ aMotionStar::getSystemStatus () {
 // Set the system status.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::setSystemStatus (const unsigned char xmtr_num,
+aMotionStar::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
+                              const unsigned char xmtr_num,
                               const char data_rate[6])
 {
-    BIRDNET::SYSTEM_STATUS sys_status;
-
-    sys_status.transmitterNumber = xmtr_num;
+    if ( sys_status->transmitterNumber != xmtr_num ) {
+        sys_status->transmitterNumber = xmtr_num;
+        fprintf(stderr, "[aMotionStar] Settting active transmitter to %u\n",
+                xmtr_num);
+    }
 
     // Copy the contents of data_rate into the measuermentRate block.
     // XXX: This may be a little bit of overkill.  strncpy(3) is probably
     // sufficient.
     for ( int i = 0; i < 6; i++ ) {
-        sys_status.measurementRate[i] = data_rate[i];
+        sys_status->measurementRate[i] = data_rate[i];
     }
 
     // Set the system status by setting the status for device 0.
-    return setDeviceStatus(0, (char*) &sys_status, sizeof(sys_status));
+    return setDeviceStatus(0, (char*) sys_status,
+                           sizeof(BIRDNET::SYSTEM_STATUS));
 }
 
 // ----------------------------------------------------------------------------

@@ -959,13 +959,15 @@ private:
     //+       packet for device 0.  The configuration packet sets the
     //+       transmitter number and the data rate.
     //
-    //! ARGS: xmtr_num  - The transmitter number to use.
-    //! ARGS: data_rate - The data measurement rate to use.
+    //! ARGS: sys_status - The current system status.
+    //! ARGS: xmtr_num   - The transmitter number to use.
+    //! ARGS: data_rate  - The data measurement rate to use.
     //
     //! RETURNS:  0 - The configuration was sent successfully.
     //! RETURNS: -1 - The configuration could not be send to the server.
     // ------------------------------------------------------------------------
-    int setSystemStatus(const unsigned char xmtr_num, const char data_rate[6]);
+    int setSystemStatus(BIRDNET::SYSTEM_STATUS* sys_status,
+                        const unsigned char xmtr_num, const char data_rate[6]);
 
     // ------------------------------------------------------------------------
     //: Read the configurations of all the birds and send our configuration
