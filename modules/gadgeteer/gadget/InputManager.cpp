@@ -407,7 +407,7 @@ bool InputManager::configureDevice(jccl::ConfigElementPtr element)
    std::string dev_name = element->getFullName();
 
    vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                 std::string("InputManager::configureDevice: dev[") + dev_name + std::string("]\n"),
+                                 std::string("InputManager::configureDevice: device[") + dev_name + std::string("]\n"),
                                  std::string("done configuring device\n"));
 
    Input* new_device;
@@ -418,13 +418,15 @@ bool InputManager::configureDevice(jccl::ConfigElementPtr element)
       addDevice(new_device);
       ret_val = true;
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-         << "   Successfully added dev: " << dev_name.c_str() << std::endl
+         << "   Successfully added device: " << dev_name << std::endl
          << vprDEBUG_FLUSH;
    }
    else
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                    << "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << std::endl << vprDEBUG_FLUSH;
+         << "New device " << clrSetBOLD(clrCYAN) << dev_name << clrRESET
+         << " failed to start.  Deleting instance" << std::endl
+         << vprDEBUG_FLUSH;
       if ( NULL != new_device )
       {
          delete new_device;
