@@ -413,7 +413,10 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
 # -----------------------------------------------------------------------------
-AC_TYPE_PID_T
+if test "x$SUBSYTEM" = "xSPROC" ; then
+   AC_TYPE_PID_T
+fi
+
 AC_TYPE_SIZE_T
 AC_TYPE_SIGNAL
 DPP_TYPE_SOCKLEN_T
