@@ -99,8 +99,8 @@ public:
    void setMode(navMode new_mode)
    { mMode = new_mode; }
 
-   gmtl::Vec3f getVelocity() const { return mVelocity; }
-   float  getSpeed() const { return gmtl::length(mVelocity); }
+   virtual gmtl::Vec3f getVelocity() const { return mVelocity; }
+   virtual float  getSpeed() const { return gmtl::length(mVelocity); }
 
    // resets the navigator's matrix to the origin (set by setOrigin)
    virtual void reset();

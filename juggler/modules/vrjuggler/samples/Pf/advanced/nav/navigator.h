@@ -116,6 +116,9 @@ public:
 
    void setName(std::string name) { mName = name; }
    std::string getName() { return mName; }
+   
+   virtual gmtl::Vec3f getVelocity() const { return gmtl::Vec3f(); }
+   virtual float  getSpeed() const { return 0.0f; }
 
 protected:
 
