@@ -69,7 +69,11 @@ public:
    {
       mThreadRunning = false;
       char namebuf[42];  // careful with that buffer, eugene
-      sprintf (namebuf, "vjGlPipe %d", (int)this);
+      
+      //kevin: on 64, this will be long.
+      long thisID = reinterpret_cast<long>(this);
+      sprintf( namebuf, "vjGlPipe %d", thisID ); 
+      
       // we need to check if we should be enabled... It looks like vjGlPipe
       // is gonna need a configure method, though...
       mPerfBuffer = new vjPerfDataBuffer (namebuf, 500, 40);
