@@ -135,7 +135,7 @@ bool PerformanceMonitor::configRemove(ConfigChunkPtr chunk)
          if (!vjstrcasecmp (mCurrentPerfConfig->getProperty ("Name"),
                             chunk->getProperty ("Name")))
          {
-            mCurrentPerfConfig.reset(0);
+            mCurrentPerfConfig.reset();
             deactivatePerfBuffers ();
          }
       }

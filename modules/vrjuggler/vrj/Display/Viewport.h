@@ -64,7 +64,7 @@ class Viewport
 {
 public:
    Viewport()
-      : mUser(NULL), mDisplay(NULL), mViewportChunk(NULL),
+      : mUser(NULL), mDisplay(NULL),
         mLatencyMeasure(), mLeftProj(NULL), mRightProj(NULL)
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;

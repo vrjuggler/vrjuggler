@@ -168,7 +168,7 @@ void ChunkDesc::setDefaultChunk (DOM_Node* n)
 {
    default_node = new DOM_Node;
    *default_node = *n;
-   default_chunk.reset(0);
+   default_chunk.reset();
 }
 
 void ChunkDesc::setDefaultChunk (ConfigChunkPtr ch)

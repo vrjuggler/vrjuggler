@@ -686,7 +686,7 @@ protected:
     *       mSocketImpl is set to NULL.
     */
    Socket_t (void)
-      : vpr::BlockIO(), mSocketImpl(NULL)
+      : vpr::BlockIO()
    {
       initSocket_t();
    }
@@ -702,7 +702,7 @@ protected:
     * @param address The address string for this socket object.
     */
    Socket_t (const std::string& address)
-       : vpr::BlockIO(address), mSocketImpl(NULL)
+       : vpr::BlockIO(address)
    {
       initSocket_t();
    }

@@ -149,7 +149,7 @@ protected:
 
 
 protected:
-   DisplayManager() : mDrawManager(NULL), mDisplaySystemChunk(0)
+   DisplayManager() : mDrawManager(NULL)
    {
        ;
    }

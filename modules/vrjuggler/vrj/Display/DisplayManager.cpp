@@ -147,7 +147,7 @@ bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
    else if(chunk_type == std::string("displaySystem"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
-      mDisplaySystemChunk.reset(0);     // Keep track of the display system chunk
+      mDisplaySystemChunk.reset();     // Keep track of the display system chunk
       return true;                     // We successfully configured.
                                        // This tell processPending to remove it to the active config
    }
