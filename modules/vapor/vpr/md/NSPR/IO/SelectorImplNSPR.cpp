@@ -123,8 +123,10 @@ vpr::Uint16 SelectorImpNSPR::getOut(IOSys::Handle handle)
 //: Select
 //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-bool SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
+Status SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
 {
+   vpr::Status ret_val;
+
    PRInt32 result;
 
    result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(), PR_MillisecondsToInterval(timeout));
@@ -133,18 +135,17 @@ bool SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
    {
       NSPR_PrintError("SelectorImpNSPR::select: Error selecting. ");
       numWithEvents = 0;
-      return false;
+      ret_val.setCode(Status::Failure);
    }
    else if(0 == result)    // Timeout
    {
       numWithEvents = 0;
-      return true;
+      ret_val.setCode(Status::Timeout);
    }
-   else                    // Got some
-   {
-      numWithEvents = result;
-      return true;
-   }
+   //else                    // Got some
+      
+   numWithEvents = result;
+   return ret_val;   
 }
 
 // Get the index of the handle given

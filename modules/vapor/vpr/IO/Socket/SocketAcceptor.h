@@ -37,6 +37,7 @@
 #include <vprConfig.h>
 #include <IO/Socket/SocketStream.h>
 #include <IO/Socket/InetAddr.h>
+#include <Utils/Status.h>
 
 namespace vpr
 {
@@ -56,25 +57,25 @@ public:
             mSocket.close();
     }
 
-    // Construct Acceptor to accept connections on the given address    
+    // Construct Acceptor to accept connections on the given address
     // - Opens the socket automatically
     SocketAcceptor( const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
 
     // Open the socket for accepting a connection
     // - Binds the connection and starts listening
-    bool open(const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
-    
+    Status open(const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
+
     /**
      * Accept a new connection.  Creates a new socket on the connection and returns it
-     * 
+     *
      * @return Ptr to the new socket for the connection  <br>
      *         NULL - Failed to accept
      * NOTE: This call is blocking.  It blocks until there is a connection to accept
      */
-    SocketStream* accept();
+    Status accept(SocketStream& sock);
 
     // Close the accepting socket
-    bool close()
+    Status close()
     { return mSocket.close(); }
 
     // Get the member socket that is being used
@@ -83,8 +84,8 @@ public:
     IOSys::Handle getHandle()
     { return mSocket.getHandle(); }
 
-private:   
-    SocketStream    mSocket; 
+private:
+    SocketStream    mSocket;
 };
 
 SocketAcceptor::SocketAcceptor(const InetAddr& addr, bool reuseAddr, int backlog)
@@ -92,40 +93,41 @@ SocketAcceptor::SocketAcceptor(const InetAddr& addr, bool reuseAddr, int backlog
     open(addr, reuseAddr, backlog);
 }
 
-bool SocketAcceptor::open(const InetAddr& addr, bool reuseAddr, int backlog)
+vpr::Status SocketAcceptor::open(const InetAddr& addr, bool reuseAddr, int backlog)
 {
-    vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
+   vpr::Status ret_val;
+
+   vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
 
     mSocket.setLocalAddr(addr);
-    
-    if(!mSocket.open())
-        return false;
+
+    ret_val = mSocket.open();
+    if(ret_val.failure())
+        return ret_val;
 
     mSocket.setReuseAddr(reuseAddr);
 
-    if(!mSocket.bind())
+    ret_val = mSocket.bind();
+    if(ret_val.failure())
     {
         mSocket.close();
-        return false;
+        return ret_val;
     }
-    
-    if(!mSocket.listen(backlog))
+
+    ret_val = mSocket.listen(backlog);
+    if(ret_val.failure())
     {
         mSocket.close();
-        return false;
+        return ret_val;
     }
-    return true;
+    return ret_val;
 }
 
-SocketStream* SocketAcceptor::accept()
+vpr::Status SocketAcceptor::accept(SocketStream& sock)
 {
-    SocketStream* new_socket(NULL);
-
     vprASSERT(mSocket.isOpen());
 
-    new_socket = mSocket.accept();
-
-    return new_socket;
+    return mSocket.accept(sock);
 }
 
 

@@ -104,7 +104,7 @@ public:
    //: Select
    //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
    //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-   bool select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
+   Status select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
    {
       return mSelectorImp.select(numWithEvents, timeout);
    }

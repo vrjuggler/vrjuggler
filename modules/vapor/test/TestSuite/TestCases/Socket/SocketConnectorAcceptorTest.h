@@ -142,11 +142,12 @@ public:
        local_acceptor_addr.setAddress("localhost", mRendevousPort);
        vpr::SocketAcceptor acceptor;
        vpr::SocketStream* sock(NULL);
-       bool ret_val(true);
+       vpr::Status ret_val;
+       ssize_t bytes_written;
 
        // Open the acceptor
        ret_val = acceptor.open(local_acceptor_addr);
-       threadAssertTest((ret_val == true), "Acceptor did not open correctly");
+       threadAssertTest((ret_val.success()), "Acceptor did not open correctly");
                      
        for(int i=0;i<mNumItersA;i++)
        {
@@ -158,15 +159,17 @@ public:
           }
           mCondVar.release();
 
-          // ACCEPT connection 
-          sock = acceptor.accept();
-           threadAssertTest((sock != NULL), "Accepted socket is null");
+          // ACCEPT connection
+          sock = new vpr::SocketStream;
+          ret_val = acceptor.accept(*sock);
+           threadAssertTest((ret_val.success()), "Accepting socket failed");
 
            threadAssertTest((sock->isOpen()), "Accepted socket should be open");
            //threadAssertTest((sock->isConnected()), "Accepted socket should be connected");
            
-           ret_val = sock->write(mMessageValue, mMessageLen);      // Send a message           
-           threadAssertTest((ret_val == true), "Problem writing in acceptor");
+           ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message           
+           threadAssertTest((ret_val.success()), "Problem writing in acceptor");
+           threadAssertTest((bytes_written == mMessageLen), "Didn't send entire messag");
            
            // WAIT for close
            mCondVar.acquire();         
@@ -178,12 +181,13 @@ public:
            //threadAssertTest((ret_val == false), "Socket should not still be connected");
            
            ret_val = sock->close();                                // Close the socket
-           threadAssertTest((ret_val == true), "Problem closing accepted socket");           
+           threadAssertTest((ret_val.success()), "Problem closing accepted socket");           
        }       
    }
    void testSpawnedAcceptor_connector(void* arg)
    {
-      bool ret_val(true);
+      vpr::Status ret_val;
+      ssize_t bytes_read;
       vpr::InetAddr remote_addr;
       remote_addr.setAddress("localhost", mRendevousPort);
       vpr::SocketConnector connector;           // Connect to acceptor
@@ -201,10 +205,11 @@ public:
          vpr::SocketStream    con_sock;
          std::string      data;
          ret_val = connector.connect(con_sock, remote_addr, 100);
-         threadAssertTest((ret_val == true), "Connector can't connect");
+         threadAssertTest((ret_val.success()), "Connector can't connect");
          
-         vpr::Uint16 size = con_sock.read(data, mMessageLen);   // Recieve data
-         threadAssertTest((size == mMessageLen), "Connector recieved message of wrong size" );
+         ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
+         threadAssertTest((ret_val.success()), "Read failed");
+         threadAssertTest((bytes_read == mMessageLen), "Connector recieved message of wrong size" );         
          
          //ret_val = con_sock.isConnected();
          //threadAssertTest((ret_val == false), "Socket should still be connected");            

@@ -38,6 +38,7 @@
 #include <IO/Socket/InetAddr.h>
 #include <IO/Socket/SocketStream.h>
 #include <Utils/Assert.h>
+#include <Utils/Status.h>
 
 
 namespace vpr
@@ -62,16 +63,16 @@ public:
 
   ~SocketConnector()
   {;}
-  
+
   /**
-   * Actively connect to the remote address and set the newStream 
+   * Actively connect to the remote address and set the newStream
    * to the new connection.
    *
    * ARGS: new_stream - The stream to connect
    *       remoteAddr - The remote address to connect to
    *       timeout    - The num msecs to wait (0 - NonBlocking)
    */
-  bool connect (SocketStream& newStream,
+  Status connect (SocketStream& newStream,
                const InetAddr& remoteAddr,
                vpr::Uint16 timeout = 0,
                const InetAddr& localAddr = InetAddr::AnyAddr);
@@ -80,7 +81,7 @@ public:
    * Complete a non-blocking connection
    * Try to complete a non-blocking connection.
    */
-  bool complete (SocketStream &newStream,
+  Status complete (SocketStream &newStream,
                 InetAddr* remoteAddr = NULL,
                 vpr::Uint16 timeout = 0);
 
@@ -97,7 +98,7 @@ protected:
       return true;
   }
 
-  
+
   // Do preconnection rituals
   // - If not bound, then bind to local addr
   // - If timeout == 0, then set nonblocking
@@ -106,31 +107,35 @@ protected:
                       const InetAddr& localAddr = InetAddr::AnyAddr);
 };
 
-bool SocketConnector::connect(SocketStream& newStream, const InetAddr& remoteAddr, 
+Status SocketConnector::connect(SocketStream& newStream, const InetAddr& remoteAddr,
                               vpr::Uint16 timeout, const InetAddr& localAddr)
 {
-    //bool ret_val(true);
+    Status ret_val;
 
     if(!checkOpen(newStream))
-        return false;
+        return Status(Status::Failure);
 
     if(!connectStart(newStream, timeout, localAddr))
-        return false;
+        return Status(Status::Failure);
 
     newStream.setRemoteAddr(remoteAddr);
-    
+
     // XXX: This needs to return a value once we fix up non-blocking
-    if(!newStream.connect())
-        return false;
+    ret_val = newStream.connect();
+    if(!ret_val.success())
+        return ret_val;
 
     InetAddr remote_addr;
 
     // Finish up connection
     if(timeout > 0)
-        if(!complete(newStream, &remote_addr, timeout))
-            return false;
+    {
+       ret_val = complete(newStream, &remote_addr, timeout);
+       if(!ret_val.success())
+          return ret_val;
+    }
 
-    return true;
+    return ret_val;
 }
 
  /**
@@ -138,12 +143,12 @@ bool SocketConnector::connect(SocketStream& newStream, const InetAddr& remoteAdd
    * Try to complete a non-blocking connection.
    *
    * ARGS: newStream - The connected stream
-   *       remoteAddr - returns the address of the remote connection 
+   *       remoteAddr - returns the address of the remote connection
    */
-bool SocketConnector::complete (SocketStream &newStream, InetAddr* remoteAddr, vpr::Uint16 timeout)
+Status SocketConnector::complete (SocketStream &newStream, InetAddr* remoteAddr, vpr::Uint16 timeout)
 {
     (*remoteAddr) = newStream.getRemoteAddr();
-    return true;
+    return vpr::Status();
 }
 
 // Do preconnection rituals
@@ -154,7 +159,7 @@ bool SocketConnector::connectStart (SocketStream& newStream,
                   const vpr::InetAddr& localAddr)
 {
   vprASSERT(newStream.isOpen());
-  
+
   // If timeout is 0, then we are non-blocking
   if(timeout == 0)
   {
@@ -165,12 +170,13 @@ bool SocketConnector::connectStart (SocketStream& newStream,
   // Check to bind to local addr
   if(localAddr != InetAddr::AnyAddr)
   {
-      if(!newStream.setLocalAddr(localAddr))
+      
+     if(!newStream.setLocalAddr(localAddr).success())
         return false;
-      if(!newStream.bind())
+      if(!newStream.bind().success())
         return false;
   }
-  
+
   return true;
 }
 
