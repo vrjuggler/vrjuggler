@@ -52,6 +52,8 @@
 namespace tweek
 {
 
+class BeanDeliverySubjectImpl;
+
 class TWEEK_CLASS_API CorbaManager
 {
 public:
@@ -156,6 +158,11 @@ public:
       return mChildPOA;
    }
 
+   BeanDeliverySubjectImpl* getBeanDeliverySubject() const
+   {
+      return mBeanDeliverySubject;
+   }
+
 private:
    vpr::ReturnStatus createChildPOA(const std::string& local_id);
 
@@ -184,6 +191,11 @@ private:
    tweek::SubjectManagerImpl*   mSubjectManager;
    PortableServer::ObjectId_var mSubjectManagerId;
    CosNaming::Name              mSubjectManagerName;
+
+   BeanDeliverySubjectImpl* mBeanDeliverySubject;
+
+   /** The name of the default Bean Delivery Subject. */
+   static const std::string DELIVERY_SUBJECT_NAME;
 };
 
 } // End of tweek namespace

@@ -44,14 +44,18 @@
 #include <tweek/Util/Version.h>
 #include <tweek/Util/Debug.h>
 #include <tweek/CORBA/SubjectManager.h>
+#include <tweek/CORBA/BeanDeliverySubjectImpl.h>
 #include <tweek/CORBA/CorbaManager.h>
 
 
 namespace tweek
 {
 
+const std::string CorbaManager::DELIVERY_SUBJECT_NAME("TweekBeanPusher");
+
 CorbaManager::CorbaManager()
-   : mAppName("unknown"), mOrbThread(NULL), mSubjectManager(NULL)
+   : mAppName("unknown"), mOrbThread(NULL), mSubjectManager(NULL),
+     mBeanDeliverySubject(NULL)
 {
    std::string tweek_ver = getVersionString();
 
@@ -166,8 +170,14 @@ void CorbaManager::shutdown(bool waitForCompletion)
 {
    // If the Subject Manager exists, we need to deactivate it, remove it
    // from the Naming Service, and free its memory.
-   if ( mSubjectManager != NULL )
+   if ( NULL != mSubjectManager )
    {
+      if ( NULL != mBeanDeliverySubject )
+      {
+         mSubjectManager->unregisterSubject(DELIVERY_SUBJECT_NAME.c_str());
+         delete mBeanDeliverySubject;
+      }
+
       destroySubjectManager();
    }
 
@@ -256,6 +266,25 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          try
          {
             mLocalContext->bind(mSubjectManagerName, mgr_ptr);
+
+            // Now that everything is set up with the Subject Manager, we can
+            // register the one Subject that is always around: the default Bean
+            // Delivery Subject.  This Subject is available for easy delivery
+            // of new Beans to observers.
+            try
+            {
+               mBeanDeliverySubject = new BeanDeliverySubjectImpl();
+               mSubjectManager->registerSubject(mBeanDeliverySubject,
+                                                DELIVERY_SUBJECT_NAME.c_str());
+            }
+            catch (...)
+            {
+               delete mBeanDeliverySubject;
+               vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+                  << clrOutNORM(clrYELLOW, "WARNING")
+                  << ": Failed to register Bean Delivery Subject\n"
+                  << vprDEBUG_FLUSH;
+            }
          }
          catch (CosNaming::NamingContext::AlreadyBound& ex)
          {

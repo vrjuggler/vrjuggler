@@ -55,11 +55,14 @@ EXTRA_SRCS_PATH=	$(srcdir)/../idl
 INSTALL=		@INSTALL@
 SUBOBJDIR=		$(TWEEK_LIBRARY)
 
-IDL_CXX_FILES=	SubjectManager.cpp SubjectManager.h	\
-		Subject.cpp Subject.h			\
-		Observer.cpp Observer.h
+IDL_CXX_FILES=	SubjectManager.cpp SubjectManager.h		\
+		Subject.cpp Subject.h				\
+		Observer.cpp Observer.h				\
+		BeanDeliverySubject.cpp BeanDeliverySubject.h
 
-SRCS=		CorbaManager.cpp		\
+SRCS=		BeanDeliverySubject.cpp		\
+		BeanDeliverySubjectImpl.cpp	\
+		CorbaManager.cpp		\
 		Observer.cpp			\
 		SubjectManager.cpp		\
 		SubjectManagerImpl.cpp		\

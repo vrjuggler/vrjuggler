@@ -757,7 +757,7 @@ strip_jar_path ( ) {
    echo "$retval"
 }
 
-jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekServices.jar'
+jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar'
 ext_jars='wizard.jar ui.jar'
 
 if test "x$JDOM_JAR" != "xnone" ; then
@@ -882,6 +882,7 @@ AC_OUTPUT(tweek-config
           tweek/Util/Makefile
           tweek/idl/Makefile
           test/Makefile
+          test/BeanDeliveryTest/Makefile
           test/FileOpenTestBean/Makefile
           test/NetworkTestBean/Makefile
           test/PrefsTestBean/Makefile

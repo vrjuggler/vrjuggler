@@ -41,11 +41,13 @@ import java.beans.Beans;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
+import org.vrjuggler.tweek.beandelivery.*;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
+import tweek.*;
 
 
 /**
@@ -57,8 +59,9 @@ import org.vrjuggler.tweek.net.corba.*;
  *
  * @version $Revision$
  */
-public class BeanContainer extends JPanel
-                           implements BeanInstantiationListener
+public class BeanContainer
+   extends JPanel
+   implements BeanInstantiationListener, BeanDeliverySubjectUpdateListener
 {
    // ========================================================================
    // Public methods.
@@ -163,6 +166,8 @@ public class BeanContainer extends JPanel
 
    public void fireConnectionEvent(CorbaService corba_if)
    {
+      addBeanDeliveryObserver(corba_if);
+
       CommunicationEvent e =
          new CommunicationEvent(this, CommunicationEvent.CONNECT, corba_if);
 
@@ -192,6 +197,8 @@ public class BeanContainer extends JPanel
 
    public void fireDisconnectionEvent(CorbaService corba_if)
    {
+      removeBeanDeliveryObserver(corba_if);
+
       CommunicationEvent e = new CommunicationEvent(this,
                                                     CommunicationEvent.DISCONNECT,
                                                     corba_if);
@@ -287,6 +294,19 @@ public class BeanContainer extends JPanel
       }
    }
 
+   public void beansAdded(BeanDeliverySubjectUpdateEvent e)
+   {
+      org.vrjuggler.tweek.TweekCore.instance().loadBeans(e.getNewBeans());
+   }
+
+   public void activeBeanChanged(BeanDeliverySubjectUpdateEvent e)
+   {
+      if ( e.hasActiveBean() )
+      {
+
+      }
+   }
+
    private void jbInit() throws Exception
    {
       this.setLayout(mContainerLayout);
@@ -309,6 +329,69 @@ public class BeanContainer extends JPanel
       }
    }
 
+   private void addBeanDeliveryObserver(CorbaService corbaService)
+   {
+      SubjectManager subj_mgr = corbaService.getSubjectManager();
+
+      // The hard-coded string used here is the same as that used by the
+      // automatically registered BeanDeliverySubject servant.  Any other
+      // such servants are not of interest to us.
+      Subject subject = subj_mgr.getSubject("TweekBeanPusher");
+
+      // Try to narrow the Subject object to a SliderSubject object.  If this
+      // fails, it throws a CORBA BAD_PARAM exception.  In that case, we open
+      // a dialog box saying that the narrowing failed.
+      try
+      {
+         // Narrow the subject.
+         BeanDeliverySubject push_subject =
+            BeanDeliverySubjectHelper.narrow(subject);
+
+         // Create the observer.
+         BeanDeliveryObserverImpl push_observer =
+            new BeanDeliveryObserverImpl(push_subject);
+
+         // Store our new observer in the collection of other observers.  We
+         // will need it again later, and we must support multiple observers
+         // of BeanDeliverySubject objects.
+         mBeanDeliveryObserverMap.put(corbaService, push_observer);
+
+         // Declare our interest in events relating to push_subject.
+         push_observer.addBeanDeliverySubjectUpdateListener(this);
+
+         // Attach our observer to the subject.
+         corbaService.registerObject(push_observer,
+                                     "TweekBeanPusher-" + corbaService.getNameServiceURI());
+         push_subject.attach(push_observer._this());
+
+         // Synchronize with the subject's current state information.
+         push_observer.update();
+      }
+      catch (org.omg.CORBA.BAD_PARAM corba_ex)
+      {
+         JOptionPane.showMessageDialog(null,
+                                       "Failed to narrow subject to BeanDeliverySubject",
+                                       "BeanDeliverySubject Narrow Error",
+                                       JOptionPane.ERROR_MESSAGE);
+      }
+   }
+
+   private void removeBeanDeliveryObserver(CorbaService corbaService)
+   {
+      BeanDeliveryObserverImpl push_observer =
+         (BeanDeliveryObserverImpl) mBeanDeliveryObserverMap.get(corbaService);
+
+      if ( null != push_observer )
+      {
+         // Clean up before disconnection.
+         push_observer.removeBeanDeliverySubjectUpdateListener(this);
+         push_observer.detach();
+
+         // Remove the key for corbaService.  We cannot use it again.
+         mBeanDeliveryObserverMap.remove(corbaService);
+      }
+   }
+
    // ========================================================================
    // Private data members.
    // ========================================================================
@@ -316,6 +399,8 @@ public class BeanContainer extends JPanel
    private Vector mCommListeners  = new Vector();
    private Vector mLevelListeners = new Vector();
    private Vector mFrameListeners = new Vector();
+
+   private java.util.Map mBeanDeliveryObserverMap = new java.util.HashMap();
 
    private TreeModel mDataModel = null;
    private BorderLayout mContainerLayout = new BorderLayout();

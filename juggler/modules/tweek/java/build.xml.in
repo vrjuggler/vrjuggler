@@ -74,6 +74,9 @@
          <include name="org/vrjuggler/tweek/net/**" />
          <include name="tweek/**" />
       </jar>
+      <jar destfile="TweekBeanDelivery.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/beandelivery/**" />
+      </jar>
       <jar destfile="TweekServices.jar" basedir=".">
          <include name="org/vrjuggler/tweek/services/**" />
       </jar>
