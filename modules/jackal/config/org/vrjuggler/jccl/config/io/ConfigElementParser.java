@@ -199,13 +199,11 @@ public class ConfigElementParser
       {
          if (type == Boolean.class)
          {
+            // If the input string is "1", change it to "true" so that the
+            // Boolean constructor will handle it correctly.
             if ( valueStr.equals("1") )
             {
                valueStr = "true";
-            }
-            else if ( valueStr.equals("0") )
-            {
-               valueStr = "false";
             }
 
             return new Boolean(valueStr);
