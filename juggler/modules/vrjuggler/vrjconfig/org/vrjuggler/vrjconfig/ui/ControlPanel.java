@@ -58,11 +58,11 @@ public class ControlPanel
       {
          public Object getElementAt(int index) { return null; }
          public Icon getIconAt(int index)      { return null; }
+         public int getIndexOf(Object value)   { return -1; }
          public int getSize()                  { return 0; }
       };
 
       // Setup the model listener and do the initial hookup
-      modelListener = new ModelListener();
       model.addListDataListener(modelListener);
    }
 
@@ -109,13 +109,51 @@ public class ControlPanel
       return titleLbl.getText();
    }
 
+   public void addActionListener(ActionListener listener)
+   {
+      listenerList.add(ActionListener.class, listener);
+   }
+
+   public void removeActionListener(ActionListener listener)
+   {
+      listenerList.remove(ActionListener.class, listener);
+   }
+
+   protected void fireAction(String command, int id)
+   {
+      ActionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ActionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ActionEvent(this, id, command);
+            }
+            ((ActionListener)listeners[i+1]).actionPerformed(evt);
+         }
+      }
+   }
+
    private void rebuildUI()
    {
+      // First clear the listener status on all the component we don't care
+      // about anymore
+      for (int i=0; i<iconPanel.getComponentCount(); ++i)
+      {
+         ((ControlPanelItem)iconPanel.getComponent(i)).removeActionListener(actionListener);
+      }
+
+      // Remove all the old items
       iconPanel.removeAll();
+
+      // Add in the new items
       for (int i=0; i<model.getSize(); ++i)
       {
          ControlPanelItem item = new ControlPanelItem(model.getElementAt(i),
                                                       model.getIconAt(i));
+         item.addActionListener(actionListener);
          iconPanel.add(item);
       }
    }
@@ -131,8 +169,6 @@ public class ControlPanel
       titleLbl.setFont(new Font("serif", Font.BOLD, 32));
       titleLbl.setText("");
       titleLbl.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 0));
-//      titleLbl.setOpaque(true);
-//      titleLbl.setBackground(Color.white);
       iconPanel.setOpaque(true);
       iconPanel.setBackground(Color.white);
       actionPanel.setLayout(actionPanelLayout);
@@ -167,10 +203,15 @@ public class ControlPanel
    private ControlPanelModel model;
 
    /**
-    * The listener for the data model so that we can update the UI when th
+    * The listener for the data model so that we can update the UI when the
     * model changes.
     */
-   private ModelListener modelListener;
+   private ModelListener modelListener = new ModelListener();
+
+   /**
+    * The listener for actions on the contained control panel items.
+    */
+   private ItemActionListener actionListener = new ItemActionListener();
 
    /**
     * Specialized listener for the model so that we make sure the UI gets
@@ -185,6 +226,7 @@ public class ControlPanel
          {
             ControlPanelItem item = new ControlPanelItem(model.getElementAt(i),
                                                          model.getIconAt(i));
+            item.addActionListener(actionListener);
             iconPanel.add(item, i);
          }
       }
@@ -193,6 +235,8 @@ public class ControlPanel
       {
          for (int i=evt.getIndex1(); i>=evt.getIndex0(); --i)
          {
+            ControlPanelItem item = (ControlPanelItem)iconPanel.getComponent(i);
+            item.removeActionListener(actionListener);
             iconPanel.remove(i);
          }
       }
@@ -204,6 +248,25 @@ public class ControlPanel
             ControlPanelItem item = (ControlPanelItem)iconPanel.getComponent(i);
             item.setValue(model.getElementAt(i));
             item.setIcon(model.getIconAt(i));
+         }
+      }
+   }
+
+   /**
+    * Specialized action listener that checks for action on the contained items.
+    */
+   private class ItemActionListener
+      implements ActionListener
+   {
+      public void actionPerformed(ActionEvent evt)
+      {
+         ControlPanelItem item = (ControlPanelItem)evt.getSource();
+         int idx = model.getIndexOf(item.getValue());
+
+         // Sanity check that the item we got an event for is in the model
+         if (idx != -1)
+         {
+            fireAction("clicked", idx);
          }
       }
    }
@@ -227,6 +290,26 @@ public class ControlPanel
          labelBtn.setOpaque(false);
          labelBtn.setBorder(BorderFactory.createEmptyBorder());
          labelBtn.setFont(new Font("serif", Font.BOLD, 16));
+
+         // setup listeners
+         iconBtn.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               // Forward on to interested parties
+               fireAction(String.valueOf(ControlPanelItem.this.value));
+            }
+         });
+         labelBtn.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               // Forward on to interested parties
+               fireAction(String.valueOf(ControlPanelItem.this.value));
+            }
+         });
+
+         // add in the internal components
          add(iconBtn);
          add(Box.createHorizontalStrut(8));
          add(labelBtn);
@@ -257,6 +340,33 @@ public class ControlPanel
          iconBtn.setIcon(icon);
       }
 
+      public void addActionListener(ActionListener listener)
+      {
+         listenerList.add(ActionListener.class, listener);
+      }
+
+      public void removeActionListener(ActionListener listener)
+      {
+         listenerList.remove(ActionListener.class, listener);
+      }
+
+      protected void fireAction(String command)
+      {
+         ActionEvent evt = null;
+         Object[] listeners = listenerList.getListenerList();
+         for (int i=listeners.length-2; i>=0; i-=2)
+         {
+            if (listeners[i] == ActionListener.class)
+            {
+               if (evt == null)
+               {
+                  evt = new ActionEvent(this, 0, command);
+               }
+               ((ActionListener)listeners[i+1]).actionPerformed(evt);
+            }
+         }
+      }
+
       /**
        * The value object being represented by this item.
        */
@@ -264,51 +374,10 @@ public class ControlPanel
 
       private JButton iconBtn = new JButton();
       private JButton labelBtn = new JButton();
-   }
 
-//   /**
-//    * Table model that wraps the ControlPanel model so that the control panel
-//    * can be displayed like a table, but used like a list.
-//    */
-//   private class ControlPanelTableModel
-//      extends AbstractTableModel
-//   {
-//      public ControlPanelTableModel(ControlPanelModel model)
-//      {
-//         setModel(model);
-//      }
-//
-//      public void setModel(ControlPanelModel model)
-//      {
-//         this.model = model;
-//         fireTableDataChanged();
-//      }
-//
-//      public ControlPanelModel getModel()
-//      {
-//         return model;
-//      }
-//
-//      public int getRowCount()
-//      {
-//         return (model.getSize() / getColumnCount()) + 1;
-//      }
-//
-//      public int getColumnCount()
-//      {
-//         return 2;
-//      }
-//
-//      public Object getValueAt(int row, int col)
-//      {
-//         int idx = 2 *row + col;
-//         if (idx <= model.getSize())
-//         {
-//            return model.getElementAt(idx);
-//         }
-//         return null;
-//      }
-//
-//      private ControlPanelModel model;
-//   }
+      /**
+       * Listeners on this item.
+       */
+      private EventListenerList listenerList = new EventListenerList();
+   }
 }
