@@ -36,7 +36,7 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 #include <gadget/Util/Debug.h>
-
+#include <vpr/Util/Interval.h>
 #include <boost/concept_check.hpp>
 
 namespace gadget
@@ -66,8 +66,8 @@ class GADGET_CLASS_API BaseDeviceInterface
 {
 public:
    BaseDeviceInterface(const BaseDeviceInterface& other)
-      : mProxyName(other.mProxyName)
-      , mNameSet(other.mNameSet)
+      : mProxyName(other.mProxyName),
+        mNameSet(other.mNameSet)
    {
       BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
    }
@@ -101,10 +101,21 @@ public:
       return (NULL != mProxyPtr);
    }
 
+   /**
+    * Helper function that will allow people to get a valid delta to use in 
+    * preFrame. Using this should ensure that all physics calculations will
+    * be synchronized across a cluster.
+    *
+    * NOTE: This returns the delta between calls so you should only 
+    *       call it once each frame to get an accurate delta.
+    */
+   vpr::Interval getDelta();
+
 protected:
-   Proxy*      mProxyPtr;   /**<  Ptr to the proxy */
-   std::string mProxyName;  /**< The name of the proxy (or alias) we are looking at */
-   bool        mNameSet;    /**< Has the user set a name?? */
+   Proxy*               mProxyPtr;   /**<  Ptr to the proxy */
+   std::string          mProxyName;  /**< The name of the proxy (or alias) we are looking at */
+   bool                 mNameSet;    /**< Has the user set a name?? */
+   vpr::Interval        mLastTime;
 
 public:
    static void refreshAllDevices();

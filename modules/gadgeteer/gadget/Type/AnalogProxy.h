@@ -80,7 +80,7 @@ public:
    }
 
    /** Returns time of last update. */
-   vpr::Interval getTimeStamp() const
+   virtual vpr::Interval getTimeStamp() const
    {
       return mData.getTime();
    }

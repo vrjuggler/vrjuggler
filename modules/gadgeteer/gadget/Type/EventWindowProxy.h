@@ -63,7 +63,8 @@ public:
       }
    }
 
-   vpr::Interval getTimeStamp()
+   /** Returns time of last update. */
+   virtual vpr::Interval getTimeStamp() const
    {
       if ( isStupified() || (mTypedDevice == NULL) )
       {

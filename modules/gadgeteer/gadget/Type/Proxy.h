@@ -130,6 +130,9 @@ namespace gadget
          mStupified = newState;
       }
 
+      /** Returns time of last update. */
+      virtual vpr::Interval getTimeStamp() const = 0;
+
    protected:
       std::string mName;         /**< The name of the proxy */
       bool        mStupified;    /**< Is the proxy current stupified (returns default data) */
