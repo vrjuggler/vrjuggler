@@ -42,7 +42,7 @@
 namespace vpr {
 
 class SocketDatagramImpWinSock : virtual public SocketImpWinSock,
-                                 virtual public SocketDatagramImp
+                                 virtual public SocketDatagramImp_i
 {
 public:
     // ========================================================================
@@ -58,24 +58,14 @@ public:
     SocketDatagramImpWinSock(void);
 
     // ------------------------------------------------------------------------
-    //: Constructor.  This takes the address (either hostname or IP address)
-    //+ of a remote site and a port and stores the values for later use in the
-    //+ member variables of the object.  The domain may also be set to
-    //+ something other than vpr::SocketTypes::INET.
     //
     //! PRE: None.
     //! POST: The member variables are initialized with the type in particular
     //+       set to vpr::SocketTypes::DATAGRAM.
     //
-    //! ARGS: address - The hostname or IP address of the site to which we
-    //+                 will connect.
-    //! ARGS: port    - The port on the remote site with which we will
-    //+                 communicate.
-    //! ARGS: domain  - The protocol family (domain) for this socket.
     // ------------------------------------------------------------------------
-    SocketDatagramImpWinSock(const std::string& address,
-                             const unsigned short port,
-                             const SocketTypes::Domain domain = SocketTypes::INET);
+    SocketDatagramImpWinSock(const InetAddr& local_addr,
+                             const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
@@ -83,21 +73,13 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagramImpWinSock(void);
+    virtual ~SocketDatagramImpWinSock (void) {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual ssize_t recvfrom(void* msg, const size_t len, const int flags,
-                             InetAddr& from);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual ssize_t recvfrom(unsigned char* msg, const size_t len,
-                             const int flags, InetAddr& from);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual ssize_t recvfrom(char* msg, const size_t len, const int flags,
                              InetAddr& from);
 
     // ------------------------------------------------------------------------
@@ -113,16 +95,6 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual ssize_t sendto(const void* msg, const size_t len, const int flags,
-                           const InetAddr& to);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual ssize_t sendto(const unsigned char* msg, const size_t len,
-                           const int flags, const InetAddr& to);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual ssize_t sendto(const char* msg, const size_t len, const int flags,
                            const InetAddr& to);
 
     // ------------------------------------------------------------------------

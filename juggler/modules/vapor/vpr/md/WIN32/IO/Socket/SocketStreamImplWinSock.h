@@ -42,11 +42,11 @@
 namespace vpr {
 
 class SocketStreamImpWinSock : virtual public SocketImpWinSock,
-                               virtual public SocketStreamImp
+                               virtual public SocketStreamImp_i
 {
 public:
     // ========================================================================
-    // vpr::SocketStreamImp implementation.
+    // vpr::SocketStreamImp_i implementation.
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -101,7 +101,9 @@ public:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketStreamImpWinSock(void);
+    virtual ~SocketStreamImpWinSock (void) {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // Listen on the socket for incoming connection requests.
@@ -125,13 +127,13 @@ public:
     // Accept an incoming connection request.
     //
     // PRE: The socket is open and is in a listening state.
-    // POST: When a connection is established, a new vpr::SocketStreamImp
-    //       object will be created that can be used for further communication
-    //       with the remote site.
+    // POST: When a connection is established, a new
+    //       vpr::SocketStreamImpWinSock object will be created that can be
+    //       used for further communication with the remote site.
     //
     // Returns:
-    //     Non-NULL - A new vpr::SocketStreamImp object that can be used to
-    //                communicate with the remote site.
+    //     Non-NULL - A new vpr::SocketStreamImpWinSock object that can be
+    //                used to communicate with the remote site.
     //     NULL     - A socket could not be created to establish communication
     //                with the remote site.  An error message is printed
     //                explaining what went wrong.
@@ -140,7 +142,7 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual SocketStreamImp* accept(void);
+    virtual SocketStreamImpWinSock* accept(void);
 
 protected:
     // ------------------------------------------------------------------------
@@ -153,11 +155,11 @@ protected:
     //       directly resulting in a ready-to-use socket.
     //
     // Arguments:
-    //     sock      - The open socket returned by the operating system.
-    //     host_addr - The host address structure of the site to which we are
-    //                 connected.
+    //     sock        - The open socket returned by the operating system.
+    //     remote_addr - The host address structure of the site to which we
+    //                   are connected.
     // ------------------------------------------------------------------------
-    SocketStreamImpWinSock(const SOCKET sock, InetAddr& host_addr);
+    SocketStreamImpWinSock(const SOCKET sock, const InetAddr& remote_addr);
 };
 
 }; // End of vpr namespace
