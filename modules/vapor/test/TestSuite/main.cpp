@@ -30,6 +30,7 @@
 
 // Real tests.
 #else
+#  include <TestCases/IO/Port/SerialPortTest.h>
 #endif
 
 #include <TestCases/BoostTest.h>
@@ -158,7 +159,11 @@ int main (int ac, char **av)
    // -------------------------------
    CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite("interactive");
 
-   interactive_suite->addTest(vprTest::ThreadTest::suite());
+//   interactive_suite->addTest(vprTest::ThreadTest::suite());
+
+#ifndef VPR_SIMULATOR
+   interactive_suite->addTest(vprTest::SerialPortTest::suite());
+#endif
 
    runner.addTest(interactive_suite);
 

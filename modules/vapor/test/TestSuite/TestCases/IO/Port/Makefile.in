@@ -46,16 +46,9 @@ include @topdir@/test/TestSuite/test.defs.mk
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 
-# Prefix for recursive stuff.
-DIRPRFX		= TestCases/IO/
+SRCS		= SerialPortTest.cpp
 
-SUBDIR		= Port		\
-                  Socket	\
-                  Stats
-
-SRCS		= SelectorTest.cpp
-
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
