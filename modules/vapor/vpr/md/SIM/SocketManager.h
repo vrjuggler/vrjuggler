@@ -206,7 +206,8 @@ public:
    /**
     * Is the address bound to a socket?
     */
-   bool isBound( const vpr::InetAddrSIM& addr );
+   bool isBound(const vpr::InetAddrSIM& addr,
+                const vpr::SocketTypes::Type addr_type);
 
    /**
     * Is there someone listening on the address?
