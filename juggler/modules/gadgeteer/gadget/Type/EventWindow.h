@@ -115,14 +115,25 @@ public:
    int mCurKeys[256]; /**< (0,*): Copy of m_keys that the user reads from between updates. */
 
 protected:
+   /**
+    * Adds the given event object to the in-progress queue.
+    */
    void addEvent(gadget::EventPtr e);
 
+   /**
+    * Copies the in-progress event queue into the current (i.e., user) queue
+    * and wipes out the in-progress queue.  This should only be called when
+    * it is time to synchronize the data for the current frame.
+    *
+    * @post mCurEventQueue gets a copy of mWorkingEventQueue at the time of
+    *       invocation.  mWorkingEventQueue is emptied.
+    */
    void updateEventQueue();
 
-   EventQueue mCurEventQueue;
+   EventQueue mCurEventQueue;     /**< Queue of events returned to users. */
    vpr::Mutex mCurEventQueueLock;
 
-   EventQueue mWorkingEventQueue;
+   EventQueue mWorkingEventQueue; /**< In-rpgress queeue of events. */
    vpr::Mutex mWorkingEventQueueLock;
 };
 
