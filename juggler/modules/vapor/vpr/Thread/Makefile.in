@@ -58,7 +58,6 @@ SUBOBJDIR	= $(VPR_LIBRARY)
 
 SRCS		= BaseThread.cpp	\
                   Signal.cpp		\
-                  TSTable.cpp		\
                   ThreadFunctor.cpp	\
                   ThreadManager.cpp	\
                   ThreadPool.cpp
