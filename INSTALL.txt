@@ -197,20 +197,20 @@ Getting the Source Code and the Dependencies
    the website (http://www.vrjuggler.org/) or you can follow these steps to
    get the code from our CVS repository.
 
-   1. Check out the 'juggler' module using CVS.
+    1. Check out the 'juggler' module using CVS.
 
  cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
  cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler
 
-   2. Get external packages that Juggler depends on. Typically you will run
+    2. Get external packages that Juggler depends on. Typically you will run
        cvs-gather.pl, found in the top-level juggler directory. For most
        users, the follow command will do the job:
 
  ./cvs-gather.pl --verbose
 
        Ideally, users can just let the command run, but sometimes a password
-       must be entered. The CVS password prompt will appear at such times.
-       Each of the projects downloaded using cvs-gather come from
+       must be entered. In that event, the usual CVS password prompt will
+       appear. Each of the projects downloaded using cvs-gather come from
        SourceForge, and for anonymous CVS access there is no password. Hence,
        simply pressing the ENTER key will allow the download to continue.
 
@@ -255,11 +255,11 @@ Getting the Source Code and the Dependencies
    To limit which packages get downloaded through cvs-gather, use the
    --target option, as shown below:
 
- ./cvs-gather --target Boost,Doozer++
+ ./cvs-gather --target GMTL,Doozer++
 
    or
 
- ./cvs-gather --target Boost --target Doozer++
+ ./cvs-gather --target GMTL --target Doozer++
 
    The names given as arguments to --target are the module names listed in
    juggler/Gatherrc. Any number of target module names may be listed.
@@ -269,11 +269,11 @@ Getting the Source Code and the Dependencies
    and then checks each one out locally for use in building the Juggler
    Project. There are three possible default names for a "gather rc" file:
 
-   1. Gatherrc (in the working directory)
+    1. Gatherrc (in the working directory)
 
-   2. .gatherrc (in the working directory)
+    2. .gatherrc (in the working directory)
 
-   3. $HOME/.gatherrc
+    3. $HOME/.gatherrc
 
    cvs-gather searches for these three files by default in the order shown
    above. Alternatively, a user-defined file (deps.gatherrc, for example) can
@@ -463,7 +463,7 @@ Compiling
    configure.pl can run in a different "build" directory or in the directory
    where it resides. Here is how we (the Juggler Team) have been using it:
 
-   1. Make a directory for compiling. There are many good reasons to do this
+    1. Make a directory for compiling. There are many good reasons to do this
        away from the main source tree (though they will not be listed here).
 
  mkdir build.linux.posix
@@ -472,11 +472,11 @@ Compiling
        system and threading subsystem. Other examples could be
        build.irix.sproc, build.solaris.nspr, etc.
 
-   2. Enter the new build directory.
+    2. Enter the new build directory.
 
  cd build.linux.posix
 
-   3. Configure all the modules making up VR Juggler. This is when you must
+    3. Configure all the modules making up VR Juggler. This is when you must
        tell the module configure scripts where all the package dependencies
        are found. For this description, we will use the term <JAVA_ORB_PATH>
        to refer to the installation directory containing a Java-based CORBA
@@ -490,6 +490,19 @@ Compiling
        simplified to the following:
 
  ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK
+
+  Note
+
+       You will probably have to specify the paths to your local CppDOM and
+       Boost installations using the options --with-cppdom and --with-boost
+       unless they are installed in the default location (/usr/local). By
+       default, Boost 1.31 installs its header files in a subdirectory of
+       include called boost-1_31. That is, if Boost is installed in
+       /home/user1/pkgs/boost, the header files will be in
+       /home/user1/pkgs/boost/include/boost-1_31. In this case, you must also
+       specify the option
+       --with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31 when
+       running configure.pl.
 
    By default, the configuration process will configure VR Juggler and all of
    its dependencies. This includes Sonix, which is an interesting special
@@ -518,32 +531,26 @@ Compiling
    cvs-gather (see the section called "Advanced Use of cvs-gather" for more
    details).
 
-   As an example, consider the case where the Boost C++ library is installed
-   in /usr/local with the headers in /usr/local/include. To use this instead
-   of the version downloaded into juggler/external, run configure.pl as
-   follows:
+   As an example, consider the case where the GMTL library is installed in
+   /usr/local with the headers in /usr/local/include. To use this instead of
+   the version downloaded into juggler/external, run configure.pl as follows:
 
- ../configure.pl --with-boost=/usr/local
+ ../configure.pl --with-gmtl=/usr/local
 
    This option could of course be mixed in with those shown in the previous
-   section. In this situation, all paths for the Boost headers will reference
-   /usr/local/include; everything in juggler/external/boost will be ignored.
-
-   There are similar options for GMTL and CppDOM. Other external dependencies
-   not downloaded with cvs-gather, such as NSPR and OpenORB, require the use
-   of such command-line arguments. Refer to the output from running
-   configure.pl --all-help for more detailed information.
+   section. In this situation, all paths for the GMTL headers will reference
+   /usr/local/include; everything in juggler/external/GMTL will be ignored.
 
     Compiling VR Juggler
 
    Once the configuration process is complete, the code can be compiled.
    Remember that we require the use of GNU make 3.78 or newer.
 
-   1. Compile the source tree using GNU make.
+    1. Compile the source tree using GNU make.
 
  gmake build
 
-   2. Once this completes, you will have a full build of VR Juggler. For
+    2. Once this completes, you will have a full build of VR Juggler. For
        those who are not interested in developing VR Juggler or its component
        modules, it is recommended that you install the software and use the
        installed version for application development. Do this as follows:
@@ -559,12 +566,15 @@ Compiling
 
    VPR can be configured a number of ways. Except when building on Win32, no
    external packages are required. For Win32, NSPR (www.mozilla.org) is
-   required. To build VPR, do the following from the top-level juggler
-   directory:
+   required. For this description, we will use the terms <CPPDOM_PATH> and
+   <BOOST_PATH> to refer to the installation directories containing compiled
+   versions of CppDOM and Boost respectively. Assume that this is an absolute
+   path (e.g., <CPPDOM_PATH> = /home/user1/pkgs/cppdom). To build VPR, do the
+   following from the top-level juggler directory:
 
  mkdir build.vpr
  cd build.vpr
- ../configure.pl --module=VPR --prefix=$HOME/vpr-inst
+ ../configure.pl --module=VPR --prefix=$HOME/vpr-inst --with-cppdom=<CPPDOM_PATH> --with-boost=<BOOST_PATH> --with-boost-includes=<BOOST_PATH>/include/boost-1_31
  gmake debug install-debug
  setenv VPR_BASE_DIR $HOME/vpr-inst
 
@@ -581,18 +591,18 @@ Compiling
    package installations, to the following from the top-level juggler
    directory:
 
-   1. mkdir build.sonix
+    1. mkdir build.sonix
  cd build.sonix
 
-   2. Choose one of the following depending on which subsystem (or both) you
+    2. Choose one of the following depending on which subsystem (or both) you
        want to enable in Sonix:
 
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-openal=/usr/local
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
 
-   3. gmake debug install-debug
+    3. gmake debug install-debug
 
-   4. setenv SNX_BASE_DIR $HOME/sonix-inst
+    4. setenv SNX_BASE_DIR $HOME/sonix-inst
 
     JCCL (Individual)
 
@@ -632,7 +642,7 @@ Compiling
    you are using a version of the JDK older than 1.4.0.
 
    For the following steps, assume that you have omniORB installed in
-   <OMNIORBPATH> and OpenORB is installed in <OPENORBPATH>.
+   <OMNIORB_PATH> and OpenORB is installed in <OPENORB_PATH>.
 
    IRIX users must configure Tweek (and its VPR dependency) to use the POSIX
    subsystem or the NSPR subsystem. omniORB will not work with SPROC threads.
@@ -645,14 +655,14 @@ Compiling
 
  mkdir build.tweek
  cd build.tweek
- ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-cxx-orb=omniORB3 --with-cxx-orb-root=<OMNIORBPATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORBPATH>/lib/openorb-1.2.0.jar
+ ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-cxx-orb=omniORB4 --with-cxx-orb-root=<OMNIORB_PATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORB_PATH>/lib/openorb-1.2.0.jar
  gmake debug install-debug
  setenv TWEEK_BASE_DIR $HOME/tweek-inst
 
    If JDK 1.4.0 or newer is used, you do not need OpenORB (or any other
    third-party CORBA implementation for Java). In that case, pass
-   --with-java-orb=JDK to configure.pl. If you are using omniORB 4.x, pass
-   --with-cxx-orb=omniORB4 instead.
+   --with-java-orb=JDK to configure.pl. If you are using omniORB 3.x, pass
+   --with-cxx-orb=omniORB3 instead.
 
    Depending on your omniORB installation, you may have to pass extra
    arguments to configure.pl so that the configuration process can find the
@@ -660,4 +670,4 @@ Compiling
    with omniORB 3.0.x, the following arguments must be specified in addition
    to the above:
 
- --with-cxx-orb-bin=<OMNIORBPATH>/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=<OMNIORBPATH>/lib/i586_linux_2.0_glibc
+ --with-cxx-orb-bin=<OMNIORB_PATH>/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=<OMNIORB_PATH>/lib/i586_linux_2.0_glibc
