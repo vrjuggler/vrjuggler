@@ -29,10 +29,10 @@ Released: ??? ??, 2001
         * On IRIX, the version 7.3.1.1m or newer of the MIPSpro Compilers is
           required.  Check your version with 'CC -version' on the command
           line.
-        * The Ascension MotionStar driver has been improved, and configration
+        * The Ascension MotionStar driver has been improved, and configuration
           files for that device must be updated.  Refer to the examples in
-          $VJ_BASE_DIR/share/Data/conifgFiles/example.mstar.1pack.config and
-          $VJ_BASE_DIR/share/Data/conifgFiles/example.mstar.2pack.config for
+          $VJ_BASE_DIR/share/Data/configFiles/example.mstar.1pack.config and
+          $VJ_BASE_DIR/share/Data/configFiles/example.mstar.2pack.config for
           one- and two-pack configurations respectively.
         * All windows are positioned relative to the lower left corner of
           the display area.  This allows all graphics APIs on all platforms
