@@ -730,6 +730,10 @@ ${LIBDIR}/${AW_LIB_DYNAMIC} ${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_
 # Java-based configuration editor targets.
 # =============================================================================
 
+# 'gui' must be a phony target so that platforms that do not have
+# case-sensitive file names will not get it confused with the GUI directory.
+.PHONY: gui
+
 # Build the Java-based configuration GUI.
 gui:
 ifndef NO_JAVA_GUI
