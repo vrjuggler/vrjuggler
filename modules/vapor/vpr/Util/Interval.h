@@ -166,9 +166,15 @@ public:
    bool operator <(const Interval& r) const
    { return (mUsecs < r.mUsecs); }
    
-   Interval operator +(const Interval& r) const
-   { return Interval(vpr::Uint32(mUsecs+r.mUsecs), Interval::Usec); }
+   Interval& operator+=(const Interval& r)
+   { mUsecs += r.mUsecs; return *this; }
 
+   const Interval operator +(const Interval& r) const
+   { return (Interval(*this) += r);  }
+
+   Interval& operator-=(const Interval& r)
+   { mUsecs -= r.mUsecs; return *this; }
+   
    /**
     * Return the difference of two interval values
     * 
@@ -178,7 +184,8 @@ public:
     * @return
     */
    Interval operator -(const Interval& r) const
-   { return Interval(vpr::Uint32(mUsecs-r.mUsecs), Interval::Usec); }
+   { return (Interval(*this) -= r); }
+
 
    /** Helper function that returns an interval representing the current time */
    static vpr::Interval now()
