@@ -405,7 +405,7 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
 
             //std::cerr << "read chunk: " << *ch << std::endl;
 
-            if (!vjstrcasecmp (ch->getType(), "IncludeFile")) {
+            if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
                 std::string s = ch->getProperty ("Name");
                 //vjConfigChunkDB newdb;
                 std::string fname = self.getFileName();
@@ -413,7 +413,7 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
                 // load changes the filename, so reset it.
                 self.setFileName(fname);
             }
-            else if (!vjstrcasecmp (ch->getType(), "IncludeDescFile")) {
+            else if (!vjstrcasecmp (ch->getType(), "vjIncludeDescFile")) {
                 // the descs could be needed by everybody else in this file,
                 // so load 'em now...
                 std::string s = ch->getProperty ("Name");

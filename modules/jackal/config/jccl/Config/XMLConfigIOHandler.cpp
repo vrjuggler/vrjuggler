@@ -488,7 +488,7 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
                     ch = buildConfigChunk (child);
                     // look for includes...
                     if (ch.get() != 0) {
-                        if (!vjstrcasecmp (ch->getType(), "IncludeFile")) {
+                        if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
                             std::string s = ch->getProperty ("Name");
                             std::string fname = db.getFileName();
                             retval = retval && db.load (s, fname);
@@ -496,7 +496,7 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
                             db.setFileName(fname);
                         }
                         else if (!vjstrcasecmp (ch->getType(), 
-                                                "IncludeDescFile")) {
+                                                "vjIncludeDescFile")) {
                             // the descs could be needed to parse the rest of
                             // the tree so load 'em now.
                             std::string s = ch->getProperty ("Name");
