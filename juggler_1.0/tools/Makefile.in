@@ -1,19 +1,16 @@
-# Generated automatically from Makefile.in by configure.
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test/ogl/combo
+# Makefile.in for juggler/tools
 # $Id$
-# -----------------------------------------------------------------------------
-# IMPORTANT NOTE FOR IRIX USERS:
-#     This application will not compile using the standard IRIX 6.x make(1).
-#     Use either pmake(1) or gmake(1).
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
-srcdir		= .
+srcdir		= @srcdir@
 
-COMPILE		= CC -DHAVE_CONFIG_H ${VJ_INCLUDES}  -ptv  -woff 3322 -w2 -g
-LINK		= CC  -ptv  -woff 3322 -w2 -g
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
 
 GLUT_LIB	= -B static -L/home/users/allenb/Libs/glut/lib32 -lglut
 GLUT_INC	= -I/home/users/allenb/Libs/glut/include
@@ -21,10 +18,12 @@ GLUT_INC	= -I/home/users/allenb/Libs/glut/include
 GLUI_LIB	= -B static -L/home/users/allenb/Libs/glui_v2/lib -lglui
 GLUI_INC 	= -I/home/users/allenb/Libs/glui_v2
 
-COMMON_INC      = -I${srcdir}/common
-VJ_INCLUDES	= -I${VJ_BASE_DIR}/include -I${srcdir} ${COMMON_INC} ${GLUT_INC} ${GLUI_INC}
-VJ_LIBS		= -B dynamic -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -lm -lC
-VPATH		= .:./common
+COMMON_INC	= -I$(srcdir)/common
+
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)	\
+                  $(COMMON_INC) $(GLUT_INC) $(GLUI_INC)
+VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
+VPATH		= @srcdir@:@srcdir@/common
 
 # This test program requires the following libraries to be linked:
 #
@@ -37,10 +36,13 @@ VPATH		= .:./common
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	=   -B dynamic -L/usr/lib32 -L/usr -lGLU -lGL -lXmu -lXext -lX11 -lm
+EXTRA_LIBS	= $(GLUI_LIB) $(GLUT_LIB) @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
+TRACKER_CONFIG_OBJECTS = trackerConfig.@OBJ_FILE_SUFFIX@	\
+                         sgGlutApp.@OBJ_FILE_SUFFIX@		\
+                         sgGlutWin.@OBJ_FILE_SUFFIX@		\
+                         sgInput.@OBJ_FILE_SUFFIX@
 
-TRACKER_CONFIG_APP_OBJECTS    = trackerConfig.o sgGlutApp.o sgGlutWin.o sgInput.o
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
@@ -48,16 +50,16 @@ default: all
 
 all: trackerConfig
 
-trackerConfig: ${TRACKER_CONFIG_APP_OBJECTS}
-	${LINK} -o $@ ${TRACKER_CONFIG_APP_OBJECTS} ${VJ_LIBS} ${GLUI_LIB} ${GLUT_LIB} ${EXTRA_LIBS}
+trackerConfig: $(TRACKER_CONFIG_OBJECTS)
+	$(LINK) -o $@ $(TRACKER_CONFIG_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-
-.cpp.o:
-	${COMPILE} -c $<
+.cpp.@OBJ_FILE_SUFFIX@:
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend testApp ${TEST_APP_OBJECTS} *core so_locations
+	rm -f Makedepend trackerConfig trackerConfig.exe		\
+          trackerConfig.ilk $(TRACKER_CONFIG_OBJECTS) *core so_locations *.?db
 	rm -rf ./ii_files
