@@ -124,7 +124,7 @@ public:
     //---------------------------------------------------------
     //: Dump the mutex debug stuff and current state.
     //---------------------------------------------------------
-#ifndef WIN32
+#ifndef VJ_OS_Win32
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
        cerr << message << "NULL Mutex\n";
