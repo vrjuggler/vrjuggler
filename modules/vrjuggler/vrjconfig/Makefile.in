@@ -50,7 +50,7 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JARS		= ClusterWizard.jar Devices.jar
+JARS		= ClusterWizard.jar Devices.jar Simulator.jar
 BEANS		= VRJConfig
 
 # List the packages for which JavaDoc documentation will be generated.

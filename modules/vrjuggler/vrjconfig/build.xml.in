@@ -43,6 +43,7 @@
          </fileset>
          <exclude name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
          <exclude name="org/vrjuggler/vrjconfig/wizard/devices/**" />
+         <exclude name="org/vrjuggler/vrjconfig/wizard/simulator/**" />
       </jar>
       <jar destfile="ClusterWizard.jar" basedir=".">
          <include name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
@@ -56,8 +57,13 @@
             <include name="org/vrjuggler/vrjconfig/wizard/devices/images/*" />
          </fileset>
       </jar>
+      <jar destfile="Simulator.jar" basedir=".">
+         <include name="org/vrjuggler/vrjconfig/wizard/simulator/**" />
+         <fileset dir="${srcdir}">
+            <include name="org/vrjuggler/vrjconfig/wizard/simulator/displays/images/*" />
+         </fileset>
+      </jar>
    </target>
-
 
    <!-- Clean up -->
    <target name="clean">
@@ -67,5 +73,6 @@
       <delete file="VRJConfig.jar" failonerror="false" />
       <delete file="ClusterWizard.jar" failonerror="false" />
       <delete file="Devices.jar" failonerror="false" />
+      <delete file="Simulator.jar" failonerror="false" />
    </target>
 </project>
