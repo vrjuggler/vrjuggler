@@ -40,6 +40,22 @@ struct vpr_GUID_Wrapper: vpr::GUID
     PyObject* self;
 };
 
+struct GuidPickle : pickle_suite
+{
+   static tuple getstate(const vpr::GUID& g)
+   {
+      return make_tuple(g.mGuid.packed.l0, g.mGuid.packed.l1,
+                        g.mGuid.packed.l2, g.mGuid.packed.l3);
+   }
+
+   static void setstate(vpr::GUID& g, tuple state)
+   {
+      g.mGuid.packed.l0 = extract<vpr::Uint32>(state[0]);
+      g.mGuid.packed.l1 = extract<vpr::Uint32>(state[1]);
+      g.mGuid.packed.l2 = extract<vpr::Uint32>(state[2]);
+      g.mGuid.packed.l3 = extract<vpr::Uint32>(state[3]);
+   }
+};
 
 }// namespace pyj
 
@@ -58,6 +74,7 @@ void _Export_GUID()
         .def("toString", &vpr::GUID::toString)
         .def("generate", (void (vpr::GUID::*)() )&vpr::GUID::generate)
         .def("generate", (void (vpr::GUID::*)(const vpr::GUID &, const std::string&) )&vpr::GUID::generate)
+        .def_pickle(pyj::GuidPickle())
         .def(self_ns::str(self))
         .def( self == self )
         .def( self != self )
