@@ -659,6 +659,13 @@
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="InputManager" name="Input Manager">
+    <category>Input</category>
+    <help>Configuration of the Gadgeteer Input Manager.</help>
+    <PropertyDesc name="Driver DSO" token="driver" type="string" variable="1">
+      <item label="DSO Path" defaultvalue="" />
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="Intersense" name="Intersense">
     <category>Devices</category>
     <help>Intersense Tracking Devices</help>
