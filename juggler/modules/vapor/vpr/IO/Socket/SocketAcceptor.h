@@ -41,50 +41,111 @@
 namespace vpr
 {
 
-// Socket connection acceptor factory
-// Wraps all the nitty-gritty details of accepting a connection
+/**
+ * Socket connection acceptor factory.
+ * Wraps all the nitty-gritty details of accepting a connection.
+ *
+ * @author Allen Bierbaum
+ */
 class VPR_CLASS_API SocketAcceptor
 {
 public:
-    // Default constructor
+    /**
+     * Default constructor.  This does nothing.  If this constructor is used
+     * when creating an acceptor, the <code>open</code> method must be
+     * called.
+     *
+     * @see open
+     */
     SocketAcceptor()
     {;}
 
+    /**
+     * Destructor.  This makes sure that the accepting socket gets closed.
+     */
     ~SocketAcceptor()
     {
         if(mSocket.isOpen())
             mSocket.close();
     }
 
-    // Construct Acceptor to accept connections on the given address
-    // - Opens the socket automatically
-    SocketAcceptor( const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
-
-    // Open the socket for accepting a connection
-    // - Binds the connection and starts listening
-    Status open(const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
+    /**
+     * Constructs Acceptor to accept connections on the given address.
+     * - Opens the socket automatically
+     *
+     * @post This acceptor is open and bound to the given address.  It is ready
+     *       to accept incoming connections.
+     *
+     * @param addr      The local address to which this acceptor will be bound.
+     * @param reuseAddr A flag stating whether or not to set the "reuse
+     *                  address" option for this socket.  This parameter is
+     *                  optional and defaults to true.
+     * @param backlog   The maximum allowed size for the queue of pending
+     *                  connections.
+     */
+    SocketAcceptor(const vpr::InetAddr& addr, bool reuseAddr = true,
+                   const int backlog = 5);
 
     /**
-     * Accept a new connection.  Creates a new socket on the connection and returns it
+     * Opens the socket for accepting a connection.
+     * - Binds the connection and starts listening.
      *
-     * @return Ptr to the new socket for the connection  <br>
-     *         NULL - Failed to accept
-     * NOTE: This call is blocking.  It blocks until there is a connection to accept
+     * @pre  This acceptor is not already open.
+     * @post This acceptor is open and bound to the given address.  It is ready
+     *       to accept incoming connections.
+     *
+     * @param addr      The local address to which this acceptor will be bound.
+     * @param reuseAddr A flag stating whether or not to set the "reuse
+     *                  address" option for this socket.  This parameter is
+     *                  optional and defaults to true.
+     * @param backlog   The maximum allowed size for the queue of pending
+     *                  connections.
      */
-    Status accept(SocketStream& sock, vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status open(const vpr::InetAddr& addr, bool reuseAddr = true,
+                     const int backlog = 5);
 
-    // Close the accepting socket
-    Status close()
+    /**
+     * Accepts a new connection.  Creates a new socket on the connection and
+     * returns it.
+     *
+     * @pre This acceptor is open and listening for incoming connections.
+     * @post A connected socket is returned via the by-reference parameter
+     *       <code>sock</code> if a connection is successfully accepted.
+     *
+     * @param sock    A reference to a vpr::SocketStream object that will be
+     *                used as storage for the connected socket object if a
+     *                connection can be established.
+     * @param timeout The amount of time to wait for an incoming connection
+     *                request.  This argument is optional and default to
+     *                vpr::Interval::NoTimeout.
+     *
+     * @return vpr::Status::Success is returned when a connection is completed
+     *         successfully.  In this case, the <code>sock</code> argument
+     *         returned is the newly created connected socket.<br>
+     *         vpr::Status::WouldBlock is returned if this is a non-blocking
+     *         acceptor and there are no pending connections.<br>
+     *         vpr::Status::Failure is returned if the socket failed to accept.
+     */
+    vpr::Status accept(vpr::SocketStream& sock,
+                       vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+    /**
+     * Closes the accepting socket.
+     */
+    vpr::Status close()
     { return mSocket.close(); }
 
-    // Get the member socket that is being used
-    SocketStream& getSocket()
+    /**
+     * Gets the member socket that is being used.
+     */
+    vpr::SocketStream& getSocket()
     { return mSocket; }
-    IOSys::Handle getHandle()
+
+    vpr::IOSys::Handle getHandle()
     { return mSocket.getHandle(); }
 
 private:
-    SocketStream    mSocket;
+    vpr::SocketStream    mSocket;
 };
 
 }
