@@ -33,11 +33,11 @@ class vjCoord;
 // (2,0) (2,1) (2,2) (2,3)   <=== Array      <br>
 // (3,0) (3,1) (3,2) (3,3)   <=== Array      <br>
 // <br>
-// For OpenGL, the matrix has to be column major in memory, so we need to
-// access it more like: <br>
+// OpenGL ordering specifies that the matrix has to be column major in memory,
+// so we need to access it more like: <br>
 //    NOTE: The given indexes are what the cells have to be called in C/C++
 //          notation.  Since we are putting the columns into memory
-//          back-to-back.
+//          back-to-back.        <br>
 // (0,0) (1,0) (2,0) (3,0)       <br>
 // (0,1) (1,1) (2,1) (3,1)       <br>
 // (0,2) (1,2) (2,2) (3,2)       <br>
@@ -45,7 +45,6 @@ class vjCoord;
 //   ^     ^     ^     ^         <br>
 //   ====================== Arrays     <br>
 //
-// This is VERY important!!!
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
 class vjMatrix
@@ -155,17 +154,20 @@ public:
 
 
    //: Make rotation matrix around _axis
+   //!ARGS: _degrees - Number of degrees to rotate
+   //+      _axis - The axis to rotate around
    void makeRot(float _degrees, vjVec3 _axis);
 
    //: Make translation matrix
+   //!POST: mat = matrix with only the new translation
    void makeTrans(float _x, float _y, float _z);
 
    //: Sets given translation to current matrix
-   //!POST: mat' = mat with the tranlation portion changed to the parameters passed
+   //!POST: mat = old(mat) with the tranlation portion set to the parameters
    void setTrans(float _x, float _y, float _z);
 
    //: Get the translation portion of the matrix
-   //!POST: _x, _y, and _z contain the translation portions of the matrix
+   //!POST: _x, _y, and _z contain the translation portion of the matrix
    void getTrans(float& _x, float& _y, float& _z);
 
    //: Make scale matrix
@@ -283,15 +285,19 @@ public:
    //!POST: mat' = trans(_x,_y,_z) * _m
    void preTrans(vjVec3& _trans, vjMatrix&  _m);
 
+   //: Post translate a matrix
    //!POST: mat' = _m * trans(_x,_y,_z)
    void postTrans(const vjMatrix&  _m, float _x, float _y, float _z);
 
+   //: Post translate a matrix
    //!POST: mat' = _m * trans(_x,_y,_z)
    void postTrans(const vjMatrix&  _m, vjVec3& _trans);
 
+   //: Pre rotate a matrix
    //!POST: mat' = rot(_degrees, axis) * _m
    void preRot(float _degrees, vjVec3& axis, vjMatrix&  _m);
 
+   //: Post rotate a matrix
    //!POST: mat' = _m * rot(_degrees, axis)
    void postRot(const vjMatrix&  _m, float _degrees, vjVec3& axis);
 
