@@ -10,54 +10,66 @@ import java.io.InputStreamReader;
 
 public class ConfigChunkDB extends Vector {
 
-  private ChunkDescDB descs;
+    private ChunkDescDB descs;
 
-  public ConfigChunkDB (ChunkDescDB d) {
-    super();
-    descs = d;
-  }
 
-  public ConfigChunkDB diff (ConfigChunkDB d) {
-    /* builds a new ConfigChunkDB that's sort of the difference of its
-     * arguments - the returned db contains every chunk in d that isn't
-     * in self or differs from the same-named chunk in self 
-     */
-    ConfigChunk c1, c2;
-    ConfigChunkDB newdb = new ConfigChunkDB(d.descs);
 
-    for (int i = 0; i < d.size(); i++) {
-      c1 = (ConfigChunk)d.elementAt(i);
-      c2 = get (c1.name);
-      if ((c2 == null) || (!c1.equals(c2)))
-	newdb.insertOrdered(c1);
+    public ConfigChunkDB (ChunkDescDB d) {
+	super();
+	descs = d;
     }
-    return newdb;
-  }
 
 
-  public boolean removeAll () {
-    removeAllElements();
-    return true;
-  }
 
-  public boolean remove(String name) {
-    for (int i = 0; i < size(); i++) {
-      if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
-        removeElementAt(i);
-        return true;
-      }
+    public ConfigChunkDB diff (ConfigChunkDB d) {
+	/* builds a new ConfigChunkDB that's sort of the 
+	 * "difference" of its arguments - the returned 
+	 * db contains every chunk in d that isn't
+	 * in self or differs from the same-named chunk in self 
+	 */
+	ConfigChunk c1, c2;
+	ConfigChunkDB newdb = new ConfigChunkDB(d.descs);
+	
+	for (int i = 0; i < d.size(); i++) {
+	    c1 = (ConfigChunk)d.elementAt(i);
+	    c2 = get (c1.name);
+	    if ((c2 == null) || (!c1.equals(c2)))
+		newdb.insertOrdered(c1);
+	}
+	return newdb;
     }
-    return false;
-  }
 
-  public ConfigChunk get (String name) {
-    for (int i = 0; i < size(); i++) {
-      if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
-        return (ConfigChunk)elementAt(i);
-      }
+
+
+    public boolean removeAll () {
+	removeAllElements();
+	return true;
     }
-    return null;
-  }
+
+
+
+    public boolean remove(String name) {
+	for (int i = 0; i < size(); i++) {
+	    if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
+		removeElementAt(i);
+		return true;
+	    }
+	}
+	return false;
+    }
+
+
+
+    public ConfigChunk get (String name) {
+	for (int i = 0; i < size(); i++) {
+	    if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
+		return (ConfigChunk)elementAt(i);
+	    }
+	}
+	return null;
+    }
+
+
 
     public Vector getOfDescName (String typename) {
 	Vector v = new Vector();
@@ -67,6 +79,8 @@ public class ConfigChunkDB extends Vector {
 	}
 	return v;
     }
+
+
 
     public Vector getOfDescToken (String typename) {
 	Vector v = new Vector();
@@ -78,87 +92,91 @@ public class ConfigChunkDB extends Vector {
     }
 
 
-  public void insertOrdered (ConfigChunk c) {
-    /* adds a chunk into self, with the constraint that it's stored
-     * with all the other chunks of its type.
-     * For the moment, we won't put any real order on that.
-     */
-    ConfigChunk t;
-    int i;
 
-    remove(c.name);
-    for (i = 0; i < size(); i++) {
-      t = (ConfigChunk)elementAt(i);
-      if (t.getDescName().equalsIgnoreCase(c.getDescName())) 
-	break;
-    }
-    if (i == size())
-      addElement(c);
-    else {
-      for ( ; i < size(); i++) {
-	t = (ConfigChunk)elementAt(i);
-	if (!t.getDescName().equalsIgnoreCase(c.getDescName()))
-	  break;
-      }
-      insertElementAt(c, i);
-    }
-  }
+    public void insertOrdered (ConfigChunk c) {
+	/* adds a chunk into self, with the constraint 
+	 * that it's stored with all the other chunks of its type.
+	 * For the moment, we won't put any real order on that.
+	 */
+	ConfigChunk t;
+	int i;
 
-  public String getNewName (String root) {
-    /* generates a name for a chunk, prefixed with root, that wont'
-     * conflict with any names of chunks currently in self
-     */
-    String name;
-    int num = 1;
-    do {
-      name = root + Integer.toString(num++);
-    } while (get(name) != null);
-    return name;
-  }
-
-  public boolean read (ConfigStreamTokenizer st) {
-    String s;
-    ConfigChunk c;
-
-    try {
-      while (true) {
-	st.nextToken();
-	if (st.sval.equalsIgnoreCase ("end"))
-	  break;
-	ChunkDesc d = descs.get(st.sval);
-	if (d != null) {
-	  c = new ConfigChunk(d);
-	  c.read(st);
-	  if ((c.name == null) || (c.name.equals(""))) {
-	    c.name = getNewName (c.desc.name);
-
-	  }
-	  insertOrdered(c);
-	} else {
-	  System.err.println ("Error reading ConfigChunks - no such chunk type " + st.sval);
+	remove(c.name);
+	for (i = 0; i < size(); i++) {
+	    t = (ConfigChunk)elementAt(i);
+	    if (t.getDescName().equalsIgnoreCase(c.getDescName())) 
+		break;
 	}
-      }
-
-      /*
-      System.out.println ("Verifying ConfigChunkDB Contents:");
-      for (int i = 0; i < size(); i++) {
-	c = (ConfigChunk)elementAt(i);
-	if (c == null) {
-	  System.out.println ("element " + i + " is null!");
+	if (i == size())
+	    addElement(c);
+	else {
+	    for ( ; i < size(); i++) {
+		t = (ConfigChunk)elementAt(i);
+		if (!t.getDescName().equalsIgnoreCase(c.getDescName()))
+		    break;
+	    }
+	    insertElementAt(c, i);
 	}
-	else
-	  System.out.println (c.name);
-      }
-      */
-
-      return true;
-
     }
-    catch (IOException io) {
-      System.err.println ("IO Error in ConfigChunkDB.read()");
-      return false;
+
+
+
+    public String getNewName (String root) {
+	/* generates a name for a chunk, prefixed with root, that
+	 * won't conflict with any names of chunks currently in self
+	 */
+	String name;
+	int num = 1;
+	do {
+	    name = root + Integer.toString(num++);
+	} while (get(name) != null);
+	return name;
     }
-  }
+
+
+
+    public boolean read (ConfigStreamTokenizer st) {
+	String s;
+	ConfigChunk c;
+	
+	try {
+	    while (true) {
+		st.nextToken();
+		if ((st.ttype == ConfigStreamTokenizer.TT_EOF) ||
+		    st.sval.equalsIgnoreCase ("end"))
+		    break;
+		ChunkDesc d = descs.get(st.sval);
+		if (d != null) {
+		    c = new ConfigChunk(d);
+		    c.read(st);
+		    if ((c.name == null) || (c.name.equals(""))) {
+			c.name = getNewName (c.desc.name);
+			
+		    }
+		    insertOrdered(c);
+		} else {
+		    System.err.println ("Error reading ConfigChunks - no such chunk type " + st.sval);
+		    for(;;) {
+			st.nextToken();
+			if ((st.ttype == ConfigStreamTokenizer.TT_WORD &&
+			     st.sval.equalsIgnoreCase("end")) ||
+			    (st.ttype == ConfigStreamTokenizer.TT_EOF))
+			    break;
+		    }
+			  
+		}
+	    }
+	    
+	    return true;
+	    
+	}
+	catch (IOException io) {
+	    System.err.println ("IO Error in ConfigChunkDB.read()");
+	    return false;
+	}
+    }
+
+
 
   public void replace(ConfigChunk o, ConfigChunk n) {
     /* removes old from the db and inserts new in old's place */
