@@ -50,6 +50,11 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
+
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 #include <boost/concept_check.hpp>
 
 #include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
