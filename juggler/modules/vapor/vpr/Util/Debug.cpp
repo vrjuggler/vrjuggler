@@ -41,6 +41,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObjectProxy.h>
@@ -126,10 +128,13 @@ void Debug::init()
    */
 }
 
-std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, const bool show_thread_info,
+std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
+                               const bool show_thread_info,
                                const bool use_indent, const int indentChange,
                                const bool lockStream)
 {
+   boost::ignore_unused_variable_warning(level);
+
    // Lock the stream
 #ifdef LOCK_DEBUG_STREAM
    if(lockStream)
