@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-24-2002 patrickh  The sonix-config script is now written in Perl.  It is
+                      capable of determining its installation path at runtime.
 Oct-24-2001 subatomic Sonix uses juggler math and vapor singleton now.
                       NOTE, because of this change you'll need to link against
                       Juggler, jccl, gadgeteer, and vpr libs...

@@ -335,6 +335,14 @@ if test "x$dpp_os_type" = "xWin32" ; then
    snx_libs='sonix.lib'
    sample_application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
 else
+   if test "x$GXX" = "xyes" ; then
+      static_begin="-Wl,-Bstatic"
+      static_end="-Wl,-Bdynamic"
+   else
+      static_begin="-B static"
+      static_end="-B dynamic"
+   fi
+
    snx_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
    snx_ldflags_linker="$snx_ldflags_compiler"
    snx_lib='-lsonix'
@@ -342,7 +350,7 @@ else
    sample_application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
 fi
 
-if test "x$PLATFORM" = "xIRIX" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     snx_n32_flags='-n32'
     snx_64_flags='-64'
 fi
@@ -350,13 +358,15 @@ fi
 dnl ===================================================
 dnl  Just extra stuff here (non-sonic stuff)
 dnl ===================================================
-snx_extra_cxxflags=""
-snx_extra_include_dirs=$GMTL_INCLUDES
+snx_extra_cxxflags="$GMTL_INCLUDES"
+snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 #snx_extra_libs="$LDFLAGS $VPR_LIBS $LIBS $APP_EXTRA_LIBS_END"
 snx_extra_libs="$LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
 
 
+AC_SUBST(static_begin)
+AC_SUBST(static_end)
 AC_SUBST(snx_lib)
 AC_SUBST(snx_libs)
 AC_SUBST(snx_n32_flags)
@@ -401,9 +411,7 @@ AC_OUTPUT(vj/Makefile
           Makefile 
           make.defs.mk
           sonix-config,
-          [ sed -e 's/^\(%.*\)/#\1/g' sonix-config > sonix-config.tmp
-      mv sonix-config.tmp sonix-config
-      chmod a+x sonix-config ] )
+          [chmod a+x sonix-config])
 
 cat <<BUILD_INFO
 
