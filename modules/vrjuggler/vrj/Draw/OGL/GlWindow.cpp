@@ -32,7 +32,9 @@
 
 #include <vrj/vrjConfig.h>
 
-#ifdef VJ_OS_Darwin
+#include <vpr/vpr.h>
+
+#ifdef VPR_OS_Darwin
 #   include <OpenGL/gl.h>
 #   include <OpenGL/glu.h>
 #else

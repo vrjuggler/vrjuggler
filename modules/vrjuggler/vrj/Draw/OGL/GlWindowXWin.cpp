@@ -36,6 +36,7 @@
 #include <X11/Xutil.h>
 #include <GL/glx.h>
 
+#include <vpr/vpr.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
@@ -395,7 +396,7 @@ void GlWindowXWin::config(vrj::Display* disp)
    }
 
    // Create hardware group
-#ifdef VJ_OS_IRIX
+#ifdef VPR_OS_IRIX
    for(i=0;i<glx_wins.size();i++)      // For each window
    {
       if(glx_wins[i] != this)    // If not me

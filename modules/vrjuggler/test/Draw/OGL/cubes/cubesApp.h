@@ -34,8 +34,9 @@
 #define _CUBES_APP_
 
 #include <vrj/vrjConfig.h>
+#include <vpr/vpr.h>
 
-#ifdef VJ_OS_Darwin
+#ifdef VPR_OS_Darwin
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else

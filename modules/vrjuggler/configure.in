@@ -158,50 +158,33 @@ case $target_os in
     irix6*)
         DBG_FLAGS="$DBG_FLAGS -gslim"
 
-        AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        AC_DEFINE(VJ_OS_HPUX,)
         AC_DEFINE(VJ_HPUX_VERSION, 10)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # HP PA-RISC machine running HP-UX 11.x.
     hpux11*)
-        AC_DEFINE(VJ_OS_HPUX,)
         AC_DEFINE(VJ_HPUX_VERSION, 11)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
-    # DEC Alpha running Digital UNIX 4.0.
-    osf4.0)
-        AC_DEFINE(VJ_OS_DUX,)
-        ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
-        AC_DEFINE(VJ_OS_FreeBSD,)
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
-        AC_DEFINE(VJ_OS_Linux,)
         ;;
     # A machine running Solaris (aka SunOS).  Currently only i386 is known to
     # work.
     solaris*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
-        AC_DEFINE(VJ_OS_Solaris,)
-        ;;
-    # IBM RS/6000 running AIX.
-    aix*)
-        AC_DEFINE(VJ_OS_AIX)
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
@@ -210,16 +193,9 @@ case $target_os in
             AC_MSG_WARN(*** Disabling performance testing on $host ***)
             _enable_perf='NONE'
         fi
-
-        AC_DEFINE(VJ_OS_Win32,)
         ;;
     darwin1.*)
-        AC_DEFINE(VJ_OS_Darwin,)
         AC_DEFINE(_BSD_TYPES,) 
-        ;;
-    # Unkown operating system (to config.guess).
-    unknown)
-        AC_DEFINE(VJ_OS_GENERIC,)
         ;;
 esac
 
