@@ -90,8 +90,9 @@ dnl    done
     else
         VPR_CFLAGS=`$VPR_CONFIG $vpr_config_args --cflags`
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags`
-        VPR_LIBS=`$VPR_CONFIG $vpr_config_args --libs`
-        VPR_LIBS_STATIC=`$VPR_CONFIG $vpr_config_args --libs --static`
+        VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs`
+        VPR_LIBS="`$VPR_CONFIG $vpr_config_args --libs` $VPR_EXTRA_LIBS"
+        VPR_LIBS_STATIC="`$VPR_CONFIG $vpr_config_args --libs --static` $VPR_EXTRA_LIBS"
         VPR_VERSION=`$VPR_CONFIG --version`
         DPP_VERSION_CHECK_MSG(VPR, $VPR_VERSION, $min_vpr_version,
                               vpr_cv_vpr_version, $2, $3)
