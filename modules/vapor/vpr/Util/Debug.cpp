@@ -61,9 +61,12 @@ Mutex  Debug::_inst_lock;
 TSObjectProxy<std::vector<int> > gVprDebugCurColumn;       // What column to indent to
 TSObjectProxy<std::vector<std::string> > gVprDebugCurColor;        // What color to display "everything" in
 
+// Register DEBUG categories
+vprREGISTER_DBG_CATEGORY(DBG_ERROR,vprDBG_ERROR);
+vprREGISTER_DBG_CATEGORY(DBG_ALL,vprDBG_ALL);
+
 
 vprSingletonImp(Debug);
-
 
 Debug::Debug()
 {

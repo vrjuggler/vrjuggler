@@ -309,15 +309,15 @@ namespace vpr
 * Defines a (file) unique variable that create a registrator in the file prive namespace
 * @param NAME  String name of the category (as used in the environment variable).  Note: This is not in string ("str") form
 * @param CAT   GUID id of the category
+* Use this in the .cpp files to register the actually token with vpr::Debug.
+* @see Debug.cpp
 */
-#define vprREGISTER_DBG_CATEGORY(NAME, CAT) namespace { vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME); }
+#define vprREGISTER_DBG_CATEGORY(NAME, CAT) vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME);
 
 // Debug output categories
 const vpr::GUID vprDBG_ALL("660b4b06-1f5b-4e4b-abb8-d44229ce1319");
-vprREGISTER_DBG_CATEGORY(DBG_ALL,vprDBG_ALL);
-
 const vpr::GUID vprDBG_ERROR("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b");   /* Error output */
-vprREGISTER_DBG_CATEGORY(DBG_ERROR,vprDBG_ERROR);
+
 
 
 #endif

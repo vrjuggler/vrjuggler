@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-11-13 allenb   Changed the debug GUID category registrators to allow only
+                    one registration of the GUIDs.  This means that the 
+                    registration macro should only be used from .cpp files now
 2001-10-12 allenb   Updated vapor debug to use GUIDs for category identifiers.
                     This allows other systems to extend the categories.
 2001-09-23 patrick  Updated test suite to use CppUnit 1.6.0.
