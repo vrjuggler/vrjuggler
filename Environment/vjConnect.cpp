@@ -176,9 +176,13 @@ void vjConnect::controlLoop(void* nullParam) {
 	     * clear the db first
 	     */
 	    s = strtok (NULL, " \t\n");
-	    if (!strcasecmp (s, "all"))
-		chunkdb->removeAll();
-	    fin >> *chunkdb;
+	    // chunks 'all' option disabled for now...
+	    //if (!strcasecmp (s, "all"))
+	    //	chunkdb->removeAll();
+	    //fin >> *chunkdb;
+	    vjConfigChunkDB newchunkdb (descdb);
+	    fin >> newchunkdb;
+	    // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
 	}
 
 	else if (!strcasecmp (s, "remove")) {
@@ -192,7 +196,9 @@ void vjConnect::controlLoop(void* nullParam) {
 	    }
 	    else if (!strcasecmp (s, "chunks")) {
 		while (s = strtok (NULL, " \t\n")) {
-		    chunkdb->removeNamed(s);
+		    // ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO 
+                    // REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
+		    //chunkdb->removeNamed(s);
 		}
 	    }
 	    else
