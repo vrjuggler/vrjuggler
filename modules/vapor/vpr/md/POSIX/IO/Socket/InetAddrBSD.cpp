@@ -195,6 +195,47 @@ std::string InetAddrBSD::getAddressString (void) const
    return ip_str;
 }
 
+std::string InetAddrBSD::getHostname () const
+{
+   std::string hostname;
+   struct hostent* entry;
+
+   entry = gethostbyaddr(&m_addr.sin_addr, sizeof(m_addr.sin_addr),
+                         m_addr.sin_family);
+
+   if ( NULL == entry )
+   {
+      hostname = std::string("<hostname lookup failed>");
+   }
+   else
+   {
+      hostname = entry->h_name;
+   }
+
+   return hostname;
+}
+
+std::vector<std::string> InetAddrBSD::getHostnames () const
+{
+   std::vector<std::string> names;
+   struct hostent* entry;
+
+   entry = gethostbyaddr(&m_addr.sin_addr, sizeof(m_addr.sin_addr),
+                         m_addr.sin_family);
+
+   if ( NULL != entry )
+   {
+      names.push_back(std::string(entry->h_name));
+
+      for ( char** ptr = entry->h_aliases; *ptr != NULL; ptr++ )
+      {
+         names.push_back(std::string(*ptr));
+      }
+   }
+
+   return names;
+}
+
 /**
  * Look up the given address and store the address in m_addr.
  */

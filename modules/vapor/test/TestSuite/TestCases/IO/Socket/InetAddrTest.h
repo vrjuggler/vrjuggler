@@ -95,6 +95,7 @@ public:
       CPPUNIT_ASSERT(addr3.getAddressValue() == addr4.getAddressValue());
       CPPUNIT_ASSERT(addr3.getAddressString() == addr4.getAddressString());
       CPPUNIT_ASSERT(addr3 == addr4);
+      CPPUNIT_ASSERT(addr3.getHostname() == addr4.getHostname());
       CPPUNIT_ASSERT(addr3 == addr5);
 #endif
    }
