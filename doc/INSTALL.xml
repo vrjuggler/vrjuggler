@@ -395,7 +395,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         the use of NSPR is strictly optional. On others (Win32, Mac OS X, and
         Solaris), it is required. Based on your local system you should decide
         whether you need NSPR. Binary versions of NSPR can be downloaded from
-        <ulink url="ftp://ftp.mozilla.org/pub/nspr/releases/">ftp://ftp.mozilla.org/pub/nspr/releases/</ulink>.
+        <ulink url="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</ulink>.
         At this time, we recommend the use of version 4.2 or newer.</para>
       </section>
 
