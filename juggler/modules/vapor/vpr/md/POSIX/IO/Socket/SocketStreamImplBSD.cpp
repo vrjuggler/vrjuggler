@@ -110,9 +110,17 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
             sock.m_handle          = new FileHandleImplUNIX(addr.getAddressString());
             sock.m_handle->m_fdesc = accept_sock;
             sock.m_open            = true;
-            sock.m_bound           = true;
-            sock.m_connected       = true;
-            sock.m_blocking_fixed  = true;
+
+            // Inherit the blocking state from the accepting socket.  This
+            // must be done after m_open is set to true to satisfy the
+            // pre-condition.
+            if ( ! m_blocking ) {
+                sock.enableNonBlocking();
+            }
+
+            sock.m_bound          = true;
+            sock.m_connected      = true;
+            sock.m_blocking_fixed = true;
         }
     }
 
