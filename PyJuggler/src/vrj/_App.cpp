@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/DrawManager.h>
@@ -37,17 +40,14 @@
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct vrj_App_Wrapper: vrj::App
 {
-    vrj_App_Wrapper(PyObject* self_, const vrj::App & p0):
+    vrj_App_Wrapper(PyObject* self_, const vrj::App& p0):
         vrj::App(p0), self(self_) {}
 
-    vrj_App_Wrapper(PyObject* self_, vrj::Kernel * p0):
+    vrj_App_Wrapper(PyObject* self_, vrj::Kernel* p0):
         vrj::App(p0), self(self_) {}
 
     vrj_App_Wrapper(PyObject* self_):
@@ -259,7 +259,7 @@ struct vrj_App_Wrapper: vrj::App
         return vrj::App::getDrawScaleFactor();
     }
 
-    bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool configCanHandle(jccl::ConfigElementPtr p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configCanHandle()\n",
                                  "vrj_App_Wrapper::configCanHandle() done.\n");
@@ -277,7 +277,7 @@ struct vrj_App_Wrapper: vrj::App
         return false;
     }
 
-    bool default_configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool default_configCanHandle(jccl::ConfigElementPtr p0) {
         return vrj::App::configCanHandle(p0);
     }
 
@@ -303,7 +303,7 @@ struct vrj_App_Wrapper: vrj::App
         return vrj::App::depSatisfied();
     }
 
-    bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool configAdd(jccl::ConfigElementPtr p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configAdd()\n",
                                  "vrj_App_Wrapper::configAdd() done.\n");
@@ -321,11 +321,11 @@ struct vrj_App_Wrapper: vrj::App
         return false;
     }
 
-    bool default_configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool default_configAdd(jccl::ConfigElementPtr p0) {
         return vrj::App::configAdd(p0);
     }
 
-    bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool configRemove(jccl::ConfigElementPtr p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configRemove()\n",
                                  "vrj_App_Wrapper::configRemove() done.\n");
@@ -343,11 +343,11 @@ struct vrj_App_Wrapper: vrj::App
         return false;
     }
 
-    bool default_configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool default_configRemove(jccl::ConfigElementPtr p0) {
         return vrj::App::configRemove(p0);
     }
 
-    vrj::DrawManager * getDrawManager() {
+    vrj::DrawManager* getDrawManager() {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::getDrawManager()\n",
                                  "vrj_App_Wrapper::getDrawManager() done.\n");
@@ -355,7 +355,7 @@ struct vrj_App_Wrapper: vrj::App
 
         try
         {
-            return call_method< vrj::DrawManager * >(self, "getDrawManager");
+            return call_method< vrj::DrawManager* >(self, "getDrawManager");
         }
         catch(error_already_set)
         {
@@ -384,13 +384,11 @@ struct vrj_App_Wrapper: vrj::App
     }
 
     int default_configProcessPending() {
-        return vrj::App::configProcessPending();
+        return jccl::ConfigElementHandler::configProcessPending();
     }
 
     PyObject* self;
 };
-
-
 
 }// namespace 
 
@@ -398,23 +396,24 @@ struct vrj_App_Wrapper: vrj::App
 // Module ======================================================================
 void _Export_App()
 {
-    class_< vrj::App, boost::noncopyable, vrj_App_Wrapper >("App", init<  >())
-        .def(init< vrj::Kernel * >())
+    class_< vrj::App, boost::noncopyable, pyj::vrj_App_Wrapper >("App", init<  >())
+        .def(init< vrj::Kernel* >())
         .def_readwrite("mKernel", &vrj::App::mKernel)
         .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
-        .def("init", &vrj::App::init, &vrj_App_Wrapper::default_init)
-        .def("apiInit", &vrj::App::apiInit, &vrj_App_Wrapper::default_apiInit)
-        .def("exit", &vrj::App::exit, &vrj_App_Wrapper::default_exit)
-        .def("preFrame", &vrj::App::preFrame, &vrj_App_Wrapper::default_preFrame)
-        .def("latePreFrame", &vrj::App::latePreFrame, &vrj_App_Wrapper::default_latePreFrame)
-        .def("intraFrame", &vrj::App::intraFrame, &vrj_App_Wrapper::default_intraFrame)
-        .def("postFrame", &vrj::App::postFrame, &vrj_App_Wrapper::default_postFrame)
-        .def("reset", &vrj::App::reset, &vrj_App_Wrapper::default_reset)
-        .def("focusChanged", &vrj::App::focusChanged, &vrj_App_Wrapper::default_focusChanged)
-        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &vrj_App_Wrapper::default_getDrawScaleFactor)
-        .def("configCanHandle", &vrj::App::configCanHandle, &vrj_App_Wrapper::default_configCanHandle)
-        .def("depSatisfied", &vrj::App::depSatisfied, &vrj_App_Wrapper::default_depSatisfied)
-        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &vrj_App_Wrapper::default_configProcessPending)
+        .def("init", &vrj::App::init, &pyj::vrj_App_Wrapper::default_init)
+        .def("apiInit", &vrj::App::apiInit, &pyj::vrj_App_Wrapper::default_apiInit)
+        .def("exit", &vrj::App::exit, &pyj::vrj_App_Wrapper::default_exit)
+        .def("preFrame", &vrj::App::preFrame, &pyj::vrj_App_Wrapper::default_preFrame)
+        .def("latePreFrame", &vrj::App::latePreFrame, &pyj::vrj_App_Wrapper::default_latePreFrame)
+        .def("intraFrame", &vrj::App::intraFrame, &pyj::vrj_App_Wrapper::default_intraFrame)
+        .def("postFrame", &vrj::App::postFrame, &pyj::vrj_App_Wrapper::default_postFrame)
+        .def("reset", &vrj::App::reset, &pyj::vrj_App_Wrapper::default_reset)
+        .def("focusChanged", &vrj::App::focusChanged, &pyj::vrj_App_Wrapper::default_focusChanged)
+        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &pyj::vrj_App_Wrapper::default_getDrawScaleFactor)
+        .def("configCanHandle", (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle, &pyj::vrj_App_Wrapper::default_configCanHandle)
+        .def("depSatisfied", &vrj::App::depSatisfied, &pyj::vrj_App_Wrapper::default_depSatisfied)
+//        .def("getDrawManager", pure_virtual(&vrj::App::getDrawManager))
+        .def("configProcessPending", (int (jccl::ConfigElementHandler::*)() )&jccl::ConfigElementHandler::configProcessPending, (int (pyj::vrj_App_Wrapper::*)())&pyj::vrj_App_Wrapper::default_configProcessPending)
         .def("haveFocus", &vrj::App::haveFocus)
         .def("setFocus", &vrj::App::setFocus)
     ;

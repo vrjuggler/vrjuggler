@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <gadget/Type/PositionData.h>
 
 // Using =======================================================================
@@ -36,12 +39,12 @@ using namespace boost::python;
 void _Export_PositionData()
 {
     class_< gadget::PositionData >("PositionData", init<  >())
-        .def(init< const gadget::PositionData & >())
+        .def(init< const gadget::PositionData& >())
         .def_readwrite("mPosData", &gadget::PositionData::mPosData)
         .def("getPosition", &gadget::PositionData::getPosition)
         .def("setPosition", &gadget::PositionData::setPosition)
         .def("setTime", (void (gadget::InputData::*)() )&gadget::InputData::setTime)
-        .def("setTime", (void (gadget::InputData::*)(const vpr::Interval &) )&gadget::InputData::setTime)
+        .def("setTime", (void (gadget::InputData::*)(const vpr::Interval&) )&gadget::InputData::setTime)
         .def("getTime", &gadget::InputData::getTime)
     ;
 

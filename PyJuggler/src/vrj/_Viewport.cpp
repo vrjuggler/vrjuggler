@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Bosot Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
@@ -36,17 +39,14 @@
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct vrj_Viewport_Wrapper: vrj::Viewport
 {
     vrj_Viewport_Wrapper(PyObject* self_):
         vrj::Viewport(), self(self_) {}
 
-    vrj_Viewport_Wrapper(PyObject* self_, const vrj::Viewport & p0):
+    vrj_Viewport_Wrapper(PyObject* self_, const vrj::Viewport& p0):
         vrj::Viewport(p0), self(self_) {}
 
     void updateProjections(const float p0) {
@@ -77,7 +77,8 @@ inline tuple vrj_Viewport_getOriginAndSize_wrapper(vrj::Viewport* vp)
 void _Export_Viewport()
 {
     scope* vrj_Viewport_scope = new scope(
-    class_< vrj::Viewport, boost::noncopyable, vrj_Viewport_Wrapper >("Viewport", init<  >())
+    class_< vrj::Viewport, boost::noncopyable, pyj::vrj_Viewport_Wrapper >("Viewport", init<  >())
+        .def("updateProjections", pure_virtual(&vrj::Viewport::updateProjections))
         .def("getType", &vrj::Viewport::getType)
         .def("isSimulator", &vrj::Viewport::isSimulator)
         .def("isSurface", &vrj::Viewport::isSurface)
@@ -85,7 +86,7 @@ void _Export_Viewport()
         .def("getName", &vrj::Viewport::getName, return_internal_reference< 1 >())
         .def("inStereo", &vrj::Viewport::inStereo)
         .def("getView", &vrj::Viewport::getView)
-        .def("getOriginAndSize", vrj_Viewport_getOriginAndSize_wrapper)
+        .def("getOriginAndSize", pyj::vrj_Viewport_getOriginAndSize_wrapper)
         .def("getConfigElement", &vrj::Viewport::getConfigElement)
         .def("getUser", &vrj::Viewport::getUser, return_internal_reference< 1 >())
         .def("getDisplay", &vrj::Viewport::getDisplay, return_internal_reference< 1 >())

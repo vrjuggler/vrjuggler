@@ -25,22 +25,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <gadget/Type/PositionProxy.h>
 
 // Using =======================================================================
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
 namespace pyj {
-
 
 struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
 {
-    gadget_PositionProxy_Wrapper(PyObject* self_, const gadget::PositionProxy & p0):
+    gadget_PositionProxy_Wrapper(PyObject* self_, const gadget::PositionProxy& p0):
         gadget::PositionProxy(p0), self(self_) {}
 
     gadget_PositionProxy_Wrapper(PyObject* self_):
@@ -61,7 +61,15 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         gadget::PositionProxy::updateData();
     }
 
-    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
+    vpr::Interval getTimeStamp() const {
+        return call_method< vpr::Interval >(self, "getTimeStamp");
+    }
+
+    vpr::Interval default_getTimeStamp() const {
+        return gadget::PositionProxy::getTimeStamp();
+    }
+
+    bool config(jccl::ConfigElementPtr p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -74,11 +82,11 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool default_config(jccl::ConfigElementPtr p0) {
         return gadget::PositionProxy::config(p0);
     }
 
-    void set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Position * p1) {
+    void set(std::string p0, gadget::Position* p1) {
         try
         {
             call_method< void >(self, "set", p0, p1);
@@ -89,7 +97,7 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         }
     }
 
-    void default_set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Position * p1) {
+    void default_set(std::string p0, gadget::Position* p1) {
         gadget::PositionProxy::set(p0, p1);
     }
 
@@ -110,10 +118,10 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         return gadget::PositionProxy::refresh();
     }
 
-    std::basic_string<char,std::char_traits<char>,std::allocator<char> > getDeviceName() const {
+    std::string getDeviceName() const {
         try
         {
-            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+            return call_method< std::string >(self, "getDeviceName");
         }
         catch(error_already_set)
         {
@@ -123,7 +131,7 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         return std::string("UNKNOWN");
     }
 
-    std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getDeviceName() const {
+    std::string default_getDeviceName() const {
         return gadget::PositionProxy::getDeviceName();
     }
 
@@ -151,8 +159,6 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_PositionProxy_getData_overloads_0_
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Proxy_stupify_overloads_0_1, stupify, 0, 1)
 
-
-
 }// namespace 
 
 
@@ -160,23 +166,23 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Proxy_stupify_overloads_0_1, stupi
 void _Export_PositionProxy()
 {
     class_< gadget::PositionProxy, pyj::gadget_PositionProxy_Wrapper >("PositionProxy", init<  >())
-        .def(init< const gadget::PositionProxy & >())
-        .def("updateData", &gadget::PositionProxy::updateData, &pyj::gadget_PositionProxy_Wrapper::default_updateData)
-        .def("config", &gadget::PositionProxy::config, &pyj::gadget_PositionProxy_Wrapper::default_config)
-        .def("set", &gadget::TypedProxy<gadget::Position>::set, &pyj::gadget_PositionProxy_Wrapper::default_set)
-        .def("refresh", &gadget::TypedProxy<gadget::Position>::refresh, &pyj::gadget_PositionProxy_Wrapper::default_refresh)
-        .def("getDeviceName", &gadget::TypedProxy<gadget::Position>::getDeviceName, &pyj::gadget_PositionProxy_Wrapper::default_getDeviceName)
-        .def("isStupified", &gadget::Proxy::isStupified, &pyj::gadget_PositionProxy_Wrapper::default_isStupified)
-        .def("getTimeStamp", &gadget::PositionProxy::getTimeStamp)
+        .def(init< const gadget::PositionProxy& >())
+        .def("updateData", (void (gadget::PositionProxy::*)() )&gadget::PositionProxy::updateData, (void (pyj::gadget_PositionProxy_Wrapper::*)())&pyj::gadget_PositionProxy_Wrapper::default_updateData)
+        .def("getTimeStamp", (vpr::Interval (gadget::PositionProxy::*)() const)&gadget::PositionProxy::getTimeStamp, (vpr::Interval (pyj::gadget_PositionProxy_Wrapper::*)() const)&pyj::gadget_PositionProxy_Wrapper::default_getTimeStamp)
+        .def("config", (bool (gadget::PositionProxy::*)(jccl::ConfigElementPtr) )&gadget::PositionProxy::config, (bool (pyj::gadget_PositionProxy_Wrapper::*)(jccl::ConfigElementPtr))&pyj::gadget_PositionProxy_Wrapper::default_config)
+        .def("set", (void (gadget::TypedProxy<gadget::Position>::*)(std::string, gadget::Position*) )&gadget::TypedProxy<gadget::Position>::set, (void (pyj::gadget_PositionProxy_Wrapper::*)(std::string, gadget::Position*))&pyj::gadget_PositionProxy_Wrapper::default_set)
+        .def("refresh", (bool (gadget::TypedProxy<gadget::Position>::*)() )&gadget::TypedProxy<gadget::Position>::refresh, (bool (pyj::gadget_PositionProxy_Wrapper::*)())&pyj::gadget_PositionProxy_Wrapper::default_refresh)
+        .def("getDeviceName", (std::string (gadget::TypedProxy<gadget::Position>::*)() const)&gadget::TypedProxy<gadget::Position>::getDeviceName, (std::string (pyj::gadget_PositionProxy_Wrapper::*)() const)&pyj::gadget_PositionProxy_Wrapper::default_getDeviceName)
+        .def("isStupified", (bool (gadget::Proxy::*)() const)&gadget::Proxy::isStupified, (bool (pyj::gadget_PositionProxy_Wrapper::*)() const)&pyj::gadget_PositionProxy_Wrapper::default_isStupified)
         .def("getData", &gadget::PositionProxy::getData, pyj::gadget_PositionProxy_getData_overloads_0_1())
         .def("getPositionData", &gadget::PositionProxy::getPositionData, return_internal_reference< 1 >())
         .def("getUnit", &gadget::PositionProxy::getUnit)
         .def("getPositionPtr", &gadget::PositionProxy::getPositionPtr, return_internal_reference< 1 >())
-        .def("getElementType", (std::basic_string<char,std::char_traits<char>,std::allocator<char> > (*)())&gadget::PositionProxy::getElementType)
-        .staticmethod("getElementType")
+        .def("getElementType", &gadget::PositionProxy::getElementType)
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
         .def("stupify", &gadget::Proxy::stupify, pyj::gadget_Proxy_stupify_overloads_0_1())
+        .staticmethod("getElementType")
     ;
 
 }

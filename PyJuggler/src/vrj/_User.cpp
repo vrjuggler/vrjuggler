@@ -25,18 +25,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Kernel/User.h>
 
 // Using =======================================================================
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct vrj_User_Wrapper: vrj::User
 {
@@ -47,15 +47,13 @@ struct vrj_User_Wrapper: vrj::User
     PyObject* self;
 };
 
-
-
 }// namespace 
 
 
 // Module ======================================================================
 void _Export_User()
 {
-    class_< vrj::User, boost::noncopyable, vrj_User_Wrapper >("User", init<  >())
+    class_< vrj::User, boost::noncopyable, pyj::vrj_User_Wrapper >("User", init<  >())
         .def("getId", &vrj::User::getId)
         .def("getName", &vrj::User::getName)
         .def("getHeadUpdateTime", &vrj::User::getHeadUpdateTime)

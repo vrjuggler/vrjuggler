@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vpr/Util/ReturnStatus.h>
 
 // Using =======================================================================
@@ -37,8 +40,8 @@ void _Export_ReturnStatus()
 {
     scope* vpr_ReturnStatus_scope = new scope(
     class_< vpr::ReturnStatus >("ReturnStatus", init<  >())
-        .def(init< const vpr::ReturnStatus & >())
-        .def(init< const vpr::ReturnStatus::Code & >())
+        .def(init< const vpr::ReturnStatus& >())
+        .def(init< const vpr::ReturnStatus::Code& >())
         .def("copy", &vpr::ReturnStatus::copy)
         .def("setCode", &vpr::ReturnStatus::setCode)
         .def("success", &vpr::ReturnStatus::success)

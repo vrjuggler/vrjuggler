@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Kernel/User.h>
@@ -35,17 +38,14 @@
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct vrj_SimViewport_Wrapper: vrj::SimViewport
 {
     vrj_SimViewport_Wrapper(PyObject* self_):
         vrj::SimViewport(), self(self_) {}
 
-    vrj_SimViewport_Wrapper(PyObject* self_, const vrj::SimViewport & p0):
+    vrj_SimViewport_Wrapper(PyObject* self_, const vrj::SimViewport& p0):
         vrj::SimViewport(p0), self(self_) {}
 
     void updateProjections(const float p0) {
@@ -79,22 +79,10 @@ inline tuple vrj_SimViewport_getOriginAndSize_wrapper(vrj::SimViewport* vp)
 // Module ======================================================================
 void _Export_SimViewport()
 {
-    class_< vrj::SimViewport, bases< vrj::Viewport >, vrj_SimViewport_Wrapper >("SimViewport", init<  >())
-        .def(init< const vrj::SimViewport & >())
-        .def("updateProjections", &vrj::SimViewport::updateProjections, &vrj_SimViewport_Wrapper::default_updateProjections)
+    class_< vrj::SimViewport, bases< vrj::Viewport >, pyj::vrj_SimViewport_Wrapper >("SimViewport", init<  >())
+        .def(init< const vrj::SimViewport& >())
+        .def("updateProjections", (void (vrj::SimViewport::*)(const float) )&vrj::SimViewport::updateProjections, (void (pyj::vrj_SimViewport_Wrapper::*)(const float))&pyj::vrj_SimViewport_Wrapper::default_updateProjections)
         .def("getDrawSimInterface", &vrj::SimViewport::getDrawSimInterface, return_internal_reference< 1 >())
-        .def("getType", &vrj::Viewport::getType)
-        .def("isSimulator", &vrj::Viewport::isSimulator)
-        .def("isSurface", &vrj::Viewport::isSurface)
-        .def("isActive", &vrj::Viewport::isActive)
-        .def("getName", &vrj::Viewport::getName, return_internal_reference< 1 >())
-        .def("inStereo", &vrj::Viewport::inStereo)
-        .def("getView", &vrj::Viewport::getView)
-        .def("getOriginAndSize", vrj_SimViewport_getOriginAndSize_wrapper)
-        .def("getConfigElement", &vrj::Viewport::getConfigElement)
-        .def("getUser", &vrj::Viewport::getUser, return_internal_reference< 1 >())
-        .def("getDisplay", &vrj::Viewport::getDisplay, return_internal_reference< 1 >())
-        .def("getLeftProj", &vrj::Viewport::getLeftProj, return_internal_reference< 1 >())
-        .def("getRightProj", &vrj::Viewport::getRightProj, return_internal_reference< 1 >());
+    ;
 }
 

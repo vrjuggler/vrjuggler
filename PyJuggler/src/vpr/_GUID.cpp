@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vpr/Util/GUID.h>
 
 // Using =======================================================================
@@ -38,14 +41,15 @@ void _Export_GUID()
 {
     scope* vpr_GUID_scope = new scope(
     class_< vpr::GUID >("GUID", init<  >())
-        .def(init< const vpr::GUID::GenerateTag & >())
-        .def(init< const char * >())
-        .def(init< const std::basic_string<char,std::char_traits<char>,std::allocator<char> > & >())
-        .def(init< const vpr::GUID &, const std::basic_string<char,std::char_traits<char>,std::allocator<char> > & >())
-        .def(init< const vpr::GUID & >())
+        .def(init< const vpr::GUID::GenerateTag& >())
+        .def(init< const std::string& >())
+        .def(init< const vpr::GUID&, const std::string& >())
+        .def(init< const vpr::GUID& >())
+        .def_readwrite("generateTag", &vpr::GUID::generateTag)
+        .def_readonly("NullGUID", &vpr::GUID::NullGUID)
         .def("toString", &vpr::GUID::toString)
         .def("generate", (void (vpr::GUID::*)() )&vpr::GUID::generate)
-        .def("generate", (void (vpr::GUID::*)(const vpr::GUID &, const std::basic_string<char,std::char_traits<char>,std::allocator<char> > &) )&vpr::GUID::generate)
+        .def("generate", (void (vpr::GUID::*)(const vpr::GUID &, const std::string&) )&vpr::GUID::generate)
         .def(self_ns::str(self))
         .def( self == self )
         .def( self != self )
@@ -53,14 +57,11 @@ void _Export_GUID()
     );
 
     class_< vpr::GUID::GenerateTag >("GenerateTag", init<  >())
-        .def(init< const vpr::GUID::GenerateTag & >())
+        .def(init< const vpr::GUID::GenerateTag& >())
     ;
 
-    vpr_GUID_scope->attr("generateTag") = boost::ref(vpr::GUID::generateTag);
-    vpr_GUID_scope->attr("NullGUID") = vpr::GUID::NullGUID;
-
     class_< vpr::GUID::hash >("hash", init<  >())
-        .def(init< const vpr::GUID::hash & >())
+        .def(init< const vpr::GUID::hash& >())
         .def("__call__", &vpr::GUID::hash::operator ())
     ;
 

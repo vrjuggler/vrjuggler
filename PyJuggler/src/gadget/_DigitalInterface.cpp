@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <gadgeteer-wrappers.h>
 
 // Using =======================================================================
@@ -36,7 +39,7 @@ using namespace boost::python;
 void _Export_DigitalInterface()
 {
     class_< gadgetWrapper::DigitalInterface >("DigitalInterface", init<  >())
-        .def(init< const gadgetWrapper::DigitalInterface & >())
+        .def(init< const gadgetWrapper::DigitalInterface& >())
         .def("init", &gadgetWrapper::DigitalInterface::init)
         .def("refresh", &gadgetWrapper::DigitalInterface::refresh)
         .def("getProxyName", &gadgetWrapper::DigitalInterface::getProxyName)

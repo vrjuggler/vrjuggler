@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vpr/Util/Interval.h>
 
 // Using =======================================================================
@@ -37,8 +40,11 @@ void _Export_Interval()
 {
     scope* vpr_Interval_scope = new scope(
     class_< vpr::Interval >("Interval", init<  >())
-        .def(init< const vpr::Interval & >())
+        .def(init< const vpr::Interval& >())
         .def(init< const vpr::Uint64, const vpr::Interval::Unit >())
+        .def_readonly("NoWait", &vpr::Interval::NoWait)
+        .def_readonly("NoTimeout", &vpr::Interval::NoTimeout)
+        .def_readonly("HalfPeriod", &vpr::Interval::HalfPeriod)
         .def("set", &vpr::Interval::set)
         .def("setf", &vpr::Interval::setf)
         .def("setd", &vpr::Interval::setd)
@@ -72,11 +78,9 @@ void _Export_Interval()
         .def( self > self )
         .def( self += self )
         .def( self + self )
+        .def( self -= self )
         .def( self - self )
     );
-    vpr_Interval_scope->attr("NoWait") = vpr::Interval::NoWait;
-    vpr_Interval_scope->attr("NoTimeout") = vpr::Interval::NoTimeout;
-    vpr_Interval_scope->attr("HalfPeriod") = vpr::Interval::HalfPeriod;
 
     enum_< vpr::Interval::Unit >("Unit")
         .value("Msec", vpr::Interval::Msec)

@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <gadgeteer-wrappers.h>
 
 // Using =======================================================================
@@ -36,7 +39,7 @@ using namespace boost::python;
 void _Export_AnalogInterface()
 {
     class_< gadgetWrapper::AnalogInterface >("AnalogInterface", init<  >())
-        .def(init< const gadgetWrapper::AnalogInterface & >())
+        .def(init< const gadgetWrapper::AnalogInterface& >())
         .def("init", &gadgetWrapper::AnalogInterface::init)
         .def("refresh", &gadgetWrapper::AnalogInterface::refresh)
         .def("getProxyName", &gadgetWrapper::AnalogInterface::getProxyName)

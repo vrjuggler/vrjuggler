@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <gadget/Type/EventWindow/Event.h>
 
 // Using =======================================================================
@@ -37,11 +40,11 @@ void _Export_gadget_Type_EventWindow_Event_h()
 {
     enum_< gadget::EventType >("EventType")
         .value("KeyPressEvent", gadget::KeyPressEvent)
+        .value("MouseButtonReleaseEvent", gadget::MouseButtonReleaseEvent)
         .value("MouseMoveEvent", gadget::MouseMoveEvent)
         .value("MouseButtonPressEvent", gadget::MouseButtonPressEvent)
         .value("NoEvent", gadget::NoEvent)
         .value("KeyReleaseEvent", gadget::KeyReleaseEvent)
-        .value("MouseButtonReleaseEvent", gadget::MouseButtonReleaseEvent)
     ;
 
 }

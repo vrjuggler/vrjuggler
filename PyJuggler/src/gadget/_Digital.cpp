@@ -27,6 +27,9 @@
 
 // Includes ====================================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <gadget/Type/Digital.h>
@@ -35,17 +38,14 @@
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
 namespace pyj {
-
 
 struct gadget_Digital_Wrapper: gadget::Digital
 {
     gadget_Digital_Wrapper(PyObject* self_):
         gadget::Digital(), self(self_) {}
 
-    bool config(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool config(jccl::ConfigElementPtr p0) {
         try
         {
             return call_method< bool >(self, "config", p0);
@@ -58,14 +58,14 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return false;
     }
 
-    bool default_config(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool default_config(jccl::ConfigElementPtr p0) {
         return gadget::Digital::config(p0);
     }
 
-    std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType() {
+    std::string getBaseType() {
         try
         {
-            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+            return call_method< std::string >(self, "getBaseType");
         }
         catch(error_already_set)
         {
@@ -75,11 +75,11 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return std::string("UNKONWN");
     }
 
-    std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getBaseType() {
+    std::string default_getBaseType() {
         return gadget::Digital::getBaseType();
     }
 
-    vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
+    vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0) {
         try
         {
             return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
@@ -92,11 +92,11 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return vpr::ReturnStatus::Fail;
     }
 
-    vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
+    vpr::ReturnStatus default_writeObject(vpr::ObjectWriter* p0) {
         return gadget::Digital::writeObject(p0);
     }
 
-    vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
+    vpr::ReturnStatus readObject(vpr::ObjectReader* p0) {
         try
         {
             return call_method< vpr::ReturnStatus >(self, "readObject", p0);
@@ -109,7 +109,7 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return vpr::ReturnStatus::Fail;
     }
 
-    vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
+    vpr::ReturnStatus default_readObject(vpr::ObjectReader* p0) {
         return gadget::Digital::readObject(p0);
     }
 
@@ -117,8 +117,6 @@ struct gadget_Digital_Wrapper: gadget::Digital
 };
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Digital_getDigitalData_overloads_0_1, getDigitalData, 0, 1)
-
-
 
 }// namespace 
 
@@ -130,8 +128,8 @@ void _Export_Digital()
     class_< gadget::Digital, boost::noncopyable, pyj::gadget_Digital_Wrapper >("Digital", init<  >())
         .def("config", &gadget::Digital::config, &pyj::gadget_Digital_Wrapper::default_config)
         .def("getBaseType", &gadget::Digital::getBaseType, &pyj::gadget_Digital_Wrapper::default_getBaseType)
-        .def("writeObject", &gadget::Digital::writeObject, &pyj::gadget_Digital_Wrapper::default_writeObject)
-        .def("readObject", &gadget::Digital::readObject, &pyj::gadget_Digital_Wrapper::default_readObject)
+        .def("writeObject", (vpr::ReturnStatus (gadget::Digital::*)(vpr::ObjectWriter*) )&gadget::Digital::writeObject, (vpr::ReturnStatus (pyj::gadget_Digital_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_Digital_Wrapper::default_writeObject)
+        .def("readObject", (vpr::ReturnStatus (gadget::Digital::*)(vpr::ObjectReader*) )&gadget::Digital::readObject, (vpr::ReturnStatus (pyj::gadget_Digital_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Digital_Wrapper::default_readObject)
         .def("getDigitalData", &gadget::Digital::getDigitalData, pyj::gadget_Digital_getDigitalData_overloads_0_1())
         .def("addDigitalSample", &gadget::Digital::addDigitalSample)
         .def("swapDigitalBuffers", &gadget::Digital::swapDigitalBuffers)

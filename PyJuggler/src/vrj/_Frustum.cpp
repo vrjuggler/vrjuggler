@@ -25,8 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Display/Frustum.h>
 #include <vrj-helpers.h>
 
@@ -45,7 +48,7 @@ void _Export_Frustum()
 {
     scope* vrj_Frustum_scope = new scope(
     class_< vrj::Frustum >("Frustum", init<  >())
-        .def(init< const vrj::Frustum & >())
+        .def(init< const vrj::Frustum& >())
         .def("setBottomLeftTopRight", &vrj::Frustum::setBottomLeftTopRight)
         .def("setNearFar", &vrj::Frustum::setNearFar)
         .def("set", &vrj::Frustum::set)

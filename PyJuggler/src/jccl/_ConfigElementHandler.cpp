@@ -25,28 +25,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Bosot Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <jccl/RTRC/ConfigElementHandler.h>
 
 // Using =======================================================================
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct jccl_ConfigElementHandler_Wrapper: jccl::ConfigElementHandler
 {
-    jccl_ConfigElementHandler_Wrapper(PyObject* self_, const jccl::ConfigElementHandler & p0):
+    jccl_ConfigElementHandler_Wrapper(PyObject* self_, const jccl::ConfigElementHandler& p0):
         jccl::ConfigElementHandler(p0), self(self_) {}
 
     jccl_ConfigElementHandler_Wrapper(PyObject* self_):
         jccl::ConfigElementHandler(), self(self_) {}
 
-    bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool configCanHandle(jccl::ConfigElementPtr p0) {
         try
         {
             return call_method< bool >(self, "configCanHandle", p0);
@@ -76,7 +76,7 @@ struct jccl_ConfigElementHandler_Wrapper: jccl::ConfigElementHandler
         return jccl::ConfigElementHandler::configProcessPending();
     }
 
-    bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool configAdd(jccl::ConfigElementPtr p0) {
         try
         {
             return call_method< bool >(self, "configAdd", p0);
@@ -89,7 +89,7 @@ struct jccl_ConfigElementHandler_Wrapper: jccl::ConfigElementHandler
         return false;
     }
 
-    bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0) {
+    bool configRemove(jccl::ConfigElementPtr p0) {
         try
         {
             return call_method< bool >(self, "configRemove", p0);
@@ -105,15 +105,16 @@ struct jccl_ConfigElementHandler_Wrapper: jccl::ConfigElementHandler
     PyObject* self;
 };
 
-
-
 }// namespace 
 
 
 // Module ======================================================================
 void _Export_ConfigElementHandler()
 {
-    class_< jccl::ConfigElementHandler, boost::noncopyable, jccl_ConfigElementHandler_Wrapper >("ConfigElementHandler", init<  >())
-        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &jccl_ConfigElementHandler_Wrapper::default_configProcessPending)
+    class_< jccl::ConfigElementHandler, boost::noncopyable, pyj::jccl_ConfigElementHandler_Wrapper >("ConfigElementHandler", init<  >())
+        .def("configCanHandle", pure_virtual(&jccl::ConfigElementHandler::configCanHandle))
+        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &pyj::jccl_ConfigElementHandler_Wrapper::default_configProcessPending)
+        .def("configAdd", pure_virtual(&jccl::ConfigElementHandler::configAdd))
+        .def("configRemove", pure_virtual(&jccl::ConfigElementHandler::configRemove))
     ;
 }

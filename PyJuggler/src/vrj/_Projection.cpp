@@ -25,28 +25,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Display/Projection.h>
 
 // Using =======================================================================
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct vrj_Projection_Wrapper: vrj::Projection
 {
     vrj_Projection_Wrapper(PyObject* self_):
         vrj::Projection(), self(self_) {}
 
-    vrj_Projection_Wrapper(PyObject* self_, const vrj::Projection & p0):
+    vrj_Projection_Wrapper(PyObject* self_, const vrj::Projection& p0):
         vrj::Projection(p0), self(self_) {}
 
-    void calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+    void calcViewMatrix(gmtl::Matrix44f& p0, const float p1) {
         try
         {
             call_method< void >(self, "calcViewMatrix", p0, p1);
@@ -60,8 +60,6 @@ struct vrj_Projection_Wrapper: vrj::Projection
     PyObject* self;
 };
 
-
-
 }// namespace 
 
 
@@ -69,7 +67,8 @@ struct vrj_Projection_Wrapper: vrj::Projection
 void _Export_Projection()
 {
     scope* vrj_Projection_scope = new scope(
-    class_< vrj::Projection, boost::noncopyable, vrj_Projection_Wrapper >("Projection", init<  >())
+    class_< vrj::Projection, boost::noncopyable, pyj::vrj_Projection_Wrapper >("Projection", init<  >())
+        .def("calcViewMatrix", pure_virtual(&vrj::Projection::calcViewMatrix))
         .def("getEye", &vrj::Projection::getEye)
         .def("getViewport", &vrj::Projection::getViewport, return_internal_reference< 1 >())
         .def("getFrustumApexAndCorners", &vrj::Projection::getFrustumApexAndCorners)

@@ -25,28 +25,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+
+// Includes ====================================================================
 #include <vrj/Display/CameraProjection.h>
 
 // Using =======================================================================
 using namespace boost::python;
 
 // Declarations ================================================================
-
-
-namespace  {
-
+namespace pyj {
 
 struct vrj_CameraProjection_Wrapper: vrj::CameraProjection
 {
-    vrj_CameraProjection_Wrapper(PyObject* self_, const vrj::CameraProjection & p0):
+    vrj_CameraProjection_Wrapper(PyObject* self_, const vrj::CameraProjection& p0):
         vrj::CameraProjection(p0), self(self_) {}
 
     vrj_CameraProjection_Wrapper(PyObject* self_):
         vrj::CameraProjection(), self(self_) {}
 
-    void calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+    void calcViewMatrix(gmtl::Matrix44f& p0, const float p1) {
         try
         {
             call_method< void >(self, "calcViewMatrix", p0, p1);
@@ -57,14 +57,12 @@ struct vrj_CameraProjection_Wrapper: vrj::CameraProjection
         }
     }
 
-    void default_calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+    void default_calcViewMatrix(gmtl::Matrix44f& p0, const float p1) {
         vrj::CameraProjection::calcViewMatrix(p0, p1);
     }
 
     PyObject* self;
 };
-
-
 
 }// namespace 
 
@@ -72,13 +70,9 @@ struct vrj_CameraProjection_Wrapper: vrj::CameraProjection
 // Module ======================================================================
 void _Export_CameraProjection()
 {
-    class_< vrj::CameraProjection, bases< vrj::Projection >, vrj_CameraProjection_Wrapper >("CameraProjection", init<  >())
-        .def(init< const vrj::CameraProjection & >())
+    class_< vrj::CameraProjection, bases< vrj::Projection >, pyj::vrj_CameraProjection_Wrapper >("CameraProjection", init<  >())
+        .def(init< const vrj::CameraProjection& >())
         .def_readwrite("mVertFOV", &vrj::CameraProjection::mVertFOV)
-        .def("calcViewMatrix", &vrj::CameraProjection::calcViewMatrix, &vrj_CameraProjection_Wrapper::default_calcViewMatrix)
-        .def("getEye", &vrj::Projection::getEye)
-        .def("getViewport", &vrj::Projection::getViewport, return_internal_reference< 1 >())
-        .def("getFrustumApexAndCorners", &vrj::Projection::getFrustumApexAndCorners)
-        .def("getViewMatrix", &vrj::Projection::getViewMatrix, return_value_policy< copy_const_reference >())
-        .def("getFrustum", &vrj::Projection::getFrustum);
+        .def("calcViewMatrix", (void (vrj::CameraProjection::*)(gmtl::Matrix44f&, const float) )&vrj::CameraProjection::calcViewMatrix, (void (pyj::vrj_CameraProjection_Wrapper::*)(gmtl::Matrix44f&, const float))&pyj::vrj_CameraProjection_Wrapper::default_calcViewMatrix)
+    ;
 }
