@@ -844,7 +844,7 @@ vpr::ReturnStatus SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOpt
 bool SerialPortImplTermios::getHardwareFlowControlState ()
 {
 #ifdef VPR_OS_IRIX
-   return false;
+   return getBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG);
 #else
    return getBit(CRTSCTS, SerialPortImplTermios::CFLAG);
 #endif
@@ -853,7 +853,8 @@ bool SerialPortImplTermios::getHardwareFlowControlState ()
 vpr::ReturnStatus SerialPortImplTermios::enableHardwareFlowControl ()
 {
 #ifdef VPR_OS_IRIX
-   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, true,
+                 "Could not enable hardware flow control");
 #else
    return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, true,
                  "Could not enable hardware flow control");
@@ -863,7 +864,8 @@ vpr::ReturnStatus SerialPortImplTermios::enableHardwareFlowControl ()
 vpr::ReturnStatus SerialPortImplTermios::disableHardwareFlowControl ()
 {
 #ifdef VPR_OS_IRIX
-   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, true,
+                 "Could not disable hardware flow control");
 #else
    return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, false,
                  "Could not disable hardware flow control");
