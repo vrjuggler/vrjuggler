@@ -408,7 +408,7 @@ protected:
     *         the file handle.<br>
     *         -1 is returned if the current flags could not be requested.
     */
-   int getFlags();
+   int getFlags() const;
 
    /**
     * Overwrites the current file handle flags with the given value.
@@ -426,13 +426,13 @@ protected:
     * Tests if the file handle is ready for reading within the timeout
     * period.
     */
-   vpr::ReturnStatus isReadable(const vpr::Interval timeout);
+   vpr::ReturnStatus isReadable(const vpr::Interval timeout) const;
 
    /**
     * Tests if the file handle is ready for writing within the timeout
     * period.
     */
-   vpr::ReturnStatus isWriteable(const vpr::Interval timeout);
+   vpr::ReturnStatus isWriteable(const vpr::Interval timeout) const;
 
    std::string mName;           /**< The name of this file */
    bool        mOpen;           /**< Open state of this file */

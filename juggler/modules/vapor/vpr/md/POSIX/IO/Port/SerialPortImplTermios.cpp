@@ -95,7 +95,7 @@ vpr::ReturnStatus SerialPortImplTermios::open()
 
 // Get the current update action.  This tells when updates to the serial
 // device take effect.
-vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction()
+vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction() const
 {
    vpr::SerialTypes::UpdateActionOption action;
 
@@ -160,7 +160,7 @@ void SerialPortImplTermios::setUpdateAction(vpr::SerialTypes::UpdateActionOption
 }
 
 // Query the serial port for the maximum buffer size.
-vpr::ReturnStatus SerialPortImplTermios::getMinInputSize(vpr::Uint16& size)
+vpr::ReturnStatus SerialPortImplTermios::getMinInputSize(vpr::Uint16& size) const
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
@@ -191,7 +191,7 @@ vpr::ReturnStatus SerialPortImplTermios::setMinInputSize(const vpr::Uint8 size)
 
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
-vpr::ReturnStatus SerialPortImplTermios::getTimeout(vpr::Uint8& timeout)
+vpr::ReturnStatus SerialPortImplTermios::getTimeout(vpr::Uint8& timeout) const
 {
    vpr::ReturnStatus retval;
    struct termios term;
@@ -222,7 +222,7 @@ vpr::ReturnStatus SerialPortImplTermios::setTimeout(const vpr::Uint8 timeout)
 }
 
 // Get the character size (the bits per byte).
-vpr::ReturnStatus SerialPortImplTermios::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
+vpr::ReturnStatus SerialPortImplTermios::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
 {
    vpr::ReturnStatus retval;
    struct termios term;
@@ -289,7 +289,7 @@ vpr::ReturnStatus SerialPortImplTermios::setCharacterSize(const vpr::SerialTypes
 }
 
 // Get the current read state for the port.
-bool SerialPortImplTermios::getReadState()
+bool SerialPortImplTermios::getReadState() const
 {
    return getBit(CREAD, SerialPortImplTermios::CFLAG);
 }
@@ -302,7 +302,7 @@ vpr::ReturnStatus SerialPortImplTermios::setRead(bool flag)
 }
 
 // Get the current CLOCAL state, if the device is locally attached.
-bool SerialPortImplTermios::getLocalAttachState()
+bool SerialPortImplTermios::getLocalAttachState() const
 {
    return getBit(CLOCAL, SerialPortImplTermios::CFLAG);
 }
@@ -315,7 +315,7 @@ vpr::ReturnStatus SerialPortImplTermios::setLocalAttach(bool flag)
 }
 
 // Get the number of stop bits in use.  This will be either 1 or 2.
-vpr::ReturnStatus SerialPortImplTermios::getStopBits(Uint8& num_bits)
+vpr::ReturnStatus SerialPortImplTermios::getStopBits(Uint8& num_bits) const
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -364,7 +364,7 @@ vpr::ReturnStatus SerialPortImplTermios::setStopBits(const Uint8 num_bits)
 }
 
 // Query the canonical input state of the serial port.
-bool SerialPortImplTermios::getCanonicalState()
+bool SerialPortImplTermios::getCanonicalState() const
 {
    return getBit(ICANON, SerialPortImplTermios::LFLAG);
 }
@@ -378,7 +378,7 @@ vpr::ReturnStatus SerialPortImplTermios::setCanonicalInput(bool flag)
 
 // Get the current state of ignoring bytes with framing errors (other than a
 // BREAK) or parity errors.
-bool SerialPortImplTermios::getBadByteIgnoreState()
+bool SerialPortImplTermios::getBadByteIgnoreState() const
 {
    return getBit(IGNPAR, SerialPortImplTermios::IFLAG);
 }
@@ -392,7 +392,7 @@ vpr::ReturnStatus SerialPortImplTermios::setBadByteIgnore(bool flag)
 }
 
 // Get the current state of ignoring BREAK bytes.
-bool SerialPortImplTermios::getBreakByteIgnoreState()
+bool SerialPortImplTermios::getBreakByteIgnoreState() const
 {
    return getBit(IGNBRK, SerialPortImplTermios::IFLAG);
 }
@@ -405,7 +405,7 @@ vpr::ReturnStatus SerialPortImplTermios::setBreakByteIgnore(bool flag)
 }
 
 // Get the state of parity checking for input.
-bool SerialPortImplTermios::getInputParityCheckState()
+bool SerialPortImplTermios::getInputParityCheckState() const
 {
    return getBit(IGNPAR, SerialPortImplTermios::IFLAG);
 }
@@ -419,7 +419,7 @@ vpr::ReturnStatus SerialPortImplTermios::setInputParityCheck(bool flag)
 
 // Get the current state of bit stripping.  When enabled, input bytes are
 // stripped to seven bits.  Otherwise, all eight bits are processed.
-bool SerialPortImplTermios::getBitStripState()
+bool SerialPortImplTermios::getBitStripState() const
 {
    return getBit(ISTRIP, SerialPortImplTermios::IFLAG);
 }
@@ -432,7 +432,7 @@ vpr::ReturnStatus SerialPortImplTermios::setBitStripping(bool flag)
 }
 
 // Get the state of start-stop input control.
-bool SerialPortImplTermios::getStartStopInputState()
+bool SerialPortImplTermios::getStartStopInputState() const
 {
    return getBit(IXOFF, SerialPortImplTermios::IFLAG);
 }
@@ -445,7 +445,7 @@ vpr::ReturnStatus SerialPortImplTermios::setStartStopInput(bool flag)
 }
 
 // Get the state of start-stop output control.
-bool SerialPortImplTermios::getStartStopOutputState()
+bool SerialPortImplTermios::getStartStopOutputState() const
 {
    return getBit(IXON, SerialPortImplTermios::IFLAG);
 }
@@ -459,7 +459,7 @@ vpr::ReturnStatus SerialPortImplTermios::setStartStopOutput(bool flag)
 
 // Get the current state of parity generation for outgoing bytes and parity
 // checking for incoming bytes.
-bool SerialPortImplTermios::getParityGenerationState()
+bool SerialPortImplTermios::getParityGenerationState() const
 {
    return getBit(PARENB, SerialPortImplTermios::CFLAG);
 }
@@ -478,7 +478,7 @@ vpr::ReturnStatus SerialPortImplTermios::setParityGeneration(bool flag)
 // is the three-byte sequence \377 \0 X where X is the byte received in error.
 // If bit stripping is enabled, a valid \377 byte is passed as the two-byte
 // sequence \377 \377.
-bool SerialPortImplTermios::getParityErrorMarkingState()
+bool SerialPortImplTermios::getParityErrorMarkingState() const
 {
    return getBit(PARMRK, SerialPortImplTermios::IFLAG);
 }
@@ -491,7 +491,7 @@ vpr::ReturnStatus SerialPortImplTermios::setParityErrorMarking(bool flag)
 }
 
 // Get the current parity checking type (either odd or even).
-vpr::SerialTypes::ParityType SerialPortImplTermios::getParity()
+vpr::SerialTypes::ParityType SerialPortImplTermios::getParity() const
 {
    vpr::SerialTypes::ParityType retval;
 
@@ -519,7 +519,7 @@ vpr::ReturnStatus SerialPortImplTermios::setParity(const vpr::SerialTypes::Parit
 }
 
 // Get the current input baud rate.
-vpr::ReturnStatus SerialPortImplTermios::getInputBaudRate(vpr::Uint32& rate)
+vpr::ReturnStatus SerialPortImplTermios::getInputBaudRate(vpr::Uint32& rate) const
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -573,7 +573,7 @@ vpr::ReturnStatus SerialPortImplTermios::setInputBaudRate(const vpr::Uint32& bau
 }
 
 // Get the current output baud rate.
-vpr::ReturnStatus SerialPortImplTermios::getOutputBaudRate(vpr::Uint32& rate)
+vpr::ReturnStatus SerialPortImplTermios::getOutputBaudRate(vpr::Uint32& rate) const
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -680,7 +680,7 @@ vpr::ReturnStatus SerialPortImplTermios::controlFlow(SerialTypes::FlowActionOpti
    return retval;
 }
 
-bool SerialPortImplTermios::getHardwareFlowControlState()
+bool SerialPortImplTermios::getHardwareFlowControlState() const
 {
 #ifdef VPR_OS_IRIX
    return getBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG);
@@ -790,7 +790,7 @@ vpr::ReturnStatus SerialPortImplTermios::sendBreak(const Int32 duration)
 * @return - May be platform dependent, but will at least be as follows.
 *           0 - not high, 1 - high, -1 - Not supported
 */
-int SerialPortImplTermios::getCarrierDetect()
+int SerialPortImplTermios::getCarrierDetect() const
 {
    if(getLineFlag(TIOCM_CAR))
       return 1;
@@ -803,7 +803,7 @@ int SerialPortImplTermios::getCarrierDetect()
 * @return - May be platform dependent, but will at least be as follows.
 *           0 - not high, 1 - high, -1 - Not supported
 */
-int SerialPortImplTermios::getDataSetReady()
+int SerialPortImplTermios::getDataSetReady() const
 {
    if(getLineFlag(TIOCM_DSR))
       return 1;
@@ -816,7 +816,7 @@ int SerialPortImplTermios::getDataSetReady()
 * @return - May be platform dependent, but will at least be as follows.
 *           0 - not high, 1 - high, -1 - Not supported
 */
-int SerialPortImplTermios::getClearToSend()
+int SerialPortImplTermios::getClearToSend() const
 {
    if(getLineFlag(TIOCM_CTS))
       return 1;
@@ -829,7 +829,7 @@ int SerialPortImplTermios::getClearToSend()
 * @return - May be platform dependent, but will at least be as follows.
 *           0 - not high, 1 - high, -1 - Not supported
 */
-int SerialPortImplTermios::getRingIndicator()
+int SerialPortImplTermios::getRingIndicator() const
 {
    if(getLineFlag(TIOCM_RI))
       return 1;
@@ -854,9 +854,7 @@ vpr::ReturnStatus SerialPortImplTermios::setRequestToSend(bool val)
 // Protected methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Set the control character at the given index to the given value.
-// ----------------------------------------------------------------------------
 void SerialPortImplTermios::setControlCharacter(const Uint32 index,
                                                 const Uint8 value)
 {
@@ -885,10 +883,8 @@ void SerialPortImplTermios::setControlCharacter(const Uint32 index,
    }
 }
 
-// ----------------------------------------------------------------------------
 // Get the value of the control character at the given index.
-// ----------------------------------------------------------------------------
-Uint8 SerialPortImplTermios::getControlCharacter(const Uint32 index)
+Uint8 SerialPortImplTermios::getControlCharacter(const Uint32 index) const
 {
    struct termios term;
    Uint8 retval;
@@ -912,9 +908,7 @@ Uint8 SerialPortImplTermios::getControlCharacter(const Uint32 index)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::getAttrs(struct termios* term)
+vpr::ReturnStatus SerialPortImplTermios::getAttrs(struct termios* term) const
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
@@ -930,8 +924,6 @@ vpr::ReturnStatus SerialPortImplTermios::getAttrs(struct termios* term)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
                                                    const char* err_msg,
                                                    const bool print_sys_err)
@@ -989,8 +981,6 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
                                                   const std::string& err_msg,
                                                   const bool print_sys_err)
@@ -998,10 +988,8 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
    return setAttrs(term, err_msg.c_str(), print_sys_err);
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getBit(const tcflag_t bit,
-                                   SerialPortImplTermios::TermFlag flag)
+                                   SerialPortImplTermios::TermFlag flag) const
 {
    struct termios term;
    bool retval = false;
@@ -1024,8 +1012,6 @@ bool SerialPortImplTermios::getBit(const tcflag_t bit,
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
                                                 SerialPortImplTermios::TermFlag flag,
                                                 bool enable,
@@ -1109,7 +1095,7 @@ vpr::ReturnStatus SerialPortImplTermios::setLineFlag(Uint8 flag, bool val)
    return vpr::ReturnStatus::Succeed;
 }
 
-bool SerialPortImplTermios::getLineFlag(Uint8 flag)
+bool SerialPortImplTermios::getLineFlag(Uint8 flag) const
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    //vprASSERT( ((TIOCM_CD
@@ -1123,10 +1109,8 @@ bool SerialPortImplTermios::getLineFlag(Uint8 flag)
    return (line_status & flag);
 }
 
-// ----------------------------------------------------------------------------
 // Convert a termios baud rate to its corresponding integer value.
-// ----------------------------------------------------------------------------
-Uint32 SerialPortImplTermios::baudToInt(const speed_t baud_rate)
+Uint32 SerialPortImplTermios::baudToInt(const speed_t baud_rate) const
 {
    Uint32 retval;
 
@@ -1211,10 +1195,8 @@ Uint32 SerialPortImplTermios::baudToInt(const speed_t baud_rate)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Convert an integer baud rate to the corresponding termios rate constant.
-// ----------------------------------------------------------------------------
-speed_t SerialPortImplTermios::intToBaud(const Uint32 speed_int)
+speed_t SerialPortImplTermios::intToBaud(const Uint32 speed_int) const
 {
    speed_t rate;
 

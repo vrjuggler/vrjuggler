@@ -76,7 +76,7 @@ public:
     *
     * @return An object containing the name of this device.
     */
-   virtual const std::string& getName()
+   virtual const std::string& getName() const
    {
       return mName;
    }
@@ -118,7 +118,7 @@ public:
     * @return <code>true</code> is returned if the device is open;
     *         <code>false</code> otherwise.
     */
-   virtual bool isOpen()
+   virtual bool isOpen() const
    {
       return mOpen;
    }
@@ -160,7 +160,7 @@ public:
     *         has no handle or if the handle could not be returned for some
     *         reason.
     */
-   virtual IOSys::Handle getHandle() = 0;
+   virtual IOSys::Handle getHandle() const = 0;
 
    /**
     * Reads at most the specified number of bytes from the I/O device into
@@ -410,8 +410,8 @@ public:
       return status;
    }
 
-   /** Return the number of avaiable bytes for reading */
-   virtual vpr::Uint32 availableBytes()
+   /** Return the number of avaiable bytes for reading. */
+   virtual vpr::Uint32 availableBytes() const
    {
       return 0;
    }
@@ -610,8 +610,10 @@ public:
    /**
     * Gets the current IO stats strategy.
     */
-   vpr::BaseIOStatsStrategy* getIOStatStrategy()
-   { return mStatsStrategy; }
+   vpr::BaseIOStatsStrategy* getIOStatStrategy() const
+   {
+      return mStatsStrategy;
+   }
 
 protected:
    /**

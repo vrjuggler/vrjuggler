@@ -230,14 +230,14 @@ protected:
       this->mSocketImpl = mSocketStreamImpl;
    }
 
-   virtual vpr::ReturnStatus getOption (const vpr::SocketOptions::Types option,
-                                        struct vpr::SocketOptions::Data& data)
+   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
+                                       struct vpr::SocketOptions::Data& data) const
    {
       return mSocketStreamImpl->getOption(option, data);
    }
 
-   virtual vpr::ReturnStatus setOption (const vpr::SocketOptions::Types option,
-                                        const struct vpr::SocketOptions::Data& data)
+   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
+                                       const struct vpr::SocketOptions::Data& data)
    {
       return mSocketStreamImpl->setOption(option, data);
    }

@@ -98,7 +98,7 @@ public:
     *
     * @return An object containing the name of the serial port.
     */
-   const std::string& getName()
+   const std::string& getName() const
    {
       return mHandle->getName();
    }
@@ -226,7 +226,7 @@ public:
    /**
     * Returns the contained handle.
     */
-   vpr::IOSys::Handle getHandle()
+   vpr::IOSys::Handle getHandle() const
    {
       return mHandle->getHandle();
    }
@@ -241,7 +241,7 @@ public:
     * @return <code>true</code> is returned if the device is in read-only
     *         mode; <code>false</code> otherwise.
     */
-   bool isReadOnly()
+   bool isReadOnly() const
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->isReadOnly();
@@ -257,7 +257,7 @@ public:
     * @return <code>true</code> is returned if the device is in write-only
     *         mode; <code>false</code> otherwise.
     */
-   bool isWriteOnly()
+   bool isWriteOnly() const
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->isWriteOnly();
@@ -273,7 +273,7 @@ public:
     * @return <code>true</code> is returned if the device is in read/write
     *         mode; <code>false</code> otherwise.
     */
-   bool isReadWrite()
+   bool isReadWrite() const
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->isReadWrite();
@@ -292,7 +292,7 @@ public:
     * @return A vpr::SerialTypes::UpdateActionOption value stating when
     *         updates take effect.
     */
-   vpr::SerialTypes::UpdateActionOption getUpdateAction();
+   vpr::SerialTypes::UpdateActionOption getUpdateAction() const;
 
    /**
     * Changes the current update action to take place as described by the
@@ -308,7 +308,8 @@ public:
    /**
     * Queries the serial port for the minimum buffer size.  This is only
     * applicable in non-canonical mode.
-    * The min buffer size determines how many bytes must be read before a read can return.
+    * The min buffer size determines how many bytes must be read before a read
+    * can return.
     *
     * @pre The serial port is open.
     * @post The minimum buffer size is returned to the caller through the
@@ -322,7 +323,7 @@ public:
     *         otherwise.
     * @see getTimeout
     */
-    vpr::ReturnStatus getMinInputSize(Uint16& size);
+    vpr::ReturnStatus getMinInputSize(Uint16& size) const;
 
    /**
     * Attempts to change the minimum buffer size to the given argument.  This
@@ -352,13 +353,13 @@ public:
     * @param timeout A reference to a vpr::Uint8 to be used as storage for
     *                the timeout value.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the timeout was requested
-    *         successfully; vpr::ReturnStatus::Fail otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if the timeout was
+    *         requested successfully; vpr::ReturnStatus::Fail otherwise.
     *
     * @see Refer to page 353 of <I>Advanced Programming in the UNIX
     *      Environment</I> for more details.
     */
-   vpr::ReturnStatus getTimeout(Uint8& timeout);
+   vpr::ReturnStatus getTimeout(Uint8& timeout) const;
 
    /**
     * Sets the value of the timeout to wait for data to arrive.  The value
@@ -393,7 +394,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus getCharacterSize(SerialTypes::CharacterSizeOption& size);
+   vpr::ReturnStatus getCharacterSize(SerialTypes::CharacterSizeOption& size) const;
 
    /**
     * Sets the current character size (the bits per byte) to the size in the
@@ -420,7 +421,7 @@ public:
     * @return true is returned if bytes can be read from the device.  false is
     *         returned otherwise.
     */
-   bool getReadState();
+   bool getReadState() const;
 
    /**
     * Changes the receiver so that bytes can (or cannot) be read from the port.
@@ -446,7 +447,7 @@ public:
     *         false - The device is not attached locally, and opening the
     *                 device will usually block until there is a response.
     */
-   bool getLocalAttachState();
+   bool getLocalAttachState() const;
 
    /**
     * Mark the device as locally attached or not.
@@ -474,7 +475,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus getStopBits(Uint8& num_bits);
+   vpr::ReturnStatus getStopBits(Uint8& num_bits) const;
 
    /**
     * Sets the number of stop bits to use.  The value must be either 1 or 2.
@@ -504,7 +505,7 @@ public:
     *
     * @return true if canonical input is enabled; false otherwise.
     */
-   bool getCanonicalState();
+   bool getCanonicalState() const;
 
    /**
     * Enables or disables canonical input.  See getCanonicalState() for more
@@ -532,7 +533,7 @@ public:
     *
     * @return true if bad bytes are ignored; false otherwise.
     */
-   bool getBadByteIgnoreState();
+   bool getBadByteIgnoreState() const;
 
    /**
     * Enables or disables ignoring of received bytes with framing errors or
@@ -557,7 +558,7 @@ public:
     *
     * @return true if bad bytes are ignored; false otherwise.
     */
-   bool getBreakByteIgnoreState();
+   bool getBreakByteIgnoreState() const;
 
    /**
     * Enables or disables ignoring of received BREAK bytes
@@ -581,7 +582,7 @@ public:
     *
     * @return true if input parity checking is enabled; false otherwise.
     */
-   bool getInputParityCheckState();
+   bool getInputParityCheckState() const;
 
    /**
     * Enables or disables input parity checking.
@@ -607,7 +608,7 @@ public:
     * @return true if input bytes are stripped to seven bits.  false is
     *         returned if input bytes are not stripped.
     */
-   bool getBitStripState();
+   bool getBitStripState() const;
 
    /**
     * Enables or disables stripping of input bytes to seven bits.
@@ -637,7 +638,7 @@ public:
     *
     * @return true if start-stop input control is enabled; false otherwise.
     */
-   bool getStartStopInputState();
+   bool getStartStopInputState() const;
 
    /**
     * Enables or disables start-stop input control.  See
@@ -668,7 +669,7 @@ public:
     *
     * @return true if start-stop output control is enabled; false otherwise.
     */
-   bool getStartStopOutputState();
+   bool getStartStopOutputState() const;
 
    /**
     * Enables or disables start-stop output control.  See
@@ -699,7 +700,7 @@ public:
     *         outgoing and incoming bytes respectively.  false is returned
     *         if parity generation and checking are disabled.
     */
-   bool getParityGenerationState();
+   bool getParityGenerationState() const;
 
    /**
     * Enables or disables parity generation for outgoing bytes and parity
@@ -724,7 +725,7 @@ public:
     * @return true is returned if parity error marking is enabled.  false is
     *         returned if parity error masking is disabled.
     */
-   bool getParityErrorMarkingState();
+   bool getParityErrorMarkingState() const;
 
    /**
     * Enables or disables marking of bytes with parity errors or framing errors
@@ -756,7 +757,7 @@ public:
     * @return A vpr::SerialTypes::ParityType value giving the parity
     *         checking being done.
     */
-   vpr::SerialTypes::ParityType getParity();
+   vpr::SerialTypes::ParityType getParity() const;
 
    /**
     * Enables odd or even parity depending on the value of the parameter.
@@ -784,7 +785,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus getInputBaudRate(vpr::Uint32& rate);
+   vpr::ReturnStatus getInputBaudRate(vpr::Uint32& rate) const;
 
    /**
     * Sets the current input baud rate.
@@ -812,7 +813,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus getOutputBaudRate(vpr::Uint32& rate);
+   vpr::ReturnStatus getOutputBaudRate(vpr::Uint32& rate) const;
 
    /**
     * Sets the current output baud rate.
@@ -865,7 +866,7 @@ public:
     *
     * @see controlFlow
     */
-   bool getHardwareFlowControlState();
+   bool getHardwareFlowControlState() const;
 
    /**
     * Attempts to enable or disable "hardware" flow control.  While some
@@ -918,33 +919,33 @@ public:
     */
    vpr::ReturnStatus sendBreak(const Int32 duration);
 
-    /**
-   * Return the status of the carrier detect signal.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getCarrierDetect();
+   /**
+    * Returns the status of the carrier detect signal.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported.
+    */
+   int getCarrierDetect() const;
 
    /**
-   * Return the status of the data set ready line.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getDataSetReady();
+    * Returns the status of the data set ready line.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported.
+    */
+   int getDataSetReady() const;
 
    /**
-   * Return the status of the clear to send.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getClearToSend();
+    * Returns the status of the clear to send.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported.
+    */
+   int getClearToSend() const;
 
    /**
-   * Return the status of the ring indicator line.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getRingIndicator();
+    * Returns the status of the ring indicator line.
+    * @return May be platform dependent, but will at least be as follows.
+    *         0 - not high, 1 - high, -1 - Not supported.
+    */
+   int getRingIndicator() const;
 
    /** Sets the data terminal ready line. */
    vpr::ReturnStatus setDataTerminalReady(bool val);
@@ -1078,12 +1079,12 @@ protected:
    /**
     * Gets the value of the control character at the given index.
     */
-   vpr::Uint8 getControlCharacter(const vpr::Uint32 index);
+   vpr::Uint8 getControlCharacter(const vpr::Uint32 index) const;
 
    /**
     * Gets the termios structure for this serial port handle.
     */
-   vpr::ReturnStatus getAttrs(struct termios* term);
+   vpr::ReturnStatus getAttrs(struct termios* term) const;
 
    /**
     * Tries to set the attributes for this serial port handle using the given
@@ -1104,7 +1105,7 @@ protected:
    /**
     * Gets the value (either on or off) for the named bit.
     */
-   bool getBit(const tcflag_t bit, TermFlag flag);
+   bool getBit(const tcflag_t bit, TermFlag flag) const;
 
    /**
     * Attempts to enable or disable the named bit.  If it fails, the given
@@ -1118,18 +1119,18 @@ protected:
    vpr::ReturnStatus setLineFlag(Uint8 flag, bool val);
 
    /** Helper for getting lines status flags */
-   bool getLineFlag(Uint8 flag);
+   bool getLineFlag(Uint8 flag) const;
 
    /**
     * Converts a termios baud rate to its corresponding integer value.
     */
-   vpr::Uint32 baudToInt(const speed_t baud_rate);
+   vpr::Uint32 baudToInt(const speed_t baud_rate) const;
 
    /**
     * Converts an integer baud rate to the corresponding termios rate
     * constant.
     */
-   speed_t intToBaud(const vpr::Uint32 speed_int);
+   speed_t intToBaud(const vpr::Uint32 speed_int) const;
 
    FileHandleImplUNIX* mHandle;    /**< File handle for the serial port */
    int                 mActions;
