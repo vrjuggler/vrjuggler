@@ -35,9 +35,9 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <jccl/JackalServer/JackalServer.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+#include <jccl/Net/JackalServer.h>
+#include <jccl/RTRC/ConfigManager.h>
+#include <jccl/PerfMonitor/PerformanceMonitor.h>
 
 
 namespace vrj

@@ -51,7 +51,7 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+#include <jccl/PerfMonitor/PerformanceMonitor.h>
 
 // Get the system factory we need
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_Linux) || defined(VPR_OS_AIX) ||   \

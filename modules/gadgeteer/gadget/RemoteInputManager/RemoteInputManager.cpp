@@ -36,8 +36,8 @@
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 #include <gadget/InputManager.h>
 #include <gadget/Util/Debug.h>

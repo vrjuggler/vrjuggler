@@ -37,7 +37,7 @@
 // on another machine
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>

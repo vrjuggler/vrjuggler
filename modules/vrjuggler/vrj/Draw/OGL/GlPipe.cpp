@@ -49,7 +49,7 @@
 
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+#include <jccl/PerfMonitor/PerformanceMonitor.h>
 
 namespace vrj
 {

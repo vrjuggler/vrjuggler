@@ -36,7 +36,7 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 
 //namespace vpr{
 //   class SocketStream;

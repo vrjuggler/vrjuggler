@@ -37,10 +37,10 @@
 
 #include <gmtl/Vec.h>
 #include <vrj/Kernel/User.h>
-#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
+#include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vrj/Kernel/Kernel.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+#include <jccl/PerfMonitor/PerformanceMonitor.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
 
