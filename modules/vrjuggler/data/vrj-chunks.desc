@@ -29,7 +29,7 @@ chunk ThreeDMouse "ThreeDMouse" ""
 chunk proxyAlias "proxyAlias" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   aliasName String 1 "aliasName" "The string alias to use."
-  proxyPtr Chunk 1 "proxyPtr" vj_enumeration { "PosProxy" "DigProxy" "AnaProxy" "GloveProxy" "KeyboardProxy" } "Pointer to the proxy to which the alias refers."
+  proxyPtr Chunk 1 "proxyPtr" vj_enumeration { "PosProxy" "DigProxy" "AnaProxy" "GloveProxy" "KeyboardProxy" "GestureProxy" } "Pointer to the proxy to which the alias refers."
   end
 chunk AnaProxy "AnaProxy" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
