@@ -57,6 +57,7 @@ private:
     } val;
 
     static vjVarValue* invalid_instance;
+    static std::string using_invalid_msg;
 
 public:
 
