@@ -725,24 +725,11 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         build VPR, do the following from the top-level <filename>juggler</filename>
         directory:</para>
 
-        <orderedlist>
-          <listitem>
-            <para><screen>mkdir build.vpr
-cd build.vpr</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>../configure.pl --module=VPR --prefix=$HOME/vpr-inst</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>gmake debug install-debug</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>setenv VPR_BASE_DIR $HOME/vpr-inst</screen></para>
-          </listitem>
-        </orderedlist>
+        <screen>mkdir build.vpr
+cd build.vpr
+../configure.pl --module=VPR --prefix=$HOME/vpr-inst
+gmake debug install-debug
+setenv VPR_BASE_DIR $HOME/vpr-inst</screen>
 
         <para>If you want to use NSPR, make sure a binary version is
         installed. In step 2, add the arguments <option>--enable-subsystem=NSPR</option>
@@ -795,24 +782,11 @@ cd build.sonix</screen></para>
         To build JCCL, do the following from the top-level
         <filename>juggler</filename> directory:</para>
 
-        <orderedlist>
-          <listitem>
-            <para><screen>mkdir build.jccl
-cd build.jccl</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom=&#34;&#60;JDOMPATH&#62;/build/jdom.jar:&#60;JDOMPATH&#62;/lib/xerces.jar&#34;</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>gmake debug install-debug</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>setenv JCCL_BASE_DIR $HOME/jccl-inst</screen></para>
-          </listitem>
-        </orderedlist>
+        <screen>mkdir build.jccl
+cd build.jccl
+../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom=&#34;&#60;JDOMPATH&#62;/build/jdom.jar:&#60;JDOMPATH&#62;/lib/xerces.jar&#34;
+gmake debug install-debug
+setenv JCCL_BASE_DIR $HOME/jccl-inst</screen>
       </section>
 
       <section>
@@ -824,24 +798,11 @@ cd build.jccl</screen></para>
         Assuming you have all the source code, do the following from the
         top-level <filename>juggler</filename> directory:</para>
 
-        <orderedlist>
-          <listitem>
-            <para><screen>mkdir build.gadgeteer
-cd build.gadgeteer</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom=&#34;&#60;JDOMPATH&#62;/build/jdom.jar:&#60;JDOMPATH&#62;/lib/xerces.jar&#34;</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>gmake debug install-debug</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen></para>
-          </listitem>
-        </orderedlist>
+        <screen>mkdir build.gadgeteer
+cd build.gadgeteer
+../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst
+gmake debug install-debug
+setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen>
       </section>
 
       <section id="tweek.build.section">
@@ -883,24 +844,11 @@ cd build.gadgeteer</screen></para>
         <para>Assuming you have the external packages installed, do the
         following from the top-level <filename>juggler</filename> directory:</para>
 
-        <orderedlist>
-          <listitem>
-            <para><screen>mkdir build.tweek
-cd build.tweek</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&#60;JDOMPATH&#62;/jdom.jar:&#60;JDOMPATH&#62;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&#60;OMNIORBPATH&#62; --with-java-orb=OpenORB --with-java-orb-jar=&#60;OPENORBPATH&#62;/lib/openorb-1.2.0.jar</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>gmake debug install-debug</screen></para>
-          </listitem>
-
-          <listitem>
-            <para><screen>setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen></para>
-          </listitem>
-        </orderedlist>
+        <screen>mkdir build.tweek
+cd build.tweek
+../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&#60;JDOMPATH&#62;/jdom.jar:&#60;JDOMPATH&#62;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&#60;OMNIORBPATH&#62; --with-java-orb=OpenORB --with-java-orb-jar=&#60;OPENORBPATH&#62;/lib/openorb-1.2.0.jar
+gmake debug install-debug
+setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen>
 
         <para>If JDK 1.4.0 is used, you do not need OpenORB (or any other
         third-party CORBA implementation for Java). In that case, pass
