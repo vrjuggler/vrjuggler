@@ -615,6 +615,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Immersion/IBox/Makefile
           gadget/Devices/Intersense/Makefile
           gadget/Devices/Intersense/IS900/Makefile
+          gadget/Devices/Intersense/IntersenseAPI/Makefile
           gadget/Devices/Keyboard/Makefile
           gadget/Devices/Logitech/Makefile
           gadget/Devices/Logitech/ThreeDMouse/Makefile
