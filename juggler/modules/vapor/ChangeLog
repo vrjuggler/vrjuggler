@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-10-29 patrickh Added new vpr::LibraryFinder which make use of the Boost
+                    Filesystem Library to scan a directory to perform dynamic
+                    library discovery.
+                    NEW VERSION: 0.19.3
 2002-10-28 patrickh Build the Boost Filesystem Library (from Boost CVS HEAD)
                     into VPR.
                     NEW VERSION: 0.19.2
