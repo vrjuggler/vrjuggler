@@ -1638,6 +1638,9 @@ sub MASKSPECIAL {
   local($str)=@_;
   local($tmp1,$tmp2);
 
+  # Handle escaped backslashes.
+  $str=~s/\\\\/&&ESC_BS/g;
+
   # Handle escaped quotes
   $str=~s/\\\"/&&QUOTD/g;
   $str=~s/\\\'/&&QUOTS/g;
@@ -1709,6 +1712,7 @@ sub MASKSPECIAL {
   $str=~s/&&TBO/\(/g;
   $str=~s/&&TBC/\)/g;
   $str=~s/&&X/\/\//g;
+  $str=~s/&&ESC_BS/\\\\/g;
   
   return $str;
 }
