@@ -106,6 +106,8 @@ ifneq ($(OS_TYPE), Win32)
     DYNAMIC_LIBS	= $(LIBS)
 endif
 
+DYLIB_DEPS	= @DYLIB_DEPS@
+
 VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
 UTILS_LIB_STATIC	= $(UTILS_LIBRARY).$(STATICLIB_EXT)
@@ -181,7 +183,7 @@ $(LIBDIR)/$(AW_LIB_DYNAMIC) $(LIBDIR)/$(SL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) -o $@ $(OBJDIR)/*.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
