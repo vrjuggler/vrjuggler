@@ -139,7 +139,10 @@ public class FileDataSource
       {
          mElements.add(chunk);
       }
-      throw new UnsupportedOperationException("Not a .config file");
+      else
+      {
+         throw new UnsupportedOperationException("Not a .config file");
+      }
    }
 
    /**
@@ -153,7 +156,10 @@ public class FileDataSource
       {
          mDefinitions.add(desc);
       }
-      throw new UnsupportedOperationException("Not a .desc file");
+      else
+      {
+         throw new UnsupportedOperationException("Not a .desc file");
+      }
    }
 
    /**
@@ -167,7 +173,10 @@ public class FileDataSource
       {
          mElements.remove(chunk);
       }
-      throw new UnsupportedOperationException("Not a .config file");
+      else
+      {
+         throw new UnsupportedOperationException("Not a .config file");
+      }
    }
 
    /**
@@ -181,7 +190,10 @@ public class FileDataSource
       {
          mDefinitions.remove(desc);
       }
-      throw new UnsupportedOperationException("Not a .desc file");
+      else
+      {
+         throw new UnsupportedOperationException("Not a .desc file");
+      }
    }
 
    /**
@@ -193,7 +205,10 @@ public class FileDataSource
       {
          return mElements.contains(chunk);
       }
-      throw new UnsupportedOperationException("Not a .config file");
+      else
+      {
+         throw new UnsupportedOperationException("Not a .config file");
+      }
    }
 
    /**
@@ -205,7 +220,10 @@ public class FileDataSource
       {
          return mDefinitions.contains(desc);
       }
-      throw new UnsupportedOperationException("Not a .desc file");
+      else
+      {
+         throw new UnsupportedOperationException("Not a .desc file");
+      }
    }
 
    /**
@@ -264,11 +282,12 @@ public class FileDataSource
     */
    public boolean isReadOnly()
    {
+      boolean read_only = false;
       if (mFile != null)
       {
-         return !mFile.canWrite();
+         read_only = !mFile.canWrite();
       }
-      return false;
+      return read_only;
    }
 
    /**
