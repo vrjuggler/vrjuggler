@@ -5,10 +5,10 @@ void vjViewport::config(vjConfigChunk* chunk)
    vjASSERT(chunk != NULL);
 
    // -- Get config info from chunk -- //
-    int originX = chunk->getProperty("origin", 0);
-    int originY = chunk->getProperty("origin", 1);
-    int sizeX   = chunk->getProperty("size", 0);
-    int sizeY   = chunk->getProperty("size", 1);
+    float originX = chunk->getProperty("origin", 0);
+    float originY = chunk->getProperty("origin", 1);
+    float sizeX   = chunk->getProperty("size", 0);
+    float sizeY   = chunk->getProperty("size", 1);
     std::string name  = chunk->getProperty("name");
     mView    = (vjViewport::View)(int)chunk->getProperty("view");
     mActive  = chunk->getProperty("active");
@@ -50,12 +50,18 @@ void vjViewport::config(vjConfigChunk* chunk)
     mViewportChunk = chunk;        // Save the chunk for later use
 }
 
-
 std::ostream& operator<<(std::ostream& out, vjViewport& viewport)
 {
-   out << "user: " << mUser->getName() <<
+   return viewport.outStream(out);
+}
+
+std::ostream& vjViewport::outStream(std::ostream& out)
+{
+   out << "user: " << getName()
        << "  org:" << mXorigin << ", " << mYorigin
        << "  sz:" << mXsize << ", " << mYsize
        << "  view:" << ((mView == vjViewport::LEFT_EYE) ? "Left" : ((mView==vjViewport::RIGHT_EYE)?"Right" : "Stereo") )
        << std::flush;
+
+   return out;
 }
