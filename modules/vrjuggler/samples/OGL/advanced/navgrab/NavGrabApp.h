@@ -88,6 +88,8 @@ public:
    */
    void initTesting();
 
+   friend class SphereTestCase;     // Make friends with our test case so it can poke our internals
+
 private:
    void initShapes();
 

@@ -44,7 +44,7 @@
 
 #include "NavGrabApp.h"
 #include <TestCases/FailureTestCase.h>
-
+#include <TestCases/SphereTestCase.h>
 
 void NavGrabApp::init()
 {
@@ -206,7 +206,8 @@ void NavGrabApp::initTesting()
 {
    mTestRunner = new vrj::test::TestRunner;
 
-   mTestRunner->addTest(new FailureTestCase);
+   mTestRunner->addTest( new SphereTestCase );
+   //mTestRunner->addTest(new FailureTestCase);
       
    mTestRunner->initialize(this);
 }
