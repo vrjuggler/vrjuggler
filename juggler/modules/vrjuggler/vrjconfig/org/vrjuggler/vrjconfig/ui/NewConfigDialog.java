@@ -91,6 +91,9 @@ public class NewConfigDialog
       // Init the includes list
       includesList.setModel(includesTableModel);
       includesTableModel.add(expandEnvVars(DEFAULT_DEFINITION_FILE));
+
+      // Default to the user's home dir
+      directoryTxt.setText(expandEnvVars("${HOME}"));
    }
 
    public int showDialog(Component parent)
