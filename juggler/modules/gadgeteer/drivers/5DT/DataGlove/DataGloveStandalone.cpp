@@ -37,12 +37,7 @@
 #include <fstream>         // for ifstream
 #include <string.h>
 
-#include <fcntl.h>         // for open
-#include <termios.h>
-#include <unistd.h>        // for sleep, and ioctl
-#include <sys/types.h>     // for open
-#include <sys/stat.h>      // for open
-#include <assert.h>        // for assert
+#include <vpr/Util/Assert.h> // for vprASSERT
 
 #include <gadget/Devices/5DT/DataGloveStandalone.h>
 
