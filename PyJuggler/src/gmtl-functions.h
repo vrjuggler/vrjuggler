@@ -148,6 +148,7 @@ namespace gmtl
    template gmtl::Vec3f& cross(gmtl::Vec3f&, const gmtl::Vec3f&,
                                const gmtl::Vec3f&);
 
+   template gmtl::Vec3i makeCross(const gmtl::Vec3i&, const gmtl::Vec3i&);
    template gmtl::Vec3d makeCross(const gmtl::Vec3d&, const gmtl::Vec3d&);
    template gmtl::Vec3f makeCross(const gmtl::Vec3f&, const gmtl::Vec3f&);
 
