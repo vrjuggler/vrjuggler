@@ -61,7 +61,12 @@
     satisfied correctly.</para>
 
     <section>
-      <title>Requirements</title>
+      <title>Additional Software</title>
+
+      <para>The following is a list of software that is required to utilize
+      PyJuggler, regardless of the type of VR Juggler application that will be
+      written. In other words, these software packages are
+      <emphasis>required</emphasis> to use PyJuggler.</para>
 
       <itemizedlist>
         <listitem>
@@ -79,16 +84,6 @@
           Boost.Python v2 or newer. The version of Boost.Python used should
           come from the Boost same version against which VR Juggler was
           compiled. As of this writing, that is Boost 1.31.0.</para>
-        </listitem>
-
-        <listitem>
-          <para><ulink
-          url="http://pyopengl.sourceforge.net/">PyOpenGL</ulink>: Python
-          bindings for the OpenGL graphics API. As of this writing, PyJuggler
-          has only been tested with OpenGL-based VR Juggler applications.
-          These applications use PyOpenGL to make calls into the natively
-          compiled OpenGL libraries on the local system. We have tested with
-          PyOpenGL 2.0.</para>
         </listitem>
 
         <listitem>
@@ -110,6 +105,33 @@
           is developed independently of VR Juggler and PyJuggler, but the
           version of PyGMTL used must be the same as the version of GMTL that
           comes with a VR Juggler release.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>With those packages installed, one or more of the following will
+      be needed in order to render graphics from the VR Juggler application
+      object:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><ulink
+          url="http://pyopengl.sourceforge.net/">PyOpenGL</ulink>: Python
+          bindings for the <ulink url="http://www.opengl.org/">OpenGL</ulink>
+          graphics API. OpenGL-based VR Juggler applications written in Python
+          use PyOpenGL to make calls into the natively compiled OpenGL
+          libraries on the local system. We have tested with PyOpenGL
+          2.0.</para>
+        </listitem>
+
+        <listitem>
+          <para><ulink
+          url="http://sourceforge.net/projects/pyosg">PyOSG</ulink>: Python
+          bindings for the <ulink url="http://www.openscenegraph.org/">Open
+          Scene Graph</ulink> (OSG). OSG-based VR Juggler applications written
+          in Python use PyOSG to make calls to the natively compiled OSG
+          libraries on the local system. If direct OpenGL calls must also be
+          made, then PyOpenGL will be needed (see above). We have tested with
+          PyOSG 0.4.5.</para>
         </listitem>
       </itemizedlist>
     </section>
