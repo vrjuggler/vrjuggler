@@ -134,9 +134,29 @@
       <DT><TT>%VJ_BASE_DIR%</TT>
         <DD>The value for this should be set using the DOS path with
             <TT>/</TT>'s as the path separator rather than <TT>\</TT>'s
-            as would normally be the case with DOS/Win32 paths.  It just
-            simplifies things all around to use a UNIX-style path in this
-            case.
+            as would normally be the case with DOS/Win32 paths.  For
+            example, if VR Juggler is installed in
+
+<PRE>
+    C:\software\vrjuggler
+</PRE>
+
+            you must set <TT>%VJ_BASE_DIR%</TT> to
+
+<PRE>
+    C:/software/vrjuggler
+</PRE>
+
+            Visual C++ can handle this type of path, and so can VR Juggler
+            when it uses the environment variable internally.  Note that
+            you can <I>never</I> use a Cygwin path (e.g.,
+ 	    <TT>//c/software/vrjuggler</TT> or
+            <TT>/cygpath/c/software/vrjuggler</TT>) because only Cygwin
+ 	    utilities understand that format.  Please refer to the
+            <A HREF="${GETTINGSTARTED}/environment.variables.html">``Set
+            Environment Variables''</A> chapter in the
+            <I><A HREF="${GETTINGSTARTED}">Getting Started Guide</A></I>
+            for more information.
     </DL>
 
 <H3><A NAME="compile">Compiling Juggler</A></H3>
