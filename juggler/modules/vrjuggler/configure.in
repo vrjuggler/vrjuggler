@@ -333,11 +333,10 @@ fi
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------
-
 DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 # -----------------------------------------------------------------------------
-# Do Makefile substitutions.
+# Finalize substitution settings.
 # -----------------------------------------------------------------------------
 
 # Add these C++ options when compiling with G++.
@@ -348,10 +347,29 @@ fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS $GMTL_INCLUDES"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+
 vrj_cxxflags="$STDFLAGS"
 vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 
+# Compiler-specific settings when GCC is not being used.
+if test "x$USE_GCC" != "xyes" ; then
+   if test "x$PLATFORM" = "xIRIX" ; then
+      CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+      CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
+      EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+   elif test "x$OS_TYPE" = "xWin32" ; then
+      vc_cxxflags='/W3 /GR /GX /EHc /QIfdiv /QI0f'
+      CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+      CXXFLAGS="$CXXFLAGS $vc_cxxflags"
+      EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
+      DBG_FLAGS="$DBG_FLAGS /MDd"
+      OPT_FLAGS="$OPT_FLAGS /MD"
+      vrj_cxxflags="$vc_cxxflags $vrj_cxxflags"
+   fi
+fi
+
 if test "x$LOCAL_GMTL" = "xY" ; then
+   INCLUDES="$INCLUDES $GMTL_INCLUDES"
    vrj_cxxflags="$vrj_cxxflags $GMTL_INCLUDES"
 fi
 
@@ -375,22 +393,6 @@ if test "x$OSG_INCLUDES" != "x" -a "x$OSG_API" = "xY" ; then
    vrj_cxxflags="$vrj_cxxflags $OSG_INCLUDES"
 fi
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
-elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    vc_cxxflags='/W3 /GR /GX /EHc /QIfdiv /QI0f'
-    CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    CXXFLAGS="$CXXFLAGS $vc_cxxflags"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-    DBG_FLAGS="$DBG_FLAGS /MDd"
-    OPT_FLAGS="$OPT_FLAGS /MD"
-    vrj_cxxflags="$vc_cxxflags $vrj_cxxflags"
-fi
-
-DPP_SYSTEM_SUBST
-
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
 if test "x$PLATFORM" = "xHP" ; then
@@ -400,27 +402,18 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
-# Define the base path to the source directory using $(VJROOT_ABS) as an
-# alternative to using $(srcdir).
-UNIX_VJROOT_ABS="$VJROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS_MIN) $(GADGET_CXX_FLAGS_MIN) $(JCCL_CXX_FLAGS_MIN) $(VPR_CXX_FLAGS_MIN)'
+VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_MIN) $(GADGET_LIBS_MIN) $(JCCL_LIBS_MIN) $(VPR_LIBS_MIN) $(GADGET_EXTRA_LIBS_MIN) $(JCCL_EXTRA_LIBS_MIN) $(VPR_EXTRA_LIBS_MIN)'
 
-# $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
-# application.
-if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD $LIBS"
-else
-    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC $LIBS -lm"
+if test "x$SONIX_SOUNDMANAGER" != "xno" ; then
+   VJ_APP_CXXFLAGS="\$(SNX_CXX_FLAGS_MIN) $VJ_APP_CXXFLAGS"
+   VJ_APP_EXTRA_LIBS="\$(SNX_LIBS_MIN) \$(SNX_EXTRA_LIBS_MIN) $VJ_APP_EXTRA_LIBS"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
 # listed are for use only in the Makefile.in's found in that tree unless
 # otherwise noted.  They are used in the following way:
 #
-#     * APP_EXTRA_FLAGS_PF: Extra flags for the compiler and linker when
-#       building Performer applications.
-#     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
-#     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
 #     * APP_EXTRA_LIBS_GL: The OpenGL libraries needed for compiling with the
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
@@ -429,22 +422,20 @@ fi
 #       with the OpenScenegraph API.
 
 # Put together the basic information needed to compile VR Juggler applications.
-VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
-VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VJ_BASE_DIR,
-              Juggler, $APP_EXTRA_LIBS)
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
+                VJ_BASE_DIR, $DEFS, , ${_EXTRA_FLAGS})
+VJ_APP_LINKER_DOOZER(["$CXX"], ["$EXTRA_LINK_FLAGS"], ["$LDOPTS_DBG"],
+                     ["$LDOPTS_OPT"], ['$(VRJ_LIBS_MIN)'],
+                     ["$VJ_APP_EXTRA_LIBS"])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
 if test "$OS_TYPE" = "UNIX" ; then
-    BASIC_DYLIB_DEPS="$LDFLAGS $GADGET_LIBS_CC $JCCL_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC $LIBS -lm"
-    DYLIB_DEPS_VJ="$SNX_LIBS_CC $BASIC_DYLIB_DEPS"
-    DYLIB_DEPS_GL="-L\$(LIBDIR) -lJuggler $OGL_LDFLAGS $LIBOPENGL $BASIC_DYLIB_DEPS"
-    DYLIB_DEPS_PF="-L\$(LIBDIR) -lJuggler $PF_LDFLAGS $LIBPERFORMER $BASIC_DYLIB_DEPS"
-
-    APP_VJ_LIBS_GL="-lJuggler_ogl"
-    APP_VJ_LIBS_PF="-lJuggler_pf"
+    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC $LIBS -lm"
+    DYLIB_DEPS_VJ="$SNX_LIBS_CC $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_GL="-L\$(LIBDIR) -lJuggler $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_PF="-L\$(LIBDIR) -lJuggler $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
     APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
 
@@ -472,17 +463,21 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
+    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD $LIBS"
     BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
     DYLIB_DEPS_BASIC="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD $BASIC_WIN32_LIBS"
     DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) $DYLIB_DEPS_BASIC"
     DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
-    APP_VJ_LIBS_GL='Juggler_ogl.lib'
-    APP_VJ_LIBS_PF='Juggler_pf.lib'
     APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
     APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
     APP_EXTRA_LIBS_OSG="$OSG_LDFLAGS $LIBOSG"
 fi
+
+# Define the base path to the source directory using $(VJROOT_ABS) as an
+# alternative to using $(srcdir).
+UNIX_VJROOT_ABS="$VJROOT_ABS"
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -530,14 +525,6 @@ VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 # Juggler.
 case $OS_TYPE in
     UNIX)
-        if test "x$GXX" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
-        fi
-
         vrj_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_ogl'
@@ -549,12 +536,12 @@ case $OS_TYPE in
 
         if test "x$PERFORMER_API" = "xY" ; then
             Juggler_pf_lib='-lJuggler_pf'
+            Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         fi
 
         # XXX: Ideally, -lm would not be added "manually" like this.
         Juggler_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_X11 $LIBS -lm"
         Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
-        Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         ;;
     Win32)
         vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
@@ -577,6 +564,12 @@ fi
 
 vrj_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
+
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+
+DPP_SYSTEM_SUBST
 
 VJ_VERSION_GROK(VERSION)
 
@@ -606,16 +599,8 @@ AC_SUBST(DYLIB_DEPS_VJ)
 AC_SUBST(DYLIB_DEPS_GL)
 AC_SUBST(DYLIB_DEPS_PF)
 
-AC_SUBST(APP_EXTRA_FLAGS_PF)
-AC_SUBST(APP_VJ_LIBS_GL)
-AC_SUBST(APP_VJ_LIBS_PF)
-AC_SUBST(APP_EXTRA_LIBS_X11)
-AC_SUBST(APP_EXTRA_LIBS_GL)
-AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
 
-AC_SUBST(static_begin)
-AC_SUBST(static_end)
 AC_SUBST(vrj_cxxflags)
 AC_SUBST(vrj_cxxflags_all)
 AC_SUBST(vrj_extra_cxxflags)
@@ -659,6 +644,7 @@ AC_OUTPUT(vrjuggler-config
           vrj/Sound/Makefile
           vrj/Sound/pf/Makefile
           vrj/Util/Makefile
+          vrj.appdefs.mk
           samples/Makefile
           samples/OGL/Makefile
           samples/OGL/glove/Makefile
@@ -693,6 +679,11 @@ AC_OUTPUT(vrjuggler-config
           test/TestSuite/test.defs.mk
           test/TestSuite/TestCases/Makefile
           test/TestSuite/TestCases/Pf/Makefile
+          test/UI/Makefile
+          test/UI/OGL/Makefile
+          test/UI/OGL/torus/Makefile
+          test/UI/Pf/Makefile
+          test/UI/Pf/simple/Makefile
           tools/Makefile
           mtree/VJ.data.dist
           mtree/VJ.include.dist

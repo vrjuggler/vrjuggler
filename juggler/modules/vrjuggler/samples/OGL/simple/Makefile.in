@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples
+# Makefile.in for vrjuggler/samples/tutorials
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,9 +41,9 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: MPApp SimpleApp contextApp
+all: MPApp SimpleApp contextApp simpleInput
 
-MPApp SimpleApp contextApp::
+MPApp SimpleApp contextApp simpleInput::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
@@ -53,3 +53,4 @@ clean:
 	-cd MPApp && $(MAKE) clean
 	-cd SimpleApp && $(MAKE) clean
 	-cd contextApp && $(MAKE) clean
+	-cd simpleInput && $(MAKE) clean

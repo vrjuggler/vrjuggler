@@ -222,6 +222,7 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vrj
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(VJ_SHARE_DIR)
 	@$(MAKE) -C vrj instlinks=$(instlinks) links
 	cd $(instlinks)/include && $(RM_LN) ./deprecated &&		\
           $(LN_S) $(VJROOT_ABS)/deprecated ./
@@ -233,8 +234,8 @@ else
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
 endif
-	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
-          $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
+	cd $(instlinks)/$(VJ_SHARE_DIR) &&  $(RM_LN) /.vrj.appdefs.mk && \
+          $(LN_S) $(topdir)/vrj.appdefs.mk ./vrj.appdefs.mk
 	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./data &&		\
           $(LN_S) $(VJROOT_ABS)/data ./data
 	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./samples &&	\
@@ -249,8 +250,10 @@ endif
 	cd $(instlinks)/bin && cp -p $(topdir)/vrjuggler-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$VJ_BASE_DIR to:'
+	@echo 'You must now set $$VJ_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
+	@echo ""
+	@echo "and extend your path to include $$VJ_BASE_DIR/bin"
 	@echo "---------------------------------------------------------------"
 
 # Remove the links in $(instlinks).
@@ -392,6 +395,10 @@ install-data:
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
           -v "$(topdir)/VARS.pl"
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(projdatadir)" --vars="$(topdir)/VARS.pl"		\
+          --files="$(top_srcdir)/vrj.appdefs.mk.in" $(_GROUP_OPT_PL)	\
+          --srcdir="."
 
 install-m4:
 	@echo "------------------------------------------------"

@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-27-2002 patrickh  The application makefiles now require GNU make, Doozer
+                      and the *-config scripts.  This fixes path problems in
+                      the installation tree.
+                      NEW VERSION: 1.1.97
 Jun-25-2002 patrickh  The vrjuggler-config script is now written in Perl.  It
                       is capable of determining its installation path at
                       runtime.
@@ -10,6 +14,8 @@ Jun-20-2002 allenb    Remove multi-threading from the case where GLXWindow and
                       GFX window and as a keyboard window.
                       This change should greatly increase the stability of GFX 
                       window input under X with OpenGL.
+
+[1.1 DR1 released - 6.13.2002]=================================================
 Jun-13-2002 patrickh  Removed vrj::EnvironmentManager.
 May-30-2002 patrickh  Removed the Juggler_utils library.
                       NEW VERSION: 1.1.95
