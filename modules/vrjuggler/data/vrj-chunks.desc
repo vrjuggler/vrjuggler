@@ -196,7 +196,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>PinchGlove</allowedtype>
       <allowedtype>DataGlove</allowedtype>
       <allowedtype>ThreeDMouse</allowedtype>
-      <allowedtype>Fastrack</allowedtype>
+      <allowedtype>Fastrak</allowedtype>
       <allowedtype>SimDigitalGlove</allowedtype>
       <allowedtype>TrackdController</allowedtype>
       <allowedtype>Intersense</allowedtype>
@@ -333,8 +333,8 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Accept Connections" defaultvalue="1" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="Fastrack" name="Fastrack">
-    <help>Polhemus Fastrack 3D</help>
+  <ChunkDesc token="Fastrak" name="Polhemus Fastrak">
+    <help>Polhemus Fastrak 3D tracker.</help>
     <category>Devices</category>
     <PropertyDesc token="port" name="Device" type="string" variable="0">
       <help>Serial port the fastrack is associated to</help>
@@ -1229,7 +1229,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>DummyPosition</allowedtype>
       <allowedtype>MotionStar</allowedtype>
       <allowedtype>TrackdSensor</allowedtype>
-      <allowedtype>Fastrack</allowedtype>
+      <allowedtype>Fastrak</allowedtype>
       <allowedtype>SimRelativePosition</allowedtype>
       <allowedtype>SimSetablePosition</allowedtype>
       <allowedtype>Intersense</allowedtype>
