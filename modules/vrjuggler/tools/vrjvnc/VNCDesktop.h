@@ -40,6 +40,7 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/KeyboardInterface.h>
+#include <vector>
 
 #include <VNCInterface.h>
 
@@ -86,6 +87,9 @@ protected:     // Helpers
 
    void drawSphere(float radius, gmtl::Point3f offset, int parts=4);
 
+   void drawBox(const gmtl::AABoxf& box);
+
+
 private:
    VNCInterface                         mVncIf;
    vpr::ThreadRunFunctor<VNCInterface>* mVncThreadFunctor;
@@ -100,6 +104,9 @@ private:
    bool mHaveKeyboard;
 
 private:
+   enum Corner
+   { LL = 0, LR = 1, UR = 2, UL=3 };
+
    /** @name Desktop parameters
    * The desktop window (ie. the texture of the desktop) is assumed to be
    * centered on 0,0,0 in the local coordinate frame with
@@ -115,8 +122,18 @@ private:
    float          mDesktopToVncWidthScale;
    float          mDesktopToVncHeightScale;
 
-   gmtl::Matrix44f  mDesktopMatrix;  /**< vnc_T_world */
+   gmtl::Matrix44f  mDesktopMatrix;    /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
+   // Corners
+   gmtl::AABoxf     mLLCorner;         /**< LL of the desktop */
+   gmtl::AABoxf     mLRCorner;         /**< LR of the desktop */
+   gmtl::AABoxf     mURCorner;         /**< UR of the desktop */
+   gmtl::AABoxf     mULCorner;         /**< UL of the desktop */
+   // Borders
+   gmtl::AABoxf     mRightBorder;      /**< The right border of the desktop */
+   gmtl::AABoxf     mLeftBorder;       /**< The left border of the desktop */
+   gmtl::AABoxf     mTopBorder;        /**< The top border of the desktop */
+   gmtl::AABoxf     mBottomBorder;     /**< The bottom border of the desktop */
    //@}
 
    bool mDesktopWandIsect;

@@ -127,6 +127,9 @@ void VNCDesktop::init(const std::string& wandName,
 */
 void VNCDesktop::updateDesktopParameters()
 {
+   const float BorderSize(0.25f);
+   const float CornerSize(BorderSize+0.07f);
+
    // --- Update scales and bounds. --- //
    mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
    mDesktopToVncHeightScale = mVncHeight / mDesktopHeight;
@@ -135,6 +138,48 @@ void VNCDesktop::updateDesktopParameters()
    mDesktopBox.setMin(gmtl::Point3f(0, 0, -0.50f));
    mDesktopBox.setMax(gmtl::Point3f(mDesktopWidth, mDesktopHeight, 0.50f));
    mDesktopBox.setEmpty(false);
+
+   float far_left = -CornerSize;
+   float far_right = mDesktopWidth+CornerSize;
+   float far_bottom = -CornerSize;
+   float far_top = mDesktopHeight+CornerSize;
+
+   // --- Update corners --- //
+   // LL
+   mLLCorner.setMin(gmtl::Point3f(far_left, far_bottom,-CornerSize));
+   mLLCorner.setMax(gmtl::Point3f(0.0f, 0.0f, CornerSize));
+   mLLCorner.setEmpty(false);
+   // LR
+   mLRCorner.setMin(gmtl::Point3f(mDesktopWidth, far_bottom,-CornerSize));
+   mLRCorner.setMax(gmtl::Point3f(far_right, 0.0f, CornerSize));
+   mLRCorner.setEmpty(false);
+   // UR
+   mURCorner.setMin(gmtl::Point3f(mDesktopWidth, mDesktopHeight, -CornerSize));
+   mURCorner.setMax(gmtl::Point3f(far_right, far_top, CornerSize));
+   mURCorner.setEmpty(false);
+   // UL
+   mULCorner.setMin(gmtl::Point3f(far_left, mDesktopHeight,-CornerSize));
+   mULCorner.setMax(gmtl::Point3f(0.0f, far_top, CornerSize));
+   mULCorner.setEmpty(false);
+
+   far_left = -BorderSize;
+   far_right = mDesktopWidth+BorderSize;
+   far_bottom = -BorderSize;
+   far_top = mDesktopHeight+BorderSize;
+
+   // Update borders -- Goto the far's so they puncture the corners
+   mLeftBorder.setMin(gmtl::Point3f(far_left,far_bottom,-BorderSize));
+   mLeftBorder.setMax(gmtl::Point3f(0.0f,far_top,BorderSize));
+   mLeftBorder.setEmpty(false);
+   mRightBorder.setMin(gmtl::Point3f(mDesktopWidth,far_bottom,-BorderSize));
+   mRightBorder.setMax(gmtl::Point3f(far_right,far_top,BorderSize));
+   mRightBorder.setEmpty(false);
+   mBottomBorder.setMin(gmtl::Point3f(far_left,far_bottom,-BorderSize));
+   mBottomBorder.setMax(gmtl::Point3f(far_right,0.0f,BorderSize));
+   mBottomBorder.setEmpty(false);
+   mTopBorder.setMin(gmtl::Point3f(far_left,mDesktopHeight,-BorderSize));
+   mTopBorder.setMax(gmtl::Point3f(far_right,far_top,BorderSize));
+   mTopBorder.setEmpty(false);
 
    // Set the translation point to be the middle of the desktop polygon.
    //gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
@@ -287,13 +332,32 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
 void VNCDesktop::draw()
 {
+   const gmtl::Vec3f micro_gui_blue(0.39f,0.51f,0.77f);
+   const gmtl::Vec3f micro_gui_yellow(0.97f,0.92f,0.22f);
+   const gmtl::Vec3f ximian_orange(0.98f,0.70f,0.098f);
+
    // XXX: Should probably use an attribute stack or something here.
-   glDisable(GL_LIGHTING);
    glDisable(GL_BLEND);
+   glEnable(GL_LIGHTING);
 
    // -- Draw the desktop "objects" -- //
    // Draw isect point
    drawSphere(0.25f, mDebug_IsectPoint);
+
+   // Draw the desktop corners and borders
+   glColor3fv( micro_gui_yellow.mData );
+   drawBox(mLLCorner);
+   drawBox(mLRCorner);
+   drawBox(mURCorner);
+   drawBox(mULCorner);
+
+   glColor3fv( micro_gui_blue.mData );
+   drawBox(mLeftBorder);
+   drawBox(mRightBorder);
+   drawBox(mTopBorder);
+   drawBox(mBottomBorder);
+
+   glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
 
    // Draw the ray
    glPushMatrix();
@@ -311,6 +375,7 @@ void VNCDesktop::draw()
       glPolygonMode(GL_FRONT, GL_FILL);
    glPopMatrix();
 
+   // Draw the desktop surface
    glPushMatrix();
       glEnable(GL_TEXTURE_2D);
 
@@ -386,6 +451,52 @@ void VNCDesktop::drawSphere(float radius, gmtl::Point3f offset, int parts)
       glTranslatef(offset[0], offset[1], offset[2]);
       gluSphere(mSphereQuad, radius, parts, parts);
    glPopMatrix();
+}
+
+void VNCDesktop::drawBox(const gmtl::AABoxf& box)
+{
+   // Define the normals for the box faces.
+   // left, top, right, bottom, front, back
+   static GLfloat normals[6][3] = {
+      { -1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0 },
+      { 0.0, -1.0, 0.0 }, { 0.0, 0.0, 1.0 }, { 0.0, 0.0, -1.0 }
+   };
+
+   // Define the array indices for the cube faces.  These will be used to
+   // access values in the v array declared below.
+   // left,
+   static GLint faces[6][4] = {
+      { 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5, 4 },
+      { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 }
+   };
+
+   gmtl::Point3f box_min = box.getMin();
+   gmtl::Point3f box_max = box.getMax();
+
+   // Define the vertices based on the min and max points on the cube.
+   // 0,1,2,3 left
+   // 4,5,6,7 right
+   GLfloat v[8][3];
+   v[0][0] = v[1][0] = v[2][0] = v[3][0] = box_min[0];   // Left x
+   v[4][0] = v[5][0] = v[6][0] = v[7][0] = box_max[0];   // Right x
+
+   v[0][1] = v[1][1] = v[4][1] = v[5][1] = box_min[1];   // bottom y
+   v[2][1] = v[3][1] = v[6][1] = v[7][1] = box_max[1];   // top y
+
+   v[0][2] = v[3][2] = v[4][2] = v[7][2] = box_min[2];   // back
+   v[1][2] = v[2][2] = v[5][2] = v[6][2] = box_max[2];   // front
+
+   // Draw the box.
+   for ( GLint i = 0; i < 6; ++i )
+   {
+      glBegin(GL_QUADS);
+         glNormal3fv(&normals[i][0]);
+         glVertex3fv(&v[faces[i][0]][0]);
+         glVertex3fv(&v[faces[i][1]][0]);
+         glVertex3fv(&v[faces[i][2]][0]);
+         glVertex3fv(&v[faces[i][3]][0]);
+      glEnd();
+   }
 }
 
 
