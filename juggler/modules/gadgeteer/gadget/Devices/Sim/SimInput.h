@@ -98,9 +98,9 @@ public:
        return std::string("SimInput");
    }
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {;}
+   {return(vpr::ReturnStatus::Succeed);}
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-   {;}
+   {return(vpr::ReturnStatus::Succeed);}
 
 protected:
    //: Check the given keypair
