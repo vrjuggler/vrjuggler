@@ -25,7 +25,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= main.o
+OBJECTS		= main.o simpleGloveApp.o
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -37,7 +37,7 @@ all: simpleGlove
 simpleGlove: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-main.o: simpleGloveApp.h
+main.o simpleGloveApp.o: simpleGloveApp.h
 
 .cpp.o:
 	${COMPILE} -c $<
