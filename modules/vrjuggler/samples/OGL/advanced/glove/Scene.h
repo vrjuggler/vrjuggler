@@ -87,12 +87,14 @@ private:
     int _floorList;
     
     int _coneList;
-    int _cubeList;
-    int _sphereList;
-    
     int _coneHlList;
+
+    int _cubeList;
     int _cubeHlList;
+    
+    int _sphereList;
     int _sphereHlList; 
+
     unsigned int _woodBitmapBindId;
     unsigned int _rainbowBitmapBindId;
     
