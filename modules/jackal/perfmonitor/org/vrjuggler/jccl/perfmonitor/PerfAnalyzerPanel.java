@@ -231,16 +231,16 @@ public class PerfAnalyzerPanel
 	public java.util.List graph_buttons;      // list of LabeledPanelButton
 	public java.util.List anomalies_buttons;  // list of LabeledPanelButton
         public JPanel panel;
-	public DefaultMutableTreeNode root;
+	public DefaultMutableTreeNode col_root;
 
-        public LabeledDataPanelElem (LabeledPerfDataCollector _col) {
+        public LabeledDataPanelElem (LabeledPerfDataCollector _col, MutableTreeNode global_root) {
             col = _col;
             index_labels = new ArrayList();
             avg_labels = new ArrayList();
             graph_buttons = new ArrayList();
             anomalies_buttons = new ArrayList();
-	    root = new DefaultMutableTreeNode();
-	    root.setUserObject (new TreeElem ("Root", null));
+	    col_root = new DefaultMutableTreeNode( new TreeElem (col.getName(), null));
+	    global_root.insert (col_root, global_root.getChildCount());
         }
 
 	public void initialize (JPanel _panel, 
@@ -311,16 +311,16 @@ public class PerfAnalyzerPanel
 		}
 		if (new_node == null) {
 		    // didn't find it, create folder node
-		    new_node = new DefaultMutableTreeNode();
-		    new_node.setUserObject (new TreeElem ((String)ii.label_components.get(i), null));
+		    new_node = new DefaultMutableTreeNode( new TreeElem ((String)ii.label_components.get(i), null));
 		    node.insert (new_node, node.getChildCount());
 		}
 		node = new_node;
 	    }
 	    // add ii as a child node of node.
-	    new_node = new DefaultMutableTreeNode();
-	    new_node.setUserObject (new TreeElem ((String)ii.label_components.get(ii.label_components.size()-1), ii));
+	    new_node = new DefaultMutableTreeNode(new TreeElem ((String)ii.label_components.get(ii.label_components.size()-1), ii));
 	    node.insert (new_node, node.getChildCount());
+
+	    //System.out.println ("tree is: \n" + col_root);
 	}
 
         public void addInitial (LabeledPerfDataCollector.IndexInfo ii) {
@@ -409,6 +409,7 @@ public class PerfAnalyzerPanel
 
     JScrollPane display_pane;
     JTextArea text_area;
+    DefaultMutableTreeNode root;
 
     PerformanceModule perf_module;
     protected String component_name;
@@ -436,6 +437,7 @@ public class PerfAnalyzerPanel
 	perf_module = null;
         ui_module = null;
 	text_area = null;
+	root = new DefaultMutableTreeNode();
 
 	preskip = 20;
 	postskip = 20;
@@ -477,7 +479,7 @@ public class PerfAnalyzerPanel
         if (col instanceof NumberedPerfDataCollector)
             dpe = new NumberedDataPanelElem ((NumberedPerfDataCollector)col);
         else
-            dpe = new LabeledDataPanelElem ((LabeledPerfDataCollector)col);
+            dpe = new LabeledDataPanelElem ((LabeledPerfDataCollector)col, root);
         datapanel_elems.add(dpe);
         if (ui_initialized)
             dpe.initialize (data_panel, gblayout, gbc);
