@@ -48,7 +48,12 @@
 #define SOUND_INFO_DATA
 #include <string>
 #include <vector>
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Math.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
 
 namespace snx
 {
@@ -104,7 +109,7 @@ struct SoundInfo
    // this field is used when datasource != FILESYSTEM
    std::vector< std::vector<char> > data;
 
-   vrj::Vec3 position;
+   gmtl::Vec3f position;
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
    bool retriggerable;  // can the sound be retriggered while playing?
