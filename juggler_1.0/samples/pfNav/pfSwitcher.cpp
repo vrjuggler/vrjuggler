@@ -45,8 +45,8 @@ void registerSomeApps(pfSwitcherApp* switcher);
 
 void main(int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance();                             // Declare a new Kernel
-   pfSwitcherApp* application = new pfSwitcherApp(kernel);  // Delcare an instance of my application
+   vjKernel* kernel = vjKernel::instance();                    // Declare a new Kernel
+   pfSwitcherApp* application = pfSwitcherApp::instance();     // Delcare an instance of my application
 
    registerSomeApps(application);
 

@@ -2,6 +2,82 @@
 #include <pfFileIO.h>
 #include <Performer/pfutil.h>
 
+#define SWITCHER_APP_BASE_SIZE 5.0f
+
+pfSwitcherApp* pfSwitcherApp::_instance = NULL;
+
+// Called for each application
+// Called after: initScene, apiInit
+// Called as part of: getScene()
+// Calls app's getScene()
+void pfAppHandle::constructAppSceneGraph()
+{
+   vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrMAGENTA)
+                        << "Constructing appScene for: " << mAppName
+                        << clrRESET<< endl << vjDEBUG_FLUSH;
+   mAppRoot = mApp->getScene();
+   mAppXformDCS = new pfDCS;
+   mAppXformDCS->addChild(mAppRoot);
+   // ------ CONFIGURE APP portion of graph ---- //
+   mAppSwitch = new pfSwitch;
+   switchOff();
+   mAppSwitch->addChild(mAppXformDCS);
+
+   // Get Scaling factor
+   pfBox bound_box;
+   pfuTravCalcBBox(mAppRoot,&bound_box);
+   pfVec3 diag = (bound_box.max - bound_box.min);
+   mUnitScaleFactor = (SWITCHER_APP_BASE_SIZE/diag.length());
+   mUnitTrans = -((bound_box.max+bound_box.min)/2.0f);
+
+   //
+   mAppXformDCS->setScale(mUnitScaleFactor);
+}
+
+void pfAppHandle::switchOn()
+{
+   if(mAppSwitch != NULL)
+   {
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrMAGENTA,"Switching on:") << mAppName << clrRESET << endl << vjDEBUG_FLUSH;
+      mAppSwitch->setVal(PFSWITCH_ON);
+   }
+}
+
+void pfAppHandle::switchOff()
+{
+   if(mAppSwitch != NULL)
+   {
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrMAGENTA,"Switching off:") << mAppName << clrRESET << endl << vjDEBUG_FLUSH;
+      mAppSwitch->setVal(PFSWITCH_OFF);
+   }
+}
+
+// Set the scale in the range of [0..mUnitScaleFactor]
+// Where percentage is the amount along the range
+void pfAppHandle::setScaleZeroToUnit(float percent)
+{
+   mAppXformDCS->setScale(percent*mUnitScaleFactor);
+}
+
+// Set the scale in the range of [mUnitScaleFactor..1.0(ie. Full Model)]
+// Where percentage is the amount along the range
+void pfAppHandle::setScaleUnitToFull(float percent)
+{
+   //mAppXformDCS->setScale((percent*(1.0f-mUnitScaleFactor)) + mUnitScaleFactor);
+}
+
+// Set scale to the unit scale value
+void pfAppHandle::setUnitScale()
+{
+   mAppXformDCS->setScale(mUnitScaleFactor);
+}
+
+// Set scale to full scale (ie. 1.0f)
+void pfAppHandle::setFullScale()
+{
+   mAppXformDCS->setScale(1.0f);
+}
+
 // ------------------------------- //
 // ------ SWITCHER INTERFACE ----- //
 // ------------------------------- //
@@ -14,6 +90,12 @@ void pfSwitcherApp::registerApp(pfAppHandle appHandle)
    mApps.push_back(appHandle);
    vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrMAGENTA) << "Registered App: " << appHandle.mAppName << clrRESET << endl << vjDEBUG_FLUSH;
 
+   // If first application in list, then set it active
+   if(mActiveApp == -1)
+   { setActiveApp(0); }
+   else        // else, set it unfocused
+   { appHandle.mApp->setFocus(false);}
+
    // If we have already initialized, then call whatever we can
    // XXX: write this code
 }
@@ -25,6 +107,7 @@ void pfSwitcherApp::constructSceneGraphSkeleton()
    mRootNode      = new pfGroup;
    mConstructDCS  = new pfDCS;
 
+   // ----- CONFIGURE CONSTRUCT MODEL ----- //
    // Load the construct model
    pfFileIO::addFilePath("/usr/share/Performer/data:");
    mConstructModel = pfFileIO::loadFile("board.sv");
@@ -50,44 +133,274 @@ void pfSwitcherApp::constructSceneGraphSkeleton()
    mRootNode->addChild(mSun);
 }
 
-// Called for each application
-// Called after: initScene, apiInit
-// Called as part of: getScene()
-// Calls app's getScene()
-void pfSwitcherApp::constructAppScene(pfAppHandle& handle)
-{
-   vjASSERT(handle.mApp != NULL);
-   vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrMAGENTA)
-                        << "Constructing appScene for: " << handle.mAppName
-                        << clrRESET<< endl << vjDEBUG_FLUSH;
-   handle.mAppRoot = handle.mApp->getScene();
-   handle.mAppSwitch = new pfSwitch;
-   handle.mAppSwitch->setVal(PFSWITCH_ON);
-   handle.mAppXformDCS = new pfDCS;
-   handle.mAppSwitch->addChild(handle.mAppRoot);
-   handle.mAppXformDCS->addChild(handle.mAppSwitch);
-
-   pfBox bound_box;
-   pfuTravCalcBBox(handle.mAppRoot,&bound_box);
-   pfVec3 diag = (bound_box.max - bound_box.min);
-   handle.mUnitScaleFactor = (1.0f/diag.length());
-   handle.mUnitTrans = -((bound_box.max+bound_box.min)/2.0f);
-
-   //pfSphere app_bound;
-   //handle.mAppRoot->getBound(&app_bound);
-   //handle.mUnitScaleFactor = (1.0f/app_bound.radius);
-
-   handle.mAppXformDCS->setScale(handle.mUnitScaleFactor);
-}
-
 void pfSwitcherApp::addAppGraph(pfAppHandle& handle)
 {
-   mRootNode->addChild(handle.mAppXformDCS);
+   mRootNode->addChild(handle.mAppSwitch);
 }
 
 void pfSwitcherApp::removeAppGraph(pfAppHandle& handle)
 {
-   mRootNode->removeChild(handle.mAppXformDCS);
+   mRootNode->removeChild(handle.mAppSwitch);
+}
+
+      // ------ HELPERS ------ //
+
+// Is the application whose index is given active?
+// ie. Is it supposed to be updated by the callbacks
+bool pfSwitcherApp::isAppActive(unsigned index)
+{
+   return (index == mActiveApp);
+   //return true;
+}
+
+// Set the active application
+//!POST: If have old active, set non-focu
+//       Set focus for new app
+void pfSwitcherApp::setActiveApp(unsigned index)
+{
+   vjASSERT(index < mApps.size());
+
+   vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrCYAN)
+                        << "pfSwitcher: Setting active app to: "
+                        << mApps[index].mAppName << " idx:"
+                        << index << endl << clrRESET << vjDEBUG_FLUSH;
+
+   // -- HAVE OLD ONE -- //
+   // Set old non-focused
+   if(mActiveApp != -1)
+   {
+      vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrCYAN)
+                        << "pfSwitcher: have old ap: "
+                        << mApps[mActiveApp].mAppName << " idx:"
+                        << mActiveApp << " Closing it.\n" << clrRESET << vjDEBUG_FLUSH;
+      mApps[mActiveApp].mApp->setFocus(false);
+      mApps[mActiveApp].switchOff();
+   }
+
+   // -- SET NEW ONE -- //
+   mActiveApp = index;                       // Set new active
+   mApps[mActiveApp].mApp->setFocus(true);   // Change focus state
+   mApps[mActiveApp].switchOn();
+}
+
+void pfSwitcherApp::initInteraction()
+{
+   mNextAppButton.init(std::string("VJButton3"));
+   mPrevAppButton.init(std::string("VJButton5"));
+   mSelectButton.init(std::string("VJButton4"));
+}
+
+
+// Perform any interaction updating needed
+void pfSwitcherApp::updateInteraction()
+{
+   bool next_btn(false);
+   bool prev_btn(false);
+   bool select_btn(false);
+
+   if(mNextAppButton->getData() == vjDigital::TOGGLE_ON)
+   {
+      next_btn = true;
+      vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrMAGENTA,"NEXT APP btn pressed\n") << vjDEBUG_FLUSH;
+   }
+
+   if(mPrevAppButton->getData() == vjDigital::TOGGLE_ON)
+   {
+      prev_btn = true;
+      vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrMAGENTA,"PREV APP btn pressed\n") << vjDEBUG_FLUSH;
+   }
+
+   if(mSelectButton->getData() == vjDigital::TOGGLE_ON)
+   {
+      select_btn = true;
+      vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrMAGENTA,"SELECT btn pressed\n") << vjDEBUG_FLUSH;
+   }
+
+
+      // ------ STATE SWITCHING -------- //
+   if(mCurState == RUN_SWITCHER)
+   {
+      // RUN_SWITCHER [NextApp]/CHANGE_APP_OUT
+      if(next_btn)
+      {
+         unsigned new_active = mActiveApp + 1;
+         if(new_active >= mApps.size())
+         { new_active = 0; }
+         mAppToMakeActive = new_active;
+         vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrMAGENTA,"SELECTED New app: RUN_SWITCHER -> CHANGE_APP_OUT: ")
+                              << "appToMakeCurrent:" << mApps[mAppToMakeActive].mAppName << " id:" << mAppToMakeActive << vjDEBUG_FLUSH;
+
+         setState(CHANGE_APP_OUT);
+      }
+   }
+   else if(mCurState == CHANGE_APP_OUT)
+   {
+      // No keypresses allowed
+
+      // Update the change transition
+      updateChangeAppTransOut();       // This may switch state to: CHANGE_APP
+   }
+   else if(mCurState == CHANGE_APP)
+   {
+      // No keypresses allowed
+
+      // Complete the change and start the CHANGE_APP_IN
+      vjASSERT(mAppToMakeActive != -1);
+      setActiveApp(mAppToMakeActive);
+      mAppToMakeActive = -1;
+
+      vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrMAGENTA,"CHANGE_APP State: CHANGE_APP -> CHANGE_APP_IN: ")
+                              << "new cur app:" << mApps[mActiveApp].mAppName << " id:" << mActiveApp << vjDEBUG_FLUSH;
+      setState(CHANGE_APP_IN);
+   }
+   else if(mCurState == CHANGE_APP_IN)
+   {
+      // No keypresses allowed
+
+      // Update the change transition
+      updateChangeAppTransIn();        // This may switch state to: RUN_SWITCHER
+   }
+   else if(mCurState == SWITCH_IN)
+   {
+
+   }
+   else if(mCurState == RUN_APP)
+   {
+
+   }
+   else if(mCurState == SWITCH_OUT)
+   {
+
+   }
+
+}
+
+// Set a new state
+// Encapsulates any calls that need to be made because of state switch
+void pfSwitcherApp::setState(SwitcherState newState)
+{
+   // Ignore if we are already in the state
+   if(mCurState == newState)
+   {
+      return;
+   }
+
+   if(newState == RUN_SWITCHER)
+   {
+      mCurState = newState;
+   }
+   else if(newState == CHANGE_APP_OUT)
+   {
+      mCurState = newState;
+      initChangeAppTransOut();
+   }
+   else if(newState == CHANGE_APP)
+   {
+      mCurState = newState;
+   }
+   else if(newState == CHANGE_APP_IN)
+   {
+      mCurState = newState;
+      initChangeAppTransIn();
+   }
+   else if(newState == SWITCH_IN)
+   {
+      mCurState = newState;
+      initSwitchTransIn();
+   }
+   else if(newState == RUN_APP)
+   {
+      mCurState = newState;
+   }
+   else if(newState == SWITCH_OUT)
+   {
+      mCurState = newState;
+      initSwitchTransOut();
+   }
+}
+
+
+// ------------------------------------ //
+// -------- TRANSITION HELPERS -------- //
+// ------------------------------------ //
+
+// Update transition for switching apps in
+// POST: Scene graph is modified for transition
+//       If transition is complete ==> RUN_APP state
+void pfSwitcherApp::updateSwitchTransIn()
+{
+   ;
+}
+
+void pfSwitcherApp::initSwitchTransIn()
+{
+   ;
+}
+
+// Update transition for switching apps out
+// POST: Scene graph is modified for transition
+//       If transition is complete ==> RUN state
+void pfSwitcherApp::updateSwitchTransOut()
+{
+   ;
+}
+void pfSwitcherApp::initSwitchTransOut()
+{
+   ;
+}
+
+// Update transition for changing apps in
+// POST: Scene graph is modified for trans
+//       If transition is complete ==> RUN_SWITCHER state
+void pfSwitcherApp::updateChangeAppTransIn()
+{
+   // Update the percentage complete
+   mTransIn += (mClock.timeInstant/ mTransLength);
+   vjDEBUG(vjDBG_ALL,0) << "AppTransIn: " << mTransIn << endl << vjDEBUG_FLUSH;
+
+   // If not complete, Update model based on that information
+   // Else if complete, Stop transition and change state ==> RUN_SWITCHER
+   if(mTransIn < 1.0f)  // NOT DONE
+   {
+      mApps[mActiveApp].setScaleZeroToUnit(mTransIn);
+   }
+   else                 // DONE
+   {
+      mApps[mActiveApp].setUnitScale();
+      setState(RUN_SWITCHER);
+   }
+
+}
+void pfSwitcherApp::initChangeAppTransIn()
+{
+   mTransIn = 0.0f;                                   // Initialize transtion value
+   mApps[mActiveApp].setScaleZeroToUnit(mTransIn);    // Set the initial scale
+}
+
+// Update transition for chaning apps out
+// POST: Scene graph is modified for trans
+//       If transition is complete ==> CHANGE_APP
+void pfSwitcherApp::updateChangeAppTransOut()
+{
+   // Update the percentage of transition completed
+   mTransOut += (mClock.timeInstant/mTransLength);
+
+   // If not complete, Update model based on that information
+   // Else if complete, Stop transition and change state ==> CHANGE_APP
+   if(mTransOut < 1.0f) // NOT DONE
+   {
+      mApps[mActiveApp].setScaleZeroToUnit(1.0f-mTransOut);
+   }
+   else                 // DONE
+   {
+      // Leave scale alone
+      setState(CHANGE_APP);
+   }
+}
+void pfSwitcherApp::initChangeAppTransOut()
+{
+   mTransOut = 0.0f;                                        // Initialize tranition value
+   mApps[mActiveApp].setScaleZeroToUnit(1.0f-mTransOut);    // Set the initial scale
 }
 
 // ---------------------------------------------- //
@@ -103,20 +416,29 @@ void pfSwitcherApp::removeAppGraph(pfAppHandle& handle)
 // - Add app to my scene grapy
 void pfSwitcherApp::initScene()
 {
-   // Init my scene stuff
+   mHaveInitialized = true;      // Tell future app adds that we are already inited
+
+   // --- SWITCHER SKELETON -- //
    constructSceneGraphSkeleton();
 
-   // Init any apps scene stuff
+   // --- APPS InitScene() --- //
    for(unsigned i=0;i<mApps.size();i++)
       mApps[i].mApp->initScene();
 
-   // For all registered, construct their skeleton scenes
-   // And add them to mine
+   // -- CONSTRUCT APPS -- //
+   // For all registered, construct their scenes And add them to mine
    // NOTE: This invokes getScene internally
    for(unsigned j=0;j<mApps.size();j++)
    {
-      constructAppScene(mApps[j]);
+      mApps[j].constructAppSceneGraph();
       addAppGraph(mApps[j]);
+   }
+
+   // Make sure that the active application is viewable
+   if(mActiveApp != -1)
+   {
+      vjASSERT(mApps[mActiveApp].mAppSwitch != NULL);
+      mApps[mActiveApp].switchOn();
    }
 }
 
@@ -133,7 +455,8 @@ void pfSwitcherApp::preForkInit()
 void pfSwitcherApp::appChanFunc(pfChannel* chan)
 {
    for(unsigned i=0;i<mApps.size();i++)
-      mApps[i].mApp->appChanFunc(chan);
+      if(isAppActive(i))
+         mApps[i].mApp->appChanFunc(chan);
 }
 
 //: Return the current scene graph
@@ -172,7 +495,8 @@ std::vector<int> pfSwitcherApp::getFrameBufferAttrs()
 void pfSwitcherApp::preDrawChan(pfChannel* chan, void* chandata)
 {
    for(unsigned i=0;i<mApps.size();i++)
-      mApps[i].mApp->preDrawChan(chan,chandata);
+      if(isAppActive(i))
+         mApps[i].mApp->preDrawChan(chan,chandata);
 }
 
 // Function called by the DEFAULT drawChan function after clearing the channel
@@ -181,7 +505,8 @@ void pfSwitcherApp::preDrawChan(pfChannel* chan, void* chandata)
 void pfSwitcherApp::postDrawChan(pfChannel* chan, void* chandata)
 {
    for(unsigned i=0;i<mApps.size();i++)
-      mApps[i].mApp->postDrawChan(chan,chandata);
+      if(isAppActive(i))
+         mApps[i].mApp->postDrawChan(chan,chandata);
 }
 
 // ----------------------------------------------- //
@@ -193,6 +518,12 @@ void pfSwitcherApp::postDrawChan(pfChannel* chan, void* chandata)
 //! POST: For each registered app, this is called
 void pfSwitcherApp::init()
 {
+   mClock.start();            // Initialize clock
+
+   // Initialize switcher
+   initInteraction();         // Initialize the interation objects
+
+   // Call app init functions
    for(unsigned i=0;i<mApps.size();i++)
       mApps[i].mApp->init();
 }
@@ -220,8 +551,16 @@ void pfSwitcherApp::exit()
 //! POST: For each registered app, this is called
 void pfSwitcherApp::preFrame()
 {
+   // Keep clock up to date
+   mClock.stop();
+   mClock.start();
+
+   // -- UPDATE Switcher app -- //
+   updateInteraction();
+
    for(unsigned i=0;i<mApps.size();i++)
-      mApps[i].mApp->preFrame();
+      if(isAppActive(i))
+         mApps[i].mApp->preFrame();
 }
 
 //: Function called <b>during</b> the application's drawing time
@@ -229,7 +568,8 @@ void pfSwitcherApp::preFrame()
 void pfSwitcherApp::intraFrame()
 {
    for(unsigned i=0;i<mApps.size();i++)
-      mApps[i].mApp->intraFrame();;
+      if(isAppActive(i))
+         mApps[i].mApp->intraFrame();;
 }
 
 //: Function called before updating trackers but after the frame is complete
@@ -237,5 +577,6 @@ void pfSwitcherApp::intraFrame()
 void pfSwitcherApp::postFrame()
 {
    for(unsigned i=0;i<mApps.size();i++)
-      mApps[i].mApp->postFrame();
+      if(isAppActive(i))
+         mApps[i].mApp->postFrame();
 }

@@ -10,6 +10,8 @@
 #include <Performer/pf/pfNode.h>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfLightSource.h>
+#include <Input/InputManager/vjDigitalInterface.h>
+#include <StopWatch.h>
 
 // Wrapper around a pfApp
 class pfAppHandle
@@ -20,21 +22,47 @@ public:
    {
       mApp = app;
       mAppName = appName;
-      mAppXformDCS = NULL;
       mAppRoot = NULL;
+      mAppXformDCS = NULL;
       mAppSwitch = NULL;
+      mUnitScaleFactor = 0.0f;
    }
+
+   // Constructs the scene graph
+   // POST: All nodes are allocated
+   //       DCS set to scaling to unit cube
+   //       switchOff() is called
+   void constructAppSceneGraph();
+
+   void switchOn();
+   void switchOff();
+
+   // Set the scale in the range of [0..mUnitScaleFactor]
+   // Where percentage is the amount along the range
+   void setScaleZeroToUnit(float percent);
+
+   // Set the scale in the range of [mUnitScaleFactor..1.0(ie. Full Model)]
+   // Where percentage is the amount along the range
+   void setScaleUnitToFull(float percent);
+
+   // Set scale to the unit scale value
+   void setUnitScale();
+
+   // Set scale to full scale (ie. 1.0f)
+   void setFullScale();
 
 public:
    vjPfApp*    mApp;
    std::string mAppName;
 
    // These are for the scene graph structure that the switcher needs
-   // -- mAppXformDCS -- mAppRoot --- << APP STUFF >>
+   // -- mAppSwitch -- mAppXformDCS -- mAppRoot --- << APP STUFF >>
    // NOTE: These are allocated by the SWITCHER
+   // NOTE: put switcher in each app so multiple can
+   //       be displayed at once
    pfGroup*    mAppRoot;
-   pfSwitch*   mAppSwitch;
    pfDCS*      mAppXformDCS;
+   pfSwitch*   mAppSwitch;             // Switch to select active application
    float       mUnitScaleFactor;    // Scale factor needed to scale to unit cube
    pfVec3      mUnitTrans;          // Amount to translate to get to unit cube
 };
@@ -48,47 +76,114 @@ public:
 class pfSwitcherApp : public vjPfApp
 {
 public:
-   pfSwitcherApp(vjKernel* kern) : vjPfApp(kern)
+   enum SwitcherState
    {
-       mRootNode = NULL;
-       mConstructModel = NULL;
-       mHaveInitialized = false;
-   }
+      RUN_SWITCHER,        // We are just running the switcher right now
+      RUN_APP,             // We are running the active app exclusively
+      SWITCH_IN,           // We are Switching into an app
+      SWITCH_OUT,          // We are Switching out of an app
+      CHANGE_APP,          // Changing the application
+      CHANGE_APP_OUT,      // We are changing displayed application
+      CHANGE_APP_IN
+   };
 
 public:
    // ------ SWITCHER INTERFACE ----- //
    // Register an application with the system.
    // This tells the system to render this application
    void registerApp(pfAppHandle appHandle);
-
    void constructSceneGraphSkeleton();
 
-   void constructAppScene(pfAppHandle& handle);
-
+protected:  // --- HELPERS --- //
    void addAppGraph(pfAppHandle& handle);
    void removeAppGraph(pfAppHandle& handle);
 
+   // Is the application whose index is given active?
+   // ie. Is it supposed to be updated by the callbacks
+   bool isAppActive(unsigned index);
+
+   // Set the active application
+   //!POST: If have old active, set non-focu
+   //       Set focus for new app
+   void setActiveApp(unsigned index);
+
+   // Initialize switcher interaction objects
+   // Called from init()
+   void initInteraction();
+
+   // Perform any interaction updating needed
+   // Modifies (transitions) system states
+   void updateInteraction();
+
+   // Set a new state
+   // Encapsulates any calls that need to be made because of state switch
+   // NOTE: If we are already in newState, then just ignore it
+   void setState(SwitcherState newState);
+
+         // --- TRANSITION HELPERS --- //
+   // Update transition for switching apps in
+   // POST: Scene graph is modified for transition
+   //       If transition is complete ==> RUN_APP state
+   void updateSwitchTransIn();
+   void initSwitchTransIn();
+
+   // Update transition for switching apps out
+   // POST: Scene graph is modified for transition
+   //       If transition is complete ==> RUN state
+   void updateSwitchTransOut();
+   void initSwitchTransOut();
+
+   // Update transition for changing apps in
+   // POST: Scene graph is modified for trans
+   //       If transition is complete ==> RUN state
+   void updateChangeAppTransIn();
+   void initChangeAppTransIn();
+
+   // Update transition for chaning apps out
+   // POST: Scene graph is modified for trans
+   //       If transition is complete ==> CHANGE_APP_IN
+   void updateChangeAppTransOut();
+   void initChangeAppTransOut();
+
 private:
+   SwitcherState     mCurState;
+
+   bool                       mHaveInitialized;    // Have the app initialization functions been called yet (ie. they won't be called again)
+   std::vector<pfAppHandle>   mApps;               // List of the applications
+   int                        mActiveApp;          // Index of the active application
+   int                        mAppToMakeActive;    // The application that will be made active when in state: APP_CHANGE_STATE
+
+   // Interaction objects
+   vjDigitalInterface   mNextAppButton;
+   vjDigitalInterface   mPrevAppButton;
+   vjDigitalInterface   mSelectButton;
+
+   // Transition members objects
+   StopWatch   mClock;           // Clock to keep track of time passage
+   float       mTransLength;     // Length of the transitions (in seconds)
+
+                                 // These values run from 0..1 as a percentage of trans completed
+   float       mTransIn;         // How much have we transitioned in (NOTE: Shared by both trans types)
+   float       mTransOut;        // How much have we transitioned out (NOTE: Shared by both trans types)
+
    // ---- SCENE GRAPH ---- //
    //           /--- mSun
    //          /--- mConstructDCS - mConstructModel
    //  mRootNode
-   //          \--- mAppXformDCS -- mAppSwitch -- mAppRoot(s)
+   //          \---- mAppRoot(s) --- switch -- sclaeDCS -- model
    //
    pfGroup*       mRootNode;              // Root node of the scene graph
    pfDCS*         mConstructDCS;          // DCS to transform the construct model
    pfNode*        mConstructModel;
-   pfLightSource* mSun;                      // Sun to light the environment
-
-   bool                       mHaveInitialized;    // Have the app initialization functions been called yet (ie. they won't be called again)
-   std::vector<pfAppHandle>   mApps;      // List of the applications
+   pfDCS*         mAppScalerDCS;          // DCS to scale active application
+   pfLightSource* mSun;                   // Sun to light the environment
 
 public:
    // ----------- PERFORMER APP INTERFACE ---------- //
 
    //: Initialize the scene graph
    // Called after pfInit & pfConfig but before apiInit
-   // POST: For all registered applications, call this funtcion
+   // POST: For all registered applications, call this function
    virtual void initScene();
 
    //: Called between pfInit and pfConfig
@@ -183,8 +278,22 @@ public:     // -------- SINGLETON ---------- //
    static pfSwitcherApp* instance()
    {
       if (_instance == NULL)
-         _instance = new pfSwitcherApp(vjKernel::instance());
+         _instance = new pfSwitcherApp();
       return _instance;
+   }
+
+protected:
+   pfSwitcherApp()
+   {
+       mRootNode = NULL;
+       mConstructModel = NULL;
+       mHaveInitialized = false;
+       mAppScalerDCS = NULL;
+       mCurState = RUN_SWITCHER;
+       mActiveApp = -1;
+       mAppToMakeActive = -1;
+       mTransLength = 3.0f;
+       mTransIn = mTransOut = 0.0f;
    }
 
 private:
