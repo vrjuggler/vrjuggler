@@ -41,7 +41,8 @@
 
 default: debug
 
-
+LIBDIR_NAME?=lib
+LIBDIR_BASE?=@topdir@/$(LIBDIR_NAME)
 
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
@@ -140,7 +141,7 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_BASE)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	cd $(instlinks)/include &&                                      \
           for dir in $(SUBDIR) ; do                                     \
               rm -f ./$$dir ;                                           \
