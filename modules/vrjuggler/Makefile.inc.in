@@ -129,7 +129,7 @@ endif
 BRANCH		= HEAD
 VER_ARGS	= -f $(VJROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
                   -i $(VJROOT_ABS)/vjParam.h.in -o vjParam.h		\
-                  -d "`date '+%b %e, %G %H:%M:%S'`"
+                  -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
     VER_ARGS	+= -v $(VERSION)
