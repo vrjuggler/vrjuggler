@@ -63,7 +63,7 @@ namespace vpr
  *
  * Uses TSBaseObject*'s so that there is some type safety. (ie. better then void*'s)
  */
-class VPR_CLASS_API TSTable
+class TSTable
 {
 public:
    TSTable()
