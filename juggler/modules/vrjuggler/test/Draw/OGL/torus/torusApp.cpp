@@ -105,7 +105,7 @@ void torusApp::draw()
 
 void torusApp::initGLState()
 {
-   GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
+   GLfloat light0_ambient[] = { .2f,  .2f,  .2f,  1.0f };
    GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
