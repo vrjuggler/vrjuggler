@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-02-2004 aronb       ClusterPlugins are now dynamically loaded in a manner 
+                        more like device drivers.
 Feb-05-2004 patrickh    gadget::DigitalProxy::getData() now returns a
                         gadget::Digital::State.
                         NEW VERSION: 0.14.2
