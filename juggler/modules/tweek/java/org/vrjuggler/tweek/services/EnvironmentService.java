@@ -45,6 +45,10 @@ package org.vrjuggler.tweek.services;
  */
 public interface EnvironmentService
 {
+   public static final int UNIX = 0;
+   public static final int MacOS = 1;
+   public static final int Windows = 2;
+
    /**
     * Stores the command-line arguments passed to the application when it was
     * started.
@@ -82,4 +86,11 @@ public interface EnvironmentService
     * preferences files and other application data should be stored.
     */
    public String getAppDataDir();
+
+   /**
+    * Returns an identifier for the host operationg system.  The value will be
+    * one of EnvironmentService.UNIX, EnvironmentService.MacOS, or
+    * EnvironmentService.Windows.
+    */
+   public int getOS();
 }
