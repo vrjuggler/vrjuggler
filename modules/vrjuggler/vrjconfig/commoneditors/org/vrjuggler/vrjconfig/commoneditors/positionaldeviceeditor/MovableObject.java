@@ -1,4 +1,4 @@
-package org.vrjuggler.vrjconfig.commoneditors;
+package org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor;
 
 import javax.swing.event.EventListenerList;
 import java.awt.event.MouseEvent;
