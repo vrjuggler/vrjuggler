@@ -107,7 +107,7 @@ public:
 void simplePfApp::initScene()
 {
    // Load the scene
-   vprDEBUG(vrjDBG_ALL, 0) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
    mRootNode             = new pfGroup;            // Root of our graph
