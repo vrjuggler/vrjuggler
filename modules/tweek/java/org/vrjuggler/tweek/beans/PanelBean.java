@@ -74,11 +74,6 @@ public class PanelBean extends TweekBean
       this.paths = paths;
    }
 
-   public String toString ()
-   {
-      return getName();
-   }
-
    public JComponent getComponent ()
    {
       return (JComponent)getBean();

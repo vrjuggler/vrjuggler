@@ -45,6 +45,30 @@ import java.util.*;
 public class BeanDependencyManager
 {
    /**
+    * This class is a singleton, use instance() instead.
+    */
+   protected BeanDependencyManager()
+   {
+      mPending = new ArrayList();
+   }
+
+   /**
+    * Gets the singleton instance of this class. This implementation is thread
+    * safe.
+    */
+   public static BeanDependencyManager instance ()
+   {
+      synchronized (BeanDependencyManager.class)
+      {
+         if ( mInstance == null )
+         {
+            mInstance = new BeanDependencyManager();
+         }
+      }
+      return mInstance;
+   }
+   
+   /**
     * Adds the given bean to the pending list.
     */
    public void add(TweekBean bean)
@@ -59,7 +83,7 @@ public class BeanDependencyManager
     * @return  the next bean with no remaining dependencies; null if there are
     *          no beans remaining whose dependencies have been satisfied
     */
-   public TweekBean pop()
+   public synchronized TweekBean pop()
    {
       TweekBean result = null;
       for (Iterator itr = mPending.iterator(); itr.hasNext(); )
@@ -86,7 +110,7 @@ public class BeanDependencyManager
    /**
     * Tests if the given bean is in the pending list.
     */
-   public boolean isPending(TweekBean bean)
+   public synchronized boolean isPending(TweekBean bean)
    {
       return mPending.contains(bean);
    }
@@ -94,7 +118,7 @@ public class BeanDependencyManager
    /**
     * Tests if there hare any beans still pending.
     */
-   public boolean hasBeansPending()
+   public synchronized boolean hasBeansPending()
    {
       return (mPending.size() > 0);
    }
@@ -103,7 +127,7 @@ public class BeanDependencyManager
     * Gets the number of unsatisfied dependencies that the given bean has
     * remaining.
     */
-   private int getNumUnsatisfiedDependencies(TweekBean bean)
+   private synchronized int getNumUnsatisfiedDependencies(TweekBean bean)
    {
       int num_unsatisfied_deps = 0;
 
@@ -124,8 +148,18 @@ public class BeanDependencyManager
       return num_unsatisfied_deps;
    }
 
+   public synchronized List getPendingBeans()
+   {
+      return mPending;
+   }
+   
+   /**
+    * The singleton instance of this class.
+    */
+   private static BeanDependencyManager mInstance = null;
+   
    /**
     * List of pending beans.
     */
-   private List mPending = new ArrayList();
+   private List mPending;
 }

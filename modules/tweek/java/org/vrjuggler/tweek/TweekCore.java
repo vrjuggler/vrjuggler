@@ -232,6 +232,8 @@ public class TweekCore
          return;
       }
 
+      mDepManager = BeanDependencyManager.instance();
+      
       for ( Iterator itr = beans.iterator(); itr.hasNext(); )
       {
          TweekBean bean = (TweekBean)itr.next();
@@ -446,7 +448,7 @@ public class TweekCore
    /**
     * The bean dependency manager used to load beans in a stable order.
     */
-   private BeanDependencyManager mDepManager = new BeanDependencyManager();
+   private BeanDependencyManager mDepManager;
 
    private boolean mValidateXML = false;
    private List    mBeanDirs    = new ArrayList();

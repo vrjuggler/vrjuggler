@@ -521,6 +521,18 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             }
          });
 
+      mMenuBeansStatus.setMnemonic('S');
+      mMenuBeansStatus.setText("Beans Status ...");
+      mMenuBeansStatus.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, KeyEvent.CTRL_MASK, false));
+      mMenuBeansStatus.addActionListener(new ActionListener ()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               beansStatusAction(e);
+            }
+         });
+
+
       // Define the About option in the Help menu.
       mMenuHelpAbout.setMnemonic('A');
       mMenuHelpAbout.setText("About ...");
@@ -616,6 +628,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mMenuBeans.setText("Beans");
       mMenuBeans.setMnemonic('B');
       mMenuBeans.add(mMenuBeansLoad);
+      mMenuBeans.add(mMenuBeansStatus);
 
       // Add the About option to the Help menu.
       mMenuHelp.setText("Help");
@@ -892,6 +905,13 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
    }
 
+   private void beansStatusAction(ActionEvent e)
+   {
+      BeanStatusDialog dialog = new BeanStatusDialog(this, "Bean Status");
+      positionDialog(dialog);
+      dialog.show();
+   }  
+
    private void loadBeansFromPath (String path)
    {
       try
@@ -1019,6 +1039,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private JMenuItem mMenuPrefsBeanEdit   = new JMenuItem();
    private JMenu mMenuBeans               = new JMenu();
    private JMenuItem mMenuBeansLoad       = new JMenuItem();
+   private JMenuItem mMenuBeansStatus       = new JMenuItem();
    private JMenu mMenuHelp                = new JMenu();
    private JMenuItem mMenuHelpAbout       = new JMenuItem();
 
