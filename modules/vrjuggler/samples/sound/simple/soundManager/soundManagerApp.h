@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _WAND_APP_
-#define _WAND_APP_
+#ifndef _SOUND_MANAGER_APP_
+#define _SOUND_MANAGER_APP_
 
 #include <vrj/vrjConfig.h>
 
@@ -56,16 +56,16 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class wandApp : public vrj::GlApp
+class soundManagerApp : public vrj::GlApp
 {
 public:
    // Constructor.
-   wandApp(vrj::Kernel* kern)
+   soundManagerApp(vrj::Kernel* kern)
       : vrj::GlApp(kern)         // Initialize base class
    {;}
 
    // Destructor.
-   virtual ~wandApp (void) {
+   virtual ~soundManagerApp (void) {
       /* Do nothing. */ ;
    }
 
@@ -185,7 +185,7 @@ public:
    snx::SoundHandle mSound;
 };
 
-};
+}
 
 
 #endif

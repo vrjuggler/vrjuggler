@@ -35,13 +35,13 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: wand@EXEEXT@
+all: soundManager@EXEEXT@
 
-APP_NAME=	wand@EXEEXT@
+APP_NAME=	soundManager@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		main.cpp wandApp.cpp
+SRCS=		main.cpp soundManagerApp.cpp
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
@@ -49,5 +49,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-wand@EXEEXT@: $(OBJS)
+soundManager@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

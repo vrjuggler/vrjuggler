@@ -37,7 +37,7 @@
 //----------------------------------------
 #include <iostream>
 #include <stdlib.h>
-#include <wandApp.h>
+#include <soundManagerApp.h>
 
       // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
@@ -46,7 +46,7 @@
 int main(int argc, char* argv[])
 {
    vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
-   vrjTest::wandApp* application = new vrjTest::wandApp(kernel);       // Instantiate an instance of the app
+   vrjTest::soundManagerApp* application = new vrjTest::soundManagerApp(kernel);       // Instantiate an instance of the app
 
    if (argc <= 1)
    {
