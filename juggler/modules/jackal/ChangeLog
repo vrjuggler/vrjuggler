@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-09-2003 patrickh    Refactored the CORBA-based remote run-time
+                        reconfiguration code so that it can be loaded at
+                        run-time as a plug-in.
+                        NEW VERSION: 0.14.0
 Nov-04-2003 patrickh    Removed the storage of multiple versions of individaul
                         configuration definitions in
                         jccl::ConfigDefinitionRepository.
