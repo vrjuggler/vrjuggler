@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audiere.m4,v
-dnl Date modified: 2004/01/29 04:28:27
-dnl Version:       1.2
+dnl Date modified: 2004/04/22 20:58:36
+dnl Version:       1.3
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -46,7 +46,7 @@ dnl     AUDIERE_INCLUDES - Extra include path for the Audiere header directory.
 dnl     AUDIERE_LDFLAGS  - Extra linker flags for the Audiere library directory.
 dnl ===========================================================================
 
-dnl audiere.m4,v 1.2 2004/01/29 04:28:27 patrickh Exp
+dnl audiere.m4,v 1.3 2004/04/22 20:58:36 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Audiere installed.  This adds the
@@ -84,7 +84,7 @@ AC_DEFUN(DPP_HAVE_AUDIERE,
                [AUDIERE_ROOT="$withval"], [AUDIERE_ROOT=$1])
 
    dnl Save these values in case they need to be restored later.
-   dpp_save_CFLAGS="$CFLAGS"
+   dpp_save_CXXFLAGS="$CXXFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
    dpp_save_LDFLAGS="$LDFLAGS"
 
@@ -93,12 +93,16 @@ AC_DEFUN(DPP_HAVE_AUDIERE,
    dnl if $AUDIERE_ROOT is "/usr"
    if test "x$AUDIERE_ROOT" != "x/usr" ; then
       CPPFLAGS="$CPPFLAGS -I$AUDIERE_ROOT/include"
-      LDFLAGS="-L$AUDIERE_ROOT/lib $LDFLAGS"
+      LDFLAGS="-L$AUDIERE_ROOT/lib $LDFLAGS $ABI_FLAGS"
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 
    dpp_save_LIBS="$LIBS"
+
+   if test "x$PLATFORM" = "xIRIX" ; then
+      LIB_AUDIO="-laudio"
+   fi
 
    DPP_LANG_SAVE
    DPP_LANG_CPLUSPLUS
@@ -106,7 +110,7 @@ AC_DEFUN(DPP_HAVE_AUDIERE,
    AC_CHECK_LIB([audiere], [AdrOpenDevice],
       [AC_CHECK_HEADER([audiere.h], [dpp_have_audiere='yes'],
                        [dpp_have_audiere='no'])],
-      [dpp_have_audiere='no'])
+      [dpp_have_audiere='no'], [$LIB_AUDIO])
 
    DPP_LANG_RESTORE
 
@@ -123,13 +127,13 @@ AC_DEFUN(DPP_HAVE_AUDIERE,
    dnl If Audiere API files were found, define this extra stuff that may be
    dnl helpful in some Makefiles
    if test "x$dpp_have_audiere" = "xyes" ; then
-      LIBAUDIERE="-laudiere -lm"
+      LIBAUDIERE="-laudiere $LIB_AUDIO -lm"
       AUDIERE_INCLUDES="-I$AUDIERE_ROOT/include"
       AUDIERE_LDFLAGS="-L$AUDIERE_ROOT/lib"
       AUDIERE='yes'
    fi
 
-   CFLAGS="$dpp_save_CFLAGS"
+   CXXFLAGS="$dpp_save_CXXFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
    LDFLAGS="$dpp_save_LDFLAGS"
 
@@ -139,4 +143,3 @@ AC_DEFUN(DPP_HAVE_AUDIERE,
    AC_SUBST(AUDIERE_INCLUDES)
    AC_SUBST(AUDIERE_LDFLAGS)
 ])
-
