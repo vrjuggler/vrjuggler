@@ -45,8 +45,9 @@
 #include <fstream>
 #include <string>
 
+#include <vpr/Util/FileUtils.h>
+
 #include <snx/dirlist.h>
-#include <snx/ReplaceEnvVars.h>
 #include <snx/PluginAPI.h>
 #include <snx/Util/Debug.h>
 #include "snx/ISoundImplementation.h"
@@ -75,7 +76,7 @@ SoundFactory::SoundFactory()
    std::vector<std::string> filelist;
    for (unsigned int x = 0; x < search_paths.size(); ++x)
    {
-      search_paths[x] = snx::replaceEnvVars( search_paths[x] );
+      search_paths[x] = vpr::replaceEnvVars(search_paths[x]);
       vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("Finding plugins in: \n"), std::string(""));
       vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, search_paths[x]+ std::string("\n"), std::string(""));
       if (xdl::isDir(search_paths[x].c_str()))
