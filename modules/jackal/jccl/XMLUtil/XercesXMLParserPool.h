@@ -46,7 +46,7 @@ namespace jccl {
 //  config_io handlers.  while this isn't great in terms of modularity, if
 //  we ever actually have more than 2 or 3 config io handlers, this'll be the
 //  least of our problems.
-class VJ_CLASS_API XercesXMLParserPool {
+class JCCL_CLASS_API XercesXMLParserPool {
 
 public:
 

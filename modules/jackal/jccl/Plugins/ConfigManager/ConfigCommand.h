@@ -50,7 +50,7 @@ namespace jccl {
     //------------- ConfigurationManager Commands -------------------
 
 
-    class VJ_CLASS_API CommandRefresh: public Command {
+    class JCCL_CLASS_API CommandRefresh: public Command {
     private:
         static const std::string protocol_name;
 
@@ -64,7 +64,7 @@ namespace jccl {
 
 
 
-    class VJ_CLASS_API CommandSendChunkDB: public Command {
+    class JCCL_CLASS_API CommandSendChunkDB: public Command {
     private:
         ConfigChunkDB* db;
         bool all;
@@ -80,7 +80,7 @@ namespace jccl {
 
 
 
-    class VJ_CLASS_API CommandSendDescDB: public Command {
+    class JCCL_CLASS_API CommandSendDescDB: public Command {
     private:
         ChunkDescDB* db;
         bool all;

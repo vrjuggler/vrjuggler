@@ -54,7 +54,7 @@ enum ConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
 // @author  Christopher Just
 //
 //---------------------------------------
-class VJ_CLASS_API Connect {
+class JCCL_CLASS_API Connect {
  public:
 
     Connect (Socket* s, const std::string& _name="unnamed", 

@@ -55,7 +55,7 @@ class ConfigChunk;
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------------
-class VJ_CLASS_API ChunkDesc {
+class JCCL_CLASS_API ChunkDesc {
 
 public:
 
@@ -198,12 +198,12 @@ public:
 
  
     //: Writes self to the given output stream
-    friend VJ_API(std::ostream&) operator << (std::ostream& out,
+    friend JCCL_API(std::ostream&) operator << (std::ostream& out,
                                               const ChunkDesc& self);
 
 
     //: Reads self's value from the given input stream
-    friend VJ_API(std::istream&) operator >> (std::istream& in,
+    friend JCCL_API(std::istream&) operator >> (std::istream& in,
                                               ChunkDesc& self);
 
 };
