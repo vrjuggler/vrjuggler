@@ -263,10 +263,6 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
          addConfigElement((ConfigElement)e.next());
          
       }
-      
-      mUniverse = new UniverseBuilder(mCanvas);
-      BranchGroup scene = createSceneGraph();
-      mUniverse.addBranchGraph(scene);	
 
       mConfigElement = elm;
       mSheet.setElement(elm);
@@ -279,10 +275,10 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
       {
          addSurfaceViewport(elm);
       }
-
+      
       mUniverse = new UniverseBuilder(mCanvas);
       BranchGroup scene = createSceneGraph();
-      mUniverse.addBranchGraph(scene);	
+      mUniverse.addBranchGraph(scene);
    }
  
    public void addConfigElement(ConfigElement elm)
