@@ -115,7 +115,7 @@ protected:
    static int* attachedCounter;
 };
 
-MemPoolSGI*  vjBarrierSGI::barrierPool = NULL;
+vjMemPoolSGI*  vjBarrierSGI::barrierPool = NULL;
 int*  vjBarrierSGI::attachedCounter = NULL;
 
 #endif
