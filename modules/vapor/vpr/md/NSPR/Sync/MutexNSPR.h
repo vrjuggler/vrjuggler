@@ -158,10 +158,12 @@ public:
     //
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Mutex is busy
+    // XXX: Possible race condition exists in this function implementation
     // -----------------------------------------------------------------------
     inline int
     tryAcquire (void) {
-        if ( mLocked == 0 ) {
+        if ( mLocked == 0 ) 
+        {
             this->acquire();
             return 1;
         } else {
