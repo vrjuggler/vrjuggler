@@ -50,9 +50,10 @@ srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
 EXTRA_JAVA_SRCS_PATH=	$(srcdir)/tweek $(KUNSTSTOFF_SRCDIR)
+IDL_GENDIR=		.
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
-JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(IDL_GENDIR)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
 LAF_DIR=		$(JUGGLERROOT_ABS)/external/swing-laf
