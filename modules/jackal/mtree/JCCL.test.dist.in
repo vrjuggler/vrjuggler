@@ -39,46 +39,16 @@
 .
     test
         TestSuite
-        ..
-        CfgTest
-        ..
-        GLWindow
-        ..
-        Math
-        ..
-        Matrix
-        ..
-        Mempool
-        ..
-        Performance
-            analyzer
+            TestCases
             ..
-            perfdatabuffer-test
+            TestFiles
+                IncludesTest
+                ..
             ..
-            timestamp-test
+            java
+                test
+                ..
             ..
-        ..
-        Quat
-        ..
-        SerialPort
-        ..
-        Socket
-        ..
-        Sync
-        ..
-        Win32k
-        ..
-        input
-            cbird
-            ..
-            fob
-            ..
-            fsPinchGlove
-            ..
-        ..
-        testDynamicCastSTL
-        ..
-        threads
         ..
     ..
 ..
