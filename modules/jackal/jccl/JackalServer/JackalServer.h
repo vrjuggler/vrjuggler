@@ -57,7 +57,7 @@ public:
     void addPerfDataBuffer (vjPerfDataBuffer *v);
 
 
-
+private:
     //: allows the Environment Manager to accept connections.
     //! RETURNS: reflects succesfully grabbing a port and listening.
     bool acceptConnections();
@@ -69,7 +69,7 @@ public:
     //! POST: no new connections are accepted. open connections
     //+       are not changed.
     bool rejectConnections();
-
+public:
 
 
     //: Kills all open connections

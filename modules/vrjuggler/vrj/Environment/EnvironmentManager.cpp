@@ -46,6 +46,8 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 
 
 void vjEnvironmentManager::activate() {
+    //reconfigure();
+
     /* start updaters */
     for (int i = 0; i < updaters.size(); i++) {
 	updaters[i]->startProcess();
