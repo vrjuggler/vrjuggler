@@ -115,3 +115,10 @@ C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 @SET_MAKE@
+
+
+###########################
+# project dependant stuff..
+###########################
+LIBOPENAL = @AL_LDFLAGS@ @LIBOPENAL@
+AL_INCLUDES = @AL_INCLUDES@

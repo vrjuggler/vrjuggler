@@ -11,8 +11,8 @@ INSTALL		= @INSTALL@
 ROOT_DIR		= $(top_srcdir)
 
 EXTRA_SRCS_PATH =
-EXTRA_INCLUDES = 
-LIBS = -lm
+EXTRA_INCLUDES = @AL_INCLUDES@
+LIBS = @AL_LDFLAGS@ @LIBOPENAL@ -lm
 
 
 ##################################################################
