@@ -205,6 +205,12 @@ class ElementNameEditor implements TreeCellEditor
    { return true; }
    public boolean stopCellEditing()
    {
+      // Detect when the user does not actually change the name.
+      if (mTextField.getText().equals(mElement.getName()))
+      {
+         return false;
+      }
+
       ConfigContext ctx = ((ConfigContextModel)mTree.getModel()).getContext();
       if (ctx.containsElementNamed(mTextField.getText()))
       {

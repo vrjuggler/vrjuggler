@@ -35,6 +35,7 @@ import java.util.*;
 import javax.swing.event.EventListenerList;
 
 import org.vrjuggler.jccl.config.event.*;
+import org.vrjuggler.jccl.config.undo.ConfigElementPropertyEdit;
 
 /**
  * A configuration element is a logical collection of configuration information
