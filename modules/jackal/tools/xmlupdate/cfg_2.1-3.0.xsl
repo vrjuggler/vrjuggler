@@ -37,11 +37,11 @@
   using version 2.1 of the file format.  Such files can be updated to version
   3.0 using an XSLT processor, as follows:
 
-     xsltproc -o new-file.config cfg_2.1-3.0.xsl old-file.config
+     xsltproc -o new-file.jconf cfg_2.1-3.0.xsl old-file.config
 
   or
 
-     xalan -in old-file.config -xsl cfg_2.1-3.0.xsl -out new-file.config
+     xalan -in old-file.config -xsl cfg_2.1-3.0.xsl -out new-file.jconf
 
  -->
 
@@ -148,7 +148,7 @@
          <xsl:element name="elements">
             <xsl:value-of select="$newline" />
             <xsl:for-each select="ConfigChunkDB/*">
-               <xsl:apply-templates select="." />
+               <xsl:call-template name="update-element"/>
             </xsl:for-each>
          </xsl:element>
          <xsl:value-of select="$newline" />
@@ -162,9 +162,49 @@
       </xsl:message>
    </xsl:template>
 
-   <!-- Leave configuration elements as is. -->
-   <xsl:template match="ConfigChunkDB/*">
-      <xsl:copy-of select="." />
+   <!--
+      Update individual configuration elements, leaving most of their original
+      contents intact.  The most important change is the addition of version
+      information.
+   -->
+   <xsl:template name="update-element">
+      <xsl:param name="elt" select="."/>
+      <xsl:element name="{name($elt)}">
+         <xsl:attribute name="name">
+            <xsl:value-of select="$elt/@name"/>
+         </xsl:attribute>
+         <xsl:attribute name="version">
+            <xsl:text>1</xsl:text>
+         </xsl:attribute>
+         <xsl:value-of select="$newline" />
+         <!-- Iterate over all the properties of $elt. -->
+         <xsl:for-each select="$elt/*">
+            <xsl:choose>
+               <!--
+                  If we have an XML element with nested XML, that is a property
+                  whose value is a nested config element.  In that case, we
+                  need to call this template recursively.
+               -->
+               <xsl:when test="count(./*/*) > 0">
+                  <xsl:element name="{name(.)}">
+                     <xsl:value-of select="$newline" />
+                     <xsl:call-template name="update-element">
+                        <xsl:with-param name="elt" select="./*"/>
+                     </xsl:call-template>
+                  </xsl:element>
+                  <xsl:value-of select="$newline" />
+               </xsl:when>
+               <!--
+                  If the current XML element does not have XML children, then
+                  we just copy it.
+               -->
+               <xsl:otherwise>
+                  <xsl:copy-of select="."/>
+                  <xsl:value-of select="$newline" />
+               </xsl:otherwise>
+            </xsl:choose>
+         </xsl:for-each>
+      </xsl:element>
       <xsl:value-of select="$newline" />
    </xsl:template>
 
