@@ -10,17 +10,18 @@
 #include <config.h>
 #include <Input/vjInput/vjInput.h>
 
-//---------------------------------------------------------------------------------
-//: vjAnalog is the abstract base class that devices with digital data derive from.
+//----------------------------------------------------------------------------- 
+//: vjAnalog is the abstract base class that devices with digital data derive
+//+ from.
 //
-//  vjAnalog is the base class that digital devices must derive from.  vjAnalog
-//  inherits from vjInput, so it has pure virtual function constraints from 
-//  vjInput in the following functions: StartSampling,StopSampling,Sample,
-//  and UpdateData. <br> <br>
+//  vjAnalog is the base class that digital devices must derive from.
+//  vjAnalog inherits from vjInput, so it has pure virtual function
+//  constraints from vjInput in the following functions: StartSampling,
+//  StopSampling, Sample, and UpdateData. <br> <br>
 //
 //  vjAnalog adds one new pure virtual function, GetAnalogData for retreiving
 //  the digital data, similar to the addition for vjPosition and vjDigital.
-//----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class vjAnalog : virtual public vjInput {
     public:
     
@@ -47,6 +48,4 @@ class vjAnalog : virtual public vjInput {
 	virtual int GetAnalogData(int devNum = 0) = 0;
 };
 
-#endif
-
-	
+#endif	/* _VJ_ANALOG_H_ */
