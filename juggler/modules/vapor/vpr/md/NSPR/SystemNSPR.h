@@ -97,10 +97,24 @@ public:
     { return PR_ntohs(conversion); }
     static vpr::Uint32 Ntohl(vpr::Uint32 conversion)
     { return PR_ntohl(conversion); }
+    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
+    {
+       vpr::Uint64 ret_val;
+       *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
+       *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+       return ret_val;
+    }
     static vpr::Uint16 Htons(vpr::Uint16 conversion)
     { return PR_htons(conversion); }
     static vpr::Uint32 Htonl(vpr::Uint32 conversion)
     { return PR_htonl(conversion); }
+    static vpr::Uint64 Htonll(vpr::Uint64 conversion)
+    {
+      vpr::Uint64 ret_val;
+       *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
+       *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+       return ret_val;
+    }
 
     inline static ReturnStatus
     getenv (const std::string& name, std::string& result) {
