@@ -64,9 +64,9 @@ AC_DEFUN(TWEEK_PATH,
                           installed (optional)            [No default]],
                 tweek_config_exec_prefix="$withval",
                 tweek_config_exec_prefix="")
-    AC_ARG_ENABLE(tweektest,
-                  [  --disable-tweektest     Do not try to compile and run a
-                          test Tweek program], , enable_tweektest=yes)
+dnl    AC_ARG_ENABLE(tweektest,
+dnl                  [  --disable-tweektest     Do not try to compile and run a
+dnl                          test Tweek program], , enable_tweektest=yes)
 
     if test "x$tweek_config_exec_prefix" != "x" ; then
         tweek_config_args="$tweek_config_args --exec-prefix=$tweek_config_exec_prefix"

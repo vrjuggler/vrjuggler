@@ -89,7 +89,7 @@ AC_DEFUN(EQUIP_PATH,
     AC_PATH_PROG(EQIDL, eqidl, no)
 
     dnl Do a sanity check to ensure that $EQIDL actually works.
-    if ! eval `$EQIDL >/dev/null 2>&1` ; then
+    if ! (eval $EQIDL >/dev/null 2>&1) 2>&1 ; then
         EQIDL='no'
     fi
 

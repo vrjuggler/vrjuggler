@@ -56,9 +56,9 @@ AC_DEFUN(JCCL_PATH,
                           Exec prefix where JCCL is
                           installed (optional)            [No default]],
                 jccl_config_exec_prefix="$withval", jccl_config_exec_prefix="")
-    AC_ARG_ENABLE(jccltest,
-                  [  --disable-jccltest       Do not try to compile and run a
-                          test JCCL program], , enable_jccltest=yes)
+dnl    AC_ARG_ENABLE(jccltest,
+dnl                  [  --disable-jccltest       Do not try to compile and run a
+dnl                          test JCCL program], , enable_jccltest=yes)
 
     if test "x$jccl_config_exec_prefix" != "x" ; then
         jccl_config_args="$jccl_config_args --exec-prefix=$jccl_config_exec_prefix"

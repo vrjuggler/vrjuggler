@@ -56,9 +56,9 @@ AC_DEFUN(SNX_PATH,
                           Exec prefix where SNX is
                           installed (optional)            [No default]],
                 sonix_config_exec_prefix="$withval", sonix_config_exec_prefix="")
-    AC_ARG_ENABLE(sonixtest,
-                  [  --disable-sonixtest       Do not try to compile and run a
-                          test SNX program], , enable_sonixtest=yes)
+dnl    AC_ARG_ENABLE(sonixtest,
+dnl                  [  --disable-sonixtest       Do not try to compile and run a
+dnl                          test SNX program], , enable_sonixtest=yes)
 
     if test "x$sonix_config_exec_prefix" != "x" ; then
         sonix_config_args="$sonix_config_args --exec-prefix=$sonix_config_exec_prefix"

@@ -50,9 +50,9 @@ AC_DEFUN(GADGETEER_PATH,
                           installed (optional)            [No default]],
                 gadget_config_exec_prefix="$withval",
                 gadget_config_exec_prefix="")
-    AC_ARG_ENABLE(gadgettest,
-                  [  --disable-gadgettest    Do not try to compile and run a
-                          test Gadgeteer program], , enable_gadgettest=yes)
+dnl    AC_ARG_ENABLE(gadgettest,
+dnl                  [  --disable-gadgettest    Do not try to compile and run a
+dnl                          test Gadgeteer program], , enable_gadgettest=yes)
 
     if test "x$gadget_config_exec_prefix" != "x" ; then
         gadget_config_args="$gadget_config_args --exec-prefix=$gadget_config_exec_prefix"
