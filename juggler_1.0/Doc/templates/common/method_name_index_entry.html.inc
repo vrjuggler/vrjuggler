@@ -6,7 +6,7 @@
  -->
 
 <TT>
-<A HREF="#{memberef}" TARGET="class_desc"><B>{mname}</B></A>({args})
+<A HREF="#{memberef}" TARGET="Body"><B>{mname}</B></A>({args})
 {if const} const {endif}
 {if throws}
   <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
