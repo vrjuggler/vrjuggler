@@ -2,11 +2,13 @@
 
 default: html
 
-XML_FILES=	book.xml
-HTML_FILES=	book.html
-PDF_FILES=	book.pdf
+NAME=		book
 
-book.html: book.xml
-book.pdf: book.xml book.fo # book.tex
+XML_FILES=	$(NAME).xml
+HTML_FILES=	$(NAME).html
+PDF_FILES=	$(NAME).pdf
+
+$(NAME).html: $(NAME).xml
+$(NAME).pdf: $(NAME).xml $(NAME).fo
 
 include ../docbook.mk
