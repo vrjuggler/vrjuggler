@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-12-08 patrickh    Allow the use of TAO as the C++ CORBA implementation.
+                       User code must now include tweek/idl/Subject.h rather
+                       than tweek/CORBA/Subject.h.
+                       NEW VERSION: 0.21.0
 2004-12-06 patrickh    Added an overload of EnvironmentService.getenv() that
                        allows users to specify a default value to be returned
                        if the environment variable is not found.

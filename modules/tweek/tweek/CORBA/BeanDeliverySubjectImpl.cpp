@@ -51,6 +51,7 @@ namespace tweek
 {
 
 BeanNameList* BeanDeliverySubjectImpl::getAllBeanNames()
+   throw(CORBA::SystemException)
 {
    BeanNameList* bean_names = new BeanNameList();
 
@@ -73,6 +74,7 @@ BeanNameList* BeanDeliverySubjectImpl::getAllBeanNames()
 }
 
 BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
+   throw(CORBA::SystemException)
 {
    std::string bean_name_str(beanName);
    vprASSERT(mBeanCollection.count(bean_name_str) > 0 && "Unknown Bean requested");
@@ -158,6 +160,7 @@ BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
 }
 
 BeanInfo* BeanDeliverySubjectImpl::getActiveBeanInfo()
+   throw(CORBA::SystemException)
 {
    BeanInfo* bean_info = new BeanInfo();
 
@@ -240,10 +243,13 @@ void BeanDeliverySubjectImpl::removeActiveBean()
 
 BeanDeliverySubjectImpl::BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj)
    :
-#ifdef OMNIORB_VER
+#if defined(TWEEK_USE_OMNIORB)
      omniServant(subj)
    , tweek::_impl_Subject(subj)
    , tweek::_impl_BeanDeliverySubject(subj)
+   ,
+#elif defined(TWEEK_USE_TAO)
+     TAO_Abstract_ServantBase(subj)
    ,
 #endif
      PortableServer::ServantBase(subj)

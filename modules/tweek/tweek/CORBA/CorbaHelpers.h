@@ -41,6 +41,11 @@
 
 #include <string>
 #include TWEEK_INCLUDE_CORBA_H
+
+#ifdef TWEEK_USE_TAO
+#include <orbsvcs/CosNamingC.h>
+#endif
+
 #include <vpr/Util/ReturnStatus.h>
 
 
