@@ -121,7 +121,7 @@ template<class PROXY_TYPE>
 class DeviceInterface : public BaseDeviceInterface
 {
 public:
-   DeviceInterface(DeviceInterface& other)
+   DeviceInterface(const DeviceInterface& other)
     : BaseDeviceInterface(other)
    {
       if (other.mTypeSpecificProxy != NULL)
