@@ -31,5 +31,4 @@ endif
 INSTALL_DEPS	?=
 
 install: ${INSTALL_DEPS}
-	${scriptdir}/mkinstalldirs ${includedir}
 	${INSTALL} -m ${FILE_PERMS} -g ${GROUP_NAME} ${srcdir}/*.h ${includedir}
