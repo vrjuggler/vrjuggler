@@ -6,41 +6,45 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     test
-	CfgTest
+	TestSuite
 	..
-	GLWindow
-	..
-	Math
-	..
-	Matrix
-	..
-	Mempool
-	..
-	Performance
-	    analyzer
+	old
+	    CfgTest
 	    ..
-	    perfdatabuffer-test
+	    GLWindow
 	    ..
-	    timestamp-test
+	    Math
 	    ..
-	..
-	Quat
-	..
-	Sync
-	..
-	Win32k
-	..
-	input
-	    cbird
+	    Matrix
 	    ..
-	    fob
+	    Mempool
 	    ..
-	    fsPinchGlove
+	    Performance
+		analyzer
+		..
+		perfdatabuffer-test
+		..
+		timestamp-test
+		..
 	    ..
-	..
-	testDynamicCastSTL
-	..
-	threads
+	    Quat
+	    ..
+	    Sync
+	    ..
+	    Win32k
+	    ..
+	    input
+		cbird
+		..
+		fob
+		..
+		fsPinchGlove
+		..
+	    ..
+	    testDynamicCastSTL
+	    ..
+	    threads
+	    ..
 	..
     ..
 ..
