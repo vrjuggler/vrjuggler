@@ -197,8 +197,6 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include/jccl && rm -f ./jcclParam.h &&		\
 	  $(LN_S) $(topdir)/jccl/jcclParam.h ./jcclParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
-          $(LN_S) $(JCCLROOT_ABS)/tools/catadf.pl ./catadf.pl
 ifndef NO_JAVA_GUI
 	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
           $(LN_S) $(topdir)/VjControl/VjControl.jar ./
@@ -342,8 +340,6 @@ install-tools:
           --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
           $(_GROUP_OPT_PL) --srcdir="."
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
 
 # Install the standard data files.
 install-data:
