@@ -377,6 +377,7 @@ public class DisplayWindowFrame
             new SurfaceViewportCreateDialog(parent, mContext, mSelectedViewport);
 
          status = dlg.showDialog();
+         if ( status == DisplayWindowStartDialog.OK_OPTION )
          {
             Rectangle bounds = dlg.getViewportBounds();
             origin_x = (float) bounds.x / 100.0f;
