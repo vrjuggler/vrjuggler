@@ -308,11 +308,6 @@ void GlDrawManager::addDisplay(Display* disp)
    pipe->addWindow(new_win);              // Window has been added
 
    vprASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
-
-   // Dump the state
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "Reconfigured the glDrawManager.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
 }
 
 
@@ -442,7 +437,7 @@ void GlDrawManager::outStream(std::ostream& out)
     for(unsigned int i = 0; i < mWins.size(); i++)
     {
        vprASSERT(mWins[i] != NULL);
-       out << clrOutNORM(clrCYAN,"\tGlWindow:\n") << mWins[i] << std::endl;
+       out << clrOutNORM(clrCYAN,"\tGlWindow:\n") << *(mWins[i]) << std::endl;
     }
     out << "=======================================" << std::endl;
 }

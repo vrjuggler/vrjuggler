@@ -269,9 +269,10 @@ void GlPipe::checkForNewWindows()
           if (mNewWins[winNum]->open())
           {
               mNewWins[winNum]->makeCurrent();
-              vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window: "
-                                        << mNewWins[winNum]->getDisplay()->getName().c_str()
-                                        << std::endl << vprDEBUG_FLUSH;
+              vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+                 << "vrj::GlPipe::checkForNewWindows(): Just opened window: "
+                 << mNewWins[winNum]->getDisplay()->getName() << std::endl
+                 << *(mNewWins[winNum]) << std::endl << vprDEBUG_FLUSH;
               mNewWins[winNum]->finishSetup();        // Complete any window open stuff
               mOpenWins.push_back(mNewWins[winNum]);
           }
