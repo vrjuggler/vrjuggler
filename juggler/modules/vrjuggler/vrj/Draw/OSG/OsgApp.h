@@ -272,7 +272,7 @@ inline void OsgApp::draw()
    the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osg_proj_xform_mat);
 
    //Draw the scene
-   sv->app();
+   sv->update();
    sv->cull();
    sv->draw();
 }
