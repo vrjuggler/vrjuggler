@@ -579,4 +579,3 @@ configure script(s) again.
 
 =head1 DESCRIPTION
 
-=out
