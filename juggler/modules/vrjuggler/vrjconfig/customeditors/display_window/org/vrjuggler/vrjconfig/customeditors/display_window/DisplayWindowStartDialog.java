@@ -122,7 +122,6 @@ public class DisplayWindowStartDialog
          mStereoCheckbox.setSelected(winElt.getProperty("stereo", 0).equals(Boolean.TRUE));
          mBorderCheckbox.setSelected(winElt.getProperty("border", 0).equals(Boolean.TRUE));
          mHideMouseCheckbox.setSelected(winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE));
-         mEventSourceCheckbox.setSelected(winElt.getProperty("act_as_event_source", 0).equals(Boolean.TRUE));
 
          // Validate the default values for the various text fields.
          validateUserInput();
@@ -211,11 +210,6 @@ public class DisplayWindowStartDialog
    public Boolean hideMouse()
    {
       return (mHideMouseCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
-   }
-
-   public Boolean isEventSource()
-   {
-      return (mEventSourceCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
    }
 
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
@@ -331,7 +325,6 @@ public class DisplayWindowStartDialog
       mBorderCheckbox.setText("Has border");
       mStereoCheckbox.setText("Render in stereo");
       mHideMouseCheckbox.setText("Hide mouse inside window");
-      mEventSourceCheckbox.setText("Act as an event source");
       mOkButton.setEnabled(false);
       mOkButton.setMnemonic('0');
       mOkButton.setSelected(false);
@@ -475,10 +468,6 @@ public class DisplayWindowStartDialog
                      new TableLayoutConstraints(0, 2, 0, 2,
                                                 TableLayout.LEFT,
                                                 TableLayout.CENTER));
-      mWindowPropsPanel.add(mEventSourceCheckbox,
-                     new TableLayoutConstraints(0, 3, 0, 3,
-                                                TableLayout.LEFT,
-                                                TableLayout.CENTER));
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mCancelButton, null);
@@ -531,7 +520,6 @@ public class DisplayWindowStartDialog
    private JCheckBox mBorderCheckbox = new JCheckBox();
    private JCheckBox mStereoCheckbox = new JCheckBox();
    private JCheckBox mHideMouseCheckbox = new JCheckBox();
-   private JCheckBox mEventSourceCheckbox = new JCheckBox();
    private JPanel mButtonPanel = new JPanel();
    private JButton mOkButton = new JButton();
    private JButton mCancelButton = new JButton();
