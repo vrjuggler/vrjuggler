@@ -198,16 +198,9 @@ fi
 
 vjsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.3.1, [$JUGGLERROOT_ABS/external/GMTL],
-          [$JUGGLERROOT_ABS/external/GMTL], ,
+GMTL_PATH(0.3.1, [/usr/local], , ,
           [AC_MSG_ERROR([*** GMTL required for VR Juggler ***])])
 CPPFLAGS="$vjsave_CPPFLAGS"
-
-# If we are not using GMTL from the external directory, we have a locally
-# installed copy.
-if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
-    LOCAL_GMTL='Y'
-fi
 
 # ------------
 # OpenGL API.
@@ -327,10 +320,8 @@ if test "x$PLATFORM" = "xDarwin" ; then
    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
 fi
 
-if test "x$LOCAL_GMTL" = "xY" ; then
-   INCLUDES="$INCLUDES $GMTL_INCLUDES"
-   vrj_cxxflags="$vrj_cxxflags $GMTL_INCLUDES"
-fi
+INCLUDES="$INCLUDES $GMTL_INCLUDES"
+vrj_cxxflags="$vrj_cxxflags $GMTL_INCLUDES"
 
 if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
    INCLUDES="$INCLUDES -I$x_includes"

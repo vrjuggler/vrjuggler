@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-11-2004 patrickh    Gadgeteer now depends on an installed version of GMTL.
 Apr-11-2004 patrickh    The Input and Cluster Managers now append a default
                         search path for driver and plug-in DSOs respectively.
                         Updated to VPR 0.35.2.
