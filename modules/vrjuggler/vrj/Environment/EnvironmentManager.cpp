@@ -51,7 +51,7 @@ void vjEnvironmentManager::activate() {
 	acceptConnections();
     }
     else
-	vjDEBUG(0) << "NOTE: EM not configured to accept connections!!!\n" << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ALL,0) << "NOTE: EM not configured to accept connections!!!\n" << vjDEBUG_FLUSH;
 }
 
 
@@ -79,6 +79,7 @@ void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *v) {
 
 
 
+
 void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     std::vector<vjPerfDataBuffer*>::iterator it;
 
@@ -92,6 +93,7 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
             break;
         }
     }
+
 }
 
 
@@ -112,7 +114,7 @@ void vjEnvironmentManager::sendRefresh() {
 //: ConfigChunkHandler stuff
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) { 
+bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
     bool networkingchanged;
     int newport;
 
@@ -157,9 +159,9 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	vn->startProcess();
 	return true;
     }
-    vjDEBUG(1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl 
+    vjDEBUG(1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl
 	       << vjDEBUG_FLUSH;
-    return false; 
+    return false;
 }
 
 
@@ -167,8 +169,8 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) { 
-    
+bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
+
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "EnvironmentManager")) {
 	// this could be trouble if the chunk being removed isn't the chunk
@@ -196,18 +198,18 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 	}
 	return true;
     }
-    
-    return false; 
+
+    return false;
 }
 
 
-    
+
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
 bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
     std::string s = chunk->getType();
-    return (!vjstrcasecmp (s, "EnvironmentManager") || 
+    return (!vjstrcasecmp (s, "EnvironmentManager") ||
 	    !vjstrcasecmp (s, "PerfMeasure") ||
 	    !vjstrcasecmp (s, "FileConnect"));
 }
@@ -221,7 +223,7 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 	return;
     if (con == perf_target)
 	setPerformanceTarget (NULL);
-    
+
     std::vector<vjConnect*>::iterator i;
     for (i = connections.begin(); i != connections.end(); i++)
 	if (con == *i) {
@@ -258,12 +260,12 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
     int len;
     vjConnect* connection;
 
-    vjDEBUG(3) << "vjEnvironmentManager network server running.\n"
+    vjDEBUG(vjDBG_ALL,3) << "vjEnvironmentManager network server running.\n"
 	       << vjDEBUG_FLUSH;
 
     /* start listening for connections */
     if (listen (listen_socket, 0)) {
-	vjDEBUG(1) << "ERROR: vjEnvironmentManager socket listen "
+	vjDEBUG(vjDBG_ALL,1) << "ERROR: vjEnvironmentManager socket listen "
 		   << "failed\n" << vjDEBUG_FLUSH;
 	return;
     }
@@ -289,7 +291,12 @@ void vjEnvironmentManager::deactivatePerfBuffers () {
     }
 }
 
+void vjEnvironmentManager::sendRefresh() {
+    for (int i = 0; i < connections.size(); i++) {
+	connections[i]->sendRefresh();
 
+    }
+}
 
 void vjEnvironmentManager::activatePerfBuffers () {
     // activates all perf buffers configured to do so
@@ -365,8 +372,10 @@ bool vjEnvironmentManager::acceptConnections() {
 	       			NULL);
     listen_thread = new vjThread (memberFunctor, 0);
 
+
     return (listen_thread != NULL);
 }
+
 
 
 
@@ -376,6 +385,7 @@ bool vjEnvironmentManager::rejectConnections () {
 	listen_thread = NULL;
 	close(listen_socket);
     }
+
 
     return 1;
 }

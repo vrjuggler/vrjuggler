@@ -126,13 +126,13 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
     self.name = str;
 
     readString (in, str, size);
-    
+
     /* parsing value labels, if there are any */
     if (!strcasecmp (str, "vj_valuelabels")) {
 	//cout << "reading valuelabels" << endl;
 	readString (in,str,size);
 	if (strcasecmp (str, "{"))
-	    vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_ALL,1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
 	
 	vjEnumEntry *e;
 	readString (in, str, size);
@@ -143,14 +143,14 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	}
 	readString (in, str, size);
     }
-    
+
     /* parsing enumerations, if there are any */
     if (!strcasecmp (str, "vj_enumeration"))
 	readString (in, str, size);
     if (!strcasecmp (str, "{")) {
 	//cout << "parsing enumerations" << endl;
 	if (self.type == T_BOOL) {
-	    vjDEBUG(1) << "ERROR: " << self.name << ": Enumerations not supported for "
+	    vjDEBUG(vjDBG_ALL,1) << "ERROR: " << self.name << ": Enumerations not supported for "
 		"boolean types.\n" << vjDEBUG_FLUSH;
 	    do {
 		readString (in, str, size);

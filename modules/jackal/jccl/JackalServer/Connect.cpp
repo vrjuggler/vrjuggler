@@ -19,7 +19,7 @@
 
 vjConnect::vjConnect(int s, const std::string& _name,
 		     vjConnectMode _mode): output(), commands_mutex() {
-    vjDEBUG(2) << "EM: Creating vjConnect to file or socket\n"
+    vjDEBUG(vjDBG_ALL,2) << "EM: Creating vjConnect to file or socket\n"
 	       << vjDEBUG_FLUSH;
     fd = s;
     mode = _mode;
@@ -33,6 +33,7 @@ vjConnect::vjConnect(int s, const std::string& _name,
 
 
 vjConnect::vjConnect(vjConfigChunk* c): output() {
+
 
     filename = (std::string)c->getProperty ("FileName");
     name = (std::string)c->getProperty ("Name");
@@ -107,7 +108,7 @@ void vjConnect::sendRefresh () {
 
 
 
-//! ARGS: _tu - a vjTimedUpdate* 
+//! ARGS: _tu - a vjTimedUpdate*
 //! ARGS: _refresh_time - time between refreshes, in milliseconds
 void vjConnect::addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
     if (mode != VJC_INPUT) {
@@ -147,27 +148,29 @@ void vjConnect::controlLoop(void* nullParam) {
    vjCommand*  cmd;
    struct pollfd pollfdstruct;
 
+
    shutdown = 0;
 
    pollfdstruct.fd = fd;
    pollfdstruct.events = POLLPRI;// | POLLHUP | POLLNVAL;
    pollfdstruct.revents = 0;
 
-   vjDEBUG(2) << "vjConnect " << name << " started control loop.\n"
+   vjDEBUG(vjDBG_ALL,2) << "vjConnect " << name << " started control loop.\n"
    << vjDEBUG_FLUSH;
 
    /* attach iostreams to socket */
    ifstream fin(fd);
 
+
    while (!shutdown) {
        if (mode != VJC_OUTPUT) {
 	   pollfdstruct.revents = 0;
 	   poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
-	   
+	
 	   //cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
 
 	   if ((pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {
-	       vjDEBUG(0) << "vjConnect to file " << fd << " exiting\n"
+	       vjDEBUG(vjDBG_ALL,0) << "vjConnect to file " << fd << " exiting\n"
 			  << vjDEBUG_FLUSH;
 	       break;
 	   }
@@ -260,7 +263,7 @@ void vjConnect::readCommand(ifstream& fin) {
 	// XXX: Hack!!! We need to change this. We should not
 	// change the dbs outside of kernel
 	//s = strtok (NULL, " \t\n");
-	vjDEBUG(0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ALL,0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
 	//if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
         //    cachedDescdb->removeAll();
 	//fin >> *cachedDescdb;
@@ -278,7 +281,7 @@ void vjConnect::readCommand(ifstream& fin) {
 	//fin >> *chunkdb;
 	vjConfigChunkDB newchunkdb (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
 	fin >> newchunkdb;
-	vjDEBUG(0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ALL,0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
 	// ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
 	vjKernel::instance()->configAdd(&newchunkdb);      // Add new chunks
     }
@@ -290,7 +293,7 @@ void vjConnect::readCommand(ifstream& fin) {
             while (s = strtok (NULL, " \t\n")) {
 		// BUG! - what if chunks exist in db using the desc we're removing?
 		//cachedDescdb->remove(s);
-		vjDEBUG(0) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
+		vjDEBUG(vjDBG_ALL,0) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
             }
 	}
 	else if (!strcasecmp (s, "chunks")) {
@@ -299,6 +302,7 @@ void vjConnect::readCommand(ifstream& fin) {
 		// REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
 		//chunkdb->removeNamed(s);
             }
+
 	}
 	else
             vjDEBUG(1) << "Error: vjConnect: Unknown remove type: "
