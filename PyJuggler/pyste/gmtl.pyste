@@ -139,17 +139,17 @@ Function('gmtl::dot', 'gmtl-functions.h')
 Function('gmtl::length', 'gmtl-functions.h')
 Function('gmtl::lengthSquared', 'gmtl-functions.h')
 
+# XXX: This isn't quite right.  gmtl::normalize() does not return a reference
+# in the vector case, but it does in the quaternion case.  What I need is a
+# way to tell Pyste which version is which...
 set_policy(Function('gmtl::normalize', 'gmtl-functions.h'),
            return_internal_reference())
-Function('gmtl::normalize', 'gmtl-functions.h')
 
 Function('gmtl::isNormalized', 'gmtl-functions.h')
 
-# XXX: This isn't quite right.  One version of gmtl::cross() returns a
-# reference, and the other does not.  This generates code that would indicate
-# that both return a reference.
 set_policy(Function('gmtl::cross', 'gmtl-functions.h'),
            return_internal_reference())
+Function('gmtl::makeCross', 'gmtl-functions.h')
 
 set_policy(Function('gmtl::reflect', 'gmtl-functions.h'),
            return_internal_reference())
