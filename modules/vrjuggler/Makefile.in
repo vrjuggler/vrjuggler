@@ -213,15 +213,6 @@ endif
 SUBDIRS		= Math Config Kernel Environment Performance Input	\
                   SharedMem Sound Sync Threads Utils
 
-# Subdirectories used for recursion through the application source trees when
-# installing.
-SAMPLE_SUBDIRS	= . ogl ogl/combo ogl/cubes ogl/glove ogl/digitalGlove	\
-                  ogl/simpleGlove ogl/torus ogl/wand pf pf/pfConfigNav	\
-                  pf/pfNav
-TEST_SUBDIRS	= . CfgTest GLWindow Math Matrix Quat Sync input	\
-                  testDynamicCastSTL threads
-TOOLS_SUBDIRS	= .
-
 # The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
 
@@ -1147,9 +1138,9 @@ install-samples:
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/samples
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
-          --vars="${topdir}/VARS.pl" --SUBDIRS="${SAMPLE_SUBDIRS}"	\
-          --startdir="${top_srcdir}/samples" --mode="${FILE_PERMS}"	\
-          ${_GROUP_OPT_PL} --srcdir="." --prefix="${prefix}/samples"
+          --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/samples"	\
+          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."		\
+          --prefix="${prefix}/samples"
 
 # Install the test programs.
 install-test:
@@ -1161,8 +1152,7 @@ install-test:
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/test
 	${PERL} ${scriptdir}/makefiles-gen.pl --prefix="${prefix}/test"	\
           --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
-          --SUBDIRS="${TEST_SUBDIRS}" --mode="${FILE_PERMS}"		\
-          ${_GROUP_OPT_PL} --srcdir="."
+          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
 
 # Install the user tools code.
 install-tools:
@@ -1174,10 +1164,10 @@ install-tools:
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/tools
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
           --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
-          --startdir="${top_srcdir}/tools" --SUBDIRS="${TOOLS_SUBDIRS}"	\
-          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/tools/catadf.pl ${bindir}/catadf.pl
+          --startdir="${top_srcdir}/tools" --mode="${FILE_PERMS}"	\
+          ${_GROUP_OPT_PL} --srcdir="." ${INSTALL} -m ${EXEC_PERMS}	\
+          ${_GROUP_OPT_UNIX} ${VJROOT_ABS}/tools/catadf.pl		\
+          ${bindir}/catadf.pl
 
 # Install the standard data files.
 install-data:
