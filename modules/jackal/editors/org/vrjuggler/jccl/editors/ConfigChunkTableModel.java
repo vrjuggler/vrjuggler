@@ -90,6 +90,12 @@ public class ConfigChunkTableModel
             PropertyDesc desc = (PropertyDesc)itr.next();
             size += Math.max(mChunk.getNumPropertyValues(desc.getToken()),
                              desc.getItemsSize());
+
+            // Add one for the add button if the values is variable
+            if (desc.hasVariableNumberOfValues())
+            {
+               ++size;
+            }
          }
 
          // Take into account rows for the chunk name and type
@@ -164,6 +170,13 @@ public class ConfigChunkTableModel
                                    cur_desc.getItemsSize());
          cur_row += num_values;
 
+         // Add one extra row for the add button if this desc has variable
+         // number of values
+         if (cur_desc.hasVariableNumberOfValues())
+         {
+            ++cur_row;
+         }
+
          // If we've passed the row we're looking for, return that desc.
          if (row < (cur_row + 2))
          {
@@ -191,6 +204,12 @@ public class ConfigChunkTableModel
          {
             cursor += Math.max(mChunk.getNumPropertyValues(cur_desc.getToken()),
                                cur_desc.getItemsSize());
+
+            // Add one for the add button if this property is variable
+            if (cur_desc.hasVariableNumberOfValues())
+            {
+               ++cursor;
+            }
          }
          // If we found the desc we're looking for, add in the index and quit
          else

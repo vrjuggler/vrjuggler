@@ -76,11 +76,36 @@ public class PropertyValueRenderer
          {
             ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
             PropertyDesc desc = data_model.getPropertyDesc(row);
+            ConfigChunk src_chunk = data_model.getConfigChunk();
 
             ((JComponent)comp).setBorder(null);
 
+            // If the property has variable values and this row is past the end
+            // of the number of values, render an add button
+            int num_values = src_chunk.getNumPropertyValues(desc.getToken());
+            int value_idx = row - data_model.getRowFor(desc);
+            if (desc.hasVariableNumberOfValues() && (value_idx == num_values))
+            {
+               JButton btn = new JButton();
+               btn.setText("Add New");
+               btn.setFont(table.getFont().deriveFont(Font.BOLD));
+               if (selected)
+               {
+                  btn.setForeground(table.getSelectionForeground());
+                  btn.setBackground(table.getSelectionBackground());
+               }
+               else
+               {
+                  btn.setForeground(table.getForeground());
+                  btn.setBackground(table.getBackground());
+               }
+               btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+               comp = btn;
+            }
+
             // If the cell value is an embedded chunk, render a hyperlink.
-            if (desc.getValType() == ValType.EMBEDDEDCHUNK)
+            else if (desc.getValType() == ValType.EMBEDDEDCHUNK)
             {
                ConfigChunk chunk = (ConfigChunk)value;
 
