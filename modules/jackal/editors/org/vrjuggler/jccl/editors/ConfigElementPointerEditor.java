@@ -48,7 +48,7 @@ public class ConfigElementPointerEditor
     */
    public String getAsText()
    {
-      return mValue;
+      return mValue.getTarget();
    }
 
    /**
@@ -62,6 +62,7 @@ public class ConfigElementPointerEditor
    public void setAsText(String text)
       throws IllegalArgumentException
    {
+      System.out.println("setAsText: " + text);
       if (text == null)
       {
          // Ack ... we got a bad string
@@ -69,7 +70,8 @@ public class ConfigElementPointerEditor
       }
       else
       {
-         setValue(text);
+         System.out.println("SetTarget: " + text);
+         mValue.setTarget(text);
       }
    }
 
@@ -195,14 +197,15 @@ public class ConfigElementPointerEditor
     */
    public void setValue(Object value)
    {
-      this.mValue = (String)value;
+      this.mValue = (ConfigElementPointer)value;
       firePropertyChange();
    }
 
    /**
     * The String name of the Chunk pointer being edited.
     */
-   private String mValue = null;
+   //private String mValue = null;
+   private ConfigElementPointer mValue = null;
 
    /**
     * The list of tags supported by this value.
