@@ -165,7 +165,9 @@ private:
     void killConnections();
 
     // These are needed to appease Visual C++ in its creation of DLLs.
-    JackalServer(const JackalServer&) {;}
+    JackalServer(const JackalServer&) 
+      : ConfigChunkHandler()
+    {;}
     void operator=(const JackalServer&) {;}
 
     vprSingletonHeader(JackalServer);

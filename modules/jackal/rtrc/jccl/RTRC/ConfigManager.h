@@ -393,7 +393,9 @@ protected:
    virtual ~ConfigManager ();
 
    // needed for windows:
-   ConfigManager(const ConfigManager&) {;}
+   ConfigManager(const ConfigManager&) 
+      : JackalControl()
+   {;}
    void operator= (const ConfigManager&) {;}
 
    vprSingletonHeader(ConfigManager);

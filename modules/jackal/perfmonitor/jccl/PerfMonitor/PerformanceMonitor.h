@@ -111,7 +111,9 @@ private:
 
 
    // These are needed to appease Visual C++ in its creation of DLLs.
-   PerformanceMonitor(const PerformanceMonitor&) {;}
+   PerformanceMonitor(const PerformanceMonitor&)
+      : JackalControl(), ConfigChunkHandler()
+   {;}
    void operator=(const PerformanceMonitor&) {;}
 
    vprSingletonHeader(PerformanceMonitor);
