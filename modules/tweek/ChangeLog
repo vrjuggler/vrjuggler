@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-02-12 patrickh The Icon Viewer now uses buttons instead of labels for its
+                    icons.  This makes it much more clear when a mouse click
+                    is actually being processed.
+                    NEW VERSION: 0.3.1
 2002-02-09 patrickh Added support for context-specific file opening and
                     closing.
                     NEW VERSION: 0.3.0
