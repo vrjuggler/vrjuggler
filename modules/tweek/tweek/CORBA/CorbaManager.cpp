@@ -117,47 +117,82 @@ vpr::ReturnStatus CorbaManager::registerSubjectManager (tweek::SubjectManagerImp
    vprASSERT(! CORBA::is_nil(m_local_context) && "No naming service available");
    vpr::ReturnStatus status;
 
+   tweek::SubjectManager_ptr mgr_ptr;
+
+   // Try to activate the given servant with our child POA before anyone tries
+   // to use it.
    try
    {
-      tweek::SubjectManager_ptr mgr_ptr;
-      const char* id   = "SubjectManager";
-      const char* kind = "Object";
-      CosNaming::Name context_name;
+      m_subj_mgr_id = m_child_poa->activate_object(mgr);
+   }
+   // This will be raised if the IdUniqunessPolicy within our child POA is set
+   // to UNIQUE_ID.
+   catch (PortableServer::POA::ServantAlreadyActive& active_ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "WARNING: Servant already active within our POA\n"
+         << vprDEBUG_FLUSH;
+   }
+   catch (PortableServer::POA::WrongPolicy& policy_ex)
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "Invalid policy used when activating Subject Manager object\n"
+         << vprDEBUG_FLUSH;
+   }
 
-      mgr_ptr = mgr->_this();
-
-      context_name.length(1);
-      context_name[0].id   = CORBA::string_dup(id);
-      context_name[0].kind = CORBA::string_dup(kind);
-
-      // Bind the Subject Manager reference and activate the object within the
-      // POA.  If a Subject Manager is already bound, the exceptoin thrown
-      // prevents either operation from happening.  This is correct since we
-      // only want one Subject Manager per address space.
+   // Only proceed if we were able to activate an object within the POA.  If
+   // we couldn't, there is no point in registering anything with the naming
+   // service.
+   if ( status.success() )
+   {
+      // Try to add the mgr_ptr reference to the bound references known to the
+      // naming service.
       try
       {
-         m_local_context->bind(context_name, mgr_ptr);
-//         m_subj_mgr_id = m_child_poa->activate_object(mgr);
+         const char* id   = "SubjectManager";
+         const char* kind = "Object";
+         CosNaming::Name context_name;
+
+         // This gives us our reference from the POA to the servant that was
+         // registered above.  This does not perform object activation because
+         // the object was activated above.
+         mgr_ptr = mgr->_this();
+
+         vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
+
+         context_name.length(1);
+         context_name[0].id   = CORBA::string_dup(id);
+         context_name[0].kind = CORBA::string_dup(kind);
+
+         // Bind the Subject Manager reference and activate the object within
+         // the POA.  If a Subject Manager is already bound, the exceptoin
+         // thrown prevents either operation from happening.  This is correct
+         // since we only want one Subject Manager per address space.
+         try
+         {
+            m_local_context->bind(context_name, mgr_ptr);
+         }
+         catch (CosNaming::NamingContext::AlreadyBound& ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "WARNING: Subject manager reference already bound!\n"
+               << vprDEBUG_FLUSH;
+         }
       }
-      catch (CosNaming::NamingContext::AlreadyBound& ex)
+      catch (CORBA::COMM_FAILURE& ex)
       {
+         status.setCode(vpr::ReturnStatus::Fail);
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "WARNING: Subject manager reference already bound!\n"
-            << vprDEBUG_FLUSH;
+            << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
       }
-   }
-   catch (CORBA::COMM_FAILURE& ex)
-   {
-      status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
-   }
-   catch (CORBA::SystemException&)
-   {
-      status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Caught a CORBA::SystemException while using the naming service\n"
-         << vprDEBUG_FLUSH;
+      catch (CORBA::SystemException&)
+      {
+         status.setCode(vpr::ReturnStatus::Fail);
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Caught a CORBA::SystemException while using the naming service"
+            << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    return status;
@@ -182,44 +217,47 @@ vpr::ReturnStatus CorbaManager::createChildPOA (const std::string& local_id)
 
    vprASSERT(! CORBA::is_nil(m_root_poa) && "Failed to get Root POA");
 
+   // We want to allow multiple IDs to the same object and retain the
+   // references.  The latter is required if we wish to do explict activation.
    PortableServer::IdUniquenessPolicy_var uniq_policy =
       m_root_poa->create_id_uniqueness_policy(PortableServer::MULTIPLE_ID);
+   PortableServer::ServantRetentionPolicy_var retain_policy =
+      m_root_poa->create_servant_retention_policy(PortableServer::RETAIN);
 
-   policy_list.length(1);
+   policy_list.length(2);
    policy_list[0] =
       PortableServer::IdUniquenessPolicy::_duplicate(uniq_policy);
+   policy_list[1] =
+      PortableServer::ServantRetentionPolicy::_duplicate(retain_policy);
 
    std::string poa_name = "tweek_" + local_id;
 
-/*
    try
    {
-*/
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "Creating child of root POA named " << poa_name << std::endl
          << vprDEBUG_FLUSH;
       m_child_poa = m_root_poa->create_POA(poa_name.c_str(),
                                            PortableServer::POAManager::_nil(),
                                            policy_list);
-/*
    }
-   catch (PortableServer::AdapterAlreadyExists& ex)
+   catch (PortableServer::POA::AdapterAlreadyExists& ex)
    {
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Child POA named '" << poa_name << "' already exists!\n"
          << vprDEBUG_FLUSH;
    }
-   catch (PortableServer::InvalidPolicy& ex)
+   catch (PortableServer::POA::InvalidPolicy& ex)
    {
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Failed to set IdUniquenessPolicy for child POA\n"
          << vprDEBUG_FLUSH;
    }
-*/
 
    uniq_policy->destroy();
+   retain_policy->destroy();
 
    return status;
 }
