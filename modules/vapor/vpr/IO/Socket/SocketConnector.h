@@ -73,7 +73,7 @@ public:
    */
   Status connect (SocketStream& newStream,
                const InetAddr& remoteAddr,
-               vpr::Uint16 timeout = 0,
+               vpr::Interval timeout = vpr::Interval::NoTimeout,
                const InetAddr& localAddr = InetAddr::AnyAddr);
 
   /**
@@ -82,7 +82,7 @@ public:
    */
   Status complete (SocketStream &newStream,
                 InetAddr* remoteAddr = NULL,
-                vpr::Uint16 timeout = 0);
+                vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
   // Make sure we have opened the socket
@@ -102,7 +102,7 @@ protected:
   // - If not bound, then bind to local addr
   // - If timeout == 0, then set nonblocking
   bool connectStart (SocketStream& newStream,
-                      const vpr::Uint16 timeout = 0,
+                      vpr::Interval timeout = vpr::Interval::NoTimeout,
                       const InetAddr& localAddr = InetAddr::AnyAddr);
 };
 
