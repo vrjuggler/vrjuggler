@@ -45,7 +45,7 @@ EXE=		$(EXE_NAME).exe
 all: $(EXE)
 
 $(EXE): $(CS_SRCS)
-	$(CSC) $(CS_SRCS) $(EXE_DEPS)
+	$(CSC) /out:$@ $(CS_SRCS) $(EXE_DEPS)
 
 clobber:
 	rm -f $(EXE)
