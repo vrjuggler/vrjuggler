@@ -579,10 +579,10 @@ fi
 # naming conventions if the user did not provide a library name.
 if test "x$given_boost_fs_libname" = "x" ; then
    case $CC in
-      gcc)
+      gcc*|*/gcc*)
          toolset='-gcc'
          ;;
-      icc)
+      icc*|*/icc*)
          if test "x$OS_TYPE" = "xWin32" ; then
             toolset='-iw'
          else
@@ -592,7 +592,7 @@ if test "x$given_boost_fs_libname" = "x" ; then
       cygcl|msvccc|cl*|CL*)
          toolset="-${BOOST_TOOL:=vc7}"
          ;;
-      cc)
+      cc*|*/cc*)
          if test "x$GCC" = "xyes" ; then
             toolset='-gcc'
          else
