@@ -41,56 +41,55 @@ default: all
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
-DEFAULT_SET	= 1
+DEFAULT_SET=	1
 
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-STARTTIME := $(shell LC_TIME=C date)
+STARTTIME:=	$(shell LC_TIME=C date)
 
-BUILD_PROF_C	= @BUILD_PROF_C@
-BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+BUILD_PROF_C=	@BUILD_PROF_C@
+BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
 # If we can build both C and C++ profiled objects, we will build profiled
 # libraries.
 ifeq ($(BUILD_PROF_C), Y)
 ifeq ($(BUILD_PROF_CXX), Y)
-    BUILD_PROF_LIBS	= 1
+   BUILD_PROF_LIBS=	1
 endif
 endif
 
-beandir			= $(bindir)/beans
-srcdir			= @srcdir@
-top_srcdir		= @top_srcdir@
-EXTRA_JAVA_SRCS_PATH	= $(srcdir)
-INSTALL			= @INSTALL@
-INSTALL_FILES		=
-
+beandir=		$(bindir)/beans
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_JAVA_SRCS_PATH=	$(srcdir)
+INSTALL=		@INSTALL@
+INSTALL_FILES=		
 
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JDOM_JAR	= @JDOM_JAR@
-TWEEK_JARS	= @TWEEK_JARS@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(TWEEK_JARS)
+JDOM_JAR=	@JDOM_JAR@
+TWEEK_JARS=	@TWEEK_JARS@
+CLASSPATH=	$(JDOM_JAR)$(JCPS)$(TWEEK_JARS)
 
-CONFIG_PKG	= org.vrjuggler.jccl.config
-CONFIG_DIR	= $(subst .,/,$(CONFIG_PKG))
-CONFIG_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.java))
-CONFIG_CLASSES	= $(CONFIG_SRCS:.java=.class)
+CONFIG_PKG=	org.vrjuggler.jccl.config
+CONFIG_DIR=	$(subst .,/,$(CONFIG_PKG))
+CONFIG_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.java))
+CONFIG_CLASSES=	$(CONFIG_SRCS:.java=.class)
 
-JAVA_SRCS 	= $(CONFIG_SRCS)
-JARS		=
-BEANS		= jccl_config
+JAVA_SRCS=	$(CONFIG_SRCS)
+JARS=		
+BEANS=		jccl_config
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(CONFIG_PKG)
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= jccl/config/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT	= programmer.reference.java
+DOC_PKGS=	$(CONFIG_PKG)
+webroot=	$(HOME)/public_html/jugglerweb
+instdir=	jccl/config/1.0
+doc_prefix=	$(webroot)/$(instdir)
+DOC_ROOT=	programmer.reference.java
 
-JAVA_AFTERBUILD = jars
+JAVA_AFTERBUILD=	jars
 
 include $(MKPATH)/dpp.compile.mk
 
@@ -98,18 +97,17 @@ include $(MKPATH)/dpp.compile.mk
 # C++-related setup
 # 		Just recurse to the sub directories and then link to a static library.
 # -----------------------------------------------------------------------------
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT = @DYNAMICLIB_EXT@
+STATICLIB_EXT=	@STATICLIB_EXT@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
-#LIBS 		= $(JCCL_CONFIG_LIBRARY)
-#STATIC_LIBS	= $(LIBS)
-#DYNAMIC_LIBS	= $(LIBS)
+#LIBS=		$(JCCL_CONFIG_LIBRARY)
+#STATIC_LIBS=	$(LIBS)
+#DYNAMIC_LIBS=	$(LIBS)
 
-JCCL_CONFIG_LIB_STATIC		= $(JCCL_CONFIG_LIBRARY).$(STATICLIB_EXT)
-JCCL_CONFIG_LIB_DYNAMIC		= $(JCCL_CONFIG_LIBRARY).$(DYNAMICLIB_EXT)
-JCCL_CONFIG_PROF_LIB_STATIC	= $(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-JCCL_CONFIG_PROF_LIB_DYNAMIC	= $(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-
+JCCL_CONFIG_LIB_STATIC=		$(JCCL_CONFIG_LIBRARY).$(STATICLIB_EXT)
+JCCL_CONFIG_LIB_DYNAMIC=	$(JCCL_CONFIG_LIBRARY).$(DYNAMICLIB_EXT)
+JCCL_CONFIG_PROF_LIB_STATIC=	$(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+JCCL_CONFIG_PROF_LIB_DYNAMIC=	$(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 include $(MKPATH)/dpp.libs-basic.mk
 include $(MKPATH)/dpp.obj-common.mk
@@ -117,8 +115,8 @@ include $(MKPATH)/dpp.obj-common.mk
 # -----------------------------------------------------------------------------
 # Recursive make setup
 # -----------------------------------------------------------------------------
-DIRPRFX	= config/
-SUBDIR	= jccl
+DIRPRFX=	config/
+SUBDIR=		jccl
 $(RECTARGET): recursive
 include $(MKPATH)/dpp.subdir.mk
 
@@ -216,10 +214,10 @@ install-docs:
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
 
-CLEAN_FILES	+= $(JARS) $(CONFIG_CLASSES)
+CLEAN_FILES+=	$(JARS) $(CONFIG_CLASSES)
 
 ifdef GLOBAL_BUILD
-    CLEAN_DIRS	+= $(top_srcdir)/bin
+   CLEAN_DIRS+=	$(top_srcdir)/bin
 endif
 
 include Makefile.inc

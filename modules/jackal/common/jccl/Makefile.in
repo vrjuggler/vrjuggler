@@ -40,10 +40,10 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= common/jccl/
+DIRPRFX=	common/jccl/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= Util XMLUtil
+SUBDIR=		Util XMLUtil
 
 $(RECTARGET): recursive
 

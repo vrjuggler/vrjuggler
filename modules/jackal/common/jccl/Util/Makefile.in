@@ -40,17 +40,16 @@ default: all
 # Include common definitions here.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/jccl/Util
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(JCCL_COMMON_LIBRARY)
+includedir=	@includedir@/jccl/Util
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(JCCL_COMMON_LIBRARY)
 
-SRCS		= 
+SRCS=
 
-EXTRA_INCLUDES = \
-	-I$(top_srcdir)/common \
-	-I$(topdir)/common
+EXTRA_INCLUDES=	-I$(top_srcdir)/common	\
+		-I$(topdir)/common
 
 include $(MKPATH)/dpp.obj.mk
 

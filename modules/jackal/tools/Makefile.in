@@ -41,7 +41,7 @@
 # -----------------------------------------------------------------------------
 default: all
 
-SUBDIRS	= \
+SUBDIRS= \
 	ConfigUpdater
 
 all: $(SUBDIRS)

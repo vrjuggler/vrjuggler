@@ -41,55 +41,55 @@ default: all
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
-DEFAULT_SET	= 1
+DEFAULT_SET=	1
 
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-STARTTIME := $(shell LC_TIME=C date)
+STARTTIME:=	$(shell LC_TIME=C date)
 
-BUILD_PROF_C	= @BUILD_PROF_C@
-BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+BUILD_PROF_C=	@BUILD_PROF_C@
+BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
 # If we can build both C and C++ profiled objects, we will build profiled
 # libraries.
 ifeq ($(BUILD_PROF_C), Y)
 ifeq ($(BUILD_PROF_CXX), Y)
-    BUILD_PROF_LIBS	= 1
+   BUILD_PROF_LIBS=	1
 endif
 endif
 
-srcdir					= @srcdir@
-top_srcdir				= @top_srcdir@
-EXTRA_JAVA_SRCS_PATH	= $(srcdir)
-INSTALL					= @INSTALL@
-INSTALL_FILES			=
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_JAVA_SRCS_PATH=	$(srcdir)
+INSTALL=		@INSTALL@
+INSTALL_FILES=		
 
 
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-#JDOM_JAR	= @JDOM_JAR@
-#TWEEK_JARS	= @TWEEK_JARS@
-#CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol$(JCPS)$(TWEEK_JARS)
-#JAVA_SRC_PATH	= $(top_srcdir)/vjcontrol
+#JDOM_JAR=	@JDOM_JAR@
+#TWEEK_JARS=	@TWEEK_JARS@
+#CLASSPATH=	$(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol$(JCPS)$(TWEEK_JARS)
+#JAVA_SRC_PATH=	$(top_srcdir)/vjcontrol
 #
-#NET_PKG		= org.vrjuggler.jccl.net
-#NET_DIR		= $(subst .,/,$(NET_PKG))
-#NET_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
-#NET_CLASSES = $(NET_SRCS:.java=.class)
+#NET_PKG=	org.vrjuggler.jccl.net
+#NET_DIR=	$(subst .,/,$(NET_PKG))
+#NET_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
+#NET_CLASSES=	$(NET_SRCS:.java=.class)
 #
-#JAVA_SRCS = $(NET_SRCS)
-#JARS		 = jccl_net.jar
+#JAVA_SRCS=	$(NET_SRCS)
+#JARS=		jccl_net.jar
 #
 ## List the packages for which JavaDoc documentation will be generated.
-#DOC_PKGS		= $(NET_PKG)
-#webroot		= $(HOME)/public_html/jugglerweb
-#instdir		= jccl/net/1.0
-#doc_prefix	= $(webroot)/$(instdir)
-#DOC_ROOT		= programmer.reference.java
+#DOC_PKGS=	$(NET_PKG)
+#webroot=	$(HOME)/public_html/jugglerweb
+#instdir=	jccl/net/1.0
+#doc_prefix=	$(webroot)/$(instdir)
+#DOC_ROOT=	programmer.reference.java
 #
-#JAVA_AFTERBUILD = jars
+#JAVA_AFTERBUILD=	jars
 
 include $(MKPATH)/dpp.compile.mk
 
@@ -97,17 +97,17 @@ include $(MKPATH)/dpp.compile.mk
 # C++-related setup
 # 		Just recurse to the sub directories and then link to a static library.
 # -----------------------------------------------------------------------------
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT = @DYNAMICLIB_EXT@
+STATICLIB_EXT=	@STATICLIB_EXT@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
-#LIBS 		= $(JCCL_NET_LIBRARY)
-#STATIC_LIBS	= $(LIBS)
-#DYNAMIC_LIBS	= $(LIBS)
+#LIBS=		$(JCCL_NET_LIBRARY)
+#STATIC_LIBS=	$(LIBS)
+#DYNAMIC_LIBS=	$(LIBS)
 
-JCCL_NET_LIB_STATIC		= $(JCCL_NET_LIBRARY).$(STATICLIB_EXT)
-JCCL_NET_LIB_DYNAMIC		= $(JCCL_NET_LIBRARY).$(DYNAMICLIB_EXT)
-JCCL_NET_PROF_LIB_STATIC	= $(JCCL_NET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-JCCL_NET_PROF_LIB_DYNAMIC	= $(JCCL_NET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+JCCL_NET_LIB_STATIC=		$(JCCL_NET_LIBRARY).$(STATICLIB_EXT)
+JCCL_NET_LIB_DYNAMIC=		$(JCCL_NET_LIBRARY).$(DYNAMICLIB_EXT)
+JCCL_NET_PROF_LIB_STATIC=	$(JCCL_NET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+JCCL_NET_PROF_LIB_DYNAMIC=	$(JCCL_NET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 
 include $(MKPATH)/dpp.libs-basic.mk
@@ -116,8 +116,8 @@ include $(MKPATH)/dpp.obj-common.mk
 # -----------------------------------------------------------------------------
 # Recursive make setup
 # -----------------------------------------------------------------------------
-DIRPRFX	= net/
-SUBDIR	= jccl
+DIRPRFX=	net/
+SUBDIR=		jccl
 $(RECTARGET): recursive
 include $(MKPATH)/dpp.subdir.mk
 
@@ -203,10 +203,10 @@ $(LIBDIR)/$(JCCL_NET_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_NET_PROF_LIB_DYNAMIC): $(OBJD
 #	rm -rf $(doc_prefix)/$(DOC_ROOT)
 #	mv $(DOC_ROOT) $(doc_prefix)
 #
-#CLEAN_FILES	+= $(JARS) $(NET_CLASSES)
+#CLEAN_FILES+=	$(JARS) $(NET_CLASSES)
 
 ifdef GLOBAL_BUILD
-    CLEAN_DIRS	+= $(top_srcdir)/bin
+   CLEAN_DIRS+=	$(top_srcdir)/bin
 endif
 
 include Makefile.inc

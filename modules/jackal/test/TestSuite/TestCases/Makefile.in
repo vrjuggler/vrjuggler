@@ -34,13 +34,13 @@ default: all
 
 include @topdir@/test/TestSuite/test.defs.mk
 
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
 # Prefix for recursive stuff.
-DIRPRFX		= TestCases/
+DIRPRFX=	TestCases/
 
-SRCS		= \
+SRCS= \
 	ConfigChunkDBTest.cpp		\
 	ConfigChunkTest.cpp		\
 	IncludesTest.cpp		\
@@ -54,6 +54,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-   include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
