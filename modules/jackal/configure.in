@@ -587,7 +587,6 @@ AC_OUTPUT(jccl-config
           mtree/JCCL.data.dist
           mtree/JCCL.include.dist
           mtree/JCCL.install.dist
-          mtree/JCCL.samples.dist
           mtree/JCCL.test.dist
           VARS.pl,
     [chmod a+x jccl-config])
