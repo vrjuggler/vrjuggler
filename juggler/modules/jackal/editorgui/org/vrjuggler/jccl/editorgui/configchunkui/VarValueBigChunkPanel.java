@@ -80,6 +80,7 @@ public class VarValueBigChunkPanel
 	prop = _prop;
 	chunk = new ConfigChunk (_chunk);
 	chunkframe = null;
+        uihelper_module = _uihelper_module;
 
 	setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
