@@ -41,7 +41,7 @@ test.o:
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${TEST_OBJECTS} core so_locations
+	rm -f Makedepend test ${TEST_OBJECTS} core so_locations
 	rm -rf ./ii_files
 
 # -----------------------------------------------------------------------------
