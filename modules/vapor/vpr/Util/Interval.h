@@ -83,27 +83,27 @@ public:
    static const Interval HalfPeriod;   /**< Half of the roll over period */
 
 public:
-   Interval() : mTensOfUsecs(0)
+   Interval() : mMicroSeconds(0)
    { }
 
-   Interval(const vpr::Uint32 num, const Unit timeUnit) : mTensOfUsecs(0)
+   Interval(const vpr::Uint64 num, const Unit timeUnit) : mMicroSeconds(0)
    { set(num, timeUnit); }
 
-   void set(const vpr::Uint32 num, const Unit timeUnit)
+   void set(const vpr::Uint64 num, const Unit timeUnit)
    {
       switch(timeUnit)
       {
       case Interval::Sec:
-         mTensOfUsecs = (100000) * num;
+         mMicroSeconds = (1000000) * num;
          break;
       case Interval::Msec:
-         mTensOfUsecs = 100 * num;
+         mMicroSeconds = 1000 * num;
          break;
       case Interval::Usec:
-         mTensOfUsecs = num/10;
+         mMicroSeconds = num;
          break;
       case Interval::Base:
-         mTensOfUsecs = num;
+         mMicroSeconds = num;
          break;
       default:
          vprASSERT(false && "vpr::Interval::set: Invalid Units used");
@@ -116,17 +116,17 @@ public:
       switch(timeUnit)
       {
       case Interval::Sec:
-         mTensOfUsecs = vpr::Uint32(100000.0f * num);
+         mMicroSeconds = vpr::Uint64(1000000.0f * num);
          break;
       case Interval::Msec:
-         mTensOfUsecs = vpr::Uint32(100.0f * num);
+         mMicroSeconds = vpr::Uint64(1000.0f * num);
          break;
       case Interval::Usec:
-         mTensOfUsecs = vpr::Uint32(num / 10.0f);
+         mMicroSeconds = vpr::Uint64(num);
          //mTensOfUsecs = num;
          break;
       case Interval::Base:
-         mTensOfUsecs = vpr::Uint32(num);
+         mMicroSeconds = vpr::Uint64(num);
          break;
       default:
          vprASSERT(false && "vpr::Interval::setf: Invalid Units used");
@@ -138,47 +138,43 @@ public:
     * Set the interval to the current time.  This can them be used to compute a time
     * interval by subtracting two intervals from each other.
     */
-#ifdef VPR_SIMULATOR
    void setNow();
-#else
-   inline void setNow();
-#endif
 
    /** Set now that is gauranteed to be "real" time */
-   inline void setNowReal();
+   void setNowReal();
 
-   void sec(const vpr::Uint32 num)
+   void sec(const vpr::Uint64 num)
    { set(num, Interval::Sec); }
-   vpr::Uint32 sec() const
-   { return (mTensOfUsecs/100000); }
+   vpr::Uint64 sec() const
+   { return (mMicroSeconds/1000000); }
    void secf(const float num)
    { setf(num, Interval::Sec); }
    float secf() const
-   { return (float(mTensOfUsecs)/100000.0f); }
+   { return (float(mMicroSeconds)/1000000.0f); }
 
-   void msec(const vpr::Uint32 num)
+   void msec(const vpr::Uint64 num)
    { set(num, Interval::Msec); }
-   vpr::Uint32 msec() const
-   { return (mTensOfUsecs/100); }
+   vpr::Uint64 msec() const
+   { return (mMicroSeconds/1000); }
    void msecf(const float num)
    { setf(num, Interval::Msec); }
    float msecf() const
-   { return (float(mTensOfUsecs)/100.0f); }
+   { return (float(mMicroSeconds)/1000.0f); }
 
-   void usec(const vpr::Uint32 num)
+   void usec(const vpr::Uint64 num)
    { set(num, Interval::Usec); }
-   vpr::Uint32 usec() const
-   { return mTensOfUsecs*10; }
+   vpr::Uint64 usec() const
+   { return mMicroSeconds; }
    void usecf(const float num)
    { setf(num, Interval::Usec); }
    float usecf() const
-   { return (mTensOfUsecs*10.0f); }
+   { return (mMicroSeconds); }
 
-   vpr::Uint32 getBaseVal() const
-   { return mTensOfUsecs; }
+   vpr::Uint64 getBaseVal() const
+   { return mMicroSeconds; }
 
    bool operator ==(const Interval& r) const
-   { return (mTensOfUsecs == r.mTensOfUsecs); }
+   { return (mMicroSeconds == r.mMicroSeconds); }
 
    bool operator !=(const Interval& r) const
    { return ! (*this == r); }
@@ -192,34 +188,22 @@ public:
    */
    bool operator <(const Interval& r) const
    {
-      const vpr::Uint32 half_range(0xffffffffUL/2);
-      vpr::Uint32 diff = r.mTensOfUsecs - mTensOfUsecs;
-      bool ret_val = (0 != diff) && (diff < half_range);
-      /*
-      vpr::Uint32 left(mTensOfUsecs+half_range);
-      vpr::Uint32 right(r.mTensOfUsecs+half_range);
-      bool ret_val = left < right;
-      */
-      return ret_val;
+      return (mMicroSeconds < r.mMicroSeconds);
    }
 
    bool operator<= (const Interval& r) const
    {
-      const vpr::Uint32 half_range(0xffffffffUL/2);
-      vpr::Uint32 diff = r.mTensOfUsecs - mTensOfUsecs;
-      bool ret_val = (diff < half_range);
-
-      return ret_val;
+      return (mMicroSeconds <= r.mMicroSeconds);
    }
 
    Interval& operator+=(const Interval& r)
-   { mTensOfUsecs += r.mTensOfUsecs; return *this; }
+   { mMicroSeconds += r.mMicroSeconds; return *this; }
 
    Interval operator +(const Interval& r) const
    { return (Interval(*this) += r);  }
 
    Interval& operator-=(const Interval& r)
-   { mTensOfUsecs -= r.mTensOfUsecs; return *this; }
+   { mMicroSeconds -= r.mMicroSeconds; return *this; }
 
    /**
     * Return the difference of two interval values
@@ -242,45 +226,9 @@ public:
 
 
 private:
-   vpr::Uint32 mTensOfUsecs;
+   vpr::Uint64 mMicroSeconds;
 }; // class Interval
 
-// In the non-simulator case, we want setNow() to be fast, so it should be
-// inlined.  In the simulator case, we cannot inline it due to circular
-// include problems (vpr::sim::Controller needs vpr::Interval, and
-// vpr::Interval needs vpr::sim::Controller's vpr::sim::Clock instance).  Thus,
-// the simulator version of setNow() is in Interval.cpp.
-//
-// If in simulator, then this is setNowReal, else this is setNow.
-#ifdef VPR_SIMULATOR
-inline void Interval::setNowReal()
-#else
-inline void Interval::setNow()
-#endif /* ifdef VPR_SIMULATOR */
-{
-#if defined(VPR_USE_NSPR)
-   /*  Todo our own rounding
-   static vpr::Uint32 ticks_per_sec(0);
-   if(ticks_per_sec == 0)
-      ticks_per_sec = PR_TicksPerSecond();
-   */
-
-   mTensOfUsecs = PR_IntervalToMicroseconds( PR_IntervalNow() ) / 10;
-#else
-
-   timeval cur_time;
-   vpr::System::gettimeofday(&cur_time);
-   mTensOfUsecs = (cur_time.tv_usec + (1000000 * cur_time.tv_sec)) / 10;
-#endif
-}
-
-// if not simulator, then define setNowReal to call setNow()
-// Note: we do not just have setNow() call setNowReal becuase
-//       the inlining may not optimize out both inline calls.
-#ifndef VPR_SIMULATOR
-inline void Interval::setNowReal()
-{  setNow(); }
-#endif
 
 }; // namespace vpr
 

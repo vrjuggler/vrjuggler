@@ -180,19 +180,17 @@ public:
       vpr::Interval offset(10, vpr::Interval::Msec);
       val1 = (vpr::Interval::HalfPeriod - offset);
       val2 = (vpr::Interval::HalfPeriod + offset);
-
-
-      // Their difference is not greater then half period, so they should compare correctly
+      
       CPPUNIT_ASSERT(val1 < val2);
       CPPUNIT_ASSERT(! (val2 < val1));
       CPPUNIT_ASSERT(val1 <= val2);
 
       vpr::Interval val3(3, vpr::Interval::Usec);
       CPPUNIT_ASSERT(val3 < val1);
-      CPPUNIT_ASSERT(val2 < val3);
+      CPPUNIT_ASSERT(val3 < val1);
 
       CPPUNIT_ASSERT(val3 <= val1);
-      CPPUNIT_ASSERT(val2 <= val3);
+      CPPUNIT_ASSERT(val3 <= val2);
    }
 
 
