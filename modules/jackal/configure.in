@@ -139,10 +139,6 @@ case $target_os in
             DBG_FLAGS="$DBG_FLAGS -gslim"
         fi
         ;;
-    # HP PA-RISC machine running HP-UX 10.20.
-    hpux10.20|hpux11*)
-        AC_DEFINE(_CMA_NOWRAPPERS_,)
-        ;;
 esac
 
 # -----------------------------------------------------------------------------
