@@ -130,7 +130,7 @@ public:
 #ifdef VPR_USE_NSPR
        vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
            << "ERROR: Cannot get handle for UNIX file descriptor with NSPR!\n";
-       return NULL;
+       return vpr::IOSys::NullHandle;
 #else
        return m_fdesc;
 #endif
