@@ -70,8 +70,12 @@ SHLIB_MAJOR=	@MAJOR_VERSION@
 SHLIB_MINOR=	@MINOR_VERSION@
 SHLIB_MICRO=	@MICRO_VERSION@
 
+# We do not do version numbering for dynamic libraries on Win32.
 ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+# But we will name the static libraries differently than the dynamic libraries.
+else
+STATIC_SUFFIX=	_s
 endif
 
 # Full list of the libraries to build.
@@ -84,8 +88,10 @@ DYLIB_DEPS=		@DYLIB_DEPS@
 DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
 
 GADGET_LIB_STATIC=		$(GADGET_LIBRARY).$(STATICLIB_EXT)
+GADGET_LIB_STATIC=		$(GADGET_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 GADGET_LIB_DYNAMIC=		$(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
 GADGET_PROF_LIB_STATIC=		$(GADGET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+GADGET_PROF_LIB_STATIC=		$(GADGET_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 GADGET_PROF_LIB_DYNAMIC=	$(GADGET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
@@ -130,7 +136,6 @@ endif
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -141,7 +146,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
-endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
