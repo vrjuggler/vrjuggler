@@ -214,16 +214,16 @@ void collideApp::draw()
 
 void collideApp::initGLState()
 {
-   GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-   GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-   GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+   GLfloat light0_ambient[]  = { 0.1f, 0.1f, 0.1f, 1.0f };
+   GLfloat light0_diffuse[]  = { 0.8f, 0.8f, 0.8f, 1.0f };
+   GLfloat light0_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat light0_position[] = { 0.0f, 0.75f, 0.75f, 0.0f };
 
-   GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
-   GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
-   GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat mat_shininess[] = { 50.0};
-   GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
+   GLfloat mat_ambient[]   = { 0.7f, 0.7f, 0.7f, 1.0f };
+   GLfloat mat_diffuse[]   = { 1.0f, 0.5f, 0.8f, 1.0f };
+   GLfloat mat_specular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat mat_shininess[] = { 50.0f };
+   GLfloat no_mat[]        = { 0.0f, 0.0f, 0.0f, 1.0f };
 
    glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
@@ -379,7 +379,7 @@ void collideApp::preFrame()
    VPR_PROFILE("preFrame");
    float hit1, hit2;
    
-   delta = 0.05; // increase to speed up, decrease to slow down ***************
+   delta = 0.05f; // increase to speed up, decrease to slow down ***************
    
    increase();
    decrease();
