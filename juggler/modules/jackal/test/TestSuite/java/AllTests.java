@@ -32,6 +32,7 @@ public class AllTests
       suite.addTestSuite( ConfigElementFactoryTest.class );
       suite.addTestSuite( ConfigDefinitionRepositoryTest.class );
       suite.addTestSuite( ConfigDefinitionBuilderTest.class );
+      suite.addTestSuite( ConfigurationReaderTest.class );
 
       return suite;
    }
