@@ -49,6 +49,10 @@
 #include <string>
 #include <assert.h>
 #include <Sound/vjSoundManager.h>
+#include <Kernel/vjDebug.h>
+
+
+//#define VJSOUNDTRAV_VERBOSE 1
 
 //: This is a Performer traverser that will replace any node ending in mKeyName
 //  in your scene graph with a pjSoundNode.
@@ -72,7 +76,7 @@ public:
    static void traverse( pfNode* node, const std::string& keyName = "_Sound_" )
    {
       //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      cout<<"[SoundReplacer] Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<flush;
+      vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrMAGENTA,"[SoundReplacer] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
    
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -97,9 +101,6 @@ protected:
          return PFTRAV_CONT;	    // Return continue 
       }
       
-      // for verbose output (outputs every node's name.)
-      //cout<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<flush;
-         
       std::string nodeName = currentNode->getName();
       if (nodeName.size() <= keyName.size())
       {
@@ -107,18 +108,25 @@ protected:
          return PFTRAV_CONT;	    // Return continue 
       }
       
+      // for verbose output (outputs every node's name.)
+      #ifdef VJSOUNDTRAV_VERBOSE
+      vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
+      #endif
+      
       int startOfKeyWord = nodeName.size() - keyName.size();
       int endOfKeyWord = nodeName.size() - 1;
       std::string isThisOurKeyWord = nodeName.substr( startOfKeyWord, endOfKeyWord );
       if (isThisOurKeyWord == keyName)   // If node is not a Geode
       {
-         cout<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<flush;
-         cout<<"[SoundReplacer]     Substring "<<keyName<<" matched, "<<flush;
+#ifndef VJSOUNDTRAV_VERBOSE
+         vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
+#endif   
+         vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer]     Substring "<<keyName<<" matched, "<<vjDEBUG_FLUSH;
          pfGroup* parent = currentNode->getParent( 0 ); // FIXME?? will 0 work for all cases (instanced nodes?)
          if (parent != NULL)
          {
             std::string soundName = nodeName.substr( 0, startOfKeyWord );
-            cout<<"extracted sound named \""<<soundName<<"\"\n"<<flush;
+            vjDEBUG_CONT(vjDBG_ALL,0)<<"extracted sound named \""<<soundName<<"\"\n"<<vjDEBUG_FLUSH;
             vjSound* sound = vjSoundManager::instance()->getHandle( soundName.c_str() );
             
             // replace the found node with a sound node.
@@ -130,25 +138,27 @@ protected:
                bool positional_sound_true( true );
                parent->addChild( new pjSoundNode( sound, positional_sound_true ) );
                sound->trigger();
-               cout<<"[SoundReplacer]     Replaced "<<nodeName<<" node with a pjSoundNode referencing the "<<soundName<<" sound."<<flush;
+               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer]     ")<<"Replaced "<<clrOutNORM(clrGREEN, nodeName)<<" node with a pjSoundNode referencing the "<<soundName<<" sound."<<vjDEBUG_FLUSH;
             }
             else
             {
-               cout<<"[SoundReplacer] !!! WARNING !!! SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<flush;
-               cout<<"[SoundReplacer] !!!         !!! You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<flush;
+               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer] !!! WARNING !!! ") <<"SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<vjDEBUG_FLUSH;
+               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer] !!!         !!! ") <<"You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<vjDEBUG_FLUSH;
                return PFTRAV_CONT;	    // Return continue                
             }
          }
          else
          {
-            cout<<"but Parent is NULL (nowhere to hang the pjSoundNode!)\n"<<flush;
+            vjDEBUG_CONT(vjDBG_ALL,0)<<"but Parent is NULL (nowhere to hang the pjSoundNode!)\n"<<vjDEBUG_FLUSH;
          }         
       }
       // for very verbose output...
-      //else
-      //{
-      //   cout<<"[SoundReplacer]     Substring not matched: \""<<isThisOurKeyWord.c_str()<<"\" != \""<<keyName<<"\"\n"<<flush;
-      //}      
+#ifdef VJSOUNDTRAV_VERBOSE
+            else
+      {
+         vjDEBUG(vjDBG_ALL,0)<<"[SoundReplacer]     Substring not matched: \""<<isThisOurKeyWord.c_str()<<"\" != \""<<keyName<<"\"\n"<<vjDEBUG_FLUSH;
+      }
+#endif      
       return PFTRAV_CONT;	    // Return continue 
    }
 };
