@@ -118,16 +118,20 @@ class VJ_CLASS_API Connect {
 
     void sendDisconnect();
 
-    void sendCommand (Command* cmd);
+    void addCommand (Command* cmd);
 
-    //: Attaches a timed update object to this connection
-    //! ARGS: _tu - a vjTimedUpdate* 
-    //! ARGS: _refresh_time - time between refreshes, in milliseconds
-    void addTimedUpdate (TimedUpdate* _tu, float _refresh_time);
+    void addPeriodicCommand (PeriodicCommand* cmd);
+
+    void removePeriodicCommand (PeriodicCommand* cmd);
+
+//      //: Attaches a timed update object to this connection
+//      //! ARGS: _tu - a vjTimedUpdate* 
+//      //! ARGS: _refresh_time - time between refreshes, in milliseconds
+//      void addTimedUpdate (TimedUpdate* _tu, float _refresh_time);
 
 
-    //: Detaches a timed update object from this connection
-    void removeTimedUpdate (TimedUpdate* _tu);
+//      //: Detaches a timed update object from this connection
+//      void removeTimedUpdate (TimedUpdate* _tu);
 
 
 private:
@@ -149,17 +153,17 @@ private:
 
     //: used for storing Command* in a priority queue
     struct CommandPtrCmp {
-	bool operator() (const Command* a, const Command* b) {
+	bool operator() (const PeriodicCommand* a, const PeriodicCommand* b) {
 	    return (a->next_fire_time > b->next_fire_time);
 	}
     };
 
 
-    std::priority_queue<Command*, std::vector<Command*>, CommandPtrCmp>
-                               timed_commands; // used as heap
+    std::priority_queue<PeriodicCommand*, std::vector<PeriodicCommand*>, CommandPtrCmp>
+                               periodic_commands; // used as heap
     std::queue<Command*>     commands;
 
-    //: controls access to commands & timed_commands queues.
+    //: controls access to commands & periodic_commands queues.
     //  could we dispense with this???
     vpr::Mutex                    commands_mutex;
 
