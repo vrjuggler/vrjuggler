@@ -42,7 +42,6 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vpr/vpr.h>
-#include <vpr/DynLoad/Library.h>
 #include <vpr/DynLoad/LibraryLoader.h>
 
 #include <vpr/Util/Singleton.h>
