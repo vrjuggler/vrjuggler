@@ -1029,7 +1029,7 @@ bool EventWindowXWin::openLocalWindow()
    XRaiseWindow(mDisplay, mWindow);
    XClearWindow(mDisplay, mWindow);    // Try to clear the background
 
-//      createEmptyCursor(mDisplay, mWindow);
+   createEmptyCursor(mDisplay, mWindow);
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "[gadget::EventWindowXWin::openTheWindow()] done." << std::endl
@@ -1060,6 +1060,7 @@ bool EventWindowXWin::setupRemoteWindow()
                               | ButtonMotionMask | PointerMotionMask ;
    mWindow = mRemoteWinInfo.xWindow;
    XSelectInput(mDisplay, mWindow, event_mask);
+   createEmptyCursor(mDisplay,mWindow);
 
    return true;
 }
