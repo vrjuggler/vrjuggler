@@ -167,7 +167,7 @@ int Bird::sample()
      {
    //int subNum;
         getReading(mData[progress].getPositionData(), port_id);
-        mData[progress].setTimeStamp();
+        mData[progress].setTime();
    /* XXX:
    positionCorrect(theData[progress].pos[0],
           theData[progress].pos[1],

@@ -45,7 +45,6 @@
 #include <gadget/Type/PositionData.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 
 namespace gadget
 {

@@ -321,9 +321,15 @@ int MotionStar::sample ()
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-      jccl::TimeStamp currentsample;
       m_motion_star.sample();
-      currentsample.set();
+
+      // get an initial timestamp for this entire sample. we'll copy it into
+      // each PositionData for this sample.
+      int firstindex;
+      if (m_motion_star.getNumBirds() > 0) {
+          firstindex = getBirdIndex (0, progress);
+          mData[firstindex].setTime();
+      }
 
       // For each bird
       for ( unsigned int i = 0; i < m_motion_star.getNumBirds(); i++ )
@@ -331,7 +337,7 @@ int MotionStar::sample ()
          // Get the index to the current read buffer
          index = getBirdIndex(i, progress);
 
-         mData[index].setTimeStamp (currentsample);
+         mData[index].setTime (mData[firstindex].getTime());
 
          format = m_motion_star.getBirdDataFormat(i);
 
