@@ -61,6 +61,14 @@ public class ConfigToolbar
    extends JComponent
    implements VrjConfigConstants
 {
+   public static final String NEW_ACTION      = "New";
+   public static final String OPEN_ACTION     = "Open";
+   public static final String RTRC_ACTION     = "RTRC";
+   public static final String SAVE_ALL_ACTION = "SaveAll";
+   public static final String CUT_ACTION      = "cut";
+   public static final String COPY_ACTION     = "copy";
+   public static final String PASTE_ACTION    = "paste";
+
    public ConfigToolbar(FileLoader fileLoader)
    {
       mFileLoaderBean = fileLoader;
@@ -164,7 +172,7 @@ public class ConfigToolbar
       listenerList.remove(ActionListener.class, listener);
    }
 
-   protected void fireAction(String command)
+   public void fireAction(String command)
    {
       ActionEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
@@ -251,7 +259,7 @@ public class ConfigToolbar
          }
 
          setConfigContext(ctx);
-         fireAction("New");
+         fireAction(NEW_ACTION);
          return true;
       }
       return false;
@@ -298,7 +306,7 @@ public class ConfigToolbar
       boolean result = doOpen(createDefaultConfigContext());
       if (result)
       {
-         fireAction("Open");
+         fireAction(OPEN_ACTION);
       }
       return result;
    }
@@ -441,7 +449,7 @@ public class ConfigToolbar
             }
          }
          setConfigContext(ctx);
-         fireAction("Open");
+         fireAction(OPEN_ACTION);
          return true;
       }
       catch(Exception ex)
@@ -494,7 +502,7 @@ public class ConfigToolbar
    public boolean doSaveAll()
    {
       // Send a SaveAll action to all ConfigIFrames.
-      fireAction("SaveAll");
+      fireAction(SAVE_ALL_ACTION);
       return true;
    }
 
@@ -578,31 +586,31 @@ public class ConfigToolbar
       toolbar.setBorder(BorderFactory.createEtchedBorder());
       toolbar.setFloatable(false);
       newBtn.setToolTipText("Create a new configuration file");
-      newBtn.setActionCommand("New");
+      newBtn.setActionCommand(NEW_ACTION);
       newBtn.setFocusPainted(false);
       openBtn.setToolTipText("Open a configuration file");
-      openBtn.setActionCommand("Open");
+      openBtn.setActionCommand(OPEN_ACTION);
       openBtn.setFocusPainted(false);
       RTRCBtn.setToolTipText("Remote run-time reconfiguration");
-      RTRCBtn.setActionCommand("RTRC");
+      RTRCBtn.setActionCommand(RTRC_ACTION);
       RTRCBtn.setFocusPainted(false);
 
       saveAllBtn.setEnabled(true);
       saveAllBtn.setToolTipText("Save all open configurations");
-      saveAllBtn.setActionCommand("SaveAll");
+      saveAllBtn.setActionCommand(SAVE_ALL_ACTION);
       saveAllBtn.setFocusPainted(false);
 
       cutBtn.setEnabled(true);
       cutBtn.setToolTipText("Cut config element to the clipboard");
-      cutBtn.setActionCommand("cut");
+      cutBtn.setActionCommand(CUT_ACTION);
       cutBtn.setFocusPainted(false);
       copyBtn.setEnabled(true);
       copyBtn.setToolTipText("Copy config element to the clipboard");
-      copyBtn.setActionCommand("copy");
+      copyBtn.setActionCommand(COPY_ACTION);
       copyBtn.setFocusPainted(false);
       pasteBtn.setEnabled(true);
       pasteBtn.setToolTipText("Paste config element");
-      pasteBtn.setActionCommand("paste");
+      pasteBtn.setActionCommand(PASTE_ACTION);
       pasteBtn.setFocusPainted(false);
 
       newBtn.addActionListener(new ActionListener()
@@ -614,7 +622,7 @@ public class ConfigToolbar
                // Indicate that an open operation was completed successfully.
                // We only do this here because we can guarantee that a child
                // of this component is the true source of the open event.
-               mFileActionGen.fireOpenPerformed(mFileLoaderBean);
+               mFileActionGen.fireOpenPerformed(newBtn, mFileLoaderBean);
             }
          }
       });
@@ -627,7 +635,7 @@ public class ConfigToolbar
                // Indicate that an open operation was completed successfully.
                // We only do this here because we can guarantee that a child
                // of this component is the true source of the open event.
-               mFileActionGen.fireOpenPerformed(mFileLoaderBean);
+               mFileActionGen.fireOpenPerformed(openBtn, mFileLoaderBean);
             }
          }
       });
@@ -640,7 +648,8 @@ public class ConfigToolbar
                // Indicate that a save operation was completed successfully.
                // We only do this here because we can guarantee that a child
                // of this component is the true source of the save event.
-               mFileActionGen.fireSaveAllPerformed(mFileLoaderBean);
+               mFileActionGen.fireSaveAllPerformed(saveAllBtn,
+                                                   mFileLoaderBean);
             }
          }
       });
