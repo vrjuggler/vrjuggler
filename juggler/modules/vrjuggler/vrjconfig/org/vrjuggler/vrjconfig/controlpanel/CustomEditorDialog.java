@@ -138,12 +138,6 @@ public class CustomEditorDialog
    private JButton mCancelButton = new JButton();
    private JButton mHelpButton = new JButton();
 
-   void this_windowClosing(WindowEvent windowEvent)
-   {
-      status = CLOSED_OPTION;
-      dispose();
-   }
-
    void mOkayButton_actionPerformed(ActionEvent actionEvent)
    {
       status = OK_OPTION;
@@ -162,22 +156,6 @@ public class CustomEditorDialog
    {
       status = CANCEL_OPTION;
       dispose();
-   }
-}
-
-class CustomEditorDialog_this_windowAdapter
-   extends WindowAdapter
-{
-   private CustomEditorDialog adaptee;
-
-   CustomEditorDialog_this_windowAdapter(CustomEditorDialog adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void windowClosing(WindowEvent windowEvent)
-   {
-      adaptee.this_windowClosing(windowEvent);
    }
 }
 
