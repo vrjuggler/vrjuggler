@@ -429,7 +429,7 @@ std::string replaceEnvVars (const std::string& s) {
                     if (s[j] == '}')
                         break;
                 std::string var(s,i+1,j-i-1);
-                cout << "searching for env var '" << var << '\'' << endl;
+                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
                 std::string res = getenv (var.c_str());
                 result += res;
                 i = j+1;
@@ -440,7 +440,7 @@ std::string replaceEnvVars (const std::string& s) {
                     if (s[j] == '/' || s[j] == '\\')
                         break;
                 std::string var(s,i,j-i);
-                cout << "searching for env var '" << var << '\'' << endl;
+                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
                 std::string res = getenv (var.c_str());
                 result += res;
                 i = j;
@@ -473,10 +473,17 @@ std::string vjConfigChunkDB::demangleFileName (const std::string& n, std::string
     if (!isAbsolutePathName(fname)) {
         // it's a relative pathname... so we have to add in the path part
         // of parentfile...
+//         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
+//              << parentfile.c_str() << "'\n" << endl;
         int lastslash = 0;
-        for (int i = 0; i < parentfile.length(); i++)
+        for (int i = 0; i < parentfile.length(); i++) {
             if (parentfile[i] == '/')
                 lastslash = i;
+#ifdef WIN32
+            if (parentfile[i] == '\\')
+                lastslash = i;
+#endif
+		}
         if (lastslash) {
             std::string s(parentfile, 0, lastslash+1);
             fname = s + n;
@@ -505,7 +512,6 @@ bool vjConfigChunkDB::load (const std::string& filename, const std::string& pare
     in >> *this;
     vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size() << " chunks\n"
                             << vjDEBUG_FLUSH;
-    //cout << *this;
     return true;
 }
 
