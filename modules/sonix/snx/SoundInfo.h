@@ -60,13 +60,14 @@ namespace snx
 
 /**
  * info struct that describes one sound entry.
+ * typically, you will fill this out and pass it to a SoundHandle object
+ * to configure your sound.
  */
 struct SoundInfo
 {
    SoundInfo() : alias(), 
                  datasource( FILESYSTEM ), 
                  filename(),
-                 data(),
                  ambient( false ),
                  retriggerable( false ),
                  repeat( 1 ),
@@ -82,8 +83,7 @@ struct SoundInfo
       position[2] = 0.0f;
    }
    
-   
-   
+   /*
    void allocBuffers( int number, int size, unsigned int sampSize )
    {
       // only suport 8 or 16 bit sound right now.
@@ -94,33 +94,54 @@ struct SoundInfo
          data[x].resize( size * sampSize );
       }      
    }   
-   
+   */
+   /** this field is used when datasource != FILESYSTEM
+    * @todo not implemented
+    */
+   //std::vector< std::vector<char> > data;
+         
+   /// name of the sound.  this is the "handle", or how you refer to the sound.         
    std::string alias;
 
    enum DataSource
    {
       FILESYSTEM, DATA_16_MONO, DATA_8_MONO
    };
-   DataSource datasource; // which of the following resources to use...
+      
+   /// which of the following resources to use...
+   DataSource datasource; 
 
-   // source of the sound...
+   /** source of the sound...
+    * for audioworks, the file should be .wav 11025hz mono
+    * for openal, the file should be .wav mono
+    */
    std::string filename;
-   
-   // this field is used when datasource != FILESYSTEM
-   std::vector< std::vector<char> > data;
 
+   /// 3D position
    gmtl::Vec3f position;
    
-   bool ambient;  // is the sound ambient (true) or positional (false)?
-   bool retriggerable;  // can the sound be retriggered while playing?
-   int repeat;           // number of times to repeat (static), -1 is infinite
-
-   float pitchbend;
-   float cutoff;
-   float volume;
+   /// is the sound ambient (true) or positional (false)?
+   bool ambient;        
    
-   // -----------------------------------------------
+   /// can the sound be retriggered while playing?
+   bool retriggerable;  
+   
+   /// number of times to repeat (static), -1 is infinite
+   int repeat;          
+
+   /// from 0 to 1.  0 is not a legal value.
+   float pitchbend;
+
+   /// from 0 to 1.
+   float cutoff;
+
+   /// from 0 to 1.
+   float volume;
+
+public:
+   /// do not use. internal use only
    bool triggerOnNextBind;
+   /// do not use. internal use only
    int repeatCountdown; // number of times left to repeat (changes during play)
 };
 
