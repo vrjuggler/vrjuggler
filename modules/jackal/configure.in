@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(common/jccl/jcclConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(common/jccl/jcclDefines.h)
-DPP_PREREQ([1.4.107])
+DPP_PREREQ([1.4.108])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
