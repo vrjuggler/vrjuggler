@@ -5,13 +5,16 @@
 
 
 #include <Environment/vjConnect.h>
+#include <Config/vjChunkDescDB.h>
+#include <Config/vjConfigChunkDB.h>
+#include <Environment/vjTimedUpdate.h>
 #include <Kernel/vjKernel.h>
+
 #include <iostream.h>
 #include <fstream.h>
 #include <sys/types.h>
 #include <sys/poll.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigChunkDB.h>
+
 
 
 vjConnect::vjConnect(int s, const std::string& _name): output(), commands_mutex() {
@@ -95,6 +98,40 @@ void vjConnect::sendRefresh () {
     commands.push (new vjCommandRefresh);
 }
 
+
+
+//! ARGS: _tu - a vjTimedUpdate* 
+//! ARGS: _refresh_time - time between refreshes, in milliseconds
+void vjConnect::addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
+    commands_mutex.acquire();
+    timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
+    commands_mutex.release();
+}
+
+
+
+void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
+    // this better not be called often - it's gotta be nlogn or something.
+    // still, there'll probably never be more than a couple dozen
+    // items in the timed_commands queue anyway.
+    std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp> newq;
+    vjCommandTimedUpdate* ctu2;
+    vjCommand* ctu1;
+    commands_mutex.acquire();
+    while (!timed_commands.empty()) {
+	ctu1 = timed_commands.top();
+	ctu2 = dynamic_cast<vjCommandTimedUpdate*>(ctu1);
+	timed_commands.pop();
+	if (ctu2 && (ctu2->timed_update == _tu))
+	    continue;
+	newq.push (ctu1);
+    }
+    timed_commands = newq;
+    commands_mutex.release();
+}
+
+
+//----------------- PRIVATE utility functions ---------------------------
 
 void vjConnect::controlLoop(void* nullParam) {
    /* this probably needs considerable revision */

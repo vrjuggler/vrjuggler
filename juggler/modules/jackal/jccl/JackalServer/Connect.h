@@ -1,17 +1,21 @@
 
-#ifndef _VJ_CONNECT_
-#define _VJ_CONNECT_
+#ifndef _VJ_CONNECT_H_
+#define _VJ_CONNECT_H_
 
+#include <vjConfig.h>
 #include <Threads/vjThread.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Environment/vjTimedUpdate.h>
+#include <Performance/vjTimeStamp.h>
 #include <Environment/vjCommand.h>
 #include <queue>
 
+class vjTimedUpdate;
+class vjConfigChunk;
 
 //--------------------------------------------------
 //: vjConnect reads/writes to a file, pipe, or socket.
+//
+// @author  Christopher Just
+//
 //---------------------------------------
 class vjConnect {
  public:
@@ -70,40 +74,21 @@ class vjConnect {
     void sendRefresh ();
 
 
+    //: Attaches a timed update object to this connection
     //! ARGS: _tu - a vjTimedUpdate* 
     //! ARGS: _refresh_time - time between refreshes, in milliseconds
-    void addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
-	commands_mutex.acquire();
-	timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
-	commands_mutex.release();
-    }
+    void addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time);
 
 
-    void removeTimedUpdate (vjTimedUpdate* _tu) {
-	// this better not be called often - it's gotta be nlogn or something.
-	// still, there'll probably never be more than a couple dozen
-	// items in the timed_commands queue anyway.
-	std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp> newq;
-	vjCommandTimedUpdate* ctu2;
-	vjCommand* ctu1;
-	commands_mutex.acquire();
-	while (!timed_commands.empty()) {
-	    ctu1 = timed_commands.top();
-	    ctu2 = dynamic_cast<vjCommandTimedUpdate*>(ctu1);
-	    timed_commands.pop();
-	    if (ctu2 && (ctu2->timed_update == _tu))
-		    continue;
-	    newq.push (ctu1);
-	}
-	timed_commands = newq;
-	commands_mutex.release();
-    }
+    //: Detaches a timed update object from this connection
+    void removeTimedUpdate (vjTimedUpdate* _tu);
+
 
 private:
 
-    ofstream                 output;
-    std::string                  name;
-    std::string                  filename;
+    ofstream                output;
+    std::string             name;
+    std::string             filename;
     vjThread*               connect_thread;
     int                     fd;
     bool                    readable;
@@ -116,9 +101,10 @@ private:
 	}
     };
 
-    std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp>          timed_commands; // used as heap
-    std::queue<vjCommand*>                   commands;
-    vjMutex                 commands_mutex;
+    std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp>
+                               timed_commands; // used as heap
+    std::queue<vjCommand*>     commands;
+    vjMutex                    commands_mutex;
 
     //: used to see if it's time to spring a timed_command
     vjTimeStamp             current_time;
