@@ -1,27 +1,30 @@
-DATE       AUTHOR   CHANGE
----------- -------- -----------------------------------------------------------
-2002-04-29 patrickh Support for plugging in Java and C++ ORBs at configuration
-                    time has been improved.  OpenORB and omniORB 3 are still
-                    the default implementations, but it is easier to use
-                    different ORBs.
-2002-02-12 patrickh The Icon Viewer now uses buttons instead of labels for its
-                    icons.  This makes it much more clear when a mouse click
-                    is actually being processed.
-                    NEW VERSION: 0.3.1
-2002-02-09 patrickh Added support for context-specific file opening and
-                    closing.
-                    NEW VERSION: 0.3.0
-2002-02-05 patrickh Added support for editing Bean-specific preferences.
-                    NEW VERSION: 0.2.0
-2002-01-22 patrickh Started a test suite for the Java code using JUnit.
-2001-12-09 patrickh Added the capability to "unregister" subjects previously
-                    registered with the Subject Manager.
-2001-11-20 patrickh Created two new Java API libraries: TweekServices.jar and
-                    TweekEvents.jar.
-2001-11-18 patrickh Added the ability to request all subjects currently
-                    registered with a tweek::SubjectManager.
-2001-11-18 patrickh Changed the use of tweek::SubjectManagerImpl so that there
-                    is one associated with each tweek::CorbaManager instance
-                    rather than one per memory space.
-2001-11-13 patrickh Encourage the use of OpenORB over JDK 1.4 so that this
-                    software can be used with JDK 1.2 and 1.3.
+DATE       AUTHOR      CHANGE
+---------- ----------- --------------------------------------------------------
+2002-05-09 nonchocoboy The Bean XML files now name the Bean class rather than
+                       the JAR file entry.
+                       NEW VERSION: 0.4.0
+2002-04-29 patrickh    Support for plugging in Java and C++ ORBs at
+                       configuration time has been improved.  OpenORB and
+                       omniORB 3 are still the default implementations, but it
+                       is easier to use different ORBs.
+2002-02-12 patrickh    The Icon Viewer now uses buttons instead of labels for
+                       its icons.  This makes it much more clear when a mouse
+                       click is actually being processed.
+                       NEW VERSION: 0.3.1
+2002-02-09 patrickh    Added support for context-specific file opening and
+                       closing.
+                       NEW VERSION: 0.3.0
+2002-02-05 patrickh    Added support for editing Bean-specific preferences.
+                       NEW VERSION: 0.2.0
+2002-01-22 patrickh    Started a test suite for the Java code using JUnit.
+2001-12-09 patrickh    Added the capability to "unregister" subjects previously
+                       registered with the Subject Manager.
+2001-11-20 patrickh    Created two new Java API libraries: TweekServices.jar
+                       and TweekEvents.jar.
+2001-11-18 patrickh    Added the ability to request all subjects currently
+                       registered with a tweek::SubjectManager.
+2001-11-18 patrickh    Changed the use of tweek::SubjectManagerImpl so that
+                       there is one associated with each tweek::CorbaManager
+                       instance rather than one per memory space.
+2001-11-13 patrickh    Encourage the use of OpenORB over JDK 1.4 so that this
+                       software can be used with JDK 1.2 and 1.3.
