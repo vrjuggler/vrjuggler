@@ -154,12 +154,18 @@ public:
    virtual void pipePreDraw()
    {;}
 
-public:  // --- Factory functions --- //
+public:  
+   /** @name Factory functions 
+    * @{
+    */
+          
    /** Get the DrawManager to use
    * Returns the ogl draw manager
    */
    virtual DrawManager*    getDrawManager()
    { return GlDrawManager::instance(); }
+    
+    /** @} */
 };
 
 
