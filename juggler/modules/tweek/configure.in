@@ -433,7 +433,7 @@ done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 INCLUDES="$INCLUDES $OMNI_INCLUDES"
-tweek_cxxflags="$STDFLAGS $VPR_CXXFLAGS $INCLUDES $tweek_idl_gen_includes"
+tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $VPR_CXXFLAGS $INCLUDES $tweek_idl_gen_includes"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -445,7 +445,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-   tweek_cxxflags="$CXXFLAGS $VPR_CXXFLAGS $INCLUDES $IDL_GEN_INCLUDES"
+   tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $VPR_CXXFLAGS $INCLUDES $IDL_GEN_INCLUDES"
 fi
 
 DPP_SYSTEM_SUBST
