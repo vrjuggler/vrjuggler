@@ -23,7 +23,6 @@
 
 #include <vjConfig.h>
 #include <Config/vjEnumEntry.h>
-#include <Config/vjParseUtil.h>
 
 
 //------------------------------------------------------------
@@ -125,18 +124,7 @@ public:
     friend istream& operator >> (istream& in, vjPropertyDesc& self);
 
 
-    vjPropertyDesc& operator= (vjPropertyDesc& pd) {
-	cout << "propdesc operator= is called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-	if (&pd == this)
-	    return *this;
-	name = pd.name;
-	token = pd.token;
-	help = pd.help;
-	type = pd.type;
-	valuelabels.erase (valuelabels.begin(), valuelabels.end());
-	enumv.erase (enumv.begin(), enumv.end());
-	return *this;
-    }
+    vjPropertyDesc& operator= (vjPropertyDesc& pd);
 
 
 

@@ -86,14 +86,10 @@ public:
     //+      invalid vjVarValue gets created & not deleted.  This is 
     //+      very unlikely, and would only result in losing a few bytes
     //+      anyway.
-    static vjVarValue& getInvalidInstance () {
-	if (invalid_instance == NULL)
-	    invalid_instance = new vjVarValue (T_INVALID);
-	return *invalid_instance;
-    }
+    static vjVarValue& getInvalidInstance ();
 
 
-    VarType getType () {
+    inline VarType getType () {
 	return type;
     }
 
