@@ -31,25 +31,7 @@
 // This file makes declarations of the templated function instantiations
 // needed for Boost.Python to do its thing.
 
-/*
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Quat.h>
-#include <gmtl/EulerAngle.h>
-#include <gmtl/AxisAngle.h>
-#include <gmtl/Sphere.h>
-#include <gmtl/AABox.h>
-#include <gmtl/LineSeg.h>
-#include <gmtl/Plane.h>
-#include <gmtl/Tri.h>
-#include <gmtl/Containment.h>
-*/
 #include <gmtl/Generate.h>
-/*
-#include <gmtl/Intersection.h>
-#include <gmtl/Output.h>
-#include <gmtl/Xforms.h>
-*/
 
 
 namespace gmtlWrapper
