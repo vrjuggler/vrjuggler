@@ -59,7 +59,7 @@ import java.util.*;
 import org.vrjuggler.jccl.config.io.*;
 
 public class PerformanceMonitorGUI extends JPanel
-implements CommunicationListener, TweekFrameListener
+implements CommunicationListener, TweekFrameListener, ActionListener
 {
    private PerformanceMonitorSubject mPerformanceMonitorSubject = null;
    private PerformanceMonitorObserverImpl mPerfMonObserver = null;
@@ -76,6 +76,8 @@ implements CommunicationListener, TweekFrameListener
    TimeSeriesCollection mDataset = null;
 
    JSpinner mJSpinner = new JSpinner( mSpinnerModel );
+   String[] mChartTypeStrings = { "TimeSeriesChart", "TreeChart", "etc" };
+   JComboBox mChartTypeBox = new JComboBox(mChartTypeStrings);
 
    ///The thread that handles updating the GUI.
    private Thread mUpdaterThread = null;
@@ -83,6 +85,8 @@ implements CommunicationListener, TweekFrameListener
    public PerformanceMonitorGUI()
    {
       mDataset = new TimeSeriesCollection( );
+      mChartTypeBox.setSelectedIndex(0);
+      mChartTypeBox.addActionListener(this);
 
       // Get data from combo box and create type of chart 
       // based on that.
@@ -94,12 +98,20 @@ implements CommunicationListener, TweekFrameListener
       System.out.println("PerformanceMonitor started");
    }
 
+       /** Listens to the combo box. */
+    public void actionPerformed(ActionEvent e) 
+    {
+       //Switch to new type of chart
+    }
+
    void jbInit ()
    {
       this.setLayout( borderLayout1 );
       mChartPanel.setPreferredSize( new java.awt.Dimension( 500, 270 ) );
       this.add( mChartPanel, BorderLayout.CENTER );
       this.add( jPanel1, BorderLayout.SOUTH );
+      this.add( mChartTypeBox, BorderLayout.NORTH);
+
       jPanel1.add( mJSpinner, null );
    }
 
