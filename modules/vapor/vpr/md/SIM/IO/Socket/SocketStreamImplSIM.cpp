@@ -79,6 +79,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
          << "]: Got pending connector from " << peer_ptr->getLocalAddr()
          << "\n" << vprDEBUG_FLUSH;
 
+      client_sock.mLocalAddr  = mLocalAddr;
       client_sock.mRemoteAddr = peer_ptr->mLocalAddr;
       client_sock.mOpen       = true;
       client_sock.mBlocking   = mBlocking;
@@ -101,6 +102,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
       // Make sure the peer's remote address has the right port number.
       // Prior to this point, it has the port of the accepting socket.
+      vprASSERT(peer_ptr->mRemoteAddr.getAddressValue() == client_sock.mLocalAddr.getAddressValue() && "Connector doesn't know peer's IP address");
       peer_ptr->mRemoteAddr.setPort(client_sock.mLocalAddr.getPort());
    }
    else
