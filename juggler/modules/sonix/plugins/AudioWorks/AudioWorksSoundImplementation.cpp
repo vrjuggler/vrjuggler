@@ -40,6 +40,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <stdlib.h>
+#include <fstream>
 #include <string>
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
