@@ -2,6 +2,8 @@
 #ifndef _VJ_NETWORK_CONNECT_
 #define _VJ_NETWORK_CONNECT_
 
+#include <config.h>
+
 //#include <Kernel/vjKernel.h>
 #include <Threads/vjThread.h>
 #include <Config/vjChunkDescDB.h>
