@@ -168,7 +168,7 @@ SocketImplBSD::enableBlocking (void) {
         status = m_handle->enableBlocking();
 
         if ( status.success() ) {
-            m_blocking = false;
+            m_blocking = true;
         }
     }
 
