@@ -90,7 +90,7 @@ template <class ENGINE>
 vjSoundEngineConstructor<ENGINE>::vjSoundEngineConstructor()
 {
    //vjASSERT(vjSoundFactory::instance() != NULL);
-   vjSoundFactory::registerCreator()->registerDevice(this);
+   vjSoundFactory::registerConstructor( this );
 }
 
 #endif
