@@ -65,16 +65,6 @@ public:
       , mVerbose(false) 
    {;}
 
-   /*
-   ~IntersenseAPIStandalone()
-   {
-      //if(script != NULL)
-      //{
-      //   delete [] script;
-      //}
-   }
-   */
-
    bool open(const std::string& dsoLocation);
    bool close();
 
@@ -131,7 +121,6 @@ public:
     */
    bool getState(int currentStation)
    {
-//      return mLocalConfigData[currentStation].State;
       return mConfigData[currentStation].State;
    }
 
@@ -140,7 +129,6 @@ public:
     */
    int getInertiaCube(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].InertiaCube;
       return mConfigData[currentStation].InertiaCube;
    }
 
@@ -149,7 +137,6 @@ public:
     */
    int getEnhancement(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].Enhancement;
       return mConfigData[currentStation].Enhancement;
    }
 
@@ -158,7 +145,6 @@ public:
     */
    int getSensitivity(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].Sensitivity;
       return mConfigData[currentStation].Sensitivity;
    }
 
@@ -167,7 +153,6 @@ public:
     */
    int getPrediction(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].Prediction;
       return mConfigData[currentStation].Prediction;
    }
 
@@ -177,7 +162,6 @@ public:
     */
    int getAngleFormat(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].AngleFormat;
       return mConfigData[currentStation].AngleFormat;
    }
 
@@ -186,7 +170,6 @@ public:
     */
    bool getTimeStamped(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].TimeStamped;
       return mConfigData[currentStation].TimeStamped;
    }
 
@@ -195,7 +178,6 @@ public:
     */
    bool getButtons(int currentStation) const
    {
-//      return mLocalConfigData[currentStation].GetButtons;
       return mConfigData[currentStation].GetButtons;
    }
 
@@ -204,7 +186,6 @@ public:
     */
    bool getAnalogData(int currentStation) const 
    {
-//      return mLocalConfigData[currentStation].GetAnalogData;
       return mConfigData[currentStation].GetAnalogData;
    }
 
@@ -216,7 +197,6 @@ public:
     */
    void setState(int currentStation, bool state)
    {
-//      mLocalConfigData[currentStation].State = state;
       mConfigData[currentStation].State = state;
    }
 
@@ -225,7 +205,6 @@ public:
     */
    void setInertiaCube(int currentStation, int inertial_cube)
    {
-//      mLocalConfigData[currentStation].InertiaCube = inertial_cube;
       mConfigData[currentStation].InertiaCube = inertial_cube;
    }
 
@@ -234,7 +213,6 @@ public:
     */
    void setEnhancement(int currentStation, int enhancement)
    {
-//      mLocalConfigData[currentStation].Enhancement = enhancement;
       mConfigData[currentStation].Enhancement = enhancement;
    }
 
@@ -243,7 +221,6 @@ public:
     */
    void setSensitivity(int currentStation, int sensitivity) 
    {
-//      mLocalConfigData[currentStation].Sensitivity = sensitivity;
       mConfigData[currentStation].Sensitivity = sensitivity;
    }
 
@@ -252,7 +229,6 @@ public:
     */
    void setPrediction(int currentStation, int prediction)
    {
-//      mLocalConfigData[currentStation].Prediction = prediction;
       mConfigData[currentStation].Prediction = prediction;
    }
 
@@ -262,7 +238,6 @@ public:
     */
    void setAngleFormat(int currentStation, int angle_format)
    {
-//      mLocalConfigData[currentStation].AngleFormat = angle_format;
       mConfigData[currentStation].AngleFormat = angle_format;
    }
 
@@ -271,7 +246,6 @@ public:
     */
    void setTimeStamped(int currentStation, bool time_stamped)
    {
-//      mLocalConfigData[currentStation].TimeStamped = time_stamped;
       mConfigData[currentStation].TimeStamped = time_stamped;
    }
 
@@ -280,7 +254,6 @@ public:
     */
    void setButtons(int currentStation, bool get_buttons)
    {
-//      mLocalConfigData[currentStation].GetButtons = get_buttons;
       mConfigData[currentStation].GetButtons = get_buttons;
    }
 
@@ -289,7 +262,6 @@ public:
     */
    void setAnalogData(int currentStation, bool get_analog_data)
    {
-//      mLocalConfigData[currentStation].GetAnalogData = get_analog_data;
       mConfigData[currentStation].GetAnalogData = get_analog_data;
    }
 
@@ -307,21 +279,6 @@ public:
    void loadConfigState(int d)
    {
       ISD_GetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
-
-      // WARNING: the following lines should be removed.  For now this is a convenient way
-      // to see what the default tracker data is (as specified by the IS interface box).
-      // these numbers can then be used to initialize the configData properly
-      /*
-      mLocalConfigData[d].InertiaCube = mConfigData[d].InertiaCube;
-      mLocalConfigData[d].Enhancement = mConfigData[d].Enhancement;
-      mLocalConfigData[d].Sensitivity = mConfigData[d].Sensitivity;
-      mLocalConfigData[d].Prediction = mConfigData[d].Prediction;
-      mLocalConfigData[d].AngleFormat = mConfigData[d].AngleFormat;
-      mLocalConfigData[d].TimeStamped = mConfigData[d].TimeStamped;
-      mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons;
-      mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
-      mLocalConfigData[d].State = mConfigData[d].State;
-      */
    }
 
    /**
@@ -329,44 +286,8 @@ public:
     */
    void saveConfigState(int d)
    {
-      /*
-      mConfigData[d].State = mLocalConfigData[d].State;
-      mConfigData[d].InertiaCube = mLocalConfigData[d].InertiaCube;
-      mConfigData[d].Enhancement = mLocalConfigData[d].Enhancement;
-      mConfigData[d].Sensitivity = mLocalConfigData[d].Sensitivity;
-      mConfigData[d].Prediction = mLocalConfigData[d].Prediction;
-      mConfigData[d].AngleFormat = mLocalConfigData[d].AngleFormat;
-      mConfigData[d].TimeStamped = mLocalConfigData[d].TimeStamped;
-      mConfigData[d].GetButtons = mLocalConfigData[d].GetButtons;
-      mConfigData[d].GetAnalogData = mLocalConfigData[d].GetAnalogData;
-      */
       ISD_SetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
    }
-
-   /**
-    *  Send the script located in the mHandle file descriptor to the physical
-    *  tracker.
-    */
-   /*
-   bool sendScript()
-   {
-      //return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
-      return false;
-   }
-   */
-
-   /*
-   bool setScript(const char* inscript) 
-   {
-      if(script != NULL)
-      {
-         delete [] script;
-      }
-      script = new char [strlen(inscript)+3];
-      strcpy(script, inscript);
-      return true;
-   }
-   */
 
    /**
     * Get the x position of the i'th receiver. 
@@ -467,14 +388,10 @@ private:
    unsigned int         mNumStations;
    std::string          mPort;
    bool                 mVerbose;
-   //char*                script;
 
    //Station level data
    
    ISD_STATION_INFO_TYPE   mConfigData[ISD_MAX_STATIONS];
-   
-//   isConfig                mLocalConfigData[ISD_MAX_STATIONS];
-
    ISD_TRACKER_DATA_TYPE   mData;
 };
 
