@@ -22,7 +22,8 @@ public:
       vprASSERT(mStartTimeNeededNext);
       mStartTimeNeededNext = false;
 
-      mSampleStartTime.now();
+      mSampleStartTime.setNow();
+      //std::cout << "sta: " << mSampleStartTime.usec() << "\n";
    }
 
    void stopSample()
@@ -31,8 +32,10 @@ public:
       mStartTimeNeededNext = true;
 
       // Compute time difference
-      mSampleStopTime.now();
+      mSampleStopTime.setNow();
+      //std::cout << "sto: " << mSampleStopTime.usec() << "\n";
       vpr::Interval diff(mSampleStartTime - mSampleStopTime);
+      //std::cout << "d: " << diff.usec() << "\n";
       double sample(0.0f);
 
       switch(mUnits)
@@ -51,6 +54,7 @@ public:
          break;
       }
 
+      //std::cout << "s: " << sample << "\n";
       addSample(sample);
    }
 
