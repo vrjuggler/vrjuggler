@@ -2,20 +2,21 @@
 
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
-FOP=		sh $(DOCBOOK_ROOT)/fop/fop.sh
-JADE=		openjade
-JADETEX=	jadetex
-PDFJADETEX=	pdfjadetex
+XALAN_VERSION?=	20020214
+SAXON_VERSION?=	6.5.1
+
+FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
+JADE?=		openjade
+JADETEX?=	jadetex
+PDFJADETEX?=	pdfjadetex
 RM=		rm -f
-SAXON=		$(DOCBOOK_ROOT)/saxon-6.5.1/saxon.sh
-#SAXON=		$(DOCBOOK_ROOT)/saxon-7.0/saxon.sh
-#XALAN=		$(DOCBOOK_ROOT)/xalan-j_2_3_1/bin/xalan.sh
-XALAN=		$(DOCBOOK_ROOT)/xalan-j_20020214/bin/xalan.sh
-#XALAN=		$(DOCBOOK_ROOT)/xalan-j_20020219/bin/xalan.sh
-XEP=		sh $(DOCBOOK_ROOT)/XEP/run.sh
-XSLTPROC=	/usr/bin/xsltproc
+SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
+XALAN?=		$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)/bin/xalan.sh
+XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
+XSLTPROC?=	/usr/bin/xsltproc
 
 FO_VERSION?=	FOP
+XSLT_TOOL?=	Xalan
 
 # Use one of the following depending on what will be processing the generated
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
@@ -78,16 +79,31 @@ images:
 # Basic XSL conversions -------------------------------------------------------
 
 .xml.html:
+ifeq ($(XSLT_TOOL), Xalan)
 	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
+else
+	$(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@		\
+          $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)
+endif
 
 .xml.fo:
+ifeq ($(XSLT_TOOL), Xalan)
 	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
+else
+	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
+          $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
+endif
 
 .xml.txt:
+ifeq ($(XSLT_TOOL), Xalan)
 	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
           $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
+else
+	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
+          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
+endif
 	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
