@@ -135,6 +135,20 @@ public class PropertyDescEditor
       {
          helpTextArea.setText("");
       }
+
+      // Enable the enum tab only if the type is not chunk pointer,
+      // embedded chunk, or boolean.
+      boolean enable_enum = false;
+      if (desc != null)
+      {
+         ValType type = desc.getValType();
+         if (type != ValType.CHUNK && type != ValType.EMBEDDEDCHUNK && type != ValType.BOOL)
+         {
+            enable_enum = true;
+         }
+      }
+      setEnabledAt(indexOfTab("Enumerations"), enable_enum);
+      
       revalidate();
    }
 
