@@ -39,10 +39,19 @@
 #include <vpr/IO/Port/SerialPort_t.h>
 
 #if defined(VPR_USE_NSPR)
-#   include <vpr/md/NSPR/IO/Port/SerialPortImplNSPR.h>
+
+#   ifdef VPR_OS_Win32
+#       include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 namespace vpr {
-  typedef SerialPort_t<SerialPortImplNSPR> SerialPort;
+  typedef SerialPort_t<SerialPortImplWin32> SerialPort;
 };
+
+#   else	/* ! VPR_OS_Win32 */
+#       include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
+namespace vpr {
+  typedef SerialPort_t<SerialPortImplTermios> SerialPort;
+};
+#   endif	/* VPR_OS_Win32 */
 
 #elif defined(VPR_USE_WIN32)
 #   include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
