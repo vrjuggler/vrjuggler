@@ -588,6 +588,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>true</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>true</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">

@@ -29,6 +29,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>true</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="EventWindow configuration 0" version="1">
@@ -106,6 +107,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>true</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="EventWindow configuration 0" version="1">
@@ -183,6 +185,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>true</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="EventWindow configuration 0" version="1">
@@ -260,6 +263,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>true</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="EventWindow configuration 0" version="1">
