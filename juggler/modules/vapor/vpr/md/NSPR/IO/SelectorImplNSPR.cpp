@@ -167,15 +167,15 @@ std::vector<PRPollDesc>::iterator SelectorImpNSPR::getHandle(PRFileDesc const* h
 PRUint16 SelectorImpNSPR::convertMaskVprToNspr(vpr::Uint16 mask)
 {
    PRUint16 ret_mask(0);
-   if(mask & READ)
+   if(mask & VPR_READ)
       ret_mask |= PR_POLL_READ;
-   if(mask & WRITE)
+   if(mask & VPR_WRITE)
       ret_mask |= PR_POLL_WRITE;
-   if(mask & EXCEPT)
+   if(mask & VPR_EXCEPT)
       ret_mask |= PR_POLL_EXCEPT;
-   if(mask & ERROR)
+   if(mask & VPR_ERROR)
       ret_mask |= PR_POLL_ERR;
-   if(mask & INVALID)
+   if(mask & VPR_INVALID)
       ret_mask |= PR_POLL_NVAL;
 
    return ret_mask;
@@ -185,15 +185,15 @@ vpr::Uint16 SelectorImpNSPR::convertMaskNsprToVpr(PRUint16 mask)
 {
    vpr::Uint16 ret_mask(0);
    if(mask & PR_POLL_READ)
-      ret_mask |= READ;
+      ret_mask |= VPR_READ;
    if(mask & PR_POLL_WRITE)
-      ret_mask |= WRITE;
+      ret_mask |= VPR_WRITE;
    if(mask & PR_POLL_EXCEPT)
-      ret_mask |= EXCEPT;
+      ret_mask |= VPR_EXCEPT;
    if(mask & PR_POLL_ERR)
-      ret_mask |= ERROR;
+      ret_mask |= VPR_ERROR;
    if(mask & PR_POLL_NVAL)
-      ret_mask |= INVALID;
+      ret_mask |= VPR_INVALID;
 
    return ret_mask;
 }

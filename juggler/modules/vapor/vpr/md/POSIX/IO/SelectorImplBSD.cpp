@@ -157,15 +157,15 @@ SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    FD_ZERO(&exception_set);
 
    for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ ) {
-      if ( (*i).in_flags & SelectorBase::READ ) {
+      if ( (*i).in_flags & SelectorBase::VPR_READ ) {
          FD_SET((*i).fd, &read_set);
       }
 
-      if ( (*i).in_flags & SelectorBase::WRITE ) {
+      if ( (*i).in_flags & SelectorBase::VPR_WRITE ) {
          FD_SET((*i).fd, &write_set);
       }
 
-      if ( (*i).in_flags & SelectorBase::EXCEPT ) {
+      if ( (*i).in_flags & SelectorBase::VPR_EXCEPT ) {
          FD_SET((*i).fd, &exception_set);
       }
    }
@@ -195,15 +195,15 @@ SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    else {
       for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ ) {
          if ( FD_ISSET((*i).fd, &read_set) ) {
-            (*i).out_flags |= SelectorBase::READ;
+            (*i).out_flags |= SelectorBase::VPR_READ;
          }
 
          if ( FD_ISSET((*i).fd, &write_set) ) {
-            (*i).out_flags |= SelectorBase::WRITE;
+            (*i).out_flags |= SelectorBase::VPR_WRITE;
          }
 
          if ( FD_ISSET((*i).fd, &exception_set) ) {
-            (*i).out_flags |= SelectorBase::EXCEPT;
+            (*i).out_flags |= SelectorBase::VPR_EXCEPT;
          }
       }
    }

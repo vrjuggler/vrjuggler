@@ -41,12 +41,12 @@ class SelectorBase
 {
 public:
    enum EventType
-      { READ = 1,           // Read - 
-        ACCEPT = 1,        //  Accept - Same as READ 
-        WRITE = 2,          // Write -
-        EXCEPT = 4,         // Exception -
-        ERROR = 8,            // Error -
-        INVALID = 16         // Invalid - Invalid handle
+      { VPR_READ = 1,          // Read - 
+        VPR_ACCEPT = 1,        // Accept - Same as READ 
+        VPR_WRITE = 2,         // Write -
+        VPR_EXCEPT = 4,        // Exception -
+        VPR_ERROR = 8,         // Error -
+        VPR_INVALID = 16       // Invalid - Invalid handle
       };
 };
 
