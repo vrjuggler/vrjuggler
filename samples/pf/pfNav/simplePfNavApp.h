@@ -329,7 +329,7 @@ public:  // Configure the application
       // FIXME: some code duplication here.
       if (mNavigators[0] != NULL)
       {
-         vjDEBUG(vjDBG_ALL,0) << "setting pos\n" <<flush;
+         vjDEBUG(vjDBG_ALL,0) << "setting pos\n" << vjDEBUG_FLUSH;
 
          vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
@@ -456,7 +456,8 @@ void simplePfNavApp::initializeModels()
       // FIXME: do rotation...
       mModelList[x].modelDCS->setScale( mModelList[x].scale );
 
-      vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Adding " << mModelList[x].filename << "\n" <<flush;
+      vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Adding " << mModelList[x].filename
+                           << "\n" << vjDEBUG_FLUSH;
       mModelList[x].modelNode = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
 
       assert( mModelList[x].modelNode != NULL );
