@@ -4718,91 +4718,215 @@ pfDraw();</programlisting>
             </tgroup>
           </table>
 
-          <!-- NEED example app for OpenSG
-               <section>
-                  <title>Class Declaration</title>
-                  <para>The following application class is called <classname>simplePfApp</classname>. It is derived from <classname>vrj::PfApp</classname> and has custom <methodname>initScene()</methodname> and <methodname>getScene()</methodname> methods declared. Note that this application uses <methodname>preForkInit()</methodname> which will be discussed later. Refer to <filename>simplePfApp.h</filename> for the implementations of <methodname>preForkInit()</methodname> and <methodname>setModel()</methodname>.</para>
-                  <programlisting linenumbering="numbered">class simplePfApp : public vrj::PfApp
+          <section>
+            <title>Class Declaration</title>
+
+            <para>The following application class is called
+            <classname>OpenSGNav</classname>. It is derived from
+            <classname>vrj::OpenSGApp</classname> and has custom
+            <methodname>initScene()</methodname>, <methodname>getSceneRoot()</methodname>,
+            <methodname>init()</methodname>, <methodname>contextInit()</methodname>,
+            and <methodname>preFrame()</methodname> methods declared. Refer to
+            <filename>OpenSGNav.h</filename> for the implementation of
+            <methodname>setModelFileName()</methodname>.</para>
+
+            <programlisting linenumbering="numbered">class OpenSGNav : public vrj::OpenSGApp
 {
 public:
-   simplePfApp();
-   virtual ~simplePfApp();
+   OpenSGNav(vrj::Kernel* kern);
+   virtual ~OpenSGNav();
 
-   virtual void preForkInit();
+   virtual void init();
+   virtual void contextInit();
+   virtual void preFrame();
+
    virtual void initScene();
-   virtual pfGroup* getScene();
-   void setModel(std::string modelFile);
+   virtual OSG::NodePtr getSceneRoot();
+
+   void setModelFileName(std::string filename);
+
+private:
+   void initGLState();
+
+private:
+   std::string mFileToLoad;
+
+   OSG::NodePtr        mRootNode;
+   OSG::TransformPtr   mSceneScale;
+   OSG::NodePtr        mSceneRoot;
+   OSG::TransformPtr   mSceneTransform;
+   OSG::NodePtr        mModelRoot;
+
+   OSG::NodePtr  mLightNode;
+   OSG::NodePtr  mLightBeacon;
 
 public:
-   std::string    mModelFileName;
+   gadget::PositionInterface  mWandPos;
+   gadget::DigitalInterface   mButton0;
+   gadget::DigitalInterface   mButton1;
+   gadget::DigitalInterface   mButton2;
+   float  velocity;
+};
+</programlisting>
+          </section>
 
-   pfGroup*       mLightGroup;
-   pfLightSource* mSun;
-   pfGroup*       mRootNode;
-   pfNode*        mModelRoot;
-};</programlisting>
-               </section>
-               <section>
-                  <title>The <methodname>initScene()</methodname> Member Function</title>
-                  <para>The implementation of <methodname>initScene()</methodname> is in <filename>simplePfApp.cpp</filename>. Within this method, we create the scene graph root node, the lighting node, and load a user-specified model. The implementation follows:</para>
-                  <programlistingco>
-                     <areaspec>
-                        <area coords="4" id="cr-rootnode.create"/>
-                        <area coords="7" id="cr.light.source.create"/>
-                        <area coords="17" id="cr.model.load"/>
-                        <areaset coords="" id="cr.scenegraph.add.all">
-                           <area coords="20" id="cr.scenegraph.add.model"/>
-                           <area coords="21" id="cr.scenegraph.add.light"/>
-                        </areaset>
-                     </areaspec>
-                     <programlisting linenumbering="numbered">void simplePfApp::initScene ()
+          <section>
+            <title>The <methodname>initScene()</methodname> Member Function</title>
+
+            <para>The implementation of <methodname>initScene()</methodname>
+            is in <filename>OpenSGNav.cpp</filename>. Within this method, we
+            create the scene graph root node, the lighting node, and load a
+            user-specified model. The implementation follows:</para>
+
+            <programlisting linenumbering="numbered">void OpenSGNav::initScene()
 {
-   // Allocate all the nodes needed
-   mRootNode = new pfGroup;
+   // Load the model to use
+   if (mFileToLoad ==  std::string(&#34;none&#34;))                               <co
+id="OpenSGNav.load.model.co" linkends="OpenSGNav.load.model.desc" />
+   {
+      mModelRoot = OSG::makeTorus(.5, 2, 16, 16);      
+   }
+   else
+   {
+      mModelRoot =
+         OSG::SceneFileHandler::the().read(mFileToLoad.c_str());
+   }
 
-   // Create the SUN light source
-   mLightGroup = new pfGroup;
-   mSun = new pfLightSource;
-   mLightGroup-&gt;addChild(mSun);
-   mSun-&gt;setPos(0.3f, 0.0f, 0.3f, 0.0f);
-   mSun-&gt;setColor(PFLT_DIFFUSE, 1.0f, 1.0f, 1.0f);
-   mSun-&gt;setColor(PFLT_AMBIENT, 0.3f, 0.3f, 0.3f);
-   mSun-&gt;setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
-   mSun-&gt;on();
+   // --- Light setup --- //
+   // - Add directional light for scene
+   // - Create a beacon for it and connect to that beacon
+   mLightNode   = OSG::Node::create();                                    <co
+id="OpenSGNav.create.light.co" linkends="OpenSGNav.load.model.desc" />
+   mLightBeacon = OSG::Node::create();
+   OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
+   OSG::TransformPtr light_beacon_core = OSG::Transform::create();
 
-   // - LOAD THE MODEL - //
-   mModelRoot = pfdLoadFile(mModelFileName.c_str());
+   // Setup light beacon
+   OSG::Matrix light_pos;
+   light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
 
-   // - CONSTRUCT STATIC STRUCTURE OF SCENE GRAPH - //
-   mRootNode-&gt;addChild(mModelRoot);
-   mRootNode-&gt;addChild(mLightGroup);
+   OSG::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+      light_beacon_core-&#62;setMatrix(light_pos);
+   OSG::endEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+
+   OSG::beginEditCP(mLightBeacon);
+      mLightBeacon-&#62;setCore(light_beacon_core);
+   OSG::endEditCP(mLightBeacon);
+
+   // Setup light node
+   OSG::addRefCP(mLightNode);
+   OSG::beginEditCP(mLightNode);
+      mLightNode-&#62;setCore(light_core);
+      mLightNode-&#62;addChild(mLightBeacon);
+   OSG::endEditCP(mLightNode);
+
+   OSG::beginEditCP(light_core);
+      light_core-&#62;setAmbient   (.9, .8, .8, 1);
+      light_core-&#62;setDiffuse   ( 0.6,  0.6,  0.6, 1);
+      light_core-&#62;setSpecular  ( 1,  1,  1, 1);
+      light_core-&#62;setDirection ( 0,  0,  1);
+      light_core-&#62;setBeacon    (mLightNode);
+   OSG::endEditCP(light_core);
+
+   // --- Setup Scene -- //
+   // add the loaded scene to the light node, so that it is lit by the light
+   OSG::addRefCP(mModelRoot);
+   OSG::beginEditCP(mLightNode);                                          <co
+id="OpenSGNav.model.add.co" linkends="OpenSGNav.model.add.desc" />
+      mLightNode-&#62;addChild(mModelRoot);
+   OSG::endEditCP(mLightNode);
+
+   // create the root part of the scene
+   mRootNode = OSG::Node::create();                                       <co
+id="OpenSGNav.root.create.co" linkends="OpenSGNav.root.create.desc" />
+   mSceneScale = OSG::Transform::create();
+   mSceneRoot = OSG::Node::create();                                      <co
+id="OpenSGNav.scene.root.create.co"
+linkends="OpenSGNav.scene.root.create.desc" />
+   mSceneTransform = OSG::Transform::create();
+
+   // Set the root node
+   OSG::beginEditCP(mRootNode);
+      mRootNode-&#62;setCore(mSceneScale);
+      mRootNode-&#62;addChild(mSceneRoot);                                    <co
+id="OpenSGNav.add.scene.root.co" linkends="OpenSGNav.add.scene.root.desc" />
+   OSG::endEditCP(mRootNode);
+
+   OSG::beginEditCP(mSceneRoot);
+      mSceneRoot-&#62;setCore(mSceneTransform);
+      mSceneRoot-&#62;addChild(mLightNode);                                   <co
+id="OpenSGNav.add.light.co" linkends="OpenSGNav.add.light.desc" />
+   OSG::endEditCP(mSceneRoot);
 }</programlisting>
-                     <calloutlist>
-                        <callout arearefs="rootnode.create">
-                           <para>First, the root node is constructed as a <classname>pfGroup</classname> object.</para>
-                        </callout>
-                        <callout arearefs="light.source.create">
-                           <para>Next, some steps are taken to create a light source for the application.</para>
-                        </callout>
-                        <callout arearefs="model.load">
-                           <para>Finally, the model is loaded using <function>pfdLoadFile()</function>, and the model scene graph root node is stored in <varname>mModelRoot</varname>. (The model loader must be initialized prior to calling <function>pfdLoadFile()</function>. This is done in <methodname>preForkInit()</methodname>.)</para>
-                        </callout>
-                        <callout arearefs="scenegraph.add.all">
-                           <para>Finally, the model and the light source nodes are added as children of the root.</para>
-                        </callout>
-                     </calloutlist>
-                  </programlistingco>
-               </section>
-               <section>
-                  <title>The <methodname>getScene()</methodname> Member Function</title>
-                  <para>The Performer Draw Manager will call the application's <methodname>getScene()</methodname> method to get the root of the scene graph. The implementation of this method can be found in <filename>simplePfApp.h</filename>. The code is as follows:</para>
-                  <programlisting>pfGroup* simplePfApp::getScene ()
+
+            <calloutlist>
+              <callout arearefs="OpenSGNav.load.model.co"
+              id="OpenSGNav.load.model.desc">
+                <para>We begin by loading the file set in
+                <methodname>OpenSGNav::setModelFileName()</methodname>. If no
+                file name was set, we default to using a simple torus model.
+                The model object is <varname>mModelRoot</varname>.</para>
+              </callout>
+
+              <callout arearefs="OpenSGNav.create.light.co"
+              id="OpenSGNav.create.light.desc">
+                <para>Next, we create a node for the light, which we define as
+                a beacon light.</para>
+              </callout>
+
+              <callout arearefs="OpenSGNav.model.add.co"
+              id="OpenSGNav.model.add.desc">
+                <para>The model is added under the light in the scene graph so
+                that it gets lit.</para>
+              </callout>
+
+              <callout arearefs="OpenSGNav.root.create.co"
+              id="OpenSGNav.root.create.desc">
+                <para>Then, the root note for the scene graph is created. This
+                is what will be returned to OpenSG for rendering by
+                <methodname>OpenSGNav::getSceneRoot()</methodname>.</para>
+              </callout>
+
+              <callout arearefs="OpenSGNav.scene.root.create.co"
+              id="OpenSGNav.scene.root.create.desc">
+                <para>We also create a root node for the scene. We do this so
+                that we can give it a transformation object without affecting
+                the root of the scene graph.</para>
+              </callout>
+
+              <callout arearefs="OpenSGNav.add.scene.root.co"
+              id="OpenSGNav.add.scene.root.desc">
+                <para>The scene root is added as a child of the root node.</para>
+              </callout>
+
+              <callout arearefs="OpenSGNav.add.light.co"
+              id="OpenSGNav.add.light.desc">
+                <para>Finally, we add the light node as a child of the scene
+                root. Remember that the light node already has the loaded
+                model as a child.</para>
+              </callout>
+            </calloutlist>
+          </section>
+
+          <section>
+            <title>The <methodname>getSceneRoot()</methodname> Member Function</title>
+
+            <para>The Performer Draw Manager will call the application&#39;s
+            <methodname>getSceneRoot()</methodname> method to get the root of
+            the scene graph. The implementation of this method can be found in
+            <filename>OpenSGNav.h</filename>. The code is as follows:</para>
+
+            <programlisting>OSG::NodePtr OpenSGNav::getSceneRoot()
 {
    return mRootNode;
 }</programlisting>
-                  <para>The simplicity of this method implementation is not limited to the simple tutorial from which it is taken. All Performer-based VR Juggler applications can take advantage of this idiom where the root node is a member variable returned in <methodname>getScene()</methodname>.</para>
-               </section>
--->
+
+            <para>The simplicity of this method implementation is not limited
+            to the simple tutorial from which it is taken. All OpenSG-based VR
+            Juggler applications can take advantage of this idiom where the
+            root node is a member variable returned in
+            <methodname>getSceneRoot()</methodname>.</para>
+          </section>
         </section>
       </section>
 
