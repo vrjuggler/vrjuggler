@@ -167,7 +167,7 @@ if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
         ldflags="-L$VPR_BASE_DIR/lib@LIBBITSUF@"
     else
-        ldflags='@vpr_ldflags@'
+        ldflags="@vpr_ldflags@"
     fi
 
     for i in $subsystem_libs ; do
