@@ -56,11 +56,7 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
 BEANS		= CommonEditors
 
-JOGL_DIR=		$(JUGGLERROOT_ABS)/external/jogl
-JOGL_JARS=		$(JOGL_DIR)/jogl-demos-data.jar \
-			$(JOGL_DIR)/jogl-demos.jar	\
-			$(JOGL_DIR)/jogl-demos-util.jar	\
-			$(JOGL_DIR)/jogl.jar
+JOGL_JARS=		@JOGL_JARS@
 
 _LOCAL_CLEAN=1
 JAVA_AFTERBUILD=java_afterbuild
