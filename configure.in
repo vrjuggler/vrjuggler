@@ -1768,6 +1768,70 @@ dnl # malicious or foolish to make it break.
 VJ_SHARE_DIR=`echo "$datadir" | sed -e "${_prefix_var_exp}"`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
+# Information needed to generate juggler-config.
+case $THREADS in
+    IRIX_SPROC)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="${_sem_lib}"
+        static_begin="-B static"
+        static_end="-B dynamic"
+        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
+        ;;
+    POSIX)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="${_pthread_lib} ${_sem_lib}"
+
+        if test "x$GXX" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+        fi
+
+        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
+        ;;
+    WIN32)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+        vrj_ldflags="-link -libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
+        vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
+        ;;
+esac
+
+case $OS_TYPE in
+    UNIX)
+        Juggler_lib='-lJuggler'
+        Juggler_utils_lib='-lJuggler_utils'
+        Juggler_ogl_lib='-lJuggler_ogl'
+
+        if test "x$PERFORMER_API" = "xY" ; then
+            Juggler_pf_lib='-lJuggler_pf'
+        fi
+
+        if test "x$AUDIO_WORKS" = "xY" ; then
+            Juggler_aw_lib='-lJuggler_aw'
+        fi
+
+        if test "x$SL" = "xY" ; then
+            Juggler_sl_lib='-lJuggler_sl'
+        fi
+        ;;
+    WIN32)
+        Juggler_lib='Juggler.lib'
+        Juggler_utils_lib='Juggler_utils.lib'
+        Juggler_ogl_lib='Juggler_ogl.lib'
+        ;;
+esac
+
+vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+vrj_extra_libs="$APP_EXTRA_LIBS_BASIC $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
+
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
@@ -1863,6 +1927,22 @@ AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_AW)
 AC_SUBST(APP_EXTRA_LIBS_SL)
+
+AC_SUBST(subsystem_cflags)
+AC_SUBST(subsystem_cxxflags)
+AC_SUBST(subsystem_libs)
+AC_SUBST(static_begin)
+AC_SUBST(static_end)
+AC_SUBST(vrj_ldflags)
+AC_SUBST(vrj_libs)
+AC_SUBST(Juggler_lib)
+AC_SUBST(Juggler_utils_lib)
+AC_SUBST(Juggler_ogl_lib)
+AC_SUBST(Juggler_pf_lib)
+AC_SUBST(Juggler_aw_lib)
+AC_SUBST(Juggler_pf_lib)
+AC_SUBST(vrj_extra_ldflags)
+AC_SUBST(vrj_extra_libs)
 
 dnl # -------------------------------------------------------------------------
 dnl # Final file generation step.

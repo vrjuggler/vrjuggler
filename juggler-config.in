@@ -123,7 +123,7 @@ while test $# -gt 0; do
             echo_cxxflags=yes
             ;;
         --subsystem)
-            echo @SUBSYSTEM@
+            echo @THREADS@
             ;;
         --libs)
             echo_libs=yes
