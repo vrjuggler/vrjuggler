@@ -60,8 +60,8 @@
 #include "fileIO.h"
 
 #include <Sound/vjSoundManager.h>
-#include <Sound/pf/pjSoundNode.h> //performer-juggler sound node.
-#include <Sound/pf/pjSoundReplaceTrav.h>
+#include <Sound/pf/pfSoundNode.h> //performer-juggler sound node.
+#include <Sound/pf/pfSoundTraverser.h>
 
 // nav includes
 #include <pfNavDCS.h>
@@ -194,7 +194,7 @@ public:
       if(mUseStats && haveFocus())
          mStats.preForkInit();
 
-      pjSoundReplaceTrav::preForkInit();
+      pfSoundTraverser::preForkInit();
    }
 
    /// Initialize the scene graph
@@ -472,10 +472,10 @@ void simplePfNavApp::initializeModels()
    mCollidableModelGroup->addChild( mConfiguredCollideModels );
    mUnCollidableModelGroup->addChild( mConfiguredNoCollideModels );
 
-   // replace all nodes with _Sound_ with pjSoundNodes...
+   // replace all nodes with _Sound_ with pfSoundNodes...
    std::string extension = "_Sound_";
-   pjSoundReplaceTrav::traverse( mConfiguredCollideModels, extension );
-   pjSoundReplaceTrav::traverse( mConfiguredNoCollideModels, extension );
+   pfSoundTraverser::replace( mConfiguredCollideModels, extension );
+   pfSoundTraverser::replace( mConfiguredNoCollideModels, extension );
 }
 
 // func needs to destroy all previous pf nodes associated with sound
@@ -508,7 +508,7 @@ void simplePfNavApp::initializeSounds()
             pf_nextSoundDcsTrans[2]);
 
       vjSound* vjs = vjSoundManager::instance()->getHandle( mSoundList[x].alias.c_str() );
-      pjSoundNode* nextSound = new pjSoundNode( vjs, mSoundList[x].positional );
+      pfSoundNode* nextSound = new pfSoundNode( vjs, mSoundList[x].positional );
       vjs->trigger();  //make sure it's playing..
 
       nextSoundDCS->addChild( nextSound );
@@ -605,9 +605,9 @@ void simplePfNavApp::initScene()
    // make sure config is processed, before doing sound replace traversal.
    this->configProcessPending();
 
-   // replace all nodes with _Sound_ with pjSoundNodes...
+   // replace all nodes with _Sound_ with pfSoundNodes...
    //std::string extension = "_Sound_";
-   //pjSoundReplaceTrav::traverse( mRootNode, extension );
+   //pfSoundTraverser::replace( mRootNode, extension );
 
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
