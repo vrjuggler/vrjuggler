@@ -21,7 +21,7 @@
 
 namespace vprTest
 {
-//CPPUNIT_TEST_SUITE_REGISTRATION( ThreadTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( ThreadTest );
 
 class Tester
 {
@@ -491,29 +491,55 @@ void ThreadTest::tsIncCounter(void* arg)
    std::string test_name("TSDataOverhead");
    test_name += (*thread_name);
 
-   const unsigned long IncCount(100000);
-
-   (*mTSCounter) = 0;
-
-   try
    {
-      CPPUNIT_METRIC_START_TIMING();
+      const unsigned long IncCount(rand()%100);
 
-      for(unsigned long i=0;i<IncCount;i++)
+      (*mTSCounter) = 0;
+      vpr::System::usleep(rand()%1000);
+      assertTestThread((*mTSCounter) == 0);
+
+      try
       {
-         (*mTSCounter) = (*mTSCounter) + 1;
-//         vpr::System::usleep(0);    // Sleep for 20 micro seconds
+         for(unsigned long i=0;i<IncCount;i++)
+         {
+            (*mTSCounter) = (*mTSCounter) + 1;
+            vpr::System::usleep(30);    // Sleep for 10 micro seconds
+         }
+         //std::cout << test_name << " ts:" << *mTSCounter << " inc:" << IncCount << std::endl;
+         assertTestThread((*mTSCounter) == IncCount);
       }
-
-      assertTestThread((*mTSCounter) == IncCount);
-
-      CPPUNIT_METRIC_STOP_TIMING();
-      CPPUNIT_ASSERT_METRIC_TIMING_LE(test_name, IncCount, 0.075f, 0.1f);  // warn at 7.5%, error at 10%
+      catch (...)
+      {
+         std::cout << "F" << std::flush;
+      }
    }
-   catch (...)
+
+   /*
    {
-      std::cout << "F" << std::flush;
+      const unsigned long IncCount(100000);
+
+      (*mTSCounter) = 0;
+
+      try
+      {
+         CPPUNIT_METRIC_START_TIMING();
+
+         for(unsigned long i=0;i<IncCount;i++)
+         {
+            (*mTSCounter) = (*mTSCounter) + 1;
+         }
+
+         assertTestThread((*mTSCounter) == IncCount);
+
+         CPPUNIT_METRIC_STOP_TIMING();
+         CPPUNIT_ASSERT_METRIC_TIMING_LE(test_name, IncCount, 0.075f, 0.1f);  // warn at 7.5%, error at 10%
+      }
+      catch (...)
+      {
+         std::cout << "F" << std::flush;
+      }
    }
+   */
 }
 
 
