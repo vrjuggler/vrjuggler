@@ -32,6 +32,10 @@
 		<ul>
 		<li><h5style><a href="#lnpnotcompile"> Why don't my LiNUX/Performer Juggler applications compile?</a> </h5style>
 		</ul>
+	<li><h5style><a href="#SGI"> SGI</a> </h5style> </li>
+		<ul>
+		<li><h5style><a href="#sginotcompile"> Why don't my SGI Juggler applications compile?</a> </h5style>
+		</ul>
 	</ul>
 	<li>
 	     <h5style> <a href="#misc">Misc</a></h5style><BR>
@@ -106,11 +110,23 @@
 		</blockquote>
 	</blockquote>
 
+	<blockquote>
+	<h4><a name="SGI">SGI</a></h4>
+		<blockquote>
+		<li><a name="sginotcompile"><b>Why do my SGI Juggler applications not compile?</b></a><BR>
+		     Some SGI systems, specifically those using the MIPSPro compiler version 7.3, need another directory added to the LD_LIBRARY_PATH environmental variable.  &nbsp;It can be set as follows: <br>
+		     <tt> setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib:/usr/lib32/cmplrs</tt> <br>
+			You'll need to set this if your compiler reports it has trouble finding the file 'be.so'.
+		     </li>
+		<LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
+		</blockquote>
+	</blockquote>
+
 <LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
 
 <HR><!-- ----------------------------------------- -->
 
-<h3><a name="misc">Miscilaneous</a></h3>
+<h3><a name="misc">Miscellaneous</a></h3>
 <LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
 
 
