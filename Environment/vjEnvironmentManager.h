@@ -63,11 +63,6 @@ public:
 
 
 
-    //: returns a pointer to a connection with the given name
-    vjConnect* getConnect (const std::string& _name);
-
-
-
     //: sends a 'refresh' message to all open connections
     void sendRefresh();
 
@@ -105,7 +100,7 @@ private:
     float                     perf_refresh_time;  // in milliseconds
     bool                      configured_to_accept;
     vjConfigChunk*            current_perf_config;
-
+    vjMutex                   connections_mutex;
 
     // PRIVATE utility functions
 
@@ -117,6 +112,9 @@ private:
     void setPerformanceTarget (vjConnect* con);
 
     void removeConnect (vjConnect* con);
+
+    //: returns a pointer to a connection with the given name
+    vjConnect* getConnect (const std::string& _name);
 
 
     //: allows the Environment Manager to accept connections.
