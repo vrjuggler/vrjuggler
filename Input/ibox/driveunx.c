@@ -34,20 +34,14 @@
  * If yours is not listed, it can be added.  Contact Immersion Corp.
  */
 
-#ifdef VJ_OS_IRIX
+#if defined(VJ_OS_IRIX)
 #   define SGI_PLATFORM
-#else
-#ifdef VJ_OS_HPUX
+#elif defined(VJ_OS_HPUX)
 #   define HP_PLATFORM
-#else
-#ifdef VJ_OS_Linux
+#elif defined(VJ_OS_Linux)
 #   define LINUX_PLATFORM
-#else
-#ifdef VJ_OS_Solaris
+#elif defined(VJ_OS_Solaris)
 #   define SUN_PLATFORM
-#endif	/* VJ_OS_Solaris */
-#endif	/* VJ_OS_Linux */
-#endif	/* VJ_OS_HPUX */
 #endif	/* VJ_OS_IRIX */
 
 #if defined(SGI_PLATFORM) || defined(LINUX_PLATFORM)
