@@ -30,18 +30,6 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  */
-
-
-/////////////////////////////////////////////////////////////////////////////
-// vjXWinKeyboard.h
-//
-// Keyboard input device, simulates 2 positional, 4 digital, and 4 analog
-//          devices.
-//
-// History:
-//
-// Andy Himberger:    v0.0 - 12-1-97 - Inital version
-////////////////////////////////////////////////////////////////////////////
 #ifndef _VJ_XWIN_KEYBOARD_H_
 #define _VJ_XWIN_KEYBOARD_H_
 
@@ -60,26 +48,34 @@ class vjConfigChunk;
 // This device is a source of keyboard events.  The device should not be
 // used directly, it should be referenced through proxies.
 //
+// Mouse Locking:
+//    This device recieves input from the XWindows display.  As such,
+//  the xwindow must have focus to generate events.  In order to help
+//  users keep the window in focus, there are two cases where the
+//  driver will "lock" the mouse to the window, thus preventing lock of focus.
+//  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)
+//  CASE 2: The user can toggle locking using a special "locking" key
+//           defined in the configuration chunk.
+//
 // See also: vjKeyboard vjKeyboardProxy
 //--------------------------------------------------------------
 class vjXWinKeyboard : public vjKeyboard
 {
 public:
+   // Enum to keep track of current lock state for state machine
+   // Unlocked - The mouse is free
+   // Lock_LockKey - The mouse is locked due to lock toggle key press
+   // Lock_LockKeyDown - The mouse is locked due to a key being held down
+   enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
 
    vjXWinKeyboard()
    {
       m_visual = NULL;
       m_display = NULL;
-      //myThread = NULL; -- Should be done in base constructore
+      //myThread = NULL; -- Should be done in base constructor
 
-      oldMouseX = 0; oldMouseY = 0;
-
-      // -1 is used to indicate that these are not grabbed.  A value of
-      // GrabSuccess (returned by XGrab{Pointer,Keyboard} upon successful
-      // grabbing) is used to indicate that they are grabbed.  BadValue might
-      // be a better choice for this.
-      m_keyboard_grabbed = -1;
-      m_pointer_grabbed = -1;
+      mPrevX = 0; mPrevY = 0;
+      mLockState = Unlocked;     // Initialize to unlocked.
    }
    ~vjXWinKeyboard() { stopSampling();}
 
@@ -127,26 +123,29 @@ private:
    void setHints(Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
 
+   //: Perform anything that must be done when state switches
+   void lockMouse();
+   void unlockMouse();
 
    Window       m_window;
    XVisualInfo* m_visual;
    Display*     m_display;
    XSetWindowAttributes m_swa;
-   int          m_screen, m_x, m_y;
+   int          m_screen, m_x, m_y;    // screen id, x_origin, y_origin
    unsigned int m_width,m_height;
 
    /* Keyboard state holders */
    int m_keys[256];     // The keyboard state during an UpdateData, without KeyUp events included
    int m_realkeys[256]; // The real keyboard state, all events processed
 
-   /*
-    * State holders for whether or not the keyboard and/or mouse are grabbed.
-    */
-   int m_keyboard_grabbed;	// The keyboard grab state
-   int m_pointer_grabbed;	// The mouse pointer grab state
+   lockState   mLockState;       // The current state of locking
+   int         mLockStoredKey;   // The key that was pressed down
+   int         mLockToggleKey;   // The key that toggles the locking
+
+   std::string mXDisplayString;   // The display string to use from systemDisplay config info
 
    float m_mouse_sensitivity;
-   int   oldMouseX, oldMouseY;
+   int   mPrevX, mPrevY;          // Previous mouse location
 };
 
 #endif
