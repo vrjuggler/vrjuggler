@@ -83,7 +83,7 @@ sub cleanup_lockfiles {
     my $base_dir = (split(/\s/, "$ARGV[0]"))[0];
     my $module = (split('/', "$base_dir"))[0];
     print "Cleaing up garbage CVS locks in $module...\n";
-    find("$CVSROOT/$module");
+    File::Find::find({wanted => \&wanted}, "$CVSROOT/$module");
 }
 
 sub wanted {
