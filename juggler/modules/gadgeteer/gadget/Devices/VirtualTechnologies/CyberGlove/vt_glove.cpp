@@ -218,10 +218,29 @@ CyberGloveBasic::vt_unprocess_glove_angles(void)
   /* NOTE: we negate gain here, so that sense of rotations is appropriate */
   /* for the digit coordinate systems                                     */
   for (finger = THUMB; finger < FINGERS+1; finger++)
+  {
     for (joint = MCP; joint < JOINTS; joint++)
+    {
+       // XXX: This has been modified to deal with trunc() being undefined
+       // on Linux.  This should be reviewed in closer detail during release
+       // testing at the very least.
+       // -PH January 4, 2002.
+       double joint_val =   mapping[finger][joint].offset
+                          - mapping[finger][joint].gain 
+                          * angle[finger][joint];
+
+       double joint_val_trunc = (joint_val < 0) ? ceil(joint_val)
+                                                : floor(joint_val);
+       raw_value[finger][joint] = static_cast<unsigned char>(joint_val_trunc);
+
+       // XXX: some systems have a faulty trunc (undefined)...
+/*
       raw_value[finger][joint] = static_cast<unsigned char>(trunc(mapping[finger][joint].offset -
                             mapping[finger][joint].gain *
                angle[finger][joint]));
+*/
+    }
+  }
 
   /* if we have a left handed glove negate abduction angles */
   if (!(current_glove_private->param_flags.word & CG_RIGHT_HAND_FLAG))
