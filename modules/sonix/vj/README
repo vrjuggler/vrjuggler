@@ -1,0 +1,5 @@
+here is some "glue" to make AudioJuggler work better with the VR toolkit 
+VR Juggler.
+
+This allows VR Juggler to sync, and configure AudioJuggler through
+the VR juggler Kernel
