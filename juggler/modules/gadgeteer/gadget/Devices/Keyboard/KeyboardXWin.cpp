@@ -167,7 +167,6 @@ void vjXWinKeyboard::updateData()
 vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
    if(mUpdKeysHasBeenCalled)
    {
-      vjDEBUG(vjDBG_ALL,0)  << vjDEBUG_FLUSH;
       mUpdKeysHasBeenCalled = false;
 
       // Scale mouse values based on sensitivity
