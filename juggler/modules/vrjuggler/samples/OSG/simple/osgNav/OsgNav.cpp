@@ -50,7 +50,7 @@
 void OsgNav::preFrame()
 {
 
-vprDEBUG(vprDBG_ALL,0) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
+//vprDEBUG(vprDBG_ALL,0) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
 /*
 cout  << "Wand Buttons:"
                       << " 0:" << mButton0->getData()
