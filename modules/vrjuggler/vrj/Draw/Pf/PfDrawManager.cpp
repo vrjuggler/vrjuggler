@@ -222,6 +222,9 @@ void PfDrawManager::initAPI()
    if(jccl::ConfigManager::instance()->isElementTypeInPendingList("cluster_manager") ||
       jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager"))
    {
+      vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) 
+         << "PfDrawManager::initAPI() Running Performer in single process to ensure cluster synchronization."
+         << std::endl << vprDEBUG_FLUSH;
       // Single process mode.
       pfMultiprocess(PFMP_APPCULLDRAW);
    }
