@@ -149,7 +149,7 @@ public:
         if(!CloseHandle(m_handle)){
 			retval.setCode(Status::Failure);
 		}
-		return retval; 
+		return retval;
     }
 
 
@@ -584,7 +584,7 @@ public:
     // ------------------------------------------------------------------------
     Status disableParityGeneration(void);
 
-    
+
     // ------------------------------------------------------------------------
     //: Enable marking of bytes with parity errors or framing errors (except
     //+ BREAKs).  This is only active if input parity and framing error
@@ -703,7 +703,7 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setOutputBaudRate(const Uint32 rate);
- 
+
 
 
     // ------------------------------------------------------------------------
@@ -788,7 +788,8 @@ protected:
     //+                port.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual Status read_i (void* buffer, const size_t length, ssize_t& bytes_read);
+    virtual Status read_i (void* buffer, const size_t length,
+                           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //: Read exactly the specified number of bytes from the serial port into
@@ -808,7 +809,8 @@ protected:
     //+                port.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual Status readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+    virtual Status readn_i (void* buffer, const size_t length,
+                            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
         Status status;
 		return status;
     }
@@ -829,7 +831,8 @@ protected:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written);
+    write_i (const void* buffer, const size_t length,
+             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 
 	HANDLE m_handle; // handle to communication file

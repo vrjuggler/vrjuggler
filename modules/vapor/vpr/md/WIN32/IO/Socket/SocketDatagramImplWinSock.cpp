@@ -37,6 +37,7 @@
 
 #include <vpr/Util/Assert.h>
 #include <vpr/md/WIN32/IO/Socket/SocketDatagramImplWinSock.h>
+#include <vpr/Util/Debug.h>
 
 
 // ============================================================================
@@ -77,10 +78,13 @@ SocketDatagramImplWinSock::SocketDatagramImplWinSock (const InetAddr& local_addr
 Status
 SocketDatagramImplWinSock::recvfrom (void* msg, const size_t length,
                                      const int flags, InetAddr& from,
-                                     ssize_t& bytes_read)
+                                     ssize_t& bytes_read,, const vpr::Interval timeout)
 {
     int fromlen;
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     fromlen = from.size();
     bytes_read = ::recvfrom(m_sockfd, (char*) msg, length, flags,
@@ -102,9 +106,12 @@ SocketDatagramImplWinSock::recvfrom (void* msg, const size_t length,
 Status
 SocketDatagramImplWinSock::recvfrom (std::string& msg, const size_t length,
                                      const int flags, InetAddr& from,
-                                     ssize_t& bytes_read)
+                                     ssize_t& bytes_read, const vpr::Interval timeout)
 {
-    msg.resize(length);
+   if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
+   msg.resize(length);
     memset(&msg[0], '\0', msg.size());
 
     return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read);
@@ -115,9 +122,13 @@ SocketDatagramImplWinSock::recvfrom (std::string& msg, const size_t length,
 Status
 SocketDatagramImplWinSock::recvfrom (std::vector<vpr::Uint8>& msg,
                                      const size_t length, const int flags,
-                                     InetAddr& from, ssize_t& bytes_read)
+                                     InetAddr& from, ssize_t& bytes_read,
+                                     const vpr::Interval timeout)
 {
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     msg.resize(length);
 
@@ -138,9 +149,12 @@ SocketDatagramImplWinSock::recvfrom (std::vector<vpr::Uint8>& msg,
 Status
 SocketDatagramImplWinSock::sendto (const void* msg, const size_t length,
                                    const int flags, const InetAddr& to,
-                                   ssize_t& bytes_sent)
+                                   ssize_t& bytes_sent, const vpr::Interval timeout)
 {
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     bytes_sent = ::sendto(m_sockfd, (char*) msg, length, flags,
                           (struct sockaddr*) &to.m_addr, to.size());
@@ -162,9 +176,12 @@ SocketDatagramImplWinSock::sendto (const void* msg, const size_t length,
 Status
 SocketDatagramImplWinSock::sendto (const std::string& msg, const size_t length,
                                    const int flags, const InetAddr& to,
-                                   ssize_t& bytes_sent)
+                                   ssize_t& bytes_sent, const vpr::Interval timeout)
 {
     vprASSERT(length <= msg.size() && "Length is bigger than data given");
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
     return sendto(msg.c_str(), length, flags, to, bytes_sent);
 }
 
@@ -173,9 +190,14 @@ SocketDatagramImplWinSock::sendto (const std::string& msg, const size_t length,
 Status
 SocketDatagramImplWinSock::sendto (const std::vector<vpr::Uint8>& msg,
                                    const size_t length, const int flags,
-                                   const InetAddr& to, ssize_t& bytes_sent)
+                                   const InetAddr& to, ssize_t& bytes_sent,
+                                   const vpr::Interval timeout)
 {
     vprASSERT(length <= msg.size() && "Length is bigger than data given");
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
     return sendto((const void*) &msg[0], length, flags, to, bytes_sent);
 }
 

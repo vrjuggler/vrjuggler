@@ -158,7 +158,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    virtual Status connect(void);
+    virtual Status connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
@@ -265,22 +265,26 @@ protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return recv(buffer, length, 0, bytes_read);
+    read_i (void* buffer, const size_t length,
+            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return recv(buffer, length, 0, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return recvn(buffer, length, 0, bytes_read);
+    readn_i (void* buffer, const size_t length,
+             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return recvn(buffer, length, 0, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return send(buffer, length, 0, bytes_written);
+    write_i (const void* buffer, const size_t length,
+             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return send(buffer, length, 0, bytes_written, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -305,7 +309,7 @@ protected:
     //      -1 - Something went wrong when trying to receive the data.
     // ------------------------------------------------------------------------
     virtual Status recv(void* buffer, const size_t length, const int flags,
-                        ssize_t& bytes_read);
+                        ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //! Read exactly the specified number of bytes from the socket into the
@@ -325,7 +329,7 @@ protected:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual Status recvn(void* buffer, const size_t length, const int flags,
-                         ssize_t& bytes_read);
+                         ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // Send the specified number of bytes contained in the given buffer from
@@ -347,7 +351,8 @@ protected:
     //      -1 - Something went wrong when trying to receive the data.
     // ------------------------------------------------------------------------
     virtual Status send(const void* buffer, const size_t length,
-                        const int flags, ssize_t& bytes_sent);
+                        const int flags, ssize_t& bytes_sent,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      *

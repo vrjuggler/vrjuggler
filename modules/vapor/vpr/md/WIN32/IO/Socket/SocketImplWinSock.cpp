@@ -39,6 +39,7 @@
 #include <ws2tcpip.h>
 
 #include <vpr/md/WIN32/IO/Socket/SocketImplWinSock.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr {
@@ -154,9 +155,13 @@ SocketImplWinSock::bind () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 Status
-SocketImplWinSock::connect () {
+SocketImplWinSock::connect (vpr::Interval timeout) {
     Status retval;
     int status;
+
+    if(vpr::Interval::NoTimeout != timeout)
+      vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
 
     // Attempt to connect to the address in m_addr.
     status = ::connect(m_sockfd, (struct sockaddr*) &m_remote_addr.m_addr,
@@ -231,9 +236,12 @@ SocketImplWinSock::init () {
 // ----------------------------------------------------------------------------
 Status
 SocketImplWinSock::recv (void* buffer, const size_t length, const int flags,
-                         ssize_t& bytes_read)
+                         ssize_t& bytes_read, const vpr::Interval timeout)
 {
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     bytes_read = ::recv(m_sockfd, (char*) buffer, length, flags);
 
@@ -251,10 +259,13 @@ SocketImplWinSock::recv (void* buffer, const size_t length, const int flags,
 // ----------------------------------------------------------------------------
 Status
 SocketImplWinSock::recvn (void* buffer, const size_t length, const int flags,
-                          ssize_t& bytes_read)
+                          ssize_t& bytes_read, const vpr::Interval timeout)
 {
     size_t count;
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     count = length;
 
@@ -285,9 +296,12 @@ SocketImplWinSock::recvn (void* buffer, const size_t length, const int flags,
 // ----------------------------------------------------------------------------
 Status
 SocketImplWinSock::send (const void* buffer, const size_t length,
-                         const int flags, ssize_t& bytes_sent)
+                         const int flags, ssize_t& bytes_sent, const vpr::Interval timeout)
 {
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     bytes_sent = ::send(m_sockfd, (char*) buffer, length, flags);
 
