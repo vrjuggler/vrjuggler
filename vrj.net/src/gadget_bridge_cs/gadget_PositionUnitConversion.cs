@@ -25,15 +25,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.3 of RCSfile: free_types_cs.tmpl,v
+// Generated from Revision: 1.7 of RCSfile: free_types_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 
 namespace gadget
 {
 
-public sealed abstract class PositionUnitConversion
+public sealed class PositionUnitConversion
 {
+   // Prevent instantiation.
+   private PositionUnitConversion()
+   {
+   }
+
    public const float ConvertToFeet = 3.2799999713897705078125e+0f;
    public const float ConvertToInches = 3.9369998931884765625e+1f;
    public const float ConvertToMeters = 1.0e+0f;

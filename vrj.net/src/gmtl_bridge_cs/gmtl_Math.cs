@@ -25,15 +25,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.6 of RCSfile: free_types_cs.tmpl,v
+// Generated from Revision: 1.7 of RCSfile: free_types_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 
 namespace gmtl
 {
 
-public sealed abstract class Math
+public sealed class Math
 {
+   // Prevent instantiation.
+   private Math()
+   {
+   }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_Math_deg2Rad__double1(double p0);
