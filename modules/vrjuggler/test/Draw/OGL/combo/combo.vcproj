@@ -78,6 +78,7 @@
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="FALSE"
 				AdditionalIncludeDirectories=".;..\cubes;..\torus;..\wand;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
