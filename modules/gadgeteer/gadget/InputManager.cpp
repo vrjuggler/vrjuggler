@@ -50,8 +50,6 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-// NEED TO FIX!!!!
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/ClusterManager.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
@@ -73,7 +71,7 @@ bool recognizeProxyAlias( jccl::ConfigChunkPtr chunk );
 *********************************************** ahimberg */
 InputManager::InputManager()
 {
-   //mRemoteInputManager = new RemoteInputManager(this);
+   
 }
 
 
@@ -85,9 +83,6 @@ InputManager::InputManager()
 *********************************************** ahimberg */
 InputManager::~InputManager()
 {
-   //mRemoteInputManager->shutdown();
-   //delete mRemoteInputManager;
-
    for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); a++)    // Stop all devices
       if ((*a).second != NULL)
       {
@@ -294,7 +289,6 @@ bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
              !cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk)) ||
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
-            //mRemoteInputManager->configCanHandle(chunk) ||
             (chunk->getDescToken() == std::string("displaySystem")) ||
             (chunk->getDescToken() == std::string("InputManager")) ||
             (chunk->getDescToken() == std::string("gadget_logger"))
@@ -463,7 +457,17 @@ bool InputManager::addDevice(Input* devPtr)
    return true;
 }
 
+/**
+ *   Add a remote device from the RemoteInputManager to the InputManager.
+ */
+bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name)
+{
+   mDevTable[device_name] = devPtr;
 
+   refreshAllProxies();
+
+   return true;
+}
 
 /**********************************************************
   InputManager::updateAllData()
@@ -483,12 +487,6 @@ void InputManager::updateAllData()
    //                 before rim or proxies get their hands on the data
    if(mInputLogger.get() != NULL)
    {  mInputLogger->process(); }
-
-   // send and receive net device messages
-//   if (mRemoteInputManager->isActive())
-//   {
-//      mRemoteInputManager->updateAll();
-//   }
 
    // Update proxies MIGHT NOT NEED
    for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
@@ -510,19 +508,7 @@ Input* InputManager::getDevice(std::string deviceName)
    if(ret_dev != mDevTable.end())
    {
       return ret_dev->second;
-   }
-   
-   // If the InputManager Doesn't have the device we can request it from the RemoteInputManager
-   Input* remote_device = cluster::RemoteInputManager::instance()->getVirtualDevice(deviceName);
-   if (NULL != remote_device)
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "vjTypedProxy::refresh: Using Remote Input Manager Virtual Device: "
-      << deviceName << std::endl << vprDEBUG_FLUSH;
-
-      return remote_device;
-   }
-   
+   }   
    return NULL;
 }
 

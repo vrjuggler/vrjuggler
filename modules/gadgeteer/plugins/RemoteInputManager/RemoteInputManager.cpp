@@ -112,6 +112,7 @@ namespace cluster
          case cluster::Header::RIM_DEVICE_REQ:
             {
                DeviceRequest* temp_device_request = dynamic_cast<DeviceRequest*>(packet);
+               vprASSERT(NULL != temp_device_request && "Dynamic cast failed!");
                std::string device_name = temp_device_request->getDeviceName();
 
                if ( jccl::ConfigManager::instance()->isPendingStale() )
@@ -163,6 +164,7 @@ namespace cluster
                //   -Do nothing(let the config manager worry about re-trying)
 
                DeviceAck* temp_device_ack = dynamic_cast<DeviceAck*>(packet);
+               vprASSERT(NULL != temp_device_ack && "Dynamic cast failed!");
                std::string device_name = temp_device_ack->getDeviceName();
 
                if ( temp_device_ack->getAck() )
@@ -178,9 +180,8 @@ namespace cluster
                   {
                      addVirtualDevice(temp_device_ack->getId(), device_name, temp_device_ack->getDeviceBaseType(), temp_device_ack->getHostname());
                      
-                     // Since we have just added a new virtual device, we need to tell the InputManager 
-                     // to update its proxies so that they know about the new data.
-                     gadget::InputManager::instance()->refreshAllProxies();      
+                     // Add this virtual device to the InputManager's list of devices.
+                     gadget::InputManager::instance()->addRemoteDevice(getVirtualDevice(device_name), device_name);
                   }
                }
                else
