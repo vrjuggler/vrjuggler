@@ -35,9 +35,10 @@ sub print_exit_message {
     print "** NOTE: Add entry to ChangeLog for major changes **\n";
 }
 
-sub cleanup_lockfiles {
-    print "Cleaing up garbage CVS locks in $CVSROOT...\n";
-    File::Find::find({wanted => \&wanted}, "$CVSROOT");
+sub cleanup_lockfiles (;$) {
+    my $dir = shift || $CVSROOT;
+    print "Cleaing up garbage CVS locks in $dir...\n";
+    File::Find::find({wanted => \&wanted}, "$dir");
 }
 
 sub wanted {
@@ -50,7 +51,6 @@ sub wanted {
         ||
         -d _
     ) &&
-    ($uid == $<) &&
     handle();
 }
 
@@ -123,6 +123,19 @@ if ( $junk eq "COMMAND" && validUser() )
 
    exit 1;
 }
+elsif ( $junk eq "CLEAN" && validUser() )
+{
+   print "Cleaning up stale lock files\n";
+
+   my(@dirs) = <CMDFILE>;
+
+   foreach $dir ( @dirs )
+   {
+      cleanup_lockfiles("$dir");
+   }
+
+   exit 1;
+}
 else
 {
    exit 0;
@@ -130,7 +143,7 @@ else
 
 sub validUser ()
 {
-   my @users = ('patrickh', 'allenb', 'subatomic', 'aronb');
+   my @users = ('patrickh', 'allenb', 'aronb');
 
    foreach ( @users )
    {
