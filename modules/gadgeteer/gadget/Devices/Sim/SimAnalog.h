@@ -68,6 +68,9 @@ public:
 
    static std::string getChunkType() { return std::string("SimAnalog");}
 
+   virtual std::vector<KeyModPair> getUpKeys() { return mSimKeysUp; }
+   virtual std::vector<KeyModPair> getDownKeys() { return mSimKeysDown; }
+
 private:
    std::vector<AnalogData>    mAnaData;      /**< The analog data that we have */
    std::vector<KeyModPair>    mSimKeysUp;    /**< The keys to press for moving analog up */
