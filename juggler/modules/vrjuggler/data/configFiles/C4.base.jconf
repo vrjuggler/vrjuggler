@@ -23,8 +23,8 @@
       <alias name="VJSystemStopKernel" version="1">
          <proxy>VJSystemStopKernelProxy</proxy>
       </alias>
-      <simulated_digital_device name="DigitalSystemControls" version="1">
-         <event_window_proxy>MainSimEventWindow</event_window_proxy>
+      <simulated_digital_device name="DigitalSystemControls" version="2">
+         <keyboard_mouse_proxy>Main Sim Input Window</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
                <modifier_key>ANY</modifier_key>
@@ -33,22 +33,24 @@
          </key_pair>
          <device_host />
       </simulated_digital_device>
-      <event_window_proxy name="MainSimEventWindow" version="1">
-         <device>Exit Event Window</device>
-      </event_window_proxy>
-      <event_window name="Exit Event Window" version="2">
-         <event_source_name />
+      <keyboard_mouse_proxy name="Main Sim Input Window" version="1">
+         <device>Exit Keyboard</device>
+      </keyboard_mouse_proxy>
+      <keyboard_mouse_device name="Exit Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <lock_key>KEY_NONE</lock_key>
-         <start_locked>false</start_locked>
-         <sleep_time>75</sleep_time>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Exit Input Window" version="1">
          <origin>0</origin>
          <origin>0</origin>
          <size>200</size>
          <size>100</size>
          <display_number>7</display_number>
-         <device_host />
-      </event_window>
+         <keyboard_mouse_device_name>Exit Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </input_window>
       <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
          <naming_service_host>localhost</naming_service_host>
          <naming_service_port>2809</naming_service_port>

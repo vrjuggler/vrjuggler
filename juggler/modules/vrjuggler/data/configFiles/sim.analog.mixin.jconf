@@ -2,8 +2,8 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <simulated_analog_device name="AnalogSimulator0" version="1">
-         <event_window_proxy>SimEventWindow Ana Proxy</event_window_proxy>
+      <simulated_analog_device name="AnalogSimulator0" version="2">
+         <keyboard_mouse_proxy>Sim Analog Keyboard Proxy</keyboard_mouse_proxy>
          <increment_keypress>
             <key_modifier_pair name="Increment Keypress 0" version="1">
                <modifier_key>NONE</modifier_key>
@@ -34,22 +34,24 @@
          <initial_value>0.0</initial_value>
          <device_host />
       </simulated_analog_device>
-      <event_window name="Sim Analog Input" version="2">
-         <event_source_name />
+      <keyboard_mouse_device name="Sim Analog Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <lock_key>KEY_NONE</lock_key>
-         <start_locked>false</start_locked>
-         <sleep_time>0</sleep_time>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Sim Analog Input" version="1">
          <origin>870</origin>
          <origin>100</origin>
          <size>300</size>
          <size>100</size>
          <display_number>0</display_number>
-         <device_host />
-      </event_window>
-      <event_window_proxy name="SimEventWindow Ana Proxy" version="1">
-         <device>Sim Analog Input</device>
-      </event_window_proxy>
+         <keyboard_mouse_device_name>Sim Analog Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+      </input_window>
+      <keyboard_mouse_proxy name="Sim Analog Keyboard Proxy" version="1">
+         <device>Sim Analog Keyboard</device>
+      </keyboard_mouse_proxy>
       <analog_proxy name="AnalogProxy0" version="1">
          <device>AnalogSimulator0</device>
          <unit>0</unit>

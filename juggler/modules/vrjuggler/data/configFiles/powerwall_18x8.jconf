@@ -2,51 +2,57 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <event_window name="Wand Event Window" version="2">
-         <event_source_name />
+      <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <lock_key>KEY_NONE</lock_key>
-         <start_locked>false</start_locked>
-         <sleep_time>0</sleep_time>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Wand Input Window" version="1">
          <origin>950</origin>
          <origin>500</origin>
          <size>200</size>
          <size>200</size>
          <display_number>0</display_number>
-         <device_host />
-      </event_window>
-      <event_window name="Head Event Window" version="2">
-         <event_source_name />
-         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
+      </input_window>
+      <keyboard_mouse_device name="Head Keyboard" version="1">
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Head Input Window" version="1">
          <origin>950</origin>
          <origin>0</origin>
          <size>300</size>
          <size>100</size>
          <display_number>0</display_number>
-         <device_host />
-      </event_window>
-      <event_window name="Sim View Cameras Control" version="2">
-         <event_source_name />
-         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <keyboard_mouse_device_name>Head Keyboard</keyboard_mouse_device_name>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
+      </input_window>
+      <keyboard_mouse_device name="Sim View Cameras Keyboard" version="1">
+         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Sim View Cameras Control" version="1">
          <origin>950</origin>
          <origin>175</origin>
          <size>300</size>
          <size>100</size>
          <display_number>0</display_number>
-         <device_host />
-      </event_window>
-      <event_window_proxy name="MainSimEventWindow" version="1">
-         <device>Head Event Window</device>
-      </event_window_proxy>
-      <event_window_proxy name="CameraEventWindowProxy" version="1">
-         <device>Sim View Cameras Control</device>
-      </event_window_proxy>
+         <keyboard_mouse_device_name>Sim View Cameras Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+      </input_window>
+      <keyboard_mouse_proxy name="Main Sim Keyboard Proxy" version="1">
+         <device>Head Keyboard</device>
+      </keyboard_mouse_proxy>
+      <keyboard_mouse_proxy name="Camera Keyboard Proxy" version="1">
+         <device>Sim View Cameras Keyboard</device>
+      </keyboard_mouse_proxy>
       <alias name="VJWand" version="1">
          <proxy>Wand Proxy</proxy>
       </alias>
@@ -63,10 +69,10 @@
          <proxy>Head Proxy</proxy>
       </alias>
       <alias name="VJKeyboard" version="1">
-         <proxy>MainSimEventWindow</proxy>
+         <proxy>Main Sim Keyboard Proxy</proxy>
       </alias>
-      <simulated_positional_device name="SimCamera1" version="2">
-         <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
+      <simulated_positional_device name="SimCamera1" version="3">
+         <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
                <modifier_key>NONE</modifier_key>
@@ -169,8 +175,8 @@
          </position_filters>
          <device_host />
       </simulated_positional_device>
-      <simulated_positional_device name="SimCamera2" version="2">
-         <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
+      <simulated_positional_device name="SimCamera2" version="3">
+         <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
                <modifier_key>SHIFT</modifier_key>
@@ -273,8 +279,8 @@
          </position_filters>
          <device_host />
       </simulated_positional_device>
-      <simulated_positional_device name="Position Simulator1" version="2">
-         <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
+      <simulated_positional_device name="Position Simulator1" version="3">
+         <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
                <modifier_key>ALT</modifier_key>
@@ -471,9 +477,8 @@
          <interocular_distance>0.069</interocular_distance>
       </user>
       <input_manager name="Input Manager" version="2">
-         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
-         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
          <driver>Flock_drv</driver>
+         <driver>IBox_drv</driver>
       </input_manager>
       <flock name="Flock_o_Birds" version="2">
          <port>/dev/ttyd3</port>
@@ -555,6 +560,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
          <naming_service_host>localhost</naming_service_host>

@@ -44,21 +44,23 @@
          <device>SimWandButtons</device>
          <unit>5</unit>
       </digital_proxy>
-      <event_window name="Wand Event Window" version="2">
-         <event_source_name />
+      <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>0.02</mouse_sensitivity>
-         <lock_key>KEY_W</lock_key>
-         <start_locked>true</start_locked>
-         <sleep_time>50</sleep_time>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Wand Input Window" version="1">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>
          <size>1000</size>
          <display_number>4</display_number>
-         <device_host />
-      </event_window>
-      <simulated_digital_device name="SimWandButtons" version="1">
-         <event_window_proxy>WandEventWindowProxy</event_window_proxy>
+         <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_W</lock_key>
+         <start_locked>true</start_locked>
+         <sleep_time>50</sleep_time>
+      </input_window>
+      <simulated_digital_device name="SimWandButtons" version="2">
+         <keyboard_mouse_proxy>Wand Keyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
                <modifier_key>NONE</modifier_key>
@@ -97,9 +99,9 @@
          </key_pair>
          <device_host />
       </simulated_digital_device>
-      <event_window_proxy name="WandEventWindowProxy" version="1">
-         <device>Wand Event Window</device>
-      </event_window_proxy>
+      <keyboard_mouse_proxy name="Wand Keyboard Proxy" version="1">
+         <device>Wand Keyboard</device>
+      </keyboard_mouse_proxy>
    </elements>
 </configuration>
 
