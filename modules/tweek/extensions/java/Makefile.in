@@ -51,7 +51,7 @@ top_srcdir		= @top_srcdir@
 INSTALL			= @INSTALL@
 INSTALL_FILES		=
 
-CLASSPATH	= $(topdir)/java/TweekBeans.jar
+CLASSPATH	= $(topdir)/java
 
 # For each package, we need the four lines to automatically add found sources
 # to the build process. This allows us to not have to modify the build
