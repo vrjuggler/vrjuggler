@@ -212,7 +212,7 @@ case $target_os in
         ;;
     dnl # A machine running Linux.  Currently only i386 is known to work.
     linux*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
         dnl # We have to use POSIX threads on Linux.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
