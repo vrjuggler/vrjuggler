@@ -88,12 +88,12 @@ int vjGlxWindow::open() {
         return true;
 
     if (window_width == -1) {
-        vjDEBUG(vjDBG_ERROR, 0) << "ERROR: vjGlxWindow: Window has not been configured\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Window has not been configured\n" << vjDEBUG_FLUSH;
         return false;
     }
 
     if (! (x_display = XOpenDisplay (display_name))) {
-        vjDEBUG(vjDBG_ERROR, 0) << "ERROR: vjGlxWindow: Unable to open display '" << display_name << "'.\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Unable to open display '" << display_name << "'.\n" << vjDEBUG_FLUSH;
         return false;
     }
 
@@ -101,7 +101,7 @@ int vjGlxWindow::open() {
 
     // get an XVisualInfo*, which we'll need below
     if ((visual_info = GetGlxVisInfo (x_display, screen)) == NULL) {
-        vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjGlxWindow: glXChooseVisual failed\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n" << vjDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -110,7 +110,7 @@ int vjGlxWindow::open() {
                                               RootWindow(x_display, screen),
                                               visual_info->visual,
                                               AllocNone)) == 0) {
-        vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjGlxWindow: XCreateColorMap failed on '" << display_name << "'.\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: XCreateColorMap failed on '" << display_name << "'.\n" << vjDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -130,7 +130,7 @@ int vjGlxWindow::open() {
                                    &w_attrib))  /* Attributes */
         == 0)
         {
-            vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_DRAW_MGR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
             goto OPEN_FAIL;
         }
 
@@ -159,9 +159,9 @@ int vjGlxWindow::open() {
     sizehints = XAllocSizeHints();
     sizehints->flags = USPosition;
 
-    XSetWMProperties (x_display, x_window, &w_name, &w_name, 
+    XSetWMProperties (x_display, x_window, &w_name, &w_name,
                       NULL, 0, sizehints, NULL, classhint);
-    
+
     XFree (w_name.value);
     XFree (classhint);
     XFree (sizehints);
@@ -179,7 +179,7 @@ int vjGlxWindow::open() {
         vjDEBUG(vjDBG_DRAW_MGR,5) << "attempting to make window borderless" << endl << vjDEBUG_FLUSH;
         Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
         if (vjMotifHints == None) {
-            vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_DRAW_MGR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
         }
         else {
             MotifWmHints hints;
@@ -207,7 +207,7 @@ int vjGlxWindow::open() {
 
     glx_context = glXCreateContext (x_display,visual_info, NULL, True);
     if (NULL == glx_context) {
-        vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't create GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -232,7 +232,7 @@ int vjGlxWindow::open() {
     // close() is coincidentally safe to call on a partially-opened
     // vjGlxWindow, and will deallocate all the stuff we might have
     // allocated above.
-    close(); 
+    close();
     return false;
 }
 
@@ -368,7 +368,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
    };
    int NumAttribs = 12;
    int AlphaAttribIndex = 11;
-   
+
    /* Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
     * for the _largest_ available buffers.  If this fails,  we might
     * want to try setting alpha size to 0 (smallest possible, maybe 0)
@@ -378,7 +378,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
     * exact order of the arguments in viattrib.  Alter those, & you'll
     * Need to redo the indices used.
     */
-   
+
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
