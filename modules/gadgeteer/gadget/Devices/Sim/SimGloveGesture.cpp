@@ -88,7 +88,7 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
    */
 
    // Set the indexes to defaults
-   resetIndexes();
+   //resetIndexes();
 
    return true;
 }
@@ -134,6 +134,7 @@ int SimGloveGesture::getGesture()
 // -Set the glove params
 void SimGloveGesture::updateData()
 {
+/*  TEMPORARILY REMOVE
    // Get the current gesture
    for(unsigned int i=0;i<mSimKeys.size();i++)
    {
@@ -149,7 +150,7 @@ void SimGloveGesture::updateData()
          mTheData[0][current].calcXforms();                       // Update the xform data
       }
    }
-
+*/
 }
 
 
