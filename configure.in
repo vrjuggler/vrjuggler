@@ -848,7 +848,12 @@ if test "$THREADS" = "POSIX" ; then
     AC_DEFINE(_THREAD_SAFE,)
     AC_DEFINE(RWSTD_MULTI_THREAD,)
     AC_DEFINE(RW_MULTI_THREAD,)
-    AC_DEFINE(_REENTRANT,)
+
+    dnl # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT,
+    dnl # so we will not define both.
+    if "x$PLATFORM" != "xLinux" ; then
+        AC_DEFINE(_REENTRANT,)
+    fi
 
     dnl # Use POSIX threading, mutexes and shared memory.
     MUTEX_SYS='POSIX'
