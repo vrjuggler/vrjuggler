@@ -216,30 +216,28 @@ public class Main {
             ch3.setName (ch2.getName() + " viewport");
 
             v = new VarValue (ValType.FLOAT);
-            v.set (0.0f);
 
             p = ch3.getPropertyFromToken ("origin");
+            v.set (0.0f);
             p.setValue (v, 0);
-            v.set (1.0f);
             p.setValue (v, 1);
 
             p = ch3.getPropertyFromToken ("size");
-            v.set (0.0f);
-            p.setValue (v, 0);
             v.set (1.0f);
+            p.setValue (v, 0);
             p.setValue (v, 1);
 
             p = ch3.getPropertyFromToken ("view");
-            p.setValue (ch3.getValueFromToken ("view",0), 0);
+            p.setValue (ch1.getValueFromToken ("view",0), 0);
 
             p = ch3.getPropertyFromToken ("cameraPos");
-            p.setValue (ch3.getValueFromToken ("cameraPos",0), 0);
+            p.setValue (ch1.getValueFromToken ("cameraPos",0), 0);
 
             p = ch3.getPropertyFromToken ("user");
-            p.setValue (ch3.getValueFromToken ("user",0), 0);
+            p.setValue (ch1.getValueFromToken ("user",0), 0);
 
             p = ch3.getPropertyFromToken ("wandPos");
-            p.setValue (ch3.getValueFromToken ("wandPos",0), 0);
+            p.setValue (ch1.getValueFromToken ("wandPos",0), 0);
 
             p = ch3.getPropertyFromToken ("active");
             p.setValue (ch1.getValueFromToken ("active",0), 0);
@@ -288,30 +286,28 @@ public class Main {
             ch3.setName (ch2.getName() + " viewport");
 
             v = new VarValue (ValType.FLOAT);
-            v.set (0.0f);
 
             p = ch3.getPropertyFromToken ("origin");
+            v.set (0.0f);
             p.setValue (v, 0);
-            v.set (1.0f);
             p.setValue (v, 1);
 
             p = ch3.getPropertyFromToken ("size");
-            v.set (0.0f);
-            p.setValue (v, 0);
             v.set (1.0f);
+            p.setValue (v, 0);
             p.setValue (v, 1);
 
             p = ch3.getPropertyFromToken ("view");
-            p.setValue (ch3.getValueFromToken ("view",0), 0);
+            p.setValue (ch1.getValueFromToken ("view",0), 0);
 
             p = ch3.getPropertyFromToken ("corners");
-            p.setValue (ch3.getValueFromToken ("corners",0), 0);
-            p.setValue (ch3.getValueFromToken ("corners",1), 1);
-            p.setValue (ch3.getValueFromToken ("corners",2), 2);
-            p.setValue (ch3.getValueFromToken ("corners",3), 3);
+            p.setValue (ch1.getValueFromToken ("corners",0), 0);
+            p.setValue (ch1.getValueFromToken ("corners",1), 1);
+            p.setValue (ch1.getValueFromToken ("corners",2), 2);
+            p.setValue (ch1.getValueFromToken ("corners",3), 3);
 
             p = ch3.getPropertyFromToken ("user");
-            p.setValue (ch3.getValueFromToken ("user",0), 0);
+            p.setValue (ch1.getValueFromToken ("user",0), 0);
 
             p = ch3.getPropertyFromToken ("active");
             p.setValue (ch1.getValueFromToken ("active",0), 0);
