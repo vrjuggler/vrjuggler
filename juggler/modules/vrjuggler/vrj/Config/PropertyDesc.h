@@ -3,6 +3,7 @@
 #define _VJ_PROPERTY_DESC_H_
 
 #include <vjConfig.h>
+#include <Config/vjEnumEntry.h>
 #include <Config/vjParseUtil.h>
 
 //------------------------------------------------------------

@@ -4,9 +4,8 @@
 
 #include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
-#include <Config/vjChunkDescDB.h>
 
-
+class vjChunkDescDB;
 
 //------------------------------------------------------------------
 //: Database of ConfigChunks
@@ -121,10 +120,12 @@ public:
     //! POST: this has added the chunks specified
     void addChunks(std::vector<vjConfigChunk*> new_chunks);
 
-    void addChunk(vjConfigChunk* new_chunk)
-    {
-       chunks.push_back (new_chunk);
-    }
+
+
+    //: Adds a chunk to this
+    void addChunk(vjConfigChunk* new_chunk);
+
+
 
     //: Returns all chunks of a given type.
     //! PRE: true;
@@ -187,6 +188,7 @@ public:
     int removeMatching (const std::string& property, int value);
     int removeMatching (const std::string& property, float value);
     int removeMatching (const std::string& property, const std::string& value);
+
 
 
     //: Sorts the chunks based on dependencies

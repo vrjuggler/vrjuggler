@@ -1,6 +1,10 @@
+#ifndef _VJ_ENUMENTRY_H_
+#define _VJ_ENUMENTRY_H_
+
 /* Tiny little data structure used to store an entry of enumeration
  * or valuelabel data 
  */
+
 
 #include <vjConfig.h>
 
@@ -25,3 +29,6 @@ public:
 	return val;
     }
 };
+
+
+#endif

@@ -4,8 +4,9 @@
 
 #include <vjConfig.h>
 #include <Config/vjVarValue.h>
-#include <Config/vjChunkDesc.h>
-#include <Config/vjChunkDescDB.h>
+#include <Config/vjPropertyDesc.h>
+class vjChunkDesc;
+
 
 //------------------------------------------------------------------
 //: Stores a property and all its values
