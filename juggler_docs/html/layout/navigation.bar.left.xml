@@ -3,7 +3,7 @@ Builder: JExplorerBuilder V 1. 0. 7
     imageurl="${IMAGES}/Icons/W98_Images/"
     linkurl="../"
     >
-< font face="Arial" style="Plain" size="8">
+< font face="Arial" style="Plain" size="${TREE_FONTSIZE}">
 < idefault title="Item" image="Folder_Closed.gif" target="Body" rtarget="NewWindow" imagetwo="" info="VR Juggler" link="" rlink="">
 < rootfolder title="VR Juggler" link="../index.html" info="Juggler Virtual Reality Platform" target="_top" image="Home.gif" imagetwo="Home.gif" >
 
@@ -15,9 +15,9 @@ Builder: JExplorerBuilder V 1. 0. 7
     < folder title="Books" ref=1 info="Online documentation.   What does each manual say?  What manual do I need?" link="${MISC}/documentation.html"  image="Book_Closed.gif" >
                 < jitfolder jit="${VJCONTROL}/table.of.contents.xml" title="VJ Control Manual (Unloaded)" link="${VJCONTROL}/table.of.contents.html"  info="How to use vjcontrol" image="Book_Closed.gif" imagetwo="Book_Open.gif" >
                 < jitfolder jit="${PROGRAMMERGUIDE}/table.of.contents.xml" title="Programmer Guide (Unloaded)" link="${PROGRAMMERGUIDE}/index.html"  info="How to write applications on top of VR Juggler. Also how to run apps, use vjcontrol, installing the binaries, etc..." image="Book_Closed.gif" imagetwo="Book_Open.gif" >
-                < jitfolder jit="${DEVGUIDE}/table.of.contents.xml" title="Developer Guide (Unloaded)" link="${DEVGUIDE}/table.of.contents.html"  info="For the VR Juggler development team.  You will need this if you are writting VR Juggler, drivers, and extensions." image="Book_Closed.gif" imagetwo="Book_Open.gif">
-                < jitfolder jit="${DEVREF}/table.of.contents.xml" title="Developer Reference (Unloaded)" link="${DEVREF}/index.html"  image="Book_Closed.gif" imageTwo="Book_Open.gif" info="Quick Reference for Developers.">
-    		< item title="Contribute!" link="${DOCUMENTATION}/why.html"  info="Why should you contribute to the Juggler documentation project?" image="Chat.gif" >
+                < jitfolder jit="${PROGRAMMERREF}/table.of.contents.xml" title="Programmer Reference (Unloaded)" link="${PROGRAMMERREF}/index.html"  image="Book_Closed.gif" imageTwo="Book_Open.gif" info="Quick Reference for Programmers using the Juggler Virtual Reality Platform.">
+    		< jitfolder jit="${DEVGUIDE}/table.of.contents.xml" title="Developer Guide (Unloaded)" link="${DEVGUIDE}/table.of.contents.html"  info="For the VR Juggler development team.  You will need this if you are writting VR Juggler, drivers, and extensions." image="Book_Closed.gif" imagetwo="Book_Open.gif">
+                < item title="Contribute!" link="${DOCUMENTATION}/why.html"  info="Why should you contribute to the Juggler documentation project?" image="Chat.gif" >
     </folder>
 
     < folder title="Publications" link="${PUBLICATIONS}/index.html"  info="Papers, Articles, and Press Releases" image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
