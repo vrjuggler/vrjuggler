@@ -238,7 +238,7 @@ bool vjInputManager::configureDevice(vjConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << "ERROR: new dev failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "new dev failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
       delete new_device;
       ret_val = false;
    }
@@ -266,7 +266,7 @@ bool vjInputManager::configureProxy(vjConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << "ERROR: Could not configure proxy:" << proxy_name.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "Could not configure proxy:" << proxy_name.c_str() << endl << vjDEBUG_FLUSH;
       vjDEBUG_END(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
       return false;
    }
@@ -387,7 +387,7 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
   out << "Alias List:" << endl;
   for(std::map<std::string, int>::iterator cur_alias = iMgr.proxyAliases.begin(); cur_alias != iMgr.proxyAliases.end(); cur_alias++)
      out << "    " << (*cur_alias).first.c_str() << "  index:" << (*cur_alias).second << endl;
-   
+
   out << "=============== vjInputManager Status =========================" << endl;
   return out;
 }
@@ -547,7 +547,7 @@ bool vjInputManager::removeDevice(char* instName)
   Set the position proxy #ProxyNum to be hooked to
                   device #DevNum at sub-unit #subNum
 
-*********************************************** ahimberg */ 
+*********************************************** ahimberg */
 int vjInputManager::setPosProxy(int ProxyNum, int DevNum, int subNum)
 {
    m_posProxyVector[ProxyNum]->set(dynamic_cast<vjPosition*>(m_devVector[DevNum]),subNum);
@@ -646,7 +646,7 @@ void vjInputManager::stupifyDig(int ProxyNum)
    m_digProxyVector[ProxyNum]->set(&m_dummyDig,0);
 }
 
-   
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -872,7 +872,8 @@ bool vjInputManager::configureProxyAlias(vjConfigChunk* chunk)
 
    if(proxyAliases.end() == proxyAliases.find(proxy_name))
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << "vjInputManager::ConfigureProxyAliases: Alias: " << alias_name.c_str()
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL)
+                  << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::ConfigureProxyAliases: Alias: " << alias_name.c_str()
                  << "  cannot find proxy: " << proxy_name.c_str() << endl << vjDEBUG_FLUSH;
       return false;
    } else {
@@ -901,7 +902,8 @@ bool vjInputManager::removeProxyAlias(vjConfigChunk* chunk)
 
    if(proxyAliases.end() == proxyAliases.find(alias_name))
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << "vjInputManager::RemoveProxyAlias: Alias: " << alias_name.c_str()
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL)
+                 << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::RemoveProxyAlias: Alias: " << alias_name.c_str()
                  << "  cannot find proxy: " << proxy_name.c_str() << endl << vjDEBUG_FLUSH;
       return false;
    } else {
