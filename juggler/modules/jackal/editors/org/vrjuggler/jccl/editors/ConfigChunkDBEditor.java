@@ -301,8 +301,7 @@ public class ConfigChunkDBEditor
    }
 
    /**
-    * Rebuilds the config chunk DB tree. This forces the table model to fire off
-    * a nodeStructureChanged event on the root node.
+    * Rebuilds the config chunk DB tree.
     */
    private void rebuildTree()
    {
@@ -324,8 +323,9 @@ public class ConfigChunkDBEditor
 
       }
 
-      // Let the tree model know that we replaced its entire tree
-      treeModel.nodeStructureChanged((TreeNode)treeModel.getRoot());
+      // Expand the root node
+      TreePath path = new TreePath(treeModel.getPathToRoot((TreeNode)treeModel.getRoot()));
+      chunkPropTree.expandPath(path);
    }
 
    /**
@@ -527,7 +527,7 @@ public class ConfigChunkDBEditor
          }
       }
 
-      parent.insert(child, insert_idx);
+      treeModel.insertNodeInto(child, parent, insert_idx);
    }
 
    /**
@@ -573,7 +573,7 @@ public class ConfigChunkDBEditor
          }
       }
 
-      parent.insert(catNode, insert_idx);
+      treeModel.insertNodeInto(parent, catNode, insert_idx);
       return catNode;
    }
 
@@ -591,10 +591,6 @@ public class ConfigChunkDBEditor
 
          // Add the config chunk to the category
          DefaultMutableTreeNode chunk_node = addChunk(cat_node, chunk);
-
-         // Notify listeners
-         int idx = treeModel.getIndexOfChild(cat_node, chunk_node);
-         treeModel.nodesWereInserted(cat_node, new int[] { idx });
       }
    }
 
