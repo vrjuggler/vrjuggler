@@ -13,7 +13,7 @@
 int main(int argc, char* argv[])
 {
    vjProjection::setNearFar(0.01, 10000.0f);
-   
+
    vjKernel* kernel = vjKernel::instance();        // Get the kernel
    cubesApp* application = new cubesApp(kernel);   // Declare an instance of the app
 
@@ -34,8 +34,3 @@ int main(int argc, char* argv[])
        //sched_yield();
    }
 }
-
-
-
-
-
