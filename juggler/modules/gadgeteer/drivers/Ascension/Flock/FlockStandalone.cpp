@@ -586,7 +586,7 @@ int aFlock::open_port( const char* const serialPort,
     // with - 48
     // without - 40
     // ... of course these may change in the future ...
-    cout<<"  ** termio struct size = "<<sizeof(termios)<<"\n"<<flush;
+    cout<<"  ** termios struct size = "<<sizeof(termios)<<"\n"<<flush;
 
     ///////////////////////////////////////////////////////////////////
     // Open and close the port to reset the tracker, then
