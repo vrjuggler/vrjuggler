@@ -48,6 +48,8 @@ public class Updater implements Runnable
 
   public void run ()
   {
+     if(mObserver == null)
+     { System.out.println("[DBG] mObserver is null!!!!!"); }
     SampleTimeMap value_map = mObserver.getValueMap();
     int length = Array.getLength(value_map.mNames);
     System.out.println("[DBG] Got a samples list of length " + length);
