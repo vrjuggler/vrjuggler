@@ -329,7 +329,7 @@ if test "x$echo_idl" != "x" ; then
     if test "$echo_idl" = "cxx" ; then
        echo "@CXX_IDL@"
     elif test "$echo_idl" = "java" ; then
-       echo "@JAVA_IDL@"
+       echo @config_java_idl@
     else
        echo "ERROR: Unrecognized IDL flag type '$echo_idl'!"
        usage 1 1>&2
