@@ -136,7 +136,7 @@ public:
 private:
    vjMatrix     m_posData;
    vjTimeStamp  m_posUpdateTime;
-   vjMatrix     m_matrixTransform;
+   vjMatrix     m_matrixTransform;        // reciever_t_modifiedReciever
    vjPosition*  m_posPtr;                 // Ptr to the position device
    int          m_unitNum;
    bool         etrans;
