@@ -1,4 +1,4 @@
-//#include <gfxConfig.h>
+#include <vprConfig.h>
 #include <iostream>
 
 #include <TestCase.h>
@@ -7,16 +7,12 @@
 
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>
+#include <Threads/TSTable.h>
 #include <Sync/Mutex.h>
 
 #include <vector>
 
-//#include <nspr.h>
-
 #define ThreadTest_INC_COUNT 5000
-
-//namespace gfxTest
-//{
 
 class ThreadTest : public TestCase
 {
@@ -146,7 +142,7 @@ public:
 
    }
 
-/*   // -------------------------------------------------------------------- //
+   // -------------------------------------------------------------------- //
    void testThreadStackSize()
    {
       // Spawn off a thread and have it consume some stack space
@@ -161,10 +157,10 @@ public:
 
       functor = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::recurseConsumeResources, &arg);
 
-//      the_thread = new vpr::Thread(functor, stack_size);
-//      assertTest(the_thread != NULL);
+      the_thread = new vpr::Thread(functor, vpr::BaseThread::VPR_PRIORITY_NORMAL, vpr::BaseThread::VPR_LOCAL_THREAD, vpr::BaseThread::VPR_JOINABLE_THREAD, stack_size);
+      assertTest(the_thread != NULL);
 
-//      assertTest(the_thread->join() && "Failed to join with testThreadStackSize thread");
+      assertTest(the_thread->join() && "Failed to join with testThreadStackSize thread");
 
       //assertTest(mCounter == (num_threads*50000));
    }
@@ -187,12 +183,12 @@ public:
       else
          return;
    }
-*/
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("ThreadTest");
       test_suite->addTest( new TestCaller<ThreadTest>("testThreadCreation", &ThreadTest::testThreadCreation));
-//      test_suite->addTest( new TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
+      test_suite->addTest( new TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
       return test_suite;
    }
 
@@ -213,5 +209,4 @@ protected:
    bool           mStopGrindingCPU;             // Flag to tell the test to stop grinding the CPU
 };
 
-//};
 
