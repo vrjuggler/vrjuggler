@@ -506,7 +506,7 @@ int aFlock::getReading( const int& n, const int& port,
 	}
 	
 	if (c >= 5000)
-	    cout << "aFlock: tracker timeout (" << c << ")" << endl << flush;
+	    cout << "aFlock: tracker " << n << " timeout (" << c << ")" << endl << flush;
 	
 	addr = group;
     } while (addr != n);
