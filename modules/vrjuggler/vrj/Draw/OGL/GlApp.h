@@ -34,18 +34,28 @@ public:
    //!POST: The current scene has been drawn
    virtual void draw() = 0;
 
+   //: Function that is called immedately after a new context is created
+   //! PRE: The ogl context has been set to the new context
+   //! POST: Application has completed in initialization the user wishes
+   virtual void contextInit()
+   {;}
+
+   //: Function that is called upon entry into the context for a draw
+   //! PRE: The ogl context has been set to the context for drawing
+   //! POST: User application has executed any commands that need
+   //+   to only be executed once per context, per frame
+   //! NOTE: This function can be used for things that need to happen
+   //+       every frame, but only once per context.
+   //+  <br> Ex: Dynamically Create display lists
+   virtual void contextPreDraw()
+   {;}
+
    //: Function that is called at the beginning of the drawing of each pipe
    //!PRE: The library is preparing to render all windows on a given pipe
    //!POST: Any pre-pipe user calls have been done
    //!NOTE: Currently the OGL context is not set when this function is called
    //!NOTE: This is a TEST function.  DO NOT USE!!!
    virtual void pipePreDraw()
-   {;}
-
-   //: Function that is called immedately after a new context is created
-   //! PRE: The ogl context has been set to the new context
-   //! POST: Application has completed in initialization the user wishes
-   virtual void contextInit()
    {;}
 
 public:  // --- Factory functions --- //
