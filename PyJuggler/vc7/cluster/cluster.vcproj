@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib boost_python-vc71-mt-gd-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib boost_python-$(BOOST_TOOL)-mt-gd-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/cluster_d.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -99,7 +99,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pyjutil.lib gadget.lib jccl.lib vpr.lib cppdom.lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="pyjutil.lib gadget.lib jccl.lib vpr.lib cppdom.lib boost_python-$(BOOST_TOOL)-mt-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/cluster.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
