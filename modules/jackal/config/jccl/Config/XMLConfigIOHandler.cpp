@@ -699,7 +699,7 @@ bool XMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const PropertyDesc&
 bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc) {
     char* name = doc.getNodeName().transcode();
     DOM_Node child;
-    ChunkDesc* desc;
+    ChunkDescPtr desc;
     bool retval = true;
 
     //std::cout << "ok, we've got a node named '" << name << "'." <<std::endl;
@@ -715,7 +715,7 @@ bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc)
             while (child != 0) {
                 if (child.getNodeType() == DOM_Node::ELEMENT_NODE) {
                     desc = buildChunkDesc (child);
-                    if (desc)
+                    if (desc.get() != 0)
                         db.insert (desc);
                 }
                 child = child.getNextSibling();
@@ -747,7 +747,7 @@ bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc)
 
 
 
-ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
+ChunkDescPtr XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
     char* name = doc.getNodeName().transcode();
     char* child_name;
     char* child_value;
@@ -755,7 +755,7 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
     DOM_NamedNodeMap attributes;
     int attr_count;
     int i;
-    ChunkDesc* desc = NULL;
+    ChunkDescPtr desc;
     bool retval = true;
 
     switch (doc.getNodeType()) {
@@ -765,7 +765,7 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         break;
     case DOM_Node::ELEMENT_NODE:
         if (!vjstrcasecmp(name, "ChunkDesc")) {
-            desc = new ChunkDesc ();
+            desc.reset(new ChunkDesc ());
             // parse attributes
             attributes = doc.getAttributes();
             attr_count = attributes.getLength();
@@ -820,11 +820,11 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
     if (!retval) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
-        if (desc) {
+        if (desc.get() != 0) {
             vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting ChunkDesc due to errors:\n"
                                     << *desc << vprDEBUG_FLUSH;
             // delete desc;
-            desc = 0;
+            desc.reset(0);
         }
     }
     return desc;

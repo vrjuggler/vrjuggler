@@ -36,6 +36,7 @@
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/PropertyDesc.h>
+#include <boost/smart_ptr.hpp>
 //#include <dom/DOM.hpp>
 
 class DOM_Node;
@@ -207,5 +208,8 @@ public:
                                               ChunkDesc& self);
 
 };
+
+    typedef boost::shared_ptr<ChunkDesc> ChunkDescPtr;
+
 };
 #endif

@@ -73,8 +73,8 @@ namespace jccl {
 
    
     //: Creates a Chunk using the given description
-    ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
-        if (d) {
+    ConfigChunk* ChunkFactory::createChunk (ChunkDescPtr d, bool use_defaults) {
+        if (d.get() != 0) {
             d->assertValid();
             return new ConfigChunk (d, use_defaults);
         }

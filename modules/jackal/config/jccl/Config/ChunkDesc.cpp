@@ -181,8 +181,9 @@ ConfigChunk* ChunkDesc::getDefaultChunk() const {
         XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler("xml_config");
         ConfigChunk* ch = handler->buildConfigChunk (*default_node, false);
         if (ch) {
-            // this is a cheat
-            const_cast<ChunkDesc*>(this)->default_chunk = ch;
+            // this is a cheat.  and ugly cuz we have to get the real pointer,
+            // not the shared_ptr, and then const_cast it :(
+            (const_cast<ChunkDesc*>(&(*this)))->default_chunk = ch;
         }
         ConfigIO::instance()->releaseHandler (handler);
     }

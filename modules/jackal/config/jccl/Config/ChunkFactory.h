@@ -79,7 +79,7 @@ public:
          return &descdb;
     }
 
-    ChunkDesc* getChunkDesc (const std::string& token) {
+    ChunkDescPtr getChunkDesc (const std::string& token) {
         return descdb.getChunkDesc (token);
     }
 
@@ -93,7 +93,7 @@ public:
     }
 
     //: Creates a Chunk using the given description
-    ConfigChunk* createChunk (ChunkDesc* d, bool use_defaults = true);
+    ConfigChunk* createChunk (ChunkDescPtr d, bool use_defaults = true);
 
 
 

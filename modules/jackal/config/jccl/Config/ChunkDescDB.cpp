@@ -55,16 +55,16 @@ ChunkDescDB::~ChunkDescDB() {
 }
 
 
-ChunkDesc* ChunkDescDB::getChunkDesc (const std::string& _token) {
+ChunkDescPtr ChunkDescDB::getChunkDesc (const std::string& _token) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, _token))
             return descs[i];
-    return NULL;
+    return ChunkDescPtr(NULL);
 }
 
 
 
-bool ChunkDescDB::insert (ChunkDesc *d) {
+bool ChunkDescDB::insert (ChunkDescPtr d) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
             if (*descs[i] != *d) {
@@ -87,9 +87,9 @@ bool ChunkDescDB::insert (ChunkDesc *d) {
 
 
 void ChunkDescDB::insert (ChunkDescDB* db) {
-    std::vector<ChunkDesc*>::iterator begin = db->descs.begin();
+    iterator begin = db->descs.begin();
     while (begin != db->descs.end()) {
-        insert (new ChunkDesc(**begin));
+        insert (*begin);//(new ChunkDesc(**begin));
         begin++;
     }
 }
@@ -98,7 +98,7 @@ void ChunkDescDB::insert (ChunkDescDB* db) {
 
 bool ChunkDescDB::remove (const std::string& tok) {
 
-    std::vector<ChunkDesc*>::iterator cur_desc = descs.begin();
+    iterator cur_desc = descs.begin();
     while (cur_desc != descs.end()) {
         if (!vjstrcasecmp ((*cur_desc)->token, tok)) {
             /// delete(*begin);     XXX:
@@ -114,11 +114,11 @@ bool ChunkDescDB::remove (const std::string& tok) {
 
 
 void ChunkDescDB::removeAll () {
-    std::vector<ChunkDesc*>::iterator i = descs.begin();
-    while (i != descs.end()) {
-        // delete (*i);    XXX:
-        i++;
-    }
+//      std::vector<ChunkDesc*>::iterator i = descs.begin();
+//      while (i != descs.end()) {
+//          // delete (*i);    XXX:
+//          i++;
+//      }
     descs.clear();
 }
 
@@ -142,15 +142,15 @@ std::ostream& operator << (std::ostream& out, const ChunkDescDB& self) {
 std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
     const int buflen = 512;
     char str[buflen];
-    ChunkDesc *ch;
+    ChunkDescPtr desc;
 
     for (;;) {
         if (readString (in, str, buflen) == 0)
             break; /* eof */
         else if (!strcasecmp (str, chunk_TOKEN)) {
-            ch = new ChunkDesc();
-            in >> *ch;
-            self.insert(ch);
+            desc.reset(new ChunkDesc());
+            in >> *desc;
+            self.insert(desc);
         }
         else if (!strcasecmp (str, end_TOKEN))
             break;
