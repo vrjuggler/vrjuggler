@@ -1,6 +1,7 @@
 #include "vpr/Perf/ProfileManager.h"
 #include "vpr/Perf/ProfileNode.h"
-
+#include <vpr/Util/Debug.h>
+#include <sstream>
 
 namespace vpr
 {
@@ -81,18 +82,25 @@ void ProfileNode::printTree(ProfileNode* node)
 {
    if(node == NULL) return;
 
-   std::cout << getName() << " total calls: " << getTotalCalls()
-          << " total time: " << getTotalTime() << " ave: " 
-          << getTotalCalls() /getTotalTime() << " history: ";
+   vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "[PROFILE STATS] " << clrRESET 
+      << clrSetBOLD(clrRED) << node->getName() << clrRESET << clrSetBOLD(clrYELLOW)  
+      << " total calls: " << clrRESET << node->getTotalCalls()
+      << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << node->getTotalTime()
+      << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET 
+      << node->getTotalTime() / node->getTotalCalls() << std::endl << vprDEBUG_FLUSH;
 
-   NodeHistoryRange p = getNodeHistoryRange();
-      for(; p.first != p.second; p.first++)
-         { std::cout << *(p.first) << " "; }
+   std::stringstream s;
+   NodeHistoryRange p = node->getNodeHistoryRange();
+   for(; p.first != p.second; p.first++)
+   {
+      s << *(p.first) << " ";
+   }
 
-      std::cout << std::endl;
+   vprDEBUG(vprDBG_ALL, 0)  << clrOutBOLD(clrYELLOW, " history: ")
+      << s.str() << std::endl << vprDEBUG_FLUSH;
 
-   printTree(node->getChild());
-   printTree(node->getSibling());
+   ProfileNode::printTree(node->getChild());
+   ProfileNode::printTree(node->getSibling());
 }
    
 
