@@ -109,7 +109,8 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    myThread = (vjThread*) vjThread::self();
 
    // Open the x-window
-   openTheWindow();
+   if(mWeOwnTheWindow)
+      openTheWindow();
 
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
@@ -130,9 +131,11 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    }
 
    // Exit, cleanup code
-   XDestroyWindow(m_display,m_window);
-   //XFree(m_visual);
-   XCloseDisplay((Display*) m_display);
+   if(mWeOwnTheWindow)
+   {
+      XDestroyWindow(m_display,m_window);
+      XCloseDisplay((Display*) m_display);
+   }
 }
 
 
@@ -582,7 +585,6 @@ int vjXWinKeyboard::openTheWindow()
    m_swa.border_pixel = WhitePixel(m_display,m_screen);
    m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
    m_swa.background_pixel = BlackPixel(m_display,m_screen);
-   checkGeometry();
 
    m_window = createWindow ( DefaultRootWindow(m_display) ,
                              1, BlackPixel(m_display,m_screen),
@@ -700,75 +702,6 @@ Window vjXWinKeyboard::createWindow (Window parent, unsigned int border, unsigne
   return window;
 } /*CreateWindow*/
 
-void vjXWinKeyboard::checkGeometry()
-{
-  char* geo_string;
-  int status;
-  int screen_width, screen_height;
-
-  geo_string = checkArgs( "-geom" );
-  if (geo_string != (char*) NULL) {
-    status = XParseGeometry(geo_string,&m_x,&m_y,&m_width,&m_height);
-    if (status & XNegative) {
-       screen_width = DisplayWidth(m_display,m_visual->screen);
-       m_x = screen_width - m_width + m_x;
-    }
-    if (status & YNegative) {
-       screen_height = DisplayHeight(m_display, m_visual->screen);
-       m_y = screen_height - m_height + m_y;
-    }
-  }
-} /*CheckGeometry*/
-
-char* vjXWinKeyboard::checkArgs(char* look_for)
-{
-  //Unused//int i, l;
-
- /* l = strlen(look_for);
-  i = 1;
-  while (i < argc)
-  { if (strncmp(argv[i], look_for, l) == 0)
-   {i++;
-
-    if (i < argc) {
-       return argv[i];
-    } else {
-      std::cerr << "ERROR: Usage is:\n" << look_for << " value\n";
-    }
-   }
-   i++;
-  }*/
-  return ((char*) NULL);
-} /*CheckArgs*/
-
-int vjXWinKeyboard::filterEvent( XEvent* event, int want_exposes,
-        int width, int height)
-{
-    int status = 1;
-    if (XFilterEvent( event, (Window)NULL ) )
-    {
-      return 0;
-    }
-    switch (event->type) {
-       case Expose:
-         if (!want_exposes ) {
-      if (event->xexpose.count != 0) {
-        status = 0;
-        }
-    }
-    break;
-        case ConfigureNotify:
-     if ((width == event->xconfigure.width ) && (height == event->xconfigure.height))
-     {  status = 0; }
-     break;
-   case MappingNotify:
-     XRefreshKeyboardMapping ( (XMappingEvent*) event );
-     status = 0;
-     break;
-   default: ;
-     }
-     return status;
-}
 
 // Called when locking states
 // - Recenter the mouse
