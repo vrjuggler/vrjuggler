@@ -7,7 +7,7 @@
 #include "IAudioJuggler.h"
 #include "ajSoundFactory.h"
 #include "ajSoundFactory.h"
-class ajSoundImplementation;
+#include "ajSoundImplementation.h"
 
 class aj : public IAudioJuggler
 {
