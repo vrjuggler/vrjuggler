@@ -372,7 +372,7 @@ void simplePfNavApp::cycleNavigator()
 
 void simplePfNavApp::setNavigator( unsigned new_index )
 {
-   vjASSERT( index < mNavigators.size() );
+   vjASSERT( new_index < mNavigators.size() );
 
    if (new_index != mCurNavIndex)
    {
