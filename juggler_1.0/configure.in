@@ -1206,26 +1206,30 @@ if test "x${_install_owner}" != "x" ; then
     fi
 fi
 
+dnl # Set $GROUP_NAME here in case the check for the user-specified group
+dnl # failed.  This provides a simple fallback in that case.
+GROUP_NAME=`id -gn`
+
 dnl # Make sure that the named install group is actually available and can
 dnl # be set by this user.  This is done by creating a file (conftest.c) and
 dnl # setting the group name to be what is in ${_install_group}.  Any output
 dnl # from chgrp(1) is redirected to chgrp_out.  If chgrp_out has non-zero
 dnl # length, chgrp(1) gave error output, and thus the group is not avaialble.
-AC_CACHE_CHECK(for ${_install_group} group, ac_cv_install_group_available,
-    [ touch conftest.c
-      chgrp ${_install_group} conftest.c >chgrp_out 2>&1
-      if test -s chgrp_out ; then
-          ac_cv_install_group_available=no
-      else
-          ac_cv_install_group_available=yes
-      fi
-      rm conftest.c chgrp_out
-    ])
+if test "x${_install_group}" != "x" ; then
+    AC_CACHE_CHECK(for ${_install_group} group, ac_cv_install_group_available,
+        [ touch conftest.c
+          chgrp ${_install_group} conftest.c >chgrp_out 2>&1
+          if test -s chgrp_out ; then
+              ac_cv_install_group_available=no
+          else
+              ac_cv_install_group_available=yes
+          fi
+          rm -f conftest.c chgrp_out
+        ])
 
-GROUP_NAME=''
-
-if test "$ac_cv_install_group_available" = "yes" ; then
-    GROUP_NAME="${_install_group}"
+    if test "$ac_cv_install_group_available" = "yes" ; then
+        GROUP_NAME="${_install_group}"
+    fi
 fi
 
 dnl # -------------------------------------------------------------------------
