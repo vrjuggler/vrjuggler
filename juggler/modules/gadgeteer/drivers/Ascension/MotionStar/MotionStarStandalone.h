@@ -160,19 +160,19 @@ public:
     //+       determined.  This is used later when reading data words from the
     //+       server's response packets.
     //
-    //! ARGS: _address       - The IP address or hostname of the MotionStar
+    //! ARGS: address       - The IP address or hostname of the MotionStar
     //+                        server to which we are connecting.
-    //! ARGS: port           - The port on the server to which we connect.
-    //! ARGS: _hemisphere    - The hemisphere in use on the transmitter.
-    //! ARGS: _birdFormat    - The bird format.
-    //! ARGS: _birdsRequired - The number of birds required.
-    //! ARGS: _runMode       - The run mode for the device.
-    //! ARGS: _birdRate      - The bird rate.
-    //! ARGS: _reportRate    - The report rate.
+    //! ARGS: port          - The port on the server to which we connect.
+    //! ARGS: hemisphere    - The hemisphere in use on the transmitter.
+    //! ARGS: birdFormat    - The bird format.
+    //! ARGS: birdsRequired - The number of birds required.
+    //! ARGS: runMode       - The run mode for the device.
+    //! ARGS: birdRate      - The bird rate.
+    //! ARGS: reportRate    - The report rate.
     // ------------------------------------------------------------------------
-    aMotionStar(char* _address, const unsigned short port, int _hemisphere,
-                unsigned int _birdFormat, unsigned int _birdsRequired,
-                int _runMode, double _birdRate, unsigned char _reportRate);
+    aMotionStar(char* address, const unsigned short port, int hemisphere,
+                unsigned int birdFormat, unsigned int birdsRequired,
+                int runMode, double birdRate, unsigned char reportRate);
 
     // ------------------------------------------------------------------------
     //: Destructor.
@@ -228,7 +228,7 @@ public:
     // ------------------------------------------------------------------------
     inline bool&
     isActive () {
-        return active;
+        return mActive;
     }
 
     // ------------------------------------------------------------------------
@@ -237,11 +237,11 @@ public:
     //! PRE: None.
     //! POST: The hemisphere for it is reset to the given value.
     //
-    //! ARGS: n - The new hemisphere to use.
+    //! ARGS: hemisphere - The new hemisphere to use.
     // ------------------------------------------------------------------------
     inline void
-    setHemisphere (int n) {
-        hemisphere = n;
+    setHemisphere (int hemisphere) {
+        mHemisphere = hemisphere;
     }
 
     // ------------------------------------------------------------------------
@@ -254,7 +254,7 @@ public:
     // ------------------------------------------------------------------------
     inline unsigned int
     getHemisphere () {
-        return hemisphere;
+        return mHemisphere;
     }
 
     // ------------------------------------------------------------------------
@@ -263,11 +263,11 @@ public:
     //! PRE: None.
     //! POST: The bird format is updated to the new value.
     //
-    //! ARGS: n - The new bird format to use.
+    //! ARGS: format - The new bird format to use.
     // ------------------------------------------------------------------------
     inline void
-    setBirdFormat (unsigned int n) {
-        birdFormat = n;
+    setBirdFormat (unsigned int format) {
+        mBirdFormat = format;
     }
 
     // ------------------------------------------------------------------------
@@ -280,7 +280,7 @@ public:
     // ------------------------------------------------------------------------
     inline unsigned int
     getBirdFormat () {
-        return birdFormat;
+        return mBirdFormat;
     }
 
     // ------------------------------------------------------------------------
@@ -289,11 +289,11 @@ public:
     //! PRE: None.
     //! POST: The number of birds is updated to the new value.
     //
-    //! ARGS: n - The new value for the number of birds in use.
+    //! ARGS: num_birds - The new value for the number of birds in use.
     // ------------------------------------------------------------------------
     inline void
-    setNumBirds (unsigned int n) {
-        birdsRequired = n;
+    setNumBirds (unsigned int num_birds) {
+        mBirdsRequired = num_birds;
     }
 
     // ------------------------------------------------------------------------
@@ -306,7 +306,7 @@ public:
     // ------------------------------------------------------------------------
     inline unsigned int
     getNumBirds () {
-        return birdsRequired;
+        return mBirdsRequired;
     }
 
     // ------------------------------------------------------------------------
@@ -315,11 +315,11 @@ public:
     //! PRE: None.
     //! POST: The bird rate is set to the given value.
     //
-    //! ARGS: n - The new value for the bird rate.
+    //! ARGS: rate - The new value for the bird rate.
     // ------------------------------------------------------------------------
     inline void
-    setBirdRate (double n) {
-        birdRate = n;
+    setBirdRate (double rate) {
+        mBirdRate = rate;
     }
 
     // ------------------------------------------------------------------------
@@ -332,7 +332,7 @@ public:
     // ------------------------------------------------------------------------
     inline double
     getBirdRate () {
-        return birdRate;
+        return mBirdRate;
     }
 
     // ------------------------------------------------------------------------
@@ -341,11 +341,11 @@ public:
     //! PRE: None.
     //! POST: the run mode is set to the given value.
     //
-    //! ARGS: i - The new value for the run mode.
+    //! ARGS: mode - The new value for the run mode.
     // ------------------------------------------------------------------------
     inline void
-    setRunMode (int n) {
-        runMode = n;
+    setRunMode (int mode) {
+        mRunMode = mode;
     }
 
     // ------------------------------------------------------------------------
@@ -358,7 +358,7 @@ public:
     // ------------------------------------------------------------------------
     inline int
     getRunMode () {
-        return runMode;
+        return mRunMode;
     }
 
     // ------------------------------------------------------------------------
@@ -367,11 +367,11 @@ public:
     //! PRE: None.
     //! POST: The report rate is set to the given byte value.
     //
-    //! ARGS: ch - The new value for the report rate.
+    //! ARGS: rate - The new value for the report rate.
     // ------------------------------------------------------------------------
     inline void
-    setReportRate (unsigned char n) {
-        reportRate = n;
+    setReportRate (unsigned char rate) {
+        mReportRate = rate;
     }
 
     // ------------------------------------------------------------------------
@@ -384,64 +384,64 @@ public:
     // ------------------------------------------------------------------------
     inline unsigned char
     getReportRate () {
-        return reportRate;
+        return mReportRate;
     }
 
     // ------------------------------------------------------------------------
     //: Set the address (either IP address or hostname) for the server.
     //
     //! PRE: None.
-    //! POST: If an address has already been set (i.e., address is non-NULL),
-    //+       that memory is freed.  A copy of n is stored in address.
+    //! POST: If an address has already been set (i.e., mAddress is non-NULL),
+    //+       that memory is freed.  A copy of addr is stored in mAddress.
     //
-    //! ARGS: n - The new value for the server address.
+    //! ARGS: addr - The new value for the server address.
     // ------------------------------------------------------------------------
-    void setAddress(const char* n);
+    void setAddress(const char* addr);
 
     // ------------------------------------------------------------------------
     //: Get the current server address for the device.
     //
     //! PRE: None.
-    //! POST: The current value of address is returned to the caller.
+    //! POST: The current value of mAddress is returned to the caller.
     //
     //! RETURNS: NULL - No address has been set.
     //! RETURNS: Non-NULL - A character array naming the server address.
     // ------------------------------------------------------------------------
     inline char*
     getAddress () {
-        return address;
+        return mAddress;
     }
 
     // ------------------------------------------------------------------------
     //: Set the port on the server to which we connect.
     //
     //! PRE: None.
-    //! POST: The value in port is stored in m_port.
+    //! POST: The value in port is stored in mPort.
     //
     //! ARGS: port - The new value for the server port.
     // ------------------------------------------------------------------------
     inline void
     setServerPort (const unsigned short port) {
-        m_port = port;
+        mPort = port;
     }
 
     // ------------------------------------------------------------------------
     //: Get the server port.
     //
     //! PRE: None.
-    //! POST: The current value of m_port is returned to the caller.
+    //! POST: The current value of mPort is returned to the caller.
     //
     //! RETURNS: An unsigned short integer containing the server port number.
     // ------------------------------------------------------------------------
     inline unsigned short
     getServerPort () {
-        return m_port;
+        return mPort;
     }
 
     // ------------------------------------------------------------------------
     //: Get the x position of the i'th bird.
     //
-    //! PRE: posinfo has valid data in it.
+    //! PRE: mPosinfo has valid data in it.
     //! POST: The x position for the given bird number is returned to the
     //+       caller.
     //
@@ -450,13 +450,13 @@ public:
     // ------------------------------------------------------------------------
     inline float
     xPos (int i) {
-        return posinfo[i][0];
+        return mPosinfo[i][0];
     }
 
     // ------------------------------------------------------------------------
     //: Get the y position of the i'th bird.
     //
-    //! PRE: posinfo has valid data in it.
+    //! PRE: mPosinfo has valid data in it.
     //! POST: The y position for the given bird number is returned to the
     //+       caller.
     //
@@ -465,13 +465,13 @@ public:
     // ------------------------------------------------------------------------
     inline float
     yPos (int i) {
-        return posinfo[i][1];
+        return mPosinfo[i][1];
     }
 
     // ------------------------------------------------------------------------
     //: Get the z position of the i'th bird.
     //
-    //! PRE: posinfo has valid data in it.
+    //! PRE: mPosinfo has valid data in it.
     //! POST: The z position for the given bird number is returned to the
     //+       caller.
     //
@@ -480,13 +480,13 @@ public:
     // ------------------------------------------------------------------------
     inline float
     zPos (int i) {
-        return posinfo[i][2];
+        return mPosinfo[i][2];
     }
 
     // ------------------------------------------------------------------------
     //: Get the z rotation of the i'th bird.
     //
-    //! PRE: posinfo has valid data in it.
+    //! PRE: mPosinfo has valid data in it.
     //! POST: The z rotation for the given bird number is returned to the
     //+       caller.
     //
@@ -495,13 +495,13 @@ public:
     // ------------------------------------------------------------------------
     inline float
     zRot (int i) {
-        return posinfo[i][3];
+        return mPosinfo[i][3];
     }
 
     // ------------------------------------------------------------------------
     //: Get the y rotation of the i'th bird.
     //
-    //! PRE: posinfo has valid data in it.
+    //! PRE: mPosinfo has valid data in it.
     //! POST: The y rotation for the given bird number is returned to the
     //+       caller.
     //
@@ -510,13 +510,13 @@ public:
     // ------------------------------------------------------------------------
     inline float
     yRot (int i) {
-        return posinfo[i][4];
+        return mPosinfo[i][4];
     }
 
     // ------------------------------------------------------------------------
     //: Get the x rotation of the i'th bird.
     //
-    //! PRE: posinfo has valid data in it.
+    //! PRE: mPosinfo has valid data in it.
     //! POST: The x rotation for the given bird number is returned to the
     //+       caller.
     //
@@ -525,10 +525,8 @@ public:
     // ------------------------------------------------------------------------
     inline float
     xRot (int i) {
-        return posinfo[i][5];
+        return mPosinfo[i][5];
     }
-
-//*****************************************************
 
 private:
     // ------------------------------------------------------------------------
@@ -662,8 +660,8 @@ private:
     inline float
     getXPos (const int offset) {
         return (m_xmtr_pos_scale *
-                   (float) toShort(response.buffer[2 + offset],
-                                   response.buffer[3 + offset]) /
+                   (float) toShort(mResponse.buffer[2 + offset],
+                                   mResponse.buffer[3 + offset]) /
                    m_xmtr_divisor);
     }
 
@@ -682,8 +680,8 @@ private:
     inline float
     getYPos (const int offset) {
         return (m_xmtr_pos_scale *
-                   (float) toShort(response.buffer[4 + offset],
-                                   response.buffer[5 + offset]) /
+                   (float) toShort(mResponse.buffer[4 + offset],
+                                   mResponse.buffer[5 + offset]) /
                    m_xmtr_divisor);
     }
 
@@ -702,8 +700,8 @@ private:
     inline float
     getZPos (const int offset) {
         return (m_xmtr_pos_scale *
-                   (float) toShort(response.buffer[6 + offset],
-                                   response.buffer[7 + offset]) /
+                   (float) toShort(mResponse.buffer[6 + offset],
+                                   mResponse.buffer[7 + offset]) /
                    m_xmtr_divisor);
     }
 
@@ -722,8 +720,8 @@ private:
     inline float
     getZRot (const int offset) {
         return (m_xmtr_rot_scale *
-                   (float) toShort(response.buffer[8 + offset],
-                                   response.buffer[9 + offset]) /
+                   (float) toShort(mResponse.buffer[8 + offset],
+                                   mResponse.buffer[9 + offset]) /
                     m_xmtr_divisor);
     }
 
@@ -742,8 +740,8 @@ private:
     inline float
     getYRot (const int offset) {
         return (m_xmtr_rot_scale *
-                   (float) toShort(response.buffer[10 + offset],
-                                   response.buffer[11 + offset]) /
+                   (float) toShort(mResponse.buffer[10 + offset],
+                                   mResponse.buffer[11 + offset]) /
                     m_xmtr_divisor);
     }
 
@@ -762,16 +760,16 @@ private:
     inline float
     getXRot (const int offset) {
         return (m_xmtr_rot_scale *
-                   (float) toShort(response.buffer[12 + offset],
-                                   response.buffer[13 + offset]) /
+                   (float) toShort(mResponse.buffer[12 + offset],
+                                   mResponse.buffer[13 + offset]) /
                     m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
     //: Print out the MotionStar information.
     //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The contents of posinfo are printed to stdout.
+    //! PRE: mPosinfo has valid data in it.
+    //! POST: The contents of mPosinfo are printed to stdout.
     // ------------------------------------------------------------------------
     void printInfo();
 
@@ -795,67 +793,47 @@ private:
     // ------------------------------------------------------------------------
     void printError(const unsigned char err_code);
 
-    float                   posinfo[3][6];
-    bool                    active;
-    char*                   address;
-    int x;
-    unsigned char           all;
-    unsigned char           FBBerror;
-    unsigned char           flockNumber;
-    unsigned char           serverNumber;
-    unsigned char           chassisNumber;
-    unsigned char           chassisDevices;
-    unsigned char           firstAddress;
-    unsigned short int      softwareRevision;
-    unsigned char           transmitterNumber;
-    char                    szRate[7];
-    int                     mRate;
-    double                  realRate;
-    unsigned int            statusSize, temp;
-    unsigned char           ertFlag;
-    unsigned char           buttonState;
+    float                   mPosinfo[3][6];
+    bool                    mActive;
+    char*                   mAddress;
+    unsigned char           mServerNumber;
+    unsigned char           mChassisNumber;
+    unsigned char           mChassisDevices;
+    unsigned char           mFirstAddress;
+    unsigned short int      mSoftwareRevision;
+    unsigned char           mTransmitterNumber;
+    double                  mRealRate;
+    unsigned int            mStatusSize;
+    unsigned int            mTemp;
+    unsigned char           mErtFlag;
+    unsigned char           mButtonState;
 
-    struct BIRDNET::BIRD_STATUS Bird[120];
-    struct BIRDNET::HEADER command, *lpCommand;
-    struct BIRDNET::RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
-    struct BIRDNET::DATAPACKET response, *lpResponse;
-    struct sockaddr_in server;
+    struct BIRDNET::BIRD_STATUS mBird[120];
+    struct BIRDNET::HEADER      mCommand;
+    struct BIRDNET::HEADER*     mLpCommand;
+    struct BIRDNET::DATAPACKET  mResponse;
+    struct BIRDNET::DATAPACKET* mLpResponse;
  
-    int s,rtn;
-    unsigned  long i,n;
-    unsigned int sequenceNumber;
+    int           mSocket;
+    unsigned int  mSequenceNumber;
 
-    char *newptr;
+    char* mNewptr;
 
-    int errno; // EXTERN!!
+    int             mNumberBytes;
+    int             mBytesReceived;
+    int             mSockfd;
+    int             mDigit;
+    int             mNo;
+    char            mRate[7];
 
-    int             numberBytes;
-    int             bytesReceived;
-#if defined(__FreeBSD__) || defined(_AIX)
-    socklen_t       Size;
-    socklen_t*      lpSize;
-#else
-    int             Size;
-    int*            lpSize;
-#endif
-    int             sockfd;
-    time_t          timeSeconds;
-    char            timeChar[64];
-    struct tm       newtime;
-    int             digit;
-    int             no;
-    int             j;
-    char            rate[7];
-
-    unsigned int    format;
-    int             hemisphere;
-    unsigned int    birdFormat;
-    unsigned int    birdsRequired;
-    double          birdRate;
-    int             runMode;
-    unsigned char   addr;
-    unsigned short  m_port;
-    unsigned char   reportRate;
+    int             mHemisphere;
+    unsigned int    mBirdFormat;
+    unsigned int    mBirdsRequired;
+    double          mBirdRate;
+    int             mRunMode;
+    unsigned char   mAddr;
+    unsigned short  mPort;
+    unsigned char   mReportRate;
 
     float           m_xmtr_pos_scale;   //: Transmitter position scaling factor
     float           m_xmtr_rot_scale;   //: Transmitter position scaling factor
