@@ -34,6 +34,7 @@
 #define _CLUSTER_PLUGIN_H
 
 #include <gadget/gadgetConfig.h>
+#include <gadget/PacketHandler.h>
 
 #include <string> 
 #include <boost/concept_check.hpp>
@@ -48,40 +49,20 @@ namespace vpr
    class GUID;
    class SerializableObject;
 }
-
+   
 namespace cluster
 {
    class Packet;
-   class ClusterNode;
 
-class GADGET_CLASS_API ClusterPlugin : public jccl::ConfigElementHandler
+class GADGET_CLASS_API ClusterPlugin 
+   : public jccl::ConfigElementHandler, public gadget::PacketHandler
 {
 public:
    ClusterPlugin();
    virtual ~ClusterPlugin();
 
-   /**
-    * Get the GUID associated with this plugin.
-    */
-   virtual vpr::GUID getPluginGUID() = 0;
-
-   /**
-    * Handle a incoming packet.
-    */
-   virtual void handlePacket(Packet* packet, ClusterNode* node) = 0;
-   
-   /**
-    * Virtual function used to inform all plugins that the ClusterNetwork
-    * has lost its connection to the given ClusterNode.
-    */
-   virtual void recoverFromLostNode(ClusterNode* lostNode)
-   {
-      boost::ignore_unused_variable_warning(lostNode);
-   }
-
    void setActive(bool active);
    bool isActive();
-
    
    virtual void preDraw() = 0;
    virtual void postPostFrame() = 0;
@@ -91,7 +72,7 @@ public:
    {;}
 
    virtual void addSerializableObject(vpr::SerializableObject* object)
-   {            \
+   {
       boost::ignore_unused_variable_warning(object);
       vprASSERT(false && "Adding a serializableObject is not supported by this plugin.");
    }

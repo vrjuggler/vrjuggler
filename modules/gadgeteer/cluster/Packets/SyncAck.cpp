@@ -32,7 +32,6 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/Packets/SyncAck.h>
 #include <cluster/Packets/PacketFactory.h>
 

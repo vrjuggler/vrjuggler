@@ -47,8 +47,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-SRCS=	ClusterNode.cpp	\
-	ClusterNetwork.cpp
+SRCS=	ClusterNode.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

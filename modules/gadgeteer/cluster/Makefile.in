@@ -51,10 +51,10 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 DIRPRFX=	cluster/
 
 # Subdirectories to compile.
-SUBDIR=		ClusterNetwork	\
-		Packets
+SUBDIR=		Packets
 
-SRCS=		ClusterManager.cpp \
+SRCS=		ClusterManager.cpp 	\
+		ClusterNode.cpp		\
 		ClusterDepChecker.cpp	\
 		ClusterPlugin.cpp	\
 		ClusterDelta.cpp

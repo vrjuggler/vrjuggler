@@ -40,12 +40,12 @@
 #include <cluster/Packets/Packet.h>
 
 /**
- * Registers a creator for the Packet base classe.
+ * Registers a creator for the Packet base class.
  *
  * @pre Requires that the method std::string getPacketFactoryType() be defined for
  *      class PacketType.
  *
- * Ex: VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(simulators::PySim)
+ * Ex: CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ConnectionAck)
  */
 #define CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(PacketType) \
 class PacketType; \
