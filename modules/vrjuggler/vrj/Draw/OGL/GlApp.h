@@ -30,19 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_GL_APP_H_
+#define _VRJ_GL_APP_H_
 
-#ifndef _VJ_GL_APP_
-#define _VJ_GL_APP_
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
+#include <vrj/Kernel/App.h>
 
-#include <Kernel/vjApp.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
 
-#include <Kernel/GL/vjGlDrawManager.h>
-
-//#include <Kernel/vjKernel.h>
-#include <Kernel/vjUser.h>
-#include <Kernel/vjProjection.h>
+//#include <vrj/Kernel/Kernel.h>
+#include <vrj/Kernel/User.h>
+#include <vrj/Display/Projection.h>
 
 namespace vrj
 {

@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Draw/DrawManager.h>
 
-#include <vjConfig.h>
-#include <Kernel/vjDrawManager.h>
-#include <Kernel/vjDisplayManager.h>
 namespace vrj
 {
    

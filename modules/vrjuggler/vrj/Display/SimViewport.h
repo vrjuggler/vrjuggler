@@ -30,19 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_SIM_DISPLAY_H_
-#define _VJ_SIM_DISPLAY_H_
+#ifndef _VRJ_SIM_DISPLAY_H_
+#define _VRJ_SIM_DISPLAY_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Math/vjMatrix.h>
-#include <Utils/vjDebug.h>
-#include <Input/InputManager/vjPosInterface.h>
-#include <Kernel/vjViewport.h>
-#include <Kernel/vjCameraProjection.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Display/CameraProjection.h>
 
-#include <Config/vjConfigChunk.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

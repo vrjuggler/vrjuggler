@@ -1,4 +1,6 @@
-#include <Kernel/vjViewport.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Display/Viewport.h>
 
 namespace vrj
 {

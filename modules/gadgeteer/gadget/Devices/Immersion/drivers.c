@@ -1,7 +1,6 @@
-#include <vjConfig.h>
 #include <stdio.h>
-#include <Input/ibox/hci.h>
-#include <Input/ibox/ibox.h>
+#include <vrj/Input/Devices/Immersion/hci.h>
+#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
 
 ibox_rec ibox;
 

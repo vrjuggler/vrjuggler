@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXMLCONFIGCOMMUNICATOR_H_
-#define _VJXMLCONFIGCOMMUNICATOR_H_
+#ifndef _VRJ_XMLCONFIGCOMMUNICATOR_H_
+#define _VRJ_XMLCONFIGCOMMUNICATOR_H_
 
-#include <vjConfig.h>
-//#include <Environment/vjConnect.h>
-#include <Environment/vjNetCommunicator.h>
-//#include <Config/vjXMLConfigIOHandler.h>
-#include <Utils/vjXercesXMLParser.h>
+#include <vrj/vjConfig.h>
+//#include <vrj/Environment/Connect.h>
+#include <vrj/Environment/NetCommunicator.h>
+//#include <vrj/Config/XMLConfigIOHandler.h>
+#include <vrj/Util/XercesXMLParser.h>
 
 namespace vrj
 {

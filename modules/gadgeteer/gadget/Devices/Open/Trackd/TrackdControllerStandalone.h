@@ -1,13 +1,13 @@
-#ifndef _A_TRACKD_CONTROLLER_H_
-#define _A_TRACKD_CONTROLLER_H_
+#ifndef _VRJ_TRACKD_CONTROLLER_STANDALONE_H_
+#define _VRJ_TRACKD_CONTROLLER_STANDALONE_H_
 
-#include <Input/Multi/trackdmem.h>
 #include <stdlib.h>
+#include <vrj/Input/Devices/Open/Trackd/trackdmem.h>
 
-class aTrackdController
+class TrackdControllerStandalone
 {
 public:
-   aTrackdController(int shmKey)
+   TrackdControllerStandalone(int shmKey)
    {
       mShmKey = shmKey;
       //mMem = NULL;
@@ -16,7 +16,7 @@ public:
       attachToMem();
    }
 
-   ~aTrackdController()
+   ~TrackdControllerStandalone()
    {
       releaseMem();
    }

@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <Input/Multi/trackdmem.h>
+#include <vrj/Input/Devices/Open/Trackd/trackdmem.h>
 
 
 /*************************************************************************

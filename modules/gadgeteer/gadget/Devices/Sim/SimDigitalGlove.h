@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_SIM_DIGITALGLOVE_H
-#define _VJ_SIM_DIGITALGLOVE_H
+#ifndef _VRJ_SIM_DIGITALGLOVE_H
+#define _VRJ_SIM_DIGITALGLOVE_H
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjGlove/vjPinchGlove.h>
-#include <Input/vjSim/vjSimInput.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Devices/Fakespace/PinchGlove.h>
+#include <vrj/Input/Devices/Sim/SimInput.h>
 
-#include <Input/vjGlove/vjFinger.h>
-#include <Input/vjGlove/vjHand.h>
+#include <vrj/Input/Type/Finger.h>
+#include <vrj/Input/Type/Hand.h>
 
 namespace vrj
 {

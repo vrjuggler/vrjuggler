@@ -12,11 +12,11 @@
  *      Requires HCI firmware version 2.0 or later
  */
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <stdio.h>
-#include <Input/ibox/hci.h>
-#include <Input/ibox/ibox.h>
-#include <Input/ibox/driveunx.h>
+#include <vrj/Input/Devices/Immersion/hci.h>
+#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
+#include <vrj/Input/Devices/Immersion/driveunx.h>
 
 
 

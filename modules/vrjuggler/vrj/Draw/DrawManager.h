@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_DRAW_MANAGER_
+#define _VRJ_DRAW_MANAGER_
 
-#ifndef _VJ_DRAW_MANAGER_
-#define _VJ_DRAW_MANAGER_
-
-#include <vjConfig.h>
-#include <Kernel/vjConfigChunkHandler.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
 
 namespace vrj
 {

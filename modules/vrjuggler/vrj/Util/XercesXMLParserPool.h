@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESXMLPARSERPOOL_H_
-#define _VJXERCESXMLPARSERPOOL_H_
+#ifndef _VRJ_XERCESXMLPARSERPOOL_H_
+#define _VRJ_XERCESXMLPARSERPOOL_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-//#include <Config/vjConfigIOHandler.h>
+//#include <vrj/Config/ConfigIOHandler.h>
 #include <vpr/Util/Singleton.h>
-#include <Utils/vjXercesXMLParser.h>
+#include <vrj/Util/XercesXMLParser.h>
 
 
 namespace vrj

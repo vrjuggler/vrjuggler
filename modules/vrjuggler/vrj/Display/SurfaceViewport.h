@@ -30,19 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SURFACE_DISPLAY_H_
+#define _VRJ_SURFACE_DISPLAY_H_
 
-#ifndef _VJ_SURFACE_DISPLAY_H_
-#define _VJ_SURFACE_DISPLAY_H_
+#include <vrj/vjConfig.h>
 
-#include <Utils/vjDebug.h>
-#include <Kernel/vjViewport.h>
-#include <Kernel/vjProjection.h>
-#include <Math/vjVec3.h>
-class ConfigChunk;
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Math/Vec3.h>
 
 namespace vrj
 {
    
+class ConfigChunk;
+
 //: Defines a display surface an associated projections
 //
 //

@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _DTK_MEMORY_SEGMENT_
-#define _DTK_MEMORY_SEGMENT_
+#ifndef _VRJ_DTK_MEMORY_SEGMENT_H_
+#define _VRJ_DTK_MEMORY_SEGMENT_H_
 
-#include <vjConfig.h>
-#include <Input/vjDTK/vjDTK.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Devices/Open/DTK/DTK.h>
 
 namespace vrj
 {

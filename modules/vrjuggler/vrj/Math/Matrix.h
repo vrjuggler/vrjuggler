@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_MATRIX_
-#define _VJ_MATRIX_
+#ifndef _VRJ_MATRIX_H_
+#define _VRJ_MATRIX_H_
 //#pragma once
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <math.h>
 #include <string.h>
-#include <Math/vjMath.h>
+#include <vrj/Math/Math.h>
 
 
 namespace vrj

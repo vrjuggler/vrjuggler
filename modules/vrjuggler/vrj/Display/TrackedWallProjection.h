@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_TRACKED_WALL_PROJECTION_H_
+#define _VRJ_TRACKED_WALL_PROJECTION_H_
 
-#ifndef _VJ_TRACKED_WALL_PROJECTION_
-#define _VJ_TRACKED_WALL_PROJECTION_
-
-#include <vjConfig.h>
-#include <Kernel/vjWallProjection.h>
-#include <Utils/vjDebug.h>
-#include <Input/InputManager/vjPosInterface.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Display/WallProjection.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Input/Type/PosInterface.h>
 
 namespace vrj
 {

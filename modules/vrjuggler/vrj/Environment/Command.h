@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
 // commands used by connections...
 
-#ifndef _VJ_COMMAND_H_
-#define _VJ_COMMAND_H_
+#ifndef _VRJ_COMMAND_H_
+#define _VRJ_COMMAND_H_
 
-#include <vjConfig.h>
-#include <Performance/vjTimeStamp.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Performance/TimeStamp.h>
 
 namespace vrj
 {

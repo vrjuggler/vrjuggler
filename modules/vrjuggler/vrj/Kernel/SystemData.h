@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SYSTEM_DATA_H_
+#define _VRJ_SYSTEM_DATA_H_
 
-#ifndef _VJ_SYSTEM_DATA_
-#define _VJ_SYSTEM_DATA_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 namespace vrj
 {

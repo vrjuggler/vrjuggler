@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
 
-#include <vjConfig.h>
-#include <Kernel/GL/vjGlWindow.h>
-#include <Kernel/vjKernel.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjDisplay.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Config/ConfigChunk.h>
 
-#include <Kernel/GL/vjGlxWindow.h>
+#include <vrj/Draw/OGL/GlxWindow.h>
 
 
 namespace vrj

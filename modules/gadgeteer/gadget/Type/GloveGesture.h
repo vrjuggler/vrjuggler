@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_GLOVE_GESTURE_H_
-#define _VJ_GLOVE_GESTURE_H_
+#ifndef _VRJ_GLOVE_GESTURE_H_
+#define _VRJ_GLOVE_GESTURE_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjGesture/vjGesture.h>
-#include <Input/vjGlove/vjGlove.h>
-#include <Input/InputManager/vjGloveProxy.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Gesture.h>
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Input/Type/GloveProxy.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

@@ -30,29 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 //===============================================================
-// Isense (a Wrapper for aFlock)
-//
-// Purpose:
-//      VR Juggler Ascention Flock of birds tracking class
-//
-// Author:
-// Kevin Meinert
-//
-// Last Modified: 4-22-99
+// Isense (a Wrapper for IntersenseStandalone)
 //===============================================================
-#ifndef VJISENSE_H
-#define VJISENSE_H
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjInput/vjAnalog.h>
-#include <vpr/Thread/Thread.h>
-#include <Input/vjPosition/isIntersense.h>
+#ifndef _VRJ_ISENSE_H_
+#define _VRJ_ISENSE_H_
+
+#include <vrj/vjConfig.h>
 #include <vector>
+#include <vpr/Thread/Thread.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Type/Analog.h>
+#include <vrj/Input/Devices/Intersense/IntersenseStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
 // box.
@@ -96,7 +88,7 @@ typedef struct {
 //----------------------------------------------------------------------------
 //: Position derived class for running an IS900 tracking system.
 //
-//  Wraps the isIntersense driver.
+//  Wraps the IntersenseStandalone driver.
 //
 //  Isense is a positional device driver for the Flock of Birds, the config
 //  chunk in the constructor should set up all the settings, for these to be
@@ -185,7 +177,7 @@ private:
 
     int getStationIndex(int stationNum, int bufferIndex);
 
-    isIntersense mTracker;
+    IntersenseStandalone mTracker;
 
     Isense_Data mInput[3];
 

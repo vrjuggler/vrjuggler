@@ -29,16 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VJ_OSX_KEYBOARD_H_
-#define _VJ_OSX_KEYBOARD_H_
 
-#include <vjConfig.h>
+#ifndef _VRJ_OSX_KEYBOARD_H_
+#define _VRJ_OSX_KEYBOARD_H_
 
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjKeyboard.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Keyboard.h>
 #include <vpr/Sync/Mutex.h>
 #include <Carbon/Carbon.h>
-#include <Kernel/vjOSXSystemFactory.h>
+#include <vrj/Kernel/OSXSystemFactory.h>
 
 namespace vrj
 {

@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SOCKET_H_
+#define _VRJ_SOCKET_H_
 
-#ifndef _VJ_SOCKET_H_
-#define _VJ_SOCKET_H_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <iostream>
 #include <vpr/IO/Socket/Socket.h>
 

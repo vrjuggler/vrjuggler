@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 // these should all be in separate .cpp files.  fix later
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 
-#include <Performance/vjTimeStampSGI.h>
+#include <vrj/Performance/TimeStampSGI.h>
 
 /*
  * SGI cyclecounter timing
@@ -57,7 +55,7 @@
 
 #include <sys/syssgi.h>
 #include <sys/errno.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {
@@ -150,7 +148,7 @@ namespace vrj
 /*
  * gettimeofday version
  */
-#include <Performance/vjTimeStampPosix.h>
+#include <vrj/Performance/TimeStampPosix.h>
 
 TimeStaMpPosix& TimeStaMpPosix::operator= (const TimeStaMpPosix& t2) {
     val = t2.val;

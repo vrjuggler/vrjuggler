@@ -36,13 +36,14 @@
 // Group manager for vj input devices and proxies
 //
 ////////////////////////////////////////////////////////////////////////////
-#ifndef VJ_INPUT_MANAGER_H
-#define VJ_INPUT_MANAGER_H
+#ifndef VRJ_INPUT_MANAGER_H
+#define VRJ_INPUT_MANAGER_H
+
+#include <vrj/vjConfig.h>
 
 #include <map>
-#include <vjConfig.h>
 
-#include <Kernel/vjConfigChunkHandler.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
 
 namespace vrj
 {

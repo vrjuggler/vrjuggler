@@ -30,8 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
  
-#ifndef VJ_FINGER___
-#define VJ_FINGER___
+#ifndef _VRJ_FINGER_H_
+#define _VRJ_FINGER_H_
+
+#include <vrj/vjConfig.h>
+
 
 namespace vrj
 {

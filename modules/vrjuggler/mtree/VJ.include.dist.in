@@ -38,86 +38,60 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     include
-        Config
-        ..
-        Environment
-        ..
-        Input
-            Filter
+        vrj
+            Config
             ..
-            InputManager
+            Display
             ..
-            Multi
-            ..
-            ibox
-            ..
-            intersense
-            ..
-            vjDTK
-            ..
-            vjGesture
-            ..
-            vjGlove
-            ..
-            vjInput
-            ..
-            vjKeyboard
-            ..
-            vjPosition
-            ..
-            vjSim
-            ..
-        ..
-        Kernel
-            GL
-            ..
-            OSG
-            ..
-            Pf
-            ..
-        ..
-        Math
-        ..
-        Performance
-        ..
-        SharedMem
-        ..
-        Sound
-            aw
-            ..
-            pf
-            ..
-            sl
-            ..
-        ..
-        Sync
-        ..
-        Threads
-        ..
-        Utils
-        ..
-        VPR
-            IO
-                Port
+            Draw
+                GL
                 ..
-                Socket
+                OSG
+                ..
+                Pf
                 ..
             ..
-            SharedMem
+            Environment
             ..
-            Sync
+            Input
+                Devices
+                ..
+                    Ascension
+                    ..
+                    Fakespace
+                    ..
+                    Immersion
+                    ..
+                    Intersense
+                    ..
+                    Keyboard
+                    ..
+                    Logitech
+                    ..
+                    Open
+                        ..
+                        DTK
+                        ..
+                        Trackd
+                    ..
+                    Sim
+                    ..
+                    VirtualTechnologies
+                    ..
+                Type
+                ..
             ..
-            Threads
+            Kernel
             ..
-            md
-                NSPR
+            Math
+            ..
+            Performance
+            ..
+            Sound
+                pf
                 ..
-                POSIX
-                ..
-                SPROC
-                ..
-                WIN32
-                ..
+            ..
+            Util
             ..
         ..
     ..

@@ -30,13 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_GL_CONTEXT_DATA_H_
-#define _VJ_GL_CONTEXT_DATA_H_
+#ifndef _VRJ_GL_CONTEXT_DATA_H_
+#define _VRJ_GL_CONTEXT_DATA_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Kernel/GL/vjGlDrawManager.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
 
 namespace vrj
 {

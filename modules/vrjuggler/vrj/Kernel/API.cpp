@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-
-//#include <Kernel/vjAPI.h>
-#include <Utils/vjDebug.h>
+//#include <vrj/Kernel/API.h>
+#include <vrj/Util/Debug.h>
 

@@ -30,12 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Config/vjStandardConfigIOHandler.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ConfigChunkDB.h>
+#include <vrj/Config/ChunkDescDB.h>
 
-//#include <Config/vjConfigIOHandler.h>
-//#include <Config/vjConfigChunkDB.h>
+//#include <vrj/Config/ConfigIOHandler.h>
+//#include <vrj/Config/ConfigChunkDB.h>
+
+#include <vrj/Config/StandardConfigIOHandler.h>
 
 //      StandardConfigIOHandler () { 
 //          ;

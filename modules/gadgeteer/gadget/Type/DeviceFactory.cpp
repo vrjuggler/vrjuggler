@@ -30,45 +30,44 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Input/InputManager/vjDeviceFactory.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/DeviceFactory.h>
 
 // Sims
-#include <Input/vjSim/vjSimAnalog.h>
-#include <Input/vjSim/vjSimDigital.h>
-#include <Input/vjSim/vjSimPosition.h>
-#include <Input/vjSim/vjSimGloveGesture.h>
-//#include <Input/vjSim/vjSimKeyboardDigital.h>
-#include <Input/vjSim/vjSimRelativePosition.h>
-#include <Input/vjSim/vjSimDigitalGlove.h>
+#include <vrj/Input/Devices/Sim/SimAnalog.h>
+#include <vrj/Input/Devices/Sim/SimDigital.h>
+#include <vrj/Input/Devices/Sim/SimPosition.h>
+#include <vrj/Input/Devices/Sim/SimGloveGesture.h>
+//#include <vrj/Input/Devices/Sim/SimKeyboardDigital.h>
+#include <vrj/Input/Devices/Sim/SimRelativePosition.h>
+#include <vrj/Input/Devices/Sim/SimDigitalGlove.h>
 
 /* Physical devices */
 #ifndef WIN32
-#   include <Input/vjPosition/vjFlock.h>
-#   include <Input/vjPosition/vjIsense.h>
+#   include <vrj/Input/Devices/Ascension/Flock.h>
+#   include <vrj/Input/Devices/Intersense/Isense.h>
 
 #   ifdef VJ_OS_Darwin
-#      include <Input/vjKeyboard/vjOSXKeyboard.h>
+#      include <vrj/Input/Devices/Keyboard/OSXKeyboard.h>
 #   else
-#      include <Input/vjInput/vjIbox.h>
-#      include <Input/vjGlove/vjCyberGlove.h>
-#      include <Input/vjGlove/vjPinchGlove.h>
-#      include <Input/vjKeyboard/vjXWinKeyboard.h>
-#      include <Input/vjKeyboard/vjXWinKBDepChecker.h>
-#      include <Input/Multi/vjTrackdController.h>
-#      include <Input/Multi/vjTrackdSensor.h>
+#      include <vrj/Input/Devices/Immersion/Ibox.h>
+#      include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
+#      include <vrj/Input/Devices/Fakespace/PinchGlove.h>
+#      include <vrj/Input/Devices/Keyboard/XWinKeyboard.h>
+#      include <vrj/Input/Devices/Keyboard/XWinKBDepChecker.h>
+#      include <vrj/Input/Devices/Open/Trackd/TrackdController.h>
+#      include <vrj/Input/Devices/Open/Trackd/TrackdSensor.h>
 #   endif
 
-#   include <Input/vjPosition/logiclass.h>
-#   include <Input/vjPosition/vjMotionStar.h>
+#   include <vrj/Input/Devices/Logitech/logiclass.h>
+#   include <vrj/Input/Devices/Ascension/MotionStar.h>
 #else
-#   include <Input/vjKeyboard/vjKeyboardWin32.h>
+#   include <vrj/Input/Devices/Keyboard/KeyboardWin32.h>
 #endif
 
 /* PThread Dependant Driver */
 #ifdef VJ_HAVE_DTK
-#   include <Input/vjDTK/vjDTK.h>
+#   include <vrj/Input/Devices/Open/DTK/DTK.h>
 #endif
 
 #include <typeinfo>

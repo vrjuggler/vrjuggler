@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////////
 // Base class for all vj Input devices
 //
@@ -42,9 +41,11 @@
 //              constructors
 // Andy Himberger:    v0.0  - Inital version
 ////////////////////////////////////////////////////////////////////////////
-#ifndef VJ_INPUT_H
-#define VJ_INPUT_H
 
+#ifndef _VRJ_INPUT_H_
+#define _VRJ_INPUT_H_
+
+#include <vrj/vjConfig.h>
 
 #ifndef VJ_OS_Win32
 #  include <unistd.h>
@@ -62,8 +63,6 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <float.h>
-
-#include <vjConfig.h>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>

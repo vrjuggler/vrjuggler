@@ -30,8 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Input/vjSim/vjSimRelativePosition.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Input/Devices/Sim/SimRelativePosition.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

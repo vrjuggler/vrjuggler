@@ -30,16 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+
 #include <string>
 #include <sys/time.h>
-#include <stdio.h>                      // need stdio for sprintf
-
-#include <vjConfig.h>
-#include <Input/vjGlove/fsPinchGlove.h> //fakespace pinch driver
-#include <Input/vjGlove/vjPinchGlove.h> //vrjuggler pinch driver
-//#include <Kernel/vjKernel.h>
-#include <Config/vjConfigChunk.h>
+#include <stdio.h>                      /* need stdio for sprintf */
 #include <vpr/System.h>
+
+#include <vrj/Input/Devices/Fakespace/PinchGloveStandalone.h> /* fakespace pinch driver */
+#include <vrj/Input/Devices/Fakespace/PinchGlove.h> /* vrjuggler pinch driver */
+//#include <vrj/Kernel/Kernel.h>
+#include <vrj/Config/ConfigChunk.h>
 
 
 namespace vrj
@@ -67,7 +68,7 @@ bool PinchGlove::config(ConfigChunk *c)
     if(glove_pos_proxy == std::string(""))
     {
        vjDEBUG(vjDBG_INPUT_MGR,0)
-          << "[Pinch] ERROR: fsPinchGlove has no posProxy." << std::endl
+          << "[Pinch] ERROR: PinchGloveStandalone has no posProxy." << std::endl
           << vjDEBUG_FLUSH;
        return false;
     }
@@ -79,11 +80,11 @@ bool PinchGlove::config(ConfigChunk *c)
        mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
        vjDEBUG(vjDBG_INPUT_MGR,0)
-          << "[Pinch] ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy."
+          << "[Pinch] ERROR: PinchGloveStandalone::PinchGloveStandalone: Can't find posProxy."
           << std::endl << std::endl << vjDEBUG_FLUSH;
           */
 
-    mGlove = new fsPinchGlove();
+    mGlove = new PinchGloveStandalone();
 
     return true;
 }
@@ -174,7 +175,7 @@ int PinchGlove::getDigitalData(int devNum)
       character[1] = '\0';
 
       // convert the character to a number.
-      // TODO: what to do if the fsPinchGlove ever gives us something
+      // TODO: what to do if the PinchGloveStandalone ever gives us something
       //       other than 0,1?
       int number = atoi( character ); //probably a better way to do this...
       return number;
@@ -255,16 +256,16 @@ void PinchGlove::updateFingerAngles()
     assert( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
-    right.setFingers( gesture[fsPinchGlove::RPINKY] == '1',
-                     gesture[fsPinchGlove::RRING] == '1',
-                     gesture[fsPinchGlove::RMIDDLE] == '1',
-                     gesture[fsPinchGlove::RINDEX] == '1',
-                     gesture[fsPinchGlove::RTHUMB] == '1' );
-    left.setFingers( gesture[fsPinchGlove::LPINKY] == '1',
-                     gesture[fsPinchGlove::LRING] == '1',
-                     gesture[fsPinchGlove::LMIDDLE] == '1',
-                     gesture[fsPinchGlove::LINDEX] == '1',
-                     gesture[fsPinchGlove::LTHUMB] == '1' );
+    right.setFingers( gesture[PinchGloveStandalone::RPINKY] == '1',
+                     gesture[PinchGloveStandalone::RRING] == '1',
+                     gesture[PinchGloveStandalone::RMIDDLE] == '1',
+                     gesture[PinchGloveStandalone::RINDEX] == '1',
+                     gesture[PinchGloveStandalone::RTHUMB] == '1' );
+    left.setFingers( gesture[PinchGloveStandalone::LPINKY] == '1',
+                     gesture[PinchGloveStandalone::LRING] == '1',
+                     gesture[PinchGloveStandalone::LMIDDLE] == '1',
+                     gesture[PinchGloveStandalone::LINDEX] == '1',
+                     gesture[PinchGloveStandalone::LTHUMB] == '1' );
 
     //Now, set the ugly ambiguously named array, mTheData:
 

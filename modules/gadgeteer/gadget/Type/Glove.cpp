@@ -30,8 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Input/vjGlove/vjGlove.h>
-#include <Math/vjVec4.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Math/Vec4.h>
 
 namespace vrj
 {

@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Kernel/Pf.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Draw/Pf.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Kernel/Pf
+includedir	= @includedir@/vrj/Draw/Pf
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
@@ -52,20 +52,10 @@ ifeq ($(PLATFORM), Linux)
     override OPTIMIZER += -O
 endif
 
-SRCS		= vjPfDrawManager.cpp	\
-                  vjPfUtil.cpp
-
-ifeq (@PERFORMER_API@, Y)
-BEFOREBUILD	= beforebuild
-endif
+SRCS		= PfDrawManager.cpp	\
+                  PfUtil.cpp
 
 include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Library targets.
-# -----------------------------------------------------------------------------
-beforebuild:
-	@$(SHELL) $(scriptdir)/mkinstalldirs $(OBJDIR)
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

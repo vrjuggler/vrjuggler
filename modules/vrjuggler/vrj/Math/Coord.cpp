@@ -30,10 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Math/vjCoord.h>
-#include <Math/vjMatrix.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Math/Matrix.h>
 
 namespace vrj
 {

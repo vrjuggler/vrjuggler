@@ -30,16 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_QUAT_H_
+#define _VRJ_QUAT_H_
 
-#ifndef _VJ_QUAT_H_
-#define _VJ_QUAT_H_
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 
-#include <Math/vjVec4.h>
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjMath.h>
+#include <vrj/Math/Vec4.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Math.h>
 #include <vpr/Util/Assert.h>
 
 

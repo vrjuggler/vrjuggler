@@ -35,14 +35,14 @@
 
 #include <Performer/pr/pfLinMath.h>
 
-#include <Math/vjCoord.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/Pf/vjPfUtil.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Draw/Pf/PfUtil.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfTraverser.h>
 
 #ifdef USE_AUDIOJUGGLER
-   #include <aj/AudioJuggler.h>
+#   include <aj/AudioJuggler.h>
 #endif
 
 //: Performer-Juggler sound node.

@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_KERNEL_
-#define _VJ_KERNEL_
+#ifndef _VRJ_KERNEL_H_
+#define _VRJ_KERNEL_H_
 //#pragma once
+
+#include <vrj/vjConfig.h>
 
 #include <vpr/Util/Singleton.h>
 
-#include <vjConfig.h>
-#include <Kernel/vjSystemFactory.h>
-#include <Performance/vjPerfDataBuffer.h>
-#include <Kernel/vjConfigChunkHandler.h>  // Config stuff
+#include <vrj/Kernel/SystemFactory.h>
+#include <vrj/Performance/PerfDataBuffer.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>  // Config stuff
 
 
 namespace vpr

@@ -45,7 +45,7 @@
 #include <arpa/inet.h>  /* For inet_addr(3) */
 #include <errno.h>
 
-#include <Input/vjPosition/aMotionStar.h>
+#include <vrj/Input/Devices/Ascension/MotionStarStandalone.h>
 
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 
@@ -202,14 +202,16 @@ operator<< (std::ostream& out, const BIRDNET::SINGLE_BIRD_STATUS& device) {
 // Constructor.  This initializes member variables and determines the
 // endianness of the host machine.
 // ----------------------------------------------------------------------------
-aMotionStar::aMotionStar(const char* address, const unsigned short port,
-                         const BIRDNET::protocol proto, const bool master,
-                         const FLOCK::hemisphere hemisphere,
-                         const FLOCK::data_format bird_format,
-                         const BIRDNET::run_mode run_mode,
-                         const unsigned char report_rate,
-                         const double measurement_rate,
-                         const unsigned int birds_requested)
+MotionStarStandalone::MotionStarStandalone(const char* address,
+                                           const unsigned short port,
+                                           const BIRDNET::protocol proto,
+                                           const bool master,
+                                           const FLOCK::hemisphere hemisphere,
+                                           const FLOCK::data_format bird_format,
+                                           const BIRDNET::run_mode run_mode,
+                                           const unsigned char report_rate,
+                                           const double measurement_rate,
+                                           const unsigned int birds_requested)
     : m_active(false), m_socket(-1), m_port(port), m_proto(proto),
       m_master(master), m_seq_num(0), m_cur_mrate(0.0),
       m_measurement_rate(measurement_rate), m_run_mode(run_mode),
@@ -247,7 +249,7 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
 // ----------------------------------------------------------------------------
 // Destructor.
 // ----------------------------------------------------------------------------
-aMotionStar::~aMotionStar () {
+MotionStarStandalone::~MotionStarStandalone () {
     unsigned int i;
 
     if ( isActive() ) {
@@ -267,7 +269,7 @@ aMotionStar::~aMotionStar () {
 // Initializes the driver, setting the status for each bird.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::start () {
+MotionStarStandalone::start () {
     int retval;
 
     retval = 0;
@@ -275,7 +277,7 @@ aMotionStar::start () {
     // Ensure that an address string has been defind for the server before
     // trying to make the connection to the server.
     if ( m_address.size() > 0 ) {
-        fprintf(stderr, "\n[aMotionStar] Connecting to %s ...\n",
+        fprintf(stderr, "\n[MotionStarStandalone] Connecting to %s ...\n",
                 m_address.c_str());
 
         // Create the socket based on the protocol in use.
@@ -290,7 +292,8 @@ aMotionStar::start () {
 
         // If the socket could not be created, we are in trouble.
         if ( m_socket < 0 ) {
-            fprintf(stderr, "[aMotionStar] Could not create %s socket: %s\n",
+            fprintf(stderr,
+                    "[MotionStarStandalone] Could not create %s socket: %s\n",
                     ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"),
                     strerror(errno));
             retval = -2;
@@ -301,7 +304,7 @@ aMotionStar::start () {
             struct hostent* host_entry;
             int status;
 
-            fprintf(stderr, "[aMotionStar] %s socket created\n",
+            fprintf(stderr, "[MotionStarStandalone] %s socket created\n",
                     ((m_proto == BIRDNET::UDP) ? "Datagram" : "Stream"));
 
             // Fill in the structure with the address of the server to which
@@ -328,7 +331,8 @@ aMotionStar::start () {
                 server_addr.sin_addr.s_addr = inet_addr(m_address.c_str());
             }
 
-            fprintf(stderr, "[aMotionStar] Got inet address of server\n");
+            fprintf(stderr,
+                    "[MotionStarStandalone] Got inet address of server\n");
 
             // Connect to the server.  If this is a datagram socket, it will
             // set the default recipient of all future packets, so this is a
@@ -337,36 +341,38 @@ aMotionStar::start () {
                              sizeof(server_addr));
 
             if ( status == -1 ) {
-                perror("[aMotionStar] Cannot connect to server");
+                perror("[MotionStarStandalone] Cannot connect to server");
                 retval = -1;
             }
             else {
-                fprintf(stderr, "[aMotionStar] Connected to server\n");
+                fprintf(stderr, "[MotionStarStandalone] Connected to server\n");
 
                 // Now that we are connected, send a wake-up call to the
                 // server.
                 if ( sendWakeUp() != 0 ) {
                     fprintf(stderr,
-                            "[aMotionStar] Could not wake up server\n");
+                            "[MotionStarStandalone] Could not wake up server\n");
                     retval = -1;
                 }
                 else {
                     BIRDNET::SYSTEM_STATUS* sys_status;
 
                     fprintf(stderr,
-                            "[aMotionStar] The Sleeper has awakened!\n");
+                            "[MotionStarStandalone] The Sleeper has awakened!\n");
 
                     // Get the general system status and save it for later.
                     sys_status = getSystemStatus();
 
                     if ( sys_status == NULL ) {
-                        fprintf(stderr, "[aMotionStar] WARNING: Failed to "
+                        fprintf(stderr,
+                                "[MotionStarStandalone] WARNING: Failed to "
                                 "read system status\n");
                     }
                     // We only try to set the system status if we got a valid
                     // copy of the current system status.
                     else {
-                        fprintf(stderr, "[aMotionStar] Got system status\n");
+                        fprintf(stderr,
+                                "[MotionStarStandalone] Got system status\n");
 
                         // As long as a positive, non-zero measurement rate is
                         // given, send it to the MotionStar chassis as a system
@@ -390,14 +396,15 @@ aMotionStar::start () {
                                                      str_rate.c_str());
 
                             if ( status != 0 ) {
-                                fprintf(stderr, "[aMotionStar] WARNING: Failed "
+                                fprintf(stderr,
+                                        "[MotionStarStandalone] WARNING: Failed "
                                         "to set system status\n");
                             }
                             else {
                                 // I use std::cerr here so that I don't have
                                 // to deal with fprintf(3)'s float vs. double
                                 // formatting.
-                                std::cerr << "[aMotionStar] Set measurement "
+                                std::cerr << "[MotionStarStandalone] Set measurement "
                                           << "rate to " << m_measurement_rate
                                           << std::endl;
                             }
@@ -413,12 +420,12 @@ aMotionStar::start () {
                     if ( m_run_mode == BIRDNET::CONTINUOUS ) {
                         if ( setContinuous() != 0 ) {
                             fprintf(stderr,
-                                    "[aMotionStar] WARNING: Continuous data "
+                                    "[MotionStarStandalone] WARNING: Continuous data "
                                     "request failed!\n");
                         }
                         else {
                             fprintf(stderr,
-                                    "[aMotionStar] Continuous data requested\n");
+                                    "[MotionStarStandalone] Continuous data requested\n");
                         }
                     }
 
@@ -428,12 +435,12 @@ aMotionStar::start () {
                     // the server's data packets.
                     if ( m_xmtr_pos_scale == -1.0 ) {
                         fprintf(stderr,
-                                "[aMotionStar] FATAL ERROR: Position scaling "
+                                "[MotionStarStandalone] FATAL ERROR: Position scaling "
                                 "factor unknown!\n");
                         retval = -4;
                     }
                     else {
-                        fprintf(stderr, "[aMotionStar] Driver setup done\n\n");
+                        fprintf(stderr, "[MotionStarStandalone] Driver setup done\n\n");
 
                         if ( sys_status != NULL ) {
                             printSystemStatus(sys_status);
@@ -464,7 +471,7 @@ aMotionStar::start () {
 // close the connection to it.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::stop () {
+MotionStarStandalone::stop () {
     stopData();
     shutdown();
 
@@ -486,7 +493,7 @@ aMotionStar::stop () {
 // BIRDNET::CONTINUOUS).
 // ----------------------------------------------------------------------------
 void
-aMotionStar::sample () {
+MotionStarStandalone::sample () {
     BIRDNET::DATA_PACKET recv_pkt;
 
     // If we are running in single-shot mode, we need to request a data
@@ -540,7 +547,7 @@ aMotionStar::sample () {
 
                 if ( rec_data_words != m_birds[bird]->data_words ) {
                     fprintf(stderr,
-                            "[aMotionStar] WARNING: Expecting %u data words from bird %u, got %u\n"
+                            "[MotionStarStandalone] WARNING: Expecting %u data words from bird %u, got %u\n"
                             "                       You may have requested more birds than you\n"
                             "                       have connected, or the birds may not be\n"
                             "                       connected sequentially\n"
@@ -558,7 +565,7 @@ aMotionStar::sample () {
 
                 if ( format_code != m_birds[bird]->format ) {
                     fprintf(stderr,
-                            "[aMotionStar] WARNING: Expecting format %u from "
+                            "[MotionStarStandalone] WARNING: Expecting format %u from "
                             "bird %u, got %u\n", m_birds[bird]->format, bird,
                             format_code);
                 }
@@ -568,7 +575,7 @@ aMotionStar::sample () {
                 // ignored.
                 if ( format_code == 15 ) {
                     fprintf(stderr,
-                            "[aMotionStar] An error occurred in sampling\n");
+                            "[MotionStarStandalone] An error occurred in sampling\n");
                 }
                 // Now that we have the size of the data block in the current
                 // record, we can read it into the current bird's data block.
@@ -600,7 +607,7 @@ aMotionStar::sample () {
         // this point, but this message will warn us if we did.
         else {
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Got unexpected packet type %u in "
+                    "[MotionStarStandalone] WARNING: Got unexpected packet type %u in "
                     "sample()!\n", recv_pkt.header.type);
         }
     }
@@ -610,7 +617,7 @@ aMotionStar::sample () {
 // Stops the data flow if it is in continuous mode.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::stopData () {
+MotionStarStandalone::stopData () {
     int status;
 
     status = 0;
@@ -628,7 +635,7 @@ aMotionStar::stopData () {
 
         if ( status != 0 ) {
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Could not send message to stop "
+                    "[MotionStarStandalone] WARNING: Could not send message to stop "
                     "continuous data\n");
         }
         else {
@@ -639,12 +646,12 @@ aMotionStar::stopData () {
             // that the data flow could not be stopped.
             if ( status != 0 ) {
                 fprintf(stderr,
-                        "[aMotionStar] WARNING: Could not stop continuous data\n");
+                        "[MotionStarStandalone] WARNING: Could not stop continuous data\n");
             }
             // Otherwise, the data flow has been stopped and we can return
             // success to the caller.
             else {
-                fprintf(stderr, "[aMotionStar] Continuous data stopped\n");
+                fprintf(stderr, "[MotionStarStandalone] Continuous data stopped\n");
             }
         }
     }
@@ -656,7 +663,7 @@ aMotionStar::stopData () {
 // Shut down the server chassis.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::shutdown () {
+MotionStarStandalone::shutdown () {
     BIRDNET::HEADER msg(BIRDNET::MSG_SHUT_DOWN), rsp;
     int status;
 
@@ -668,7 +675,7 @@ aMotionStar::shutdown () {
 
     if ( status != 0 ) {
         fprintf(stderr,
-                "[aMotionStar] WARNING: Could not send shutdown request\n");
+                "[MotionStarStandalone] WARNING: Could not send shutdown request\n");
     }
     else {
         // Get the server's response to the MSG_SHUT_DOWN packet.
@@ -677,11 +684,11 @@ aMotionStar::shutdown () {
         // If one could not be read, print a warning message.
         if ( status != 0 ) {
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Could not shutdown server chassis\n");
+                    "[MotionStarStandalone] WARNING: Could not shutdown server chassis\n");
         }
         // Otherwise, the server is now shut down, so the driver is inactive.
         else {
-            fprintf(stderr, "[aMotionStar] Server chassis shut down\n");
+            fprintf(stderr, "[MotionStarStandalone] Server chassis shut down\n");
             m_active = false;
         }
     }
@@ -693,7 +700,7 @@ aMotionStar::shutdown () {
 // Get the current server address for the device.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::setRunMode (const BIRDNET::run_mode mode) {
+MotionStarStandalone::setRunMode (const BIRDNET::run_mode mode) {
     // If the driver is already active, we may need to do some communication
     // with the server before changing the run mode.
     if ( m_active ) {
@@ -708,12 +715,12 @@ aMotionStar::setRunMode (const BIRDNET::run_mode mode) {
             m_seq_num++;
 
             if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
-                fprintf(stderr, "[aMotionStar] Continuous data stopped\n");
+                fprintf(stderr, "[MotionStarStandalone] Continuous data stopped\n");
                 getRsp(&rsp, sizeof(BIRDNET::HEADER));
             }
             else {
                 fprintf(stderr,
-                        "[aMotionStar] WARNING: Could not stop continuous "
+                        "[MotionStarStandalone] WARNING: Could not stop continuous "
                         "data before changing run modes!\n");
             }
         }
@@ -729,12 +736,12 @@ aMotionStar::setRunMode (const BIRDNET::run_mode mode) {
             m_seq_num++;
 
             if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
-                fprintf(stderr, "[aMotionStar] Continuous data requested\n");
+                fprintf(stderr, "[MotionStarStandalone] Continuous data requested\n");
                 getRsp(&rsp, sizeof(BIRDNET::HEADER));
             }
             else {
                 fprintf(stderr,
-                        "[aMotionStar] WARNING: Could not request continuous "
+                        "[MotionStarStandalone] WARNING: Could not request continuous "
                         "data flow!\n");
             }
         }
@@ -747,7 +754,7 @@ aMotionStar::setRunMode (const BIRDNET::run_mode mode) {
 // Get the x position of the i'th bird.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::getXPos (const unsigned int i) const {
+MotionStarStandalone::getXPos (const unsigned int i) const {
     float x_pos;
     FLOCK::data_format format;
 
@@ -764,7 +771,7 @@ aMotionStar::getXPos (const unsigned int i) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getXPos() for bird %u does not support data "
+                "[MotionStarStandalone] getXPos() for bird %u does not support data "
                 "format %d\n", i, format);
         x_pos = 0.0;
     }
@@ -776,7 +783,7 @@ aMotionStar::getXPos (const unsigned int i) const {
 // Get the y position of the i'th bird.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::getYPos (const unsigned int i) const {
+MotionStarStandalone::getYPos (const unsigned int i) const {
     float y_pos;
     FLOCK::data_format format;
 
@@ -793,7 +800,7 @@ aMotionStar::getYPos (const unsigned int i) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getYPos() for bird %u does not support data "
+                "[MotionStarStandalone] getYPos() for bird %u does not support data "
                 "format %s\n", i, FLOCK::getFormatName(format).c_str());
         y_pos = 0.0;
     }
@@ -805,7 +812,7 @@ aMotionStar::getYPos (const unsigned int i) const {
 // Get the z position of the i'th bird.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::getZPos (const unsigned int i) const {
+MotionStarStandalone::getZPos (const unsigned int i) const {
     float z_pos;
     FLOCK::data_format format;
 
@@ -822,7 +829,7 @@ aMotionStar::getZPos (const unsigned int i) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getZPos() for bird %u does not support data "
+                "[MotionStarStandalone] getZPos() for bird %u does not support data "
                 "format %s\n", i, FLOCK::getFormatName(format).c_str());
         z_pos = 0.0;
     }
@@ -834,7 +841,7 @@ aMotionStar::getZPos (const unsigned int i) const {
 // Get the z rotation of the i'th bird.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::getZRot (const unsigned int i) const {
+MotionStarStandalone::getZRot (const unsigned int i) const {
     float z_rot;
     FLOCK::data_format format;
 
@@ -848,7 +855,7 @@ aMotionStar::getZRot (const unsigned int i) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getZRot() for bird %u does not support data "
+                "[MotionStarStandalone] getZRot() for bird %u does not support data "
                 "format %s\n", i, FLOCK::getFormatName(format).c_str());
         z_rot = 0.0;
     }
@@ -860,7 +867,7 @@ aMotionStar::getZRot (const unsigned int i) const {
 // Get the y rotation of the i'th bird.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::getYRot (const unsigned int i) const {
+MotionStarStandalone::getYRot (const unsigned int i) const {
     float y_rot;
     FLOCK::data_format format;
 
@@ -874,7 +881,7 @@ aMotionStar::getYRot (const unsigned int i) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getYRot() for bird %u does not support data "
+                "[MotionStarStandalone] getYRot() for bird %u does not support data "
                 "format %d\n", i, format);
         y_rot = 0.0;
     }
@@ -886,7 +893,7 @@ aMotionStar::getYRot (const unsigned int i) const {
 // Get the x rotation of the i'th bird.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::getXRot (const unsigned int i) const {
+MotionStarStandalone::getXRot (const unsigned int i) const {
     float x_rot;
     FLOCK::data_format format;
 
@@ -900,7 +907,7 @@ aMotionStar::getXRot (const unsigned int i) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getXRot() for bird %u does not support data "
+                "[MotionStarStandalone] getXRot() for bird %u does not support data "
                 "format %d\n", i, format);
         x_rot = 0.0;
     }
@@ -913,7 +920,7 @@ aMotionStar::getXRot (const unsigned int i) const {
 // then stored in the given array.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::getMatrixAngles (const unsigned int bird, float angles[3]) const {
+MotionStarStandalone::getMatrixAngles (const unsigned int bird, float angles[3]) const {
     FLOCK::data_format format;
 
     format = m_birds[bird]->format;
@@ -977,7 +984,7 @@ aMotionStar::getMatrixAngles (const unsigned int bird, float angles[3]) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getMatrixAngles() for bird %u does not support "
+                "[MotionStarStandalone] getMatrixAngles() for bird %u does not support "
                 "data format %d\n", bird, format);
         angles[0] = angles[1] = angles[2] = 0.0;
     }
@@ -988,7 +995,7 @@ aMotionStar::getMatrixAngles (const unsigned int bird, float angles[3]) const {
 // then stored in the given array.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::getQuaternion (const unsigned int bird, float quat[4]) const {
+MotionStarStandalone::getQuaternion (const unsigned int bird, float quat[4]) const {
     FLOCK::data_format format;
 
     format = m_birds[bird]->format;
@@ -1013,7 +1020,7 @@ aMotionStar::getQuaternion (const unsigned int bird, float quat[4]) const {
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] getQuaternion() for bird %u does not support "
+                "[MotionStarStandalone] getQuaternion() for bird %u does not support "
                 "data format %d\n", bird, format);
         quat[0] = quat[1] = quat[2] = quat[3] = 0.0;
     }
@@ -1027,7 +1034,7 @@ aMotionStar::getQuaternion (const unsigned int bird, float quat[4]) const {
 // Send a wake-up call to the MotionStar server.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::sendWakeUp () {
+MotionStarStandalone::sendWakeUp () {
     BIRDNET::HEADER msg(BIRDNET::MSG_WAKE_UP), rsp;
     int status;
 
@@ -1040,7 +1047,7 @@ aMotionStar::sendWakeUp () {
     // warning message.
     if ( status != 0 ) {
         fprintf(stderr,
-                "[aMotionStar] WARNING: Could not send wake-up message to "
+                "[MotionStarStandalone] WARNING: Could not send wake-up message to "
                 "server!\n");
     }
     else {
@@ -1053,7 +1060,7 @@ aMotionStar::sendWakeUp () {
             BIRDNET::HEADER shutdown_msg(BIRDNET::MSG_SHUT_DOWN);
 
             fprintf(stderr,
-                    "[aMotionStar] Reinitializing server and sending wake-up "
+                    "[MotionStarStandalone] Reinitializing server and sending wake-up "
                     "call again\n");
 
             shutdown_msg.sequence = htons(m_seq_num);
@@ -1071,7 +1078,7 @@ aMotionStar::sendWakeUp () {
 // Get the system status.
 // ----------------------------------------------------------------------------
 BIRDNET::SYSTEM_STATUS*
-aMotionStar::getSystemStatus () {
+MotionStarStandalone::getSystemStatus () {
     BIRDNET::DATA_PACKET* sys_status;
     BIRDNET::SYSTEM_STATUS* status_info;
 
@@ -1144,7 +1151,7 @@ aMotionStar::getSystemStatus () {
             // the number of birds we want to sample, we have a problem.
             if ( flock_number < m_birds_requested ) {
                 fprintf(stderr,
-                        "[aMotionStar] WARNING: Needed %u birds, but the "
+                        "[MotionStarStandalone] WARNING: Needed %u birds, but the "
                         "server only has %u\n", m_birds_requested,
                         flock_number);
             }
@@ -1158,13 +1165,13 @@ aMotionStar::getSystemStatus () {
 // Set the system status.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
-                              const unsigned char xmtr_num,
-                              const char data_rate[6])
+MotionStarStandalone::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
+                                       const unsigned char xmtr_num,
+                                       const char data_rate[6])
 {
     if ( sys_status->transmitterNumber != xmtr_num ) {
         sys_status->transmitterNumber = xmtr_num;
-        fprintf(stderr, "[aMotionStar] Settting active transmitter to %u\n",
+        fprintf(stderr, "[MotionStarStandalone] Settting active transmitter to %u\n",
                 xmtr_num);
     }
 
@@ -1185,7 +1192,7 @@ aMotionStar::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
 // to them.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::configureBirds () {
+MotionStarStandalone::configureBirds () {
     BIRDNET::SINGLE_BIRD_STATUS* bird_status;
     unsigned int bird_count;
     bool values_set;
@@ -1199,7 +1206,7 @@ aMotionStar::configureBirds () {
         bird_status = getBirdStatus(bird);
 
         if ( bird_status == NULL ) {
-            fprintf(stderr, "[aMotionStar] Could not get status for bird %u\n",
+            fprintf(stderr, "[MotionStarStandalone] Could not get status for bird %u\n",
                     bird);
         }
         // If we got the status for bird, parse it and send a new
@@ -1315,7 +1322,7 @@ aMotionStar::configureBirds () {
     }
 
     fprintf(stderr,
-            "[aMotionStar] Configured %d birds (%u requested, %u active, "
+            "[MotionStarStandalone] Configured %d birds (%u requested, %u active, "
             "%u disabled)\n", bird_count, m_birds_requested, m_birds_active,
             bird_count - m_birds_active);
 
@@ -1326,7 +1333,7 @@ aMotionStar::configureBirds () {
 // Get the status of an individual bird.
 // ----------------------------------------------------------------------------
 BIRDNET::SINGLE_BIRD_STATUS*
-aMotionStar::getBirdStatus (const unsigned char bird) {
+MotionStarStandalone::getBirdStatus (const unsigned char bird) {
     BIRDNET::DATA_PACKET* status;
     BIRDNET::SINGLE_BIRD_STATUS* bird_status;
 
@@ -1372,7 +1379,7 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
             break;
           case 6:
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Got INVALID data format for "
+                    "[MotionStarStandalone] WARNING: Got INVALID data format for "
                     "bird %u\n", bird);
             m_birds[bird]->format = FLOCK::INVALID;
             break;
@@ -1384,7 +1391,7 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
             break;
           default:
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Got unknown data format %u for "
+                    "[MotionStarStandalone] WARNING: Got unknown data format %u for "
                     "bird %u\n", bird_status->dataFormat & 0x0f, bird);
             break;
         }
@@ -1410,7 +1417,7 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
             break;
           default:
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Got unknown data hemisphere %u "
+                    "[MotionStarStandalone] WARNING: Got unknown data hemisphere %u "
                     "for bird %u\n", bird_status->dataFormat, bird);
             break;
         }
@@ -1426,7 +1433,7 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
 // Set the status of an individual bird.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::setBirdStatus (const unsigned char bird,
+MotionStarStandalone::setBirdStatus (const unsigned char bird,
                             BIRDNET::SINGLE_BIRD_STATUS* status)
 {
     // The value in bird is the index into the m_birds vector.  Using that
@@ -1442,7 +1449,7 @@ aMotionStar::setBirdStatus (const unsigned char bird,
 // addressed from 1 through 120.
 // ----------------------------------------------------------------------------
 BIRDNET::DATA_PACKET*
-aMotionStar::getDeviceStatus (const unsigned char device) {
+MotionStarStandalone::getDeviceStatus (const unsigned char device) {
     int status;
     BIRDNET::HEADER msg(BIRDNET::MSG_GET_STATUS);
     BIRDNET::DATA_PACKET* rsp;
@@ -1457,7 +1464,7 @@ aMotionStar::getDeviceStatus (const unsigned char device) {
 
     if ( status != 0 ) {
         fprintf(stderr,
-                "[aMotionStar] ERROR: Could not request status for device %u\n",
+                "[MotionStarStandalone] ERROR: Could not request status for device %u\n",
                 device);
     }
     else {
@@ -1471,7 +1478,7 @@ aMotionStar::getDeviceStatus (const unsigned char device) {
 
         if ( status != 0 ) {
             fprintf(stderr,
-                    "[aMotionStar] ERROR: Could not read status header for "
+                    "[MotionStarStandalone] ERROR: Could not read status header for "
                     "device %u from server\n", device);
         }
         // If that succeeded, read the rest of the response using the size
@@ -1482,7 +1489,7 @@ aMotionStar::getDeviceStatus (const unsigned char device) {
 
             if ( status != 0 ) {
                 fprintf(stderr,
-                        "[aMotionStar] ERROR: Could not read status data "
+                        "[MotionStarStandalone] ERROR: Could not read status data "
                         "buffer for device %u from server\n", device);
             }
         }
@@ -1498,8 +1505,9 @@ aMotionStar::getDeviceStatus (const unsigned char device) {
 // the overall system.  The birds are addressed from 1 through 120.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
-                              const unsigned short buffer_size)
+MotionStarStandalone::setDeviceStatus (const unsigned char device,
+                                       const char* buffer,
+                                       const unsigned short buffer_size)
 {
     BIRDNET::DATA_PACKET msg;
     BIRDNET::HEADER rsp;
@@ -1523,7 +1531,7 @@ aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
 
     if ( status != 0 ) {
         fprintf(stderr,
-                "[aMotionStar] WARNING: Could not set device status for "
+                "[MotionStarStandalone] WARNING: Could not set device status for "
                 "device %u: %s\n", device, strerror(errno));
     }
     else {
@@ -1531,7 +1539,7 @@ aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
 
         if ( status != 0 ) {
             fprintf(stderr,
-                    "[aMotionStar] WARNING: Could not read server response to "
+                    "[MotionStarStandalone] WARNING: Could not read server response to "
                     "device %u setup: %s\n", device, strerror(errno));
         }
     }
@@ -1543,7 +1551,7 @@ aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
 // Tell the MotionStar server to sample continuously.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::setContinuous () {
+MotionStarStandalone::setContinuous () {
     BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
     int status;
 
@@ -1569,7 +1577,7 @@ aMotionStar::setContinuous () {
 // the packets and converting them into usable values.
 // ----------------------------------------------------------------------------
 short
-aMotionStar::toShort (const char high_byte, const char low_byte) const {
+MotionStarStandalone::toShort (const char high_byte, const char low_byte) const {
     union {
         char   c[sizeof(short)];
         short  value;
@@ -1597,7 +1605,7 @@ aMotionStar::toShort (const char high_byte, const char low_byte) const {
 // Operation and Installation Guide.
 // ----------------------------------------------------------------------------
 float
-aMotionStar::toFloat (const unsigned char high_byte,
+MotionStarStandalone::toFloat (const unsigned char high_byte,
                       const unsigned char low_byte)
     const
 {
@@ -1637,7 +1645,7 @@ aMotionStar::toFloat (const unsigned char high_byte,
 // floating-point number representing the data rate.
 // ----------------------------------------------------------------------------
 double
-aMotionStar::convertMeasurementRate (const unsigned char rate[6]) {
+MotionStarStandalone::convertMeasurementRate (const unsigned char rate[6]) {
     double data_rate;
     char data_rate_a[7];
 
@@ -1664,7 +1672,8 @@ aMotionStar::convertMeasurementRate (const unsigned char rate[6]) {
 // of characters representing the data rate.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::convertMeasurementRate (const double rate, std::string& str_rate)
+MotionStarStandalone::convertMeasurementRate (const double rate,
+                                              std::string& str_rate)
 {
     char rate_a[7];
 
@@ -1677,8 +1686,8 @@ aMotionStar::convertMeasurementRate (const double rate, std::string& str_rate)
 // the position scaling factor.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::getUnitInfo (const unsigned int bird,
-                          const BIRDNET::SINGLE_BIRD_STATUS* bird_status)
+MotionStarStandalone::getUnitInfo (const unsigned int bird,
+                                   const BIRDNET::SINGLE_BIRD_STATUS* bird_status)
 {
     unsigned char high_byte, low_byte, units;
 
@@ -1696,7 +1705,7 @@ aMotionStar::getUnitInfo (const unsigned int bird,
     }
     else {
         fprintf(stderr,
-                "[aMotionStar] WARNING: Unknown units value %u read from "
+                "[MotionStarStandalone] WARNING: Unknown units value %u read from "
                 "scaling factor on bird %u\n", units, bird);
     }
 
@@ -1711,7 +1720,7 @@ aMotionStar::getUnitInfo (const unsigned int bird,
 // Send the given message to the server.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::sendMsg (const void* packet, const size_t packet_size) {
+MotionStarStandalone::sendMsg (const void* packet, const size_t packet_size) {
     ssize_t bytes;
     int status;
 
@@ -1720,13 +1729,13 @@ aMotionStar::sendMsg (const void* packet, const size_t packet_size) {
 
     // Nothing was sent.
     if ( bytes == 0 ) {
-        fprintf(stderr, "[aMotionStar] Sent 0 bytes to %s: %s\n",
+        fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s: %s\n",
                m_address.c_str(), strerror(errno));
         status = -2;
     }
     // An error occurred while trying to send the packet.
     else if ( bytes == -1 ) {
-        fprintf(stderr, "[aMotionStar] Could not send message to %s: %s\n",
+        fprintf(stderr, "[MotionStarStandalone] Could not send message to %s: %s\n",
                 m_address.c_str(), strerror(errno));
         status = -1;
     }
@@ -1742,7 +1751,7 @@ aMotionStar::sendMsg (const void* packet, const size_t packet_size) {
 // Get the server's response to a sent message.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::getRsp (void* packet, const size_t packet_size) {
+MotionStarStandalone::getRsp (void* packet, const size_t packet_size) {
     ssize_t bytes;
     int status;
 
@@ -1751,13 +1760,13 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
 
     // Nothing was read.
     if ( bytes == 0 ) {
-        fprintf(stderr, "[aMotionStar] Read 0 bytes from %s: %s\n",
+        fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s: %s\n",
                 m_address.c_str(), strerror(errno));
         status = -2;
     }
     // An error occurred while trying to receive the packet.
     else if ( bytes == -1 ) {
-        fprintf(stderr, "[aMotionStar] Could not read message from %s: %s\n",
+        fprintf(stderr, "[MotionStarStandalone] Could not read message from %s: %s\n",
                 m_address.c_str(), strerror(errno));
         status = -1;
     }
@@ -1773,7 +1782,7 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
 // Read exactly packet_size bytes from the server.
 // ----------------------------------------------------------------------------
 ssize_t
-aMotionStar::recvn (void* packet, const size_t packet_size, const int flags) {
+MotionStarStandalone::recvn (void* packet, const size_t packet_size, const int flags) {
     size_t count;
     ssize_t bytes;
 
@@ -1811,7 +1820,7 @@ aMotionStar::recvn (void* packet, const size_t packet_size, const int flags) {
 // Print the system status as read from the server.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status) {
+MotionStarStandalone::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status) {
     unsigned char erc_addr, xmtr_num;
     unsigned int pad_width_full, pad_width_dot;
     char rev_str[8];
@@ -1877,7 +1886,7 @@ aMotionStar::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status) {
 // Print the status for all the devices that have not been disabled.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::printDeviceStatus () {
+MotionStarStandalone::printDeviceStatus () {
     unsigned int pad_width_full, pad_width_dot;
 
     // Set the padding for the dots that go between the description and the
@@ -1937,7 +1946,7 @@ aMotionStar::printDeviceStatus () {
 // message is based on the table on page 140 of the MotionStar manual.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::printError (const unsigned char err_code) {
+MotionStarStandalone::printError (const unsigned char err_code) {
     // Map the error code to a human-readable string.  These messages are
     // based on the table on page 140 of the MotionStar manual.
     switch (err_code) {

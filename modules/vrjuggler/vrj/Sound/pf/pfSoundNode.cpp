@@ -1,4 +1,4 @@
-#include "Sound/pf/pfSoundNode.h"
+#include <vrj/Sound/pf/pfSoundNode.h>
 
 
 pfSoundNode::pfSoundNode( const std::string& sound, bool isPositional ) : mIsPositional( true )

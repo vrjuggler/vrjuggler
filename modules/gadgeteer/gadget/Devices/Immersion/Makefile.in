@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input/ibox.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input/Devices/Immersion.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Input/ibox
+includedir	= @includedir@/vrj/Input/Devices/Immersion
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
@@ -49,10 +49,11 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 
 ifneq (@OS_TYPE@, Win32)
 ifneq (@PLATFORM@, Darwin)
-SRCS		= drivers.c	\
-                  driveunx.c 	\
-                  hci.c 	\
-                  ibox.c
+SRCS		= drivers.c		\
+                  driveunx.c 		\
+                  hci.c 		\
+                  iboxStandalone.c	\
+                  Ibox.cpp
 endif
 endif
 

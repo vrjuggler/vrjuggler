@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <assert.h>
-#include <Math/vjQuat.h>
-#include <Math/vjMath.h>
+#include <vrj/vjConfig.h>
+#include <vpr/Util/Assert.h>
+#include <vrj/Math/Quat.h>
+#include <vrj/Math/Math.h>
 
 namespace vrj
 {
@@ -122,7 +122,7 @@ void Quat::getRot( float& rad, float& xx, float& yy, float& zz ) const
    {
       quat.normalize();
    }
-   assert( Math::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
+   vprASSERT( Math::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
    
    
    // [acos( w ) * 2.0, v / (asin( w ) * 2.0)]
@@ -243,7 +243,7 @@ void Quat::slerp(float t, const Quat& p, const Quat& q)
 
 void Quat::squad(float _t, const Quat& _q1, const Quat& _q2, const Quat& _a, const Quat& _b)
 { 
-   assert( false && "not implemented" ); 
+   vprASSERT( false && "not implemented" ); 
 }
 
 //: complex exponentiation 

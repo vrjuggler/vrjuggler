@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_ASCENSION_MOTION_STAR_H_
-#define _VJ_ASCENSION_MOTION_STAR_H_
+#ifndef _VRJ_ASCENSION_MOTION_STAR_H_
+#define _VRJ_ASCENSION_MOTION_STAR_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <string>
-
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>
 #include <vpr/Thread/Thread.h>
-#include <Input/vjPosition/aMotionStar.h>
+
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Devices/Ascension/MotionStarStandalone.h>
 
 namespace vrj
 {
@@ -48,9 +48,10 @@ namespace vrj
 //-----------------------------------------------------------------------------
 //: Position-derived class for running an Ascension MotionStar device that
 //+ is connected to a Flock of Birds.  It is a wrapper class for the real
-//+ driver class 'aMotionStar'.
+//+ driver class 'MotionStarStandalone'.
 //
-//  MotionStar adds to the aMotionStar class shared memory and threading.<br>
+//  MotionStar adds to the MotionStarStandalone class shared memory and
+//  threading.<br>
 //  MotionStar is a positional device driver for the Flock of Birds.  The
 //  config chunk in the constructor should set up all the settings.  For these
 //  to be changed, the MotionStar has to be deleted and a new instance created
@@ -73,8 +74,8 @@ class MotionStar : public Input, public Position {
 public:
 
     // ------------------------------------------------------------------------
-    //: Constructor.  This invokes the aMotionStar constructor and initializes
-    //+ member variables.
+    //: Constructor.  This invokes the MotionStarStandalone constructor and
+    //+ initializes member variables.
     //
     //! PRE: None.
     //! POST: m_motion_star is initialized, and mThread is set to NULL.
@@ -614,8 +615,8 @@ private:
     // ------------------------------------------------------------------------
     unsigned int getBirdIndex(int bird_num, int buffer_index);
 
-    vpr::Thread*   m_my_thread;   // The thread doing the flock sampling
-    aMotionStar m_motion_star; // Actual MotionStar device driver
+    vpr::Thread*         m_my_thread;   // The thread doing the flock sampling
+    MotionStarStandalone m_motion_star; // Actual MotionStar device driver
 };
 
 

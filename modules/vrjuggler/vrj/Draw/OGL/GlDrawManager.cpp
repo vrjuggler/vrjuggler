@@ -30,28 +30,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
 #include <vpr/Thread/Thread.h>
 
-#include <vjConfig.h>
-#include <Kernel/GL/vjGlDrawManager.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Kernel/vjKernel.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Kernel/Kernel.h>
 
-#include <Kernel/vjDisplay.h>
-#include <Kernel/vjViewport.h>
-#include <Kernel/vjSimViewport.h>
-#include <Kernel/vjSurfaceViewport.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Display/SimViewport.h>
+#include <vrj/Display/SurfaceViewport.h>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Input/vjGlove/vjGlove.h>
-#include <Input/InputManager/vjGloveProxy.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Input/Type/GloveProxy.h>
 
-#include <Kernel/GL/vjGlPipe.h>
-#include <Kernel/GL/vjGlWindow.h>
+#include <vrj/Draw/OGL/GlPipe.h>
+#include <vrj/Draw/OGL/GlWindow.h>
 
-#include <Math/vjVec3.h>
-#include <Math/vjVec4.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Vec4.h>
 
 namespace vrj
 {
@@ -196,7 +196,7 @@ void GlDrawManager::addDisplay(Display* disp)
 {
    vprASSERT(disp != NULL);    // Can't add a null display
 
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager:addDisplay: " << disp
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vrj::GlDrawManager:addDisplay: " << disp
                              << std::endl << vjDEBUG_FLUSH;
 
    // -- Create a window for new display
@@ -261,7 +261,7 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
    else
    {
-      vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vjDEBUG_FLUSH;
       vprASSERT(false);
    }
 
@@ -271,7 +271,7 @@ void GlDrawManager::removeDisplay(Display* disp)
 /// Shutdown the drawing API
 void GlDrawManager::closeAPI()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vjDEBUG_FLUSH;
     // Stop all pipes
    ;
     // Delete all pipes
@@ -775,11 +775,11 @@ void GlDrawManager::drawGlove(GloveProxy* gloveProxy)
 
 
 #if  defined(VJ_OS_Win32)
-#  include <Kernel/GL/vjGlWinWin32.h>
+#  include <vrj/Draw/OGL/GlWinWin32.h>
 #elif defined(VJ_OS_Darwin)
-#  include <Kernel/GL/vjGlOSXWindow.h>
+#  include <vrj/Draw/OGL/GlOSXWindow.h>
 #else
-#  include <Kernel/GL/vjGlxWindow.h>
+#  include <vrj/Draw/OGL/GlxWindow.h>
 #endif
 
 namespace vrj

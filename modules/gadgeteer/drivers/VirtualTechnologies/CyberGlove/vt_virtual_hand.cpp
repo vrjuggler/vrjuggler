@@ -11,18 +11,18 @@
 /*  --    Author:  Larry Edwards                            --  */
 /*  ==========================================================  */
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#include <Input/vjGlove/vjCyberGlove.h>
-#include <Input/vjGlove/vt_math3d.h>
-#include <Input/vjGlove/vt_init.h>
-#include <Input/vjGlove/vt_read_user_cal-types.h>
-#include <Input/vjGlove/vt_virtual_hand-types.h>
-#include <Input/vjGlove/vt_globals.h>
-#include <Input/vjGlove/vt_error.h>
+#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_math3d.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_init.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
 
 typedef float Matrix[4][4];
 

@@ -30,13 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/PosProxy.h>
+#include <vrj/Config/ConfigChunk.h>
 
-#include <vjConfig.h>
-#include <Input/InputManager/vjPosProxy.h>
-#include <Config/vjConfigChunk.h>
-
-#include <Input/Filter/vjPosFilter.h>
-#include <Input/Filter/vjLinearSigmoidPosFilter.h>
+#include <vrj/Input/Type/PosFilter.h>
+#include <vrj/Input/Type/LinearSigmoidPosFilter.h>
 
 namespace vrj
 {

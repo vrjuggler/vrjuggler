@@ -30,10 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Input/vjSim/vjSimDigital.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Devices/Sim/SimDigital.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

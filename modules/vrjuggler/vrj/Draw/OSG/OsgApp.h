@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_OSG_APP_
-#define _VJ_OSG_APP_
+#ifndef _VRJ_OSG_APP_H_
+#define _VRJ_OSG_APP_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Kernel/GL/vjGlApp.h>
+#include <vrj/Draw/OGL/GlApp.h>
 
 #include <osg/Vec3>
 #include <osg/Matrix>
@@ -183,5 +183,5 @@ inline void OsgApp::draw()
 
 
 };
-#endif
 
+#endif

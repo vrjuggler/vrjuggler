@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_PINCH_GLOVE_H_
+#define _VRJ_PINCH_GLOVE_H_
 
-#ifndef _VJ_PINCH_GLOVE_H_
-#define _VJ_PINCH_GLOVE_H_
-
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjGlove/vjGlove.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjGlove/fsPinchGlove.h>
+#include <vrj/vjConfig.h>
 #include <string>
 
-#include <Input/vjGlove/vjFinger.h>
-#include <Input/vjGlove/vjHand.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Devices/Fakespace/PinchGloveStandalone.h>
+
+#include <vrj/Input/Type/Finger.h>
+#include <vrj/Input/Type/Hand.h>
 
 namespace vrj
 {
@@ -93,7 +93,7 @@ protected:
 
 protected:
    //vjThread*         mControlThread;      // The thread of control for the object
-   fsPinchGlove*      mGlove;              // The actual glove
+   PinchGloveStandalone* mGlove;              // The actual glove
 
    Hand left, right;
 };
@@ -101,4 +101,4 @@ protected:
 
 };
 
-#endif   /* _VJ_PINCH_GLOVE_H_ */
+#endif   /* _VRJ_PINCH_GLOVE_H_ */

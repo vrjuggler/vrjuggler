@@ -47,18 +47,18 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjChunkDesc.cpp		\
-                  vjChunkDescDB.cpp		\
-                  vjChunkFactory.cpp		\
-                  vjConfigChunk.cpp		\
-                  vjConfigChunkDB.cpp		\
-                  vjConfigIO.cpp		\
-                  vjParseUtil.cpp		\
-                  vjProperty.cpp		\
-                  vjPropertyDesc.cpp		\
-                  vjStandardConfigIOHandler.cpp	\
-                  vjVarValue.cpp		\
-               	  vjXMLConfigIOHandler.cpp
+SRCS		= ChunkDesc.cpp			\
+                  ChunkDescDB.cpp		\
+                  ChunkFactory.cpp		\
+                  ConfigChunk.cpp		\
+                  ConfigChunkDB.cpp		\
+                  ConfigIO.cpp			\
+                  ParseUtil.cpp			\
+                  Property.cpp			\
+                  PropertyDesc.cpp		\
+                  StandardConfigIOHandler.cpp	\
+                  VarValue.cpp			\
+               	  XMLConfigIOHandler.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -30,25 +30,25 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_PROXY_H_
 #define _VJ_PROXY_H_
 
+#include <vrj/vjConfig.h>
+
 #include <typeinfo>
 
-#include <vjConfig.h>
-#include <Kernel/vjKernel.h>
-#include <Input/InputManager/vjInputManager.h>
-#include <Input/vjInput/vjInput.h>
-#include <Config/vjConfigChunk.h>
-#include <Utils/vjDebug.h>
-
-//class Input;
-//class Kernel;
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Input/InputManager.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {
    
+//class Input;
+//class Kernel;
+
 //: Base class for all input proxies
 // TODO rename to InputProxy
 //

@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SYSTEM_H_
+#define _VRJ_SYSTEM_H_
 
-#ifndef _VJ_SYSTEM_H_
-#define _VJ_SYSTEM_H_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <vpr/Sync/Mutex.h>
 
 namespace vrj

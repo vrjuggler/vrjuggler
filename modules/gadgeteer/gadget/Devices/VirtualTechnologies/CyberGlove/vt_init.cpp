@@ -10,15 +10,15 @@
 /*  --    Further modified by Larry Edwards                       --  */
 /*  ================================================================  */
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <Input/vjGlove/vjCyberGlove.h>
-#include <Input/vjGlove/vt_globals.h>
-#include <Input/vjGlove/vt_init.h>
+#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_init.h>
 
 #define True 1
 #define False 0

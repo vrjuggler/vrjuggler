@@ -115,7 +115,7 @@ endif
 BRANCH		= HEAD
 CANON_NAME	= Kenny
 VER_ARGS	= -f $(VJROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(VJROOT_ABS)/vjParam.h.in -o vjParam.h		\
+                  -i $(VJROOT_ABS)/vrj/vjParam.h.in -o vrj/vjParam.h	\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
 ifdef VERSION
@@ -237,13 +237,8 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
-	cd $(instlinks)/include &&					\
-          for dir in $(SUBDIR) ; do					\
-              rm -f ./$$dir ;						\
-              ln -s $(VJROOT_ABS)/$$dir ./$$dir ;			\
-          done
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vrj
+	@$(MAKE) -C vrj instlinks=$(instlinks) links
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
@@ -252,12 +247,12 @@ ifneq (@OS_TYPE@, Win32)
           ln -s $(VJROOT_ABS)/Data ./Data
 	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(VJROOT_ABS)/samples ./samples
-	cd $(instlinks)/include && rm -f ./vjConfig.h &&		\
-          $(LN_S) $(VJROOT_ABS)/vjConfig.h ./vjConfig.h
-	cd $(instlinks)/include && rm -f ./vjDefines.h &&		\
-	  $(LN_S) $(topdir)/vjDefines.h ./vjDefines.h
-	cd $(instlinks)/include && rm -f ./vjParam.h &&			\
-	  $(LN_S) $(topdir)/vjParam.h ./vjParam.h
+	cd $(instlinks)/include/vrj && rm -f ./*.h &&			\
+          $(LN_S) $(VJROOT_ABS)/vrj/*.h ./
+	cd $(instlinks)/include/vrj && rm -f ./vjDefines.h &&		\
+	  $(LN_S) $(topdir)/vrj/vjDefines.h ./vjDefines.h
+	cd $(instlinks)/include/vrj && rm -f ./vjParam.h &&		\
+	  $(LN_S) $(topdir)/vrj/vjParam.h ./vjParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
@@ -348,12 +343,15 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
 
 post-install-headers:
+	$(MAKE) install-headers-deprecated
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/vjConfig.h $(includedir)/vjConfig.h
+          $(VJROOT_ABS)/vrj/vjConfig.h $(includedir)/vrj/vjConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vjDefines.h $(includedir)
+          $(topdir)/vrj/vjDefines.h $(includedir)/vrj
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vjParam.h $(includedir)
+          $(topdir)/vrj/vjParam.h $(includedir)/vrj
+
+install-headers-deprecated:
 
 # Install the sample applications.
 install-samples:
@@ -414,6 +412,7 @@ install-data:
 # '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
 # =============================================================================
 _clobber:
+	@$(MAKE) cleandepend
 	@$(MAKE) clean-links
 
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is

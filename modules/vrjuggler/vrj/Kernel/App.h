@@ -30,20 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_APP_H_
+#define _VRJ_APP_H_
 
-#ifndef _VJ_APP_
-#define _VJ_APP_
-
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjConfigChunkHandler.h>
-#include <Sound/SoundManagerFactory.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <vrj/Sound/SoundManagerFactory.h>
 
 
 namespace vrj
 {
    
-   class DrawManager;
+class DrawManager;
 class Kernel;
 
 //----------------------------------------------------------------

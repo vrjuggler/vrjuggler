@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_VIEWPORT_H_
+#define _VRJ_VIEWPORT_H_
 
-#ifndef _VJ_VIEWPORT_H_
-#define _VJ_VIEWPORT_H_
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-
-#include <Math/vjVec3.h>
-#include <Input/vjPosition/vjPosition.h>
-#include <Kernel/vjUser.h>
-#include <Environment/vjEnvironmentManager.h>
-#include <Performance/vjPerfDataBuffer.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Kernel/User.h>
+#include <vrj/Environment/EnvironmentManager.h>
+#include <vrj/Performance/PerfDataBuffer.h>
 
 
 namespace vrj

@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // positional tracker base class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_ANALOG_H_
-#define _VJ_ANALOG_H_
+#ifndef _VRJ_ANALOG_H_
+#define _VRJ_ANALOG_H_
 
-#include <vjConfig.h>
-#include <Config/vjConfigChunk.h>
-#include <Utils/vjDebug.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {

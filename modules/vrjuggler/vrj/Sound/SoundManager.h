@@ -2,7 +2,8 @@
 #ifndef _VRJUGGLER_SOUND_MANAGER_
 #define _VRJUGGLER_SOUND_MANAGER_
 
-#include <Kernel/vjConfigChunkHandler.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
 
 namespace vrj
 {

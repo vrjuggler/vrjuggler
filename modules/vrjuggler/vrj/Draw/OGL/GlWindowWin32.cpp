@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
-#include <Kernel/GL/vjGlWinWin32.h>
-#include <Utils/vjDebug.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Draw/OGL/GlWinWin32.h>
+#include <vrj/Utils/Debug.h>
 #include <vpr/Util/Assert.h>
 
 #define glWinWin32Classname "vjOGLWin32"

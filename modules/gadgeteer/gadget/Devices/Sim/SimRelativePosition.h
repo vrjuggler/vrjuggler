@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SIM_RELATIVE_POSITION_H
+#define _VRJ_SIM_RELATIVE_POSITION_H
 
-#ifndef _VJ_SIM_RELATIVE_POSITION_H
-#define _VJ_SIM_RELATIVE_POSITION_H
-
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>
-#include <Input/InputManager/vjPosInterface.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Type/PosInterface.h>
 
 namespace vrj
 {

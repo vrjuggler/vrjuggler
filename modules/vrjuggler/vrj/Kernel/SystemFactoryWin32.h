@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_WIN32_SYSTEM_FACTORY_H_
+#define _VRJ_WIN32_SYSTEM_FACTORY_H_
 
-#ifndef _VJ_WIN32_SYSTEM_FACTORY_H_
-#define _VJ_WIN32_SYSTEM_FACTORY_H_
-
-#include <vjConfig.h>
-#include <Kernel/vjSystemFactory.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Util/Singleton.h>
 
 namespace vrj

@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_LINEAR_SIGMOID_POS_FILTER_H_
-#define _VJ_LINEAR_SIGMOID_POS_FILTER_H_
+#ifndef _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
+#define _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Input/Filter/vjPosFilter.h>
-#include <Math/vjQuat.h>
+#include <vrj/Input/Type/PosFilter.h>
+#include <vrj/Math/Quat.h>
 
 namespace vrj
 {

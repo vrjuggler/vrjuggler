@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <Utils/vjXercesStreamInputStream.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Util/XercesStreamInputStream.h>
 
 namespace vrj
 {

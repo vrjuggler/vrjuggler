@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // ibox tracking class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_IBOX_H_
-#define _VJ_IBOX_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjInput/vjAnalog.h>
-#include <Input/ibox/hci.h>
-#include <Input/ibox/ibox.h>
+#ifndef _VRJ_IBOX_H_
+#define _VRJ_IBOX_H_
+
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Type/Analog.h>
+#include <vrj/Input/Devices/Immersion/hci.h>
+#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
 
 namespace vrj
 {

@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // positional proxy class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_DIGITALPROXY_H_
-#define _VJ_DIGITALPROXY_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/InputManager/vjProxy.h>
+#ifndef _VRJ_DIGITALPROXY_H_
+#define _VRJ_DIGITALPROXY_H_
+
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Type/Proxy.h>
 #include <vpr/Util/Assert.h>
 
 namespace vrj

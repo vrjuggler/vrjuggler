@@ -30,14 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Kernel/vjSurfaceViewport.h>
+#include <vrj/vjConfig.h>
 
-#include <Kernel/vjWallProjection.h>
-#include <Kernel/vjTrackedWallProjection.h>
-#include <Math/vjCoord.h>
-#include <Math/vjVec3.h>
-#include <Math/vjVec4.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Display/WallProjection.h>
+#include <vrj/Display/TrackedWallProjection.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Vec4.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

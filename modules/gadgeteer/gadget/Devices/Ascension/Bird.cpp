@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <termios.h>
 
-#include <vjConfig.h>
-
 #include <vpr/System.h>
 
-#include <Input/vjPosition/vjBird.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Input/Devices/Ascension/Bird.h>
+#include <vrj/Config/ConfigChunk.h>
 
 
 namespace vrj

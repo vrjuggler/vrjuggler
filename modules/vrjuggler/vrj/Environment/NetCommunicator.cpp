@@ -30,15 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Environment/vjNetCommunicator.h>
-//#include <iostream.h>
+#include <vrj/vjConfig.h>
+
 //#include <string>
 
-//class Connect;
+#include <vrj/Environment/NetCommunicator.h>
 
 namespace vrj
 {
    
+//class Connect;
+
 //: Constructor
 NetCommunicator::NetCommunicator () {
     connection = NULL;

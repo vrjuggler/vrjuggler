@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_PLANE_H_
-#define _VJ_PLANE_H_
+#ifndef _VRJ_PLANE_H_
+#define _VRJ_PLANE_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
-#include <Math/vjVec3.h>
-#include <Math/vjSeg.h>
-#include <Math/vjMath.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Seg.h>
+#include <vrj/Math/Math.h>
 
 
 namespace vrj

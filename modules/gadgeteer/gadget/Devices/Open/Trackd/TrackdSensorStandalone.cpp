@@ -1,7 +1,7 @@
-#include <Input/Multi/aTrackdSensor.h>
+#include <vrj/Input/Devices/Open/Trackd/TrackdSensorStandalone.h>
 #include <assert.h>
 
-int aTrackdSensor::numSensors()
+int TrackdSensorStandalone::numSensors()
 {
    assert(mMem != NULL);
    assert(mShmKey != 0);
@@ -9,7 +9,7 @@ int aTrackdSensor::numSensors()
 }
 
 // Return the position of the given sensor
-vrj::Matrix aTrackdSensor::getSensorPos(int sensorNum)
+vrj::Matrix TrackdSensorStandalone::getSensorPos(int sensorNum)
 {
    assert(mMem != NULL && "We don't have a valid trackd memory area");
    assert(sensorNum < numSensors() && "Out of bounds request for a sensor");
@@ -27,14 +27,14 @@ vrj::Matrix aTrackdSensor::getSensorPos(int sensorNum)
 
 //: Attach to the memory segment with key (mShmKey)
 //! POST: mMem = address of the shared memory area
-void aTrackdSensor::attachToMem()
+void TrackdSensorStandalone::attachToMem()
 {
    assert(mShmKey != 0 && "Key was not set correctly");
    mMem = trackd_attach_tracker_mem(mShmKey);
 }
 
 //: Release the memory segment of mMem
-void aTrackdSensor::releaseMem()
+void TrackdSensorStandalone::releaseMem()
 {
    assert(mMem != NULL && "Trying to release trackd memory that was NULL");
    trackd_release_tracker_mem(mMem);

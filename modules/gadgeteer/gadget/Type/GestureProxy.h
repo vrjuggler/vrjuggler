@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 // GestureProxy.h
 //
 // Gesture proxy class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_GESTURE_PROXY_H_
-#define _VJ_GESTURE_PROXY_H_
 
-#include <vjConfig.h>
+#ifndef _VRJ_GESTURE_PROXY_H_
+#define _VRJ_GESTURE_PROXY_H_
+
+#include <vrj/vjConfig.h>
 #include <math.h>
 
-#include <Input/vjGesture/vjGesture.h>
-#include <Input/InputManager/vjProxy.h>
+#include <vrj/Input/Type/Gesture.h>
+#include <vrj/Input/Type/Proxy.h>
 
 namespace vrj
 {

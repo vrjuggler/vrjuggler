@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_GL_DRAW_MANAGER_H_
+#define _VRJ_GL_DRAW_MANAGER_H_
 
-#ifndef _VJ_GL_DRAW_MANAGER_
-#define _VJ_GL_DRAW_MANAGER_
+#include <vrj/vjConfig.h>
 
 //#include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/Thread/TSObjectProxy.h>
-
-#include <vjConfig.h>
 
 #ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
@@ -49,11 +48,11 @@
 #   include <GL/glu.h>
 #endif
 
-#include <Kernel/vjDrawManager.h>
-//#include <Kernel/GL/vjGlApp.h>
-#include <Kernel/GL/vjGlWindow.h>
-#include <Kernel/GL/vjGlPipe.h>
-#include <Kernel/GL/vjGlUserData.h>
+#include <vrj/Draw/DrawManager.h>
+//#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlPipe.h>
+#include <vrj/Draw/OGL/GlUserData.h>
 
 namespace vrj
 {

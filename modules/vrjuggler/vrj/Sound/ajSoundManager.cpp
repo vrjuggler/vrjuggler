@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
-#include <Config/vjConfigChunk.h>
-#include <Sound/ajSoundManager.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Sound/ajSoundManager.h>
 #include <aj/AudioJuggler.h>
 #include <aj/Matrix44.h>
 

@@ -1,9 +1,9 @@
-#ifndef SOUNDMANAGER_FACTORY
-#define SOUNDMANAGER_FACTORY
+#ifndef _VRJ_SOUNDMANAGER_FACTORY_H_
+#define _VRJ_SOUNDMANAGER_FACTORY_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Sound/SoundManager.h>
+#include <vrj/Sound/SoundManager.h>
 
 namespace vrj
 {

@@ -30,22 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // implementation of Environment Manager
 //
 // author: Christopher Just
 
+#include <vrj/vjConfig.h>
 
-#include <Environment/vjEnvironmentManager.h>
-#include <Kernel/vjKernel.h>
-#include <Environment/vjConnect.h>
-#include <Performance/vjPerfDataBuffer.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjParseUtil.h>
-#include <Environment/vjTimedUpdate.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Environment/Connect.h>
+#include <vrj/Performance/PerfDataBuffer.h>
+#include <vrj/Config/ChunkDescDB.h>
+#include <vrj/Config/ConfigChunkDB.h>
+#include <vrj/Config/ParseUtil.h>
+#include <vrj/Environment/TimedUpdate.h>
 
-#include <Kernel/vjConfigManager.h>
+#include <vrj/Kernel/ConfigManager.h>
+#include <vrj/Environment/EnvironmentManager.h>
 
 namespace vrj
 {

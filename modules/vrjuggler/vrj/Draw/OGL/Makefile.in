@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Kernel/GL.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Draw/OGL.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,37 +41,27 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Kernel/GL
+includedir	= @includedir@/vrj/Draw/OGL
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GL_LIBRARY)
 
-SRCS 		= vjGlDrawManager.cpp		\
-                  vjGlPipe.cpp			\
-                  vjGlWindow.cpp
+SRCS 		= GlDrawManager.cpp		\
+                  GlPipe.cpp			\
+                  GlWindow.cpp
 
 ifeq (@OS_TYPE@, Win32)
-    SRCS	+= vjGlWinWin32.cpp
+    SRCS	+= GlWinWin32.cpp
 else
     ifeq (@PLATFORM@, Darwin)
-        SRCS    += vjGlOSXWindow.cpp
+        SRCS    += GlOSXWindow.cpp
     else
-    	SRCS	+= vjGlxWindow.cpp
+    	SRCS	+= GlxWindow.cpp
     endif
 endif
 
-ifeq (@OPENGL_API@, Y)
-BEFOREBUILD	= beforebuild
-endif
-
 include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Library targets.
-# -----------------------------------------------------------------------------
-beforebuild:
-	@$(SHELL) $(scriptdir)/mkinstalldirs $(OBJDIR)
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
