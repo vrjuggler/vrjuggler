@@ -107,6 +107,12 @@ namespace jccl {
 
 
 
+    void ConfigManager::removePending(std::list<PendingChunk>::iterator item)
+    {
+        vprASSERT(1 == mPendingLock.test());
+        mPendingConfig.erase(item);
+    }
+
 
 
     //: Do we need to check the pending list
@@ -269,6 +275,53 @@ namespace jccl {
         vprDEBUG_NEXT(vprDBG_ALL,debug_level)
             << "----------------------------------\n" << vprDEBUG_FLUSH;
     }
+
+
+    //------------------ Active List Stuff -------------------------------
+
+    //: Is the chunk in the active configuration??
+    //! CONCURRENCY: concurrent
+    //! NOTE: This locks the active list to do processing
+    bool ConfigManager::isChunkInActiveList(std::string chunk_name)
+    {
+        vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
+
+        std::vector<ConfigChunk*>::iterator i;
+        for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
+            {
+                if(std::string((*i)->getProperty("name")) == chunk_name)
+                    return true;
+            }
+        
+        return false;     // Not found, so return false
+    }
+
+
+
+   //: Add an item to the active configuration
+   //! NOTE: This DOES NOT process the chunk
+   //+     it just places it into the active configuration list
+   //! PRE: Current list must NOT be locked
+   void ConfigManager::addActive (ConfigChunk* chunk)
+   {
+      vprASSERT(0 == mActiveLock.test());
+      lockActive();
+      mActiveConfig.addChunk(chunk);
+      unlockActive();
+   }
+
+
+
+   //: Erase an item from the list
+   //! PRE: Active list must be locked && item must be in list
+   //! POST: list = old(list).erase(item) && item is invalid
+   void ConfigManager::removeActive (const std::string& chunk_name)
+   {
+      vprASSERT(0 == mActiveLock.test());
+      lockActive();
+      mActiveConfig.removeNamed(chunk_name);
+      unlockActive();
+   }
 
 
 
