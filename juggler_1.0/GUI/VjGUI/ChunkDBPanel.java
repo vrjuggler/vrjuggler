@@ -56,6 +56,8 @@ public class ChunkDBPanel extends JPanel
     private JComboBox db_combobox;
     private JComboBox insert_type;
     private JScrollPane scroll_pane;
+    private Font current_font;  // used to make sure when we add a new tree
+                                // that it's using the correct font.
 
     TreePath treeitem_menu_path;
     JPopupMenu desctreeitem_menu;
@@ -74,6 +76,7 @@ public class ChunkDBPanel extends JPanel
 	JPanel side_panel; 
 	Box center_panel;
 
+	current_font = null;
 	dependency_frame = null;
 	chunk_frames = new Vector();
 	chunkdb = null;
@@ -220,6 +223,11 @@ public class ChunkDBPanel extends JPanel
     }
 
 
+    public void setFont (Font f) {
+	super.setFont(f);
+	current_font = f;
+    }
+
     private void buildDBList () {
 	int i;
 	db_combobox.addItem ("No Selection");
@@ -244,6 +252,8 @@ public class ChunkDBPanel extends JPanel
 	}
 	    
 	dbt = dbt_factory.getTreeModel (chunkdb);
+	if (current_font != null)
+	    dbt.tree.setFont(current_font);
 	scroll_pane.setViewportView (dbt.tree);
 	dbt.tree.addMouseListener(this);
 	db_combobox.setSelectedItem (dbt.getName());

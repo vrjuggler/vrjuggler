@@ -449,15 +449,6 @@ public class ControlUI  extends JFrame
 	    UIManager.put (keys[i], newfont);
 	} 
 	changeFont (this, newfont);
-
-	// -- BUG --- not changing fonts correctly anymore...
-	//changeFont (Core.active_treemodel.tree, newfont);
-
-	for (i = 0; i < Core.chunkdbs.size(); i++) {
-	    dbt = (ChunkDBTreeModel)Core.chunkdbs.elementAt (i);
-	    changeFont (dbt.tree, newfont);
-	}
-
 	changeMenuBarFont (main_menubar, newfont);
 
 	validate();
