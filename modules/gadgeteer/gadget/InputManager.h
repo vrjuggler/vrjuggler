@@ -39,7 +39,7 @@
 #ifndef VRJ_INPUT_MANAGER_H
 #define VRJ_INPUT_MANAGER_H
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <map>
 

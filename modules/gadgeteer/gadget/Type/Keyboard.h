@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_H_
 #define _VRJ_KEYBOARD_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 
 // --------- VJKEY's ------------ //

@@ -15,7 +15,7 @@
 #ifndef _HCI_H
 #define _HCI_H
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #ifdef __cplusplus
 extern "C" {

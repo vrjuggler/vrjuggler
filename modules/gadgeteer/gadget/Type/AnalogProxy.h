@@ -39,7 +39,7 @@
 #ifndef _VRJ_ANALOGPROXY_H_
 #define _VRJ_ANALOGPROXY_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <vrj/Util/Debug.h>
 #include <gad/Type/Analog.h>
 #include <gad/Type/Proxy.h>

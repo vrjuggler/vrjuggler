@@ -33,7 +33,7 @@
 #ifndef _VRJ_TRACKD_SENSOR_H_
 #define _VRJ_TRACKD_SENSOR_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <vector>
 #include <gad/Type/Input.h>
 #include <gad/Type/Position.h>

@@ -34,7 +34,7 @@
 #define _VRJ_GESTURE_H_
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 
 namespace vrj

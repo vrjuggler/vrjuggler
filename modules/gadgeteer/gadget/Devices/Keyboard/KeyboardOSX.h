@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_OSX_H_
 #define _VRJ_KEYBOARD_OSX_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <gad/Type/Input.h>
 #include <gad/Type/Keyboard.h>

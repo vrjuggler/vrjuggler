@@ -33,7 +33,7 @@
 #ifndef _VRJ_PROXY_DEP_CHECKER_H_
 #define _VRJ_PROXY_DEP_CHECKER_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 // Dependency checker includes
 #include <vrj/Kernel/DependencyManager.h>

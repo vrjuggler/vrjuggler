@@ -33,7 +33,7 @@
 #ifndef _VRJ_SIM_GLOVE_GESTURE_H_
 #define _VRJ_SIM_GLOVE_GESTURE_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Digital.h>
 #include <gad/Type/GloveGesture.h>

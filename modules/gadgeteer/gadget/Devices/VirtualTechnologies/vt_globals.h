@@ -8,7 +8,7 @@
 /*  --       Copyright (C) 1993 Virtual Technologies        --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Devices/VirtualTechnologies/vt_init.h>
 
 extern char version_string[];

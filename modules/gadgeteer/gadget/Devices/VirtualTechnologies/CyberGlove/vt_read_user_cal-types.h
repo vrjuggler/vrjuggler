@@ -11,7 +11,7 @@
 #ifndef VT_READ_USER_CAL_TYPES_H
 #define VT_READ_USER_CAL_TYPES_H
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Devices/VirtualTechnologies/vt_math3d.h>
 #include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
 

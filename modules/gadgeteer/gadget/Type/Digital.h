@@ -39,7 +39,7 @@
 #ifndef _VRJ_DIGITAL_H_
 #define _VRJ_DIGITAL_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 namespace vrj
 {

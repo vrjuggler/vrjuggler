@@ -33,7 +33,7 @@
 #ifndef _VRJ_SIM_RELATIVE_POSITION_H
 #define _VRJ_SIM_RELATIVE_POSITION_H
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Position.h>
 #include <gad/Type/PosInterface.h>
