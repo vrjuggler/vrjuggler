@@ -43,16 +43,16 @@ void digitalGloveApp::init()
    mGlove.init("VJGlove");
       
    // for the digital glove fingers.
-   mLeftThumb.init("LeftThumb");
-   mLeftIndex.init("LeftIndex");
-   mLeftMiddle.init("LeftMiddle");
-   mLeftRing.init("LeftRing");
-   mLeftPinky.init("LeftPinky");
-   mRightThumb.init("RightThumb");
-   mRightIndex.init("RightIndex");
-   mRightMiddle.init("RightMiddle");
-   mRightRing.init("RightRing");
-   mRightPinky.init("RightPinky");
+   mLeftThumb.init("PinchLeftThumb");
+   mLeftIndex.init("PinchLeftIndex");
+   mLeftMiddle.init("PinchLeftMiddle");
+   mLeftRing.init("PinchLeftRing");
+   mLeftPinky.init("PinchLeftPinky");
+   mRightThumb.init("PinchRightThumb");
+   mRightIndex.init("PinchRightIndex");
+   mRightMiddle.init("PinchRightMiddle");
+   mRightRing.init("PinchRightRing");
+   mRightPinky.init("PinchRightPinky");
       
    //std::cout<<" --- done\n"<<std::flush;
 }
