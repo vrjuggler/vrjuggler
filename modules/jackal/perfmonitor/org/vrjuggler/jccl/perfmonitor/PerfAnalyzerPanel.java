@@ -287,7 +287,7 @@ public class PerfAnalyzerPanel
 	    public LabeledPerfDataCollector.IndexInfo ii; // null for folders
 	    public JComponent component;
 	    public TreeElem (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii) {
-		sublabel = sublabel;
+		sublabel = _sublabel;
 		ii = _ii;
 		component = new JLabel (sublabel);
 	    }
@@ -299,11 +299,13 @@ public class PerfAnalyzerPanel
 	    int i, j, n;  // i = index into ii.label_components
 	    i = 0;
 	    // first, find the parent
+	    //System.out.println ("add to tree: " + ii.label_components);
 	    for (i = 0; i < ii.label_components.size() - 1; i++) {
 		new_node = null;
 		for (j = 0; j < node.getChildCount(); j++) {
 		    DefaultMutableTreeNode mtn = (DefaultMutableTreeNode)node.getChildAt(j);
-		    if (((TreeElem)mtn.getUserObject()).sublabel.equals((String)ii.label_components.get(i))) {
+		    TreeElem te = (TreeElem)mtn.getUserObject();
+		    if (te.sublabel.equals((String)ii.label_components.get(i))) {
 			new_node = mtn;
 		    }
 		}
@@ -323,6 +325,7 @@ public class PerfAnalyzerPanel
 
         public void addInitial (LabeledPerfDataCollector.IndexInfo ii) {
 	    System.out.println ("addInitial: " + ii.index);
+	    addToTree (ii);
 	    JLabel l;
 	    JButton b;
 	    Insets insets = new Insets (1,1,1,1);
