@@ -300,7 +300,7 @@ public class ConfigUIHelper
     public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
 
         String classname = ch.getValueFromToken ("classname", 0).getString();
-        if (Core.component_factory.classSupportsInterface (classname, "VjComponents.ConfigEditor.ConfigChunkPanel")) {
+        if (Core.component_factory.classSupportsInterface (classname, VjComponents.ConfigEditor.ConfigChunkPanel.class)) {
             return configchunkpanel_factory.addConfig (ch);
         }
         else {
