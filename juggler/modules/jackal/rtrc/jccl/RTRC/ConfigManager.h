@@ -31,22 +31,25 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_CONFIG_MANGER_H_
-#define _VJ_CONFIG_MANGER_H_
+#ifndef _JCCL_CONFIG_MANGER_H_
+#define _JCCL_CONFIG_MANGER_H_
 
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
+#include <jccl/jcclConfig.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
 //#include <Config/vjConfigChunk.h>
-class vjConfigChunk;
+class ConfigChunk;
 
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ChunkDescDB.h>
 //#include <Config/vjChunkFactory.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <list>
 
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
+
+namespace jccl {
 
 //: Configuration manager class
 //
@@ -55,17 +58,17 @@ class vjConfigChunk;
 //! Created: Jan-13-2000
 //! Author: Allen Bierbaum
 //
-class vjConfigManager
+class ConfigManager
 {
 public:
-   struct vjPendingChunk
+   struct PendingChunk
    {
-      vjPendingChunk() : mType(0), mChunk(NULL)
+      PendingChunk() : mType(0), mChunk(NULL)
       {;}
 
       enum { ADD=0, REMOVE=1};
       unsigned mType;           // What type of chunk is it (ADD or REMOVE)
-      vjConfigChunk* mChunk;
+      ConfigChunk* mChunk;
    };
 
 
@@ -77,7 +80,7 @@ public: // -- Query functions --- //
    {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
-      std::vector<vjConfigChunk*>::iterator i;
+      std::vector<ConfigChunk*>::iterator i;
       for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
       {
          if(std::string((*i)->getProperty("name")) == chunk_name)
@@ -91,13 +94,13 @@ public: // -- Query functions --- //
    //! PRE: The pending list can NOT be locked
    //! POST: pendinglist = old(pendinglist) += db
    //! NOTE: The entries are copied
-   void addChunkDB(vjConfigChunkDB* db);
+   void addChunkDB(ConfigChunkDB* db);
 
    //: Add the given chunks to the db as pending removes
    //! PRE: The pending list can NOT be locked
    //! POST: pendinglist = old(pendinglist) += db
    //! NOTE: The entries are copied
-   void removeChunkDB(vjConfigChunkDB* db);
+   void removeChunkDB(ConfigChunkDB* db);
 
 
 public:   // ----- PENDING LIST ----- //
@@ -117,9 +120,9 @@ public:   // ----- PENDING LIST ----- //
    //! PRE: pending must NOT be locked
    //! POST: A copy of the pendingChunk is placed on the pending list
    //! concurrency: gaurded
-   void addPending(vjPendingChunk& pendingChunk)
+   void addPending(PendingChunk& pendingChunk)
    {
-      vjASSERT(0 == mPendingLock.test());
+      vprASSERT(0 == mPendingLock.test());
       lockPending();
       mPendingConfig.push_back(pendingChunk);
       unlockPending();
@@ -145,26 +148,26 @@ public:   // ----- PENDING LIST ----- //
 
    //: Get the beginning of the pending list
    //! PRE: Pending list must be locked
-   std::list<vjPendingChunk>::iterator getPendingBegin()
+   std::list<PendingChunk>::iterator getPendingBegin()
    {
-      vjASSERT(1 == mPendingLock.test());     // ASSERT: We must have the lock
+      vprASSERT(1 == mPendingLock.test());     // ASSERT: We must have the lock
       return mPendingConfig.begin();
    }
 
    //: Get the end of the pending list
    //! PRE: Pending list must be locked
-   std::list<vjPendingChunk>::iterator getPendingEnd()
+   std::list<PendingChunk>::iterator getPendingEnd()
    {
-      vjASSERT(1 == mPendingLock.test());
+      vprASSERT(1 == mPendingLock.test());
       return mPendingConfig.end();
    }
 
    //: Erase an item from the list
    //! PRE: Pending list must be locked && item must be in list
    //! POST: list = old(list).erase(item) && item is invalid
-   void removePending(std::list<vjPendingChunk>::iterator item)
+   void removePending(std::list<PendingChunk>::iterator item)
    {
-      vjASSERT(1 == mPendingLock.test());
+      vprASSERT(1 == mPendingLock.test());
       mPendingConfig.erase(item);
    }
 
@@ -192,17 +195,17 @@ public:   // ----- ACTIVE LIST ----- //
 
    //: Get the beginning of the current list
    //! PRE: Pending list must be locked
-   std::vector<vjConfigChunk*>::iterator getActiveBegin()
+   std::vector<ConfigChunk*>::iterator getActiveBegin()
    {
-      vjASSERT(1 == mActiveLock.test());     // ASSERT: We must have the lock
+      vprASSERT(1 == mActiveLock.test());     // ASSERT: We must have the lock
       return mActiveConfig.begin();
    }
 
    //: Get the end of the pending list
    //! PRE: Active list must be locked
-   std::vector<vjConfigChunk*>::iterator getActiveEnd()
+   std::vector<ConfigChunk*>::iterator getActiveEnd()
    {
-      vjASSERT(1 == mActiveLock.test());
+      vprASSERT(1 == mActiveLock.test());
       return mActiveConfig.end();
    }
 
@@ -211,7 +214,7 @@ public:   // ----- ACTIVE LIST ----- //
    //! POST: list = old(list).erase(item) && item is invalid
    void removeActive(std::string chunk_name)
    {
-      vjASSERT(0 == mActiveLock.test());
+      vprASSERT(0 == mActiveLock.test());
       lockActive();
       mActiveConfig.removeNamed(chunk_name);
       unlockActive();
@@ -221,9 +224,9 @@ public:   // ----- ACTIVE LIST ----- //
    //! NOTE: This DOES NOT process the chunk
    //+     it just places it into the active configuration list
    //! PRE: Current list must NOT be locked
-   void addActive(vjConfigChunk* chunk)
+   void addActive(ConfigChunk* chunk)
    {
-      vjASSERT(0 == mActiveLock.test());
+      vprASSERT(0 == mActiveLock.test());
       lockActive();
       mActiveConfig.addChunk(chunk);
       unlockActive();
@@ -233,9 +236,9 @@ public:   // ----- ACTIVE LIST ----- //
    //! PRE: active must be locked
    //! NOTE: The pointer is only valid until active is unlocked
    //! CONCURRENCY: sequential
-   vjConfigChunkDB* getActiveConfig()
+   ConfigChunkDB* getActiveConfig()
    {
-      vjASSERT(1 == mActiveLock.test());
+      vprASSERT(1 == mActiveLock.test());
       return &mActiveConfig;
    }
 
@@ -251,8 +254,8 @@ public:
    int scanForLostDependencies();
 
 private:
-   vjConfigChunkDB            mActiveConfig;   //: List of current configuration
-   std::list<vjPendingChunk>  mPendingConfig;   //: List of pending configuration changes
+   ConfigChunkDB            mActiveConfig;   //: List of current configuration
+   std::list<PendingChunk>  mPendingConfig;   //: List of pending configuration changes
    vpr::Mutex                    mPendingLock;     //: Lock on pending list
    vpr::Mutex                    mActiveLock;     //: Lock for current config list
 
@@ -262,33 +265,14 @@ private:
    int                        mPendingCheckCount;  //: How many pending checks since last change to pending
    int                        mLastPendingSize;    //: The size of pending at last check
 protected:
-   vjConfigManager()
+   ConfigManager()
    {;}
 
 
-/*
-public:
-   //: Get instance of singleton object
-   static vjConfigManager* instance()
-   {
-      if(_instance == NULL)                     // First check
-      {
-         vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
-         if (_instance == NULL)                 // Second check
-            _instance = new vjConfigManager;
-      }
-      vjASSERT(_instance != NULL && "vjConfigManager has NULL _instance");
-      return _instance;
-   }
-
-
-private:
-   static vjConfigManager* _instance;   //: The instance
-   static vpr::Mutex _inst_lock;
-   */
-   vjSingletonHeader(vjConfigManager);
+   vprSingletonHeader(ConfigManager);
 };
 
+}; // namespace jccl
 
 #endif
 

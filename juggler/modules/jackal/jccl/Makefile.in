@@ -39,7 +39,8 @@ DIRPRFX		= jccl/
 SUBDIR		= Config		\
                   XMLUtil		\
                   JackalServer		\
-                  Performance 
+                  Performance 		\
+		  ConfigManager
 
 $(RECTARGET): recursive
 
