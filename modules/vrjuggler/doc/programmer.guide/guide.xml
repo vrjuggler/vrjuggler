@@ -2614,7 +2614,8 @@ public:
                         <type>void</type>
                         <methodname>appChanFunc</methodname>
                         <methodparam>
-                           <parameter>pfChannel* chan</parameter>
+                           <type>pfChannel*</type>
+                           <parameter>chan</parameter>
                         </methodparam>
                      </methodsynopsis></para>
                   <para>This method is called every frame in the application process for each active channel. It is called immediately before rendering (<function>pfFrame()</function>).</para>
@@ -2630,7 +2631,8 @@ public:
                         <type>void</type>
                         <methodname>configPWin</methodname>
                         <methodparam>
-                           <parameter>pfPipeWindow* pWin</parameter>
+                           <type>pfPipeWindow*</type>
+                           <parameter>pWin</parameter>
                         </methodparam>
                      </methodsynopsis></para>
                   <para>This method is used to initialize a pipe window. It is called as soon as the pipe window is opened.</para>
@@ -2657,10 +2659,15 @@ public:
                   </indexterm>
                   <para>Prototype: <methodsynopsis>
                         <modifier>public</modifier>
-                        <type>void</type>
+                        <void/>
                         <methodname>drawChan</methodname>
                         <methodparam>
-                           <funcparams>pfChannel* chan, void* chandata</funcparams>
+                           <type>pfChannel*</type>
+                           <parameter>chan</parameter>
+                        </methodparam>
+                        <methodparam>
+                           <type>void*</type>
+                           <parameter>chandata</parameter>
                         </methodparam>
                      </methodsynopsis></para>
                   <para>This is the method called in the channel draw function to do the actual rendering. For most programs, the default behavior of this function is correct. It simply does the following:</para>
@@ -2676,10 +2683,15 @@ pfDraw();</programlisting>
                   </indexterm>
                   <para>Prototype: <methodsynopsis>
                         <modifier>public</modifier>
-                        <type>void</type>
+                        <void/>
                         <methodname>preDrawChan</methodname>
                         <methodparam>
-                           <funcparams>pfChannel* chan, void* chandata</funcparams>
+                           <type>pfChannel*</type>
+                           <parameter>chan</parameter>
+                        </methodparam>
+                        <methodparam>
+                           <type>void*</type>
+                           <parameter>chandata</parameter>
                         </methodparam>
                      </methodsynopsis></para>
                   <para>This is the function called by the <emphasis>default</emphasis> <methodname>drawChan()</methodname> member function before clearing the channel and drawing the next frame (<function>pfFrame()</function>).</para>
@@ -2692,10 +2704,15 @@ pfDraw();</programlisting>
                   </indexterm>
                   <para>Prototype: <methodsynopsis>
                         <modifier>public</modifier>
-                        <type>void</type>
+                        <void/>
                         <methodname>postDrawChan</methodname>
                         <methodparam>
-                           <funcparams>pfChannel* chan, void* chandata</funcparams>
+                           <type>pfChannel*</type>
+                           <parameter>chan</parameter>
+                        </methodparam>
+                        <methodparam>
+                           <type>void*</type>
+                           <parameter>chandata</parameter>
                         </methodparam>
                      </methodsynopsis></para>
                   <para>This is the function called by the <emphasis>default</emphasis> <methodname>drawChan()</methodname> member function after clearing the channel and drawing the next frame (<function>pfFrame()</function>).</para>
@@ -3736,7 +3753,15 @@ thread = new vjThread(my_functor);</programlisting>
                         </indexterm> class and consists of three methods:</para>
                      <orderedlist>
                         <listitem>
-                           <para><methodname>virtual bool configCanHandle(vjConfigChunk* chunk)</methodname></para>
+                           <methodsynopsis>
+                              <modifier>virtual</modifier>
+                              <type>bool</type>
+                              <methodname>configCanHandle</methodname>
+                              <methodparam>
+                                 <type>vjConfigChunk*</type>
+                                 <parameter>chunk</parameter>
+                              </methodparam>
+                           </methodsynopsis>
                            <indexterm>
                               <primary>vjApp</primary>
                               <secondary>configCanHandle() method</secondary>
@@ -3750,7 +3775,15 @@ if ( !vjstrcasecmp(s, "my_custom_chunk_type") )
 }</programlisting>
                         </listitem>
                         <listitem>
-                           <para><methodname>virtual bool configAdd(vjConfigChunk* chunk)</methodname></para>
+                           <methodsynopsis>
+                              <modifier>virtual</modifier>
+                              <type>bool</type>
+                              <methodname>configAdd</methodname>
+                              <methodparam>
+                                 <type>vjConfigChunk*</type>
+                                 <parameter>chunk</parameter>
+                              </methodparam>
+                           </methodsynopsis>
                            <indexterm>
                               <primary>vjApp</primary>
                               <secondary>configAdd() method</secondary>
@@ -3759,7 +3792,15 @@ if ( !vjstrcasecmp(s, "my_custom_chunk_type") )
                            <para>When <methodname>configAdd()</methodname> is called, the application should look at the chunk passed to it and decide what to do. This might involve creating a new object, changing the configuration of an already extant object, changing the values of certain variables, or any number of other possibilities. This flexibility is part of the power of dynamic reconfiguration with VR Juggler.</para>
                         </listitem>
                         <listitem>
-                           <para><methodname>virtual bool configRemove(vjConfigChunk* chunk)</methodname></para>
+                           <methodsynopsis>
+                              <modifier>virtual</modifier>
+                              <type>bool</type>
+                              <methodname>configRemove</methodname>
+                              <methodparam>
+                                 <type>vjConfigChunk*</type>
+                                 <parameter>chunk</parameter>
+                              </methodparam>
+                           </methodsynopsis>
                            <indexterm>
                               <primary>vjApp</primary>
                               <secondary>configRemove() method</secondary>
@@ -3773,17 +3814,30 @@ if ( !vjstrcasecmp(s, "my_custom_chunk_type") )
                      <para>When an application receives a ConfigChunk to process via <methodname>configAdd()</methodname> or <methodname>configRemove()</methodname>, it needs to retrieve the data in that Chunk in order to decide what to do. ConfigChunks can be very complex, but the interface has been designed to be as simple as possible. We now describe a few of the most important methods in the ConfigChunk API.</para>
                      <itemizedlist>
                         <listitem>
-                           <para><methodname>std::string&amp; vjConfigChunk::getType ()</methodname></para>
+                           <methodsynopsis>
+                              <type>std::string&amp;</type>
+                              <methodname>vjConfigChunk::getType</methodname>
+                              <void/>
+                           </methodsynopsis>
                            <indexterm>
                               <primary>vjConfigChunk</primary>
                               <secondary>getType() method</secondary>
                            </indexterm>
                            <para>This method returns the token of the ChunkDesc which describes this ConfigChunk. This is useful if an application uses several kinds of custom ConfigChunk types. With this method, it is possible to distinguish one from another.</para>
                         </listitem>
-                     </itemizedlist>
-                     <itemizedlist>
                         <listitem>
-                           <para><methodname>vjVarValue&amp; vjConfigChunk::getProperty (std::string&amp; property_token, int num)</methodname></para>
+                           <methodsynopsis>
+                              <type>vjVarValue&amp;</type>
+                              <methodname>vjConfigChunk::getProperty</methodname>
+                              <methodparam>
+                                 <type>std::string&amp;</type>
+                                 <parameter>property_token</parameter>
+                              </methodparam>
+                              <methodparam>
+                                 <type>int</type>
+                                 <parameter>num</parameter>
+                              </methodparam>
+                           </methodsynopsis>
                            <indexterm>
                               <primary>vjConfigChunk</primary>
                               <secondary>getProperty() method</secondary>
@@ -3807,10 +3861,18 @@ vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
 // ch is a copy of the embedded chunk. Once again, the caller
 // of getProperty() is responsible for freeing this memory.</programlisting>
                         </listitem>
-                     </itemizedlist>
-                     <itemizedlist>
                         <listitem>
-                           <para><methodname>int vjConfigChunk::getNum (const std::string&amp; property_token) const</methodname></para>
+                           <methodsynopsis>
+                              <type>int</type>
+                              <methodname>vjConfigChunk::getNum</methodname>
+                              <methodparam>
+                                 <modifier>const</modifier>
+                                 <type>std::string&amp;</type>
+                                 <parameter>property_token</parameter>
+                              </methodparam>
+                              <modifier>const</modifier>
+                           </methodsynopsis>
+                           <para></para>
                            <indexterm>
                               <primary>vjConfigChunk</primary>
                               <secondary>getNum() method</secondary>
@@ -3910,7 +3972,12 @@ vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
                   <para>Using basic class declaration for <classname>MyNewButtonDevice</classname> from above, we will proceed with the implementation of the driver class. First, there are six member functions that must be implemented:</para>
                   <orderedlist>
                      <listitem>
-                        <para><methodname>virtual int startSampling()</methodname></para>
+                        <methodsynopsis>
+                           <modifier>virtual</modifier>
+                           <type>int</type>
+                           <methodname>startSampling</methodname>
+                           <void/>
+                        </methodsynopsis>
                         <para>Within this function, a new thread is started. This thread is used to sample the data from the device. The thread creation step may look something like the following:</para>
                         <programlisting>vjThreadMemberFunctor&lt;MyNewButtonDevice&gt;* functor =
    new vjThreadMemberFunctor&lt;MyNewButtonDevice&gt;(this,
@@ -3929,17 +3996,32 @@ mThread = new vjThread(functor);</programlisting>
                         <para>The thread can be tested for validity using the method <methodname>vjBaseThread::valid()</methodname>. For more information on VR Juggler threads, refer to <xref linkend="using-vjThread-sect"/>.</para>
                      </listitem>
                      <listitem>
-                        <para><methodname>virtual int stopSampling()</methodname></para>
+                        <methodsynopsis>
+                           <modifier>virtual</modifier>
+                           <type>int</type>
+                           <methodname>stopSampling</methodname>
+                           <void/>
+                        </methodsynopsis>
                         <para>The job of this function is to kill the thread created in <methodname>startSampling()</methodname>. Again, refer to <xref linkend="using-vjThread-sect"/> for more information on the use of VR Juggler threads.</para>
                      </listitem>
                      <listitem>
-                        <para><methodname>virtual int sample()</methodname></para>
+                        <methodsynopsis>
+                           <modifier>virtual</modifier>
+                           <type>int</type>
+                           <methodname>sample</methodname>
+                           <void/>
+                        </methodsynopsis>
                         <para>This method reads data from the device and stores it for later use by <methodname>getDigitalData()</methodname>. Note that <methodname>MyNewButtonDevice::sampleFunction()</methodname>, defined above, invokes this method.</para>
                         <para>VR Juggler devices typically use triple-buffered data management. This is done to ensure that data is not being written into a buffer when the Input Manager is trying to read the most recent value. The <classname>vjInput</classname> class defines three variables to help programmers keep track of which buffer is in use at any given time: <varname>vjInput::current</varname>, <varname>vjInput::valid</varname>, and <varname>vjInput::progress</varname>. The sampled data would be read into a three-element array of the correct type (this is driver-specific). When writing the freshly sampled data into the array, use <varname>vjInput::progress</varname>:</para>
                         <programlisting>mSampledDigitalData[vjInput::progress] = sampled_digital_value;</programlisting>
                      </listitem>
                      <listitem>
-                        <para><methodname>virtual void updateData()</methodname></para>
+                        <methodsynopsis>
+                           <modifier>virtual</modifier>
+                           <void/>
+                           <methodname>updateData</methodname>
+                           <void/>
+                        </methodsynopsis>
                         <para>Triple-buffered device drivers use this method to swap the data indices. The member function is usually implemented as follows:</para>
                         <programlisting>void MyNewButtonDevice::updateData()
 {
@@ -3954,7 +4036,12 @@ mThread = new vjThread(functor);</programlisting>
                         <para>Note the use of a <classname>vjGuard&lt;&gt;</classname> object to synchronize access to the <varname>mSampledDigitalData</varname> array. This is needed because the sampling and the reading are occurring in separate threads, but both threads need access to <varname>mSampledDigitalData</varname>.</para>
                      </listitem>
                      <listitem>
-                        <para><methodname>static std::string getChunkType()</methodname></para>
+                        <methodsynopsis>
+                           <modifier>static</modifier>
+                           <type>std::string</type>
+                           <methodname>getChunkType</methodname>
+                           <void/>
+                        </methodsynopsis>
                         <para>In the <methodname>getChunkType()</methodname> function, the <firstterm>chunk type</firstterm> of the device must be returned. Its name must be as it appears in the chunk description file for the driver. For example, the implementation for the simple button driver would appear as:</para>
                         <programlisting>std::string MyNewButtonDevice::getChunkType()
 {
@@ -3963,7 +4050,15 @@ mThread = new vjThread(functor);</programlisting>
                         <para>At this time, it is useful to point out that every VR Juggler device needs a <firstterm>chunk type</firstterm> associated with it. A chunk type is similar to a struct in C or C++. The data structure is defined in a chunk description file (which usually has the extension <filename>.desc</filename>). Once defined, the type for a new driver can be used in VR Juggler configuration files.</para>
                      </listitem>
                      <listitem>
-                        <para><methodname>virtual int getDigitalData(int devNum = 0)</methodname></para>
+                        <methodsynopsis>
+                           <modifier>virtual</modifier>
+                           <type>int</type>
+                           <methodname>getDigitalData</methodname>
+                           <methodparam>
+                              <type>int</type>
+                              <parameter>devNum = 0</parameter>
+                           </methodparam>
+                        </methodsynopsis>
                         <para>The VR Juggler Input Manager uses this method to read digital data sampled by the driver. This is when the triple-buffered data scheme becomes especially valuable. To provide the Input Manager with the most up-to-date sample, use <varname>vjInput::current</varname> as the index, as shown below:</para>
                         <programlisting>int MyNewJoystickDevice::getDigitalData(int devNum)
 {
@@ -4045,11 +4140,24 @@ End</programlisting>
                   <para>In the driver, there are two methods that must be implemented in order to handle config chunks:</para>
                   <orderedlist>
                      <listitem>
-                        <para><methodname>static std::string MyNewButtonDevice::getChunkType()</methodname></para>
+                        <methodsynopsis>
+                           <modifier>static</modifier>
+                           <type>std::string</type>
+                           <methodname>MyNewButtonDevice::getChunkType</methodname>
+                           <void/>
+                        </methodsynopsis>
                         <para>When the VR system configuration changes, the system asks every registered driver for their chunk type. If it matches the new configuration chunk passed into the system, then the driver's <methodname>config()</methodname> method is invoked. This will happen, for example, when a new configuration file is loaded into the VR Juggler kernel. The implementation of this method was described above.</para>
                      </listitem>
                      <listitem>
-                        <para><methodname>virtual bool vjInput::config(vjConfigChunk* c)</methodname></para>
+                        <methodsynopsis>
+                           <modifier>virtual</modifier>
+                           <type>bool</type>
+                           <methodname>vjInput::config</methodname>
+                           <methodparam>
+                              <type>vjConfigChunk*</type>
+                              <parameter>c</parameter>
+                           </methodparam>
+                        </methodsynopsis>
                         <para>When the system detects a configuration change for a given driver, it will pass the new <classname>vjConfigChunk</classname> object to this method. For more information about how to access config chunk objects, refer to the <emphasis>Programmer's Reference</emphasis>. The following is a simple example for the basic button device we have used thus far:</para>
                         <programlisting>bool MyNewButtonDevice::config( vjConfigChunk *c )
 {
