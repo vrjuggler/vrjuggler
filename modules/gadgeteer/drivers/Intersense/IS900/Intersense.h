@@ -68,15 +68,16 @@
 namespace gadget
 {
 
-typedef struct {
-    int stationIndex;
-    bool enabled;
+struct ISStationConfig
+{
+   int stationIndex;
+   bool enabled;
 
-    int dig_min, dig_num;
-    int ana_min, ana_num;
+   int dig_min, dig_num;
+   int ana_min, ana_num;
 
-    bool useDigital, useAnalog;
-} ISStationConfig;
+   bool useDigital, useAnalog;
+};
 
 
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
@@ -119,7 +120,8 @@ protected:
        * Init analog with IS_ANALOG_NUM values
        */
       IsenseData()
-         : digital( IS_BUTTON_NUM ), analog(IS_ANALOG_NUM)
+         : digital(IS_BUTTON_NUM)
+         , analog(IS_ANALOG_NUM)
       {;}
 
       // Helper function to set all the times
@@ -128,10 +130,19 @@ protected:
       void setTime()
       {
          digital[0].setTime();
-         for(std::vector<DigitalData>::iterator d=digital.begin(); d != digital.end(); ++d)
-         {  (*d).setTime(digital[0].getTime()); }
-         for(std::vector<AnalogData>::iterator a=analog.begin(); a != analog.end(); ++a)
-         {  (*a).setTime(digital[0].getTime()); }
+         for ( std::vector<DigitalData>::iterator d=digital.begin();
+               d != digital.end();
+               ++d )
+         {
+            (*d).setTime(digital[0].getTime());
+         }
+
+         for ( std::vector<AnalogData>::iterator a=analog.begin();
+               a != analog.end();
+               ++a )
+         {
+            (*a).setTime(digital[0].getTime());
+         }
       }
 
       std::vector<DigitalData> digital;
@@ -173,8 +184,6 @@ public:
     */
    // PositionData* getPositionData (int dev=0);
 
-
-
    /**
     * Gets the digital and analog data.
     * @param d  The button number.
@@ -195,7 +204,10 @@ public:
 //   AnalogData* getAnalogData(int d = 0);
 
    /** Checks if the device is active. */
-   bool isActive() { return mTracker.isActive(); };
+   bool isActive()
+   {
+      return mTracker.isActive();
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -239,10 +251,9 @@ private:
 // the digital IO as well. Therefore what is needed with four wands is a digital device that allows
 // access to subsets of digital buttons.
 
-    std::string  mPortName;
-    int           mBaudRate;
-    bool          mExitFlag;
-
+    std::string mPortName;
+    int         mBaudRate;
+    bool        mExitFlag;
 };
 
 } // End of gadget namespace
