@@ -35,8 +35,7 @@
 
 #include <vpr/Util/Singleton.h>
 #include <vpr/vpr.h>
-#include <vpr/DynLoad/Library.h>
-
+#include <vpr/DynLoad/LibraryLoader.h>
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/DeviceFactory.h>
@@ -115,8 +114,6 @@ private:
 public:
    ClusterPlugin* getPluginByGUID(const vpr::GUID& plugin_guid);
 
-   vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
-
    //General helper functions
 public:
    jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
@@ -162,8 +159,8 @@ private:
    std::list<ClusterPlugin*>     mPlugins;            /**< List of Plugins.*/
    vpr::Mutex                    mPluginsLock;        /**< Lock on plugins list.*/
    std::string                   mBarrierMachineName; /**< Name of the barrier machine.*/
-   std::map<vpr::GUID, ClusterPlugin*>                   mPluginMap;
-   std::vector<vpr::LibraryPtr>  mPluginLibraries;
+   std::map<vpr::GUID, ClusterPlugin*> mPluginMap;
+   vpr::LibraryLoader            mPluginLoader;
 
    vpr::Mutex                    mClusterNodesLock;
    std::vector<std::string>      mClusterNodes;

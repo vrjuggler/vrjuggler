@@ -32,9 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <cluster/ClusterManager.h> // my header...
-
-#include <vpr/DynLoad/LibraryFinder.h>
+#include <vpr/DynLoad/Library.h>
 #include <vpr/Util/FileUtils.h>
 
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
@@ -59,10 +57,36 @@
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/StartBlock.h>
 
+#include <cluster/ClusterManager.h> // my header...
+
 
 namespace cluster
 {
    vprSingletonImp( ClusterManager );
+
+   struct Callable
+   {
+      Callable(cluster::ClusterManager* cMgr) : mgr(cMgr)
+      {
+      }
+
+      bool operator()(void* func)
+      {
+         cluster::ClusterPlugin* (*creator)();
+         creator = (ClusterPlugin* (*)()) func;
+         cluster::ClusterPlugin* p = (*creator)();
+
+         // Successfully created the plug-in.
+         if ( NULL != p )
+         {
+            mgr->addPlugin(p);
+         }
+
+         return (p != NULL);
+      }
+
+      cluster::ClusterManager* mgr;
+   };
 
    ClusterManager::ClusterManager() : mClusterActive(false), mClusterReady(false)
    {
@@ -463,6 +487,7 @@ namespace cluster
          // --- Load ClusterPlugin dsos -- //
          // - Load individual plugins
          const std::string plugin_prop_name("plugin");
+         const std::string plugin_init_func("initPlugin");
          int plugin_count = element->getNum(plugin_prop_name);
          std::string plugin_dso;
 
@@ -476,12 +501,15 @@ namespace cluster
                   << "InputMgr::config: Loading ClusterPlugin DSO '"
                   << plugin_dso << "'\n" << vprDEBUG_FLUSH;
 
-               // If any part of the driver loading fails, the object driver_library
-               // will go out of scope at the end of this iteration, thereby freeing
-               // the allocated memory.
+               // If any part of the driver loading fails, the object
+               // plugin_library will go out of scope at the end of this
+               // iteration, thereby freeing the allocated memory.
                vpr::LibraryPtr plugin_library =
                   vpr::LibraryPtr(new vpr::Library(plugin_dso));
-               this->loadDriverDSO(plugin_library);
+
+               Callable functor(this);
+               mPluginLoader.loadAndInitDSO(plugin_library, plugin_init_func,
+                                            functor);
             }
          }
 
@@ -576,58 +604,5 @@ namespace cluster
 
       //return(NULL); //HOW DO I DO THIS WITH BOOST SHARED POINTERS
    }
-
-
-vpr::ReturnStatus ClusterManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
-{
-   vprASSERT(driverDSO.get() != NULL && "Invalid vpr::LibraryPtr object");
-
-   const int lib_name_width(50);
-
-   vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
-      << "Loading plugin library: " << std::setiosflags(std::ios::right)
-      << std::setfill(' ') << std::setw(lib_name_width) << driverDSO->getName()
-      << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
-
-   // Load the driver
-   vpr::ReturnStatus status;
-   status = driverDSO->load();
-
-   if ( status.success() )
-   {
-      vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-         << "Success DSO loaded.\n" << vprDEBUG_FLUSH;
-
-      ClusterPlugin* (*creator)();
-
-      creator = (ClusterPlugin* (*)()) driverDSO->findSymbol("initPlugin");
-
-      if ( NULL != creator )
-      {
-         vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-            << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
-
-         mPluginLibraries.push_back(driverDSO);
-         ClusterPlugin* new_plugin = (*creator)();
-         addPlugin(new_plugin);
-      }
-      else
-      {
-         vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-            << clrOutNORM(clrYELLOW, "WARNING")
-            << ": Failed to look up factory function in driver DSO '"
-            << driverDSO << "'\n" << vprDEBUG_FLUSH;
-      }
-   }
-   else
-   {
-      vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
-   }
-
-   return status;
-}
-
 
 } // End of gadget namespace
