@@ -108,7 +108,13 @@ void BaseTypeFactory::hackLoadKnownDevices()
 	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >* siminput_input_position
 			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >;
 	
+    // SimInput Input Digital
+	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >* siminput_input_position
+			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >;
 
+    // SimInput Input Analog
+	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_position
+			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
 
 
 
@@ -171,7 +177,7 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
    new_dev = constructor->createNetDevice(base_type);
    if(new_dev!=NULL)
    {
-      vprDEBUG(gadgetDBG_RIM,1) << "[NetDevice Factory] Found the BaseType\n"<< vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[NetDevice Factory] Found the BaseType\n"<< vprDEBUG_FLUSH;
    }
    return new_dev;
 }
