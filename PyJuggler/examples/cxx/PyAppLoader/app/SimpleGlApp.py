@@ -31,6 +31,7 @@ from OpenGL.GL import *
 # NOTE: If you import the individual modules from PyJuggler, make sure to
 # import PyJuggler.vrj first.
 from PyJuggler import *
+import gmtl
 
 
 class SimpleGlApp(vrj.GlApp):
