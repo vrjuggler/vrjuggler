@@ -8,8 +8,7 @@
 int main()
 {
   vjMemPool* anSgiPool = new vjMemPoolSGI(1024*1024);
- 	
-  
+
   const int numBirds = 2;
   const  char* calfile = "/home/users/allenb/Source/juggler/Data/calibration.table";
   const BIRD_HEMI hemi = LOWER_HEM;
