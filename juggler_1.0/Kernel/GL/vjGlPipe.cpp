@@ -70,7 +70,7 @@ void vjGlPipe::triggerRender()
    //vjASSERT(mThreadRunning == true);      // We must be running
    while(!mThreadRunning)
    {
-      vjDEBUG(vjDBG_DRAW_MGR,3) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
    }
 
    renderTriggerSema.release();

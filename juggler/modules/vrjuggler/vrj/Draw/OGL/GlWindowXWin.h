@@ -44,6 +44,7 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplay.h>
+#include <Input/vjKeyboard/vjXWinKeyboard.h>
 
 // this simple motif-esqe definition was taken from GLUT
 typedef struct {
@@ -63,7 +64,7 @@ typedef struct {
 // to dealing with a GLX window
 // in OpenGL
 //------------------------------------
-class vjGlxWindow: public vjGlWindow
+class vjGlxWindow: public vjGlWindow, public vjXWinKeyboard
 {
 public:
     vjGlxWindow();
@@ -79,18 +80,8 @@ public:
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins);
 
-private:
-
-   Display         *x_display;
-   XVisualInfo     *visual_info;
-   GLXContext      glx_context;
-   Window          x_window;
-   std::string     window_name;
-   int             mPipe;
-   std::string     mXDisplayName;  //: Name of the x display to use
-
-
-   /* private member functions.  these get profoundly painful */
+protected:
+      /* private member functions.  these get profoundly painful */
    XVisualInfo *GetGlxVisInfo (Display *display, int screen);
 
    //!PRE:  window is an xwindow under display
@@ -99,6 +90,15 @@ private:
    //+       until a window has actually been mapped.
    static int EventIsMapNotify (Display *display,  XEvent *e,  XPointer window);
 
+private:
+   Display*       x_display;
+   XVisualInfo*   visual_info;
+   GLXContext     glx_context;
+   Window         x_window;
+   std::string    window_name;
+   int            mPipe;
+   std::string    mXDisplayName;       //: Name of the x display to use
+   bool           mAreKeyboardDevice;  // Should we act as a keyboard device to
 };
 
 #endif

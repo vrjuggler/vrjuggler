@@ -45,7 +45,7 @@
 
 
 vjGlxWindow::vjGlxWindow():vjGlWindow() {
-   window_is_open = 0;
+   window_is_open = false;
    window_width = window_height = -1;
    x_display = NULL;
    visual_info = NULL;
@@ -53,6 +53,7 @@ vjGlxWindow::vjGlxWindow():vjGlWindow() {
    window_name = std::string("");
    mPipe = -1;
    mXDisplayName = std::string("");
+   mAreKeyboardDevice = false;
 }
 
 
@@ -229,20 +230,23 @@ int vjGlxWindow::open() {
         goto OPEN_FAIL;
     }
 
-//     vjASSERT(NULL != glx_context);
-//     if (!glXMakeCurrent ( x_display, x_window, glx_context  )) {
-//         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << mXDisplayName << "'\n" << vjDEBUG_FLUSH;
-//         return false;
-//     }
+    window_is_open = true;
 
-    /* allen found a hint online that if we have the controlling process
-     * "disown" the gl context we just created, we could then have another
-     * process pick it up and use it.  However, it doesn't seem to have
-     * worked for us.
-     */
-    // glXMakeCurrent (x_display,0,0);
+    // ----------- Keyboard device starting -------------- //
+    if(true == mAreKeyboardDevice)     // Are we going to act like a keyboard device
+    {
+       // Set the parameters that we will need to get events
+       vjXWinKeyboard::m_window = x_window;
+       vjXWinKeyboard::m_visual = visual_info;
+       vjXWinKeyboard::m_display = x_display;
 
-    window_is_open = 1;
+       // Start up the device
+       vjXWinKeyboard::startSampling();
+
+       vjInput* dev_ptr = dynamic_cast<vjInput*>(this);
+
+       vjKernel::instance()->getInputManager()->addDevice(dev_ptr);
+    }
 
     return true;
 
@@ -306,13 +310,16 @@ bool vjGlxWindow::makeCurrent() {
 
 void vjGlxWindow::config(vjDisplay* _display)
 {
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlxWindow::config: _display: " << (*_display)
+                              << "\nConfig chunk:\n" << (*(_display->getConfigChunk()))
+                              << std::endl << vjDEBUG_FLUSH;
+
    const char neg_one_STRING[] = "-1";
    vjGlWindow::config(_display);
 
     // Get the vector of display chunks
-   vjConfigChunk* dispSysChunk;
-   //dispSysChunk = vjKernel::instance()->getInitialChunkDB()->getMatching("displaySystem");
-   dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
+   vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
+   vjConfigChunk* displayChunk = _display->getConfigChunk();
 
    window_name = _display->getName();
    mPipe = _display->getPipe();
@@ -326,6 +333,27 @@ void vjGlxWindow::config(vjDisplay* _display)
    }
    vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
                              << mXDisplayName << std::endl << vjDEBUG_FLUSH;
+
+   mAreKeyboardDevice = (bool)displayChunk->getProperty("act_as_keyboard_device");
+   // if should have keyboard device
+   if(true == mAreKeyboardDevice)
+   {
+      mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
+
+      // Configure keyboard device portion
+      vjConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
+
+      // Set the name of the chunk to the same as the parent chunk (so we can point at it)
+      keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
+
+      vjXWinKeyboard::config(keyboard_chunk);
+
+      // Custom configuration
+      vjXWinKeyboard::m_width = vjGlxWindow::window_width;
+      vjXWinKeyboard::m_height = vjGlxWindow::window_height;
+
+      mWeOwnTheWindow = false;      // Keyboard device does not own window
+   }
 }
 
 

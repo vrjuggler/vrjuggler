@@ -93,6 +93,9 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
    if (mSleepTimeMS == 0)
       mSleepTimeMS = 50;
 
+   // Default to owning the window
+   mWeOwnTheWindow = true;
+
    return true;
 }
 
