@@ -120,7 +120,6 @@ namespace vrj
    bool SoundManagerSonix::configCanHandle( jccl::ConfigChunkPtr chunk )
    {
       std::string chunk_type = (std::string)chunk->getDescToken();
-
       if(std::string("juggler_audio_manager") == chunk_type)
          return true;
       else
