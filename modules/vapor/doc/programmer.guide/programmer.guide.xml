@@ -176,6 +176,36 @@
           managing memory carefully.</para>
         </tip>
       </section>
+
+      <section>
+        <title>Statistics Collection</title>
+
+        <indexterm>
+          <primary>input/output abstraction</primary>
+
+          <secondary>built-in statistics collection</secondary>
+        </indexterm>
+
+        <para>All the I/O classes in VPR have built-in statistics collection
+        capabilities. By default, the code is not activated so as to prevent
+        unwanted overhead. However, it can be enabled quite simply using the
+        method <methodname>vpr::BlockIO::setIOStatStrategy()</methodname>.
+        This method takes a single parameter, a statistics collection object,
+        and invokes the correct methods whenever I/O occurs. Within the
+        specific implementation, any form of statistics related to reading and
+        writing of data may be collected.</para>
+
+        <para>From the name of the method in <classname>vpr::BlockIO</classname>,
+        we see the first indication that a Strategy pattern <xref
+        linkend="ref.design.patterns" /> is used to implement the pluggable
+        statistics collection code. All statistics strategy classes must
+        derive from <classname>vpr::BaseIOStatsStrategy</classname><indexterm><primary>classes</primary><secondary>vpr::BaseIOStatsStrategy</secondary></indexterm>,
+        and strategies can be mixed using the templated class
+        <classname>vpr::IOStatsStratgeyAdapter&#60;S, T&#62;</classname><indexterm><primary>classes</primary><secondary>vpr::IOStatsStrategyAdapter&#60;S,
+        T&#62;</secondary></indexterm>. Currently, the only strategy class is
+        <classname>vpr::BandwidthIOStatsStrategy</classname>, used for
+        collecting information about bandwidth usage of a given I/O object.</para>
+      </section>
     </chapter>
 
     <chapter id="chapter.vpr.sockets">
@@ -2163,7 +2193,24 @@ cv.release();</programlisting>
     <chapter id="chapter.signal.handling">
       <title>Signal Handling</title>
 
-      <para></para>
+      <para>VPR contains an abstraction for allowing cross-platform signal
+      handling. The interface is based on that used in the <ulink
+      url="http://www.cs.wustl.edu/~schmidt/ACE.html">ADAPTIVE Communication
+      Environment</ulink> (ACE). The basic idea is that a set of signals is
+      associated with a signal handler. The handler is registered with the
+      operating system, and whenever one of the signals in the signal set is
+      delivered to the process (thread), the handler is invoked.</para>
+
+      <para>The signal set is encapsulated within an instance of
+      <classname>vpr::SignalSet</classname>, and a signal handler is simply a
+      callback function. The two are combined using the concept of a signal
+      action which is implemented in the class <classname>vpr::SignalAction</classname>.
+      The signal action registers the handler for the given set of signals
+      with the operating system.</para>
+
+      <para>At this time, the signal handling abstraction has not been put
+      into use in any Juggler Project code. As such, it is not well tested,
+      and it should be considered a work in progress.</para>
     </chapter>
   </part>
 
@@ -2173,7 +2220,65 @@ cv.release();</programlisting>
     <chapter id="chapter.sim.sockets">
       <title>Simulated Sockets</title>
 
-      <para></para>
+      <para>The simulated sockets (often referred to as <quote>sim sockets</quote>)
+      in VPR are designed to allow testing of network algorithms without
+      requiring the use of a physical computer network. All communication
+      between <quote>nodes</quote> occurs in memory by simulating the actual
+      process of sending and receiving data on a network. This is done through
+      a discrete event simulation where the events are the arrival of a
+      message (packet) at a node in the network. Because we have chosen the
+      message arrival event as the step size, the simulation can proceed at a
+      very high rate. Within the network, timing calculations are performed so
+      that messages are delivered based on the constraints of the network
+      (bandwidth and transmission latency are the primary constraints in the
+      current version).</para>
+
+      <section>
+        <title>Sim Socket Interface</title>
+
+        <para>The interface for sim sockets is identical to that of the
+        operating system abstraction layer for sockets, namely
+        <classname>vpr::Socket</classname>, <classname>vpr::SocketStream</classname>,
+        and <classname>vpr::SocketDatagram</classname>. Indeed, user code
+        actually uses instances of those classes. The use of sim sockets
+        versus real sockets is made when VPR is compiled, in the same way that
+        the threading abstraction (NSPR versus POSIX versus SPROC) is chosen
+        at compile time. Ideally, user code should not have to change at all
+        to use sim sockets, thus making it possible to test network algorithms
+        with exactly the same code as would be used with real sockets.</para>
+
+        <para>Of course, the real world is not ideal. While it is very true
+        that most code does not have to change to use sim sockets, there is
+        one major exception. Because the sim sockets are based on an
+        event-driven simulation, something must be driving the simulation.
+        When using sim sockets, user code must have a separate thread running
+        that makes use of the singleton <classname>vpr::sim::Controller</classname>.
+        The thread contains a loop that invokes <methodname>vpr::sim::Controller::processNextEvent()</methodname>
+        or <methodname>vpr::sim::Controller::processEvents()</methodname> at
+        each iteration.</para>
+
+        <para>Another aspect of the current sim socket implementation is that
+        it is designed to execute in a single thread using non-blocking socket
+        semantics. We have chosen this design because we felt that the
+        complexity of writing a multi-threaded socket simulation that allowed
+        sockets to block would be far too difficult. Future versions may allow
+        blocking or non-blocking semantics to be chosen by user code, but such
+        a feature is not expected in the near future.</para>
+      </section>
+
+      <section>
+        <title>Sim Socket Implementation</title>
+
+        <para>The implementation of the sim socket code is based on the <ulink
+        url="http://www.boost.org/libs/graph/doc/">Boost Graph Library</ulink>.
+        Vertices represent network nodes (also known as hosts), and edges
+        represent network lines. The network topology is constructed using
+        output from the <ulink
+        url="http://www.geocities.com/ResearchTriangle/3867/sourcecode.html">Tiers
+        software</ulink>. Once constructed, an in-memory network serves as the
+        backend for the higher level socket API. Messages (blocks of memory)
+        are passed between nodes until they reach their destination.</para>
+      </section>
     </chapter>
 
     <chapter id="chapter.guid">
