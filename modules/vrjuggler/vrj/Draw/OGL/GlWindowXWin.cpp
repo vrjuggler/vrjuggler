@@ -47,7 +47,7 @@
 #include <vrj/Display/DisplayManager.h>
 
 #include <vrj/Draw/OGL/GlWindowXWin.h>
-#include <gadget/Devices/EventWindow/EventWindowXWin.h>
+//#include <gadget/Devices/KeyboardMouseDevice/EventWindowXWin.h>
 
 #include <stdexcept>
 
@@ -68,10 +68,10 @@ namespace vrj
 
 GlWindowXWin::GlWindowXWin()
    : GlWindow()
-   , mXDisplay(NULL)
+//   , mXDisplay(NULL)
    , mVisualInfo(NULL)
    , mGlxContext(NULL)
-   , mXWindow(0)
+//   , mXWindow(0)
    , mWindowName("")
    , mPipe(-1)
    , mXDisplayName(""),
@@ -79,6 +79,9 @@ GlWindowXWin::GlWindowXWin()
 {
    mWindowIsOpen = false;
    mWindowWidth = mWindowHeight = -1;
+
+   // XEvent processing is not blocking.
+   mBlocking = false;
 }
 
 GlWindowXWin::~GlWindowXWin()
@@ -161,7 +164,10 @@ bool GlWindowXWin::open()
          throw glwinx_OpenFailureException();
       }
 
-      event_mask = ExposureMask | StructureNotifyMask;   // Don't request buttons or keys since that will be handled elsewhere
+      event_mask = ExposureMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask |
+                   ButtonPressMask | ButtonReleaseMask | ButtonMotionMask |
+                   PointerMotionMask | StructureNotifyMask;
+//      event_mask = ExposureMask | StructureNotifyMask;   // Don't request buttons or keys since that will be handled elsewhere
       w_attrib.event_mask = event_mask;
       w_attrib.border_pixel = 0x0;
 
@@ -278,10 +284,12 @@ bool GlWindowXWin::open()
       }
 
       // ----------- Register this window with XEvent Device registry --------- //
+      /*
       gadget::EventWindowXWin::WindowRegistry::WindowInfo xwin_info;
       xwin_info.displayName = mXDisplayName;
       xwin_info.xWindow = mXWindow;
       gadget::EventWindowXWin::WindowRegistry::instance()->addWindow(mVrjDisplay->getName(), xwin_info);
+      */
 
       ret_val = true;
    }
@@ -382,6 +390,9 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
    jccl::ConfigElementPtr disp_sys_elt = DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
 
+   // Get the lock and KeyboardMouseDevice information
+   gadget::InputArea::config(display_elt);
+   
    mWindowName = disp->getName();
    mPipe = disp->getPipe();
    vprASSERT(mPipe >= 0);
@@ -445,25 +456,32 @@ bool GlWindowXWin::createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wi
 
 void GlWindowXWin::checkEvents()
 {
-   XEvent event;
-
-   while( XPending(mXDisplay))
+   // XXX: Move this all down sooner or later.
+   if (NULL != mKeyboardMouseDevice)
    {
-      XNextEvent(mXDisplay,&event);
+      handleEvents();
+   }
+   else
+   {
+      XEvent event;
 
-      switch ( event.type )
+      while( XPending(mXDisplay))
       {
-         case ConfigureNotify:
-            updateOriginSize(vrj::GlWindow::mOriginX, vrj::GlWindow::mOriginY,
-                             event.xconfigure.width, event.xconfigure.height);
-            vrj::GlWindow::setDirtyViewport(true);
-            break;
+         XNextEvent(mXDisplay,&event);
 
-         default:
-            break;
+         switch ( event.type )
+         {
+            case ConfigureNotify:
+               updateOriginSize(vrj::GlWindow::mOriginX, vrj::GlWindow::mOriginY,
+                                event.xconfigure.width, event.xconfigure.height);
+               vrj::GlWindow::setDirtyViewport(true);
+               break;
+
+            default:
+               break;
+         }
       }
    }
-
 }
 
 /***********************************************************/

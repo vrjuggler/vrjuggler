@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <gadget/Type/EventWindowProxy.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vrj/Display/Projection.h>

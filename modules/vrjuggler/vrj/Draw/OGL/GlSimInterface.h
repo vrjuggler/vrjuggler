@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <gadget/Type/EventWindowProxy.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 
 #include <vrj/Draw/DrawSimInterface.h>
@@ -61,7 +61,7 @@ namespace vrj
        * Sets the event window the simulator can use to get input from the
        * user.
        */
-      virtual void setEventWindow(gadget::EventWindowInterface ewInterface) = 0;
+      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface ewInterface) = 0;
    };
 }
 
