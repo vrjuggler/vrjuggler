@@ -40,14 +40,11 @@
 //: Constructor
 bool vjXWinKeyboard::config(vjConfigChunk *c)
 {
-    vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
-                     << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
-
-    const char neg_one_STRING[] = "-1";
-
     if(!vjKeyboard::config(c))
       return false;
 
+     const char neg_one_STRING[] = "-1";
+    
     // Done in vjInput --- myThread = NULL;
     int i;
     for(i =0; i < 256; i++)
