@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-15-2003 aronb       Fixed RTRC so that it now works with vrjconfig.
 Jul-10-2003 patrickh    Removed the ConfigUpdater utility.
 Jul-10-2003 nonchocoboy Merged everything from jccl_config_refactor_branch.
                         Among other things, this officially renames "config
