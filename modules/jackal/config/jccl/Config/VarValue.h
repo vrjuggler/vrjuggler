@@ -61,181 +61,228 @@ typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
  */
 
 
-//-------------------------------------------------
-//: A VarValue is an object that knows its own type even if we don't.
-//  More seriously, it's the value storage unit and value return type
-//  for a ConfigChunk. <br>
-//  Currently, VarValues can be of types int, FLOAT, boolean, string
-//  (char*), distance(essentially FLOAT), as defined by the VarType
-//  enumeration in VarValue.h. <br>
-//  When you get a VarValue, you can do just a few things with it: <br>
-//    1. assign it to a variable and then use it.  Note that there is
-//       type checking here: if you try assigning a string VarValue to
-//       an int, you'll get an error. <br>
-//    2. Cast it to the right type and use it. <br>
-//    3. print it - VarValues have overloaded << so you can print them
-//       without having to cast to the right value. <br>
-//  Note that it's generally incumbent upon the client to know what
-//  kind of VarValue he's getting and what it can do.  Hey, you're
-//  the one who queried the ConfigChunk, not me. <br>
-//
-// @author  Christopher Just
-//
-//!PUBLIC_API:
-//--------------------------------------------------
-
-class JCCL_CLASS_API VarValue {
-
-private:
-
-    VarType    type;
-
-    // these are the possible storage areas.
-    int          intval;
-    float        floatval;
-    std::string  strval;
-    bool         boolval;
-    ConfigChunkPtr embeddedchunkval;
-    unsigned int validation;
-
-    static VarValue* invalid_instance;
-    static const std::string using_invalid_msg;
-
-public:
-
-    //:Gets a reference to a global "invalid" VarValue
-    //!NOTE: This is mainly useful for returning an invalid VarValue in
-    //+      case of an error, and is used internally by some Config/*
-    //+      classes.
-    //!NOTE: There is a fairly harmless race condition where an extra
-    //+      invalid VarValue gets created & not deleted.  This is 
-    //+      very unlikely, and would only result in losing a few bytes
-    //+      anyway.
-    static VarValue& getInvalidInstance ();
-
-
-    inline VarType getType () const {
-	return type;
-    }
-
-    //: Copy constructor.
-    VarValue (const VarValue &v);
-
-
-    //: Constructor - creates a T_EMBEDDEDCHUNK VarValue containing ch
-    //!NOTE: This is explicit for safety's sake.  I already encountered a bug
-    //+      where some chunkdb code was interpreting
-    //+          VarValue v1 = chunk.getProperty(blah)
-    //+      as casting the result of getProperty to a chunk* and then calling
-    //+      this constructor instead of using the VarValue copy constructor
-    //+      becuase getProperty returns a const VarValue and the copy const
-    //+      didn't expect a const (since fixed).
-    explicit VarValue (const ConfigChunkPtr ch);
-
-
-    //: Creates a new VarValue of type t.
-    //! NOTE: Note that once a VarValue object has been created, the type
-    //+ cannot be changed.
-    VarValue ( VarType t );
-
-
-
-    //: Destroys self and all associated memory.
-    ~VarValue();
-
-
-    #ifdef JCCL_DEBUG
-    void assertValid () const;
-    #else
-    inline void assertValid () const {
-        ;
-    }
-    #endif
-
-
-
-    //: Assignment Operator
-    VarValue& operator= (const VarValue &v);
-
-
-
-    //: Equality Operator
-    bool operator == (const VarValue& v) const;
-    inline bool operator != (const VarValue& v) const {
-	return !(*this == v);
-    }
-
-
-    /** Returns true if the VarValue's type is anything but VJ_T_INVALID.
+    /** VarValue is an object which stores a single typed data element.
+     *  VarValues are used as the internal storage for properties of
+     *  ConfigChunks.  ConfigChunks also return VarValues to user code.
+     *  <p>
+     *  Currently, VarValues can be of the primitive types int, float,
+     *  boolean, and string.  There are also two special types:  Chunk,
+     *  which is the string name of a ConfigChunk, and EmbeddedChunk,
+     *  which actually contains an entire jccl::ConfigChunk.  The types
+     *  available for VarValues are defined by the jccl::VarType 
+     *  enumeration in VarValue.h.
+     *  <p>
+     *  When you get a VarValue, you can do several things with it:
+     *    1.  Assign it to another VarValue variable and then use it.  
+     *        Note that this can change the VarValue type of the
+     *        variable you are assigning into.
+     *    2.  Cast it to the right type and use it.  VarValues can
+     *        generally be cast freely to strings, ints, floats, and
+     *        booleans.
+     *    3.  Print it - VarValues have overloaded << so that they
+     *        can be printed directly, without knowing the value or
+     *        type of value they contain.
+     *  <p>
+     *  Note that it's generally incumbent upon the client to know
+     *  what kind of VarValue he's getting and what he can do with it.
+     *  Hey, you're the one who queried the ConfigChunk, not me.
      */
-    inline bool isValid () const {
-        return (type != VJ_T_INVALID);
-    }
+    class JCCL_CLASS_API VarValue {
+
+    private:
+
+        VarType    type;
+
+        // these are the possible storage areas.
+        int          intval;
+        float        floatval;
+        std::string  strval;
+        bool         boolval;
+        ConfigChunkPtr embeddedchunkval;
+        unsigned int validation;
+
+        static VarValue* invalid_instance;
+        static const std::string using_invalid_msg;
+
+    public:
+
+        /** Returns a reference to a global "invalid" VarValue.
+         *  This method is mainly useful for returning an invalid
+         *  VarValue in case of an error, and is used internally by some
+         *  Config/ classes so that they can safely return a VarValue&.
+         *  <p>
+         *  Note that there is a fairly harmless race condition where an
+         *  extra invalid VarValue could be created & not deleted.  Thus
+         *  it is not valid to assume that all VJ_T_INVALID varvalues 
+         *  are the same object.
+         */
+        static VarValue& getInvalidInstance ();
 
 
-    /*  Cast Operators
-     *  These operators are used whenever a VarValue is cast to another
-     *  type.  They do some amount of type checking and coercion,
-     *  eventually returning the data stored within the config itself.
-     *  Right now, in event of an error we only write a message to cerr
-     *  and return a "reasonable" value - 0, 0.0, false, "", NULL, etc.
-     */
+        /** Returns the current VarValue type of this object.
+         */
+        inline VarType getType () const {
+            return type;
+        }
 
-    //: Cast to int
-    //!RETURNS: i - integer value of self if T_INT, 0 or 1 if T_BOOL
-    //!RETURNS: 0 - if not T_INT or T_BOOL (this is bad)
-    operator int() const;
+
+        /** Copy Constructor.
+         */
+        VarValue (const VarValue &v);
+
+
+        /** Convenience constructor for T_EMBEDDEDCHUNK VarValue.
+         *  This constructor creates a VarValue with an initial value of
+         *  ch.  Note that it stores a smart pointer reference to ch 
+         *  itself, and does _not_ make a copy.
+         *  <p>
+         *  This is explicit for safety's sake.  On some compilers,
+         *  the nonexplicit version with a statement like
+         *      VarValue v1 = chunk.getProperty(blah)
+         *  would cast the result of getProperty to a chunk* and then
+         *  call this constructor instead of using the VarValue assignment
+         *  operator (because at that time the copy const didn't expect a
+         *  const VarValue argument (since fixed)).
+         */
+        explicit VarValue (const ConfigChunkPtr ch);
+
+
+        /** Creates a new VarValue of type t.
+         *  The initial value of the VarValue will be 0, false, empty 
+         *  string, 0.0f, or a ConfigChunkPtr pointing to NULL.
+         */
+        VarValue ( VarType t );
+
+
+        /** Destroys self and all associated memory. */
+        ~VarValue();
+
+
+#ifdef JCCL_DEBUG
+        void assertValid () const;
+#else
+        inline void assertValid () const {
+            ;
+        }
+#endif
+
+
+
+        /** Assignment operator. */
+        VarValue& operator= (const VarValue &v);
+
+
+
+        /** Equality operator.
+         *  Returns true only if the two VarValues have the same type
+         *  and the same value (or if both are VJ_T_INVALID).
+         */
+        bool operator == (const VarValue& v) const;
+        inline bool operator != (const VarValue& v) const {
+            return !(*this == v);
+        }
+
+
+        /** Returns true if the VarValue's type is anything but VJ_T_INVALID.
+         */
+        inline bool isValid () const {
+            return (type != VJ_T_INVALID);
+        }
+
+
+        /*  Cast Operators
+         *  These operators are used whenever a VarValue is cast to another
+         *  type.  They do some amount of type checking and coercion,
+         *  eventually returning the data stored within the config itself.
+         *  Right now, in event of an error we only write a message to cerr
+         *  and return a "reasonable" value - 0, 0.0, false, "", NULL, etc.
+         */
+
+        /** Cast to int.
+         *  @return an integer representation of self's value.  Floats are
+         *          cast to int, bool to 0 or 1.  Everything else returns 0.
+         */
+        operator int() const;
     
 
-    //: cast to ConfigChunk
-    operator ConfigChunkPtr() const;
+        /** Cast to ConfigChunkPtr.
+         *  @return A ConfigChunkPtr.  If self is not of type 
+         *          T_EMBEDDEDCHUNK, the smart pointer points to NULL.
+         */
+        operator ConfigChunkPtr() const;
 
 
-    //: Cast to bool
-    operator bool() const;
+        /** Cast to bool.
+         *  @return A boolean.  Ints and Floats are true if nonzero.
+         *          Everything else returns false.
+         */
+        operator bool() const;
 
 
-    //: Cast to float (for T_FLOAT or T_DISTANCE)
-    operator float () const;
+        /** Cast to float.
+         */
+        operator float () const;
 
 
-    //: Returns a string VarValue as a c-style string
-    //!NOTE: returns a freshly allocated char array that the caller is 
-    //+      responsible for deleting.
-    char* cstring () const;
+        /** Converts to a string representation.
+         *  @return A freshly-allocated char array that the caller is
+         *          responsible for deleting.
+         *          Note that EmbeddedChunk VarValues are not currently
+         *          converted by this method.
+         */
+        char* cstring () const;
 
 
-    //: Cast to std::string
-    operator std::string () const;
+        /** Cast to std::string.
+         *  Note that EmbeddedChunk VarValues are not currently
+         *  converted by this method.
+         */
+        operator std::string () const;
 
 
-    //: Assignment overload 
-    //!NOTE: type of a VarValue is immutable, so a type mismatch here
-    //+      can cause an error (in which case the assignment fails)
-    VarValue& operator = (int i);
-    VarValue& operator = (bool i);
-    VarValue& operator = (float i);
-    VarValue& operator = (const std::string& i);
+        /** Assignment overload.
+         *  Note that none of these assignment operators will change
+         *  the VarValue's type.  Instead, the VarValue will coerce the
+         *  argument into the desired type.
+         *  Note that the std::string and char* assignments are quite
+         *  sophisticated, and will attempt to parse strings into
+         *  ints, floats, or booleans, as required.
+         *  If no reasonable coercion of types exists, the assignment
+         *  will fail and print an error message.
+         */
+        VarValue& operator = (int i);
+        VarValue& operator = (bool i);
+        VarValue& operator = (float i);
+        VarValue& operator = (const std::string& i);
 
-    //: Assignment overload 
-    //!NOTE: type of a VarValue is immutable, so a type mismatch here
-    //+      can cause an error (in which case the assignment fails)
-    //!NOTE: the VarValue makes a copy of the string - you can do with
-    //+      the original as you please.
+
+        /** Assignment overload.
+         *  Note that none of these assignment operators will change
+         *  the VarValue's type.  Instead, the VarValue will coerce the
+         *  argument into the desired type.
+         *  Note that this assignment is quite
+         *  sophisticated, and will attempt to parse strings into
+         *  ints, floats, or booleans, as required.
+         *  If no reasonable coercion of types exists, the assignment
+         *  will fail and print an error message.
+         *  In any event, the char* argument is copied, so the caller may
+         *  freely delete or overwrite the char* passed to this method.
+         */
     VarValue &operator = (const char *s);
 
     VarValue &operator = (const ConfigChunkPtr s);
 
 
 
-    //: Writes the value of self to the stream out
-    //!NOTE: v knows what type it is, so it makes sure it's printed
-    //+      in a reasonable way.  ints & floats are printed as numbers,
-    //+      bools as the strings "true" and "false", strings and 
-    //+      chunks as their string reps, etc.
-    friend JCCL_API(std::ostream&) operator << (std::ostream& out, const VarValue& v);
+        /** Write the value of self to out.
+         *  self knows what type it is, and makes sure that it is printed
+         *  in a reasonable way.  Ints and floats are printed as numbers,
+         *  bools as the strings "true" and "false", strings & chunks as
+         *  their string reps, etc.
+         */
+        friend JCCL_API(std::ostream&) operator << (std::ostream& out, const VarValue& v);
     
-};
+    };
 
 }; // namespace jccl
 #endif
