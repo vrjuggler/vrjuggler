@@ -665,7 +665,7 @@ fi
 if test "x$OS_TYPE" = "xWin32" ; then
     DYLIB_DEPS="$NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB"
+    DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
 
 # Information needed to generate vpr-config.
