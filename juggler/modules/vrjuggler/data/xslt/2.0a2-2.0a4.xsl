@@ -71,6 +71,10 @@
      <xsl:processing-instruction name="org-vrjuggler-jccl-settings">configuration.version="3.0"</xsl:processing-instruction>
       <xsl:value-of select="$newline"/>
 
+      <xsl:variable name="include_count">
+         <xsl:value-of select="count(processing-instruction('org-vrjuggler-jccl-include'))" />
+      </xsl:variable>
+
       <!-- XXX: Need to deal with includes here. -->
       <!-- Create the new XML tree. -->
       <xsl:element name="configuration">
@@ -94,6 +98,13 @@
             <xsl:value-of select="$cfg_namespace" />
          </xsl:attribute>
          <xsl:value-of select="$newline"/>
+
+         <xsl:call-template name="for-loop">
+            <xsl:with-param name="i"         select="1" />
+            <xsl:with-param name="increment" select="1" />
+            <xsl:with-param name="operator"  select="'&lt;='" />
+            <xsl:with-param name="testValue" select="$include_count" />
+         </xsl:call-template>
 
          <!-- Create the tree of elements. -->
          <xsl:element name="elements">
@@ -2166,6 +2177,121 @@
             <xsl:value-of select="." />
          </xsl:otherwise>
       </xsl:choose>
+   </xsl:template>
+
+   <!-- Generator of <include> elements. -->
+   <xsl:template name="includeGenerate">
+      <xsl:param name="file"/>
+      <xsl:param name="label"/>
+      <xsl:param name="defaultValue" select="''"/>
+
+      <xsl:element name="include">
+         <xsl:attribute name="file">
+            <xsl:value-of select="$file"/>
+         </xsl:attribute>
+      </xsl:element>
+
+      <xsl:value-of select="$newline"/>
+   </xsl:template>
+
+   <!--
+      This template emulates the behavior of a traditional for loop.  It
+      comes from Chapter 4 of /Mastering XML Transformations/ (pp. 85-89)
+      by Doug Tidwell.
+    -->
+   <xsl:template name="for-loop">
+      <xsl:param name="i"         select="1"/>
+      <xsl:param name="increment" select="1"/>
+      <xsl:param name="operator"  select="'='"/>
+      <xsl:param name="testValue" select="1"/>
+      <xsl:param name="iteration" select="1"/>
+
+      <xsl:variable name="testPassed">
+         <xsl:choose>
+            <xsl:when test="starts-with($operator, '!=')">
+               <xsl:if test="$i != $testValue">
+                  <xsl:text>true</xsl:text>
+               </xsl:if>
+            </xsl:when>
+            <xsl:when test="starts-with($operator, '&lt;=')">
+               <xsl:if test="$i &lt;= $testValue">
+                  <xsl:text>true</xsl:text>
+               </xsl:if>
+            </xsl:when>
+            <xsl:when test="starts-with($operator, '&gt;=')">
+               <xsl:if test="$i &gt;= $testValue">
+                  <xsl:text>true</xsl:text>
+               </xsl:if>
+            </xsl:when>
+            <xsl:when test="starts-with($operator, '=')">
+               <xsl:if test="$i = $testValue">
+                  <xsl:text>true</xsl:text>
+               </xsl:if>
+            </xsl:when>
+            <xsl:when test="starts-with($operator, '&lt;')">
+               <xsl:if test="$i &lt; $testValue">
+                  <xsl:text>true</xsl:text>
+               </xsl:if>
+            </xsl:when>
+            <xsl:when test="starts-with($operator, '&gt;')">
+               <xsl:if test="$i &gt; $testValue">
+                  <xsl:text>true</xsl:text>
+               </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:message terminate="yes">
+                  <xsl:text>Sorry, the for-loop emulator only </xsl:text>
+                  <xsl:text>handles six operators </xsl:text>
+                  <xsl:value-of select="$newline"/>
+                  <xsl:text>(&lt; | &gt; | = | &lt;= | &gt;= | !=).  </xsl:text>
+                  <xsl:text>The value </xsl:text>
+                  <xsl:value-of select="$operator"/>
+                  <xsl:text> is not allowed.</xsl:text>
+                  <xsl:value-of select="$newline"/>
+               </xsl:message>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+
+      <xsl:if test="$testPassed='true'">
+         <xsl:variable name="file_param">
+            <xsl:value-of select="processing-instruction('org-vrjuggler-jccl-include')[$i]" />
+         </xsl:variable>
+
+         <!--
+            The magic number 7 here is to truncate trailing characters
+            including the closing quote on the file name.
+         -->
+         <xsl:variable name="file_end">
+            <xsl:value-of select="string-length($file_param) - 7" />
+         </xsl:variable>
+
+         <xsl:call-template name="includeGenerate">
+            <!--
+               The magic number 7 here is to skip characters up to and
+               including the opening quote on the file name.
+               XXX: Is there a better way to extract the file name string
+               from $file_param?
+            -->
+            <xsl:with-param name="file"
+                            select="substring($file_param, 7, $file_end)"/>
+         </xsl:call-template>
+
+         <!-- Your logic should end here; don't change the rest of this     -->
+         <!-- template!                                                     -->
+
+         <!-- Now for the important part: we increment the index variable   -->
+         <!-- and loop.  Notice that we're passing the incremented value,   -->
+         <!-- not changing the variable itself.                             -->
+
+         <xsl:call-template name="for-loop">
+            <xsl:with-param name="i"         select="$i + $increment"/>
+            <xsl:with-param name="increment" select="$increment"/>
+            <xsl:with-param name="operator"  select="$operator"/>
+            <xsl:with-param name="testValue" select="$testValue"/>
+            <xsl:with-param name="iteration" select="$iteration + 1"/>
+         </xsl:call-template>
+      </xsl:if> 
    </xsl:template>
 
 </xsl:stylesheet>
