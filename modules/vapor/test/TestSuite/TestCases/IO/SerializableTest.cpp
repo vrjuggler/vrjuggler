@@ -21,6 +21,12 @@ void SerializableTest::testReaderWriter()
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
+
+   const vpr::Int8 data_int8(-7);
+   const vpr::Int16 data_int16(-298);
+   const vpr::Int32 data_int32(-14567);
+   const vpr::Int64 data_int64(-12345678);
+
    const float       data_float(1221.75f);
    const double      data_double(1.2211975);
    const std::string data_string("test string");
@@ -35,6 +41,12 @@ void SerializableTest::testReaderWriter()
    writer->writeUint16(data_uint16);
    writer->writeUint32(data_uint32);
    writer->writeUint64(data_uint64);
+   
+   writer->writeUint8(data_int8);
+   writer->writeUint16(data_int16);
+   writer->writeUint32(data_int32);
+   writer->writeUint64(data_int64);
+
    writer->writeFloat(data_float);
    writer->writeDouble(data_double);
    writer->writeString(data_string);
@@ -44,6 +56,11 @@ void SerializableTest::testReaderWriter()
    vpr::Uint16 read_uint16;
    vpr::Uint32 read_uint32;
    vpr::Uint64 read_uint64;
+   vpr::Int8 read_int8;
+   vpr::Int16 read_int16;
+   vpr::Int32 read_int32;
+   vpr::Int64 read_int64;
+
    float       read_float;
    double      read_double;
    std::string read_string;
@@ -56,6 +73,10 @@ void SerializableTest::testReaderWriter()
    reader->readUint16(read_uint16);
    reader->readUint32(read_uint32);
    reader->readUint64(read_uint64);
+   reader->readUint8(vpr::Uint8(read_int8));
+   reader->readUint16(vpr::Uint16(read_int16));
+   reader->readUint32(vpr::Uint32(read_int32));
+   reader->readUint64(vpr::Uint64(read_int64));
    reader->readFloat(read_float);
    reader->readDouble(read_double);
    reader->readString(read_string);
@@ -65,6 +86,10 @@ void SerializableTest::testReaderWriter()
    CPPUNIT_ASSERT(data_uint16 == read_uint16);
    CPPUNIT_ASSERT(data_uint32 == read_uint32);
    CPPUNIT_ASSERT(data_uint64 == read_uint64);
+   CPPUNIT_ASSERT(data_int8 == read_int8);
+   CPPUNIT_ASSERT(data_int16 == read_int16);
+   CPPUNIT_ASSERT(data_int32 == read_int32);
+   CPPUNIT_ASSERT(data_int64 == read_int64);
    CPPUNIT_ASSERT(data_float == read_float);
    CPPUNIT_ASSERT(data_double == read_double);
    CPPUNIT_ASSERT(data_string == read_string);
@@ -73,6 +98,7 @@ void SerializableTest::testReaderWriter()
 
 // Test reading and writing data from many memory offsets
 // - Loop over several different offsets and at each read and write all types
+// - Tests for memory alignment errors (ie. bus errors and seg faults)
 void SerializableTest::testDataOffsets()
 {
 
@@ -157,6 +183,12 @@ void SerializableTest::testReadWriteSimple()
    obj1.shortVal = 0xCAFE;
    obj1.longVal = 0xDEADBEEF;
    obj1.longlongVal = 0xFACEBEEFCAFEDEAD;
+   
+   obj1.scharVal = -10;
+   obj1.sshortVal = -233;
+   obj1.slongVal = -10000;
+   obj1.slonglongVal = -12345678;
+
    obj1.floatVal = 1221.1975f;
    obj1.doubleVal = 25.000034;
    obj2 = obj1;                   // Make a copy
