@@ -58,12 +58,18 @@
 # debug           - Build the VPR libraries (dynamic and static) with
 #                   debugging symbols turned on.
 # dbg             - Build the debugging, static copy of the libraries.
-# ddso            - Build the debugging, dynamic shared object version of the
+# dbg-dso         - Build the debugging, dynamic shared object version of the
 #                   libraries.
 # optim           - Build the VPR libraries (dynamic and static) with
 #                   optimization flags enabled.
 # opt             - Build the optimized, static version of the libraries.
-# dso             - Build the dynamic shared object version of the libraries.
+# opt-dso         - Build the optimized, dynamic shared object version of the
+#                   libraries.
+# profiled        - Build the VPR libraries (dynamic and static) with
+#                   profiling flags enabled.
+# prof            - Build the profiled, static version of the libraries.
+# prof-dso        - Build the profiled, dynamic shared object version of the
+#                   libraries.
 # obj             - Build the object files using the default value for
 #                   $(OBJDIR).
 #
@@ -117,6 +123,17 @@ DEFAULT_SET	= 1
 include @topdir@/make.defs.mk
 
 STARTTIME	:= $(shell LC_TIME=C date)
+
+BUILD_PROF_C	= @BUILD_PROF_C@
+BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+
+# If we can build both C and C++ profiled objects, we will build profiled
+# libraries.
+ifeq ($(BUILD_PROF_C), Y)
+ifeq ($(BUILD_PROF_CXX), Y)
+    BUILD_PROF_LIBS	= 1
+endif
+endif
 
 # =============================================================================
 # Lists used for various types of recursion.
