@@ -25,8 +25,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= main.o main-ibox.o main-inputgroup.o main-logiclass.o
-PROGS		= go go-ibox go-inputgroup go-logiclass
+PROGS		= go go-ibox go-inputgroup go-logiclass aFlockTest vjFlockTest
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -102,5 +101,5 @@ main-logiclass.o: main-logiclass.cpp
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${PROGS} ${OBJECTS} core so_locations
+	rm -f Makedepend ${PROGS} *.o core so_locations
 	rm -rf ./ii_files
