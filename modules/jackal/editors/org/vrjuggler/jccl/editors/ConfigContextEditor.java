@@ -343,6 +343,7 @@ public class ConfigContextEditor
       addBtn.setEnabled(false);
       removeBtn.setText("Remove");
       removeBtn.setEnabled(false);
+      removeBtn.setActionCommand("delete");
       mElementTree.setContextEditable(false);
 
       helpScrollPane.setMinimumSize(new Dimension(0, 0));
@@ -378,53 +379,7 @@ public class ConfigContextEditor
     */
    protected void removeAction(ActionEvent evt)
    {
-      Object[] nodes = mElementTree.getLeadSelectionPath().getPath();
-
-      DefaultMutableTreeNode node;
-
-      // The last node in the path is the config element that the user wants
-      // to remove.  We do not have to test the type before the cast because
-      // the user interface only allows removal of ConfigElement objects.
-      node = (DefaultMutableTreeNode) nodes[nodes.length - 1];
-      ConfigElement elt_to_remove = (ConfigElement) node.getUserObject();
-
-      // Now, we need to see if the parent of the selected config element is
-      // a PropertyDefinition object.
-      node = (DefaultMutableTreeNode) nodes[nodes.length - 2];
-      Object obj = node.getUserObject();
-
-      // If the parent of the config element to remove is a PropertyDefinition
-      // object, then the user wants to remove an embedded element.  This must
-      // be done by editing the appropriate property in the config element
-      // containing the one to be removed.
-      if ( obj instanceof PropertyDefinition )
-      {
-         PropertyDefinition prop_def = (PropertyDefinition) obj;
-
-         node = (DefaultMutableTreeNode) nodes[nodes.length - 3];
-         ConfigElement owner = (ConfigElement) node.getUserObject();
-         owner.removeProperty(prop_def.getToken(), elt_to_remove,
-                              getContext());
-      }
-      // If the parent of the config element to remove is not a
-      // PropertyDefinition object, then we have a "top-level" config element.
-      // We have to remove it using the Config Broker.
-      else
-      {
-         boolean removed = getBroker().remove(mContextModel.getContext(),
-                                              elt_to_remove);
-
-         if ( ! removed )
-         {
-            Container parent =
-               SwingUtilities.getAncestorOfClass(Container.class, this);
-            JOptionPane.showMessageDialog(parent,
-                                          "Failed to remove config element '" +
-                                          elt_to_remove.getName() + "'",
-                                          "Config Element Removal Failed",
-                                          JOptionPane.ERROR_MESSAGE);
-         }
-      }
+      mElementTree.actionPerformed(evt);
    }
 
    /**
