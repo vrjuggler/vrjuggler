@@ -222,6 +222,8 @@ endif
           $(VPRROOT_ABS)/COPYING $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/README $(prefix)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/INSTALL $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VPR make release started on $(STARTTIME)"
