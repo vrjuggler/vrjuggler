@@ -11,6 +11,7 @@ Build targets are:
     dso             - Build a dynamic shared object version of the library.
     obj             - Build the object files using the default value for
                       \${OBJDIR}.
+    gui             - Build the Java-based configuration GUI.
 
 Library type targets are:
     lib-static      - Build the static version of the library.  This target
@@ -27,9 +28,10 @@ Dependency targets are:
 
 Install targets are:
     install-all     - Install all versions of the library, all header files,
-                      the Data directory and the test code.
+                      the Data directory, the configuration GUI and the test
+                      code.
     install         - Install the library, all header files, the Data
-                      directory and the test code.
+                      directory, the configuration GUI and the test code.
     install-dbg     - Install the debugging, static version of the library.
     install-ddso    - Install the debugging, dynamic shared object version of
                       the library.
@@ -38,6 +40,7 @@ Install targets are:
     install-headers - Install only the header files.
     install-test    - Install only the test code.
     install-data    - Install only the Data directory.
+    install-gui     - Install only the configuration GUI.
 
 Miscellaneous targets are:
     links           - Define links (for developer use only) that provide
