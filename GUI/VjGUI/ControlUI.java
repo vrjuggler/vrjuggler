@@ -526,20 +526,26 @@ public class ControlUI  extends JFrame
     public void logMessage (LogMessageEvent e) {
 	String source = e.getSourceName();
 	String s = e.getMessage();
+	String message = "";
+
+	if (source != null)
+	    message = "(" + source + "): ";
+	if (s != null)
+	    message += s;
 
 	switch (e.getStyle()) {
 	case LogMessageEvent.TEMPORARY_MESSAGE:
-	    status_label.setText ("(" + source + "): " + s);
+	    status_label.setText (message);
 	    status_label.setForeground (UIManager.getColor ("Label.foreground"));
 	    //Core.ui.status_label.repaint((long)1);
 	    paint (getGraphics());
 	    break;
 	case LogMessageEvent.PERMANENT_MESSAGE:
-	    status_label.setText ("(" + source + "): " + s);
+	    status_label.setText (message);
 	    status_label.setForeground (UIManager.getColor ("Label.foreground"));
 	    break;
 	case LogMessageEvent.PERMANENT_ERROR:
-	    status_label.setText ("Error (" + source + "): " + s);
+	    status_label.setText ("Error " + message);
 	    status_label.setForeground (Color.red);
 	    break;
 	}
