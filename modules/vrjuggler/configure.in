@@ -1413,6 +1413,94 @@ AC_SUBST(TEST_EXTRA_LIBS_PF)
 dnl # -------------------------------------------------------------------------
 dnl # Final file generation step.
 dnl # -------------------------------------------------------------------------
+
+dnl # Ensure that the release directory exists since configure would not
+dnl # create it otherwise.
+if test ! -d release ; then
+    mkdir release
+    mkdir release/mtree
+fi
+
+dnl # Create the VJ.lib.dist file in release/mtree.  This is generated from
+dnl # scratch since it cannot be generalized into a template using our
+dnl # library directory scheme.  The only time this file needs to be generated
+dnl # is when configure is run, so it is not set up to be one of the commands
+dnl # that config.status can execute.
+_lib_file='release/mtree/VJ.lib.dist'
+_set_line="/set type=dir mode=$DIR_PERMS uname=$OWNER_NAME gname=$GROUP_NAME"
+
+dnl # Ensure that the file exists and has zero length.  Then write out the
+dnl # /set line which is going to be there no matter what.
+echo "creating ${_lib_file}"
+echo >${_lib_file}
+echo "${_set_line}" >>${_lib_file}
+echo "" >>${_lib_file}
+
+dnl # On IRIX, it's easy to compile for different ABI/ISA combinations, so
+dnl # we just make cases for all -n32/-64/-mips3/-mips4 settings.
+if test "x$PLATFORM" = "xIRIX" ; then
+    cat >>${_lib_file} <<END_IRIX_DIST
+.
+    lib32
+	mips3
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+	mips4
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+    ..
+    lib64
+	mips3
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+	mips4
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+    ..
+..
+END_IRIX_DIST
+dnl # If a value for $ISA has been set (which is the case for some platforms),
+dnl # create a subdirectory in lib for that value.
+elif test "x$ISA" != "x" ; then
+    cat >>${_lib_file} <<END_ISA_DIST
+.
+    lib
+	$ISA
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+    ..
+..
+END_ISA_DIST
+dnl # In all other cases, just make a simple directory tree for debugging and
+dnl # optimized libraries.
+else
+    cat >>${_lib_file} <<END_DIST
+.
+    lib
+	debug
+	..
+	opt
+	..
+    ..
+..
+END_DIST
+fi
+
 AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           GUI/Makefile Input/Makefile Input/InputManager/Makefile
           Input/ibox/Makefile Input/vjGesture/Makefile Input/vjGlove/Makefile
@@ -1432,6 +1520,9 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           samples/ogl/glove/Makefile samples/ogl/simpleGlove/Makefile
           samples/ogl/torus/Makefile samples/ogl/wand/Makefile
           tools/Makefile
+          release/mtree/VJ.data.dist release/mtree/VJ.include.dist
+          release/mtree/VJ.install.dist release/mtree/VJ.samples.dist
+          release/mtree/VJ.test.dist release/mtree/VJ.tools.dist
           VARS.pl)
 
 cat <<BUILD_INFO
