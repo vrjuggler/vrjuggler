@@ -42,21 +42,6 @@
 
 OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 {
-   //
-   //          /-- mNoNav
-   // mRootNode
-   //         \-- mNavTrans -- mModelTrans -- mModel
-
-   //The top level nodes of the tree
-   mRootNode = new osg::Group();
-   mNoNav    = new osg::Group();
-   mNavTrans = new osg::MatrixTransform();
-   mFileToLoad = std::string("");
-   
-   // We need to create a new navigater before calling initTweek because we pass
-   // it to the RemoteNavSubjectImpl.
-   mNavigater = new OsgNavigater();
-   
    //Initialize tweek, which registers a new RemoteNavSubjectImpl with the
    //nameserver.
    initTweek( argc, argv );
@@ -64,23 +49,20 @@ OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 
 void OsgNav::preFrame()
 {
-   static vpr::Interval last_time;
-
    vpr::Interval cur_time = mWand->getTimeStamp();
-   vpr::Interval diff_time(cur_time-last_time);
-      
+   vpr::Interval diff_time(cur_time-mLastPreFrameTime);
+
    float time_delta = diff_time.secf();
 
    // Cluster debug code.
    // std::cout << "CLUSTER Delta: " << diff_time.getBaseVal() << std::endl;
    // std::cout << "CLUSTER Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
-   
-   last_time = cur_time;
-   
+
+   mLastPreFrameTime = cur_time;
 
    //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
 
-   // Get wand data 
+   // Get wand data
    gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
 
    // If we are pressing button 1 then translate in the direction the wand is
@@ -91,13 +73,13 @@ void OsgNav::preFrame()
       gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, 10.0f);
       gmtl::xform(direction, wandMatrix, Zdir);
 
-      mNavigater->setVelocity(direction); 
-   } // Make sure to reset the velocity when we stop pressing the button.
+      mNavigater->setVelocity(direction);
+   }  // Make sure to reset the velocity when we stop pressing the button.
    else if ( mButton0->getData() == gadget::Digital::TOGGLE_OFF)
    {
-      mNavigater->setVelocity(gmtl::Vec3f(0.0, 0.0, 0.0)); 
+      mNavigater->setVelocity(gmtl::Vec3f(0.0, 0.0, 0.0));
    }
-   
+
    // If we are pressing button 2 then rotate in the direction the wand is
    // pointing.
    if ( mButton2->getData() == gadget::Digital::ON )
@@ -108,7 +90,7 @@ void OsgNav::preFrame()
    {
       mNavigater->setRotationalVelocity(gmtl::Matrix44f());
    }
-   
+
    // Update the navigation using the time delta between
    mNavigater->update(time_delta);
 
@@ -126,12 +108,27 @@ void OsgNav::bufferPreDraw()
 
 void OsgNav::myInit()
 {
+   //
+   //          /-- mNoNav
+   // mRootNode
+   //         \-- mNavTrans -- mModelTrans -- mModel
+
+   //The top level nodes of the tree
+   mRootNode = new osg::Group();
+   mNoNav    = new osg::Group();
+   mNavTrans = new osg::MatrixTransform();
+   mFileToLoad = std::string("");
+
+   // We need to create a new navigater before calling initTweek because we pass
+   // it to the RemoteNavSubjectImpl.
+   mNavigater = new OsgNavigater();
+
    mNavigater->init();
 
    //vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
    //std::string hostname = "crash";
    //mMyData.init(new_guid, hostname);
-   
+
    mRootNode->addChild( mNoNav );
    mRootNode->addChild( mNavTrans );
 
@@ -144,7 +141,7 @@ void OsgNav::myInit()
    mModelTrans  = new osg::MatrixTransform();
    //This can be used if the model orientation needs to change
    mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( -90.0f ), 1.0f, 0.0f, 0.0f) );
-   
+
    // Add model to the transform
    mModelTrans->addChild(mModel);
    // Add the transform to the tree
@@ -158,12 +155,6 @@ void OsgNav::myInit()
    // OpenGL display lists.
    //osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
    //mRootNode->accept(dlv);
-   
-   // The initial speed for navigation is set to zero
-   speed = 0.0f;
-   // How much we should accelerat each frame the button is held
-   inc = 0.005f;
-
 }
 
 void OsgNav::initTweek( int& argc, char* argv[] )
@@ -172,7 +163,7 @@ void OsgNav::initTweek( int& argc, char* argv[] )
    std::cout << "\n\nSTARTING TWEEK INITIALIZATION!!\n\n" << std::flush;
 
    std::string name_context( "OSG_REMOTE_NAV_");
-   
+
    try
    {
       if ( mCorbaManager.init(name_context, argc, argv).success() )
