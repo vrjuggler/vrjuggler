@@ -1,5 +1,14 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-11-2004 patrickh    Exposed gadget::EventWindow, gadget::EventWindowProxy,
+                        gadget::EventWindowInterface, gadget::StringData,
+                        gadget::SpeechRecogDigital, gadget::SpeechRecogString,
+                        gadget::SpeechRecogDigitalProxy,
+                        gadget::SpeechRecogStringProxy,
+                        gadget::SpeechRecogDigitalInterface,
+                        gadget::SpeechRecogStringInterface, and the constants
+                        defined in gadget::PositionUnitConversion.
+                        NEW VERSION: 0.14.0
 Nov-06-2004 patrickh    Exposed jccl::ConfigManager, jccl::ConfigDefinition,
                         jccl::PropertyDefinition, and jccl::VarType.  Removed
                         methods that expose the underly use of CppDOM in JCCL

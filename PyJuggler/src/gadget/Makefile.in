@@ -26,6 +26,9 @@ SRCS= \
 	_DigitalInterface.cpp			\
 	_DigitalProxy.cpp			\
 	_Event.cpp				\
+	_EventWindow.cpp			\
+	_EventWindowInterface.cpp		\
+	_EventWindowProxy.cpp			\
 	_InputManager.cpp			\
 	_KeyEvent.cpp				\
 	_MouseEvent.cpp				\
@@ -33,6 +36,14 @@ SRCS= \
 	_PositionData.cpp			\
 	_PositionInterface.cpp			\
 	_PositionProxy.cpp			\
+	_PositionUnitConversion.cpp		\
+	_SpeechRecogDigital.cpp			\
+	_SpeechRecogDigitalInterface.cpp	\
+	_SpeechRecogDigitalProxy.cpp		\
+	_SpeechRecogString.cpp			\
+	_SpeechRecogStringInterface.cpp		\
+	_SpeechRecogStringProxy.cpp		\
+	_StringData.cpp				\
 	_gadget_Type_EventWindow_Event_h.cpp	\
 	_gadget_Type_EventWindow_Keys_h.cpp	\
 	gadget.cpp

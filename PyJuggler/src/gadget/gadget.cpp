@@ -12,23 +12,34 @@
 // Exports =====================================================================
 void _Export_InputManager();
 void _Export_AnalogData();
-void _Export_KeyEvent();
-void _Export_Position();
-void _Export_Digital();
+void _Export_DigitalData();
 void _Export_PositionData();
+void _Export_StringData();
 void _Export_Analog();
+void _Export_Digital();
+void _Export_Position();
+void _Export_EventWindow();
+void _Export_SpeechRecogDigital();
+void _Export_SpeechRecogString();
 void _Export_AnalogProxy();
-void _Export_BaseDeviceInterface();
-void _Export_gadget_Type_EventWindow_Keys_h();
 void _Export_DigitalProxy();
 void _Export_PositionProxy();
-void _Export_DigitalData();
-void _Export_Event();
-void _Export_gadget_Type_EventWindow_Event_h();
+void _Export_EventWindowProxy();
+void _Export_SpeechRecogDigitalProxy();
+void _Export_SpeechRecogStringProxy();
+void _Export_BaseDeviceInterface();
 void _Export_AnalogInterface();
 void _Export_DigitalInterface();
 void _Export_PositionInterface();
+void _Export_EventWindowInterface();
+void _Export_SpeechRecogDigitalInterface();
+void _Export_SpeechRecogStringInterface();
+void _Export_gadget_Type_EventWindow_Event_h();
+void _Export_gadget_Type_EventWindow_Keys_h();
+void _Export_Event();
+void _Export_KeyEvent();
 void _Export_MouseEvent();
+void _Export_PositionUnitConversion();
 
 // Module ======================================================================
 BOOST_PYTHON_MODULE(gadget)
@@ -47,21 +58,39 @@ BOOST_PYTHON_MODULE(gadget)
     ;
     _Export_InputManager();
     _Export_AnalogData();
-    _Export_Event();
-    _Export_KeyEvent();
-    _Export_Position();
-    _Export_Digital();
+    _Export_DigitalData();
     _Export_PositionData();
+    _Export_StringData();
     _Export_Analog();
+    _Export_Digital();
+    _Export_Position();
+    _Export_EventWindow();
+    _Export_SpeechRecogDigital();
+    _Export_SpeechRecogString();
     _Export_AnalogProxy();
-    _Export_BaseDeviceInterface();
-    _Export_gadget_Type_EventWindow_Keys_h();
     _Export_DigitalProxy();
     _Export_PositionProxy();
-    _Export_DigitalData();
-    _Export_gadget_Type_EventWindow_Event_h();
+    _Export_EventWindowProxy();
+    _Export_SpeechRecogDigitalProxy();
+    _Export_SpeechRecogStringProxy();
+    _Export_BaseDeviceInterface();
     _Export_AnalogInterface();
     _Export_DigitalInterface();
     _Export_PositionInterface();
+    _Export_EventWindowInterface();
+    _Export_SpeechRecogDigitalInterface();
+    _Export_SpeechRecogStringInterface();
+    _Export_gadget_Type_EventWindow_Keys_h();
+    _Export_gadget_Type_EventWindow_Event_h();
+    _Export_Event();
+    _Export_KeyEvent();
     _Export_MouseEvent();
+    _Export_PositionUnitConversion();
+
+/*
+    scope().attr("gadget::PositionUnitConversion::ConvertToCentimeters") = gadget::PositionUnitConversion::ConvertToCentimeters;
+    scope().attr("gadget::PositionUnitConversion::ConvertToMeters") = gadget::PositionUnitConversion::ConvertToMeters;
+    scope().attr("gadget::PositionUnitConversion::ConvertToFeet") = gadget::PositionUnitConversion::ConvertToFeet;
+    scope().attr("gadget::PositionUnitConversion::ConvertToInches") = gadget::PositionUnitConversion::ConvertToInches;
+*/
 }
