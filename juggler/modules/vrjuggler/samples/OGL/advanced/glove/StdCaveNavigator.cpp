@@ -36,7 +36,7 @@ namespace vrj
 {
    
 StdCaveNavigator::StdCaveNavigator()
-    : Matrix(), mNowTranslating( false ), mNowRotating( false )
+    : vrj::Matrix(), mNowTranslating( false ), mNowRotating( false )
 {
 }
 

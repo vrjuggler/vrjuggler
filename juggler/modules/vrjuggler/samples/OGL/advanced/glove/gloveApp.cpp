@@ -30,14 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-#include <Input/vjGlove/fsPinchGlove.h>
-#include <Input/vjGlove/vjPinchGlove.h>
 
 #include <gloveApp.h>
 
@@ -217,16 +214,16 @@ bool gloveApp::RightFist()
 //  objects.
 void gloveApp::postFrame()
 {
-   GlApp::postFrame();
+   vrj::GlApp::postFrame();
    
    //: we need to keep track of the wand, and the user.
     UserInfo    userInfo;
     TrackedInfo wandInfo;
     TrackedInfo headInfo;
 
-    Vec3 glovePos;
-    Matrix finger_matrix;
-    Matrix invNav;
+    vrj::Vec3 glovePos;
+    vrj::Matrix finger_matrix;
+    vrj::Matrix invNav;
     invNav.invert(mNavigation);
     
    /////////////////////////////////////////////////////////
@@ -278,12 +275,12 @@ void gloveApp::postFrame()
    //: Handle navigation
    //mNavigation.accelerate( LeftPointing() == true );
    //mNavigation.rotate( LeftPointing() == false && LeftOpen() == false );
-   //mNavigation.setMatrix( mGlove->getPos(GloveData::INDEX) );
+   //mNavigation.setMatrix( mGlove->getPos(vrj::GloveData::INDEX) );
    //mNavigation.update( time );
 
    
    //: Get the position of the index finger:
-    finger_matrix = mGlove->getPos(GloveData::INDEX);
+    finger_matrix = mGlove->getPos(vrj::GloveData::INDEX);
     finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
     glovePos.xformVec( invNav, glovePos );
     
@@ -302,9 +299,9 @@ void gloveApp::postFrame()
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
-    Matrix tttt = mGlove->getPos(GloveData::INDEX);
+    vrj::Matrix tttt = mGlove->getPos(vrj::GloveData::INDEX);
     wandInfo.updateWithMatrix( tttt );
-    userInfo.update( wandInfo, Vec3(0.0f, 0.0f, 0.0f) );
+    userInfo.update( wandInfo, vrj::Vec3(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
     ////////////////////////////////////////////////////////
     

@@ -34,10 +34,10 @@
 #define _VJ_STD_CAVE_NAVIGATOR_H_
 
 
-//#include <Kernel/vjKernel.h>
-#include <Utils/vjDebug.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjQuat.h>
+//#include <vrj/Kernel/Kernel.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Quat.h>
 
 namespace vrj
 {
@@ -48,7 +48,7 @@ namespace vrj
 //  The matrix is in the OpenGL form, 
 //  For performer, convert this matrix, 
 //  and copy it to a DCS node once per frame as well.
-class StdCaveNavigator : public Matrix
+class StdCaveNavigator : public vrj::Matrix
 {
 public:
    StdCaveNavigator();
@@ -91,22 +91,22 @@ public:
    }
    
    //: tell the navigator the matrix that reset() uses as it's origin.
-   virtual void setOrigin( const Matrix& matrix )
+   virtual void setOrigin( const vrj::Matrix& matrix )
    {
       mOrigin = matrix;
    }
    
    //: tell the navigator what the pointing device's matrix is.
    //  you can usually do this to get that matrix
-   //  Matrix* wand_mat = mWand->getData();
-   virtual void setMatrix( const Matrix& matrix )
+   //  vrj::Matrix* wand_mat = mWand->getData();
+   virtual void setMatrix( const vrj::Matrix& matrix )
    {
       mDeviceMatrix = matrix;
    }   
    
 protected:
-   Matrix mOrigin;
-   Matrix mDeviceMatrix;
+   vrj::Matrix mOrigin;
+   vrj::Matrix mDeviceMatrix;
    bool mAccelerate;
    bool mStop;
    float mVelocity;
@@ -114,7 +114,7 @@ protected:
 };
 
 //: call once per frame (pre or post frame, not intra frame)
-virtual int update()
+inline int update()
 {
    mVelocity = mVelocity / factor;
    mAccelerate = 0.0f;

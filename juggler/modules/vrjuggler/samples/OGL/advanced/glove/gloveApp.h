@@ -33,18 +33,16 @@
 #ifndef _GLOVE_APP_
 #define _GLOVE_APP_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Vec3.h>
 
-#include <Kernel/GL/vjGlContextData.h>
-#include <Input/InputManager/vjGloveInterface.h>
-#include <Input/InputManager/vjGestureInterface.h>
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Input/Type/GloveInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
 #include "defines.h"
 #include "Scene.h"
@@ -73,7 +71,7 @@
 // the nav is a hack, and well, it works for this silly little app.
 // be warned, it (navigation.h) won't be fun to extend 
 
-class gloveApp : public GlApp
+class gloveApp : public vrj::GlApp
 {
 // utility functions
 protected:
@@ -81,13 +79,10 @@ protected:
 
 // Application Functions:
 public:
-   gloveApp(Kernel* kern) : GlApp(kern),
-                                mCubeSelected(false),
-                                mSphereSelected(false),
-                                mConeSelected(false),
-            mCubePos( 0.0f, 3.5f, -20.0f ),
-            mConePos( -2.5f, 3.5f, -20.0f ),
-            mSpherePos( 2.5f, 3.5f, -20.0f )
+   gloveApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern), mCubeSelected(false), mSphereSelected(false),
+        mConeSelected(false), mCubePos( 0.0f, 3.5f, -20.0f ),
+        mConePos( -2.5f, 3.5f, -20.0f ), mSpherePos( 2.5f, 3.5f, -20.0f )
    {
       // Do nothing
    }
@@ -97,7 +92,7 @@ public:
    // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
-      GlApp::init();
+      vrj::GlApp::init();
       // for the glove position
       mGlove.init("VJGlove");
       
@@ -121,7 +116,7 @@ public:
    // allocation here.
    virtual void contextInit()
    {
-      GlApp::contextInit();
+      vrj::GlApp::contextInit();
       // Init the scene's displaylists for this context.
       mScene->init();
    }
@@ -145,7 +140,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      GlApp::apiInit();
+      vrj::GlApp::apiInit();
       // Do nothing
    }
 
@@ -155,7 +150,7 @@ public:
    // objects.
    virtual void preFrame()
    {
-      GlApp::preFrame();
+      vrj::GlApp::preFrame();
       // Do nothing
    }   
 
@@ -171,7 +166,7 @@ public:
    // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      GlApp::intraFrame();
+      vrj::GlApp::intraFrame();
       // Do nothing
    }
 
@@ -186,19 +181,19 @@ private:
 
 protected:
    // for the glove position
-   GloveInterface    mGlove;
+   vrj::GloveInterface    mGlove;
 
    // for the glove fingers
-   DigitalInterface  mPinchLeftThumb;
-   DigitalInterface  mPinchLeftIndex;
-   DigitalInterface  mPinchLeftMiddle;
-   DigitalInterface  mPinchLeftRing;
-   DigitalInterface  mPinchLeftPinky;
-   DigitalInterface  mPinchRightThumb;
-   DigitalInterface  mPinchRightIndex;
-   DigitalInterface  mPinchRightMiddle;
-   DigitalInterface  mPinchRightRing;
-   DigitalInterface  mPinchRightPinky;
+   vrj::DigitalInterface  mPinchLeftThumb;
+   vrj::DigitalInterface  mPinchLeftIndex;
+   vrj::DigitalInterface  mPinchLeftMiddle;
+   vrj::DigitalInterface  mPinchLeftRing;
+   vrj::DigitalInterface  mPinchLeftPinky;
+   vrj::DigitalInterface  mPinchRightThumb;
+   vrj::DigitalInterface  mPinchRightIndex;
+   vrj::DigitalInterface  mPinchRightMiddle;
+   vrj::DigitalInterface  mPinchRightRing;
+   vrj::DigitalInterface  mPinchRightPinky;
    
    
    //: Object selection
@@ -207,13 +202,13 @@ protected:
    bool                mConeSelected;
 
    //: Object positions
-   Vec3               mCubePos;
-   Vec3               mConePos;
-   Vec3               mSpherePos;
+   vrj::Vec3           mCubePos;
+   vrj::Vec3           mConePos;
+   vrj::Vec3           mSpherePos;
 
-   Matrix    mNavigation;
+   vrj::Matrix    mNavigation;
 
-   GlContextData<Scene> mScene;
+   vrj::GlContextData<Scene> mScene;
 };
 
 
