@@ -35,6 +35,8 @@
 #include <stdio.h>
 
 #ifdef VPR_OS_Win32
+#include <wininet.h>
+
 #define MAXHOSTNAMELEN INTERNET_MAX_HOST_NAME_LENGTH
 #else
 #include <sys/param.h>
