@@ -34,6 +34,19 @@
 #include <jccl/Config/ChunkFactory.h>
 
 namespace jccl {
+
+
+    //: Adds descriptions in file 'filename' to the factory
+    bool ChunkFactory::loadDescs (const std::string& filename) {
+        //vjConfigIO::instance->readChunkDescDB (filename, descdb);
+        bool retval = descdb.load(filename.c_str());
+        if (!retval) {
+            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Failed to load ChunkDesc file: '" << filename.c_str() << "'.\n" << vprDEBUG_FLUSH;
+        }
+        return retval;
+    }
+
+
    
 //: Creates a Chunk using the given description
 ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
