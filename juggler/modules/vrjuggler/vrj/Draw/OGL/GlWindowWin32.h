@@ -151,8 +151,6 @@ private:
     std::string    mWindowName;
     int            mPipe;
     std::string    mXDisplayName;       /**<  Name of the x display to use */
-
-    PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */
 };
 
 } // End of vrj namespace

@@ -49,8 +49,7 @@ namespace vrj
 {
 
 GlWindowWin32::GlWindowWin32()
-   : mMatch(NULL)
-   , mWinHandle(NULL)
+   : mWinHandle(NULL)
    , mRenderContext(NULL)
    , mDeviceContext(NULL)
 {
@@ -394,7 +393,6 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 {
    int pixel_format;
    PIXELFORMATDESCRIPTOR pfd;
-   mMatch = NULL;
 
    memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
    pfd.nSize = (sizeof(PIXELFORMATDESCRIPTOR));
@@ -486,9 +484,9 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    pixel_format = ChoosePixelFormat(hDC, &pfd);
    if ( pixel_format > 0 )
    {
-      mMatch = (PIXELFORMATDESCRIPTOR *) malloc(sizeof(PIXELFORMATDESCRIPTOR));
+      PIXELFORMATDESCRIPTOR match;
       DescribePixelFormat(hDC, pixel_format, sizeof(PIXELFORMATDESCRIPTOR),
-                          mMatch);
+                          &match);
 
       /* ChoosePixelFormat is dumb in that it will return a pixel
          format that doesn't have stereo even if it was requested
@@ -496,9 +494,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
          got it. */
       if ( mVrjDisplay->isStereoRequested() )
       {
-         if ( !(mMatch->dwFlags & PFD_STEREO) )
+         if ( !(match.dwFlags & PFD_STEREO) )
          {
-            free(mMatch);
             return NULL;
          }
       }
