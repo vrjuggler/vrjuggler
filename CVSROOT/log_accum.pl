@@ -69,7 +69,8 @@ $CVSROOT       = $ENV{'CVSROOT'} || "/home/vr/Juggler/CVSRepos";
 ############################################################
 
 sub cleanup_lockfiles {
-    my $module = (split(/\s/, "$ARGV[0]"))[0];
+    my $base_dir = (split(/\s/, "$ARGV[0]"))[0];
+    my $module = (split('/', "$base_dir"))[0];
     print "Cleaing up garbage CVS locks in $module...\n";
     find("$CVSROOT/$module");
 }
