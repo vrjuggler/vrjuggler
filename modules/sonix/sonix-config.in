@@ -201,23 +201,17 @@ sub make_CXXFLAGS ($;$)
    my $cxxflags_arg = shift;
    my $print_min    = shift || 0;
 
-   my $dep_libs       = '';
-   my $dep_extra_libs = '';
+   my $dep_cxxflags = '';
 
    unless ( $print_min )
    {
       my @dep_scripts = qw(@snx_dep_scripts@);
-      my $extra_arg = ($use_linker ? '--linker' : '');
 
       foreach ( @dep_scripts )
       {
-         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg`;
-         chomp($cur_dep_libs);
-         $dep_libs .= " $cur_dep_libs";
-
-         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $extra_arg`;
-         chomp($cur_dep_extra_libs);
-         $dep_extra_libs .= " $cur_dep_extra_libs";
+         my $cur_dep_cxxflags = `$_ --min --cxxflags $cxxflags_arg`;
+         chomp($cur_dep_cxxflags);
+         $dep_cxxflags = "$cur_dep_cxxflags $dep_cxxflags";
       }
    }
 
@@ -250,7 +244,7 @@ sub make_CXXFLAGS ($;$)
    }
 
    # XXX: No @snx_cxxflags@ defined by configure!
-   my $cxxflags = "$snx_extra_cxxflags " .
+   my $cxxflags = "$dep_cxxflags $snx_extra_cxxflags " .
                   qq(-I@includedir@ $snx_extra_includes);
 
    # Strip out extra whitespace.
