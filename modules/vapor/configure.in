@@ -572,6 +572,8 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS"
+
+    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB"
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VPR_LIBS_BEGIN="/link /libpath:\$(VPR_BASE_DIR)/lib/debug $NSPR_LDFLAGS"
     APP_VPR_LIBS_END=''
