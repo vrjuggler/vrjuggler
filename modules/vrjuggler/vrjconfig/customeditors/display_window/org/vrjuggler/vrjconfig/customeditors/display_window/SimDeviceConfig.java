@@ -33,8 +33,11 @@
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.vrjuggler.jccl.config.*;
 
@@ -223,7 +226,7 @@ public class SimDeviceConfig
 */
       device  = simDeviceElt;
       proxies = proxyElts;
-      aliases = aliasElts;
+      fillAliasMap(aliasElts);
    }
 
    /**
@@ -253,10 +256,13 @@ public class SimDeviceConfig
          proxies.add(proxyElts[i]);
       }
 
+      List alias_list = new ArrayList();
       for ( int i = 0; i < aliasElts.length; ++i )
       {
-         aliases.add(aliasElts[i]);
+         alias_list.add(aliasElts[i]);
       }
+
+      fillAliasMap(alias_list);
    }
 
    /**
@@ -265,7 +271,27 @@ public class SimDeviceConfig
     */
    public List getAliases()
    {
-      return aliases;
+      List alias_list = new ArrayList();
+
+      // Values is a Collection of List objects.
+      Collection values = aliases.values();
+
+      for ( Iterator i = values.iterator(); i.hasNext(); )
+      {
+         alias_list.addAll((List) i.next());
+      }
+
+      return alias_list;
+   }
+
+   /**
+    * Returns the list of aliases referring to the given proxy config element.
+    * The proxy config element should be in the List returned by getProxies().
+    * If it is not, then null is guaranteed to be returned.
+    */
+   public List getAliases(ConfigElement proxyElt)
+   {
+      return (List) aliases.get(proxyElt);
    }
 
    /**
@@ -361,27 +387,35 @@ public class SimDeviceConfig
       List elts = broker.getElements(ctx);
       List alias_elts = ConfigUtilities.getElementsWithDefinition(elts,
                                                                   ALIAS_TYPE);
+      fillAliasMap(alias_elts);
+   }
 
-      for ( Iterator i = alias_elts.iterator(); i.hasNext(); )
+   private void fillAliasMap(List aliasElts)
+   {
+      for ( Iterator i = aliasElts.iterator(); i.hasNext(); )
       {
-         ConfigElement cur_elt = (ConfigElement) i.next();
+         ConfigElement alias_elt = (ConfigElement) i.next();
          ConfigElementPointer proxy_ptr =
-            (ConfigElementPointer) cur_elt.getProperty(PROXY_PROPERTY, 0);
+            (ConfigElementPointer) alias_elt.getProperty(PROXY_PROPERTY, 0);
 
-         for ( Iterator j = proxies.iterator(); j.hasNext(); )
+         if ( proxy_ptr != null && proxy_ptr.getTarget() != null &&
+              ! proxy_ptr.getTarget().equals("") )
          {
-            ConfigElement proxy = (ConfigElement) j.next();
-
-            if ( proxy_ptr.getTarget() != null &&
-                 proxy_ptr.getTarget().equals(proxy.getName()) )
+            for ( Iterator j = proxies.iterator(); j.hasNext(); )
             {
-               aliases.add(cur_elt);
+               ConfigElement proxy_elt = (ConfigElement) j.next();
+
+               if ( proxy_ptr.getTarget().equals(proxy_elt.getName()) )
+               {
+                  aliases.put(proxy_elt, alias_elt);
+                  break;
+               }
             }
          }
       }
    }
 
-   private List          aliases = new ArrayList();
+   private Map           aliases = new HashMultiMap();
    private List          proxies = new ArrayList();
    private ConfigElement device  = null;
 }
