@@ -3,7 +3,7 @@
 #------------------------
 
 # Add new source files to C2LIB_OBJECTS and the build rules at
-#   the end of the file 
+#   the end of the file
 
 #!ifndef C2LIB
 #error:
@@ -50,7 +50,7 @@ C2LIB_OBJECTS = ConfigChunk.obj ParseUtil.obj \
 	C2Matrix.obj \
 #	C2SGISystemFactory.obj \
 	C2Vec3.obj \
-	C2Vec4.obj 
+	C2Vec4.obj
 #	C2WallProjection.obj \
 #	C2glDrawManager.obj \
 #	C2glPipe.obj \
@@ -66,7 +66,7 @@ INPUT_HS = $(INPUT_HS) C2Position.h \
 CONFIG_HS = ChunkDesc.h 	    ConfigChunk.h \
 	    ParseUtil.h     ChunkDescDB.h \
 	    ConfigChunkDB.h 	    VarValue.h \
-	     
+	
 INPUT_HS = $(INPUT_HS)  C2Input.h \
 	     C2Analog.h C2Digital.h \
 	     C2DummyAnalog.h C2DummyDigital.h \
@@ -124,7 +124,7 @@ OBJECTS	= $(C2LIB_OBJECTS)
 HFILES = $(C2LIB_HFILES)
 
 
-goal: $(EXE).lib 
+goal: $(EXE).lib
 	echo Success! > good.snt
 
 LINK     = link
@@ -142,28 +142,28 @@ STATIC_RES_DIR   = $(SRC_DIR)\res\static
 
 # Settings common to Ship and Debug builds
 
-OLE_FLAGS =  -DWIN32S  
+OLE_FLAGS =  -DWIN32S
 
 CFLAGS	  = $(BSC) -TP -c -D_X86_=1 -DWIN32 -DWIN -Gz -GX -GR  -nologo  -QIfdiv- \
 	$(C2_PATHS)
 
 !ifdef SHIP
 CFLAGS = $(CFLAGS) -MT -Ox -Gf -Gy -G3 -W4
-!else 
+!else
 CFLAGS = $(CFLAGS) -MTd -Od -Oi -FR /nologo /MTd /W3 \
   /Z7 /D "WIN32" /D "_DEBUG" /D "_WINDOWS" \
-  /Fp"C2Lib.pch" /YX /Fo /Fd /FD 
+  /Fp"C2Lib.pch" /YX /Fo /Fd /FD
 !endif
 
 # LFLAGS = -align:0x1000 -entry:WinStart -incremental:no -map -nodefaultlib -nologo -fixed -subsystem:windows,4.00
 #LFLAGS = -align:0x1000 -incremental:no -nologo -lib
 # Bogus!  This has to be / and all caps, or the linker might choke on it
 LFLAGS = -lib $(LFLAGS) /FORCE:MULTIPLE /DBGIMPLIB  \
-	/LIBPATH:$(VCROOT)\lib 
+	/LIBPATH:$(VCROOT)\lib
 
 !ifdef SHIP
 #LFLAGS = $(LFLAGS) -merge:.rdata=.text -optidata -opt:ref -warn:3
-!else 
+!else
 #LFLAGS = $(LFLAGS) -warn:2
 !endif
 
@@ -193,20 +193,20 @@ SYSLIBS	= kernel32.lib \
 			oleaut32.lib \
 			uuid.lib \
 			odbc32.lib\
-			odbccp32.lib 
+			odbccp32.lib
 
 
 !ifdef SHIP
-SYSLIBS = $(SYSLIBS) 
+SYSLIBS = $(SYSLIBS)
 !else
-SYSLIBS = $(SYSLIBS)  
+SYSLIBS = $(SYSLIBS)
 !endif
 
 
 COMMONINCL= $(HFILES)
 
 
-RES_OBJS	= 
+RES_OBJS	=
 
 ##########################################################################
 #
@@ -215,7 +215,7 @@ RES_OBJS	=
 
 APP_OBJS =  $(OBJECTS)
 
- 
+
 ##########################################################################
 #
 # Browser stuff
@@ -233,7 +233,7 @@ $(EXE).bsc : $(BSCFILES)
 
 # $(EXE).exe: $(APP_OBJS) $(MSO_DLL) $(SRC_DIR)\$(APP).def $(BSCGOAL)
 #$(EXE).dll: $(APP_OBJS) $(C2ROOT)\lib\win32\softdist.def $(BSCGOAL)
-#    $(LINK) $(LFLAGS)  $(APP_OBJS)  -out:$@ $(SYSLIBS) $(OLELIBS) 
+#    $(LINK) $(LFLAGS)  $(APP_OBJS)  -out:$@ $(SYSLIBS) $(OLELIBS)
 
 $(EXE).lib: $(OBJECTS)
 #	/usr/lib/DCC/edg_prelink $?
@@ -250,29 +250,29 @@ Property.obj \
 ChunkDescDB.obj \
 ChunkDesc.obj \
 ConfigChunkDB.obj:
- $(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Config\$*.C
+ $(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Config\$*.cpp
 
 C2Position.obj C2DummyPosition.obj:
- $(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\C2Position\$*.C
+ $(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\C2Position\$*.cpp
 
 
 C2Input.obj \
 #	C2Ibox.obj \
 C2KeyboardWin32.obj:
-	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\C2Input\$*.C
+	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\C2Input\$*.cpp
 
 InputGroup.obj:
-	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\InputGroup\$*.C
+	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\InputGroup\$*.cpp
 
 C2Vec3.obj \
 C2Vec4.obj \
 C2Matrix.obj:
-	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Kernel\$*.C
+	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Kernel\$*.cpp
 
 #{$(SRC_DIR)}.{$(OBJECTS)}:
 #    $(CC) $(CFLAGS) $(OLE_FLAGS) $<
 
-#{$(SRC_DIR)}.C{}.obj:
+#{$(SRC_DIR)}.cpp{}.obj:
 #    $(CC) $(CFLAGS) $(OLE_FLAGS) $<
 
 #{$(SRC_DIR)}.h{}:
@@ -328,18 +328,18 @@ full: clean goal
 
 default: dbg
 
-dbg: 
+dbg:
 	@ echo "making DBG version of $(EXE)"
-	@ mkdir  DBG.$(C2RELEASE).WIN 
-	@ cd DBG.$(C2RELEASE).WIN 
+	@ mkdir  DBG.$(C2RELEASE).WIN
+	@ cd DBG.$(C2RELEASE).WIN
 	 $(MAKE) /f "../Makefile.win" $(EXE).lib
 #	@ echo $(MAKE) /f "../Makefile.win" $(EXE).dll
 
-opt: 
+opt:
 	@ echo "making OPT version of $(EXE)"
 	 SET SHIP = 1
-	@ mkdir  OPT.$(C2RELEASE).WIN 
-	@ cd OPT.$(C2RELEASE).WIN 
+	@ mkdir  OPT.$(C2RELEASE).WIN
+	@ cd OPT.$(C2RELEASE).WIN
 	 $(MAKE) /f "../Makefile.win" $(EXE).lib
 #	@ echo $(MAKE) /f "../Makefile.win" $(EXE).dll
 
