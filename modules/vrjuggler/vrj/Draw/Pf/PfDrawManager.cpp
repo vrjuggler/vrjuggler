@@ -107,13 +107,13 @@ bool PfDrawManager::configDisplaySystem(ConfigChunk* chunk)
    vprASSERT((std::string)chunk->getType() == std::string("displaySystem"));
 
    // ---- SETUP PipeStr's ---- //
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "------------- PfDrawManager::config ----------------" << std::endl
-      << vjDEBUG_FLUSH;
+      << vprDEBUG_FLUSH;
    mNumPipes = (unsigned int)(int)chunk->getProperty("numpipes");
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
-                                            << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
+                                            << std::endl << vprDEBUG_FLUSH;
    for (unsigned int i=0;i<mNumPipes;i++)
    {
       char cur_disp_name[] = "-1";
@@ -128,9 +128,9 @@ bool PfDrawManager::configDisplaySystem(ConfigChunk* chunk)
          strcpy(xpipe_name, display_env);
          mPipeStrs[i] = xpipe_name;
       }
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "Pipe:" << i << ": "
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "Pipe:" << i << ": "
                                                << mPipeStrs[i] << std::endl
-                                               << vjDEBUG_FLUSH;
+                                               << vprDEBUG_FLUSH;
    }
    return true;
 }
@@ -140,48 +140,48 @@ bool PfDrawManager::configPerformerAPI(ConfigChunk* chunk)
 {
    vprASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI:"
-                                            << " Configuring Performer\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI:"
+                                            << " Configuring Performer\n" << vprDEBUG_FLUSH;
 
    // --- Get simulator model info --- //
    char* head_file = chunk->getProperty("simHeadModel").cstring();
    char* wand_file = chunk->getProperty("simWandModel").cstring();
    if(head_file == NULL)
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "WARNING: PfDrawManager::config: simHeadModel not set."
-         << std::endl << vjDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
    if(wand_file == NULL)
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "WARNING: PfDrawManager::config: simWandModel not set."
-         << std::endl << vjDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
 
    mHeadModel = FileIO::replaceEnvVars(head_file);
    mWandModel = FileIO::replaceEnvVars(wand_file);
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "Head Model: " << mHeadModel.c_str() << std::endl
-      << "Wand Model: " << mWandModel.c_str() << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+      << "Wand Model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "-----------------------------------------------------" << std::endl
-      << vjDEBUG_FLUSH;
+      << vprDEBUG_FLUSH;
    return true;
 }
 
 
 void PfDrawManager::sync()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::sync\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::sync\n" << vprDEBUG_FLUSH;
    pfSync();
 }
 
 //! POST: Calls pfFrame()
 void PfDrawManager::draw()
 {
-   vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjPfDrawManager::calling appChanFuncs\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "vjPfDrawManager::calling appChanFuncs\n" << vprDEBUG_FLUSH;
    callAppChanFuncs();
 
-   vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
-   //vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "vjPfDrawManager::draw\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << "vjPfDrawManager::draw\n" << vprDEBUG_FLUSH;
 
    pfFrame();
 }
@@ -233,7 +233,7 @@ void PfDrawManager::initAPI()
 
    app->preForkInit();
 
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Entering." << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Entering." << std::endl << vprDEBUG_FLUSH;
 
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
@@ -263,9 +263,9 @@ void PfDrawManager::initAPI()
    //pfFrame();
 
    // Dump the state
-//   debugDump(vjDBG_CONFIG_LVL);
+//   debugDump(vprDBG_CONFIG_LVL);
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Exiting." << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Exiting." << std::endl << vprDEBUG_FLUSH;
 }
 
 // Get a performer pipe
@@ -291,8 +291,8 @@ void PfDrawManager::initPipes()
 
    for(unsigned pipe_num=0; pipe_num<mNumPipes; pipe_num++)
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initPipes: Opening Pipe." << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::initPipes: Opening Pipe." << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl << vprDEBUG_FLUSH;
 
       mPipes[pipe_num] = pfGetPipe(pipe_num);
       mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num]);
@@ -318,26 +318,26 @@ void PfDrawManager::addDisplay(Display* disp)
 
    // ouput debug info about the frame buffer config recieved
    unsigned int i;
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::addDisplay: Got Stereo FB config\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::addDisplay: Got Stereo FB config\n" << vprDEBUG_FLUSH;
    for(i=0;i<stereo_fb_config.size();i++)
-      vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << stereo_fb_config[i] << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "\nPfDrawManager::addDisplay: Got Mono FB config\n" << vjDEBUG_FLUSH;
+      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << stereo_fb_config[i] << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "\nPfDrawManager::addDisplay: Got Mono FB config\n" << vprDEBUG_FLUSH;
    for(i=0;i<mono_fb_config.size();i++)
-      vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << std::endl << vprDEBUG_FLUSH;
 
    //  For the display
    //     -Create a pWin for it
    //     - For each viewport
    //        - Create viewport
    //        - Create channels for the viewports
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << std::endl << vprDEBUG_FLUSH;
 
    pfDisplay pf_disp;            // The pfDisplay to use
    pf_disp.disp = disp;
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(disp) << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tPfDrawManager::add Display: Got Display:\n" << (*disp) << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(disp) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tPfDrawManager::add Display: Got Display:\n" << (*disp) << vprDEBUG_FLUSH;
 
    int xo, yo, xs, ys;
    pfPipe* pipe = getPfPipe(disp->getPipe());      // Get the pipe
@@ -359,12 +359,12 @@ void PfDrawManager::addDisplay(Display* disp)
    // Setup Frame Buffer config
    if (disp->inStereo())                            // If we need stereo
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring stereo window attribs.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring stereo window attribs.\n" << vprDEBUG_FLUSH;
       pf_disp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
    }
    else
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring mono window attribs.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring mono window attribs.\n" << vprDEBUG_FLUSH;
       pf_disp.pWin->setFBConfigAttrs(&(mono_fb_config[0]));       // Configure a "norm" window
    }
 
@@ -380,7 +380,7 @@ void PfDrawManager::addDisplay(Display* disp)
    Viewport* viewport = NULL;
    unsigned num_vps = disp->getNumViewports();
 
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_CONFIG_LVL) << "   Num viewports: " << num_vps << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << "   Num viewports: " << num_vps << std::endl << vprDEBUG_FLUSH;
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = disp->getViewport(vp_num);
@@ -486,11 +486,11 @@ void PfDrawManager::addDisplay(Display* disp)
    mDisplays.push_back(pf_disp);
 
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vprDEBUG_FLUSH;
 
    // Dump the state
-   vjDEBUG(vjDBG_DRAW_MGR, 1) << "Reconfiged the pfDrawManager.\n" << vjDEBUG_FLUSH;
-   //vjDEBUG(vjDBG_DRAW_MGR, 1) << (*this) << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, 1) << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_DRAW_MGR, 1) << (*this) << vprDEBUG_FLUSH;
    debugDump(1);
 }
 
@@ -508,7 +508,7 @@ void PfDrawManager::removeDisplay(Display* disp)
 
    if(mDisplays.end() == disp_i)
    {
-      vjDEBUG(vjDBG_DRAW_MGR, vjDBG_CRITICAL_LVL) << "ERROR: PfDrawManager::removeDisplay: Tried to remove a non-existant display\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "ERROR: PfDrawManager::removeDisplay: Tried to remove a non-existant display\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -552,7 +552,7 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSurfChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vjDEBUG(0,0) << "Trying to remove a non-existant pfChannel\n" << vjDEBUG_FLUSH;
+               vprDEBUG(0,0) << "Trying to remove a non-existant pfChannel\n" << vprDEBUG_FLUSH;
             }
 
             // Check if we were the master
@@ -573,7 +573,7 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSimChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vjDEBUG(0,0) << "Trying to remove a non-existant pfChannel";
+               vprDEBUG(0,0) << "Trying to remove a non-existant pfChannel";
             }
 
             // Check if we were the master
@@ -746,17 +746,17 @@ void PfDrawManager::initSimulatorGraph()
    if(!mHeadModel.empty())
    {
       head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded head model: " << mHeadModel.c_str() << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded head model: " << mHeadModel.c_str() << std::endl << vprDEBUG_FLUSH;
    } else {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand head specified.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: No wand head specified.\n" << vprDEBUG_FLUSH;
    }
 
    if(!mWandModel.empty())
    {
       wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded wand model: " << mWandModel.c_str() << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded wand model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;
    } else {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand model specified.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: No wand model specified.\n" << vprDEBUG_FLUSH;
    }
 
    mSimTree = new pfGroup;
@@ -798,7 +798,7 @@ void PfDrawManager::closeAPI()
 
 void PfDrawManager::updateProjections()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::updateProjections: Entering." << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::updateProjections: Entering." << std::endl << vprDEBUG_FLUSH;
 
    // --- Update the channel projections --- //
    //for(each pfDisp)
@@ -868,8 +868,8 @@ void PfDrawManager::updateProjections()
 //+        equivalent of proj's projection data.
 void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj, bool simulator)
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
-                    << proj->mViewMat << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
+                    << proj->mViewMat << std::endl << vprDEBUG_FLUSH;
 
    pfMatrix pfViewMat;
    pfViewMat.set(proj->mViewMat.getFloatPtr());      // Hmm...
@@ -900,12 +900,12 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj, bool s
       chan->setFOV(0.0f, cam_proj->mVertFOV);
    }
 
-   vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[Frustum::VJ_LEFT]
+   vprDEBUG(vrjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[Frustum::VJ_LEFT]
               << "   r: " << proj->mFrustum[Frustum::VJ_RIGHT]
               << "   b: " << proj->mFrustum[Frustum::VJ_BOTTOM]
-              << "   t: " << proj->mFrustum[Frustum::VJ_TOP] << std::endl << vjDEBUG_FLUSH;
+              << "   t: " << proj->mFrustum[Frustum::VJ_TOP] << std::endl << vprDEBUG_FLUSH;
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vprDEBUG_FLUSH;
 }
 
 
@@ -941,32 +941,32 @@ PfDrawManager::pfDisp* PfDrawManager::getPfDisp(pfChannel* chan)
 
 void PfDrawManager::debugDump(int debugLevel)
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)app << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mRoot << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "Disps:" << mDisplays.size() << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)app << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mRoot << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "Disps:" << mDisplays.size() << std::endl << vprDEBUG_FLUSH;
    for (std::vector<pfDisplay>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)
    {
       debugDumpPfDisp(&(*i),debugLevel);
    }
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,debugLevel) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,debugLevel) << "-------- Dump end ----\n" << vprDEBUG_FLUSH;
 }
 
 
 void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "Display:" << (void*)(pf_disp->disp) << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::dec << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel) << "Display:" << (void*)(pf_disp->disp) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::dec << std::endl << vprDEBUG_FLUSH;
 
    for(int vp=0;vp<pf_disp->viewports.size();vp++)
    {
       vprASSERT((pf_disp->viewports[vp].viewport != NULL) && "NULL viewport in pf_disp. Check if it was ever set.");
 
-      vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel) << "Viewport: " << vp << vjDEBUG_FLUSH;
-      vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel) << "      vp: " << *(pf_disp->viewports[vp].viewport) << vjDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel) << "Viewport: " << vp << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel) << "      vp: " << *(pf_disp->viewports[vp].viewport) << vprDEBUG_FLUSH;
 
       for(int ch=0;ch<2;ch++)
       {
@@ -974,18 +974,18 @@ void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
          unsigned chan_mask(0);
          if(cur_chan != NULL)
             chan_mask = cur_chan->getShare();
-         vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)
+         vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
               << "chan:" << ch << " -- " << (void*)cur_chan
               << "  shared: FOV:" << (chan_mask & PFCHAN_FOV)
               << " Scene:" << (chan_mask & PFCHAN_SCENE)
               << " AppFunc:" << (chan_mask & PFCHAN_APPFUNC)
               << " SwapBuff:" << (chan_mask & PFCHAN_SWAPBUFFERS)
               << " SwapBuff-HW:" << (chan_mask & PFCHAN_SWAPBUFFERS_HW)
-              << std::endl << vjDEBUG_FLUSH;
+              << std::endl << vprDEBUG_FLUSH;
       }
    }
 
-   vjDEBUG_CONT_END(vjDBG_DRAW_MGR,debugLevel) << vjDEBUG_FLUSH;
+   vprDEBUG_CONT_END(vrjDBG_DRAW_MGR,debugLevel) << vprDEBUG_FLUSH;
 }
 
 
@@ -1004,32 +1004,32 @@ void PFconfigPWin(pfPipeWindow* pWin)
 
    // Ouput the visual id
    int fb_id = pWin->getFBConfigId();
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "vjPFConfigPWin: framebuffer id: x" << std::hex << fb_id << std::dec
-      << std::endl << vjDEBUG_FLUSH;
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 
 /*
 void PfAppFunc(pfChannel *chan, void* chandata)
 {
-   vjDEBUG(vjDBG_DRAW_MGR, 0) << "--- PfAppFunc: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, 0) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, 0) << "--- PfAppFunc: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, 0) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
 
    pfChannel* master_chan = PfDrawManager::instance()->mMasterChan;
    if(master_chan == chan)
    {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "I am the master of the house:\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,0) << "I am the master of the house:\n" << vprDEBUG_FLUSH;
       if(PfDrawManager::instance()->mPfAppCalled == false)      // Haven't called it yet
       {
-         vjDEBUG(vjDBG_DRAW_MGR,0) << "pfApp has not been called yet.  Let me do it...\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_DRAW_MGR,0) << "pfApp has not been called yet.  Let me do it...\n" << vprDEBUG_FLUSH;
          PfDrawManager::instance()->mPfAppCalled = true;
          pfApp();
       }
    }
    else
    {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "I am not master. I can't do anything.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,0) << "I am not master. I can't do anything.\n" << vprDEBUG_FLUSH;
    }
 }
 */
@@ -1042,28 +1042,28 @@ void PfAppFunc(pfChannel *chan, void* chandata)
 //template <bool left_eye, bool right_eye, bool stereo, bool simulator>
 void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator)
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- PfDrawFunc: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFunc: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
 
       // Select correct buffer to draw to
       // If we are in stereo and not a simulator
    if(stereo && !simulator)
    {
-      vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "vjPfDrawFunc: Drawing stereo win\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vjPfDrawFunc: Drawing stereo win\n" << vprDEBUG_FLUSH;
       if(left_eye)
       {
          glDrawBuffer(GL_BACK_LEFT);
-         vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "vjPfDrawFunc: Set to BACK_LEFT\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vjPfDrawFunc: Set to BACK_LEFT\n" << vprDEBUG_FLUSH;
       }
       else
       {
          glDrawBuffer(GL_BACK_RIGHT);
-         vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "vjPfDrawFunc: Set to BACK_RIGHT\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vjPfDrawFunc: Set to BACK_RIGHT\n" << vprDEBUG_FLUSH;
       }
    }
    else                                // No Stereo or have sim, so just go to back buffer
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawFunc: Drawing mono window\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawFunc: Drawing mono window\n" << vprDEBUG_FLUSH;
       glDrawBuffer(GL_BACK);
    }
 
@@ -1079,7 +1079,7 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
    }
    */
 
-   vjDEBUG_END(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- PfDrawFunc: Exit ---.\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFunc: Exit ---.\n" << vprDEBUG_FLUSH;
 }
 
 /*********************************************************************
@@ -1090,29 +1090,29 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
 ***********************************************************************/
 void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata)
 {
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- PfDrawFuncStereoLeft: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncStereoLeft: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,true,false,true,false);
 }
 
 void PfDrawFuncStereoRight(pfChannel *chan, void* chandata)
 {
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- PfDrawFuncStereoRight: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncStereoRight: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,true,true,false);
 }
 
 void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
 {
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,false,false,false);
 }
 
 void PfDrawFuncSimulator(pfChannel* chan, void* chandata)
 {
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- PfDrawFuncSimulator: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncSimulator: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,false,false,true);
 }
 

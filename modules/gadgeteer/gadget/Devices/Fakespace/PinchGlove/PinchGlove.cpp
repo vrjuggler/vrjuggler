@@ -67,9 +67,9 @@ bool PinchGlove::config(ConfigChunk *c)
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vjDEBUG(vjDBG_INPUT_MGR,0)
+       vprDEBUG(vrjDBG_INPUT_MGR,0)
           << "[Pinch] ERROR: PinchGloveStandalone has no posProxy." << std::endl
-          << vjDEBUG_FLUSH;
+          << vprDEBUG_FLUSH;
        return false;
     }
 
@@ -79,9 +79,9 @@ bool PinchGlove::config(ConfigChunk *c)
     if(proxy_index != -1)
        mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
-       vjDEBUG(vjDBG_INPUT_MGR,0)
+       vprDEBUG(vrjDBG_INPUT_MGR,0)
           << "[Pinch] ERROR: PinchGloveStandalone::PinchGloveStandalone: Can't find posProxy."
-          << std::endl << std::endl << vjDEBUG_FLUSH;
+          << std::endl << std::endl << vprDEBUG_FLUSH;
           */
 
     mGlove = new PinchGloveStandalone();
@@ -97,16 +97,16 @@ PinchGlove::~PinchGlove ()
 
 int PinchGlove::startSampling()
 {
-   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
-                               << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
+                               << vprDEBUG_FLUSH;
 
    if (myThread == NULL)
    {
       resetIndexes();
 
       // Create a new thread to handle the control
-      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
-                                  << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
+                                  << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
 
@@ -118,8 +118,8 @@ int PinchGlove::startSampling()
       }
       else
       {
-         vjDEBUG(vjDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
-                                    << std::endl << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
+                                    << std::endl << vprDEBUG_FLUSH;
          active = 1;
          return 1;
       }
@@ -130,24 +130,24 @@ int PinchGlove::startSampling()
 
 void PinchGlove::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
-                               << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
+                               << vprDEBUG_FLUSH;
 
    bool result = false;
    while (result == false)
    {
-      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
+      vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
                                             << sPort << "...\n"
-                                            << vjDEBUG_FLUSH;
+                                            << vprDEBUG_FLUSH;
       result = mGlove->connectToHardware( sPort );
       if (result == false)
       {
-         vjDEBUG(vjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vprDEBUG_FLUSH;
          vpr::System::usleep(14500);
       }
    }
 
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "[Pinch] Successfully connected, Now sampling pinch data." << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] Successfully connected, Now sampling pinch data." << vprDEBUG_FLUSH;
 
    while(1)
    {
@@ -185,7 +185,7 @@ int PinchGlove::getDigitalData(int devNum)
    {
       // DONT assert!  just notify system that there was a user error.
       // asserting could bring the system down, and that's bad.
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "[Pinch] Assertion: application requested a digital ID out of range.  Valid range is [0.."<<gesture.size() <<"]\n"<< vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] Assertion: application requested a digital ID out of range.  Valid range is [0.."<<gesture.size() <<"]\n"<< vprDEBUG_FLUSH;
    }
 
    // function failed
@@ -234,8 +234,8 @@ int PinchGlove::stopSampling()
 
       // XXX: there is no "close"
       //mGlove->Close();
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "[Pinch] stopping PinchGlove.."
-                                 << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,1) << "[Pinch] stopping PinchGlove.."
+                                 << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

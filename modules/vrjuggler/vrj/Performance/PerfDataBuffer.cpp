@@ -71,8 +71,8 @@ PerfDataBuffer::~PerfDataBuffer () {
 //+       writing available data when requested.
 void PerfDataBuffer::activate() {
     active = 1;
-    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name <<
-    " activated.\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_PERFORMANCE,1) << "Performance Buffer " << name <<
+    " activated.\n" << vprDEBUG_FLUSH;
 }
 
 
@@ -90,8 +90,8 @@ void PerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name <<
-    " deactivated.\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_PERFORMANCE,1) << "Performance Buffer " << name <<
+    " deactivated.\n" << vprDEBUG_FLUSH;
 
 }
 
@@ -124,8 +124,8 @@ void PerfDataBuffer::set(int _phase) {
         lost_lock.release();
     }
     else
-        vjDEBUG(vjDBG_ALL,2) << "vjPerfDataBuffer: lock acquire "
-               << "failed\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ALL,2) << "vjPerfDataBuffer: lock acquire "
+               << "failed\n" << vprDEBUG_FLUSH;
     tw = (write_pos + numbufs - 1) % numbufs;
     buffer[tw].phase = _phase;
     buffer[tw].ts.set();

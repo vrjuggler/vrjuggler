@@ -67,8 +67,8 @@ ConesApp::~ConesApp () {
 // ----------------------------------------------------------------------------
 void
 ConesApp::init () {
-    vjDEBUG(vjDBG_ALL, 0) << "---------- Cones:App:init() ---------------"
-                          << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ALL, 0) << "---------- Cones:App:init() ---------------"
+                          << std::endl << vprDEBUG_FLUSH;
 
     std::vector<vrj::User*> users = kernel->getUsers();
     int num_users = users.size();
@@ -92,8 +92,8 @@ ConesApp::init () {
         vprASSERT(users[0]->getId() == 0);
         break;
       default:
-        vjDEBUG(vjDBG_ALL, 0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users."
-                              << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_ALL, 0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users."
+                              << vprDEBUG_FLUSH;
         exit();
       break;
     }
@@ -105,8 +105,8 @@ ConesApp::init () {
 // ----------------------------------------------------------------------------
 void
 ConesApp::apiInit () {
-    vjDEBUG(vjDBG_ALL, 0) << "---- ConesApp::apiInit() ----\n"
-                          << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ALL, 0) << "---- ConesApp::apiInit() ----\n"
+                          << vprDEBUG_FLUSH;
 }
 
 // ----------------------------------------------------------------------------
@@ -125,8 +125,8 @@ ConesApp::contextInit () {
         drawCone(1.5, 2.0, 20, 10);
     glEndList();
 
-    vjDEBUG(vjDBG_ALL, 0) << "Creating DL:" << mDlData->dlIndex
-                          << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ALL, 0) << "Creating DL:" << mDlData->dlIndex
+                          << std::endl << vprDEBUG_FLUSH;
     std::cerr << "created displays lists:" << mDlDebugData->dlIndex + 1
               << std::endl;
 
@@ -141,15 +141,15 @@ void
 ConesApp::contextClose() {
     // Deallocate the random display lists used for debugging.
     if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE ) {
-        vjDEBUG(vjDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
-                              << " debugging display lists\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
+                              << " debugging display lists\n" << vprDEBUG_FLUSH;
         glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
     }
 
     // Deallocate the cube face geometry data from the video hardware.
     if ( glIsList(mDlData->dlIndex) == GL_TRUE ) {
-        vjDEBUG(vjDBG_ALL, 0) << "Deallocating cone display list\n"
-                              << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_ALL, 0) << "Deallocating cone display list\n"
+                              << vprDEBUG_FLUSH;
         glDeleteLists(mDlData->dlIndex, 1);
     }
 }
@@ -160,8 +160,8 @@ ConesApp::contextClose() {
 // ----------------------------------------------------------------------------
 void
 ConesApp::preFrame () {
-   vjDEBUG(vjDBG_ALL, 2) << "ConesApp::preFrame()" << std::endl
-                         << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_ALL, 2) << "ConesApp::preFrame()" << std::endl
+                         << vprDEBUG_FLUSH;
 
     for ( unsigned int i = 0 ; i < mUserData.size() ; i++ ) {
         // Update the navigation matrix
@@ -187,8 +187,8 @@ ConesApp::draw () {
 // ----------------------------------------------------------------------------
 void
 ConesApp::intraFrame () {
-    vjDEBUG(vjDBG_ALL, 2) << "ConesApp::intraFrame()" << std::endl
-                          << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ALL, 2) << "ConesApp::intraFrame()" << std::endl
+                          << vprDEBUG_FLUSH;
 }
 
 // ----------------------------------------------------------------------------
@@ -197,8 +197,8 @@ ConesApp::intraFrame () {
 // ----------------------------------------------------------------------------
 void
 ConesApp::postFrame () {
-    vjDEBUG(vjDBG_ALL, 2) << "ConesApp::postFrame" << std::endl
-                          << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ALL, 2) << "ConesApp::postFrame" << std::endl
+                          << vprDEBUG_FLUSH;
 }
 
 // ----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ ConesApp::depSatisfied () {
 // ----------------------------------------------------------------------------
 void
 ConesApp::myDraw (vrj::User* user) {
-    vjDEBUG(vjDBG_ALL, 2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ALL, 2) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
 
     static const float SCALE = 100;
 //    static const float SCALE = 10;

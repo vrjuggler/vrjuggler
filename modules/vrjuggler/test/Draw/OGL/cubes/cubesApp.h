@@ -140,7 +140,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      vjDEBUG(vjDBG_ALL,0) << "---- cubesApp::apiInit() ----\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,0) << "---- cubesApp::apiInit() ----\n" << vprDEBUG_FLUSH;
    }
 
    // Called immediately upon opening a new OpenGL context.  This is called
@@ -174,8 +174,8 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
-       vjDEBUG(vjDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
-                            << vjDEBUG_FLUSH;
+       vprDEBUG(vrjDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
+                            << vprDEBUG_FLUSH;
 
        for(unsigned int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
@@ -202,16 +202,16 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vjDEBUG(vjDBG_ALL,5) << "cubesApp::intraFrame()" << std::endl
-                           << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,5) << "cubesApp::intraFrame()" << std::endl
+                           << vprDEBUG_FLUSH;
    }
 
    // Function called before updating trackers but after the frame is drawn.
    // Do calculations here.
    virtual void postFrame()
    {
-      vjDEBUG(vjDBG_ALL,5) << "cubesApp::postFrame" << std::endl
-                           << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,5) << "cubesApp::postFrame" << std::endl
+                           << vprDEBUG_FLUSH;
    }
 
    //: Make sure that all our dependencies are satisfied

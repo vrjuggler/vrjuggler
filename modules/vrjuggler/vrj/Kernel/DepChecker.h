@@ -100,13 +100,13 @@ public:
       return pass;
    }
 
-   // Write out the dependencies to the vjDEBUG macro
-   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
+   // Write out the dependencies to the vprDEBUG macro
+   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
-      vjDEBUG_NEXT_BEGIN(vjDBG_ALL,dbg_lvl) << "---- Dependencies for: item: "
+      vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "---- Dependencies for: item: "
                                             << chunk->getProperty("name")
                                             << " type: " << ((std::string)chunk->getType()).c_str()
-                                            << "-------\n" << vjDEBUG_FLUSH;
+                                            << "-------\n" << vprDEBUG_FLUSH;
 
       ConfigManager* cfg_mgr = ConfigManager::instance();
 
@@ -116,20 +116,20 @@ public:
       // Check to see if they are loaded already
       for(unsigned int i=0;i<dependencies.size();i++)
       {
-         vjDEBUG_NEXT(vjDBG_ALL,dbg_lvl) << i << ": "
+         vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl) << i << ": "
                                          << dependencies[i].c_str()
-                                         << " ==> " << vjDEBUG_FLUSH;
+                                         << " ==> " << vprDEBUG_FLUSH;
          if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
          {
-            vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "not available.\n" << vjDEBUG_FLUSH;
+            vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "not available.\n" << vprDEBUG_FLUSH;
          }
          else
          {
-            vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "passed.\n" << vjDEBUG_FLUSH;
+            vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
          }
       }
 
-      vjDEBUG_CONT_END(vjDBG_ALL,dbg_lvl) << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG_CONT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
 
    }
 };

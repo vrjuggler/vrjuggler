@@ -107,7 +107,7 @@ protected:
       norm2 = bot_side.cross(right_side);
       norm1.normalize(); norm2.normalize();
       if(norm1 != norm2)
-         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Invalid surface corners.\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ERROR,0) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
    }
 
 

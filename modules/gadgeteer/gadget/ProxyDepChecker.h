@@ -66,8 +66,8 @@ public:
       return true;
    }
 
-   // Write out the dependencies to the vjDEBUG macro
-   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
+   // Write out the dependencies to the vprDEBUG macro
+   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
       ;
    }

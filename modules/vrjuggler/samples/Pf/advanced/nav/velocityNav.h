@@ -220,8 +220,8 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 // Set the name of the pos device that is used in navigation
 void velocityNav::setNavPosControl(std::string wand_dev)
 {
-   vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ")
-                        << wand_dev.c_str() << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ")
+                        << wand_dev.c_str() << std::endl << vprDEBUG_FLUSH;
    mNavWand.init(wand_dev);
 }
 
@@ -270,22 +270,22 @@ void velocityNav::updateInteraction()
 
    // Output visual feedback
    if(mAcceleratingForward)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward") << "(Accel = " << mAcceleration << ")" << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward") << "(Accel = " << mAcceleration << ")" << std::endl << vprDEBUG_FLUSH;
    if(mBraking)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking")
-                           << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking")
+                           << std::endl << vprDEBUG_FLUSH;
    if(mStopping)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping")
-                           << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping")
+                           << std::endl << vprDEBUG_FLUSH;
    if(mResetting)
    {
       vrj::Vec3 hpos = mHomePos.getTrans();
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
-                           << hpos << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
+                           << hpos << std::endl << vprDEBUG_FLUSH;
    }
    if(mRotating)
-       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating")
-                            << std::endl << vjDEBUG_FLUSH;
+       vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating")
+                            << std::endl << vprDEBUG_FLUSH;
 }
 
 void velocityNav::update()
@@ -295,15 +295,15 @@ void velocityNav::update()
 
    if(stopWatch.timeInstant > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
    {
-      vjDEBUG(vjDBG_ALL,0)
+      vprDEBUG(vrjDBG_ALL,0)
          << clrOutNORM(clrCYAN,"VelNav: timeInstant to large: ")
-         << stopWatch.timeInstant << std::endl << vjDEBUG_FLUSH;
+         << stopWatch.timeInstant << std::endl << vprDEBUG_FLUSH;
       stopWatch.stop();    // Get a REALLY small delta time
       stopWatch.start();
    }
 
-   //vjDEBUG_BEGIN(vjDBG_ALL,0) << "VelNav: ----- Update ----\n" << vjDEBUG_FLUSH;
-   //vjDEBUG(vjDBG_ALL,0) << "VelNav: timeInstant: " << stopWatch.timeInstant << std::endl << vjDEBUG_FLUSH;
+   //vprDEBUG_BEGIN(vrjDBG_ALL,0) << "VelNav: ----- Update ----\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_ALL,0) << "VelNav: timeInstant: " << stopWatch.timeInstant << std::endl << vprDEBUG_FLUSH;
 
    // If we are not supposed to be active, then don't run
    if(!this->isActive())
@@ -365,14 +365,14 @@ void velocityNav::update()
       // add the velocity this timeslice/frame by the acceleration from gravity.
       velocityAccumulator += mVelocityFromGravityAccumulator;
 
-      //vjDEBUG(vjDBG_ALL,0) << "velNav: drive: gravAccum: " << mVelocityFromGravityAccumulator << vjDEBUG_FLUSH;
+      //vprDEBUG(vrjDBG_ALL,0) << "velNav: drive: gravAccum: " << mVelocityFromGravityAccumulator << vprDEBUG_FLUSH;
 
       // recalculate the current downward velocity from gravity.
       // this vector then is accumulated with the rest of the velocity vectors each frame.
       mVelocityFromGravityAccumulator += (gravity * stopWatch.timeInstant);
 
-      //vjDEBUG_CONT(vjDBG_ALL,0) << " new vel: " << velocityAccumulator
-      //                          << " new grav: " << mVelocityFromGravityAccumulator << endl << vjDEBUG_FLUSH;
+      //vprDEBUG_CONT(vrjDBG_ALL,0) << " new vel: " << velocityAccumulator
+      //                          << " new grav: " << mVelocityFromGravityAccumulator << endl << vprDEBUG_FLUSH;
    }
    if (mAllowTrans)
    {
@@ -390,7 +390,7 @@ void velocityNav::update()
    // NOTE: this is not the final distance, since we still have to do collision correction.
    vrj::Vec3 distanceToMove = velocityAccumulator * stopWatch.timeInstant;
 
-   //vjDEBUG(vjDBG_ALL,0) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << stopWatch.timeInstant << endl << vjDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_ALL,0) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << stopWatch.timeInstant << endl << vprDEBUG_FLUSH;
 
    // --- TRANSLATION and COLLISION DETECTION --- //
    bool     did_collide;               // Did we collide with anything
@@ -399,10 +399,10 @@ void velocityNav::update()
 
    if(did_collide)      // If we hit something, stop falling
    {
-      //vjDEBUG(vjDBG_ALL,0) << "Did collide: Setting gravAccum to 0,0,0\n" << vjDEBUG_FLUSH;
+      //vprDEBUG(vrjDBG_ALL,0) << "Did collide: Setting gravAccum to 0,0,0\n" << vprDEBUG_FLUSH;
       mVelocityFromGravityAccumulator.set( 0.0f, 0.0f, 0.0f );
    }
-   //vjDEBUG_END(vjDBG_ALL,0) << "---------------------\n" << vjDEBUG_FLUSH;
+   //vprDEBUG_END(vrjDBG_ALL,0) << "---------------------\n" << vprDEBUG_FLUSH;
 }
 
 void velocityNav::scaled_rotate(vrj::Matrix rot_mat)

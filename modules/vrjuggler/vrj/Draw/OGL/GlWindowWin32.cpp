@@ -64,15 +64,15 @@ int GlWindowWin32::open()
         // If we want a border, create an overlapped window.  This will have
         // a titlebar and a border.
         if ( border ) {
-            vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to give window a border"
-                                       << std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_DRAW_MGR, 5) << "attempting to give window a border"
+                                       << std::endl << vprDEBUG_FLUSH;
             style |= WS_OVERLAPPEDWINDOW;
         }
         // Otherwise, come as close as possible to having no border by using
         // the thin-line border.
         else {
-            vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to make window borderless"
-                                       << std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_DRAW_MGR, 5) << "attempting to make window borderless"
+                                       << std::endl << vprDEBUG_FLUSH;
             style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
         }
 

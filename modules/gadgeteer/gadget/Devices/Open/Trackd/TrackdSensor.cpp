@@ -73,7 +73,7 @@ namespace vrj
     int shm_key = (int)c->getProperty("shm_key");
     if(shm_key == 0)
     {
-       vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vjDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
        return false;
     }
     mTrackdSensors = new TrackdSensorStandalone(shm_key);

@@ -331,7 +331,7 @@ bool Property::setValue (ConfigChunk* val, int ind) {
     assertValid();
 
     if (!preSet(ind)) {
-        vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vprDEBUG_FLUSH;
         return false;
     }
     *(value[ind]) = val;
@@ -382,15 +382,15 @@ bool Property::tryAssign (int index, const char* val) {
     case T_INT:
         i = strtol (val, &endval, 0);
         if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
-                  << val << "'\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vrjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
+                  << val << "'\n" << vprDEBUG_FLUSH;
         setValue (i, index);
         return true;
     case T_FLOAT:
         f = (float)strtod (val, &endval);
         if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
-                                      << val << "'\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vrjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
+                                      << val << "'\n" << vprDEBUG_FLUSH;
         setValue (f, index);
         return true;
     case T_BOOL:
@@ -403,8 +403,8 @@ bool Property::tryAssign (int index, const char* val) {
             b = strtol (val, &endval, 0);
             if (endval != '\0') {
                 b = false;
-                vjDEBUG (vjDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
-                                         << val << "'\n" << vjDEBUG_FLUSH;
+                vprDEBUG (vrjDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
+                                         << val << "'\n" << vprDEBUG_FLUSH;
             }
         }
         setValue (b, index);

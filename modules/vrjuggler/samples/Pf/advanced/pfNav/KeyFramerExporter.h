@@ -23,16 +23,16 @@ namespace kev
 
          if (!frames_file.rdbuf()->is_open())
          {
-            vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
+            vprDEBUG(vrjDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
                            << clrRESET
                            << "couldn't open keyframe file: "
                            << filename <<"\n"
-                           << vjDEBUG_FLUSH;
+                           << vprDEBUG_FLUSH;
             return;
          }
 
-         vjDEBUG(vjDBG_ALL,0) << "Writing keyframe(s) to file: "
-                <<filename<<"\n"<<vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_ALL,0) << "Writing keyframe(s) to file: "
+                <<filename<<"\n"<<vprDEBUG_FLUSH;
 
          std::map<float, kev::KeyFramer::Key>::const_iterator it1 = kf.keys().begin();
          for (; it1 != kf.keys().end(); ++it1)

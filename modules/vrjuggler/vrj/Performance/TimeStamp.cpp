@@ -70,8 +70,8 @@ void TimeStampSGI::initialize() {
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
-    vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStamp: Cycle Counter not "
-        "supported by this machine.\n" << vjDEBUG_FLUSH;
+    vprDEBUG (vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStamp: Cycle Counter not "
+        "supported by this machine.\n" << vprDEBUG_FLUSH;
     iotimer_addr = &enodev_dummy_address;
     }
     else {
@@ -92,8 +92,8 @@ void TimeStampSGI::initialize() {
     else
     initval = *(unsigned int*)iotimer_addr;
 
-    vjDEBUG(vjDBG_PERFORMANCE,3) << "vjTimeStamp system initialized.\n"
-           << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_PERFORMANCE,3) << "vjTimeStamp system initialized.\n"
+           << vprDEBUG_FLUSH;
 }
 
 

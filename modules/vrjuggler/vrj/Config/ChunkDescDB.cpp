@@ -66,12 +66,12 @@ bool ChunkDescDB::insert (ChunkDesc *d) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
             if (*descs[i] != *d) {
-                vjDEBUG (vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of ChunkDesc ("
+                vprDEBUG (vprDBG_ALL,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of ChunkDesc ("
                                      << d->name.c_str() << ") not allowed:\n"
                                      << "  Original Desc: \n" << *descs[i]
                                      << "\n  New Desc: \n" << *d
                                      << "\n (multiple definitions must be identical)\n"
-                                     << vjDEBUG_FLUSH;
+                                     << vprDEBUG_FLUSH;
                 vprASSERT (false);
                 return false;
             }
@@ -153,12 +153,12 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
         else if (!strcasecmp (str, end_TOKEN))
             break;
         else {
-            vjDEBUG(vjDBG_ERROR,1) << "Unexpected symbol parsing ChunkDescDB: '"
-                       << str <<"'"<< std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,1) << "Unexpected symbol parsing ChunkDescDB: '"
+                       << str <<"'"<< std::endl << vprDEBUG_FLUSH;
         }
     }
-    vjDEBUG(vjDBG_CONFIG,3) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
-               << " descriptions read." << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_CONFIG,3) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
+               << " descriptions read." << std::endl << vprDEBUG_FLUSH;
     return in;
 }
 
@@ -173,12 +173,12 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
 //      std::ifstream in(fname.c_str());
 
 //      if (!in) {
-//          vjDEBUG(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
+//          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
 //              << clrOutNORM(clrYELLOW, "WARNING:") << " ChunkDescDB::load(): Unable to open file\n"
-//              << vjDEBUG_FLUSH;
-//          vjDEBUG_NEXT(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
+//              << vprDEBUG_FLUSH;
+//          vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
 //              << "'" << fname.c_str() << "'" << clrRESET << std::endl
-//              << vjDEBUG_FLUSH;
+//              << vprDEBUG_FLUSH;
 //          return false;
 //      }
 //      in >> *this;
@@ -190,8 +190,8 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
 bool ChunkDescDB::save (const char *fname) {
     std::ofstream out(fname);
     if (!out) {
-        vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::save(): Unable to open file '"
-                   << fname << "'" << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjChunkDescDB::save(): Unable to open file '"
+                   << fname << "'" << std::endl << vprDEBUG_FLUSH;
         return false;
     }
     out << *this;

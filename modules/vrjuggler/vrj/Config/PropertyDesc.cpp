@@ -230,8 +230,8 @@ std::istream& operator >> (std::istream& in, PropertyDesc& self) {
         //cout << "reading valuelabels" << endl;
         readString (in,str,size);
         if (strcasecmp (str, lbrace_TOKEN))
-            vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " expected '{'" << std::endl
-                                   << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " expected '{'" << std::endl
+                                   << vprDEBUG_FLUSH;
 
         EnumEntry *e;
         readString (in, str, size);

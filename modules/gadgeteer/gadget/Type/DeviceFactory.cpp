@@ -110,7 +110,7 @@ void DeviceFactory::hackLoadKnownDevices()
        (NULL == sim_relative) ||
        (NULL == simpinch_glove))
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
 #ifndef WIN32
@@ -118,7 +118,7 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<OSXKeyboard>* osx_keyboard = new DeviceConstructor<OSXKeyboard>;
    if( (NULL == osx_keyboard) )
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
 #else
@@ -138,7 +138,7 @@ void DeviceFactory::hackLoadKnownDevices()
        (NULL == xwin_key)     ||
        (NULL == threed_mouse))
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
 #endif
@@ -150,14 +150,14 @@ void DeviceFactory::hackLoadKnownDevices()
        (NULL == intersense)   ||
        (NULL == motion_star)   )
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 #else
 
    DeviceConstructor<KeyboardWin32>* key_win32 = new DeviceConstructor<KeyboardWin32>;
    if( (NULL == key_win32))
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
 #endif
@@ -165,7 +165,7 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<DTK>* dtk_wrapper = new DeviceConstructor<DTK>;
    if( (NULL == dtk_wrapper))
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 #endif
 }
@@ -174,11 +174,11 @@ void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
 {
    vprASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory: Registered: "
+   vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjDeviceFactory: Registered: "
               << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType() << std::setiosflags(std::ios::right)
               //<< "   :" << (void*)constructor
               << "  type: " << typeid(*constructor).name() << std::endl
-              << vjDEBUG_FLUSH;
+              << vprDEBUG_FLUSH;
 }
 
 // Simply query all device constructors registered looking
@@ -205,9 +205,9 @@ Input* DeviceFactory::loadDevice(ConfigChunk* chunk)
    Input* new_dev;
    DeviceConstructorBase* constructor = mConstructors[index];
 
-   vjDEBUG(vjDBG_INPUT_MGR,3) << "vjDeviceFactory::loadDevice: Loading device: "
+   vprDEBUG(vrjDBG_INPUT_MGR,3) << "vjDeviceFactory::loadDevice: Loading device: "
               << chunk->getType() << "  with: "
-              << typeid(*constructor).name() << std::endl << vjDEBUG_FLUSH;
+              << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
 
    new_dev = constructor->createDevice(chunk);
    return new_dev;
@@ -234,18 +234,18 @@ int DeviceFactory::findConstructor(ConfigChunk* chunk)
 
 void DeviceFactory::debugDump()
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,0) << "vjDeviceFactory::debugDump\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "num constructors:" << mConstructors.size() << "\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,0) << "vjDeviceFactory::debugDump\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_INPUT_MGR,0) << "num constructors:" << mConstructors.size() << "\n" << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
    {
       DeviceConstructorBase* dev_constr = mConstructors[cNum];
-      vjDEBUG(vjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr
-                 << "   type:" << typeid(*dev_constr).name() << "\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr
+                 << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,0) << "   recog:" << dev_constr->getChunkType() << "\n" << vprDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_INPUT_MGR,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_INPUT_MGR,0) << "------ END DUMP ------\n" << vprDEBUG_FLUSH;
 }
 
 };

@@ -109,9 +109,9 @@ void GlWindow::setProjection(vrj::Projection* proj)
 
    float* frust = proj->mFrustum.frust;
 
-   vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Frustum ----\n"
+   vprDEBUG(vrjDBG_DRAW_MGR,7)  << "---- Frustum ----\n"
                << proj->mFrustum.frust << std::endl
-               << vjDEBUG_FLUSH;
+               << vprDEBUG_FLUSH;
 
    // --- Set up the projection --- //
    glMatrixMode(GL_PROJECTION);
@@ -144,9 +144,9 @@ void GlWindow::setCameraProjection(vrj::CameraProjection* camProj)
    vprASSERT(camProj != NULL && "Trying to use a non-camera projection with a sim view");
    float* frust = camProj->mFrustum.frust;
 
-   vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
+   vprDEBUG(vrjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
                << camProj->mFrustum.frust << std::endl
-               << vjDEBUG_FLUSH;
+               << vprDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    glDrawBuffer(GL_BACK);

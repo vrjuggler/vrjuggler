@@ -86,8 +86,8 @@ bool EnvironmentManager::isAccepting() {
 
 
 void EnvironmentManager::addPerfDataBuffer (PerfDataBuffer *b) {
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
-                                   << vjDEBUG_FLUSH;
+    vprDEBUG (vrjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
+                                   << vprDEBUG_FLUSH;
     perf_buffers_mutex.acquire();
     perf_buffers.push_back(b);
     activatePerfBuffers();
@@ -100,8 +100,8 @@ void EnvironmentManager::addPerfDataBuffer (PerfDataBuffer *b) {
 void EnvironmentManager::removePerfDataBuffer (PerfDataBuffer *b) {
     std::vector<PerfDataBuffer*>::iterator it;
 
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
-                                   << "\n" << vjDEBUG_FLUSH;
+    vprDEBUG (vrjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
+                                   << "\n" << vprDEBUG_FLUSH;
 
     perf_buffers_mutex.acquire();
     b->deactivate();
@@ -201,8 +201,8 @@ bool EnvironmentManager::configAdd(ConfigChunk* chunk) {
         if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
             // it's new to us
             Connect* vn = new Connect (chunk);
-            vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
-                                       << vjDEBUG_FLUSH;
+            vprDEBUG (vrjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
+                                       << vprDEBUG_FLUSH;
             connections_mutex.acquire();
             connections.push_back (vn);
             vn->startProcess();
@@ -245,15 +245,15 @@ bool EnvironmentManager::configRemove(ConfigChunk* chunk) {
         return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-        vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: "
-                                  << chunk->getProperty ("Name") << '\n' << vjDEBUG_FLUSH;
+        vprDEBUG (vrjDBG_ENV_MGR,1) << "EM Removing connection: "
+                                  << chunk->getProperty ("Name") << '\n' << vprDEBUG_FLUSH;
         connections_mutex.acquire();
         Connect* c = getConnect (chunk->getProperty ("Name"));
         if (c) {
             removeConnect (c);
         }
         connections_mutex.release();
-        vjDEBUG (vjDBG_ENV_MGR,4) << "EM completed connection removal\n" << vjDEBUG_FLUSH;
+        vprDEBUG (vrjDBG_ENV_MGR,4) << "EM completed connection removal\n" << vprDEBUG_FLUSH;
         return true;
     }
 
@@ -323,15 +323,15 @@ void EnvironmentManager::controlLoop (void* nullParam) {
     //int len;
     Connect* connection;
 
-    vjDEBUG(vjDBG_ENV_MGR,4) << "vjEnvironmentManager started control loop.\n"
-          << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ENV_MGR,4) << "vjEnvironmentManager started control loop.\n"
+          << vprDEBUG_FLUSH;
 
     for (;;) {
         servsock = listen_socket->accept();
         char name[128];
         //sprintf (name, "Network Connect %d", servsock->getID());
-        vjDEBUG(vjDBG_ENV_MGR,vjDBG_CONFIG_LVL) << "vjEnvironmentManager: Accepted connection: id: "
-                                                << servsock->getID() << " on port: N/A\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_ENV_MGR,vprDBG_CONFIG_LVL) << "vjEnvironmentManager: Accepted connection: id: "
+                                                << servsock->getID() << " on port: N/A\n" << vprDEBUG_FLUSH;
         connection = new Connect (servsock, (std::string)name);
         connections_mutex.acquire();
         connections.push_back( connection );
@@ -406,15 +406,15 @@ bool EnvironmentManager::acceptConnections() {
 
     listen_socket = new Socket ();
     if (!listen_socket->listen (Port)) {
-        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
-                                                << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
+                                                << vprDEBUG_FLUSH;
         return false;
     }
     else
-        vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+        vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrCYAN, "Environment Manager")
             << " listening on port " << clrOutNORM(clrMAGENTA, Port) << "\n"
-            << vjDEBUG_FLUSH;
+            << vprDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
     vpr::ThreadMemberFunctor<EnvironmentManager>* memberFunctor =

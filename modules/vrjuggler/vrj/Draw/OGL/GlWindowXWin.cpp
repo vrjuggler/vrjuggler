@@ -97,18 +97,18 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
     ::XSizeHints *sizehints;
     ::XClassHint *classhint;
 
-    vjDEBUG(vjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vprDEBUG_FLUSH;
 
     if (window_is_open)
         return true;
 
     if (window_width == -1) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: Window has not been configured\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: Window has not been configured\n" << vprDEBUG_FLUSH;
         return false;
     }
 
     if (! (x_display = ::XOpenDisplay (mXDisplayName.c_str()))) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: Unable to open display '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: Unable to open display '" << mXDisplayName << "'.\n" << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -116,7 +116,7 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
     // get an XVisualInfo*, which we'll need below
     if ((visual_info = GetGlxVisInfo (x_display, screen)) == NULL) {
-        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n" << vprDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -125,7 +125,7 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
                                               RootWindow(x_display, screen),
                                               visual_info->visual,
                                               AllocNone)) == 0) {
-        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: XCreateColorMap failed on '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: XCreateColorMap failed on '" << mXDisplayName << "'.\n" << vprDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -154,10 +154,10 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
                                    &w_attrib))  /* Attributes */
         == 0)
         {
-            vjDEBUG(vjDBG_DRAW_MGR,0)
+            vprDEBUG(vrjDBG_DRAW_MGR,0)
                << clrOutNORM(clrRED,"ERROR:")
                << "vjGlWindowXWin: Couldn't create window for " << mXDisplayName
-               << std::endl << vjDEBUG_FLUSH;
+               << std::endl << vprDEBUG_FLUSH;
             goto OPEN_FAIL;
         }
 
@@ -203,14 +203,14 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
      * manager don't support this feature.
      */
     if (!border) {
-        vjDEBUG(vjDBG_DRAW_MGR,5) << "attempting to make window borderless"
-                                  << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_DRAW_MGR,5) << "attempting to make window borderless"
+                                  << std::endl << vprDEBUG_FLUSH;
         Atom MotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
         if (MotifHints == None) {
-            vjDEBUG(vjDBG_DRAW_MGR,0)
+            vprDEBUG(vrjDBG_DRAW_MGR,0)
                << clrOutNORM(clrRED,"ERROR:")
                << "vjGlWindowXWin: Could not get X atom for _MOTIF_WM_HINTS."
-               << std::endl << vjDEBUG_FLUSH;
+               << std::endl << vprDEBUG_FLUSH;
         }
         else {
             MotifWmHints hints;
@@ -233,13 +233,13 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
     ::XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
     ::XSync(x_display,0);
 
-    vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlWindowXWin: done mapping window\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,4) << "vjGlWindowXWin: done mapping window\n" << vprDEBUG_FLUSH;
 
     /********************* OpenGL Context Stuff *********************/
 
     glx_context = glXCreateContext (x_display,visual_info, NULL, True);
     if (NULL == glx_context) {
-        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '" << mXDisplayName << "'\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '" << mXDisplayName << "'\n" << vprDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -330,9 +330,9 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
 void GlWindowXWin::config(vrj::Display* disp)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowXWin::config: _display: " << (*disp)
+   vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjGlWindowXWin::config: _display: " << (*disp)
                               << "\nConfig chunk:\n" << (*(disp->getConfigChunk()))
-                              << std::endl << vjDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
    const char neg_one_STRING[] = "-1";
    vrj::GlWindow::config(disp);
@@ -351,8 +351,8 @@ void GlWindowXWin::config(vrj::Display* disp)
        const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
        mXDisplayName = std::string(getenv(DISPLAY_str.c_str()));
    }
-   vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
-                             << mXDisplayName << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
+                             << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
    mAreKeyboardDevice = (bool)displayChunk->getProperty("act_as_keyboard_device");
    // if should have keyboard device
@@ -385,7 +385,7 @@ void GlWindowXWin::config(vrj::Display* disp)
    unsigned int i;
 
    if(wins.size() <= 0)
-      vjDEBUG(vjDBG_ERROR,0) << "WARNING: createHardwareSwapGroup called with no windows\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR,0) << "WARNING: createHardwareSwapGroup called with no windows\n" << vprDEBUG_FLUSH;
 
    for(i=0;i<wins.size();i++)
    {
@@ -405,7 +405,7 @@ void GlWindowXWin::config(vrj::Display* disp)
    }
 
 #else
-   vjDEBUG(vjDBG_ERROR,0) << "WARNING: createHardwareSwapGroup not supported.\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ERROR,0) << "WARNING: createHardwareSwapGroup not supported.\n" << vprDEBUG_FLUSH;
 #endif
    return true;
 }
@@ -455,8 +455,8 @@ void GlWindowXWin::config(vrj::Display* disp)
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
-      vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " X Display '"<< mXDisplayName <<
-      "' doesn't support GLX.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " X Display '"<< mXDisplayName <<
+      "' doesn't support GLX.\n" << vprDEBUG_FLUSH;
       return NULL;
    }
 
@@ -479,9 +479,9 @@ void GlWindowXWin::config(vrj::Display* disp)
    // still no luck. if we were going for stereo, let's try without.
    if (mDisplay->inStereo())
    {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << mXDisplayName
+      vprDEBUG(vrjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << mXDisplayName
                  << "' couldn't get display in stereo - trying mono.\n"
-                 << vjDEBUG_FLUSH;
+                 << vprDEBUG_FLUSH;
       in_stereo = false;
       viattrib[NumAttribs-1] = GLX_USE_GL; // should be a reasonable 'ignore' tag
       if( (vi = glXChooseVisual (display, screen, viattrib)) )
@@ -489,9 +489,9 @@ void GlWindowXWin::config(vrj::Display* disp)
    }
 
    // if we reach here, we didn't.  Maybe we should make alpha optional.
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << mXDisplayName
+   vprDEBUG(vrjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << mXDisplayName
               << "' couldn't get display with alpha channel - trying without.\n"
-              << vjDEBUG_FLUSH;
+              << vprDEBUG_FLUSH;
    viattrib[AlphaAttribIndex] = 0;
    if( (vi = glXChooseVisual (display, screen, viattrib)) )
       return vi;

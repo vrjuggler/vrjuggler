@@ -120,7 +120,7 @@ public:
       Input* input_dev = Kernel::instance()->getInputManager()->getDevice(mDeviceName);
       if(NULL == input_dev)       // Not found, so stupify
       {
-         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "vjTypedProxy::refresh: Could not find device: " << mDeviceName << std::endl << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "vjTypedProxy::refresh: Could not find device: " << mDeviceName << std::endl << vprDEBUG_FLUSH;
          stupify(true);
       }
       else
@@ -128,14 +128,14 @@ public:
          DEV_TYPE* typed_dev = dynamic_cast<DEV_TYPE*>(input_dev);
          if(NULL == typed_dev)
          {
-            vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjTypedProxy::config: Device was of wrong type: " << mDeviceName
-                                                  << " it was type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "vjTypedProxy::config: Device was of wrong type: " << mDeviceName
+                                                  << " it was type:" << typeid(input_dev).name() << std::endl << vprDEBUG_FLUSH;
             stupify(true);
             return false;
          }
 
-         vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << mDeviceName.c_str() << std::endl << vjDEBUG_FLUSH;
-         vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   Proxy config()'ed" << std::endl << vjDEBUG_FLUSH;
+         vprDEBUG_CONT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "   attaching to device named: " << mDeviceName.c_str() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_END(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
 
          set(typed_dev);    // Set the proxy
       }

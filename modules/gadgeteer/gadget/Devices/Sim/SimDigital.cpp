@@ -40,18 +40,18 @@ namespace vrj
 //: Default Constructor
 SimDigital::SimDigital() : Digital(), SimInput()
 {
-   vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::SimDigital()\n"<< vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
 //: Destructor
 SimDigital::~SimDigital()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
 bool SimDigital::config(ConfigChunk* chunk)
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::config()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))
       return false;
 
@@ -70,7 +70,7 @@ bool SimDigital::config(ConfigChunk* chunk)
 //+     When key is release, digital goes to off state
 void SimDigital::updateData()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::updateData()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::updateData()\n"<< vprDEBUG_FLUSH;
 
    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)

@@ -17,7 +17,7 @@ namespace kev
       {
          float w, x, y, z;
          key.rotation().getRot( w, x, y, z );
-         vjDEBUG(vjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<vrj::Math::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<vrj::Math::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vprDEBUG_FLUSH;
       }
 
       void execute( const char* const filename, kev::KeyFramer& kf )
@@ -32,16 +32,16 @@ namespace kev
 
          if (!frames_file.rdbuf()->is_open())
          {
-            vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
+            vprDEBUG(vrjDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
                            << clrRESET
                            << "couldn't open keyframe file: "
                            << filename <<"\n"
-                           << vjDEBUG_FLUSH;
+                           << vprDEBUG_FLUSH;
             return;
          }
 
-         vjDEBUG(vjDBG_ALL,0) << "Reading keyframe(s) in file: "
-                <<filename<<"\n"<<vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_ALL,0) << "Reading keyframe(s) in file: "
+                <<filename<<"\n"<<vprDEBUG_FLUSH;
 
          float time;
          float deg;
@@ -54,7 +54,7 @@ namespace kev
             // if EOF then return...
             if (time == -1)
             {
-               vjDEBUG(vjDBG_ALL,0)<<"time==-1: "<<time<<"\n"<<vjDEBUG_FLUSH;
+               vprDEBUG(vrjDBG_ALL,0)<<"time==-1: "<<time<<"\n"<<vprDEBUG_FLUSH;
                return;
             }
             frames_file>>pos[0]>>pos[1]>>pos[2]>>deg>>vec[0]>>vec[1]>>vec[2];

@@ -54,7 +54,7 @@ bool User::config(ConfigChunk* chunk)
    vprASSERT(chunk != NULL);
    vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
-   vjDEBUG_BEGIN(vjDBG_KERNEL,3) << "vjUser::config: Creating a new user\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_KERNEL,3) << "vjUser::config: Creating a new user\n" << vprDEBUG_FLUSH;
 
    // Assign user id
    mUserId = mNextUserId++;
@@ -71,13 +71,13 @@ bool User::config(ConfigChunk* chunk)
 
    if(mInterocularDist == 0.0f)
    {
-      vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << clrOutNORM(clrRED, "WARNING:") << "User: " << mName << " has interocular distance is set to 0.0f.  This is probably not what you wanted.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << clrOutNORM(clrRED, "WARNING:") << "User: " << mName << " has interocular distance is set to 0.0f.  This is probably not what you wanted.\n" << vprDEBUG_FLUSH;
    }
 
-   vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "id: " << mUserId << "   Name:" << mName.c_str()
+   vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL) << "id: " << mUserId << "   Name:" << mName.c_str()
                            << "   headPos:" << head_alias.c_str()
                            << "   interocular_distance:" << mInterocularDist
-                           << std::endl << vjDEBUG_FLUSH;
+                           << std::endl << vprDEBUG_FLUSH;
 
    return true;
 }

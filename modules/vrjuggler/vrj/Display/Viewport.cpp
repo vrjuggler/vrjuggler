@@ -22,17 +22,17 @@ void Viewport::config(ConfigChunk* chunk)
    // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
    {
-      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: viewport sizeX set to: " << sizeX
+      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: viewport sizeX set to: " << sizeX
                                 << ".  Setting to 1." << std::endl
-                                << vjDEBUG_FLUSH;
+                                << vprDEBUG_FLUSH;
       sizeX = 1.0f;
    }
 
    if(sizeY <= 0)
    {
-      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: viewport sizeY set to: " << sizeY
+      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: viewport sizeY set to: " << sizeY
                                 << ".  Setting to 1." << std::endl
-                                << vjDEBUG_FLUSH;
+                                << vprDEBUG_FLUSH;
       sizeY = 1.0f;
    }
 
@@ -45,9 +45,9 @@ void Viewport::config(ConfigChunk* chunk)
 
     if(NULL == mUser)
     {
-       vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " User not found named: "
+       vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " User not found named: "
                               << user_name.c_str() << std::endl
-                              << vjDEBUG_FLUSH;
+                              << vprDEBUG_FLUSH;
       vprASSERT(false && "User not found in Viewport::config");
     }
 
