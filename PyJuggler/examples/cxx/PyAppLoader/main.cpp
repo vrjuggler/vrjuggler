@@ -42,6 +42,8 @@
 
 namespace python = boost::python;
 
+// This class is important for keeping hold of all the reference-counted
+// memory associated with a given Python application object.
 class AppHolder
 {
 public:
