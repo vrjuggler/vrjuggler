@@ -151,6 +151,8 @@ java:
 	@echo "------------------------------------------------"
 	$(ANT)
 
+BUILD_JAVA=	@BUILD_JAVA@
+
 _clean:
 ifeq ($(BUILD_JAVA), Y)
 	$(ANT) clean
