@@ -33,7 +33,6 @@
 #include <iostream>  // for debug output..
 #include <string>    // for std::string
 #include <memory.h>  // for NULL
-#include <assert.h>  // for assert
 
 #ifndef WIN32
 #  include <dlfcn.h>   // for dlopen functions...
@@ -270,7 +269,7 @@ namespace xdl
             return true;
          else
          {
-            std::cout<< "[xdl] " << ::dlerror()<<"\n"<<std::flush;
+            //std::cout<< "[xdl] " << ::dlerror()<<"\n"<<std::flush;
             return false;
          }
       }
