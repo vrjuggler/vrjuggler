@@ -74,6 +74,8 @@ bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
    if(location.size() > 0){ 
       mDeviceName = (std::string)chunk->getProperty("name");
       mDeviceName += "_NET_";   // input device we'll point to
+      mUnitNum = 0;
+      setTransform(0,0,0, 0,0,0 );
    }
    else{
       mUnitNum = chunk->getProperty("unit");
