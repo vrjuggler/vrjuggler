@@ -83,13 +83,14 @@ public:
     * manager are activated within that child POA.
     *
     * @param local_id A string providing a unique identifier for the local POA.
-    * @param argc     The size of the following argument vector.
+    * @param argc     The size of the following argument vector.  This will be
+    *                 modified if any elements are removed from argv.
     * @param argv     The command-line arguments passed to the application.
     *                 These may include parameters defining the ORB's
-    *                 behavior.
+    *                 behavior.  Those recognized as ORB arguments are removed
+    *                 from the array leaving application parameters.
     */
-   vpr::ReturnStatus init(const std::string& local_id, int argc = 0,
-                          char** argv = NULL);
+   vpr::ReturnStatus init(const std::string& local_id, int& argc, char** argv);
 
    /**
     * Shuts down the ORB and the POA (if they were successfully initialized).
@@ -110,7 +111,7 @@ public:
     * @return true if init() the ORB and POA references were initialized
     *         successfully.
     */
-   bool isValid (void)
+   bool isValid (void) const
    {
       return ! (CORBA::is_nil(m_orb) || CORBA::is_nil(m_root_poa));
    }
