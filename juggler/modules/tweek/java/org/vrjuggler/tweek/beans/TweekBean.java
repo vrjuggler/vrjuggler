@@ -116,31 +116,34 @@ public abstract class TweekBean
 
       try
       {
-         String class_path = null;
-         List deps = attrs.getJarDependencies();
-
-         // build up the class path for the dependencies
-         if ( deps.size() >= 1 )
-         {
-            class_path = ((JarDependency) deps.get(0)).getPath();
-
-            for ( int i = 1; i < deps.size(); i++ )
-            {
-               class_path = class_path + ";" +
-                            ((JarDependency) deps.get(i)).getPath();
-            }
-         }
-
-         // build up a list of the JAR files that the bean depends on
+         String class_path  = null;
          Vector depJarFiles = new Vector();
-         for ( int i = 0; i < deps.size(); i++ )
+         List deps          = attrs.getJarDependencies();
+
+         if ( null != deps )
          {
-            depJarFiles.add(((JarDependency) deps.get(i)).getFile());
+            // build up the class path for the dependencies
+            if ( deps.size() >= 1 )
+            {
+               class_path = ((JarDependency) deps.get(0)).getPath();
+
+               for ( int i = 1; i < deps.size(); i++ )
+               {
+                  class_path = class_path + ";" +
+                               ((JarDependency) deps.get(i)).getPath();
+               }
+            }
+
+            // build up a list of the JAR files that the bean depends on
+            for ( int i = 0; i < deps.size(); i++ )
+            {
+               depJarFiles.add(((JarDependency) deps.get(i)).getFile());
+            }
          }
 
          bean_loader.loadBeanFromJar(getJarURL(), depJarFiles, class_path);
          beanObject = bean_loader.instantiate(BeanJarClassLoader.instance(),
-                                        attrs.getClassname());
+                                              attrs.getClassname());
 
          instantiated = true;
 
