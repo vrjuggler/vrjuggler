@@ -56,15 +56,20 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=
+# XXX: This is a hack to work around the fact that we are treating the Boost
+# Filesystem Library as a normal Boost library despite the fact that it is
+# not installed with the rest of Boost.
+EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/boost_fs
+
+SRCS=		LibraryFinder.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-#ifndef DO_CLEANDEPEND
-#ifndef DO_BEFOREBUILD
-#   -include $(DEPEND_FILES)
-#endif
-#endif
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+   -include $(DEPEND_FILES)
+endif
+endif
