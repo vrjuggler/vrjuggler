@@ -3,9 +3,10 @@
 
 #include <vector>
 #include <string>
-#include <stringstream>
+#include <sstream>
 
-namespace vrj::test
+namespace vrj {
+namespace test
 {
 
 /* Message with extra details.
@@ -46,7 +47,7 @@ public:
   /*! \brief Returns the short description.
    * \return Short description.
    */
-  const std::string& shortDesc() const
+  std::string shortDesc()
   { return mShortDesc; }
 
   /** Returns a string that represents a list of the detail strings.
@@ -105,7 +106,7 @@ private:
   std::vector<std::string> mDetails;      /**< The associated details */
 };
 
-}
+} }
 
 #endif
 

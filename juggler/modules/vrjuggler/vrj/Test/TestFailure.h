@@ -5,14 +5,16 @@
 #include <vrj/vrjConfig.h>
 
 #include <vrj/Test/Message.h>
+#include <vrj/Test/Test.h>
 
 #include <string>
 #include <vector>
-#include <stringstream>
+#include <sstream>
 
 #include <exception>
 
-namespace vrj::test
+namespace vrj {
+namespace test
 {
 
 /**
@@ -28,12 +30,15 @@ class TestFailure : public std::exception
 {
 public:
    TestFailure(Test* failedTest, vrj::test::Message message, 
-               const std::string& fileName, int lineNumber)
+               const std::string& fileName, int lineNumber) throw()
       : mMessage(message), 
         mFileName(fileName), mLineNumber(lineNumber)
    {
 
    }
+
+   virtual ~TestFailure() throw()
+   {;}
 
    Test* getFailedTest()
    { return mFailedTest; }
@@ -53,8 +58,8 @@ public:
    std::string getFullDescription()
    {
       std::stringstream oss;
-      oss << getFailedTestName() << ": " << getFileName 
-          << ": line:" << getLineNumber() << ": " << getMessage().shortDesc() << " -- " << getMessage().details();
+      oss << getFailedTestName() << ": " << getFileName() << ": line:" << getLineNumber() 
+          << ": " << getMessage().shortDesc() << " -- " << getMessage().details();
       return oss.str();
    }
 
@@ -66,7 +71,7 @@ protected:
    int                  mLineNumber;      /**< The line number it happened on */
 };
 
-}
+} }
 
 #endif
 
