@@ -278,6 +278,29 @@ public:
               ((mat)[3][2] == (_m)[3][2]) &&
               ((mat)[3][3] == (_m)[3][3]));
    }
+   
+   //: Compare matrix for equality within some tolerance...
+   //!RETVAL: true - this == _m
+   //!RETVAL: false - this != _m
+   inline bool isEqual( const Matrix& _m, float eps = 0.0001f )
+   {
+      return ( vrj::Math::abs((mat)[0][0] - (_m)[0][0]) <= eps &&
+              vrj::Math::abs((mat)[0][1] - (_m)[0][1]) <= eps &&
+              vrj::Math::abs((mat)[0][2] - (_m)[0][2]) <= eps &&
+              vrj::Math::abs((mat)[0][3] - (_m)[0][3]) <= eps &&
+              vrj::Math::abs((mat)[1][0] - (_m)[1][0]) <= eps &&
+              vrj::Math::abs((mat)[1][1] - (_m)[1][1]) <= eps &&
+              vrj::Math::abs((mat)[1][2] - (_m)[1][2]) <= eps &&
+              vrj::Math::abs((mat)[1][3] - (_m)[1][3]) <= eps &&
+              vrj::Math::abs((mat)[2][0] - (_m)[2][0]) <= eps &&
+              vrj::Math::abs((mat)[2][1] - (_m)[2][1]) <= eps &&
+              vrj::Math::abs((mat)[2][2] - (_m)[2][2]) <= eps &&
+              vrj::Math::abs((mat)[2][3] - (_m)[2][3]) <= eps &&
+              vrj::Math::abs((mat)[3][0] - (_m)[3][0]) <= eps &&
+              vrj::Math::abs((mat)[3][1] - (_m)[3][1]) <= eps &&
+              vrj::Math::abs((mat)[3][2] - (_m)[3][2]) <= eps &&
+              vrj::Math::abs((mat)[3][3] - (_m)[3][3]) <= eps);
+   }
 
    //: Clamps the values of the matrix to zero
    //!POST: Any values in matrix < (some epsilon) are set to 0
