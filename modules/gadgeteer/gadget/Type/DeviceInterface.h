@@ -126,8 +126,10 @@ public:
         }
     }
 public:
-   DeviceInterface() : mTypeSpecificProxy(NULL)
-   {;}
+   DeviceInterface()
+   {
+      mTypeSpecificProxy = &mDummyProxy;
+   }
 
    PROXY_TYPE* operator->()
    { return mTypeSpecificProxy; }
