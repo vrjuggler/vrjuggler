@@ -1,7 +1,7 @@
 chunk displaySystem "Display System" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   numpipes Int 1 "Number of Pipes" "The number of pipes on the system"
-  xpipes String 8 "xpipes" "The x-display strings for the pipes"
+  xpipes String -1 "xpipes" "The x-display strings for the pipes"
   end
 chunk IBox "IBox" "Configuration for the IBox"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
