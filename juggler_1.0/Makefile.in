@@ -213,7 +213,7 @@ ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
 	@${MAKE} _libs
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -241,7 +241,7 @@ endif
               echo "------------------------------------------------" ;	\
               ${MAKE} vjABI=$$abi _libs ;				\
           done
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -267,7 +267,7 @@ all buildworld:
 	@echo "==============================================================="
 	@${MAKE} beforebuild
 	@${MAKE} _libs
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "==============================================================="
 	@echo "$@ complete"
@@ -288,7 +288,7 @@ all-abi:
               echo "------------------------------------------------" ;	\
               ${MAKE} vjABI=$$abi _libs ;				\
           done
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "==============================================================="
 	@echo "$@ complete"
@@ -341,7 +341,7 @@ debug:
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_static
 	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -357,7 +357,7 @@ dbg:
 	@${MAKE} beforebuild
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_static
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -373,7 +373,7 @@ ddso:
 	@${MAKE} beforebuild
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -391,7 +391,7 @@ optim:
 	@${MAKE} _build_opt_obj
 	@${MAKE} _build_opt_lib_static
 	@${MAKE} _build_opt_lib_shared
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -407,7 +407,7 @@ opt:
 	@${MAKE} beforebuild
 	@${MAKE} _build_opt_obj
 	@${MAKE} _build_opt_lib_static
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -423,7 +423,7 @@ dso:
 	@${MAKE} beforebuild
 	@${MAKE} _build_opt_obj
 	@${MAKE} _build_opt_lib_shared
-	@${MAKE} _check_gui
+	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -569,13 +569,6 @@ ${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.o
 # Java-based configuration editor targets.
 # =============================================================================
 
-# This is a wrapper for the 'gui' target that checks for the mere existence
-# of the JAR file before compiling the GUI code.
-_check_gui:
-	@if [ ! -e ${topdir}/GUI/VjControl.jar ] ; then	\
-            ${MAKE} gui ;				\
-        fi
-
 # Build the Java-based configuration GUI.
 gui:
 ifndef NO_JAVA_GUI
@@ -583,7 +576,7 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Building GUI"
 	@echo "------------------------------------------------"
-	cd GUI && ${MAKE} all
+	@${MAKE} -C GUI all
 	@echo "------------------------------------------------"
 	@echo "GUI done"
 	@echo "------------------------------------------------"
@@ -944,7 +937,7 @@ _clean:
 	@echo "Cleaning up the build tree"
 	@echo "------------------------------------------------"
 	@${MAKE} RECTARGET="clean" recursive
-	cd GUI && ${MAKE} clean
+	${MAKE} -C GUI clean
 	@if test -d ${_DBG_BUILDDIR}; then				\
             echo "------------------------------------------------" ;	\
             echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
