@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/Property.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -43,370 +42,414 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
-namespace jccl {
+
+namespace jccl
+{
 
 Property::Property (PropertyDesc *pd): mValues()
 {
-    //cout << "Property(): desc is '" << flush << *pd << "'" << endl;
-    int j;
-    VarValue *v;
+   //cout << "Property(): desc is '" << flush << *pd << "'" << endl;
+   int j;
+   VarValue *v;
 
-    mValidation = 1;
+   mValidation = 1;
 
-    pd->assertValid();
-    mDescription = pd;
+   pd->assertValid();
+   mDescription = pd;
 
-    mNum = pd->getNumAllowed();
-    mType = pd->getType();
-    mEmbedDesc.reset(NULL);
+   mNum = pd->getNumAllowed();
+   mType = pd->getType();
+   mEmbedDesc.reset(NULL);
 
-    if (mType == T_EMBEDDEDCHUNK) {
-        EnumEntry *e = mDescription->getEnumEntryAtIndex (0);
-        if (e)
-            mEmbedDesc = ChunkFactory::instance()->getChunkDesc (e->getName());
-    }
+   if ( mType == T_EMBEDDEDCHUNK )
+   {
+      EnumEntry *e = mDescription->getEnumEntryAtIndex (0);
+      if ( e )
+      {
+         mEmbedDesc = ChunkFactory::instance()->getChunkDesc (e->getName());
+      }
+   }
 
-    /* the idea here is that if num == -1 we can add values to
-     * a property, e.g. add another active wall.
-     * otherwise we can just set the extant values.
-     */
-    if (mNum != -1) {
-        /* we're filling the vector with num copies of a
-         * default VarValue */
-        for (j = 0; j < mNum; j++ ) {
-            v = createVarValue (j);
-            mValues.push_back(v);
-        }
-    }
+   /* the idea here is that if num == -1 we can add values to
+    * a property, e.g. add another active wall.
+    * otherwise we can just set the extant values.
+    */
+   if ( mNum != -1 )
+   {
+      /* we're filling the vector with num copies of a
+       * default VarValue */
+      for ( j = 0; j < mNum; j++ )
+      {
+         v = createVarValue (j);
+         mValues.push_back(v);
+      }
+   }
 }
-
-
 
 Property::Property (const Property& p):mValues()
 {
-    mDescription = NULL;
-    mValidation = 1;
-    *this = p;
+   mDescription = NULL;
+   mValidation = 1;
+   *this = p;
 }
-
-
 
 VarValue *Property::createVarValue (int i)
 {
-    assertValid();
+   assertValid();
 
-    // if i == -1, we're just tacking onto the end
-    if (i == -1)
-        i = mValues.size();
-    if (mType == T_EMBEDDEDCHUNK) {
-        ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (mEmbedDesc);
-        if (mDescription->getValueLabelsSize() > i)
-            ch->setProperty ("Name", mDescription->getValueLabel(i));
-        else {
-            ch->setProperty ("Name", mDescription->getName());
-        }
-        return new VarValue (ch);
-    }
-    else
-        return new VarValue (mType);
+   // if i == -1, we're just tacking onto the end
+   if ( i == -1 )
+   {
+      i = mValues.size();
+   }
+
+   if ( mType == T_EMBEDDEDCHUNK )
+   {
+      ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (mEmbedDesc);
+      if ( mDescription->getValueLabelsSize() > i )
+      {
+         ch->setProperty ("Name", mDescription->getValueLabel(i));
+      }
+      else
+      {
+         ch->setProperty ("Name", mDescription->getName());
+      }
+
+      return new VarValue (ch);
+   }
+   else
+   {
+      return new VarValue (mType);
+   }
 }
-
 
 Property::~Property ()
 {
+   unsigned int i;
 
-    unsigned int i;
+   for ( i = 0; i < mValues.size(); i++ )
+   {
+      delete mValues[i];
+   }
 
-    for (i = 0; i < mValues.size(); i++)
-        delete mValues[i];
-
-    mValidation = 0;
+   mValidation = 0;
 }
-
-
 
 #ifdef JCCL_DEBUG
 void Property::assertValid () const
 {
-    vprASSERT (mValidation == 1 && "Trying to use deleted Property");
+   vprASSERT (mValidation == 1 && "Trying to use deleted Property");
 
-    for (unsigned int i = 0; i < mValues.size(); i++)
-        mValues[i]->assertValid();
+   for ( unsigned int i = 0; i < mValues.size(); i++ )
+   {
+      mValues[i]->assertValid();
+   }
 
-    if (mDescription)
-        mDescription->assertValid();
+   if ( mDescription )
+   {
+      mDescription->assertValid();
+   }
 }
 #endif
 
-
-
 Property& Property::operator= (const Property& p)
 {
-    assertValid();
-    p.assertValid();
+   assertValid();
+   p.assertValid();
 
-    unsigned int i;
+   unsigned int i;
 
-    if (&p == this)
-        return *this;
+   if ( &p == this )
+   {
+      return *this;
+   }
 
-    mDescription = p.mDescription;
-    mType = p.mType;
-    mUnits = p.mUnits;
-    mEmbedDesc = p.mEmbedDesc;
-    mNum = p.mNum;
+   mDescription = p.mDescription;
+   mType = p.mType;
+   mUnits = p.mUnits;
+   mEmbedDesc = p.mEmbedDesc;
+   mNum = p.mNum;
 
+   for ( i = 0; i < mValues.size(); i++ )
+   {
+      delete (mValues[i]);
+   }
 
-    for (i = 0; i < mValues.size(); i++)
-        delete (mValues[i]);
+   mValues.clear();
 
-    mValues.clear();
-
-    for (i = 0; i < p.mValues.size(); i++) {
-        mValues.push_back (new VarValue(*(p.mValues[i])));
-    }
-    return *this;
+   for ( i = 0; i < p.mValues.size(); i++ )
+   {
+      mValues.push_back (new VarValue(*(p.mValues[i])));
+   }
+   return *this;
 }
-
-
 
 bool Property::operator== (const Property& p) const
 {
-    assertValid();
-    p.assertValid();
+   assertValid();
+   p.assertValid();
 
-    if (mDescription != p.mDescription)
-        return false;
-    if (mValues.size() != p.mValues.size())
-        return false;
-    for (unsigned int i = 0; i < mValues.size(); i++)
-        if (*(mValues[i]) != *(p.mValues[i]))
-            return false;
-    return true;
+   if ( mDescription != p.mDescription )
+   {
+      return false;
+   }
+
+   if ( mValues.size() != p.mValues.size() )
+   {
+      return false;
+   }
+
+   for ( unsigned int i = 0; i < mValues.size(); i++ )
+   {
+      if ( *(mValues[i]) != *(p.mValues[i]) )
+      {
+         return false;
+      }
+   }
+
+   return true;
 }
-
-
 
 bool Property::applyUnits (CfgUnit u)
 {
-    assertValid();
+   assertValid();
 
-    if (mType == T_DISTANCE) {
-        for (unsigned int j = 0; j < mValues.size(); j++)
-            setValue( toFeet (getValue(j), u), j);
-        return true;
-    }
-    else {
-        //cerr << "Units may only be applied to Distance mValuess." <<endl;
-        return false;
-    }
+   if ( mType == T_DISTANCE )
+   {
+      for ( unsigned int j = 0; j < mValues.size(); j++ )
+      {
+         setValue( toFeet (getValue(j), u), j);
+      }
+
+      return true;
+   }
+   else
+   {
+      //std::cerr << "Units may only be applied to Distance mValuess." <<std::endl;
+      return false;
+   }
 }
-
-
-
 
 std::ostream& operator << (std::ostream &out, Property& p)
 {
-    p.assertValid();
+   p.assertValid();
 
-    ConfigIO::instance()->writeProperty (out, p);
-    return out;
+   ConfigIO::instance()->writeProperty (out, p);
+   return out;
 }
-
-
 
 const VarValue& Property::getValue (unsigned int ind) const
 {
-    assertValid();
+   assertValid();
 
-    if (ind >= mValues.size())
-    {
-        return VarValue::getInvalidInstance();
-    }
-    return *((mValues)[ind]);
+   if ( ind >= mValues.size() )
+   {
+      return VarValue::getInvalidInstance();
+   }
+   return *((mValues)[ind]);
 }
-
-
 
 int Property::getNum () const
 {
-    assertValid();
+   assertValid();
 
-    return mValues.size();
+   return mValues.size();
 }
-
-
 
 const std::string& Property::getName () const
 {
-    assertValid();
+   assertValid();
 
-    return mDescription->getName();
+   return mDescription->getName();
 }
-
 
 const std::string& Property::getToken () const
 {
-    assertValid();
+   assertValid();
 
-    return mDescription->getToken();
+   return mDescription->getToken();
 }
-
 
 bool Property::preSet (unsigned int ind)
 {
-    assertValid();
+   assertValid();
 
-    unsigned int i;
-    VarValue *v;
+   unsigned int i;
+   VarValue *v;
 
-    if (ind >= mValues.size()) {
-        if (mNum == -1) {
-            for (i = mValues.size(); i <= ind; i++) {
-                v = createVarValue();
-                mValues.push_back(v);
-            }
-            return true;
-        }
-        else
-            return false;
-    }
-    return true;
+   if ( ind >= mValues.size() )
+   {
+      if ( mNum == -1 )
+      {
+         for ( i = mValues.size(); i <= ind; i++ )
+         {
+            v = createVarValue();
+            mValues.push_back(v);
+         }
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
+
+   return true;
 }
-
-
 
 bool Property::setValue (int val, int ind )
 {
-    assertValid();
+   assertValid();
 
-    if (!preSet(ind))
-        return false;
-    *((mValues)[ind]) = val;
-    return true;
+   if ( !preSet(ind) )
+   {
+      return false;
+   }
+
+   *((mValues)[ind]) = val;
+   return true;
 }
-
-
 
 bool Property::setValue (float val, int ind )
 {
-    assertValid();
+   assertValid();
 
-    if (!preSet(ind))
-        return false;
-    *((mValues)[ind]) = val;
-    return true;
+   if ( !preSet(ind) )
+   {
+      return false;
+   }
+
+   *((mValues)[ind]) = val;
+   return true;
 }
-
-
 
 bool Property::setValue (const std::string& val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    if (!preSet(ind))
-        return false;
-    *((mValues)[ind]) = val;
-    return true;
+   if ( !preSet(ind) )
+   {
+      return false;
+   }
+
+   *((mValues)[ind]) = val;
+   return true;
 }
-
-
 
 bool Property::setValue (ConfigChunkPtr val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    if (!preSet(ind)) {
-        vprDEBUG(vprDBG_ERROR, 1) << "Property::Preset failed!\n" << vprDEBUG_FLUSH;
-        return false;
-    }
-    *(mValues[ind]) = val;
-    return true;
+   if ( !preSet(ind) )
+   {
+      vprDEBUG(vprDBG_ERROR, 1) << "Property::Preset failed!\n" << vprDEBUG_FLUSH;
+      return false;
+   }
+   *(mValues[ind]) = val;
+   return true;
 }
-
-
 
 bool Property::setValue (const VarValue& val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    if (!preSet (ind))
-        return false;
-    *(mValues[ind]) = val;
-    return true;
+   if ( !preSet (ind) )
+   {
+      return false;
+   }
+
+   *(mValues[ind]) = val;
+   return true;
 }
-
-
 
 bool Property::tryAssign (int index, const char* val)
 {
-    assertValid();
+   assertValid();
 
-    /* This does some type-checking and translating before just
-     * doing an assign into the right mValues entry of p. Some of
-     * this functionality ought to just be subsumed by VarValue
-     * itself, but this way we get back some feedback about
-     * wether a type mismatch occurred (ie we return false if
-     * a type mismatch occurs ).
-     *
-     * Incidentally, this is also where string Values get
-     * mangled into enumeration entries when assigning strings
-     * to T_INTs.
-     */
-    char* endval;
-    int i;
-    float f;
-    bool b;
+   /* This does some type-checking and translating before just
+    * doing an assign into the right mValues entry of p. Some of
+    * this functionality ought to just be subsumed by VarValue
+    * itself, but this way we get back some feedback about
+    * wether a type mismatch occurred (ie we return false if
+    * a type mismatch occurs ).
+    *
+    * Incidentally, this is also where string Values get
+    * mangled into enumeration entries when assigning strings
+    * to T_INTs.
+    */
+   char* endval;
+   int i;
+   float f;
+   bool b;
 
-    if (mType != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
-        EnumEntry* e = mDescription->getEnumEntry (val);
-        if (e) {
-            setValue (e->getValue());
-            return true;
-        }
-    }
+   if ( mType != T_CHUNK )
+   {          // T_CHUNKS have enumeration, but they are really strings (or something)
+      EnumEntry* e = mDescription->getEnumEntry (val);
+      if ( e )
+      {
+         setValue (e->getValue());
+         return true;
+      }
+   }
 
-    switch (mType) {
-    case T_INT:
-        i = strtol (val, &endval, 0);
-        if (*endval != '\0')
-            vprDEBUG (jcclDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
-                  << val << "'\n" << vprDEBUG_FLUSH;
-        setValue (i, index);
-        return true;
-    case T_FLOAT:
-        f = (float)strtod (val, &endval);
-        if (*endval != '\0')
-            vprDEBUG (jcclDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
-                                      << val << "'\n" << vprDEBUG_FLUSH;
-        setValue (f, index);
-        return true;
-    case T_BOOL:
-        b = false;
-        if (!strcasecmp (val, true_TOKEN))
+   switch ( mType )
+   {
+      case T_INT:
+         i = strtol (val, &endval, 0);
+         if ( *endval != '\0' )
+         {
+            vprDEBUG (jcclDBG_CONFIG, 0)
+               << clrOutNORM(clrYELLOW, "WARNING:")
+               << " Parser expected int, got '" << val << "'\n"
+               << vprDEBUG_FLUSH;
+         }
+         setValue (i, index);
+         return true;
+      case T_FLOAT:
+         f = (float)strtod (val, &endval);
+         if ( *endval != '\0' )
+         {
+            vprDEBUG (jcclDBG_CONFIG, 0)
+               << clrOutNORM(clrYELLOW, "WARNING:")
+               << " Parser expected float, got '" << val << "'\n"
+               << vprDEBUG_FLUSH;
+         }
+         setValue (f, index);
+         return true;
+      case T_BOOL:
+         b = false;
+         if ( !strcasecmp (val, true_TOKEN) )
+         {
             b = true;
-        else if (!strcasecmp (val, false_TOKEN))
+         }
+         else if ( !strcasecmp (val, false_TOKEN) )
+         {
             b = false;
-        else { // we'll try to accept a numeric mValues
+         }
+         else
+         { // we'll try to accept a numeric mValues
             b = strtol (val, &endval, 0) != 0;
-            if (endval != '\0') {
-                b = false;
-                vprDEBUG (jcclDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
-                                         << val << "'\n" << vprDEBUG_FLUSH;
+            if ( endval != '\0' )
+            {
+               b = false;
+               vprDEBUG (jcclDBG_CONFIG,0)
+                  << clrOutNORM(clrYELLOW, "WARNING:")
+                  << " Parser expected bool, got '" << val << "'\n"
+                  << vprDEBUG_FLUSH;
             }
-        }
-        setValue (b, index);
-        return true;
-    case T_STRING:
-    case T_CHUNK:
-        setValue (val, index);
-        return true;
-    case T_EMBEDDEDCHUNK:
-        std::cout << "NOT HANDLED HERE!" << std::endl;
-        return false;
-    default:
-        return false;
-    }
+         }
+         setValue (b, index);
+         return true;
+      case T_STRING:
+      case T_CHUNK:
+         setValue (val, index);
+         return true;
+      case T_EMBEDDEDCHUNK:
+         std::cout << "NOT HANDLED HERE!" << std::endl;
+         return false;
+      default:
+         return false;
+   }
 }
 
-};
+} // End of jccl namespace

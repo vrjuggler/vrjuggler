@@ -40,215 +40,236 @@
 #include <jccl/Config/XMLConfigIOHandler.h>
 
 
-namespace jccl {
-   
-ChunkDesc::ChunkDesc () :plist() {
-    validation = 1;
-    name = "unnamed";
-    token = "unnamed";
-    help = "";
-    default_node = 0;
-    PropertyDesc *d = new PropertyDesc("name",1,T_STRING," ");
-    add (d);
+namespace jccl
+{
+
+ChunkDesc::ChunkDesc () :plist()
+{
+   validation = 1;
+   name = "unnamed";
+   token = "unnamed";
+   help = "";
+   default_node = 0;
+   PropertyDesc *d = new PropertyDesc("name",1,T_STRING," ");
+   add (d);
 }
 
-
-
-ChunkDesc::ChunkDesc (const ChunkDesc& desc): plist() {
-    validation = 1;
-    *this = desc;
+ChunkDesc::ChunkDesc (const ChunkDesc& desc): plist()
+{
+   validation = 1;
+   *this = desc;
 }
 
+ChunkDesc::~ChunkDesc()
+{
+   for ( unsigned int i = 0; i < plist.size(); i++ )
+   {
+      delete plist[i];
+   }
 
-
-ChunkDesc::~ChunkDesc() {
-    for (unsigned int i = 0; i < plist.size(); i++)
-        delete plist[i];
-    validation = 0;
+   validation = 0;
 }
-
 
 #ifdef JCCL_DEBUG
-void ChunkDesc::assertValid () const {
-    vprASSERT (validation == 1 && "Trying to use deleted ChunkDesc");
-    for (unsigned int i = 0; i < plist.size(); i++)
-        plist[i]->assertValid();
+void ChunkDesc::assertValid () const
+{
+   vprASSERT (validation == 1 && "Trying to use deleted ChunkDesc");
+   for ( unsigned int i = 0; i < plist.size(); i++ )
+   {
+      plist[i]->assertValid();
+   }
 }
 #endif
 
+ChunkDesc& ChunkDesc::operator= (const ChunkDesc& other)
+{
+   assertValid();
+   other.assertValid();
 
+   unsigned int i;
 
-ChunkDesc& ChunkDesc::operator= (const ChunkDesc& other) {
-    assertValid();
-    other.assertValid();
+   if ( &other == this )
+   {
+      return *this;
+   }
 
-    unsigned int i;
+   for ( i = 0; i < plist.size(); i++ )
+   {
+      delete plist[i];
+   }
+   plist.clear();
 
-    if (&other == this)
-        return *this;
+   name = other.name;
+   token = other.token;
+   help = other.help;
+   default_node = other.default_node;
+   default_chunk = other.default_chunk;
 
-    for (i = 0; i < plist.size(); i++)
-    {
-       delete plist[i];
-    }
-    plist.clear();
+   plist.reserve (other.plist.size());
+   for ( i = 0; i < other.plist.size(); i++ )
+   {
+      plist.push_back(new PropertyDesc(*(other.plist[i])));
+   }
 
-    name = other.name;
-    token = other.token;
-    help = other.help;
-    default_node = other.default_node;
-    default_chunk = other.default_chunk;
-
-    plist.reserve (other.plist.size());
-    for (i = 0; i < other.plist.size(); i++) {
-        plist.push_back ( new PropertyDesc(*(other.plist[i])));
-    }
-
-    return *this;
+   return *this;
 }
 
+void ChunkDesc::setName (const std::string& _name)
+{
+   assertValid();
 
-
-void ChunkDesc::setName (const std::string& _name) {
-    assertValid();
-
-    name = _name;
+   name = _name;
 }
 
+void ChunkDesc::setToken (const std::string& _token)
+{
+   assertValid();
 
-
-void ChunkDesc::setToken (const std::string& _token) {
-    assertValid();
-
-    token = _token;
+   token = _token;
 }
 
+void ChunkDesc::setHelp (const std::string& _help)
+{
+   assertValid();
 
-
-void ChunkDesc::setHelp (const std::string& _help) {
-    assertValid();
-
-    help = _help;
+   help = _help;
 }
 
+const std::string& ChunkDesc::getName () const
+{
+   assertValid();
 
-
-const std::string& ChunkDesc::getName () const {
-    assertValid();
-
-    return name;
+   return name;
 }
 
+const std::string& ChunkDesc::getToken () const
+{
+   assertValid();
 
-const std::string& ChunkDesc::getToken () const {
-    assertValid();
-
-    return token;
+   return token;
 }
 
+const std::string& ChunkDesc::getHelp () const
+{
+   assertValid();
 
-const std::string& ChunkDesc::getHelp () const {
-    assertValid();
-
-    return help;
+   return help;
 }
 
+void ChunkDesc::add (PropertyDesc *pd)
+{
+   assertValid();
 
-void ChunkDesc::add (PropertyDesc *pd) {
-    assertValid();
-
-    remove(pd->getToken());
-    plist.push_back(pd);
+   remove(pd->getToken());
+   plist.push_back(pd);
 }
 
-
-void ChunkDesc::setDefaultChunk (DOM_Node* n) {
-    default_node = new DOM_Node;
-    *default_node = *n;
-    default_chunk.reset(0);
+void ChunkDesc::setDefaultChunk (DOM_Node* n)
+{
+   default_node = new DOM_Node;
+   *default_node = *n;
+   default_chunk.reset(0);
 }
 
+void ChunkDesc::setDefaultChunk (ConfigChunkPtr ch)
+{
+   default_chunk = ch;
+}
 
-    void ChunkDesc::setDefaultChunk (ConfigChunkPtr ch) {
-        default_chunk = ch;
-    }
-
-
-ConfigChunkPtr ChunkDesc::getDefaultChunk() const {
-    // thread safety???
-    if ((default_chunk.get() == 0) && (default_node != 0)) {
-        XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler();
-        ConfigChunkPtr ch = handler->buildConfigChunk (*default_node, false);
-        if (ch.get()) {
-            // this is a cheat.  and ugly cuz we have to get the real pointer,
-            // not the shared_ptr, and then const_cast it :(
-            (const_cast<ChunkDesc*>(&(*this)))->default_chunk = ch;
-        }
-        ConfigIO::instance()->releaseHandler (handler);
-    }
+ConfigChunkPtr ChunkDesc::getDefaultChunk() const
+{
+   // thread safety???
+   if ( (default_chunk.get() == 0) && (default_node != 0) )
+   {
+      XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler();
+      ConfigChunkPtr ch = handler->buildConfigChunk (*default_node, false);
+      if ( ch.get() )
+      {
+         // this is a cheat.  and ugly cuz we have to get the real pointer,
+         // not the shared_ptr, and then const_cast it :(
+         (const_cast<ChunkDesc*>(&(*this)))->default_chunk = ch;
+      }
+      ConfigIO::instance()->releaseHandler (handler);
+   }
 //      if (default_chunk)
 //          std::cout << "returning a default chunk: " << *default_chunk << std::endl;
 //      else
 //          std::cout << "getDefaultChunk return null" << std::endl;
-    return default_chunk;
+   return default_chunk;
 }
 
+PropertyDesc* ChunkDesc::getPropertyDesc (const std::string& _token) const
+{
+   assertValid();
 
-PropertyDesc* ChunkDesc::getPropertyDesc (const std::string& _token) const {
-    assertValid();
+   for ( unsigned int i = 0; i < plist.size(); i++ )
+   {
+      if ( !vjstrcasecmp (_token, plist[i]->getToken()) )
+      {
+         return plist[i];
+      }
+   }
 
-    for (unsigned int i = 0; i < plist.size(); i++)
-        if (!vjstrcasecmp (_token, plist[i]->getToken()))
-            return plist[i];
-    return NULL;
+   return NULL;
 }
-
-
 
 bool ChunkDesc::remove (const std::string& _token)
 {
-    assertValid();
+   assertValid();
 
-    std::vector<PropertyDesc*>::iterator cur_desc = plist.begin();
-    while (cur_desc != plist.end()) {
-        if (!vjstrcasecmp ((*cur_desc)->getToken(), _token)) {
-            cur_desc = plist.erase(cur_desc);
-            return true;
-        }
-        cur_desc++;
-    }
-    return false;
+   std::vector<PropertyDesc*>::iterator cur_desc = plist.begin();
+   while ( cur_desc != plist.end() )
+   {
+      if ( !vjstrcasecmp ((*cur_desc)->getToken(), _token) )
+      {
+         cur_desc = plist.erase(cur_desc);
+         return true;
+      }
+      cur_desc++;
+   }
+   return false;
 }
-
-
 
 JCCL_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
-                                         const ChunkDesc& self)
+                                           const ChunkDesc& self)
 {
-    self.assertValid();
-    ConfigIO::instance()->writeChunkDesc (out, self);
-    return out;
+   self.assertValid();
+   ConfigIO::instance()->writeChunkDesc(out, self);
+   return out;
 }
-
-
 
 //:equality operator
 // a little stricter than it needs to be.. it shouldn't care about the order of
 // propertydescs...
-bool ChunkDesc::operator== (const ChunkDesc& d) const {
-    assertValid();
-    d.assertValid();
+bool ChunkDesc::operator== (const ChunkDesc& d) const
+{
+   assertValid();
+   d.assertValid();
 
-    if (vjstrcasecmp (token, d.token))
-        return false;
-    if (vjstrcasecmp (name, d.name))
-        return false;
-    if (plist.size() != d.plist.size())
-        return false;
-    for (unsigned int i = 0; i < plist.size(); i++)
-        if ((*plist[i]) != (*d.plist[i]))
-            return false;
-    return true;
+   if ( vjstrcasecmp(token, d.token) )
+   {
+      return false;
+   }
+
+   if ( vjstrcasecmp(name, d.name) )
+   {
+      return false;
+   }
+
+   if ( plist.size() != d.plist.size() )
+   {
+      return false;
+   }
+
+   for ( unsigned int i = 0; i < plist.size(); i++ )
+   {
+      if ( (*plist[i]) != (*d.plist[i]) )
+      {
+         return false;
+      }
+   }
+
+   return true;
 }
 
-};
+} // End of jccl namespace

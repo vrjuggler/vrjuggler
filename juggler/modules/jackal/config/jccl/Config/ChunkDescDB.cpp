@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
 #include <jccl/jcclConfig.h>
 #include <sys/types.h>
 
@@ -43,130 +41,139 @@
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ConfigIO.h>
 
-namespace jccl {
-   
-ChunkDescDB::ChunkDescDB (): descs() {
-    ;
+namespace jccl
+{
+
+ChunkDescDB::ChunkDescDB (): descs()
+{
+   ;
+}
+
+ChunkDescDB::~ChunkDescDB()
+{
+   ;
+}
+
+ChunkDescPtr ChunkDescDB::getChunkDesc (const std::string& _token)
+{
+   for ( unsigned int i = 0; i < descs.size(); i++ )
+   {
+      if ( !vjstrcasecmp(descs[i]->token, _token) )
+      {
+         return descs[i];
+      }
+   }
+
+   return ChunkDescPtr(NULL);
 }
 
 
 
-ChunkDescDB::~ChunkDescDB() {
-    ;
+bool ChunkDescDB::insert (ChunkDescPtr d)
+{
+   for ( unsigned int i = 0; i < descs.size(); i++ )
+   {
+      if ( !vjstrcasecmp (descs[i]->token, d->token) )
+      {
+         if ( *descs[i] != *d )
+         {
+            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+               <<  clrOutNORM(clrRED, "ERROR:")
+               << " redefinition of ChunkDesc ("
+               << d->name.c_str() << ") not allowed:\n  Original Desc: \n"
+               << *descs[i] << "\n  New Desc: \n" << *d
+               << "\n (multiple definitions must be identical)\n"
+               << vprDEBUG_FLUSH;
+            vprASSERT(false);
+            return false;
+         }
+         return true;
+      }
+   }
+
+   descs.push_back(d);
+   return true;
 }
 
-
-ChunkDescPtr ChunkDescDB::getChunkDesc (const std::string& _token) {
-    for (unsigned int i = 0; i < descs.size(); i++)
-        if (!vjstrcasecmp (descs[i]->token, _token))
-            return descs[i];
-    return ChunkDescPtr(NULL);
+void ChunkDescDB::insert (ChunkDescDB* db)
+{
+   iterator begin = db->descs.begin();
+   while ( begin != db->descs.end() )
+   {
+      insert (*begin);//(new ChunkDesc(**begin));
+      begin++;
+   }
 }
 
+bool ChunkDescDB::remove (const std::string& tok)
+{
 
-
-bool ChunkDescDB::insert (ChunkDescPtr d) {
-    for (unsigned int i = 0; i < descs.size(); i++)
-        if (!vjstrcasecmp (descs[i]->token, d->token)) {
-            if (*descs[i] != *d) {
-                vprDEBUG (vprDBG_ALL,vprDBG_CRITICAL_LVL) 
-                    <<  clrOutNORM(clrRED, "ERROR:") 
-                    << " redefinition of ChunkDesc ("
-                    << d->name.c_str() << ") not allowed:\n  Original Desc: \n"
-                    << *descs[i] << "\n  New Desc: \n" << *d
-                    << "\n (multiple definitions must be identical)\n"
-                    << vprDEBUG_FLUSH;
-                vprASSERT (false);
-                return false;
-            }
-            return true;
-        }
-    descs.push_back(d);
-    return true;
+   iterator cur_desc = descs.begin();
+   while ( cur_desc != descs.end() )
+   {
+      if ( !vjstrcasecmp ((*cur_desc)->token, tok) )
+      {
+         /// delete(*begin);     XXX:
+         cur_desc = descs.erase(cur_desc);
+         return true;
+      }
+      else
+         cur_desc++;
+   }
+   return false;
 }
 
-
-
-void ChunkDescDB::insert (ChunkDescDB* db) {
-    iterator begin = db->descs.begin();
-    while (begin != db->descs.end()) {
-        insert (*begin);//(new ChunkDesc(**begin));
-        begin++;
-    }
+void ChunkDescDB::removeAll ()
+{
+   descs.clear();
 }
 
-
-
-bool ChunkDescDB::remove (const std::string& tok) {
-
-    iterator cur_desc = descs.begin();
-    while (cur_desc != descs.end()) {
-        if (!vjstrcasecmp ((*cur_desc)->token, tok)) {
-            /// delete(*begin);     XXX:
-            cur_desc = descs.erase(cur_desc);
-            return true;
-        }
-        else
-            cur_desc++;
-    }
-    return false;
+int ChunkDescDB::size () const
+{
+   return descs.size();
 }
 
-
-
-void ChunkDescDB::removeAll () {
-    descs.clear();
+std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
+{
+   ConfigIO::instance()->writeChunkDescDB (out, self);
+   return out;
 }
 
-
-
-int ChunkDescDB::size () const {
-    return descs.size();
+std::istream& operator >> (std::istream& in, ChunkDescDB& self)
+{
+   ConfigIO::instance()->readChunkDescDB (in, self);
+   return in;
 }
 
+bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile)
+{
+   std::string fname = demangleFileName (filename, parentfile);
+   bool retval = ConfigIO::instance()->readChunkDescDB (fname, *this);
 
-
-std::ostream& operator << (std::ostream& out, const ChunkDescDB& self) {
-    ConfigIO::instance()->writeChunkDescDB (out, self);
-    return out;
+   return retval;
 }
 
+bool ChunkDescDB::save (const char *file_name)
+{
 
+   vprDEBUG(jcclDBG_CONFIG,3)
+      << "ChunkDescDB::save(): saving file " << file_name
+      << " -- " << vprDEBUG_FLUSH;
+   bool retval = ConfigIO::instance()->writeChunkDescDB (file_name, *this);
 
-std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
-    ConfigIO::instance()->readChunkDescDB (in, self);
-    return in;
+   if ( retval )
+   {
+      vprDEBUG(jcclDBG_CONFIG,3) << " finished.\n" << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ERROR,1)
+         << clrOutNORM(clrRED, "ERROR:") << " ChunkDescDB::save() - "
+         << "Unable to open file '"
+         << file_name << "'\n" << vprDEBUG_FLUSH;
+   }
+
+   return retval;
 }
 
-
-
-bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
-    std::string fname = demangleFileName (filename, parentfile);
-    bool retval = ConfigIO::instance()->readChunkDescDB (fname, *this);
-
-    return retval;
-}
-
-
-
-bool ChunkDescDB::save (const char *file_name) {
-
-    vprDEBUG(jcclDBG_CONFIG,3) 
-        << "ChunkDescDB::save(): saving file " << file_name 
-        << " -- " << vprDEBUG_FLUSH;    
-    bool retval = ConfigIO::instance()->writeChunkDescDB (file_name, *this);
-    if (retval) {
-        vprDEBUG(jcclDBG_CONFIG,3)
-            << " finished.\n" << vprDEBUG_FLUSH;
-    }
-    else {
-        vprDEBUG(vprDBG_ERROR,1)
-            << clrOutNORM(clrRED, "ERROR:") << " ChunkDescDB::save() - "
-            << "Unable to open file '"
-            << file_name << "'\n" << vprDEBUG_FLUSH;
-    }
-    return retval;
-}
-
-
-}; // namespace jccl
+} // namespace jccl
