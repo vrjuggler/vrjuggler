@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-04-16 allenb   Added vpr::Error which can be used to output
+           patrickh subsystem-specific (i.e., OS-specific) error messages.
+                    NEW VERSION: 0.13.2
 2002-04-09 patrickh Extended vpr::Interval to include methods for converting
                     the interval value to double-precision floating-point
                     values.
