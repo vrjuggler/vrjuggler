@@ -83,7 +83,7 @@ public:
      *
      * @param sock The source socket object to be copied.
      */
-    SocketDatagram_t (const vpr::SocketDatagram_t& sock)
+    SocketDatagram_t (const SocketDatagram_t& sock)
         : m_socket_dgram_imp(sock.m_socket_dgram_imp)
     {
         m_socket_imp = &m_socket_dgram_imp;
