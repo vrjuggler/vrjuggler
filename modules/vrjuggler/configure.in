@@ -184,7 +184,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 VPR_PATH([0.27.5], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH_CXX([0.17], ,
+JCCL_PATH_CXX([0.17.1], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.16], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
@@ -196,8 +196,8 @@ if test "x$GADGET_USE_X11" = "xyes" ; then
 fi
 
 if test "x$BUILD_JAVA" = "xY" ; then
-   TWEEK_PATH_JAVA([0.17.0],
-                   [JCCL_PATH_JAVA([0.16], ,
+   TWEEK_PATH_JAVA([0.17.1],
+                   [JCCL_PATH_JAVA([0.17.1], ,
                        [AC_MSG_WARN([*** JCCL Java API required for VRJConfig ***])
                        BUILD_JAVA='N'])],
                    [AC_MSG_WARN(*** Tweek Java API required for VRJConfig ***)
