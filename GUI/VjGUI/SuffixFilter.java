@@ -4,7 +4,7 @@ package VjGUI;
 import javax.swing.filechooser.*;
 import java.io.*;
 
-public class SuffixFilter extends FileFilter {
+public class SuffixFilter extends javax.swing.filechooser.FileFilter {
 
     String suffix;
     String name;
