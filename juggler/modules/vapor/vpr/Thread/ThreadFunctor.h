@@ -181,7 +181,7 @@ public:
    virtual ~ThreadRunFunctor()
    {
       mObject   = (OBJ_TYPE*) 0xDEADBEEF;
-      mFunction = (FunPtr) 0xDEADBEEF;
+//      mFunction = (FunPtr) 0xDEADBEEF;
    }
 
    void operator() (void* arg)
@@ -206,7 +206,7 @@ public:
          vprASSERT((OBJ_TYPE*)0xDEADBEEF != mObject);
          return false;
       }
-      else if ( (NULL == mFunction) || ((FunPtr) 0xDEADBEEF == mFunction) )
+      else if ( (NULL == mFunction) /* || ((FunPtr) 0xDEADBEEF == mFunction) */ )
       {
          return false;
       }
