@@ -43,6 +43,7 @@
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/KeyboardInterface.h>
 #include <vector>
+#include <vrj/Draw/OGL/GlContextData.h>
 
 #include <vpr/Util/StatCollector.h>
 
@@ -76,6 +77,11 @@ public:
    * @return value indicates wether vnc desktop is in mouse/user focus
    */
    Focus update(const gmtl::Matrix44f& navMatrix);
+
+   /**
+   * Perform context setup and texture uploads
+   */
+   void contextPreDraw();
 
    /**
     * Renders the desktop.
@@ -151,17 +157,31 @@ private:
       RollingDown
    };
 
+   struct TexCtxtInfo
+   {
+      TexCtxtInfo()
+         : id(0)
+      {;}
+
+      GLuint   id;   /**< The texture object id */
+   };
+
    /** @name Desktop parameters
    * The desktop window (ie. the texture of the desktop) is assumed to be
    * centered on 0,0,0 in the local coordinate frame with
    */
    //@{
-   float mDesktopWidth, mDesktopHeight;      /**< Width and height of the virtual desktop. VRJ units */
+   float mDesktopWidth, mDesktopHeight;     /**< Width and height of the virtual desktop. VRJ units */
    float mMaxSize, mMinSize, mIncSize;
    int   mTexWidth, mTexHeight;             /**< Width and height of the texture in pixels */
-   int   mVncWidth, mVncHeight;              /**< The width and height of the vnc/X desktop */
-   float mMaxTexCoordX, mMaxTexCoordY;       /**< Texture coordinates for the sub-texture that is the desktop */
-   GLuint mTexObjId;                         /**< Id of the texture object for the desktop */
+   int   mVncWidth, mVncHeight;             /**< The width and height of the vnc/X desktop */
+   float mMaxTexCoordX, mMaxTexCoordY;      /**< Texture coordinates for the sub-texture that is the desktop */
+
+   Rectangle      mUpdateRect;     /**< Rectangle to update this frame */
+   bool           mHasRectUpdate;  /**< If true, there is a pending update */
+
+   /** Id of the texture object for the desktop */
+   vrj::GlContextData<TexCtxtInfo>   mTexInfo;
 
    /** Scale value for converting from virt desktop size to VNC coords
    *    ex. vnc.x = desktoppoly.x * mDesktopToVncWidthScale;
