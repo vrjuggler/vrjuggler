@@ -166,13 +166,13 @@ namespace gadget
       {
          return mDigitalSamples.stableBuffer();
       }
-      virtual std::string getBaseType()
+      virtual std::string getInputTypeName()
       {
          return std::string("Digital");
       }
 
       virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-      
+
       virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    protected:

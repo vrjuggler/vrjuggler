@@ -121,7 +121,7 @@ public:
     */
    virtual bool startSampling() = 0;
 
-   /** 
+   /**
     * StopSampling.
     *
     * Reverse the effects of StartSampling().
@@ -159,10 +159,10 @@ public:
    }
 
    /**
-    * Get the BaseType used later by the BaseTypeFactory to build a "virtual"
-    * representation of this to be used for remote input.
+    * Get the string name of the current device type.  This is used later by the BaseTypeFactory to build
+    * a "virtual" representation of this to be used for remote input.
     */
-   virtual std::string getBaseType()
+   virtual std::string getInputTypeName()
    {
       return std::string("Input");
    }

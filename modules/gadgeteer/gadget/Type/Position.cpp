@@ -108,7 +108,7 @@ vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
 
-   writer->beginTag(Position::getBaseType());
+   writer->beginTag(Position::getInputTypeName());
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_POS);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
@@ -160,7 +160,7 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader)
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
-   reader->beginTag(Position::getBaseType());
+   reader->beginTag(Position::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

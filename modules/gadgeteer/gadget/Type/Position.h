@@ -129,7 +129,7 @@ public:
       mPosSamples.swapBuffers();
    }
 
-    virtual std::string getBaseType()
+    virtual std::string getInputTypeName()
     {
         return std::string("Position");
     }

@@ -56,7 +56,7 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
 
    ////////////////////////////////////////////////////
    SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-   writer->beginTag(Analog::getBaseType());
+   writer->beginTag(Analog::getInputTypeName());
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_ANALOG);                                   // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
@@ -108,7 +108,7 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
-   reader->beginTag(Analog::getBaseType());
+   reader->beginTag(Analog::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
@@ -224,7 +224,7 @@ Analog::getAnalogDataBuffer()
    return mAnalogSamples.stableBuffer();
 }
 
-std::string Analog::getBaseType()
+std::string Analog::getInputTypeName()
 {
    return std::string("Analog");
 }

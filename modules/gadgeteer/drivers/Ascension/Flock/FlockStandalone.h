@@ -94,8 +94,7 @@ namespace Transmitter
 }
 
 namespace Flock
-{
-   /** Get string description of the given error */
+{    /** Get string description of the given error */
    std::string getErrorDescription(vpr::Uint8 errCode, vpr::Uint8 expandedErr );
 
    // ------ Flock exceptions ------ //

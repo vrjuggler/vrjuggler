@@ -41,7 +41,7 @@ namespace gadget
 
 vpr::ReturnStatus SpeechRecogString::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->beginTag(SpeechRecogString::getBaseType());
+   writer->beginTag(SpeechRecogString::getInputTypeName());
    //std::cout << "[Remote Input Manager] In SpeechRecogString write" << std::endl;
    SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
@@ -86,7 +86,7 @@ vpr::ReturnStatus SpeechRecogString::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not String Data
-   reader->beginTag(SpeechRecogString::getBaseType());
+   reader->beginTag(SpeechRecogString::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

@@ -139,9 +139,9 @@ namespace gadget
       {
          return mStringSamples.stableBuffer();
       }
-      virtual std::string getBaseType()
+      virtual std::string getInputTypeName()
       {
-         return std::string("String");
+         return std::string("SpeechRecogString");
       }
 
       virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);

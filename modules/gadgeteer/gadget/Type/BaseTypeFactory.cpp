@@ -122,11 +122,11 @@ void BaseTypeFactory::hackLoadKnownDevices()
    // Input SpeechRecogDigital
    BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >* input_speech_digital
          = new BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >;
-   
+
    // Input Glove
    BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >* input_glove
          = new BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >;
-   
+
    // Input Glove Digital
    BaseTypeConstructor< InputMixer< InputMixer<Input, Glove> , Digital>::MixedPlaceholderType >* input_glove_digital
          = new BaseTypeConstructor< InputMixer< InputMixer<Input, Glove> , Digital>::MixedPlaceholderType >;
@@ -196,7 +196,7 @@ int BaseTypeFactory::findConstructor(std::string base_type)
       // Get next constructor
       BaseTypeConstructorBase* construct = mConstructors[i];
       vprASSERT(construct != NULL);
-      if(construct->getBaseType() == base_type)
+      if(construct->getInputTypeName() == base_type)
       {
          return i;
       }
@@ -223,7 +223,7 @@ void BaseTypeFactory::debugDump()
          << cNum << ": Constructor:" << (void*)dev_constr
          << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL) << "   recog:"
-                                << dev_constr->getBaseType() << "\n"
+                                << dev_constr->getInputTypeName() << "\n"
                                 << vprDEBUG_FLUSH;
    }
 }

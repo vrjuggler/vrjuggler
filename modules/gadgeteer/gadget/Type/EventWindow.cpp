@@ -61,7 +61,7 @@ EventWindow::EventWindow()
    mCurKeys[gadget::KEY_NONE] = 1;
 }
 
-std::string EventWindow::getBaseType()
+std::string EventWindow::getInputTypeName()
 {
    return "event_window";
 }
@@ -72,7 +72,7 @@ std::string EventWindow::getBaseType()
 vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
-   
+
    writer->writeUint64(mSyncTime.getBaseVal());
 
    // Write Current Keys to a stream using the given ObjectWriter
@@ -84,7 +84,7 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 
    // Write Events to a stream using the given ObjectWriter
    writer->writeUint16(mCurEventQueue.size());
-   
+
    // Lock the Queue of current events to serialize
    vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
 
@@ -109,17 +109,17 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    vpr::Uint16 data_type = reader->readUint16();
    vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()] Not EventWindow Data");
    boost::ignore_unused_variable_warning(data_type);
-   
+
    // We must save this value to set the sync time after we updateEventQueue.
    // This is because we can not read the timestamp from an event in the
    // queue since we do not have events every frame.
    vpr::Uint64 temp_sync = reader->readUint64();
-   
+
    // Read Current Keys using the given ObjectReader
    unsigned int num_keys = reader->readUint16();
-   
+
    vprASSERT(gadget::LAST_KEY == num_keys && "[EventWindow::readObject()] Different number of keys.");
-   
+
    for ( unsigned int i = 0; i < num_keys; ++i )
    {
       mCurKeys[i] = reader->readUint32();
@@ -127,7 +127,7 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
 
    // Read all events using the given ObjectReader
    unsigned num_events = reader->readUint16();
-      
+
    // -For each event
    //   -Read the event type
    //   -Create the correct Event subclass using the EventFactory
@@ -137,11 +137,11 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    //  -Update the event queue, which swaps the working and current queues
    for (unsigned i = 0; i < num_events; ++i )
    {
-      EventType event_type = (EventType)reader->readUint16();      
+      EventType event_type = (EventType)reader->readUint16();
       EventPtr temp_event(EventFactory::instance()->createObject(event_type));
-      
+
       vprASSERT(NULL != temp_event.get() && "temp_event == NULL, Event Type does not exist.");
-      
+
       temp_event->setType(event_type);
       temp_event->readObject(reader);
 
@@ -363,7 +363,7 @@ void EventWindow::updateEventQueue()
       vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
       mCurEventQueue = mWorkingEventQueue;
    }
-   
+
    mWorkingEventQueue.clear();      // Clear old queue
 }
 
