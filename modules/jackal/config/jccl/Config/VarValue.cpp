@@ -176,7 +176,7 @@ VarValue::operator int() const {
     case T_INT:
         return intval;
     case T_BOOL:
-        return boolval;
+        return boolval?1:0;
     case T_FLOAT:
         return (int)floatval;
     case VJ_T_INVALID:
@@ -224,7 +224,7 @@ VarValue::operator bool() const {
         return boolval;
     switch (type) {
     case T_BOOL:
-        return boolval;
+        return boolval?1.0f:0.0f;
     case T_INT:
         return (bool)intval;
     case T_FLOAT:
@@ -369,9 +369,15 @@ VarValue &VarValue::operator = (float i) {
     assertValid();
 
     switch (type) {
+    case T_INT:
+        intval = (int)i;
+        break;
     case T_FLOAT:
     case T_DISTANCE:
         floatval = i;
+        break;
+    case T_BOOL:
+        boolval = (i==0.0f)?false:true;
         break;
     default:
         vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = float.\n" << vprDEBUG_FLUSH;
