@@ -196,10 +196,8 @@ DPP_PROG_INSTALL(no)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
-TWEEK_PATH_CXX([0.4.0], , 
-                [AC_MSG_ERROR([*** Tweek C++ required for JCCL ***])])
 TWEEK_PATH_JAVA([0.4.0], ,
-                [AC_MSG_WARN([*** Tweek Java required for edtior JavaBeans ***])
+                [AC_MSG_WARN([*** Tweek required for edtior JavaBeans ***])
                  BUILD_JAVA='N'
                 ])
 
@@ -302,9 +300,9 @@ if test "x$CPPDOM_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $CPPDOM_INCLUDES"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $TWEEK_CXXFLAGS_MIN"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_INCLUDES_MIN $TWEEK_INCLUDES_MIN"
+DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 jccl_cxxflags="$STD_FLAGS"
 
 # List the scripts jccl-config will call to get flags.  This should be in the
@@ -351,11 +349,11 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 # $jccl_extra_libs only lists the external (non-Juggler) libraries needed by
 # JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
     jccl_extra_libs="$LDFLAGS $LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     jccl_extra_libs="$LDFLAGS $LIBS"
 fi
