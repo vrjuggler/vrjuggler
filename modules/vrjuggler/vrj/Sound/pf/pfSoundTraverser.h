@@ -45,8 +45,8 @@
 #include <unistd.h>
 #include <string>
 #include <assert.h>
-#include <Sound/pf/pfSoundNode.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Sound/pf/pfSoundNode.h>
+#include <vrj/Util/Debug.h>
 
 //: This is a collection of Performer traversers...
 //
