@@ -1,0 +1,82 @@
+package id4efd7cyax23xmcyb0797n;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+*/
+class reference55 {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#preForkInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#appChanFunc#(#pfChannel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#configPWin#(#pfPipeWindow*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#preDrawChan#(#pfChannel*#void*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#postDrawChan#(#pfChannel*#void*#)#:oiref> 
+*/
+class reference56 {
+}/**
+@__ref <oiref:cpp#Class#vrj::OsgApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::OpenSGApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference7 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.f.state = off
+filter.d1.state = on
+filter.e.state = off
+filter.d2.state = off 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=353,560,353,510:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=30,300,250,180,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=410,560,186,254,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=450,560,450,510:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=215,300,215,270:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=310,300,180,210,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=220,560,176,238,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=350,300,350,270:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=150,30,240,240,0:oigroup>
+
+*/
+class __positions {
+}
