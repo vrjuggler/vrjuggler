@@ -189,9 +189,39 @@
          <allowed_type>surface_viewport</allowed_type>
       </property>      
       <upgrade_transform>
-       <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
             <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:display_window">
+               <xsl:element namespace="{$jconf}" name="display_window">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">4</xsl:attribute>
+                  <xsl:copy-of select="./jconf:origin[1]"/>
+                  <xsl:copy-of select="./jconf:origin[2]"/>
+                  <xsl:copy-of select="./jconf:size[1]"/>
+                  <xsl:copy-of select="./jconf:size[2]"/>
+                  <xsl:copy-of select="./jconf:pipe"/>
+                  <xsl:copy-of select="./jconf:frame_buffer_config"/>
+                  <xsl:copy-of select="./jconf:stereo"/>
+                  <xsl:copy-of select="./jconf:border"/>
+                  <xsl:copy-of select="./jconf:hide_mouse"/>
+                  <xsl:copy-of select="./jconf:active"/>
+                  <xsl:if test="count(./jconf:simulator_viewports) = 1">
+                     <xsl:copy-of select="./jconf:simulator_viewports"/>
+                  </xsl:if>
+                  <xsl:if test="count(./jconf:surface_viewports) = 1">
+                     <xsl:copy-of select="./jconf:surface_viewports"/>
+                  </xsl:if>
+               </xsl:element>
+            </xsl:template>
          </xsl:stylesheet>
-      </upgrade_transform>   </definition_version>
+      </upgrade_transform>
+   </definition_version>
 </definition>
