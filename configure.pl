@@ -118,6 +118,9 @@ $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 # putting quotes around each argument).
 if ( $Win32 ) 
 {
+   die "Absolute Cygwin paths confuse Visual C++.  Use a relative path.\n"
+      if $0 =~ /^\//;
+
    for ( my $i = 0; $i <= $#save_argv; $i++ )
    {
       $save_argv[$i] = "\"$save_argv[$i]\"";
