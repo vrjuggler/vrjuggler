@@ -1321,7 +1321,7 @@ wand_pos = *(mWand-&gt;getData());
          </section>
          <section>
             <title>Tutorial: Getting Input</title>
-            <informaltable>
+            <table>
                <tgroup cols="2">
                   <tbody>
                      <row>
@@ -1360,7 +1360,7 @@ wand_pos = *(mWand-&gt;getData());
                      </row>
                   </tbody>
                </tgroup>
-            </informaltable>
+            </table>
             <section>
                <title>Class Declaration and Data Members</title>
                <para>In the following class declaration, note the data members (<varname>mWand</varname>, <varname>mHead</varname>, etc.). This application has four device interface member variables: two for positional input (<varname>mHead</varname> and <varname>mWand</varname>) and two for digital input (<varname>mButton0</varname> and <varname>mButton1</varname>). Each of these member variables will act as a handle to a "real" device from which we will read data in <methodname>preFrame()</methodname>.</para>
@@ -1445,7 +1445,7 @@ public:
          </section>
          <section id="simpe_ogl_app_sect">
             <title>Tutorial: Drawing a Cube with OpenGL</title>
-            <informaltable>
+            <table>
                <tgroup cols="2">
                   <tbody>
                      <row>
@@ -1484,7 +1484,7 @@ public:
                      </row>
                   </tbody>
                </tgroup>
-            </informaltable>
+            </table>
             <section>
                <title>Class Declaration</title>
                <para>The following application class is called <classname>simpleApp</classname>. It is derived from <classname>vjGlApp</classname> and has custom <methodname>init()</methodname> and <methodname>draw()</methodname> methods declared. Note that the application declares several device interface members that are used by the application for getting device data.</para>
@@ -1656,7 +1656,7 @@ userApp::draw()
          </section>
          <section>
             <title>Tutorial: Drawing a Cube using OpenGL Display Lists</title>
-            <informaltable>
+            <table>
                <tgroup cols="2">
                   <tbody>
                      <row>
@@ -1698,7 +1698,7 @@ userApp::draw()
                      </row>
                   </tbody>
                </tgroup>
-            </informaltable>
+            </table>
             <section>
                <title>Class Declaration and Data Members</title>
                <para>The following code example shows the basics of declaring the class interface and data members for an application that will use context-specific data. This is an extension of the simple OpenGL application presented in <xref linkend="simpe_ogl_app_sect"/>. Note the addition of the <methodname>contextInit()</methodname> declaration and the use of the context-specific data member <varname>mCubeDlId</varname>.</para>
@@ -1786,7 +1786,7 @@ public:
          </section>
          <section>
             <title>Tutorial: Loading a Model with OpenGL Performer</title>
-            <informaltable>
+            <table>
                <tgroup cols="2">
                   <tbody>
                      <row>
@@ -1825,7 +1825,7 @@ public:
                      </row>
                   </tbody>
                </tgroup>
-            </informaltable>
+            </table>
             <section>
                <title>Class Declaration</title>
                <para>The following application class is called <classname>simplePfApp</classname>. It is derived from <classname>vjPfApp</classname> and has custom <methodname>initScene()</methodname> and <methodname>getScene()</methodname> methods declared. Note that this application uses <methodname>preForkInit()</methodname> which will be discussed later. Refer to simplePfApp.h for the implementations of <methodname>preForkInit()</methodname> and <methodname>setModel()</methodname>.</para>
