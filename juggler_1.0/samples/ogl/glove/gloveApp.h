@@ -48,7 +48,7 @@
 #include <Input/InputManager/vjDigitalInterface.h>
 
 #include <navigator.h>
-#include <collidor.h>
+#include <collider.h>
 #include <vjStdCaveNavigator.h>
 
 #include "defines.h"
