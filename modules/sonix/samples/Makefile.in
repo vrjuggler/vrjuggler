@@ -24,9 +24,9 @@ EXTRA_FLAGS	=
 INCLUDES	= @INCLUDES@ -I$(topdir) -I$(srcdir) -I$(AJ_BASE_DIR)
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
-LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
+LDFLAGS		= @LDFLAGS@
 LIBBITSUF	= @LIBBITSUF@
-LIBS		= @LIBS@
+LIBS		= -L${topdir}/aj -lAudioJuggler @LIBS@
 MAKEDEPEND	= @MAKEDEPEND@
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
@@ -37,7 +37,7 @@ USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
 
-EXTRA_LIBS	= -L${topdir}/aj -lAudioJuggler
+EXTRA_LIBS	= -lm
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
@@ -51,7 +51,8 @@ DEPDIR =
 
 MK_DIR = ${srcdir}/mk
 
-include ${MK_DIR}/mk.objs
+include $(MKPATH)/dpp.obj.mk
+# include ${MK_DIR}/mk.objs
 
 # Compile then Link
 $(PROJECT_NAME): $(OBJS)
