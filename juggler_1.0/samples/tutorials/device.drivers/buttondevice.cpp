@@ -1,0 +1,84 @@
+#include <Input/vjInput/vjDigital.h>
+#include <Input/InputManager/vjDeviceFactory.h>
+
+class MyButtonDevice : public vjDigital
+{
+public:
+   MyButtonDevice() : mSampleThread( NULL ) {}
+   virtual ~MyButtonDevice() { this->stopSampling(); }
+   virtual void  getData();
+public:
+   virtual void  startSampling();
+   virtual void  sample();
+   virtual void  stopSampling();
+   virtual char* getDeviceName();
+private:
+   static void   threadedSampleFunction( void* classPointer );
+   int           mDigitalData;
+   vjThread*     mSampleThread;
+};
+
+vjDeviceConstructor<MyButtonDevice>* this_ptr_not_used = new vjDeviceConstructor<MyButtonDevice>;
+
+//: What is the name of this device?
+//  This function returns a string that should match this device's 
+//  configchunk name.
+char* MyButtonDevice::getDeviceName()
+{ 
+   return "MyButtonDevice"; 
+}
+
+// spawn a sample thread, 
+// which calls MyButtonDevice::sample() repeatedly
+void MyButtonDevice::startSampling()
+{
+   mSampleThread = new vjThread( threadedSampleFunction, (void*)this, 0 );
+   if (!mSampleThread->valid())
+      return 0; // thread creation failed
+   else 
+      return 1; // thread creation success
+}
+   
+//: Record (or sample) the current data
+// this is called repeatedly by the sample thread created by startSampling()
+void MyButtonDevice::sample()
+{
+   // here you would add your code to 
+   // sample the hardware for a button press:
+   mDigitalData[progress] = 1;//rand_number_0_or_1();
+}
+
+// kill sample thread
+int MyButtonDevice::stopSampling()
+{
+   if (mSampleThread != NULL)
+   {
+      mSampleThread->kill();
+      delete mSampleThread;
+      mSampleThread = NULL;
+   }
+   return 1;
+}
+
+//: function for users to get the digital data.
+//  here we overload vjDigital::getDigitalData
+int MyButtonDevice::getDigitalData(int d)
+{
+   // only one button, so we ignore "d"
+   return mDigitalData[current];
+}
+
+// Our threaded sample function
+// This function is declared as a <b>static</b> member of MyButtonDevice
+// just spins... calling sample() over and over.
+void MyButtonDevice::threadedSampleFunction( void* classPointer )
+{
+   MyButtonDevice* this_ptr = static_cast<MyButtonDevice*>( classPointer );
+
+   // spin until someone kills "mSampleThread"
+   while (1)   
+   {
+     this_ptr->sample();
+     sleep(1); //specify some time here, so you don't waste CPU cycles
+   }
+}
