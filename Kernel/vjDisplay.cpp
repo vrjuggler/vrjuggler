@@ -89,7 +89,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     if(NULL == mUser)
     {
-       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: "
+       vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " User not found named: "
                               << user_name.c_str() << std::endl
                               << vjDEBUG_FLUSH;
       vjASSERT(false);

@@ -94,20 +94,20 @@ vjConnect::vjConnect(vjConfigChunk* c): commands_mutex() {
     case VJC_OUTPUT:
         outstream = new std::ofstream (filename.c_str(), std::ios::out);
         if (!outstream)
-            vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename.c_str()
+            vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
                                  << "\"\n" << vjDEBUG_FLUSH;
         break;
     case VJC_INPUT:
         instream = new std::ifstream (filename.c_str(), std::ios::in);
         if (!instream)
-            vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename.c_str()
+            vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
                                  << "\"\n" << vjDEBUG_FLUSH;
         break;
     case VJC_INTERACTIVE:
         instream = new std::fstream (filename.c_str(),
                                      std::ios::in | std::ios::out);
         if (!instream)
-            vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename.c_str()
+            vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
                                  << "\"\n" << vjDEBUG_FLUSH;
         outstream = (std::fstream*)instream;
         break;

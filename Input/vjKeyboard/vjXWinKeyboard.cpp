@@ -752,7 +752,7 @@ char* vjXWinKeyboard::checkArgs(char* look_for)
     if (i < argc) {
        return argv[i];
     } else {
-      std::cerr << "ERROR: Usage is:\n" << look_for << " value\n";
+      std::cerr << clrOutNORM(clrRED, "ERROR:") << " Usage is:\n" << look_for << " value\n";
     }
    }
    i++;

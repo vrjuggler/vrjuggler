@@ -69,7 +69,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    std::string glove_pos_proxy = chunk->getProperty("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: vjSimGloveGesture has no posProxy."
+      vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " vjSimGloveGesture has no posProxy."
                                  << std::endl << vjDEBUG_FLUSH;
       return false;
    }
@@ -79,7 +79,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
       mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
    else
       vjDEBUG(vjDBG_INPUT_MGR,0)
-         << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy."
+         << clrOutNORM(clrRED, "ERROR:") << " vjSimGloveGesture::vjCyberGlove: Can't find posProxy."
          << std::endl << std::endl << vjDEBUG_FLUSH;
 
    // Set the indexes to defaults

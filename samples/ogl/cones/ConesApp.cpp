@@ -92,7 +92,7 @@ ConesApp::init () {
         vjASSERT(users[0]->getId() == 0);
         break;
       default:
-        vjDEBUG(vjDBG_ALL, 0) << "ERROR: Bad number of users."
+        vjDEBUG(vjDBG_ALL, 0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users."
                               << vjDEBUG_FLUSH;
         exit();
       break;
