@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <sstream>
 #include <fstream>
@@ -48,7 +48,7 @@
 
 #include <gadget/Devices/Intersense/IntersenseAPI/IntersenseAPI.h>
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::IntersenseAPI>(inputMgr);
 }
