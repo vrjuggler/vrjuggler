@@ -77,20 +77,11 @@ namespace snxEndian
    {
       BIG, LITTLE
    };   
-      
-   template< class Type >
-   inline void  byteReverse( Endianness& e, Type& bytes )
-   {
-      if (e == BIG && snxEndian::isLittle())
-         byteReverse( bytes );
-      if (e == LITTLE && snxEndian::isBig())
-         byteReverse( bytes );
-   }   
-   
+
    //: check the system for endianess
-   inline bool isLittle() 
+   inline bool isLittle()
    {
-      union 
+      union
       {
          short   val;
          char    ch[sizeof(short)];
@@ -108,7 +99,16 @@ namespace snxEndian
    inline bool isBig()
    {
       return !snxEndian::isLittle();
-   }   
+   }
+
+   template< class Type >
+   inline void  byteReverse( Endianness& e, Type& bytes )
+   {
+      if (e == BIG && snxEndian::isLittle())
+         byteReverse( bytes );
+      if (e == LITTLE && snxEndian::isBig())
+         byteReverse( bytes );
+   }
 
 }; // end namespace.
 #endif
