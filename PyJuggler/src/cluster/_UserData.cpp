@@ -11,7 +11,6 @@
 #include <boost/cstdint.hpp>
 
 // Includes ====================================================================
-/* #include <vpr/Util/Assert.h> */
 #include <plugins/ApplicationDataManager/UserData.h>
 #include <pyjutil/InterpreterGuard.h>
 #include <pyjutil/Debug.h>
