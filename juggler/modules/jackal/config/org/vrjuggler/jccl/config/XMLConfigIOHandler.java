@@ -399,6 +399,10 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         else if (vt == ValType.STRING) {
             while ((s = stringTokenizer (buf)) != null) {
                 v = p.desc.getEnumValue (s);
+                if (v == null) {
+                    v = new VarValue (vt);
+                    v.set(s);
+                }
                 p.setValue (v, startval++);
             }
         }
@@ -406,6 +410,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                  vt == ValType.BOOL) {
             while ((s = stringTokenizer (buf)) != null) {
                 v = p.desc.getEnumValue (s);
+                if (v == null) {
+                    v = new VarValue (vt);
+                    try {
+                        v.set(s);
+                    }
+                    catch (Exception e) {
+                        iostatus.addWarning (e);
+                    }
+                }
                 p.setValue (v, startval++);
             }
         }
