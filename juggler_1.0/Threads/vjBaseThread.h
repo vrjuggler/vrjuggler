@@ -14,18 +14,32 @@
 #include <vjConfig.h>
 #include <hash_map>
 #include <Threads/vjThreadFunctor.h>
+#include <Threads/vjTSTable.h>            // Needed to cache a copy here
 
 class vjBaseThread
 {
 public:
    vjBaseThread()
-      : mThreadId(0)
+      : mThreadId(0), mTSTable(NULL)
    {;}
 
    virtual ~vjBaseThread()
    {
       ;
    }
+
+public:     // Thread specific data caching
+   //: Get the Thread specific data table
+   //! NOTE: Internal use ONLY
+   vjTSTable* getTSTable()
+   { return mTSTable; }
+
+   //: Set the ts table
+   //! NOTE: Internal use ONLY
+   void setTSTable(vjTSTable* table)
+   { mTSTable = table; }
+private:
+   vjTSTable*  mTSTable;      // cached copy of the thread specific data
 
 protected:
    //: After the object has been created, call this routine to complete
@@ -273,7 +287,9 @@ private:
 ostream& operator<<(ostream& out, vjBaseThread* threadPtr);
 
 
-//: Helper class that maintains a table of the threads allocated in the system.
+//: Helper class fot vjThread that maintains a list of threads and ides
+//
+// Basically maps from system specific index ==> vjThread*
 //
 // Used internally because we can have many types of indexes for the thread
 // list depending upon the type of threads being used.

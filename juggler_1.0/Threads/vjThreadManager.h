@@ -129,6 +129,7 @@ private:
 private:
    vjMutex             mTSMutex;          //: Mutex to protect access to all TS stuff
    std::vector<vjTSTable*> mTSTables;     //: The table of TSTables
+                                          // Not that the thread each have a cached copy of this as well
    vjTSTable           mBaseTSTable;      //: This is the "good" copy of the table to use as source for copies
    long                mNextTSObjectKey;  //: The next available object key
 

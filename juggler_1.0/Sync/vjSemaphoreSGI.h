@@ -5,8 +5,6 @@
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>
-#include <Kernel/vjDebug.h>
-//#include <Threads/vjThread.h>
 
 //----------------------------------------------
 //: Semaphore wrapper for the SGI systems

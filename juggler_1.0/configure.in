@@ -221,7 +221,7 @@ case $host_os in
         fi
 
         AR='${CXX}'
-        ARFLAGS='-ar -WR,-v -o'
+        ARFLAGS='-J6 -ar -WR,-v -o'
         CFLAGS="$CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
         DBG_FLAGS="-g -gslim"

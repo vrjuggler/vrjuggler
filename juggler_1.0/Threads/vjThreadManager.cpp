@@ -25,12 +25,12 @@ void vjThreadManager::debugDump()
 // Adds object to all tables using that key
 long vjThreadManager::addTSObject(vjTSBaseObject* object)
 {
-   vjGuard<vjMutex> guard(mTSMutex);      // MUTEX Protection
+vjGuard<vjMutex> guard(mTSMutex);      // MUTEX Protection
    long new_key = generateNewTSKey();
 
    mBaseTSTable.setObject(object, new_key);     // Set it in the base table
    for (int i=0;i<mTSTables.size();i++)         // For all thread tables
-      mTSTables[i]->setObject(object, new_key); // Add the object
+      mTSTables[i]->setObject(object, new_key); // Add the object (table is mutex protected)
 
    return new_key;
 }
@@ -40,10 +40,10 @@ long vjThreadManager::addTSObject(vjTSBaseObject* object)
 // Requests that each table release the object
 void vjThreadManager::removeTSObject(long key)
 {
-   vjGuard<vjMutex> guard(mTSMutex);      // MUTEX Protection
+vjGuard<vjMutex> guard(mTSMutex);      // MUTEX Protection
    mBaseTSTable.releaseObject(key);
    for (int i=0;i<mTSTables.size();i++)   // For all thread tables
-      mTSTables[i]->releaseObject(key);
+      mTSTables[i]->releaseObject(key);   // relase - (table is mutex protected)
 }
 
 //: Return a ptr to the thread table of the current process
@@ -51,15 +51,22 @@ void vjThreadManager::removeTSObject(long key)
 // Looks up the element in the local TS Table based on this id
 vjTSTable* vjThreadManager::getCurrentTSTable()
 {
-   vjGuard<vjMutex> guard(mTSMutex);		// MUTEX Protection
    vjBaseThread* cur_thread;
    int32_t thread_id;
 
    cur_thread = vjThread::self();		   // Get current thread
    thread_id = cur_thread->getTID();		// Get thread id
 
-   vjASSERT((thread_id >= 0) && (thread_id < mTSTables.size()));
-   return mTSTables[thread_id];                    // Get the table for that id
+   vjTSTable* ret_val = cur_thread->getTSTable();     // Get the cached copy
+
+   if(ret_val == NULL)     // If it's null, then it needs set
+   {
+   vjGuard<vjMutex> guard(mTSMutex);		// MUTEX Protection
+      vjASSERT((thread_id >= 0) && (thread_id < mTSTables.size()));
+      ret_val =  mTSTables[thread_id];                    // Get the table for that id
+      cur_thread->setTSTable(ret_val);
+   }
+   return ret_val;
 }
 
 //: Called when a thread has been added to the system
@@ -78,7 +85,8 @@ void vjThreadManager::tsThreadAdded(vjBaseThread* thread)
    while (mTSTables.size() <= thread->getTID())
       mTSTables.push_back(NULL);
 
-   mTSTables[thread->getTID()] = new_table;
+   mTSTables[thread->getTID()] = new_table;     // Add the new table to the local list
+   thread->setTSTable(new_table);               // Set the cached copy in the thread
 }
 
 
