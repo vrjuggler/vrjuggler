@@ -7,6 +7,8 @@
 # The Makefiles that include this file can add to the ${CLEAN_FILES} variable
 # to dictate which files should be removed when 'make clean' is done.
 # Common files that are likely to always be removed should be listed here.
+# A ${CLEAN_DIRS} variable is provided for recursively removing directories.
+# It is used in the same manner as ${CLEAN_FILES}.
 #
 # To provide a "local" 'clean' target in the file including this code,
 # define ${_LOCAL_CLEAN} before including this file and define a target
@@ -23,9 +25,11 @@
 # -----------------------------------------------------------------------------
 
 CLEAN_FILES	= Makedepend core so_locations
+CLEAN_DIRS	=
 
 clean:
 	rm -f ${CLEAN_FILES}
+	rm -rf ${CLEAN_DIRS}
 	if [ -d "ii_files" ] ; then rm -rf ii_files ; fi
 ifdef _LOCAL_CLEAN
 	${MAKE} _clean
