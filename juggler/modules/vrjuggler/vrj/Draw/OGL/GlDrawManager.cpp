@@ -63,7 +63,7 @@ namespace vrj
 vprSingletonImp(GlDrawManager);
 
 
-//: Set the app the draw should interact with.
+/** Sets the app the draw should interact with. */
 void GlDrawManager::setApp(App* _app)
 {
    mApp = dynamic_cast<GlApp*>(_app);
@@ -74,13 +74,15 @@ void GlDrawManager::setApp(App* _app)
    vprASSERT(mApp != NULL);
 }
 
-//: Return the app we are rednering
+/** Returns the app we are rednering. */
 GlApp* GlDrawManager::getApp()
 { return mApp; }
 
 
-//: Do initial configuration for the draw manager
-// Doesn't do anything right now
+/**
+ * Do initial configuration for the draw manager.
+ * Doesn't do anything right now.
+ */
 /*
 void GlDrawManager::configInitial(jccl::ConfigChunkDB*  chunkDB)
 {
@@ -88,7 +90,7 @@ void GlDrawManager::configInitial(jccl::ConfigChunkDB*  chunkDB)
 }
 */
 
-//: Start the control loop
+/** Starts the control loop. */
 void GlDrawManager::start()
 {
    // --- Setup Multi-Process stuff --- //
@@ -113,16 +115,17 @@ void GlDrawManager::draw()
 }
 
 
-//: Blocks until the end of the frame
-//! POST:
-//+      The frame has been drawn
+/**
+ * Blocks until the end of the frame.
+ * @post The frame has been drawn.
+ */
 void GlDrawManager::sync()
 {
    drawDoneSema.acquire();
 }
 
 
-//: This is the control loop for the manager
+/** This is the control loop for the manager. */
 void GlDrawManager::main(void* nullParam)
 {
    //while(!Exit)
@@ -180,21 +183,25 @@ void GlDrawManager::drawAllPipes()
       << vprDEBUG_FLUSH;
 }
 
-//: Initialize the drawing API (if not already running)
-//! POST: Control thread is started
+/**
+ * Initializes the drawing API (if not already running).
+ * @post Control thread is started.
+ */
 void GlDrawManager::initAPI()
 {
    start();
 }
 
 
-//: Callback when display is added to display manager
-//! PRE: Must be in kernel controlling thread
-//! NOTE: This function can only be called by the display manager
-//+      functioning on behalf of a thread the holds the kernel
-//+      reconfiguration lock.
-//+      This guarantees that we are not rendering currently.
-//+      We will most likely be waiting for a render trigger.
+/**
+ * Callback when display is added to display manager.
+ * @pre Must be in kernel controlling thread.
+ * @note This function can only be called by the display manager
+ *       functioning on behalf of a thread the holds the kernel
+ *       reconfiguration lock.
+ *       This guarantees that we are not rendering currently.
+ *       We will most likely be waiting for a render trigger.
+ */
 void GlDrawManager::addDisplay(Display* disp)
 {
    vprASSERT(disp != NULL);    // Can't add a null display
@@ -236,9 +243,11 @@ void GlDrawManager::addDisplay(Display* disp)
 }
 
 
-//: Callback when display is removed to display manager
-//! PRE: disp must be a valid display that we have
-//! POST: window for disp is removed from the draw manager and child pipes
+/**
+ * Callback when display is removed to display manager.
+ * @pre disp must be a valid display that we have.
+ * @post window for disp is removed from the draw manager and child pipes.
+ */
 void GlDrawManager::removeDisplay(Display* disp)
 {
    GlPipe* pipe;  pipe = NULL;
@@ -271,7 +280,7 @@ void GlDrawManager::removeDisplay(Display* disp)
 }
 
 
-/// Shutdown the drawing API
+/** Shutdown the drawing API */
 void GlDrawManager::closeAPI()
 {
    vprDEBUG(vrjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vprDEBUG_FLUSH;
@@ -283,32 +292,40 @@ void GlDrawManager::closeAPI()
 }
 
 /////// CHUNK HANDLERS ////////////////////
-//: Add the chunk to the draw manager config
-//! PRE: configCanHandle(chunk) == true
-//! POST: The chunks have reconfigured the system
+/**
+ * Adds the chunk to the draw manager config.
+ * @pre configCanHandle(chunk) == true
+ * @post The chunks have reconfigured the system
+ */
 bool GlDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }
 
-//: Remove the chunk from the current configuration
-//! PRE: configCanHandle(chunk) == true
-//!RETURNS: success
+/**
+ * Removes the chunk from the current configuration.
+ * @pre configCanHandle(chunk) == true
+ * @return success
+ */
 bool GlDrawManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }
 
-//: Can the handler handle the given chunk?
-//! RETURNS: false - We can't handle anything
+/**
+ * Can the handler handle the given chunk?
+ * @return false - We can't handle anything
+ */
 bool GlDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }
 
 
-//: Set the dirty bits off all the gl windows
-// Dirty all the window contexts
+/**
+ * Sets the dirty bits off all the gl windows.
+ * Dirty all the window contexts.
+ */
 void GlDrawManager::dirtyAllWindows()
 {
     // Create Pipes & Add all windows to the correct pipe
@@ -358,10 +375,13 @@ void GlDrawManager::drawObjects()
 }
 
 
-// Draw the projections
-//!POST: Draws the projections
-//+      If withApex, then it draws the frustums with different colors
-//+      If !withApex, then just draws the surfaces in all white
+/**
+ * Draw the projections.
+ *
+ * @post Draws the projections.
+ *       If withApex, then it draws the frustums with different colors.
+ *       If !withApex, then just draws the surfaces in all white.
+ */
 void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
 {
    const float ALPHA_VALUE(0.25f);
@@ -447,8 +467,10 @@ void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
    }  // for disps
 }
 
-//: Draw a simulator using OpenGL commands
-//! NOTE: This is called internally by the library
+/**
+ * Draws a simulator using OpenGL commands.
+ * @note This is called internally by the library.
+ */
 void GlDrawManager::drawSimulator(SimViewport* sim_vp)
 {
    const float head_radius(0.60f);      // 7.2 inches

@@ -50,7 +50,7 @@
 namespace vrj
 {
 
-// this simple motif-esqe definition was taken from GLUT
+/** this simple motif-esqe definition was taken from GLUT */
 typedef struct {
 #define MWM_HINTS_DECORATIONS   2
   long flags;
@@ -60,13 +60,10 @@ typedef struct {
 } MotifWmHints;
 
 
-//------------------------------------
-//: A GLX specific glWindow
-//------------------------------------
-// Has all information specific
-// to dealing with a GLX window
-// in OpenGL
-//------------------------------------
+/**
+ * A GLX specific glWindow.
+ * Has all information specific to dealing with a GLX window in OpenGL.
+ */
 class GlWindowXWin: public vrj::GlWindow, public gadget::KeyboardXWin
 {
 public:
@@ -84,18 +81,21 @@ public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
 
 protected:
-      /* private member functions.  these get profoundly painful */
+   /* private member functions.  these get profoundly painful */
    XVisualInfo *GetGlxVisInfo (::Display *display, int screen);
 
-   //!PRE:  window is an xwindow under display
-   //!POST: returns true if e is a mapnotify event for window, else false
-   //!NOTE: this is a utility function for InitGfx,  used to wait
-   //+       until a window has actually been mapped.
+   /**
+    * @pre  window is an xwindow under display.
+    * @post returns true if e is a mapnotify event for window, else false.
+    * @note this is a utility function for InitGfx,  used to wait
+    *       until a window has actually been mapped.
+    */
    static int EventIsMapNotify (::Display *display,  ::XEvent *e,  ::XPointer window);
 
-   //: Called with any x-events to process
-   // From X-win keyboard
-   // Called from seperate process (keyboard device update)
+   /**
+    * Called with any XEvents to process from X-win keyboard.
+    * Called from seperate process (keyboard device update).
+    */
    virtual void processEvent(::XEvent event);
 
 private:
@@ -105,8 +105,8 @@ private:
    ::Window         x_window;
    std::string    window_name;
    int            mPipe;
-   std::string    mXDisplayName;       //: Name of the x display to use
-   bool           mAreKeyboardDevice;  // Should we act as a keyboard device to
+   std::string    mXDisplayName;       /**<  Name of the x display to use */
+   bool           mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
 };
 
 

@@ -50,9 +50,11 @@
 #   include <agl.h>
 #endif
 
-// structure for creating a context from a window
-// This structure comes from Carbon SetupGL 1.5 distributed by Apple
-// Corporation.  Its use is here is permitted by the license.
+/**
+ * Structure for creating a context from a window.
+ * This structure comes from Carbon SetupGL 1.5 distributed by Apple
+ * Corporation.  Its use is here is permitted by the license.
+ */
 struct structGLWindowInfo {
    Boolean fAcceleratedMust;    // input: must renderer be accelerated?
    GLint aglAttributes[64];     // input: pixel format attributes always
@@ -81,13 +83,10 @@ struct structGLWindowInfo {
 namespace vrj
 {
 
-//------------------------------------
-//: A GL specific glWindow for OS X
-//------------------------------------
-// Has all information specific
-// to dealing with a GL window
-// in OpenGL
-//------------------------------------
+/**
+ * A GL specific glWindow for OS X.
+ * Has all information specific to dealing with a GL window in OpenGL.
+ */
 class GlWindowOSX: public GlWindow
 {
 public:
