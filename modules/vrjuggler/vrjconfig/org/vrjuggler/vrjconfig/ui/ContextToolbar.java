@@ -381,8 +381,14 @@ public class ContextToolbar
    {
       if (context.getConfigUndoManager().getUnsavedChanges())
       {
+         String file_names = new String();
+         for (Iterator itr = context.getResources().iterator() ; itr.hasNext() ; )
+         {
+            file_names = file_names + "\n" + itr.next();
+         }
+         
          int result = JOptionPane.showConfirmDialog(null,
-                           "You have unsaved changes, do you want to save them?",
+                           "You have unsaved changes, do you want to save them?\n" + file_names,
                            "Unsaved Changes",
                            JOptionPane.YES_NO_OPTION,
                            JOptionPane.INFORMATION_MESSAGE);
