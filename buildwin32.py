@@ -877,8 +877,22 @@ def installJCCL(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'tools')
    installDir(srcdir, destdir)
 
-   destdir = os.path.join(prefix, 'share', 'jccl', 'data')
+   schema_root = os.path.join(prefix, 'share', 'jccl', 'data', 'schema')
+
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'data')
+   destdir = os.path.join(schema_root, 'www.vrjuggler.org', 'jccl', 'xsd',
+                          '3.0')
+   mkinstalldirs(destdir)
+   shutil.copy2(os.path.join(srcdir, 'configuration.xsd'), destdir)
+
+   destdir = os.path.join(schema_root, 'www.vrjuggler.org', 'jccl', 'xsd',
+                          '3.1')
+   mkinstalldirs(destdir)
+   shutil.copy2(os.path.join(srcdir, 'definition.xsd'), destdir)
+
+   destdir = schema_root
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'data',
+                          'stdschemas')
    installDir(srcdir, destdir)
 
    # Install additional files into <prefix>\share\jccl
