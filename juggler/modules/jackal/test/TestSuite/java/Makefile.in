@@ -2,11 +2,12 @@ default: all
 
 # Basic options.
 srcdir=		@srcdir@
+ARCH=		$(shell uname -p)
 JAVAC_FLAGS=	-classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
 JCPS=		@JCPS@
 
 JUNIT_JAR=	@JUNIT_JAR@
-		
+
 JCCL_JARS=	$(shell $(JCCL_BASE_DIR)/bin/jccl-config --jars)
 TWEEK_JARS=	$(shell $(JCCL_BASE_DIR)/bin/tweek-config --jars)
 CLASSPATH=	$(JUNIT_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(JCCL_JARS)$(JCPS)
@@ -45,10 +46,16 @@ all:
 	$(MAKE) java
 
 run: $(CLASSES)
-	java -classpath "$(CLASSPATH)$(JCPS)." -DDATA_DIR=$(srcdir)/data AllTests
+	java -classpath "$(CLASSPATH)$(JCPS)." 				\
+          -Djava.library.path="$(JCCL_BASE_DIR)/share/tweek/java/$(ARCH)" \
+          -DJCCL_BASE_DIR="$(JCCL_BASE_DIR)"				\
+          -DDATA_DIR="$(srcdir)/data" AllTests
 
 run-text: $(CLASSES)
-	java -classpath "$(CLASSPATH)$(JCPS)." -DDATA_DIR=$(srcdir)/data junit.textui.TestRunner AllTests
+	java -classpath "$(CLASSPATH)$(JCPS)." 				\
+          -Djava.library.path="$(JCCL_BASE_DIR)/share/tweek/java/$(ARCH)" \
+          -DJCCL_BASE_DIR="$(JCCL_BASE_DIR)"				\
+          -DDATA_DIR="$(srcdir)/data" junit.textui.TestRunner AllTests
 
 java:
 	$(MAKE) tests
