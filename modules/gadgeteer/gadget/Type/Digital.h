@@ -30,12 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/////////////////////////////////////////////////////////////////////////
-//
-// positional tracker base class
-//
-////////////////////////////////////////////////////////////////////////
-
 #ifndef _GADGET_DIGITAL_H_
 #define _GADGET_DIGITAL_H_
 
@@ -61,9 +55,9 @@ namespace gadget
    *  Digital inherits from Input, so it has pure virtual function
    *  constraints from Input in the following functions: StartSampling,
    *  StopSampling, Sample, and UpdateData. <br>
-   *  Digital adds one new pure virtual function, GetDigitalData for
-   *  retreiving the digital data, similar to the addition for Position and
-   *  Analog.
+   *  Digital adds one new pure virtual function, getDigitalData() for
+   *  retreiving the digital data, similar to the addition for gadget::Position
+   *  and gadget::Analog.
    *
    * @see Input
    */
@@ -165,9 +159,14 @@ namespace gadget
       
       virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
+   protected:
+      // gadget::SampleBuffer<T> is not copyable, so neither are we.
+      Digital(const gadget::Digital& d) : vpr::SerializableObject() {;}
+      void operator=(const gadget::Digital& d) {;}
+
    private:
-      SampleBuffer_t    mDigitalSamples; /**< Position samples */
-      DigitalData       mDefaultValue;   /**< Default analog value to return */
+      SampleBuffer_t    mDigitalSamples; /**< Digital samples */
+      DigitalData       mDefaultValue;   /**< Default digital value to return */
    };
 
 } // End of gadget namespace
