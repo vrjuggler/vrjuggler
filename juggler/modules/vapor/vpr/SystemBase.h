@@ -43,15 +43,7 @@
 #define _VPR_SYSTEM_BASE_H_
 
 #include <vpr/vprConfig.h>
-
-#if defined(VPR_OS_FreeBSD) || defined(VPR_OS_Linux)
-#include <sys/types.h>
-#include <unistd.h>
-#include <execinfo.h>
-
-#include <sstream>
-#endif
-
+#include <string>
 
 
 namespace vpr
@@ -75,7 +67,7 @@ public:
     * @return 0 is returned for little-endian hosts<br>
     *         1 is returned for big-endian hosts
     */
-   static int getEndian (void)
+   static int getEndian()
    {
       union
       {
@@ -97,7 +89,7 @@ public:
     * @return <code>true</code> is returned on a little-endian host.<br>
     *         <code>false</code> is returned on a big-endian host.<br>
     */
-   static bool isLittleEndian (void)
+   static bool isLittleEndian()
    {
       return(getEndian() == 0);
    }
@@ -108,41 +100,16 @@ public:
     * @return <code>true</code> is returned on a big-endian host.<br>
     *         <code>false</code> is returned on a little-endian host.<br>
     */
-   static bool isBigEndian (void)
+   static bool isBigEndian()
    {
       return(getEndian() == 1);
    }
 
-   /** Return a stack trace.
-   * @post If supported, returns a string describing the current call stack
-   */
-   static std::string getCallStack()
-   {
-      std::string ret_stack("<Call stack not supported>");
-
-// XXX: should come up with better test for glib
-#if defined(VPR_OS_FreeBSD) || defined(VPR_OS_Linux)
-      void* trace_syms[100];
-      size_t size;
-      char **strings;
-
-      pid_t cur_pid = getpid();
-      size = backtrace (trace_syms, 100);
-      strings = backtrace_symbols (trace_syms, size);
-
-      std::ostringstream trace_stream;
-      trace_stream << "Stack trace: thread: " << cur_pid << std::endl;
-
-      for (size_t i = 0; i < size; i++)
-      {  trace_stream << "   " << strings[i] << std::endl;  }
-
-      free (strings);
-
-      ret_stack = trace_stream.str();
-#endif
-
-      return ret_stack;
-   }
+   /**
+    * Returns a stack trace.
+    * @post If supported, returns a string describing the current call stack.
+    */
+   static std::string getCallStack();
 };
 
 } // End of vpr namespace
