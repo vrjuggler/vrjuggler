@@ -9,11 +9,12 @@
 #include <sys/time.h>
 
 #include <assert.h>
-#include <string>
 #include <fstream.h>
 #include <iostream.h>
 
 #include "aFlock.h"
+
+const int aFlock::MAXCHARSTRINGSIZE = 256;
 
 //: Configure Constructor
 // Give:                                                 <BR>
@@ -42,7 +43,6 @@ aFlock::aFlock(const char* const port,
 		const char* const calfile) : 
 		  _portId(-1),
 		  _active(false),
-		  _port(port),
 		  _baud(baud),
 		  _syncStyle(sync),
 		  _blocking(block),
@@ -51,10 +51,12 @@ aFlock::aFlock(const char* const port,
 		  _hemisphere(hemi),
 		  _filter( filt ),
 		  _reportRate(report),
-		  _calibrationFileName( calfile ),
 		  _usingCorrectionTable(false),
 		  _current(0), _valid(1), _progress(2)
 {
+  if (port != NULL)
+  	strncpy( _port, port, aFlock::MAXCHARSTRINGSIZE );
+  
   // fix the report rate if it makes no sense.
   if ((_reportRate != 'Q') && (_reportRate != 'R') &&
       (_reportRate != 'S') && (_reportRate != 'T'))
@@ -66,7 +68,8 @@ aFlock::aFlock(const char* const port,
 
   if (calfile != NULL && calfile[0] != '\0')
   {
-  	this->initCorrectionTable(calfile);
+  	strncpy( _calibrationFileName, calfile, aFlock::MAXCHARSTRINGSIZE );
+  	this->initCorrectionTable(_calibrationFileName);
   	_usingCorrectionTable = true;
   }	
 }
@@ -88,7 +91,8 @@ void aFlock::setPort(const char* const serialPort)
 	cout << "Flock: Cannot change the serial Port while active\n";
 	return;
     }
-    _port = serialPort;
+    if (serialPort != NULL)
+  	strncpy( _port, serialPort, aFlock::MAXCHARSTRINGSIZE );
 }
 
 //: get the port used
@@ -96,8 +100,7 @@ void aFlock::setPort(const char* const serialPort)
 //  ex: unix - "/dev/ttyd3", win32 - "COM3"
 const char* const aFlock::getPort()
 {
-    const char* const &charString = _port.data();
-    return charString;
+    return _port;
 }
 
 //: set the baud rate
@@ -122,7 +125,7 @@ int aFlock::start()
     {
 	cout << "    Getting flock ready....\n" << flush;
 	
-	aFlock::open_port( _port.data(), _baud, _portId );
+	aFlock::open_port( _port, _baud, _portId );
 	if (_portId == -1) 
 	    return 0;
 	aFlock::set_blocking( _portId, _blocking );
