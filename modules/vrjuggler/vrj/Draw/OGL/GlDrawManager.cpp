@@ -183,9 +183,9 @@ void GlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeRender();
 
    // Barrier for Cluster
-   //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH; 
+   //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
    gadget::InputManager::instance()->getRemoteInputManager()->createBarrier();
-   // vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH; 
+   // vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
 
    // SWAP
@@ -528,7 +528,7 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp, float scaleFactor)
       //----------------Enable Materials.....
       glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
       glEnable(GL_COLOR_MATERIAL);
-           
+
       glDisable(GL_TEXTURE_2D);
       glDisable(GL_TEXTURE_1D);
 
@@ -580,6 +580,8 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp, float scaleFactor)
       // Draw the wand
       glPushMatrix();
          glMultMatrixf(sim_vp->getWandPos().mData);
+         glScalef(scaleFactor,scaleFactor,scaleFactor);
+         glEnable(GL_NORMALIZE);
          mDrawWandFunctor->draw();
       glPopMatrix();
 
