@@ -158,9 +158,11 @@ void vjGlWindow::setCameraProjection()
 
 ostream& operator<<(ostream& out, vjGlWindow* win)
 {
+   vjASSERT(win != NULL);
+   vjASSERT(win->mDisplay != NULL);
+
    //out << "-------- vjGlWindow --------" << endl;
    out << "Open: " << (win->window_is_open ? "Y" : "N") << endl;
-   vjASSERT(win->mDisplay != NULL);
    out << "Display:" << win->mDisplay << endl;
    out << "Stereo:" << (win->in_stereo ? "Y" : "N") << endl;
    return out;

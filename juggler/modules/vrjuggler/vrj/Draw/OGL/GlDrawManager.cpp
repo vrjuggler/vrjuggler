@@ -209,8 +209,12 @@ void vjGlDrawManager::removeDisplay(vjDisplay* disp)
    if(win != NULL)
    {
       vjASSERT(pipe != NULL);
-
       pipe->removeWindow(win);
+   }
+   else
+   {
+      vjDEBUG(vjDBG_ERROR, 0) << "vjGlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vjDEBUG_FLUSH;
+      vjASSERT(false);
    }
 
 }

@@ -11,7 +11,8 @@ vjDisplayManager* vjDisplayManager::_instance = NULL;
 
 std::vector<vjDisplay*> vjDisplayManager::getAllDisplays()
 {
-   std::vector<vjDisplay*> ret_val = mActiveDisplays;
+   std::vector<vjDisplay*> ret_val;
+   ret_val.insert(ret_val.end(), mActiveDisplays.begin(), mActiveDisplays.end());
    ret_val.insert(ret_val.end(), mInactiveDisplays.begin(), mInactiveDisplays.end());
    return ret_val;
 }
@@ -140,17 +141,17 @@ int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
 //+   ==> Draw manager has been told to clode the window for the display
 int vjDisplayManager::closeDisplay(vjDisplay* disp, bool notifyDrawMgr)
 {
-   vjASSERT(isMemberDisplay(disp));
+   vjASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
 
    // Notify the draw manager to get rid of it
-   if((notifyDrawMgr) && (mDrawManager != NULL))
+   if((notifyDrawMgr) && (mDrawManager != NULL) && (disp->isActive()))
       mDrawManager->removeDisplay(disp);
 
    // Remove it from local data structures
-   // NOTE: I am not checking it I actually removed one because the
-   // pre-condition gaurantees that one must exist.
+      int num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
    mActiveDisplays.erase(std::remove(mActiveDisplays.begin(), mActiveDisplays.end(), disp), mActiveDisplays.end());
    mInactiveDisplays.erase(std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp), mInactiveDisplays.end());
+      vjASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
 
    // Delete the object
    // XXX: Memory leak.  Can't delete display here because the draw manager
