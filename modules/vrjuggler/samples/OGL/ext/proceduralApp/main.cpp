@@ -38,14 +38,6 @@
 
 // --- Lib Stuff --- //
 #include <vrj/vrjConfig.h>
-#include <vrj/Kernel/Kernel.h>
-
-#include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/DigitalInterface.h>
-
-#include <gmtl/Matrix.h>
-#include <gmtl/Generate.h>
-#include <gmtl/Vec.h>
 
 #include <math.h>
 #include <GL/gl.h>
@@ -53,8 +45,16 @@
 #include <iostream>
 #include <iomanip>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Vec.h>
+
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
+
 // --- Extensions for procedural apps --- //
 #include <vrj/Draw/OGL/GlProcApp.h>
+
 
 // Callback methods
 void init();
