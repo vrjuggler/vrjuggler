@@ -39,6 +39,9 @@
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+includedir=	@includedir@/gadget/Devices
+INSTALL=	@INSTALL@
+
 # Prefix for recursive stuff.
 DIRPRFX=	gadget/Devices/
 
@@ -54,4 +57,5 @@ SUBDIR=		$(DRIVERS)
 $(RECTARGET): recursive
 
 include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.install.mk
 include $(MKPATH)/dpp.clean.mk

@@ -561,6 +561,7 @@ AC_OUTPUT(gadgeteer-config
           make.defs.mk
           gadget/Makefile
           gadget/Devices/Makefile
+          gadget/Devices/driver.defs.mk
           gadget/Devices/5DT/Makefile
           gadget/Devices/5DT/DataGlove/Makefile
           gadget/Devices/Ascension/Makefile
