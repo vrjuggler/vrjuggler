@@ -2,6 +2,9 @@
 
 default: html
 
+docs: html chunk-html pdf
+install-docs: install-html install-chunk-html install-pdf
+
 NAME=		book
 
 XML_FILES=	$(NAME).xml

@@ -2,6 +2,9 @@
 
 default: html
 
+docs: html pdf
+install-docs: install-html install-pdf
+
 NAME=		faq
 
 XML_FILES=	$(NAME).xml
