@@ -107,7 +107,7 @@ private:
 };
 
 /** Entry point function for the device driver plug-in. */
-extern "C" GADGET_DRIVER_API(void) initDevice(InputManager* inputMgr)
+extern "C" GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
 {
    new DeviceConstructor<MyButtonDevice>(inputMgr);
 }
