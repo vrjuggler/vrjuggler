@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="pf_basic_nav_app" icon_path="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Basic Performer Navigation App">
+      <abstract>false</abstract>
+      <help>Configuration for a basic performer navigation application.</help>
+      <parent />
+      <category>/Application/</category>
+      <property valuetype="float" variable="false" name="start_location">
+         <help />
+         <value label="Start Location (x)" defaultvalue="0.0" />
+         <value label="Start Location (y)" defaultvalue="0.0" />
+         <value label="Start Location (z)" defaultvalue="0.0" />
+      </property>
+      <property valuetype="string" variable="false" name="file_path">
+         <help>Paths to search for files.</help>
+         <value label="File Paths" defaultvalue="" />
+      </property>
+      <property valuetype="configelement" variable="true" name="sounds">
+         <help>The sounds to be used by the pfConfigNav application.</help>
+         <value label="Sound" />
+         <allowed_type>pf_config_sound</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="models">
+         <help>The models to be loaded by the pfConfigNav application.</help>
+         <value label="Models" />
+         <allowed_type>pf_config_model</allowed_type>
+      </property>
+      <property valuetype="float" variable="false" name="bounding_size">
+         <help />
+         <value label="Bounding sphere size" defaultvalue="0.0" />
+      </property>
+      <property valuetype="float" variable="false" name="icon_view_offset">
+         <help>Amount to tranlate the application scene graph for displaying the icon (in Performer coordinates, model coords).</help>
+         <value label="X Translation" defaultvalue="0.0" />
+         <value label="Y Translation" defaultvalue="0.0" />
+         <value label="Z Translation" defaultvalue="0.0" />
+      </property>
+      <property valuetype="boolean" variable="false" name="enable_nav">
+         <help>Allow navigation or not.  Use false for animation.</help>
+         <value label="Enable navigation?" defaultvalue="true" />
+      </property>
+      <property valuetype="boolean" variable="false" name="animation_play">
+         <help>Play animation (true) or stop (false).</help>
+         <value label="Play animation?" defaultvalue="false" />
+      </property>
+      <property valuetype="integer" variable="false" name="animation_loops">
+         <help>Number of times to loop animation (-1 for infinite).</help>
+         <value label="Number of loops" defaultvalue="1" />
+      </property>
+      <property valuetype="string" variable="false" name="animation_filename">
+         <help>Name of animation file to load.</help>
+         <value label="Animation filename" defaultvalue="" />
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>
+
