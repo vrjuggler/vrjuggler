@@ -41,11 +41,20 @@
 // include bridge class
 #include <vpr/IO/Socket/SocketStream_t.h>
 
+// Include the perf monitoring stuff
+#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+#include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
+#include <vpr/IO/Stats/IOStatsStrategyAdapter.h>
+
 // make the connection
 #if defined(VPR_USE_NSPR)
 #   include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 namespace vpr {
-    typedef SocketStream_t<SocketStreamImplNSPR, SocketImplNSPR> SocketStream;
+    //typedef SocketStream_t<SocketStreamImplNSPR, SocketImplNSPR> SocketStream;
+    typedef SocketStream_t<SocketStreamImplNSPR,
+                           SocketImplNSPR,
+                           IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy> >
+                        SocketStream;
 };
 
 #else

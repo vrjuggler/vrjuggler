@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vapor/vpr/IO.  It requires GNU make.
+# Makefile.in for vapor/vpr/IO/Stats.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,24 +41,18 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/IO
+includedir	= @includedir@/vpr/IO/Stats
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
-VPR_SRCDIR	= @VPR_SRCDIR@/vpr/IO
+VPR_SRCDIR	= @VPR_SRCDIR@/vpr/IO/Stats
 
-# Prefix for recursive stuff.
-DIRPRFX		= vpr/IO/
+SRCS	 	= BandwidthIOStatsStrategy.cpp \
+					BaseIOStatsStrategy.cpp
 
-SUBDIR		= Port		\
-      			Socket  \
-						Stats
-
-SRCS 		= BlockIO.cpp
-
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
