@@ -39,80 +39,39 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-default: debug
+# =============================================================================
+# This file <test.defs.mk> provides variable information shared by all
+# makefiles in the VR Juggler Portable Runtime test suite tree.  It requires
+# GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# All makefiles in the test suite tree should include this file for maximum
+# information sharing.
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# test_topdir     - The top of the test suite build tree.
+# =============================================================================
 
-# This is a hack to deal with GNU make's ignorance about defined targets.
-# Without this, the 'default' set in dpp.subdir.mk becomes the default
-# target, and that's not what we want.
-DEFAULT_SET	= 1
+include @topdir@/make.defs.mk
 
-include test.defs.mk
+# -----------------------------------------------------------------------------
+# Base variables needed by all test suite makefiles.
+# -----------------------------------------------------------------------------
+test_topdir	= @topdir@/test/TestSuite
+VPR_BASE_DIR	?= @APP_BASE_DIR@
+CPP_UNIT	= $(JUGGLERROOT_ABS)/external/cppunit
 
-BUILD_PROF_C	= @BUILD_PROF_C@
-BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+# -----------------------------------------------------------------------------
+# Override settings for variables read from make.defs.mk.
+# -----------------------------------------------------------------------------
+EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@
+EXTRA_CXXFLAGS	= @APP_EXTRA_CFLAGS@
+EXTRA_DEFS	= -DGRAPH_PATH="\"$(VPRROOT_ABS)\""
+EXTRA_INCLUDES	= -I$(VPR_BASE_DIR)/include -I$(srcdir) -I$(CPP_UNIT)/include
 
-# If we can build both C and C++ profiled objects, we will build a profiled
-# application.
-ifeq ($(BUILD_PROF_C), Y)
-ifeq ($(BUILD_PROF_CXX), Y)
-    BUILD_PROF_APP	= 1
+ifeq (@PLATFORM@, IRIX)
+    EXTRA_DEPEND_FLAGS	+= -I@BOOST_DIR@/boost/compatibility/cpp_c_headers
+    EXTRA_INCLUDES	+= -I@BOOST_DIR@/boost/compatibility/cpp_c_headers
 endif
-endif
-
-# -----------------------------------------------------------------------------
-# Inital options, commands, etc.
-# -----------------------------------------------------------------------------
-APP		= runner@EXEEXT@
-builddir	= $(test_topdir)
-srcdir		= @srcdir@
-topdir		= @topdir@
-
-LINK_FLAGS	= @APP_LINK_FLAGS@ $(EXTRA_LFLAGS)
-EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@ $(DEBUG_LFLAGS)
-DEBUG_LFLAGS	= @APP_DEBUG_LFLAGS@
-OPTIM_LFLAGS	= @APP_OPTIM_LFLAGS@
-LINK		= @APP_LINK@ $(LINK_FLAGS)
-
-# -----------------------------------------------------------------------------
-# CppUnit stuff.
-# -----------------------------------------------------------------------------
-CPPUNIT_SRCS	= Exception.cpp		\
-                  NotEqualException.cpp	\
-                  TestAssert.cpp	\
-                  TestCase.cpp		\
-                  TestResult.cpp	\
-                  TestFailure.cpp	\
-                  TestSuite.cpp
-CPPUNIT_UI_SRCS	= TextTestResult.cpp	\
-                  TextTestRunner.cpp
-CPPUNIT_EXTS	= MetricRegistry.cpp
-EXTRA_SRCS_PATH	= $(CPP_UNIT)/src/cppunit $(CPP_UNIT)/src/cppunit/extensions
-
-# -----------------------------------------------------------------------------
-# Build stuff.
-# -----------------------------------------------------------------------------
-SRCS		= $(CPPUNIT_SRCS) $(CPPUNIT_UI_SRCS) $(CPPUNIT_EXTS) main.cpp
-
-ALL_OBJS	= $(OBJDIR)/*.@OBJEXT@
-
-SUBDIR		= TestCases
-
-# -----------------------------------------------------------------------------
-# Linking stuff.
-# -----------------------------------------------------------------------------
-BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@	\
-                  @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@	\
-                  $(NULL)
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@
-
-$(APP): $(ALL_OBJS)
-	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
-          $(EXTRA_LIBS)
-
-include $(MKPATH)/dpp.simple-app.mk
-include $(MKPATH)/dpp.subdir.mk
-
-CLEAN_DIRS	+= obj
-CLOBBER_FILES	+= $(APP) $(DEPEND_FILES)
-
--include $(DEPEND_FILES)

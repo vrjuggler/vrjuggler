@@ -1,8 +1,6 @@
 #ifndef _VPR_TEST_INET_ADDR_TEST_H_
 #define _VPR_TEST_INET_ADDR_TEST_H_
 
-#include <iostream>
-
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
@@ -41,64 +39,11 @@ public:
       //CPPUNIT_ASSERT(any_addr == vpr::InetAddr::AnyAddr);
    }
 
-   void testEqual()
-   {
-      vpr::InetAddr addr1(80);
-      vpr::InetAddr addr2(21);
-      vpr::InetAddr addr3(80);
+   void testEqual();
 
-      CPPUNIT_ASSERT(addr1 != addr2);
-      CPPUNIT_ASSERT(addr1 == addr3);
+   void testSets();
 
-      addr1.setAddress(23, addr1.getPort());
-      addr3.setAddress(23, addr3.getPort());
-
-      CPPUNIT_ASSERT(addr1 == addr3);
-
-      addr3.setAddress(17, addr3.getPort());
-
-      CPPUNIT_ASSERT(addr1 != addr3);
-   }
-
-   void testSets()
-   {
-      vpr::InetAddr addr1;
-
-      addr1.setPort(23);
-
-      CPPUNIT_ASSERT(23 == addr1.getPort());
-
-      addr1.setAddress(1221, addr1.getPort());
-
-      CPPUNIT_ASSERT(1221 == addr1.getAddressValue());
-   }
-
-   void testAddressLookup () {
-      vpr::InetAddr addr1;
-      vpr::InetAddr addr2;
-      vpr::InetAddr addr3;
-      vpr::InetAddr addr4;
-      vpr::InetAddr addr5;
-      vpr::InetAddr local_addr;
-
-      CPPUNIT_ASSERT(addr1.setAddress("192.49.3.2", 13768).success());
-      CPPUNIT_ASSERT(addr2.setAddress((vpr::Uint32)3224437506u, 13768).success());
-      CPPUNIT_ASSERT(addr3.setAddress("cruncher.vrac.iastate.edu", 13768).success());
-      CPPUNIT_ASSERT(addr4.setAddress("129.186.232.58", 13768).success());
-      CPPUNIT_ASSERT(addr5.setAddress("cruncher.vrac.iastate.edu:13768").success());
-      CPPUNIT_ASSERT(local_addr.setAddress("localhost", 0).success());
-
-      CPPUNIT_ASSERT(local_addr.getAddressValue() > 0);
-      CPPUNIT_ASSERT(addr1.getAddressValue() == 3224437506u);
-      CPPUNIT_ASSERT(addr1 == addr2);
-#ifndef VPR_SIMULATOR
-      CPPUNIT_ASSERT(addr3.getAddressValue() == addr4.getAddressValue());
-      CPPUNIT_ASSERT(addr3.getAddressString() == addr4.getAddressString());
-      CPPUNIT_ASSERT(addr3 == addr4);
-      CPPUNIT_ASSERT(addr3.getHostname() == addr4.getHostname());
-      CPPUNIT_ASSERT(addr3 == addr5);
-#endif
-   }
+   void testAddressLookup();
 
    static CppUnit::Test* suite()
    {
