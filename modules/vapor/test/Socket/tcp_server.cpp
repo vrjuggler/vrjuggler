@@ -56,7 +56,7 @@ main (int argc, char* argv[]) {
     // Open in server mode.
     if ( sock.openServer().success() ) {
         vpr::SocketStream client_sock;
-        vpr::Status status;
+        vpr::ReturnStatus status;
         vpr::Uint32 bytes;
         char buffer[] = "Hello there!";
 //        std::string buffer = "Hello there!";
@@ -76,7 +76,7 @@ main (int argc, char* argv[]) {
 //                status = client_sock.write(buffer, buffer.length(), bytes);
                 client_sock.close();
             }
-            else if ( status == vpr::Status::Timeout ) {
+            else if ( status == vpr::ReturnStatus::Timeout ) {
                 vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                     << "No connections within timeout period!\n"
                     << vprDEBUG_FLUSH;

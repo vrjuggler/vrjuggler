@@ -61,7 +61,7 @@ main (int argc, char* argv[]) {
             sock.write(buffer, 40, bytes);
 
             // Read from the server.
-            vpr::Status status = sock.read(buffer, 40, bytes);
+            vpr::ReturnStatus status = sock.read(buffer, 40, bytes);
 
             // If the server reasponded, print the result.
             if ( status.success() ) {
