@@ -64,3 +64,6 @@ links:
 		for jar in $(JARS); do \
 			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/config/$$jar ./$$jar; \
 		done
+	cd $(instlinks)/bin && \
+		$(RM_LN) ./configservice.xml && \
+		$(LN_S) $(topdir)/config/configservice.xml ./configservice.xml
