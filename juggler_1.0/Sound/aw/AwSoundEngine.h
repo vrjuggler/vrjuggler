@@ -92,7 +92,8 @@ public:
 	
    awPlayer*   mPlayer;
    awObserver* mObserver;
-	std::string mAdfFileName;
+	std::string mAdfFileList;  // i.e: "file1.adf file2.adf file3.adf"
+   bool        mInitialized;  // is audioworks initialized yet??
 };
 
 vjSoundEngineConstructor<AwSoundEngine> aw_constructor; 

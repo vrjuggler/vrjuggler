@@ -36,10 +36,12 @@
 #include <aw.h> //audio works
 #include <Sound/vjSoundEngine.h>   // base class
 #include <Sound/aw/AwSound.h>       // my sound type...
+#include <samples/tools/fileIO.h>
+//#include <samples/tools/fileIO.cpp>
 
 #include <Sound/aw/AwSoundEngine.h> // my header
 
-AwSoundEngine::AwSoundEngine() : vjSoundEngine(), mObserver( NULL )
+AwSoundEngine::AwSoundEngine() : vjSoundEngine(), mObserver( NULL ), mInitialized( false )
 {
 }
 
@@ -47,6 +49,26 @@ AwSoundEngine::~AwSoundEngine() {}
 
 void AwSoundEngine::init()
 {
+   std::string tmpFile = "/var/tmp/";
+   tmpFile += getenv( "USER" );
+   tmpFile += ".AwSoundEngine.adf";
+   
+   
+   std::string command = "/home/vr/apps/bin/catadf.pl -o ";
+   command += tmpFile;
+   command += " ";
+   command += mAdfFileList;
+   
+   std::string commandRm = "rm ";
+   commandRm += tmpFile;
+   
+   system( commandRm.c_str() );
+   system( command.c_str() );
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"Issuing system() command:")  << command.c_str() << "\n" << vjDEBUG_FLUSH;
+   
+      
+   mInitialized = false;  //set it to true at the end of this func...
+   
    // initialize the AudioWorks system
    awOpenAWD("");
    awOpenEP(0, AWEP_SHARE);
@@ -62,8 +84,14 @@ void AwSoundEngine::init()
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
-   cout<<"[aw] Loading: "<<mAdfFileName.c_str()<<"\n"<<flush;
-   vjASSERT( awDefineSys( mAdfFileName.c_str() ) != -1 );
+   cout<<"[aw] Loading: "<<tmpFile.c_str()<<"\n"<<flush;
+   int result = awDefineSys( tmpFile.c_str() );
+   if (result == -1)
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrRED,"[aw] ADF file didn't load: ")  << "awDefineSys failed (== -1)... about to assert.."<< "\n" << vjDEBUG_FLUSH;
+      sleep( 5 );
+   }
+   vjASSERT( result != -1 );
    // Make explicit function calls to create instances of AudioWorks classes.
 
    // - Configuration
@@ -88,7 +116,7 @@ void AwSoundEngine::init()
    if (mObserver == NULL)
    {
       cout<<"[aw] \n"
-          <<"[aw] !!! WARNING !!!: could not find in the .adf file the \"observer\" named \"you\".  \n"
+          <<"[aw] !!! WARNING !!!: could not find in "<<tmpFile.c_str()<<" file the \"observer\" named \"you\".  \n"
           <<"[aw] !!!         !!!: This *has* to be there, or else none of the sound localization \n"
           <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
           <<"[aw] \n"<<flush;
@@ -96,6 +124,8 @@ void AwSoundEngine::init()
    
    // default...
    this->setPosition( mPosition );
+   
+   mInitialized = true;
 }
 
 // lookup a filename, given the sound's alias.
@@ -112,6 +142,11 @@ void AwSoundEngine::aliasToFileName( const char* const alias, std::string& filen
 // memory managed by engine
 vjSound* AwSoundEngine::newSound()
 {
+   // if not initialized...
+   if (mInitialized == false)
+   {
+      this->init();         // Initialize the new puppy *woof*
+   }
    return new AwSound( *this );
 }
 
@@ -168,14 +203,20 @@ bool AwSoundEngine::config( vjConfigChunk* chunk )
 {
 	vjASSERT( (std::string)chunk->getType() == AwSoundEngine::getChunkType() );
 
-	mAdfFileName = (std::string)chunk->getProperty( "adfConfigFile" );
-   
-   if (mAdfFileName != "")
+	std::string adfName = (std::string)chunk->getProperty( "adfConfigFile" );
+
+   if (adfName == "")
    {
+      return false;
+   }
+
+   else
+   {
+      std::string demangled = fileIO::demangleFileName( adfName, "" );
+      mAdfFileList += demangled;
+      mAdfFileList += " ";
       return true;
    }
-   
-   return false;
 }
 
 
