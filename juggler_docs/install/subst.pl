@@ -35,6 +35,7 @@ $path_subst{"PDFBOOKS"} = 'html/books';
 # directories within the ~/html directory
 $path_subst{"BUGS"} = 'html/bugs';
 $path_subst{"CONTACT"} = 'html/contact.info';
+$path_subst{"ABOUT"} = 'html/about';
 
 $path_subst{"DOCUMENTATION"} = 'html/documentation';
 $path_subst{"OVERVIEW"} = 'html/juggler.overview';
