@@ -19,6 +19,9 @@ class vjDisplay;
 class vjDrawManager : public vjConfigChunkHandler
 {
 public:
+   vjDrawManager (void) {
+      displayManager = NULL;
+   }
 
    //: Function to initialy config API specific stuff.
    // Takes a chunkDB and extracts API specific stuff
