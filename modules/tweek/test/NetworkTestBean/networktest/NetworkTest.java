@@ -79,7 +79,7 @@ public class NetworkTest
          JOptionPane.showMessageDialog(null,
                                        "Failed to narrow subject to WhiteboardSubject",
                                        "WhiteboardSubject Narrow Error",
-                               ./NetworkTestBean/networktest/NetworkTest.java        JOptionPane.ERROR_MESSAGE);
+                                       JOptionPane.ERROR_MESSAGE);
       }
 
       // Ensure that slider_subject is a valid object just to be safe.
