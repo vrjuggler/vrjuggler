@@ -156,26 +156,6 @@ public:
    {return -1;}
 
    // -----------------------------------------------------------------------
-   //: Wait for one or more threads to exit.
-   //
-   //! PRE: None.
-   //! POST: The caller blocks until the specified threads finish their
-   //+       execution (i.e., call the exit() method).  This routine may
-   //+       return immediately if the specified threads have already
-   //+       exited.
-   //
-   //! ARGS: thread_array - Array of one or more thread IDs to be joined.
-   //! ARGS: n - The number of threads to join.
-   //! ARGS: ret_val - Storage for return value of an exiting thread
-   //+                 (optional).
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
-   int join (BaseThread* thread_array[], int n, void** ret_val = 0)
-   { return -1;}
-
-   // -----------------------------------------------------------------------
    //: Resume the execution of a thread that was previously suspended using
    //+ suspend().
    //
