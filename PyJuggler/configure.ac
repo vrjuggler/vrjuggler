@@ -54,10 +54,6 @@ AC_ARG_WITH([python],
             [  --with-python=<PATH>    Path to Python root             [default=/usr/local]],
             [PYTHON_ROOT="$withval"], [PYTHON_ROOT='/usr/local'])
 
-AC_ARG_WITH([python-ver],
-            [  --with-python-ver=<VER> Python version                  [default=2.2]],
-            [PYTHON_VERSION="$withval"], [PYTHON_VERSION='2.2'])
-
 AC_ARG_WITH([bpldir],
             [  --with-bpldir=<PATH>    Directory containing a built
                           version of Boost.Python v2      [default=/usr/local/lib]],
@@ -128,6 +124,12 @@ if test "x$PYTHON" = "xno" ; then
 else
    AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
 fi
+
+AC_MSG_CHECKING([for Python version])
+changequote(<<, >>)
+PYTHON_VERSION=`echo "import sys; print sys.version[:3]" | $PYTHON -`
+changequote([, ])
+AC_MSG_RESULT([$PYTHON_VERSION])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
