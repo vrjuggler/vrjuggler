@@ -3,18 +3,12 @@ package testbean;
 import java.awt.*;
 import java.net.URL;
 import javax.swing.*;
-import org.vrjuggler.tweek.beans.*;
+import org.vrjuggler.tweek.event.*;
 
 
 /**
- * Title:        Plexus Network Monitor and Simulation Controller
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:      VRAC
- * @author
  * @version 1.0
  */
-
 public class TestBean extends JPanel implements java.io.Serializable,
                                                 UserLevelChangeListener
 {
