@@ -37,10 +37,13 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
+AC_INIT([VR Juggler], [1.1], [vrjuggler-devel@lists.sourceforge.net])
+AC_CONFIG_HEADERS([vrj/vrjDefines.h])
+AC_PREREQ([2.53])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
+AC_CONFIG_SRCDIR([vrj/vrjConfig.h])
 AC_REVISION($Revision$)
-AC_INIT(vrj/vrjConfig.h)
-AC_CONFIG_AUX_DIR(../../share/config)
-AC_CONFIG_HEADER(vrj/vrjDefines.h)
+AC_CONFIG_AUX_DIR([../../share/config])
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
@@ -102,19 +105,6 @@ case $target_os in
         if test "x$USE_GCC" != "xyes" ; then
             DBG_FLAGS="$DBG_FLAGS -gslim"
         fi
-
-        AC_DEFINE(_BSD_TYPES,)
-        ;;
-    # HP PA-RISC machine running HP-UX 10.20.
-    hpux10.20)
-        AC_DEFINE(VJ_HPUX_VERSION, 10)
-        ;;
-    # HP PA-RISC machine running HP-UX 11.x.
-    hpux11*)
-        AC_DEFINE(VJ_HPUX_VERSION, 11)
-        ;;
-    darwin1.*)
-        AC_DEFINE(_BSD_TYPES,) 
         ;;
 esac
 
@@ -224,8 +214,8 @@ OPENGL_API=''			# 'Y' then we are using OpenGL
 # Test for the OpenGL library if the OpenGL API was enabled.
 if test "x${_enable_gl_api}" = "xyes" ; then
     DPP_HAVE_OPENGL(/usr, no,
-        [ OPENGL_API='Y' ;
-          AC_DEFINE(VJ_API_OPENGL,) ],
+        [OPENGL_API='Y'
+         AC_DEFINE(VJ_API_OPENGL, , [Define to enable the OpenGL API.])],
         [AC_MSG_ERROR(*** OpenGL API will not be used (GL files not found) ***)])
 fi
 
@@ -237,8 +227,8 @@ PERFORMER_API=''		# 'Y' then we are using Performer
 # Test for the Performer library if the Performer API was enabled.
 if test "x${_enable_pf_api}" = "xyes" ; then
     DPP_HAVE_PERFORMER(/usr, 2.4,
-        [ PERFORMER_API='Y' ;
-          AC_DEFINE(VJ_API_PERFORMER,) ],
+        [PERFORMER_API='Y'
+         AC_DEFINE(VJ_API_PERFORMER, , [Define to enable the Performer API.])],
         [AC_MSG_WARN(*** Performer API will not be used (files not found) ***)])
 fi
 
@@ -591,84 +581,88 @@ AC_SUBST(Juggler_pf_extra_libs)
 
 VJ_MTREE_LIB_GEN(VJ, mtree, $PLATFORM, $ISA)
 
-AC_OUTPUT(vrjuggler-config
-          Makefile
-          Makefile.inc
-          common.defs.mk
-          make.defs.mk
-          vrj/Makefile
-          vrj/Display/Makefile
-          vrj/Draw/Makefile
-          vrj/Draw/OGL/Makefile
-          vrj/Draw/OSG/Makefile
-          vrj/Draw/OpenSG/Makefile
-          vrj/Draw/Pf/Makefile
-          vrj/Kernel/Makefile
-          vrj/Sound/Makefile
-          vrj/Sound/pf/Makefile
-          vrj/Test/Makefile
-          vrj/Util/Makefile
-          vrj.appdefs.mk
-          vrjconfig/build.xml
-          vrjconfig/Makefile
-          vrjconfig/Makefile.inc
-          samples/Makefile
-          samples/OGL/Makefile
-          samples/OGL/advanced/Makefile
-          samples/OGL/advanced/glove/Makefile
-          samples/OGL/advanced/navgrab/Makefile
-          samples/OGL/simple/Makefile
-          samples/OGL/simple/ConfigApp/Makefile
-          samples/OGL/simple/MPApp/Makefile
-          samples/OGL/simple/SimpleApp/Makefile
-          samples/OGL/simple/contextApp/Makefile
-          samples/OGL/simple/simpleInput/Makefile
-          samples/OSG/Makefile
-          samples/OSG/simple/Makefile
-          samples/OSG/simple/osgNav/Makefile
-          samples/OpenSG/Makefile
-          samples/OpenSG/simple/Makefile
-          samples/OpenSG/simple/OpenSGNav/Makefile
-          samples/OpenSG/advanced/Makefile
-          samples/OpenSG/advanced/OpenSGViewer/Makefile
-          samples/Pf/Makefile
-          samples/Pf/advanced/Makefile
-          samples/Pf/advanced/pfConfigNav/Makefile
-          samples/Pf/advanced/pfNav/Makefile
-          samples/Pf/simple/Makefile
-          samples/Pf/simple/simplePf/Makefile
-          samples/sound/Makefile
-          samples/sound/simple/Makefile
-          samples/sound/simple/sonix/Makefile
-          samples/sound/simple/soundManager/Makefile
-          test/Makefile 
-          test/Cluster/Makefile
-          test/Cluster/applicationData/Makefile
-          test/Draw/Makefile
-          test/Draw/OGL/Makefile
-          test/Draw/OGL/analog/Makefile
-          test/Draw/OGL/combo/Makefile
-          test/Draw/OGL/cubes/Makefile
-          test/Draw/OGL/digitalGlove/Makefile
-          test/Draw/OGL/logger/Makefile
-          test/Draw/OGL/simpleGlove/Makefile
-          test/Draw/OGL/texture/Makefile
-          test/Draw/OGL/torus/Makefile
-          test/Draw/OGL/wand/Makefile
-          test/RTRC/Makefile
-          test/TestSuite/Makefile
-          test/TestSuite/test.defs.mk
-          test/TestSuite/TestCases/Makefile
-          test/TestSuite/TestCases/Pf/Makefile
-          tools/Makefile
-          mtree/VJ.data.dist
-          mtree/VJ.include.dist
-          mtree/VJ.install.dist
-          mtree/VJ.samples.dist
-          mtree/VJ.test.dist
-          mtree/VJ.tools.dist
-          VARS.pl,
-    [chmod a+x vrjuggler-config])
+AC_CONFIG_FILES([
+   vrjuggler-config
+   Makefile
+   Makefile.inc
+   common.defs.mk
+   make.defs.mk
+   vrj/Makefile
+   vrj/Display/Makefile
+   vrj/Draw/Makefile
+   vrj/Draw/OGL/Makefile
+   vrj/Draw/OSG/Makefile
+   vrj/Draw/OpenSG/Makefile
+   vrj/Draw/Pf/Makefile
+   vrj/Kernel/Makefile
+   vrj/Sound/Makefile
+   vrj/Sound/pf/Makefile
+   vrj/Test/Makefile
+   vrj/Util/Makefile
+   vrj.appdefs.mk
+   vrjconfig/build.xml
+   vrjconfig/Makefile
+   vrjconfig/Makefile.inc
+   samples/Makefile
+   samples/OGL/Makefile
+   samples/OGL/advanced/Makefile
+   samples/OGL/advanced/glove/Makefile
+   samples/OGL/advanced/navgrab/Makefile
+   samples/OGL/simple/Makefile
+   samples/OGL/simple/ConfigApp/Makefile
+   samples/OGL/simple/MPApp/Makefile
+   samples/OGL/simple/SimpleApp/Makefile
+   samples/OGL/simple/contextApp/Makefile
+   samples/OGL/simple/simpleInput/Makefile
+   samples/OSG/Makefile
+   samples/OSG/simple/Makefile
+   samples/OSG/simple/osgNav/Makefile
+   samples/OpenSG/Makefile
+   samples/OpenSG/simple/Makefile
+   samples/OpenSG/simple/OpenSGNav/Makefile
+   samples/OpenSG/advanced/Makefile
+   samples/OpenSG/advanced/OpenSGViewer/Makefile
+   samples/Pf/Makefile
+   samples/Pf/advanced/Makefile
+   samples/Pf/advanced/pfConfigNav/Makefile
+   samples/Pf/advanced/pfNav/Makefile
+   samples/Pf/simple/Makefile
+   samples/Pf/simple/simplePf/Makefile
+   samples/sound/Makefile
+   samples/sound/simple/Makefile
+   samples/sound/simple/sonix/Makefile
+   samples/sound/simple/soundManager/Makefile
+   test/Makefile 
+   test/Cluster/Makefile
+   test/Cluster/applicationData/Makefile
+   test/Draw/Makefile
+   test/Draw/OGL/Makefile
+   test/Draw/OGL/analog/Makefile
+   test/Draw/OGL/combo/Makefile
+   test/Draw/OGL/cubes/Makefile
+   test/Draw/OGL/digitalGlove/Makefile
+   test/Draw/OGL/logger/Makefile
+   test/Draw/OGL/simpleGlove/Makefile
+   test/Draw/OGL/texture/Makefile
+   test/Draw/OGL/torus/Makefile
+   test/Draw/OGL/wand/Makefile
+   test/RTRC/Makefile
+   test/TestSuite/Makefile
+   test/TestSuite/test.defs.mk
+   test/TestSuite/TestCases/Makefile
+   test/TestSuite/TestCases/Pf/Makefile
+   tools/Makefile
+   mtree/VJ.data.dist
+   mtree/VJ.include.dist
+   mtree/VJ.install.dist
+   mtree/VJ.samples.dist
+   mtree/VJ.test.dist
+   mtree/VJ.tools.dist
+   VARS.pl
+   ],
+   [chmod a+x vrjuggler-config])
+
+AC_OUTPUT
 
 cat <<BUILD_INFO
 
