@@ -75,6 +75,16 @@ public class ConnectionDialog extends JDialog
       return status;
    }
 
+   public String getOrbHost ()
+   {
+      return orbHost;
+   }
+
+   public int getOrbPort ()
+   {
+      return orbPort;
+   }
+
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
    public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
@@ -163,6 +173,8 @@ public class ConnectionDialog extends JDialog
 
    private void commit ()
    {
+      orbHost = m_addr_field.getText();
+      orbPort = Integer.parseInt(m_port_field.getText());
    }
 
    private int status;
@@ -188,4 +200,7 @@ public class ConnectionDialog extends JDialog
    private JPanel  m_button_panel  = new JPanel();
    private JButton m_ok_button     = new JButton();
    private JButton m_cancel_button = new JButton();
+
+   private String orbHost = null;
+   private int    orbPort = -1;
 }
