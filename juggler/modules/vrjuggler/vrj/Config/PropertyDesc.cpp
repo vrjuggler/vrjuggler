@@ -67,10 +67,12 @@ vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
 
 vjPropertyDesc::~vjPropertyDesc () {
     unsigned int i;
+    /* XXX
     for (i = 0; i < enumv.size(); i++)
         delete enumv[i];
     for (i = 0; i < valuelabels.size(); i++)
         delete valuelabels[i];
+        */
 }
 
 
@@ -211,7 +213,7 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
                     *v = i++;
             }
             self.enumv.push_back (new vjEnumEntry (str, *v));
-            delete v;
+            // delete v; XXX
             readString (in, str, size);
         }
         readString (in, str, size);
@@ -232,12 +234,16 @@ vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
     type = pd.type;
     num = pd.num;
 
+    /*
     for (i = 0; i < valuelabels.size(); i++)
         delete valuelabels[i];
     for (i = 0; i < enumv.size(); i++)
         delete enumv[i];
-    valuelabels.erase (valuelabels.begin(), valuelabels.end());
-    enumv.erase (enumv.begin(), enumv.end());
+        */
+    valuelabels.clear();
+    enumv.clear();
+    //valuelabels.erase (valuelabels.begin(), valuelabels.end());
+    //enumv.erase (enumv.begin(), enumv.end());
     for (i = 0; i < pd.valuelabels.size(); i++)
         valuelabels.push_back (new vjEnumEntry(*(pd.valuelabels[i])));
     for (i = 0; i < pd.enumv.size(); i++)

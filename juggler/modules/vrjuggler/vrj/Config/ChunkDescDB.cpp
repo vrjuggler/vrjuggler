@@ -99,7 +99,7 @@ bool vjChunkDescDB::remove (const std::string& tok) {
     std::vector<vjChunkDesc*>::iterator begin = descs.begin();
     while (begin != descs.end()) {
         if (!vjstrcasecmp ((*begin)->token, tok)) {
-            delete(*begin);
+            /// delete(*begin);     XXX:
             descs.erase(begin);
             return true;
         }
@@ -114,10 +114,11 @@ bool vjChunkDescDB::remove (const std::string& tok) {
 void vjChunkDescDB::removeAll () {
     std::vector<vjChunkDesc*>::iterator i = descs.begin();
     while (i != descs.end()) {
-        delete (*i);
+        // delete (*i);    XXX:
         i++;
     }
-    descs.erase(descs.begin(), descs.end());
+    //descs.erase(descs.begin(), descs.end());
+    descs.clear();
 }
 
 

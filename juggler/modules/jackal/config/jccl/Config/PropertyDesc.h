@@ -43,14 +43,14 @@
 //------------------------------------------------------------
 //: A Description used to instantiate a vjProperty
 //
-//       Information stored in a vjPropertyDesc includes vjProperty 
-//       Name, Type, number of allowed values, and a Help string 
-//       describing the purpose of the particular property.  
-//       vjPropertyDescs also include information for parsing a 
+//       Information stored in a vjPropertyDesc includes vjProperty
+//       Name, Type, number of allowed values, and a Help string
+//       describing the purpose of the particular property.
+//       vjPropertyDescs also include information for parsing a
 //       vjProperty, and (optional) enumeration data for T_INT
 //       type Properties.
 //       Note: Frequently the docs for this class will refer to 'this
-//       vjProperty', which refers to any object of class vjProperty 
+//       vjProperty', which refers to any object of class vjProperty
 //       instantiated
 //       using this description.
 //
@@ -86,29 +86,29 @@ public:
 
     //: returns the token string for
     inline std::string& getToken () {
-	return token;
+   return token;
     }
 
 
     inline std::string& getName () {
-	return name;
+   return name;
     }
 
 
 
     inline VarType getType () {
-	return type;
+   return type;
     }
 
 
     inline int getNumAllowed () {
-	return num;
+   return num;
     }
 
 
     //: Returns the number of individual value labels
     inline int getValueLabelsSize () {
-	return valuelabels.size();
+   return valuelabels.size();
     }
 
 
@@ -120,7 +120,7 @@ public:
     //: Returns the enumeration entry at index ind
     //! ARGS: index - index of EnumEntry to retrieve (0-base)
     //! RETURNS: NULL - if index is < 0 or out of range
-    //! RETURNS: enumentry* - otherwise 
+    //! RETURNS: enumentry* - otherwise
     vjEnumEntry* getEnumEntryAtIndex (unsigned int index);
 
 
@@ -133,7 +133,7 @@ public:
     //! RETURNS: vjEnumEntry* - otherwise
     vjEnumEntry* getEnumEntry (const std::string& _name);
 
-    
+
     //: Writes a vjPropertyDesc to the given ostream
     //!NOTE: output format is:
     //+      name typename num token { enum1 enum2=42 } "help string"
@@ -176,7 +176,7 @@ private:
     //  position offset might be described with 3 Float values (xyz).
     //  A value of -1 indicates that this vjProperty may have a variable
     //  number of values (e.g. for a list of active Walls).
-    int  num; 
+    int  num;
 
     //: Labels for individual values of this Property (ie. "width", "height")
     std::vector<vjEnumEntry*> valuelabels;
@@ -187,7 +187,7 @@ private:
     //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
     //  means _all_ chunk types are accepted
     std::vector<vjEnumEntry*> enumv;
-    
+
 };
 
 

@@ -52,8 +52,10 @@ vjChunkDesc::vjChunkDesc (vjChunkDesc& desc): plist() {
 
 
 vjChunkDesc::~vjChunkDesc() {
+    /* XXX: Leave it for now
     for (unsigned int i = 0; i < plist.size(); i++)
-   delete plist[i];
+       delete plist[i];
+    */
 }
 
 
@@ -64,11 +66,13 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     if (&other == this)
    return *this;
 
+    /* XXX: Leave it alone for now
     for (i = 0; i < plist.size(); i++)
     {
        delete plist[i];
        plist[i] = NULL;       // Overwrite dangling pointer
     }
+    */
     plist.clear();
 
     name = other.name;
@@ -143,7 +147,9 @@ bool vjChunkDesc::remove (const std::string& _token)
    {
       if (!vjstrcasecmp ((*begin)->getToken(), _token))
       {
+         /* XXX:
          delete (*begin);
+         */
          *begin = NULL;
          plist.erase(begin);
          return true;
@@ -183,8 +189,10 @@ std::istream& operator >> (std::istream& in, vjChunkDesc& self)
 
    for (unsigned int i = 0; i < self.plist.size(); i++)
    {
+      /* XXX: Leave the memory for now.  Need to fix
       delete self.plist[i];
       self.plist[i] = NULL;                  // Get rid of dangling pointer
+      */
    }
    //self.plist.erase (self.plist.begin(), self.plist.end());
    self.plist.clear();
@@ -196,7 +204,9 @@ std::istream& operator >> (std::istream& in, vjChunkDesc& self)
       in >> *p;
       if (!vjstrcasecmp (p->getToken(),std::string("end")))
       {
+         /* XXX:
          delete p;
+         */
          break;
       }
       self.add(p);

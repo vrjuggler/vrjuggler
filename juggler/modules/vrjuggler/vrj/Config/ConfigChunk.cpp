@@ -63,8 +63,10 @@ vjConfigChunk::~vjConfigChunk () {
     assertValid();
 
     validation = 0;
+    /* XXX
     for (unsigned int i = 0; i < props.size(); i++)
         delete (props[i]);
+        */
 }
 
 
@@ -94,9 +96,12 @@ void vjConfigChunk::associateDesc (vjChunkDesc* d) {
     desc = d;
     type_as_varvalue = desc->getToken();
 
+    /* XXX:
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
+    */
     props.erase (props.begin(), props.end());
+    props.clear();
 
     for (i = 0; i < desc->plist.size(); i++) {
         vjPropertyDesc* pd = desc->plist[i];
@@ -118,9 +123,13 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     desc = c.desc;
     type_as_varvalue = c.type_as_varvalue;
 
+    /* XXX:
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
-    props.erase (props.begin(), props.end());
+        */
+    //props.erase (props.begin(), props.end());
+    props.clear();
+
     for (i = 0; i < c.props.size(); i++) {
         props.push_back (new vjProperty(*(c.props[i])));
     }

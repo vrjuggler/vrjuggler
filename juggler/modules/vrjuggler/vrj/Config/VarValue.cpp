@@ -51,9 +51,11 @@ const std::string vjVarValue::using_invalid_msg = "Casting from T_INVALID VarVal
 }
 
 
-vjVarValue::vjVarValue (const vjVarValue &v):strval("") {
+vjVarValue::vjVarValue (const vjVarValue &v)
+{
     validation = 1;
 
+    strval = std::string("");
     intval = 0;
     floatval = 0.0;
     embeddedchunkval = NULL;
@@ -62,9 +64,11 @@ vjVarValue::vjVarValue (const vjVarValue &v):strval("") {
 }
 
 
-vjVarValue::vjVarValue (vjConfigChunk* ch):strval("") {
+vjVarValue::vjVarValue (vjConfigChunk* ch)
+{
     validation = 1;
 
+    strval = std::string("");
     intval = 0;
     floatval = 0.0;
     embeddedchunkval = NULL;
@@ -75,9 +79,11 @@ vjVarValue::vjVarValue (vjConfigChunk* ch):strval("") {
 }
 
 
-vjVarValue::vjVarValue ( VarType t ):strval("") {
+vjVarValue::vjVarValue ( VarType t )
+{
     validation = 1;
 
+    strval = std::string("");
     type = t;
     intval = 0;
     floatval = 0.0;
@@ -113,7 +119,7 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
     type = v.type;
 
     if (embeddedchunkval) {
-   delete embeddedchunkval;
+      // delete embeddedchunkval; XXX
    embeddedchunkval = NULL;
     }
     intval = v.intval;
@@ -415,21 +421,24 @@ vjVarValue &vjVarValue::operator = (const char *val) {
 
 
 vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_EMBEDDEDCHUNK:
-   if (embeddedchunkval)
-       delete embeddedchunkval;
-   if (s)
-       embeddedchunkval = new vjConfigChunk (*s);
-   else
-       embeddedchunkval = NULL;
-   break;
-    default:
-   vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = vjConfigChunk*.\n" << vjDEBUG_FLUSH;
-    }
-    return *this;
+   switch (type)
+   {
+   case T_EMBEDDEDCHUNK:
+      /* XXX: Leave it hanging for now.
+      if (embeddedchunkval)
+         delete embeddedchunkval;
+      */
+      if (s)
+         embeddedchunkval = new vjConfigChunk (*s);
+      else
+         embeddedchunkval = NULL;
+      break;
+   default:
+      vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = vjConfigChunk*.\n" << vjDEBUG_FLUSH;
+   }
+   return *this;
 }
 
 
