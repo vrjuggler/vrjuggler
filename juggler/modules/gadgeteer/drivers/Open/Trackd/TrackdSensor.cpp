@@ -101,16 +101,20 @@ namespace gadget
 
     for(int i=0;i<mTrackdSensors->numSensors();i++)
     {
-       *(mCurSensorValues[i].getPositionData()) 
+       *(mCurSensorValues[i].getPositionData())
            = mTrackdSensors->getSensorPos(i);
+       mCurSensorValues[i].setTime();
     }
+
+    // Update the data buffer
+    mPosSamples.lock();
+    mPosSamples.addSample(mCurSensorValues);
+    mPosSamples.unlock();
+
+    // Swap it
+    mPosSamples.swapBuffers();
  }
 
-
-PositionData* TrackdSensor::getPositionData (int dev) {
-    vprASSERT((unsigned)dev < mCurSensorValues.size() && "getPosData() index out of range");
-    return &(mCurSensorValues[dev]);
-}
 
 
 };
