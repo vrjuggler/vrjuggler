@@ -54,7 +54,7 @@ public class ConfigChunkDB
    public static final double CONFIG_VERSION_VALUE = 2.1;
 
    private static final String CONFIG_VERSION_ATTR = "config.db.version";
-   private static final String URL_ATTR            = "url";
+   private static final String FILE_ATTR           = "file";
 
    /**
     * Creates a new ConfigChunk database initially empty and the name
@@ -578,7 +578,7 @@ public class ConfigChunkDB
       ProcessingInstruction include = new
          ProcessingInstruction(INCLUDE_INSTRUCTION, new HashMap());
 
-      include.setValue(URL_ATTR, url);
+      include.setValue(FILE_ATTR, url);
       mDoc.addContent(include);
    }
 
@@ -598,7 +598,7 @@ public class ConfigChunkDB
             if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
             {
                // If this PI is an include for the target file, remove it
-               if (pi.getValue(URL_ATTR).equals(url))
+               if (pi.getValue(FILE_ATTR).equals(url))
                {
                   mDoc.removeContent(pi);
                   break;
@@ -625,7 +625,7 @@ public class ConfigChunkDB
             ProcessingInstruction pi = (ProcessingInstruction)next;
             if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
             {
-               result.add(pi.getValue(URL_ATTR));
+               result.add(pi.getValue(FILE_ATTR));
             }
          }
       }
@@ -650,7 +650,7 @@ public class ConfigChunkDB
             ProcessingInstruction pi = (ProcessingInstruction)next;
             if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
             {
-               if (pi.getValue(URL_ATTR).equals(url))
+               if (pi.getValue(FILE_ATTR).equals(url))
                {
                   included = true;
                }
