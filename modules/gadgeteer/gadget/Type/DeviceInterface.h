@@ -1,6 +1,8 @@
 #ifndef _VJ_DEVICE_INTERFACE_H_
 #define _VJ_DEVICE_INTERFACE_H_
 
+#include <vjConfig.h>
+
 //: Base class for simplified interfaces
 //
 // Interfaces provide an easier way to access proxy objects from
@@ -11,9 +13,8 @@
 //
 //! NOTE: The init function should be called in the init function of the user
 //+         application
-
-#include <vjConfig.h>
-
+//!PUBLIC_API
+//------------------------------------------------------------------------------
 class vjDeviceInterface
 {
 public:
