@@ -168,7 +168,7 @@ void SimGloveGesture::updateData()
       {
          mCurGesture = i;
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-            << "vjSimGloveGesture: Got gesture: "
+            << "gadget::SimGloveGesture: Got gesture: "
             << getGestureString(mCurGesture).c_str()
             << std::endl << vprDEBUG_FLUSH;
 
