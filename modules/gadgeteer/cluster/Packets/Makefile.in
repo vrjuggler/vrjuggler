@@ -47,18 +47,19 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-SRCS=	Header.cpp           \
-        Packet.cpp           \
-        PacketFactory.cpp	\
-	DeviceRequest.cpp    \
-	DeviceAck.cpp	\
-	ConnectionRequest.cpp\
-	ConnectionAck.cpp 	\
-	SyncRequest.cpp	\
-	SyncAck.cpp		\
-	DataPacket.cpp	\
+SRCS= \
+	ApplicationDataAck.cpp		\
 	ApplicationDataRequest.cpp	\
-	ApplicationDataAck.cpp	
+	ConnectionAck.cpp		\
+	ConnectionRequest.cpp		\
+	DataPacket.cpp			\
+	DeviceAck.cpp			\
+	DeviceRequest.cpp		\
+	Header.cpp			\
+	Packet.cpp			\
+	PacketFactory.cpp		\
+	SyncAck.cpp			\
+	SyncRequest.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
