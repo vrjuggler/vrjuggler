@@ -7,15 +7,15 @@
       <parent>positional_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>Serial port the Flock is attached to</help>
-         <value label="Port" defaultvalue="/dev/ttyd1"/>
+         <help>The name of the serial port to which the Flock is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>Serial port speed</help>
-         <value label="Baud Rate" defaultvalue="38400"/>
+         <help>Serial port speed.</help>
+         <value label="Baud" defaultvalue="38400"/>
       </property>
       <property valuetype="integer" variable="false" name="number_of_birds">
-         <help>Number of birds in the Flock</help>
+         <help>Number of birds in the Flock.</help>
          <value label="Number of Birds" defaultvalue="2"/>
       </property>
       <property valuetype="configelement" variable="true" name="position_filters">
@@ -83,19 +83,19 @@
    </definition_version>
    <definition_version version="2" label="Flock of Birds">
       <abstract>false</abstract>
-      <help>Configuration for Ascension Flock of Birds</help>
+      <help>Configuration for Ascension Flock of Birds.</help>
       <parent>positional_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>Serial port to which the Flock is attached.</help>
-         <value label="Port" defaultvalue="/dev/ttyd1"/>
+         <help>The name of the serial port to which the Flock is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
          <help>Serial port speed.</help>
-         <value label="Baud Rate" defaultvalue="38400"/>
+         <value label="Baud" defaultvalue="38400"/>
       </property>
       <property valuetype="integer" variable="false" name="hemisphere">
-         <help>Flock Hemisphere</help>
+         <help>The transmitter hemisphere in which the sensors will be tracked.</help>
          <value label="Hemisphere" defaultvalue="3"/>
          <enumeration editable="false">
             <enum label="Front" value="0"/>
