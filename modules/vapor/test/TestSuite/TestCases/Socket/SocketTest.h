@@ -171,11 +171,13 @@ public:
       //connector_thread.join();
       //acceptor_thread.join();
    }
-
+            
    // =========================================================================
-   
+   // open/close test
+   // =========================================================================
    void openCloseTest()
-   {  
+   { 
+      std::cout<<" Open/Close Test: "; 
       bool openSuccess=false;
       bool closeSuccess=false;
       bool bindSuccess=false;
@@ -184,17 +186,23 @@ public:
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr);	
       openSuccess=sock->open();
-      if (openSuccess)
+      if (openSuccess){
+         std::cout<< " Open...";
          bindSuccess=(sock->bind());
+      }
       closeSuccess=sock->close();
+      std::cout<< " Close..."<<endl;
       assertTest( openSuccess && "Socket can not be opened!");
       assertTest( bindSuccess && "Socket can not be bound!");
       assertTest( closeSuccess && "Socket can not be closed!");
       delete sock;
    }
-   
+   // =========================================================================
+   // reuse address test
+   // =========================================================================
    void reuseAddrTest()
    {
+      std::cout<<" Reuse Address Test"<<endl;
       vpr::InetAddr addr1(13768);
       vpr::InetAddr addr2("129.186.232.58", 5438);
       vpr::SocketStream*	sock1;
@@ -209,15 +217,14 @@ public:
       }
       else assert(false && "Cannot open sock1");
       if (sock2->open()){
-//         sock2->setReuseAddr(true);
          assertTest(sock2->bind());
       }
       else assert(false && "Cannot open sock2");
-//      if (sock3->open())
-//         assertTest(sock3->bind());
+      if (sock3->open())
+         assertTest(sock3->bind());
       sock1->close();
       sock2->close();
-//      sock3->close();
+      sock3->close();
       delete sock1;
       delete sock2;
       delete sock3;
@@ -232,7 +239,7 @@ public:
       vpr::Thread* serverThread;
       serverThread=new vpr::Thread(serverFunctor);
 
-      sleep(1);
+      vpr::System::sleep(1);
 
       //Creat a bunch of client thread.
       std::vector<vpr::ThreadMemberFunctor<SocketTest>*> clientFunctors(mNumClient);
@@ -242,7 +249,7 @@ public:
          clientThreads[t] = new vpr::Thread(clientFunctors[t]);
       }
 
-      sleep(1);
+      vpr::System::sleep(1);
 
       //Stop the master server thread 
 //      serverThread->kill();
