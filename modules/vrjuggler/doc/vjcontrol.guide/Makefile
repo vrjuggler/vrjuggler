@@ -16,7 +16,7 @@ webroot=	$(HOME)/public_html/jugglerweb
 instdir=	vrjuggler/1.0/vjcontrol.guide
 
 prefix=		$(webroot)/$(instdir)
-#INSTALL_DIRS=	figures
+INSTALL_DIRS=	figures
 INSTALL_FILES=	$(webroot)/base_style.css
 
 $(NAME).html: $(NAME).xml
