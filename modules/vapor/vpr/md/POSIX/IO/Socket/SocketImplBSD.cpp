@@ -289,7 +289,11 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
    if ( mConnected && vpr::InetAddr::AnyAddr == mLocalAddr )
    {
       int status;
+#ifdef VPR_OS_IRIX
+      int namelen;
+#else
       socklen_t namelen;
+#endif
       struct sockaddr temp_addr;
 
       namelen = sizeof(struct sockaddr);
@@ -461,7 +465,11 @@ vpr::ReturnStatus SocketImplBSD::getOption (const vpr::SocketOptions::Types opti
 {
    int opt_name, opt_level, status;
    vpr::ReturnStatus retval;
+#ifdef VPR_OS_IRIX
+   int opt_size;
+#else
    socklen_t opt_size;
+#endif
    union sockopt_data opt_data;
 
    opt_name = opt_level = -1;
@@ -631,7 +639,11 @@ vpr::ReturnStatus SocketImplBSD::setOption (const vpr::SocketOptions::Types opti
                                             const struct vpr::SocketOptions::Data& data)
 {
    int opt_name, opt_level;
+#ifdef VPR_OS_IRIX
+   int opt_size;
+#else
    socklen_t opt_size;
+#endif
    union sockopt_data opt_data;
    vpr::ReturnStatus retval;
 
