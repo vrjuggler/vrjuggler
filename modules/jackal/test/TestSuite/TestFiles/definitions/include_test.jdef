@@ -1,0 +1,15 @@
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            name="include_test">
+   <definition_version version="1" label="Include Test">
+      <help />
+      <parent/>
+      <property valuetype="integer" variable="false" name="int_prop">
+         <help>Help yourself, bub.</help>
+         <value label="Integer" defaultvalue="0" />
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
