@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-09-15 patrickh Dropped support for Draft 4 of the POSIX threads standard.
+                    NEW VERSION: 0.27.11
 2003-09-10 allenb   Extended object reader interface to support push/pop
                     of current read state.
                     NEW VERSION: 0.27.10

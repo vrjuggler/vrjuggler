@@ -80,11 +80,7 @@ public:
    MutexPosix (void)
    {
       // Initialize the mutex.
-#ifdef _PTHREADS_DRAFT_4
-      pthread_mutex_init(&mMutex, pthread_mutexattr_default);
-#else
       pthread_mutex_init(&mMutex, NULL);
-#endif
    }
 
    /**

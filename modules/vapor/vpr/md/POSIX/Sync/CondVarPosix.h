@@ -81,11 +81,7 @@ public:
    CondVarPosix (MutexPosix* mutex = NULL)
    {
       // Initialize the condition variable.
-#ifdef _PTHREADS_DRAFT_4
-      pthread_cond_init(&mCondVar, pthread_condattr_default);
-#else
       pthread_cond_init(&mCondVar, NULL);
-#endif
 
       // If the caller did not specify a mutex variable to use with
       // the condition variable, use mDefaultMutex.
