@@ -102,6 +102,9 @@ if ( $regen )
 {
    if ( $module )
    {
+      die "ERROR: No such module $module in $cfg!\n"
+         unless defined($MODULES{"$module"});
+
       regenModuleInfo("$module");
       generateMakefile("$module");
    }
@@ -124,6 +127,9 @@ else
 {
    if ( $module )
    {
+      die "ERROR: No such module $module in $cfg!\n"
+         unless defined($MODULES{"$module"});
+
       generateReconfig("$module", @save_argv);
       configureModule("$module");
       generateMakefile("$module");
@@ -332,6 +338,8 @@ sub generateMakefile (;$)
          }
       }
    }
+
+   warn "WARNING: No modules defined!\n" unless $modules;
 
    my $cwd = getcwd();
    chdir("$base_dir");
