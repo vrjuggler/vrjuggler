@@ -48,21 +48,28 @@ public class IntegerTextField extends JTextField {
 
     protected void processKeyEvent (KeyEvent e) {
 
-        //System.out.println (e.getKeyModifiersText(e.getModifiers()) + "," + e.getKeyText(e.getKeyCode()) + "\n");
-
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_BACK_SPACE 
             || key == KeyEvent.VK_DELETE
             || key == KeyEvent.VK_LEFT
-            || key == KeyEvent.VK_RIGHT)
+            || key == KeyEvent.VK_RIGHT) { 
             super.processKeyEvent (e);
-        
+            return;
+        }
+       
         int keyChar = e.getKeyChar();
         if ((keyChar >= '0' && keyChar <= '9') ||
             keyChar == '+' || keyChar == '-' 
-            || keyChar == '\n'
-            )
+            || keyChar == '\n' ||
+            // these next two are hardcoded backspace & delete
+            // which we seem to need for linux jdks
+            keyChar == (char)8 || keyChar ==(char)127) {
             super.processKeyEvent (e);
+            return;
+        }
+
+//          System.out.println ("Ignoring keypress: " + 
+//                              ", keychar= " + keyChar);
     }
 
 }

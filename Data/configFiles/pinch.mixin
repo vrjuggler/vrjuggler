@@ -154,7 +154,7 @@ SimGloveGesture
         key { "MOUSE_BUT1" }
         end
  }
-  trainedFilename { "/home/users/allenb/Source/juggler/Data/gesture/simpleSimGestures.dat" }
+  trainedFilename { "${VJ_BASE_DIR}/share/Data/gesture/simpleSimGestures.dat" }
   glovePos { "GlovePos Proxy" }
   end
 DigProxy

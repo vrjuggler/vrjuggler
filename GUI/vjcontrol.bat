@@ -1,3 +1,4 @@
+@echo off
 rem
 rem ************* <auto-copyright.pl BEGIN do not edit this line> *************
 rem
@@ -34,5 +35,6 @@ rem Version:       $Revision$
 rem -----------------------------------------------------------------
 rem
 rem ************** <auto-copyright.pl END do not edit this line> **************
+@echo on
 
-java -DVJ_BASE_DIR=%VJ_BASE_DIR% -cp %VJ_BASE_DIR%/bin/VjControl.jar VjGUI.VjControl %1 %2 %3 %4 %5 %6 %7 %8 %9
+java -DVJ_BASE_DIR=%VJ_BASE_DIR% -DVJ_SHARE_DIR=%VJ_BASE_DIR%/#VJ_SHARE_DIR# -cp %VJ_BASE_DIR%/bin/VjControl.jar VjGUI.VjControl %1 %2 %3 %4 %5 %6 %7 %8 %9

@@ -48,22 +48,22 @@ VJ_INCLUDES	= -I$(srcdir)/../../nav @INCLUDES@			\
 VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@
 VPATH		= @srcdir@
 
-# This test program requires the following libraries to be linked:
+# This OpenGL sample program requires the following libraries to be linked:
 #
-#     -lGLU -lGL -lXext -lXmu -lX11 -lm
+#     -lGLU -lGL -lX11 -lXext -lm
 #
-# If the library uses POSIX threads, "-lpthread" must also be added to the
-# list of libraries.
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
 #
 # The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
-# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
-# use -L/usr/lib64.
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 OBJECTS		= main.@OBJ_FILE_SUFFIX@		\
                   gloveApp.@OBJ_FILE_SUFFIX@		\
-                  vjStdCaveNavigator.@OBJ_FILE_SUFFIX@	\
+                  navigation.@OBJ_FILE_SUFFIX@	\
                   Scene.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ glove: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.@OBJ_FILE_SUFFIX@: gloveApp.h
-gloveApp.@OBJ_FILE_SUFFIX@: gloveApp.h vjStdCaveNavigator.h
+gloveApp.@OBJ_FILE_SUFFIX@: gloveApp.h navigation.h
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<

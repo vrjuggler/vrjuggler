@@ -44,10 +44,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <varargs.h>
+#include <stdarg.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <termios.h>
+#include <math.h>
 
 #include <Input/vjGlove/vjCyberGlove.h>
 #include <Input/vjGlove/vt_types.h>
@@ -115,7 +116,7 @@ CyberGloveBasic::allocate_CbGlove(void)
 
 //  private_data->abduct_fingers = abduct_18;
 
-  memset(private_data->ascii_record,NULL,CG_RECSIZE);
+  memset(private_data->ascii_record,0,CG_RECSIZE);
 
   return (newglove);
 }
@@ -195,8 +196,10 @@ CyberGloveBasic::vt_create_CbGlove(Boolean connect, ...)
 {
   char *dev_name;
   int baudrate;
-  va_list address_arg1 = (va_list) &connect;
+  va_list address_arg1;
 
+  va_start(address_arg1,connect);
+  
   current_glove = allocate_CbGlove();
   current_glove_private = current_glove->private_data;
 
@@ -207,6 +210,7 @@ CyberGloveBasic::vt_create_CbGlove(Boolean connect, ...)
     if (vt_open_glove_port(dev_name,baudrate) < Ok)
       vt_print_error("vt_create_CbGlove");
   }
+  va_end(address_arg1);
 
   return (current_glove);
 }
@@ -245,9 +249,9 @@ CyberGloveBasic::vt_unprocess_glove_angles(void)
   /* for the digit coordinate systems                                     */
   for (finger = THUMB; finger < FINGERS+1; finger++)
     for (joint = MCP; joint < JOINTS; joint++)
-      raw_value[finger][joint] = mapping[finger][joint].offset -
+      raw_value[finger][joint] = static_cast<unsigned char>(trunc(mapping[finger][joint].offset -
                             mapping[finger][joint].gain *
-               angle[finger][joint];
+               angle[finger][joint]));
 
   /* if we have a left handed glove negate abduction angles */
   if (!(current_glove_private->param_flags.word & CG_RIGHT_HAND_FLAG))
@@ -491,12 +495,11 @@ CyberGloveBasic::vt_read_processed_glove_data(void)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::set_baud_rate(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_baud_rate(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   unsigned char baudbyte, dontcaremask = 0x37;
-  va_list temp = (va_list)address_arg1;
 
   baudbyte = va_arg(temp, int);
   baudbyte &= dontcaremask;
@@ -526,12 +529,11 @@ CyberGloveBasic::set_baud_rate(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::enable_timestamp(CbGlove glove, void *address_arg1)
+CyberGloveBasic::enable_timestamp(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   int enabled;
-  va_list temp = (va_list)address_arg1;
 
   enabled = va_arg(temp, int);
 
@@ -562,12 +564,11 @@ CyberGloveBasic::enable_timestamp(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::enable_filter(CbGlove glove, void *address_arg1)
+CyberGloveBasic::enable_filter(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   Boolean enabled;
-  va_list temp = (va_list)address_arg1;
 
   enabled = va_arg(temp, int);
 
@@ -596,7 +597,7 @@ CyberGloveBasic::enable_filter(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::request_single_sample(CbGlove glove, void *address_arg1)
+CyberGloveBasic::request_single_sample(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
 
@@ -620,7 +621,7 @@ CyberGloveBasic::request_single_sample(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::request_sample_stream(CbGlove glove, void *address_arg1)
+CyberGloveBasic::request_sample_stream(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
 
@@ -645,12 +646,11 @@ CyberGloveBasic::request_sample_stream(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::enable_switch_controls_light(CbGlove glove, void *address_arg1)
+CyberGloveBasic::enable_switch_controls_light(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   Boolean enabled;
-  va_list temp = (va_list)address_arg1;
 
   enabled = va_arg(temp, int);
 
@@ -680,13 +680,12 @@ CyberGloveBasic::enable_switch_controls_light(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::set_sensor_mask(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_sensor_mask(CbGlove glove, va_list temp)
 {
   int num_enabled_sensors = 0, portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   unsigned long mask;
   unsigned char *byte;
-  va_list temp = (va_list)address_arg1;
 
   /* send the set software sensor mask command */
   if (vt_serial_write_byte(portfd,CG_SENSOR_MASK_CH) < Ok)
@@ -732,12 +731,11 @@ CyberGloveBasic::set_sensor_mask(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::set_num_values_returned(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_num_values_returned(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   int num_values;
-  va_list temp = (va_list)address_arg1;
 
   /* send the set software sensor mask command */
   if (vt_serial_write_byte(portfd,CG_NUM_VALUES_CH) < Ok)
@@ -769,12 +767,11 @@ CyberGloveBasic::set_num_values_returned(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::set_param_flags(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_param_flags(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   word_byte_union param_flags;
-  va_list temp = (va_list)address_arg1;
 
   /* send the set software sensor mask command */
   if (vt_serial_write_byte(portfd,CG_PARAMETER_CH) < Ok)
@@ -807,7 +804,7 @@ CyberGloveBasic::set_param_flags(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::reboot_CGIU(CbGlove glove, void *address_arg1)
+CyberGloveBasic::reboot_CGIU(CbGlove glove, va_list temp)
 {
   int lastbyte, portfd = glove->portfd;
   unsigned char buffer[2];
@@ -849,8 +846,10 @@ CyberGloveBasic::reboot_CGIU(CbGlove glove, void *address_arg1)
 int
 CyberGloveBasic::vt_send_glove_command(int id, ...)
 {
-  va_list address_arg1 = (va_list) &id;
-  static int (CyberGloveBasic::*command_function[])(CbGlove, void *) =
+  va_list address_arg1;
+  va_start(address_arg1,id);
+
+  static int (CyberGloveBasic::*command_function[])(CbGlove, va_list) =
   {
     &CyberGloveBasic::set_baud_rate, NULL, NULL, &CyberGloveBasic::enable_timestamp,
     &CyberGloveBasic::enable_filter, &CyberGloveBasic::request_single_sample,
@@ -863,8 +862,6 @@ CyberGloveBasic::vt_send_glove_command(int id, ...)
 
   if (current_glove->portfd == -1)
     return (Ok);
-
-  va_arg(address_arg1,int);      /* increment to first variable arg */
 
   if ((this->*command_function[id])(current_glove,address_arg1) < Ok)
     return (vt_print_error("vt_send_glove_command"));
@@ -890,14 +887,13 @@ CyberGloveBasic::vt_send_glove_command(int id, ...)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::glove_ok_query(CbGlove glove, void *address_arg1)
+CyberGloveBasic::glove_ok_query(CbGlove glove, va_list temp)
 {
   int status, portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   unsigned long flags;
   Boolean *status_return = NULL;
-  va_list temp = (va_list)address_arg1;
 
   if (temp)
     status_return = va_arg(temp,Boolean *);
@@ -946,12 +942,11 @@ CyberGloveBasic::glove_ok_query(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::get_glove_info(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_glove_info(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   char *query_string = CG_GLOVE_QUERY;
   static char buffer[2048];
-  va_list temp = (va_list)address_arg1;
   char **info_return = NULL;
 
   if (temp)
@@ -1003,13 +998,12 @@ CyberGloveBasic::get_glove_info(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::get_avail_sensor_mask(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_avail_sensor_mask(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   unsigned char mask[3];
-  va_list temp = (va_list)address_arg1;
   unsigned long *mask_return;
 
   if (temp)
@@ -1054,13 +1048,12 @@ CyberGloveBasic::get_avail_sensor_mask(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::get_sensor_mask(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_sensor_mask(CbGlove glove, va_list temp)
 {
   int num_enabled_sensors = 0, portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   word_byte_union mask;
-  va_list temp = (va_list)address_arg1;
   unsigned long *mask_return = NULL;
 
   if (temp)
@@ -1117,13 +1110,12 @@ CyberGloveBasic::get_sensor_mask(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::get_num_values_returned(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_num_values_returned(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   int num_values;
-  va_list temp = (va_list)address_arg1;
   int *num_values_return = NULL;
 
   if (temp)
@@ -1167,13 +1159,12 @@ CyberGloveBasic::get_num_values_returned(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::read_param_flags(CbGlove glove, void *address_arg1)
+CyberGloveBasic::read_param_flags(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   unsigned char param[3];
-  va_list temp = (va_list)address_arg1;
   unsigned long *param_return = NULL;
 
   if (temp)
@@ -1219,14 +1210,13 @@ CyberGloveBasic::read_param_flags(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::right_hand_glove_query(CbGlove glove, void *address_arg1)
+CyberGloveBasic::right_hand_glove_query(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   unsigned long flags;
   int is_righthand;
-  va_list temp = (va_list)address_arg1;
   Boolean *righthand_return = NULL;
 
   if (temp)
@@ -1274,13 +1264,12 @@ CyberGloveBasic::right_hand_glove_query(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-CyberGloveBasic::get_max_num_sensors(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_max_num_sensors(CbGlove glove, va_list temp)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
   char *query_string = CG_GLOVE_QUERY;
   int num_sensors;
-  va_list temp = (va_list)address_arg1;
   int *num_sensors_return = NULL;
 
   if (temp)
@@ -1327,9 +1316,10 @@ CyberGloveBasic::get_max_num_sensors(CbGlove glove, void *address_arg1)
 int
 CyberGloveBasic::vt_send_glove_query(int id, ...)
 {
-  va_list address_arg1 = (va_list) &id;
+  va_list address_arg1;
+  va_start(address_arg1, id);
 
-  static int (CyberGloveBasic::*query_function[])(CbGlove, void *) =
+  static int (CyberGloveBasic::*query_function[])(CbGlove, va_list) =
   {
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     &CyberGloveBasic::get_sensor_mask, &CyberGloveBasic::get_num_values_returned,
@@ -1342,10 +1332,10 @@ CyberGloveBasic::vt_send_glove_query(int id, ...)
   if (current_glove->portfd == -1)
     return (Ok);
 
-  va_arg(address_arg1,int);      /* increment to first variable arg */
-
   if ((this->*query_function[id])(current_glove,address_arg1) < Ok)
     return (vt_print_error("vt_send_glove_query"));
+
+  va_end(address_arg1);
 
   return (Ok);
 }

@@ -49,6 +49,7 @@ require 5.004;
 
 use Cwd;
 use File::Basename;
+use File::Copy;
 use File::Path;
 use Getopt::Std;
 
@@ -74,10 +75,12 @@ if ( $#ARGV < 3 || $#ARGV > 9 ) {
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopt('g:i:m:o:');
+getopt('g:i:m:o:v:');
 
 my $src_dir = "$opt_i";
 my $dest_dir = "$opt_o";
+
+require "$opt_v" if $opt_v;
 
 # Defaults.  getpwuid() is not implemented in the Win32 Perl port.
 my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
@@ -125,5 +128,42 @@ exit 0;
 sub recurseAction ($) {
     my $curfile = shift;
 
-    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+    # If the current file is a .in template file, process it before
+    # installing.
+    if ( $curfile =~ /^(.+?)\.in$/ ) {
+	my $filename = "$1";
+
+	my $workfile;
+
+	if ( $Win32 ) {
+	    $workfile = "C:/temp/$curfile";
+	} else {
+	    $workfile = "/tmp/$curfile";
+	}
+
+	# Make a working copy of the input file to be safe.
+	copy("$curfile", "$workfile") unless "$curfile" eq "$workfile";
+
+	# Replace the tags in $workfile with the values in %VARS.
+	if ( replaceTags("$workfile", %VARS) < 0 ) {
+	    copy("$curfile", "$filename");
+	}
+	# If replaceTags() succeeded, move the work file to the file name
+	# to be installed.
+	else {
+	    copy("$workfile", "$filename");
+	    unlink("$workfile")
+	        or warn "WARNING: Could not delete $workfile: $!";
+	}
+
+	installFile("$filename", $uid, $gid, "$mode", "$dest_dir");
+
+	# Delete the generated file now that we are done with it.
+	unlink("$filename") or warn "WARNING: Could not delete $filename: $!";
+    }
+    # Otherwise, install it as-is.
+    else {
+	installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+    }
+
 }

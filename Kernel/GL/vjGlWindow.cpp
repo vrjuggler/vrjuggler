@@ -49,7 +49,13 @@
 
 
 int vjGlWindow::mCurMaxWinId = 0;
+vjMutex vjGlWindow::mWinIdMutex;
 
+int vjGlWindow::getNextWindowId()
+{
+vjGuard<vjMutex> guard(mWinIdMutex);   // Protect the id
+   return mCurMaxWinId++;
+}
 
 void vjGlWindow::config(vjDisplay* _display)
 {

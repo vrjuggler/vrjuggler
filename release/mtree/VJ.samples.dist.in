@@ -40,7 +40,13 @@
     samples
 	nav
 	..
+	OSG
+	    osgNav
+	    ..
+	..
 	ogl
+	    analog
+	    ..
 	    combo
 	    ..
 	    cones
@@ -50,6 +56,10 @@
 	    digitalGlove
 	    ..
 	    simpleGlove
+	    ..
+	    texture
+		ImageFileLoaderCode
+		..
 	    ..
 	    torus
 	    ..
@@ -66,7 +76,11 @@
 	    pfTools
 	    ..
 	..
-	tools
+	tutorials
+	    simpleInput
+	    ..
+	    simplePfApp
+	    ..
 	..
     ..
 ..

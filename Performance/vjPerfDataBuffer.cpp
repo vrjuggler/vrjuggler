@@ -53,7 +53,7 @@ void vjPerfDataBuffer::init (const char* _name, int _numbufs,
 //: POST: all memory & buffers have been freed.
 vjPerfDataBuffer::~vjPerfDataBuffer () {
     active = 0;
-    delete buffer;
+    delete []buffer;
     delete name;
 }
 

@@ -60,7 +60,7 @@ class vjConfigManager
 public:
    struct vjPendingChunk
    {
-      vjPendingChunk() : mChunk(NULL), mType(0)
+      vjPendingChunk() : mType(0), mChunk(NULL)
       {;}
 
       enum { ADD=0, REMOVE=1};

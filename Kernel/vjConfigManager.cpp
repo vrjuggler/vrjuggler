@@ -75,16 +75,29 @@ bool vjConfigManager::pendingNeedsChecked()
          }
          else
          {
-            vjDEBUG_BEGIN(vjDBG_ALL,0) << "vjConfigManager::pendingNeedsChecked: Pending list is now "
-                                       << clrOutNORM(clrGREEN,"STALE: ")
-                                       << cur_pending_size << " items still in pending\n" << vjDEBUG_FLUSH;
-            vjDEBUG_NEXT(vjDBG_ALL,0) << "NOTE: These items have been specified in configuration, but have not been loaded\n" << vjDEBUG_FLUSH;
-            vjDEBUG_NEXT(vjDBG_ALL,0) << "      This may be an error in the configuration OR\n" << vjDEBUG_FLUSH;
-            vjDEBUG_NEXT(vjDBG_ALL,0) << "      It may be waiting for more configuration information.\n"  << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << "vjConfigManager::pendingNeedsChecked: Pending list is now\n"
+                << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << clrOutNORM(clrGREEN,"STALE: ")
+                << cur_pending_size << " items still in pending\n"
+                << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << "NOTE: These items have been specified in configuration,\n"
+                << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << "      but have not been loaded.\n" << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << "      This may be an error in the configuration OR\n"
+                << vjDEBUG_FLUSH;
+            vjDEBUG_NEXT(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << "      it may be waiting for more configuration information.\n" 
+                << vjDEBUG_FLUSH;
+//            vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL) << vjDEBUG_FLUSH;
+
             lockPending();
-            debugDumpPending(0);     // Output the stale pending list
+            debugDumpPending(vjDBG_CRITICAL_LVL); // Output the stale pending list
             unlockPending();
-            vjDEBUG_CONT_END(vjDBG_ALL,0) << vjDEBUG_FLUSH;
 
             ret_val = false;
          }
@@ -173,10 +186,10 @@ int vjConfigManager::scanForLostDependencies()
    {
       if(!dep_mgr->depSatisfied(chunks[i]))      // We are not satisfied
       {
-         vjDEBUGlg(vjDBG_ALL,1,false,true) << chunks[i]->getProperty("name")
-                                            << " type: " << ((std::string)chunks[i]->getType()).c_str()
-                                            << " has lost dependencies.\n"
-                                            << vjDEBUG_FLUSH;
+         vjDEBUG_NEXT(vjDBG_ALL,1) << chunks[i]->getProperty("name")
+                                   << " type: " << ((std::string)chunks[i]->getType()).c_str()
+                                   << " has lost dependencies.\n"
+                                   << vjDEBUG_FLUSH;
 
          num_lost_deps++;              // Keep a count of the number lost deps found
 
@@ -204,9 +217,9 @@ int vjConfigManager::scanForLostDependencies()
 void vjConfigManager::debugDumpPending(int debug_level)
 {
    vjASSERT(1 == mPendingLock.test());
-   vjDEBUG_BEGIN(vjDBG_ALL,debug_level)
+   vjDEBUG(vjDBG_ALL,debug_level)
          << clrSetNORM(clrGREEN)
-         << "---- Debug Dump of Pending list: " << mPendingConfig.size() << " items in list\n"
+         << "---- Pending list: " << mPendingConfig.size() << " items ----\n"
          << clrRESET << vjDEBUG_FLUSH;
    std::list<vjConfigManager::vjPendingChunk>::iterator current, end;
    current = getPendingBegin();
@@ -222,7 +235,6 @@ void vjConfigManager::debugDumpPending(int debug_level)
                                         << std::endl << vjDEBUG_FLUSH;
       current++;
    }
-   vjDEBUG_ENDlg(vjDBG_ALL,0,false,true) << "----------------------------------\n" << vjDEBUG_FLUSH      ;
+   vjDEBUG_NEXT(vjDBG_ALL,debug_level)
+       << "----------------------------------\n" << vjDEBUG_FLUSH;
 }
-
-

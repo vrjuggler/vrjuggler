@@ -74,7 +74,7 @@ int sockstreambuf::overflow (int c) {
 }
 
 
-int sockstreambuf::underflow () {
+sockstreambuf::int_type sockstreambuf::underflow () {
     char c;
     //std::cout << "underflow: gptr is " << (int)gptr() << " and egptr is " << (int)egptr() << std::endl;
     if (gptr() < egptr()) {

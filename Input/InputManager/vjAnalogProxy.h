@@ -75,6 +75,9 @@ public:
       assert( anaPtr->fDeviceSupport(DEVICE_ANALOG) );
       m_anaPtr = anaPtr;
       m_unitNum = subNum;
+
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "anaPtr: " << anaPtr << std::endl
+              << "subNum: " << subNum << std::endl << vjDEBUG_FLUSH;
    }
 
    //: Update the cached data copy from the device

@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+  <head>
+    <title>Default Sim Config</title>
+      </head>
+
+  <body>
+    <!--NewPage-->
+    <h1>Using the Default VR Juggler Simulator Mode</h1>
+
+
+This document describes the basics of how to interact with VR Juggler's
+simulator displays and devices.  It is important to remember that Juggler
+is highly configurable, and that the specifics of the discussion here apply
+to the default simulator configuration files shipped with VR Juggler.
+<p>
+The best way to find out how a specific configuration file is set up is to
+look at it in vjcontrol.  In particular, look in Input/Simulated Devices
+to see which keyboard windows the simulated devices are hooked up to and how
+they respond to key presses and mouse movements.
+
+
+<h2>The Simulator Config Files</h2>
+Juggler ships with four configuration files which, together, provide a
+complete simulation of an immersive environment.  These files are found in
+<TT>$VJ_BASE_DIR/Data/configFiles</TT> and should have been copied into your
+<TT>~/.vjconfig</TT> directory.  The simulator files are:
+
+<p>
+<PRE>
+        sim.base.config
+        sim.wand.mixin.config
+        sim.glove.mixin.config
+        sim.analog.mixin.config
+</PRE>
+<p>
+
+<TT>sim.base.config</TT> is the base config file for simulator mode (big
+surprise, huh?).  It contains most of the configuration needed to start up
+a Juggler app.  It also defines two simulator display windows - a little one
+that's active by default, and a larger one that's initially inactive
+(that can be changed by editing the file or by dynamically reconfiguring
+an application with vjcontrol).
+
+<p>
+A Simulator Display is a special kind of VR Juggler display.  Instead of
+basing its viewpoint on the head position of one of the users, it is 
+controlled by a separate ``camera'' - which is just another positional
+device.  The Sim Display also draws certain objects to help visualize the
+environment.  For example, the heads of users are represented as 
+blue spheres with gray eyes, and the wand is drawn as a green cone.  Also,
+Surface Displays - Juggler Displays representing projection screens -
+are drawn in the environment as translucent rectangles.
+
+<p>
+<TT>sim.wand.mixin.config</TT> sets up a simulated 3-button wand, and
+is designed to be used with a base config file.  Actually, 
+<tt>sim.base.config</tt> currently requires a wand to be defined.  The
+real reason this is a separate file is that we occasionally find it useful
+to use a simulated wand with real displays, or vice versa, for testing.
+
+<p>
+<tt>sim.glove.mixin.config</tt> sets up a simulated glove device.  You
+only need to include this config file if your application expects to find
+a glove. 
+
+<p>
+<tt>sim.analog.mixin.config</tt> sets up a small input window for controlling
+analog devices.  You only need to include this config file if your 
+application expects to find analog devices.  This config file requires
+that the <TT>sim.wand.mixin.config</TT> also be loaded.
+
+
+<h2>Starting the Application</h2>
+
+To start an application in simulator mode, simply give the base and mixin
+config files you want to use as command-line arguments.  For example, to 
+run the ``<TT>cubes</tt>'' test program:
+
+<pre>
+     cubes ~/.vjconfig/sim.base.config ~/.vjconfig/sim.wand.mixin.config
+</pre>
+
+When the application starts up, it opens several windows.  The small
+window labeled ``<TT>SimWindow1</TT>'' shows a view of the application.
+You should be able to see the user's head, a wand, and -- if you're 
+running cubes -- a bunch of little cubes floating in space.  The
+other windows off to the side are keyboard input windows, used to
+control the simulated input devices.  You should see windows labeled
+``<TT>Head Keyboard</TT>'', ``<TT>Sim View Camera Control</TT>'', and
+``<TT>Wand Keyboard</TT>''.  The base config also sets up another
+display window - ``<TT>SimWindow2</TT>'' - but doesn't open it unless
+you go into the configuration and activate it.
+
+<h2>Head and Camera Movement in Simulator Mode</h2>
+
+To move the user's head, select the ``<TT>Head Keyboard</TT>'' window
+and use the numeric keypad.  The controls are:
+
+<pre>
+    KEY              MOVES
+   -------------------------
+    8                Forward
+    2                Back
+    4                Left
+    6                Right
+    9                Up
+    7                Down
+    CTRL-4           Turn Left
+    CTRL-6           Turn Right
+    CTRL-8           Look Down
+    CTRL-2           Look Up
+    3                Tilt Clockwise
+    1                Tilt CCW
+</pre>
+
+The camera positions in <TT>SimDisplay1</TT> and <TT>SimDisplay2</TT>
+are controlled by a pair of position simulator devices attached to the
+``<TT>Sim View Camera Control</TT>'' window.  Their controls are as
+follows (yes, <TT>SimCamera1</TT> is set up pretty much the same as the
+Head Position):
+
+<pre>
+    KEY              MOVES
+   -------------------------
+    8                SimCamera1 Forward
+    2                SimCamera1 Back
+    4                SimCamera1 Left
+    6                SimCamera1 Right
+    9                SimCamera1 Up
+    7                SimCamera1 Down
+    CTRL-4           SimCamera1 Turn Left
+    CTRL-6           SimCamera1 Turn Right
+    CTRL-8           SimCamera1 Look Down
+    CTRL-2           SimCamera1 Look Up
+    3                SimCamera1 Tilt Clockwise
+    1                SimCamera1 Tilt CCW
+
+    SHIFT-8          SimCamera2 Forward
+    SHIFT-2          SimCamera2 Back
+    SHIFT-4          SimCamera2 Left
+    SHIFT-6          SimCamera2 Right
+    SHIFT-9          SimCamera2 Up
+    SHIFT-7          SimCamera2 Down
+    ALT-4            SimCamera2 Turn Left
+    ALT-6            SimCamera2 Turn Right
+    ALT-8            SimCamera2 Look Down
+    ALT-2            SimCamera2 Look Up
+    SHIFT-3          SimCamera2 Tilt Clockwise
+    SHIFT-1          SimCamera2 Tilt CCW
+</pre>
+
+<h2>Using the Wand</h2>
+
+For the wand, we've tried something a little different in our default
+configuration: mouse control.  When the ``<TT>Wand Keyboard</TT>''
+window is selected, mouse movements are translated into wand movements.
+Here's how it works:
+
+<ul>
+<li>The mouse buttons, from left to right, correspond to wand buttons
+0 through 2 (VJButton0-2).  Note that the buttons only work when no
+modifier keys (<TT>CTRL, ALT, SHIFT</TT>) are pressed.
+<li>Hold down a <TT>CTRL</TT> key and move the mouse.  Left-right movement is 
+translated into left-right movement of the wand; forward-back movement
+is translated into up-down.
+<li>Hold down an <TT>ALT</TT> key and move the mouse.  Forward-back movement is
+translated into forward-back movement of the wand.
+<li>Hold down the <TT>SHIFT</TT> key and move the mouse to rotate the wand left
+or right or tilt it up or down.
+</ul>
+
+<h2>Using the Glove</h2>
+
+If you include the <TT>sim.glove.mixin.config</TT> file, your application
+will also have access to a simulated glove, with position and gesture 
+inputs.  The glove is controlled by the ``<TT>Glove Keyboard</TT>'' window.
+This window lets you control the glove position and selected gesture.
+Movement control of the glove uses the mouse and is the same as that of the wand.
+The mouse buttons are used to select gestures.
+The mapping of the gesture numbers to actual hand positions is controlled
+by the Training File - for the sim glove, it defaults to 
+<TT>$VJ_BASE_DIR/Data/gesture/simpleSimGestures.dat</TT>.
+
+
+
+<h2>Using the Analog Devices</h2>
+
+If you include the <TT>sim.analog.mixin.config</TT> file, your application
+will also have access to a set of four analog devices - devices with a
+value in a range from 0 to 255.  The analog devices are also controlled
+using the ``<TT>Wand Keyboard</TT>'' window - that's why their config file
+requires the wand config file.  They keypresses used for controlling the
+analog devices are:
+
+<PRE>
+    KEY              ACTION
+   -------------------------
+    Q                VJAnalog0 increase
+    A                VJAnalog0 decrease
+    W                VJAnalog1 increase
+    S                VJAnalog1 decrease
+    E                VJAnalog2 increase
+    D                VJAnalog2 decrease
+    R                VJAnalog3 increase
+    F                VJAnalog3 decrease
+</PRE>
+
+If you aren't using a QWERTY keyboard, you'll probably want to change those
+to something more intuitive.
+
+<hr>
+
+<!-- Created: Wed Jul  7 13:52:54 CDT 1999 -->
+<!-- hhmts start -->
+Last modified: Wed Jul  7 17:05:32 CDT 1999
+<!-- hhmts end -->
+  </body>
+</html>

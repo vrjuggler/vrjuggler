@@ -52,7 +52,7 @@ private:
    {
       mDepCheckers = std::vector<vjDepChecker*>(0);
       vjASSERT(mDepCheckers.size() == 0);
-      debugDump();
+      //debugDump();
    }
 
 public:
@@ -62,13 +62,14 @@ public:
       vjASSERT(checker != NULL);
       mDepCheckers.push_back(checker);          // Add the checker to the list
       vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
-              << "vjDependencyManager::registerChecker: Checker registered: "
-              << checker->getCheckerName().c_str()
-              << "   :" << (void*)checker
-              << " type:" << typeid(*checker).name() << std::endl
+              << "vjDependencyManager: Registered: "
+              << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << std::resetiosflags(std::ios::right)
+              << "  type: " << typeid(*checker).name() << std::endl
               << vjDEBUG_FLUSH;
       debugDump();
    }
+
+
 
    //: Are the dependencies satisfied for the given chunk?
    //

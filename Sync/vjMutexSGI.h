@@ -50,6 +50,7 @@
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>
+#include <Kernel/vjAssert.h>
 
 //: Mutex wrapper for the SGI systems.  Used for critical section protection.
 //!PUBLIC_API:
@@ -69,6 +70,7 @@ public:
 
         // ----- Allocate the mutex ----- //
         mutex = usnewlock(mutexPool->getArena());
+        vjASSERT( mutex != NULL && "in vjMutexSGI::vjMutexSGI() mutex is NULL" );
     }
 
     ~ vjMutexSGI(void)
@@ -99,7 +101,8 @@ public:
     //---------------------------------------------------------
     int acquire() const
     {
-        return ussetlock(mutex);
+       vjASSERT( mutex != NULL && "in vjMutexSGI::aquire() mutex is NULL" );
+        return ussetlock( mutex );
     }
 
     //----------------------------------------------------------

@@ -20,49 +20,7 @@
 
 /* if not Win32 then it must be UNIX, no other OS is supported  */
 #if !defined __WIN32__ && !defined WIN32 && !defined _Windows && !defined _WIN32
-#define UNIX 
-
-/* Following defines the flavor of UNIX the program should be compiled for.
-   Only one of the 3 lines can be used, the others should be commented out. */
-
-#define IRIX      /* use SGI-specific serial port configuration */
-/* #define SOLARIS */   /* SUN Solaris OS */
-/*#define LINUX*/
-#endif
-
-/* Serial port initialization varies for diffent vesions of IRIX operating systems.
-   If you have an older SGI, remove the comments from around the following line. I don't
-   have the actual models and IRIX version numbers, so it may be necessary to try both
-   with and without this flag. */
-
-/* #define LEGACY_SGI */
-
-
-/* handle difference between little and big endian systems */
-#if defined IRIX || defined SOLARIS
-#define REVERSE_BYTE_ORDER
-#endif
-
-#if (defined IRIX && (defined LINUX || defined SOLARIS)) || (defined LINUX && defined SOLARIS)
-#error More than one UNIX version is defined
-#endif
-
-/* maximum baud rate allowed by the operating system. Older SGI computers did not
-   support 115200 */
-
-#if defined UNIX && defined LEGACY_SGI
-#define MAX_BAUD_RATE  38400L
-#else
-#define MAX_BAUD_RATE  115200L
-#endif
-/* mugsy-> add 19200 instead of 115200*/
-/* if using a slower SGI system, serial port processing may be too taxing for the
-   processor, so it may be preferable to run in polled mode. Continuous mode, however,
-   is highly recommended for best performance. Win32 platform has efficient serial 
-   port driver that handles any throughput without effecting applications. */
-
-#if defined IRIX
-/* #define USE_POLLED_MODE */
+#define UNIX
 #endif
 
 /* -------------------------------------- */
@@ -74,20 +32,19 @@
 #define FALSE   0
 #endif
 
+#define MAX_BAUD_RATE 115200
+
 #if defined UNIX
-
-typedef unsigned long       DWORD;
-typedef int                 BOOL;
-typedef unsigned char       BYTE;
-typedef unsigned short      WORD;
-typedef float               FLOAT;
-typedef long                LONG;
-typedef int                 INT;
-
-#else /* Win32 platform */
-
-#include <windows.h>
-
+    typedef unsigned long       DWORD;
+    typedef int                 BOOL;
+    typedef unsigned char       BYTE;
+    typedef unsigned short      WORD;
+    typedef float               FLOAT;
+    typedef long                LONG;
+    typedef int                 INT;
+#else
+#   include <windows.h>
+#   include <winbase.h>
 #endif
 
 /* tracking system type */

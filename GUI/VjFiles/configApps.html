@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<title>Configuring Apps</title>
+
+<body>
+
+<!--NewPage-->
+<h1>Configuring VR Juggler Applications</h1>
+
+<p>
+VR Juggler applications are configured by using ConfigChunks.  These Chunks
+can be specified in a configuration file which the application reads at
+startup, or they can be added to a running application using the VjControl
+tool.
+</p>
+
+<p>
+This page documents particular kinds of ConfigChunks, and how they
+can be used with Juggler applications.  This includes adding 
+and configuring input devices, controlling displays, and setting up the VR
+  Juggler simulator mode. 
+</p>
+
+<p>
+The Chunks in the listing below have been divided into general categories.
+Each Chunk name is a hyperlink to a detailed description.
+</p>
+
+<p>
+For many chunks,
+it is reasonable and useful to have multiple instances in
+your configuration (displays are an obvious example).  Others are 
+"singletons" - they provide some sort of global information, and it
+wouldn't make sense to have multiple definitions.  Singleton Chunks
+are noted in the descriptions.  If a Juggler configuration does contain
+multiple instances of a singleton Chunk - multiple EnvironmentManager Chunks,
+for example - the most recently read Chunk will supercede older ConfigChunks.
+</p>
+
+<!-- install-web book-ignore-begin -->
+<h2>Jump to:</h2>
+<ul>
+<li><a href="#meta">"Meta" Chunks</a>
+<li><a href="#display">Display Chunks</a>
+<li><a href="#input">Input Chunks</a>
+<li><a href="#env">Environment Manager Chunks</a>
+<li><a href="#misc">Miscellaneous Chunks</a>
+<li><a href="#vjcontrol">VjControl-specific Chunks</a>
+</ul>
+<!-- install-web book-ignore-end -->
+
+<h2><a name="meta">"Meta" Chunks</a></h2>
+
+<p>
+VR Juggler defines two ConfigChunks which don't correspond to components 
+of the VR system itself, but rather impact how configuration files are
+loaded in the first place.
+
+<dl>
+
+<dt><a href="DescHelp/vjIncludeFile.html">Config File Include</a>
+<dd>The Config File Include chunk gives the name
+of an additional config file which should be loaded whenever this chunk
+is encountered.
+
+<dt><a href="DescHelp/vjIncludeDescFile.html">ChunkDesc File Include</a>
+<dd>The ChunkDesc File Include chunk gives the name
+of an additional chunk descriptions file which should be loaded whenever 
+this chunk is encountered.  ChunkDesc Include Chunks are particularly
+useful in configuration files that include application-defined ConfigChunk
+types.
+
+</dl>
+
+
+<h2><a name="display">Display Chunks</a></h2>
+
+<p>
+VR Juggler gives you a great deal of latitude in defining displays. 
+For example, you can use a combination of surface displays and 
+simulator displays, or maybe just one or
+  more simulator displays. Each display window is configured by a 
+Simulator or Surface Display ConfigChunk. To add a new display window, 
+simply add a new Display ConfigChunk to your
+ configuration file and edit it to taste. 
+
+<dl>
+<dt><a href="DescHelp/simDisplay.html">Simulator Display</a>
+<dd>Opens a display window suitable for simulator-style use.  The
+simulator window uses a "camera" attached to an arbitrary position
+input, and can graphically show the position of a user's head,
+wands, gloves, surface displays, and projection frustums.
+
+<dt><a href="DescHelp/surfaceDisplay.html">Surface Display</a>
+<dd>Opens a display window suitable for use with a projection screen.
+The dimensions and position of the surface can be freely defined in 3d space.
+
+<dt><a href="DescHelp/displaySystem.html">Display System</a>
+<dd>This chunk (a singleton) tells VR Juggler about the number of
+video channels on a machine, and how they map to X Window displays.
+
+
+</dl>
+
+<h2><a name="input">Input</a></h2>
+
+Any input devices that are defined in your config file will be initialized 
+at application startup. So, to add a new device, all you have to do is add 
+a ConfigChunk which describes its configuration. This section describes 
+the ConfigChunks for the input devices supported by VR Juggler.
+
+
+<ul>
+
+<h3><li>Input Manager</h3>
+<dl>
+<dt><a href="DescHelp/InputManager.html">Input Manager</a>
+<dd>This singleton chunk specifies some useful default values
+for the input devices, such as a default position and orientation
+of positional devices.
+</dl>
+
+<p><h3><li>Input Devices</h3>
+</p>
+
+<dl>
+<dt><a href="DescHelp/Flock.html">Flock of Birds</a>
+<dd>Configuration for Ascension Flock of Birds tracking system.
+
+<dt><a href="DescHelp/MotionStar.html">MotionStar</a>
+<dd>Configuration for Ascension MotionStar wireless tracking system.
+
+<dt>Trackd Controller (experimental)
+<dd>Configuation for a Trackd controller memory area.
+
+<dt>Trackd Sensor (experimental)
+<dd>Configuration for a Trackd sensor memory area.
+
+<dt><a href="DescHelp/Isense.html">Intersense tracker</a>
+<dd>Configuration for Intersense trackers.
+
+<dt><a href="DescHelp/IBox.html">IBox</a>
+<dd>Configuration for Immersion Corp. IBox.
+
+<dt><a href="DescHelp/CyberGlove.html">CyberGlove</a>
+<dd>Configuration for a Virtual Technologies CyberGlove.  The glove is a gesture device,
+and can also have a positional device attached to it.
+
+<dt><a href="DescHelp/ThreeDMouse.html">3D Mouse</a>
+<dd>Configuration for Logitech 3D Mouse.
+
+<dt><a href="DescHelp/Keyboard.html">Keyboard Input Window</a>
+<dd>This device opens a window on a display which accepts keypresses
+and mouse movement information.  It is usually used to provide input
+for the simulated devices described below.
+
+</dl>
+
+<p><h3><li>Simulator Devices</h3>
+</p>
+
+<p>
+VR Juggler provides a complete set of simulated input devices for use in
+testing applications.  The simulated devices generally attach to a Keyboard
+Input Window.  The mapping of keypresses to actions is completely configurable.
+</p>
+
+<dl>
+<dt><a href="DescHelp/SimDigital.html">Digital Simulator</a>
+<dd>Provides one or more digital inputs (on/off values).
+
+<dt><a href="DescHelp/SimAnalog.html">Analog Simulator</a>
+<dd>Provides one or more analog inputs (inputs in a continuous range).
+Keypresses to move up and down for each device, and the increment for
+a single keypress, can be configured.
+
+<dt><a href="DescHelp/SimPosition.html">Position Simulator</a>
+<dd>Simulates a single positional input (i.e. a tracker).  Users can configure
+the keypresses to use for movement and rotation on each access, delta for
+movement and rotation, and initial values.
+
+<dt><a href="DescHelp/SimGloveGesture.html">Glove Gesture Simulator</a>
+<dd>Simulates a gesture input device (i.e. a glove).
+
+<dt><a href="DescHelp/simKeyboardDigital.html">simKeyboardDigital</a>
+<dd>This is a rather unusual device.  It uses digital input devices
+to simulate a keyboard - which can be used to drive other simulator
+devices!
+
+<dt><a href="DescHelp/DummyPosition.html">Dummy Position</a>
+<dd>A fake positional device, which always returns a constant (configurable)
+position and orientation.
+
+</dl>
+
+<h3><li>Proxies and Proxy Aliases</h3>
+
+<p>
+Proxies are the mechanism for making access to input devices generic.
+A Configuration file should include a proxy for every possible input
+source.  Each proxy is defined with the name of the device it accesses
+and a unit number (for devices that provide multiple inputs).
+</p>
+
+<dl>
+
+<dt><a href="DescHelp/DigProxy.html">Digital Proxy</a>
+<dd>Proxy for digital devices.
+
+<dt><a href="DescHelp/AnaProxy.html">Analog Proxy</a>
+<dd>Proxy for analog devices.
+
+<dt><a href="DescHelp/PosProxy.html">Position Proxy</a>
+<dd>Proxy for position devices.  The Position Proxy also allows you to
+apply a transformation to the position data returned from the device.
+
+<dt><a href="DescHelp/GloveProxy.html">Glove Proxy</a>
+<dd>Proxy for a glove device.
+
+<dt><a href="DescHelp/GestureProxy.html">Gesture Proxy</a>
+<dd>Proxy for a gesture device.
+
+<dt><a href="DescHelp/KeyboardProxy.html">Keyboard Proxy</a>
+<dd>Proxy for keyboard devices.
+
+<dt><a href="DescHelp/proxyAlias.html">Proxy Alias</a>
+<dd>Proxy aliases are used to create additional names to refer to
+proxies.
+
+</dl>
+
+</ul>
+
+
+
+<p><h2><a name="env">Environment Manager</a></h2>
+
+<p>
+The Environment Manager(EM) is the part of VR Juggler that controls communications
+with the GUI program, vjcontrol.  It also controls Juggler's performance
+monitoring capabilities.
+<br>
+
+<dl>
+
+<dt><a href="DescHelp/EnvironmentManager.html">Environment Manager</a>
+<dd>The Environment Manager chunk, a singleton, allows the user to 
+configure the network setup of a Juggler app (whether to accept connections
+or not, what network port to listen on, etc).
+
+<dt><a href="DescHelp/PerfMeasure.html">Performance Measurements</a>
+<dd>This chunk, also a singleton, allows you to turn Juggler's internal
+performance measurements on and off.  
+
+<dt><a href="DescHelp/FileConnect.html">EM Connection</a>
+<dd>These chunks define data connections - files or sockets - that
+the EM can connect to.  An EM Connection is created automatically
+whenever a vjcontrol process connects to a Juggler application. Another
+common use of EM Connections is to define an output file for Juggler
+performance data.
+
+</dl>
+
+
+<p><h2><a name="misc">Miscellaneous</a></h2>
+</p>
+
+<dl>
+<dt><a href="DescHelp/JugglerUser.html">Juggler User</a>
+<dd>One of the eventual goals of VR Juggler is to provide full support
+for multiple users.  The first step is the Juggler User chunk, which
+currently associates a positional input proxy with a user's head.  You'll
+need to create at least one of these, to use as a target of your Display
+chunks.
+
+<dt><a href="DescHelp/apiPerformer.html">Performer API</a>
+<dd>This singleton Chunk defines a few properties needed for using Iris 
+Performer-based
+Juggler applications.  If you aren't using Performer, you don't need to
+worry about this one.
+
+</dl>
+
+<h2><a name="vjcontrol">VjControl-specific chunks</a></h2>
+
+<p>
+The VR Juggler control program, vjcontrol, also uses some ConfigChunks
+for its own configuration.  Generally, these will be kept in a separate
+file (<TT>~/.vjconfig/vjcontrol.config</TT>).
+</p>
+
+<p>
+<dl>
+<dt><a href="DescHelp/vjcontrol.html">VjControl Configuration</a>
+<dd>This chunk stores VjControl's preferences information.
+
+<dt><a href="DescHelp/PerfData.html">Performance Data Display</a>
+<dd>Chunks of this type give VjControl information on how to display
+and interpret performance data gathered from a Juggler application
+or a performance log file.
+
+</dl>
+</p>
+
+</body>
+
+
+</html>
+

@@ -256,6 +256,8 @@ bool navigator::checkForAction(std::vector<vjDigitalInterface*> btns, std::vecto
 {
    bool ret_val;
 
+   ret_val = true;
+
    // Check state of all the required combos
    for(unsigned int i=0;i<state_combo.size();i++)
    {

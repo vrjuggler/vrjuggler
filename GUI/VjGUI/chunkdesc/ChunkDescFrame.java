@@ -243,6 +243,9 @@ public class ChunkDescFrame
 		else
 		    i++;
 	    }
+            // validate & repaint needed to get components to "shift up"
+            // after removing one in the middle.
+            validate();
 	    repaint();
 	}
 	if (e.getSource() == insertbutton) {

@@ -74,6 +74,8 @@ public:
    {
       vjASSERT( gesturePtr->fDeviceSupport(DEVICE_GESTURE) );
       mGesturePtr = gesturePtr;
+
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "gesturePtr: " << gesturePtr << std::endl << vjDEBUG_FLUSH;
    }
 
    //: Get the current gesture.

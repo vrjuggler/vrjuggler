@@ -42,10 +42,8 @@
 default: TestSuite
 
 SUBDIRS	= TestSuite	\
-          CfgTest	\
           Math		\
           Matrix	\
-          Performance	\
           Quat		\
           Sync		\
           input		\

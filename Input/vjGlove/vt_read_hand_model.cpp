@@ -250,7 +250,8 @@ adjust_hand_model_geometry(vec3d geom[5][4], vec3d thumb_roll_vecs[2],
 static void
 skip_comments(FILE *inputfp)
 {
-  char ch,comment_line[256];
+  int ch;
+  char comment_line[256];
 
   while (((ch = getc(inputfp)) == '!') && (ch != EOF))
     fgets(comment_line,256,inputfp);

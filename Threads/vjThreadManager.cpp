@@ -74,27 +74,25 @@ void vjThreadManager::removeThread(vjBaseThread* thread)
 //: Dump the state of the manager to debug
 void vjThreadManager::debugDump()
 {
-   vjDEBUG(vjDBG_ALL, vjDBG_CONFIG_LVL)
+   vjDEBUG(vjDBG_ALL, vjDBG_VERB_LVL)
       << "------- Thread Manager DUMP -------\n" << vjDEBUG_FLUSH;
-   vjDEBUG_BEGIN(vjDBG_ALL, vjDBG_CONFIG_LVL) << "--- Thread List ----\n"
-                                                << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL, vjDBG_STATE_LVL) << "--- Thread List ----\n";
    for (unsigned int i=0;i<mThreads.size();i++)
    {
       if (mThreads[i] != NULL)
-         vjDEBUG(vjDBG_ALL, vjDBG_CONFIG_LVL) << i << ": ["
+         vjDEBUGnl(vjDBG_ALL, vjDBG_STATE_LVL) << i << ": ["
                                                 << (void*)mThreads[i] << "] "
-                                                << mThreads[i] << std::endl
-                                                << vjDEBUG_FLUSH;
+                                                << mThreads[i] << std::endl;
       else
-         vjDEBUG(vjDBG_ALL, vjDBG_CONFIG_LVL) << i << ": ["
+         vjDEBUGnl(vjDBG_ALL, vjDBG_STATE_LVL) << i << ": ["
                                                 << (void*)mThreads[i]
-                                                << "] No thread\n"
-                                                << vjDEBUG_FLUSH;
+                                                << "] No thread\n";
    }
 
-   vjDEBUG_END(vjDBG_ALL, vjDBG_CONFIG_LVL) << "---------------------\n"
+   vjDEBUG_ENDnl(vjDBG_ALL, vjDBG_STATE_LVL) << "---------------------\n"
                                               << vjDEBUG_FLUSH;
 }
+
 
 
 

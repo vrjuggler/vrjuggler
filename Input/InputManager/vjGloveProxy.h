@@ -70,6 +70,9 @@ public:
      vjASSERT( glovePtr->fDeviceSupport(DEVICE_GLOVE) );
      mGlovePtr = glovePtr;
      mUnitNum = unitNum;
+
+     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "glovePtr: " << glovePtr << std::endl
+              << "unitNum: " << unitNum << std::endl << vjDEBUG_FLUSH;
   }
 
   float getAngle(vjGloveData::vjGloveComponent component,

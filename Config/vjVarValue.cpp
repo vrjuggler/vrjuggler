@@ -249,7 +249,7 @@ vjVarValue::operator float () const {
     case T_FLOAT:
         return floatval;
     case T_INT:
-        return (float)floatval;
+        return (float)intval;
     case T_BOOL:
         return (float)boolval;
     case T_INVALID:

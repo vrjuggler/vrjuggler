@@ -40,6 +40,9 @@
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Kernel/vjUser.h>
+#include <Performance/vjPerfDataBuffer.h>
+#include <Environment/vjEnvironmentManager.h>
+#include <Kernel/vjKernel.h>
 
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
@@ -63,10 +66,23 @@ public:
       mType = vjDisplay::UNDEFINED;
       mDisplayChunk = NULL;
       mPipe = vjDisplay::NONE;
+      mLatencyMeasure = NULL;
    }
 
-   virtual ~vjDisplay()
-   {;}
+   virtual ~vjDisplay() {
+       if (mLatencyMeasure) {
+           vjKernel::instance()->getEnvironmentManager()->removePerfDataBuffer (mLatencyMeasure);
+
+       }
+   }
+
+
+    // i'm probably gonna regret this
+    void recordLatency (int trackertimeindex, int currenttimeindex) {
+        mLatencyMeasure->set (trackertimeindex, *(mUser->getHeadUpdateTime()));
+        mLatencyMeasure->set (currenttimeindex);
+    }
+
 
    enum DisplayType { UNDEFINED, SURFACE, SIM};             // What type of display is it
    enum DisplayView { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
@@ -153,6 +169,9 @@ protected:
    DisplayView  mView;                 //: Which buffer(s) to display (left, right, stereo)
 
    vjConfigChunk* mDisplayChunk;        //: The chunk data for this display
+
+    vjPerfDataBuffer *mLatencyMeasure;   //: measures of user tracking latency
+
 };
 
 //std::ostream& operator<<(std::ostream& out, vjDisplay* disp);
