@@ -1,15 +1,15 @@
-<!-- Juggler class navigation thingie -->
-<!-- The formatting is tight because perceps leave a LOT of white space in the file -->
+Juggler class navigation thingie
+The formatting is tight because perceps leave a LOT of white space in the file
 {foreach classgroup sort} < folder title="{gname}" >
 {foreach gmember sort}
 {if PUBLIC_API} {if class}
 {if gmember}
 	<folder title="{classname}" link="classes/{class}_desc.html#{memberef}" {if brief} info="{brief}" {endif} image="Class.gif">
 {endif}	 
-{if classgroup}
+{if class}
 	<folder title="{classname}" link="classes/{class}_desc.html" {if brief} info="{brief}" {endif} image="Class.gif">
 {endif}	     
-  <!-- Public Funcs -->
+   Public Funcs
     <font style="Bold" color="000022">
     {foreach public all}
     {if func}        
@@ -17,7 +17,7 @@
     {endif}	 
     {next public}
     </font>
-  <!-- Protected Funcs -->
+  Protected Funcs
     <font style="Bold" color="002200">
     {foreach protected all}
     {if func}        
@@ -25,7 +25,7 @@
     {endif}	 
     {next public}
     </font>
-  <!-- Private Funcs -->
+  Private Funcs
     <font style="Bold" color="220000">
     {foreach private all}
     {if func}
@@ -33,7 +33,7 @@
     {endif}	 
     {next public}
     </font>
-  <!-- Public vars -->
+  Public vars
     <font style="Plain" color="000022">
     {foreach public all}
     {if !func}        
@@ -41,7 +41,7 @@
     {endif}	 
     {next public}
     </font>
-  <!-- Protected vars -->
+  Protected vars
     <font style="Plain" color="002200">
     {foreach protected all}        
     {if !func}        
@@ -49,7 +49,7 @@
     {endif}	 
     {next public}
     </font>
-  <!-- Private vars -->
+  Private vars
     <font style="Plain" color="220000">
     {foreach private all}        
     {if !func}        
