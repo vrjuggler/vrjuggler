@@ -70,7 +70,7 @@ public:
     * @param iiopVersion  The version of IIOP to use when communicating with
     *                     the Naming Service.  Common values are "1.0" and
     *                     "1.2".  It defaults to "1.0".
-    * @param subcontextId The identifier for the Naming subcontext.  This is
+    * @param subContextId The identifier for the Naming subcontext.  This is
     *                     currently unused.
     */
    CorbaService(const std::string& nsHost, vpr::Uint16 nsPort = 2809,

@@ -137,13 +137,13 @@ public:
    }
 
    /**
-    * Assigns the given value for the username informational item.  This can
-    * be used to provide remote users with an application-specific identifier
-    * for this Subject Manager instance.  If this method is not used, the
-    * username setting defaults to "unknown".
+    * Assigns the given value for the application name informational item.
+    * This can be used to provide remote users with an application-specific
+    * identifier for this Subject Manager instance.  If this method is not
+    * used, the application name setting defaults to "unknown".
     *
-    * @param userName The username to be added to the collection of custom
-    *                 informational items.
+    * @param appName The application name to be added to the collection of
+    *                custom informational items.
     */
    void setApplicationName(const std::string& appName)
    {
