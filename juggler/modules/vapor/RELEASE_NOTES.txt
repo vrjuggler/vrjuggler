@@ -66,7 +66,7 @@ Released: July 11, 2001
 
     New features:
         The internal I/O implementation classes no longer inherit from
-        vpr::BlockIO.  This dramatically reduces the use of virutal functions
+        vpr::BlockIO.  This dramatically reduces the use of virtual functions
         and should improve performance in general.
 
  Version: 0.2.0
@@ -77,7 +77,7 @@ Released: July 2, 2001
  Version: 0.1.0
 Released: July 2, 2001
 
-    First stable version--interal release only.  The API has been stabilized
+    First stable version--internal release only.  The API has been stabilized
     on RELENG_0_1 branch.  Only bug fixes are allowed in subsequent 0.1.x
     releases.
 
