@@ -1,4 +1,4 @@
-#!/usr/freeware/bin/perl
+#!/usr/bin/perl
 # Options:  -a     recompile everything
 #           -n     don't run netscape after compile
 

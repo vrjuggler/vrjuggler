@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 # -----------------------------------------------------------------------------
 # Fancy install for websites, includes variable substitution, text includes, 
