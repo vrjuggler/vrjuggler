@@ -21,6 +21,7 @@
 #include <OpenSG/OSGThread.h>
 #include <OpenSG/OSGMPBase.h>
 #include <OpenSG/OSGMatrixUtility.h>
+#include <OpenSG/OSGGeometry.h>
 
 OSG::UInt32 OpenSGNav::OSG_MAIN_ASPECT_ID=0;
 
@@ -34,6 +35,16 @@ void OpenSGNav::init()
    // XXX: Complete initialization
    // if(!osgInitAlreadyCalled())
    OSG::osgInit(0,0);                  // Binds to primordial thread
+
+   OSG::FieldContainerPtr pProto = OSG::Geometry::getClassType().getPrototype();
+
+   OSG::GeometryPtr pGeoProto = OSG::GeometryPtr::dcast(pProto);
+
+   if(pGeoProto != OSG::NullFC)
+   {
+       pGeoProto->setDlistCache(false);
+   }
+
    OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
 }
 
