@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-15-2002 nonchocoboy ConfigChunks are now created on the fly as needed when
+                        requested from a ConfigChunkDB. This allows client code
+                        to follow includedesc directives before the Chunks in
+                        the ConfigChunkDB try to use the chunk descs.
 Sep-15-2002 patrickh    Disconnected unused JCCL network code from the build.
                         It will be replaced with the CORBA-based remote
                         reconfiguration code soon.
