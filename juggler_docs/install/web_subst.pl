@@ -21,6 +21,9 @@
 $web_subst{"HTML"} = 'html/';
 $web_subst{"IMAGES"} = 'images/';
 $web_subst{"CLASS_PATH"} = 'java.class/ver1.07/';
+## put all binaries, tarballs, and pdf's here...
+$web_subst{"PUB"} = 'pub/';
+
 
 # directories within the ~/html directory
 $web_subst{"BUGS"} = 'html/bugs';
@@ -35,6 +38,8 @@ $web_subst{"NEWS"} = 'html/news';
 $web_subst{"PUBLICATIONS"} = 'html/publications';
 $web_subst{"PROGRAMMERGUIDE"} = 'html/programmer.guide';
 $web_subst{"VJCONTROL"} = 'html/vjcontrol';
+$web_subst{"DOCUMENTATION"} = 'html/documentation';
+
 
 # html files
 $web_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';

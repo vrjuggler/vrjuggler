@@ -531,7 +531,7 @@ sub recurseAction ($) {
      # This is equivalent to a C switch block.
     SWITCH: {
       # Match .txt or .TXT.
-      if ( $curfile =~ /\.txt$/i ) {
+      if ( $curfile =~ /\.(txt|pdf)$/i ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
