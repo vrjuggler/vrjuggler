@@ -405,7 +405,7 @@ bool Connect::readCommand(std::istream& fin) {
     }
 
     if (communicator) {
-        return communicator->readStream (fin, buf);
+        return communicator->readStream (this, fin, buf);
     }
     else {
         vprDEBUG (vprDBG_ENV_MGR, 1) << "Connection: Couldn't find protocol handler for '" << protocol_name << "'\n" << vprDEBUG_FLUSH;
