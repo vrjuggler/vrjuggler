@@ -479,7 +479,8 @@ void collideApp::decrease()
 void collideApp::preFrame()
 {   
    VPR_PROFILE_GUARD("preFrame");
-   float hit1, hit2;
+   float hit1 = 0.0f;
+   float hit2 = 0.0f;
    
    delta = 0.05f; // increase to speed up, decrease to slow down ***************
    
