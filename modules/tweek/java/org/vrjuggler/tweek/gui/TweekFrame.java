@@ -312,6 +312,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       m_status_bar.setLayout(m_status_bar_layout);
       m_status_bar.setBorder(BorderFactory.createLoweredBevelBorder());
+      m_progress_bar.setMinimumSize(new Dimension(100, 14));
       m_status_msg_button.setMinimumSize(new Dimension(24, 24));
 
       String bulb_on_icon_name  = "org/vrjuggler/tweek/bulb-on-small.gif";
@@ -358,6 +359,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       m_content_pane.add(m_status_bar,  BorderLayout.SOUTH);
       m_status_bar.add(m_status_msg_button,  BorderLayout.EAST);
       m_status_bar.add(m_status_msg_label,  BorderLayout.CENTER);
+      m_status_bar.add(m_progress_bar, BorderLayout.WEST);
       m_main_panel.setDividerLocation(500);
    }
 
@@ -632,6 +634,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
    // Status bar stuff.
    private JPanel        m_status_bar         = new JPanel();
+   private JProgressBar  m_progress_bar       = new JProgressBar();
    private JLabel        m_status_msg_label   = new JLabel();
    private JButton       m_status_msg_button  = new JButton();
    private BorderLayout  m_status_bar_layout  = new BorderLayout();
