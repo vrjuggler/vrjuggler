@@ -61,8 +61,7 @@
 #include <osgDB/ReadFile>
 #include <math.h>
 
-//#include <vrj/Draw/OSG/OsgApp.h>
-#include "OsgApp.h"
+#include <vrj/Draw/OSG/OsgApp.h>
 
 /**
  * Demonstration Open Scene Graph application class
