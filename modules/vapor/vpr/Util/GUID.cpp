@@ -108,24 +108,6 @@ GUID::GUID (const struct vpr::GUID::StdGUID& guid)
    memcpy(&m_guid, &guid, sizeof(vpr::GUID::StdGUID));
 }
 
-GUID::GUID (const std::string& guid_string)
-{
-   vpr::Uint32 m3[8];
-
-   // The array of vpr::Uint32's is used to avoid alignment problems on
-   // architectures such as MIPS.
-   sscanf(guid_string.c_str(),
-          "%08x-%04hx-%04hx-%02x%02x-%02x%02x%02x%02x%02x%02x",
-          &m_guid.moz.m0, &m_guid.moz.m1, &m_guid.moz.m2,
-          &m3[0], &m3[1], &m3[2], &m3[3], &m3[4], &m3[5], &m3[6], &m3[7]);
-
-   // Fill the m_guid struct with the values read into m3[] above.
-   for ( int i = 0; i < 8; i++ )
-   {
-      m_guid.moz.m3[i] = (vpr::Uint8) m3[i];
-   }
-}
-
 GUID::GUID (const GUID& ns_guid, const std::string& name)
 {
    generate(ns_guid,name);
@@ -143,6 +125,24 @@ void GUID::generate(const GUID& ns_guid, const std::string& name)
    uuid_create_from_name((uuid_t*)(&m_guid.standard), 
                          temp_ns_id,
                          (void*) name.c_str(), name.length());
+}
+
+void GUID::fromString (const std::string& guid_string)
+{
+   vpr::Uint32 m3[8];
+
+   // The array of vpr::Uint32's is used to avoid alignment problems on
+   // architectures such as MIPS.
+   sscanf(guid_string.c_str(),
+          "%08x-%04hx-%04hx-%02x%02x-%02x%02x%02x%02x%02x%02x",
+          &m_guid.moz.m0, &m_guid.moz.m1, &m_guid.moz.m2,
+          &m3[0], &m3[1], &m3[2], &m3[3], &m3[4], &m3[5], &m3[6], &m3[7]);
+
+   // Fill the m_guid struct with the values read into m3[] above.
+   for ( int i = 0; i < 8; i++ )
+   {
+      m_guid.moz.m3[i] = (vpr::Uint8) m3[i];
+   }
 }
 
 
