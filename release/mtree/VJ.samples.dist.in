@@ -40,6 +40,10 @@
     samples
 	nav
 	..
+	OSG
+	    osgNav
+	    ..
+	..
 	ogl
 	    analog
 	    ..

@@ -62,6 +62,7 @@ INSTALL_DEPS	+= install-recursive
 
 # Prefix for recursive stuff.
 DIRPRFX		= Kernel/
+SUBDIRS		= OSG
 
 # Subdirectories to compile.
 ifeq (@OPENGL_API@, Y)
