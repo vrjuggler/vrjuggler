@@ -125,8 +125,8 @@ public:
 
       //vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vpr::GUID(): overhead = " << per_call << "us per call\n"
       //          << vprDEBUG_FLUSH;
-      
-      CPPUNIT_ASSERT_METRIC_LE("GUIDTest/CreationOverhead", per_call, 0.1f, 0.05f);
+
+      CPPUNIT_ASSERT_METRIC_LE("GUIDTest/CreationOverhead", per_call, 0.05f, 0.1f);
    }
 
    void testDebugOutput()
