@@ -539,6 +539,8 @@ def generateAntBuildFiles():
                          'VRJConfig', 'build-proxyeditor.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
                          'VRJConfig', 'build-surfacedisplayeditor.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\plugins\corba_perf_mon',
+                         r'VRJugglerPlugins\Perf_Plugin_Java', 'build.xml'))
 
    for m in mods:
       m.generateBuildFile()
@@ -560,6 +562,8 @@ def doInstall(prefix):
    installGadgeteerPlugins(prefix)
    installVRJuggler(prefix)
    installVRJConfig(prefix)
+   installVRJugglerPlugins(prefix)
+   installVRJugglerPluginsJava(prefix)
    installMsvcRT(prefix)
 
 def mkinstalldirs(dir):
@@ -1083,6 +1087,35 @@ def installVRJConfig(prefix):
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
       print "VRJConfig not built.  Skipping."
+
+def installVRJugglerPlugins(prefix):
+   print "Installing VR Juggler C++ plug-ins ..."
+
+   destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'plugins')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJugglerPlugins',
+                          'Perf_Plugin_CXX')
+   installLibs(srcroot, destdir, extensions = ['.dll'])
+
+def installVRJugglerPluginsJava(prefix):
+   srcdir = os.path.join(juggler_dir, 'vc7', 'VRJugglerPlugins',
+                         'Perf_Plugin_Java')
+
+   plugins = [('PerformanceMonitor', 'corba_perf_mon')]
+
+   for p in plugins:
+      name = p[0]
+      dir  = p[1]
+      if os.path.exists(os.path.join(srcdir, name + '.jar')):
+         print "Installing VR Juggler Java plug-ins ..."
+
+         destdir = os.path.join(prefix, 'bin', 'beans')
+         shutil.copy2(os.path.join(srcdir, name + '.jar'), destdir)
+
+         srcdir = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'plugins',
+                               dir)
+         shutil.copy2(os.path.join(srcdir, name + '.xml'), destdir)
+      else:
+         print "VR Juggler %s Java plug-ins not built.  Skipping." % name
 
 def installMsvcRT(prefix):
    print "Installing MSVC runtime DLLs"
