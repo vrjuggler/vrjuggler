@@ -78,14 +78,14 @@ public:
    * Actively connect to the remote address and set the newStream
    * to the new connection.
    *
-   * ARGS: new_stream - The stream to connect
-   *       remoteAddr - The remote address to connect to
-   *       timeout    - The num msecs to wait (0 - NonBlocking)
+   * @param new_stream The stream to connect
+   * @param remoteAddr The remote address to connect to
+   * @para timeout     The num msecs to wait (0 - NonBlocking)
    */
-  inline vpr::ReturnStatus connect (vpr::SocketStream& newStream,
-                                    const vpr::InetAddr& remoteAddr,
-                                    vpr::Interval timeout = vpr::Interval::NoTimeout,
-                                    const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
+  inline vpr::ReturnStatus connect(vpr::SocketStream& newStream,
+                                   const vpr::InetAddr& remoteAddr,
+                                   vpr::Interval timeout = vpr::Interval::NoTimeout,
+                                   const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 
   /**
    * Complete a non-blocking connection
