@@ -766,7 +766,8 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef nextHandler,
       GetEventParameter(theEvent, kEventParamMouseButton, typeMouseButton,
                         NULL, sizeof(typeMouseButton), NULL, &myButton);
 
-
+      // Note that the button ordering in Carbon is:
+      // left (Primary), right (Secondary), and middle (Tertiary)
       switch ( myButton )
       {
          case kEventMouseButtonPrimary :
@@ -776,12 +777,12 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef nextHandler,
             break;
          case kEventMouseButtonSecondary:
             m_realkeys[gadget::MBUTTON2] = m_keys[gadget::MBUTTON2] = 1;
-            addMouseButtonEvent(gadget::MBUTTON2, theEvent,
+            addMouseButtonEvent(gadget::MBUTTON3, theEvent,
                                 gadget::MouseButtonPressEvent);
             break;
          case kEventMouseButtonTertiary:
             m_realkeys[gadget::MBUTTON3] = m_keys[gadget::MBUTTON3] = 1;
-            addMouseButtonEvent(gadget::MBUTTON3, theEvent,
+            addMouseButtonEvent(gadget::MBUTTON2, theEvent,
                                 gadget::MouseButtonPressEvent);
             break;
       }
