@@ -241,6 +241,104 @@ public class PropertySheetFactory extends PropertyComponent
       return sheet;
    }
 
+   private void addOrderingButtons(PropertySheet sheet,
+                                   final ConfigContext ctx,
+                                   final ConfigElement elm,
+                                   PropertyDefinition propDef, int row)
+   {
+      ClassLoader loader = getClass().getClassLoader();
+      Icon up_icon = new ImageIcon(loader.getResource(IMG_ROOT + "/Up16.gif"));
+      Icon down_icon = new ImageIcon(loader.getResource(IMG_ROOT +
+                                                        "/Down16.gif"));
+
+      JButton up_button = new JButton();
+      up_button.setIcon(up_icon);
+      up_button.setMargin(new Insets(0,0,0,0));
+      up_button.setBorderPainted(false);
+      up_button.setFocusPainted(false);
+      up_button.setContentAreaFilled(false);
+      up_button.setEnabled(false);
+
+      JButton down_button = new JButton();
+      down_button.setIcon(down_icon);
+      down_button.setMargin(new Insets(0,0,0,0));
+      down_button.setBorderPainted(false);
+      down_button.setFocusPainted(false);
+      down_button.setContentAreaFilled(false);
+      down_button.setEnabled(false);
+
+      // Verify that the property is variable.
+      if ( propDef.isVariable() )
+      {
+         up_button.setToolTipText("Move this value up one");
+         down_button.setToolTipText("Move this value down one");
+
+         final String prop_token = propDef.getToken();
+
+         // Create an action listener that decrements the proeprty value by 1.
+         // The notion of "up" relates to how this information is presented in
+         // the GUI.
+         up_button.addActionListener(new ActionListener()
+            {
+               public void actionPerformed(ActionEvent evt)
+               {
+                  Component source = (Component) evt.getSource();
+                  PropertyComponent sheet =
+                     (PropertyComponent) source.getParent();
+                  TableLayout tl = (TableLayout) sheet.getLayout();
+
+                  // Get the row where this button is located.
+                  TableLayoutConstraints tlc = tl.getConstraints(source);
+                  int row = tlc.row1;
+
+                  // Calculate the property index on the fly based on our row.
+                  int old_index = row - PropertySheet.VAR_LIST_VALUE_START_ROW;
+                  int new_index = old_index - 1;
+                  elm.setPropertyValueIndex(prop_token, new_index, old_index,
+                                            ctx);
+               }
+            }
+         );
+
+         // Create an action listener that increments the proeprty value by 1.
+         // The notion of "down" relates to how this information is presented
+         // in the GUI.
+         down_button.addActionListener(new ActionListener()
+            {
+               public void actionPerformed(ActionEvent evt)
+               {
+                  Component source = (Component) evt.getSource();
+                  PropertyComponent sheet =
+                     (PropertyComponent) source.getParent();
+                  TableLayout tl = (TableLayout) sheet.getLayout();
+
+                  // Get the row where this button is located.
+                  TableLayoutConstraints tlc = tl.getConstraints(source);
+                  int row = tlc.row1;
+
+                  // Calculate the property index on the fly based on our row.
+                  int old_index = row - PropertySheet.VAR_LIST_VALUE_START_ROW;
+                  int new_index = old_index + 1;
+                  elm.setPropertyValueIndex(prop_token, new_index, old_index,
+                                            ctx);
+               }
+            }
+         );
+
+         refreshOrderingButtons(sheet, PropertySheet.VAR_LIST_VALUE_START_ROW,
+                                row);
+      }
+
+      sheet.add(up_button,
+                new TableLayoutConstraints(PropertySheet.UP_ICON_COLUMN, row,
+                                           PropertySheet.UP_ICON_COLUMN, row,
+                                           TableLayout.LEFT, TableLayout.TOP));
+      sheet.add(down_button,
+                new TableLayoutConstraints(PropertySheet.DOWN_ICON_COLUMN, row,
+                                           PropertySheet.DOWN_ICON_COLUMN, row,
+                                           TableLayout.LEFT, TableLayout.TOP));
+   }
+
    /**
     * Adds a delete icon next to the given property. When the Icon is clicked
     * it will remove the property from the ConfigElement.
@@ -278,7 +376,7 @@ public class PropertySheetFactory extends PropertyComponent
                PropertyComponent sheet = (PropertyComponent) source.getParent();
                TableLayout tl = (TableLayout) sheet.getLayout();
 
-               // Get the row that this panel is in.
+               // Get the row where this button is located.
                TableLayoutConstraints tlc = tl.getConstraints(source);
                int row = tlc.row1;
 
@@ -291,14 +389,14 @@ public class PropertySheetFactory extends PropertyComponent
                   {
                      TableLayoutConstraints cur_tlc =
                         tl.getConstraints(components[i]);
-                     if ( cur_tlc != null && cur_tlc.row1 == row )
+                     if ( cur_tlc.row1 == row )
                      {
                         row_components.add(components[i]);
                      }
                   }
                }
 
-               // Calculate the property index on the fly bsaed on our row.
+               // Calculate the property index on the fly based on our row.
                int value_index = row - PropertySheet.VAR_LIST_VALUE_START_ROW;
                temp_elm.removeProperty(temp_string, value_index, temp_ctx);
 
@@ -313,6 +411,8 @@ public class PropertySheetFactory extends PropertyComponent
 
                // Remove the row that is now empty from the layout.
                tl.deleteRow(row);
+
+               refreshOrderingButtons(sheet, row, tl.getNumRow());
 
                sheet.revalidate();
                sheet.repaint();
@@ -329,6 +429,45 @@ public class PropertySheetFactory extends PropertyComponent
                                     PropertySheet.DELETE_ICON_COLUMN, row,
                                     TableLayout.LEFT, TableLayout.TOP);
       sheet.add(remove_button, c4);
+   }
+
+   private void refreshOrderingButtons(PropertyComponent sheet, int startRow,
+                                       int endRow)
+   {
+      if ( startRow <= endRow )
+      {
+         Component[] components = sheet.getComponents();
+         TableLayout tl = (TableLayout) sheet.getLayout();
+         int last_row = tl.getNumRow() - 1;
+
+         for ( int i = 0; i < components.length; ++i )
+         {
+            TableLayoutConstraints tlc = tl.getConstraints(components[i]);
+            if ( tlc.row1 >= startRow && tlc.row1 <= endRow )
+            {
+               // The "Up" button must be disabled when it is in the starting
+               // row for a variable list of values.  Otherwise, it can be
+               // enabled.
+               if ( tlc.col1 == PropertySheet.UP_ICON_COLUMN )
+               {
+                  components[i].setEnabled(
+                     tlc.row1 != PropertySheet.VAR_LIST_VALUE_START_ROW
+                  );
+                  System.out.println("Up button in row #" + tlc.row1 +
+                                     " enabled? " + components[i].isEnabled());
+               }
+               // The "Down" button must be disabled when it is in the last
+               // row of the layout for a variable list of values.  Otherwise,
+               // it can be enabled.
+               else if ( tlc.col1 == PropertySheet.DOWN_ICON_COLUMN )
+               {
+                  components[i].setEnabled(tlc.row1 != last_row);
+                  System.out.println("Down button in row #" + tlc.row1 +
+                                     " enabled? " + components[i].isEnabled());
+               }
+            }
+         }
+      }
    }
 
    private void addVarList(PropertySheet sheet, ConfigContext ctx,
@@ -373,6 +512,7 @@ public class PropertySheetFactory extends PropertyComponent
       JLabel label = new JLabel(labelText);
       sheet.add(label, PropertySheet.LABEL_COLUMN + "," + row + ",F,F");
 
+      addOrderingButtons(sheet, ctx, elm, propDef, row);
       addDeleteButton(sheet, ctx, elm, propDef, row);
 
       revalidate();
@@ -398,10 +538,83 @@ public class PropertySheetFactory extends PropertyComponent
                                     TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
 
+      addOrderingButtons(sheet, ctx, elm, propDef, row);
       addDeleteButton(sheet, ctx, elm, propDef, row);
 
       revalidate();
       repaint();
+   }
+
+   /**
+    * Handles any reordering of editor components needed based on a change
+    * in the order of property values in the given property
+    * (as identified by <code>propDef</code>) in the given config element.
+    * The given property sheet is revalidated and repainted at the end of
+    * this operation.
+    *
+    * @param sheet      the property sheet to update
+    * @param elt        the element containing the property whose values have
+    *                   been reordered
+    * @param rangeStart the index of the first property value that has been
+    *                   reordered
+    * @param rangeEnd   the index of the last property value that has been
+    *                   reordered
+    *
+    * @since 0.92.11
+    */
+   public void updateValueOrdering(PropertySheet sheet, ConfigElement elt,
+                                   PropertyDefinition propDef, int rangeStart,
+                                   int rangeEnd)
+   {
+      String prop_token = propDef.getToken();
+      Component[] components = sheet.getComponents();
+      TableLayout tl = (TableLayout) sheet.getLayout();
+
+      int start_row = rangeStart + PropertySheet.VAR_LIST_VALUE_START_ROW;
+      int end_row   = rangeEnd + PropertySheet.VAR_LIST_VALUE_START_ROW;
+
+      List prop_values = elt.getPropertyValues(prop_token);
+
+      for ( int i = 0; i < components.length; ++i )
+      {
+         TableLayoutConstraints cur_tlc =
+            tl.getConstraints(components[i]);
+
+         if ( cur_tlc.row1 >= start_row && cur_tlc.row1 <= end_row )
+         {
+            Object value = null;
+
+            if ( components[i] instanceof EmbeddedElementPanel )
+            {
+               value = ((EmbeddedElementPanel) components[i]).getValue();
+            }
+            else if ( components[i] instanceof PropertyEditorPanel )
+            {
+               value = ((PropertyEditorPanel) components[i]).getValue();
+            }
+
+            if ( value != null )
+            {
+               int value_index = elt.getPropertyValueIndex(prop_token, value);
+
+               if ( value_index > -1 )
+               {
+                  int expected_row = value_index +
+                                        PropertySheet.VAR_LIST_VALUE_START_ROW;
+
+                  if ( expected_row != cur_tlc.row1 )
+                  {
+                     cur_tlc.row1 = expected_row;
+                     cur_tlc.row2 = expected_row;
+                     tl.setConstraints(components[i], cur_tlc);
+                  }
+               }
+            }
+         }
+      }
+
+      sheet.revalidate();
+      sheet.repaint();
    }
 
    private void addNewNormalEditor(ConfigContext ctx, ConfigElement elm,

@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-30-2005 patrickh    Added the ability to change the ordering of property
+                        values within a variable-valued property through the
+                        Java API and the Java editor Beans.
+                        NEW VERSION: 0.92.11
 Mar-22-2005 patrickh    Added a new method editorClosing() to the interface
                         org.vrjuggler.jccl.editors.CustomEditor.
                         NEW VERSION: 0.92.10

@@ -138,6 +138,16 @@ public class PropertyEditorPanel extends PropertyComponent
    }
 
    /**
+    * Provides package visible access to the value edited by this panel;
+    *
+    * @since 0.92.11
+    */
+   Object getValue()
+   {
+      return mEditor.getValue();
+   }
+
+   /**
     * Enables or disables the editor component contained within this panel.
     *
     * @param enabled If true, this component and its editor component are
@@ -203,6 +213,8 @@ public class PropertyEditorPanel extends PropertyComponent
          }
       }
    }
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {;}
    public void propertyValueAdded(ConfigElementEvent evt)
    {;}
    public void propertyValueRemoved(ConfigElementEvent evt)
