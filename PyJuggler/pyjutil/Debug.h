@@ -31,7 +31,7 @@
 #include <vpr/Util/Debug.h>
 
 // Juggler categories
-const vpr::DebugCategory pyjDBG_CXX("51f9218d-1aa0-44ba-a5ad-ceee32a8b00f", "DBG_CXX", "pyjC++:");
+const vpr::DebugCategory pyjDBG_CXX(vpr::GUID("51f9218d-1aa0-44ba-a5ad-ceee32a8b00f"), "DBG_CXX", "pyjC++:");
 
 
 #endif /* _PYJUGGLER_DEBUG_H_ */
