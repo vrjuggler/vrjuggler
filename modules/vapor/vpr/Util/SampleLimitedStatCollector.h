@@ -133,7 +133,7 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::print(std::ostream& out)
        << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2 << std::endl
        << " --- data --- time --- " << std::endl;
 
-   for(std::vector< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
+   for(typename std::vector< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
        i!= mSampleBuffer.end(); ++i)
    {
       out << (*i).first << "   " << (*i).second.msec() << "ms\n";
