@@ -37,6 +37,15 @@ Introduction
    conclude with instructions on how to build VR Juggler and its individual
    components.
 
+   Before reading further, we recommend that readers take a look at the Wiki
+   page relating to building from CVS
+   (http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs).
+   It is a supplement to this document containing tips and reminders for
+   those users building the CVS version of VR Juggler. It is not a
+   replacement for this document, nor can it stand on its own as build
+   instructions. You are reading the definitive build instructions; the Wiki
+   page merely provides informal, extra information.
+
   Important Notes for IRIX Users
 
    Despite our best efforts, there are some issues related to compiling the
@@ -111,6 +120,14 @@ Getting the Source Code
      o Boost (http://www.boost.org/): A C++ library providing many powerful
        tools
 
+     o Doozer++ (http://www.sf.net/projects/doozer/): A foundation the
+       development of complex build systems using Autoconf and GNU make. This
+       is the basis for the entire VR Juggler build system.
+
+     o Doozer (http://www.sf.net/projects/doozer/): A foundation for rapid
+       makefile development based on GNU make. This is needed for building
+       the sample VR Juggler applications.
+
    The following lists semi-optional packages:
 
      o NSPR (http://www.mozilla.org/projects/nspr/): The Netscape Portable
@@ -147,9 +164,11 @@ Getting the Source Code
        simply pressing the ENTER key will allow the download to continue.
 
        You can use the cvs-gather tool, or you can read the file Gatherrc and
-       get the packages manually. For more details about this, see the
-       section called "Using cvs-gather". If you choose to follow this step
-       as shown above, you may skip ahead to the section called "Compiling".
+       get the packages manually. If you choose not to use cvs-gather, you
+       must be familiar with CVS and with the use of CVS tags to check out
+       code. For more details about cvs-gather, see the section called "Using
+       cvs-gather". If you choose to follow this step as shown above, you may
+       skip ahead to the section called "Compiling".
 
   Using cvs-gather
 
