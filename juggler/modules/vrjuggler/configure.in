@@ -359,6 +359,7 @@ else
 fi
 
 AC_PROG_INSTALL
+AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \${scriptdir}/mtree.pl)
 AC_PROG_MAKE_SET
 dnl # AC_PROG_RANLIB
 
