@@ -186,7 +186,7 @@ private:
    osg::MatrixTransform*   mModelTrans;
    osg::Node*              mModel;
 
-   OsgNavigater*  mNavigater;       /** Navigation class */
+   OsgNavigater  mNavigator;       /** Navigation class */
    //cluster::UserData< OsgNavigater >  mNavigater;
 
    std::string mFileToLoad;

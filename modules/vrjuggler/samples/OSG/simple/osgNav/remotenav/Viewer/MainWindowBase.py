@@ -567,7 +567,7 @@ class MainWindowBase(QMainWindow):
 
 
    def languageChange(self):
-      self.setCaption(self.__tr("MMA Client"))
+      self.setCaption(self.__tr("Nav Control"))
       QToolTip.add(self.jumpTab,QString.null)
       self.transGroupBox.setTitle(self.__tr("Translate"))
       QToolTip.add(self.mNavTransPix,self.__tr("Translate user. Up/down is forward/back. Left/right is left/right."))
