@@ -1,44 +1,29 @@
 #ifndef _JCCL_CONFIGURATION_TEST_H
 #define _JCCL_CONFIGURATION_TEST_H
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace jcclTest
 {
 
-// Tests out the functionality of jccl::Configuration's
-class ConfigurationTest : public CppUnit::TestCase
+// Tests out the functionality of the class jccl::Configuration.
+class ConfigurationTest : public CppUnit::TestFixture
 {
+   CPPUNIT_TEST_SUITE(ConfigurationTest);
+   CPPUNIT_TEST(Load);
+   CPPUNIT_TEST(Clear);
+   CPPUNIT_TEST_SUITE_END();
+
 public:
-   ConfigurationTest() : CppUnit::TestCase()
-   {
-   }
-
-   ConfigurationTest(std::string name) : CppUnit::TestCase(name)
-   {
-   }
-
    virtual ~ConfigurationTest()
    {
    }
 
-   void testLoad();
+   void Load();
    //void testDependencySort();
    //void testDependencySortFailure();
-   void testClear();
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ConfigurationTest");
-      test_suite->addTest(new CppUnit::TestCaller<ConfigurationTest>("testLoad", &ConfigurationTest::testLoad));
-      //test_suite->addTest(new CppUnit::TestCaller<ConfigurationTest>("testDependencySort", &ConfigurationTest::testDependencySort));
-      //test_suite->addTest(new CppUnit::TestCaller<ConfigurationTest>("testDependencySortFailure", &ConfigurationTest::testDependencySortFailure));
-      test_suite->addTest(new CppUnit::TestCaller<ConfigurationTest>("testClear", &ConfigurationTest::testClear));
-
-      return test_suite;
-   }
+   void Clear();
 };
 
 }

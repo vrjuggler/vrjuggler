@@ -1,39 +1,38 @@
 #ifndef _JCCL_CONFIG_ELEMENT_TEST_H
 #define _JCCL_CONFIG_ELEMENT_TEST_H
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 
 namespace jcclTest
 {
-   class ConfigElementTest : public CppUnit::TestCase
+   class ConfigElementTest : public CppUnit::TestFixture
    {
+      CPPUNIT_TEST_SUITE(ConfigElementTest);
+      CPPUNIT_TEST(SetProperty);
+      CPPUNIT_TEST(PropertyValues);
+      CPPUNIT_TEST(BasicEquality);
+      CPPUNIT_TEST(CopyConstructor);
+      CPPUNIT_TEST(ContentEquality);
+      CPPUNIT_TEST(BasicInequality);
+      CPPUNIT_TEST(ReadPropertyValues);
+      CPPUNIT_TEST_SUITE_END();
+
    public:
-      ConfigElementTest() : CppUnit::TestCase()
-      {
-      }
-
-      ConfigElementTest(std::string name) : CppUnit::TestCase(name)
-      {
-      }
-
       virtual ~ConfigElementTest()
       {
       }
 
-      void setPropTests();
-      void PropertyValueTests();
-      void testEqual();
-      void testCopyConstr();
-      void testIsEqual();
-      void testIsNotEqual();
-      void testAreDefaultsProperlyReturned();
-
-      static CppUnit::Test* suite();
+      void SetProperty();
+      void PropertyValues();
+      void BasicEquality();
+      void CopyConstructor();
+      void ContentEquality();
+      void BasicInequality();
+      void ReadPropertyValues();
    };
 
-} // end jcclTest space
+} // end jcclTest namespace
 
 #endif
