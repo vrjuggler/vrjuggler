@@ -100,7 +100,7 @@ int ConfigChunkHandler::configProcessPending()
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_chunk);      // Add it to the current config
 
-                     outputPendingItemState(vprDBG_CONFIG_LVL, cur_chunk->getName(),
+                     outputPendingItemState(vprDBG_CONFIG_STATUS_LVL, cur_chunk->getName(),
                                             cur_chunk->getDescToken(),
                                             SUCCESS);
                   }
@@ -116,12 +116,12 @@ int ConfigChunkHandler::configProcessPending()
                else     // Dependency failed
                {
 
-                  outputPendingItemState(vprDBG_WARNING_LVL,
+                  outputPendingItemState(vprDBG_CONFIG_LVL,
                                          cur_chunk->getName(),
                                          cur_chunk->getDescToken(),
                                          NEED_DEPS);
-                  vprDEBUG_CONT(vprDBG_ALL,vprDBG_WARNING_LVL) << std::endl << vprDEBUG_FLUSH;
-                  dep_mgr->debugOutDependencies(cur_chunk,vprDBG_WARNING_LVL);
+                  vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << std::endl << vprDEBUG_FLUSH;
+                  dep_mgr->debugOutDependencies(cur_chunk,vprDBG_CONFIG_LVL);
                   current++;
                }
                break;
@@ -186,16 +186,17 @@ int ConfigChunkHandler::configProcessPending()
 
 void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result)
 {
-   const int item_width(25);
+   const int item_width(25+14);
    const int type_width(20);
 
-   const std::string name_prefix("Pending item: ");
-   const std::string type_prefix(" type: ");
+   //const std::string name_prefix("Pending item: ");
+   //const std::string type_prefix(" type: ");
    vprDEBUG(vprDBG_ALL,debugLevel)
-      << "Pending item: " << std::setiosflags(std::ios::right)
-      << std::setfill(' ') << std::setw(item_width) << chunkName
-      <<    "     type: " << std::setiosflags(std::ios::right)
+      << " Type: "
+      << std::setiosflags(std::ios::right) 
       << std::setfill(' ') << std::setw(type_width) << chunkType
+      << std::setiosflags(std::ios::right)
+      << std::setfill(' ') << std::setw(item_width) << chunkName
       << std::resetiosflags(std::ios::right) << "  ";
 
    /*

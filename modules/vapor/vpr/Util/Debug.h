@@ -68,13 +68,14 @@
 // 6 - Very detailed: i.e. Function entry and exit
 // 7 - You will be reading hexidecimal
 #define vprDBG_CRITICAL_LVL 0
-#define vprDBG_CONFIG_LVL 1
-#define vprDBG_WARNING_LVL 2
-#define vprDBG_STATE_LVL 3
-#define vprDBG_VERB_LVL 4
-#define vprDBG_HVERB_LVL 5
-#define vprDBG_DETAILED_LVL 6
-#define vprDBG_HEX_LVL 7
+#define vprDBG_WARNING_LVL 1
+#define vprDBG_CONFIG_STATUS_LVL 2
+#define vprDBG_CONFIG_LVL 3
+#define vprDBG_STATE_LVL 4
+#define vprDBG_VERB_LVL 5
+#define vprDBG_HVERB_LVL 6
+#define vprDBG_DETAILED_LVL 7
+#define vprDBG_HEX_LVL 8
 
 // ANSI COLOR CONTROL CODES
 // TODO: Make the work for windows
@@ -120,7 +121,7 @@
 #  define VPR_MAX_DBG_LEVEL 100
 #else
 #  define LOCK_DEBUG_STREAM
-#  define VPR_MAX_DBG_LEVEL vprDBG_WARNING_LVL
+#  define VPR_MAX_DBG_LEVEL vprDBG_CONFIG_LVL
 
 //#  define vprDEBUG(cat,val) if (1) ; else std::cout
 //#  define vprDEBUG_BEGIN(cat,val) if (1) ; else std::cout

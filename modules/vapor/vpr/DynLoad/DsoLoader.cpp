@@ -192,7 +192,7 @@ void DsoLoader::loadDSO(vpr::LibraryPtr dsoPtr,
 
       if ( NULL != creator )
       {
-         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
             << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n"
             << vprDEBUG_FLUSH;
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)

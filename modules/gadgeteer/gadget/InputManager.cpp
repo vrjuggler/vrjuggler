@@ -778,7 +778,7 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
 
       if ( NULL != creator )
       {
-         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
 
