@@ -51,6 +51,7 @@
 //#include <gadget/Type/NetPosition.h>
 #include <gadget/RemoteInputManager/NetDevice.h>
 #include <gadget/Type/BaseTypeFactory.h>
+#include <gadget/RemoteInputManager/ClusterBarrier.h>
 
 namespace gadget{
 
@@ -82,8 +83,9 @@ namespace gadget{
       std::list<NetDevice*>         mTransmittingDevices;   /**< devices/proxies that we transmit from */
       std::list<NetDevice*>         mReceivingDevices;      /**< devices/proxies that we receive from */
 
-      std::vector<jccl::ConfigChunkPtr>                  mDeviceChunks;
-      std::map<std::string, jccl::ConfigChunkPtr>        mMachineTable;    /**< list of proxies in the system */
+      std::vector<jccl::ConfigChunkPtr>                  mPendingDeviceChunks;
+      std::map<std::string, jccl::ConfigChunkPtr>        mMachineTable;
+      std::map<std::string, jccl::ConfigChunkPtr>        mClusterTable;
 
       vpr::Uint16          mListenPort;
       vpr::GUID            mManagerId;
@@ -96,6 +98,8 @@ namespace gadget{
       vpr::SocketStream*                  mSyncServer;
       bool                                mIsMaster;
       std::string                         mSyncMasterChunkName;
+      vpr::SerialPort                     *mSerialPort;
+      gadget::ClusterBarrier*             mBarrier;
 
    public:
       RemoteInputManager(InputManager* input_manager);
@@ -105,9 +109,9 @@ namespace gadget{
       void debugDump();
       
       static std::string getChunkType() { return std::string( "RIMChunk" ); }
-      static std::string getMachineSpecificChunkType() { return std::string( "cluster_machine" ); }
+      static std::string getMachineSpecificChunkType() { return std::string( "MachineSpecific" ); }
 
-      bool startCluster(std::vector<jccl::ConfigChunkPtr>);
+      vpr::ReturnStatus configSerialPort();
       bool configAdd(jccl::ConfigChunkPtr chunk);
       bool configRemove(jccl::ConfigChunkPtr chunk);
       bool configCanHandle(jccl::ConfigChunkPtr chunk);
@@ -284,8 +288,8 @@ namespace gadget{
        * Read the network until all connections have received the data 
        * they need
        */
-      void receiveDeviceNetData();
-      void receiveTemp();
+      void receiveReceivingConnectionData();
+      void receiveTransmittingConnectionData();
       
       /**
        * Parse incoming packets.

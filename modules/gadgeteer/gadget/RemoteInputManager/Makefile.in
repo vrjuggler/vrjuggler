@@ -52,7 +52,9 @@ SRCS		= MsgPackage.cpp \
                   RecvBuffer.cpp \
                   RemoteInputManager.cpp \
                   RmtMgrDepChecker.cpp \
-                  ClusterSync.cpp
+                  ClusterSync.cpp \
+                  ClusterBarrierSerial.cpp \
+                  ClusterBarrierTCP.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
