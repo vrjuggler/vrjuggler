@@ -207,7 +207,14 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    {
       for(int i=0;i<indentLevel;i++)
       {
-         std::cout << "\t";
+         if(mFile==NULL)
+         {
+            std::cout << "\t";
+         }
+         else
+         {
+            *mFile << "\t";
+         }
       }
 
       /* For debugging indentation
@@ -245,7 +252,17 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
          column = (*gVprDebugCurColumn).back();
 
       for(int i=0;i<(column*column_width);i++)
-         std::cout << "\t";
+      {
+         if(mFile==NULL)
+         {
+            std::cout << "\t";
+         }
+         else
+         {
+            *mFile << "\n";
+         }
+      }
+
    }
 
    if(indentChange > 0)             // If increasing indent
