@@ -123,16 +123,19 @@ ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/vjcontrol/$$jar $(bindir) || exit 1; \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vjcontrol/$$jar $(bindir) \
+                  || exit 1; \
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ; \
 	  do \
 		$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-		  $(top_srcdir)/editors/$$bean.xml $(beandir) || exit 1; \
+		  $(EXTRA_INSTALL_ARGS) $(top_srcdir)/editors/$$bean.xml \
+                  $(beandir) || exit 1; \
 	  	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-		  $(topdir)/editors/$$bean.jar $(beandir) || exit 1; \
+		  $(EXTRA_INSTALL_ARSGS) $(topdir)/editors/$$bean.jar \
+                  $(beandir) || exit 1; \
 	  done
 endif
 
