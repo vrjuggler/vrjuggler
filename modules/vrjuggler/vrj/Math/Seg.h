@@ -30,13 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_SEG_H_
-#define _VJ_SEG_H_
+#ifndef _VRJ_SEG_H_
+#define _VRJ_SEG_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Math/vjVec3.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Math/Vec3.h>
 
 namespace vrj
 {

@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 // need stdio for sprintf
 #include <stdio.h>
 #include <sys/time.h>
 
 /* CyberGloveBasic */
-#include <Input/vjGlove/CyberGloveBasic.h>
-#include <Input/vjGlove/vt_globals.h>
-#include <Input/vjGlove/vt_types.h>
-#include <Input/vjGlove/vt_error.h>
+#include <vrj/Input/Devices/VirtualTechnologies/CyberGloveBasic.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
 
 char version_string[] = "2.0.2";
 int vt_error_code = 0;

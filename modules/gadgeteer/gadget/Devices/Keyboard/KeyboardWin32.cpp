@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <sys/types.h>
 
-#include <Math/vjCoord.h>
-#include <Config/vjConfigChunk.h>
-#include <Kernel/vjDebug.h>
-#include <Input/vjKeyboard/vjKeyboardWin32.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Input/Devices/Keyboard/KeyboardWin32.h>
 
 // The message loop
 void samplem_keys(void*);

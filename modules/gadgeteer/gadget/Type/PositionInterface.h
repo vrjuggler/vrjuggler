@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_POS_INTERFACE_H_
+#define _VRJ_POS_INTERFACE_H_
 
-#ifndef _VJ_POS_INTERFACE_H_
-#define _VJ_POS_INTERFACE_H_
-
-#include <Input/InputManager/vjPosProxy.h>
-#include <Input/InputManager/vjDeviceInterface.h>
+#include <vrj/Input/Type/PosProxy.h>
+#include <vrj/Input/Type/DeviceInterface.h>
 
 #endif

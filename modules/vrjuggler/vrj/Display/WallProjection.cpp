@@ -30,23 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 //#include <sys/types.h>
 
-#include <Kernel/vjWallProjection.h>
-#include <Kernel/vjKernel.h>
+#include <vrj/Display/WallProjection.h>
+#include <vrj/Kernel/Kernel.h>
 
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
-#include <Math/vjVec4.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Vec4.h>
 
 
-#include <Input/vjPosition/vjPosition.h>
-#include <Math/vjCoord.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Util/Debug.h>
 
-#include <Config/vjConfigChunk.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

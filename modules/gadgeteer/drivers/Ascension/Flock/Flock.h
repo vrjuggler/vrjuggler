@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 //===============================================================
-// Flock (a Wrapper for aFlock)
+// Flock (a Wrapper for FlockStandalone)
 //
 // Purpose:
 //      VR Juggler Ascention Flock of birds tracking class
@@ -42,23 +41,24 @@
 //
 // Last Modified: 4-22-99
 //===============================================================
-#ifndef _VJ_ASCENSION_FLOCK_OF_BIRDS_H_
-#define _VJ_ASCENSION_FLOCK_OF_BIRDS_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>
+#ifndef _VRJ_ASCENSION_FLOCK_OF_BIRDS_H_
+#define _VRJ_ASCENSION_FLOCK_OF_BIRDS_H_
+
+#include <vrj/vjConfig.h>
 #include <vpr/Thread/Thread.h>
-#include <Input/vjPosition/aFlock.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Devices/Ascension/FlockStandalone.h>
 
 namespace vrj
 {
    
 //----------------------------------------------------------------------------
 //: Position derived class for running a Flock of Birds.
-//: , also a wrapper class for the real ascension flock class "aFlock"
+//: , also a wrapper class for the real ascension flock class "FlockStandalone"
 //
-//  Flock adds to the aFlock class shared memory and threading.<br>
+//  Flock adds to the FlockStandalone class shared memory and threading.<br>
 //  Flock is a positional device driver for the Flock of Birds, the config
 //  chunk in the constructor should set up all the settings, for these to be
 //  changed the Flock has to be deleted and a new instance created with an
@@ -264,7 +264,7 @@ private:
 
     vpr::Thread*   myThread;      // The thread doing the flock sampling
 
-    aFlock mFlockOfBirds;
+    FlockStandalone mFlockOfBirds;
 };
 
 };

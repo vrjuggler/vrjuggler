@@ -30,13 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
 #include <sax/SAXParseException.hpp>
-#include <Utils/vjXercesXMLError.h>
-#include <iostream.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dom/DOMString.hpp>
+
+#include <vrj/Util/XercesXMLError.h>
 
 //based on Xerces DOMPrint source code
 

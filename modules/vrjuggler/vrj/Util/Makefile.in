@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Utils.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Util.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -47,27 +47,15 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(UTILS_LIBRARY)
 
-# Prefix for recursive stuff.
-DIRPRFX		= Utils/
-
-SRCS 		= vjDebug.cpp			\
-                  vjFileIO.cpp			\
-                  vjStreamLock.cpp		\
-                  vjXercesStreamInputSource.cpp	\
-                  vjXercesStreamInputStream.cpp	\
-                  vjXercesXMLError.cpp		\
-                  vjXercesXMLParser.cpp		\
-                  vjXercesXMLParserPool.cpp
-
-BEFOREBUILD	= beforebuild
+SRCS 		= Debug.cpp			\
+                  FileIO.cpp			\
+                  XercesStreamInputSource.cpp	\
+                  XercesStreamInputStream.cpp	\
+                  XercesXMLError.cpp		\
+                  XercesXMLParser.cpp		\
+                  XercesXMLParserPool.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
-
-# -----------------------------------------------------------------------------
-# Library targets.
-# -----------------------------------------------------------------------------
-beforebuild:
-	@$(SHELL) $(scriptdir)/mkinstalldirs $(OBJDIR)
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

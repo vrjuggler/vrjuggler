@@ -30,13 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
 #include <vpr/Thread/Thread.h>
-#include <Config/vjConfigChunk.h>
-
 #include <vpr/Util/Assert.h>
+
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Config/ConfigChunk.h>
+
 
 namespace vrj
 {

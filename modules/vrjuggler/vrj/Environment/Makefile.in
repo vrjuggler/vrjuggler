@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Environment.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Environment.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,19 +41,19 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Environment
+includedir	= @includedir@/vrj/Environment
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjCommand.cpp			\
-                  vjConnect.cpp			\
-                  vjEnvironmentManager.cpp	\
-                  vjSocket.cpp			\
-                  vjSockStream.cpp		\
-		  vjNetCommunicator.cpp		\
-		  vjXMLConfigCommunicator.cpp	
+SRCS		= Command.cpp			\
+                  Connect.cpp			\
+                  EnvironmentManager.cpp	\
+                  Socket.cpp			\
+                  SockStream.cpp		\
+		  NetCommunicator.cpp		\
+		  XMLConfigCommunicator.cpp	
 
 include $(MKPATH)/dpp.obj.mk
 

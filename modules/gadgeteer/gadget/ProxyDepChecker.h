@@ -29,15 +29,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VJ_PROXY_DEP_CHECKER_H_
-#define _VJ_PROXY_DEP_CHECKER_H_
 
-#include <vjConfig.h>
+#ifndef _VRJ_PROXY_DEP_CHECKER_H_
+#define _VRJ_PROXY_DEP_CHECKER_H_
+
+#include <vrj/vjConfig.h>
 
 // Dependency checker includes
-#include <Kernel/vjDependencyManager.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Kernel/vjDepChecker.h>
+#include <vrj/Kernel/DependencyManager.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Kernel/DepChecker.h>
 
 
 namespace vrj

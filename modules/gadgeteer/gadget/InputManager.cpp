@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
+#include <vrj/Input/Type/Proxy.h>
+#include <vrj/Util/Debug.h>
 
-#include <Input/InputManager/vjProxy.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Input/Type/DeviceFactory.h>
+#include <vrj/Input/ProxyFactory.h>
+#include <vrj/Input/Type/DeviceInterface.h>
+#include <vrj/Config/ConfigChunk.h>
 
-#include <Input/InputManager/vjDeviceFactory.h>
-#include <Input/InputManager/vjProxyFactory.h>
-#include <Input/InputManager/vjDeviceInterface.h>
-#include <Config/vjConfigChunk.h>
-
-#include <Input/InputManager/vjInputManager.h> // my header...
+#include <vrj/Input/InputManager.h> // my header...
 
 
 

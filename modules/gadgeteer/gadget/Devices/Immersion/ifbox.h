@@ -15,7 +15,7 @@
 #ifndef _IBOX_H
 #define _IBOX_H
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #ifdef __cplusplus
 extern "C" {

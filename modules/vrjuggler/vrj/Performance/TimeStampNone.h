@@ -30,12 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_TIMESTAMP_NONE_H_
+#define _VRJ_TIMESTAMP_NONE_H_
 
-
-#ifndef _VJ_TIMESTAMP_NONE_
-#define _VJ_TIMESTAMP_NONE_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 namespace vrj
 {

@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #define PF_C_API 1
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <Performer/pf.h>
 #include <Performer/pfdu.h>
@@ -42,20 +42,20 @@
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfTraverser.h>
 
-#include <Kernel/vjDisplayManager.h>
-#include <Kernel/Pf/vjPfDrawManager.h>
-#include <Kernel/Pf/vjPfApp.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Draw/Pf/PfDrawManager.h>
+#include <vrj/Draw/Pf/PfApp.h>
+#include <vrj/Util/Debug.h>
 
-#include <Kernel/vjProjection.h>
-#include <Kernel/vjCameraProjection.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/CameraProjection.h>
 
-#include <Kernel/vjSimViewport.h>
-#include <Kernel/vjSurfaceViewport.h>
+#include <vrj/Display/SimViewport.h>
+#include <vrj/Display/SurfaceViewport.h>
 
-#include <Config/vjConfigChunk.h>
+#include <vrj/Config/ConfigChunk.h>
 
-#include <Utils/vjFileIO.h>
+#include <vrj/Util/FileIO.h>
 
 namespace vrj
 {

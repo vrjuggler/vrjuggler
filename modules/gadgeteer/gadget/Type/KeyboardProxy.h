@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_KEYBOARD_PROXY_H_
+#define _VRJ_KEYBOARD_PROXY_H_
 
-#ifndef _VJ_KEYBOARD_PROXY_H_
-#define _VJ_KEYBOARD_PROXY_H_
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Proxy.h>
+#include <vrj/Input/Type/Keyboard.h>
 
-#include <vjConfig.h>
-#include <Input/InputManager/vjProxy.h>
-#include <Input/vjInput/vjKeyboard.h>
 namespace vrj
 {
    

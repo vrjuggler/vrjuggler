@@ -30,21 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // Implementation of ConfigChunk DB
 //
 // Author: Christopher Just
 
-#include <vjConfig.h>
-
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkFactory.h>
-#include <Config/vjParseUtil.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjConfigTokens.h>
-#include <Config/vjConfigIO.h>
+#include <vrj/vjConfig.h>
 
 #include <sys/types.h>
+
+#include <vrj/Config/ChunkFactory.h>
+#include <vrj/Config/ParseUtil.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Config/ConfigTokens.h>
+#include <vrj/Config/ConfigIO.h>
+#include <vrj/Config/ConfigChunkDB.h>
 
 namespace vrj
 {

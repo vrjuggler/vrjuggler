@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 // Standaolne bird tracking class
 //
 // Note: untested with a standalone configuration, probably doesn't work
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_BIRD_H_
-#define _VJ_BIRD_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>
+#ifndef _VRJ_BIRD_H_
+#define _VRJ_BIRD_H_
+
+#include <vrj/vjConfig.h>
 #include <vpr/Thread/Thread.h>
-#include <Input/vjPosition/vjFlock.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Devices/Ascension/Flock.h>
 
 namespace vrj
 {

@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJCONFIGIOHANDLER_H_
-#define _VJCONFIGIOHANDLER_H_
+#ifndef _VRJ_CONFIGIOHANDLER_H_
+#define _VRJ_CONFIGIOHANDLER_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <string.h>
 #include <stdlib.h>

@@ -50,10 +50,10 @@
 #ifndef _LOGICLASS_H_
 #define _LOGICLASS_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>    // The base class for vr_devices
-#include <Math/vjVec3.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>    // The base class for vr_devices
+#include <vrj/Math/Vec3.h>
 //#include <Inventor/SbLinear.h> // For the vec classes
 
 #ifndef TRUE

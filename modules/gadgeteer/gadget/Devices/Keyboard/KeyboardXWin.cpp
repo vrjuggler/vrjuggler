@@ -29,15 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <vrj/vjConfig.h>
+
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Config/ConfigChunk.h>
 
-#include <Input/vjKeyboard/vjXWinKeyboard.h> // my header
+#include <vrj/Input/Devices/Keyboard/XWinKeyboard.h> // my header
 
 namespace vrj
 {

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _ASCENSION_MOTION_STAR_H_
-#define _ASCENSION_MOTION_STAR_H_
+#ifndef _VRJ_ASCENSION_MOTION_STAR_STANDALONE_H_
+#define _VRJ_ASCENSION_MOTION_STAR_STANDALONE_H_
 
 #include <iostream>
 #include <string>
@@ -350,7 +350,7 @@ enum units {
 
 //+ The protocol in use is as specified in the MotionStar Installation and
 //+ Operation Guide dated May 27, 1999.
-class aMotionStar {
+class MotionStarStandalone {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This initializes member variables and determines the
@@ -378,13 +378,14 @@ public:
     //! ARGS: birds_requested  - The number of birds whose data will be
     //+                          sampled.
     // ------------------------------------------------------------------------
-    aMotionStar(const char* address, const unsigned short port,
-                const BIRDNET::protocol proto, const bool master,
-                const FLOCK::hemisphere hemisphere,
-                const FLOCK::data_format bird_format,
-                const BIRDNET::run_mode run_mode,
-                const unsigned char report_rate, const double measurement_rate,
-                const unsigned int birds_requested);
+    MotionStarStandalone(const char* address, const unsigned short port,
+                         const BIRDNET::protocol proto, const bool master,
+                         const FLOCK::hemisphere hemisphere,
+                         const FLOCK::data_format bird_format,
+                         const BIRDNET::run_mode run_mode,
+                         const unsigned char report_rate,
+                         const double measurement_rate,
+                         const unsigned int birds_requested);
 
     // ------------------------------------------------------------------------
     //: Destructor.
@@ -393,7 +394,7 @@ public:
     //! POST: The device is stopped, and the memory allocated for the server
     //+       address is released.
     // ------------------------------------------------------------------------
-    ~aMotionStar(void);
+    ~MotionStarStandalone(void);
 
     // ------------------------------------------------------------------------
     //: Initializes the driver, setting the status for each bird.
@@ -1484,4 +1485,4 @@ private:
 };
 
 
-#endif	/* _ASCENSION_MOTION_STAR_H_ */
+#endif	/* _VRJ_ASCENSION_MOTION_STAR_STANDALONE_H_ */

@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_KEYBOARD_H_
+#define _VRJ_KEYBOARD_H_
 
-#ifndef _VJ_KEYBOARD_H_
-#define _VJ_KEYBOARD_H_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 
 // --------- VJKEY's ------------ //

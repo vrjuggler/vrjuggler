@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_DEP_CHECKER_H_
-#define _VJ_DEP_CHECKER_H_
+#ifndef _VRJ_DEP_CHECKER_H_
+#define _VRJ_DEP_CHECKER_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Config/vjConfigChunk.h>
-#include <Kernel/vjConfigManager.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Kernel/ConfigManager.h>
 
 namespace vrj
 {

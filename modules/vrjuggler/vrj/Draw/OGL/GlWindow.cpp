@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
 #ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
@@ -39,18 +40,15 @@
 #   include <GL/glu.h>
 #endif
 
-
-#include <vjConfig.h>
-
-#include <Kernel/GL/vjGlWindow.h>
-#include <Kernel/vjProjection.h>
-#include <Kernel/vjCameraProjection.h>
-#include <Kernel/vjFrustum.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjViewport.h>
-//#include <Kernel/vjSimViewport.h>
-//#include <Kernel/vjSurfaceViewport.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/CameraProjection.h>
+#include <vrj/Display/Frustum.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/Viewport.h>
+//#include <vrj/Display/SimViewport.h>
+//#include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Draw/OGL/GlWindow.h>
 
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.

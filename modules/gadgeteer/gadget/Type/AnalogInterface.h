@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_ANA_INTERFACE_H_
-#define _VJ_ANA_INTERFACE_H_
+#ifndef _VRJ_ANALOG_INTERFACE_H_
+#define _VRJ_ANALOG_INTERFACE_H_
 
-#include <Input/InputManager/vjAnalogProxy.h>
-#include <Input/InputManager/vjDeviceInterface.h>
+#include <vrj/Input/Type/AnalogProxy.h>
+#include <vrj/Input/Type/DeviceInterface.h>
 
 #endif

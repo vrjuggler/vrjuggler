@@ -55,11 +55,12 @@
 #ifndef isIntersense_h
 #define isIntersense_h
 
-extern "C" {
-    #include <Input/intersense/isense.h>
-}
 #include <fstream>
 #include <string>
+
+extern "C" {
+#include <vrj/Input/Devices/Intersense/isense.h>
+}
 
 struct isConfig {
     bool State;
@@ -73,14 +74,14 @@ struct isConfig {
     bool GetAnalogData;
 };
 
-class isIntersense {
+class IntersenseStandalone {
 public:
-    isIntersense()
+    IntersenseStandalone()
     {
        init();
     }
 
-    ~isIntersense()
+    ~IntersenseStandalone()
     {
        if(script != NULL) delete [] script;
        if(mPortName != NULL) delete [] mPortName;

@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Math/vjMath.h>
+#include <vrj/Math/Math.h>
 
 
 //: PI

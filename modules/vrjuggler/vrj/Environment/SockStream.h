@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_SOCKSTREAM_H_
-#define _VJ_SOCKSTREAM_H_
+#ifndef _VRJ_SOCKSTREAM_H_
+#define _VRJ_SOCKSTREAM_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 namespace vrj
 {

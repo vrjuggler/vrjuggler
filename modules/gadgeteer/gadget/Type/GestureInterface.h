@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_GESTURE_INTERFACE_H_
+#define _VRJ_GESTURE_INTERFACE_H_
 
-#ifndef _VJ_GESTURE_INTERFACE_H_
-#define _VJ_GESTURE_INTERFACE_H_
-
-#include <Input/InputManager/vjGestureProxy.h>
-#include <Input/InputManager/vjDeviceInterface.h>
+#include <vrj/Input/Type/GestureProxy.h>
+#include <vrj/Input/Type/DeviceInterface.h>
 
 #endif

@@ -31,7 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input/vjGlove.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input/Devices/VirtualTechnologies.  It
+# requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,20 +42,18 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Input/vjGlove
+includedir	= @includedir@/vrj/Input/Devices/VirtualTechnologies
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjGlove.cpp
+SRCS		=
 
 ifneq (@OS_TYPE@, Win32)
 ifneq (@PLATFORM@, Darwin)
 SRCS		+= CyberGloveBasic.cpp		\
-                   fsPinchGlove.cpp		\
-                   vjCyberGlove.cpp		\
-                   vjPinchGlove.cpp		\
+                   CyberGlove.cpp		\
                    vt_glove.cpp			\
                    vt_error.cpp			\
                    vt_init.cpp			\

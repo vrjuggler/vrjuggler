@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/GloveGesture.h>
 
-#include <vjConfig.h>
-#include <Input/vjGesture/vjGloveGesture.h>
 namespace vrj
 {
    

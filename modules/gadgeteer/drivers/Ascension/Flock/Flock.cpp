@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 //===============================================================
-// Flock (a Wrapper for aFlock)
+// Flock (a Wrapper for FlockStandalone)
 //
 // Purpose:
 //      VR Juggler Ascention Flock of birds tracking class
@@ -42,18 +41,19 @@
 //
 // Date: 4-22-99
 //===============================================================
-#include <vjConfig.h>
+
+#include <vrj/vjConfig.h>
+
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
-
-#include <Math/vjCoord.h>
-#include <Utils/vjDebug.h>
-#include <Utils/vjFileIO.h>
-#include <Input/vjPosition/aFlock.h>
-#include <Config/vjConfigChunk.h>
 #include <vpr/System.h>
-#include <Input/vjPosition/vjFlock.h>
+
+#include <vrj/Math/Coord.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Util/FileIO.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Input/Devices/Ascension/Flock.h>
 
 namespace vrj
 {
@@ -122,7 +122,8 @@ bool Flock::config(ConfigChunk *c)
    if(! (Input::config(c) && Position::config(c)))
       return false;
 
-   // keep aFlock's port and baud members in sync with Input's port and baud members.
+   // keep FlockStandalone's port and baud members in sync with Input's port
+   // and baud members.
    mFlockOfBirds.setPort( Input::getPort() );
    mFlockOfBirds.setBaudRate( Input::getBaudRate() );
 
@@ -149,10 +150,10 @@ bool Flock::config(ConfigChunk *c)
 
    // output what was read.
    vjDEBUG(vjDBG_INPUT_MGR,1) << "    Flock Settings: " << std::endl
-      << "          aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
-      << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << std::endl
-      << "          aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << std::endl
-      << "          aFlock::getPort()         : " << mFlockOfBirds.getPort() << std::endl
+      << "          FlockStandalone::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
+      << "          FlockStandalone::getNumBirds(): " << mFlockOfBirds.getNumBirds() << std::endl
+      << "          FlockStandalone::getBaudRate(): " << mFlockOfBirds.getBaudRate() << std::endl
+      << "          FlockStandalone::getPort(): " << mFlockOfBirds.getPort() << std::endl
       << "     instance name : " << instName << std::endl
       << std::endl << vjDEBUG_FLUSH;
 
@@ -265,7 +266,8 @@ int Flock::sample()
       int index = getBirdIndex(i,progress);
 
 
-      // We add 1 to "i" to account for the fact that aFlock is 1-based
+      // We add 1 to "i" to account for the fact that FlockStandalone is
+      // 1-based
       theData[index].makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
                                   mFlockOfBirds.yRot( i+1 ),
                                   mFlockOfBirds.xRot( i+1 ));
@@ -453,7 +455,7 @@ void Flock::setPort( const char* const serialPort )
     mFlockOfBirds.setPort( serialPort );
 
     // keep Input's port and baud members in sync
-    // with aFlock's port and baud members.
+    // with FlockStandalone's port and baud members.
     Input::setPort( serialPort );
 }
 
@@ -470,7 +472,7 @@ void Flock::setBaudRate( const int& baud )
     mFlockOfBirds.setBaudRate( baud );
 
     // keep Input's port and baud members in sync
-    // with aFlock's port and baud members.
+    // with FlockStandalone's port and baud members.
     Input::setBaudRate( baud );
 }
 

@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Display/SimViewport.h>
+#include <vrj/Draw/DrawManager.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Math/Coord.h>
 
-#include <vjConfig.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Kernel/vjDisplay.h>
-#include <Kernel/vjSurfaceViewport.h>
-#include <Kernel/vjSimViewport.h>
-#include <Kernel/vjDrawManager.h>
-#include <Kernel/vjKernel.h>
-#include <Math/vjCoord.h>
-
-#include <Config/vjConfigChunk.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

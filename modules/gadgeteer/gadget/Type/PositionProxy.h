@@ -30,22 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // positional proxy class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_POSPROXY_H_
-#define _VJ_POSPROXY_H_
 
-#include <vjConfig.h>
+#ifndef _VRJ_POSPROXY_H_
+#define _VRJ_POSPROXY_H_
+
+#include <vrj/vjConfig.h>
 #include <math.h>
 
-#include <Input/vjPosition/vjPosition.h>
-#include <Input/InputManager/vjProxy.h>
-#include <Math/vjMatrix.h>
-#include <Input/Filter/vjPosFilter.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Type/Proxy.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Input/Type/PosFilter.h>
 
 
 namespace vrj

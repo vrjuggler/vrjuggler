@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_SIM_ANALOG_H
-#define _VJ_SIM_ANALOG_H
+#ifndef _VRJ_SIM_ANALOG_H
+#define _VRJ_SIM_ANALOG_H
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjAnalog.h>
-#include <Input/vjSim/vjSimInput.h>
-#include <Utils/vjDebug.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Analog.h>
+#include <vrj/Input/Devices/Sim/SimInput.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {

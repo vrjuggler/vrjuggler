@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CHUNKDESC_H_
+#define _VRJ_CHUNKDESC_H_
 
-#ifndef _VJ_CHUNKDESC_H_
-#define _VJ_CHUNKDESC_H_
-
-#include <vjConfig.h>
-#include <Config/vjPropertyDesc.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/PropertyDesc.h>
 //#include <dom/DOM.hpp>
 
 // forward declare the xerces dom node

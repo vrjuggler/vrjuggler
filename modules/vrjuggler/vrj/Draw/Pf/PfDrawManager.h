@@ -30,23 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_PF_DRAW_MANAGER_
+#define _VRJ_PF_DRAW_MANAGER_
 
-#ifndef _VJ_PF_DRAW_MANAGER_
-#define _VJ_PF_DRAW_MANAGER_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <functional>
 #include <algorithm>
 
 #include <Performer/pf/pfChannel.h>
 
-#include <Kernel/vjDrawManager.h>
-#include <Kernel/vjDisplay.h>
-#include <Kernel/vjSimViewport.h>
+#include <vrj/Draw/DrawManager.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/SimViewport.h>
 
-//#include <Kernel/Pf/vjPfApp.h>
-#include <Kernel/Pf/vjPfUtil.h>
+//#include <vrj/Draw/Pf/PfApp.h>
+#include <vrj/Draw/Pf/PfUtil.h>
 #include <vpr/Util/Singleton.h>
 
 namespace vrj

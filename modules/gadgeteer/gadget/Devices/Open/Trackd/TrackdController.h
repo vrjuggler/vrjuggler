@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_TRACKD_CONTROLLER_H_
-#define _VJ_TRACKD_CONTROLLER_H_
+#ifndef _VRJ_TRACKD_CONTROLLER_H_
+#define _VRJ_TRACKD_CONTROLLER_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjInput/vjAnalog.h>
-#include <Input/vjSim/vjSimInput.h>
-#include <Input/Multi/aTrackdController.h>
+#include <vrj/vjConfig.h>
 #include <vector>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Type/Analog.h>
+#include <vrj/Input/Devices/Sim/SimInput.h>
+#include <vrj/Input/Devices/Open/Trackd/TrackdControllerStandalone.h>
 
 namespace vrj
 {
@@ -143,7 +143,7 @@ public:
    }
 
 private:
-   aTrackdController*      mTrackdController;      // The controller we are dealing with
+   TrackdControllerStandalone* mTrackdController;  // The controller we are dealing with
    std::vector<float>      mCurValuators;          // The current (up-to-date) values
    std::vector<bool>       mCurButtons;            // The current button states
 };

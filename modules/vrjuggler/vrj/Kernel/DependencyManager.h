@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_DEP_MGR_H_
-#define _VJ_DEP_MGR_H_
+#ifndef _VRJ_DEP_MGR_H_
+#define _VRJ_DEP_MGR_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Kernel/vjDepChecker.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/DepChecker.h>
+#include <vrj/Config/ConfigChunk.h>
 #include <typeinfo>
 #include <vpr/Util/Singleton.h>
 

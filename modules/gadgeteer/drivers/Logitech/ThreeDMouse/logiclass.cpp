@@ -46,7 +46,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <stdio.h>    // for perror(3C)
 #include <sys/types.h>   // for open(2)
 #include <sys/stat.h>    // for open(2)
@@ -56,7 +56,7 @@
 #include <sys/time.h>
 
 #include <vpr/System.h>
-#include <Input/vjPosition/logiclass.h>   // classprototypes and data types
+#include <vrj/Input/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
 
 // uncommenting the following will produce debug print statements */
 //

@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_PF_UTIL_H_
-#define _VJ_PF_UTIL_H_
+#ifndef _VRJ_PF_UTIL_H_
+#define _VRJ_PF_UTIL_H_
 
 /**************************************************
 * Performer helper routines                       *
 ***************************************************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <Performer/pr/pfLinMath.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Math/Matrix.h>
 
 namespace vrj
 {

@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <Math/vjPlane.h>
-#include <Math/vjSeg.h>
+#include <vrj/Math/Plane.h>
+#include <vrj/Math/Seg.h>
 
 
 

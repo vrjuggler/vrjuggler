@@ -30,22 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+/* vrj::TimeStamp... a simple class to enclose a timestamp */
 
+#ifndef _VRJ_TIMESTAMP_H_
+#define _VRJ_TIMESTAMP_H_
 
-/* TimeStaMp... a simple class to enclose a timestamp */
-
-   
-
-#ifndef _VJ_TIMESTAMPPPPPP_
-#define _VJ_TIMESTAMPPPPPP_
-
-#include <vjConfig.h>
-
-
-
+#include <vrj/vjConfig.h>
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
-#include <Performance/vjTimeStampSGI.h>
+#include <vrj/Performance/TimeStampSGI.h>
+
 namespace vrj
 {
    typedef TimeStaMpSGI TimeStaMp;
@@ -53,7 +47,7 @@ namespace vrj
 
 
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
-#include <Performance/vjTimeStampPosix.h>
+#include <vrj/Performance/TimeStampPosix.h>
 namespace vrj
 {
    typedef TimeStaMpPosix TimeStaMp;
@@ -61,7 +55,7 @@ namespace vrj
 
 
 #else
-#include <Performance/vjTimeStampNone.h>
+#include <vrj/Performance/TimeStampNone.h>
 namespace vrj
 {
    typedef TimeStaMpNone TimeStaMp;

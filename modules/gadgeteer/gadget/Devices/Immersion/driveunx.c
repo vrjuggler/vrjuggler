@@ -9,7 +9,7 @@
  * Rev 2.1
  */
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>
@@ -23,7 +23,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include <Input/ibox/driveunx.h>
+#include <vrj/Input/Devices/Immersion/driveunx.h>
 
 
 

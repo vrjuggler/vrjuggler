@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CONNECT_H_
+#define _VRJ_CONNECT_H_
 
-#ifndef _VJ_CONNECT_H_
-#define _VJ_CONNECT_H_
+#include <vrj/vjConfig.h>
 
 #include <queue>
 #include <vpr/Thread/Thread.h>
 
-#include <vjConfig.h>
-#include <Environment/vjSocket.h>
-#include <Environment/vjNetCommunicator.h>
-#include <Performance/vjTimeStamp.h>
-#include <Environment/vjCommand.h>
+#include <vrj/Environment/Socket.h>
+#include <vrj/Environment/NetCommunicator.h>
+#include <vrj/Performance/TimeStamp.h>
+#include <vrj/Environment/Command.h>
 
 namespace vrj
 {

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <strstream>
 #include <fstream>
@@ -38,9 +38,9 @@
 #include <dtk.h>
 #include <dlfcn.h>
 
-#include <Utils/vjDebug.h>
-#include <Config/vjConfigChunk.h>
-#include <Input/vjDTK/vjDTK.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Input/Devices/Open/DTK/DTK.h>
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex

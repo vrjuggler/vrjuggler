@@ -30,19 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJDebug_h_
-#define _VJDebug_h_
+#ifndef _VRJDebug_h_
+#define _VRJDebug_h_
 //#pragma once
 
 // #define VJ_DEBUG  Defined in vjConfig.h
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <stdlib.h>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Singleton.h>
-#include <Utils/vjStreamLock.h>
+#include <vpr/Util/StreamLock.h>
 
 // Debug output categories
 #define vjDBG_BASE 0
@@ -172,8 +171,8 @@ const std::string vjDBG_CONFIGstr("vjDBG_CONFIGDB");
 
 
 #ifdef LOCK_DEBUG_STREAM
-#   define vjDEBUG_STREAM_LOCK vrj::StreamLock(vrj::Debug::instance()->debugLock())
-#   define vjDEBUG_STREAM_UNLOCK vrj::StreamUnLock(vrj::Debug::instance()->debugLock())
+#   define vjDEBUG_STREAM_LOCK vpr::StreamLock(vrj::Debug::instance()->debugLock())
+#   define vjDEBUG_STREAM_UNLOCK vpr::StreamUnLock(vrj::Debug::instance()->debugLock())
 #   define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << std::flush
 #else
 #   define vjDEBUG_STREAM_LOCK std::flush

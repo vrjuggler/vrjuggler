@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _CYBER_GLOVE_BASIC_H_
 #define _CYBER_GLOVE_BASIC_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
+
+#include <stdio.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <limits>
 #endif
 
-#include <Input/vjGlove/vt_types.h>
-#include <Input/vjGlove/vt_glove-types.h>
-#include <Input/vjGlove/vt_virtual_hand-types.h>
-#include <stdio.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
 
 struct CYBER_GLOVE_DATA {
   float joints[MAX_SENSOR_GROUPS][MAX_SENSOR_VALUES];

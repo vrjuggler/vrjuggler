@@ -30,15 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-#include <Kernel/vjOSXSystemFactory.h>
-#include <vpr/Thread/Thread.h>
-#include <vpr/System.h>
-#include <Utils/vjDebug.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#include <vrj/Kernel/OSXSystemFactory.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
+#include <vrj/Util/Debug.h>
 #include <CoreFoundation/CFString.h>
 
 namespace vrj

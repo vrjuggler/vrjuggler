@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CYBER_GLOVE_H_
+#define _VRJ_CYBER_GLOVE_H_
 
-#ifndef _VJ_CYBER_GLOVE_H_
-#define _VJ_CYBER_GLOVE_H_
-
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjGlove/vjGlove.h>
-#include <Input/vjGlove/CyberGloveBasic.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Input/Devices/VirtualTechnologies/CyberGloveBasic.h>
 
 namespace vrj
 {

@@ -30,17 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_PERF_DATA_BUFFER_H_
+#define _VRJ_PERF_DATA_BUFFER_H_
 
-
-
-#ifndef _VJ_PERF_DATA_BUFFER_H_
-#define _VJ_PERF_DATA_BUFFER_H_
-
-#include <vjConfig.h>
-#include <Environment/vjTimedUpdate.h>
-#include <Performance/vjTimeStamp.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Environment/TimedUpdate.h>
+#include <vrj/Performance/TimeStamp.h>
 #include <vpr/Sync/Mutex.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {

@@ -38,8 +38,8 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(vjConfig.h)
-AC_CONFIG_HEADER(vjDefines.h)
+AC_INIT(vrj/vjConfig.h)
+AC_CONFIG_HEADER(vrj/vjDefines.h)
 DPP_PREREQ(1.4)
 DPP_INIT
 
@@ -853,68 +853,65 @@ AC_OUTPUT(Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
-          Config/Makefile
-          Environment/Makefile
-          Input/Makefile
-          Input/Filter/Makefile
-          Input/InputManager/Makefile
-          Input/Multi/Makefile
-          Input/ibox/Makefile
-          Input/vjDTK/Makefile
-          Input/vjGesture/Makefile
-          Input/vjGlove/Makefile
-          Input/vjInput/Makefile
-          Input/vjKeyboard/Makefile
-          Input/vjPosition/Makefile
-          Input/vjSim/Makefile
-          Input/intersense/Makefile
-          Kernel/Makefile
-          Kernel/GL/Makefile
-          Kernel/OSG/Makefile
-          Kernel/Pf/Makefile
-          Math/Makefile
-          Performance/Makefile
-          Sound/Makefile
-          Sound/pf/Makefile
-          Utils/Makefile
+          vrj/Makefile
+          vrj/Makefile.inc
+          vrj/Config/Makefile
+          vrj/Display/Makefile
+          vrj/Draw/Makefile
+          vrj/Draw/OGL/Makefile
+          vrj/Draw/OSG/Makefile
+          vrj/Draw/Pf/Makefile
+          vrj/Environment/Makefile
+          vrj/Input/Makefile
+          vrj/Input/Devices/Makefile
+          vrj/Input/Devices/Ascension/Makefile
+          vrj/Input/Devices/Fakespace/Makefile
+          vrj/Input/Devices/Immersion/Makefile
+          vrj/Input/Devices/Intersense/Makefile
+          vrj/Input/Devices/Keyboard/Makefile
+          vrj/Input/Devices/Logitech/Makefile
+          vrj/Input/Devices/Open/Makefile
+          vrj/Input/Devices/Open/DTK/Makefile
+          vrj/Input/Devices/Open/Trackd/Makefile
+          vrj/Input/Devices/Sim/Makefile
+          vrj/Input/Devices/VirtualTechnologies/Makefile
+          vrj/Input/Type/Makefile
+          vrj/Kernel/Makefile
+          vrj/Math/Makefile
+          vrj/Performance/Makefile
+          vrj/Sound/Makefile
+          vrj/Sound/pf/Makefile
+          vrj/Util/Makefile
+          doc/Makefile
           samples/Makefile
-          samples/ogl/Makefile
-          samples/ogl/combo/Makefile
-          samples/ogl/cones/Makefile
-          samples/ogl/cubes/Makefile
-          samples/ogl/glove/Makefile
-          samples/ogl/digitalGlove/Makefile
-          samples/ogl/simpleGlove/Makefile
-          samples/ogl/torus/Makefile
-          samples/ogl/texture/Makefile
-          samples/ogl/analog/Makefile
-          samples/ogl/wand/Makefile
+          samples/OGL/Makefile
+          samples/OGL/combo/Makefile
+          samples/OGL/cones/Makefile
+          samples/OGL/cubes/Makefile
+          samples/OGL/glove/Makefile
+          samples/OGL/digitalGlove/Makefile
+          samples/OGL/simpleGlove/Makefile
+          samples/OGL/torus/Makefile
+          samples/OGL/texture/Makefile
+          samples/OGL/analog/Makefile
+          samples/OGL/wand/Makefile
           samples/OSG/Makefile
           samples/OSG/osgNav/Makefile
-          samples/pf/Makefile
-          samples/pf/simple/Makefile
-          samples/pf/advanced/Makefile
-          samples/pf/advanced/pfConfigNav/Makefile
-          samples/pf/advanced/pfNav/Makefile
+          samples/Pf/Makefile
+          samples/Pf/simple/Makefile
+          samples/Pf/advanced/Makefile
+          samples/Pf/advanced/pfConfigNav/Makefile
+          samples/Pf/advanced/pfNav/Makefile
           samples/tutorials/Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile
-          samples/vjcontrol/Makefile
-          samples/vjcontrol/AudioPlayer/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/CfgTest/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
-          test/Performance/Makefile
-          test/Performance/analyzer/Makefile
-          test/Performance/perfdatabuffer-test/Makefile
           test/Quat/Makefile
-          test/Sync/Makefile 
           test/input/Makefile
-          test/testDynamicCastSTL/Makefile
           tools/Makefile
-          Doc/Makefile
           mtree/VJ.data.dist
           mtree/VJ.include.dist
           mtree/VJ.install.dist

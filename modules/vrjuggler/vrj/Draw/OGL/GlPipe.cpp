@@ -30,24 +30,24 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
-
-#include <Kernel/vjKernel.h>
-#include <Kernel/GL/vjGlPipe.h>
-#include <Kernel/GL/vjGlApp.h>
-#include <vpr/Thread/Thread.h>
-#include <vpr/Sync/Guard.h>
-#include <Utils/vjDebug.h>
-
-#include <Kernel/vjSurfaceViewport.h>
-#include <Kernel/vjSimViewport.h>
-#include <Environment/vjEnvironmentManager.h>
+#include <vrj/vjConfig.h>
 
 #ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
 #else
 #   include <GL/gl.h>
 #endif
+
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Draw/OGL/GlPipe.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Guard.h>
+#include <vrj/Util/Debug.h>
+
+#include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Display/SimViewport.h>
+#include <vrj/Environment/EnvironmentManager.h>
 
 namespace vrj
 {

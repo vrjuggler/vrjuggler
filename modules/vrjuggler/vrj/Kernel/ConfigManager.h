@@ -8,8 +8,7 @@
  *   Carolina Cruz-Neira, Albert Baker
  *
  * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
+ * modify it under the terms of the GNU Library General Public * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
@@ -30,21 +29,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CONFIG_MANGER_H_
+#define _VRJ_CONFIG_MANGER_H_
 
-#ifndef _VJ_CONFIG_MANGER_H_
-#define _VJ_CONFIG_MANGER_H_
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
-//#include <Config/vjConfigChunk.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
-//#include <Config/vjChunkFactory.h>
-#include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
 #include <list>
 
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/Util/Singleton.h>
+
+#include <vrj/Util/Debug.h>
+//#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Config/ConfigChunkDB.h>
+#include <vrj/Config/ChunkDescDB.h>
+//#include <vrj/Config/ChunkFactory.h>
 
 
 namespace vrj

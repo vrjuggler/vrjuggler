@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SIM_GLOVE_GESTURE_H_
+#define _VRJ_SIM_GLOVE_GESTURE_H_
 
-#ifndef _VJ_SIM_GLOVE_GESTURE_H_
-#define _VJ_SIM_GLOVE_GESTURE_H_
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Type/GloveGesture.h>
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Input/Type/Gesture.h>
+#include <vrj/Input/Devices/Sim/SimInput.h>
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjGesture/vjGloveGesture.h>
-#include <Input/vjGlove/vjGlove.h>
-#include <Input/vjGesture/vjGesture.h>
-#include <Input/vjSim/vjSimInput.h>
 namespace vrj
 {
    

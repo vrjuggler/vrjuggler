@@ -30,36 +30,35 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <string.h>
-#include <vjParam.h>
-#include <Kernel/vjKernel.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjConfigManager.h>
-#include <Kernel/vjDrawManager.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Kernel/vjApp.h>
-#include <Kernel/vjUser.h>
+#include <vrj/vjParam.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Kernel/ConfigManager.h>
+#include <vrj/Draw/DrawManager.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Kernel/App.h>
+#include <vrj/Kernel/User.h>
 
 #include <vpr/Thread/Thread.h>
-#include <Environment/vjEnvironmentManager.h>
+#include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/System.h>
 
-#include <Input/InputManager/vjInputManager.h>
+#include <vrj/Input/InputManager.h>
 
-#include <Config/vjConfigChunk.h>
-#include <Config/vjChunkFactory.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Config/ChunkFactory.h>
 
 
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
     defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
-#include <Kernel/vjSGISystemFactory.h>
+#include <vrj/Kernel/SGISystemFactory.h>
 #elif defined(VJ_OS_Darwin)
-#include <Kernel/vjOSXSystemFactory.h>
+#include <vrj/Kernel/OSXSystemFactory.h>
 #elif defined(VJ_OS_Win32)
-#include <Kernel/vjWin32SystemFactory.h>
+#include <vrj/Kernel/Win32SystemFactory.h>
 #endif
 
 namespace vrj

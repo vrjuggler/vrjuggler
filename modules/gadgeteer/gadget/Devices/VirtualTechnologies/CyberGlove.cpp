@@ -30,20 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <sys/time.h>
 
 // need stdio for sprintf
 #include <stdio.h>
 
-#include <Input/vjGlove/vt_types.h>
-#include <Input/vjGlove/vjCyberGlove.h>
-#include <Input/vjGlove/vt_globals.h>
-#include <Input/vjGlove/vt_types.h>
-#include <Input/vjGlove/vt_error.h>
-#include <Kernel/vjKernel.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Config/ConfigChunk.h>
 #include <vpr/System.h>
 
 namespace vrj

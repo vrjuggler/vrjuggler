@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_ENUMENTRY_H_
-#define _VJ_ENUMENTRY_H_
+#ifndef _VRJ_ENUMENTRY_H_
+#define _VRJ_ENUMENTRY_H_
 
 /* Tiny little data structure used to store an entry of enumeration
  * or valuelabel data 
  */
 
 
-#include <vjConfig.h>
-#include <Config/vjVarValue.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/VarValue.h>
 
 namespace vrj
 {

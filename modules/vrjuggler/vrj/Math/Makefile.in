@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Math.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Math.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -47,13 +47,13 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjCoord.cpp	\
-                  vjMath.cpp	\
-                  vjMatrix.cpp	\
-                  vjQuat.cpp	\
-                  vjSeg.cpp	\
-                  vjVec3.cpp	\
-                  vjVec4.cpp
+SRCS		= Coord.cpp	\
+                  Math.cpp	\
+                  Matrix.cpp	\
+                  Quat.cpp	\
+                  Seg.cpp	\
+                  Vec3.cpp	\
+                  Vec4.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CONFIGCHUNK_H_
+#define _VRJ_CONFIGCHUNK_H_
 
-#ifndef _VJ_CONFIGCHUNK_H_
-#define _VJ_CONFIGCHUNK_H_
-
-#include <vjConfig.h>
-#include <Config/vjChunkDesc.h>
-#include <Config/vjProperty.h>
-#include <Config/vjVarValue.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ChunkDesc.h>
+#include <vrj/Config/Property.h>
+#include <vrj/Config/VarValue.h>
 
 
 namespace vrj

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
-#include <Kernel/vjConfigChunkHandler.h>
-#include <Kernel/vjConfigManager.h>
-#include <Config/vjConfigChunk.h>
-#include <Kernel/vjDependencyManager.h>
-#include <Utils/vjDebug.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <vrj/Kernel/ConfigManager.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Kernel/DependencyManager.h>
+#include <vrj/Util/Debug.h>
 #include <typeinfo>
 
 namespace vrj

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <Config/vjChunkFactory.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ChunkFactory.h>
 
 namespace vrj
 {

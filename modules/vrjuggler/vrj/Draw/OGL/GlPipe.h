@@ -30,18 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_GL_PIPE_H_
+#define _VRJ_GL_PIPE_H_
 
-#ifndef _VJ_GL_PIPE_
-#define _VJ_GL_PIPE_
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-
-#include <Kernel/GL/vjGlWindow.h>
-#include <Kernel/GL/vjGlDrawManager.h>
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 
-#include <Performance/vjPerfDataBuffer.h>
+#include <vrj/Performance/PerfDataBuffer.h>
 
 namespace vrj
 {

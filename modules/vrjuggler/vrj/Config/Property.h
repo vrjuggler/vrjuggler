@@ -30,14 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_PROPERTY_H_
+#define _VRJ_PROPERTY_H_
 
-
-#ifndef _VJ_PROPERTY_H_
-#define _VJ_PROPERTY_H_
-
-#include <vjConfig.h>
-#include <Config/vjVarValue.h>
-#include <Config/vjPropertyDesc.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/VarValue.h>
+#include <vrj/Config/PropertyDesc.h>
 
 namespace vrj
 {

@@ -31,7 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input/intersense.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input/Devices/Intersense.  It requires GNU
+# make.
 # modified from ibox Makefile.in by Chris Johanson 17/9/00
 #
 # Generated for use on @PLATFORM@
@@ -42,17 +43,19 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Input/intersense
+includedir	= @includedir@/vrj/Input/Devices/Intersense
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= isdriver.c	\
-                  isense.c 	\
-                  itcom.c 	\
-                  timer.c 	\
-                  serial.c
+SRCS		= isdriver.c			\
+                  isense.c 			\
+                  itcom.c 			\
+                  timer.c 			\
+                  serial.c			\
+                  IntersenseStandalone.cpp	\
+                  Isense.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

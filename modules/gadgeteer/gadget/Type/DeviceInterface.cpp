@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <Input/InputManager/vjDeviceInterface.h>
-#include <Kernel/vjKernel.h>
-#include <Input/InputManager/vjInputManager.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/DeviceInterface.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Input/InputManager.h>
 
 namespace vrj
 {

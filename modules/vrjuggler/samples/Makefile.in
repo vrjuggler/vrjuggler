@@ -41,15 +41,15 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: OSG ogl pf
+all: OGL OSG Pf
 
-OSG ogl pf::
+OGL OSG Pf::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:	
+	-cd OGL && $(MAKE) clean
 	-cd OSG && $(MAKE) clean
-	-cd ogl && $(MAKE) clean
-	-cd pf  && $(MAKE) clean	
+	-cd Pf  && $(MAKE) clean	

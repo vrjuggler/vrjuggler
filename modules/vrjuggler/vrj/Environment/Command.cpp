@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-
-#include <Environment/vjCommand.h>
-#include <Environment/vjTimedUpdate.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigIO.h>
-#include <Performance/vjTimeStamp.h>
+#include <vrj/Environment/TimedUpdate.h>
+#include <vrj/Config/ConfigChunkDB.h>
+#include <vrj/Config/ChunkDescDB.h>
+#include <vrj/Config/ConfigIO.h>
+#include <vrj/Performance/TimeStamp.h>
+#include <vrj/Environment/Command.h>
 
 // generic Command
 
