@@ -72,38 +72,6 @@ public class ConfigElementPointer
       fireTargetChanged(old_target);
    }
 
-   public class ConfigElementPointerEdit extends AbstractUndoableEdit
-   {
-      public ConfigElementPointerEdit(String old_val, String new_val)
-      {
-         super();
-         mOldTarget = old_val;
-         mNewTarget = new_val;
-         System.out.println("New edit: " + mOldTarget + " -> " + mNewTarget);
-      }
-
-      public void undo() throws CannotUndoException 
-      {
-         System.out.println("undoing..");
-         super.undo();
-         System.out.println("undoing...");
-         String old_target = mTarget;
-         mTarget = mOldTarget;
-         fireTargetChanged(old_target);
-      }
-
-      public void redo() throws CannotRedoException
-      {
-         super.redo();
-         String old_target = mTarget;
-         mTarget = mNewTarget;
-         fireTargetChanged(old_target);
-      }
-
-      private String mNewTarget;
-      private String mOldTarget;
-   }
-
    /**
     * Tests if this configuration element pointer is equal to the given object.
     */
