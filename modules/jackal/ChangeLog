@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-20-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
 May-06-2003 patrickh    Restored the ability to read symbolic values from
                         configuration files where value enumerations are used.
                         NEW VERSION: 0.10.1
