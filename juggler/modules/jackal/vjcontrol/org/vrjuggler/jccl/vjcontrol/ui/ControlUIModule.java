@@ -331,7 +331,7 @@ public class ControlUIModule
         if (classname == null) 
             throw new VjComponentException (component_name + ": Not a component instance chunk: " + ch.getName());
             
-        if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanel")) {
+        if (Core.component_factory.classSupportsInterface (classname, VjComponents.UI.PlugPanel.class)) {
             PlugPanel pp = (PlugPanel) Core.component_factory.createComponent(classname);
             pp.setConfiguration (ch);
             pp.initialize ();
@@ -340,7 +340,7 @@ public class ControlUIModule
                 panel_container.insertPanel(pp);
             return pp;
         }
-        else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanelContainer")) {
+        else if (Core.component_factory.classSupportsInterface (classname, VjComponents.UI.PlugPanelContainer.class)) {
             PlugPanelContainer pc = (PlugPanelContainer) Core.component_factory.createComponent (classname);
             pc.setConfiguration (ch);
             pc.initialize ();

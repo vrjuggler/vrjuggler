@@ -34,8 +34,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.io.InputStreamReader;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.beans.Beans;
 
 import VjConfig.*;
@@ -100,46 +99,6 @@ import VjControl.VjClassLoader;
  */
 public class ComponentFactory {
 
-    /** Internal storage of VjComponent information. */
-    protected class CEntry {
-        public String class_name;
-        protected Class class_obj;
-
-        public CEntry (String _class_name, Class _class) {
-            class_name = _class_name;
-            class_obj = _class;
-        }
-
-        public Class getClassObject() {
-            try {
-                if (class_obj == null)
-                    class_obj = loader.loadClass (class_name);
-                return class_obj;
-            }
-            catch (Exception e) {
-                Core.consoleErrorMessage ("Component Factory", "Error loading class '" + class_name + "'");
-                return null;
-            }
-        }
-
-        public VjComponent createNewComponent() {
-            try {
-                if (class_obj == null)
-                    class_obj = loader.loadClass (class_name);
-                if (class_obj != null)
-                    return (VjComponent)class_obj.newInstance();
-                else
-                    return null;
-            }
-            catch (Exception e) {
-                Core.consoleErrorMessage ("Component Factory", "Error instantiating class '" + class_name + "'");
-                return null;
-            }
-        }
-    }
-
-    /** Contains entries for all registered VjComponent classes. */
-    public HashMap registered_classes;
 
     /** Contains all objects which are listening for ComponentFactoryEvents. */
     public Vector component_factory_targets;
@@ -149,7 +108,6 @@ public class ComponentFactory {
     /** Constructor */
     public ComponentFactory () {
         component_factory_targets = new Vector ();
-        registered_classes = new HashMap();
         loader = new VjClassLoader(new URL[0]);
     }
 
@@ -212,6 +170,54 @@ public class ComponentFactory {
 
 
 
+    /** Performs vjcontrol component load on the vjcontrol.jar file.
+     *  Its contents.config is parsed,
+     *  new VjComponent classes are registered, and instantiation
+     *  ConfigChunks are placed in Core's pending configuration queue.
+     */
+    public void registerBaseJar () {
+
+        InputStream is;
+
+        try {
+            // Get an optional chunkdescs file "contents.desc"
+            is = loader.getSystemResourceAsStream ("contents.desc");
+            if (is != null) {
+                ChunkDescDB descdb = new ChunkDescDB();
+                ConfigIO.readChunkDescDB (is, descdb, ConfigIO.GUESS);
+                Core.descdb.addAll (descdb);
+            }
+        }
+        catch (Exception e1) {
+            Core.consoleErrorMessage ("ComponentFactory", 
+                                      "Error reading contents.desc in base .jar");
+            // e1.printStackTrace();
+        }
+
+        try {
+            // Get the required contents file "contents.config"
+            is = loader.getSystemResourceAsStream ("contents.config");
+            if (is != null) {
+                ConfigChunkDB chunkdb = new ConfigChunkDB();
+                ConfigIO.readConfigChunkDB (is, chunkdb, ConfigIO.GUESS);
+
+                /* now we need to analyze the read-in chunks */
+                for (int i = 0; i < chunkdb.size(); i++)
+                    registerComponent (chunkdb.get(i));
+            }
+            else {
+                Core.consoleErrorMessage ("ComponentFactory",
+                                          "Base .jar had no 'contents.config'");
+            }
+        }
+        catch (Exception e2) {
+            Core.consoleErrorMessage ("ComponentFactory",
+                                      "Error reading contents.config in base .jar");
+        }
+    }
+
+
+
     /** Auxiliary function for registering JarFiles.
      *  @param ch A ConfigChunk from the .jar's contents.config.
      *  @param cl ClassLoader for the .jar.
@@ -222,9 +228,6 @@ public class ComponentFactory {
             if (desctoken.equalsIgnoreCase ("vjc_component")) {
                 String class_name = ch.getName();
                 System.out.println ("Registering component: " + class_name);
-                //Class c = loader.loadClass (class_name);
-                CEntry ce = new CEntry (class_name, null);
-                registered_classes.put (class_name, ce);
                 //notifyComponentFactoryTargets (class_name, c);
             }
             else {
@@ -264,24 +267,6 @@ public class ComponentFactory {
     }
 
 
-//         VjComponent c = null;
-
-//         try {
-//             CEntry ce = (CEntry)registered_classes.get(class_name);
-//             if (ce != null) {
-//                 c = ce.createNewComponent();//(VjComponent)ce.class_obj.newInstance();
-//             }
-//             else
-//                 Core.consoleErrorMessage ("Create Component", "No Registration for class " + class_name);
-//         }
-//         catch (Exception e) {
-//             Core.consoleErrorMessage ("CreateComponent", "Failed: " + e.toString());
-//             e.printStackTrace();
-//         }
-//         return c;
-//     }
-
-
 
     /** Returns true if class_name is a VjComponent class we know about.
      *  @param class_name Fully-qualified name of a class that's been
@@ -290,7 +275,14 @@ public class ComponentFactory {
      *          classes, and false if it isn't.
      */
     public boolean isRegistered (String class_name) {
-        return (registered_classes.get(class_name) != null);
+        //return (registered_classes.get(class_name) != null);
+        try {
+            loader.loadClass (class_name);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
 
@@ -298,26 +290,24 @@ public class ComponentFactory {
     /** Checks if the named class supports an interface.
      *  @param class_name Fully-qualified name of a class that's been
      *                    registered with the ComponentFactory.
-     *  @param interface_name Fully-qualified name of an interface.
+     *  @param inter The interface we're checking for.
      *  @return True if the class class_name implements the interface
      *          interface_name.
      *          False if the class doesn't implement it, or either the
      *          class or interface couldn't be found.
      */
     public boolean classSupportsInterface (String class_name, 
-                                           String interface_name) {
+                                           Class inter) {
         try {
-            CEntry ce = (CEntry)registered_classes.get(class_name);
-            Class inter = loader.loadClass(interface_name);
-            return inter.isAssignableFrom (ce.getClassObject());
+            Class cl = loader.loadClass (class_name);
+            return inter.isAssignableFrom (cl);
         }
         catch (Exception ex) {
             // any exception here is gonna be because we couldn't find the
             // class or interface, which implies failure.
             return false;
         }
-    }
-               
+    }              
 
 
     //------------------ Component Factory Target Stuff ---------------------

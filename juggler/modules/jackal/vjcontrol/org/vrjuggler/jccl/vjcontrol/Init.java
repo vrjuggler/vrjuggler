@@ -63,7 +63,7 @@ public class Init {
 
         /* load extensions... */
         ArrayList extension_dirs = new ArrayList();
-        extension_dirs.add ("$JCCL_BASE_DIR/bin/VjControl.jar");
+        //extension_dirs.add ("$JCCL_BASE_DIR/bin/VjControl.jar");
 
         /* we'll look thru the command line for extension .jars */
  	for (int i = 0; i < args.length; i++) {
@@ -71,6 +71,8 @@ public class Init {
                 extension_dirs.add (args[++i]);
             }
         }
+
+        Core.component_factory.registerBaseJar();
 
         loadExtensions (extension_dirs);
      	
