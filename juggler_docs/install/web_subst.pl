@@ -29,7 +29,6 @@ $web_subst{"PUB"} = 'pub/';
 $web_subst{"BUGS"} = 'html/bugs';
 $web_subst{"CONTACT"} = 'html/contact.info';
 $web_subst{"DEVGUIDE"} = 'html/developer.guide/';
-$web_subst{"DEVREF"} = 'html/developer.reference/';
 $web_subst{"DOWNLOAD"} = 'html/download';
 $web_subst{"LAYOUT"} = 'html/layout';
 $web_subst{"LEGAL"} = 'html/legal';
@@ -37,6 +36,7 @@ $web_subst{"MISC"} = 'html/misc';
 $web_subst{"NEWS"} = 'html/news';
 $web_subst{"PUBLICATIONS"} = 'html/publications';
 $web_subst{"PROGRAMMERGUIDE"} = 'html/programmer.guide';
+$web_subst{"PROGRAMMERREF"} = 'html/programmer.reference/';
 $web_subst{"VJCONTROL"} = 'html/vjcontrol';
 $web_subst{"DOCUMENTATION"} = 'html/documentation';
 
@@ -72,3 +72,5 @@ $alias_subst{"COATS"} = 'mailto:jwcoats@vrac.iastate.edu';
 $alias_subst{"VRAC"} = 'http://www.vrac.iastate.edu';
 $alias_subst{"IASTATE"} = 'http://www.iastate.edu';
 
+# font size for the tree control (JEXPLORER)
+$alias_subst{"TREE_FONTSIZE"} = '11';
