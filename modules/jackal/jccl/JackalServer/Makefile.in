@@ -47,13 +47,13 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_LIBRARY)
 
-SRCS		= vjCommand.cpp			\
-                  vjConnect.cpp			\
-                  vjEnvironmentManager.cpp	\
-                  vjSocket.cpp			\
-                  vjSockStream.cpp		\
-		  vjNetCommunicator.cpp		\
-		  vjXMLConfigCommunicator.cpp	
+SRCS		= Command.cpp			\
+                  Connect.cpp			\
+                  EnvironmentManager.cpp	\
+                  Socket.cpp			\
+                  SockStream.cpp		\
+		  NetCommunicator.cpp		\
+		  XMLConfigCommunicator.cpp	
 
 include $(MKPATH)/dpp.obj.mk
 
