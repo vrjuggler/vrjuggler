@@ -117,10 +117,10 @@ endif
 
 jccl_vjcontrol.jar: $(JAVA_CLASSES)
 	$(JAR) cvf $@ $(JAVA_CLASSES) \
-			 $(WIZARDS_DIR)/gfx \
-			 $(WIZARDS_DIR)/data \
-			 VjFiles \
-			 contents.config
+			 -C $(JCCLROOT_ABS)/vjcontrol $(WIZARDS_DIR)/gfx \
+			 -C $(JCCLROOT_ABS)/vjcontrol $(WIZARDS_DIR)/data \
+			 -C $(JCCLROOT_ABS)/vjcontrol VjFiles \
+			 -C $(JCCLROOT_ABS)/vjcontrol contents.config
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
