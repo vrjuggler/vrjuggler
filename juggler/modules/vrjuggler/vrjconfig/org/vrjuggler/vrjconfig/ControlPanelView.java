@@ -26,11 +26,16 @@
 package org.vrjuggler.vrjconfig;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 import javax.swing.*;
-import org.vrjuggler.vrjconfig.ui.*;
+
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.vrjconfig.ui.*;
 
 /**
  * Provides a control panel view into a config chunk collection.
@@ -61,9 +66,66 @@ public class ControlPanelView
          public void actionPerformed(ActionEvent evt)
          {
             Object value = control.getModel().getElementAt(evt.getID());
-            JOptionPane.showMessageDialog(ControlPanelView.this, "Selected "+String.valueOf(value));
+            String item = (String)value;
+//            if (item.equals("Simulator"))
+//            {
+//               showSimEditor();
+//            }
+//            else
+//            {
+               JOptionPane.showMessageDialog(ControlPanelView.this, "Selected "+String.valueOf(value));
+//            }
          }
       });
+   }
+
+//   protected void showSimEditor()
+//   {
+//      JDialog dlg = new JDialog(
+//            (Frame)SwingUtilities.getAncestorOfClass(Frame.class, this),
+//            "Simulator Editor",
+//            true);
+//      dlg.getContentPane().setLayout(new BorderLayout());
+//      dlg.getContentPane().add(new SimEditor(), BorderLayout.CENTER);
+//      dlg.pack();
+//      dlg.setVisible(true);
+//   }
+
+   private void createNewChunkDB()
+   {
+   }
+
+   private void open()
+   {
+      int result = fileChooser.showOpenDialog(this);
+      if (result == JFileChooser.APPROVE_OPTION)
+      {
+         try
+         {
+            File file = fileChooser.getSelectedFile();
+            ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
+            ConfigManagerService mgr = (ConfigManagerService)BeanRegistry.instance().getBean("ConfigManager").getBean();
+
+            if (file.getName().endsWith(".config"))
+            {
+               InputStream in = new BufferedInputStream(new FileInputStream(file));
+               ConfigChunkDB chunk_db = config.loadConfigChunks(in, mgr.getAllChunkDescs());
+               mgr.add(chunk_db);
+               mgr.setActiveConfig(chunk_db);
+               this.add(control, BorderLayout.CENTER);
+               this.updateUI();
+               control.invalidate();
+            }
+         }
+         catch (IOException ioe)
+         {
+            JOptionPane.showMessageDialog(this,
+                  "Failed to open the file: "+ioe.getMessage(),
+                  "Error",
+                  JOptionPane.ERROR_MESSAGE);
+            ioe.printStackTrace();
+         }
+      }
    }
 
    /**
@@ -75,12 +137,30 @@ public class ControlPanelView
       this.setLayout(baseLayout);
       control.setTitle("Choose a category");
       control.setModel(model);
-      this.add(control,  BorderLayout.CENTER);
+      toolbar.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            String cmd = evt.getActionCommand();
+            if (cmd.equals("New ChunkDB"))
+            {
+               createNewChunkDB();
+            }
+            else if (cmd.equals("Open"))
+            {
+               open();
+            }
+         }
+      });
+      this.add(toolbar,  BorderLayout.NORTH);
+//      this.add(control,  BorderLayout.CENTER);
    }
 
    //--- JBuilder GUI variables ---//
-   private ControlPanel control = new ControlPanel();
    private BorderLayout baseLayout = new BorderLayout();
+   private ConfigToolbar toolbar = new ConfigToolbar();
+   private ControlPanel control = new ControlPanel();
+   private JFileChooser fileChooser = new JFileChooser();
 
    /**
     * The data model for the control panel.
