@@ -33,7 +33,7 @@
 #ifndef _GADGET_TWEEK_POSITION_SUBJECT_IMPL_H_
 #define _GADGET_TWEEK_POSITION_SUBJECT_IMPL_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <gmtl/Matrix.h>
 #include <vpr/vpr.h>
