@@ -109,6 +109,8 @@ SerialPortImpTermios::open () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current update action.  This tells when updates to the serial
+// device take effect.
 // ----------------------------------------------------------------------------
 SerialTypes::UpdateActionOption
 SerialPortImpTermios::getUpdateAction () {
@@ -130,6 +132,8 @@ SerialPortImpTermios::getUpdateAction () {
 }
 
 // ----------------------------------------------------------------------------
+// Change the current update action to take place as described by the given
+// value.
 // ----------------------------------------------------------------------------
 void
 SerialPortImpTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
@@ -148,6 +152,8 @@ SerialPortImpTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
 }
 
 // ----------------------------------------------------------------------------
+// Get the local attach state.  That is, test if the device is attached
+// locally.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getLocalAttachState () {
@@ -155,6 +161,7 @@ SerialPortImpTermios::getLocalAttachState () {
 }
 
 // ----------------------------------------------------------------------------
+// Mark the device as locally attached.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableLocalAttach () {
@@ -163,6 +170,7 @@ SerialPortImpTermios::enableLocalAttach () {
 }
 
 // ----------------------------------------------------------------------------
+// Mark the device as not locally attached.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableLocalAttach () {
@@ -171,6 +179,7 @@ SerialPortImpTermios::disableLocalAttach () {
 }
 
 // ----------------------------------------------------------------------------
+// Query the serial port for the maximum buffer size.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::getBufferSize (Uint8& size) {
@@ -185,6 +194,7 @@ SerialPortImpTermios::getBufferSize (Uint8& size) {
 }
 
 // ----------------------------------------------------------------------------
+// Attempt to change the buffer size to the given argument.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setBufferSize (const Uint8 size) {
@@ -200,6 +210,8 @@ SerialPortImpTermios::setBufferSize (const Uint8 size) {
 }
 
 // ----------------------------------------------------------------------------
+// Get the value of the timeout (in tenths of a second) to wait for data to
+// arrive.  This is only applicable in non-canonical mode.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::getTimeout (Uint8& timeout) {
@@ -214,6 +226,9 @@ SerialPortImpTermios::getTimeout (Uint8& timeout) {
 }
 
 // ----------------------------------------------------------------------------
+// Set the value of the timeout to wait for data to arrive.  The value given
+// must be in tenths of a second.  This is only applicable in non-canonical
+// mode.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setTimeout (const Uint8 timeout) {
@@ -229,6 +244,7 @@ SerialPortImpTermios::setTimeout (const Uint8 timeout) {
 }
 
 // ----------------------------------------------------------------------------
+// Get the character size (the bits per byte).
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::getCharacterSize (SerialTypes::CharacterSizeOption& size)
@@ -257,6 +273,9 @@ SerialPortImpTermios::getCharacterSize (SerialTypes::CharacterSizeOption& size)
 }
 
 // ----------------------------------------------------------------------------
+// Set the current character size (the bits per byte) to the size in the given
+// value.  This is used for both reding and writing, and the size does not
+// include the parity bit (if any).
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setCharacterSize (const SerialTypes::CharacterSizeOption bpb)
@@ -294,6 +313,7 @@ SerialPortImpTermios::setCharacterSize (const SerialTypes::CharacterSizeOption b
 }
 
 // ----------------------------------------------------------------------------
+// Get the current read state for the port.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getReadState () {
@@ -301,6 +321,7 @@ SerialPortImpTermios::getReadState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable the receiver so that bytes can be read from the port.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableRead () {
@@ -309,6 +330,7 @@ SerialPortImpTermios::enableRead () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable the receiver so that bytes cannot be read from the port.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableRead () {
@@ -317,6 +339,7 @@ SerialPortImpTermios::disableRead () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the number of stop bits in use.  This will be either 1 or 2.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::getStopBits (Uint8& num_bits) {
@@ -338,6 +361,7 @@ SerialPortImpTermios::getStopBits (Uint8& num_bits) {
 }
 
 // ----------------------------------------------------------------------------
+// Set the number of stop bits to use.  The value must be either 1 or 2.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
@@ -372,6 +396,7 @@ SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current input echo state (either on or off) for the serial port.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getInputEchoState () {
@@ -379,6 +404,7 @@ SerialPortImpTermios::getInputEchoState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable input echo.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableInputEcho () {
@@ -387,6 +413,7 @@ SerialPortImpTermios::enableInputEcho () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable input echo.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableInputEcho () {
@@ -395,6 +422,13 @@ SerialPortImpTermios::disableInputEcho () {
 }
 
 // ----------------------------------------------------------------------------
+// Query the canonical input state of the serial port.  If canonical mode is
+// enabled, the characters EOF, EOL, EOL2, ERASE, KILL, REPRINT, STATUS, and
+// WERASE are enabled, and the input characters are assembled into lines.
+// Otherwise, read requests are satisfied directly from the input queue, and a
+// read will not return until the buffer is at its minimum capacity or the
+// timeout has expired.  See getBufferSize() and getTimeout() for more
+// information.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getCanonicalState () {
@@ -402,6 +436,8 @@ SerialPortImpTermios::getCanonicalState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable canonical input.  See getCanonicalState() for more information about
+// what this means.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableCanonicalInput () {
@@ -410,6 +446,8 @@ SerialPortImpTermios::enableCanonicalInput () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable canonical input.  See getCanonicalState() for more information
+// about what this means.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableCanonicalInput () {
@@ -418,6 +456,7 @@ SerialPortImpTermios::disableCanonicalInput () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current state of carriage return (CR) to newline (NL) translation.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getCRTranslateState () {
@@ -425,6 +464,7 @@ SerialPortImpTermios::getCRTranslateState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable translation of received carriage returns to newlines.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableCRTranslation () {
@@ -433,6 +473,7 @@ SerialPortImpTermios::enableCRTranslation () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable translation of received carriage returns to newlines.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableCRTranslation () {
@@ -441,6 +482,8 @@ SerialPortImpTermios::disableCRTranslation () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current state of ignoring received carriage returns (CRs).  If CRs
+// are not ignored, they may be translated to newlines.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getCRIgnoreState () {
@@ -448,6 +491,7 @@ SerialPortImpTermios::getCRIgnoreState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable ignoring of received carriage returns.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableCRIgnore () {
@@ -456,6 +500,8 @@ SerialPortImpTermios::enableCRIgnore () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable ignoring of received carriage returns.  Once disabled, received
+// carriage returns may be converted to newlines.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableCRIgnore () {
@@ -464,6 +510,8 @@ SerialPortImpTermios::disableCRIgnore () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current state of ignoring bytes with framing errors (other than a
+// BREAK) or parity errors.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getBadByteIgnoreState () {
@@ -471,6 +519,7 @@ SerialPortImpTermios::getBadByteIgnoreState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable ignoring of received bytes with framing errors or parity errors.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableBadByteIgnore () {
@@ -479,6 +528,7 @@ SerialPortImpTermios::enableBadByteIgnore () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable ignoring of received bytes with framing errors or parity errors.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableBadByteIgnore () {
@@ -487,6 +537,7 @@ SerialPortImpTermios::disableBadByteIgnore () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the state of parity checking for input.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getInputParityCheckState () {
@@ -494,6 +545,7 @@ SerialPortImpTermios::getInputParityCheckState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable input parity checking.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableInputParityCheck () {
@@ -502,6 +554,7 @@ SerialPortImpTermios::enableInputParityCheck () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable input parity checking.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableInputParityCheck () {
@@ -510,6 +563,9 @@ SerialPortImpTermios::disableInputParityCheck () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current signal generation state.  If it is enabled, the input bytes
+// are checked against signal values.  If equal, the corresponding signal is
+// generated.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getSignalGenerateState () {
@@ -517,6 +573,8 @@ SerialPortImpTermios::getSignalGenerateState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable signal generation.  The signals checked are interrupt, quit, and
+// suspend.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableSignalGeneration () {
@@ -525,6 +583,7 @@ SerialPortImpTermios::enableSignalGeneration () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable signal generation.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableSignalGeneration () {
@@ -533,6 +592,8 @@ SerialPortImpTermios::disableSignalGeneration () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current state of bit stripping.  When enabled, input bytes are
+// stripped to seven bits.  Otherwise, all eight bits are processed.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getBitStripState () {
@@ -540,6 +601,7 @@ SerialPortImpTermios::getBitStripState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable stripping of input bytes to seven bits.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableBitStripping () {
@@ -548,6 +610,7 @@ SerialPortImpTermios::enableBitStripping () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable stripping of input bytes to seven bits.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableBitStripping () {
@@ -556,6 +619,12 @@ SerialPortImpTermios::disableBitStripping () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the state of start-stop input control.  When enabled, if the terminal
+// driver sees that the receive buffer is getting full, a STOP command is sent
+// to the serial device.  The device should respond by halting its data flow.
+// When the input queue has been processed, a START command is sent to the
+// serial device which should cause it to resume putting bytes onto the input
+// queue.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getStartStopInputState () {
@@ -563,6 +632,8 @@ SerialPortImpTermios::getStartStopInputState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable start-stop input control.  See getStartStopInputState() for more
+// information.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableStartStopInput () {
@@ -571,6 +642,8 @@ SerialPortImpTermios::enableStartStopInput () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable start-stop input control.  See getStartStopInputState() for more
+// information.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableStartStopInput () {
@@ -579,6 +652,10 @@ SerialPortImpTermios::disableStartStopInput () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the state of start-stop output control.  When enabled, when the
+// terminal driver receives a STOP command, output stops.  When it receives a
+// START command, output resumes.  If disabled, these/ commands are read as
+// normal characters.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getStartStopOutputState () {
@@ -586,6 +663,8 @@ SerialPortImpTermios::getStartStopOutputState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable start-stop input control.  See getStartStopInputState() for more
+// information.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableStartStopOutput () {
@@ -594,6 +673,8 @@ SerialPortImpTermios::enableStartStopOutput () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable start-stop input control.  See getStartStopInputState() for more
+// information.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableStartStopOutput () {
@@ -602,6 +683,8 @@ SerialPortImpTermios::disableStartStopOutput () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current state of parity generation for outgoing bytes and parity
+// checking for incoming bytes.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getParityGenerationState () {
@@ -609,6 +692,8 @@ SerialPortImpTermios::getParityGenerationState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable parity generation for outgoing bytes and parity checking for
+// incoming bytes.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableParityGeneration () {
@@ -617,6 +702,8 @@ SerialPortImpTermios::enableParityGeneration () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable parity generation for outgoing bytes and parity checking for
+// incoming bytes.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableParityGeneration () {
@@ -625,6 +712,12 @@ SerialPortImpTermios::disableParityGeneration () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable marking of bytes with parity errors or framing errors (except
+// BREAKs).  This is only active if input parity and framing error reporting
+// is enabled (see getInputParityCheckState() for more information).  The mark
+// is the three-byte sequence \377 \0 X where X is the byte received in error.
+// If bit stripping is enabled, a valid \377 byte is passed as the two-byte
+// sequence \377 \377.
 // ----------------------------------------------------------------------------
 bool
 SerialPortImpTermios::getParityErrorMarkingState () {
@@ -632,6 +725,7 @@ SerialPortImpTermios::getParityErrorMarkingState () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable parity error and framing error marking.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::enableParityErrorMarking () {
@@ -640,6 +734,7 @@ SerialPortImpTermios::enableParityErrorMarking () {
 }
 
 // ----------------------------------------------------------------------------
+// Disable parity error and framing error marking.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::disableParityErrorMarking () {
@@ -648,6 +743,7 @@ SerialPortImpTermios::disableParityErrorMarking () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current parity checking type (either odd or even).
 // ----------------------------------------------------------------------------
 SerialTypes::ParityType
 SerialPortImpTermios::getParity () {
@@ -666,6 +762,7 @@ SerialPortImpTermios::getParity () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable odd parity.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setOddParity () {
@@ -674,6 +771,7 @@ SerialPortImpTermios::setOddParity () {
 }
 
 // ----------------------------------------------------------------------------
+// Enable even parity.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setEvenParity () {
@@ -682,6 +780,7 @@ SerialPortImpTermios::setEvenParity () {
 }
 
 // ----------------------------------------------------------------------------
+// Get the current input baud rate.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::getInputBaudRate (Uint32& rate) {
@@ -699,6 +798,7 @@ SerialPortImpTermios::getInputBaudRate (Uint32& rate) {
 }
 
 // ----------------------------------------------------------------------------
+// Set the current input baud rate.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setInputBaudRate (const Uint32 baud) {
@@ -731,6 +831,7 @@ fprintf(stderr, "Setting input baud rate to %d\n", new_rate);
 }
 
 // ----------------------------------------------------------------------------
+// Get the current output baud rate.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::getOutputBaudRate (Uint32& rate) {
@@ -748,6 +849,7 @@ SerialPortImpTermios::getOutputBaudRate (Uint32& rate) {
 }
 
 // ----------------------------------------------------------------------------
+// Set the current output baud rate.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::setOutputBaudRate (const Uint32 baud) {
@@ -780,6 +882,7 @@ fprintf(stderr, "Setting output baud rate to %d\n", new_rate);
 }
 
 // ----------------------------------------------------------------------------
+// Wait for all output to be transmitted.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::drainOutput () {
@@ -796,6 +899,10 @@ SerialPortImpTermios::drainOutput () {
 }
 
 // ----------------------------------------------------------------------------
+// Alter the input or output flow control.  Based on the
+// vpr::SerialTypes::FlowActionOption argument, output can be suspended and
+// restarted or the terminal device can be told to stop or to resume sending
+// data.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::controlFlow (SerialTypes::FlowActionOption opt) {
@@ -828,13 +935,16 @@ SerialPortImpTermios::controlFlow (SerialTypes::FlowActionOption opt) {
 }
 
 // ----------------------------------------------------------------------------
+// Discard either the input buffer (unread data received from the terminal
+// device) or the output buffer (data written but not yet transmitted to the
+// terminal device).  The argument tells which queue (or queues) to flush.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption opt) {
+SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
     int queue;
     Status retval;
 
-    switch (opt) {
+    switch (vpr_queue) {
       case SerialTypes::INPUT_QUEUE:
         queue = TCIFLUSH;
         break;
@@ -849,7 +959,7 @@ SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption opt) {
     if ( tcflush(m_handle->m_fdesc, queue) == -1 ) {
         std::string queue_name;
 
-        switch (opt) {
+        switch (vpr_queue) {
           case SerialTypes::INPUT_QUEUE:
             queue_name = "input queue";
             break;
@@ -871,6 +981,10 @@ SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption opt) {
 }
 
 // ----------------------------------------------------------------------------
+// Transmit a continuous stream of zero bits for the given duration.  If the
+// argument is 0, the transmission will last between 0.25 and 0.5 seconds.
+// Otherwise, the duration specfies the number of seconds to send the zero bit
+// stream.
 // ----------------------------------------------------------------------------
 Status
 SerialPortImpTermios::sendBreak (const Int32 duration) {
@@ -891,6 +1005,7 @@ SerialPortImpTermios::sendBreak (const Int32 duration) {
 // ============================================================================
 
 // ----------------------------------------------------------------------------
+// Set the control character at the given index to the given value.
 // ----------------------------------------------------------------------------
 void
 SerialPortImpTermios::setControlCharacter (const Uint32 index,
@@ -919,6 +1034,7 @@ SerialPortImpTermios::setControlCharacter (const Uint32 index,
 }
 
 // ----------------------------------------------------------------------------
+// Get the value of the control character at the given index.
 // ----------------------------------------------------------------------------
 Uint8
 SerialPortImpTermios::getControlCharacter (const Uint32 index) {
@@ -1092,6 +1208,7 @@ SerialPortImpTermios::setBit (const tcflag_t bit,
 }
 
 // ----------------------------------------------------------------------------
+// Convert a termios baud rate to its corresponding integer value.
 // ----------------------------------------------------------------------------
 Uint32
 SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
@@ -1152,6 +1269,7 @@ SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
 }
 
 // ----------------------------------------------------------------------------
+// Convert an integer baud rate to the corresponding termios rate constant.
 // ----------------------------------------------------------------------------
 speed_t
 SerialPortImpTermios::intToBaud (const Uint32 speed_int) {

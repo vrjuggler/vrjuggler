@@ -208,260 +208,774 @@ public:
     }
 
     // ========================================================================
-    // vpr::SerialPortImp interface implementation.
+    // VPR serial port interface implementation.
     // ========================================================================
 
     // ------------------------------------------------------------------------
+    //: Get the current update action.  This tells when updates to the serial
+    //+ device take effect.
+    //
+    //! PRE: None.
+    //! POST: The current update action is returned to the caller.
+    //
+    //! RETURNS: A vpr::SerialTypes::UpdateActionOption value stating when
+    //+          updates take effect.
     // ------------------------------------------------------------------------
     SerialTypes::UpdateActionOption getUpdateAction(void);
 
     // ------------------------------------------------------------------------
+    //: Change the current update action to take place as described by the
+    //+ given value.
+    //
+    //! PRE: None.
+    //! POST: The update action is modified to use the new value.  The results
+    //+       will be seen with the next device operation.
+    //
+    //! ARGS: action - The new update action value.
     // ------------------------------------------------------------------------
     void setUpdateAction(SerialTypes::UpdateActionOption action);
 
     // ------------------------------------------------------------------------
+    //: Get the local attach state.  That is, test if the device is attached
+    //+ locally.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The local attach state is returned to the caller.
+    //
+    //! RETURNS: true  - The device is attached locally.
+    //! RETURNS: false - The device is not attached locally, and opening the
+    //+                  device will usually block until there is a response.
     // ------------------------------------------------------------------------
     bool getLocalAttachState(void);
 
     // ------------------------------------------------------------------------
+    //: Mark the device as locally attached.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The device has its local attachment state enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableLocalAttach(void);
 
     // ------------------------------------------------------------------------
+    //: Mark the device as not locally attached.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The device has its local attachment state disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableLocalAttach(void);
 
     // ------------------------------------------------------------------------
+    //: Query the serial port for the maximum buffer size.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The maximum buffer size is returned to the caller through the
+    //+       by-reference argument.
+    //
+    //! ARGS: size - A reference to a vpr::Uint8 where the buffer size is
+    //+              stored for return to the caller.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status getBufferSize(Uint8& size);
 
     // ------------------------------------------------------------------------
+    //: Attempt to change the buffer size to the given argument.
+    //
+    //! PRE: The serial port is open.
+    //! POST: If the buffer size is usable on the port, the port attributes
+    //+       are updated and success is returned.  Otherwise, a failure
+    //+       status is returned.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setBufferSize(const Uint8 size);
 
     // ------------------------------------------------------------------------
+    //: Get the value of the timeout (in tenths of a second) to wait for data
+    //+ to arrive.  This is only applicable in non-canonical mode.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current timeout setting is returned to the caller in the
+    //+       by-reference argument.
+    //
+    //! ARGS: timeout - A reference to a vpr::Uint8 to be used as storage for
+    //+                 the timeout value.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //
+    //! NOTE: See page 353 of <I>Advanced Programming in the UNIX
+    //+       Environment</I> for more details.
     // ------------------------------------------------------------------------
     Status getTimeout(Uint8& timeout);
 
     // ------------------------------------------------------------------------
+    //: Set the value of the timeout to wait for data to arrive.  The value
+    //+ given must be in tenths of a second.  This is only applicable in
+    //+ non-canonical mode.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The timeout interval is updated to use the given value.
+    //
+    //! ARGS: timeout_val - The new timeout value measured in tenths of a
+    //+                     second.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //
+    //! NOTE: See page 353 of <I>Advanced Programming in the UNIX
+    //+       Environment</I> for more details.
     // ------------------------------------------------------------------------
     Status setTimeout(const Uint8 timeout);
 
     // ------------------------------------------------------------------------
+    //: Get the character size (the bits per byte).
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current character size is returned to the caller in the
+    //+       by-reference argument.
+    //
+    //! ARGS: size - A reference to a vpr::SerialTypes::CharacterSizeOption
+    //+              object to be used as storage for the character size
+    //+              value.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status getCharacterSize(SerialTypes::CharacterSizeOption& size);
 
     // ------------------------------------------------------------------------
-    //: Set the character size for both reading and writing on this port.
-    //+ This size does not include the parity bit if any.
+    //: Set the current character size (the bits per byte) to the size in the
+    //+ given value.  This is used for both reding and writing, and the size
+    //+ does not include the parity bit (if any).
+    //
+    //! PRE: The serial port is open.
+    //! POST: The bits per byte for the serial port is updated.
+    //
+    //! ARGS: bpb - The new character size.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setCharacterSize(const SerialTypes::CharacterSizeOption bpb);
 
     // ------------------------------------------------------------------------
+    //: Get the current read state for the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The read state (either enabled or disabled) is returne to the 
+    //+       caller.
+    //
+    //! RETURNS: true  - Bytes can be read from the device.
+    //! RETURNS: false - Bytes cannot be read from the device.
     // ------------------------------------------------------------------------
     bool getReadState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable the receiver so that bytes can be read from the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: An attempt is made to make the device readable.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableRead(void);
 
     // ------------------------------------------------------------------------
+    //: Disable the receiver so that bytes cannot be read from the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: An attempt is made to make the device unreadable.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableRead(void);
 
     // ------------------------------------------------------------------------
+    //: Get the number of stop bits in use.  This will be either 1 or 2.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The number of stop bits currently in use is returned via the
+    //+       by-reference argument.
+    //
+    //! ARGS: num_bits - A reference to a vpr::Uint8 that will be used to
+    //+                  store the number of stop bits.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status getStopBits(Uint8& num_bits);
 
     // ------------------------------------------------------------------------
+    //: Set the number of stop bits to use.  The value must be either 1 or 2.
+    //
+    //! PRE: The serial port is open, and the given number of stop bits is
+    //+      either 1 or 2.
+    //! POST: The number of stop bits is updated to use the given value.
+    //
+    //! ARGS: num_bits - The number of stop bits to use.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setStopBits(const Uint8 num_bits);
 
     // ------------------------------------------------------------------------
+    //: Get the current input echo state (either on or off) for the serial
+    //+ port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The input echo state is returned to the caller.
+    //
+    //! RETURNS: true  - Input characters are echoed back to the terminal
+    //+                  device.
+    //! RETURNS: false - Input characters are echoed not back to the terminal
+    //+                  device.
     // ------------------------------------------------------------------------
     bool getInputEchoState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable input echo.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Input echoing is enabled for the serial port.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableInputEcho(void);
 
     // ------------------------------------------------------------------------
+    //: Disable input echo.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Input echoing is disabled for the serial port.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableInputEcho(void);
 
     // ------------------------------------------------------------------------
+    //: Query the canonical input state of the serial port.  If canonical mode
+    //+ is enabled, the characters EOF, EOL, EOL2, ERASE, KILL, REPRINT,
+    //+ STATUS, and WERASE are enabled, and the input characters are
+    //+ assembled into lines.  Otherwise, read requests are satisfied directly
+    //+ from the input queue, and a read will not return until the buffer is
+    //+ at its minimum capacity or the timeout has expired.  See
+    //+ getBufferSize() and getTimeout() for more information.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current state of canonical input is returnd to the caller.
+    //
+    //! RETURNS: true  - Canonical input is enabled.
+    //! RETURNS: false - Canonical input is disabled.
     // ------------------------------------------------------------------------
     bool getCanonicalState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable canonical input.  See getCanonicalState() for more information
+    //+ about what this means.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Canonical input is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableCanonicalInput(void);
 
     // ------------------------------------------------------------------------
+    //: Disable canonical input.  See getCanonicalState() for more information
+    //+ about what this means.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Canonical input is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableCanonicalInput(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current state of carriage return (CR) to newline (NL)
+    //+ translation.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The CR --> NL translation state is returned to the caller.
+    //
+    //! RETURNS: true  - Received carriage returns are converted to newlines.
+    //! RETURNS: false - Received carriage returns are not converted to
+    //+                  newlines.
     // ------------------------------------------------------------------------
     bool getCRTranslateState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable translation of received carriage returns to newlines.
+    //
+    //! PRE: The serial port is open.
+    //! POST: CR --> NL translation is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableCRTranslation(void);
 
     // ------------------------------------------------------------------------
+    //: Disable translation of received carriage returns to newlines.
+    //
+    //! PRE: The serial port is open.
+    //! POST: CR --> NL translation is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableCRTranslation(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current state of ignoring received carriage returns (CRs).  If
+    //+ CRs are not ignored, they may be translated to newlines.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The CR ignore state is returned to the caller.
+    //
+    //! RETURNS: true  - Received carriage returns are ignored.
+    //! RETURNS: false - Received carriage returns are not ignored.
     // ------------------------------------------------------------------------
     bool getCRIgnoreState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable ignoring of received carriage returns.
+    //
+    //! PRE: The serial port is open.
+    //! POST: CR ignoring is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableCRIgnore(void);
 
     // ------------------------------------------------------------------------
+    //: Disable ignoring of received carriage returns.  Once disabled,
+    //+ received carriage returns may be converted to newlines.
+    //
+    //! PRE: The serial port is open.
+    //! POST: CR ignoring is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableCRIgnore(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current state of ignoring bytes with framing errors (other
+    //+ than a BREAK) or parity errors.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The erroneous byte ignore state is returned to the caller.
+    //
+    //! RETURNS: true  - Bad bytes are ignored.
+    //! RETURNS: false - Bad bytes are not ignored.
     // ------------------------------------------------------------------------
     bool getBadByteIgnoreState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable ignoring of received bytes with framing errors or parity
+    //+ errors.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Erroneous byte ignoring is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableBadByteIgnore(void);
 
     // ------------------------------------------------------------------------
+    //: Disable ignoring of received bytes with framing errors or parity
+    //+ errors.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Erroneous byte ignoring is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableBadByteIgnore(void);
 
     // ------------------------------------------------------------------------
+    //: Get the state of parity checking for input.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The state of input parity checking is returned to the caller.
+    //
+    //! RETURNS: true  - Input parity checking is enabled.
+    //! RETURNS: false - Input parity checking is disabled.
     // ------------------------------------------------------------------------
     bool getInputParityCheckState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable input parity checking.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Input parity checking is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableInputParityCheck(void);
 
     // ------------------------------------------------------------------------
+    //: Disable input parity checking.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Input parity checking is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableInputParityCheck(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current signal generation state.  If it is enabled, the input
+    //+ bytes are checked against signal values.  If equal, the corresponding
+    //+ signal is generated.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current signal generation state valus is returned to the
+    //+       caller.
+    //
+    //! RETURNS: true  - Signal generation is enabled.
+    //! RETURNS: false - Signal generation is disabled.
     // ------------------------------------------------------------------------
     bool getSignalGenerateState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable signal generation.  The signals checked are interrupt, quit,
+    //+ and suspend.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Signal generation is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableSignalGeneration(void);
 
     // ------------------------------------------------------------------------
+    //: Disable signal generation.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Signal generation is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableSignalGeneration(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current state of bit stripping.  When enabled, input bytes are
+    //+ stripped to seven bits.  Otherwise, all eight bits are processed.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current bit stripping state is returned to the caller.
+    //
+    //! RETURNS: true  - Input bytes are stripped to seven bits.
+    //! RETURNS: false - Input bytes are not stripped.
     // ------------------------------------------------------------------------
     bool getBitStripState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable stripping of input bytes to seven bits.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Input bit stripping is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableBitStripping(void);
 
     // ------------------------------------------------------------------------
+    //: Disable stripping of input bytes to seven bits.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Input bit stripping is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableBitStripping(void);
 
     // ------------------------------------------------------------------------
+    //: Get the state of start-stop input control.  When enabled, if the
+    //+ terminal driver sees that the receive buffer is getting full, a STOP
+    //+ command is sent to the serial device.  The device should respond by
+    //+ halting its data flow.  When the input queue has been processed, a
+    //+ START command is sent to the serial device which should cause it to
+    //+ resume putting bytes onto the input queue.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current state of start-stop input control is returned to the
+    //+       caller.
+    //
+    //! RETURNS: true  - Start-stop input control is enabled.
+    //! RETURNS: true  - Start-stop input control is not enabled.
     // ------------------------------------------------------------------------
     bool getStartStopInputState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable start-stop input control.  See getStartStopInputState() for
+    //+ more information.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Start-stop input control is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableStartStopInput(void);
 
     // ------------------------------------------------------------------------
+    //: Disable start-stop input control.  See getStartStopInputState() for
+    //+ more information.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Start-stop input control is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableStartStopInput(void);
 
     // ------------------------------------------------------------------------
+    //: Get the state of start-stop output control.  When enabled, when the
+    //+ terminal driver receives a STOP command, output stops.  When it
+    //+ receives a START command, output resumes.  If disabled, these
+    //+ commands are read as normal characters.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current state of start-stop output control is returned to
+    //+       the caller.
+    //
+    //! RETURNS: true  - Start-stop output control is enabled.
+    //! RETURNS: true  - Start-stop output control is not enabled.
     // ------------------------------------------------------------------------
     bool getStartStopOutputState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable start-stop input control.  See getStartStopInputState() for
+    //+ more information.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Start-stop input control is ensabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableStartStopOutput(void);
 
     // ------------------------------------------------------------------------
+    //: Disable start-stop output control.  See getStartStopOutputState() for
+    //+ more information.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Start-stop output control is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableStartStopOutput(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current state of parity generation for outgoing bytes and
+    //+ parity checking for incoming bytes.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current parity generation/checking state is returned to the
+    //+       caller.
+    //
+    //! RETURNS: true  - Parity generation and checking are enabled for
+    //+                  outgoing and incoming bytes respectively.
+    //! RETURNS: false - Parity generation and checking are disabled.
     // ------------------------------------------------------------------------
     bool getParityGenerationState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable parity generation for outgoing bytes and parity checking for
+    //+ incoming bytes.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Parity generation and checking are enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableParityGeneration(void);
 
     // ------------------------------------------------------------------------
+    //: Disable parity generation for outgoing bytes and parity checking for
+    //+ incoming bytes.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Parity generation and checking are disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableParityGeneration(void);
 
     // ------------------------------------------------------------------------
+    //: Enable marking of bytes with parity errors or framing errors (except
+    //+ BREAKs).  This is only active if input parity and framing error
+    //+ reporting is enabled (see getInputParityCheckState() for more
+    //+ information).  The mark is the three-byte sequence \377 \0 X where X
+    //+ is the byte received in error.  If bit stripping is enabled, a valid
+    //+ \377 byte is passed as the two-byte sequence \377 \377.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Bytes with an error are marked and passed on to the reader.
+    //
+    //! RETURNS: true  - Parity error marking is enabled.
+    //! RETURNS: false - Parity error marking is disabled.
     // ------------------------------------------------------------------------
     bool getParityErrorMarkingState(void);
 
     // ------------------------------------------------------------------------
+    //: Enable parity error and framing error marking.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Parity error marking is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status enableParityErrorMarking(void);
 
     // ------------------------------------------------------------------------
+    //: Disable parity error and framing error marking.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Parity error marking is disabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableParityErrorMarking(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current parity checking type (either odd or even).
+    //
+    //! PRE: The serial port is open.
+    //! POST: The parity type is returned to the caller.
+    //
+    //! RETURNS: A vpr::SerialTypes::ParityType value giving the parity
+    //+          checking being done.
     // ------------------------------------------------------------------------
     SerialTypes::ParityType getParity(void);
 
     // ------------------------------------------------------------------------
+    //: Enable odd parity.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Odd parity is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setOddParity(void);
 
     // ------------------------------------------------------------------------
+    //: Enable even parity.
+    //
+    //! PRE: The serial port is open.
+    //! POST: Even parity is enabled.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setEvenParity(void);
 
     // ------------------------------------------------------------------------
+    //: Get the current input baud rate.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current input baud rate is returned to the caller via the
+    //+       by-reference parameter.
+    //
+    //! ARGS: rate - A reference to a vpr::Uint32 to be used as storage for
+    //+              the current input baud rate.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status getInputBaudRate(Uint32& rate);
 
     // ------------------------------------------------------------------------
+    //: Set the current input baud rate.
+    //
+    //! PRE: The serial port is open, and the rate is a valid baud rate.
+    //! POST: The input baud rate is updated to use the given value.
+    //
+    //! ARGS: rate - The new input baud rate.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setInputBaudRate(const Uint32 rate);
 
     // ------------------------------------------------------------------------
+    //: Get the current output baud rate.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The current output baud rate is returned to the caller via the
+    //+       by-reference parameter.
+    //
+    //! ARGS: rate - A reference to a vpr::Uint32 to be used as storage for
+    //+              the current output baud rate.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status getOutputBaudRate(Uint32& rate);
 
     // ------------------------------------------------------------------------
+    //: Set the current output baud rate.
+    //
+    //! PRE: The serial port is open, and the rate is a valid baud rate.
+    //! POST: The output baud rate is updated to use the given value.
+    //
+    //! ARGS: rate - The new output baud rate.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setOutputBaudRate(const Uint32 rate);
 
     // ------------------------------------------------------------------------
+    //: Wait for all output to be transmitted.
+    //
+    //! PRE: The serial port is open.
+    //! POST: All output is transmitted.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status drainOutput(void);
 
     // ------------------------------------------------------------------------
+    //: Alter the input or output flow control.  Based on the
+    //+ vpr::SerialTypes::FlowActionOption argument, output can be suspended
+    //+ and restarted or the terminal device can be told to stop or to resume
+    //+ sending data.
+    //
+    //! PRE: The serial device is open.
+    //! POST: Based on the argument value, the input or output flow control is
+    //+       updated.
+    //
+    //! ARGS: opt - The flow control change.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status controlFlow(SerialTypes::FlowActionOption opt);
 
     // ------------------------------------------------------------------------
+    //: Discard either the input buffer (unread data received from the
+    //+ terminal device) or the output buffer (data written but not yet
+    //+ transmitted to the terminal device).  The argument tells which queue
+    //+ (or queues) to flush.
+    //
+    //! PRE: The serial device is open.
+    //! POST: Based on the argument, the appropriate queue is flushed of its
+    //+       current contents.
+    //
+    //! ARGS: queue - The queue (or queues) to be flushed.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status flushQueue(SerialTypes::FlushQueueOption opt);
+    Status flushQueue(SerialTypes::FlushQueueOption queue);
 
     // ------------------------------------------------------------------------
+    //: Transmit a continuous stream of zero bits for the given duration.  If
+    //+ the argument is 0, the transmission will last between 0.25 and 0.5
+    //+ seconds.  Otherwise, the duration specfies the number of seconds to
+    //+ send the zero bit stream.
+    //
+    //! PRE: The serial device is open.
+    //! POST: A stream of zero bits are sent to the serial device for the
+    //+       given duration.
+    //
+    //! ARGS: duration - The length of time to send a zero bit stream to the
+    //+                  serial device.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status sendBreak(const Int32 duration);
 
@@ -476,10 +990,12 @@ protected:
     };
 
     // ------------------------------------------------------------------------
+    //: Set the control character at the given index to the given value.
     // ------------------------------------------------------------------------
     void setControlCharacter(const Uint32 index, const Uint8 value);
 
     // ------------------------------------------------------------------------
+    //: Get the value of the control character at the given index.
     // ------------------------------------------------------------------------
     Uint8 getControlCharacter(const Uint32 index);
 
@@ -572,10 +1088,13 @@ protected:
                   const std::string& err_msg, const bool print_sys_err = true);
 
     // ------------------------------------------------------------------------
+    //: Convert a termios baud rate to its corresponding integer value.
     // ------------------------------------------------------------------------
     Uint32 baudToInt(const speed_t baud_rate);
 
     // ------------------------------------------------------------------------
+    //: Convert an integer baud rate to the corresponding termios rate
+    //+ constant.
     // ------------------------------------------------------------------------
     speed_t intToBaud(const Uint32 speed_int);
 
