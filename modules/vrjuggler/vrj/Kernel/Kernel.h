@@ -158,7 +158,6 @@ protected:
 
    /// Performance information
    vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
-   bool performanceEnabled;               //: is performance measurement for kernel active?
 
    /// Config Stuff
    vjChunkDescDB*    mConfigDesc;
