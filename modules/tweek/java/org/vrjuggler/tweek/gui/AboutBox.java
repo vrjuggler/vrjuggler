@@ -34,7 +34,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.tweek;
+package org.vrjuggler.tweek.gui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -82,7 +82,7 @@ public class AboutBox extends JDialog implements ActionListener
    private void jbInit() throws Exception  {
       try
       {
-         imageIcon = new ImageIcon(ClassLoader.getSystemResource("org/vrjuggler/tweek/tweek.gif"));
+         imageIcon = new ImageIcon(ClassLoader.getSystemResource("org/vrjuggler/tweek/gui/tweek.gif"));
          imageControl1.setIcon(imageIcon);
       }
       catch (NullPointerException e)

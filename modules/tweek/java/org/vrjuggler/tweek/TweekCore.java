@@ -44,6 +44,7 @@ import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
+import org.vrjuggler.tweek.gui.TweekFrame;
 import org.vrjuggler.tweek.services.*;
 import org.vrjuggler.tweek.net.corba.*;
 
