@@ -49,6 +49,7 @@ Primary build/install targets are:
     installworld    - Install everything (same as 'install-all').  This
                       requires that 'buildworld' be successfully completed
                       beforehand.
+    release         - Build and install a release version.
 
 Build targets are:
     all             - Build everything.
