@@ -377,7 +377,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
         std::string newstr = str;
         ch = vjChunkFactory::instance()->createChunk (newstr);
         if (ch == NULL) {
-            vjDEBUG(vjDBG_ERROR,0) << "ERROR!: Unknown Chunk type: " << str << std::endl
+            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Unknown Chunk type: " << str << std::endl
                                    << vjDEBUG_FLUSH;
             // skip to end of chunk
             while (strcasecmp (str, end_TOKEN)) {
