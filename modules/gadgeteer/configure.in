@@ -55,6 +55,10 @@ DPP_GEN_RECONFIG
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
 
+AC_ARG_ENABLE([xwindows],
+              [  --enable-xwindows       Use X11 for windowing code ],
+              [XWIN_UI="$enableval"], [XWIN_UI='no'])
+
 # ------------------------------------------------------ #
 # --enable-feature[=arg] and --disable-feature arguments #
 # ------------------------------------------------------ #
@@ -225,6 +229,22 @@ if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
 fi
 
 AC_PATH_X
+
+gadget_use_x11='no'
+
+if test "x$have_x" = "xyes" ; then
+   AH_TEMPLATE([GADGET_USE_X11], [Define if the X Window System will be used])
+
+   if test "x$PLATFORM" = "xDarwin" ; then
+      if test "x$XWIN_UI" = "xyes" ; then
+         gadget_use_x11='yes'
+         AC_DEFINE(GADGET_USE_X11,)
+      fi
+   elif test "x$OS_TYPE" = "xUNIX" -a "" ; then
+      gadget_use_x11='yes'
+      AC_DEFINE(GADGET_USE_X11,)
+   fi
+fi
 
 # -----------
 # Trackd API
@@ -556,6 +576,10 @@ fi
 # alternative to using $(srcdir).
 UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 
+if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
+   X_LDFLAGS="-L$x_libraries"
+fi
+
 # $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -565,7 +589,10 @@ else
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
     APP_EXTRA_PROF_LIBS="$LDFLAGS $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_PROF_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
 
-    if test "x$PLATFORM" = "xDarwin" ; then
+    if test "x$gadget_use_x11" = "xyes" ; then
+       APP_EXTRA_LIBS="$APP_EXTRA_LIBS $X_LDFLAGS -lX11"
+       APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS $X_LDFLAGS -lX11"
+    elif test "x$PLATFORM" = "xDarwin" ; then
        APP_EXTRA_LIBS="$APP_EXTRA_LIBS -framework Carbon"
        APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS -framework Carbon"
     fi
@@ -587,16 +614,14 @@ if test "x$OS_TYPE" = "xUNIX" ; then
     DSO_DRIVER_DEPS="-L\$(LIBDIR) -lgadget $DYLIB_DEPS"
     TWEEK_DRIVER_DEPS="$TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN"
 
-    if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
-        INCLUDES="$INCLUDES -I$x_includes"
-        gadget_cxxflags="$gadget_cxxflags -I$x_includes"
-    fi
+    if test "x$gadget_use_x11" = "xyes" ; then
+        if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
+            INCLUDES="$INCLUDES -I$x_includes"
+            gadget_cxxflags="$gadget_cxxflags -I$x_includes"
+        fi
 
-    if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
-        X_LDFLAGS="-L$x_libraries"
+        APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
     fi
-
-    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
 elif test "x$OS_TYPE" = "xWin32" ; then
     DSO_DRIVER_DEPS="-libpath:\$(LIBDIR) gadget.lib $DYLIB_DEPS"
     TWEEK_DRIVER_DEPS="$TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN"
@@ -718,6 +743,7 @@ AC_SUBST(gadget_extra_ldflags_linker)
 AC_SUBST(gadget_extra_libs)
 AC_SUBST(gadget_n32_flags)
 AC_SUBST(gadget_64_flags)
+AC_SUBST(gadget_use_x11)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
