@@ -381,9 +381,9 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 # $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS $LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD $LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS $LIBS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC $LIBS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -519,7 +519,7 @@ case $OS_TYPE in
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
-        vrj_extra_libs_juggler="$GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS"
+        vrj_extra_libs_juggler="$GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
         Juggler_lib='-lJuggler'
         Juggler_utils_lib='-lJuggler_utils'
         Juggler_ogl_lib='-lJuggler_ogl'
@@ -534,7 +534,7 @@ case $OS_TYPE in
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
         vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
-        vrj_extra_libs_juggler="$GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS"
+        vrj_extra_libs_juggler="$GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 
         Juggler_lib='Juggler.lib'
         Juggler_utils_lib='Juggler_utils.lib'
