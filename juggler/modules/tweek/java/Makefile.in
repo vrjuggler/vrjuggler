@@ -91,7 +91,7 @@ BEANS		= Viewers
 
 TWEEK_CLASSES	= org/vrjuggler/tweek/*.class			\
                   org/vrjuggler/tweek/gui/*.class
-TWEEK_EXTRAS	= org/vrjuggler/tweek/gui/*.gif
+TWEEK_EXTRAS	= org/vrjuggler/tweek/gui/*.gif LICENSE-java-laf.txt
 
 BEANS_MF	= $(srcdir)/beans.MF
 BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
@@ -110,7 +110,7 @@ SERVICE_CLASSES	= org/vrjuggler/tweek/services/*.class
 VIEWERS_MF	= $(srcdir)/viewers.MF
 VIEWERS_CLASSES	= org/vrjuggler/tweek/iconviewer/*.class	\
                   org/vrjuggler/tweek/treeviewer/*.class
-VIEWERS_EXTRAS	= org/vrjuggler/tweek/iconviewer/*.gif
+VIEWERS_EXTRAS	= org/vrjuggler/tweek/iconviewer/*.gif LICENSE-java-laf.txt
 
 # List the packages for which JavaDoc documentation will be generated.
 BASE_PKG	= org.vrjuggler.tweek
