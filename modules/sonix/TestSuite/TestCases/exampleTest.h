@@ -44,20 +44,21 @@
 
 #include <iostream>
 
-#include <TestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 //#include <IO/Socket/InetAddr.h>
 
 namespace snxTest
 {
 
-class exampleTest : public TestCase
+class exampleTest : public CppUnit::TestCase
 {
 public:
+   exampleTest() {}
    exampleTest( std::string name )
-   : TestCase (name)
+   : CppUnit::TestCase (name)
    {;}
 
    virtual ~exampleTest()
@@ -72,20 +73,20 @@ public:
 
    void testSimple()
    {
-      assertTest(1 != 0);
+      CPPUNIT_ASSERT(1 != 0);
    }
 
-   static Test* suite()
+   static CppUnit::Test* suite()
    {
-      TestSuite* test_suite = new TestSuite ("exampleTest");
-      test_suite->addTest( new TestCaller<exampleTest>("testSimple", &exampleTest::testSimple));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("exampleTest");
+      test_suite->addTest( new CppUnit::TestCaller<exampleTest>("testSimple", &exampleTest::testSimple));
 
       return test_suite;
    }
 
-   static Test* interactiveSuite()
+   static CppUnit::Test* interactiveSuite()
    {
-      TestSuite* test_suite = new TestSuite ("InteractiveexampleTest");
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("InteractiveexampleTest");
       //test_suite->addTest( new TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
       return test_suite;
    }
