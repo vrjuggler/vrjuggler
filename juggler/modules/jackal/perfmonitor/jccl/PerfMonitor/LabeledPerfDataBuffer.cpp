@@ -37,8 +37,6 @@
 
 namespace jccl {
 
-    vprSingletonImp (LabeledPerfDataBuffer::LabeledPerfDataGlobal);
-
 LabeledPerfDataBuffer::LabeledPerfDataBuffer () {
     name = "untitled";
     numbufs = 100;
@@ -71,7 +69,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  const std::string& index_name) {
     int tw;
 
-    if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
+    if (PerformanceCategories::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
             if (lost_lock.acquire().success()) {
@@ -103,7 +101,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  TimeStamp& value) {
     int tw;
 
-    if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
+    if (PerformanceCategories::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
             if (lost_lock.acquire().success()) {
@@ -133,7 +131,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
 void LabeledPerfDataBuffer::setBeginCycle (const vpr::GUID &category) {
     int tw;
 
-    if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
+    if (PerformanceCategories::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
             if (lost_lock.acquire().success()) {
