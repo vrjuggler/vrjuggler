@@ -344,15 +344,7 @@ vpr::ReturnStatus SerialPortImplTermios::getStopBits (Uint8& num_bits)
 
    if ( (retval = getAttrs(&term)).success() )
    {
-      switch ( term.c_cflag & CSTOPB )
-      {
-         case 0:
-            num_bits = 1;
-            break;
-         case 1:
-            num_bits = 2;
-            break;
-      }
+      num_bits = (term.c_cflag & CSTOPB) ? 2 : 1;
    }
 
    return retval;
