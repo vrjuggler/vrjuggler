@@ -43,7 +43,6 @@
 
 #include <string>
 
-#define INITGUID
 
 namespace gadget
 {
