@@ -489,24 +489,24 @@ SerialPortImpTermios::disableBadByteIgnore () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getParityCheckState () {
+SerialPortImpTermios::getInputParityCheckState () {
     return getBit(IGNPAR, SerialPortImpTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableParityCheck () {
+SerialPortImpTermios::enableInputParityCheck () {
     return setBit(INPCK, SerialPortImpTermios::IFLAG, true,
-                  "Could not enable parity checking");
+                  "Could not enable input parity checking");
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableParityCheck () {
+SerialPortImpTermios::disableInputParityCheck () {
     return setBit(INPCK, SerialPortImpTermios::IFLAG, false,
-                  "Could not disable parity checking");
+                  "Could not disable input parity checking");
 }
 
 // ----------------------------------------------------------------------------
