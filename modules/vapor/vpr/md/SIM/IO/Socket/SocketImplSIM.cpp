@@ -78,8 +78,10 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
 
-   if ( mPeer != NULL )
+   if ( mConnected )
    {
+      vprASSERT(mPeer != NULL && "I am connected to a NULL peer");
+
       // We tell our peer that we are disconnecting.  This is a little
       // different than how real sockets work, but since we communicate
       // directly with our peer, this is a reasonable thing to do.
