@@ -34,25 +34,8 @@
 
 /*----------------------------------------------------------------------------*/
 
-#include <vjOSGApp.h>
+#include <vrj/Draw/OpenSG/OpenSGApp.h>
 
-struct context_data
-{
-   context_data()
-     : mRenderAction(NULL),
-       mContextThreadInitialized(false),
-       mOsgThread(NULL)
-   {;}
-
-   OSG::RenderAction*         mRenderAction;    /**< The render action for the scene */
-   OSG::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
-   OSG::MatrixCameraPtr       mCamera;
-   OSG::TransformPtr          mCameraCartTransform;   /**< Do I really need all this cart stuff */
-   OSG::NodePtr               mCameraCartNode;
-
-   bool                       mContextThreadInitialized;
-   OSG::ExternalThread*       mOsgThread;
-};
 
 
 class OpenSGNav : public vrj::OpenSGApp
@@ -73,15 +56,6 @@ public:
     // Handle any initialization needed before API
     virtual void init();
 
-    virtual void apiInit()
-    {
-       vrj::OpenSGApp::apiInit();
-
-       vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initAPI: Called.\n" << vprDEBUG_FLUSH;
-
-       this->initScene();
-       vprASSERT(getSceneRoot().getCPtr() != NULL);    // I don't know if this is even valid
-    }
 
     virtual void initScene();
     virtual OSG::NodePtr getSceneRoot()
@@ -92,10 +66,6 @@ public:
     virtual void draw();
 
     virtual void contextInit();
-    virtual void contextPreDraw();
-    virtual void contextPostDraw();
-
-    void bufferPreDraw();
 
     virtual void preFrame();
 
@@ -109,30 +79,21 @@ public:
     void initGLState();
 
   private:
+    std::string   mFileToLoad;
 
-    float speed;
+    OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
+    OSG::TransformPtr   mSceneTransform;  /**< Transform core */
+    OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
 
-    std::string mFileToLoad;
-    OSG::NodePtr              mSceneRoot;       /**< The root of the scene */
-    OSG::NodePtr              mLightNode;       /**< The light node */
-    OSG::NodePtr              mLightCart;       /**< The cart for the light */
-
-    // App class stuff //
-    //OSG::NodePtr              mRoot;            /**< A pointer to the scene graph root*/
-
-    //OSG::ImageForegroundPtr   _foreground;
-    //OSG::NodePtr              _internalRoot;
-    //OSG::DirectionalLightPtr  _headlight;
-
-
-    vrj::GlContextData<context_data>  mContextData;
-
-    /* OSG::Matrix OSGMat; */
+    OSG::NodePtr  mLightNode;       /**< The light node */
+    OSG::NodePtr  mLightCart;       /**< The cart for the light */
 
   public:
     gadget::PositionInterface   mWand;
-
-    static OSG::UInt32 OSG_MAIN_ASPECT_ID;
+    gadget::DigitalInterface   mButton0;
+    gadget::DigitalInterface   mButton1;
+    gadget::DigitalInterface   mButton2;
+    float  velocity;
 };
 
 
