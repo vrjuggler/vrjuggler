@@ -190,7 +190,7 @@ protected:
    static int* attachedCounter;
 };
 
-MemPoolWin32* vjSemaphoreWin32::semaphorePool = NULL;
+vjMemPoolWin32* vjSemaphoreWin32::semaphorePool = NULL;
 int* vjSemaphoreWin32::attachedCounter = NULL;
 
 #endif
