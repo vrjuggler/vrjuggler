@@ -838,7 +838,8 @@ namespace sim
    // return an unused port at some existing address, or 0 for error.
    vpr::Uint32 SocketManager::genUnusedPort (const vpr::SocketTypes::Type addr_type)
    {
-      vpr::Uint32 full = -1;
+      //vpr::Uint32 full = -1;
+      vpr::Uint32 full = 0xFFFF;    // Max 32 bit value
       vpr::InetAddrSIM address;
 
       switch (addr_type)
