@@ -19,6 +19,8 @@
 #include "isense.h"
 #include <vpr/vpr.h>
 
+#include <boost/concept_check.hpp>
+
 #ifdef VPR_OS_Win32
 
 #include <windows.h>
@@ -29,8 +31,6 @@
 #include "serial.h"
 #include "isdriver.h"
 #include "timer.h"
-
-#include <boost/concept_check.hpp>
 
 static BOOL setCommStateBYTE(COMM_PORT *port, DCB *dcb, BYTE *target, BYTE value);
 static BOOL setCommStateDWORD(COMM_PORT *port, DCB *dcb, DWORD *target, DWORD value);
