@@ -59,14 +59,14 @@ libs:
 	$(MAKE) libdsomod1.so libdsomod2.so libcmod.so libcxxmod.so
 
 libdsomod1.so: $(OBJDIR)/DsoLoaderModule1.o
-	$(CC) -shared -o $@ $(OBJDIR)/DsoLoaderModule1.o
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule1.o
 
 libdsomod2.so: $(OBJDIR)/DsoLoaderModule2.o
-	$(CC) -shared -o $@ $(OBJDIR)/DsoLoaderModule2.o
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule2.o
 
 libcmod.so: $(OBJDIR)/c_module.o
-	$(CC) -shared -o $@ $(OBJDIR)/c_module.o
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.o
 
 libcxxmod.so: $(OBJDIR)/cxx_module.o
-	$(CXX) -shared -o $@ $(OBJDIR)/cxx_module.o
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/cxx_module.o
 
