@@ -54,6 +54,7 @@
 #include <GL/glut.h>
 
 #include "snx/sonix.h"    // interface
+#include "snx/SoundHandle.h"
 
 #include <iostream.h>
 #include <stdlib.h>
@@ -67,6 +68,9 @@ public:
 };
 int AppWindow::width = 0, AppWindow::height = 0;
 int AppWindow::mainWin_contextID = -1;
+
+// our sound object...
+snx::SoundHandle kevinSound;
 
 void drawGrid()
 {
@@ -169,7 +173,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       snx::SoundInfo si;
       si.filename = "../../../data/sample.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
-      sonix::instance()->configure( "kevin", si );
+      kevinSound.configure( si );
 
       sonix::instance()->changeAPI( "OpenAL" );
    }
@@ -180,7 +184,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       snx::SoundInfo si;
       si.filename = "../../../data/suck1.aiff";
       si.datasource = snx::SoundInfo::FILESYSTEM;
-      sonix::instance()->configure( "kevin", si );
+      kevinSound.configure( si );
 
       sonix::instance()->changeAPI( "AudioWorks" );
    }
@@ -195,7 +199,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       snx::SoundInfo si;
       si.filename = "../../../data/sample.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
-      sonix::instance()->configure( "kevin", si );
+      kevinSound.configure( si );
    }
    break;
       case 'b':
@@ -203,34 +207,34 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       snx::SoundInfo si;
       si.filename = "../../../data/sample-drumsolo-2bars.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
-      sonix::instance()->configure( "kevin", si );
+      kevinSound.configure( si );
    }
    break;
    case 't':
    {
-      sonix::instance()->trigger( "kevin" );
+      kevinSound.trigger();
    }
    break;
    case 'p':
    {
-      sonix::instance()->pause( "kevin" );
+      kevinSound.pause();
    }
    break;
    case 's':
    {
-      sonix::instance()->stop( "kevin" );
+      kevinSound.stop();
    }
    break;
 
    case ',':
    {
-      sonix::instance()->setPosition( "kevin", -60, 0, 0 );
+      kevinSound.setPosition( -60, 0, 0 );
    }
    break;
 
    case '.':
    {
-      sonix::instance()->setPosition( "kevin", 60, 0, 0 );
+      kevinSound.setPosition( 60, 0, 0 );
    }
    break;
 
@@ -331,7 +335,7 @@ static void OnApplicationInit()
    // (like before a graphics context is obtained)
    
    
-   // !!!TODO!!!: put your initialization code here.
+   kevinSound.init( "kevin" );
 }
 
 
