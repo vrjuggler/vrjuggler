@@ -177,22 +177,6 @@ public class GlobalPreferencesServiceProxy
    }
 
    /**
-    * Sets the user's current preferred file chooser "open style".  This
-    * defines how file choosers should behave with respect to the directory
-    * they use when first opening.  It is up to the code that opens the file
-    * choosers to act on this preference.
-    */
-   public void setChooserOpenStyle(int style)
-   {
-      mPrefsService.setChooserOpenStyle(style);
-   }
-
-   public int getChooserOpenStyle()
-   {
-      return mPrefsService.getChooserOpenStyle();
-   }
-
-   /**
     * Sets the user's preference for lazy Panel Bean instantiation.  This
     * defines whether Panel Beans are instantiated upon discovery or upon
     * first interaction.
