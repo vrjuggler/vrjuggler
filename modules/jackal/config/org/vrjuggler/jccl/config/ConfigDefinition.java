@@ -46,12 +46,14 @@ public class ConfigDefinition
     * Creates a new configuration definition using the given metadata.
     */
    public ConfigDefinition(String name, String token, String icon_location, 
-                           int version, String help, List categories, List propDefs)
+                           int version, List parents, String help, 
+                           List categories, List propDefs)
    {
       mName = name;
       mToken = token;
       mIconLocation = icon_location;
       mVersion = version;
+      mParents = parents;
       mHelp = help;
       mCategories = categories;
       mPropertyDefs = propDefs;
@@ -135,6 +137,14 @@ public class ConfigDefinition
    {
       return mHelp;
    }
+   
+   /**
+    * Gets the parent for this definition.
+    */
+   public List getParents()
+   {
+      return mParents;
+   }
 
    /**
     * Gets a list of all the categories this definition belongs to.
@@ -186,7 +196,7 @@ public class ConfigDefinition
    public synchronized PropertyDefinition getPropertyDefinition(String token)
       throws IllegalArgumentException
    {
-      for (Iterator itr = mPropertyDefs.iterator(); itr.hasNext(); )
+      for (Iterator itr = getPropertyDefinitions().iterator(); itr.hasNext(); )
       {
          PropertyDefinition def = (PropertyDefinition)itr.next();
          if (def.getToken().equals(token))
@@ -196,6 +206,26 @@ public class ConfigDefinition
       }
 
       throw new IllegalArgumentException("Invalid property definition: " + token);
+   }
+   
+   private ConfigBroker mBroker = null;
+
+   /**
+    * Gets a handle to the configuration broker.
+    */
+   protected ConfigBroker getBroker()
+   {
+      if (mBroker == null)
+      {
+         synchronized (this)
+         {
+            if (mBroker == null)
+            {
+               mBroker = new ConfigBrokerProxy();
+            }
+         }
+      }
+      return mBroker;
    }
 
    /**
@@ -247,11 +277,70 @@ public class ConfigDefinition
    }
 
    /**
+    * Get a list of all ConfigDefinitions that derive from this definition.
+    * @param defs - A list that will be modified 
+    */
+   public synchronized List getSubDefinitions()
+   {
+      ConfigDefinitionRepository repos = getBroker().getRepository();
+      List result = new ArrayList();
+      getSubDefinitionsHelper(result, repos);
+
+      return result;
+   }
+   private synchronized void getSubDefinitionsHelper(List result, ConfigDefinitionRepository repos)
+   {
+      // Passing in the list defs to use recursivly to save copying if I were
+      // to return it from each recursive call.
+     
+      // Iterate over repository finding children
+      for (Iterator itr = repos.getAllLatest().iterator(); itr.hasNext(); )
+      {
+         ConfigDefinition def = (ConfigDefinition)itr.next();
+         if(def.getParents().contains(mToken) && !result.contains(def))
+         {
+            result.add(def);
+         }
+      }
+   }
+
+   /**
     * Gets a list of all the property definitions.
     */
    public synchronized List getPropertyDefinitions()
    {
-      return mPropertyDefs;
+      ConfigDefinitionRepository repos = getBroker().getRepository();
+      
+      // This will use recursion to find a property definition in a parent. 
+         
+      // - Get property definitions from parent.
+      // - Create a copy local list of definition.
+      // - Iterate over parent property definitions.
+      //   - If we do not have a local property definition
+      //     - Inherit parent's definiton
+
+      List temp_list = new ArrayList();
+      temp_list.addAll(mPropertyDefs);
+
+
+      for (Iterator parent_itr = mParents.iterator(); parent_itr.hasNext(); )
+      {
+         ConfigDefinition parent = repos.get((String)parent_itr.next());
+         
+         if(null != parent)
+         {   
+            List parent_defs = parent.getPropertyDefinitions();
+            for (Iterator itr = parent_defs.iterator(); itr.hasNext(); )
+            {
+               Object definition = itr.next();
+               if(!temp_list.contains(definition))
+               {
+                  temp_list.add(definition);
+               }
+            }
+         }
+      }
+      return temp_list;
    }
 
    /**
@@ -259,7 +348,7 @@ public class ConfigDefinition
     */
    public synchronized int getPropertyDefinitionsCount()
    {
-      return mPropertyDefs.size();
+      return getPropertyDefinitions().size();
    }
 
 
@@ -277,8 +366,8 @@ public class ConfigDefinition
              mVersion == d.mVersion &&
              mCategories.equals(d.mCategories) &&
              mHelp.equals(d.mHelp) &&
-             mPropertyDefs.equals(d.mPropertyDefs))/* &&
-             mParent.equals(d.mParent)) */
+             mPropertyDefs.equals(d.mPropertyDefs) &&
+             mParents.equals(d.mParents))
          {
             return true;
          }
@@ -457,7 +546,7 @@ public class ConfigDefinition
    
    /** The version string for this definition. */
    private int mVersion;
-
+   
    /** The short help string for this definition. */
    private String mHelp;
 
@@ -467,9 +556,9 @@ public class ConfigDefinition
    /** The property definitions for this config definition. */
    private List mPropertyDefs;
 
-//   /** The definition this definition inherits from. */
-//   private ConfigDefinition mParent;
-
+   /** The definition this definition inherits from. */
+   private List mParents;
+   
    /** List of listeners interested in this definition. */
    private EventListenerList listenerList = new EventListenerList();
 }
