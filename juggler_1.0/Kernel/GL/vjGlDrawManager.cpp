@@ -333,20 +333,23 @@ void vjGlDrawManager::drawSolidCube(float size)
 void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
 {
    vjMatrix    base_glove_pos = gloveProxy->getPos();    // Get the location of the base coord system
-   vjGloveData gd = gloveProxy->getData();       // Get the glove data
+   vjGloveData gd = gloveProxy->getData();               // Get the glove data
    vjVec3      origin(0.0f,0.0f,0.0f);
 
-   glColor3f(0.0f, 1.0f, 0.0f);
 
    glPushMatrix();
    {
+      glColor3f(0.8f, 0.85f, 0.95f);
+
       // Get to hand coord system to start drawing
       glMultMatrixf(base_glove_pos.getFloatPtr());
 
       // Draw PALM
       glPushMatrix();
       {
-         drawSphere((1.5f/12.0f), 6, 6);
+         //drawSphere((1.5f/12.0f), 6, 6);
+         glScalef(2.0f, 1.5f, 0.5f);
+         drawSolidCube((1.0f/12.0f));      // 1 in. cube
       }
       glPopMatrix();
 
@@ -354,13 +357,13 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glPushMatrix();
       {
          glMultMatrixf(gd.xforms[vjGloveData::INDEX][vjGloveData::MPJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::INDEX][vjGloveData::PIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::INDEX][vjGloveData::PIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::INDEX][vjGloveData::DIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::INDEX][vjGloveData::DIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::INDEX][vjGloveData::DIJ+1]);
       }
       glPopMatrix();
@@ -369,13 +372,13 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glPushMatrix();
       {
          glMultMatrixf(gd.xforms[vjGloveData::MIDDLE][vjGloveData::MPJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::MIDDLE][vjGloveData::PIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::MIDDLE][vjGloveData::PIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::MIDDLE][vjGloveData::DIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::MIDDLE][vjGloveData::DIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::MIDDLE][vjGloveData::DIJ+1]);
       }
       glPopMatrix();
@@ -384,13 +387,13 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glPushMatrix();
       {
          glMultMatrixf(gd.xforms[vjGloveData::RING][vjGloveData::MPJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::RING][vjGloveData::PIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::RING][vjGloveData::PIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::RING][vjGloveData::DIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::RING][vjGloveData::DIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::RING][vjGloveData::DIJ+1]);
       }
       glPopMatrix();
@@ -399,13 +402,13 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glPushMatrix();
       {
          glMultMatrixf(gd.xforms[vjGloveData::PINKY][vjGloveData::MPJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::PINKY][vjGloveData::PIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::PINKY][vjGloveData::PIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::PINKY][vjGloveData::DIJ]);
          glMultMatrixf(gd.xforms[vjGloveData::PINKY][vjGloveData::DIJ].getFloatPtr());
-         drawSphere((0.1f/12.0f), 6, 6);
+         drawSphere((0.1f/12.0f), 4, 4);
          drawLine(origin, gd.dims[vjGloveData::PINKY][vjGloveData::DIJ+1]);
       }
       glPopMatrix();
