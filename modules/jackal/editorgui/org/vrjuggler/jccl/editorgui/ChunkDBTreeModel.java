@@ -241,7 +241,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	while (nodes.hasMoreElements()) {
 	    n = (DefaultMutableTreeNode)nodes.nextElement();
 	    ni = (ChunkTreeNodeInfo)n.getUserObject();
-	    if (ni.name.equals(oldc.getName())) {
+	    if (ni.isChunkNode() && ni.name.equals(oldc.getName())) {
 		ni.name = newc.getName();
                 nodeChanged (n);
 	    }
