@@ -126,8 +126,8 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
     HashMap index_info;          // for each unique index string, store:
                                  // total # of values, total of values
                                  // so that we can create averages, etc.
+    List ordered_index_info;
 
-//  public int numsamps[];
     public double totalsum;
     public int totalsamps;
     DataLine current_dl = null;
@@ -138,15 +138,19 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
         datalines = new LinkedList();
         action_listeners = new ArrayList();
 	index_info = new HashMap();
+        ordered_index_info = new ArrayList();
 	name = _name;
 	totalsum = 0.0;
 	totalsamps = 0;
 	current_dl = new DataLine ();
-//  	place = 0;
 	maxdatalines = maxsamples;
 	System.out.println ("creating PerfDataCollector " + _name + ".");
 
 
+    }
+
+    public Iterator indexIterator() {
+        return ordered_index_info.iterator();
     }
 
 
@@ -196,7 +200,6 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    i = dl.iterator();
 	    while (i.hasNext()) {
 		DataElem de = (DataElem)i.next();
-		//IndexInfo ii = (IndexInfo)index_info.get(de.index);
 		de.index_info.removeSample (de.stamp);
 	    }
 	}
@@ -217,6 +220,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	if (ii == null) {
 	    ii = new IndexInfo(category, index);
 	    index_info.put (index, ii);
+            ordered_index_info.add (ii);
 	}
 	ii.addSample (stamp);
 	current_dl.addSample (ii, stamp);
