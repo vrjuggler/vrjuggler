@@ -2828,7 +2828,7 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         </indexterm>
 
         <indexterm zone="section.gadget.proxies.devif">
-          <primary>applications</primary>
+          <primary>application programming</primary>
 
           <secondary>getting input</secondary>
 
@@ -2836,7 +2836,7 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         </indexterm>
 
         <indexterm zone="section.gadget.proxies.devif">
-          <primary>applications</primary>
+          <primary>application programming</primary>
 
           <secondary>getting input</secondary>
 
@@ -3607,7 +3607,9 @@ head.init("VJHead");</programlisting>
             two types of events: key press events and mouse events.
             Furthermore, user code should only be interested in
             <classname>gadget::KeyEventPtr</classname> and
-            <classname>gadget::MouseEventPtr</classname>.</para>
+            <classname>gadget::MouseEventPtr</classname>. The specific event
+            type is determined through the method
+            <methodname>gadget::Event::type()</methodname>.</para>
 
             <para>At this point, observant readers will be wondering how to
             downcast instances of <classname>gadget::EventPtr</classname> to
@@ -3625,9 +3627,7 @@ head.init("VJHead");</programlisting>
             <function>boost::dynamic_pointer_cast&lt;T,U&gt;()</function>. It
             works the same way as
             <function>dynamic_cast&lt;T,U&gt;()</function>, but it is designed
-            specifically for Boost shared pointers. The specific event type is
-            determined through the method
-            <methodname>gadget::Event::type()</methodname>. In <xref
+            specifically for Boost shared pointers. In <xref
             linkend="example.using.gadget.KeyboardMouseInterface" />, we see
             how to put all of this together in order to handle keyboard and
             mouse input.</para>
@@ -3639,6 +3639,8 @@ head.init("VJHead");</programlisting>
 
               <programlisting linenumbering="numbered">#include &lt;boost/shared_ptr.hpp&gt;
 #include &lt;gadget/Type/KeyboardMouseInterface.h&gt;
+#include &lt;gadget/Type/KeyboardMouse/KeyEvent.h&gt;
+#include &lt;gadget/Type/KeyboardMouse/MouseEvent.h&gt;
 #include &lt;vrj/Draw/OGL/GlApp.h&gt;
 
 
