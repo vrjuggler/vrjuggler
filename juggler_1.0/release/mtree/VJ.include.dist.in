@@ -71,6 +71,8 @@
         Kernel
             GL
             ..
+            OSG
+            ..
             Pf
             ..
         ..
