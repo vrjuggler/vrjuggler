@@ -440,7 +440,7 @@ if test "x${_idl_java}" = "xno" ; then
    APP_JAVA_IDL="JACORB_PATH=\"$app_jacorb_dir\" \"$app_jacorb_dir/idl\""
    APP_JAVA_IDL_INST="JACORB_PATH=\"\$(TWEEK_BASE_DIR)/bin\" \"\$(TWEEK_BASE_DIR)/bin/idl\""
 
-   config_jacorb_dir='\$(TWEEK_BASE_DIR)/bin'
+   config_jacorb_dir='$prefix/bin'
    config_java_idl="JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
 else
    # XXX: Need to support more than one IDL compiler for Java by recognizing
