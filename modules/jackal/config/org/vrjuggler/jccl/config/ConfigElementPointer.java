@@ -103,6 +103,11 @@ public class ConfigElementPointer
       mListenerList.remove(ConfigElementPointerListener.class, listener);
    }
 
+   public String toString()
+   {
+      return mTarget;
+   }
+
    /**
     * Notifies listeners that this pointer's target has changed.
     */
