@@ -50,6 +50,10 @@
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
             <xsl:template match="/">
                <xsl:element name="swap_lock_plugin">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
                   <xsl:copy-of select="./*"/>
                   <xsl:element name="slave_one">
                      <xsl:text>false</xsl:text>
