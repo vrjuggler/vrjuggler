@@ -56,7 +56,7 @@ namespace gadget
  *
  * This class should not be used directly by the user.
  */
-class SimDigitalGlove : virtual public InputMixer< InputMixer<Input,Digital>, InputMixer<SimInput,Glove> >
+class SimDigitalGlove : virtual public InputMixer< InputMixer< InputMixer<Input,Digital>, SimInput>, Glove>
 {
 public:
    /**  Default Constructor */
