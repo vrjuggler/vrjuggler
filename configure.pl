@@ -36,7 +36,7 @@ use 5.005;
 
 use strict 'vars';
 use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
-            $CUSTOM_ARGS $LAST_ARG_GROUP $Win32);
+            $CUSTOM_ARGS $LAST_ARG_GROUP $OS $Win32);
 use vars qw(%MODULES);
 
 use Cwd qw(chdir getcwd);
@@ -54,6 +54,7 @@ use lib("$base_dir");
 use JugglerConfigure;
 
 # Subroutine prototypes.
+sub loadDefaultArgs($);
 sub configureModule($);
 sub regenModuleInfo($);
 sub generateMakefile(;$);
@@ -62,6 +63,7 @@ sub listModules();
 sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
+sub getPlatform();
 
 %MODULES = ();
 
@@ -73,6 +75,8 @@ my $script_help = 0;
 my $manual      = 0;
 my $regen       = 0;
 my $mod_list    = 0;
+my $args_file   = 'acdefaults.cfg';
+my $user_args   = '';
 
 $CONFIG_ARGS    = 0;
 $PATH_ARGS      = 1;
@@ -86,7 +90,8 @@ my @save_argv = @ARGV;
 Getopt::Long::Configure('pass_through');
 GetOptions('help|?' => \$script_help, 'cfg=s' => \$user_cfg,
            'module=s' => \$module, 'all-help' => \$all_help,
-           'manual' => \$manual, 'regen' => \$regen, 'modlist' => \$mod_list)
+           'manual' => \$manual, 'regen' => \$regen, 'modlist' => \$mod_list,
+           'args=s' => \$user_args, 'os=s' => \$OS)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
@@ -142,12 +147,23 @@ else
       }
    }
 
+   # Figure out what argument file to load, if any.  If the user specified
+   # a file name on the command line, it will be in $user_args.  Otherwise, we
+   # fall back on $base_dir/$args_file.
+   my $args_load = ("$user_args" eq "") ? "$base_dir/$args_file" : "$user_args";
+
+   if ( -r "$args_load" )
+   {
+      loadDefaultArgs("$args_load");
+   }
+
    if ( ! $cache_file_set )
    {
       my $cwd = getcwd();
       push(@ARGV, "--cache-file=$cwd/config.cache");
    }
 
+   # Configure the module named on the command line.
    if ( $module )
    {
       die "ERROR: No such module $module in $cfg!\n"
@@ -157,6 +173,8 @@ else
       configureModule("$module");
       generateMakefile("$module");
    }
+   # If no module was named on the command line but we do have a default
+   # module, configure it.
    elsif ( $JugglerConfigure::DEFAULT_MODULE &&
            defined($MODULES{"$JugglerConfigure::DEFAULT_MODULE"}) )
    {
@@ -164,6 +182,8 @@ else
       configureModule("$JugglerConfigure::DEFAULT_MODULE");
       generateMakefile("$JugglerConfigure::DEFAULT_MODULE");
    }
+   # If neither of the above will do, just configure every module we know
+   # about from the input file.
    else
    {
       generateReconfig('', @save_argv);
@@ -182,6 +202,65 @@ exit(0);
 # =============================================================================
 # Subroutines follow.
 # =============================================================================
+
+sub loadDefaultArgs ($)
+{
+   my $args_load = shift;
+
+   if ( open(ARGS_FILE, "$args_load") )
+   {
+      print "Loading default arguments from $args_load ...\n";
+      my $args_contents = '';
+
+      while ( <ARGS_FILE> )
+      {
+         s/#.*$//;           # Strip comments
+         next if /^\s*$/;    # Skip blank lines
+         $args_contents .= "$_";
+      }
+
+      close(ARGS_FILE) or warn "WARNING: Could not close $args_load: $!\n";
+
+      my $platform = getPlatform();
+
+      while ( "$args_contents" ne '' )
+      {
+         my @args_list = ();
+
+         # Read in the arguments for all platforms.
+         if ( $args_contents =~ /^\s*all\s*{(.+?)}\s*/si )
+         {
+            @args_list     = split(m|$/|, "$1");
+            $args_contents = $';
+         }
+         # Read in the arguments for the current platform.
+         elsif ( $args_contents =~ /^\s*$platform\s*{(.+?)}\s*/sio )
+         {
+            @args_list     = split(m|$/|, "$1");
+            $args_contents = $';
+         }
+         # Skip a platform that does not match $platform.
+         elsif ( $args_contents =~ /^\s*(\S+)\b\s*{(.+?)}\s*/s )
+         {
+            print "Skipping $1\n";
+            $args_contents = $';
+         }
+
+         foreach ( @args_list )
+         {
+            # Strip leading and trailing whitespace.
+            s/^\s+//;
+            s/\s+$//;
+            next if /^$/;   # Just to be safe...
+            push(@ARGV, "$_");
+         }
+      }
+   }
+   else
+   {
+      warn "WARNING: Coult not read from $args_load: $!\n";
+   }
+}
 
 sub configureModule ($)
 {
@@ -591,6 +670,45 @@ sub parseOutput ($$)
    }
 }
 
+sub getPlatform ()
+{
+   my $platform = "unknown";
+
+   # Prefer the user-defined platform type over any auto-detected value.
+   if ( "$OS" ne '' )
+   {
+      $platform = "$OS";
+   }
+   elsif ( defined($ENV{'OS'}) )
+   {
+      $platform = "$ENV{'OS'}";
+   }
+   elsif ( defined($ENV{'OSTYPE'}) )
+   {
+      $platform = "$ENV{'OSTYPE'}";
+   }
+   elsif ( defined($ENV{'OS_TYPE'}) )
+   {
+      $platform = "$ENV{'OS_TYPE'}";
+   }
+   elsif ( defined($ENV{'HOSTTYPE'}) )
+   {
+      $platform = "$ENV{'HOSTTYPE'}";
+   }
+   # As a last resort, fall back on the use of uname(1).
+   else
+   {
+      chomp($platform = `uname -s`);
+   }
+
+   # XXX: This is a hack to deal with weird OS strings such as "linux-gnu".
+   # We just make the platform be "linux" unless the user set the platform
+   # type on the command line.
+   $platform = 'linux' if ! $OS && $platform =~ /linux/i;
+
+   return $platform;
+}
+
 __END__
 
 =head1 NAME
@@ -606,6 +724,10 @@ that the dependencies are satisfied correctly.  Note that all modules must
 be capable of having dependencies satisfied based entirely on the results
 of running a dependent module's configure script.
 
+=head1 DESCRIPTION
+
+(Still need to write this...)
+
 =head1 OPTIONS
 
 =over 8
@@ -618,7 +740,7 @@ Print usage information of this script alone and exit.
 
 Print usage information for all the known configure scripts.  The
 knowledge of configure scripts comes from the configuration file.  The
-output may be limited using the --module argument, described below.
+output may be limited using the B<--module> argument, described below.
 
 =item B<--manual>
 
@@ -631,9 +753,9 @@ Print a list of the available modules.
 =item B<--cfg>=file
 
 Name the configuration file to be used by this script.  If not specified,
-it defaults to juggler.cfg.  This file is discovered based on the run-time
-path to this script, and thus the script and the configuration file must
-be in the same directory.  For example, if this script is run as:
+it defaults to F<juggler.cfg>.  This file is discovered based on the
+run-time path to this script, and thus the script and the configuration
+file must be in the same directory.  For example, if this script is run as:
 
 =over 4
 
@@ -641,7 +763,7 @@ be in the same directory.  For example, if this script is run as:
 
 =back
 
-then juggler.cfg will be searched for as B<../juggler.cfg>.
+then F<juggler.cfg> will be searched for as F<../juggler.cfg>.
 
 =item B<--module>=name
 
@@ -655,7 +777,19 @@ to limit the output to only what is appropriate for the named module.
 Just regenerate the files previously generated without running the
 configure script(s) again.
 
-=back
+=item B<--args>=file
 
-=head1 DESCRIPTION
+Name the file containing arguments to pass to the Autoconf-generated
+configure script(s) that will be executed.  If not specified, it defaults
+to F<acdefaults.cfg>, found using the same technique as is used for
+F<juggler.cfg> (see B<--cfg> above).
+
+=item B<--os>=name
+
+Define the host operating system.  This can be any string.  It will be used
+to recognize which platform-specific block to load from the Autoconf default
+arguments file.  Use of this argument forcibly overrides automatic detection
+of the host operating system.  I<Use with caution!>
+
+=back
 
