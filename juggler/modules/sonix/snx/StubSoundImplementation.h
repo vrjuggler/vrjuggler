@@ -60,7 +60,7 @@ public:
    /**
     * constructor for the OpenAL implementation 
     */
-   StubSoundImplementation() : snx::SoundImplementation() {}
+   StubSoundImplementation() : snx::SoundImplementation() { this->setName( "Stub" ); }
 
    /**
     * destructor for the OpenAL implementation
@@ -90,6 +90,7 @@ public:
    {
       snx::SoundImplementation::trigger( alias, looping );
       // do nothing
+      std::cout << "[snx]Stub::trigger (does nothing)\n"<<std::flush;
    }
 
    /**
@@ -100,6 +101,7 @@ public:
    {
       snx::SoundImplementation::stop( name );
       // do nothing
+      std::cout << "[snx]Stub::stop (does nothing)\n"<<std::flush;
    }
 
    /**
@@ -143,6 +145,7 @@ public:
     */
    virtual void startAPI()
    {
+      std::cout << "[snx]Stub::startAPI (does nothing)\n"<<std::flush;
    }
    
    /**
@@ -152,6 +155,7 @@ public:
     */
    virtual void shutdownAPI()
    {
+      std::cout << "[snx]Stub::shutdownAPI (does nothing)\n"<<std::flush;
    }   
 
    /**
