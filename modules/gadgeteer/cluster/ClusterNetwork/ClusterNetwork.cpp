@@ -153,6 +153,9 @@ namespace cluster
    {
       if (getPendingNode(node->getHostname()) == NULL)
       {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
+            << "[ClusterNetwork] Adding Pending Host: " << node->getHostname() << "\n"<< vprDEBUG_FLUSH;
+
          vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
          mPendingNodes.push_back(node);
       }
@@ -176,13 +179,14 @@ namespace cluster
       return NULL;
    }
 
+   
    void ClusterNetwork::removePendingNode(std::string host_name)
    {
       vprASSERT(1 == mPendingNodesLock.test() 
                 && "The mPendingNodes list must be locked before we can remove a pending node.");
 
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "Removing Pending Host: " << host_name << "\n"<< vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
+         << "[ClusterNetwork] Removing Pending Host: " << host_name << "\n"<< vprDEBUG_FLUSH;
       
       std::vector<cluster::ClusterNode*>::iterator begin = mPendingNodes.begin();
       std::vector<cluster::ClusterNode*>::iterator end = mPendingNodes.end();
@@ -414,7 +418,7 @@ namespace cluster
             cluster_delta.clientClusterDelta(node->getSockStream());
 
             node->setConnected(ClusterNode::NEWCONNECTION);
-            
+            vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
             debugDumpClusterNodes(1);
          }
          else if ( status == vpr::ReturnStatus::Timeout )
@@ -589,5 +593,9 @@ namespace cluster
             (*i)->debugDump(vprDBG_CONFIG_LVL);
          }
       }
+   }
+   bool ClusterNetwork::isClusterNetworkReady()
+   {
+      return (0 == mPendingNodes.size());
    }
 }	// end namespace cluster

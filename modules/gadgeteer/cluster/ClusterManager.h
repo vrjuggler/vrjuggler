@@ -59,6 +59,7 @@ public:
    void preDraw();
    void postPostFrame();
 
+   bool isClusterReady();
 
    bool recognizeClusterManagerConfig(jccl::ConfigChunkPtr chunk);
    

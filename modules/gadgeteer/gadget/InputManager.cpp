@@ -499,12 +499,26 @@ void InputManager::updateAllData()
 // RETURNS: NULL - Not found
 Input* InputManager::getDevice(std::string deviceName)
 {
+   // Look up in Input Manager
    tDevTableType::iterator ret_dev;
    ret_dev = mDevTable.find(deviceName);
    if(ret_dev != mDevTable.end())
+   {
       return ret_dev->second;
-   else
-      return NULL;
+   }
+   
+   // If the InputManager Doesn't have the device we can request it from the RemoteInputManager
+   Input* remote_device = cluster::RemoteInputManager::instance()->getVirtualDevice(deviceName);
+   if (NULL != remote_device)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "vjTypedProxy::refresh: Using Remote Input Manager Virtual Device: "
+      << deviceName << std::endl << vprDEBUG_FLUSH;
+
+      return remote_device;
+   }
+   
+   return NULL;
 }
 
 DeviceFactory* InputManager::getDeviceFactory()

@@ -310,7 +310,7 @@ namespace cluster
    {
       updateAll();
    }
-   
+
    void RemoteInputManager::updateAll()
    {
       mFrameNumber++;
@@ -497,6 +497,12 @@ namespace cluster
    {
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
       return(mPendingDeviceRequests.size());
+   }
+
+   bool RemoteInputManager::isPluginReady()
+   {
+      vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
+      return(0 == mPendingDeviceRequests.size());
    }
 
    vpr::ReturnStatus RemoteInputManager::createPendingConfigRemove(std::string device_name)

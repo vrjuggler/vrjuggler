@@ -176,8 +176,6 @@ namespace cluster
          sock_stream->setNoDelay(true);
 //         sock_stream->setTypeOfService(vpr::SocketOptions::LowDelay);
            mSockStream = sock_stream;
-           
-           ClusterNetwork::instance()->removePendingNode(mHostname);
       }
       else
       {
@@ -287,8 +285,7 @@ namespace cluster
       //   - Delete all VirtualDevices for this node
       //   - Delete all DeviceServers for this node
       //   - Refresh All Proxies
-      
-      mConnectedLock.acquire();
+      vpr::Guard<vpr::Mutex> guard(mConnectedLock);
       if (mConnected == CONNECTED && connect == DISCONNECTED)
       {
          /*
@@ -303,8 +300,13 @@ namespace cluster
          RemoteInputManager::instance()->removeDeviceClientsForHost(mHostname);
          gadget::InputManager::instance()->refreshAllProxies();
       }
+      if (connect == CONNECTED)
+      {
+         ClusterNetwork::instance()->lockPendingNodes();
+         ClusterNetwork::instance()->removePendingNode(mHostname);
+         ClusterNetwork::instance()->unlockPendingNodes();
+      }
       mConnected = connect;
-      mConnectedLock.release();
    }
 
 
