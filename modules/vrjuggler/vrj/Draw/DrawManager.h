@@ -34,6 +34,7 @@
 #define _VRJ_DRAW_MANAGER_
 
 #include <vrj/vrjConfig.h>
+#include <iostream>
 //#include <jccl/Config/Configuration.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 
@@ -46,7 +47,7 @@ class App;
 class Display;
 
 /**
- * Abstract base class for API specific Draw Manager.
+ * Abstract base class for API-specific Draw Manager.
  *
  * Concrete classes are resonsible for all rendering.
  *
@@ -55,13 +56,19 @@ class Display;
 class VJ_CLASS_API DrawManager : public jccl::ConfigElementHandler
 {
 public:
-   DrawManager (void)
+   DrawManager()
+      : mDisplayManager(NULL)
    {
-      mDisplayManager = NULL;
+      /* Do nothing. */ ;
+   }
+
+   virtual ~DrawManager()
+   {
+      /* Do nothing. */ ;
    }
 
    /**
-    * Function to initialy config API specific stuff.
+    * Function to initialy config API-specific stuff.
     * Takes a jccl::Configuration and extracts API-specific stuff.
     */
    //**//virtual void configInitial(jccl::Configuration*  cfg) = 0;
@@ -76,12 +83,12 @@ public:
    virtual void sync() = 0;
 
    /**
-    * Sets the app the draw whould interact with.
+    * Sets the application with which the Draw Manager will interact.
     *
     * @note The member variable is not in the base class because its "real"
-    * type is only known in the derived classes.
+    *       type is only known in the derived classes.
     */
-   virtual void setApp(App* _app) = 0;
+   virtual void setApp(App* app) = 0;
 
    /**
     * Initializes the drawing API (if not already running).
@@ -91,31 +98,36 @@ public:
     */
    virtual void initAPI() = 0;
 
-   /// Callback when display is added to display manager
+   /** Callback when display is added to Display Manager. */
    virtual void addDisplay(Display* disp) = 0;
 
-   /// Callback when display is removed to display manager
+   /** Callback when display is removed to Display Manager. */
    virtual void removeDisplay(Display* disp) = 0;
 
    /**
-    * Shutdown the drawing API.
+    * Shuts down the drawing API.
     *
     * @note If it was an active object, kill process here.
     */
    virtual void closeAPI() = 0;
 
-   /// Setter for display manager variable
-   void setDisplayManager(DisplayManager* _dispMgr);
+   /** Setter for Display Manager variable. */
+   void setDisplayManager(DisplayManager* dispMgr);
    DisplayManager* getDisplayManager();
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out,
                                            DrawManager& drawMgr);
+
    virtual void outStream(std::ostream& out)
-   { out << "vjDrawManager: outstream\n"; }  // Set a default
+   {
+      out << "vrj::DrawManager: outstream\n";  // Set a default
+   }
 
 protected:
    DisplayManager* mDisplayManager;  /**< The display manager dealing with */
 };
 
-};
+} // End of vrj namespace
+
+
 #endif
