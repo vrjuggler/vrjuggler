@@ -36,7 +36,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <termios.h>
+#include <sys/time.h>
+#include <unistd.h>
 #include <errno.h>
 
 #ifdef __sun__
