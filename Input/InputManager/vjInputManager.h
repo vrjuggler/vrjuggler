@@ -64,9 +64,11 @@ public:
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
+   //! POST: (chunk is proxy) ==> (returns == false)
+   //+       (chunk is device) ==> (devices is removed && proxies are stupified)
+   //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
    //!RETURNS: success
-   bool configRemove(vjConfigChunk* chunk)
-   { return false;}
+   bool configRemove(vjConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
@@ -76,11 +78,16 @@ public:
 private:
    //: Load the device for the given chunk
    //!RETURNS: true - Device was configured and added
-   bool ConfigureDevice(vjConfigChunk* chunk);
+   bool configureDevice(vjConfigChunk* chunk);
 
    //: Load the Proxy for the given chunk
    //!RETURNS: true - Proxy was configured and added
-   bool ConfigureProxy(vjConfigChunk* chunk);
+   bool configureProxy(vjConfigChunk* chunk);
+
+   //: Remove the device associated with the given chunk
+   //!RETURNS: true - Device was removed
+   bool removeDevice(vjConfigChunk* chunk);
+
 
    //-------------------//
    //     PROXIES       //
@@ -121,8 +128,8 @@ private:
    //
    //! MODIFIES: self
    //! POST: m_devVector[devNum]' = NULL
-   int RemoveDevice(int devNum);
-   int RemoveDevice(char* instName);
+   bool RemoveDevice(int devNum);
+   bool RemoveDevice(char* instName);
 
    //: Get the device number from its Instance Name.
    //
@@ -348,10 +355,13 @@ protected:
 
 private:
    //: Function to configure the proxy Alias array
-   bool ConfigureProxyAlias(vjConfigChunk* chunk);
+   bool configureProxyAlias(vjConfigChunk* chunk);
+
+   //: Remove a proxy alias
+   bool removeProxyAlias(vjConfigChunk* chunk);
 
    //: Add a proxy alias
-   void AddProxyAlias(std::string str, int proxyIndex);
+   void addProxyAlias(std::string str, int proxyIndex);
 };
 
 // Write out the status of the input manager

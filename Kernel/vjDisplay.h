@@ -29,9 +29,11 @@ public:
       _xo = _yo = _xs = _ys = -1;
       mType = vjDisplay::UNDEFINED;
       mDisplayChunk = NULL;
+      mPipe = vjDisplay::NONE;
    }
 
-   enum DisplayType { UNDEFINED, SURFACE, SIM};      // What type of display is it
+   enum DisplayType { UNDEFINED, SURFACE, SIM};             // What type of display is it
+   enum DisplayView { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
 
 public:
       //: Takes a display chunk and configures the display based one it.
@@ -72,7 +74,11 @@ public:
 
    //!NOTE: If we are in simulator, we can not be in stereo
    bool inStereo()
-   { return mStereo; }
+   { return (mView == STEREO); }
+
+   // Which view are we supposed to render
+   DisplayView getView()
+   { return mView; }
 
    void setOriginAndSize(int xo, int yo, int xs, int ys)
    { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
@@ -95,7 +101,7 @@ public:
    vjUser*  getUser()
    { return mUser;}
 
-   friend ostream& operator<<(ostream& out, vjDisplay& disp);
+   friend ostream& operator<<(ostream& out, vjDisplay* disp);
 
 protected:
    vjUser*           mUser;         //: The user being rendered by this window
@@ -106,12 +112,12 @@ protected:
    int         _xo, _yo, _xs, _ys;     //: X and Y origin and size of the view
    bool        mBorder;                //: Should we have a border
    int         mPipe;                  //: Hardware pipe. Index of the rendering hardware
-   bool        mStereo;                //: Do we want stereo
    bool        mActive;                //: Is the display active or not
+   DisplayView  mView;                 //: Which buffer(s) to display (left, right, stereo)
 
    vjConfigChunk* mDisplayChunk;        //: The chunk data for this display
 };
 
-ostream& operator<<(ostream& out,  vjDisplay& disp);
+//ostream& operator<<(ostream& out, vjDisplay* disp);
 
 #endif

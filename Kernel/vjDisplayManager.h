@@ -26,6 +26,24 @@ class vjDisplay;
 //-----------------------------------------------------------------------------
 class vjDisplayManager : public vjConfigChunkHandler
 {
+public:     // --- Config stuff -- //
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! POST: (display of same name already loaded) ==> old display closed, new one opened
+   //+       (display is new) ==> (new display is added)
+   //+       draw manager is notified of the display change
+   virtual bool configAdd(vjConfigChunk* chunk);
+
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   virtual bool configRemove(vjConfigChunk* chunk);
+
+   //: Can the handler handle the given chunk?
+   //! RETURNS: true - Can handle it
+   //+          false - Can't handle it
+   virtual bool configCanHandle(vjConfigChunk* chunk);
+
 public:
    //: This function updates the projections for all contained displays.
    // It also tells the draw manager that the projections have changed
@@ -50,22 +68,6 @@ public:
    //: Return list of all displays (inactive and active)
    //! NOTE: DO NOT EDIT THE DISPLAYS
    std::vector<vjDisplay*> getAllDisplays();
-
-public:     // --- Config stuff -- //
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk);
-
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk);
-
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk);
 
 private:
    //: Add a display to the current system

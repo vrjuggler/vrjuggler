@@ -20,6 +20,7 @@ int vjGlWindow::mCurMaxWinId = 0;
 
 void vjGlWindow::config(vjDisplay* _display)
 {
+   vjASSERT(_display != NULL);      // We can't config to a NULL display
    mDisplay = _display;
    mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
    border = mDisplay->shouldDrawBorder();
@@ -155,11 +156,12 @@ void vjGlWindow::setCameraProjection()
 }
 
 
-ostream& operator<<(ostream& out, vjGlWindow& win)
+ostream& operator<<(ostream& out, vjGlWindow* win)
 {
    //out << "-------- vjGlWindow --------" << endl;
-   out << "Open: " << (win.window_is_open ? "Y" : "N") << endl;
-   out << "Display:" << *(win.mDisplay) << endl;
-   out << "Stereo:" << (win.in_stereo ? "Y" : "N") << endl;
+   out << "Open: " << (win->window_is_open ? "Y" : "N") << endl;
+   vjASSERT(win->mDisplay != NULL);
+   out << "Display:" << win->mDisplay << endl;
+   out << "Stereo:" << (win->in_stereo ? "Y" : "N") << endl;
    return out;
 }

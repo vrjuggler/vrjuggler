@@ -64,6 +64,12 @@ public:
 
    bool config(vjConfigChunk* chunk);
 
+   virtual vjInput* getProxiedInputDevice()
+   {
+      vjInput* ret_val = dynamic_cast<vjInput*>(m_anaPtr);
+      vjASSERT(ret_val != NULL);
+      return ret_val;
+   }
 
 private:
    vjAnalog*   m_anaPtr;

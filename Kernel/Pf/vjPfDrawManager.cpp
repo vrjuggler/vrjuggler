@@ -150,7 +150,7 @@ void vjPfDrawManager::initDrawing()
       tempPfDisp.disp = (*dispIter);
 
       vjDEBUG(vjDBG_ALL,0) << "\tDisplay is:" << (void*)(*dispIter) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,0) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << *(*dispIter) << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << (*dispIter) << vjDEBUG_FLUSH;
 
       int xo, yo, xs, ys;
       pfPipe* localPipe = pipes[tempPfDisp.disp->getPipe()];
@@ -259,7 +259,7 @@ void vjPfDrawManager::initDrawing()
 //: Callback when display is added to display manager
 void vjPfDrawManager::addDisplay(vjDisplay* disp)
 {
-   vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager:addDisplay\n" << *disp << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager:addDisplay\n" << disp << endl << vjDEBUG_FLUSH;
 
 }
 

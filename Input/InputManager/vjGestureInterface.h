@@ -13,11 +13,26 @@
 class vjGestureInterface : public vjDeviceInterface
 {
 public:
+   vjGestureInterface() : mGestProxy(NULL)
+   {;}
+
    vjGestureProxy* operator->()
-   { return vjKernel::instance()->getInputManager()->GetGestureProxy(mProxyIndex); }
+   { return mGestProxy; }
 
    vjGestureProxy& operator*()
-   { return *(vjKernel::instance()->getInputManager()->GetGestureProxy(mProxyIndex)); }
+   { return *(mGestProxy); }
+
+   virtual void refresh()
+   {
+      vjDeviceInterface::refresh();
+      if(mProxyIndex != -1)
+         mGestProxy = vjKernel::instance()->getInputManager()->GetGestureProxy(mProxyIndex);
+      else
+         mGestProxy = NULL;
+   }
+
+private:
+   vjGestureProxy* mGestProxy;     // The proxy that is being wrapped
 };
 
 #endif

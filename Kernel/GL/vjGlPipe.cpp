@@ -72,7 +72,7 @@ void vjGlPipe::completeSwap()
 void vjGlPipe::addWindow(vjGlWindow* win)
 {
    vjGuard<vjMutex> guardNew(newWinLock);       // Protect the data
-   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::addWindow: Pipe: " << mPipeNum << " adding window (to new wins):\n" << *win << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::addWindow: Pipe: " << mPipeNum << " adding window (to new wins):\n" << win << endl << vjDEBUG_FLUSH;
    newWins.push_back(win);
 }
 
@@ -81,7 +81,7 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 void vjGlPipe::removeWindow(vjGlWindow* win)
 {
    vjGuard<vjMutex> guardClosing(mClosingWinLock);
-   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum << " window added to closingWins.\n" << *win << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum << " window added to closingWins.\n" << win << endl << vjDEBUG_FLUSH;
    mClosingWins.push_back(win);
 }
 
@@ -157,12 +157,12 @@ void vjGlPipe::checkForWindowsToClose()
          vjGlApp* theApp = glManager->getApp();       // Get application for easy access
          vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
-         glManager->setCurrentContext(win->getId());     // Set TSS data of context id
+         glManager->setCurrentContext(win->getId());     // Set TS data of context id
          glManager->currentUserData()->setUser(theDisplay->getUser());         // Set user data
          glManager->currentUserData()->setProjection(NULL);
 
-         win->makeCurrent();           // Make the context current
-         theApp->contextClose();              // Call context close function
+         win->makeCurrent();              // Make the context current
+         theApp->contextClose();          // Call context close function
 
          // Close the window
          win->close();
@@ -196,7 +196,7 @@ void vjGlPipe::checkForNewWindows()
       {
          newWins[winNum]->open();
          newWins[winNum]->makeCurrent();
-         vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << *(newWins[winNum]) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << newWins[winNum] << endl << vjDEBUG_FLUSH;
          openWins.push_back(newWins[winNum]);
       }
 
@@ -208,9 +208,7 @@ void vjGlPipe::checkForNewWindows()
 //! POST: win is rendered (In stereo if it is a stereo window)
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
-
-   mPerfBuffer->set(0);
-
+      mPerfBuffer->set(0);
 
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
@@ -235,38 +233,43 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
 
 
    theApp->contextPreDraw();                 // Do any context pre-drawing
+      mPerfBuffer->set(1);
 
-   mPerfBuffer->set(1);
-
-   if (theDisplay->isSurface())        // Surface display
+   // ---- SURFACE --- //
+   if (theDisplay->isSurface())
    {
       vjSurfaceDisplay* surface_disp = dynamic_cast<vjSurfaceDisplay*>(theDisplay);
+      vjDisplay::DisplayView view = theDisplay->getView();        // Get the view we are rendering
 
-      win->setLeftEyeProjection();
-      mPerfBuffer->set(2);
-      glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
-      glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
+      if((vjDisplay::STEREO == view) || (vjDisplay::LEFT_EYE == view))
+      {
+         win->setLeftEyeProjection();
+            mPerfBuffer->set(2);
+         glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
+         glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
 
-      mPerfBuffer->set(3);
+            mPerfBuffer->set(3);
 
-      theApp->draw();
-      mPerfBuffer->set(4);
-      glManager->drawObjects();
-      mPerfBuffer->set(5);
-      if (win->isStereo())
+         theApp->draw();
+            mPerfBuffer->set(4);
+         glManager->drawObjects();
+            mPerfBuffer->set(5);
+      }
+      if ((vjDisplay::STEREO == view) || (vjDisplay::RIGHT_EYE == theDisplay->getView()))
       {
          win->setRightEyeProjection();
-	 mPerfBuffer->set(6);
+	         mPerfBuffer->set(6);
          glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(surface_disp->getRightProj());
-	 mPerfBuffer->set(7);
+	         mPerfBuffer->set(7);
          theApp->draw();
-	 mPerfBuffer->set(8);
+	         mPerfBuffer->set(8);
          glManager->drawObjects();
-	 mPerfBuffer->set(9);
+	         mPerfBuffer->set(9);
       }
    }
-   else if(theDisplay->isSimulator())                                  // SIMULATOR
+   // ---- SIMULATOR ---------- //
+   else if(theDisplay->isSimulator())
    {
       vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(theDisplay);
 
