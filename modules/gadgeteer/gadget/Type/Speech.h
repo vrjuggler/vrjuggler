@@ -55,7 +55,10 @@ public:
 
    enum Mode
    {
-      DICTATE,COMMAND,ON,OFF
+      DICTATE,
+      COMMAND,
+      ON,
+      OFF
    };
 
 
