@@ -93,11 +93,10 @@ private:
     ofstream                output;
     std::string             name;
     std::string             filename;
-    vjThread*               connect_thread;
+    vjThread*               read_connect_thread;
+    vjThread*               write_connect_thread;
     int                     fd;
     vjConnectMode           mode;
-    //bool                    readable;
-    //bool                    writeable;
     bool                    shutdown;        // set to stop procs
 
     struct vjCommandPtrCmp {
@@ -115,7 +114,8 @@ private:
     vjTimeStamp             current_time;
 
     //: body of network process.
-    void controlLoop (void* nullParam);
+    void readControlLoop (void* nullParam);
+    void writeControlLoop (void* nullParam);
 
     //: utility for controlLoop()
     void readCommand (ifstream& fin);
