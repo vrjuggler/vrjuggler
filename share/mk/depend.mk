@@ -92,30 +92,37 @@ else
 endif
 
 %.d: %.c
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_C_DEPGEN)
 
 %.d: %.C
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_CXX_DEPGEN)
 
 %.d: %.CC
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_CXX_DEPGEN)
 
 %.d: %.cc
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_CXX_DEPGEN)
 
 %.d: %.c++
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_CXX_DEPGEN)
 
 %.d: %.cpp
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_CXX_DEPGEN)
 
 %.d: %.cxx
+	$(warning "depend.mk is deprecated--please upgrade to new build system.")
 	@echo "Updating dependency file $@ ..."
 	@$(_CXX_DEPGEN)
 

@@ -60,24 +60,31 @@ CREATE_OBJ_FILE_COMMAND = $(CXX_COMPILE) $(WARNINGS_FLAGS) $(OBJ_NAME_FLAG) -c $
 CREATE_OBJ_FILE_COMMAND_C = $(C_COMPILE) $(WARNINGS_FLAGS) $(OBJ_NAME_FLAG) -c $<
 
 $(OBJDIR)/%.$(OBJEXT): %.c
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND_C)
 
 $(OBJDIR)/%.$(OBJEXT): %.cxx
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND)
 
 $(OBJDIR)/%.$(OBJEXT): %.c++
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND)
 
 $(OBJDIR)/%.$(OBJEXT): %.cc
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND)
 
 $(OBJDIR)/%.$(OBJEXT): %.C
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND)
 
 $(OBJDIR)/%.$(OBJEXT): %.cpp
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND)
 
 $(OBJDIR)/%.$(OBJEXT): %.C
+	$(warning "objs.mk is deprecated--please upgrade to new build system.")
 	$(CREATE_OBJ_FILE_COMMAND)
 
 # Search path for source code and object files.
