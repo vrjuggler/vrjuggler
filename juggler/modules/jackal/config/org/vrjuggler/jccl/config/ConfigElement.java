@@ -215,7 +215,7 @@ public class ConfigElement implements ConfigElementPointerListener
       values.set(index, value);
 
       // Notify listeners of the change
-      firePropertyValueChanged(name, index, value);
+      firePropertyValueChanged(name, index, old_value);
       System.out.println("setProperty("+name+","+index+","+value+")");
       
       //TODO:  This will only work if we make sure we do not skip over a
