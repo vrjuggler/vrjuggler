@@ -98,7 +98,7 @@ namespace cluster
                //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ADM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
                //temp_data_packet->printData(1);
    
-               ApplicationData* user_data = getRemoteApplicationData(temp_data_packet->getId());
+               ApplicationData* user_data = getRemoteApplicationData(temp_data_packet->getObjectId());
                if (user_data != NULL)
                {                  
                   vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
@@ -248,12 +248,15 @@ namespace cluster
        //   << "Sending ApplicationData.\n" << vprDEBUG_FLUSH;
 
        mApplicationDataServersLock.acquire();
-       std::map<vpr::GUID, ApplicationDataServer*>::iterator ApplicationData_servers_begin = mApplicationDataServers.begin();
-       std::map<vpr::GUID, ApplicationDataServer*>::iterator ApplicationData_servers_end = mApplicationDataServers.end();
-       for (std::map<vpr::GUID, ApplicationDataServer*>::iterator i = ApplicationData_servers_begin; i != ApplicationData_servers_end; i++)
+       
+       std::map<vpr::GUID, ApplicationDataServer*>::iterator application_data_servers_begin = mApplicationDataServers.begin();
+       std::map<vpr::GUID, ApplicationDataServer*>::iterator application_data_servers_end = mApplicationDataServers.end();
+       
+       for (std::map<vpr::GUID, ApplicationDataServer*>::iterator i = application_data_servers_begin; i != application_data_servers_end; i++)
        {
-          (*i).second->updateLocalData();
-          (*i).second->send();
+          //(*i).second->updateLocalData();
+          //(*i).second->send();
+          (*i).second->serializeAndSend();
        }
        mApplicationDataServersLock.release();      
    }
@@ -282,9 +285,16 @@ namespace cluster
       for (i = begin ; i != end ; i++)
       {
          ClusterNode* temp_node = ClusterNetwork::instance()->getClusterNodeByHostname((*i).second);
-         if (temp_node != NULL && temp_node->isConnected())
+         if (temp_node != NULL)
          {
-            temp_node->send((*i).first);
+            if (temp_node->isConnected())
+            {
+               temp_node->send((*i).first);
+            }
+            else
+            {
+               ClusterNetwork::instance()->addPendingNode(temp_node);
+            }
          }
       }
    }
@@ -350,7 +360,7 @@ namespace cluster
             
             // Adding a new ApplicationData server
             vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
-            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mPluginGUID);                        
+            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mPluginGUID);
             mApplicationDataServers[id] = new_appdata_server;
          }
          else
