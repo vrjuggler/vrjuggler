@@ -7,7 +7,7 @@ install-docs: install-html install-chunk-html install-pdf
 
 XSLT_TOOL=	Saxon
 
-NAME=		book
+NAME=		configuration.guide
 
 XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
