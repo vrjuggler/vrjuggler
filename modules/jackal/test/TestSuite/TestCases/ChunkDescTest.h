@@ -60,7 +60,7 @@ namespace jcclTest
       void propertyDescTests()
       {
          // start fresh and new (and shiny!!!)
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
          
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
@@ -81,7 +81,7 @@ namespace jcclTest
       void testEqual()
       {
          // start fresh and new (and shiny!!!)
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
          
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
@@ -104,7 +104,7 @@ namespace jcclTest
       {
          // start fresh and new (and shiny!!!) who cares about the rest of the system - blahhhh!!!
          // @todo is there a way to not do this globally?
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
          
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
@@ -120,7 +120,7 @@ namespace jcclTest
       void testIsEqual()
       {
          // start fresh and new (and shiny!!!)
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
          
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
@@ -135,7 +135,7 @@ namespace jcclTest
       void testIsNotEqual()
       {
          // start fresh and new (and shiny!!!)
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
          
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
@@ -149,7 +149,7 @@ namespace jcclTest
       void addPropDesc()
       {
          // start fresh and new (and shiny!!!)
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
          
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
@@ -175,7 +175,7 @@ namespace jcclTest
       {
          // start fresh and new (and shiny!!!)
          /*
-         jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+         jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
          std::string file_path( TESTFILES_PATH );
          jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
