@@ -48,7 +48,7 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= Sound/
+DIRPRFX		= vrj/Sound/
 
 SUBDIR		= pf
 
