@@ -122,7 +122,7 @@ public:
          vpr::IOSys::Handle handle = new_acceptor->getHandle();                  // Get the Handle to register
          acceptorTable[handle] = new_acceptor;
          selector.addHandle(handle);                          // Add to selector
-         selector.setIn(handle, (vpr::Selector::READ | vpr::Selector::WRITE | vpr::Selector::EXCEPT));         
+         selector.setIn(handle, (vpr::Selector::VPR_READ | vpr::Selector::VPR_WRITE | vpr::Selector::VPR_EXCEPT));         
       }
        
       // READY - Tell everyone that we are ready to accept
@@ -149,8 +149,8 @@ public:
           vpr::SocketAcceptor* ready_acceptor = NULL;
           for(j=0;j<selector.getNumHandles();j++)
           {
-            // if selector's out flag is READ|EXCEPT
-            if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::READ | vpr::Selector::EXCEPT))
+            // if selector's out flag is VPR_READ|VPR_EXCEPT
+            if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
             {
                threadAssertTest((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()) && "Handle not found int acceptor table");
                ready_acceptor = acceptorTable[selector.getHandle(j)];               
@@ -196,7 +196,7 @@ public:
       mCondVar.release();
       
       // Connect randomly to the rendevous ports
-      for(int i=0;i<mNumIters;i++)
+      for(unsigned int i=0;i<mNumIters;i++)
       {         
          vpr::Uint16 port_num = mRendevousPort+(random() % mNumRendevousPorts);
          //std::cout << " p: " << port_num << std::flush;
@@ -286,7 +286,7 @@ public:
          vpr::IOSys::Handle handle = sock.getHandle();       // Get the Handle to register
          handleTable[handle] = i;                           // Save handle index
          selector.addHandle(handle);                          // Add to selector
-         selector.setIn(handle, (vpr::Selector::READ));       // Set it for waiting for READ
+         selector.setIn(handle, (vpr::Selector::VPR_READ));       // Set it for waiting for VPR_READ
       }
 
       threadAssertTest((mNumRendevousPorts == selector.getNumHandles()), "We didn't add all ports correctly to selector");
@@ -316,7 +316,7 @@ public:
           for(j=0;j<selector.getNumHandles();j++)
           {
              // If have data to read
-             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::READ))      
+             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::VPR_READ))      
             {
                threadAssertTest((handleTable.find(selector.getHandle(j)) != handleTable.end()) && "Handle not found int acceptor table");
                vpr::Uint16 sock_index = handleTable[selector.getHandle(j)];
@@ -438,7 +438,7 @@ private:
    bool             mThreadAssertTest; // true for no error
 
 protected:
-    int     mNumIters;
+    unsigned     mNumIters;
 
     vpr::Uint16     mRendevousPort;       // The port the acceptor will be waiting on
     vpr::Uint16     mNumRendevousPorts;   // The number of ports to use
