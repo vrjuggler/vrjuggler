@@ -74,6 +74,7 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
 //       thread hash.
 // ---------------------------------------------------------------------------
 vjThreadPosix::~vjThreadPosix (void) {
+    vjPthreadObj me;
     int status;
 
     mThreadTable.removeThread(gettid());
