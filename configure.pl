@@ -92,7 +92,7 @@ die "ERROR: No configuration given\n" unless $cfg;
 $base_dir = (fileparse("$0"))[1];
 $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
-parseConfigFile("$cfg");
+parseConfigFile("$base_dir/$cfg");
 
 listModules() && exit(0) if $mod_list;
 printHelp() && exit(0) if $all_help;
@@ -177,6 +177,7 @@ exit(0);
 
 sub parseConfigFile ($)
 {
+   my $cfg = shift;
    open(CFG, "$cfg") or die "ERROR: Could not read from $cfg: $!\n";
 
    my($cfg_file, $line);
