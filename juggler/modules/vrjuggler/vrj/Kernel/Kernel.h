@@ -36,7 +36,6 @@
 //#pragma once
 
 #include <vjConfig.h>
-#include <vjParam.h>
 #include <Kernel/vjSystemFactory.h>
 #include <Performance/vjPerfDataBuffer.h>
 

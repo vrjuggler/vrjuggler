@@ -33,6 +33,7 @@
 
 #include <vjConfig.h>
 #include <string.h>
+#include <vjParam.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjConfigManager.h>
