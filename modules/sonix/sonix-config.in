@@ -1,8 +1,8 @@
-#!/bin/sh
+#!@PERL@ -w
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+# VR Juggler is (C) Copyright 1998-2002 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -24,247 +24,401 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-%{
-%}
+use 5.004;
 
-#subsystem_cxxflags="@subsystem_cxxflags@"
-#subsystem_libs="@subsystem_libs@"
-snx_extra_cxxflags="@snx_extra_cxxflags@"
-snx_libs="@snx_libs@"
-snx_lib="@snx_lib@"
+use strict 'vars';
+use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
+            $ECHO_PREFIX);
+use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
+            $SNX_ABI_FLAGS $SNX_ISA_FLAGS $Win32);
 
-snx_extra_include_dirs="@snx_extra_include_dirs@"
+use File::Basename;
+use Getopt::Long;
 
-snx_default_abi="@ABI@"
-snx_default_isa="@ISA@"
-snx_n32_flags="@snx_n32_flags@"
-snx_64_flags="@snx_64_flags@"
-LIBBITSUF='@LIBBITSUF@'
+sub usage($);
+sub make_CXXFLAGS($;$);
+sub make_INCLUDES($);
+sub make_LDFLAGS($;$$);
+sub make_EXTRA_LDFLAGS($;$$);
+sub handleOptArg($$);
+sub stripDuplicateArgs($);
 
-if [ "x$snx_default_abi" = "xN32" ]; then
-    snx_abi_flags="$snx_n32_flags"
-elif [ "x$snx_default_abi" = "x64" ]; then
-    snx_abi_flags="$snx_64_flags"
-else
-    snx_abi_flags=''
-fi
+# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
 
-if [ "x$snx_default_isa" = "xmips3" -o "x$snx_default_isa" = "xmips4" ]; then
-    snx_isa_flags="-$snx_default_isa"
-else
-    snx_isa_flags=''
-fi
+usage(1) if $#ARGV == -1;
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-exec_prefix_set='no'
-use_linker='no'
+my $snx_default_abi = qq(@ABI@);
+my $snx_default_isa = qq(@ISA@);
+my $snx_n32_flags   = qq(@snx_n32_flags@);
+my $snx_64_flags    = qq(@snx_64_flags@);
+$LIBBITSUF          = qq(@LIBBITSUF@);
 
-#if [ "x$snx_extra_include_dirs" != "x" ]; then
-#    for dir in $snx_extra_include_dirs ; do
-#        snx_extra_includes="$snx_extra_includes -I@includedir@/$dir"
-#        snx_basedir_extra_includes="$snx_basedir_extra_includes -I$SNX_BASE_DIR/include/$dir"
-#    done
-#fi
+my $use_gcc = '@USE_GCC@';
 
-usage()
+$SNX_ABI_FLAGS = '';
+
+if ( $snx_default_abi =~ /n32/i )
 {
-    cat <<EOF
-Usage: snx-config [OPTIONS] [LIBRARIES]
+   $SNX_ABI_FLAGS = "$snx_n32_flags";
+}
+elsif ( $snx_default_abi =~ /64/ )
+{
+   $SNX_ABI_FLAGS = "$snx_64_flags";
+}
+
+$SNX_ISA_FLAGS = '';
+
+# If we are not using GCC and a known ISA is defined, add define the ISA
+# argument for the compiler and linker.
+if ( $use_gcc !~ /^y/i && $snx_default_isa =~ /^mips[34]/ )
+{
+   $SNX_ISA_FLAGS = "-$snx_default_isa";
+}
+
+# Set up variables used to determine what the real prefix is.  This is
+# important when this script has been installed.
+$Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
+
+my $base_dir = '';
+
+# Get the directory where this script is located.
+if ( defined($ENV{'SNX_BASE_DIR'}) )
+{
+   $base_dir = "$ENV{'SNX_BASE_DIR'}";
+}
+else
+{
+   $base_dir = (fileparse("$0"))[1];
+
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+
+   $base_dir =~ s|$path_sep$||o;       # Strip off the trailing slash
+   $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
+}
+
+# If we are on Windows, make sure that $base_dir is a full DOS path.
+if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
+{
+   chomp($base_dir = `cygpath -w $base_dir`);
+   $base_dir =~ s|\\|/|g;   # We want / as the path separator
+}
+
+# $exec_prefix may refer to $prefix, so it must be set after $prefix is
+# defined.
+$prefix      = "$base_dir";
+$exec_prefix = qq(@exec_prefix@);
+
+$ECHO_PREFIX      = 0;
+$ECHO_EXEC_PREFIX = 0;
+$PREFIX_SET       = 0;
+$EXEC_PREFIX_SET  = 0;
+$ECHO_CXXFLAGS    = 0;
+$ECHO_LIBS        = 0;
+$ECHO_EXTRA_LIBS  = 0;
+
+my $script_help    = 0;
+my $print_all      = 0;
+my $echo_includes  = 0;
+my $echo_subsystem = 0;
+my $echo_version   = 0;
+my $echo_static    = 0;
+my $use_linker     = 0;
+
+my $cxxflags_arg   = '';
+my $libs_arg       = '';
+my $extra_libs_arg = '';
+
+GetOptions('help|?' => \$script_help, 'all' => \$print_all,
+           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
+           'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
+           'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
+           'linker' => \$use_linker, 'static' => \$echo_static);
+
+usage(0) if $script_help;
+
+# Construct the (potentially complex) strings that may be printed.
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_all);
+my $includes      = make_INCLUDES("$cxxflags");
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
+my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
+                                       $print_all);
+
+# Finally, print out the requested information.
+print "$prefix\n" if $ECHO_PREFIX;
+print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
+print "maybe OpenAL or possibly AudioWorks\n" if $echo_subsystem;
+print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
+print "$cxxflags\n" if $ECHO_CXXFLAGS;
+print "$includes\n" if $echo_includes;
+print "$ldflags\n" if $ECHO_LIBS;
+print "$extra_ldflags\n" if $ECHO_EXTRA_LIBS;
+
+exit(0);
+
+# =============================================================================
+# Subroutines follow.
+# =============================================================================
+
+sub usage ($)
+{
+    print <<EOF;
+Usage: $0 [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]             Use \$SNX_BASE_DIR when printing paths
         [--prefix[=DIR]]        Print the installation prefix or set an
                                 alternate prefix to use when printing paths
         [--exec-prefix[=DIR]]   Print the executable prefix or set an
                                 alternate executable prefix to use when
                                 printing paths
-        [--version]             Print the installed SNX's version number
-        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
-        [--libs [N32|64]]       Print the basic SNX libraries
+        [--version]             Print the installed Gadgeteer's version number
+        [--cxxflags [N32|64]]   Print the Gadgeteer-specific flags for the C++
+                                compiler
+        [--includes]            Print out only the header path extension
+                                arguments
+        [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
+        [--all]                 Print all the flags used for compiling or
+                                linking (depending on other options)
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
-        [--subsystem]           Print the OS abstraction layer being used
+        [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
-    exit $1
+    exit($_[0]);
 }
 
-if test $# -eq 0; then
-    usage 1 1>&2
-fi
+sub make_CXXFLAGS ($;$)
+{
+   my $cxxflags_arg = shift;
+   my $print_all    = shift || 0;
 
-while test $# -gt 0; do
-    case "$1" in
-        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-        *) optarg= ;;
-    esac
+   my $cxxflags = '';
 
-    case $1 in
-        --basedir)
-            use_base_dir=yes
-            ;;
-        --prefix=*)
-            prefix=$optarg
-            if test $exec_prefix_set = no ; then
-                exec_prefix=$optarg
-            fi
-            ;;
-        --prefix)
-            echo_prefix=yes
-            ;;
-        --exec-prefix=*)
-            exec_prefix=$optarg
-            exec_prefix_set=yes
-            ;;
-        --exec-prefix)
-            echo_exec_prefix=yes
-            ;;
-        --version)
-            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
-            ;;
-        --cxxflags)
-            echo_cxxflags=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    snx_extra_cxxflags="$snx_extra_cxxflags $snx_n32_flags $snx_isa_flags"
-                    shift
-                    ;;
-                64)
-                    snx_extra_cxxflags="$snx_extra_cxxflags $snx_64_flags $snx_isa_flags"
-                    shift
-                    ;;
-                *)
-                    snx_extra_cxxflags="$snx_extra_cxxflags $snx_abi_flags $snx_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --subsystem)
-            echo "maybe OpenAL or possibly Audioworks"
-            ;;
-        --libs)
-            echo_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    ldflags="$snx_n32_flags $snx_isa_flags"
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    ldflags="$snx_64_flags $snx_isa_flags"
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    ldflags="$snx_abi_flags $snx_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --extra-libs)
-            echo_extra_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --linker)
-            use_linker=yes
-            ;;
-        --static)
-            echo_static=yes
-            ;;
-        *)
-            usage 1 1>&2
-            ;;
-    esac
-    shift
-done
+   # Default setting from configure.
+   my $snx_extra_cxxflags = qq(@snx_extra_cxxflags@);
 
-if test "$echo_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $SNX_BASE_DIR
-    else
-        echo $prefix
-    fi
-fi
+   if ( $cxxflags_arg =~ /n32/i )
+   {
+      $snx_extra_cxxflags = "$snx_extra_cxxflags $snx_n32_flags $SNX_ISA_FLAGS";
+   }
+   elsif ( $cxxflags_arg =~ /64/ )
+   {
+      $snx_extra_cxxflags = "$snx_extra_cxxflags $snx_64_flags $SNX_ISA_FLAGS";
+   }
+   elsif ( "$cxxflags_arg" eq '' )
+   {
+      $snx_extra_cxxflags = "$snx_extra_cxxflags $SNX_ABI_FLAGS $SNX_ISA_FLAGS";
+   }
 
-if test "$echo_exec_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $SNX_BASE_DIR
-    else
-        echo $exec_prefix
-    fi
-fi
+   my $snx_extra_includes     = '';
+   my $snx_extra_include_dirs = qq(@snx_extra_include_dirs@);
 
-if test "$echo_cxxflags" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ $snx_extra_cxxflags -I$SNX_BASE_DIR/include
-    else
-        echo @CXXFLAGS@ $snx_extra_cxxflags -I@includedir@
-    fi
-fi
+   if ( "$snx_extra_include_dirs" ne "" )
+   {
+      my $dir;
+      foreach $dir ( split(/\s+/, "$snx_extra_include_dirs") )
+      {
+         $snx_extra_includes .= " -I@includedir@/$dir";
+      }
+   }
 
-if test "$echo_static" = "yes" ; then
-    static_begin='@static_begin@'
-    static_end='@static_end@'
-fi
+   # XXX: Fix me!!!
+   my $snx_cxxflags_addtl = '';
+#   my $snx_cxxflags_addtl = ($print_all ? qq(@snx_cxxflags_all@) : '');
 
-if test "$echo_libs" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        ldflags="$ldflags -L$SNX_BASE_DIR/lib$LIBBITSUF"
-    else
-        if test "$use_linker" = "yes" ; then
-            ldflags="$ldflags @snx_ldflags_linker@"
-        else
-            ldflags="$ldflags @snx_ldflags_compiler@"
-        fi
-    fi
+   # XXX: No @snx_cxxflags@ defined by configure!
+   $cxxflags = qq($snx_cxxflags_addtl $snx_extra_cxxflags ) .
+               qq(-I@includedir@ $snx_extra_includes);
 
-#    for i in $subsystem_libs ; do
-#        if test $i != -L@libdir@ ; then
-#            if test -z "$my_subsystem_libs" ; then
-#                my_subsystem_libs="$i"
-#            else
-#                my_subsystem_libs="$my_subsystem_libs $i"
-#            fi
-#        fi
-#    done
+   # Strip out extra whitespace.
+   $cxxflags =~ s/\s{2,}/ /g;
 
-    echo $ldflags $static_begin $snx_libs $static_end 
-#$my_subsystem_libs
-fi      
+   return stripDuplicateArgs("$cxxflags");
+}
 
-if test "x$echo_extra_libs" = "xyes"; then
-    snx_extra_ldflags="@snx_extra_ldflags@"
-    snx_extra_libs="@snx_extra_libs@"
-    echo $snx_extra_ldflags $snx_extra_libs
-fi
+sub make_INCLUDES ($)
+{
+   my(@compiler_flags) = split(/\s+/, "$_[0]");
+   return join(" ", grep(/^-I/, @compiler_flags));
+}
+
+sub make_LDFLAGS ($;$$)
+{
+   my $libs_arg     = shift;
+   my $echo_static  = shift || 0;  # Echo static linking flags
+   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
+
+   my $static_begin = '';
+   my $static_end   = '';
+
+   if ( $echo_static )
+   {
+      $static_begin = qq(@static_begin@);
+      $static_end   = qq(@static_end@);
+   }
+
+   my $ldflags = '';
+
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$snx_n32_flags $SNX_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$snx_64_flags $SNX_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$SNX_ABI_FLAGS $SNX_ISA_FLAGS";
+   }
+
+   $ldflags .= ($use_linker ? qq( @snx_ldflags_linker@)
+                            : qq( @snx_ldflags_compiler@));
+
+   my $full_ldflags = qq($ldflags $static_begin @snx_libs@ $static_end);
+   $full_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_ldflags";
+}
+
+sub make_EXTRA_LDFLAGS ($;$$)
+{
+   my $extra_libs_arg = shift;
+   my $use_linker     = shift || 0;
+   my $print_all      = shift || 0;
+
+   if ( $extra_libs_arg =~ /n32/i )
+   {
+      $LIBBITSUF = '32';
+   }
+   elsif ( $extra_libs_arg =~ /64/ )
+   {
+      $LIBBITSUF = '64';
+   }
+
+   # XXX: Fix me!!!
+   my $extra_ldflags = qq(@snx_extra_ldflags@);
+#   my $extra_ldflags = ($use_linker ? qq(@snx_extra_ldflags_linker@)
+#                                    : qq(@snx_extra_ldflags_compiler@));
+
+   # Add the full set of extra flags if the user specified --all on the
+   # command line.
+   # XXX: Fix me!!!
+   my $snx_extra_libs_addtl = '';
+#   my $snx_extra_libs_addtl = ($print_all ? qq(@snx_extra_libs_juggler@)
+#                                          : '');
+
+   my $full_extra_ldflags = qq($extra_ldflags @snx_extra_libs@ ) .
+                            "$snx_extra_libs_addtl";
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_extra_ldflags";
+}
+
+# Subroutine for handling command-line parameters that have an optional
+# argument.
+sub handleOptArg ($$)
+{
+   my $name  = shift;
+   my $value = shift || '';
+
+   SWITCH:
+   {
+      if ( "$name" eq "prefix" )
+      {
+         # If $value is defined, we set $prefix to its value.  The value of
+         # $prefix will not be printed in this case.
+         if ( $value )
+         {
+            $prefix      = "$value";
+            $ECHO_PREFIX = 0;
+            $PREFIX_SET  = 1;
+         }
+         # If $value is undefined, that means that --prefix was specified, but
+         # no value was given.  In that case, we just want to print the
+         # prefix.
+         else
+         {
+            $ECHO_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "exec-prefix" )
+      {
+         # If $value is defined, we set $exec_prefix to its value.  The value
+         # of $exec_prefix will not be printed in this case.
+         if ( $value )
+         {
+            $exec_prefix      = "$value";
+            $EXEC_PREFIX_SET  = 1;
+            $ECHO_EXEC_PREFIX = 0;
+         }
+         # If $value is undefined, that means that --exec-prefix was specified,
+         # but no value was given.  In that case, we just want to print the
+         # exec prefix.
+         else
+         {
+            $ECHO_EXEC_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "cxxflags" )
+      {
+         $ECHO_CXXFLAGS = 1;
+         $cxxflags_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "libs" )
+      {
+         $ECHO_LIBS = 1;
+         $libs_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "extra-libs" )
+      {
+         $ECHO_EXTRA_LIBS = 1;
+         $extra_libs_arg  = $value;
+         last SWITCH;
+      }
+   }
+}
+
+# This is a fairly brute-force method for removing duplicated arguments from
+# the given string.  It should not be used for argument lists such as those
+# passed to the linker where functionality can be turned on and off (for
+# example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
+# static linking).
+sub stripDuplicateArgs ($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   foreach ( @arg_list )
+   {
+      next if exists($known_args{"$_"});  # Skip previously seen arguments
+      $known_args{"$_"} = 1;              # Register this argument
+      push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
+}
