@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindowBase.ui'
 #
-# Created: Thu Nov 27 02:22:25 2003
+# Created: Thu Nov 27 02:34:21 2003
 #      by: The PyQt User Interface Compiler (pyuic) 3.8.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -418,6 +418,8 @@ class MainWindowBase(QMainWindow):
       self.navTab = QWidget(self.jumpTab,"navTab")
       navTabLayout = QVBoxLayout(self.navTab,11,6,"navTabLayout")
 
+      layout8 = QHBoxLayout(None,0,6,"layout8")
+
       self.transGroupBox = QGroupBox(self.navTab,"transGroupBox")
       self.transGroupBox.setColumnLayout(0,Qt.Vertical)
       self.transGroupBox.layout().setSpacing(6)
@@ -429,24 +431,9 @@ class MainWindowBase(QMainWindow):
       self.mNavTransPix.setPixmap(self.image0)
       self.mNavTransPix.setScaledContents(1)
       transGroupBoxLayout.addWidget(self.mNavTransPix)
-
-      layout15 = QVBoxLayout(None,0,6,"layout15")
-
-      self.mAllowXTransChk = QCheckBox(self.transGroupBox,"mAllowXTransChk")
-      self.mAllowXTransChk.setChecked(1)
-      layout15.addWidget(self.mAllowXTransChk)
-
-      self.mAllowYTransChk = QCheckBox(self.transGroupBox,"mAllowYTransChk")
-      self.mAllowYTransChk.setChecked(1)
-      layout15.addWidget(self.mAllowYTransChk)
-
-      self.mAllowZTransChk = QCheckBox(self.transGroupBox,"mAllowZTransChk")
-      self.mAllowZTransChk.setChecked(1)
-      layout15.addWidget(self.mAllowZTransChk)
-      transGroupBoxLayout.addLayout(layout15)
-      spacer = QSpacerItem(16,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
-      transGroupBoxLayout.addItem(spacer)
-      navTabLayout.addWidget(self.transGroupBox)
+      layout8.addWidget(self.transGroupBox)
+      spacer = QSpacerItem(20,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
+      layout8.addItem(spacer)
 
       self.rotGroupBox = QGroupBox(self.navTab,"rotGroupBox")
       self.rotGroupBox.setColumnLayout(0,Qt.Vertical)
@@ -455,16 +442,44 @@ class MainWindowBase(QMainWindow):
       rotGroupBoxLayout = QHBoxLayout(self.rotGroupBox.layout())
       rotGroupBoxLayout.setAlignment(Qt.AlignTop)
 
-      layout14 = QHBoxLayout(None,0,6,"layout14")
-
       self.mNavRotPix = QLabel(self.rotGroupBox,"mNavRotPix")
       self.mNavRotPix.setPixmap(self.image0)
       self.mNavRotPix.setScaledContents(1)
-      layout14.addWidget(self.mNavRotPix)
-      spacer_2 = QSpacerItem(114,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
-      layout14.addItem(spacer_2)
-      rotGroupBoxLayout.addLayout(layout14)
-      navTabLayout.addWidget(self.rotGroupBox)
+      rotGroupBoxLayout.addWidget(self.mNavRotPix)
+      layout8.addWidget(self.rotGroupBox)
+      navTabLayout.addLayout(layout8)
+
+      layout9 = QHBoxLayout(None,0,6,"layout9")
+
+      layout15 = QVBoxLayout(None,0,6,"layout15")
+
+      self.mAllowXTransChk = QCheckBox(self.navTab,"mAllowXTransChk")
+      self.mAllowXTransChk.setChecked(1)
+      layout15.addWidget(self.mAllowXTransChk)
+
+      self.mAllowYTransChk = QCheckBox(self.navTab,"mAllowYTransChk")
+      self.mAllowYTransChk.setChecked(1)
+      layout15.addWidget(self.mAllowYTransChk)
+
+      self.mAllowZTransChk = QCheckBox(self.navTab,"mAllowZTransChk")
+      self.mAllowZTransChk.setChecked(1)
+      layout15.addWidget(self.mAllowZTransChk)
+      layout9.addLayout(layout15)
+
+      layout18 = QHBoxLayout(None,0,6,"layout18")
+
+      layout17 = QVBoxLayout(None,0,6,"layout17")
+
+      self.mPosLabel = QLabel(self.navTab,"mPosLabel")
+      layout17.addWidget(self.mPosLabel)
+
+      self.mRotLabel = QLabel(self.navTab,"mRotLabel")
+      layout17.addWidget(self.mRotLabel)
+      layout18.addLayout(layout17)
+      spacer_2 = QSpacerItem(40,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
+      layout18.addItem(spacer_2)
+      layout9.addLayout(layout18)
+      navTabLayout.addLayout(layout9)
 
       layout16 = QHBoxLayout(None,0,6,"layout16")
 
@@ -485,20 +500,8 @@ class MainWindowBase(QMainWindow):
       self.mFactorSlider.setOrientation(QSlider.Horizontal)
       layout16.addWidget(self.mFactorSlider)
       navTabLayout.addLayout(layout16)
-
-      layout18 = QHBoxLayout(None,0,6,"layout18")
-
-      layout17 = QVBoxLayout(None,0,6,"layout17")
-
-      self.mPosLabel = QLabel(self.navTab,"mPosLabel")
-      layout17.addWidget(self.mPosLabel)
-
-      self.mRotLabel = QLabel(self.navTab,"mRotLabel")
-      layout17.addWidget(self.mRotLabel)
-      layout18.addLayout(layout17)
-      spacer_3 = QSpacerItem(40,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
-      layout18.addItem(spacer_3)
-      navTabLayout.addLayout(layout18)
+      spacer_3 = QSpacerItem(20,20,QSizePolicy.Minimum,QSizePolicy.Expanding)
+      navTabLayout.addItem(spacer_3)
 
       layout13_3 = QHBoxLayout(None,0,6,"layout13_3")
       spacer_4 = QSpacerItem(20,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
@@ -557,7 +560,7 @@ class MainWindowBase(QMainWindow):
 
       self.languageChange()
 
-      self.resize(QSize(291,421).expandedTo(self.minimumSizeHint()))
+      self.resize(QSize(295,394).expandedTo(self.minimumSizeHint()))
 
       self.connect(self.mResetButton,SIGNAL("clicked()"),self.resetClicked)
       self.connect(self.mFactorSlider,SIGNAL("valueChanged(int)"),self.factorChanged)
@@ -568,15 +571,15 @@ class MainWindowBase(QMainWindow):
       QToolTip.add(self.jumpTab,QString.null)
       self.transGroupBox.setTitle(self.__tr("Translate"))
       QToolTip.add(self.mNavTransPix,self.__tr("Translate user. Up/down is forward/back. Left/right is left/right."))
+      self.rotGroupBox.setTitle(self.__tr("Rotate"))
+      QToolTip.add(self.mNavRotPix,self.__tr("Rotate the user."))
       self.mAllowXTransChk.setText(self.__tr("Allow X"))
       self.mAllowYTransChk.setText(self.__tr("Allow Y"))
       self.mAllowZTransChk.setText(self.__tr("Allow Z"))
-      self.rotGroupBox.setTitle(self.__tr("Rotate"))
-      QToolTip.add(self.mNavRotPix,self.__tr("Rotate the user."))
-      self.textLabel3.setText(self.__tr("Factor"))
-      self.mFactorValLabel.setText(self.__tr("1.0"))
       self.mPosLabel.setText(self.__tr("Pos:"))
       self.mRotLabel.setText(self.__tr("Rot:"))
+      self.textLabel3.setText(self.__tr("Factor"))
+      self.mFactorValLabel.setText(self.__tr("1.0"))
       self.mResetButton.setText(self.__tr("Reset"))
       self.jumpTab.changeTab(self.navTab,self.__tr("Nav"))
       self.textLabel1.setText(self.__tr("Place"))

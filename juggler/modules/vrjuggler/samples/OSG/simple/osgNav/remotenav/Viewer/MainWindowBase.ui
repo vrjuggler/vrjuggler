@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>291</width>
-            <height>421</height>
+            <width>295</width>
+            <height>394</height>
         </rect>
     </property>
     <property name="caption">
@@ -45,34 +45,101 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QGroupBox">
+                    <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>transGroupBox</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Translate</string>
+                            <cstring>layout8</cstring>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <property name="margin">
-                                <number>4</number>
-                            </property>
-                            <widget class="QLabel">
+                            <widget class="QGroupBox">
                                 <property name="name">
-                                    <cstring>mNavTransPix</cstring>
+                                    <cstring>transGroupBox</cstring>
                                 </property>
-                                <property name="pixmap">
-                                    <pixmap>image0</pixmap>
+                                <property name="title">
+                                    <string>Translate</string>
                                 </property>
-                                <property name="scaledContents">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Translate user. Up/down is forward/back. Left/right is left/right.</string>
-                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>4</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>mNavTransPix</cstring>
+                                        </property>
+                                        <property name="pixmap">
+                                            <pixmap>image0</pixmap>
+                                        </property>
+                                        <property name="scaledContents">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Translate user. Up/down is forward/back. Left/right is left/right.</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
                             </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer7</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QGroupBox">
+                                <property name="name">
+                                    <cstring>rotGroupBox</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Rotate</string>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>5</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>mNavRotPix</cstring>
+                                        </property>
+                                        <property name="pixmap">
+                                            <pixmap>image0</pixmap>
+                                        </property>
+                                        <property name="scaledContents">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Rotate the user.</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout9</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
                             <widget class="QLayoutWidget">
                                 <property name="name">
                                     <cstring>layout15</cstring>
@@ -116,64 +183,43 @@
                                     </widget>
                                 </vbox>
                             </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer7</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>16</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
-                    </widget>
-                    <widget class="QGroupBox">
-                        <property name="name">
-                            <cstring>rotGroupBox</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Rotate</string>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>5</number>
-                            </property>
                             <widget class="QLayoutWidget">
                                 <property name="name">
-                                    <cstring>layout14</cstring>
+                                    <cstring>layout18</cstring>
                                 </property>
                                 <hbox>
                                     <property name="name">
                                         <cstring>unnamed</cstring>
                                     </property>
-                                    <widget class="QLabel">
+                                    <widget class="QLayoutWidget">
                                         <property name="name">
-                                            <cstring>mNavRotPix</cstring>
+                                            <cstring>layout17</cstring>
                                         </property>
-                                        <property name="pixmap">
-                                            <pixmap>image0</pixmap>
-                                        </property>
-                                        <property name="scaledContents">
-                                            <bool>true</bool>
-                                        </property>
-                                        <property name="toolTip" stdset="0">
-                                            <string>Rotate the user.</string>
-                                        </property>
+                                        <vbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QLabel">
+                                                <property name="name">
+                                                    <cstring>mPosLabel</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Pos:</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLabel">
+                                                <property name="name">
+                                                    <cstring>mRotLabel</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Rot:</string>
+                                                </property>
+                                            </widget>
+                                        </vbox>
                                     </widget>
                                     <spacer>
                                         <property name="name">
-                                            <cstring>spacer6</cstring>
+                                            <cstring>spacer8</cstring>
                                         </property>
                                         <property name="orientation">
                                             <enum>Horizontal</enum>
@@ -183,7 +229,7 @@
                                         </property>
                                         <property name="sizeHint">
                                             <size>
-                                                <width>114</width>
+                                                <width>40</width>
                                                 <height>20</height>
                                             </size>
                                         </property>
@@ -248,59 +294,23 @@
                             </widget>
                         </hbox>
                     </widget>
-                    <widget class="QLayoutWidget">
+                    <spacer>
                         <property name="name">
-                            <cstring>layout18</cstring>
+                            <cstring>spacer6</cstring>
                         </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLayoutWidget">
-                                <property name="name">
-                                    <cstring>layout17</cstring>
-                                </property>
-                                <vbox>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <widget class="QLabel">
-                                        <property name="name">
-                                            <cstring>mPosLabel</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Pos:</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLabel">
-                                        <property name="name">
-                                            <cstring>mRotLabel</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Rot:</string>
-                                        </property>
-                                    </widget>
-                                </vbox>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer8</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>40</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
-                    </widget>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
                     <widget class="QLayoutWidget">
                         <property name="name">
                             <cstring>layout13_3</cstring>
