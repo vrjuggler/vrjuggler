@@ -58,9 +58,7 @@
 
 #include <vrj/Util/FileIO.h>
 
-#ifdef USE_SONIX
 #include <snx/SoundHandle.h>
-#endif
 
 #include <vrj/Sound/pf/pfSoundNode.h> //performer-juggler sound node.
 #include <vrj/Sound/pf/pfSoundTraverser.h>
@@ -170,14 +168,13 @@ void simplePfNavApp::init()
    mStopButton.init( std::string( "VJButton1" ) );
    mGoButton.init( std::string( "VJButton0" ) );
 
-#ifdef USE_SONIX
+
       mBumpSound.init( "bump" );
       mLandSound.init( "land" );
       mAmbientSound.init( "ambience" );
       mAccelSound.init( "accel" );
       mStopSound.init( "stop" );
       mWalkingSound.init( "step" );
-#endif
 }
 
 //: data init
@@ -312,10 +309,8 @@ void simplePfNavApp::preFrame()
       if (mColliding == false)
       {
          // we bumped into something, do some action...
-      #ifdef USE_SONIX
          mBumpSound.trigger();
          std::cout<<"mBumpSound.trigger();"<<std::endl;
-      #endif
       }
       mColliding = true;
    }
@@ -334,10 +329,8 @@ void simplePfNavApp::preFrame()
       if (mRiding == false)
       {
          // we landed on something, do some action...
-      #ifdef USE_SONIX
          mLandSound.trigger();
          mWalkingSound.trigger();
-      #endif
       }
       mRiding = true;
       mRideCount = 0;
@@ -364,47 +357,33 @@ void simplePfNavApp::preFrame()
       if (mWalkingCount > amount)
       {
          mWalkingCount -= amount;
-      #ifdef USE_SONIX
          mWalkingSound.trigger();
-      #endif
       }
    }
 
    // play sound while stopping...
    if (mStopButton->getData() == gadget::Digital::TOGGLE_ON)
    {
-      #ifdef USE_SONIX
          mStopSound.trigger( -1 );
-      #endif
    }
    else if (mStopButton->getData() == gadget::Digital::TOGGLE_OFF)
    {
-      #ifdef USE_SONIX
          mStopSound.stop();
-      #endif
    }
    //std::cout << speed << std::endl;
-      #ifdef USE_SONIX
    mStopSound.setPitchBend( 0.2f + speed / 15.0f );
-      #endif
    
    // play sound while accelerating...
    if (mGoButton->getData() == gadget::Digital::TOGGLE_ON)
    {
-      #ifdef USE_SONIX
          mAccelSound.trigger( -1 );
-      #endif
    }
    else if (mGoButton->getData() == gadget::Digital::TOGGLE_OFF)
    {
-      #ifdef USE_SONIX
          mAccelSound.stop();
-      #endif
    }
-      #ifdef USE_SONIX
    mAccelSound.setPitchBend( 0.2f + speed / 15.0f );
    mAmbientSound.trigger( -1 );
-      #endif
    
    // show stats...
    if (mUseStats && haveFocus())
@@ -690,9 +669,7 @@ void simplePfNavApp::initializeSounds()
 
       pfSoundNode* nextSound = new pfSoundNode( mSoundList[x].alias, mSoundList[x].positional );
 
-      #ifdef USE_SONIX
       sonix::instance()->trigger( mSoundList[x].alias );
-      #endif
 
       nextSoundDCS->addChild( nextSound );
       mSoundNodes->addChild( nextSoundDCS );
