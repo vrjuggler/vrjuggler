@@ -41,8 +41,8 @@ operator<< (ostream& outfile, vjThreadPosix& thread) {
 //+      beginning execution.
 // ---------------------------------------------------------------------------
 int
-vjThreadPosix::create ( vjBaseThreadFunctor* functorPtr, long flags,
-                     u_int priority, void* stack_addr, size_t stack_size)
+vjThreadPosix::create (vjBaseThreadFunctor* functorPtr, long flags,
+                       u_int priority, void* stack_addr, size_t stack_size)
 {
     int ret_val;
     pthread_attr_t thread_attrs;
@@ -123,13 +123,13 @@ vjThreadPosix::create ( vjBaseThreadFunctor* functorPtr, long flags,
 // ---------------------------------------------------------------------------
 int
 vjThreadPosix::create_n (vjThreadPosix thread_ids[], int n, THREAD_FUNC func,
-                       void* arg, long flags, u_int priority,
-                       void* stack_addr[], size_t stack_size[])
+                         void* arg, long flags, u_int priority,
+                         void* stack_addr[], size_t stack_size[])
 {
     for ( int i = 0; i < n; i++ ) {
         vjThreadPosix* newThread = vjThread::spawn(func, arg, flags, priority,
-                                                 (stack_addr == 0) ? 0 : stack_addr[i],
-                                                 (stack_size == 0) ? 0 : stack_size[i]);
+                                                   (stack_addr == 0) ? 0 : stack_addr[i],
+                                                   (stack_size == 0) ? 0 : stack_size[i]);
 
         thread_ids[i] = *newThread;
     }
