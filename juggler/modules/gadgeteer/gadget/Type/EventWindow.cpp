@@ -51,8 +51,7 @@ namespace gadget
 vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
-      
-   mSyncTime.setNow();
+     
    writer->writeUint64(mSyncTime.getBaseVal());
 
    // Write Current Keys to a stream using the given ObjectWriter
@@ -330,6 +329,8 @@ void EventWindow::addEvent(gadget::EventPtr e)
 
 void EventWindow::updateEventQueue()
 {
+   mSyncTime.setNow();
+
    vpr::Guard<vpr::Mutex> work_guard(mWorkingEventQueueLock);
    {
       vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
