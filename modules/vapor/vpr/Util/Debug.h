@@ -171,6 +171,9 @@
 #define vprDEBUG_ThreadLocalEnable() vpr::Debug::instance()->enableThreadLocalSettings()
 #define vprDEBUG_ThreadLocalDisable() vpr::Debug::instance()->disableThreadLocalSettings()
 
+#define vprDEBUG_OutputGuard(cat, level, entryText, exitText) vpr::DebugOutputGuard debug_output_guard(cat, level, entryText, exitText)
+#define vprDEBUG_OutputGuard_i(cat, level, indent, entryText, exitText) vpr::DebugOutputGuard debug_output_guard(cat, level, entryText, exitText, indent)
+
 
 #ifdef LOCK_DEBUG_STREAM
    #define vprDEBUG_STREAM_LOCK vpr::StreamLock(vpr::Debug::instance()->debugLock())
@@ -232,7 +235,7 @@ namespace vpr {
       void enableThreadLocalSettings()
       { mUseThreadLocal = true;}
       void disableThreadLocalSettings()
-      { 
+      {
          mUseThreadLocal = false;
          std::cout << clrRESET;     // Reset colors
       }
@@ -288,6 +291,36 @@ namespace vpr {
       ~DebugColorGuard()
       { vprDEBUG_PopTSColor();}
    };
+
+   /** Helper class that outputs debug information at creation and destruction of the object */
+   struct DebugOutputGuard
+   {
+      DebugOutputGuard(const vpr::GUID& cat, const int level,
+                      std::string entryText, std::string exitText,
+                      bool indent = true)
+         : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(exitText), mIndent(indent)
+      {
+         if(mIndent)
+            vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+         else
+            vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+      }
+
+      ~DebugOutputGuard()
+      {
+         if(mIndent)
+            vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+         else
+            vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+      }
+
+      vpr::GUID   mCat;
+      int         mLevel;
+      std::string mEntryText;
+      std::string mExitText;
+      bool        mIndent;
+   };
+
 
 
 }; // End of vpr namespace
