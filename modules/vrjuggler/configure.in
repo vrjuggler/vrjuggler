@@ -180,7 +180,7 @@ if test "x$BUILD_JAVA" = "xY"; then
       AC_MSG_WARN([*** VRJConfig requires ant to build the java sources -- it will not be built ***])
       BUILD_JAVA='N'
    else
-      ANT="JAVA_HOME=$JDK_HOME $ANT"
+      ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
    fi
 fi
 
