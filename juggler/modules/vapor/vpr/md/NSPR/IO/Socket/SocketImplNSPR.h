@@ -38,6 +38,8 @@
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/InetAddr.h>
+#include <IO/Socket/SocketTypes.h>
+#include <IO/Socket/SocketOptions.h>
 
 namespace vpr {
 
@@ -234,6 +236,18 @@ public:
 
        return true;
     }
+
+    /**
+     *
+     */
+    int getOption(const SocketOptions::Types option,
+                  struct SocketOptions::Data& data);
+
+    /**
+     *
+     */
+    int setOption(const SocketOptions::Types option,
+                  const struct SocketOptions::Data& data);
 
 protected:
     // ------------------------------------------------------------------------

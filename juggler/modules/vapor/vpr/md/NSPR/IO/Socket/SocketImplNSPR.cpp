@@ -32,16 +32,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/param.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <errno.h>
+#include <prinrval.h>
 
 #include <md/POSIX/SocketImpBSD.h>
-
-#ifndef INADDR_NONE
-#define INADDR_NONE 0xffffffff   /* -1 return */
-#endif
 
 
 // ============================================================================
@@ -130,7 +123,7 @@ SocketImpNSPR::bind () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 bool
-SocketImpBSD::connect () {
+SocketImpNSPR::connect () {
     bool retval;
     PRStatus status;
 
@@ -148,6 +141,240 @@ SocketImpBSD::connect () {
     }
 
     return retval;
+}
+
+/**
+ *
+ */
+int
+SocketImpNSPR::getOption (const SocketOptions::Types option,
+                          struct SocketOptions::Data& data)
+{
+    PRStatus retval;
+    socklen_t opt_size;
+    PRSockOptionData opt_data;
+    bool get_opt;
+
+    // If this is true, PR_GetSocketOption() will be called.
+    get_opt = true;
+
+    switch (option) {
+      case SocketOptions::Linger:
+        opt_data.option = PR_SockOpt_Linger;
+        break;
+      case SocketOptions::ReuseAddr:
+        opt_data.option = PR_SockOpt_Reuseaddr;
+        break;
+      case SocketOptions::KeepAlive:
+        opt_data.option = PR_SockOpt_Keepalive;
+        break;
+      case SocketOptions::RecvBufferSize:
+        opt_data.option = PR_SockOpt_RecvBufferSize;
+        break;
+      case SocketOptions::SendBufferSize:
+        opt_data.option = PR_SockOpt_SendBufferSize;
+        break;
+      case SocketOptions::IpTimeToLive:
+        opt_data.option = PR_SockOpt_IpTimeToLive;
+        break;
+      case SocketOptions::IpTypeOfService:
+        opt_data.option = PR_SockOpt_IpTypeOfService;
+        break;
+      case SocketOptions::AddMember:
+      case SocketOptions::DropMember:
+        fprintf(stderr,
+                "[vpr::SocketImpNSPR] Cannot get add/drop member socket option!\n");
+        get_opt = false;
+        break;
+      case SocketOptions::McastInterface:
+        opt_data.option = PR_SockOpt_McastInterface;
+        break;
+      case SocketOptions::McastTimeToLive:
+        opt_data.option = PR_SockOpt_McastTimeToLive;
+        break;
+      case SocketOptions::McastLoopback:
+        opt_data.option = PR_SockOpt_McastLoopback;
+        break;
+      case SocketOptions::NoDelay:
+        opt_data.option = PR_SockOpt_NoDelay;
+        break;
+      case SocketOptions::MaxSegment:
+        opt_data.option = PR_SockOpt_MaxSegment;
+        break;
+    }
+
+    if ( get_opt ) {
+        retval = PR_GetSocketOption(m_handle, &opt_data);
+
+        if ( retval == PR_SUCCESS ) {
+            // This extracts the information from the union passed to
+            // PR_GetSocketOption() and puts it in our friendly
+            // SocketOptions::Data object.
+            switch (option) {
+              case SocketOptions::Linger:
+                data.linger.enabled = opt_data.value.linger.polarity;
+                data.linger.seconds = PR_IntervalToSeconds(opt_data.value.linger.linger);
+                break;
+              case SocketOptions::ReuseAddr:
+                data.reuse_addr = (opt_data.value.reuse_addr != 0 ? true
+                                                                  : false);
+                break;
+              case SocketOptions::KeepAlive:
+                data.keep_alive = (opt_data.value.keep_alive != 0 ? true
+                                                                  : false);
+                break;
+              case SocketOptions::RecvBufferSize:
+                data.recv_buffer_size = opt_data.value.recv_buffer_size;
+                break;
+              case SocketOptions::SendBufferSize:
+                data.send_buffer_size = opt_data.value.send_buffer_size;
+                break;
+              case SocketOptions::IpTimeToLive:
+                data.ip_ttl = opt_data.value.ip_ttl;
+                break;
+              case SocketOptions::IpTypeOfService:
+                switch (opt_data.value.ip_tos) {
+                  case IPTOS_LOWDELAY:
+                    data.type_of_service = SocketOptions::LowDelay;
+                    break;
+                  case IPTOS_THROUGHPUT:
+                    data.type_of_service = SocketOptions::Throughput;
+                    break;
+                  case IPTOS_RELIABILITY:
+                    data.type_of_service = SocketOptions::Reliability;
+                    break;
+#ifdef IPTOS_LOWCOST
+                  case IPTOS_LOWCOST:
+                    data.type_of_service = SocketOptions::LowCost;
+                    break;
+#endif
+                }
+
+                break;
+              case SocketOptions::McastInterface:
+//                data.mcast_if = InetAddr(opt_data.value.mcast_if);
+                break;
+              case SocketOptions::McastTimeToLive:
+                data.mcast_ttl = opt_data.value.mcast_ttl;
+                break;
+              case SocketOptions::McastLoopback:
+                data.mcast_loopback = opt_data.value.mcast_loop;
+                break;
+              case SocketOptions::NoDelay:
+                data.no_delay = (opt_data.value.no_delay != 0 ? true : false);
+                break;
+              case SocketOptions::MaxSegment:
+                data.max_segment = opt_data.value.max_segment;
+                break;
+            }
+        }
+        else {
+            fprintf(stderr,
+                    "[vpr::SocketImpNSPR] ERROR: Could not get socket option "
+                    "for socket %s: %s\n",
+                    m_handle->getName().c_str(), strerror(errno));
+        }
+    }
+    else {
+        retval = -1;
+    }
+
+    return retval;
+}
+
+/**
+ *
+ */
+int
+SocketImpNSPR::setOption (const SocketOptions::Types option,
+                          const struct SocketOptions::Data& data)
+{
+    PRSocketOptionData opt_data;
+
+    switch (option) {
+      case SocketOptions::Linger:
+        opt_data.option                = PR_SockOpt_Linger;
+        opt_data.value.linger.polarity = data.linger.enabled;
+        opt_data.value.linger.linger   = PR_SecondsToInterval(data.linger.seconds);
+        break;
+      case SocketOptions::ReuseAddr:
+        opt_data.option           = PR_SockOpt_Reuseaddr;
+        opt_data.value.reuse_addr = (data.reuse_addr ? PR_TRUE : PR_FALSE);
+        break;
+      case SocketOptions::KeepAlive:
+        opt_data.option           = PR_SockOpt_Keepalive;
+        opt_data.value.keep_alive = (data.keep_alive ? PR_TRUE : PR_FALSE);
+        break;
+      case SocketOptions::RecvBufferSize:
+        opt_data.option                 = PR_SockOpt_RecvBufferSize;
+        opt_data.value.recv_buffer_size = data.recv_buffer_size;
+        break;
+      case SocketOptions::SendBufferSize:
+        opt_data.option                 = PR_SockOpt_SendBufferSize;
+        opt_data.value.send_buffer_size = data.send_buffer_size;
+        break;
+      case SocketOptions::IpTimeToLive:
+        opt_data.option       = PR_SockOpt_IpTimeToLive;
+        opt_data.value.ip_ttl = data.ip_ttl;
+        break;
+      case SocketOptions::IpTypeOfService:
+        opt_data.option = PR_SockOpt_IpTypeOfService;
+
+        switch (data.type_of_service) {
+          case SocketOptions::LowDelay:
+//            opt_data.value.tos = ???;
+            break;
+          case SocketOptions::Throughput:
+//            opt_data.value.tos = ???;
+            break;
+          case SocketOptions::Reliability:
+//            opt_data.value.tos = ???;
+            break;
+          case SocketOptions::LowCost:
+#ifdef IPTOS_LOWCOST
+//            opt_data.value.tos = ???;
+#else
+            fprintf(stderr,
+                    "[vpr::SocketImpNSPR] WARNING: This subsystem does not "
+                    "support LowCost type of service!\n");
+#endif
+            break;
+        }
+
+        break;
+      case SocketOptions::AddMember:
+        opt_data.option = PR_SockOpt_AddMember;
+//        opt_data.value.mcast_req.mcaddr = data.mcast_add_member.getMulticastAddr().getAddressValue();
+//        opt_data.value.mcast_req.ifaddr = data.mcast_add_member.getInterfaceAddr().getAddressValue();
+        break;
+      case SocketOptions::DropMember:
+        opt_data.option = PR_SockOpt_DropMember;
+//        opt_data.value.mcast_req.mcaddr = data.mcast_drop_member.getMulticastAddr().getAddressValue();
+//        opt_data.value.mcast_req.ifaddr = data.mcast_drop_member.getInterfaceAddr().getAddressValue();
+        break;
+      case SocketOptions::McastInterface:
+        opt_data.option         = PR_SockOpt_McastInterface;
+//        opt_data.value.mcast_if = data.mcast_if.getAddressValue();
+        break;
+      case SocketOptions::McastTimeToLive:
+        opt_data.option          = PR_SockOpt_McastTimeToLive;
+        opt_data.value.mcast_ttl = data.mcast_ttl;
+        break;
+      case SocketOptions::McastLoopback:
+        opt_data.option               = PR_SockOpt_McastLoopback;
+        opt_data.value.mcast_loopback = data.mcast_loopback;
+        break;
+      case SocketOptions::NoDelay:
+        opt_data.option         = PR_SockOpt_NoDelay;
+        opt_data.value.no_delay = (data.no_delay ? PR_TRUE : PR_FALSE);
+        break;
+      case SocketOptions::MaxSegment:
+        opt_data.option            = PR_SockOpt_MaxSegment;
+        opt_data.value.max_segment = data.max_segment;
+        break;
+    }
+
+    return PR_SetSocketOption(m_handle, &opt_data);
 }
 
 // ============================================================================
