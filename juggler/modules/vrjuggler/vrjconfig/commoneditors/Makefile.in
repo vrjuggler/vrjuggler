@@ -53,7 +53,7 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JARS		= CommonEditors
+JARS		= CommonEditors.jar
 
 JOGL_JARS=		@JOGL_JARS@
 
