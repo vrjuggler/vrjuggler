@@ -43,7 +43,6 @@
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunk.h>
 
-
 namespace vrj
 {
 
@@ -99,11 +98,6 @@ public:
     * @post Draw Manager is notified of any displays currently configured.
     */
    void setDrawManager(DrawManager* drawMgr);
-
-   /**
-    * Returns the current DrawManager.
-    */
-   DrawManager* getDrawManager();
 
    /**
     * Returns a list of the current displays.
