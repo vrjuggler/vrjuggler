@@ -128,13 +128,13 @@ public class BeanLoader
 
          if ( e.getCause() != null )
          {
-            System.err.println("       " + e.getCause().getMessage());
+            System.err.println("       Cause: " + e.getCause().getMessage());
 //            e.getCause().printStackTrace();
          }
-
-         if ( e.getException() != null )
+         else if ( e.getException() != null )
          {
-            System.err.println("       " + e.getException().getMessage());
+            System.err.println("       Cause: " +
+                               e.getException().getMessage());
 //            e.getException().printStackTrace();
          }
 
@@ -143,7 +143,7 @@ public class BeanLoader
          throw new BeanInstantiationException("Instantiation of " + bean_class +
                                               " failed!\n(" +
                                               "Class " + e.getMessage() +
-                                              " not found");
+                                              " not found", e);
       }
       catch (NoClassDefFoundError e)
       {
@@ -155,7 +155,7 @@ public class BeanLoader
          throw new BeanInstantiationException("Instantiation of " + bean_class +
                                               " failed!\n" +
                                               "No definition found for class " +
-                                              e.getMessage());
+                                              e.getMessage(), e);
       }
 
       return obj;

@@ -36,13 +36,28 @@
 
 package org.vrjuggler.tweek.beans.loader;
 
+
 /**
+ * Exception type thrown when a Bean cannot be instantiated.  As of Tweek
+ * 0.92.6, This exception type supports the <i>cause</i> mechanism defined by
+ * <code>java.lang.Throwable</code>.
+ *
  * @version $Revision$
  */
 public class BeanInstantiationException extends Exception
 {
-   public BeanInstantiationException (String msg)
+   public BeanInstantiationException(String msg)
    {
       super(msg);
+   }
+
+   /**
+    * Create a Bean instantiation exception that has a cause.
+    *
+    * @since 0.92.6
+    */
+   public BeanInstantiationException(String msg, Throwable cause)
+   {
+      super(msg, cause);
    }
 }
