@@ -145,7 +145,7 @@ void aMotionStar::start () {
 
   if (( s = socket(AF_INET,SOCK_STREAM,0))<0) {
     perror("client: can't open stream socket");
-    assert(false);
+    return;
   }
 
   /* Fill in the structure with the address of the
