@@ -39,6 +39,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
+import org.vrjuggler.vrjconfig.commoneditors.ProxyEditor;
 import org.vrjuggler.vrjconfig.commoneditors.SerialPortChooser;
 import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 
@@ -92,7 +93,12 @@ public class FlockEditorPanel
          new PropertyEditorPanel(ctx, elt.getProperty("filter", 0),
                                  flock_def.getPropertyDefinition("filter"),
                                  elt, 0, Color.white);
+      mDeviceHostEditor =
+         new PropertyEditorPanel(ctx, elt.getProperty("device_host", 0),
+                                 flock_def.getPropertyDefinition("device_host"),
+                                 elt, 0, Color.white);
 
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
       java.util.List filters = elt.getPropertyValues("position_filters");
 
       if ( filters == null || filters.size() == 0 )
@@ -111,7 +117,6 @@ public class FlockEditorPanel
                                        JOptionPane.WARNING_MESSAGE);
 
          // Create the new position_transform_filter config element.
-         ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition filter_def =
             broker.getRepository().get("position_transform_filter");
          ConfigElementFactory factory =
@@ -142,6 +147,9 @@ public class FlockEditorPanel
          }
       }
 
+      mProxyEditorPanel.setConfig(ctx, elt,
+                                  broker.getRepository().get("position_proxy"));
+
       try
       {
          jbInit();
@@ -157,8 +165,9 @@ public class FlockEditorPanel
    {
       this.setLayout(mMainLayout);
       mHardwarePanel.setBorder(mHardwarePanelTitle);
-      mHardwarePanel.setLayout(nHardwarePanelLayout);
+      mHardwarePanel.setLayout(mHardwarePanelLayout);
       mHardwarePanelTitle.setTitle("Hardware Settings");
+      mRealHardwarePanel.setLayout(mRealHardwarePanelLayout);
       mPortLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mPortLabel.setLabelFor(mPortEditor);
       mPortLabel.setText("Serial Port:");
@@ -172,83 +181,105 @@ public class FlockEditorPanel
       mMasterAddrLabel.setLabelFor(mMasterAddrEditor);
       mMasterAddrLabel.setText("Master Address:");
       mAddrModeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mAddrModeLabel.setLabelFor(mAddrModeEditor);
       mAddrModeLabel.setText("Addressing Mode:");
+      mDeviceHostLabel.setForeground(Color.black);
+      mDeviceHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mDeviceHostLabel.setLabelFor(mDeviceHostEditor);
+      mDeviceHostLabel.setText("Device Host:");
       mPortEditor.addActionListener(new
                                     FlockEditorPanel_mPortEditor_actionAdapter(this));
       mFilterLabel.setLabelFor(mFilterEditor);
       mFilterLabel.setText("Filter:");
       mBaudEditor.addActionListener(new
                                     FlockEditorPanel_mBaudEditor_actionAdapter(this));
-      mHardwarePanel.add(mPortLabel,
+      mRealHardwarePanel.add(mPortLabel,
                          new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 3, 0, 3), 0, 0));
-      mHardwarePanel.add(mPortEditor,
+      mRealHardwarePanel.add(mPortEditor,
                          new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mBaudLabel,
+      mRealHardwarePanel.add(mBaudLabel,
                          new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 3, 0, 3), 0, 0));
-      mHardwarePanel.add(mBaudEditor,
+      mRealHardwarePanel.add(mBaudEditor,
                          new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mHemisphereEditor,
+      mRealHardwarePanel.add(mHemisphereEditor,
                          new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 3, 0, 0), 0, 0));
-      mHardwarePanel.add(mHemisphereLabel,
+      mRealHardwarePanel.add(mHemisphereLabel,
                          new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mMasterAddrLabel,
+      mRealHardwarePanel.add(mMasterAddrLabel,
                          new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 3, 0, 3), 0, 0));
-      mHardwarePanel.add(mMasterAddrEditor,
+      mRealHardwarePanel.add(mMasterAddrEditor,
                          new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mAddrModeLabel,
+      mRealHardwarePanel.add(mAddrModeLabel,
                          new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 3, 0, 3), 0, 0));
-      mHardwarePanel.add(mAddrModeEditor,
+      mRealHardwarePanel.add(mAddrModeEditor,
                          new GridBagConstraints(1, 4, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mFilterLabel,
+      mRealHardwarePanel.add(mFilterLabel,
                          new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 3, 0, 3), 0, 0));
-      mHardwarePanel.add(mFilterEditor,
+      mRealHardwarePanel.add(mFilterEditor,
                          new GridBagConstraints(1, 5, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
+      mRealHardwarePanel.add(mDeviceHostLabel,
+                         new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+                                                GridBagConstraints.EAST,
+                                                GridBagConstraints.NONE,
+                                                new Insets(0, 3, 0, 3), 0, 0));
+      mRealHardwarePanel.add(mDeviceHostEditor,
+                         new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.WEST,
+                                                GridBagConstraints.BOTH,
+                                                new Insets(0, 0, 0, 0), 0, 0));
+      mHardwarePanel.add(mRealHardwarePanel,
+                         new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.WEST,
+                                                GridBagConstraints.VERTICAL,
+                                                new Insets(0, 0, 0, 0), 0, 0));
       this.add(mHardwarePanel,
                new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
-                                      GridBagConstraints.WEST,
+                                      GridBagConstraints.CENTER,
                                       GridBagConstraints.BOTH,
-                                      new Insets(0, 0, 2, 0), 20, 0));
-      this.add(mPosXformFilterPanel,
-               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
-                                      GridBagConstraints.WEST,
+                                      new Insets(0, 0, 2, 0), 0, 0));
+      this.add(mTabbedPane,
+               new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                                      GridBagConstraints.CENTER,
                                       GridBagConstraints.BOTH,
-                                      new Insets(0, 0, 2, 0), 20, 0));
+                                      new Insets(0, 0, 2, 0), 0, 0));
+      mTabbedPane.add(mPosXformFilterPanel, "Transmitter");
+      mTabbedPane.add(mProxyEditorPanel, "Sensors");
    }
 
    private ConfigContext mContext = null;
@@ -256,8 +287,10 @@ public class FlockEditorPanel
 
    private TransmitterTransformPanel mPosXformFilterPanel =
       new TransmitterTransformPanel();
+   private ProxyEditor mProxyEditorPanel = new ProxyEditor();
    private JPanel mHardwarePanel = new JPanel();
    private TitledBorder mHardwarePanelTitle = new TitledBorder("");
+   private JPanel mRealHardwarePanel = new JPanel();
    private JLabel mPortLabel = new JLabel();
    private SerialPortChooser mPortEditor = new SerialPortChooser();
    private JLabel mBaudLabel = new JLabel();
@@ -270,8 +303,12 @@ public class FlockEditorPanel
    private PropertyEditorPanel mAddrModeEditor = null;
    private JLabel mFilterLabel = new JLabel();
    private PropertyEditorPanel mFilterEditor = null;
-   private GridBagLayout nHardwarePanelLayout = new GridBagLayout();
+   private JLabel mDeviceHostLabel = new JLabel();
+   private PropertyEditorPanel mDeviceHostEditor = null;
+   private GridBagLayout mHardwarePanelLayout = new GridBagLayout();
+   private GridBagLayout mRealHardwarePanelLayout = new GridBagLayout();
    private GridBagLayout mMainLayout = new GridBagLayout();
+   private JTabbedPane mTabbedPane = new JTabbedPane();
 
    void mPortEditor_actionPerformed(ActionEvent actionEvent)
    {
