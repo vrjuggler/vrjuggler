@@ -55,14 +55,20 @@ void Registry::initCORBA()
 {
    int temp = 0;
 
-   orb = CORBA::ORB_init(temp, 0, "omniORB2");
-   boa = orb->BOA_init(temp, 0, "omniORB2_BOA");
+   // Boy, does this suck.
+#if OMNIORB_VER == 2
+   m_orb = CORBA::ORB_init(temp, 0, "omniORB2");
+#elif OMNIORB_VER == 3
+   m_orb = CORBA::ORB_init(temp, 0, "omniORB3");
+#endif
+
+   boa = m_orb->BOA_init(temp, 0, "omniORB2_BOA");
 
    try
    {
       CORBA::Object_var initServ;
 
-      initServ         = orb->resolve_initial_references("NameService");
+      initServ         = m_orb->resolve_initial_references("NameService");
       m_naming_context = CosNaming::NamingContext::_narrow(initServ);
 
       if ( CORBA::is_nil(m_naming_context) )
@@ -107,16 +113,9 @@ CORBA::Object_var Registry::getInterface (std::string& objectId,
    CORBA::Object_var obj;
    int temp = 0;
 
-   // Boy, does this suck.
-#if OMNIORB_VER == 2
-   CORBA::ORB_ptr orb = CORBA::ORB_init(temp, 0, "omniORB2");
-#elif OMNIORB_VER == 3
-   CORBA::ORB_ptr orb = CORBA::ORB_init(temp, 0, "omniORB3");
-#endif
-
    CORBA::Object_var initServ;
 
-   initServ         = orb->resolve_initial_references("NameService");
+   initServ         = m_orb->resolve_initial_references("NameService");
    m_naming_context = CosNaming::NamingContext::_narrow(initServ);
 
    CosNaming::Name name;
