@@ -57,7 +57,7 @@ private:
     vjChunkDesc* desc;
     vjChunkDescDB *descdb;
     std::vector<vjProperty*> props;       // Stores the set of properties
-
+    vjVarValue type_as_varvalue;
 
 public:
 

@@ -79,6 +79,21 @@ bool vjChunkDesc::setHelp (char *_help) {
 
 
 
+char* vjChunkDesc::getName () {
+    return name;
+}
+
+
+char* vjChunkDesc::getToken () {
+    return token;
+}
+
+
+char* vjChunkDesc::getHelp () {
+    return help;
+}
+
+
 void vjChunkDesc::add (vjPropertyDesc *pd) {
     remove(pd->token);
     plist.push_back(pd);

@@ -4,6 +4,8 @@
 #include <Config/vjVarValue.h>
 #include <Config/vjConfigChunk.h>
 
+vjVarValue* vjVarValue::invalid_instance = NULL;
+
 vjVarValue::vjVarValue (vjVarValue &v) {
     *this = v;
 }

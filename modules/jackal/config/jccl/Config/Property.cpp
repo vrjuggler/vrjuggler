@@ -161,8 +161,7 @@ ostream& operator << (ostream &out, vjProperty& p) {
 
 vjVarValue& vjProperty::getValue (int ind) {
     if ((ind < 0) || (ind >= value.size())) {
-	vjVarValue v(T_INVALID);
-	return v;
+	return vjVarValue::getInvalidInstance();
     }
     return *((value)[ind]);
 }
@@ -225,8 +224,9 @@ bool vjProperty::setValue (char* val, int ind) {
 
 
 bool vjProperty::setValue (vjConfigChunk* val, int ind) {
-    if (!preSet(ind))
+    if (!preSet(ind)) {
 	return false;
+    }
     *((value)[ind]) = val;
     return true;
 }
