@@ -113,6 +113,22 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int argc,
    return status;
 }
 
+void CorbaManager::shutdown (bool wait_for_completion)
+{
+   if ( ! CORBA::is_nil(m_root_poa) )
+   {
+      // We want to etherialize objects (destroy registered servants).  This
+      // will destroy all descendant POAs, so we do not have to worry about
+      // them at all.
+      m_root_poa->destroy(true, wait_for_completion);
+   }
+
+   if ( ! CORBA::is_nil(m_orb) )
+   {
+      m_orb->shutdown(wait_for_completion);
+   }
+}
+
 vpr::ReturnStatus CorbaManager::createSubjectManager ()
 {
    vprASSERT(! CORBA::is_nil(m_root_context) && "No naming service available");
@@ -352,6 +368,9 @@ void CorbaManager::run(void* args)
    pman->activate();
    m_orb->run();
    m_orb->destroy();
+
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Server has shut down\n"
+                                          << vprDEBUG_FLUSH;
 }
 
 } // End of tweek namespace
