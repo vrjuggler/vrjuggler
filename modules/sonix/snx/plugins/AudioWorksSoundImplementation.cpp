@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -43,19 +43,19 @@
 
 
 
-#include "AudioWorksSoundImplementation.h"
+#include "JugglerWorksSoundImplementation.h"
 
-#include "aj/SoundFactory.h"
-namespace aj
+#include "snx/SoundFactory.h"
+namespace snx
 {
-aj::SoundFactoryReg<AudioWorksSoundImplementation> audioworksRegistrator( "AudioWorks" );
+snx::SoundFactoryReg<JugglerWorksSoundImplementation> audioworksRegistrator( "JugglerWorks" );
 
 
 /**
  * constructor for the OpenAL implementation 
  */
-AudioWorksSoundImplementation::AudioWorksSoundImplementation() : 
-      aj::SoundImplementation(), mTotalTimeElapsed( 0.0f ), mIsStarted( false )
+JugglerWorksSoundImplementation::JugglerWorksSoundImplementation() : 
+      snx::SoundImplementation(), mTotalTimeElapsed( 0.0f ), mIsStarted( false )
 {
    // TODO: set up the defaults for aw...
    //mSoundAPIInfo.
@@ -64,16 +64,16 @@ AudioWorksSoundImplementation::AudioWorksSoundImplementation() :
 /**
  * destructor for the OpenAL implementation
  */
-AudioWorksSoundImplementation::~AudioWorksSoundImplementation()
+JugglerWorksSoundImplementation::~JugglerWorksSoundImplementation()
 {
 }
 
 /**
   * every implementation can return a new copy of itself
   */
-void AudioWorksSoundImplementation::clone( aj::SoundImplementation* &newCopy )
+void JugglerWorksSoundImplementation::clone( snx::SoundImplementation* &newCopy )
 {
-   newCopy = new AudioWorksSoundImplementation;
+   newCopy = new JugglerWorksSoundImplementation;
 
    // copy state, so that we return a true "clone"
    newCopy->copy( *this );
@@ -85,13 +85,13 @@ void AudioWorksSoundImplementation::clone( aj::SoundImplementation* &newCopy )
  * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
  * @semantics Triggers a sound
  */
-void AudioWorksSoundImplementation::trigger( const std::string & alias, const unsigned int & looping )
+void JugglerWorksSoundImplementation::trigger( const std::string & alias, const unsigned int & looping )
 {
-   aj::SoundImplementation::trigger( alias, looping );
+   snx::SoundImplementation::trigger( alias, looping );
 
    if (mBindTable.count( alias ) > 0)
    {
-      std::cout<<"[aj]AudioWorks| DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
+      std::cout<<"[snx]JugglerWorks| DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
       awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
    }
 }
@@ -101,9 +101,9 @@ void AudioWorksSoundImplementation::trigger( const std::string & alias, const un
  * does the sound restart from beginning?
  * (if a tree falls and no one is around to hear it, does it make sound?)
  */
-void AudioWorksSoundImplementation::setRetriggerable( const std::string& alias, bool onOff )
+void JugglerWorksSoundImplementation::setRetriggerable( const std::string& alias, bool onOff )
 {
-   aj::SoundImplementation::setRetriggerable( alias, onOff );
+   snx::SoundImplementation::setRetriggerable( alias, onOff );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -120,9 +120,9 @@ void AudioWorksSoundImplementation::setRetriggerable( const std::string& alias, 
  * when listener moves...
  * or is the sound positional - changes volume as listener nears or retreats..
  */
-void AudioWorksSoundImplementation::setAmbient( const std::string& alias, bool isAmbient )
+void JugglerWorksSoundImplementation::setAmbient( const std::string& alias, bool isAmbient )
 {
-   aj::SoundImplementation::setAmbient( alias, isAmbient );
+   snx::SoundImplementation::setAmbient( alias, isAmbient );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -153,9 +153,9 @@ void AudioWorksSoundImplementation::setAmbient( const std::string& alias, bool i
 /*
  * mute, sound continues to play, but you can't hear it...
  */
-void AudioWorksSoundImplementation::mute( const std::string& alias )
+void JugglerWorksSoundImplementation::mute( const std::string& alias )
 {
-   aj::SoundImplementation::mute( alias );
+   snx::SoundImplementation::mute( alias );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -166,9 +166,9 @@ void AudioWorksSoundImplementation::mute( const std::string& alias )
 /*
  * unmute, let the muted-playing sound be heard again
  */
-void AudioWorksSoundImplementation::unmute( const std::string& alias )
+void JugglerWorksSoundImplementation::unmute( const std::string& alias )
 {
-   aj::SoundImplementation::unmute( alias );
+   snx::SoundImplementation::unmute( alias );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -180,9 +180,9 @@ void AudioWorksSoundImplementation::unmute( const std::string& alias )
  * @semantics stop the sound
  * @input alias of the sound to be stopped
  */
-void AudioWorksSoundImplementation::stop( const std::string& alias )
+void JugglerWorksSoundImplementation::stop( const std::string& alias )
 {
-   aj::SoundImplementation::stop( alias );
+   snx::SoundImplementation::stop( alias );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -193,10 +193,10 @@ void AudioWorksSoundImplementation::stop( const std::string& alias )
 /**
  * set sound's 3D position 
  */
-void AudioWorksSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
+void JugglerWorksSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
    // NOTE: don't limit based on ambiance, even abient sounds can have position...
-   aj::SoundImplementation::setPosition( alias, x, y, z );
+   snx::SoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
@@ -210,25 +210,25 @@ void AudioWorksSoundImplementation::setPosition( const std::string& alias, float
  * @input alias is a name that has been associate()d with some sound data
  * @output x,y,z are returned in OpenGL coordinates.
  */
-void AudioWorksSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
+void JugglerWorksSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
 {
-   aj::SoundImplementation::getPosition( alias, x, y, z );
+   snx::SoundImplementation::getPosition( alias, x, y, z );
 }
 
 /**
  * set the position of the listener
  */
-void AudioWorksSoundImplementation::setListenerPosition( const aj::Matrix44& mat )
+void JugglerWorksSoundImplementation::setListenerPosition( const snx::Matrix44& mat )
 {
-   aj::SoundImplementation::setListenerPosition( mat );
+   snx::SoundImplementation::setListenerPosition( mat );
 }
 
 /**
  * get the position of the listener
  */
-void AudioWorksSoundImplementation::getListenerPosition( aj::Matrix44& mat )
+void JugglerWorksSoundImplementation::getListenerPosition( snx::Matrix44& mat )
 {
-   aj::SoundImplementation::getListenerPosition( mat );
+   snx::SoundImplementation::getListenerPosition( mat );
 }
 
 /**
@@ -236,7 +236,7 @@ void AudioWorksSoundImplementation::getListenerPosition( aj::Matrix44& mat )
  * @postconditions sound API is ready to go.
  * @semantics this function should be called before using the other functions in the class.
  */
-void AudioWorksSoundImplementation::startAPI()
+void JugglerWorksSoundImplementation::startAPI()
 {
    // setup the hardware system
    awOpenAWD("");
@@ -249,7 +249,7 @@ void AudioWorksSoundImplementation::startAPI()
    //initialize the AW system
    if (awInitSys() == -1) 
    {
-     std::cerr << "[aj]AudioWorks| ERROR: InitSys() failed!\n" << std::flush;
+     std::cerr << "[snx]JugglerWorks| ERROR: InitSys() failed!\n" << std::flush;
      return;
    }
 
@@ -260,7 +260,7 @@ void AudioWorksSoundImplementation::startAPI()
    int result = awAttachEng(mEngine);
    if (result < 0)      //Attach the engine to the system
    {
-       std::cerr << "[aj]AudioWorks| ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
+       std::cerr << "[snx]JugglerWorks| ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
   //     awPrint(mEngine);
        return;
    }
@@ -311,7 +311,7 @@ void AudioWorksSoundImplementation::startAPI()
    result = awConfigSys(0);
   if (result != 0)         //Attempt to configure the system
   {    
-    std::cout << "[aj]AudioWorks| ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
+    std::cout << "[snx]JugglerWorks| ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
 //    awPrint(mEngine);
     return;
   }
@@ -328,7 +328,7 @@ void AudioWorksSoundImplementation::startAPI()
  * @postconditions sound API is ready to go.
  * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
  */
-void AudioWorksSoundImplementation::shutdownAPI()
+void JugglerWorksSoundImplementation::shutdownAPI()
 {
    if (mIsStarted == true)
    {
@@ -356,7 +356,7 @@ void AudioWorksSoundImplementation::shutdownAPI()
   * query whether the API has been started or not
   * @semantics return true if api has been started, false otherwise.
   */
-bool AudioWorksSoundImplementation::isStarted() const
+bool JugglerWorksSoundImplementation::isStarted() const
 {
    return mIsStarted;
 }
@@ -364,9 +364,9 @@ bool AudioWorksSoundImplementation::isStarted() const
 /**
  * configure the sound API global settings
  */
-void AudioWorksSoundImplementation::configure( const aj::SoundAPIInfo& sai )
+void JugglerWorksSoundImplementation::configure( const snx::SoundAPIInfo& sai )
 {
-   aj::SoundImplementation::configure( sai );
+   snx::SoundImplementation::configure( sai );
    // TODO: configure the engine based on the settings!!
 }
 
@@ -378,9 +378,9 @@ void AudioWorksSoundImplementation::configure( const aj::SoundAPIInfo& sai )
   * @postconditions alias will point to loaded sound data
   * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
   */
-void AudioWorksSoundImplementation::configure( const std::string& alias, const aj::SoundInfo& description )
+void JugglerWorksSoundImplementation::configure( const std::string& alias, const snx::SoundInfo& description )
 {
-   aj::SoundImplementation::configure( alias, description );
+   snx::SoundImplementation::configure( alias, description );
    // do nothing
 }
 
@@ -388,9 +388,9 @@ void AudioWorksSoundImplementation::configure( const std::string& alias, const a
   * remove a configured sound, any future reference to the alias will not
   * cause an error, but will not result in a rendered sound
   */
-void AudioWorksSoundImplementation::remove( const std::string alias )
+void JugglerWorksSoundImplementation::remove( const std::string alias )
 {
-   aj::SoundImplementation::remove( alias );
+   snx::SoundImplementation::remove( alias );
    // do nothing
 }
 
@@ -398,7 +398,7 @@ void AudioWorksSoundImplementation::remove( const std::string alias )
  * clear all associate()tions.
  * @semantics any existing aliases will be stubbed. aounds will be unbind()ed
  */
-void AudioWorksSoundImplementation::clear()
+void JugglerWorksSoundImplementation::clear()
 {
 }   
 
@@ -406,14 +406,14 @@ void AudioWorksSoundImplementation::clear()
  * load/allocate the sound data this alias refers to the sound API
  * @postconditions the sound API has the sound buffered.
  */
-void AudioWorksSoundImplementation::bind( const std::string& alias )
+void JugglerWorksSoundImplementation::bind( const std::string& alias )
 {
-   std::cout<<"[aj]AudioWorks| DEBUG: bind() "<<alias<<"\n"<<std::flush;
+   std::cout<<"[snx]JugglerWorks| DEBUG: bind() "<<alias<<"\n"<<std::flush;
    
    this->unbind( alias );
    
    AWSoundInfo si;
-   aj::SoundInfo sinfo = mSounds[alias];
+   snx::SoundInfo sinfo = mSounds[alias];
 
 
    // Set up waves and load files
@@ -421,13 +421,13 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
    awName( si.mWave, sinfo.filename.c_str() ); //Set the aifc filename
    if (awLoadWav(si.mWave) != 0)               //Load the aifc file
    {
-       std::cout << "[aj]AudioWorks| \nfailed to open wave file\nwave dump:\n" << std::flush;
+       std::cout << "[snx]JugglerWorks| \nfailed to open wave file\nwave dump:\n" << std::flush;
        awPrint( si.mWave );
        return;
    }
    else
    {
-      std::cout << "[aj]AudioWorks| NOTICE: loaded: "<<sinfo.filename<<"\n" << std::flush;
+      std::cout << "[snx]JugglerWorks| NOTICE: loaded: "<<sinfo.filename<<"\n" << std::flush;
    }   
    awMapWavToSE( si.mWave, mEngine );                    //Associate the wave with the engine
    awFlushWavToSE( si.mWave );                            //Flush the changes to the engine
@@ -469,7 +469,7 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
 
    this->setAmbient( alias, sinfo.ambient );
    
-   std::cout<<"[aj]AudioWorks| DEBUG: bind() done"<<alias<<"\n"<<std::flush;
+   std::cout<<"[snx]JugglerWorks| DEBUG: bind() done"<<alias<<"\n"<<std::flush;
    
 }
 
@@ -477,7 +477,7 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
  * unload/deallocate the sound data this alias refers from the sound API
  * @postconditions the sound API no longer has the sound buffered.
  */
-void AudioWorksSoundImplementation::unbind( const std::string& alias )
+void JugglerWorksSoundImplementation::unbind( const std::string& alias )
 {
    if (mBindTable.count( alias ) > 0)
    {
@@ -487,7 +487,7 @@ void AudioWorksSoundImplementation::unbind( const std::string& alias )
       awDelete( mBindTable[alias].mWave );
       
       mBindTable.erase( alias );
-      std::cout<<"[aj]AudioWorks| DEBUG: unbind() "<<alias<<"\n"<<std::flush;
+      std::cout<<"[snx]JugglerWorks| DEBUG: unbind() "<<alias<<"\n"<<std::flush;
    }
    
    assert( mBindTable.count( alias ) == 0 && "should have unbound" );
@@ -498,14 +498,14 @@ void AudioWorksSoundImplementation::unbind( const std::string& alias )
  * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
  * @input time elapsed since last frame
  */
-void AudioWorksSoundImplementation::step( const float & timeElapsed )
+void JugglerWorksSoundImplementation::step( const float & timeElapsed )
 {
    if (this->isStarted() == true)
    {
       // audioworks wants total time elapsed, not time of last frame.
       mTotalTimeElapsed += timeElapsed;
 
-      aj::SoundImplementation::step( timeElapsed );
+      snx::SoundImplementation::step( timeElapsed );
       double total_time_elapsed = mTotalTimeElapsed;
       //total_time_elapsed = awGetClockSecs();
       awFrame(total_time_elapsed);

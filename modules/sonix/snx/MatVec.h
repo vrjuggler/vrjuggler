@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -42,71 +42,71 @@
 
 
 
-#ifndef AJ_MAT_VEC_FUNCS
-#define AJ_MAT_VEC_FUNCS
+#ifndef SNX_MAT_VEC_FUNCS
+#define SNX_MAT_VEC_FUNCS
 
-#include "aj/Math.h"
-#include "aj/Matrix44.h"
-#include "aj/Vec3.h"
+#include "snx/Math.h"
+#include "snx/Matrix44.h"
+#include "snx/Vec3.h"
 
-namespace aj
+namespace snx
 {
 
 // result[4] = mat * vec[4]
-inline void xform( float* result, const aj::Matrix44& mat, const float* vec )
+inline void xform( float* result, const snx::Matrix44& mat, const float* vec )
 {
    for (int j = 0; j < 4; ++j)
 	   for (int k = 0; k < 4; ++k)
 		   result[j] += vec[k] * mat( k, j );
 }
 
-inline aj::Vec3 xformFull( const aj::Matrix44& mat, const aj::Vec3& vec )
+inline snx::Vec3 xformFull( const snx::Matrix44& mat, const snx::Vec3& vec )
 {
    float vec4[4] = { vec[0], vec[1], vec[2], 1.0f };
    float result[4];
    xform( result, mat, vec4 );
    float w_inv = 1.0f / result[3];
-   return aj::Vec3( result[0] * w_inv, result[1] * w_inv, result[2] * w_inv );
+   return snx::Vec3( result[0] * w_inv, result[1] * w_inv, result[2] * w_inv );
 }
 
-inline aj::Vec3 xformVec( const aj::Matrix44& mat, const aj::Vec3& vec )
+inline snx::Vec3 xformVec( const snx::Matrix44& mat, const snx::Vec3& vec )
 {
    float vec4[4] = { vec[0], vec[1], vec[2], 0.0f };
    float result[4];
    xform( result, mat, vec4 );
-   return aj::Vec3( result[0], result[1], result[2] );
+   return snx::Vec3( result[0], result[1], result[2] );
 }
 
-inline aj::Vec3 operator+( const aj::Vec3& vec1, const aj::Vec3& vec2 )
+inline snx::Vec3 operator+( const snx::Vec3& vec1, const snx::Vec3& vec2 )
 {
-   aj::Vec3 v( vec1[0] + vec2[0],
+   snx::Vec3 v( vec1[0] + vec2[0],
              vec1[1] + vec2[1],
              vec1[2] + vec2[2] );
    return v;
 }
 
-inline aj::Vec3 operator-( const aj::Vec3& vec1, const aj::Vec3& vec2 )
+inline snx::Vec3 operator-( const snx::Vec3& vec1, const snx::Vec3& vec2 )
 {
-   aj::Vec3 v( vec1[0] - vec2[0],
+   snx::Vec3 v( vec1[0] - vec2[0],
              vec1[1] - vec2[1],
              vec1[2] - vec2[2] );
    return v;
 }
-inline aj::Vec3 operator*( const aj::Vec3& vec, const float& scalar )
+inline snx::Vec3 operator*( const snx::Vec3& vec, const float& scalar )
 {
-   aj::Vec3 v( vec[0] * scalar,
+   snx::Vec3 v( vec[0] * scalar,
              vec[1] * scalar,
              vec[2] * scalar );
    return v;
 }
 
 // Linear Interpolation between two vectors.
-inline void Lerp(const aj::Vec3& from, 
-      const aj::Vec3& to, 
+inline void Lerp(const snx::Vec3& from, 
+      const snx::Vec3& to, 
       const float &lerp, 
-      aj::Vec3& lerpedValue )
+      snx::Vec3& lerpedValue )
 {
-    aj::Vec3 offset = to - from;
+    snx::Vec3 offset = to - from;
     lerpedValue = from + offset*lerp;
 }
 

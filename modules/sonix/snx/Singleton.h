@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -47,7 +47,7 @@
 #ifndef AUDIOJUGGLER_VPR_SINGLETON_H_
 #define AUDIOJUGGLER_VPR_SINGLETON_H_
 
-namespace aj
+namespace snx
 {
    // you can use this coolio class to make a singleton,
    // just inherit like so...
@@ -94,6 +94,6 @@ namespace aj
       {
       }
    };
-}; // end of namespace aj
+}; // end of namespace snx
 
 #endif
