@@ -140,8 +140,15 @@ public class TransmitterTransformPanel
       mTrackerZRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
                                                           180.0, 0.1));
 
-      mVrjCoordChooser.setRenderer(new CoordFrameRenderer(mCoordFrames));
-      mTrackerCoordChooser.setRenderer(new CoordFrameRenderer(mCoordFrames));
+      CoordFrameRenderer r0 = new CoordFrameRenderer(mCoordFrames);
+      r0.setPreferredSize(new Dimension(64, 64));
+      mVrjCoordChooser.setRenderer(r0);
+      mVrjCoordChooser.setMaximumRowCount(4);
+
+      CoordFrameRenderer r1 = new CoordFrameRenderer(mCoordFrames);
+      r1.setPreferredSize(new Dimension(64, 64));
+      mTrackerCoordChooser.setRenderer(r1);
+      mTrackerCoordChooser.setMaximumRowCount(4);
    }
 
    public void stateChanged(ChangeEvent e)
@@ -188,16 +195,19 @@ public class TransmitterTransformPanel
          Map dev_unit_map = prop_def.getEnums();
 
          elt.addConfigElementListener(new ElementListener());
-         mSensorUnitsChooser =
+         mSensorUnitsEditor =
             new PropertyEditorPanel(ctx, elt.getProperty("device_units", 0),
                                     elt.getDefinition().getPropertyDefinition("device_units"),
                                     elt, 0, Color.white);
 
-         // Set up the custom units field.
-         mCustomUnitsField.setText(elt.getProperty("custom_scale", 0).toString());
+         mCustomUnitsEditor =
+            new PropertyEditorPanel(ctx, elt.getProperty("custom_scale", 0),
+                                    elt.getDefinition().getPropertyDefinition("custom_scale"),
+                                    elt, 0, Color.white);
+
          boolean enable_custom =
             ((Number) elt.getProperty("device_units", 0)).floatValue() == 0.0;
-         mCustomUnitsField.setEnabled(enable_custom);
+         mCustomUnitsEditor.setEnabled(enable_custom);
 
          mTrackerXPosField.setValue(elt.getProperty("pre_translate", 0));
          mTrackerYPosField.setValue(elt.getProperty("pre_translate", 1));
@@ -381,8 +391,6 @@ public class TransmitterTransformPanel
       mVrjCoordChooserLabel.setText("<html>VR Juggler Coordinate Frame</html>");
       mVrjCoordPanel.setLayout(mVrjCoordPanelLayout);
       mVrjCoordChooser.setEnabled(false);
-      mVrjCoordChooser.setMinimumSize(new Dimension(64, 64));
-      mVrjCoordChooser.setPreferredSize(new Dimension(64, 64));
       mVrjCoordChooser.addActionListener(new
          TransmitterTransformPanel_mVrjCoordChooser_actionAdapter(this));
       mVrjCoordAdvButton.setText("Advanced");
@@ -440,23 +448,20 @@ public class TransmitterTransformPanel
       mSensorUnitsPanel.setBorder(mTrackerUnitsBorder);
       mSensorUnitsPanel.setLayout(mSensorUnitsPanelLayout);
       mTrackerUnitsBorder.setTitle("Tracker Units");
-      mSensorUnitsLabel.setLabelFor(mSensorUnitsChooser);
+      mSensorUnitsEditorPanel.setLayout(mSensorUnitsEditorPanelLayout);
+      mSensorUnitsLabel.setLabelFor(mSensorUnitsEditor);
       mSensorUnitsLabel.setText("Sensor Sample Units");
-      mCustomUnitsField.setEnabled(false);
-      mCustomUnitsField.setToolTipText(
+      mCustomUnitsEditor.setEnabled(false);
+      mCustomUnitsEditor.setToolTipText(
          "Set custom unit conversion (to meters) for sensor samples");
-      mCustomUnitsField.setText("1.0");
-      mCustomUnitsField.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerPosUnitsChooser.setToolTipText(
          "Choose the units of the values entered below");
       mTrackerPosUnitsChooser.addActionListener(new
          TransmitterTransformPanel_mTrackerPosUnitsChooser_actionAdapter(this));
-      mSensorUnitsChooser.setToolTipText(
+      mSensorUnitsEditor.setToolTipText(
          "Choose the units of samples collected from sensors");
       mTrackerCoordChooser.addActionListener(new
          TransmitterTransformPanel_mTrackerCoordChooser_actionAdapter(this));
-      mTrackerCoordChooser.setMinimumSize(new Dimension(64, 64));
-      mTrackerCoordChooser.setPreferredSize(new Dimension(64, 64));
       mTrackerAdvPanel.add(mTrackerAnglesPanel,
                            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0
                                                   , GridBagConstraints.CENTER,
@@ -563,18 +568,18 @@ public class TransmitterTransformPanel
                            new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
                                                   , GridBagConstraints.WEST,
                                                   GridBagConstraints.NONE,
-                                                  new Insets(0, 0, 0, 1), 20, 0));
+                                                  new Insets(0, 0, 0, 1), 40, 0));
       mTrackerPosPanel.add(mTrackerYPosField,
                            new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
                                                   , GridBagConstraints.WEST,
                                                   GridBagConstraints.NONE,
-                                                  new Insets(0, 0, 0, 1), 20, 0));
+                                                  new Insets(0, 0, 0, 1), 40, 0));
       mTrackerPosPanel.add(mTrackerZPosField,
                            new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
                                                   , GridBagConstraints.WEST,
                                                   GridBagConstraints.NONE,
-                                                  new Insets(0, 0, 0, 1), 20, 0));
-      mSensorUnitsPanel.add(mCustomUnitsField,
+                                                  new Insets(0, 0, 0, 1), 40, 0));
+      mSensorUnitsEditorPanel.add(mCustomUnitsEditor,
                             new GridBagConstraints(2, 0, 1, 1, 1.0, 0.0
          , GridBagConstraints.WEST, GridBagConstraints.NONE,
          new Insets(0, 3, 0, 2), 50, 0));
@@ -589,7 +594,7 @@ public class TransmitterTransformPanel
       this.add(mRotationPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0
          , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
          new Insets(0, 0, 0, 0), 0, 30));
-      mSensorUnitsPanel.add(mSensorUnitsLabel,
+      mSensorUnitsEditorPanel.add(mSensorUnitsLabel,
                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
          , GridBagConstraints.EAST, GridBagConstraints.NONE,
          new Insets(0, 0, 0, 3), 0, 0));
@@ -600,8 +605,12 @@ public class TransmitterTransformPanel
                               new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
          , GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
          new Insets(0, 0, 3, 0), 54, 10));
-      mSensorUnitsPanel.add(mSensorUnitsChooser,
+      mSensorUnitsEditorPanel.add(mSensorUnitsEditor,
                             new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+         , GridBagConstraints.WEST, GridBagConstraints.NONE,
+         new Insets(0, 0, 0, 0), 0, 0));
+      mSensorUnitsPanel.add(mSensorUnitsEditorPanel,
+                            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
          , GridBagConstraints.WEST, GridBagConstraints.NONE,
          new Insets(0, 0, 0, 0), 0, 0));
    }
@@ -647,15 +656,17 @@ public class TransmitterTransformPanel
    private JFormattedTextField mTrackerZPosField = new JFormattedTextField();
    private JPanel mSensorUnitsPanel = new JPanel();
    private TitledBorder mTrackerUnitsBorder = new TitledBorder("");
+   private JPanel mSensorUnitsEditorPanel = new JPanel();
    private JLabel mSensorUnitsLabel = new JLabel();
-   private PropertyEditorPanel mSensorUnitsChooser = null;
-   private JTextField mCustomUnitsField = new JTextField();
+   private PropertyEditorPanel mSensorUnitsEditor = null;
+   private PropertyEditorPanel mCustomUnitsEditor = null;
    private GridBagLayout mVrjCoordPanelLayout = new GridBagLayout();
    private GridBagLayout mTrackerCoordPanelLayout = new GridBagLayout();
    private GridBagLayout mTrackerAdvPanelLayout = new GridBagLayout();
    private GridBagLayout mTrackerAnglesPanelLayout = new GridBagLayout();
    private GridBagLayout mRotationPanelLayout = new GridBagLayout();
    private GridBagLayout mSensorUnitsPanelLayout = new GridBagLayout();
+   private GridBagLayout mSensorUnitsEditorPanelLayout = new GridBagLayout();
    private GridBagLayout mTrackerPosPanelLayout = new GridBagLayout();
    private GridBagLayout mTranslationPanelLayout = new GridBagLayout();
    private GridBagLayout mMainLayout = new GridBagLayout();
@@ -669,7 +680,7 @@ public class TransmitterTransformPanel
          {
             Object value = mElement.getProperty("device_units", 0);
             boolean enable = ((Number) value).floatValue() == 0.0;
-            mCustomUnitsField.setEnabled(enable);
+            mCustomUnitsEditor.setEnabled(enable);
          }
       }
    }
@@ -897,9 +908,9 @@ class CoordFrame
 
    public String toString()
    {
-      return "X: " + Math.toDegrees(getXRot()) + "\u00B0, " +
-             "Y: " + Math.toDegrees(getYRot()) + "\u00B0, " +
-             "Z: " + Math.toDegrees(getZRot()) + "\u00B0";
+      return "X: " + getXRot() + "\u00B0, " +
+             "Y: " + getYRot() + "\u00B0, " +
+             "Z: " + getZRot() + "\u00B0";
    }
 
    private double xRot;
@@ -916,6 +927,8 @@ class CoordFrameRenderer
    {
       this.mCoordFrames = coordFrames;
       setOpaque(true);
+      setHorizontalAlignment(CENTER);
+      setVerticalAlignment(CENTER);
    }
 
    public Component getListCellRendererComponent(JList list, Object value,
