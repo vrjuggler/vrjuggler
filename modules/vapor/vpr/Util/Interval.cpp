@@ -197,7 +197,8 @@ bool Interval::initializeCycleCounter()
         ((mMmem_fd = open("/dev/mmem", O_RDONLY)) != -1) )
    {
       int poffmask = getpagesize() - 1;
-      __psunsigned_t phys_addr, raddr, cycleval;
+      __psunsigned_t phys_addr, raddr;
+      vpr::Uint32 cycleval;
 
       phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cycleval);
       raddr = phys_addr & ~poffmask;
