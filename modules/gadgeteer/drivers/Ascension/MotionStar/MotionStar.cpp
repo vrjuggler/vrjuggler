@@ -308,7 +308,7 @@ int MotionStar::sample ()
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
-      gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      gmtl::Matrix44f world_T_transmitter, transmitter_T_receiver, world_T_receiver;
       m_motion_star.sample();
 
       // get an initial timestamp for this entire sample. we'll copy it into
@@ -323,7 +323,7 @@ int MotionStar::sample ()
       {
          // Get the index to the current read buffer
          cur_samples[i].setTime( cur_samples[i].getTime() );
-         gmtl::identity(transmitter_T_reciever);
+         gmtl::identity(transmitter_T_receiver);
 
          format = m_motion_star.getBirdDataFormat(i);
 
@@ -333,11 +333,11 @@ int MotionStar::sample ()
             case FLOCK::INVALID:
                break;
             case FLOCK::POSITION:
-               gmtl::setTrans (transmitter_T_reciever,
+               gmtl::setTrans (transmitter_T_receiver,
                                gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i)) );
                break;
             case FLOCK::ANGLES:
-               gmtl::setRot( transmitter_T_reciever,
+               gmtl::setRot( transmitter_T_receiver,
                                  gmtl::Math::deg2Rad(m_motion_star.getZRot(i)),
                                  gmtl::Math::deg2Rad(m_motion_star.getYRot(i)),
                                  gmtl::Math::deg2Rad(m_motion_star.getXRot(i)),
@@ -346,7 +346,7 @@ int MotionStar::sample ()
             case FLOCK::MATRIX:
                m_motion_star.getMatrixAngles(i, angles);
 
-               gmtl::setRot( transmitter_T_reciever,
+               gmtl::setRot( transmitter_T_receiver,
                                  gmtl::Math::deg2Rad(angles[0]),
                                  gmtl::Math::deg2Rad(angles[1]),
                                  gmtl::Math::deg2Rad(angles[2]),
@@ -361,7 +361,7 @@ int MotionStar::sample ()
                                  gmtl::Math::deg2Rad(m_motion_star.getYRot(i)),
                                  gmtl::Math::deg2Rad(m_motion_star.getXRot(i)),
                                  gmtl::ZYX );
-               transmitter_T_reciever = (trans_mat * rot_mat);
+               transmitter_T_receiver = (trans_mat * rot_mat);
                break;
             case FLOCK::POSITION_MATRIX:
                gmtl::setTrans( trans_mat,
@@ -369,15 +369,15 @@ int MotionStar::sample ()
 
                m_motion_star.getMatrixAngles(i, angles);
 
-               gmtl::setRot( transmitter_T_reciever,
+               gmtl::setRot( transmitter_T_receiver,
                                  gmtl::Math::deg2Rad(angles[0]),
                                  gmtl::Math::deg2Rad(angles[1]),
                                  gmtl::Math::deg2Rad(angles[2]), gmtl::ZYX);
-               transmitter_T_reciever = trans_mat * rot_mat;
+               transmitter_T_receiver = trans_mat * rot_mat;
                break;
             case FLOCK::QUATERNION:
                m_motion_star.getQuaternion(i, quat);
-               gmtl::convert( transmitter_T_reciever, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+               gmtl::convert( transmitter_T_receiver, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
                break;
             case FLOCK::POSITION_QUATERNION:
                gmtl::setTrans( trans_mat, gmtl::Vec3f(m_motion_star.getXPos(i),
@@ -387,22 +387,22 @@ int MotionStar::sample ()
                m_motion_star.getQuaternion(i, quat);
                gmtl::convert( rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
 
-               transmitter_T_reciever = trans_mat * rot_mat;
+               transmitter_T_receiver = trans_mat * rot_mat;
                break;
          }
 
          // Set transmitter offset from local info.
          world_T_transmitter = xformMat;
 
-         // Get reciever data from sampled data.
-         //transmitter_T_reciever = *(cur_samples[index].getPosition());
+         // Get receiver data from sampled data.
+         //transmitter_T_receiver = *(cur_samples[index].getPosition());
 
          // Compute total transform.
          // wTr = wTt * tTr
-         gmtl::mult(world_T_reciever, world_T_transmitter, transmitter_T_reciever);
+         gmtl::mult(world_T_receiver, world_T_transmitter, transmitter_T_receiver);
 
          // Store corrected xform back into data.
-         *(cur_samples[i].getPosition()) = world_T_reciever;
+         *(cur_samples[i].getPosition()) = world_T_receiver;
       }
 
       // Locks and then swaps the indices.
