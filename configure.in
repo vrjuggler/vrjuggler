@@ -851,7 +851,7 @@ if test "$THREADS" = "POSIX" ; then
 
     dnl # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT,
     dnl # so we will not define both.
-    if "x$PLATFORM" != "xLinux" ; then
+    if test "x$PLATFORM" != "xLinux" ; then
         AC_DEFINE(_REENTRANT,)
     fi
 
