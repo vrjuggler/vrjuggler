@@ -628,7 +628,6 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Keyboard/Makefile
           gadget/Devices/Logitech/Makefile
           gadget/Devices/Logitech/ThreeDMouse/Makefile
-          gadget/Devices/Open/Makefile
           gadget/Devices/Open/DTK/Makefile
           gadget/Devices/Open/Trackd/Makefile
           gadget/Devices/Polhemus/Makefile
