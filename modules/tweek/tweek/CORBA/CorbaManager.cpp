@@ -51,7 +51,7 @@ namespace tweek
 {
 
 CorbaManager::CorbaManager()
-   : mAppName("unknown"), m_my_thread(NULL), m_subj_mgr(NULL)
+   : mAppName("unknown"), mOrbThread(NULL), mSubjectManager(NULL)
 {
    std::string tweek_ver = getVersionString();
 
@@ -84,7 +84,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
          << "Initializing ORB (using init string '" << TWEEK_ORB_VER_STRING
          << "')\n" << vprDEBUG_FLUSH;
-      m_orb = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING);
+      mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING);
 
       status = createChildPOA(local_id);
 
@@ -105,7 +105,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
       vpr::ThreadMemberFunctor<CorbaManager>* corba_run =
          new vpr::ThreadMemberFunctor<CorbaManager>(this, &CorbaManager::run);
 
-      m_my_thread = new vpr::Thread(corba_run);
+      mOrbThread = new vpr::Thread(corba_run);
    }
    catch (CORBA::SystemException&)
    {
@@ -139,39 +139,39 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
    return status;
 }
 
-void CorbaManager::shutdown(bool wait_for_completion)
+void CorbaManager::shutdown(bool waitForCompletion)
 {
-   if ( ! CORBA::is_nil(m_root_poa) )
+   if ( ! CORBA::is_nil(mRootPOA) )
    {
       // We want to etherialize objects (destroy registered servants).  This
       // will destroy all descendant POAs, so we do not have to worry about
       // them at all.
-      m_root_poa->destroy(true, wait_for_completion);
+      mRootPOA->destroy(true, waitForCompletion);
    }
 
-   if ( ! CORBA::is_nil(m_orb) )
+   if ( ! CORBA::is_nil(mORB) )
    {
-      m_orb->shutdown(wait_for_completion);
+      mORB->shutdown(waitForCompletion);
    }
 }
 
 vpr::ReturnStatus CorbaManager::createSubjectManager()
 {
-   vprASSERT(! CORBA::is_nil(m_root_context) && "No naming service available");
-   vprASSERT(! CORBA::is_nil(m_local_context) && "No naming service available");
+   vprASSERT(! CORBA::is_nil(mRootContext) && "No naming service available");
+   vprASSERT(! CORBA::is_nil(mLocalContext) && "No naming service available");
    vpr::ReturnStatus status;
 
    tweek::SubjectManager_ptr mgr_ptr;
 
-   vprASSERT(m_subj_mgr == NULL && "Subject Manager already exists for this CORBA Manager!");
-   m_subj_mgr = new SubjectManagerImpl(*this);
-   m_subj_mgr->setApplicationName(mAppName);
+   vprASSERT(mSubjectManager == NULL && "Subject Manager already exists for this CORBA Manager!");
+   mSubjectManager = new SubjectManagerImpl(*this);
+   mSubjectManager->setApplicationName(mAppName);
 
    // Try to activate the given servant with our child POA before anyone tries
    // to use it.
    try
    {
-      m_subj_mgr_id = m_child_poa->activate_object(m_subj_mgr);
+      mSubjectManagerId = mChildPOA->activate_object(mSubjectManager);
    }
    // This will be raised if the IdUniqunessPolicy within our child POA is set
    // to UNIQUE_ID.
@@ -201,7 +201,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          // Construct the SubjectManager's name using its GUID so that it is
          // guaranteed to be unique.
          std::string id_str("SubjectManager.");
-         id_str += m_subj_mgr->getGUID().toString();
+         id_str += mSubjectManager->getGUID().toString();
 
          const char* kind = "Object";
 
@@ -211,13 +211,13 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          // This gives us our reference from the POA to the servant that was
          // registered above.  This does not perform object activation because
          // the object was activated above.
-         mgr_ptr = m_subj_mgr->_this();
+         mgr_ptr = mSubjectManager->_this();
 
          vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
 
-         m_subj_mgr_name.length(1);
-         m_subj_mgr_name[0].id   = CORBA::string_dup(id_str.c_str());
-         m_subj_mgr_name[0].kind = CORBA::string_dup(kind);
+         mSubjectManagerName.length(1);
+         mSubjectManagerName[0].id   = CORBA::string_dup(id_str.c_str());
+         mSubjectManagerName[0].kind = CORBA::string_dup(kind);
 
          // Bind the Subject Manager reference and activate the object within
          // the POA.  If a Subject Manager is already bound, the exceptoin
@@ -225,7 +225,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          // since we only want one Subject Manager per address space.
          try
          {
-            m_local_context->bind(m_subj_mgr_name, mgr_ptr);
+            mLocalContext->bind(mSubjectManagerName, mgr_ptr);
          }
          catch (CosNaming::NamingContext::AlreadyBound& ex)
          {
@@ -257,7 +257,7 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
    vpr::ReturnStatus status;
 
    // Only try to do destruction if there is a servant to destroy.
-   if ( m_subj_mgr != NULL )
+   if ( mSubjectManager != NULL )
    {
       // This attempts to go through the process of destroying the registered
       // Subject Manager servant.  The memory for the servant is only deleted
@@ -265,14 +265,14 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
       try
       {
          // First, we deactivate the servant in the POA.
-         m_child_poa->deactivate_object(m_subj_mgr_id);
+         mChildPOA->deactivate_object(mSubjectManagerId);
 
          // Then we attempt to unbind the reference from the Naming Service.
          // Should this fail, the object reference will be invalid because of
          // the above step, so deleting the servant's memory should be okay.
          try
          {
-            m_local_context->unbind(m_subj_mgr_name);
+            mLocalContext->unbind(mSubjectManagerName);
          }
          catch (CORBA::ORB::InvalidName& ex)
          {
@@ -288,8 +288,8 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
          }
 
          // Finally, we delete the servant's memory.
-         delete m_subj_mgr;
-         m_subj_mgr = NULL;
+         delete mSubjectManager;
+         mSubjectManager = NULL;
       }
       catch (PortableServer::POA::ObjectNotActive& policy_ex)
       {
@@ -297,8 +297,8 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
          // wrong in createSubjectManager().  In that case, the memory should
          // still be deleted since there is no active object to worry about
          // anyway.
-         delete m_subj_mgr;
-         m_subj_mgr = NULL;
+         delete mSubjectManager;
+         mSubjectManager = NULL;
 
          vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
             << "WARNING: Coult not deactive Subject Manager: not active in POA\n"
@@ -337,19 +337,19 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    // thrown exceptions.
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Root POA\n"
                                               << vprDEBUG_FLUSH;
-   obj        = m_orb->resolve_initial_references("RootPOA");
-   m_root_poa = PortableServer::POA::_narrow(obj);
+   obj      = mORB->resolve_initial_references("RootPOA");
+   mRootPOA = PortableServer::POA::_narrow(obj);
 
-   vprASSERT(! CORBA::is_nil(m_root_poa) && "Failed to get Root POA");
+   vprASSERT(! CORBA::is_nil(mRootPOA) && "Failed to get Root POA");
 
    // We want to allow multiple IDs to the same object and retain the
    // references.  The latter is required if we wish to do explict activation.
    PortableServer::IdUniquenessPolicy_var uniq_policy =
-      m_root_poa->create_id_uniqueness_policy(PortableServer::MULTIPLE_ID);
+      mRootPOA->create_id_uniqueness_policy(PortableServer::MULTIPLE_ID);
    PortableServer::ServantRetentionPolicy_var retain_policy =
-      m_root_poa->create_servant_retention_policy(PortableServer::RETAIN);
+      mRootPOA->create_servant_retention_policy(PortableServer::RETAIN);
    PortableServer::ThreadPolicy_var thread_policy =
-      m_root_poa->create_thread_policy(PortableServer::ORB_CTRL_MODEL);
+      mRootPOA->create_thread_policy(PortableServer::ORB_CTRL_MODEL);
 
    policy_list.length(3);
    policy_list[0] =
@@ -366,9 +366,9 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
          << "Creating child of root POA named " << poa_name << std::endl
          << vprDEBUG_FLUSH;
-      m_child_poa = m_root_poa->create_POA(poa_name.c_str(),
-                                           PortableServer::POAManager::_nil(),
-                                           policy_list);
+      mChildPOA = mRootPOA->create_POA(poa_name.c_str(),
+                                       PortableServer::POAManager::_nil(),
+                                       policy_list);
    }
    catch (PortableServer::POA::AdapterAlreadyExists& ex)
    {
@@ -393,11 +393,11 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
 
 /**
  *
- * @post The root context is retrieved through m_orb, and a sub-context is
+ * @post The root context is retrieved through mORB, and a sub-context is
  *       created for use within this memory space.
  */
-vpr::ReturnStatus CorbaManager::initNamingService(const std::string& ref_name,
-                                                  const std::string& local_id)
+vpr::ReturnStatus CorbaManager::initNamingService(const std::string& refName,
+                                                  const std::string& localId)
 {
    CORBA::Object_var name_obj;
    vpr::ReturnStatus status;
@@ -416,10 +416,10 @@ vpr::ReturnStatus CorbaManager::initNamingService(const std::string& ref_name,
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Name Service\n"
                                               << vprDEBUG_FLUSH;
-   name_obj       = m_orb->resolve_initial_references(ref_name.c_str());
-   m_root_context = CosNaming::NamingContext::_narrow(name_obj);
+   name_obj     = mORB->resolve_initial_references(refName.c_str());
+   mRootContext = CosNaming::NamingContext::_narrow(name_obj);
 
-   if ( CORBA::is_nil(m_root_context) )
+   if ( CORBA::is_nil(mRootContext) )
    {
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -440,16 +440,16 @@ vpr::ReturnStatus CorbaManager::initNamingService(const std::string& ref_name,
 
       try
       {
-         m_local_context = m_root_context->bind_new_context(tweek_context_name);
+         mLocalContext = mRootContext->bind_new_context(tweek_context_name);
       }
       catch (CosNaming::NamingContext::AlreadyBound& ex)
       {
          CORBA::Object_var temp_obj;
 
-         temp_obj        = m_root_context->resolve(tweek_context_name);
-         m_local_context = CosNaming::NamingContext::_narrow(temp_obj);
+         temp_obj      = mRootContext->resolve(tweek_context_name);
+         mLocalContext = CosNaming::NamingContext::_narrow(temp_obj);
 
-         if ( CORBA::is_nil(m_local_context) )
+         if ( CORBA::is_nil(mLocalContext) )
          {
             status.setCode(vpr::ReturnStatus::Fail);
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -467,11 +467,11 @@ void CorbaManager::run(void* args)
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"
                                               << vprDEBUG_FLUSH;
 
-   PortableServer::POAManager_var pman = m_child_poa->the_POAManager();
+   PortableServer::POAManager_var pman = mChildPOA->the_POAManager();
 
    pman->activate();
-   m_orb->run();
-//   m_orb->destroy();
+   mORB->run();
+//   mORB->destroy();
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server has shut down\n"
                                               << vprDEBUG_FLUSH;

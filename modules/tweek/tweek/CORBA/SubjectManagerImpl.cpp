@@ -49,40 +49,40 @@
 namespace tweek
 {
 
-void SubjectManagerImpl::registerSubject(SubjectImpl* subject_servant,
+void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
                                          const char* name)
 {
    std::string name_str(name);
 
-   m_subject_ids_mutex.acquire();
+   mSubjectIdsMutex.acquire();
    {
       // We have to register servant with POA first.
-      m_subject_ids[name_str] =
-         m_corba_mgr.getChildPOA()->activate_object(subject_servant);
+      mSubjectIds[name_str] =
+         mCorbaMgr.getChildPOA()->activate_object(subjectServant);
    }
-   m_subject_ids_mutex.release();
+   mSubjectIdsMutex.release();
 
-   registerSubject(subject_servant->_this(), name_str);
+   registerSubject(subjectServant->_this(), name_str);
 }
 
 vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
 {
    vpr::ReturnStatus status;
    std::string name_str(name);
-   vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
+   vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
 
-   if ( m_subjects.count(name_str) > 0 )
+   if ( mSubjects.count(name_str) > 0 )
    {
-      m_subject_ids_mutex.acquire();
+      mSubjectIdsMutex.acquire();
       {
          // Deactivate the object in the POA.
-         m_corba_mgr.getChildPOA()->deactivate_object(m_subject_ids[name_str]);
+         mCorbaMgr.getChildPOA()->deactivate_object(mSubjectIds[name_str]);
       }
-      m_subject_ids_mutex.release();
+      mSubjectIdsMutex.release();
 
-      Subject_ptr subj = m_subjects[name_str];
+      Subject_ptr subj = mSubjects[name_str];
       CORBA::release(subj);
-      m_subjects.erase(name_str);
+      mSubjects.erase(name_str);
    }
    else
    {
@@ -98,25 +98,25 @@ vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
 void SubjectManagerImpl::registerSubject(Subject_ptr subject,
                                          const std::string& name)
 {
-   vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
+   vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
       << "Registering subject named '" << name << "'\n" << vprDEBUG_FLUSH;
 
-   m_subjects[name] = Subject::_duplicate(subject);
+   mSubjects[name] = Subject::_duplicate(subject);
 }
 
 Subject_ptr SubjectManagerImpl::getSubject(const char* name)
 {
    Subject_ptr subject;
    std::string name_str(name);
-   vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
+   vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
 
    subject_map_t::iterator i;
 
-   i = m_subjects.find(name_str);
+   i = mSubjects.find(name_str);
 
-   if ( i != m_subjects.end() )
+   if ( i != mSubjects.end() )
    {
       subject = Subject::_duplicate((*i).second);
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
@@ -145,13 +145,13 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
    // Create the sequence and size it.
    tweek::SubjectManager::SubjectList* subjects =
       new tweek::SubjectManager::SubjectList();
-   subjects->length(m_subjects.size());
+   subjects->length(mSubjects.size());
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
       << "Sequence size: " << subjects->length() << std::endl
       << vprDEBUG_FLUSH;
 
-   for ( i = m_subjects.begin(), j = 0; i != m_subjects.end(); i++, j++ )
+   for ( i = mSubjects.begin(), j = 0; i != mSubjects.end(); i++, j++ )
    {
       tweek::SubjectManager::RegisteredSubject rs;
       rs.subject_name = CORBA::string_dup((*i).first.c_str());
