@@ -57,7 +57,6 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
-#include <snx/xdl.h>
 #include <snx/FileIO.h>
 #include <snx/SoundImplementation.h>
 #include <snx/SoundInfo.h>
@@ -71,10 +70,33 @@
 #ifdef NO_SELF_REGISTER
 extern "C"
 {
-XDL_EXPORT const char* getVersion() { return "sonix xx.xx.xx"; }
-XDL_EXPORT const char* getName() { return "Audiere"; }
-XDL_EXPORT snx::ISoundImplementation* newPlugin() { return new snx::AudiereSoundImplementation; }
-XDL_EXPORT void deletePlugin( snx::ISoundImplementation* &p ) { if (NULL == p) return; delete p; p = NULL; }
+
+SNX_PLUGIN_EXPORT(const char*) getVersion()
+{
+   return "sonix xx.xx.xx";
+}
+
+SNX_PLUGIN_EXPORT(const char*) getName()
+{
+   return "Audiere";
+}
+
+SNX_PLUGIN_EXPORT(snx::ISoundImplementation*) newPlugin()
+{
+   return new snx::AudiereSoundImplementation;
+}
+
+SNX_PLUGIN_EXPORT(void) deletePlugin(snx::ISoundImplementation* &p)
+{
+   if (NULL == p)
+   {
+      return;
+   }
+
+   delete p;
+   p = NULL;
+}
+
 }
 #endif
 /////////////////////////
