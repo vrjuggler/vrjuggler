@@ -326,7 +326,21 @@ public class PropertySheetFactory extends PropertyComponent
       // We know that we want the default value for the first
       // PropertyValueDefinition since this is a variable list.
       PropertyValueDefinition pvd = prop_def.getPropertyValueDefinition(0);
-      Object default_value = pvd.getDefaultValue();
+      Object default_value = null;
+      
+      // NOTE: This fixed a rather large bug that caused ConfigElementPointerEditors
+      //       that were added at run time to all edit the same ConfigElementPointer.
+      //       By default the PropertyValueDefinition returns a default value that
+      //       is always the same, bad idea.
+      if (prop_def.getType() == ConfigElementPointer.class)
+      {
+         default_value = new ConfigElementPointer("");
+      }
+      else
+      {
+         default_value = pvd.getDefaultValue();
+      }
+      
       elm.addProperty(prop_def.getToken(), default_value);
       
       //XXX: This should be detected through a listener in the Property sheet.

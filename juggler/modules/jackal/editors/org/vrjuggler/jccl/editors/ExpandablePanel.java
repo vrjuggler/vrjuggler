@@ -23,6 +23,17 @@ import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 public class ExpandablePanel extends PropertyComponent
 {
    private TableLayout tableLayout;
+
+   public void finalize()
+   {
+      ActionListener[] listeners = mExpandButton.getActionListeners();
+      
+      for (int i = 0 ; i < listeners.length ; ++i)
+      {
+         mExpandButton.removeActionListener(listeners[i]);
+      }
+      super.finalize();
+   }
    
    public ExpandablePanel(Color color)
    {
