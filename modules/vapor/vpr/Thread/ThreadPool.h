@@ -41,7 +41,11 @@
 
 namespace vpr {
 
-//: Helper class for vpr::ThreadPool
+/**
+ * Helper class for vpr::ThreadPool
+ *
+ * @author Allen Bierbaum
+ */
 class OneThread
 {
 public:
@@ -60,21 +64,18 @@ public:
 std::ostream& operator<< (std::ostream&, vpr::OneThread&);
 
 
-//----------------------------------------------
-//: A pool of threads to process user jobs
-//
-//
-// Outline of thread pool <br>
-//   |-Need to initialize all thread given a parameter to the constructor of the # to use <br>
-//   |-Need a function to block until all work is done that has started <br>
-//   |-Just repetiviely add work to the process <br>
-//
-// Author:
-// Allen Bierbaum
-//
-// Date: 2-5-97
-//-----------------------------------------------
-//!PUBLIC_API:
+/**
+ * A pool of threads to process user jobs
+ *
+ * Outline of thread pool <br>
+ *   |-Need to initialize all thread given a parameter to the constructor of the # to use <br>
+ *   |-Need a function to block until all work is done that has started <br>
+ *   |-Just repetiviely add work to the process <br>
+ *
+ * @author Allen Bierbaum
+ *
+ * Date: 2-5-97
+ */
 class ThreadPool
 {
 public:
