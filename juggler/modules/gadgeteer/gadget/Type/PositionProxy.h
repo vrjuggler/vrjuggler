@@ -66,10 +66,10 @@ namespace gadget
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
-   PositionProxy() :  mUnitNum(-1)
+   PositionProxy() : mUnitNum(-1)
    {;}
 
-   virtual ~PositionProxy() {}
+   virtual ~PositionProxy() {;}
 
    /**
     * Updates the proxy's copy of the data.
@@ -94,22 +94,28 @@ public:
    gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet ) const;
    
    /** Gets the actual PositionData. */
-    PositionData* getPositionData()
-    {
-        return &mPositionData;
-    }
+   PositionData* getPositionData()
+   {
+      return &mPositionData;
+   }
 
    /// Returns this device's subunit number.
    int getUnit() const
-   { return mUnitNum; }
+   {
+      return mUnitNum;
+   }
 
    /// Return the Position pointer held by this proxy.
    Position* getPositionPtr()
    {
       if(!mStupified)
+      {
          return mTypedDevice;
+      }
       else
+      {
          return NULL;
+      }
    }
 
    static std::string getElementType();
