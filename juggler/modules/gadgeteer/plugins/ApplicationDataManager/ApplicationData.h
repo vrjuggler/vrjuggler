@@ -37,7 +37,7 @@
 #include <vpr/IO/SerializableObject.h>
 
 #include <cluster/ClusterManager.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
+#include <plugins/ApplicationDataManager/ApplicationDataManager.h>
 #include <gadget/Util/Debug.h>
 
 namespace cluster
