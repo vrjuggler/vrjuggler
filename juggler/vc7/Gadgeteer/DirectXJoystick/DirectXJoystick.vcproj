@@ -132,6 +132,9 @@
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Microsoft\DirectXJoystick\DirectXJoystick.h">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Microsoft\DirectXJoystick\DirectXJoystickExceptions.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Microsoft\DirectXJoystick\DirectXJoystickStandalone.h">
 			</File>
 		</Filter>
