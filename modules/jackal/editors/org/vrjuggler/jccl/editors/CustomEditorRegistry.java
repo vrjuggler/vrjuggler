@@ -65,8 +65,6 @@ public class CustomEditorRegistry
          {
             java.util.List classList = (java.util.List)mEditors.get(token);
                
-            System.out.println("Size of list: " + classList.size());
-            
             editorList = new ArrayList();
             
             for(Iterator itr = classList.iterator() ; itr.hasNext() ; )
@@ -105,26 +103,19 @@ public class CustomEditorRegistry
    {
       initialize();
       
-      System.out.println("Register: " + token);
-      
       // Register the new editor class with the given token
       if (editorClass != null)
       {
          if(mEditors.containsKey(token))
          {
-            System.out.println("contains key: " + token);
-            
             java.util.List editorList = (java.util.List)mEditors.get(token);
             if(!editorList.contains(editorClass))
             {
-               System.out.println("new to List: " + token);
                editorList.add(editorClass);
             }
          }
          else
          {
-            System.out.println("New token: " + token);
-            
             java.util.List editorList = new ArrayList();
             editorList.add(editorClass);
             mEditors.put(token, editorList);
@@ -135,7 +126,6 @@ public class CustomEditorRegistry
       {
          mEditors.remove(token);
       }
-      System.out.println("Map: " + mEditors);
    }
 
    /**
