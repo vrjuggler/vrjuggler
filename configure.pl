@@ -36,7 +36,7 @@ use 5.005;
 
 use strict 'vars';
 use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
-            $CUSTOM_ARGS $LAST_ARG_GROUP $DEFAULT_MODULE $Win32);
+            $CUSTOM_ARGS $LAST_ARG_GROUP $Win32);
 use vars qw(%MODULES);
 
 use Cwd qw(chdir getcwd);
@@ -45,8 +45,15 @@ use File::Path;
 use Getopt::Long;
 use Pod::Usage;
 
+BEGIN
+{
+   $base_dir = (fileparse("$0"))[1];
+}
+
+use lib("$base_dir");
+use JugglerConfigure;
+
 # Subroutine prototypes.
-sub parseConfigFile($);
 sub configureModule($);
 sub regenModuleInfo($);
 sub generateMakefile(;$);
@@ -56,8 +63,7 @@ sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
 
-$DEFAULT_MODULE = '';
-%MODULES        = ();
+%MODULES = ();
 
 my $all_help    = 0;
 my $cfg         = "juggler.cfg";
@@ -89,11 +95,10 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $manual;
 
 die "ERROR: No configuration given\n" unless $cfg || $user_cfg;
 
-$base_dir = (fileparse("$0"))[1];
 $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
 my $cfg_load = ("$user_cfg" eq "") ? "$base_dir/$cfg" : "$user_cfg";
-parseConfigFile("$cfg_load");
+%MODULES = JugglerConfigure::parseConfigFile("$cfg_load");
 
 listModules() && exit(0) if $mod_list;
 printHelp() && exit(0) if $all_help;
@@ -108,10 +113,11 @@ if ( $regen )
       regenModuleInfo("$module");
       generateMakefile("$module");
    }
-   elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+   elsif ( $JugglerConfigure::DEFAULT_MODULE &&
+           defined($MODULES{"$JugglerConfigure::DEFAULT_MODULE"}) )
    {
-      regenModuleInfo("$DEFAULT_MODULE");
-      generateMakefile("$DEFAULT_MODULE");
+      regenModuleInfo("$JugglerConfigure::DEFAULT_MODULE");
+      generateMakefile("$JugglerConfigure::DEFAULT_MODULE");
    }
    else
    {
@@ -151,11 +157,12 @@ else
       configureModule("$module");
       generateMakefile("$module");
    }
-   elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+   elsif ( $JugglerConfigure::DEFAULT_MODULE &&
+           defined($MODULES{"$JugglerConfigure::DEFAULT_MODULE"}) )
    {
-      generateReconfig("$DEFAULT_MODULE", @save_argv);
-      configureModule("$DEFAULT_MODULE");
-      generateMakefile("$DEFAULT_MODULE");
+      generateReconfig("$JugglerConfigure::DEFAULT_MODULE", @save_argv);
+      configureModule("$JugglerConfigure::DEFAULT_MODULE");
+      generateMakefile("$JugglerConfigure::DEFAULT_MODULE");
    }
    else
    {
@@ -175,77 +182,6 @@ exit(0);
 # =============================================================================
 # Subroutines follow.
 # =============================================================================
-
-sub parseConfigFile ($)
-{
-   my $cfg = shift;
-   open(CFG, "$cfg") or die "ERROR: Could not read from $cfg: $!\n";
-
-   my($cfg_file, $line);
-   while ( $line = <CFG> )
-   {
-      $line =~ s/(#|\/\/).*$//;
-      $cfg_file .= "$line";
-   }
-
-   close(CFG);
-
-   while ( $cfg_file !~ /^\s*$/ )
-   {
-      if ( $cfg_file =~ /^\s*(\S+)\s*{(.+?)}\s*/s )
-      {
-         my $mod   = "$1";
-         my $deps  = "$2";
-         $cfg_file = $';
-
-         $MODULES{"$mod"} = new JugglerModule("$mod");
-
-         while ( $deps !~ /^\s*$/ )
-         {
-            if ( $deps =~ /^\s*depend\s+(\S+);/ )
-            {
-               $deps = $';
-               my $module_name = "$1";
-
-               die "ERROR: No such module $module_name for $mod dependency\n"
-                  unless defined($MODULES{"$module_name"});
-
-               $MODULES{"$mod"}->addDependencies($MODULES{"$module_name"}->getDependencies());
-            }
-            elsif ( $deps =~ /\s*(\S.+?):\s+(.+?);/ )
-            {
-               $deps = $';
-
-               my @var_list = split(/\s*,\s*/, "$2");
-               my %vars = ();
-               my $dep_path = "$1";
-
-               my $var;
-               foreach $var ( @var_list )
-               {
-                  $var =~ /\s*(\w+)=(\S+)\s*/;
-                  $vars{"$1"} = "$2";
-               }
-
-               $MODULES{"$mod"}->addDependency(new ModuleDependency("$dep_path",
-                                                                    \%vars));
-            }
-            else
-            {
-               # XXX: Not quite right...
-               $deps ='';
-            }
-         }
-      }
-      elsif ( $cfg_file =~ /^Default:\s+(\S+)\s*$/m )
-      {
-         $DEFAULT_MODULE = "$1";
-         $cfg_file       = $';
-      }
-
-      $cfg_file =~ s/^\s*//;
-   }
-}
 
 sub configureModule ($)
 {
@@ -497,9 +433,10 @@ sub printHelp ()
    {
       getConfigureHelp("$module", \@help_output);
    }
-   elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+   elsif ( $JugglerConfigure::DEFAULT_MODULE &&
+           defined($MODULES{"$JugglerConfigure::DEFAULT_MODULE"}) )
    {
-      getConfigureHelp("$DEFAULT_MODULE", \@help_output);
+      getConfigureHelp("$JugglerConfigure::DEFAULT_MODULE", \@help_output);
    }
    else
    {
@@ -558,7 +495,8 @@ sub printHelp ()
       print "\t$_\n";
    }
 
-   print "\nDefault module is $DEFAULT_MODULE\n" if $DEFAULT_MODULE;
+   print "\nDefault module is $JugglerConfigure::DEFAULT_MODULE\n"
+      if $JugglerConfigure::DEFAULT_MODULE;
 
    return 1;
 }
@@ -651,108 +589,6 @@ sub parseOutput ($$)
 
       $string =~ s/^\s*//s;
    }
-}
-
-package JugglerModule;
-
-sub new ($$)
-{
-   my $class = shift;
-   my $name  = shift;
-
-   return bless
-   {
-      'name' => $name,          # Name of this module
-      'deps' => []              # Array of ModuleDependecy objects
-   }, $class;
-}
-
-sub getName ($)
-{
-   my $this = shift;
-   return $this->{'name'};
-}
-
-sub getDependencies ($)
-{
-   my $this = shift;
-   return @{$this->{'deps'}};
-}
-
-sub addDependency ($$)
-{
-   my $this = shift;
-   my $dep  = shift;
-   push(@{$this->{'deps'}}, $dep);
-}
-
-sub addDependencies ($@)
-{
-   my $this = shift;
-
-   # The $MODULES entry for $module_name contains an array of hash references.
-   # We just copy those references into the array for the current module
-   # ($this).  Simple, no?
-   my $dep;
-   foreach $dep ( @_ )
-   {
-      $this->addDependency($dep) unless $this->hasDependency($dep);
-   }
-}
-
-sub hasDependency ($$)
-{
-   my $this    = shift;
-   my $new_dep = shift;
-
-   my $has_dependency = 0;
-
-   my $cur_dep;
-   foreach $cur_dep ( $this->getDependencies() )
-   {
-      if ( $cur_dep->getPath() eq $new_dep->getPath() )
-      {
-         $has_dependency = 1;
-         last;
-      }
-   }
-
-   return $has_dependency;
-}
-
-package ModuleDependency;
-
-sub new ($$;$)
-{
-   my $class = shift;
-   my $path  = shift;
-   my $env   = shift || {};
-   
-   return bless
-   {
-      'path' => $path,          # Path to this dependency
-      'env'  => $env            # Reference to environment variable hash
-   }, $class;
-}
-
-sub getPath ($)
-{
-   my $this = shift;
-   return $this->{'path'};
-}
-
-sub getEnvironment ($)
-{
-   my $this = shift;
-   return %{$this->{'env'}};
-}
-
-sub getEnvironmentValue ($$)
-{
-   my $this = shift;
-   my $key  = shift;
-
-   return ${$this->{'env'}}{"$key"};
 }
 
 __END__
