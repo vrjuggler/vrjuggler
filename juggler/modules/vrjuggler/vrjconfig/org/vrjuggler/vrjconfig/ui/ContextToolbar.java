@@ -173,15 +173,6 @@ public class ContextToolbar
       int option = new_dlg.showDialog(this);
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
-         // Open all the included files first
-         for (Iterator itr = new_dlg.getIncludes().iterator(); itr.hasNext(); )
-         {
-            if (! openInContext((String)itr.next(), this.context))
-            {
-               return false;
-            }
-         }
-
          // Create the new config file
          try
          {
