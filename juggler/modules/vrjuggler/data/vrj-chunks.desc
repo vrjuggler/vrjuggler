@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings desc.db.version="2.0" ?>
 <ChunkDescDB>
   <ChunkDesc token="displaySystem" name="Display System">
     <category>Display</category>
@@ -64,6 +63,11 @@
       <enumeration name="proxyAlias" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove">
     <category>Devices/Simulator</category>
@@ -84,6 +88,11 @@
       <help>The position proxy for the right hand glove position.</help>
       <enumeration name="PosProxy" />
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="CyberGlove" name="CyberGlove">
     <category>Devices</category>
@@ -101,6 +110,11 @@
       <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
       <enumeration name="proxyAlias" />
       <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DummyPosition" name="Dummy Position">
@@ -127,6 +141,11 @@
     </PropertyDesc>
     <PropertyDesc token="baud" name="Baud Rate" type="int" num="1">
       <help>Serial port speed</help>
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="proxyAlias" name="Proxy Alias">
@@ -157,10 +176,6 @@
     <PropertyDesc token="unit" name="Unit" type="int" num="1">
       <help>The unit in the device this proxy attaches to</help>
     </PropertyDesc>
-    <PropertyDesc token="location" name="Location" type="chunk" num="1">
-      <help>Remote net connection where this device will be found (no selection means local)</help>
-      <enumeration name="RemoteInputHost" />
-    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DigProxy" name="Digital Proxy">
     <category>Proxies</category>
@@ -177,10 +192,6 @@
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" num="1">
       <help>The unit in the device this proxy attaches to</help>
-    </PropertyDesc>
-    <PropertyDesc token="location" name="Location" type="chunk" num="1">
-      <help>Remote net connection where this device will be found (no selection means local)</help>
-      <enumeration name="RemoteInputHost" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="apiPerformer" name="Performer API">
@@ -227,10 +238,6 @@
     <PropertyDesc token="useFilter" name="Use Filter" type="bool" num="1" />
     <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="embeddedchunk" num="1">
       <enumeration name="sigmoid_linear_pos_filter" />
-    </PropertyDesc>
-    <PropertyDesc token="location" name="Location" type="chunk" num="1">
-      <help>Remote net connection where this device will be found (no selection means local)</help>
-      <enumeration name="RemoteInputHost" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Flock" name="Flock of Birds">
@@ -290,6 +297,11 @@
     </PropertyDesc>
     <PropertyDesc token="transmitter" name="Transmitter" type="int" num="1">
       <help>Id of the transmitter</help>
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Keyboard" name="Keyboard">
@@ -386,6 +398,11 @@
     <PropertyDesc token="sleep_time" name="Sleep time" type="int" num="1">
       <help>This is the number of milliseconds that the keyboard update loop should sleep between updates.</help>
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GloveProxy" name="Glove Proxy">
     <category>Proxies</category>
@@ -470,6 +487,11 @@
     <PropertyDesc token="measurementRate" name="Chassis Measurement Rate" type="float" num="1">
       <help>Measurement rate for the chassis.</help>
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimGloveGesture" name="Glove Gesture Simulator">
     <category>Devices/Simulator</category>
@@ -487,6 +509,11 @@
     <PropertyDesc token="glovePos" name="Glove Position" type="chunk" num="1">
       <help>The position proxy for the glove position.</help>
       <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GestureProxy" name="Gesture Proxy">
@@ -521,6 +548,11 @@
     <PropertyDesc token="max" name="max" type="float" num="1">
       <help>the actual analog data values range - upper bound</help>
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimDigital" name="Digital Simulator">
     <category>Devices/Simulator</category>
@@ -532,6 +564,11 @@
     <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" num="variable">
       <help>Keypresses to trigger multiple digital inputs</help>
       <enumeration name="KeyModPair" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimPosition" name="Position Simulator">
@@ -587,6 +624,7 @@
     </PropertyDesc>
     <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
       <help />
+      <item label="" defaultvalue="" />
       <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
@@ -789,12 +827,22 @@
       <enumeration name="proxyAlias" />
       <enumeration name="DigProxy" />
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="simKeyboardDigital" name="simKeyboardDigital">
     <category>Devices/Simulator</category>
     <PropertyDesc token="simKeys" name="simKeys" type="embeddedchunk" num="variable">
       <help>The keys we are simulating</help>
       <enumeration name="simKeyDigital" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PerfMeasure" name="Performance Measurements">
@@ -936,6 +984,11 @@
     <PropertyDesc token="max" name="max" type="float" num="1">
       <help>the actual analog data values range - upper bound</help>
     </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="ISenseStation" name="Station">
     <category>Devices</category>
@@ -955,6 +1008,11 @@
     </PropertyDesc>
     <PropertyDesc token="analogNum" name="Analog Count" type="int" num="1">
       <help>The number of analog inputs that will be stored into the vjIsense device</help>
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Isense" name="Isense">
@@ -987,6 +1045,11 @@
     </PropertyDesc>
     <PropertyDesc token="max" name="max" type="float" num="1">
       <help>the actual analog data values range - upper bound</help>
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DTKsegment" name="DTK Memory Segment">
@@ -1171,26 +1234,6 @@
       <enumeration name="surfaceViewport" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="RemoteInputManager" name="Remote Input Manager">
-    <category>NoClue</category>
-    <help>Manager of remote input devices.  This chunk is only required when it cannot be automatically determined which Remote Input Host we are (i.e. two of them have the same hostname, but different listening ports).</help>
-    <PropertyDesc token="listen_port" name="Listen Port" type="int" num="1">
-      <help>Port on which to listen for connections</help>
-    </PropertyDesc>
-    <PropertyDesc token="forced_hostname" name="Forced Hostname" type="string" num="1">
-      <help>Useful if a computer has multiple networks and network names.</help>
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="RemoteInputHost" name="Remote Input Host Address">
-    <category>NoClue</category>
-    <help>A host and port that accepts requests to share its devices.</help>
-    <PropertyDesc token="hostname" name="Hostname" type="string" num="1">
-      <help>Hostname of device host</help>
-    </PropertyDesc>
-    <PropertyDesc token="port" name="Host Port" type="int" num="1">
-      <help>Listening port of device Host</help>
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="cluster_machine" name="Cluster Machine">
     <help />
     <PropertyDesc name="Display System" token="display_system" num="1" type="embeddedchunk">
@@ -1208,13 +1251,6 @@
       <help />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc name="Cluster System" token="cluster_system">
-    <help>List of machines currently running in the cluster</help>
-    <PropertyDesc name="Cluster Machine" token="cluster_machine" num="variable" type="chunk">
-      <help />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="Fastrack" name="Fastrack">
     <help>Polhemus Fastrack 3D</help>
     <PropertyDesc token="port" name="Device" type="string" num="1">
@@ -1226,165 +1262,170 @@
       <item label="Baud rate" defaultvalue="38400" />
     </PropertyDesc>
     <PropertyDesc token="button" name="Button Mode" type="int" num="1">
-        <help>Stylus mode: CONT = continuous with start/stop on button, ONCE = button action -&gt; send info, MOUSE = continuous, MONCE = when asked</help>
-        <item label="Button mode" defaultvalue="0" />
-        <enumeration name="CONT" value="0"/>
-        <enumeration name="ONCE" value="1"/>
-        <enumeration name="MOUSE" value="2"/>
-        <enumeration name="MONCE" value="3"/>
+      <help>Stylus mode: CONT = continuous with start/stop on button, ONCE = button action -&gt; send info, MOUSE = continuous, MONCE = when asked</help>
+      <item label="Button mode" defaultvalue="0" />
+      <enumeration name="CONT" value="0" />
+      <enumeration name="ONCE" value="1" />
+      <enumeration name="MOUSE" value="2" />
+      <enumeration name="MONCE" value="3" />
     </PropertyDesc>
     <PropertyDesc token="Rec1" name="st 1 Record Tune" type="bool" num="3">
-        <item label="Pos" defaultvalue="0"/>
-        <item label="Ang" defaultvalue="0"/>
-        <item label="But" defaultvalue="0"/>
+      <item label="Pos" defaultvalue="0" />
+      <item label="Ang" defaultvalue="0" />
+      <item label="But" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="Rec2" name="st 2 Record Tune" type="bool" num="2">
-        <item label="Pos" defaultvalue="0"/>
-        <item label="Ang" defaultvalue="0"/>
+      <item label="Pos" defaultvalue="0" />
+      <item label="Ang" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="Rec3" name="st 3 Record Tune" type="bool" num="2">
-        <item label="Pos" defaultvalue="0"/>
-        <item label="Ang" defaultvalue="0"/>
+      <item label="Pos" defaultvalue="0" />
+      <item label="Ang" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="Rec4" name="st 4 Record Tune" type="bool" num="2">
-        <item label="Pos" defaultvalue="0"/>
-        <item label="Ang" defaultvalue="0"/>
+      <item label="Pos" defaultvalue="0" />
+      <item label="Ang" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="Tip1" name="st 1 Tip offset" type="float" num="3">
-        <help>Tip-Offsets: FT manual p. 140</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Tip-Offsets: FT manual p. 140</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Tip2" name="st 2 Tip offset" type="float" num="3">
-        <help>Tip-Offsets: FT manual p. 140</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Tip-Offsets: FT manual p. 140</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Tip3" name="st 3 Tip offset" type="float" num="3">
-        <help>Tip-Offsets: FT manual p. 140</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Tip-Offsets: FT manual p. 140</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Tip4" name="st 4 Tip offset" type="float" num="3">
-        <help>Tip-Offsets: FT manual p. 140</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Tip-Offsets: FT manual p. 140</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Inc1" name="st 1 Increment" type="float" num="1">
-        <help>Increments: FT manual p. 93</help>
-        <item label="st 1 Increment" defaultvalue="0.0"/>
+      <help>Increments: FT manual p. 93</help>
+      <item label="st 1 Increment" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Inc2" name="st 2 Increment" type="float" num="1">
-        <help>Increments: FT manual p. 93</help>
-        <item label="st 2 Increment" defaultvalue="0.0"/>
+      <help>Increments: FT manual p. 93</help>
+      <item label="st 2 Increment" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Inc3" name="st 3 Increment" type="float" num="1">
-        <help>Increments: FT manual p. 93</help>
-        <item label="st 3 Increment" defaultvalue="0.0"/>
+      <help>Increments: FT manual p. 93</help>
+      <item label="st 3 Increment" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Inc4" name="st 4 Increment" type="float" num="1">
-        <help>Increments: FT manual p. 93</help>
-        <item label="st 4 Increment" defaultvalue="0.0"/>
+      <help>Increments: FT manual p. 93</help>
+      <item label="st 4 Increment" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Hem1" name="st 1 Hemisphere" type="float" num="3">
-        <help>Hemisphere of Operation: FT manual p. 88</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Hemisphere of Operation: FT manual p. 88</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Hem2" name="st 2 Hemisphere" type="float" num="3">
-        <help>Hemisphere of Operation: FT manual p. 88</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Hemisphere of Operation: FT manual p. 88</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Hem3" name="st 3 Hemisphere" type="float" num="3">
-        <help>Hemisphere of Operation: FT manual p. 88</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Hemisphere of Operation: FT manual p. 88</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="Hem4" name="st 4 Hemisphere" type="float" num="3">
-        <help>Hemisphere of Operation: FT manual p. 88</help>
-        <item label="x" defaultvalue="0.0"/>
-        <item label="y" defaultvalue="0.0"/>
-        <item label="z" defaultvalue="0.0"/>
+      <help>Hemisphere of Operation: FT manual p. 88</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="ARF1" name="st 1 ARF" type="float" num="9">
-        <help>Alignment Reference Frame: FT manual p. 47</help>
-        <item label="Ox" defaultvalue="0.0"/>
-        <item label="Oy" defaultvalue="0.0"/>
-        <item label="Oz" defaultvalue="0.0"/>
-        <item label="Xx" defaultvalue="0.0"/>
-        <item label="Xy" defaultvalue="0.0"/>
-        <item label="Xz" defaultvalue="0.0"/>
-        <item label="Yx" defaultvalue="0.0"/>
-        <item label="Yy" defaultvalue="0.0"/>
-        <item label="Yz" defaultvalue="0.0"/>
+      <help>Alignment Reference Frame: FT manual p. 47</help>
+      <item label="Ox" defaultvalue="0.0" />
+      <item label="Oy" defaultvalue="0.0" />
+      <item label="Oz" defaultvalue="0.0" />
+      <item label="Xx" defaultvalue="0.0" />
+      <item label="Xy" defaultvalue="0.0" />
+      <item label="Xz" defaultvalue="0.0" />
+      <item label="Yx" defaultvalue="0.0" />
+      <item label="Yy" defaultvalue="0.0" />
+      <item label="Yz" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="ARF2" name="st 2 ARF" type="float" num="9">
-        <help>Alignment Reference Frame: FT manual p. 47</help>
-        <item label="Ox" defaultvalue="0.0"/>
-        <item label="Oy" defaultvalue="0.0"/>
-        <item label="Oz" defaultvalue="0.0"/>
-        <item label="Xx" defaultvalue="0.0"/>
-        <item label="Xy" defaultvalue="0.0"/>
-        <item label="Xz" defaultvalue="0.0"/>
-        <item label="Yx" defaultvalue="0.0"/>
-        <item label="Yy" defaultvalue="0.0"/>
-        <item label="Yz" defaultvalue="0.0"/>
+      <help>Alignment Reference Frame: FT manual p. 47</help>
+      <item label="Ox" defaultvalue="0.0" />
+      <item label="Oy" defaultvalue="0.0" />
+      <item label="Oz" defaultvalue="0.0" />
+      <item label="Xx" defaultvalue="0.0" />
+      <item label="Xy" defaultvalue="0.0" />
+      <item label="Xz" defaultvalue="0.0" />
+      <item label="Yx" defaultvalue="0.0" />
+      <item label="Yy" defaultvalue="0.0" />
+      <item label="Yz" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="ARF3" name="st 3 ARF" type="float" num="9">
-        <help>Alignment Reference Frame: FT manual p. 47</help>
-        <item label="Ox" defaultvalue="0.0"/>
-        <item label="Oy" defaultvalue="0.0"/>
-        <item label="Oz" defaultvalue="0.0"/>
-        <item label="Xx" defaultvalue="0.0"/>
-        <item label="Xy" defaultvalue="0.0"/>
-        <item label="Xz" defaultvalue="0.0"/>
-        <item label="Yx" defaultvalue="0.0"/>
-        <item label="Yy" defaultvalue="0.0"/>
-        <item label="Yz" defaultvalue="0.0"/>
+      <help>Alignment Reference Frame: FT manual p. 47</help>
+      <item label="Ox" defaultvalue="0.0" />
+      <item label="Oy" defaultvalue="0.0" />
+      <item label="Oz" defaultvalue="0.0" />
+      <item label="Xx" defaultvalue="0.0" />
+      <item label="Xy" defaultvalue="0.0" />
+      <item label="Xz" defaultvalue="0.0" />
+      <item label="Yx" defaultvalue="0.0" />
+      <item label="Yy" defaultvalue="0.0" />
+      <item label="Yz" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="ARF4" name="st 4 ARF" type="float" num="9">
-        <help>Alignment Reference Frame: FT manual p. 47</help>
-        <item label="Ox" defaultvalue="0.0"/>
-        <item label="Oy" defaultvalue="0.0"/>
-        <item label="Oz" defaultvalue="0.0"/>
-        <item label="Xx" defaultvalue="0.0"/>
-        <item label="Xy" defaultvalue="0.0"/>
-        <item label="Xz" defaultvalue="0.0"/>
-        <item label="Yx" defaultvalue="0.0"/>
-        <item label="Yy" defaultvalue="0.0"/>
-        <item label="Yz" defaultvalue="0.0"/>
+      <help>Alignment Reference Frame: FT manual p. 47</help>
+      <item label="Ox" defaultvalue="0.0" />
+      <item label="Oy" defaultvalue="0.0" />
+      <item label="Oz" defaultvalue="0.0" />
+      <item label="Xx" defaultvalue="0.0" />
+      <item label="Xy" defaultvalue="0.0" />
+      <item label="Xz" defaultvalue="0.0" />
+      <item label="Yx" defaultvalue="0.0" />
+      <item label="Yy" defaultvalue="0.0" />
+      <item label="Yz" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="TMF1" name="st 1 TMF" type="float" num="3">
-        <help>Transmitter Mounting Frame: FT manual p. 59</help>
-        <item label="head" defaultvalue="0.0"/>
-        <item label="pitch" defaultvalue="0.0"/>
-        <item label="roll" defaultvalue="0.0"/>
+      <help>Transmitter Mounting Frame: FT manual p. 59</help>
+      <item label="head" defaultvalue="0.0" />
+      <item label="pitch" defaultvalue="0.0" />
+      <item label="roll" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="TMF2" name="st 2 TMF" type="float" num="3">
-        <help>Transmitter Mounting Frame: FT manual p. 59</help>
-        <item label="head" defaultvalue="0.0"/>
-        <item label="pitch" defaultvalue="0.0"/>
-        <item label="roll" defaultvalue="0.0"/>
+      <help>Transmitter Mounting Frame: FT manual p. 59</help>
+      <item label="head" defaultvalue="0.0" />
+      <item label="pitch" defaultvalue="0.0" />
+      <item label="roll" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="TMF3" name="st 3 TMF" type="float" num="3">
-        <help>Transmitter Mounting Frame: FT manual p. 59</help>
-        <item label="head" defaultvalue="0.0"/>
-        <item label="pitch" defaultvalue="0.0"/>
-        <item label="roll" defaultvalue="0.0"/>
+      <help>Transmitter Mounting Frame: FT manual p. 59</help>
+      <item label="head" defaultvalue="0.0" />
+      <item label="pitch" defaultvalue="0.0" />
+      <item label="roll" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="TMF4" name="st 4 TMF" type="float" num="3">
-        <help>Transmitter Mounting Frame: FT manual p. 59</help>
-        <item label="head" defaultvalue="0.0"/>
-        <item label="pitch" defaultvalue="0.0"/>
-        <item label="roll" defaultvalue="0.0"/>
+      <help>Transmitter Mounting Frame: FT manual p. 59</help>
+      <item label="head" defaultvalue="0.0" />
+      <item label="pitch" defaultvalue="0.0" />
+      <item label="roll" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" num="1" type="chunk">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
 </ChunkDescDB>

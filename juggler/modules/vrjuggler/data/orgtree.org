@@ -37,8 +37,7 @@ Begin "Zelda"
             "SimSetablePosition"
         End
         Begin "Remote Input"
-            "Remote Input Manager"
-            "Remote Input Host Address"
+            "Cluster Machine"
         End
     End
     "VR Juggler User"
