@@ -27,7 +27,8 @@ vjConnect::vjConnect(int s, const std::string& _name,
 
     filename = "no_file_name";
     name = _name;
-    connect_thread = NULL;
+    read_connect_thread = NULL;
+    write_connect_thread = NULL;
     output.attach(fd);
 
     // we need to add a chunk describing ourself
@@ -58,7 +59,8 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
     //readable = c->getProperty ("Readable");
     mode = (vjConnectMode)(int)c->getProperty ("Mode");
 
-    connect_thread = NULL;
+    read_connect_thread = NULL;
+    write_connect_thread = NULL;
     switch (mode) {
     case VJC_OUTPUT:
 	fd = open (filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0660 );
@@ -85,10 +87,14 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
 
 
 vjConnect::~vjConnect() {
-    if (connect_thread)
-        connect_thread->kill();
-    delete connect_thread;
-    //connect_thread = NULL;
+    if (read_connect_thread) {
+        read_connect_thread->kill();
+	delete read_connect_thread;
+    }
+    if (write_connect_thread) {
+	write_connect_thread->kill();
+	delete write_connect_thread;
+    }
 
     close (fd);
 }
@@ -96,18 +102,33 @@ vjConnect::~vjConnect() {
 
 
 bool vjConnect::startProcess() {
-    if (connect_thread)
+    if (write_connect_thread)
 	return true;
+
+    bool success = true;
 
     //vjDEBUG(0) << "starting vjConnect process for " << name << endl << vjDEBUG_FLUSH;
     shutdown = false;
     // Create a new thread to handle the control
-    vjThreadMemberFunctor<vjConnect> *memberFunctor =
-        new vjThreadMemberFunctor<vjConnect>(this,
-						 &vjConnect::controlLoop,
+
+    if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE) {
+	vjThreadMemberFunctor<vjConnect> *writeMemberFunctor =
+	    new vjThreadMemberFunctor<vjConnect>(this,
+						 &vjConnect::writeControlLoop,
 						 NULL);
-    connect_thread = new vjThread (memberFunctor, 0);
-    return (connect_thread != NULL);
+	write_connect_thread = new vjThread (writeMemberFunctor, 0);
+	success = success && write_connect_thread;
+    }
+    if (mode == VJC_INPUT || mode == VJC_INTERACTIVE) {
+	vjThreadMemberFunctor<vjConnect> *readMemberFunctor =
+	    new vjThreadMemberFunctor<vjConnect>(this,
+						 &vjConnect::readControlLoop,
+						 NULL);
+	read_connect_thread = new vjThread (readMemberFunctor, 0);
+	success = success && read_connect_thread;
+    }
+
+    return success;
 }
 
 
@@ -173,17 +194,13 @@ void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
 
 //----------------- PRIVATE utility functions ---------------------------
 
-void vjConnect::controlLoop(void* nullParam) {
+void vjConnect::readControlLoop(void* nullParam) {
    /* this probably needs considerable revision */
-   vjCommand*  cmd;
-   struct pollfd pollfdstruct;
+ 
 
-
-   shutdown = false;
-
-   pollfdstruct.fd = fd;
-   pollfdstruct.events = POLLPRI;// | POLLHUP | POLLNVAL;
-   pollfdstruct.revents = 0;
+ //   pollfdstruct.fd = fd;
+//    pollfdstruct.events = POLLPRI | POLLIN;// | POLLHUP | POLLNVAL;
+//    //pollfdstruct.revents = 0;
 
    vjDEBUG(vjDBG_ALL,2) << "vjConnect " << name << " started control loop.\n"
    << vjDEBUG_FLUSH;
@@ -193,23 +210,40 @@ void vjConnect::controlLoop(void* nullParam) {
 
 
    while (!shutdown) {
-       if (mode != VJC_OUTPUT) {
-	   pollfdstruct.revents = 0;
-	   poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
-	
-	   //cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
+       if (fin.eof())
+	   break;
+       readCommand (fin);
+   }
+//        if (mode != VJC_OUTPUT) {
+// 	   pollfdstruct.events = POLLPRI | POLLIN;
+// 	   pollfdstruct.revents = 0;
+// 	   poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
+// 	   cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
 
-	   if ((pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {
-	       vjDEBUG(vjDBG_ALL,0) << "vjConnect to file " << fd << " exiting\n"
-				    << vjDEBUG_FLUSH;
-	       break;
-	   }
+// 	   if (fin.eof() || (pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {
+// 	       vjDEBUG(vjDBG_ALL,0) << "vjConnect to file " << fd << " exiting\n"
+// 				    << vjDEBUG_FLUSH;
+// 	       break;
+// 	   }
 
-	   readCommand(fin);
-       }
-       else {
-	   usleep (500000); // half a sec
-       }
+// 	   if ((pollfdstruct.revents & POLLIN) || (pollfdstruct.revents & POLLPRI)) {
+// 	       cout << "there is a message to read..." << endl;
+
+// 	       readCommand(fin);
+// 	   }
+// 	   //cout << "read" << endl;
+//        }
+//    }
+}
+
+
+void vjConnect::writeControlLoop(void* nullParam) {
+   /* this probably needs considerable revision */
+   vjCommand*  cmd;
+   struct pollfd pollfdstruct;
+
+   while (!shutdown) {
+       usleep (500000); // half a sec
 
        commands_mutex.acquire();
 
@@ -238,7 +272,6 @@ void vjConnect::controlLoop(void* nullParam) {
 
    } // end main loop
 
-   connect_thread = NULL;
 }
 
 
