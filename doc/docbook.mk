@@ -330,6 +330,7 @@ endif
 clobber:
 	@$(MAKE) clean
 	$(RM) *.html *.pdf $(LINK_DEPS) $(CLOBBER_FILES)
+	$(RM) -rf $(XML_FILES:.xml=)
 ifneq ($(CLOBBER_DIRS), )
 	$(RM) -r $(CLOBBER_DIRS)
 endif
