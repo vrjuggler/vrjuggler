@@ -183,7 +183,7 @@ case "x${_abi_type}" in
         VJ_ABI_CFG('O32', 'mips2', , '-o32 -mips2')
         ;;
     xHP)
-        VJ_ABI_CFG()
+        VJ_ABI_CFG(HP, PA-RISC)
         ;;
     xELF_i386)
         VJ_ABI_CFG('ELF', 'i386')
@@ -303,7 +303,9 @@ case $target_os in
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         AC_DEFINE(notdef,)
-        ABI_LIST=''
+        ABI='HP'
+        ISA='PA-RISC'
+        ABI_LIST='HP'
         PLATFORM='HP'
         ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
