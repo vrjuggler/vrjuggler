@@ -361,7 +361,8 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
 
             break;
           case SocketOptions::McastInterface:
-            data.mcast_if = InetAddr(opt_data.mcast_if.s_addr, 0);
+            data.mcast_if = InetAddr();
+            data.mcast_if.setAddress(opt_data.mcast_if.s_addr, 0);
             break;
           case SocketOptions::McastTimeToLive:
             data.mcast_ttl = opt_data.mcast_ttl;

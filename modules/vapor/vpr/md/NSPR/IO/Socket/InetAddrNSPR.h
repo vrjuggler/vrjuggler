@@ -58,85 +58,16 @@ public:
     //
     //! PRE: None.
     //! POST: Zero out the address and set everything to ANY
-    // ------------------------------------------------------------------------
-    InetAddrNSPR (void)
-    {
-       memset(&mAddr, 0, sizeof(mAddr));
-       setFamily(SocketTypes::INET);
-       setAddressValue(PR_INADDR_ANY);
-       setPort(PR_INADDR_ANY);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct an address object using the given address.  It must be of
-    //+ the form <address>:<port> where <address> can be a hostname or a
-    //+ dotted-decimal IP address.
     //
-    //! PRE: None.
-    //! POST:
-    //
-    //! ARGS: address - A string giving the address and port number separated
-    //+                 by a colon.  The address can be a hostname or a
-    //+                 dotted-decimal IP address.
+    //! ARGS: port - An unsigned 16-bit integer port number for this address
+    //+              in host byte order.
     // ------------------------------------------------------------------------
-    InetAddrNSPR (const std::string& address)
-    {
-       std::string::size_type pos;
-       std::string host_addr, host_port;
-       Uint16 port;
-
-       // Extract the address and the port number from the given string.
-       pos       = address.find(":");
-       host_addr = address.substr(0, pos);
-       host_port = address.substr(pos + 1);
-       port      = (Uint16) atoi(host_port.c_str());
-
-       memset(&mAddr, 0, sizeof(mAddr));
-       setAddress(host_addr);
-       setPort(port);
-       setFamily(SocketTypes::INET);
-    }
-
-    // ------------------------------------------------------------------------
-    // Initialize to address and port
-    //! ARGS: address - A string giving the address (either hostname or IP
-    //+                 address).
-    //! ARGS: port    - The port to associate with the IP address.
-    // ------------------------------------------------------------------------
-    InetAddrNSPR (const std::string& address, const Uint16 port)
-    {
-       memset(&mAddr, 0, sizeof(mAddr));
-       setFamily(SocketTypes::INET);
-       setAddress(address);
-       setPort(port);
-    }
-
-    // ------------------------------------------------------------------------
-    // Initialize to an ANY address and a given port
-    // ------------------------------------------------------------------------
-    InetAddrNSPR (const Uint16 port)
+    InetAddrNSPR (const Uint16 port = 0)
     {
        memset(&mAddr, 0, sizeof(mAddr));
        setFamily(SocketTypes::INET);
        setAddressValue(PR_INADDR_ANY);
        setPort(port);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct an address object using the given address and port number.
-    //+ The address must be the actual 32-bit integer value.
-    //
-    //! PRE: None.
-    //! POST:
-    //
-    //! ARGS: address - A 32-bit integer IP address.
-    //! ARGS: port    - The port to associate with the IP address.
-    // ------------------------------------------------------------------------
-    InetAddrNSPR (const Uint32 address, const Uint16 port) {
-        memset(&mAddr, 0, sizeof(mAddr));
-        setAddressValue(address);
-        setPort(port);
-        setFamily(SocketTypes::INET);
     }
 
     // ------------------------------------------------------------------------
@@ -150,6 +81,55 @@ public:
     InetAddrNSPR (const InetAddrNSPR& addr)
     {
        mAddr = addr.mAddr;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set the address for this object using the given address.  It must be
+    //+ of the form <address>:<port> where <address> can be a hostname or a
+    //+ dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address and port number separated
+    //+                 by a colon.  The address can be a hostname or a
+    //+                 dotted-decimal IP address.
+    // ------------------------------------------------------------------------
+    bool setAddress(const std::string& address);
+
+    // ------------------------------------------------------------------------
+    //: Set the address for this object using the given address and port
+    //+ number.  The address string can be a hostname or a dotted-decimal IP
+    //+ address.
+    //
+    //! ARGS: address - A string giving the address (either hostname or IP
+    //+                 address).
+    //! ARGS: port    - The port to associate with the IP address.
+    // ------------------------------------------------------------------------
+    inline bool setAddress (const std::string& address, const Uint16 port)
+    {
+       bool retval;
+       retval = lookupAddress(address);
+       setFamily(SocketTypes::INET);
+       setPort(port);
+       return retval;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Construct an address object using the given address and port number.
+    //+ The address must be the actual 32-bit integer value.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A 32-bit integer IP address.
+    //! ARGS: port    - The port to associate with the IP address.
+    // ------------------------------------------------------------------------
+    inline bool setAddress (const Uint32 address, const Uint16 port) {
+        setAddressValue(address);
+        setPort(port);
+        setFamily(SocketTypes::INET);
+        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -223,23 +203,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Set this structure's IP address.  The given address must be in host
-    //+ byte order.
-    //
-    //! PRE: The given IP address is in host byte order.
-    //! POST: The given IP address is stored in the address structure in
-    //+       network byte order.
-    //
-    //! ARGS: port - An unsigned int IP address for this
-    //+              address structure in host byte order.
-    // ------------------------------------------------------------------------
-    inline void
-    setAddressValue (const Uint32 addr_value)
-    {
-       mAddr.inet.ip = PR_htonl(addr_value);
-    }
-
-    // ------------------------------------------------------------------------
     //: Get the IP address associated with this structure as a human-readable
     //+ string.
     //
@@ -251,24 +214,6 @@ public:
     //+          in the human-readable "dotted-decimal" notation.
     // ------------------------------------------------------------------------
     std::string getAddressString(void) const;
-
-    // ------------------------------------------------------------------------
-    //: Set the IP address for this object using the given string.  The string
-    //+ can be a hostname or a dotted-decimal IP address.
-    //
-    //! PRE: None.
-    //! POST: If the address is valid, the object's IP address is updated
-    //+       appropriately.
-    //
-    //! ARGS: addr - An address string in dotted-decimal address notation or
-    //+              as a hostname.
-    //
-    //! RETURNS: true  - The address was valid and the set operation
-    //+                  succeeded.
-    //! RETURNS: false - The address could not be looked up.  An error message
-    //+                  is printed to stderr explaining what went wrong.
-    // ------------------------------------------------------------------------
-    bool setAddress (const std::string& addr);
 
     // ------------------------------------------------------------------------
     //: Overloaded assignment operator to ensure that assignments work
@@ -316,6 +261,28 @@ public:
     }
 
 protected:
+  // -------------------------------------------------------------------------
+   //: Set this structure's IP address.  The given address must be in host
+   //+ byte order.
+   //
+   //! PRE: The given IP address is in host byte order.
+   //! POST: The given IP address is stored in the address structure in
+   //+       network byte order.
+   //
+   //! ARGS: port - An unsigned int IP address for this address object in host
+   //+              byte order.
+   // -------------------------------------------------------------------------
+   inline void
+   setAddressValue (const Uint32 addr_value)
+   {
+      mAddr.inet.ip = PR_htonl(addr_value);
+   }
+
+   // -------------------------------------------------------------------------
+   // Look up the address in m_name and store the address in m_remote_addr.
+   // -------------------------------------------------------------------------
+   bool lookupAddress(const std::string& address);
+
    PRNetAddr   mAddr;         // Actual address
 };
 
