@@ -297,8 +297,9 @@ aMotionStar::sample () {
       header_bytes_received = 0;
       lp_buffer = (char*) mLpResponse;
 
-      while ( header_bytes_received != 16 ) {
-        mBytesReceived = recv(mSocket, (void*) lp_buffer, 16, 0);
+      while ( header_bytes_received != sizeof(struct BIRDNET::HEADER) ) {
+        mBytesReceived = recv(mSocket, (void*) lp_buffer,
+                              sizeof(struct BIRDNET::HEADER), 0);
 
       /*  if ( mBytesReceived < 0 ) {
           perror("recv1"), exit(1);
@@ -350,7 +351,7 @@ aMotionStar::sample () {
 
     total_bytes_received = 0;
     total_bytes_needed   = ntohs(mResponse.header.number_bytes);
-    lp_buffer            = (char*) mLpResponse + 16;
+    lp_buffer            = (char*) mLpResponse + sizeof(struct BIRDNET::HEADER);
 
     if ( mRunMode == 0 ) {
       struct timeval first, second;
@@ -467,8 +468,9 @@ aMotionStar::runContinuous () {
 
     headerBytesReceived = 0;
     lpBuffer = (char*) mLpResponse;
-    while(headerBytesReceived != 16) {
-      bytesReceived = recv(s, (void*)lpBuffer, 16, 0);
+    while ( headerBytesReceived != sizeof(struct BIRDNET::HEADER) ) {
+      bytesReceived = recv(mSocket, (void*) mLpBuffer,
+                           sizeof(struct BIRDNET::HEADER), 0);
 
       if (bytesReceived < 0) {
           perror("recv1"), exit(1);
@@ -524,8 +526,9 @@ aMotionStar::getSystemStatus () {
   header_bytes = 0;
   lp_buffer    = mLpResponse;
 
-  while( header_bytes < 16 ) {
-      bytes_received = recv(mSocket, (void*) lp_buffer, 16, 0);
+  while( header_bytes < sizeof(struct BIRDNET::HEADER) ) {
+      bytes_received = recv(mSocket, (void*) lp_buffer,
+                            sizeof(struct BIRDNET::HEADER), 0);
       header_bytes   = header_bytes + bytes_received;
       lp_buffer      = (char*) lp_buffer + bytes_received;
   }
@@ -620,7 +623,8 @@ aMotionStar::setSystemStatus () {
      int i;
      mResponse.header.type         = BIRDNET::MSG_SEND_SETUP;
      mResponse.header.xtype        = 0;
-     mResponse.header.number_bytes = htons(mStatusSize - 16);
+     mResponse.header.number_bytes = htons(mStatusSize -
+                                         sizeof(struct BIRDNET::HEADER));
 
      for ( i = 0; i < 6; i++ ) {
         mResponse.buffer[5+i] = mRate[i];
@@ -660,8 +664,9 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
   header_bytes = 0;
   lp_buffer    = mLpResponse;
 
-  while ( header_bytes < 16 ) {
-      mBytesReceived = recv(mSocket, (void*) lp_buffer, 16, 0);
+  while ( header_bytes < sizeof(struct BIRDNET::HEADER) ) {
+      mBytesReceived = recv(mSocket, (void*) lp_buffer,
+                            sizeof(struct BIRDNET::HEADER), 0);
       header_bytes   = header_bytes + mBytesReceived;
       lp_buffer      = (char*) lp_buffer + mBytesReceived;
   }
@@ -694,6 +699,7 @@ aMotionStar::setBirdStatus (unsigned char fbb_addr) {
   mResponse.header.xtype        = fbb_addr;
   mResponse.header.number_bytes = htons(70);
 
+  // XXX: Hard-coded packet size.
   mNumberBytes = send(mSocket, (void*) mLpResponse, 86, 0);
 
 //  printf("\nSEND SETUP #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
