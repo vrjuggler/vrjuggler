@@ -130,6 +130,7 @@ public:
    {
       // Put your pre frame computations here.
 
+      /*
       std::cout  << "Wand Buttons:"
                  << " 0:" << mButton0->getData()
                  << " 1:" << mButton1->getData()
@@ -137,6 +138,7 @@ public:
                  << " 3:" << mButton3->getData()
                  << " 4:" << mButton4->getData()
                  << " 5:" << mButton5->getData() << std::endl;
+      */
    }
 
    virtual void bufferPreDraw();
