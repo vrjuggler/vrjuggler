@@ -70,8 +70,7 @@ public:
       mThreadRunning = false;
       char namebuf[42];  // careful with that buffer, eugene
       
-      caddr_t thisID = reinterpret_cast<caddr_t>( this );
-      sprintf( namebuf, "vjGlPipe %ld", thisID ); 
+      sprintf( namebuf, "vjGlPipe %d", mPipeNum ); 
       
       // we need to check if we should be enabled... It looks like vjGlPipe
       // is gonna need a configure method, though...
