@@ -4,8 +4,8 @@
 // Group manager for vj input devices and proxies
 //
 ////////////////////////////////////////////////////////////////////////////
-#ifndef VJ_INPUTGROUP_H
-#define VJ_INPUTGROUP_H
+#ifndef VJ_INPUT_MANAGER_H
+#define VJ_INPUT_MANAGER_H
 
 #include <config.h>
 
@@ -65,6 +65,7 @@ public:
    int FNewInput(vjConfigChunkDB *cdb);
 
    //: Function to get an index to the proxy/alias given in str
+   //! RETURNS: -1 - Not Found
    int  GetProxyIndex(string proxyName);
    
 
