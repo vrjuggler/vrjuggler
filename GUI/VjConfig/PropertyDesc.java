@@ -27,6 +27,8 @@ public class PropertyDesc {
 
     public boolean equals(PropertyDesc d) {
 	DescEnum e1, e2;
+	if (d == null)
+	  return false;
 	if (!name.equalsIgnoreCase(d.name))
 	    return false;
 	if (!token.equalsIgnoreCase(d.token))
