@@ -41,7 +41,7 @@ The required environment variables are as follows:
   <dt><tt>BOOST_TOOL</tt></dt>
   <dd>
     The name of the Boost Jam toolset used to compile Boost.  This will
-    be either <tt>vc7</tt> or <tt>vc7.1</tt> depending on how Boost was
+    be either <tt>vc7</tt> or <tt>vc71</tt> depending on how Boost was
     compiled.  To figure out for sure which was used, look at the names
     of the libraries in <tt>%BOOST_ROOT%\lib</tt>.  For example, the
     name of the Boost.Filesystem DLL may be
@@ -68,7 +68,7 @@ The required environment variables are as follows:
   <dd>
     The root directory of an installed copy of
     <a href="http://www.sourceforge.net/projects/xml-cppdom/">CppDOM</a>
-    0.3.0 or newer.  This must contain a directory named <tt>lib</tt> and a
+    0.3.1 or newer.  This must contain a directory named <tt>lib</tt> and a
     directory named <tt>include</tt>.  Within <tt>lib</tt>, there must be
     directories named <tt>Debug</tt>, <tt>DebugDLL</tt>, <tt>Release</tt>,
     and <tt>ReleaseDLL</tt>.  Each of these contains one build of the CppDOM
@@ -83,6 +83,14 @@ The optional environment variables are as follows:
 </p>
 
 <dl>
+  <dt><tt>PF_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://www.sgi.com/software/performer/">OpenGL Performer</a> 3.x
+    installation.  This directory must contain the sub-directories
+    <tt>Include</tt> and <tt>Lib</tt>.  This is the normal structure for a
+    standard OpenGL Performer installation.
+  </dd>
   <dt><tt>OMNIORB_ROOT</tt></dt>
   <dd>
     The root directory of an
@@ -112,8 +120,8 @@ The optional environment variables are as follows:
 Once the environment variables are set, double-click on <tt>Juggler.sln</tt>
 or load that file into the Visual Studio GUI.  The chosen target should
 be either "Debug DLL" or "Release DLL".  Otherwise, select "Batch Build"
-and compile everything selected.  By default, the static versions of the
-libraries will not be compiled.
+and compile everything selected.  Compiling the static versions of the
+various libraries is not necessary.
 </p>
 
 <p>
