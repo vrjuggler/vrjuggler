@@ -55,11 +55,18 @@ public class WizardViewerBean
    extends JPanel
    implements Serializable, WizardView
 {
+
+   public WizardViewerBean()
+   {
+      this(new HashMap());
+   }
    /**
     * Creates a new WizardViewer bean with no initial wizard.
     */
-   public WizardViewerBean()
+   public WizardViewerBean(Map white_board)
    {
+      mWhiteBoard = white_board;
+
       listeners = new ArrayList();
 
       try
@@ -344,7 +351,7 @@ public class WizardViewerBean
    /**
     * Used to share information between wizard steps.
     */
-   private Map mWhiteBoard = new HashMap();
+   private Map mWhiteBoard = null;
 
    /**
     * Cache of the current step being viewed.
