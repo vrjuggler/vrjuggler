@@ -125,7 +125,7 @@
                   <title><classname>vjApp</classname> hierarchy</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="myAppHierarchy.gif" format="GIF"/>
+                        <imagedata fileref="myAppHierarchy.png" format="PNG"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -232,7 +232,7 @@ int main (int argc, char* argv[])
                <title>Kernel loop sequence</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="AppInitAndMainLoop_modified.gif" format="GIF"/>
+                     <imagedata fileref="AppInitAndMainLoop_modified.png" format="PNG"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -282,7 +282,7 @@ int main (int argc, char* argv[])
                <title>Application object interface</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="myAppHierarchy-highlightVjApp.gif" format="GIF"/>
+                     <imagedata fileref="myAppHierarchy-highlightVjApp.png" format="PNG"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -393,7 +393,7 @@ int main (int argc, char* argv[])
                   <title><classname>vjGlApp</classname> interface extensions to <classname>vjApp</classname></title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="myAppHierarchy-highlightVjOglApp.gif" format="GIF"/>
+                        <imagedata fileref="myAppHierarchy-highlightVjOglApp.png" format="PNG"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -417,7 +417,7 @@ int main (int argc, char* argv[])
                   <title><classname>vjPfApp</classname> interface extensions to <classname>vjApp</classname></title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="myAppHierarchy-highlightVjPfApp.gif" format="GIF"/>
+                        <imagedata fileref="myAppHierarchy-highlightVjPfApp.png" format="PNG"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -812,7 +812,7 @@ vec.xformFull(xform_mat);</programlisting>
                <informalequation>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="eq_v_eq_m_v.gif" format="GIF"/>
+                        <imagedata fileref="eq_v_eq_m_v.png" format="PNG"/>
                      </imageobject>
                      <textobject>
                         <phrase>V' = M * V</phrase>
@@ -1069,7 +1069,7 @@ if ( mat1 != mat2 )
                <para>The transpose operation works conceptually as <inlineequation>
                      <inlinemediaobject>
                         <imageobject>
-                           <imagedata fileref="eq_m1_eq_tr_m2.gif" format="GIF"/>
+                           <imagedata fileref="eq_m1_eq_tr_m2.png" format="PNG"/>
                         </imageobject>
                         <textobject>
                            <phrase>matrix1 = transpose(matrix2)</phrase>
@@ -1095,7 +1095,7 @@ mat1.transpose(mat2);</programlisting>
                <para>The transpose operation works conceptually as <inlineequation>
                      <inlinemediaobject>
                         <imageobject>
-                           <imagedata fileref="eq_m1_eq_inv_m2.gif" format="GIF"/>
+                           <imagedata fileref="eq_m1_eq_inv_m2.png" format="PNG"/>
                         </imageobject>
                         <textobject>
                            <phrase>matrix1 = inverse(matrix2)</phrase>
@@ -1175,7 +1175,7 @@ mat1.postMult(mat2);</programlisting>
                <para>Conceptually, the operation is <inlineequation>
                      <inlinemediaobject>
                         <imageobject>
-                           <imagedata fileref="eq_m1_eq_m1_m2.gif" format="GIF"/>
+                           <imagedata fileref="eq_m1_eq_m1_m2.png" format="PNG"/>
                         </imageobject>
                         <textobject>
                            <phrase>mat1 = mat1 * mat2</phrase>
@@ -1201,7 +1201,7 @@ mat1.preMult(mat2);</programlisting>
                <para>Here, the conceptual operation is <inlineequation>
                      <inlinemediaobject>
                         <imageobject>
-                           <imagedata fileref="eq_m1_eq_m2_m1.gif" format="GIF"/>
+                           <imagedata fileref="eq_m1_eq_m2_m1.png" format="PNG"/>
                         </imageobject>
                         <textobject>
                            <phrase>mat1 = mat2 * mat1</phrase>
@@ -1994,7 +1994,7 @@ public:
                <title><classname>vjGlApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="myAppHierarchy-highlightVjOglApp.gif" format="GIF"/>
+                     <imagedata fileref="myAppHierarchy-highlightVjOglApp.png" format="PNG"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -2283,7 +2283,7 @@ userApp::draw()
                   <title>VR Juggler OpenGL system</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="JugglerOGLSystemChart.gif" format="GIF"/>
+                        <imagedata fileref="JugglerOGLSystemChart.png" format="PNG"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -2414,7 +2414,7 @@ public:
                <title><classname>vjPfApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="myAppHierarchy-highlightVjPfApp.gif" format="GIF"/>
+                     <imagedata fileref="myAppHierarchy-highlightVjPfApp.png" format="PNG"/>
                   </imageobject>
                </mediaobject>
             </figure>
