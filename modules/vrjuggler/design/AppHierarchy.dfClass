@@ -22,6 +22,8 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@hideAttributes
 */
 class reference {
 }/**
@@ -37,6 +39,8 @@ class reference {
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextClose#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPreDraw#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPostDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
 */
 class reference55 {
 }/**
@@ -53,6 +57,8 @@ class reference55 {
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
 */
 class reference56 {
 }/**
@@ -69,6 +75,8 @@ class reference56 {
 @__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextClose#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextPreDraw#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::OsgApp#bufferPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$constructor$$#(##)#:oiref>
+@hideAttributes
 */
 class reference {
 }/**
@@ -85,6 +93,7 @@ class reference {
 @__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#contextPostDraw#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#draw#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#bufferPreDraw#(##)#:oiref> 
+@hideAttributes
 */
 class reference7 {
 }}/**
@@ -101,15 +110,15 @@ filter.d2.state = off
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=245,360,245,320:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=10,210,160,110,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=280,360,200,110,0:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=300,360,300,320:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=150,210,150,170:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=190,210,150,110,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=90,360,170,110,0:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=250,210,250,170:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=110,10,180,160,0:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=130,470,130,430:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=292,270,160,140,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=200,470,200,130,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=236,470,236,430:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=333,270,333,230:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=80,270,192,160,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=10,470,170,110,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=233,270,233,230:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=194,10,180,220,0:oigroup>
 
 */
 class __positions {
