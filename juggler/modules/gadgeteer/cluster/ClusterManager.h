@@ -66,9 +66,9 @@ class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler
 protected:
    /** Constructor is hidden, so no direct instantiation is allowed. */
    ClusterManager();
-   
+
    virtual ~ClusterManager();
-   
+
    /** Constructor is hidden, so no copying is allowed. */
    ClusterManager( const ClusterManager& cm )
       : jccl::ConfigElementHandler( cm )
@@ -90,7 +90,7 @@ public:
     * Remove an existing ClusterPlugin.
     */
    void removePlugin( ClusterPlugin* old_manager );
-   
+
    /**
     * Return the ClusterPlugin with the given GUID.
     */
@@ -100,17 +100,17 @@ private:
     * Return true if the specified ClusterPlugin exists.
     */
    bool doesPluginExist( ClusterPlugin* old_manager );
-   
+
    /**
     * Send end block to all other connected nodes and
     * signal each connected node to sync.
     */
    void sendEndBlocksAndSignalUpdate( const int temp );
-   
+
    /**
     * Returns the string representation of the element type used for the
     * ClusterManager.
-    */   
+    */
    static std::string getElementType();
 public:
    /**
@@ -123,7 +123,7 @@ public:
     * the draw() method.
     */
    void preDraw();
-   
+
    /**
     * Synchronize plugins directly after the kernel calls
     * the postFrame() method.
@@ -135,13 +135,13 @@ public:
     * achieve swaplock.
     */
    void createBarrier();
-   
+
    /**
     * Cause the cluster to recover when a connection to
     * a ClusterNode is lost.
     */
    void recoverFromLostNode( gadget::Node* lost_node );
-   
+
    /**
     * Return the representation of the network which
     * this cluster is running on.
@@ -150,7 +150,7 @@ public:
    {
       return mClusterNetwork;
    }
-   
+
    /**
     * Return true if ConfigElement is a remote device.
     */
@@ -163,26 +163,26 @@ public:
 
    /**
     * Configure the given ConfigElement.
-    * 
+    *
     * @return true iff element was successfully configured.
     */
    bool configAdd( jccl::ConfigElementPtr element );
-   
-   /** 
+
+   /**
     * Shutdown the cluster using given ConfigElement.
-    * 
+    *
     * @return true iff the element (and any objects it represented)
     *          were successfully removed.
     */
    bool configRemove( jccl::ConfigElementPtr element );
 
-   /** 
+   /**
     * Checks if this handler can process the given element.
     *
     * @return true iff this handler can process element.
     */
    bool configCanHandle( jccl::ConfigElementPtr element );
-   
+
    /**
     * Get a pointer to the ConfigElement with the given name.
     */
@@ -197,7 +197,7 @@ public:
       0        0  = 1
       0        1  = 1
 
-      (NOT(Active AND (NOT READY)))   
+      (NOT(Active AND (NOT READY)))
    */
 
    /**
@@ -225,14 +225,14 @@ public:
    void setClusterReady( const bool ready )
    {
       vpr::Guard<vpr::Mutex> guard( mClusterReadyLock );
-      
+
       vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
          << clrOutBOLD( clrCYAN, "[ClusterManager]" )
          << " Cluster is ready." << std::endl << vprDEBUG_FLUSH;
-      
+
       mClusterReady = ready;
    }
-   
+
    /**
     * Output the current status of the cluster.
     */
@@ -257,10 +257,10 @@ private:
 
    vpr::Mutex                   mNodesLock;          /**< Lock on hostname list. */
    std::vector<std::string>     mNodes;              /**< Hostnames of the nodes in the cluster. */
-   
+
    vpr::Mutex                   mClusterActiveLock;  /**< Lock on ClusterActive bool.*/
    bool                         mClusterActive;      /**< Flag informing us if this app is running on a cluster. */
-   
+
    vpr::Mutex                   mClusterReadyLock;   /**< Lock on ClusterReady bool.*/
    bool                         mClusterReady;       /**< Flag set true when all dependancies are satisfied. */
 
