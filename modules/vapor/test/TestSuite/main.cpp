@@ -13,7 +13,7 @@
 
 #include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
 
-#include <TestCases/ReturnStatusTest.h>
+#include <TestCases/Util/ReturnStatusTest.h>
 #include <TestCases/Util/IntervalTest.h>
 
 #include <TestCases/BoostTest.h>
