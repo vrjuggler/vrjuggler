@@ -81,6 +81,7 @@ void vjKernel::controlLoop(void* nullParam)
             perfBuffer->set (1);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postDraw\n" << vjDEBUG_FLUSH;
          mApp->postDraw();        // POST DRAW: Do computations that can be done while drawing.  This should be for next frame.
+         //usleep(15000);              // Generate a wait in critical section
             perfBuffer->set (2);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
          mDrawManager->sync();    // SYNC: Block until drawing is done
@@ -89,12 +90,13 @@ void vjKernel::controlLoop(void* nullParam)
          mApp->postSync();        // POST SYNC: Do processing after drawing is complete
             perfBuffer->set (4);
       }
-      //else
-      //{
+      else
+      {
          // ??? Should we do this, or just grind up the CPU as fast as possible
          mControlThread->yield();   // Give up CPU
-      //}
+      }
 
+      //usleep(10000);
       checkForReconfig();        // Check for any reconfiguration that needs done
 
       perfBuffer->set(5);
