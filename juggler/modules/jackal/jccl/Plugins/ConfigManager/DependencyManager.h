@@ -63,7 +63,7 @@ public:
       mDepCheckers.push_back(checker);          // Add the checker to the list
       vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
               << "vjDependencyManager: Registered: "
-              << setiosflags(ios::right) << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << resetiosflags(ios::right)
+              << std::setiosflags(ios::right) << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << std::resetiosflags(ios::right)
               << "  type: " << typeid(*checker).name() << std::endl
               << vjDEBUG_FLUSH;
       debugDump();
