@@ -29,15 +29,14 @@ import java.util.Enumeration;
 import VjConfig.*;
 import VjGUI.*;
 import VjGUI.chunkdesc.ChunkDescFrame;
-import VjGUI.util.JFrameParent;
+import VjGUI.util.PlugPanel;
+
 
 public class DescDBPanel extends JPanel 
-  implements ActionListener, MouseListener, CoreDBListener,
-	     JFrameParent {
+    implements PlugPanel, ActionListener, MouseListener, CoreDBListener, DescDBListener {
 
     JTree tree;
     ChunkDescDB currdb;
-    Vector desc_frames;
     DefaultTreeModel model;
     JButton new_button;
     JButton load_button;
@@ -56,7 +55,6 @@ public class DescDBPanel extends JPanel
 	ImageIcon new_icn, load_icn, save_icn, close_icn;
 	JPanel south_panel, side_panel; Box center_panel;
 
-	desc_frames = new Vector();
 	currdb = null;
 
 	setBorder (BorderFactory.createEmptyBorder (5,5,5,5));
@@ -138,10 +136,15 @@ public class DescDBPanel extends JPanel
 	    name = "No Selection";
 	if (name.equalsIgnoreCase ("No Selection")) {
 	    tree.setModel (new DefaultTreeModel (new DefaultMutableTreeNode ("no selection")));
+	    if (currdb != null)
+		currdb.removeDescDBListener(this);
 	    currdb = null;
 	}
 	else {
+	    if (currdb != null)
+		currdb.removeDescDBListener(this);
 	    currdb = db;
+	    currdb.addDescDBListener(this);
 	    root = new DefaultMutableTreeNode ("root");
 	    for (i = 0; i < currdb.size(); i++) {
 		d = currdb.elementAt(i);
@@ -188,8 +191,6 @@ public class DescDBPanel extends JPanel
 		n = (DefaultMutableTreeNode)tp[i].getLastPathComponent();
 		s = (String)n.getUserObject();
 		currdb.removeByName (s);
-		model.removeNodeFromParent (n);
-		model.reload();
 	    }
 	}
 	else if (source == insert_button) {
@@ -203,9 +204,6 @@ public class DescDBPanel extends JPanel
 	    d.name = "unnamed" + j;
 	    d.token = "unnamed" + j;
 	    currdb.addElement (d);
-	    n = new DefaultMutableTreeNode(d.name);
-	    ((DefaultMutableTreeNode)model.getRoot()).add(n);
-	    model.reload(n.getParent());
 	}
 	else if (source == load_button) {
 	    if (currdb == null)
@@ -245,10 +243,12 @@ public class DescDBPanel extends JPanel
 		    return; // it was the root node...
 		selected = (String)n.getUserObject();
 		if (selected != null) {
-		    f = getDescFrame (selected);
+		    f = (ChunkDescFrame)Core.ui.getChildFrameMatching ("VjGUI.chunkdesc.ChunkDescFrame", currdb, currdb.getByName(selected));
+		    //f = getDescFrame (selected);
 		    if (f == null) {
-			f = new ChunkDescFrame (this, currdb.getByName(selected), true);
-			desc_frames.addElement(f);
+			f = new ChunkDescFrame (Core.ui, currdb.getByName(selected), currdb, true);
+			//desc_frames.addElement(f);
+			Core.ui.addChildFrame(f);
 		    }
 		    else
 			f.show();
@@ -259,30 +259,6 @@ public class DescDBPanel extends JPanel
 
 
 
-    public ChunkDescFrame getDescFrame (String name) {
-	int i;
-	ChunkDescFrame f;
-	for (i = 0; i < desc_frames.size(); i++) {
-	    f = (ChunkDescFrame)desc_frames.elementAt(i);
-	    if (f.getName().equalsIgnoreCase (name))
-		return f;
-	}
-	return null;
-    }
-
-
-
-    public void destroyDescFrames () {
-	int i;
-	ChunkDescFrame f;
-	for (i = 0; i < desc_frames.size(); i++) {
-	    f = (ChunkDescFrame)desc_frames.elementAt(i);
-	    f.dispose();
-	}
-	desc_frames.removeAllElements();
-    }
-
-
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mousePressed(MouseEvent e) {}
@@ -290,40 +266,11 @@ public class DescDBPanel extends JPanel
 
 
 
-    public void closedChild (JFrame frame, boolean ok) {
-	DefaultMutableTreeNode root, n;
-	Enumeration e;
-	ChunkDescFrame f = (ChunkDescFrame)frame;
+    /****************** CoreDBListener stuff **********************/
 
-	if (ok) {
-	    ChunkDesc newc, oldc;
-	    oldc = f.getOldValue();
-	    newc = f.getNewValue();
-	    if (oldc != null) {
-		currdb.replace (oldc, newc);
-		// need to update the tree model too <sigh>
-		root = (DefaultMutableTreeNode)tree.getModel().getRoot();
-		e = root.children();
-		while (e.hasMoreElements()) {
-		    n = (DefaultMutableTreeNode)e.nextElement();
-		    if (oldc.name.equals((String)n.getUserObject())) {
-			n.setUserObject(newc.name);
-			((DefaultTreeModel)tree.getModel()).reload(n);
-			break;
-		    }
-		}
-	    }
-	}
-	desc_frames.removeElement(f);
-	f.dispose();
-    }
-    
-
-    // CoreDBListener stuff
     public void addDescDB (CoreDBEvent e) {
 	db_combobox.addItem (e.getDescDB().getName());
     }
-
 
     public void removeDescDB (CoreDBEvent e) {
 	if (currdb == e.getDescDB())
@@ -335,6 +282,68 @@ public class DescDBPanel extends JPanel
     }
 
     public void removeChunkDB (CoreDBEvent e) {
+    }
+
+
+    /***************** PlugPanel Stuff ***************************/
+
+    public void destroy () {
+	Core.removeCoreDBListener (this);
+	if (currdb != null)
+	    currdb.removeDescDBListener (this);
+    }
+
+
+
+    /***************** DescDBListener Stuff **********************/
+
+
+    public void addDesc (DescDBEvent e) {
+	// need to update the tree model too <sigh>
+	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+	DefaultMutableTreeNode n = new DefaultMutableTreeNode(e.getNewDesc().name);
+	root.add(n);
+	((DefaultTreeModel)tree.getModel()).reload(root);
+    }	
+
+
+
+    public void removeDesc (DescDBEvent e) {
+	DefaultMutableTreeNode n;
+	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+	Enumeration en = root.children();
+	while (en.hasMoreElements()) {
+	    n = (DefaultMutableTreeNode)en.nextElement();
+	    if (e.getOldDesc().name.equals((String)n.getUserObject())) {
+		root.remove(n);
+		((DefaultTreeModel)tree.getModel()).reload(root);
+		break;
+	    }
+	}
+    }
+
+
+
+    public void replaceDesc (DescDBEvent e) {
+	DefaultMutableTreeNode n;
+	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+	Enumeration en = root.children();
+	while (en.hasMoreElements()) {
+	    n = (DefaultMutableTreeNode)en.nextElement();
+	    if (e.getOldDesc().name.equals((String)n.getUserObject())) {
+	        n.setUserObject(e.getNewDesc().name);
+		((DefaultTreeModel)tree.getModel()).reload(n);
+		break;
+	    }
+	}
+    }
+
+
+
+    public void removeAllDescs (DescDBEvent e) {
+	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+	root.removeAllChildren();
+	((DefaultTreeModel)tree.getModel()).reload(root);
     }
 
 

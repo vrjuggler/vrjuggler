@@ -28,43 +28,43 @@ import java.util.Vector;
 
 import VjConfig.*;
 import VjGUI.*;
-import VjGUI.util.JFrameParent;
+import VjGUI.util.*;
 import VjGUI.configchunk.ConfigChunkFrame;
 
-public class ChunkDBPanel extends JPanel 
-    implements ActionListener, MouseListener, CoreDBListener, JFrameParent {
+public class ChunkDBPanel extends JPanel
+    implements PlugPanel, ActionListener, MouseListener, CoreDBListener { 
 
 
-    int controls_on_side; // 0 for left, 1 for right;
-    ChunkDBTreeModel dbt;
-    ConfigChunkDB chunkdb;
-    Vector chunk_frames;
-    DependencyFrame dependency_frame;
-    private ChunkDBPanel sendacross_target; // target for the >>, >all> buttons
+    protected int controls_on_side; // 0 for left, 1 for right;
+    protected ChunkDBTreeModel dbt;
+    protected ConfigChunkDB chunkdb;
+    protected ChunkDBPanel sendacross_target; // target for the >>, >all> buttons
 
-    private JButton load_button;
-    private JButton save_button;
-    private JButton insert_button;
-    private JButton remove_button;
-    private JButton send_button;
-    private JButton send_all_button;
-    private JButton new_button;
-    private JButton close_button;
-    private JButton duplicate_button;
-    private JButton chunkhelp_button;
-    private JButton checkdepend_button;
-    private JComboBox db_combobox;
-    private JComboBox insert_type;
-    private JScrollPane scroll_pane;
-    private Font current_font;  // used to make sure when we add a new tree
+    protected JButton load_button;
+    protected JButton save_button;
+    protected JButton insert_button;
+    protected JButton remove_button;
+    protected JButton send_button;
+    protected JButton send_all_button;
+    protected JButton new_button;
+    protected JButton close_button;
+    protected JButton duplicate_button;
+    protected JButton chunkhelp_button;
+    protected JButton checkdepend_button;
+    protected JComboBox db_combobox;
+    protected JComboBox insert_type;
+    protected JScrollPane scroll_pane;
+    protected Font current_font;  // used to make sure when we add a new tree
                                 // that it's using the correct font.
 
-    TreePath treeitem_menu_path;
-    JPopupMenu desctreeitem_menu;
-    JPopupMenu chunktreeitem_menu;
-    JMenuItem help1_mi, help2_mi, remove_mi, insert_mi;
+    protected TreePath treeitem_menu_path;
+    protected JPopupMenu desctreeitem_menu;
+    protected JPopupMenu chunktreeitem_menu;
+    protected JMenuItem help1_mi, help2_mi, remove_mi, insert_mi;
 
-    private static ChunkDBTreeModelFactory dbt_factory;
+    protected static ChunkDBTreeModelFactory dbt_factory;
+
+
 
     public ChunkDBPanel (int _controls_on_side) {
 	super();
@@ -77,8 +77,6 @@ public class ChunkDBPanel extends JPanel
 	Box center_panel;
 
 	current_font = null;
-	dependency_frame = null;
-	chunk_frames = new Vector();
 	chunkdb = null;
 	dbt = null;
 	sendacross_target = null;
@@ -218,9 +216,12 @@ public class ChunkDBPanel extends JPanel
     }
 
 
+
+    // sets the target for >> and >all> buttons
     public void setSendAcrossTarget (ChunkDBPanel _target) {
 	sendacross_target = _target;
     }
+
 
 
     public void setFont (Font f) {
@@ -228,7 +229,9 @@ public class ChunkDBPanel extends JPanel
 	current_font = f;
     }
 
-    private void buildDBList () {
+
+
+    protected void buildDBList () {
 	int i;
 	db_combobox.addItem ("No Selection");
 	for (i = 0; i < Core.chunkdbs.size(); i++) {
@@ -246,7 +249,6 @@ public class ChunkDBPanel extends JPanel
 	chunkdb = newchunkdb;
 
 	if (dbt != null) {
-	    destroyFrames();
 	    dbt.tree.removeMouseListener (this);
 	    dbt_factory.releaseTreeModel (dbt);
 	}
@@ -270,9 +272,10 @@ public class ChunkDBPanel extends JPanel
     }
 
 
+
     // typically, one chunkdbpanel will call this on another to perform a 
     // sendacross action
-    private void addChunks (ConfigChunkDB newdb) {
+    protected void addChunks (ConfigChunkDB newdb) {
 	if (chunkdb == null)
 	    return;
 	else if (chunkdb == Core.active_chunkdb) {
@@ -285,7 +288,10 @@ public class ChunkDBPanel extends JPanel
 	}
     }	
 
-    private void updateInsertTypes () {
+
+
+    // updates the list of chunk types which can be inserted.
+    protected void updateInsertTypes () {
 	int i, j;
 	if (insert_type == null)
 	    return;
@@ -301,7 +307,9 @@ public class ChunkDBPanel extends JPanel
 
 
 
-    private void setButtonsEnabled (boolean b) {
+    // enables/disables some of the side panel buttons. Used when there
+    // is no loaded db.
+    protected void setButtonsEnabled (boolean b) {
 	save_button.setEnabled(b);
 	insert_button.setEnabled(b);
 	remove_button.setEnabled(b);
@@ -312,6 +320,9 @@ public class ChunkDBPanel extends JPanel
 	checkdepend_button.setEnabled(b);
     }
 
+
+
+    /******************** ActionListener Stuff ***********************/
 
     // public, as the saying goes, as an implementation detail
     public void actionPerformed (ActionEvent e) {
@@ -355,11 +366,14 @@ public class ChunkDBPanel extends JPanel
 		if (db != chunkdb)
 		    db.searchDependencies (vec);
 	    }
-	    if (dependency_frame == null)
+            DependencyFrame dependency_frame = (DependencyFrame)Core.ui.getChildFrameMatching ("VjGUI.DependencyFrame", chunkdb, null);
+            if (dependency_frame != null)
+                dependency_frame.refreshData (vec);
+            else {
 		dependency_frame = new DependencyFrame(this, chunkdb, vec);
-	    else
-		dependency_frame.refreshData (vec);
-	    dependency_frame.setVisible (true);
+                Core.ui.addChildFrame (dependency_frame);
+	    }
+            dependency_frame.show();
 	}
 	else if (source == remove_button) {
 	    tp = dbt.tree.getSelectionPaths();
@@ -506,10 +520,10 @@ public class ChunkDBPanel extends JPanel
     public void openChunkFrame (ConfigChunk ch) {
 	if (ch == null)
 	    return;
-	ConfigChunkFrame f = getChunkFrame (ch.getName());
+	ConfigChunkFrame f = (ConfigChunkFrame)Core.ui.getChildFrameMatching ("VjGUI.configchunk.ConfigChunkFrame", chunkdb, ch);
 	if (f == null) {
-	    f = new ConfigChunkFrame (this, ch);
-	    chunk_frames.addElement(f);
+	    f = new ConfigChunkFrame (Core.ui, ch, chunkdb);
+	    Core.ui.addChildFrame (f);
 	}
 	else
 	    f.show();
@@ -517,39 +531,7 @@ public class ChunkDBPanel extends JPanel
 
 
 
-    private ConfigChunkFrame getChunkFrame (String name) {
-	int i;
-	ConfigChunkFrame f;
-	for (i = 0; i < chunk_frames.size(); i++) {
-	    f = (ConfigChunkFrame)chunk_frames.elementAt(i);
-	    if (f.getOldValue().getName().equalsIgnoreCase (name))
-		return f;
-	}
-	return null;
-    }
-
-
-
-    private void destroyFrames () {
-	// destroys child frames of this chunkdbpanel (dependency frames
-	// and chunkframes
-	int i;
-	ConfigChunkFrame f;
-
-	if (dependency_frame != null) {
-	    dependency_frame.setVisible(false);
-	    dependency_frame.dispose();
-	    dependency_frame = null;
-	}
-
-	for (i = 0; i < chunk_frames.size(); i++) {
-	    f = (ConfigChunkFrame)chunk_frames.elementAt(i);
-	    f.setVisible(false);
-	    f.dispose();
-	}
-	chunk_frames.removeAllElements();
-    }
-
+    /******************* MouseListener Stuff ************************/
 
     public void mouseEntered(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
@@ -580,32 +562,7 @@ public class ChunkDBPanel extends JPanel
 
 
 
-
-    public void closedChild (JFrame frame, boolean ok) {
-	ConfigChunkFrame f = (ConfigChunkFrame)frame;
-	if (ok) {
-	    ConfigChunk newc, oldc;
-	    oldc = f.getOldValue();
-	    newc = f.getValue();
-	    if (chunkdb == Core.active_chunkdb) {
-		if (oldc.getName().equals (newc.getName()))
-		    Core.net.sendChunk(newc);
-		else {
-		    Core.net.removeChunk (oldc);
-		    Core.net.sendChunk (newc);
-		}
-	    }
-	    else {
-		chunkdb.replace (oldc, newc);
-	    }
-	}
-	chunk_frames.removeElement(f);
-	f.dispose();
-    }
-
-
-
-    // CoreDBListener stuff
+    /****************** CoreDBListener stuff *********************/
     public void addChunkDB (CoreDBEvent e) {
 	db_combobox.addItem (e.getChunkDB().getName());
     }
@@ -622,6 +579,13 @@ public class ChunkDBPanel extends JPanel
 
     public void removeDescDB (CoreDBEvent e) {
 	updateInsertTypes();
+    }
+
+
+    /*********************** PlugPanel Stuff ***************************/
+
+    public void destroy () {
+	Core.removeCoreDBListener (this);
     }
 
 

@@ -46,6 +46,8 @@ public class VjControl {
 	String lastfname = "";
 	String lastdname = "";
 	boolean hostset = false;
+	String new_host = "";
+	int new_port = 4450;
 	boolean autoload = true;
 	auto_descdbnames = new Vector();
 	auto_chunkdbnames = new Vector();
@@ -62,8 +64,6 @@ public class VjControl {
 	 */
 	FileControl.loadVjControlConfig();
 	configure();
-
-	Core.reconfigure();
 
 	/* read & parse command line arguments
 	 *
@@ -89,11 +89,11 @@ public class VjControl {
 		autoload = false;
 	    }
 	    else if (hostset == false) {
-		Core.ui.connection_pane.setHost(args[i]);
+		new_host = args[i];
 		hostset = true;
 	    }
 	    else {
-		Core.ui.connection_pane.setPort(Integer.parseInt(args[i]));
+		new_port = Integer.parseInt(args[i]);
 	    }
 	    
 	}
@@ -135,27 +135,30 @@ public class VjControl {
 	    FileControl.loadChunkOrgTree(orgtreename, false, Core.chunkorgtree);
 	}
 	
-	Core.ui.refreshPerfData();
+	//Core.ui.refreshPerfData();
 
 	
 	Core.consoleInfoMessage ("VjControl 1.0", "VR Juggler Control and Configuration Program");
 	
 	Core.ui.show();
 
-	if (hostset)
+	if (hostset) {
+	    Core.net.setRemoteHost (new_host, new_port);
 	    Core.net.connect();
+	}
     }
 
 
 
+    //: does minimal sanity checking on the vjcontrol config.  This just
+    //  means that if loading the config failed, we manually add a chunk
+    //  with some reasonable(?) defaults.
     static void configure() {
 	int i;
 	String s;
 	Property p;
-	Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
-	if (v.size() > 1) 
-	    Core.consoleErrorMessage ("Config", "VjControl's own config file seems messed up. Making a guess...");
 	ConfigChunk ch;
+	Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
 	if (v.size() == 0 || ((ch = (ConfigChunk)v.elementAt(0)) == null)) {
 	    System.err.println ("didn't get chunk");
 	    ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
@@ -163,9 +166,10 @@ public class VjControl {
 	    ch.setPropertyFromToken ("fontsize", new VarValue (12), 0);
 	    ch.setPropertyFromToken ("looknfeel", new VarValue ("Java"), 0);
 	    ch.setPropertyFromToken ("name", new VarValue ("VjControl Config"), 0);
+	    ch.setPropertyFromToken ("host", new VarValue ("localhost"), 0);
+	    ch.setPropertyFromToken ("port", new VarValue (4450), 0);
 	    Core.gui_chunkdb.addElement (ch);
 	}
-	Core.vjcontrol_preferences = ch;
 
 	p = ch.getPropertyFromToken ("descfiles");
 	for (i = 0; i < p.getNum(); i++) {

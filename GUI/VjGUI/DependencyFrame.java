@@ -19,6 +19,11 @@
 
 
 // frame to display a vector of dependency information
+// NOTE: A whole bunch of things could be done with the new event system
+// to autoupdate the dependency data.  The only question is if we really
+// want to be listening to change notification on every open chunkdb.
+// Given that it would only be an issue when the depframe is open, this
+// might not be a bad idea.
 
 package VjGUI;
 
@@ -27,9 +32,14 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-import VjConfig.*;
 
-public class DependencyFrame extends JFrame implements ActionListener {
+import VjConfig.*;
+import VjGUI.util.ChildFrame;
+
+
+
+public class DependencyFrame extends JFrame 
+    implements ChildFrame, ActionListener {
 
     ConfigChunkDB    chunkdb;
     Vector           deps;
@@ -124,6 +134,34 @@ public class DependencyFrame extends JFrame implements ActionListener {
 	//System.out.println (s);
     }
 
+
+
+    /********************** ChildFrameStuff ************************/
+
+    public void destroy () {
+        dispose ();
+    }
+
+
+    public boolean matches (String cl, Object db, Object o) {
+	if (cl != null) {
+	    try {
+		if (!(Class.forName(cl).isInstance(this)))
+		    return false;
+	    }
+	    catch (Exception e) {
+		return false;
+	    }
+	}
+	if (chunkdb != db)
+	    return false;
+        return true;
+    }
+
+
+    public void updateUI () {
+	SwingUtilities.updateComponentTreeUI (this);
+    }
 
 }
 

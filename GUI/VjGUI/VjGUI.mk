@@ -33,6 +33,8 @@ VJGUI_SOURCES = VjGUI/VjControl.java		\
 		VjGUI/CoreDBEvent.java		\
 		VjGUI/LogMessageListener.java	\
 		VjGUI/LogMessageEvent.java	\
+		VjGUI/NetControlListener.java	\
+		VjGUI/NetControlEvent.java	\
 		VjGUI/ChunkDBTreeModelFactory.java 
 
 VJGUI_OBJS = ${VJGUI_SOURCES:.java=.class}

@@ -23,23 +23,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class ConnectionPane extends JPanel implements ActionListener {
+public class ConnectionPane extends JPanel 
+    implements ActionListener, NetControlListener {
 
-  JButton connect_button;
-  JButton disconnect_button;
-  JTextField hostfield;
-  JTextField portfield;
-
-
-    public void setHost (String _name) {
-	hostfield.setText (_name);
-	Core.net.setHost (_name);
-    }
-
-    public void setPort (int _port) {
-	portfield.setText (Integer.toString(_port));
-	Core.net.setPort (_port);
-    }
+    JButton connect_button;
+    JButton disconnect_button;
+    JTextField hostfield;
+    JTextField portfield;
 
 
     public ConnectionPane () {
@@ -71,6 +61,14 @@ public class ConnectionPane extends JPanel implements ActionListener {
 
 	connect_button.setToolTipText ("Connect or reconnect to remote host");
 	disconnect_button.setToolTipText ("Disconnect from remote host");
+
+	Core.net.addNetControlListener (this);
+    }
+
+
+    protected void setRemoteAddress (String _host, int port) {
+	hostfield.setText (_host);
+	portfield.setText (Integer.toString(port));
     }
 
 
@@ -81,14 +79,21 @@ public class ConnectionPane extends JPanel implements ActionListener {
         if (e.getSource() == connect_button) {
             Core.net.disconnect(); // if we were connected, drop it
             int portnum = Integer.parseInt(portfield.getText());
-            Core.net.connect(hostfield.getText(), portnum);
-            //Core.net.getChunkDescs();
-            //Core.net.getChunks();
+	    Core.net.setRemoteHost (hostfield.getText(), portnum);
+            Core.net.connect ();
         }
         else if (e.getSource() == disconnect_button) {
             Core.net.disconnect();
         }
     }  // actionPerformed()
+
+
+    /********************* NetControlListener Stuff ******************/
+    public void openedConnection (NetControlEvent e) {;}
+    public void closedConnection (NetControlEvent e) {;}
+    public void addressChanged (NetControlEvent e) {
+	setRemoteAddress (e.host, e.port);
+    }
 
 }
 

@@ -39,10 +39,11 @@ import VjGUI.util.*;
 
 public class ChunkDescFrame 
     extends JFrame 
-    implements ActionListener, WindowListener { 
+    implements ChildFrame, ActionListener, WindowListener { 
 
     JFrameParent parent;
     ChunkDesc desc;
+    ChunkDescDB descdb;
     Vector proppanels; // property description panels.
     JPanel properties;
     JTextField namefield;
@@ -58,6 +59,7 @@ public class ChunkDescFrame
 
     public ChunkDescFrame (JFrameParent p, 
 			   ChunkDesc _desc,
+			   ChunkDescDB _descdb,
 			   boolean _editable) {
 	super("Edit ChunkDesc: "+_desc.name);
 
@@ -67,6 +69,7 @@ public class ChunkDescFrame
 	parent = p;
 	editable = _editable;
 	desc = _desc;
+	descdb = _descdb;
 	proppanels = new Vector();
 	
 	//setFont(core.ui.windowfont);
@@ -192,6 +195,11 @@ public class ChunkDescFrame
 
 
 
+    public ChunkDescDB getDescDB() {
+	return descdb;
+    }
+
+
     public void closeFrame(boolean ok) {
 	/* for each property panel, call closeEnums() */
 	for (int i = 0; i < proppanels.size(); i++) {
@@ -283,6 +291,34 @@ public class ChunkDescFrame
     public void windowDeiconified(WindowEvent e) {}
     public void windowIconified(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
+
+
+    /***************** ChildFrame Stuff ***************************/
+
+    public void destroy () {
+	dispose();
+    }
+
+
+    public boolean matches (String cl, Object db, Object o) {
+	if (cl != null) {
+	    try {
+		if (!(Class.forName(cl).isInstance(this)))
+		    return false;
+	    }
+	    catch (Exception e) {
+		return false;
+	    }
+	}
+	if (db != descdb)
+	    return false;
+	return (o == null) || (o == desc);
+    }
+
+
+    public void updateUI () {
+	SwingUtilities.updateComponentTreeUI (this);
+    }
 
 
 }

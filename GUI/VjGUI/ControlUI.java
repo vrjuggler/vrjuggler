@@ -27,9 +27,12 @@ import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
 import java.util.Vector;
+
 import VjGUI.*;
 import VjGUI.util.JFrameParent;
+import VjGUI.util.ChildFrame;
 import VjGUI.configchunk.ConfigChunkFrame;
+import VjGUI.chunkdesc.ChunkDescFrame;
 import VjConfig.*;
 import VjPerf.*;
 
@@ -37,16 +40,10 @@ import VjPerf.*;
 public class ControlUI  
     extends JFrame 
     implements ActionListener, WindowListener, JFrameParent, 
-	       LogMessageListener, DescDBListener {
+	       LogMessageListener, DescDBListener, ChunkDBListener, CoreDBListener {
 
 
-    JPanel      main_panel;
-    JComponent configure_pane;
-    ConnectionPane connection_pane;
-    JComponent descdb_pane;
-    JComponent console_pane;
-    JComponent orgtree_pane;
-    PerfAnalyzerPanel perfanalyze_pane;
+    private JPanel      main_panel;
 
     JMenuBar    main_menubar;
     JMenu       file_menu, 
@@ -80,16 +77,18 @@ public class ControlUI
 
     JLabel      status_label;
 
-    ConfigChunkFrame prefs_frame;
+    Vector child_frames;
 
-    Vector help_frames;
+    //Vector help_frames;
 
 
     public ControlUI () {
 	super ("VR Juggler Control Program");
 
-	help_frames = new Vector();
-	prefs_frame = null;
+	JComponent p;  // temp panel pointer
+
+	//help_frames = new Vector();
+	child_frames = new Vector();
 
 	JTabbedPane tabpane;
 	main_panel = new JPanel();
@@ -102,23 +101,27 @@ public class ControlUI
 	status_label = new JLabel (" ");
 	main_panel.add (status_label, "South");
 
-	configure_pane = new ConfigurePane();
-	tabpane.add ("Configure", configure_pane);
+	// ------------------- SUBPANELS ----------------------
+	// eventually, this will need to know to load components from somewhere
 
-	connection_pane = new ConnectionPane();
-	tabpane.add ("Connection", connection_pane);
+	p = new ConfigurePane();
+	tabpane.add ("Configure", p);
+
+	p = new ConnectionPane();
+	tabpane.add ("Connection", p);
 	
-	descdb_pane = new DescDBPanel();
-	tabpane.add ("Descriptions", descdb_pane);
+	p = new DescDBPanel();
+	tabpane.add ("Descriptions", p);
 	
-	orgtree_pane = new ChunkOrgTreePane();
-	tabpane.add ("Org Tree", orgtree_pane);
+	p = new ChunkOrgTreePane();
+	tabpane.add ("Org Tree", p);
 
-	console_pane = new ConsolePane();
-	tabpane.add ("Messages", console_pane);
+	p = new ConsolePane();
+	tabpane.add ("Messages", p);
 
-	perfanalyze_pane = new PerfAnalyzerPanel(Core.perf_collection);
-	tabpane.add ("Performance", perfanalyze_pane);
+	p = new PerfAnalyzerPanel();
+	tabpane.add ("Performance", p);
+
 
 	// --------------------- MENUS -------------------------------------------
 
@@ -198,8 +201,10 @@ public class ControlUI
 	//show();
 	//configure_pane.setDividerLocation (0.5);
 
+	Core.gui_chunkdb.addChunkDBListener (this);
 	Core.addLogMessageListener (this);
 	Core.descdb.addDescDBListener (this);
+	Core.addCoreDBListener (this);
     }
 
 
@@ -208,6 +213,42 @@ public class ControlUI
         dispose();
         System.exit(0);
     }
+
+
+
+    public void addChildFrame (ChildFrame f) {
+	child_frames.addElement(f);
+    }
+
+    public void removeChildFrame (ChildFrame f) {
+	child_frames.removeElement (f);
+	f.destroy();
+    }
+
+    public void removeChildFramesMatching (String cl, Object db, Object o) {
+	ChildFrame f;
+	for (int i = 0; i < child_frames.size(); ) {
+	    f = (ChildFrame)child_frames.elementAt(i);
+	    if (f.matches (cl, db, o)) {
+		child_frames.removeElementAt(i);
+		f.destroy();
+	    }
+	    else
+		i++;
+	}
+    }
+
+    public ChildFrame getChildFrameMatching (String cl, Object db, Object o) {
+	ChildFrame f;
+	for (int i = 0; i < child_frames.size(); i++) {
+	    f = (ChildFrame)child_frames.elementAt(i);
+	    if (f.matches (cl, db, o))
+		return f;
+	}
+	return null;
+    }
+
+
 
 
     public void actionPerformed (ActionEvent e) {
@@ -235,11 +276,20 @@ public class ControlUI
 
 	}
 	else if (o == editprefs_mi) {
-	    if (prefs_frame == null) {
-		prefs_frame = new ConfigChunkFrame (this, Core.vjcontrol_preferences);
+	    Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
+	    if (v.size() >= 1) {
+		ConfigChunkFrame f = (ConfigChunkFrame)getChildFrameMatching ("VjGUI.configchunk.ConfigChunkFrame", Core.gui_chunkdb, 
+									      v.elementAt(0));
+		if (f == null) {
+		    f = new ConfigChunkFrame (this, 
+					      (ConfigChunk)(v.elementAt(0)), 
+					      Core.gui_chunkdb);
+		    addChildFrame (f);
+		}
+		else
+		    f.show();
 	    }
-	    else
-		prefs_frame.show();
+
 	}
 	else if (o == saveprefs_mi) {
 	    //System.out.println ("need to add save prefs");
@@ -314,7 +364,7 @@ public class ControlUI
 	    return;
 
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
-	help_frames.addElement (help_frame);
+	child_frames.addElement (help_frame);
 	help_frame.show();
     }
 
@@ -325,32 +375,59 @@ public class ControlUI
 	//System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
-	help_frames.addElement (help_frame);
+	child_frames.addElement (help_frame);
 	help_frame.show();
     }
     
 
+
     //: Callback when one of ControlUI's children is closed (this sucks)
-    public void closedChild (JFrame f, boolean ok) {
-	if (f instanceof HTMLFrame) {
-	    help_frames.removeElement (f);
-	    f.dispose();
+    public void closedChild (ChildFrame frame, boolean ok) {
+	if (frame instanceof HTMLFrame) {
+	    child_frames.removeElement (frame);
+	    frame.destroy();
 	}
-	else if (f instanceof ConfigChunkFrame) {
+	else if (frame instanceof ChunkDescFrame) {
+	    ChunkDescFrame f = (ChunkDescFrame)frame;
+
 	    if (ok) {
-		ConfigChunk newc = ((ConfigChunkFrame)f).getValue();
-		Core.gui_chunkdb.replace (Core.vjcontrol_preferences, newc);
-		Core.vjcontrol_preferences = newc;
-		Core.reconfigure();
+		ChunkDesc oldc = f.getOldValue();
+		ChunkDesc newc = f.getNewValue();
+		ChunkDescDB descdb = f.getDescDB();
+		if (oldc != null) {
+		    descdb.replace (oldc, newc);
+		}
 	    }
-	    f.dispose();
-	    prefs_frame = null;
+	    child_frames.removeElement(f);
+	    f.destroy();
+	}
+	else if (frame instanceof ConfigChunkFrame) {
+	    ConfigChunkFrame f = (ConfigChunkFrame)frame;
+	    if (ok) {
+		ConfigChunk newc, oldc;
+		oldc = f.getOldValue();
+		newc = f.getNewValue();
+		ConfigChunkDB chunkdb = f.getChunkDB();
+		if (chunkdb == Core.active_chunkdb) {
+		    if (oldc.getName().equals (newc.getName()))
+			Core.net.sendChunk(newc);
+		    else {
+			Core.net.removeChunk (oldc);
+			Core.net.sendChunk (newc);
+		    }
+		}
+		else {
+		    chunkdb.replace (oldc, newc);
+		}
+	    }
+	    child_frames.removeElement(f);
+	    f.destroy();
 	}
     }
 
 
 
-    public void setLookNFeel (String s) {
+    protected void setLookNFeel (String s) {
 	String lnf = "";
 	
 	if (s.equalsIgnoreCase ("java"))
@@ -368,6 +445,9 @@ public class ControlUI
 	try {
 	    UIManager.setLookAndFeel (lnf);
 	    SwingUtilities.updateComponentTreeUI (this);
+	    for (int i = 0; i < child_frames.size(); i++) {
+		((ChildFrame)child_frames.elementAt(i)).updateUI();
+	    }
 	}
 	catch (Exception ex) {
 	    Core.consoleErrorMessage ("GUI", "Couldn't change look and feel: " + ex);
@@ -376,7 +456,7 @@ public class ControlUI
 
 
 
-    public void totalSetFont (String name, int size) {
+    protected void totalSetFont (String name, int size) {
 	//System.out.println (UIManager.getDefaults());
 	//There ought to be a better way to do this...
 	Font newfont, oldfont;
@@ -481,12 +561,33 @@ public class ControlUI
     }
 
 
-    public void refreshPerfData() {
-	perfanalyze_pane.refresh();
+
+    protected void reconfigure (ConfigChunk ch) {
+	// called whenever vjcontrol_preferences changes
+	String looknfeel = null;
+	int fontsize = -1;
+	String fontname = "";
+
+	try {
+	    looknfeel = 
+		ch.getPropertyFromToken ("looknfeel").getValue(0).getString();
+	    fontsize = 
+		ch.getPropertyFromToken("fontsize").getValue(0).getInt();
+	    fontname = 
+		ch.getPropertyFromToken("fontname").getValue(0).getString();
+	}
+	catch (Exception e) {
+	    Core.consoleInfoMessage ("vjControl", "Old vjcontrol preferences file - please check preferences and re-save");
+	}
+
+	if (fontname != "" && fontsize != -1)
+	    totalSetFont (fontname, fontsize);
+	setLookNFeel (looknfeel);
+
     }
 
 
-    /* WindowListener Stuff */
+    /******************** WindowListener Stuff ***********************/
     public void windowActivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
     public void windowClosing(WindowEvent e) {
@@ -498,7 +599,7 @@ public class ControlUI
     public void windowOpened(WindowEvent e) {}
 
 
-    /* LogMessageListener stuff */
+    /******************* LogMessageListener stuff *********************/
     public void logMessage (LogMessageEvent e) {
 	String source = e.getSourceName();
 	String s = e.getMessage();
@@ -543,6 +644,33 @@ public class ControlUI
     public void removeDesc (DescDBEvent e) {}
     public void replaceDesc (DescDBEvent e) {}
     public void removeAllDescs (DescDBEvent e) {}
+
+
+    /************************** ChunkDBListener stuff **********************/
+    //: ControlUI only listens to ChunkDB events from the GUI chunkdb
+    public void addChunk (ChunkDBEvent e) {
+	reconfigure (e.getNewChunk());
+    }
+    public void removeChunk (ChunkDBEvent e) {;}
+    public void replaceChunk (ChunkDBEvent e) {
+	reconfigure (e.getNewChunk());
+    }
+    public void removeAllChunks (ChunkDBEvent e) {;}
+
+
+    /************************ CoreDBListener Stuff ************************/
+    // These are mostly in here so we can close child frames when an 
+    // associated db is unloaded.
+    public void addChunkDB (CoreDBEvent e) {
+    }
+    public void removeChunkDB (CoreDBEvent e) {
+	removeChildFramesMatching (null, e.getChunkDB(), null);
+    }
+    public void addDescDB (CoreDBEvent e) {
+    }
+    public void removeDescDB (CoreDBEvent e) {
+	removeChildFramesMatching (null, e.getDescDB(), null);
+    }
 
 }
 

@@ -36,10 +36,10 @@ import VjGUI.*;
 import VjConfig.*;
 import VjPerf.*;
 
-public class Core {
+public class Core implements NetControlListener, ChunkDBListener {
 
-    static Core instance; // dummy instance used as source of CoreDBEvents
 
+    // main components that the GUI elements are allowed to access
     static public ChunkOrgTree chunkorgtree;
     static public Vector chunkdbs;
     static public Vector descdbs;
@@ -49,10 +49,10 @@ public class Core {
     static public ControlUI ui;
     static public ConfigChunkDB gui_chunkdb;
     static public ConfigChunkDB default_chunkdb;
-    static public ConfigChunk vjcontrol_preferences = null;
-
     static public PerfDataCollection perf_collection;
 
+    // private data
+    static private Core instance; // dummy instance used as source for CoreDBEvents
     static private Vector coredb_targets;
     static private Vector logmessage_targets;
 
@@ -72,8 +72,10 @@ public class Core {
     static final private int ADD_DESCDB = 3;
     static final private int REMOVE_DESCDB = 4;
 
+
     private Core() {
     }
+
 
     static public ConfigChunk findPrefixMatchChunk (String name) {
 	/* finds a chunk whose name is a prefix of name */
@@ -90,6 +92,7 @@ public class Core {
 	}
 	return null;
     }
+
 
 
     static public void initialize () {
@@ -114,6 +117,8 @@ public class Core {
 	active_chunkdb.setName ("Active Configuration");
 	net = new NetControl();
 
+	net.addNetControlListener (instance);
+	gui_chunkdb.addChunkDBListener (instance);
 
 	new_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/new.gif"))
 ;
@@ -135,19 +140,7 @@ public class Core {
 
 
 
-    static public void enableActiveDB () {
-	chunkdbs.addElement (active_chunkdb);
-	notifyCoreDBTargets (ADD_CHUNKDB, active_chunkdb, null);
-    }
-
-
-
-    static public void disableActiveDB () {
-	notifyCoreDBTargets (REMOVE_CHUNKDB, active_chunkdb, null);
-	chunkdbs.removeElement (active_chunkdb);
-    }
-
-
+    //: Removes a ChunkDB from the system
     static public void closeChunkDB (ConfigChunkDB db) {
 	if (db == null || db == active_chunkdb)
 	    return;
@@ -156,7 +149,8 @@ public class Core {
     }
 
 
-
+    
+    //: Removes a DescDB from the system
     static public void closeDescDB (ChunkDescDB db) {
 	if (db == null || db.name.equalsIgnoreCase ("No Selection") || db == descdb)
 	    return;
@@ -166,8 +160,7 @@ public class Core {
 
 
 
-
-    static public String createUniqueChunkDBName (String base) {
+    static protected String createUniqueChunkDBName (String base) {
 	// returns a string, starting with base, which doesn't
 	// conflict with names of any dbs in chunkdbs.
 	int i;
@@ -184,7 +177,7 @@ public class Core {
 
 
 
-    static public String createUniqueDescDBName (String base) {
+    static protected String createUniqueDescDBName (String base) {
 	int i;
 	String name;
 	if (getChunkDescDB (base) == null)
@@ -195,6 +188,7 @@ public class Core {
 		return name;
 	}
     }
+
 
 
     static public String renameChunkDB (ConfigChunkDB _db, String newbase) {
@@ -208,6 +202,7 @@ public class Core {
     }
 
 
+
     static public String renameDescDB (ChunkDescDB _db, String newbase) {
 	if (_db.name.equals (newbase))
 	    return newbase;
@@ -217,6 +212,8 @@ public class Core {
 	notifyCoreDBTargets (ADD_DESCDB, null, _db);
 	return newbase;
     }
+
+
 
     static public String addChunkDB (ConfigChunkDB _chunkdb) {
 	_chunkdb.setName (createUniqueChunkDBName (_chunkdb.name));
@@ -237,18 +234,7 @@ public class Core {
 
 
 
-//      static public void rebuildAllTrees () {
-//  	// rebuilds all the trees in chunkdbs...
-//  	ChunkDBTreeModel dbt;
-//  	for (int i = 0; i < chunkdbs.size(); i++) {
-//  	    dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
-//  	    dbt.buildTree();
-//  	}
-//      }
-
-
-
-    static ConfigChunkDB getChunkDB (String name) {
+    static protected ConfigChunkDB getChunkDB (String name) {
 	ConfigChunkDB db;
 	for (int i = 0; i < chunkdbs.size(); i++) {
 	    db = (ConfigChunkDB)chunkdbs.elementAt(i);
@@ -260,7 +246,7 @@ public class Core {
     
 
 
-    static ChunkDescDB getChunkDescDB (String name) {
+    static protected ChunkDescDB getChunkDescDB (String name) {
 	ChunkDescDB db;
 	for (int i = 0; i < descdbs.size(); i++) {
 	    db = (ChunkDescDB)descdbs.elementAt(i);
@@ -272,27 +258,17 @@ public class Core {
 
 
 
-    static public void reconfigure() {
+    static protected void reconfigure(ConfigChunk ch) {
 	// called whenever vjcontrol_preferences changes
-	String looknfeel = null;
 	int i;
 	String s;
 	Property p;
-	int fontsize = -1;
-	String fontname = "";
 	String defaultchunkfile = null;
 
-	ConfigChunk ch = vjcontrol_preferences;
 	if (ch == null)
 	    return;
 
 	try {
-	    ui.connection_pane.setHost (ch.getPropertyFromToken("host").getValue(0).getString());
-	    ui.connection_pane.setPort (ch.getPropertyFromToken("port").getValue(0).getInt());
-	    looknfeel = ch.getPropertyFromToken ("looknfeel").getValue(0).getString();
-
-	    fontsize = ch.getPropertyFromToken("fontsize").getValue(0).getInt();
-	    fontname = ch.getPropertyFromToken("fontname").getValue(0).getString();
 	    //window_pos_kludge = ch.getPropertyFromToken("windowposkludge").getValue(0).getBool();
 
 	    screenWidth = ch.getPropertyFromToken("windowsize").getValue(0).getInt();
@@ -311,8 +287,6 @@ public class Core {
 	if (screenHeight < 1)
 	    screenHeight = 600;
 
-	ui.totalSetFont (fontname, fontsize);
-	ui.setLookNFeel (looknfeel);
     }
 
 
@@ -423,6 +397,32 @@ public class Core {
     }
 
 
+
+    /**************** NetControlListener Stuff *********************/
+    public void openedConnection (NetControlEvent e) {
+	chunkdbs.addElement (active_chunkdb);
+	notifyCoreDBTargets (ADD_CHUNKDB, active_chunkdb, null);
+    }
+
+    public void closedConnection (NetControlEvent e) {
+	notifyCoreDBTargets (REMOVE_CHUNKDB, active_chunkdb, null);
+	chunkdbs.removeElement (active_chunkdb);
+    }
+
+    public void addressChanged (NetControlEvent e) {
+    }
+
+
+    /****************** ChunkDBListener Stuff **********************/
+    //: Core only listens to ChunkDB events from the GUI chunkdb
+    public void addChunk (ChunkDBEvent e) {
+	reconfigure (e.getNewChunk());
+    }
+    public void removeChunk (ChunkDBEvent e) {;}
+    public void replaceChunk (ChunkDBEvent e) {
+	reconfigure (e.getNewChunk());
+    }
+    public void removeAllChunks (ChunkDBEvent e) {;}
 
 }
 

@@ -105,18 +105,20 @@ public class VarValueBigChunkPanel extends VarValuePanel implements ActionListen
 	    parent.removePanel(this);
 	else if (e.getSource() == editbutton) {
 	    if (chunkframe == null)
-		chunkframe = new ConfigChunkFrame (this, chunk);
+		chunkframe = new ConfigChunkFrame (this, chunk, null);
+	    // BUG!!! that call to ConfigChunkFrame() ought to pass the
+	    // chunkdb, but this panel doesn't know what it is!!!
 	}
     }
 
 
-    public void closedChild (JFrame frame, boolean ok) {
+    public void closedChild (ChildFrame frame, boolean ok) {
 	if (chunkframe != frame) {
 	    Core.consoleErrorMessage ("VarValueBigChunkPanel", 
 				      "Got a closedChunkFrame for a ChunkFrame I never made!!! EEEK!");
 	}
 	else if (ok) {
-	    chunk = chunkframe.getValue();
+	    chunk = chunkframe.getNewValue();
 	}
 	chunkframe.dispose();
 	chunkframe = null;
