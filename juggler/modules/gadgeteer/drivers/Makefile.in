@@ -135,7 +135,6 @@ endif
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	5DT/DataGlove		 \
-	Ascension/Flock		 \
 	Ascension/MotionStar	 \
 	Fakespace/PinchGlove	 \
 	Immersion/IBox		 \
@@ -150,6 +149,8 @@ SUBDIR=	5DT/DataGlove		 \
 	Polhemus/Fastrak	 \
 	VRCO/TrackdAPI		 \
 	VirtualTechnologies/CyberGlove
+#	Ascension/Flock
+
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
