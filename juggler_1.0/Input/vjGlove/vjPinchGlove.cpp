@@ -56,17 +56,21 @@ bool vjPinchGlove::config(vjConfigChunk *c)
 
     vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
 
+    /*
     char* home_dir = c->getProperty("calDir").cstring();
     if (home_dir != NULL)
     {
         mCalDir = new char [strlen(home_dir) + 1];
         strcpy(mCalDir,home_dir);
     }
-
+    */
+      
+    // already set in base interface.
+    //std::string sPort = c->getProperty("port");
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: fsPinchGlove has no posProxy." << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] ERROR: fsPinchGlove has no posProxy." << endl << vjDEBUG_FLUSH;
        return false;
     }
 
@@ -75,7 +79,7 @@ bool vjPinchGlove::config(vjConfigChunk *c)
     if(proxy_index != -1)
        mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
-       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
+       vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
     mGlove = new fsPinchGlove();
 
@@ -90,11 +94,14 @@ vjPinchGlove::~vjPinchGlove ()
 
 int vjPinchGlove::startSampling()
 {
+   vjDEBUG(vjDBG_INPUT_MGR, 0)<<"[vjPinch] Begin sampling\n"<<flush;
+   
    if (myThread == NULL)
    {
       resetIndexes();
 
       // Create a new thread to handle the control
+      vjDEBUG(vjDBG_INPUT_MGR, 0)<<"[vjPinch] Spawning control thread\n"<<flush;
       vjThreadMemberFunctor<vjPinchGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjPinchGlove>(this, &vjPinchGlove::controlLoop, NULL);
 
@@ -106,7 +113,7 @@ int vjPinchGlove::startSampling()
       }
       else
       {
-         vjDEBUG(vjDBG_INPUT_MGR,1) << "vjPinchGlove is active " << endl;
+         vjDEBUG(vjDBG_INPUT_MGR,1) << "[vjPinch] vjPinchGlove is active " << endl;
          active = 1;
          return 1;
       }
@@ -117,12 +124,22 @@ int vjPinchGlove::startSampling()
 
 void vjPinchGlove::controlLoop(void* nullParam)
 {
-	if (mGlove->connectToHardware( sPort ) == false)
+   vjDEBUG(vjDBG_INPUT_MGR, 0)<<"[vjPinch] Entered control thread\n"<<flush;
+   
+   bool result = false;
+   while (result == false)
 	{
-		vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: Can't open Pinchglove or it is already opened." << vjDEBUG_FLUSH;
-		return;
-	}
+		vjDEBUG(vjDBG_INPUT_MGR, 0)<<"[vjPinch] Connecting to "<<sPort<<"...\n"<<flush;
+      result = mGlove->connectToHardware( sPort );
+      if (result == false)
+      {
+         vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] ERROR: Can't open or it is already opened." << vjDEBUG_FLUSH;
+	      usleep(14500);
+      }
+   }
 
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] Successfully connected, Now sampling pinch data." << vjDEBUG_FLUSH;
+	      
 	while(1)
 	{
 		sample();
@@ -131,18 +148,26 @@ void vjPinchGlove::controlLoop(void* nullParam)
 
 int vjPinchGlove::sample()
 {
-    // Tell the glove to resample
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] sample" << vjDEBUG_FLUSH;
+	 
+   // Tell the glove to resample
+vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] updateStringFromHardware" << vjDEBUG_FLUSH;
     mGlove->updateStringFromHardware();
-
+	
     // Copy the data from the fsPinchGlove to myself.
-    copyDataFromGlove();
-
+vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] copyDataFromGlove" << vjDEBUG_FLUSH;
+    copyDataFromGlove();//dies here...
+	
     // Update the xform data
+vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] progress" << vjDEBUG_FLUSH;
     mTheData[progress][0].calcXforms();
     mTheData[progress][1].calcXforms();
-
+	
+vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] swapValidIndexes" << vjDEBUG_FLUSH;
     swapValidIndexes();
-    return 1;
+    
+vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] return" << vjDEBUG_FLUSH;
+	    return 1;
 }
 
 void vjPinchGlove::updateData()
@@ -171,7 +196,7 @@ int vjPinchGlove::stopSampling()
 
       // XXX: there is no "close"
       //mGlove->Close();
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjPinchGlove.." << endl;
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "[vjPinch] stopping vjPinchGlove.." << endl;
    }
    return 1;
 }
