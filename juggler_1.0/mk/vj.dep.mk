@@ -1,69 +1,50 @@
 # -----------------------------------------------------------------------------
 # $Id$
 #
-# This include file <vj.dep.mk> handles Makefile dependencies.
+# This include file <vj.dep.mk> handles source code dependencies.  It
+# generates makefiles corresponding to each source file (ending in .c or .cpp)
+# that have the dependencies for that source file.  The generated file can
+# then be included in the Makefile for the directory.
 # -----------------------------------------------------------------------------
-# The targets defined by this file are:
+# The Makefile including this file must define the following variables:
 #
-# depend    - Generate the dependencies for the source files.
-# newdepend - Forcibly regenerate the dependencies for the source files.
-# -----------------------------------------------------------------------------
-# The Makefile including this file should define the following variables:
-#
-# srcdir        - The directory where the source file(s) is/are located.
-# DEPENDFLAGS   - Flags to pass to makedepend(1).
-# DEPEND_EXTRAS - Extra flags that may not be recognized by makedepend(1)
-#                 because they may be specific to a given compiler.  Any
-#                 recognized options will be processed normally while any
-#                 unrecognized options will be ignored.  Thus, this variable
-#                 could be set to ${CLFAGS} to allow compiler options
-#                 necessary for the source to compile to be passed to
-#                 makedepend(1).
-# DEPEND_SRCS   - The list of source files to be processed.
-# OBJDIR        - The directory to which the object file(s) will be written.
-# WORKDIR       - The working directory (not necessarily where the source
-#                 files are found).
+# C_COMPILE    - The compiler command for C files.
+# CXX_COMPILE  - The compiler command for C++ files.
+# DEPEND_FILES - The list of dependency makefiles to be generated.
+# OBJDIR       - The directory to which the object file(s) will be written.
 #
 # Example:
-#        srcdir = /usr/src/proj1
-#        OBJDIR = /usr/obj/proj1
-#   DEPENDFLAGS = ${INCLUDES} ${DEFS}
-# DEPEND_EXTRAS = ${CFLAGS}
-#   DEPEND_SRCS = file1.c file2.c file3.c
-#       WORKDIR = /usr/build/proj1
+#         srcdir = /usr/src/proj1
+#         OBJDIR = /usr/obj/proj1
+#   DEPEND_FILES = file1.d file2.d file3.d
 #
 # With these settings, the source code comes from /usr/src/proj1 and the
-# object files go into /usr/obj/proj1.  The actual Makefile from which this
-# is run is in /usr/build/proj1.
+# object files go into /usr/obj/proj1.
 # -----------------------------------------------------------------------------
-# Optionally, the including file can add to the following existing variables
-# to provide additional local 'depend' and 'newdepend' functionality:
+
+# Conditionally set ${OBJDIR} just to be safe.
+ifndef OBJDIR
+    OBJDIR	= .
+endif
+
+ifdef DO_CLEANDEPEND
+    CLEAN_FILES	+= ${DEPEND_FILES}
+endif
+
+# This expression reformats the output from the dependency text to be of the
+# form:
 #
-# DEPEND_DEPS    - Dependencies for the 'depend' target.
-# NEWDEPEND_DEPS - Dependencies for the 'newdepend' target.
-# -----------------------------------------------------------------------------
+#     ${OBJDIR}/file1.o file1.d : ...
+#
+# where file1 is the value in $* and file1.d is $@.
+_SED_EXP	= '\''s/\($*\)\.o[ :]*/$${OBJDIR}\/\1.o $@ : /g'\''
 
-# Variables that should be used only by this file.
-_DEPEND_FILE	= ${WORKDIR}/Makefile
-_DEPEND_DONE	= .depend_done
+%.d: %.c
+	@echo "Updating dependency file $@ ..."
+	@${SHELL} -ec '${C_COMPILE} -M $< | sed ${_SED_EXP} > $@ ;	\
+                        [ -s $@ ] || rm -f $@'
 
-DEPEND_DEPS	+= ${_DEPEND_DONE}
-NEWDEPEND_DEPS	?=
-
-# Add ${_DEPEND_DONE} to ${CLEAN_FLAGS} and conditionally set ${OBJDIR} just
-# to be safe.
-CLEAN_FILES	+= ${_DEPEND_DONE}
-OBJDIR		?= .
-
-depend: ${DEPEND_DEPS}
-
-newdepend: ${NEWDEPEND_DEPS}
-	-@rm -f ${_DEPEND_DONE}
-	${MAKE} depend
-
-# This target will allow the 'depend' target to be built only once.
-${_DEPEND_DONE}:
-	cd ${srcdir} &&							\
-          makedepend -f${_DEPEND_FILE} -p'$${OBJDIR}/'			\
-              ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- ${DEPEND_SRCS}
-	@touch ${WORKDIR}/${_DEPEND_DONE}
+%.d: %.cpp
+	@echo "Updating dependency file $@ ..."
+	@${SHELL} -ec '${CXX_COMPILE} -M $< | sed ${_SED_EXP} > $@ ;	\
+                        [ -s $@ ] || rm -f $@'
