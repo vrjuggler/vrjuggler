@@ -84,7 +84,7 @@ ISD_GET_TIME            _ISD_GetTime              = NULL;
 ******************************************************************************/
 static DLL *load_ISLIB(  const char *driver_name )
 {
-    if( hLib = dll_load( driver_name ) )
+    if( (hLib = dll_load( driver_name )) )
     {
         _ISD_OpenTracker         = ( ISD_OPEN_FN )           dll_entrypoint( hLib, "ISD_OpenTracker" );
         _ISD_OpenAllTrackers     = ( ISD_OPEN_ALL_FN )       dll_entrypoint( hLib, "ISD_OpenAllTrackers" );
@@ -158,7 +158,7 @@ ISD_TRACKER_HANDLE ISD_OpenTracker(
                                    DWORD commPort, 
                                    Bool infoScreen, 
                                    Bool verbose,
-                                   const char *name 
+                                   const char *name
                                    )
 {
     if( !_ISD_OpenTracker ) /* this will be NULL if dll not loaded */
@@ -183,8 +183,8 @@ DWORD ISD_OpenAllTrackers(
                           Hwnd hParent, 
                           ISD_TRACKER_HANDLE *handle, 
                           Bool infoScreen, 
-                          Bool verbose,      
-                          const char *name 
+                          Bool verbose,
+                          const char *name
                           )
 {
     if( !_ISD_OpenAllTrackers ) /* this will be NULL if dll is not loaded */

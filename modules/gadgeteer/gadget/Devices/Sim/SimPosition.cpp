@@ -43,6 +43,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/EulerAngle.h>
 
+#include <boost/concept_check.hpp>
+
 namespace gadget
 {
 
@@ -157,10 +159,10 @@ void SimPosition::updateData()
    // Debug output
    //vjCoord pos_data(mPos);
    //vprDEBUG(vprDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vprDEBUG_FLUSH;
-   
+
    // Set the time for the position data to the EventWindow timestamp
    mPos.setTime(mEventWin->getTimeStamp());
-   addPositionSample(std::vector< gadget::PositionData>(1, mPos) );   
+   addPositionSample(std::vector< gadget::PositionData>(1, mPos) );
 
    swapPositionBuffers();  // Swap the buffers
 }
@@ -273,6 +275,7 @@ void SimPosition::rotRollCCW(const float amt)
  */
 bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 {
+   boost::ignore_unused_variable_warning(trans);
    // check if the movement is goign to intersect with any of the surface displays
    // If it does, then return false
    /*

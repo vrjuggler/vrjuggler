@@ -36,17 +36,19 @@
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
 
+#include <boost/concept_check.hpp>
+
 namespace cluster
 {
-   ApplicationDataServer::ApplicationDataServer(vpr::GUID guid,  ApplicationData* user_data, vpr::GUID plugin_guid) 
+   ApplicationDataServer::ApplicationDataServer(vpr::GUID guid,  ApplicationData* user_data, vpr::GUID plugin_guid)
    {
       mId = guid;
       mPluginGUID = plugin_guid;
-      
+
       mApplicationData = user_data;
 
       mDataPacket = new DataPacket();
-      mDeviceData = new std::vector<vpr::Uint8>;      
+      mDeviceData = new std::vector<vpr::Uint8>;
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
    }
 
@@ -61,7 +63,7 @@ namespace cluster
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Sending data to: " 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Sending data to: "
             << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
          try
          {
@@ -71,16 +73,16 @@ namespace cluster
          }
          catch(cluster::ClusterException cluster_exception)
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ApplicationDataServer::send() Caught an exception!" 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ApplicationDataServer::send() Caught an exception!"
                << std::endl << vprDEBUG_FLUSH;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
                << cluster_exception.getMessage() << clrRESET
                << std::endl << vprDEBUG_FLUSH;
 
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
                "ApplicationDataServer::send() We have lost our connection to: " << (*i)->getName() << ":" << (*i)->getPort()
                << std::endl << vprDEBUG_FLUSH;
-            
+
             (*i)->setConnected(ClusterNode::DISCONNECTED);
             debugDump(vprDBG_CONFIG_LVL);
          }
@@ -104,16 +106,16 @@ namespace cluster
       lockClients();
 
       mClients.push_back(new_client_node);
-      
+
       unlockClients();
    }
-   
+
 /*   void ApplicationDataServer::removeClient(const std::string& host_name)
    {
       vprASSERT(0 == mClientsLock.test());
       lockClients();
-   
-      for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ; 
+
+      for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ;
             i!= mClients.end() ; i++)
       {
          if ((*i)->getHostname() == host_name)
@@ -125,10 +127,11 @@ namespace cluster
       }
       unlockClients();
    }
-  
+
 */
    void ApplicationDataServer::debugDump(int debug_level)
    {
+      boost::ignore_unused_variable_warning(debug_level);
 /*      vprASSERT(0 == mClientsLock.test());
       lockClients();
 
@@ -137,12 +140,12 @@ namespace cluster
                                  std::string("------------------------------------------\n"));
 
       vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mId.toString() << std::endl << vprDEBUG_FLUSH;
-      
-      { // Used simply to make the following DebugOutputGuard go out of scope 
+
+      { // Used simply to make the following DebugOutputGuard go out of scope
          vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
                            std::string("------------ Clients ------------\n"),
                            std::string("---------------------------------\n"));
-         for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ; 
+         for (std::map<cluster::ClusterNode*,vpr::Uint16>::iterator i = mClients.begin() ;
                i!= mClients.end() ; i++)
          {
             vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
@@ -151,8 +154,8 @@ namespace cluster
          }
       }
       unlockClients();
-      
-*/      
+
+*/
    }
 
 } // End of gadget namespace

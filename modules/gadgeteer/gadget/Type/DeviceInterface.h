@@ -37,6 +37,8 @@
 #include <vector>
 #include <gadget/Util/Debug.h>
 
+#include <boost/concept_check.hpp>
+
 namespace gadget
 {
 
@@ -63,7 +65,10 @@ class PositionProxy;
 class GADGET_CLASS_API BaseDeviceInterface
 {
 public:
-   BaseDeviceInterface(const BaseDeviceInterface& other) {;}
+   BaseDeviceInterface(const BaseDeviceInterface& other)
+   {
+      boost::ignore_unused_variable_warning(other);
+   }
 
 public:
    BaseDeviceInterface();
@@ -116,6 +121,7 @@ class DeviceInterface : public BaseDeviceInterface
 {
 public:
    DeviceInterface(DeviceInterface& other)
+    : BaseDeviceInterface(other)
    {
       if (other.mTypeSpecificProxy != NULL)
       {
@@ -129,6 +135,7 @@ public:
 
 public:
    DeviceInterface()
+    : BaseDeviceInterface()
    {
       mTypeSpecificProxy = &mDummyProxy;
    }

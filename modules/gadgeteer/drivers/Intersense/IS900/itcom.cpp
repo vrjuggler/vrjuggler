@@ -31,6 +31,8 @@
 #include "itcom.h"
 #include "serial.h"
 
+#include <boost/concept_check.hpp>
+
 static void  processSystemRecord(InterSenseTrackerType *tracker, char *cmdbuf,int numChars);
 static void  processFastrackData(InterSenseTrackerType *tracker, char *cmdbuf,int numChars);
 static void  processSystemDataRecord(InterSenseTrackerType *tracker, char *cmdbuf,int numChars);
@@ -366,6 +368,8 @@ static void ISD_PRECISION_serviceSerialPort(InterSenseTrackerType *tracker)
 /******************* processInterTraxDataRecord *******************/
 BOOL processInterTraxDataRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     struct INT_ANGLES_3DOF {
         short azIntAngle, elIntAngle, twIntAngle;
     };
@@ -1164,6 +1168,8 @@ static void processIntrackRecord(InterSenseTrackerType *tracker, char *cmdbuf, i
 /********************** processIntrackPseRecord ****************************/
 static void processIntrackPseRecord(InterSenseTrackerType *tracker, char *buf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     int   num, numConverted;
     DWORD stationNum;
 
@@ -1270,6 +1276,8 @@ static BOOL processSystemOutputListRecord(InterSenseTrackerType *tracker, char *
 /*********************** processSystemStatusRecord ***********************/
 static void processSystemStatusRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     ItComSystemStatusRecordType  status;
     int  statLow;
     int  statMed;
@@ -1335,6 +1343,8 @@ static void processSystemStatusRecord(InterSenseTrackerType *tracker, char *cmdb
 /********************* processIntrackSensorRecord *******************/
 static void processIntrackSensorRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     int   statLow;
     int   statMed;
     int   statHigh;
@@ -1395,6 +1405,8 @@ static void processIntrackSensorRecord(InterSenseTrackerType *tracker, char *cmd
 /********************* processIntrackSystemRecord *******************/
 static void processIntrackSystemRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     int statLow;
     int statMed;
     int statHigh;
@@ -1432,6 +1444,8 @@ static void processIntrackSystemRecord(InterSenseTrackerType *tracker, char *cmd
 /******************* processIntrackPredictionRecord *********************/
 static void processIntrackPredictionRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     DWORD sNum;
 
     sNum = charToNum(cmdbuf[1])-1;
@@ -1486,6 +1500,8 @@ static void processSystemStationRecord(InterSenseTrackerType *tracker, char *cmd
 /*************************** processSensitivityRecord ******************************/
 static void processSensitivityRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     int numConverted;
     unsigned long num;
     int stationNum;
@@ -1514,6 +1530,8 @@ static void processSensitivityRecord(InterSenseTrackerType *tracker, char *cmdbu
 /********************* processSyncRecord *********************/
 static void processSyncRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
+   boost::ignore_unused_variable_warning(numChars);
+
     int state, numFrames, numConverted;
     float rate;
 

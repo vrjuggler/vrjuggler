@@ -40,10 +40,12 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-                                                                                                          
+
+#include <boost/concept_check.hpp>
+
 //#define RIM_PACKET_HEAD_SIZE 8
 
 namespace cluster
@@ -55,7 +57,7 @@ public:
    /**
     * packet_head: Given a packet that has been parsed, and found to be a device request
     * stream: A socket that the connection is on
-    * 
+    *
     * Create a deviceRequest packet
     */
    EndBlock(Header* packet_head, vpr::SocketStream* stream)
@@ -64,7 +66,7 @@ public:
       // -Continue reading packet from socket
 
       mHeader = packet_head;
-      
+
       //recv(packet_head,stream);
       //parse();
    }
@@ -81,7 +83,7 @@ public:
       // - Set member variables
       // - Create the correct packet header
       // - Serialize the packet
-   
+
       // Header vars (Create Header)
       mHeader = new Header(Header::RIM_PACKET,
                                        Header::RIM_END_BLOCK,
@@ -90,7 +92,7 @@ public:
       serialize();
    }
 
-   
+
    /**
     * Helper for the above creation of a device request to be sent
     */
@@ -114,27 +116,28 @@ public:
       // Temp Var
       //mTempVar = mPacketReader->readUint16();
    }
-   
+
    virtual void printData(int debug_level)
    {
-/*      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      boost::ignore_unused_variable_warning(debug_level);
+/*      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          <<  clrOutBOLD(clrYELLOW,"====== END BLOCK ======\n") << vprDEBUG_FLUSH;
-      
+
       Packet::printData(debug_level);
-      
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
+
+      vprDEBUG(gadgetDBG_RIM,debug_level)
          << clrOutBOLD(clrYELLOW, "New State:    ") << mNewState
          << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
-*/         
+*/
    }
    static vpr::Uint16 getBaseType()
    {
        return(Header::RIM_END_BLOCK);
    }
-      
+
    virtual bool action(ClusterNode* node)
    {
       // -Set New State
@@ -145,7 +148,7 @@ public:
 
       //node->setState(mNewState);
       node->setUpdated(true);
-      
+
       return true;
    }
 private:
