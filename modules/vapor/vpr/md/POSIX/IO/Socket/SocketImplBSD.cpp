@@ -312,7 +312,11 @@ SocketImplBSD::isConnected () {
 
         if ( status.success() ) {
             if ( bytes == 0 ) {
-                retval = m_handle->isReadable(vpr::Interval::NoWait).success();
+                // If there are no bytes to read but the OS tells us that the
+                // socket is readable, then something is wrong.
+                if ( ! m_handle->isReadable(vpr::Interval::NoWait).success() ) {
+                    retval = true;
+                }
             }
             else {
                 retval = true;
