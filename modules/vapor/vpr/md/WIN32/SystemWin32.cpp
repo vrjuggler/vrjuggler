@@ -47,10 +47,9 @@ SystemWin32::gettimeofday (struct timeval* tp, struct timezone* tzp) {
 #ifdef HAVE_GETTIMEOFDAY
     return ::gettimeofday(tp, tzp);
 #else
-    FILETIME file_time, tfile;
-    GetSystemTimeAsFileTime(&tfile);
+    FILETIME file_time;
+    GetSystemTimeAsFileTime(&file_time);
 
-    //  Initializes the ACE_Time_Value object from a Win32 FILETIME
     ULARGE_INTEGER _100ns =
     {
         file_time.dwLowDateTime,
