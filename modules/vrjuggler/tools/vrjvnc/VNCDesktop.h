@@ -35,7 +35,9 @@
 #include <string>
 #include <gmtl/Matrix.h>
 #include <gmtl/AABox.h>
-#include <gmtl/Tri.h>
+#include <gmtl/Point.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Ray.h>
 #include <vpr/vpr.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -142,9 +144,16 @@ private:
 
    Selection        mSelectState;      /**< State of selection */
 
-   gmtl::Matrix44f  mDesktopMatrix;    /**< vnc_T_world */
+   /** Transform matrix of the desktop.
+   * This is from world to desktop.
+   * In only captures the local transformations (not any app nav matrix stuff)
+   */
+   gmtl::Matrix44f  m_world_M_desktop;
+
    gmtl::AABoxf     mDesktopBox;
-   float            mDrawRayLength;    /**< The length of the ray to draw */
+   gmtl::Rayf       mWandRay;          /**< The wand ray to draw (clipped to length) */
+   gmtl::Point3f    mIsectPoint;       /**< The point of intersection on the desktop plane */
+
    // Corners
    gmtl::AABoxf     mLLCorner;         /**< LL of the desktop */
    gmtl::AABoxf     mLRCorner;         /**< LR of the desktop */
@@ -164,8 +173,6 @@ private:
 
    // Debugging stuff
    GLUquadric*   mSphereQuad;       /**< Sphere rep for draw "points" */
-   gmtl::Point3f mDebug_IsectPoint; /**< Isect point to draw */
-
 };
 
 }

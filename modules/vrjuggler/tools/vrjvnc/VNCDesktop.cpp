@@ -83,6 +83,9 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
 
    updateDesktopParameters();       // Initial update of desktop parameters
 
+   // Set initial transform
+   //gmtl::setTrans( m_world_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
+
    // Request the first update.
    mVncIf.updateFramebuffer(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
 
@@ -263,7 +266,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    const gmtl::Matrix44f wand_mat(*(mWand->getData()));
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
    const gmtl::Vec3f ray_vector(0.0f, 0.0f, -max_ray_length);
-   const gmtl::Rayf wand_ray(gmtl::makeTrans<gmtl::Point3f>(wand_mat), (wand_mat*ray_vector));
+   mWandRay.setOrigin(gmtl::makeTrans<gmtl::Point3f>(wand_mat) );          // For now set it long.  Clip later.
+   mWandRay.setDir(wand_mat*ray_vector);
 
    // Find ray intersection on the z=0 plane
    const gmtl::Vec3f pos_z_norm(0.0f, 0.0f, 1.0f);
@@ -274,14 +278,15 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // this is our intersection in desktop coordinates (polygon).
    // It will have to be scaled to get back into vnc coords.
    float t_isect;
-   gmtl::intersect(z_plane, wand_ray, t_isect);
-   mDrawRayLength = t_isect*max_ray_length ;                                                              // Set length of drawn ray
-   const gmtl::Point3f isect_point(wand_ray.mOrigin + (wand_ray.mDir*t_isect));
-   vprASSERT( gmtl::Math::isEqual(isect_point[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
-   mDebug_IsectPoint = isect_point;
+   gmtl::intersect(z_plane, mWandRay, t_isect);
+   mIsectPoint = (mWandRay.mOrigin + (mWandRay.mDir*t_isect));
+   vprASSERT( gmtl::Math::isEqual(mIsectPoint[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
+
+   // Compute drawing objects
+   mWandRay.setDir(mWandRay.getDir()*t_isect);     // Scale it back
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "VNC: Isect point: " << isect_point << std::endl << vprDEBUG_FLUSH;
+         << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
 
    // Get button states
    bool select_button_state = mLeftButton->getData();
@@ -290,7 +295,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    if(!things_grabbed)    // If nothing grabbed then check for input
    {
       // Check for selecting the main desktop box
-      if ( gmtl::isInVolume(mDesktopBox, isect_point) )
+      if ( gmtl::isInVolume(mDesktopBox, mIsectPoint) )
       {
          focus_val = IN_FOCUS;
 
@@ -308,8 +313,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          //
          // vnc x,y desktop point just like x desktop.  origin upper left, y increases going down
          //     The valid range is [0,mVncWidth or mVncHeight]
-         float vnc_x = isect_point[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
-         float vnc_y = -(isect_point[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
+         float vnc_x = mIsectPoint[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
+         float vnc_y = -(mIsectPoint[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
 
          mVncIf.pointerEvent(int(vnc_x), int(vnc_y), button_mask);
 
@@ -320,7 +325,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          mSelectState = Nothing;
       }
       // ---- Check corner selection --- //
-      else if( gmtl::isInVolume(mURCorner, isect_point))
+      else if( gmtl::isInVolume(mURCorner, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -331,7 +336,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: URCornerSelect" << std::endl;
          }
       }
-      else if( gmtl::isInVolume(mULCorner, isect_point))
+      else if( gmtl::isInVolume(mULCorner, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -342,7 +347,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: ULCornerSelect" << std::endl;
          }
       }
-      else if( gmtl::isInVolume(mLLCorner, isect_point))
+      else if( gmtl::isInVolume(mLLCorner, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -353,7 +358,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: LLCornerSelect" << std::endl;
          }
       }
-      else if( gmtl::isInVolume(mLRCorner, isect_point))
+      else if( gmtl::isInVolume(mLRCorner, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -365,7 +370,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
       }
       // ---- Check border selection --- //
-      else if( gmtl::isInVolume(mTopBorder, isect_point))
+      else if( gmtl::isInVolume(mTopBorder, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -376,7 +381,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: TopBorderSelect" << std::endl;
          }
       }
-      else if( gmtl::isInVolume(mBottomBorder, isect_point))
+      else if( gmtl::isInVolume(mBottomBorder, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -387,7 +392,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: BottomBorderSelect" << std::endl;
          }
       }
-      else if( gmtl::isInVolume(mLeftBorder, isect_point))
+      else if( gmtl::isInVolume(mLeftBorder, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -398,7 +403,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: LeftBorderSelect" << std::endl;
          }
       }
-      else if( gmtl::isInVolume(mRightBorder, isect_point))
+      else if( gmtl::isInVolume(mRightBorder, mIsectPoint))
       {
          if(select_button_state)
          {
@@ -445,6 +450,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
 void VNCDesktop::draw()
 {
+   // -- Const colors to choose from --//
+   // Put them here so we don't have to change a bunch of code below to change the visuals
    const gmtl::Vec3f micro_gui_blue(0.39f,0.51f,0.77f);
    const gmtl::Vec3f micro_gui_blue_selected(0.39f,0.71f,0.97f);
    const gmtl::Vec3f micro_gui_yellow(0.97f,0.92f,0.22f);
@@ -456,54 +463,58 @@ void VNCDesktop::draw()
    const gmtl::Vec3f border_color(micro_gui_blue);
    const gmtl::Vec3f border_color_selected(micro_gui_blue_selected);
 
-
-   // XXX: Should probably use an attribute stack or something here.
-   glDisable(GL_BLEND);
-   glEnable(GL_LIGHTING);
-
-   // -- Draw the desktop "objects" -- //
-   // Draw isect point
-   drawSphere(0.25f, mDebug_IsectPoint);
-
-   // Draw the desktop corners and borders
-   setColorIfState(corner_color_selected, corner_color, LLCornerSelect, LLCornerGrab);
-   drawBox(mLLCorner);
-   setColorIfState(corner_color_selected, corner_color, LRCornerSelect, LRCornerGrab);
-   drawBox(mLRCorner);
-   setColorIfState(corner_color_selected, corner_color, URCornerSelect, URCornerGrab);
-   drawBox(mURCorner);
-   setColorIfState(corner_color_selected, corner_color, ULCornerSelect, ULCornerGrab);
-   drawBox(mULCorner);
-
-   setColorIfState(border_color_selected, border_color, LeftBorderSelect, LeftBorderSelect);
-   drawBox(mLeftBorder);
-   setColorIfState(border_color_selected, border_color, RightBorderSelect, RightBorderSelect);
-   drawBox(mRightBorder);
-   setColorIfState(border_color_selected, border_color, TopBorderSelect, TopBorderSelect);
-   drawBox(mTopBorder);
-   setColorIfState(border_color_selected, border_color, BottomBorderSelect, BottomBorderSelect);
-   drawBox(mBottomBorder);
-
-   glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
-
-   // Draw the ray
    glPushMatrix();
-      glMultMatrixf(mWand->getData()->mData);
+   {
+      // Get into the desktop coordinate frame
+      glMultMatrixf(m_world_M_desktop.mData);
 
-      glPolygonMode(GL_FRONT, GL_LINE);
-      glLineWidth(2);
-      glColor3f(1.0f, 0.0f, 0.0f);
+      // XXX: Should probably use an attribute stack or something here.
+      glDisable(GL_BLEND);
+      glEnable(GL_LIGHTING);
 
-      glBegin(GL_LINES);
-         glVertex3f(0.0f, 0.0f, 0.0f);
-         glVertex3f(0.0f, 0.0f, -mDrawRayLength);
-      glEnd();
+      // -- Draw the desktop "objects" -- //
+      // Draw isect point
+      drawSphere(0.25f, mIsectPoint);
 
-      glPolygonMode(GL_FRONT, GL_FILL);
-   glPopMatrix();
+      // Draw the desktop corners and borders
+      setColorIfState(corner_color_selected, corner_color, LLCornerSelect, LLCornerGrab);
+      drawBox(mLLCorner);
+      setColorIfState(corner_color_selected, corner_color, LRCornerSelect, LRCornerGrab);
+      drawBox(mLRCorner);
+      setColorIfState(corner_color_selected, corner_color, URCornerSelect, URCornerGrab);
+      drawBox(mURCorner);
+      setColorIfState(corner_color_selected, corner_color, ULCornerSelect, ULCornerGrab);
+      drawBox(mULCorner);
 
-   // Draw the desktop surface
-   glPushMatrix();
+      setColorIfState(border_color_selected, border_color, LeftBorderSelect, LeftBorderSelect);
+      drawBox(mLeftBorder);
+      setColorIfState(border_color_selected, border_color, RightBorderSelect, RightBorderSelect);
+      drawBox(mRightBorder);
+      setColorIfState(border_color_selected, border_color, TopBorderSelect, TopBorderSelect);
+      drawBox(mTopBorder);
+      setColorIfState(border_color_selected, border_color, BottomBorderSelect, BottomBorderSelect);
+      drawBox(mBottomBorder);
+
+      glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
+
+      // Draw the ray
+      glPushMatrix();
+         gmtl::Vec3f ray_start = mWandRay.getOrigin();
+         gmtl::Vec3f ray_end = mIsectPoint;
+
+         glPolygonMode(GL_FRONT, GL_LINE);
+         glLineWidth(2);
+         glColor3f(1.0f, 0.0f, 0.0f);
+
+         glBegin(GL_LINES);
+            glVertex3fv(ray_start.mData);
+            glVertex3fv(ray_end.mData);
+         glEnd();
+
+         glPolygonMode(GL_FRONT, GL_FILL);
+      glPopMatrix();
+
+      // Draw the desktop surface
       glEnable(GL_TEXTURE_2D);
 
       GLuint tex_name;
@@ -565,8 +576,8 @@ void VNCDesktop::draw()
       }
 
       glDeleteTextures(1, &tex_name);
-
       glDisable(GL_TEXTURE_2D);
+   }
    glPopMatrix();
 
    glEnable(GL_LIGHTING);
