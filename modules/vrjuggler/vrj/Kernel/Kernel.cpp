@@ -315,7 +315,7 @@ int vjKernel::configProcessPending(bool lockIt)
       chunks_processed += getInputManager()->configProcessPending(lockIt);
       chunks_processed += mDisplayManager->configProcessPending(lockIt);
       if(NULL != mSoundManager)
-         chunks_processed != mSoundManager->configProcessPending(lockIt);
+         chunks_processed += mSoundManager->configProcessPending(lockIt);
       if(NULL != mDrawManager)
          chunks_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
       if (NULL != environmentManager)
