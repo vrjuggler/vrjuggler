@@ -41,14 +41,13 @@
 
 vjEnvironmentManager::vjEnvironmentManager():
                           connections(),
-                          //updaters(),
                           perf_buffers(),
                           connections_mutex() {
 
     /* I want some hardcoded defaults, yes? */
     Port = 4450;
     listen_thread = NULL;
-    listen_socket = -1;
+    listen_socket = NULL;
     configured_to_accept = false;
     perf_refresh_time = 500;
 
@@ -87,8 +86,9 @@ void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
 void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     std::vector<vjPerfDataBuffer*>::iterator it;
 
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName()
+    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName() 
 				   << "\n" << vjDEBUG_FLUSH;
+
     b->deactivate();
     if (perf_target)
 	perf_target->removeTimedUpdate (b);
@@ -128,76 +128,71 @@ void vjEnvironmentManager::sendRefresh() {
 
 
 
-//: ConfigChunkHandler interface
+//: ConfigChunkHandler stuff
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
 bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
-   bool networkingchanged = false;
-   int newport;
+    bool networkingchanged = false;
+    int newport;
 
-   std::string s = chunk->getType();
-   if (!vjstrcasecmp (s, "EnvironmentManager"))
-   {
-      configured_to_accept = chunk->getProperty ("AcceptConnections");
-      newport = chunk->getProperty("Port");
+    std::string s = chunk->getType();
+    if (!vjstrcasecmp (s, "EnvironmentManager")) {
+	configured_to_accept = chunk->getProperty ("AcceptConnections");
+	newport = chunk->getProperty("Port");
 
-      if (newport == 0)
-         newport = Port;
-      if ((newport != Port) || (configured_to_accept != isAccepting()))
-         networkingchanged = true;
-      perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
-      connections_mutex.acquire();
+	if (newport == 0)
+	    newport = Port;
+	if ((newport != Port) || (configured_to_accept != isAccepting()))
+	    networkingchanged = true;
+	perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+	connections_mutex.acquire();
+	
+	vjConnect* new_perf_target = getConnect(perf_target_name);
+	if (new_perf_target != perf_target)
+	    setPerformanceTarget (NULL);
 
-      vjConnect* new_perf_target = getConnect(perf_target_name);
-      if (new_perf_target != perf_target)
-         setPerformanceTarget (NULL);
-
-      if (networkingchanged)
-      {
-         Port = newport;
-         if (isAccepting())
-            rejectConnections();
-         if (configured_to_accept)
-            acceptConnections();
-         else
-            killConnections();
-      }
-      if (new_perf_target)
-         setPerformanceTarget(new_perf_target);
-      connections_mutex.release();
-
-      return true;
-   }
-   else if (!vjstrcasecmp (s, "PerfMeasure"))
-   {
-      current_perf_config = new vjConfigChunk (*chunk);
-      activatePerfBuffers();
-      return true;
-   }
-   else if (!vjstrcasecmp (s, "FileConnect"))
-   {
-      // I wanted to just look if the fileconnect had been added yet.
-      // however I seem to have a chicken/egg problem.
-      // so the kludge we'll do now is to not directly add a chunk that's
-      // of type VJC_INTERACTIVE. sigh.
-      // Unfortunately, this means that for other cases (such as attaching
-      // to a named pipe) we're still broken
-      if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE)
-      {
-         // it's new to us
-         vjConnect* vn = new vjConnect (chunk);
-         vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName() << '\n'
-         << vjDEBUG_FLUSH;
-         connections_mutex.acquire();
-         connections.push_back (vn);
-         vn->startProcess();
-         if (!vjstrcasecmp (vn->getName(), perf_target_name))
-            setPerformanceTarget (vn);
-         connections_mutex.release();
-      }
-      return true;
-   }
-   return false;
+	if (networkingchanged) {
+	    Port = newport;
+	    if (isAccepting())
+		rejectConnections();
+	    if (configured_to_accept)
+		acceptConnections();
+	    else
+		killConnections();
+	}
+	if (new_perf_target)
+	    setPerformanceTarget(new_perf_target);
+	connections_mutex.release();
+	
+	return true;
+    }
+    else if (!vjstrcasecmp (s, "PerfMeasure")) {
+	current_perf_config = new vjConfigChunk (*chunk);
+	activatePerfBuffers();
+	return true;
+    }
+    else if (!vjstrcasecmp (s, "FileConnect")) {
+	// I wanted to just look if the fileconnect had been added yet.
+	// however I seem to have a chicken/egg problem.
+	// so the kludge we'll do now is to not directly add a chunk that's
+	// of type VJC_INTERACTIVE. sigh.
+	// Unfortunately, this means that for other cases (such as attaching
+	// to a named pipe) we're still broken
+	if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
+	    // it's new to us
+	    vjConnect* vn = new vjConnect (chunk);
+	    vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName() << '\n'
+				       << vjDEBUG_FLUSH;
+	    connections_mutex.acquire();
+	    connections.push_back (vn);
+	    vn->startProcess();
+	    if (!vjstrcasecmp (vn->getName(), perf_target_name))
+		setPerformanceTarget (vn);
+	    connections_mutex.release();
+	}
+	return true;
+    }
+    return false;
 }
 
 
@@ -230,20 +225,15 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 	return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-	vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: "
+	vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: " 
 				  << chunk->getProperty ("Name") << '\n' << vjDEBUG_FLUSH;
 	connections_mutex.acquire();
  	vjConnect* c = getConnect (chunk->getProperty ("Name"));
  	if (c) {
- 	    if (removeConnect (c))
-		vjDEBUG(vjDBG_ENV_MGR,3) << "EM connection removal succeeded\n"
-					 << vjDEBUG_FLUSH;
-	    else
-		vjDEBUG(vjDBG_ENV_MGR,1) << "EM connection removal - not found - "
-					 << chunk->getProperty ("Name") << endl
-					 << vjDEBUG_FLUSH;
+ 	    removeConnect (c);
  	}
 	connections_mutex.release();
+	vjDEBUG (vjDBG_ENV_MGR,4) << "EM completed connection removal\n" << vjDEBUG_FLUSH;
 	return true;
     }
 
@@ -267,9 +257,9 @@ bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 // should only be called when we own connections_mutex
-bool vjEnvironmentManager::removeConnect (vjConnect* con) {
+void vjEnvironmentManager::removeConnect (vjConnect* con) {
     if (!con)
-	return false;
+	return;
     if (con == perf_target)
 	setPerformanceTarget (NULL);
     std::vector<vjConnect*>::iterator i;
@@ -277,9 +267,8 @@ bool vjEnvironmentManager::removeConnect (vjConnect* con) {
 	if (con == *i) {
 	    connections.erase (i);
 	    delete con;
-	    return true;
+	    break;
 	}
-    return false;
 }
 
 
@@ -308,26 +297,17 @@ vjConnect* vjEnvironmentManager::getConnect (const std::string& s) {
 void vjEnvironmentManager::controlLoop (void* nullParam) {
     // Child process used to listen for new network connections
     struct sockaddr_in servaddr;
-    int servsock;
+    vjSocket* servsock;
     int len;
     vjConnect* connection;
 
     vjDEBUG(vjDBG_ENV_MGR,4) << "vjEnvironmentManager started control loop.\n"
 	       << vjDEBUG_FLUSH;
 
-    /* start listening for connections */
-    if (listen (listen_socket, 0)) {
-	vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjEnvironmentManager socket listen "
-		   << "failed\n" << vjDEBUG_FLUSH;
-	return;
-    }
-
     for (;;) {
-	len = sizeof (struct sockaddr_in);
-	servsock = accept (listen_socket,
-			   (sockaddr*)&servaddr, &len);
+	servsock = listen_socket->accept();
 	char name[128];
-	sprintf (name, "Network Connect %d", servsock);
+	sprintf (name, "Network Connect %d", 12);
 	connection = new vjConnect (servsock, (std::string)name);
 	connections_mutex.acquire();
 	connections.push_back( connection );
@@ -395,21 +375,14 @@ void vjEnvironmentManager::activatePerfBuffers () {
 
 
 bool vjEnvironmentManager::acceptConnections() {
-    struct sockaddr_in sockaddress;
 
     if (listen_thread != NULL)
 	return true;
 
-    /* here, we open a socket & get ready to read connections */
-    listen_socket = socket (AF_INET, SOCK_STREAM, 0);
-    bzero(&sockaddress, sizeof (struct sockaddr_in));
-    sockaddress.sin_family = PF_INET;
-    sockaddress.sin_port = htons(Port);
-
-    if (bind ( listen_socket, (sockaddr*)&sockaddress,
-	       sizeof (struct sockaddr_in))) {
+    listen_socket = new vjSocket ();
+    if (!listen_socket->listen (Port)) {
 	vjDEBUG(vjDBG_ERROR,0) << "ERROR: Environment Manager couldn't open socket\n"
-		   << vjDEBUG_FLUSH;
+			       << vjDEBUG_FLUSH;
 	return false;
     }
     else
@@ -435,7 +408,8 @@ bool vjEnvironmentManager::rejectConnections () {
     if (listen_thread) {
 	listen_thread->kill();
 	listen_thread = NULL;
-	close(listen_socket);
+	delete listen_socket;
+	listen_socket = 0;
     }
     return 1;
 }
