@@ -60,13 +60,31 @@ void main()
 	    {
 		flock.sample();
 		system("clear");  
-		cout << "vjFlock------------------------------------------------------------" << endl 
-		    << "Data: x:" << setw(10) << flock.xPos() << endl
-		    << "      y:" << setw(10) << flock.yPos() << endl
-		    << "      z:" << setw(10) << flock.zPos() << endl
-		    << "    azi:" << setw(10) << flock.zRot() << endl  
-		    << "   elev:" << setw(10) << flock.yRot() << endl 
-		    << "   roll:" << setw(10) << flock.xRot() << endl << endl;
+		cout << "vjFlock------------------------------------------------------------" << endl ;
+		    cout<< "Data: x:" << setw(10) ;
+		    for(int i=1; i <= flock.getNumBirds(); ++i) 
+		    	cout<< setw(10) <<flock.xPos(i);
+		    cout<<endl;
+		    cout<< "      y:" << setw(10) ;
+		    for(  i=1; i <= flock.getNumBirds(); ++i) 
+		    	cout<< setw(10) <<flock.yPos(i);
+		    cout<<endl;
+		    cout<< "      z:" << setw(10) ;
+		    for(  i=1; i <= flock.getNumBirds(); ++i) 
+		    	cout<< setw(10) <<flock.zPos(i);
+		    cout<<endl;
+		    cout<< "    azi:" << setw(10) ;
+		    for(  i=1; i <= flock.getNumBirds(); ++i) 
+		    	cout<< setw(10) <<flock.zRot(i);
+		    cout<<endl;
+		    cout<< "   elev:" << setw(10) ;
+		    for(  i=1; i <= flock.getNumBirds(); ++i) 
+		    	cout<< setw(10) <<flock.yRot(i);
+		    cout<<endl;
+		    cout<< "   roll:"  ;
+		    for(  i=1; i <= flock.getNumBirds(); ++i) 
+		    	cout<< setw(10) <<flock.xRot(i);
+		    cout<<endl<<endl;
 		sleep(2);
 	    }
 	    break;
