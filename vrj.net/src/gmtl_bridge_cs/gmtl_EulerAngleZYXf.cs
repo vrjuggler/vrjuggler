@@ -112,13 +112,13 @@ public sealed class EulerAngleZYXf
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_EulerAngle_float_gmtl_ZYX__set__float_float_float3(IntPtr obj,
-	ref float p0,
-	ref float p1,
-	ref float p2);
+	float p0,
+	float p1,
+	float p2);
 
-   public  void set(ref float p0, ref float p1, ref float p2)
+   public  void set(float p0, float p1, float p2)
    {
-      gmtl_EulerAngle_float_gmtl_ZYX__set__float_float_float3(mRawObject, ref p0, ref p1, ref p2);
+      gmtl_EulerAngle_float_gmtl_ZYX__set__float_float_float3(mRawObject, p0, p1, p2);
    }
 
 

@@ -81,57 +81,39 @@ public sealed class Point4i
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_int_4__Point__int_int(ref int p0,
-	ref int p1);
+   private extern static IntPtr gmtl_Point_int_4__Point__int_int(int p0,
+	int p1);
 
-   public Point4i(ref int p0, ref int p1)
+   public Point4i(int p0, int p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      mRawObject   = gmtl_Point_int_4__Point__int_int(ref p0, ref p1);
+      mRawObject   = gmtl_Point_int_4__Point__int_int(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_int_4__Point__int_int_int(ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static IntPtr gmtl_Point_int_4__Point__int_int_int(int p0,
+	int p1,
+	int p2);
 
-   public Point4i(ref int p0, ref int p1, ref int p2)
+   public Point4i(int p0, int p1, int p2)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      mRawObject   = gmtl_Point_int_4__Point__int_int_int(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Point_int_4__Point__int_int_int(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_int_4__Point__int_int_int_int(ref int p0,
-	ref int p1,
-	ref int p2,
-	ref int p3);
+   private extern static IntPtr gmtl_Point_int_4__Point__int_int_int_int(int p0,
+	int p1,
+	int p2,
+	int p3);
 
-   public Point4i(ref int p0, ref int p1, ref int p2, ref int p3)
+   public Point4i(int p0, int p1, int p2, int p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_Point_int_4__Point__int_int_int_int(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_Point_int_4__Point__int_int_int_int(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    // Internal constructor needed for marshaling purposes.

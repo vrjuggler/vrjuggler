@@ -193,21 +193,21 @@ public sealed class Matrix33d
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Matrix_double_3_3__set__double1(IntPtr obj,
-	ref double p0);
+	double p0);
 
-   public  void set(ref double p0)
+   public  void set(double p0)
    {
-      gmtl_Matrix_double_3_3__set__double1(mRawObject, ref p0);
+      gmtl_Matrix_double_3_3__set__double1(mRawObject, p0);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Matrix_double_3_3__setTranspose__double1(IntPtr obj,
-	ref double p0);
+	double p0);
 
-   public  void setTranspose(ref double p0)
+   public  void setTranspose(double p0)
    {
-      gmtl_Matrix_double_3_3__setTranspose__double1(mRawObject, ref p0);
+      gmtl_Matrix_double_3_3__setTranspose__double1(mRawObject, p0);
    }
 
 

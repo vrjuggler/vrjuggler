@@ -95,15 +95,13 @@ public sealed class Planef
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Vec3f_float([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0,
-	ref float p1);
+	float p1);
 
-   public Planef(gmtl.Vec3f p0, ref float p1)
+   public Planef(gmtl.Vec3f p0, float p1)
    {
       
-      
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_float(p0, ref p1);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_float(p0, p1);
       mWeOwnMemory = true;
-      
       
    }
 
@@ -180,11 +178,11 @@ public sealed class Planef
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Plane_float__setOffset__float1(IntPtr obj,
-	ref float p0);
+	float p0);
 
-   public  void setOffset(ref float p0)
+   public  void setOffset(float p0)
    {
-      gmtl_Plane_float__setOffset__float1(mRawObject, ref p0);
+      gmtl_Plane_float__setOffset__float1(mRawObject, p0);
    }
 
 

@@ -74,54 +74,36 @@ public class VecBase_int_2
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_2__VecBase__int_int(ref int p0,
-	ref int p1);
+   private extern static IntPtr gmtl_VecBase_int_2__VecBase__int_int(int p0,
+	int p1);
 
-   public VecBase_int_2(ref int p0, ref int p1)
+   public VecBase_int_2(int p0, int p1)
    {
-      
-      
-      mRawObject   = gmtl_VecBase_int_2__VecBase__int_int(ref p0, ref p1);
+      mRawObject   = gmtl_VecBase_int_2__VecBase__int_int(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_2__VecBase__int_int_int(ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static IntPtr gmtl_VecBase_int_2__VecBase__int_int_int(int p0,
+	int p1,
+	int p2);
 
-   public VecBase_int_2(ref int p0, ref int p1, ref int p2)
+   public VecBase_int_2(int p0, int p1, int p2)
    {
-      
-      
-      
-      mRawObject   = gmtl_VecBase_int_2__VecBase__int_int_int(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_VecBase_int_2__VecBase__int_int_int(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_2__VecBase__int_int_int_int(ref int p0,
-	ref int p1,
-	ref int p2,
-	ref int p3);
+   private extern static IntPtr gmtl_VecBase_int_2__VecBase__int_int_int_int(int p0,
+	int p1,
+	int p2,
+	int p3);
 
-   public VecBase_int_2(ref int p0, ref int p1, ref int p2, ref int p3)
+   public VecBase_int_2(int p0, int p1, int p2, int p3)
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_VecBase_int_2__VecBase__int_int_int_int(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_VecBase_int_2__VecBase__int_int_int_int(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    // Internal constructor needed for marshaling purposes.
@@ -152,57 +134,57 @@ public class VecBase_int_2
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_int_2__set__int1(IntPtr obj,
-	ref int p0);
+	int p0);
 
-   public  void set(ref int p0)
+   public  void set(int p0)
    {
-      gmtl_VecBase_int_2__set__int1(mRawObject, ref p0);
+      gmtl_VecBase_int_2__set__int1(mRawObject, p0);
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_int_2__set__int1(IntPtr obj,
-	ref int p0);
+	int p0);
 
-   public  void set(ref int p0)
+   public  void set(int p0)
    {
-      gmtl_VecBase_int_2__set__int1(mRawObject, ref p0);
+      gmtl_VecBase_int_2__set__int1(mRawObject, p0);
    }
 */
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_int_2__set__int_int2(IntPtr obj,
-	ref int p0,
-	ref int p1);
+	int p0,
+	int p1);
 
-   public  void set(ref int p0, ref int p1)
+   public  void set(int p0, int p1)
    {
-      gmtl_VecBase_int_2__set__int_int2(mRawObject, ref p0, ref p1);
+      gmtl_VecBase_int_2__set__int_int2(mRawObject, p0, p1);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_int_2__set__int_int_int3(IntPtr obj,
-	ref int p0,
-	ref int p1,
-	ref int p2);
+	int p0,
+	int p1,
+	int p2);
 
-   public  void set(ref int p0, ref int p1, ref int p2)
+   public  void set(int p0, int p1, int p2)
    {
-      gmtl_VecBase_int_2__set__int_int_int3(mRawObject, ref p0, ref p1, ref p2);
+      gmtl_VecBase_int_2__set__int_int_int3(mRawObject, p0, p1, p2);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_int_2__set__int_int_int_int4(IntPtr obj,
-	ref int p0,
-	ref int p1,
-	ref int p2,
-	ref int p3);
+	int p0,
+	int p1,
+	int p2,
+	int p3);
 
-   public  void set(ref int p0, ref int p1, ref int p2, ref int p3)
+   public  void set(int p0, int p1, int p2, int p3)
    {
-      gmtl_VecBase_int_2__set__int_int_int_int4(mRawObject, ref p0, ref p1, ref p2, ref p3);
+      gmtl_VecBase_int_2__set__int_int_int_int4(mRawObject, p0, p1, p2, p3);
    }
 
 

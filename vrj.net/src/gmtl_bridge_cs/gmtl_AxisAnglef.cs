@@ -69,38 +69,28 @@ public sealed class AxisAnglef
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AxisAngle_float__AxisAngle__float_float_float_float(ref float p0,
-	ref float p1,
-	ref float p2,
-	ref float p3);
+   private extern static IntPtr gmtl_AxisAngle_float__AxisAngle__float_float_float_float(float p0,
+	float p1,
+	float p2,
+	float p3);
 
-   public AxisAnglef(ref float p0, ref float p1, ref float p2, ref float p3)
+   public AxisAnglef(float p0, float p1, float p2, float p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_AxisAngle_float__AxisAngle__float_float_float_float(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_AxisAngle_float__AxisAngle__float_float_float_float(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(ref float p0,
+   private extern static IntPtr gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(float p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p1);
 
-   public AxisAnglef(ref float p0, gmtl.Vec3f p1)
+   public AxisAnglef(float p0, gmtl.Vec3f p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       
-      
-      mRawObject   = gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(ref p0, p1);
+      mRawObject   = gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(p0, p1);
       mWeOwnMemory = true;
-      
       
    }
 
@@ -133,25 +123,25 @@ public sealed class AxisAnglef
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AxisAngle_float__set__float_float_float_float4(IntPtr obj,
-	ref float p0,
-	ref float p1,
-	ref float p2,
-	ref float p3);
+	float p0,
+	float p1,
+	float p2,
+	float p3);
 
-   public new void set(ref float p0, ref float p1, ref float p2, ref float p3)
+   public new void set(float p0, float p1, float p2, float p3)
    {
-      gmtl_AxisAngle_float__set__float_float_float_float4(mRawObject, ref p0, ref p1, ref p2, ref p3);
+      gmtl_AxisAngle_float__set__float_float_float_float4(mRawObject, p0, p1, p2, p3);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AxisAngle_float__set__float_gmtl_Vec3f2(IntPtr obj,
-	ref float p0,
+	float p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p1);
 
-   public new void set(ref float p0, gmtl.Vec3f p1)
+   public new void set(float p0, gmtl.Vec3f p1)
    {
-      gmtl_AxisAngle_float__set__float_gmtl_Vec3f2(mRawObject, ref p0, p1);
+      gmtl_AxisAngle_float__set__float_gmtl_Vec3f2(mRawObject, p0, p1);
    }
 
 
@@ -167,11 +157,11 @@ public sealed class AxisAnglef
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AxisAngle_float__setAngle__float1(IntPtr obj,
-	ref float p0);
+	float p0);
 
-   public  void setAngle(ref float p0)
+   public  void setAngle(float p0)
    {
-      gmtl_AxisAngle_float__setAngle__float1(mRawObject, ref p0);
+      gmtl_AxisAngle_float__setAngle__float1(mRawObject, p0);
    }
 
 

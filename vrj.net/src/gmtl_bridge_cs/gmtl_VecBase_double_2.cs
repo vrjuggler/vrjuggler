@@ -74,54 +74,36 @@ public class VecBase_double_2
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_double_2__VecBase__double_double(ref double p0,
-	ref double p1);
+   private extern static IntPtr gmtl_VecBase_double_2__VecBase__double_double(double p0,
+	double p1);
 
-   public VecBase_double_2(ref double p0, ref double p1)
+   public VecBase_double_2(double p0, double p1)
    {
-      
-      
-      mRawObject   = gmtl_VecBase_double_2__VecBase__double_double(ref p0, ref p1);
+      mRawObject   = gmtl_VecBase_double_2__VecBase__double_double(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_double_2__VecBase__double_double_double(ref double p0,
-	ref double p1,
-	ref double p2);
+   private extern static IntPtr gmtl_VecBase_double_2__VecBase__double_double_double(double p0,
+	double p1,
+	double p2);
 
-   public VecBase_double_2(ref double p0, ref double p1, ref double p2)
+   public VecBase_double_2(double p0, double p1, double p2)
    {
-      
-      
-      
-      mRawObject   = gmtl_VecBase_double_2__VecBase__double_double_double(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_VecBase_double_2__VecBase__double_double_double(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_double_2__VecBase__double_double_double_double(ref double p0,
-	ref double p1,
-	ref double p2,
-	ref double p3);
+   private extern static IntPtr gmtl_VecBase_double_2__VecBase__double_double_double_double(double p0,
+	double p1,
+	double p2,
+	double p3);
 
-   public VecBase_double_2(ref double p0, ref double p1, ref double p2, ref double p3)
+   public VecBase_double_2(double p0, double p1, double p2, double p3)
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_VecBase_double_2__VecBase__double_double_double_double(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_VecBase_double_2__VecBase__double_double_double_double(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    // Internal constructor needed for marshaling purposes.
@@ -152,57 +134,57 @@ public class VecBase_double_2
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_double_2__set__double1(IntPtr obj,
-	ref double p0);
+	double p0);
 
-   public  void set(ref double p0)
+   public  void set(double p0)
    {
-      gmtl_VecBase_double_2__set__double1(mRawObject, ref p0);
+      gmtl_VecBase_double_2__set__double1(mRawObject, p0);
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_double_2__set__double1(IntPtr obj,
-	ref double p0);
+	double p0);
 
-   public  void set(ref double p0)
+   public  void set(double p0)
    {
-      gmtl_VecBase_double_2__set__double1(mRawObject, ref p0);
+      gmtl_VecBase_double_2__set__double1(mRawObject, p0);
    }
 */
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_double_2__set__double_double2(IntPtr obj,
-	ref double p0,
-	ref double p1);
+	double p0,
+	double p1);
 
-   public  void set(ref double p0, ref double p1)
+   public  void set(double p0, double p1)
    {
-      gmtl_VecBase_double_2__set__double_double2(mRawObject, ref p0, ref p1);
+      gmtl_VecBase_double_2__set__double_double2(mRawObject, p0, p1);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_double_2__set__double_double_double3(IntPtr obj,
-	ref double p0,
-	ref double p1,
-	ref double p2);
+	double p0,
+	double p1,
+	double p2);
 
-   public  void set(ref double p0, ref double p1, ref double p2)
+   public  void set(double p0, double p1, double p2)
    {
-      gmtl_VecBase_double_2__set__double_double_double3(mRawObject, ref p0, ref p1, ref p2);
+      gmtl_VecBase_double_2__set__double_double_double3(mRawObject, p0, p1, p2);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_VecBase_double_2__set__double_double_double_double4(IntPtr obj,
-	ref double p0,
-	ref double p1,
-	ref double p2,
-	ref double p3);
+	double p0,
+	double p1,
+	double p2,
+	double p3);
 
-   public  void set(ref double p0, ref double p1, ref double p2, ref double p3)
+   public  void set(double p0, double p1, double p2, double p3)
    {
-      gmtl_VecBase_double_2__set__double_double_double_double4(mRawObject, ref p0, ref p1, ref p2, ref p3);
+      gmtl_VecBase_double_2__set__double_double_double_double4(mRawObject, p0, p1, p2, p3);
    }
 
 

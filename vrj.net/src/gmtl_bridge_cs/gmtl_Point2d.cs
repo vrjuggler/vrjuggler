@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -81,57 +81,39 @@ public sealed class Point2d
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_2__Point__double_double(ref double p0,
-	ref double p1);
+   private extern static IntPtr gmtl_Point_double_2__Point__double_double(double p0,
+	double p1);
 
-   public Point2d(ref double p0, ref double p1)
+   public Point2d(double p0, double p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      mRawObject   = gmtl_Point_double_2__Point__double_double(ref p0, ref p1);
+      mRawObject   = gmtl_Point_double_2__Point__double_double(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_2__Point__double_double_double(ref double p0,
-	ref double p1,
-	ref double p2);
+   private extern static IntPtr gmtl_Point_double_2__Point__double_double_double(double p0,
+	double p1,
+	double p2);
 
-   public Point2d(ref double p0, ref double p1, ref double p2)
+   public Point2d(double p0, double p1, double p2)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      mRawObject   = gmtl_Point_double_2__Point__double_double_double(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Point_double_2__Point__double_double_double(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_2__Point__double_double_double_double(ref double p0,
-	ref double p1,
-	ref double p2,
-	ref double p3);
+   private extern static IntPtr gmtl_Point_double_2__Point__double_double_double_double(double p0,
+	double p1,
+	double p2,
+	double p3);
 
-   public Point2d(ref double p0, ref double p1, ref double p2, ref double p3)
+   public Point2d(double p0, double p1, double p2, double p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_Point_double_2__Point__double_double_double_double(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_Point_double_2__Point__double_double_double_double(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    // Internal constructor needed for marshaling purposes.

@@ -193,21 +193,21 @@ public sealed class Matrix33f
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Matrix_float_3_3__set__float1(IntPtr obj,
-	ref float p0);
+	float p0);
 
-   public  void set(ref float p0)
+   public  void set(float p0)
    {
-      gmtl_Matrix_float_3_3__set__float1(mRawObject, ref p0);
+      gmtl_Matrix_float_3_3__set__float1(mRawObject, p0);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Matrix_float_3_3__setTranspose__float1(IntPtr obj,
-	ref float p0);
+	float p0);
 
-   public  void setTranspose(ref float p0)
+   public  void setTranspose(float p0)
    {
-      gmtl_Matrix_float_3_3__setTranspose__float1(mRawObject, ref p0);
+      gmtl_Matrix_float_3_3__setTranspose__float1(mRawObject, p0);
    }
 
 

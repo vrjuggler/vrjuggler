@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.6 of RCSfile: free_types_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 
@@ -879,48 +879,48 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Planed_gmtl_Planed_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.Planed p0, gmtl.Planed p1, ref double p2)
+   public static bool isEqual(gmtl.Planed p0, gmtl.Planed p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Planed_gmtl_Planed_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Planed_gmtl_Planed_double3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Planef_gmtl_Planef_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.Planef p0, gmtl.Planef p1, ref float p2)
+   public static bool isEqual(gmtl.Planef p0, gmtl.Planef p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Planef_gmtl_Planef_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Planef_gmtl_Planef_float3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Spheref_gmtl_Spheref_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpherefMarshaler))] gmtl.Spheref p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpherefMarshaler))] gmtl.Spheref p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.Spheref p0, gmtl.Spheref p1, ref float p2)
+   public static bool isEqual(gmtl.Spheref p0, gmtl.Spheref p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Spheref_gmtl_Spheref_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Spheref_gmtl_Spheref_float3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Sphered_gmtl_Sphered_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpheredMarshaler))] gmtl.Sphered p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpheredMarshaler))] gmtl.Sphered p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.Sphered p0, gmtl.Sphered p1, ref double p2)
+   public static bool isEqual(gmtl.Sphered p0, gmtl.Sphered p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Sphered_gmtl_Sphered_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Sphered_gmtl_Sphered_double3(p0, p1, p2);
       return result;
    }
 
@@ -938,12 +938,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Matrix44d_gmtl_Matrix44d_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))] gmtl.Matrix44d p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))] gmtl.Matrix44d p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.Matrix44d p0, gmtl.Matrix44d p1, ref double p2)
+   public static bool isEqual(gmtl.Matrix44d p0, gmtl.Matrix44d p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Matrix44d_gmtl_Matrix44d_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Matrix44d_gmtl_Matrix44d_double3(p0, p1, p2);
       return result;
    }
 
@@ -961,12 +961,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_EulerAngleZYXf_gmtl_EulerAngleZYXf_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXfMarshaler))] gmtl.EulerAngleZYXf p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXfMarshaler))] gmtl.EulerAngleZYXf p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.EulerAngleZYXf p0, gmtl.EulerAngleZYXf p1, ref float p2)
+   public static bool isEqual(gmtl.EulerAngleZYXf p0, gmtl.EulerAngleZYXf p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_EulerAngleZYXf_gmtl_EulerAngleZYXf_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_EulerAngleZYXf_gmtl_EulerAngleZYXf_float3(p0, p1, p2);
       return result;
    }
 
@@ -984,12 +984,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_EulerAngleZXYf_gmtl_EulerAngleZXYf_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZXYfMarshaler))] gmtl.EulerAngleZXYf p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZXYfMarshaler))] gmtl.EulerAngleZXYf p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.EulerAngleZXYf p0, gmtl.EulerAngleZXYf p1, ref float p2)
+   public static bool isEqual(gmtl.EulerAngleZXYf p0, gmtl.EulerAngleZXYf p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_EulerAngleZXYf_gmtl_EulerAngleZXYf_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_EulerAngleZXYf_gmtl_EulerAngleZXYf_float3(p0, p1, p2);
       return result;
    }
 
@@ -1007,12 +1007,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_EulerAngleXYZd_gmtl_EulerAngleXYZd_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleXYZdMarshaler))] gmtl.EulerAngleXYZd p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleXYZdMarshaler))] gmtl.EulerAngleXYZd p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.EulerAngleXYZd p0, gmtl.EulerAngleXYZd p1, ref double p2)
+   public static bool isEqual(gmtl.EulerAngleXYZd p0, gmtl.EulerAngleXYZd p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_EulerAngleXYZd_gmtl_EulerAngleXYZd_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_EulerAngleXYZd_gmtl_EulerAngleXYZd_double3(p0, p1, p2);
       return result;
    }
 
@@ -1030,12 +1030,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_EulerAngleZXYd_gmtl_EulerAngleZXYd_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZXYdMarshaler))] gmtl.EulerAngleZXYd p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZXYdMarshaler))] gmtl.EulerAngleZXYd p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.EulerAngleZXYd p0, gmtl.EulerAngleZXYd p1, ref double p2)
+   public static bool isEqual(gmtl.EulerAngleZXYd p0, gmtl.EulerAngleZXYd p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_EulerAngleZXYd_gmtl_EulerAngleZXYd_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_EulerAngleZXYd_gmtl_EulerAngleZXYd_double3(p0, p1, p2);
       return result;
    }
 
@@ -1053,12 +1053,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_EulerAngleXYZf_gmtl_EulerAngleXYZf_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleXYZfMarshaler))] gmtl.EulerAngleXYZf p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleXYZfMarshaler))] gmtl.EulerAngleXYZf p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.EulerAngleXYZf p0, gmtl.EulerAngleXYZf p1, ref float p2)
+   public static bool isEqual(gmtl.EulerAngleXYZf p0, gmtl.EulerAngleXYZf p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_EulerAngleXYZf_gmtl_EulerAngleXYZf_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_EulerAngleXYZf_gmtl_EulerAngleXYZf_float3(p0, p1, p2);
       return result;
    }
 
@@ -1456,12 +1456,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Trif_gmtl_Trif_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TrifMarshaler))] gmtl.Trif p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TrifMarshaler))] gmtl.Trif p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.Trif p0, gmtl.Trif p1, ref float p2)
+   public static bool isEqual(gmtl.Trif p0, gmtl.Trif p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Trif_gmtl_Trif_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Trif_gmtl_Trif_float3(p0, p1, p2);
       return result;
    }
 
@@ -1560,12 +1560,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Trid_gmtl_Trid_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TridMarshaler))] gmtl.Trid p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TridMarshaler))] gmtl.Trid p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.Trid p0, gmtl.Trid p1, ref double p2)
+   public static bool isEqual(gmtl.Trid p0, gmtl.Trid p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Trid_gmtl_Trid_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Trid_gmtl_Trid_double3(p0, p1, p2);
       return result;
    }
 
@@ -1583,12 +1583,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_EulerAngleZYXd_gmtl_EulerAngleZYXd_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXdMarshaler))] gmtl.EulerAngleZYXd p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXdMarshaler))] gmtl.EulerAngleZYXd p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.EulerAngleZYXd p0, gmtl.EulerAngleZYXd p1, ref double p2)
+   public static bool isEqual(gmtl.EulerAngleZYXd p0, gmtl.EulerAngleZYXd p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_EulerAngleZYXd_gmtl_EulerAngleZYXd_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_EulerAngleZYXd_gmtl_EulerAngleZYXd_double3(p0, p1, p2);
       return result;
    }
 
@@ -1606,12 +1606,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Matrix44f_gmtl_Matrix44f_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))] gmtl.Matrix44f p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))] gmtl.Matrix44f p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.Matrix44f p0, gmtl.Matrix44f p1, ref float p2)
+   public static bool isEqual(gmtl.Matrix44f p0, gmtl.Matrix44f p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Matrix44f_gmtl_Matrix44f_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Matrix44f_gmtl_Matrix44f_float3(p0, p1, p2);
       return result;
    }
 
@@ -1641,72 +1641,72 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_AABoxf_gmtl_AABoxf_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxfMarshaler))] gmtl.AABoxf p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxfMarshaler))] gmtl.AABoxf p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.AABoxf p0, gmtl.AABoxf p1, ref float p2)
+   public static bool isEqual(gmtl.AABoxf p0, gmtl.AABoxf p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_AABoxf_gmtl_AABoxf_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_AABoxf_gmtl_AABoxf_float3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_AABoxd_gmtl_AABoxd_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxdMarshaler))] gmtl.AABoxd p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxdMarshaler))] gmtl.AABoxd p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.AABoxd p0, gmtl.AABoxd p1, ref double p2)
+   public static bool isEqual(gmtl.AABoxd p0, gmtl.AABoxd p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_AABoxd_gmtl_AABoxd_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_AABoxd_gmtl_AABoxd_double3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_VecBase_float_4_gmtl_VecBase_float_4_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_4Marshaler))] gmtl.VecBase_float_4 p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_4Marshaler))] gmtl.VecBase_float_4 p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.VecBase_float_4 p0, gmtl.VecBase_float_4 p1, ref float p2)
+   public static bool isEqual(gmtl.VecBase_float_4 p0, gmtl.VecBase_float_4 p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_VecBase_float_4_gmtl_VecBase_float_4_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_VecBase_float_4_gmtl_VecBase_float_4_float3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_VecBase_double_4_gmtl_VecBase_double_4_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_4Marshaler))] gmtl.VecBase_double_4 p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_4Marshaler))] gmtl.VecBase_double_4 p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.VecBase_double_4 p0, gmtl.VecBase_double_4 p1, ref double p2)
+   public static bool isEqual(gmtl.VecBase_double_4 p0, gmtl.VecBase_double_4 p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_VecBase_double_4_gmtl_VecBase_double_4_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_VecBase_double_4_gmtl_VecBase_double_4_double3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_VecBase_float_3_gmtl_VecBase_float_3_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_3Marshaler))] gmtl.VecBase_float_3 p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_3Marshaler))] gmtl.VecBase_float_3 p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.VecBase_float_3 p0, gmtl.VecBase_float_3 p1, ref float p2)
+   public static bool isEqual(gmtl.VecBase_float_3 p0, gmtl.VecBase_float_3 p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_VecBase_float_3_gmtl_VecBase_float_3_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_VecBase_float_3_gmtl_VecBase_float_3_float3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_VecBase_double_3_gmtl_VecBase_double_3_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.VecBase_double_3 p0, gmtl.VecBase_double_3 p1, ref double p2)
+   public static bool isEqual(gmtl.VecBase_double_3 p0, gmtl.VecBase_double_3 p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_VecBase_double_3_gmtl_VecBase_double_3_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_VecBase_double_3_gmtl_VecBase_double_3_double3(p0, p1, p2);
       return result;
    }
 
@@ -1724,12 +1724,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Matrix33d_gmtl_Matrix33d_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33dMarshaler))] gmtl.Matrix33d p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33dMarshaler))] gmtl.Matrix33d p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.Matrix33d p0, gmtl.Matrix33d p1, ref double p2)
+   public static bool isEqual(gmtl.Matrix33d p0, gmtl.Matrix33d p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Matrix33d_gmtl_Matrix33d_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Matrix33d_gmtl_Matrix33d_double3(p0, p1, p2);
       return result;
    }
 
@@ -1747,12 +1747,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Matrix33f_gmtl_Matrix33f_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33fMarshaler))] gmtl.Matrix33f p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33fMarshaler))] gmtl.Matrix33f p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.Matrix33f p0, gmtl.Matrix33f p1, ref float p2)
+   public static bool isEqual(gmtl.Matrix33f p0, gmtl.Matrix33f p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_Matrix33f_gmtl_Matrix33f_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_Matrix33f_gmtl_Matrix33f_float3(p0, p1, p2);
       return result;
    }
 
@@ -1770,12 +1770,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_AxisAngled_gmtl_AxisAngled_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AxisAngledMarshaler))] gmtl.AxisAngled p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AxisAngledMarshaler))] gmtl.AxisAngled p1,
-	ref double p2);
+	double p2);
 
-   public static bool isEqual(gmtl.AxisAngled p0, gmtl.AxisAngled p1, ref double p2)
+   public static bool isEqual(gmtl.AxisAngled p0, gmtl.AxisAngled p1, double p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_AxisAngled_gmtl_AxisAngled_double3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_AxisAngled_gmtl_AxisAngled_double3(p0, p1, p2);
       return result;
    }
 
@@ -1793,12 +1793,12 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_AxisAnglef_gmtl_AxisAnglef_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AxisAnglefMarshaler))] gmtl.AxisAnglef p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AxisAnglefMarshaler))] gmtl.AxisAnglef p1,
-	ref float p2);
+	float p2);
 
-   public static bool isEqual(gmtl.AxisAnglef p0, gmtl.AxisAnglef p1, ref float p2)
+   public static bool isEqual(gmtl.AxisAnglef p0, gmtl.AxisAnglef p1, float p2)
    {
       bool result;
-      result = gmtl_isEqual__gmtl_AxisAnglef_gmtl_AxisAnglef_float3(p0, p1, ref p2);
+      result = gmtl_isEqual__gmtl_AxisAnglef_gmtl_AxisAnglef_float3(p0, p1, p2);
       return result;
    }
 
@@ -2036,14 +2036,14 @@ public sealed abstract class Gmtl
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))]
    private extern static gmtl.VecBase_double_3 gmtl_lerp__gmtl_VecBase_double_3_double_gmtl_VecBase_double_3_gmtl_VecBase_double_34([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p0,
-	ref double p1,
+	double p1,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p2,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p3);
 
-   public static gmtl.VecBase_double_3 lerp(gmtl.VecBase_double_3 p0, ref double p1, gmtl.VecBase_double_3 p2, gmtl.VecBase_double_3 p3)
+   public static gmtl.VecBase_double_3 lerp(gmtl.VecBase_double_3 p0, double p1, gmtl.VecBase_double_3 p2, gmtl.VecBase_double_3 p3)
    {
       gmtl.VecBase_double_3 result;
-      result = gmtl_lerp__gmtl_VecBase_double_3_double_gmtl_VecBase_double_3_gmtl_VecBase_double_34(p0, ref p1, p2, p3);
+      result = gmtl_lerp__gmtl_VecBase_double_3_double_gmtl_VecBase_double_3_gmtl_VecBase_double_34(p0, p1, p2, p3);
       return result;
    }
 
@@ -2051,14 +2051,14 @@ public sealed abstract class Gmtl
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.VecBase_float_3Marshaler))]
    private extern static gmtl.VecBase_float_3 gmtl_lerp__gmtl_VecBase_float_3_float_gmtl_VecBase_float_3_gmtl_VecBase_float_34([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_3Marshaler))] gmtl.VecBase_float_3 p0,
-	ref float p1,
+	float p1,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_3Marshaler))] gmtl.VecBase_float_3 p2,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_3Marshaler))] gmtl.VecBase_float_3 p3);
 
-   public static gmtl.VecBase_float_3 lerp(gmtl.VecBase_float_3 p0, ref float p1, gmtl.VecBase_float_3 p2, gmtl.VecBase_float_3 p3)
+   public static gmtl.VecBase_float_3 lerp(gmtl.VecBase_float_3 p0, float p1, gmtl.VecBase_float_3 p2, gmtl.VecBase_float_3 p3)
    {
       gmtl.VecBase_float_3 result;
-      result = gmtl_lerp__gmtl_VecBase_float_3_float_gmtl_VecBase_float_3_gmtl_VecBase_float_34(p0, ref p1, p2, p3);
+      result = gmtl_lerp__gmtl_VecBase_float_3_float_gmtl_VecBase_float_3_gmtl_VecBase_float_34(p0, p1, p2, p3);
       return result;
    }
 
@@ -2096,14 +2096,14 @@ public sealed abstract class Gmtl
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.VecBase_float_4Marshaler))]
    private extern static gmtl.VecBase_float_4 gmtl_lerp__gmtl_VecBase_float_4_float_gmtl_VecBase_float_4_gmtl_VecBase_float_44([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_4Marshaler))] gmtl.VecBase_float_4 p0,
-	ref float p1,
+	float p1,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_4Marshaler))] gmtl.VecBase_float_4 p2,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_float_4Marshaler))] gmtl.VecBase_float_4 p3);
 
-   public static gmtl.VecBase_float_4 lerp(gmtl.VecBase_float_4 p0, ref float p1, gmtl.VecBase_float_4 p2, gmtl.VecBase_float_4 p3)
+   public static gmtl.VecBase_float_4 lerp(gmtl.VecBase_float_4 p0, float p1, gmtl.VecBase_float_4 p2, gmtl.VecBase_float_4 p3)
    {
       gmtl.VecBase_float_4 result;
-      result = gmtl_lerp__gmtl_VecBase_float_4_float_gmtl_VecBase_float_4_gmtl_VecBase_float_44(p0, ref p1, p2, p3);
+      result = gmtl_lerp__gmtl_VecBase_float_4_float_gmtl_VecBase_float_4_gmtl_VecBase_float_44(p0, p1, p2, p3);
       return result;
    }
 
@@ -2111,14 +2111,14 @@ public sealed abstract class Gmtl
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.VecBase_double_4Marshaler))]
    private extern static gmtl.VecBase_double_4 gmtl_lerp__gmtl_VecBase_double_4_double_gmtl_VecBase_double_4_gmtl_VecBase_double_44([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_4Marshaler))] gmtl.VecBase_double_4 p0,
-	ref double p1,
+	double p1,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_4Marshaler))] gmtl.VecBase_double_4 p2,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_4Marshaler))] gmtl.VecBase_double_4 p3);
 
-   public static gmtl.VecBase_double_4 lerp(gmtl.VecBase_double_4 p0, ref double p1, gmtl.VecBase_double_4 p2, gmtl.VecBase_double_4 p3)
+   public static gmtl.VecBase_double_4 lerp(gmtl.VecBase_double_4 p0, double p1, gmtl.VecBase_double_4 p2, gmtl.VecBase_double_4 p3)
    {
       gmtl.VecBase_double_4 result;
-      result = gmtl_lerp__gmtl_VecBase_double_4_double_gmtl_VecBase_double_4_gmtl_VecBase_double_44(p0, ref p1, p2, p3);
+      result = gmtl_lerp__gmtl_VecBase_double_4_double_gmtl_VecBase_double_4_gmtl_VecBase_double_44(p0, p1, p2, p3);
       return result;
    }
 
@@ -2207,12 +2207,12 @@ public sealed abstract class Gmtl
                        MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))]
    private extern static gmtl.Matrix44d gmtl_mult__gmtl_Matrix44d_gmtl_Matrix44d_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))] gmtl.Matrix44d p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))] gmtl.Matrix44d p1,
-	ref double p2);
+	double p2);
 
-   public static gmtl.Matrix44d mult(gmtl.Matrix44d p0, gmtl.Matrix44d p1, ref double p2)
+   public static gmtl.Matrix44d mult(gmtl.Matrix44d p0, gmtl.Matrix44d p1, double p2)
    {
       gmtl.Matrix44d result;
-      result = gmtl_mult__gmtl_Matrix44d_gmtl_Matrix44d_double3(p0, p1, ref p2);
+      result = gmtl_mult__gmtl_Matrix44d_gmtl_Matrix44d_double3(p0, p1, p2);
       return result;
    }
 
@@ -2221,12 +2221,12 @@ public sealed abstract class Gmtl
                        MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))]
    private extern static gmtl.Matrix44f gmtl_mult__gmtl_Matrix44f_gmtl_Matrix44f_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))] gmtl.Matrix44f p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))] gmtl.Matrix44f p1,
-	ref float p2);
+	float p2);
 
-   public static gmtl.Matrix44f mult(gmtl.Matrix44f p0, gmtl.Matrix44f p1, ref float p2)
+   public static gmtl.Matrix44f mult(gmtl.Matrix44f p0, gmtl.Matrix44f p1, float p2)
    {
       gmtl.Matrix44f result;
-      result = gmtl_mult__gmtl_Matrix44f_gmtl_Matrix44f_float3(p0, p1, ref p2);
+      result = gmtl_mult__gmtl_Matrix44f_gmtl_Matrix44f_float3(p0, p1, p2);
       return result;
    }
 
@@ -2329,12 +2329,12 @@ public sealed abstract class Gmtl
                        MarshalTypeRef = typeof(gmtl.Matrix33dMarshaler))]
    private extern static gmtl.Matrix33d gmtl_mult__gmtl_Matrix33d_gmtl_Matrix33d_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33dMarshaler))] gmtl.Matrix33d p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33dMarshaler))] gmtl.Matrix33d p1,
-	ref double p2);
+	double p2);
 
-   public static gmtl.Matrix33d mult(gmtl.Matrix33d p0, gmtl.Matrix33d p1, ref double p2)
+   public static gmtl.Matrix33d mult(gmtl.Matrix33d p0, gmtl.Matrix33d p1, double p2)
    {
       gmtl.Matrix33d result;
-      result = gmtl_mult__gmtl_Matrix33d_gmtl_Matrix33d_double3(p0, p1, ref p2);
+      result = gmtl_mult__gmtl_Matrix33d_gmtl_Matrix33d_double3(p0, p1, p2);
       return result;
    }
 
@@ -2343,12 +2343,12 @@ public sealed abstract class Gmtl
                        MarshalTypeRef = typeof(gmtl.Matrix33fMarshaler))]
    private extern static gmtl.Matrix33f gmtl_mult__gmtl_Matrix33f_gmtl_Matrix33f_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33fMarshaler))] gmtl.Matrix33f p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix33fMarshaler))] gmtl.Matrix33f p1,
-	ref float p2);
+	float p2);
 
-   public static gmtl.Matrix33f mult(gmtl.Matrix33f p0, gmtl.Matrix33f p1, ref float p2)
+   public static gmtl.Matrix33f mult(gmtl.Matrix33f p0, gmtl.Matrix33f p1, float p2)
    {
       gmtl.Matrix33f result;
-      result = gmtl_mult__gmtl_Matrix33f_gmtl_Matrix33f_float3(p0, p1, ref p2);
+      result = gmtl_mult__gmtl_Matrix33f_gmtl_Matrix33f_float3(p0, p1, p2);
       return result;
    }
 
@@ -2825,24 +2825,24 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
-	ref double p2);
+	double p2);
 
-   public static PlaneSide whichSide(gmtl.Planed p0, gmtl.Point3d p1, ref double p2)
+   public static PlaneSide whichSide(gmtl.Planed p0, gmtl.Point3d p1, double p2)
    {
       PlaneSide result;
-      result = gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double3(p0, p1, ref p2);
+      result = gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
-	ref float p2);
+	float p2);
 
-   public static PlaneSide whichSide(gmtl.Planef p0, gmtl.Point3f p1, ref float p2)
+   public static PlaneSide whichSide(gmtl.Planef p0, gmtl.Point3f p1, float p2)
    {
       PlaneSide result;
-      result = gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float3(p0, p1, ref p2);
+      result = gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float3(p0, p1, p2);
       return result;
    }
 
@@ -3566,24 +3566,24 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))]
-   private extern static gmtl.Matrix44f gmtlWrappers_makeScaleMatrix44__float1(ref float p0);
+   private extern static gmtl.Matrix44f gmtlWrappers_makeScaleMatrix44__float1(float p0);
 
-   public static gmtl.Matrix44f makeScaleMatrix44(ref float p0)
+   public static gmtl.Matrix44f makeScaleMatrix44(float p0)
    {
       gmtl.Matrix44f result;
-      result = gmtlWrappers_makeScaleMatrix44__float1(ref p0);
+      result = gmtlWrappers_makeScaleMatrix44__float1(p0);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))]
-   private extern static gmtl.Matrix44d gmtlWrappers_makeScaleMatrix44__double1(ref double p0);
+   private extern static gmtl.Matrix44d gmtlWrappers_makeScaleMatrix44__double1(double p0);
 
-   public static gmtl.Matrix44d makeScaleMatrix44(ref double p0)
+   public static gmtl.Matrix44d makeScaleMatrix44(double p0)
    {
       gmtl.Matrix44d result;
-      result = gmtlWrappers_makeScaleMatrix44__double1(ref p0);
+      result = gmtlWrappers_makeScaleMatrix44__double1(p0);
       return result;
    }
 
@@ -6289,24 +6289,24 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isOnVolume__gmtl_Sphered_gmtl_Point3d_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpheredMarshaler))] gmtl.Sphered p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
-	ref double p2);
+	double p2);
 
-   public static bool isOnVolume(gmtl.Sphered p0, gmtl.Point3d p1, ref double p2)
+   public static bool isOnVolume(gmtl.Sphered p0, gmtl.Point3d p1, double p2)
    {
       bool result;
-      result = gmtl_isOnVolume__gmtl_Sphered_gmtl_Point3d_double3(p0, p1, ref p2);
+      result = gmtl_isOnVolume__gmtl_Sphered_gmtl_Point3d_double3(p0, p1, p2);
       return result;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isOnVolume__gmtl_Spheref_gmtl_Point3f_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpherefMarshaler))] gmtl.Spheref p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
-	ref float p2);
+	float p2);
 
-   public static bool isOnVolume(gmtl.Spheref p0, gmtl.Point3f p1, ref float p2)
+   public static bool isOnVolume(gmtl.Spheref p0, gmtl.Point3f p1, float p2)
    {
       bool result;
-      result = gmtl_isOnVolume__gmtl_Spheref_gmtl_Point3f_float3(p0, p1, ref p2);
+      result = gmtl_isOnVolume__gmtl_Spheref_gmtl_Point3f_float3(p0, p1, p2);
       return result;
    }
 

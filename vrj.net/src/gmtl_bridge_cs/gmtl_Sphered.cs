@@ -64,15 +64,13 @@ public sealed class Sphered
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr gmtl_Sphere_double__Sphere__gmtl_Point3d_double([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
-	ref double p1);
+	double p1);
 
-   public Sphered(gmtl.Point3d p0, ref double p1)
+   public Sphered(gmtl.Point3d p0, double p1)
    {
       
-      
-      mRawObject   = gmtl_Sphere_double__Sphere__gmtl_Point3d_double(p0, ref p1);
+      mRawObject   = gmtl_Sphere_double__Sphere__gmtl_Point3d_double(p0, p1);
       mWeOwnMemory = true;
-      
       
    }
 
@@ -149,11 +147,11 @@ public sealed class Sphered
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Sphere_double__setRadius__double1(IntPtr obj,
-	ref double p0);
+	double p0);
 
-   public  void setRadius(ref double p0)
+   public  void setRadius(double p0)
    {
-      gmtl_Sphere_double__setRadius__double1(mRawObject, ref p0);
+      gmtl_Sphere_double__setRadius__double1(mRawObject, p0);
    }
 
 

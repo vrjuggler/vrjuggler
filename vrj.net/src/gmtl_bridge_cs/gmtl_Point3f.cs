@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -81,57 +81,39 @@ public sealed class Point3f
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_float_3__Point__float_float(ref float p0,
-	ref float p1);
+   private extern static IntPtr gmtl_Point_float_3__Point__float_float(float p0,
+	float p1);
 
-   public Point3f(ref float p0, ref float p1)
+   public Point3f(float p0, float p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      mRawObject   = gmtl_Point_float_3__Point__float_float(ref p0, ref p1);
+      mRawObject   = gmtl_Point_float_3__Point__float_float(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_float_3__Point__float_float_float(ref float p0,
-	ref float p1,
-	ref float p2);
+   private extern static IntPtr gmtl_Point_float_3__Point__float_float_float(float p0,
+	float p1,
+	float p2);
 
-   public Point3f(ref float p0, ref float p1, ref float p2)
+   public Point3f(float p0, float p1, float p2)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      mRawObject   = gmtl_Point_float_3__Point__float_float_float(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Point_float_3__Point__float_float_float(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_float_3__Point__float_float_float_float(ref float p0,
-	ref float p1,
-	ref float p2,
-	ref float p3);
+   private extern static IntPtr gmtl_Point_float_3__Point__float_float_float_float(float p0,
+	float p1,
+	float p2,
+	float p3);
 
-   public Point3f(ref float p0, ref float p1, ref float p2, ref float p3)
+   public Point3f(float p0, float p1, float p2, float p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_Point_float_3__Point__float_float_float_float(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_Point_float_3__Point__float_float_float_float(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    // Internal constructor needed for marshaling purposes.

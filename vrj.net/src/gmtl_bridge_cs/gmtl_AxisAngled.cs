@@ -69,38 +69,28 @@ public sealed class AxisAngled
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AxisAngle_double__AxisAngle__double_double_double_double(ref double p0,
-	ref double p1,
-	ref double p2,
-	ref double p3);
+   private extern static IntPtr gmtl_AxisAngle_double__AxisAngle__double_double_double_double(double p0,
+	double p1,
+	double p2,
+	double p3);
 
-   public AxisAngled(ref double p0, ref double p1, ref double p2, ref double p3)
+   public AxisAngled(double p0, double p1, double p2, double p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      
-      
-      mRawObject   = gmtl_AxisAngle_double__AxisAngle__double_double_double_double(ref p0, ref p1, ref p2, ref p3);
+      mRawObject   = gmtl_AxisAngle_double__AxisAngle__double_double_double_double(p0, p1, p2, p3);
       mWeOwnMemory = true;
-      
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(ref double p0,
+   private extern static IntPtr gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(double p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p1);
 
-   public AxisAngled(ref double p0, gmtl.Vec3d p1)
+   public AxisAngled(double p0, gmtl.Vec3d p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       
-      
-      mRawObject   = gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(ref p0, p1);
+      mRawObject   = gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(p0, p1);
       mWeOwnMemory = true;
-      
       
    }
 
@@ -133,25 +123,25 @@ public sealed class AxisAngled
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AxisAngle_double__set__double_double_double_double4(IntPtr obj,
-	ref double p0,
-	ref double p1,
-	ref double p2,
-	ref double p3);
+	double p0,
+	double p1,
+	double p2,
+	double p3);
 
-   public new void set(ref double p0, ref double p1, ref double p2, ref double p3)
+   public new void set(double p0, double p1, double p2, double p3)
    {
-      gmtl_AxisAngle_double__set__double_double_double_double4(mRawObject, ref p0, ref p1, ref p2, ref p3);
+      gmtl_AxisAngle_double__set__double_double_double_double4(mRawObject, p0, p1, p2, p3);
    }
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AxisAngle_double__set__double_gmtl_Vec3d2(IntPtr obj,
-	ref double p0,
+	double p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p1);
 
-   public new void set(ref double p0, gmtl.Vec3d p1)
+   public new void set(double p0, gmtl.Vec3d p1)
    {
-      gmtl_AxisAngle_double__set__double_gmtl_Vec3d2(mRawObject, ref p0, p1);
+      gmtl_AxisAngle_double__set__double_gmtl_Vec3d2(mRawObject, p0, p1);
    }
 
 
@@ -167,11 +157,11 @@ public sealed class AxisAngled
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AxisAngle_double__setAngle__double1(IntPtr obj,
-	ref double p0);
+	double p0);
 
-   public  void setAngle(ref double p0)
+   public  void setAngle(double p0)
    {
-      gmtl_AxisAngle_double__setAngle__double1(mRawObject, ref p0);
+      gmtl_AxisAngle_double__setAngle__double1(mRawObject, p0);
    }
 
 
