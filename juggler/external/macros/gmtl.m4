@@ -7,8 +7,8 @@ dnl   Allen Bierbaum
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          gmtl.m4,v
-dnl Date modified: 2004/04/12 03:20:42
-dnl Version:       1.12
+dnl Date modified: 2004/05/18 15:15:15
+dnl Version:       1.13
 dnl -----------------------------------------------------------------
 dnl
 dnl ************************************************************** ggt-head end
@@ -59,9 +59,9 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(GMTL_PATH,
 [
    dnl Get the cflags and libraries from the gmtl-config script
-   AC_ARG_WITH(gmtl-prefix,
-               [  --with-gmtl-prefix=<PATH>
-                          Prefix where GMTL is installed  [default=$2]],
+   AC_ARG_WITH(gmtl,
+               [  --with-gmtl=<PATH>      Directory where GMTL is
+                          installed                       [default=$2]],
                [GMTL_ROOT="$withval"], [GMTL_ROOT=$2])
    AC_ARG_WITH(gmtl-includes,
                [  --with-gmtl-includes=<DIR>
@@ -73,9 +73,6 @@ AC_DEFUN(GMTL_PATH,
                           Exec prefix where GMTL is
                           installed (optional)            [No default]],
                gmtl_config_exec_prefix="$withval", gmtl_config_exec_prefix="")
-dnl   AC_ARG_ENABLE(gmtltest,
-dnl                 [  --disable-gmtltest       Do not try to compile and run a
-dnl                         test GMTL program], , enable_gmtltest=yes)
 
    if test "x$gmtl_config_exec_prefix" != "x" ; then
       gmtl_config_args="$gmtl_config_args --exec-prefix=$gmtl_config_exec_prefix"
