@@ -96,7 +96,7 @@ protected:
 public:
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   virtual void configInitial(vjConfigChunkDB*  chunkDB);
+   //virtual void configInitial(vjConfigChunkDB*  chunkDB);
 
     //: Blocks until the end of the frame
     //! PRE: none
@@ -245,7 +245,9 @@ public:
       }
       return _instance;
    }
+   
 protected:
+   
    vjPfDrawManager() {
       sceneRoot    = NULL;
       mSimTree     = NULL;
@@ -255,6 +257,7 @@ protected:
    }
 
    virtual ~vjPfDrawManager() {}
+   
 
 private:
    static vjPfDrawManager* _instance;

@@ -92,11 +92,11 @@ pfNaver::pfNaver()
 
 
 // app() - APP traversal function.  This overloads the standard pfNode
-//	app() method, which will be called each frame during the APP
-//	traversal of the scene graph (*only if* needsApp() (below) returns
-//	TRUE).
-//	app() is called automatically by Performer; it is not called directly
-//	by a program.
+// app() method, which will be called each frame during the APP
+// traversal of the scene graph (*only if* needsApp() (below) returns
+// TRUE).
+// app() is called automatically by Performer; it is not called directly
+// by a program.
 int pfNaver::app(pfTraverser *trav)
 {
    int button0_state = mButton0->getData();
@@ -105,13 +105,11 @@ int pfNaver::app(pfTraverser *trav)
 
    vjMatrix* wand_mat = mWand->getData();
 
-   /*
-   vjDEBUG(vjDBG_ALL, 0) << "b0: " << button0_state
+   vjDEBUG(vjDBG_ALL, vjDBG_VERB_LVL) << "b0: " << button0_state
                          << "b1: " << button1_state
                          << "b2: " << button2_state
                          << "\t" << vjDEBUG_FLUSH;
-                         */
-
+                       
    mVNav.update(*wand_mat, button0_state, button1_state);    // mat, trans, rot
 
    if(1 == button0_state)     // Translate
@@ -136,18 +134,18 @@ int pfNaver::app(pfTraverser *trav)
 
 //---------------------------------------------------------------------//
 // Performer type data - this part is required for any class which
-//	is derived from a Performer class.  It creates a new pfType
-//	which identifies objects of this class.  All constructors for
-//	this class must then call setType(classType_).
+// is derived from a Performer class.  It creates a new pfType
+// which identifies objects of this class.  All constructors for
+// this class must then call setType(classType_).
 pfType *pfNaver::mClassType = NULL;
 
 void pfNaver::init(void)
 {
  if (mClassType == NULL)
-	{
-        pfDCS::init();				// Initialize my parent
-        mClassType =  new pfType(pfDCS::getClassType(), "pfNaver");	// Create the new type
-	}
+   {
+        pfDCS::init();           // Initialize my parent
+        mClassType =  new pfType(pfDCS::getClassType(), "pfNaver");  // Create the new type
+   }
 }
 //----------------------------------------------------------------------//
 
