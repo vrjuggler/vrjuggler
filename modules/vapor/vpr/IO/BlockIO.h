@@ -45,7 +45,7 @@ typedef int ssize_t;
 #include <string>
 
 
-namespace  {
+namespace vpr {
 
 // ----------------------------------------------------------------------------
 //: Block-style (as opposed to streaming) I/O interface.
