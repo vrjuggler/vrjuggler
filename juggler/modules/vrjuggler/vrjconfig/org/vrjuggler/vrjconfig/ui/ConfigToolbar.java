@@ -283,6 +283,7 @@ public class ConfigToolbar
    {
       // Only allow the user to choose files
       fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      fileChooser.setFileHidingEnabled(false);
 
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
@@ -467,11 +468,10 @@ public class ConfigToolbar
       String name = null;
       do
       {
-         JFileChooser chooser = new JFileChooser();
-         int result = chooser.showSaveDialog(this);
+         int result = fileChooser.showSaveDialog(this);
          if (result == JFileChooser.APPROVE_OPTION)
          {
-            File file = chooser.getSelectedFile();
+            File file = fileChooser.getSelectedFile();
             String filename = file.getAbsolutePath();
             if (! getConfigBroker().containsDataSource(filename))
             {

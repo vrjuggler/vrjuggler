@@ -228,7 +228,7 @@ public class ControlPanelView
             }
             else if (item.equals("D i s p l a y"))
             {
-               DisplayEditor display_editor = new DisplayEditor();
+               DisplayEditor3D display_editor = new DisplayEditor3D();
                display_editor.setConfigContext(context);
                pushCurrentBack(display_editor);
             }
