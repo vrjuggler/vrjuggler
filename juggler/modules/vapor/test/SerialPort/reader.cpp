@@ -49,14 +49,16 @@ main (int argc, char* argv[]) {
         char buffer[80];
         vpr::Uint32 bytes;
 
+        std::cout << "Port opened\n";
+        memset((void*) &buffer, '\0', sizeof(buffer));
+
 //        read_port->setUpdateAction(vpr::SerialIO::NOW);
-//        read_port->enableLocalAttach();
         read_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
         read_port->enableRead();
-//        read_port->flushQueue(vpr::SerialIO::INPUT_QUEUE);
-        std::cout << "Port opened\n";
+        read_port->disableCanonicalInput();
+//        read_port->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
         read_port->read(buffer, sizeof(buffer), bytes);
-        std::cout << "Read '" << buffer << "'\n";
+        std::cout << "Read '" << buffer << "'" << std::endl;
     }
 
     return 0;
