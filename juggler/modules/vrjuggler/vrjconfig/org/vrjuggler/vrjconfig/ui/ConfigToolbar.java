@@ -42,6 +42,8 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
 
+import org.vrjuggler.jccl.rtrc.*;
+
 /**
  * A specialized toolbar that pays attention to the ConfigManager.
  */
@@ -72,6 +74,7 @@ public class ConfigToolbar
          undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
          redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
          expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
+         RTRCBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/vrjuggler.gif")));
       }
       catch (Exception e)
       {
@@ -84,6 +87,7 @@ public class ConfigToolbar
          undoBtn.setText("Undo");
          redoBtn.setText("Redo");
          expandBtn.setText("Expand");
+         expandBtn.setText("RTRC");
       }
    }
 
@@ -248,8 +252,22 @@ public class ConfigToolbar
       {
          fireAction("Open");
       }
+      return result;   
+   }
+   
+   public boolean doRTRC()
+   {
+      boolean result = doRTRC(createDefaultConfigContext());
+      if (result)
+      {
+         //XXX: "RTRC"
+         fireAction("Open");
+      }
+
+      
       return result;
    }
+
 
    /**
     * Programmatically executes an open action into the given context.
@@ -317,6 +335,40 @@ public class ConfigToolbar
 
       return false;
    }
+
+   /**
+    * Adds a RTRCDataSource into the given context.
+    */
+   public boolean doRTRC(ConfigContext ctx)
+   {
+         try
+         {
+            ConfigBroker broker = new ConfigBrokerProxy();
+            RTRCDataSourceBroker RTRCBroker = new RTRCDataSourceBrokerProxy();
+            ConnectionDialog dialog = new ConnectionDialog("RTRCDataSources Connections");
+            //XXX: add this function
+            //positionDialog(dialog);
+            dialog.show();
+
+            RTRCDataSource data_src = dialog.getDataSource();
+
+            broker.add(data_src.toString(), data_src);
+            ctx.add(data_src.toString());
+
+            setConfigContext(ctx);
+            return true;
+         }
+         catch (Exception ioe)
+         {
+            JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            ioe.printStackTrace();
+         }
+
+      return false;
+   }
+
+
 
    /**
     * Programmatically execute a save action.
@@ -508,6 +560,9 @@ public class ConfigToolbar
       openBtn.setToolTipText("Open Configuration");
       openBtn.setActionCommand("Open");
       openBtn.setFocusPainted(false);
+      RTRCBtn.setToolTipText("Run Time ReConfiguration");
+      RTRCBtn.setActionCommand("RTRC");
+      RTRCBtn.setFocusPainted(false); 
       saveBtn.setEnabled(false);
       saveBtn.setToolTipText("Save Configuration");
       saveBtn.setActionCommand("Save");
@@ -588,10 +643,18 @@ public class ConfigToolbar
             toggleContextEditor();
          }
       });
+      RTRCBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doRTRC();
+         }
+      });
       this.add(titleLbl, BorderLayout.NORTH);
       this.add(toolbar, BorderLayout.CENTER);
       toolbar.add(newBtn, null);
       toolbar.add(openBtn, null);
+      toolbar.add(RTRCBtn, null);
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
       toolbar.add(saveAllBtn, null);
@@ -613,12 +676,12 @@ public class ConfigToolbar
    private JButton undoBtn = new JButton();
    private JButton redoBtn = new JButton();
    private JToggleButton expandBtn = new JToggleButton();
+   private JButton RTRCBtn = new JButton();
    private JFileChooser fileChooser = new JFileChooser();
 
    private ConfigContext context = new ConfigContext();
    private EditContextPopup contextEditor;
    private ContextChangeListener contextListener = new ContextChangeListener();
-
 
    /**
     * Our special context change listener used to toggle the save and expand
