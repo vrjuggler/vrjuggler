@@ -64,7 +64,6 @@ vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
 bool vjChunkDescDB::insert (vjChunkDesc *d) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
-            cout << "----------------------------------- conflict found...\n" << endl;
             if (*descs[i] != *d) {
                 vjDEBUG (vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of vjChunkDesc ("
                                      << d->name.c_str() << ") not allowed:\n"
