@@ -38,6 +38,41 @@
 
 vjThreadManager* vjThreadManager::_instance = NULL;
 
+
+//-----------------------------------------------------
+//: Called when a thread has been added to the system.
+//
+//! PRE: Manager must be locked.
+//-----------------------------------------------------
+void vjThreadManager::addThread(vjBaseThread* thread)
+{
+   vjASSERT((mThreadVectorMutex.test()==1) && (mTSMutex.test()==1)); // Assert manager locked
+   vjASSERT(thread->getTID() >= 0);
+
+   // Insert thread into local table
+   while ((int)mThreads.size() <= thread->getTID())
+      mThreads.push_back(NULL);
+   mThreads[thread->getTID()] = thread;
+
+   tsThreadAdded(thread);     // Tell TS routines that thread added
+   debugDump();               // Dump current state
+}
+
+//-----------------------------------------------------
+//: Called when a thread has been removed from the
+//+ system.
+//
+//! PRE: Manager must be locked.
+//-----------------------------------------------------
+void vjThreadManager::removeThread(vjBaseThread* thread)
+{
+   vjASSERT((mThreadVectorMutex.test()==1) && (mTSMutex.test()==1)); // Assert manager locked
+   vjASSERT((thread->getTID() >= 0) && (thread->getTID() < (int)mThreads.size()));
+   mThreads[(unsigned int)thread->getTID()] = NULL;
+   tsThreadRemoved(thread);   // Tell TS routines that thread removed
+}
+
+
 //: Dump the state of the manager to debug
 void vjThreadManager::debugDump()
 {

@@ -61,19 +61,7 @@ public:
    //
    //! PRE: Manager must be locked.
    //-----------------------------------------------------
-   void addThread(vjBaseThread* thread)
-   {
-      vjASSERT((mThreadVectorMutex.test()==1) && (mTSMutex.test()==1)); // Assert manager locked
-      vjASSERT(thread->getTID() >= 0);
-
-      // Insert thread into local table
-      while ((int)mThreads.size() <= thread->getTID())
-         mThreads.push_back(NULL);
-      mThreads[thread->getTID()] = thread;
-
-      tsThreadAdded(thread);     // Tell TS routines that thread added
-      debugDump();               // Dump current state
-   }
+   void addThread(vjBaseThread* thread);
 
    //-----------------------------------------------------
    //: Called when a thread has been removed from the
@@ -81,13 +69,7 @@ public:
    //
    //! PRE: Manager must be locked.
    //-----------------------------------------------------
-   void removeThread(vjBaseThread* thread)
-   {
-      vjASSERT((mThreadVectorMutex.test()==1) && (mTSMutex.test()==1)); // Assert manager locked
-      vjASSERT((thread->getTID() >= 0) && (thread->getTID() < (int)mThreads.size()));
-      mThreads[(unsigned int)thread->getTID()] = NULL;
-      tsThreadRemoved(thread);   // Tell TS routines that thread removed
-   }
+   void removeThread(vjBaseThread* thread);
 
    //-----------------------------------------------------
    //: Lock the manager so that we have complete control
