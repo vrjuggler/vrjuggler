@@ -58,82 +58,84 @@ namespace vpr {
  * @see vpr::SystemPosix
  * @see vpr::SystemNSPR
  */
-class VPR_CLASS_API SystemBase {
+class VPR_CLASS_API SystemBase
+{
 public:
-    /**
-     * Sleeps for the given number of microseconds.
-     *
-     * @param micro The number of microseconds to sleep.
-     */
-    inline static int
-    usleep (vpr::Uint32 micro) {
-        return Thread::usleep(micro);
-    }
+   /**
+    * Sleeps for the given number of microseconds.
+    *
+    * @param micro The number of microseconds to sleep.
+    */
+   static int usleep (vpr::Uint32 micro)
+   {
+      return Thread::usleep(micro);
+   }
 
-    /**
-     * Sleeps for the given number of milliseconds.
-     *
-     * @param micro The number of milliseconds to sleep.
-     */
-    inline static int
-    msleep (vpr::Uint32 milli) {
-        return Thread::msleep(milli);
-    }
+   /**
+    * Sleeps for the given number of milliseconds.
+    *
+    * @param micro The number of milliseconds to sleep.
+    */
+   static int msleep (vpr::Uint32 milli)
+   {
+      return Thread::msleep(milli);
+   }
 
-    /**
-     * Sleeps for the given number of seconds.
-     *
-     * @param micro The number of seconds to sleep.
-     */
-    inline static int
-    sleep (vpr::Uint32 seconds) {
-        return Thread::sleep(seconds);
-    }
+   /**
+    * Sleeps for the given number of seconds.
+    *
+    * @param micro The number of seconds to sleep.
+    */
+   static int sleep (vpr::Uint32 seconds)
+   {
+      return Thread::sleep(seconds);
+   }
 
-    /**
-     * Determines the endianness of the host platform.  A return nvalue of 0
-     * means that the host uses little-endian byte order.  A return value of
-     * 1 means that the host uses big-endian byte order.
-     *
-     * @return 0 is returned for little-endian hosts<br>
-     *         1 is returned for big-endian hosts
-     */
-    inline static int
-    getEndian (void) {
-        union {
-            char   c[sizeof(short)];
-            short  value;
-        } endian;
+   /**
+    * Determines the endianness of the host platform.  A return nvalue of 0
+    * means that the host uses little-endian byte order.  A return value of
+    * 1 means that the host uses big-endian byte order.
+    *
+    * @return 0 is returned for little-endian hosts<br>
+    *         1 is returned for big-endian hosts
+    */
+   static int getEndian (void)
+   {
+      union
+      {
+         char   c[sizeof(short)];
+         short  value;
+      } endian;
 
-        // The way this works is that we access the first byte of endian.value
-        // directly.  If it is 1, the host treats that as the high-order byte.
-        // Otherwise, it is the low-order byte.
-        endian.value = 256;
+      // The way this works is that we access the first byte of endian.value
+      // directly.  If it is 1, the host treats that as the high-order byte.
+      // Otherwise, it is the low-order byte.
+      endian.value = 256;
 
-        return endian.c[0];
-    }
+      return endian.c[0];
+   }
 
-    /**
-     * Tells if the host uses little-endian byte order or not.
-     *
-     * @return <code>true</code> is returned on a little-endian host.<br>
-     *         <code>false</code> is returned on a big-endian host.<br>
-     */
-    inline static bool
-    isLittleEndian (void) {
-        return (getEndian() == 0);
-    }
+   /**
+    * Tells if the host uses little-endian byte order or not.
+    *
+    * @return <code>true</code> is returned on a little-endian host.<br>
+    *         <code>false</code> is returned on a big-endian host.<br>
+    */
+   static bool isLittleEndian (void)
+   {
+      return(getEndian() == 0);
+   }
 
-    /**
-     * Tells if the host uses big-endian byte order or not.
-     *
-     * @return <code>true</code> is returned on a big-endian host.<br>
-     *         <code>false</code> is returned on a little-endian host.<br>
-     */
-    inline static bool
-    isBigEndian (void) {
-        return (getEndian() == 1);
-    }
+   /**
+    * Tells if the host uses big-endian byte order or not.
+    *
+    * @return <code>true</code> is returned on a big-endian host.<br>
+    *         <code>false</code> is returned on a little-endian host.<br>
+    */
+   static bool isBigEndian (void)
+   {
+      return(getEndian() == 1);
+   }
 };
 
 }; // End of vpr namespace
