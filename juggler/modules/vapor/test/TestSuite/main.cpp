@@ -148,7 +148,7 @@ int main (int ac, char **av)
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
    noninteractive_suite->addTest(vprTest::SelectorTest::suite());
    noninteractive_suite->addTest(vprTest::SerializableTest::suite());
-   //noninteractive_suite->addTest(vprTest::ThreadTest::suite());
+   noninteractive_suite->addTest(vprTest::ThreadTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( noninteractive_suite );
