@@ -17,5 +17,3 @@ log_accum.pl
 log_verify
 log_verify.pl
 rcstemplate
-cmd.verify
-cmd.verify.pl
