@@ -149,15 +149,12 @@ SelectorImplBSD::getOut (IOSys::Handle handle) {
 //+                       have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
 Status
-SelectorImplBSD::select (vpr::Uint16& numWithEvents,
-                         const vpr::Interval timeout)
-{
+SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout) {
    vpr::Status ret_val;
    int result, last_fd;
    fd_set read_set, write_set, exception_set;
    std::vector<BSDPollDesc>::iterator i;
    struct timeval timeout_obj;
-   struct timeval* timeout_ptr;
 
    // Zero everything out before doing anything else.
    FD_ZERO(&read_set);
@@ -187,21 +184,9 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents,
       }
    }
 
-   // Unless the caller wants to wait forever, the timeval object to which we
-   // want to point is timeout_obj.
-   timeout_ptr = &timeout_obj;
-
-   // If timeout is vpr::Interval::NoWait, this will be the same as polling
-   // the descriptors.
    if ( timeout == vpr::Interval::NoWait ) {
        timeout_obj.tv_sec  = 0;
        timeout_obj.tv_usec = 0;
-   }
-   // To get no timeout, NULL must be passed to select(2).
-   else if ( timeout == vpr::Interval::NoTimeout ||
-             (timeout.usec() == 0 && timeout.sec() == 0) )
-   {
-       timeout_ptr = NULL;
    }
    else {
        // Apparently select(2) doesn't like if the microsecond member has a
@@ -218,8 +203,10 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents,
        }
    }
 
+   // If timeout is 0, this will be the same as polling the descriptors.  To
+   // get no timeout, NULL must be passed to select(2).
    result = ::select(last_fd + 1, &read_set, &write_set, &exception_set,
-                     timeout_ptr);
+                     (timeout != vpr::Interval::NoTimeout) ? &timeout_obj : NULL);
 
    // D'oh!
    if ( -1 == result ) {
