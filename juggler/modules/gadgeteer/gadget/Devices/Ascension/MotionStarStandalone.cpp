@@ -237,11 +237,7 @@ void aMotionStar::stop() {
 
     command.sequence      = sequenceNumber;
     command.type          = 105;
-    numberBytes           = sendto(s, (void*)lpCommand,
-                                   sizeof(command),
-                                   0,
-                                   (struct sockaddr *)&server,
-                                   sizeof(server));
+    numberBytes           = send(s, (void*)lpCommand, sizeof(command), 0);
 
 } // end void aMotionStar::stop()
 
@@ -264,10 +260,7 @@ void aMotionStar::send_wakeup()
 
 //  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
 
-  bytesReceived = recv( s,
-                        (void*)lpResponse,
-                        sizeof(response),
-                        0);
+  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
 
 //  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 
@@ -283,17 +276,11 @@ void aMotionStar::runContinuous() {
   command.xtype = 0;
   command.sequence = sequenceNumber++;
   n++;
-  numberBytes   = send(s,
-                       (void*)lpCommand,
-                       sizeof(command),
-                       0);
+  numberBytes   = send(s, (void*)lpCommand, sizeof(command), 0);
 
 //    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
 
-  bytesReceived = recv( s,
-                        (void*)lpResponse,
-                        sizeof(response),
-                        0);
+  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
 
 //    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 
@@ -306,12 +293,8 @@ void aMotionStar::runContinuous() {
     headerBytesReceived = 0;
     lpBuffer = (char*)lpResponse;
     while(headerBytesReceived != 16) {
-      bytesReceived = recvfrom(s,
-                               (void*)lpBuffer,
-                               16,
-                               0,
-                               (struct sockaddr *)&server,
-                               lpSize);
+      bytesReceived = recv(s, (void*)lpBuffer, 16, 0);
+
       if (bytesReceived < 0) {
           perror("recv1"), exit(1);
       }
@@ -329,15 +312,14 @@ void aMotionStar::singleShot()
   command.type=103; /* MSG_SINGLE_SHOT - request server to send single packet of data */
   command.xtype = 0;
   command.sequence = sequenceNumber++;
-  numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
-                       (struct sockaddr *)&server, sizeof(server));
+  numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
 
     //printf("bytes sent = %d errno %d\n", numberBytes,errno);
 
   /* wait for the packet to come back */
 
-  bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
-                           (struct sockaddr *)&server, lpSize);
+  bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+
     //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,response.header.sequence
 	//	,response.header.type, bytesReceived);
 
@@ -368,12 +350,8 @@ void aMotionStar::sample() {
       headerBytesReceived = 0;
       lpBuffer = (char*)lpResponse;
       while(headerBytesReceived != 16) {
-        bytesReceived = recvfrom(s,
-                               (void*)lpBuffer,
-                               16,
-                               0,
-                               (struct sockaddr *)&server,
-                               lpSize);
+        bytesReceived = recv(s, (void*) lpBuffer, 16, 0);
+
       /*  if (bytesReceived < 0){
           perror("recv1"), exit(1);
           } */
@@ -424,12 +402,9 @@ void aMotionStar::sample() {
 
     if (runMode == 0) {
       while(totalBytesReceived != totalBytesNeeded){
-        bytesReceived = recvfrom(s,
-                               (void*)lpBuffer,
-                               (totalBytesNeeded-totalBytesReceived),
-                               0,
-                               (struct sockaddr *)&server,
-                               lpSize);
+        bytesReceived = recv(s, (void*) lpBuffer,
+                             (totalBytesNeeded - totalBytesReceived), 0);
+
         if (bytesReceived < 0)
           perror("recv2"), exit(1);
 
@@ -477,10 +452,9 @@ void aMotionStar::get_status_all()
 
   command.type=101;
   command.xtype=0;
-  numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
-                       (struct sockaddr *)&server, sizeof(server));
-//  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno)
-;
+  numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
+
+//  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
@@ -488,7 +462,7 @@ void aMotionStar::get_status_all()
   lpBuffer = lpResponse;
   while(headerBytes<16)
     {
-      bytesReceived = recvfrom(s, (void*)lpBuffer, 16, 0, (struct sockaddr *)&server, lpSize);
+      bytesReceived = recv(s, (void*) lpBuffer, 16, 0);
       headerBytes = headerBytes + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
@@ -496,9 +470,7 @@ void aMotionStar::get_status_all()
   dataBytes = 0;
   while(dataBytes<(response.header.number_bytes))
     {
-      bytesReceived = recvfrom(s, (void*)lpBuffer, response.header.number_bytes,
-
-                               0, (struct sockaddr *)&server, lpSize);
+      bytesReceived = recv(s, (void*)lpBuffer, response.header.number_bytes, 0);
       dataBytes = dataBytes + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
@@ -599,15 +571,14 @@ void aMotionStar::set_status_all()
         response.buffer[5+i] = rate[i];
         }
 
-     numberBytes = sendto(s,(void*)lpResponse, statusSize, 0,
-                 (struct sockaddr *)&server, sizeof(server));
+     numberBytes = send(s,(void*) lpResponse, statusSize, 0);
 
 //     printf("\nSEND STATUS - number bytes sent = %5d errorNumber %d", numberBytes,errno);
 
      /***** Receive packet from the server *****/
 
-     bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
-                              (struct sockaddr *)&server, lpSize);
+     bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+
 //     printf("\nSEND STATUS ACK - number bytes received = %5d,", bytesReceived);
 //     printf("  type %d\n",response.header.type);
 
@@ -625,8 +596,8 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
   command.xtype=fbb_addr;
   command.number_bytes = 0;
 
-  numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
-                       (struct sockaddr *)&server, sizeof(server));
+  numberBytes = send(s, (void*) lpCommand, sizeof(command), 0);
+
 //  printf("\n\nGET STATUS #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
@@ -635,7 +606,7 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
   lpBuffer = lpResponse;
   while(headerBytes<16)
     {
-      bytesReceived = recvfrom(s, (void*)lpBuffer, 16, 0, (struct sockaddr *)&server, lpSize);
+      bytesReceived = recv(s, (void*) lpBuffer, 16, 0);
       headerBytes = headerBytes + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
@@ -643,9 +614,7 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
   dataBytes = 0;
   while(dataBytes<(response.header.number_bytes))
     {
-      bytesReceived = recvfrom(s, (void*)lpBuffer, response.header.number_bytes,
-
-                               0, (struct sockaddr *)&server, lpSize);
+      bytesReceived = recv(s, (void*)lpBuffer, response.header.number_bytes, 0);
       dataBytes = dataBytes + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
@@ -680,14 +649,14 @@ void aMotionStar::set_status_fbb(unsigned char fbb_addr)
   response.header.xtype = fbb_addr;
   response.header.number_bytes = 70;
 
-  numberBytes = sendto(s,(void*)lpResponse, 86, 0,
-                       (struct sockaddr *)&server, sizeof(server));
+  numberBytes = send(s, (void*) lpResponse, 86, 0);
+
 //  printf("\nSEND SETUP #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
-  bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
-                           (struct sockaddr *)&server, lpSize);
+  bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+
 /*
   printf("\nSETUP ACKNOWLEDGED - number bytes received = %5d ", bytesReceived);
   printf("type %d ",response.header.type);
