@@ -47,8 +47,9 @@
 namespace vpr
 {
 
-std::string replaceEnvVars(const std::string str,
-                           const std::string startStr, const std::string endStr)
+VPR_IMPLEMENT(std::string) replaceEnvVars(const std::string str,
+                                          const std::string startStr,
+                                          const std::string endStr)
 {
 
    std::string ret_str(str);
@@ -68,7 +69,7 @@ std::string replaceEnvVars(const std::string str,
    return ret_str;
 }
 
-std::string replaceEnvVars(const std::string str)
+VPR_IMPLEMENT(std::string) replaceEnvVars(const std::string str)
 {
    std::string ret_str(str);
 
