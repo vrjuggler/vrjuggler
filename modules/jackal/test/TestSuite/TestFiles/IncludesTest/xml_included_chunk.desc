@@ -1,0 +1,10 @@
+<ChunkDescDB>
+  <ChunkDesc token="chunkincludetest" name="Chunk Include Test">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="int_prop" name="int_prop" type="Integer" num="1">
+        <help>help yourself, bub</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
