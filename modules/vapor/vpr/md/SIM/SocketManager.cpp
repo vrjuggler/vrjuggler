@@ -108,7 +108,7 @@ namespace sim
             mListenerListMutex.acquire();
             {
                vprASSERT(mListenerList.find(remoteName) != mListenerList.end());
-               remote_sock = (*mListenerList.find(remoteName)).second.first;
+               remote_sock = (*mListenerList.find(remoteName)).second;
             }
             mListenerListMutex.release();
 
@@ -125,6 +125,13 @@ namespace sim
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: Cannot connect, no one listening on "
                << remoteName << std::endl << vprDEBUG_FLUSH;
+            
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "--------- Listening list ---------\n" << vprDEBUG_FLUSH;
+            for(std::map<vpr::InetAddrSIM, vpr::SocketStreamImplSIM* >::iterator i=mListenerList.begin();
+                i != mListenerList.end(); ++i)
+            { vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << (*i).second->getLocalAddr() << std::endl << vprDEBUG_FLUSH; }
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "---- [End] Listening list ---------\n" << vprDEBUG_FLUSH;
+
             vprASSERT(false && "Tried to connect to a non-listening node");
             status.setCode(vpr::ReturnStatus::Fail);
          }
@@ -138,7 +145,7 @@ namespace sim
          mListenerListMutex.acquire();
          {
             vprASSERT(mListenerList.find(remoteName) != mListenerList.end());
-            remote_sock = (*mListenerList.find(remoteName)).second.first;
+            remote_sock = (*mListenerList.find(remoteName)).second;
          }
          mListenerListMutex.release();
 
@@ -203,23 +210,26 @@ namespace sim
    {
       vpr::ReturnStatus status;
 
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<"listen( "<<handle<<" )\n"
-                                             <<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 0) <<"SocketManager::listen: Added listner: " << handle->getLocalAddr() << std::endl
+                                             << vprDEBUG_FLUSH;
       vprASSERT( handle->isBound() && "Can't listen on unbound socket");
       vprASSERT( handle->getType() == vpr::SocketTypes::STREAM && "Trying to listen with not stream socket");
+
+      vpr::InetAddrSIM local_addr = handle->getLocalAddr();
 
       // enter self into list for accepting connections.
       mListenerListMutex.acquire();
       {
-         mListenerList[ handle->getLocalAddr() ] =
-               std::pair<vpr::SocketStreamImplSIM*, int>(handle, backlog);
+         //mListenerList.insert(listener_map_t::value_type( handle;
+         mListenerList[local_addr] = handle;
       }
       mListenerListMutex.release();
 
+      vprASSERT( mListenerList.find(local_addr) != mListenerList.end());
+      vprASSERT( isListening(handle->getLocalAddr()) && "Didn't add listener" );
+
       return status;
    }
-
-
 
 
    void SocketManager::findRoute (vpr::SocketImplSIM* src_sock,
