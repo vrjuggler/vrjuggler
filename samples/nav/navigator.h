@@ -80,7 +80,7 @@ public:
    { mCurPos = pos; }
 
    void setHomePosition(vjMatrix pos)
-   { 
+   {
       mHomePos = pos;
       vjVec3 hpos = mHomePos.getTrans();
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ") << hpos << endl << vjDEBUG_FLUSH;
@@ -98,6 +98,9 @@ public:
    // If the navigator is not active, then we should not be updating
    bool isActive() const { return mIsActive; }
    void setActive(bool state) { mIsActive = state; }
+
+   void setName(std::string name) { mName = name; }
+   std::string getName() { return mName; }
 
 protected:
 
@@ -121,6 +124,7 @@ protected:
    bool checkForAction(std::vector<vjDigitalInterface*> btns, std::vector<ActionState> state_combo);
 
 protected:
+   std::string       mName;         // Name of the collidor
    bool mAllowRot,   mAllowTrans;
    vjMatrix          mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
                                     // Moves the "user" from the models origin to the user's navigated origin (coord system)
