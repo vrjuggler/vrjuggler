@@ -62,7 +62,7 @@ private:
       bool        mActive;
    };
 
-   typedef std::map<const vpr::GUID*, CategoryInfo > category_map_t;
+   typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
    category_map_t mCategories; 
     
    bool mActive;
