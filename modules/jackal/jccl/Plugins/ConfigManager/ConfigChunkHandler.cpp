@@ -38,21 +38,22 @@
 #include <jccl/Util/Debug.h>
 #include <typeinfo>
 
-namespace jccl {
 
-   enum PendItemResult
-   { SUCCESS, FAILED, NEED_DEPS };
+namespace jccl
+{
+
+enum PendItemResult
+{ SUCCESS, FAILED, NEED_DEPS };
+
 
 void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result);
 
 
-
-
 int ConfigChunkHandler::configProcessPending()
 {
-    ConfigManager*     cfg_mgr = ConfigManager::instance();
-    DependencyManager* dep_mgr = DependencyManager::instance();
-
+   ConfigManager*     cfg_mgr = ConfigManager::instance();
+   DependencyManager* dep_mgr = DependencyManager::instance();
+   
    bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
 
    // We need to track the number vefore and after to know if we changed anything
@@ -189,9 +190,12 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 
    const std::string name_prefix("Pending item: ");
    const std::string type_prefix(" type: ");
-   vprDEBUG(vprDBG_ALL,debugLevel) << "Pending item: " << std::setiosflags(std::ios::right) << std::setfill(' ') << std::setw(item_width) << chunkName
-                                 <<    "     type: " << std::setiosflags(std::ios::right) << std::setfill(' ') << std::setw(type_width) << chunkType
-                                                     << std::resetiosflags(std::ios::right) << "  ";
+   vprDEBUG(vprDBG_ALL,debugLevel)
+      << "Pending item: " << std::setiosflags(std::ios::right)
+      << std::setfill(' ') << std::setw(item_width) << chunkName
+      <<    "     type: " << std::setiosflags(std::ios::right)
+      << std::setfill(' ') << std::setw(type_width) << chunkType
+      << std::resetiosflags(std::ios::right) << "  ";
 
    /*
    const int prefix_len = name_prefix.length() + type_prefix.length();
@@ -219,8 +223,6 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 
    vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << std::endl << vprDEBUG_FLUSH;
 }
-
-
 
 
 }; // namespace jccl
