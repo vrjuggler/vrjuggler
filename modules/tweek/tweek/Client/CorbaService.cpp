@@ -324,10 +324,6 @@ void CorbaService::addSubjectManagers(const CosNaming::BindingList& bindingList,
          const std::string subj_mgr_name("SubjectManager");
          bool substr_match(false);
 
-         vprDEBUG(vprDBG_ALL, 0) << "subj_mgr_name.size(): "
-                                 << subj_mgr_name.size() << std::endl
-                                 << vprDEBUG_FLUSH;
-
 #if defined(__GNUC__) && __GNUC__ == 2
          // XXX: This is a hack to deal with GCC 2.96 (and earlier?) having
          // a std::string::compare() method that does not match the actual
