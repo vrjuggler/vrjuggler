@@ -15,6 +15,7 @@
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/System.h>
 
@@ -104,7 +105,7 @@ void SocketSimulatorTest::singleThreadTest ()
    CPPUNIT_ASSERT(status.success() && "Failed to close acceptor");
 }
 
-void SocketSimulatorTest::networkCommTest ()
+void SocketSimulatorTest::networkCommTestTCP()
 {
    vpr::ReturnStatus status;
    vpr::sim::NetworkGraph::AddressList addrs;
@@ -210,6 +211,115 @@ void SocketSimulatorTest::networkCommTest ()
    }
 
    for ( std::vector<vpr::SocketStream>::iterator i = sockets.begin();
+         i != sockets.end();
+         i++ )
+   {
+      (*i).close();
+   }
+}
+
+void SocketSimulatorTest::networkCommTestUDP()
+{
+   vpr::ReturnStatus status;
+   vpr::sim::NetworkGraph::AddressList addrs;
+
+//   status = constructGraph();
+//   CPPUNIT_ASSERT(status.success() && "Could not construct network");
+
+   status =
+      vpr::sim::Controller::instance()->getNetworkGraph().getAllAddresses(addrs);
+   CPPUNIT_ASSERT(status.success() && "Could not request all addresses");
+
+   const unsigned int node_count =
+      vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount();
+   CPPUNIT_ASSERT(node_count > 0 && "No nodes in the graph");
+
+   std::vector<vpr::Uint32> addr_vec;
+   addr_vec.resize(node_count);
+   std::iota(addr_vec.begin(), addr_vec.end(), 0);
+   std::random_shuffle(addr_vec.begin(), addr_vec.end());
+
+   // Create a vector with min(20, node_count) sockets, all with default
+   // addresses,
+   const unsigned int socket_count = (20 < node_count ? 20 : node_count);
+   std::vector<vpr::SocketDatagram> sockets;
+
+   vpr::InetAddr local_addr;
+
+   // Create a bunch of sockets with different addresses to ensure that they
+   // are bound to different nodes on the network.
+   for ( unsigned int i = 0; i < socket_count; i++ )
+   {
+      vpr::sim::NetworkGraph::net_vertex_t node =
+         vpr::sim::Controller::instance()->getNetworkGraph().getNode(addr_vec[i]);
+      vpr::sim::NetworkNodePtr node_prop =
+         vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
+
+      // All the sockets can have the same port number because they will be
+      // on different nodes in the network.
+      local_addr.setAddress(node_prop->getIpAddress(), 40000);
+
+      sockets.push_back(vpr::SocketDatagram(local_addr, vpr::InetAddr::AnyAddr));
+      CPPUNIT_ASSERT(sockets[i].getLocalAddr() == local_addr && "Address assignment failed");
+
+      status = sockets[i].open();
+      CPPUNIT_ASSERT(status.success() && "Failed to open new socket");
+
+      status = sockets[i].bind();
+      CPPUNIT_ASSERT(status.success() && "Failed to bind socket to local address");
+   }
+
+   std::vector<vpr::SocketDatagram> source_sockets, dest_sockets;
+
+   // Here, socket(n) is receiving from socket(n + 1) (where n is even).
+   for ( unsigned int i = 0; i + 1 < socket_count; i += 2 )
+   {
+      const unsigned int receiver = i, sender = i + 1;
+
+      sockets[sender].setRemoteAddr(sockets[receiver].getLocalAddr());
+//      status = sockets[sender].connect();
+//      CPPUNIT_ASSERT(status == vpr::ReturnStatus::Succeed &&
+//                     "Connection to receiver should be instantaneous");
+
+      source_sockets.push_back(sockets[sender]);
+      dest_sockets.push_back(sockets[receiver]);
+   }
+
+   CPPUNIT_ASSERT(source_sockets.size() == dest_sockets.size() &&
+                  "Different number of source and destination sockets");
+
+   // XXX: Sending a unique packet each time might help in debugging.
+   std::string msg("Here is a packet");
+
+   // Now we send a message from each source to its connected destination.
+   for ( unsigned int i = 0; i < source_sockets.size(); i++ )
+   {
+      vpr::Uint32 bytes_written;
+      status = source_sockets[i].sendto(msg, msg.length(), 0,
+                                        dest_sockets[i].getLocalAddr(),
+                                        bytes_written);
+      CPPUNIT_ASSERT(status.success() && "Failed to send buffer to receiver");
+
+      char buffer[20];
+      vpr::Uint32 bytes_read;
+      vpr::InetAddr src_addr;
+
+      do
+      {
+         status = dest_sockets[i].recvfrom(buffer, sizeof(buffer), 0, src_addr,
+                                           bytes_read);
+      }
+      while (status == vpr::ReturnStatus::WouldBlock);
+
+      buffer[bytes_read] = '\0';
+
+      CPPUNIT_ASSERT(status.success() && "Failed to receive buffer");
+      CPPUNIT_ASSERT(src_addr == source_sockets[i].getLocalAddr() && "Received from wrong source");
+
+      CPPUNIT_ASSERT(buffer == msg && "Got the wrong message");
+   }
+
+   for ( std::vector<vpr::SocketDatagram>::iterator i = sockets.begin();
          i != sockets.end();
          i++ )
    {
