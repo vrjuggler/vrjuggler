@@ -85,11 +85,11 @@ public:
 
    /**
     * Gets the positional data within the device pointed to by this proxy as a
-    * matrix.
+    * matrix.  For example, getData(3.28f) will return a matrix in feet.
     *
-    * @param scaleFactor - factor to convert from meters to the desired units
-    * @return  the position of the device as a matrix.
-    * @example getData(3.28f) will return a matrix in feet.
+    * @param scaleFactor Factor to convert from meters to the desired units
+    *
+    * @return The position of the device as a matrix.
     */
    gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet ) const;
    

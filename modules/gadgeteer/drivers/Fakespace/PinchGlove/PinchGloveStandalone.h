@@ -164,8 +164,8 @@ private:
    /**
     * Send a command to the PinchGlove.
     *
-    * @param first  - First byte to send, the command.
-    * @param second - Second byte to send, the parameter.
+    * @param first  First byte to send, the command.
+    * @param second Second byte to send, the parameter.
     */
    vpr::ReturnStatus sendCommand(const vpr::Uint8& first, 
                                  const vpr::Uint8& second);

@@ -54,9 +54,10 @@ public:
    {;}
 
    /**
-    * Create a EndBlock packet to signal that the local node has reached the end of the frame.
+    * Create a EndBlock packet to signal that the local node has reached the
+    * end of the frame.
     *
-    * @param frame_number -The current number of frames that have been drawn.
+    * @param frame_number The current number of frames that have been drawn.
     */
    EndBlock(const vpr::Uint32& frame_number);
 

@@ -49,8 +49,9 @@ public:
    /**
     * Construct a new ApplicationData object.
     *
-    * @param guid - The GUID used to reference this object.
-    * @param host_name - The hostname of the node that should be responsible for updating this object.
+    * @param guid      The GUID used to reference this object.
+    * @param host_name The hostname of the node that should be responsible for
+    *                  updating this object.
     */
    ApplicationData(const vpr::GUID& guid, const std::string& host_name) : mIsLocal(false), mId(guid), mHostname(host_name)
    {
@@ -104,7 +105,7 @@ public:
    }
 
    /**
-    * Return the hostname of the node that should update this object
+    * Return the hostname of the node that should update this object.
     */
    std::string getHostname()
    {
@@ -112,7 +113,7 @@ public:
    }
 
    /**
-    * Return the hostname of the node that should update this object
+    * Return the hostname of the node that should update this object.
     */
    void setHostname(const std::string& hostname)
    {
