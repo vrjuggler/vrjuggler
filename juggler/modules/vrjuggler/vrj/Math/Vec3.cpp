@@ -41,7 +41,7 @@ void vjVec3::xformFull(const vjMatrix& _m, const vjVec3& _v)
     vjVec4 tempVec(_v[0], _v[1], _v[2], 1.0f);
     tempVec.xform(_m, tempVec);
 
-    float w_coord_div = 1/tempVec.vec[3];
+    float w_coord_div = 1.0f / tempVec.vec[3];
 
     vec[0] = (tempVec.vec[0]* w_coord_div);
     vec[1] = (tempVec.vec[1]* w_coord_div);
