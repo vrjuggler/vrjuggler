@@ -47,24 +47,4 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GL_LIBRARY)
 
-ifeq (@OSG_API@, Y)
-#SRCS 		= vjOsgApp.cpp
-#BEFOREBUILD	= beforebuild
-endif
-
 include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Library targets.
-# -----------------------------------------------------------------------------
-beforebuild:
-	@$(SHELL) $(scriptdir)/mkinstalldirs $(OBJDIR)
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-ifndef DO_BEFOREBUILD
-    include $(DEPEND_FILES)
-endif
-endif
