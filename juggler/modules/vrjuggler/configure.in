@@ -1203,7 +1203,6 @@ AC_OUTPUT(Makefile
           test/Makefile 
           test/TestSuite/Makefile
           test/CfgTest/Makefile
-          test/GLWindow/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
           test/Performance/Makefile
