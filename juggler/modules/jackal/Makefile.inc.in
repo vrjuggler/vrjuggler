@@ -191,15 +191,15 @@ ifeq ($(BUILD_VJCONTROL), Y)
 	cd $(instlinks)/bin && $(RM_LN) ./VjControl.jar &&		\
           $(LN_S) $(topdir)/VjControl/VjControl.jar ./
 	cd $(instlinks)/bin && $(RM_LN) ./vjcontrol &&			\
-          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'		\
-              ${JCCLROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&	\
-          chmod ${EXEC_PERMS} vjcontrol
+          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
+              $(JCCLROOT_ABS)/VjControl/vjcontrol.sh > vjcontrol &&	\
+          chmod $(EXEC_PERMS) vjcontrol
 	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
           $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
 	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
-          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'		\
-            ${JCCLROOT_ABS}/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
-          chmod ${EXEC_PERMS} cfgupdater
+          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
+            $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
+          chmod $(EXEC_PERMS) cfgupdater
 endif
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
