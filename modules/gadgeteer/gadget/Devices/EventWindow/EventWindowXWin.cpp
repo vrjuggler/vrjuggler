@@ -870,7 +870,9 @@ gadget::Keys EventWindowXWin::xKeyToKey(KeySym xKey)
    case XK_equal        : return gadget::KEY_EQUAL;
    case XK_greater      : return gadget::KEY_GREATER;
    case XK_question     : return gadget::KEY_QUESTION;
+   case XK_at           : return gadget::KEY_AT;
    case XK_bracketleft  : return gadget::KEY_BRACKET_LEFT;
+   case XK_backslash    : return gadget::KEY_BACKSLASH;
    case XK_bracketright : return gadget::KEY_BRACKET_RIGHT;
    case XK_asciicircum  : return gadget::KEY_ASCII_CIRCUM;
    case XK_underscore   : return gadget::KEY_UNDERSCORE;
