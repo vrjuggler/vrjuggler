@@ -263,6 +263,8 @@ public:
                   && "Handle doesn't match" );
          }
       }
+      assertTest( num_events > 0 && "no events" );
+      
       
       // a:   accept
       vpr::SocketStream spawned_socket;
@@ -283,6 +285,24 @@ public:
       message.resize( size );
       status = spawned_socket.write( message, message.size(), bytes_written );
       threadAssertTest( status.success(), "maxsize test failed" );
+      
+      // block until data is sent
+      /*
+      status = selector.select( num_events, 50000 );
+      for (int j = 0; j < selector.getNumHandles(); ++j)
+      {
+         if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::READ | vpr::Selector::EXCEPT))
+         {
+            threadAssertTest( handle == selector.getHandle( j ) 
+                  && "Handle doesn't match" );
+         }
+      }
+      assertTest( num_events > 0 && "no events" );
+      
+      // c:     read
+      status = connector_socket.read( message, message.size(), bytes_written );
+      threadAssertTest( status.success(), "read test failed" );
+      */
       
       // a/c/s: Close
       status = acceptor_socket.close();
