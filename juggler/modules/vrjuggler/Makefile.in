@@ -605,6 +605,7 @@ links:
 ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjControl.jar ./
 	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
+	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
@@ -911,6 +912,8 @@ ifeq (${BUILD_GUI}, Y)
           ${topdir}/GUI/VjControl.jar ${bindir}
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${VJROOT_ABS}/GUI/vjcontrol1.1 ${bindir}/vjcontrol1.1
 else
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of vjcontrol (not built)"
