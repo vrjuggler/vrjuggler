@@ -10,7 +10,7 @@ class  vjBaseThreadFunctor
 //     Converts a function into a functor that can be passed
 //	to a extern C type function to be called by a thread creation
 //	routine.
-//!PUBLIC_API
+//!PUBLIC_API:
 //---------------------------------------------------------------
 {
 public:
@@ -19,7 +19,8 @@ public:
     virtual void setArg(void*) = 0;
 };
 
-//!PUBLIC_API
+//: Member functor class.
+//!PUBLIC_API:
 template<class T>
 class vjThreadMemberFunctor : public  vjBaseThreadFunctor
 {
@@ -55,7 +56,8 @@ private:
 };
 
 
-//!PUBLIC_API
+//: Nonmember functor class.
+//!PUBLIC_API:
 class vjThreadNonMemberFunctor : public  vjBaseThreadFunctor
 //---------------------------------------------------------------
 // PURPOSE:

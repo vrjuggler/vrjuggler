@@ -36,7 +36,7 @@ enum BIRD_FILT  {AC_NARROW, AC_WIDE, DC_FILTER};
 //    consistent with the vjInput/vjPosition functionality these
 //    are only left for building apps without vjConfigChunks
 //---------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjFlock : public vjPosition {
     public:
         /** @name Construction/Destruction */

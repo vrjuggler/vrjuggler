@@ -21,7 +21,7 @@
 //
 // See also: vjAnalog
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjAnalogProxy : public vjMemory, public vjProxy
 {
 

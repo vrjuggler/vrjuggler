@@ -18,7 +18,8 @@
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>
 
-//!PUBLIC_API
+//: Mutex wrapper for the SGI systems.  Used for critical section protection.
+//!PUBLIC_API:
 class  vjMutexSGI
 {
 public:

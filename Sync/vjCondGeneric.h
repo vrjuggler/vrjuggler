@@ -27,7 +27,7 @@
 //	Allen Bierbaum
 //
 // Date: 1-29-97
-//!PUBLIC_API
+//!PUBLIC_API:
 //-----------------------------------------------
 class  vjCondGeneric
 {

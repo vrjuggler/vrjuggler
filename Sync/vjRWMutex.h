@@ -18,7 +18,7 @@
 //
 // Date: 1-31-97
 //-----------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjRWMutex
 {
 public:

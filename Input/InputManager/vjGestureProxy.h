@@ -23,7 +23,7 @@
 // against the gestures they want to respond to.
 //
 // See also: vjGesture
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGestureProxy : public vjProxy
 {
 public:

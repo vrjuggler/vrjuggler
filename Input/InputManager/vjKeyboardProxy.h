@@ -6,7 +6,7 @@
 #include <Input/vjInput/vjKeyboard.h>
 
 //: Proxy class to vjKeyboard based devices.
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjKeyboardProxy : public vjProxy
 {
 public:

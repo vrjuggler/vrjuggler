@@ -19,7 +19,7 @@
 //    Animating Rotation with Quaternion Curves,  Ken Shoemake
 //		   SIGGRAPH Proceedings Vol 19, Number 3, 1985
 //----------------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjQuat : public vjVec4
 {
 public:

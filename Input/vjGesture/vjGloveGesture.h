@@ -11,7 +11,7 @@
 //: Abstract base class for all glove gesture recognition
 //
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGloveGesture : virtual public vjGesture
 {
 public:

@@ -17,7 +17,7 @@
 
 //: Threads implementation using multiple processes created with sproc(2).
 
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjThreadSGI : public vjBaseThread
 {
 public:

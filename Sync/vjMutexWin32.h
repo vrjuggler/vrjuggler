@@ -16,7 +16,8 @@
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolWin32.h>
 
-//!PUBLIC_API
+//: Mutex wrapper for Win32 systems.
+//!PUBLIC_API:
 class vjMutexWin32
 {
 public:
