@@ -553,37 +553,50 @@ std::string ConfigElement::getPropertyString(const std::string& prop, int ind) c
    vprASSERT(tokens::NAME != prop && "Use getName() to get an element's name");
 
    std::string prop_string_rep("");     // The String rep to convert from
-   // Get the cdata node without auto create
-   cppdom::NodePtr cdata_node = getPropertyCdataNode(prop,ind,false);
-
    PropertyDefinition prop_def = mDef->getPropertyDefinition(prop);
-   vprASSERT(prop_def.getNode().get() != NULL && "Invalid property requested.  Bad programmer");
 
-   if(cdata_node.get() != NULL)
+   // Ensure that a valid property was requested before taking any action.
+   if ( prop_def.getNode().get() == NULL )
    {
-      prop_string_rep = cdata_node->getCdata();            // Get the cdata
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": [jccl::ConfigElement::getPropertyString()] Invalid property '"
+         << prop << "' requested!\n" << vprDEBUG_FLUSH;
+      vprASSERT(false && "Invalid property requested.  Bad programmer");
    }
-   // Fall back on the default value.
    else
    {
-      prop_string_rep = prop_def.getDefaultValueString(ind);
-   }
+      // Get the cdata node without auto create
+      cppdom::NodePtr cdata_node = getPropertyCdataNode(prop,ind,false);
 
-   // XXX: This isn't as optimized as I would like it to be.  --PH (5/6/2003)
-   // Then again, the loop should be inlined, so it can't do too much better.
-   cppdom::NodeList enum_vals(prop_def.getNode()->getChildrenPred(EnumValuePredicate(prop_string_rep)));
+      if(cdata_node.get() != NULL)
+      {
+         prop_string_rep = cdata_node->getCdata();            // Get the cdata
+      }
+      // Fall back on the default value.
+      else
+      {
+         prop_string_rep = prop_def.getDefaultValueString(ind);
+      }
 
-   // If the property definition has an enumeration, the string in
-   // prop_string_rep may be symbolic.  We need to translate it to the
-   // real value before returning.
-   if ( ! enum_vals.empty() )
-   {
-      vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
-         << "jccl::ConfigElement::getPropertyString(): Converting '"
-         << prop_string_rep << "' to '"
-         << (std::string) enum_vals[0]->getAttribute(definition_tokens::VALUE)
-         << "'\n" << vprDEBUG_FLUSH;
-      prop_string_rep = (std::string)enum_vals[0]->getAttribute(definition_tokens::VALUE);
+      // XXX: This isn't as optimized as I would like it to be.  --PH (5/6/2003)
+      // Then again, the loop should be inlined, so it can't do too much
+      // better.
+      cppdom::NodeList enum_vals(prop_def.getNode()->getChildrenPred(EnumValuePredicate(prop_string_rep)));
+
+      // If the property definition has an enumeration, the string in
+      // prop_string_rep may be symbolic.  We need to translate it to the
+      // real value before returning.
+      if ( ! enum_vals.empty() )
+      {
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
+            << "jccl::ConfigElement::getPropertyString(): Converting '"
+            << prop_string_rep << "' to '"
+            << (std::string) enum_vals[0]->getAttribute(definition_tokens::VALUE)
+            << "'\n" << vprDEBUG_FLUSH;
+         prop_string_rep =
+            (std::string) enum_vals[0]->getAttribute(definition_tokens::VALUE);
+      }
    }
 
    return prop_string_rep;
