@@ -1003,10 +1003,6 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
 
-    if test "$PLATFORM" = "FreeBSD" ; then
-        LDFLAGS="$LDFLAGS -lX11 -lXext -lICE -lm"
-    fi
-
     dnl # Add the user-specified OpenGL installation directory to these paths.
     dnl # Ensure that /usr/include and /usr/lib are not included multiple times
     dnl # if $OGLROOT is "/usr".
@@ -1055,16 +1051,35 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             LDFLAGS="-L$x_libraries $LDFLAGS"
         fi
 
+        _vjsave_LIBS="$LIBS"
+
         dnl # If the OpenGL library was found, add the API object files to the
         dnl # files to be compiled and enable the OpenGL API compile-time
         dnl # option.
-        AC_CHECK_LIB(GL, glEnable,
-            AC_CHECK_HEADER(GL/gl.h,
-                [ OPENGL_API="Y";
-                  AC_DEFINE(VJ_API_OPENGL,) ],
-                AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***)),
+        AC_CHECK_LIB(GL, glEnable, ,
             AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***),
             -lGLU -lm -lX11 -lXext -lXt)
+
+        dnl # This is necessary because AC_CHECK_LIB() adds -lGL to $LIBS.  We
+        dnl # want to do that ourselves later.
+        LIBS="${_vjsave_LIBS}"
+
+        dnl # If we have reached this point, the previous test succeeded.  Now
+        dnl # we need to ensure that the compiler can find the GL headers.
+        dnl # The goal here is to provide a fallback to the directory in
+        dnl # $x_includes since that is a reasonable location for them to be
+        dnl # (if they are not in /usr/include).  However, we do not want to
+        dnl # bother with this if the user gave us a value for $OGLROOT.
+        if test "x$OGLROOT" = "x/usr" -a "x$x_includes" != "x" -a	\
+                "x$x_includes" != "xNONE"
+        then
+            CPPFLAGS="$CPPFLAGS -I$x_includes"
+            INCLUDES="$INCLUDES -I$x_includes"
+        fi
+
+        AC_CHECK_HEADER(GL/gl.h,
+            [ OPENGL_API="Y"; AC_DEFINE(VJ_API_OPENGL,) ],
+            AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***))
     fi
 
     dnl # Restore $CFLAGS and $CPPFLAGS now that we are done testing.
@@ -1074,14 +1089,11 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     dnl # If OpenGL API files were added, define this extra stuff that is
     dnl # used in some Makefiles.
     if test "x$OPENGL_API" != "x" ; then
-        if test "x" = "x$x_libraries" ; then
-            _x_lib_path=''
-        else
-            _x_lib_path="-L$x_libraries"
-        fi
-
-        if test "$OS_TYPE" = "UNIX" ;  then
-            _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lX11 -lXext"
+        if test "x$OS_TYPE" = "xUNIX" ;  then
+            dnl # We do not need to add the path to the X libraries here
+            dnl # because it was already added to $LDFLAGS above.  The same
+            dnl # is true for the directories containing the GL libraries.
+            _LIBOPENGL='-lGLU -lGL -lX11 -lXext'
         else
             _LIBOPENGL='opengl32.lib glu32.lib'
         fi
@@ -1381,7 +1393,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     TEST_VJ_LIBS_GL="-lJuggler_ogl"
     TEST_VJ_LIBS_PF="-lJuggler_pf"
     TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
+    TEST_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
     TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
     TEST_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
