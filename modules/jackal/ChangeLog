@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-19-2004 patrickh    Using a search path to find configuration files is
+                        working again for the first time since September 2001.
+                        NEW VERSION: 0.16.0
 Dec-31-2003 patrickh    Removed unneeded functions jccl::stringToVar(),
                         jccl::hasSeparator(), jccl::getRemainder(), and
                         jccl::getFirstNameComponent().
