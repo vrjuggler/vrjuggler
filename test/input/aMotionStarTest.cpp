@@ -40,6 +40,7 @@ main () {
   std::string addr;
   unsigned short port;
   unsigned int birdsRequired;
+  double measurement_rate;
 
   // Get configuration information
   std::cerr << "-------- MotionStar Test program -------\n"
@@ -52,6 +53,8 @@ main () {
   std::cin >> port;
   std::cout << "How many birds: " << std::flush;
   std::cin >> birdsRequired;
+  std::cout << "Measurement rate: " << std::flush;
+  std::cin >> measurement_rate;
   std::cout << "\nUsing FRONT_HEMISPHERE" << std::flush;
   std::cout << "\nRequesting POSITION_ANGLES data" << std::flush;
   std::cout << "\nReading continuous data" << std::flush;
@@ -60,7 +63,7 @@ main () {
                                             true, FLOCK::FRONT_HEMISPHERE,
                                             FLOCK::POSITION_ANGLES,
                                             BIRDNET::CONTINUOUS, 1,
-                                            birdsRequired);
+                                            measurement_rate, birdsRequired);
 
    char achar;
    bool birds_running(false);      // Are the birds currently running
