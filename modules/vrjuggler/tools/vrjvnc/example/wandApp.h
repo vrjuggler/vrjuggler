@@ -190,6 +190,8 @@ private:
       drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
    }
 
+   void drawFloor();
+
 public:
    gadget::PositionInterface    mWand;      // the Wand
    gadget::PositionInterface    mHead;      // the head
@@ -202,10 +204,13 @@ public:
 
    gadget::DigitalInterface     mLoggerPlayButton;   // Playback log file when pressed
 
-   std::vector<gmtl::Vec3f>     mHeadHistory;
+   gmtl::Matrix44f              mNavMat;              // Navigation matrix
 
-   VNCDesktop* mDesktop;
-   bool mEmbeddedGUI;
+   vpr::Uint64                  mFrameCount;          // Count of the current frame
+
+   // VNC Client info
+   VNCDesktop*    mDesktop;         /**< The actual desktop object */
+   bool           mEmbeddedGUI;     /**< If true, then we should embed the gui */
 };
 
 }

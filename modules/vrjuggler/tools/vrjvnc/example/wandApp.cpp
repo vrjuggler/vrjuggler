@@ -86,6 +86,13 @@ bool wandApp::configAdd(jccl::ConfigChunkPtr element)
 
 void wandApp::preFrame()
 {
+   mFrameCount++;
+
+   if((mFrameCount % 100) == 1)
+   {
+      mDesktop->printStats();
+   }
+
    // Put your pre frame computations here.
 
    /*
@@ -97,7 +104,21 @@ void wandApp::preFrame()
               << " 4:" << mButton4->getData()
               << " 5:" << mButton5->getData() << std::endl;
              */
-   //mHeadHistory.push_back( gmtl::makeTrans<gmtl::Vec3f>(*(mHead->getData())) );
+   // Update navigation
+   // - Find forward direction of wand
+   // - Translate along that direction
+   float velocity(0.0f);
+   if(mButton0->getData())
+      velocity = 0.05f;
+
+   if(velocity > 0.0f)
+   {
+      gmtl::Matrix44f wandMatrix;
+      wandMatrix = (*mWand->getData());      // Get the wand matrix
+      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
+      gmtl::Vec3f direction(wandMatrix * Zdir);
+      gmtl::preMult(mNavMat, gmtl::makeTrans<gmtl::Matrix44f>(direction));
+   }
 
    // Check logger play button
    if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
@@ -139,11 +160,15 @@ void wandApp::myDraw()
 
    glMatrixMode(GL_MODELVIEW);
 
-      // -- Draw box on wand --- //
+   // -- Draw box on wand --- //
    gmtl::Matrix44f* wandMatrix;
    wandMatrix = mWand->getData();      // Get the wand matrix
 
    glPushMatrix();
+   {
+      // Move world for navigation
+      glMultMatrixf(mNavMat.mData);
+
       // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
          glMultMatrixf(wandMatrix->mData);  // Push the wand matrix on the stack
@@ -167,54 +192,14 @@ void wandApp::myDraw()
          drawCube();
       glPopMatrix();
 
-         // A little laser pointer
-      glLineWidth(5.0f);
+      // Draw a floor
+      drawFloor();
 
-      // Draw Axis
-      glDisable(GL_LIGHTING);
-      glPushMatrix();
-         glMultMatrixf(wandMatrix->mData);    // Goto wand position
-
-         gmtl::Vec3f x_axis(7.0f,0.0f,0.0f);
-         gmtl::Vec3f y_axis(0.0f, 7.0f, 0.0f);
-         gmtl::Vec3f z_axis(0.0f, 0.0f, 7.0f);
-         gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
-
-         glBegin(GL_LINES);
-            glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3fv(origin.mData);
-            glVertex3fv(x_axis.mData);
-
-            glColor3f(0.0f, 1.0f, 0.0f);
-            glVertex3fv(origin.mData);
-            glVertex3fv(y_axis.mData);
-
-            glColor3f(0.0f, 0.0f, 1.0f);
-            glVertex3fv(origin.mData);
-            glVertex3fv(z_axis.mData);
-         glEnd();
-      glPopMatrix();
-      glEnable(GL_LIGHTING);
-   glPopMatrix();
-
-   // Draw the head history
-   glLineWidth(1.0f);
-   glPushMatrix();
-    glBegin(GL_LINES);
-        glColor3f(0.0f, 0.8f, 0.8f);
-
-        for(unsigned i=0;i<mHeadHistory.size();++i)
-        {
-            glVertex3fv(mHeadHistory[i].mData);
-        }
-    glEnd();
-
-   glPopMatrix();
-
-   if ( mEmbeddedGUI )
-   {
-      mDesktop->draw();
+      // VNC GUI
+      if ( mEmbeddedGUI )
+      {  mDesktop->draw(); }
    }
+   glPopMatrix();
 }
 
 void wandApp::initGLState()
@@ -297,6 +282,31 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
          glVertex3dv(&v[faces[i][3]][0]);
       glEnd();
    }
+}
+
+void wandApp::drawFloor()
+{
+   glPolygonMode(GL_FRONT, GL_LINE);
+   glLineWidth(2);
+   glColor3f(0.30f, 0.87f, 0.22f);     // Nice matrix green
+
+   glBegin(GL_LINES);
+      for ( int z = -25; z < 25; ++z )
+      {
+         for ( int x = -25; x < 25; ++x )
+         {
+            // Draw the line along the Z axis.
+            glVertex3f((float) x, 0.01f, (float) z);
+            glVertex3f((float) x, 0.01f, (float) z + 1.0f);
+
+            // Draw the line along the X axis.
+            glVertex3f((float) x, 0.01f, (float) z);
+            glVertex3f((float) x + 1.0f, 0.01f, (float) z);
+         }
+      }
+   glEnd();
+
+   glPolygonMode(GL_FRONT, GL_FILL);
 }
 
 } // namespace vrjvnc
