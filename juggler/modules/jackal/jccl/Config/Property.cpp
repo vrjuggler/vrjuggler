@@ -56,7 +56,7 @@ Property::Property (PropertyDesc *pd): value() {
 
     num = pd->getNumAllowed();
     type = pd->getType();
-    embeddesc = NULL;
+    embeddesc.reset(NULL);
 
     if (type == T_EMBEDDEDCHUNK) {
         EnumEntry *e = description->getEnumEntryAtIndex (0);

@@ -49,13 +49,12 @@ namespace jccl {
 /*static*/ const std::string ConfigChunk::embedded_separator("->");
 
 ConfigChunk::ConfigChunk (): props(), type_as_varvalue(T_STRING) {
-    desc = 0;
     validation = 1;
 }
 
 
 
-ConfigChunk::ConfigChunk (ChunkDesc *d, bool use_defaults) :props(), type_as_varvalue(T_STRING) {
+ConfigChunk::ConfigChunk (ChunkDescPtr d, bool use_defaults) :props(), type_as_varvalue(T_STRING) {
     validation = 1;
     associateDesc (d, use_defaults);
 }
@@ -107,7 +106,7 @@ void ConfigChunk::assertValid () const {
 
 
 
-void ConfigChunk::associateDesc (ChunkDesc* d, bool use_defaults) {
+void ConfigChunk::associateDesc (ChunkDescPtr d, bool use_defaults) {
     assertValid();
     ConfigChunk* ch = 0;
     if (use_defaults)
@@ -172,7 +171,7 @@ bool ConfigChunk::operator== (const ConfigChunk& c) const {
     // 2. the properties will be in the _same_order_.  This is
     //    reasonable if 1. is true.
 
-    if (desc != c.desc)
+    if (desc.get() != c.desc.get())
         return false;
     if (props.size() != c.props.size()) // probably redundant
         return false;
@@ -341,7 +340,7 @@ std::ostream& operator << (std::ostream& out, const ConfigChunk& self) {
     self.assertValid();
 
     // outputting an uninitialized chunk would be a mistake...
-    if (self.desc) {
+    if (self.desc.get() != 0) {
         out << self.desc->token.c_str() << std::endl;
         for (unsigned int i =0; i < self.props.size(); i++) {
             out << "  " << *(self.props[i]) << std::endl;
@@ -366,7 +365,7 @@ std::istream& operator >> (std::istream& in, ConfigChunk& self) {
     bool quoted;
 
     // if this chunk hasn't been assigned a description yet, something's wrong
-    if (!self.desc)
+    if (self.desc.get() == 0)
         return in;
 
     while (readString (in, buf, buflen, NULL)) {

@@ -38,10 +38,9 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/VarValue.h>
 #include <jccl/Config/PropertyDesc.h>
+#include <jccl/Config/ChunkDesc.h>
 
 namespace jccl {
-   
-class ChunkDesc;
 
 
 //------------------------------------------------------------------
@@ -86,7 +85,7 @@ public:
     std::vector<VarValue*> value;
 
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
-    ChunkDesc *embeddesc;
+    ChunkDescPtr embeddesc;
 
 
 

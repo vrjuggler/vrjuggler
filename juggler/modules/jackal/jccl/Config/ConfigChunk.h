@@ -61,7 +61,7 @@ struct VJCFGToken;
 class JCCL_CLASS_API ConfigChunk {
 
 private:
-    ChunkDesc* desc;
+    ChunkDescPtr desc;
     std::vector<Property*> props;       // Stores the set of properties
     VarValue type_as_varvalue;
     unsigned int validation;  // flag for testing validity of self
@@ -92,7 +92,7 @@ public:
     //!PRE: desc points to a valid ChunkDesc
     //!POST: self has been created, and all its Propertys
     //+      initialized to their default values.
-    ConfigChunk (ChunkDesc *_desc, bool use_defaults = true);
+    ConfigChunk (ChunkDescPtr _desc, bool use_defaults = true);
 
 
 
@@ -109,16 +109,14 @@ public:
     #ifdef JCCL_DEBUG
     void assertValid () const;
     #else
-    inline void assertValid () const {
-        ;
-    }
+    inline void assertValid () const {;}
     #endif
 
     //: Associates the description d with this Chunk
     //!NOTE:  When this function is called, any previous properties etc.
     //+       of this Chunk are destroyed, and new (blank) properties are
     //+       created.
-    void associateDesc (ChunkDesc* d, bool use_defaults = true);
+    void associateDesc (ChunkDescPtr d, bool use_defaults = true);
 
 
     ConfigChunk& operator = (const ConfigChunk& c);
@@ -287,8 +285,7 @@ public:
 
 };
 
-};
+}; // namespace jccl
+
 #endif
-
-
 
