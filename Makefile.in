@@ -257,15 +257,24 @@ endif
 # Build all four versions of the libraries.
 # ------------------------------------------
 all buildworld:
+	@echo "==============================================================="
+	@echo "Building everything"
+	@echo "==============================================================="
 	@${MAKE} beforebuild
 	@${MAKE} _libs
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
+	@echo "==============================================================="
+	@echo "$@ complete"
+	@echo "==============================================================="
 
 # -------------------------------
 # Build all ABIs in ${ABI_LIST}.
 # -------------------------------
 all-abi:
+	@echo "==============================================================="
+	@echo "Building everything using all ABIs"
+	@echo "==============================================================="
 	@${MAKE} beforebuild
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
@@ -276,6 +285,9 @@ all-abi:
           done
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
+	@echo "==============================================================="
+	@echo "$@ complete"
+	@echo "==============================================================="
 
 # Things to do before the object files and library are built.
 beforebuild:
@@ -317,71 +329,89 @@ endif
 # Make the debugging version of the libraries.
 # ---------------------------------------------
 dbg:
+	@echo "========================================================"
+	@echo "Making DBG version of VR Juggler"
+	@echo "========================================================"
 	@${MAKE} beforebuild
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_static
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
+	@echo "========================================================"
+	@echo "$@ complete"
+	@echo "========================================================"
 
 # ------------------------------------------------------------
 # Make the debugging version of the libraries that uses DSOs.
 # ------------------------------------------------------------
 ddso:
+	@echo "========================================================"
+	@echo "Making DBG version of VR Juggler"
+	@echo "========================================================"
 	@${MAKE} beforebuild
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_shared
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
+	@echo "========================================================"
+	@echo "$@ complete"
+	@echo "========================================================"
 
 # ---------------------------------------------
 # Make the optimized version of the libraries.
 # ---------------------------------------------
 opt:
+	@echo "========================================================"
+	@echo "Making OPT version of VR Juggler"
+	@echo "========================================================"
 	@${MAKE} beforebuild
 	@${MAKE} _build_opt_obj
 	@${MAKE} _build_opt_lib_static
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
+	@echo "========================================================"
+	@echo "$@ complete"
+	@echo "========================================================"
 
 # ------------------------------------------------------------
 # Make the optimized version of the libraries that uses DSOs.
 # ------------------------------------------------------------
 dso:
+	@echo "========================================================"
+	@echo "Making OPT version of VR Juggler"
+	@echo "========================================================"
 	@${MAKE} beforebuild
 	@${MAKE} _build_opt_obj
 	@${MAKE} _build_opt_lib_shared
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
+	@echo "========================================================"
+	@echo "$@ complete"
+	@echo "========================================================"
 
 # Build the object files with the debugging flags enabled.
 _build_dbg_obj:
-	@echo "========================================================"
-	@echo "Making DBG version of libraries"
-	@echo "========================================================"
-	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
 	@echo "------------------------------------------------"
 	@echo "Building object files with debugging symbols"
 	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
 	@${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
           BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
 # Build the object files with the optimization flags enabled.
 _build_opt_obj:
-	@echo "========================================================"
-	@echo "Making OPT version of libraries"
-	@echo "========================================================"
-	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
 	@echo "------------------------------------------------"
 	@echo "Building optimized object files"
 	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
 	@${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
           BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
 # Build the static libraries with the debugging flags enabled.
 _build_dbg_lib_static:
-	@echo "========================================================"
+	@echo "================================================"
 	@echo "Building static debugging libraries"
-	@echo "========================================================"
+	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -395,9 +425,9 @@ endif
 
 # Build the shared libraries with the debugging flags enabled.
 _build_dbg_lib_shared:
-	@echo "========================================================"
+	@echo "================================================"
 	@echo "Building shared debugging libraries"
-	@echo "========================================================"
+	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -411,9 +441,9 @@ endif
 
 # Build the static libraries with the optimization flags enabled.
 _build_opt_lib_static:
-	@echo "========================================================"
+	@echo "================================================"
 	@echo "Building static optmized libraries"
-	@echo "========================================================"
+	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -427,9 +457,9 @@ endif
 
 # Build the shared libraries with the optimization flags enabled.
 _build_opt_lib_shared:
-	@echo "========================================================"
+	@echo "================================================"
 	@echo "Building shared optmized libraries"
-	@echo "========================================================"
+	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -596,15 +626,18 @@ beforeinstall:
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
 afterinstall:
-	@echo "------------------------------------------------"
-	@echo "Library installation complete"
-	@echo "------------------------------------------------"
+	@echo "==============================================================="
+	@echo "VR Juggler installation complete"
+	@echo "==============================================================="
 
 # ------------------------------------------------------------------------
 # Do a full installation all versions of the libraries and the associated
 # files.
 # ------------------------------------------------------------------------
 install-all installworld:
+	@echo "==============================================================="
+	@echo "Installing everything"
+	@echo "==============================================================="
 	@${MAKE} beforeinstall
 	@${MAKE} _install_libs
 	@${MAKE} _install_post_libs
@@ -615,6 +648,9 @@ install-all installworld:
 # ABIs in ${ABI_LIST}.
 # -----------------------------------------------------------------------------
 install-all-abi:
+	@echo "==============================================================="
+	@echo "Installing everything using all ABIs"
+	@echo "==============================================================="
 	@${MAKE} beforeinstall
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
@@ -649,6 +685,9 @@ _install_post_libs:
 # Do a full installation of the static debugging version of the libraries.
 # -------------------------------------------------------------------------
 install:
+	@echo "==============================================================="
+	@echo "Starting static debugging installation"
+	@echo "==============================================================="
 	@${MAKE} beforeinstall
 	@${MAKE} install-dbg
 	@${MAKE} _install_post_libs
