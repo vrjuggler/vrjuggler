@@ -82,6 +82,8 @@ public:
    //: put vrj device inits here
    virtual void init();
 
+   virtual void bufferPreDraw();
+
    //: Function to "draw" the scene
    //  put your opengl draw functions here...
    //  PRE: OpenGL state has correct transformation and buffer selected
