@@ -35,6 +35,8 @@
 
 #include <vprConfig.h>
 #include <stdlib.h>
+#include <vector>
+#include <map>
 
 #include <Sync/Mutex.h>
 #include <Sync/Guard.h>
