@@ -602,8 +602,8 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-    DBG_FLAGS="$DBG_FLAGS /MTd"
-    OPT_FLAGS="$OPT_FLAGS /MT"
+    DBG_FLAGS="$DBG_FLAGS /MDd"
+    OPT_FLAGS="$OPT_FLAGS /MD"
 fi
 
 DPP_SYSTEM_SUBST
