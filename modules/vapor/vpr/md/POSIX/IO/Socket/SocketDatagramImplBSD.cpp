@@ -53,11 +53,6 @@
 #include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
 
 
-// ============================================================================
-// External global variables.
-// ============================================================================
-extern int errno;
-
 namespace vpr
 {
 
