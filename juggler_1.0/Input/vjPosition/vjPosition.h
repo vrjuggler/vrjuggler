@@ -44,6 +44,7 @@
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
 #include <Performance/vjTimeStamp.h>
+#include <typeinfo>
 
 typedef struct {
   vjVec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
@@ -67,7 +68,7 @@ typedef struct {
 //!PUBLIC_API:
 class vjPosition : virtual public vjInput {
     public:
-    
+
     //: Constructor
     vjPosition();
 
@@ -83,16 +84,16 @@ class vjPosition : virtual public vjInput {
     virtual int sample() = 0;
     virtual void updateData() = 0;
 
-    
+
     //: Get the device name
     char* getDeviceName() { return "vjPosition"; }
-    
+
     /* New pure virtual functions */
     //: Get Position data
     virtual vjMatrix* getPosData(int devNum = 0) = 0;
     virtual vjTimeStamp* getPosUpdateTime (int devNum = 0) {
-	std::cout << "FOO, I FORGOT TO IMPLEMENT SOMETHING!!!!" << std::endl;
-	return NULL;
+      vjDEBUG(vjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl;
+   return NULL;
     }
 
 public:
