@@ -41,6 +41,8 @@ extension vpr
 
    <library-path>$(VJ_BASE_DIR)/lib
 
+   <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+
    <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
    <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
    <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
@@ -65,6 +67,8 @@ extension jccl
    <include>$(NSPR_ROOT)/include/nspr
 
    <library-path>$(VJ_BASE_DIR)/lib
+
+   <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
 
    <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
    <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
@@ -109,6 +113,8 @@ extension gadget
 
    <library-path>$(VJ_BASE_DIR)/lib
 
+   <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+
    <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
    <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
    <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
@@ -145,6 +151,8 @@ extension vrj
    <include>$(NSPR_ROOT)/include/nspr
 
    <library-path>$(VJ_BASE_DIR)/lib
+
+   <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
 
    <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
    <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
