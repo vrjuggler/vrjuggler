@@ -505,7 +505,7 @@ case $target_os in
         PLATFORM='FreeBSD'
         ;;
     dnl # A machine running Linux.  Currently only i386 and PowerPC are known
-    dln # to work.
+    dnl # to work.
     linux*)
         dnl # If no ABI has been set yet, default to ELF with whatever the
         dnl # target CPU architecture is.
