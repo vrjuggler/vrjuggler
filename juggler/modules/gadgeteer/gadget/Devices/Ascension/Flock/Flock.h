@@ -49,6 +49,7 @@
 #include <vpr/Thread/Thread.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Ascension/FlockStandalone.h>
 
 namespace gadget
@@ -75,7 +76,7 @@ namespace gadget
  *
  * @see gadget::Position
  */
-class Flock : public Input, public Position
+class Flock : public InputMixer<Input,Position>
 {
 public:
    /**

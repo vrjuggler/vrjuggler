@@ -40,6 +40,7 @@
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Ascension/MotionStarStandalone.h>
 
 namespace gadget
@@ -69,7 +70,7 @@ namespace gadget
  *
  * @see Position
  */
-class MotionStar : public Input, public Position
+class MotionStar : public InputMixer<Input,Position>
 {
 public:
 
