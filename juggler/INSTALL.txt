@@ -359,12 +359,12 @@ Compiling
 
        You will probably have to specify the paths to your local CppDOM,
        GMTL, and Boost installations using the options --with-cppdom,
-       --with-gmtl-prefix and --with-boost unless they are installed in the
-       default location (/usr/local). By default, Boost 1.31 installs its
-       header files in a subdirectory of include called boost-1_31. That is,
-       if Boost is installed in /home/user1/pkgs/boost, the header files will
-       be in /home/user1/pkgs/boost/include/boost-1_31. In this case, you
-       must also specify the option
+       --with-gmtl and --with-boost unless they are installed in the default
+       location (/usr/local). By default, Boost 1.31 installs its header
+       files in a subdirectory of include called boost-1_31. That is, if
+       Boost is installed in /home/user1/pkgs/boost, the header files will be
+       in /home/user1/pkgs/boost/include/boost-1_31. In this case, you must
+       also specify the option
        --with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31 when
        running configure.pl.
 
@@ -392,10 +392,10 @@ Compiling
    /home/user1/pkgs/GMTL with the headers in /home/user1/pkgs/GMTL/include.
    To use this installation, run configure.pl as follows:
 
- ../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL
+ ../configure.pl --with-gmtl=/home/user1/pkgs/GMTL
 
-   The --with-gmtl-prefix option could of course be mixed in with those shown
-   in the previous section.
+   The --with-gmtl option could of course be mixed in with those shown in the
+   previous section.
 
     Compiling VR Juggler
 
