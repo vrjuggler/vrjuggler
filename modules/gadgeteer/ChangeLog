@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-18-2003 patrickh    Updated to VPR 0.28.
+                        NEW VERSION: 0.13.2
 Aug-16-2003 patrickh    Updated to Tweek 0.15.
                         NEW VERSION: 0.13.1
 Jul-10-2003 nonchocoboy Updated to JCCL 0.12.0 API for both Java and C++.
