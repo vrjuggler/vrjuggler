@@ -56,10 +56,17 @@ SUBDIR=		Devices		        \
 		Type			\
 		Util
 
-SRCS=		InputLogger.cpp		\
-		InputManager.cpp	\
-       		ProxyDepChecker.cpp	\
-		ProxyFactory.cpp
+SRCS=		AbstractNetworkManager.cpp	\
+		Acceptor.cpp			\
+		Connector.cpp			\
+		DeviceServer.cpp		\
+		InputLogger.cpp			\
+		InputManager.cpp		\
+		Node.cpp			\
+       		ProxyDepChecker.cpp		\
+		ProxyFactory.cpp		\
+		RemoteInputManager.cpp		\
+		VirtualDevice.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

@@ -88,8 +88,8 @@ public:
     * matrix.
     *
     * @param scaleFactor - factor to convert from meters to the desired units
-    * @return  the position of the device as a matrix
-    * @example getData(3.28f) will return a matrix in feet
+    * @return  the position of the device as a matrix.
+    * @example getData(3.28f) will return a matrix in feet.
     */
    gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet ) const;
    

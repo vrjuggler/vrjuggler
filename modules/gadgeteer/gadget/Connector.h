@@ -30,19 +30,42 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DEBUG_H_
-#define _GADGET_DEBUG_H_
-//#pragma once
+#ifndef _GADGET_CONNECTOR_H
+#define _GADGET_CONNECTOR_H
 
 #include <gadget/gadgetConfig.h>
-#include <stdlib.h>
 
-#include <vpr/Util/Debug.h>
+namespace vpr
+{
+   class ReturnStatus;
+}
 
-// Gadgeteer categories
-const vpr::DebugCategory gadgetDBG_INPUT_MGR(vpr::GUID("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2"), "DBG_INPUT_MGR", "gadgetINP:");
-const vpr::DebugCategory gadgetDBG_RIM(vpr::GUID("2af7e28f-a831-4b7c-b5c9-beda5289ffde"), "DBG_RIM", "gadgetRIM:");
-const vpr::DebugCategory gadgetDBG_NET_MGR(vpr::GUID("02be47d5-c5f8-4487-b08c-e99ee23cc1d5"), "DBG_NET_MGR", "gadgetNET:");
+namespace gadget
+{
+class Node;
 
+class GADGET_CLASS_API Connector
+{
+private:
+   /**
+    * Hide copy constructor and assignment operator.
+    */
+   Connector( const Connector& c )
+   {;}
+   void operator=( const Connector& c )
+   {;}
+public:
+   Connector()
+   {;}
+   virtual ~Connector()
+   {;}
+   
+   /**
+    * Attempt to connect to the given node.
+    */
+   vpr::ReturnStatus attemptConnect( Node* node );
+};
 
-#endif
+} // end namespace gadget
+
+#endif /* _GADGET_CONNECTOR_H */

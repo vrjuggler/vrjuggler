@@ -245,7 +245,7 @@ public:
    friend class InputLogger;  /**< Make input logger a friend */
 
 protected:
-   vpr::LibraryLoader mDriverLoader;
+   vpr::LibraryLoader   mDriverLoader;
 
    typedef std::map<std::string,Input*> tDevTableType;
 

@@ -30,19 +30,58 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DEBUG_H_
-#define _GADGET_DEBUG_H_
-//#pragma once
+#ifndef _GADGET_ACCEPTOR_H
+#define _GADGET_ACCEPTOR_H
 
 #include <gadget/gadgetConfig.h>
-#include <stdlib.h>
+#include <gadget/AbstractNetworkManager.h>
 
-#include <vpr/Util/Debug.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
-// Gadgeteer categories
-const vpr::DebugCategory gadgetDBG_INPUT_MGR(vpr::GUID("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2"), "DBG_INPUT_MGR", "gadgetINP:");
-const vpr::DebugCategory gadgetDBG_RIM(vpr::GUID("2af7e28f-a831-4b7c-b5c9-beda5289ffde"), "DBG_RIM", "gadgetRIM:");
-const vpr::DebugCategory gadgetDBG_NET_MGR(vpr::GUID("02be47d5-c5f8-4487-b08c-e99ee23cc1d5"), "DBG_NET_MGR", "gadgetNET:");
+namespace gadget
+{
 
+class GADGET_CLASS_API Acceptor
+{
+private:
+   /**
+    * Hide copy constructor and assignment operator.
+    */
+   Acceptor( const Acceptor& a )
+   {;}
+   void operator=( const Acceptor& a )
+   {;}
+public:
+   /**
+    * Construct an empty TCP/IP acceptor.
+    */
+   Acceptor( AbstractNetworkManager* network );
 
-#endif
+   /**
+    * Deconstruct object and release memory.
+    */
+   virtual ~Acceptor();
+
+   /**
+    * Start the listening thread on the given port.
+    */
+   bool startListening( const int& listen_port );
+
+   /**
+    * Stop the listen thread.
+    */
+   void shutdown();
+private:
+   /**
+    * Control Loop used to continuously accept incoming connections.
+    */
+   void acceptLoop( void* nullParam );
+private:
+   AbstractNetworkManager*      mNetworkManager;     /**< Network we are accepting connections on. */
+   vpr::Thread*                 mAcceptThread;       /**< Thread that listens for incoming connections. */
+   vpr::InetAddr                mListenAddr;         /**< Address to listen for incoming connections on. */
+};
+
+} // end namespace gadget
+
+#endif /* _GADGET_ACCEPTOR_H */
