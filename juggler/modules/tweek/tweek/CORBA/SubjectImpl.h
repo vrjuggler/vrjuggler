@@ -58,11 +58,11 @@ class TWEEK_CLASS_API SubjectImpl : virtual public POA_tweek::Subject,
                                     public PortableServer::RefCountServantBase
 {
 public:
-   SubjectImpl ()
+   SubjectImpl()
    {
    }
 
-   virtual ~SubjectImpl ()
+   virtual ~SubjectImpl()
    {
    }
 
@@ -71,6 +71,17 @@ public:
    virtual void detach(Observer_ptr o);
 
    virtual void notify();
+
+protected:
+   SubjectImpl(const SubjectImpl& s)
+      : POA_tweek::Subject(s), PortableServer::RefCountServantBase(s)
+   {
+   }
+
+   SubjectImpl& operator=(const SubjectImpl& subj)
+   {
+      return *this;
+   }
 
 private:
    typedef std::vector<Observer_var> observer_vec_t;
