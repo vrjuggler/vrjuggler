@@ -60,12 +60,29 @@ public:
       vec[2] = vec[2] / len;
    }
 
+   //: Is the vector normalized
+   bool isNormalized()
+   {
+      float len = lengthSquared();
+      float diff = len-1.0f;
+      return((diff < 0.0001f) && (diff > -0.0001f));
+   }
+
+   //: Return the length squared
+   //! NOTE: Since this does not use sqrt it is faster
+   //+ than length().  It can be used to optimize some
+   //+ routines
+   float lengthSquared() const
+   {
+      return (vec[0]*vec[0])+
+             (vec[1]*vec[1])+
+             (vec[2]*vec[2]);
+   }
+
    //: Return vector's length
    float length() const
    {
-      return sqrtf((vec[0]*vec[0])+
-                   (vec[1]*vec[1])+
-                   (vec[2]*vec[2]));
+      return sqrtf(lengthSquared());
    }
 
 
