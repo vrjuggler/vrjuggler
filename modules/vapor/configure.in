@@ -214,16 +214,6 @@ case $target_os in
         fi
 
         AC_DEFINE(VPR_OS_Linux,)
-
-        _vpr_gxx_ver=`$CXX -dumpversion`
-
-        case ${_vpr_gxx_ver} in
-           3.0*)
-              ;;
-           2.9*)
-              AC_DEFINE(_GNU_SOURCE,)
-              ;;
-        esac
         ;;
     # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
@@ -511,7 +501,7 @@ if test "x$GXX" = "xyes" ; then
          vpr_cxxflags="$vpr_cxxflags -fexceptions"
          ;;
       2.9*)
-         if test "x$DPP_PLATFORM" = "xLinux" ; then
+         if test "x$PLATFORM" = "xLinux" ; then
             AC_DEFINE(_GNU_SOURCE,)
          fi
          ;;
@@ -528,7 +518,7 @@ fi
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
