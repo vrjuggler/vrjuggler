@@ -228,7 +228,13 @@ void _Export_UserData()
            "must be identified using a configuration element of type\n"
            "application_data.  Otherwise, the given string object is used\n"
            "to identify the writer host.  Naming the writer host explicitly\n"
-           "is somewhat easier to use, but it can be less flexible."
+           "is somewhat easier to use, but it can be less flexible.\n"
+           "Keyword arguments:\n"
+           "id         -- A vpr.GUID object that uniquely identifies this\n"
+           "              instance of application-specific shared data.\n"
+           "writerAddr -- The cluster node (hostnameo or IP address) that\n"
+           "              will be the writer of the shared data.  This\n"
+           "              argument is optional."
        )
       .def("isLocal", &cluster::UserData<pyj::PickleObject>::isLocal,
            "isLocal() -> Boolean\n"
