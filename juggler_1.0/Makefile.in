@@ -173,6 +173,9 @@ SHLIB_MINOR	= 0
 VJ_LIB_STATIC	= ${VJ_LIBRARY}.@STATICLIB_EXT@
 VJ_LIB_DYNAMIC	= ${VJ_LIBRARY}.@SHAREDLIB_EXT@
 
+UTILS_LIB_STATIC	= ${UTILS_LIBRARY}.@STATICLIB_EXT@
+UTILS_LIB_DYNAMIC	= ${UTILS_LIBRARY}.@SHAREDLIB_EXT@
+
 GL_API		= @OPENGL_API@
 GL_LIB_STATIC	= ${GL_LIBRARY}.@STATICLIB_EXT@
 GL_LIB_DYNAMIC	= ${GL_LIBRARY}.@SHAREDLIB_EXT@
@@ -348,6 +351,10 @@ _lib_links:
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
 	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_STATIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_DYNAMIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
@@ -498,6 +505,8 @@ _build_dbg_lib_static:
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Utils"			\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${UTILS_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
           LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_STATIC}
@@ -523,6 +532,8 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Utils"			\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${UTILS_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
           LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}
@@ -553,6 +564,8 @@ _build_opt_lib_static:
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}"	LIBDIR=${_OPT_LIBDIR}	\
           ${_OPT_LIBDIR}/${VJ_LIB_STATIC}
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Utils"			\
+          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${UTILS_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
           LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${GL_LIB_STATIC}
@@ -578,6 +591,8 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Utils"			\
+          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${UTILS_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
           LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}
@@ -616,12 +631,12 @@ obj:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-static-libs: ${VJ_LIB_STATIC} ${GL_LIB_STATIC} ${PF_LIB_STATIC}		\
-             ${AW_LIB_STATIC} ${SL_LIB_STATIC}
+static-libs: ${VJ_LIB_STATIC} ${UTILS_LIB_STATIC} ${GL_LIB_STATIC}	\
+             ${PF_LIB_STATIC} ${AW_LIB_STATIC} ${SL_LIB_STATIC}
 
-${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${GL_LIB_STATIC}			\
-${LIBDIR}/${PF_LIB_STATIC} ${LIBDIR}/${AW_LIB_STATIC}			\
-${LIBDIR}/${SL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
+${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${UTILS_LIB_STATIC}		\
+${LIBDIR}/${GL_LIB_STATIC} ${LIBDIR}/${PF_LIB_STATIC}			\
+${LIBDIR}/${AW_LIB_STATIC} ${LIBDIR}/${SL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -636,12 +651,12 @@ ${LIBDIR}/${SL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 # -------------------------------------------------------
 # Construct the dynamic shared version of the libraries.
 # -------------------------------------------------------
-shared-libs: ${VJ_LIB_DYNAMIC} ${GL_LIB_DYNAMIC} ${PF_LIB_DYNAMIC}	\
-             ${AW_LIB_DYNAMIC} ${SL_LIB_DYNAMIC}
+shared-libs: ${VJ_LIB_DYNAMIC} ${UTILS_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}	\
+             ${PF_LIB_DYNAMIC} ${AW_LIB_DYNAMIC} ${SL_LIB_DYNAMIC}
 
-${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${GL_LIB_DYNAMIC}			\
-${LIBDIR}/${PF_LIB_DYNAMIC} ${LIBDIR}/${AW_LIB_DYNAMIC}			\
-${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
+${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${UTILS_LIB_DYNAMIC}		\
+${LIBDIR}/${GL_LIB_DYNAMIC} ${LIBDIR}/${PF_LIB_DYNAMIC}			\
+${LIBDIR}/${AW_LIB_DYNAMIC} ${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -842,6 +857,9 @@ install-dbg:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_DBG_LIBDIR}/${UTILS_LIB_STATIC}				\
+          ${_install_libdir_abs}/${_DEBUG_DIR}/
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
@@ -871,6 +889,9 @@ ifneq (@OS_TYPE@, Win32)
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_DBG_LIBDIR}/${UTILS_LIB_DYNAMIC}				\
+          ${_install_libdir_abs}/${_DEBUG_DIR}/
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
@@ -913,6 +934,9 @@ install-opt:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_OPT_LIBDIR}/${UTILS_LIB_STATIC}				\
+          ${_install_libdir_abs}/${_OPT_DIR}/
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
@@ -942,6 +966,9 @@ ifneq (@OS_TYPE@, Win32)
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_OPT_LIBDIR}/${UTILS_LIB_DYNAMIC}				\
+          ${_install_libdir_abs}/${_OPT_DIR}/
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
@@ -974,6 +1001,12 @@ ifndef NOLINK
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${VJ_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          rm -f ./${UTILS_LIB_STATIC} &&				\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          rm -f ./${UTILS_LIB_DYNAMIC} &&				\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${GL_LIB_STATIC} &&					\
@@ -1015,6 +1048,12 @@ endif
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${VJ_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          rm -f ./${UTILS_LIB_STATIC} &&				\
+          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          rm -f ${UTILS_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
 	  rm -f ${GL_LIB_STATIC} &&					\
