@@ -1,0 +1,10 @@
+This directory contains the VR Juggler Programmer's Guide.
+
+
+The programmers guide is:
+- Documentation for application programmers, written in a case-study, 
+  or hand holding manner.
+  
+What kind of documentation goes here?
+- How to write applications on top of VR Juggler. 
+- How to run apps, use vjcontrol, installing the binaries, etc...
