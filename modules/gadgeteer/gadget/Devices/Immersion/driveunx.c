@@ -9,7 +9,8 @@
  * Rev 2.1
  */
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
+#include <vpr/vpr.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>
@@ -34,17 +35,17 @@
  * If yours is not listed, it can be added.  Contact Immersion Corp.
  */
 
-#if defined(VJ_OS_IRIX)
+#if defined(VPR_OS_IRIX)
 #   define SGI_PLATFORM
-#elif defined(VJ_OS_HPUX)
+#elif defined(VPR_OS_HPUX)
 #   define HP_PLATFORM
-#elif defined(VJ_OS_Linux)
+#elif defined(VPR_OS_Linux)
 #   define LINUX_PLATFORM
-#elif defined(VJ_OS_Solaris)
+#elif defined(VPR_OS_Solaris)
 #   define SUN_PLATFORM
-#elif defined(VJ_OS_FreeBSD)
+#elif defined(VPR_OS_FreeBSD)
 #   define BSD_PLATFORM
-#endif  /* VJ_OS_IRIX */
+#endif  /* VPR_OS_IRIX */
 
 #if defined(SGI_PLATFORM) || defined(LINUX_PLATFORM)
 #define PORT1_DEV  "/dev/ttyd1"
