@@ -258,8 +258,8 @@ public:
    {
       if ( NULL != p )
       {
-         Input* input_ptr = static_cast<Input*>(p);
-         input_ptr->destroy();
+         ISoundImplementation* sound_ptr = static_cast<ISoundImplementation*>(p);
+         sound_ptr->destroy();
       }
    }
 #endif
