@@ -55,7 +55,7 @@ import VjConfig.ConfigStreamTokenizer;
  *      "Update" - when data is appended to the Collector.
  *      "Clear" - when the Collector clears out all its data.
  */
-public class LabeledPerfDataCollector {
+public class LabeledPerfDataCollector implements PerfDataCollector {
 
     protected class DataElem {
 	public double stamp;
@@ -149,7 +149,7 @@ public class LabeledPerfDataCollector {
     }
 
 
-//      public void write (DataOutputStream out) throws IOException {
+      public void write (DataOutputStream out) throws IOException {
 //  	out.writeBytes ("PerfData1 \"" + name + "\" " + num + "\n");
 //  	ListIterator li = datalines.listIterator(0);
 //  	while (li.hasNext()) {
@@ -168,7 +168,7 @@ public class LabeledPerfDataCollector {
 //  	    }
 //  	}
 //  	out.writeBytes ("-1 0\n");
-//      }
+      }
 
 
     private void addDataLine (DataLine new_dl) {
@@ -276,7 +276,7 @@ public class LabeledPerfDataCollector {
 	}
     }
 
-//      public void refreshMaxValues () {
+      public void refreshMaxValues () {
 //  	DataLine dl;
 //  	int i;
 //  	for (i = 0; i < num; i++)
@@ -293,15 +293,16 @@ public class LabeledPerfDataCollector {
 //  	}
 //  //  	for (i = 0; i < num; i++) 
 //  //  	    System.out.println ("max " + i + " is " + maxvals[i]);
-//      }
+      }
 
-//      public double getMaxValue () {
+    public double getMaxValue () {
 //  	double maxval = 0.0;
 //  	for (int i = 0; i < num; i++)
 //  	    maxval += maxvals[i];
 //  	System.out.println ("alt generation method show " + maxval);
 //  	return maxlinetotal;
-//      }
+	  return 0.0;
+    }
 
 //      public double getMaxValueForPhase (int phase) {
 //  	    return maxvals[phase];
@@ -320,8 +321,9 @@ public class LabeledPerfDataCollector {
 	return s;
     }
 
-//      public String dumpData() {
-//  	String s = name + "\n";
+    public String dumpData() {
+	String s = name + "\n";
+
 //  	DataLine d;
 //  	ListIterator li;
 //  	int i,j;
@@ -342,8 +344,8 @@ public class LabeledPerfDataCollector {
 //  		s += "\n";
 //  	}
 
-//  	return s;
-//      }
+  	return s;
+    }
 
 
     private String padFloat (double f) {
@@ -363,7 +365,8 @@ public class LabeledPerfDataCollector {
 
     }
 
-//      public String dumpAverages (int preskip, int postskip, boolean doanomaly, double cutoff) {
+    public String dumpAverages (int preskip, int postskip, boolean doanomaly, double cutoff) {
+	return "";  
 //  	int i;
 //    	Property labelsprop = null;
 //    	String label;
@@ -399,79 +402,9 @@ public class LabeledPerfDataCollector {
 
 //  	s += "  Total: " + (totalsum/totalsamps) + " us\n";
 
-//  	return s;
-//      }
+	//return s;
+    }
 
-
-
-
-//      public void read (ConfigStreamTokenizer st) {
-//          // we'll assume that the initial id stuff has already been read
-//          // and we can dig straight into the data lines.
-//          int i, j;
-//          int index;
-//          double val;
-//          int lastlost;
-//          double lastval;
-
-
-//          try {
-//              for (;;) {
-//                  st.nextToken();
-//                  index = Integer.parseInt(st.sval);
-//                  st.nextToken();
-//                  //System.out.println ("index is " + index + "\nval is " + st.nval);
-//                  if (index == -1) {
-//                      int numlost = Integer.parseInt(st.sval);
-//                      if (numlost == 0)
-//                          break; // no data lost, no reason to muck with things
-//                      for (; place < num; place++)
-//                          dl.vals[place] = Double.NaN;
-//                      dl.numlost = numlost;
-//                      prevplace = -1;
-//                      addDataLine (dl);
-//                      dl = new DataLine(num);
-//                      place = 0;
-//                      break;
-//                  }
-//                  //System.out.println ("place1 is " + place); 
-//                  val = Double.parseDouble (st.sval);
-//                  for (; place != index; place++) {
-//                      //System.out.println ("place1 is " + place);
-//                      if (place >= num) {
-//                          addDataLine (dl);
-//                          dl = new DataLine (num);
-//                          place = 0;
-//                      }
-//                      dl.vals[place] = 0.0;
-//                      dl.diffs[place] = 0.0;
-//                      if (place == index)
-//                          break; //kludge
-//                  }
-//                  place = index;
-//                  //System.out.println ("place2 is " + place); 
-//                  dl.vals[place] = val;
-//                  if (prevplace != -1) {
-//                      dl.diffs[place] = dl.vals[place] - prevval;
-//                  }
-//                  else
-//                      dl.diffs[place] = Double.NaN;
-//                  prevplace = place;
-//                  prevval = val;
-//                  place = (place+1);
-//                  if (place >= num) {
-//                      addDataLine(dl);
-//                      dl = new DataLine(num);
-//                      place = 0;
-//                  }
-//              }
-//          }
-//          catch (IOException e) {
-//              System.out.println ("Read failed:\n" + e);
-//          }
-
-//          notifyActionListenersUpdate();
-//      }
 
 
     //--------------------- ActionEvent Stuff ------------------------
