@@ -105,7 +105,8 @@ public class ConfigChunkTreeTableModel
       DefaultMutableTreeNode parent = getNodeFor(chunk);
 
       // This property has only one value, add it in
-      if ((propDesc.getItemsSize() == 1) && (! propDesc.hasVariableNumberOfValues()))
+      if ((propDesc.getItemsSize() == 1) && (! propDesc.hasVariableNumberOfValues())
+         && (propDesc.getValType() != ValType.EMBEDDEDCHUNK))
       {
          int idx = parent.getChildCount();
 //         System.out.println("Adding property node for single-valued property: "+
