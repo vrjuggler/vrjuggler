@@ -111,7 +111,7 @@ protected:
    vjDisplayManager* displayManager;      //: The Display Manager we are currently using
    vjEnvironmentManager* environmentManager; //: The Environment Manager object
    vjPerfDataBuffer* perfBuffer; //: store perfdata for kernel main
- 
+    bool performanceEnabled;  //: is performance measurement for kernel active?
    /// Config Stuff
    vjChunkDescDB*    configDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
