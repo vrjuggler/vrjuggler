@@ -37,69 +37,56 @@
 class Scene
 {
 public:
-    Scene();
-    virtual ~Scene();
+   Scene();
+   ~Scene();
 
 public:
-    void init();
-    
-    //: These functions call the displaylists 
-    //  created by init()
-    void drawFloor();
-    void drawSphere( const float& width, 
-		    const float& height,
-		    const float& depth, 
-		    const bool& highlighted );
-    void drawCone( const float& width, 
-		    const float& height,
-		    const float& depth, 
-		    const bool& highlighted );
-    void drawCube( const float& _width, 
-		    const float& _height,
-		    const float& _depth, 
-		    const bool& highlighted );
-    void drawTable();  
-    void renderWoodTexture();
-    void renderRainbowTexture();
-    
-    
-//:  Scene components: table, floor, and some objects.    
+   void init();
+
+   //: These functions call the displaylists
+   //  created by init()
+   void drawFloor();
+   void drawSphere(const float width, const float height, const float depth,
+                   const bool highlighted);
+   void drawCone(const float width, const float height, const float depth,
+                 const bool highlighted);
+   void drawCube(const float _width, const float _height, const float _depth,
+                 const bool highlighted);
+   void drawTable();
+   void renderWoodTexture();
+   void renderRainbowTexture();
+
+//:  Scene components: table, floor, and some objects.
 private:
-    //: these functions render the geometry using opengl functions
-    void _drawTable();  
-    void _drawFloor();
-    void _drawSphere( const float& _width, 
-		    const float& _height,
-		    const float& _depth, 
-		    const bool& highlighted );
-    void _drawCone( const float& _width, 
-		    const float& _height,
-		    const float& _depth, 
-		    const bool& highlighted );
-    void _drawCube( const float& _width, 
-		    const float& _height,
-		    const float& _depth, 
-		    const bool& highlighted );
-    void _renderTexture(char bitmap[16*3]);
-    
-    // these hold the display list IDs
-    int _tableList;
-    int _floorList;
-    
-    int _coneList;
-    int _coneHlList;
+   //: these functions render the geometry using opengl functions
+   void _drawTable();
+   void _drawFloor();
+   void _drawSphere(const float width, const float height,
+                    const float depth, const bool highlighted);
+   void _drawCone(const float width, const float height, const float depth,
+                  const bool highlighted);
+   void _drawCube(const float width, const float height, const float depth,
+                  const bool highlighted);
+   void _renderTexture(char* bitmap);
 
-    int _cubeList;
-    int _cubeHlList;
-    
-    int _sphereList;
-    int _sphereHlList; 
+   // these hold the display list IDs
+   int mTableList;
+   int mFloorList;
 
-    unsigned int _woodBitmapBindId;
-    unsigned int _rainbowBitmapBindId;
-    
-    char woodBitmap[16*3]; 
-    char rainbowBitmap[16*3]; 
+   int mConeList;
+   int mConeHlList;
+
+   int mCubeList;
+   int mCubeHlList;
+
+   int mSphereList;
+   int mSphereHlList;
+
+   unsigned int mWoodBitmapBindId;
+   unsigned int mRainbowBitmapBindId;
+
+   char mWoodBitmap[16 * 3];
+   char mRainbowBitmap[16 * 3];
 };
 
 

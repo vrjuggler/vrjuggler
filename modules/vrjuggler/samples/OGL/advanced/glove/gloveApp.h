@@ -80,13 +80,19 @@ protected:
 // Application Functions:
 public:
    gloveApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern), mCubeSelected(false), mSphereSelected(false),
-        mConeSelected(false), mCubePos( 0.0f, 3.5f, -20.0f ),
-        mConePos( -2.5f, 3.5f, -20.0f ), mSpherePos( 2.5f, 3.5f, -20.0f )
+      : vrj::GlApp(kern)
+      , mCubeSelected(false)
+      , mSphereSelected(false)
+      , mConeSelected(false)
+      , mCubePos(0.0f, 3.5f, -20.0f)
+      , mConePos(-2.5f, 3.5f, -20.0f)
+      , mSpherePos(2.5f, 3.5f, -20.0f)
    {
       // Do nothing
    }
+
    virtual ~gloveApp(){}
+
    //: Initialize
    // Executes any initialization needed before the API is started.
    // Initialize VR Juggler device interfaces here.
@@ -170,9 +176,9 @@ public:
    virtual void postFrame();
 
 private:
-    void initGlState();
-    void renderLightsAndMaterials();
-    void myDraw();
+   void initGlState();
+   void renderLightsAndMaterials();
+   void myDraw();
 
 protected:
    // for the glove position
@@ -192,16 +198,16 @@ protected:
 
 
    //: Object selection
-   bool                mCubeSelected;
-   bool                mSphereSelected;
-   bool                mConeSelected;
+   bool mCubeSelected;
+   bool mSphereSelected;
+   bool mConeSelected;
 
    //: Object positions
-   gmtl::Vec3f         mCubePos;
-   gmtl::Vec3f         mConePos;
-   gmtl::Vec3f         mSpherePos;
+   gmtl::Vec3f     mCubePos;
+   gmtl::Vec3f     mConePos;
+   gmtl::Vec3f     mSpherePos;
 
-   gmtl::Matrix44f     mNavigation;
+   gmtl::Matrix44f mNavigation;
 
    vrj::GlContextData<Scene> mScene;
 };

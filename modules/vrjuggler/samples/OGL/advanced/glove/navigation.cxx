@@ -40,37 +40,37 @@
 
 //: a vector pointing forward in our space,
 //  useful for getting what direction a device is pointing.
-const gmtl::Vec3f TrackedInfo::forwardVec( 0.0f, 0.0f, -1.0f );
+const gmtl::Vec3f TrackedInfo::mForwardVec(0.0f, 0.0f, -1.0f);
 
 //: the origin
-const gmtl::Vec3f TrackedInfo::origin( 0.0f, 0.0f, 0.0f );
+const gmtl::Vec3f TrackedInfo::mOrigin(0.0f, 0.0f, 0.0f);
 
 //: call this once per frame with your tracker's matrix.
-void TrackedInfo::updateWithMatrix( const gmtl::Matrix44f& matrix )
+void TrackedInfo::updateWithMatrix(const gmtl::Matrix44f& matrix)
 {
-    // save the old values.
-    _rotOld = _rot;
+   // save the old values.
+   mRotOld = mRot;
 
-    // get the forward direction that the tracker is pointing.
-    // (_vec = matrix * forwardVec)
-    gmtl::Vec3f wandPos, wandForward;
-    gmtl::xform( wandForward, matrix, forwardVec );
-    gmtl::xform( wandPos, matrix, origin );
-    _vec = wandForward - wandPos;
+   // get the forward direction that the tracker is pointing.
+   // (mVec = matrix * mForwardVec)
+   gmtl::Vec3f wand_pos, wand_forward;
+   gmtl::xform(wand_forward, matrix, mForwardVec);
+   gmtl::xform(wand_pos, matrix, mOrigin);
+   mVec = wand_forward - wand_pos;
 
-    // get the x,y,z rotations of the tracker.
-    gmtl::EulerAngleXYZf euler;
-    gmtl::setRot( euler, matrix );
-    _rot.mData[0] = euler[0];
-    _rot.mData[1] = euler[1];
-    _rot.mData[2] = euler[2];
+   // get the x,y,z rotations of the tracker.
+   gmtl::EulerAngleXYZf euler;
+   gmtl::setRot(euler, matrix);
+   mRot.mData[0] = euler[0];
+   mRot.mData[1] = euler[1];
+   mRot.mData[2] = euler[2];
 
-    // calculate the new rotational delta
-    _rotDelta = _rot - _rotOld;
-};
+   // calculate the new rotational delta
+   mRotDelta = mRot - mRotOld;
+}
 
 //: default constructor
-UserInfo::UserInfo() : _walkingMode(true)
+UserInfo::UserInfo() : mWalkingMode(true)
 {
 
 }
@@ -79,100 +79,102 @@ UserInfo::UserInfo() : _walkingMode(true)
 //  this will update user data such as position, velocity
 //  NOTE: if in "weightless" mode,
 //        then pass (0,0,0) in for gravity
-void  UserInfo::update( const TrackedInfo& tracker, const gmtl::Vec3f& gravity )
+void UserInfo::update(const TrackedInfo& tracker, const gmtl::Vec3f& gravity)
 {
-    // save the old values.
-    _posOld = _pos;
-    _rotOld = _rot;
+   // save the old values.
+   mPosOld = mPos;
+   mRotOld = mRot;
 
-    _updateWithTracker( tracker );
-    _updateWithGravity( gravity );
+   updateWithTracker(tracker);
+   updateWithGravity(gravity);
 }
 
-void UserInfo::_updateWithTracker( const TrackedInfo& tracker )
+void UserInfo::updateWithTracker(const TrackedInfo& tracker)
 {
-    //: get the scene's rotation for use in computing tracker vector
-    gmtl::Matrix44f sceneRotation;
-    gmtl::identity(sceneRotation);
-    gmtl::EulerAngleXYZf euler( _rot[0], _rot[1], _rot[2] );
-    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( euler );
+   //: get the scene's rotation for use in computing tracker vector
+   gmtl::Matrix44f scene_rotation;
+   gmtl::identity(scene_rotation);
+   gmtl::EulerAngleXYZf euler(mRot[0], mRot[1], mRot[2]);
+   scene_rotation = gmtl::makeRot<gmtl::Matrix44f>(euler);
 
-    //: transform the tracker vector from cave space to model space.
-    gmtl::Vec3f trackerVec;
-    gmtl::xform( trackerVec, sceneRotation, tracker.vector() );
+   //: transform the tracker vector from cave space to model space.
+   gmtl::Vec3f tracker_vec;
+   gmtl::xform(tracker_vec, scene_rotation, tracker.vector());
 
-    // constrain this vector in XZ plane if in walking mode.
-    if (_walkingMode == true)
-    trackerVec[1] = 0.0f;
+   // constrain this vector in XZ plane if in walking mode.
+   if ( mWalkingMode == true )
+   {
+      tracker_vec[1] = 0.0f;
+   }
 
-    //: calculate the user's velocity vector (vel = pos/frame)
-    //  To get this, you need a unit vector (length 1),
-    //    pointing in the direction of the tracker...
-    gmtl::normalize(trackerVec);
+   //: calculate the user's velocity vector (vel = pos/frame)
+   //  To get this, you need a unit vector (length 1),
+   //    pointing in the direction of the tracker...
+   gmtl::normalize(tracker_vec);
 
-    // ...then multiply it by the velocity scalar
-    //    to get the velocity vector.
-    _velocityVec = trackerVec * _velocity;
+   // ...then multiply it by the velocity scalar
+   //    to get the velocity vector.
+   mVelocityVec = tracker_vec * mVelocity;
 
-    //: add the velocity to the user's position.
-    //  This will move _pos by _velocity's length, which is the same as _velocityVec length.
-    //  NOTE: _velocity is "velocity per frame"
-    _pos += _velocityVec;
+   //: add the velocity to the user's position.
+   //  This will move mPos by mVelocity's length, which is the same as
+   //  mVelocityVec length.
+   //  NOTE: mVelocity is "velocity per frame"
+   mPos += mVelocityVec;
 
-    //: move user's orientation by the tracker's rotation delta.
-    // TODO: you may want to scale this down by some value to prevent really large deltas
-    _rot += tracker.rotation() * _angularVelocity;
+   //: move user's orientation by the tracker's rotation delta.
+   // TODO: you may want to scale this down by some value to prevent really
+   // large deltas
+   mRot += tracker.rotation() * mAngularVelocity;
 
-    // constrain orientation to only yaw.
-    // this keeps people from being sick,
-    //  but is a poor choice for flight simulators etc..
-    _rot[0] = 0;
-    _rot[2] = 0;
+   // constrain orientation to only yaw.
+   // this keeps people from being sick,
+   //  but is a poor choice for flight simulators etc..
+   mRot[0] = 0;
+   mRot[2] = 0;
 }
 
-void UserInfo::_updateWithGravity( const gmtl::Vec3f& gravity )
+void UserInfo::updateWithGravity(const gmtl::Vec3f& gravity)
 {
     // apply gravity to the position
     // NOTE gravity is in (vel = pos/frame)
-    _pos += gravity;
+    mPos += gravity;
 }
-
-
-
 
 //: get the transform to put the scene from the user's point of view
 //  from the user's info, calculate, then return, the
 //  transform to put the scene into the user's point of view
-void  UserInfo::getSceneTransform( gmtl::Matrix44f& sceneMatrix ) const
+void UserInfo::getSceneTransform(gmtl::Matrix44f& sceneMatrix) const
 {
-    gmtl::Matrix44f sceneTranslation;
-    gmtl::Matrix44f sceneRotation;
+   gmtl::Matrix44f scene_translation;
+   gmtl::Matrix44f scene_rotation;
 
-    //: set the translation of the scene
-    //  if we want to move forward in the scene, then we need to move the scene backwards.
-    sceneTranslation = gmtl::makeTrans<gmtl::Matrix44f>( -_pos );
+   //: set the translation of the scene
+   //  if we want to move forward in the scene, then we need to move the scene
+   //  backwards.
+   scene_translation = gmtl::makeTrans<gmtl::Matrix44f>(-mPos);
 
-    //: set the rotation of the scene
-    //  if we want to move clockwise in the scene,
-    //   then we need to move the scene counter-clockwise.
-    gmtl::EulerAngleXYZf euler( -_rot[0], -_rot[1], -_rot[2] );
-    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( euler );
+   //: set the rotation of the scene
+   //  if we want to move clockwise in the scene,
+   //   then we need to move the scene counter-clockwise.
+   gmtl::EulerAngleXYZf euler(-mRot[0], -mRot[1], -mRot[2]);
+   scene_rotation = gmtl::makeRot<gmtl::Matrix44f>(euler);
 
-    //: translate to your position, then rotate the scene.
-    sceneMatrix = sceneRotation * sceneTranslation;
+   //: translate to your position, then rotate the scene.
+   sceneMatrix = scene_rotation * scene_translation;
 }
 
 //: set the "velocity per frame" once each frame.
 //  required - call this before you use any 'update' functions.
-void  UserInfo::setVelocity( const float& velocity )
+void UserInfo::setVelocity(const float velocity)
 {
-    _velocity = velocity;
+   mVelocity = velocity;
 }
 
 //: set the "angular velocity per frame" once each frame.
 //  required - call this before you use any 'update' functions.
 // set this value from [0,1]
-void  UserInfo::setAngularVelocity( const float& aVelocity )
+void UserInfo::setAngularVelocity(const float aVelocity)
 {
-    _angularVelocity = aVelocity;
+   mAngularVelocity = aVelocity;
 }
