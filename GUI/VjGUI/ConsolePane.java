@@ -23,8 +23,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
+import VjGUI.LogMessageListener;
+import VjGUI.LogMessageEvent;
+import VjGUI.Core;
 
-public class ConsolePane extends JPanel {
+public class ConsolePane extends JPanel implements LogMessageListener {
 
     JTextArea textarea;
     JScrollPane sp;
@@ -34,13 +37,24 @@ public class ConsolePane extends JPanel {
 	textarea = new JTextArea ("");
 	textarea.setEditable (false);
 	add (sp = new JScrollPane (textarea), "Center");
+
+	Core.addLogMessageListener (this);
     }
 
-    public void addInfoMessage (String source, String content) {
-	textarea.append ("(" + source + "): " + content + "\n");
+
+
+    public void logMessage (LogMessageEvent e) {
+	switch (e.getStyle()) {
+	case LogMessageEvent.TEMPORARY_MESSAGE:
+	    break;
+	case LogMessageEvent.PERMANENT_MESSAGE:
+	    textarea.append ("(" + e.getSourceName() + "): " + e.getMessage() + "\n");
+	    break;
+	case LogMessageEvent.PERMANENT_ERROR:
+	    textarea.append ("ERROR (" + e.getSourceName() + "): " + e.getMessage() + "\n");
+	    break;
+	}
     }
-    public void addErrorMessage (String source, String content) {
-	textarea.append ("ERROR (" + source + "): " + content + "\n");
-    }
+
 
 }

@@ -18,8 +18,14 @@
 
 
 
-/* holder for global variables & utility functions 
+/*
+ * The primary job of the Core object is to own the primary databases
+ * of chunks and chunkdescs.  It's also a primary source of events.
+ * Objects can register with the Core to receive event notification
+ * for the addition and removal of ChunkDBs or DescDBs (Objects can
+ * register with the individual dbs for change notification).
  */
+
 package VjGUI;
 
 import java.lang.String;
@@ -32,6 +38,8 @@ import VjConfig.*;
 import VjPerf.*;
 
 public class Core {
+
+    static Core instance;
 
     static public ChunkOrgTree chunkorgtree;
     static public Vector chunkdbs;        // actually, a vector of ChunkDBTreeModel
@@ -46,8 +54,11 @@ public class Core {
 
     static public PerfDataCollection perf_collection;
 
-    static final boolean info_msg_to_stdout = false;
-    static final boolean error_msg_to_stdout = true;
+    static private Vector coredb_targets;
+    static private Vector logmessage_targets;
+
+    static final private boolean info_msg_to_stdout = false;
+    static final private boolean error_msg_to_stdout = true;
     static public int    screenWidth;
     static public int    screenHeight;
     static public boolean window_pos_kludge;
@@ -56,6 +67,14 @@ public class Core {
     static ImageIcon load_icn;
     static ImageIcon save_icn;
     static ImageIcon close_icn;
+
+    static final private int ADD_CHUNKDB = 1;
+    static final private int REMOVE_CHUNKDB = 2;
+    static final private int ADD_DESCDB = 3;
+    static final private int REMOVE_DESCDB = 4;
+
+    private Core() {
+    }
 
     static public ConfigChunk findPrefixMatchChunk (String name) {
 	/* finds a chunk whose name is a prefix of name */
@@ -76,12 +95,16 @@ public class Core {
 
     static public void initialize () {
 	ConfigChunkDB db;
+
+	instance = new Core();
 	
 	window_pos_kludge = false;
 	screenWidth = 800;
 	screenHeight = 600;
 	descdbs = new Vector();
 	chunkdbs = new Vector();
+	coredb_targets = new Vector();
+	logmessage_targets = new Vector();
 	perf_collection = new PerfDataCollection();
 	chunkorgtree = new ChunkOrgTree();
 	descdb = new ChunkDescDB();
@@ -117,20 +140,21 @@ public class Core {
 
     static public void enableActiveDB () {
 	chunkdbs.addElement (active_treemodel);
-	ui.addChunkDBTree (active_treemodel);
+	notifyCoreDBTargets (ADD_CHUNKDB, active_treemodel.chunkdb, null);
     }
 
 
 
     static public void disableActiveDB () {
+	notifyCoreDBTargets (REMOVE_CHUNKDB, active_treemodel.chunkdb, null);
 	chunkdbs.removeElement (active_treemodel);
-	ui.removeChunkDBTree (active_treemodel);
     }
+
 
     static public void closeChunkDB (ChunkDBTreeModel dbt) {
 	if (dbt == null || dbt == active_treemodel || dbt.getName().equalsIgnoreCase ("No Selection"))
 	    return;
-	ui.removeChunkDBTree (dbt);
+	notifyCoreDBTargets (REMOVE_CHUNKDB, dbt.chunkdb, null);
 	chunkdbs.removeElement (dbt);
     }
 
@@ -139,7 +163,7 @@ public class Core {
     static public void closeDescDB (ChunkDescDB db) {
 	if (db == null || db.name.equalsIgnoreCase ("No Selection") || db == descdb)
 	    return;
-	ui.removeDescDB (db.name);
+	notifyCoreDBTargets (REMOVE_DESCDB, null, db);
 	descdbs.removeElement (db);
     }
 
@@ -181,9 +205,9 @@ public class Core {
 	    return newbase;
 	newbase = createUniqueChunkDBName (newbase);
 	ChunkDBTreeModel dbt = getChunkDBTree (_db.name);
-	ui.removeChunkDBTree (dbt);
+	notifyCoreDBTargets (REMOVE_CHUNKDB, _db, null);
 	_db.setName (newbase);
-	ui.addChunkDBTree (dbt);
+	notifyCoreDBTargets (ADD_CHUNKDB, _db, null);
 	return newbase;
     }
 
@@ -192,9 +216,9 @@ public class Core {
 	if (_db.name.equals (newbase))
 	    return newbase;
 	newbase = createUniqueDescDBName (newbase);
-	ui.removeDescDB (_db.name);
+	notifyCoreDBTargets (REMOVE_DESCDB, null, _db);
 	_db.setName (newbase);
-	ui.addDescDB (_db);
+	notifyCoreDBTargets (ADD_DESCDB, null, _db);
 	return newbase;
     }
 
@@ -202,7 +226,7 @@ public class Core {
 	_chunkdb.setName (createUniqueChunkDBName (_chunkdb.name));
 	ChunkDBTreeModel ctm = new ChunkDBTreeModel (_chunkdb, chunkorgtree);
 	chunkdbs.addElement (ctm);
-	ui.addChunkDBTree (ctm);
+	notifyCoreDBTargets (ADD_CHUNKDB, _chunkdb, null);
 	return _chunkdb.name;
     }
 
@@ -212,44 +236,44 @@ public class Core {
 	_descdb.setName(createUniqueDescDBName (_descdb.name));
 	descdbs.addElement( _descdb);
 	descdb.addElements (_descdb);
-	ui.addDescDB (_descdb);
+	notifyCoreDBTargets (ADD_DESCDB, null, _descdb);
 	return _descdb.name;
     }
 
 
 
-  static public void rebuildAllTrees () {
-    // rebuilds all the trees in chunkdbs...
-    ChunkDBTreeModel dbt;
-    for (int i = 0; i < chunkdbs.size(); i++) {
-      dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
-      dbt.buildTree();
+    static public void rebuildAllTrees () {
+	// rebuilds all the trees in chunkdbs...
+	ChunkDBTreeModel dbt;
+	for (int i = 0; i < chunkdbs.size(); i++) {
+	    dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
+	    dbt.buildTree();
+	}
     }
-  }
 
 
 
-  static ChunkDBTreeModel getChunkDBTree (String name) {
-    ChunkDBTreeModel dbt;
-    for (int i = 0; i < chunkdbs.size(); i++) {
-      dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
-      if (dbt.getName().equalsIgnoreCase(name))
-	return dbt;
+    static ChunkDBTreeModel getChunkDBTree (String name) {
+	ChunkDBTreeModel dbt;
+	for (int i = 0; i < chunkdbs.size(); i++) {
+	    dbt = (ChunkDBTreeModel)chunkdbs.elementAt(i);
+	    if (dbt.getName().equalsIgnoreCase(name))
+		return dbt;
+	}
+	return null;
     }
-    return null;
-  }
+    
 
 
-
-  static ChunkDescDB getChunkDescDB (String name) {
-    ChunkDescDB db;
-    for (int i = 0; i < descdbs.size(); i++) {
-      db = (ChunkDescDB)descdbs.elementAt(i);
-      if (db.name.equalsIgnoreCase(name))
-	return db;
+    static ChunkDescDB getChunkDescDB (String name) {
+	ChunkDescDB db;
+	for (int i = 0; i < descdbs.size(); i++) {
+	    db = (ChunkDescDB)descdbs.elementAt(i);
+	    if (db.name.equalsIgnoreCase(name))
+		return db;
+	}
+	return null;
     }
-    return null;
-  }
 
 
 
@@ -298,7 +322,7 @@ public class Core {
 
 
 
-
+   
     public static void consoleTempMessage (String s) {
 	/* like a consoleInfoMessage, but not logged */
 	consoleTempMessage (null, s);
@@ -307,21 +331,11 @@ public class Core {
 	if (info_msg_to_stdout)
 	    System.out.println (source + ": " + s);
 	if (s == null || s.equals (""))
-	    s = "  ";
-	//if (Core.ui != null && Core.ui.console_pane != null) {
-	try {
-	    if (source != null)
-		Core.ui.status_label.setText ("(" + source + "): " + s);
-	    else
-		Core.ui.status_label.setText (s);
-	    Core.ui.status_label.setForeground (UIManager.getColor ("Label.foreground"));
-	    //Core.ui.status_label.repaint((long)1);
-	    Core.ui.paint (Core.ui.getGraphics());
-	}
-	catch (NullPointerException e) {
-	    System.out.println (s);
-	}
+	    s = " ";
+
+	notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.TEMPORARY_MESSAGE));
     }
+
 
     public static void consoleInfoMessage (String s) {
 	consoleInfoMessage ("", s);
@@ -329,12 +343,9 @@ public class Core {
     public static void consoleInfoMessage (String source, String s) {
 	if (info_msg_to_stdout)
 	    System.out.println (source + ": " + s);
-	if (Core.ui != null && Core.ui.console_pane != null) {
-	    Core.ui.console_pane.addInfoMessage (source, s);
-	    Core.ui.status_label.setText ("(" + source + "): " + s);
-	    Core.ui.status_label.setForeground (UIManager.getColor ("Label.foreground"));
-	}
+	notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.PERMANENT_MESSAGE));
     }
+
 
     public static void consoleErrorMessage (String s) {
 	consoleInfoMessage ("", s);
@@ -342,12 +353,80 @@ public class Core {
     public static void consoleErrorMessage (String source, String s) {
 	if (error_msg_to_stdout)
 	    System.out.println ("Error (" + source + "): " + s);
-	if (Core.ui != null && Core.ui.console_pane != null) {
-	    Core.ui.console_pane.addErrorMessage (source, s);
-	    Core.ui.status_label.setText ("Error (" + source + "): " + s);
-	    Core.ui.status_label.setForeground (Color.red);
+	notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.PERMANENT_ERROR));
+    }
+
+
+
+
+
+    /******************** CoreDB Target Stuff *********************/
+
+    static public synchronized void addCoreDBListener (CoreDBListener l) {
+	synchronized (coredb_targets) {
+	    coredb_targets.addElement (l);
 	}
     }
+
+    static public void removeCoreDBListener (CoreDBListener l) {
+	synchronized (coredb_targets) {
+	    coredb_targets.removeElement (l);
+	}
+    }
+
+    static protected void notifyCoreDBTargets (int msgtype, ConfigChunkDB _chunkdb, ChunkDescDB _descdb) {
+	Vector l;
+	CoreDBEvent e = new CoreDBEvent (instance, _chunkdb, _descdb);
+	synchronized (coredb_targets) {
+	    l = (Vector) coredb_targets.clone();
+	}
+	for (int i = 0; i < l.size(); i++) {
+	    CoreDBListener lis = (CoreDBListener)l.elementAt (i);
+	    switch (msgtype) {
+	    case ADD_CHUNKDB:
+		lis.addChunkDB (e);
+		break;
+	    case REMOVE_CHUNKDB:
+		lis.removeChunkDB (e);
+		break;
+	    case ADD_DESCDB:
+		lis.addDescDB (e);
+		break;
+	    case REMOVE_DESCDB:
+		lis.removeDescDB (e);
+		break;
+	    }
+	}
+    }
+
+
+
+    /******************** LogMessage Target Stuff *********************/
+
+    static public synchronized void addLogMessageListener (LogMessageListener l) {
+	synchronized (logmessage_targets) {
+	    logmessage_targets.addElement (l);
+	}
+    }
+
+    static public void removeLogMessageListener (LogMessageListener l) {
+	synchronized (logmessage_targets) {
+	    logmessage_targets.removeElement (l);
+	}
+    }
+
+    static protected void notifyLogMessageTargets (LogMessageEvent e) {
+	Vector l;
+	synchronized (logmessage_targets) {
+	    l = (Vector) logmessage_targets.clone();
+	}
+	for (int i = 0; i < l.size(); i++) {
+	    LogMessageListener lis = (LogMessageListener)l.elementAt (i);
+	    lis.logMessage (e);
+	}
+    }
+
+
 
 }
 

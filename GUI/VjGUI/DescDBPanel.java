@@ -32,7 +32,7 @@ import VjGUI.chunkdesc.ChunkDescFrame;
 import VjGUI.util.JFrameParent;
 
 public class DescDBPanel extends JPanel 
-  implements ActionListener, MouseListener, 
+  implements ActionListener, MouseListener, CoreDBListener,
 	     JFrameParent {
 
     JTree tree;
@@ -107,7 +107,8 @@ public class DescDBPanel extends JPanel
 	remove_button.addActionListener (this);
 	
 	selectDB ("");
-	
+
+	Core.addCoreDBListener (this);
     }
 
 
@@ -120,19 +121,6 @@ public class DescDBPanel extends JPanel
 	}
     }
 
-
-
-    public void addDescDB (String _name) {
-	//System.out.println ("need to do something in DescDBPanel.java");
-	db_combobox.addItem (_name);
-    }
-
-
-    public void removeDescDB (String name) {
-	if (currdb.name.equals (name))
-	    selectDB ("No Selection");
-	db_combobox.removeItem (name);
-    }
 
 
     public void selectDB (String name) {
@@ -330,6 +318,24 @@ public class DescDBPanel extends JPanel
 	f.dispose();
     }
     
+
+    // CoreDBListener stuff
+    public void addDescDB (CoreDBEvent e) {
+	db_combobox.addItem (e.getDescDB().getName());
+    }
+
+
+    public void removeDescDB (CoreDBEvent e) {
+	if (currdb == e.getDescDB())
+	    selectDB ("No Selection");
+	db_combobox.removeItem (e.getDescDB().getName());
+    }
+
+    public void addChunkDB (CoreDBEvent e) {
+    }
+
+    public void removeChunkDB (CoreDBEvent e) {
+    }
 
 
 }

@@ -32,7 +32,7 @@ import VjGUI.util.JFrameParent;
 import VjGUI.configchunk.ConfigChunkFrame;
 
 public class ChunkDBPanel extends JPanel 
-    implements ActionListener, MouseListener, JFrameParent {
+    implements ActionListener, MouseListener, CoreDBListener, JFrameParent {
 
 
     int controls_on_side; // 0 for left, 1 for right;
@@ -40,20 +40,20 @@ public class ChunkDBPanel extends JPanel
     Vector chunk_frames;
     DependencyFrame dependency_frame;
 
-    JButton load_button;
-    JButton save_button;
-    JButton insert_button;
-    JButton remove_button;
-    JButton send_button;
-    JButton send_all_button;
-    JButton new_button;
-    JButton close_button;
-    JButton duplicate_button;
-    JButton chunkhelp_button;
-    JButton checkdepend_button;
-    JComboBox db_combobox;
-    JComboBox insert_type;
-    JScrollPane scroll_pane;
+    private JButton load_button;
+    private JButton save_button;
+    private JButton insert_button;
+    private JButton remove_button;
+    private JButton send_button;
+    private JButton send_all_button;
+    private JButton new_button;
+    private JButton close_button;
+    private JButton duplicate_button;
+    private JButton chunkhelp_button;
+    private JButton checkdepend_button;
+    private JComboBox db_combobox;
+    private JComboBox insert_type;
+    private JScrollPane scroll_pane;
 
     TreePath treeitem_menu_path;
     JPopupMenu desctreeitem_menu;
@@ -188,6 +188,8 @@ public class ChunkDBPanel extends JPanel
 	help2_mi.addActionListener (this);
 	remove_mi.addActionListener (this);
 	insert_mi.addActionListener (this);
+
+	Core.addCoreDBListener (this);
     }
 
 
@@ -198,20 +200,6 @@ public class ChunkDBPanel extends JPanel
 	for (i = 0; i < Core.chunkdbs.size(); i++) {
 	    db_combobox.addItem (((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).getName());
 	}
-    }
-
-
-
-    public void removeChunkDBTree (ChunkDBTreeModel dbt) {
-	if (dbt == current_treemodel)
-	    selectDB ("");
-	db_combobox.removeItem (dbt.getName());
-    }
-
-
-
-    public void addChunkDBTree (ChunkDBTreeModel dbt) {
-	db_combobox.addItem (dbt.getName());
     }
 
 
@@ -262,7 +250,7 @@ public class ChunkDBPanel extends JPanel
 
 	
 
-    public void updateInsertTypes () {
+    private void updateInsertTypes () {
 	int i, j;
 	if (insert_type == null)
 	    return;
@@ -570,6 +558,26 @@ public class ChunkDBPanel extends JPanel
 	f.dispose();
     }
 
+
+
+    // CoreDBListener stuff
+    public void addChunkDB (CoreDBEvent e) {
+	db_combobox.addItem (e.getChunkDB().getName());
+    }
+
+    public void removeChunkDB (CoreDBEvent e) {
+	if (current_treemodel.chunkdb == e.getChunkDB())
+	    selectDB ("");
+	db_combobox.removeItem (e.getChunkDB().getName());
+    }
+
+    public void addDescDB (CoreDBEvent e) {
+	updateInsertTypes();
+    }
+
+    public void removeDescDB (CoreDBEvent e) {
+	updateInsertTypes();
+    }
 
 
 }

@@ -70,26 +70,6 @@ public class ConfigurePane extends JSplitPane implements MouseListener {
 
 
 
-    public void updateInsertTypes() {
-	leftpanel.updateInsertTypes();
-	rightpanel.updateInsertTypes();
-    }
-
-
-
-    public void removeChunkDBTree (ChunkDBTreeModel dbt) {
-	leftpanel.removeChunkDBTree (dbt);
-	rightpanel.removeChunkDBTree (dbt);
-    }
-
-
-    public void addChunkDBTree (ChunkDBTreeModel dbt) {
-	leftpanel.addChunkDBTree (dbt);
-	rightpanel.addChunkDBTree (dbt);
-    }
-
-
-
     public void selectLeftDB (String name) {
 	leftpanel.selectDB (name);
     }
@@ -100,13 +80,13 @@ public class ConfigurePane extends JSplitPane implements MouseListener {
 
 
 
+    // MouseListener stuff
     public void mouseClicked(MouseEvent e) {
 	if (e.getSource() == leftpanel)
 	    System.out.println ("left panel click");
 	else
 	    System.out.println ("right panel click");
     }
-
 
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}

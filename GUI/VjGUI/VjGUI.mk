@@ -28,6 +28,10 @@ VJGUI_SOURCES = VjGUI/VjControl.java		\
 		VjGUI/DescDBPanel.java		\
 		VjGUI/HTMLFrame.java		\
 		VjGUI/SuffixFilter.java         \
-		VjGUI/DependencyFrame.java      
+		VjGUI/DependencyFrame.java      \
+		VjGUI/CoreDBEvent.java		\
+		VjGUI/CoreDBListener.java	\
+		VjGUI/LogMessageEvent.java	\
+		VjGUI/LogMessageListener.java	\
 
 VJGUI_OBJS = ${VJGUI_SOURCES:.java=.class}
