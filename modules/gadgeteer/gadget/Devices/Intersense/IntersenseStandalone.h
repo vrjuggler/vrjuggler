@@ -58,7 +58,7 @@
 extern "C" { 
     #include <Input/intersense/isense.h>
 }
-
+#include <fstream.h>
 #include <string.h>
 
 struct isConfig {
@@ -77,6 +77,12 @@ public:
     isIntersense() 
     { 
 	init();
+    }
+
+    ~isIntersense()
+    {
+	if(script != NULL) delete [] script;
+	if(mPortName != NULL) delete [] mPortName;
     }
   
     bool open();
@@ -170,11 +176,19 @@ public:
 	ISD_SetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
 	return d;
     } // d  i'th station of tracker
-  
-    bool sendScript( const char* script ) {
+
+//: sendScript
+//+ filename: the name of a file containing an intersense protocol script
+    bool sendScript() {
 	return ISD_SendScript( mHandle, (char *) script );
     }
 
+    bool setScript(const char* inscript) {
+	if(script != NULL) delete [] script;
+	script = new char [strlen(inscript)+3];
+	strcpy(script, inscript);
+	return true;
+    }
   
 //TODO: check for euler or quat values in the configstate.
 // get the x position of the i'th receiver
@@ -226,7 +240,7 @@ private:
     bool mVerbose;
     bool mActive;
     char* mPortName; //fix was implemented in all c drivers to allow precise control over the port used
-
+    char* script;
 //Station level data
     int mCurrentStation; //0-3 for current 9/2000 IS900
     ISD_STATION_CONFIG_TYPE mConfigData[ISD_MAX_STATIONS]; 

@@ -301,6 +301,6 @@ chunk Isense "Isense" "Intersense Tracking Devices"
   translate Float 3 "Translation" "(world_T_transmitter) Translation of the transmitter from Juggler coord system."
   rotate Float 3 "Rotation" "(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system."
   num Int 1 "Number of Cubes" "Number of inertia cubes in use."
-  script String 1 "Startup Script" "Script sent to the tracker on startup."
+  script String 1 "Script File" "File path of script sent to the tracker on startup."
   end
 End
