@@ -91,14 +91,14 @@ public:
       mState = NOT_READY;                        // Initialize
 
       // Spawn acceptor thread
-      vpr::ThreadMemberFunctor<SocketCopyConstructorTest>
-            acceptor_functor( this, &SocketCopyConstructorTest::testCopyConstructor_acceptor );
-      vpr::Thread acceptor_thread( &acceptor_functor );
+      vpr::ThreadMemberFunctor<SocketCopyConstructorTest>* acceptor_functor =
+         new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>( this, &SocketCopyConstructorTest::testCopyConstructor_acceptor );
+      vpr::Thread acceptor_thread( acceptor_functor );
 
       // spawn a connector thread
-      vpr::ThreadMemberFunctor<SocketCopyConstructorTest>
-            connector_functor( this, &SocketCopyConstructorTest::testCopyConstructor_connector );
-      vpr::Thread connector_thread( &connector_functor );
+      vpr::ThreadMemberFunctor<SocketCopyConstructorTest>* connector_functor =
+         new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>( this, &SocketCopyConstructorTest::testCopyConstructor_connector );
+      vpr::Thread connector_thread( connector_functor );
 
       connector_thread.join();
       acceptor_thread.join();

@@ -80,14 +80,14 @@ public:
        mState = NOT_READY;                        // Initialize
 
        // Spawn acceptor thread
-       vpr::ThreadMemberFunctor<SelectorTest>
-           acceptor_functor( this, &SelectorTest::testAcceptorPoolSelection_acceptor );
-       vpr::Thread acceptor_thread( &acceptor_functor);
+       vpr::ThreadMemberFunctor<SelectorTest>* acceptor_functor =
+               new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testAcceptorPoolSelection_acceptor );
+       vpr::Thread acceptor_thread( acceptor_functor);
 
        // Spawn connector thread
-       vpr::ThreadMemberFunctor<SelectorTest>
-           connector_functor( this, &SelectorTest::testAcceptorPoolSelection_connector );
-       vpr::Thread connector_thread( &connector_functor);
+       vpr::ThreadMemberFunctor<SelectorTest>* connector_functor =
+               new vpr::ThreadMemberFunctor<SelectorTest>( this, &SelectorTest::testAcceptorPoolSelection_connector );
+       vpr::Thread connector_thread( connector_functor);
 
        // Wait for threads
        acceptor_thread.join();
@@ -235,14 +235,14 @@ public:
        mState = NOT_READY;                        // Initialize
 
        // Spawn acceptor thread
-       vpr::ThreadMemberFunctor<SelectorTest>
-           acceptor_functor( this, &SelectorTest::testSendThenPoll_acceptor );
-       vpr::Thread acceptor_thread( &acceptor_functor);
+       vpr::ThreadMemberFunctor<SelectorTest>* acceptor_functor =
+               new vpr::ThreadMemberFunctor<SelectorTest>( this, &SelectorTest::testSendThenPoll_acceptor );
+       vpr::Thread acceptor_thread( acceptor_functor);
 
        // Spawn connector thread
-       vpr::ThreadMemberFunctor<SelectorTest>
-           connector_functor( this, &SelectorTest::testSendThenPoll_connector );
-       vpr::Thread connector_thread( &connector_functor);
+       vpr::ThreadMemberFunctor<SelectorTest>* connector_functor =
+               new vpr::ThreadMemberFunctor<SelectorTest>( this, &SelectorTest::testSendThenPoll_connector );
+       vpr::Thread connector_thread( connector_functor);
 
        // Wait for threads
        acceptor_thread.join();

@@ -171,16 +171,14 @@ public:
       mMessageLen   = mMessage.length();
 
       // Spawn acceptor thread
-      vpr::ThreadMemberFunctor<NonBlockingSocketTest>
-          acceptor_functor(this,
-                           &NonBlockingSocketTest::testNonBlockingTransfer_acceptor);
-      vpr::Thread acceptor_thread( &acceptor_functor);
+      vpr::ThreadMemberFunctor<NonBlockingSocketTest>* acceptor_functor =
+            new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testNonBlockingTransfer_acceptor);
+      vpr::Thread acceptor_thread( acceptor_functor);
 
       // Spawn connector thread
-      vpr::ThreadMemberFunctor<NonBlockingSocketTest>
-          connector_functor(this,
-                            &NonBlockingSocketTest::testNonBlockingTransfer_connector);
-      vpr::Thread connector_thread( &connector_functor);
+      vpr::ThreadMemberFunctor<NonBlockingSocketTest>* connector_functor =
+         new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testNonBlockingTransfer_connector);
+      vpr::Thread connector_thread( connector_functor);
 
       // Wait for threads
       acceptor_thread.join();
