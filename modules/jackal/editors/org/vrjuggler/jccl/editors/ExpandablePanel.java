@@ -37,7 +37,7 @@ public class ExpandablePanel extends PropertyComponent
       if(embedded)
       {
          ClassLoader loader = getClass().getClassLoader();
-         mTypeIcon = new ImageIcon(loader.getResource("images/juggler-jigsaw16.gif"));
+         mTypeIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/config_element.gif"));
          mTypeButton.setIcon(mTypeIcon);
          
          setBorder(BorderFactory.createEtchedBorder());
@@ -84,7 +84,7 @@ public class ExpandablePanel extends PropertyComponent
       mComponent = cmp;
 
       ClassLoader loader = getClass().getClassLoader();
-      mTypeIcon = new ImageIcon(loader.getResource("images/juggler-jigsaw16.gif"));
+      mTypeIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/config_element.gif"));
       //mExpandedIcon = (Icon)UIManager.get( "Tree.expandedIcon" );
       //mCollapsedIcon = (Icon)UIManager.get( "Tree.collapsedIcon" );
       mExpandedIcon = WindowsTreeUI.ExpandedIcon.createExpandedIcon();
