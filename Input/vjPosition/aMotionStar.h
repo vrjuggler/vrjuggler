@@ -243,8 +243,8 @@ private:
 
     // ------------------------------------------------------------------------
     //: Combine the two given bytes (passed as high byte and low byte
-    //+ respectively) into a single word.  This is used for reading bytes from
-    //+ the packets and converting them into usable values.
+    //+ respectively) into a single word in host byte order.  This is used for
+    //+ reading bytes from the packets and converting them into usable values.
     //
     //! PRE: None.
     //! POST: The two given bytes are combined into a single word that is
@@ -255,11 +255,30 @@ private:
     //! ARGS: low_byte - The byte that will become the low byte of the
     //+                  returned word.
     //
-    //! RETURNS: A 16-bit word that is the combination of the two given bytes.
+    //! RETURNS: A 16-bit word in host byte order that is the combination of
+    //+          the two given bytes.
     // ------------------------------------------------------------------------
     inline short
     toShort (char high_byte, char low_byte) {
-      return ((short) high_byte << 8) | ((short) low_byte);
+      union {
+        char c[sizeof(short)];
+        short value;
+      } result;
+
+      // If this is a big-endian host, put the high byte in the first byte of
+      // result.value and the low byte in the second byte.
+      if ( m_big_endian ) {
+        result.c[0] = high_byte;
+        result.c[1] = low_byte;
+      }
+      // Otherwise, put the low byte in the first byte and the high byte in
+      // the second byte.
+      else {
+        result.c[0] = low_byte;
+        result.c[1] = high_byte;
+      }
+
+      return result.value;
     }
 
     // ------------------------------------------------------------------------
@@ -443,6 +462,7 @@ float		m_xmtr_pos_scale;	// Transmitter position scaling factor
 float		m_xmtr_rot_scale;	// Transmitter position scaling factor
 float		m_xmtr_divisor;		// Number by which all returned values
 					// must be divided
+bool		m_big_endian;
 };
 
 
