@@ -111,9 +111,9 @@
       file in the source tree is also made to perform a very general, inexact
       verification that things are where they are supposed to be.  Currently,
       <I>configure</I> will check for the existence of
-      <TT>Config/ChunkDesc.C</TT>.  Finally, the header file created when
-      done with the configuration process is named.  This will most likely
-      always be <TT>vjDefines.h</TT>.
+      <TT>Config/vjChunkDesc.cpp</TT>.  Finally, the header file created when
+      done with the configuration process is named.  This file is called
+      <TT>vjDefines.h</TT>.
 
       <P>
   <DT><B>Custom arguments</B>
@@ -187,13 +187,13 @@
       To do something similar to:
 
 <PRE>
-  #define C2_DEF
+  #define VJ_DEF
 </PRE>
 
       use the following syntax:
 
 <PRE>
-  AC_DEFINE(C2_DEF,)
+  AC_DEFINE(VJ_DEF,)
 </PRE>
 
       Defining macros that take parameters cannot be done with
@@ -448,9 +448,9 @@
       sources and the object files, the following is done:
 
 <PRE>
-  DEPEND_SRCS = C2Memory.C @SHAREDMEM_DEPEND_SRCS@
+  DEPEND_SRCS = vjMemory.C @SHAREDMEM_DEPEND_SRCS@
 
-  SHM_OBJECTS = ${OBJDIR}/C2Memory.o @SHAREDMEM_OBJS@
+  SHM_OBJECTS = ${OBJDIR}/vjMemory.o @SHAREDMEM_OBJS@
 </PRE>
 
       Any extra platform- or implementation-specific files are defined when
@@ -504,12 +504,12 @@
       line for it.  The only dependency needed is the C/C++ source file
       associated with the object file.  Because <TT>${VPATH}</TT> is being
       used, the path to that source file is not needed.  However, in the
-      compile line, a path must be given.  The <TT>${C2_SRCDIR}</TT> variable
+      compile line, a path must be given.  The <TT>${VJ_SRCDIR}</TT> variable
       is used so that some flexibility is available at configuration time.
       Though it is not currently implemented, it could be possible to use
-      either an absolute path (using <TT>${C2ROOT_ABS}</TT>) or a relative
+      either an absolute path (using <TT>${VJROOT_ABS}</TT>) or a relative
       path (using <TT>${srcdir}</TT>).  This would be implemented in
-      <TT>configure.in</TT>, and <TT>${C2_SRCDIR}</TT> would simply have the
+      <TT>configure.in</TT>, and <TT>${VJ_SRCDIR}</TT> would simply have the
       current value substituted by <I>configure</I>.  Obviously, these
       targets are specific to the given <TT>Makefile</TT>.
 
