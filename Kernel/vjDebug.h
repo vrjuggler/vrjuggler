@@ -65,6 +65,7 @@ extern vjMutex DebugLock;
 // 5 - Highly verbose debug output
 // 6 - Function entry and exit
 // 7 - In house only type debug output
+//!PUBLIC_API
 //-----------------------------------------
 class vjDebug
 {

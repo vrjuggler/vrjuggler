@@ -39,6 +39,7 @@ protected:
 //! NOTE: Requires that the type of the context data provide a default
 //+ constructor used to initialize all of the copies of the data.
 //-----------------------------------------------------------------------
+//!PUBLIC_API
 template<class ContextDataType = int>
 class vjGlContextData : private vjGlContextDataBase
 {
