@@ -397,15 +397,17 @@ C:\WINDOWS;C:\bin;C:\</screen>
         for <quote>environment variables</quote>.</para>
 
         <section>
-          <title>Windows 2000</title>
+          <title>Windows 2000 and Windows XP</title>
 
           <para>In the Control Panel, open the <guiicon>System</guiicon> icon.
           Under the <guilabel>Advanced</guilabel> tab, there is a button
-          labeled <guibutton>Environment Variables</guibutton> (shown in <xref
-          linkend="figure.win2k.sysprops" />). Clicking this button opens the
-          dialog box shown in <xref linkend="figure.win2k.envvars" />. Here,
-          you can set variables for yourself and, if you have the access
-          privileges, for all users.</para>
+          labeled <guibutton>Environment Variables</guibutton>, shown in <xref
+          linkend="figure.win2k.sysprops" /> (the Windows XP version is shown
+          in <xref linkend="figure.winxp.sysprops" />). Clicking this button
+          opens the dialog box shown in <xref
+          linkend="figure.win2k.envvars" />. Here, you can set variables for
+          yourself and, if you have the access privileges, for all
+          users.</para>
 
           <figure id="figure.win2k.sysprops">
             <title>Windows 2000 System Properties Dialog</title>
@@ -414,6 +416,17 @@ C:\WINDOWS;C:\bin;C:\</screen>
               <imageobject>
                 <imagedata align="center"
                            fileref="figures/Window.SystemProperties.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <figure id="figure.winxp.sysprops">
+            <title>Windows XP System Properties Dialog</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="figures/Window.SystemProperties.winxp.png"
                            format="PNG" />
               </imageobject>
             </mediaobject>
@@ -437,13 +450,11 @@ C:\WINDOWS;C:\bin;C:\</screen>
           example, let us say that the Win32 version of VR Juggler is
           installed in the <filename>D:\</filename> directory. As such, we
           will set <envar>VJ_BASE_DIR</envar> as shown in <xref
-          linkend="figure.win2k.envvar.set" />. Note that we use a forward
-          slash (/) instead of a backslash (\) for the directory separator.
-          This is not required, though it is helpful in reducing confusion
-          with respect to other examples.</para>
+          linkend="figure.win2k.envvar.set" />. <envar>VJ_DEPS_DIR</envar> is
+          set similarly.</para>
 
           <figure id="figure.win2k.envvar.set">
-            <title>Setting <envar>VJ_BASE_DIR</envar> on Windows 2000</title>
+            <title>Setting <envar>VJ_BASE_DIR</envar> on Windows</title>
 
             <mediaobject>
               <imageobject>
@@ -938,8 +949,9 @@ value</screen>
           directory must be in your path (via the <envar>PATH</envar>
           environment variable) for proper application execution. The NSPR can
           be downloaded from the <ulink
-          url="http://www.mozilla.org/projects/nspr">NSPR home
-          page</ulink>.</para>
+          url="http://www.mozilla.org/projects/nspr">NSPR home page</ulink>.
+          If the pre-compiled VR Juggler dependencies are installed, then NSPR
+          is already available.</para>
         </note>
 
         <para>All OpenGL sample applications are shipped with pre-configured
@@ -977,10 +989,10 @@ value</screen>
           </mediaobject>
         </figure>
 
-        <para>Before proceeding, the program arguments must be set. In Visual
-        Studio 7, this can be performed several ways. For example,
-        right-clicking on the project name in the Solution Explorer brings up
-        the menu shown in <xref
+        <para>In some cases, it may be necessary to change the default project
+        properties. The project properties dialog can be opened in several
+        ways. For example, right-clicking on the project name in the Solution
+        Explorer brings up the menu shown in <xref
         linkend="visual.studio.project-menu.figure" />. We are interested in
         changing the project's properties, so we select the
         <guimenuitem>Properties</guimenuitem> item from the popup menu.</para>
@@ -997,50 +1009,19 @@ value</screen>
           </mediaobject>
         </figure>
 
-        <para>Selecting this item opens the <quote>Project Pages</quote>
-        dialog, shown in <xref
-        linkend="visual.studio.project-settings.dialog.figure" />. In this
-        window, choose the <guilabel>Debugging</guilabel> item. There will be
-        an empty text entry field under the heading <guilabel>Command
-        Arguments</guilabel>. Here, enter the full paths to the VR Juggler
-        configuration files that will be used to run the torus application. To
-        use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
-        syntax must be used. In other words, to load
-        <filename>sim.base.jconf</filename>, use
-        <filename>$(VJ_BASE_DIR)/share/vrjuggler/data/configFiles/sim.base.jconf</filename>.
-        The following shows the beginning of the program arguments listing
-        <filename>sim.base.jconf</filename> and
-        <filename>sim.wand.mixin.jconf</filename>:</para>
+        <para>Under the MPApp project settings, the path(s) to the VR Juggler
+        C++ dependencies must be filled in. This means setting paths to find
+        headers and libraries. All the Visual C++ project files shipped with
+        VR Juggler refer to the VR Juggler C++ dependency installation via the
+        <envar>VJ_DEPS_DIR</envar> environment variable. If this is not set or
+        cannot be used, the paths must be filled in manually.</para>
 
-        <figure id="visual.studio.project-settings.dialog.figure">
-          <title>Project Settings Dialog</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="figures/MPApp.visual.c++.args.png"
-                         format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Note that in this example, the / directory separator is used
-        instead of \ for the program arguments. This is not strictly required
-        in this case, but doing it this way maintains consistency with other
-        examples.</para>
-
-        <para>Also under the MPApp project settings, the path(s) to the VR
-        Juggler C++ dependencies must be filled in. This means setting paths
-        to find headers and libraries. All the Visual C++ project files
-        shipped with VR Juggler refer to the VR Juggler C++ dependency
-        installation via the <envar>VJ_DEPS_DIR</envar> environment variable.
-        If this is not set or cannot be used, the paths must be filled in
-        manually.</para>
-
-        <para>Once the program arguments are set up, compile the application.
+        <para>Once the program properties are set, compile the application.
         Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build
         MPApp</guimenuitem> item as shown in <xref
-        linkend="visual.studio.build-menu.figure" />.</para>
+        linkend="visual.studio.build-menu.figure" />. Visual C++ will compile
+        the application, and if you have everything configured properly on
+        your computer, the compiling will complete successfully.</para>
 
         <figure id="visual.studio.build-menu.figure">
           <title>Build <filename>MPApp.exe</filename></title>
@@ -1054,27 +1035,10 @@ value</screen>
           </mediaobject>
         </figure>
 
-        <para>Visual C++ will compile the application, and if you have
-        everything configured properly on your computer, the compiling will
-        complete successfully. Once it is done, execute the MPApp program by
-        choosing the <guimenuitem>Start</guimenuitem> item from the
-        <guimenu>Debug</guimenu> menu, shown below in <xref
-        linkend="visual.studio.debug-menu.exectue.figure" />. For the
-        remainder of this book, we will explain how to run applications from
-        the command line rather than from the Visual Studio GUI. Readers can
-        follow whichever method they prefer.</para>
-
-        <figure id="visual.studio.debug-menu.exectue.figure">
-          <title>Execute <filename>MPApp.exe</filename></title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="figures/MPApp.visual.c++.run.png"
-                         format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+        <para>For the remainder of this book, much of the discussion will
+        concentrate on running applications from the command line rather than
+        from the Visual Studio GUI. Readers can follow whichever method they
+        prefer.</para>
       </section>
     </section>
   </chapter>
@@ -1317,42 +1281,91 @@ value</screen>
             </imageobject>
           </mediaobject>
         </figure>
-      </section>
 
-      <section>
-        <title>Running an Application on Mac OS X with the X Window
-        System</title>
+        <section>
+          <title>Running an Application on Windows from Within Visual
+          Studio</title>
 
-        <para>Running a VR Juggler application on Mac OS X is slightly
-        different if VR Juggler was compiled against <ulink
-        url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>. Before
-        starting the VR Juggler application, X11 must be running. This can be
-        accomplished by double-clicking on the X11 icon in the Applications
-        folder. By default, X11 will open a standard xterm when it starts. In
-        this xterm, the <envar>$DISPLAY</envar> environment variable will be
-        set correctly, and it is recommended that VR Juggler applications be
-        launched from this xterm. From this xterm, set the necessary
-        environment variables as described earlier in <xref
-        linkend="envvars.required.section" />. Once this is done, the
-        application can be executed from the command line just as described in
-        the previous section.</para>
+          <para>To run MPApp from within the Visual Studio IDE, the program
+          arguments must be set first. This is done by opening the properties
+          dialog for the project. In this dialog box, choose the
+          <guilabel>Debugging</guilabel> item. There will be an empty text
+          entry field under the heading <guilabel>Command
+          Arguments</guilabel>. Here, enter the full paths to the VR Juggler
+          configuration files that will be used to run the torus application.
+          To use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
+          syntax must be used. In other words, to load
+          <filename>sim.base.jconf</filename>, use
+          <filename>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</filename>.
+          The following shows the beginning of the arguments set to
+          <filename>standalone.jconf</filename>.</para>
 
-        <para>MPApp is shown executing on a Mac OS X desktop in <xref
-        linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
-        the X11 icon is activated and that the application menu is for an X11
-        application. This truly is an X11 application running on OS X.</para>
+          <figure id="visual.studio.project-settings.dialog.figure">
+            <title>Setting Command Arguments</title>
 
-        <figure id="MPApp.OSX.running.single.figure">
-          <title>MPApp running on Mac OS X using X11 with one window</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp.visual.c++.args.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
 
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="figures/MPApp-OSX.thumbnail.single.png"
-                         format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+          <para>With the application already compiled, execute the MPApp
+          program by choosing the <guimenuitem>Start</guimenuitem> item from
+          the <guimenu>Debug</guimenu> menu, shown below in <xref
+          linkend="visual.studio.debug-menu.exectue.figure" />.</para>
+
+          <figure id="visual.studio.debug-menu.exectue.figure">
+            <title>Execute <filename>MPApp.exe</filename></title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp.visual.c++.run.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
+
+        <section>
+          <title>Running an Application on Mac OS X with the X Window
+          System</title>
+
+          <para>Running a VR Juggler application on Mac OS X is slightly
+          different if VR Juggler was compiled against <ulink
+          url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>. Before
+          starting the VR Juggler application, X11 must be running. This can
+          be accomplished by double-clicking on the X11 icon in the
+          Applications folder. By default, X11 will open a standard xterm when
+          it starts. In this xterm, the <envar>$DISPLAY</envar> environment
+          variable will be set correctly, and it is recommended that VR
+          Juggler applications be launched from this xterm. From this xterm,
+          set the necessary environment variables as described earlier in
+          <xref linkend="envvars.required.section" />. Once this is done, the
+          application can be executed from the command line just as described
+          in the previous section.</para>
+
+          <para>MPApp is shown executing on a Mac OS X desktop in <xref
+          linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
+          the X11 icon is activated and that the application menu is for an
+          X11 application. This truly is an X11 application running on OS
+          X.</para>
+
+          <figure id="MPApp.OSX.running.single.figure">
+            <title>MPApp running on Mac OS X using X11 with one window</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp-OSX.thumbnail.single.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
       </section>
 
       <section>
