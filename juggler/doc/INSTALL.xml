@@ -190,16 +190,9 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
         url="http://java.sun.com/">http://java.sun.com/</ulink>): The J2SE SDK
         (or JDK) is used to compile all the Java code used in the Juggler
         Project. Without it, none of the Java code can be built. We require
-        version 1.3 or newer; we recommend version 1.4 or newer. The Java
-        Standard Edition (J2SE) can be downloaded from <ulink
+        version 1.4 or newer. The Java Standard Edition (J2SE) can be
+        downloaded from <ulink
         url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.</para>
-      </listitem>
-
-      <listitem>
-        <para>OpenORB (<ulink
-        url="http://www.jdom.org/">http://openorb.sourceforge.net/</ulink>): A
-        pure Java implementation of CORBA 2.3, required for the Tweek Java GUI
-        if you are using a version of the JDK older than 1.4.0.</para>
       </listitem>
 
       <listitem>
@@ -210,14 +203,13 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       </listitem>
     </itemizedlist>
 
-    <para>In the following subsections, we describe how to get all of the
-    above except Boost, CppDOM, the JDK, OpenORB, omniORB, and NSPR. These
-    must be downloaded individually from the sites listed above. You may also
-    have to compile one or more of the packages if binary distributions are
-    not available. Which packages you download depends on what you already
-    have installed. Note carefully which packages are needed based on the
-    software you have installed and what versions of tools (such as the JDK)
-    that you download.</para>
+    <para>The third-party dependencies must be downloaded from the sites
+    listed above and installed manually. You may also have to compile one or
+    more of the packages if binary distributions are not available. Which
+    packages you download depends on what you already have installed. Note
+    carefully which packages are needed based on the software you have
+    installed and what versions of tools (such as the JDK) that you
+    download.</para>
 
     <section>
       <title>How to Get the Juggler Suite from CVS</title>
@@ -233,13 +225,12 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
     </section>
 
     <section>
-      <title>Downloading Binary Dependencies</title>
+      <title>Downloading Third-Party Dependencies</title>
 
       <para>In addition to source the dependencies acquired through CVS, there
       are some third-party dependencies that must be installed separately.
       Remember that no Java code in VR Juggler can be used without the JDK and
-      a working Java version of CORBA (either from OpenORB, JacORB, or the JDK
-      itself).</para>
+      a working Java version of CORBA.</para>
 
       <section>
         <title>Boost</title>
@@ -298,29 +289,11 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
         <para>We make use of the Java programming language in addition to C++.
         Java is used exclusively for GUIs such as Tweek and VRJConfig (which
         is a JavaBean that is loaded into Tweek). To compile the Java code, a
-        JDK is necessary. We currently require version 1.3 or newer; we
-        recommend version 1.4 or newer. The Java Standard Edition can be
-        downloaded from <ulink
+        JDK is necessary. We currently require version 1.4 or newer. The Java
+        Standard Edition can be downloaded from <ulink
         url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.
         More information can be found at <ulink
         url="http://java.sun.com/">http://java.sun.com/</ulink>.</para>
-      </section>
-
-      <section>
-        <title>OpenORB</title>
-
-        <para>OpenORB is a pure-Java implementation of CORBA 2.3. It is
-        required in order to compile the Tweek Java API (and hence VRJConfig)
-        if you are using a version of the JDK older than 1.4.0. OpenORB 1.3.0
-        can be downloaded from <ulink
-        url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink>.</para>
-
-        <para>There are three JAR files needed to use OpenORB 1.3 with Juggler
-        Project code. They are <filename>openorb-1.3.0.jar</filename>,
-        <filename>avalon-framework.jar</filename>, and
-        <filename>logkit.jar</filename>. All three come with a standard
-        OpenORB distribution. We will show how to tell the configure scripts
-        about these JAR files later.</para>
       </section>
 
       <section>
@@ -439,22 +412,11 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
             <listitem>
               <para>Configure all the modules making up VR Juggler. This is
               when you must tell the module configure scripts where all the
-              package dependencies are found. For this description, we will
-              use the term <filename>&lt;JAVA_ORB_PATH&gt;</filename> to refer
-              to the installation directory containing a Java-based CORBA
-              implementation. Assume that this is an absolute path (e.g.,
-              <filename>&lt;JAVA_ORB_PATH&gt;</filename> =
-              <filename>/home/user1/pkgs/openorb</filename>). For this
-              example, we will use the OpenORB 1.3 JAR file list.</para>
-
-              <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=OpenORB --with-java-orb-jar="&lt;JAVA_ORB_PATH&gt;/lib/openorb-1.3.0.jar:&lt;JAVA_ORB_PATH&gt;/lib/avalon-framework.jar:&lt;JAVA_ORB_PATH&gt;/lib/logkit.jar"</screen>
-
-              <para>If you are using JDK 1.4.0 or newer, your command line can
-              be simplified to the following:</para>
+              package dependencies are found.</para>
 
               <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK</screen>
 
-              <note>
+              <important>
                 <para>You will probably have to specify the paths to your
                 local CppDOM, GMTL, and Boost installations using the options
                 <option>--with-cppdom</option>, <option>--with-gmtl</option>
@@ -469,7 +431,7 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
                 In this case, you must also specify the option
                 <option>--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31</option>
                 when running <command>configure.pl</command>.</para>
-              </note>
+              </important>
             </listitem>
           </orderedlist>
 
@@ -594,56 +556,33 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
       <section id="tweek.build.section">
         <title>Tweek</title>
 
-        <para>Tweek needs JDK 1.3.1 or newer and the third-party CORBA
-        implementations omniORB 3.0.4 or newer (C++) and OpenORB 1.2.0 or
-        newer (Java). These packages can be downloaded from the following
-        websites:</para>
+        <para>Tweek needs JDK 1.4 or newer and a C++ CORBA implementation.
+        Currently, we primarily use omniORB 4.0, but omniORB 3.0 can be used.
+        Visit the <ulink url="http://omniorb.sourceforge.net/">omniORB
+        website</ulink> to download omniORB.</para>
 
-        <itemizedlist>
-          <listitem>
-            <para>omniORB: <ulink
-            url="http://www.omniorb.org/">http://www.omniorb.org/</ulink> or
-            <ulink
-            url="http://omniorb.sourceforge.net/">http://omniorb.sourceforge.net/</ulink></para>
-          </listitem>
-
-          <listitem>
-            <para>OpenORB: <ulink
-            url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink></para>
-          </listitem>
-        </itemizedlist>
-
-        <para>Remember that a separate Java implementation of CORBA is only
-        required if you are using a version of the JDK older than
-        1.4.0.</para>
+        <note>
+          <para>IRIX users must configure Tweek (and its VPR dependency) to
+          use the POSIX subsystem or the NSPR subsystem. omniORB
+          <emphasis>will not work</emphasis> with SPROC threads. To configure
+          VPR to use either POSIX threads or NSPR threads, pass either
+          <option>--enable-subsystem=POSIX</option> or
+          <option>--enable-subsystem=NSPR</option> respectively to
+          <command>configure.pl</command>.</para>
+        </note>
 
         <para>For the following steps, assume that you have omniORB installed
-        in <filename>&lt;OMNIORB_PATH&gt;</filename> and OpenORB is installed
-        in <filename>&lt;OPENORB_PATH&gt;</filename>.</para>
-
-        <para>IRIX users must configure Tweek (and its VPR dependency) to use
-        the POSIX subsystem or the NSPR subsystem. omniORB <emphasis>will not
-        work</emphasis> with SPROC threads. To configure VPR to use either
-        POSIX threads or NSPR threads, pass either
-        <option>--enable-subsystem=POSIX</option> or
-        <option>--enable-subsystem=NSPR</option> respectively to
-        <command>configure.pl</command>.</para>
-
-        <para>Assuming you have the external packages installed, do the
-        following from the top-level <filename>juggler</filename>
-        directory:</para>
+        in <filename>&lt;OMNIORB_PATH&gt;</filename>. Assuming you have the
+        external packages installed, do the following from the top-level
+        <filename>juggler</filename> directory:</para>
 
         <screen>mkdir build
 cd build
-../configure.pl --with-cxx-orb=omniORB4 --with-cxx-orb-root=&lt;OMNIORB_PATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORB_PATH&gt;/lib/openorb-1.2.0.jar
+../configure.pl --with-cxx-orb=omniORB4 --with-cxx-orb-root=&lt;OMNIORB_PATH&gt; --with-java-orb=JDK --module=Tweek
 gmake build install</screen>
 
-        <para>If JDK 1.4.0 or newer is used, you do not need OpenORB (or any
-        other third-party CORBA implementation for Java). In that case, pass
-        <option>--with-java-orb=JDK</option> to
-        <command>configure.pl</command> and remove the
-        <option>--with-java-orb-jar</option> option. If you are using omniORB
-        3.x, pass <option>--with-cxx-orb=omniORB3</option> instead.</para>
+        <para>If you are using omniORB 3.x, pass
+        <option>--with-cxx-orb=omniORB3</option> instead.</para>
 
         <para>Depending on your omniORB installation, you may have to pass
         extra arguments to <command>configure.pl</command> so that the
