@@ -307,12 +307,14 @@ clean-links:
 # Installation targets.
 install-all: install-opt install-dso install-dbg install-ddso		\
              install-headers install-test install-data install-gui
+	@-cd ${prefix} && chgrp -R c2dev .
+	@-cd ${prefix} && chmod -R g+rw .
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_install_libdir}"
 	@echo "------------------------------------------------"
-	cd ${_install_libdir} &&					\
+	cd ${_install_libdir} && umask 002 &&				\
           rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
-	cd ${_install_libdir} &&					\
+	cd ${_install_libdir} && umask 002 &&				\
           rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
 	@echo "------------------------------------------------"
 	@echo "Library installation complete"
@@ -336,6 +338,8 @@ install: install-dbg
 	${MAKE} install-test
 	${MAKE} install-data
 	${MAKE} install-gui
+	@-cd ${prefix} && chgrp -R c2dev .
+	@-cd ${prefix} && chmod -R g+rw .
 	@echo "------------------------------------------------"
 	@echo "Install done"
 	@echo "------------------------------------------------"
@@ -347,7 +351,7 @@ install-dbg: dbg
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
 	${INSTALL} -m 644 ${_DBG_LIBDIR}/${LIB_STATIC}			\
           ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} &&					\
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_STATIC} ./
 
 install-ddso: ddso
@@ -357,7 +361,7 @@ install-ddso: ddso
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
 	${INSTALL} -m 755 ${_DBG_LIBDIR}/${LIB_DYNAMIC}			\
           ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} &&					\
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_DYNAMIC} ./
 
 install-opt: opt
@@ -367,7 +371,7 @@ install-opt: opt
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
 	${INSTALL} -m 644 ${_OPT_LIBDIR}/${LIB_STATIC}			\
           ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} &&					\
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_STATIC} ./
 
 install-dso: dso
@@ -377,7 +381,7 @@ install-dso: dso
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
 	${INSTALL} -m 755 ${_OPT_LIBDIR}/${LIB_DYNAMIC}			\
           ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} &&					\
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_DYNAMIC} ./
 
 install-headers:
