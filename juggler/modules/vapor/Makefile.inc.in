@@ -144,7 +144,11 @@ $(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OB
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
+else
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -155,13 +159,13 @@ $(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OB
 # $VPR_BASE_DIR should be set to $(instlinks).
 # =============================================================================
 links:
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vpr
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
+ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
@@ -169,6 +173,15 @@ ifneq (@OS_TYPE@, Win32)
           done
 	cd $(instlinks)/include && rm -f ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
+else
+	cd $(instlinks)/include &&					\
+          for dir in $(SUBDIR) ; do					\
+              rm -rf ./$$dir ;						\
+              cp -r $(VPRROOT_ABS)/$$dir ./ ;				\
+          done
+	cd $(instlinks)/include && rm -rf ./boost &&			\
+          cp -r $(JUGGLERROOT_ABS)/external/boost/boost ./
+endif
 	for lib in $(LIBS) ; do 					\
             cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
@@ -189,12 +202,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo 'You should now set $$VPR_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
-else
-	@echo "---------------------------------------------------------------"
-	@echo 'You must now install VPR and set %VPR_BASE_DIR% to:'
-	@echo "  ${prefix}"
-	@echo "---------------------------------------------------------------"
-endif
 
 # Remove the links in $(instlinks).
 clean-links:
