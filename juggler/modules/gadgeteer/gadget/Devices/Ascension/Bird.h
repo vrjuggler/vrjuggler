@@ -48,12 +48,14 @@
 namespace gadget
 {
 
-//: A start at a standalone bird derice driver.
-//
-//  Bird is based off of Flock, but for one bird only, the
-//  group mode things have been stripped, and should be close to
-//  a working implementation, but has not been tested a standalone
-//  bird.
+/**
+ *  A start at a standalone bird derice driver.
+ *
+ *  Bird is based off of Flock, but for one bird only, the
+ *  group mode things have been stripped, and should be close to
+ *  a working implementation, but has not been tested a standalone
+ *  bird.
+ */
 class Bird : public Input, public Position
 {
 public:
