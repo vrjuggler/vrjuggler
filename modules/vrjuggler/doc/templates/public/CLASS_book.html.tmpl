@@ -101,22 +101,22 @@
 		    {endif}
 		    </TT>
 	        {endif}
+	        {else}
+		  {if !overridden}
+		    <DT>
+		      {include ../common/member_type.html.inc}
+		      <TT>
+		      {nolink true}
+		      <A HREF="{defclass}_desc.html#{memberef}"><B>{mname}</B></A>({args})
+		      {nolink false}
+		      {if const} const {endif}
+		      {if throws}
+		        <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
+		      {endif}
+		      </TT>
+		  {endif}
+	        {endelse}
 	      {endif}
-	      {else}
-		{if !overridden}
-		  <DT>
-		    {include ../common/member_type.html.inc}
-		    <TT>
-		    {nolink true}
-		    <A HREF="{defclass}_desc.html#{memberef}"><B>{mname}</B></A>({args})
-		    {nolink false}
-		    {if const} const {endif}
-		    {if throws}
-		      <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
-		    {endif}
-		    </TT>
-		{endif}
-	      {endelse}
 	    {endif}
 	  {endif}
 	{next member}
