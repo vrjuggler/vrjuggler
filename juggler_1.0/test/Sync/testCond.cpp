@@ -7,9 +7,9 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include <Threads/vjThread.h>
 #include <Sync/vjCond.h>
 #include <Kernel/vjDebug.h>
-#include <Threads/vjThread.h>
 
 class SyncIncrementer
 {
@@ -48,13 +48,13 @@ int main(void)
 
    while (1)
    {         
-      //cerr << setw(5) << vjThread::self() << "P1: Before Trigger" << endl;   
+      cerr << setw(5) << vjThread::self() << "P1: Before Trigger" << endl;   
 
          vjDEBUG(0) << "main: trigger\n" << vjDEBUG_FLUSH;
       syncer.trigger();    // Trigger the beginning of frame drawing
          vjDEBUG(3) << "main: trigger done\n" << vjDEBUG_FLUSH;
 
-      //cerr << setw(5) << vjThread::self() << "P1: Between" << endl;
+      cerr << setw(5) << vjThread::self() << "P1: Between" << endl;
 
          vjDEBUG(0) << "main: sync up\n" << vjDEBUG_FLUSH;
       syncer.sync();    // Block until drawing is done
@@ -79,10 +79,10 @@ int SyncIncrementer::start()
    vjThreadMemberFunctor<SyncIncrementer>* memberFunctor = 
    new vjThreadMemberFunctor<SyncIncrementer>(this, &SyncIncrementer::main, NULL);
 
-   vjThreadId* controlPid = vjThread::spawn(memberFunctor, 0);
+   vjThread* control_thread = new vjThread(memberFunctor, 0);
 
    vjDEBUG(0) << "SyncIncrementer::start: Just started main loop.  "
-              << *controlPid << endl << vjDEBUG_FLUSH;
+              << control_thread << endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -124,8 +124,7 @@ void SyncIncrementer::sync()
 
 
 //: This is the main loop that incs
-void SyncIncrementer::main(void* nullParam)
-{
+void SyncIncrementer::main(void* nullParam) {
    while (1)
    {
       syncCond.acquire();
