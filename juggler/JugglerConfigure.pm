@@ -81,14 +81,18 @@ sub parseConfigFile ($)
                $deps = $';
 
                my $dep_path = "$1";
-               my @var_list = split(/\s*,\s*/, "$3");
                my %vars = ();
 
-               my $var;
-               foreach $var ( @var_list )
+               if ( defined($3) )
                {
-                  $var =~ /\s*(\w+)=(\S+)\s*/;
-                  $vars{"$1"} = "$2";
+                  my @var_list = split(/\s*,\s*/, "$3");
+
+                  my $var;
+                  foreach $var ( @var_list )
+                  {
+                     $var =~ /\s*(\w+)=(\S+)\s*/;
+                     $vars{"$1"} = "$2";
+                  }
                }
 
                $MODULES{"$mod"}->addDependency(new ModuleDependency("$dep_path",
