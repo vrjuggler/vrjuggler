@@ -16,7 +16,7 @@
          <allowed_type>event_window_proxy</allowed_type>
          <allowed_type>gesture_proxy</allowed_type>
          <allowed_type>glove_proxy</allowed_type>
-         <allowed_type>positional_proxy</allowed_type>
+         <allowed_type>position_proxy</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>
