@@ -32,12 +32,15 @@
 
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
-XALAN_VERSION?=	20020214
-SAXON_VERSION?=	6.5.2
+DOCBOOK_XSL_VERSION?=	1.53.0
+XALAN_VERSION?=		20020214
+SAXON_VERSION?=		6.5.2
 
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
 FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
+HTML2TXT?=	/usr/bin/links
+HTML2TXTOPTS?=	-dump
 JADE?=		openjade -V tex-backend
 JADEPROC?=	$(DOCBOOK_ROOT)/jadeproc.pl
 JADETEX?=	$(TEX_BINDIR)/jadetex
@@ -47,11 +50,13 @@ PDFTEX?=	$(TEX_BINDIR)/pdftex
 PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
 RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.5/svgrasterizer
 RM=		rm -f
-SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
+SAXON_DIR?=	$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)
+SAXON?=		$(SAXON_DIR)/saxon.sh
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
 TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 TEX_ENV?=	PATH=$(TEX_BINDIR):$(PATH) VARTEXMF=$(TEX_DIR)/texmf-var
-XALAN?=		$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)/bin/xalan.sh
+XALAN_DIR?=	$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)
+XALAN?=		$(XALAN_DIR)/bin/xalan.sh
 XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC?=	/usr/bin/xsltproc
 
@@ -62,8 +67,8 @@ XSLT_TOOL?=	Xalan
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
 ifeq ($(FO_VERSION), FOP)
-   XALAN_FO_PARAMS=	-PARAM fop.extensions "1"
-   SAXON_FO_PARAMS=	fop.extensions=1
+   XALAN_FO_PARAMS=	-PARAM fop.extensions "1" -PARAM alignment "start"
+   SAXON_FO_PARAMS=	fop.extensions=1 alignment="start"
 else
 ifeq ($(FO_VERSION), XEP)
    XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
@@ -91,7 +96,12 @@ SGML_ROOT?=	/usr/share/sgml/docbook
 
 DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
-XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
+XSL_DIR=	$(DOCBOOK_ROOT)/docbook-xsl-$(DOCBOOK_XSL_VERSION)
+
+ENV=		DOCBOOK_XSL=$(XSL_DIR) DOCBOOK_ROOT=$(DOCBOOK_ROOT)	\
+		SAXON_DIR=$(SAXON_DIR) XALAN_DIR=$(XALAN_DIR)		\
+		DOCBOOK_XSL_VERSION=$(DOCBOOK_XSL_VERSION)		\
+		SAXON_VERSION=$(SAXON_VERSION)
 
 ifdef NEED_DB_IMAGES
 LINK_DEPS=	images
@@ -107,10 +117,16 @@ chunk-html:
             if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
             cur_dir=`pwd` ; \
             cd $$dir ; \
-            $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
+            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
               $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
             cd $$cur_dir ; \
-        done
+            if [ ! -z "$(INSTALL_FILES)" ]; then \
+                cp $(INSTALL_FILES) $$dir ; \
+            fi ; \
+            if [ ! -z "$(INSTALL_DIRS)" ]; then \
+                cp -r $(INSTALL_DIRS) $$dir ; \
+            fi ; \
+          done
 
 pdf: $(LINK_DEPS) $(PDF_FILES)
 
@@ -190,31 +206,34 @@ install install-all:
 
 .xml.html:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
+	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 else
-	$(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@		\
+	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@	\
           $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)
 endif
 
 .xml.fo:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
+	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@	\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
 else
-	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
+	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@	\
           $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
 endif
 
-.xml.txt:
-ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
-          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
-else
-	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
-          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
-endif
-	$(FOP) -fo $< -txt $@
+.html.txt:
+	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $< > $@
+
+#.xml.txt:
+#ifeq ($(XSLT_TOOL), Xalan)
+#	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@	\
+#          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
+#else
+#	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@	\
+#          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
+#endif
+#	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
 ifeq ($(FO_VERSION), FOP)
@@ -280,8 +299,14 @@ endif
 # -----------------------------------------------------------------------------
 
 clean:
-	$(RM) *.aux *.out *.tex *.log *.fo *~
+	$(RM) *.aux *.out *.tex *.log *.fo *~ $(CLEAN_FILES)
+ifneq ($(CLEAN_DIRS), )
+	$(RM) -r $(CLEAN_DIRS)
+endif
 
 clobber:
 	@$(MAKE) clean
-	$(RM) *.html *.pdf $(LINK_DEPS)
+	$(RM) *.html *.pdf $(LINK_DEPS) $(CLOBBER_FILES)
+ifneq ($(CLOBBER_DIRS), )
+	$(RM) -r $(CLOBBER_DIRS)
+endif
