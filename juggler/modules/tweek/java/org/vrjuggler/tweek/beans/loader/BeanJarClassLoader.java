@@ -91,15 +91,20 @@ public class BeanJarClassLoader extends ClassLoader
    }
 
    /**
-    * Adds the given vector of dependencies (String objects naming the JAR
-    * files that must be loaded).
+    * Adds the given list of dependencies (String objects naming the JAR files
+    * that must be loaded).
     *
     * @pre The class path has been extended via extendClassPath().
     * @post Those dependency JAR files that are found are added to the vector
     *       of known JAR files.
+    *
+    * @return A list of String objects containing any dependencies that were
+    *         not resolved is returned to the caller.
     */
-   public void addDependencies (List deps)
+   public List resolveDependencies (List deps)
    {
+      List unresolved_deps = new ArrayList();
+
       for ( Iterator i = deps.iterator(); i.hasNext(); )
       {
          String name = (String) i.next();
@@ -123,6 +128,8 @@ public class BeanJarClassLoader extends ClassLoader
                }
             }
 
+            // If the named file was found in mDirs, we use it to create a
+            // JarFile object that is then added to mJars.
             if ( jar_file != null )
             {
                try
@@ -137,8 +144,16 @@ public class BeanJarClassLoader extends ClassLoader
                   e.printStackTrace();
                }
             }
+            // If the named file was not found, we add it to unresolved_deps
+            // and leave further handling up to the caller.
+            else
+            {
+               unresolved_deps.add(name);
+            }
          }
       }
+
+      return unresolved_deps;
    }
 
    public Class findClass (String name) throws ClassNotFoundException
