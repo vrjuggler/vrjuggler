@@ -32,16 +32,12 @@
 
 #include <iostream>
 #include <iomanip>
-#include <VPR/SharedMem/vjMemPool.h>
-//#include <VPR/SharedMem/vjSharedType.h>
-#include <Input/vjPosition/vjFlock.h>
-#include <Math/vjCoord.h>
+#include <vrj/Input/Devices/Ascension/Flock.h>
+#include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 
 int main()
 {
-  MemPool* aMemPool = new SharedPool(1024*1024);
-
   // Get configuration information
   char port[100] = "/dev/ttyd3";
   int baud = 38400;
@@ -78,17 +74,9 @@ int main()
   std::cin >> transmitter;
 
 
-    Flock* flock = new(aMemPool) Flock
-    		(   port,
-		    baud,
-		    sync,
-		    blocking,
-		    numBirds,
-		    transmitter,
-		    hemi,
-		    filt,
-		    report,
-		    calfile );
+  vrj::Flock* flock = new vrj::Flock (port, baud, sync, blocking, numBirds,
+		                      transmitter, hemi, filt, report,
+                                      calfile);
 
   char achar;
   bool birds_running(false);      // Are the birds currently running
@@ -138,8 +126,8 @@ int main()
                       << num_samples << ") -------" << std::endl;
             for(int bird=0;bird<numBirds;bird++)
             {
-               Vec3 pos0 = Coord( *flock->getPosData(bird) ).pos;
-               Vec3 ori0 = Coord( *flock->getPosData(bird) ).orient;
+               vrj::Vec3 pos0 = vrj::Coord( *flock->getPosData(bird) ).pos;
+               vrj::Vec3 ori0 = vrj::Coord( *flock->getPosData(bird) ).orient;
                std::cout << "Bird " << bird << ":\n"
                  << std::setiosflags(std::ios::right | std::ios::fixed | std::ios::showpoint)
                  << "Data: x:" << std::setprecision(2) << std::setw(10)
@@ -167,6 +155,5 @@ int main()
   flock->stopSampling();
 
   delete flock;
-  delete aMemPool;
   return 0;
 }

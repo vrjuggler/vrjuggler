@@ -42,7 +42,7 @@
 #    dummyTrackd=dummyTrackd.cpp --apps
 #    fsPinchGloveTest=fsPinchGloveTest.cpp --apps go=main.cpp --apps
 #    go-ibox=main-ibox.cpp --apps go-inputgroup=main-inputgroup.cpp --apps
-#    go-logiclass=main-logiclass.cpp
+#    go-logiclass=main-logiclass.cpp --apps FlockTest=FlockTest.cpp
 #    --srcdir=../../vrj/Input/Devices/Ascension
 #    --extralibs=@APP_EXTRA_LIBS_X11@
 #
@@ -94,10 +94,12 @@ go-inputgroup_OBJS	= main-inputgroup.@OBJEXT@
 
 go-logiclass_OBJS	= main-logiclass.@OBJEXT@
 
+FlockTest_OBJS	= FlockTest.@OBJEXT@
+
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-all: aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@
+all: aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@
 
 aFlockTest@EXEEXT@: $(aFlockTest_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(aFlockTest_OBJS) @APP_EXTRA_LIBS@
@@ -123,6 +125,9 @@ go-inputgroup@EXEEXT@: $(go-inputgroup_OBJS)
 go-logiclass@EXEEXT@: $(go-logiclass_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(go-logiclass_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
 
+FlockTest@EXEEXT@: $(FlockTest_OBJS)
+	$(LINK) @EXE_NAME_FLAG@ $(FlockTest_OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
+
 # Suffix rules for building object files.
 .SUFFIXES: .cpp .cxx .@OBJEXT@
 
@@ -136,9 +141,9 @@ go-logiclass@EXEEXT@: $(go-logiclass_OBJS)
 # Clean-up targets.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend *.@OBJEXT@ aFlockTest.ilk aMotionStarTest.ilk dummyTrackd.ilk fsPinchGloveTest.ilk go.ilk go-ibox.ilk go-inputgroup.ilk go-logiclass.ilk so_locations *.?db core*
+	rm -f Makedepend *.@OBJEXT@ aFlockTest.ilk aMotionStarTest.ilk dummyTrackd.ilk fsPinchGloveTest.ilk go.ilk go-ibox.ilk go-inputgroup.ilk go-logiclass.ilk FlockTest.ilk  so_locations *.?db core*
 	rm -rf ii_files
 
 clobber:
 	@$(MAKE) clean
-	rm -f aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@
+	rm -f aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@ 
