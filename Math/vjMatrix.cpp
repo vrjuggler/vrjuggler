@@ -1,4 +1,6 @@
 #include <vjConfig.h>
+
+#include <Kernel/vjDebug.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjCoord.h>
@@ -154,6 +156,10 @@ void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot)
 
 void vjMatrix::makeDirCos(vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis)
 {
+   vjASSERT(secXAxis.isNormalized());
+   vjASSERT(secYAxis.isNormalized());
+   vjASSERT(secZAxis.isNormalized());
+
    float Xa, Xb, Xy;    // Direction cosines of the secondary x-axis
    float Ya, Yb, Yy;    // Direction cosines of the secondary y-axis
    float Za, Zb, Zy;    // Direction cosines of the secondary z-axis
