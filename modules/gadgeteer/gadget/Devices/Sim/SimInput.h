@@ -46,12 +46,10 @@ namespace gadget
 {
 
 
-//: Base class for all simulated input devices
-//
-// Has the common routines for accessing and seting
-// up keyboard interface
-//
-//!PUBLIC_API:
+/**
+ * Base class for all simulated input devices.
+ * Has the common routines for accessing and seting up keyboard interface.
+ */
 class SimInput
 {
 public:
@@ -90,8 +88,10 @@ public:
    }
    virtual ~SimInput() {}
 
-   //: Configure the simulated input device
-   //! POST: Keyboard proxy is configured <br>
+   /**
+    * Configures the simulated input device.
+    * @post Keyboard proxy is configured.
+    */
    virtual bool config(jccl::ConfigChunkPtr chunk);
    virtual std::string getBaseType()
    {
@@ -103,24 +103,33 @@ public:
    {return(vpr::ReturnStatus::Succeed);}
 
 protected:
-   //: Check the given keypair
-   //! RETURNS: Number of times the key was pressed
-   //           with the modifier alone held down
-   virtual int  checkKeyPair(KeyModPair& pair);
+   /**
+    * Checks the given keypair.
+    * @return Number of times the key was pressed with the modifier alone
+    *         held down.
+    */
+   virtual int checkKeyPair(KeyModPair& pair);
 
-   //: Get number of time key pressed
-   //! RETURNS: Number of time the key is pressed
-   virtual int   checkKey(int keyId);
+   /**
+    * Gets number of times the key was pressed.
+    * @return Number of times the key was pressed.
+    */
+   virtual int checkKey(int keyId);
 
-   //: Constructs a vector of key mod pairs
-   // Takes as input a chunk that has a list of KeyModPair embeded chunks
-   //! PRE: keyList must be full of var values containing chunks of the type "KeyModPair"
-   //+      The KeyModPair chunk type must have fields name key and modKey
-   //! RETURNS: vector of KeyModPairs
+   /**
+    * Constructs a vector of key mod pairs.
+    * Takes as input a chunk that has a list of KeyModPair embeded chunks.
+    *
+    * @pre keyList must be full of var values containing chunks of the type
+    *      "KeyModPair".  The KeyModPair chunk type must have fields name key
+    *      and modKey.
+    *
+    * @return vector of KeyModPairs
+    */
    std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList);
 
 protected:
-   KeyboardInterface     mKeyboard;        //: The keyboard we are getting events from
+   KeyboardInterface     mKeyboard; /**< The keyboard we are getting events from */
 };
 
 };
