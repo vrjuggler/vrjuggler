@@ -237,11 +237,11 @@ clean-links:
 	rmdir ${instlinks}
 
 # Installation targets.
-install-all: install-header install-test install-data install-gui	\
+install-all: install-headers install-test install-data install-gui	\
              install-dbg install-ddso install-opt install-dso
 
 install: install-dbg
-	${MAKE} install-header
+	${MAKE} install-headers
 	${MAKE} install-test
 	${MAKE} install-data
 	${MAKE} install-gui
@@ -277,7 +277,7 @@ install-dso: dso
 	${scriptdir}/mkinstalldirs ${libdir}
 	${INSTALL} -m 755 ${OPT_BUILDDIR}/${LIB_DYNAMIC} ${libdir}
 
-install-header:
+install-headers:
 	@echo "------------------------------------------------"
 	@echo "Installing header files"
 	@echo "------------------------------------------------"
