@@ -21,9 +21,11 @@ Released: ??? ??, 2001
           set in the JugglerUser chunk.
         * Link Juggler_utils when compiling applications.
         * Update the descfiles property in ~/.vjconfig/vjcontrol.cfg (if one
-          exists) to point to "$VJ_SHARE_DIR/share/Data/chunksDesc".  This is
+          exists) to point to "$VJ_SHARE_DIR/Data/chunksDesc".  This is
           necessary because the extra VR Juggler files are now installed in
-          $VJ_BASE_DIR/share by default instead of $VJ_BASE_DIR.
+          $VJ_BASE_DIR/share by default instead of $VJ_BASE_DIR.  Note that
+          $VJ_SHARE_DIR is a value used internally by VjControl and does
+          not have to be set as an environment variable.
         * On IRIX with the MIPSpro Compilers, -LANG:std must be added to the
           compiler and linker options for compiling applications.
         * On IRIX, the version 7.3.1.1m or newer of the MIPSpro Compilers is
