@@ -79,35 +79,44 @@ public:
 
 
 
-    virtual ~EnvironmentManager();
+    virtual ~EnvironmentManager()
+    {
+       /* Do nothing. */ ;
+    }
 
+    jccl::ConfigManager* getConfigManager ()
+    {
+       return config_manager;
+    }
 
-
-    jccl::ConfigManager* getConfigManager();
-
-    jccl::PerformanceMonitor* getPerformanceMonitor();
-
+    jccl::PerformanceMonitor* getPerformanceMonitor ()
+    {
+       return performance_monitor;
+    }
 
     //: jccl::ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
     //! RETURNS: success
-    virtual bool configAdd(jccl::ConfigChunkPtr chunk);
-
-
+    virtual bool configAdd (jccl::ConfigChunkPtr chunk)
+    {
+       return false;
+    }
 
     //: Remove the chunk from the current configuration
     //! PRE: configCanHandle(chunk) == true
     //!RETURNS: success
-    virtual bool configRemove(jccl::ConfigChunkPtr chunk);
-
-
+    virtual bool configRemove (jccl::ConfigChunkPtr chunk)
+    {
+       return false;
+    }
 
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
-    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
-
-
+    virtual bool configCanHandle (jccl::ConfigChunkPtr chunk)
+    {
+       return false;
+    }
 
 private:
 
