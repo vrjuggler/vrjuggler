@@ -109,49 +109,7 @@ public:
       return true;
    }
 
-   /**
-    * Handles any events in the system.
-    * Copies mKeys to mCurKeys.
-    */
-//   void handleEvents();
-//   void updKeys(const MSG& message);
-//   virtual void setDelegate(gadget::EventWindowWin32* delegate)
-//   {
-//      mEventDelegate = delegate;
-//   }
-
 protected:
-//   void lockMouse();
-//   void unlockMouse();
-//   void resize(long width, long height);
-//   virtual void addKeyEvent(const gadget::Keys& key,
-//                            const gadget::EventType& type, const MSG& message);
-//   virtual void addMouseButtonEvent(const gadget::Keys& button,
-//                                    const gadget::EventType& type,
-//                                    const MSG& message);
-//   virtual void addMouseMoveEvent(const MSG& message);
-//   gadget::Keys VKKeyToKey(int vkKey);
-//   static void doInternalError( const std::string& msg );
-
-protected:
-//   EventWindowWin32* mEventDelegate;
-//   HWND              mWinHandle;       /**< Window handle */
-
-   // NOTE: This driver does not use the normal triple buffering mechanism.
-   // Instead, it just uses a modified double buffering system.
-   /* Event window state holders */
-   /**
-    * (0,*): The num key presses during an UpdateData (ie. How many keypress
-    * events).
-    */
-//   int mKeys[gadget::LAST_KEY];
-
-   /**
-    * (0,1): The real keyboard state, all events processed (ie. what is the
-    * key now).
-    */
-//   int mRealkeys[gadget::LAST_KEY];
-
    lockState    mLockState;       /**< The current state of locking. */
    int          mLockStoredKey;   /**< The key that was pressed down. */
    int          mLockToggleKey;   /**< The key that toggles the locking. */
@@ -162,10 +120,6 @@ protected:
    
    std::string                mKeyboardMouseDeviceName; /**< Name of the remote display window (index in registry). */
    KeyboardMouseDevice::KeyboardMouseDeviceRegistry::KeyboardMouseDeviceInfo mKeyboardMouseDeviceInfo;     /**< Info structure for remote window. */
-//   unsigned int mWidth,mHeight;
-//   bool         mUseOwnDisplay;   /**< Are we using a display we manage ourselves (true) or a remote one (false). */
-//   vpr::Mutex   mKeysLock;        /**< Must hold this lock when accessing mKeys. */
-//   int   mPrevX, mPrevY;         /**< Previous mouse location. */
 };
 
 } // end namespace gadget
