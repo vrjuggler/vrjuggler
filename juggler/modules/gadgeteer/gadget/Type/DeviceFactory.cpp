@@ -74,13 +74,12 @@ namespace gadget
 // Initialize the singleton ptr
 //vjDeviceFactory* DeviceFactory::mInstance = NULL;
 //vjSingletonImp( DeviceFactory ); //kevin
-vprSingletonImpWithInitFunc( DeviceFactory, hackLoadKnownDevices );
+vprSingletonImpWithInitFunc(DeviceFactory, loadKnownDevices);
 
 /**
  * Registers all the devices that I know about.
- * @note This should really be moved to dynamic library loading code.
  */
-void DeviceFactory::hackLoadKnownDevices()
+void DeviceFactory::loadKnownDevices()
 {
    gadget::InputManager* input_mgr = gadget::InputManager::instance();
 

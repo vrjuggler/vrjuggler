@@ -58,11 +58,14 @@ private:
       vprASSERT(mConstructors.size() == 0);
    }
 
-   // This should be replaced with device plugins.
    /**
-    * @post Devices are loaded that the system knows about.
+    * Performs static loading of devices that cannot be loaded through the
+    * dynamic plug-in mechanism.
+    *
+    * @post Devices known to the system statically at initialization time are
+    *       loaded.
     */
-   void hackLoadKnownDevices();
+   void loadKnownDevices();
 
 public:
    void registerDevice(DeviceConstructorBase* constructor);
@@ -98,7 +101,7 @@ private:
 private:
    std::vector<DeviceConstructorBase*> mConstructors;  /**<  List of the device constructors */
 
-   vprSingletonHeaderWithInitFunc(DeviceFactory, hackLoadKnownDevices);
+   vprSingletonHeaderWithInitFunc(DeviceFactory, loadKnownDevices);
 };
 
 } // end namespace gadget
