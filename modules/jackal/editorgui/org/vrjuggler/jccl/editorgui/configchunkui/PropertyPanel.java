@@ -69,7 +69,6 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
     public PropertyPanel (Property pr, JPanel par, 
                           ConfigUIHelper _uihelper_module) {
 	super();
-
         uihelper_module = _uihelper_module;
 
 	if (border == null)
