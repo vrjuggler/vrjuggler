@@ -4,10 +4,10 @@ update process is iterative with each step corresponding to one release
 of VR Juggler.
 
 At some point, we intend to automate the update process inside VRJConfig
-using XSLT.  VRJConfig will detect the format of the loaded file and
-perform an update to the contents if necessary.  This will only be possible
-for configuration element versions where XSLT stylesheets are provided for
-performing the update.
+using XSLT.  VRJConfig will detect the versions of the contents in the
+loaded file and perform an update to the contents if necessary.  This
+will only be possible for configuration element versions where XSLT
+stylesheets are provided for performing the update.
 
 2.0a1-2.0a2.xsl
 ---------------
@@ -19,12 +19,12 @@ performing the update.
    To use this stylesheet with the xsltproc command, run xsltproc as
    follows:
 
-      xsltproc -o <output.desc> 2.0a1-2.0a2.xsl <input.desc>
+      xsltproc -o <output.cfg> 2.0a1-2.0a2.xsl <input.cfg>
 
    To use it with Xalan, run the xalan wrapper (shell script or batch
    file) as follows:
 
-      xalan -in <input.desc> -out <output.desc> -xsl 2.0a1-2.0a2.xsl
+      xalan -in <input.cfg> -out <output.cfg> -xsl 2.0a1-2.0a2.xsl
 
    Fill in your input filename and output filename for appropriately.
 
