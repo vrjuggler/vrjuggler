@@ -114,14 +114,30 @@ public class ConfigChunkFrame extends JFrame
 	 */
 	pack();
 	Dimension d = properties.getPreferredSize();
-	if (d.height > 400) {
-	  // the extra width is to make room for a scrollbar... but getsize
-	  // on it doesn't seem to work how ye'd like...
-	  //int sbwidth = sp.getVerticalScrollBar().getMaximumSize().width;
-	  //System.out.println ("sbwidth: " + sbwidth);
-	  setSize (d.width+42, 450);
-	}
+	d.width += 45;
+	d.height += getMinimumSize().height;
+	d.height = Math.min (d.height, Core.screenHeight);
+	d.width = Math.min (d.width, Core.screenWidth);
+	setSize(d);
+	properties.setSize (properties.getMinimumSize());
+
 	setVisible(true);
+
+// no good - you just can't tell java to relocate a window...
+// 	if (Core.window_pos_kludge == true) {
+// 	    Point p = getLocation();
+// 	    Dimension d2 = getSize();
+// 	    int y = Core.screenHeight - d2.height;
+// 	    y = (y < 0)?0:y;
+// 	    int x = Core.screenWidth - d2.width;
+// 	    x = (x < 0)?0:x;
+// 	    if (y < p.y || x < p.x) {
+// 		setLocation (x,y);
+// 	    }
+// 	    System.out.println ("screenWidth is " + Core.screenWidth + " so I'm opening at " + x);
+// 	    p = getLocation();
+// 	    System.out.println ("new location is " + p);
+// 	}
 
 	Core.consoleTempMessage ("");
     }

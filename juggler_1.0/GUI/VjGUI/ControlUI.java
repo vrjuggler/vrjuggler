@@ -159,7 +159,7 @@ public class ControlUI  extends JFrame
 	totalSetFont ("", 12);
 
 	addWindowListener (this);
-	setSize(600,450);
+	setSize(650,550);
 
 	//show();
 	//configure_pane.setDividerLocation (0.5);

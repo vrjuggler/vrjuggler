@@ -41,13 +41,9 @@ public class DescEnumFrame extends JFrame
 			  int _numval) {
 
 	super(pdn);
-
-System.out.println (_data);
 	
 	closed = false;
 	pdtype = pdt;
-
-	//setFont(core.ui.windowfont);
 
 	buttonspanel = new JPanel();
 	//buttonspanel.setLayout (new GridLayout (1, 4));
@@ -105,7 +101,6 @@ System.out.println (_data);
 
 
     public void setFrameSize() {
-	//pack();
 	Dimension d = sppanel.getPreferredSize();
 	Dimension d2 = buttonspanel.getPreferredSize();
 	d.width = Math.max (d.width+42, d2.width +20);
