@@ -170,10 +170,10 @@ public:
       return vjVec3(vec[0]-_v[0], vec[1]-_v[1], vec[2]-_v[2]);
    }
 
-   friend VJ_EXTERN(vjVec3) operator *(float _s, const vjVec3&);
-   friend VJ_EXTERN(vjVec3) operator *(const vjVec3& _v, float _s);
-   friend VJ_EXTERN(vjVec3) operator /(const vjVec3& _v, float _s);
-//    friend inline vjVec3 operator *(const vjVec3& _v, const vjMatrix& _m);
+   friend VJ_API(vjVec3) operator *(float _s, const vjVec3&);
+   friend VJ_API(vjVec3) operator *(const vjVec3& _v, float _s);
+   friend VJ_API(vjVec3) operator /(const vjVec3& _v, float _s);
+//    friend VJ_API(vjVec3) operator *(const vjVec3& _v, const vjMatrix& _m);
 
    //: linear interpolate from vector a to vector b
    //!PRE:  n is a number between [0..1]
@@ -223,8 +223,8 @@ public:
       return *this;
    }
 
-   friend VJ_EXTERN(std::ostream&) operator<<( std::ostream& out,
-                                               const vjVec3& _v );
+   friend VJ_API(std::ostream&) operator<<( std::ostream& out,
+                                            const vjVec3& _v );
 
 public:
    float vec[3];
