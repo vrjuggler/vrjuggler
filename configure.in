@@ -603,8 +603,8 @@ case $target_os in
             OPT_FLAGS='-GB -MT'
             LD='link -dll'
             LDOPTS="$LDOPTS -nologo -out:\"${OBJDIR}/Juggler.lib\""
-            LDOPTS_DBG='-LDd -MDd -PDB:NONE'
-            LDOPTS_OPT='-LD -MD'
+            LDOPTS_DBG='-DEBUG -PDB:NONE'
+            LDOPTS_OPT='-RELEASE'
             OBJ_FILE_SUFFIX='obj'
             OBJ_NAME_FLAG='-Fo$@'
         fi
