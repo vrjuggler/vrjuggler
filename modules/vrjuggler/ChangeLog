@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-31-2002 allenb    Moved Projection Enum values into an Enum named Eye.
 Jan-31-2002 allenb    Removed unneeded mType parameter from Projection classes.
 Jan-31-2002 allenb    Modified viewports to have handles to parent displays,
                       and projections to have handles to parent viewports.
