@@ -85,8 +85,7 @@ vjMemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName) {
       usconfig(CONF_INITSIZE, initialSize);
       usconfig(CONF_AUTOGROW, 1);   // Default, but we set anyway
    
-      char* tempName = new char[strlen(staticTempName)+1];      // Therefore we need to use a non-static variable
-      strcpy(tempName, staticTempName);
+      char* tempName = strdup (staticTempName); // make mutable copy for mktemp
    
       arenaForMemPools = usinit(mktemp(tempName));
       unlink(tempName);
@@ -95,9 +94,9 @@ vjMemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName) {
       {
          perror("ERROR: vjMemPoolSGI::init. Was not able to get an arena!!!!");
       }
-   
-      arenaForMemPoolsFileName = (char*)usmalloc(strlen(staticTempName+1), arenaForMemPools);
+      arenaForMemPoolsFileName = (char*)usmalloc(strlen(staticTempName)+1, arenaForMemPools);
       strcpy(arenaForMemPoolsFileName, tempName);
+      free (tempName);
    
       std::cerr << "\tfile: " << arenaForMemPoolsFileName << std::endl;
       std::cerr << "\tarena: " << arenaForMemPools << std::endl;
