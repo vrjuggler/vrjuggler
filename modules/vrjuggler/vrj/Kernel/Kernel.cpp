@@ -79,6 +79,7 @@ int Kernel::start()
    }
 
    mIsRunning = true;
+   initSignalButtons();    // Initialize the signal buttons that may be pressed
 
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<Kernel>* memberFunctor =
@@ -174,6 +175,7 @@ void Kernel::controlLoop(void* nullParam)
 
       // --- Stop for reconfiguration -- //
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
+      checkSignalButtons();      // Check for any pending control requests
 
       mPerfBuffer->set(5);
 
@@ -248,7 +250,7 @@ void Kernel::checkForReconfig()
 
 // Changes the application in use
 //  If there is another app active, it has to stop that
-//  application first then restart all API specific Managers.
+//  application first then restart all API specif ic Managers.
 //! ARGS: newApp - If NULL, stops current application
 //! NOTE: This can only be called from the kernel thread
 // app = NULL ==> stop draw manager and null out app
@@ -307,6 +309,22 @@ void Kernel::changeApplication(App* newApp)
    }
 }
 
+
+/** Initialize the signal buttons for the kernel */
+void Kernel::initSignalButtons()
+{
+   mStopKernelSignalButton.init("VJSystemStopKernel");
+}
+
+/** Check the signal buttons to see if anything has been triggered */
+void Kernel::checkSignalButtons()
+{
+   if(mStopKernelSignalButton->getData() == gadget::Digital::ON)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "StopKernelSignalButton pressed: Kernel will exit.\n" << vprDEBUG_FLUSH;
+      this->stop();  // Signal kernel to stop
+   }
+}
 
 
 //-----------------------------------------------
