@@ -140,7 +140,7 @@ void vjPfDrawManager::initDrawing()
    //  For each display:
    //	    -Create a pWin for it
    //	    -Create the channels to put it the pWin
-   std::vector<vjDisplay*> displays = displayManager->getDisplays();
+   std::vector<vjDisplay*> displays = displayManager->getActiveDisplays();
    for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
    {
