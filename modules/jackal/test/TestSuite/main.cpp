@@ -7,6 +7,7 @@
 #include <TestCases/LabeledPerfDataBufferTest.h>
 #include <TestCases/EnumerationsTest.h>
 #include <TestCases/ConfigChunkTest.h>
+#include <TestCases/ConfigChunkDBTest.h>
 
 
 #include <vpr/Util/Debug.h>
@@ -41,17 +42,18 @@ int main (int ac, char **av)
 
    //------------------------------------
    //  noninteractive
-   //------------------------------------	
+   //------------------------------------
    // create non-interactive test suite
    CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
 
    // add tests to the suite
    noninteractive_suite->addTest(jcclTest::ConfigChunkTest::suite());
+   noninteractive_suite->addTest(jcclTest::ConfigChunkDBTest::suite());
    noninteractive_suite->addTest(jcclTest::VarValueTest::suite());
    noninteractive_suite->addTest(jcclTest::ChunkDescTest::suite());
    noninteractive_suite->addTest(jcclTest::IncludesTest::suite());
    noninteractive_suite->addTest(jcclTest::EnumerationsTest::suite());
-   
+
    // Add the test suite to the runner
    runner.addTest( noninteractive_suite );
 
