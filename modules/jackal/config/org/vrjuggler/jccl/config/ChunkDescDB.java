@@ -671,6 +671,23 @@ public class ChunkDescDB
    }
 
    /**
+    * Forwards the given event from the contained chunk descs to listeners of
+    * this database.
+    */
+   public void nameChanged(ChunkDescEvent evt)
+   {
+      System.out.println("ChunkDescDB.nameChanged");
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            ((ChunkDescListener)listeners[i+1]).nameChanged(evt);
+         }
+      }
+   }
+
+   /**
     * Forwards the given event from the contained chunk descs to listeners of this
     * database.
     */

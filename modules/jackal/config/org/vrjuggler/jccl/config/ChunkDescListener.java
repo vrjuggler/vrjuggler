@@ -33,9 +33,18 @@ package org.vrjuggler.jccl.config;
 
 import java.util.EventListener;
 
+/**
+ * Interface for objects that wish to be notified when a ChunkDesc changes in
+ * some way.
+ */
 public interface ChunkDescListener
    extends EventListener
 {
+   public void nameChanged(ChunkDescEvent evt);
+
+//   public void categoryAdded(ChunkDescEvent evt);
+//   public void categoryRemoved(ChunkDescEvent evt);
+
    public void propertyDescChanged(ChunkDescEvent evt);
    public void propertyDescAdded(ChunkDescEvent evt);
    public void propertyDescRemoved(ChunkDescEvent evt);
