@@ -8,13 +8,14 @@
   morphon.document.settings.relative.systemids="0"
   morphon.document.settings.endofline.type="2"
   morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.maxlinelength="0"
 ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>The Programmer's Guide</subtitle>
-      <releaseinfo>Version 1.1 DR3</releaseinfo>
+      <releaseinfo>Version 1.1 DR4</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <part id="intro.part">
@@ -332,7 +333,7 @@ int main (int argc, char* argv[])
                </section>
             </section>
             <section id="app-object-frame-funcs">
-               <title>Frame Functions</title>
+               <title id="frame.functions.section">Frame Functions</title>
                <indexterm zone="app-object-frame-funcs">
                   <primary>application object</primary>
                   <secondary>frame functions</secondary>
@@ -351,7 +352,7 @@ int main (int argc, char* argv[])
                   </section>
                </section>
                <section>
-                  <title><methodname>vrj::App::intraFrame()</methodname></title>
+                  <title id="App.intraFrame.section"><methodname>vrj::App::intraFrame()</methodname></title>
                   <para>The code in this method executes in parallel with the rendering method. That is, it executes while the current frame is being drawn. This is the place to put any processing that can be done in advance for the next frame. By doing parallel processing in this method, the application can increase its frame rate because drawing and computation can be parallelized. Special care must be taken to ensure that any data being used for rendering does not change while rendering is happening. One method for doing this is buffering. Use of synchronization primitives is not recommended because that technique could <emphasis>lower</emphasis> the frame rate.</para>
                   <section>
                      <title>Timing</title>
@@ -2573,7 +2574,7 @@ pfDraw();</programlisting>
                <primary>application programming</primary>
                <secondary>OpenSG</secondary>
             </indexterm>
-            <para>This section explains how to use the OpenSG scene graph in a VR Juggler application. OpenSG is an opensource scenegraph that is available at <ulink url="http://www.opensg.org/">www.opensg.org</ulink>.</para>
+            <para>This section explains how to use the OpenSG scene graph in a VR Juggler application. OpenSG is an open source scenegraph that is available at <ulink url="http://www.opensg.org/">www.opensg.org</ulink>.</para>
             <para>An OpenSG VR Juggler must derive from <classname>vrj::OpenSGApp</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vrj::OpenSGApp</secondary>
@@ -2618,7 +2619,7 @@ pfDraw();</programlisting>
                <para>In order for OpenSG to render the application scene graph, it must get access to the scene graph root. The method <methodname>vrj::OpenSGApp::getSceneRoot()</methodname> will be called by the OpenSG application class wrapper so that it can get access to the currently active scene graph whenever the wrapper needs to use it (ex. rendering, updating). Since the job of <methodname>getSceneRoot()</methodname> is straightforward, its implementation can be very simple. A typical implementation will have a single statement that returns a member variable that holds a pointer to the current scene graph root node.</para>
                <section>
                   <title>Possible Misuses</title>
-                  <para>Do not do any cpu-heavy processing in this method. Because this method is called frequently, it should only do the minimum amount of processing necessary to return the root scene graph node. In most cases this method should only be one line of code. See the following code for an example.</para>
+                  <para>Do not do any CPU-heavy processing in this method. Because this method is called frequently, it should only do the minimum amount of processing necessary to return the root scene graph node. In most cases this method should only be one line of code. See the following code for an example.</para>
                   <programlisting>virtual OSG::NodePtr getSceneRoot()
 {
    return mSceneRoot;  // Return the root of the graph
@@ -3251,30 +3252,27 @@ int main(int argc, char* argv[])
                   <para>Use the <methodname>vrj::App::intraFrame()</methodname> application object member function</para>
                </listitem>
                <listitem>
-                  <para>Use triple-buffered data</para>
+                  <para>Use triple-buffered data with <methodname>vrj::App::intraFrame()</methodname></para>
                </listitem>
                <listitem>
-                  <para>Use separate threads with the <classname>vpr::Thread</classname><indexterm>
-                        <primary>classes</primary>
-                        <secondary>vpr::Thread</secondary>
-                     </indexterm> class</para>
+                  <para>Use triple-buffered data with separate threads</para>
                </listitem>
             </orderedlist>
          </section>
-         <section id="multi-threading-classes">
+         <section id="multi-threading.classes.section">
             <title>Helper Classes</title>
-            <indexterm zone="multi-threading-classes">
+            <indexterm zone="multi-threading.classes.section">
                <primary>multi-threading</primary>
                <secondary>helper classes</secondary>
             </indexterm>
             <para>All the techniques presented in the previous section require some form of synchronization to protect the data accessed by multiple threads. Developers who choose the third option and use separate threads must learn the VR Juggler thread API. This section presents all the helper classes available for multi-threaded VR Juggler application programming. We begin with the thread API and then move on to the synchronization primitive API.</para>
-            <section id="using-vjThread-sect">
+            <section id="using.vprThread.section">
                <title>Using the <classname>vpr::Thread</classname> Interface</title>
-               <indexterm zone="using-vjThread-sect">
+               <indexterm zone="using.vprThread.section">
                   <primary>multi-threading</primary>
                   <secondary>vpr::Thread</secondary>
                </indexterm>
-               <indexterm zone="using-vjThread-sect">
+               <indexterm zone="using.vprThread.section">
                   <primary>vpr::Thread</primary>
                </indexterm>
                <para>When considering multi-threaded programming, it is important to know that with great power comes great responsibility. The power is being able to provide multiple threads of control in a single application. The responsibility is making sure those threads get along with each other and do not step on each other's data. VR Juggler is a multi-threaded library which makes it very powerful and very complex.</para>
@@ -3481,7 +3479,7 @@ my_id = vpr::Thread::self();</programlisting>
                   <primary>vpr::BaseThreadFunctor</primary>
                   <seealso>vpr::ThreadMemberFunctor, vpr::ThreadNonMemberFunctor</seealso>
                </indexterm>
-               <para>In this section, we explain the concept and use of functors. As with much of VR Juggler, a functor is a high-level concept that encapsulates something quite simple. A functor is defined as <quote>something that performs an operation or a function.</quote> While this is not very detailed, it is clear and concise. In VR Juggler, functors can be used as the code executed by a thread (refer to <xref linkend="using-vjThread-sect"/> for more detail on the topic of <classname>vpr::Thread</classname>s). This section describes how to use functors for exactly that purpose.</para>
+               <para>In this section, we explain the concept and use of functors. As with much of VR Juggler, a functor is a high-level concept that encapsulates something quite simple. A functor is defined as <quote>something that performs an operation or a function.</quote> While this is not very detailed, it is clear and concise. In VR Juggler, functors can be used as the code executed by a thread (refer to <xref linkend="using.vprThread.section"/> for more detail on the topic of <classname>vpr::Thread</classname>s). This section describes how to use functors for exactly that purpose.</para>
                <section>
                   <title>High-Level Description</title>
                   <indexterm>
@@ -3602,7 +3600,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
                      <primary>vpr::Semaphore</primary>
                      <secondary>creating</secondary>
                   </indexterm>
-                  <para>When creating a <classname>vpr::Semaphore</classname> object, give the initial value that represents the number of resources being controlled by the semaphore. If no value is given, the default is 1 which of course gives a binary semaphore. Binary semaphores are better known as mutexes (see <xref linkend="using-vjMutex-sect"/> for more information about mutex use in VR Juggler). An example of creating a simple semaphore to control access to five resources is as follows:</para>
+                  <para>When creating a <classname>vpr::Semaphore</classname> object, give the initial value that represents the number of resources being controlled by the semaphore. If no value is given, the default is 1 which of course gives a binary semaphore. Binary semaphores are better known as mutexes (see <xref linkend="using.vprMutex.section"/> for more information about mutex use in VR Juggler). An example of creating a simple semaphore to control access to five resources is as follows:</para>
                   <programlisting>vpr::Semaphore sema(5);</programlisting>
                   <para>This creates a semaphore capable of controlling concurrent access to five resources. At some point, if there is a need to change the number of resources, a method called <methodname>reset()</methodname><indexterm>
                         <primary>vpr::Semaphore</primary>
@@ -3653,7 +3651,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
                   <para>The semaphore implementation used is chosen when VR Juggler is compiled and will always match the thread implementation being used. When the VR Juggler build is configured, preprocessor <symbol>#define</symbol> statements are made in <filename>vpr/vprDefines.h</filename> that describe the threading system and thus the semaphores to use. Based on that, the header file <filename>vpr/Sync/Semaphore.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific implementations to act as the <classname>vpr::Semaphore</classname> interface. For example, if compiling on Linux, the class <classname>vpr::SempahorePosix</classname> is <type>typedef</type>'d to <classname>vpr::Semaphore</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
                </section>
             </section>
-            <section id="using-vjMutex-sect">
+            <section id="using.vprMutex.section">
                <title>Using the <classname>vpr::Mutex</classname> Interface</title>
                <indexterm>
                   <primary>vpr::Mutex</primary>
@@ -3743,6 +3741,203 @@ thread = new vpr::Thread(my_functor);</programlisting>
                   <para>Similar to <classname>vpr::Semaphore</classname>, there is no base interface from which these implementations inherit. Performance issues caused by virtual functions are avoided by doing this.</para>
                   <para>The mutex implementation used is chosen when VR Juggler is compiled and will always match the thread implementation being used. When the VR Juggler build is configured, preprocessor <symbol>#define</symbol> statements are made in <filename>vpr/vprDefines.h</filename> that describe the threading system and thus the mutexes to use. Based on that, the header file <filename>vpr/Sync/Mutex.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific implementations to act as the <classname>vpr::Mutex</classname> interface. For example, if compiling on Solaris, the class <classname>vpr::MutexPosix</classname> is <type>typedef</type>'d to be <classname>vpr::Mutex</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
                </section>
+            </section>
+            <section id="tutorial.intraFrame.section">
+               <title>Tutorial: Perform Computations Asynchronously to Rendering with <methodname>intraFrame()</methodname></title>
+               <indexterm>
+                  <primary>tutorial</primary>
+                  <secondary>rendering and computing asynchronously using intraFrame()</secondary>
+               </indexterm>
+               <table>
+                  <title>Tutorial Overview</title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Description</entry>
+                           <entry>Performing the computations to animate a mesh asynchronously to rendering the mesh</entry>
+                        </row>
+                        <row>
+                           <entry>Objectives</entry>
+                           <entry>Understand how to use multi-threading techniques in an application</entry>
+                        </row>
+                        <row>
+                           <entry>Member functions</entry>
+                           <entry><itemizedlist>
+                                 <listitem>
+                                    <para><methodname>vrj::App::init()</methodname></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><methodname>vrj::App::preFrame()</methodname></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><methodname>vrj::App::intraFrame()</methodname></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><methodname>vrj::GlApp::draw()</methodname></para>
+                                 </listitem>
+                              </itemizedlist></entry>
+                        </row>
+                        <row>
+                           <entry>Directory</entry>
+                           <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/MPApp</filename></entry>
+                        </row>
+                        <row>
+                           <entry>Files</entry>
+                           <entry><itemizedlist>
+                                 <listitem>
+                                    <para><filename>MPApp.h</filename></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><filename>MPApp.cpp</filename></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><filename>Mesh.h</filename></para>
+                                 </listitem>
+                              </itemizedlist></entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+               <section>
+                  <title>Class Declaration and Data Members</title>
+                  <para>The following code example shows the basics of declaring the class interface and data members for an application that will use context-specific data. This is an extension of the simple OpenGL application presented in <xref linkend="simple-ogl-app-sect"/>. Note the addition of the <methodname>contextInit()</methodname> declaration and the use of the context-specific data member <varname>mCubeDlId</varname>.</para>
+                  <programlisting linenumbering="numbered">using namespace vrj;
+
+class MPApp : public GlApp
+{
+public:
+   MPApp() {;}
+   virtual void init();
+   virtual void preFrame();
+   virtual void draw();
+   virtual void intraFrame();
+    ...
+public:
+   // The Mesh object used for computing and rendering.
+   Mesh mMesh;
+   ...
+};</programlisting>
+               </section>
+               <section>
+                  <title>The <methodname>preFrame()</methodname> Member Function</title>
+                  <para>We now show the implementation of <methodname>MPApp::preFrame()</methodname>. In the initial version of the application, the computation for the mesh animation is done here.</para>
+                  <programlisting linenumbering="numbered">void MPApp::preFrame()
+{
+   mCurTime += 0.005;
+   mMesh.compute(mCurTime);
+
+   // Other once-per-frame operations follow ...
+}</programlisting>
+                  <note>
+                     <para>Note that in this example, the animation is based on the frame rate. It is much better to use a time-based animation scheme. For this example, however, we will keep things simple.</para>
+                  </note>
+               </section>
+               <section>
+                  <title>The <methodname>draw()</methodname> Member Function</title>
+                  <para>When we enter <methodname>draw()</methodname>, the computations for this frame's animation are complete. Thus, we can call the <methodname>render()</methodname> method to display the new calculations.</para>
+                  <programlisting linenumbering="numbered">using namespace gmtl;
+
+void MPApp::draw()
+{
+   glClear(GL_DEPTH_BUFFER_BIT);
+
+   // --- Setup for drawing --- //
+   glMatrixMode(GL_MODELVIEW);
+
+   glColor3f(0.0f, 0.5f, 0.75f);
+   glPushMatrix();
+      glScalef(15.0f,15.0f,15.0f);
+      glRotatef(-90.0f,1.0,0.0,0.0);
+      mMesh.render();                // Render the mesh
+   glPopMatrix();
+}</programlisting>
+               </section>
+               <section>
+                  <title>Exercise</title>
+                  <para>In the tutorial application code, perform the computations asynchronously to the rendering process by using <methodname>intraFrame()</methodname>. Recall from <xref linkend="App.intraFrame.section"/> (in <xref linkend="frame.functions.section"/>) that <methodname>intraFrame()</methodname> is invoked in parallel to the execution of <methodname>draw()</methodname>.</para>
+               </section>
+            </section>
+         </section>
+         <section>
+            <title>Using Data Buffering</title>
+            <para>In the reader exercise from <xref linkend="tutorial.intraFrame.section"/>, we do not suggest the use of mutexes to protect access to the data modified in <methodname>intraFrame()</methodname> and rendered in <methodname>draw()</methodname>. When the mesh is rendered, some tearing will almost certainly be seen. This happens as a result of data changing during the rendering of the data. In other words, access to a <firstterm>critical section</firstterm> of code not being controlled. To prevent tearing, we need to protect the internal mesh data. However, using a mutex to control access to the mesh will result in the computation and rendering being serialized. In so doing, we lose the value of parallelizing the computation and rendering.</para>
+            <section id="triple.buffering.section">
+               <title>Triple Buffering</title>
+               <indexterm zone="triple.buffering.section">
+                  <primary>triple buffering</primary>
+                  <secondary>definition</secondary>
+               </indexterm>
+               <para>To work around this, we can use multiple buffers. More specifically, we will use three buffers: one for reading, one for writing, and one as temporary storage of the most recently completed write(s). This is called <firstterm>triple buffering</firstterm>, and it allows us to perform computation and rendering in parallel without causing one process to wait on the other. The rendering buffer can be accessed without locking, as can the computation buffer. The only time a lock must be held is when the latest computations are copied into the temporary storage buffer or when the contents of the temporary storage buffer are copied into the rendering buffer. Thus, the key to triple buffering is the temporary storage buffer.</para>
+               <para>Implementing triple buffering is relatively straightforward, once the basic idea is understood. For this discussion we will refer to the buffers as follows:</para>
+               <orderedlist>
+                  <listitem>
+                     <para><firstterm>Stable</firstterm>: The buffer from which the most recent data will be read</para>
+                  </listitem>
+                  <listitem>
+                     <para><firstterm>Working</firstterm>: The buffer into which the current data will be written</para>
+                  </listitem>
+                  <listitem>
+                     <para><firstterm>Working Copy</firstterm>: The buffer used to store the last completed write results temporarily</para>
+                  </listitem>
+               </orderedlist>
+               <para>Of the three, Working Copy is the only one that is shared between the threads, and thus, only one mutex must be used. The mutex must be locked when swapping the contents of Stable and Working Copy and when swapping the contents of Working and Working Copy. No lock must be held when reading from Stable or when writing to Working. This is where the major benefit of triple buffering is realized.</para>
+               <para>In the thread that will write to Working, the implementation will follow this basic structure:</para>
+               <programlisting>while ( KeepWriting )
+{
+   Write to Working
+
+   Lock Working Copy mutex
+      Swap Working and Working Copy
+   Unlock Working Copy mutex
+}</programlisting>
+               <para>In the thread that will read from Stable, the implementation is (roughly) the reverse:</para>
+               <programlisting>while ( KeepReading )
+{
+   Lock Working Copy mutex
+      Swap Stable and Working Copy
+   Unlock Working Copy mutex
+
+   Read from Stable
+}</programlisting>
+            </section>
+            <section id="optimize.tribuffer.section">
+               <title>Optimizing Triple Buffering</title>
+               <indexterm zone="optimize.tribuffer.section">
+                  <primary>triple buffering</primary>
+                  <secondary>optimization of</secondary>
+               </indexterm>
+               <para>It is possible to optimize triple buffering to reduce the amount of time spent in the locked section. Instead of swapping the buffers, we can swap the pointers to the buffers. The result is that we only have to swap (up to) eight bytes of memory, regardless of the size of the actual data.</para>
+               <para>A very simple way to implement this is to use a three-element array to hold the buffers and three variables to use as the indices into the array. The variables can be named <varname>stable</varname>, <varname>working</varname>, and <varname>working_copy</varname>, for example. All accesses into the array of buffers use one of those three values. In other words, the thread reading from Stable will use <varname>buffer[stable]</varname> to get its buffer. Similarly, the thread writing to Working will use <varname>buffer[working]</varname>. Swapping the buffers simply involves changing the values of <varname>stable</varname> and <varname>working_copy</varname> or <varname>working</varname> and <varname>working_copy</varname>.</para>
+               <para>In the thread that will perform the writing, the pseudo-code for swapping is as follows:</para>
+               <programlisting>Lock Working Copy mutex
+   temp = working
+   working = working_copy
+   working_copy = working
+Unlock Working Copy Mutex</programlisting>
+               <para>Similarly, in the thread that will perform the reading, the pseudo-code for swapping is as follows:</para>
+               <programlisting>Lock Working Copy mutex
+   temp = stable
+   stable = working_copy
+   working_copy = stable
+Unlock Working Copy Mutex</programlisting>
+               <para>In these examples, it takes three memory copies to swap the two values. Use of the temporary storage is required (at the C/C++ level), and thus, swapping the memory cannot be done any faster, regardless of the size of the data buffers.</para>
+            </section>
+            <section id="app.tribuffer.section">
+               <title>Using Triple Buffering in an Application</title>
+               <indexterm zone="app.tribuffer.section">
+                  <primary>triple buffering</primary>
+                  <secondary>using in an application</secondary>
+               </indexterm>
+               <para>Triple buffering can be used in VR Juggler applications in two ways: in <methodname>intraFrame()</methodname> or in a separate thread. In both cases, the operations will happen asynchronously to the <methodname>draw()</methodname> thread, so the uses are <emphasis>roughly</emphasis> equivalent. Using <methodname>intraFrame()</methodname> is easier than creating a separate thread because the parallel processing comes <quote>for free</quote> with <methodname>intraFrame()</methodname>. No special actions must be taken on the part of the application developer. Programmers must keep in mind, however, that if the computations will take longer than the rendering, the application frame rate will drop. This is because the next frame cannot start until after <methodname>intraFrame()</methodname> completes. Thus, using a thread will increase the complexity of the application code somewhat, but it will ensure that the frame rate will not be adversely affected.</para>
+            </section>
+            <section>
+               <title>Tutorial: Perform Computations Using Triple Buffering</title>
+               <indexterm>
+                  <primary>tutorial</primary>
+                  <secondary>rendering and computing using triple buffering</secondary>
+               </indexterm>
+               <para>In this tutorial, we will use MPApp again to do parallel computation and rendering. This time, however, we will use triple-buffered, protected data instead of simply writing in <methodname>intraFrame()</methodname> and reading (simultaneously) in <methodname>draw()</methodname>. It will be best to begin with an unmodified version of MPApp to ensure that no changes made for the previous tutorial affect this exercise.</para>
+               <para>Using the information presented earlier in this section, the exercise is to extend the <classname>Mesh</classname> class (found in <filename>Mesh.h</filename>) so that it uses triple buffering for computation and rendering. It is up to the reader to decide whether to use threads (refer to the documentation for <classname>vpr::Thread</classname> in <xref linkend="using.vprThread.section"/> and in the online <emphasis>Programmer Reference</emphasis>) or to use <methodname>intraFrame()</methodname>. Either way, a single <classname>vpr::Mutex</classname> instance will be needed, so it may be helpful to review <xref linkend="using.vprMutex.section"/> as well.</para>
             </section>
          </section>
       </chapter>
@@ -4033,7 +4228,7 @@ mThread = new vpr::Thread(functor);</programlisting>
       this-&gt;sample();
    }
 }</programlisting>
-                     <para>The thread can be tested for validity using the method <methodname>vpr::BaseThread::valid()</methodname>. For more information on VR Juggler threads, refer to <xref linkend="using-vjThread-sect"/>.</para>
+                     <para>The thread can be tested for validity using the method <methodname>vpr::BaseThread::valid()</methodname>. For more information on VR Juggler threads, refer to <xref linkend="using.vprThread.section"/>.</para>
                   </listitem>
                   <listitem>
                      <methodsynopsis>
@@ -4042,7 +4237,7 @@ mThread = new vpr::Thread(functor);</programlisting>
                         <methodname>stopSampling</methodname>
                         <void/>
                      </methodsynopsis>
-                     <para>The job of this function is to kill the thread created in <methodname>startSampling()</methodname>. Again, refer to <xref linkend="using-vjThread-sect"/> for more information on the use of VR Juggler threads.</para>
+                     <para>The job of this function is to kill the thread created in <methodname>startSampling()</methodname>. Again, refer to <xref linkend="using.vprThread.section"/> for more information on the use of VR Juggler threads.</para>
                   </listitem>
                   <listitem>
                      <methodsynopsis>
