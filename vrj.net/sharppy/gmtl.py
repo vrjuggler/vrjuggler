@@ -36,14 +36,21 @@ mod = 'gmtl'
 Matrix = ReferenceTemplate(mod, 'gmtl::Matrix', 'gmtl/Matrix.h')
 
 Matrix44f = Matrix('float 4 4', rename = 'gmtl::Matrix44f')
-Matrix33f = Matrix('float 3 3', rename = 'gmtl::Matrix33f')
 sealed(Matrix44f)
+
+Matrix44d = Matrix('double 4 4', rename = 'gmtl::Matrix44d')
+sealed(Matrix44d)
+
+Matrix33f = Matrix('float 3 3', rename = 'gmtl::Matrix33f')
 sealed(Matrix33f)
+
+Matrix33d = Matrix('double 3 3', rename = 'gmtl::Matrix33d')
+sealed(Matrix33d)
 # ============================================================== gmtl::Matrix<>
 
 # gmtl::Vec<> =================================================================
-# XXX: The gmtl::VecBase<> instantiations should cannot be renamed until
-# Sharppy supports renaming without requiring existing typedefs.
+# XXX: The gmtl::VecBase<> instantiations cannot be renamed until Sharppy
+# supports renaming without requiring existing typedefs.
 VecBase = ReferenceTemplate(mod, 'gmtl::VecBase', 'gmtl/VecBase.h')
 VecBase2f = VecBase('float 2')
 VecBase2d = VecBase('double 2')
@@ -83,6 +90,13 @@ sealed(Quatd)
 
 # gmtl::Point<> ===============================================================
 Point = ReferenceTemplate(mod, 'gmtl::Point', 'gmtl/Point.h')
+
+Point4f = Point('float 4', rename = 'gmtl::Point4f')
+Point4d = Point('double 4', rename = 'gmtl::Point4d')
+Point4i = Point('int 4', rename = 'gmtl::Point4i')
+sealed(Point4f)
+sealed(Point4d)
+sealed(Point4i)
 
 Point3f = Point('float 3', rename = 'gmtl::Point3f')
 Point3d = Point('double 3', rename = 'gmtl::Point3d')
@@ -265,6 +279,8 @@ gmtl_free_types.addEnum('gmtl::PlaneSide')
 gmtl_free_types.addConstant('gmtl::GMTL_EPSILON')
 gmtl_free_types.addConstant('gmtl::GMTL_MAT_EQUAL_EPSILON')
 gmtl_free_types.addConstant('gmtl::GMTL_VEC_EQUAL_EPSILON')
+
+# General operations ----------------------------------------------------------
 gmtl_free_types.addFunction('gmtl::add')
 gmtl_free_types.addFunction('gmtl::center')
 gmtl_free_types.addFunction('gmtl::conj')
@@ -299,6 +315,64 @@ gmtl_free_types.addFunction('gmtl::sub')
 gmtl_free_types.addFunction('gmtl::transpose')
 gmtl_free_types.addFunction('gmtl::whichSide')
 gmtl_free_types.addFunction('gmtl::zero')
+# ---------------------------------------------------------- General operations
+
+# Generator operations --------------------------------------------------------
+gmtl_free_types.addFunction('gmtlWrappers::makeRotMatrix33')
+gmtl_free_types.addFunction('gmtlWrappers::makeRotMatrix44')
+gmtl_free_types.addFunction('gmtlWrappers::makeRotQuat')
+gmtl_free_types.addFunction('gmtlWrappers::makeRotEulerAngleXYZ')
+gmtl_free_types.addFunction('gmtlWrappers::makeRotEulerAngleZYX')
+gmtl_free_types.addFunction('gmtlWrappers::makeRotEulerAngleZXY')
+
+gmtl_free_types.addFunction('gmtlWrappers::makeDirCosMatrix33')
+gmtl_free_types.addFunction('gmtlWrappers::makeDirCosMatrix44')
+
+gmtl_free_types.addFunction('gmtlWrappers::makeTransMatrix44')
+gmtl_free_types.addFunction('gmtlWrappers::makeTransVec3')
+
+gmtl_free_types.addFunction('gmtlWrappers::makeScaleMatrix44')
+
+gmtl_free_types.addFunction('gmtlWrappers::makeAxesMatrix44')
+
+gmtl_free_types.addFunction('gmtl::setRot')
+gmtl_free_types.addFunction('gmtl::makeVec')
+gmtl_free_types.addFunction('gmtl::makeNormal')
+gmtl_free_types.addFunction('gmtl::makeCross')
+gmtl_free_types.addFunction('gmtl::setTrans')
+gmtl_free_types.addFunction('gmtl::setPure')
+gmtl_free_types.addFunction('gmtl::makePure')
+gmtl_free_types.addFunction('gmtl::makeConj')
+gmtl_free_types.addFunction('gmtl::makeInvert')
+gmtl_free_types.addFunction('gmtl::set')
+gmtl_free_types.addFunction('gmtl::setScale')
+
+gmtl_free_types.addFunction('gmtl::makeYRot')
+gmtl_free_types.addFunction('gmtl::makeXRot')
+gmtl_free_types.addFunction('gmtl::makeZRot')
+gmtl_free_types.addFunction('gmtl::setDirCos')
+gmtl_free_types.addFunction('gmtl::setAxes')
+gmtl_free_types.addFunction('gmtl::makeTranspose')
+
+gmtl_free_types.addFunction('gmtl::setFrustum')
+gmtl_free_types.addFunction('gmtl::setPerspective')
+# -------------------------------------------------------- Generator operations
+
+# Containment operations ------------------------------------------------------
+gmtl_free_types.addFunction('gmtl::isInVolume')
+gmtl_free_types.addFunction('gmtl::extendVolume')
+gmtl_free_types.addFunction('gmtl::isOnVolume')
+#gmtl_free_types.addFunction('gmtl::makeVolume')   # std::vector<T> param
+# ------------------------------------------------------ Containment operations
+
+# Intersection operations -----------------------------------------------------
+gmtl_free_types.addFunction('gmtl::intersect')
+gmtl_free_types.addFunction('gmtl::intersectVolume')
+# ----------------------------------------------------- Intersection operations
+
+# Transform operations --------------------------------------------------------
+gmtl_free_types.addFunction('gmtl::xform')
+# -------------------------------------------------------- Transform operations
 
 # NOTE: The following probably duplicate existing .NET math code, so they could
 # be removed without causing trouble.
