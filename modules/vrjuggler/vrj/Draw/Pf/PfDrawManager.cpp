@@ -84,37 +84,6 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw);
 //vjPfDrawManager* PfDrawManager::_instance = NULL;
 vprSingletonImp(PfDrawManager);
 
-
-/**
- * Can the handler handle the given chunk?
- * @return true if we can handle it; false if we can't.
- */
-bool PfDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
-{
-   std::string chunk_type = chunk->getDescToken();
-   return ( chunk_type == std::string("apiPerformer"));
-}
-
-/**
- * Adds the chunk to the configuration.
- * @pre configCanHandle(chunk) == true
- * @return success
- */
-bool PfDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
-{
-   vprASSERT(configCanHandle(chunk));
-
-   std::string chunk_type = chunk->getDescToken();
-
-   if(chunk_type == std::string("apiPerformer"))
-   {
-      return configPerformerAPI(chunk);
-   }
-
-   return false;
-}
-
-
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
 // - The xpipe strings to use
@@ -152,40 +121,6 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
    }
    return true;
 }
-
-/** Configures the Performer API stuff. */
-bool PfDrawManager::configPerformerAPI(jccl::ConfigChunkPtr chunk)
-{
-   vprASSERT(chunk->getDescToken() == std::string("apiPerformer"));
-
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI:"
-                                            << " Configuring Performer\n" << vprDEBUG_FLUSH;
-
-   // --- Get simulator model info --- //
-   std::string head_file = chunk->getProperty<std::string>("simHeadModel");
-   std::string wand_file = chunk->getProperty<std::string>("simWandModel");
-   if(head_file.empty())
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "WARNING: PfDrawManager::config: simHeadModel not set."
-         << std::endl << vprDEBUG_FLUSH;
-   }
-   if(wand_file.empty())
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "WARNING: PfDrawManager::config: simWandModel not set."
-         << std::endl << vprDEBUG_FLUSH;
-   }
-
-   mHeadModel = vpr::replaceEnvVars(head_file);
-   mWandModel = vpr::replaceEnvVars(wand_file);
-
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-      << "Head Model: " << mHeadModel.c_str() << std::endl
-      << "Wand Model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;
-   return true;
-}
-
 
 void PfDrawManager::sync()
 {
@@ -268,7 +203,8 @@ void PfDrawManager::initAPI()
    pfMultiprocess(PFMP_APP_CULL_DRAW);    // XXX: Uncomment this line for normal operation
    //pfMultiprocess(PFMP_APPCULLDRAW);    // XXX: Uncomment this line to get synchronization on the cluster
 
-   initLoaders();          // Must call before pfConfig
+// We can not init head and wand model loaders since they are loaded in PfBasicSimInterface
+//   initLoaders();          // Must call before pfConfig
 
    // --- FORKS HERE --- //
    pfConfig();
@@ -278,7 +214,6 @@ void PfDrawManager::initAPI()
    // If we don't do this, then pf automatically give each pipe a big black channel
    initPipes();
 
-   initSimulatorGraph();        // Create the simulator scene graph nodes
    initPerformerGraph();        // Create the other scene graph nodes
    if(mApp != NULL)
       initAppGraph();           // App was already set, but pf was not loaded.  So load graph now
@@ -834,20 +769,13 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
    attrs.push_back(PFFB_DEPTH_SIZE); attrs.push_back(db_size);
 }
 
-void PfDrawManager::initLoaders()
-{
-   if(!mHeadModel.empty())
-      pfdInitConverter(mHeadModel.c_str());
-   if(!mWandModel.empty())
-      pfdInitConverter(mWandModel.c_str());
-}
-
-
 // Initializes the application's scene <br>
 // Set's the sceneRoot
 void PfDrawManager::initPerformerGraph()
 {
    mRoot = new pfScene;
+   mRootWithSim = new pfScene;
+
    mSceneGroup = new pfGroup;                // (Placeholder until app loads theirs)
    mRoot->addChild(mSceneGroup);        // Create the base scene without sim
    mRootWithSim->addChild(mSceneGroup);      // Create base scene with sim
@@ -865,59 +793,6 @@ void PfDrawManager::initAppGraph()
 
    mSceneRoot = mApp->getScene();
    mSceneGroup->addChild(mSceneRoot);
-}
-
-
-void PfDrawManager::initSimulatorGraph()
-{
-   pfNode* head_node(NULL);
-   pfNode* wand_node(NULL);
-
-   if(!mHeadModel.empty())
-   {
-      head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded head model: " << mHeadModel.c_str() << std::endl << vprDEBUG_FLUSH;
-   } else {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: No wand head specified.\n" << vprDEBUG_FLUSH;
-   }
-
-   if(!mWandModel.empty())
-   {
-      wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded wand model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;
-   } else {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: No wand model specified.\n" << vprDEBUG_FLUSH;
-   }
-
-   mSimTree = new pfGroup;
-   mRootWithSim = new pfScene;
-   mHeadDCS = new pfDCS;
-   mWandDCS = new pfDCS;
-   mSimTree->addChild(mHeadDCS);
-   mSimTree->addChild(mWandDCS);
-   if(NULL != head_node)
-   {
-      mHeadDCS->addChild(head_node);
-   }
-   if(NULL != wand_node)
-   {
-      mWandDCS->addChild(wand_node);
-   }
-
-   if((head_node != NULL) && (wand_node != NULL))
-   {
-      mRootWithSim->addChild(mSimTree);      // Put sim stuff in the graph
-   }
-}
-
-void PfDrawManager::updateSimulator(SimViewport* sim_vp)
-{
-   gmtl::Matrix44f vj_head_mat = sim_vp->getHeadPos();          // Get Juggler matrices
-   gmtl::Matrix44f vj_wand_mat = sim_vp->getWandPos();
-   pfMatrix head_mat = GetPfMatrix(vj_head_mat);    // Convert to Performer
-   pfMatrix wand_mat = GetPfMatrix(vj_wand_mat);
-   mHeadDCS->setMat(head_mat);                        // Set the DCS nodes
-   mWandDCS->setMat(wand_mat);
 }
 
 void PfDrawManager::closeAPI()
@@ -979,16 +854,21 @@ void PfDrawManager::updatePfProjections()
             vprASSERT(false && "vjPfDrawManager::updateProjections(): We don't have a valid display type, don't know what to do");
          }
 
-        // Sim viewport
-        if(cur_vp->isSimulator())
-        {
-            SimViewport* sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
-            vprASSERT(sim_vp != NULL && "Could not cast supposedly simulator display to SimDisplay.");
+         // Sim viewport
+         if(cur_vp->isSimulator())
+         {
+            SimViewport*      sim_vp(NULL);
+            PfSimInterface*   draw_sim_i(NULL);
 
-            updateSimulator(sim_vp);
-        //    updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], sim_vp->getCameraProj(), true);
+            sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
+            vprASSERT(sim_vp != NULL && "Could not cast supposed simulator display to SimDisplay.");
+            
+            draw_sim_i = dynamic_cast<PfSimInterface*>(sim_vp->getDrawSimInterface());
+            vprASSERT(draw_sim_i != NULL && "Could not cast supposed simulator interface to PfSimInterface.");
+            
+            draw_sim_i->updateSimulatorSceneGraph();
          }
-
+         
       }
    }
 }

@@ -235,6 +235,15 @@ The filters are applied in the order that they are specified in this configurati
       <item label="green" defaultvalue="0.0" />
       <item label="blue" defaultvalue="0.0" />
     </PropertyDesc>
+    <help>This is information for configuring the Performer API.  It only pertains to Performer.</help>
+    <PropertyDesc token="simHeadModel" name="SimHeadModel" type="string" variable="0">
+      <help>This is the full path to the model used for the head while using Performer.</help>
+      <item label="Simulator Head Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/head.flt" />
+    </PropertyDesc>
+    <PropertyDesc token="simWandModel" name="SimWandModel" type="string" variable="0">
+      <help>This is the full path to the model used as a wand while using Performer.</help>
+      <item label="Simulator Wand Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/wand.flt" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DigProxy" name="Digital Proxy" version="1.0">
     <category>Proxies</category>
@@ -1203,18 +1212,6 @@ The filters are applied in the order that they are specified in this configurati
       <help>Turn on/off Juggler timing measurements by category name</help>
       <item label="Performance Measurement Categories" />
       <allowedtype>PerfTestActive</allowedtype>
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="apiPerformer" name="Performer API" version="1.0">
-    <category>Display</category>
-    <help>This is information for configuring the Performer API.  It only pertains to Performer.</help>
-    <PropertyDesc token="simHeadModel" name="SimHeadModel" type="string" variable="0">
-      <help>This is the full path to the model used for the head.</help>
-      <item label="Simulator Head Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/head.flt" />
-    </PropertyDesc>
-    <PropertyDesc token="simWandModel" name="SimWandModel" type="string" variable="0">
-      <help>This is the full path to the model used as a wand.</help>
-      <item label="Simulator Wand Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/wand.flt" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PinchGlove" name="PinchGlove" version="1.0">
