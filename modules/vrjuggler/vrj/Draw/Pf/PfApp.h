@@ -82,9 +82,20 @@ public:
    //! POST: Channel should be drawn
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
+      this->preDrawChan(chan,chandata);
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel
+      this->postDrawChan(chan,chandata);
    }
+
+   // Function called by the DEFAULT drawChan function before clearing the channel
+   // and drawing the next frame (pfFrame())
+   virtual void preDrawChan(pfChannel* chan, void* chandata){;}
+
+   // Function called by the DEFAULT drawChan function after clearing the channel
+   // and drawing the next frame (pfFrame())
+   virtual void postDrawChan(pfChannel* chan, void* chandata){;}
+
 
 public:  // --- Factory functions --- //
    //: Get the DrawManager to use
