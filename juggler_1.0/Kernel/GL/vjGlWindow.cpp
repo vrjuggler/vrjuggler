@@ -19,7 +19,7 @@ void vjGlWindow::setLeftEye() {
    float* frust = display->leftProj->frustum.frust;
 
    vjDEBUG(2)  << "---- Left Frustum ----\n"
-               << display->leftProj->frustum.frust << endl;
+               << display->leftProj->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -56,7 +56,7 @@ void vjGlWindow::setRightEye()
    float* frust = display->rightProj->frustum.frust;
    
    vjDEBUG(2)  << "---- Right Frustum ----\n"
-               << display->rightProj->frustum.frust << endl;
+               << display->rightProj->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -95,7 +95,7 @@ void vjGlWindow::setCameraEye()
    //float* frust = display->cameraProj->frustum.frust;
    
    vjDEBUG(2)  << "---- Camera Frustrum ----\n"
-               << display->cameraProj->frustum.frust << endl;
+               << display->cameraProj->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    glDrawBuffer(GL_BACK);

@@ -26,7 +26,7 @@ vjAPIFactory* vjAPI::getAPIFactory()
 #ifdef VJ_API_PERFORMER
       retVal = vjPfAPIFactory::instance();
 #else
-      vjDEBUG(0) << "Performer API is not available.\n";
+      vjDEBUG(0) << "Performer API is not available.\n" << vjDEBUG_FLUSH;
 #endif
 
       break;
@@ -34,7 +34,7 @@ vjAPIFactory* vjAPI::getAPIFactory()
 #ifdef VJ_API_OPENGL
       retVal = vjGlAPIFactory::instance();
 #else
-      vjDEBUG(0) << "OpenGL API is not available.\n";
+      vjDEBUG(0) << "OpenGL API is not available.\n" << vjDEBUG_FLUSH;
 #endif
 
       break;

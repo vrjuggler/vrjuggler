@@ -23,14 +23,14 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
 
    vjConfigChunk* sgiChunk = (*sgiChunks)[0];
 
-   vjDEBUG_BEGIN(0) << "------------- vjPfDrawManager::config ----------------" << endl;
+   vjDEBUG_BEGIN(0) << "------------- vjPfDrawManager::config ----------------" << endl << vjDEBUG_FLUSH;
    numPipes = sgiChunk->getProperty("numpipes");
 
-   vjDEBUG(0) << "NumPipes: " << numPipes << endl;
+   vjDEBUG(0) << "NumPipes: " << numPipes << endl << vjDEBUG_FLUSH;
    for (int i=0;i<numPipes;i++)
    {
       pipeStrs.push_back(sgiChunk->getProperty("xpipes", i));
-      vjDEBUG(0) << "Pipe:" << i << ": " << pipeStrs[i] << endl;
+      vjDEBUG(0) << "Pipe:" << i << ": " << pipeStrs[i] << endl << vjDEBUG_FLUSH;
    }
    
       // --- Get simulator model info --- //
@@ -44,30 +44,30 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
       char* head_file = perf_chunk->getProperty("simHeadModel");
       char* wand_file = perf_chunk->getProperty("simWandModel");
       if(head_file == NULL)
-         vjDEBUG(0) << "vjPfDrawManager::config: simHeadModel not set." << endl;
+         vjDEBUG(0) << "vjPfDrawManager::config: simHeadModel not set." << endl << vjDEBUG_FLUSH;
       if(wand_file == NULL)
-         vjDEBUG(0) << "vjPfDrawManager::config: simWandModel not set." << endl;
+         vjDEBUG(0) << "vjPfDrawManager::config: simWandModel not set." << endl << vjDEBUG_FLUSH;
       
       mHeadModel = string(head_file);
       mWandModel = string(wand_file);
    }
    
-   vjDEBUG(0) << "Head Model: " << mHeadModel << endl;
-   vjDEBUG(0) << "Wand Model: " << mWandModel << endl;
-   vjDEBUG_END(0) << "-----------------------------------------------------" << endl;
+   vjDEBUG(0) << "Head Model: " << mHeadModel << endl
+              << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(0) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
 }
 
 
 void vjPfDrawManager::sync()
 {
-   vjDEBUG(2) << "vjPfDrawManager::sync\n";
+   vjDEBUG(2) << "vjPfDrawManager::sync\n" << vjDEBUG_FLUSH;
    pfSync();
 }
 
 //! POST: Calls pfFrame()
 void vjPfDrawManager::draw()
 {
-   vjDEBUG(2) << "vjPfDrawManager::draw\n";
+   vjDEBUG(2) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
 
    pfFrame(); 
 }
@@ -80,7 +80,7 @@ void vjPfDrawManager::initAPI()
 
 void vjPfDrawManager::initDrawing()
 {
-   vjDEBUG_BEGIN(0) << "vjPfDrawManager::initDrawing: Entering." << endl;
+   vjDEBUG_BEGIN(0) << "vjPfDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
 
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(numPipes);
@@ -94,8 +94,8 @@ void vjPfDrawManager::initDrawing()
 
    for (int pipeNum = 0; pipeNum < numPipes; pipeNum++)
    {
-      vjDEBUG(0) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl;
-      vjDEBUG(0) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl;
+      vjDEBUG(0) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
 
       pipes[pipeNum] = pfGetPipe(pipeNum);
       pipes[pipeNum]->setWSConnectionName(pipeStrs[pipeNum]);
@@ -118,13 +118,13 @@ void vjPfDrawManager::initDrawing()
    for (vector<vjDisplay*>::iterator dispIter = displayManager->displays.begin();
        dispIter != displayManager->displays.end(); dispIter++)
    {
-      vjDEBUG(0) << "------- Opening new Display --------" << endl;
+      vjDEBUG(0) << "------- Opening new Display --------" << endl << vjDEBUG_FLUSH;
       
       pfDisp tempPfDisp;
       tempPfDisp.disp = (*dispIter);
 
-      vjDEBUG(0) << "\tDisplay is:" << (void*)(*dispIter) << endl;
-      vjDEBUG(0) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << *(*dispIter) << flush;
+      vjDEBUG(0) << "\tDisplay is:" << (void*)(*dispIter) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << *(*dispIter) << vjDEBUG_FLUSH;
 
       int xo, yo, xs, ys;
       pfPipe* localPipe = pipes[tempPfDisp.disp->pipe()];
@@ -215,7 +215,7 @@ void vjPfDrawManager::initDrawing()
    // Dump the state
    debugDump();
 
-   vjDEBUG_END(0) << "vjPfDrawManager::initDrawing: Exiting." << endl;
+   vjDEBUG_END(0) << "vjPfDrawManager::initDrawing: Exiting." << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -265,7 +265,7 @@ void vjPfDrawManager::closeAPI()
 
 void vjPfDrawManager::updateProjections()
 {
-   vjDEBUG(2) << "vjPfDrawManager::updateProjections: Entering." << endl << flush;
+   vjDEBUG(2) << "vjPfDrawManager::updateProjections: Entering." << endl << vjDEBUG_FLUSH;
 
    vjDrawManager::updateProjections();
 
@@ -291,7 +291,7 @@ void vjPfDrawManager::updateProjections()
 void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bool simulator)
 {
    vjDEBUG_BEGIN(6) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
-                    << proj->viewMat << endl << flush;
+                    << proj->viewMat << endl << vjDEBUG_FLUSH;
 
    pfMatrix pfViewMat;
    pfViewMat.set(proj->viewMat.getFloatPtr());      // Hmm...
@@ -324,28 +324,28 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
    vjDEBUG(7) << "Frustum: l:" << proj->frustum[vjFrustum::LEFT]
               << "   r: " << proj->frustum[vjFrustum::RIGHT]
               << "   b: " << proj->frustum[vjFrustum::BOTTOM] 
-              << "   t: " << proj->frustum[vjFrustum::TOP] << endl << flush;
+              << "   t: " << proj->frustum[vjFrustum::TOP] << endl << vjDEBUG_FLUSH;
    
-   vjDEBUG_END(6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << flush;
+   vjDEBUG_END(6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vjDEBUG_FLUSH;
 }
 
 
 
 void vjPfDrawManager::debugDump()
 {
-   vjDEBUG_BEGIN(0) << "-- DEBUG DUMP --------- vjPfDrawManager: " << (void*)this << " ------------" << endl;
-   vjDEBUG(0)       << "app:" << (void*)app << endl;
-   vjDEBUG(0)       << "scene:" << (void*)sceneRoot << endl;
-   vjDEBUG(0)       << "Disps:" << disps.size() << endl;
+   vjDEBUG_BEGIN(0) << "-- DEBUG DUMP --------- vjPfDrawManager: " << (void*)this << " ------------" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(0)       << "app:" << (void*)app << endl << vjDEBUG_FLUSH;
+   vjDEBUG(0)       << "scene:" << (void*)sceneRoot << endl << vjDEBUG_FLUSH;
+   vjDEBUG(0)       << "Disps:" << disps.size() << endl << vjDEBUG_FLUSH;
 
    for (vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
    {
-      vjDEBUG(0) << "\n\tDisplay:" << (void*)(i->disp) << endl;
-      vjDEBUG(0) << "\tpWin:" << (void*)(i->pWin) << endl;
-      vjDEBUG(0) << "\t\tvis id:" << hex << i->pWin->getFBConfigId();
-      vjDEBUG(0) << "\tchans: L:" << (void*)(i->chans[pfDisp::LEFT]) << "\tR:" << (void*)(i->chans[pfDisp::RIGHT]) << endl;  
+      vjDEBUG(0) << "\n\tDisplay:" << (void*)(i->disp) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "\tpWin:" << (void*)(i->pWin) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "\t\tvis id:" << hex << i->pWin->getFBConfigId() << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "\tchans: L:" << (void*)(i->chans[pfDisp::LEFT]) << "\tR:" << (void*)(i->chans[pfDisp::RIGHT]) << endl << vjDEBUG_FLUSH; 
    }
-   vjDEBUG_END(0) << "-------- Dump end ----\n" << flush;
+   vjDEBUG_END(0) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
 }
 
 

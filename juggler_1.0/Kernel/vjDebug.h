@@ -3,30 +3,42 @@
 
 #include <config.h>
 #include <iostream.h>
+#include <iomanip.h>
+
 #include <stdlib.h>
 
 #include <assert.h>
 
+#include <Threads/vjThread.h>
 #include <Sync/vjMutex.h>
 #include <Sync/vjNullMutex.h>
+
+#include <Kernel/vjStreamLock.h>
 
 // NOTE: Quick Hack for now.  Need to really design something nice. :)
 extern vjMutex DebugLock;
 
 #define DEBUG_VJ
+#define LOCK_DEBUG_STREAM
 
 #ifdef DEBUG_VJ
-
-#define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
-#define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
-#define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
-
+   #define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
+   #define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
+   #define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
 #else
+   #define vjDEBUG(val) if (1) ; else cout
+   #define vjDEBUG_BEGIN(val) if (1) ; else cout
+   #define vjDEBUG_END(val) if (1) ; else cout
+#endif
 
-#define vjDEBUG(val) if (1) ; else cout
-#define vjDEBUG_BEGIN(val) if (1) ; else cout
-#define vjDEBUG_END(val) if (1) ; else cout
-
+#ifdef LOCK_DEBUG_STREAM
+   #define vjDEBUG_STREAM_LOCK vjStreamLock(vjDebug::instance()->debugLock())
+   #define vjDEBUG_STREAM_UNLOCK vjStreamUnLock(vjDebug::instance()->debugLock())
+   #define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << flush
+#else
+   #define vjDEBUG_STREAM_LOCK flush
+   #define vjDEBUG_STREAM_UNLOCK flush
+   #define vjDEBUG_FLUSH flush
 #endif
 
    // -- ASSERT -- //
@@ -76,7 +88,7 @@ public:
          indentLevel += indentChange;
       
       //cout << "VG " << level << ": ";
-      cout << "VG: ";
+      cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VG: ";
 
          // Insert the correct number of tabs into the stream for indenting
       for(int i=0;i<indentLevel;i++)
@@ -93,9 +105,14 @@ public:
       return debugLevel;
    }
 
+   vjMutex& debugLock()
+   { return mDebugLock; }
+
 private:
    int debugLevel;      // Debug level to use
    int indentLevel;     // Amount to indent
+
+   vjMutex  mDebugLock;
 
 public:
    static vjDebug* instance()

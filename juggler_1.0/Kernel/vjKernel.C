@@ -20,8 +20,8 @@ int vjKernel::start()
 
    controlPid = vjThread::spawn(memberFunctor, 0);
 
-   cerr << "vjKernel::start: Just started control loop.  "
-        << *controlPid << endl;
+   vjDEBUG(0) << "vjKernel::start: Just started control loop.  "
+              << *controlPid << endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -34,7 +34,7 @@ int vjKernel::start()
 //----------------------------------------------
 void vjKernel::initConfig()
 {
-   vjDEBUG(0) << "vjKernel::initConfig: Entered.\n";
+      vjDEBUG_BEGIN(0) << "vjKernel::initConfig: Entered.\n" << vjDEBUG_FLUSH;
 
    vjSharedPool::init();         // Try to init the pool stuff
    sharedMemPool = new vjSharedPool(1024*1024);      // XXX: should not be system specific
@@ -47,12 +47,12 @@ void vjKernel::initConfig()
    apiFactory = app->api.getAPIFactory();
    sysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 
-   vjDEBUG(0) << "vjKernel::initConfig: Calling setupDisplayManager.\n";
+      vjDEBUG(0) << "vjKernel::initConfig: Calling setupDisplayManager.\n" << vjDEBUG_FLUSH;
    setupDisplayManager();
-   vjDEBUG(0) << "vjKernel::initConfig: Calling setupDrawManager.\n";  
+      vjDEBUG(0) << "vjKernel::initConfig: Calling setupDrawManager.\n" << vjDEBUG_FLUSH; 
    setupDrawManager();
    displayManager->setDrawManager(drawManager);
-   vjDEBUG(0) << "vjKernel::initConfig: Exiting.\n";
+      vjDEBUG_END(0) << "vjKernel::initConfig: Exiting.\n" << vjDEBUG_FLUSH;
 }
 
 /// The Kernel loop
@@ -88,7 +88,7 @@ void vjKernel::updateFrameData()
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfig()
 {
-   vjDEBUG(5) << "   vjKernel::loadConfig:\n";
+   vjDEBUG(5) << "   vjKernel::loadConfig:\n" << vjDEBUG_FLUSH;
    configDesc = new vjChunkDescDB;
    if (!configDesc->load("/home/users/allenb/Source/juggler/Data/chunksDesc"))
    {
@@ -108,11 +108,11 @@ void vjKernel::loadConfig()
       exit(1);
    }
 
-   vjDEBUG(2) << "------------  Config Chunks ----------";
-   vjDEBUG(2) << (*chunkDB);
+   vjDEBUG(2) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
+   vjDEBUG(2) << (*chunkDB) << vjDEBUG_FLUSH;
 
    /*  XXX: I think this code was just here to display config data.  It didn't do anything??
-   vjDEBUG(2) << "----- Displays -------";
+   vjDEBUG(2) << "----- Displays -------" << vjDEBUG_FLUSH;
    vector<vjConfigChunk*>* displayChunks;
    displayChunks = chunkDB->getMatching("display");
 
@@ -120,37 +120,38 @@ void vjKernel::loadConfig()
    {
       vjConfigChunk* chunk = (*displayChunks)[i];
 
-      vjDEBUG(2) << "\n\nDisplay: " << i << endl;
+      vjDEBUG(2) << "\n\nDisplay: " << i << endl << vjDEBUG_FLUSH;
       vjDEBUG(2) << "Name:"
-                  << (char*)chunk->getProperty("name") << endl;
+                  << (char*)chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
       vjDEBUG(2) << "Proj:"
-                  << (char*)chunk->getProperty("projectiontype") << endl;
+                  << (char*)chunk->getProperty("projectiontype") << endl << vjDEBUG_FLUSH;
       vjDEBUG(2) << "Origin:"
                   << (int)chunk->getProperty("origin", 0) << " "
-                  << (int)chunk->getProperty("origin", 1) << endl;
+                  << (int)chunk->getProperty("origin", 1) << endl << vjDEBUG_FLUSH;
       vjDEBUG(2) << "Size:"
                   << (int)chunk->getProperty("size", 0) << " "
-                  << (int)chunk->getProperty("size", 1) << endl;
+                  << (int)chunk->getProperty("size", 1) << endl << vjDEBUG_FLUSH;
    }
    */
 }
 
 void vjKernel::setupInputManager()
 {
-   vjDEBUG(0) << "   vjKernel::setupInputManager\n";
+   vjDEBUG(0) << "   vjKernel::setupInputManager\n" << vjDEBUG_FLUSH;
    data.inputManager = new (sharedMemPool) vjInputManager;
    data.inputManager->FNewInput(chunkDB);
 
-   vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl;
+   vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl << vjDEBUG_FLUSH;
 
    data.inputManager->UpdateAllData();
    
-   vjDEBUG(0) << "      First Update trackers succeeded..." << endl;
+   vjDEBUG(0) << "      First Update trackers succeeded..." << endl << vjDEBUG_FLUSH;
 }
 
 void vjKernel::setupDisplayManager()
 {
-   vjDEBUG(0) << "   vjKernel::setupDisplayManager\n";
+   vjDEBUG_BEGIN(0) << "------- vjKernel::setupDisplayManager\n -------" << vjDEBUG_FLUSH;
+   
    // Setup displays
    displayManager = vjDisplayManager::instance();
 
@@ -169,17 +170,19 @@ void vjKernel::setupDisplayManager()
       newDisp->config(chunk);
       displayManager->addDisplay(newDisp);
 
-      vjDEBUG(0) << "--- New Display ----" << endl
-              << *newDisp << endl << flush;
+      vjDEBUG(0) << "Display: " << i << endl
+                 << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
       // Tell Display manager to look for head
    displayManager->setupHeadIndices();
+
+   vjDEBUG_END(0) << "------- vjKernel::setupDisplayManager --------\n" << vjDEBUG_FLUSH;
 }
 
 void vjKernel::setupDrawManager()
 {
-   vjDEBUG(0) << "   vjKernel::setupDrawManager" << endl;
+   vjDEBUG_BEGIN(0) << "   vjKernel::setupDrawManager" << endl << vjDEBUG_FLUSH;
 
    drawManager = apiFactory->getDrawManager();
    drawManager->config(chunkDB);     // Give it the chunk DB to extract API specific info
@@ -191,6 +194,6 @@ void vjKernel::setupDrawManager()
    app->apiInit();                  // Have app do any app-init stuff
    drawManager->initDrawing();      // Configs and Starts drawing procs
 
-   vjDEBUG(0) << "   vjKernel::setupDrawManager: Exiting." << endl << flush;
+   vjDEBUG_END(0) << "   vjKernel::setupDrawManager: Exiting." << endl << vjDEBUG_FLUSH;
 }
 

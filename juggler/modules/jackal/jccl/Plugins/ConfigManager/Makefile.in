@@ -47,6 +47,7 @@ DEPEND_SRCS	:= vjAPI.C			\
                   vjFrustum.C			\
                   vjKernel.C			\
                   vjProjection.C		\
+		  vjStreamLock.C		\
                   vjWallProjection.C		\
 		  vjSGISystemFactory.C
 

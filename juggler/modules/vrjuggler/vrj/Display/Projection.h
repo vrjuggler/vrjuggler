@@ -37,7 +37,7 @@ public:
 
    void setSurface(char* projStr)
    {
-      vjDEBUG(2) << "vjProjection::setSurface: Setting surface:" << projStr << endl;
+      vjDEBUG(2) << "vjProjection::setSurface: Setting surface:" << projStr << endl << vjDEBUG_FLUSH;
       if (strcasecmp(projStr, "left") == 0)
          setSurface(vjProjection::LEFT);
       else if (strcasecmp(projStr, "right") == 0)

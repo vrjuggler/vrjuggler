@@ -58,7 +58,7 @@ protected:
    {
       setWallRotationMatrix();
       mWallRotationMatrixInv.invert(mWallRotationMatrix);
-      vjDEBUG(3) << "vjWallProjection::surfaceSet: Set rotation matrix:\n" << mWallRotationMatrix;
+      vjDEBUG(3) << "vjWallProjection::surfaceSet: Set rotation matrix:\n" << mWallRotationMatrix << vjDEBUG_FLUSH;
    }
 
 private:

@@ -26,7 +26,7 @@ public:
 
       if((mCameraIndex == -1) || (mHeadIndex == -1) || (mWandIndex == -1))
       {
-         vjDEBUG(0) << "vjSimulator::config: ERROR: Can't find Proxy for camera or head or wand" << endl << flush;
+         vjDEBUG(0) << "vjSimulator::config: ERROR: Can't find Proxy for camera or head or wand" << endl << vjDEBUG_FLUSH;
       }
    }
 
