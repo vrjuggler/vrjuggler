@@ -10,16 +10,29 @@
 
 <h3>Introduction</h3>
 
-<blockquote>
 <p>A number of environment variables affect the way VR Juggler works.  Some 
 of these are required to compile and run applications, while others are 
 optional.  This page lists all of these environment variables.
 <p>The syntax for setting or changing an environment variable varies with 
-operating systems and/or shell interpreters.  This page assumes the syntax
-used by the popular csh shell.
-<p><strong>Note for WinNT users:</strong> The typical syntax for setting an 
-environment variable under Windows is: <tt>set&nbsp;VARIABLE_NAME=value</tt>
-</blockquote>
+operating systems and shell interpreters.  This page assumes the syntax
+used by C-style shells (for example, csh or tcsh).  Please refer to the
+documentation for your shell for more information about how to set,
+reference and modify environment variables.
+
+<P>
+  <strong>Note for Win32 users using DOS shells:</strong> The typical syntax
+  for setting an environment variable from the command line under Windows is:
+
+<PRE>
+    &gt; <B>set&nbsp;VARIABLE_NAME=value</B>
+</PRE>
+
+  Here, <TT>VARIABLE_NAME</TT> is the name of the environment variable to
+  be set.  To view the values of environment variables, just enter
+  <TT><B>set</B></TT>; for the value of a single variable, enter
+  <TT><B>set&nbsp;VARIABLE_NAME</B></TT>.  For more information, refer to
+  the Windows online documentation about environment variables.
+</P>
 
 <h3>Required Environment Variables</h3>
 
