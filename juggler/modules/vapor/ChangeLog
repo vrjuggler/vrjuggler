@@ -1,6 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-2001-08-06 allenb   Introduced Htonll and Ntohll. (currently only NSPR)
+2001-08-06 allenb   Test case for vpr::System added.
+2001-08-06 allenb   Introduced Htonll and Ntohll.
 2001-07-31 patrick  Fixed major problems with SocketImplBSD::isConnected() and
                     with FileHandleImplUNIX::is{Redable,Writeable}().  These
                     methods now work properly.
