@@ -103,7 +103,7 @@ public:
    //+       only for EXPERT use
    //+ Needed for casses where something must be done to each
    //+ copy of the data during pre-draw.
-   std::vector<ContextDataType>* getDataVector()
+   std::vector<ContextDataType*>* getDataVector()
    {
       return &mContextDataVector;
    }
