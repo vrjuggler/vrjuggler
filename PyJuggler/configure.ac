@@ -25,11 +25,6 @@ DPP_INIT
 
 DPP_STD_CPP([yes])
 
-AC_ARG_ENABLE([boost-hacks],
-              [  --enable-boost-hacks    Turn off workarounds for Boost
-                          header versioning madness],
-              [BOOST_HACKS="$enableval"], [BOOST_HACKS='no'])
-
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -249,9 +244,27 @@ fi
 
 boost_ver_str=`echo $BOOST_VERSION | sed -e 's/\./_/g'`
 
-if test "x$BOOST_HACKS" = "xyes" ; then
-   boost_extra_inc_dir="/boost-$boost_ver_str"
-fi
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+
+_pyj_save_CPPFLAGS="$CPPFLAGS"
+
+bp_inc_opt="-I$BOOST_PYTHON_DIR/include"
+CPPFLAGS="$bp_inc_opt $CPPFLAGS"
+
+AC_CHECK_HEADER([boost/python.hpp],
+                [BOOST_PYTHON_HEADER_DIR="$BOOST_PYTHON_DIR/include"],
+                [CPPFLAGS="$CPPFLAGS $bp_inc_opt/boost-$boost_ver_str"
+                 AC_CHECK_HEADER([boost-$boost_ver_str/boost/python.hpp],
+                                 [BOOST_PYTHON_HEADER_DIR="$BOOST_PYTHON_DIR/include/boost-$boost_ver_str"],
+                                 [AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])])
+                ])
+
+BOOST_PYTHON_INCLUDE_OPTS="-I$BOOST_PYTHON_HEADER_DIR"
+
+CPPFLAGS="${_pyj_save_CPPFLAGS}"
+
+DPP_LANG_RESTORE
 
 if test "x$bp_libname" = "x" ; then
    if test $boost_minor_ver -ge 31; then
@@ -320,10 +333,10 @@ _pyj_save_CPPFLAGS="$CPPFLAGS"
 _pyj_save_LIBS="$LIBS"
 _pyj_save_LDFLAGS="$LDFLAGS"
 
-CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir"
+CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES $BOOST_PYTHON_INCLUDE_OPTS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-   CPPFLAGS="$CPPFLAGS -I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir/boost/compatibility/cpp_c_headers"
+   CPPFLAGS="$CPPFLAGS -I$BOOST_PYTHON_HEADER_DIR/compatibility/cpp_c_headers"
 fi
 
 LIBS="$LIBS $bpl_link_option $PYTHON_LIB $UTIL_LIB $PYTHON_LIB_DEPS"
@@ -354,10 +367,10 @@ if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
       BOOST_PYTHON_CXXFLAGS="$BOOST_PYTHON_CXXFLAGS -Wno-long-double -no-cpp-precomp -fcoalesce-templates"
    fi
 
-   BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir"
+   BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDE_OPTS"
 
    if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-      BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir/boost/compatibility/cpp_c_headers"
+      BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDES -I$BOOST_PYTHON_HEADER_DIR/compatibility/cpp_c_headers"
    fi
 
    if test "x$OS_TYPE" = "xWin32" ; then

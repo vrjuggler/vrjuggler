@@ -176,11 +176,6 @@ THE PATCH VERSION!!  This extra option is needed because the Boost
 installation procedure incldues the Boost version number in the names of
 installed files and directories.
 
-If you are using your own Boost.Python installation rather than the
-one that comes with the pre-packaged VR Juggler dependencies, you may
-have to add --enable-boost-hacks in order for the Boost headers to be
-found correctly.
-
 If, for some reason, your Boost 1.31 (or newer) installation does not
 use the new naming conventions (the Boost.Python library is named
 libboost_python.so rather than libboost_python-gcc-mt.so), then add

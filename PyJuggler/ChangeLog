@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-27-2004 patrickh    The configure script option --enable-boost-hacks is no
+                        longer required for detection of some Boost.Python
+                        installations.
 Oct-26-2004 patrickh    Added support for sharing application-specific data in
                         a VR Juggler cluster configuration via a specialization
                         of cluster::UserData<T>.
