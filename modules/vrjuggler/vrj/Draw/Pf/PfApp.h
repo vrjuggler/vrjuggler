@@ -35,6 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vector>
+#include <boost/concept_check.hpp>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfChannel.h>
 
@@ -90,7 +91,10 @@ public:
     * Called immediately before draw (pfFrame()).
     * XXX: Should maybe only call this for one "master" channel each frame.
     */
-   virtual void appChanFunc(pfChannel* chan) {;}
+   virtual void appChanFunc(pfChannel* chan)
+   {
+      boost::ignore_unused_variable_warning(chan);
+   }
 
    /**
     * Returns the current scene graph.
@@ -109,7 +113,9 @@ public:
     * is opened.
     */
    virtual void configPWin(pfPipeWindow* pWin)
-   {;}
+   {
+      boost::ignore_unused_variable_warning(pWin);
+   }
 
    /**
     * Returns the needed parameters for the performer framebuffer.
@@ -118,7 +124,9 @@ public:
     * ex: To request multisampling return a vector containing: [PFB_SAMPLE_BUFFER,1,PFFB_SAMPLES,1]
     */
    virtual std::vector<int> getFrameBufferAttrs()
-   { return std::vector<int>();}
+   {
+      return std::vector<int>();
+   }
 
    /**
     * Function called in the channel draw function to do the actual drawing.
@@ -152,21 +160,30 @@ public:
     * Function called by the DEFAULT drawChan function before clearing the
     * channel and drawing the next frame (pfFrame()).
     */
-   virtual void preDrawChan(pfChannel* chan, void* chandata){;}
+   virtual void preDrawChan(pfChannel* chan, void* chandata)
+   {
+      boost::ignore_unused_variable_warning(chan);
+      boost::ignore_unused_variable_warning(chandata);
+   }
 
    /**
     * Function called by the DEFAULT drawChan function after clearing the
     * channel and drawing the next frame (pfFrame()).
     */
-   virtual void postDrawChan(pfChannel* chan, void* chandata){;}
+   virtual void postDrawChan(pfChannel* chan, void* chandata)
+   {
+      boost::ignore_unused_variable_warning(chan);
+      boost::ignore_unused_variable_warning(chandata);
+   }
 
 public: // -- Factory Function -- //
    /**
     * Gets the Draw Manager to use. Returns the Performer Draw Manager.
     */
    virtual DrawManager* getDrawManager()
-   { return PfDrawManager::instance(); }
-
+   {
+      return PfDrawManager::instance();
+   }
 };
 
 }

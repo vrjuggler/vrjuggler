@@ -234,10 +234,10 @@ protected:
    }
 
    GlDrawManager(const GlDrawManager& o)
-      : DrawManager()
+      : DrawManager(o)
    {;}
 
-   void operator=(const GlDrawManager& o) {;}
+   void operator=(const GlDrawManager&) {;}
 
    vprSingletonHeader(GlDrawManager);
 };

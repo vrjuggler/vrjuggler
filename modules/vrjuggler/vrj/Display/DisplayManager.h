@@ -189,12 +189,12 @@ protected:
    {;}
 
    DisplayManager(const DisplayManager& o)
-      : jccl::ConfigElementHandler()
+      : jccl::ConfigElementHandler(o)
    {
       ;
    }
 
-   void operator= (const DisplayManager& o) {;}
+   void operator= (const DisplayManager&) {;}
 
    vprSingletonHeader( DisplayManager );
 };

@@ -187,8 +187,8 @@ private:
     */
    void finishWindowSetup(GlWindow* win);
 
-   GlPipe(const GlPipe& o) {;}
-   void operator=(const GlPipe& o) {;}
+   GlPipe(const GlPipe&) {;}
+   void operator=(const GlPipe&) {;}
 
 private:
    vpr::Thread*   mActiveThread;    /**< The thread running this object */
