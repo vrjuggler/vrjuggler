@@ -30,18 +30,45 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_STREAM_H_
-#define _VPR_SOCKET_STREAM_H_
+#ifndef _VPR_SOCKET_CONFIGURATION_H_
+#define _VPR_SOCKET_CONFIGURATION_H_
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/IO/Socket/SocketConfiguration.h>
-#include <vpr/IO/Socket/SocketStream_t.h>             // include bridge class
+// Include the perf monitoring stuff
+#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+#include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
+#include <vpr/IO/Stats/IOStatsStrategyAdapter.h>
+
+
+#if defined(VPR_USE_NSPR)
+#   include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+#   include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 
 namespace vpr
-{
-   typedef SocketStream_t<SocketConfiguration>  SocketStream;
+{   
+   struct SocketConfiguration
+   {
+      typedef SocketImplNSPR           SocketImpl;
+      typedef SocketStreamImplNSPR     SocketStreamImpl;
+      typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+   };
 }
+#else
+namespace vpr
+{
+#   include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+#   include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
+   
+   struct SocketConfiguration
+   {
+      typedef SocketImplNSPR           SocketImplBSD;
+      typedef SocketStreamImplNSPR     SocketStreamImplBSD;
+      typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+   };
+}
+#endif
+
+#endif  /* _VPR_SOCKET_CONFIGURATION_H_ */
 
 
-#endif	/* _VPR_SOCKET_STREAM_H_ */
