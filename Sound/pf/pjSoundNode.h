@@ -40,6 +40,7 @@
 #include <Kernel/vjDebug.h>
 #include <Kernel/Pf/vjPfUtil.h>
 #include <Sound/vjSound.h> //juggler sound
+#include <Performer/pf/pfDCS.h>
 
 //: Performer-Juggler sound node.
 //  this node automatically updates the Sound's position information.
@@ -50,16 +51,16 @@
 class pjSoundNode : public pfDCS
 {
 public:
-   // TODO: the constructor takes a vjSound, which does not 
+   // TODO: the constructor takes a vjSound, which does not
    //       mean that it was aquired with a getHandle function... fixme..
-   //  who manages this memory?  should be sound manager... but... 
-   //  what if it wasn't created by the manager?   
+   //  who manages this memory?  should be sound manager... but...
+   //  what if it wasn't created by the manager?
    pjSoundNode( vjSound* sound, bool isPositional = true );
    virtual ~pjSoundNode()
    {
-      // vjSounds recieved with a sound handle are managed by 
+      // vjSounds recieved with a sound handle are managed by
       // the sound manager.
-      // TODO: the constructor takes a vjSound, which does not 
+      // TODO: the constructor takes a vjSound, which does not
       //       mean that it was aquired with a getHandle function... fixme..
       mSound = NULL;
    }
@@ -76,19 +77,19 @@ public:
       vjASSERT( mSound != NULL );
       return *mSound;
    }
-   
+
    void setSound( vjSound* sound )
    {
       mSound = sound;
-   }   
-   
+   }
+
    void setPositional( bool isPositional)
    {
       mIsPositional = isPositional;
    }
-   
-   
-   
+
+
+
 public:  // APP traversal
    virtual int app( pfTraverser* );
    virtual int needsApp( void )
@@ -172,12 +173,12 @@ int pjSoundNode::app(pfTraverser *trav)
    }
    else
    {
-      // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f 
+      // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f
       // this makes the sound the same as the observer.
       mSound->setPosition( 0.0f, 0.0f, 0.0f );
       //cout<<"["<<mSound->getName()<<"] No position\n"<<flush;
-   }   
-      
+   }
+
    return pfDCS::app(trav);  // call the parent class's app()
 
 }
@@ -192,7 +193,7 @@ pfType *pjSoundNode::classType = NULL;
 void pjSoundNode::init(void)
 {
    vjDEBUG(vjDBG_ALL,1)<<"[pjSoundNode] Registering sound node with performer.\n"<<vjDEBUG_FLUSH;
-      
+
    if (classType == NULL)
    {
         pfDCS::init();           // Initialize my parent
