@@ -38,9 +38,6 @@ package org.vrjuggler.tweek.event;
 
 import java.util.*;
 
-import org.vrjuggler.tweek.event.RegistrationEvent;
-import org.vrjuggler.tweek.event.RegistrationListener;
-
 
 /**
  * A singleton that centralizes registration of events handled by the
