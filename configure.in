@@ -452,7 +452,7 @@ case $target_os in
         CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -KPIC"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
-        _LD_REGOPTS='-check_registry ${DSOREGFILE}'
+#        _LD_REGOPTS='-check_registry ${DSOREGFILE}'
         LDOPTS="$LDOPTS -ansi -LANG:std -all ${_LD_REGOPTS} -elf -rdata_shared"
         SHAREDLIB_EXT='so'
 
