@@ -65,6 +65,7 @@ import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.PortView;
 import org.jgraph.layout.JGraphLayoutAlgorithm;
 import org.jgraph.layout.JGraphLayoutRegistry;
+import org.jgraph.layout.JGraphLayoutSettings;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.ConfigDefinitionChooser;
@@ -113,6 +114,8 @@ public class ProxyEditorUI
       {
          initUI();
 
+         mLayoutCfgButton.setEnabled(cur_algo.createSettings() != null);
+
          mSelectButton.setSelected(mMarqueeHandler.isSelectionEnabled());
          mPortToggleButton.setSelected(
             deviceProxyEditor.getGraph().isPortsVisible()
@@ -153,6 +156,9 @@ public class ProxyEditorUI
          mLayoutButton.setIcon(
             new ImageIcon(loader.getResource(img_base + "/Refresh16.gif"))
          );
+         mLayoutCfgButton.setIcon(
+            new ImageIcon(loader.getResource(img_base + "/Preferences16.gif"))
+         );
       }
       catch (NullPointerException ex)
       {
@@ -171,6 +177,8 @@ public class ProxyEditorUI
          mPortToggleButton.setText("Show Ports");
          mLayoutButton.setIcon(null);
          mLayoutButton.setText("Refresh Layout");
+         mLayoutCfgButton.setIcon(null);
+         mLayoutCfgButton.setText("Configure Layout");
       }
 
       deviceProxyEditor.getGraph().addGraphSelectionListener(this);
@@ -246,6 +254,7 @@ public class ProxyEditorUI
       mDisconnectButton.removeActionListener(mDisconnectAdapter);
       mPortToggleButton.removeActionListener(mPortToggleAdapter);
       mLayoutButton.removeActionListener(mLayoutBtnAdapter);
+      mLayoutCfgButton.removeActionListener(mLayoutBtnCfgAdapter);
       mLayoutChooser.removeActionListener(mLayoutChooserAdapter);
       mContext = null;
       mAllowedDefs = null;
@@ -264,6 +273,7 @@ public class ProxyEditorUI
       mRemoveButton = null;
       mLayoutButton = null;
       mLayoutChooser = null;
+      mLayoutCfgButton = null;
       mButtonBar = null;
       mEditorPane = null;
    }
@@ -330,6 +340,9 @@ public class ProxyEditorUI
       );
       mLayoutChooser.setRenderer(new LayoutAlgorithmRenderer());
       mLayoutChooser.addActionListener(mLayoutChooserAdapter);
+      mLayoutCfgButton.setEnabled(false);
+      mLayoutCfgButton.addActionListener(mLayoutBtnCfgAdapter);
+      mLayoutCfgButton.setToolTipText("Configure the selected layout");
       mButtonBar.add(mAddButton);
       mButtonBar.add(mRemoveButton);
       mButtonBar.addSeparator();
@@ -340,6 +353,7 @@ public class ProxyEditorUI
       mButtonBar.add(mPortToggleButton);
       mButtonBar.add(mLayoutButton);
       mButtonBar.add(mLayoutChooser);
+      mButtonBar.add(mLayoutCfgButton);
       this.setLayout(new BorderLayout());
       this.add(mButtonBar, BorderLayout.NORTH);
       this.add(mEditorPane, BorderLayout.CENTER);
@@ -365,6 +379,8 @@ public class ProxyEditorUI
       new ProxyEditorUI_mLayoutButton_actionAdapter(this);
    private ProxyEditorUI_mLayoutChooser_actionAdapter mLayoutChooserAdapter =
       new ProxyEditorUI_mLayoutChooser_actionAdapter(this);
+   private ProxyEditorUI_mLayoutCfgButton_actionAdapter mLayoutBtnCfgAdapter =
+      new ProxyEditorUI_mLayoutCfgButton_actionAdapter(this);
 
    private JToolBar mButtonBar = new JToolBar();
    private JButton mAddButton = new JButton();
@@ -375,6 +391,7 @@ public class ProxyEditorUI
    private JToggleButton mPortToggleButton = new JToggleButton();
    private JButton mLayoutButton = new JButton();
    private JComboBox mLayoutChooser = null;
+   private JButton mLayoutCfgButton = new JButton();
    private DeviceProxyGraphEditor deviceProxyEditor =
       new DeviceProxyGraphEditor();
    private JScrollPane mEditorPane = null;
@@ -794,19 +811,58 @@ public class ProxyEditorUI
 
    void mLayoutButton_actionPerformed(ActionEvent actionEvent)
    {
-      GraphSelectionModel sel_model =
-         deviceProxyEditor.getGraph().getSelectionModel();
+      mLayoutButton.setEnabled(false);
+      final DeviceProxyGraphEditor editor = deviceProxyEditor;
+      final JGraphLayoutAlgorithm controller =
+         deviceProxyEditor.getGraphLayoutAlgorithm();
 
-      if ( sel_model.getSelectionCount() > 0 )
-      {
-         deviceProxyEditor.applyGraphLayoutAlgorithm(
-            deviceProxyEditor.getGraph().getSelectionCells()
-         );
-      }
-      else
-      {
-         deviceProxyEditor.applyGraphLayoutAlgorithm();
-      }
+      JDialog parent =
+         (JDialog) SwingUtilities.getAncestorOfClass(JDialog.class, this);
+      final ProgressMonitor monitor =
+         new ProgressMonitor(parent, "Applying layout to graph...", "", 0,
+                             controller.getMaximumProgress());
+      monitor.setProgress(0);
+      monitor.setMillisToDecideToPopup(1000);
+
+      ActionListener l = new ActionListener()
+         {
+           public void actionPerformed(ActionEvent e)
+           {
+              monitor.setProgress(controller.getProgress());
+              controller.setAllowedToRun(! monitor.isCanceled());
+           }
+         };
+      final javax.swing.Timer updater = new javax.swing.Timer(1000, l);
+            
+      Thread t = new Thread()
+         {
+            public void run()
+            {
+               try
+               {
+                  GraphSelectionModel sel_model =
+                     editor.getGraph().getSelectionModel();
+
+                  if ( sel_model.getSelectionCount() > 0 )
+                  {
+                     editor.applyGraphLayoutAlgorithm(
+                        editor.getGraph().getSelectionCells()
+                     );
+                  }
+                  else
+                  {
+                     editor.applyGraphLayoutAlgorithm();
+                  }
+               }
+               finally
+               {
+                  monitor.close();
+                  updater.stop();
+                  mLayoutButton.setEnabled(true);
+               }
+            }
+         };
+      t.start();
    }
 
    void mLayoutChooser_actionPerformed(ActionEvent actionEvent)
@@ -814,6 +870,29 @@ public class ProxyEditorUI
       JGraphLayoutAlgorithm cur_algo =
          (JGraphLayoutAlgorithm) mLayoutChooser.getSelectedItem();
       deviceProxyEditor.setGraphLayoutAlgorithm(cur_algo);
+
+      mLayoutCfgButton.setEnabled(cur_algo.createSettings() != null);
+   }
+
+   void mLayoutCfgButton_actionPerformed(ActionEvent actionEvent)
+   {
+      JGraphLayoutAlgorithm algo = deviceProxyEditor.getGraphLayoutAlgorithm();
+
+      JGraphLayoutSettings settings = algo.createSettings();
+      if ( settings != null )
+      {
+         JDialog parent =
+            (JDialog) SwingUtilities.getAncestorOfClass(JDialog.class, this);
+         System.out.println("parent: " + parent);
+         JDialog dialog =
+            JGraphLayoutAlgorithm.createDialog(settings, parent,
+                                               "Configure Layout Settings",
+                                               "Cancel", "Apply");
+         dialog.setModal(true);
+         dialog.pack();
+         dialog.setLocationRelativeTo(parent);
+         dialog.show();
+      }
    }
 }
 
@@ -942,5 +1021,21 @@ class ProxyEditorUI_mLayoutChooser_actionAdapter
    public void actionPerformed(ActionEvent actionEvent)
    {
       adaptee.mLayoutChooser_actionPerformed(actionEvent);
+   }
+}
+
+class ProxyEditorUI_mLayoutCfgButton_actionAdapter
+   implements ActionListener 
+{
+   private ProxyEditorUI adaptee;
+
+   public ProxyEditorUI_mLayoutCfgButton_actionAdapter(ProxyEditorUI adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+
+   public void actionPerformed(ActionEvent actionEvent)
+   {
+      adaptee.mLayoutCfgButton_actionPerformed(actionEvent);
    }
 }
