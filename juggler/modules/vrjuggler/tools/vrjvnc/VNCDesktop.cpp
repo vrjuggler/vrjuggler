@@ -257,9 +257,10 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // Just transform the wand into the local frame and we are set to go with minimal effort.
 
    // Get the point position of the wand and construct a ray that shoots out of the wand.
+   const float max_ray_length(100.0f);
    const gmtl::Matrix44f wand_mat(*(mWand->getData()));
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
-   const gmtl::Vec3f ray_vector(0.0f, 0.0f, -100.0f);
+   const gmtl::Vec3f ray_vector(0.0f, 0.0f, -max_ray_length);
    const gmtl::Rayf wand_ray(gmtl::makeTrans<gmtl::Point3f>(wand_mat), (wand_mat*ray_vector));
 
    // Find ray intersection on the z=0 plane
@@ -272,6 +273,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // It will have to be scaled to get back into vnc coords.
    float t_isect;
    gmtl::intersect(z_plane, wand_ray, t_isect);
+   mDrawRayLength = t_isect*max_ray_length ;                                                              // Set length of drawn ray
    const gmtl::Point3f isect_point(wand_ray.mOrigin + (wand_ray.mDir*t_isect));
    vprASSERT( gmtl::Math::isEqual(isect_point[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
    mDebug_IsectPoint = isect_point;
@@ -334,6 +336,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    */
 
    // Resize it
+   ///*
    mDesktopWidth += mIncSize;
    if(mDesktopWidth > mMaxSize)
    {
@@ -347,7 +350,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    }
    mDesktopHeight = mDesktopWidth;
    //std::cout << "Height: " << mDesktopHeight << std::endl;
-
+   //*/
    updateDesktopParameters();
 
 
@@ -393,7 +396,7 @@ void VNCDesktop::draw()
 
       glBegin(GL_LINES);
          glVertex3f(0.0f, 0.0f, 0.0f);
-         glVertex3f(0.0f, 0.0f, -100.0f);
+         glVertex3f(0.0f, 0.0f, -mDrawRayLength);
       glEnd();
 
       glPolygonMode(GL_FRONT, GL_FILL);
