@@ -59,6 +59,10 @@ SRCS=		Analog.cpp			\
 		DeviceInterface.cpp		\
 		Digital.cpp			\
 		DigitalProxy.cpp		\
+		SpeechRecogString.cpp		\
+		SpeechRecogStringProxy.cpp	\
+		SpeechRecogDigital.cpp		\
+		SpeechRecogDigitalProxy.cpp	\
 		EventWindow.cpp			\
 		EventWindowProxy.cpp		\
 		GestureProxy.cpp		\
