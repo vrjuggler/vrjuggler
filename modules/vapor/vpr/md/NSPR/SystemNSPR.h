@@ -185,7 +185,7 @@ public:
 
       PRStatus ret_val = PR_SetEnv(set_value->c_str());
 
-      if ( ret_val != PR_SUCCESS )
+      if ( ret_val == PR_SUCCESS )
       {
          status.setCode(ReturnStatus::Succeed);
       }
