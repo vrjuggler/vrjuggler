@@ -48,9 +48,10 @@ include @topdir@/make.defs.mk
 includedir=		@includedir@/tweek/CORBA
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
-CXX_IDL_OPTS=		@CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(srcdir)
+IDL_GENDIR=		.
+CXX_IDL_OPTS=		@CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(IDL_GENDIR)
 CXX_IDL_INCLUDES=	@CXX_IDL_INCFLAG@$(top_srcdir)
-EXTRA_INCLUDES+=	-I$(srcdir)
+EXTRA_INCLUDES+=	-I$(IDL_GENDIR)
 EXTRA_SRCS_PATH=	$(srcdir)/../idl
 INSTALL=		@INSTALL@
 SUBOBJDIR=		$(TWEEK_LIBRARY)
@@ -72,7 +73,11 @@ SRCS=		BeanDeliverySubject.cpp		\
 
 include $(MKPATH)/dpp.obj.mk
 
-CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))
+ifneq ($(srcdir), $(IDL_GENDIR))
+   INSTALL_FILES+=	$(IDL_GENDIR)/*.h
+endif
+
+CLEAN_FILES+=		$(addprefix $(IDL_GENDIR)/, $(IDL_CXX_FILES))
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
