@@ -77,9 +77,9 @@ vjPropertyDesc::~vjPropertyDesc () {
 
 std::string vjPropertyDesc::getValueLabel (unsigned int i) {
     if (i < valuelabels.size())
-        return (std::string)"";
-    else
         return valuelabels[i]->getName();
+    else
+        return (std::string)"";
 }
 
 
