@@ -530,7 +530,7 @@ chkPerl ( ) {
     echo $retval
 }
 
-_PERL_PATH='/usr/local/bin /usr/bin'
+_PERL_PATH='/usr/local/bin /usr/bin C:/Perl/bin'
 
 dnl # If ${_user_perl_path} has a value, prepend that on ${_PERL_PATH} so that
 dnl # it will be checked before the standard places.
