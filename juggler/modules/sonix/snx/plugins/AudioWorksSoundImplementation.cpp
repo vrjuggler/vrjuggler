@@ -200,8 +200,10 @@ namespace snx
 
       if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
       {
+         float xyz[3] = { 0.0f, 0.0f, 0.0f };
          float hpr[3] = { 0.0f, 0.0f, 0.0f };
-         awXYZHPR( mBindTable[alias].mSound, mSounds[alias].position, hpr );  //Set sound at origin
+         snx::SoundImplementation::getPosition( alias, xyz[0], xyz[1], xyz[2] );
+         awXYZHPR( mBindTable[alias].mSound, xyz, hpr );  //Set sound at origin
       }
    }
 
@@ -402,6 +404,33 @@ namespace snx
    {
    }   
 
+   void loadload( const std::string& filename, awWave& wav )
+   {
+      // aiff
+      awName( &wav, filename.c_str() );       //Set the aifc filename
+      if (awLoadWav( &wav ) != 0)               //Load the aifc file
+      {
+          std::cout << "[snx]AudioWorks| \nfailed to open wave file\nwave dump:\n" << std::flush;
+          awPrint( &wav );
+          return;
+      }
+      else
+      {
+         std::cout << "[snx]AudioWorks| NOTICE: loaded: "<<filename<<"\n" << std::flush;
+      }
+      
+      /*
+      // wav
+      awProp( wav, AWWV_NFRAMES, samples );
+      awProp( wav, AWWV_FORMAT, AWWV_S16BIT );
+      awProp( wav, AWWV_NCHANS, AWWV_MONO );
+      awProp( wav, AWWV_LOOPTYPE, AWWV_LOOPOFF );
+      awProp( wav, AWWV_SRATE, samp_rate );
+      
+      awPutWavSam( wav, AWWV_MONOIDX, frame_offset, num_samps, data );
+      */
+   }   
+   
    /**
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
@@ -416,19 +445,8 @@ namespace snx
       snx::SoundInfo sinfo = mSounds[alias];
 
 
-      // Set up waves and load files
       si.mWave = awNewWav();                      //Define the wave form
-      awName( si.mWave, sinfo.filename.c_str() ); //Set the aifc filename
-      if (awLoadWav(si.mWave) != 0)               //Load the aifc file
-      {
-          std::cout << "[snx]AudioWorks| \nfailed to open wave file\nwave dump:\n" << std::flush;
-          awPrint( si.mWave );
-          return;
-      }
-      else
-      {
-         std::cout << "[snx]AudioWorks| NOTICE: loaded: "<<sinfo.filename<<"\n" << std::flush;
-      }   
+      loadload( sinfo.filename, *si.mWave );
       awMapWavToSE( si.mWave, mEngine );                    //Associate the wave with the engine
       awFlushWavToSE( si.mWave );                            //Flush the changes to the engine
 
