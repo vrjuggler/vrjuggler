@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-04-29 patrickh Support for plugging in Java and C++ ORBs at configuration
+                    time has been improved.  OpenORB and omniORB 3 are still
+                    the default implementations, but it is easier to use
+                    different ORBs.
 2002-02-12 patrickh The Icon Viewer now uses buttons instead of labels for its
                     icons.  This makes it much more clear when a mouse click
                     is actually being processed.
