@@ -82,7 +82,7 @@ void SubsynthSoundImplementation::step( const float & timeElapsed )
    snx::SoundImplementation::step( timeElapsed );
 }
 
-void SubsynthSoundImplementation::remove( const std::string alias )
+void SubsynthSoundImplementation::remove( const std::string& alias )
 {
    snx::SoundImplementation::remove( alias );
 }
