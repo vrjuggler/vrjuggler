@@ -2,19 +2,23 @@
 
 default: txt
 
-NAME=		README
+README=		README
+INSTALL=	INSTALL
+FILES=		$(README) $(INSTALL)
 
 XSLT_TOOL=Saxon 
 #FO_VERSION=XEP
 
+TXT_FILES=	$(FILES:=.txt)
+HTML_FILES=	$(FILES:=.html)
+PDF_FILES=	$(FILES:=.pdf)
 
-TXT_FILES=	$(NAME).txt
-HTML_FILES=	$(NAME).html
-PDF_FILES=	$(NAME).pdf
-
-$(NAME).txt: $(NAME).xml $(NAME).html # $(NAME).fo
-$(NAME).html: $(NAME).xml
-$(NAME).pdf: $(NAME).xml $(NAME).fo # $(NAME).tex
+$(README).txt: $(README).xml $(README).html # $(README).fo
+$(README).html: $(README).xml
+$(README).pdf: $(README).xml $(README).fo
+$(INSTALL).txt: $(INSTALL).xml $(INSTALL).html # $(INSTALL).fo
+$(INSTALL).html: $(INSTALL).xml
+$(INSTALL).pdf: $(INSTALL).xml $(INSTALL).fo
 
 CLOBBER_FILES=	$(TXT_FILES)
 
