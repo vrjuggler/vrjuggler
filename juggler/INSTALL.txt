@@ -14,7 +14,7 @@
 
                 Important Note Regarding Compiling
 
-                Important Not for IRIX Users
+                Important Note for IRIX Users
 
                 Compiling the Juggler suite of tools
 
@@ -35,7 +35,7 @@ Compiling
    complicated for anyone who does not have some background in Autoconf, C++,
    and make.
 
-  Important Not for IRIX Users
+  Important Note for IRIX Users
 
    There are many Perl scripts used as part of getting, configuring, and
    building the Juggler tools. The version of Perl that ships with IRIX 6.5
@@ -65,9 +65,14 @@ Compiling
 
    Getting the source code takes a few steps. You have to first download or
    check out Juggler and some external packages such as GGT, Xerces, and
-   possibly NSPR. Here are the steps:
+   possibly NSPR. The steps are listed in the following sections.
 
     How to get Juggler and external package dependencies
+
+   This section is for those users who want to get the Juggler source code
+   from the CVS repository on SourceForge. Those users who have downloaded a
+   pre-packaged version of the source can skip ahead to the section called
+   "Configuring and compiling all Juggler tools at once".
 
    1. You can optionally get Juggler as a source code tarball from the
        website (www.vrjuggler.org) or...
@@ -119,7 +124,7 @@ Compiling
    this writing, such a file is provide that allows anonymous-only CVS
    access. To use it, enter the following:
 
- ./cvs-gather.pl --versbose --cfg=deps.gatherrc
+ ./cvs-gather.pl --verbose --cfg=deps.gatherrc
 
    To simplify shared use of a single configuration file, the contents of the
    file may be overridden on the command line or using an "overrides" file.
@@ -142,7 +147,7 @@ Compiling
 
     Configuring and compiling all Juggler tools at once
 
-   Every time you have newly updated source code aquired from CVS or
+   Every time you have newly updated source code acquired from CVS or
    cvs-gather, it is recommended that you run autogen.sh, found in the
    top-level juggler directory:
 
@@ -200,7 +205,7 @@ Compiling
 
    Sonix requires a third-party software package called GMTL (ggt.sf.net).
    Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or
-   audioworks (multigen.com). One of these subsystems are required in order
+   AudioWorks (multigen.com). One of these subsystems are required in order
    to hear sound. Here is how you build sonix:
 
    1. cd modules/sonix
@@ -258,8 +263,9 @@ Compiling
       VR Juggler (individual)
 
    VR Juggler depends on JCCL, VPR, and Gadgeteer. It also needs the 3rd
-   party math lib GMTL. VRJuggler uses JCCL_BASE_DIR, GADGET_BASE_DIR, and
-   VPR_BASE_DIR env variables to find these, so be sure you have them set.
+   party math lib GMTL. VR Juggler uses JCCL_BASE_DIR, GADGET_BASE_DIR, and
+   VPR_BASE_DIR environment variables to find these, so be sure you have them
+   set.
 
    1. cd modules/vrjuggler
 
