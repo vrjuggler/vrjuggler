@@ -44,68 +44,68 @@
 namespace jccl
 {
 
-/** Factory for chunks and place holder for some other system wide factory functions
-*/
-class JCCL_CLASS_API ChunkFactory : public vpr::Singleton<ChunkFactory>
-{
-   friend class vpr::Singleton<ChunkFactory>;
-public:
-   //: Adds descriptions in _descdb to the factory
-   /*
-   void addDescs (ChunkDescDB* _descdb)
-   {
-      descdb.insert (_descdb);
-   }
+   /** Factory for chunks and place holder for some other system wide factory functions
    */
-
-   /** Adds descriptions in file 'filename' to the factory */
-   bool loadDescs(const std::string& filename, const std::string& parentFile = "");
-
-   // we actually do need this so that the EM can send the descdb to the gui...
-   ChunkDescDB* getChunkDescDB()
+   class JCCL_CLASS_API ChunkFactory : public vpr::Singleton<ChunkFactory>
    {
-      return &mDescDB;
-   }
+      friend class vpr::Singleton<ChunkFactory>;
+   public:
+      //: Adds descriptions in _descdb to the factory
+      /*
+      void addDescs (ChunkDescDB* _descdb)
+      {
+         descdb.insert (_descdb);
+      }
+      */
 
-   ChunkDescPtr getChunkDesc(const std::string& token)
-   {
-      return mDescDB.get(token);
-   }
+      /** Adds descriptions in file 'filename' to the factory */
+      bool loadDescs(const std::string& filename, const std::string& parentFile = "");
 
-   /** Creates a Chunk using the named description */
-   ConfigChunkPtr createChunk(const std::string& desctoken)
-   {
-      return createChunk(mDescDB.get(desctoken) );
-   }
+      // we actually do need this so that the EM can send the descdb to the gui...
+      ChunkDescDB* getChunkDescDB()
+      {
+         return &mDescDB;
+      }
 
-   //: Creates a Chunk using the given description
-   ConfigChunkPtr createChunk(ChunkDescPtr d);
+      ChunkDescPtr getChunkDesc(const std::string& token)
+      {
+         return mDescDB.get(token);
+      }
 
-   /** Get the global XML context that we are using system-wide */
-   cppdom::ContextPtr getXMLContext()
-   {
-      vprASSERT(mGlobalContext.get() != NULL);
-      return mGlobalContext;
-   }
+      /** Creates a Chunk using the named description */
+      ConfigChunkPtr createChunk(const std::string& desctoken)
+      {
+         return createChunk(mDescDB.get(desctoken) );
+      }
 
-   /** Creates a new (empty) XML node using global context */
-   cppdom::NodePtr createXMLNode()
-   {
-      return cppdom::NodePtr(new cppdom::Node(getXMLContext()));
-   }
+      //: Creates a Chunk using the given description
+      ConfigChunkPtr createChunk(ChunkDescPtr d);
 
-   /** Creates a new (empty) XML document using global context */
-   cppdom::DocumentPtr createXMLDocument()
-   {
-      return cppdom::DocumentPtr(new cppdom::Document(getXMLContext()));
-   }
+      /** Get the global XML context that we are using system-wide */
+      cppdom::ContextPtr getXMLContext()
+      {
+         vprASSERT(mGlobalContext.get() != NULL);
+         return mGlobalContext;
+      }
 
-private:
-   ChunkFactory();
+      /** Creates a new (empty) XML node using global context */
+      cppdom::NodePtr createXMLNode()
+      {
+         return cppdom::NodePtr(new cppdom::Node(getXMLContext()));
+      }
 
-   ChunkDescDB             mDescDB;
-   cppdom::ContextPtr      mGlobalContext;      /**< The global context to use for jccl */
-};
+      /** Creates a new (empty) XML document using global context */
+      cppdom::DocumentPtr createXMLDocument()
+      {
+         return cppdom::DocumentPtr(new cppdom::Document(getXMLContext()));
+      }
+
+   private:
+      ChunkFactory();
+
+      ChunkDescDB             mDescDB;
+      cppdom::ContextPtr      mGlobalContext;      /**< The global context to use for jccl */
+   };
 
 } // namespace jccl
 
