@@ -81,8 +81,8 @@ public:
 
    EventWindowXWin()
       : mWeOwnTheWindow(true), mVisual(NULL), mDisplay(NULL),
-        mExitFlag(false), mControlLoopDone(false), mLockState(Unlocked),
-        mPrevX(0), mPrevY(0)
+        mEmptyCursorSet(false), mExitFlag(false), mControlLoopDone(false),
+        mLockState(Unlocked), mPrevX(0), mPrevY(0)
    {
       //mThread = NULL; -- Should be done in base constructor
    }
@@ -241,6 +241,8 @@ private:
    void unlockMouse();
 
 protected:
+   void createEmptyCursor(Display* display, Window root);
+
    bool mWeOwnTheWindow; /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
 
    ::Window       mWindow;
@@ -249,6 +251,9 @@ protected:
    ::XSetWindowAttributes mSWA;
    int          mScreen, mX, mY;    /**< screen id, x-origin, y-origin. */
    unsigned int mWidth, mHeight;
+
+   Cursor mEmptyCursor;
+   bool   mEmptyCursorSet;
 
    /** @name EventWindow state holders
     * @note This driver does not use the normal triple buffering mechanism.
