@@ -39,6 +39,7 @@
 #include <Kernel/vjConfigManager.h>
 #include <Threads/vjThread.h>
 #include <Environment/vjEnvironmentManager.h>
+#include <SharedMem/vjMemPool.h>
 
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
