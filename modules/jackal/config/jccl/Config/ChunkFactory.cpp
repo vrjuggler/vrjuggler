@@ -78,4 +78,5 @@ namespace jccl
       }
    }
 
+   vprSingletonImp(ChunkFactory);
 } // namespace jccl

@@ -46,9 +46,8 @@ namespace jccl
 
    /** Factory for chunks and place holder for some other system wide factory functions
    */
-   class JCCL_CLASS_API ChunkFactory : public vpr::Singleton<ChunkFactory>
+   class JCCL_CLASS_API ChunkFactory
    {
-      friend class vpr::Singleton<ChunkFactory>;
    public:
       //: Adds descriptions in _descdb to the factory
       /*
@@ -105,6 +104,8 @@ namespace jccl
 
       ChunkDescDB             mDescDB;
       cppdom::ContextPtr      mGlobalContext;      /**< The global context to use for jccl */
+
+      vprSingletonHeader(ChunkFactory);
    };
 
 } // namespace jccl
