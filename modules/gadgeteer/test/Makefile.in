@@ -60,7 +60,7 @@ DEFS		= @APP_DEFS@
 EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@ $(DEBUG_CFLAGS)
 DEBUG_CFLAGS	= @APP_DEBUG_CFLAGS@
 OPTIM_CFLAGS	= @APP_OPTIM_CFLAGS@
-INCLUDES	= @APP_INCLUDES@ -I$(srcdir) -I$(srcdir)/../../vrj/Input/Devices/Ascension
+INCLUDES	= @APP_INCLUDES@ -I$(srcdir) -I$(srcdir)/../gadget/Devices/Ascension
 
 EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@ $(DEBUG_LFLAGS)
 DEBUG_LFLAGS	= @APP_DEBUG_LFLAGS@
@@ -76,7 +76,7 @@ C_COMPILE	= @APP_CC@ $(CFLAGS)
 CXX_COMPILE	= @APP_CXX@ $(CXXFLAGS)
 LINK		= @APP_LINK@ $(LINK_FLAGS)
 
-VPATH	= @srcdir@:@srcdir@/../../vrj/Input/Devices/Ascension
+VPATH	= @srcdir@:@srcdir@/../gadget/Devices/Ascension
 
 aFlockTest_OBJS	= FlockStandalone.@OBJEXT@ aFlockTest.@OBJEXT@
 
