@@ -21,17 +21,19 @@ protected:
     VJ_NETID_TYPE mLocalId;  // unsigned short
     VJ_NETID_TYPE mRemoteId;
     std::vector<char> mSendBuffer;  
+    const uint DATA_SIZE;   // sizeof data: 2 for NetDigital
+    const uint DATA_TIME_SIZE;  // size of Data + Timestamp: 2 + 4 for NetDigital
    
    // constructor used when a device has been requested from us (and remote id has been given)
-   NetInput(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id);
+   NetInput(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id, uint data_size);
 
    // constructor used when a device has been requested from us (and remote id has been given)
-   NetInput(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id);
+   NetInput(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id, uint data_size);
 
    // constructor used when we are going to request a remote device and receive data from it.
    //    a Proxy in the input manager will point to a NetInput in the Remote Input Manager.
    //    the NetInput will have "_NET_" appended to its name.
-   NetInput(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id);
+   NetInput(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id, uint data_size);
 
 public:
 
