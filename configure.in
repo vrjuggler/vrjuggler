@@ -35,8 +35,16 @@ AC_ARG_WITH(threads,
             _thread_pkg="$withval", _thread_pkg='SGI_IPC')
 
 dnl # Define the root directory for the Java installation.
-dnl # The default is /usr/java.
-_JDK_HOME_ALT_LIST="/usr/local/java"
+dnl # The default is /usr/java or what the user has defined in his or her
+dnl # $JDK_HOME environment variable.  ${_JDK_HOME_ALT_LIST} must be a
+dnl # colon-separated list of bin directories that could contain javac(1)
+dnl # and the other JDK utilities.
+if test ! -z "$JAVA_HOME" ; then
+    _JDK_HOME_ALT_LIST="/usr/local/java/bin"
+else
+    _JDK_HOME_ALT_LIST="${JAVA_HOME}/bin:/usr/local/java/bin"
+fi
+
 AC_ARG_WITH(jdkhome,
             [  --with-jdkhome=<PATH>   JDK installation directory      [default=/usr/java]],
             JDK_HOME="$withval", JDK_HOME="${JDK_HOME-/usr/java}")
@@ -423,12 +431,12 @@ AC_PROG_CXXCPP
 CFLAGS="${_vjsave_CFLAGS}"
 CXXFLAGS="${_vjsave_CXXFLAGS}"
 
-dnl # Check for the JDK (specifically try to find javac(1) in $JDK_HOME).
 JAVAC=''
 JAR=''
 
-_jdk_path_extra=`echo ${_JDK_HOME_ALT_LIST} | sed -e 's/ /\/bin:/g'`
-AC_PATH_PROG(JAVAC, javac, no, $PATH:${JDK_HOME}/bin:${_jdk_path_extra})
+dnl # Check for the JDK (specifically try to find javac(1) in $JDK_HOME or
+dnl # in ${_JDK_HOME_ALT_LIST}).
+AC_PATH_PROG(JAVAC, javac, no, $PATH:${JDK_HOME}/bin:${_JDK_HOME_ALT_LIST})
 
 dnl # If there is still no value in $JAVAC, then warn that the GUI will not be
 dnl # built.
