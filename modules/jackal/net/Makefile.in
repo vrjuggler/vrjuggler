@@ -84,9 +84,6 @@ DOC_ROOT		= programmer.reference.java
 
 JAVA_AFTERBUILD = jars
 
-# Hack to make sure we build Java sources after the C++ library is built
-AFTERBUILD = java
-
 include $(MKPATH)/dpp.compile.mk
 
 # -----------------------------------------------------------------------------
