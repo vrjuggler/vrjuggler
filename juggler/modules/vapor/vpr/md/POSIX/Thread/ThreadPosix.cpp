@@ -65,8 +65,8 @@ ThreadPosix::staticWrapper ThreadPosix::statics;
 ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
                           VPRThreadPriority priority, VPRThreadScope scope,
                           VPRThreadState state, size_t stack_size)
+   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false)
 {
-   mUserThreadFunctor = NULL;
    ThreadManager* vpr_tm_inst;
 
    mScope = VPR_THREAD_SCOPE;
@@ -74,6 +74,7 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
 
    // Create the thread functor to start
    mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
+   mDeleteThreadFunctor = true;
    ThreadMemberFunctor<ThreadPosix>* start_functor
                = new ThreadMemberFunctor<ThreadPosix>(this,
                                                       &ThreadPosix::startThread,
@@ -101,7 +102,7 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
 ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
                           VPRThreadPriority priority, VPRThreadScope scope,
                           VPRThreadState state, size_t stack_size)
-    : mUserThreadFunctor(NULL)
+    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false)
 {
     ThreadManager* vpr_tm_inst;
 
@@ -139,7 +140,9 @@ ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
 ThreadPosix::~ThreadPosix (void) {
     int status;
 
-    delete mUserThreadFunctor;
+    if ( mDeleteThreadFunctor ) {
+        delete mUserThreadFunctor;
+    }
 
     status = 0;
     pthread_exit((void*) &status);

@@ -137,6 +137,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
 
 private:
    BaseThreadFunctor* mUserThreadFunctor;     // The functor to call when the thread starts
+   bool               mDeleteThreadFunctor;   //
 
 public:  // ----- Various other thread functions ------
 
