@@ -57,6 +57,7 @@
 #                   generating dependencies).
 # DEPEND_EXTRAS   - Flags not recognized by makedepend(1) that may be
 #                   necessary in ${CFLAGS} or ${CXXFLAGS}.
+# OWNER_NAME      - The name of the user that will own the files.
 # GROUP_NAME      - The name of the group that will own the files.
 # FILE_PERMS      - Normal file permissions.
 # EXEC_PERMS      - Executable file permissions.
@@ -153,6 +154,7 @@ PERL		= @PERL@
 RANLIB		= @RANLIB@
 
 # Installation information (permissions, ownership).
+OWNER_NAME	= @OWNER_NAME@
 GROUP_NAME	= @GROUP_NAME@
 FILE_PERMS	= @FILE_PERMS@
 EXEC_PERMS	= @EXEC_PERMS@
