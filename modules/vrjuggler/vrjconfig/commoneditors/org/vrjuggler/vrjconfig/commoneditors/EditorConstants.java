@@ -37,12 +37,14 @@ public abstract class EditorConstants
    public static final String analog_proxy_type  = "analog_proxy";
    public static final String digital_proxy_type = "digital_proxy";
 
-   public static final String position_filters_prop          = "position_filters";
-   public static final String position_transform_filter_type = "position_transform_filter";
-   public static final String position_proxy_type            = "position_proxy";
+   public static final String position_proxy_type   = "position_proxy";
+   public static final String position_filters_prop = "position_filters";
 
-   public static final String pre_rotation_prop     = "pre_rotation";
-   public static final String post_rotation_prop    = "post_rotation";
-   public static final String pre_translation_prop  = "pre_translation";
-   public static final String post_translation_prop = "post_translation";
+   public static final String position_transform_filter_type = "position_transform_filter";
+   public static final String custom_scale_prop              = "custom_scale";
+   public static final String device_units_prop              = "device_units";
+   public static final String pre_rotation_prop              = "pre_rotation";
+   public static final String post_rotation_prop             = "post_rotation";
+   public static final String pre_translation_prop           = "pre_translate";
+   public static final String post_translation_prop          = "post_translate";
 }
