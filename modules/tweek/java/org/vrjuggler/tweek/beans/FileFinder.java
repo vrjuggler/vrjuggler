@@ -57,43 +57,47 @@ public class FileFinder
     * Constructs a new FileFinder object looking for files with the given
     * extension in the given path.
     *
+    * @pre The named path is a directory.
+    *
     * @param ext     the extension to match against not including the '.'
     * @param path    the path in which to search for files
+    *
+    * @throws BeanPathException
     */
    public FileFinder (String ext, String path) throws BeanPathException
    {
-      m_directory = new File(path);
+      mDirectory = new File(path);
 
-      if ( ! m_directory.isDirectory() )
+      if ( ! mDirectory.isDirectory() )
       {
          throw new BeanPathException(path);
       }
 
       // Search the directory for the files matching the given extension.
-      ExtensionFileFilter filter = new ExtensionFileFilter( "", false );
-      filter.addExtension( ext );
-      m_files = m_directory.listFiles( filter );
+      ExtensionFileFilter filter = new ExtensionFileFilter("", false);
+      filter.addExtension(ext);
+      mFiles = mDirectory.listFiles(filter);
    }
 
    public int getFileCount ()
    {
-      return m_files.length;
+      return mFiles.length;
    }
 
    public File[] getFiles ()
    {
-      return m_files;
+      return mFiles;
    }
 
    public File getFile (int index)
    {
-      return m_files[index];
+      return mFiles[index];
    }
 
    // =========================================================================
    // Private methods.
    // =========================================================================
 
-   private File   m_directory = null; /**< The directory searched */
-   private File[] m_files     = null; /**< The matching files found in m_directory */
+   private File   mDirectory = null; /**< The directory searched */
+   private File[] mFiles     = null; /**< The matching files found in mDirectory */
 }
