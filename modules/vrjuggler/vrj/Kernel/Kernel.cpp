@@ -169,6 +169,8 @@ void Kernel::controlLoop(void* nullParam)
 
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->latePreFrame()\n" << vprDEBUG_FLUSH;
+         mApp->latePreFrame();
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
