@@ -97,13 +97,13 @@
 #define PACKAGE_NAME "VR Juggler Portable Runtime"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "VR Juggler Portable Runtime 0.34"
+#define PACKAGE_STRING "VR Juggler Portable Runtime 0.40"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "vr-juggler-portable-runtime"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.34"
+#define PACKAGE_VERSION "0.40"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

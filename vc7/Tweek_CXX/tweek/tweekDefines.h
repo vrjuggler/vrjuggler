@@ -74,20 +74,24 @@
 #define PACKAGE_NAME "Tweek"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Tweek 0.16"
+#define PACKAGE_STRING "Tweek 0.21"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "tweek"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.16"
+#define PACKAGE_VERSION "0.21"
 
-/* Define to include the file CORBA.h -- for example: <omniORB3/CORBA.h> */
+/* Define to include the main CORBA header file -- for example:
+   <omniORB3/CORBA.h> */
 #define TWEEK_INCLUDE_CORBA_H <omniORB4/CORBA.h>
 
-/* Define to an ORB version string used to initialized the ORB -- for example:
-   "omniORB3" */
+/* Define to an ORB identifier string used to initialized the ORB -- for
+   example: "omniORB3" */
 #define TWEEK_ORB_VER_STRING "omniORB4"
+
+/* Define if using omniORB as the C++ CORBA implementation. */
+#define TWEEK_USE_OMNIORB 
 
 /* Define only on Windows NT/2000/XP. */
 #define __NT__ 1
