@@ -108,6 +108,8 @@ public:
    {;}
 
    /** Function that is called upon entry into a buffer of a gl context
+   * This function is executed after contextInit() (if needed) but before
+   * contextPreDraw().
    * @pre The ogl context has been set to the context for drawing
    * @post User application has executed any commands that need
    *   to only be executed once per context, per buffer, per frame
