@@ -54,6 +54,7 @@ DPP_ABI_SETUP
 # -----------------------------------------------------------------------------
 # Path setup.
 # -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
 
 # $srcdir is the root directory of the SNX source tree.  To get a value
 # for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
@@ -62,8 +63,14 @@ cd "$srcdir"
 SNXROOT_ABS=`pwd`
 
 cd "$SNXROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
+UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
+else
+   JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
+fi
 
 dnl ===========================================================================
 dnl Define macros useful when working in a Win32/DOS-based environment.
@@ -76,7 +83,6 @@ dnl Subroutines defined:
 dnl     unix2dos - Convert a UNIX-style path into a DOS-style path.
 dnl     dos2unix - Convert a DOS-style path into a UNIX-style path.
 dnl ===========================================================================
-DPP_WIN32_SETUP
 
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 
@@ -243,7 +249,6 @@ fi
 # alternative to using $srcdir.
 SNX_SRCDIR='$(SNXROOT_ABS)'
 UNIX_SNXROOT_ABS="$SNXROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
