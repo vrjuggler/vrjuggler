@@ -31,12 +31,12 @@
  * -----------------------------------------------------------------
  */
 
-#include <collider.h>
-#include <vjVec3.h>
-#include <vjMatrix.h>
-
 #ifndef _PLANE_COLLIDER_H_
 #define _PLANE_COLLIDER_H_
+
+#include <collider.h>
+#include <Math/vjVec3.h>
+#include <Math/vjMatrix.h>
 
 class planeCollider : public collider
 {
