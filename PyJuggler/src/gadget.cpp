@@ -61,7 +61,14 @@ struct gadget_BaseDeviceInterface_Wrapper: gadget::BaseDeviceInterface
         gadget::BaseDeviceInterface(), self(self_) {}
 
     void refresh() {
-        call_method< void >(self, "refresh");
+        try
+        {
+            call_method< void >(self, "refresh");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_refresh() {
@@ -82,7 +89,14 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
         gadget::AnalogProxy(), self(self_) {}
 
     void updateData() {
-        call_method< void >(self, "updateData");
+        try
+        {
+            call_method< void >(self, "updateData");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_updateData() {
@@ -90,7 +104,16 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
     }
 
     bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "config", p0);
+        try
+        {
+            return call_method< bool >(self, "config", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
@@ -98,7 +121,14 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
     }
 
     void set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Analog * p1) {
-        call_method< void >(self, "set", p0, p1);
+        try
+        {
+            call_method< void >(self, "set", p0, p1);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Analog * p1) {
@@ -106,7 +136,16 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
     }
 
     bool refresh() {
-        return call_method< bool >(self, "refresh");
+        try
+        {
+            return call_method< bool >(self, "refresh");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_refresh() {
@@ -114,7 +153,16 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > getDeviceName() const {
-        return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+        try
+        {
+            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return std::string("UNKNOWN");
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getDeviceName() const {
@@ -122,7 +170,16 @@ struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
     }
 
     bool isStupified() const {
-        return call_method< bool >(self, "isStupified");
+        try
+        {
+            return call_method< bool >(self, "isStupified");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_isStupified() const {
@@ -141,7 +198,14 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
         gadget::DigitalProxy(), self(self_) {}
 
     void updateData() {
-        call_method< void >(self, "updateData");
+        try
+        {
+            call_method< void >(self, "updateData");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_updateData() {
@@ -149,7 +213,16 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
     }
 
     bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "config", p0);
+        try
+        {
+            return call_method< bool >(self, "config", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
@@ -157,7 +230,14 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
     }
 
     void set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Digital * p1) {
-        call_method< void >(self, "set", p0, p1);
+        try
+        {
+            call_method< void >(self, "set", p0, p1);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Digital * p1) {
@@ -165,7 +245,16 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
     }
 
     bool refresh() {
-        return call_method< bool >(self, "refresh");
+        try
+        {
+            return call_method< bool >(self, "refresh");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_refresh() {
@@ -173,7 +262,16 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > getDeviceName() const {
-        return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+        try
+        {
+            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return std::string("UNKNOWN");
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getDeviceName() const {
@@ -181,7 +279,16 @@ struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
     }
 
     bool isStupified() const {
-        return call_method< bool >(self, "isStupified");
+        try
+        {
+            return call_method< bool >(self, "isStupified");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_isStupified() const {
@@ -202,7 +309,14 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
         gadget::PositionProxy(), self(self_) {}
 
     void updateData() {
-        call_method< void >(self, "updateData");
+        try
+        {
+            call_method< void >(self, "updateData");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_updateData() {
@@ -210,7 +324,16 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
     }
 
     bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "config", p0);
+        try
+        {
+            return call_method< bool >(self, "config", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
@@ -218,7 +341,14 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
     }
 
     void set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Position * p1) {
-        call_method< void >(self, "set", p0, p1);
+        try
+        {
+            call_method< void >(self, "set", p0, p1);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
     }
 
     void default_set(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0, gadget::Position * p1) {
@@ -226,7 +356,16 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
     }
 
     bool refresh() {
-        return call_method< bool >(self, "refresh");
+        try
+        {
+            return call_method< bool >(self, "refresh");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_refresh() {
@@ -234,7 +373,16 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > getDeviceName() const {
-        return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+        try
+        {
+            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getDeviceName");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return std::string("UNKNOWN");
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getDeviceName() const {
@@ -242,7 +390,16 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
     }
 
     bool isStupified() const {
-        return call_method< bool >(self, "isStupified");
+        try
+        {
+            return call_method< bool >(self, "isStupified");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_isStupified() const {
@@ -260,7 +417,16 @@ struct gadget_Analog_Wrapper: gadget::Analog
         gadget::Analog(), self(self_) {}
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
-        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
@@ -268,7 +434,16 @@ struct gadget_Analog_Wrapper: gadget::Analog
     }
 
     vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
-        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
@@ -276,7 +451,16 @@ struct gadget_Analog_Wrapper: gadget::Analog
     }
 
     bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "config", p0);
+        try
+        {
+            return call_method< bool >(self, "config", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
@@ -284,7 +468,16 @@ struct gadget_Analog_Wrapper: gadget::Analog
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType() {
-        return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+        try
+        {
+            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return std::string("UNKONWN");
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getBaseType() {
@@ -302,7 +495,16 @@ struct gadget_Digital_Wrapper: gadget::Digital
         gadget::Digital(), self(self_) {}
 
     bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "config", p0);
+        try
+        {
+            return call_method< bool >(self, "config", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
@@ -310,7 +512,16 @@ struct gadget_Digital_Wrapper: gadget::Digital
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType() {
-        return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+        try
+        {
+            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return std::string("UNKONWN");
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getBaseType() {
@@ -318,7 +529,16 @@ struct gadget_Digital_Wrapper: gadget::Digital
     }
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
-        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
@@ -326,7 +546,16 @@ struct gadget_Digital_Wrapper: gadget::Digital
     }
 
     vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
-        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
@@ -344,7 +573,16 @@ struct gadget_Position_Wrapper: gadget::Position
         gadget::Position(), self(self_) {}
 
     bool config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "config", p0);
+        try
+        {
+            return call_method< bool >(self, "config", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
@@ -352,7 +590,16 @@ struct gadget_Position_Wrapper: gadget::Position
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType() {
-        return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+        try
+        {
+            return call_method< std::basic_string<char,std::char_traits<char>,std::allocator<char> > >(self, "getBaseType");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return std::string("UNKNOWN");
     }
 
     std::basic_string<char,std::char_traits<char>,std::allocator<char> > default_getBaseType() {
@@ -360,7 +607,16 @@ struct gadget_Position_Wrapper: gadget::Position
     }
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
-        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
@@ -368,7 +624,16 @@ struct gadget_Position_Wrapper: gadget::Position
     }
 
     vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
-        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
@@ -393,7 +658,16 @@ struct gadget_KeyEvent_Wrapper: gadget::KeyEvent
         gadget::KeyEvent(), self(self_) {}
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
-        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
@@ -401,7 +675,16 @@ struct gadget_KeyEvent_Wrapper: gadget::KeyEvent
     }
 
     vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
-        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
@@ -423,7 +706,16 @@ struct gadget_MouseEvent_Wrapper: gadget::MouseEvent
         gadget::MouseEvent(), self(self_) {}
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
-        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
@@ -431,7 +723,16 @@ struct gadget_MouseEvent_Wrapper: gadget::MouseEvent
     }
 
     vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
-        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return vpr::ReturnStatus::Fail;
     }
 
     vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {

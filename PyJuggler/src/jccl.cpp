@@ -48,11 +48,29 @@ struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
         jccl::ConfigChunkHandler(), self(self_) {}
 
     bool configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "configCanHandle", p0);
+        try
+        {
+            return call_method< bool >(self, "configCanHandle", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     int configProcessPending() {
-        return call_method< int >(self, "configProcessPending");
+        try
+        {
+            return call_method< int >(self, "configProcessPending");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return 0;
     }
 
     int default_configProcessPending() {
@@ -60,11 +78,29 @@ struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
     }
 
     bool configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "configAdd", p0);
+        try
+        {
+            return call_method< bool >(self, "configAdd", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     bool configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "configRemove", p0);
+        try
+        {
+            return call_method< bool >(self, "configRemove", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+
+        return false;
     }
 
     PyObject* self;
