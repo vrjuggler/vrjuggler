@@ -58,6 +58,18 @@
 /* Define if building on a platform not specified above. */
 #undef VJ_OS_GENERIC
 
+/* Define to match the output of running 'uname -r. */
+#undef VJ_OS_RELEASE
+
+/*
+ * Define to match the numeric version number of the target operating system.
+ * For example, on HP-UX 10.20:
+ *     #define VJ_OS_RELEASE_MAJOR 10
+ *     #define VJ_OS_RELEASE_MINOR 20
+ */
+#undef VJ_OS_RELEASE_MAJOR
+#undef VJ_OS_RELEASE_MINOR
+
 /* Define to `unsigned int' if the u_int type is not available. */
 #undef u_int
 
