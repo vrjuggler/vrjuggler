@@ -154,10 +154,12 @@ public:
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
     * @semantics this function should be called before using the other functions in the class.
+    * @return values: 0 if failed, 1 if success
     */
-   virtual void startAPI()
+   virtual int startAPI()
    {
        vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("Stub::startAPI (does nothing)\n"), std::string("\n"));
+       return 1;
    }
    
    /**

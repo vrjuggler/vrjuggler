@@ -170,8 +170,9 @@ public:
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
     * @semantics this function should be called before using the other functions in the class.
+    * @return values: return 1 if successful, 0 otherwise
     */
-   virtual void startAPI() = 0;
+   virtual int startAPI() = 0;
 
    /**
     * query whether the API has been started or not
