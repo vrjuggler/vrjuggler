@@ -96,6 +96,12 @@ public class SimKeyboardEditorDialog
       this.getRootPane().setDefaultButton(mCloseButton);
 
       this.pack();
+
+      Dimension dlg_size    = this.getSize();
+      Dimension parent_size = parent.getSize();
+      this.setSize(Math.min(dlg_size.width, parent_size.width),
+                   Math.min(dlg_size.height, parent_size.height));
+
       this.setLocationRelativeTo(parent);
    }
 
