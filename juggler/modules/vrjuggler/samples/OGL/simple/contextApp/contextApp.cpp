@@ -71,8 +71,7 @@ void contextApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //
-   Matrix44f wand_matrix;
-   wand_matrix = mWand->getData();
+   Matrix44f wand_pos = mWand->getData();
 
    // --- Create a color for the wand --- //
    float wand_color[3];
@@ -82,7 +81,7 @@ void contextApp::draw()
 
       // --- Draw the box --- //
       glPushMatrix();
-         glMultMatrixf(wand_matrix.mData);    // Push the wand offset matrix on the stack
+         glMultMatrixf(wand_pos.mData);    // Push the wand offset matrix on the stack
          glColor3fv(wand_color);
          glCallList(*mCubeDlId);
       glPopMatrix();
@@ -91,7 +90,7 @@ void contextApp::draw()
       glLineWidth(5.0f);
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         glMultMatrixf(wand_matrix.mData);    // Goto wand position
+         glMultMatrixf(wand_pos.mData);    // Goto wand position
          drawAxis();
       glPopMatrix();
       glEnable(GL_LIGHTING);
@@ -103,8 +102,8 @@ void contextApp::contextInit()
    // --- Allocate context specific data --- //
    (*mCubeDlId) = glGenLists(1);
 
-   glNewList((*mCubeDlId), GL_COMPILE);
-      glScalef(0.50f, 0.50f, 0.50f);
+   glNewList(*mCubeDlId, GL_COMPILE);
+      glScalef(0.5f, 0.5f, 0.5f);
       drawCube();
    glEndList();
 
