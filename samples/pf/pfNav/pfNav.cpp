@@ -51,50 +51,49 @@ void usage(char** argv)
    cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
 }
 /*
-bool initSoundEngine( const std::string& arg, SoundEngine* engine )
+bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
 {
-   if (arg == "sl")
+   std::string soundConfigFile;
+   if (arg == "sl") // some hacky logic.
    {
-      char* filename = "sound.dat";
-      std::string fileNameWithPath;
-      if (fileIO::fileExistsResolvePath( filename, fileNameWithPath ))
-      {
-         engine = SoundFactory::newEngine( SoundFactory::SL, fileNameWithPath.c_str() );
-      }
-      
-      else
-      {
-         cout<<"Couldn't find "<<filename<<"\n"<<flush;
-         exit(1);
-      }      
+      soundConfigFile = "sound.dat";
    }
    
    else if (arg == "aw")
    {
-      char* filename = "sound.adf";
-      std::string fileNameWithPath;
-      if (fileIO::fileExistsResolvePath( filename, fileNameWithPath ))
-      {  
-         engine = SoundFactory::newEngine( SoundFactory::AW, fileNameWithPath.c_str() );
-      }
-      
-      else
-      {
-         cout<<"Couldn't find "<<filename<<"\n"<<flush;
-         exit(1);
-      }      
+      soundConfigFile = "sound.adf";
    }
    
    else if (arg == "nosound")
    {
-      engine = SoundFactory::newEngine( SoundFactory::NOSOUND, "nofileneeded" );
+      soundConfigFile = "sound.dat";
    }   
-   
    else
    {
+      engine = NULL;
       return false; //user didn't specify an option
    }
    
+   std::string soundConfigFileWithPath;
+   if (fileIO::fileExistsResolvePath( soundConfigFile, soundConfigFileWithPath ))
+   {
+      engine = SoundFactory::newEngine( arg, soundConfigFileWithPath.c_str() );
+      
+      if ( engine == NULL)
+      {
+         cout<<"NULL engine\n"<<flush;
+         return false;
+      }      
+   }
+      
+   else
+   {
+      cout<<"Couldn't find "<<soundConfigFile<<"\n"<<flush;
+      engine = NULL;
+      return false;
+   }    
+   
+   cout<<"Good engine\n"<<flush;
    return true; //user specified an option
 }
 */
