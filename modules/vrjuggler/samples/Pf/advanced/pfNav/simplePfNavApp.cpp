@@ -46,21 +46,21 @@
 #include <Performer/pfutil.h>
 
     // --- VR Juggler Stuff --- //
-#include <Kernel/vjKernel.h>
-#include <Kernel/Pf/vjPfApp.h>    // the performer application base type
-#include <Utils/vjDebug.h>
-#include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/Projection.h>  // for setNearFar (for setting clipping planes)
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
-#include <Utils/vjFileIO.h>
+#include <vrj/Util/FileIO.h>
 
 #ifdef USE_AUDIOJUGGLER
 #include <aj/AudioJuggler.h>
 #endif
 
-#include <Sound/pf/pfSoundNode.h> //performer-juggler sound node.
-#include <Sound/pf/pfSoundTraverser.h>
+#include <vrj/Sound/pf/pfSoundNode.h> //performer-juggler sound node.
+#include <vrj/Sound/pf/pfSoundTraverser.h>
 
 // nav includes
 #include <pfNavDCS.h>
@@ -70,7 +70,7 @@
 #include <pfPogoCollider.h>
 #include <pfRayCollider.h>
 #include <pfBoxCollider.h>
-#include <vjPfAppStats.h>
+#include <PfAppStats.h>
 
 #include "pfFileIO.h" // handy fileloading/caching functions
 
@@ -95,7 +95,7 @@ simplePfNavApp::Model::Model() : description( "no description" ),
 }
 
 simplePfNavApp::Model::Model( const std::string& desc, const std::string& file_name,
-            const float& s, const Vec3& position, const Vec3& rotation, 
+            const float& s, const vrj::Vec3& position, const vrj::Vec3& rotation, 
             const bool& collidable )
 {
    description = desc;
@@ -117,7 +117,7 @@ simplePfNavApp::Sound::Sound() : name( "no name" ),
 simplePfNavApp::Sound::Sound( const std::string& sound_name, 
                               const std::string& alias_name, 
                               const bool& isPositional, 
-                              const Vec3& position )
+                              const vrj::Vec3& position )
 {
    name = sound_name;
    alias = alias_name;
@@ -234,18 +234,18 @@ void simplePfNavApp::preFrame()
       std::cout<<"disable...\n"<<std::flush;
       
       // do animation...
-      Matrix mat;
+      vrj::Matrix mat;
       mKeyFramer.getMatrix( mat );
       pfMatrix pf_mat;
-      pf_mat = GetPfMatrix( mat );
+      pf_mat = vrj::GetPfMatrix( mat );
       mAnimDCS->setMat( pf_mat );
       
       // Emit a time
       if (0 == (mStatusMessageEmitCount++ % 60))
       {
-         Vec3 cur_pos;
+         vrj::Vec3 cur_pos;
          cur_pos = mat.getTrans();
-         Quat quat;
+         vrj::Quat quat;
          quat.makeRot( mat );
 
          std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: ";
@@ -258,7 +258,7 @@ void simplePfNavApp::preFrame()
       // Deal with focus based changes
       mNavigationDCS->setActive(haveFocus());
 
-      if (haveFocus() && (mNavCycleButton->getData() == Digital::TOGGLE_ON))
+      if (haveFocus() && (mNavCycleButton->getData() == vrj::Digital::TOGGLE_ON))
       {
          cycleNavigator();
       }
@@ -268,9 +268,9 @@ void simplePfNavApp::preFrame()
          // Emit cur position
          if (0 == (mStatusMessageEmitCount++ % 60))
          {
-            Vec3 cur_pos;
+            vrj::Vec3 cur_pos;
             cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
-            Quat quat;
+            vrj::Quat quat;
             quat.makeRot( mNavigationDCS->getNavigator()->getCurPos() );
 
             std::cout << "You: " << cur_pos << " :|: ";
@@ -285,12 +285,12 @@ void simplePfNavApp::preFrame()
             
             // debug//./////
             /*
-            Matrix mmm = mNavigationDCS->getNavigator()->getCurPos();
+            vrj::Matrix mmm = mNavigationDCS->getNavigator()->getCurPos();
             std::cout << "MatrixNav:\n" << mmm << std::endl << std::endl;
             
             std::cout << "-----------" << std::endl;
             
-            std::cout << mKeyFramer.time() << ": "<<(Vec3)mKeyFramer.key().position() << " :|: ";
+            std::cout << mKeyFramer.time() << ": "<<(vrj::Vec3)mKeyFramer.key().position() << " :|: ";
             mKeyFramer.key().rotation().outStreamReadable( std::cout );
             std::cout << std::endl;
             
@@ -377,7 +377,7 @@ void simplePfNavApp::addModelFile( const std::string& filename )
 
 void simplePfNavApp::loadAnimation( const char* const filename )
 {
-   std::string dFilename = FileIO::demangleFileName( std::string( filename ), std::string( "" ) );
+   std::string dFilename = vrj::FileIO::demangleFileName( std::string( filename ), std::string( "" ) );
    kev::KeyFramerImporter kfi;
    kfi.execute( dFilename.c_str(), mKeyFramer );
 }  
@@ -409,10 +409,10 @@ void simplePfNavApp::addFilePath( const std::string& path )
 }
 void simplePfNavApp::setFilePath( const std::string& path )
 {
-   std::string dFilePath = FileIO::demangleFileName( path, std::string( "" ) );
+   std::string dFilePath = vrj::FileIO::demangleFileName( path, std::string( "" ) );
    mFilePath = dFilePath;
 }
-void simplePfNavApp::setInitialNavPos( const Vec3& initialPos )
+void simplePfNavApp::setInitialNavPos( const vrj::Vec3& initialPos )
 {
    mInitialNavPos = initialPos;
 
@@ -421,7 +421,7 @@ void simplePfNavApp::setInitialNavPos( const Vec3& initialPos )
    // FIXME: some code duplication here.
    for (unsigned int i = 0; i < mNavigators.size(); ++i)
    {
-	   Matrix initial_nav;
+      vrj::Matrix initial_nav;
       vjDEBUG(vjDBG_ALL,0) << "setting pos\n" << vjDEBUG_FLUSH;
       initial_nav.setTrans( mInitialNavPos );
 
@@ -522,7 +522,7 @@ void simplePfNavApp::initializeModels()
 
       // set trans
       //pfVec3 pf_nextModelDcsTrans;
-      pfVec3 pf_model_trans = GetPfVec( mModelList[x].pos );
+      pfVec3 pf_model_trans = vrj::GetPfVec( mModelList[x].pos );
       mModelList[x].modelDCS->setTrans( pf_model_trans[0],
                                           pf_model_trans[1],
                                           pf_model_trans[2]);
@@ -578,7 +578,7 @@ void simplePfNavApp::initializeSounds()
 
       // set trans
       pfVec3 pf_nextSoundDcsTrans;
-      pf_nextSoundDcsTrans = GetPfVec( mSoundList[x].pos );
+      pf_nextSoundDcsTrans = vrj::GetPfVec( mSoundList[x].pos );
       nextSoundDCS->setTrans( pf_nextSoundDcsTrans[0],
             pf_nextSoundDcsTrans[1],
             pf_nextSoundDcsTrans[2]);
@@ -653,7 +653,7 @@ void simplePfNavApp::initScene()
    initializeSounds();
 
    // Configure the Navigator DCS node:
-   Matrix initial_nav;              // Initial navigation position
+   vrj::Matrix initial_nav;              // Initial navigation position
    initial_nav.setTrans( mInitialNavPos );
 
 

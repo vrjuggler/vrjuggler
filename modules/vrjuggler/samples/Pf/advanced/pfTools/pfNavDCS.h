@@ -36,10 +36,10 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pr/pfLinMath.h>
 
-#include <Kernel/vjKernel.h>
-#include <Math/vjCoord.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/Pf/vjPfUtil.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Draw/Pf/PfUtil.h>
 
 #include <navigator.h>
 
@@ -83,10 +83,10 @@ private:
    bool                 mActive;     // Are we active
    navigator*           mNaver;      // My navigator
 
-   PosInterface       mWand;
-   DigitalInterface   mButton0;
-   DigitalInterface   mButton1;
-   DigitalInterface   mButton2;
+   vrj::PosInterface       mWand;
+   vrj::DigitalInterface   mButton0;
+   vrj::DigitalInterface   mButton1;
+   vrj::DigitalInterface   mButton2;
 
 public:  // APP traversal
    virtual int app(pfTraverser*);
@@ -118,10 +118,10 @@ void pfNavDCS::updateTransformMatrix()
 
    // Set the navigation DCS to the new navigation matrix
    // cur_pos = modelspace_M_user
-   Matrix cur_pos_inv, cur_pos;
+   vrj::Matrix cur_pos_inv, cur_pos;
    cur_pos = mNaver->getCurPos();
    cur_pos_inv.invert(cur_pos);
-   pfMatrix model_move = GetPfMatrix( cur_pos_inv );
+   pfMatrix model_move = vrj::GetPfMatrix( cur_pos_inv );
    this->setMat( model_move );
 }
 

@@ -35,9 +35,10 @@
 
 // animation
 #include "KeyFramer.h" // for keyframer...
-#include <vjPfAppStats.h> // for stats
+#include <PfAppStats.h> // for stats
 #include "StopWatch.h"    // for time
-#include <Kernel/Pf/vjPfApp.h>    // the performer application base type
+#include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
+
 class pfNavDCS;
 class navigator;
 
@@ -54,7 +55,7 @@ extern int AppNotifyPostTrav( pfTraverser* trav, void* data );
 // but really hard to understand.
 // - i.e. don't use this to learn vrjuggler or performer!
 //        you've been warned...
-class simplePfNavApp : public PfApp
+class simplePfNavApp : public vrj::PfApp
 {
 public: 
    // Model and sound member classes
@@ -63,15 +64,15 @@ public:
    public:
       Model();
       Model( const std::string& desc, const std::string& file_name,
-            const float& s, const Vec3& position, const Vec3& rotation, 
-            const bool& collidable );
+            const float& s, const vrj::Vec3& position,
+            const vrj::Vec3& rotation, const bool& collidable );
 
       // Config parameters
       std::string description;
       std::string filename;
       float       scale;
-      Vec3      pos;
-      Vec3      rot;
+      vrj::Vec3   pos;
+      vrj::Vec3   rot;
       bool        isCollidable;
 
       // Run-time information
@@ -85,12 +86,12 @@ public:
     public:
       Sound();
       Sound( const std::string& sound_name, const std::string& alias_name, 
-            const bool& isPositional, const Vec3& position );
+            const bool& isPositional, const vrj::Vec3& position );
       
       std::string name;
       std::string alias;
       bool        positional;
-      Vec3      pos;
+      vrj::Vec3   pos;
    };
 
 // application callbacks:
@@ -155,7 +156,7 @@ public:
 
    void addFilePath( const std::string& path );
    void setFilePath( const std::string& path );
-   void setInitialNavPos( const Vec3& initialPos );
+   void setInitialNavPos( const vrj::Vec3& initialPos );
 
    // Go to the next navigator
    void cycleNavigator();
@@ -186,19 +187,19 @@ public:
    
    // CONFIG PARAMS
    std::string    mFilePath;
-   Vec3         mInitialNavPos;
+   vrj::Vec3      mInitialNavPos;
    float          mBoundingSize;       // XXX: This is a hack and should be refactored
 
    int            mStatusMessageEmitCount;
 
-   bool           mUseStats;
-   PfAppStats   mStats;
+   bool            mUseStats;
+   vrj::PfAppStats mStats;
 
    // navigation objects.
    std::vector<navigator*>    mNavigators;      // A list of the navigators in the system
    unsigned                   mCurNavIndex;     // Index of the current navigator
    pfNavDCS*                  mNavigationDCS;
-   DigitalInterface         mNavCycleButton;  // Button to cycle the navigation
+   vrj::DigitalInterface      mNavCycleButton;  // Button to cycle the navigation
 
    // SCENE GRAPH NODES
    pfGroup*       mLightGroup;
