@@ -5,27 +5,8 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 3.0">
 <base target="main">
 <title>Contents</title>
-</head>
 
-<body bgcolor="#000000" text="#FFFFFF">
-
-<p>
-<applet width="250" height="350" name="Tree" code="TreeApp.class" align="top"
-archive="tree.zip">
-  <param name="bgColor" value="black">
-  <param name="fgColor" value="lightgray">
-  <param name="textColor" value="white">
-  <param name="textHighlight" value="white">
-  <param name="bgHighlight" value="rose">
-  <param name="file2" value="test2.txt">
-  <param name="file3" value="test3.txt">
-  <param name="mouseOver" value="white">
-  <param name="mouseUnder" value="white">
-  <param name="tooltext" value="black">
-  <param name="toolback" value="white">
-  <param name="plusColor" value="white">
-  <param name="showURL" value="true">
- 
+<script language="jexplorer" >
 // JExplorer Version 1.0
 < treecontrol imageurl="./images/" >
 // set font to courier
@@ -35,14 +16,14 @@ archive="tree.zip">
 < idefault height=20 title="Item" image="doc.gif" info="JExplorer Beta 1.0 and an extremly long text string to go width it" >
 
 // set the root folder title and image
-< rootfolder title="JExplorer Demo" image="fold.gif" imagetwo="fold2.gif" info="A site map of pages on mcsoftware.com.au" >
+< rootfolder image="fold.gif" imagetwo="fold2.gif" info="A site map of pages on mcsoftware.com.au" >
 
 // add an item
 < item title="ItemOne" image="doc_web.gif" >
 
 // change font to bold	
 <font style="bold" color="blue"> 
-< jitfolder jit="test2.txt" image="fold_grey.gif" imageTwo="fold_grey2.gif" title="Load file test2.txt" info="Load test file test2.txt from disk into new folder"> 
+< jitfolder loadasroot jit="test2.txt" image="fold_grey.gif" imageTwo="fold_grey2.gif" title="Load file as root" info="Load file as root folder"> 
 </font>
 
 <font style="bold" > 
@@ -103,6 +84,30 @@ archive="tree.zip">
 	< item title="nextItemOne" >
 </folder> // end folder block
 </treecontrol> // end treecontrol block
+
+</script>
+</head>
+
+
+<body bgcolor="#000000" text="#FFFFFF">
+
+<p>
+<applet width="250" height="350" name="Tree" code="TreeApp.class" align="top"
+archive="tree.zip">
+  <param name="bgColor" value="black">
+  <param name="fgColor" value="lightgray">
+  <param name="textColor" value="white">
+  <param name="textHighlight" value="white">
+  <param name="bgHighlight" value="rose">
+  <param name="file2" value="test2.txt">
+  <param name="file3" value="test3.txt">
+  <param name="mouseOver" value="white">
+  <param name="mouseUnder" value="white">
+  <param name="tooltext" value="black">
+  <param name="toolback" value="white">
+  <param name="plusColor" value="white">
+  <param name="showURL" value="true">
+  <param name="barsize" value="12" >
 
 </applet>
 </p>

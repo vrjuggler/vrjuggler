@@ -20,18 +20,18 @@
     width="100%" height="3509">
       <tr>
         <td height="25" bgcolor="#000000" align="right"><font color="#ffffff"><p align="right"><font
-        face="Verdana"><big>Using the JExplorer/JFinder</big></font></font></td>
+        face="Verdana"><big>Using the JExplorer/JFinder</big></font></font></P></td>
       </tr>
       <tr>
-        <td height="21"><p align="right"><font color="#400080" face="Verdana"><small>Version 1.06
-        - 6/7/1999</small></font></td>
+        <td height="21"><p align="right"><font color="#400080" face="Verdana"><small>Version 1.08
+        - 11/1/2000</small></font></p></td>
       </tr>
       <tr>
         <td height="146"><font face="Verdana">To use jexplorer you must first include the applet
-        tag in your web page (<a href="#Using Applets">see using applets below</a>) including a
+        tag in your web page (<A href="#Using Applets">see using applets below</A>) including a
         file1 param tag which points to a text file specifying the items and there relationships.
-        The items are laid out in an <strong>XML like</strong> format defined in the <a
-        href="paramfile.htm">paramfile.htm</a>.<br>
+        The items are laid out in an <strong>XML like</strong> format defined in the <A
+        href="paramfile.htm">paramfile.htm</A>.<br>
         Note: You must keep all the dot class files distributed with the package in the same
         directory and keep the filenames identical (including case) otherwise the applet will be
         unable to start.</font></td>
@@ -45,7 +45,7 @@
         files that can be selected by the javascript interface setFile. Files are numbered
         sequentially (file1, file2 .. fileN) each specifying the URL of a file to be loaded. The
         URL's for the files are relative to the html document base from which the applet is loaded
-        and are text files laying out items in the <a href="paramfile.htm">parameter file format</a>
+        and are text files laying out items in the <A href="paramfile.htm">parameter file format</A>
         specified. The default file1 URL is the base html page URL.</font></td>
       </tr>
       <tr>
@@ -85,7 +85,7 @@
         bar when items are selected.</font></td>
       </tr>
       <tr>
-        <td height="18" bgcolor="#C0C0C0"><font face="Verdana">hidelines</font></td>
+        <td height="18" bgcolor="#c0c0c0"><font face="Verdana">hidelines</font></td>
       </tr>
       <tr>
         <td height="38"><font face="Verdana">Removes all lines from between the items displayed.</font></td>
@@ -171,11 +171,17 @@
       <tr>
         <td height="21" bgcolor="#c0c0c0"><font face="Verdana">plusColor = color </font></td>
       </tr>
+        <TR>
+          <TD height=91><FONT face=Verdana>Plus color is the color of the 
+            folder expand and collapse +/- signs . The default color is 
+            lightGray or the same as fgColor if fgColor is defined.</FONT></TD></TR>
       <tr>
-        <td height="91"><font face="Verdana">Plus color is the color of the folder expand and
-        collapse +/- signs . The default color is lightGray or the same as fgColor if fgColor is
-        defined.</font></td>
+        <td height="21" bgcolor="#c0c0c0"><font face="Verdana">barsize = int</font></td>
       </tr>
+        <TR>
+          <TD height=91><FONT face=Verdana>barszie 
+            defines the width in pixels of the scrollbars. This width is by 
+            default 12 pixel.</FONT></TD></TR>
       <tr>
         <td height="21" bgcolor="#c0c0c0"><font face="Verdana">title = text</font></td>
       </tr>
@@ -183,7 +189,7 @@
         <td height="70"><font face="Verdana">Title is the title that is displayed as the applet
         loads a file from the host server. It can be any text string but defaults to <a
         href="http://www.jexplorer.com">www.jexplorer.com</a> if not defined. The text may bee
-        null &quot;&quot; in that case nothing is displayed. </font></td>
+        null "" in that case nothing is displayed. </font></td>
       </tr>
       <tr>
         <td height="21" bgcolor="#c0c0c0"><font face="Verdana">Example</font></td>
@@ -192,26 +198,26 @@
         <td height="443"><div align="left"><table border="1" cellpadding="0" width="100%"
         cellspacing="0" bordercolorlight="#000000" bordercolordark="#000000">
           <tr>
-            <td width="100%"><font face="Verdana">&lt;applet width=&quot;100%&quot;
-            height=&quot;75%&quot; name=&quot;Tree&quot; code=&quot;TreeApp.class&quot;
-            archive=&quot;tree.zip&quot; codebase=&quot;./&quot; align=&quot;top&quot;&gt;</font><p><font
+            <td width="100%"><font face="Verdana">&lt;applet width="100%"
+            height="75%" name="Tree" code="TreeApp.class"
+            archive="tree.zip" codebase="./" align="top"&gt;</font><p><font
             face="Verdana"><font color="#008040">Load three files all in applet directory<br>
-            </font>&lt;param name=&quot;file1&quot; value=&quot;test.txt&quot;&gt;<br>
-            &lt;param name=&quot;file2&quot; value=&quot;test2.txt&quot;&gt;<br>
-            &lt;param name=&quot;file3&quot; value=&quot;test3.txt&quot;&gt;</font></p>
+            </font>&lt;param name="file1" value="test.txt"&gt;<br>
+            &lt;param name="file2" value="test2.txt"&gt;<br>
+            &lt;param name="file3" value="test3.txt"&gt;</font></p>
             <p><font face="Verdana"><font color="#008040">Set applet colors</font><br>
-            &lt;param name=&quot;bgHighlight&quot; value=&quot;rose&quot;&gt;<br>
-            &lt;param name=&quot;textHighlight&quot; value=&quot;white&quot;&gt;<br>
-            &lt;param name=&quot;mouseover&quot; value=&quot;blue&quot;&gt;<br>
-            &lt;param name=&quot;mouseunder&quot; value=&quot;0A0A0A&quot;&gt;</font></p>
+            &lt;param name="bgHighlight" value="rose"&gt;<br>
+            &lt;param name="textHighlight" value="white"&gt;<br>
+            &lt;param name="mouseover" value="blue"&gt;<br>
+            &lt;param name="mouseunder" value="0A0A0A"&gt;</font></p>
             <p><font face="Verdana"><font color="#008040">Add a background image and tile it</font><br>
-            &lt;param name=&quot;bgImage&quot; value=&quot;tile.gif&quot; &gt;<br>
-            &lt;param name=&quot;tile&quot; value=&quot;&quot; &gt;</font></p>
-            <p><font face="Verdana">&lt;param name=&quot;title&quot; value=&quot;The JExplorer&quot;
+            &lt;param name="bgImage" value="tile.gif" &gt;<br>
+            &lt;param name="tile" value="" &gt;</font></p>
+            <p><font face="Verdana">&lt;param name="title" value="The JExplorer"
             &gt;</font></p>
             <p><font face="Verdana"><font color="#008040">And show the URL of items in info text</font><br>
-            &lt;param name=showURL&quot; value=&quot;&quot; &gt;<br>
-            &lt;/applet&gt;</font></td>
+            &lt;param name=showURL" value="" &gt;<br>
+            &lt;/applet&gt;</font></p></td>
           </tr>
         </table>
         </div></td>
@@ -221,7 +227,7 @@
       </tr>
       <tr>
         <td height="31" bgcolor="#000000"><p align="right"><font color="#ffffff" face="Verdana"><big><big><a
-        name="Using Colors">Using Colors</a></big></big></font></td>
+        name="Using Colors">Using Colors</a></big></big></font></p></td>
       </tr>
       <tr>
         <td height="72"><font face="Verdana">Colors can be defined in two ways. Firstly a color
@@ -255,11 +261,11 @@
         <td height="172"><div align="left"><table border="1" cellpadding="0" width="100%"
         cellspacing="0" bordercolorlight="#000000" bordercolordark="#000000">
           <tr>
-            <td width="100%"><font face="Verdana">&lt;param name=bgColor value=&quot;black&quot;&gt;</font><p><font
-            face="Verdana">&lt;param name=bgHighlight value=&quot;lightgray&quot;&gt;</font></p>
-            <p><font face="Verdana">&lt;param name=fgColor value=&quot;A0A0A0&quot;&gt;</font></p>
-            <p><font face="Verdana">&lt;param name=textColor value=&quot;white&quot;&gt;</font></p>
-            <p><font face="Verdana">&lt;param name=textHighlight value=&quot;FF00A0&quot;&gt;</font></td>
+            <td width="100%"><font face="Verdana">&lt;param name=bgColor value="black"&gt;</font><p><font
+            face="Verdana">&lt;param name=bgHighlight value="lightgray"&gt;</font></p>
+            <p><font face="Verdana">&lt;param name=fgColor value="A0A0A0"&gt;</font></p>
+            <p><font face="Verdana">&lt;param name=textColor value="white"&gt;</font></p>
+            <p><font face="Verdana">&lt;param name=textHighlight value="FF00A0"&gt;</font></p></td>
           </tr>
         </table>
         </div></td>
@@ -269,7 +275,7 @@
       </tr>
       <tr>
         <td height="31" bgcolor="#000000"><p align="right"><font color="#ffffff" face="Verdana"><big><big><a
-        name="Using Applets">Using Applets</a></big></big></font></td>
+        name="Using Applets">Using Applets</a></big></big></font></p></td>
       </tr>
       <tr>
         <td height="77"><font face="Verdana">&lt; applet codebase = URL code=applet-filename
@@ -321,7 +327,7 @@
     newer browsers include the option of downloading the resources needed from a single
     archive or zip file.The filename is relative to the codebase and should contain the class
     files required to run the applet.&nbsp; The archive file is included with the distribution
-    classes.</font><p>&nbsp;</td>
+    classes.</font><p>&nbsp;</p></td>
   </tr>
 </table>
 </div>
