@@ -100,8 +100,11 @@ public class DisplayWindowFrame
 
          jbInit();
 
-         mKbdEditor = new KeyboardChooserPanel(ctx, elt, allowKbdEdit);
-         this.getContentPane().add(mKbdEditor, BorderLayout.NORTH);
+         if ( allowKbdEdit )
+         {
+            mEditButton.setText("Edit Simulator Input Settings ...");
+            this.getContentPane().add(mEditButton, BorderLayout.NORTH);
+         }
 
          placeMyself();
 
@@ -260,7 +263,6 @@ public class DisplayWindowFrame
    private DisplayWindowFrame_this_configElementAdapter mElementListener = null;
    private boolean mHideMouse = false;
 //   private boolean mMousePressed = false;
-   private KeyboardChooserPanel mKbdEditor = null;
    private ViewportPlacer mViewportEditor = null;
    private ConfigElement mSelectedViewport = null;
 

@@ -136,7 +136,6 @@ public class SimKeyboardEditorPanel
       // nothing for this panel to do.
       if ( kbdElt == null )
       {
-         mAddSimDeviceButton.setEnabled(false);
          mRemoveSimDeviceButton.setEnabled(false);
       }
       // If the given ConfigElement reference is not null, then we will not
@@ -152,7 +151,7 @@ public class SimKeyboardEditorPanel
                                                KEYBOARD_MOUSE_TYPE);
          }
 
-         mKbdElement = kbdElt;
+         keyboardDeviceElement = kbdElt;
 
          ConfigBroker broker = new ConfigBrokerProxy();
          List elements = broker.getElements(ctx);
@@ -198,7 +197,7 @@ public class SimKeyboardEditorPanel
                if ( kbd_ptr != null && kbd_ptr.getTarget() != null &&
                     kbd_ptr.getTarget().equals(kbdElt.getName()) )
                {
-                  mKbdProxyElement = proxy_elt;
+                  keyboardProxyElement = proxy_elt;
 
                   // Loop over all the simulated device config elements we
                   // know about looking for those that refer to the keyboard
@@ -250,6 +249,11 @@ public class SimKeyboardEditorPanel
       mDataSourceName = dataSourceName;
    }
 
+   public ConfigElement getKeyboardDeviceElement()
+   {
+      return keyboardDeviceElement;
+   }
+
    private void jbInit() throws Exception
    {
       this.setLayout(mMainLayout);
@@ -284,11 +288,11 @@ public class SimKeyboardEditorPanel
       mDeviceScrollPane.getViewport().add(mDeviceList);
    }
 
-   private ConfigContext mContext           = null;
-   private ConfigElement mKbdElement        = null;
-   private ConfigElement mKbdProxyElement   = null;
-   private Map           mSimDevProxyDefMap = new HashMap();
-   private String        mDataSourceName    = null;
+   private ConfigContext mContext              = null;
+   private ConfigElement keyboardDeviceElement = null;
+   private ConfigElement keyboardProxyElement  = null;
+   private Map           mSimDevProxyDefMap    = new HashMap();
+   private String        mDataSourceName       = null;
 
    private Map mSimEditorMap = new HashMap();
    private SimDeviceEditor mCurSimEditor = null;
@@ -309,6 +313,33 @@ public class SimKeyboardEditorPanel
 
    void mAddSimDeviceButton_actionPerformed(ActionEvent event)
    {
+      if ( keyboardDeviceElement == null )
+      {
+         ConfigBrokerProxy broker = new ConfigBrokerProxy();
+         ConfigDefinition kbd_def =
+            broker.getRepository().get(KEYBOARD_MOUSE_TYPE);
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+
+         // Create the new KEYBOARD_MOUSE_TYPE config element.  We won't bother
+         // to ask the user for a name since they probably won't care anyway.
+         keyboardDeviceElement = factory.createUnique(kbd_def, mContext);
+
+         // Create a proxy to the new KEYBOARD_MOUSE_TYPE config element.
+         ConfigDefinition kbd_proxy_def =
+            broker.getRepository().get(KEYBOARD_MOUSE_PROXY_TYPE);
+         keyboardProxyElement =
+            factory.create(keyboardDeviceElement.getName() + " Proxy",
+                           kbd_proxy_def);
+         keyboardProxyElement.setProperty(DEVICE_PROPERTY, 0,
+                                          keyboardDeviceElement.getName());
+
+         // Add the newly created config elements to the data source that the
+         // user selected.
+         broker.add(mContext, keyboardDeviceElement, mDataSourceName);
+         broker.add(mContext, keyboardProxyElement, mDataSourceName);
+      }
+
       Container parent =
          (Container) SwingUtilities.getAncestorOfClass(Container.class, this);
 
@@ -316,10 +347,10 @@ public class SimKeyboardEditorPanel
       // chooser, it will use the same data source that is currently in use
       // for this panel.  As far as the user is concerned, this should make
       // sense.  Furthermore, the device to be created will need to reference
-      // mKbdProxyElement, so it would generally be best to have all those
+      // keyboardProxyElement, so it would generally be best to have all those
       // config elements in the same file.
       SimDeviceCreateDialog dlg =
-         new SimDeviceCreateDialog(parent, mContext, mKbdProxyElement,
+         new SimDeviceCreateDialog(parent, mContext, keyboardProxyElement,
                                    mSimDevProxyDefMap, mDataSourceName);
       SimDeviceConfig sim_dev_cfg = dlg.showDialog();
 
