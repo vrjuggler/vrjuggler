@@ -92,6 +92,13 @@ public class ChunkDescDB extends Vector {
 
 
 
+    public void addElement (ChunkDesc d) {
+	remove (d.token);
+	super.addElement(d);
+    }
+
+
+
   public boolean read (ConfigStreamTokenizer st) {
     String name;
     ChunkDesc c;
@@ -105,7 +112,7 @@ public class ChunkDescDB extends Vector {
 	  throw new IOException();
 	st.nextToken();
 	name = st.sval;
-	System.err.println ("Adding chunk: " + name);
+	//System.err.println ("Reading chunkDesc: " + name);
 	c = new ChunkDesc (name);
 	c.read(st);
 	addElement(c);
