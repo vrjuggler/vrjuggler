@@ -543,6 +543,11 @@ AC_OUTPUT(jccl-config
           rtrc/jccl/Makefile
           rtrc/jccl/Makefile.inc
           rtrc/jccl/RTRC/Makefile
+          test/Makefile
+          test/TestSuite/Makefile
+          test/TestSuite/test.defs.mk
+          test/TestSuite/java/Makefile
+          test/TestSuite/TestCases/Makefile
           vjcontrol/Makefile
           vjcontrol/Makefile.inc
           mtree/JCCL.data.dist

@@ -42,7 +42,7 @@ namespace jcclTest
         jccl::ConfigChunkPtr chunk;
         jccl::ConfigChunkDB chunkdb;
 
-        jccl::ChunkFactory::instance()->loadDescs ("${JCCL_BASE_DIR}/share/data/jccl-chunks.desc");
+        jccl::ChunkFactory::instance()->loadDescs ("${JCCL_BASE_DIR}/share/jccl/data/jccl-chunks.desc");
 
 
         std::string file_path(TESTFILES_PATH);
