@@ -34,6 +34,7 @@
 #define _CLUSTER_APPLICATION_DATA_MANAGER_H
 
 #include <cluster/Plugins/PluginConfig.h>
+#include <vector>
 #include <map>
 
 #include <vpr/vpr.h>
