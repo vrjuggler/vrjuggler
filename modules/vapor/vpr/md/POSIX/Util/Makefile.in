@@ -56,7 +56,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
-ifeq (@SUBSYSTEM@, POSIX)
+ifneq (@SUBSYSTEM@, NSPR)
     SRCS	= ErrorImplPosix.cpp
 endif
 
