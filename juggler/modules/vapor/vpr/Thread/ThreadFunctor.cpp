@@ -46,7 +46,7 @@ namespace vpr {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
         func();	// Call the functor's operator ()
     }
-#elif defined(VPR_OS_Win32)	/* ----- Using Win32 ---- */
+#elif defined(VPR_USE_WIN32)	/* ----- Using Win32 ---- */
     unsigned int __stdcall
     ThreadFunctorFunction (void* args) {
          BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
