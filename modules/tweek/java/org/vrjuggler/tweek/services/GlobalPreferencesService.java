@@ -158,7 +158,7 @@ public class GlobalPreferencesService
       return lookAndFeel;
    }
 
-   public void addBeanViewer (String name)
+   private void addBeanViewer(String name)
    {
       beanViewers.add(name);
    }
@@ -521,7 +521,10 @@ public class GlobalPreferencesService
          }
          else
          {
-            viewer_element.setAttribute("name", "IconViewer");
+            // XXX: Hard coding a Bean viewer this way is rather bad, but if
+            // beanViewers is empty, then no Viewer Beans have been discovered
+            // yet.
+            viewer_element.setAttribute("name", "Tree Viewer");
          }
 
          beanViewer = viewer_element.getAttribute("name").getValue();
