@@ -86,6 +86,20 @@ Released: December 24, 2004
            VPR_PROFILE_HISTORY() has been renamed to
            VPR_PROFILE_GUARD_HISTORY().
 
+         * The pseudo-device TweekGadget has been removed from Gadgeteer.
+           Its sole purpose was to work around the lack of support for
+           shared application-specific data in a cluster configuration.
+           That feature has existed since VR Juggler 2.0 Alpha 1, and
+           therefore, TweekGadget had out-lived its usefullness a long
+           time ago.  Users of TweekGadget must switch their code to use
+           the Tweek Java and C++ APIs directly in conjunction with the
+           Gadgeteer type cluster::UserData<T> for sharing arbitrary
+           application-specific data structures.  Programmer's unfamiliar
+           with the direct use of the Tweek C++ and Java APIs are
+           referred to the Tweek /Programmer's Guide/:
+
+              http://www.vrjuggler.org/tweek/docs.php
+
 Version: 2.0 Alpha 4 (1.1.150-0)
 Released: April 28, 2004
 
