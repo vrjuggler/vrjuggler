@@ -65,7 +65,6 @@ vpr::ReturnStatus SocketImplSIM::close ()
 {
    vpr::ReturnStatus status;
 
-
    vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
       
    if ( mPeer != NULL )
@@ -75,6 +74,7 @@ vpr::ReturnStatus SocketImplSIM::close ()
       // directly with our peer, this is a reasonable thing to do.
       mPeer->disconnect();
       disconnect();
+      vpr::sim::Controller::instance()->flushPath(this, mPathToPeer);
    }
 
    if ( mBound )

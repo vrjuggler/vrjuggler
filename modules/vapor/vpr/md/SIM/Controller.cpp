@@ -130,6 +130,68 @@ void Controller::addLocalhostDeliveryEvent (const vpr::Interval& event_time,
    mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(connector_sock, EventData::LOCALHOST_DELIVERY)));
 }
 
+void Controller::flushPath (const vpr::SocketImplSIM* sock,
+                            vpr::sim::NetworkGraph::VertexListPtr path)
+{
+   vpr::sim::NetworkGraph::VertexList::iterator source, dest;
+   vpr::sim::NetworkGraph::net_edge_t current_line;
+   bool got_next_line;
+
+   source = dest = path->begin();
+   ++dest;
+
+   for ( ; dest != path->end(); ++dest )
+   {
+      boost::tie(current_line, got_next_line) = mGraph.getEdge(*source, *dest);
+
+      if ( got_next_line )
+      {
+         vpr::sim::NetworkLine& line_prop = mGraph.getLineProperty(current_line);
+         vpr::sim::NetworkLine::LineDirection dir;
+         std::vector<vpr::Interval> event_times;
+
+         dir = mGraph.isSource(*source, current_line) ? NetworkLine::FORWARD
+                                                      : NetworkLine::REVERSE;
+
+         line_prop.removeActiveMessages(sock, event_times, dir);
+
+         // If the event_times vector has elements in it, these specify the
+         // times at which flushed messages were scheduled to arrive.  We must
+         // remove these events from the mEvents container.
+         if ( ! event_times.empty() )
+         {
+            EventData test_event(current_line, dir);    // Message event
+            event_map_t::iterator event_iter, end_iter;
+
+            // For each of the scheduled event times, look up all the events
+            // in the event container with that time and find the one that
+            // matches the message flushed from the line above.
+            for ( std::vector<vpr::Interval>::iterator i = event_times.begin();
+                  i != event_times.end();
+                  ++i )
+            {
+               boost::tie(event_iter, end_iter) = mEvents.equal_range(*i);
+
+               // XXX: I'm not sure if std::remove_if() can be used here
+               // because mEvents is currently an associative container.
+               for ( ; event_iter != end_iter; ++event_iter )
+               {
+                  if ( test_event == (*event_iter).second )
+                  {
+                     mEvents.erase(event_iter);
+                  }
+               }
+            }
+         }
+      }
+
+      // Finally, move the source to point to the current destination.  The
+      // destination will be incremented as part of the for loop's
+      // iteration.
+      source = dest;
+   }
+}
+
 void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 {
    if ( recvSocket != NULL )
