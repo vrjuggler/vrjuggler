@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
@@ -100,9 +101,13 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
  */
 vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
 {
-   // ASSERT if the given datastream does not start with the correct datatype flag
+   // ASSERT if the given datastream does not start with the correct datatype
+   // flag.
+   // XXX: Should there be error checking for the case when vprASSERT() is
+   // compiled out?  -PH 8/21/2003
    vpr::Uint16 data_type = reader->readUint16();
    vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()]Not EventWindow Data");
+   boost::ignore_unused_variable_warning(data_type);
    
    // We must save this value to set the sync time after we updateEventQueue.
    // This is because we can not ready the timestamp from an event in the
