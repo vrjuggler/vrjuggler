@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //===============================================================
-// Isense (a Wrapper for IntersenseStandalone)
+// Intersense (a Wrapper for IntersenseStandalone)
 //===============================================================
 
-#ifndef _VRJ_ISENSE_H_
-#define _VRJ_ISENSE_H_
+#ifndef _VRJ_INTERSENSE_H_
+#define _VRJ_INTERSENSE_H_
 
 #include <vrj/vjConfig.h>
 #include <vector>
@@ -83,19 +83,19 @@ typedef struct {
 
 
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
-//class Isense : virtual public Position, virtual public Digital, virtual public Analog
+//class Intersense : virtual public Position, virtual public Digital, virtual public Analog
 
 //----------------------------------------------------------------------------
 //: Position derived class for running an IS900 tracking system.
 //
 //  Wraps the IntersenseStandalone driver.
 //
-//  Isense is a positional device driver for the Flock of Birds, the config
+//  Intersense is a positional device driver for the Flock of Birds, the config
 //  chunk in the constructor should set up all the settings, for these to be
 //  changed the Flock has to be deleted and a new instance created with an
 //  updated configchunk.
 //  <br>
-//! NOTE: Isense inherits from Digital and Analog.  These base classes,
+//! NOTE: Intersense inherits from Digital and Analog.  These base classes,
 //+ however, can not handle multiple receivers in the same way as
 //+ Position.  Therefore, to access buttons 0-3 on station 0,
 //+ call for button 0-3. but to access buttons 0-3 on station 1,
@@ -112,11 +112,11 @@ typedef struct {
 // See also: Position
 //---------------------------------------------------------------------------
 //!PUBLIC_API:
-class Isense :  public Input, public Position,  public Digital,  public Analog
+class Intersense :  public Input, public Position,  public Digital,  public Analog
 {
     public:
-   Isense();
-   virtual ~Isense();
+   Intersense();
+   virtual ~Intersense();
 
 
 //: configure the flock with a config chunk
@@ -138,7 +138,7 @@ class Isense :  public Input, public Position,  public Digital,  public Analog
     void updateData();
 
 //: return what chunk type is associated with this class.
-    static std::string getChunkType() { return std::string("Isense");}
+    static std::string getChunkType() { return std::string("Intersense");}
 
 //: Get the receiver transform
 //! ARGS: dev - is the reciever number
@@ -199,4 +199,4 @@ private:
 
 };
 
-#endif //vjIsense_h
+#endif
