@@ -60,31 +60,6 @@
 <HR>
 
 {if class}
-  {if membervar !private}
-    <!-- Index of non-private class member variable(s). -->
-    <H3>Member Variable Summary</H3>
-
-      <DL>
-	{foreach member all}
-	  {if !mprivate}
-	    {if !func}
-	      <DT>{include ../common/member_type.html.inc}
-		  <TT><B>{name}</B></TT>
-		  {if enum}
-		  <FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
-		  {endif}
-		<DD>
-		  {if brief}
-		    {brief}
-		  {endif}
-		  <P> </P>
-		</DD>
-	    {endif}
-	  {endif}
-	{next member}
-      </DL>
-  {endif}
-
   {if constructor !private}
     <!-- Index of non-private class constructor(s). -->
     <H3>Constructor Summary</H3>
@@ -141,6 +116,31 @@
 		    </TT>
 		{endif}
 	      {endelse}
+	    {endif}
+	  {endif}
+	{next member}
+      </DL>
+  {endif}
+
+  {if membervar public}
+    <!-- Index of non-private class member variable(s). -->
+    <H3>Member Variable Summary</H3>
+
+      <DL>
+	{foreach member all}
+	  {if public}
+	    {if !func}
+	      <DT>{include ../common/member_type.html.inc}
+		  <TT><B>{name}</B></TT>
+		  {if enum}
+		  <FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
+		  {endif}
+		{if brief}
+		  <DD>
+		    {brief}
+		    <P> </P>
+		  </DD>
+		{endif}
 	    {endif}
 	  {endif}
 	{next member}
