@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: reconfigApp$(EXT_EXT)
+all: reconfigApp$(EXE_EXT)
 
 APP_NAME=	reconfigApp$(EXE_EXT)
 

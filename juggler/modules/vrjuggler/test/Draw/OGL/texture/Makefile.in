@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: texture$(EXT_EXT)
+all: texture$(EXE_EXT)
 
 APP_NAME=	texture$(EXE_EXT)
 

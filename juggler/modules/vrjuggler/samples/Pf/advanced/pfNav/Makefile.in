@@ -34,7 +34,7 @@
 # Makefile.in for vrjuggler/samples/Pf/advanced/pfNav.  It requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: pfNav$(EXT_EXT)
+all: pfNav$(EXE_EXT)
 
 APP_NAME=	pfNav$(EXE_EXT)
 
