@@ -44,51 +44,12 @@
 #include <gmtl/EulerAngle.h>
 
 #include <gadget/Type/PositionProxy.h>
-
+#include <gadget/Type/Position/PositionUnitConversion.h>
 
 namespace gadget
 {
 
-/**
- * Sets the transform for this PositionProxy.
- * Sets the transformation matrix to:
- * <code>
- *    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
- * </code>
- *
- * @note This means that to set transform, you specific the translation
- *       followed by rotation that takes the device from where it physically
- *       is in space to where you want it to be.
- */
-void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Translate
-                                 float xrot, float yrot, float zrot)   // Rotate
-{
-   /*
-   mETrans = true;
-   gmtl::identity(mMatrixTransform);
-
-   gmtl::Matrix44f trans_mat;
-   gmtl::Matrix44f rot_mat;
-
-   if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
-   {
-      //trans_mat .makeTrans(xoff, yoff, zoff);
-      gmtl::setTrans(trans_mat, gmtl::Vec3f(xoff, yoff, zoff));
-   }
-   if((xrot != 0.0f) || (yrot != 0.0f) || (zrot != 0.0f))
-   {
-      //rot_mat.makeXYZEuler(xrot, yrot, zrot);
-      gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(xrot),
-                                  gmtl::Math::deg2Rad(yrot),
-                                  gmtl::Math::deg2Rad(zrot) );
-      gmtl::setRot( rot_mat, euler );
-   }
-
-   mMatrixTransform = (trans_mat * rot_mat);
-   */
-}
-
-
+float PositionProxy::sScaleFactor = gadget::PositionUnitConversion::ConvertToFeet;
 
 bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
 {
@@ -104,7 +65,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       mDeviceName = chunk->getFullName();
       mDeviceName += "_NET_";   // input device we'll point to
       mUnitNum = 0;
-      setTransform(0,0,0, 0,0,0 );
+      //setTransform(0,0,0, 0,0,0 );
    }
    else
    {
@@ -115,6 +76,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       {
          vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3)
             << "Position Transform enabled..." << std::endl << vprDEBUG_FLUSH;
+         /*
          setTransform
             ( chunk->getProperty<float>("translate",0) , // xtrans
             chunk->getProperty<float>("translate",1) , // ytrans
@@ -122,6 +84,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             chunk->getProperty<float>("rotate",0) , // xrot
             chunk->getProperty<float>("rotate",1) , // yrot
             chunk->getProperty<float>("rotate",2) );// zrot
+         */
 /*
          vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,4)
             << "Transform Matrix: " << std::endl
@@ -167,6 +130,35 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    refresh();
 
    return true;
+}
+
+void PositionProxy::updateData()
+{
+   if((!mStupified) && (mTypedDevice != NULL))
+   {
+       mPositionData = (mTypedDevice->getPositionData (mUnitNum));
+
+       //vprDEBUG(vprDBG_ALL,0) << "Proxy::updateData: mPosData:" << *(mPositionData.getPosition()) << "\n" << vprDEBUG_FLUSH;
+
+      /*
+      if(mETrans)
+         transformData();
+         */
+
+      // Filter the data if there is an active filters
+      /*
+      if(mFilter != NULL)
+      {
+         *(mPositionData.getPosition()) = mFilter->getPos(*(mPositionData.getPosition()));
+      }
+      */
+
+      // Do scaling based on Proxy scale factor
+      gmtl::Vec3f trans;                              // SCALE:
+      gmtl::setTrans(trans, *(mPositionData.getPosition()));           // Get the translational vector
+      trans *= sScaleFactor;                          // Scale the translation and set the value again
+      gmtl::setTrans(*(mPositionData.getPosition()), trans);
+   }
 }
 
 } // End of gadget namespace

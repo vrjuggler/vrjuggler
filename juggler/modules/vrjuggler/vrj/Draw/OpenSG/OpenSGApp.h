@@ -138,6 +138,8 @@ inline void OpenSGApp::init()
 {
    vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::init: Called.\n" << vprDEBUG_FLUSH;
 
+   GlApp::init();
+
    // XXX: Complete initialization
    // if(!osgInitAlreadyCalled())
    OSG::osgInit(0,0);                  // Binds to primordial thread
