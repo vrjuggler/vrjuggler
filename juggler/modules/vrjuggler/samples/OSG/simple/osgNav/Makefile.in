@@ -72,6 +72,7 @@ EXTRA_LIBS+=		$(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS_MIN)
 
 IDL_CXX_FILES=		RemoteNavSubject.cpp RemoteNavSubject.h
 
+# Need to not do this unless target is "remote"
 SRCS+=			RemoteNavSubject.cpp
 endif
 
@@ -89,6 +90,9 @@ endif
 # Application build targets.
 # -----------------------------------------------------------------------------
 all:
+	$(MAKE) $(APP_NAME)
+
+remote:
 	$(MAKE) cxx_idl
 #	$(MAKE) python_idl
 	$(MAKE) NO_DEPEND=0 cxx
