@@ -22,8 +22,8 @@ Jul-09-2003 patrickh    Reorganized the way the modules are exposed to Python
                         NEW VERSION: 0.7.1
 Jun-30-2003 patrickh    Separated the source for the vpr, gadget, and vrj
                         modules into multiple .cpp files.
-Jun-26-2003 patrickh    Removed the vjAvatar bindings.  They now live along
-                        side the vjAvatar C++ code.
+Jun-26-2003 patrickh    Removed the vjAvatar bindings.  They now live alongside
+                        the vjAvatar C++ code.
                         NEW VERSION: 0.7.0
 Jun-13-2003 patrickh    Removed setter methods from vrj.Display and related
                         classes.  These now act as read-only objects when
@@ -54,7 +54,7 @@ Apr-30-2003 patrickh    Updated to Gadgeteer 0.11.0 API.
                         NEW VERSION: 0.4.7
 Apr-29-2003 patrickh    Exposed new event window classes in Gadgeteer.
                         NEW VERSION: 0.4.6
-Apr-29-2003 patrickh    Exposed vjAvatar and vjAvatar factory.
+Apr-29-2003 patrickh    Exposed vjAvatar and vjAvatarFactory.
                         NEW VERSION: 0.4.5
 Apr-26-2003 patrickh    Exposed common instances of gmtl::Coord<S, T>.
                         NEW VERSION: 0.4.4
@@ -79,6 +79,6 @@ Apr-11-2003 patrickh    Moved the individual modules into the PyJuggler
                         NEW VERSION: 0.3
 Apr-11-2003 patrickh    Removed PyJuggler.cpp because the individual modules
                         (gmtl.cpp, vpr.cpp, gadget.cpp, jccl.cpp, vrj.cpp) seem
-                        to be as stable sa the old monolithic module.
+                        to be as stable as the old monolithic module.
                         NEW VERSION: 0.2
 Apr-11-2003 patrickh    ChangeLog started
