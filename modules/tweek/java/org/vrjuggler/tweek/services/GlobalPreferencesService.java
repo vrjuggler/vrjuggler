@@ -400,6 +400,8 @@ public class GlobalPreferencesService
                                       lazyPanelBeanInstantiation ? "true"
                                                                  : "false");
 
+         m_prefs_doc_root.addContent(chooser_element);
+
          save(true);
       }
    }
