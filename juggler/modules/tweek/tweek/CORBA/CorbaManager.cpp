@@ -36,6 +36,7 @@
 
 #include <tweek/tweekConfig.h>
 
+#include <cstdio>
 #include <vpr/vpr.h>
 //#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
@@ -73,7 +74,9 @@ CorbaManager::CorbaManager()
 }
 
 vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
-                                     char** argv)
+                                     char** argv, const std::string& nsHost,
+                                     const vpr::Uint16& nsPort,
+                                     const std::string& iiopVersion)
 {
    vpr::ReturnStatus status;
 
@@ -95,7 +98,31 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
       try
       {
-         mRootContext = tweek::getRootNamingContextByInitRef(mORB);
+         // If no Naming Service host is given in the nsHost parameter, we
+         // will use the initial references method for getting the root
+         // naming context.
+         if ( nsHost == std::string("") )
+         {
+            mRootContext = tweek::getRootNamingContextByInitRef(mORB);
+         }
+         // Otherwise, we will use a corbaloc URI to get the reference to
+         // the Naming Service.
+         else
+         {
+            // Why isn't this conversion easier to do with std::string?
+            char nsPort_str[6];
+            std::sprintf(nsPort_str, "%hu", nsPort);
+
+            std::string ns_uri("corbaloc:iiop:");
+            ns_uri += iiopVersion;
+            ns_uri += std::string("@");
+            ns_uri += nsHost;
+            ns_uri += std::string(":");
+            ns_uri += nsPort_str;
+            ns_uri += std::string("/NameService");
+
+            mRootContext = tweek::getRootNamingContextByURI(mORB, ns_uri);
+         }
 
          if ( ! CORBA::is_nil(mRootContext) )
          {
