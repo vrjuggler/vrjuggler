@@ -1,0 +1,16 @@
+#codewizard.rulesdirlist /home/users/allenb/Source/juggler_1.1/share/codewizard/cw_default-rules.txt
+
+CodeWizard.Unsuppress item * type SV class * file *
+CodeWizard.Unsuppress item ecpp* type PV class * file *
+CodeWizard.Unsuppress item ecpp-12 class * file *
+CodeWizard.Unsuppress item ecpp-39 class * file *
+CodeWizard.Unsuppress item mecpp* type PV class * file *
+CodeWizard.Unsuppress item ucs-13 class * file *
+CodeWizard.Unsuppress item ucs-20 class * file *
+CodeWizard.Unsuppress item ucs-23 class * file *
+CodeWizard.Unsuppress item ucs-27 class * file *
+CodeWizard.Unsuppress item ucs-32 class * file *
+CodeWizard.Unsuppress item ucs-33 class * file *
+CodeWizard.Unsuppress item ucs-34 class * file *
+CodeWizard.Unsuppress item ucs-35 class * file *
+CodeWizard.Suppress item mecpp-24 class * file *
