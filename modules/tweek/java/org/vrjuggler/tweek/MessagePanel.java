@@ -57,22 +57,22 @@ public class MessagePanel
 
    public static MessagePanel instance ()
    {
-      if ( m_instance == null )
+      if ( mInstance == null )
       {
-         m_instance = new MessagePanel();
+         mInstance = new MessagePanel();
       }
 
-      return m_instance;
+      return mInstance;
    }
 
    public void addMessageAdditionListener (MessageAdditionListener l)
    {
-      m_listeners.add(l);
+      mListeners.add(l);
    }
 
    public void removeMessageAdditionListener (MessageAdditionListener l)
    {
-      m_listeners.remove(l);
+      mListeners.remove(l);
    }
 
    public void printStatus (String msg)
@@ -94,12 +94,12 @@ public class MessagePanel
    {
       try
       {
-         m_text_pane.getDocument().remove(0, m_last_index);
-         m_last_index = 0;
+         mTextPane.getDocument().remove(0, mLastIndex);
+         mLastIndex = 0;
       }
       catch (BadLocationException ex)
       {
-         System.err.println("Failed to clear message panel through position " + m_last_index);
+         System.err.println("Failed to clear message panel through position " + mLastIndex);
       }
    }
 
@@ -132,7 +132,7 @@ public class MessagePanel
    // Protected member variables.
    // =========================================================================
 
-   protected static MessagePanel m_instance = null;
+   protected static MessagePanel mInstance = null;
 
    // =========================================================================
    // Private methods.
@@ -140,8 +140,8 @@ public class MessagePanel
 
    private void jbInit ()
    {
-      m_text_pane.setEditable(false);
-      m_text_pane.addMouseListener(new PopupListener());
+      mTextPane.setEditable(false);
+      mTextPane.addMouseListener(new PopupListener());
       mPopupClearItem.setText("Clear Messages");
       mPopupClearItem.addActionListener(new java.awt.event.ActionListener()
       {
@@ -150,31 +150,31 @@ public class MessagePanel
             popupClearSelected(e);
          }
       });
-      panel.getViewport().add(m_text_pane, null);
+      panel.getViewport().add(mTextPane, null);
       mMsgPanelMenu.add(mPopupClearItem);
    }
 
    private void initStyles ()
    {
-      for ( int i = 0; i < m_styles.length; i++ )
+      for ( int i = 0; i < mStyles.length; i++ )
       {
-         m_styles[i] = new SimpleAttributeSet();
+         mStyles[i] = new SimpleAttributeSet();
       }
 
-      StyleConstants.setForeground(m_styles[STATUS], Color.black);
-      StyleConstants.setForeground(m_styles[WARNING], Color.orange);
-      StyleConstants.setForeground(m_styles[ERROR], Color.red);
-      StyleConstants.setBold(m_styles[ERROR], true);
+      StyleConstants.setForeground(mStyles[STATUS], Color.black);
+      StyleConstants.setForeground(mStyles[WARNING], Color.orange);
+      StyleConstants.setForeground(mStyles[ERROR], Color.red);
+      StyleConstants.setBold(mStyles[ERROR], true);
    }
 
    private void print (String text, int type)
    {
-      StyledDocument doc = (StyledDocument) m_text_pane.getDocument();
+      StyledDocument doc = (StyledDocument) mTextPane.getDocument();
 
       try
       {
-         doc.insertString(m_last_index, text, m_styles[type]);
-         m_last_index += text.length();
+         doc.insertString(mLastIndex, text, mStyles[type]);
+         mLastIndex += text.length();
 
          fireMessageAddition(text, type);
       }
@@ -182,7 +182,7 @@ public class MessagePanel
       {
          System.err.println("WARNING: Failed to insert message '" + text +
                             "' of type " + type + " at location " +
-                            m_last_index);
+                            mLastIndex);
       }
    }
 
@@ -195,7 +195,7 @@ public class MessagePanel
 
       synchronized (this)
       {
-         listeners = (Vector) m_listeners.clone();
+         listeners = (Vector) mListeners.clone();
       }
 
       for ( int i = 0; i < listeners.size(); i++ )
@@ -234,13 +234,13 @@ public class MessagePanel
    // Private member variables.
    // =========================================================================
 
-   private Vector m_listeners = new Vector();
+   private Vector mListeners = new Vector();
 
-   private JTextPane   m_text_pane  = new JTextPane();
-   private JScrollPane panel        = new JScrollPane();
-   private int         m_last_index = 0;
+   private JTextPane   mTextPane  = new JTextPane();
+   private JScrollPane panel      = new JScrollPane();
+   private int         mLastIndex = 0;
 
-   private SimpleAttributeSet[] m_styles = new SimpleAttributeSet[MSG_TYPE_COUNT];
+   private SimpleAttributeSet[] mStyles = new SimpleAttributeSet[MSG_TYPE_COUNT];
 
    private JPopupMenu mMsgPanelMenu   = new JPopupMenu();
    private JMenuItem  mPopupClearItem = new JMenuItem();
