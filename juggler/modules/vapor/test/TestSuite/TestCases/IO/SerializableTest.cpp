@@ -77,17 +77,16 @@ void SerializableTest::testReaderWriter()
    reader->readUint16(read_uint16);
    reader->readUint32(read_uint32);
    reader->readUint64(read_uint64);
-#if defined(VPR_OS_IRIX) || defined(VPR_OS_Win32)
-   read_int8 = reader->readUint8();
-   read_int16 = reader->readUint16();
-   read_int32 = reader->readUint32();
-   read_int64 = reader->readUint64();
-#else
-   reader->readUint8(vpr::Uint8(read_int8));
-   reader->readUint16(vpr::Uint16(read_int16));
-   reader->readUint32(vpr::Uint32(read_int32));
-   reader->readUint64(vpr::Uint64(read_int64));
-#endif
+
+   vpr::Uint8* temp_uint8   = (vpr::Uint8*) &read_int8;
+   vpr::Uint16* temp_uint16 = (vpr::Uint16*) &read_int16;
+   vpr::Uint32* temp_uint32 = (vpr::Uint32*) &read_int32;
+   vpr::Uint64* temp_uint64 = (vpr::Uint64*) &read_int64;
+
+   reader->readUint8(*temp_uint8);
+   reader->readUint16(*temp_uint16);
+   reader->readUint32(*temp_uint32);
+   reader->readUint64(*temp_uint64);
    reader->readFloat(read_float);
    reader->readDouble(read_double);
    reader->readString(read_string);
