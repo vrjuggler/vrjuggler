@@ -36,45 +36,44 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Serial I/O types.
-// ----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Serial I/O types.
+ */
 namespace SerialTypes {
-    //: Possible update action values.
+    /// Possible update action values.
     enum UpdateActionOption {
-        NOW,            // Perform change immediately
-        DRAIN,          // Perform change after all output is transmitted
-        FLUSH           // Perform chagne after all output is transmitted and
-                        // discard all unread input
+        NOW,            /**< Perform change immediately */
+        DRAIN,          /**< Perform change after all output is transmitted */
+        FLUSH           /**< Perform chagne after all output is transmitted
+                             and discard all unread input */
     };
 
-    //: Possible flow action values.
+    /// Possible flow action values.
     enum FlowActionOption {
-        OUTPUT_OFF,     // Output is suspended
-        OUTPUT_ON,      // Previously suspended output is restarted
-        INPUT_OFF,      // Send a STOP character to the device
-        INPUT_ON        // Send a START character to the device
+        OUTPUT_OFF,     /**< Output is suspended */
+        OUTPUT_ON,      /**< Previously suspended output is restarted */
+        INPUT_OFF,      /**< Send a STOP character to the device */
+        INPUT_ON        /**< Send a START character to the device */
     };
 
-    //: Posslbie queue flushing options values.
+    /// Posslbie queue flushing options values.
     enum FlushQueueOption {
-        INPUT_QUEUE,    // Flush data received but not read on input queue
-        OUTPUT_QUEUE,   // Flush data written but not transmitted on output
-                        // queue 
-        IO_QUEUES       // Flush all data (combination of the above two)
+        INPUT_QUEUE,    /**< Flush data received but not read on input queue */
+        OUTPUT_QUEUE,   /**< Flush data written but not transmitted on output
+                             queue */
+        IO_QUEUES       /**< Flush all data (combination of the above two) */
     };
 
     enum CharacterSizeOption {
-        CS_BITS_5 = 5,  // 5 bits per byte
-        CS_BITS_6 = 6,  // 6 bits per byte
-        CS_BITS_7 = 7,  // 7 bits per byte
-        CS_BITS_8 = 8   // 8 bits per byte
+        CS_BITS_5 = 5,  /**< 5 bits per byte */
+        CS_BITS_6 = 6,  /**< 6 bits per byte */
+        CS_BITS_7 = 7,  /**< 7 bits per byte */
+        CS_BITS_8 = 8   /**< 8 bits per byte */
     };
 
     enum ParityType {
-        PORT_PARITY_EVEN = 0, // Even parity
-        PORT_PARITY_ODD  = 1  // Odd parity
+        PORT_PARITY_EVEN = 0, /**< Even parity */
+        PORT_PARITY_ODD  = 1  /**< Odd parity */
     };
 };
 
