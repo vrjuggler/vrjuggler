@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 //#include <vrj/Config/ConfigChunkPtr.h>
 #include <gadget/Type/PositionInterface.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
+#include <vpr/Util/Interval.h>
 
 namespace jccl {
     class ConfigChunk;
@@ -88,7 +88,7 @@ public:
    Matrix* getHeadPos()
    { return mHead->getData(); }
 
-   jccl::TimeStamp getHeadUpdateTime()
+   vpr::Interval getHeadUpdateTime()
    { return mHead->getTimeStamp(); }
 
    float getInterocularDistance()
