@@ -27,6 +27,9 @@ public:
       in_stereo = false;
       window_is_open = false;
       mDirtyContext = true;      // Always dirty when window first created
+
+      mDisplay = NULL;
+      display_name = NULL;
    }
 
 public:
@@ -125,10 +128,3 @@ private:
 // ostream& operator<<(ostream& out, vjGlWindow& win);
 
 #endif
-
-
-
-
-
-
-
