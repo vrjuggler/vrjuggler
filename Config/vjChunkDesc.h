@@ -3,13 +3,13 @@
  *
  * Author: Christopher Just
  *
- * A vjChunkDesc is a description for a kind of vjConfigChunk.  The vjChunkDesc
+ * A vjChunkDesc is a description for a kind of ConfigChunk.  The vjChunkDesc
  * includes a typename and a list of property descriptions.
  *
  */
 
-#ifndef _CHUNKDESC_H_
-#define _CHUNKDESC_H_
+#ifndef _VJ_CHUNKDESC_H_
+#define _VJ_CHUNKDESC_H_
 
 #include <config.h>
 #include <strings.h>
@@ -55,37 +55,40 @@ public:
 };
 
 
-//: A vjPropertyDesc describes a single Property entry for a vjConfigChunk.
-//  Information stored in a vjPropertyDesc includes Property Name, Type,
-//  number of allowed values, and a Help string describing the purpose
-//  of the particular property.  vjPropertyDescs also include information
-//  for parsing a Property, and (optional) enumeration data for T_INT
-//  type Properties.
-//  Note: Frequently the docs for this class will refer to 'this
-//  Property', which refers to any object of class Property instantiated
-//  using this description.
-//
+/** A vjPropertyDesc describes a single vjProperty entry for a ConfigChunk.
+ *  Information stored in a vjPropertyDesc includes vjProperty Name, Type,
+ *  number of allowed values, and a Help string describing the purpose
+ *  of the particular property.  vjPropertyDescs also include information
+ *  for parsing a vjProperty, and (optional) enumeration data for T_INT
+ *  type Properties.
+ *  Note: Frequently the docs for this class will refer to 'this
+ *  vjProperty', which refers to any object of class vjProperty instantiated
+ *  using this description.
+ */
 class vjPropertyDesc {
 
 public:
 
-  /// String name of the Property this object describes.
+  /// String descriptive name of the vjProperty this object describes.
   char *name;
-  /// Type of values allowed in this Property.
+  /// Type of values allowed in this vjProperty.
   VarType type;
-  /** Number of value entries allowed for this Property.
+  /** Number of value entries allowed for this vjProperty.
    *  Typically this is an integer > 0.  For example, a tracker
    *  position offset might be described with 3 Float values (xyz).
-   *  A value of -1 indicates that this Property may have a variable
+   *  A value of -1 indicates that this vjProperty may have a variable
    *  number of values (e.g. for a list of active Walls).
    */
   int  num; 
-  /** The token is a string used to identify this Property when
-   *  reading and writing vjConfigChunks.
+  /** The token is a string used to identify this vjProperty when
+   *  reading and writing ConfigChunks & querying a chunkdesc
    */
   char *help;
   char *token; 
   /* the token used to id this in the parser (not case sensitive) */
+
+  vector<vjEnumEntry*> valuelabels;
+
   vector<vjEnumEntry*> enumv;
   /* enumv is used to store enumerations - string/int pairs for T_INTs,
    * valid string values for T_STRINGS, and names of acceptable chunk
@@ -118,18 +121,20 @@ public:
 };
 
 
-//: A vjChunkDesc contains a description of a single type of vjConfigChunk.
-//  Primarily, it is a name and a list of vjPropertyDescs.
-//  vjChunkDescs will probably only need to be used by the vjChunkDescDB,
-//  the vjConfigChunkDB, and the GUI.
-//
+/** A vjChunkDesc contains a description of a single type of ConfigChunk.
+ *  Primarily, it is a name and a list of vjPropertyDescs.
+ *  vjChunkDescs will probably only need to be used by the vjChunkDescDB,
+ *  the ConfigChunkDB, and the GUI.
+ */
 class vjChunkDesc {
 
 public:
-  /** Name of the vjChunkDesc.  This will be the type of the vjConfigChunks
+  /** Name of the vjChunkDesc.  This will be the type of the ConfigChunks
    *  created using it.
    */
   char *name;
+  char *token;
+  char *help;
   /** Vector of properties.
    */
   vector<vjPropertyDesc*> plist;
@@ -137,11 +142,19 @@ public:
   vjChunkDesc& operator= (const vjChunkDesc& other) {
     if (name)
       delete name;
+    if (help)
+	delete help;
+    if (token)
+	delete token;
     for (int i = 0; i < plist.size(); i++)
       delete plist[i];
 
     name = new char[strlen (other.name)+1];
     strcpy (name, other.name);
+    token = new char[strlen (other.token)+1];
+    strcpy (token, other.token);
+    help = new char[strlen(other.help)+1];
+    strcpy (help, other.help);
     plist = other.plist;
 
     return *this;
@@ -162,6 +175,25 @@ public:
     if (!name)
       return false;
     strcpy (name, n);
+    return true;
+  }
+
+  bool setToken (char *n) {
+    if (token)
+      delete token;
+    token = new char[strlen(n)+1];
+    if (!token)
+      return false;
+    strcpy (token, n);
+    return true;
+  }
+  bool setHelp (char *n) {
+    if (help)
+      delete help;
+    help = new char[strlen(n)+1];
+    if (!help)
+      return false;
+    strcpy (help, n);
     return true;
   }
 

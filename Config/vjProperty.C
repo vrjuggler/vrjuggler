@@ -1,4 +1,4 @@
-/* vjPropery.C
+/* vjProperty.C
  *
  */
 
@@ -8,12 +8,12 @@
 
 
 
-vjPropery::vjPropery (vjPropertyDesc *pd):value() {
+vjProperty::vjProperty (vjPropertyDesc *pd):value() {
   int j;
   vjVarValue *v;
 
   description = pd;
-  name = pd->name;
+  name = pd->token;
   num = pd->num;
   type = pd->type;
 
@@ -32,7 +32,7 @@ vjPropery::vjPropery (vjPropertyDesc *pd):value() {
 
 
 
-vjPropery::~vjPropery () {
+vjProperty::~vjProperty () {
   int i;
 
   for (i = 0; i < value.size(); i++) 
@@ -41,7 +41,7 @@ vjPropery::~vjPropery () {
 
 
 
-bool vjPropery::applyUnits (CfgUnit u) {
+bool vjProperty::applyUnits (CfgUnit u) {
 
   if (type == T_DISTANCE) {
     for (int j = 0; j < value.size(); j++)
@@ -56,7 +56,7 @@ bool vjPropery::applyUnits (CfgUnit u) {
 
 
 
-vjEnumEntry* vjPropery::getEnumEntry (char *n) {
+vjEnumEntry* vjProperty::getEnumEntry (char *n) {
   for (int i = 0; i < description->enumv.size(); i++)
     if (!strcasecmp (n, description->enumv[i]->getName()))
       return description->enumv[i];
@@ -65,7 +65,7 @@ vjEnumEntry* vjPropery::getEnumEntry (char *n) {
 
 
 
-vjEnumEntry* vjPropery::getEnumEntry (int val) {
+vjEnumEntry* vjProperty::getEnumEntry (int val) {
   // gets an enumentry based on the value, instead of the name
   for (int i = 0; i < description->enumv.size(); i++)
     if (val == description->enumv[i]->getVal())
@@ -75,9 +75,8 @@ vjEnumEntry* vjPropery::getEnumEntry (int val) {
 
 
 
-ostream& operator << (ostream &out, vjPropery& p) {
-  out << p.description->token;
-  out << " { ";
+ostream& operator << (ostream &out, vjProperty& p) {
+  out << p.name << " { ";
   for (int i = 0; i < p.value.size(); i++) {
     vjVarValue *v = ((p.value))[i];
 
@@ -103,7 +102,7 @@ ostream& operator << (ostream &out, vjPropery& p) {
 }
 
 
-vjVarValue& vjPropery::getValue (int ind) {
+vjVarValue& vjProperty::getValue (int ind) {
   if ((ind < 0) || (ind >= value.size())) {
     vjVarValue v(T_INVALID);
     return v;
@@ -112,13 +111,13 @@ vjVarValue& vjPropery::getValue (int ind) {
 }
 
 
-int vjPropery::getNum () {
+int vjProperty::getNum () {
   return value.size();
 }
 
 
 
-bool vjPropery::preSet (int ind) {
+bool vjProperty::preSet (int ind) {
   int i;
   vjVarValue *v;
   
@@ -140,7 +139,7 @@ bool vjPropery::preSet (int ind) {
 
 
 
-bool vjPropery::setValue (int val, int ind ) {
+bool vjProperty::setValue (int val, int ind ) {
   
   if (!preSet(ind))
     return false;
@@ -150,7 +149,7 @@ bool vjPropery::setValue (int val, int ind ) {
 
 
 
-bool vjPropery::setValue (float val, int ind ) {
+bool vjProperty::setValue (float val, int ind ) {
 
   if (!preSet(ind))
     return false;
@@ -160,7 +159,7 @@ bool vjPropery::setValue (float val, int ind ) {
 
 
 
-bool vjPropery::setValue (char* val, int ind) {
+bool vjProperty::setValue (char* val, int ind) {
   
   if (!preSet(ind))
     return false;

@@ -21,7 +21,7 @@ vjChunkDescDB::~vjChunkDescDB() {
 
 vjChunkDesc* vjChunkDescDB::getChunkDesc (char *name) {
   for (int i = 0; i < descs.size(); i++)
-    if (!strcasecmp (descs[i]->name, name))
+    if (!strcasecmp (descs[i]->token, name))
       return descs[i];
   return NULL;
 }
@@ -30,7 +30,7 @@ vjChunkDesc* vjChunkDescDB::getChunkDesc (char *name) {
 
 bool vjChunkDescDB::insert (vjChunkDesc *d) {
   for (int i = 0; i < descs.size(); i++) 
-    if (!strcasecmp (descs[i]->name, d->name)) {
+    if (!strcasecmp (descs[i]->token, d->token)) {
       delete (descs[i]);
       descs[i] = d;
       return true;
@@ -41,11 +41,11 @@ bool vjChunkDescDB::insert (vjChunkDesc *d) {
 
 
 
-bool vjChunkDescDB::remove (char *name) {
+bool vjChunkDescDB::remove (char *tok) {
   
   vector<vjChunkDesc*>::iterator begin = descs.begin();
   while (begin != descs.end()) {
-    if (!strcasecmp ((*begin)->name, name)) {
+    if (!strcasecmp ((*begin)->token, tok)) {
       delete(*begin);
       descs.erase(begin);
       return true;
@@ -121,6 +121,8 @@ bool vjChunkDescDB::load (char *fname) {
   in >> *this;
   return true;
 }
+
+
 
 bool vjChunkDescDB::save (char *fname) {
   ofstream out(fname);

@@ -10,9 +10,9 @@
 
 vjConfigChunk::vjConfigChunk (vjChunkDesc *desc) :props() {
 
-  mytypename = desc->name;
+  mytypename = desc->token;
   for (int i = 0; i < desc->plist.size(); i++)
-    props.push_back (new vjPropery(desc->plist[i]));
+    props.push_back (new vjProperty(desc->plist[i]));
 }
 
 
@@ -24,7 +24,7 @@ vjConfigChunk::~vjConfigChunk () {
 
 
 
-vjPropery* vjConfigChunk::getPropertyPtr (char *property) {
+vjProperty* vjConfigChunk::getPropertyPtr (char *property) {
   for (int i = 0; i < props.size(); i++) {
     if (!strcasecmp(props[i]->name,property))
       return props[i];
@@ -34,7 +34,7 @@ vjPropery* vjConfigChunk::getPropertyPtr (char *property) {
 
 
 
-vjPropery* vjConfigChunk::getPropertyFromToken (char *token) {
+vjProperty* vjConfigChunk::getPropertyFromToken (char *token) {
   for (int i = 0; i < props.size(); i++) {
     if (!strcasecmp(props[i]->description->token,token))
       return props[i];
@@ -136,7 +136,7 @@ bool vjConfigChunk::getToken (istream& in, Token& tok) {
 
 
 
-bool vjConfigChunk::tryassign (vjPropery *p, Token &tok, int i) {
+bool vjConfigChunk::tryassign (vjProperty *p, Token &tok, int i) {
   /* This does some type-checking and translating before just
    * doing an assign into the right value entry of p. Some of
    * this functionality ought to just be subsumed by vjVarValue
@@ -215,7 +215,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
   /* can't really use property >> because we don't know what
    * property to assign into.
    */
-  vjPropery *p;
+  vjProperty *p;
   Token tok;
   int i;
 
@@ -231,13 +231,13 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 
     // We have a string token; assumably a property name.
     if (!(p = self.getPropertyFromToken (tok.strval))) {
-      vjDEBUG(3) << "ERROR: vjPropery '" << tok.strval << "' is not found in"
+      vjDEBUG(3) << "ERROR: Property '" << tok.strval << "' is not found in"
 		 << " Chunk " << self.mytypename << endl;
       self.getToken(in,tok);
       continue;
     }
 
-    // We're reading a line of input for a valid vjPropery.
+    // We're reading a line of input for a valid Property.
     self.getToken (in, tok);
     if (tok.type == TK_OpenBracket) {
       // We're reading values until we get a TK_CloseBracket.
@@ -255,10 +255,10 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	self.getToken (in, tok);
       }
       if ((p->num != -1) && (p->num != i))
-	vjDEBUG(3) << "ERROR: vjPropery " << p->name << " should have "
+	vjDEBUG(3) << "ERROR: vjProperty " << p->name << " should have "
 		   << p->num << " values; " << i << " found" << endl;
       if (tok.type != TK_CloseBracket)
-	vjDEBUG(3) << "ERROR: vjPropery " << p->name << ": '}' expected" 
+	vjDEBUG(3) << "ERROR: vjProperty " << p->name << ": '}' expected" 
 		   << endl;
       self.getToken (in,tok);
     }
@@ -273,7 +273,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	self.getToken (in, tok);
       } 
       if (p->num > 1) {
-	vjDEBUG(3) << "ERROR: vjPropery " << p->name
+	vjDEBUG(3) << "ERROR: Property " << p->name
 		   << " expects " << p->num << " values." << endl;
       }
     }
@@ -310,7 +310,7 @@ vjVarValue vjConfigChunk::getProperty (char *property, int ind) {
     return v;
   }
 
-  vjPropery *p = getPropertyPtr (property);
+  vjProperty *p = getPropertyPtr (property);
   if (!p) {
     vjVarValue v(T_INVALID);
     return v;
@@ -324,7 +324,7 @@ vjVarValue vjConfigChunk::getProperty (char *property, int ind) {
  */
 
 bool vjConfigChunk::setProperty (char *property, int val, int ind) {
-  vjPropery *p;
+  vjProperty *p;
   p = getPropertyPtr (property);
   if (!p)
     return false;
@@ -332,7 +332,7 @@ bool vjConfigChunk::setProperty (char *property, int val, int ind) {
 }
 
 bool vjConfigChunk::setProperty (char *property, float val, int ind) {
-  vjPropery *p;
+  vjProperty *p;
   p = getPropertyPtr (property);
   if (!p)
     return false;
@@ -340,7 +340,7 @@ bool vjConfigChunk::setProperty (char *property, float val, int ind) {
 }
 
 bool vjConfigChunk::setProperty (char *property, char* val, int ind) {
-  vjPropery *p;
+  vjProperty *p;
   p = getPropertyPtr (property);
   if (!p)
     return false;
@@ -349,7 +349,7 @@ bool vjConfigChunk::setProperty (char *property, char* val, int ind) {
 
 
 bool vjConfigChunk::addValue (char *property, int val) {
-  vjPropery *p;
+  vjProperty *p;
   p = getPropertyPtr (property);
   if (p == NULL)
     return false;
@@ -359,7 +359,7 @@ bool vjConfigChunk::addValue (char *property, int val) {
 }
 
 bool vjConfigChunk::addValue (char *property, float val) {
-  vjPropery *p;
+  vjProperty *p;
   p = getPropertyPtr (property);
   if (p == NULL)
     return false;
@@ -369,7 +369,7 @@ bool vjConfigChunk::addValue (char *property, float val) {
 }
 
 bool vjConfigChunk::addValue (char *property, char* val) {
-  vjPropery *p;
+  vjProperty *p;
   p = getPropertyPtr (property);
   if (p == NULL)
     return false;

@@ -14,7 +14,7 @@ int readString (istream &in, char *buffer, int size, bool *quoted) {
    */
 
   int i;
-  char c, c2;
+  char c, vj;
 
   if (quoted)
     *quoted = false;
@@ -28,30 +28,30 @@ int readString (istream &in, char *buffer, int size, bool *quoted) {
         in.get(c);
       continue;
       }
-    if ((c == '/') && in.get(c2)) {
+    if ((c == '/') && in.get(vj)) {
       /* it might be one or the other type of comment */
-      if (c2 == '/') {
+      if (vj == '/') {
 	// single line comment.
 	while (c != '\n')
 	  if (!in.get(c))
 	    break;
 	continue;
       }
-      else if (c2 == '*') {
+      else if (vj == '*') {
 	// multiline comment.
 	while (true) {
-	  if (!in.get(c2))
+	  if (!in.get(vj))
 	    break;
-	  if (c2 == '*') {
-	    in.get(c2);
-	    if (c2 == '/')
+	  if (vj == '*') {
+	    in.get(vj);
+	    if (vj == '/')
 	      break;
 	  }
 	}
 	continue;
       }
       else 
-	in.putback(c2);
+	in.putback(vj);
     }
     break;
   }
