@@ -72,7 +72,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          </section>
          <section>
             <title>Configuring and compiling all Juggler tools at once</title>
-            <para>Every time you have newly updated source code aquired from CVS or <command>cvs-gather</command>, it is recommended that you <command>autogen.sh</command>, found in the top-level <filename>juggler</filename> directory:</para>
+            <para>Every time you have newly updated source code aquired from CVS or <command>cvs-gather</command>, it is recommended that you run <command>autogen.sh</command>, found in the top-level <filename>juggler</filename> directory:</para>
             <screen>./autogen.sh</screen>
             <para>Also in this directory, we have a <quote>global</quote> configure script written in Perl rather than Autoconf. It is called <command>configure.pl</command>. To get options for this script, use one of the following (the second being much more detailed):</para>
             <screen>./configure.pl --script-help
