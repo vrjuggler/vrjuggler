@@ -678,7 +678,8 @@ int EventWindowXWin::getMask(const int& state)
 
 int EventWindowXWin::stopSampling()
 {
-   if (mThread != NULL)
+   // If there is a thread for us and we actually own the window
+   if ((mThread != NULL) && mWeOwnTheWindow)
    {
       mExitFlag = true;
 
