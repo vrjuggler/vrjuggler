@@ -31,9 +31,9 @@
  * -----------------------------------------------------------------
  */
 
-
 #include <vjConfig.h>
 
+#include <Kernel/vjKernel.h>
 #include <Kernel/GL/vjGlPipe.h>
 #include <Kernel/GL/vjGlApp.h>
 #include <Threads/vjThread.h>
