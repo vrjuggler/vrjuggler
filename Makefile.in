@@ -771,9 +771,11 @@ links:
             done
 	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
           ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
-	cd ${instlinks} && rm -rf ./share && mkdir ./share
-	cd ${instlinks}/share && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
-	cd ${instlinks}/share && rm -f ./samples &&			\
+	cd ${instlinks} && rm -rf ./${VJ_SHARE_DIR} &&			\
+          ${SHELL} ${scriptdir}/mkinstalldirs ./${VJ_SHARE_DIR}
+	cd ${instlinks}/${VJ_SHARE_DIR} && rm -f ./Data &&		\
+          ln -s ${VJROOT_ABS}/Data ./Data
+	cd ${instlinks}/${VJ_SHARE_DIR} && rm -f ./samples &&		\
           ln -s ${VJROOT_ABS}/samples ./samples
 	cd ${instlinks}/include && rm -f ./vjConfig.h &&		\
           ${LN_S} ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
@@ -788,7 +790,9 @@ ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && rm -f ./VjControl.jar &&			\
           ${LN_S} ${topdir}/GUI/VjControl.jar ./
 	cd ${instlinks}/bin && rm -f ./vjcontrol &&			\
-          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
+          sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+              ${VJROOT_ABS}/GUI/vjcontrol > vjcontrol &&		\
+          chmod ${EXEC_PERMS} vjcontrol
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
@@ -828,6 +832,7 @@ hier:
 	@echo "------------------------------------------------"
 	${SHELL} ${scriptdir}/mkinstalldirs ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
@@ -1168,6 +1173,7 @@ install-samples:
 	@echo "------------------------------------------------"
 	@echo "Installing sample applications"
 	@echo "------------------------------------------------"
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/samples
@@ -1181,6 +1187,7 @@ install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/test
@@ -1193,6 +1200,7 @@ install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing user tools"
 	@echo "------------------------------------------------"
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/tools	\
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/tools
@@ -1208,9 +1216,11 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-dir.pl -i ${top_srcdir}/Data	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/Data
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/Data	\
+          -v "${topdir}/VARS.pl"
 
 # Install the Java-based config editor if possible.
 install-gui:
@@ -1224,11 +1234,15 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
+	@sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+          ${VJROOT_ABS}/GUI/vjcontrol > vjcontrol
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
+          vjcontrol ${bindir}/vjcontrol && rm -f vjcontrol
 else
+	@sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+          ${VJROOT_ABS}/GUI/vjcontrol.bat > vjcontrol.bat
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX} 			\
-          ${VJROOT_ABS}/GUI/vjcontrol.bat ${bindir}/vjcontrol.bat
+          vjcontrol.bat ${bindir}/vjcontrol.bat && rm -f vjcontrol.bat
 endif	# if OS_TYPE == UNIX
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/GUI/VjControl.jar ${bindir}

@@ -47,9 +47,14 @@ if test ! -x "$JDK_HOME/bin/java" ; then
     status=1
 # Otherwise, start up VjControl and exit with status 0.
 else
+    if test "x$VJ_SHARE_DIR" = "x" ; then
+        VJ_SHARE_DIR=$VJ_BASE_DIR/#VJ_SHARE_DIR#
+    fi
+
     CLASSPATH=
-    ${JDK_HOME}/bin/java -DVJ_BASE_DIR=${VJ_BASE_DIR} -cp	\
-      ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
+    ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
+      -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
+      -cp ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
     status=0
 fi
 
