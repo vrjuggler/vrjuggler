@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -159,6 +159,8 @@ void UserData::updateShapeSetting()
 // initialization here.
 void cubesApp::init()
 {
+   vrj::GlApp::init();
+
    vprDEBUG(vprDBG_ALL,0) << "---------- cubes:App:init() ---------------"
                         << std::endl << vprDEBUG_FLUSH;
    std::vector<vrj::User*> users = mKernel->getUsers();
