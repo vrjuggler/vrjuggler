@@ -26,6 +26,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
+#include <stdlib.h>
 #include <unistd.h>
 #include <string>
 #include <vector>
@@ -67,6 +68,14 @@ private:
 };
 
 
+static void usage(const char* appName)
+{
+   std::cerr << "Usage:\n   "
+             << appName << " -c <VR Juggler config file> -m <Python module>\n";
+   std::cerr << "\tThere may be one or more VR Juggler config files and one\n"
+             << "\tor more Python modules given by repeating the options.\n";
+}
+
 int main(int argc, char* argv[])
 {
 //- INITIALIZATION ------------------------------------------------------//
@@ -78,21 +87,31 @@ int main(int argc, char* argv[])
    extern int optind;
    int ch;
    std::vector<std::string> module_names;
+   bool cfg_file_given(false), module_given(false);
 
-   while ( (ch = getopt(argc, argv, "c:m:")) != -1 )
+   while ( (ch = getopt(argc, argv, "c:hm:")) != -1 )
    {
       switch (ch)
       {
          case 'c':
             vrj::Kernel::instance()->loadConfigFile(optarg);
+            cfg_file_given = true;
             break;
          case 'm':
             module_names.push_back(std::string(optarg));
+            module_given = true;
             break;
+         case 'h':
          default:
-//            usage();
+            usage(argv[0]);
             break;
       }
+   }
+
+   if ( argc < 5 || ! (cfg_file_given && module_given) )
+   {
+      usage(argv[0]);
+      exit(1);
    }
 
    argc -= optind;
@@ -162,12 +181,15 @@ int main(int argc, char* argv[])
       }
    }
 
-   for ( unsigned int i = 0; i < apps.size() * 5; ++i )
+   for ( unsigned int count = 0; count < apps.size() * 5; ++count )
    {
-      vrj::Kernel::instance()->setApplication(apps[i].getApp());
-      Py_BEGIN_ALLOW_THREADS;
-         vpr::System::sleep(10);
-      Py_END_ALLOW_THREADS;
+      for ( unsigned int i = 0; i < apps.size(); ++i )
+      {
+         vrj::Kernel::instance()->setApplication(apps[i].getApp());
+         Py_BEGIN_ALLOW_THREADS;
+            vpr::System::sleep(10);
+         Py_END_ALLOW_THREADS;
+      }
    }
 
 /*
