@@ -114,26 +114,6 @@ AC_ARG_WITH(threads,
                           Define threading implementation [default=IRIX_SPROC]],
             _thread_pkg="$withval", _thread_pkg='IRIX_SPROC')
 
-dnl # Define the root directory for the Performer installation.
-dnl # The default is /usr.
-AC_ARG_WITH(pfroot,
-            [  --with-pfroot=<PATH>    Performer installation
-                          directory                       [default=/usr]],
-            PFROOT="$withval", PFROOT='/usr')
-
-dnl # Define the root directory for the OpenGL installation.
-dnl # The default is /usr.
-AC_ARG_WITH(oglroot,
-            [  --with-oglroot=<PATH>   OpenGL installation directory   [default=/usr]],
-            OGLROOT="$withval", OGLROOT='/usr')
-
-dnl # Use the Mesa OpenGL implementation.  That is, link with libMesaGL and
-dnl # libMesaGLU.
-dnl # The default is no.
-AC_ARG_WITH(mesa,
-            [  --with-mesa             Use Mesa OpenGL implementation  [default=no]],
-            _with_mesa="$withval", _with_mesa='no')
-
 dnl # Use AudioWorks (which can be found at the given path) in the sound
 dnl # wrapper.
 dnl # The default is to use it with the path being /usr.
@@ -359,6 +339,10 @@ dnl # C compiler we have available.  Now check to see if the compiler accepts
 dnl # the -pthread option.
 if test "x${_thread_pkg}" = "xPOSIX" ; then
     DPP_CC_PTHREAD_ARG
+
+    if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
+        DPP_CC_PTHREADS_ARG
+    fi
 fi
 
 dnl # Ensure that the C++ compiler we've found is capable of compiling the
@@ -473,6 +457,8 @@ if test "x$THREADS" = "xPOSIX" ; then
     dnl # properly testing for working POSIX semaphores.
     if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
         LDFLAGS="$LDFLAGS -pthread"
+    elif test "x$CC_ACCEPTS_PTHREADS" = "xyes" ; then
+        LDFLAGS="$LDFLAGS -pthreads"
     fi
 
     LIBS="$LIBS $PTHREAD_LIB"
@@ -518,133 +504,12 @@ dnl # OpenGL API.
 dnl # ------------
 OPENGL_API=''			dnl # 'Y' then we are using OpenGL
 
-if test "x${_with_mesa}" = "xyes" ; then
-    MESA='Mesa'
-else
-    MESA=''
-fi
-
-_LIBOPENGL=''
-
 dnl # Test for the OpenGL library if the OpenGL API was enabled.
 if test "x${_enable_gl_api}" = "xyes" ; then
-    dnl # Save these values in case they need to be restored later.
-    _vjsave_CFLAGS="$CFLAGS"
-    _vjsave_CPPFLAGS="$CPPFLAGS"
-    _vjsave_INCLUDES="$INCLUDES"
-    _vjsave_LDFLAGS="$LDFLAGS"
-
-    dnl # Add the user-specified OpenGL installation directory to these paths.
-    dnl # Ensure that /usr/include and /usr/lib are not included multiple times
-    dnl # if $OGLROOT is "/usr".
-    if test "x${OGLROOT}" != "x/usr" ; then
-        CPPFLAGS="$CPPFLAGS -I${OGLROOT}/include"
-        INCLUDES="$INCLUDES -I${OGLROOT}/include"
-        LDFLAGS="-L${OGLROOT}/lib${LIBBITSUF} $LDFLAGS"
-    fi
-
-    CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
-
-    dnl # On HP-UX, we have to compile the test code with aCC (which is
-    dnl # required by an above test) because the HP-UX OpenGL 1.1
-    dnl # implementation mandates this.
-    if test "$PLATFORM" = "HP" ; then
-        _vjsave_CC="$CC"
-        _vjsave_LIBS="$LIBS"
-        CC="$CXX"
-        LIBS="$LIBS -l${MESA}GL"
-
-        dnl # Check the cache in case this test was run previously and if not,
-        dnl # compile the given code and try to link it against the GL
-        dnl # library.  We don't need to test for the existence of GL/gl.h
-        dnl # after linking because the test program already includes it.
-        AC_CACHE_CHECK(for glEnable in -l${MESA}GL, ac_cv_glEnable_available,
-            AC_TRY_LINK([#include <GL/gl.h>], [glEnable(GL_CULL_FACE)],
-                ac_cv_glEnable_available='yes',
-                [ LIBS="${_vjsave_LIBS}";
-                  AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***) ] ))
-
-        dnl # If the library was found, add the OpenGL API object files to
-        dnl # the files to be compiled and enable the OpenGL API compile-time
-        dnl # option.
-        if test "$ac_cv_glEnable_available" = "yes" ; then
-            OPENGL_API="Y"
-            AC_DEFINE(VJ_API_OPENGL,)
-        fi
-
-        CC="${_vjsave_CC}"
-    elif test "$OS_TYPE" = "Win32" ; then
-        AC_MSG_WARN(Assuming that OpenGL is available in a standard location)
-        OPENGL_API="Y"
-        AC_DEFINE(VJ_API_OPENGL,)
-    else
-        if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
-            LDFLAGS="-L$x_libraries $LDFLAGS"
-        fi
-
-        _vjsave_LIBS="$LIBS"
-
-        dnl # If the OpenGL library was found, add the API object files to the
-        dnl # files to be compiled and enable the OpenGL API compile-time
-        dnl # option.
-        AC_CHECK_LIB(${MESA}GL, glEnable, ,
-            AC_MSG_ERROR(*** OpenGL API will not be used (GL library not found) ***),
-            -lX11 -lXext -lm)
-
-        dnl # This is necessary because AC_CHECK_LIB() adds -l${MESA}GL to
-        dnl # $LIBS.  We want to do that ourselves later.
-        LIBS="${_vjsave_LIBS}"
-
-        dnl # If we have reached this point, the previous test succeeded.  Now
-        dnl # we need to ensure that the compiler can find the GL headers.
-        dnl # The goal here is to provide a fallback to the directory in
-        dnl # $x_includes since that is a reasonable location for them to be
-        dnl # (if they are not in /usr/include).  However, we do not want to
-        dnl # bother with this if the user gave us a value for $OGLROOT.
-        if test "x$OGLROOT" = "x/usr" -a "x$x_includes" != "x" -a	\
-                "x$x_includes" != "xNONE"
-        then
-            CPPFLAGS="$CPPFLAGS -I$x_includes"
-            INCLUDES="$INCLUDES -I$x_includes"
-        fi
-
-        AC_CHECK_HEADER(GL/gl.h, ,
-            AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***))
-
-        AC_CHECK_LIB(${MESA}GLU, gluNewQuadric, ,
-            AC_MSG_ERROR(*** OpenGL API will not be used (GLU library not found) ***),
-            -l${MESA}GL -lm -lX11 -lXext -lXt)
-
-        dnl # This is necessary again because AC_CHECK_LIB() adds -l${MESA}GLU
-        dnl # to $LIBS.
-        LIBS="${_vjsave_LIBS}"
-
-        AC_CHECK_HEADER(GL/glu.h,
-            [ OPENGL_API="Y"; AC_DEFINE(VJ_API_OPENGL,) ],
-            AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***))
-    fi
-
-    dnl # Restore $CFLAGS and $CPPFLAGS now that we are done testing.
-    CFLAGS="${_vjsave_CFLAGS}"
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-
-    dnl # If OpenGL API files were added, define this extra stuff that is
-    dnl # used in some Makefiles.
-    if test "x$OPENGL_API" != "x" ; then
-        if test "x$OS_TYPE" = "xUNIX" ;  then
-            dnl # We do not need to add the path to the X libraries here
-            dnl # because it was already added to $LDFLAGS above.  The same
-            dnl # is true for the directories containing the GL libraries.
-            _LIBOPENGL="-l${MESA}GLU -l${MESA}GL -lX11 -lXext"
-        else
-            _LIBOPENGL='opengl32.lib glu32.lib'
-        fi
-    dnl # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
-    dnl # that no OpenGL stuff in included in them.
-    else
-        INCLUDES="${_vjsave_INCLUDES}"
-        LDFLAGS="${_vjsave_LDFLAGS}"
-    fi
+    DPP_HAVE_OPENGL(/usr, no,
+        [ OPENGL_API='Y' ;
+          AC_DEFINE(VJ_API_OPENGL,) ],
+        AC_MSG_ERROR(*** OpenGL API will not be used (GL files not found) ***))
 fi
 
 dnl # --------------------
@@ -654,63 +519,10 @@ PERFORMER_API=''		dnl # 'Y' then we are using Performer
 
 dnl # Test for the Performer library if the Performer API was enabled.
 if test "x${_enable_pf_api}" = "xyes" ; then
-    _vjsave_CFLAGS="$CFLAGS"
-    _vjsave_INCLUDES="$INCLUDES"
-    _vjsave_LDFLAGS="$LDFLAGS"
-
-    dnl # Ensure that /usr/include and /usr/lib are not included multiple
-    dnl # times if $PFROOT is "/usr".
-    if test "x${PFROOT}" != "x/usr" ; then
-        INCLUDES="$INCLUDES -I\${PFROOT}/include"
-        LDFLAGS="-L\${PFROOT}/lib\${LIBBITSUF} $LDFLAGS"
-    fi
-
-    CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-
-    dnl # On Linux, we have to link all the Performer libraries AND libdl to
-    dnl # get the check for pfInit() in libpf to compile.
-    if test "x$PLATFORM" = "xLinux" ; then
-        _vjsave_LIBS="$LIBS"
-        LIBS="$LIBS -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -ldl"
-    fi
-
-    dnl # If the Performer library was found, add the API object files to the
-    dnl # files to be compiled and enable the Performer API compile-time
-    dnl # option.
-    AC_CHECK_LIB(pf, pfInit,
-        AC_CHECK_HEADER(Performer/pf.h,
-            [ PERFORMER_API="Y";
-              _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl';
-              AC_DEFINE(VJ_API_PERFORMER,) ],
-            AC_MSG_WARN(*** Performer API will not be used (pf.h not found) ***)),
-        AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
-
-    dnl # Restore $LIBS to its original value if we are using Linux (it was
-    dnl # modified before the previous check block).  Also append -ldl to
-    dnl # $LIBS if the Performer library was found.
-    if test "x$PLATFORM" = "xLinux" ; then
-        LIBS="${_vjsave_LIBS}"
-
-        if test "x$PERFORMER_API" != "x" ; then
-            _PFOGLLIB="${_PFOGLLIB} -ldl"
-        fi
-    fi
-
-    dnl # Under Irix users will need -limage to load .flt files
-    dnl # referencing .sgi images
-    if test "x$PLATFORM" = "xIRIX" ; then
-            _PFOGLLIB="${_PFOGLLIB} -limage"
-    fi
-
-    dnl # Restore $CFLAGS now that we are done testing.
-    CFLAGS="${_vjsave_CFLAGS}"
-
-    dnl # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
-    dnl # so that no OpenGL stuff in included in them.
-    if test "x$PERFORMER_API" = "x" ; then
-        INCLUDES="${_vjsave_INCLUDES}"
-        LDFLAGS="${_vjsave_LDFLAGS}"
-    fi
+    DPP_HAVE_PERFORMER(/usr, 2.4,
+        [ PERFORMER_API='Y' ;
+          AC_DEFINE(VJ_API_PERFORMER,) ],
+        AC_MSG_WARN(*** Performer API will not be used (files not found) ***))
 fi
 
 dnl # -----------
@@ -925,6 +737,17 @@ fi
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
+if test "x$X_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $X_INCLUDES"
+fi
+
+if test "x$OGL_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $OGL_INCLUDES"
+fi
+
+if test "x$PF_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $PF_INCLUDES"
+fi
 
 dnl # For use in linking applications.
 EXTRA_LINK_FLAGS=''
@@ -1014,7 +837,7 @@ dnl #       with the AudioWorks sound system.
 dnl #     * APP_EXTRA_LIBS_SL: The SL libraries needed for compiling with the
 dnl #       SL sound libraries.
 dnl #
-APP_EXTRA_FLAGS="${_EXTRA_FLAGS}"
+APP_EXTRA_FLAGS="${_EXTRA_FLAGS} $X_INCLUDES"
 
 dnl # If we have AudioWorks, make it available in the application makefiles.
 if test "$AUDIO_WORKS" = "Y" ; then
@@ -1076,8 +899,18 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+
+    if test "x$OGL_LDFLAGS" != "x" ; then
+        APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
+    else
+        APP_EXTRA_LIBS_GL="$LIBOPENGL"
+    fi
+
+    if test "x$PF_LDFLAGS" != "x" ; then
+        APP_EXTRA_LIBS_PF="-L$PFROOT/lib$LIBBITSUF $LIBPERFORMER"
+    else
+        APP_EXTRA_LIBS_PF="$LIBPERFORMER"
+    fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
     APP_VJ_LIBS_END=''
@@ -1090,13 +923,13 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_PF='Juggler_pf.lib'
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
+    APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
 fi
 
 dnl # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    SAFE_VJROOT_ABS=`unix2dos "$VJROOT_ABS"`
+    SAFE_VJROOT_ABS=`unix2dos -p "$VJROOT_ABS"`
     VJ_SRCDIR=`unix2dos "$VJ_SRCDIR"`
 
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -1104,7 +937,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     LIBS=`unix2dos "$LIBS"`
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
-    JDK_HOME=`unix2dos "$JDK_HOME"`
+    JDK_HOME=`unix2dos -p "$JDK_HOME"`
 
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
     APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
@@ -1124,7 +957,6 @@ AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(BUILD_GUI)
 
-AC_SUBST(OGLROOT)
 AC_SUBST(PFROOT)
 
 AC_SUBST(OPENGL_API)
