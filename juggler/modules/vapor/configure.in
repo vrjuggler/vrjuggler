@@ -243,15 +243,17 @@ esac
 # for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
 # return to the directory where configure is being run ($topdir).
 cd "$srcdir"
-VPRROOT_ABS=`pwd`
+UNIX_VPRROOT_ABS=`pwd`
 
 cd "$VPRROOT_ABS/../.."
 UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
 if test "x$CYGPATH" != "xno" ; then
-   JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
+   VPRROOT_ABS=`unix2dos -p "$UNIX_VPRROOT_ABS"`
+   JUGGLERROOT_ABS=`unix2dos -p "$UNIX_JUGGLERROOT_ABS"`
 else
+   VPRROOT_ABS="$UNIX_VPRROOT_ABS"
    JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
 fi
 
