@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-23-2004 patrickh    NEW VERSION: 0.91.0
 Nov-30-2004 patrickh    Extended the config definition file markup to allow
                         identification of definition versions that should not
                         be instantiated as config elements in config files.
