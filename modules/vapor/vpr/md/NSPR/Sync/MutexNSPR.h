@@ -261,8 +261,11 @@ protected:
     int     mLocked;    //:
 
     // = Prevent assignment and initialization.
-    void operator= (const MutexNSPR &) {
+    MutexNSPR& operator= (const MutexNSPR& r) {
         /* Do nothing. */ ;
+        mMutex = r.mMutex;
+        mLocked = r.mLocked;
+        return *this;
     }
 
     MutexNSPR (const MutexNSPR &) {
@@ -273,4 +276,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif	/* ifdef _VJ_MUTEX_NSPR_H_ */
+#endif   /* ifdef _VJ_MUTEX_NSPR_H_ */

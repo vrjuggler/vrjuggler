@@ -115,7 +115,10 @@ namespace vpr
       // RESULT: this = status
       ReturnStatus& operator=( const ReturnStatus& status )
       {
-         this->copy( status );
+         if((&status) != this)
+         {
+            this->copy( status );
+         }
          return *this;
       }
 

@@ -79,15 +79,15 @@ public:
       bool ret_val(false);
 
       if (m_guid.packed.l0 < r.m_guid.packed.l0)
-         ret_val = true;
+      {  ret_val = true; }
       else if(m_guid.packed.l0 == r.m_guid.packed.l0)
       {
          if(m_guid.packed.l1 < r.m_guid.packed.l1)
-            ret_val = true;
+         {  ret_val = true; }
          else if(m_guid.packed.l1 == r.m_guid.packed.l1)
          {
             if(m_guid.packed.l2 < r.m_guid.packed.l2)
-               ret_val = true;
+            {  ret_val = true; }
             else if(m_guid.packed.l2 == r.m_guid.packed.l2)
             {
                if(m_guid.packed.l3 < r.m_guid.packed.l3)
@@ -156,21 +156,25 @@ public:
    GUID(const GUID& ns_guid, const std::string& name);
 
    GUID (const GUID& obj)
-   { 
+   {
       m_guid.packed.l0 = obj.m_guid.packed.l0;
       m_guid.packed.l1 = obj.m_guid.packed.l1;
       m_guid.packed.l2 = obj.m_guid.packed.l2;
       m_guid.packed.l3 = obj.m_guid.packed.l3;
    }
 
-   
 
-   void operator= (const GUID& obj)
+
+   GUID& operator= (const GUID& obj)
    {
+      if(&obj == this) // Check for self
+         return *this;
+
       m_guid.packed.l0 = obj.m_guid.packed.l0;
       m_guid.packed.l1 = obj.m_guid.packed.l1;
       m_guid.packed.l2 = obj.m_guid.packed.l2;
       m_guid.packed.l3 = obj.m_guid.packed.l3;
+      return *this;
    }
 
    void generate();
@@ -237,7 +241,7 @@ struct hash<vpr::GUID>
 {
    vpr::Uint32 operator() (const vpr::GUID guid) const
    {
-      return guid.m_guid.packed.l0 + guid.m_guid.packed.l1 + guid.m_guid.packed.l2 + guid.m_guid.packed.l3; 
+      return guid.m_guid.packed.l0 + guid.m_guid.packed.l1 + guid.m_guid.packed.l2 + guid.m_guid.packed.l3;
    }
 };
 
