@@ -5,13 +5,12 @@
 # syntax.
 #
 
-group|meisters|patrickh,allenb,nonchocoboy
+group|meisters|patrickh,allenb,nonchocoboy,aronb
 
 unavail
 avail|:meisters|CVSROOT
 avail|:meisters|cppunit
 avail||juggler_1.0
-avail||juggler_docs
 avail||juggler
-avail|patrickh,nonchocoboy|PyJuggler
+avail|patrickh,nonchocoboy,allenb|PyJuggler
 avail|patrickh|vrj.net
