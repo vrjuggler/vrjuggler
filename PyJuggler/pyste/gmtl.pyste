@@ -27,13 +27,16 @@
 
 # gmtl::Matrix<> ==============================================================
 Matrix = Template('gmtl::Matrix', 'gmtl/Matrix.h')
+
 Matrix44f = Matrix('float 4 4')
 rename(Matrix44f, 'Matrix44f')
-set_policy(Matrix44f.getData, return_internal_reference())
+exclude(Matrix44f.getData)
+exclude(Matrix44f.mData)
 
 Matrix33f = Matrix('float 3 3')
 rename(Matrix33f, 'Matrix33f')
-set_policy(Matrix33f.getData, return_internal_reference())
+exclude(Matrix33f.getData)
+exclude(Matrix33f.mData)
 
 Matrix_identity = Function('gmtl::identity', 'gmtl-functions.h')
 set_policy(Matrix_identity, return_internal_reference())
@@ -76,14 +79,14 @@ Matrix_isEqual = Function('gmtl::isEqual', 'gmtl-functions.h')
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
 Vec3f = Vec('float 3')
 rename(Vec3f, 'Vec3f')
-set_policy(Vec3f.getData, return_internal_reference())
+exclude(Vec3f.getData)
 # ================================================================= gmtl::Vec<>
 
 # gmtl::Quat<> ================================================================
 Quat = Template('gmtl::Quat', 'gmtl/Quat.h')
 Quatf = Quat('float')
 rename(Quatf, 'Quatf')
-set_policy(Quatf.getData, return_internal_reference())
+exclude(Quatf.getData)
 # ================================================================ gmtl::Quat<>
 
 Point = Template('gmtl::Point', 'gmtl/Point.h')
