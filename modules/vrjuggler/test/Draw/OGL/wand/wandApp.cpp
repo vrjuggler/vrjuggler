@@ -83,6 +83,8 @@ void wandApp::preFrame()
    */
 
    mHeadHistory.push_back(gmtl::makeTrans<gmtl::Vec3f>(mHead->getData()));
+
+   mPerfProbe.update();
 }
 
 void wandApp::bufferPreDraw()
@@ -183,6 +185,8 @@ void wandApp::draw()
          }
       glEnd();
    glPopMatrix();
+
+   mPerfProbe.draw();
 
 }
 
