@@ -63,7 +63,7 @@ public:
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = vjViewport::UNDEFINED;
-      mActive = true;
+      mActive = false;
    }
 
    virtual ~vjViewport()
