@@ -86,7 +86,10 @@ public class RTRCDataSourceBrokerImpl
       {
          RemoteReconfigSubject temp =
             RemoteReconfigSubjectHelper.narrow(subject);
-         add(temp);
+         if (temp != null)
+         {
+            add(temp);
+         }
       }
       catch (BAD_PARAM narrow_ex)
       {
