@@ -37,12 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 
 /** Main executable for VjControl.
  *  This class includes main() for VjControl, and is responsible for initial
  *  startup, configuration, and loading initial components .jars.
- *
- *  @version $Revision$
  */
 public class Init {
 
@@ -135,7 +134,7 @@ public class Init {
 
         // 1st - load the chunkdesc into memory...
 
-        URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
+        URL descurl = BeanJarClassLoader.instance().getResource("VjFiles/vjcontrol.dsc");
 
         try {
             Core.descdb.build(descurl.openStream());

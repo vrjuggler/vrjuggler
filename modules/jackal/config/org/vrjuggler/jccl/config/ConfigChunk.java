@@ -40,14 +40,13 @@ import org.jdom.Element;
 import org.jdom.Attribute;
 
 
-/** A ConfigChunk is a logical collection of configuration information.
- *  A vjConfigChunk stores a number of vjPropertys that describe
- *  the configuration of a particular component of the system.
- *  It has an associated vjChunkDesc which describes its type
- *  and the vjPropertys that belong to it.
+/**
+ * A ConfigChunk is a logical collection of configuration information. It stores
+ * a number of Properties that describe the configuration of a particular
+ * component of the system. It has an associated ChunkDesc which describes its
+ * type and the Properties that belong to it.
  *
- *  @see ChunkDesc
- *  @version $Revision$
+ * @see ChunkDesc
  */
 public class ConfigChunk
 {
@@ -65,12 +64,22 @@ public class ConfigChunk
       }
    }
 
+   /**
+    * Creates a new ConfigChunk that is an exact copy of the source ConfigChunk.
+    *
+    * @param srcChunk      the ConfigChunk to copy
+    */
    public ConfigChunk (ConfigChunk srcChunk)
    {
       desc = srcChunk.desc;
       mDomElement = (Element) srcChunk.mDomElement.clone();
    }
 
+   /**
+    * Create a new ConfigChunk using the given chunk description.
+    *
+    * @param desc    the ChunkDesc that describes the ConfigChunk to create
+    */
    public ConfigChunk (ChunkDesc d)
    {
       desc = d;
@@ -339,6 +348,12 @@ public class ConfigChunk
       return chunks;
    }
 
+   /**
+    * Tests if this ConfigChunk is equal to the given ConfigChunk. This is true
+    * if both ConfigChunks share the same DOM element object.
+    *
+    * @param chunk   the chunk to compare equality against
+    */
    public boolean equals(ConfigChunk c)
    {
       return this.mDomElement == c.mDomElement;
@@ -449,6 +464,9 @@ public class ConfigChunk
       return value;
    }
 
+   /**
+    * Gets the number of properties that this ConfigChunk has.
+    */
    public int getPropertyCount (String propType)
    {
       List children = mDomElement.getChildren(propType);
@@ -552,7 +570,9 @@ public class ConfigChunk
       return status;
    }
 
-   /** Returns a vector of ConfigChunk names this chunk depends on */
+   /**
+    * Returns a vector of name of ConfigChunks that this ConfigChunk depends on.
+    */
    public List getDependencyNames()
    {
       ArrayList results = new ArrayList();
@@ -607,6 +627,10 @@ public class ConfigChunk
       return results;
    }
 
+   /**
+    * Gets the XML representation of this ConfigChunk as a String. This is
+    * suitable for a replacement to serialization.
+    */
    public final String toString()
    {
       org.jdom.output.XMLOutputter outputter =
@@ -625,7 +649,13 @@ public class ConfigChunk
       return mDomElement;
    }
 
+   /**
+    * The DOM tree node for this chunk.
+    */
    private Element mDomElement = null;
 
+   /**
+    * The ChunkDesc that was used to create this chunk.
+    */
    private ChunkDesc desc   = null;
 }

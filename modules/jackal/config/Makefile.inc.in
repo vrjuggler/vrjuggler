@@ -68,12 +68,16 @@ links:
 	@$(MAKE) -C jccl instlinks="$(instlinks)" links
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
-	cd $(instlinks)/bin && \
-		for jar in $(JARS); do \
-			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/config/$$jar ./$$jar; \
+#	cd $(instlinks)/bin && \
+#		for jar in $(JARS); do \
+#			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/config/$$jar ./$$jar; \
+#		done
+	cd $(instlinks)/bin/beans && \
+		for bean in $(BEANS); do \
+			$(RM_LN) ./$$bean.jar && \
+			$(LN_S) $(topdir)/config/$$bean.jar ./$$bean.jar; \
+			$(RM_LN) ./$$bean.xml && \
+			$(LN_S) $(top_srcdir)/config/$$bean.xml ./$$bean.xml; \
 		done
-	cd $(instlinks)/bin && \
-		$(RM_LN) ./configservice.xml && \
-		$(LN_S) $(topdir)/config/configservice.xml ./configservice.xml
 endif
 endif

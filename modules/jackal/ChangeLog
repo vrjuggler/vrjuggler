@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
------------ ----------- --------------------------------------------------------
+Jun-11-2002 nonchocoboy VjControl now runs as a Tweek bean.
+Jun-10-2002 nonchocoboy Ported generic editor panel creation for ChunkDescs and
+                        ConfigChunks to a Tweek service.
 Jun-09-2002 patrickh    Added a Python 2 script (xmlupdate.py) that can convert
                         config files created prior to version 0.2.0 to the new
                         format.
@@ -10,6 +12,7 @@ Jun-04-2002 patrickh    The process of making symlinks to the contents of
 May-31-2002 patrickh    Disabled performance collection code by default.  It is
                         currently unstable.  See SourceForge Bug #562680.
                         NEW VERSION: 0.2.1
+May-24-2002 nonchocoboy Ported config subsystem to Tweek service.
 May-23-2002 patrickh    Merged changes from jccl_file_format_change_branch.
             allenb      The JCCL C++ code now depends on CppDOM instead of
                         Xerces-C; the Java code depends on JDOM instead of
