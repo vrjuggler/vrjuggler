@@ -37,6 +37,10 @@
 #include <list>
 #include <sstream>
 
+#include <vpr/vpr.h>
+#include <vrj/Util/Debug.h>
+#include <vpr/Util/Debug.h>
+
 #include <corba_perf_mon/PerformanceMonitorSubjectImpl.h>
 
 namespace vrj
@@ -57,15 +61,27 @@ namespace vrj
    
    vrj::PerformanceMonitorSubject::SampleValueMap* PerformanceMonitorSubjectImpl::getValueMap()
    {
-      vrj::PerformanceMonitorSubject::SampleValueMap* value_map = 
-                        new vrj::PerformanceMonitorSubject::SampleValueMap();
       std::map<std::string, float> sample_time_map = vpr::ProfileManager::getValueMap();
+      /*
+      sample_time_map["Aron"] = 1.0f;
+      sample_time_map["Dan"] = 2.0f;
+      sample_time_map["Allen"] = 3.0f;
+      sample_time_map["Patrick"] = 4.0f;
+      */
+
       std::map<std::string, float>::iterator itr;
       unsigned long i = 0;
-      for (itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr,++i)
+      vrj::PerformanceMonitorSubject::SampleValueMap* value_map = 
+                        new vrj::PerformanceMonitorSubject::SampleValueMap();
+      
+      //for (itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr)
+      value_map->length(sample_time_map.size());
+
+      for (itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr)
       {
-         (*value_map)[i].mName = itr->first.c_str();
+         (*value_map)[i].mName = CORBA::string_dup(itr->first.c_str());
          (*value_map)[i].mSampleTime = itr->second;
+         i++;
       }
       return value_map;
    }
