@@ -47,39 +47,39 @@ import info.clearthought.layout.*;
 
 public class KeyboardEditorPanel extends JPanel
 {
-   HashMap mKeyMap = new HashMap();
-   ArrayList mButtonList = new ArrayList();
+   private HashMap mKeyMap = new HashMap();
+   private ArrayList mButtonList = new ArrayList();
 
-   JToggleButton A = new JToggleButton();
-   JToggleButton B = new JToggleButton();
-   JToggleButton C = new JToggleButton();
-   JToggleButton D = new JToggleButton();
-   JToggleButton E = new JToggleButton();
-   JToggleButton F = new JToggleButton();
-   JToggleButton G = new JToggleButton();
-   JToggleButton H = new JToggleButton();
-   JToggleButton I = new JToggleButton();
-   JToggleButton J = new JToggleButton();
-   JToggleButton K = new JToggleButton();
-   JToggleButton L = new JToggleButton();
-   JToggleButton M = new JToggleButton();
-   JToggleButton N = new JToggleButton();
-   JToggleButton O = new JToggleButton();
-   JToggleButton P = new JToggleButton();
-   JToggleButton Q = new JToggleButton();
-   JToggleButton R = new JToggleButton();
-   JToggleButton S = new JToggleButton();
-   JToggleButton T = new JToggleButton();
-   JToggleButton U = new JToggleButton();
-   JToggleButton V = new JToggleButton();
-   JToggleButton W = new JToggleButton();
-   JToggleButton X = new JToggleButton();
-   JToggleButton Y = new JToggleButton();
-   JToggleButton Z = new JToggleButton();
-   JToggleButton forward_slash = new JToggleButton();
-   JToggleButton greater = new JToggleButton();
-   JToggleButton less = new JToggleButton();
-   JToggleButton semi = new JToggleButton();
+   private JToggleButton A = new JToggleButton();
+   private JToggleButton B = new JToggleButton();
+   private JToggleButton C = new JToggleButton();
+   private JToggleButton D = new JToggleButton();
+   private JToggleButton E = new JToggleButton();
+   private JToggleButton F = new JToggleButton();
+   private JToggleButton G = new JToggleButton();
+   private JToggleButton H = new JToggleButton();
+   private JToggleButton I = new JToggleButton();
+   private JToggleButton J = new JToggleButton();
+   private JToggleButton K = new JToggleButton();
+   private JToggleButton L = new JToggleButton();
+   private JToggleButton M = new JToggleButton();
+   private JToggleButton N = new JToggleButton();
+   private JToggleButton O = new JToggleButton();
+   private JToggleButton P = new JToggleButton();
+   private JToggleButton Q = new JToggleButton();
+   private JToggleButton R = new JToggleButton();
+   private JToggleButton S = new JToggleButton();
+   private JToggleButton T = new JToggleButton();
+   private JToggleButton U = new JToggleButton();
+   private JToggleButton V = new JToggleButton();
+   private JToggleButton W = new JToggleButton();
+   private JToggleButton X = new JToggleButton();
+   private JToggleButton Y = new JToggleButton();
+   private JToggleButton Z = new JToggleButton();
+   private JToggleButton forward_slash = new JToggleButton();
+   private JToggleButton greater = new JToggleButton();
+   private JToggleButton less = new JToggleButton();
+   private JToggleButton semi = new JToggleButton();
 
    public KeyboardEditorPanel()
    {
@@ -95,7 +95,7 @@ public class KeyboardEditorPanel extends JPanel
       }
    }
 
-   class Focuser extends MouseAdapter
+   private class Focuser extends MouseAdapter
    {
       JPanel mPanel = null;
 
@@ -110,53 +110,53 @@ public class KeyboardEditorPanel extends JPanel
    }
 
    private Focuser mFocuser = new Focuser(this);
-   JToggleButton Control2 = new JToggleButton();
-   JToggleButton LeftClick = new JToggleButton();
-   JToggleButton Win2 = new JToggleButton();
-   JToggleButton Alt2 = new JToggleButton();
-   JToggleButton Space = new JToggleButton();
-   JToggleButton Alt1 = new JToggleButton();
-   JToggleButton Win1 = new JToggleButton();
-   JToggleButton Control1 = new JToggleButton();
-   JToggleButton Shift2 = new JToggleButton();
-   JToggleButton Shift1 = new JToggleButton();
-   JToggleButton Enter1 = new JToggleButton();
-   JToggleButton Quote = new JToggleButton();
-   JToggleButton CapsLock = new JToggleButton();
-   JToggleButton bslash = new JToggleButton();
-   JToggleButton rbracket = new JToggleButton();
-   JToggleButton lbracket = new JToggleButton();
-   JToggleButton Tab = new JToggleButton();
-   JToggleButton BackSpace = new JToggleButton();
-   JToggleButton Equals = new JToggleButton();
-   JToggleButton Dash = new JToggleButton();
-   JToggleButton B0 = new JToggleButton();
-   JToggleButton B9 = new JToggleButton();
-   JToggleButton B8 = new JToggleButton();
-   JToggleButton B7 = new JToggleButton();
-   JToggleButton B6 = new JToggleButton();
-   JToggleButton B5 = new JToggleButton();
-   JToggleButton B4 = new JToggleButton();
-   JToggleButton B3 = new JToggleButton();
-   JToggleButton B2 = new JToggleButton();
-   JToggleButton B1 = new JToggleButton();
-   JToggleButton Tildy = new JToggleButton();
-   JToggleButton F12 = new JToggleButton();
-   JToggleButton F11 = new JToggleButton();
-   JToggleButton F10 = new JToggleButton();
-   JToggleButton F9 = new JToggleButton();
-   JToggleButton F8 = new JToggleButton();
-   JToggleButton F7 = new JToggleButton();
-   JToggleButton F6 = new JToggleButton();
-   JToggleButton F5 = new JToggleButton();
-   JToggleButton F4 = new JToggleButton();
-   JToggleButton F3 = new JToggleButton();
-   JToggleButton F2 = new JToggleButton();
-   JToggleButton F1 = new JToggleButton();
-   JToggleButton Esc = new JToggleButton();
-   GridBagLayout gridBagLayout1 = new GridBagLayout();
+   private JToggleButton Control2 = new JToggleButton();
+   private JToggleButton LeftClick = new JToggleButton();
+   private JToggleButton Win2 = new JToggleButton();
+   private JToggleButton Alt2 = new JToggleButton();
+   private JToggleButton Space = new JToggleButton();
+   private JToggleButton Alt1 = new JToggleButton();
+   private JToggleButton Win1 = new JToggleButton();
+   private JToggleButton Control1 = new JToggleButton();
+   private JToggleButton Shift2 = new JToggleButton();
+   private JToggleButton Shift1 = new JToggleButton();
+   private JToggleButton Enter1 = new JToggleButton();
+   private JToggleButton Quote = new JToggleButton();
+   private JToggleButton CapsLock = new JToggleButton();
+   private JToggleButton bslash = new JToggleButton();
+   private JToggleButton rbracket = new JToggleButton();
+   private JToggleButton lbracket = new JToggleButton();
+   private JToggleButton Tab = new JToggleButton();
+   private JToggleButton BackSpace = new JToggleButton();
+   private JToggleButton Equals = new JToggleButton();
+   private JToggleButton Dash = new JToggleButton();
+   private JToggleButton B0 = new JToggleButton();
+   private JToggleButton B9 = new JToggleButton();
+   private JToggleButton B8 = new JToggleButton();
+   private JToggleButton B7 = new JToggleButton();
+   private JToggleButton B6 = new JToggleButton();
+   private JToggleButton B5 = new JToggleButton();
+   private JToggleButton B4 = new JToggleButton();
+   private JToggleButton B3 = new JToggleButton();
+   private JToggleButton B2 = new JToggleButton();
+   private JToggleButton B1 = new JToggleButton();
+   private JToggleButton Tildy = new JToggleButton();
+   private JToggleButton F12 = new JToggleButton();
+   private JToggleButton F11 = new JToggleButton();
+   private JToggleButton F10 = new JToggleButton();
+   private JToggleButton F9 = new JToggleButton();
+   private JToggleButton F8 = new JToggleButton();
+   private JToggleButton F7 = new JToggleButton();
+   private JToggleButton F6 = new JToggleButton();
+   private JToggleButton F5 = new JToggleButton();
+   private JToggleButton F4 = new JToggleButton();
+   private JToggleButton F3 = new JToggleButton();
+   private JToggleButton F2 = new JToggleButton();
+   private JToggleButton F1 = new JToggleButton();
+   private JToggleButton Esc = new JToggleButton();
+   private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-   void setup()
+   private void setup()
    {
       this.addKeyListener(new KeyAdapter()
       {
@@ -205,7 +205,7 @@ public class KeyboardEditorPanel extends JPanel
       this.addMouseListener(mFocuser);
    }
 
-   void jbInit() throws Exception
+   private void jbInit() throws Exception
    {
       A.setRequestFocusEnabled(false);
       A.setMargin(new Insets(2, 2, 2, 2));
@@ -600,7 +600,7 @@ public class KeyboardEditorPanel extends JPanel
       mKeyMap.put(new Integer(KeyEvent.VK_SPACE), Space);
    }
 
-   void reset()
+   private void reset()
    {
       Collection buttons = mKeyMap.values();
 
