@@ -56,8 +56,7 @@ public:
    // Set the application object for the Kernel to deal with
    //  If there is another app active, it has to stop that
    //  application first then restart all API specific Managers.
-   void setApplication(vjApp* _app)
-   { app = _app; }
+   void setApplication(vjApp* _app);
 
    // Stops the current application but leaves the kernel running.
    // It closes all API specific stuff (DrawManager,  etc.)
@@ -71,8 +70,22 @@ public:
    void loadConfigFile(std::string filename);
 
 public:  // --- Config interface --- //
+   //: Get the chunks that are actually running in the system
    vjConfigChunkDB* getChunkDB()
-   { return mChunkDB; }
+   {
+      vjASSERT(NULL != mChunkDB);
+      return mChunkDB;
+   }
+
+   //: Get the initial chunk database
+   // Returns the chunks that were originally used to configure
+   // the system.
+   //! NOTE: This may contain chunks that are not currently running.
+   vjConfigChunkDB* getInitialChunkDB()
+   {
+      vjASSERT(NULL != mInitialChunkDB);
+      return mInitialChunkDB;
+   }
 
       // Add a group of config chunks
    void configAdd(vjConfigChunkDB* chunkDB);
@@ -95,7 +108,15 @@ protected:      // --- STARTUP ROUTINES --- //
    void initialSetupInputManager();
    void setupEnvironmentManager();
    void initialSetupDisplayManager();
-   void setupDrawManager();
+   void initialSetupDrawManager();
+
+   // Starts the drwa manager running
+   // Calls the app callbacks for the draw manager
+   void startDrawManager();
+
+   // Stop the draw manager and close it's resources
+   void stopDrawManager()
+   {;}
 
 public:      // Global "get" interface
 
@@ -137,6 +158,7 @@ protected:
    /// Config Stuff
    vjChunkDescDB*    mConfigDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
+   vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
@@ -152,7 +174,7 @@ protected:
    vjKernel()
    {
       app = NULL;
-      mChunkDB = NULL;
+      mInitialChunkDB = NULL;
       mConfigDesc = NULL;
    }
 
