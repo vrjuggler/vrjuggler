@@ -2,23 +2,23 @@ DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 Jan-31-2002 allenb    Added SignalButtons init and check functions to the
                       Kernel.  The only "signal" being checked currently
-					  is the VJSystemStopKernel button which triggers a kernel
-					  stop call.
+                      is the VJSystemStopKernel button which triggers a kernel
+                      stop call.
 Jan-31-2002 allenb    Moved left and right projections from surface viewport
                       to the base viewport class.  Now simulator viewports
-					  create to camera projections and just use one by default
-					  This simplifies the code and eliminates some redundancy.
-					  This should allow for stereo simulator views as well.
+                      create to camera projections and just use one by default
+                      This simplifies the code and eliminates some redundancy.
+                      This should allow for stereo simulator views as well.
 Jan-31-2002 allenb    Moved Projection Enum values into an Enum named Eye.
 Jan-31-2002 allenb    Removed unneeded mType parameter from Projection classes.
 Jan-31-2002 allenb    Modified viewports to have handles to parent displays,
                       and projections to have handles to parent viewports.
-					  This enabled camera projection to be calculated
-					  in CameraProjection class and to auto calculate
-					  the aspect ratio.
-					  Now CameraProjection actually calculates a frutum
-					  so we do not have to use a special case for
-					  simulator camera rendering where we use gluPerspective.
+                      This enabled camera projection to be calculated
+                      in CameraProjection class and to auto calculate
+                      the aspect ratio.
+                      Now CameraProjection actually calculates a frutum
+                      so we do not have to use a special case for
+                      simulator camera rendering where we use gluPerspective.
 Jan-30-2002 allenb    Changed order that oglApp functions are called.  Now
                       contextInit() is called before bufferPreDraw().
 Jan-29-2002 allenb    Added new interface function oglApp::contextPostDraw()
