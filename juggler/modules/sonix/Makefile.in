@@ -206,8 +206,8 @@ hier:
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/snx
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/sonix/src
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/sonix/data
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/src
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/data
 	@for lib in $(ABI_LIST) ; do					\
             $(MAKE) dppABI=$$lib hier-abi ;   \
           done
@@ -237,9 +237,9 @@ post-install:
           $(topdir)/sonix-config $(bindir)
 
 install-share:
-	cp -r $(ROOT_ABS)/data/*.wav $(projdatadir)/sonix/data
-	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(projdatadir)/sonix/src
-	cp $(ROOT_ABS)/README.txt $(projdatadir)/sonix
+	cp -r $(ROOT_ABS)/data/*.wav $(projdatadir)/data
+	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(projdatadir)/src
+	cp $(ROOT_ABS)/README.txt $(projdatadir)
 
 install-test:
 
@@ -267,6 +267,50 @@ buildworld: all
 # files.
 # ------------------------------------------------------------------------
 installworld: install-all
+
+# -------------------------------------------------------------
+# Build and install everything (i.e., the world) for a release.
+# -------------------------------------------------------------
+.PHONY: release
+
+# -----------------------------------------------------------------------------
+# A release is a superset of 'world' except that no profiled libraries are
+# built.  Beyond this, the change log, release notes, etc. are installed.
+# A special case is required for releases made in the "global" build.  Namely,
+# the developer installation ("instlinks") must be created so that subsequent
+# targets can find headers properly.
+# -----------------------------------------------------------------------------
+release:
+	@echo "==============================================================="
+	@echo ">>> Sonix make release started on $(STARTTIME)"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@$(MAKE) clobber
+endif
+	@$(MAKE) $(BEFOREBUILD)
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
+ifdef GLOBAL_BUILD
+	@$(MAKE) links
+endif
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning Sonix release installation process"
+	@echo "---------------------------------------------------------------"
+	@$(MAKE) beforeinstall
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(ROOT_ABS)/CHANGELOG $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(ROOT_ABS)/COPYING.txt $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(ROOT_ABS)/README.txt $(projdatadir)
+#	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+#          $(ROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
+	@echo "==============================================================="
+	@echo ">>> Sonix make release started on $(STARTTIME)"
+	@echo ">>> Sonix make release completed on `LTIME=C date`"
+	@echo "==============================================================="
 
 # =============================================================================
 # Automatically generated documentation.
