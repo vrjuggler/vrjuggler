@@ -174,12 +174,12 @@ sub installFile ($$$$$) {
 }
 
 # -----------------------------------------------------------------------------
-# Replace tags of the form "@...@" found in $infile with known values that
-# will be written to $outfile.  The values for the tags are given in the
-# %VARS hash which is indexed by the tag name (without the surrounding @'s).
+# Replace tags of the form "@...@" found in $infile with known values.  The
+# values for the tags are given in the %VARS hash which is indexed by the tag
+# name (without the surrounding @'s).
 #
 # Syntax:
-#     $count = replaceTags("$infile", "$outfile", %VARS);
+#     $count = replaceTags("$infile", %VARS);
 #
 # Aguments:
 #      $infile: The input file to be read.
