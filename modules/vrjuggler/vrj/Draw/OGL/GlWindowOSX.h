@@ -30,10 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_GLOSX_WIN_H
 #define _VJ_GLOSX_WIN_H
-//#pragma once
 
 #include <vjConfig.h>
 
@@ -42,10 +40,44 @@
 #include <Utils/vjDebug.h>
 #include <Kernel/vjDisplay.h>
 
-#include <Carbon/Carbon.h>
-#include <SetupGL/Carbon SetupGL.h>
-#include <SetupGL/Carbon Include.h>
-#include <AGL/gl.h>
+#ifdef __APPLE_CC__
+#   include <Carbon/Carbon.h>
+#   include <DrawSprocket/DrawSprocket.h>
+#   include <AGL/agl.h>
+#else
+#   include <Carbon.h>
+#   include <DrawSprocket.h>
+#   include <agl.h>
+#endif
+
+
+// structure for creating a context from a window
+// This structure comes from Carbon SetupGL 1.5 distributed by Apple
+// Corporation.  Its use is here is permitted by the license.
+struct structGLWindowInfo {
+   Boolean fAcceleratedMust; 	// input: must renderer be accelerated?
+   GLint aglAttributes[64]; 	// input: pixel format attributes always
+                                //        required (reset to what was actually
+				//        allocated)
+   long VRAM;			// input: minimum VRAM; output: actual (if
+                                //        successful otherwise input)
+   long textureRAM;		// input: amount of texture RAM required on
+                                //        card; output: same (used in
+				//        allcoation to ensure enough texture
+   AGLPixelFormat	fmt;	// input: none; output pixel format...
+   Boolean fDraggable;		// input: is window going to be dragable, 
+				//        * if so renderer check (accel, VRAM,
+				//          textureRAM) will look at all
+				//          renderers vice just the current one
+				//        * if window is not dragable renderer
+				//          check will either check the single
+				//          device or short circuit to software
+				//        * if window spans multiple devices 
+				//          software renderer is consider to
+				//          have unlimited VRAM, unlimited
+				//          textureRAM and to not be
+				//          accelerated
+};
 
 //------------------------------------
 //: A GLOSX specific glWindow
@@ -71,6 +103,26 @@ public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins);
 
 protected:
+    OSStatus BuildGLFromWindow(WindowPtr pWindow, AGLContext* paglContext,
+                               structGLWindowInfo* pcontextInfo);
+
+    OSStatus BuildGLonWindow(WindowPtr pWindow, AGLContext* paglContext,
+                             structGLWindowInfo* pcontextInfo);
+
+    OSStatus DestroyGLFromWindow(AGLContext* paglContext,
+                                 structGLWindowInfo* pcontextInfo);
+
+    short FindGDHandleFromWindow(WindowPtr pWindow, GDHandle* phgdOnThisDevice);
+
+    Boolean CheckRenderer(GDHandle hGD, long *VRAM, long *textureRAM, GLint*,
+                          Boolean fAccelMust);
+
+    Boolean CheckAllDeviceRenderers(long* pVRAM, long* pTextureRAM,
+                                    GLint* pDepthSizeSupport,
+                                    Boolean fAccelMust);
+
+    void ReportError(const char* strError);
+    GLenum aglReportError(void);
 
 private:
     int          		mPipe;
@@ -83,6 +135,8 @@ private:
     AbsoluteTime		gTimeWindow;
     float			gRotation;
     CFStringRef			window_title;
+
+    static AGLContext		aglShareContext;
 };
 
 #endif
