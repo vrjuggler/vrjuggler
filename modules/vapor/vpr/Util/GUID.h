@@ -122,10 +122,25 @@ public:
    GUID(const struct StdGUID& guid);
 
    /**
-    * Generates a GUID from the given string representation of the GUID.
+    * Generates a GUID from the given string representation of the GUID using
+    * a char*.
     * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
     */
-   GUID(const std::string& guid_string);
+   GUID (const char* guid_string)
+   {
+      std::string temp(guid_string);
+      fromString(temp);
+   }
+
+   /**
+    * Generates a GUID from the given string representation of the GUID using
+    * a std::string.
+    * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
+    */
+   GUID (const std::string& guid_string)
+   {
+      fromString(guid_string);
+   }
 
    /**
     * Generates a GUID based on the given name that is part of the namespace
@@ -178,6 +193,14 @@ public:
    friend class vpr::GUIDFactory;
 
    const static vpr::GUID NullGUID;
+
+private:
+
+   /**
+    * Performs the real work of generating a GUID from a string.
+    * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
+    */
+   void fromString(const std::string& guid_string);
 };
 
 } // End of vpr namespace
