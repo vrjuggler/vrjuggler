@@ -46,6 +46,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
+import com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel;
 import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -76,10 +78,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       // Install extra look and feels.
       UIManager.installLookAndFeel("Kunststoff",
-                                   com.incors.plaf.kunststoff.KunststoffLookAndFeel.class.getName());
+                                   KunststoffLookAndFeel.class.getName());
+      KunststoffLookAndFeel.setIsInstalled(true);
+
       UIManager.installLookAndFeel("Kunststoff Mini",
-                                   com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel.class.getName());
-      com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel.setIsInstalled(true);
+                                   KunststoffMiniLookAndFeel.class.getName());
+      KunststoffMiniLookAndFeel.setIsInstalled(true);
 
       // This needs to be done as early as possible so that we receive events
       // that happen during initialization.
