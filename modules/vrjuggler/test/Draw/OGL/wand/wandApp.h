@@ -43,6 +43,12 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Coord.h>
+#include <gmtl/Generate.h>
+
+
 namespace vrjTest
 {
 
@@ -134,6 +140,8 @@ public:
                  << " 3:" << mButton3->getData()
                  << " 4:" << mButton4->getData()
                  << " 5:" << mButton5->getData() << std::endl;
+
+      mHeadHistory.push_back( gmtl::makeTrans<gmtl::Vec3f>(*(mHead->getData())) );
    }
 
    virtual void bufferPreDraw();
@@ -189,6 +197,8 @@ public:
    gadget::DigitalInterface     mButton3;
    gadget::DigitalInterface     mButton4;
    gadget::DigitalInterface     mButton5;
+
+   std::vector<gmtl::Vec3f>     mHeadHistory;
 };
 
 };
