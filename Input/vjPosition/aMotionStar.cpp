@@ -248,11 +248,17 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
 // Destructor.
 // ----------------------------------------------------------------------------
 aMotionStar::~aMotionStar () {
+    unsigned int i;
+
     if ( isActive() ) {
         stop();
     }
 
-    for ( unsigned int i = 0; i < m_birds.size(); i++ ) {
+    for ( i = 0; i < m_erc_vec.size(); i++ ) {
+        delete m_erc_vec[i];
+    }
+
+    for ( i = 0; i < m_birds.size(); i++ ) {
         delete m_birds[i];
     }
 }
@@ -1061,6 +1067,7 @@ aMotionStar::getSystemStatus () {
         // vector.
 //        if ( m_master ) {
             unsigned char* fbb_devices;
+            FBB::Device* cur_dev;
 
             // Get the start address for the "array" of devices.  Element 0
             // of this "array" is the first byte after the end of the system
@@ -1068,21 +1075,32 @@ aMotionStar::getSystemStatus () {
             fbb_devices = &sys_status->buffer[sizeof(BIRDNET::SYSTEM_STATUS)];
 
             for ( unsigned char i = 0; i < flock_number; i++ ) {
-                // Create a new FBB Device object and put it in the m_birds
-                // vector.  Its initial values are set using the status byte
-                // for the device.
-                m_birds.push_back(new FBB::Device());
-                m_birds[i]->accessible = fbb_devices[i] & FBB::ACCESS;
-                m_birds[i]->running    = fbb_devices[i] & FBB::RUNNING;
-                m_birds[i]->has_sensor = fbb_devices[i] & FBB::SENSOR;
-                m_birds[i]->is_erc     = fbb_devices[i] & FBB::ERC;
+                // Create a new FBB Device object.
+                cur_dev = new FBB::Device();
 
-                if ( m_birds[i]->is_erc ) {
-                    m_birds[i]->ert3_present = fbb_devices[i] & FBB::ERT3;
-                    m_birds[i]->ert2_present = fbb_devices[i] & FBB::ERT2;
-                    m_birds[i]->ert1_present = fbb_devices[i] & FBB::ERT1;
-                    m_birds[i]->ert0_present = fbb_devices[i] & FBB::ERT0;
+                // The ERC device is not put into the m_birds vector.  We do
+                // not want to try reading data from it.
+                if ( fbb_devices[i] & FBB::ERC ) {
+                    m_erc_vec.push_back(cur_dev);
+
+                    cur_dev->ert3_present = fbb_devices[i] & FBB::ERT3;
+                    cur_dev->ert2_present = fbb_devices[i] & FBB::ERT2;
+                    cur_dev->ert1_present = fbb_devices[i] & FBB::ERT1;
+                    cur_dev->ert0_present = fbb_devices[i] & FBB::ERT0;
                 }
+                // Put all non-ERC devices in the m_birds vector.
+                else {
+                    m_birds.push_back(cur_dev);
+                }
+
+                cur_dev->accessible = fbb_devices[i] & FBB::ACCESS;
+                cur_dev->running    = fbb_devices[i] & FBB::RUNNING;
+                cur_dev->has_sensor = fbb_devices[i] & FBB::SENSOR;
+                cur_dev->is_erc     = fbb_devices[i] & FBB::ERC;
+
+                // This is how we handle remembering which device this is
+                // after this point.
+                cur_dev->addr = i + 1;
             }
 
             // If the number of birds connected to the server is less than
@@ -1159,14 +1177,7 @@ aMotionStar::configureBirds () {
 
             // If we are still reading configuration information for
             // requested birds, handle the setup steps.
-            // XXX: This should use the < operator for the comparison becuase
-            // bird is 0-based and is not is not incremented until the end of
-            // the loop.  I don't know why this has to be <= since bird, but
-            // it may just be a requirement of how the birds are configured.
-            // I need to read the documentation in more detail to figure this
-            // out.  In any case, an additional hack is added at the end of
-            // the loop when m_birds_active is incrmented.
-            if ( bird <= m_birds_requested ) {
+            if ( bird < m_birds_requested ) {
                 unsigned char format;
 
                 // XXX: Eventually, we would like to have all birds get their
@@ -1278,9 +1289,9 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
     BIRDNET::DATA_PACKET* status;
     BIRDNET::SINGLE_BIRD_STATUS* bird_status;
 
-    // We request the status of (bird + 1) because the MotionStar devices are
-    // indexed from 1, but the driver indexes them from 0.
-    status = getDeviceStatus(bird + 1);
+    // The value in bird is the index into the m_birds vector.  Using that
+    // element from the vector, we get the actual FBB address.
+    status = getDeviceStatus(m_birds[bird]->addr);
 
     // If nothing was read, nothing can be returned.
     if ( status == NULL ) {
@@ -1377,9 +1388,9 @@ int
 aMotionStar::setBirdStatus (const unsigned char bird,
                             BIRDNET::SINGLE_BIRD_STATUS* status)
 {
-    // We set the status for (bird + 1) because the MotionStar devices are
-    // indexed from 1, but the driver indexes them from 0.
-    return setDeviceStatus(bird + 1, (char*) status,
+    // The value in bird is the index into the m_birds vector.  Using that
+    // entry, we get the actual FBB address.
+    return setDeviceStatus(m_birds[bird]->addr, (char*) status,
                            sizeof(BIRDNET::SINGLE_BIRD_STATUS));
 }
 

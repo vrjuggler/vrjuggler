@@ -154,6 +154,8 @@ struct Device {
     FLOCK::hemisphere   hemisphere;   //:
     unsigned char       address;      //: FBB address of this device
     FLOCK::data_block   data;         //: Data read from this device
+
+    unsigned char       addr;
 };
 
 };	// namespace FBB
@@ -1448,8 +1450,9 @@ private:
                                            //+ be read
     unsigned int       m_birds_active;     //: Number of birds being sampled
 
-    std::vector<FBB::Device*> m_birds;  //: Vector of all devices (birds)
-                                        //+ connected to the server chassis
+    std::vector<FBB::Device*> m_erc_vec; //: Vector of ERC devices
+    std::vector<FBB::Device*> m_birds;   //: Vector of all devices (birds)
+                                         //+ connected to the server chassis
 
     // Data management member variables.
     BIRDNET::units m_units;             //: Units in which data are read
