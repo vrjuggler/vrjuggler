@@ -57,6 +57,9 @@ vjDeviceConstructor<DEV>::vjDeviceConstructor()
 // Register all the devices that I know about
 void vjDeviceFactory::hackLoadKnownDevices()
 {
+   // NOTE: These will all given unused variable errors in compiling.
+   // That is okay, because the don't actually have to do anything.
+   // They just register themselves in their constructor.
    vjDeviceConstructor<vjSimAnalog>* sim_analog = new vjDeviceConstructor<vjSimAnalog>;
    vjDeviceConstructor<vjSimDigital>* sim_digital = new vjDeviceConstructor<vjSimDigital>;
    vjDeviceConstructor<vjSimPosition>* sim_position = new vjDeviceConstructor<vjSimPosition>;
@@ -122,7 +125,7 @@ int vjDeviceFactory::findConstructor(vjConfigChunk* chunk)
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();
 
-   for(int i=0;i<mConstructors.size();i++)
+   for(unsigned int i=0;i<mConstructors.size();i++)
    {
       // Get next constructor
       vjDeviceConstructorBase* construct = mConstructors[i];
@@ -141,7 +144,7 @@ void vjDeviceFactory::debugDump()
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,0) << "vjDeviceFactory::debugDump\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,0) << "num constructors:" << mConstructors.size() << "\n" << vjDEBUG_FLUSH;
 
-   for(int cNum=0;cNum<mConstructors.size();cNum++)
+   for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
    {
       vjDeviceConstructorBase* dev_constr = mConstructors[cNum];
       vjDEBUG(vjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr

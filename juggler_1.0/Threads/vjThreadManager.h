@@ -53,7 +53,7 @@ public:
       vjASSERT(thread->getTID() >= 0);
 
       // Insert thread into local table
-      while (mThreads.size() <= thread->getTID())
+      while ((int)mThreads.size() <= thread->getTID())
          mThreads.push_back(NULL);
       mThreads[thread->getTID()] = thread;
 
@@ -70,8 +70,8 @@ public:
    void removeThread(vjBaseThread* thread)
    {
       vjASSERT((mThreadVectorMutex.test()==1) && (mTSMutex.test()==1)); // Assert manager locked
-      vjASSERT((thread->getTID() >= 0) && (thread->getTID() < mThreads.size()));
-      mThreads[thread->getTID()] = NULL;
+      vjASSERT((thread->getTID() >= 0) && (thread->getTID() < (int)mThreads.size()));
+      mThreads[(unsigned int)thread->getTID()] = NULL;
       tsThreadRemoved(thread);   // Tell TS routines that thread removed
    }
 

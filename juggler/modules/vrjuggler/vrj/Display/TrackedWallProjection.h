@@ -30,7 +30,7 @@ class vjMatrix;
 //-----------------------------------------------------------------
 //: Wall specific class for viewport definitions.
 //
-//	 This class behaves the same as the vjWallProjection class
+//  This class behaves the same as the vjWallProjection class
 //  except that it is tracked.
 //
 //  This means that all parameters are relative to a tracked (moving)
@@ -62,7 +62,9 @@ public:
       //     It shoulbe be though from dependency checking
       mTracker.init(tracker_name);              // Intialize the tracker
    }
-
+   
+   virtual ~vjTrackedWallProjection() {}
+   
    virtual void config(vjConfigChunk* chunk)
    {
       vjProjection::config(chunk);        // Call base class config first

@@ -33,7 +33,11 @@ void vjPosInterface::refresh()
 {
    vjDeviceInterface::refresh();
    if(mProxyIndex != -1)
+   {
       mPosProxy = vjKernel::instance()->getInputManager()->getPosProxy(mProxyIndex);
+   }
    else
-      mPosProxy = NULL;
+   {
+      mPosProxy = vjKernel::instance()->getInputManager()->getDummyPosProxy();
+   }
 }

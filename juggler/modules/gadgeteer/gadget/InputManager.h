@@ -65,7 +65,7 @@ class vjInputManager : public vjMemory, public vjConfigChunkHandler
 {
 public:
    vjInputManager();
-   ~vjInputManager();
+   virtual ~vjInputManager();
 
    friend ostream& operator<<(ostream& out, vjInputManager& iMgr);
 
@@ -74,7 +74,7 @@ public:
  //---------------------------//
    //: Initial configuration for InputManager
    //! PRE: MUST be called before any config is added to input manager
-   void configureInitial(vjConfigChunkDB* cdb);
+   //void configureInitial(vjConfigChunkDB* cdb);
 
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
@@ -161,7 +161,7 @@ private:
    // return the pointer at the devNum position in the array. <br>
    //
    //!POST: return = m_devVector[devNum]  (this can be NULL)
-   vjInput* getDevice(int devNum);
+   vjInput* getDevice(unsigned int devNum);
 
    /*********************************************************
     *          PROXIES                                      *
@@ -178,11 +178,15 @@ public:
    int setPosProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
-   vjPosProxy* getPosProxy(int posProxyIndex)
+   vjPosProxy* getPosProxy(unsigned int posProxyIndex)
    {
       vjASSERT(m_posProxyVector.size() > posProxyIndex);    // Check array bounds
       return m_posProxyVector[posProxyIndex];
    }
+
+   //: Return a handle to the dummy proxy
+   vjPosProxy* getDummyPosProxy()
+   { return m_dummyPosProxy; }
 
    //: Add the pos proxy
    //! POST: pos proxy has been added
@@ -208,11 +212,16 @@ public:
    int setDigProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
-   vjDigitalProxy* getDigProxy(int digProxyIndex)
+   vjDigitalProxy* getDigProxy(unsigned int digProxyIndex)
    {
       vjASSERT(m_digProxyVector.size() > digProxyIndex);    // Check array bounds
       return m_digProxyVector[digProxyIndex];
    }
+
+   //: Return a handle to the dummy proxy
+   vjDigitalProxy* getDummyDigProxy()
+   { return m_dummyDigitalProxy; }
+
 
    //: Add the digital proxy
    //! POST: dig proxy has been added
@@ -238,11 +247,16 @@ public:
    int setAnaProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
-   vjAnalogProxy* getAnaProxy(int anaProxyIndex)
+   vjAnalogProxy* getAnaProxy(unsigned int anaProxyIndex)
    {
       vjASSERT(m_anaProxyVector.size() > anaProxyIndex);    // Check array bounds
       return m_anaProxyVector[anaProxyIndex];
    }
+
+   //: Return a handle to the dummy proxy
+   vjAnalogProxy* getDummyAnaProxy()
+   { return m_dummyAnalogProxy; }
+
 
    //: Add the analog proxy
    //! POST: analog proxy has been added
@@ -268,11 +282,16 @@ public:
    int setGloveProxy(int ProxyNum, int DevNum, int subNum);
 
    //: get the proxy at the given index
-   vjGloveProxy* GetGloveProxy(int gloveProxyIndex)
+   vjGloveProxy* getGloveProxy(unsigned int gloveProxyIndex)
    {
       vjASSERT(m_gloveProxyVector.size() > gloveProxyIndex);    // Check array bounds
       return m_gloveProxyVector[gloveProxyIndex];
    }
+
+   //: Return a handle to the dummy proxy
+   vjGloveProxy* getDummyGloveProxy()
+   { return m_dummyGloveProxy; }
+
 
    //: Add the glove proxy
    //! POST: glove proxy has been added
@@ -302,11 +321,15 @@ public:
    int setKeyboardProxy(int ProxyNum, int DevNum);
 
    //: Get the keyboard proxy at the given index
-   vjKeyboardProxy* getKeyboardProxy(int keyboardProxyIndex)
+   vjKeyboardProxy* getKeyboardProxy(unsigned int keyboardProxyIndex)
    {
       vjASSERT(m_keyboardProxyVector.size() > keyboardProxyIndex);    // Check array bounds
       return m_keyboardProxyVector[keyboardProxyIndex];
    }
+
+   //: Return a handle to the dummy proxy
+   vjKeyboardProxy* getDummyKeyboardProxy()
+   { return m_dummyKeyboardProxy; }
 
    //: Add the keyboard proxy
    //! POST: keyboard proxy has been added
@@ -331,11 +354,15 @@ public:
    int setGestureProxy(int ProxyNum, int DevNum);
 
    //: Get the gesture proxy at the given index
-   vjGestureProxy* getGestureProxy(int gestureProxyIndex)
+   vjGestureProxy* getGestureProxy(unsigned int gestureProxyIndex)
    {
       vjASSERT(m_gestureProxyVector.size() > gestureProxyIndex);    // Check array bounds
       return m_gestureProxyVector[gestureProxyIndex];
    }
+
+   //: Return a handle to the dummy proxy
+   vjGestureProxy* getDummyGestureProxy()
+   { return m_dummyGestureProxy; }
 
    //: Add the gesture proxy
    //! POST: gesture proxy has been added
@@ -368,7 +395,15 @@ protected:
    vjDummyKeyboard   m_dummyKeyboard;
    vjDummyGesture    m_dummyGesture;
 
-   vjPosProxy*      m_dummyPosProxy;      // Proxy to the dummy pos
+   // A bunch of dummy proxies to use in the device interfaces
+   // when the correct proxy is not around
+   // These should be moved to the device interfaces when input system is rewritten
+   vjPosProxy*       m_dummyPosProxy;        // Proxy to the dummy pos
+   vjDigitalProxy*   m_dummyDigitalProxy;    // Proxy to dummy digital
+   vjAnalogProxy*    m_dummyAnalogProxy;     // Proxy to dummy analog data
+   vjGloveProxy*     m_dummyGloveProxy;      // Proxy to dummy glove information
+   vjKeyboardProxy*  m_dummyKeyboardProxy;   // Proxy to dummy keyboard information
+   vjGestureProxy*   m_dummyGestureProxy;    // Proxy to dummy of gesture information
 
    std::map<std::string, int> proxyAliases; // List of alias indices for proxies
 

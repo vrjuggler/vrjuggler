@@ -36,7 +36,7 @@ class vjDisplay;
 //: Singleton Container class for all vjDisplays.
 //
 // PURPOSE:
-//	This class is responsible for holding the data about display aspects
+// This class is responsible for holding the data about display aspects
 //  of the application.  The display object are window/system independant
 //  this class is in charge of holding all the display data and keeping it
 //  current.  This includes updating projections, adding/deleting new displays, etc.
@@ -49,14 +49,10 @@ class vjDisplayManager : public vjConfigChunkHandler
 public:     // --- Config stuff -- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
-   //! POST: (display of same name already loaded) ==> old display closed, new one opened
-   //+       (display is new) ==> (new display is added)
-   //+       draw manager is notified of the display change
    virtual bool configAdd(vjConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
    virtual bool configRemove(vjConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
@@ -89,7 +85,23 @@ public:
    //! NOTE: DO NOT EDIT THE DISPLAYS
    std::vector<vjDisplay*> getAllDisplays();
 
+   vjConfigChunk* getDisplaySystemChunk()
+   {return mDisplaySystemChunk;}
+
 private:
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! POST: (display of same name already loaded) ==> old display closed, new one opened
+   //+       (display is new) ==> (new display is added)
+   //+       draw manager is notified of the display change
+   bool configAddDisplay(vjConfigChunk* chunk);
+
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   bool configRemoveDisplay(vjConfigChunk* chunk);
+
+   
    //: Add a display to the current system
    //! PRE: disp is a valid display
    //! POST: disp has been added to the list of displays
@@ -116,8 +128,8 @@ public:
    std::vector<vjDisplay*> mInactiveDisplays;   //: List of currently inactive displays
 
 protected:
-   vjDrawManager*  mDrawManager;     //: The current drawManager to communicate with
-
+   vjDrawManager*    mDrawManager;           //: The current drawManager to communicate with
+   vjConfigChunk*    mDisplaySystemChunk;    //: Config chunk for the displaySystem
 
    // ---- Singleton stuff ---- //
 public:
@@ -130,6 +142,9 @@ public:
 
 protected:
    vjDisplayManager() : mDrawManager(NULL)
+   {;}
+
+   virtual ~vjDisplayManager()
    {;}
 
 private:

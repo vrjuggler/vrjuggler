@@ -253,13 +253,14 @@ void vjGlxWindow::config(vjDisplay* _display)
    vjGlWindow::config(_display);
 
     // Get the vector of display chunks
-   std::vector<vjConfigChunk*>* dispSysChunk;
-   dispSysChunk = vjKernel::instance()->getInitialChunkDB()->getMatching("displaySystem");
+   vjConfigChunk* dispSysChunk;
+   //dispSysChunk = vjKernel::instance()->getInitialChunkDB()->getMatching("displaySystem");
+   dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
 
    window_name = _display->getName();
    pipe = _display->getPipe();
 
-   display_name = (*dispSysChunk)[0]->getProperty("xpipes", pipe).cstring();
+   display_name = dispSysChunk->getProperty("xpipes", pipe).cstring();
    if(strcmp(display_name, "-1") == 0)    // Use display env
       strcpy(display_name, getenv("DISPLAY"));
    vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: " << display_name << endl << vjDEBUG_FLUSH;
@@ -275,7 +276,7 @@ void vjGlxWindow::config(vjDisplay* _display)
    if(wins.size() <= 0)
       vjDEBUG(vjDBG_ERROR,0) << "WARNING: createHardwareSwapGroup called with no windows\n" << vjDEBUG_FLUSH;
 
-   for(int i=0;i<wins.size();i++)
+   for(unsigned int i=0;i<wins.size();i++)
    {
       vjGlxWindow* glx_win = dynamic_cast<vjGlxWindow*>(wins[i]);
       vjASSERT(glx_win != NULL);    // Make sure we have the right type
@@ -354,7 +355,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 
 
    // first, see if we can get exactly what we want.
-   if (vi = glXChooseVisual (display, screen, viattrib))
+   if ( (vi = glXChooseVisual (display, screen, viattrib)) )
       return vi;
 
    // still no luck. if we were going for stereo, let's try without.
@@ -365,7 +366,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
                  << "\n  Trying mono.\n" << vjDEBUG_FLUSH;
       in_stereo = false;
       viattrib[12] = GLX_USE_GL; // should be a reasonable 'ignore' tag
-      if (vi = glXChooseVisual (display, screen, viattrib))
+      if( (vi = glXChooseVisual (display, screen, viattrib)) )
          return vi;
    }
 
@@ -374,7 +375,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
               << "\n  Couldn't get display with alpha channel."
               << "\n  Trying without." << endl << vjDEBUG_FLUSH;
    viattrib[11] = 0;
-   if (vi = glXChooseVisual (display, screen, viattrib))
+   if( (vi = glXChooseVisual (display, screen, viattrib)) )
       return vi;
 
    // But they told me to please go f___ myself

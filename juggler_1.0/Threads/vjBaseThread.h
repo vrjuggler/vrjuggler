@@ -37,7 +37,7 @@ class vjBaseThread
 {
 public:
    vjBaseThread()
-      : mThreadId(0), mTSTable(NULL)
+      :  mTSTable(NULL), mThreadId(0)
    {;}
 
    virtual ~vjBaseThread()
@@ -65,7 +65,7 @@ protected:
    // in derived class's constructor.
    //! POST: Thread is setup correctly to run.
    //+       The thread has been registered with the system.
-	//+		 Creates the thread's id (mThreadId)
+   //+       Creates the thread's id (mThreadId)
    //! ARGS: successfulCreation - Did the thread get created correctly
    void registerThread(bool succesfulCreation);
 
@@ -293,6 +293,7 @@ private:
    // --- STATICS ---- //
 
 private:
+   // XXX: What happens when it rolls over after we have been running for a LONG time.
    int32_t getNextThreadId()
    {
       return mNextThreadId++;

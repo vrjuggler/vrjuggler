@@ -69,12 +69,42 @@ public:
       std::vector<std::string> dependencies = chunk->getChunkPtrDependencies();
 
       // Check to see if they are loaded already
-      for(int i=0;i<dependencies.size();i++)
+      for(unsigned int i=0;i<dependencies.size();i++)
       {
-         if(!cfg_mgr->isChunkInActiveList(dependencies[i]));
+         if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
             pass = false;      
       }
       return pass;
+   }
+
+   // Write out the dependencies to the vjDEBUG macro
+   virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=1)
+   {
+      vjDEBUG_BEGINlg(vjDBG_ALL,dbg_lvl,false,true) << "\n------------ Dependencies for: item: " << chunk->getProperty("name")
+                                                 << " type: " << (std::string)chunk->getType()
+                                              << "------------\n" << vjDEBUG_FLUSH;
+
+      vjConfigManager* cfg_mgr = vjConfigManager::instance();
+      
+      // Get the list of dependencies
+      std::vector<std::string> dependencies = chunk->getChunkPtrDependencies();
+
+      // Check to see if they are loaded already
+      for(unsigned int i=0;i<dependencies.size();i++)
+      {         
+         vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,true) << i << ": " << dependencies[i] << " ==> " << vjDEBUG_FLUSH;
+         if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
+         {
+            vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,false) << "FAILED!!!\n" << vjDEBUG_FLUSH;
+         }
+         else
+         {
+            vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,false) << "passed.\n" << vjDEBUG_FLUSH;
+         }
+      }
+
+      vjDEBUG_ENDlg(vjDBG_ALL,dbg_lvl,false,false) << endl << vjDEBUG_FLUSH;
+
    }
 };
 

@@ -56,22 +56,24 @@ vjGlApp* vjGlDrawManager::getApp()
 
 //: Do initial configuration for the draw manager
 // Doesn't do anything right now
+/*
 void vjGlDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
 {
     // Setup any config data
 }
+*/
 
 //: Start the control loop
 void vjGlDrawManager::start()
 {
    // --- Setup Multi-Process stuff --- //
    // Create a new thread to handle the control
-	vjThread* control_thread;
+   vjThread* control_thread;
 
    vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
       new vjThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
 
-	control_thread = new vjThread(memberFunctor, 0);
+   control_thread = new vjThread(memberFunctor, 0);
 
    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: " << control_thread << endl << vjDEBUG_FLUSH;
 }
@@ -87,7 +89,7 @@ void vjGlDrawManager::draw()
 
 //: Blocks until the end of the frame
 //! POST:
-//+	   The frame has been drawn
+//+      The frame has been drawn
 void vjGlDrawManager::sync()
 {
    drawDoneSema.acquire();
@@ -116,6 +118,7 @@ void vjGlDrawManager::main(void* nullParam)
       // Allow run-time config
       //**//mRuntimeConfigSema.release();
          // This is the time that reconfig can happen
+      // configProcessPending();
       //**//mRuntimeConfigSema.acquire();
    }
 }
@@ -123,7 +126,7 @@ void vjGlDrawManager::main(void* nullParam)
 void vjGlDrawManager::drawAllPipes()
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: " << endl << flush << vjDEBUG_FLUSH;
-   int pipeNum;
+   unsigned int pipeNum;
 
    // RENDER
       // Start rendering all the pipes
@@ -159,14 +162,14 @@ void vjGlDrawManager::initAPI()
 //
 //! PRE: API is running (initAPI has been called)
 //! POST: API is ready do draw    <br>
-//+	 Process model is configured <br>
-//+	 Multi-pipe data is set      <br>
-//+	 Window list is correct      <br>
+//+    Process model is configured <br>
+//+    Multi-pipe data is set      <br>
+//+    Window list is correct      <br>
 void vjGlDrawManager::initDrawing()
 {
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
 }
-	
+   
 
 //: Callback when display is added to display manager
 //! PRE: Must be in kernel controlling thread
@@ -181,15 +184,15 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager:addDisplay: " << disp << endl << vjDEBUG_FLUSH;
 
-   //	-- Create a window for new display
-   //	-- Store the window in the wins vector
+   // -- Create a window for new display
+   // -- Store the window in the wins vector
       // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
    vjGlWindow* new_win = vjKernel::instance()->getSysFactory()->getGLWindow();
    new_win->config(disp);                                            // Configure it
    mWins.push_back(new_win);                                         // Add to our local window list
 
    // -- Create any needed Pipes & Start them
-   int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
+   unsigned int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
    vjASSERT(pipe_num >= 0);                            // ASSERT: pipeNum := [0...n]
    if(pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
@@ -223,7 +226,7 @@ void vjGlDrawManager::removeDisplay(vjDisplay* disp)
    vjGlPipe* pipe;  pipe = NULL;
    vjGlWindow* win; win = NULL;     // Window to remove
 
-   for(int i=0;i<mWins.size();i++)
+   for(unsigned int i=0;i<mWins.size();i++)
    {
       if(mWins[i]->getDisplay() == disp)      // FOUND it
       {
@@ -291,7 +294,7 @@ bool vjGlDrawManager::configCanHandle(vjConfigChunk* chunk)
 void vjGlDrawManager::dirtyAllWindows()
 {
     // Create Pipes & Add all windows to the correct pipe
-   for(int winId=0;winId<mWins.size();winId++)   // For each window we created
+   for(unsigned int winId=0;winId<mWins.size();winId++)   // For each window we created
    {
       mWins[winId]->setDirtyContext(true);
    }
@@ -301,7 +304,7 @@ void vjGlDrawManager::dirtyAllWindows()
 bool vjGlDrawManager::isValidWindow(vjGlWindow* win)
 {
    bool ret_val = false;
-   for(int i=0;i<mWins.size();i++)
+   for(unsigned int i=0;i<mWins.size();i++)
       if(mWins[i] == win)
          ret_val = true;
 
@@ -324,7 +327,7 @@ void vjGlDrawManager::drawObjects()
       vjGloveProxy* cur_glove_proxy;
       for(int glv=0;glv<input_mgr->getNumGloveProxies();glv++)    // For each glove in system
       {
-         cur_glove_proxy = input_mgr->GetGloveProxy(glv);         // Get the glove proxy
+         cur_glove_proxy = input_mgr->getGloveProxy(glv);         // Get the glove proxy
          if(cur_glove_proxy->isVisible())                         // If flag set
             drawGlove(cur_glove_proxy);                           // draw it
       }
@@ -348,7 +351,7 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
    vjVec3 apex, ur, lr, ul, ll;
    vjProjection* proj; proj = NULL;
 
-   for(int i=0;i<disps.size();i++)
+   for(unsigned int i=0;i<disps.size();i++)
    {
       if(disps[i]->isSurface())
       {
@@ -406,26 +409,26 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
-   	//-----------------set up materials....
-   	float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
-   	float mat_shininess[] = {50.0f};
-   	float mat_diffuse[] = {.7f, .7f, .7f, 1.0f};
-   	float mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-   	//-----------------Call Materials.....
-   	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-   	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-   	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-   	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-   	//----------------Enable Materials.....
-   	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-   	glEnable(GL_COLOR_MATERIAL);
+      //-----------------set up materials....
+      float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
+      float mat_shininess[] = {50.0f};
+      float mat_diffuse[] = {.7f, .7f, .7f, 1.0f};
+      float mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+      //-----------------Call Materials.....
+      glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+      glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+      glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+      //----------------Enable Materials.....
+      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+      glEnable(GL_COLOR_MATERIAL);
 
-	   glDisable(GL_TEXTURE_2D);
+      glDisable(GL_TEXTURE_2D);
       glDisable(GL_TEXTURE_1D);
      // Draw the user's head
       glPushMatrix();
-	      glMultMatrixf(sim->getHeadPos().getFloatPtr());
-	
+         glMultMatrixf(sim->getHeadPos().getFloatPtr());
+   
          // Draw Axis
          /*
          glDisable(GL_LIGHTING);
@@ -443,28 +446,28 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
          //glEnable(GL_BLEND);
          //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
          glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
-	      drawSphere(head_radius, 10, 10);             // Head
+         drawSphere(head_radius, 10, 10);             // Head
          glDisable(GL_BLEND);
 
-	      glPushMatrix();
-	         glColor3f(0.2f, 0.2f, 0.2f);
-	         glTranslatef(0.0f, eye_vertical, -eye_horizontal);
-	         glPushMatrix();                     // Right eye
-		         glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
-		         drawSphere(eye_radius, 5, 5);
-	         glPopMatrix();
-	         glPushMatrix();                     // Left eye
-		         glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
-		         drawSphere(eye_radius, 5, 5);
-	         glPopMatrix();
-	      glPopMatrix();
+         glPushMatrix();
+            glColor3f(0.2f, 0.2f, 0.2f);
+            glTranslatef(0.0f, eye_vertical, -eye_horizontal);
+            glPushMatrix();                     // Right eye
+               glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
+               drawSphere(eye_radius, 5, 5);
+            glPopMatrix();
+            glPushMatrix();                     // Left eye
+               glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
+               drawSphere(eye_radius, 5, 5);
+            glPopMatrix();
+         glPopMatrix();
       glPopMatrix();
 
-	   // Draw the wand
+      // Draw the wand
       glPushMatrix();
-	      glMultMatrixf(sim->getWandPos().getFloatPtr());
-	      glColor3f(0.0f, 1.0f, 0.0f);
-	      drawCone(0.2f, 0.6f, 6.0f, 1.0f);
+         glMultMatrixf(sim->getWandPos().getFloatPtr());
+         glColor3f(0.0f, 1.0f, 0.0f);
+         drawCone(0.2f, 0.6f, 6.0f, 1.0f);
       glPopMatrix();
 
        // Draw a The display surfaces
@@ -480,12 +483,12 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 void vjGlDrawManager::outStream(ostream& out)
 {
     out     << "========== vjGlDrawManager: " << (void*)this << " =========" << endl
-	         << "\tapp:" << (void*)mApp << endl
+            << "\tapp:" << (void*)mApp << endl
             << "\tWins:" << mWins.size();
 
-    for(int i = 0; i < mWins.size(); i++)
+    for(unsigned int i = 0; i < mWins.size(); i++)
     {
-	    vjASSERT(mWins[i] != NULL);
+       vjASSERT(mWins[i] != NULL);
        out << "\n\t\tvjGlWindow:\n" << mWins[i] << endl;
     }
     out << "=======================================" << endl;

@@ -47,6 +47,9 @@ public:
    vjUser() : mUserId(-1), mName("")
    {;}
 
+   virtual ~vjUser()
+   {;}
+
    //: Get the id of the user in the system
    //! RETURNS: -1 => User has not been configured
    int getId();
@@ -64,7 +67,7 @@ public:
    { return mHead->getData(); }
 
     vjTimeStamp* getHeadUpdateTime() {
-	return mHead->getUpdateTime();
+   return mHead->getUpdateTime();
     }
 
 private:

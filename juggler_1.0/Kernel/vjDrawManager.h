@@ -31,7 +31,7 @@ class vjDisplay;
 //--------------------------------------------------------
 //: Abstract base class for API specific Draw Manager.
 //
-//	Concrete classes are resonsible for all rendering.
+// Concrete classes are resonsible for all rendering.
 //
 // @author Allen Bierbaum
 //  Date: 9-7-97
@@ -45,7 +45,7 @@ public:
 
    //: Function to initialy config API specific stuff.
    // Takes a chunkDB and extracts API specific stuff
-   virtual void configInitial(vjConfigChunkDB*  chunkDB) = 0;
+   //**//virtual void configInitial(vjConfigChunkDB*  chunkDB) = 0;
 
    //: Enable a frame to be drawn
    virtual void draw() = 0;

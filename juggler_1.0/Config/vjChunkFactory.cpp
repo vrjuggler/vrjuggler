@@ -20,5 +20,4 @@
 
 #include <Config/vjChunkFactory.h>
 
-vjChunkDescDB vjChunkFactory::descdb;
-vjChunkDesc* vjChunkFactory::nulldesc = NULL;
+vjChunkFactory* vjChunkFactory::_instance = NULL;

@@ -100,6 +100,19 @@ public:
    virtual void postFrame()
    {;}
 
+public:  // --- DEfault config handlers: (inherited from vjConfigChunkHandler) --- //
+   // Default to not handling anything
+   virtual bool configCanHandle(vjConfigChunk* chunk)
+   { return false; }
+   
+protected:
+   //! NOTE: Inherited from vjConfigChunkHandler
+   virtual bool configAdd(vjConfigChunk* chunk)
+   { vjASSERT(false);  return false; }
+   //! NOTE: INherited from vjConfigChunkHandler
+   virtual bool configRemove(vjConfigChunk* chunk)
+   { vjASSERT(false); return false; }
+
 public:
    //vjAPI       api;        // Used to signal which API this application works with
    vjKernel*   kernel;     // The library kernel (here for convienence)

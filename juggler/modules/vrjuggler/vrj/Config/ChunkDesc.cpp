@@ -38,20 +38,20 @@ vjChunkDesc::vjChunkDesc (vjChunkDesc& desc): plist() {
 
 
 vjChunkDesc::~vjChunkDesc() {
-    for (int i = 0; i < plist.size(); i++)
-	delete plist[i];
+    for (unsigned int i = 0; i < plist.size(); i++)
+   delete plist[i];
 }
 
 
 
 vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
-    int i;
+    unsigned int i;
 
     if (&other == this)
-	return *this;
+   return *this;
 
     for (i = 0; i < plist.size(); i++)
-	delete plist[i];
+   delete plist[i];
     plist.erase (plist.begin(), plist.end());
     
     name = other.name;
@@ -60,7 +60,10 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     
     plist.reserve (other.plist.size());
     for (i = 0; i < other.plist.size(); i++)
-	plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
+    {  
+       //plist.push_back ( other.plist[i]);
+       plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
+    }
     
     return *this;
 }
@@ -108,9 +111,9 @@ void vjChunkDesc::add (vjPropertyDesc *pd) {
 
 
 vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) {
-    for (int i = 0; i < plist.size(); i++)
-	if (!vjstrcasecmp (_token, plist[i]->getToken()))
-	    return plist[i];
+    for (unsigned int i = 0; i < plist.size(); i++)
+   if (!vjstrcasecmp (_token, plist[i]->getToken()))
+       return plist[i];
     return NULL;
 }
 
@@ -120,12 +123,12 @@ bool vjChunkDesc::remove (const std::string& _token) {
 
     std::vector<vjPropertyDesc*>::iterator begin = plist.begin();
     while (begin != plist.end()) {
-	if (!vjstrcasecmp ((*begin)->getToken(), _token)) {
-	    delete (*begin);
-	    plist.erase(begin);
-	    return 1;
-	}
-	begin++;
+   if (!vjstrcasecmp ((*begin)->getToken(), _token)) {
+       delete (*begin);
+       plist.erase(begin);
+       return 1;
+   }
+   begin++;
     }
     return 0;
 }
@@ -134,9 +137,9 @@ bool vjChunkDesc::remove (const std::string& _token) {
 
 ostream& operator << (ostream& out, vjChunkDesc& self) {
     out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
-	<< self.help.c_str() << '"' << endl;
-    for (int i = 0; i < self.plist.size(); i++)
-	out << "  " << *(self.plist[i]) << endl;
+   << self.help.c_str() << '"' << endl;
+    for (unsigned int i = 0; i < self.plist.size(); i++)
+   out << "  " << *(self.plist[i]) << endl;
     out << "  end" <<endl;
     return out;
 }
@@ -157,22 +160,22 @@ istream& operator >> (istream& in, vjChunkDesc& self) {
     readString (in, str, buflen);
     self.help = str;
 
-    for (int i = 0; i < self.plist.size(); i++)
-	delete self.plist[i];
+    for (unsigned int i = 0; i < self.plist.size(); i++)
+   delete self.plist[i];
     self.plist.erase (self.plist.begin(), self.plist.end());
 
     // this could use improvement
     do {
-	p = new vjPropertyDesc();
-	in >> *p;
-	if (!vjstrcasecmp (p->getToken(),"end")) {
-	    delete p;
-	    break;
-	}
-	self.add(p);
+   p = new vjPropertyDesc();
+   in >> *p;
+   if (!vjstrcasecmp (p->getToken(),"end")) {
+       delete p;
+       break;
+   }
+   self.add(p);
     } while (!in.eof());
 
     if (!self.getPropertyDesc ("name")) 
-	self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
+   self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
     return in;
 }

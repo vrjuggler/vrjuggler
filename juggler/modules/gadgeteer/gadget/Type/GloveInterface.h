@@ -46,9 +46,9 @@ public:
    {
       vjDeviceInterface::refresh();
       if(mProxyIndex != -1)
-         mGloveProxy = vjKernel::instance()->getInputManager()->GetGloveProxy(mProxyIndex);
+         mGloveProxy = vjKernel::instance()->getInputManager()->getGloveProxy(mProxyIndex);
       else
-         mGloveProxy = NULL;
+         mGloveProxy = vjKernel::instance()->getInputManager()->getDummyGloveProxy();
    }
 
 private:

@@ -56,17 +56,23 @@ vjDebug::vjDebug()
 
 }
 
-ostream& vjDebug::getStream(int cat, int level, int indentChange)
+ostream& vjDebug::getStream(int cat, int level, bool show_thread_info, bool use_indent, int indentChange)
 {
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
 
    //cout << "VG " << level << ": ";
-   cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VG: ";
+   if(show_thread_info)
+      cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VG: ";
+   else
+      cout << vjDEBUG_STREAM_LOCK;
 
       // Insert the correct number of tabs into the stream for indenting
-   for(int i=0;i<indentLevel;i++)
-      cout << "\t";
+   if(use_indent)
+   {
+      for(int i=0;i<indentLevel;i++)
+         cout << "\t";
+   }
 
    if(indentChange > 0)             // If increasing indent
       indentLevel += indentChange;

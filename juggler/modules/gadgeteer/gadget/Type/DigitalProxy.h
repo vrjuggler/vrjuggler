@@ -45,16 +45,13 @@ class vjDigitalProxy : public vjMemory, public vjProxy
 
 public:
    /** @name Construction/Destruction */
-   //@{
    vjDigitalProxy() {
       m_digPtr = NULL;
       m_unitNum = -1;
       m_data = 0;
    }
 
-   ~vjDigitalProxy() {}
-   //@}
-
+   virtual ~vjDigitalProxy() {}
 
    void set(vjDigital* digPtr, int subNum)
    {

@@ -48,7 +48,7 @@ public:
       if(mProxyIndex != -1)
          mAnaProxy = vjKernel::instance()->getInputManager()->getAnaProxy(mProxyIndex);
       else
-         mAnaProxy = NULL;
+         mAnaProxy = vjKernel::instance()->getInputManager()->getDummyAnaProxy();
    }
 
 private:

@@ -39,7 +39,7 @@ vjChunkDescDB::~vjChunkDescDB() {
 
 
 vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
-    for (int i = 0; i < descs.size(); i++)
+    for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, _token))
             return descs[i];
     return NULL;
@@ -48,7 +48,7 @@ vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
 
 
 bool vjChunkDescDB::insert (vjChunkDesc *d) {
-    for (int i = 0; i < descs.size(); i++)
+    for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
             delete (descs[i]);
             descs[i] = d;
@@ -105,7 +105,7 @@ int vjChunkDescDB::size () {
 
 
 ostream& operator << (ostream& out, vjChunkDescDB& self) {
-    for (int i = 0; i < self.descs.size(); i++)
+    for (unsigned int i = 0; i < self.descs.size(); i++)
         out << "Chunk " << *(self.descs[i]) << endl;
     out << "End" <<endl;
     return out;

@@ -43,7 +43,7 @@ public:
    //: Return analog data
    virtual int getAnalogData(int devNum=0)
    {
-      vjASSERT(devNum < mAnaData.size());    // Make sure we have enough space
+      vjASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
       return mAnaData[devNum];
    }
 

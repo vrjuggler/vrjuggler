@@ -54,9 +54,21 @@ bool recognizeProxyAlias(vjConfigChunk* chunk);
 *********************************************** ahimberg */
 vjInputManager::vjInputManager() : m_dummyPos(), m_dummyDig(), m_dummyAna(), m_dummyGlove()
 {
+   // Setup all the dummies and their proxies
+   // XXX: This should really be moved to the dev interfaces when the new input system is written
    m_dummyPosProxy = new vjPosProxy();      // Create dummy proxy
    m_dummyPosProxy->set(&m_dummyPos,0);
    m_dummyGlove.setGlovePosProxy(m_dummyPosProxy);       // So dummy glove has a location
+   m_dummyDigitalProxy = new vjDigitalProxy();
+   m_dummyDigitalProxy->set(&m_dummyDig,0);
+   m_dummyAnalogProxy = new vjAnalogProxy();
+   m_dummyAnalogProxy->set(&m_dummyAna,0);
+   m_dummyGloveProxy = new vjGloveProxy();
+   m_dummyGloveProxy->set(&m_dummyGlove,0);
+   m_dummyKeyboardProxy = new vjKeyboardProxy();
+   m_dummyKeyboardProxy->set(&m_dummyKeyboard);
+   m_dummyGestureProxy = new vjGestureProxy();
+   m_dummyGestureProxy->set(&m_dummyGesture);
 }
 
 
@@ -68,25 +80,25 @@ vjInputManager::vjInputManager() : m_dummyPos(), m_dummyDig(), m_dummyAna(), m_d
 *********************************************** ahimberg */
 vjInputManager::~vjInputManager()
 {
-   for (int a = 0; a < m_devVector.size(); a++)    // Stop all devices
+   for (unsigned int a = 0; a < m_devVector.size(); a++)    // Stop all devices
       if (m_devVector[a] != NULL)
          m_devVector[a]->stopSampling();
-   for (int i = 0; i < m_devVector.size(); i++)    // Delete all devices
+   for (unsigned int i = 0; i < m_devVector.size(); i++)    // Delete all devices
       if (m_devVector[i] != NULL)
          delete m_devVector[i];
-   for (int j = 0; j < m_posProxyVector.size(); j++)  // Delete all pos proxies
+   for (unsigned int j = 0; j < m_posProxyVector.size(); j++)  // Delete all pos proxies
       if (m_posProxyVector[j] != NULL)
          delete m_posProxyVector[j];
-   for (int k = 0; k < m_digProxyVector.size(); k++)  // Delete all digital proxies
+   for (unsigned int k = 0; k < m_digProxyVector.size(); k++)  // Delete all digital proxies
       if (m_digProxyVector[k] != NULL)
          delete m_digProxyVector[k];
-   for (int l = 0; l < m_anaProxyVector.size(); l++)  // Delete all analog proxies
+   for (unsigned int l = 0; l < m_anaProxyVector.size(); l++)  // Delete all analog proxies
       if (m_anaProxyVector[l] != NULL)
          delete m_anaProxyVector[l];
-   for (int m = 0; m < m_gloveProxyVector.size(); m++)  // Delete all glove proxies
+   for (unsigned int m = 0; m < m_gloveProxyVector.size(); m++)  // Delete all glove proxies
       if (m_gloveProxyVector[m] != NULL)
          delete m_gloveProxyVector[m];
-   for (int n = 0; n < m_gestureProxyVector.size(); n++)  // Delete all gesture proxies
+   for (unsigned int n = 0; n < m_gestureProxyVector.size(); n++)  // Delete all gesture proxies
       if (m_gestureProxyVector[n] != NULL)
          delete m_gestureProxyVector[n];
 }
@@ -94,6 +106,7 @@ vjInputManager::~vjInputManager()
 //: Set the initial configuration
 // Finds the InputManager chunks in the db
 // uses these to configure dummyPos
+/*
 void vjInputManager::configureInitial(vjConfigChunkDB *cdb)
 {
    vjDEBUG(vjDBG_INPUT_MGR,6) << "vjInputManager::ConfigureInitial" << endl << vjDEBUG_FLUSH;
@@ -122,11 +135,13 @@ void vjInputManager::configureInitial(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 }
+*/
 
 //: Add the given config chunk to the input system
 bool vjInputManager::configAdd(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "\nvjInputManager: Adding config info... " << endl << vjDEBUG_FLUSH;
+   vjASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
 
@@ -159,6 +174,7 @@ bool vjInputManager::configAdd(vjConfigChunk* chunk)
 bool vjInputManager::configRemove(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "\nvjInputManager: Removing config... " << endl << vjDEBUG_FLUSH;
+   vjASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
 
@@ -261,7 +277,8 @@ bool vjInputManager::removeDevice(vjConfigChunk* chunk)
 *********************************************** ahimberg */
 ostream& operator<<(ostream& out, vjInputManager& iMgr)
 {
-  int i,d;
+  unsigned int i;
+  int d;
   out << "\n=============== vjInputManager Status: ===============================" << endl;
 
   out << "Devices:\n";
@@ -270,9 +287,9 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (iMgr.m_devVector[i] != NULL)
        out << setw(2) << i << ":"
            << "  name:" << setw(30) << iMgr.m_devVector[i]->getInstanceName()
-	        << "  type:" << setw(12) << iMgr.m_devVector[i]->getDeviceName()
-	        << "  port:" << setw(10) << iMgr.m_devVector[i]->getPort()
-	        << "  baud:" << iMgr.m_devVector[i]->getBaudRate() << endl;
+           << "  type:" << setw(12) << iMgr.m_devVector[i]->getDeviceName()
+           << "  port:" << setw(10) << iMgr.m_devVector[i]->getPort()
+           << "  baud:" << iMgr.m_devVector[i]->getBaudRate() << endl;
 
   out << "\nPos Proxies:\n";
   for (i = 0; i < iMgr.m_posProxyVector.size(); i++)    // DUMP PosProxies
@@ -281,10 +298,10 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (d != -1)
        out << setw(2) << i << ":"
            << "   Proxies:"
-	        << setw(10)
-	        << (iMgr.m_posProxyVector[i]->getPositionPtr())->getInstanceName()
-	        << "  unit:" <<
-	             iMgr.m_posProxyVector[i]->getUnit() << endl;
+           << setw(10)
+           << (iMgr.m_posProxyVector[i]->getPositionPtr())->getInstanceName()
+           << "  unit:" <<
+                iMgr.m_posProxyVector[i]->getUnit() << endl;
   }
 
   out << "\nDigital Proxies\n";
@@ -294,10 +311,10 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (d != -1)
        out << setw(2) << i << ":"
             << "   Proxies:"
-	         << setw(10)
-	         << (iMgr.m_digProxyVector[i]->getDigitalPtr())->getInstanceName()
+            << setw(10)
+            << (iMgr.m_digProxyVector[i]->getDigitalPtr())->getInstanceName()
             << "  unit:" <<
-	             iMgr.m_digProxyVector[i]->getUnit() << endl;
+                iMgr.m_digProxyVector[i]->getUnit() << endl;
   }
 
   out << "\nAnalog Proxies\n";
@@ -307,10 +324,10 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (d != -1)
        out << setw(2) << i << ":"
             << "   Proxies:"
-	         << setw(10)
-	         << (iMgr.m_anaProxyVector[i]->getAnalogPtr())->getInstanceName()
+            << setw(10)
+            << (iMgr.m_anaProxyVector[i]->getAnalogPtr())->getInstanceName()
             << "  unit:" <<
-	             iMgr.m_anaProxyVector[i]->getUnit() << endl;
+                iMgr.m_anaProxyVector[i]->getUnit() << endl;
   }
 
   out << "\nGlove Proxies:\n";
@@ -320,10 +337,10 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (d != -1)
        out << setw(2) << i << ":"
             << "   Proxies:"
-	         << setw(10)
-	         << (iMgr.m_gloveProxyVector[i]->getGlovePtr())->getInstanceName()
+            << setw(10)
+            << (iMgr.m_gloveProxyVector[i]->getGlovePtr())->getInstanceName()
         << "  unit:" <<
-	             iMgr.m_gloveProxyVector[i]->getUnit() << endl;
+                iMgr.m_gloveProxyVector[i]->getUnit() << endl;
   }
 
   out << "\nKeyboard Proxies\n";
@@ -333,9 +350,9 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (d != -1)
        out << setw(2) << i << ":"
             << "   Proxies:"
-	         << setw(10)
-	         << (iMgr.m_keyboardProxyVector[i]->getKeyboardPtr())->getInstanceName()
-	         << endl;
+            << setw(10)
+            << (iMgr.m_keyboardProxyVector[i]->getKeyboardPtr())->getInstanceName()
+            << endl;
   }
 
   out << "\nGesture Proxies\n";
@@ -345,9 +362,9 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      if (d != -1)
        out << setw(2) << i << ":"
             << "   Proxies:"
-	         << setw(10)
-	         << (iMgr.m_gestureProxyVector[i]->getGesturePtr())->getInstanceName()
-	         << endl;
+            << setw(10)
+            << (iMgr.m_gestureProxyVector[i]->getGesturePtr())->getInstanceName()
+            << endl;
   }
 
   out << endl;
@@ -356,7 +373,7 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
   out << "Alias List:" << endl;
   for(std::map<std::string, int>::iterator cur_alias = iMgr.proxyAliases.begin(); cur_alias != iMgr.proxyAliases.end(); cur_alias++)
      out << "    " << (*cur_alias).first.c_str() << "  index:" << (*cur_alias).second << endl;
-	
+   
   out << "=============== vjInputManager Status =========================" << endl;
   return out;
 }
@@ -384,7 +401,7 @@ int vjInputManager::fAddDevice(vjInput* devPtr)
 *********************************************** ahimberg */
 void vjInputManager::updateAllData()
 {
-   int j;
+   unsigned int j;
    for (j = 0; j < m_devVector.size(); j++)
       if (m_devVector[j] != NULL)
          m_devVector[j]->updateData();
@@ -411,7 +428,7 @@ void vjInputManager::updateAllData()
 *********************************************** ahimberg */
 int vjInputManager::findDeviceNum(const char* instName)
 {
-   for (int i = 0; i < m_devVector.size(); i++)
+   for (unsigned int i = 0; i < m_devVector.size(); i++)
    {
       if (m_devVector[i] != NULL)
          if ((strcasecmp(m_devVector[i]->getInstanceName(),instName) == 0)
@@ -427,10 +444,10 @@ int vjInputManager::findDeviceNum(const char* instName)
 
   Get the vjInput pointer at a device,
   NOTE: this can return a null pointer if there is not a
-	device at devNum
+   device at devNum
 
 *********************************************** ahimberg */
-vjInput* vjInputManager::getDevice(int devNum)
+vjInput* vjInputManager::getDevice(unsigned int devNum)
 {
     assert (devNum < (m_devVector.size() -1));
     //assert (m_devVector[devNum] != NULL);
@@ -448,9 +465,11 @@ vjInput* vjInputManager::getDevice(int devNum)
 *********************************************** ahimberg */
 bool vjInputManager::removeDevice(int devNum)
 {
-   int i;
+   unsigned int i;
    if (m_devVector[devNum] == NULL)    // Check for valid device
       return false;
+
+   // XXX: We should actually just un-config the proxies
 
    // Find any proxies connected to the device
    // Stupify any proxies connected to device
@@ -503,7 +522,7 @@ bool vjInputManager::removeDevice(char* instName)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-		POSITION PROXY FUNCTIONS
+      POSITION PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -514,7 +533,7 @@ bool vjInputManager::removeDevice(char* instName)
   Set the position proxy #ProxyNum to be hooked to
                   device #DevNum at sub-unit #subNum
 
-*********************************************** ahimberg */	
+*********************************************** ahimberg */ 
 int vjInputManager::setPosProxy(int ProxyNum, int DevNum, int subNum)
 {
    m_posProxyVector[ProxyNum]->set(dynamic_cast<vjPosition*>(m_devVector[DevNum]),subNum);
@@ -534,7 +553,7 @@ int vjInputManager::addPosProxy(std::string devName, int subNum, std::string pro
    vjDEBUG(vjDBG_INPUT_MGR,1) << "adding a posProxy : " << proxyName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   attaching to device named: " << devName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   at unit number: " << subNum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "  Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
 
    posProxy->set(dynamic_cast<vjPosition*>(m_devVector[dev_num]),subNum);
    m_posProxyVector.push_back(posProxy);
@@ -559,7 +578,7 @@ void vjInputManager::stupifyPos(int ProxyNum)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-		DIGITAL PROXY FUNCTIONS
+      DIGITAL PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -590,7 +609,7 @@ int vjInputManager::addDigProxy(std::string devName, int subNum, std::string pro
    vjDEBUG(vjDBG_INPUT_MGR,1) << "adding a digProxy : " << proxyName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   attaching to device named: " << devName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   at unit number: " << subNum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "  Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
 
    digitalProxy->set(dynamic_cast<vjDigital*>(m_devVector[dev_num]),subNum);      // Set the proxy
    m_digProxyVector.push_back(digitalProxy);                                     // Add to proxy array
@@ -613,11 +632,11 @@ void vjInputManager::stupifyDig(int ProxyNum)
    m_digProxyVector[ProxyNum]->set(&m_dummyDig,0);
 }
 
-	
+   
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-		ANALOG PROXY FUNCTIONS
+      ANALOG PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -648,7 +667,7 @@ int vjInputManager::addAnaProxy(std::string devName, int subNum, std::string pro
    vjDEBUG(vjDBG_INPUT_MGR,1) << "adding a anaProxy : " << proxyName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   attaching to device named: " << devName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   at unit number: " << subNum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "  Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
 
    anaProxy->set(dynamic_cast<vjAnalog*>(m_devVector[dev_num]),subNum);    // Set the proxy
    m_anaProxyVector.push_back(anaProxy);                                  // Add to proxy array
@@ -675,7 +694,7 @@ void vjInputManager::stupifyAna(int ProxyNum)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-		GLOVE PROXY FUNCTIONS
+      GLOVE PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -700,7 +719,7 @@ int vjInputManager::addGloveProxy(std::string devName, int subNum, std::string p
    vjDEBUG(vjDBG_INPUT_MGR,1) << "adding a gloveProxy : " << proxyName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   attaching to device named: " << devName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   at unit number: " << subNum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "  Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
 
    gloveProxy->set(dynamic_cast<vjGlove*>(m_devVector[dev_num]),subNum);       // Set the proxy
    m_gloveProxyVector.push_back(gloveProxy);                                  // Add to proxy array
@@ -720,7 +739,7 @@ void vjInputManager::stupifyGlove(int ProxyNum)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-		KEYBOARD PROXY FUNCTIONS
+      KEYBOARD PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 //: Set the keyboard proxy #ProxyNum to be hooked to
@@ -744,7 +763,7 @@ int vjInputManager::addKeyboardProxy(std::string devName, int subNum, std::strin
    vjDEBUG(vjDBG_INPUT_MGR,1) << "adding a keyboard Proxy : " << proxyName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   attaching to device named: " << devName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   at unit number: " << subNum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "  Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
 
    vjKeyboard* theKB = dynamic_cast<vjKeyboard*>(m_devVector[dev_num]);
    vjASSERT(theKB != NULL);
@@ -765,7 +784,7 @@ void vjInputManager::stupifyKeyboard(int ProxyNum)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-		GESTURE PROXY FUNCTIONS
+      GESTURE PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 //: Set the gesture proxy
@@ -789,7 +808,7 @@ int vjInputManager::addGestureProxy(std::string devName, int subNum, std::string
    vjDEBUG(vjDBG_INPUT_MGR,1) << "adding a anaProxy : " << proxyName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   attaching to device named: " << devName.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,1) << "   at unit number: " << subNum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "  Found the device at devNum: " << dev_num << endl << vjDEBUG_FLUSH;
 
    gestureProxy->set(dynamic_cast<vjGesture*>(m_devVector[dev_num]));
    m_gestureProxyVector.push_back(gestureProxy);
@@ -812,7 +831,7 @@ void vjInputManager::stupifyGesture(int ProxyNum)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	PRIVATE FUNCTIONS TO INPUTGROUP
+   PRIVATE FUNCTIONS TO INPUTGROUP
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 

@@ -29,7 +29,7 @@
 
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
-typedef struct sched_param	sched_param_t;
+typedef struct sched_param sched_param_t;
 
 
 // ---------------------------------------------------------------------------
@@ -52,6 +52,7 @@ vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
         int ret_val;
         vjThreadNonMemberFunctor* NonMemFunctor;
 
+        // XXX: Memory leak
         NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
 
         ret_val = spawn(NonMemFunctor, flags, priority, stack_addr,
@@ -127,7 +128,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
         if ( priority > 0 ) {
             pthread_attr_setprio(&thread_attrs, priority);
         }
-#   endif	/* _POSIX_THREAD_REALTIME_SCHEDULING */
+#   endif   /* _POSIX_THREAD_REALTIME_SCHEDULING */
 
 #else
     sched_param_t prio_param;
@@ -140,7 +141,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
         if ( stack_addr != NULL && stack_addr > 0 ) {
             pthread_attr_setstackaddr(&thread_attrs, stack_addr);
         }
-#   endif	/* _POSIX_THREAD_ATTR_STACKADDR */
+#   endif   /* _POSIX_THREAD_ATTR_STACKADDR */
 
     // If thread priority scheduling is available, set the thread's priority
     // if it is set to be higher than 0.
@@ -151,9 +152,9 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
             prio_param.sched_priority = priority;
             pthread_attr_setschedparam(&thread_attrs, &prio_param);
         }
-#   endif	/* _POSIX_THREAD_PRIORITY_SCHEDULING */
+#   endif   /* _POSIX_THREAD_PRIORITY_SCHEDULING */
 
-#endif	/* _PTHREADS_DRAFT_4 */
+#endif   /* _PTHREADS_DRAFT_4 */
 
     // Set the stack size if a value greater than 0 is specified and this
     // pthreads implementation supports it.  Ensure that
@@ -251,6 +252,6 @@ vjThreadPosix::checkRegister (int status) {
         registerThread(true);
         mThreadTable.addThread(this, hash());
     } else {
-        registerThread(false);	// Failed to create
+        registerThread(false);   // Failed to create
     }
 }

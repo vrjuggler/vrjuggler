@@ -49,7 +49,7 @@ public:
    vjAnalogProxy() : m_anaPtr(NULL), m_unitNum(-1), m_data(-1)
    {;}
 
-   ~vjAnalogProxy() {}
+   virtual ~vjAnalogProxy() {}
 
    //: Set the proxy to point to the given analog device
    //! PRE: anaPtr must be a valid analog device

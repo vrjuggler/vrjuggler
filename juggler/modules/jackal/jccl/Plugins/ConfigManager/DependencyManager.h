@@ -60,6 +60,13 @@ public:
       return checker->depSatisfied(chunk);
    }
 
+   void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl)
+   {
+      vjASSERT(NULL != chunk);
+      vjDepChecker* checker = findDepChecker(chunk);
+      checker->debugOutDependencies(chunk,dbg_lvl);
+   }
+
 private:
    //: Returns a dependency checker for the given chunk
    //! RETURNS: If checker found, it is returned

@@ -48,7 +48,7 @@ public:
       if(mProxyIndex != -1)
          mKeyProxy = vjKernel::instance()->getInputManager()->getKeyboardProxy(mProxyIndex);
       else
-         mKeyProxy = NULL;
+         mKeyProxy = vjKernel::instance()->getInputManager()->getDummyKeyboardProxy();
    }
 
 private:
