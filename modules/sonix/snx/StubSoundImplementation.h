@@ -119,6 +119,12 @@ public:
       return true;
    }
 
+   virtual void configure( const aj::SoundAPIInfo& sai )
+   {
+      // nothing to do, call the base impl...
+      SoundImplementation::configure( sai );
+   }   
+   
    /**
      * configure/reconfigure a sound
      * configure: associate a name (alias) to the description if not already done
