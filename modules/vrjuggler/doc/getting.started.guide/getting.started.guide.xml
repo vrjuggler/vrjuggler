@@ -333,7 +333,7 @@ value</screen>
                   </imageobject>
                </mediaobject>
             </figure>
-            <para>Selecting this item opens the <quote>Project Settings</quote> dialog, shown in <xref linkend="visual.studio.project-settings.dialog.figure"/>. In this window, choose the <guilabel>Debug</guilabel> tab. There will be an empty text entry field under the heading <guilabel>Project arguments</guilabel>. Here, enter the full paths to the VR Juggler configuration files that will be used to run the torus application. The <varname>VJ_BASE_DIR</varname> environment variable cannot be used here, unfortunately, so the <emphasis>full path</emphasis> to <emphasis>every</emphasis> file must be used. The following shows the beginning of the program arguments listing <filename>sim.base.config</filename>, <filename>sim.wand.mixin.config</filename>, and <filename>sim.displays.config</filename>:</para>
+            <para>Selecting this item opens the <quote>Project Settings</quote> dialog, shown in <xref linkend="visual.studio.project-settings.dialog.figure"/>. In this window, choose the <guilabel>Debug</guilabel> tab. There will be an empty text entry field under the heading <guilabel>Project arguments</guilabel>. Here, enter the full paths to the VR Juggler configuration files that will be used to run the torus application. The <varname>VJ_BASE_DIR</varname> environment variable cannot be used here, unfortunately, so the <emphasis>full path</emphasis> to <emphasis>every</emphasis> file must be used. The following shows the beginning of the program arguments listing <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>:</para>
             <figure float="1" id="visual.studio.project-settings.dialog.figure">
                <title>Project Settings Dialog</title>
                <mediaobject>
@@ -378,9 +378,7 @@ value</screen>
          <itemizedlist>
             <listitem>
                <para><filename>sim.base.config</filename> - The basic configuration file needed by all applications when run in simulator mode. It defines commonly used VR Juggler concepts that are beyond the scope of this particular book. It also defines simulated head movement using the keyboard. For now, it is sufficient to know that it is required to run the sample applications in simulator mode.</para>
-            </listitem>
-            <listitem>
-               <para><filename>sim.displays.config</filename> - The basic simulator display configuration file needed by all applications when run in simulator mode. This file defines the display windows where the rendering magic occurs. Two simulator display windows are configured by this file: a small one that is active by default and a larger one that is inactive initially.</para>
+               <para>It also contains the basic simulator display configuration file needed by all applications when run in simulator mode. It file defines the display windows where the rendering magic occurs. Two simulator display windows are configured by this file: a small one that is active by default and a larger one that is inactive initially.</para>
             </listitem>
             <listitem>
                <para><filename>sim.analog.wandmixin.config</filename> - A <quote>mix-in</quote> configuration file that defines simulated analog input using the keyboard. This is only required for applications where analog input is used and needs to be simulated when in simulator mode.</para>
@@ -401,7 +399,7 @@ value</screen>
                <para><filename>sim.wand.mixin.config</filename> - A <quote>mix-in</quote> configuration file that defines simulated wand input using the mouse. This is only required for applications where wand input is used and needs to be simulated when in simulator mode.</para>
             </listitem>
             <listitem>
-               <para><filename>standalone.config</filename> - A configuration file that stands on its own and combines the functionality of <filename>sim.base.config</filename>, <filename>sim.wand.mixin.config</filename>, and <filename>sim.displays.config</filename>. Note that it uses a single display window for all input.</para>
+               <para><filename>standalone.config</filename> - A configuration file that stands on its own and combines the functionality of <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>. Note that it uses a single display window for all input.</para>
                <note>
                   <para>At the time of this writing, this configuration file only works with OpenGL, OpenSG, and OpenSceneGraph applications on UNIX and Win32. It will not work with OpenGL Performer, nor will it work on Mac OS X.</para>
                </note>
@@ -409,7 +407,7 @@ value</screen>
          </itemizedlist>
          <para>For the MPApp application, we need the base configuration file, the displays configuration file, and the wand mix-in configuration file.</para>
          <para>Now it is time to run the application&mdash;finally! Make sure that all your environment variables are set properly before trying to start the application. Once you are ready, specify the name of the application and all the configuration files it needs. An example of this is:</para>
-         <screen>% MPApp sim.base.config sim.displays.config sim.wand.mixin.config</screen>
+         <screen>% MPApp sim.base.config sim.wand.mixin.config</screen>
          <para>You will notice that no paths are specified for finding the three configuration files. This is intentional to shorten the command line given in the example. In general, you always have to give the full path to the files<footnote>
                <para>This is being remedied for VR Juggler 1.1 and beyond.</para>
             </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
