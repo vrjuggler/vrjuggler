@@ -56,7 +56,7 @@ dnl                          found.  This argument is optional.
 dnl    action-if-not-found - The action to take if a GMTL implementation is
 dnl                          not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(GMTL_PATH,
+AC_DEFUN([GMTL_PATH],
 [
    dnl Get the cflags and libraries from the gmtl-config script
    AC_ARG_WITH(gmtl-prefix,
@@ -109,6 +109,11 @@ dnl                         test GMTL program], , enable_gmtltest=yes)
       GMTL_CONFIG='no'
    fi
 
+   dnl If $GMTL_ROOT has no value, use $GMTL_CONFIG to get it.
+   if test "x$GMTL_ROOT" = "x" ; then
+      GMTL_ROOT=`$GMTL_CONFIG $gmtl_config_args --prefix`
+   fi
+
    GMTL_CXXFLAGS=''
 
    no_gmtl='no'
@@ -119,6 +124,7 @@ dnl                         test GMTL program], , enable_gmtltest=yes)
    fi
 
    ggt_save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$GMTL_CXXFLAGS $CPPFLAGS"
 
    dnl Add the user-specified GMTL installation directory to the preprocessor
    dnl arguments.  Ensure that /usr/include is not included multiple times if
