@@ -72,8 +72,8 @@ public:
    };
 
    enum VPRThreadState {
-       VPR_JOINABLE_THREAD,
-       VPR_UNJOINABLE_THREAD
+       VPR_JOINABLE_THREAD,   /**< The thread can be reattached later */
+       VPR_UNJOINABLE_THREAD  /**< The thread cannot be attached with join() */
    };
 
    BaseThread()
