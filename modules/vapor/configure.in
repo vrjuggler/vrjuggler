@@ -618,8 +618,10 @@ case $CC in
 esac
 
 # We can only use multi-threading versions of Boost libraries if we are not
-# using SPROC threads.  Boost does not support SPROC.
-if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
+# using SPROC threads and we are not on Darwin.  Boost does not support SPROC,
+# and apparently it doesn't support threading on Darwin.
+if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" -a "x$PLATFORM" != "xDarwin"
+then
    threading='-mt'
 fi
 
