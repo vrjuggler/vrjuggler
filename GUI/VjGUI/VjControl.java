@@ -70,16 +70,14 @@ public class VjControl {
 	Vector chunkdbnames = new Vector();
 	Vector perfdatanames = new Vector();
 
+        String prefs_name = null;
+
 	String orgtreename = null;
 
         boolean do_help = false;
 
 	Core.initialize();
 
-	/* do config stuff... 
-	 */
-	FileControl.loadVjControlConfig();
-	configure();
 
 	/* read & parse command line arguments
 	 *
@@ -101,6 +99,9 @@ public class VjControl {
 	    else if (args[i].equalsIgnoreCase("-o")) {
 		orgtreename = args[++i];
 	    }
+            else if (args[i].equalsIgnoreCase("-prefs")) {
+                prefs_name = args[++i];
+            }
 	    else if (args[i].equalsIgnoreCase("-noautoload")) {
 		autoload = false;
 	    }
@@ -137,6 +138,7 @@ public class VjControl {
                 "    -d file           load chunkdesc file\n" +
                 "    -p file           load performance data file\n" +
                 "    -o file           load configchunk organization tree\n" +
+                "    -prefs file       override vjcontrol preferences file\n" +
                 "    -h  (or --help)   display this help message\n" +
                 "    -noautoload       don't load files specified in\n" +
                 "                      VjControl preferences\n\n" +
@@ -146,8 +148,15 @@ public class VjControl {
                 );
             System.exit(0);
         }
-                
 
+                
+	/* do config stuff... 
+	 */
+	FileControl.loadVjControlConfig(prefs_name);
+	configure();
+
+
+        /* load files specified in config file & command line */
 
 	if (autoload) {
 	    for (i = 0; i < auto_descdbnames.size(); i++) {

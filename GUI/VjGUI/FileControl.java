@@ -99,12 +99,15 @@ public class FileControl {
 
 
 
-    public static void loadVjControlConfig() {
+    public static void loadVjControlConfig (String prefs_name) {
 	ConfigStreamTokenizer st;
 	File f1 = null;
 	FileReader r;
 	InputStreamReader inr;
 	String homedir;
+
+        if (prefs_name == null)
+            prefs_name = "$HOME/.vjconfig/vjcontrol.cfg";
 
 	// 1st - load the chunkdesc into memory...
 
@@ -119,7 +122,7 @@ public class FileControl {
 	}
 		
 	try {
-	    f1 = new File (mangleFileName ("$HOME/.vjconfig/vjcontrol.cfg"));
+	    f1 = new File (mangleFileName (prefs_name));
 	    Core.gui_chunkdb.setName (f1.getName());
 	    Core.gui_chunkdb.setFile (f1);
 	    r = new FileReader (f1);
