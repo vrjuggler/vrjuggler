@@ -389,6 +389,7 @@ public class TransmitterTransformPanel
       mTranslationBorder.setTitle("Position");
       mVrjCoordChooserLabel.setLabelFor(mVrjCoordChooser);
       mVrjCoordChooserLabel.setText("<html>VR Juggler Coordinate Frame</html>");
+      mVrjCoordChooserLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mVrjCoordPanel.setLayout(mVrjCoordPanelLayout);
       mVrjCoordChooser.setEnabled(false);
       mVrjCoordChooser.addActionListener(new
@@ -400,10 +401,12 @@ public class TransmitterTransformPanel
       mTrackerCoordChooserLabel.setLabelFor(mTrackerCoordChooser);
       mTrackerCoordChooserLabel.setText(
          "<html>Transmitter Coordinate Frame</html>");
+      mTrackerCoordChooserLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mTrackerAdvPanel.setLayout(mTrackerAdvPanelLayout);
       mTrackerAnglesLabel.setLabelFor(mTrackerAnglesPanel);
       mTrackerAnglesLabel.setText(
          "<html>Transmitter Pre-Rotation Angles</html>");
+      mTrackerAnglesLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mTrackerAnglesPanel.setLayout(mTrackerAnglesPanelLayout);
       mTrackerXRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerXRotLabel.setLabelFor(mTrackerXRotSpinner);
@@ -425,7 +428,7 @@ public class TransmitterTransformPanel
       mTrackerZRotSpinner.setEnabled(false);
       mTrackerPosLabel.setLabelFor(mTrackerPosPanel);
       mTrackerPosLabel.setText(
-         "<html>Measurements of the tracker transmitter from VR Juggler origin (pre-translation)</html>");
+         "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation)</html>");
       mTrackerPosPanel.setLayout(mTrackerPosPanelLayout);
       mTrackerXPosLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerXPosLabel.setLabelFor(mTrackerXPosField);
@@ -453,7 +456,7 @@ public class TransmitterTransformPanel
       mTrackerUnitsBorder.setTitle("Tracker Units");
       mSensorUnitsEditorPanel.setLayout(mSensorUnitsEditorPanelLayout);
       mSensorUnitsLabel.setLabelFor(mSensorUnitsEditor);
-      mSensorUnitsLabel.setText("Sensor Sample Units");
+      mSensorUnitsLabel.setText("Sensor(s) Sample Units:");
       mCustomUnitsEditor.setEnabled(false);
       mCustomUnitsEditor.setToolTipText(
          "Set custom unit conversion (to meters) for sensor samples");
@@ -466,10 +469,11 @@ public class TransmitterTransformPanel
       mTrackerCoordChooser.addActionListener(new
          TransmitterTransformPanel_mTrackerCoordChooser_actionAdapter(this));
       mTrackerAdvPanel.add(mTrackerAnglesPanel,
-                           new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0
-                                                  , GridBagConstraints.CENTER,
+                           new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                                  GridBagConstraints.CENTER,
                                                   GridBagConstraints.BOTH,
-                                                  new Insets(0, 0, 0, 0), 0, 0));
+                                                  new Insets(0, 0, 0, 0),
+                                                  0, 0));
       mTrackerCoordPanel.add(mTrackerCoordChooser,
                              new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
          , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -485,20 +489,22 @@ public class TransmitterTransformPanel
                                                 GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mVrjCoordPanel.add(mVrjCoordChooserLabel,
-                         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-                                                , GridBagConstraints.NORTH,
+                         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                                GridBagConstraints.CENTER,
                                                 GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mTrackerCoordPanel.add(mTrackerCoordChooserLabel,
-                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-         , GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-         new Insets(0, 0, 0, 0), 0, 0));
+                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.CENTER,
+                                                    GridBagConstraints.HORIZONTAL,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
       mRotationPanel.add(mTrackerAdvPanel,
-                         new GridBagConstraints(2, 0, 1, 1, 1.0, 1.0
-                                                , GridBagConstraints.CENTER,
+                         new GridBagConstraints(2, 0, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.CENTER,
                                                 GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 2), -66,
-                                                -89));
+                                                new Insets(0, 0, 0, 2),
+                                                -66, -89));
       mTrackerAnglesPanel.add(mTrackerXRotLabel,
                               new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
          , GridBagConstraints.EAST, GridBagConstraints.NONE,
@@ -512,10 +518,11 @@ public class TransmitterTransformPanel
          , GridBagConstraints.EAST, GridBagConstraints.NONE,
          new Insets(0, 0, 0, 3), 0, 0));
       mTrackerAdvPanel.add(mTrackerAnglesLabel,
-                           new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-                                                  , GridBagConstraints.NORTH,
+                           new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                                  GridBagConstraints.CENTER,
                                                   GridBagConstraints.HORIZONTAL,
-                                                  new Insets(0, 0, 3, 0), 0, 0));
+                                                  new Insets(0, 0, 3, 0),
+                                                  0, 0));
       mTrackerAdvPanel.add(mTrackerManualRotButton,
                            new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
                                                   , GridBagConstraints.CENTER,
@@ -592,21 +599,21 @@ public class TransmitterTransformPanel
          new Insets(0, 3, 0, 2), 50, 0));
       mTrackerAnglesPanel.add(mTrackerXRotSpinner,
                               new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0,
-                                                     GridBagConstraints.CENTER,
-                                                     GridBagConstraints.HORIZONTAL,
-                                                     new Insets(0, 0, 3, 0),
+                                                     GridBagConstraints.WEST,
+                                                     GridBagConstraints.NONE,
+                                                     new Insets(2, 0, 3, 0),
                                                      0, 0));
       mTrackerAnglesPanel.add(mTrackerYRotSpinner,
                               new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
-                                                     GridBagConstraints.CENTER,
-                                                     GridBagConstraints.HORIZONTAL,
+                                                     GridBagConstraints.WEST,
+                                                     GridBagConstraints.NONE,
                                                      new Insets(0, 0, 3, 0),
                                                      0, 0));
       mTrackerAnglesPanel.add(mTrackerZRotSpinner,
                               new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
-                                                     GridBagConstraints.CENTER,
-                                                     GridBagConstraints.HORIZONTAL,
-                                                     new Insets(0, 0, 0, 0),
+                                                     GridBagConstraints.WEST,
+                                                     GridBagConstraints.NONE,
+                                                     new Insets(0, 0, 2, 0),
                                                      0, 0));
       this.add(mRotationPanel,
                new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
