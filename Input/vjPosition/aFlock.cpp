@@ -472,9 +472,9 @@ void aFlock::initCorrectionTable( const char* const fName )
          >> caltable.ymin >> caltable.ymax
          >> caltable.zmin >> caltable.zmax;
 
-  xsize = caltable.xmax - caltable.xmin + 1;
-  ysize = caltable.ymax - caltable.ymin + 1;
-  zsize = caltable.zmax - caltable.zmin + 1;
+  xsize = (int) (caltable.xmax - caltable.xmin) + 1;
+  ysize = (int) (caltable.ymax - caltable.ymin) + 1;
+  zsize = (int) (caltable.zmax - caltable.zmin) + 1;
 
   for (i = 0; i < xsize; i++)
     for (j = 0; j < ysize; j++)
