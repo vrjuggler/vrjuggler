@@ -102,8 +102,9 @@ int ConfigElementHandler::configProcessPending()
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_element);    // Add it to the current config
 
-                     outputPendingItemState(vprDBG_CONFIG_LVL, element_name,
-                                            element_type, SUCCESS);
+                     outputPendingItemState(vprDBG_CONFIG_STATUS_LVL,
+                                            element_name, element_type,
+                                            SUCCESS);
                   }
                   else  // FAILED adding
                   {
@@ -114,12 +115,11 @@ int ConfigElementHandler::configProcessPending()
                }
                else     // Dependency failed
                {
-
-                  outputPendingItemState(vprDBG_WARNING_LVL, element_name,
+                  outputPendingItemState(vprDBG_CONFIG_LVL, element_name,
                                          element_type, NEED_DEPS);
-                  vprDEBUG_CONT(vprDBG_ALL,vprDBG_WARNING_LVL)
+                  vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL)
                      << std::endl << vprDEBUG_FLUSH;
-                  dep_mgr->debugOutDependencies(cur_element,vprDBG_WARNING_LVL);
+                  dep_mgr->debugOutDependencies(cur_element,vprDBG_CONFIG_LVL);
                   current++;
                }
                break;
@@ -182,16 +182,14 @@ void outputPendingItemState(int debugLevel, const std::string& elementName,
                             const std::string& elementType,
                             PendItemResult result)
 {
-   const int item_width(25);
+   const int item_width(39);
    const int type_width(20);
 
-   const std::string name_prefix("Pending item: ");
-   const std::string type_prefix(" type: ");
    vprDEBUG(vprDBG_ALL,debugLevel)
-      << "Pending item: " << std::setiosflags(std::ios::right)
-      << std::setfill(' ') << std::setw(item_width) << elementName
-      <<    "     type: " << std::setiosflags(std::ios::right)
+      << "Type: " << std::setiosflags(std::ios::right)
       << std::setfill(' ') << std::setw(type_width) << elementType
+      << std::setiosflags(std::ios::right)
+      << std::setfill(' ') << std::setw(item_width) << elementName
       << std::resetiosflags(std::ios::right) << "  ";
 
    /*
@@ -220,6 +218,5 @@ void outputPendingItemState(int debugLevel, const std::string& elementName,
 
    vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << std::endl << vprDEBUG_FLUSH;
 }
-
 
 }
