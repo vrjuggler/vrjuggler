@@ -49,9 +49,9 @@ namespace gadget
 {
 
 /**
- * Fakespace Pinchglove Device.
+ * Fakespace PinchGlove device.
  */
-class PinchGlove : public InputMixer<Input,InputMixer<Glove,Digital> >
+class PinchGlove : public InputMixer<InputMixer<Input, Glove>, Digital>
 {
 public:
    /**
