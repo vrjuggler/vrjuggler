@@ -186,7 +186,7 @@ namespace cluster
       //vprASSERT(temp_packet->getPacketType() == cluster::Header::RIM_CONNECTION_ACK && "We must be receiving a ConnectionAck here");
       
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "We have a responce" << std::endl << vprDEBUG_FLUSH;
+         << "We have a response" << std::endl << vprDEBUG_FLUSH;
 
       temp_packet->printData(vprDBG_CONFIG_LVL);
       ClusterManager::instance()->handlePacket(temp_packet,this);
