@@ -112,15 +112,15 @@ dnl TWEEK_PATH_CXX([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, 
 dnl
 dnl Tests for Tweek C++ API and then defines the following variables:
 dnl     TWEEK_CXXFLAGS
-dnl     TWEEK_CXXFLAGS_ALL
+dnl     TWEEK_CXXFLAGS_MIN
 dnl     TWEEK_LIBS_LD
-dnl     TWEEK_LIBS_LD_ALL
+dnl     TWEEK_LIBS_LD_MIN
 dnl     TWEEK_LIBS_STATIC_LD
-dnl     TWEEK_LIBS_STATIC_LD_ALL
+dnl     TWEEK_LIBS_STATIC_LD_MIN
 dnl     TWEEK_LIBS_CC
-dnl     TWEEK_LIBS_CC_ALL
+dnl     TWEEK_LIBS_CC_MIN
 dnl     TWEEK_LIBS_STATIC_CC
-dnl     TWEEK_LIBS_STATIC_CC_ALL
+dnl     TWEEK_LIBS_STATIC_CC_MIN
 dnl     TWEEK_CXX_IDL
 dnl     TWEEK_CXX_IDL_OPTS
 dnl     TWEEK_CXX_IDL_GENDIR_OPT
@@ -130,15 +130,15 @@ AC_DEFUN(TWEEK_PATH_CXX,
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
    TWEEK_CXXFLAGS=""
-   TWEEK_CXXFLAGS_ALL=""
+   TWEEK_CXXFLAGS_MIN=""
    TWEEK_LIBS_LD=""
-   TWEEK_LIBS_LD_ALL=""
+   TWEEK_LIBS_LD_MIN=""
    TWEEK_LIBS_STATIC_LD=""
-   TWEEK_LIBS_STATIC_LD_ALL=""
+   TWEEK_LIBS_STATIC_LD_MIN=""
    TWEEK_LIBS_CC=""
-   TWEEK_LIBS_CC_ALL=""
+   TWEEK_LIBS_CC_MIN=""
    TWEEK_LIBS_STATIC_CC=""
-   TWEEK_LIBS_STATIC_CC_ALL=""
+   TWEEK_LIBS_STATIC_CC_MIN=""
    TWEEK_CXX_IDL=""
    TWEEK_CXX_IDL_OPTS=""
    TWEEK_CXX_IDL_GENDIR_OPT=""
@@ -160,17 +160,17 @@ AC_DEFUN(TWEEK_PATH_CXX,
 
          if test "x$tweek_version_okay" = "xyes" ; then
             TWEEK_CXXFLAGS=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI`
-            TWEEK_CXXFLAGS_ALL=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --all`
+            TWEEK_CXXFLAGS_MIN=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --min`
             TWEEK_EXTRA_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI`
             TWEEK_EXTRA_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker`
             TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_LIBS_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --all` $TWEEK_EXTRA_LIBS_LD"
+            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD"
             TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_LIBS_STATIC_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --all` $TWEEK_EXTRA_LIBS_LD"
+            TWEEK_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min` $TWEEK_EXTRA_LIBS_LD"
             TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_LIBS_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --all` $TWEEK_EXTRA_LIBS_CC"
+            TWEEK_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min` $TWEEK_EXTRA_LIBS_CC"
             TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_LIBS_STATIC_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --all` $TWEEK_EXTRA_LIBS_CC"
+            TWEEK_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min` $TWEEK_EXTRA_LIBS_CC"
             TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
             TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
             TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
@@ -185,15 +185,15 @@ AC_DEFUN(TWEEK_PATH_CXX,
    fi
 
    AC_SUBST([TWEEK_CXXFLAGS])
-   AC_SUBST([TWEEK_CXXFLAGS_ALL])
+   AC_SUBST([TWEEK_CXXFLAGS_MIN])
    AC_SUBST([TWEEK_LIBS_LD])
-   AC_SUBST([TWEEK_LIBS_LD_ALL])
+   AC_SUBST([TWEEK_LIBS_LD_MIN])
    AC_SUBST([TWEEK_LIBS_STATIC_LD])
-   AC_SUBST([TWEEK_LIBS_STATIC_LD_ALL])
+   AC_SUBST([TWEEK_LIBS_STATIC_LD_MIN])
    AC_SUBST([TWEEK_LIBS_CC])
-   AC_SUBST([TWEEK_LIBS_CC_ALL])
+   AC_SUBST([TWEEK_LIBS_CC_MIN])
    AC_SUBST([TWEEK_LIBS_STATIC_CC])
-   AC_SUBST([TWEEK_LIBS_STATIC_CC_ALL])
+   AC_SUBST([TWEEK_LIBS_STATIC_CC_MIN])
    AC_SUBST([TWEEK_CXX_IDL])
    AC_SUBST([TWEEK_CXX_IDL_OPTS])
    AC_SUBST([TWEEK_CXX_IDL_GENDIR_OPT])
@@ -261,15 +261,15 @@ dnl
 dnl Tests for Tweek C++ and Java APIs and then defines the following
 dnl variables:
 dnl     TWEEK_CXXFLAGS
-dnl     TWEEK_CXXFLAGS_ALL
+dnl     TWEEK_CXXFLAGS_MIN
 dnl     TWEEK_LIBS_LD
-dnl     TWEEK_LIBS_LD_ALL
+dnl     TWEEK_LIBS_LD_MIN
 dnl     TWEEK_LIBS_STATIC_LD
-dnl     TWEEK_LIBS_STATIC_LD_ALL
+dnl     TWEEK_LIBS_STATIC_LD_MIN
 dnl     TWEEK_LIBS_CC
-dnl     TWEEK_LIBS_CC_ALL
+dnl     TWEEK_LIBS_CC_MIN
 dnl     TWEEK_LIBS_STATIC_CC
-dnl     TWEEK_LIBS_STATIC_CC_ALL
+dnl     TWEEK_LIBS_STATIC_CC_MIN
 dnl     TWEEK_CXX_IDL
 dnl     TWEEK_CXX_IDL_OPTS
 dnl     TWEEK_CXX_IDL_GENDIR_OPT
