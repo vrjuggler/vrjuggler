@@ -139,6 +139,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       // --- Load device driver dsos -- //
       // - Load individual drivers
       const std::string driver_prop_name("driver");
+      const std::string driver_init_func("initDevice");
       int driver_count = element->getNum(driver_prop_name);
       std::string driver_dso;
 
@@ -156,7 +157,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             // the allocated memory.
             vpr::LibraryPtr driver_library =
                vpr::LibraryPtr(new vpr::Library(driver_dso));
-            this->loadDriverDSO(driver_library);
+            mDriverLoader.loadAndInitDSO(driver_library, driver_init_func,
+                                         this);
          }
       }
 
@@ -189,7 +191,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                      lib != libs.end();
                      ++lib )
                {
-                  this->loadDriverDSO(*lib);
+                  mDriverLoader.loadAndInitDSO(*lib, driver_init_func, this);
                }
             }
             else
@@ -749,56 +751,6 @@ bool InputManager::removeProxy(jccl::ConfigElementPtr element)
    std::string proxy_name;
    proxy_name = element->getFullName();
    return removeProxy(proxy_name);
-}
-
-vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
-{
-   vprASSERT(driverDSO.get() != NULL && "Invalid vpr::LibraryPtr object");
-
-   const int lib_name_width(50);
-
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-      << "Loading device library: " << std::setiosflags(std::ios::right)
-      << std::setfill(' ') << std::setw(lib_name_width) << driverDSO->getName()
-      << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
-
-   // Load the driver
-   vpr::ReturnStatus status;
-   status = driverDSO->load();
-
-   if ( status.success() )
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "Loaded DSO success.\n" << vprDEBUG_FLUSH;
-
-      void (*creator)(gadget::InputManager*);
-
-      creator = (void (*)(gadget::InputManager*)) driverDSO->findSymbol("initDevice");
-
-      if ( NULL != creator )
-      {
-         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
-
-         mDeviceDrivers.push_back(driverDSO);
-         (*creator)(this);
-      }
-      else
-      {
-         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << clrOutNORM(clrYELLOW, "WARNING")
-            << ": Failed to look up factory function in driver DSO '"
-            << driverDSO << "'\n" << vprDEBUG_FLUSH;
-      }
-   }
-   else
-   {
-      vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
-   }
-
-   return status;
 }
 
 /** Get the input logger connected to the system */
