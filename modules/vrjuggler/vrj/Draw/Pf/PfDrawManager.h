@@ -289,7 +289,7 @@ protected:
    pfChannel*              mSimMasterChan;   /**< Master channel for simulators */
 
    std::vector<pfPipe*>    mPipes;            /**< Performer pipes we have opened */
-   std::vector<char*>      mPipeStrs;        /**< The X-Strs of the pipes */
+   std::vector<std::string> mPipeStrs;        /**< The X-Strs of the pipes */
    bool                    mPfHasForked;     /**< Performer has forked it processes already */
 
    /** List of (available) pipe windows grouped by pipe num

@@ -82,7 +82,7 @@ public:     // RECONFIG STUFF
    // see if it can be configured with the given information
    static bool configCanHandleChunk(jccl::ConfigChunkPtr chunk)
    {
-      std::string chunk_type = (std::string)chunk->getType();
+      std::string chunk_type = chunk->getDescToken();
 
       if(std::string("pf_basic_nav_app") == chunk_type)
          return true;
@@ -119,36 +119,38 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
 {
    int x;
 
-   vprASSERT(std::string("pf_basic_nav_app") == (std::string)chunk->getType());
+   vprASSERT(std::string("pf_basic_nav_app") == chunk->getDescToken());
 
    // Set the properties based on the chunk values
-   std::string app_name = chunk->getProperty("Name");
-   std::string file_path = chunk->getProperty("file_path");
+   std::string app_name = chunk->getName();
+   std::string file_path = chunk->getProperty<std::string>("file_path");
    gmtl::Vec3f initial_pos;
-   initial_pos.set((float)chunk->getProperty("start_location",0),
-                   (float)chunk->getProperty("start_location",1),
-                   (float)chunk->getProperty("start_location",2));
+   initial_pos.set(chunk->getProperty<float>("start_location",0),
+                   chunk->getProperty<float>("start_location",1),
+                   chunk->getProperty<float>("start_location",2));
 
    ///////////////////////////
-   if (chunk->doesPropertyExistFromToken( "enable_nav" ))
+   if (chunk->getNum( "enable_nav" ) > 0)
    {
-      this->enableNav( (bool)chunk->getProperty( "enable_nav" ) );
-      vprDEBUG_BEGIN(vprDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vprDEBUG_FLUSH;
+      this->enableNav( chunk->getProperty<bool>( "enable_nav" ) );
+      vprDEBUG_BEGIN(vprDBG_ALL,0)
+         << "enable_nav: " << chunk->getProperty<bool>( "enable_nav" )
+         << "\n===========================\n" << vprDEBUG_FLUSH;
    }
    else
    {
       this->enableNav( true );
    }
 
-   if (chunk->doesPropertyExistFromToken( "animation_filename" ))
+   if (chunk->getNum( "animation_filename" ) > 0)
    {
-      std::string a = (std::string)chunk->getProperty( "animation_filename" );
+      std::string a = chunk->getProperty<std::string>( "animation_filename" );
       this->loadAnimation( a.c_str() );
    }
 
-   if (chunk->doesPropertyExistFromToken( "animation_play" ))
+   if (chunk->getNum( "animation_play" ) > 0)
    {
-      if ((bool)chunk->getProperty( "animation_play" ) == true)
+      if (chunk->getProperty<bool>( "animation_play" ) == true)
       {
          this->keyFramer().play();
       }
@@ -157,7 +159,7 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
          this->keyFramer().stop();
          this->keyFramer().rewind();
       }
-      this->keyFramer().loop( (int)chunk->getProperty( "animation_loops" ) );
+      this->keyFramer().loop( chunk->getProperty<int>( "animation_loops" ) );
    }
    ////////////////////////////
 
@@ -167,19 +169,21 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
    mModelList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Model" ); ++x)
    {
-      jccl::ConfigChunkPtr model_chunk = chunk->getProperty( "Model", x );
+      jccl::ConfigChunkPtr model_chunk =
+         chunk->getProperty<jccl::ConfigChunkPtr>( "Model", x );
+
       Model m;
-      m.description = (std::string)model_chunk->getProperty( "Name" );
-      m.filename = (std::string)model_chunk->getProperty( "filename" );
+      m.description = model_chunk->getName();
+      m.filename = model_chunk->getProperty<std::string>( "filename" );
       vprDEBUG_NEXT(vprDBG_ALL,0) << "Reading " <<m.filename<<" model from the config file\n"<< vprDEBUG_FLUSH;;
-      m.scale = (float)model_chunk->getProperty( "Scale" );
-      m.pos.set( (float)model_chunk->getProperty( "x" ),
-            (float)model_chunk->getProperty( "y" ),
-            (float)model_chunk->getProperty( "z" ) );
-      m.rot.set( (float)model_chunk->getProperty( "rotx" ),
-            (float)model_chunk->getProperty( "roty" ),
-            (float)model_chunk->getProperty( "rotz" ) );
-      m.isCollidable = (bool)model_chunk->getProperty( "collidable" );
+      m.scale = model_chunk->getProperty<float>( "Scale" );
+      m.pos.set( model_chunk->getProperty<float>( "x" ),
+                 model_chunk->getProperty<float>( "y" ),
+                 model_chunk->getProperty<float>( "z" ) );
+      m.rot.set( model_chunk->getProperty<float>( "rotx" ),
+                 model_chunk->getProperty<float>( "roty" ),
+                 model_chunk->getProperty<float>( "rotz" ) );
+      m.isCollidable = model_chunk->getProperty<bool>( "collidable" );
       addModel( m );
    }
 
@@ -187,21 +191,23 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
    mSoundList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Sound" ); ++x)
    {
-      jccl::ConfigChunkPtr sound_chunk = chunk->getProperty( "Sound", x );
+      jccl::ConfigChunkPtr sound_chunk =
+         chunk->getProperty<jccl::ConfigChunkPtr>( "Sound", x );
+
       Sound s;
-      s.name = (std::string)sound_chunk->getProperty( "Name" );
-      s.alias = (std::string)sound_chunk->getProperty( "soundAlias" );
+      s.name = sound_chunk->getName();
+      s.alias = sound_chunk->getProperty<std::string>( "soundAlias" );
       vprDEBUG_NEXT(vprDBG_ALL,0) <<"Reading "<<s.alias<<" sound from the config file\n"<< vprDEBUG_FLUSH;
-      s.positional = (bool)sound_chunk->getProperty( "positional" );
-      s.pos.set( (float)sound_chunk->getProperty( "x" ),
-            (float)sound_chunk->getProperty( "y" ),
-            (float)sound_chunk->getProperty( "z" ) );
+      s.positional = sound_chunk->getProperty<bool>( "positional" );
+      s.pos.set( sound_chunk->getProperty<float>( "x" ),
+                 sound_chunk->getProperty<float>( "y" ),
+                 sound_chunk->getProperty<float>( "z" ) );
       mSoundList.push_back( s );
    }
 
    setFilePath( file_path );
    setInitialNavPos( initial_pos );
-   mBoundingSize = chunk->getProperty("bounding_size");
+   mBoundingSize = chunk->getProperty<float>("bounding_size");
 
    vprDEBUG_NEXT(vprDBG_ALL,0) << "   filepath: " << file_path << std::endl
                              << vprDEBUG_FLUSH;

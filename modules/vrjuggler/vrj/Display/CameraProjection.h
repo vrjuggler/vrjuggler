@@ -59,11 +59,11 @@ public:
    {
       Projection::config(chunk);
 
-      vprASSERT( ((std::string)chunk->getType() == std::string("simDisplay")) ||
-                ((std::string)chunk->getType() == std::string("simViewport")) );
+      vprASSERT( (chunk->getDescToken() == std::string("simDisplay")) ||
+                 (chunk->getDescToken() == std::string("simViewport")) );
 
       // Set fov and make sure that it is not 0.0
-      mVertFOV = chunk->getProperty("vert_fov");
+      mVertFOV = chunk->getProperty<float>("vert_fov");
       if(mVertFOV == 0.0f)
          mVertFOV = 60.0f;
    }
