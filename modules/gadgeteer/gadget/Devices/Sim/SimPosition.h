@@ -79,16 +79,6 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-    /** Get current data from the receiver.
-     *  @arg dev - the virutal device number. 
-     *  @return a pointer to the receiver's current PositionData.
-     */
-    PositionData* getPositionData (int dev=0) {
-        vprASSERT (dev == 0);
-        return &mPos;
-    }
-
-
    /* These functions don't do anything */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
@@ -127,7 +117,7 @@ private:
    int            mTransCoordSystem;                 //: What coord system for translations?
    int            mRotCoordSystem;              //: What coord system for rotations?
    PositionData   mPos;                         //: The current position being simulated
-   KeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
+   KeyModPair     mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
    float          mDTrans;                      //: Delta translation
    float          mDRot;                        //: Delta rotation
 
