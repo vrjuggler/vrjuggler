@@ -3,6 +3,7 @@
 
 #include <TestCases/VarValueTest.h>
 #include <TestCases/ChunkDescTest.h>
+#include <TestCases/IncludesTest.h>
 
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
@@ -43,6 +44,7 @@ int main (int ac, char **av)
    // add tests to the suite
    noninteractive_suite->addTest(jcclTest::VarValueTest::suite());
    noninteractive_suite->addTest(jcclTest::ChunkDescTest::suite());
+   noninteractive_suite->addTest(jcclTest::IncludesTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( noninteractive_suite );

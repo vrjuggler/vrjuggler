@@ -43,7 +43,7 @@ CXX		= @CXX@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 CPPFLAGS	= @CPPFLAGS@
 CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
-DEFS		= @DEFS@
+DEFS		= @DEFS@ -DJCCL_TEST_DIR="\"$(JCCLROOT_ABS)/test/TestSuite\""
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ $(INCLUDES)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
@@ -69,6 +69,8 @@ endif
 
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_LFLAGS)
+
+LN_S            = @LN_S@
 
 JCCL_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
                   @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@		\
@@ -118,6 +120,8 @@ $(PROJECT_NAME): $(OBJS) $(JCCL_BASE_DIR)/lib$(LIBBITSUF)/libjccl.a
 	@echo "-------------------------------------------"
 	$(LINK) -o $@ $(OBJS) $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 	@echo ""
+	@echo "Copying test files..."
+	$(LN_S) $(srcdir)/TestFiles .
 	@echo "-------------------------------------------"
 	@echo "$(PROJECT_NAME) done"
 	@echo "-------------------------------------------"

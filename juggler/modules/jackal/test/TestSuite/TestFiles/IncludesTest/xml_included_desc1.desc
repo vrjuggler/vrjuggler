@@ -1,0 +1,7 @@
+<ChunkDescDB>
+  <ChunkDesc token="xml_included_desc_1" name="XML Included Desc 1">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
