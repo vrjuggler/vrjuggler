@@ -53,10 +53,6 @@
 #include <gadget/Devices/Sim/SimSetablePosition.h>
 #include <gadget/Devices/Sim/SimDigitalGlove.h>
 
-// RemoteInputManager Dependency Checker
-#include <jccl/RTRC/DependencyManager.h>
-#include <gadget/RemoteInputManager/RmtMgrDepChecker.h>
-
 /* Physical devices */
 #ifndef VPR_OS_Win32
 
