@@ -34,8 +34,7 @@
 #define _GADGET_DEBUG_H_
 //#pragma once
 
-// #define VJ_DEBUG  Defined in vjConfig.h
-#include <gadget/gadgetConfig.h>
+//#include <gadget/gadgetConfig.h>
 #include <stdlib.h>
 
 #include <vpr/Util/Debug.h>
