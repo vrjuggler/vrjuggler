@@ -110,7 +110,7 @@ void Controller::processNextEvent ()
       vpr::Interval event_time            = (*cur_event).first;
       NetworkGraph::net_edge_t event_edge = (*cur_event).second.edge;
       NetworkLine::LineDirection dir      = (*cur_event).second.direction;
-      vpr::sim::NetworkLine line          = mGraph.getLineProperty(event_edge);
+      vpr::sim::NetworkLine& line         = mGraph.getLineProperty(event_edge);
       vpr::sim::MessagePtr msg;
       vpr::ReturnStatus status;
 
@@ -125,7 +125,6 @@ void Controller::processNextEvent ()
       // ----------------------------------------------------------------------
 
       status = line.getArrivedMessage(event_time, msg, dir);
-      mGraph.setLineProperty(event_edge, line);
       vprASSERT(status.success() && "No arrived message at this time");
 
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
@@ -179,7 +178,6 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       NetworkGraph::net_vertex_t next_next_hop = msg->getNextHop();
       NetworkGraph::net_edge_t next_line;
       bool got_next_line;
-      vpr::sim::NetworkLine next_line_prop;
       NetworkLine::LineDirection dir;
 
       boost::tie(next_line, got_next_line) = mGraph.getEdge(next_hop,
@@ -193,7 +191,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       dir = mGraph.isSource(next_hop, next_line) ? NetworkLine::FORWARD
                                                  : NetworkLine::REVERSE;
 
-      next_line_prop = mGraph.getLineProperty(next_line);
+      vpr::sim::NetworkLine& next_line_prop = mGraph.getLineProperty(next_line);
       next_line_prop.calculateMessageEventTimes(msg, cur_time, dir);
 
       vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
@@ -204,7 +202,6 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
          << std::endl << vprDEBUG_FLUSH;
 
       next_line_prop.addMessage(msg, dir);
-      mGraph.setLineProperty(next_line, next_line_prop);
       addEvent(msg->whenArrivesFully(), next_line, dir);
    }
    // End of the path--we have reached our destination.

@@ -270,10 +270,9 @@ namespace sim
 
          if ( found )
          {
-            NetworkLine first_edge_prop;
             NetworkLine::LineDirection dir;
 
-            first_edge_prop = net_graph.getLineProperty(first_edge);
+            NetworkLine& first_edge_prop = net_graph.getLineProperty(first_edge);
 
             // Determine the direction for the message on this line.
             dir = net_graph.isSource(first_hop, first_edge) ? NetworkLine::FORWARD : NetworkLine::REVERSE;
@@ -281,7 +280,9 @@ namespace sim
                                                        dir);
 
             vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-               << "SocketManager::sendMessage(): Starting message on wire "
+               << "SocketManager::sendMessage(): Starting message ["
+               << msg->getSourceSocket()->getLocalAddr() << " ==> "
+               << msg->getDestinationSocket()->getLocalAddr() << "] on wire "
                << first_edge_prop.getNetworkAddressString() << ": ("
                << msg->whenStartOnWire().getBaseVal() << ", "
                << msg->whenFullyOnWire().getBaseVal() << ", "
@@ -289,7 +290,6 @@ namespace sim
                << vprDEBUG_FLUSH;
 
             first_edge_prop.addMessage(msg, dir);
-            net_graph.setLineProperty(first_edge, first_edge_prop);
             controller->addEvent(msg->whenArrivesFully(), first_edge, dir);
          }
       }
