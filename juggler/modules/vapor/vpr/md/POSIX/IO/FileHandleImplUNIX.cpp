@@ -428,6 +428,7 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i (void* buffer,
                                               << vprDEBUG_FLUSH;
 
    count = length;
+   bytes = 0;
 
    while ( count > 0 )
    {

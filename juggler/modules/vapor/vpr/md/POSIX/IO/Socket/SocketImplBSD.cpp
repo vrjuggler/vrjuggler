@@ -107,6 +107,7 @@ SocketImplBSD::open () {
 #endif
         break;
       default:
+        domain = -1;
         fprintf(stderr,
                 "[vpr::SocketImplBSD] ERROR: Unknown socket domain value %d\n",
                 m_local_addr.getFamily());
@@ -124,6 +125,7 @@ SocketImplBSD::open () {
         type = SOCK_RAW;
         break;
       default:
+        type = -1;
         fprintf(stderr,
                 "[vpr::SocketImplBSD] ERROR: Unknown socket type value %d\n",
                 m_local_addr.getFamily());
@@ -435,6 +437,8 @@ SocketImplBSD::getOption (const vpr::SocketOptions::Types option,
     socklen_t opt_size;
     union sockopt_data opt_data;
 
+    opt_name = opt_level = -1;
+
     switch (option) {
       // Socket-level options.
       case vpr::SocketOptions::Linger:
@@ -599,6 +603,9 @@ SocketImplBSD::setOption (const vpr::SocketOptions::Types option,
     socklen_t opt_size;
     union sockopt_data opt_data;
     vpr::ReturnStatus retval;
+
+    opt_name = opt_level = -1;
+    opt_size = 0;
 
     switch (option) {
       // Socket-level options.
