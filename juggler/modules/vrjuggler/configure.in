@@ -180,10 +180,10 @@ case $host in
         CFLAGS="-ptv $CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
-        LD='ld'
-        LIBOPTS='-shared -all -check_registry'
+        LD='${CXX} -shared'
+        LIBOPTS='-check_registry'
         LDFLAGS="$LDFLAGS"
-        LDOPTS=''
+        LDOPTS='-all'
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
