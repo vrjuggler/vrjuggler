@@ -197,11 +197,8 @@ hier:
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/snx
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/vj
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/sonix/src
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/sonix/data
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/sonix/data
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/sonix/src
 	@for lib in $(ABI_LIST) ; do					\
             $(MAKE) dppABI=$$lib hier-abi ;   \
           done
