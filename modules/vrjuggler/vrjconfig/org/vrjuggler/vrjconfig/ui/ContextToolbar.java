@@ -115,7 +115,7 @@ public class ContextToolbar
          redoBtn.setIcon(new ImageIcon(loader.getResource(img_root +
                                                           "/redo.gif")));
          expandBtn.setIcon(new ImageIcon(loader.getResource(img_root +
-                                                            "/expand_toolbar.gif")));
+                                                            "/ContextEdit16.png")));
       }
       catch (Exception e)
       {
