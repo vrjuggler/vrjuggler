@@ -86,7 +86,7 @@ PinchGloveStandalone::~PinchGloveStandalone()
 }
 
 // Connect to the pinch glove hardware
-bool PinchGloveStandalone::connectToHardware(const char* const ttyPort, int mBaudRate)
+bool PinchGloveStandalone::connectToHardware(const std::string& ttyPort, int mBaudRate)
 {
     std::cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<std::flush;
     int result = mConnectToHardware( ttyPort , mBaudRate);
@@ -130,7 +130,7 @@ void PinchGloveStandalone::updateStringFromHardware()
 
 // send to hardware methods:
 
-int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort, int baud)
+int PinchGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud)
 {
     const int BUFFER_LEN = 100;
     unsigned char buf[BUFFER_LEN];

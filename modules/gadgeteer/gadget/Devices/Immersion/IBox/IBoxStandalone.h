@@ -30,6 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _GADGET_IBOX_STANDALONE_H_
+#define _GADGET_IBOX_STANDALONE_H_
+
 #include <gadget/gadgetConfig.h>
 #include <string>
 #include <vpr/IO/Port/SerialPort.h>
@@ -215,7 +218,7 @@ public:
      *         NO_HCI if the ibox could not successfully synchronize. <br>
      *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
      */
-    vpr::ReturnStatus    connect(char* port_name, long int baud);
+    vpr::ReturnStatus    connect(const std::string& port_name, long int baud);
 	vpr::ReturnStatus    connect();
     
 	/**
@@ -569,11 +572,11 @@ public:
 
 	char* getString(byte cmnd);
 
-	void setPort(char* port_name)
+	void setPort(const std::string& port_name)
 	{
 		mPortName=port_name;
 	}
-	char* getPort()
+	const std::string& getPort()
 	{
 		return(mPortName);
 	}
@@ -593,8 +596,7 @@ private:
 	//char	    	_port[256];
     vpr::Uint8       mSlow_timeout;    /* slow timeout setting (in tenths of seconds) */
     vpr::Uint8       mFast_timeout;    /* fast timeout setting (in tenths of seconds) */
-    //std::string      mPortName;            /* name of serial port */
-	char*		     mPortName;            /* name of serial port */
+    std::string      mPortName;            /* name of serial port */
     int              mBaudRate;            /* baud rate of ibox */
     ////////////////////////////////////////////////////////////////
 	int overlap;     /* keeps track of how many reads and writes are
@@ -689,6 +691,4 @@ public:
 
 };
 
-
-
-
+#endif /* _GADGET_IBOX_STANDALONE_H_ */

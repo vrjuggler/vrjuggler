@@ -38,7 +38,6 @@ void IntersenseStandalone::init()
 {
   mBaudRate = 9600;
   mPort = 0;
-  mPortName = NULL;
   mVerbose = false;
   mHandle = 0;
   mActive = false;
@@ -48,8 +47,8 @@ void IntersenseStandalone::init()
 
 bool IntersenseStandalone::open()
 {
-  if(mPortName != NULL) {
-      mHandle = ISD_OpenTrackerPort(mPortName, FALSE, mVerbose, (DWORD)mBaudRate);
+  if(!mPortName.empty()) {
+      mHandle = ISD_OpenTrackerPort(mPortName.c_str(), FALSE, mVerbose, (DWORD)mBaudRate);
   } else {
       mHandle = ISD_OpenTracker(mPort, FALSE, mVerbose, (DWORD)mBaudRate);
   }

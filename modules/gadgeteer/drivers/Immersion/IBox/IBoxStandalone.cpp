@@ -84,7 +84,8 @@ IboxStandalone::~IboxStandalone()
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
-vpr::ReturnStatus IboxStandalone::connect(char* port_name,  long int baud)
+vpr::ReturnStatus IboxStandalone::connect(const std::string& port_name,
+                                          long int baud)
 {
 	mPortName=port_name;
 	mBaudRate = baud;
@@ -120,7 +121,7 @@ vpr::ReturnStatus IboxStandalone::connect(char* port_name,  long int baud)
 }
 vpr::ReturnStatus IboxStandalone::connect()
 {
-	if(mPortName==NULL) mPortName = "/dev/ttyd4";
+	if(mPortName.empty()) mPortName = std::string("/dev/ttyd4");
 	if(mBaudRate==0) mBaudRate = 9600;
     
 	port = new vpr::SerialPort(mPortName);    
