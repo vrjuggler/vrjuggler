@@ -44,7 +44,7 @@
  */
 
 /* This should always be included first. */
-#include <snx/snxDefines.h>
+/* #include <snx/snxDefines.h> */
 
 #ifdef _DEBUG
 #   define SNX_DEBUG
