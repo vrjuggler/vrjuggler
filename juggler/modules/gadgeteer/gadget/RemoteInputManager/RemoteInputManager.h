@@ -75,6 +75,7 @@ namespace gadget{
       IdGenerator<VJ_NETID_TYPE>    mLocalIdGen;            /**< keeps track of used/free network ids */
 
       gadget::MsgPackage            mMsgPackage;
+      gadget::MsgPackage            mAcceptMsgPackage;
       gadget::InputManager*         mInputManager;          /**< a ptr to the Input Manager so we can access devices */
 
       std::string                   mInstanceName;

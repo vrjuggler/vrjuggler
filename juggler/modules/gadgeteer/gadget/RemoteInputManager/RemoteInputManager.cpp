@@ -128,13 +128,13 @@ namespace gadget
       << "\nInputManager: Removing config... " << std::endl << vprDEBUG_FLUSH;
       vprASSERT(configCanHandle(chunk));
 
-      //bool ret_val = false;      // Flag to return success
+      bool ret_val = false;      // Flag to return success
       // CAN NOT REMOVE YET
       //if (recognizeClusterMachineConfig(chunk)) 
       //	{;}
       //else if(recognizeRemoteDeviceConfig(chunk))
       //   ret_val = removeDevice(chunk);
-      //return ret_val;         // Return the success flag if we added at all
+      return ret_val;         // Return the success flag if we added at all
    }
 
 
@@ -264,7 +264,10 @@ namespace gadget
             //char local_port_str[64];
             //sprintf(local_port_str, "%i", mListenPort);
    
-            if ( mMsgPackage.receiveHandshake(streamHostname,streamPort, streamManagerId, client_sock) )
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"[makeConnection]")
+               << "Waiting for a handshake responce on port: "<< mListenPort << "\n"<< vprDEBUG_FLUSH;
+
+            if ( mAcceptMsgPackage.receiveHandshake(streamHostname,streamPort, streamManagerId, client_sock) )
             {  // read the name from stream
    
                // create an alias_name to pass to addConnection
@@ -274,16 +277,16 @@ namespace gadget
                {
                   // if connection is successfully added, send handshake
                   //    CLIENT_SOCK<<<<<<<<<<<<<<<<<<
-                  mMsgPackage.createHandshake(true,mShortHostname,mListenPort, mManagerId.toString());   // send my name: send my hostname & port
-                  mMsgPackage.sendAndClear(client_sock);
+                  mAcceptMsgPackage.createHandshake(true,mShortHostname,mListenPort, mManagerId.toString());   // send my name: send my hostname & port
+                  mAcceptMsgPackage.sendAndClear(client_sock);
                   client_sock = new vpr::SocketStream;
                   mIncomingConnections++;
                }
                else
                {
                   // connection already exists or could not be made, so send rejection
-                  mMsgPackage.createHandshake(false,mShortHostname,mListenPort,mManagerId.toString());
-                  mMsgPackage.sendAndClear(client_sock);
+                  mAcceptMsgPackage.createHandshake(false,mShortHostname,mListenPort,mManagerId.toString());
+                  mAcceptMsgPackage.sendAndClear(client_sock);
                   // prepare new socket
                   client_sock->close();
                   delete client_sock;
@@ -293,8 +296,8 @@ namespace gadget
    
             else
             {
-               mMsgPackage.createHandshake(false,mShortHostname, mListenPort, mManagerId.toString());   // send my manager's name
-               mMsgPackage.sendAndClear(client_sock);
+               mAcceptMsgPackage.createHandshake(false,mShortHostname, mListenPort, mManagerId.toString());   // send my manager's name
+               mAcceptMsgPackage.sendAndClear(client_sock);
                // failed handshake so prepare new socket
                client_sock->close();
                delete client_sock;
@@ -483,7 +486,7 @@ namespace gadget
          int port_num = host_machine->getProperty<int>("listen_port");
 
          // We are configuring a NetDevice, so make sure connections don't change while we're here
-         acquireConfigMutex();
+//         acquireConfigMutex();
 
          NetConnection* connection = this->getConnectionByHostAndPort(host_name,port_num);
          if ( connection != NULL )  //If connection exists, go for it.
@@ -514,7 +517,7 @@ namespace gadget
             }
          }
          vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[END Configure Net Device] ") << dev_name << "\n"<< vprDEBUG_FLUSH;
-         releaseConfigMutex();
+//         releaseConfigMutex();
          return(true);
    }
 
@@ -542,7 +545,8 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=    SENDING DATA   =\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
-      
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Number Connections: " << this->mConnections.size() << vprDEBUG_FLUSH;
+
          sendDeviceNetData();
       
 
@@ -552,6 +556,7 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=  RECEIVEING DATA  =\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Number Connections: " << this->mConnections.size() << vprDEBUG_FLUSH;
          
          receiveDeviceNetData();  // NEED ROAD BLOCK
          
@@ -692,7 +697,24 @@ namespace gadget
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "PACKET SIZE: " << length << "\n" << vprDEBUG_FLUSH;
       
-      status = socket_stream->recvn(packet_data,length-RIM_HEAD_LENGTH,bytes_read);
+      vpr::Uint16 device_id;
+      if (opcode == MSG_DEVICE_DATA)
+      {
+         unsigned bytes_read;
+         status = socket_stream->recvn(&device_id,2,bytes_read);
+         device_id = vpr::System::Ntohs(device_id);
+         vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetNORM(clrCYAN) 
+            << "==============DEVICE ID: " 
+            << device_id << "==================\n" << clrRESET << vprDEBUG_FLUSH;
+         status = socket_stream->recvn(packet_data,length-RIM_HEAD_LENGTH-2,bytes_read);
+      }
+      else
+      {
+         status = socket_stream->recvn(packet_data,length-RIM_HEAD_LENGTH,bytes_read);
+      }
+      
+      
+      
       vpr::ObjectReader* data_reader = new vpr::ObjectReader(&packet_data);
 
       switch ( opcode )
@@ -774,8 +796,7 @@ namespace gadget
       case MSG_DEVICE_DATA:
          {
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] DEVICE_DATA\n") << vprDEBUG_FLUSH;
-            vpr::Uint16 device_id = data_reader->readUint16();
-
+            
             NetDevice* net_device_recvr = net_connection->findReceivingNetDeviceByLocalId(device_id);    
             if ( net_device_recvr == NULL )
             {
@@ -837,6 +858,13 @@ namespace gadget
 
          std::string received_hostname, received_manager_id;
          vpr::Uint16 received_port;
+         
+
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"[makeConnection]")
+            << "Waiting for a handshake responce on port: "<< connection_port << "\n"<< vprDEBUG_FLUSH;
+         
+
+
          if ( mMsgPackage.receiveHandshake(received_hostname, received_port, received_manager_id,sock_stream) )
          { // receive parameters from other manager, but to addConnection we'll actually use the variable names passed in from above
             
@@ -906,6 +934,8 @@ namespace gadget
 
          mMsgPackage.createDeviceAck(net_device->getRemoteId(), net_device->getLocalId(), device_name, net_device->getRealDevice()->getBaseType());
          mMsgPackage.sendAndClear(net_connection->getSockStream());
+         mMsgPackage.createEndBlock();
+         mMsgPackage.sendAndClear(net_connection->getSockStream());
 
          net_device->setWasInitializedTrue();
          vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
@@ -914,6 +944,17 @@ namespace gadget
       }
       else
       {
+         // Send Acknowledgement and Id back to requester
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We did not find the local device: " << device_name << "\n" << vprDEBUG_FLUSH;
+
+         mMsgPackage.createDeviceNack(net_device->getRemoteId(), 0, device_name);
+         mMsgPackage.sendAndClear(net_connection->getSockStream());
+         mMsgPackage.createEndBlock();
+         mMsgPackage.sendAndClear(net_connection->getSockStream());
+
+         net_device->setWasInitializedTrue();
+         vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
+               << "setWasInitializedTrue() " << device_name << "\n" << vprDEBUG_FLUSH;
          return false;  // input device not found
       }
 
@@ -964,6 +1005,7 @@ namespace gadget
          << "RemoteInputManager: Connection to " << connection_hostname
          <<" : "<< connection_port <<" : "<< manager_id << " already exists."
          << std::endl << vprDEBUG_FLUSH;
+         //return getConnectionByManagerId(manager_id);
          return NULL;
       }
       else
