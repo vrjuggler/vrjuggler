@@ -95,9 +95,9 @@ LDOPTS		:= ${LDOPTS} ${DSOVERSIONOPTS}
 include ${MKPATH}/vj.lib.mk
 include ${MKPATH}/vj.rec.mk
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # Build and installation directory naming and permission information.
-# -----------------------------------------------------------------------------
+# =============================================================================
 _DEBUG_DIR	= debug
 _OPT_DIR	= opt
 _DEFAULT_DIR	= ${_DEBUG_DIR}
@@ -155,9 +155,9 @@ PF_API		= @PERFORMER_API@
 PF_LIB_STATIC	= ${PF_LIBRARY}.a
 PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # Lists used for various types of recursion.
-# -----------------------------------------------------------------------------
+# =============================================================================
 
 # Subdirectories used for recursion through the source tree.
 SUBDIRS		= Math Config Kernel Environment Performance Input	\
@@ -171,9 +171,23 @@ TEST_SUBDIRS	= . CfgTest Quat Sync input ogl ogl/cubes ogl/wand	\
 # The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
 
-# -----------------------------------------------------------------------------
-# Library targets.
-# -----------------------------------------------------------------------------
+# =============================================================================
+# Library targets.  The default is 'dbg' as defined above.  The steps for 
+# building the 'dbg', 'ddso', 'opt' and 'dso' are as follows:
+#
+#    1) Build dependencies (if necessary).
+#    2) Compile all object files that are out of date.
+#    3) Build the Java-based config editor (if necessary).
+#    4) Compile the actual libraries from the object files.
+#    5) Set up the developer installation links.
+#
+# These four particular targets are wrapper targets for simpler targets with
+# an underscore ('_') prepended to the target name.  It is in these simpler
+# targets that the compilation is done.  The wrapper targets define the order
+# in which things take place.
+# =============================================================================
+
+# Build all four versions of the libraries.
 all: beforebuild _opt _dso _dbg _ddso _check_gui
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_LIBDIR}"
@@ -196,6 +210,7 @@ ifeq (${PF_API}, Y)
 endif
 	${MAKE} afterbuild
 
+# Build all ABIs in ${ABI_LIST}.
 all-abi:
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
@@ -215,7 +230,9 @@ afterbuild: links
 	@echo "Library build complete"
 	@echo "------------------------------------------------"
 
+# ---------------------------------------------
 # Make the debugging version of the libraries.
+# ---------------------------------------------
 dbg: beforebuild _dbg _check_gui afterbuild
 
 _dbg: _build_dbg
@@ -230,7 +247,9 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_STATIC}
 endif
 
+# ------------------------------------------------------------
 # Make the debugging version of the libraries that uses DSOs.
+# ------------------------------------------------------------
 ddso: beforebuild _ddso _check_gui afterbuild
 
 _ddso: _build_dbg
@@ -245,7 +264,9 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_DYNAMIC}
 endif
 
+# ---------------------------------------------
 # Make the optimized version of the libraries.
+# ---------------------------------------------
 opt: beforebuild _opt _check_gui afterbuild
 
 _opt: _build_opt
@@ -260,7 +281,9 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_STATIC}
 endif
 
+# ------------------------------------------------------------
 # Make the optimized version of the libraries that uses DSOs.
+# ------------------------------------------------------------
 dso: beforebuild _opt _check_gui afterbuild
 
 _dso: _build_opt
@@ -275,7 +298,9 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_DYNAMIC}
 endif
 
+# ---------------------------------------------------------
 # Build the object files with the debugging flags enabled.
+# ---------------------------------------------------------
 _build_dbg:
 	@echo "------------------------------------------------"
 	@echo "Making DBG version of libraries"
@@ -287,7 +312,9 @@ _build_dbg:
 	${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
           BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
+# ------------------------------------------------------------
 # Build the object files with the optimization flags enabled.
+# ------------------------------------------------------------
 _build_opt:
 	@echo "------------------------------------------------"
 	@echo "Making OPT version of libraries"
@@ -299,7 +326,9 @@ _build_opt:
 	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
           BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
+# --------------------------------------------------------------------
 # Build only the object files using the default values for ${OBJDIR}.
+# --------------------------------------------------------------------
 obj:
 	@echo "------------------------------------------------"
 	@echo "Making library object files"
@@ -309,12 +338,70 @@ obj:
 	@echo "Object files built"
 	@echo "------------------------------------------------"
 
-# Build the Java-based configuration GUI.
+# -----------------------
+# Dependency generation.
+# -----------------------
+depend: .depend_done
+
+newdepend:
+	@echo "------------------------------------------------"
+	@echo "Regenerating dependencies"
+	@echo "------------------------------------------------"
+	-@rm -f .depend_done
+	${MAKE} RECTARGET="$@" recursive
+	@touch .depend_done
+
+.depend_done:
+	@echo "------------------------------------------------"
+	@echo "Generating dependencies"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="depend" recursive
+	@touch .depend_done
+
+# -----------------------------------------------
+# Construct the static version of the libraries.
+# -----------------------------------------------
+static-libs: ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}
+
+${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}:
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${LIBDIR}
+	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" static-lib
+	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# -------------------------------------------------------
+# Construct the dynamic shared version of the libraries.
+# -------------------------------------------------------
+shared-libs: ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}
+
+${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}:
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${LIBDIR}
+	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" shared-lib
+	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# =============================================================================
+# Java-based configuration editor targets.
+# =============================================================================
+
+# This is a wrapper for the 'gui' target that checks for the mere existence
+# of the JAR file before compiling the GUI code.
 _check_gui:
 	@if [ ! -e ${topdir}/GUI/VjCfg.jar ] ; then	\
             ${MAKE} gui ;				\
         fi
 
+# Build the Java-based configuration GUI.
 gui:
 ifeq (@BUILD_GUI@, yes)
 	@echo "------------------------------------------------"
@@ -330,37 +417,11 @@ else
 	@echo "------------------------------------------------"
 endif
 
-# Construct the static version of the libraries.
-static-libs: ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}
-
-${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}:
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${LIBDIR}
-	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" static-lib
-	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-# Construct the dynamic shared version of the libraries.
-shared-libs: ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}
-
-${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}:
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${LIBDIR}
-	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" shared-lib
-	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
+# =============================================================================
 # Make links for developer use that provide the needed functionality for
 # the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
-# should be set to ${VJROOT_ABS}.
+# should be set to ${instlinks}.
+# =============================================================================
 links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
@@ -394,14 +455,30 @@ clean-links:
 	@echo "------------------------------------------------"
 	rm -rf ${instlinks}
 
-# Installation targets.
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Ensure that everything is built.
+#     2) Create the installation directory.
+#     3) Install the libraries.
+#     4) Install the header files.
+#     5) Install the test programs.
+#     6) Install the contents of the Data directory.
+#     7) Install the Java-based config editor (if possible).
+# =============================================================================
+
+# Steps to take before beginning the installation process.
 beforeinstall:
 
+# Steps to take after the installation process is complete.
 afterinstall:
 	@echo "------------------------------------------------"
 	@echo "Library installation complete"
 	@echo "------------------------------------------------"
 
+# Do a full installation all versions of the libraries.
 install-all: beforeinstall install-opt install-dso install-dbg		\
              install-ddso install-headers install-test install-data	\
              install-gui
@@ -428,6 +505,8 @@ ifeq (${PF_API}, Y)
 endif
 	${MAKE} afterinstall
 
+# Do a full installation of all versions of the libraries built in each of the
+# ABIs in ${ABI_LIST}.
 install-all-abi:
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
@@ -440,11 +519,15 @@ install-all-abi:
 	@echo "install-all-abi done"
 	@echo "------------------------------------------------"
 
+# Do a full installation of the static debugging version of the libraries.
 install: beforeinstall install-dbg install-headers install-test		\
          install-data install-gui afterinstall
 	@-cd ${prefix} && chgrp -R c2dev .
 	@-cd ${prefix} && chmod -R g+rw .
 
+# ------------------------------------------------------------
+# Install only the static debugging version of the libraries.
+# ------------------------------------------------------------
 install-dbg: dbg
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging libraries"
@@ -467,6 +550,9 @@ ifeq (${PF_API}, Y)
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
 endif
 
+# -------------------------------------------------------------
+# Install only the dynamic debugging version of the libraries.
+# -------------------------------------------------------------
 install-ddso: ddso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
@@ -489,6 +575,9 @@ ifeq (${PF_API}, Y)
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
+# ------------------------------------------------------------
+# Install only the static optimized version of the libraries.
+# ------------------------------------------------------------
 install-opt: opt
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized libraries"
@@ -511,6 +600,9 @@ ifeq (${PF_API}, Y)
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_STATIC} ./
 endif
 
+# -------------------------------------------------------------
+# Install only the dynamic optimized version of the libraries.
+# -------------------------------------------------------------
 install-dso: dso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
@@ -533,6 +625,7 @@ ifeq (${PF_API}, Y)
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
+# Install the header files.
 install-headers:
 	@echo "------------------------------------------------"
 	@echo "Installing header files"
@@ -543,6 +636,7 @@ install-headers:
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${topdir}/vjDefines.h ${includedir}
 
+# Install the test programs.
 install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
@@ -563,6 +657,7 @@ install-test:
           --TEST_EXTRA_LIBS_GL="@TEST_EXTRA_LIBS_GL_SUBST@"		\
           --TEST_EXTRA_LIBS_PF="@TEST_EXTRA_LIBS_PF@"
 
+# Install the standard data files.
 install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
@@ -570,6 +665,7 @@ install-data:
 	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data		\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/Data
 
+# Install the Java-based config editor if possible.
 install-gui: _check_gui
 ifeq (@BUILD_GUI@, yes)
 	@echo "------------------------------------------------"
@@ -586,28 +682,10 @@ else
 	@echo "------------------------------------------------"
 endif
 
-# Dependency generation.
-depend: .depend_done
-
-newdepend:
-	@echo "------------------------------------------------"
-	@echo "Regenerating dependencies"
-	@echo "------------------------------------------------"
-	-@rm -f .depend_done
-	${MAKE} RECTARGET="$@" recursive
-	@touch .depend_done
-
-.depend_done:
-	@echo "------------------------------------------------"
-	@echo "Generating dependencies"
-	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="depend" recursive
-	@touch .depend_done
-
-# -----------------------------------------------------------------------------
-# Clean-up.  '_clean' removes all the files in the build directories.  
+# =============================================================================
+# Clean-up targets.  '_clean' removes all the files in the build directories.  
 # 'clobber' removes the ${_BUILDDIR_BASE} and ${_LIBDIR_NAME} directories.
-# -----------------------------------------------------------------------------
+# =============================================================================
 _clean:
 	@echo "------------------------------------------------"
 	@echo "Cleaning up the build tree"
@@ -652,9 +730,9 @@ clobber: _clean clean-links
 	@echo "Done with 'clobber'"
 	@echo "------------------------------------------------"
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # Human-readable information about the build system.
-# -----------------------------------------------------------------------------
+# =============================================================================
 info::
 	@echo "\nInfo for the make of ${VJ_LIBRARY}"
 	@echo "\nOBJDIR: ${OBJDIR}"
