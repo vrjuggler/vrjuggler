@@ -61,7 +61,7 @@ class vjConfigChunk;
 //
 // See also: vjKeyboard vjKeyboardProxy
 //--------------------------------------------------------------
-class vjXWinKeyboard : public vjKeyboard
+class vjXWinKeyboard : virtual public vjKeyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
