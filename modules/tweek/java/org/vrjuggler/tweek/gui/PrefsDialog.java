@@ -42,13 +42,16 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
 /**
  * @since 1.0
  */
-public class PrefsDialog extends JDialog
+public class PrefsDialog extends JDialog implements TableModelListener
 {
    public PrefsDialog (Frame owner, String title,
                        GlobalPreferencesService prefs)
@@ -60,10 +63,17 @@ public class PrefsDialog extends JDialog
       userLevel        = mPrefs.getUserLevel();
       lookAndFeel      = mPrefs.getLookAndFeel();
       beanViewer       = mPrefs.getBeanViewer();
+      windowWidth      = new Integer(mPrefs.getWindowWidth());
+      windowHeight     = new Integer(mPrefs.getWindowHeight());
       chooserStartDir  = mPrefs.getChooserStartDir();
       chooserOpenStyle = mPrefs.getChooserOpenStyle();
       defaultCorbaHost = mPrefs.getDefaultCorbaHost();
       defaultCorbaPort = mPrefs.getDefaultCorbaPort();
+
+      WindowSizeTableModel table_model = new WindowSizeTableModel(windowWidth,
+                                                                  windowHeight);
+      table_model.addTableModelListener(this);
+      mWinSizeTable = new JTable(table_model);
 
       try
       {
@@ -110,6 +120,22 @@ public class PrefsDialog extends JDialog
       return status;
    }
 
+   public void tableChanged(TableModelEvent e)
+   {
+      WindowSizeTableModel model =
+         (WindowSizeTableModel) e.getSource();
+
+      switch (e.getColumn())
+      {
+         case 0:
+            windowWidth = (Integer) model.getValueAt(0, 0);
+            break;
+         case 1:
+            windowHeight = (Integer) model.getValueAt(0, 1);
+            break;
+      }
+   }
+
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
    public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
@@ -126,8 +152,6 @@ public class PrefsDialog extends JDialog
 
    private void jbInit() throws Exception
    {
-
-
       mOkButton.setMnemonic('O');
       mOkButton.setText("OK");
       mOkButton.addActionListener(new ActionListener()
@@ -257,10 +281,13 @@ public class PrefsDialog extends JDialog
       mCorbaLayout.setColumns(2);
       mCorbaLayout.setRows(0);
 
-
-
-
-
+      mWinSizeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mWinSizeLabel.setText("Window Size");
+      mWinSizeTable.setCellSelectionEnabled(true);
+      mWinSizeTable.setRowSelectionAllowed(false);
+      mWinSizeTablePane.setMaximumSize(new Dimension(32767, 16));
+      mWinSizeTablePane.setMinimumSize(new Dimension(150, 16));
+      mWinSizeTablePane.setPreferredSize(new Dimension(150, 16));
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mSaveButton, null);
       mButtonPanel.add(mCancelButton, null);
@@ -281,6 +308,8 @@ public class PrefsDialog extends JDialog
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
       mGenConfigPanel.add(mLazyInstanceButton,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+      mGenConfigPanel.add(mWinSizeLabel,    new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 0, 23));
       mContentPane.add(mCorbaPanel,   "CORBA");
       mCorbaPanel.add(mCorbaHostLabel, null);
       mCorbaPanel.add(mCorbaHostField, null);
@@ -302,6 +331,9 @@ public class PrefsDialog extends JDialog
       mOpenStyleButtonGroup.add(mWindowsStyleButton);
       mOpenStyleButtonGroup.add(mEmacsStyleButton);
       mContentPane.add(mFileChooserPanel,  "File Chooser");
+      mWinSizeTablePane.getViewport().add(mWinSizeTable);
+      mGenConfigPanel.add(mWinSizeTablePane,          new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 16));
    }
 
    /**
@@ -446,6 +478,8 @@ public class PrefsDialog extends JDialog
       mPrefs.setUserLevel(userLevel);
       mPrefs.setLookAndFeel(lookAndFeel);
       mPrefs.setBeanViewer(beanViewer);
+      mPrefs.setWindowWidth(windowWidth.intValue());
+      mPrefs.setWindowHeight(windowHeight.intValue());
       mPrefs.setChooserStartDir(chooserStartDir);
       mPrefs.setChooserOpenStyle(chooserOpenStyle);
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
@@ -487,6 +521,67 @@ public class PrefsDialog extends JDialog
       {
          mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
       }
+   }
+
+   private class WindowSizeTableModel extends AbstractTableModel
+   {
+      public WindowSizeTableModel(Integer width, Integer height)
+      {
+         this.width  = width;
+         this.height = height;
+      }
+
+      public int getRowCount()
+      {
+         return 1;
+      }
+
+      public int getColumnCount()
+      {
+         return 2;
+      }
+
+      public String getColumnName(int col)
+      {
+         return (col == 0 ? "Width" : "Height");
+      }
+
+      public Object getValueAt(int row, int column)
+      {
+         return (column == 0 ? width : height);
+      }
+
+      public void setValueAt(Object newVal, int row, int column)
+      {
+         switch (column)
+         {
+            case 0:
+               width = (Integer) newVal;
+               break;
+            case 1:
+               height = (Integer) newVal;
+               break;
+         }
+
+         fireTableCellUpdated(row, column);
+      }
+
+      /**
+       * Overrides the default getColumnClass().  This method is critical for
+       * getting cell renderers to work.
+       */
+      public Class getColumnClass(int column)
+      {
+         return Integer.class;
+      }
+
+      public boolean isCellEditable(int row, int col)
+      {
+         return true;
+      }
+
+      private Integer width;
+      private Integer height;
    }
 
    // =========================================================================
@@ -545,4 +640,7 @@ public class PrefsDialog extends JDialog
    private JTextField mCorbaHostField = new JTextField();
    private JLabel mCorbaHostLabel = new JLabel();
    private GridLayout mCorbaLayout = new GridLayout();
+   private JLabel mWinSizeLabel = new JLabel();
+   private JTable mWinSizeTable = null;
+   private JScrollPane mWinSizeTablePane = new JScrollPane();
 }
