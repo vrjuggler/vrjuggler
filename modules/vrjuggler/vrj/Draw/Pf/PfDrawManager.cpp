@@ -47,7 +47,6 @@
 #include <Performer/pf/pfScene.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pf/pfLightSource.h>
-#include <Performer/pfdu.h>
 #include <Performer/pf/pfTraverser.h>
 
 #include <vpr/vpr.h>
@@ -56,9 +55,9 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfApp.h>
+#include <vrj/Draw/Pf/PfInputHandler.h>
 #include <vrj/Draw/Pf/PfSimInterface.h>
 #include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
-
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
@@ -66,6 +65,7 @@
 
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
+
 
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
@@ -93,6 +93,65 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw);
 
 //vjPfDrawManager* PfDrawManager::_instance = NULL;
 vprSingletonImp(PfDrawManager);
+
+PfDrawManager::~PfDrawManager()
+{
+   //TODO: Add thread safety.
+   for ( std::vector<PfInputHandler*>::iterator itr = mPfInputHandlers.begin();
+         itr != mPfInputHandlers.end() ; itr++)
+   {
+      delete *itr;
+   }
+   mPfInputHandlers.clear();
+}
+
+// Helper method that forwards all events to the correct PfInputHandler.
+void handlePerformerEvents(int dev, void* val , pfuCustomEvent* pfuevent)
+{
+   boost::ignore_unused_variable_warning( dev );
+   boost::ignore_unused_variable_warning( pfuevent );
+   
+   ::XAnyEvent* event = (::XAnyEvent*)val;
+   vprASSERT( event != NULL );
+
+   PfInputHandler* pf_input_handler = PfDrawManager::getPfInputHandler( event->window );
+   vprASSERT( pf_input_handler != NULL );
+   
+   pf_input_handler->handlePerformerEvent( *((::XEvent*)val) );
+}
+
+// Instantiate the mPfInputMap.
+std::map< ::Window, PfInputHandler* > PfDrawManager::mPfInputMap;
+
+void PfDrawManager::addPfInputHandler(::Window win, PfInputHandler* pfInput)
+{
+   vprASSERT( pfInput != NULL );
+
+   if ( mPfInputMap.find(win) == mPfInputMap.end() )     // Not already there
+   {
+      mPfInputMap[win] = pfInput;
+   }
+}
+
+void PfDrawManager::removePfInputHandler(::Window win)
+{
+   mPfInputMap.erase(win);     // Erase the entry in the list
+}
+
+PfInputHandler* PfDrawManager::getPfInputHandler(::Window win)
+{
+   std::map< ::Window, PfInputHandler* >::iterator pfInputIter;
+   
+   pfInputIter = mPfInputMap.find(win);
+   if ( pfInputIter == mPfInputMap.end() )     // Not found
+   {
+      return NULL;
+   }
+   else
+   {
+      return(*pfInputIter).second;                 // Return the found window
+   }
+}
 
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
@@ -165,6 +224,7 @@ void PfDrawManager::draw()
 
    pfFrame();
 }
+
 
 // XXX: Hack for now
 void PfDrawManager::callAppChanFuncs()
@@ -327,7 +387,6 @@ void PfDrawManager::initPipes()
       mPipes[pipe_num]->setSwapFunc( PfPipeSwapFunc );      // Set to the given swap func
    }
 }
-
 
 /**
  * Callback when display is added to display manager.
@@ -594,14 +653,31 @@ void PfDrawManager::addDisplay(Display* disp)
 #endif
    */
    
+   // Set up the Performer Input handler.
+   /*
+   jccl::ConfigElementPtr display_elt = disp->getConfigElement();
+   PfInputHandler* input_handler = new PfInputHandler();
+   mInputHandlers.push_back(input_handler);
+   input_handler->config(display_elt);
+   */
+
+   jccl::ConfigElementPtr display_elt = disp->getConfigElement();
+   std::string displayName = mPipeStrs[disp->getPipe()];
+   PfInputHandler* input_handler = new PfInputHandler(pf_disp.pWin, displayName);
+   input_handler->config(display_elt, disp);
+
+   mPfInputHandlers.push_back( input_handler );
+   PfDrawManager::addPfInputHandler(  pf_disp.pWin->getWSWindow(), input_handler );
+   
+   //TODO: Move to apiInit
+   pfuInputHandler(&handlePerformerEvents, PFUINPUT_CATCH_ALL);
+
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
    //vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
    debugDump(vprDBG_CONFIG_LVL);
 }
-
-
 
 /*
 #ifndef VPR_OS_Win32
@@ -1201,6 +1277,7 @@ void PFconfigPWin(pfPipeWindow* pWin)
    pfInitGfx();
    pfuInitInput( pWin, PFUINPUT_NOFORK_X );
    //pfPWinType( pWin, PFPWIN_TYPE_X_NOFORK );
+   pfPWinType( pWin, PFPWIN_TYPE_X );
    
    // Call user config function
    dm->mApp->configPWin(pWin);
