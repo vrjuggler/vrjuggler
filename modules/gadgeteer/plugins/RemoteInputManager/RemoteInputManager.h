@@ -195,7 +195,7 @@ public:
    { return mLocalIdGen.generateNewId(); }
 
    void releaseLocalId(vpr::Uint16 remove)
-   { return mLocalIdGen.releaseId(remove); }
+   { mLocalIdGen.releaseId(remove); }
 
    void setReconfigurationNeededOnConnection(bool val)
    { mReconfigurationNeededOnConnection = val; }
