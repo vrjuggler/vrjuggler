@@ -140,7 +140,7 @@ def setVars():
 
       # Default values for optional settings.
       'OMNIORB_ROOT'    : os.getenv('OMNIORB_ROOT', ''),
-      'PF_ROOT'         : os.getenv('PF_ROOT',
+      'PFROOT'          : os.getenv('PFROOT',
                                     r'C:\Program Files\Silicon Graphics\OpenGL Performer'),
       'VRPN_ROOT'       : os.getenv('VRPN_ROOT', ''),
       'AUDIERE_ROOT'    : os.getenv('AUDIERE_ROOT', ''),
@@ -174,7 +174,7 @@ def setVars():
    print "+++ Optional Settings"
    processInput(options, 'OMNIORB_ROOT', 'omniORB installation directory',
                 False)
-   processInput(options, 'PF_ROOT', 'OpenGL Performer installation directory',
+   processInput(options, 'PFROOT', 'OpenGL Performer installation directory',
                 False)
    processInput(options, 'VRPN_ROOT', 'VRPN installation directory', False)
    processInput(options, 'AUDIERE_ROOT', 'Audiere installation directory',
