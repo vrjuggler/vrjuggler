@@ -170,40 +170,48 @@ public class DisplayWindowStartDialog
          mNameField.setText(winElt.getName());
 
          ConfigElement fb_cfg =
-            (ConfigElement) winElt.getProperty("frame_buffer_config", 0);
+            (ConfigElement) winElt.getProperty(FRAME_BUFFER_PROPERTY, 0);
 
          int val;
-         val = ((Integer) fb_cfg.getProperty("red_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(COLOR_RED_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mRedDepthSpinner, val, 0, 8);
-         val = ((Integer) fb_cfg.getProperty("green_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(COLOR_GREEN_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mGreenDepthSpinner, val, 0, 8);
-         val = ((Integer) fb_cfg.getProperty("blue_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(COLOR_BLUE_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mBlueDepthSpinner, val, 0, 8);
-         val = ((Integer) fb_cfg.getProperty("alpha_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(COLOR_ALPHA_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mAlphaDepthSpinner, val, 0, 8);
          val =
-            ((Integer) fb_cfg.getProperty("auxiliary_buffer_count", 0)).intValue();
+            ((Integer) fb_cfg.getProperty(AUX_BUFFER_COUNT_PROPERTY, 0)).intValue();
          setSpinnerModel(mNumAuxBufferSpinner, val, 0, 32);
          val =
-            ((Integer) fb_cfg.getProperty("depth_buffer_size", 0)).intValue();
+            ((Integer) fb_cfg.getProperty(DEPTH_BUFFER_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mDepthBufferSpinner, val, 0, 32);
          val =
-            ((Integer) fb_cfg.getProperty("stencil_buffer_size", 0)).intValue();
+            ((Integer) fb_cfg.getProperty(STENCIL_BUFFER_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mStencilBufferSpinner, val, 0, 32);
-         val = ((Integer) fb_cfg.getProperty("accum_red_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(ACCUM_RED_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mAccumRedDepthSpinner, val, 0, 8);
-         val = ((Integer) fb_cfg.getProperty("accum_green_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(ACCUM_GREEN_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mAccumGreenDepthSpinner, val, 0, 8);
-         val = ((Integer) fb_cfg.getProperty("accum_blue_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(ACCUM_BLUE_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mAccumBlueDepthSpinner, val, 0, 8);
-         val = ((Integer) fb_cfg.getProperty("accum_alpha_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty(ACCUM_ALPHA_SIZE_PROPERTY, 0)).intValue();
          setSpinnerModel(mAccumAlphaDepthSpinner, val, 0, 8);
 
          mVisualIdField.setText(
-            ((Integer) fb_cfg.getProperty("visual_id", 0)).toString()
+            ((Integer) fb_cfg.getProperty(VISUAL_ID_PROPERTY, 0)).toString()
          );
          mFSAACheckbox.setSelected(
-            fb_cfg.getProperty("fsaa_enable", 0).equals(Boolean.TRUE)
+            fb_cfg.getProperty(FSAA_ENABLE_PROPERTY, 0).equals(Boolean.TRUE)
          );
 
          mPositionXField.setValue(winElt.getProperty(ORIGIN_PROPERTY, 0));
@@ -212,13 +220,13 @@ public class DisplayWindowStartDialog
          mHeightField.setValue(winElt.getProperty(SIZE_PROPERTY, 1));
 
          mStereoCheckbox.setSelected(
-            winElt.getProperty("stereo", 0).equals(Boolean.TRUE)
+            winElt.getProperty(STEREO_PROPERTY, 0).equals(Boolean.TRUE)
          );
          mBorderCheckbox.setSelected(
-            winElt.getProperty("border", 0).equals(Boolean.TRUE)
+            winElt.getProperty(BORDER_PROPERTY, 0).equals(Boolean.TRUE)
          );
          mHideMouseCheckbox.setSelected(
-            winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE)
+            winElt.getProperty(HIDE_MOUSE_PROPERTY, 0).equals(Boolean.TRUE)
          );
 
          mSleepTimeField.setValue(winElt.getProperty(SLEEP_TIME_PROPERTY, 0));
