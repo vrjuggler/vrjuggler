@@ -47,7 +47,8 @@ endif # PASSIVE_TEX
 endif # XEP
 endif # FOP
 
-XALAN_HTML_PARAMS=	
+SAXON_HTML_PARAMS=	html.stylesheet=base_style.css
+XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css"
 
 XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 			-PARAM page.margin.inner "0in"	\
