@@ -253,6 +253,22 @@ public class ConfigDefinitionRepositoryEditor
                      ((ConfigDefinition)evt.getSource()).getToken() +
                      " " + mCurConfigDef.getToken());
             }
+            public void parentAdded(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Parent Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mCurConfigDef.getToken());
+            }
+            public void parentRemoved(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Parent Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mCurConfigDef.getToken());
+            }
             public void categoryAdded(ConfigDefinitionEvent evt)
             {
                mDefinitionChanged = true;

@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-05-2005 patrickh    Extended the config definition editor to support
+                        adding and removing parents.  This added two new
+                        methods (for adding and removing parents) to
+                        org.vrjuggler.jccl.config.ConfigDefinition and
+                        org.vrjuggler.jccl.config.event.ConfigDefinitionListener.
+                        NEW VERSION: 0.92.7
 Mar-01-2005 patrickh    Added an overload of
                         org.vrjuggler.jccl.config.ConfigElement.setName() that
                         supports undoing the name change operation.

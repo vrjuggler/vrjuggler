@@ -40,12 +40,16 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
+import info.clearthought.layout.*;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.config.event.ConfigDefinitionEvent;
 
+
 /**
- * A specialized panel that knows how to edit a single configuration definition.
+ * A specialized panel that knows how to edit a single configuration
+ * definition.
  */
 public class ConfigDefinitionEditor
    extends JPanel
@@ -65,17 +69,32 @@ public class ConfigDefinitionEditor
       try
       {
          ClassLoader loader = getClass().getClassLoader();
-         mCategoriesListNewBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/newcategory.gif")));
-         mCategoriesListRemoveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/removecategory.gif")));
+         String img_root = "org/vrjuggler/jccl/editors/images";
+         ImageIcon new_icon =
+            new ImageIcon(loader.getResource(img_root + "/newcategory.gif"));
+         ImageIcon remove_icon =
+            new ImageIcon(loader.getResource(img_root + "/removecategory.gif"));
+         mParentsListNewBtn.setIcon(new_icon);
+         mParentsListRemoveBtn.setIcon(remove_icon);
+         mCategoriesListNewBtn.setIcon(new_icon);
+         mCategoriesListRemoveBtn.setIcon(remove_icon);
       }
       catch (Exception e)
       {
          // Ack! No icons. Use text labels instead
+         mParentsListNewBtn.setText("New");
+         mParentsListRemoveBtn.setText("Remove");
          mCategoriesListNewBtn.setText("New");
          mCategoriesListRemoveBtn.setText("Remove");
+
+         mParentsListNewBtn.setIcon(null);
+         mParentsListRemoveBtn.setIcon(null);
+         mCategoriesListNewBtn.setIcon(null);
+         mCategoriesListRemoveBtn.setIcon(null);
       }
 
-      // Setup the categories list
+      // Setup the parents and categories lists
+      mParentsList.setModel(mParentsModel);
       mCategoriesList.setModel(mCategoriesModel);
    }
 
@@ -117,15 +136,89 @@ public class ConfigDefinitionEditor
          mAbstractBox.setSelected(mDefinition.isAbstract());
       }
 
-      // Reset the categories list
+      // Reset the parents and categories lists.
+      mParentsModel.clear();
       mCategoriesModel.clear();
+
       if (mDefinition != null)
       {
-         for (Iterator itr = mDefinition.getCategories().iterator(); itr.hasNext(); )
+         ConfigBroker broker = new ConfigBrokerProxy();
+         ConfigDefinitionRepository repos = broker.getRepository();
+
+         for ( Iterator itr = mDefinition.getParents().iterator();
+               itr.hasNext(); )
+         {
+            mParentsModel.addElement(repos.get((String) itr.next()));
+         }
+
+         for ( Iterator itr = mDefinition.getCategories().iterator();
+               itr.hasNext(); )
          {
             mCategoriesModel.add(itr.next());
          }
       }
+   }
+
+   private void parentSelectionChanged(ListSelectionEvent e)
+   {
+      if ( mParentsList.getSelectedIndex() == -1 )
+      {
+         mParentsListRemoveBtn.setEnabled(false);
+      }
+      else
+      {
+         mParentsListRemoveBtn.setEnabled(true);
+      }
+   }
+
+   private void addParent()
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      ConfigDefinitionRepository repos = broker.getRepository();
+      java.util.List all_defs = repos.getAllLatest();
+      filterDisallowedParents(repos, mDefinition.getParents(), all_defs);
+      ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
+      chooser.setDefinitions(all_defs);
+      Frame parent = (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                               this);
+
+      if ( chooser.showDialog(parent) == ConfigDefinitionChooser.APPROVE_OPTION )
+      {
+         ConfigDefinition new_parent = chooser.getSelectedDefinition();
+         if ( new_parent != null )
+         {
+            mDefinition.addParent(new_parent.getToken());
+         }
+      }
+   }
+
+   private void filterDisallowedParents(ConfigDefinitionRepository repos,
+                                        java.util.List parentTokens,
+                                        java.util.List allDefs)
+   {
+      for ( Iterator i = parentTokens.iterator(); i.hasNext(); )
+      {
+         String parent_name = (String) i.next();
+
+         if ( ! parent_name.equals("") )
+         {
+            ConfigDefinition parent_def = repos.get(parent_name);
+
+            if ( parent_def.getParents() != null &&
+                 ! parent_def.getParents().isEmpty() )
+            {
+               filterDisallowedParents(repos, parent_def.getParents(),
+                                       allDefs);
+            }
+
+            allDefs.remove(parent_def);
+         }
+      }
+   }
+
+   private void removeParent(ConfigDefinition parentDef)
+   {
+      mDefinition.removeParent(parentDef.getToken());
    }
 
    private void addCategory()
@@ -135,7 +228,11 @@ public class ConfigDefinitionEditor
 
    private void removeCategory(int idx)
    {
-      mDefinition.removeCategory((Category)mCategoriesModel.getValueAt(idx, 0));
+      if ( idx > -1 )
+      {
+         mDefinition.removeCategory((Category)mCategoriesModel.getValueAt(idx,
+                                                                          0));
+      }
    }
 
    /**
@@ -144,6 +241,12 @@ public class ConfigDefinitionEditor
    private void jbInit()
       throws Exception
    {
+      double[][] sizes =
+         {
+            {TableLayout.FILL},
+            {0.5, 0.5}
+         };
+      mParentCategoryPanel.setLayout(new TableLayout(sizes));
       this.setLayout(mBaseLayout);
       mBasicPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Basic"));
       mBasicPanel.setLayout(mBasicPanelLayout);
@@ -151,6 +254,25 @@ public class ConfigDefinitionEditor
       mNamePnl.setLayout(mNamePnlLayout);
       mTokenLbl.setText("Token:");
       mTokenPnl.setLayout(mTokenPnlLayout);
+      mParentsPnl.setLayout(mParentsPnlLayout);
+      mParentsPnl.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Parents"));
+      mParentsListCtrlPnl.setLayout(new BoxLayout(mParentsListCtrlPnl, BoxLayout.X_AXIS));
+      mParentsListRemoveBtn.setEnabled(false);
+      mParentsListRemoveBtn.setToolTipText("Remove Parent");
+      mParentsListRemoveBtn.setMargin(new Insets(0, 0, 0, 0));
+      mParentsListNewBtn.setToolTipText("New Parent");
+      mParentsListNewBtn.setMargin(new Insets(0, 0, 0, 0));
+      mParentsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      mParentsList.setCellRenderer(new ConfigDefinitionCellRenderer());
+      mParentsList.addListSelectionListener(
+         new ListSelectionListener()
+         {
+            public void valueChanged(ListSelectionEvent e)
+            {
+               parentSelectionChanged(e);
+            }
+         }
+      );
       mCategoriesPnl.setLayout(mCategoriesPnlLayout);
       mCategoriesPnl.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Categories"));
       mCategoriesListCtrlPnl.setLayout(new BoxLayout(mCategoriesListCtrlPnl, BoxLayout.X_AXIS));
@@ -183,6 +305,20 @@ public class ConfigDefinitionEditor
             mDefinition.setAbstract(mAbstractBox.isSelected());
          }
       });
+      mParentsListNewBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            addParent();
+         }
+      });
+      mParentsListRemoveBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            removeParent((ConfigDefinition) mParentsList.getSelectedValue());
+         }
+      });
       mCategoriesListNewBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -210,7 +346,21 @@ public class ConfigDefinitionEditor
       mBasicPanel.add(mAbstractBox,  new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 2, 2));
       mTokenPnl.add(mTokenTxt,  BorderLayout.CENTER);
-      this.add(mCategoriesPnl, BorderLayout.CENTER);
+      mParentCategoryPanel.add(mParentsPnl,
+                               new TableLayoutConstraints(0, 0, 0, 0,
+                                                          TableLayoutConstraints.FULL,
+                                                          TableLayoutConstraints.FULL));
+      mParentCategoryPanel.add(mCategoriesPnl,
+                               new TableLayoutConstraints(0, 1, 0, 1,
+                                                          TableLayoutConstraints.FULL,
+                                                          TableLayoutConstraints.FULL));
+      this.add(mParentCategoryPanel, BorderLayout.CENTER);
+      mParentsPnl.add(mParentsListSP, BorderLayout.CENTER);
+      mParentsListSP.getViewport().add(mParentsList, null);
+      mParentsPnl.add(mParentsListCtrlPnl, BorderLayout.NORTH);
+      mParentsListCtrlPnl.add(Box.createHorizontalGlue(), null);
+      mParentsListCtrlPnl.add(mParentsListNewBtn, null);
+      mParentsListCtrlPnl.add(mParentsListRemoveBtn, null);
       mCategoriesPnl.add(mCategoriesListSP, BorderLayout.CENTER);
       mCategoriesListSP.getViewport().add(mCategoriesList, null);
       mCategoriesPnl.add(mCategoriesListCtrlPnl, BorderLayout.NORTH);
@@ -232,6 +382,14 @@ public class ConfigDefinitionEditor
    private BorderLayout mTokenPnlLayout = new BorderLayout();
    private JCheckBox mAbstractBox = new JCheckBox();
    private JTextField mTokenTxt = new JTextField();
+   private JPanel mParentCategoryPanel = new JPanel();
+   private JPanel mParentsPnl = new JPanel();
+   private BorderLayout mParentsPnlLayout = new BorderLayout();
+   private JScrollPane mParentsListSP = new JScrollPane();
+   private JPanel mParentsListCtrlPnl = new JPanel();
+   private JButton mParentsListNewBtn = new JButton();
+   private JButton mParentsListRemoveBtn = new JButton();
+   private JList mParentsList = new JList();
    private JPanel mCategoriesPnl = new JPanel();
    private BorderLayout mCategoriesPnlLayout = new BorderLayout();
    private JScrollPane mCategoriesListSP = new JScrollPane();
@@ -250,6 +408,11 @@ public class ConfigDefinitionEditor
          return pref_size;
       }
    };
+
+   /**
+    * The data model for the parents list.
+    */
+   private DefaultListModel mParentsModel = new DefaultListModel();
 
    /**
     * The data model for the categories list.
@@ -335,8 +498,8 @@ public class ConfigDefinitionEditor
             Object old_val = getValueAt(row, col);
 
             // Modify the definition
-            mDefinition.removeCategory((Category)old_val);
-            mDefinition.addCategory((Category)obj);
+            mDefinition.removeCategory((Category) old_val);
+            mDefinition.addCategory((Category) obj);
          }
       }
 
@@ -367,6 +530,33 @@ public class ConfigDefinitionEditor
       private java.util.List mData = new ArrayList();
    }
 
+   private static class ConfigDefinitionCellRenderer
+      extends JLabel
+      implements ListCellRenderer
+   {
+      public Component getListCellRendererComponent(JList list, Object value,
+                                                    int index,
+                                                    boolean isSelected,
+                                                    boolean hasFocus)
+      {
+         ConfigDefinition def = (ConfigDefinition) value;
+         this.setText(def.getName() + " (" + def.getToken() + ")");
+
+         if ( isSelected )
+         {
+            setForeground(list.getSelectionForeground());
+            setBackground(list.getSelectionBackground());
+         }
+         else
+         {
+            setForeground(list.getForeground());
+            setBackground(list.getBackground());
+         }
+
+         return this;
+      }
+   }
+
    /**
     * Specialized class for listening to changes to a config definition.
     */
@@ -385,9 +575,22 @@ public class ConfigDefinitionEditor
          mTokenTxt.setText(def.getToken());
       }
 
+      public void parentAdded(ConfigDefinitionEvent evt)
+      {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         ConfigDefinitionRepository repos = broker.getRepository();
+         mParentsModel.addElement(repos.get((String) evt.getValue()));
+      }
+
+      public void parentRemoved(ConfigDefinitionEvent evt)
+      {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         ConfigDefinitionRepository repos = broker.getRepository();
+         mParentsModel.removeElement(repos.get((String) evt.getValue()));
+      }
+
       public void categoryAdded(ConfigDefinitionEvent evt)
       {
-         ConfigDefinition def = (ConfigDefinition)evt.getSource();
          mCategoriesModel.add((Category)evt.getValue());
       }
 
