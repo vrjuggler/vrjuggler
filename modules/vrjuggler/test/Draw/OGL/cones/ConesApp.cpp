@@ -50,14 +50,16 @@
 // Constructor.  This creates the GLU quadric used to render the cones.
 // ----------------------------------------------------------------------------
 ConesApp::ConesApp () {
-    mQuad = gluNewQuadric();
+    mConeQuad = gluNewQuadric();
+    mBaseQuad = gluNewQuadric();
 }
 
 // ----------------------------------------------------------------------------
 // Destructor.  This deletes the GLU quadric allocated in the constructor.
 // ----------------------------------------------------------------------------
 ConesApp::~ConesApp () {
-    gluDeleteQuadric(mQuad);
+    gluDeleteQuadric(mConeQuad);
+    gluDeleteQuadric(mBaseQuad);
 }
 
 // ----------------------------------------------------------------------------
