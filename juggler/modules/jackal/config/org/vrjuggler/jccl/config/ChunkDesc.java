@@ -54,22 +54,22 @@ public class ChunkDesc implements Cloneable {
     private Node default_node;
 
     public ChunkDesc (String n) {
-	props = new Vector();
-	addNameProperty();
-	name = n;
-	token = n;
-	help = "";
+        props = new Vector();
+        addNameProperty();
+        name = n;
+        token = n;
+        help = "";
         default_node = null;
         default_chunk = null;
     }
 
 
     public ChunkDesc () {
-	props = new Vector();
-	addNameProperty();
-	name = "";
-	token = "";
-	help = "";
+        props = new Vector();
+        addNameProperty();
+        name = "";
+        token = "";
+        help = "";
         default_node = null;
         default_chunk = null;
     }
@@ -93,7 +93,7 @@ public class ChunkDesc implements Cloneable {
 
 
     public final String getName () {
-	return name;
+        return name;
     }
 
 
@@ -103,7 +103,7 @@ public class ChunkDesc implements Cloneable {
 
 
     public final String getToken () {
-	return token;
+        return token;
     }
 
 
@@ -175,50 +175,50 @@ public class ChunkDesc implements Cloneable {
     }
 
     public boolean equals (ChunkDesc c) {
-	PropertyDesc p1, p2;
-	if (!token.equals(c.token))
-	    return false;
-	
-	/* This next part is O(n^2) <sigh> */
+        PropertyDesc p1, p2;
+        if (!token.equals(c.token))
+            return false;
+
+        /* This next part is O(n^2) <sigh> */
         int n = props.size();
-	for (int i = 0; i < n; i++) {
-	    p1 = (PropertyDesc) props.get(i);
-	    p2 = c.getPropertyDesc(p1.getToken());
-	    if ((p2 == null) || (!p1.equals(p2)))
-		return false;
-	}
-	return true;
+        for (int i = 0; i < n; i++) {
+            p1 = (PropertyDesc) props.get(i);
+            p2 = c.getPropertyDesc(p1.getToken());
+            if ((p2 == null) || (!p1.equals(p2)))
+                return false;
+        }
+        return true;
     }
 
 
 
     private void addNameProperty () {
-	/* quick little function to add in a name property if it isn't already
-	 * in the ChunkDesc.
-	 */
-	PropertyDesc named;
-	named = getPropertyDesc("Name");
-	if (named == null) {
-	    named = new PropertyDesc();
+        /* quick little function to add in a name property if it isn't already
+         * in the ChunkDesc.
+         */
+        PropertyDesc named;
+        named = getPropertyDesc("Name");
+        if (named == null) {
+            named = new PropertyDesc();
             named.setName ("Name");
             named.setToken ("Name");
-	    named.setHelp ("Unique name of an instance of this chunk type");
-	    named.setValType (ValType.STRING);
-	    props.add(0, named);
-	}
+            named.setHelp ("Unique name of an instance of this chunk type");
+            named.setValType (ValType.STRING);
+            props.add(0, named);
+        }
     }
 
 
 
     public PropertyDesc getPropertyDesc (String tok) {
-	PropertyDesc p;
+        PropertyDesc p;
         int n = props.size();
-	for (int i = 0; i < n; i++) {
-	    p = (PropertyDesc)props.get(i);
-	    if (p.getToken().equalsIgnoreCase(tok))
-		return p;
-	}
-	return null;
+        for (int i = 0; i < n; i++) {
+            p = (PropertyDesc)props.get(i);
+            if (p.getToken().equalsIgnoreCase(tok))
+                return p;
+        }
+        return null;
     }
 
 
