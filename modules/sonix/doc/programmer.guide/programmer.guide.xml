@@ -51,8 +51,7 @@
    <section>
       <title>Simple Minimalist Interface</title>
       <figure
-        id        = "simplesonixinterface"
-        xreflabel = "simplesonixinterface"
+        id    = "simplesonixinterface"
       >
          <title>UML diagram of the Sonix interface.</title>
          <mediaobject>
@@ -187,6 +186,20 @@ int main( int argc, char* argv[] )
    </section>
    <section>
       <title>Design and Implementation of Sonix</title>
+      <figure
+        id    = "completesonixinterface"
+      >
+         <title>The Sonix design.</title>
+         <mediaobject>
+            <imageobject>
+               <imagedata
+                 fileref = "sonix.system.view.png"
+                 format  = "PNG"
+                 align   = "center"
+               />
+            </imageobject>
+         </mediaobject>
+      </figure>
       <para>Sonix was designed (see <xref linkend="completesonixinterface"/>) using modern software design principles including design patterns and object oriented design. </para>
       <section>
          <title>Design Patterns Overview</title>
@@ -211,26 +224,12 @@ int main( int argc, char* argv[] )
                <para>Proxy (<classname>std::string</classname> and <classname>snx::SoundHandle</classname>). <classname>snx::SoundHandle</classname> is how users manipulate their sound object. <classname>snx::SoundHandle</classname> is actually a proxy to a <classname>std::string</classname> proxy. The <classname>std::string</classname> Proxy is what allows Sonix reconfiguration of resources. Rather than using pointers which can easily be left to dangle, the <classname>std::string</classname> serves as a lookup for a protected sound resource located internally to the Sonix tool. The <classname>snx::SoundHandle</classname> wraps this <classname>std::string</classname> to provide a simple and familier C++ object to use as the sound handle. The Sonix class acts as Mediator between every Proxy method and the actual audio system Adapter.</para>
             </listitem>
          </itemizedlist>
-         <figure
-           id        = "completesonixinterface"
-           xreflabel = "completesonixinterface"
-         >
-            <title>The Sonix design.</title>
-            <mediaobject>
-               <imageobject>
-                  <imagedata
-                    fileref = "sonix.system.view.png"
-                    format  = "PNG"
-                    align   = "center"
-                  />
-               </imageobject>
-            </mediaobject>
-         </figure>
       </section>
       <section>
          <title>Plug-in audio subsystems</title>
-         <para>Sonix supports the selection of several audio subsystems by the application through implementation plug-ins. Each plug-in implements an adapter to an underlying audio subsystem. The adapter supports a common interface that Sonix knows how talk to. Each adapter is then registered with a factory object, which may ask that adapter to clone itself for use by whoever called the factory. </para>
-         <figure>
+         <figure
+           id    = "howPluginsWork"
+         >
             <title>How Sonix is able to support many audio subsystems through "plug-ins"</title>
             <mediaobject>
                <imageobject>
@@ -242,6 +241,7 @@ int main( int argc, char* argv[] )
                </imageobject>
             </mediaobject>
          </figure>
+         <para>Sonix supports the selection of several audio subsystems by the application through implementation plug-ins (see <xref linkend="howPluginsWork"/>). Each plug-in implements an adapter to an underlying audio subsystem. The adapter supports a common interface that Sonix knows how talk to. Each adapter is then registered with a factory object, which may ask that adapter to clone itself for use by whoever called the factory. </para>
       </section>
    </section>
    <bibliography>
