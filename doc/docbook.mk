@@ -114,7 +114,7 @@ XSL_DIR=	$(DOCBOOK_ROOT)/docbook-xsl-$(DOCBOOK_XSL_VERSION)
 
 HTML_XSL?=		$(XSL_DIR)/html/docbook.xsl
 CHUNK_HTML_XSL?=	$(XSL_DIR)/html/chunk.xsl
-FO_XSL?=		$(XSL_DIR)/fo/docbook.fo
+FO_XSL?=		$(XSL_DIR)/fo/docbook.xsl
 
 ENV=		DOCBOOK_XSL=$(XSL_DIR) DOCBOOK_ROOT=$(DOCBOOK_ROOT)	\
 		SAXON_DIR=$(SAXON_DIR) XALAN_DIR=$(XALAN_DIR)		\
