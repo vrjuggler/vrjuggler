@@ -47,14 +47,13 @@ public:
 
    void graphConstructionTest (void)
    {
-      vpr::sim::Controller controller;
       std::string path_base;
       vpr::ReturnStatus status;
 
       status = vpr::System::getenv("VPR_TEST_DIR", path_base);
       CPPUNIT_ASSERT(status.success() && "Could not find VPR_TEST_DIR environment variable");
 
-      status = controller.constructNetwork(path_base.append("/test_network.tiers"));
+      status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.tiers"));
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
    }
 
@@ -62,13 +61,12 @@ public:
    singleThreadTest (void) {
       vpr::SocketStream sender, acceptor, receiver;
       vpr::ReturnStatus status;
-      vpr::sim::Controller simulator;
       std::string path_base;
 
       status = vpr::System::getenv("VPR_TEST_DIR", path_base);
       CPPUNIT_ASSERT(status.success() && "Could not find VPR_TEST_DIR environment variable");
 
-      status = simulator.constructNetwork(path_base.append("/test_network.tiers"));
+      status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.tiers"));
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
 
       status = acceptor.setLocalAddr(vpr::InetAddr(5556));
@@ -112,7 +110,7 @@ public:
       vpr::Uint32 bytes_read;
 
       do {
-         simulator.step();
+         vpr::sim::Controller::instance()->processNextEvent();
          status = receiver.read(buffer2, sizeof(buffer2), bytes_read);
       } while (status == vpr::ReturnStatus::WouldBlock);
 
@@ -139,7 +137,7 @@ public:
       mMessage      = "The sixth sheik's sixth sheep's sick";
       mMessageLen   = mMessage.length();
 
-      status = simulator.constructNetwork("test_network.tiers");
+      status = vpr::sim::Controller::instance()->constructNetwork("test_network.tiers");
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
 
       vpr::ThreadMemberFunctor<SocketSimulatorTest>* acceptor_func =
@@ -150,11 +148,11 @@ public:
          new vpr::ThreadMemberFunctor<SocketSimulatorTest>(this, &SocketSimulatorTest::multiThreadTest_connector);
       vpr::Thread connector(connector_func);
 
-      simulator.start();
+      vpr::sim::Controller::instance()->start();
 
       // Run, Lola, run.
-      while ( simulator.isRunning() ) {
-         simulator.step();
+      while ( vpr::sim::Controller::instance()->isRunning() ) {
+         vpr::sim::Controller::instance()->processNextEvent();
       }
 
       acceptor.join();

@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <boost/utility.hpp>
+#include <vpr/Util/Interval.h>
 #include <vpr/Util/Debug.h>
 
 #include <vpr/md/SIM/Network/Message.h>
@@ -55,9 +56,18 @@ namespace vpr
 namespace sim
 {
 
+Controller* Controller::mPrimordialInstance = NULL;
+vpr::TSObjectProxy<Controller::ControllerTS> Controller::mInstance;
+
 // ============================================================================
 // Public methods.
 // ============================================================================
+
+Controller::Controller ()
+   : m_started(false)
+{
+   /* Do nothing. */ ;
+}
 
 vpr::ReturnStatus Controller::constructNetwork (const std::string& graph_file)
 {
@@ -67,10 +77,16 @@ vpr::ReturnStatus Controller::constructNetwork (const std::string& graph_file)
 
    if ( status.success() )
    {
-      vpr::sim::SocketManager::instance()->setNetworkGraph(&mGraph);
+      mSocketManager.setActive();
    }
 
    return status;
+}
+
+void Controller::addEvent (const vpr::Interval& event_time,
+                           const NetworkGraph::net_edge_t edge)
+{
+   mEvents.insert(std::pair<vpr::Interval, NetworkGraph::net_edge_t>(event_time, edge));
 }
 
 void Controller::processNextEvent ()

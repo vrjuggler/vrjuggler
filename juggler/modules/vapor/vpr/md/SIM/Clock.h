@@ -39,44 +39,49 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vpr/vprConfig.h>
+#ifndef _VPR_SIM_CLOCK_H_
+#define _VPR_SIM_CLOCK_H_
 
-#include <vpr/md/SIM/Network/Message.h>
-#include <vpr/md/SIM/Network/MessagePtr.h>
-#include <vpr/md/SIM/Controller.h>
-#include <vpr/md/SIM/SocketManager.h>
-#include <vpr/md/SIM/IO/Socket/SocketDatagramImplSIM.h>
+#include <vpr/vprConfig.h>
+#include <vpr/vprTypes.h>
 
 
 namespace vpr
 {
 
-vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
-                                                   const vpr::Uint32 length,
-                                                   const int flags,
-                                                   vpr::InetAddr& from,
-                                                   vpr::Uint32& bytes_read,
-                                                   const vpr::Interval timeout)
+namespace sim
 {
-   vpr::ReturnStatus status;
 
-   return status;
-}
-
-vpr::ReturnStatus SocketDatagramImplSIM::sendto (void* msg,
-                                                 const vpr::Uint32 length,
-                                                 const int flags,
-                                                 vpr::InetAddr& to,
-                                                 vpr::Uint32& bytes_sent,
-                                                 const vpr::Interval timeout)
+/**
+ * Simulated clock for use with the socket simulation code.  The basic unit
+ * of time is tens of microseconds since that is what vpr::Interval uses.
+ */
+class Clock
 {
-   vpr::ReturnStatus status;
+public:
+   Clock (void)
+      : mTensOfUsec(0)
+   {
+      /* Do nothing. */ ;
+   }
 
-   bytes_sent = length;
-   vpr::sim::MessagePtr net_msg(new vpr::sim::Message(msg, length));
-   vpr::sim::Controller::instance()->getSocketManager().sendMessageTo(net_msg, this, to);
+   const vpr::Uint32& getCurrentTime (void) const
+   {
+      return mTensOfUsec;
+   }
 
-   return status;
-}
+   void setCurrentTime (const vpr::Uint32 time)
+   {
+      mTensOfUsec = time;
+   }
+
+private:
+   vpr::Uint32 mTensOfUsec;
+};
+
+} // End of sim namespace
 
 } // End of vpr namespace
+
+
+#endif /* _VPR_SIM_CLOCK_H_ */

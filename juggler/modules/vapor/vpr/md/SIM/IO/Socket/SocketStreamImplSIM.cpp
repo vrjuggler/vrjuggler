@@ -41,9 +41,9 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/vpr.h>
 #include <vpr/Util/Assert.h>
 
+#include <vpr/md/SIM/Controller.h>
 #include <vpr/md/SIM/SocketManager.h>
 #include <vpr/md/SIM/IO/Socket/SocketStreamImplSIM.h>
 
@@ -53,7 +53,7 @@ namespace vpr
 
 vpr::ReturnStatus SocketStreamImplSIM::listen( const int backlog )
 {
-   return vpr::sim::SocketManager::instance()->listen(this, backlog);
+   return vpr::sim::Controller::instance()->getSocketManager().listen(this, backlog);
 }
 
 vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
@@ -90,14 +90,14 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
       // Get an address for the new socket, bind it, and attach the socket to
       // the correct node.
-      vpr::sim::SocketManager::instance()->bindUnusedPort(client_sock.getHandle(),
-                                                          client_sock.mLocalAddr);
-      vpr::sim::SocketManager::instance()->assignToNode(client_sock.getHandle(),
-                                                        client_sock.mLocalAddr);
+      vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(client_sock.getHandle(),
+                                                                          client_sock.mLocalAddr);
+      vpr::sim::Controller::instance()->getSocketManager().assignToNode(client_sock.getHandle(),
+                                                                        client_sock.mLocalAddr);
 
       // Now define the route for messages between the two sockets.
-      vpr::sim::SocketManager::instance()->findRoute(peer_ptr,
-                                                     client_sock.getHandle());
+      vpr::sim::Controller::instance()->getSocketManager().findRoute(peer_ptr,
+                                                                     client_sock.getHandle());
 
       // Finally, tell the connecting socket its peer.  It's okay to do this
       // cast since getHandle() returns 'this'.
