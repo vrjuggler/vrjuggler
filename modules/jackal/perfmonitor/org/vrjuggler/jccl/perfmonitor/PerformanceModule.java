@@ -179,22 +179,22 @@ public class PerformanceModule extends DefaultCoreModule {
 	String name;
 	int num;
 	PerfDataCollector p;
-
-        if (id.equalsIgnoreCase ("PerfData1")) {
+        st.nextToken();
+        if (st.sval.equalsIgnoreCase ("PerfData1")) {
             st.nextToken();
             name = st.sval;
             st.nextToken();
             num = Integer.parseInt(st.sval);
 
-            //System.out.println ("read perf info for " + name + "\nnum is " + num);
+            System.out.println ("read perf info for " + name + "\nnum is " + num);
             p = getCollector (name);
             if (p == null)
                 p = addCollector (name, num);
             p.read (st);
         }
         else {
-            //Core.consoleErrorMessage ("Perf", "Major parsing failure in PerfDataCollection");
-            System.out.println ("Major parsing failure in PerfDataCollection");
+            Core.consoleErrorMessage ("Perf", "Major parsing failure in PerfDataCollection");
+            //System.out.println ("Major parsing failure in PerfDataCollection");
         }
     }
 
