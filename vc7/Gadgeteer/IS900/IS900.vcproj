@@ -112,56 +112,56 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\Intersense.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\Intersense.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\IntersenseStandalone.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\IntersenseStandalone.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\isdriver.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\isdriver.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\isense.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\isense.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\itcom.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\itcom.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\serial.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\serial.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\timer.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\timer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\wsock.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\wsock.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\Intersense.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\Intersense.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\IntersenseStandalone.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\IntersenseStandalone.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\isdriver.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\isdriver.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\isense.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\isense.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\itcom.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\itcom.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\serial.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\serial.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\timer.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\timer.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IS900\wsock.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\wsock.h">
 			</File>
 		</Filter>
 		<Filter

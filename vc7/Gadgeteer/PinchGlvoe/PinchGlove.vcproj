@@ -112,20 +112,20 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Fakespace\PinchGlove\PinchGlove.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Fakespace\PinchGlove\PinchGlove.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Fakespace\PinchGlove\PinchGloveStandalone.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Fakespace\PinchGlove\PinchGloveStandalone.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Fakespace\PinchGlove\PinchGlove.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Fakespace\PinchGlove\PinchGlove.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Fakespace\PinchGlove\PinchGloveStandalone.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Fakespace\PinchGlove\PinchGloveStandalone.h">
 			</File>
 		</Filter>
 		<Filter

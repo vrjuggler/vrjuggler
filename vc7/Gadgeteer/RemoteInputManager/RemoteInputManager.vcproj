@@ -112,26 +112,26 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\RemoteInputManager\DeviceServer.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\DeviceServer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\RemoteInputManager\RemoteInputManager.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\RemoteInputManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\RemoteInputManager\VirtualDevice.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\VirtualDevice.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\RemoteInputManager\DeviceServer.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\DeviceServer.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\RemoteInputManager\RemoteInputManager.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\RemoteInputManager.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\RemoteInputManager\VirtualDevice.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\VirtualDevice.h">
 			</File>
 		</Filter>
 		<Filter

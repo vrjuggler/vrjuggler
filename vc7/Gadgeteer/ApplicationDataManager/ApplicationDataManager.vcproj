@@ -112,26 +112,26 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\ApplicationDataManager\ApplicationDataManager.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationDataManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\ApplicationDataManager\ApplicationDataServer.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationDataServer.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\ApplicationDataManager\ApplicationData.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationData.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\ApplicationDataManager\ApplicationDataManager.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationDataManager.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\ApplicationDataManager\ApplicationDataServer.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationDataServer.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\ApplicationDataManager\UserData.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\UserData.h">
 			</File>
 		</Filter>
 		<Filter
