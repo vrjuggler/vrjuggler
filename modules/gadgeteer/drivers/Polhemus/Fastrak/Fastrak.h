@@ -61,13 +61,6 @@
 
 namespace gadget
 {
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
-
-namespace gadget
-{
 
 class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
 {

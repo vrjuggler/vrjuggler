@@ -44,13 +44,6 @@
 
 namespace gadget
 {
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
-
-namespace gadget
-{
 
 /**
  * Class interfacing with trackd sensor data located on the local machine in

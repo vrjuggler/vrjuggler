@@ -39,12 +39,16 @@
 #include <gadget/Type/DeviceConstructor.h>
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::TrackdAPIController>(inputMgr);
    new gadget::DeviceConstructor<gadget::TrackdAPISensor>(inputMgr);
 }
 
+}
 
 namespace gadget
 {

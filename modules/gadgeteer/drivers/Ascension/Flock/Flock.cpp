@@ -50,9 +50,14 @@
 #include <drivers/Ascension/Flock/Flock.h>
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Flock>(inputMgr);
+}
+
 }
 
 namespace gadget
