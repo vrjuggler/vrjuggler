@@ -72,6 +72,7 @@ world release:
 
 all buildworld debug optim profiled dbg dbg-dso opt opt-dso prof	\
 prof-dso links:
+	$(MKINSTALLDIRS) $(instlinks)/include
 ifneq ($(TARGETS), )
 	@for target in $(TARGETS) ; do					\
             $(MAKE) links-$$target || exit 1;				\
