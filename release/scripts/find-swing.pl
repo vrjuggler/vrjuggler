@@ -13,6 +13,8 @@
 #     find-swing.pl
 # -----------------------------------------------------------------------------
 
+require 5.001;
+
 use Env('CLASSPATH');
 
 my $fallback = "/home/users/cjust/Swing/swingall.jar";
