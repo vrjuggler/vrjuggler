@@ -64,13 +64,22 @@ vprSingletonImp(SoundFactory);
 SoundFactory::SoundFactory()
 {
    std::vector<std::string> search_paths;
+
 #if defined(_ABIN32)
-   search_paths.push_back( "${SNX_BASE_DIR}/lib32/snx/plugins" );
+   std::string snx_lib_dir("${SNX_BASE_DIR}/lib32/snx/plugins");
 #elif defined(_ABI64)
-   search_paths.push_back( "${SNX_BASE_DIR}/lib64/snx/plugins" );
+   std::string snx_lib_dir("${SNX_BASE_DIR}/lib64/snx/plugins");
 #else
-   search_paths.push_back( "${SNX_BASE_DIR}/lib/snx/plugins" );
+   std::string snx_lib_dir("${SNX_BASE_DIR}/lib/snx/plugins");
 #endif
+
+#ifdef SNX_DEBUG
+   snx_lib_dir += std::string("/dbg");
+#else
+   snx_lib_dir += std::string("/opt");
+#endif
+
+   search_paths.push_back(snx_lib_dir);
    search_paths.push_back( "${HOME}/.sonix/plugins" );
 
    std::vector<std::string> filelist;
