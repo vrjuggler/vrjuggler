@@ -170,14 +170,14 @@ public:
     vjVarValue& operator = (int i);
     vjVarValue& operator = (bool i);
     vjVarValue& operator = (float i);
-    vjVarValue& operator = (std::string i);
+    vjVarValue& operator = (const std::string& i);
 
     //: Assignment overload 
     //!NOTE: type of a vjVarValue is immutable, so a type mismatch here
     //+      can cause an error (in which case the assignment fails)
     //!NOTE: the vjVarValue makes a copy of the string - you can do with
     //+      the original as you please.
-    vjVarValue &operator = (char *s);
+    vjVarValue &operator = (const char *s);
 
     vjVarValue &operator = (vjConfigChunk *s);
 
