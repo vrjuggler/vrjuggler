@@ -123,7 +123,8 @@ else
 fi
 
 AC_ARG_WITH(jdkhome,
-            [  --with-jdkhome=<PATH>   JDK installation directory      [default=/usr/java]],
+            [  --with-jdkhome=<PATH>   JDK installation directory      [default=\$JDK_HOME
+                                                           then /usr/java]],
             JDK_HOME="$withval", JDK_HOME="${JDK_HOME-/usr/java}")
 
 dnl # Define the root directory for the Performer installation.
