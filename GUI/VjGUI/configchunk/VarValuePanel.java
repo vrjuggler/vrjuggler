@@ -111,6 +111,8 @@ public class VarValuePanel extends JPanel implements ActionListener {
     if (desc.num == -1) {
       /* then it's a variable # of values */
       removebutton = new JButton("Remove");
+      Insets in = new Insets (0,0,0,0);
+      removebutton.setMargin (in);
       add (removebutton,"East");
       removebutton.addActionListener(this);
     }
@@ -171,14 +173,13 @@ public class VarValuePanel extends JPanel implements ActionListener {
   }
 
 
-  public void actionPerformed (ActionEvent e) {
-    /* note - this is going to listen for the removebutton's event, &
-     * tell the parent to remove us.
-     */
-    if (e.getSource() == removebutton) {
-      parent.removePanel(this);
-      //parent.validate();
+
+    public void actionPerformed (ActionEvent e) {
+	if (e.getSource() == removebutton)
+	    parent.removePanel(this);
     }
-  }
+
+
 
 }
+
