@@ -160,12 +160,14 @@ aMotionStar::start () {
   // Ensure that an address string has been defind for the server before
   // trying to make a connection.
   if ( mAddress != NULL ) {
-    printf("\nConnecting to %s ...\n", mAddress);
+    fprintf(stderr, "\n[aMotionStar] Connecting to %s ...\n", mAddress);
 
     if ( (mSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
       perror("client: can't open stream socket");
       return -1;
     }
+
+    fprintf(stderr, "[aMotionStar] Socket created\n");
 
     // Fill in the structure with the address of the
     // server that we want to connect to.
@@ -189,13 +191,22 @@ aMotionStar::start () {
       server_addr.sin_addr.s_addr = inet_addr(mAddress);
     }
 
+    fprintf(stderr, "[aMotionStar] Got inet address of server\n");
+
     rtn = connect(mSocket, (struct sockaddr*) &server_addr,
                   sizeof(server_addr));
+
+    if ( rtn == -1 ) {
+      perror("[aMotionStar] client: Can't connect to server");
+      return -1;
+    }
 /*
     printf("connect = %4d, connect error = %4d, ", rtn, errno);
     perror(NULL);
     printf("\n");
 */
+
+    fprintf(stderr, "[aMotionStar] Connected to server\n");
 
     mNewptr     = (char*) &mResponse;
     mLpCommand  = &mCommand;
@@ -204,11 +215,17 @@ aMotionStar::start () {
     /* send the wake up call */
     sendWakeup();
 
+    fprintf(stderr, "[aMotionStar] Sent wakeup message\n");
+
     /* get the system status */
     getSystemStatus();
 
+    fprintf(stderr, "[aMotionStar] Got system status from server\n");
+
     /* send the system setup */
     setSystemStatus();
+
+    fprintf(stderr, "[aMotionStar] System configured\n");
 
      /* for 1 to n flock boards                    */
     /* get the individual bird status             */
@@ -218,6 +235,8 @@ aMotionStar::start () {
     for ( unsigned int flock = 1; flock<= mChassisDevices; flock++ ) {
       /* get the status of an individual bird */
       getBirdStatus(flock);
+
+//      fprintf(stderr, "[aMotionStar] Got status for bird %u\n", flock);
 
       /* change the data format to something new for all birds */
       if( flock <= mBirdsRequired ) {
@@ -233,7 +252,11 @@ aMotionStar::start () {
 
       /* set the status of an individual bird */
       setBirdStatus(flock);
+
+//      fprintf(stderr, "[aMotionStar] Set status for bird %u\n", flock);
     }
+
+    fprintf(stderr, "[aMotionStar] Birds configured\n");
 
     if ( mRunMode == 0 ) {
       runContinuous();
@@ -241,6 +264,9 @@ aMotionStar::start () {
     else {
       singleShot();
     }
+
+    fprintf(stderr, "[aMotionStar] Driver setup done\n");
+    printSystemStatus();
 
     mActive = true;
 
@@ -511,7 +537,6 @@ aMotionStar::getSystemStatus () {
   void* lp_buffer;
   int header_bytes, data_bytes;
   int bytes_received;
-  unsigned char flock_number;
   char sz_rate[7];
   int rate;
 
@@ -546,17 +571,10 @@ aMotionStar::getSystemStatus () {
 //  printf("\nSYSTEM STATUS RECEIVED - number bytes received = %5d,", bytesReceived);
 //  printf("  type %d\n",mResponse.header.type);
 
-  printf("\n============================================================\n\n");
-
-  /* now print out the details of the status packet */
-
   // mResponse.buffer byte 0 -> all
   // mResponse.buffer byte 1 -> FBBerror
-  flock_number = mResponse.buffer[2];
-  printf("Number of FBB devices in system = %d\n", flock_number);
-
+  mBirdCount         = mResponse.buffer[2];
   mTransmitterNumber = (mResponse.buffer[4]>>4) & 0x0F;
-  printf("Transmitter is at FBB address %d\n", mTransmitterNumber);
 
   sz_rate[0] = mResponse.buffer[5];
   sz_rate[1] = mResponse.buffer[6];
@@ -574,14 +592,6 @@ aMotionStar::getSystemStatus () {
   rate              = atoi(sz_rate);
   mRealRate         = ((double) rate) / 1000.0;
 
-  printf("Measurement rate = %6.1f\n", mRealRate);
-  printf("Number of chassis in system = %d\n", mServerNumber);
-  printf("Chassis# = %d\n", mChassisNumber);
-  printf("Number of FBB devices in this chassis = %d\n", mChassisDevices);
-  printf("First FBB device in this chassis = %d\n", mFirstAddress);
-  printf("SERVER Software Version = %d\n\n", mSoftwareRevision);
-  printf("============================================================\n\n");
-
 /*
   for(i= 0;i<16;i++) printf(" %2x", mResponse.buffer[i]);
   printf("  |  ");
@@ -590,7 +600,7 @@ aMotionStar::getSystemStatus () {
   printf("\n\n");
 */
 
-  for ( int i = 0; i < flock_number; i++ ) {
+  for ( int i = 0; i < mBirdCount; i++ ) {
       mBird[i].status.status             = mResponse.buffer[16+i*8];
       mBird[i].status.id                 = mResponse.buffer[17+i*8];
       mBird[i].status.softwareRev        = mResponse.buffer[18+i*8] +
@@ -714,6 +724,24 @@ aMotionStar::setBirdStatus (unsigned char fbb_addr) {
   for (i=0;i<bytesReceived;++i)
     printf("%4d",*(mNewptr+i));
 */
+}
+
+// ----------------------------------------------------------------------------
+// Print the system status as read from the server.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::printSystemStatus () {
+  printf("[aMotionStar] System status:\n\n");
+  printf("  ============================================================\n");
+  printf("  Number of FBB devices in system = %u\n", mBirdCount);
+  printf("  Transmitter is at FBB address %u\n", mTransmitterNumber);
+  printf("  Measurement rate = %6.1f\n", mRealRate);
+  printf("  Number of chassis in system = %u\n", mServerNumber);
+  printf("  Chassis number = %u\n", mChassisNumber);
+  printf("  Number of FBB devices in this chassis = %u\n", mChassisDevices);
+  printf("  First FBB device in this chassis = %u\n", mFirstAddress);
+  printf("  Server Software Version = %hu\n", mSoftwareRevision);
+  printf("  ============================================================\n\n");
 }
 
 // ----------------------------------------------------------------------------
