@@ -55,13 +55,13 @@ bool isIntersense::open()
   }
   bool tracker_connect = false;
   if (-1 != mHandle) {
-    tracker_connect = true;    
+    tracker_connect = true;
     sendScript();
   }
-  
+
   mActive = true;
   return tracker_connect;
-  
+
 }
 
 bool isIntersense::close()
@@ -71,14 +71,14 @@ bool isIntersense::close()
 
 bool isIntersense::updateData()
 {
-  
+
   bool is_data = false;
-  
+
   if (FALSE != ISD_GetTrackerData(mHandle, &mData))
       is_data = true;
-      
+
       return is_data;
-  
+
 }
 
 
@@ -98,16 +98,20 @@ float& isIntersense::yQuat( const int& i ) { return mData.Station[i].Orientation
 float& isIntersense::zQuat( const int& i ) { return mData.Station[i].Orientation[0]; }
 float& isIntersense::wQuat( const int& i ) { return mData.Station[i].Orientation[3]; }
 
-int isIntersense::buttonState(const int& i, const int& f) 
+int isIntersense::buttonState(const int& i, const int& f)
 {
-  if(f < MAX_NUM_BUTTONS && i < mNumStations) return mData.Station[i].ButtonState[f];
-  return 0;
+  if(f < MAX_NUM_BUTTONS && i < mNumStations)
+     return mData.Station[i].ButtonState[f];
+  else
+     return 0;
 }
 
 
-int isIntersense::analogData(const int& i, const int& j) {  
-  if(j < MAX_ANALOG_CHANNELS && i < mNumStations) return mData.Station[i].AnalogData[j];
-  return 0;
+int isIntersense::analogData(const int& i, const int& j) {
+  if(j < MAX_ANALOG_CHANNELS && i < mNumStations)
+     return mData.Station[i].AnalogData[j];
+  else
+     return 0;
 }
 
 
