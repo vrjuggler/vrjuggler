@@ -125,12 +125,12 @@ public final class ValType
       }
    }
 
-   public boolean equals(ValType v)
+   public boolean equals(Object obj)
    {
-      if (v == null)
+      if (obj instanceof ValType)
       {
-         return false;
+         return val == ((ValType)obj).val;
       }
-      return (val == v.val);
+      return false;
    }
 }

@@ -360,9 +360,13 @@ public class ConfigChunk
     *
     * @param chunk   the chunk to compare equality against
     */
-   public boolean equals(ConfigChunk c)
+   public boolean equals(Object obj)
    {
-      return this.mDomElement == c.mDomElement;
+      if (obj instanceof ConfigChunk)
+      {
+         return mDomElement == ((ConfigChunk)obj).mDomElement;
+      }
+      return false;
    }
 
    /**
