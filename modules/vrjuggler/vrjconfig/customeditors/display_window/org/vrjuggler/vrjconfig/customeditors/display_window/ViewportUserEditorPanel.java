@@ -46,16 +46,30 @@ public class ViewportUserEditorPanel extends JPanel
 {
    public ViewportUserEditorPanel()
    {
-      this(null);
+      this(null, null);
    }
 
    public ViewportUserEditorPanel(ConfigElementListener externalListener)
    {
+      this(externalListener, null);
+   }
+
+   public ViewportUserEditorPanel(ConfigElementListener externalListener,
+                                  ConfigElement elt)
+   {
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
-      ConfigElementFactory factory =
-         new ConfigElementFactory(broker.getRepository().getAllLatest());
-      mElt = factory.create("ViewportUserEditorPanel Junk", vp_def);
+
+      if ( elt == null )
+      {
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+         mElt = factory.create("ViewportUserEditorPanel Junk", vp_def);
+      }
+      else
+      {
+         mElt = elt;
+      }
 
       if ( externalListener != null )
       {

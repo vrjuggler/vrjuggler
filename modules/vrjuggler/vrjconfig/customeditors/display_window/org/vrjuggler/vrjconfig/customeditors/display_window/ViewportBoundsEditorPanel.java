@@ -36,10 +36,17 @@ import java.awt.*;
 import javax.swing.*;
 import info.clearthought.layout.*;
 
+import org.vrjuggler.jccl.config.ConfigElement;
+
 
 public class ViewportBoundsEditorPanel extends JPanel
 {
    public ViewportBoundsEditorPanel()
+   {
+      this(null);
+   }
+
+   public ViewportBoundsEditorPanel(ConfigElement element)
    {
       double[][] bounds_size = {{TableLayout.PREFERRED, 10,
                                  TableLayout.PREFERRED, 3,
@@ -52,10 +59,26 @@ public class ViewportBoundsEditorPanel extends JPanel
       try
       {
          jbInit();
-         setSpinnerModel(mOriginXSpinner, 0, 0, 99);
-         setSpinnerModel(mOriginYSpinner, 0, 0, 99);
-         setSpinnerModel(mWidthSpinner, 100, 0, 100);
-         setSpinnerModel(mHeightSpinner, 100, 0, 100);
+
+         if ( element == null )
+         {
+            setSpinnerModel(mOriginXSpinner, 0, 0, 99);
+            setSpinnerModel(mOriginYSpinner, 0, 0, 99);
+            setSpinnerModel(mWidthSpinner, 100, 0, 100);
+            setSpinnerModel(mHeightSpinner, 100, 0, 100);
+         }
+         else
+         {
+            double val;
+            val = ((Number) element.getProperty("origin", 0)).doubleValue() * 100.0;
+            setSpinnerModel(mOriginXSpinner, (int) val, 0, 99);
+            val = ((Number) element.getProperty("origin", 1)).doubleValue() * 100.0;
+            setSpinnerModel(mOriginYSpinner, (int) val, 0, 99);
+            val = ((Number) element.getProperty("size", 0)).doubleValue() * 100.0;
+            setSpinnerModel(mWidthSpinner, (int) val, 0, 100);
+            val = ((Number) element.getProperty("size", 1)).doubleValue() * 100.0;
+            setSpinnerModel(mHeightSpinner, (int) val, 0, 100);
+         }
 
          // Set up a pairing between the origin spinners and the dimensions
          // spinners.  In this pairing, whenever the origin is changed, the
