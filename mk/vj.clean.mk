@@ -19,7 +19,7 @@
 #     CLEAN_FILES += file1.o file2.o
 #
 # Similarly, a "local" 'cleandepend' target can be used by defining
-# #{_LOCAL_CLEANDEP} before including this file.  The name of the local
+# ${_LOCAL_CLEANDEP} before including this file.  The name of the local
 # target is '_cleandepend', and it will be run after the standard
 # 'cleandepend' target is finished.
 # -----------------------------------------------------------------------------
