@@ -257,6 +257,11 @@ public class SimAnalogDeviceEditor
          return 2;
       }
 
+      public String getColumnName(int col)
+      {
+         return columnNames[col];
+      }
+
       public boolean isCellEditable(int row, int col)
       {
          // Only column 1 is editable
@@ -308,6 +313,7 @@ public class SimAnalogDeviceEditor
       }
 
       private ConfigChunk chunk;
+      private String[] columnNames = { "Action", "Key Combo" };
    }
 
    /**
