@@ -239,8 +239,13 @@ public class PerfAnalyzerPanel
             avg_labels = new ArrayList();
             graph_buttons = new ArrayList();
             anomalies_buttons = new ArrayList();
-	    col_root = new DefaultMutableTreeNode( new TreeElem (col.getName(), null));
-	    global_root.insert (col_root, global_root.getChildCount());
+	    col_root = new DefaultMutableTreeNode( new PerfTreeNodeInfo (col.getName(), null, col));
+	    tree_model.insertNodeInto (col_root, global_root, global_root.getChildCount());
+	    //tree.expandPath(new TreePath(col_root.getPath()));
+//  	    tree.expandRow(0);
+//  	    tree.expandRow(1);
+//  	    global_root.insert (col_root, global_root.getChildCount());
+//  	    tree_model.nodeChanged (global_root);
         }
 
 	public void initialize (JPanel _panel, 
@@ -282,19 +287,9 @@ public class PerfAnalyzerPanel
             col.removeActionListener (this);
         }
 
-	protected class TreeElem {
-	    public String sublabel;
-	    public LabeledPerfDataCollector.IndexInfo ii; // null for folders
-	    public JComponent component;
-	    public TreeElem (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii) {
-		sublabel = _sublabel;
-		ii = _ii;
-		component = new JLabel (sublabel);
-	    }
-	}
 
 	public void addToTree (LabeledPerfDataCollector.IndexInfo ii) {
-	    MutableTreeNode node = root;
+	    MutableTreeNode node = col_root;
 	    MutableTreeNode new_node;
 	    int i, j, n;  // i = index into ii.label_components
 	    i = 0;
@@ -304,21 +299,25 @@ public class PerfAnalyzerPanel
 		new_node = null;
 		for (j = 0; j < node.getChildCount(); j++) {
 		    DefaultMutableTreeNode mtn = (DefaultMutableTreeNode)node.getChildAt(j);
-		    TreeElem te = (TreeElem)mtn.getUserObject();
+		    PerfTreeNodeInfo te = (PerfTreeNodeInfo)mtn.getUserObject();
 		    if (te.sublabel.equals((String)ii.label_components.get(i))) {
 			new_node = mtn;
 		    }
 		}
 		if (new_node == null) {
 		    // didn't find it, create folder node
-		    new_node = new DefaultMutableTreeNode( new TreeElem ((String)ii.label_components.get(i), null));
-		    node.insert (new_node, node.getChildCount());
+		    new_node = new DefaultMutableTreeNode( new PerfTreeNodeInfo ((String)ii.label_components.get(i), null, col));
+		    tree_model.insertNodeInto (new_node, node, node.getChildCount());
+//  		    node.insert (new_node, node.getChildCount());
+//  		    tree_model.nodeChanged (node);
 		}
 		node = new_node;
 	    }
 	    // add ii as a child node of node.
-	    new_node = new DefaultMutableTreeNode(new TreeElem ((String)ii.label_components.get(ii.label_components.size()-1), ii));
-	    node.insert (new_node, node.getChildCount());
+	    new_node = new DefaultMutableTreeNode(new PerfTreeNodeInfo ((String)ii.label_components.get(ii.label_components.size()-1), ii, col));
+	    tree_model.insertNodeInto (new_node, node, node.getChildCount());
+//  	    node.insert (new_node, node.getChildCount());
+//  	    tree_model.nodeChanged (node);
 
 	    //System.out.println ("tree is: \n" + col_root);
 	}
@@ -410,6 +409,9 @@ public class PerfAnalyzerPanel
     JScrollPane display_pane;
     JTextArea text_area;
     DefaultMutableTreeNode root;
+    JTree tree;
+    DefaultTreeModel tree_model;
+    PanelTree panel_tree;
 
     PerformanceModule perf_module;
     protected String component_name;
@@ -438,6 +440,7 @@ public class PerfAnalyzerPanel
         ui_module = null;
 	text_area = null;
 	root = new DefaultMutableTreeNode();
+	tree_model = new DefaultTreeModel(root);
 
 	preskip = 20;
 	postskip = 20;
@@ -737,6 +740,19 @@ public class PerfAnalyzerPanel
                 DataPanelElem dpe = (DataPanelElem)datapanel_elems.get(i);
                 dpe.initialize (data_panel, gblayout, gbc);
             }
+
+	    // setup tree display
+//  	    tree = new JTree (tree_model);
+	
+//    	    DefaultTreeCellRenderer r = (DefaultTreeCellRenderer)tree.getCellRenderer();
+//    	    tree.setCellRenderer (new LabeledPerfTreeCellRenderer(r));
+//  	    tree.setShowsRootHandles (true);
+//  	    tree.setRootVisible (true);
+//  	    //tree.setModel(this);
+//  	    display_pane.setViewportView (tree);
+	    //	    tree_box = new Box (BoxLayout.Y_AXIS);
+	    panel_tree = new PanelTree (tree_model);
+	    data_panel.add (panel_tree);
 
             ui_initialized = true;
         }
