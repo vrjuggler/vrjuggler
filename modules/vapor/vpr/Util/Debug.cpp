@@ -470,7 +470,8 @@ DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
 DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
                                    const int level, std::string entryText,
                                    bool indent)
-   : mCat(cat), mLevel(level), mEntryText(entryText), mIndent(indent)
+   : mCat(cat), mLevel(level), mEntryText(entryText), mExitText("")
+     mIndent(indent)
 {
    if(mIndent)
    {
@@ -480,7 +481,6 @@ DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
    {
       vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
    }
-   mExitText = std::string("");
 }
 
 DebugOutputGuard::~DebugOutputGuard()
