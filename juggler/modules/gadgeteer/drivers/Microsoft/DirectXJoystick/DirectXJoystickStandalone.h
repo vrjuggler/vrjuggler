@@ -34,13 +34,6 @@
 #define _GADGET_DIRECTX_JOYSTICK_STANDALONE_H_
 
 #include <windows.h>
-#include <dinput.h>
-
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
-
 #include <string>
 
 
