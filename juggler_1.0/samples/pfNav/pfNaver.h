@@ -5,28 +5,33 @@
 
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
+#include <Input/InputManager/vjPosInterface.h>
+#include <Input/InputManager/vjDigitalInterface.h>
+
 
 class pfNaver : public pfDCS
 {
 public:
-   pfNaver(int wandIndex, int button0Index, int button1Index);
-   
+   pfNaver();
+
    float& transVelocity(void) { return mTransVelocity;}
    float& rotVelocity(void) { return mRotVelocity;}
 
 private:
    float mTransVelocity;
-   float mRotVelocity;     
-   int   mWandIndex;       // The index of the wand proxy
-   int   mButton0Index;     // The index to the button proxy
-   int   mButton1Index;    // The index to button 1
+   float mRotVelocity;
+
+   vjPosInterface       mWand;
+   vjDigitalInterface   mButton0;
+   vjDigitalInterface   mButton1;
+
    vjKernel* mKern;        // The Kernel
-   
+
 
 public:  // APP traversal
    virtual int app(pfTraverser*);
    virtual int needsApp(void) {return TRUE;}
-   
+
    // Required for Performer class
 public:
    static void init(void);
@@ -37,13 +42,15 @@ private:
 
 
 
-pfNaver::pfNaver(int wandIndex, int button0Index, int button1Index)
-   : mWandIndex(wandIndex), mButton0Index(button0Index), mButton1Index(button1Index)
+pfNaver::pfNaver()
 {
    setType(mClassType);  // Set the type
    mRotVelocity = 1.0f;
    mTransVelocity = 0.1f;
    mKern = vjKernel::instance();    // Store the kernel
+   mWand.init("VJWand");
+   mButton0.init("VJButton0");
+   mButton1.init("VJButton1");
 }
 
 
@@ -51,19 +58,19 @@ pfNaver::pfNaver(int wandIndex, int button0Index, int button1Index)
 // app() - APP traversal function.  This overloads the standard pfNode
 //	app() method, which will be called each frame during the APP
 //	traversal of the scene graph (*only if* needsApp() (below) returns
-//	TRUE). 
+//	TRUE).
 //	app() is called automatically by Performer; it is not called directly
 //	by a program.
 int pfNaver::app(pfTraverser *trav)
 {
-   int button0_state = mKern->getInputManager()->GetDigData(mButton0Index);
-   int button1_state = mKern->getInputManager()->GetDigData(mButton1Index);
+   int button0_state = mButton0->GetData();
+   int button1_state = mButton1->GetData();
 
    cout << "b0: " << button0_state << "\t";
    cout << "b1: " << button1_state << endl;
 
    vjMatrix* wandMatrix;
-   wandMatrix = mKern->getInputManager()->GetPosData(mWandIndex);
+   wandMatrix = mWand->GetData();
 
    vjCoord wand_coord(*wandMatrix);
    cout << "Wand pos:" << wand_coord.pos << endl;
@@ -71,9 +78,6 @@ int pfNaver::app(pfTraverser *trav)
 
    if(1 == button0_state)   // Translation
    {
-      //C2Matrix* wandMatrix;
-      //wandMatrix = mKern->getInputManager()->GetPosData(mWandIndex);
-
       vjVec3   forward(0.0, 0.0, -1.0f);     // -Z is forward in C2
       forward.xformFull(*wandMatrix, forward);
 
@@ -107,7 +111,7 @@ int pfNaver::app(pfTraverser *trav)
       new_pf_mat.set(new_or.getFloatPtr());      // Hmm...
       new_pf_mat.preRot(-90, 1, 0, 0, new_pf_mat);
       new_pf_mat.postRot(new_pf_mat, 90, 1, 0, 0);
-      
+
       pfMatrix curMat;
       getMat(curMat);
       curMat.postMult(new_pf_mat);
@@ -123,7 +127,7 @@ int pfNaver::app(pfTraverser *trav)
 //	is derived from a Performer class.  It creates a new pfType
 //	which identifies objects of this class.  All constructors for
 //	this class must then call setType(classType_).
-pfType *pfNaver::mClassType = NULL; 
+pfType *pfNaver::mClassType = NULL;
 
 void pfNaver::init(void)
 {
