@@ -93,14 +93,17 @@ DSOVERSIONOPTS	= @DSOVERSIONOPTS@
 # -----------------------------------------------------------------------------
 # Build and installation directory naming information.
 # -----------------------------------------------------------------------------
+_DEBUG_DIR	= debug
+_OPT_DIR	= opt
+_DEFAULT_DIR	= ${_DEBUG_DIR}
 
 # ------------------------------------------------
 # Object file build and installation directories.
 # ------------------------------------------------
 _BUILDDIR_BASE	= ${topdir}/obj
 _BUILDDIR	= ${_BUILDDIR_BASE}/${PLATFORM}/${ABI}/${INST_SET}
-_DBG_BUILDDIR	= ${_BUILDDIR}/debug
-_OPT_BUILDDIR	= ${_BUILDDIR}/opt
+_DBG_BUILDDIR	= ${_BUILDDIR}/${_DEBUG_DIR}
+_OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
 
 # --------------------------------------------
 # Library build and installation directories.
@@ -124,8 +127,8 @@ _LIBDIR		= ${_LIBDIR_BASE}/${INST_SET}
 # ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the library
 # is actually built.  The first is for a debugging copy of the library and
 # the second is for an optimized version of the library.
-_DBG_LIBDIR	= ${_LIBDIR}/debug
-_OPT_LIBDIR	= ${_LIBDIR}/opt
+_DBG_LIBDIR	= ${_LIBDIR}/${_DEBUG_DIR}
+_OPT_LIBDIR	= ${_LIBDIR}/${_OPT_DIR}
 
 # Full name of the static and dynamic versions of the library.
 LIB_STATIC	= ${LIBRARY}.a
@@ -149,6 +152,16 @@ ABI_LIST	= @ABI_LIST@
 # Library targets.
 # -----------------------------------------------------------------------------
 all: opt dso dbg ddso
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${_LIBDIR}"
+	@echo "------------------------------------------------"
+	cd ${_LIBDIR} &&						\
+          rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
+	cd ${_LIBDIR} &&						\
+          rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
+	@echo "------------------------------------------------"
+	@echo "Library build complete"
+	@echo "------------------------------------------------"
 
 all-abi:
 	@abi_list='${ABI_LIST}' ;					\
@@ -296,6 +309,16 @@ clean-links:
 # Installation targets.
 install-all: install-opt install-dso install-dbg install-ddso		\
              install-headers install-test install-data install-gui
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${_install_libdir}"
+	@echo "------------------------------------------------"
+	cd ${_install_libdir} &&					\
+          rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
+	cd ${_install_libdir} &&					\
+          rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
+	@echo "------------------------------------------------"
+	@echo "Library installation complete"
+	@echo "------------------------------------------------"
 
 install-all-abi:
 	@abi_list='${ABI_LIST}' ;					\
@@ -305,6 +328,9 @@ install-all-abi:
               echo "------------------------------------------------" ;	\
               ${MAKE} vjABI=$$abi install-all ;				\
           done
+	@echo "------------------------------------------------"
+	@echo "install-all-abi done"
+	@echo "------------------------------------------------"
 
 
 install: install-dbg
@@ -320,39 +346,41 @@ install-dbg: dbg
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging library"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/debug
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
 	${INSTALL} -m 644 ${_DBG_LIBDIR}/${LIB_STATIC}			\
-          ${_install_libdir}/debug/
+          ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} &&					\
-          ln -sf ${_install_libdir}/debug/${LIB_STATIC} ./
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_STATIC} ./
 
 install-ddso: ddso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging library"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/debug
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
 	${INSTALL} -m 755 ${_DBG_LIBDIR}/${LIB_DYNAMIC}			\
-          ${_install_libdir}/debug/
+          ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} &&					\
-          ln -sf ${_install_libdir}/debug/${LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_DYNAMIC} ./
 
 install-opt: opt
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized library"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/opt
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${LIB_STATIC} ${_install_libdir}/opt/
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${LIB_STATIC}			\
+          ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} &&					\
-          ln -sf ${_install_libdir}/opt/${LIB_STATIC} ./
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_STATIC} ./
 
 install-dso: dso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied library"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/opt
-	${INSTALL} -m 755 ${_OPT_LIBDIR}/${LIB_DYNAMIC} ${_install_libdir}/opt/
+	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
+	${INSTALL} -m 755 ${_OPT_LIBDIR}/${LIB_DYNAMIC}			\
+          ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} &&					\
-          ln -sf ${_install_libdir}/opt/${LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_DYNAMIC} ./
 
 install-headers:
 	@echo "------------------------------------------------"
