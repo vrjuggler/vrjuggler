@@ -28,7 +28,7 @@ sample@EXEEXT@: $(OBJECTS)
 	$(LINK) @EXE_NAME_FLAG@ $(OBJECTS) $(APP_LIBS)
 
 .cpp.@OBJEXT@:
-	$(COMPILE) $(APP_INCLUDES) @OBJ_NAME_FLAG@ -c $<
+	$(COMPILE) $(APP_INCLUDES) @OBJ_NAME_FLAG@ $<
 	
 # -----------------------------------------------------------------------------
 # Clean-up.
