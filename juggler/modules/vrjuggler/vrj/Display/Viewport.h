@@ -65,7 +65,7 @@ class Viewport
 public:
    Viewport()
       : mUser(NULL), mDisplay(NULL), mViewportChunk(NULL),
-        mLeftProj(NULL), mRightProj(NULL), mLatencyMeasure ()
+        mLatencyMeasure(), mLeftProj(NULL), mRightProj(NULL)
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = Viewport::UNDEFINED;
