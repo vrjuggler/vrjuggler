@@ -121,7 +121,7 @@ ifneq (@OS_TYPE@, Win32)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -136,15 +136,19 @@ $(LIBDIR)/$(JCCL_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS_JCCL)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
 #ifeq (@OS_TYPE@, Win32)
-#	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIB_STATIC) &&		\
+#	cd $(LIBDIR_BASE) && $(RM_LN) $(JCCL_LIB_STATIC) &&		\
 #            $(LN_S) $(LIBDIR)/$(JCCL_LIB_STATIC) ./
-#	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIBRARY).exp &&			\
+#	cd $(LIBDIR_BASE) && $(RM_LN) $(JCCL_LIBRARY).exp &&			\
 #            $(LN_S) $(LIBDIR)/$(JCCL_LIBRARY).exp ./
 #endif
 
@@ -155,43 +159,48 @@ $(LIBDIR)/$(JCCL_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(
 # should be set to $(instlinks).
 # =============================================================================
 links:
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/jccl
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C jccl instlinks=$(instlinks) links           
+ifeq (@OS_TYPE@, Win32)
+	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
+else
 	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
+endif
 	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&		\
           $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./data &&		\
           ln -s $(JCCLROOT_ABS)/data ./data
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(JCCLROOT_ABS)/samples ./samples
-	cd $(instlinks)/include/jccl && rm -f ./jcclConfig.h &&		\
-          $(LN_S) $(JCCLROOT_ABS)/jccl/jcclConfig.h ./jcclConfig.h
-	cd $(instlinks)/include/jccl && rm -f ./jcclDefines.h &&	\
+	cd $(instlinks)/include/jccl && $(RM_LN) ./*.h &&		\
+          $(LN_S) $(JCCLROOT_ABS)/jccl/*.h ./
+	cd $(instlinks)/include/jccl && $(RM_LN) ./jcclDefines.h &&	\
           $(LN_S) $(topdir)/jccl/jcclDefines.h ./jcclDefines.h
-	cd $(instlinks)/include/jccl && rm -f ./jcclParam.h &&		\
+	cd $(instlinks)/include/jccl && $(RM_LN) ./jcclParam.h &&	\
           $(LN_S) $(topdir)/jccl/jcclParam.h ./jcclParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 ifndef NO_JAVA_GUI
-	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
+ifeq ($(BUILD_VJCONTROL), Y)
+	cd $(instlinks)/bin && $(RM_LN) ./VjControl.jar &&		\
           $(LN_S) $(topdir)/VjControl/VjControl.jar ./
-	cd $(instlinks)/bin && rm -f ./vjcontrol &&			\
-          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'			\
-              ${JCCLROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&		\
+	cd $(instlinks)/bin && $(RM_LN) ./vjcontrol &&			\
+          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'		\
+              ${JCCLROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&	\
           chmod ${EXEC_PERMS} vjcontrol
-	cd $(instlinks)/bin && rm -f ./ConfigUpdater.jar &&		\
+	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
           $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
-	cd $(instlinks)/bin && rm -f ./cfgupdater &&			\
-          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'			\
-              ${JCCLROOT_ABS}/tools/ConfigUpdater/cfgupdater.sh > cfgupdater &&		\
+	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
+          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'		\
+            ${JCCLROOT_ABS}/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
           chmod ${EXEC_PERMS} cfgupdater
+endif
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
@@ -201,12 +210,6 @@ endif
 	@echo 'You should now set $$JCCL_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
-else
-	@echo "---------------------------------------------------------------"
-	@echo 'You must now install Jackal and set %JCCL_BASE_DIR% to:'
-	@echo "  $(prefix)"
-	@echo "---------------------------------------------------------------"
-endif
 
 # Remove the links in $(instlinks).
 clean-links:

@@ -251,7 +251,6 @@ if test "x$XERCESROOT" != "x/usr" ; then
 fi
 
 CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-LDFLAGS="$LDFLAGS $X_LDFLAGS"
 LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
 
 DPP_LANG_SAVE
@@ -391,13 +390,13 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 # JCCL.
 # $jccl_extra_libs_juggler lists the Juggler Project libraries needed by JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib $VPR_EXTRA_LIBS_LD"
     jccl_extra_libs="$LDFLAGS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib"
-    jccl_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS"
+    jccl_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $VPR_EXTRA_LIBS_CC"
     jccl_extra_libs="$LDFLAGS $XERCES_LDFLAGS -l$XERCES_LIB $LIBS"
-    jccl_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS"
+    jccl_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -440,11 +439,13 @@ if test "x$OS_TYPE" = "xWin32" ; then
         LIBS=`unix2dos "$LIBS"`
     fi
 
-    LN_S='cp'
+    LN_S='cp -r'
+    RM_LN='rm -rf'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
 #    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
+    RM_LN='rm -f'
     JCCLROOT_ABS="$JCCLROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
@@ -509,6 +510,7 @@ AC_SUBST(JCCLROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(JCCL_SHARE_DIR)
 
+AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(BUILD_VJCONTROL)
