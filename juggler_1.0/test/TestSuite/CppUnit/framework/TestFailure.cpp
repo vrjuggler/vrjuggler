@@ -7,3 +7,4 @@ std::string TestFailure::toString ()
 { 
     return m_failedTest->toString () + ": " + m_thrownException->what ();
 }
+
