@@ -908,11 +908,13 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
           Performance/Makefile SharedMem/Makefile Sync/Makefile
           Threads/Makefile
-          test/Makefile test/CfgTest/Makefile test/Matrix/Makefile
-          test/Sync/Makefile test/Quat/Makefile test/input/Makefile
-          test/ogl/Makefile test/ogl/cubes/Makefile test/ogl/glove/Makefile
-          test/ogl/simpleGlove/Makefile test/ogl/wand/Makefile
-	  test/ogl/torus/Makefile test/ogl/combo/Makefile
+          test/Makefile test/CfgTest/Makefile test/Math/Makefile
+          test/Matrix/Makefile test/Performance/Makefile
+          test/Performance/analyzer/Makefile
+          test/Performance/perfdatabuffer-test/Makefile test/Quat/Makefile
+          test/Sync/Makefile test/input/Makefile test/ogl/Makefile
+          test/ogl/combo/Makefile test/ogl/cubes/Makefile
+          test/ogl/glove/Makefile test/ogl/simpleGlove/Makefile
+          test/ogl/torus/Makefile test/ogl/wand/Makefile
           test/pfNav/Makefile test/testDynamicCastSTL/Makefile
-	  test/Math/Makefile
-          test/threads/Makefile test/Performance/Makefile test/Performance/perfdatabuffer-test/Makefile test/Performance/analyzer/Makefile)
+          test/threads/Makefile)
