@@ -54,10 +54,10 @@ public class ConfigElementParser
     * @param searchPath    the path in which to look for config definitions when
     *                      they cannot be found in the repository
     */
-   public ConfigElementParser(ConfigDefinitionRepository repos, List searchPath)
+   public ConfigElementParser(ConfigDefinitionRepository repos/*, List searchPath*/)
    {
       mDefinitionRepos = repos;
-      mSearchPath = searchPath;
+      //mSearchPath = searchPath;
    }
 
    /**
@@ -246,6 +246,7 @@ public class ConfigElementParser
       }
 
       // Go looking for the definition
+      /*
       File def_file = findDefinition(token);
       if (def_file != null)
       {
@@ -277,6 +278,7 @@ public class ConfigElementParser
             pe.printStackTrace();
          }
       }
+      */
       return null;
    }
 
@@ -284,7 +286,7 @@ public class ConfigElementParser
     * Given the token for a configuration definition, this method attempts to
     * find a file named "token".jdef in this parser's search path.
     */
-   private File findDefinition(String token)
+   /*private File findDefinition(String token)
    {
       String filename = token + ".jdef";
       for (Iterator itr = mSearchPath.iterator(); itr.hasNext(); )
@@ -302,7 +304,7 @@ public class ConfigElementParser
       }
 
       return null;
-   }
+   }*/
 
    private static final String CONFIGURATION_ELEMENTS = "configuration_elements";
    private static final String NAME                   = "name";
@@ -310,5 +312,5 @@ public class ConfigElementParser
 
    private ConfigDefinitionRepository mDefinitionRepos;
 
-   private List mSearchPath;
+   //private List mSearchPath;
 }
