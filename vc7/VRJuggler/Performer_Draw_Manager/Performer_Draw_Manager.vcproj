@@ -122,6 +122,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfApp.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfBasicSimulator.cpp">
 			</File>
 			<File
