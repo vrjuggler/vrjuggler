@@ -4,31 +4,8 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <iostream>
-#include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fstream.h>
-#include <unistd.h>
-
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Generate.h>
-
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Util/Debug.h>
-
-#include <vrj/Display/DisplayManager.h>
-#include <jccl/RTRC/ConfigManager.h>
-#include <gadget/InputManager.h>
-
-#include <gadget/Devices/Sim/SimPosition.h>
-#include <gadget/Devices/Sim/SimDigital.h>
-#include <gadget/Devices/Sim/SimAnalog.h>
-#include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Devices/Keyboard/KeyboardXWin.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -36,8 +13,9 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <gadget/Type/AnalogProxy.h>
-                                         
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Kernel/Kernel.h>
+
 
 class reconfigApp : public vrj::GlApp
 {
