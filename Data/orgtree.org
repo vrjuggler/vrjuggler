@@ -25,7 +25,7 @@ Begin "Zelda"
             "Dummy Position"
             "Flock of Birds"
             "PinchGlove"
-            "Motion Star"
+            "MotionStar"
         End
         Begin "Simulated Devices"
             "SimDigitalGlove"
