@@ -41,7 +41,15 @@ import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.tree.*;
 
+
 /**
+ * This class serves as the data model used to store the hierarchy of Panel
+ * Beans loaded at any given point during execution.  The leaves of the tree
+ * contain the actual Panel Bean objects while the non-leaves provide the
+ * "path" to the individual Panel Beans.  Viewer Beans use this data model to
+ * complete the Model View design pattern, and thus the Viewer Beans may
+ * provide any representation they wish of the data contained herein.
+ *
  * @since 1.0
  */
 public class BeanTreeModel
@@ -169,35 +177,4 @@ public class BeanTreeModel
          System.err.println("WARNING: Invalid tree path '" + path + "'");
       }
    }
-
-   public synchronized void addTreeModelRefreshListener (TreeModelRefreshListener l)
-   {
-      m_listeners.add(l);
-   }
-
-   public synchronized void removeTreeModelRefreshListener (TreeModelRefreshListener l)
-   {
-      m_listeners.remove(l);
-   }
-
-   public void fireTreeModelRefreshEvent ()
-   {
-      TreeModelRefreshEvent e = new TreeModelRefreshEvent(this);
-
-      TreeModelRefreshListener l = null;
-      Vector listeners;
-
-      synchronized (this)
-      {
-         listeners = (Vector) m_listeners.clone();
-      }
-
-      for ( int i = 0; i < listeners.size(); i++ )
-      {
-         l = (TreeModelRefreshListener) listeners.elementAt(i);
-         l.treeModelRefresh(e);
-      }
-   }
-
-   private Vector m_listeners = new Vector();
 }

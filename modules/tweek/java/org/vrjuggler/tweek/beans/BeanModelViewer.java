@@ -46,9 +46,8 @@ public interface BeanModelViewer
 {
    public javax.swing.JComponent getViewer();
    public void init(BeanTreeModel tree_model);
-   public void initDataModel(BeanTreeModel tree_model);
+   public void setModel(BeanTreeModel tree_model);
    public void initGUI();
-   public void refreshDataModel(BeanTreeModel tree_model);
 
    public void addBeanFocusChangeListener(BeanFocusChangeListener l);
    public void removeBeanFocusChangeListener(BeanFocusChangeListener l);
