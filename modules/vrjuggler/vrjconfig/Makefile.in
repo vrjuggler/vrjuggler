@@ -169,6 +169,8 @@ ifeq (@PLATFORM@, Darwin)
           $(top_srcdir)/vrjconfig/vrjconfig.icns			\
           $(bundleroot)/Contents/Resources
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(top_srcdir)/vrjconfig/jconf.icns $(bundleroot)/Contents/Resources
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(top_srcdir)/data/ControlPanel.xml $(bundle_vrj_datadir)
 	echo 'AAPL????' > $(bundleroot)/Contents/PkgInfo
 	/Developer/Tools/SetFile -a B $(bundleroot)
