@@ -40,59 +40,62 @@
 //: Constructor
 bool vjXWinKeyboard::config(vjConfigChunk *c)
 {
-    if(!vjKeyboard::config(c))
+   if (!vjKeyboard::config(c))
       return false;
 
-     const char neg_one_STRING[] = "-1";
-    
-    // Done in vjInput --- myThread = NULL;
-    int i;
-    for(i =0; i < 256; i++)
-         m_realkeys[i] = m_keys[i] = 0;
-    m_realkeys[0] = m_keys[0] = 1;
+   const char neg_one_STRING[] = "-1";
 
-    // Get size and position
-    m_width = (int)c->getProperty("width");
-    m_height = (int)c->getProperty("height");
-    if (m_width == 0) m_width = 400;
-    if (m_height == 0) m_height = 400;
+   // Done in vjInput --- myThread = NULL;
+   int i;
+   for (i =0; i < 256; i++)
+      m_realkeys[i] = m_keys[i] = 0;
+   m_realkeys[0] = m_keys[0] = 1;
 
-    m_x = c->getProperty("origin", 0);
-    m_y = c->getProperty("origin", 1);
+   // Get size and position
+   m_width = (int)c->getProperty("width");
+   m_height = (int)c->getProperty("height");
+   if (m_width == 0) m_width = 400;
+   if (m_height == 0) m_height = 400;
 
-    // Get the X display string
-    int x_disp_num = c->getProperty("display_number");
-    vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
+   m_x = c->getProperty("origin", 0);
+   m_y = c->getProperty("origin", 1);
 
-    if((x_disp_num >= 0) && dispSysChunk)
-       mXDisplayString = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
-    else
-       mXDisplayString = std::string("-1");
+   // Get the X display string
+   int x_disp_num = c->getProperty("display_number");
+   vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
 
-    if((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), neg_one_STRING) == 0))    // Use display env
-      mXDisplayString = (std::string)getenv("DISPLAY");
+   if ((x_disp_num >= 0) && dispSysChunk)
+      mXDisplayString = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
+   else
+      mXDisplayString = std::string("-1");
 
-    // Get the lock information
-    mLockToggleKey = c->getProperty("lock_key");
-    bool start_locked = c->getProperty("start_locked");
-    if(start_locked)
-       mLockState = Lock_LockKey;      // Initialize to the locked state
+   if ((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), neg_one_STRING) == 0))    // Use display env
+   {
+      const std::string DISPLAY_str("DISPLAY");
+      mXDisplayString = (std::string)getenv(DISPLAY_str.c_str());
+   }
 
-    m_mouse_sensitivity = c->getProperty("msens");
-    if (0.0f == m_mouse_sensitivity)
-       m_mouse_sensitivity = 0.5;
+   // Get the lock information
+   mLockToggleKey = c->getProperty("lock_key");
+   bool start_locked = c->getProperty("start_locked");
+   if (start_locked)
+      mLockState = Lock_LockKey;      // Initialize to the locked state
 
-    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
-               << m_mouse_sensitivity << std::endl << vjDEBUG_FLUSH;
-    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << std::endl << vjDEBUG_FLUSH;
+   m_mouse_sensitivity = c->getProperty("msens");
+   if (0.0f == m_mouse_sensitivity)
+      m_mouse_sensitivity = 0.5;
 
-    mSleepTimeMS = c->getProperty("sleep_time");
+   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
+   << m_mouse_sensitivity << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << std::endl << vjDEBUG_FLUSH;
 
-    // HACK: Use a default time until config file has defaults
-    if(mSleepTimeMS == 0)
-       mSleepTimeMS = 50;
+   mSleepTimeMS = c->getProperty("sleep_time");
 
-    return true;
+   // HACK: Use a default time until config file has defaults
+   if (mSleepTimeMS == 0)
+      mSleepTimeMS = 50;
+
+   return true;
 }
 
 // Main thread of control for this active object
