@@ -45,7 +45,7 @@ package org.vrjuggler.tweek.beandelivery;
  * and for creating instances of TweekBean that correspond to each Bean that
  * can be instantiated.
  *
- * @see TweekBean
+ * @see org.vrjuggler.tweek.beans.TweekBean
  */
 public interface TweekBeanIntrospector
 {

@@ -80,7 +80,7 @@ public class Wizard
    /**
     * Sets the name of this wizard.
     *
-    * @param   the name
+    * @param name       the name
     */
    public void setName(String name)
    {
@@ -100,7 +100,7 @@ public class Wizard
    /**
     * Sets the title of this wizard.
     *
-    * @param   the title
+    * @param title      the title
     */
    public void setTitle(String title)
    {
