@@ -46,7 +46,11 @@ default: all
 
 include @topdir@/make.defs.mk
 
-SRCS = SoundFactory.cpp 
+SRCS = SoundFactory.cpp
+
+ifeq ($(OS_TYPE), Win32)
+    SRCS        += dirent-win32.c
+endif
 
 ifeq (@OPENAL_API@, Y)
     SRCS        += OpenALSoundImplementation.cpp
