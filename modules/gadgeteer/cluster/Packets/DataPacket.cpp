@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <gadget/Util/Debug.h>
 
 #include <cluster/Packets/DataPacket.h>
@@ -72,6 +73,7 @@ namespace cluster
    
    vpr::ReturnStatus DataPacket::send(vpr::SocketStream* socket)
    {
+      boost::ignore_unused_variable_warning(socket);
       vprASSERT(false && "YOU SHOULD NOT BE USING THIS SEND FUNCTION");
       return(vpr::ReturnStatus::Fail);
    }
@@ -138,14 +140,19 @@ namespace cluster
       //i = mPacketReader->mData->erase(i);
       //std::cout << "Size after shrink: " << mPacketReader->mData->size() << std::endl;
    }
-   
+
    bool DataPacket::action(ClusterNode* node)
    {
+      boost::ignore_unused_variable_warning(node);
       return false;
    }
    
    void DataPacket::printData(int debug_level)
    {
+      // NOTE: This should be removed if any of the below code ever puts
+      // debug_level to use.
+      boost::ignore_unused_variable_warning(debug_level);
+
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) 
          <<  clrOutBOLD(clrYELLOW,"==== Device Data Packet ====\n") << vprDEBUG_FLUSH;
       

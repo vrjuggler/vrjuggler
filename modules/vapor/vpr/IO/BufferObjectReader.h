@@ -45,8 +45,9 @@
 #include <vpr/vprConfig.h>
 
 #include <vector>
-
 #include <boost/static_assert.hpp>
+#include <boost/concept_check.hpp>
+
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/System.h>
@@ -79,6 +80,7 @@ public:
    */
    virtual vpr::ReturnStatus beginTag(std::string tagName)
    {
+      boost::ignore_unused_variable_warning(tagName);
       return vpr::ReturnStatus::Succeed;
    }
 
@@ -91,6 +93,7 @@ public:
    /** Starts an attribute of the name attributeName */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
    {
+      boost::ignore_unused_variable_warning(attributeName);
       return vpr::ReturnStatus::Succeed;
    }
 

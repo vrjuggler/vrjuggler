@@ -32,8 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Type/Glove.h>
-
+#include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
@@ -41,6 +40,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/EulerAngle.h>
+
+#include <gadget/Type/Glove.h>
 
 
 namespace gadget
@@ -70,7 +71,7 @@ GloveData::GloveData(): InputData()
    // Matrices are already identities
 }
 
-GloveData::GloveData(const GloveData& data)
+GloveData::GloveData(const GloveData& data) : gadget::InputData(data)
 {
    int i;
 
@@ -207,10 +208,13 @@ Glove::Glove()
 
 // Just get the data from the current vector entry
 float Glove::getGloveAngle(GloveData::GloveComponent component,
-                             GloveData::GloveJoint joint, int devNum)
+                           GloveData::GloveJoint joint, int devNum)
 {
    // Temporarily removed
    // return mTheData[devNum][current].angles[component][joint];
+   boost::ignore_unused_variable_warning(component);
+   boost::ignore_unused_variable_warning(joint);
+   boost::ignore_unused_variable_warning(devNum);
    return 0;
 }
 
@@ -283,6 +287,8 @@ gmtl::Matrix44f Glove::getGlovePos(GloveData::GloveComponent component, int devN
       vprASSERT( mGlovePos[devNum] != NULL );      // should be false in here
       return gmtl::Matrix44f();
    }*/
+   boost::ignore_unused_variable_warning(component);
+   boost::ignore_unused_variable_warning(devNum);
    gmtl::Matrix44f ret_val;       // The returned matrix.
    return ret_val;
 }

@@ -39,10 +39,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef BW_IOSTATS_H
-#define BW_IOSTATS_H
+#ifndef VPR_BW_IOSTATS_H
+#define VPR_BW_IOSTATS_H
 
 #include <vpr/vprConfig.h>
+#include <boost/concept_check.hpp>
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
 #include <vpr/Util/DateTime.h>
 #include <vpr/Util/Interval.h>
@@ -74,8 +75,14 @@ public:
                vpr::Uint32& bytes_read,
                const vpr::Interval timeout = vpr::Interval::NoTimeout)
   {
+     boost::ignore_unused_variable_warning(buffer);
+     boost::ignore_unused_variable_warning(length);
+     boost::ignore_unused_variable_warning(timeout);
+
      if(status.success())
+     {
         mReadStats.addSample(bytes_read);
+     }
   }
 
    /**
@@ -86,8 +93,14 @@ public:
                 vpr::Uint32& bytes_read,
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
   {
+     boost::ignore_unused_variable_warning(buffer);
+     boost::ignore_unused_variable_warning(length);
+     boost::ignore_unused_variable_warning(timeout);
+
      if(status.success())
+     {
         mReadStats.addSample(bytes_read);
+     }
   }
 
    /**
@@ -98,8 +111,14 @@ public:
                 vpr::Uint32& bytes_written,
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
   {
+     boost::ignore_unused_variable_warning(buffer);
+     boost::ignore_unused_variable_warning(length);
+     boost::ignore_unused_variable_warning(timeout);
+
      if(status.success())
+     {
         mWriteStats.addSample(bytes_written);
+     }
   }
 
 public:
@@ -116,4 +135,4 @@ private:
 } //namespace vpr
 
 
-#endif //BWIOSTATS_H
+#endif //VPR_BWIOSTATS_H

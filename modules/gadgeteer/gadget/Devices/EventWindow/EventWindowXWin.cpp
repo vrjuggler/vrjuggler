@@ -32,6 +32,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -133,6 +135,8 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
 // Main thread of control for this active object
 void EventWindowXWin::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::EventWindowXWin::controlLoop: Thread started.\n"
       << vprDEBUG_FLUSH;
@@ -321,7 +325,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          mKeys[vj_key] += 1;
 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-            << "vj_key press value: " << vj_key << std::endl
+            << "vj_key press value: " << (unsigned int) vj_key << std::endl
             << vprDEBUG_FLUSH;
          addKeyEvent(vj_key, gadget::KeyPressEvent, &event.xkey);
 
@@ -392,7 +396,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)    //vprDBG_HVERB_LVL
             << "KeyPress: " << std::hex << key
             << " state: " << ((XKeyEvent*)&event)->state
-            << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
+            << " ==> " << (unsigned int) xKeyToKey(key) << std::endl
+            << vprDEBUG_FLUSH;
 
          break;
 
@@ -420,7 +425,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "KeyRelease:" << std::hex << key
             << " state:" << ((XKeyEvent*)&event)->state
-            << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
+            << " ==> " << (unsigned int) xKeyToKey(key) << std::endl
+            << vprDEBUG_FLUSH;
          break;
 
       // A MotionNotify event (mouse pointer movement) occurred.
@@ -1066,6 +1072,11 @@ Window EventWindowXWin::createWindow(Window parent, unsigned int border,
                                      unsigned long fore, unsigned long back,
                                      unsigned long event_mask)
 {
+   // NOTE: The following can be removed if code below is ever uncommented.
+   boost::ignore_unused_variable_warning(fore);
+   boost::ignore_unused_variable_warning(back);
+   boost::ignore_unused_variable_warning(event_mask);
+
    Window window;
    //UnUsed// XSetWindowAttributes attributes;
    //UnUsed// unsigned long attribute_mask;

@@ -32,6 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
@@ -151,10 +152,13 @@ Flock::~Flock()
 
 void Flock::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    // vprDEBUG(gadgetDBG_INPUT_MGR,3)
    //    << "gadget::Flock: Spawned SampleBirds starting"
    //    << std::endl << vprDEBUG_FLUSH;
 
+   // XXX: I can never exit!
    for (;;)
    {
       this->sample();

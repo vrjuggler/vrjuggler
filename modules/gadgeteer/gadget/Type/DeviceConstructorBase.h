@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <string>
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -63,6 +64,7 @@ public:
    /** Creates the device. */
    virtual Input* createDevice(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "ERROR: DeviceConstructorBase::createDevice: Should never be called\n"
          << vprDEBUG_FLUSH;

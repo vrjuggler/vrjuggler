@@ -35,9 +35,11 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <string> 
+#include <boost/concept_check.hpp>
+
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <string> 
 
 namespace vpr
 {
@@ -69,8 +71,10 @@ public:
     * Virtual function used to inform all plugins that the ClusterNetwork
     * has lost its connection to the given ClusterNode.
     */
-   virtual void recoverFromLostNode(ClusterNode* lost_node)
-   {;}
+   virtual void recoverFromLostNode(ClusterNode* lostNode)
+   {
+      boost::ignore_unused_variable_warning(lostNode);
+   }
 
    void setActive(bool active);
    bool isActive();

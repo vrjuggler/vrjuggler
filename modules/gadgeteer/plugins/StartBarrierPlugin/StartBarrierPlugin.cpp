@@ -32,6 +32,8 @@
 
 #include <cluster/Plugins/PluginConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <cluster/Plugins/StartBarrierPlugin/StartBarrierPlugin.h> // my header...
 
 #include <gadget/Util/Debug.h>
@@ -52,9 +54,12 @@ namespace cluster
 {
    vprSingletonImp( StartBarrierPlugin );
    
-   StartBarrierPlugin::StartBarrierPlugin() : mBarrierMaster(false),
-      mComplete(false), mPluginGUID("566a50ff-5e73-43e0-a9a9-0fb62b76731a"),
-      mSlaveWaitingOnPlugins(false), mSlowDownMaster(0)
+   StartBarrierPlugin::StartBarrierPlugin()
+      : mBarrierMaster(false)
+      , mComplete(false)
+      , mSlaveWaitingOnPlugins(false)
+      , mSlowDownMaster(0)
+      , mPluginGUID("566a50ff-5e73-43e0-a9a9-0fb62b76731a")
    {;}
 
    StartBarrierPlugin::~StartBarrierPlugin()
@@ -159,6 +164,7 @@ namespace cluster
    */
    bool StartBarrierPlugin::configRemove(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       return false;
    }
    

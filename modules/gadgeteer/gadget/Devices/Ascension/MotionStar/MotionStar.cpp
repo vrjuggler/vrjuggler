@@ -32,6 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
@@ -722,7 +723,11 @@ void MotionStar::setMeasurementRate(const double rate)
 // ----------------------------------------------------------------------------
 void MotionStar::positionCorrect(float& x, float& y, float& z)
 {
-   /* Implement me! */ ;
+   boost::ignore_unused_variable_warning(x);
+   boost::ignore_unused_variable_warning(y);
+   boost::ignore_unused_variable_warning(z);
+
+   // XXX Implement me!
 }
 
 // ----------------------------------------------------------------------------
@@ -730,7 +735,9 @@ void MotionStar::positionCorrect(float& x, float& y, float& z)
 // ----------------------------------------------------------------------------
 void MotionStar::initCorrectionTable(const char* table_file)
 {
-   /* Implement me! */ ;
+   boost::ignore_unused_variable_warning(table_file);
+
+   // XXX Implement me!
 }
 
 } // End of gadget namespace

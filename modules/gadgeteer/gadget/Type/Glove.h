@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <gadget/Type/Input.h>
 //#include <gadget/Type/DeviceInterface.h>
 #include <gadget/Type/PositionProxy.h>
@@ -127,7 +128,10 @@ public:
 
    // Let constructor take care of device abilities and init
    virtual bool config(jccl::ConfigChunkPtr chunk)
-   {return true;}
+   {
+      boost::ignore_unused_variable_warning(chunk);
+      return true;
+   }
 
 public:  // ---- GLOVE INTERFACE ---- //
    /**

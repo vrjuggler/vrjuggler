@@ -31,13 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/DeviceRequest.h>
+#include <boost/concept_check.hpp>
+
 #include <gadget/Util/Debug.h>
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <jccl/RTRC/ConfigManager.h>
+
+#include <cluster/Packets/DeviceRequest.h>
 
 namespace cluster
 {
@@ -96,6 +99,7 @@ namespace cluster
    
    bool DeviceRequest::action(ClusterNode* node)
    {
+      boost::ignore_unused_variable_warning(node);
       return false;
    }
 
