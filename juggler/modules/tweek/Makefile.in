@@ -106,21 +106,21 @@ default: debug
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
-DEFAULT_SET	= 1
+DEFAULT_SET=	1
 
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-STARTTIME	:= $(shell LC_TIME=C date)
+STARTTIME:=	$(shell LC_TIME=C date)
 
-BUILD_PROF_C	= @BUILD_PROF_C@
-BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+BUILD_PROF_C=	@BUILD_PROF_C@
+BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
 # If we can build both C and C++ profiled objects, we will build profiled
 # libraries.
 ifeq ($(BUILD_PROF_C), Y)
 ifeq ($(BUILD_PROF_CXX), Y)
-    BUILD_PROF_LIBS	= 1
+   BUILD_PROF_LIBS=	1
 endif
 endif
 
@@ -253,7 +253,7 @@ installworld: install-all
 
 .PHONY: test
 
-PROCS	= 1
+PROCS=	1
 
 test:
 	$(MAKE) -C test/TestSuite -j $(PROCS) runner

@@ -45,81 +45,81 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
-includedir	= @includedir@
-instlinks	= $(topdir)/instlinks
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-JACORB_DIR	= $(JUGGLERROOT_ABS)/external/JacORB
+includedir=	@includedir@
+instlinks=	$(topdir)/instlinks
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+JACORB_DIR=	$(JUGGLERROOT_ABS)/external/JacORB
 
-BUILD_CXX		= @BUILD_CXX@
-BUILD_JAVA		= @BUILD_JAVA@
-BUILD_EXTENSIONS	= @BUILD_EXTENSIONS@
+BUILD_CXX=		@BUILD_CXX@
+BUILD_JAVA=		@BUILD_JAVA@
+BUILD_EXTENSIONS=	@BUILD_EXTENSIONS@
 
 # Extra compiler and linker options needed only by this file.
-DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.
 # =============================================================================
-DEFAULT_DIR	= $(OPT_DIR)
+DEFAULT_DIR=	$(OPT_DIR)
 
 # If we have a name for the install group, define group-setting options for
 # UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
 # (makefiles-gen.pl in particular).
 ifdef GROUP_NAME
-    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+   _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
 endif
 
 # --------------------------------------------
 # Library build information.
 # --------------------------------------------
 
-SHLIB_MAJOR	= @MAJOR_VERSION@
-SHLIB_MINOR	= @MINOR_VERSION@
-SHLIB_MICRO	= @MICRO_VERSION@
+SHLIB_MAJOR=	@MAJOR_VERSION@
+SHLIB_MINOR=	@MINOR_VERSION@
+SHLIB_MICRO=	@MICRO_VERSION@
 
 ifneq (@OS_TYPE@, Win32)
-DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+STATICLIB_EXT=	@STATICLIB_EXT@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
 ifeq ($(BUILD_CXX), Y)
-LIBS		= $(TWEEK_LIBRARY)
-STATIC_LIBS	= $(LIBS)
-DYNAMIC_LIBS	= $(LIBS)
+LIBS=		$(TWEEK_LIBRARY)
+STATIC_LIBS=	$(LIBS)
+DYNAMIC_LIBS=	$(LIBS)
 endif
 
-DYLIB_DEPS	= @DYLIB_DEPS@
-DYLIB_PROF_DEPS	= @DYLIB_PROF_DEPS@
+DYLIB_DEPS=		@DYLIB_DEPS@
+DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
 
-TWEEK_LIB_STATIC	= $(TWEEK_LIBRARY).$(STATICLIB_EXT)
-TWEEK_LIB_DYNAMIC	= $(TWEEK_LIBRARY).$(DYNAMICLIB_EXT)
-TWEEK_PROF_LIB_STATIC	= $(TWEEK_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-TWEEK_PROF_LIB_DYNAMIC	= $(TWEEK_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+TWEEK_LIB_STATIC=	$(TWEEK_LIBRARY).$(STATICLIB_EXT)
+TWEEK_LIB_DYNAMIC=	$(TWEEK_LIBRARY).$(DYNAMICLIB_EXT)
+TWEEK_PROF_LIB_STATIC=	$(TWEEK_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+TWEEK_PROF_LIB_DYNAMIC=	$(TWEEK_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
-PARAM_HEADER	= tweek/tweekParam.h
-BRANCH		= HEAD
-CANON_NAME	= Harbucks Coffee
-VER_ARGS	= -f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@	\
-                  -b $(BRANCH) -o $(PARAM_HEADER) -n "$(CANON_NAME)"	\
-                  -i $(TWEEKROOT_ABS)/tweek/tweekParam.h.in		\
-                  -d "`date '+%b %e, %Y %H:%M:%S'`"
+PARAM_HEADER=	tweek/tweekParam.h
+BRANCH=		HEAD
+CANON_NAME=	Harbucks Coffee
+VER_ARGS=	-f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
+		-b $(BRANCH) -o $(PARAM_HEADER) -n "$(CANON_NAME)"	\
+		-i $(TWEEKROOT_ABS)/tweek/tweekParam.h.in		\
+		-d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
-    VER_ARGS	+= -v $(VERSION)
+   VER_ARGS+=	-v $(VERSION)
 endif
 
 # =============================================================================
 # Library targets.
 # =============================================================================
 
-BEFOREBUILD	= beforebuild
-AFTERBUILD	= afterbuild
+BEFOREBUILD=	beforebuild
+AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild:
@@ -296,8 +296,8 @@ endif
 #     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
-BEFOREINSTALL	= beforeinstall
-AFTERINSTALL	= afterinstall
+BEFOREINSTALL=	beforeinstall
+AFTERINSTALL=	afterinstall
 
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
@@ -323,8 +323,8 @@ afterinstall:
 	@echo "Tweek installation complete"
 	@echo "==============================================================="
 
-PREINSTALL	= pre-install
-POSTINSTALL	= post-install
+PREINSTALL=	pre-install
+POSTINSTALL=	post-install
 
 pre-install:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.lib.dist -p $(prefix)
@@ -358,15 +358,15 @@ else
 endif
 endif
 
-PREINSTALL_HEADERS	= pre-install-headers
+PREINSTALL_HEADERS=	pre-install-headers
 
 # If the C++ API is not available (the else clause), install the IDL files
 # anyway.  The Java API needs them.  Unfortunately, doing it this way is just
 # a big hack.
 ifeq ($(BUILD_CXX), Y)
-POSTINSTALL_HEADERS	= post-install-headers
+POSTINSTALL_HEADERS=	post-install-headers
 else
-POSTINSTALL_HEADERS	= post-install-headers-idl
+POSTINSTALL_HEADERS=	post-install-headers-idl
 endif
 
 pre-install-headers:
@@ -451,11 +451,11 @@ _clobber:
 
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
 # a '_clobber' target to be run besides the standard targets.
-_LOCAL_CLOBBER	= 1
+_LOCAL_CLOBBER=	1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
 
-CLEAN_FILES	+= $(PARAM_HEADER)
-CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
-CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLEAN_FILES+=	$(PARAM_HEADER)
+CLEAN_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
