@@ -912,12 +912,12 @@ value</screen>
         window, choose the <guilabel>Debugging</guilabel> item. There will be
         an empty text entry field under the heading <guilabel>Command
         Arguments</guilabel>. Here, enter the full paths to the VR Juggler
-        configuration files that will be used to run the torus application.
-        The <envar>VJ_BASE_DIR</envar> environment variable cannot be used
-        here, unfortunately, so the <emphasis>full path</emphasis> to
-        <emphasis>every</emphasis> file must be used. The following shows the
-        beginning of the program arguments listing <filename>sim.base.jconf</filename>
-        and <filename>sim.wand.mixin.jconf</filename>:</para>
+        configuration files that will be used to run the torus application. To
+        use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
+        syntax must be used. In other words, to load <filename>sim.base.jconf</filename>,
+        use <filename>$(VJ_BASE_DIR)/share/vrjuggler/data/configFiles/sim.base.jconf</filename>.
+        The following shows the beginning of the program arguments listing
+        <filename>sim.base.jconf</filename> and <filename>sim.wand.mixin.jconf</filename>:</para>
 
         <figure id="visual.studio.project-settings.dialog.figure">
           <title>Project Settings Dialog</title>
@@ -990,11 +990,11 @@ value</screen>
     program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>,
     you can find many basic configuration files including those for running in
     simulator using a mouse and keyboard to simulate VR input devices and some
-    example files based on those used for the VRAC C4 system. In the directory,
-    you will see some files with names containing <quote>mixin</quote>. These
-    are special files that provide a specific capability not necessarily needed
-    by all applications. They can be mixed in (hence the name) with other
-    configuration files as needed. The configuration files found in the
+    example files based on those used for the VRAC C4 system. In the
+    directory, you will see some files with names containing <quote>mixin</quote>.
+    These are special files that provide a specific capability not necessarily
+    needed by all applications. They can be mixed in (hence the name) with
+    other configuration files as needed. The configuration files found in the
     <filename>configFiles</filename> directory will be referenced in the
     examples provided, so be sure you know where they are.</para>
 
@@ -1093,11 +1093,11 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.glove.mixin.jconf</filename> - A
-          <quote>mix-in</quote> configuration file that defines simulated
-          gesture-based glove input using the keyboard. This is only required
-          for applications where gesture-based glove input is used and needs
-          to be simulated when in simulator mode.</para>
+          <para><filename>sim.glove.mixin.jconf</filename> - A <quote>mix-in</quote>
+          configuration file that defines simulated gesture-based glove input
+          using the keyboard. This is only required for applications where
+          gesture-based glove input is used and needs to be simulated when in
+          simulator mode.</para>
         </listitem>
 
         <listitem>
@@ -1696,16 +1696,14 @@ value</screen>
           <para><filename>C4.closed.jconf</filename> - The single
           configuration file that includes the other configuration files
           necessary for loading a VR Juggler application in the C4 in its
-          closed configuration with full tracking and stereoscopic
-          graphics.</para>
+          closed configuration with full tracking and stereoscopic graphics.</para>
         </listitem>
 
         <listitem>
           <para><filename>C4.closed.mono.jconf</filename> - The single
           configuration file that includes the other configuration files
           necessary for loading a VR Juggler application in the C4 in its
-          closed configuration with full tracking and monoscopic
-          graphics.</para>
+          closed configuration with full tracking and monoscopic graphics.</para>
         </listitem>
 
         <listitem>
@@ -1726,9 +1724,9 @@ value</screen>
         <listitem>
           <para><filename>C4.displays.closed.mono.jconf</filename> - The basic
           display configuration file needed to run with all four walls active
-          and rendering monoscopic graphics. This defines only the four surface
-          displays to be opened. The corners are configured for the closed
-          position of the moveable walls.</para>
+          and rendering monoscopic graphics. This defines only the four
+          surface displays to be opened. The corners are configured for the
+          closed position of the moveable walls.</para>
         </listitem>
 
         <listitem>
