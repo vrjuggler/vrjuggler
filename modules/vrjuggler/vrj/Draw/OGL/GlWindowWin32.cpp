@@ -114,8 +114,10 @@ int GlWindowWin32::open()
 }
 
 
-//: Close the OpenGL window
-//! NOTE: Must be called by the same thread that called open
+/**
+ * Closes the OpenGL window.
+ * @note Must be called by the same thread that called open.
+ */
 int GlWindowWin32::close()
 {
     if(!window_is_open)
@@ -130,8 +132,10 @@ int GlWindowWin32::close()
     return (1 == DestroyWindow(hWnd));
 }
 
-//: Sets the current OpenGL context to this window
-//! POST: this.context is active context
+/**
+ * Sets the current OpenGL context to this window.
+ * @post this.context is active context.
+ */
 bool GlWindowWin32::makeCurrent()
 {
     vprASSERT((hDC != NULL) && (hRC != NULL));
@@ -297,9 +301,9 @@ void GlWindowWin32::sizeChanged(long width, long height)
 
 
 
-//-------------------------------
-//: Global Window event handler
-//-------------------------------
+/**
+ * Global Window event handler.
+ */
 LRESULT CALLBACK GlWindowWin32::WndProc(    HWND    hWnd,
                                                 UINT    message,
                                                 WPARAM  wParam,
@@ -317,9 +321,9 @@ LRESULT CALLBACK GlWindowWin32::WndProc(    HWND    hWnd,
     }
 }
 
-//-------------------------------
-//: Window registration
-//-------------------------------
+/**
+ * Window registration.
+ */
 bool GlWindowWin32::mWinRegisteredClass = false;
 WNDCLASS GlWindowWin32::winClass;           // The window class to register
 std::map<HWND, GlWindowWin32*> GlWindowWin32::glWinMap;
@@ -360,7 +364,7 @@ bool GlWindowWin32::registerWindowClass()
 };
 
 //----------------------//
-//          WinList         //
+//      WinList         //
 //----------------------//
 void GlWindowWin32::addWindow(HWND handle, GlWindowWin32* glWin)
 {

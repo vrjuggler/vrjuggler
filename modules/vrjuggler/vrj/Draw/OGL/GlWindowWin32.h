@@ -55,27 +55,37 @@ public:
 
 public:
 
-   //: Open the OpenGL window
-   //! PRE: this has been configured
-    // POST: Window created
-    //          Create message sets the visual
-    //! RETURN: true - window opened correctly
+   /**
+    * Opens the OpenGL window.
+    *
+    * @pre this has been configured.
+    * @post Window created.  Create message sets the visual.
+    *
+    * @return true if the window opened correctly.
+    */
    virtual int open();
 
-   //: Close the OpenGL window
-    //! NOTE: Must be called by the same thread that called open
-    //! RETURN: true - window closed correctly
+   /**
+    * Closes the OpenGL window.
+    *
+    * @return true if the window closed correctly.
+    * @note Must be called by the same thread that called open.
+    */
    virtual int close();
 
-   //: Sets the current OpenGL context to this window
-   //! POST: this.context is active context
+   /**
+    * Sets the current OpenGL context to this window.
+    * @post this.context is active context.
+    */
    virtual bool makeCurrent();
 
-   //: Performs an OpenGL swap buffers command
+   /** Performs an OpenGL swap buffers command. */
    virtual void swapBuffers();
 
-   //: Check for window events
-   //! POST: All win32 events have ben dispatched and dealt with
+   /**
+    * Checks for window events.
+    * @post All win32 events have ben dispatched and dealt with.
+    */
    virtual void checkEvents();
 
 protected:
@@ -86,8 +96,10 @@ protected:
                               WPARAM    wParam,
                               LPARAM    lParam);
 
-    // Set the pixel format for the given display context
-    //! RETURN: success
+    /**
+     * Sets the pixel format for the given display context.
+     * @return success
+     */
     bool setPixelFormat(HDC hDC);
 
     void sizeChanged(long width, long height);
@@ -100,29 +112,31 @@ protected:
                                                 WPARAM  wParam,
                                                 LPARAM  lParam);
 
-    static WNDCLASS winClass;           // The window class to register
-    static bool      mWinRegisteredClass;   // Have we already registered
+    static WNDCLASS winClass;           /**< The window class to register */
+    static bool      mWinRegisteredClass;   /**< Have we already registered */
 
 protected:
     // Keep a map of window handles to ogl windows
     // This can be used by the message handler to call a class specific
     // message handler for each window
 
-    // Add a window to the map
+    /** Adds a window to the map. */
     static void addWindow(HWND handle, GlWindowWin32* glWin);
-    // Remove a window from the map
+
+    /** Removes a window from the map. */
     static void removeWindow(HWND handle);
-    // Get the glWin we are dealing with
+
+    /** Gets the glWin we are dealing with. */
     static GlWindowWin32* getGlWin(HWND handle);
 
    static std::map<HWND, GlWindowWin32*>        glWinMap;
 
 public:
-    HWND    hWnd;       // Window handle
-    HGLRC hRC;      // Permenant Rendering context
-    HDC hDC;        // Private GDI Device context
+    HWND    hWnd;   /**< Window handle */
+    HGLRC hRC;      /**< Permenant Rendering context */
+    HDC hDC;        /**< Private GDI Device context */
 
-    PIXELFORMATDESCRIPTOR* match;       // Points the the found pixel format
+    PIXELFORMATDESCRIPTOR* match;    /**< Points the the found pixel format */
 };
 
 

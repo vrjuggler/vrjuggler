@@ -276,8 +276,10 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
 
 
-//: Closes the window given
-//! NOTE: this function mucks with the current rendering context */
+/**
+ *  Closes the window given
+ * @note this function mucks with the current rendering context
+ */
 int GlWindowXWin::close()
 {
 vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
@@ -507,10 +509,12 @@ void GlWindowXWin::config(vrj::Display* disp)
    return NULL;
 }
 
-//!PRE:  window is an xwindow under display
-//!POST: returns true if e is a mapnotify event for window, else false
-//!NOTE: this is a utility function for InitGfx,  used to wait
-//+       until a window has actually been mapped.
+/**
+ * @pre  window is an xwindow under display.
+ * @post returns true if e is a mapnotify event for window, else false.
+ * @note this is a utility function for InitGfx,  used to wait
+ *       until a window has actually been mapped.
+ */
 int GlWindowXWin::EventIsMapNotify (::Display *display,  ::XEvent *e,  ::XPointer window) {
 
     return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
