@@ -66,7 +66,6 @@ public class ConfigChunkDB
       chunks = new Vector();
       targets = new ArrayList();
       name = "Untitled";
-      inputFile = new File("Untitled");
 
       // Create a new document for this DB.
       mDoc = new Document();
@@ -100,12 +99,6 @@ public class ConfigChunkDB
       }
    }
 
-   /** Returns the file used for loading/saving */
-   public final File getInputFile()
-   {
-      return inputFile;
-   }
-
    /** Sets the identifier string for this DB */
    public final void setName(String name)
    {
@@ -128,23 +121,12 @@ public class ConfigChunkDB
     *
     * @throws IOException  if there is an error while building the database
     */
-   public void build(File inputFile)
+   public void build(File file)
       throws IOException
    {
-      this.inputFile = inputFile;
-
-      if ( null != inputFile || ! inputFile.canRead() )
+      if ( null != file || ! file.canRead() )
       {
-         try
-         {
-            SAXBuilder builder = new SAXBuilder();
-            mDoc = builder.build(inputFile);
-            loadChunks(mDoc.getRootElement());
-         }
-         catch (JDOMException e)
-         {
-            throw new IOException(e.getMessage());
-         }
+         build(new BufferedInputStream(new FileInputStream(file)));
       }
       else
       {
@@ -165,8 +147,6 @@ public class ConfigChunkDB
    public void build(InputStream stream)
       throws IOException
    {
-      this.inputFile = null;
-
       try
       {
          SAXBuilder builder = new SAXBuilder();
@@ -191,7 +171,6 @@ public class ConfigChunkDB
    public void build(Document document)
       throws IOException
    {
-      this.inputFile = null;
       mDoc = document;
       loadChunks(mDoc.getRootElement());
    }
@@ -204,20 +183,9 @@ public class ConfigChunkDB
       loadChunks(elem);
    }
 
-   public void write()
-      throws IOException
-   {
-      write(inputFile);
-   }
-
    public void write(File file)
       throws IOException
    {
-      if ( inputFile != file )
-      {
-         inputFile = file;
-      }
-
       XMLOutputter outputter = new XMLOutputter("  ", true);
       outputter.setLineSeparator(System.getProperty("line.separator"));
 
@@ -914,15 +882,6 @@ public class ConfigChunkDB
     *  (e.g. "config [1]" and "config [2]").
     */
    private String name;
-
-   /** File that the ChunkDB was loaded from.
-    *  This is used for loading & saving the ChunkDB, and is guaranteed
-    *  not to be mangled like name could be.
-    *  <p>
-    *  Note: file defaults to "Untitled", but is never null unless
-    *  explicitly set.
-    */
-   private File inputFile;
 
    /** This is the XML document from which this DB was constructed. */
    protected Document mDoc;
