@@ -5,6 +5,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+import java.awt.event.*;
 
 import org.vrjuggler.jccl.config.*;
 
@@ -101,17 +102,117 @@ public class ConfigContextEditor
    private void jbInit()
       throws Exception
    {
+      JPanel temp = new JPanel();
+      temp.setLayout(new BorderLayout());
+      
+      treePane.setLayout(treeLayout);
+
       this.setLayout(mBaseLayout);
       mElementTreeScrollPane.setMinimumSize(new Dimension(0, 0));
       mElementTree.setRootVisible(false);
       mElementTree.setShowsRootHandles(true);
       mBaseSplitPane.setOneTouchExpandable(true);
       this.add(mBaseSplitPane, BorderLayout.CENTER);
-      mBaseSplitPane.add(mElementTreeScrollPane, JSplitPane.LEFT);
+      //mBaseSplitPane.add(mElementTreeScrollPane, JSplitPane.LEFT);
+      mBaseSplitPane.add(treePane, JSplitPane.LEFT);
+      
+      
       mBaseSplitPane.add(mElementPropSheetScrollPane, JSplitPane.RIGHT);
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
       mElementTreeScrollPane.getViewport().add(mElementTree, null);
+
+      treeToolbar.setFloatable(false);
+
+      addBtn.setText("Add");
+      //addBtn.setEnabled(false);
+      removeBtn.setText("Remove");
+      //removeBtn.setEnabled(false);
+ 
+      addBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            addAction(evt);
+         }
+      });
+      removeBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            ;//removeAction(evt);
+         }
+      });
+
+      treePane.add(treeToolbar, BorderLayout.NORTH);
+      treePane.add(mElementTreeScrollPane, BorderLayout.CENTER);
+      treeToolbar.add(addBtn);
+      treeToolbar.add(removeBtn);
    }
+
+   private ConfigBroker broker = null;
+   /**
+    * Gets the cached config broker proxy instance.
+    */
+   private ConfigBroker getConfigBroker()
+   {
+      if (broker == null)
+      {
+         broker = new ConfigBrokerProxy();
+      }
+      return broker;
+   }
+
+   /**
+    * Adds a new config chunk to the current ConfigChunkDB.
+    */
+   protected void addAction(ActionEvent evt)
+   {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                     mElementTree.getLastSelectedPathComponent();
+
+      // Get a DB of all known ChunkDescs
+      ConfigDefinitionRepository temp = getConfigBroker().getRepository();
+      java.util.List defs = temp.getAllLatest();
+      //java.util.List descs = getConfigBroker().getDescs(getContext());
+
+      // Ask the user to choose a base ChunkDesc
+      ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
+      chooser.setDefinitions(defs);
+      int result = chooser.showDialog(this);
+
+      // If the user did not cancel their choice, make a new ConfigChunk for
+      // the chose ChunkDesc
+      if (result == ConfigDefinitionChooser.APPROVE_OPTION)
+      {
+         ConfigElementFactory tempfac = new ConfigElementFactory(defs);
+         //ConfigElement element = new ConfigElement(chooser.getSelectedDefinition());
+         ConfigElement element = tempfac.create("CHANGEME", chooser.getSelectedDefinition());
+            //         chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
+//         chunk.setName(chunk.getDesc().getName()); // TODO: Compute a unique name
+
+         // Make sure this add goes through successfully
+         if (! getConfigBroker().add(getContext(), element))
+         {
+            JOptionPane.showMessageDialog(this,
+                                          "There are no configuration files active.",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+         }
+
+// TODO: Make this work again
+         // Make sure the new node gets selected
+//         List chunk_nodes = getNodesFor(chunk);
+//         if (chunk_nodes.size() > 0)
+//         {
+//            TreeNode chunk_node = (TreeNode)chunk_nodes.get(0);
+//            TreePath path = new TreePath(treeModel.getPathToRoot(chunk_node));
+//            mElementTree.setSelectionPath(path);
+//         }
+      }
+   }
+
+
 
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
@@ -119,6 +220,12 @@ public class ConfigContextEditor
    private JTree mElementTree = new JTree();
    private JScrollPane mElementPropSheetScrollPane = new JScrollPane();
    private ConfigElementPropertySheet mElementPropSheet = new ConfigElementPropertySheet();
+   
+   private BorderLayout treeLayout = new BorderLayout();
+   private JPanel treePane = new JPanel();
+   private JToolBar treeToolbar = new JToolBar();
+   private JButton addBtn = new JButton();
+   private JButton removeBtn = new JButton();
 
    /** The data model used to represent the context. */
    private ConfigContextModel mContextModel;
