@@ -309,10 +309,10 @@ public class FileControl {
             
             /* opens up a file requester... */
             if (file.isDirectory())
-                chooser = new JFileChooser(file.getCanonicalFile());
+                chooser = new JFileChooser(file);
             else {
                 //System.out.println ("File is " + file + "\n and parent is " + file.getParent());
-                String dir = file.getCanonicalFile().getParent();
+                String dir = file.getParent();
                 if (dir == null) 
                     dir = "";
                 chooser = new JFileChooser (new File(dir));
