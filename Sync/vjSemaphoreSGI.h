@@ -6,7 +6,7 @@
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>
 #include <Kernel/vjDebug.h>
-#include <Threads/vjThread.h>
+//#include <Threads/vjThread.h>
 
 //----------------------------------------------
 //: Semaphore wrapper for the SGI systems
@@ -31,13 +31,13 @@ public:
       {
          semaphorePool = new vjMemPoolSGI(65536, 32, "/var/tmp/memSemaphorePoolSGIXXXXXX");
          attachedCounter = static_cast<int*>(semaphorePool->allocate(sizeof(int)));
-         *attachedCounter = 0; 
+         *attachedCounter = 0;
       }
       *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
 
-      DebugLock.acquire();
+      //DebugLock.acquire();
       //vjDEBUG << vjThread::self() << " vjSemaphoreSGI::vjSemaphoreSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
-      DebugLock.release();
+      //DebugLock.release();
 
       // ----- Allocate the semaphore ----- //
       sema = usnewsema(semaphorePool->getArena(), initialValue);
@@ -49,11 +49,11 @@ public:
       usfreesema(sema, semaphorePool->getArena());
 
       // ---- Deal with the pool --- //
-      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated  
+      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
 
-      DebugLock.acquire();
+      //DebugLock.acquire();
       //vjDEBUG << vjThread::self() << " vjSemaphoreSGI::~vjSemaphoreSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
-      DebugLock.release();
+      //DebugLock.release();
 
       if (*attachedCounter == 0)
       {
@@ -133,7 +133,7 @@ public:
 // int release()
 //
 // PURPOSE:
-//   Release the Semaphore. 
+//   Release the Semaphore.
 // RETURNS:
 //   0 - Success
 //  -1 - Error
@@ -151,7 +151,7 @@ public:
 // int reset(int val)
 //
 // PURPOSE:
-//   Reset the Semaphore. 
+//   Reset the Semaphore.
 // RETURNS:
 //   0 - Success
 //  -1 - Error
@@ -160,7 +160,7 @@ public:
 //---------------------------------------------------------
    int reset(int val)
    {
-      return usinitsema(sema, val);   
+      return usinitsema(sema, val);
    }
 
 //---------------------------------------------------------
@@ -171,7 +171,7 @@ public:
 //---------------------------------------------------------
    void dump (FILE* dest = stderr, const char* message = "\n------ Semaphore Dump -----\n") const
    {
-      usdumpsema(sema, dest, message);  
+      usdumpsema(sema, dest, message);
    }
 
 
@@ -180,7 +180,7 @@ protected:
 
    // = Prevent assignment and initialization.
    void operator= (const vjSemaphoreSGI &) {}
-   vjSemaphoreSGI (const vjSemaphoreSGI &) {}  
+   vjSemaphoreSGI (const vjSemaphoreSGI &) {}
 
    // Problem here.  Fork will not like these.
    static vjMemPoolSGI* semaphorePool;
