@@ -82,6 +82,8 @@ void ProfileNode::printTree(ProfileNode* node)
 {
    if(node == NULL) return;
 
+   ProfileNode::printTree(node->getSibling());
+
    vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "[PROFILE STATS] " << clrRESET 
       << clrSetBOLD(clrRED) << node->getName() << clrRESET << clrSetBOLD(clrYELLOW)  
       << " total calls: " << clrRESET << node->getTotalCalls()
@@ -100,7 +102,7 @@ void ProfileNode::printTree(ProfileNode* node)
       << s.str() << std::endl << vprDEBUG_FLUSH;
 
    ProfileNode::printTree(node->getChild());
-   ProfileNode::printTree(node->getSibling());
+
 }
    
 
