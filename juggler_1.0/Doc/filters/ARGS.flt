@@ -21,7 +21,7 @@ sub filter {
 <TABLE BORDER="1" CELLPADDING="2">
   <TR>
     <TH BGCOLOR="#dddddd">
-      <FONT SIZE="2">Paramater</FONT>
+      <FONT SIZE="2">Parameter</FONT>
     </TH>
     <TH BGCOLOR="#dddddd">
       <FONT SIZE="2">Description</FONT>
