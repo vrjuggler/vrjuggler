@@ -80,7 +80,7 @@ int main (int argc, char* argv[])
             }
             else
             {
-               vpr::Thread::msleep(100);
+               vpr::System::msleep(100);
             }
          }
       }
