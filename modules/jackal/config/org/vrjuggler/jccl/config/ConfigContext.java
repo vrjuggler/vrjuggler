@@ -127,17 +127,28 @@ public class ConfigContext extends UndoableEditSupport
    {
       ConfigBroker broker = new ConfigBrokerProxy();
       
-      for(Iterator itr = mResources.iterator() ; itr.hasNext() ; )
+      java.util.List elm_list = broker.getElements(this);
+      return (elm_list.contains(elm));
+   }
+   
+   /**
+    * Returns true if the give ConfigElement is in this context.
+    */
+   public boolean containsElementNamed(String name)
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      
+      java.util.List elm_list = broker.getElements(this);
+      for (Iterator itr = elm_list.iterator() ; itr.hasNext() ; )
       {
-         java.util.List elm_list = broker.getElementsIn((String)itr.next());
-         if(elm_list.contains(elm))
+         if ( ((ConfigElement)itr.next()).getName().equals(name) )
          {
             return true;
          }
       }
       return false;
    }
-
+   
    /**
     * Adds the given listener so that it receives events when this context
     * changes.
