@@ -49,19 +49,18 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Config
 
-SRCS		= vjChunkDesc.cpp	\
-                  vjChunkDescDB.cpp	\
-                  vjChunkFactory.cpp	\
-                  vjConfigChunk.cpp	\
-                  vjConfigChunkDB.cpp	\
-                  vjParseUtil.cpp	\
-                  vjPropertyDesc.cpp	\
-                  vjProperty.cpp	\
-                  vjPropertyDesc.cpp	\
-                  vjVarValue.cpp	\
-		  vjConfigIO.cpp	\
-		  vjXMLConfigIOHandler.cpp	\
-		  vjStandardConfigIOHandler.cpp	
+SRCS		= vjChunkDesc.cpp		\
+                  vjChunkDescDB.cpp		\
+                  vjChunkFactory.cpp		\
+                  vjConfigChunk.cpp		\
+                  vjConfigChunkDB.cpp		\
+                  vjConfigIO.cpp		\
+                  vjParseUtil.cpp		\
+                  vjProperty.cpp		\
+                  vjPropertyDesc.cpp		\
+                  vjStandardConfigIOHandler.cpp	\
+                  vjVarValue.cpp		\
+               	  vjXMLConfigIOHandler.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
