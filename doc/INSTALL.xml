@@ -186,6 +186,26 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                      <para>Configure all the modules making up VR Juggler. This is when you must tell the module configure scripts where all the package dependencies are found. For this description, we will use the term <filename>&lt;JDOMPATH&gt;</filename> to refer to the JDOM installation. Assume that this is an absolute path (e.g., <filename>&lt;JDOMPATH&gt;</filename> = <filename>/home/user1/pkgs/jdom</filename>).</para>
                      <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen>
                      <para>On Win32, remember that the path is given as the full DOS drive path, but <filename>/</filename> should be used instead of <filename>\</filename> as the path separator.</para>
+                                    <para>
+               OPTIONAL: If you need to build vrjuggler with sonix support, here is an example of how to configure, note that you need --module=VRJuggler+Sonix, instead of the default --module=VRJuggler...
+               <screen>
+../configure.pl --module=VRJuggler+Sonix 
+         --cfg=../juggler.cfg 
+         --with-cppdomroot=`pwd`/../external/cppdom 
+         --with-gmtl-include=`pwd`/../external/GMTL 
+         --enable-openal 
+         --with-oalroot=/home/users/kevn/software/linux 
+         --enable-sonix=yes 
+         --with-jdom=/home/users/patrick/src/Tweek/jdom.jar:/home/users/patrick/src/Tweek/xerces.jar 
+         --with-cxx-orb=omniORB3 
+         --with-cxx-orb-root=/home/users/patrick/src/Tweek/omni-3.0.4/omni 
+         --with-cxx-orb-bin=/home/users/patrick/src/Tweek/omni-3.0.4/omni/bin/i586_linux_2.0_glibc 
+         --with-cxx-orb-lib=/home/users/patrick/src/Tweek/omni-3.0.4/omni/lib/i586_linux_2.0_glibc 
+         --with-java-orb=OpenORB 
+         --with-java-orb-jar=/home/users/patrick/src/Tweek/OpenORB-1.2.0/lib/openorb-1.2.0.jar
+                </screen>
+               </para>
+
                   </listitem>
                </orderedlist>
             </section>
@@ -220,7 +240,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                <para>VPR can be configured a number of ways. Except when building on Win32, no external packages are required. For Win32, NSPR (<ulink url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required. To build VPR, do the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
-                     <para><screen>mkdir build.vpr
+                     <para><screen>mkdir build.vpr 
 cd build.vpr</screen></para>
                   </listitem>
                   <listitem>
@@ -255,6 +275,7 @@ cd build.sonix</screen></para>
                      <para><screen>setenv SNX_BASE_DIR $HOME/sonix-inst</screen></para>
                   </listitem>
                </orderedlist>
+               <para>NOTE: you can build sonix support into vrjuggler.  See the VRJuggler section above for information...</para>
             </section>
             <section>
                <title>JCCL (individual)</title>
