@@ -27,7 +27,7 @@ vpr::Uint32 DNS::lookupAddress (const std::string& addr_str)
    {
       union
       {
-         vpr::Uint8 bytes[0];
+         vpr::Uint8 bytes[4];
          vpr::Uint32 value;
       } addr;
       int retval;
