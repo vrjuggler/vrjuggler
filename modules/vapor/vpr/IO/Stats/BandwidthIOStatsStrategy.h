@@ -46,6 +46,7 @@
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
 #include <vpr/Util/DateTime.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/StatCollector.h>
 
 #include <deque>
 
@@ -60,15 +61,7 @@ class VPR_CLASS_API BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
 {
 public:
    BandwidthIOStatsStrategy()
-   {
-      mMaxBwBufferSize = 100;
-      mSendCount = mReadCount = 0;
-      mSentBytes = mReadBytes = 0;
-
-      mInstSendBW = mSTASendBW = mSTASendMaxBW = 0.0f;
-      mInstReadBW = mSTAReadBW = mSTAReadMaxBW = 0.0f;
-      mBWBurstiness = 0.0f;
-   }
+   {;}
 
    virtual ~BandwidthIOStatsStrategy()
    {;}
@@ -82,7 +75,7 @@ public:
                const vpr::Interval timeout = vpr::Interval::NoTimeout)
   {
      if(status.success())
-        incrementBytesRead(bytes_read);
+        mReadStats.addSample(bytes_read);
   }
 
    /**
@@ -94,7 +87,7 @@ public:
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
   {
      if(status.success())
-        incrementBytesRead(bytes_read);
+        mReadStats.addSample(bytes_read);
   }
 
    /**
@@ -106,51 +99,38 @@ public:
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
   {
      if(status.success())
-        incrementBytesSent(bytes_written);
+        mWriteStats.addSample(bytes_written);
   }
-
-
-protected:
-   void incrementBytesSent(vpr::Uint32 bytes);
-   void incrementBytesRead(vpr::Uint32 bytes);
 
 public:
    vpr::Uint32 getTotalBytesSent()
-      { return mSentBytes; }
+      { return mWriteStats.getTotal(); }
    vpr::Uint32 getTotalBytesRead()
-      { return mReadBytes; }
+      { return mReadStats.getTotal(); }
 
-   double getAverageSendBW();
-   double getAverageReadBW();
+   double getAverageSendBW()
+      { return mWriteStats.getMean(); }
+   double getAverageReadBW()
+      { return mReadStats.getMean(); }
 
    double getSTASendBW()
-      { return mSTASendBW;}
+      { return mWriteStats.getSTA();}
    double getSTAReadBW()
-      { return mSTAReadBW; }
-   double getInstSendBW()
-      { return mInstSendBW; }
-   double getInstReadBW()
-      { return mInstReadBW; }
-   double getMaxSTASendBW()
-      { return mSTASendMaxBW;}
-   double getMaxSTAReadBW()
-      { return mSTAReadMaxBW;}
+      { return mReadStats.getSTA();}
 
+   double getInstSendBW()
+      { return mWriteStats.getInstAverage(); }
+   double getInstReadBW()
+      { return mReadStats.getInstAverage(); }
+
+   double getMaxSTASendBW()
+      { return mWriteStats.getMaxSTA();}
+   double getMaxSTAReadBW()
+      { return mReadStats.getMaxSTA();}
 
 private:
-   vpr::Uint32 mMaxBwBufferSize;
-   vpr::Uint32 mSendCount, mReadCount;
-   vpr::Uint32 mSentBytes, mReadBytes;
-
-   double mInstSendBW, mSTASendBW, mSTASendMaxBW;
-   double mInstReadBW, mSTAReadBW, mSTAReadMaxBW;
-   double mBWBurstiness;
-
-   vpr::DateTime  mInitialSendTime, mInitialReadTime;
-   vpr::Interval  mPrevSendTime, mPrevReadTime;
-
-   std::deque<double> mSendBWBuffer;     // Short term write bandwidth buffer -- Holds most recent N instAv vals
-   std::deque<double> mReadBWBuffer;     // Short term read bw buffer -- Holds most recent N instAv vals
+   vpr::StatCollector<vpr::Uint32> mReadStats;
+   vpr::StatCollector<vpr::Uint32> mWriteStats;
 };
 
 }; //namespace vpr
