@@ -37,13 +37,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
@@ -81,6 +81,10 @@ public class TransmitterTransformPanel
       mCoordFrames[22] = new CoordFrame(0.0, -90.0, 0.0);
       mCoordFrames[23] = new CoordFrame(-90.0, -90.0, 0.0);
 
+      // Create the renderers for mVrjCoordChooser and mTrackerCoordChooser.
+      CoordFrameRenderer r0 = new CoordFrameRenderer(mCoordFrames);
+      CoordFrameRenderer r1 = new CoordFrameRenderer(mCoordFrames);
+
       try
       {
          ClassLoader loader = getClass().getClassLoader();
@@ -98,7 +102,18 @@ public class TransmitterTransformPanel
                                                 ".png"))
             );
          }
+
+         // Only set up preferred sizes if all the icons were loaded
+         // successfully.
+         int w = 70, h = 70;
+         r0.setPreferredSize(new Dimension(w, h));
+         r1.setPreferredSize(new Dimension(w, h));
+         mVrjCoordChooserPane.setMinimumSize(new Dimension(w, h));
+         mVrjCoordChooserPane.setPreferredSize(new Dimension(w, h));
+         mTrackerCoordChooserPane.setMinimumSize(new Dimension(w, h));
+         mTrackerCoordChooserPane.setPreferredSize(new Dimension(w, h));
       }
+      // If any one icon failed to load, clear all the coordinate frame icons.
       catch(NullPointerException ex)
       {
          for ( int i = 0; i < mCoordFrames.length; ++i )
@@ -107,11 +122,20 @@ public class TransmitterTransformPanel
          }
       }
 
+      // Set up the list models for the coordinate frame choosers.
+      DefaultListModel vrj_model     = new DefaultListModel();
+      DefaultListModel tracker_model = new DefaultListModel();
+
       for ( int i = 0; i < mCoordFrames.length; ++i )
       {
-         mVrjCoordChooser.addItem(new Integer(i));
-         mTrackerCoordChooser.addItem(new Integer(i));
+         vrj_model.addElement(new Integer(i));
+         tracker_model.addElement(new Integer(i));
       }
+
+      mVrjCoordChooser.setModel(vrj_model);
+      mVrjCoordChooser.setCellRenderer(r0);
+      mTrackerCoordChooser.setModel(tracker_model);
+      mTrackerCoordChooser.setCellRenderer(r1);
 
       mTranslationUnits    = new MeasurementUnit[4];
       mTranslationUnits[0] = new MeasurementUnit("Meters", 1.0);
@@ -123,6 +147,14 @@ public class TransmitterTransformPanel
       {
          mTrackerPosUnitsChooser.addItem(mTranslationUnits[i].name);
       }
+
+      mTrackerXRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
+                                                          180.0, 0.1));
+      mTrackerYRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
+                                                          180.0, 0.1));
+      mTrackerZRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
+                                                          180.0, 0.1));
+
 /*
       try
       {
@@ -133,22 +165,6 @@ public class TransmitterTransformPanel
          ex.printStackTrace();
       }
 */
-      mTrackerXRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
-                                                          180.0, 0.1));
-      mTrackerYRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
-                                                          180.0, 0.1));
-      mTrackerZRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
-                                                          180.0, 0.1));
-
-      CoordFrameRenderer r0 = new CoordFrameRenderer(mCoordFrames);
-      r0.setPreferredSize(new Dimension(64, 64));
-      mVrjCoordChooser.setRenderer(r0);
-      mVrjCoordChooser.setMaximumRowCount(4);
-
-      CoordFrameRenderer r1 = new CoordFrameRenderer(mCoordFrames);
-      r1.setPreferredSize(new Dimension(64, 64));
-      mTrackerCoordChooser.setRenderer(r1);
-      mTrackerCoordChooser.setMaximumRowCount(4);
    }
 
    public void stateChanged(ChangeEvent e)
@@ -190,10 +206,6 @@ public class TransmitterTransformPanel
          mContext = ctx;
          mElement = elt;
 
-         PropertyDefinition prop_def =
-            mElement.getDefinition().getPropertyDefinition("device_units");
-         Map dev_unit_map = prop_def.getEnums();
-
          elt.addConfigElementListener(new ElementListener());
          mSensorUnitsEditor =
             new PropertyEditorPanel(ctx, elt.getProperty("device_units", 0),
@@ -224,8 +236,20 @@ public class TransmitterTransformPanel
          mTrackerYRotSpinner.setValue(new Double(y_rot));
          mTrackerZRotSpinner.setValue(new Double(z_rot));
 
+         try
+         {
+            jbInit();
+         }
+         catch(Exception ex)
+         {
+            ex.printStackTrace();
+         }
+
          // This is slow, but I don't think that there is a better way to do
          // it.
+         // NOTE: This must be done *after* jbInit() is called so that the
+         // scroll pane will be updated to display the selected coordinate
+         // frame.
          int i;
          for ( i = 0; i < mCoordFrames.length; ++i )
          {
@@ -234,9 +258,13 @@ public class TransmitterTransformPanel
                  mCoordFrames[i].getZRot() == z_rot )
             {
                mTrackerCoordChooser.setSelectedIndex(i);
+               mTrackerCoordChooser.ensureIndexIsVisible(i);
                break;
             }
          }
+
+         mVrjCoordChooser.setSelectedIndex(0);
+         mVrjCoordChooser.ensureIndexIsVisible(0);
 
          System.out.println("[TrackerTransformPanel.setConfig()] i == " + i);
          System.out.println("[TrackerTransformPanel.setConfig()] mCoordFrames.length == " + mCoordFrames.length);
@@ -248,17 +276,8 @@ public class TransmitterTransformPanel
             mTrackerManualRotButton.setSelected(true);
          }
 
-         try
-         {
-            jbInit();
-         }
-         catch(Exception ex)
-         {
-            ex.printStackTrace();
-         }
-
          // The change listener should be added after the spinners are fully
-         // set up.
+         // set up.  This will help avoid needless event handling on our part.
          mTrackerXRotSpinner.addChangeListener(this);
          mTrackerYRotSpinner.addChangeListener(this);
          mTrackerZRotSpinner.addChangeListener(this);
@@ -392,8 +411,8 @@ public class TransmitterTransformPanel
       mVrjCoordChooserLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mVrjCoordPanel.setLayout(mVrjCoordPanelLayout);
       mVrjCoordChooser.setEnabled(false);
-      mVrjCoordChooser.addActionListener(new
-         TransmitterTransformPanel_mVrjCoordChooser_actionAdapter(this));
+      mVrjCoordChooser.addListSelectionListener(new
+         TransmitterTransformPanel_mVrjCoordChooser_listSelectionAdapter(this));
       mVrjCoordAdvButton.setText("Advanced");
       mVrjCoordAdvButton.addActionListener(new
          TransmitterTransformPanel_mVrjCoordAdvButton_actionAdapter(this));
@@ -466,23 +485,27 @@ public class TransmitterTransformPanel
          TransmitterTransformPanel_mTrackerPosUnitsChooser_actionAdapter(this));
       mSensorUnitsEditor.setToolTipText(
          "Choose the units of samples collected from sensors");
-      mTrackerCoordChooser.addActionListener(new
-         TransmitterTransformPanel_mTrackerCoordChooser_actionAdapter(this));
+      mTrackerCoordChooser.addListSelectionListener(new
+         TransmitterTransformPanel_mTrackerCoordChooser_listSelectionAdapter(this));
       mTrackerAdvPanel.add(mTrackerAnglesPanel,
                            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
                                                   GridBagConstraints.CENTER,
                                                   GridBagConstraints.BOTH,
                                                   new Insets(0, 0, 0, 0),
                                                   0, 0));
-      mTrackerCoordPanel.add(mTrackerCoordChooser,
-                             new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-         , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-         new Insets(0, 0, 0, 0), 0, 0));
-      mVrjCoordPanel.add(mVrjCoordChooser,
-                         new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
-                                                , GridBagConstraints.CENTER,
-                                                GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 0, 0, 0), 0, 0));
+      mTrackerCoordPanel.add(mTrackerCoordChooserPane,
+                             new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
+                                                    GridBagConstraints.CENTER,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 0, 2),
+                                                    0, 0));
+      mTrackerCoordChooserPane.getViewport().add(mTrackerCoordChooser);
+      mVrjCoordPanel.add(mVrjCoordChooserPane,
+                         new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.CENTER,
+                                                GridBagConstraints.BOTH,
+                                                new Insets(0, 0, 0, 2), 0, 0));
+      mVrjCoordChooserPane.getViewport().add(mVrjCoordChooser);
       mVrjCoordPanel.add(mVrjCoordAdvButton,
                          new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
                                                 , GridBagConstraints.CENTER,
@@ -659,11 +682,13 @@ public class TransmitterTransformPanel
    private TitledBorder mTranslationBorder = new TitledBorder("");
    private JPanel mVrjCoordPanel = new JPanel();
    private JLabel mVrjCoordChooserLabel = new JLabel();
-   private JComboBox mVrjCoordChooser = new JComboBox();
+   private JScrollPane mVrjCoordChooserPane = new JScrollPane();
+   private JList mVrjCoordChooser = new JList();
    private JCheckBox mVrjCoordAdvButton = new JCheckBox();
    private JPanel mTrackerCoordPanel = new JPanel();
    private JLabel mTrackerCoordChooserLabel = new JLabel();
-   private JComboBox mTrackerCoordChooser = new JComboBox();
+   private JScrollPane mTrackerCoordChooserPane = new JScrollPane();
+   private JList mTrackerCoordChooser = new JList();
    private JPanel mTrackerAdvPanel = new JPanel();
    private JLabel mTrackerAnglesLabel = new JLabel();
    private JPanel mTrackerAnglesPanel = new JPanel();
@@ -720,22 +745,14 @@ public class TransmitterTransformPanel
       mVrjCoordChooser.setEnabled(mVrjCoordAdvButton.isSelected());
    }
 
-   void mTrackerManualRotButton_actionPerformed(ActionEvent actionEvent)
-   {
-      boolean enabled = mTrackerManualRotButton.isSelected();
-      mTrackerXRotSpinner.setEnabled(enabled);
-      mTrackerYRotSpinner.setEnabled(enabled);
-      mTrackerZRotSpinner.setEnabled(enabled);
-   }
-
-   void mVrjCoordChooser_actionPerformed(ActionEvent actionEvent)
+   void mVrjCoordChooser_valueChanged(ListSelectionEvent listSelectionEvent)
    {
       CoordFrame cf = mCoordFrames[mVrjCoordChooser.getSelectedIndex()];
       fireTransformChanged(mJugglerListeners, cf.getXRot(), cf.getYRot(),
                            cf.getZRot());
    }
 
-   void mTrackerCoordChooser_actionPerformed(ActionEvent actionEvent)
+   void mTrackerCoordChooser_valueChanged(ListSelectionEvent listSelectionEvent)
    {
       CoordFrame cf = mCoordFrames[mTrackerCoordChooser.getSelectedIndex()];
       mTrackerXRotSpinner.getModel().setValue(new Double(cf.getXRot()));
@@ -744,6 +761,14 @@ public class TransmitterTransformPanel
 
       fireTransformChanged(mTrackerListeners, cf.getXRot(), cf.getYRot(),
                            cf.getZRot());
+   }
+
+   void mTrackerManualRotButton_actionPerformed(ActionEvent actionEvent)
+   {
+      boolean enabled = mTrackerManualRotButton.isSelected();
+      mTrackerXRotSpinner.setEnabled(enabled);
+      mTrackerYRotSpinner.setEnabled(enabled);
+      mTrackerZRotSpinner.setEnabled(enabled);
    }
 
    void mTrackerPosUnitsChooser_actionPerformed(ActionEvent actionEvent)
@@ -784,6 +809,38 @@ public class TransmitterTransformPanel
       {
          mElement.setProperty("pre_translate", 2, mTrackerZPosField.getValue());
       }
+   }
+}
+
+class TransmitterTransformPanel_mTrackerCoordChooser_listSelectionAdapter
+   implements ListSelectionListener
+{
+   private TransmitterTransformPanel adaptee;
+   TransmitterTransformPanel_mTrackerCoordChooser_listSelectionAdapter(
+      TransmitterTransformPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+
+   public void valueChanged(ListSelectionEvent listSelectionEvent)
+   {
+      adaptee.mTrackerCoordChooser_valueChanged(listSelectionEvent);
+   }
+}
+
+class TransmitterTransformPanel_mVrjCoordChooser_listSelectionAdapter
+   implements ListSelectionListener
+{
+   private TransmitterTransformPanel adaptee;
+   TransmitterTransformPanel_mVrjCoordChooser_listSelectionAdapter(
+      TransmitterTransformPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+
+   public void valueChanged(ListSelectionEvent listSelectionEvent)
+   {
+      adaptee.mVrjCoordChooser_valueChanged(listSelectionEvent);
    }
 }
 
@@ -851,23 +908,6 @@ class TransmitterTransformPanel_mTrackerPosUnitsChooser_actionAdapter
    }
 }
 
-class TransmitterTransformPanel_mTrackerCoordChooser_actionAdapter
-   implements ActionListener
-{
-   private TransmitterTransformPanel adaptee;
-   TransmitterTransformPanel_mTrackerCoordChooser_actionAdapter(
-      TransmitterTransformPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void actionPerformed(ActionEvent actionEvent)
-   {
-
-      adaptee.mTrackerCoordChooser_actionPerformed(actionEvent);
-   }
-}
-
 class MeasurementUnit
 {
    public MeasurementUnit(String name, double toMeters)
@@ -878,22 +918,6 @@ class MeasurementUnit
 
    public String name;
    public double toMeters;
-}
-
-class TransmitterTransformPanel_mVrjCoordChooser_actionAdapter
-   implements ActionListener
-{
-   private TransmitterTransformPanel adaptee;
-   TransmitterTransformPanel_mVrjCoordChooser_actionAdapter(
-      TransmitterTransformPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void actionPerformed(ActionEvent actionEvent)
-   {
-      adaptee.mVrjCoordChooser_actionPerformed(actionEvent);
-   }
 }
 
 class CoordFrame
@@ -957,7 +981,7 @@ class CoordFrameRenderer
    {
       this.mCoordFrames = coordFrames;
       setOpaque(true);
-      setHorizontalAlignment(CENTER);
+      setHorizontalAlignment(LEFT);
       setVerticalAlignment(CENTER);
    }
 
@@ -983,12 +1007,12 @@ class CoordFrameRenderer
       {
          setIcon(mCoordFrames[selected_index].getIcon());
          setToolTipText(mCoordFrames[selected_index].toString());
+         setHorizontalTextPosition(RIGHT);
+         setVerticalTextPosition(CENTER);
       }
-      else
-      {
-         setText(mCoordFrames[selected_index].toString());
-         setFont(list.getFont());
-      }
+
+      setText(mCoordFrames[selected_index].toString());
+      setFont(list.getFont());
 
       return this;
    }
