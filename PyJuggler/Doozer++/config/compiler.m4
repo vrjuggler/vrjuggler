@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2003/06/23 19:40:08
-dnl Version:       1.29.2.8
+dnl Date modified: 2003/11/23 17:45:42
+dnl Version:       1.37
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -132,7 +132,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.29.2.8 2003/06/23 19:40:08 patrickh Exp
+dnl compiler.m4,v 1.37 2003/11/23 17:45:42 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for

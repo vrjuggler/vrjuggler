@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.info.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.1.2.1
+# Date modified: 2003/02/22 03:31:58
+# Version:       1.2
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.info.mk,v 1.1.2.1 2003/02/22 03:23:19 patrickh Exp
+# dpp.info.mk,v 1.2 2003/02/22 03:31:58 patrickh Exp
 #
 # This file <dpp.info.mk> is intended to be used by build systems that want to
 # give users an easy way to find out about all the possible targets.  It

@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.prog.mk,v
-# Date modified: 2003/02/22 03:23:20
-# Version:       1.3.4.1
+# Date modified: 2003/02/22 03:31:59
+# Version:       1.4
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.prog.mk,v 1.3.4.1 2003/02/22 03:23:20 patrickh Exp
+# dpp.prog.mk,v 1.4 2003/02/22 03:31:59 patrickh Exp
 #
 # This file <dpp.prog.mk> is intended to be used by makefiles that need to
 # build programs.  It provides some handy targets and includes other .mk

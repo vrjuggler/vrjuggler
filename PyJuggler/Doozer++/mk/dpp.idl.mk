@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.idl.mk,v
-# Date modified: 2003/06/08 16:11:36
-# Version:       1.9.2.2
+# Date modified: 2003/11/23 17:38:49
+# Version:       1.11
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.idl.mk,v 1.9.2.2 2003/06/08 16:11:36 patrickh Exp
+# dpp.idl.mk,v 1.11 2003/11/23 17:38:49 patrickh Exp
 #
 # This file <dpp.idl.mk> handles compiling a CORBA IDL file into source files
 # for various languages using the appropriate IDL compiler.

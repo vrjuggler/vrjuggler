@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          Makefile.in,v
-# Date modified: 2003/02/22 03:23:16
-# Version:       1.5.4.1
+# Date modified: 2003/02/22 03:31:57
+# Version:       1.6
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 #
-#	Makefile.in,v 1.5.4.1 2003/02/22 03:23:16 patrickh Exp
+#	Makefile.in,v 1.6 2003/02/22 03:31:57 patrickh Exp
 #
 
 datadir	= @datadir@/Doozer++

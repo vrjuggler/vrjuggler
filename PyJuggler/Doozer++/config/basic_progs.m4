@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          basic_progs.m4,v
-dnl Date modified: 2003/02/22 03:23:16
-dnl Version:       1.11.2.4
+dnl Date modified: 2003/02/22 03:31:57
+dnl Version:       1.15
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl Variables defined:
 dnl     GMAKE                - The GNU make executable.
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.11.2.4 2003/02/22 03:23:16 patrickh Exp
+dnl basic_progs.m4,v 1.15 2003/02/22 03:31:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.

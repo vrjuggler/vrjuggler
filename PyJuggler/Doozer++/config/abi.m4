@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2003/02/22 03:23:16
-dnl Version:       1.8.2.4
+dnl Date modified: 2003/02/22 03:31:57
+dnl Version:       1.12
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -73,7 +73,7 @@ dnl                    $CFLAGS and $CXXFLAGS.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.8.2.4 2003/02/22 03:23:16 patrickh Exp
+dnl abi.m4,v 1.12 2003/02/22 03:31:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters

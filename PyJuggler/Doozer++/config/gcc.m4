@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          gcc.m4,v
-dnl Date modified: 2003/06/23 19:40:08
-dnl Version:       1.8.2.8
+dnl Date modified: 2003/06/23 19:56:47
+dnl Version:       1.16
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -56,7 +56,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.8.2.8 2003/06/23 19:40:08 patrickh Exp
+dnl gcc.m4,v 1.16 2003/06/23 19:56:47 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.

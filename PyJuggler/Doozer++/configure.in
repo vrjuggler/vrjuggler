@@ -21,16 +21,18 @@
 #
 # -----------------------------------------------------------------
 # File:          configure.in,v
-# Date modified: 2003/02/22 03:23:16
-# Version:       1.5.4.1
+# Date modified: 2003/02/22 03:31:57
+# Version:       1.7
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_REVISION(1.5.4.1)
-AC_INIT(config/general.m4)
-AC_CONFIG_AUX_DIR(scripts)
+AC_REVISION([1.7])
+AC_INIT([config/general.m4])
+AC_CONFIG_AUX_DIR([scripts])
 
-AC_CHECK_PROG(AUTOCONF, autoconf, yes, AC_MSG_ERROR(*** Must have Autoconf ***))
-AC_CHECK_PROG(ACLOCAL, aclocal, yes, AC_MSG_ERROR(*** Must have aclocal ***))
+AC_CHECK_PROG([AUTOCONF], [autoconf], [yes],
+              [AC_MSG_ERROR([*** Must have Autoconf ***])])
+AC_CHECK_PROG([ACLOCAL], [aclocal], [yes],
+              [AC_MSG_ERROR([*** Must have aclocal ***])])
 
 AC_OUTPUT(Makefile)

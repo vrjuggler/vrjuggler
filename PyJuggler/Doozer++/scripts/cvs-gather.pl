@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.12.2.7 2003/02/22 03:23:20 patrickh Exp
+# cvs-gather.pl,v 1.31 2003/07/03 16:54:54 patrickh Exp
 
 use 5.005;
 
@@ -35,7 +35,8 @@ use Getopt::Long;
 use Pod::Usage;
 
 use strict 'vars';
-use vars qw($indent $log_file $full_path $debug_level);
+use vars qw($indent $log_file $full_path $debug_level $override $max_cvs_tries
+            $cvs_wait_length $cvs_wait_multiplier $cvs_wait_unit);
 use vars qw($CRITICAL_LVL $WARNING_LVL $CONFIG_LVL $STATE_LVL $VERB_LVL
             $HVERB_LVL $HEX_LVL);
 
@@ -60,20 +61,24 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.0.17';
+my $VERSION = '0.1.10';
 # *********************************************************************
 
-my $cfg_file      = '';
-my $help          = 0;
-my $print_version = 0;
-my $verbose       = 0;
-my $entry_mod     = 0;
-my $force_install = 0;
-my $manual        = 0;
+my $cfg_file         = '';
+my $help             = 0;
+my $ignore_overrides = 0;
+my $print_version    = 0;
+my $verbose          = 0;
+my $entry_mod        = 0;
+my $force_install    = 0;
+my $manual           = 0;
 
 my (@limit_modules) = ();
 my (@overrides)     = ();
 my (%cmd_overrides) = ();
+
+$max_cvs_tries = 10;
+my $cvs_wait   = "1s";
 
 $CRITICAL_LVL = 0;
 $WARNING_LVL  = 1;
@@ -85,10 +90,12 @@ $HEX_LVL      = 6;
 
 $debug_level = $CRITICAL_LVL;
 GetOptions('cfg=s' => \$cfg_file, 'help' => \$help, 'override=s' => \@overrides,
+           'ignore-overrides' => \$ignore_overrides,
            'debug=i' => \$debug_level, 'set=s' => \%cmd_overrides,
            'version' => \$print_version, 'verbose' => \$verbose,
            'entry-mod' => \$entry_mod, 'force-install' => \$force_install,
-           'target=s' => \@limit_modules, 'manual' => \$manual)
+           'target=s' => \@limit_modules, 'manual' => \$manual,
+           'cvs-tries=i' => \$max_cvs_tries, 'cvs-wait=s' => \$cvs_wait)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
@@ -102,9 +109,28 @@ printVersion() && exit(0) if $print_version;
 # then we push the debug level up to the max.
 $debug_level = $HVERB_LVL if $verbose && $debug_level <= $CRITICAL_LVL;
 
+$cvs_wait =~ /^(\d+)(\w?)$/;
+$cvs_wait_length = $1;
+my $wait_unit    = "$2";
+
+if ( "$wait_unit" == "s" )
+{
+   $cvs_wait_multiplier = 1;
+   $cvs_wait_unit       = "second";
+}
+elsif ( "$wait_unit" == "m" )
+{
+   $cvs_wait_multiplier = 60;
+   $cvs_wait_unit       = "minute";
+}
+
 if ( ! $cfg_file )
 {
-   if ( -r ".gatherrc" )
+   if ( -r "Gatherrc" )
+   {
+      $cfg_file = 'Gatherrc';
+   }
+   elsif ( -r ".gatherrc" )
    {
       $cfg_file = '.gatherrc';
    }
@@ -120,102 +146,126 @@ open(LOG_FILE, "> $log_file")
 
 my (%orig_modules) = ();
 parse("$cfg_file", \%orig_modules) or die "ERROR: Failed to parse $cfg_file\n";
+
+# %orig_modules contains the set of modules with all options set as read from
+# $cfg_file.  %override_modules is a copy of that information that will be
+# passed around to doOverride() below.  In this way, we can retain the original
+# module information if we need it for comparison purposes or something.  Once
+# all the doOverride() calls are complete, %override_modules will contain
+# exactly what the user wants in terms of modules to retrieve and what options
+# should be used in the retrieval process.
 my %override_modules = %orig_modules;
 
-if ( $#overrides == -1 )
+# If --ignore-overrides was not passed in, process any override files and
+# override command-line arguments.
+if ( ! $ignore_overrides )
 {
-   if ( -r ".gatherrc-override" )
+   # If the list of override files is empty, try the default files.
+   if ( $#overrides == -1 )
    {
-      push(@overrides, '.gatherrc-override');
-   }
-   elsif ( -r "$ENV{'HOME'}/.gatherrc-override" )
-   {
-      push(@overrides, "$ENV{'HOME'}/.gatherrc-override");
-   }
-}
-
-my $override = '';
-foreach $override ( @overrides )
-{
-   if ( open(OVERRIDE, "$override") )
-   {
-      my $line;
-      while ( $line = <OVERRIDE> )
+      if ( -r ".gatherrc-override" )
       {
-         chomp($line);
+         push(@overrides, '.gatherrc-override');
+      }
+      elsif ( -r "$ENV{'HOME'}/.gatherrc-override" )
+      {
+         push(@overrides, "$ENV{'HOME'}/.gatherrc-override");
+      }
+   }
 
-         # Strip comments.
-         $line =~ s/#.*$//;
+   # This is a global variable (argh!) that will contain the name of the
+   # current override file being processed.
+   $override = '';
 
-         # Skip blank lines.
-         next if $line =~ /^\s*$/;
-
-         # The current line has at least one wildcard.
-         if ( $line =~ /\*/ )
+   # Iterate over the list of override files passed in on the command line and
+   # apply each of them to the current environment.
+   foreach $override ( @overrides )
+   {
+      if ( open(OVERRIDE, "$override") )
+      {
+         my $line;
+         while ( $line = <OVERRIDE> )
          {
-            if ( $line !~ /\*\./ )
-            {
-               warn "ERROR: Invalid wildcard use at $override:$.\n";
-            }
-            else
-            {
-               my(@override_lines) = expandWildcardLine("$line",
-                                                        \%orig_modules);
+            chomp($line);
 
-               foreach ( @override_lines )
+            # Strip comments.
+            $line =~ s/#.*$//;
+
+            # Skip blank lines.
+            next if $line =~ /^\s*$/;
+
+            # The current line has at least one wildcard.
+            if ( $line =~ /\*/ )
+            {
+               if ( $line !~ /\*\./ )
                {
-                  doOverride("$_", \%override_modules);
+                  warn "ERROR: Invalid wildcard use at $override:$.\n";
+               }
+               else
+               {
+                  my(@override_lines) = expandWildcardLine("$line",
+                                                           \%orig_modules);
+
+                  foreach ( @override_lines )
+                  {
+                     doOverride("$_", \%override_modules);
+                  }
                }
             }
+            # The current line has no wildcards.
+            else
+            {
+               doOverride("$line", \%override_modules);
+            }
          }
-         # The current line has no wildcards.
-         else
-         {
-            doOverride("$line", \%override_modules);
-         }
-      }
 
-      close(OVERRIDE);
-   }
-   else
-   {
-      warn "WARNING: Could not open override file $override: $!\n";
-   }
-}
-
-my $key;
-foreach $key ( keys(%cmd_overrides) )
-{
-   # This is needed because expandWildcardLine() and doOverride() expect to
-   # see something of the form "<key> = <value>".
-   my $line = "$key = $cmd_overrides{$key}";
-
-   # The current line has at least one wildcard.
-   if ( $key =~ /\*/ )
-   {
-      if ( $key !~ /\*\./ )
-      {
-         warn "ERROR: Invalid wildcard use at $override:$.\n";
+         close(OVERRIDE);
       }
       else
       {
-         my(@override_lines) = expandWildcardLine("$line", \%orig_modules);
-
-         foreach ( @override_lines )
-         {
-            doOverride("$_", \%override_modules);
-         }
+         warn "WARNING: Could not open override file $override: $!\n";
       }
    }
-   # The current line has no wildcards.
-   else
+
+   # Loop over all the command-line overrides (--set key=value arguments) and
+   # apply them to the current environment.
+   my $key;
+   foreach $key ( keys(%cmd_overrides) )
    {
-      doOverride("$line", \%override_modules);
+      # This is needed because expandWildcardLine() and doOverride() expect to
+      # see something of the form "<key> = <value>".
+      my $line = "$key = $cmd_overrides{$key}";
+
+      # The current line has at least one wildcard.
+      if ( $key =~ /\*/ )
+      {
+         if ( $key !~ /\*\./ )
+         {
+            warn "ERROR: Invalid wildcard use at $override:$.\n";
+         }
+         else
+         {
+            my(@override_lines) = expandWildcardLine("$line", \%orig_modules);
+
+            foreach ( @override_lines )
+            {
+               doOverride("$_", \%override_modules);
+            }
+         }
+      }
+      # The current line has no wildcards.
+      else
+      {
+         doOverride("$line", \%override_modules);
+      }
    }
 }
 
 my (%targeted_modules) = ();
 
+# If the list of target modules is empty, then %override_modules contains the
+# module list we will use.  This hash may be different from %orig_modules
+# depending on what command-line options were given.
 if ( $#limit_modules == -1 )
 {
    %targeted_modules = %override_modules;
@@ -739,8 +789,21 @@ sub updateModule ($$$$$$)
    {
       my $cmd_line = "cvs update ";
 
-      $cmd_line .= "-r $tag " if $tag && "$tag" ne "HEAD";
-      $cmd_line .= "-D \"$date\" " if $date;
+      # If we are updating on the HEAD branch and no date is specified, use
+      # 'cvs update -A' to remove any sticky tags that may exist from an
+      # earlier update or checkout.
+      if ( "$tag" eq "HEAD" && ! $date )
+      {
+         $cmd_line .= "-A ";
+      }
+      # If we are not updating on the HEAD branch or a date is given, then we
+      # need extra arguments to get sticky tags put into place.
+      else
+      {
+         # Do not use -r when the tag name is HEAD.  CVS doesn't like this.
+         $cmd_line .= "-r $tag " if $tag && "$tag" ne "HEAD";
+         $cmd_line .= "-D \"$date\" " if $date;
+      }
 
       $status = runCvsCommand("$cmd_line");
    }
@@ -935,43 +998,57 @@ sub runCvsCommand ($)
 {
    my $cmd_line = shift;
 
-   # Open a pipe to read from the output of $cmd_line.
-   open(CVS_CMD, "$cmd_line 2>&1 |") or die "Can't fork: $!\n";
-   $| = 1;
+   my $try        = 0;
+   my $have_error = 0;
 
-   # Power users will appreciate seeing the output from CVS as it happens.
-   if ( $verbose )
+   do
    {
-      print "$_" while <CVS_CMD>;
-   }
-   # For simpler folk, we will just write out to a log file.  To keep them
-   # placated, however, there will be a little spinner that runs while CVS is
-   # doing its job.
-   else
-   {
-      my $next_char = '|';
+      # Open a pipe to read from the output of $cmd_line.
+      open(CVS_CMD, "$cmd_line 2>&1 |") or die "Can't fork: $!\n";
+      $| = 1;
 
-      print "Working ... $next_char";
-
-      while ( <CVS_CMD> )
+      # Power users will appreciate seeing the output from CVS as it happens.
+      if ( $verbose )
       {
-         print LOG_FILE "$_";
-         $next_char = nextSpinnerFrame("$next_char");
+         print "$_" while <CVS_CMD>;
+      }
+      # For simpler folk, we will just write out to a log file.  To keep them
+      # placated, however, there will be a little spinner that runs while CVS is
+      # doing its job.
+      else
+      {
+         my $next_char = '|';
+
+         print "Working ... $next_char";
+
+         while ( <CVS_CMD> )
+         {
+            print LOG_FILE "$_";
+            $next_char = nextSpinnerFrame("$next_char");
+         }
+
+         print "\n";
       }
 
-      print "\n";
-   }
+      $| = 0;
 
-   $| = 0;
+      # Close up our pipe now that we are done with it.
+      close(CVS_CMD);
 
-   # Close up our pipe now that we are done with it.
-   close(CVS_CMD);
-
-   if ( $? && ! $verbose )
-   {
-      warn "WARNING: An error may have occurred when running CVS.  " .
-           "Check $log_file\n";
-   }
+      if ( $? )
+      {
+         print "CVS returned error status.\n" .
+               "Trying again after sleeping $cvs_wait_length $cvs_wait_unit" .
+               ($cvs_wait_length == 1 ? "" : "s") . "...\n";
+         $try++;
+         $have_error = 1;
+         sleep($cvs_wait_length * $cvs_wait_multiplier);
+      }
+      else
+      {
+         $have_error = 0;
+      }
+   } while ( $have_error && $try < $max_cvs_tries );
 
    return 1;
 }
@@ -1101,12 +1178,32 @@ Print usage information.
 =item B<--cfg=<filename>>
 
 Specify the name of the module configuration to load. If not given,
-the current directory is searched for a .gatherrc file. If one is not
-found, the user's home directory is searched for the same file.
+the current directory is searched for a Gatherrc file and then a .gatherrc
+file. If one is not found, the user's home directory is searched for the
+same file.
 
 =item B<--debug=<level>>
 
 Set the debug output level (0-5).
+
+=item B<--cvs-tries=<count>>
+
+Set the maximum number of times to retry a failed CVS command.  The default
+is 10.
+
+=item B<--cvs-wait=<interval>>
+
+Set the amount of time to wait between retrying a failed CVS command.  The
+interval must be of the following form:
+
+=over 4
+
+XXs or XXm
+
+=back
+
+Here "XX" is an integer value, and "s" or "m" specifies the units, either
+seconds or minutes respectively.  The default is 1s.
 
 =item B<--entry-mod>
 
@@ -1152,6 +1249,12 @@ containing zero or more wildcards that describes the hierarchy of a
 given element (Project.Dep1.CVSROOT, for example).  The value is the
 new value for the named key.  Wildcards can only appear in place of
 module names.
+
+=item B<--ignore-overrides>
+
+Ignores I<all> overrides, both those that are defined explicitly (with
+the arguments B<--override> and B<--set>) and those that are read
+automatically (from B<.gatherrc-override> or B<$HOME/.gatherrc-override>).
 
 =item B<--verbose>
 
@@ -1237,14 +1340,15 @@ the end of the line.  No other comment syntax is supported.
 
 =over 8
 
-=item B<./.gatherrc>, B<$HOME/.gatherrc>
+=item B<./Gatherrc>, B<./.gatherrc>, B<$HOME/.gatherrc>
 
 If no configuration file is specified using B<--cfg>, the script will
-search the current directory for the file B<.gatherrc>.  If not found,
-the user's home directory is searched for a file of the same name.
-This is the basic configuration file that names the module (or modules)
-and any dependencies.  A configuration file must be specified using one
-of these three methods for the script to do any work.
+search the current directory for the file B<Gatherrc> and then the file
+B<.gatherrc>.  If not found, the user's home directory is searched for
+a file of the same name.  This is the basic configuration file that
+names the module (or modules) and any dependencies.  A configuration
+file must be specified using one of these three methods for the script
+to do any work.
 
 =item B<./.gatherrc-override>, B<$HOME/.gatherrc-override>
 

@@ -1,60 +1,60 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
-2003-06-23 patrickh     Added individual commands for use in makefiles that
-                        generate shared libraries and plug-ins from C or C++
-                        object files.
-2003-06-08 patrickh     Added support for generating Python code from IDL.
-2003-05-22 patrickh     Added a "warning level" feature for compiling with
+2003-11-23 patrickh     Fully synchronized with RELENG_1_5.
+                        NEW VERSION: 1.99.14
+2003-11-23 patrickh     Added support for generating Python code from IDL.
+2003-11-23 patrickh     Added a "warning level" feature for compiling with
                         different degrees of strictness.
-2003-01-15 patrickh     Added the cygcl.pl Perl script as a replacement for
-                        msvccc.  Using cygcl, the NSPR and OpenGL Performer
-                        macros are now safe to use when the installation
-                        directory contains spaces.
-2003-02-07 patrickh     The OpenGL Performer macro works on Windows.
-2002-12-04 patrickh     Began overhauling the macros DPP_HAVE_SUBSYNTH,
-                        DPP_HAVE_PORTAUDIO, DPP_HAVE_AUDIOWORKS, and
-                        DPP_HAVE_GLUT.  See RELEASE_NOTES.txt for required
-                        migration changes.
+2003-06-10 patrickh     Changed the command-line arguments --with-awroot,
+                        --with-paroot, --with-synroot, and --with-glutroot to
+                        --with-audioworks, --with-portaudio, --with-subsynth,
+                        and --with-glut respectively.
+                        NEW VERSION: 1.99.12
+2003-05-23 patrickh     Merged the compiler warning level features from
+                        RELENG_1_5.
+                        NEW VERSION: 1.99.11
+2003-01-25 patrickh     Changed the command-line arguments --with-oglroot and
+                        --with-oalroot to --with-opengl and --with-openal
+                        respectively.
+                        NEW VERSION: 1.99.10
 2002-12-02 patrickh     Added macros for determining which linker to use and if
                         that linker is GNU ld.
+                        NEW VERSION: 1.99.9
 2002-12-02 patrickh     Swapped the order of the first two arguments to
                         DPP_HAVE_CPPUNIT.
-                        Added the new macro DPP_CHECK_DYNLOAD_LIB.
+                        Added the new macro DPP_CHECK_DYNLAOD_LIB.
+                        NEW VERSION: 1.99.8
 2002-11-27 patrickh     Rewrote the CppUnit detection macro.  The command-line
                         argument it adds has been changed to --with-cppunit.
                         It now takes another argument specifying the minimum
                         required version.
+2002-11-17 patrickh     Resynchronized with RELENG_1_5 as of today.
+                        NEW VERSION: 1.99.7
 2002-09-18 nonchocoboy  Renamed dos2unix and unix2dos to unixpath and dospath
                         respectively.
-                        NEW VERSION: 1.5.1
-2002-08-08 patrickh     NEW VERSION: 1.5.0
+                        NEW VERSION: 1.99.6
+2002-08-16 patrickh     Removed the empty macro DPP_SYSTEM_SETUP().
+                        NEW VERSION: 1.99.5
 2002-08-16 patrickh     Separated compiler-sepcific setup from system-specific
                         setup.  There is now a macro called DPP_COMPILER_SETUP
                         that handles the compiler-specific configuration.  It
                         is called automaticaly by DPP_PROG_CC and DPP_PROG_CXX.
-                        DPP_SYSTEM_SUBST is now an empty macro.
-                        NEW VERSION: 1.4.108
-2002-08-02 patrickh     Run bsd-install.pl relative to $(DPP_SCRIPTDIR).
-                        NEW VERSION: 1.4.107
-2002-07-31 patrickh     Added a new macro, DPP_PROG_INSTALL, that finds a
-                        BSD-compatible install(1) tool.  It favors the use of
-                        bsd-install.pl (added earlier today) because it's
-                        smarter and more robust than other similar utilities.
-                        NEW VERSION: 1.4.106
+                        NEW VERSION: 1.99.4
 2002-07-31 patrickh     Revamped DPP_PERL_VER to work better and to deal with
                         the version numbering change between Perl 5.005 and
                         5.6.0.
-                        NEW VERSION: 1.4.105
-2002-07-31 patrickh     Added a Perl script that provides better compatibility
-                        with BSD install(1) than install-sh.
-2002-05-28 patrickh     The DPP_HAVE_BOOST() macro now takes a version number
-                        as its first argument.  The other arguments have been
-                        "shifted over" one position as a result.
-                        NEW VERSION: 1.4.104
+                        NEW VERSION: 1.99.3
+2002-05-28 patrickh     Added a version check to DPP_HAVE_BOOST().  The minimum
+                        version number is the first argument.  All the other
+                        arguments have been "shifted over" one position.  This
+                        was merged from the 1.5 release branch.
+                        NEW VERSION: 1.99.2
 2002-04-06 patrickh     Improved support for forcing the use of GCC for
-                        compiling.  Improved support for use of Doozer++ m4
-                        macros with Autoconf 2.5x.
-                        NEW VERSION: 1.4.102
+                        compiling.
+                        NEW VERSION: 1.99.1
+2002-04-03 patrickh     Moved package-detection macros into pkgs, a new
+                        subdirectory of config.
+                        NEW VERSION: 1.99.0
 2002-12-14 patrickh     Added the ability to specify the path to the NSPR
                         headers in the DPP_HAVE_NSPR macro through the use of
                         a new command line option (--with-nspr-includes).  Part

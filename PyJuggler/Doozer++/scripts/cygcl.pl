@@ -20,7 +20,7 @@
 # 02111-1307, USA.
 
 #
-# cygcl.pl,v 1.1.2.4 2003/02/27 06:55:48 patrickh Exp
+# cygcl.pl,v 1.3 2003/02/27 14:16:04 patrickh Exp
 #
 
 use strict 'vars';

@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2003/02/22 03:23:19
-dnl Version:       1.47.2.12
+dnl Date modified: 2003/02/22 03:31:57
+dnl Version:       1.57
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.47.2.12 2003/02/22 03:23:19 patrickh Exp
+dnl sys.m4,v 1.57 2003/02/22 03:31:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -325,13 +325,4 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
    AC_SUBST(ABI_LIST)
    AC_SUBST(OS_TYPE)
    AC_SUBST(PLATFORM)
-])
-
-dnl ---------------------------------------------------------------------------
-dnl This macro is deprecated and does nothing.  This definition is retained
-dnl for backwards compatibility with previous Doozer++ 1.x releases.
-dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_SYSTEM_SUBST,
-[
-   AC_OBSOLETE([$0], [; it will be removed in Doozer++ 2.0])
 ])

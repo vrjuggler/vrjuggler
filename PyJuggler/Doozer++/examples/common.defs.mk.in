@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2003/06/23 19:40:08
-# Version:       1.30.2.6
+# Date modified: 2003/11/23 17:35:49
+# Version:       1.36
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.30.2.6 2003/06/23 19:40:08 patrickh Exp
+# common.defs.mk.in,v 1.36 2003/11/23 17:35:49 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -68,12 +68,12 @@
 # CXXCPP          - Command for invoking the C preprocessor used by the C++
 #                   compiler.
 # CFLAGS          - Flags for $(CC).
-# CFLAGS_DYLINB   - Special flags used only when building dynamically linked
+# CFLAGS_DYNLIB   - Special flags used only when building dynamically linked
 #                   libraries with the C compiler.
 # CC_PROF_FLAGS   - Flag(s) to enable compiling profiled C objects.
 # CPPFLAGS        - Flags for $(CPP) and $(CXXCPP).
 # CXXFLAGS        - Flags for $(CXX).
-# CXXFLAGS_DYLINB - Special flags used only when building dynamically linked
+# CXXFLAGS_DYNLIB - Special flags used only when building dynamically linked
 #                   libraries with the C++ compiler.
 # CXX_PROF_FLAGS  - Flag(s) to enable compiling profiled C++ objects.
 # C_DLL           - Command for linking a DLL from C object files.
@@ -179,10 +179,10 @@ CPPFLAGS=		@CPPFLAGS@ $(EXTRA_CPPFLAGS)
 CXXFLAGS=		@CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
 CXXFLAGS_DYNLIB=	@CXXFLAGS_DYNLIB@
 CXX_PROF_FLAGS= 	@CXX_PROF_FLAGS@
-C_DLL=			@C_DLL@
-CXX_DLL=		@CXX_DLL@
-C_PLUGIN=		@C_PLUGIN@
-CXX_PLUGIN=		@CXX_PLUGIN@
+C_DLL=			@C_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+CXX_DLL=		@CXX_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+C_PLUGIN=		@C_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+CXX_PLUGIN=		@CXX_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 DEFS=			@DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG=		@DEP_GEN_FLAG@
 DEPEND_FLAGS=		@DEPEND_FLAGS@ $(INCLUDES) $(EXTRA_DEPEND_FLAGS)

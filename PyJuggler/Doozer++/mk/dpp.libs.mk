@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.13.2.1
+# Date modified: 2003/02/22 03:31:58
+# Version:       1.14
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.mk,v 1.13.2.1 2003/02/22 03:23:19 patrickh Exp
+# dpp.libs.mk,v 1.14 2003/02/22 03:31:58 patrickh Exp
 #
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage

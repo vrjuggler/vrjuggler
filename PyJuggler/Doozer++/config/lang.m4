@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          lang.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.4.2.1
+dnl Date modified: 2003/02/22 03:31:57
+dnl Version:       1.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -38,7 +38,7 @@ dnl     DPP_LANG_CPLUSPLUS - Set the current language to C++.
 dnl     DPP_LANG_JAVA      - Set the current language to Java.
 dnl ===========================================================================
 
-dnl lang.m4,v 1.4.2.1 2003/02/22 03:23:18 patrickh Exp
+dnl lang.m4,v 1.5 2003/02/22 03:31:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Save the current language state.

@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.simple-app.mk,v
-# Date modified: 2003/02/22 03:23:20
-# Version:       1.4.2.1
+# Date modified: 2003/02/22 03:31:59
+# Version:       1.5
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.simple-app.mk,v 1.4.2.1 2003/02/22 03:23:20 patrickh Exp
+# dpp.simple-app.mk,v 1.5 2003/02/22 03:31:59 patrickh Exp
 #
 # This file <dpp.simple-app.mk> defines many targets for use in compiling a
 # single application.

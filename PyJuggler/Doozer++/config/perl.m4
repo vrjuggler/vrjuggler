@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          perl.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.5.2.5
+dnl Date modified: 2003/11/23 17:47:48
+dnl Version:       1.9
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -47,14 +47,14 @@ dnl Variables defined:
 dnl     PERL - The full path to the Perl binary meeting the requirements.
 dnl ===========================================================================
 
-dnl perl.m4,v 1.5.2.5 2003/02/22 03:23:18 patrickh Exp
+dnl perl.m4,v 1.9 2003/11/23 17:47:48 patrickh Exp
 
 AC_DEFUN(DPP_EXTRACT_PERL_VER,
 [
    perl_ver_line=`$1 -v | grep -i 'this is perl'`
    changequote(<<, >>)
    PERL_VER_NUM=`echo $perl_ver_line | sed -e 's/^[^0-9]*\([1-9][^ ]*\) .*$/\1/'`
-   split_ver_num=`echo $PERL_VER_NUM | sed -e 's/\./ /g' -e 's/_/ /g'`
+   split_ver_num=`echo $PERL_VER_NUM | sed -e 's/[\._-]/ /g'`
    PERL_MAJOR_VER=`echo $split_ver_num | awk '{ print $<<1>> }' -`
    PERL_MINOR_VER=`echo $split_ver_num | awk '{ print $<<2>> }' - | sed -e 's/^0*\([^0][1-9]*\)/\1/'`
    PERL_PATCH_VER=`echo $split_ver_num | awk '{ print $<<3>> }' - | sed -e 's/^0*\([^0][1-9]*\)/\1/'`

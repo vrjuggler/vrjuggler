@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          pthreads.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.18.2.2
+dnl Date modified: 2003/02/22 03:31:57
+dnl Version:       1.23
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -79,7 +79,7 @@ dnl     _PTHREADS_DRAFT_10 - The POSIX thread implementation is Draft 10.
 dnl     _PTHREADS_DRAFT_4  - The POSIX thread implementation is Draft 4.
 dnl ===========================================================================
 
-dnl pthreads.m4,v 1.18.2.2 2003/02/22 03:23:18 patrickh Exp
+dnl pthreads.m4,v 1.23 2003/02/22 03:31:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that POSIX threads are needed for compiling.

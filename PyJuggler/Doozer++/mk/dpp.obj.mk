@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.obj.mk,v
-# Date modified: 2003/02/22 03:23:20
-# Version:       1.9.2.2
+# Date modified: 2003/02/22 03:31:58
+# Version:       1.11
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.obj.mk,v 1.9.2.2 2003/02/22 03:23:20 patrickh Exp
+# dpp.obj.mk,v 1.11 2003/02/22 03:31:58 patrickh Exp
 #
 # This file <dpp.obj.mk> is intended to be used by makefiles that need to
 # build object files.  It defines variables and targets that are common to all

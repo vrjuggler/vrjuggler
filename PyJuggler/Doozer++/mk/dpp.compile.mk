@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.compile.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.9.2.1
+# Date modified: 2003/02/22 03:31:58
+# Version:       1.11
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.compile.mk,v 1.9.2.1 2003/02/22 03:23:19 patrickh Exp
+# dpp.compile.mk,v 1.11 2003/02/22 03:31:58 patrickh Exp
 #
 # This include file <dpp.compile.mk> handles source code compiling.
 # -----------------------------------------------------------------------------
@@ -138,5 +138,6 @@ else
 endif
 
 $(OBJDIR)/$(JAVA_PKG)/%.class: %.java
-	$(JAVAC) -classpath "$(DPP_CLASSPATH)" -d "$(OBJDIR)"		\
+	$(JAVAC) $(JAVAC_FLAGS) $(EXTRA_JAVAC_FLAGS)			\
+          -classpath "$(DPP_CLASSPATH)" -d "$(OBJDIR)"
           -sourcepath ".:$(JAVA_SRC)" $<

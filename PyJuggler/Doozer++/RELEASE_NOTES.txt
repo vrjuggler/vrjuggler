@@ -8,70 +8,21 @@ For all versions:
 
 ===============================================================================
 
- Version: 1.5.1
-Released: January 4, 2003
+ Version: 2.0.0
+Released: <month> <day>, 2003
 
-    New features:
-        * The following macros have been added:
+    Differences from 1.x:
+        * Command-line arguments such as --with-oglroot in Doozer++ 1.x are
+          now named --with-opengl.  This naming convention is more obvious
+          and follows the conventions used by other configure scripts.
 
-             - DPP_CHECK_DYNLOAD_LIB: Determines what library, if any, is
-               needed for performing dynamic code loading at runtime
-             - DPP_PROG_LINKER: Determines what linker is in use
-             - DPP_LINKER_IS_GNU_LD: Determines if the linker is GNU ld
-
-        * Capabilities for building static libraries alongside dynamic
-          libraries on Win32 have been added.
-
-    Bugs fixed:
-        * Mac OS X 10.2 is detected properly.
-
-    Required changes when upgrading from 1.5.0:
-        * The helper functions for converting paths have been renamed as
-          follows:
-
-             - dos2unix ==> unixpath
-             - unix2dos ==> dospath
-
-        * The macro DPP_HAVE_CPPUNIT has been modified in the following ways:
-
-             1. The command-line parameter it adds is now --with-cppunit.
-             2. Its argument list now takes as its first parameter the
-                minimum required CppUnit version.  The other arguments have
-                been shifted over one position.
-             3. The variable $CPPUNITROOT is now spelled $CPPUNIT_ROOT.
-
-        * The macro DPP_HAVE_PORTAUDIO has been modified in the following
-          ways:
-
-             1. Renamed the command-line argument to --with-portaudio
-             2. Renamed substitution variables as follows:
-                  PAROOT      --> PORTAUDIO_ROOT
-                  PA_INCLUDES --> PORTAUDIO_INCLUDES
-                  PA_LDFLAGS  --> PORTAUDIO_LDFLAGS
-
-        * The macro DPP_HAVE_SUBSYNTH has been modified in the following ways:
-
-             1. Renamed the command-line argument to --with-subsynth
-             2. Renamed substitution variables as follows:
-                  SYNROOT      --> SUBSYNTH_ROOT
-                  SYN_INCLUDES --> SUBSYNTH_INCLUDES
-                  SYN_LDFLAGS  --> SUBSYNTH_LDFLAGS
-
-        * The macro DPP_HAVE_AUDIOWORKS has been modified in the following
-          ways:
-
-             1. Changed the name of the command-line argument to
-                --with-audioworks
-             2. Changed substitution variable names as follows:
-                  AWROOT      - AUDIOWORKS_ROOT
-                  AW_INCLUDES - AUDIOWORKS_INCLUDES
-                  AW_LDFLAGS  - AUDIOWORKS_LDFLAGS
-
-        * The macro DPP_HAVE_GLUT has been modified in the following ways:
-
-             1. The command-line argument has been renamed to --with-glut.
-             2. The root directory variable has been renamed from $GLUTROOT
-                to $GLUT_ROOT.
+    Required changes when upgrading from 1.x:
+        * To detect macros for third-party packages, the include path given
+          to Aclocal must be extended to include the directory
+          $(DPP_PATH)/config/pkgs (where $DPP_PATH is the root directory
+          of the Doozer++ installation).
+        * The DPP_SYSTEM_SETUP() macro that was deprecated in version 1.5.0
+          has been removed.
 
  Version: 1.5.0
 Released: September 8, 2002
@@ -112,7 +63,3 @@ Released: September 8, 2002
           The new argument specifies the path to the NSPR headers.  For a
           quick update, just use the value of nspr-root with "/include"
           appended.
-
-        * DPP_BASIC_PROGS no longer checks for a BSD-compatible install(1)
-          utility.  Use DPP_PROG_INSTALL(no) for functionality similar to
-          Doozer++ 1.4.x.

@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# bsd-install.pl,v 1.1.2.3 2003/02/22 03:23:20 patrickh Exp
+# bsd-install.pl,v 1.4 2003/11/07 16:48:44 patrickh Exp
 
 use 5.004;
 
@@ -149,7 +149,7 @@ sub installFile($$)
          $source     = "$cur_dir/$source";
       }
 
-      unlink("$dest") if -e "$dest";
+      unlink("$dest") if -e "$dest" or -l "$dest";
       symlink("$source", "$dest")
          or warn "WARNING: Failed to make symlink from $source to $dest: $!\n";
    }

@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# genmkinfo.pl,v 1.1.2.1 2003/02/22 03:23:20 patrickh Exp
+# genmkinfo.pl,v 1.2 2003/02/22 03:31:59 patrickh Exp
 
 require 5.004;
 

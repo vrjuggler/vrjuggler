@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2003/02/22 03:23:17
-dnl Version:       1.40.2.6
+dnl Date modified: 2003/10/11 15:03:46
+dnl Version:       1.48
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.40.2.6 2003/02/22 03:23:17 patrickh Exp
+dnl java.m4,v 1.48 2003/10/11 15:03:46 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -116,14 +116,14 @@ AC_DEFUN(DPP_PATH_JAVA,
 
    if test "x$jdkhome" != "x" ; then
       cmdline_path="$jdkhome/bin:"
-      : ${JDK_HOME="$jdkhome"}
+      JDK_HOME="$jdkhome"
    fi
 
    if test "x$OS_TYPE" = "xWin32" ; then
       JDK_HOME=`unixpath -p "$JDK_HOME"`
       JCPS=';'
    else
-       JCPS=':'
+      JCPS=':'
    fi
 
    JAVA=''
@@ -386,11 +386,15 @@ AC_DEFUN(DPP_CHECK_JAVA_STATIC_METHOD,
    dnl to do what I need...
    dpp_cache_var=`echo dpp_cv_'$1.$2' | sed -e 's/\./_/g' -e 's/(/_/g' -e 's/)/_/g' -e 's/ /_/g'`
 
+   dnl Backwards compatibility with Autoconf 2.13.
+   : ${ECHO_N:=$ac_n}
+   : ${ECHO_C:=$ac_c}
+
    AC_MSG_CHECKING([for $2 in $1])
 
    dnl Check cached value (based on AC_CACHE_VAL).
    if eval "test \"`echo '$''{'$dpp_cache_var'+set}'`\" = set" ; then
-      echo $ac_n "(cached) $ac_c" 1>&AC_FD_MSG
+      echo $ECHO_N "(cached) $ECHO_C" 1>&AC_FD_MSG
    dnl The value was not cached.
    else
       dpp_class_name='ConfTest'
@@ -477,17 +481,21 @@ AC_DEFUN(DPP_CHECK_JAVA_METHOD,
    dnl to do what I need...
    dpp_cache_var=`echo dpp_cv_'$1.$2' | sed -e 's/\./_/g' -e 's/(/_/g' -e 's/)/_/g' -e 's/ /_/g'`
 
+   dnl Backwards compatibility with Autoconf 2.13.
+   : ${ECHO_N:=$ac_n}
+   : ${ECHO_C:=$ac_c}
+
    AC_MSG_CHECKING([for $2 in $1])
 
    dnl Check cached value (based on AC_CACHE_VAL).
    if eval "test \"`echo '$''{'$dpp_cache_var'+set}'`\" = set" ; then
-      echo $ac_n "(cached) $ac_c" 1>&AC_FD_MSG
+      echo $ECHO_N "(cached) $ECHO_C" 1>&AC_FD_MSG
    dnl The value was not cached.
    else
       dpp_class_name='ConfTest'
 
-       dnl Create the .java file that will be compiled.
-       cat > $dpp_class_name.java <<NONSTATIC_EOF
+      dnl Create the .java file that will be compiled.
+      cat > $dpp_class_name.java <<NONSTATIC_EOF
 public class $dpp_class_name
 {
    public static void main (String args[])

@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.subdir.mk,v
-# Date modified: 2003/02/22 03:23:20
-# Version:       1.4.4.1
+# Date modified: 2003/02/22 03:31:59
+# Version:       1.5
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.subdir.mk,v 1.4.4.1 2003/02/22 03:23:20 patrickh Exp
+# dpp.subdir.mk,v 1.5 2003/02/22 03:31:59 patrickh Exp
 #
 # This include file <dpp.subdir.mk> handles recursive builds using a target
 # called 'recursive'.

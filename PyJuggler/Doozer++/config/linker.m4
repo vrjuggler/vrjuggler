@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          linker.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.1.2.7
+dnl Date modified: 2003/11/23 17:31:13
+dnl Version:       1.7
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,7 +43,7 @@ dnl                            GNU ld (as determined by DPP_LINKER_IS_GNU_LD).
 dnl                            It will be set to "no" otherwise.
 dnl ===========================================================================
 
-dnl linker.m4,v 1.1.2.7 2003/02/22 03:23:18 patrickh Exp
+dnl linker.m4,v 1.7 2003/11/23 17:31:13 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Finds the platform-specific tool used for linking object files.  The

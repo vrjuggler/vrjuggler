@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          install.m4,v
-dnl Date modified: 2003/02/22 03:23:17
-dnl Version:       1.5.2.7
+dnl Date modified: 2003/02/22 03:31:57
+dnl Version:       1.10
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -56,7 +56,7 @@ dnl     EXEC_PERMS - The UNIX-style octal permissions of executable files.
 dnl     DIR_PERMS  - The UNIX-style octal permissions of directories.
 dnl ===========================================================================
 
-dnl install.m4,v 1.5.2.7 2003/02/22 03:23:17 patrickh Exp
+dnl install.m4,v 1.10 2003/02/22 03:31:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Set up the installer configuration.  This adds command line options for

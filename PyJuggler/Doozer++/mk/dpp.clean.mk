@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.clean.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.7.2.4
+# Date modified: 2003/11/23 17:37:19
+# Version:       1.11
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.clean.mk,v 1.7.2.4 2003/02/22 03:23:19 patrickh Exp
+# dpp.clean.mk,v 1.11 2003/11/23 17:37:19 patrickh Exp
 #
 # This include file <dpp.clean.mk> handles clean-up operations.  It adds a
 # 'clean' target and a 'cleandepend' target.

@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          general.m4,v
-dnl Date modified: 2003/02/22 03:23:17
-dnl Version:       1.44.2.15
+dnl Date modified: 2003/11/23 17:56:27
+dnl Version:       1.65
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,10 +43,10 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.44.2.15 2003/02/22 03:23:17 patrickh Exp
+dnl general.m4,v 1.65 2003/11/23 17:56:27 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.5.1)
+define(DPP_DPPVERSION, 1.99.14)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
@@ -201,14 +201,21 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_VERSION_CHECK_MSG,
 [
    AC_CACHE_CHECK([whether $1 version is >= $3], [$4],
-      [DPP_VERSION_CHECK([$2], [$3],
-         [ $4="$2"
-           ifelse([$5], , :, [$5])
-         ],
-         [ $4='no'
-           AC_MSG_RESULT([$2])
-           ifelse([$6], , :, [$6])
-         ])])
+      [DPP_VERSION_CHECK([$2], [$3], [$4="$2"],
+         [$4='no'
+          AC_MSG_RESULT([$2])])])
+
+   dnl Successful version comparison.  Note that $4 is a variable name, not
+   dnl the result of evaluating a variable.  As such, we have to prepend a '$'
+   dnl to its name here in order to get its value.
+   if test "x$$4" != "xno" ; then
+      ifelse([$5], , :, [$5])
+      true
+   dnl Failed version comparison.
+   else
+      ifelse([$6], , :, [$6])
+      true
+   fi
 ])
 
 dnl ---------------------------------------------------------------------------

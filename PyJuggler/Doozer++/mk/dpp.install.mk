@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.install.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.9.2.4
+# Date modified: 2003/02/22 03:31:58
+# Version:       1.12
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.install.mk,v 1.9.2.4 2003/02/22 03:23:19 patrickh Exp
+# dpp.install.mk,v 1.12 2003/02/22 03:31:58 patrickh Exp
 #
 # This include file <dpp.install.mk> handles install operations.  It adds an
 # 'install' target.

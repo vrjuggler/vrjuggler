@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.dep.mk,v
-# Date modified: 2003/06/06 15:37:28
-# Version:       1.10.2.3
+# Date modified: 2003/06/06 15:39:07
+# Version:       1.13
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.dep.mk,v 1.10.2.3 2003/06/06 15:37:28 patrickh Exp
+# dpp.dep.mk,v 1.13 2003/06/06 15:39:07 patrickh Exp
 #
 # This include file <dpp.dep.mk> handles source code dependencies.  It
 # generates makefiles corresponding to each source file (ending in .c or .cpp)

@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2003/02/22 03:23:20
-# Version:       1.15.2.18
+# Date modified: 2003/10/06 17:17:51
+# Version:       1.34
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.15.2.18 2003/02/22 03:23:20 patrickh Exp
+# dpp.libs.targets.mk,v 1.34 2003/10/06 17:17:51 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -241,8 +241,8 @@ dbg:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="dbg" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.dbg.build
-	@$(MAKE) lib.static.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" obj.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" lib.static.dbg.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="dbg" $(AFTERBUILD)
 endif
@@ -260,8 +260,8 @@ dbg-dso:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="dbg" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.dbg.build
-	@$(MAKE) lib.dynamic.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" obj.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" lib.dynamic.dbg.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="dbg" $(AFTERBUILD)
 endif
@@ -279,8 +279,8 @@ opt:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="opt" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.opt.build
-	@$(MAKE) lib.static.opt.build
+	@$(MAKE) BUILD_TYPE="opt" obj.opt.build
+	@$(MAKE) BUILD_TYPE="opt" lib.static.opt.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="opt" $(AFTERBUILD)
 endif
@@ -298,8 +298,8 @@ opt-dso:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="opt" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.opt.build
-	@$(MAKE) lib.dynamic.opt.build
+	@$(MAKE) BUILD_TYPE="opt" obj.opt.build
+	@$(MAKE) BUILD_TYPE="opt" lib.dynamic.opt.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="opt" $(AFTERBUILD)
 endif
@@ -317,8 +317,8 @@ prof:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="prof" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.prof.build
-	@$(MAKE) lib.static.prof.build
+	@$(MAKE) BUILD_TYPE="prof" obj.prof.build
+	@$(MAKE) BUILD_TYPE="prof" lib.static.prof.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="prof" $(AFTERBUILD)
 endif
@@ -336,8 +336,8 @@ prof-dso:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="prof" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.prof.build
-	@$(MAKE) lib.dynamic.prof.build
+	@$(MAKE) BUILD_TYPE="prof" obj.prof.build
+	@$(MAKE) BUILD_TYPE="prof" lib.dynamic.prof.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="prof" $(AFTERBUILD)
 endif
@@ -429,9 +429,9 @@ debug:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="dbg" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.dbg.build
-	@$(MAKE) lib.static.dbg.build
-	@$(MAKE) lib.dynamic.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" obj.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" lib.static.dbg.build
+	@$(MAKE) BUILD_TYPE="dbg" lib.dynamic.dbg.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="dbg" $(AFTERBUILD)
 endif
@@ -450,9 +450,9 @@ optim:
 ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="opt" $(BEFOREBUILD)
 endif
-	@$(MAKE) obj.opt.build
-	@$(MAKE) lib.static.opt.build
-	@$(MAKE) lib.dynamic.opt.build
+	@$(MAKE) BUILD_TYPE="opt" obj.opt.build
+	@$(MAKE) BUILD_TYPE="opt" lib.static.opt.build
+	@$(MAKE) BUILD_TYPE="opt" lib.dynamic.opt.build
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="opt" $(AFTERBUILD)
 endif
@@ -472,9 +472,9 @@ ifdef BEFOREBUILD
 	@$(MAKE) BUILD_TYPE="prof" $(BEFOREBUILD)
 endif
 ifdef BUILD_PROF_LIBS
-	@$(MAKE) obj.prof.build
-	@$(MAKE) lib.static.prof.build
-	@$(MAKE) lib.dynamic.prof.build
+	@$(MAKE) BUILD_TYPE="prof" obj.prof.build
+	@$(MAKE) BUILD_TYPE="prof" lib.static.prof.build
+	@$(MAKE) BUILD_TYPE="prof" lib.dynamic.prof.build
 endif
 ifdef AFTERBUILD
 	@$(MAKE) BUILD_TYPE="prof" $(AFTERBUILD)
