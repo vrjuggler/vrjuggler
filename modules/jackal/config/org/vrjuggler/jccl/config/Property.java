@@ -57,11 +57,11 @@ public class Property {
     public void applyNewDesc (PropertyDesc _desc) {
         desc = _desc;
         num = desc.getNumValues();
-        if (!valtype.equals(desc.getValType())) {
+        if (valtype != desc.getValType()) {
             vals.clear();
             valtype = desc.getValType();
         }
-	if (valtype.equals (ValType.t_embeddedchunk)) {
+	if (valtype == ValType.EMBEDDEDCHUNK) {
 	    ChunkDesc newembeddesc = ChunkFactory.getChunkDescByToken(desc.getEnumAtIndex(0).str);
 	    if (newembeddesc == null) {
 		System.err.println ("Big Messup in Property Constructor!!!");
@@ -88,7 +88,7 @@ public class Property {
 	num = p.num;
 	desc = p.desc;
 	embeddesc = p.embeddesc;
-	valtype = new ValType (p.valtype);
+	valtype = p.valtype;
 	vals = new ArrayList();
         int i, n = p.vals.size();
 	for (i = 0; i < n; i++)
@@ -102,7 +102,7 @@ public class Property {
 	valtype = desc.getValType();
 	num = desc.getNumValues();
 	vals = new ArrayList();
-	if (valtype.equals (ValType.t_embeddedchunk)) {
+	if (valtype == ValType.EMBEDDEDCHUNK) {
 	    embeddesc = ChunkFactory.getChunkDescByToken(d.getEnumAtIndex(0).str);
 	    if (embeddesc == null) {
 		System.err.println ("Big Messup in Property Constructor!!!");
@@ -123,7 +123,7 @@ public class Property {
 	// if i == -1, we're just tacking onto the end
 	if (i == -1)
 	    i = vals.size();
-	if (valtype.equals (ValType.t_embeddedchunk)) {
+	if (valtype == ValType.EMBEDDEDCHUNK) {
 	    ConfigChunk ch = ChunkFactory.createChunk (embeddesc);
 	    if (i < desc.getValueLabelsSize())
 		ch.setName (desc.getValueLabel(i));
@@ -142,6 +142,10 @@ public class Property {
 
     public final String getToken () {
 	return desc.getToken();
+    }
+
+    public final ValType getValType () {
+        return desc.getValType();
     }
 
 
@@ -182,7 +186,7 @@ public class Property {
 
 
     public void setValue (VarValue s, int v) {
- 	if (!valtype.equals (s.getValType())) {
+ 	if (valtype != s.getValType()) {
             System.out.println ("Property.setValue() - type mismatch");
  	    return;
         }
@@ -234,7 +238,7 @@ public class Property {
 	    return false;
 	if (!getToken().equals(p.getToken()))
 	    return false;
-	if (!valtype.equals(p.valtype))
+	if (valtype != p.getValType())
 	    return false;
 	if (vals.size() != p.vals.size())
 	    return false;
@@ -256,7 +260,7 @@ public class Property {
 	for (int i = 0; i < vals.size(); i++) {
 	    v = (VarValue)vals.get(i);
 
-	    if (valtype.equals (ValType.t_embeddedchunk)) {
+	    if (valtype == ValType.EMBEDDEDCHUNK) {
 		s += "\n" + v.getEmbeddedChunk().toString(pad + "    ");
 	    }
 	    else {
@@ -280,7 +284,7 @@ public class Property {
         int i, n = vals.size();
         for (i = 0; i < n; i++) {
             v = (VarValue)vals.get(i);
-            if (valtype.equals (ValType.t_embeddedchunk)) {
+            if (valtype == ValType.EMBEDDEDCHUNK) {
                 s.append('\n');
                 s.append(v.getEmbeddedChunk().xmlRep (pad + "    "));
             }
@@ -355,7 +359,7 @@ public class Property {
 	if (st.ttype == '}')
 	    return null;
 
-	if (valtype.equals (ValType.t_embeddedchunk)) {
+	if (valtype == ValType.EMBEDDEDCHUNK) {
 	    if (embeddesc != null) {
 		ConfigChunk c = ChunkFactory.createChunk (embeddesc);
 		c.read(st);

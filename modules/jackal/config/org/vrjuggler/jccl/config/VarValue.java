@@ -77,27 +77,27 @@ public final class VarValue {
     }
 
     public VarValue (int v) {
-	valtype = new ValType(ValType.t_int);
+	valtype = ValType.INT;
 	intval = v;
     }
 
     public VarValue (float v) {
-	valtype = new ValType (ValType.t_float);
+	valtype = ValType.FLOAT;
 	floatval = v;
     }
 
     public VarValue (boolean v) {
-	valtype = new ValType (ValType.t_bool);
+	valtype = ValType.BOOL;
 	boolval = v;
     }
 
     public VarValue (String v) {
-	valtype = new ValType (ValType.t_string);
+	valtype = ValType.STRING;
 	strval = v;
     }
 
     public VarValue (ConfigChunk v) {
-	valtype = new ValType (ValType.t_embeddedchunk);
+	valtype = ValType.EMBEDDEDCHUNK;
 	embeddedchunkval = v;
     }
 
@@ -106,40 +106,42 @@ public final class VarValue {
     public boolean equals(VarValue v) {
         if (v == null)
             return false;
-	if (!valtype.equals(v.valtype))
+	if (valtype != v.valtype)
 	    return false;
-	else if (valtype.equals (ValType.t_int))
+	else if (valtype == ValType.INT)
 	    return (intval == v.intval);
-	else if (valtype.equals (ValType.t_float))
+	else if (valtype == ValType.FLOAT)
 	    return (floatval == v.floatval);
-	else if (valtype.equals (ValType.t_bool))
+	else if (valtype == ValType.BOOL)
 	    return (boolval == v.boolval);
-	else if (valtype.equals (ValType.t_embeddedchunk))
+	else if (valtype == ValType.EMBEDDEDCHUNK)
 	    return (embeddedchunkval.equals (v.embeddedchunkval));
-	else
+	else if (valtype == ValType.STRING || valtype == ValType.CHUNK)
 	    return (strval.equals(v.strval));
+        else
+            return false;
     }
 
 
 
     public String toString() {
 	String s = null;
-	if (valtype.equals(ValType.t_bool)) {
+	if (valtype == ValType.BOOL) {
 	    s = (boolval)?"True":"False";
 	}
-	else if (valtype.equals(ValType.t_string)) {
+	else if (valtype == ValType.STRING) {
 	    s = strval;
 	}
-	else if (valtype.equals(ValType.t_chunk)) {
+	else if (valtype == ValType.CHUNK) {
 	    s = strval;
 	}
-	else if (valtype.equals(ValType.t_int)) {
+	else if (valtype == ValType.INT) {
 	    s = String.valueOf(intval);
 	}
-	else if (valtype.equals(ValType.t_float)) {
+	else if (valtype == ValType.FLOAT) {
 	    s = String.valueOf(floatval);
 	}
-	else if (valtype.equals (ValType.t_embeddedchunk)) {
+	else if (valtype == ValType.EMBEDDEDCHUNK) {
 	    s = embeddedchunkval.toString();
 	}
 	return s;
@@ -158,33 +160,20 @@ public final class VarValue {
      */
     public void set (String s) {
 	try {
-	    switch (valtype.getInt()) {
-	    case ValType.t_string:
+            if (valtype == ValType.STRING ||
+                valtype == ValType.CHUNK)
 		strval = s;
-		break;
-	    case ValType.t_chunk:
-		strval = s;
-		break;
-	    case ValType.t_bool:
+            else if (valtype == ValType.BOOL)
 		boolval = s.equalsIgnoreCase("true")? true:false;
-		break;
-	    case ValType.t_int:
+            else if (valtype == ValType.INT)
 		intval = Integer.parseInt(s);
-		break;
-	    case ValType.t_float:
-		floatval = new Float(s).floatValue();
-		/* why doesn't Float have something analogous to 
-		 * Integer.parseInt()? 
-		 */
-		break;
-	    case ValType.t_embeddedchunk:
+            else if (valtype == ValType.FLOAT)
+                floatval = Float.parseFloat(s);
+            else if (valtype == ValType.EMBEDDEDCHUNK) {
 		embeddedchunkval = null;
 		throw (new VarValueException ("Error assigning string to " +
 					      "embeddedchunk VarValue"));
-		//break;
-	    default:
-		break;
-	    }
+            }
 	}
 	catch (NumberFormatException e) {
 	    /* just so it's defined: if an error occurred, we set the numeric
@@ -202,7 +191,7 @@ public final class VarValue {
 
 
     public void set (boolean s) {
-	if (valtype.equals(ValType.t_bool))
+	if (valtype == ValType.BOOL)
 	    boolval = s;
 	else
 	    throw (new VarValueException ("Error assigning to Boolean VarValue"));
@@ -210,24 +199,19 @@ public final class VarValue {
 
 
     public void set (int s) {
-	switch (valtype.getInt()) {
-	case ValType.t_int:
+        if (valtype == ValType.INT)
 	    intval = s;
-	    break;
-	case ValType.t_float:
+        else if (valtype == ValType.FLOAT)
 	    floatval = (float)s;
-	    break;
-	case ValType.t_bool:
+        else if (valtype == ValType.BOOL)
 	    boolval = (s==0)?false:true;
-	    break;
-	default:
+        else
 	    throw (new VarValueException ("Error assigning to Integer VarValue"));
-	}
     }
 
 
     public void set (float s) {
-	if (valtype.equals(ValType.t_float))
+	if (valtype == ValType.FLOAT)
 	    floatval = s;
 	else
 	    throw (new VarValueException ("Error assigning to Float VarValue"));
@@ -235,7 +219,7 @@ public final class VarValue {
 
 
     public void set (ConfigChunk ch) {
-	if (valtype.equals (ValType.t_embeddedchunk))
+	if (valtype == ValType.EMBEDDEDCHUNK)
 	    embeddedchunkval = ch;
 	else
 	    throw (new VarValueException ("Error assigning to EmbeddedChunk VarValue"));
@@ -244,7 +228,7 @@ public final class VarValue {
 
     public void set (VarValue s) {
 	/* so we can copy one varvalue into another */
-	if (!valtype.equals(s.getValType()))
+	if (valtype != s.getValType())
 	    throw (new VarValueException ("Incompatible types assigning one VarValue to another."));
 	boolval = s.boolval;
 	intval = s.intval;
@@ -255,30 +239,28 @@ public final class VarValue {
 
 
     public int getInt() {
-	switch (valtype.getInt()) {
-	case ValType.t_int:
+        if (valtype == ValType.INT)
 	    return intval;
-	case ValType.t_float:
+        if (valtype == ValType.FLOAT)
 	    return (int)floatval;
-	case ValType.t_bool:
+        if (valtype == ValType.BOOL)
 	    return boolval?1:0;
-	default:
-	    throw (new VarValueException ("Error in getInt()"));
-	}
+        throw (new VarValueException ("Error in getInt()"));
     }
 
 
     public float getFloat() {
-	if (valtype.equals(ValType.t_float))
+	if (valtype == ValType.FLOAT)
 	    return floatval;
-	else
-	    throw (new VarValueException ("Error in getFloat()"));
+        if (valtype == ValType.INT)
+            return (float)intval;
+        throw (new VarValueException ("Error in getFloat()"));
     }
 
 
 
     public boolean getBoolean() {
-	if (valtype.equals(ValType.t_bool))
+	if (valtype == ValType.BOOL)
 	    return boolval;
 	else
 	    throw (new VarValueException ("Error in getBool()"));
@@ -286,7 +268,8 @@ public final class VarValue {
 
 
     public String getString() {
-	if (valtype.equals(ValType.t_string) || valtype.equals(ValType.t_chunk))
+	if (valtype == ValType.STRING ||
+            valtype == ValType.CHUNK)
 	    return strval;
 	else
 	    throw (new VarValueException ("Error in getInt()"));
@@ -294,7 +277,7 @@ public final class VarValue {
 
 
     public ConfigChunk getEmbeddedChunk() {
-	if (valtype.equals (ValType.t_embeddedchunk))
+	if (valtype == ValType.EMBEDDEDCHUNK)
 	    return embeddedchunkval;
 	else
 	    throw (new VarValueException ("Error in getEmbeddedChunk()"));
@@ -302,17 +285,17 @@ public final class VarValue {
 
 
     public Object get() {
-	if (valtype.equals(ValType.t_string))
+	if (valtype == ValType.STRING)
 	    return strval;
-	else if (valtype.equals(ValType.t_chunk))
+	else if (valtype == ValType.CHUNK)
 	    return strval;
-	else if (valtype.equals(ValType.t_int))
+	else if (valtype == ValType.INT)
 	    return new Integer(intval);
-	else if (valtype.equals(ValType.t_float))
+	else if (valtype == ValType.FLOAT)
 	    return new Float(floatval);
-	else if (valtype.equals(ValType.t_bool))
+	else if (valtype == ValType.BOOL)
 	    return new Boolean(boolval);
-	else if (valtype.equals (ValType.t_embeddedchunk))
+	else if (valtype == ValType.EMBEDDEDCHUNK)
 	    return embeddedchunkval;
 	else
 	    throw (new VarValueException ("Error in get()"));
