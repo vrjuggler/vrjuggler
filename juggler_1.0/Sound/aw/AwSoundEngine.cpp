@@ -50,38 +50,38 @@ void AwSoundEngine::init()
 {
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"==============================================================")  << "\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"Juggler is starting Audioworks:")  << "\n" << vjDEBUG_FLUSH;
-   
+
    std::string tmpFile = "/var/tmp/";
    tmpFile += getenv( "USER" );
    tmpFile += ".AwSoundEngine.adf";
-   
-   
+
+
    std::string command = "${VJ_BASE_DIR}/bin/catadf.pl";
    command = vjFileIO::demangleFileName( command, "" );
    command += " -o ";
    command += tmpFile;
    command += " ";
    command += mAdfFileList;
-   
+
    std::string commandRm = "rm ";
    commandRm += tmpFile;
-   
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"Attempting to delete: ") << commandRm.c_str() << "\n" << vjDEBUG_FLUSH;
+
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Attempting to delete: ") << commandRm.c_str() << "\n" << vjDEBUG_FLUSH;
    system( commandRm.c_str() );
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"Issuing system() command:")  << command.c_str() << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Issuing system() command:")  << command.c_str() << "\n" << vjDEBUG_FLUSH;
    system( command.c_str() );
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"Done with command\n") << vjDEBUG_FLUSH;
-      
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Done with command\n") << vjDEBUG_FLUSH;
+
    mInitialized = false;  //set it to true at the end of this func...
-   
+
    // initialize the AudioWorks system
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"initialize the AudioWorks system\n") << vjDEBUG_FLUSH;
-   
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awOpenAWD\n" << vjDEBUG_FLUSH;
+
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awOpenAWD\n" << vjDEBUG_FLUSH;
    awOpenAWD("");
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awOpenEP\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awOpenEP\n" << vjDEBUG_FLUSH;
    awOpenEP(0, AWEP_SHARE);
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awEPReset,awEPFlush,awCloseEP,awCloseAWD\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awEPReset,awEPFlush,awCloseEP,awCloseAWD\n" << vjDEBUG_FLUSH;
    awEPReset();
    awEPFlush();
    awCloseEP();
@@ -90,40 +90,40 @@ void AwSoundEngine::init()
 
    // The three stages in setting up a AudioWorks application are
    // - Initialization
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awInitSys\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awInitSys\n" << vjDEBUG_FLUSH;
    vjASSERT( awInitSys() != -1 );
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
-   cout<<"[aw] Loading: "<<flush<<tmpFile.c_str()<<"\n"<<flush;
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "[aw] Loading: " << flush << tmpFile.c_str() << "\n" << vjDEBUG_FLUSH;
    int result = awDefineSys( tmpFile.c_str() );
    if (result == -1)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrRED,"[aw] ADF file didn't load: ")  << "awDefineSys failed (== -1)... about to assert.."<< "\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"[aw] ADF file didn't load: ")  << "awDefineSys failed (== -1)... about to assert.."<< "\n" << vjDEBUG_FLUSH;
       sleep( 5 );
    }
    vjASSERT( result != -1 );
    // Make explicit function calls to create instances of AudioWorks classes.
 
    // - Configuration
-   // Finally, call awConfigSys(1) to complete setup.  
-   // awConfigSys() now requires one argument called the map switch.  
-   // This switch is used to allow multiple engine configurations.  
-   // Passing in a value of 1 will cause the standard mapping of all 
-   // waveforms to be assigned to the first sound engine that is found in 
+   // Finally, call awConfigSys(1) to complete setup.
+   // awConfigSys() now requires one argument called the map switch.
+   // This switch is used to allow multiple engine configurations.
+   // Passing in a value of 1 will cause the standard mapping of all
+   // waveforms to be assigned to the first sound engine that is found in
    // the list.  Passing in a value of 0 will skip all of the mapping
-   // function calls.  These functions must be called by the application 
+   // function calls.  These functions must be called by the application
    // for each sound and engine that will be used in the same simulation.
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "awConfigSys\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awConfigSys\n" << vjDEBUG_FLUSH;
    vjASSERT( awConfigSys( 1 ) == 0 );
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"done\n") << vjDEBUG_FLUSH;
-   
+
    // use a separate process for the sound engine.
    // OFF is default
    //awProp( awGetSys(), AWSYS_MPMODE, AW_ON );
 
    //usleep( 3000 );
-   
+
    // we need an observer to do localized sound.
    mObserver = awFindObs( "you" );
    if (mObserver == NULL)
@@ -134,10 +134,10 @@ void AwSoundEngine::init()
           <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
           <<"[aw] \n"<<vjDEBUG_FLUSH;
    }
-   
+
    // default...
    this->setPosition( mPosition );
-   
+
    mInitialized = true;
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"==============================================================")  << "\n" << vjDEBUG_FLUSH;
 }
@@ -167,7 +167,7 @@ vjSound* AwSoundEngine::newSound()
 // call this once per main loop.
 //
 void AwSoundEngine::update()
-{      
+{
    // set the state of our sound to on
    awSyncFrame();
 
@@ -188,14 +188,14 @@ void AwSoundEngine::kill()
 void AwSoundEngine::setPosition( const vjMatrix& position )
 {
    vjSoundEngine::setPosition( position );
-   
+
    if (mObserver != NULL)
    {
       // vgMat is just a [4][4]
       vgPosition* vgposition = NULL;
       const vgMat& vgmat = position.mat;
       vgPosMat( vgposition, const_cast<vgMat&>( vgmat ) );
-   
+
       awPos( mObserver, vgposition );
    }
 }
@@ -204,7 +204,7 @@ void AwSoundEngine::setPosition( const vjMatrix& position )
 void AwSoundEngine::setPosition( const float& x, const float& y, const float& z )
 {
    vjSoundEngine::setPosition( x, y, z );
-   
+
    if (mObserver != NULL)
    {
       float xyz[3] = { x, y, z };
@@ -215,9 +215,9 @@ void AwSoundEngine::setPosition( const float& x, const float& y, const float& z 
 
 bool AwSoundEngine::config( vjConfigChunk* chunk )
 {
-	vjASSERT( (std::string)chunk->getType() == AwSoundEngine::getChunkType() );
+   vjASSERT( (std::string)chunk->getType() == AwSoundEngine::getChunkType() );
 
-	std::string adfName = (std::string)chunk->getProperty( "adfConfigFile" );
+   std::string adfName = (std::string)chunk->getProperty( "adfConfigFile" );
 
    if (adfName == "")
    {
