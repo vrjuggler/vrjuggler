@@ -89,7 +89,7 @@ public:
    Viewport* getViewport()
    { return mViewport; }
 
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos) = 0;
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor) = 0;
 
    /** Helper to the frustum apex and corners in model coordinates.
    * @note This function is meant for debugging purposes

@@ -124,7 +124,7 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
    mRightProj->setViewport(this);
 }
 
-void SurfaceViewport::updateProjections(float positionScale)
+void SurfaceViewport::updateProjections(const float positionScale)
 {
    gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
@@ -149,8 +149,8 @@ void SurfaceViewport::updateProjections(float positionScale)
    left_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f( -eye_offset, 0, 0));
    right_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(eye_offset, 0, 0));
 
-   mLeftProj->calcViewMatrix(left_eye_pos);
-   mRightProj->calcViewMatrix(right_eye_pos);
+   mLeftProj->calcViewMatrix(left_eye_pos, positionScale);
+   mRightProj->calcViewMatrix(right_eye_pos, positionScale);
 }
 
 void SurfaceViewport::calculateSurfaceRotation()

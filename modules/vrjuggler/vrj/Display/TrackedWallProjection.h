@@ -90,11 +90,11 @@ public:
     * Recalculate the projection matrix.
     * @post frustum has been recomputed for given eyePos.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos)
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor)
    {
       updateWallParams();
 
-      calcViewFrustum(eyePos);
+      calcViewFrustum(eyePos, scaleFactor);
 
       // We don't need to postTrans like in non-tracked projection
       // because the wall position is already in mWallRotationMatrix

@@ -402,9 +402,11 @@ void GlDrawManager::drawObjects()
  *       If withApex, then it draws the frustums with different colors.
  *       If !withApex, then just draws the surfaces in all white.
  */
-void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
+void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, const float scaleFactor)
 {
    const float ALPHA_VALUE(0.25f);
+
+   mDisplayManager->updateProjections(scaleFactor);                     // Update all projections for drawing
 
    std::vector<Display*> disps = mDisplayManager->getAllDisplays();
 
@@ -492,7 +494,7 @@ void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
  * Draws a simulator using OpenGL commands.
  * @note This is called internally by the library.
  */
-void GlDrawManager::drawSimulator(SimViewport* sim_vp, float scaleFactor)
+void GlDrawManager::drawSimulator(SimViewport* sim_vp, const float scaleFactor)
 {
    // All units are in meters
    // Note: All the wand and head data in the sim viewport class
@@ -590,7 +592,7 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp, float scaleFactor)
          glDisable(GL_LIGHTING);
 
       glPushMatrix();
-         drawProjections(sim_vp->shouldDrawProjections(), sim_vp->getSurfaceColor());
+         drawProjections(sim_vp->shouldDrawProjections(), sim_vp->getSurfaceColor(), scaleFactor);
       glPopMatrix();
    }
    glPopAttrib();
