@@ -2,4 +2,7 @@
 #include <Kernel/vjKernel.h>
 
 vjApp::vjApp()
-{ kernel = vjKernel::instance(); }
+{
+   kernel = vjKernel::instance();
+   mHaveFocus = false;
+}
