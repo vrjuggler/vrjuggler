@@ -185,15 +185,31 @@ public:
 
    /** Operator <
    * Must handle the roll over condition
+   * |--------------|--------------|
+   *  v1          v2 v3
+   *
+   * v1<v2, v2<v3, v3<v1
    */
    bool operator <(const Interval& r) const
    {
-      return ( (mTensOfUsecs+(0xffffffffUL/2)) < (r.mTensOfUsecs+(0xffffffffUL/2)) );
+      const vpr::Uint32 half_range(0xffffffffUL/2);
+      vpr::Uint32 diff = r.mTensOfUsecs - mTensOfUsecs;
+      bool ret_val = (0 != diff) && (diff < half_range);
+      /*
+      vpr::Uint32 left(mTensOfUsecs+half_range);
+      vpr::Uint32 right(r.mTensOfUsecs+half_range);
+      bool ret_val = left < right;
+      */
+      return ret_val;
    }
 
    bool operator<= (const Interval& r) const
    {
-      return ( (mTensOfUsecs+(0xffffffffUL/2)) <= (r.mTensOfUsecs+(0xffffffffUL/2)) );
+      const vpr::Uint32 half_range(0xffffffffUL/2);
+      vpr::Uint32 diff = r.mTensOfUsecs - mTensOfUsecs;
+      bool ret_val = (diff < half_range);
+
+      return ret_val;
    }
 
    Interval& operator+=(const Interval& r)
