@@ -106,15 +106,19 @@ public:
    //        Analog::normalizeMinToMax()
 
    // XXX: Add a "sample" filter that does the normalization in here instead of in the driver
-   AnalogData* getAnalogData(int devNum = 0)
+   AnalogData getAnalogData(int devNum = 0)
    {
-      vprASSERT(!mAnalogSamples.stableBuffer().empty() && "Empty stable buffer, can't get sample");
-      vprASSERT((mAnalogSamples.stableBuffer().back().size() > (unsigned)devNum) && 
-                "Trying to get out of range device. No dev available"); 
+      gadget::SampleBuffer<AnalogData>::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
 
-      // XXX: Fill in;
-      //return NULL;
-      return &(mAnalogSamples.stableBuffer().back()[devNum]);
+      if((!stable_buffer.empty()) &&
+         (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
+      {
+         return stable_buffer.back()[devNum];
+      }
+      else        // No data or request out of range, return default value
+      {
+         return mDefaultValue;
+      }
    }
 
 protected:
@@ -153,6 +157,7 @@ private:
 
 protected:
    gadget::SampleBuffer<AnalogData>  mAnalogSamples;   /**< Position samples */
+   AnalogData                        mDefaultValue;   /**< Default analog value to return */
 };
 
 

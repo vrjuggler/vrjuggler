@@ -75,7 +75,7 @@ public:
    {
       if(!mStupified)
       {
-         m_data = *(mTypedDevice->getAnalogData(m_unitNum));
+         m_data = mTypedDevice->getAnalogData(m_unitNum);
       }
    }
 
