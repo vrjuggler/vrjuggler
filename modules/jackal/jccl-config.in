@@ -41,6 +41,8 @@ jccl_n32_flags="@jccl_n32_flags@"
 jccl_64_flags="@jccl_64_flags@"
 LIBBITSUF='@LIBBITSUF@'
 
+USE_GCC='@USE_GCC@'
+
 if [ "x$jccl_default_abi" = "xN32" ]; then
     jccl_abi_flags="$jccl_n32_flags"
 elif [ "x$jccl_default_abi" = "x64" ]; then
@@ -49,10 +51,11 @@ else
     jccl_abi_flags=''
 fi
 
-if [ "x$jccl_default_isa" = "xmips3" -o "x$jccl_default_isa" = "xmips4" ]; then
-    jccl_isa_flags="-$jccl_default_isa"
-else
-    jccl_isa_flags=''
+if [ "x$USE_GCC" != "xyes" ]; then
+   if [ "x$jccl_default_isa" = "xmips3" -o "x$jccl_default_isa" = "xmips4" ]
+   then
+      jccl_isa_flags="-$jccl_default_isa"
+   fi
 fi
 
 prefix=@prefix@
