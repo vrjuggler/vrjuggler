@@ -39,6 +39,7 @@ package org.vrjuggler.tweek.beans.loader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.jar.*;
 import java.util.zip.InflaterInputStream;
@@ -155,6 +156,51 @@ public class BeanJarClassLoader extends ClassLoader
       }
 
       return loaded_class;
+   }
+
+   public URL findResource (String name)
+   {
+      URL path = null;
+
+      for ( int i = 0; i < m_jars.size(); i++ )
+      {
+         JarFile jar_file = (JarFile) m_jars.elementAt(i);
+         JarEntry entry   = jar_file.getJarEntry(name);
+
+         if ( entry != null )
+         {
+            try
+            {
+               path = new URL("jar:file:" + jar_file.getName() + "!/" + name);
+               System.out.println("Resource found: " + path);
+               break;
+            }
+            catch (java.net.MalformedURLException url_ex)
+            {
+               System.err.println("WARNING: Invalid URL constructed when " +
+                                  "trying to find resource " + name + " in " +
+                                  jar_file.getName());
+            }
+         }
+      }
+
+      return path;
+   }
+
+   public URL getResource(String name) {
+      URL url = null;
+
+      if ( this.getParent() != null )
+      {
+         url = this.getParent().getResource(name);
+      }
+
+      if (url == null)
+      {
+         url = this.findResource(name);
+      }
+
+      return url;
    }
 
    /**
