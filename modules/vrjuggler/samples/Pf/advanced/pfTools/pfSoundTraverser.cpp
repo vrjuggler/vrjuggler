@@ -192,7 +192,7 @@ int pfSoundTraverser::soundNodesStop(pfuTraverser* trav)
       }
 
       // unpause the sound, unmute it too
-      ronix::instance()->stop(nodeName);
+      snx::sonix::instance()->stop(nodeName);
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << clrOutNORM(clrYELLOW,"[SoundStop] ")
