@@ -92,7 +92,10 @@ vjMotionStar::vjMotionStar (char* address, const unsigned short port,
 vjMotionStar::~vjMotionStar () {
    this->stopSampling();
    if (theData != NULL)
-      getMyMemPool()->deallocate((void*)theData);
+   {
+      delete theData;
+   }
+   //getMyMemPool()->deallocate((void*)theData);
 }
 
 // ----------------------------------------------------------------------------
@@ -135,12 +138,13 @@ vjMotionStar::startSampling () {
       int retval;
 
       if ( theData != NULL ) {
-         getMyMemPool()->deallocate((void*)theData);
+         //getMyMemPool()->deallocate((void*)theData);
+         delete theData;
       }
 
       // Allocate buffer space for birds
       int numbuffs = (mMotionStar.getNumBirds()+1)*3;
-      theData = (vjMatrix*) new vjMatrix[numbuffs];
+      theData = new vjMatrix[numbuffs];
 
       // Reset current, progress, and valid indices
       resetIndexes();

@@ -60,7 +60,7 @@
 // See also: vjPosition
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjPosProxy : public vjMemory, public vjProxy
+class vjPosProxy : public vjProxy
 {
 public:
    vjPosProxy() : mPosPtr(NULL), mUnitNum(-1), mETrans(false), mFilter(NULL)

@@ -39,7 +39,7 @@
 //      VR Juggler Ascention Flock of birds tracking class
 //
 // Author:
-//	Kevin Meinert
+// Kevin Meinert
 //
 // Date: 4-22-99
 //===============================================================
@@ -83,24 +83,24 @@ int vjFlock::getBirdIndex(int birdNum, int bufferIndex)
 // Result: configures internal data members,
 //         doesn't actually talk to the FOB yet.
 vjFlock::vjFlock(const char* const port,
-		const int& baud,
-		const int& sync,
-		const int& block,
-		const int& numBrds,
-		const int& transmit,
-		const BIRD_HEMI& hemi,
-		const BIRD_FILT& filt,
-		const char& report,
-		const char* const calfile) : mFlockOfBirds(port,
-						    baud,
-						    sync,
-						    block,
-						    numBrds,
-						    transmit,
-						    hemi,
-						    filt,
-						    report,
-						    calfile)
+      const int& baud,
+      const int& sync,
+      const int& block,
+      const int& numBrds,
+      const int& transmit,
+      const BIRD_HEMI& hemi,
+      const BIRD_FILT& filt,
+      const char& report,
+      const char* const calfile) : mFlockOfBirds(port,
+                      baud,
+                      sync,
+                      block,
+                      numBrds,
+                      transmit,
+                      hemi,
+                      filt,
+                      report,
+                      calfile)
 {
    myThread = NULL;
 }
@@ -109,7 +109,7 @@ bool vjFlock::config(vjConfigChunk *c)
 {
    port_id = -1;
 
-   vjDEBUG(vjDBG_INPUT_MGR,3) << "	 vjFlock::vjFlock(vjConfigChunk*)"
+   vjDEBUG(vjDBG_INPUT_MGR,3) << "   vjFlock::vjFlock(vjConfigChunk*)"
                               << std::endl << vjDEBUG_FLUSH;
 
    // read in vjPosition's config stuff,
@@ -143,13 +143,13 @@ bool vjFlock::config(vjConfigChunk *c)
       mFlockOfBirds.setReportRate( r );
 
    // output what was read.
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	  Flock Settings: " << std::endl
-      << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "    Flock Settings: " << std::endl
+      << "          aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
       << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << std::endl
-      << "	        aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << std::endl
-      << "	        deviceAbilities:" << deviceAbilities << std::endl
-      << "	        aFlock::getPort()         : " << mFlockOfBirds.getPort() << std::endl
-      << "		instance name : " << instName << std::endl
+      << "          aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << std::endl
+      << "          deviceAbilities:" << deviceAbilities << std::endl
+      << "          aFlock::getPort()         : " << mFlockOfBirds.getPort() << std::endl
+      << "     instance name : " << instName << std::endl
       << std::endl << vjDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
@@ -162,7 +162,8 @@ vjFlock::~vjFlock()
 {
    this->stopSampling();
    if (theData != NULL)
-      getMyMemPool()->deallocate((void*)theData);
+      delete theData;
+      //getMyMemPool()->deallocate((void*)theData);
    if (mDataTimes != NULL)
       delete mDataTimes;
 }
@@ -192,13 +193,14 @@ int vjFlock::startSampling()
    if (myThread == NULL)
    {
       if (theData != NULL)
-         getMyMemPool()->deallocate((void*)theData);
+         delete theData;
+      //   getMyMemPool()->deallocate((void*)theData);
       if (mDataTimes != NULL)
-	      delete mDataTimes;
+         delete mDataTimes;
 
       // Allocate buffer space for birds
       int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
-      theData = (vjMatrix*) new vjMatrix[numbuffs];
+      theData = new vjMatrix[numbuffs];
       mDataTimes = new vjTimeStamp[numbuffs];
 
       // Reset current, progress, and valid indices
@@ -322,14 +324,14 @@ int vjFlock::stopSampling()
 vjMatrix* vjFlock::getPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
-   	return NULL;
+      return NULL;
 
     return (&theData[getBirdIndex(d,current)]);
 }
 
 vjTimeStamp* vjFlock::getPosUpdateTime (int d) {
     if (this->isActive() == false)
-	   return NULL;
+      return NULL;
 
     return (&mDataTimes[getBirdIndex(d,current)]);
 }
