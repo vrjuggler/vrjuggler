@@ -17,9 +17,11 @@
    Getting the Source Code
 
                 How to get the Juggler Suite and external package
-                dependencies
+                dependencies from CVS
 
                 Using cvs-gather
+
+                Downloading binary dependencies
 
    Compiling
 
@@ -157,13 +159,19 @@ Getting the Source Code
        Runtime, which can be used by VPR for threading and sockets (required
        on Win32)
 
-     o JDOM (http://www.jdom.org/): An XML parser for Java (required only for
-       VjControl, the GUI for editing VR Juggler configuration files)
+     o JDOM (http://www.jdom.org/): An XML parser for Java, needed for the
+       Tweek Java GUI and for the VR Juggler configuration editor VRJConfig
 
-   The following describes how to get all of the above except JDOM and NSPR.
-   These must be downloaded separately.
+     o OpenORB (http://openorb.sourceforge.net/): A pure Java implementation
+       of CORBA 2.3, required for the Tweek Java GUI
 
-  How to get the Juggler Suite and external package dependencies
+     o omniORB (http://omniorb.sourceforge.net/): A C++ implementation of
+       CORBA 2.3, required for the Tweek C++ API
+
+   The following describes how to get all of the above except JDOM, OpenORB,
+   omniORB, and NSPR. These must be downloaded separately.
+
+  How to get the Juggler Suite and external package dependencies from CVS
 
    You can optionally get the Juggler Project as a source code tarball from
    the website (http://www.vrjuggler.org/) or you can follow these steps to
@@ -274,6 +282,66 @@ Getting the Source Code
 
    If all goes well, you'll get everything you need to compile.
 
+  Downloading binary dependencies
+
+   In addition to source the dependencies acquired through CVS, there are
+   some third-party dependencies that must be installed separately. As of
+   this writing, these dependencies are semi-optional. That is, VR Juggler
+   can be used on most platforms without these dependencies, but it is
+   recommended that you get them anyway. In particular, no Java code in VR
+   Juggler can be used without JDOM and OpenORB.
+
+    Netscape Portable Runtime (NSPR)
+
+   Our operating system abstraction, VPR, can make use of NSPR for operating
+   system primitives. On some platforms (IRIX, FreeBSD, Linux), the use of
+   NSPR is strictly optional. On others (Win32, Mac OS X, and Solaris), it is
+   required. Based on your local system you should decide whether you need
+   NSPR. Binary versions of NSPR can be downloaded from
+   ftp://ftp.mozilla.org/pub/nspr/releases/. At this time, we recommend the
+   use of version 4.2 or newer.
+
+    JDOM
+
+   JDOM is a pure-Java API for handling XML using a simplified DOM model. We
+   use JDOM extensively for all XML handling in Java. This includes the Tweek
+   Java GUI and the VR Juggler configuration editor, VRJConfig. At this time,
+   we recommend the use of JDOM B8. It can be downloaded from
+   http://www.jdom.org/.
+
+   There are two JAR files needed to use JDOM with Juggler Project code. They
+   are jdom.jar and xerces.jar. Both come with a standard JDOM distribution.
+   We will show how to tell the configure scripts about these JAR files
+   later.
+
+    OpenORB
+
+   OpenORB is a pure-Java implementation of CORBA 2.3. It is required in
+   order to compile the Tweek Java API (and hence VRJConfig). OpenORB 1.3.0
+   can be downloaded from http://openorb.sourceforge.net/.
+
+   There are three JAR files needed to use OpenORB 1.3 with Juggler Project
+   code. They are openorb-1.3.0.jar, avalon-framework.jar, and logkit.jar.
+   All three come with a standard OpenORB distribution. We will show how to
+   tell the configure scripts about these JAR files later.
+
+    omniORB
+
+   omniORB is a C++ implementation of CORBA 2.3. It is required in order to
+   compile the Tweek C++ API. At this time, the Tweek C++ API is not required
+   for VR Juggler, but this situation will change in the near future. At this
+   time, we primarily use omniORB 3.0.5, though we have tested beta versions
+   of 4.0 successfully. omniORB can be downloaded from
+   http://omniorb.sourceforge.net/.
+
+   omniORB 3.0 has strange conventions for how installations are made. Within
+   the bin and lib directories, there are platform-specific subdirectories
+   that contain the actual binaries (except when installed on FreeBSD via the
+   Ports Collection). Because of this, several extra options must be
+   specified in order to tell the Tweek configure script where to find
+   everything. Please refer to the section called "Tweek (individual)" for
+   more details on this.
+
 Compiling
 
    In this section, we describe how to compile the Juggler Project. We focus
@@ -352,11 +420,14 @@ Compiling
 
    3. Configure all the modules making up VR Juggler. This is when you must
        tell the module configure scripts where all the package dependencies
-       are found. For this description, we will use the term <JDOMPATH> to
+       are found. For this description, we will use the term <JDOM_PATH> to
        refer to the JDOM installation. Assume that this is an absolute path
-       (e.g., <JDOMPATH> = /home/user1/pkgs/jdom).
+       (e.g., <JDOM_PATH> = /home/user1/pkgs/jdom). Further, we will use the
+       term <JAVA_ORB_PATH> to refer to the Java CORBA installation (most
+       likely OpenORB). For this example, we will use the OpenORB 1.3 JAR
+       file list.
 
- ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
+ ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-jdom="<JDOM_PATH>/build/jdom.jar:<JDOM_PATH>/lib/xerces.jar" --with-java-orb=OpenORB --with-java-orb-jar="<JAVA_ORB_PATH>/lib/openorb-1.3.0.jar:<JAVA_ORB_PATH>/lib/avalon-framework.jar:<JAVA_ORB_PATH>/lib/logkit.jar"
 
        On Win32, remember that the path is given as the full DOS drive path,
        but / should be used instead of \ as the path separator.
