@@ -251,4 +251,18 @@ chunk SimRelativePosition "SimRelativePosition" "A positional device simulator f
   base_frame_proxy Chunk 1 "base_frame_proxy" vj_enumeration { "PosProxy" } "Pos proxy that devices the base frame of reference"
   relative_proxy Chunk 1 "relative_proxy" vj_enumeration { "PosProxy" } "device that is relative to the base frame"
   end
+chunk AwSoundEngine "Audioworks Sound Engine" "Use an audioworks sound engine."
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  adfConfigFile String 1 "adfConfigFile" ""
+  end
+chunk SlSoundInfo "SlSoundInfo" "defines one sound"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  Alias String 1 "Alias" "i.e. bigsound"
+  Filename String 1 "Filename" "i.e. bigsound.wav"
+  end
+chunk SlSoundEngine "SL Sound Engine" "Use the SL sound engine (8bit mono)"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  Sounds EmbeddedChunk -1 "Sounds" vj_enumeration { "SlSoundInfo" } ""
+  FilePath String 1 "FilePath" "the search path to use to find your .wav files."
+  end
 End
