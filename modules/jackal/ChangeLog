@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-15-2005 patrickh    Extended org.vrjuggler.jccl.config.ConfigUndoManager to
+                        provide automatmed multiple undo/redo operations.
+                        NEW VERSION: 0.92.3
 Feb-06-2005 patrickh    Custom editors of config elements can now provide a
                         means to respond to help requests raised by a user
                         clicking on a button.
