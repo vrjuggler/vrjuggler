@@ -62,6 +62,5 @@ TODO: Change all of the _check functions to load the files that they are suppose
       Some tests don't test for ALL possible testable values. Update them to
       fill in these possible holes.
 
-      Some tests ignore the return values of chunk loading functions. Change
-      them to bail out if a file loading operator fails, because the rest of
-      the test will be tainted anyways.
+      Some GFX-related tests directly remove chunks from the system without
+      going through the removeChunkFile or swapChunkFiles methods. Change this.
