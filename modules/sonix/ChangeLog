@@ -1,5 +1,5 @@
 DATE        AUTHOR      CHANGE
------------ ---------   ---------------------------------------------------------
+----------- ---------   -------------------------------------------------------
 Sep-04-2002 nonchocoboy AudioWorks plugin now actually works.
                         NEW VERSION: 0.1.1
 Aug-29-2002 nonchocoboy Changed the build so that the sonix implementations are
@@ -27,7 +27,8 @@ Jul-20-2002 subatomic   Added plugin loading support with xdl (cross platform
                                  "${SNX_BASE_DIR}/share/sonix/plugins"
                                  "${HOME}/.sonix/plugins"
 Jun-24-2002 patrickh    The sonix-config script is now written in Perl.  It is
-                        capable of determining its installation path at runtime.
+                        capable of determining its installation path at
+                        runtime.
 Apr-16-2002 subatomic   Added grouping in doxygen autodocumentation
 Apr-12-2002 subatomic   pause, unpause, set volume, pitch, and retriggerable
 Apr-12-2002 subatomic   Added isPaused, isRetriggerable, isPlaying
@@ -35,28 +36,31 @@ Apr-12-2002 subatomic   Sonix uses GMTL for math.  Vapor dependency is removed.
 Dec-28-2001 subatomic   SoundHandle is now available.  Use it to allocate and
                         access sound objects.
 Oct-24-2001 subatomic   Sonix uses juggler math and vapor singleton now.
-                        NOTE, because of this change you'll need to link against
-                        Juggler, jccl, gadgeteer, and vpr libs...
+                        NOTE, because of this change you'll need to link
+                        against VR Juggler, JCCL, Gadgeteer, and VPR libs.
                         Once Juggler math is separated, these dependancies
                         will drastically reduce.
 Oct-22-2001 subatomic   renamed project to sonix
 Jun-21-2001 subatomic   Newest Juggler Audio is born.  Based on my previous two
-                        revisions, I've refactored the vjSoundManager into two parts.
-                        One part (core) that can stand alone as a useful reconfigurable
-                        sound adapter, and one part that allows VR Juggler to
-                        communicate with the core.  This newest derivitive of the
-                        VR Juggler sound manager finally allows runtime
-                        reconfiguration of the sounds and their respective sound
-                        implementations.  Also it allows extension of available
-                        sound drivers at runtime to help facilitate an always
-                        running system.  This iteration of the VR Juggler sound code
-                        will be called AudioJuggler.
-Dec-05-2000 subatomic   rewrote vjSoundManager to allow run-time reconfiguration
-                        like all the other components of VR Juggler.
-                        this code is a prototype, and is not yet good enough to go
-                        into the main distribution of VR Juggler.
+                        revisions, I've refactored the vjSoundManager into two
+                        parts.  One part (core) that can stand alone as a
+                        useful reconfigurable sound adapter, and one part that
+                        allows VR Juggler to communicate with the core.  This
+                        newest derivitive of the VR Juggler sound manager
+                        finally allows runtime reconfiguration of the sounds
+                        and their respective sound implementations.  Also it
+                        allows extension of available sound drivers at runtime
+                        to help facilitate an always running system.  This
+                        iteration of the VR Juggler sound code will be called
+                        AudioJuggler.
+Dec-05-2000 subatomic   Rewrote vjSoundManager to allow run-time
+                        reconfiguration like all the other components of VR
+                        Juggler.  This code is a prototype, and is not yet
+                        good enough to go into the main distribution of VR
+                        Juggler.
 Jun-17-2000 subatomic   Created the VR Juggler vjSoundManager and associated
-                        classes which allow a VR juggler application to generically
-                        use sound within an application.  vjSoundManager is
-                        essentially an adaptor to an underlying sound API, in this
-                        case SL library, or Audioworks.
+                        classes which allow a VR juggler application to
+                        generically use sound within an application.
+                        vjSoundManager is essentially an adaptor to an
+                        underlying sound API, in this case SL library, or
+                        Audioworks.
