@@ -54,6 +54,12 @@ Jan-27-2001 patrick   The Juggler_utils library must now be linked for all
                       applications.
 Jan-26-2001 cjust     Improved Navigation in VjControl help.
 Jan-20-2001 cjust     VjControl now recommends JDK1.3 (1.2 still minimum).
+Jan-09-2001 patrick   RELENG_1_0 CVS branch created in preparation for 1.0
+                      release.  This was branched at the same point as the
+                      now defunct RELENG_0_2 branch.  The HEAD is now moving
+                      towards 1.2.
+
+[1.0 release brach created - 1.9.2001]=========================================
 Dec-30-2000 patrick   Build system converted to use Doozer++ 1.0.  Automake 1.4
                       is now required for compiling in addition to Autoconf.
                       Use autogen.sh to do the auto generation phase before
@@ -63,6 +69,10 @@ Dec-28-2000 patrick   Added initial version of serial and socket I/O
                       cross-platform drivers with very little effort.
 Dec-17-2000 bthomp    UNIX version of IS-900 driver converted to use termios
                       which in turn fixes cross-platform building
+Dec-13-2000 patrick   RELENG_0_2 CVS branch created in preparation for 0.2.0
+                      release
+
+[0.2 release brach created - 12.13.2000]=======================================
 Nov-27-2000 bthomp    Added initial version of Intersense IS-900 driver
 Nov-02-2000 patrick   Finished new MotionStar driver--config files must be
                       updated to reflect some new options
