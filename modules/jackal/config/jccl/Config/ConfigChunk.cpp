@@ -41,7 +41,6 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <string.h>
 
 
 
@@ -79,6 +78,8 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRI
 #ifdef VJ_DEBUG
 void vjConfigChunk::assertValid () const {
     assert (validation == 1 && "Trying to use deleted config chunk");
+    for (int i = 0; i < props.size(); i++)
+        props[i]->assertValid();
 }
 #endif
 

@@ -82,6 +82,9 @@ public:
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
     vjChunkDesc *embeddesc;
 
+    unsigned int validation;  // flag for testing validity of self
+
+
     //: Constructor
     //! PRE: true
     //! POST: Property is created.  If num values is not -1, num
@@ -103,6 +106,16 @@ public:
 
 
     vjProperty (const vjProperty& p);
+
+
+
+    #ifdef VJ_DEBUG
+    void assertValid () const;
+    #else
+    inline void assertValid () const {
+        ;
+    }
+    #endif
 
 
 
@@ -159,6 +172,7 @@ public:
 
 
     inline vjEnumEntry* getEnumEntry (const std::string& n) const {
+        assertValid();
         return description->getEnumEntry (n);
     }
     vjEnumEntry* getEnumEntryWithValue (int val) const;
