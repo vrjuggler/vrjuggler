@@ -129,16 +129,6 @@ public:
       newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
    }
 
-   //: Function that is called immediately after a new OGL context is created
-   // Initialize GL state here. Also used to create context specific information<BR>
-   //
-   // This is called once for each display (twice for each stereo display)
-   virtual void contextInit()
-   {
-      vrj::OsgApp::contextInit();    // MUST call base class version
-      initGLState();       // Initialize the GL state information. (lights, shading, etc)
-   }
-
    void bufferPreDraw();
 
    // ----- Drawing Loop Functions ------
@@ -182,9 +172,6 @@ public:
    {
       mFileToLoad = filename;
    }
-
-private:
-   void initGLState();
 
 private:
    osg::Vec3 mPos;
