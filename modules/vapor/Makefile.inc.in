@@ -111,10 +111,6 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
-	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VPRROOT_ABS)/vpr-config.in -v $(VPRROOT_ABS)/VERSION	\
-            -o $(topdir)/vpr-config
-	@chmod +x $(topdir)/vpr-config
 
 # Things to do after the object files and library are built.
 afterbuild:
