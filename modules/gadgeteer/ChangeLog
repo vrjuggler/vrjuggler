@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-11-2004 aronb       Added support for BaseTypes InputGlove & 
+                        InputGloveDigital in order to allow glove
+                        devices to work properly on the cluster.
 Oct-11-2004 patrickh    Updated to require VPR 0.40.0.
                         NEW VERSION: 0.17.1
 Sep-24-2004 aronb       Split gadget::InputManager::updateAllData() into
