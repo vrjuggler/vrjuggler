@@ -4,8 +4,7 @@
 default: TestSuite
 
 SUBDIRS= \
-	TestSuite \
-	apps
+	TestSuite 
 
 all: $(SUBDIRS)
 
