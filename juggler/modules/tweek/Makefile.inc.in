@@ -361,9 +361,15 @@ else
 endif
 endif
 
-ifeq ($(BUILD_CXX), Y)
 PREINSTALL_HEADERS	= pre-install-headers
+
+# If the C++ API is not available (the else clause), install the IDL files
+# anyway.  The Java API needs them.  Unfortunately, doing it this way is just
+# a big hack.
+ifeq ($(BUILD_CXX), Y)
 POSTINSTALL_HEADERS	= post-install-headers
+else
+POSTINSTALL_HEADERS	= post-install-headers-idl
 endif
 
 pre-install-headers:
@@ -382,6 +388,10 @@ post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/tweek/tweekParam.h		\
           $(includedir)/tweek
+
+# Install only the .idl files in tweek/idl.
+post-install-headers-idl:
+	$(MAKE) -C tweek/idl install
 
 # Install the Java-based software if possible.
 install-tweek-gui:
