@@ -24,6 +24,7 @@
 #include <iostream.h>
 #include <iomanip.h>
 #include <fstream.h>
+#include <vector>
 #include <string>
 #endif
 
