@@ -76,13 +76,18 @@ void digitalGloveApp::preFrame()
              <<mRightPinky->getData()<<"\n"<<std::flush;
 }
 
+void digitalGloveApp::bufferPreDraw()
+{
+   // Clear the scene
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void digitalGloveApp::myDraw()
 {
     //cout<<"digitalGloveApp::myDraw()\n"<<flush;
 
-   // Clear the scene
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
 
    int finger;

@@ -113,6 +113,8 @@ public:
    // calculations and state modifications here.
    virtual void preFrame();
 
+   virtual void bufferPreDraw();
+
    //: Function to draw the scene.  Put OpenGL draw functions here.
    //
    //! PRE: OpenGL state has correct transformation and buffer selected

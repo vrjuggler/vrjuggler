@@ -81,6 +81,8 @@ public:
    // put your opengl deallocation here...
    virtual void contextClose();
 
+   virtual void bufferPreDraw();
+
    //: Function to "draw" the scene
    //  put your opengl draw functions here...
    //  PRE: OpenGL state has correct transformation and buffer selected

@@ -86,6 +86,8 @@ public:
    // calculations and state modifications here.
    virtual void preFrame();
 
+   virtual void bufferPreDraw();
+
    // ----- Drawing Loop Functions ------
    //
    //  The drawing loop will look similar to this:
