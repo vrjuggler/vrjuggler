@@ -54,6 +54,8 @@
 
 #if defined(HAVE_HASH_MAP)
 #   include <hash_map>
+#elif defined(HAVE_EXT_HASH_MAP_H)
+#   include <ext/hash_map>
 #elif defined(HAVE_HASH_MAP_H)
 #   include <hash_map.h>
 #endif
