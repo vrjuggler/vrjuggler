@@ -34,6 +34,16 @@ vjPropertyDesc::~vjPropertyDesc () {
 }
 
 
+
+std::string vjPropertyDesc::getValueLabel (int i) {
+    if (i < valuelabels.size())
+	return (std::string)"";
+    else
+	return valuelabels[i]->getName();
+}
+
+
+
 vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
     for (int i = 0; i < enumv.size(); i++) {
 	if (!vjstrcasecmp (enumv[i]->getName(), s))

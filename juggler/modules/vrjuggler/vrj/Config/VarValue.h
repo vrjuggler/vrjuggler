@@ -18,6 +18,7 @@ class vjConfigChunk;
  * internally as feet.
  */
 
+//-------------------------------------------------
 //: A vjVarValue is an object that knows its own type even if we don't.
 //  More seriously, it's the value storage unit and value return type
 //  for a ConfigChunk. <br>
@@ -35,23 +36,16 @@ class vjConfigChunk;
 //  kind of vjVarValue he's getting and what it can do.  Hey, you're
 //  the one who queried the ConfigChunk, not me. <br>
 //
+// @author  Christopher Just
+//
 //!PUBLIC_API:
-class vjVarValue {
+//--------------------------------------------------
 
-  /* general question of using objects in here.
-   * we have to actually store the objects as pointers, in order
-   * to be able to use classes that have constructors inside
-   * the union.
-   * When should we copy?  Seems like the objects we store should
-   * be fresh copies of whatever's given to us, and probably so
-   * should the objects we return, just for safety's sake.
-   * would it be ok to receive and return pointers to objects?
-   * What objects would we need to store? mebbe a string class?
-   */
+class vjVarValue {
 
 private:
 
-  VarType    type;
+    VarType    type;
 
     // these are the possible storage areas.
     struct {
@@ -107,25 +101,8 @@ public:
 
 
     //: Equality Operator
-    bool operator == (const vjVarValue& v) {
-	if (type != v.type)
-	    return false;
-	switch (type) {
-	    case T_INT:
-	    return (val.intval == v.val.intval);
-	    case T_FLOAT:
-	    return (val.floatval == v.val.floatval);
-	    case T_STRING:
-	    case T_CHUNK:
-	    return (val.strval == v.val.strval);
-	    case T_BOOL:
-	    return (val.boolval == v.val.boolval);
-	    case T_EMBEDDEDCHUNK:
-	    return (val.embeddedchunkval == v.val.embeddedchunkval);
-	    default:
-	    return false;
-	}
-    }
+    bool operator == (const vjVarValue& v);
+
 
 
     /*  Cast Operators
@@ -133,7 +110,7 @@ public:
      *  type.  They do some amount of type checking and coercion,
      *  eventually returning the data stored within the config itself.
      *  Right now, in event of an error we only write a message to cerr
-     *  and return a "reasonable" value - 0, 0.0, false, NULL, etc.
+     *  and return a "reasonable" value - 0, 0.0, false, "", NULL, etc.
      */
 
     //: Cast to int
@@ -145,8 +122,6 @@ public:
     //: cast to ConfigChunk
     //!NOTE: Returns a copy of the contained chunk which must be
     //+      freed.
-    // problem - will that work for nonprimitive types? 
-    // I doubt that i'm that lucky.
     operator vjConfigChunk*();
 
 
@@ -158,11 +133,11 @@ public:
     operator float ();
 
 
-    //: Cast to char* (can return NULL!)
-    //!NOTE: if non-NULL, returns a freshly-allocated char array, which the
-    //+      caller is responsible for freeing.
-    //operator char* ();
-char* cstring ();
+    //: Returns a string VarValue as a c-style string
+    //!NOTE: returns a freshly allocated char array that the caller is 
+    //+      responsible for deleting.
+    char* cstring ();
+
 
     //: Cast to std::string
     operator std::string ();

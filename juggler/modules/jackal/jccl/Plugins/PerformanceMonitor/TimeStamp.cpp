@@ -15,6 +15,12 @@
  *
  */
 
+//#include <iostream.h>
+#include <stddef.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
 
 
 #include <sys/syssgi.h>

@@ -2,20 +2,24 @@
 #ifndef _VJ_TIMESTAMP_SGI_
 #define _VJ_TIMESTAMP_SGI_
 
-/* This version of vjTimeStamp uses the SGI system cycle counter
- * to collect timing information.  The precision of this hardware
- * timer varies on different machines.  On Onyx systems it's
- * 21 nanoseconds, and on Octanes it's 80 ns.
- */
-
-#include <iostream.h>
-#include <stddef.h>
+#include <vjConfig.h>
 #include <sys/types.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/syssgi.h>
-#include <unistd.h>
 
+//-----------------------------------------
+//:Time recorder for SGI systems
+//
+//     This version of vjTimeStamp uses the SGI system cycle
+//     counter to collect timing information.  The precision
+//     of this hardware timer varies on different machines.
+//     For example, on an SGI Onyx it's 21 nanoseconds, while
+//     it's 80 ns on an Octane.
+//
+//     vjTimeStampPosix should never be instantiated directly.
+//     Instead, use vjTimeStamp, which will be typedefed to
+//     the correct implementation.
+//
+// @author  Christopher Just
+//-----------------------------------------
 
 class vjTimeStampSGI {
 
@@ -42,13 +46,12 @@ public:
     //! PRE: true
     //! POST: self's value is the current time
     inline void set() {
-	if (cyclecntrsize == 64)
-	    val = *(unsigned long long*)iotimer_addr;
-	else 
-	    val = *(unsigned int*)iotimer_addr;
-	val = (val >= initval)?
-	    val - initval
-	    :val + (maxval - initval);
+	val = (cyclecntrsize == 64)
+	    ? *(unsigned long long*) iotimer_addr
+	    : *(unsigned int*) iotimer_addr;
+	val = (val >= initval)
+	    ? val - initval
+	    : val + (maxval - initval);
     }
 
 

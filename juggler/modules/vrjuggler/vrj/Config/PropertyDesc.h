@@ -6,6 +6,7 @@
 #include <Config/vjEnumEntry.h>
 #include <Config/vjParseUtil.h>
 
+
 //------------------------------------------------------------
 //: A Description used to instantiate a vjProperty
 //
@@ -22,7 +23,6 @@
 //
 // @author:  Christopher Just
 //------------------------------------------------------------
-
 
 class vjPropertyDesc {
 
@@ -66,17 +66,14 @@ public:
     }
 
 
-    int getValueLabelsSize () {
+    //: Returns the number of individual value labels
+    inline int getValueLabelsSize () {
 	return valuelabels.size();
     }
 
 
-    std::string getValueLabel (int i) {
-	if (i < valuelabels.size())
-	    return (std::string)"";
-	else
-	    return valuelabels[i]->getName();
-    }
+    //: Returns the ith value label
+    std::string getValueLabel (int i);
 
 
 
