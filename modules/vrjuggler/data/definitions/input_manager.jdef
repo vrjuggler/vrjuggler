@@ -45,6 +45,7 @@
             <enum label="SerialEncoder_drv" value="SerialEncoder_drv"/>
             <enum label="ThreeDMouse_drv" value="ThreeDMouse_drv"/>
             <enum label="Trackd_drv" value="Trackd_drv"/>
+            <enum label="TrackdAPI_drv" value="TrackdAPI_drv"/>
          </enumeration>
       </property>
       <property valuetype="string" variable="true" name="driver_scan_path">
