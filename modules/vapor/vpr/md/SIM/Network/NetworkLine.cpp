@@ -144,7 +144,13 @@ void NetworkLine::addMessageToQueue (vpr::sim::MessagePtr msg, msg_queue_t& queu
       << mNetworkIPStr << " (" << msg->whenStartOnWire().getBaseVal() << ", "
       << msg->whenFullyOnWire().getBaseVal() << ", "
       << msg->whenArrivesFully().getBaseVal() << ")\n" << vprDEBUG_FLUSH;
-   vprASSERT(queue.back().first < msg->whenArrivesFully() && "Message queued out of order");
+#ifdef VPR_DEBUG
+   if ( ! queue.empty() )
+   {
+      vprASSERT(queue.back().first < msg->whenArrivesFully() && "Message queued out of order");
+   }
+#endif
+
    queue.push_back(std::pair<vpr::Interval, vpr::sim::MessagePtr>(msg->whenArrivesFully(), msg));
 }
 
