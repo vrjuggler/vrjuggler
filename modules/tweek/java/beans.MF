@@ -1,33 +1,17 @@
 Class-Path: jdom.jar xerces.jar
 
-Name: plx/beans/
-Specification-Title: Plexus Bean-Handling Classes
+Name: org/vrjuggler/tweek/beans/
+Specification-Title: Tweek Bean-Handling Classes
 Specification-Version: 0.1.0
 Specification-Vendor: vrjuggler.org
-Implementation-Title: plx.beans
+Implementation-Title: org.vrjuggler.tweek.beans
 Implementation-Version: 1.0 alpha1
 Implementation-Vendor: vrjuggler.org
 
-Name: plx/beans/icon/
-Specification-Title: Plexus Bean Icon Viewer Classes
+Name: org/vrjuggler/tweek/beans/loader/
+Specification-Title: Tweek Bean-Loading Classes
 Specification-Version: 0.1.0
 Specification-Vendor: vrjuggler.org
-Implementation-Title: plx.beans.icon
-Implementation-Version: 1.0 alpha1
-Implementation-Vendor: vrjuggler.org
-
-Name: plx/beans/loader/
-Specification-Title: Plexus Bean-Loading Classes
-Specification-Version: 0.1.0
-Specification-Vendor: vrjuggler.org
-Implementation-Title: plx.beans.loader
-Implementation-Version: 1.0 alpha1
-Implementation-Vendor: vrjuggler.org
-
-Name: plx/beans/tree/
-Specification-Title: Plexus Bean Tree Viewer Classes
-Specification-Version: 0.1.0
-Specification-Vendor: vrjuggler.org
-Implementation-Title: plx.beans.tree
+Implementation-Title: org.vrjuggler.tweek.beans.loader
 Implementation-Version: 1.0 alpha1
 Implementation-Vendor: vrjuggler.org
