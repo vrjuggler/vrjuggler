@@ -1515,18 +1515,18 @@ class GuiFrontEnd:
 
       # CommandFrame Innards.
       next_row = 0
-      self.mRoot.CommandFrame.BatchBuildCheck = \
-         Tkinter.Checkbutton(self.mRoot.CommandFrame, text="Batch Build",
+      self.mRoot.CommandFrame.OpenVSCheck = \
+         Tkinter.Checkbutton(self.mRoot.CommandFrame,
+                             text="Open Visual Studio IDE",
                              bg = self.JugglerYellow,
                              activebackground = self.JugglerYellow,
                              onvalue = "Yes", offvalue = "No")
-      self.mRoot.CommandFrame.BatchBuildCheck.Variable = Tkinter.StringVar()
-      self.mRoot.CommandFrame.BatchBuildCheck.Variable.set("Yes")
-      self.mRoot.CommandFrame.BatchBuildCheck["variable"] = \
-         self.mRoot.CommandFrame.BatchBuildCheck.Variable
-      self.mRoot.CommandFrame.BatchBuildCheck.grid(row = next_row, column = 0,
-                                                   sticky = Tkinter.EW,
-                                                   pady = 4)
+      self.mRoot.CommandFrame.OpenVSCheck.Variable = Tkinter.StringVar()
+      self.mRoot.CommandFrame.OpenVSCheck.Variable.set("No")
+      self.mRoot.CommandFrame.OpenVSCheck["variable"] = \
+         self.mRoot.CommandFrame.OpenVSCheck.Variable
+      self.mRoot.CommandFrame.OpenVSCheck.grid(row = next_row, column = 0,
+                                               sticky = Tkinter.EW, pady = 4)
       next_row = next_row + 1
       self.mRoot.CommandFrame.InstallJugglerCheck = \
          Tkinter.Checkbutton(self.mRoot.CommandFrame, text = "Install Juggler",
@@ -1732,7 +1732,7 @@ class GuiFrontEnd:
       solution_file = r'%s' % os.path.join('vc7', 'Juggler.sln')
       build_args = r'/build Debug'
 
-      if self.mRoot.CommandFrame.BatchBuildCheck.Variable.get() == "Yes":
+      if self.mRoot.CommandFrame.OpenVSCheck.Variable.get() == "No":
          cmd = devenv_cmd_no_exe + ' ' + solution_file + ' ' + build_args
 
          print cmd
