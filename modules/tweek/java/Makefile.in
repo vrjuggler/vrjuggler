@@ -75,7 +75,7 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
-                  TweekComm.jar
+                  TweekNet.jar
 BEANS		= Viewers
 
 # For the following, *.class is used so that these variables may be used as
@@ -89,7 +89,7 @@ BEANS_MF	= $(srcdir)/beans.MF
 BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
                   org/vrjuggler/tweek/beans/loader/*.class
 
-COMM_CLASSES	= org/vrjuggler/tweek/net/*.class		\
+NET_CLASSES	= org/vrjuggler/tweek/net/*.class		\
                   org/vrjuggler/tweek/net/corba/*.class		\
                   tweek/*.class
 
@@ -115,8 +115,8 @@ Tweek.jar: $(TWEEK_CLASSES)
 	$(JAR) cvf $@ $(TWEEK_CLASSES)
 	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ $(TWEEK_EXTRAS)
 
-TweekComm.jar: $(COMM_CLASSES)
-	$(JAR) cvf $@ $(COMM_CLASSES)
+TweekNet.jar: $(NET_CLASSES)
+	$(JAR) cvf $@ $(NET_CLASSES)
 
 TweekBeans.jar: $(BEANS_MF) $(BEANS_CLASSES)
 	$(JAR) cvfm $@ $(BEANS_MF) $(BEANS_CLASSES)
