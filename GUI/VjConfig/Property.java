@@ -119,47 +119,10 @@ public class Property {
 
 
 
-    public void setValue (String s, int v) {
-	if (!valtype.equals (ValType.t_string))
-	    return;
-	if (v < 0)
-	    return;
-	if (num == -1) {
-	    while (v >= vals.size())
-		vals.addElement (createVarValue(-1));
-	}
-	else if (v >= num)
-	    return;
-	((VarValue)vals.elementAt(v)).set(s);
-    }
-
-
-
-    public void setValue (int s, int v) {
-	if (!valtype.equals (ValType.t_int))
-	    return;
-	if (v < 0)
-	    return;
-	if (num == -1) {
-	    while (v >= vals.size())
-		vals.addElement (createVarValue(-1));
-	}
-	else if (v >= num)
-	    return;
-	((VarValue)vals.elementAt(v)).set(s);
-    }
-
-
-
     public VarValue getValue (int i) {
 	if (i < 0 || i >= vals.size())
 	    return null;
 	return (VarValue)vals.elementAt(i);
-    }
-
-    // for compatibility
-    public VarValue getVal (int i) {
-	return getValue(i);
     }
 
 
@@ -203,31 +166,14 @@ public class Property {
 	String s = pad + desc.token + " { ";
 	for (int i = 0; i < vals.size(); i++) {
 	    v = (VarValue)vals.elementAt(i);
-	    if (valtype.equals(ValType.t_string) ||
-		valtype.equals(ValType.t_chunk)) 
-		s += '"' + v.toString() + '"';
-	    else if (valtype.equals (ValType.t_embeddedchunk)) {
+
+	    if (valtype.equals (ValType.t_embeddedchunk)) {
 		s += "\n" + v.getEmbeddedChunk().toString(pad + "    ");
 	    }
-	    else if (valtype.equals(ValType.t_bool) ||
-		     (desc.enums.size() == 0))
-		s += v.toString();
-	    else if (valtype.equals(ValType.t_int)) {
-		try {
-		    s += "\"" + desc.getEnumString (v.getInt()) + "\"";
-		}
-		catch (java.util.NoSuchElementException e) {
-		    s += v.getInt();
-		}
+	    else {
+		s += "\"" + desc.getEnumString(v) + "\"";
 	    }
-	    else if (valtype.equals(ValType.t_float)) {
-		try {
-		    s += "\"" + desc.getEnumString (v.getFloat()) + "\"";
-		}
-		catch (java.util.NoSuchElementException e) {
-		    s += v.getFloat();
-		}
-	    }
+
 	    s+= " ";
 	}
 	s += "}";

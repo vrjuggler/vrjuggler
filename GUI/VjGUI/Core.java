@@ -144,14 +144,6 @@ public class Core {
     }
 
 
-    /*
-    static public String addNewChunkDB () {
-	// creates a new db, treemodel, etc.
-	ConfigChunkDB db = new ConfigChunkDB (descdb);
-	addChunkDB (db);
-	return db.name;
-    }
-    */
 
 
     static public String createUniqueChunkDBName (String base) {
@@ -276,18 +268,18 @@ public class Core {
 	    return;
 
 	try {
-	    ui.connection_pane.setHost (ch.getPropertyFromToken("host").getVal(0).getString());
-	    ui.connection_pane.setPort (ch.getPropertyFromToken("port").getVal(0).getInt());
-	    looknfeel = ch.getPropertyFromToken ("looknfeel").getVal(0).getString();
+	    ui.connection_pane.setHost (ch.getPropertyFromToken("host").getValue(0).getString());
+	    ui.connection_pane.setPort (ch.getPropertyFromToken("port").getValue(0).getInt());
+	    looknfeel = ch.getPropertyFromToken ("looknfeel").getValue(0).getString();
 
-	    fontsize = ch.getPropertyFromToken("fontsize").getVal(0).getInt();
-	    fontname = ch.getPropertyFromToken("fontname").getVal(0).getString();
-	    //window_pos_kludge = ch.getPropertyFromToken("windowposkludge").getVal(0).getBool();
+	    fontsize = ch.getPropertyFromToken("fontsize").getValue(0).getInt();
+	    fontname = ch.getPropertyFromToken("fontname").getValue(0).getString();
+	    //window_pos_kludge = ch.getPropertyFromToken("windowposkludge").getValue(0).getBool();
 
-	    screenWidth = ch.getPropertyFromToken("windowsize").getVal(0).getInt();
-	    screenHeight = ch.getPropertyFromToken("windowsize").getVal(1).getInt();
+	    screenWidth = ch.getPropertyFromToken("windowsize").getValue(0).getInt();
+	    screenHeight = ch.getPropertyFromToken("windowsize").getValue(1).getInt();
 	    // default chunk files not dealt with here - only at startup.
-	    //defaultchunkfile = ch.getPropertyFromToken("defaultchunkfiles").getVal(0).getString();
+	    //defaultchunkfile = ch.getPropertyFromToken("defaultchunkfiles").getValue(0).getString();
 	   
 
 	}

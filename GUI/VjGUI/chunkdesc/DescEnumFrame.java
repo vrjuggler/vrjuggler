@@ -222,6 +222,10 @@ public class DescEnumFrame extends JFrame
 
 		s = p.getName();
 		val.set (p.getVal());
+		//System.out.println ("name is " + s + " and val is " + val.toString());
+
+		if (s == null || s.equals (""))
+		    continue; 
 
 		if (pdtype.equals (ValType.t_chunk) || pdtype.equals (ValType.t_embeddedchunk)) {
 		    for (j = 0; j < Core.descdbs.size(); j++) {
@@ -234,36 +238,20 @@ public class DescEnumFrame extends JFrame
 		    }
 		}
 
-		if (s == null || s.equals (""))
-		    continue; 
+		if (pdtype.equals (ValType.t_int) || pdtype.equals (ValType.t_float)) {
+		    if (p.getVal().equals("")) {
+			val.set (unused++);
+		    }
+		    else
+			unused = (unused > val.getInt())?(unused):(val.getInt()+1);
+		}
+
+		if (pdtype.equals (ValType.t_string) || pdtype.equals (ValType.t_chunk) || pdtype.equals (ValType.t_embeddedchunk))
+		    if (p.getVal().equals(""))
+			val.set (s);
 
 		data.addElement (new DescEnum (s, val));
 		
-// 		if (pdtype.equals (ValType.t_int)) {
-// 		    try {
-// 			j = p.getIntVal();
-// 			unused = (unused>j)?(unused):(j+1);
-// 		    }
-// 		    catch (NumberFormatException ne) {
-// 			j = unused++;
-// 		    }
-// 		    data.addElement(new DescEnum (s,j));
-// 		}
-// 		else if (pdtype.equals (ValType.t_float)) {
-// 		    try {
-// 			k = p.getFloatVal();
-// 			unused = (unused>k)?(unused):((new Float(k)).intValue() +1);
-// 		    }
-// 		    catch (NumberFormatException ne) {
-// 			k = unused++;
-// 		    }
-// 		    data.addElement(new DescEnum (s,k));
-// 		}
-// 		else if (pdtype.equals (ValType.t_string) ||
-// 			 pdtype.equals (ValType.t_chunk) ||
-// 			 pdtype.equals (ValType.t_embeddedchunk)) {
-// 		    data.addElement(new DescEnum (s,0));
-// 		}
 	    }
 	    closeFrame();
 	}

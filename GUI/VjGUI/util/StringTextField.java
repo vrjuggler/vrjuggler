@@ -22,6 +22,9 @@ package VjGUI.util;
 import javax.swing.*;
 import java.awt.event.*;
 
+
+// A text field that only accepts valid vjcontrol strings
+// (ie no spaces).
 public class StringTextField extends JTextField {
 
     public StringTextField (int i) {

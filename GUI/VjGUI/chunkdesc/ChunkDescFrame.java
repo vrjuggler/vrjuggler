@@ -35,7 +35,7 @@ import javax.swing.border.*;
 import VjConfig.*;
 import VjGUI.chunkdesc.*;
 import VjGUI.Core;
-import VjGUI.util.JFrameParent;
+import VjGUI.util.*;
 
 public class ChunkDescFrame 
     extends JFrame 
@@ -90,7 +90,7 @@ public class ChunkDescFrame
 	gbl.setConstraints (l, gbc);
 	mainpanel.add (l);
 	
-	namefield = new JTextField (desc.name, 15);
+	namefield = new StringTextField (desc.name, 15);
 	gbc.weightx = 0.5;
 	gbl.setConstraints (namefield, gbc);
 	mainpanel.add (namefield);
@@ -100,7 +100,7 @@ public class ChunkDescFrame
 	gbl.setConstraints (l, gbc);
 	mainpanel.add (l);
 
-	tokenfield = new JTextField (desc.token, 15);
+	tokenfield = new NoSpaceTextField (desc.token, 15);
 	gbc.gridwidth = gbc.REMAINDER;
 	gbc.weightx = 0.5;
 	gbl.setConstraints (tokenfield, gbc);
@@ -112,7 +112,7 @@ public class ChunkDescFrame
 	gbl.setConstraints (l, gbc);
 	mainpanel.add (l);
 
-	helpfield = new JTextField (desc.help, 50);
+	helpfield = new StringTextField (desc.help, 50);
 	gbc.weightx = 1;
 	gbc.gridwidth = gbc.REMAINDER;
 	gbl.setConstraints (helpfield, gbc);

@@ -48,7 +48,8 @@ public class DescEnum {
 
     public DescEnum (String s, VarValue v) {
 	str = s;
-	val = v;
+	val = new VarValue(v);
+	//System.out.println(toString());
     }
 
 

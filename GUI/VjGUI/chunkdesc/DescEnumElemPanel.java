@@ -33,22 +33,22 @@ import VjGUI.util.*;
  * in the enums vector.  Exactly how this ought to look depends on the
  * type of the Property these enums are for:
  *
- *  t_int, t_float: TextField for name, TextField for val
- *  t_string: TextField for name
- *  t_chunk: Choice with names of available chunks
+ *  t_int, t_float, t_string: TextField for name, TextField for val
+ *  t_chunk, t_embeddedchunk: Choice with names of available chunks
+ *  t_bool: string name, Choice w/ true/false
  *
  * the more cool I make this GUI, the more it gets all interconnected together
  * <sigh>.  I guess sometimes you really do want global variables ;)
  */
 public class DescEnumElemPanel extends JPanel implements MouseListener {
 
-  static AbstractBorder select_border=null;
-  static AbstractBorder unselect_border=null;
+    static AbstractBorder select_border=null;
+    static AbstractBorder unselect_border=null;
 
-  JTextField namef;
-  JComboBox namechoice;
-  JTextField valf;
-  boolean selected;
+    JTextField namef;
+    JComboBox namechoice;
+    JTextField valf;
+    boolean selected;
 
 
     /* I'm going to let the parent frame deal with building the actual desc
@@ -56,10 +56,12 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
      * bits and pieces.
      */
     public String getName() {
-	if (namechoice != null)
-	    return (String)(namechoice.getSelectedItem());
-	else
+	// order is important cuz bools use namef for label & namechoice 
+	// for value
+	if (namef != null)
 	    return namef.getText();
+	else
+	    return (String)(namechoice.getSelectedItem());
     }
 
 
@@ -105,9 +107,11 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 		}
 		if (s == null) 
 		    s = "";
-		System.out.println ("setting active to: " + s);
+		//System.out.println ("setting active to: " + s);
 		namechoice.setSelectedItem (s);
 	    }
+	    else if (t.equals(ValType.t_bool)) 
+		namechoice.setSelectedItem (e.val.getBool()?"True":"False");
 	    else
 		namechoice.setSelectedItem(e.str);
 	}
@@ -140,12 +144,7 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 	namef = null;
 
 	/* next bit is specific on valtype of the propertydesc */
-	if (t.equals(ValType.t_string)) {
-	    addLabel ("Name: ");
-	    namef = new JTextField (20);
-	    add (namef);
-	}
-	else if (t.equals(ValType.t_chunk)) {
+	if (t.equals(ValType.t_chunk)) {
 	    addLabel ("Accept chunks of type: ");
 	    namechoice = new JComboBox();
 	    for (i = 0; i < Core.descdbs.size(); i++) {
@@ -163,6 +162,16 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 		for (j = 0; j < db.size(); j++)
 		    namechoice.addItem(((ChunkDesc)db.elementAt(j)).name);
 	    }
+	    add (namechoice);
+	}
+	else if (t.equals(ValType.t_bool)) {
+	    addLabel ("Name: ");
+	    namef = new JTextField (20);
+	    add (namef);
+	    addLabel ("Value: ");
+	    namechoice = new JComboBox();
+	    namechoice.addItem ("False");
+	    namechoice.addItem ("True");
 	    add (namechoice);
 	}
 	else {

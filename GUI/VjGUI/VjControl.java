@@ -134,8 +134,6 @@ public class VjControl {
 	else if (orgtreename != null) {
 	    FileControl.loadChunkOrgTree(orgtreename, false, Core.chunkorgtree);
 	}
-
-	//Core.rebuildAllTrees();
 	
 	Core.ui.selectLeftDB ("Active Configuration");
 	Core.ui.selectRightDB (lastfname);
@@ -164,30 +162,28 @@ public class VjControl {
 	if (v.size() == 0 || ((ch = (ConfigChunk)v.elementAt(0)) == null)) {
 	    System.err.println ("didn't get chunk");
 	    ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
-	    ch.setPropertyFromToken ("fontname", "Courier", 0);
-	    ch.setPropertyFromToken ("fontsize", 12, 0);
-	    ch.setPropertyFromToken ("looknfeel", "Java", 0);
-	    ch.setPropertyFromToken ("name", "VjControl Config", 0);
+	    ch.setPropertyFromToken ("fontname", new VarValue ("Courier"), 0);
+	    ch.setPropertyFromToken ("fontsize", new VarValue (12), 0);
+	    ch.setPropertyFromToken ("looknfeel", new VarValue ("Java"), 0);
+	    ch.setPropertyFromToken ("name", new VarValue ("VjControl Config"), 0);
 	    Core.gui_chunkdb.addElement (ch);
 	}
 	Core.vjcontrol_preferences = ch;
 
-	//p = ch.getPropertyFromToken ("
-
 	p = ch.getPropertyFromToken ("descfiles");
 	for (i = 0; i < p.getNum(); i++) {
-	    s = p.getVal(i).getString();
+	    s = p.getValue(i).getString();
 	    auto_descdbnames.addElement (s);
 	}
 	p = ch.getPropertyFromToken ("chunkfiles");
 	for (i = 0; i < p.getNum(); i++) {
-	    s = p.getVal(i).getString();
+	    s = p.getValue(i).getString();
 	    auto_chunkdbnames.addElement (s);
 	}
 	p = ch.getPropertyFromToken ("defaultchunkfiles");
 	if (p != null) 
 	    for (i = 0; i < p.getNum(); i++) {
-		s = p.getVal(i).getString();
+		s = p.getValue(i).getString();
 		auto_defaultchunkdbnames.addElement (s);
 	    }
     }
