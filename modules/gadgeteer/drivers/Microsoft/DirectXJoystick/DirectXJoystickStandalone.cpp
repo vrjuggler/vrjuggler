@@ -36,29 +36,29 @@
 namespace gadget
 {
 
-LPDIRECTINPUT8       mDxObject;      // DirectInput object
-LPDIRECTINPUTDEVICE8 mDxJoystick;    // DirectInput device
-DIDEVICEINSTANCE mDxDeviceInfo;
-DIJOYSTATE  mJsData; 		// joystick state data-structure
+static LPDIRECTINPUT8       sDxObject;      // DirectInput object
+static LPDIRECTINPUTDEVICE8 sDxJoystick;    // DirectInput device
+static DIDEVICEINSTANCE     sDxDeviceInfo;
+static DIJOYSTATE           sJsData;        // joystick state data-structure
 
 // The Callback function must be static
-BOOL CALLBACK enumerateJoysticksCallback(const DIDEVICEINSTANCE* dInstance,
+static BOOL CALLBACK enumerateJoysticksCallback(const DIDEVICEINSTANCE* dInstance,
                                          void* pContext);
-BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
+static BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
                                     void* pContext);
 
 BOOL CALLBACK enumerateJoysticksCallback(const DIDEVICEINSTANCE* dInstance,
                                          void* pContext)
 {
    // Obtain an interface to the enumerated joystick.
-   mDxObject->CreateDevice(dInstance->guidInstance, &mDxJoystick, NULL);
+   sDxObject->CreateDevice(dInstance->guidInstance, &sDxJoystick, NULL);
    return DIENUM_STOP;
 /* // FIXME: allow configurable joystick station
    static int count = 0;
    ++count;
    if( count == 2 )
    {
-      mDxObject->CreateDevice(dInstance->guidInstance, &mDxJoystick, NULL);
+      mDxObject->CreateDevice(dInstance->guidInstance, &sDxJoystick, NULL);
       return DIENUM_STOP;
    }
    return DIENUM_CONTINUE;
@@ -79,7 +79,7 @@ BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
    diprg.lMax              = +100;
 
    // Set the range for the axis
-   if( FAILED(mDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
+   if( FAILED(sDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
    {
       return DIENUM_STOP;
    }
@@ -95,7 +95,7 @@ HRESULT DirectXJoystickStandalone::init()
 {
    // Create a DInput object.
    HRESULT err = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-                                    IID_IDirectInput8, (VOID**) &mDxObject,
+                                    IID_IDirectInput8, (VOID**) &sDxObject,
                                     NULL);
 
    // some error.
@@ -105,25 +105,25 @@ HRESULT DirectXJoystickStandalone::init()
    }
 
    // Look for joystick .
-   mDxObject->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerateJoysticksCallback,
+   sDxObject->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerateJoysticksCallback,
                           (LPVOID) NULL, (DWORD) DIEDFL_ATTACHEDONLY);
 
-   mDxJoystick->SetDataFormat(&c_dfDIJoystick);
+   sDxJoystick->SetDataFormat(&c_dfDIJoystick);
 
    // Set the cooperative level to let DInput know how this device should
    // interact with the system and with other DInput applications.
-   mDxJoystick->SetCooperativeLevel((HWND) NULL,
+   sDxJoystick->SetCooperativeLevel((HWND) NULL,
                                     DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 
    // Enumerate the axes of the joystick and set the range of each axis found.
-   mDxJoystick->EnumObjects(enumerateAxesCallback, (VOID*) NULL, DIDFT_AXIS);
+   sDxJoystick->EnumObjects(enumerateAxesCallback, (VOID*) NULL, DIDFT_AXIS);
 
-   mDxJoystick->Acquire();
+   sDxJoystick->Acquire();
 
    // Get device specific information
-   mDxJoystick->GetDeviceInfo(&mDxDeviceInfo);
-   mType = mDxDeviceInfo.dwDevType;
-   mProductName = std::string(mDxDeviceInfo.tszProductName);
+   sDxJoystick->GetDeviceInfo(&sDxDeviceInfo);
+   mType = sDxDeviceInfo.dwDevType;
+   mProductName = std::string(sDxDeviceInfo.tszProductName);
    if ( mProductName.size() == 0 )
    {
       mProductName = "unknown";
@@ -158,9 +158,9 @@ std::string DirectXJoystickStandalone::getProductName()
 HRESULT DirectXJoystickStandalone::poll()
 {
    //DIJOYSTATE  js; // DInput joystick state data-structure
-   mDxJoystick->Poll();
+   sDxJoystick->Poll();
    // FIXME: error tracking
-   mDxJoystick->GetDeviceState(sizeof(DIJOYSTATE), &mJsData);
+   sDxJoystick->GetDeviceState(sizeof(DIJOYSTATE), &sJsData);
    return S_OK;
 }
 
@@ -185,27 +185,27 @@ button is up or does not exist.
 
 DIJOYSTATE DirectXJoystickStandalone::getData()
 {
-   return mJsData;
+   return sJsData;
 }
 
 void DirectXJoystickStandalone::close()
 {
    // Unacquire & release any DirectInputDevice objects.
-   if( mDxJoystick != NULL )
+   if( sDxJoystick != NULL )
    {
-      mDxJoystick->Unacquire();
-      if ( mDxJoystick )
+      sDxJoystick->Unacquire();
+      if ( sDxJoystick )
       {
-         mDxJoystick->Release();
-         mDxJoystick = NULL;
+         sDxJoystick->Release();
+         sDxJoystick = NULL;
       }
    }
 
    // Release any DirectInput objects.
-   if(mDxObject)
+   if( sDxObject )
    {
-      mDxObject->Release();
-      mDxObject = NULL;
+      sDxObject->Release();
+      sDxObject = NULL;
    }
 }
 
