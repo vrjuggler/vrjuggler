@@ -71,7 +71,6 @@ namespace jcclTest
          CPPUNIT_ASSERT( desc->getHelp() == "wood chuckin'" );
          
          jccl::PropertyDesc* p = desc->getPropertyDesc( "test prop multi" );
-         std::cout<<"BIG FIST!!!! " <<  p->getName()<<std::endl;
          CPPUNIT_ASSERT( p->getName() == "big bad beaver" );
          CPPUNIT_ASSERT( p->getToken() == "test prop multi" );
          CPPUNIT_ASSERT( p->getHelp() == "multi beaver" );
@@ -159,23 +158,44 @@ namespace jcclTest
          // shouldn't exist (yet!)
          CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) == NULL );
          
-         jccl::PropertyDesc pdesc;
-         pdesc.setName( "chuckli brocolli" );
-         pdesc.setToken( "chuck e cheeze" );
-         pdesc.setHelp( "lend a chucking hand" );
-         desc->add( &pdesc ); // suspicious that it doesn't take a const ptr (or shared_ptr!)
+         jccl::PropertyDesc* pdesc = new jccl::PropertyDesc;
+         pdesc->setName( "chuckli brocolli" );
+         pdesc->setToken( "chuck e cheeze" );
+         pdesc->setHelp( "lend a chucking hand" );
+         desc->add( pdesc ); // suspicious that it doesn't take a const ptr (or shared_ptr!)
          
          CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) != NULL );
          
-         // @todo fails here, fixme.  should copy the desc -or- should use a smartptr
-         CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) != &pdesc );
+         // @todo fails here, fixme. desc->add() should copy the propdesc -or- should use a smartptr
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) != pdesc );
       }
             
       void remPropDesc()
       {
-         
-      }      
-      
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+
+         std::string file_path( TESTFILES_PATH );
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         // shouldn't exist (yet!)
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "cheer up chuck" ) == NULL );
+
+         jccl::PropertyDesc* pdesc = new jccl::PropertyDesc;
+         pdesc->setName( "chuckli brocolli" );
+         pdesc->setToken( "cheer up chuck" );
+         pdesc->setHelp( "hey chuck isn't that your friend ralph?" );
+         desc->add( pdesc );
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "cheer up chuck" ) != NULL );
+
+         // @todo remove deletes memory that i created, 
+         // this would not work well in a dll (memory system conflicts...)
+         bool result = desc->remove( "cheer up chuck" );
+         CPPUNIT_ASSERT( result == true );
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "cheer up chuck" ) == NULL );
+      }
+
       static CppUnit::Test* suite()
       {
           CppUnit::TestSuite* test_suite = new CppUnit::TestSuite( "ChunkDescTest" );
