@@ -48,13 +48,13 @@ namespace vrj
          return false;
       }
 
-      std::string manager_name = chunk->getProperty( "Name" );
-      std::string api_to_use = chunk->getProperty( "api" );
+      std::string manager_name = chunk->getName();
+      std::string api_to_use = chunk->getProperty<std::string>( "api" );
       float listener_position[3];
-      listener_position[0] = (float)chunk->getProperty( "listener_position", 0 );
-      listener_position[1] = (float)chunk->getProperty( "listener_position", 1 );
-      listener_position[2] = (float)chunk->getProperty( "listener_position", 2 );
-      std::string file_search_path = chunk->getProperty( "file_search_path" );
+      listener_position[0] = (float)chunk->getProperty<float>( "listener_position", 0 );
+      listener_position[1] = (float)chunk->getProperty<float>( "listener_position", 1 );
+      listener_position[2] = (float)chunk->getProperty<float>( "listener_position", 2 );
+      std::string file_search_path = chunk->getProperty<std::string>( "file_search_path" );
 
       // configure sonix
       sonix::instance()->changeAPI( api_to_use );
@@ -66,16 +66,16 @@ namespace vrj
       int size = chunk->getNum( "Sound" );
       for (int x = 0; x < size; ++x)
       {
-         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty( "Sound", x );
-         std::string alias = (std::string)sound_chunk->getProperty( "Name" );
-         std::string filename = (std::string)sound_chunk->getProperty( "filename" );
-         bool ambient = (bool)sound_chunk->getProperty( "ambient" );
-         bool retriggerable = (bool)sound_chunk->getProperty( "retriggerable" );
-         int loop = (int)sound_chunk->getProperty( "loop" );
+         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sound", x );
+         std::string alias = (std::string)sound_chunk->getName();
+         std::string filename = (std::string)sound_chunk->getProperty<std::string>( "filename" );
+         bool ambient = (bool)sound_chunk->getProperty<bool>( "ambient" );
+         bool retriggerable = (bool)sound_chunk->getProperty<bool>( "retriggerable" );
+         int loop = (int)sound_chunk->getProperty<int>( "loop" );
          float position[3];
-         position[0] = (float)chunk->getProperty( "position", 0 );
-         position[1] = (float)chunk->getProperty( "position", 1 );
-         position[2] = (float)chunk->getProperty( "position", 2 );
+         position[0] = (float)chunk->getProperty<float>( "position", 0 );
+         position[1] = (float)chunk->getProperty<float>( "position", 1 );
+         position[2] = (float)chunk->getProperty<float>( "position", 2 );
 
          // configure the sound...
          snx::SoundInfo si;
@@ -101,8 +101,8 @@ namespace vrj
       int size = chunk->getNum( "Sound" );
       for (int x = 0; x < size; ++x)
       {
-         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty( "Sound", x );
-         std::string alias = (std::string)sound_chunk->getProperty( "Name" );
+         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sound", x );
+         std::string alias = (std::string)sound_chunk->getName();
          sonix::instance()->remove( alias );
       }
 
@@ -114,7 +114,7 @@ namespace vrj
    //+          false - Can't handle it
    bool SoundManagerSonix::configCanHandle( jccl::ConfigChunkPtr chunk )
    {
-      std::string chunk_type = (std::string)chunk->getType();
+      std::string chunk_type = (std::string)chunk->getDescToken();
 
       if(std::string("juggler_audio_manager") == chunk_type)
          return true;
