@@ -672,7 +672,7 @@ if test "x$GXX" = "xyes" ; then
 fi
 
 # For use in linking applications.
-EXTRA_LINK_FLAGS="$STDFLAGS"
+BASE_APP_LINK_FLAGS="$STDFLAGS"
 
 if test "x$ac_cv_header_sys_sysinfo_h" = "xyes" ; then
     UUID_DEFS='-DHAVE_SYS_SYSINFO_H'
@@ -681,11 +681,14 @@ fi
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -w2"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4"
+    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -J4"
 elif test "x$PLATFORM" = "xDarwin" ; then
     CFLAGS="$CFLAGS -Wno-long-double"
     CXXFLAGS="$CXXFLAGS -Wno-long-double"
+    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
+    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
     vpr_cxxflags="$vpr_cxxflags -Wno-long-double"
+    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
@@ -728,8 +731,8 @@ fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VPR_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
-VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VPR_BASE_DIR,
-              vpr, $APP_EXTRA_LIBS)
+VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
+              [VPR_BASE_DIR], [vpr], [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VPR_BASE_DIR)'
@@ -856,7 +859,6 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SHARE_DIR)
 
 AC_SUBST(RM_LN)
-AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(SUBSYSTEM)
 AC_SUBST(SIMULATOR)
