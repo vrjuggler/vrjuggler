@@ -45,6 +45,10 @@ public:
    : CppUnit::ThreadTestCase ()
    {;}
 
+   SelectorTest(std::string name)
+   : CppUnit::ThreadTestCase (name)
+   {;}
+
    virtual ~SelectorTest()
    {}
 
@@ -461,10 +465,14 @@ public:
    }
 
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
-      suite->addTest( new CppUnit::TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SelectorTest");
+
+      test_suite->addTest( new CppUnit::TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
+      test_suite->addTest( new CppUnit::TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
+
+      return test_suite;
    }
 
 protected:

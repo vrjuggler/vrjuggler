@@ -26,6 +26,9 @@ public:
    {
    }
 
+   GUIDTest(std::string name) : CppUnit::TestCase (name)
+   {
+   }
 
    virtual ~GUIDTest()
    {
@@ -140,20 +143,28 @@ public:
 
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testConstructor",
-                                                       &GUIDTest::testConstructor));
-      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCompare",
-                                                       &GUIDTest::testCompare));      
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("GUIDTest");
+
+      test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testConstructor",
+                                                            &GUIDTest::testConstructor));
+      test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCompare",
+                                                            &GUIDTest::testCompare));      
+
+      return test_suite;
    }
 
-   void registerMetricsTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* metric_suite()
    {
-      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testDebugOutput", &GUIDTest::testDebugOutput));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("GUIDTest_metric");
 
-      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCreationOverhead",
-                                                       &GUIDTest::testCreationOverhead));
+      test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testDebugOutput", &GUIDTest::testDebugOutput));
+
+      test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCreationOverhead",
+                                                            &GUIDTest::testCreationOverhead));
+
+      return test_suite;
    }
 
 };

@@ -33,6 +33,10 @@ public:
    : CppUnit::ThreadTestCase ()
    {;}
 
+   SocketCopyConstructorTest(std::string name)
+   : CppUnit::ThreadTestCase (name)
+   {;}
+
    virtual ~SocketCopyConstructorTest()
    {}
 

@@ -41,6 +41,10 @@ public:
    : CppUnit::ThreadTestCase ()
    {;}
 
+   SocketBandwidthIOStatsTest(std::string name)
+   : CppUnit::ThreadTestCase (name)
+   {;}
+
    virtual ~SocketBandwidthIOStatsTest()
    {;}
 
@@ -230,15 +234,23 @@ public:
       }
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      //suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
-      //suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketBandwidthIOStatsTest");
+
+      //test_suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
+      //test_suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
+
+      return test_suite;
    }
 
-   void registerMetricsTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* metric_suite()
    {
-      suite->addTest( new CppUnit::TestCaller<SocketBandwidthIOStatsTest>("testBandwidth", &SocketBandwidthIOStatsTest::testBandwidth));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketBandwidthIOStatsTest_metric");
+
+      test_suite->addTest( new CppUnit::TestCaller<SocketBandwidthIOStatsTest>("testBandwidth", &SocketBandwidthIOStatsTest::testBandwidth));
+
+      return test_suite;
    }
 
 

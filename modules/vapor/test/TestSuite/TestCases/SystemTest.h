@@ -24,6 +24,9 @@ public:
    {
    }
 
+   SystemTest(std::string name) : CppUnit::TestCase (name)
+   {
+   }
 
    virtual ~SystemTest()
    {
@@ -74,11 +77,14 @@ public:
    }
 
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<SystemTest>("ShortConversions", &SystemTest::ShortConversions));
-      suite->addTest( new CppUnit::TestCaller<SystemTest>("LongConversions", &SystemTest::LongConversions));
-      suite->addTest( new CppUnit::TestCaller<SystemTest>("LongLongConversions", &SystemTest::LongLongConversions));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SystemTest");
+      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("ShortConversions", &SystemTest::ShortConversions));
+      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("LongConversions", &SystemTest::LongConversions));
+      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("LongLongConversions", &SystemTest::LongLongConversions));
+
+      return test_suite;
    }
 };
 
