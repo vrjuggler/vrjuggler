@@ -26,6 +26,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
 
    vpr::Uint8 read_uint8;
    vpr::Uint16 read_uint16;
+   vpr::Uint16 read_uint16_2;
    vpr::Uint32 read_uint32;
    vpr::Uint64 read_uint64;
    float       read_float;
@@ -49,9 +50,13 @@ void XMLReaderWriterTest::testBasicWriteRead()
       // - Multiple cdata areas for a node
       // - Very long string (> 1024chars)
       // - Empty tags
+      // - Two attributes in one tag
       xml_writer.beginTag("FirstLevel");
-         xml_writer.beginAttribute("uint8");
+         xml_writer.beginAttribute("uint8_16");
             xml_writer.writeUint8(data_uint8);
+            xml_writer.writeUint16(data_uint16);
+         xml_writer.endAttribute();
+         xml_writer.beginAttribute("uint16");
             xml_writer.writeUint16(data_uint16);
          xml_writer.endAttribute();
          xml_writer.writeUint32(data_uint32);
@@ -81,9 +86,12 @@ void XMLReaderWriterTest::testBasicWriteRead()
       vpr::XMLObjectReader xml_reader(data_buffer);
 
       xml_reader.beginTag("FirstLevel");
-         xml_reader.beginAttribute("uint8");
+         xml_reader.beginAttribute("uint8_16");
             xml_reader.readUint8(read_uint8);
             xml_reader.readUint16(read_uint16);
+         xml_reader.endAttribute();
+         xml_reader.beginAttribute("uint16");
+            xml_reader.readUint16(read_uint16_2);
          xml_reader.endAttribute();
          xml_reader.readUint32(read_uint32);
          xml_reader.readUint64(read_uint64);
@@ -125,6 +133,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
 
    CPPUNIT_ASSERT_EQUAL(data_uint8, read_uint8);
    CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16);
+   CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16_2);
    CPPUNIT_ASSERT_EQUAL(data_uint32, read_uint32);
    CPPUNIT_ASSERT_EQUAL(data_uint64, read_uint64);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(data_float, read_float, 0.001f);
