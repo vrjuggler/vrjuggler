@@ -40,6 +40,8 @@ import java.util.Stack;
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+
+import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
@@ -104,8 +106,19 @@ public class ContextToolbar
          redoBtn.setText("Redo");
          expandBtn.setText("Expand");
       }
+
+      mTweekFrameListener = new TweekFrameAdapter()
+         {
+            public boolean frameClosing(TweekFrameEvent e)
+            {
+               return doClose();
+            }
+         };
+     
+      System.out.println("Registering listener");
+      EventListenerRegistry.instance().registerListener(mTweekFrameListener, TweekFrameListener.class);
    }
-   
+
    public void undoableEditHappened(UndoableEditEvent e)
    {
       undoBtn.setEnabled(true);
@@ -394,7 +407,7 @@ public class ContextToolbar
          int result = JOptionPane.showConfirmDialog(null,
                            "You have unsaved changes, do you want to save them?\n" + file_names,
                            "Unsaved Changes",
-                           JOptionPane.YES_NO_OPTION,
+                           JOptionPane.YES_NO_CANCEL_OPTION ,
                            JOptionPane.INFORMATION_MESSAGE);
          switch (result)
          {
@@ -403,6 +416,9 @@ public class ContextToolbar
                break;
             case JOptionPane.NO_OPTION:
                break;
+            case JOptionPane.CANCEL_OPTION:
+               System.out.println("Cancel...");
+               return false;
          }
       }
       
@@ -411,6 +427,9 @@ public class ContextToolbar
       {
          broker.remove((String)itr.next());
       }
+      
+      System.out.println("Unregistering listener");
+      EventListenerRegistry.instance().unregisterListener(mTweekFrameListener, TweekFrameListener.class);
       return true;
    }
 
@@ -702,6 +721,7 @@ public class ContextToolbar
 
    private Container mParentFrame = null;
    private VrjConfig.ConfigIFrame mConfigIFrame = null;
+   private TweekFrameAdapter mTweekFrameListener = null;
 
    /**
     * Our special context change listener used to toggle the save and expand

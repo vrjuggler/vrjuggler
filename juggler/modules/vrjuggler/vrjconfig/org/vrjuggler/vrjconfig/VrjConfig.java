@@ -54,7 +54,7 @@ import org.vrjuggler.vrjconfig.ui.ContextToolbar;
 
 public class VrjConfig
    extends JPanel
-   implements FileLoader, TweekFrameListener
+   implements FileLoader
 {
    public VrjConfig()
    {
@@ -96,55 +96,6 @@ public class VrjConfig
    static
    {
       mEnvService = new EnvironmentServiceProxy();
-   }
-
-   public void frameClosed(TweekFrameEvent e)
-   {
-   }
-
-   /**
-    * This method can be used to prevent the Tweek Java GUI from closing
-    * by returning false.  This could be used as a way to have the user
-    * cancel an accidental closing of the whole GUI.
-    */
-   public boolean frameClosing(TweekFrameEvent e)
-   {
-      try
-      {
-         JInternalFrame[] frames = mDesktop.getAllFrames();
-         for (int i = 0 ; i < frames.length ; i++)
-         {
-            System.out.println("Closing internal frame #" + i);
-            frames[i].setClosed(true);
-         }
-      }
-      catch (java.beans.PropertyVetoException ex)
-      {
-         System.out.println(ex);
-         ex.printStackTrace();
-      }
-
-      return true;
-   }
-
-   public void frameDeiconified(TweekFrameEvent e)
-   {
-   }
-
-   public void frameFocused(TweekFrameEvent e)
-   {
-   }
-
-   public void frameIconified(TweekFrameEvent e)
-   {
-   }
-
-   public void frameOpened(TweekFrameEvent e)
-   {
-   }
-
-   public void frameUnfocused(TweekFrameEvent e)
-   {
    }
 
    //--------------------------------------------------------------------------
@@ -212,7 +163,6 @@ public class VrjConfig
    private void addFrame(JInternalFrame frame)
    {
       frame.addInternalFrameListener(mActivationListener);
-      frame.addInternalFrameListener(mCloseListener);
       frame.pack();
       frame.setVisible(true);
       mDesktop.add(frame);
@@ -230,7 +180,6 @@ public class VrjConfig
    {
       mDesktop.remove(frame);
       frame.removeInternalFrameListener(mActivationListener);
-      frame.removeInternalFrameListener(mCloseListener);
    }
 
    /**
@@ -288,9 +237,6 @@ public class VrjConfig
    /** Our listener for activation changes to the internal frames. */
    private InternalFrameListener mActivationListener = new ActivationListener();
 
-   /** Our listener for close notifications from the internal frames. */
-   private InternalFrameListener mCloseListener = new CloseListener();
-
    /**
     * The special internal frame used to hold configuration editors.
     */
@@ -309,12 +255,20 @@ public class VrjConfig
 
          mToolbar.addActionListener(this);
          addActionListener(editor.getContextEditor().getElementTree());
-         
+        
+         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
          addInternalFrameListener(new InternalFrameAdapter()
             {
                public void internalFrameClosing(InternalFrameEvent evt)
                {
-                  mContextToolbar.doClose();
+                  if ( mContextToolbar.doClose() )
+                  {
+                     dispose();
+                  }
+               }
+               public void internalFrameClosed(InternalFrameEvent evt)
+               {
+                  mToolbar.setConfigContext(new ConfigContext());
                }
             });
                
@@ -409,35 +363,6 @@ public class VrjConfig
       public void internalFrameDeactivated(InternalFrameEvent evt)
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
-      }
-   }
-
-   /**
-    * The special internal frame listener detects when a frame has been closed
-    * and cleans up the files that are open.
-    */
-   private class CloseListener
-      extends InternalFrameAdapter
-   {
-      /**
-       * User wants to close the frame. Check if there are any unsaved changes
-       * first.
-       */
-      public void internalFrameClosing(InternalFrameEvent evt)
-      {
-         JInternalFrame src = evt.getInternalFrame();
-         src.dispose();
-      }
-
-      /**
-       * The frame has closed. Clean up after all the files that were open.
-       */
-      public void internalFrameClosed(InternalFrameEvent evt)
-      {
-         ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
-         mToolbar.setConfigContext(frame.getEditor().getConfigContext());
-         mToolbar.doClose();
-         mToolbar.setConfigContext(new ConfigContext());
       }
    }
 }
