@@ -326,7 +326,9 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
     for (;;) {
         servsock = listen_socket->accept();
         char name[128];
-        sprintf (name, "Network Connect %d", servsock->getID());
+        //sprintf (name, "Network Connect %d", servsock->getID());
+        vjDEBUG(vjDBG_ENV_MGR,vjDBG_CONFIG_LVL) << "vjEnvironmentManager: Accepted connection: id: "
+                                                << servsock->getID() << " on port: N/A\n" << vjDEBUG_FLUSH;
         connection = new vjConnect (servsock, (std::string)name);
         connections_mutex.acquire();
         connections.push_back( connection );
