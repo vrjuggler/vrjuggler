@@ -826,6 +826,7 @@ public class Placer
       public void placerItemsInserted(PlacerModelEvent evt)
       {
          repaint();
+         selectedIndex = 0;
          fireItemSelected(0);
       }
 
