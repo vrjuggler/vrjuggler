@@ -33,14 +33,19 @@ LDFLAGS=	$(shell gadgeteer-config --libs)		\
 MOD_NAME=	gadget
 
 SRCS=		gadget_Analog.cpp			\
+		gadget_AnalogData.cpp			\
 		gadget_AnalogInterface.cpp		\
 		gadget_AnalogProxy.cpp			\
+		gadget_BaseDeviceInterface.cpp		\
 		gadget_Digital.cpp			\
+		gadget_DigitalData.cpp			\
 		gadget_DigitalInterface.cpp		\
 		gadget_DigitalProxy.cpp			\
 		gadget_Input.cpp			\
+		gadget_InputData.cpp			\
 		gadget_InputManager.cpp			\
 		gadget_Position.cpp			\
+		gadget_PositionData.cpp			\
 		gadget_PositionInterface.cpp		\
 		gadget_PositionProxy.cpp		\
 		gadget_Proxy.cpp			\
