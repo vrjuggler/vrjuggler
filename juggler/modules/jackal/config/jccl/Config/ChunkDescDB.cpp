@@ -96,15 +96,15 @@ void vjChunkDescDB::insert (vjChunkDescDB* db) {
 
 bool vjChunkDescDB::remove (const std::string& tok) {
 
-    std::vector<vjChunkDesc*>::iterator begin = descs.begin();
-    while (begin != descs.end()) {
-        if (!vjstrcasecmp ((*begin)->token, tok)) {
+    std::vector<vjChunkDesc*>::iterator cur_desc = descs.begin();
+    while (cur_desc != descs.end()) {
+        if (!vjstrcasecmp ((*cur_desc)->token, tok)) {
             /// delete(*begin);     XXX:
-            descs.erase(begin);
+            cur_desc = descs.erase(cur_desc);
             return true;
         }
         else
-            begin++;
+            cur_desc++;
     }
     return false;
 }

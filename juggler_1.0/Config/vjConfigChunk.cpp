@@ -100,7 +100,7 @@ void vjConfigChunk::associateDesc (vjChunkDesc* d) {
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
     */
-    props.erase (props.begin(), props.end());
+    //props.erase (props.begin(), props.end());
     props.clear();
 
     for (i = 0; i < desc->plist.size(); i++) {
