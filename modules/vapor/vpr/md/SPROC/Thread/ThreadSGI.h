@@ -109,18 +109,17 @@ public:
     * @param flags  Flags for the thread--not currently used in this
     *                implementation (optional).
     *
-    * @return non-zero - Succeedful thread creation
-    * @return       -1 - Error
+    * @return A non-zero value is returned upon successful thread creation.
+    *         -1 is returned if an error occurred.
     */
-   virtual int spawn (BaseThreadFunctor* functorPtr,
-                      BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-                      BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
-                      BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
-                      size_t stack_size = 0)
+   virtual int spawn(BaseThreadFunctor* functorPtr,
+                     BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
+                     BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
+                     BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
+                     size_t stack_size = 0)
    {
       mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction),
-                         PR_SADDR | PR_SFDS,
-                         functorPtr);
+                         PR_SADDR | PR_SFDS, functorPtr);
       return mThreadPID;
    }
 
@@ -144,10 +143,10 @@ public:
     * Makes the calling thread wait for the termination of the specified
     * thread.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned on successful completion.  -1 is returned on
+    *         failure.
     */
-   virtual int join (void** = 0);
+   virtual int join(void** = 0);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -158,10 +157,10 @@ public:
     * @post The specified thread is sent the SIGCONT signal and is allowed
     *        to begin executing again.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned on successful completion.  -1 is returned on
+    *         failure.
     */
-   virtual int resume (void)
+   virtual int resume()
    {
       return ::kill(mThreadPID, SIGCONT);
    }
@@ -173,10 +172,10 @@ public:
     * @post This thread is sent the SIGSTOP signal and is thus suspended
     *        from execution until the member function resume() is called.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned on successful completion.  -1 is returned on
+    *         failure.
     */
-   virtual int suspend (void)
+   virtual int suspend()
    {
       return ::kill(mThreadPID, SIGSTOP);
    }
@@ -191,10 +190,10 @@ public:
     * @param prio  Pointer to an int variable that will have the thread's
     *               priority stored in it.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned on successful completion.  -1 is returned on
+    *         failure.
     */
-   virtual int getprio (int* prio)
+   virtual int getprio(int* prio)
    {
       *prio = getpriority(PRIO_PROCESS, mThreadPID);
 
@@ -216,10 +215,10 @@ public:
     *
     * @param prio  The new priority of the specified thread.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned on successful completion.  -1 is returned on
+    *         failure.
     */
-   int setprio (int prio)
+   int setprio(int prio)
    {
       return setpriority(PRIO_PROCESS, mThreadPID, prio);
    }
@@ -232,12 +231,18 @@ public:
     * @post The caller yields its execution control to another thread or
     *        process.
     */
-   static void yield (void)
+   static void yield()
    {
       sginap(0);
    }
 
-   static int usleep (vpr::Uint32 micro) {
+   /**
+    * Causes the calling thread to sleep for the given number of microseconds.
+    *
+    * @param micro The number of microseconds to sleep.
+    */
+   static int usleep(vpr::Uint32 micro)
+   {
        return ::usleep(micro);
    }
 
@@ -259,7 +264,12 @@ public:
       return ThreadSGI::usleep((milli % 1000) * 1000);
    }
 
-   static int sleep (vpr::Uint32 seconds)
+   /**
+    * Causes the calling thread to sleep for the given number of seconds.
+    *
+    * @param seconds The number of seconds to sleep.
+    */
+   static int sleep(vpr::Uint32 seconds)
    {
        return ::sleep(seconds);
    }
@@ -272,10 +282,10 @@ public:
     *
     * @param signum  The signal to send to the specified thread.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned on successful completion.  -1 is returned on
+    *         failure.
     */
-   virtual int kill (int signum)
+   virtual int kill(int signum)
    {
       return ::kill(mThreadPID, signum);
    }
@@ -294,7 +304,7 @@ public:
     *        cancel() routine instead of kill() because a two-argument
     *        version of kill() is also used for sending signals to threads.
     */
-   virtual void kill (void)
+   virtual void kill()
    {
       kill(SIGKILL);
    }
