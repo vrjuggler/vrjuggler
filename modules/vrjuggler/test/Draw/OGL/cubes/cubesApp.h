@@ -60,6 +60,8 @@
 
 #include <vrj/Kernel/User.h>
 
+#include <vpr/Util/DurationStatCollector.h>
+
 
 
 // Class to hold all context specific data
@@ -75,6 +77,16 @@ public:
 public:
    int   dlIndex;
    int   maxIndex;     // For debugging purposes only!
+};
+
+class ContextTimingData
+{
+public:
+   ContextTimingData()
+      : dlist_wait(vpr::Interval::Usec, 4000000)
+   {;}
+
+   vpr::DurationStatCollector dlist_wait;
 };
 
 // Class to hold all data for a specific user
@@ -146,7 +158,7 @@ class cubesApp : public vrj::GlApp
 {
 public:
    cubesApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern), mConeQuad(NULL), mBaseQuad(NULL)
+      : vrj::GlApp(kern), mConeQuad(NULL), mBaseQuad(NULL), mCurFrameNum(0)
    {
       mConeQuad = gluNewQuadric();
       mBaseQuad = gluNewQuadric();
@@ -208,6 +220,18 @@ public:
           mUserData[i]->updateShapeSetting();
           mUserData[i]->updateNavigation();       // Update the navigation matrix
        }
+
+       ++mCurFrameNum;     // Goto next frame
+   }
+
+   virtual void pipePreDraw()
+   {
+      if((mCurFrameNum % 50) == 0)
+      { 
+         ContextTimingData* timing_data = &(*mContextTiming);
+         double mean = timing_data->dlist_wait.getMean();
+         vprDEBUG(vprDBG_ALL,0) << "dlist wait: " << mean << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    // Function to draw the scene.  Put OpenGL draw functions here.
@@ -263,8 +287,8 @@ private:
    void initGLState();
 
    void drawCube()
-   {
-       glCallList(mDlCubeData->dlIndex);
+   {       
+      glCallList(mDlCubeData->dlIndex);
        //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
    }
 
@@ -290,7 +314,10 @@ public:
    vrj::GlContextData<ContextData>  mDlCubeData;  // Data for cube display lists
    vrj::GlContextData<ContextData>  mDlConeData;  // Data for cone display lists
    vrj::GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
-   std::vector<UserData*>        mUserData;     // All the users in the program
+   std::vector<UserData*>           mUserData;    // All the users in the program
+   vpr::TSObjectProxy<ContextTimingData>  mContextTiming;
+
+   long                             mCurFrameNum;     // Current frame number count
 };
 
 

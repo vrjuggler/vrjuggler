@@ -294,6 +294,9 @@ void cubesApp::myDraw(vrj::User* user)
    }
    */
 
+   ContextTimingData* timing_data = &(*mContextTiming);
+   int dlist_index(0);
+
    glPushMatrix();
          // --- Push on Navigation matrix for the user --- //
 
@@ -315,13 +318,19 @@ void cubesApp::myDraw(vrj::User* user)
                switch (mUserData[user->getId()]->getShapeSetting())
                {
                   case UserData::CONE:
-                     drawCone();
+                     timing_data->dlist_wait.startSample();
+                     dlist_index = mDlConeData->dlIndex;
+                     timing_data->dlist_wait.stopSample();
                      break;
                   case UserData::CUBE:
                   default:
-                     drawCube();
+                     timing_data->dlist_wait.startSample();
+                     dlist_index = mDlCubeData->dlIndex;
+                     timing_data->dlist_wait.stopSample();
                      break;
                }
+
+               glCallList(dlist_index);
 
                glPopMatrix();
             }
