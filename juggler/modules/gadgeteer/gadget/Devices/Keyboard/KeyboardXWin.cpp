@@ -607,7 +607,7 @@ int vjXWinKeyboard::openTheWindow()
    XRaiseWindow(m_display,m_window);
    XClearWindow(m_display,m_window);    // Try to clear the background
 
-   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
+   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
               << "vjXWinKeyboard::openTheWindow() : done." << std::endl
               << vjDEBUG_FLUSH;
 

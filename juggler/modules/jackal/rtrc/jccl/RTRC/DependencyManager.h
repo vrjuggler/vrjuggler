@@ -62,10 +62,10 @@ public:
       vjASSERT(checker != NULL);
       mDepCheckers.push_back(checker);          // Add the checker to the list
       vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
-              << "vjDependencyManager::registerChecker: Checker registered: "
-              << checker->getCheckerName().c_str()
-              << "   :" << (void*)checker
-              << " type:" << typeid(*checker).name() << std::endl
+              << "vjDependencyManager: Registered: "
+              << std::right << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << std::left
+              //<<  << "   :" << (void*)checker << std::left
+              << "  type: " << typeid(*checker).name() << std::endl
               << vjDEBUG_FLUSH;
       debugDump();
    }

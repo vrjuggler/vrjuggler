@@ -77,7 +77,7 @@ public:
         ;
     }
 
-    
+
     // -----------------------------------------------------------------------
     //: Create a new thread that will execute functorPtr.
     //
@@ -140,7 +140,7 @@ public:
         if( 0xFFFFFFFF == ResumeThread(mThreadHandle))
            return -1;
         else
-           return 0;        
+           return 0;
     }
 
     // -----------------------------------------------------------------------
@@ -158,7 +158,7 @@ public:
         if( 0xFFFFFFFF == SuspendThread(mThreadHandle))
            return -1;
         else
-           return 0;        
+           return 0;
     }
 
     // -----------------------------------------------------------------------
@@ -212,7 +212,7 @@ public:
        Sleep(0);     // Sleep for 0 ms, this gives up our time-slice
     }
 
-    
+
     // -----------------------------------------------------------------------
     //: Send the specified signal to this thread (not necessarily SIGKILL).
     //
@@ -252,7 +252,7 @@ public:
         CloseHandle(mThreadHandle);
     }
 
-   
+
    // -----------------------------------------------------------------------
    //: Output the state of the object.
    // -----------------------------------------------------------------------
@@ -262,6 +262,7 @@ public:
       out << std::setw(6) << std::setfill('0') << mThreadPID << "/";
       out.unsetf(std::ios::right);
       vjBaseThread::outStream(out);
+      out << std::setfill(' ');
       return out;
    }
 
@@ -285,7 +286,7 @@ public:
         DWORD thread_id = GetCurrentThreadId();   // Get our pid or handle
 
         // Get the entry in the thread table.
-        vjBaseThread* cur_thread = mThreadTable.getThread(thread_id); 
+        vjBaseThread* cur_thread = mThreadTable.getThread(thread_id);
 
         // Return us.
         return cur_thread;
@@ -296,4 +297,4 @@ private:
 };
 
 
-#endif	/* _THREAD_WIN32_H */
+#endif   /* _THREAD_WIN32_H */

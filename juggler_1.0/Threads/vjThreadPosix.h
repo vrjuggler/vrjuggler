@@ -379,6 +379,7 @@ public:  // ----- Various other thread functions ------
         out << std::setw(6) << std::setfill('0') << getpid() << "/";
         out.unsetf(std::ios::right);
         vjBaseThread::outStream(out);
+        out << std::setfill(' ');
         return out;
     }
 

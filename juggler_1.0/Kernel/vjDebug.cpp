@@ -98,9 +98,11 @@ std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
       std::cout << vjDEBUG_STREAM_LOCK << "             ";
    */
 
+   // Ouput thread info
+   // If not, then output space if we are also using indent (assume this means new line used)
    if(show_thread_info)
       std::cout << "[" << vjThread::self() << "] VJ: ";
-   else
+   else if(use_indent)
       std::cout << "                 ";
 
 

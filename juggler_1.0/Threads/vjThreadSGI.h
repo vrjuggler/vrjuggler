@@ -247,6 +247,7 @@ public:
       out << std::setw(6) << std::setfill('0') << mThreadPID << "/";
       out.unsetf(std::ios::right);
       vjBaseThread::outStream(out);
+      out << std::setfill(' ');
       return out;
    }
 
