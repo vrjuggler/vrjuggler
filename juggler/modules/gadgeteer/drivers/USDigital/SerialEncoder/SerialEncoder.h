@@ -1,12 +1,44 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #ifndef SERIAL_ENCODER_H
 #define SERIAL_ENCODER_H
 
+#include <gadget/Devices/DriverConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Guard.h>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
@@ -22,43 +54,48 @@ namespace gadget
 
 extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
-class SerialEncoder:public gadget::InputMixer<gadget::Input,gadget::Position>{
+class SerialEncoder:public gadget::InputMixer<gadget::Input,gadget::Position>
+{
 public:
    SerialEncoder();
    virtual ~SerialEncoder();
 
-   static std::string getElementType(){
+   static std::string getElementType()
+   {
       return std::string("serial_encoder");
    }
 
-	bool config(jccl::ConfigElementPtr e);
+   bool config(jccl::ConfigElementPtr e);
 
-	bool startSampling();
-	bool sample();
-	bool stopSampling();
-  
-	void updateData(){
-		swapPositionBuffers();
-	}
-    
-	void threadedSampleFunction(void* classPointer);
+   bool startSampling();
+   bool sample();
+   bool stopSampling();
 
-	void operator delete(void* p){
-		::operator delete(p);
-	}
+   void updateData()
+   {
+      swapPositionBuffers();
+   }
+
+   void threadedSampleFunction(void* classPointer);
+
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
 
 protected:
-	virtual void destroy(){
-		delete this;
-	}
+   virtual void destroy()
+   {
+      delete this;
+   }
 
 private:
-	vpr::Thread* mSampleThread;
+   vpr::Thread* mSampleThread;
    bool  mExitFlag;
-	std::string mPortStr;
-	long mBaudRate;
+   std::string mPortStr;
+   long mBaudRate;
 
-	SEIBus mBus;
+   SEIBus mBus;
 };
 
 #endif
