@@ -933,7 +933,7 @@ public:
     */
    int getRingIndicator()
    {
-      returm -1;
+      return -1;
    }
 
    /** Sets the data terminal ready line. */
