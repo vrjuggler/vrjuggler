@@ -100,7 +100,7 @@ TT, tt, PRE, pre
    color: rgb(0, 0, 40);
 }
 
-li, LI, .hanging
+li, ul, LI, .hanging
 {
    text-indent: -2em;
    margin-left:  2em;
