@@ -78,18 +78,6 @@ public class PerfAnalyzerPanel
 	}
     }
 
-//      protected class LabeledPanelButton extends JButton {
-//          public LabeledPerfDataCollector collector;
-//          public LabeledPerfDataCollector.IndexInfo index_info;
-
-//          public LabeledPanelButton (LabeledPerfDataCollector _collector, 
-//                                     LabeledPerfDataCollector.IndexInfo _ii, 
-//                                     String text) {
-//              super (text);
-//              collector = _collector;
-//              index_info = _ii;
-//          }
-//      }
 
     protected interface DataPanelElem 
         extends ActionListener {
