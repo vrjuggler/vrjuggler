@@ -257,11 +257,15 @@ bool ChunkDesc::operator== (const ChunkDesc& d) const
    assertValid();
    d.assertValid();
 
+   bool is_equal(false);
+   is_equal = mNode->isEqual(d.mNode);
+   /*
    std::ostringstream self_string, d_string;
    mNode->save(self_string);
    d.mNode->save(d_string);
+   */
 
-   return (self_string == d_string);
+   return is_equal;
 }
 
 } // End of jccl namespace
