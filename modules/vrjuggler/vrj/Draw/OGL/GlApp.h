@@ -32,7 +32,7 @@ class vjGlApp : public vjApp
 public:
    vjGlApp(vjKernel* kern) : vjApp(kern)
    {
-      api.setOpenGL();     // Tell everyone that we are OpenGL
+      //api.setOpenGL();     // Tell everyone that we are OpenGL
    }
 
    //: Function to draw the scene
@@ -41,12 +41,17 @@ public:
    //!POST: The current scene has been drawn
    virtual void draw() = 0;
 
-   //: Function that is called immedately after a new context is created
+   //: Function that is called immediately after a new context is created
    //  Use this function to create context specific data structures.
    //  i.e. Display lists, Texture objects, etc.
    //! PRE: The ogl context has been set to the new context
    //! POST: Application has completed in initialization the user wishes
    virtual void contextInit()
+   {;}
+
+   //: Function that is called immediately before a context is closed
+   // Use the function to clean up any context data structures
+   virtual void contextClose()
    {;}
 
    //: Function that is called upon entry into the context for a draw

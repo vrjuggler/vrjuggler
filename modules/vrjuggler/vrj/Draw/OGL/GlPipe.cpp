@@ -72,6 +72,15 @@ void vjGlPipe::addWindow(vjGlWindow* win)
    newWins.push_back(win);
 }
 
+//: Remove a GLWindow from the window list
+//! NOTE: The window is not actually removed until the next draw trigger
+void vjGlPipe::removeWindow(vjGlWindow* win)
+{
+   vjGuard<vjMutex> guardClosing(mClosingWinLock);
+   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum << " window added to closingWins.\n" << *win << endl << vjDEBUG_FLUSH;
+   mClosingWins.push_back(win);
+}
+
 
 // The main loop routine
 // while running <br>
@@ -91,8 +100,8 @@ void vjGlPipe::controlLoop(void* nullParam)
 
    while (!controlExit)
    {
-      checkForNewWindows();      // Checks for new windows to open
       checkForWindowsToClose();  // Checks for closing windows
+      checkForNewWindows();      // Checks for new windows to open
 
 
       // --- RENDER the windows ---- //
@@ -127,12 +136,52 @@ void vjGlPipe::controlLoop(void* nullParam)
    mThreadRunning = false;     // We are not running
 }
 
+// Closes all the windows in the list of windows to close
+void vjGlPipe::checkForWindowsToClose()
+{
+   if(mClosingWins.size() > 0)   // If there are windows to close
+   {
+      vjGuard<vjMutex> guardClosing(mClosingWinLock);
+      vjGuard<vjMutex> guardNew(newWinLock);
+      vjGuard<vjMutex> guardOpen(openWinLock);
+
+      for(int i=0;i<mClosingWins.size();i++)
+      {
+         vjGlWindow* win = mClosingWins[i];
+
+         // Call contextClose
+         vjGlApp* theApp = glManager->getApp();       // Get application for easy access
+         vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+
+         glManager->setCurrentContext(win->getId());     // Set TSS data of context id
+         glManager->currentUserData()->setUser(theDisplay->getUser());         // Set user data
+         glManager->currentUserData()->setProjection(NULL);
+
+         win->makeCurrent();           // Make the context current
+         theApp->contextClose();              // Call context close function
+
+         // Close the window
+         win->close();
+
+         // Remove it from the lists
+         newWins.erase(std::remove(newWins.begin(), newWins.end(), win), newWins.end());
+         openWins.erase(std::remove(openWins.begin(), openWins.end(), win), openWins.end());
+
+         // Delete the window
+         delete win;
+         mClosingWins[i] = NULL;
+      }
+
+      mClosingWins.erase(mClosingWins.begin(), mClosingWins.end());
+   }
+}
+
 /**  Checks for any new windows to add to the pipe
  * POST: Any new windows will be opened and added to the pipe's rendering list
  */
 void vjGlPipe::checkForNewWindows()
 {
-   vjGlApp* theApp = glManager->getApp();    // Get the application
+   //vjGlApp* theApp = glManager->getApp();    // Get the application
 
    if (newWins.size() > 0)  // If there are new windows added
    {
@@ -162,7 +211,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
-   vjGlDrawManager::instance()->setCurrentContext(win->getId());     // Set TSS data of context id
+   glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vjDEBUG(vjDBG_ALL,4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
 
