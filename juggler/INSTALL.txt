@@ -378,7 +378,7 @@ Compiling
 
    2. ../configure.pl --module=VPR --prefix=$HOME/vpr-inst
 
-   3. gmake debug install
+   3. gmake debug install-debug
 
    4. setenv VPR_BASE_DIR $HOME/vpr-inst
 
@@ -404,7 +404,7 @@ Compiling
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
 
-   3. gmake debug install
+   3. gmake debug install-debug
 
    4. setenv SNX_BASE_DIR $HOME/sonix-inst
 
@@ -419,7 +419,7 @@ Compiling
 
    2. ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
 
-   3. gmake debug install
+   3. gmake debug install-debug
 
    4. setenv JCCL_BASE_DIR $HOME/jccl-inst
 
@@ -434,7 +434,7 @@ Compiling
 
    2. ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
 
-   3. gmake debug install
+   3. gmake debug install-debug
 
    4. setenv GADGET_BASE_DIR $HOME/gadgeteer-inst
 
@@ -462,7 +462,7 @@ Compiling
 
    2. ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=<JDOMPATH>/jdom.jar:<JDOMPATH>/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=<OMNIORBPATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORBPATH>/lib/openorb-1.2.0.jar
 
-   3. gmake debug install
+   3. gmake debug install-debug
 
    4. setenv TWEEK_BASE_DIR $HOME/tweek-inst
 
