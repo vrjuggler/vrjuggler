@@ -264,6 +264,7 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes.
    virtual void intraFrame()
    {
+      VPR_PROFILE("cubesApp::intraFrame");
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::intraFrame()" << std::endl
                            << vprDEBUG_FLUSH;
    }
