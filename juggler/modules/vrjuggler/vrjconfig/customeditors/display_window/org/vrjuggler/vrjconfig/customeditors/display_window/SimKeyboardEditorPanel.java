@@ -381,8 +381,19 @@ public class SimKeyboardEditorPanel
       ((DefaultListModel) mDeviceList.getModel()).removeElement(sim_dev_cfg);
 
       ConfigBroker broker = new ConfigBrokerProxy();
-      broker.remove(mContext, sim_dev_cfg.getAlias());
-      broker.remove(mContext, sim_dev_cfg.getProxy());
+
+      List aliases = sim_dev_cfg.getAliases();
+      for ( Iterator i = aliases.iterator(); i.hasNext(); )
+      {
+         broker.remove(mContext, (ConfigElement) i.next());
+      }
+
+      List proxies = sim_dev_cfg.getProxies();
+      for ( Iterator i = proxies.iterator(); i.hasNext(); )
+      {
+         broker.remove(mContext, (ConfigElement) i.next());
+      }
+
       broker.remove(mContext, sim_dev_cfg.getDevice());
    }
 
@@ -412,7 +423,7 @@ public class SimKeyboardEditorPanel
             try
             {
                mCurSimEditor = (SimDeviceEditor) editor_class.newInstance();
-               mCurSimEditor.setConfigElement(dev_elt);
+               mCurSimEditor.setConfig(mContext, dev_elt);
                mDeviceSplitPane.remove(mEmptyEditor);
                mDeviceSplitPane.add(mCurSimEditor.getEditor(),
                                     JSplitPane.LEFT);

@@ -33,12 +33,13 @@
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
 import javax.swing.JComponent;
+import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 
 
 public interface SimDeviceEditor
 {
-   public void setConfigElement(ConfigElement elt);
+   public void setConfig(ConfigContext ctx, ConfigElement elt);
 
    public JComponent getEditor();
 }

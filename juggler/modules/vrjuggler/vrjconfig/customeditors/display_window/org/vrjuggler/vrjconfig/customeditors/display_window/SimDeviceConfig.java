@@ -32,52 +32,121 @@
 
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.vrjuggler.jccl.config.*;
 
 
+/**
+ * This is a helper class designed to collect together all the config elements
+ * associated with a given config element for a simulated device type.  It
+ * finds all the proxies pointing at the given config element and all the
+ * aliases that refer to those proxies.  There is nothing that specifically
+ * restricts this class to being used with simulated devices.  It just
+ * happens to have evolved out of a need for handling simulated device type
+ * config elements.
+ */
 public class SimDeviceConfig
    implements EditorConstants
 {
+   /**
+    * Simple constructor for a simulated device type's config element.
+    * This looks in the context for all proxies pointing at the given
+    * simulated device's config element and all aliases referring to those
+    * discovered proxies.
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    */
    public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt)
    {
       device = simDeviceElt;
 
-      findProxy(ctx);
+      findProxies(ctx);
 
-      if ( proxy == null )
+      if ( proxies.size() == 0 )
       {
          System.out.println("No proxy found for " + device.getName());
       }
       else
       {
-         findAlias(ctx);
-
-         if ( alias == null )
-         {
-            System.out.println("No alias found for " + proxy.getName());
-         }
+         findAliases(ctx);
       }
    }
 
+   /**
+    * Device + proxy list constructor.  This constructor assumes that the
+    * given list of proxy config elements is both correct (the proxies
+    * refer to the givem simulated device config element) and complete (the
+    * proxies in the list are all those proxies in the context that refer
+    * to the given simulated device config element).  This looks in the
+    * context for all aliases referring to the given list of proxies.
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    * @param proxyElts          the complete list of proxy config elements in
+    *                           ctx that point to simDeviceElt
+    */
    public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          ConfigElement proxyElt)
+                          List proxyElts)
    {
-      device = simDeviceElt;
-      proxy  = proxyElt;
-      findAlias(ctx);
+      device  = simDeviceElt;
+      proxies = proxyElts;
+      findAliases(ctx);
+   }
 
-      if ( alias == null )
+   /**
+    * Device + proxy list constructor.  This constructor assumes that the
+    * given list of proxy config elements is both correct (the proxies
+    * refer to the givem simulated device config element) and complete (the
+    * proxies in the list are all those proxies in the context that refer
+    * to the given simulated device config element).  This looks in the
+    * context for all aliases referring to the given list of proxies.
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    * @param proxyElts          the complete array of proxy config elements in
+    *                           ctx that point to simDeviceElt
+    */
+   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
+                          ConfigElement[] proxyElts)
+   {
+      device  = simDeviceElt;
+
+      for ( int i = 0; i < proxyElts.length; ++i )
       {
-         System.out.println("No alias found for " + proxy.getName());
+         proxies.add(proxyElts[i]);
       }
+
+      findAliases(ctx);
    }
 
+   /**
+    * Device + proxy list + alias list constructor.  This constructor assumes
+    * that the given lists of proxy and alias config elements are correct
+    * (the proxies refer to the givem simulated device config element and the
+    * aliases refer to the given list of proxies) and complete (the proxies in
+    * the list are all those proxies in the context that refer to the given
+    * simulated device config element and the aliases are all those in the
+    * context that refer to those proxies).
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    * @param proxyElts          the complete list of proxy config elements in
+    *                           ctx that point to simDeviceElt
+    * @param aliasElts          the complete list of alias config elements in
+    *                           ctx that refer to the proxies in proxyElts
+    */
    public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          ConfigElement proxyElt, ConfigElement aliasElt)
+                          List proxyElts, List aliasElts)
    {
+/*
       ConfigDefinition def = aliasElt.getDefinition();
       if ( ! def.getToken().equals(ALIAS_TYPE) )
       {
@@ -85,50 +154,82 @@ public class SimDeviceConfig
                                             def.getToken() + "'" +
                                             " (expected " + ALIAS_TYPE + ")");
       }
-
-      device = simDeviceElt;
-      proxy  = proxyElt;
-      alias  = aliasElt;
+*/
+      device  = simDeviceElt;
+      proxies = proxyElts;
+      aliases = aliasElts;
    }
 
-   public ConfigElement getAlias()
+   /**
+    * Device + proxy list + alias list constructor.  This constructor assumes
+    * that the given lists of proxy and alias config elements are correct
+    * (the proxies refer to the givem simulated device config element and the
+    * aliases refer to the given list of proxies) and complete (the proxies in
+    * the list are all those proxies in the context that refer to the given
+    * simulated device config element and the aliases are all those in the
+    * context that refer to those proxies).
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    * @param proxyElts          the complete array of proxy config elements in
+    *                           ctx that point to simDeviceElt
+    * @param aliasElts          the complete array of alias config elements in
+    *                           ctx that refer to the proxies in proxyElts
+    */
+   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
+                          ConfigElement[] proxyElts, ConfigElement[] aliasElts)
    {
-      return alias;
+      device  = simDeviceElt;
+
+      for ( int i = 0; i < proxyElts.length; ++i )
+      {
+         proxies.add(proxyElts[i]);
+      }
+
+      for ( int i = 0; i < aliasElts.length; ++i )
+      {
+         aliases.add(aliasElts[i]);
+      }
    }
 
-   public ConfigElement getProxy()
+   /**
+    * Returns the list of aliases referring to this simulated device's
+    * proxy config elements.
+    */
+   public List getAliases()
    {
-      return proxy;
+      return aliases;
    }
 
+   /**
+    * Returns the list of proxies referring to this simulated device's config
+    * element.
+    */
+   public List getProxies()
+   {
+      return proxies;
+   }
+
+   /**
+    * Returns the config element for this simulated device's configuration.
+    */
    public ConfigElement getDevice()
    {
       return device;
    }
 
+   /**
+    * Presents a string representation of this simulated device's
+    * configuration.
+    */
    public String toString()
    {
-      String str;
-
-      if ( alias != null )
-      {
-         str = alias.getName() + " \u2192 " + device.getName();
-      }
-      else if ( proxy != null )
-      {
-         str = proxy.getName() + " \u2192 " + device.getName();
-      }
-      else
-      {
-         str = device.getName();
-      }
-
-      return str;
+      return device.getName();
    }
 
-   private void findProxy(ConfigContext ctx)
+   private void findProxies(ConfigContext ctx)
    {
-      boolean found_proxy = false;
       ConfigBroker broker = new ConfigBrokerProxy();
       List elts = broker.getElements(ctx);
 
@@ -148,44 +249,40 @@ public class SimDeviceConfig
                if ( dev_ptr.getTarget() != null &&
                     dev_ptr.getTarget().equals(device.getName()) )
                {
-                  proxy = cur_elt;
-                  found_proxy = true;
-                  break;
+                  proxies.add(cur_elt);
                }
             }
-         }
-
-         if ( found_proxy )
-         {
-            break;
          }
       }
    }
 
-   private void findAlias(ConfigContext ctx)
+   private void findAliases(ConfigContext ctx)
    {
       ConfigBroker broker = new ConfigBrokerProxy();
       List elts = broker.getElements(ctx);
+      List alias_elts = ConfigUtilities.getElementsWithDefinition(elts,
+                                                                  ALIAS_TYPE);
 
-      for ( Iterator i = elts.iterator(); i.hasNext(); )
+      for ( Iterator i = alias_elts.iterator(); i.hasNext(); )
       {
          ConfigElement cur_elt = (ConfigElement) i.next();
-         if ( cur_elt.getDefinition().getToken().equals(ALIAS_TYPE) )
+         ConfigElementPointer proxy_ptr =
+            (ConfigElementPointer) cur_elt.getProperty("proxy", 0);
+
+         for ( Iterator j = proxies.iterator(); j.hasNext(); )
          {
-            ConfigElementPointer proxy_ptr =
-               (ConfigElementPointer) cur_elt.getProperty("proxy", 0);
+            ConfigElement proxy = (ConfigElement) j.next();
 
             if ( proxy_ptr.getTarget() != null &&
                  proxy_ptr.getTarget().equals(proxy.getName()) )
             {
-               alias = cur_elt;
-               break;
+               aliases.add(cur_elt);
             }
          }
       }
    }
 
-   private ConfigElement alias  = null;
-   private ConfigElement proxy  = null;
-   private ConfigElement device = null;
+   private List          aliases = new ArrayList();
+   private List          proxies = new ArrayList();
+   private ConfigElement device  = null;
 }

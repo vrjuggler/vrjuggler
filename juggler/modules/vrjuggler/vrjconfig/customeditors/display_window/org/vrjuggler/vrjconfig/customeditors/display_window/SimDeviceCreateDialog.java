@@ -261,8 +261,9 @@ public class SimDeviceCreateDialog
       broker.add(mContext, proxy_elt, mDataSourceName);
       broker.add(mContext, alias_elt, mDataSourceName);
 
-      mSimDevConfig = new SimDeviceConfig(mContext, dev_elt, proxy_elt,
-                                          alias_elt);
+      mSimDevConfig = new SimDeviceConfig(mContext, dev_elt,
+                                          new ConfigElement[]{proxy_elt},
+                                          new ConfigElement[]{alias_elt});
 
       dispose();
    }
