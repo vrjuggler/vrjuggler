@@ -44,6 +44,7 @@ void OpenSGNav::contextInit()
    context_data* c_data = &(*mContextData);
 
    // Check for thread initialized
+   // This will only happen for the first initialized context per pipe
    if(!c_data->mContextThreadInitialized)
    {
       c_data->mContextThreadInitialized = true;
@@ -51,7 +52,7 @@ void OpenSGNav::contextInit()
       char thread_name_buffer[255];
       sprintf(thread_name_buffer, "vprThread:%d", vpr::Thread::self()->getTID());
       c_data->mOsgThread = OSG::ExternalThread::get(thread_name_buffer);
-      c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this must be different thread
+      c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this might need to be different thread
    }
 
    // Allocate OpenSG stuff
@@ -72,6 +73,10 @@ void OpenSGNav::contextInit()
       c_data->mCamera->setNear   (0.1);
       c_data->mCamera->setFar    (10000);
    OSG::endEditCP(c_data->mCamera);
+
+   // Could actually make one of these per thread instead of context.
+   c_data->mRenderAction = OSG::RenderAction::create();
+   c_data->mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
 
    //vjOSGApp::contextInit();
    initGLState();
@@ -94,7 +99,6 @@ void OpenSGNav::draw()
 {
    context_data* c_data = &(*mContextData);
 
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::draw: Called.\n" << vprDEBUG_FLUSH;
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
    vprASSERT(drawMan != NULL);
    vrj::GlUserData* userData = drawMan->currentUserData();
@@ -145,12 +149,12 @@ void OpenSGNav::draw()
    }
 
    // --- Trigger the draw --- //
-   mRenderAction->setWindow(c_data->mWin.getCPtr());
-   mRenderAction->setViewport(NULL);
-   mRenderAction->setCamera(c_data->mCamera.getCPtr());
-   mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't trust the frustum setup
+   c_data->mRenderAction->setWindow(c_data->mWin.getCPtr());
+   c_data->mRenderAction->setViewport(NULL);
+   c_data->mRenderAction->setCamera(c_data->mCamera.getCPtr());
+   c_data->mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't trust the frustum setup
 
-   mRenderAction->apply(getSceneRoot());                // Actually do the rendering
+   c_data->mRenderAction->apply(getSceneRoot());                // Actually do the rendering
 
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      // Set material color
@@ -210,32 +214,13 @@ void OpenSGNav::initGLState()
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_NORMALIZE);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_LIGHT0);
-   glEnable(GL_COLOR_MATERIAL);
+   //glEnable(GL_LIGHTING);
+   //glEnable(GL_LIGHT0);
+   //glEnable(GL_COLOR_MATERIAL);
    glShadeModel(GL_SMOOTH);
 
    glMatrixMode(GL_MODELVIEW);
 
-}
-
-void OpenSGNav::initRenderer()
-{
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initRenderer: Called.\n" << vprDEBUG_FLUSH;
-
-    //the rendering action
-    mRenderAction = OSG::RenderAction::create();
-    mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
-
-    //mRoot = OSG::Node::create();
-    //mRootGroupCore = OSG::Group::create();
-
-    //OSG::addRefCP(mRoot);
-    //OSG::beginEditCP(mRoot);
-    //  mRoot->setCore(mRootGroupCore);
-    //OSG::endEditCP(mRoot);
-
-    std::cout << "OpenSGNav::initRenderer finished.\n";
 }
 
 void OpenSGNav::initScene(void)
@@ -248,16 +233,16 @@ void OpenSGNav::initScene(void)
    // Load a graph
    if (mFileToLoad ==  std::string("none"))
     {
-        std::cout << "OpenSGNav::myInit beforetorusmake\n";
+        std::cout << "OpenSGNav::initScene beforetorusmake\n";
         mSceneRoot = OSG::makeTorus(.5, 2, 16, 16);
         std::cout << "OpenSGNav::myInit aftertorusmake\n";
     }
     else
     {
-       std::cout << "OpenSGNav::myInit: Loading [" << mFileToLoad.c_str() << "]\n";
+       std::cout << "OpenSGNav::initScene: Loading [" << mFileToLoad.c_str() << "]\n";
        mSceneRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
     }
-    std::cout << "OpenSGNav::myInit before RenderAction::create()\n";
+    std::cout << "OpenSGNav::initScene before RenderAction::create()\n";
 
     // -- light node --> light cart
     //the camera and light beacon
@@ -287,8 +272,8 @@ void OpenSGNav::initScene(void)
     osg::endEditCP(mLightNode);
 
     osg::beginEditCP(light_core);
-      light_core->setAmbient   (.9, .2, .2, 1);
-      light_core->setDiffuse   ( 0.5,  0.5,  0.9, 1);
+      light_core->setAmbient   (.9, .8, .8, 1);
+      light_core->setDiffuse   ( 0.6,  0.6,  0.6, 1);
       light_core->setSpecular  ( 1,  1,  1, 1);
       light_core->setDirection ( 0,  0,  1);
       light_core->setBeacon    (mLightNode);
