@@ -205,7 +205,6 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    if (comps[i] == p) {
 		eastpanel.remove (comps[i-1]);
 		eastpanel.remove(p);
-                System.out.println ("What the fuck is going on here?");
 		Box pr = (Box)getParent();
 		pr.validate();
 		//pr.repaint (pr.getBounds());
