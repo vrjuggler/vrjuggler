@@ -11,7 +11,7 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug - DLL|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="DebugDLL"
 			IntermediateDirectory="DebugDLL"
 			ConfigurationType="2"
@@ -61,7 +61,7 @@
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
-			Name="Release - DLL|Win32"
+			Name="Release|Win32"
 			OutputDirectory="ReleaseDLL"
 			IntermediateDirectory="ReleaseDLL"
 			ConfigurationType="2"
@@ -125,13 +125,13 @@
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfDrawManager.cpp">
 				<FileConfiguration
-					Name="Debug - DLL|Win32">
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalOptions="/Zm200"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release - DLL|Win32">
+					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalOptions="/Zm200"/>
