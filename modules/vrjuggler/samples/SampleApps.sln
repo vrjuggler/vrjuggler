@@ -25,8 +25,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSGNav", "OpenSG\simple\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osgNav", "OSG\simple\osgNav\osgNav.vcproj", "{8346115D-65A0-42F9-859F-77C649F8FD1C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "collideApp", "OGL\simple\collideApp\collideApp.vcproj", "{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}"
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -87,10 +85,6 @@ Global
 		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Debug.Build.0 = Debug|Win32
 		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Release.ActiveCfg = Release|Win32
 		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Release.Build.0 = Release|Win32
-		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Debug.ActiveCfg = Debug|Win32
-		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Debug.Build.0 = Debug|Win32
-		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Release.ActiveCfg = Release|Win32
-		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
