@@ -59,7 +59,7 @@ sub make_LDFLAGS($;$$$);
 sub make_EXTRA_LDFLAGS($;$);
 sub handleOptArg($$);
 
-# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
+# TODO: Do not use @prefix@ if possible.
 
 usage(1) if $#ARGV == -1;
 

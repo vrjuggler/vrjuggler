@@ -46,7 +46,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([VR Juggler Portable Runtime], [0.32],
+AC_INIT([VR Juggler Portable Runtime], [0.33],
         [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([vpr/vprDefines.h])
 AC_PREREQ([2.53])
@@ -543,19 +543,8 @@ AC_CHECK_HEADERS([hash_map ext/hash_map hash_map.h])
 AC_CHECK_HEADERS(hash_set ext/hash_set hash_set.h ext/numeric)
 DPP_LANG_RESTORE
 
-DPP_HAVE_BOOST(1.30.0, [$JUGGLERROOT_ABS/external/boost],
-               [$JUGGLERROOT_ABS/external/boost], ,
+DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
                [AC_MSG_ERROR([*** Boost is required for VPR ***])])
-
-if test "x$BOOST_ROOT" != "x$JUGGLERROOT_ABS/external/boost" ; then
-    LOCAL_BOOST='Y'
-fi
-
-if test "x$OS_TYPE" = "xWin32" ; then
-   BOOST_ROOT_UNIX=`$CYGPATH -u $BOOST_ROOT`
-else
-   BOOST_ROOT_UNIX="$BOOST_ROOT"
-fi
 
 # -----------------------------------------------------------------------------
 # Checks for library functions.
@@ -648,6 +637,64 @@ if test "x$ac_cv_has_backtrace" = "xyes" ; then
              [Define if the GLIBC backtrace() function is available.])
 fi
 
+case $CC in
+   gcc)
+      toolset='gcc'
+      ;;
+   cygcl|msvccc|cl*|CL*)
+      toolset='vc'
+      ;;
+   cc)
+      if test "x$GCC" = "xyes" ; then
+         toolset='gcc'
+      else
+         case $PLATFORM in
+            IRIX)
+               toolset='mp'
+               ;;
+            Solaris)
+               toolset='sw'
+               ;;
+         esac
+      fi
+      ;;
+esac
+
+# We can only use multi-threading versions of Boost libraries if we are not
+# using SPROC threads.  Boost does not support SPROC.
+if test "x$SUBSYSTEM" != "xSPROC" ; then
+   threading='-mt'
+fi
+
+# Ensure that a compiled version of the Boost.Filesystem library is available.
+boost_fs_name="boost_filesystem-$toolset$threading"
+vprsave_CPPFLAGS="$CPPFLAGS"
+vprsave_LIBS="$LIBS"
+vprsave_LDFLAGS="$LDFLAGS"
+
+CPPFLAGS="$CPPFLAGS $BOOST_INCLUDES"
+LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
+LIBS="$LIBS -l$boost_fs_name"
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+AC_CACHE_CHECK([for boost::filesystem::exists() in $boost_fs_name],
+   [ac_cv_has_boost_fs_exists],
+   [AC_TRY_LINK([#include <boost/filesystem/operations.hpp> ],
+                [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
+                [ac_cv_has_boost_fs_exists='yes'],
+                [ac_cv_has_boost_fs_exists='no'])])
+rm -rf ./ii_files
+DPP_LANG_RESTORE
+
+if test "x$ac_cv_has_boost_fs_exists" = "xno" ; then
+   AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
+fi
+
+CPPFLAGS="$vprsave_CPPFLAGS"
+LIBS="$vprsave_LIBS"
+LDFLAGS="$vprsave_LDFLAGS"
+
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------
@@ -670,9 +717,7 @@ if test "x$LOCAL_CPPDOM" = "xY" ; then
 fi
 
 # If the user has a local copy of Boost, add its path to the C++ flags.
-if test "x$LOCAL_BOOST" = "xY" ; then
-   vpr_cxxflags="$vpr_cxxflags $BOOST_INCLUDES"
-fi
+vpr_cxxflags="$vpr_cxxflags $BOOST_INCLUDES"
 
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
@@ -749,9 +794,9 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -790,7 +835,7 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-    DYLIB_DEPS="$NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    DYLIB_DEPS="$BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
     DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
@@ -802,9 +847,9 @@ case $SUBSYSTEM in
         subsystem_libs="$SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
-        vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
+        vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
@@ -823,9 +868,9 @@ case $SUBSYSTEM in
             fi
         fi
 
-        vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
+        vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
@@ -836,16 +881,16 @@ case $SUBSYSTEM in
             subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
             vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
-            vpr_extra_ldflags_compiler="/link $NSPR_LDFLAGS_LINK_EXE"
-            vpr_extra_ldflags_linker="$NSPR_LDFLAGS_LINK_EXE"
+            vpr_extra_ldflags_compiler="/link $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
+            vpr_extra_ldflags_linker="$BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
             vpr_libs='vpr.lib'
             vpr_prof_libs='vpr.lib'
         else
             subsystem_cxxflags="$subsystem_includes"
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
-            vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
+            vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
-            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
+            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name"
             vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
             vpr_libs='-lvpr'
             vpr_prof_libs='-lvpr_p'
@@ -903,9 +948,6 @@ AC_SUBST(LOCAL_CPPDOM)
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
-AC_SUBST(LOCAL_BOOST)
-AC_SUBST(BOOST_ROOT_UNIX)
-
 AC_SUBST(DYLIB_DEPS)
 
 AC_SUBST(UUID_DEFS)
@@ -941,7 +983,6 @@ AC_CONFIG_FILES([
    common.defs.mk
    make.defs.mk
    external/Makefile
-   external/boost_fs/Makefile
    external/cppdom/Makefile
    vpr/Makefile
    vpr/md/Makefile
