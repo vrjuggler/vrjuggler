@@ -95,7 +95,7 @@ public:
    /**
     * Receives a message from the specified address.
     */
-   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
+   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
                               vpr::InetAddr& from, vpr::Uint32& bytes_read,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
@@ -103,8 +103,7 @@ public:
     * Sends a message to the specified address.
     */
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                            const int flags, const vpr::InetAddr& to,
-                            vpr::Uint32& bytes_sent,
+                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
