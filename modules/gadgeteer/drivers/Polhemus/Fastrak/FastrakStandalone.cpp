@@ -44,7 +44,7 @@ vpr::ReturnStatus FastrakStandalone::open()
    vpr::ReturnStatus status;
 
    mSerialPort = new vpr::SerialPort(std::string(mConf.port));
-   mSerialPort->setOpenNonBlocking();
+   mSerialPort->setBlocking(false);
    mSerialPort->setOpenReadWrite();
 
    status = mSerialPort->open();
