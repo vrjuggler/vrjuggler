@@ -346,7 +346,7 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
       cd = self.descs->getChunkDesc (str);
       if (cd == NULL)
       {
-         vjDEBUG(1) << "ERROR!: Unknown Chunk type: " << str << endl
+         vjDEBUG(vjDBG_ALL,1) << "ERROR!: Unknown Chunk type: " << str << endl
          << vjDEBUG_FLUSH;
          // skip to end of chunk
          while (strcasecmp (str, "end"))
@@ -369,7 +369,7 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
       }
    } while (!in.eof());
 
-   vjDEBUG(3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH;
 
    return in;
 }
