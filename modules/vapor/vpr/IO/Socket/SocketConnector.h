@@ -111,7 +111,7 @@ protected:
 
   // Do preconnection rituals
   // - If not bound, then bind to local addr
-  // - If timeout == 0, then set nonblocking
+  // - If timeout == NoWait, then try to set nonblocking
   inline bool connectStart (vpr::SocketStream& newStream,
                             vpr::Interval timeout = vpr::Interval::NoTimeout,
                             const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
@@ -243,8 +243,7 @@ inline bool SocketConnector::connectStart (SocketStream& newStream,
    // If timeout is 0, then we are non-blocking
    if(vpr::Interval::NoWait == timeout)
    {
-      newStream.enableNonBlocking();
-      vprASSERT(false && "vpr does not support non-blocking connections yet");
+      newStream.enableNonBlocking();      
    }
 
   // Check to bind to local addr
