@@ -277,8 +277,8 @@ namespace gadget
       for(int i=0;i<mTrackerNumber;i++)
       {
          temp = mPreMatrixTransform*getSensorPos(i);
-	      (mCurPositions[i].getPosition()) = temp * mPostMatrixTransform;
-      	mCurPositions[i].setTime();
+         mCurPositions[i].setPosition(temp * mPostMatrixTransform);
+         mCurPositions[i].setTime();
       }
     
     for (int i=0;i<mButtonNumber;i++)
