@@ -115,8 +115,10 @@ AC_DEFUN(VPR_PATH,
             echo "*** full path to vpr-config."
         fi
         VPR_CXXFLAGS=""
-        VPR_LIBS=""
-        VPR_LIBS_STATIC=""
+        VPR_LIBS_LD=""
+        VPR_LIBS_STATIC_LD=""
+        VPR_LIBS_CC=""
+        VPR_LIBS_STATIC_CC=""
         ifelse([$3], , :, [$3])
     fi
 
