@@ -48,11 +48,10 @@ public:
 
    void LongConversions()
    {
-      vpr::Uint32 start_val;
+      vpr::Uint32 start_val(0xDEAD1234);
       vpr::Uint32 net_val;
       vpr::Uint32 new_val;
 
-      start_val = 0xDEAD1234;
       net_val = vpr::System::Htonl(start_val);
       new_val = vpr::System::Ntohl(net_val);
       CPPUNIT_ASSERT(new_val == start_val);
@@ -63,11 +62,10 @@ public:
 
    void LongLongConversions()
    {
-      vpr::Uint64 start_val;
+      vpr::Uint64 start_val(0xDEAD1234BEEF5678);
       vpr::Uint64 net_val;
       vpr::Uint64 new_val;
 
-      start_val = 0xDEAD1234BEEF5678;
       net_val = vpr::System::Htonll(start_val);
       new_val = vpr::System::Ntohll(net_val);
       CPPUNIT_ASSERT(new_val == start_val);
