@@ -13,8 +13,14 @@
 #include <Kernel/vjKernel.h>
 
 
-vjCyberGlove::vjCyberGlove(vjConfigChunk *c) : vjGlove(c)
+vjCyberGlove::vjCyberGlove(vjConfigChunk *c)
+   : vjGlove(c), vjInput(c)
 {
+   // Init member vars
+   //myThread = NULL;
+
+   vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
+
     char* home_dir = c->getProperty("calDir");
     if (home_dir != NULL)
     {
@@ -28,14 +34,13 @@ vjCyberGlove::vjCyberGlove(vjConfigChunk *c) : vjGlove(c)
        vjDEBUG(0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
        return;
     }
+
     // init glove proxy interface
     int proxy_index = vjKernel::instance()->getInputManager()->GetProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
        mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
     else
        vjDEBUG(0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
-
-    myThread = NULL;
 
     mGlove = new CyberGloveBasic(mCalDir, sPort, baudRate);
 };
@@ -47,17 +52,11 @@ vjCyberGlove::StartSampling()
    {
       resetIndexes();
 
-      if(mGlove->Open() == 0)
-      {
-         vjDEBUG(0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
-         return 0;
-      }
-
       // Create a new thread to handle the control
       vjThreadMemberFunctor<vjCyberGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjCyberGlove>(this, &vjCyberGlove::controlLoop, NULL);
 
-      mControlThread = new vjThread(memberFunctor, 0);
+      myThread = new vjThread(memberFunctor, 0);
 
       if (!myThread->valid())
       {
@@ -74,8 +73,18 @@ vjCyberGlove::StartSampling()
      return 0; // already sampling
 }
 
+// -Opens the glove port
+// -Starts sampling the glove
 void vjCyberGlove::controlLoop(void* nullParam)
 {
+   // Open the port and run with it
+   if(mGlove->Open() == 0)
+   {
+      vjDEBUG(0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
+      return;
+   }
+
+   // Spin in the sampling
    while(1)
  	   Sample();
 }
@@ -101,11 +110,11 @@ void vjCyberGlove::UpdateData()
 
 int vjCyberGlove::StopSampling()
 {
-   if (mControlThread != NULL)
+   if (myThread != NULL)
    {
-      mControlThread->kill();
-      delete mControlThread;
-      mControlThread = NULL;
+      myThread->kill();
+      delete myThread;
+      myThread = NULL;
       sginap(1);
 
       mGlove->Close();
