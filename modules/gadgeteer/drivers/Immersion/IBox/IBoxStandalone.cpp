@@ -14,12 +14,12 @@
 #define MIN_TIMEOUT 0.1
 
 
-#include <stdio.h>
-#include <termio.h>
-#include <ctype.h>
-#include <fcntl.h>
-#include <sys/time.h>
-#include <stropts.h>
+//#include <stdio.h>
+//#include <termio.h>
+//#include <ctype.h>
+//#include <fcntl.h>
+//#include <sys/time.h>
+//#include <stropts.h>
 
 
 
@@ -29,13 +29,13 @@
 
 
 
-#define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
-			| ONLRET | OFILL | OFDEL)
-#define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
-			| ECHONL | NOFLSH)
-#define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
-			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
-			| IXOFF)
+//#define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
+//			| ONLRET | OFILL | OFDEL)
+//#define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
+//			| ECHONL | NOFLSH)
+//#define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
+//			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
+//			| IXOFF)
 
 
 
@@ -93,12 +93,46 @@ vpr::ReturnStatus IboxStandalone::connect(char* port_name,  long int baud)
     port->setOpenReadWrite();
     if ( !port->open().success() )
 	{
-		std::cerr << "[IBox] Port: " << port_name << " could not be opened!" << std::endl;
+		std::cerr << "[IBox] Port: " << mPortName << " could not be opened!" << std::endl;
 		return(vpr::ReturnStatus::Fail);
 	}
 	else
 	{
-		std::cerr << "[IBox] Success, Port: " << port_name << " opened." << std::endl;
+		std::cerr << "[IBox] Success, Port: " << mPortName << " opened." << std::endl;
+	}
+    port->clearAll();
+    port->enableLocalAttach();
+    port->setBufferSize(0);
+    port->setTimeout(0);
+    port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
+	port->setInputBaudRate(mBaudRate);
+    port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+    port->enableRead();
+	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;           
+	if ( autosynch()!=vpr::ReturnStatus::Succeed )
+	{
+		return(vpr::ReturnStatus::Fail);
+	}
+	std::cerr << "[IBox] Done with Autosync." << std::endl;         
+	begin();
+	getInfo();
+	return(vpr::ReturnStatus::Succeed);
+}
+vpr::ReturnStatus IboxStandalone::connect()
+{
+	if(mPortName==NULL) mPortName = "/dev/ttyd4";
+	if(mBaudRate==0) mBaudRate = 9600;
+    
+	port = new vpr::SerialPort(mPortName);    
+    port->setOpenReadWrite();
+    if ( !port->open().success() )
+	{
+		std::cerr << "[IBox] Port: " << mPortName << " could not be opened!" << std::endl;
+		return(vpr::ReturnStatus::Fail);
+	}
+	else
+	{
+		std::cerr << "[IBox] Success, Port: " << mPortName << " opened." << std::endl;
 	}
     port->clearAll();
     port->enableLocalAttach();
@@ -337,12 +371,14 @@ void IboxStandalone::disconnect()
 
 vpr::ReturnStatus IboxStandalone::string_cmd(byte cmnd)
 {
+	
 	vpr::Uint32 written;
 	vpr::ReturnStatus result;
 
+	char temp=cmnd;
+    char* buffer = &temp;
     char ch[2];
-    char* buffer = &(char)cmnd;
-    
+
 	port->flushQueue(vpr::SerialTypes::IO_QUEUES);
 	port->write(buffer, 1, written);
 	port->read(ch, 1, written,fastTimeOut);
