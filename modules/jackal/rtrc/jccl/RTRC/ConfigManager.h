@@ -110,21 +110,21 @@ public: // -- Query functions --- //
    /** Checks if the named ConfigElement is in the active configuration.
     *  This locks the active list to do processing.
     *
-    *  Note: This should not be used often. Use this at your own risk.
+    *  @note This should not be used often. Use this at your own risk.
     */
    bool isElementInActiveList(const std::string& elementName);
 
    /** Is the element of this type in the active configuration?
     *  This locks the active list to do processing.
     *
-    *  Note: This should not be used often. Use this at your own risk.
+    *  @note This should not be used often. Use this at your own risk.
     */
    bool isElementTypeInActiveList(const std::string& elementName);
 
-   /** Is there a element of this type in the pending list??
-    *  This locks the pending list to do processing
+   /** Is there a element of this type in the pending list?
+    *  This locks the pending list to do processing.
     *
-    *  Note: This should not be used often. Use this at your own risk.
+    *  @note This should not be used often. Use this at your own risk.
     */
    bool isElementTypeInPendingList(const std::string& elementType);
 
@@ -136,13 +136,13 @@ public:   // ----- PENDING LIST ----- //
     *  change for several consecutive calls of attemptReconfiguration.
     *  Call this method when something happens that might allow
     *  items on a stale pending list to be processed.
-    *  <p>
+    *
     *  For example, in VR Juggler, applications (which are
     *  ConfigElementHandlers) can be explicitly changed via a vrj::Kernel
     *  method.  When this happens, the VR Juggler kernel calls
     *  refreshPendingList because the new application object may be able
     *  to process ConfigElements that the old one could not.
-    *  <p>
+    *
     *  Generally, if an object is added to the system via
     *  ConfigElementHandler's addConfig method, it is not necessary to
     *  call this function explicitly; the ConfigManager will notice that
@@ -169,7 +169,7 @@ public:   // ----- PENDING LIST ----- //
     *  The pending list must not be locked.
     *  A copy of the pendingElement is placed on the pending list.
     *
-    * @pre - mPendingLock mutex must be locked.
+    * @pre mPendingLock mutex must be locked.
     */
    void addPending(PendingElement& pendingElement);
 
@@ -308,7 +308,7 @@ public:   // ----- ACTIVE LIST ----- //
     *  appends it to the active list.
     *  If a element with the same name is already in the active list,
     *  the old element is replaced by the new one.
-    *  <p>
+    *
     *  This method is occasionally useful when an application wants
     *  to add items to the active list that were not created via
     *  the ConfigManager's dynamic reconfiguration ability.
@@ -338,7 +338,8 @@ public:
     *  an equivalent add.  This way, the object will be removed from the
     *  system on the next check of the pending list, and will be re-added
     *  if its dependencies are ever subsequently met.
-    *  @return The number of lost dependencies found
+    *
+    *  @return The number of lost dependencies found.
     */
    int scanForLostDependencies();
 
@@ -370,15 +371,22 @@ private:
    /** List of objects that know how to handle configuration changes. */
    std::vector<ConfigElementHandler*> mElementHandlers;
 
-   // The following variables are used to implement some logic
-   // that "stales" the pending list.   (see pendingNeedsChecked)
-   vpr::Mutex              mPendingCountMutex;
+   //@{
+   /**
+    * The following variables are used to implement some logic
+    * that "stales" the pending list.
+    *
+    * @see pendingNeedsChecked
+    */
+
+   vpr::Mutex mPendingCountMutex; /**< Lock to protect mPendingCheckCount. */
 
    /** Number of times pending list has been checked since it last changed. */
-   int                     mPendingCheckCount;
+   int mPendingCheckCount;
 
    /** Size of pending list when last checked (used to check for changes). */
    std::list<PendingElement>::size_type mLastPendingSize;
+   //@}
 
    vpr::LibraryLoader mPluginLoader;
 
