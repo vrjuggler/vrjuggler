@@ -64,7 +64,7 @@
 namespace
 {
 
-static std::string demangleTraceString(char* traceLine)
+std::string demangleTraceString(char* traceLine)
 {
 #ifdef USE_CXA_DEMANGLE
    // Try to extract the mangled name from the line (if it exists)
