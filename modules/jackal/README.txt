@@ -39,15 +39,15 @@ Table of contents:
         JCCL is officially supported on the following platforms:
 
             IRIX 6.5
-            RedHat Linux 6.1, 6.2, 7.1, and newer
-            Windows NT 4.0 and 2000
+            RedHat Linux 7.1 and newer
+            Windows NT 4.0, 2000, and XP
             Windows 98/Me
 
         JCCL is known to work on the following platforms (but is not
         officially supported):
 
             HP-UX 11.00
-            FreeBSD 4.2 and 5.0-CURRENT (x86)
+            FreeBSD 4.x and 5.0-CURRENT (x86)
             Sun Solaris 7 (x86) with patches up through June 6, 2001
             Sun Solaris 8 (x86 and SPARC) with patches up through June 25, 2001
             Mac OS X
@@ -61,12 +61,8 @@ Table of contents:
             Java 2 Platform 1.2.2 or newer (only for VjControl)
 
         * IRIX
-            MIPSpro Compilers 7.3.1.1m or newer
+            MIPSpro Compilers 7.3.1.3m or newer
             OpenGL
-
-        * RedHat Linux 6.x
-            GCC 2.91
-            Mesa3D 3.2 or newer
 
         * RedHat Linux 7.1
             GCC 2.96 20000731 (Red Hat Linux 7.1 2.96-81)
@@ -79,7 +75,7 @@ Table of contents:
             OpenGL
 
         * Solaris 7 (patches including 108377-23)
-            GCC 2.85.2 or newer
+            GCC 2.95.3 or newer
             GNU binutils 2.11.2 or newer
             OpenGL
 
@@ -90,8 +86,8 @@ Table of contents:
             OpenGL
 
         * Win32
-            Microsoft Visual Studio 6.0 (SP4 or SP5)
-            Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
+            Microsoft Visual Studio 7.0
+            Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools.zip)
 
 ==============================================================================
 2. Questions about JCCL
