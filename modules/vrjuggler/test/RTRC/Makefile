@@ -7,7 +7,7 @@ COMPILER =      c++
 LD =            ld
 
 MY_INC_DIR =    -I. -I$(VJ_BASE_DIR)/include
-MYLIBS =   -L/usr/lib -L$(VJ_BASE_DIR)/lib -Wl,-Bstatic -Wl,--whole-archive -lJuggler -lJuggler_ogl -lvpr -ljccl -lgadget -Wl,-Bdynamic -Wl,--no-whole-archive
+MYLIBS =   -L/usr/lib -L$(VJ_BASE_DIR)/lib -lJuggler -lJuggler_ogl -lvpr -ljccl -lgadget
 
 
 # These are assorted other libraries that must be linked with 
@@ -41,4 +41,6 @@ $(APP_NAME):    $(OBJS)
 clean:
 	rm -f *.o
 	rm $(APP_NAME)
+	rm nodeid
+	rm state
 	@echo "Squeaky Clean"

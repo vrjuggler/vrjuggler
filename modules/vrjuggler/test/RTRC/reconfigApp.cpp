@@ -1094,23 +1094,40 @@ bool reconfigApp::reconfigSimPos_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim position device...\n" << std::flush;
 
-   if (!removeChunkFile( "./Chunks/startup/sim.simheadpos02.config" ))
+   if (!removeChunkFile( "./Chunks/startup/sim.simheadpos.config" ))
    {
       std::cout << "\tError: Could not remove the head position file\n" << std::flush;
       return false;
    }
-/*
+
    if (!addChunkFile( "./Chunks/sim.simheadpos.reconfig.config" ))
    {
       std::cout << "\tError: Could not add the head position reconfiguration file\n" << std::flush;
       return false;
    }
-*/
+
    return true;
 }
 
 bool reconfigApp::reconfigSimPos_check()
 {
+   //Get the sim position pointer
+   gadget::SimPosition* device = (gadget::SimPosition*)gadget::InputManager::instance()->getDevice( "SimHeadPos" );
+
+   if ( device == NULL )
+   {
+      std::cout << "\tError: Could not find the sim position device\n" << std::flush;
+      return false;      
+   }
+
+   vrj::Matrix mat = *(device->getPositionData().getPosition());
+   vrj::Vec3 pos = mat.getTrans();
+
+   if ((pos[0] != 1.0) || (pos[1] != 2.0) || (pos[2] != 3.0))
+   {
+      std::cout << "\tError: Sim position device has incorrect initial position: " << pos[0] << "  " << pos[1] << "  " << pos[2] << "\n" << std::flush;
+   }
+
    return true;
 }
 

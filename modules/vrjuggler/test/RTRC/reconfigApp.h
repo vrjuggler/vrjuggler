@@ -13,12 +13,18 @@
 #include <fstream.h>
 #include <unistd.h>
 
+#include <gmtl/Wrapper/Vec3.h>
+#include <gmtl/Wrapper/Matrix.h>
+#include <gmtl/Wrapper/Quat.h>
+
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Util/Debug.h>
 
 #include <vrj/Display/DisplayManager.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <gadget/InputManager.h>
+
+#include <gadget/Devices/Sim/SimPosition.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
