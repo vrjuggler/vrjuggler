@@ -66,7 +66,7 @@ const int DEVICE_GROW2    = 32;
 //  have a Constructor which takes a config chunk and calls the vjInput
 //  constructor taking a vjConfigChunk. <br> <br>
 //
-//  All Physical devices will inherit from not c2Input but another abstract
+//  All Physical devices will inherit from not vjInput but another abstract
 //  class which inherits from vjInput, currently there is support for
 //  Positional Devices, Analog Devices, and Digital devices, each has its own
 //  added pure virtual functions providing a simple and equal interface to
