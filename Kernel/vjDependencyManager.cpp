@@ -36,7 +36,8 @@
 #include <Kernel/vjDependencyManager.h>
 
 // Initialize the singleton ptr
-vjDependencyManager* vjDependencyManager::mInstance = NULL;
+//vjDependencyManager* vjDependencyManager::mInstance = NULL;
+vjSingletonImp(vjDependencyManager);
 
 
 vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)

@@ -39,6 +39,7 @@
 #include <Kernel/vjDebug.h>
 #include <vector>
 #include <typeinfo>
+#include <Utils/vjSingleton.h>
 
 //: soundengines use the SEC to register themselves with the sound factory
 class vjSoundEngineConstructorBase;
@@ -54,7 +55,7 @@ public:
    // pass in a config file name to go with that sound engine.
    // returns a non-NULL pointer on success, NULL on failure.
    //static SoundEngine* newEngine( const std::string& description, const char* const setupFile = NULL );
-   
+
 	//: Query if the factory knows about the given sound engine
    //!PRE: chunk != NULL, chunk is a valid chunk
    //!ARGS: chunk - chunk we are requesting about knowledge to create
@@ -69,12 +70,12 @@ public:
    //+         other - Pointer to the loaded device
    vjSoundEngine* loadEngine(vjConfigChunk* chunk);
 
-   
+
 public:
    // register a creator to the factory.
    // this is intended to be used by each api's registration method
    void registerConstructor( vjSoundEngineConstructorBase* constructor );
-   
+
    // TODO: add a removeCreator function.
 protected:
    /*
@@ -89,10 +90,16 @@ protected:
    //+            - Index of the constructorck
    int   findConstructor(vjConfigChunk* chunk);
 
-protected:   
+protected:
    // regged soundengines...
    std::vector< vjSoundEngineConstructorBase* > mConstructors;
 
+protected:
+   //: Constructor.
+   vjSoundFactory();
+
+vjSingletonHeader(vjSoundFactory);
+/*
 public:
    //: Get instance of singleton object
    static vjSoundFactory* instance()
@@ -102,12 +109,9 @@ public:
       return _instance;
    }
 
-protected:
-   //: Constructor.
-   vjSoundFactory();
-
 private:
    static vjSoundFactory* _instance;   //: The instance
+   */
 };
 
 #endif

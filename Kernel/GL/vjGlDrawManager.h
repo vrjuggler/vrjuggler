@@ -53,6 +53,7 @@ class vjGloveProxy;
 
 //#include <Sync/vjCond.h>
 #include <Sync/vjSemaphore.h>
+#include <Utils/vjSingleton.h>
 
 //-----------------------------------------------
 //: Concrete Singleton Class for OpenGL drawing
@@ -222,15 +223,6 @@ protected:
    vjSemaphore    mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
                                        //+ is acquired can run-time config occur
 
-
-   // --- Singleton Stuff --- //
-public:
-   static vjGlDrawManager* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjGlDrawManager();
-      return _instance;
-   }
 protected:
    vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
    {
@@ -239,8 +231,20 @@ protected:
 
    virtual ~vjGlDrawManager() {}
 
+   vjSingletonHeader(vjGlDrawManager);
+/*
+   // --- Singleton Stuff --- //
+public:
+   static vjGlDrawManager* instance()
+   {
+      if (_instance == NULL)
+         _instance = new vjGlDrawManager();
+      return _instance;
+   }
+
 private:
    static vjGlDrawManager* _instance;
+   */
 };
 
 #endif

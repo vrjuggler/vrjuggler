@@ -60,7 +60,8 @@ void vjPfDrawFuncSimulator(pfChannel* chan, void* chandata);
 
 //void vjPfAppFunc(pfChannel *chan, void* chandata);
 
-vjPfDrawManager* vjPfDrawManager::_instance = NULL;
+//vjPfDrawManager* vjPfDrawManager::_instance = NULL;
+vjSingletonImp(vjPfDrawManager);
 
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it

@@ -49,7 +49,8 @@
 #include <Kernel/GL/vjGlPipe.h>
 #include <Kernel/GL/vjGlWindow.h>
 
-vjGlDrawManager* vjGlDrawManager::_instance = NULL;
+//vjGlDrawManager* vjGlDrawManager::_instance = NULL;
+vjSingletonImp(vjGlDrawManager);
 
 
 //: Set the app the draw should interact with.

@@ -61,13 +61,13 @@
 // Constructor.
 // ---------------------------------------------------------------------------
 vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
-    DebugLock.acquire();
+    //DebugLock.acquire();
       vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL)
          << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL)
          << "\tvjThreadPool::vjThreadPool: Number threads: " << numToStartWith
          << std::endl << vjDEBUG_FLUSH;
-    DebugLock.release();
+    //DebugLock.release();
 
     listHead = NULL;
     workingCount = 0;
@@ -93,14 +93,14 @@ vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
 // ---------------------------------------------------------------------------
 void
 vjThreadPool::threadLoop(void* theThreadAsVoid) {
-   DebugLock.acquire();
+//   DebugLock.acquire();
    vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL) << vjThread::self()
                                           << " vjThreadPool::threadLoop: Entering."
                                           << std::endl << vjDEBUG_FLUSH;
 //      vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL) << vjThread::self()
 //      << " vjThreadPool::threadLoop: theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vjDEBUG_FLUSH;
-   DebugLock.release();
+//   DebugLock.release();
 
    listLock.acquire();
    listLock.release();     // Do this to make sure addThread is done
@@ -196,12 +196,12 @@ vjThreadPool::printList (void) {
 vjOneThread* vjThreadPool::addThread (void)
 {
     static int numTimes = 0;
-    DebugLock.acquire();
+//    DebugLock.acquire();
       vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL) << vjThread::self()
                                              << " vjThreadPool::addThread: Entering: "
                                              << ++numTimes << std::endl
                                              << vjDEBUG_FLUSH;
-    DebugLock.release();
+//    DebugLock.release();
 
     vjGuard<vjMutex> guard(listLock);   // Protect the head
 
@@ -213,12 +213,12 @@ vjOneThread* vjThreadPool::addThread (void)
 
     newThread->thread = new vjThread(memberFunctor, 0);
 
-    DebugLock.acquire();
+//    DebugLock.acquire();
         vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL) << newThread->thread
                                             << " vjThreadPool::addThread: List at end\n"
                                             << vjDEBUG_FLUSH;
         printList();
-    DebugLock.release();
+//    DebugLock.release();
 
     return listHead;
 }

@@ -49,8 +49,8 @@
 #include <Kernel/vjWin32SystemFactory.h>
 #endif
 
-// Initailize Statics
-vjKernel* vjKernel::_instance = NULL;
+//vjKernel* vjKernel::_instance = NULL;
+vjSingletonImp(vjKernel);
 
 //: Start the Kernel loop running
 int vjKernel::start()
