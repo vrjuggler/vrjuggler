@@ -70,6 +70,12 @@ AC_ARG_ENABLE(jackal,
 
 builtin(include, modules/jackal/cfgargs.m4)
 
+AC_ARG_ENABLE(tweek,
+              [--enable-tweek            Enable building Tweek           [default=no]],
+              build_tweek="$enableval", build_tweek='no')
+
+builtin(include, modules/tweek/cfgargs.m4)
+
 DPP_ABI_SETUP
 
 # -----------------------------------------------------------------------------
@@ -88,6 +94,15 @@ if test "x$build_jccl" = "xyes" ; then
    JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/jackal"
    JCCL_BASE_DIR="$builddir/modules/jackal"
    export JCCL_BASE_DIR
+fi
+
+BUILD_TWEEK='NO'
+
+if test "x$build_tweek" = "xyes" ; then
+   BUILD_TWEEK='YES'
+   JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/tweek"
+   TWEEK_BASE_DIR="$builddir/modules/tweek"
+   export TWEEK_BASE_DIR
 fi
 
 # List the sub-projects where a local configure script needs to be run.
