@@ -148,9 +148,7 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
          station_config->getProperty<bool>("use_digital");
       mStations[i].useAnalog = station_config->getProperty<bool>("use_analog");
 
-      mStations[i].dig_min = station_config->getProperty<int>("digital_first");
       mStations[i].dig_num = station_config->getProperty<int>("digital_count");
-      mStations[i].ana_min = station_config->getProperty<int>("analog_first");
       mStations[i].ana_num = station_config->getProperty<int>("analog_count");
    }
 
@@ -306,15 +304,9 @@ bool IntersenseAPI::sample()
       // files) and we copy the digital data from this station to the
       // InterSense device for range (min -> min+count-1).
 
-      // Get the miniumum and maximum index that we should write data into.
-      int min_digital = mStations[i].dig_min;
-      int max_digital = min_digital + mStations[i].dig_num;
       if (mStations[i].useDigital)
       {
-         int j, k;
-         for ( j = 0, k = min_digital;
-               j < MAX_NUM_BUTTONS && k < IS_BUTTON_NUM && k < max_digital;
-               ++j, ++k)
+         for ( int j = 0; j < MAX_NUM_BUTTONS; ++j )
          {
             DigitalData new_digital(mTracker.buttonState(stationIndex, j));
             new_digital.setTime();
@@ -323,15 +315,10 @@ bool IntersenseAPI::sample()
       }
 
       // Analog works the same as the digital
-      int min_analog = mStations[i].ana_min;
-      int max_analog = min_analog + mStations[i].ana_num;
       if (mStations[i].useAnalog)
       {
          float f;
-         int j, k;
-         for ( j = 0, k = min_analog;
-               j < MAX_ANALOG_CHANNELS && k < IS_ANALOG_NUM && k < max_analog;
-               ++j, ++k)
+         for ( int j = 0; j < MAX_ANALOG_CHANNELS; ++j )
          {
             Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
             AnalogData new_analog(f);
