@@ -47,12 +47,13 @@
 #include <iomanip>
 #include <map>
 #include <vpr/vprTypes.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
 
 
 namespace vpr
 {
+
+class BaseThreadFunctor;
 
 /**
  * This is used as the base class for all thread classes.
@@ -88,6 +89,9 @@ public:
    {
       ;
    }
+
+   /** Sets the thread's functor--the code that will get executed. */
+   virtual void setFunctor(BaseThreadFunctor* functorPtr) = 0;
 
    /** Starts the thread's execution. */
    virtual vpr::ReturnStatus start() = 0;

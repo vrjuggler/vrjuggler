@@ -38,15 +38,13 @@ void SocketBandwidthIOStatsTest::testBandwidth()
 
    // Spawn acceptor thread
    vpr::ThreadMemberFunctor<SocketBandwidthIOStatsTest>* acceptor_functor =
-           new vpr::ThreadMemberFunctor<SocketBandwidthIOStatsTest>( this, &SocketBandwidthIOStatsTest::testBandwidth_acceptor );
-   vpr::Thread acceptor_thread( acceptor_functor);
-   acceptor_thread.start();
+      new vpr::ThreadMemberFunctor<SocketBandwidthIOStatsTest>(this, &SocketBandwidthIOStatsTest::testBandwidth_acceptor);
+   vpr::Thread acceptor_thread(acceptor_functor);
 
    // Spawn connector thread
    vpr::ThreadMemberFunctor<SocketBandwidthIOStatsTest>* connector_functor =
-           new vpr::ThreadMemberFunctor<SocketBandwidthIOStatsTest>( this, &SocketBandwidthIOStatsTest::testBandwidth_connector );
-   vpr::Thread connector_thread( connector_functor);
-   connector_thread.start();
+      new vpr::ThreadMemberFunctor<SocketBandwidthIOStatsTest>(this, &SocketBandwidthIOStatsTest::testBandwidth_connector);
+   vpr::Thread connector_thread(connector_functor);
 
    CPPUNIT_ASSERT( acceptor_thread.valid() && "Invalid acceptor thread");
    CPPUNIT_ASSERT( connector_thread.valid() && "Invalid connector thread");

@@ -88,7 +88,6 @@ int main (int ac, char **av)
    vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test/TestSuite/test_network.vsn"));
 
    vpr::Thread sim_thread(run);
-   sim_thread.start();
 #endif
 
    // -------- CONFIGURE METRIC REGISTRY ------- //

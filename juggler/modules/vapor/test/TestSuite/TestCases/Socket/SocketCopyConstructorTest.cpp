@@ -56,15 +56,13 @@ void SocketCopyConstructorTest::testCopyConnectedSocket ()
 
    // Spawn acceptor thread
    vpr::ThreadMemberFunctor<SocketCopyConstructorTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>( this, &SocketCopyConstructorTest::testCopyConstructor_acceptor );
-   vpr::Thread acceptor_thread( acceptor_functor );
-   acceptor_thread.start();
+      new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>(this, &SocketCopyConstructorTest::testCopyConstructor_acceptor);
+   vpr::Thread acceptor_thread(acceptor_functor);
 
    // spawn a connector thread
    vpr::ThreadMemberFunctor<SocketCopyConstructorTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>( this, &SocketCopyConstructorTest::testCopyConstructor_connector );
-   vpr::Thread connector_thread( connector_functor );
-   connector_thread.start();
+      new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>(this, &SocketCopyConstructorTest::testCopyConstructor_connector);
+   vpr::Thread connector_thread(connector_functor);
 
    connector_thread.join();
    acceptor_thread.join();

@@ -47,15 +47,13 @@ void SelectorTest::testAcceptorPoolSelection ()
 
     // Spawn acceptor thread
     vpr::ThreadMemberFunctor<SelectorTest>* acceptor_functor =
-            new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testAcceptorPoolSelection_acceptor );
-    vpr::Thread acceptor_thread( acceptor_functor);
-    acceptor_thread.start();
+        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testAcceptorPoolSelection_acceptor);
+    vpr::Thread acceptor_thread(acceptor_functor);
 
     // Spawn connector thread
     vpr::ThreadMemberFunctor<SelectorTest>* connector_functor =
-            new vpr::ThreadMemberFunctor<SelectorTest>( this, &SelectorTest::testAcceptorPoolSelection_connector );
-    vpr::Thread connector_thread( connector_functor);
-    connector_thread.start();
+        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testAcceptorPoolSelection_connector);
+    vpr::Thread connector_thread(connector_functor);
 
     // Wait for threads
     acceptor_thread.join();
@@ -198,15 +196,13 @@ void SelectorTest::testSendThenPoll ()
 
     // Spawn acceptor thread
     vpr::ThreadMemberFunctor<SelectorTest>* acceptor_functor =
-            new vpr::ThreadMemberFunctor<SelectorTest>( this, &SelectorTest::testSendThenPoll_acceptor );
-    vpr::Thread acceptor_thread( acceptor_functor);
-    acceptor_thread.start();
+        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testSendThenPoll_acceptor);
+    vpr::Thread acceptor_thread(acceptor_functor);
 
     // Spawn connector thread
     vpr::ThreadMemberFunctor<SelectorTest>* connector_functor =
-            new vpr::ThreadMemberFunctor<SelectorTest>( this, &SelectorTest::testSendThenPoll_connector );
-    vpr::Thread connector_thread( connector_functor);
-    connector_thread.start();
+        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testSendThenPoll_connector);
+    vpr::Thread connector_thread(connector_functor);
 
     // Wait for threads
     acceptor_thread.join();

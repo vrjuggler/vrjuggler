@@ -80,11 +80,15 @@ typedef vpr::Uint32 thread_id_t;
 class ThreadPosix : public BaseThread
 {
 public:  // ---- Thread CREATION and SPAWNING -----
+   /** Non-spawning constructor.  This will not start a thread. */
+   ThreadPosix(VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
+               VPRThreadScope scope = VPR_LOCAL_THREAD,
+               VPRThreadState state = VPR_JOINABLE_THREAD,
+               size_t stack_size = 0);
+
    /**
-    * Spawning constructor.
-    *
-    * This will actually start a new thread that will execute the specified
-    * function.
+    * Spawning constructor with argument.  This will start a new thread that
+    * will execute the specified function.
     */
    ThreadPosix(thread_func_t func, void* arg = NULL,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
@@ -93,9 +97,8 @@ public:  // ---- Thread CREATION and SPAWNING -----
                size_t stack_size = 0);
 
    /**
-    * Spawning constructor with arguments (functor version).
-    *
-    * This will start a new thread that will execute the specified function.
+    * Spawning constructor (functor version).  This will start a new thread
+    * that will execute the function encapsulated by the functor.
     */
    ThreadPosix(BaseThreadFunctor* functorPtr,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
@@ -112,7 +115,23 @@ public:  // ---- Thread CREATION and SPAWNING -----
     */
    virtual ~ThreadPosix();
 
-   /** Starts this thread's execution. */
+   /**
+    * Sets the functor that this thread will execute.
+    *
+    * @pre The thread is not already running.  The functor is valid.
+    */
+   virtual void setFunctor(BaseThreadFunctor* functorPtr);
+
+   /**
+    * Starts this thread's execution.
+    *
+    * @pre The functor to execute has been set.  The thread is not already
+    *      running.
+    * @post A thread (with any specified attributes) is created that begins
+    *       executing our functor.  Depending on the scheduler, it may begin
+    *       execution immediately, or it may block for a short time before
+    *       beginning execution.
+    */
    virtual vpr::ReturnStatus start();
 
 protected:
@@ -374,6 +393,7 @@ public:  // ----- Various other thread functions ------
 
 // All private member variables and functions.
 private:
+   bool              mRunning;
    pthread_t         mThread;        /**< pthread_t data structure for this thread */
    VPRThreadPriority mPriority;
    VPRThreadScope    mScope;         /**< Scope (process or system) of this thread */
