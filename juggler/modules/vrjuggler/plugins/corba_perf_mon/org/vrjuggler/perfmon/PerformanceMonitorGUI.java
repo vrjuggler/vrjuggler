@@ -73,6 +73,7 @@ public class PerformanceMonitorGUI extends JPanel
    Integer max = new Integer( 10000 );
    Integer step = new Integer( 50 );
    SpinnerNumberModel mSpinnerModel = new SpinnerNumberModel( value, min, max, step );
+   TimeSeriesCollection mDataset = null;
 
    JSpinner mJSpinner = new JSpinner( mSpinnerModel );
 
@@ -81,12 +82,11 @@ public class PerformanceMonitorGUI extends JPanel
 
    public PerformanceMonitorGUI()
    {
-      TimeSeriesCollection dataset = new TimeSeriesCollection( );
-      JFreeChart chart = createChart( dataset );
+      mDataset = new TimeSeriesCollection( );
+      JFreeChart chart = createChart( mDataset );
       mChartPanel = new ChartPanel( chart );
 
       jbInit();
-      mUpdaterThread = new Thread( new Updater( dataset, mSpinnerModel, mPerfMonObserver ) );
       
       System.out.println("PerformanceMonitor started");
    }
@@ -131,7 +131,7 @@ public class PerformanceMonitorGUI extends JPanel
     */
    public void connectionOpened(CommunicationEvent e)
    {
-      System.out.println("[DBG] PerfMon Connection Opened.");
+      System.out.println("PerfMon Connection Opened.");
       // The first thing to do is get the CORBA service object from the
       // event.  We need this so we know to whom we are are connecting.  Once
       // we have the CORBA service, we get its Subject Manager since that's
@@ -146,15 +146,14 @@ public class PerformanceMonitorGUI extends JPanel
       // a dialog box saying that the narrowing failed.
       try
       {
-         PerformanceMonitorSubject mPerformanceMonitorSubject =
+            mPerformanceMonitorSubject =
             PerformanceMonitorSubjectHelper.narrow(subject);
       }
       catch (BAD_PARAM narrow_ex)
       {
+
+         System.out.println("[DBG] Caught BAD_PARAM setting mPerformanceMonitorSubject to Null");
          mPerformanceMonitorSubject = null;
-      }
-      if (mPerformanceMonitorSubject == null)
-      {
          JOptionPane.showMessageDialog(null,
                                        "Failed to narrow subject to CorbaPerfPlugin",
                                        "CorbaPerfPlugin Narrow Error",
@@ -175,7 +174,9 @@ public class PerformanceMonitorGUI extends JPanel
          // subject.  The subject needs to know who its observers are so
          // that it can notify them of updates.
          mPerformanceMonitorSubject.attach(mPerfMonObserver._this());
-      
+         
+         mUpdaterThread = new Thread( new Updater( mDataset, mSpinnerModel, mPerfMonObserver ) );
+         
          ///Start the updater thread.
          mUpdaterThread.start();
       }
