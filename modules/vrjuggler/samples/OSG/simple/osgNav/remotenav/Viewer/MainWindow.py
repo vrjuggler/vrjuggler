@@ -89,6 +89,9 @@ class MainWindow(MainWindowBase):
                self.setRot(n_pos[0],n_pos[1])
             
          return True             # Consume event
+      elif ((event.type() == QEvent.KeyPress) or
+            (event.type() == QEvent.KeyRelease)):
+         pass
       else:
          return False
       
