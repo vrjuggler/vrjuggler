@@ -124,17 +124,28 @@ void wandApp::preFrame()
              */
    if(we_have_focus)
    {
+      gmtl::Matrix44f wandMatrix;
+      wandMatrix = (*mWand->getData());      // Get the wand matrix
+
       // Update navigation
       // - Find forward direction of wand
       // - Translate along that direction
       float velocity(0.0f);
+      float rotation(0.0f);
       if(mButton0->getData())
          velocity = 0.05f;
 
+      if(mButton1->getData())
+      {
+         const float rot_scale(0.01f);
+         float y_rot = gmtl::makeYRot<float>(wandMatrix);
+         rotation = -1.0f * y_rot * rot_scale;
+         gmtl::preMult(mNavMat,
+                       gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(0.0f,rotation,0.0f)));
+      }
+
       if(velocity > 0.0f)
       {
-         gmtl::Matrix44f wandMatrix;
-         wandMatrix = (*mWand->getData());      // Get the wand matrix
          gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
          gmtl::Vec3f direction(wandMatrix * Zdir);
          gmtl::preMult(mNavMat, gmtl::makeTrans<gmtl::Matrix44f>(direction));
