@@ -273,6 +273,26 @@ public class GlobalPreferencesService
       return lazyPanelBeanInstantiation;
    }
 
+   public void setDefaultCorbaPort (int port)
+   {
+      defaultCorbaPort = port;
+
+      Element e = mPrefsDocRoot.getChild("corba");
+
+      if ( e == null )
+      {
+         e = new Element("corba");
+         mPrefsDocRoot.addContent(e);
+      }
+
+      e.setAttribute("port", String.valueOf(port));
+   }
+
+   public int getDefaultCorbaPort ()
+   {
+      return defaultCorbaPort;
+   }
+
    /**
     * Changes the default preferences file name to be the given name.
     */
@@ -347,6 +367,13 @@ public class GlobalPreferencesService
             {
                lazyPanelBeanInstantiation = lazyinst_element.getAttribute("enabled").getBooleanValue();
             }
+
+            Element corba_element = mPrefsDocRoot.getChild("corba");
+
+            if ( corba_element != null )
+            {
+               defaultCorbaPort = corba_element.getAttribute("port").getIntValue();
+            }
          }
          catch (JDOMException e)
          {
@@ -395,12 +422,17 @@ public class GlobalPreferencesService
                break;
          }
 
-         Element lazyinst_element = new Element("lazyinst");
-         chooser_element.setAttribute("enabled",
-                                      lazyPanelBeanInstantiation ? "true"
-                                                                 : "false");
-
          mPrefsDocRoot.addContent(chooser_element);
+
+         Element lazyinst_element = new Element("lazyinst");
+         lazyinst_element.setAttribute("enabled",
+                                       lazyPanelBeanInstantiation ? "true"
+                                                                  : "false");
+         mPrefsDocRoot.addContent(lazyinst_element);
+
+         Element corba_element = new Element("corba");
+         corba_element.setAttribute("port", String.valueOf(defaultCorbaPort));
+         mPrefsDocRoot.addContent(corba_element);
 
          save(true);
       }
@@ -470,4 +502,5 @@ public class GlobalPreferencesService
    private String  chooserStartDir  = CWD_START;
    private int     chooserOpenStyle = WINDOWS_CHOOSER;
    private boolean lazyPanelBeanInstantiation = true;
+   private int     defaultCorbaPort = 2809;
 }

@@ -62,6 +62,7 @@ public class PrefsDialog extends JDialog
       beanViewer       = mPrefs.getBeanViewer();
       chooserStartDir  = mPrefs.getChooserStartDir();
       chooserOpenStyle = mPrefs.getChooserOpenStyle();
+      defaultCorbaPort = mPrefs.getDefaultCorbaPort();
 
       try
       {
@@ -73,6 +74,8 @@ public class PrefsDialog extends JDialog
       }
 
       this.configComboBoxes();
+
+      mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
 
       switch ( chooserOpenStyle )
       {
@@ -123,6 +126,7 @@ public class PrefsDialog extends JDialog
    {
       mFileChooserBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"File Chooser Configuration");
       mGenBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"General Configuration");
+      mCorbaBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"CORBA Configuration");
       mViewerBox.setMinimumSize(new Dimension(126, 10));
       mViewerBox.setPreferredSize(new Dimension(130, 10));
 
@@ -224,8 +228,24 @@ public class PrefsDialog extends JDialog
       mFcOpenStyleButtonPanel.setPreferredSize(new Dimension(128, 50));
       mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
+      mCorbaPanel.setBorder(mCorbaBorder);
+      mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mCorbaPortLabel.setText("Port Number");
+      mCorbaPortField.setMaximumSize(new Dimension(2147483647, 15));
+      mCorbaPortField.setMinimumSize(new Dimension(85, 17));
+      mCorbaPortField.setPreferredSize(new Dimension(85, 17));
+      mCorbaPortField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            corbaPortFieldChanged(e);
+         }
+      });
       mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
       mContentPanel.add(mGeneralPanel, null);
+      mContentPanel.add(mCorbaPanel, null);
+      mCorbaPanel.add(mCorbaPortLabel, null);
+      mCorbaPanel.add(mCorbaPortField, null);
       mContentPanel.add(mFileChooserPanel, null);
 
       mLevelLabel.setText("User Level");
@@ -415,7 +435,31 @@ public class PrefsDialog extends JDialog
       mPrefs.setChooserStartDir(chooserStartDir);
       mPrefs.setChooserOpenStyle(chooserOpenStyle);
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
+      mPrefs.setDefaultCorbaPort(defaultCorbaPort);
    }
+
+   /**
+    * Action taken when the user changes the text field containing the default
+    * CORBA port.  This validates the entered port number to ensure that it is
+    * valid.
+    */
+   private void corbaPortFieldChanged(ActionEvent e)
+   {
+      int port = Integer.parseInt(mCorbaPortField.getText());
+
+      if ( port > 0 && port < 65536 )
+      {
+         defaultCorbaPort = port;
+      }
+      else
+      {
+         mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
+      }
+   }
+
+   // =========================================================================
+   // Private data members.
+   // =========================================================================
 
    private int status;
 
@@ -424,6 +468,7 @@ public class PrefsDialog extends JDialog
    private String beanViewer       = null;
    private String chooserStartDir  = GlobalPreferencesService.DEFAULT_START;
    private int    chooserOpenStyle = GlobalPreferencesService.DEFAULT_CHOOSER;
+   private int    defaultCorbaPort = 0;
 
    private GlobalPreferencesService mPrefs = null;
 
@@ -465,4 +510,9 @@ public class PrefsDialog extends JDialog
    private JButton mSaveButton   = new JButton();
    private JButton mOkButton     = new JButton();
    private JCheckBox mLazyInstanceButton = new JCheckBox();
+
+   private JPanel mCorbaPanel = new JPanel();
+   private TitledBorder mCorbaBorder;
+   private JLabel mCorbaPortLabel = new JLabel();
+   private JTextField mCorbaPortField = new JTextField();
 }
