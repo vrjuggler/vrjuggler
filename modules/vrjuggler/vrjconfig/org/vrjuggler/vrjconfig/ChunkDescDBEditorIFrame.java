@@ -57,7 +57,7 @@ public class ChunkDescDBEditorIFrame
       this.setIconifiable(true);
       this.setMaximizable(true);
       this.setResizable(true);
-      this.setTitle("ChunkDescDB Editor");
+      this.setTitle("Configuration Format: ");
       this.getContentPane().add(editor,  BorderLayout.CENTER);
    }
 
@@ -69,7 +69,7 @@ public class ChunkDescDBEditorIFrame
    public void setFilename(String filename)
    {
       this.filename = filename;
-      setTitle("Configuration Format: "+filename); 
+      setTitle("Configuration Format: "+filename);
    }
 
    public ChunkDescDBEditor getEditor()
