@@ -465,14 +465,6 @@ public:
     // ------------------------------------------------------------------------
     Status sendBreak(const Int32 duration);
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    void setControlCharacter(const Uint32 index, const Uint8 value);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    Uint8 getControlCharacter(const Uint32 index);
-
 protected:
     // Symbolic names for the four types of flags that can be set in the
     // termios struct.
@@ -482,6 +474,14 @@ protected:
         CFLAG,		// Control flag
         LFLAG		// Local flag
     };
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    void setControlCharacter(const Uint32 index, const Uint8 value);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    Uint8 getControlCharacter(const Uint32 index);
 
     // ------------------------------------------------------------------------
     //! Read up to the specified number of bytes from the serial port into the
