@@ -85,6 +85,14 @@ std::string GUID::toString () const
 
 bool GUID::operator== (const GUID& guid) const
 {
+   /*
+   bool ret_val0 = (m_guid.packed.l0 == guid.m_guid.packed.l0);
+   bool ret_val1 = (m_guid.packed.l1 == guid.m_guid.packed.l1);
+   bool ret_val2 = (m_guid.packed.l2 == guid.m_guid.packed.l2);
+   bool ret_val3 = (m_guid.packed.l3 == guid.m_guid.packed.l3);
+   return (ret_val0 && ret_val1 && ret_val2 && ret_val3);
+   */
+   
    return ( (m_guid.packed.l0 == guid.m_guid.packed.l0) &&
             (m_guid.packed.l1 == guid.m_guid.packed.l1) &&
             (m_guid.packed.l2 == guid.m_guid.packed.l2) &&
@@ -95,12 +103,8 @@ bool GUID::operator== (const GUID& guid) const
 // Private methods.
 // ============================================================================
 
-GUID::GUID (bool genRandom)
+GUID::GUID ()
 {
-   if(genRandom)
-   {
-      generate();
-   }
 }
 
 GUID::GUID (const struct vpr::GUID::StdGUID& guid)

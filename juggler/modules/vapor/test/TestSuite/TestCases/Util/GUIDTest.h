@@ -9,6 +9,8 @@
 #include <vpr/Util/GUIDFactory.h>
 #include <vpr/Util/Interval.h>
 
+#include <vpr/Util/Debug.h>
+
 
 /*****************************************************************
  tests out the functionality expected of vpr::GUID
@@ -44,7 +46,7 @@ public:
       CPPUNIT_ASSERT(*guid1 == *guid2);
 
       // Test assignment
-      vpr::GUID guid3(true), guid4(true);
+      vpr::GUID guid3(*vpr::GUIDFactory::createRandomGUID()), guid4;
       guid3 = guid4;
       CPPUNIT_ASSERT(guid3 == guid4);
 
@@ -65,6 +67,26 @@ public:
 
       delete guid1;
       delete guid2;
+
+      vpr::GUID guid3("90c8e44b-8a50-4b78-8167-bb944f439a3a");
+      vpr::GUID guid4("a7be7b42-f876-4268-878a-46c01736efe3");
+
+      //std::cout << "guid3: " << guid3 << " --- should be: 90c8e44b-8a50-4b78-8167-bb944f439a3a" << std::endl;
+
+      //std::cout << "vprDBG_ALL: " << vprDBG_ALL << std::endl;
+
+      vpr::GUID guid5(vprDBG_ALL);     // Copy over known guid
+      vpr::GUID guid6;
+
+      CPPUNIT_ASSERT(guid3 != guid4);
+      CPPUNIT_ASSERT(guid3 == guid3);
+      CPPUNIT_ASSERT(guid4 == guid4);
+      
+      CPPUNIT_ASSERT(vprDBG_ALL == guid5);
+      CPPUNIT_ASSERT(guid5 == vprDBG_ALL);
+
+      guid6 = guid3;
+      CPPUNIT_ASSERT(guid6 == guid3);
    }
 
    void testCreationOverhead()
@@ -78,7 +100,7 @@ public:
 
       while(loops--)
       {
-        guid1 = vpr::GUIDFactory::createRandomGUID();
+        guid1 = *(vpr::GUIDFactory::createRandomGUID());
       }
 
       vpr::Interval diff = time_out - time_in;
@@ -86,8 +108,33 @@ public:
       double per_call;      // Num ns per call
       per_call = (diff.usecf()*1000.0f) / double(iters);
 
-      std::cout << "vpr::GUID(): overhead = " << per_call << "ns per call\n"
-                << std::flush;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vpr::GUID(): overhead = " << per_call << "ns per call\n"
+                << vprDEBUG_FLUSH;
+   }
+
+   void testDebugOutput()
+   {
+       /*
+       if (0>100)
+          ; 
+       else
+       {
+          bool enabled = (vpr::Debug::instance()->isDebugEnabled());
+          bool low_level = (0 <= vpr::Debug::instance()->getLevel());
+          bool cat_allowed = (vpr::Debug::instance()->isCategoryAllowed(vprDBG_ALL));
+
+          if(enabled && low_level && cat_allowed) 
+            vpr::Debug::instance()->getStream(vprDBG_ALL, 0, true) << "out: -1" << vpr::StreamUnLock(vpr::Debug::instance()->debugLock()) << std::flush;
+       }
+       */
+      
+      std::cout << "\n------ Should see debug output ----" << std::endl;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "out: 0" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "out: 1" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "out: 2" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "out: 3" << vprDEBUG_FLUSH;
+      std::cout << std::endl;
+
    }
 
    void registerTests (CppUnit::TestSuite* suite)
@@ -95,11 +142,13 @@ public:
       suite->addTest(new CppUnit::TestCaller<GUIDTest>("testConstructor",
                                                        &GUIDTest::testConstructor));
       suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCompare",
-                                                       &GUIDTest::testCompare));
+                                                       &GUIDTest::testCompare));      
    }
 
    void registerMetricsTests (CppUnit::TestSuite* suite)
    {
+      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testDebugOutput", &GUIDTest::testDebugOutput));
+
       suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCreationOverhead",
                                                        &GUIDTest::testCreationOverhead));
    }
