@@ -600,8 +600,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
 #    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
     RM_LN='rm -f'
-    VPRROOT_ABS="$VPRROOT_ABS"
-    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Dependencies for dynamic/shared libraries.
