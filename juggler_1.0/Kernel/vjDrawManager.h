@@ -70,7 +70,7 @@ public:
    // based on the data in the display manager.
    //! PRE: API is running (initAPI has been called)
    //! POST: API is ready do draw
-   virtual void initDrawing() = 0;
+   //virtual void initDrawing() = 0;
 
    //: Callback when display is added to display manager
    virtual void addDisplay(vjDisplay* disp) = 0;

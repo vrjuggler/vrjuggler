@@ -79,12 +79,8 @@ public:
    // Set the application object for the Kernel to deal with
    //  If there is another app active, it has to stop that
    //  application first then restart all API specific Managers.
+   //! ARGS: _app - If NULL, stops current application
    void setApplication(vjApp* _app);
-
-   // Stops the current application but leaves the kernel running.
-   // It closes all API specific stuff (DrawManager,  etc.)
-   //! RETURNS: success
-   void stopApplication();
 
    //: Load configuration data for Kernel
    //! POST: Config data has been read into initial buffer
@@ -126,6 +122,18 @@ protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
    //! POST: All tracker data is ready for next frame
    void updateFrameData();
+
+   //: Checks to see if there is reconfiguration to be done
+   //! POST: Any reconfiguration needed has been completed
+   //! NOTE: Can only be called by the kernel thread
+   void checkForReconfig();
+
+   // Changes the application in use
+   //  If there is another app active, it has to stop that
+   //  application first then restart all API specific Managers.
+   //! ARGS: _app - If NULL, stops current application
+   //! NOTE: This can only be called from the kernel thread
+   void changeApplication(vjApp* _app);
 
 protected:      // --- STARTUP ROUTINES --- //
          // --- Manager Initial setup functions ---- //
@@ -211,6 +219,8 @@ protected:
    vjKernel() : mRuntimeConfigSema(0)
    {
       mApp = NULL;
+      mNewApp = NULL;
+      mNewAppSet = false;
       mControlThread = NULL;
       mSysFactory = NULL;
       mInputManager = NULL;

@@ -87,11 +87,7 @@ void vjKernel::controlLoop(void* nullParam)
          mControlThread->yield();   // Give up CPU
       }
 
-      // Sync should be here for Kernel changes from
-      // the environment manager
-      mRuntimeConfigSema.release();
-         // This is the time that reconfig can happen
-      mRuntimeConfigSema.acquire();
+      checkForReconfig();        // Check for any reconfiguration that needs done
 
       perfBuffer->set(5);
 
@@ -105,23 +101,50 @@ void vjKernel::controlLoop(void* nullParam)
 }
 
 // Set the application to run
+// XXX: Should have protection here
+void vjKernel::setApplication(vjApp* _app)
+{
+   mNewApp = _app;
+   mNewAppSet = true;
+}
+
+
+//: Checks to see if there is reconfiguration to be done
+//! POST: Any reconfiguration needed has been completed
+//! NOTE: Can only be called by the kernel thread
+void vjKernel::checkForReconfig()
+{
+   vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
+
+   // Check for application reconfiguration
+   if(mNewAppSet)
+   {
+      mNewAppSet = false;
+      changeApplication(mNewApp);
+   }
+
+   // Sync should be here for Kernel changes from
+   // the environment manager
+   mRuntimeConfigSema.release();
+      // This is the time that reconfig can happen
+   mRuntimeConfigSema.acquire();
+}
+
+// Changes the application in use
+//  If there is another app active, it has to stop that
+//  application first then restart all API specific Managers.
+//! ARGS: _app - If NULL, stops current application
+//! NOTE: This can only be called from the kernel thread
 // app = NULL ==> stop dra manager and null out app
 // app != NULL ==>
 //             Get the draw manager needed
 //             Start it
 //             Give it the application
-void vjKernel::setApplication(vjApp* _app)
+void vjKernel::changeApplication(vjApp* _app)
 {
-vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to configure
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:" << _app << endl << vjDEBUG_FLUSH;
 
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::SetApplication: Setting to:" << _app << endl << vjDEBUG_FLUSH;
-
-   if(mControlThread == NULL) // Have not started control loop
-   {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::setApplication: Kernel not started yet.\n" << vjDEBUG_FLUSH;
-      vjASSERT(false);
-      exit(0);
-   }
+   vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // EXIT Previous application
    if(mApp != NULL)
@@ -152,10 +175,7 @@ vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to c
    }
 }
 
-void vjKernel::stopApplication()
-{
-   setApplication(NULL);
-}
+
 
 //-----------------------------------------------
 // Initialize Shared Memory
@@ -438,7 +458,7 @@ void vjKernel::initialSetupDisplayManager()
 
 
 // This starts up the draw manager given
-// All processes and data should be created by draw manager after this is done
+//!POST: All processes and data should have been created by draw manager
 void vjKernel::startDrawManager(bool newMgr)
 {
    vjASSERT((mApp != NULL) && (mDrawManager != NULL) && (mDisplayManager != NULL));
