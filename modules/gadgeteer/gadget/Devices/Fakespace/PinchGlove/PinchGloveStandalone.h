@@ -30,22 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//===============================================================
-// PinchGloveStandalone
-//
-// Purpose:
-//    software interface to Fakespace Pinchglove hardware
-//
-// Author:
-//  Kevin Meinert
-//
-// NOTES:
-//      The long function names greatly decrease the
-//       ambiguity of what the functions do ... sorry. :)
-//
-// Date: 1-23-99
-//===============================================================
-
 #ifndef _GADGET_PINCH_GLOVE_STANDALONE_H_
 #define _GADGET_PINCH_GLOVE_STANDALONE_H_
 
@@ -54,26 +38,41 @@
 #include <vpr/IO/Port/SerialPort.h>
 
 
+/**
+ * Software interface to Fakespace Pinchglove hardware.
+ *
+ *
+ * @note The long function names greatly decrease the
+ *       ambiguity of what the functions do ... sorry. :)
+ *
+ * @date 1-23-99
+ */
 class PinchGloveStandalone
 {
 public:
-   // Default constructor.
+   /// Default constructor.
    PinchGloveStandalone();
    ~PinchGloveStandalone();
 
-   //: Connect to the pinch glove hardware
+   /** Connects to the pinch glove hardware. */
    bool connectToHardware( const std::string& ttyPort, int mBaudRate );
 
-   //: call updateStringFromHardware to get most
-   //:  current pinch data.
+   /**
+    * Call updateStringFromHardware to get the most current pinch data.
+    */
    void updateStringFromHardware();
 
-   //: get the last sampled string
-   //  NOTE: call updateStringFromHardware to get most current pinch data.
+   /**
+    * Gets the last sampled string.
+    *
+    * @note call updateStringFromHardware to get most current pinch data.
+    */
    void getSampledString( std::string& gestureString );
 
-   //: Use one of these indices to index the string
-   //  returned by "GetSampledString()"
+   /**
+    * Uses one of these indices to index the string returned by
+    * GetSampledString().
+    */
    enum finger
    {
       LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
@@ -85,7 +84,7 @@ protected:
    std::string         mPreviousGestureString;
    vpr::SerialPort     *port;
 
-   // equal to "00000.00000"
+   /// equal to "00000.00000"
    static const std::string    mOpenHandString;
 
    /* functions provided by fakespace */

@@ -57,8 +57,9 @@ static void sampleBox(void* pointer)
 namespace gadget
 {
 
-//: Config function
-// Configures the ibox
+/**
+ * Configures the IBox.
+ */
 bool IBox::config(jccl::ConfigChunkPtr c)
 {
   if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
