@@ -61,7 +61,6 @@ SGML_ROOT?=	/usr/share/sgml/docbook
 DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
 XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
-#TEXINPUTS=	.:$(DOCBOOK_ROOT)/latex/passivetex:$(DOCBOOK_ROOT)/latex/base:
 
 txt: $(TXT_FILES)
 
@@ -69,12 +68,13 @@ html: images $(HTML_FILES)
 
 chunk-html:
 	for file in $(XML_FILES) ; do \
-          dir=`echo $$file | sed -e 's/\.xml//'` ; \
-          if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
-          cur_dir=`pwd` ; \
-          cd $$dir ; \
-          $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl $(SAXON_PARAMS); \
-          cd $$cur_dir ; \
+            dir=`echo $$file | sed -e 's/\.xml//'` ; \
+            if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
+            cur_dir=`pwd` ; \
+            cd $$dir ; \
+            $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
+              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
+            cd $$cur_dir ; \
         done
 
 LINK_DEPS=	images # pdfxmltex.fmt
