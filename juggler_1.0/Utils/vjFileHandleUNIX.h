@@ -188,6 +188,26 @@ public:
     //+       handle, and the number of bytes read successfully is returned
     //+       to the caller.
     //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) where
+    //+                the file contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the file
+    //+                handle.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t read(std::string& buffer, const size_t length = 0);
+
+    // ------------------------------------------------------------------------
+    //! Read the specified number of bytes from the file handle into the given
+    //+ buffer.
+    //
+    //! PRE: The file descriptor is valid, and the buffer is at least length
+    //+       bytes long.
+    //! POST: The given buffer has length bytes copied into it from the file
+    //+       handle, and the number of bytes read successfully is returned
+    //+       to the caller.
+    //
     //! ARGS: buffer - A pointer to the buffer (a vector of chars) where the
     //+                file contents are to be stored.
     //! ARGS: length - The number of bytes to be read.
@@ -268,6 +288,26 @@ public:
     //+       handle, and the number of bytes read successfully is returned to
     //+       the caller.
     //
+    //! ARGS: buffer - A reference to the buffer where the file contents are
+    //                 to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the serial
+    //+                port.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t readn(std::string& buffer, const size_t length = 0);
+
+    // ------------------------------------------------------------------------
+    //! Read exactly the specified number of bytes from the file handle into
+    //+ the given buffer.
+    //
+    //! PRE: The file descriptor is valid, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the file
+    //+       handle, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
     //! ARGS: buffer - A pointer to the buffer where the file contents are to
     //                 be stored.
     //! ARGS: length - The number of bytes to be read.
@@ -327,6 +367,23 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual ssize_t write(const char* buffer, const size_t length);
+
+    // ------------------------------------------------------------------------
+    //: Write the buffer to the file handle.
+    //
+    //! PRE: The file descriptor is valid.
+    //! POST: The given buffer is written to the file handle, and the number
+    //+       of bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) to be
+    //+                written.
+    //! ARGS: length - The length of the buffer.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the file
+    //+                handle.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    virtual ssize_t write(const std::string& buffer, const size_t length = 0);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.

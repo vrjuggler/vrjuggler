@@ -36,6 +36,7 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <string>
+#include <vector>
 
 #include <Utils/Socket/vjSocketImp.h>
 #include <Utils/Socket/vjInetAddr.h>
@@ -114,6 +115,13 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline virtual ssize_t
+    read (std::string& buffer, const size_t length = 0) {
+        return recv(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline virtual ssize_t
     read (std::vector<char>& buffer, const size_t length = 0) {
         return recv(buffer, length);
     }
@@ -138,6 +146,10 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
+    virtual ssize_t readn(std::string& buffer, const size_t length = 0);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     virtual ssize_t readn(std::vector<char>& buffer, const size_t length = 0);
 
     // ------------------------------------------------------------------------
@@ -158,6 +170,13 @@ public:
     // ------------------------------------------------------------------------
     inline virtual ssize_t
     write (const char* buffer, const size_t length) {
+        return send(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline virtual ssize_t
+    write (const std::string& buffer, const size_t length = 0) {
         return send(buffer, length);
     }
 
@@ -288,6 +307,30 @@ public:
                          const int flags = 0);
 
     // ------------------------------------------------------------------------
+    //: Receive the specified number of bytes from the remote site to which
+    //+ the local side is connected.
+    //
+    //! PRE: The socket is open and connect() has been called.  buffer is at
+    //+      least length bytes in size.
+    //! POST: length bytes are read from the remote site and stored in the
+    //+       given buffer.  The number of bytes read is returned to the
+    //+       caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) used
+    //+                for storing the bytes received from the remote site.
+    //! ARGS: length - The number of bytes to receive from the remote site.
+    //+                If the length is 0, the value is determined from the
+    //+                size of the string object.
+    //! ARGS: flags  - Flags to use when receiving the data.  This is optional
+    //+                and defaults to 0.
+    //
+    //! RETURNS: >-1 - The number of bytes received.
+    //! RETURNS:  -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t recv(std::string& buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
     // Receive the specified number of bytes from the remote site to which the
     // local side is connected.
     //
@@ -379,6 +422,30 @@ public:
     //      -1 - Something went wrong when trying to receive the data.
     // ------------------------------------------------------------------------
     virtual ssize_t send(const char* buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
+    //: Send the specified number of bytes contained in the given buffer from
+    //+ the local side to the remote site to which we are connected.
+    //
+    //! PRE: The socket is open and connect() has been called.  buffer is at
+    //+      least length bytes in size.
+    //! POST: length bytes are sent from the buffer on the local site to the
+    //+       remote site.  The number of bytes read is returned to the
+    //+       caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object)
+    //+                containing the bytes to be sent.
+    //! ARGS: length - The number of bytes to sent to the remote site.  If the
+    //+                length is 0, the value is determined from the size of
+    //+                the string object.
+    //! ARGS: flags  - Flags to use when sending the data.  This is optional
+    //+                and defaults to 0.
+    //
+    //! RETURNS: >-1 - The number of bytes received.
+    //! RETURNS:  -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t send(const std::string& buffer, const size_t length,
                          const int flags = 0);
 
     // ------------------------------------------------------------------------

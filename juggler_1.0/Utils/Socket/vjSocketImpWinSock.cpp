@@ -208,6 +208,30 @@ vjSocketImpWinSock::recv (char* buffer, const size_t length, const int flags) {
 // local side is connected.
 // ----------------------------------------------------------------------------
 ssize_t
+vjSocketImpWinSock::recv (std::string& buffer, const size_t length,
+                          const int flags)
+{
+    ssize_t bytes;
+    char* temp_buf;
+
+    temp_buf = (char*) malloc(length);
+    bytes    = recv(temp_buf, length, flags);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        buffer = temp_buf;
+    }
+
+    free(temp_buf);
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Receive the specified number of bytes from the remote site to which the
+// local side is connected.
+// ----------------------------------------------------------------------------
+ssize_t
 vjSocketImpWinSock::recv (std::vector<char>& buffer, const size_t length,
                           const int flags)
 {
@@ -260,6 +284,17 @@ vjSocketImpWinSock::send (const char* buffer, const size_t length,
                           const int flags)
 {
     return send((void*) buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Send the specified number of bytes contained in the given buffer from the
+// local side to the remote site to which we are connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::send (const std::string& buffer, const size_t length,
+                          const int flags)
+{
+    return send(buffer.c_str(), length, flags);
 }
 
 // ----------------------------------------------------------------------------

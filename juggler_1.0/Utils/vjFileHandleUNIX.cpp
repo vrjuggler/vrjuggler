@@ -304,6 +304,36 @@ vjFileHandleUNIX::read (char* buffer, const size_t length) {
 
 // ----------------------------------------------------------------------------
 // Read the specified number of bytes from the file handle into the given
+// buffer.
+// ----------------------------------------------------------------------------
+ssize_t
+vjFileHandleUNIX::read (std::string& buffer, const size_t length) {
+    ssize_t bytes;
+    char* temp_buf;
+    size_t buf_len;
+
+    if ( length == 0 ) {
+        buf_len = buffer.size();
+    }
+    else {
+        buf_len = length;
+    }
+
+    temp_buf = (char*) malloc(buf_len);
+    bytes    = read(temp_buf, buf_len);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        buffer = temp_buf;
+    }
+
+    free(temp_buf);
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Read the specified number of bytes from the file handle into the given
 // bufer.
 // ----------------------------------------------------------------------------
 ssize_t
@@ -397,6 +427,30 @@ vjFileHandleUNIX::readn (char* buffer, const size_t length) {
 // given buffer.
 // ----------------------------------------------------------------------------
 ssize_t
+vjFileHandleUNIX::readn (std::string& buffer, const size_t length) {
+    size_t buf_len;
+    char* temp_buf;
+    ssize_t bytes;
+
+    buf_len  = (length == 0) ? buffer.size() : length;
+    temp_buf = (char*) malloc(buf_len);
+    bytes    = readn(temp_buf, buf_len);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        buffer = temp_buf;
+    }
+
+    free(temp_buf);
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Read exactly the specified number of bytes from the file handle into the
+// given buffer.
+// ----------------------------------------------------------------------------
+ssize_t
 vjFileHandleUNIX::readn (std::vector<char>& buffer, const size_t length) {
     ssize_t bytes;
     char* temp_buf;
@@ -456,6 +510,14 @@ vjFileHandleUNIX::write (const unsigned char* buffer, const size_t length) {
 ssize_t
 vjFileHandleUNIX::write (const char* buffer, const size_t length) {
     return write((void*) buffer, length);
+}
+
+// ----------------------------------------------------------------------------
+// Write the buffer to the file handle.
+// ----------------------------------------------------------------------------
+ssize_t
+vjFileHandleUNIX::write (const std::string& buffer, const size_t length) {
+    return write(buffer.c_str(), ((length == 0) ? buffer.size() : length));
 }
 
 // ----------------------------------------------------------------------------
