@@ -25,7 +25,7 @@ VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= combo.o torusApp.o
+OBJECTS		= combo.o cubesApp.o wandApp.o torusApp.o
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -38,6 +38,8 @@ combo: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 combo.o: torusApp.h wandApp.h cubesApp.h
+cubesApp.o: cubesApp.h
+wandApp.o: wandApp.h
 torusApp.o: torusApp.h
 
 .cpp.o:
