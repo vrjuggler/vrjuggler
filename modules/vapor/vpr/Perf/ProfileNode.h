@@ -155,6 +155,18 @@ namespace vpr
          mHistory.clear();
       }
 
+      /** Get the average time sample.
+       * Returns total time sampled/total calls.
+       */
+      vpr::Interval getAverage()
+      {
+         return vpr::Interval(getTotalTime().getBaseVal()/getTotalCalls(), vpr::Interval::Base);
+      }
+
+      /** Get the short term average.
+       * Computed as the average of the history.
+       */
+      vpr::Interval getSTA();
 
    protected:
 

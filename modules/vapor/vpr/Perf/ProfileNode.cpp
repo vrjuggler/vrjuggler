@@ -141,7 +141,7 @@ namespace vpr
       return NULL;
    }
 
-   
+
 
    void ProfileNode::printTree(ProfileNode* node)
    {
@@ -215,6 +215,15 @@ namespace vpr
       }
 
       return( mRecursionCounter == 0 );
+   }
+
+   vpr::Interval ProfileNode::getSTA()
+   {
+      vpr::Interval sta_interval;
+      for(std::deque<vpr::Interval>::iterator i=mHistory.begin(); i!=mHistory.end(); ++i)
+      { sta_interval += *i; }
+      sta_interval.set(sta_interval.getBaseVal()/mHistory.size(), vpr::Interval::Base);
+      return sta_interval;
    }
 
 
