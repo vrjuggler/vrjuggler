@@ -96,4 +96,4 @@ public:
 }; // End of vpr namespace
 
 
-#endif   /* _VPR_SYSTEM_H_ */
+#endif   /* _VPR_SYSTEM_NSPR_H_ */
