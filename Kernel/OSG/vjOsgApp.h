@@ -36,6 +36,7 @@
 #include <vjConfig.h>
 
 #include <Kernel/GL/vjGlApp.h>
+#include <Kernel/vjCameraProjection.h>
 
 #include <osg/Vec3>
 #include <osg/Matrix>
@@ -159,39 +160,36 @@ inline void vjOsgApp::draw()
    //Get the frustrum
    vjFrustum frustum = project->mFrustum;
 
-   // Get the viewport
-   vjViewport* vp = userData->getViewport();
-	 
    //Reset the camera
    osg::Camera* the_cam = sceneView->getCamera();
    vjCameraProjection* sim_cam_proj(NULL);   
 
-   switch(vp->getType())
+   switch(project->getType())
    {
-   case vjViewport::SURFACE:
+   case vjProjection::SURFACE:
       the_cam->home();
       the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
    
       //Set the frustrum (this is set with the matrix below)
       //float near_val = frustum[Frustum::VJ_NEAR];
-      the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
-                          frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
-                          frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
+      the_cam->setFrustum(frustum[vjFrustum::VJ_LEFT],   frustum[vjFrustum::VJ_RIGHT],
+                          frustum[vjFrustum::VJ_BOTTOM], frustum[vjFrustum::VJ_TOP],
+                          frustum[vjFrustum::VJ_NEAR],   frustum[vjFrustum::VJ_FAR]);
       break;
 
-   case vjViewport::SIM:
+   case vjProjection::SIM:
       sim_cam_proj = dynamic_cast<vjCameraProjection*>(project);
-      vprASSERT(sim_cam_proj != NULL && "Trying to use non-camera projection for simulator");
+      vjASSERT(sim_cam_proj != NULL && "Trying to use non-camera projection for simulator");
       the_cam->home();
       the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_HORIZONTAL);
       //chan->setNearFar(frustum[Frustum::VJ_NEAR], frustum[Frustum::VJ_FAR]);
       //chan->setFOV(0.0f, cam_proj->mVertFOV);
       the_cam->setPerspective( sim_cam_proj->mVertFOV, sim_cam_proj->mAspectRatio,
-                               frustum[Frustum::VJ_NEAR], frustum[Frustum::VJ_FAR]);
+                               frustum[vjFrustum::VJ_NEAR], frustum[vjFrustum::VJ_FAR]);
       break;
 
    default:
-      vprASSERT(false);
+      vjASSERT(false);
       break;
    }
 
