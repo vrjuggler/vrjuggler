@@ -30,9 +30,8 @@ ifeq ($(FO_VERSION), XEP)
    SAXON_FO_PARAMS=	xep.extensions=1
 else
 ifeq ($(FO_VERSION), PASSIVE_TEX)
-   XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"	\
-			-PARAM tex.math.in.alt "latex"
-   SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
+   XALAN_FO_PARAMS=	-PARAM tex.math.in.alt "latex"
+   SAXON_FO_PARAMS=	tex.math.in.alt=latex
 endif # PASSIVE_TEX
 endif # XEP
 endif # FOP
@@ -50,8 +49,7 @@ SGML_ROOT?=	/usr/share/sgml/docbook
 
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.74b
 XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
-#TEXINPUTS=	.:$(HOME)/tex:$(HOME)/latex/passivetex:$(HOME)/latex/base:
-#TEXMF=		$(HOME)/latex
+TEXINPUTS=	.:$(DOCBOOK_ROOT)/latex/passivetex:$(DOCBOOK_ROOT)/latex/base:
 
 txt: $(TXT_FILES)
 
@@ -59,15 +57,15 @@ html: images $(HTML_FILES)
 
 chunk-html:
 	for file in $(XML_FILES) ; do \
-	  dir=`echo $$file | sed -e 's/\.xml//'` ; \
-	  if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
+          dir=`echo $$file | sed -e 's/\.xml//'` ; \
+          if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
           cur_dir=`pwd` ; \
           cd $$dir ; \
           $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl $(SAXON_PARAMS); \
           cd $$cur_dir ; \
-	done
+        done
 
-pdf: images $(PDF_FILES)
+pdf: images pdfxmltex.fmt $(PDF_FILES)
 
 # The method for specifying a path to the images that come with the DocBook
 # XSL stylesheets sucks.  It requires a path relative to the current directory,
@@ -76,11 +74,18 @@ pdf: images $(PDF_FILES)
 images:
 	ln -s $(XSL_DIR)/images ./
 
+#ifeq ($(FO_VERSION), PASSIVE_TEX)
+#pdf: pdfxmltex.fmt
+#
+#pdfxmltex.fmt:
+#	ln -s $(DOCBOOK_ROOT)/latex/base/pdfxmltex.fmt ./
+#endif
+
 # Basic XSL conversions -------------------------------------------------------
 
 .xml.html:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
+	$(XALAN) -in $< -xsl $(XSL_DIR)/html/conferencepaper.xsl -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 else
 	$(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@		\
@@ -124,6 +129,7 @@ endif
 # Jade/JadeTex conversions ----------------------------------------------------
 
 # Generate a TeX file using Jade.
+ifdef USE_JADE
 .xml.tex:
 	$(JADE) -t tex -d $(DSSSL_DIR)/print/docbook.dsl $<
 
@@ -132,6 +138,7 @@ endif
 #.xml.pdf:
 #	$(JADETEX) $*.tex
 #	$(PDFJADETEX) $*.tex
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -139,15 +146,17 @@ endif
 
 # Generate a PDF file from an XML file using PassiveTeX.  This one requires
 # that a simple TeX file be generated from the XML first (see below).
-#.xml.pdf:
-#	TEXINPUTS="$(TEXINPUTS)" HOMETEXMF="$(TEXMF)" TEXMF="$(TEXMF):/usr/share/texmf" pdflatex $*.tex
-#	TEXINPUTS="$(TEXINPUTS)" TEXMF="{\$$TEXMFMAIN,!!$(TEXMF)}" pdflatex $*.tex
+ifeq ($(FO_VERSION), PASSIVE_TEX)
+.fo.pdf:
+	TEXINPUTS="$(TEXINPUTS)" pdflatex "&pdfxmltex" $*.fo
+#	TEXINPUTS="$(TEXINPUTS)" pdflatex "&pdfxmltex" $*.fo
 
 # Generate a TeX file for use with PassiveTeX.
-.xml.tex:
-	@echo "Generating $*.tex from $<"
-	@echo '\def\xmlfile{$*.fo}' >$*.tex
-	@echo '\input xmltex' >>$*.tex
+#.xml.tex:
+#	@echo "Generating $*.tex from $<"
+#	@echo '\def\xmlfile{$*.fo}' >$*.tex
+#	@echo '\input xmltex' >>$*.tex
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -163,7 +172,7 @@ endif
 # -----------------------------------------------------------------------------
 
 clean:
-	$(RM) *.tex *.log *.fo *~
+	$(RM) *.aux *.out *.tex *.log *.fo *~
 
 clobber:
 	@$(MAKE) clean
