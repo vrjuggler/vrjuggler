@@ -68,8 +68,11 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
+# pfSoundNode does not work correctly on Windows.
+ifneq (@OS_TYPE@, Win32)
 ifeq (@PERFORMER_API@, Y)
 SOUND_SRCS	:= pfSoundNode.cpp
+endif
 endif
 
 SOUND_OBJECTS	:= ${addprefix ${OBJDIR}/,${SOUND_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
