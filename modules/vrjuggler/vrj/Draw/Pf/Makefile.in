@@ -27,8 +27,8 @@ vpath %.o ${OBJDIR}
 #------------------------
 
 PF_API		:= @PERFORMER_API@
-PF_SRCS 	:= vjPfAPIFactory.C vjPfDrawManager.C
-DEPEND_SRCS	:= 
+PF_SRCS 	:= vjPfDrawManager.C
+DEPEND_SRCS	:=
 
 ifeq ($(PF_API),Y)
     DEPEND_SRCS += $(PF_SRCS)

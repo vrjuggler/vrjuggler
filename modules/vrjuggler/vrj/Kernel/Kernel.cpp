@@ -44,7 +44,7 @@ void vjKernel::initConfig()
 
    setupInputManager();
 
-   apiFactory = app->api.getAPIFactory();
+   //apiFactory = app->api.getAPIFactory();
    sysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 
       vjDEBUG(0) << "vjKernel::initConfig: Calling setupDisplayManager.\n" << vjDEBUG_FLUSH;
@@ -195,7 +195,8 @@ void vjKernel::setupDrawManager()
 {
    vjDEBUG_BEGIN(0) << "   vjKernel::setupDrawManager" << endl << vjDEBUG_FLUSH;
 
-   drawManager = apiFactory->getDrawManager();
+   //drawManager = apiFactory->getDrawManager();
+   drawManager = app->getDrawManager();
    drawManager->config(chunkDB);     // Give it the chunk DB to extract API specific info
    drawManager->setApp(app);
    drawManager->setDisplayManager(displayManager);
