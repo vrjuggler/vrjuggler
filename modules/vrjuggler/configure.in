@@ -79,6 +79,14 @@ AC_ARG_ENABLE(pf-api,
               [  --enable-pf-api         Use Perfromer API               [default=yes]],
               _enable_pf_api="$enableval", _enable_pf_api='yes')
 
+# Enable compilation of the OpenScenegraph API.  Possible values are "yes" or
+# "no".  "yes" is set with --enable-osg-api and "no" is set with
+# --disable-osg-api.
+# The default is "yes".
+AC_ARG_ENABLE(osg-api,
+              [  --enable-osg-api        Use OpenScenegraph API          [default=yes]],
+              _enable_osg_api="$enableval", _enable_osg_api='yes')
+
 # Enable performance testing.  Values that enable it are as follows:
 #
 #      SGI: Enable SGI IPC performance testing.  This defines VJ_PERFORMANCE to
@@ -320,10 +328,8 @@ else
         newInstance(), ,
         BUILD_GUI='Y',
         [ BUILD_GUI='N' ;
-          AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***) ]
-     )
+          AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***) ])
 fi
-
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
@@ -457,6 +463,65 @@ if test "x${_enable_pf_api}" = "xyes" ; then
         [ PERFORMER_API='Y' ;
           AC_DEFINE(VJ_API_PERFORMER,) ],
         AC_MSG_WARN(*** Performer API will not be used (files not found) ***))
+fi
+
+# --------------------
+# OpenScenegraph API.
+# --------------------
+OSG_API=''		# 'Y' then we are using OpenScenegraph
+
+# Test for the OpenScenegraph library if the OpenScenegraph API was enabled.
+if test "x${_enable_osg_api}" = "xyes" ; then
+    # Define the root directory for the OpenScenegraph installation.
+    AC_ARG_WITH(osgroot,
+                [  --with-osgroot=<PATH>   OpenScenegraph installation
+                          directory                       [default=\$OSGHOME
+                                                           then /usr]],
+                OSGROOT="$withval", OSGROOT="${OSGHOME-/usr}")
+
+    _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_CPPFLAGS="$CPPFLAGS"
+    _vjsave_INCLUDES="$INCLUDES"
+    _vjsave_LDFLAGS="$LDFLAGS"
+    _vjsave_LIBS="$LIBS"
+
+    # Ensure that /usr/include and /usr/lib are not included multiple times
+    # if $OSGROOT is "/usr".
+    if test "x$OSGROOT" != "x/usr" ; then
+        CPPFLAGS="-I$OSGROOT/include $CPPFLAGS"
+        INCLUDES="-I$OSGROOT/include $INCLUDES"
+        LDFLAGS="-L$OSGROOT/lib$LIBBITSUF $LDFLAGS"
+    fi
+
+    CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
+    LDFLAGS="$LDFLAGS $X_LDFLAGS"
+
+    vj_have_osg='no'
+
+    DPP_LANG_SAVE
+    DPP_LANG_CPLUSPLUS
+
+    AC_CHECK_LIB(osg, osgGetVersion,
+        AC_CHECK_HEADER(osg/Vec3, vj_have_osg='yes',
+            AC_MSG_WARN(*** OpenScenegraph API will not be used (headers not found) ***)),
+        AC_MSG_WARN(*** OpenScenegraph API will not be used (libraries not found) ***), -lX11 -lXext)
+
+    DPP_LANG_RESTORE
+
+    if test "x$vj_have_osg" = "xyes" ; then
+        OSG_API='Y'
+        AC_DEFINE(VJ_API_OPENSCENEGRAPH,)
+
+        LIBOSG='-losg -losgGLUT -losgUtil -losgDB'
+        OSG_INCLUDES="-I$OSGROOT/include"
+        OSG_LDFLAGS="-L$OSGROOT/lib\$(LIBBITSUF)"
+    fi
+
+    CFLAGS="${_vjsave_CFLAGS}"
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+    INCLUDES="${_vjsave_INCLUDES}"
+    LDFLAGS="${_vjsave_LDFLAGS}"
+    LIBS="${_vjsave_LIBS}"
 fi
 
 # ----
@@ -750,6 +815,10 @@ if test "x$PF_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $PF_INCLUDES"
 fi
 
+if test "x$OSG_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $OSG_INCLUDES"
+fi
+
 if test "x$DTK_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $DTK_INCLUDES"
 fi
@@ -824,6 +893,8 @@ fi
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
 #       the Performer API.
+#     * APP_EXTRA_LIBS_OSG: The OpenScenegraph libraries needed for compiling
+#       with the OpenScenegraph API.
 #     * APP_EXTRA_LIBS_AW: The AudioWorks libraries needed for compiling with
 #       the AudioWorks sound system.
 #     * APP_EXTRA_LIBS_SL: The SL libraries needed for compiling with the SL
@@ -883,12 +954,19 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "x$PLATFORM" = "xLinux" ; then
         APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
     fi
+
+    if test "x$OSG_LDFLAGS" != "x" ; then
+        APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib$LIBBITSUF $LIBOSG"
+    else
+        APP_EXTRA_LIBS_OSG="$LIBOSG"
+    fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
     APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
+    APP_EXTRA_LIBS_OSG="$OSG_LDFLAGS $LIBOSG"
 fi
 
 # Translate paths from UNIX-style to Win32.
@@ -907,6 +985,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
     APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
+    APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
     APP_EXTRA_LIBS_AW=`unix2dos "$APP_EXTRA_LIBS_AW"`
     APP_EXTRA_LIBS_SL=`unix2dos "$APP_EXTRA_LIBS_SL"`
 else
@@ -1018,6 +1097,8 @@ AC_SUBST(BUILD_GUI)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
+AC_SUBST(OSGROOT)
+AC_SUBST(OSG_API)
 AC_SUBST(DTK_CONFIG)
 AC_SUBST(HAVE_DTK)
 
@@ -1046,6 +1127,7 @@ AC_SUBST(APP_VJ_LIBS_SL)
 AC_SUBST(APP_VJ_LIBS_UTILS)
 AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
+AC_SUBST(APP_EXTRA_LIBS_OSG)
 AC_SUBST(APP_EXTRA_LIBS_AW)
 AC_SUBST(APP_EXTRA_LIBS_SL)
 
@@ -1092,6 +1174,7 @@ AC_OUTPUT(Makefile
 	  Input/intersense/Makefile
           Kernel/Makefile
           Kernel/GL/Makefile
+          Kernel/OSG/Makefile
           Kernel/Pf/Makefile
           Math/Makefile
           Performance/Makefile
