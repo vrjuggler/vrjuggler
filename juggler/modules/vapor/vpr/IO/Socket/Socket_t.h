@@ -718,7 +718,7 @@ protected:
       if( DefaultIOStatsStrategy::IS_NULL == 0)     // If we have a real one
       {
          //std::cout << "Allocating strategy: " << typeid(DefaultIOStatsStrategy).name() << std::endl;
-         BaseIOStatsStrategy* new_strategy = new DefaultIOStatsStrategy;
+         BaseIOStatsStrategy<vpr::BlockIO>* new_strategy = new DefaultIOStatsStrategy;
          this->setIOStatStrategy(new_strategy);
       }
    }
