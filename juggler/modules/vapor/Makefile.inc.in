@@ -234,6 +234,8 @@ pre-install:
 # Do everything needed after installing the library binaries.
 post-install:
 	@$(MAKE) install-test
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/vpr-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers

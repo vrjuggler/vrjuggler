@@ -638,6 +638,44 @@ else
     SAFE_VPRROOT_ABS="$VPRROOT_ABS"
 fi
 
+# Information needed to generate vpr-config.
+case $SUBSYSTEM in
+    IRIX_SPROC)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="$SEM_LIB $SOCKET_LIB"
+        static_begin="-B static"
+        static_end="-B dynamic"
+        vpr_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
+        vpr_libs='-lvpr'
+        ;;
+    POSIX)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        static_begin="-Wl,-Bstatic"
+        static_end="-Wl,-Bdynamic"
+        vpr_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
+        vpr_libs='-lvpr'
+        ;;
+    NSPR)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        static_begin="-Wl,-Bstatic"
+        static_end="-Wl,-Bdynamic"
+        vpr_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
+        vpr_libs='-lvpr'
+        ;;
+    WIN32)
+        subsystem_cflags="$INCLUDES"
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
+        vpr_ldflags="-link -libpath:$prefix/lib/debug"
+        vpr_libs='vpr.lib'
+        ;;
+esac
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -665,6 +703,14 @@ AC_SUBST(APP_LIBS_BASIC)
 AC_SUBST(APP_EXTRA_LIBS_BEGIN)
 AC_SUBST(APP_EXTRA_LIBS_END)
 AC_SUBST(APP_EXTRA_LIBS_BASIC)
+
+AC_SUBST(subsystem_cflags)
+AC_SUBST(subsystem_cxxflags)
+AC_SUBST(subsystem_libs)
+AC_SUBST(static_begin)
+AC_SUBST(static_end)
+AC_SUBST(vpr_ldflags)
+AC_SUBST(vpr_libs)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -783,7 +829,9 @@ AC_OUTPUT(Makefile
           release/mtree/VPR.include.dist
           release/mtree/VPR.install.dist
           release/mtree/VPR.test.dist
-          VARS.pl)
+          vpr-config
+          VARS.pl,
+          [chmod +x vpr-config])
 
 cat <<BUILD_INFO
 
