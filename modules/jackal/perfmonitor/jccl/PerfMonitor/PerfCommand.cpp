@@ -29,11 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-#include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
+#include <jccl/PerfMonitor/PerfCommand.h>
+#include <jccl/PerfMonitor/PerformanceCategories.h>
 
 namespace jccl
 {

@@ -29,15 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
-#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
+#include <jccl/PerfMonitor/PerformanceCategories.h>
+#include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 
 namespace jccl
 {
-
 
 PerformanceCategories::PerformanceCategories ()
 {

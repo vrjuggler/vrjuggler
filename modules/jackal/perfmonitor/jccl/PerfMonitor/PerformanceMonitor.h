@@ -29,8 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef _JCCL_PERFORMANCE_MONITOR_H_
 #define _JCCL_PERFORMANCE_MONITOR_H_
 
@@ -38,12 +36,11 @@
 #include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
+#include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
+#include <jccl/PerfMonitor/PerformanceCategories.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
-
 
 namespace jccl
 {
