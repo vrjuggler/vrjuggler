@@ -38,11 +38,11 @@
 
 // determine which implementation of vjSystem to include.
 #if defined(VJ_IRIX_SPROC) || defined(VJ_USE_PTHREADS)
-   #include <VPR/md/POSIX/vjSystemPosix.h>
+#   include <VPR/md/POSIX/vjSystemPosix.h>
 #elif defined(VJ_OS_Win32)
-   #include <VPR/md/WIN32/vjSystemWin32.h>
+#   include <VPR/md/WIN32/vjSystemWin32.h>
 #else
-   #include <VPR/md/NSPR/vjSystemNSPR.h>
+#   include <VPR/md/NSPR/vjSystemNSPR.h>
 #endif  /* VJ_IRIX_SPROC || VJ_USE_PTHREADS */
 
 #endif // _VJ_SYSTEM_FAKE_H_
