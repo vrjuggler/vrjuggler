@@ -86,6 +86,8 @@ public class ScreenDisplay
       this.add(sep, new TableLayoutConstraints(col - 1, 0, col - 1, 0, TableLayout.FULL,
                                                TableLayout.FULL));
       mScreens.put(elm, sep);
+      revalidate();
+      repaint();
    }
 
    /**
@@ -109,17 +111,7 @@ public class ScreenDisplay
             //System.out.println(elm.getDefinition().getName());
             if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
             {
-               ViewportPlacer vp = new ViewportPlacer(mConfigContext, elm);
-               vp.setMinimumSize(new Dimension(100, 100));
-               vp.setPreferredSize(new Dimension(100, 100));
-               vp.setMaximumSize(new Dimension(100, 100));
-               vp.setBorder(BorderFactory.createLineBorder(java.awt.Color.black));
-               
-               mScreenDisplay.add(vp);
-               mScreenDisplay.revalidate();
-               mScreenDisplay.repaint();
-               
-               mScreens.put(elm, vp);
+               mScreenDisplay.addScreen(elm);
             }
          }
       }

@@ -44,6 +44,7 @@ public class Corners
    
    public Corners() 
    {
+      System.out.println("Corners Constructor()");
       ll_corner[0] = -5.0f;
       ll_corner[1] = -5.0f;
       ll_corner[2] =  0.0f;
@@ -60,6 +61,7 @@ public class Corners
 
    public Corners(float[] ll, float[] lr, float[] ur, float[] ul)
    {
+      System.out.println("Corners Constructor(a,a,a,a)");
       for (int i = 0 ; i < 3 ; i++)
       {
          ll_corner[i] = ll[i];
@@ -88,6 +90,7 @@ public class Corners
 
    public Corners(ConfigElement elm)
    {
+      System.out.println("Corners Constructor(elm)");
       ll_corner[0] = ((Number) elm.getProperty("lower_left_corner", 0)).floatValue();
       ll_corner[1] = ((Number) elm.getProperty("lower_left_corner", 1)).floatValue();
       ll_corner[2] = ((Number) elm.getProperty("lower_left_corner", 2)).floatValue();

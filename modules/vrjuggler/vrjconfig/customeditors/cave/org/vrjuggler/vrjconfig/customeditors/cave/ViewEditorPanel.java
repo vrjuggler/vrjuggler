@@ -36,6 +36,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -51,6 +53,7 @@ import org.vrjuggler.jccl.config.ConfigElementFactory;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
+import org.vrjuggler.vrjconfig.customeditors.cave.event.*;
 
 public class ViewEditorPanel
    extends JPanel
@@ -58,19 +61,14 @@ public class ViewEditorPanel
    private static int VP_ELT_COUNT = 0;
    private CaveModel mCaveModel = null;
 
-   public ViewEditorPanel(CaveModel cm, Dimension resolution, String title)
+   public ViewEditorPanel(Dimension resolution, String title)
       throws HeadlessException
    {
       mResolution = resolution;
-      mCaveModel = cm;
 
       try
       {
          jbInit();
-         mScreenModel = new ScreenComboBoxModel( cm );
-         mScreenRenderer = new ScreenComboBoxRenderer( cm );
-         mScreenCB.setModel( mScreenModel );
-         mScreenCB.setRenderer( mScreenRenderer );
       }
       catch(Exception e)
       {
@@ -83,33 +81,55 @@ public class ViewEditorPanel
                                                            title);
       this.setBorder(mMainBorder);
    }
+
+   public void setCaveModel(CaveModel cm)
+   {
+      mCaveModel = cm;
+      
+      if (null == mScreenModel)
+      {
+         mScreenModel = new ScreenComboBoxModel(mCaveModel);
+      }
+      
+      if (null == mScreenRenderer)
+      {
+         mScreenRenderer = new ScreenComboBoxRenderer(mCaveModel);
+      }
+
+      mScreenCB.setModel( mScreenModel );
+      mScreenCB.setRenderer( mScreenRenderer );
+   }
    
    public void updatePosSize(PropertyChangeEvent evt)
    {
       ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
-      int val = Integer.parseInt(evt.getNewValue().toString());
-      int screen_size_x  = ((Integer) screen.getProperty("size", 0)).intValue();
-      int screen_size_y  = ((Integer) screen.getProperty("size", 1)).intValue();
-         
-      if (evt.getSource() == mPositionXField)
+
+      if (null != screen)
       {
-         float pos_x = (float)val/(float)screen_size_x;
-         mView.setProperty("origin", 0, new Float(pos_x));
-      }
-      else if (evt.getSource() == mPositionYField)
-      {
-         float pos_y = (float)val/(float)screen_size_y;
-         mView.setProperty("origin", 1, new Float(pos_y));
-      }
-      else if (evt.getSource() == mWidthField)
-      {
-         float size_x = (float)val/(float)screen_size_x;
-         mView.setProperty("size", 0, new Float(size_x));
-      }
-      else if (evt.getSource() == mHeightField)
-      {
-         float size_y = (float)val/(float)screen_size_y;
-         mView.setProperty("size", 1, new Float(size_y));
+         int val = Integer.parseInt(evt.getNewValue().toString());
+         int screen_size_x  = ((Integer) screen.getProperty("size", 0)).intValue();
+         int screen_size_y  = ((Integer) screen.getProperty("size", 1)).intValue();
+            
+         if (evt.getSource() == mPositionXField)
+         {
+            float pos_x = (float)val/(float)screen_size_x;
+            mView.setProperty("origin", 0, new Float(pos_x));
+         }
+         else if (evt.getSource() == mPositionYField)
+         {
+            float pos_y = (float)val/(float)screen_size_y;
+            mView.setProperty("origin", 1, new Float(pos_y));
+         }
+         else if (evt.getSource() == mWidthField)
+         {
+            float size_x = (float)val/(float)screen_size_x;
+            mView.setProperty("size", 0, new Float(size_x));
+         }
+         else if (evt.getSource() == mHeightField)
+         {
+            float size_y = (float)val/(float)screen_size_y;
+            mView.setProperty("size", 1, new Float(size_y));
+         }
       }
    }
 
@@ -125,55 +145,83 @@ public class ViewEditorPanel
    }
 
    private ChangeListener mChangeListener = new ChangeListener();
-   
+   private ConfigElementAdapter mSizeOriginListener = new ConfigElementAdapter()
+      {
+         public void propertyValueChanged(ConfigElementEvent event)
+         {
+            if ( event.getProperty().equals("size") ||
+                 event.getProperty().equals("origin") )
+            {
+               loadPosSizeFromElement();
+            }
+         }
+      };
+
    public void setConfig(ConfigElement view)
    {
+      if (null != mView)
+      {
+         mView.removeConfigElementListener(mSizeOriginListener);
+         mPositionXField.removePropertyChangeListener(mChangeListener);
+         mPositionYField.removePropertyChangeListener(mChangeListener);
+         mWidthField.removePropertyChangeListener(mChangeListener);
+         mHeightField.removePropertyChangeListener(mChangeListener);
+      }
+      
       mView = view;
-      ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
       
-      loadPosSizeFromElement();
-      mScreenModel.setSelectedScreen( screen );
-
-
-      mPositionXField.addPropertyChangeListener(mChangeListener);
-      mPositionYField.addPropertyChangeListener(mChangeListener);
-      mWidthField.addPropertyChangeListener(mChangeListener);
-      mHeightField.addPropertyChangeListener(mChangeListener);
-      
-      // Validate the default values for the various text fields.
-      validateUserInput();
-
-      mView.addConfigElementListener( new ConfigElementAdapter()
+      if (null == view)
+      {
+         
+      }
+      else
+      {
+         mView = view;
+         ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
+         
+         loadPosSizeFromElement();
+                  
+         if (null != screen)
          {
-            public void propertyValueChanged(ConfigElementEvent event)
-            {
-               if ( event.getProperty().equals("size") ||
-                    event.getProperty().equals("origin") )
-               {
-                  loadPosSizeFromElement();
-               }
-            }
-         });
+            mScreenCB.setSelectedItem(screen);
+         }
+         else
+         {
+            mScreenCB.setSelectedItem("None");
+         }
+
+         mPositionXField.addPropertyChangeListener(mChangeListener);
+         mPositionYField.addPropertyChangeListener(mChangeListener);
+         mWidthField.addPropertyChangeListener(mChangeListener);
+         mHeightField.addPropertyChangeListener(mChangeListener);
+         
+         // Validate the default values for the various text fields.
+         validateUserInput();
+
+         mView.addConfigElementListener(mSizeOriginListener);
+      }
    }
 
    private void loadPosSizeFromElement()
    {
       ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
-
-      float v_origin_x  = ((Number) mView.getProperty("origin", 0)).floatValue();
-      float v_origin_y  = ((Number) mView.getProperty("origin", 1)).floatValue();
-      float v_size_x  = ((Number) mView.getProperty("size", 0)).floatValue();
-      float v_size_y  = ((Number) mView.getProperty("size", 1)).floatValue();
       
-      int s_origin_x  = ((Integer) screen.getProperty("origin", 0)).intValue();
-      int s_origin_y  = ((Integer) screen.getProperty("origin", 1)).intValue();
-      int s_size_x  = ((Integer) screen.getProperty("size", 0)).intValue();
-      int s_size_y  = ((Integer) screen.getProperty("size", 1)).intValue();
+      if (null != screen)
+      {
+         float v_origin_x  = ((Number) mView.getProperty("origin", 0)).floatValue();
+         float v_origin_y  = ((Number) mView.getProperty("origin", 1)).floatValue();
+         float v_size_x  = ((Number) mView.getProperty("size", 0)).floatValue();
+         float v_size_y  = ((Number) mView.getProperty("size", 1)).floatValue();
+         int s_origin_x  = ((Integer) screen.getProperty("origin", 0)).intValue();
+         int s_origin_y  = ((Integer) screen.getProperty("origin", 1)).intValue();
+         int s_size_x  = ((Integer) screen.getProperty("size", 0)).intValue();
+         int s_size_y  = ((Integer) screen.getProperty("size", 1)).intValue();
          
-      mPositionXField.setValue( new Integer((int)(v_origin_x * s_origin_x)) );
-      mPositionYField.setValue( new Integer((int)(v_origin_y * s_origin_y)) );
-      mWidthField.setValue( new Integer((int)(v_size_x * s_size_x)) );
-      mHeightField.setValue( new Integer((int)(v_size_y * s_size_y)) );
+         mPositionXField.setValue( new Integer((int)(v_origin_x * s_origin_x)) );
+         mPositionYField.setValue( new Integer((int)(v_origin_y * s_origin_y)) );
+         mWidthField.setValue( new Integer((int)(v_size_x * s_size_x)) );
+         mHeightField.setValue( new Integer((int)(v_size_y * s_size_y)) );
+      }
    }
    
    public Object getViewpoint()
@@ -305,9 +353,50 @@ public class ViewEditorPanel
    void mScreenCB_selectionChanged(ActionEvent e)
    {
       JComboBox cb = (JComboBox)e.getSource();
-      ConfigElement new_screen = mScreenModel.getSelectedScreen();
+      Object value = cb.getSelectedItem();
+      
+      if (value instanceof ConfigElement)
+      {
+         ConfigElement new_screen = (ConfigElement)value;
+         mCaveModel.changeScreenForView(mView, new_screen);
+      }
+      else
+      {
+         String name = (String)value;
 
-      mCaveModel.changeScreenForView(mView, new_screen);
+         if (name.equals("None"))
+         {
+            mCaveModel.changeScreenForView(mView, null);
+         }
+         else if (name.equals("New Screen"))
+         {
+            Frame parent =
+               (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+
+            String screen_name =
+               JOptionPane.showInputDialog(parent,
+                                           "Enter a name for the new screen",
+                                           "New Screen Name",
+                                           JOptionPane.QUESTION_MESSAGE);
+            ConfigBrokerProxy broker = new ConfigBrokerProxy();
+            ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.display_window_type);
+            ConfigElementFactory factory =
+               new ConfigElementFactory(broker.getRepository().getAllLatest());
+            ConfigElement new_screen = factory.create(screen_name, vp_def);
+
+            // Make sure this add goes through successfully
+            if (! broker.add(mCaveModel.getConfigContext(), new_screen))
+            {
+               JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(Frame.class, this),
+                                             "There are no configuration files active.",
+                                             "Error",
+                                             JOptionPane.ERROR_MESSAGE);
+               return;
+            }
+            mCaveModel.addScreen(new_screen);
+            mCaveModel.changeScreenForView(mView, new_screen);
+         }
+      }
    }
    
    private void validateUserInput()
@@ -398,16 +487,26 @@ public class ViewEditorPanel
             setForeground(list.getForeground());
          }
          
-         ConfigElement screen = (ConfigElement)value;
-         ConfigElement node = (ConfigElement)mCaveModel.getScreenToNodeMap().get( screen );
-
-         if (null != node)
+         // If a ConfigElement is given use its name, otherwise
+         // use the given String.
+         if(value instanceof ConfigElement)
          {
-            setText( node.getName() + ":" + screen.getName() );
+            ConfigElement screen = (ConfigElement)value;
+            
+            ConfigElement node = (ConfigElement)mCaveModel.getScreenToNodeMap().get( screen );
+
+            if (null == node)
+            {
+               setText( "local:" + screen.getName() );
+            }
+            else
+            {
+               setText( node.getName() + ":" + screen.getName() );
+            }
          }
          else
          {
-            setText( "local:" + screen.getName() );
+            setText((String)value);
          }
             
          return this;
@@ -415,152 +514,46 @@ public class ViewEditorPanel
    }
    
    public class ScreenComboBoxModel
-      extends AbstractListModel
-      implements ComboBoxModel//, ConfigListener, ConfigElementListener
+      extends DefaultComboBoxModel
    {
       private CaveModel mCaveModel = null;
-      private Object mSelectedObject;
-       
-      public void setSelectedItem(Object obj)
-      {
-         if ((mSelectedObject != null && !mSelectedObject.equals( obj )) ||
-              mSelectedObject == null && obj != null)
-         {
-            mSelectedObject = obj;
-            fireContentsChanged(this, -1, -1);
-         }
-      }
-
-      public Object getSelectedItem()
-      {
-         return mSelectedObject;
-      }
+      private List mTags = new ArrayList();
       
+      public ScreenComboBoxModel( CaveModel cm )
+      {
+         Exception e = new Exception("");
+         e.printStackTrace();
+               
+         mCaveModel = cm;
+         generateTags();
+         
+         mCaveModel.addCaveModelListener(new CaveModelAdapter()
+            {
+               public void screenAdded(CaveModelEvent evt)
+               {
+                  generateTags();
+                  fireIntervalAdded(evt.getSource(), evt.getIndex(), evt.getIndex());
+               }
+            });
+      }
       public Object getElementAt(int index)
       {
-         if ( index >= 0 && index < mCaveModel.getScreens().size() )
-         {
-            return mCaveModel.getScreens().elementAt(index);
-         }
-         else
-         {
-            return null;
-         }
+         return mTags.get(index);
       }
 
       public int getSize()
       {
-         return mCaveModel.getScreens().size();
+         return mTags.size();
       }
-      
-      public int getIndexOf(Object obj)
+      public void generateTags()
       {
-         return mCaveModel.getScreens().indexOf( obj );
-      }
-      
-      public void addElement(Object obj)
-      {
-         mCaveModel.getScreens().addElement( obj );
-         fireIntervalAdded( this, mCaveModel.getScreens().size() - 1, mCaveModel.getScreens().size() - 1 );
-         if ( mCaveModel.getScreens().size() == 1 && mSelectedObject == null && obj != null )
-         {
-            setSelectedItem( obj );
-         }
-      }
+         // For each definition token this definition can point to, look for
+         // matching config elements we can use.
+         mTags.clear();
 
-      public ScreenComboBoxModel( CaveModel cm )
-      {
-         mCaveModel = cm;
+         mTags.add("None");
+         mTags.add("New Screen");
+         mTags.addAll(mCaveModel.getScreens());
       }
-
-      public ConfigElement getSelectedScreen()
-      {
-         Object obj = getSelectedItem();
-         if (null != obj)
-         {
-            return( (ConfigElement)obj );
-         }
-         else
-         {
-            return null;
-         }
-      }
-      
-      public void setSelectedScreen( ConfigElement elm )
-      {
-         mSelectedObject = elm;
-      }
-
-      /*
-      
-      public void configElementAdded(ConfigEvent evt)
-      {
-         if (null != mConfigContext && mConfigContext.contains(evt.getResource()))
-         {
-            ConfigElement elm = evt.getElement();
-            screenAdded( elm );
-         
-            if ( elm.getDefinition().getToken().equals(EditorConstants.cluster_node_type) )
-            {
-               elm.addConfigElementListener(this);
-            }
-         }
-      }
-
-      public void configElementRemoved(ConfigEvent evt)
-      {
-         if (null != mConfigContext && mConfigContext.contains(evt.getResource()))
-         {
-            ConfigElement elm = evt.getElement();
-            screenRemoved( elm );
-
-            if ( elm.getDefinition().getToken().equals(EditorConstants.cluster_node_type) )
-            {
-               elm.removeConfigElementListener(this);
-            }
-         }
-      }
-
-      public void nameChanged(ConfigElementEvent evt)
-      {;}
-      
-      public void propertyValueChanged(ConfigElementEvent evt)
-      {;}
-      
-      public void propertyValueAdded(ConfigElementEvent evt)
-      {
-         if ( evt.getProperty().equals( EditorConstants.display_window_type ) )
-         {
-            ConfigElement elm = (ConfigElement)evt.getValue();
-            screenAdded( elm );
-         }
-      }
-      
-      public void propertyValueRemoved(ConfigElementEvent evt)
-      {
-         if ( evt.getProperty().equals( EditorConstants.display_window_type ) )
-         {
-            ConfigElement elm = (ConfigElement)evt.getValue();
-            screenRemoved( elm );
-         }
-      }
-      
-      public void screenAdded(ConfigElement elm)
-      {
-         //System.out.println(elm.getDefinition().getName());
-         if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
-         {
-            addElement(elm));
-         }
-      }
-     
-      public void screenRemoved(ConfigElement elm)
-      {
-         if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
-         {
-            mCaveModel.getScreens().removeElement(elm);
-         }
-      }
-   */
    }
 }

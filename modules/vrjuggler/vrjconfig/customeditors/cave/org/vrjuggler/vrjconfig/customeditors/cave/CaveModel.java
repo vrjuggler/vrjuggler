@@ -33,6 +33,7 @@
 package org.vrjuggler.vrjconfig.customeditors.cave;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,9 +41,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import javax.swing.event.EventListenerList;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
+import org.vrjuggler.vrjconfig.customeditors.cave.event.*;
 
 public class CaveModel
 {
@@ -52,7 +58,10 @@ public class CaveModel
    private Vector mScreens = new Vector();
    private Map mScreenToNodeMap = new HashMap();
    private Map mViewToScreenMap = new HashMap();
-
+   
+   /** Listeners interested in this cave model. */
+   private EventListenerList listenerList = new EventListenerList();
+   
    public Vector getScreens()
    {
       return mScreens;
@@ -142,6 +151,7 @@ public class CaveModel
       for (Iterator itr = sorter.getKeys().iterator() ; itr.hasNext() ; )
       {
          Corners new_corners = (Corners)itr.next();
+         System.out.println(new_corners);
          CaveWall new_wall = new CaveWall(this, new_corners, (List)sorter.getValues(new_corners));
          mWalls.add(new_wall);
       }
@@ -149,7 +159,25 @@ public class CaveModel
       mBrokerChangeListener = new BrokerChangeListener(this);
       broker.addConfigListener( mBrokerChangeListener );
    }
+   
+   public CaveWall makeNewWall(ConfigElement elt)
+   {
+      Corners new_corners = new Corners();
+      List new_list = new ArrayList();
+      new_list.add(elt);
+      CaveWall new_wall = new CaveWall(this, new_corners, new_list);
+      mWalls.add(new_wall);
+      fireWallAdded(mWalls.size() - 1, new_wall);
 
+      return new_wall;
+   }
+   
+   void addScreen(ConfigElement new_screen)
+   {
+      mScreens.add(new_screen);
+      fireScreenAdded(mScreens.size() - 1, new_screen);
+   }
+   
    public List getWalls()
    {
       return mWalls;
@@ -163,17 +191,22 @@ public class CaveModel
    public void changeScreenForView(ConfigElement view, ConfigElement new_screen)
    {
       ConfigElement old_screen = (ConfigElement)mViewToScreenMap.remove(view);
-      mViewToScreenMap.put(view, new_screen);
       
-      int result = old_screen.removeProperty(EditorConstants.surface_viewports_prop,
-                                             view, mConfigContext);
-      if (-1 == result)
+      if (null != old_screen)
       {
-         System.out.println("ERROR: Trying to move a view from a screen that does not contain it.");
+         int result = old_screen.removeProperty(EditorConstants.surface_viewports_prop,
+                                                view, mConfigContext);
+         if (-1 == result)
+         {
+            System.out.println("ERROR: Trying to move a view from a screen that does not contain it.");
+         }
       }
-      else
+      
+      // If we are not setting the screen to null.
+      if (null != new_screen)
       {
          new_screen.addProperty(EditorConstants.surface_viewports_prop, view, mConfigContext);
+         mViewToScreenMap.put(view, new_screen);
       }
    }
    
@@ -282,7 +315,64 @@ public class CaveModel
    public void setViewHeight(ConfigElement view, int height)
    {
    }
+
+   /**
+    * Adds the given listener to be notified when this cave model changes.
+    */
+   public void addCaveModelListener(CaveModelListener listener)
+   {
+      listenerList.add(CaveModelListener.class, listener);
+   }
+
+   /**
+    * Removes the given listener that was registered to be notified when this
+    * cave model changed.
+    */
+   public void removeCaveModelListener(CaveModelListener listener)
+   {
+      listenerList.remove(CaveModelListener.class, listener);
+   }
+
+   /**
+    * Notifies listeners that a wall was added.
+    */
+   protected void fireWallAdded(int index, CaveWall wall)
+   {
+      CaveModelEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == CaveModelListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new CaveModelEvent(this, index, wall);
+            }
+            ((CaveModelListener)listeners[i+1]).wallAdded(evt);
+         }
+      }
+   }
    
+   /**
+    * Notifies listeners that a screen was added.
+    */
+   protected void fireScreenAdded(int index, ConfigElement screen)
+   {
+      CaveModelEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == CaveModelListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new CaveModelEvent(this, index, screen);
+            }
+            ((CaveModelListener)listeners[i+1]).screenAdded(evt);
+         }
+      }
+   }
+
    /**
     * Custom listener for changes to the config broker.
     */

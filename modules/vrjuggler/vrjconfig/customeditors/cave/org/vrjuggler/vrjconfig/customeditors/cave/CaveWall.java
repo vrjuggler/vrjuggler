@@ -66,13 +66,24 @@ public class CaveWall
    private float[] lr_corner = new float[3];
    private float[] ur_corner = new float[3];
    private float[] ul_corner = new float[3];
+   
+   float mWallWidth, mWallHeight;
+   int mPlane = LEFT_PLANE;
 
    private String mName = null;
    
    public static final int ACTIVE_STEREO = 0;
    public static final int PASSIVE_STEREO = 1;
    public static final int MONO = 2;
-
+   
+   private static final int FRONT_PLANE = 0;
+   private static final int BACK_PLANE = 1;
+   private static final int LEFT_PLANE = 2;
+   private static final int RIGHT_PLANE = 3;
+   private static final int BOTTOM_PLANE = 4;
+   private static final int TOP_PLANE = 5;
+   private static final int CUSTOM_PLANE = 6;
+   
    private int mStereoMode = -1;
   
    public CaveWall()
@@ -112,7 +123,20 @@ public class CaveWall
    public CaveWall(CaveModel cm, Corners c, List views)
    {
       mCaveModel = cm;
-
+         
+      ll_corner[0] = c.getLL()[0];
+      ll_corner[1] = c.getLL()[1];
+      ll_corner[2] = c.getLL()[2];
+      lr_corner[0] = c.getLR()[0];
+      lr_corner[1] = c.getLR()[1];
+      lr_corner[2] = c.getLR()[2];
+      ul_corner[0] = c.getUL()[0];
+      ul_corner[1] = c.getUL()[1];
+      ul_corner[2] = c.getUL()[2];
+      ur_corner[0] = c.getUR()[0];
+      ur_corner[1] = c.getUR()[1];
+      ur_corner[2] = c.getUR()[2];
+         
       int num_views = views.size();
       if(num_views > 2 || num_views < 1)
       {
@@ -149,7 +173,18 @@ public class CaveWall
          ConfigElement screen_elm = (ConfigElement)mCaveModel.getViewToScreenMap().get(view_elm);
          
          int view = ((Number)view_elm.getProperty("view", 0)).intValue();
-         boolean stereo = ((Boolean) screen_elm.getProperty("stereo", 0)).booleanValue();
+         boolean stereo;
+
+         // When we do not yet have a screen assume that we are creating
+         // a new wall which has a default mono view.
+         if (null == screen_elm)
+         {
+            stereo = false;
+         }
+         else
+         {
+            stereo = ((Boolean) screen_elm.getProperty("stereo", 0)).booleanValue();
+         }
 
          if( stereo && (3 == view))
          {
@@ -261,6 +296,104 @@ public class CaveWall
    public String getName()
    {
       return mName;
+   }
+
+   public void updateWidthHeight()
+   {
+      /*
+      System.out.println("Corners:");
+      System.out.println(ll_corner[0]);
+      System.out.println(ll_corner[1]);
+      System.out.println(ll_corner[2]);
+      System.out.println(lr_corner[0]);
+      System.out.println(lr_corner[1]);
+      System.out.println(lr_corner[2]);
+      System.out.println(ul_corner[0]);
+      System.out.println(ul_corner[1]);
+      System.out.println(ul_corner[2]);
+
+
+      if ( ll_corner[0] == lr_corner[0] )
+      {
+         if ( ll_corner[2] > lr_corner[2] )
+         {
+            mPlane = LEFT_PLANE;
+            mWallWidth  = ll_corner[2] - lr_corner[2];
+            mWallHeight = ul_corner[1] - ll_corner[1];
+         }
+         else
+         {
+            mPlane = RIGHT_PLANE;
+            mWallWidth  = lr_corner[2] - ll_corner[2];
+            mWallHeight = ul_corner[1] - ll_corner[1];
+         }
+      }
+      else if ( ll_corner[2] == lr_corner[2] )
+      {
+         if ( lr_corner[0] > ll_corner[0] )
+         {
+            mPlane = FRONT_PLANE;
+            mWallWidth  = lr_corner[0] - ll_corner[0];
+            mWallHeight = ul_corner[1] - ll_corner[1];
+         }
+         else
+         {
+            mPlane = BACK_PLANE;
+            mWallWidth  = ll_corner[0] - lr_corner[0];
+            mWallHeight = ul_corner[1] - ll_corner[1];
+         }
+      }
+      else if ( ll_corner[1] == ul_corner [1] )
+      {
+         if ( ll_corner[2] > ul_corner[2] )
+         {
+            mPlane = BOTTOM_PLANE;
+            mWallWidth  = lr_corner[0] - ll_corner[0];
+            mWallHeight = ll_corner[2] - ul_corner[2];
+         }
+         else
+         {
+            mPlane = TOP_PLANE;
+            mWallWidth  = lr_corner[0] - ll_corner[0];
+            mWallHeight = ul_corner[2] - ll_corner[2];
+         }
+      }
+      else
+      {
+         mPlane = CUSTOM_PLANE;
+
+         float x_diff = lr_corner[0] - ll_corner[0];
+         float y_diff = lr_corner[1] - ll_corner[1];
+         float z_diff = lr_corner[2] - ll_corner[2];
+         float len_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+         mWallWidth = (float) Math.sqrt(len_sq);
+
+         x_diff = ul_corner[0] - ll_corner[0];
+         y_diff = ul_corner[1] - ll_corner[1];
+         z_diff = ul_corner[2] - ll_corner[2];
+         float width_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+         mWallHeight = (float) Math.sqrt(width_sq);
+
+         // XXX: At this point, there needs to be code that figures out the
+         // rotational angles for the custom-defined plane.  Those angles
+         // then need to go into the text fields.
+      }
+   */
+   }
+
+   public float getWidth()
+   {
+      return mWallWidth;
+   }
+   
+   public float getHeight()
+   {
+      return mWallHeight;
+   }
+
+   public int getPlane()
+   {
+      return mPlane;
    }
 
    /*
