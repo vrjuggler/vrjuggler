@@ -249,18 +249,17 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Provide a way of printing the process and thread ID neatly.
+    //: Provide a way of printing the process ID neatly.
     // -----------------------------------------------------------------------
     ostream&
     outStream (ostream& out) {
-        out << "pThrd: [" << getpid() << ":" << id << "] ";
+        out << "pThrd: [" << getpid() << "] ";
         vjBaseThread::outStream(out);
         return out;
     }
 
 // All private member variables and functions.
 private:
-    thread_id_t	id;		//: Non-decreasing, unique ID for this thread
     pthread_t	mThread;	//: pthread_t data structure for this thread
 
     void checkRegister(int status);
@@ -329,9 +328,6 @@ private:
 
         return hash(me);
     }
-
-    //: Non-decreasing count of how many thread objects have been created.
-    static thread_id_t			mThreadCount;
 
     static vjThreadTable<thread_id_t>	mThreadTable;
 };
