@@ -13,7 +13,11 @@
    <xs:element name="configuration">
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="include" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:attribute name="file" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
             <xs:element name="definition_path" type="definition_path" minOccurs="0"/>
             <xs:element name="elements" type="elements" />
          </xs:sequence>
