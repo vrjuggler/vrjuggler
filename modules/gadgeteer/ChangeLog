@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Feb-17-2002 eolson    Merged Remote Input Manager from developmental branch to
+                      the HEAD branch.
+                      NEW VERSION: 0.1.0
 Jan-21-2002 allenb    Fixed various bugs associated with the SampleBuffer
                       conversion.
 Jan-18-2002 allenb    Converted all input to use SampleBuffer to track
