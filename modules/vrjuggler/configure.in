@@ -146,6 +146,12 @@ AC_ARG_WITH(perl,
                           or newer binary                 [No default]],
             _user_perl_path="$withval")
 
+dnl # Name the user who will own installed files.
+AC_ARG_WITH(install-owner,
+            [  --with-install-owner=<USER NAME>
+                          Installed file owner name       [default=You]],
+            _install_owner="$withval")
+
 dnl # Name the group used for setting ownership on installed files.
 AC_ARG_WITH(install-group,
             [  --with-install-group=<GROUP NAME>
@@ -1174,6 +1180,36 @@ dnl # -------------------------------------------------------------------------
 dnl # Miscellaneous checks.
 dnl # -------------------------------------------------------------------------
 
+dnl # Set $OWNER_NAME here in case the check for the user-specified owner
+dnl # failed.  This provides a simple fallback in that case.
+if test "x$OS_TYPE" = "xWin32" ; then
+    OWNER_NAME='500'
+else
+    OWNER_NAME=`whoami`
+fi
+
+dnl # Make sure that the named install owner is actually available and can
+dnl # be set by this user.  This is done by creating a file (conftest.c) and
+dnl # setting the owner name to be what is in ${_install_owner}.  Any output
+dnl # from chown(1) is redirected to chown_out.  If chown_out has non-zero
+dnl # length, chown(1) gave error output, and thus the name is not avaialble.
+if test "x${_install_owner}" != "x" ; then
+    AC_CACHE_CHECK(for user ${_install_owner}, ac_cv_install_owner_available,
+        [ touch conftest.c
+          chown ${_install_owner} conftest.c >chown_out 2>&1
+          if test -s chown_out ; then
+              ac_cv_install_owner_available=no
+          else
+              ac_cv_install_owner_available=yes
+          fi
+          rm -f conftest.c chown_out
+        ])
+
+    if test "$ac_cv_install_owner_available" = "yes" ; then
+        OWNER_NAME="${_install_owner}"
+    fi
+fi
+
 dnl # Make sure that the named install group is actually available and can
 dnl # be set by this user.  This is done by creating a file (conftest.c) and
 dnl # setting the group name to be what is in ${_install_group}.  Any output
@@ -1318,10 +1354,6 @@ AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
 AC_SUBST(EXTRA_LINK_FLAGS)
-AC_SUBST(GROUP_NAME)
-AC_SUBST(FILE_PERMS)
-AC_SUBST(EXEC_PERMS)
-AC_SUBST(DIR_PERMS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LD)
 AC_SUBST(LIBS)
@@ -1333,6 +1365,12 @@ AC_SUBST(OBJ_NAME_FLAG)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
 AC_SUBST(PERL)
+
+AC_SUBST(OWNER_NAME)
+AC_SUBST(GROUP_NAME)
+AC_SUBST(FILE_PERMS)
+AC_SUBST(EXEC_PERMS)
+AC_SUBST(DIR_PERMS)
 
 AC_SUBST(LIB_PREFIX)
 AC_SUBST(STATICLIB_EXT)
