@@ -46,7 +46,8 @@
 
 // Initialize the singleton ptr
 //vjProxyFactory* vjProxyFactory::mInstance = NULL;
-vjSingletonImp(vjProxyFactory);
+//vjSingletonImp( vjProxyFactory ); // kevin
+vjSingletonImpWithInitFunc( vjProxyFactory, loadKnownProxies );
 
 template <class PROXY>
 vjProxyConstructor<PROXY>::vjProxyConstructor()
