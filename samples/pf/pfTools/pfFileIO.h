@@ -56,13 +56,15 @@ public:
    static std::string filePath;
    static void setFilePath( const std::string& filepath = ".:" )
    {
-      filePath = filepath;
+      std::string demangled_path = fileIO::replaceEnvVars( filepath );
+      filePath = demangled_path;
       //cout << "pfFileIO::setFilePath: path now: " << filePath << endl;
    }
 
    static void addFilePath( const std::string& filepath)
    {
-      filePath += filepath;
+      std::string demangled_path = fileIO::replaceEnvVars( filepath );
+      filePath += demangled_path;
       filePath += std::string(":");    // Add on trailing seperator
       //cout << "pfFileIO::addFilePath: path now: " << filePath << endl;
    }

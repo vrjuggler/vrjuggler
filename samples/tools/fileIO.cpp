@@ -31,6 +31,7 @@
  * -----------------------------------------------------------------
  */
 
+#include <Kernel/vjDebug.h>
 #include "fileIO.h"
 
 std::vector<std::string> fileIO::mPaths;
@@ -38,7 +39,9 @@ std::vector<std::string> fileIO::mPaths;
 //: true - 
 bool fileIO::fileExists( const char* const name )
 {
-	FILE* file = ::fopen( name, "r" );
+   std::string stdstring_name = name;
+   std::string demangled_name = demangleFileName( stdstring_name, "" );
+	FILE* file = ::fopen( demangled_name.c_str(), "r" );
 	if (file == NULL)
 	{
 		return false;
@@ -69,10 +72,13 @@ bool fileIO::fileExistsResolvePath( const std::string& filename, std::string& re
 
 std::string fileIO::resolvePathForName( const char* const filename )
 {
+   std::string stdstring_name = filename;
+   std::string demangled_name = demangleFileName( stdstring_name, "" );
+	
    for (int x = 0; x < fileIO::mPaths.size(); ++x)
    {
       std::string slash = "/";
-      std::string temp  = fileIO::mPaths[x] + slash + filename;
+      std::string temp  = fileIO::mPaths[x] + slash + demangled_name;
       
       // if this path works, then return it.
       if (fileExists( temp ))
@@ -83,6 +89,114 @@ std::string fileIO::resolvePathForName( const char* const filename )
    }
    
    // couldn't find any that matched, so just return the filename.
-   cout<<"Did not fix path: "<<filename<<"\n"<<flush;
-   return filename;
+   //cout<<"Did not need to fix path: "<<demangled_name<<"\n"<<flush;
+   return demangled_name;
+}
+
+/** filename handling routines **/
+
+//: Returns a copy of s with all environment variable names replaced
+//+ with their values.
+std::string fileIO::replaceEnvVars( const std::string& s ) 
+{
+    unsigned int i, j;
+    int lastpos = 0;
+    std::string result = "";
+    for (i = 0; i < s.length(); i++) 
+    {
+        if (s[i] == '$')
+        {
+            //process an env var
+            result += std::string(s, lastpos, i - lastpos);
+            i++; // skip $
+            if (s[i] == '{') 
+            {
+               // now search for the closing brace...
+                for (j = i; j < s.length(); j++)
+                    if (s[j] == '}')
+                        break;
+                std::string var(s,i+1,j-i-1);
+                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
+                std::string res = getenv( var.c_str() );
+                if (res == "")
+                {
+                   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vjDEBUG_FLUSH;
+                   result += var; // don't replace the var (or replace var with var...)
+                }
+                else
+                {
+                   result += res; // replace var with the found env variable.
+                }
+                i = j+1;
+                lastpos = i;
+            }
+            else {
+                for (j = i; j < s.length(); j++)
+                    if (s[j] == '/' || s[j] == '\\')
+                        break;
+                std::string var(s,i,j-i);
+                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
+                std::string res = getenv (var.c_str());
+                if (res == "")
+                {
+                   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vjDEBUG_FLUSH;
+                   result += var; // don't replace the var (or replace var with var...)
+                }
+                else
+                {
+                   result += res; // replace var with the found env variable.
+                }
+                i = j;
+                lastpos = i;
+            }
+        }
+    }
+    result += std::string(s, lastpos, s.length() - lastpos);
+    return result;
+}
+
+
+
+//: is n an absolute path name?
+bool fileIO::isAbsolutePathName (const std::string& n) 
+{
+#ifdef WIN32
+    return ((n.length() > 0) && (n[0] == '\\'))
+        || ((n.length() > 2) && (n[1] == ':') && (n[2] == '\\'));
+#else
+    return (n.length() > 0) && (n[0] == '/');
+#endif
+}
+
+
+
+std::string fileIO::demangleFileName (const std::string& n, std::string parentfile) 
+{
+
+   std::string fname = replaceEnvVars (n);
+
+   if (!isAbsolutePathName(fname)) 
+   {
+      // it's a relative pathname... so we have to add in the path part
+      // of parentfile...
+      //         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
+      //              << parentfile.c_str() << "'\n" << endl;
+      int lastslash = 0;
+      for (unsigned int i = 0; i < parentfile.length(); i++) 
+      {
+            if (parentfile[i] == '/')
+                lastslash = i;
+#ifdef WIN32
+            if (parentfile[i] == '\\')
+                lastslash = i;
+#endif
+      }
+      if (lastslash) 
+      {
+         std::string s(parentfile, 0, lastslash+1);
+         fname = s + n;
+      }
+   }
+
+   return fname;
 }
