@@ -94,12 +94,6 @@ public:
     */
    void getByType(const std::string& typeName, std::vector<ConfigChunkPtr>& chunks) const;
 
-   /** Returns all ConfigChunks of a given name.
-    *  @param typeName - The name of a ChunkDesc.
-    *  @param chunks - Vector that will return with only the chunks found of the given name
-    */
-   void getByName(const std::string& typeName, std::vector<ConfigChunkPtr>& chunks) const;
-
    /** Removes a chunk with the given name.
     *  @param name - name of an instance of ConfigChunk.
     *  @return True if a matching ConfigChunk was found and removed,
