@@ -29,14 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-/* Event type for sending network status notifications
- */
-
-package VjComponents.Network;
+package org.vrjuggler.jccl.net;
 
 import java.util.EventObject;
 
+/** Event type for sending network status notifications
+ */
 public class NetControlEvent extends EventObject {
     public String host;
     public int port;

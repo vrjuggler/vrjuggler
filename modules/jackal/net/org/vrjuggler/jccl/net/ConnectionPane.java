@@ -29,23 +29,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.Network;
+package org.vrjuggler.jccl.net;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import VjControl.*;
-import VjComponents.UI.PlugPanel;
-import VjConfig.*;
-import VjComponents.Network.NetworkModule;
-import VjComponents.UI.ControlUIModule;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.ui.ControlUIModule;
+import org.vrjuggler.jccl.ui.PlugPanel;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** PlugPanel for managing connections to VR Juggler apps.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ConnectionPane extends JPanel 

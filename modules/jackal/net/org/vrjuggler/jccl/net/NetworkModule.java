@@ -29,16 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.Network;
+package org.vrjuggler.jccl.net;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import VjConfig.*;
-import VjControl.*;
-import VjComponents.Network.NetCommunicator;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** Network connection manager.
  *  Responsible for taking care of sockets and connections.  Adds a thread
@@ -54,7 +51,6 @@ import VjComponents.Network.NetCommunicator;
  *  @bug This shouldn't really depend on ConfigStreamTokenizer; we should
  *       tweak this IO setup to be more generic if at all possible.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class NetworkModule
