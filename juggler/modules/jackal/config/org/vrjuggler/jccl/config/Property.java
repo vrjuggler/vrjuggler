@@ -147,6 +147,7 @@ public class Property {
             if (i < desc.getValueLabelsSize())
             {
                 ch.setName (desc.getValueLabel(i));
+            }
             else
             {
                 ch.setName (desc.getName() + " " + i);
