@@ -51,7 +51,7 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
-
+#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
 
 // Get the system factory we need
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_Linux) || defined(VPR_OS_AIX) ||   \
@@ -136,36 +136,34 @@ void Kernel::controlLoop(void* nullParam)
    }
    mControlThread = (vpr::Thread*) vpr::Thread::self();
 
-   //jccl::TimeStamp::initialize();
    // Do any initial configuration
    initConfig();
-
-   // setup performance buffer
-   mPerfBuffer = environmentManager->getPerformanceMonitor()->getPerfDataBuffer ("Kernel Loop", 500, 8);
 
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
+       jcclTIMESTAMP (jcclPERF_ALL, "kernel/startframe");
+
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
-            mPerfBuffer->set (0);
+            jcclTIMESTAMP (jcclPERF_ALL, "kernel/app/preFrame()");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
-            mPerfBuffer->set (1);
+            jcclTIMESTAMP (jcclPERF_ALL, "kernel/trigger Draw");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-            mPerfBuffer->set (2);
+            jcclTIMESTAMP (jcclPERF_ALL, "kernel/app/intraFrame()");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
-            mPerfBuffer->set (3);
+            jcclTIMESTAMP (jcclPERF_ALL, "kernel/wait for draw threads");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
-            mPerfBuffer->set (4);
+           jcclTIMESTAMP (jcclPERF_ALL, "kernel/app/postFrame");
       }
       else
       {
@@ -177,15 +175,14 @@ void Kernel::controlLoop(void* nullParam)
       // --- Stop for reconfiguration -- //
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
       checkSignalButtons();      // Check for any pending control requests
-
-      mPerfBuffer->set(5);
+       jcclTIMESTAMP (jcclPERF_ALL, "kernel/checkForReconfig");
 
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
-         mPerfBuffer->set(6);
+         jcclTIMESTAMP (jcclPERF_ALL, "kernel/input/updateAllData()");
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
-         mPerfBuffer->set(7);
+         jcclTIMESTAMP (jcclPERF_ALL, "kernel/updateFrameData");
    }
 
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
@@ -595,7 +592,6 @@ Kernel::Kernel()
    mDisplayManager = NULL;
 
    environmentManager = NULL;
-   mPerfBuffer = NULL;
 
    //mInitialChunkDB = NULL;
    //mChunkDB = NULL;
