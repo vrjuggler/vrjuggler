@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <Utils/Socket/vjSocketImpWinSock.h>
@@ -114,6 +115,177 @@ vjSocketImpWinSock::close (void) {
     }
 
     return retval;
+}
+
+// ----------------------------------------------------------------------------
+// Bind this socket to the address in the host address member variable.
+// ----------------------------------------------------------------------------
+bool
+vjSocketImpWinSock::bind () {
+    bool retval;
+    int status;
+
+    // Bind the socket to the address in m_addr.
+    status = ::bind(m_sockfd, (struct sockaddr*) &m_addr.m_addr,
+                    m_addr.size());
+
+    // If that fails, print an error and return error status.
+    if ( status == -1 ) {
+        fprintf(stderr,
+                "[vjSocketImpWinSock] Cannot bind socket to address: %s\n",
+                strerror(errno));
+        retval = false;
+    }
+    // Otherwise, return success.
+    else {
+        retval = true;
+    }
+
+    return retval;
+}
+
+// ----------------------------------------------------------------------------
+// Connect the socket on the client side to the server side.  For a datagram
+// socket, this makes the address given to the constructor the default
+// destination for all packets.  For a stream socket, this has the effect of
+// establishing a connection with the destination.
+// ----------------------------------------------------------------------------
+bool
+vjSocketImpWinSock::connect () {
+    bool retval;
+    int status;
+
+    // Attempt to connect to the address in m_addr.
+    status = ::connect(m_sockfd, (struct sockaddr*) &m_addr.m_addr,
+                       m_addr.size());
+
+    // If connect(2) failed, print an error message explaining why and return
+    // error status.
+    if ( status == -1 ) {
+        fprintf(stderr, "[vjSocketImpWinSock] Error connecting to %s: %s\n",
+                m_name.c_str(), strerror(errno));
+        retval = false;
+    }
+    // Otherwise, return success.
+    else {
+        retval = true;
+    }
+
+    return retval;
+}
+
+// ----------------------------------------------------------------------------
+// Receive the specified number of bytes from the remote site to which the
+// local side is connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
+    return ::recv(m_sockfd, buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Receive the specified number of bytes from the remote site to which the
+// local side is connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::recv (unsigned char* buffer, const size_t length,
+                          const int flags)
+{
+    return recv((void*) buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Receive the specified number of bytes from the remote site to which the
+// local side is connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::recv (char* buffer, const size_t length, const int flags) {
+    return recv((void*) buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Receive the specified number of bytes from the remote site to which the
+// local side is connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::recv (std::vector<char>& buffer, const size_t length,
+                          const int flags)
+{
+    ssize_t bytes;
+    char* temp_buf;
+
+    temp_buf = (char*) malloc(length);
+    bytes    = recv(temp_buf, length, flags);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        for ( size_t i = 0; i < bytes; i++ ) {
+            buffer[i] = temp_buf[i];
+        }
+    }
+
+    free(temp_buf);
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Send the specified number of bytes contained in the given buffer from the
+// local side to the remote site to which we are connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::send (const void* buffer, const size_t length,
+                          const int flags)
+{
+    return ::send(m_sockfd, buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Send the specified number of bytes contained in the given buffer from the
+// local side to the remote site to which we are connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::send (const unsigned char* buffer, const size_t length,
+                          const int flags)
+{
+    return send((void*) buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Send the specified number of bytes contained in the given buffer from the
+// local side to the remote site to which we are connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::send (const char* buffer, const size_t length,
+                          const int flags)
+{
+    return send((void*) buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Send the specified number of bytes contained in the given buffer from the
+// local side to the remote site to which we are connected.
+// ----------------------------------------------------------------------------
+ssize_t
+vjSocketImpWinSock::send (const std::vector<char>& buffer, const size_t length,
+                          const int flags)
+{
+    ssize_t bytes;
+    char* temp_buf;
+
+    temp_buf = (char*) malloc(length);
+
+    // Copy the contents of buffer into temp_buf.
+    for ( size_t i = 0; i < length; i++ ) {
+        temp_buf[i] = buffer[i];
+    }
+
+    // Write temp_buf to the file handle.
+    bytes = send(temp_buf, length, flags);
+
+    free(temp_buf);
+
+    return bytes;
 }
 
 // ============================================================================
