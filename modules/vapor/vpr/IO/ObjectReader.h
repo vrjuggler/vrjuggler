@@ -43,66 +43,72 @@
 #define _VPR_OBJECT_READER_H
 
 #include <vpr/vprConfig.h>
+
 #include <vpr/Util/AttributeMapBase.h>
-
-#include <vector>
-
-#include <boost/static_assert.hpp>
-
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
 
 namespace vpr
 {
 
-/** Interface used to read object data to a stream.
-*
-*/
+/** Interface used to read object data to a stream. */
 class ObjectReader : public AttributeMapBase
 {
-public:
+protected:
    ObjectReader()
    {;}
 
+   ObjectReader(const ObjectReader& o)
+      : AttributeMapBase(o)
+   {;}
+
+public:
    virtual ~ObjectReader()
    {;}
 
-   /** @name Tag and attribute handling
-   * ObjectReader and ObjectWriter support an interface that allows for using tags and attributes
-   * in the written output data.  This allows support for formats such as XML where there is
-   * a logical grouping of the data.
-   *
-   * Tags are similar to the XML concept of elements.  They are used to deliniate a hierarchical group
-   * in the structure of the data.  Attributes are similar to XML attributes in that they are
-   * properties of the most recently started tag.
-   *
-   * The structure looks something like (based on XML):
-   *
-   * <tag1>
-   *   <tag2 attrib1="XXX">
-   *   </tag2>
-   * </tag1>
-   */
+   /** @name Tag and attribute handling.
+    * ObjectReader and ObjectWriter support an interface that allows for using
+    * tags and attributes in the written output data.  This allows support
+    * for formats such as XML where there is a logical grouping of the data.
+    *
+    * Tags are similar to the XML concept of elements.  They are used to
+    * deliniate a hierarchical group in the structure of the data.  Attributes
+    * are similar to XML attributes in that they are properties of the most
+    * recently started tag.
+    *
+    * The structure looks something like (based on XML):
+    *
+    * <tag1>
+    *   <tag2 attrib1="XXX">
+    *   </tag2>
+    * </tag1>
+    */
    //@{
-   /** Starts a new section/element of name tagName.
-   */
+   /** Starts a new section/element of name tagName. */
    virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
 
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag() = 0;
 
-   /** Starts an attribute of the name attributeName */
+   /** Starts an attribute of the name attributeName. */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName) = 0;
 
-   /** Ends the most recently named attribute */
+   /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute() = 0;
    //@}
 
+   /**
+    * Reset the reading to the initial reading state.
+    * @post The reader can be reused and will function as if it were just
+    *       initialized.
+    */
    virtual void resetReading() = 0;
 
-   /** The following methods allow users to push/pop that active state of reading.
-   * This can be used to move back to previous reading states if needed.
-   */
+   /**
+    * The following methods allow users to push/pop that active state of
+    * reading.  This can be used to move back to previous reading states if
+    * needed.
+    */
    virtual void pushState() = 0;
    virtual void popState() = 0;
 
@@ -132,10 +138,6 @@ public:
    { str = this->readString(); }
    virtual void readBool(bool& val)
    { val = this->readBool(); }
-
-   /** Reset the reading to the initial reading state.
-   * @post The reader can be reused and will function as if it were just initialized.
-   */
 };
 
 } // namespace vpr
