@@ -71,51 +71,52 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
    PendingChunk pending;
    pending.mType = PendingChunk::ADD;
 
+   // Begin Machine Specific Code
+      // Get Local Host Name
+   vpr::InetAddr local_addr;
+   vpr::InetAddr::getLocalHost(local_addr);
+   std::string host_name = local_addr.getHostname();
+   if ( host_name.find('.') != std::string::npos )
+   {
+      host_name = host_name.substr(0, host_name.find('.'));
+   }
+   if ( host_name.find(':') != std::string::npos )
+   {
+      host_name = host_name.substr(0, host_name.find('.'));
+   }
+   // End Machine Specific Code
+   
    for ( std::vector<ConfigChunkPtr>::iterator i = db->vec().begin();
          i != db->vec().end();
          ++i )
    {
       pending.mChunk = (*i);
       mPendingConfig.push_back(pending);
+
+      // Begin Machine Specific Code
       if ( (*i)->getDescToken() == std::string("cluster_machine") )
       {
-         // Get Local Host Name
-         vpr::InetAddr local_addr;
-         vpr::InetAddr::getLocalHost(local_addr);
-         std::string host_name = local_addr.getHostname();
-         if ( host_name.find('.') != std::string::npos )
-         {
-            host_name = host_name.substr(0, host_name.find('.'));
-         }
-         if ( host_name.find(':') != std::string::npos )
-         {
-            host_name = host_name.substr(0, host_name.find('.'));
-         }
          if ( (*i)->getProperty<std::string>("host_name") == host_name )
          {
             // NOTE: Add all machine dependent ConfigChunkPtr's here
             vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System Chunk must have exactly 1 display_system chunk");
-            std::cout << " Added system display chunk for this machine: " << (*i)->getProperty<std::string>("host_name") << std::endl;
-            //vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CRITICAL_LVL)
-            //  << clrOutNORM(/*clrCYAN*/clrBLUE, "[RemoteInputManager]")
-            //   << clrOutNORM(clrBLUE/*MAGENTA*/, " Added system display chunk for this machine" ) << std::endl
-            //  << vprDEBUG_FLUSH;
-            PendingChunk pending;
-            pending.mType = PendingChunk::ADD;
-            pending.mChunk = (*i)->getProperty<jccl::ConfigChunkPtr>("display_system");
-            mPendingConfig.push_back(pending);
             
-
-            for( int j = 0; j < (*i)->getNum("display_windows"); j++)
-    	    {
-	            PendingChunk pending;
-	            pending.mType = PendingChunk::ADD;
-	                // NEED getEmbedded since the name differs.
-	            pending.mChunk = (*i)->getProperty<jccl::ConfigChunkPtr>("display_windows", j);
-	            mPendingConfig.push_back(pending);
+            std::vector<jccl::ConfigChunkPtr> machine_specific_chunks = (*i)->getEmbeddedChunks();
+            
+            for (std::vector<jccl::ConfigChunkPtr>::iterator i= machine_specific_chunks.begin();
+                 i != machine_specific_chunks.end();
+                 i++)
+            {
+               PendingChunk pending;
+               pending.mType = PendingChunk::ADD;
+               pending.mChunk = (*i);
+               mPendingConfig.push_back(pending);
+               vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN) 
+                  << "[ConfigManager] Adding Machine specific ConfigChunk: "
+                  << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }
          }
-      } // End Add Specific Cluster Info
+      } // End Machine Specific Code
    }
 
    unlockPending();
