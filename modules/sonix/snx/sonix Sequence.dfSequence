@@ -1,0 +1,120 @@
+package idxpc9cngob3p6cngorogs;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node19:oiref><oihard>
+@__modelType reference 
+*/
+class reference20 {
+}/**
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node21:oiref><oihard>
+@__modelType reference 
+*/
+class reference22 {
+}/**
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node26:oiref><oihard>
+@__modelType reference 
+*/
+class reference27 {
+}}/**
+@__tags
+@shapeType SequenceDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.node:oiref>=239,123,14,40,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node21.node:oiref>=412,133,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.link:oiref>=253,133,412,133:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node26:oiref>=523,30,118,270,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node:oiref>=30,30,90,270,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19:oiref>=195,30,103,270,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node.link:oiref>=82,123,239,123:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node21:oiref>=360,30,118,270,1:oigroup>
+*/
+class __positions {
+}/**
+@shapeType Object
+@__modelType node
+@name Juggler
+@stereotype actor 
+*/
+class node {
+/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node19:oiref><oihard>
+@sendingInstant 123
+@processingDuration 40
+@sequenceNumber 1
+@controlFlowType synchronous 
+*/
+class link {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node19:oiref><oihard> 
+*/
+class link23 {
+}}/**
+@shapeType Object
+@__modelType node
+@name AudioJuggler 
+*/
+class node19 {
+/**
+@shapeType Activation
+@__modelType node
+@name Activation1
+@activationMessage <oiref:design#Class#idxpc9cngob3p6cngorogs.node.link:oiref> 
+*/
+class node {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node21:oiref><oihard>
+@sendingInstant 133
+@processingDuration 20
+@sequenceNumber 1.1
+@controlFlowType synchronous
+*/
+class link {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#idxpc9cngob3p6cngorogs.node21:oiref><oihard> 
+*/
+class link24 {
+}}/**
+@shapeType Object
+@__modelType node
+@name Sound API Impl 
+*/
+class node21 {
+/**
+@shapeType Activation
+@__modelType node
+@name Activation2
+@activationMessage <oiref:design#Class#idxpc9cngob3p6cngorogs.node19.link:oiref> 
+*/
+class node {
+}}/**
+@shapeType Object
+@__modelType node
+@name ajSoundFactory 
+*/
+class node26 {
+}
