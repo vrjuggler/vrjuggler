@@ -187,8 +187,7 @@ void ThreadSGI::startThread(void* null_param)
  * Makes the calling thread wait for the termination of the specified
  * thread.
  */
-int
-ThreadSGI::join (void** arg)
+int ThreadSGI::join(void** arg)
 {
     int status, retval;
     pid_t pid;
@@ -216,4 +215,14 @@ ThreadSGI::join (void** arg)
     return retval;
 }
 
-}; // End of vpr namespace
+std::ostream& ThreadSGI::outStream(std::ostream& out)
+{
+   out.setf(std::ios::right);
+   out << std::setw(7) << std::setfill('0') << mThreadPID << "/";
+   out.unsetf(std::ios::right);
+   BaseThread::outStream(out);
+   out << std::setfill(' ');
+   return out;
+}
+
+} // End of vpr namespace
