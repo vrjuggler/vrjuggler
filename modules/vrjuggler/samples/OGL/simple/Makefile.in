@@ -41,9 +41,9 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: ConfigApp MPApp SimpleApp contextApp simpleInput WallTest
+all: ConfigApp MPApp SimpleApp contextApp simpleInput WallTest collideApp
 
-ConfigApp MPApp SimpleApp contextApp simpleInput WallTest::
+ConfigApp MPApp SimpleApp contextApp simpleInput WallTest collideApp::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
@@ -56,3 +56,4 @@ clean:
 	-cd contextApp && $(MAKE) clean
 	-cd simpleInput && $(MAKE) clean
 	-cd WallTest && $(MAKE) clean
+	-cd collideApp && $(MAKE) clean
