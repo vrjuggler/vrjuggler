@@ -39,7 +39,7 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.*;
 import VjControl.Core;
-import VjComponents.UI.Widgets.*;
+import VjComponents.UI.Widgets.ChildFrame;
 import VjComponents.PerfMonitor.GenericGraphPanel;
 
 public class GenericGraphFrame extends JFrame 
