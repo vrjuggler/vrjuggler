@@ -110,17 +110,6 @@ public:
     isBigEndian (void) {
         return (getEndian() == 1);
     }
-
-    // ----- Host to network byte order conversions ---- //
-    static vpr::Int16 ntohs(vpr::Int32 conversion)
-    { return 0; }
-    static vpr::Int32 ntohl(vpr::Int32 conversion)
-    { return 0; }
-    static vpr::Int16 htons(vpr::Int32 conversion)
-    { return 0; }
-    static vpr::Int32 htonl(vpr::Int32 conversion)
-    { return 0; }
-
 };
 
 }; // End of vpr namespace

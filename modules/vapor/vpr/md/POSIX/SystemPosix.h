@@ -45,6 +45,7 @@
 
 #include <stdlib.h>
 #include <sys/time.h>
+#include <sys/param.h>
 
 #include <SystemBase.h>
 
@@ -55,6 +56,27 @@ public:
     inline static int
     gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
         return ::gettimeofday(tp, tzp);
+    }
+
+    // ----- Host to network byte order conversions ---- //
+    inline static vpr::Uint16
+    Ntohs (vpr::Uint32 conversion) {
+        return ntohs(conversion);
+    }
+
+    inline static vpr::Uint32
+    Ntohl (vpr::Uint32 conversion) {
+        return ntohl(conversion);
+    }
+
+    inline static vpr::Uint16
+    Htons (vpr::Uint16 conversion) {
+        return htons(conversion);
+    }
+
+    inline static vpr::Uint32
+    Htonl (vpr::Uint32 conversion) {
+        return htonl(conversion);
     }
 };
 
