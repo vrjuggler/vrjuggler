@@ -32,24 +32,23 @@
 #include <vpr/Util/Debug.h>
 
 #include "Debug.h"
-#include "MethodGuard.h"
+#include "InterpreterGuard.h"
 
 
 namespace PyJuggler
 {
 
-// XXX: This really should be in MethodGuard.cpp.
-vpr::TSObjectProxy<MethodGuard::State> MethodGuard::mState;
+vpr::TSObjectProxy<InterpreterGuard::State> InterpreterGuard::mState;
 
-MethodGuard::State::State() : gilLocked(false), pyState(NULL)
+InterpreterGuard::State::State() : gilLocked(false), pyState(NULL)
 {
    vprDEBUG(pyjDBG_CXX, vprDBG_HVERB_LVL)
-      << "MethodGuard::State constructor -- this->pyState: "
+      << "InterpreterGuard::State constructor -- this->pyState: "
       << std::hex << this->pyState << std::dec << std::endl
       << vprDEBUG_FLUSH;
 }
 
-MethodGuard::State::~State()
+InterpreterGuard::State::~State()
 {
    if ( NULL != pyState )
    {
@@ -62,7 +61,7 @@ MethodGuard::State::~State()
    }
 }
 
-MethodGuard::MethodGuard() : mMyLock(false)
+InterpreterGuard::InterpreterGuard() : mMyLock(false)
 {
    if ( NULL == mState->pyState )
    {
@@ -91,7 +90,7 @@ MethodGuard::MethodGuard() : mMyLock(false)
    }
 }
 
-MethodGuard::~MethodGuard()
+InterpreterGuard::~InterpreterGuard()
 {
    if ( mMyLock && mState->gilLocked )
    {

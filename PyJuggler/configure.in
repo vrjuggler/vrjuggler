@@ -197,6 +197,7 @@ else
    BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_LIBDIR -lboost_python"
 fi
 
+VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
 VRJUGGLER_PATH([1.1.135], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
@@ -220,4 +221,5 @@ AC_SUBST(PYSTE)
 AC_SUBST(BOOST_PYTHON_LDFLAGS)
 
 AC_OUTPUT(Makefile)
+AC_OUTPUT(pyjutil/Makefile)
 AC_OUTPUT(src/Makefile)

@@ -25,8 +25,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _PYJUGGLER_METHOD_GUARD_H_
-#define _PYJUGGLER_METHOD_GUARD_H_
+#ifndef _PYJUGGLER_INTERPRETER_GUARD_H_
+#define _PYJUGGLER_INTERPRETER_GUARD_H_
 
 #include <Python.h>
 
@@ -39,25 +39,22 @@ namespace PyJuggler
 
 /**
  * Helper class for dealing with the ins and outs of multi-threaded C++ code
- * calling into Python code.  This class is designed for a very specific
- * purpose: an instance of PyJuggler::MethodGuard::State should exist as a
- * member variable of a class with virtual methods that pass through calls to
- * corresponding Python methods.  For each method where
- * boost::python::call_method<T>() may be invoked by a thread other than the
- * thread where the Python interpreter was started, an instance of
- * PyJuggler::MethodGuard should be created on the stack before
- * boost::python::call_method<T>() is invoked.  For those classes where it is
- * possible for recursive calls to Python code to be made from the same thread,
- * this class handles the locking and unlocking.
+ * calling into the Python interpreter.  This class is designed for a very
+ * specific purpose: an instance of PyJuggler::InterpreterGuard should exist
+ * on the stack prior to any calls into the Python interpreter via Python/C
+ * (or Boost.Python) when the calling thread is different from the thread
+ * that started the interpreter.  Recursive locks (of a fashion) are allowed
+ * by this class.  More specifically, it will not allow the same thread to
+ * acquire the Global Interpreter Lock twice and in so doing prevents
+ * deadlock.
  */
-class MethodGuard
+class InterpreterGuard
 {
 private:
    /**
     * One instance of this class should exist for each thread that may call
-    * through to a Python method.  It is recommended that some sort of
-    * thread-specific data mechanism be used to manage which instance is
-    * given to the PyJuggler::MethodGuard constructor for a given thread.
+    * through to the Python interpreter.  A thread-specific data mechanism is
+    * needed to manage which instance is used for a given thread.
     */
    struct State
    {
@@ -74,13 +71,13 @@ public:
     * Acquires the Python Global Interpreter Lock (GIL) for the invoking
     * thread.  If that thread already holds the GIL, then no action is taken.
     */
-   MethodGuard();
+   InterpreterGuard();
 
    /**
     * Releases the Python Global Interpreter Lock (GIL) for the invoking thread
     * iff that thread holds the GIL and the constructor acquired the GIL.
     */
-   ~MethodGuard();
+   ~InterpreterGuard();
 
 private:
    /**
@@ -91,12 +88,12 @@ private:
    static vpr::TSObjectProxy<State> mState;
 
    /** Prevent copying. */
-   MethodGuard(const MethodGuard& o)
+   InterpreterGuard(const InterpreterGuard& o)
    {
       /* Do nothing. */ ;
    }
 
-   void operator=(const MethodGuard& o)
+   void operator=(const InterpreterGuard& o)
    {
       /* Do nothing. */ ;
    }
@@ -107,4 +104,4 @@ private:
 } // End of PyJuggler namespace
 
 
-#endif /* _PYJUGGLER_METHOD_GUARD_H_ */
+#endif /* _PYJUGGLER_INTERPRETER_GUARD_H_ */

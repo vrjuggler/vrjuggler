@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-18-2003 patrickh    Moved C++ utility code into the new pyjutil library
+                        directory.  As part of this, PyJuggler::MethodGuard
+                        has been renamed to PyJuggler::InterpreterGuard.
+                        NEW VERSION: 0.4.0
 Apr-16-2003 patrickh    Improved the stability of code based on PyJuggler.vrj
                         by synchronizing multi-threaded access to the Python 
                         interpreter.

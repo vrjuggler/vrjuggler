@@ -32,8 +32,9 @@ top_srcdir=	@top_srcdir@
 
 CXX=		@CXX@
 CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
+		-I$(top_srcdir) -I$(srcdir)
+INCLUDES=	$(shell vrjuggler-config --includes) -I$(top_srcdir)	\
 		-I$(srcdir)
-INCLUDES=	$(shell vrjuggler-config --includes) -I$(srcdir)
 PYTHON=		@PYTHON@
 PYSTE=		$(PYTHON) @PYSTE@ $(INCLUDES)
 
@@ -61,7 +62,7 @@ PYSTE_FILES=	vpr.pyste	\
 		vrj.pyste
 
 SRCS=		$(PYSTE_FILES:.pyste=.cpp)
-OBJS=		$(SRCS:.cpp=.$(OBJEXT)) MethodGuard.$(OBJEXT)
+OBJS=		$(SRCS:.cpp=.$(OBJEXT))
 MODS=		$(PYSTE_FILES:.pyste=.$(DLLEXT)) gmtl.$(DLLEXT)
 
 GMTL_SRCS=	\
@@ -112,7 +113,9 @@ GMTL_OBJS=	$(GMTL_SRCS:.cpp=.$(OBJEXT))
 VPR_OBJS=	vpr.$(OBJEXT)
 JCCL_OBJS=	jccl.$(OBJEXT)
 GADGET_OBJS=	gadget.$(OBJEXT)
-VRJ_OBJS=	vrj.$(OBJEXT) MethodGuard.$(OBJEXT)
+VRJ_OBJS=	vrj.$(OBJEXT)
+
+PYJUTIL_LIB=	-L$(topdir)/lib -lpyjutil
 
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
@@ -164,8 +167,9 @@ gadget.$(DLLEXT): $(GADGET_OBJS)
           $(PYTHON_LDFLAGS) $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
 
 vrj.$(DLLEXT): $(VRJ_OBJS)
-	$(CXX) -shared -o $@ $(VRJ_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
-          $(PYTHON_LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
+	$(CXX) -shared -o $@ $(VRJ_OBJS) $(PYJUTIL_LIB)			\
+          $(BOOST_PYTHON_LDFLAGS) $(PYTHON_LDFLAGS) $(VJ_LIBS)		\
+          $(VJ_EXTRA_LIBS)
 
 gmtl.$(DLLEXT): $(GMTL_OBJS)
 	$(CXX) -shared -o $@ $(GMTL_OBJS) $(BOOST_PYTHON_LDFLAGS)	\

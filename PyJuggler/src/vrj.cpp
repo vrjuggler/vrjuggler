@@ -35,8 +35,8 @@
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlApp.h>
-#include "MethodGuard.h"
-#include "Debug.h"
+#include <pyjutil/InterpreterGuard.h>
+#include <pyjutil/Debug.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -117,7 +117,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::init()\n",
                                  "vrj_App_Wrapper::init() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "init");
     }
 
@@ -129,7 +129,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::apiInit()\n",
                                  "vrj_App_Wrapper::apiInit() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "apiInit");
     }
 
@@ -141,7 +141,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::exit()\n",
                                  "vrj_App_Wrapper::exit() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "exit");
     }
 
@@ -153,7 +153,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::preFrame()\n",
                                  "vrj_App_Wrapper::preFrame() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "preFrame");
     }
 
@@ -165,7 +165,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::intraFrame()\n",
                                  "vrj_App_Wrapper::intraFrame() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "intraFrame");
     }
 
@@ -177,7 +177,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::postFrame()\n",
                                  "vrj_App_Wrapper::postFrame() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "postFrame");
     }
 
@@ -189,7 +189,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::reset()\n",
                                  "vrj_App_Wrapper::reset() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "reset");
     }
 
@@ -201,7 +201,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::focusChanged()\n",
                                  "vrj_App_Wrapper::focusChanged() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "focusChanged");
     }
 
@@ -213,7 +213,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::getDrawScaleFactor()\n",
                                  "vrj_App_Wrapper::getDrawScaleFactor() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< float >(self, "getDrawScaleFactor");
     }
 
@@ -225,7 +225,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configCanHandle()\n",
                                  "vrj_App_Wrapper::configCanHandle() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "configCanHandle", p0);
     }
 
@@ -237,7 +237,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::depSatisfied()\n",
                                  "vrj_App_Wrapper::depSatisfied() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "depSatisfied");
     }
 
@@ -249,7 +249,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configAdd()\n",
                                  "vrj_App_Wrapper::configAdd() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "configAdd", p0);
     }
 
@@ -257,7 +257,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configRemove()\n",
                                  "vrj_App_Wrapper::configRemove() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "configRemove", p0);
     }
 
@@ -265,7 +265,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::getDrawManager()\n",
                                  "vrj_App_Wrapper::getDrawManager() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< vrj::DrawManager * >(self, "getDrawManager");
     }
 
@@ -273,7 +273,7 @@ struct vrj_App_Wrapper: vrj::App
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::configProcessPending()\n",
                                  "vrj_App_Wrapper::configProcessPending() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< int >(self, "configProcessPending");
     }
 
@@ -303,7 +303,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::draw()\n",
                                  "vrj_GlApp_Wrapper::draw() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "draw");
     }
 
@@ -311,7 +311,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::contextInit()\n",
                                  "vrj_GlApp_Wrapper::contextInit() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "contextInit");
     }
 
@@ -323,7 +323,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::contextClose()\n",
                                  "vrj_GlApp_Wrapper::contextClose() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "contextClose");
     }
 
@@ -335,7 +335,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::contextPreDraw()\n",
                                  "vrj_GlApp_Wrapper::contextPreDraw() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "contextPreDraw");
     }
 
@@ -347,7 +347,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::contextPostDraw()\n",
                                  "vrj_GlApp_Wrapper::contextPostDraw() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "contextPostDraw");
     }
 
@@ -359,7 +359,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::bufferPreDraw()\n",
                                  "vrj_GlApp_Wrapper::bufferPreDraw() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "bufferPreDraw");
     }
 
@@ -371,7 +371,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::pipePreDraw()\n",
                                  "vrj_GlApp_Wrapper::pipePreDraw() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "pipePreDraw");
     }
 
@@ -383,7 +383,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::init()\n",
                                  "vrj_GlApp_Wrapper::init() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "init");
     }
 
@@ -395,7 +395,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::apiInit()\n",
                                  "vrj_GlApp_Wrapper::apiInit() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "apiInit");
     }
 
@@ -407,7 +407,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::exit()\n",
                                  "vrj_GlApp_Wrapper::exit() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "exit");
     }
 
@@ -419,7 +419,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::preFrame()\n",
                                  "vrj_GlApp_Wrapper::preFrame() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "preFrame");
     }
 
@@ -431,7 +431,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::intraFrame()\n",
                                  "vrj_GlApp_Wrapper::intraFrame() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "intraFrame");
     }
 
@@ -443,7 +443,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::postFrame()\n",
                                  "vrj_GlApp_Wrapper::postFrame() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "postFrame");
     }
 
@@ -455,7 +455,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::reset()\n",
                                  "vrj_GlApp_Wrapper::reset() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "reset");
     }
 
@@ -467,7 +467,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::focusChanged()\n",
                                  "vrj_GlApp_Wrapper::focusChanged() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         call_method< void >(self, "focusChanged");
     }
 
@@ -479,7 +479,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::getDrawScaleFactor()\n",
                                  "vrj_GlApp_Wrapper::getDrawScaleFactor() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< float >(self, "getDrawScaleFactor");
     }
 
@@ -491,7 +491,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::configCanHandle()\n",
                                  "vrj_GlApp_Wrapper::configCanHandle() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "configCanHandle", p0);
     }
 
@@ -503,7 +503,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::depSatisfied()\n",
                                  "vrj_GlApp_Wrapper::depSatisfied() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "depSatisfied");
     }
 
@@ -515,7 +515,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::configAdd()\n",
                                  "vrj_GlApp_Wrapper::configAdd() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "configAdd", p0);
     }
 
@@ -523,7 +523,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::configRemove()\n",
                                  "vrj_GlApp_Wrapper::configRemove() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< bool >(self, "configRemove", p0);
     }
 
@@ -531,7 +531,7 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::configProcessPending()\n",
                                  "vrj_GlApp_Wrapper::configProcessPending() done.\n");
-        PyJuggler::MethodGuard guard;
+        PyJuggler::InterpreterGuard guard;
         return call_method< int >(self, "configProcessPending");
     }
 
