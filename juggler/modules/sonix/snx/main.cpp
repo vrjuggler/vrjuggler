@@ -7,6 +7,9 @@
 
 int main( int argc, char* argv[] )
 {
+   char bok[] = "../../../Audio/wav/sample.wav";
+   argv[1] = bok;
+   
    std::cout<<"exists: "<<CFileIO::fileExists( argv[1] ) << "\n" << std::flush;
 
    /*
