@@ -48,7 +48,7 @@ chunk apiPerformer "Performer API" "This is information for configuring the Perf
   end
 chunk PosProxy "Position Proxy" "Used to access a single positional input source"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "device" vj_enumeration { "Flock" "SimPosition" "DummyPosition" "vjSimRelativePosition" } "The device the proxy points to"
+  device Chunk 1 "device" vj_enumeration { "Flock" "SimPosition" "DummyPosition" "motionstar" "vjSimRelativePosition" } "The device the proxy points to"
   unit Int 1 "unit" "The unit in the device this proxy attaches to"
   etrans Bool 1 "Enable Transformation" "If true, the Proxy Transformation is applied to data"
   translate Float 3 "Translation" vj_valuelabels { "Trans X" "Trans Y" "Trans Z" } "Proxy translation (in the reciever's coord system)"
@@ -216,6 +216,16 @@ chunk vjcontrol "VjControl Configuration" "Configuration information for the VjC
 chunk PerfData "Performance Data Display" "Information for displaying data from perfbuffers with a matching name"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   labels String -1 "Labels" "Labels for Perf Buffer phases"
+  end
+chunk motionstar "Motion Star" "Ascension Wireless Motion Tracker"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  format Int 1 "Format" ""
+  bformat Int 1 "Bird Format" ""
+  num Int 1 "Number of Birds" ""
+  brate Float 1 "Bird Rate" ""
+  mode Int 1 "Run Mode" vj_enumeration { "Run Continuous=0" "Sample Individually=1" } ""
+  translate Float 3 "Translation" ""
+  rotate Float 3 "Rotation" ""
   end
 chunk SimRelativePosition "SimRelativePosition" "A positional device simulator for one device relative to another."
   Name String 1 "Name" "Unique name of an instance of this chunk type"

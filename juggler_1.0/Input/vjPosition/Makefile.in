@@ -32,7 +32,9 @@ VJPOS_SRCS	:= logiclass.cpp	\
                    vjDummyPosition.cpp	\
                    aFlock.cpp		\
                    vjFlock.cpp		\
-                   vjPosition.cpp
+                   vjPosition.cpp       \
+		   vjMotionStar.cpp     \
+		   aMotionStar.cpp
                   
 
 VJPOS_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJPOS_SRCS:.cpp=.o}}
