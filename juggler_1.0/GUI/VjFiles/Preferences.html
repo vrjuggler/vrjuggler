@@ -34,10 +34,12 @@ running on their respective platforms.
 Most of the differences between look-and-feels are cosmetic, but you
 may wish to experiment.  The Windows L&F appears to perform better than
 Java under W98/NT.  The Java L&F has been most extensively tested.
-
 <p>
+
 <li><h4>Default Host and Default Port</h4> - These are the default host name
-and port number that will appear in the Connections panel.
+and port number that will appear in the Connections panel.  See
+<a href="Dynamic.html">Dynamic Reconfiguration</a> for more information.
+<p>
 
 <li><h4>Preload ChunkDesc Files</h4> - Here you can specify one or more
 Chunk Description files that will be loaded automatically when vjcontrol
@@ -45,14 +47,13 @@ starts up.  The arguments are simply pathnames to files.  If the strings
 "$VJ_BASE_DIR" or "$HOME" are included in a path name, they will be replaced
 with the value of the $VJ_BASE_DIR environment variable or the user's
 home directory, respectively.
-
 <p>
 It is suggested that you include <tt>VJ_BASE_DIR/Data/chunksDesc</tt>, the
 main Chunk Description file.
-
 <p>
 You can override the automatic loading of files at startup by using the 
 -noautoload <a href="cmdline.html">command-line argument</a>.
+<p>
 
 <li><h4>Preload Configuration Files</h4> - This lets you specify one or more
 Configuration files to load at startup (The details are similar to the
@@ -63,6 +64,8 @@ option above).
 font to use for all of vjcontrol's windows.  Note that currently only a 
 small number of fonts are available (this is a limitation of JDK 1.1,
 and will be fixed at a later date).
+<p>
+
 
 </body>
 

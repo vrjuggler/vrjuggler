@@ -5,22 +5,23 @@
 <body bgcolor="#ffffcc">
 <h2><img src="juggler.gif"></img>Getting Started</h2>
 
-Welcome to VR Juggler VjControl 1.0!
-
+Welcome to VR Juggler vjcontrol!
 <p>
 <h3>Setup</h3>
-If you're reading this from the VjControl help menu, you've probably done
+If you're reading this from the vjcontrol help menu, you've probably done
 this already, but if not, these are the steps that need to be taken before
-using VjControl:
+using vjcontrol:
 
 <ol>
-<li>Set your <tt>VJ_BASE_DIR</tt> environment variable to the directory where VR Juggler is installed.
+<li>Set your <tt>$VJ_BASE_DIR</tt> environment variable to the directory where VR Juggler is installed.
 <li>Create a directory called <tt>.vjconfig</tt> in your home directory.
 This is where VjControl will store its own configuration information, and is a good general place to store all your Juggler-related configuration files.
 <li>You should add the directory <tt>${VJ_BASE_DIR}/bin</tt> to your <tt>$PATH</tt>.
 <li>Make sure that Java v1.2 is installed on your machine.  Make sure that the directory where the <tt>java</tt> executable resides is also in your <tt>$PATH</tt>.  (see below for instructions on using VjControl with jdk1.1).
-<li>If you have been provided with a <tt>vjcontrol.cfg</tt> file, copy it into
-the <tt>~/.vjconfig</tt> directory.
+<li>The Juggler distribution includes a number of sample config files
+(include a config file for vjcontrol itself) in the directory
+<TT>$VJ_BASE_DIR/Data/configFiles</TT>.  These files should be copied into 
+your <TT>~/.vjconfig</TT> directory.
 </ol>
 
 <h3>Starting VjControl</h3>
@@ -39,7 +40,7 @@ VR Juggler uses two types of files: <i>Config Files</i> and <i>ChunkDesc Files</
 one chunk will describe the setup of a display device while another will
 describe the setup for a keyboard or tracking system.  There will typically
 be several readymade config files in the <tt>$VJ_BASE_DIR/Data</tt> directory,
-with names like <tt>config.simulator</tt> or <tt>config.2wall</tt>.
+with names like <tt>simulator.config</tt> or <tt>C2_4wall.config</tt>.
 
 <li><i>ChunkDesc Files</i> define the different kinds of chunks (ie. what kind
 of information a Keyboard chunk should have, or a Display chunk).  The main
@@ -64,12 +65,14 @@ bit of work.
 
 <p>First, you need to download and install the Java Foundation Classes (Swing 
 classes) for JDK 1.1.  Pay particular attention to the location of the
-file "swingall.jar".
+file <TT>swingall.jar</TT>.
 
-<p>The $VJ_BASE_DIR/bin directory contains script called vjcontrol.jdk11
+<p>The $VJ_BASE_DIR/bin directory contains script called vjcontrol1.1
 which will start up vjcontrol on systems with JDK1.1 and Swing.  You may
 need to edit the script file to make sure the paths used for classes.zip
-and swingall.jar are correct.
+and <TT>swingall.jar</TT> are correct.  In particular, the script expects 
+a copy of the <TT>swingall.jar</TT> file to be copied or linked in the 
+<TT>$VJ_BASE_DIR/bin</TT> directory.
 
 </html>
 

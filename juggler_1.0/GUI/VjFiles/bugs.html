@@ -12,6 +12,11 @@ mantra until you believe.
 <br><li>File names of loaded chunkorgtrees are not stored correctly,
 resulting in weird defaults for the org tree save file requester.
 
+<br><li>When dynamically reconfiguring a Juggler app, do not remove the 
+EM Connect ConfigChunk representing the connection between vjcontrol and
+the app.  This will cause the app to freeze (vjConnect suicide bug).
+Instead, use the <TT>Disconnect</TT> button in the Connections panel.
+
 <br><li>Double-clicking on chunk names in the org tree panel can occasionally 
 cause a null pointer exception.  This appears to be a bug in JFC 1.1 mouse
 click handling, and can safely be ignored.
@@ -30,7 +35,7 @@ the font selected in preferences.
 changed don't adopt the new look and feel. (The help panel never changes look & feel).
 
 <br><li>Run-time performance monitoring with multiple graphing windows open
-can be quite CPU-intensive (Java too slow).
+can be quite CPU-intensive (Java-too-slow error).
 
 <br><li>The "Print" option in the Performance panel actually just writes a
 summary to the standard output stream.
