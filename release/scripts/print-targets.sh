@@ -4,6 +4,7 @@ cat <<EOF
 
 Build targets are:
     all             - Build everything.
+    all-abi         - Build everything using all supported ABIs.
     dbg             - Build a debugging, static copy of the library.
     ddso            - Build a debugging, dynamic shared object version of the
                       library.
@@ -30,6 +31,7 @@ Install targets are:
     install-all     - Install all versions of the library, all header files,
                       the Data directory, the configuration GUI and the test
                       code.
+    install-all-abi - Install every ABI possible on the target platform.
     install         - Install the library, all header files, the Data
                       directory, the configuration GUI and the test code.
     install-dbg     - Install the debugging, static version of the library.
