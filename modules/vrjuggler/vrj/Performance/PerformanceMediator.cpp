@@ -53,22 +53,22 @@ namespace fs = boost::filesystem;
 namespace vrj
 {
 
-PerformanceMediator::PerformanceMediator()
+   PerformanceMediator::PerformanceMediator()
    : mPerfIf(NULL)
-{
-   loadPerfPlugin();
-}
-
-PerformanceMediator::~PerformanceMediator()
-{
-   if ( NULL != mPerfIf && mPerfIf->isEnabled() )
    {
-      mPerfIf->disable();
-
-      delete mPerfIf;
-      mPerfIf = NULL;
+      loadPerfPlugin();
    }
-}
+
+   PerformanceMediator::~PerformanceMediator()
+   {
+      if ( NULL != mPerfIf && mPerfIf->isEnabled() )
+      {
+         mPerfIf->disable();
+
+         delete mPerfIf;
+         mPerfIf = NULL;
+      }
+   }
 
 /**
  * This struct implements a callable object (a functor, basically).  An
@@ -76,135 +76,135 @@ PerformanceMediator::~PerformanceMediator()
  * In vrj:PerformanceMediator::loadPerfPlugin(), instances are used to handle
  * dynamic loading of plug-ins via vpr::LibraryLoader.
  */
-struct Callable
-{
-   Callable(vrj::PerformanceMediator* mgr) : med(mgr)
+   struct Callable
    {
-   }
-
-   /**
-    * This will be invoked as a callback by methods of vpr::LibraryLoader.
-    *
-    * @param func A function pointer for the entry point in a dynamically
-    *             loaded plug-in.  This must be cast to the correct signature
-    *             before being invoked.
-    */
-   bool operator()(void* func)
-   {
-      vrj::PerfPlugin* (*init_func)(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr);
-
-      // Cast the entry point function to the correct signature so that we can
-      // call it.  All dynamically plug-ins must have an entry point function
-      // that takes no argument and returns a pointer to an implementation of
-      // the vrj::RemoteReconfig interface.
-      init_func = (vrj::PerfPlugin* (*)(vrj::PerformanceMediator*, jccl::ConfigManager*)) func;
-
-      jccl::ConfigManager* mgr = jccl::ConfigManager::instance();
-      
-      // Call the entry point function.
-      vrj::PerfPlugin* plugin = (*init_func)(med, mgr);
-
-      if ( NULL != plugin )
+      Callable(vrj::PerformanceMediator* mgr) : med(mgr)
       {
-         med->setPerfPlugin(plugin);
-         return true;
       }
-      else
+
+      /**
+       * This will be invoked as a callback by methods of vpr::LibraryLoader.
+       *
+       * @param func A function pointer for the entry point in a dynamically
+       *             loaded plug-in.  This must be cast to the correct signature
+       *             before being invoked.
+       */
+      bool operator()(void* func)
       {
-         return false;
+         vrj::PerfPlugin* (*init_func)(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr);
+
+         // Cast the entry point function to the correct signature so that we can
+         // call it.  All dynamically plug-ins must have an entry point function
+         // that takes no argument and returns a pointer to an implementation of
+         // the vrj::RemoteReconfig interface.
+         init_func = (vrj::PerfPlugin* (*)(vrj::PerformanceMediator*, jccl::ConfigManager*)) func;
+
+         jccl::ConfigManager* mgr = jccl::ConfigManager::instance();
+
+         // Call the entry point function.
+         vrj::PerfPlugin* plugin = (*init_func)(med, mgr);
+
+         if ( NULL != plugin )
+         {
+            med->setPerfPlugin(plugin);
+            return true;
+         }
+         else
+         {
+            return false;
+         }
       }
-   }
 
-   vrj::PerformanceMediator* med;
-};
+      vrj::PerformanceMediator* med;
+   };
 
-void PerformanceMediator::loadPerfPlugin()
-{
-   vprASSERT(NULL == mPerfIf && "PerformanceMediator interface object already instantiated.");
-
-   const std::string vj_base_dir("VJ_BASE_DIR");
-   std::string base_dir;
-
-   if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+   void PerformanceMediator::loadPerfPlugin()
    {
-      return;
-   }
+      vprASSERT(NULL == mPerfIf && "PerformanceMediator interface object already instantiated.");
+
+      const std::string vj_base_dir("VJ_BASE_DIR");
+      std::string base_dir;
+
+      if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+      {
+         return;
+      }
 
 #if defined(_ABIN32)
-   const std::string bit_suffix("32");
+      const std::string bit_suffix("32");
 #elif defined(_ABI64)
-   const std::string bit_suffix("64");
+      const std::string bit_suffix("64");
 #else
-   const std::string bit_suffix("");
+      const std::string bit_suffix("");
 #endif
 
-   std::vector<fs::path> search_path(1);
-   search_path[0] = fs::path(base_dir, fs::native) /
+      std::vector<fs::path> search_path(1);
+      search_path[0] = fs::path(base_dir, fs::native) /
                        (std::string("lib") + bit_suffix) /
                        std::string("vrjuggler") / std::string("plugins");
 
-   // In the long run, we may not want to hard-code the base name of the
-   // plug-in we load.  If we ever reach a point where we have multiple ways
-   // of implementing remote performance monitoring, we could have options
-   // for which plug-in to load.
-   const std::string perf_mon_dso("corba_perf_mon");
-   const std::string init_func("initPlugin");
-   Callable functor(this);
-   mPluginLoader.findAndInitDSO(perf_mon_dso, search_path, init_func, functor);
-}
-
-void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
-{
-   // If we already have a remote performance monitoring plug-in, discard it
-   // first.
-   if ( NULL != mPerfIf )
-   {
-      vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
-         << "[PerformanceMediator::setPerfPlugin()] "
-         << "Removing old remote performance monitoring plug-in\n"
-         << vprDEBUG_FLUSH;
-
-      if ( mPerfIf->isEnabled() )
-      {
-         mPerfIf->disable();
-      }
-
-      delete mPerfIf;
+      // In the long run, we may not want to hard-code the base name of the
+      // plug-in we load.  If we ever reach a point where we have multiple ways
+      // of implementing remote performance monitoring, we could have options
+      // for which plug-in to load.
+      const std::string perf_mon_dso("corba_perf_mon");
+      const std::string init_func("initPlugin");
+      Callable functor(this);
+      mPluginLoader.findAndInitDSO(perf_mon_dso, search_path, init_func, functor);
    }
 
-   vprDEBUG(jcclDBG_RECONFIG, vprDBG_VERB_LVL)
-      << "[PerformanceMediator::setPerfPlugin()] "
-      << "Enabling new remote performance monitoring plug-in\n"
-      << vprDEBUG_FLUSH;
-   mPerfIf = plugin;
-
-   if ( NULL != mPerfIf )
+   void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
    {
-      // Attempt to initialize the remote performance monitoring component.
-      if ( mPerfIf->init().success() )
+      // If we already have a remote performance monitoring plug-in, discard it
+      // first.
+      if ( NULL != mPerfIf )
       {
-         // Now, attempt to enable remote performance monitoring hooks.
-         if ( ! mPerfIf->enable().success() )
+         vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
+         << "[PerformanceMediator::setPerfPlugin()] "
+            << "Removing old remote performance monitoring plug-in\n"
+            << vprDEBUG_FLUSH;
+
+         if ( mPerfIf->isEnabled() )
          {
-            vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+            mPerfIf->disable();
+         }
+
+         delete mPerfIf;
+      }
+
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_VERB_LVL)
+      << "[PerformanceMediator::setPerfPlugin()] "
+         << "Enabling new remote performance monitoring plug-in\n"
+         << vprDEBUG_FLUSH;
+      mPerfIf = plugin;
+
+      if ( NULL != mPerfIf )
+      {
+         // Attempt to initialize the remote performance monitoring component.
+         if ( mPerfIf->init().success() )
+         {
+            // Now, attempt to enable remote performance monitoring hooks.
+            if ( ! mPerfIf->enable().success() )
+            {
+               vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING:")
                << " Failed to enable remote performance monitoring hooks.\n"
+                  << vprDEBUG_FLUSH;
+               delete mPerfIf;
+               mPerfIf = NULL;
+            }
+         }
+         // Initialization failed.
+         else
+         {
+            vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Failed to initialize remote performance monitoring hooks.\n"
                << vprDEBUG_FLUSH;
             delete mPerfIf;
             mPerfIf = NULL;
          }
       }
-      // Initialization failed.
-      else
-      {
-         vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Failed to initialize remote performance monitoring hooks.\n"
-            << vprDEBUG_FLUSH;
-         delete mPerfIf;
-         mPerfIf = NULL;
-      }
    }
-}
 
 } // namespace vrj
