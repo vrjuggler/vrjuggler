@@ -44,12 +44,15 @@
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
 # Software and stylesheet versions.
-DOCBOOK_XSL_VERSION?=	1.65.1
-XALAN_VERSION?=		2_4_1
+DOCBOOK_XSL_VERSION?=	1.67.2
+XALAN_VERSION?=		2_5_2
 SAXON_VERSION?=		6.5.2
+FOP_VERSION?=		0.20.5
+BATIK_VERSION?=		1.5.1
 
 # Installation paths.
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
+BATIK_ROOT?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)
 SGML_ROOT?=	/usr/share/sgml/docbook
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
 TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
@@ -57,9 +60,10 @@ TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 # Application paths.
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
-FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
-HTML2TXT?=	/usr/bin/links
-HTML2TXTOPTS?=	-dump
+FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/fop.sh
+HTML2TXT?=	html2text
+HTML2TXTOPTS?=	-ascii -nobs -style pretty -width 76 -rcfile html2text.rc
+HTML2TXTFILE?=	file:$<
 JADE?=		openjade -V tex-backend
 JADEPROC?=	$(DOCBOOK_ROOT)/jadeproc.pl
 JADETEX?=	$(TEX_BINDIR)/jadetex
@@ -67,7 +71,7 @@ PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
 PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
-RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.5/svgrasterizer
+RASTERIZER?=	BATIK_ROOT="$(BATIK_ROOT)" $(BATIK_ROOT)/svgrasterizer
 RM=		rm -f
 SAXON_DIR?=	$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)
 SAXON?=		$(SAXON_DIR)/saxon.sh
@@ -153,6 +157,7 @@ pdf: $(LINK_DEPS) $(PDF_FILES)
 # and we do not necessarily know how to get to $(XSL_DIR) relative to the
 # current directory.  This hack with a symlink works around that problem.
 images:
+	-rm -f ./images
 	ln -s $(XSL_DIR)/images ./
 
 install-txt: $(TXT_FILES)
@@ -176,7 +181,7 @@ ifdef INSTALL_DIRS
 	cp -r $(INSTALL_DIRS) $(prefix)
 endif
 ifdef NEED_DB_IMAGES
-	cp -rH images $(prefix)/
+	cp -RH images $(prefix)/
 endif
 endif
 
@@ -192,7 +197,7 @@ else
                 cp $(INSTALL_FILES) $(prefix)/$$dir ; \
             fi ; \
             if [ ! -z "$(NEED_DB_IMAGES)" ]; then \
-                cp -rH images $(prefix)/$$dir ; \
+                cp -RH images $(prefix)/$$dir ; \
             fi ; \
             if [ ! -z "$(INSTALL_DIRS)" ]; then \
                 cp -r $(INSTALL_DIRS) $(prefix)/$$dir ; \
@@ -241,7 +246,7 @@ else
 endif
 
 .html.txt:
-	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $< > $@
+	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $(HTML2TXTFILE) > $@
 
 #.xml.txt:
 #ifeq ($(XSLT_TOOL), Xalan)
