@@ -59,11 +59,12 @@ bool Position::config(jccl::ConfigChunkPtr c)
     yt = c->getProperty("translate",1);
     zt = c->getProperty("translate",2);
 
-
+    // These values are specified in human-friendly degrees but must be passed
+    // to GMTL as radians.
     float xr, yr, zr;
-    xr = c->getProperty("rotate",0);
-    yr = c->getProperty("rotate",1);
-    zr = c->getProperty("rotate",2);
+    xr = gmtl::Math::deg2Rad(c->getProperty("rotate",0));
+    yr = gmtl::Math::deg2Rad(c->getProperty("rotate",1));
+    zr = gmtl::Math::deg2Rad(c->getProperty("rotate",2));
 
       // This makes a rotation matrix that moves a pt in
       // the device's coord system to the vj coord system.
