@@ -67,7 +67,7 @@ ostream& operator<<(ostream& out, vjVec4& _v)
 {
     for(int j=0;j<4;j++)
     {
-    	out << _v.vec[j] << ", ";
+    	out << _v.vec[j] << (j < 3 ? ", " : "");
     }
 
     return out;	
