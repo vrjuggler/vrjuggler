@@ -44,9 +44,9 @@ namespace gadget
 {
 
 /**
- * A proxy class to event window devices, used by the Input Manager.
+ * A proxy class to keyboard/mouse devices, used by the Input Manager.
  *
- * An event window proxy always points to an event window device and unit
+ * A keyboard/mouse proxy always points to a keyboard/mouse device and unit
  * number within that device.  The Input Manager can therefore keep an array
  * of these around and treat them as digital devices that only return a single
  * sub-device's amount of data (an event queue and individual keys).
@@ -132,7 +132,7 @@ public:
    }
 
    /**
-    * Returns a copy of the current queue of events for the proxied window.
+    * Returns a copy of the current queue of events for the proxied device.
     */
    KeyboardMouse::EventQueue getEventQueue()
    {

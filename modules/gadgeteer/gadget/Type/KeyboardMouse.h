@@ -54,13 +54,13 @@ namespace gadget
 const unsigned short MSG_DATA_EVENT_WINDOW = 420;
 
 /**
- * gadget::KeyboardMouse is an abstract class for interfacing with keyboard (and
- * other key-based) devices.  Informally, an event window can be thought of as
- * a map of keyboard and mouse events (presses, releases, and movements) to
- * integers.  The integers indicate the number of times the event occurred
- * since the last update.  That is to say, gadget::KeyboardMouse counts the
- * number of keyboard and mouse events between updates.  Updates in Juggler
- * occur once per frame.
+ * gadget::KeyboardMouse is an abstract class for interfacing with keyboard
+ * (and other key-based) devices.  Informally, a keyboard/mouse device can be
+ * thought of as a map of keyboard and mouse events (presses, releases, and
+ * movements) to integers.  The integers indicate the number of times the event
+ * occurred since the last update.  That is to say, gadget::KeyboardMouse
+ * counts the number of keyboard and mouse events between updates.  Updates in
+ * Juggler occur once per frame.
  */
 class GADGET_CLASS_API KeyboardMouse : public vpr::SerializableObject
 {
@@ -141,7 +141,7 @@ public:
    std::string getKeyName(gadget::Keys keyId);
 
    /**
-    * Returns a copy of the current queue of events for this window.
+    * Returns a copy of the current queue of events for this device.
     */
    EventQueue getEventQueue();
 
