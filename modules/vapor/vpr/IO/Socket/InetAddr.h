@@ -45,38 +45,43 @@
 #include <vpr/vprConfig.h>
 
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#   include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
+#  include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#   include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
+#  include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#   include <vpr/md/SIM/IO/Socket/InetAddrSIM.h>
+#  include <vpr/md/SIM/IO/Socket/InetAddrSIM.h>
 #endif
 
 #ifdef VPR_HASH_MAP_INCLUDE
 #  include VPR_HASH_MAP_INCLUDE
 #endif
 
-namespace std {
+namespace std
+{
 
 #if defined(HAVE_HASH_MAP) || defined(HAVE_EXT_HASH_MAP) || \
    defined(HAVE_HASH_MAP_H)
 /// Nice little helper class for hashing a <code>vpr::InetAddr</code>
 template<>
-struct hash<vpr::InetAddr> {
-   size_t operator() (vpr::InetAddr addr) const {
+struct hash<vpr::InetAddr>
+{
+   size_t operator() (vpr::InetAddr addr) const
+   {
       return ((addr.getAddressValue() << 16) | addr.getPort());
    }
 };
 #else
 /// Nice little helper class for hashing a <code>vpr::InetAddr</code>
-struct hash {
-   size_t operator() (vpr::InetAddr addr) const {
+struct hash
+{
+   size_t operator() (vpr::InetAddr addr) const
+   {
       return ((addr.getAddressValue() << 16) | addr.getPort());
    }
 };
 #endif
 
-}
+} // End of std namespace
 
 inline bool operator<(const vpr::InetAddr& addr1, const vpr::InetAddr& addr2)
 {
@@ -105,6 +110,6 @@ inline ostream& operator<<(std::ostream& out, const vpr::InetAddr& addr)
    return out;
 }
 
-}
+} // End of std namespace
 
 #endif   /* _VPR_INET_ADDR_H_ */
