@@ -18,7 +18,7 @@
       friend
     {endif}
     {else}
-      private
+      public
     {endelse}
   {endelse}
 {endelse}
