@@ -71,10 +71,10 @@ class RemoteReconfig;
  *  objects that implement the ConfigElementHandler interface, and register
  *  these using the ConfigManager::addConfigElementHandler method.
  *
- *  Requests to add ConfigElements can be added via the JavaBeans or by the
+ *  Requests to add config elements can be added via the JavaBeans or by the
  *  addPending*() methods of this class.  These requests are added to
  *  the ConfigManager's "pending" list.  The ConfigManager also maintains
- *  an "active" list, containing all the ConfigElements that have been
+ *  an "active" list, containing all the config elements that have been
  *  successfully configured.
  *
  *  Once ConfigElementHandlers have been registered with the ConfigManager,
@@ -130,6 +130,9 @@ public: // -- Query functions --- //
 
 public:   // ----- PENDING LIST ----- //
 
+   //@{
+   /** @name Pending List accessors and manipulators. */
+
    /** Marks pending list as "not stale".
     *  To minimize time spent on configuration calls, the Configuration
     *  Manager will mark the pending list as "stale" if it does not
@@ -141,10 +144,10 @@ public:   // ----- PENDING LIST ----- //
     *  ConfigElementHandlers) can be explicitly changed via a vrj::Kernel
     *  method.  When this happens, the VR Juggler kernel calls
     *  refreshPendingList because the new application object may be able
-    *  to process ConfigElements that the old one could not.
+    *  to process config elements that the old one could not.
     *
     *  Generally, if an object is added to the system via
-    *  ConfigElementHandler's addConfig method, it is not necessary to
+    *  ConfigElementHandler's configAdd method, it is not necessary to
     *  call this function explicitly; the ConfigManager will notice that
     *  the pending and active lists have changed and will consider the
     *  pending list to be fresh.
@@ -153,17 +156,20 @@ public:   // ----- PENDING LIST ----- //
     */
    void refreshPendingList();
 
-   /** Add the ConfigElements in db to pending list as adds.
+   /** Add the config elements in cfg to pending list as adds.
     *  The pending list must not be (already) locked.
-    *  ConfigElements in db are copied.
+    *  The config elements in cfg are copied.
+    *
+    *  @post Config elements are copied out of configuration, so the memory
+    *        pointed to by cfg may be deleted by calling method.
     */
-   void addPendingAdds(Configuration* db);
+   void addPendingAdds(Configuration* cfg);
 
-   /** Add the ConfigElements in db to pending list as removes.
+   /** Add the config elements in db to pending list as removes.
     *  The pending list must not be (already) locked.
-    *  ConfigElements in db are copied.
+    *  The config elements in cfg are copied.
     */
-   void addPendingRemoves(Configuration* db);
+   void addPendingRemoves(Configuration* cfg);
 
    /** Add an entry to the pending list.
     *  The pending list must not be locked.
@@ -179,6 +185,7 @@ public:   // ----- PENDING LIST ----- //
     */
    void removePending(std::list<PendingElement>::iterator item);
 
+private:
    /** Checks if we need to check the pending list.
     *  Checks if the pending list is "fresh" or if it should be marked
     *  as "stale".  If the pending list has been checked several times
@@ -186,9 +193,12 @@ public:   // ----- PENDING LIST ----- //
     *  it cannot be processed by the application.
     *  This is a utility function for attemptReconfiguration.
     *  CONCURRENCY: concurrent.
+    *
+    *  @see attemptReconfiguration
     */
    bool pendingNeedsChecked();
 
+public:
    /** Checks to see if the Pending List is stale, meaning that the
     *  ConfigManager is not actively trying to configure anything
     *  right now.
@@ -245,8 +255,12 @@ public:   // ----- PENDING LIST ----- //
    {
       return mPendingConfig.size();
    }
+   //@}
 
 public:   // ----- ACTIVE LIST ----- //
+   //@{
+   /** @name Active List accessors and manipulators. */
+
    /** Checks if active list is empty.
     *  CONCURRENCY: concurrent
     */
@@ -257,7 +271,7 @@ public:   // ----- ACTIVE LIST ----- //
 
    /** Locks the active list.
     *  This function blocks until it can lock the list of active
-    *  ConfigElements.
+    *  config elements.
     *  The caller of this method must call unlockActive() when it
     *  is finished viewing/modifying the active list.
     */
@@ -308,14 +322,6 @@ public:   // ----- ACTIVE LIST ----- //
     *  appends it to the active list.
     *  If a element with the same name is already in the active list,
     *  the old element is replaced by the new one.
-    *
-    *  This method is occasionally useful when an application wants
-    *  to add items to the active list that were not created via
-    *  the ConfigManager's dynamic reconfiguration ability.
-    *  For example, when JCCL's network server opens a new
-    *  connection, it explicitly creates a ConfigElement describing
-    *  that connection and adds it to the active list with this
-    *  method.
     */
    void addActive(ConfigElementPtr element);
 
@@ -329,6 +335,7 @@ public:   // ----- ACTIVE LIST ----- //
       vprASSERT(1 == mActiveLock.test());
       return &mActiveConfig;
    }
+   //@}
 
 public:
    /** Scan the active list for items that don't have their dependencies
@@ -353,12 +360,28 @@ public:
      mLastPendingSize = mPendingConfig.size() + 1;
    }
 
-   //------------ Default DynamicReconfig Handling Stuff -------------------
+   //@{
+   /** @name Default dynamic reconfiguration handling code. */
 
    void addConfigElementHandler(ConfigElementHandler* h);
    void removeConfigElementHandler(ConfigElementHandler* h);
+
+   /**
+    * Loops over the list of registered config element handlers and invokes
+    * their configProcessPending() method.
+    *
+    * @return The total number of config elements processed by all the
+    *         handlers.  If this number is zero, then either no element
+    *         handlers are registered, there are no pending config elements,
+    *         or none of the pending config elements could be handled by the
+    *         registered handlers.
+    *
+    * @see jccl::ConfigElementHandler
+    */
    int attemptReconfiguration();
+
    //int attemptHandlerReconfiguration(ConfigElementHandler* h);
+   //@}
 
    void setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin);
 
