@@ -86,6 +86,7 @@ public class NewClusterFileStep
    {
       List classes = new ArrayList();
       classes.add(NewClusterFilePanel.class.getName());
+      classes.add(NewClusterFilePanel.class.getName()+"$1");
       return classes;
    }
 

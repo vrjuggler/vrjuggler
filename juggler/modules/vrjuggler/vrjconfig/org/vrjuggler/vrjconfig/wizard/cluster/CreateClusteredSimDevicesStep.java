@@ -102,6 +102,9 @@ public class CreateClusteredSimDevicesStep
    {
       List classes = new ArrayList();
       classes.add(CreateClusteredSimDevicesPanel.class.getName());
+      classes.add(CreateClusteredSimDevicesPanel.class.getName()+"$1");
+      classes.add(CreateClusteredSimDevicesPanel.class.getName()+"$2");
+      classes.add(CreateClusteredSimDevicesPanel.class.getName()+"$3");
       return classes;
    }
 
