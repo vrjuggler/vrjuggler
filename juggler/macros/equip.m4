@@ -58,25 +58,21 @@ AC_DEFUN(EQUIP_PATH,
     dnl -----------------------------------------------
     dnl -- Checks for header files and build EQ_LIBS --
     dnl ----------------------------------------------- 
-    DPP_LANG_SAVE
-    DPP_LANG_CPLUSPLUS
+    AC_MSG_CHECKING([if EquipExt/VectorStream.h is available])
+    if test -e "$eq_standalone/include/EquipExt/VectorStream.h" ; then
+        AC_MSG_RESULT(yes)
+        INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
 
-    dso_save_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$CPPFLAGS $VPR_CXXFLAGS -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
-    AC_CHECK_HEADER([EquipExt/VectorStream.h], , $3)
-    CPPFLAGS="$dso_save_CPPFLAGS"
-    INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
-
-    if test "x$OS_TYPE" = "xWin32" ; then
-        EQ_LIBS="-libpath:$eq_standalone/lib$LIBBITSUF eqStandalone.lib"
+        if test "x$OS_TYPE" = "xWin32" ; then
+            EQ_LIBS="-libpath:$eq_standalone/lib$LIBBITSUF eqStandalone.lib"
+        else
+            EQ_LIBS="-L$eq_standalone/lib$LIBBITSUF -leqStandalone"
+        fi
     else
-        EQ_LIBS="-L$eq_standalone/lib$LIBBITSUF -leqStandalone"
+        ifelse([$3], , :, [$3])
     fi
-
-    DPP_LANG_RESTORE
     dnl ------------------------------------------------
 
-        
     dnl -- Construct path to eqidl --
     EQIDL=''
     if test "x$eqidl_prefix" != "x" ; then
