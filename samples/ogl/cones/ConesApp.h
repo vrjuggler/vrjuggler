@@ -163,10 +163,12 @@ private:
     // ------------------------------------------------------------------------
     inline void
     drawCone(GLdouble base, GLdouble height, GLint slices, GLint stacks) {
-        gluCylinder(mQuad, base, 0.0, height, slices, stacks);
+        gluCylinder(mConeQuad, base, 0.0, height, slices, stacks);
+        gluDisk(mBaseQuad, 0.0, base, slices, 1);
     }
 
-    GLUquadric* mQuad;      // GLU quadric for the cone
+    GLUquadric* mConeQuad;      // GLU quadric for the cone
+    GLUquadric* mBaseQuad;      // GLU quadric for the cone's base
 };
 
 
