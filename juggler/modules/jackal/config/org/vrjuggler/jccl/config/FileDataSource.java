@@ -365,6 +365,30 @@ public class FileDataSource
    }
 
    /**
+    * File data sources are equal if they refer to the same object.
+    */
+   public boolean equals(Object obj)
+   {
+      if (obj instanceof FileDataSource)
+      {
+         FileDataSource ds = (FileDataSource)obj;
+         if (mFile.equals(ds.mFile))
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   //XXX: Debug when this data source gets finalized
+   protected void finalize()
+      throws Throwable
+   {
+      System.out.println("FileDataSource for "+mFile.getPath()+" being finalized.");
+      super.finalize();
+   }
+
+   /**
     * The file associated with this data source.
     */
    private File mFile;

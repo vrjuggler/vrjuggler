@@ -45,7 +45,11 @@ import java.util.*;
 public interface ConfigBroker
 {
    /**
-    * Adds the given resources in the given data source to this broker.
+    * Adds the given resources in the given data source to this broker. Multiple
+    * adds of the same datasource will just increment the usage count on that
+    * data source. The datasource will not be removed until the usage count
+    * reaches 0. Thus each call to add(String, DataSource) must be followed
+    * later by a call to remove(String).
     *
     * @param name          the unique name to assign to the resource
     * @param dataSource    the data source from which to retrieve the data

@@ -135,14 +135,28 @@ public class ConfigBrokerImpl
     */
    public void add(String name, DataSource dataSource)
    {
+      System.out.println("Adding data source: "+name);
       // Check if a resource is already open under that name
       if (resources.containsKey(name))
       {
-         throw new IllegalArgumentException(name + " already in use");
+         // The key is in use ... is it the same datasource?
+         if (resources.get(name).equals(dataSource))
+         {
+            // Same data source, increment the reference
+            addReference(name);
+         }
+         else
+         {
+            throw new IllegalArgumentException(name + " already in use");
+         }
       }
-
-      resources.put(name, dataSource);
-      fireResourceAdded(name, dataSource);
+      else
+      {
+         // This is a new data source, add it in to this broker
+         resources.put(name, dataSource);
+         addReference(name);
+         fireResourceAdded(name, dataSource);
+      }
    }
 
    /**
@@ -150,19 +164,35 @@ public class ConfigBrokerImpl
     *
     * @param name          the name of the data source to remove
     *
-    * @return  the data source that was removed
+    * @return  the data source that was removed, null if the data source's
+    *          reference count was merely decremented
     */
    public DataSource remove(String name)
    {
-      if (resources.containsKey(name))
+      System.out.println("Removing data source: "+name);
+      // Check if a resource is open under that name
+      if (! resources.containsKey(name))
       {
          throw new IllegalArgumentException(name + " is not open");
       }
 
-      DataSource data_source = (DataSource)resources.remove(name);
-      fireResourceRemoved(name, data_source);
-
-      return data_source;
+      // Check if this is the last reference to the resource
+      if (getReferenceCount(name) == 1)
+      {
+         // Hey, nobody wants this baby anymore. Remove it
+         DataSource data_source = (DataSource)resources.remove(name);
+         removeReference(name);
+         fireResourceRemoved(name, data_source);
+         return data_source;
+      }
+      else
+      {
+         // There are still more references to the data source. Don't really
+         // remove it; just decrement the reference count.
+         removeReference(name);
+         System.out.println("Detected last usage of a data source. Removing it from the broker.");
+         return null;
+      }
    }
 
    /**
@@ -781,10 +811,49 @@ public class ConfigBrokerImpl
       return null;
    }
 
+   private synchronized int getReferenceCount(String name)
+   {
+      // Ensure that the reference is valid
+      if (! references.containsKey(name))
+      {
+         return 0;
+      }
+      return ((Integer)references.get(name)).intValue();
+   }
+
+   private synchronized void addReference(String name)
+   {
+      // Increment the ref count and put it in the references map
+      int refcount = getReferenceCount(name);
+      ++refcount;
+      references.put(name, new Integer(refcount));
+      System.out.println("addReference: Data Source '"+name+"' now has "+refcount+" references");
+   }
+
+   private synchronized void removeReference(String name)
+   {
+      // Ensure that the reference is valid
+      int refcount = getReferenceCount(name);
+      if (refcount == 0)
+      {
+         throw new IllegalArgumentException("Invalid reference name: "+name);
+      }
+
+      // Decrement the refcount and put it back in the references map
+      --refcount;
+      references.put(name, new Integer(refcount));
+      System.out.println("removeReference: Data Source '"+name+"' now has "+refcount+" references");
+   }
+
    /**
-    * The mapping of resources names to the resources it refers to.
+    * The mapping of resource names to the resources it refers to.
     */
    private Map resources = new HashMap();
+
+   /**
+    * The mapping of data source names to their reference count.
+    */
+   private Map references = new HashMap();
 
    /**
     * All listeners interested in this broker.
