@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <stdio.h>
+#include <string.h>
 #include <prerror.h>
 
 #include <md/NSPR/NSPRHelpers.h>
@@ -43,9 +44,16 @@ void NSPR_PrintError(const std::string error_prefix_string )
 {
    PRInt32 textLength = PR_GetErrorTextLength();
    char *text = (char*)malloc(textLength);
-   (void)PR_GetErrorText(text);
-   fprintf(stderr, "%s (%d, %d, %s)\n",
-           error_prefix_string.c_str(), PR_GetError(), PR_GetOSError(), text);
+   if ( PR_GetErrorText(text) > 0 ) {
+      fprintf(stderr, "%s (%d, %d, %s)\n",
+              error_prefix_string.c_str(), PR_GetError(), PR_GetOSError(),
+              text);
+   }
+   else {
+       fprintf(stderr, "%s (%d, %s)\n", PR_GetError(),
+               error_prefix_string.c_str(), strerror(PR_GetOSError()));
+   }
+
    free(text);
 }
 
