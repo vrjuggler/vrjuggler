@@ -55,9 +55,12 @@ SRCS= \
 	DependencyManager.cpp
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
-   CXX_IDL_OPTS=	@TWEEK_CXX_IDL_OPTS@ @TWEEK_CXX_IDL_GENDIR_OPT@$(srcdir)
+   IDL_GENDIR=		.
+   CXX_IDL_OPTS=	@TWEEK_CXX_IDL_OPTS@ @TWEEK_CXX_IDL_GENDIR_OPT@$(IDL_GENDIR)
    CXX_IDL_INCLUDES=	@TWEEK_CXX_IDL_INCFLAG@$(top_srcdir)
    IDL_CXX_FILES=	RTRCInterfaceSubject.cpp RTRCInterfaceSubject.h
+   EXTRA_INCLUDES+=	-I$(IDL_GENDIR)			\
+			-I$(topdir)/rtrc
 
    SRCS+=		RTRCInterfaceSubjectImpl.cpp	\
 			RTRCInterfaceSubject.cpp	\
@@ -74,8 +77,12 @@ EXTRA_INCLUDES+= \
 include $(MKPATH)/dpp.obj.mk
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
+   ifneq ($(srcdir), $(IDL_GENDIR))
+      INSTALL_FILES+=	$(IDL_GENDIR)/*.h
+   endif
+
    INSTALL_FILES+=	$(srcdir)/*.idl
-   CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))
+   CLEAN_FILES+=	$(addprefix $(IDL_GENDIR)/, $(IDL_CXX_FILES))
 endif
 
 # -----------------------------------------------------------------------------
