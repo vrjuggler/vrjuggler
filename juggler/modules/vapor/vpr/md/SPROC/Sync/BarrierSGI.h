@@ -106,7 +106,7 @@ public:
     */
    int wait(int numProcs)
    {
-      ;
+      return -1;
    }
 
    int wait ()
