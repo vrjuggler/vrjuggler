@@ -70,6 +70,7 @@ int AppWindow::width = 0, AppWindow::height = 0;
 int AppWindow::mainWin_contextID = -1;
 
 int soundpos = 0;
+float pitchbend = 0.0f;
 
 // our sound object...
 snx::SoundHandle kevinSound;
@@ -246,6 +247,21 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       soundpos += 1;
       kevinSound.setPosition( soundpos, 0, 0 );
       std::cout<<soundpos<<std::endl;
+   }
+   
+   case '[':
+   {
+      pitchbend -= 15.0f;
+      kevinSound.setPitchBend( pitchbend );
+      std::cout<<pitchbend<<std::endl;
+   }
+   break;
+
+   case ']':
+   {
+      pitchbend += 15.0f;
+      kevinSound.setPitchBend( pitchbend );
+      std::cout<<pitchbend<<std::endl;
    }
    break;
 
