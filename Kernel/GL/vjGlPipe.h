@@ -146,6 +146,7 @@ private:
    bool        mThreadRunning;      //: Do we have a running thread?
 
     vjPerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
+    int mPerfPhase;                 //: utility var for perf measurement
 };
 
 #endif
