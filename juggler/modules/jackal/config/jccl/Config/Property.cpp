@@ -150,7 +150,7 @@ ostream& operator << (ostream &out, vjProperty& p) {
 	else {
 	    vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
 	    if (e)
-		out << e->getName();
+		out << '"' << e->getName() << '"';
 	    else
 		out << *v;
 	}
