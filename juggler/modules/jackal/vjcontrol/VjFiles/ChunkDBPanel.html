@@ -22,20 +22,21 @@ on a chunk to view or edit it.
 There are eight buttons along the side of each panel:
 
 <ul>
-<li>New - creates a new (empty) config file.
-<li>Load - loads a config file and views it in this panel.
-<li>Save - save the config file currently being viewed.  Note that this
+<li><b>New</b> - creates a new (empty) config file.
+<li><b>Load</b> - loads a config file and views it in this panel.
+<li><b>Save</b> - save the config file currently being viewed.  Note that this
 button always opens a file dialog, so it's technically Save As...
-<li>Close - removes the currently viewed config file from memory.
+<li><b>Close</b> - removes the currently viewed config file from memory.
 <b>WARNING!</b> VjControl does not currently warn you if you close a
 file without saving it.
 
-<li><< or >> - copies all selected chunks in this file to the file
+<li><b>>></b> - copies all selected chunks in this file to the file
 being viewed in the other panel.
-<li><All< or >All> - copies every chunk in this file to the file being
-viewed in the other file.
-<li>Remove - deletes all selected chunks in the currently viewed file.
-<li>Insert - inserts a new chunk.  The type of chunk to insert is determined
+<li><b>>All></b> - copies every chunk in this file to the file being
+viewed in the other panel.
+<li><b>Remove</b> - deletes all selected chunks in the currently viewed file.
+<li><b>Duplicate</b> - adds duplicate copies of all selected chunks in the currently viewed file.
+<li><b>Insert</b> - inserts a new chunk.  The type of chunk to insert is determined
 by the Insert Type combo box at the bottom of the panel.
 
 </ul>
@@ -43,8 +44,16 @@ by the Insert Type combo box at the bottom of the panel.
 <hr>
 <h3> The ConfigChunk Editing Window</h3>
 
-under construction
+Double-click on one of the ConfigChunks in the tree to open the
+ConfigChunk editing window.  This window displays the values for all 
+the Chunk's properties, and lets you modify these values.  Properties
+that allow a variable number of values will include an <b>Add Value</b> button
+next to the Property name, and a <b>Remove</b> button next to each value.
+<p>
+Click the <b>OK</b> button to exit the window, or <b>Cancel</b> to close
+the window without saving the changes you've made.
 
+<br><br><br><br>
 </body>
 </html>
 

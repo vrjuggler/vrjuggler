@@ -26,18 +26,18 @@ public class ConfigChunkDB extends Vector {
     }
 
 
-  public void setFile (File f) {
-    file = f;
-  }
 
-  public void setName (String _name) {
-    name = _name;
-  }
+    public void setFile (File f) {
+	file = f;
+    }
 
+    public void setName (String _name) {
+	name = _name;
+    }
 
-  public String getName () {
-    return name;
-  }
+    public String getName () {
+	return name;
+    }
 
 
     public ConfigChunkDB diff (ConfigChunkDB d) {
@@ -153,51 +153,6 @@ public class ConfigChunkDB extends Vector {
     }
 
 
-    /*
-    public boolean read (ConfigStreamTokenizer st) {
-	String s;
-	ConfigChunk c;
-	
-	try {
-	    while (true) {
-		st.nextToken();
-		if ((st.ttype == ConfigStreamTokenizer.TT_EOF) ||
-		    st.sval.equalsIgnoreCase ("end"))
-		    break;
-		ChunkDesc d = descs.get(st.sval);
-		if (d != null) {
-		    c = new ConfigChunk(d);
-		    c.read(st);
-		    if ((c.name == null) || (c.name.equals(""))) {
-			c.name = getNewName (c.desc.name);
-			
-		    }
-		    insertOrdered(c);
-		} else {
-		    System.err.println ("Error reading ConfigChunks - no such chunk type " + st.sval);
-		    for(;;) {
-			st.nextToken();
-			if ((st.ttype == ConfigStreamTokenizer.TT_WORD &&
-			     st.sval.equalsIgnoreCase("end")) ||
-			    (st.ttype == ConfigStreamTokenizer.TT_EOF))
-			    break;
-		    }
-			  
-		}
-	    }
-	    
-	    return true;
-	    
-	}
-	catch (IOException io) {
-	    System.err.println ("IO Error in ConfigChunkDB.read()");
-	    return false;
-	}
-    }
-    */
-
-
-
 
     public boolean read (ConfigStreamTokenizer st) {
 	ConfigChunk c;
@@ -213,6 +168,7 @@ public class ConfigChunkDB extends Vector {
     }
 
 
+
     public ConfigChunk readAChunk (ConfigStreamTokenizer st) {
 	String s;
 	ConfigChunk c = null;
@@ -226,7 +182,7 @@ public class ConfigChunkDB extends Vector {
 		    return null;
 		d = descs.get(st.sval);
 		if (d != null) {
-		    c = new ConfigChunk(d);
+		    c = new ConfigChunk(d, descs);
 		    c.read(st);
 		    if ((c.name == null) || (c.name.equals(""))) {
 			c.name = getNewName (c.desc.name);    
@@ -253,30 +209,32 @@ public class ConfigChunkDB extends Vector {
 
 
 
-  public void replace(ConfigChunk o, ConfigChunk n) {
-    /* removes old from the db and inserts new in old's place */
-    ConfigChunk t;
-    for (int i = 0; i < size(); i++) {
-      t = (ConfigChunk)elementAt(i);
-      if (t.getName().equals(o.getName())) {
-	removeElementAt(i);
-	insertElementAt(n,i);
-	return;
-      }
+    public void replace(ConfigChunk o, ConfigChunk n) {
+	/* removes old from the db and inserts new in old's place */
+	ConfigChunk t;
+	for (int i = 0; i < size(); i++) {
+	    t = (ConfigChunk)elementAt(i);
+	    if (t.getName().equals(o.getName())) {
+		removeElementAt(i);
+		insertElementAt(n,i);
+		return;
+	    }
+	}
     }
-  }
 
-  public String fileRep() {
-    /* returns a string representation (actually a config file representation)
-     * of the db.
-     * Can't just overload toString cuz that's final for vector.
-     */
-    String s = "";
-    for (int i = 0; i < size(); i++)
-      s = s + ((ConfigChunk)elementAt(i)).toString();
-    s = s + "End\n";
-    return s;
-  }
+
+
+    public String fileRep() {
+	/* returns a string representation (actually a config file representation)
+	 * of the db.
+	 * Can't just overload toString cuz that's final for vector.
+	 */
+	String s = "";
+	for (int i = 0; i < size(); i++)
+	    s = s + ((ConfigChunk)elementAt(i)).toString();
+	s = s + "End\n";
+	return s;
+    }
 }
 
 

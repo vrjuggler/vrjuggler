@@ -25,14 +25,24 @@ public class DescEnumFrame extends JFrame
     Vector data;  // vector of DescEnum
     public boolean closed;
     JPanel buttonspanel;
+    boolean varnumbers;
+    int numvals;
 
 
-
+    /* 
+     * ARGS: _varnumbers - if true, show insert & remove buttons
+     * ARGS: _numval - # of values to show (only matters if varnumbers false)
+     */
     public DescEnumFrame (PropertyDescPanel p,
 			  Vector _data,
 			  String pdn,
-			  ValType pdt) {
+			  ValType pdt,
+			  boolean _varnumbers,
+			  int _numval) {
+
 	super(pdn);
+
+System.out.println (_data);
 	
 	closed = false;
 	pdtype = pdt;
@@ -40,9 +50,12 @@ public class DescEnumFrame extends JFrame
 	//setFont(core.ui.windowfont);
 
 	buttonspanel = new JPanel();
-	buttonspanel.setLayout (new GridLayout (1, 4));
-	
+	//buttonspanel.setLayout (new GridLayout (1, 4));
+	//buttonspanel.setLayout (new BoxLayout (buttonspanel, BoxLayout.X_AXIS));
+
 	data = _data;
+	varnumbers = _varnumbers;
+	numvals = _numval;
 
 	elempanels = new Vector();
 	panel = new JPanel(new BorderLayout (10,2));
@@ -60,12 +73,20 @@ public class DescEnumFrame extends JFrame
 
 	panel.add (sp, "Center");
 
-	insertbutton = new JButton ("Insert");
-	insertbutton.addActionListener(this);
-	buttonspanel.add (insertbutton);
-	removebutton = new JButton ("Remove");
-	removebutton.addActionListener(this);
-	buttonspanel.add (removebutton);
+	if (varnumbers) {
+	    buttonspanel.setLayout (new GridLayout (1, 4));
+	    insertbutton = new JButton ("Insert");
+	    insertbutton.addActionListener(this);
+	    buttonspanel.add (insertbutton);
+	    removebutton = new JButton ("Remove");
+	    removebutton.addActionListener(this);
+	    buttonspanel.add (removebutton);
+	}
+	else {
+	    buttonspanel.setLayout (new GridLayout (1, 2));
+	    insertbutton = null;
+	    removebutton = null;
+	}
 	okbutton = new JButton ("OK");
 	okbutton.addActionListener(this);
 	buttonspanel.add (okbutton);
@@ -89,13 +110,11 @@ public class DescEnumFrame extends JFrame
 	Dimension d2 = buttonspanel.getPreferredSize();
 	d.width = Math.max (d.width+42, d2.width +20);
 	d.width = Math.min (d.width, Core.screenWidth);
-	d.height = Math.min (300, Core.screenHeight);
+	if (varnumbers)
+	    d.height = Math.min (300, Core.screenHeight);
+	else
+	    d.height = Math.min (d.height + d2.height + 45, Core.screenHeight);
 	setSize(d);
-	//if (d.height > Core.screenHeight - 50) {
-	// the extra width is to make room for a scrollbar... but getsize
-	// on it doesn't seem to work how ye'd like...
-	//setSize (d.width+42, Core.screenHeight);
-	//}
     }
 
 
@@ -114,13 +133,21 @@ public class DescEnumFrame extends JFrame
 	/* fills up the scrollpane with all the items in enums, which is a vector
 	 * of DescEnum
 	 */
+	int i;
 	int ypos = 0;
 	DescEnumElemPanel p;
-	for (int i = 0; i < data.size(); i++) {
+	for (i = 0; (i < data.size()) && (varnumbers || (i < numvals)); i++) {
 	    p = new DescEnumElemPanel((DescEnum)data.elementAt(i),
 				      pdtype);
 	    elempanels.addElement(p);
 	    sppanel.add(p);
+	}
+	if (!varnumbers) {
+	    for (; i < numvals; i++) {
+		p = new DescEnumElemPanel(pdtype);
+		elempanels.addElement(p);
+		sppanel.add(p);
+	    }
 	}
 	sppanel.validate();
 	return data.size();
@@ -171,7 +198,7 @@ public class DescEnumFrame extends JFrame
 	    data.removeAllElements();
 	    for (int i = 0; i < elempanels.size(); i++) {
 		p = (DescEnumElemPanel)elempanels.elementAt(i);
-		if (pdtype.equals (ValType.t_chunk)) {
+		if (pdtype.equals (ValType.t_chunk) || pdtype.equals (ValType.t_embeddedchunk)) {
 		    for (j = 0; j < Core.descdbs.size(); j++) {
 			s = ((ChunkDescDB)Core.descdbs.elementAt(j)).getTokenFromName (p.getName());
 			if (s != null)
@@ -204,7 +231,8 @@ public class DescEnumFrame extends JFrame
 		    data.addElement(new DescEnum (s,k));
 		}
 		else if (pdtype.equals (ValType.t_string) ||
-			 pdtype.equals (ValType.t_chunk)) {
+			 pdtype.equals (ValType.t_chunk) ||
+			 pdtype.equals (ValType.t_embeddedchunk)) {
 		    data.addElement(new DescEnum (s,0));
 		}
 	    }

@@ -35,8 +35,8 @@ public class PropertyDescPanel extends JPanel
     DescEnumFrame         valuesframe;
     boolean               selected;
   
-  static AbstractBorder select_border=null;
-  static AbstractBorder unselect_border=null;
+    static AbstractBorder select_border=null;
+    static AbstractBorder unselect_border=null;
 
 
     public PropertyDesc getPropertyDesc() {
@@ -80,6 +80,7 @@ public class PropertyDescPanel extends JPanel
 	 * initialized with the values in d
 	 */
 	super();
+
 	int i;
 	init (d, p, editable);
 	for (i = 0; i < d.enums.size(); i++)
@@ -151,7 +152,7 @@ public class PropertyDescPanel extends JPanel
 	addLabel ("Number");
 	numfield = new IntegerTextField (Integer.toString(d.num), 3);
 	if (d.num == -1)
-	  numfield.disable();
+	    numfield.setEnabled(false);
 	add (numfield);
 	addLabel ("Type");
 	typechoice = new JComboBox();
@@ -160,9 +161,13 @@ public class PropertyDescPanel extends JPanel
 	typechoice.addItem ("Bool");
 	typechoice.addItem ("String");
 	typechoice.addItem ("Chunk");
-	typechoice.setSelectedItem ( d.valtype.strVal());
+	typechoice.addItem ("EmbeddedChunk");
+	typechoice.setSelectedItem ( d.valtype.toString());
 	add (typechoice);
+	typechoice.addActionListener (this);
+
 	enumsbutton = new JButton ("Edit Enumerations");
+	setEnumsButton ((String)typechoice.getSelectedItem());
 	enumsbutton.addActionListener(this);
 	gblayout.setConstraints(enumsbutton,gbc);
 	add(enumsbutton);
@@ -226,24 +231,57 @@ public class PropertyDescPanel extends JPanel
 
 
 
+    private void setEnumsButton (String s) {
+	if (s.equalsIgnoreCase ("EmbeddedChunk")) {
+	    enumsbutton.setText ("Inner Chunk Type");
+	}
+	else if (s.equalsIgnoreCase ("Chunk")) {
+	    enumsbutton.setText ("Set Allowed Types");
+	}
+	else {
+	    enumsbutton.setText ("Edit Enumerations");
+	}
+    }
+
+
+
     public void actionPerformed (ActionEvent e) {
+	if (e.getSource() == typechoice) {
+	    setEnumsButton ((String)typechoice.getSelectedItem());
+	}
 	if (e.getSource() == valuelabelsbutton) {
-	    System.out.println ("got valuelabelsbutton action");
 	    if ((valuesframe == null) || valuesframe.closed) {
-		valuesframe = new DescEnumFrame (this, newvalues,
-						 namefield.getText(),
-						 new ValType ("string")
-						 );
+		if (varbox.isSelected()) {
+		    valuesframe = new DescEnumFrame (this, newvalues,
+						     namefield.getText(),
+						     new ValType ("string"),
+						     true, 1
+						     );
+		}
+		else {
+		    valuesframe = new DescEnumFrame (this, newvalues,
+						     namefield.getText(),
+						     new ValType ("string"),
+						     false, Integer.parseInt(numfield.getText())
+						     );
+		}
 	    }
 	}
 	else if (e.getSource() == enumsbutton) {
-	    System.out.println ("got enumsbutton action");
 	    if ((enumsframe == null) || enumsframe.closed) {
-	      enumsframe = new DescEnumFrame (this, newenum,
-					      namefield.getText(),
-					      new ValType((String)typechoice.
-							  getSelectedItem())
-						);
+		if (((String)typechoice.getSelectedItem()).equalsIgnoreCase 
+		    ("EmbeddedChunk")) {
+		    enumsframe = new DescEnumFrame (this, newenum,
+						    namefield.getText(),
+						    new ValType((String)typechoice.getSelectedItem()),
+						    false, 1);
+		}
+		else {
+		    enumsframe = new DescEnumFrame (this, newenum,
+						    namefield.getText(),
+						    new ValType((String)typechoice.getSelectedItem()),
+						    true, 0);
+		}
 	    }
 	}
     }

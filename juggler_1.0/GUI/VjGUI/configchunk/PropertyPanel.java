@@ -16,7 +16,7 @@ import VjConfig.*;
 import VjGUI.*;
 import VjGUI.configchunk.*;
 
-public class PropertyPanel extends JPanel implements ActionListener {
+public class PropertyPanel extends JPanel implements ActionListener, VarValuePanel.VarValuePanelParent {
 
     
     protected static AbstractBorder border=null;
@@ -96,7 +96,8 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	    c.weightx = 1;
 	    c.gridwidth = GridBagConstraints.REMAINDER;
 
-	    VarValuePanel p = new VarValuePanel(this, pr.desc);
+	    VarValuePanel p;
+	    p = makeVarValuePanel (pr, i);
 	    p.setValue((VarValue)pr.vals.elementAt(i));
 	    valuepanels.addElement(p);
 	    eastpanellayout.setConstraints(p, c);
@@ -107,6 +108,44 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	eastpanel.validate();
     }
 
+
+
+    private VarValuePanel makeVarValuePanel (Property pr, int valindex) {
+	if (pr.desc.valtype.equals (ValType.t_embeddedchunk)) {
+	    ConfigChunk ch;
+	    if (valindex < pr.vals.size())
+		ch = ((VarValue)pr.vals.elementAt(valindex)).getEmbeddedChunk();
+	    else
+		ch = new ConfigChunk (pr.embeddesc, pr.descdb);
+	    if (pr.desc.valuelabels.size() > valindex)
+		ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
+	    else
+		ch.setName (pr.desc.name + " " + valindex);
+	    boolean useminipanel = true;
+	    if (ch.desc.props.size() > 4)
+		useminipanel = false;
+	    PropertyDesc pd;
+	    int nvals = 0;
+	    for (int i = 0; i < ch.desc.props.size(); i++) {
+		pd = (PropertyDesc)ch.desc.props.elementAt(i);
+		if (pd.num == -1)
+		    useminipanel = false;
+		else
+		    nvals += pd.num;
+	    }
+	    if (nvals > 4)
+		useminipanel = false;
+	    // basically, if the chunk has more than 3 values, or has a var
+	    // args thing anywhere, we can't use the minipanel.  
+	    // Actually, that should be 3 _values_ - change later.
+	    if (useminipanel)
+		return new VarValueMiniChunkPanel (this, pr, ch);
+	    else
+		return new VarValueBigChunkPanel (this, pr, ch);
+	}
+	else
+	    return new VarValueStandardPanel(this, pr.desc);
+    }
 
 
     public void removePanel (VarValuePanel p) {
@@ -128,7 +167,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 
     public Property getValue() {
-	Property p = new Property (prop.desc);
+	Property p = new Property (prop.desc, Core.descdb);
 	p.vals.removeAllElements();
 	for (int i = 0; i < valuepanels.size(); i++) {
 	    p.vals.addElement (((VarValuePanel)valuepanels.elementAt(i)).getValue());
@@ -156,7 +195,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	    c.weightx = 1;
 	    c.gridwidth = GridBagConstraints.REMAINDER;
 
-	    VarValuePanel p = new VarValuePanel(this, prop.desc);
+	    VarValuePanel p = makeVarValuePanel(prop, i);
 	    valuepanels.addElement(p);
 	    //c.gridwidth = GridBagConstraints.REMAINDER;
 	    eastpanellayout.setConstraints(p,c);
