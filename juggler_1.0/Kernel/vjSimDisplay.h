@@ -12,8 +12,9 @@
 class vjSimDisplay : public vjDisplay
 {
 public:
-   vjSimDisplay()
-   {;}
+   vjSimDisplay() {
+      mCameraProj = NULL;
+   }
 
 public:
    //: Configure the simulator
