@@ -15,11 +15,11 @@ namespace vpr
       mCurrentNode->call();
    }
 
-   void  ProfileManager::startProfile( const char * name , const unsigned int queue_size)
+   void  ProfileManager::startProfile( const char * profileName , const unsigned int queueSize)
    {
-      if ( name != mCurrentNode->getName() )
+      if ( profileName != mCurrentNode->getName() )
       {
-         mCurrentNode = mCurrentNode->getSubNode( name, queue_size);
+         mCurrentNode = mCurrentNode->getSubNode( profileName, queueSize);
       }
 
       mCurrentNode->call();
