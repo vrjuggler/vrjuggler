@@ -23,18 +23,6 @@ CPPUNIT_TEST( OutputDebug );
 CPPUNIT_TEST_SUITE_END();
 
 public:
-   DebugTest() : CppUnit::TestCase ()
-   {
-   }
-
-   DebugTest(std::string name) : CppUnit::TestCase (name)
-   {
-   }
-
-   virtual ~DebugTest()
-   {
-   }
-
    /** Just outputs some debug info at each level */
    void OutputDebug();
 };
