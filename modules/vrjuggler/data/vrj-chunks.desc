@@ -79,6 +79,16 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Initial Value" defaultvalue="0.0" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="AppData" name="ApplicationData" version="1.0">
+    <category>ClusterJuggler</category>
+    <help>Specify the host that is responsible for the given ApplicationData object.</help>
+    <PropertyDesc token="guid" name="Global Unique Identifier" type="string" variable="0">
+      <item label="Global Unique Identifier" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="hostname" name="Responsible Host" type="string" variable="0">
+      <item label="Responsible Host" defaultvalue="" />
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="AwSoundEngine" name="Audioworks Sound Engine" version="1.0">
     <category>Audio</category>
     <help>Use an audioworks sound engine.</help>
