@@ -76,36 +76,11 @@ public:
    // Execute any initialization needed before the API is started<BR><BR>
    //
    // This is called once before OGL is initialized
-   virtual void initScene()
-   {
-      //DeBugOut = Debug::getStream(0, 3, true, true, 1, true);
-
-      //std::cout << "---------- App:init() ---------------" << std::endl;
-      // Initialize devices
-      std::string wand("VJWand");
-      std::string vjhead("VJHead");
-      std::string but0("VJButton0");
-      std::string but1("VJButton1");
-      std::string but2("VJButton2");
-      std::string but3("VJButton3");
-      std::string but4("VJButton4");
-      std::string but5("VJButton5");
-
-      mWand.init(wand);
-      mHead.init(vjhead);
-      mButton0.init(but0);
-      mButton1.init(but1);
-      mButton2.init(but2);
-      mButton3.init(but3);
-      mButton4.init(but4);
-      mButton5.init(but5);
-
-      myInit();
-   }
+   virtual void initScene();
 
    void myInit();
 
-   void initTweek( int& argc, char* argv[] );
+   void initTweek(int& argc, char* argv[]);
 
    virtual osg::Group* getScene()
    {
@@ -177,8 +152,7 @@ private:
    osg::MatrixTransform*   mModelTrans;
    osg::Node*              mModel;
 
-   OsgNavigater  mNavigator;       /** Navigation class */
-   //cluster::UserData< OsgNavigater >  mNavigater;
+   OsgNavigator  mNavigator;       /** Navigation class */
 
    std::string mFileToLoad;
 
