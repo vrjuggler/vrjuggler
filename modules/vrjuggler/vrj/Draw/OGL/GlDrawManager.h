@@ -255,8 +255,8 @@ protected:
    std::vector<GlPipe*>   pipes;    /**< A list of the pipes in the system */
 
    // --- Helper field data --- //
-   vpr::TSObjectProxy<int>             mContextId;  /**<  TS Data for context id */
-   vpr::TSObjectProxy<GlUserData>    mUserData;     /**  User data for draw func */
+   vpr::TSObjectProxy<int>           mContextId;   /**<  TS Data for context id */
+   vpr::TSObjectProxy<GlUserData>    mUserData;    /**  User data for draw func */
 
    // --- MP Stuff -- //
    vpr::Semaphore    drawTriggerSema;  /**< Semaphore for draw trigger */
