@@ -32,15 +32,16 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <stdio.h>
 
 #include <vrj/Kernel/SystemFactoryOSX.h>
-#include <vpr/Thread/Thread.h>
-#include <vpr/System.h>
-#include <vrj/Util/Debug.h>
-#include <CoreFoundation/CFString.h>
+//#include <vpr/Thread/Thread.h>
+//#include <vpr/System.h>
+//#include <vrj/Util/Debug.h>
+//#include <CoreFoundation/CFString.h>
+
 
 namespace vrj
 {
@@ -49,9 +50,11 @@ vprSingletonImp(SystemFactoryOSX);
 
 // This function comes from Carbon SetupGL 1.5 distributed by Apple
 // Corporation.  Its use is here is permitted by the license.
+/*
 static Boolean PreflightGL (Boolean checkFullscreen)
 {
    // ensure Mac OS X flag is set
+   
    if ((Ptr) kUnresolvedCFragSymbolAddress == (Ptr) aglChoosePixelFormat) // check for existance of OpenGL
       return false;
 
@@ -59,9 +62,11 @@ static Boolean PreflightGL (Boolean checkFullscreen)
    if (checkFullscreen &&
        ((Ptr) kUnresolvedCFragSymbolAddress == (Ptr) DSpStartup)) // check for existance of DSp
       return false;
+      
    return true;
 }
-
+*/
+/*
 void SystemFactoryOSX::CarbonApplicationThread(void* nullData)
 {
     Initialize();
@@ -70,9 +75,12 @@ void SystemFactoryOSX::CarbonApplicationThread(void* nullData)
     InitComplete = true;
     EventLoop(); // This is where we will put the main loop to retrieve events from carbon
 }
+*/
+
 
 SystemFactoryOSX::SystemFactoryOSX()
 {
+    /*
     InitComplete = false; //We haven't initialized yet!
 
     vpr::ThreadMemberFunctor<SystemFactoryOSX>* memberFunctor = new vpr::ThreadMemberFunctor<SystemFactoryOSX>(this, &SystemFactoryOSX::CarbonApplicationThread, NULL);
@@ -80,6 +88,8 @@ SystemFactoryOSX::SystemFactoryOSX()
     new_thread = new vpr::Thread(memberFunctor);
 
     while(!InitComplete); //Spin here until the application is initialized!
+    */
+    //PreflightGL (false);
 }
 
 /*******************************************************************/
@@ -87,33 +97,35 @@ SystemFactoryOSX::SystemFactoryOSX()
 // Menubar Definitions
 //
 /*******************************************************************/
-#define rMenuBar    128 /* menu bar */
+/*
+#define rMenuBar    128 // menu bar
 
-#define mApple      128 /* Apple menu */
+#define mApple      128 // Apple menu
 #define iAbout      1
 
-#define mFile       129 /* File menu */
+#define mFile       129 // File menu 
 #define iNew        1
 #define iClose      4
 #define iQuitSeparator  10
 #define iQuit       11
 
-#define mEdit       130 /* Edit menu */
+#define mEdit       130 // Edit menu
 
-#define kAboutBox   200 /* Dialog resource for About box */
-
+#define kAboutBox   200 // Dialog resource for About box
+*/
 /*******************************************************************/
 //
 // Carbon Mac OS X Event handling
 //
 /*******************************************************************/
-
+/*
 static OSErr QuitAppleEventHandler( const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon )
 {
     SystemFactoryOSX::instance()->setQuitFlag(true);
     return noErr;
 }
-
+*/
+/*
 void SystemFactoryOSX::Initialize()
 {
     OSErr   err;
@@ -125,7 +137,7 @@ void SystemFactoryOSX::Initialize()
     if (err != noErr)
         ExitToShell();
 
-    /*/ Doesn't work right quite yet...
+     Doesn't work right quite yet...
     char    bundle_path[1024];
     char    root_path[] = "\0";
     CFStringRef bundle_path_cfstr;
@@ -147,16 +159,16 @@ void SystemFactoryOSX::Initialize()
         vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error setting the menubar!" << std::endl << vprDEBUG_FLUSH;;
 
     CFRelease(bundleURL);
-    CFRelease(bundle_path_cfstr); */
+    CFRelease(bundle_path_cfstr);
 
     Handle  menuBar;
     MenuRef menu;
     long    response;
 
-    menuBar = GetNewMBar(rMenuBar); /* read menus into menu bar */
+    menuBar = GetNewMBar(rMenuBar); // read menus into menu bar
     if ( menuBar != nil )
     {
-        SetMenuBar(menuBar);    /* install menus */
+        SetMenuBar(menuBar);    // install menus 
 
         err = Gestalt(gestaltMenuMgrAttr, &response);
     if ((err == noErr) && (response & gestaltMenuMgrAquaLayoutMask))
@@ -170,7 +182,8 @@ void SystemFactoryOSX::Initialize()
     // This has to be done no matter what!
     DrawMenuBar();
 }
-
+*/
+/*
 void SystemFactoryOSX::EventLoop()
 {
     Boolean gotEvent;
@@ -191,7 +204,8 @@ void SystemFactoryOSX::EventLoop()
     // Cmd + Q works for killing the application.
     ExitToShell();
 }
-
+*/
+/*
 void SystemFactoryOSX::DoEvent(EventRecord *event)
 {
     char    key;
@@ -204,7 +218,7 @@ void SystemFactoryOSX::DoEvent(EventRecord *event)
             part = FindWindow(event->where, &whichWindow);
             switch (part)
             {
-                case inMenuBar:  /* process a moused menu command */
+                case inMenuBar:  // process a moused menu command 
                     DoMenuCommand(MenuSelect(event->where));
                     break;
                 default: break;
@@ -222,13 +236,14 @@ void SystemFactoryOSX::DoEvent(EventRecord *event)
                 break;
     }
 }
-
+*/
+/*
 void SystemFactoryOSX::DoMenuCommand(long menuResult)
 {
-    short   menuID;     /* the resource ID of the selected menu */
-    short   menuItem;   /* the item number of the selected menu */
+    short   menuID;     // the resource ID of the selected menu 
+    short   menuItem;   // the item number of the selected menu 
 
-    menuID = HiWord(menuResult);    /* use macros to get item & menu number */
+    menuID = HiWord(menuResult);    // use macros to get item & menu number 
     menuItem = LoWord(menuResult);
 
     switch (menuID)
@@ -256,7 +271,7 @@ void SystemFactoryOSX::DoMenuCommand(long menuResult)
             break;
     }
 
-    HiliteMenu(0);  /* unhighlight what MenuSelect (or MenuKey) hilited */
+    HiliteMenu(0);  // unhighlight what MenuSelect (or MenuKey) hilited 
 }
-
+*/
 };
