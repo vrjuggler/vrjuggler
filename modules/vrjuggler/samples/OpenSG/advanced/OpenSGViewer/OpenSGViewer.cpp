@@ -188,7 +188,7 @@ void OpenSGViewer::initScene(void)
 }
 
 //! NOTE: Inherited from jccl::ConfigElementHandler
-bool OpenSGViewer::configAdd(jccl::ConfigELementPtr element)
+bool OpenSGViewer::configAdd(jccl::ConfigElementPtr element)
 {
    return true;
 }
