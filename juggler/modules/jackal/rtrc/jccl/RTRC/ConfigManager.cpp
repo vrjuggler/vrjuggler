@@ -578,7 +578,7 @@ int ConfigManager::attemptReconfiguration()
 
       for (unsigned int i = 0 ; i < mElementHandlers.size() ; i++)
       {
-         mElementHandlers[i]->configProcessPending();
+         elements_processed += mElementHandlers[i]->configProcessPending();
       }
 
       unlockPending();
