@@ -4,6 +4,7 @@
           title="Choose a category">
    <category label="Display" title="Choose a display" icon="org/vrjuggler/vrjconfig/images/display64.png">
       <wizard label="Test wizard" wizard_location="" icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
+      <type label="Display Window" title="Choose a display window" token="display_window" icon="org/vrjuggler/vrjconfig/images/display64.png"/>
    </category>
    <editor label="Simulator" class="" icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
    <category label="Cluster" title="Choose a cluster editor" icon="org/vrjuggler/vrjconfig/images/cluster64.png">
