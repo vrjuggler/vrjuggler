@@ -49,6 +49,7 @@ Table of contents:
             HP-UX 11.00
             FreeBSD 4.2 and 5.0-CURRENT (x86)
             Sun Solaris 7 (x86) with patches up through June 6, 2001
+            Sun Solaris 8 (x86 and SPARC) with patches up through June 25, 2001
             Mac OS X
 
     B. Minimum requirements (by operating system)
@@ -75,6 +76,17 @@ Table of contents:
 
         * HP-UX 11.00
             aCC A.03.30
+            OpenGL
+
+        * Solaris 7 (patches including 108377-23)
+            GCC 2.85.2 or newer
+            GNU binutils 2.11.2 or newer
+            OpenGL
+
+        * Solaris 8 (patches including 108652-24 for SPARC or 108653-24 for
+          x86)
+            GCC 3.0 or newer
+            GNU binutils 2.11.2 or newer
             OpenGL
 
         * Win32
