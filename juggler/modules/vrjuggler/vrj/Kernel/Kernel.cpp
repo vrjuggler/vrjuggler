@@ -531,7 +531,11 @@ void Kernel::startDrawManager(bool newMgr)
    if(newMgr)
    {
       mDrawManager->setDisplayManager(mDisplayManager);
-      mDrawManager->configProcessPending();                 // Handle any pending configuration requests BEFORE we init and start it going
+      environmentManager->getConfigManager()->lockPending();
+      {
+         mDrawManager->configProcessPending();                 // Handle any pending configuration requests BEFORE we init and start it going
+      }
+      environmentManager->getConfigManager()->unlockPending();
    }
    mDrawManager->setApp(mApp);
 
