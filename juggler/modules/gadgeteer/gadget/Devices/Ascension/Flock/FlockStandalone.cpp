@@ -123,23 +123,55 @@ int aFlock::start()
 {
     if (!_active)
     {
-	cout << "    Getting flock ready....\n" << flush;
+	cout << "aFlock: Getting ready....\n\n" << flush;
 	
+	cout<<"aFlock: Opening port\n"<<flush;
 	aFlock::open_port( _port, _baud, _portId );
 	if (_portId == -1) 
 	    return 0;
+	sleep(5);
+	    
+	cout<<"aFlock: Setting blocking\n"<<flush;
 	aFlock::set_blocking( _portId, _blocking );
-	aFlock::set_sync( _portId, _syncStyle );
-	aFlock::set_group( _portId );
-	aFlock::set_autoconfig( _portId, _numBirds );
-	aFlock::set_transmitter( _portId, _xmitterUnitNumber );
-	aFlock::set_filter( _portId, _filter );
-	aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
-	aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
-	aFlock::pickBird( _xmitterUnitNumber,_portId );
-	aFlock::set_rep_and_stream( _portId, _reportRate );
+	sleep(5);
 	
-	cout  << "Flock ready to go.." << endl << flush;
+	cout<<"aFlock: Setting sync\n"<<flush;
+	aFlock::set_sync( _portId, _syncStyle );
+	sleep(5);
+	
+	cout<<"aFlock: Setting group\n"<<flush;
+	aFlock::set_group( _portId );
+	sleep(5);
+	
+	cout<<"aFlock: Setting autoconfig\n"<<flush;
+	aFlock::set_autoconfig( _portId, _numBirds );
+	sleep(5);
+	
+	cout<<"aFlock: Setting transmitter\n"<<flush;
+	aFlock::set_transmitter( _portId, _xmitterUnitNumber );
+	sleep(5);
+	
+	cout<<"aFlock: Setting filter\n"<<flush;
+	aFlock::set_filter( _portId, _filter );
+	sleep(5);
+	
+	cout<<"aFlock: Setting hemisphere\n"<<flush;
+	aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
+	sleep(3);
+	
+	cout<<"aFlock: Setting pos_angles\n"<<flush;
+	aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
+	sleep(3);
+	
+	cout<<"aFlock: Setting pickBird\n"<<flush;
+	aFlock::pickBird( _xmitterUnitNumber,_portId );
+	sleep(3);
+	
+	cout<<"aFlock: Setting rep_and_stream\n"<<flush;
+	aFlock::set_rep_and_stream( _portId, _reportRate );
+	sleep(3);
+	
+	cout  << "aFlock: ready to go.." << endl << flush;
 	
 	// flock is active.
 	_active = true;
@@ -196,11 +228,21 @@ int aFlock::stop()
     
     bird_command[0] = 'B';
     write( _portId, bird_command, 1 );
-    ioctl( _portId, TCFLSH, (char *) 0 );
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( _portId, TCFLSH, 2 );
+    
     sginap( 5 );
     bird_command[0] = 'G';
     write( _portId, bird_command, 1 );
-    ioctl( _portId, TCFLSH, (char *) 0 );
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( _portId, TCFLSH, 2 );
+    
     sleep( 2 );
     close( _portId );
     _portId = -1;
@@ -478,71 +520,91 @@ float aFlock::rawToFloat( char& r1, char& r2 )
 
 void  aFlock::pickBird( const int& birdID, const int& port )
 {
-   char buff = 0xF0 + birdID;
-   write( port, &buff, 1 );
-   ioctl( port, TCFLSH, (char*) 0 );
-   
-   sginap( 1 );
+    char buff = 0xF0 + birdID;
+    write( port, &buff, 1 );
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
+    
+    sginap( 1 );
 }
 
 int aFlock::open_port( const char* const serialPort, 
 			const int& baud, 
 			int& _portId )
 {
-   ///////////////////////////////////////////////////////////////////
-   // Open and close the port to reset the tracker, then
-   // Open the port
-   ///////////////////////////////////////////////////////////////////
-   _portId = open( serialPort, O_RDWR | O_NDELAY );
-   if (_portId == -1)
-   {
-      cout << "!!aFlock port open (1 of 2) failed\n" << flush ;
-      return _portId;
-   } else {
-      cout << "aFlock port open (1 of 2) successfully\n" << flush;
-   }
-   
-   sleep(2);
-   close( _portId );
-   _portId = open( serialPort, O_RDWR | O_NDELAY );
-   
-   if (_portId == -1)
-   {
-      cout << "!!aFlock port open (2 of 2) failed\n" << flush;
-      return _portId;
-   } else {
-      cout << "aFlock port open (2 of 2) successfully\n" << flush;
-   }
-
-   //////////////////////////////////////////////////////////////////
-   // Setup the port, current setting is 38400 baud
-   //
-   //////////////////////////////////////////////////////////////////
-   termio port_a;
-   ioctl( _portId,TCGETA,&port_a );
-
-   port_a.c_iflag = port_a.c_oflag = port_a.c_lflag = 0;
-
-   switch (baud)
-   {
-   case 38400:port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
-      break;
-   case 19200:port_a.c_cflag = (B19200 | CS8 | CLOCAL | CREAD);
-      break;
-   case 9600:port_a.c_cflag = (B9600 | CS8 | CLOCAL | CREAD);
-      break;
-   case 4800:port_a.c_cflag = (B4800 | CS8 | CLOCAL | CREAD);
-      break;
-   }
-
-   port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
-   port_a.c_cc[0] = port_a.c_cc[1] = port_a.c_cc[2] = port_a.c_cc[3] = 0;
-   port_a.c_cc[4] = port_a.c_cc[5] = 1;
-
-   // Set the new attributes
-   ioctl( _portId,TCSETA,&port_a );
-   ioctl( _portId,TIOCNOTTY );
-   return _portId;
+    ///////////////////////////////////////////////////////////////////
+    // Open and close the port to reset the tracker, then
+    // Open the port
+    ///////////////////////////////////////////////////////////////////
+    _portId = open( serialPort, O_RDWR | O_NDELAY);
+    if (_portId == -1)
+    {
+	cout << "  port reset failed (because port open failed)\n" << flush ;
+	return _portId;
+    } else {
+	sleep(2);
+	close( _portId );
+	cout << "  port reset successfully (port was opened then closed)\n" << flush;
+    }
+    
+    
+    sleep(2);
+    _portId = open( serialPort, O_RDWR | O_NDELAY);
+    
+    if (_portId == -1)
+    {
+	cout << "  port open failed\n" << flush;
+	return _portId;
+    } else {
+	cout << "  port open successfully\n" << flush;
+    }
+    
+    sleep(2);
+    
+    //////////////////////////////////////////////////////////////////
+    // Setup the port, current setting is 38400 baud
+    //
+    //////////////////////////////////////////////////////////////////
+    
+    cout << "  Getting current term setting\n" << flush;
+    termio port_a;
+    ioctl( _portId, TCGETA, &port_a );
+    
+    port_a.c_iflag = port_a.c_oflag = port_a.c_lflag = 0;
+    
+    switch (baud)
+    {
+    case 38400:
+	port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
+	break;
+    
+    case 19200:
+	port_a.c_cflag = (B19200 | CS8 | CLOCAL | CREAD);
+	break;
+    case 9600:
+	port_a.c_cflag = (B9600 | CS8 | CLOCAL | CREAD);
+	break;
+    
+    case 4800:
+	port_a.c_cflag = (B4800 | CS8 | CLOCAL | CREAD);
+	break;
+    }
+    
+    port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
+    port_a.c_cc[0] = port_a.c_cc[1] = port_a.c_cc[2] = port_a.c_cc[3] = 0;
+    port_a.c_cc[4] = port_a.c_cc[5] = 1;
+    
+    // Set the new attributes
+    cout << "  Modifying old term setting: "<<baud<<" baud.\n" << flush;
+    ioctl( _portId, TCSETA, &port_a );
+    
+    cout<<"  Disconnect calling process from terminal and session (TIOCNOTTY).\n"<<flush;
+    ioctl( _portId, TIOCNOTTY );
+    
+    return _portId;
 }
 
 void aFlock::set_blocking( const int& port, const int& blocking )
@@ -565,7 +627,11 @@ void aFlock::set_blocking( const int& port, const int& blocking )
     // 1 Blocked
     fcntl( port, F_SETFL, blocking ? blockf : nonblock ); 
     
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
     ioctl( port, TCFLSH, 2 );
+    
     sginap( 10 );
     
     // read 1kb of junk
@@ -587,7 +653,11 @@ void aFlock::set_sync( const int& port, const int& sync )
     unsigned char buff[4] = {'A', 1};
     buff[1] = sync;
     write( port,buff,2 );
-    ioctl( port,TCFLSH,0 );
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
 }
 
 
@@ -642,7 +712,12 @@ void aFlock::set_hemisphere( const int& port,
 	    break;
 	}
 	write( port, buff, 3 );
-	ioctl( port, TCFLSH, (char *) 0 );
+	
+	// TCFLSH = 0, flush the input
+	// TCFLSH = 1, flush the output queue; 
+	// TCFLSH = 2, flush both the input and output queues. 
+	ioctl( port, TCFLSH, 2 );
+    
 	sginap( 5 );
     }
 }
@@ -659,7 +734,12 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
     /////////////////////////////////////////////////////////////////
     buff[0] = reportRate;
     write( port, buff, 1 );
-    ioctl( port, TCFLSH, (char *) 0 );
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
+    
     sginap( 20 );
     
     ////////////////////////////////////////////////////////////////
@@ -667,7 +747,12 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
     ////////////////////////////////////////////////////////////////
     buff[0] = '@';
     write( port, buff, 1 );
-    ioctl( port, TCFLSH, (char *) 0 );
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
+    
     sginap( 5 );
 }
 
@@ -684,7 +769,12 @@ void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& 
 	aFlock::pickBird( i,port );
 	buff[0] = 'Y';
 	write( port, buff, 1 );
-	ioctl( port, TCFLSH, (char *) 0 );
+	
+	// TCFLSH = 0, flush the input
+	// TCFLSH = 1, flush the output queue; 
+	// TCFLSH = 2, flush both the input and output queues. 
+	ioctl( port, TCFLSH, 2 );
+    
 	sginap( 5 );
     }
 }
@@ -702,8 +792,12 @@ void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
     buff[1] = 0x04;
     buff[2] = 0x00;
     buff[3] = 0;
-    write(port,buff,4);
-    ioctl(port,TCFLSH,(char*)0);
+    write(port, buff, 4);
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
     
     //TODO: Do I need to sleep here?
     sginap(120);
@@ -719,7 +813,12 @@ void aFlock::set_transmitter(const int& port, const int& transmitter)
     buff[0] = (unsigned char) (0x30);
     buff[1] = (unsigned char) transmitter  << 4;
     write(port, buff, 2);
-    ioctl(port, TCFLSH,(char*) 0);
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
+    
     sginap(120);
 }
 
@@ -736,7 +835,12 @@ void aFlock::set_autoconfig(const int& port, const int& numbirds)
     buff[1] = 0x32;
     buff[2] = numbirds+1;  //number of input devices + 1 for transmitter
     write(port, buff,3);
-    ioctl(port, TCFLSH, (char*) 0);
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
+    
     sleep(2);
 }
 
@@ -753,6 +857,11 @@ void aFlock::set_group(const int& port)
     buff[1] = 0x23;
     buff[2] = 0x01;
     write(port, buff, 3);
-    ioctl(port, TCFLSH, (char *) 0);
+    
+    // TCFLSH = 0, flush the input
+    // TCFLSH = 1, flush the output queue; 
+    // TCFLSH = 2, flush both the input and output queues. 
+    ioctl( port, TCFLSH, 2 );
+    
     sleep(2);
 }
