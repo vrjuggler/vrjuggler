@@ -170,6 +170,7 @@ public class PropertySheetFactory extends PropertyComponent
          add_button.setContentAreaFilled(false);
 
          final ConfigElement temp_elm = elm;
+         final ConfigContext temp_ctx = ctx;
          final PropertyDefinition temp_prop_def = propDef;
 
          add_button.addActionListener(new ActionListener()
@@ -178,11 +179,11 @@ public class PropertySheetFactory extends PropertyComponent
             {
                if(ConfigElement.class == temp_prop_def.getType())
                {
-                  addNewEmbeddedElement(temp_elm, temp_prop_def);
+                  addNewEmbeddedElement(temp_ctx, temp_elm, temp_prop_def);
                }
                else
                {
-                  addNewNormalEditor(temp_elm, temp_prop_def);
+                  addNewNormalEditor(temp_ctx, temp_elm, temp_prop_def);
                }
             }
          });
@@ -235,9 +236,9 @@ public class PropertySheetFactory extends PropertyComponent
     * Adds a delete icon next to the given property. When the Icon is clicked
     * it will remove the property from the ConfigElement.
     */
-   private void addDeleteButton(PropertySheet sheet, ConfigElement elm,
-                                PropertyDefinition propDef, Object value,
-                                int row)
+   private void addDeleteButton(PropertySheet sheet, ConfigContext ctx,
+                                ConfigElement elm, PropertyDefinition propDef,
+                                Object value, int row)
    {
       ClassLoader loader = getClass().getClassLoader();
       Icon remove_icon =
@@ -257,6 +258,7 @@ public class PropertySheetFactory extends PropertyComponent
 
          final Object temp_value = value;
          final String temp_string = propDef.getToken();
+         final ConfigContext temp_ctx = ctx;
          final ConfigElement temp_elm = elm;
 
          remove_button.addActionListener(new ActionListener()
@@ -265,7 +267,7 @@ public class PropertySheetFactory extends PropertyComponent
             {
                PropertyComponent temp =
                   (PropertyComponent)((Component)evt.getSource()).getParent();
-               temp_elm.removeProperty(temp_string, temp_value);
+               temp_elm.removeProperty(temp_string, temp_value, temp_ctx);
 
                if(temp.getLayout() instanceof TableLayout)
                {
@@ -332,7 +334,7 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.add(editor, c);
       sheet.add(new JLabel(label), "0," + Integer.toString(row) + ",F,F");
 
-      addDeleteButton(sheet, elm, propDef, value, row);
+      addDeleteButton(sheet, ctx, elm, propDef, value, row);
 
       revalidate();
       repaint();
@@ -355,13 +357,13 @@ public class PropertySheetFactory extends PropertyComponent
                                                             TableLayout.FULL);
       sheet.add(editor_list, c);
 
-      addDeleteButton(sheet, elm, propDef, value, row);
+      addDeleteButton(sheet, ctx, elm, propDef, value, row);
 
       revalidate();
       repaint();
    }
 
-   private void addNewNormalEditor(ConfigElement elm,
+   private void addNewNormalEditor(ConfigContext ctx, ConfigElement elm,
                                    PropertyDefinition propDef)
    {
       // We know that we want the default value for the first
@@ -383,7 +385,7 @@ public class PropertySheetFactory extends PropertyComponent
          default_value = pvd.getDefaultValue();
       }
 
-      elm.addProperty(propDef.getToken(), default_value);
+      elm.addProperty(propDef.getToken(), default_value, ctx);
 
       //XXX: This should be detected through a listener in the Property sheet.
       // We select 2 here because we want to add it to the top of the list.
@@ -391,7 +393,7 @@ public class PropertySheetFactory extends PropertyComponent
       //                elm.getPropertyValueCount(propDef.getToken()) - 1);
    }
 
-   private void addNewEmbeddedElement(ConfigElement elm,
+   private void addNewEmbeddedElement(ConfigContext ctx, ConfigElement elm,
                                       PropertyDefinition propDef)
    {
       Object new_value = null;
@@ -431,7 +433,7 @@ public class PropertySheetFactory extends PropertyComponent
          new_value = temp_factory.create("CHANGEME",
                                          chooser.getSelectedDefinition());
 
-         elm.addProperty(propDef.getToken(), new_value);
+         elm.addProperty(propDef.getToken(), new_value, ctx);
          // XXX: This should be detected through a listener in the Property
          // sheet.  We select 2 here because we want to add it to the top of
          // the list.
