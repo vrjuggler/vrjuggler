@@ -115,7 +115,7 @@ public:
    void myInit();
 
    void initTweek( int& argc, char* argv[] );
-      
+
    virtual osg::Group* getScene()
    {
       return mRootNode;
@@ -175,21 +175,18 @@ public:
    }
 
 private:
-   osg::Vec3 mPos;
-   double posInc;
+   osg::Group*             mRootNode;
+   osg::Group*             mNoNav;
+   osg::MatrixTransform*   mNavTrans;
+   osg::MatrixTransform*   mModelTrans;
+   osg::Node*              mModel;
 
-   osg::Group* mRootNode;
-   osg::Group* mNoNav;
-   osg::MatrixTransform* mNavTrans;
-   osg::MatrixTransform* mModelTrans;
-   osg::Node* mModel;
-
-   float speed;
-   float inc;
-   OsgNavigater* mNavigater;
+   OsgNavigater*  mNavigater;       /** Navigation class */
    //cluster::UserData< OsgNavigater >  mNavigater;
 
    std::string mFileToLoad;
+
+   vpr::Interval           mLastPreFrameTime;   /**< Time of the start of the last preframe */
 
 #ifdef TWEEK_HAVE_CXX
    tweek::CorbaManager mCorbaManager;

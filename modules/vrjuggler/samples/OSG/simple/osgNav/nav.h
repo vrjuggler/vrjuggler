@@ -16,6 +16,8 @@
 #include <vpr/IO/ObjectWriter.h>
 #include <cluster/Plugins/ApplicationDataManager/UserData.h>
 
+/** Navigation data to share across cluster
+ */
 class NavData : public vpr::SerializableObject
 {
 public:
@@ -23,13 +25,10 @@ public:
    {
       float pos_data[16];
       for ( unsigned n=0;n<16;n++ )
-      { 
-         pos_data[n] = reader->readFloat(); 
+      {
+         pos_data[n] = reader->readFloat();
       }
-      
-      //gmtl::Matrix44f temp;
-      //temp.set(pos_data);
-      //mCurPos = temp;
+
       mCurPos.set(pos_data);
       return vpr::ReturnStatus::Succeed;
    }
@@ -39,21 +38,24 @@ public:
       const float* pos_data = mCurPos.getData();
       for ( int n=0;n<16;n++ )
       {
-         writer->writeFloat(pos_data[n]); 
+         writer->writeFloat(pos_data[n]);
       }
       return vpr::ReturnStatus::Succeed;
-   } 
-public:   
+   }
+public:
    gmtl::Matrix44f mCurPos;
 };
 
+/** Class to control all navigation */
 class OsgNavigater
 {
+   /** Navigation mode */
    enum NavMode
    {
-      WALK,
-      FLY
+      WALK,       /**< Constrain to x,y trans and y rotations. */
+      FLY         /**< No restrictions */
    };
+
 public:
    OsgNavigater() : mActive(false), mMode(FLY)
    {;}
@@ -90,54 +92,46 @@ public:
    }
    void update(float delta)
    {
+      // Don't update if not active or we have a very large delta
       if(delta > 2.0 || !mActive)
       {
          return;
       }
-      
-      // Erase the translation from the rotation velocity.
-      gmtl::Matrix44f rot = mRotVelocity;
-      gmtl::setTrans(rot, gmtl::Vec3f(0.0f, 0.0f, 0.0f));
-  
-      // We now have a pure rotation and need to scale it.
-      gmtl::Matrix44f result = scaled_rotate(rot, delta);
+      // Clamp delta
+      if (delta > 1.0)
+      {  delta = 1.0f; }
 
-      
+      // ---------- ROTATION ----------- //
+      // Scale the rotation velocity (slerp) to get a time based change
+      gmtl::Quatf qrot = gmtl::make<gmtl::Quatf>(mRotVelocity);
+      gmtl::Quatf scaled_qrot, src_rot;   // scaled rotation and Identity rotation
+      gmtl::Matrix44f delta_rot;          // The delta rotation to use
+
+      // Only compute if we don't have identity rotation
+      if (!(gmtl::isEqual(gmtl::MAT_IDENTITY44F, mRotVelocity, 0.001f))
+      {
+         gmtl::slerp(scaled_qrot, delta, src_rot, qrot);
+         gmtl::set(delta_rot, scaled_qrot);
+      }
+
       if(mMode == WALK)
       {
-         gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot(result), 0.0f );// Only allow Yaw (rot y)
-         gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler ); 
-         gmtl::postMult(mNavData->mCurPos, real);
+         gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot(delta_rot), 0.0f );// Only allow Yaw (rot y)
+         delta_rot = gmtl::makeRot<gmtl::Matrix44f>( euler );
       }
-      else
-      {
-         gmtl::postMult(mNavData->mCurPos, result);
-      }
-      
-     
-      //real *= delta;
+      gmtl::postMult(mNavData->mCurPos, delta_rot);
 
-      // Do translation.
+      // ------- TRANSLATION ---- //
       gmtl::Vec3f trans_delta;
       if(mMode == WALK)
       {
-         gmtl::Vec3f vel(mVelocity[0], 0.0f, mVelocity[2]);
-         trans_delta = vel * delta;
+         mVelocity[1] = 0.0f;
       }
-      else
-      {
-         trans_delta =  mVelocity * delta;
-      }
-      
+      trans_delta =  mVelocity * delta;
+
       // Post multiply the delta translation
       gmtl::Matrix44f trans_matrix = gmtl::makeTrans<gmtl::Matrix44f>(trans_delta);
-
       gmtl::postMult(mNavData->mCurPos, trans_matrix);
-            
-      //osg::Matrix osg_trans_matrix;
-      //osg_trans_matrix.set(trans_matrix.getData());
-      
-      //mNavTransform->postMult(osg_trans_matrix);
    }
 
    gmtl::Matrix44f getCurPos()
@@ -151,7 +145,7 @@ public:
          return mNavData->mCurPos;
       }
    }
-   
+
    void setCurPos(const gmtl::Matrix44f& pos)
    {
       if(mActive)
@@ -159,49 +153,15 @@ public:
          mNavData->mCurPos = pos;
       }
    }
-    
-   gmtl::Matrix44f scaled_rotate(gmtl::Matrix44f rot_mat, float delta)
-   {
-      //: Confused by quaternions???
-      //  All this does is scale the angle of rotation back by about %4
-      //  Quaternions allow you to interpolate between rotations,
-      //  thus getting a scale factor of the original (with respect to identity)
 
-      // I should scale the rotation matrix here
-      // I should also compute a relative rotation from the head here as well
-      gmtl::Matrix44f transform, transformIdent;
-      gmtl::Quatf     source_rot, goal_rot, slerp_rot;
-
-      // Create an identity quaternion to rotate from
-      gmtl::identity(transformIdent);
-
-      // Create the goal rotation quaternion (the goal is the input matrix)
-      gmtl::set(goal_rot, rot_mat);
-
-      // If we don't have two identity matrices, then interpolate between them
-      if(transformIdent != rot_mat)
-      {
-         gmtl::slerp(slerp_rot, /*0.04f **/ delta, source_rot, goal_rot ); // Transform part way there
-         gmtl::set( transform, slerp_rot ); // Create the transform matrix to use
-      }
-      else
-      {
-         gmtl::identity(transform);
-      }
-      //navigator::navRotate(transform);                   // update the mCurPos navigation matrix
-      return transform;
-   }
 private:
-   //osg::MatrixTransform*   mNavTransform;
    bool                    mActive;
    NavMode                 mMode;
-   
-   //NavData                 mNavData;
+
+   /** Current postion (as userdate for sharing across cluster */
    cluster::UserData< NavData >  mNavData;
 
-   //gmtl::Matrix44f         mCurPos;
-  
-   gmtl::Vec3f             mVelocity;
-   gmtl::Matrix44f         mRotVelocity;
+   gmtl::Vec3f             mVelocity;        /**< Current trans velocity */
+   gmtl::Matrix44f         mRotVelocity;     /**< Current angular velocity */
 };
 #endif /* _OSG_NAVIGATE_H */
