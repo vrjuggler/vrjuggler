@@ -94,13 +94,13 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     return true;
 }
 
-
 // Main thread of control for this active object
 void vjXWinKeyboard::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
-   while (0 == vjThread::self());
+   while (NULL == vjThread::self())
+   { vjDEBUG(vjDBG_ALL,1) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;}
    myThread = (vjThread*) vjThread::self();
 
    // Open the x-window
@@ -528,7 +528,8 @@ int vjXWinKeyboard::openTheWindow()
    m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
    if (m_display == NULL)
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "vjKeyboard::StartSampling() : failed to open display" << endl;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
+                     << "vjKeyboard::StartSampling() : failed to open display" << endl << vjDEBUG_FLUSH;
       return 0;
    }
    m_screen = DefaultScreen(m_display);
@@ -551,7 +552,8 @@ int vjXWinKeyboard::openTheWindow()
 
    if (i == nVisuals)
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "vjKeyboard::startSampling() : find visual failed" << endl;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
+                  << "vjKeyboard::startSampling() : find visual failed" << endl << vjDEBUG_FLUSH;
       return 0;
    }
 
