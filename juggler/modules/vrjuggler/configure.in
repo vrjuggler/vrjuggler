@@ -490,7 +490,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
     LIBS=`unix2dos "$LIBS"`
-    LN_S='cp -pr'
+    LN_S='cp -r'
     RM_LN='rm -rf'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
