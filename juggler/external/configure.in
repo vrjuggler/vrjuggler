@@ -65,7 +65,7 @@ AC_ARG_WITH([boost],
 
 AC_ARG_WITH(boost-includes,
             [  --with-boost-includes=<DIR>
-                       Boost header file directory     [default=/usr/local/include]],
+                          Boost header file directory     [default=/usr/local/include]],
             [BOOST_INCLUDES="$withval"], [BOOST_INCLUDES=no])
 
 AC_ARG_WITH(cppdom,
@@ -99,8 +99,7 @@ AC_ARG_WITH(cxx-orb-lib,
             [CXX_ORB_LIB_DIR="$withval"], [CXX_ORB_LIB_DIR='none'])
 
 AC_ARG_WITH(gmtl,
-            [  --with-gmtl=<PATH>
-                       Prefix where GMTL is installed  [default=/usr/local]],
+            [  --with-gmtl=<PATH>      Prefix where GMTL is installed  [default=/usr/local]],
             [GMTL_ROOT="$withval"], [GMTL_ROOT=/usr/local])
 
 AC_ARG_WITH(nspr,
@@ -109,7 +108,7 @@ AC_ARG_WITH(nspr,
 
 AC_ARG_WITH(nspr-includes,
             [  --with-nspr-includes=<DIR>
-                       NSPR headers are in DIR         [default=/usr/include]],
+                          NSPR headers are in DIR         [default=/usr/include]],
             _with_nspr_inc="$withval", _with_nspr_inc="$NSPR_ROOT/include")
 
 AC_ARG_WITH(openal,
