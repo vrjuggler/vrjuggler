@@ -208,7 +208,10 @@ Table of contents:
          iv. Compile VR Juggler (using the Autoconf system and GNU make)
 
               a. Generate header template (vjDefines.h.in) and the
-                 configure script
+                 configure script (this step is only required if you
+                 downloaded the source from CVS; pre-packaged source
+                 distributions already have vjDefines.h.in and the
+                 configure script)
 
                     autoheader
                     autoconf
