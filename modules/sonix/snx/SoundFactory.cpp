@@ -26,6 +26,8 @@ void SoundFactory::createImplementation( const std::string& apiName,
    {
       mImplementation = new aj::StubSoundImplementation;
    }
+   
+   mImplementation->setName( apiName );
 }
 
 }; // end namespace

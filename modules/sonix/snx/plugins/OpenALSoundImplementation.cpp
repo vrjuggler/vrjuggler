@@ -200,33 +200,34 @@ void OpenALSoundImplementation::startAPI()
       mDev = alcOpenDevice( NULL );
 	   if (mDev == NULL) 
       {
-		   std::cerr << "Could not open device\n" << std::flush;
+		   std::cerr << "ERROR: Could not open device\n" << std::flush;
    	   return;
 	   }
 
       // Initialize ALUT
-      std::vector<int> attrlist;
-      attrlist.push_back( ALC_FREQUENCY );
-      attrlist.push_back( 22050 );
-      attrlist.push_back( ALC_INVALID );
+      int attrlist[] = { ALC_FREQUENCY, 22050, ALC_INVALID };
 
       // create context
-	   mContextId = alcCreateContext( mDev, &attrlist[0] );
+	   mContextId = alcCreateContext( mDev, attrlist );
       if (mContextId == NULL) 
       {
          std::string err = (char*)alGetString( alcGetError() );
-		   std::cerr << "Could not open context: " << err.c_str() << "\n" << std::flush;
+		   std::cerr << "ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
 		   return;
 	   }
 
       // make context active...
 	   alcMakeContextCurrent( mContextId );
+      
+      std::cerr<<"NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
    }
    else
    {
-      std::cerr << "startAPI called when API is already started\n" << std::flush;
+      std::cerr << "WARNING: startAPI called when API is already started\n" << std::flush;
    }      
 
+  
+   
    // init the listener...
    this->setListenerPosition( mListenerPos );
 
@@ -241,16 +242,28 @@ void OpenALSoundImplementation::startAPI()
  */
 void OpenALSoundImplementation::shutdownAPI()
 {
-   if (mDev != NULL && mContextId != NULL)
+   if (this->isStarted() == false)
    {
-      this->unbindAll();
-      
-      alcDestroyContext( mContextId );
-	   alcCloseDevice(  mDev  );
-
-      mContextId = NULL;
-      mDev = NULL;
+      std::cerr << "WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
+      return;
    }
+   
+   this->unbindAll();
+
+   if (mContextId != NULL)
+   {
+      alcDestroyContext( mContextId );
+   }
+
+   if (mDev != NULL)
+   {
+      alcCloseDevice(  mDev  );
+   }
+
+   mContextId = NULL;
+   mDev = NULL;
+
+   std::cerr<<"NOTICE: OpenAL API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
 }   
 
 /**
@@ -299,6 +312,15 @@ void OpenALSoundImplementation::unbindAll()
  */
 void OpenALSoundImplementation::bind( const std::string& alias )
 {
+   // need to initialize the get error thingie, otherwise it can misreport errors...
+   int err = alGetError(); 
+
+   if (this->isStarted() == false)
+   {
+      std::cerr << "ERROR: API not started, bind() failed\n" << std::flush;
+      return;
+   }
+   
    aj::SoundInfo& soundInfo = this->lookup( alias );
 
    // if alias is already bound, then unbind it...
@@ -314,40 +336,82 @@ void OpenALSoundImplementation::bind( const std::string& alias )
       default:
       case aj::SoundInfo::FILESYSTEM:
       {
-         ALuint bufferID;
-         ALuint sourceID;
+         ALuint bufferID( 0 );
+         ALuint sourceID( 0 );
 
          // open the file as readonly binary
 	      if (!ajFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
 		      std::cerr<<"file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
-            return;
+            break;
 	      }
 
          // read the data from the file.
-         std::cout<<"loading: "<<soundInfo.filename<<"... " << std::flush;
+         std::cout<<"NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
          ajFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
-         std::cout<<"done\n" << std::flush;
+         std::cout<<"done("<<mBindLookup[alias].data.size()<<")\n" << std::flush;
 
-	      // put the data in an OpenAL buffer
-	      alGenBuffers( 1, &bufferID );
-         alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0 );
-         if (alGetError() != AL_NO_ERROR)
+	      // create a new buffer to put our loaded data into...
+         alGenBuffers( 1, &bufferID );
+         err = alGetError();
+         if (err != AL_NO_ERROR)
          {
-		      std::cerr << "Could not buffer data\n" << std::flush;
-            alDeleteBuffers( 1, &bufferID );
+            std::cerr << "ERROR: Could not gen a buffer [err="<<err<<"]\n" << std::flush;
+            switch (err)
+            {
+               case AL_INVALID_VALUE:
+                  std::cerr << "       invalid value < 0\n" << std::flush;
+                  break;
+               case AL_OUT_OF_MEMORY:
+                  std::cerr << "       out of memory\n" << std::flush;
+                  break;
+               default:
+                  std::cerr << "       unknown error\n" << std::flush;
+            }
+         }
+         
+         // put the data into an OpenAL buffer
+         alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0 );
+         err = alGetError();
+         if (err != AL_NO_ERROR)
+         {
+            std::cerr << "ERROR: Could not buffer data [bufferID="<<bufferID<<",err="<<err<<"]\n" << std::flush;
+            switch (err)
+            {
+               case AL_ILLEGAL_COMMAND:
+                  std::cout<<"       Streaming buffers cannot use alBufferData\n"<<std::flush;
+                  break;
+               case AL_INVALID_NAME:
+                  std::cout<<"       bufferID is not a valid buffer name\n"<<std::flush;
+                  break;
+               //case AL_INVALID_ENUM:
+               //   std::cout<<"       format is invalid\n"<<std::flush;
+               //   break;
+               case AL_OUT_OF_MEMORY:
+                  std::cout<<"       not enough memory is available to make a copy of this data\n"<<std::flush;
+                  break;
+               default:
+                  std::cout<<"       unknown error\n"<<std::flush;
+            }            
+		      alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
-		      return;
+		      break;
 	      }
+         
+         else
+         {
+            //std::cerr << "DEBUG: buffered data success [bufferID="<<bufferID<<"]\n" << std::flush;
+         }
+
       
          // associate a source with the buffer
 	      alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-		      std::cerr << "Could not gen a source\n" << std::flush;
+		      std::cerr << "ERROR: Could not generate a source\n" << std::flush;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
-		      return;
+		      break;
 	      }
 	      alSourcei( sourceID, AL_BUFFER, bufferID );
 	      alSourcei( sourceID, AL_LOOPING, AL_FALSE );
@@ -361,6 +425,13 @@ void OpenALSoundImplementation::bind( const std::string& alias )
       }
    }
 
+   // was it playing?  if so, then start it up again...
+   if (soundInfo.triggerOnNextBind == true)
+   {
+      soundInfo.triggerOnNextBind = false; // done...
+      std::cout<<"NOTIFY: triggering reconfigured sound\n"<<std::flush;
+      this->trigger( alias );
+   }
 }   
 
 /**
@@ -369,6 +440,28 @@ void OpenALSoundImplementation::bind( const std::string& alias )
  */
 void OpenALSoundImplementation::unbind( const std::string& alias )
 {
+   if (this->isStarted() == false)
+   {
+      std::cerr << "ERROR: API not started, unbind() failed\n" << std::flush;
+      return;
+   }
+ 
+   // is it currently playing?  if so, stop it
+   if (this->isPlaying( alias ) == true)
+   {
+      this->stop( alias );
+      
+      // should trigger next time, since we just stopped it
+      if (mSounds.count( alias ) > 0)
+      {
+         mSounds[alias].triggerOnNextBind = true; 
+      }
+      else
+      {
+         std::cout<<"ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
+      }      
+   }
+     
    if (mBindLookup.count( alias ) > 0)
    {
       alDeleteSources( 1, &mBindLookup[alias].source );

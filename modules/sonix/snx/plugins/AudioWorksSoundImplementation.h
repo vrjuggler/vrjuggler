@@ -179,18 +179,20 @@ protected:
    class AWSoundInfo
    {
    public:
-      awWave *myWave;   // Each wave must have a sound
-      awSound *mySound;   // and vice versa
-      awPlayer* mPlayer; // the player (so we can support non-positional sounds, attach the sound to the listener)
+      awWave*     mWave;   // Each wave must have a sound
+      awSound*    mSound;   // and vice versa
+      awPlayer*   mPlayer; // the player (so we can support non-positional sounds, attach the sound to the listener)
    };   
    
    std::map<std::string, AWSoundInfo> mBindTable;
 
-   awEngine *myEngine;
-   awChannel *myChannel;
-   awEnv *myEnv;
-   awScene *myScene;
-   awObserver *myObs;
+   awEngine*      mEngine;
+   awChannel*     mChannel;
+   awEnv*         mEnv;
+   awScene*       mScene;
+   awObserver*    mObs;
+   
+   bool mIsStarted;
 
    /** @link dependency */
    /*#  aj::SoundAPIInfo lnkaj::SoundAPIInfo; */

@@ -17,7 +17,7 @@ public:
    /**
     * @semantics default constructor 
     */
-   SoundImplementation() : mSounds()
+   SoundImplementation() : mSounds(), mName( "unknown" )
    {
       mListenerPos[0] = 0.0f;
       mListenerPos[1] = 0.0f;
@@ -62,10 +62,8 @@ public:
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
-      // todo: capture this in a soundinfo::play func
-      this->lookup( alias ).isPlaying = true;
       this->lookup( alias ).repeat = repeat;
-      this->lookup( alias ).repeat_countdown = repeat;
+      this->lookup( alias ).repeatCountdown = repeat;
    }
 
    /**
@@ -95,9 +93,7 @@ public:
    virtual void stop( const std::string& alias )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      
-      this->lookup( alias ).isPlaying = false;
-      this->lookup( alias ).repeat_countdown = 0;
+      this->lookup( alias ).repeatCountdown = 0;
    }
 
    /**
@@ -212,7 +208,14 @@ public:
      */
    virtual void configure( const std::string& alias, const aj::SoundInfo& description )
    {
-      mSounds[alias] = description;
+      this->unbind( alias );
+      aj::SoundInfo temp = mSounds[alias];
+      mSounds[alias] = description; // TODO: put is_playing within the SoundInfo.
+
+      // restore fields that should be preserved on a reconfigure...
+      mSounds[alias].triggerOnNextBind = temp.triggerOnNextBind;
+      //std::cout<<"DEBUG: triggerOnNextBind = "<<mSounds[alias].triggerOnNextBind<<"\n"<<std::flush;
+
       if (this->isStarted())
       {
          this->bind( alias );
@@ -280,7 +283,23 @@ public:
       return mSounds[alias];
    }
 
+   void setName( const std::string& name )
+   {
+      mName = name;
+   }
+   
+   std::string& name()
+   {
+      return mName;
+   }   
+      
 protected:
+   
+   /*
+    * name of this impl...
+    */
+   std::string mName;
+
    aj::SoundAPIInfo mSoundAPIInfo;
    std::map<std::string, aj::SoundInfo> mSounds;
    /*
