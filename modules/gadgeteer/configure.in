@@ -425,7 +425,7 @@ case $OS_TYPE in
             static_end="-B dynamic"
         fi
 
-        gadget_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+        gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         gadget_ldflags_linker="$gadget_ldflags_compiler"
         gadget_libs='-lgadget'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
