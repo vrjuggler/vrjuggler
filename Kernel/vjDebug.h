@@ -55,7 +55,7 @@
 extern vjMutex DebugLock;
 
 
-   
+
 
 //------------------------------------------
 //: Class to support debug output
@@ -63,9 +63,9 @@ extern vjMutex DebugLock;
 // Suggested use of val/debugLevel
 //
 // 1 - critical messages / Config data
-// 2 - 
+// 2 -
 // 3 - Object construction
-// 4 - 
+// 4 -
 // 5 - Highly verbose debug output
 // 6 - Function entry and exit
 // 7 - In house only type debug output
@@ -77,13 +77,13 @@ private:
    {
       indentLevel = 0;     // Initialy don't indent
       debugLevel = 0;      // Should actually try to read env variable
-      
+
       char* debug_lev = getenv("VJ_DEBUG_NFY_LEVEL");
       if(debug_lev != NULL)
       {
          debugLevel = atoi(debug_lev);
          cout << "VJ_DEBUG_NFY_LEVEL: Set to " << debugLevel << endl << flush;
-      } else {   
+      } else {
          cout << "VJ_DEBUG_NFY_LEVEL: Not found. " << endl << flush;
          cout << "VJ_DEBUG_NFY_LEVEL: Defaults to " << debugLevel << endl << flush;
       }
@@ -94,7 +94,7 @@ public:
    {
       if(indentChange < 0)
          indentLevel += indentChange;
-      
+
       //cout << "VG " << level << ": ";
       cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VG: ";
 
