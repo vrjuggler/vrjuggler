@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pfNav.  It requires GNU make.
+# Makefile.in for juggler/samples/pf/pfNav.  It requires GNU make.
 # $Id$
 #
 # Generated for use on @PLATFORM@
@@ -17,14 +17,15 @@ AW_INCLUDES 	= @APP_EXTRA_INC_AW@
 AW_LIBS		= @APP_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
-                  -I$(srcdir)/../nav -I$(srcdir)/../pfTools
+                  -I$(srcdir)/../../nav -I$(srcdir)/../../tools		\
+                  -I$(srcdir)/../pfTools
 VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_pf.a
 
-vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
+vpath %.cpp @srcdir@ @srcdir@/../../nav @srcdir@/../../tools @srcdir@/../pfTools
 
 # This test program requires the following libraries to be linked:
 #
@@ -40,34 +41,24 @@ vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-COMMON_OBJECTS = fileIO.@OBJ_FILE_SUFFIX@		\
+COMMON_OBJECTS	= fileIO.@OBJ_FILE_SUFFIX@		\
                   pfFileIO.@OBJ_FILE_SUFFIX@		\
                   pfTerryCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
                   pfMPStats.@OBJ_FILE_SUFFIX@
 
-PFNAV_OBJECTS = pfNav.@OBJ_FILE_SUFFIX@ $(COMMON_OBJECTS)
-
-PF_BASIC_CONFIG_NAV_OBJECTS = pfBasicConfigNav.@OBJ_FILE_SUFFIX@ $(COMMON_OBJECTS)
-
-PF_SWITCHER_OBJECTS = pfSwitcher.@OBJ_FILE_SUFFIX@ pfSwitcherApp.@OBJ_FILE_SUFFIX@ $(COMMON_OBJECTS)
+PFNAV_OBJECTS	= pfNav.@OBJ_FILE_SUFFIX@ $(COMMON_OBJECTS)
 
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
 default: pfNav
 
-all: pfNav pfBasicConfigNav pfSwitcher
+all: pfNav
 
 pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
 	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
-
-pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
-
-pfSwitcher: $(PF_SWITCHER_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PF_SWITCHER_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
@@ -77,17 +68,14 @@ pfSwitcher: $(PF_SWITCHER_OBJECTS) $(VJ_LIB_DEPS)
 # -----------------------------------------------------------------------------
 clean:
 	rm -f Makedepend pfNav pfBasicConfigNav pfSwitcher pfNav.exe	\
-          pfNav.ilk $(PFNAV_OBJECTS) $(PF_BASIC_CONFIG_NAV_OBJECTS)	\
-          $(PF_SWITCHER_OBJECTS) *core so_locations *.?db
+          pfNav.ilk $(PFNAV_OBJECTS) *core so_locations *.?db
 	rm -rf ./ii_files
 
 # -----------------------------------------------------------------------------
 # Dependency stuff.
 # -----------------------------------------------------------------------------
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
-DEPEND_FILES	= $(PFNAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)		\
-                  $(PF_BASIC_CONFIG_NAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)  \
-		  $(PF_SWITCHER_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)
+DEPEND_FILES	= $(PFNAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)
 
 # This expression reformats the output from the dependency text to be of the
 # form:
