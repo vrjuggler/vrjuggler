@@ -757,7 +757,7 @@ strip_jar_path ( ) {
    echo "$retval"
 }
 
-jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar'
+jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar'
 ext_jars='wizard.jar ui.jar'
 
 if test "x$JDOM_JAR" != "xnone" ; then
