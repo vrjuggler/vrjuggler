@@ -99,14 +99,14 @@ namespace cluster
       
       jccl::ConfigChunkPtr server_chunk = ClusterManager::instance()->getConfigChunkPointer(mSyncMasterChunkName);
 
-      if (NULL == server_chunk)
+      if (NULL == server_chunk.get())
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"This machine is not in the current Cluster Configuration!\n") << vprDEBUG_FLUSH;
          exit(1);
       }
 
       // Get Barrier method
-      int                  sync_method = chunk->getProperty<int>("sync_method");
+      int sync_method = chunk->getProperty<int>("sync_method");
       std::cout << "Method: " << sync_method << std::endl;
 
       //////////// Get Local Machin Configuration /////////
