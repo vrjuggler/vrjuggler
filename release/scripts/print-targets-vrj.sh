@@ -99,6 +99,11 @@ Install targets are:
     install-data    - Install only the Data directory.
     install-gui     - Install only the configuration GUI.
 
+Documentation generation targets:
+    docs            - Build the internal and the public documentation.
+    doc-internal    - Build only the internal documentation.
+    doc-public      - Build only the public documentation.
+
 Miscellaneous targets are:
     links           - Define links (for developer use only) that provide
                       functionality allowing the use of the \$VJ_BASE_DIR
