@@ -30,8 +30,10 @@
 	      {include ../common/member_type.html.inc}
 	    </TD>
 	    <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%" {if mprivate} BGCOLOR="#d0d0d0" {endif}>
-	      <TT><B>{name}</B></TT>
-	      <BR>
+	      <TT><B>{name}</B></TT><BR>
+	      {if enum}
+		<FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
+	      {endif}
 	      {if brief}
 	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{brief}
 	        <BR>
