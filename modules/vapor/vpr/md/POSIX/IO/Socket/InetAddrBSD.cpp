@@ -63,6 +63,14 @@ namespace vpr
 
 const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to ANY addr
 
+InetAddrBSD::InetAddrBSD()
+{
+   memset(&mAddr, 0, sizeof(mAddr));
+   setAddressValue(INADDR_ANY);
+   setPort(0);
+   setFamily(SocketTypes::INET);
+}
+
 vpr::ReturnStatus InetAddrBSD::getLocalHost (vpr::InetAddrBSD& host_addr)
 {
    char local_host_name[MAXHOSTNAMELEN + 1];
@@ -103,6 +111,45 @@ vpr::ReturnStatus InetAddrBSD::setAddress (const std::string& address)
    setFamily(vpr::SocketTypes::INET);
 
    return retval;
+}
+
+vpr::ReturnStatus InetAddrBSD::setAddress(const std::string& address,
+                                          const Uint16 port)
+{
+   vpr::ReturnStatus retval;
+
+   retval = lookupAddress(address);
+   setPort(port);
+   setFamily(SocketTypes::INET);
+
+   return retval;
+}
+
+vpr::ReturnStatus InetAddrBSD::setAddress(const vpr::Uint32 address,
+                                          const vpr::Uint16 port)
+{
+   setAddressValue(address);
+   setPort(port);
+   setFamily(SocketTypes::INET);
+   return ReturnStatus();
+}
+
+unsigned char InetAddrBSD::getLength() const
+{
+#ifdef _HAVE_SIN_LEN
+   return mAddr.sin_len;
+#else
+   return 0;
+#endif
+}
+
+void InetAddrBSD::setLength(const unsigned char length)
+{
+#ifdef _HAVE_SIN_LEN
+   mAddr.sin_len = length;
+#else
+   boost::ignore_unused_variable_warning(length);
+#endif
 }
 
 /**
@@ -188,6 +235,21 @@ void InetAddrBSD::setFamily (const vpr::SocketTypes::Domain family)
    }
 }
 
+vpr::Uint16 InetAddrBSD::getPort() const
+{
+   return ntohs(mAddr.sin_port);
+}
+
+void InetAddrBSD::setPort(const vpr::Uint16 port)
+{
+   mAddr.sin_port = htons(port);
+}
+
+vpr::Uint32 InetAddrBSD::getAddressValue() const
+{
+   return ntohl(mAddr.sin_addr.s_addr);
+}
+
 /**
  * Get the IP address associated with this structure as a human-readable
  * string.
@@ -250,6 +312,43 @@ std::vector<std::string> InetAddrBSD::getHostnames () const
    }
 
    return names;
+}
+
+void InetAddrBSD::copyAddressValue(const char* addr_value)
+{
+   vprASSERT(addr_value != NULL);
+   memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addr_value,
+          sizeof(mAddr.sin_addr.s_addr));
+}
+
+void InetAddrBSD::setAddressValue(const vpr::Uint32 addr_value)
+{
+   mAddr.sin_addr.s_addr = htonl(addr_value);
+}
+
+size_t InetAddrBSD::size() const
+{
+   return sizeof(mAddr);
+}
+
+size_t InetAddrBSD::addressSize() const
+{
+   return sizeof(mAddr.sin_addr.s_addr);
+}
+
+void InetAddrBSD::setSockaddr(const struct sockaddr* addr)
+{
+   memcpy((void*) &mAddr, (void*) addr, sizeof(mAddr));
+}
+
+struct sockaddr_in InetAddrBSD::toSockaddrInet()
+{
+   return mAddr;
+}
+
+void InetAddrBSD::copy(const InetAddrBSD& addr)
+{
+   memcpy((void*) &mAddr, (void*) &addr.mAddr, sizeof(mAddr));
 }
 
 /**
