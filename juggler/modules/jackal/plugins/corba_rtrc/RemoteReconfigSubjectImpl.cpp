@@ -42,12 +42,12 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
+#include <corba_rtrc/RemoteReconfigSubjectImpl.h>
 
 namespace jccl
 {
 
-void RTRCInterfaceSubjectImpl::add(const char* configurationString)
+void RemoteReconfigSubjectImpl::add(const char* configurationString)
 {
    jccl::Configuration new_elements;
    std::string cfg_string(configurationString);
@@ -65,7 +65,7 @@ void RTRCInterfaceSubjectImpl::add(const char* configurationString)
 }
 
 
-void RTRCInterfaceSubjectImpl::remove(const char* configurationString)
+void RemoteReconfigSubjectImpl::remove(const char* configurationString)
 {
    jccl::Configuration delete_elements;
    std::string cfg_string(configurationString);
@@ -82,8 +82,8 @@ void RTRCInterfaceSubjectImpl::remove(const char* configurationString)
    jccl::ConfigManager::instance()->addPendingRemoves(&delete_elements);
 }
 
-void RTRCInterfaceSubjectImpl::swap(const char* addConfigurationString,
-                                    const char* removeConfigurationString)
+void RemoteReconfigSubjectImpl::swap(const char* addConfigurationString,
+                                     const char* removeConfigurationString)
 {
    jccl::Configuration add_elements, delete_elements;
    std::string add_element_string(addConfigurationString);
@@ -101,7 +101,7 @@ void RTRCInterfaceSubjectImpl::swap(const char* addConfigurationString,
    jccl::ConfigManager::instance()->addPendingAdds(&add_elements);
 }
 
-char* RTRCInterfaceSubjectImpl::getElements()
+char* RemoteReconfigSubjectImpl::getElements()
 {
    //Lock the config manager
    jccl::ConfigManager::instance()->lockActive();
@@ -124,7 +124,7 @@ char* RTRCInterfaceSubjectImpl::getElements()
    return CORBA::string_dup(active_output.str().c_str());
 }
 
-char* RTRCInterfaceSubjectImpl::getDefinitions()
+char* RemoteReconfigSubjectImpl::getDefinitions()
 {
    // Get the list of definitions from the ElementFactory.
    ConfigDefinitionRepository* defs =

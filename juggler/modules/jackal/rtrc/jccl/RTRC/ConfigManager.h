@@ -41,6 +41,7 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Singleton.h>
+#include <vpr/DynLoad/LibraryLoader.h>
 
 #include <jccl/Config/Configuration.h>
 #include <jccl/Config/ConfigDefinitionRepository.h>
@@ -53,12 +54,9 @@ namespace jccl
 {
 
 class ConfigElementHandler;
+class RemoteReconfig;
 
-#ifdef HAVE_TWEEK_CXX
-class RTRCInterface;
-#endif
-
-/** Dynamic reconfiguration management plugin for Jackal.
+/** Dynamic reconfiguration management plugin for JCCL.
  *  The ConfigManager provides a complete solution for configuring an
  *  application via JCCL's ConfigElement API.  The ConfigManager can
  *  configure based on static configuration files, or dynamically
@@ -91,10 +89,9 @@ class RTRCInterface;
  *  requests in the pending list.  However, the attemptReconfiguration()
  *  interface should be sufficient for almost all uses.
  *
- *  Created: Jan-13-2000
+ *  @date January 13, 2000
  */
-
-class JCCL_CLASS_API ConfigManager //: public JackalControl
+class JCCL_CLASS_API ConfigManager
 {
 public:
    struct PendingElement
@@ -125,10 +122,7 @@ public: // -- Query functions --- //
     */
    bool isElementTypeInPendingList(std::string elementType);
 
-
-
 public:   // ----- PENDING LIST ----- //
-
 
    /** Marks pending list as "not stale".
     *  To minimize time spent on configuration calls, the Configuration
@@ -153,13 +147,11 @@ public:   // ----- PENDING LIST ----- //
     */
    void refreshPendingList();
 
-
    /** Add the ConfigElements in db to pending list as adds.
     *  The pending list must not be (already) locked.
     *  ConfigElements in db are copied.
     */
    void addPendingAdds(Configuration* db);
-
 
    /** Add the ConfigElements in db to pending list as removes.
     *  The pending list must not be (already) locked.
@@ -167,20 +159,17 @@ public:   // ----- PENDING LIST ----- //
     */
    void addPendingRemoves(Configuration* db);
 
-
    /** Add an entry to the pending list.
     *  The pending list must not be locked.
     *  A copy of the pendingElement is placed on the pending list.
     */
    void addPending(PendingElement& pendingElement);
 
-
    /** Erases an item from the pending list.
     *  The pending list must be locked && item must be in list.
     *  Item is invalid after this operation.
     */
    void removePending(std::list<PendingElement>::iterator item);
-
 
    /** Checks if we need to check the pending list.
     *  Checks if the pending list is "fresh" or if it should be marked
@@ -205,16 +194,18 @@ public:   // ----- PENDING LIST ----- //
     *  is finished viewing/modifying the pending list.
     */
    void lockPending()
-   { mPendingLock.acquire(); }
-
+   {
+      mPendingLock.acquire();
+   }
 
    /** Unlocks the pending list.
     *  Unlocks the mutex held on the pending list.
     *  The caller of this method must first have called lockPending().
     */
    void unlockPending()
-   { mPendingLock.release(); }
-
+   {
+      mPendingLock.release();
+   }
 
    /** Get an iterator to the beginning of the pending list.
     *  The caller of this method must have locked the pending list.
@@ -225,7 +216,6 @@ public:   // ----- PENDING LIST ----- //
       return mPendingConfig.begin();
    }
 
-
    /** Get an iterator to the end of the pending list.
     *  The caller of this method must have locked the pending list.
     */
@@ -235,27 +225,27 @@ public:   // ----- PENDING LIST ----- //
       return mPendingConfig.end();
    }
 
-
    /** Print a copy of the pending list to vprDEBUG.
     *  The caller of this method must have locked the pending list.
     */
    void debugDumpPending(int debug_level);
 
-
    /** Get the size of the pending list.
     *  CONCURRENCY: concurrent
     */
    int getNumPending()
-   { return mPendingConfig.size(); }
-
+   {
+      return mPendingConfig.size();
+   }
 
 public:   // ----- ACTIVE LIST ----- //
    /** Checks if active list is empty.
     *  CONCURRENCY: concurrent
     */
    bool isActiveEmpty()
-   { return mActiveConfig.vec().empty(); }
-
+   {
+      return mActiveConfig.vec().empty();
+   }
 
    /** Locks the active list.
     *  This function blocks until it can lock the list of active
@@ -264,8 +254,9 @@ public:   // ----- ACTIVE LIST ----- //
     *  is finished viewing/modifying the active list.
     */
    void lockActive()
-   { mActiveLock.acquire(); }
-
+   {
+      mActiveLock.acquire();
+   }
 
    /** Unlocks the active list.
     *  The method releases the lock on the active configuration list.
@@ -273,8 +264,9 @@ public:   // ----- ACTIVE LIST ----- //
     *  list with lockActive().
     */
    void unlockActive()
-   { mActiveLock.release(); }
-
+   {
+      mActiveLock.release();
+   }
 
    /** Get an iterator to the beginning of the active list.
     *  The caller of this method must have locked the active list.
@@ -285,7 +277,6 @@ public:   // ----- ACTIVE LIST ----- //
       return mActiveConfig.vec().begin();
    }
 
-
    /** Get an iterator to the end of the active list.
     *  The caller of this method must have locked the active list.
     */
@@ -295,14 +286,12 @@ public:   // ----- ACTIVE LIST ----- //
       return mActiveConfig.vec().end();
    }
 
-
    /** Removes the named ConfigElement from the active list.
     *  The caller of this method must have locked the active list.
     *  If no element with a matching name is found, this method has
     *  no effect.
     */
    void removeActive(const std::string& elementName);
-
 
    /** Adds a ConfigElement to the active list.
     *  This method locks the active list; therefore, the caller
@@ -315,13 +304,12 @@ public:   // ----- ACTIVE LIST ----- //
     *  This method is occasionally useful when an application wants
     *  to add items to the active list that were not created via
     *  the ConfigManager's dynamic reconfiguration ability.
-    *  For example, when Jackal's network server opens a new
+    *  For example, when JCCL's network server opens a new
     *  connection, it explicitly creates a ConfigElement describing
     *  that connection and adds it to the active list with this
     *  method.
     */
    void addActive(ConfigElementPtr element);
-
 
    /** Get a pointer to the active list (as a jccl::Configuration).
     *  The caller of this method must have locked the active list.
@@ -333,7 +321,6 @@ public:   // ----- ACTIVE LIST ----- //
       vprASSERT(1 == mActiveLock.test());
       return &mActiveConfig;
    }
-
 
 public:
    /** Scan the active list for items that don't have their dependencies
@@ -347,17 +334,15 @@ public:
     */
    int scanForLostDependencies();
 
-
    /** Reset pending check count, so that pending list is made not stale.
     *  Delay config from becoming stale.  ConfigManager must try to
     *  config items in pending list again before the list can
     *  become stale.
     */
-   void delayStalePendingList(){
+   void delayStalePendingList()
+   {
      mLastPendingSize = mPendingConfig.size() + 1;
    }
-
-
 
    //------------ Default DynamicReconfig Handling Stuff -------------------
 
@@ -366,14 +351,7 @@ public:
    int attemptReconfiguration();
    //int attemptHandlerReconfiguration(ConfigElementHandler* h);
 
-/*
-   //------------------ JackalControl Stuff --------------------------------
-
-public:
-
-   virtual void addConnect(Connect *c);
-   virtual void removeConnect(Connect* c);
-*/
+   void setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin);
 
 private:
    Configuration             mActiveConfig;  /**< Current configuration.     */
@@ -394,10 +372,10 @@ private:
    /** Size of pending list when last checked (used to check for changes). */
    int                     mLastPendingSize;
 
-#ifdef HAVE_TWEEK_CXX
+   vpr::LibraryLoader mPluginLoader;
+
    /** Network communications object for reconfiguration control. */
-   RTRCInterface* mReconfigIf;
-#endif
+   RemoteReconfig* mReconfigIf;
 
    std::string              mCachedLocalHostName;  /**< A cached copy of the local host name */
 protected:
@@ -406,7 +384,7 @@ protected:
    virtual ~ConfigManager();
 
    /** Enables the remote runtime reconfiguration interface object. */
-   void enableReconfigInterface();
+   void loadRemoteReconfig();
 
    // needed for windows:
    ConfigManager(const ConfigManager&) {;}

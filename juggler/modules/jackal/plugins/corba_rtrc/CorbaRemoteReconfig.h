@@ -33,33 +33,36 @@
 #ifndef _JCCL_RTRC_INTERFACE_H_
 #define _JCCL_RTRC_INTERFACE_H_
 
-#include <jccl/jcclConfig.h>
+#include <jccl/Plugins/PluginConfig.h>
 
-#include <stdlib.h>
 #include <string>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <tweek/CORBA/CorbaManager.h>
+#include <jccl/RTRC/RemoteReconfig.h>
 
+
+extern "C" JCCL_PLUGIN_API(jccl::RemoteReconfig*) initPlugin();
 
 namespace jccl 
 {
 
-class RTRCInterfaceSubjectImpl;
+class RemoteReconfigSubjectImpl;
 
-/** CORBA RTRC interface object. Handles configuration of the Tweek corba
- *  manager and creation of the interface subject.
+/**
+ * CORBA remote run-time reconfiguration interface implementation. Handles
+ * configuration of the Tweek CORBA Manager and creation of the interface
+ * subject.
  *
- *  @date July 31, 2002
+ * @date July 31, 2002
  */
-
-class JCCL_CLASS_API RTRCInterface
+class CorbaRemoteReconfig : public jccl::RemoteReconfig
 {
 
 public:
-   RTRCInterface();
+   CorbaRemoteReconfig();
 
-   ~RTRCInterface();
+   virtual ~CorbaRemoteReconfig();
 
    /**
     * Initializes the RTRC interface.
@@ -71,16 +74,32 @@ public:
     */   
    vpr::ReturnStatus enable();
 
+   bool isEnabled() const;
+
    /**
     * Turns off the interface to RTRC (disallow incoming connections).
     */
    void disable();
 
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   virtual void destroy()
+   {
+      delete this;
+   }
+
 private:
    tweek::CorbaManager* mCorbaManager;
-   RTRCInterfaceSubjectImpl* mInterface;
+   RemoteReconfigSubjectImpl* mInterface;
    std::string mInterfaceName;
-
 };
 
 } // namespace jccl

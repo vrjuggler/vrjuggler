@@ -46,50 +46,26 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(JCCL_RTRC_LIBRARY)
 
-HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
-
 SRCS= \
-	ConfigElementHandler.cpp \
-	ConfigManager.cpp \
-	DepChecker.cpp \
+	ConfigElementHandler.cpp	\
+	ConfigManager.cpp		\
+	DepChecker.cpp			\
 	DependencyManager.cpp
 
-ifeq ($(HAVE_TWEEK_CXX), Y)
-   IDL_GENDIR=		.
-   CXX_IDL_OPTS=	@TWEEK_CXX_IDL_OPTS@ @TWEEK_CXX_IDL_GENDIR_OPT@$(IDL_GENDIR)
-   CXX_IDL_INCLUDES=	@TWEEK_CXX_IDL_INCFLAG@$(top_srcdir)
-   IDL_CXX_FILES=	RTRCInterfaceSubject.cpp RTRCInterfaceSubject.h
-   EXTRA_INCLUDES+=	-I$(IDL_GENDIR)			\
-			-I$(topdir)/rtrc
-
-   SRCS+=		RTRCInterfaceSubjectImpl.cpp	\
-			RTRCInterfaceSubject.cpp	\
-			RTRCInterface.cpp
-endif
-
 EXTRA_INCLUDES+= \
-	-I$(top_srcdir)/common \
-	-I$(top_srcdir)/config \
-	-I$(top_srcdir)/net \
-	-I$(top_srcdir)/rtrc \
+	-I$(top_srcdir)/common	\
+	-I$(top_srcdir)/config	\
+	-I$(top_srcdir)/net	\
+	-I$(top_srcdir)/rtrc	\
 	-I$(topdir)/common
 
 include $(MKPATH)/dpp.obj.mk
-
-ifeq ($(HAVE_TWEEK_CXX), Y)
-   ifneq ($(srcdir), $(IDL_GENDIR))
-      INSTALL_FILES+=	$(IDL_GENDIR)/*.h
-   endif
-
-   INSTALL_FILES+=	$(srcdir)/*.idl
-   CLEAN_FILES+=	$(addprefix $(IDL_GENDIR)/, $(IDL_CXX_FILES))
-endif
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_IDL
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif

@@ -37,7 +37,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([JCCL], [0.13], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([JCCL], [0.14], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([common/jccl/jcclDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
@@ -81,12 +81,6 @@ fi
 # ------------------------------------------------------ #
 
 DPP_STD_CPP(yes)
-
-# Enable CORBA-based remote runtime reconfiguration.
-AC_ARG_ENABLE(corba-rtrc,
-              [  --enable-corba-rtrc     Enable CORBA-based C++ remote
-                          runtime reconfiguration code    [default=no]],
-              enable_corba_rtrc="$enableval", enable_corba_rtrc='no')
 
 # Enable performance testing.
 AC_ARG_ENABLE(performance,
@@ -209,17 +203,6 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 VPR_PATH([0.27.5], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 
-if test "x$enable_corba_rtrc" = "xyes" ; then
-   TWEEK_PATH_CXX([0.15.0],
-                  [AC_DEFINE([HAVE_TWEEK_CXX], ,
-                     [Define if the Tweek C++ API (the C++ CORBA stuff) is available.])
-                   HAVE_TWEEK_CXX='Y'
-                  ],
-                  [AC_MSG_WARN([*** Tweek C++ required for remote reconfig ***])
-                   HAVE_TWEEK_CXX='N'
-                  ])
-fi
-
 TWEEK_PATH_JAVA([0.15.0], ,
                 [AC_MSG_WARN([*** Tweek Java required for editor JavaBeans ***])
                  BUILD_JAVA='N'
@@ -255,19 +238,15 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $TWEEK_CXXFLAGS_MIN"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_INCLUDES_MIN $TWEEK_INCLUDES_MIN"
+DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 jccl_cxxflags="$STD_FLAGS"
 
 # List the scripts jccl-config will call to get flags.  This should be in the
 # order used for linking.  That means the dependencies are satisfied right to
 # left.
 jccl_dep_scripts='vpr-config'
-
-if test "x$HAVE_TWEEK_CXX" = "xY" ; then
-   jccl_dep_scripts="tweek-config $jccl_dep_scripts"
-fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -307,11 +286,11 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 # $jccl_extra_libs only lists the external (non-Juggler) libraries needed by
 # JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
     jccl_extra_libs="$LDFLAGS $LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     jccl_extra_libs="$LDFLAGS $LIBS"
 fi
@@ -426,7 +405,6 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_CXX)
-AC_SUBST(HAVE_TWEEK_CXX)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
@@ -477,6 +455,7 @@ AC_CONFIG_FILES([
    common/Makefile
    common/Makefile.inc
    common/jccl/Makefile
+   common/jccl/Plugins/Makefile
    common/jccl/Util/Makefile
    config/build.xml
    config/Makefile
@@ -486,9 +465,7 @@ AC_CONFIG_FILES([
    editors/build.xml
    editors/Makefile
    editors/Makefile.inc
-   rtrc/build.xml
    rtrc/Makefile
-   rtrc/Makefile.inc
    rtrc/jccl/Makefile
    rtrc/jccl/RTRC/Makefile
    test/Makefile

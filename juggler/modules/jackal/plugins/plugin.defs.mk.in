@@ -30,38 +30,35 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-BUILD_JAVA=	@BUILD_JAVA@
+# =============================================================================
+# This file <plugin.defs.mk> provides variable information shared by all
+# makefiles in the JCCL plug-ins source tree.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# =============================================================================
 
-rtrc-java:
-ifndef NO_JAVA
-ifeq ($(BUILD_JAVA), Y)
-	@echo "------------------------------------------------"
-	@echo "Building Java code for the JCCL RTRC"
-	@echo "------------------------------------------------"
-	@$(MAKE) java
-else
-	@echo "------------------------------------------------"
-	@echo "JCCL RTRC build skipped"
-	@echo "------------------------------------------------"
+# -----------------------------------------------------------------------------
+# Common code for plug-in DSOs.
+# -----------------------------------------------------------------------------
+ifeq ($(BUILD_TYPE), dbg)
+   BUILD_TYPE_EXT=	_d
 endif
-endif	# ifndef NO_JAVA
 
-# Build the JARs
-rtrc-jar:
-ifndef NO_JAVA
-ifeq ($(BUILD_JAVA), Y)
-	@$(MAKE) jars
-else
-	@echo "------------------------------------------------"
-	@echo "JCCL RTRC JAR file creation skipped"
-	@echo "------------------------------------------------"
-endif
-endif	# ifndef NO_JAVA
+LIBDIR_NAME?=	lib$(LIBBITSUF)
 
+# $(LIBDIR_BASE) is the base directory where the libraries will be built.
+LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-java-install:
-ifndef NO_JAVA
-ifeq ($(BUILD_JAVA), Y)
-	@$(MAKE) rtrc-install
-endif
-endif
+DSO_PLUGIN_SUBDIR=	jccl/plugins
+DSO_PLUGIN_DIR=		$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
+
+PLUGIN_DSO=	$(PLUGIN_NAME)$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
+DYLIB_DEPS=	$(PRE_DSO_PLUGIN_DEPS) @DSO_PLUGIN_DEPS@ $(POST_DSO_PLUGIN_DEPS)
+
+plugin-dso: $(DSO_PLUGIN_DIR)/$(PLUGIN_DSO)
+
+$(DSO_PLUGIN_DIR)/$(PLUGIN_DSO): $(OBJECTS)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJECTS) $(DYLIB_DEPS)

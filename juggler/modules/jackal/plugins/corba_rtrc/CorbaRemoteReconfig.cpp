@@ -30,23 +30,33 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/jcclConfig.h>
+#include <jccl/Plugins/PluginConfig.h>
 
 #include <stdlib.h>
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
 
-#include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
-#include <jccl/RTRC/RTRCInterface.h>
+#include <jccl/Util/Debug.h>
+#include <corba_rtrc/RemoteReconfigSubjectImpl.h>
+#include <corba_rtrc/CorbaRemoteReconfig.h>
+
+jccl::RemoteReconfig* initPlugin()
+{
+   return new jccl::CorbaRemoteReconfig;
+}
 
 namespace jccl
 {
 
-RTRCInterface::RTRCInterface()
-   : mCorbaManager(NULL), mInterface(NULL), mInterfaceName("RTRCInterface")
-{}
+CorbaRemoteReconfig::CorbaRemoteReconfig()
+   : mCorbaManager(NULL)
+   , mInterface(NULL)
+   , mInterfaceName("CorbaRemoteReconfig")
+{
+   /* Do nothing. */ ;
+}
 
-RTRCInterface::~RTRCInterface()
+CorbaRemoteReconfig::~CorbaRemoteReconfig()
 {
    //Clean up interface by disconnecting first
    if (mInterface != NULL)
@@ -56,24 +66,19 @@ RTRCInterface::~RTRCInterface()
       mInterface = NULL;
    }
 
-   //Clean up the corba manager and delete it
+   // Clean up the corba manager and delete it.
    if (mCorbaManager != NULL)
    {
-      //Corba manager has its own destructor cleanup
+      // CORBA Manager has its own destructor cleanup.
       delete mCorbaManager;
       mCorbaManager = NULL;
    }
 }
 
-vpr::ReturnStatus RTRCInterface::init()
+vpr::ReturnStatus CorbaRemoteReconfig::init()
 {
-   //Create new corba manager and initialize it
-   //Create new RTRCInterfaceSubjectImpl object
-
+   // Create new CORBA Manager and initialize it.
    mCorbaManager = new tweek::CorbaManager;
-
-   //TODO: How do we get a unique instance name?
-   mInterfaceName = "RTRCInterface";
 
    vpr::ReturnStatus status;
 
@@ -81,14 +86,14 @@ vpr::ReturnStatus RTRCInterface::init()
    {
       int dummy_int(0);
 
-      //Attempt to initialize the corba manager
-      status = mCorbaManager->init("corba_test", dummy_int, NULL);
+      // Attempt to initialize the CORBA Manager.
+      status = mCorbaManager->init("corba_rtrc", dummy_int, NULL);
    }
    catch (...)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::init: Caught an unknown exception while initializing CorbaManager\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::init: Caught an unknown exception while initializing CorbaManager\n" 
+         << vprDEBUG_FLUSH;
 
       delete mCorbaManager; 
       mCorbaManager = NULL;
@@ -98,9 +103,9 @@ vpr::ReturnStatus RTRCInterface::init()
    //Test to see if init succeeded
    if ( !status.success() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::init: Could not initialize CorbaManager\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::init: Could not initialize CorbaManager\n" 
+         << vprDEBUG_FLUSH;
 
       delete mCorbaManager; 
       mCorbaManager = NULL;
@@ -114,16 +119,16 @@ vpr::ReturnStatus RTRCInterface::init()
    }
    catch (CORBA::Exception& ex)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::init: Caught an unknown CORBA exception while creating the subject manager\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::init: Caught an unknown CORBA exception while creating the subject manager\n" 
+         << vprDEBUG_FLUSH;
    }
       
    if ( !status.success() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::init: CORBA subject manager failed to initialize\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::init: CORBA subject manager failed to initialize\n" 
+         << vprDEBUG_FLUSH;
 
       delete mCorbaManager; 
       mCorbaManager = NULL;
@@ -131,19 +136,19 @@ vpr::ReturnStatus RTRCInterface::init()
    }
 
    //Create an intstance of our interface subject
-   mInterface = new RTRCInterfaceSubjectImpl();
+   mInterface = new RemoteReconfigSubjectImpl;
 
    return status;
 }
 
-vpr::ReturnStatus RTRCInterface::enable()
+vpr::ReturnStatus CorbaRemoteReconfig::enable()
 {
    //Make sure the corba manager has been initialized
    if ((mInterface == NULL) || (mCorbaManager == NULL))
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::enable: Cannot enable interface until it has been initialized\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::enable: Cannot enable interface until it has been initialized\n" 
+         << vprDEBUG_FLUSH;
 
       return vpr::ReturnStatus::Fail;
    }
@@ -157,21 +162,26 @@ vpr::ReturnStatus RTRCInterface::enable()
    }
    catch (...)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::enable: Caught an exception while trying to register subject\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::enable: Caught an exception while trying to register subject\n" 
+         << vprDEBUG_FLUSH;
       return vpr::ReturnStatus::Fail;
    }
 }
 
-void RTRCInterface::disable()
+bool CorbaRemoteReconfig::isEnabled() const
+{
+   return true;
+}
+
+void CorbaRemoteReconfig::disable()
 {
    //Make sure the corba manager has been initialized
    if ((mInterface == NULL) || (mCorbaManager == NULL))
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::disable: Cannot disable interface until it has been initialized\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::disable: Cannot disable interface until it has been initialized\n" 
+         << vprDEBUG_FLUSH;
 
       return;
    }
@@ -186,18 +196,17 @@ void RTRCInterface::disable()
    }
    catch (...)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::disable: Caught an exception while trying to unregister subject\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::disable: Caught an exception while trying to unregister subject\n" 
+         << vprDEBUG_FLUSH;
    }
 
    if (!status.success())
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::disable: Could not unregister subject\n" 
-         << vprDEBUG_FLUSH ;
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "CorbaRemoteReconfig::disable: Could not unregister subject\n" 
+         << vprDEBUG_FLUSH;
    }
-
 }
 
-}
+} // End of jccl namespace
