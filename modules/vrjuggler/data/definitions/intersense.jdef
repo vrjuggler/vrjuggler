@@ -22,12 +22,12 @@
       <property valuetype="configelement" variable="true" name="position_filters">
          <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
          <value label="Position Filter"/>
-      <allowed_type>PosXformFilter</allowed_type>
+      <allowed_type>position_transform_filter</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="stations">
          <help>Settings for each Station.</help>
          <value label="Stations"/>
-         <allowed_type>intersens_station</allowed_type>
+         <allowed_type>intersense_station</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="verbose">
          <help>Enable output from the Intersense Driver</help>
