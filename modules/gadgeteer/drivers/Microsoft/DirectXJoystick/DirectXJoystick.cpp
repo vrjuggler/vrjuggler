@@ -221,7 +221,7 @@ void DirectXJoystick::updateData()
    mCurAxes[8] = (float(mJsData.rgdwPOV[0])); //hat: -1, 0, 9,000, 18,000, or 27,000.
 
    // use axes as button, only first 3 are tested.
-   for ( int axis_number = 0; axis_number < mNumAxes; ++axis_number )
+   for ( unsigned int axis_number = 0; axis_number < mNumAxes; ++axis_number )
    {
       // FIXME: don't know when it is changed
       mCurAxes[axis_number].setTime();
