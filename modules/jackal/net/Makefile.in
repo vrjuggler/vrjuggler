@@ -126,6 +126,7 @@ ifneq (@OS_TYPE@, Win32)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(OBJDIR) && rm -rf ii_files
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -141,6 +142,7 @@ $(LIBDIR)/$(JCCL_NET_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_NET_PROF_LIB_DYNAMIC): $(OBJD
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(OBJDIR) && rm -rf ii_files
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
