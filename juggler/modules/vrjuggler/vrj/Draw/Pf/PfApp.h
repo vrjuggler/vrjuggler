@@ -55,7 +55,7 @@ namespace vrj
  * derived from.  The interface given is the interface that the System expects
  * in order to interface with the application.
  */
-class PfApp : public App
+class VJ_CLASS_API PfApp : public App
 {
 public:
    PfApp(Kernel* kern);
