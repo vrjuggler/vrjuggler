@@ -149,7 +149,7 @@ AC_ARG_WITH(perl,
 dnl # Name the user who will own installed files.
 AC_ARG_WITH(install-owner,
             [  --with-install-owner=<USER NAME>
-                          Installed file owner name       [default=`id -un`]],
+                          Installed file owner name],
             _install_owner="$withval")
 
 dnl # Name the group used for setting ownership on installed files.
@@ -1210,6 +1210,9 @@ dnl # -------------------------------------------------------------------------
 dnl # Miscellaneous checks.
 dnl # -------------------------------------------------------------------------
 
+_vjsave_PATH="$PATH"
+PATH="/usr/xpg4/bin:$PATH"
+
 dnl # Set $OWNER_NAME here in case the check for the user-specified owner
 dnl # failed.  This provides a simple fallback in that case.
 OWNER_NAME=`id -un`
@@ -1261,6 +1264,8 @@ if test "x${_install_group}" != "x" ; then
         GROUP_NAME="${_install_group}"
     fi
 fi
+
+PATH="${_vjsave_PATH}"
 
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
