@@ -82,7 +82,7 @@ public:
    void TransformData()
    { m_posData.postMult(m_matrixTransform); }
 
-   static string getChunkType() { return "PosProxy"; }
+   static std::string getChunkType() { return "PosProxy"; }
 
    bool config(vjConfigChunk* chunk);
 

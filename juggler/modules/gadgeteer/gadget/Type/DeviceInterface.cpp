@@ -3,7 +3,7 @@
 #include <Input/InputManager/vjInputManager.h>
 
 
-void vjDeviceInterface::init(string proxyName)
+void vjDeviceInterface::init(std::string proxyName)
 {
    mProxyIndex = vjKernel::instance()->getInputManager()->GetProxyIndex(proxyName);
    if (mProxyIndex == -1)

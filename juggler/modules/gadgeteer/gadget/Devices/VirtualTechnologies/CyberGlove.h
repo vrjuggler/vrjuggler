@@ -29,7 +29,7 @@ public:
    virtual int Sample();
    virtual void UpdateData ();
 
-   static string getChunkType() { return string("CyberGlove");}
+   static std::string getChunkType() { return std::string("CyberGlove");}
 
 protected:
 	//: The main control loop for the object

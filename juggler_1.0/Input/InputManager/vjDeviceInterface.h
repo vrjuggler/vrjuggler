@@ -23,7 +23,7 @@ public:
 
    //: Initialize the object
    //! ARGS: proxyName - String name of the proxy to connect to
-   void init(string proxyName);
+   void init(std::string proxyName);
 
    //: Return the index of the proxy
    int getProxyIndex()

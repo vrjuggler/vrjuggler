@@ -33,7 +33,7 @@ public:
 
    //: Get the name of the user object
    //! RETURNS: string name of the head
-   string getName();
+   std::string getName();
 
    //: Configure the user object
    //! POST: User has valid ids (int and string)
@@ -45,7 +45,7 @@ public:
 
 private:
    int               mUserId;    //: the id of the user
-   string            mName;      //: The string name of the user
+   std::string       mName;      //: The string name of the user
    vjPosInterface    mHead;      //: The head positon
 
 private:

@@ -84,7 +84,7 @@ vjInput* vjDeviceFactory::loadDevice(vjConfigChunk* chunk)
    vjDeviceConstructorBase* constructor = mConstructors[index];
 
    vjDEBUG(1) << "vjDeviceFactory::loadDevice: Loading device: "
-              << (string)(char*)chunk->getType() << "  with: "
+              << (std::string)(char*)chunk->getType() << "  with: "
               << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
 
    new_dev = constructor->createDevice(chunk);
@@ -93,8 +93,8 @@ vjInput* vjDeviceFactory::loadDevice(vjConfigChunk* chunk)
 
 int vjDeviceFactory::findConstructor(vjConfigChunk* chunk)
 {
-   string chunk_type;
-   chunk_type = (string)(char*)chunk->getType();
+   std::string chunk_type;
+   chunk_type = (std::string)(char*)chunk->getType();
 
    for(int i=0;i<mConstructors.size();i++)
    {
@@ -120,7 +120,7 @@ void vjDeviceFactory::debugDump()
       vjDeviceConstructorBase* dev_constr = mConstructors[cNum];
       vjDEBUG(0) << cNum << ": Constructor:" << (void*)dev_constr
                  << "   type:" << typeid(*dev_constr).name() << "\n" << vjDEBUG_FLUSH;
-      vjDEBUG(0) << "   recog:" << (string)dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "   recog:" << (std::string)dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
    }
 
    vjDEBUG_END(0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;

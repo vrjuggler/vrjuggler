@@ -51,20 +51,20 @@ public:
    //: Return the identifier of the string gesture.
    //! ARGS: name - string name of a gesture
    //! RETURNS: -1 if not found
-   int getGestureIndex(string name)
+   int getGestureIndex(std::string name)
    { return mGesturePtr->getGestureIndex(name); }
 
    //: Get a gesture name
    //! RETURNS: Name of gesture with the given id (gestureId)
    //! NOTE: if gestureId = -1, returns name of current gesture
-   string getGestureString(int gestureId = -1)
+   std::string getGestureString(int gestureId = -1)
    { return mGesturePtr->getGestureString(gestureId); }
 
    //: Returns a pointer to the device held by this proxy.
    vjGesture* getGesturePtr()
    { return mGesturePtr; }
 
-   static string getChunkType() { return "GestureProxy"; }
+   static std::string getChunkType() { return "GestureProxy"; }
 
    bool config(vjConfigChunk* chunk);
 

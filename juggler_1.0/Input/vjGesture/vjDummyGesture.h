@@ -26,11 +26,11 @@ public:
 
    //: Retuns the id of the named gesture.
    //! RETURNS: -1 - Gesture name Not found.
-   virtual int getGestureIndex(string name) { return -1; }
+   virtual int getGestureIndex(std::string name) { return -1; }
 
    //: Not implemented
    // returns null string
-   virtual string getGestureString(int id) { return string(""); }
+   virtual std::string getGestureString(int id) { return std::string(""); }
 
    //: Not implemented
    virtual void train() { }
@@ -40,25 +40,25 @@ public:
    virtual int getGesture() { return -1; }
 
    //: Not implemented
-   virtual int createGesture(string gestureName) { return -1; }
+   virtual int createGesture(std::string gestureName) { return -1; }
 
    //: Not implemented
    virtual void addSample(int gestureId) { }
 
    //: Not implemented
-   virtual void loadSamplesFile(string filename) { }
+   virtual void loadSamplesFile(std::string filename) { }
 
    //: Not implemented
    virtual void clearSamples(int gestureId=-1) { }
 
    //: Not implemented
-   virtual void loadTrainedFile(string fileName) {}
+   virtual void loadTrainedFile(std::string fileName) {}
 
    //: Not implemented
-   virtual void saveTrainedFile(string fileName) {}
+   virtual void saveTrainedFile(std::string fileName) {}
 
    //: Not implemented
-   virtual void saveSamplesFile(string filename) {}
+   virtual void saveSamplesFile(std::string filename) {}
 };
 
 #endif

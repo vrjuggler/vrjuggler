@@ -31,7 +31,7 @@ public:
    int keyPressed(int keyId)
    { return mKeyboard->keyPressed(keyId); }
 
-   static string getChunkType() { return "KeyboardProxy"; }
+   static std::string getChunkType() { return "KeyboardProxy"; }
 
    bool config(vjConfigChunk* chunk);
 

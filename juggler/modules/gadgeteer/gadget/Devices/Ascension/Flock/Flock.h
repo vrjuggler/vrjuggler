@@ -80,7 +80,7 @@ class vjFlock : public vjPosition {
 	char* GetDeviceName() { return "vjFlock"; }
 	//@}
 	
-   static string getChunkType() { return string("Flock");}
+   static std::string getChunkType() { return std::string("Flock");}
 
 	/** @name vjPosition pure virtual functions
 	 *

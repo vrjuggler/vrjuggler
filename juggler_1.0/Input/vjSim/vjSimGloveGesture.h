@@ -27,7 +27,7 @@ public:
 
    //: Load trained data for the gesture object
    // Loads the file for trained data
-   void loadTrainedFile(string fileName);
+   void loadTrainedFile(std::string fileName);
 
    int StartSampling() { return 1; }
    int StopSampling() { return 1; }
@@ -38,12 +38,12 @@ public:
 
    //: Return our name
    char* GetDeviceName() { return "vjSimGloveGesture"; }
-   static string getChunkType() { return string("SimGloveGesture");}
+   static std::string getChunkType() { return std::string("SimGloveGesture");}
 
    /*** These are not supported in sim ***/
-   void saveTrainedFile(string fileName) { ;}
-   void loadSamplesFile(string filename) {;}
-   void saveSamplesFile(string filename) {;}
+   void saveTrainedFile(std::string fileName) { ;}
+   void loadSamplesFile(std::string filename) {;}
+   void saveSamplesFile(std::string filename) {;}
    void clearSamples(int gestureId=-1) {;}
    void addSample(int gestureId) {;}
    void train() { ; }

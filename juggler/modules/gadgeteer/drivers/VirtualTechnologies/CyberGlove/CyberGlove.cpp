@@ -27,8 +27,8 @@ bool vjCyberGlove::config(vjConfigChunk *c)
 	     strcpy(mCalDir,home_dir);
     }
 
-    string glove_pos_proxy = (char*)c->getProperty("glovePos");    // Get the name of the pos_proxy
-    if(glove_pos_proxy == string(""))
+    std::string glove_pos_proxy = (char*)c->getProperty("glovePos");    // Get the name of the pos_proxy
+    if(glove_pos_proxy == std::string(""))
     {
        vjDEBUG(0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
        return false;

@@ -40,7 +40,7 @@ public:
 
    //: Get the name of the digital device
    char* GetDeviceName() { return "vjSimDigital";}
-   static string getChunkType() { return string("SimDigital");}
+   static std::string getChunkType() { return std::string("SimDigital");}
 
 private:
    vector<int>             mDigitalData;     //: The digital data that we have

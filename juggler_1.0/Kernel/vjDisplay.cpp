@@ -72,7 +72,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     */
 
     // Setup head pos by getting user
-    string user_name = (string)(char*)chunk->getProperty("user");
+    std::string user_name = (std::string)(char*)chunk->getProperty("user");
     mUser = vjKernel::instance()->getUser(user_name);
 
     if(NULL == mUser)

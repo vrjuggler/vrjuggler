@@ -59,7 +59,7 @@ public:
    void setApplication(vjApp* _app)
    { app = _app; }
 
-   void setProgramSpecifiedConfigFile(string filename)
+   void setProgramSpecifiedConfigFile(std::string filename)
    { mProgramConfigFile = filename; }
 
    // Stops the current application but leaves the kernel running.
@@ -112,7 +112,7 @@ public:      // Global "get" interface
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
-   vjUser*  getUser(string userName);
+   vjUser*  getUser(std::string userName);
 
    //: Get a list of the users back
    vector<vjUser*> getUsers()
@@ -140,7 +140,7 @@ protected:
    /// Config Stuff
    vjChunkDescDB*    configDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
-   string            mProgramConfigFile;  //: Config file specified by program
+   std::string       mProgramConfigFile;  //: Config file specified by program
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;

@@ -25,12 +25,12 @@ public:
    //: Get a gesture name
    //! RETURNS: Name of gesture with the given id (gestureId)
    // NOTE: if gestureId = -1, returns name of current gesture
-   virtual string getGestureString(int gestureId = -1);
+   virtual std::string getGestureString(int gestureId = -1);
 
    //: Create a new gesture
    //! ARGS: gestureName - Name of the new gesture
    //! RETURNS: int id of the new gesture
-   virtual int createGesture(string gestureName);
+   virtual int createGesture(std::string gestureName);
 
    //: Load the header of a glove data file.
    // This is both for the samples and for the trained files.
@@ -54,7 +54,7 @@ public:
 
    //: Return the identifier of the string gesture.
    //! RETURNS: -1 if not found
-   virtual int getGestureIndex(string gestureName);
+   virtual int getGestureIndex(std::string gestureName);
 
    //: Return the number of gestures in system
    virtual int getNumGestures()
@@ -62,7 +62,7 @@ public:
 
 protected:
    // mGestureNames and mGestureExamples MUST always be same size
-   vector<string>          mGestureNames;       //: List of all gesture names
+   vector<std::string>     mGestureNames;       //: List of all gesture names
    vector<vjGloveData>     mGestureExamples;    //: Examples of all gestures
    vjGloveProxy*           mGloveProxy;         //: Proxy to the glove
 };

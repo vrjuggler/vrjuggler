@@ -20,7 +20,7 @@ public:
    virtual vjProxy* createProxy(vjConfigChunk* chunk) const = 0;
 
    //: Get the string desc of the type of chunk we can create
-   virtual string    getChunkType() const = 0;
+   virtual std::string    getChunkType() const = 0;
 };
 
 
@@ -44,7 +44,7 @@ public:
       }
    }
 
-   string   getChunkType() const
+   std::string   getChunkType() const
    { return PROXY::getChunkType(); }
 };
 

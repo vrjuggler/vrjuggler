@@ -44,7 +44,8 @@ public:
    // Takes the string names of the devices to use
    // NOTE: This means that we cannot construct a user until the input manager is loaded
    //       Ex. The Init function
-   UserData(vjUser* user, string wandName, string incButton, string decButton, string stopButton)
+   UserData(vjUser* user, std::string wandName, std::string incButton,
+            std::string decButton, std::string stopButton)
    {
       mNavMatrix.makeIdent();
 

@@ -137,7 +137,7 @@ public:
 
    //: Returns the string rep of the chunk type used to config this device
    // Used by input manager to find chunks that construct devices
-   static string getChunkType() { return string("Undefined"); }
+   static std::string getChunkType() { return std::string("Undefined"); }
 
    /** @name Functions to remove (?)
      *

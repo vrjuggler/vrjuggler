@@ -59,7 +59,7 @@ class vjDummyPosition: public vjPosition {
       return mydata;
    }
 
-   static string getChunkType() { return string("DummyPosition");}
+   static std::string getChunkType() { return std::string("DummyPosition");}
 
   private:
    vjMatrix mydata;     // Location data

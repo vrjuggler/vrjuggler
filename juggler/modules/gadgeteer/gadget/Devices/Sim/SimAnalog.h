@@ -38,7 +38,7 @@ public:
     //: Get the name of the device
    char* GetDeviceName() { return "vjSimAnalog";}
 
-   static string getChunkType() { return string("SimAnalog");}
+   static std::string getChunkType() { return std::string("SimAnalog");}
 
 private:
    vector<int>             mAnaData;      //: The analog data that we have

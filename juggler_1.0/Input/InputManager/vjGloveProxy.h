@@ -76,7 +76,7 @@ public:
    bool isVisible()
    { return mVisible; }
 
-   static string getChunkType() { return "GloveProxy"; }
+   static std::string getChunkType() { return "GloveProxy"; }
 
    bool config(vjConfigChunk* chunk);
 

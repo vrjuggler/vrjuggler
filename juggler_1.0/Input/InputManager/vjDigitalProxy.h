@@ -70,7 +70,7 @@ public:
       return m_unitNum;
    }
 
-   static string getChunkType() { return "DigProxy"; }
+   static std::string getChunkType() { return "DigProxy"; }
 
    bool config(vjConfigChunk* chunk);
 
