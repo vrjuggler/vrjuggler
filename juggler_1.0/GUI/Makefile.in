@@ -46,7 +46,8 @@ all: VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar: classfiles
+VjControl.jar:
+	${MAKE} classfiles
 	cp -r ${srcdir}/VjFiles .
 	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class	\
             VjGUI/configchunk/*.class VjGUI/util/*.class		\
@@ -72,5 +73,6 @@ CLEAN_FILES	+= ${VJCONFIG_OBJS} VjConfig/*~ ${VJGUI_OBJS} VjGUI/*~	\
                    ${VJGUICONFIGCHUNK_OBJS} VjGUI/configchunk/*~	\
                    ${VJGUIUTIL_OBJS} VjGUI/util/*~
 
-clobber: clean
+clobber:
+	${MAKE} clean
 	rm VjControl.jar
