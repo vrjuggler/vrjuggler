@@ -12,10 +12,10 @@
       <title>Introduction</title>
       <chapter id="ch1">
          <title>Getting Started</title>
-         <para>In this book, we present a "how-to" for writing VR Juggler applications. We will explain concepts used in VR Juggler and present carefully annotated example code whenever appropriate. There are two groups of people who should read this book:</para>
+         <para>In this book, we present a <quote>how-to</quote> for writing VR Juggler applications. We will explain concepts used in VR Juggler and present carefully annotated example code whenever appropriate. There are two groups of people who should read this book:</para>
          <orderedlist>
             <listitem>
-               <para>Those who are required to read it in order to do a project for work. To those in this category, fear not--VR Juggler is very simple to use after getting through the initial learning stages. It is a very powerful tool that will allow the creation of interesting and powerful applications very quickly.</para>
+               <para>Those who are required to read it in order to do a project for work. To those in this category, fear not&mdash;VR Juggler is very simple to use after getting through the initial learning stages. It is a very powerful tool that will allow the creation of interesting and powerful applications very quickly.</para>
             </listitem>
             <listitem>
                <para>Those who are just interested in creating compelling, interesting VR applications. VR Juggler facilitates the construction of extremely powerful applications that will run on nearly any combination of hardware architecture and software platform.</para>
@@ -92,12 +92,12 @@
                   <primary>virtual platform</primary>
                </indexterm>. (An interface is a collection of operations used to specify a service of a class or a component.)</para>
             <section id="main-func-intro-sect">
-               <title>No <function>main()</function> -- "Don't call me, I'll call you"</title>
+               <title>No <function>main()</function> &mdash; "Don't call me, I'll call you"</title>
                <indexterm zone="main-func-intro-sect">
                   <primary>main function</primary>
                </indexterm>
                <para>Since VR Juggler applications are objects, developers do not write the traditional <function>main()</function> function. Instead, developers create an application object that implements a set of pre-defined interfaces. The VR Juggler kernel controls the application's processing time by calling the object's interface implementation methods.</para>
-               <para>In traditional programs, the <function>main()</function> function defines the point where the <firstterm>thread of control</firstterm> enters the application. After the <function>main()</function> function is called, the application starts performing any necessary processing. When the operating system (OS) starts the program, it gives the <function>main()</function> function some unit of processing time. After the time unit (quantum) for the process expires, the OS performs what is called a "context switch" to change control to another process. VR Juggler accomplishes similar functionality but in a slightly different manner.</para>
+               <para>In traditional programs, the <function>main()</function> function defines the point where the <firstterm>thread of control</firstterm> enters the application. After the <function>main()</function> function is called, the application starts performing any necessary processing. When the operating system (OS) starts the program, it gives the <function>main()</function> function some unit of processing time. After the time unit (quantum) for the process expires, the OS performs what is called a <quote>context switch</quote> to change control to another process. VR Juggler accomplishes similar functionality but in a slightly different manner.</para>
                <para>The application objects correspond to processes in a normal OS. The kernel is the scheduler, and it allocations time to an application by invoking the methods of the application object. Because the kernel has additional information about the resources needed and used by the applications, it maintains a very strict schedule to define when the application is granted processing time. This is the basis to maintain coherence across the system.</para>
             </section>
             <section>
@@ -132,7 +132,7 @@
             </section>
             <section>
                <title>Writing an Application Means Filling in the Blanks</title>
-               <para>To implement an application in VR Juggler, developers simply need to "fill in the blanks" of the appropriate interfaces. To simplify this process, there are default implementations of most methods in the interfaces. Hence, the user must only provide implementations for the aspects they want to customize. If an implementation is not provided in the user application object, the default is used, but it is important to know that in most cases, the default implementation does nothing.</para>
+               <para>To implement an application in VR Juggler, developers simply need to <quote>fill in the blanks</quote> of the appropriate interfaces. To simplify this process, there are default implementations of most methods in the interfaces. Hence, the user must only provide implementations for the aspects they want to customize. If an implementation is not provided in the user application object, the default is used, but it is important to know that in most cases, the default implementation does nothing.</para>
             </section>
          </section>
          <section>
@@ -163,7 +163,7 @@
                <secondary>starting</secondary>
             </indexterm>
             <section id="app-startup-no-main">
-               <title>No <function>main()</function>--Sort Of</title>
+               <title>No <function>main()</function>&mdash;Sort Of</title>
                <indexterm zone="app-startup-no-main">
                   <primary>applications</primary>
                   <secondary>main function</secondary>
@@ -244,8 +244,8 @@ int main (int argc, char* argv[])
                </indexterm>
                <para>The VR Juggler kernel calls each of the methods in the application object based on a strictly scheduled <firstterm>frame of execution</firstterm><indexterm>
                      <primary>frame of execution</primary>
-                  </indexterm>. The frame of execution is shown in <xref linkend="Kernel-seq-diag"/>; it makes up all the lines within the "while(running)" clause.</para>
-               <para>During the frame of execution, the kernel calls the application methods and performs internal updates (the <methodname>updateAllData()</methodname> data call). Because the kernel has complete control over the frame, it can make changes at pre-defined "safe" times when the application is not doing any processing. At these times, the kernel can change the virtual platform configuration as long as the interface remains the same.</para>
+                  </indexterm>. The frame of execution is shown in <xref linkend="Kernel-seq-diag"/>; it makes up all the lines within the <quote>while(running)</quote> clause.</para>
+               <para>During the frame of execution, the kernel calls the application methods and performs internal updates (the <methodname>updateAllData()</methodname> data call). Because the kernel has complete control over the frame, it can make changes at pre-defined <quote>safe</quote> times when the application is not doing any processing. At these times, the kernel can change the virtual platform configuration as long as the interface remains the same.</para>
                <para>The frame of execution also serves as a framework for the application. That is, the application can expect that when <methodname>preFrame()</methodname> is called, the devices have just been updated. Applications can rely upon the system being in well-defined stages of the frame when the kernel invokes the application object's methods.</para>
             </section>
          </section>
@@ -336,7 +336,7 @@ int main (int argc, char* argv[])
                   </section>
                   <section>
                      <title>Uses</title>
-                     <para>In general, this method should be reserved for "last-millisecond" data updates in response to device input (latency-critical code).</para>
+                     <para>In general, this method should be reserved for <quote>last-millisecond</quote> data updates in response to device input (latency-critical code).</para>
                   </section>
                </section>
                <section>
@@ -360,7 +360,7 @@ int main (int argc, char* argv[])
                   </section>
                   <section>
                      <title>Uses</title>
-                     <para>Some possible uses of this method include "cleaning up" after the frame has been rendered or synchronizing with external networking or computational processes.</para>
+                     <para>Some possible uses of this method include <quote>cleaning up</quote> after the frame has been rendered or synchronizing with external networking or computational processes.</para>
                   </section>
                </section>
             </section>
@@ -374,7 +374,7 @@ int main (int argc, char* argv[])
             <para>Beyond the basic methods common to all applications, there are methods that are specific to a given Draw Manager. The application classes are extended for each of the specific Draw Managers. The graphics API-specific application classes derive from <classname>vjApp</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vjApp</secondary>
-               </indexterm> and extend this interface further. They adding extra "hooks" that support the abilities of that specific API.</para>
+               </indexterm> and extend this interface further. They adding extra <quote>hooks</quote> that support the abilities of that specific API.</para>
             <section id="draw-mgr-classes-opengl-sect">
                <title>OpenGL Application Class</title>
                <indexterm zone="draw-mgr-classes-opengl-sect">
@@ -399,7 +399,7 @@ int main (int argc, char* argv[])
                </figure>
                <section>
                   <title><methodname>vjGlApp::draw()</methodname></title>
-                  <para>The "draw function" is called by the OpenGL Draw Manager when it needs to render the current scene in an OpenGL graphics window.It is called for each active OpenGL context.</para>
+                  <para>The <quote>draw function</quote> is called by the OpenGL Draw Manager when it needs to render the current scene in an OpenGL graphics window.It is called for each active OpenGL context.</para>
                </section>
             </section>
             <section id="draw-mgr-classes-performer-sect">
@@ -890,7 +890,7 @@ my_vec.vec[3] = 1.0;</programlisting>
                   </indexterm> represents a 4x4 matrix of single-precision floating-point values. The class includes implementations of the standard matrix operations such as transpose, scale, and multiply. More specifically, it is a mechanism to facilitate common matrix operations used in computer graphics, especially those associated with a transform matrix. On the surface, it is nearly identical to a 4x4 C++ array of <type>float</type>s, but there is one crucial difference: a <classname>vjMatrix</classname> keeps its internal matrix in column-major order rather than in row-major order<indexterm>
                      <primary>vjMatrix</primary>
                      <secondary>compared to C++ matrices</secondary>
-                  </indexterm>. More detail on this is given below, but this is done because OpenGL maintains its internal matrices using the same memory layout. At the conceptual level, this does not matter--it is related only to the matrix representation in the computer's memory. Access to the elements is still in row-major order. In any case, understanding how C++ multidimensional arrays work means understanding 90% of what there is to know about <classname>vjMatrix</classname>. The class provides a degree convenience not found with a normal C++ array, especially when doing OpenGL programming. The complications surrounding the <classname>vjMatrix</classname> class are identical to those with OpenGL matrix handling, and with an understanding of that, then all that is left to learn is the interface of <classname>vjMatrix</classname>.</para>
+                  </indexterm>. More detail on this is given below, but this is done because OpenGL maintains its internal matrices using the same memory layout. At the conceptual level, this does not matter&mdash;it is related only to the matrix representation in the computer's memory. Access to the elements is still in row-major order. In any case, understanding how C++ multidimensional arrays work means understanding 90% of what there is to know about <classname>vjMatrix</classname>. The class provides a degree convenience not found with a normal C++ array, especially when doing OpenGL programming. The complications surrounding the <classname>vjMatrix</classname> class are identical to those with OpenGL matrix handling, and with an understanding of that, then all that is left to learn is the interface of <classname>vjMatrix</classname>.</para>
                <para>As a representation of mathematical matrices, <classname>vjMatrix</classname> implements several common operations performed on matrices to relieve the users of the class of some tedious, repetitive effort. The general mathematical operations are:</para>
                <itemizedlist>
                   <listitem>
@@ -1632,7 +1632,7 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
                <para>The class <classname>vjDeviceInterface</classname> is designed to be a wrapper class around the proxies. Applications could use the proxy classes directly, but <classname>vjDeviceInterface</classname> and its subclasses simplify use of the proxy object they contain. Thus, typical VR Juggler application objects will have one or more device interface member variables.</para>
                <para>In the application object, a device interface member variable is used as a <firstterm>smart pointer</firstterm><indexterm>
                      <primary>smart pointer</primary>
-                  </indexterm> to the proxy. In C++, a smart pointer is not usually an actual object pointer. Instead, the class acting as a smart pointer overloads the dereference operator -&gt; so that a special action can be taken when the "pointer" is dereferenced. The dereference operator is just another operator like the addition and subtraction operators, and overloading the deference operator allows some "magic" to occur behind the scenes. On the surface, the code looks exactly the same as a normal pointer dereference, and in most cases, people reading and writing the code can think of the smart pointer as a standard pointer. It may be convenient to think of a smart pointer as a handle.</para>
+                  </indexterm> to the proxy. In C++, a smart pointer is not usually an actual object pointer. Instead, the class acting as a smart pointer overloads the dereference operator -&gt; so that a special action can be taken when the <quote>pointer</quote> is dereferenced. The dereference operator is just another operator like the addition and subtraction operators, and overloading the deference operator allows some <quote>magic</quote> to occur behind the scenes. On the surface, the code looks exactly the same as a normal pointer dereference, and in most cases, people reading and writing the code can think of the smart pointer as a standard pointer. It may be convenient to think of a smart pointer as a handle.</para>
                <para>With that background, we can move on to explain how <classname>vjDeviceInterface</classname> uses these concepts. First, know that <classname>vjDeviceInterface</classname> is a base class for all other device interface classes such as digital interfaces (wand buttons), position interfaces (wands, a user's head), etc. In user code, there will be instances of objects such as <classname>vjDigitalInterface</classname><indexterm>
                      <primary>classes</primary>
                      <secondary>vjDigitalInterface</secondary>
@@ -1656,7 +1656,7 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
                   <primary>classes</primary>
                   <secondary>vjDeviceInterface</secondary>
                </indexterm>
-               <para>VR Juggler applications do not usually use <classname>vjDeviceInterface</classname> directly. Instead, the subclasses mentioned above will be used. Within this section, we will refer to subclasses of <classname>vjDeviceInterface</classname> as "device interfaces". The high-level description has already made use of this convention.</para>
+               <para>VR Juggler applications do not usually use <classname>vjDeviceInterface</classname> directly. Instead, the subclasses mentioned above will be used. Within this section, we will refer to subclasses of <classname>vjDeviceInterface</classname> as <quote>device interfaces</quote>. The high-level description has already made use of this convention.</para>
                <para>Before using a device interface, some must be declared. Programmers must choose the type that is appropriate for the type of devices relevant to a given application. All device interface objects must be initialized in the application object's <methodname>init()</methodname> method<indexterm>
                      <primary>device interfaces</primary>
                      <secondary>initialization of</secondary>
@@ -1698,7 +1698,7 @@ head_mat = head-&gt;getData();</programlisting>
             <indexterm>
                <primary>vjProxy</primary>
             </indexterm>
-            <para>This whole proxy scheme can be confusing. We admit that it makes the learning curve for VR Juggler a little steeper, but once you get it, you will know it all. An alternate title for this section is ``Horton Hears a Proxy.'' In this case, Horton is VR Juggler (it is rather elephant-like at times), and the complexity of dealing with these ethereal, ubiquitous proxies causes VR Juggler to take a lot of guff. This section presents the <classname>vjProxy</classname><indexterm>
+            <para>This whole proxy scheme can be confusing. We admit that it makes the learning curve for VR Juggler a little steeper, but once you get it, you will know it all. An alternate title for this section is <quote>Horton Hears a Proxy.</quote> In this case, Horton is VR Juggler (it is rather elephant-like at times), and the complexity of dealing with these ethereal, ubiquitous proxies causes VR Juggler to take a lot of guff. This section presents the <classname>vjProxy</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vjProxy</secondary>
                   <seealso>vjProxy</seealso>
@@ -1903,7 +1903,7 @@ wand_pos = *(mWand-&gt;getData());
                </table>
                <section>
                   <title>Class Declaration and Data Members</title>
-                  <para>In the following class declaration, note the data members (<varname>mWand</varname>, <varname>mHead</varname>, etc.). This application has four device interface member variables: two for positional input (<varname>mHead</varname> and <varname>mWand</varname>) and two for digital input (<varname>mButton0</varname> and <varname>mButton1</varname>). Each of these member variables will act as a handle to a "real" device from which we will read data in <methodname>preFrame()</methodname>.</para>
+                  <para>In the following class declaration, note the data members (<varname>mWand</varname>, <varname>mHead</varname>, etc.). This application has four device interface member variables: two for positional input (<varname>mHead</varname> and <varname>mWand</varname>) and two for digital input (<varname>mButton0</varname> and <varname>mButton1</varname>). Each of these member variables will act as a handle to a <quote>real</quote> device from which we will read data in <methodname>preFrame()</methodname>.</para>
                   <programlisting linenumbering="numbered">class simpleInput : public vjGlApp
 {
 public:
@@ -2001,7 +2001,7 @@ public:
             <para>In <xref linkend="vjGlApp-class-fig"/>, we see the functions added by the <classname>vjGlApp</classname> interface: <methodname>draw()</methodname>, <methodname>contextInit()</methodname>, and <methodname>contextPreDraw()</methodname><indexterm>
                   <primary>vjGlApp</primary>
                   <secondary>extensions to vjApp</secondary>
-               </indexterm>. These functions deal with OpenGL drawing and managing context-specific data (do not worry what context data is right now--we cover that in detail later). There are a few other functions in the interface, but these cover 99% of the issues that most developers face. In the following sections, we will describe how to add OpenGL drawing to an application and how to handle context-specific data. There is also a tutorial for each topic.</para>
+               </indexterm>. These functions deal with OpenGL drawing and managing context-specific data (do not worry what context data is right now&mdash;we cover that in detail later). There are a few other functions in the interface, but these cover 99% of the issues that most developers face. In the following sections, we will describe how to add OpenGL drawing to an application and how to handle context-specific data. There is also a tutorial for each topic.</para>
             <section>
                <title>OpenGL Drawing: <methodname>vjGlApp::draw()</methodname></title>
                <indexterm>
@@ -2172,7 +2172,7 @@ public:
                   <title>Why it is Needed</title>
                   <para>As outlined in the VR Juggler architecture documentation, VR Juggler uses a single memory area for all application data. All threads can see the same memory area and thus share the same copy of all variables. This makes programming normal application code very easy because programmers never have to worry about which thread can see which variables. In the case of context-specific data, however, it presents a problem.</para>
                   <para>To understand the problem, consider an environment where we use a single display list. That display list is created to draw some object in the scene. We would like to be able to call the display list in our <methodname>draw()</methodname> method and have it draw the primitives that were captured in it.</para>
-                  <para>The following class skeleton shows an outline of this idea. Do not worry for now that we do not show the code where we allocate the display list--that will be covered later. For now, we see that there is a variable that stores the display list ID (<varname>mDispListId</varname>), and we use it in the <methodname>draw()</methodname> method.</para>
+                  <para>The following class skeleton shows an outline of this idea. Do not worry for now that we do not show the code where we allocate the display list&mdash;that will be covered later. For now, we see that there is a variable that stores the display list ID (<varname>mDispListId</varname>), and we use it in the <methodname>draw()</methodname> method.</para>
                   <programlisting>class userApp : public vjGlApp
 {
 public:
@@ -2207,7 +2207,7 @@ userApp::draw()
 {
    glCallList(*mDispListId);
 }</programlisting>
-                  <para>This code looks nearly the same as the previous example. In this case, <varname>mDispListId</varname> is treated as a pointer, and it has a special template-based type that tells VR Juggler it is context-specific data. When defining a context-specific data member, use the <classname>vjGlContextData&lt;&gt;</classname> template class and pass the "true" type of the variable to the template definition. From then on, it can be treated as a normal pointer.<note>
+                  <para>This code looks nearly the same as the previous example. In this case, <varname>mDispListId</varname> is treated as a pointer, and it has a special template-based type that tells VR Juggler it is context-specific data. When defining a context-specific data member, use the <classname>vjGlContextData&lt;&gt;</classname> template class and pass the <quote>true</quote> type of the variable to the template definition. From then on, it can be treated as a normal pointer.<note>
                         <para>The types that are used for context-specific data must provide default constructors. The user cannot directly call the constructor for the data item because VR Juggler has to allocate new items on the fly as new contexts are created.</para>
                      </note></para>
                </section>
@@ -2766,7 +2766,7 @@ pfDraw();</programlisting>
                   <para>The draw, frame, and initialize routine concepts in VR Juggler are presented in the following list.</para>
                   <itemizedlist>
                      <listitem>
-                        <para>Draw: An application's display "callback" function is defined by a new member function called <methodname>draw()</methodname> in the derived class. This is where OpenGL rendering commands such as <function>glBegin()</function>, <function>glVertex()</function>, etc. are placed.</para>
+                        <para>Draw: An application's display <quote>callback</quote> function is defined by a new member function called <methodname>draw()</methodname> in the derived class. This is where OpenGL rendering commands such as <function>glBegin()</function>, <function>glVertex()</function>, etc. are placed.</para>
                      </listitem>
                      <listitem>
                         <para>Frame: Calculations such as navigation, collision, physics, artificial intelligence, etc. are often placed in the frame function. The frame function is split across three member functions:</para>
@@ -2986,7 +2986,7 @@ int main(int argc, char* argv[])
                   <para>The draw, frame, and initialize routine concepts in VR Juggler are presented in the following list.</para>
                   <itemizedlist>
                      <listitem>
-                        <para>Draw: An application's display "callback" function is defined by a new member function called <methodname>draw()</methodname> in the derived class. This is where OpenGL rendering commands such as <function>glBegin()</function>, <function>glVertex()</function>, etc. are placed.</para>
+                        <para>Draw: An application's display <quote>callback</quote> function is defined by a new member function called <methodname>draw()</methodname> in the derived class. This is where OpenGL rendering commands such as <function>glBegin()</function>, <function>glVertex()</function>, etc. are placed.</para>
                      </listitem>
                      <listitem>
                         <para>Frame: Calculations such as navigation, collision, physics, artificial intelligence, etc. are often placed in the frame function. The frame function is split across three member functions:</para>
@@ -3329,7 +3329,7 @@ void someFunc ()
                         <primary>vjThread</primary>
                         <secondary>joining threads</secondary>
                      </indexterm>
-                     <para>Once we have a thread running, it is often useful to synchronize another thread so that its execution halts until the running thread has completed. This is called "joining threads". The following example illustrates how this can be done:</para>
+                     <para>Once we have a thread running, it is often useful to synchronize another thread so that its execution halts until the running thread has completed. This is called <quote>joining threads</quote>. The following example illustrates how this can be done:</para>
                      <programlisting>vjThread* thread;
 
 thread = new vjThread(run);
@@ -3403,7 +3403,7 @@ thread-&gt;setPrio(prio);</programlisting>
                         <primary>vjThread</primary>
                         <secondary>self</secondary>
                      </indexterm>
-                     <para>Lastly, it is common to request the currently running thread's identifier. This only makes sense when called from a point on that thread's flow of execution. (In POSIX threads, this is the notion of "self". For IRIX SPROC threads, this means getting the process ID.) The <classname>vjThread</classname> API provides a static method that can be called at any time in the thread that is currently running. It returns a pointer to a <classname>vjBaseThread</classname> (the basic type from which <classname>vjThread</classname> inherits its interface). The syntax is as follows:</para>
+                     <para>Lastly, it is common to request the currently running thread's identifier. This only makes sense when called from a point on that thread's flow of execution. (In POSIX threads, this is the notion of <quote>self</quote>. For IRIX SPROC threads, this means getting the process ID.) The <classname>vjThread</classname> API provides a static method that can be called at any time in the thread that is currently running. It returns a pointer to a <classname>vjBaseThread</classname> (the basic type from which <classname>vjThread</classname> inherits its interface). The syntax is as follows:</para>
                      <programlisting>vjBaseThread* my_id;
 
 my_id = vjThread::self();</programlisting>
@@ -3429,7 +3429,7 @@ my_id = vjThread::self();</programlisting>
                      </itemizedlist>
                      <para>The interface itself is defined in <classname>vjBaseThread</classname>, and all of the above classes inherit from that class.</para>
                      <para>The threading implementation used is chosen when VR Juggler is compiled. To use a certain type of thread system, be sure that the version of VR Juggler in use was compiled with the type of threads desired. When the VR Juggler build is configured, preprocessor <function>#define</function> statements are made in <filename>vjDefines.h</filename> that describe the threading system to use. Based on that, the header file <filename>Threads/vjThread.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific thread implementations to act as the <classname>vjThread</classname> interface. For example, if compiling on Win32, the class <classname>vjThreadWin32</classname> is <type>typedef</type>'d to be <classname>vjThread</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
-                     <para>The current implementation is modeled after the POSIX thread API for the most part. When designing it, we approached it with the idea that having a more complete API was more important than having a "lowest-common-denominator"' API. That is, just because not all threading implementations support a specific feature does not mean that the API should suffer by not having that feature. Whether this was a good approach or not is an open debate.</para>
+                     <para>The current implementation is modeled after the POSIX thread API for the most part. When designing it, we approached it with the idea that having a more complete API was more important than having a <quote>lowest-common-denominator</quote> API. That is, just because not all threading implementations support a specific feature does not mean that the API should suffer by not having that feature. Whether this was a good approach or not is an open debate.</para>
                      <para>As mentioned in the previous section, the next major release of VR Juggler (2.0 as of this writing) dramatically changes the way the threading subsystem in VR Juggler is implemented. We have added a wrapper around <ulink url="http://www.mozilla.org/projects/nspr/index.html">Netscape Portable Runtime</ulink> (NSPR) threads<indexterm>
                            <primary>NSPR</primary>
                         </indexterm>. We have removed the Win32-specific threads because NSPR already supports that implementation. Further implementations may be removed in favor of using what NSPR offers. Doing this will offload much of our efforts onto the NSPR. Most of what has been described in the <classname>vjThread</classname> interface has remained consistent after this change. NSPR threads do not support all the features we have, however, because they took the lowest-common-denominator approach. As with all technology, there is a trade-off in relieving some of our work load by using an existing cross-platform thread implementation: our interface becomes limited to what features that implementation provides. It remains to be seen exactly how much of VR Juggler's threading subsystem will be removed, and those programmers who choose to use it should be careful to watch the mailing lists for discussions and announcements about changes.</para>
@@ -3441,7 +3441,7 @@ my_id = vjThread::self();</programlisting>
                      <primary>vjBaseThreadFunctor</primary>
                      <seealso>vjThreadMemberFunctor, vjThreadNonMemberFunctor</seealso>
                   </indexterm>
-                  <para>In this section, we explain the concept and use of functors. As with much of VR Juggler, a functor is a high-level concept that encapsulates something quite simple. A functor is defined as "something that performs an operation or a function." While this is not very detailed, it is clear and concise. In VR Juggler, functors can be used as the code executed by a thread (refer to <xref linkend="using-vjThread-sect"/> for more detail on the topic of <classname>vjThread</classname>s). This section describes how to use functors for exactly that purpose.</para>
+                  <para>In this section, we explain the concept and use of functors. As with much of VR Juggler, a functor is a high-level concept that encapsulates something quite simple. A functor is defined as <quote>something that performs an operation or a function.</quote> While this is not very detailed, it is clear and concise. In VR Juggler, functors can be used as the code executed by a thread (refer to <xref linkend="using-vjThread-sect"/> for more detail on the topic of <classname>vjThread</classname>s). This section describes how to use functors for exactly that purpose.</para>
                   <section>
                      <title>High-Level Description</title>
                      <indexterm zone="using-vjThread-sect">
@@ -3460,7 +3460,7 @@ my_id = vjThread::self();</programlisting>
                            <secondary>vjThread</secondary>
                         </indexterm>. VR Juggler's threads can execute two types of functions: normal C/C++ functions and class methods or functors. The former was described in the section about using <classname>vjThread</classname>s, and the latter is described here. The use of functors is given more attention because the concept may be foreign to some programmers. Those who already know about functors can skip this short description and go straight to the section on using functors.</para>
                      <para>In VR Juggler, a functor is simply another object type that happens to encapsulate a user-defined function. The details on how this is done are not important here, but they are provided later for those who are interested. What is important to know is that a functor can be thought of as a normal function. When using them, programmers simply implement a function and then pass the function pointer (and the function's optional argument) to the functor's constructor. The object does the rest.</para>
-                     <para>Observant readers may have noticed the parenthetical phrase in the previous paragraph mentioning a function's optional argument. Note that "argument" is singular meaning that only one parameter can be passed to the function that will be run by the created thread. The type of that argument is the wonderfully vague <type>void*</type>, an artifact of basing the threading subsystem on C libraries. As discussed in the section on using <classname>vjThread</classname>s, if there is a need to pass multiple arguments, they must be encapsulated in a struct or a comparable object.</para>
+                     <para>Observant readers may have noticed the parenthetical phrase in the previous paragraph mentioning a function's optional argument. Note that <quote>argument</quote> is singular meaning that only one parameter can be passed to the function that will be run by the created thread. The type of that argument is the wonderfully vague <type>void*</type>, an artifact of basing the threading subsystem on C libraries. As discussed in the section on using <classname>vjThread</classname>s, if there is a need to pass multiple arguments, they must be encapsulated in a struct or a comparable object.</para>
                      <para>Once a functor object exists, it is passed to the <classname>vjThread</classname> constructor, and the new thread will execute the functor (which knows about the function). The end result is the same as using a normal C/C++ function or a static class member function, but there is one special benefit: with functors, non-static class member functions can be passed. In many cases, there arises a need to run a member function in a separate thread, but making it static is infeasible or awkward. Thus, it would be best to pass a non-static member function to the created thread. To get access to the non-static data members, however, the C++ <varname>this</varname> pointer must be available to the thread. By using a VR Juggler functor, that is all handled behind the scenes so that passing a non-static member function is straightforward.</para>
                      <para>Before getting into specifics, there is a header file that must be included to use VR juggler thread functors. In this case, the header is <filename>Threads/vjThreadFunctor.h</filename>. Within this header, <classname>vjBaseThreadFunctor</classname> is declared as an abstract base class. It has two subclasses implementing its interface: <classname>vjThreadMemberFunctor</classname> and <classname>vjThreadNonMemberFunctor</classname>. Both of these subclasses will be discussed in turn next.</para>
                   </section>
@@ -3470,7 +3470,7 @@ my_id = vjThread::self();</programlisting>
                         <primary>vjThreadMemberFunctor</primary>
                         <secondary>use</secondary>
                      </indexterm>
-                     <para>This implementation of <classname>vjBaseThreadFunctor</classname> is for all functions that fall into the rather elite category of being non-static class member functions. To be more specific, those member functions (heretofore referred to as "methods") must have the following prototype: </para>
+                     <para>This implementation of <classname>vjBaseThreadFunctor</classname> is for all functions that fall into the rather elite category of being non-static class member functions. To be more specific, those member functions (heretofore referred to as <quote>methods</quote>) must have the following prototype: </para>
                      <programlisting>void methodName(void* arg);</programlisting>
                      <para>Those readers with experience in multi-threaded programming will recognize this prototype instantly. It is no different than that used in common threading implementations. Constructing the functor to use this method, however, is quite different than what readers may have seen before.</para>
                      <para>Say there is a class <classname>MyObject</classname> with a method <methodname>run()</methodname> having the appropriate prototype that will be executed by a <classname>vjThread</classname><indexterm>
@@ -3546,7 +3546,7 @@ thread = new vjThread(my_functor);</programlisting>
                   <indexterm zone="using-vjThread-sect">
                      <primary>vjSemaphore</primary>
                   </indexterm>
-                  <para>The most important part of multi-threaded programming is proper thread synchronization so that access to shared data is controlled. Doing so results in consistency among all threads. Semaphores are a very common synchronization mechanism and have been used widely in concurrent systems. This short section describes the cross-platform semaphore interface provided with and used by VR Juggler. It does not explain what semaphores are or how to use them--it is assumed that readers are already familiar with the topic lest they probably would not be reading this chapter on advanced classes at all.</para>
+                  <para>The most important part of multi-threaded programming is proper thread synchronization so that access to shared data is controlled. Doing so results in consistency among all threads. Semaphores are a very common synchronization mechanism and have been used widely in concurrent systems. This short section describes the cross-platform semaphore interface provided with and used by VR Juggler. It does not explain what semaphores are or how to use them&mdash;it is assumed that readers are already familiar with the topic lest they probably would not be reading this chapter on advanced classes at all.</para>
                   <section>
                      <title>High-Level Description</title>
                      <indexterm zone="using-vjThread-sect">
@@ -3961,7 +3961,7 @@ vjConfigChunk* ch = (vjConfigChunk*) chunk-&gt;getProperty("embedded_chunk", 2);
                   <para>To use the joystick in place of a tracker, it should derive instead from <classname>vjPosition</classname><indexterm>
                         <primary>classes</primary>
                         <secondary>vjPosition</secondary>
-                     </indexterm>. This way, you can replace real trackers with your joystick "pseudo tracker". The main idea is that to be able to replace one device with another, the alternate device class must derive from the same base classes as the original device.</para>
+                     </indexterm>. This way, you can replace real trackers with your joystick <quote>pseudo tracker</quote>. The main idea is that to be able to replace one device with another, the alternate device class must derive from the same base classes as the original device.</para>
                </note>
                <section>
                   <title>Implementing the Device Driver</title>
@@ -4091,7 +4091,7 @@ mThread = new vjThread(functor);</programlisting>
 
 vjDeviceConstructor&lt;MyNewButtonDevice&gt;* this_ptr_not_used =
    new vjDeviceConstructor&lt;MyNewButtonDevice&gt;;</programlisting>
-                  <para>The new device driver can be compiled along with the <classname>vjDeviceConstructor</classname> call into a standalone library (<filename>.a</filename>, <filename>.so</filename>, <filename>.lib</filename>, and <filename>.dll</filename> are common). This library can then be linked with applications. In this way, there is no need to modify the VR Juggler source code to add a new driver. The driver code can be centralized into a single, neat driver that can be distributed as a "plug-in" for VR Juggler.</para>
+                  <para>The new device driver can be compiled along with the <classname>vjDeviceConstructor</classname> call into a standalone library (<filename>.a</filename>, <filename>.so</filename>, <filename>.lib</filename>, and <filename>.dll</filename> are common). This library can then be linked with applications. In this way, there is no need to modify the VR Juggler source code to add a new driver. The driver code can be centralized into a single, neat driver that can be distributed as a <quote>plug-in</quote> for VR Juggler.</para>
                   <note>
                      <para>When linking, it is important that the linker include <emphasis>all</emphasis> library symbols. On IRIX with the MIPSpro Compilers, the <parameter>-all</parameter> option informs the linker of this need. The GNU linker uses <parameter>--whole-archive</parameter>. Refer to your compiler documentation for more detailed information.</para>
                   </note>
