@@ -184,6 +184,12 @@ public class PropertyDescPanel extends JPanel
 	    enumsbutton.setEnabled(false);
 	    valuelabelsbutton.setEnabled(false);
 	}
+
+	Dimension d1 = getPreferredSize();
+	Dimension d2 = getMaximumSize();
+	d2.height = d1.height;
+	setMaximumSize(d2);
+
     }
 
 

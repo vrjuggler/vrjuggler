@@ -138,6 +138,7 @@ public class DescDBPanel extends JPanel
       name = "No Selection";
     if (name.equalsIgnoreCase ("No Selection")) {
       tree.setModel (new DefaultTreeModel (new DefaultMutableTreeNode ("no selection")));
+      currdb = null;
       return;
     }
     
@@ -159,65 +160,66 @@ public class DescDBPanel extends JPanel
 
 
 
-  public void actionPerformed (ActionEvent e) {
-    int i,j;
-    String s;
-    DefaultMutableTreeNode n;
-    DefaultTreeModel model;
-    TreePath[] tp;
-    ChunkDesc d;
+    public void actionPerformed (ActionEvent e) {
+	int i,j;
+	String s;
+	DefaultMutableTreeNode n;
+	DefaultTreeModel model;
+	TreePath[] tp;
+	ChunkDesc d;
 
-    Object source = e.getSource();
+	Object source = e.getSource();
     
-    if (source == remove_button) {
-      model = (DefaultTreeModel)tree.getModel();
-      tp = tree.getSelectionPaths();
-      if (tp == null)
-	return;
-      for (i = 0; i < tp.length; i++) {
-	n = (DefaultMutableTreeNode)tp[i].getLastPathComponent();
-	s = (String)n.getUserObject();
-	currdb.removeByName (s);
-	model.removeNodeFromParent (n);
-	model.reload();
-      }
+	if (source == remove_button) {
+	    model = (DefaultTreeModel)tree.getModel();
+	    tp = tree.getSelectionPaths();
+	    if (tp == null)
+		return;
+	    for (i = 0; i < tp.length; i++) {
+		n = (DefaultMutableTreeNode)tp[i].getLastPathComponent();
+		s = (String)n.getUserObject();
+		currdb.removeByName (s);
+		model.removeNodeFromParent (n);
+		model.reload();
+	    }
+	}
+	else if (source == insert_button) {
+	    model = (DefaultTreeModel)tree.getModel();
+	    d = new ChunkDesc();
+	    for (j = 0; j <50; j++) {
+		if ((currdb.getByName("unnamed"+j) == null) &&
+		    (currdb.get("unnamed"+j) == null))
+		    break;
+	    }
+	    d.name = "unnamed" + j;
+	    d.token = "unnamed" + j;
+	    currdb.addElement (d);
+	    n = new DefaultMutableTreeNode(d.name);
+	    ((DefaultMutableTreeNode)model.getRoot()).add(n);
+	    model.reload(n.getParent());
+	}
+	else if (source == load_button) {
+	    if (currdb == null)
+		s = FileControl.loadNewDescDBFile("", true);
+	    else
+		s = FileControl.loadNewDescDBFile (currdb.file.getParent(), true);
+	    if (s != null)
+		selectDB(s);
+	}
+	else if (source == new_button) {
+	    ChunkDescDB descdb = new ChunkDescDB();
+	    selectDB (Core.addDescDB (descdb));
+	}
+	else if (source == close_button) {
+	    Core.closeDescDB (currdb);
+	}
+	else if (source == save_button) {
+	    selectDB (FileControl.saveDescDBFile(currdb));
+	}
+	else if (source == db_combobox) {
+	    selectDB ((String)db_combobox.getSelectedItem());
+	}
     }
-    else if (source == insert_button) {
-      model = (DefaultTreeModel)tree.getModel();
-      d = new ChunkDesc();
-      for (j = 0; j <50; j++) {
-	if ((currdb.getByName("unnamed"+j) == null) &&
-	    (currdb.get("unnamed"+j) == null))
-	  break;
-      }
-      d.name = "unnamed" + j;
-      d.token = "unnamed" + j;
-      currdb.addElement (d);
-      n = new DefaultMutableTreeNode(d.name);
-      ((DefaultMutableTreeNode)model.getRoot()).add(n);
-      model.reload(n.getParent());
-    }
-    else if (source == load_button) {
-      s = FileControl.loadNewDescDBFile("", true);
-      if (s != null)
-	selectDB(s);
-    }
-    else if (source == new_button) {
-	ChunkDescDB descdb = new ChunkDescDB();
-	descdb.setName("untitled");
-	descdb.setDirectory("");
-	selectDB (Core.addDescDB (descdb));
-    }
-    else if (source == close_button) {
-	Core.closeDescDB (currdb);
-    }
-    else if (source == save_button) {
-      FileControl.saveDescDBFile(currdb);
-    }
-    else if (source == db_combobox) {
-      selectDB ((String)db_combobox.getSelectedItem());
-    }
-  }
 
 
 

@@ -38,13 +38,12 @@ public class FileControl {
 	    Core.consoleErrorMessage ("FileControl","Couldn't load " +descurl);
 	}
 		
-
 	try {
  	    homedir = System.getProperty ("user.home", "");
 	    f1 = new File (homedir, ".vjconfig");
 	    f2 = new File (f1, "vjcontrol.cfg");
 	    Core.gui_chunkdb.setName (f2.getName());
-	    Core.gui_chunkdb.setDirectory (f2.getParent());
+	    Core.gui_chunkdb.setFile (f2);
 	    r = new FileReader (f2);
 	    Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
 	}
@@ -88,7 +87,8 @@ public class FileControl {
     }
 
 
-    static public void loadMainChunkOrgTree (String name, boolean showrequester) {
+
+    static public void loadChunkOrgTree (String name, boolean showrequester, ChunkOrgTree orgtree) {
 	File f;
 	FileReader r;
 	ConfigStreamTokenizer st;
@@ -106,8 +106,8 @@ public class FileControl {
 	    r = new FileReader (f);
 	    Core.consoleInfoMessage ("FileControl", "Loading organization tree: " + f);
 	    st = new ConfigStreamTokenizer (r);
-	    Core.chunkorgtree.read(st);
-	    Core.rebuildAllTrees();
+	    orgtree.read(st);
+	    //Core.rebuildAllTrees();
 	}
 	catch (FileNotFoundException e) {
 	    Core.consoleErrorMessage ("FileControl", "File not found: " + f);
@@ -154,59 +154,92 @@ public class FileControl {
       st = new ConfigStreamTokenizer(r);
       ConfigChunkDB chunkdb = new ConfigChunkDB(Core.descdb);
       chunkdb.setName(f.getName());
-      chunkdb.setDirectory(f.getParent());
+      chunkdb.setFile(f);
       chunkdb.read(st);
       Core.addChunkDB (chunkdb);
-      return f.getName();
+      return chunkdb.name;
     }
     catch (FileNotFoundException e) {
-      Core.consoleErrorMessage ("FileControl", "File Not Found: " + e);
+      Core.consoleErrorMessage ("FileControl", "File Not Found: " + f);
       return null;
     }
   }
 
 
 
-  public static File requestSaveFile (String dir, String name) {
-    if (dir == null || dir.equals(""))
-      dir = System.getProperty("user.dir");
-    /* opens up a file requester... */
-    JFileChooser chooser = new JFileChooser(dir);
-    chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-    chooser.setApproveButtonText("Save");
-    chooser.setDialogTitle("Save Config File...");
-    chooser.setSelectedFile(new File(dir, name));
+    public static File requestSaveFile (File file) {
+	JFileChooser chooser;
+	/* opens up a file requester... */
+	if (file.isDirectory())
+	    chooser = new JFileChooser(file);
+	else {
+	    //System.out.println ("File is " + file + "\n and parent is " + file.getParent());
+	    String dir = file.getParent();
+	    if (dir == null)
+		dir = "";
+	    chooser = new JFileChooser (new File(dir));
+	    chooser.setSelectedFile (file);
+	}
+	chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+	chooser.setApproveButtonText("Save");
+	chooser.setDialogTitle("Save File...");
 
-    int returnVal = chooser.showSaveDialog(Core.ui); 
-    if(returnVal == JFileChooser.APPROVE_OPTION) { 
-     return chooser.getSelectedFile();
-    } 
-    else
-      return null;
-  }
-
-
-
-  public static boolean saveChunkDBFile (ConfigChunkDB db) {
-    File f = requestSaveFile (db.directory, db.name);
-    if (f == null)
-      return false;
-
-    try {
-      DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
-      out.writeBytes(db.fileRep());
-      Core.consoleInfoMessage ("FileControl", "Saved ChunkDB file: " + f);
-      return true;
+	int returnVal = chooser.showSaveDialog(Core.ui); 
+	if(returnVal == JFileChooser.APPROVE_OPTION) { 
+	    return chooser.getSelectedFile();
+	} 
+	else
+	    return null;
     }
-    catch (IOException e) {
-      Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
-      return false;
+
+
+
+    public static String saveChunkDBFile (ConfigChunkDB db) {
+	File f = requestSaveFile (db.file);
+	if (f == null)
+	    return db.name;
+
+	try {
+	    DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+	    out.writeBytes(db.fileRep());
+	    Core.consoleInfoMessage ("FileControl", "Saved ChunkDB file: " + f);
+
+	    /* do some fixing up if the name changed */
+	    db.setFile (f);
+	    return Core.renameChunkDB (db, f.getName());
+	}
+	catch (IOException e) {
+	    Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
+	    return db.name;
+	}
     }
-  }
+
+
+    public static String saveChunkOrgTree (ChunkOrgTree ot) {
+	File f = requestSaveFile (new File ("orgtree.org"));
+	if (f == null)
+	    return "";
+
+	try {
+	    DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+	    out.writeBytes(ot.toString());
+	    Core.consoleInfoMessage ("FileControl", "Saved ChunkOrgTree file: " + f);
+
+	    /* do some fixing up if the name changed */
+	    //db.setFile (f);
+	    //return Core.renameChunkDB (db, f.getName());
+	    return f.getName();
+	}
+	catch (IOException e) {
+	    Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
+	    return "";
+	}
+    }
 
 
 
-  public static String loadNewDescDBFile (String currentdir, boolean showrequester) {
+    public static String loadNewDescDBFile (String currentdir, 
+					    boolean showrequester) {
     File f;
     FileReader r;
     ConfigStreamTokenizer st;
@@ -225,10 +258,10 @@ public class FileControl {
       st = new ConfigStreamTokenizer(r);
       ChunkDescDB descdb = new ChunkDescDB();
       descdb.setName(f.getName());
-      descdb.setDirectory(f.getParent());
+      descdb.setFile (f);
       descdb.read(st);
       Core.addDescDB (descdb);
-      return f.getName();
+      return descdb.name;
     }
     catch (FileNotFoundException e) {
       Core.consoleErrorMessage ("FileControl", "File not found: " + e);
@@ -237,23 +270,27 @@ public class FileControl {
   }
 
 
-  public static boolean saveDescDBFile (ChunkDescDB db) {
-    File f = requestSaveFile (db.directory, db.name);
+  public static String saveDescDBFile (ChunkDescDB db) {
+    File f = requestSaveFile (db.file);
     if (f == null)
-      return false;
+      return db.name;
 
     try {
       DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
       out.writeBytes(db.fileRep());
-      System.out.println ("Saved ChunkDesc File: " + f);
-      return true;
+      Core.consoleInfoMessage ("FileControl", "Saved ChunkDesc File: " + f);
+
+      /* do some fixing up if the name changed */
+      db.setFile (f);
+      return Core.renameDescDB (db, f.getName());
     }
     catch (IOException e) {
-      System.err.println ("IOerror saving file " + f);
-      return false;
+      Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
+      return db.name;
     }
   }
 
 
 
 }
+

@@ -29,6 +29,7 @@ public class ChunkDBPanel extends JPanel
     JButton send_all_button;
     JButton new_button;
     JButton close_button;
+    JButton duplicate_button;
     JComboBox db_combobox;
     JComboBox insert_type;
     JScrollPane scroll_pane;
@@ -54,18 +55,8 @@ public class ChunkDBPanel extends JPanel
 
 	// south panel - add/load etc. buttons
  	south_panel = new JPanel();
-// 	south_panel.setLayout (new GridLayout (2, 2));
-// 	south_panel.add (insert_button = new JButton ("Insert"));
-// 	south_panel.add (remove_button = new JButton ("Remove"));
  	add (south_panel, "South");
-// ((FlowLayout)south_panel.getLayout()).setVgap(0);
-// 	if (controls_on_side == 0)
-// 	    ((FlowLayout)south_panel.getLayout()).setAlignment(FlowLayout.RIGHT);
-// 	else
-// 	    ((FlowLayout)south_panel.getLayout()).setAlignment(FlowLayout.LEFT);
 	south_panel.setLayout (new BoxLayout (south_panel, BoxLayout.X_AXIS));
-
-	//JToolBar toolbar = new JToolBar();
 
 	ImageIcon new_icn, load_icn, save_icn, close_icn;
 
@@ -92,15 +83,9 @@ public class ChunkDBPanel extends JPanel
 	save_button.setMargin (ins);
 	close_button.setMargin (ins);
 
-	//add (toolbar, "North");
-
-	// side panel - send & send all buttons
-	//side_panel = new Box(BoxLayout.Y_AXIS);
 	side_panel = new JPanel();
 	side_panel.setLayout (new GridLayout (11, 1));
 
-	//side_panel.add (Box.createVerticalStrut (20));
-	//side_panel.add (new JLabel (" "));
 	side_panel.add (new JLabel ("File"));
 
 	side_panel.add (new_button);
@@ -108,7 +93,6 @@ public class ChunkDBPanel extends JPanel
 	side_panel.add (save_button);
 	side_panel.add (close_button);
 
-	//side_panel.add (Box.createVerticalStrut (20));
 	side_panel.add (new JLabel ("Chunk"));
 	if (controls_on_side == 0) {
 	    side_panel.add (send_button = new JButton (">>"));
@@ -122,12 +106,11 @@ public class ChunkDBPanel extends JPanel
 	}
 
 	side_panel.add (remove_button = new JButton ("Remove"));
+	side_panel.add (duplicate_button = new JButton ("Duplicate"));
 	side_panel.add (insert_button = new JButton ("Insert"));
 
 	south_panel.add (new JLabel ("Insert type:"));
 	south_panel.add (insert_type = new JComboBox ());
-	//insert_type.addItem ("No Selection");
-	//updateInsertTypes();
 
 	// center: scrolled pane w/ tree
 	center_panel = new Box (BoxLayout.Y_AXIS);
@@ -143,6 +126,7 @@ public class ChunkDBPanel extends JPanel
 	load_button.addActionListener (this);
 	save_button.addActionListener (this);
 	insert_button.addActionListener (this);
+	duplicate_button.addActionListener (this);
 	remove_button.addActionListener (this);
 	send_button.addActionListener (this);
 	send_all_button.addActionListener (this);
@@ -153,20 +137,22 @@ public class ChunkDBPanel extends JPanel
 	load_button.setToolTipText ("Load another Config file");
 	save_button.setToolTipText ("Save this Config file");
 	close_button.setToolTipText ("Close this file (doesn't save)");
-	send_button.setToolTipText ("Copy selected chunks over to the other panel");
+	send_button.setToolTipText ("Copy selected chunks to the other panel");
 	send_all_button.setToolTipText ("Copy all chunks over to the other panel");
-	insert_button.setToolTipText ("Copies selected chunks or creates chunk in selected folder");
+	insert_button.setToolTipText ("Inserts new chunk (select type below)");
 	
     }
 
 
-  public void buildDBList () {
-    int i;
-    db_combobox.addItem ("No Selection");
-    for (i = 0; i < Core.chunkdbs.size(); i++) {
-      db_combobox.addItem (((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).getName());
+
+    public void buildDBList () {
+	int i;
+	db_combobox.addItem ("No Selection");
+	for (i = 0; i < Core.chunkdbs.size(); i++) {
+	    db_combobox.addItem (((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).getName());
+	}
     }
-  }
+
 
 
     public void removeChunkDBTree (ChunkDBTreeModel dbt) {
@@ -175,9 +161,12 @@ public class ChunkDBPanel extends JPanel
 	db_combobox.removeItem (dbt.getName());
     }
 
+
+
     public void addChunkDBTree (ChunkDBTreeModel dbt) {
 	db_combobox.addItem (dbt.getName());
     }
+
 
 
     public void selectDB (String name) {
@@ -211,10 +200,10 @@ public class ChunkDBPanel extends JPanel
 
 
 
-  public void addChunks (ConfigChunkDB newdb) {
-    for (int i = 0; i < newdb.size(); i++)
-      current_treemodel.insertNode ((ConfigChunk)newdb.elementAt(i));
-  }
+    public void addChunks (ConfigChunkDB newdb) {
+	for (int i = 0; i < newdb.size(); i++)
+	    current_treemodel.insertNode ((ConfigChunk)newdb.elementAt(i));
+    }
 
 	
 
@@ -234,100 +223,99 @@ public class ChunkDBPanel extends JPanel
 
 
 
-  public void actionPerformed (ActionEvent e) {
-    int i,j;
-    String s;
-    ChunkTreeNodeInfo nodeinfo;
-    TreePath[] tp;
-    ConfigChunkDB v;
-    Object source = e.getSource();
-    ConfigChunk ch;
+    public void actionPerformed (ActionEvent e) {
+	int i,j;
+	String s;
+	ChunkTreeNodeInfo nodeinfo;
+	TreePath[] tp;
+	ConfigChunkDB v;
+	Object source = e.getSource();
+	ConfigChunk ch;
 
-    if (source == send_button) {
-      tp = current_treemodel.tree.getSelectionPaths();
-      if (tp == null)
-	  return;
-      v = new ConfigChunkDB(Core.descdb);
-      if (tp != null) {
-	for (i = 0; i < tp.length; i++) {
-	  nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-	  if (nodeinfo.ch != null)
-	    v.addElement (nodeinfo.ch);
+	if (source == send_button) {
+	    tp = current_treemodel.tree.getSelectionPaths();
+	    if (tp == null)
+		return;
+	    v = new ConfigChunkDB(Core.descdb);
+	    if (tp != null) {
+		for (i = 0; i < tp.length; i++) {
+		    nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
+		    if (nodeinfo.ch != null)
+			v.addElement (nodeinfo.ch);
+		}
+	    }
+	    Core.ui.configure_pane.sendAcross (v, this);
+	    //System.out.println ("Chunks to send:\n" + v.toString());
 	}
-      }
-      Core.ui.configure_pane.sendAcross (v, this);
-      //System.out.println ("Chunks to send:\n" + v.toString());
-    }
-    else if (source == send_all_button) {
-      Core.ui.configure_pane.sendAcross (current_treemodel.chunkdb, this);
-    }
-    else if (source == new_button) {
-	String name = Core.addNewChunkDB ();
-	selectDB (name);
-    }
-    else if (source == close_button) {
-	Core.closeChunkDB (current_treemodel);
-    }
-    else if (source == remove_button) {
-      System.out.println ("Remove button pressed");
-      tp = current_treemodel.tree.getSelectionPaths();
-      if (tp == null)
-	return;
-      for (i = 0; i < tp.length; i++) {
-	nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-	if (nodeinfo.ch != null) {
-	  System.out.println ("removing node " + nodeinfo.ch.getName());
-	  current_treemodel.removeNode(nodeinfo.ch.getName());
+	else if (source == send_all_button) {
+	    Core.ui.configure_pane.sendAcross (current_treemodel.chunkdb, this);
 	}
-      }
-    }
-    else if (source == insert_button) {
-	ChunkDesc cd;
-	System.out.println ("Insert button pressed");
-	cd = Core.descdb.getByName ((String)insert_type.getSelectedItem());
-	if (cd != null) {
-	    ch = new ConfigChunk (cd);
-	    ch.name = (current_treemodel.chunkdb.getNewName(cd.name));
-	    current_treemodel.insertNode (ch);
+	else if (source == new_button) {
+	    selectDB (Core.addChunkDB (new ConfigChunkDB (Core.descdb)));
+	    // 	String name = Core.addNewChunkDB ();
+	    // 	selectDB (name);
 	}
-//       tp = current_treemodel.tree.getSelectionPaths();
-//       if (tp == null)
-// 	  return;
-//       for (i = 0; i < tp.length; i++) {
-// 	nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-// 	if (nodeinfo.ch != null) {
-// 	  // create a copy of this node...
-// 	  System.out.println ("not implemented");
-// 	  ch = nodeinfo.ch.copy();
-// 	  ch.name = "copy of " + ch.name;
-// 	  System.out.println ("doing insert of\n" + ch);
-// 	  current_treemodel.insertNode (ch);
-// 	}
-// 	else if (nodeinfo.s != null) {
-// 	  ChunkDesc d = Core.descdb.getByName(nodeinfo.s);
-// 	  if (d != null) {
-// 	    ch = new ConfigChunk (d);
-// 	    ch.name = (current_treemodel.chunkdb.getNewName(d.name));
-// 	    System.out.println ("doing insert of\n" + ch);
-// 	    current_treemodel.insertNode (ch);
-// 	  }
-      //	}
-    //	else
-	    //	  System.out.println ("nothin to do for node " + nodeinfo);
-    //      }
+	else if (source == close_button) {
+	    Core.closeChunkDB (current_treemodel);
+	}
+	else if (source == remove_button) {
+	    System.out.println ("Remove button pressed");
+	    tp = current_treemodel.tree.getSelectionPaths();
+	    if (tp == null)
+		return;
+	    for (i = 0; i < tp.length; i++) {
+		nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
+		if (nodeinfo.ch != null) {
+		    System.out.println ("removing node " + nodeinfo.ch.getName());
+		    current_treemodel.removeNode(nodeinfo.ch.getName());
+		}
+	    }
+	}
+	else if (source == insert_button) {
+	    ChunkDesc cd;
+	    System.out.println ("Insert button pressed");
+	    cd = Core.descdb.getByName ((String)insert_type.getSelectedItem());
+	    if (cd != null) {
+		ch = new ConfigChunk (cd);
+		ch.name = (current_treemodel.chunkdb.getNewName(cd.name));
+		current_treemodel.insertNode (ch);
+	    }
+	}
+	else if (source == duplicate_button) {
+	    tp = current_treemodel.tree.getSelectionPaths();
+	    if (tp == null)
+		return;
+	    for (i = 0; i < tp.length; i++) {
+		nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
+		if (nodeinfo.ch != null) {
+		    // create a copy of this node...
+		    System.out.println ("not implemented");
+		    ch = nodeinfo.ch.copy();
+		    ch.name = "copy of " + ch.name;
+		    System.out.println ("doing insert of\n" + ch);
+		    current_treemodel.insertNode (ch);
+		}
+		else
+		    System.out.println ("nothin to do for node " + nodeinfo);
+	    }
+	}
+	else if (source == load_button) {
+	    if (current_treemodel == empty_treemodel)
+		s = FileControl.loadNewChunkDBFile ("", true);
+	    else
+		s = FileControl.loadNewChunkDBFile (current_treemodel.chunkdb.file.getParent(), true);
+	    if (s != null)
+		selectDB(s);
+	}
+	else if (source == save_button) {
+	    if (current_treemodel != empty_treemodel)
+		selectDB (FileControl.saveChunkDBFile(current_treemodel.chunkdb));
+	}
+	else if (source == db_combobox) {
+	    selectDB ((String)db_combobox.getSelectedItem());
+	}
     }
-    else if (source == load_button) {
-      s = FileControl.loadNewChunkDBFile("", true);
-      if (s != null)
-	selectDB(s);
-    }
-    else if (source == save_button) {
-      FileControl.saveChunkDBFile(current_treemodel.chunkdb);
-    }
-    else if (source == db_combobox) {
-      selectDB ((String)db_combobox.getSelectedItem());
-    }
-  }
+
 
 
   public void mouseClicked(MouseEvent e) {
@@ -337,7 +325,7 @@ public class ChunkDBPanel extends JPanel
       int selRow = current_treemodel.tree.getRowForLocation(e.getX(), e.getY());
       TreePath selPath = current_treemodel.tree.getPathForLocation(e.getX(), e.getY());
       if(selRow != -1) {
-	System.out.println ("Double click on path: " + selPath);
+	  //System.out.println ("Double click on path: " + selPath);
 	ChunkTreeNodeInfo ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)selPath.getLastPathComponent()).getUserObject());
 	
 	if (ni.ch != null) {

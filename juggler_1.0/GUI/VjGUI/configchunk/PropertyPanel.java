@@ -29,6 +29,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
     GridBagLayout eastpanellayout;
     GridBagConstraints c;
 
+
     public PropertyPanel (Property pr, ConfigChunkFrame par) {
 	super();
 

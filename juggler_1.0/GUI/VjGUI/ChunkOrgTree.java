@@ -12,6 +12,26 @@ public class ChunkOrgTree {
                       // and ChunkOrgTrees
     Vector listeners; // ActionListeners - we'll send a "reload" action when we change
 
+    public void copyValueFrom (ChunkOrgTree ot) {
+	// copies the values of the tree ot, but not its listeners
+	label = ot.label;
+	Object o;
+	ChunkOrgTree ot2;
+	children.removeAllElements();
+	for (int i = 0; i < ot.children.size(); i++) {
+	    o = ot.children.elementAt(i);
+	    if (o instanceof String)
+		children.addElement((String)o);
+	    else {
+		ot2 = new ChunkOrgTree ();
+		ot2.copyValueFrom ((ChunkOrgTree)o);
+		children.addElement(ot2);
+	    }
+	}
+	
+	processActionEvent (new ActionEvent (this, 5, "reload"));
+    }
+
     public void addActionListener (ActionListener l) {
 	if (!listeners.contains (l))
 	    listeners.addElement (l);
