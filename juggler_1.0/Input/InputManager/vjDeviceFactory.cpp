@@ -87,7 +87,6 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
    vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
-   vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
 #else
