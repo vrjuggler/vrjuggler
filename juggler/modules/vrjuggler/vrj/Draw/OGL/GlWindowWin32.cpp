@@ -195,9 +195,9 @@ void GlWindowWin32::checkEvents()
       << "[vrj::GlWindowWin32::checkEvents()]"
       << std::endl << vprDEBUG_FLUSH;
 
-	MSG win_message;
+   MSG win_message;
 
-	// Try to find messages.
+   // Try to find messages.
    while ( PeekMessage(&win_message, NULL, 0, 0, PM_REMOVE) )
    {
       // Test if quit.
@@ -208,12 +208,12 @@ void GlWindowWin32::checkEvents()
 
       TranslateMessage(&win_message);     // Translate the accelerator keys
 		
-		// If we have a valid KeyboardMouseDevice, process
-		// all keyboard/mouse events
-		if ( NULL != mKeyboardMouseDevice )
-		{
-			updKeys( win_message );
-		}
+      // If we have a valid KeyboardMouseDevice, process
+      // all keyboard/mouse events
+      if ( NULL != mKeyboardMouseDevice )
+      {
+         updKeys( win_message );
+      }
 
       DispatchMessage(&win_message);      // Send to the WinProc
    }
