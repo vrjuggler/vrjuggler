@@ -107,7 +107,7 @@ snx::SoundFactoryReg<OpenALSoundImplementation> openAlRegistrator( "OpenAL" );
 
 void OpenALSoundImplementation::step( const float & timeElapsed )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    snx::SoundImplementation::step( timeElapsed );
 }
@@ -137,7 +137,7 @@ OpenALSoundImplementation::~OpenALSoundImplementation()
 void OpenALSoundImplementation::trigger( const std::string& alias, const int& looping )
 {
    
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    snx::SoundImplementation::trigger( alias, looping );
 
@@ -173,11 +173,11 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const int& lo
 
 bool OpenALSoundImplementation::isPlaying( const std::string& alias )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    if (mBindLookup.count( alias ) > 0)
    {
-      assert( alIsSource( mBindLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
+      vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
 
       ALint state( AL_INITIAL ); // initialized
       alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
@@ -199,11 +199,11 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
 /** if the sound is paused, then return true. */
 bool OpenALSoundImplementation::isPaused( const std::string& alias )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    if (mBindLookup.count( alias ) > 0)
    {
-      assert( alIsSource( mBindLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
+      vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
       ALint state( AL_INITIAL ); // initialized
       alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
       //std::cout<<"state: "<<state<<(AL_PAUSED == state)<<(AL_PLAYING == state)<<(AL_STOPPED == state)<<std::endl;
@@ -218,7 +218,7 @@ bool OpenALSoundImplementation::isPaused( const std::string& alias )
  */
 void OpenALSoundImplementation::pause( const std::string& alias )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    if (mBindLookup.count( alias ) > 0)
    {
@@ -231,7 +231,7 @@ void OpenALSoundImplementation::pause( const std::string& alias )
  */
 void OpenALSoundImplementation::unpause( const std::string& alias )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    if (mBindLookup.count( alias ) > 0)
    {
@@ -248,7 +248,7 @@ void OpenALSoundImplementation::unpause( const std::string& alias )
  */
 void OpenALSoundImplementation::stop( const std::string& alias )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    snx::SoundImplementation::stop( alias );
 
@@ -300,7 +300,7 @@ void OpenALSoundImplementation::configure( const std::string& alias, const snx::
  */
 void OpenALSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    snx::SoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindLookup.count( alias ) > 0)
@@ -337,7 +337,7 @@ void OpenALSoundImplementation::getPosition( const std::string& alias, float& x,
  */
 void OpenALSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
 {
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
    
    snx::SoundImplementation::setListenerPosition( mat );
 
@@ -698,7 +698,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       mBindLookup.erase( alias );
    }
    
-   assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
+   vprASSERT(mBindLookup.count(alias) == 0 && "unbind failed");
 }
 
 } // end namespace
