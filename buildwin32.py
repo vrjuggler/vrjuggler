@@ -885,7 +885,7 @@ def installGadgeteerDrivers(prefix):
    srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
 
    drivers = ['DataGlove', 'Fastrak', 'Flock', 'IBox', 'IntersenseAPI',
-              'IS900', 'MotionStar', 'PinchGlove', 'SerialEncoder',
+              'IS900', 'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove', 'SerialEncoder',
               'TrackdAPI', 'VRPN']
 
    for d in drivers:
