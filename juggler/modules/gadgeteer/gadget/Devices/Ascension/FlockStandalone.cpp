@@ -1,25 +1,33 @@
+
+//#include <sys/types.h> //for open
+//#include <sys/stat.h>  //for open
+#include <fcntl.h>     //for open
+
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <sys/time.h>
 
-#include <Math/vjMatrix.h>
+#include <assert.h>
+#include <string>
+#include <fstream.h>
+#include <iostream.h>
 
 #include "aFlock.h"
 
 //: Configure Constructor
-// Give:
-//   port - such as "/dev/ttyd3"
-//   baud - such as 38400, 19200, 9600, 14400, etc...
-//   sync - sync type.
-//   block - blocking
-//   numBrds - number of birds in flock,
-//   transmit - transmitter unit number,
-//   hemi - hemisphere to track from,
-//   filt - filtering type,
-//   report -
-//   calfile - a calibration file, if "", then use none.
-// 
+// Give:                                                 <BR>
+//   port - such as "/dev/ttyd3"                         <BR>
+//   baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
+//   sync - sync type.                                   <BR>
+//   block - blocking                                    <BR>
+//   numBrds - number of birds in flock,                 <BR>
+//   transmit - transmitter unit number,                 <BR>
+//   hemi - hemisphere to track from,                    <BR>
+//   filt - filtering type,                              <BR>
+//   report -                                            <BR>
+//   calfile - a calibration file, if "", then use none. <BR>
+//                                                       <BR>
 // Result: configures internal data members, 
 //         doesn't actually talk to the FOB yet.
 aFlock::aFlock(const char* const port, 
@@ -32,6 +40,7 @@ aFlock::aFlock(const char* const port,
 		const BIRD_FILT& filt, 
 		const char& report, 
 		const char* const calfile) : 
+		  _portId(-1),
 		  _active(false),
 		  _port(port),
 		  _baud(baud),
@@ -43,7 +52,8 @@ aFlock::aFlock(const char* const port,
 		  _filter( filt ),
 		  _reportRate(report),
 		  _calibrationFileName( calfile ),
-		  _usingCorrectionTable(false)
+		  _usingCorrectionTable(false),
+		  _current(0), _valid(1), _progress(2)
 {
   // fix the report rate if it makes no sense.
   if ((_reportRate != 'Q') && (_reportRate != 'R') &&
@@ -56,158 +66,157 @@ aFlock::aFlock(const char* const port,
 
   if (calfile != NULL && calfile[0] != '\0')
   {
-  	InitCorrectionTable(calfile);
+  	this->initCorrectionTable(calfile);
   	_usingCorrectionTable = true;
   }	
 }
 
+//: Destructor
 aFlock::~aFlock()
 {
-    StopSampling();
-    if (theData != NULL)
-       getMyMemPool()->deallocate((void*)theData);
+    this->stop();
 }
 
-void aFlock::SetPort(const char* serialPort)
+//: set the port to use
+//  this will be a string in the form of the native OS descriptor <BR>
+//  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setPort(const char* const serialPort)
 {
-    if (myThread != NULL) {
-     cerr << "Cannot change the serial Port while active\n";
-     return;
-  }
-  strncpy(_port, serialPort, (size_t)30);
+    if (_active) 
+    {
+	cout << "Flock: Cannot change the serial Port while active\n";
+	return;
+    }
+    _port = serialPort;
 }
 
-char* aFlock::GetPort()
+//: get the port used
+//  this will be a string in the form of the native OS descriptor <BR>
+//  ex: unix - "/dev/ttyd3", win32 - "COM3"
+const char* const aFlock::getPort()
 {
-  if (sPort == NULL) 
-  	return "No port";
-  else 
-  	return _port;
+    const char* const &charString = _port.data();
+    return charString;
 }
 
-void aFlock::SetBaudRate(int baud)
+//: set the baud rate
+//  this is generally 38400, consult flock manual for other rates. <BR>
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setBaudRate(const int& baud)
 {
-  if (myThread != NULL)
-     _baudRate = baud;
+    if (_active) 
+    {
+	cerr << "Flock: Cannot change the baud rate while active\n";
+	return;
+    } else {
+	_baud = baud;
+    }
 }
 
-int aFlock::StartSampling()
+//: call this to connect to the flock device.
+//  NOTE: flock.isActive() must be false to use this function
+int aFlock::start()
 {
-      if (theData != NULL)
-         getMyMemPool()->deallocate((void*)theData);
-      theData = (vjMatrix*) new vjMatrix[(_numBirds+1)*3];
-
-      current = 0;
-      valid = 1;
-      progress = 2;
-
-      cout << "    Getting flock ready....\n" << flush;
-
-      port_id = open_port( _port, _baud );
-      if (port_id == -1) return 0;
-      set_blocking(port_id, blocking);
-      set_sync(port_id,syncStyle);
-      set_group(port_id);
-      set_autoconfig(port_id, _numBirds);
-      set_transmitter(port_id, _xmitterUnitNumber);
-      set_filter(port_id, _filter);
-      set_hemisphere(port_id, _hemisphere, _xmitterUnitNumber, _numBirds);
-      set_pos_angles(port_id, _xmitterUnitNumber, _numBirds);
-      pickBird(_xmitterUnitNumber,port_id);
-      set_rep_and_stream(port_id, _reportRate);
-
-      cout  << "aFlock ready to go.." << endl << flush;
-      
-   else return 0; // already sampling
+    if (!_active)
+    {
+	cout << "    Getting flock ready....\n" << flush;
+	
+	aFlock::open_port( _port.data(), _baud, _portId );
+	if (_portId == -1) 
+	    return 0;
+	aFlock::set_blocking( _portId, _blocking );
+	aFlock::set_sync( _portId, _syncStyle );
+	aFlock::set_group( _portId );
+	aFlock::set_autoconfig( _portId, _numBirds );
+	aFlock::set_transmitter( _portId, _xmitterUnitNumber );
+	aFlock::set_filter( _portId, _filter );
+	aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
+	aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
+	aFlock::pickBird( _xmitterUnitNumber,_portId );
+	aFlock::set_rep_and_stream( _portId, _reportRate );
+	
+	cout  << "Flock ready to go.." << endl << flush;
+	
+	// flock is active.
+	_active = true;
+	
+	// return success
+	return 1;
+    } else 
+	return 0; // already sampling
 }
 
 
-// call this repeatedly to update the data from the birds.
-int aFlock::Sample()
+//: call this repeatedly to update the data from the birds.
+//  NOTE: flock.isActive() must be true to use this function
+int aFlock::sample()
 {
+     // can't sample when not active.
+     assert( _active == true );
+     
      int i;
-     int tmp;
-
+    
      // for [1..n] birds, get their reading:
      for (i=1; i < (_numBirds+1); i++)
      {
 	if (i == _xmitterUnitNumber)
 		continue;
 	
+	
+	
+	aFlock::getReading(i, _portId, 
+		this->xPos(),
+		this->yPos(),
+		this->zPos(),
+		this->zRot(),
+		this->yRot(),
+		this->xRot());	
+		
 	if (_usingCorrectionTable)
 	{
-	    //correct the position...
+	    this->positionCorrect( this->xPos(),
+			    this->yPos(),
+			    this->zPos() );
 	}
-
-      	// Sets index to current read buffer
-	int index = progress*(_numBirds+1)+i-1;
-	
-
-         getReading(i, &theData[index], port_id);	
-
-	// Transforms between the cord frames
-	// See transform documentation and VR System pg 146
-         vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-
-         world_T_transmitter = xformMat;                   // Set transmitter offset from local info
-         transmitter_T_reciever = theData[index];        // Get reciever data from sampled data
-         world_T_reciever.mult( world_T_transmitter, transmitter_T_reciever);   // compute total transform
-         theData[index] = world_T_reciever;                                     // Store corrected xform back into data
      }
-	
-     lock.acquire();
-     tmp = valid;
-     valid = progress;
-     progress = tmp;
-     lock.release();
 
      return 1;
 }
 
-int aFlock::StopSampling()
+//: stop the flock
+int aFlock::stop()
 {
-  char   bird_command[4];
-
-  cout << "Stopping the flock..." << flush;
-
-  bird_command[0] = 'B';
-  write(port_id, bird_command, 1);
-  ioctl(port_id, TCFLSH, (char *) 0);
-  sginap( 5 );
-  bird_command[0] = 'G';
-  write(port_id, bird_command, 1);
-  ioctl(port_id, TCFLSH, (char *) 0);
-  sleep( 2 );
-  close(port_id);
-  port_id = -1;
-
-  cout << "stopped." << endl << flush;
-  
-   return 1;
+    char   bird_command[4];
+    
+    cout << "Flock: Stopping the flock..." << flush;
+    
+    bird_command[0] = 'B';
+    write( _portId, bird_command, 1 );
+    ioctl( _portId, TCFLSH, (char *) 0 );
+    sginap( 5 );
+    bird_command[0] = 'G';
+    write( _portId, bird_command, 1 );
+    ioctl( _portId, TCFLSH, (char *) 0 );
+    sleep( 2 );
+    close( _portId );
+    _portId = -1;
+    
+    // flock is not active now.
+    _active = false;
+    
+    cout << "stopped." << endl << flush;
+    
+    return 1;
 }
 
-vjMatrix& aFlock::GetMatrix( int d ) // d is 0 based
-{
-  return theData[current*(_numBirds+1)+d] ;
-}
-
-void aFlock::UpdateData()
-{
-  // swap the indicies for the pointers
-  lock.acquire();
-  int tmp = current;
-  current = valid;
-  valid = tmp;
-  lock.release();
-
-  return;
-}
-
-void aFlock::SetHemisphere(BIRD_HEMI h)
+//: Set the hemisphere that the transmitter transmits from.
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setHemisphere( const BIRD_HEMI& h )
 {
     if (_active) 
     {
-	cout << "Cannot change the hemisphere\n" << flush;
+	cout << "Flock: Cannot change the hemisphere\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -215,11 +224,13 @@ void aFlock::SetHemisphere(BIRD_HEMI h)
     }
 }
 
-void aFlock::SetFilters(BIRD_FILT f)
+//: Set the type of filtering that the flock uses
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setFilters( const BIRD_FILT& f )
 {
     if (_active) 
     {
-	cout << "Cannot change filters while active\n" << flush;
+	cout << "Flock: Cannot change filters while active\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -227,11 +238,13 @@ void aFlock::SetFilters(BIRD_FILT f)
     }
 }
 
-void aFlock::SetReportRate(char rRate)
+//: Set the report rate that the flock uses
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setReportRate( const char& rRate )
 {
     if (_active) 
     {
-	cout << "Cannot change report rate while active\n" << flush;
+	cout << "Flock: Cannot change report rate while active\n" << flush;
 	return;
     } else {
 	// Set it.
@@ -239,56 +252,78 @@ void aFlock::SetReportRate(char rRate)
     }
 }
 
-void aFlock::SetTransmitter(int Transmit)
+//: Set the unit number of the transmitter
+//  give - an integer that is the same as the dip switch 
+//         setting on the transmitter box (for the unit number) <BR>
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setTransmitter( const int& Transmit )
 {
   if (_active) 
   {
-      cout << "Cannot change transmitter while active\n" << flush;
+      cout << "Flock: Cannot change transmitter while active\n" << flush;
       return;
   } else {
       // Set it.
       _xmitterUnitNumber = Transmit;
   }
 }
-void aFlock::SetNumBirds(int n)
+
+//: Set the number of birds to use in the flock.
+//  give - an integer number not more than the number of 
+//         birds attached to the system <BR>
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setNumBirds( const int& n )
 {
     if (_active) 
     {
-	cout << "Cannot change num birds while active\n" << flush;
+	cout << "Flock: Cannot change num birds while active\n" << flush;
 	return;
     } else {
 	// Set it.
 	_numBirds = n;
     }
 }
-void aFlock::SetSync(int sync)
+
+//: set the video sync type
+//  this option allows the Flock to syncronize its pulses with 
+//  your video display.  This will eliminate most flicker caused 
+//  by the magnetic distortion. <BR>
+//  - Refer to your flock manual for what number to use.
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setSync(const int& sync)
 {
   if (_active) 
   {
-      cout << "Cannot change report rate while active\n" << flush;
+      cout << "Flock: Cannot change report rate while active\n" << flush;
       return;
   } else {
       // Set it.
-      syncStyle = sync;
+      _syncStyle = sync;
   }
 }
 
-void aFlock::SetBlocking(int blVal)
+//: set blocking of flock
+//  see flock manual for details.
+//  NOTE: flock.isActive() must be false to use this function
+void aFlock::setBlocking( const int& blVal )
 {
   if (_active) 
   {
-      cout << "Cannot change report rate while active\n" << flush;
+      cout << "Flock: Cannot change blocking while active\n" << flush;
       return;
   } else {
       // Set it.
-      blocking = blVal;
+      _blocking = blVal;
   }
 }
 
-void aFlock::Position_Correct(float&x,float&y,float&z) 
+//: with the calibration table info, correct a given position
+//  give - a position in x, y, z euclidian coordinates
+//  returns - a corrected position in x, y, z euclidian coordinates
+void aFlock::positionCorrect( float& x, float& y, float& z ) 
 {
-  int xlo,ylo,zlo,xhi,yhi,zhi;
-  float a,b,c,a1,b1,c1;
+    int xlo,ylo,zlo,xhi,yhi,zhi;
+    float a,b,c,a1,b1,c1;
 
     // Find corners
     xlo = (int)(x-caltable.xmin);
@@ -328,7 +363,10 @@ void aFlock::Position_Correct(float&x,float&y,float&z)
     return;
 }
 
-void aFlock::InitCorrectionTable(const char* fName)
+//: init the correction table from a file
+//  give - a file name of the calibration file.
+//  result - initializes the correction table with the file's info
+void aFlock::initCorrectionTable( const char* const fName )
 {
   int i,j,k, xsize,ysize,zsize;
   float dump;
@@ -336,7 +374,7 @@ void aFlock::InitCorrectionTable(const char* fName)
 
   cout << "	  Initializing calibration table ... " << endl
              << "	    " << fName << endl << flush;
-  inFile.open(fName);
+  inFile.open( fName );
   if (!inFile)
   {
 	cout << "Unable to open calibration.table\n" << flush;
@@ -370,61 +408,64 @@ void aFlock::InitCorrectionTable(const char* fName)
 ///////////////////////////////////////////////////////////////////
 // Local functions to aFlock.cpp
 //////////////////////////////////////////////////////////////////
-int aFlock::getReading(int n, vjMatrix* data, int port)
+//: get a reading
+//  give - n:    the bird unit number  <BR>
+//  give - port: the flock port number <BR>
+//  give - xyz positions               <BR>
+//  give - zyx rotations
+int aFlock::getReading( const int& n, const int& port, 
+    float& xPos, float& yPos, float& zPos, 
+    float& zRot, float& yRot, float& xRot )
 {
-   char buff[12], group;
-   int  c,i, addr;
-
-   do
-   {
-      c=i = 0;
-      while (!i && c < 99999)
-      {
-         c++;
-         if ((read(port,buff,1) == 1) && (buff[0] & 0x80))
-            i = 1;
-      }
-      while (i != 12 && c < 99999)
-      {
-         c++;
-         i += read(port,&buff[i], 12-i);
-      }
-
-      while ((read(port,&group,1) == 0) && c < 99999)
-      {
-         sgi_nap(1);
-	 c++;
+    char buff[12], group;
+    int  c,i, addr;
+    
+    do
+    {
+	c=i = 0;
+	while (!i && c < 99999)
+	{
+	    c++;
+	    if ((read( port,buff,1 ) == 1) && (buff[0] & 0x80))
+		i = 1;
+	}
+	while (i != 12 && c < 99999)
+	{
+	    c++;
+	    i += read( port,&buff[i], 12-i );
 	}
 	
-      if (c >= 5000)
-         cout << "aFlock: tracker timeout (" << c << ")" << endl << flush;
-
-      addr = group;
-   }
-   while (addr != n);
-
-   //cout << "addr: " << addr << endl;
-
-   vjVec3 pos_data, or_data;
-
-   pos_data[0] = rawToFloat(buff[1],buff[0]) * POSITION_RANGE;       // X
-   pos_data[1] = rawToFloat(buff[3],buff[2]) * POSITION_RANGE;       // Y
-   pos_data[2] = rawToFloat(buff[5],buff[4]) * POSITION_RANGE;       // Z
-   or_data[0] = rawToFloat(buff[7],buff[6]) * ANGLE_RANGE;           // rotZ
-//  if (data->or[0] < -180.0f)
-//     data->or[0] += 360.0f;
-   or_data[1] = rawToFloat(buff[9],buff[8]) * ANGLE_RANGE;           // rotY
-   or_data[2] = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;         // rotX
-
-   data->makeZYXEuler(or_data[0], or_data[1], or_data[2]);
-   data->setTrans(pos_data[0], pos_data[1], pos_data[2]);
-
-   return addr;
+	while ((read( port,&group,1 ) == 0) && c < 99999)
+	{
+	    sginap(1);
+	    c++;
+	}
+	
+	if (c >= 5000)
+	    cout << "aFlock: tracker timeout (" << c << ")" << endl << flush;
+	
+	addr = group;
+    } while (addr != n);
+    
+    //cout << "addr: " << addr << endl;
+    
+    // Position
+    xPos = rawToFloat(buff[1],buff[0])   * POSITION_RANGE;
+    yPos = rawToFloat(buff[3],buff[2])   * POSITION_RANGE;
+    zPos = rawToFloat(buff[5],buff[4])   * POSITION_RANGE;
+    
+    // Orientation
+    zRot = rawToFloat(buff[7],buff[6])   * ANGLE_RANGE;
+    yRot = rawToFloat(buff[9],buff[8])   * ANGLE_RANGE;
+    xRot = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;
+    
+    return addr;
 }
 
-float aFlock::rawToFloat(char& r1, char& r2)
+float aFlock::rawToFloat( char& r1, char& r2 )
 {
    // return ((float) (((r1 & 0x7f) << 9) | (r2 & 0x7f) << 2) / 0x7fff);
+   
    short int ival1,ival2,val;
    ival1 = r1 & 0x7f;
    ival2 = r2 & 0x7f;
@@ -432,40 +473,41 @@ float aFlock::rawToFloat(char& r1, char& r2)
    return ((float)val) / 0x7fff;
 }
 
-void  aFlock::pickBird(int birdID, int port)
+void  aFlock::pickBird( const int& birdID, const int& port )
 {
    char buff = 0xF0 + birdID;
-   write(port, &buff, 1);
-   ioctl(port, TCFLSH, (char*) 0);
-   sginap(1);
+   write( port, &buff, 1 );
+   ioctl( port, TCFLSH, (char*) 0 );
+   
+   sginap( 1 );
 }
 
-int aFlock::open_port(char* serialPort, int baud)
+int aFlock::open_port( const char* const serialPort, 
+			const int& baud, 
+			int& _portId )
 {
    ///////////////////////////////////////////////////////////////////
    // Open and close the port to reset the tracker, then
    // Open the port
    ///////////////////////////////////////////////////////////////////
-   int port_id = open(serialPort, O_RDWR | O_NDELAY);
-   if (port_id == -1)
+   _portId = open( serialPort, O_RDWR | O_NDELAY );
+   if (_portId == -1)
    {
       cout << "!!aFlock port open (1 of 2) failed\n" << flush ;
-      return port_id;
-   }
-   else
-   {
+      return _portId;
+   } else {
       cout << "aFlock port open (1 of 2) successfully\n" << flush;
    }
+   
    sleep(2);
-   close(port_id);
-   port_id = open(serialPort,O_RDWR | O_NDELAY);
-   if (port_id == -1)
+   close( _portId );
+   _portId = open( serialPort, O_RDWR | O_NDELAY );
+   
+   if (_portId == -1)
    {
       cout << "!!aFlock port open (2 of 2) failed\n" << flush;
-      return port_id;
-   }
-   else
-   {
+      return _portId;
+   } else {
       cout << "aFlock port open (2 of 2) successfully\n" << flush;
    }
 
@@ -474,7 +516,7 @@ int aFlock::open_port(char* serialPort, int baud)
    //
    //////////////////////////////////////////////////////////////////
    termio port_a;
-   ioctl(port_id,TCGETA,&port_a);
+   ioctl( _portId,TCGETA,&port_a );
 
    port_a.c_iflag = port_a.c_oflag = port_a.c_lflag = 0;
 
@@ -495,209 +537,219 @@ int aFlock::open_port(char* serialPort, int baud)
    port_a.c_cc[4] = port_a.c_cc[5] = 1;
 
    // Set the new attributes
-   ioctl(port_id,TCSETA,&port_a);
-   ioctl(port_id,TIOCNOTTY);
-   return port_id;
+   ioctl( _portId,TCSETA,&port_a );
+   ioctl( _portId,TIOCNOTTY );
+   return _portId;
 }
 
-void aFlock::set_blocking(int port, int blocking)
+void aFlock::set_blocking( const int& port, const int& blocking )
 {
- //////////////////////////////////////////////////////////////////
- // Setup a non/blocked port & Flush port
- //////////////////////////////////////////////////////////////////
-  static int blockf,nonblock;
-  int flags;
-
-  flags = fcntl(port,F_GETFL,0);
-  blockf = flags & ~FNDELAY;  // Turn blocking on
-  nonblock = flags | FNDELAY; // Turn blocking off
-
-  fcntl(port,F_SETFL,blocking ? blockf : nonblock); // 0 Non Blocked
-                                                    // 1 Blocked
-  ioctl(port,TCFLSH,2);
-  sginap(10);
-  char junk[1024];
-  read(port, junk, 1024);
-  sleep(1);
-
+    //////////////////////////////////////////////////////////////////
+    // Setup a non/blocked port & Flush port
+    //////////////////////////////////////////////////////////////////
+    static int blockf,nonblock;
+    int flags;
+    
+    flags = fcntl( port,F_GETFL,0 );
+    
+    // Turn blocking on
+    blockf   = flags & ~FNDELAY;  
+    
+    // Turn blocking off
+    nonblock = flags | FNDELAY; 
+    
+    // 0 Non Blocked
+    // 1 Blocked
+    fcntl( port, F_SETFL, blocking ? blockf : nonblock ); 
+    
+    ioctl( port, TCFLSH, 2 );
+    sginap( 10 );
+    
+    // read 1kb of junk
+    char junk[1024];
+    read( port, junk, 1024 );
+    
+    sleep( 1 );
 }
 
-void aFlock::set_sync(int port, int sync)
+void aFlock::set_sync( const int& port, const int& sync )
 {
-/////////////////////////////////////////////////////////////////
- // Set CRT sync: (manual page 82)
- //   set crt sync
- //   nosync    -   0
- //   > 72Hz    -   1 (type 1)
- //                 2 (type 2)
- /////////////////////////////////////////////////////////////////
-  unsigned char buff[4] = {'A', 1};
-  buff[1] = sync;
-  write(port,buff,2);
-  ioctl(port,TCFLSH,0);
+    /////////////////////////////////////////////////////////////////
+    // Set CRT sync: (manual page 82)
+    //   set crt sync
+    //   nosync    -   0
+    //   > 72Hz    -   1 (type 1)
+    //                 2 (type 2)
+    /////////////////////////////////////////////////////////////////
+    unsigned char buff[4] = {'A', 1};
+    buff[1] = sync;
+    write( port,buff,2 );
+    ioctl( port,TCFLSH,0 );
 }
 
 
-void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds)
+void aFlock::set_hemisphere( const int& port, 
+			const BIRD_HEMI& hem, 
+			const int& transmitter, 
+			const int& numbirds )
 {
- /////////////////////////////////////////////////////////////////
- // Set Hemisphere for birds taking input
- //
- //  buff   [1]   [2]
- // Front: 0x00, 0x00
- // Aft  : 0x00, 0x01
- // Upper: 0x0C, 0x01
- // Lower: 0x0C, 0x00
- // Left : 0x06, 0x01
- // Right: 0x06, 0x00
- /////////////////////////////////////////////////////////////////
-  char buff[3];
-  buff[0] = 'L';
-  for (int i = 1; i < (numbirds+1); i++)
-  {
+    /////////////////////////////////////////////////////////////////
+    // Set Hemisphere for birds taking input
+    //
+    //  buff   [1]   [2]
+    // Front: 0x00, 0x00
+    // Aft  : 0x00, 0x01
+    // Upper: 0x0C, 0x01
+    // Lower: 0x0C, 0x00
+    // Left : 0x06, 0x01
+    // Right: 0x06, 0x00
+    /////////////////////////////////////////////////////////////////
+    char buff[3];
+    buff[0] = 'L';
+    for (int i = 1; i < (numbirds+1); i++)
+    {
 	if (i == transmitter)
 		continue;
-    pickBird(i,port);
-    switch(hem) {
-      case FRONT_HEM:
-        buff[1] = 0x00;
-	buff[2] = 0x00;
-        break;
-      case AFT_HEM:
-        buff[1] = 0x00;
-	buff[2] = 0x01;
-	break;
-      case UPPER_HEM:
-        buff[1] = 0x0C;
-	buff[2] = 0x01;
-	break;
-      case LOWER_HEM:
-        buff[1] = 0x0C;
-	buff[2] = 0x00;
-	break;		
-      case LEFT_HEM:
-        buff[1] = 0x06;
-	buff[2] = 0x01;
-	break;
-      case RIGHT_HEM:
-        buff[1] = 0x06;
-	buff[2] = 0x00;
-	break;
-   }
-    write(port, buff, 3);
-    ioctl(port, TCFLSH, (char *) 0);
-    sginap(5);
-  }
+	pickBird( i,port );
+	switch (hem) 
+	{
+	case FRONT_HEM:
+	    buff[1] = 0x00;
+	    buff[2] = 0x00;
+	    break;
+	case AFT_HEM:
+	    buff[1] = 0x00;
+	    buff[2] = 0x01;
+	    break;
+	case UPPER_HEM:
+	    buff[1] = 0x0C;
+	    buff[2] = 0x01;
+	    break;
+	case LOWER_HEM:
+	    buff[1] = 0x0C;
+	    buff[2] = 0x00;
+	    break;		
+	case LEFT_HEM:
+	    buff[1] = 0x06;
+	    buff[2] = 0x01;
+	    break;
+	case RIGHT_HEM:
+	    buff[1] = 0x06;
+	    buff[2] = 0x00;
+	    break;
+	}
+	write( port, buff, 3 );
+	ioctl( port, TCFLSH, (char *) 0 );
+	sginap( 5 );
+    }
 }
 
-void set_rep_and_stream(int port, char reportRate)
+void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
 {
- char buff[1];
- /////////////////////////////////////////////////////////////////
- // Set report rate
- //             Q  Every cycle
- //  buff[0] - 'R' Every other bird cycle
- //             S  every 8 cycles
- //             T  every 32 cycles
- /////////////////////////////////////////////////////////////////
-  buff[0] = _reportRate;
-  write(port, buff, 1);
-  ioctl(port, TCFLSH, (char *) 0);
-  sginap(20);
-
- ////////////////////////////////////////////////////////////////
- // set stream mode
- ////////////////////////////////////////////////////////////////
-  buff[0] = '@';
-  write(port, buff, 1);
-  ioctl(port, TCFLSH, (char *) 0);
-  sginap(5);
-
+    char buff[1];
+    /////////////////////////////////////////////////////////////////
+    // Set report rate
+    //             Q  Every cycle
+    //  buff[0] - 'R' Every other bird cycle
+    //             S  every 8 cycles
+    //             T  every 32 cycles
+    /////////////////////////////////////////////////////////////////
+    buff[0] = reportRate;
+    write( port, buff, 1 );
+    ioctl( port, TCFLSH, (char *) 0 );
+    sginap( 20 );
+    
+    ////////////////////////////////////////////////////////////////
+    // set stream mode
+    ////////////////////////////////////////////////////////////////
+    buff[0] = '@';
+    write( port, buff, 1 );
+    ioctl( port, TCFLSH, (char *) 0 );
+    sginap( 5 );
 }
 
-void set_pos_angles(int port, int transmitter, int numbirds)
+void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& numbirds)
 {
- //////////////////////////////////////////////////////////////////
- // Set Position Angles
- /////////////////////////////////////////////////////////////////
-  char buff[1];
-  for (int i = 1; i < (numbirds + 1); i++)
-  {
+    //////////////////////////////////////////////////////////////////
+    // Set Position Angles
+    /////////////////////////////////////////////////////////////////
+    char buff[1];
+    for (int i = 1; i < (numbirds + 1); i++)
+    {
 	if (i == transmitter)
 		continue;
-    pickBird(i,port);
-    buff[0] = 'Y';
-    write(port, buff, 1);
-    ioctl(port, TCFLSH, (char *) 0);
-    sginap(5);
-  }
-
+	aFlock::pickBird( i,port );
+	buff[0] = 'Y';
+	write( port, buff, 1 );
+	ioctl( port, TCFLSH, (char *) 0 );
+	sginap( 5 );
+    }
 }
 
-void set_filter(int port, BIRD_FILT filter)
+void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
 {
- ///////////////////////////////////////////////////////////////
- // Turn filters on (manual page 48)
- // 0s turn AC NARROW notch filter ON
- //         AC WIDE notch filter ON
- //         DC filter ON
- ///////////////////////////////////////////////////////////////
-  char buff[4];
-  buff[0] = 'P';
-  buff[1] = 0x04;
-  buff[2] = 0x00;
-  buff[3] = 0;
-  write(port,buff,4);
-  ioctl(port,TCFLSH,(char*)0);
- // Do I need to sleep here?
+    ///////////////////////////////////////////////////////////////
+    // Turn filters on (manual page 48)
+    // 0s turn AC NARROW notch filter ON
+    //         AC WIDE notch filter ON
+    //         DC filter ON
+    ///////////////////////////////////////////////////////////////
+    char buff[4];
+    buff[0] = 'P';
+    buff[1] = 0x04;
+    buff[2] = 0x00;
+    buff[3] = 0;
+    write(port,buff,4);
+    ioctl(port,TCFLSH,(char*)0);
+    
+    //TODO: Do I need to sleep here?
     sginap(120);
 }
 
-void set_transmitter(int port, int transmitter)
+void aFlock::set_transmitter(const int& port, const int& transmitter)
 {
-///////////////////////////////////////////////////////////////
- // Sets up the device for Transmitting (manual page 67)
- // Command (0x30) for Next Transmitter
- ///////////////////////////////////////////////////////////////
-  char buff[2];
-  buff[0] = (unsigned char) (0x30);
-  buff[1] = (unsigned char) transmitter  << 4;
-  write(port, buff, 2);
-  ioctl(port, TCFLSH,(char*) 0);
-  sginap(120);
+    ///////////////////////////////////////////////////////////////
+    // Sets up the device for Transmitting (manual page 67)
+    // Command (0x30) for Next Transmitter
+    ///////////////////////////////////////////////////////////////
+    char buff[2];
+    buff[0] = (unsigned char) (0x30);
+    buff[1] = (unsigned char) transmitter  << 4;
+    write(port, buff, 2);
+    ioctl(port, TCFLSH,(char*) 0);
+    sginap(120);
 }
 
 
-void set_autoconfig(int port, int numbirds)
+void aFlock::set_autoconfig(const int& port, const int& numbirds)
 {
- ///////////////////////////////////////////////////////////////
- // FBB AUTO-CONFIGURATION (manual page 60)
- //
- // Must wait 300 milliseconds before and after this command
- ///////////////////////////////////////////////////////////////
-  char buff[3];
-  buff[0] = 'P';
-  buff[1] = 0x32;
-  buff[2] = numbirds+1;  //number of input devices + 1 for transmitter
-  write(port, buff,3);
-  ioctl(port, TCFLSH, (char*) 0);
-  sleep(2);
+    ///////////////////////////////////////////////////////////////
+    // FBB AUTO-CONFIGURATION (manual page 60)
+    //
+    // Must wait 300 milliseconds before and after this command
+    ///////////////////////////////////////////////////////////////
+    char buff[3];
+    buff[0] = 'P';
+    buff[1] = 0x32;
+    buff[2] = numbirds+1;  //number of input devices + 1 for transmitter
+    write(port, buff,3);
+    ioctl(port, TCFLSH, (char*) 0);
+    sleep(2);
 }
 
-void set_group(int port)
+void aFlock::set_group(const int& port)
 {
- ////////////////////////////////////////////////////////////////
- // Setup group mode: (manual page 59)
- // 'P' Change Parameter
- // Number 35 (hex 23),
- // Set flag to 1 enabling group mode.
- ////////////////////////////////////////////////////////////////
-  char buff[3];
-  buff[0] = 'P';
-  buff[1] = 0x23;
-  buff[2] = 0x01;
-  write(port, buff, 3);
-  ioctl(port, TCFLSH, (char *) 0);
-  sleep(2);
-
+    ////////////////////////////////////////////////////////////////
+    // Setup group mode: (manual page 59)
+    // 'P' Change Parameter
+    // Number 35 (hex 23),
+    // Set flag to 1 enabling group mode.
+    ////////////////////////////////////////////////////////////////
+    char buff[3];
+    buff[0] = 'P';
+    buff[1] = 0x23;
+    buff[2] = 0x01;
+    write(port, buff, 3);
+    ioctl(port, TCFLSH, (char *) 0);
+    sleep(2);
 }

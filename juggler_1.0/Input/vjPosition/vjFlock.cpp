@@ -29,40 +29,40 @@ vjFlock::vjFlock()
 
 bool vjFlock::config(vjConfigChunk *c)
 {
-  vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
-
-  if(!vjPosition::config(c))
+    vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
+    
+    if(!vjPosition::config(c))
      return false;
-
-  syncStyle = static_cast<int>(c->getProperty("sync"));//1;
-  blocking = static_cast<int>(c->getProperty("blocking"));//0;
-
-  // to be added to config:
-  theTransmitter = static_cast<int>(c->getProperty("transmitter"));
-  numBirds = static_cast<int>(c->getProperty("num"));
-  hemisphere = (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi")));  //LOWER_HEMI
-  char r = static_cast<char*>(c->getProperty("report"))[0];
-  if ((r != 'Q') && (r != 'R') &&
+    
+    syncStyle = static_cast<int>(c->getProperty("sync"));//1;
+    blocking = static_cast<int>(c->getProperty("blocking"));//0;
+    
+    // to be added to config:
+    theTransmitter = static_cast<int>(c->getProperty("transmitter"));
+    numBirds = static_cast<int>(c->getProperty("num"));
+    hemisphere = (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi")));  //LOWER_HEMI
+    char r = static_cast<char*>(c->getProperty("report"))[0];
+    if ((r != 'Q') && (r != 'R') &&
       (r != 'S') && (r != 'T'))
-  {
-     vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
-     repRate = 'R';
-  }
-  else
-     repRate = r;
-
-  vjDEBUG(0)   << "	  Flock Settings: " << endl
-               << "	        theTransmitter: " << theTransmitter << endl
-	            << "             numBirds      : " << numBirds << endl
-               << "	        baudRate      : " << baudRate << endl
-               << "	        deviceAbilities:" << deviceAbilities << endl
-               << "	        sPort         : " << sPort << endl
-               << "		instance name : " << instName << endl
-               << endl << vjDEBUG_FLUSH;
-
-  InitCorrectionTable(c->getProperty("calfile"));
-
-  return true;
+    {
+	vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
+	repRate = 'R';
+    }
+    else
+	repRate = r;
+    
+    vjDEBUG(0) << "	  Flock Settings: " << endl
+	       << "	        theTransmitter: " << theTransmitter << endl
+		    << "             numBirds      : " << numBirds << endl
+	       << "	        baudRate      : " << baudRate << endl
+	       << "	        deviceAbilities:" << deviceAbilities << endl
+	       << "	        sPort         : " << sPort << endl
+	       << "		instance name : " << instName << endl
+	       << endl << vjDEBUG_FLUSH;
+    
+    InitCorrectionTable(c->getProperty("calfile"));
+    
+    return true;
 }
 
 vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
