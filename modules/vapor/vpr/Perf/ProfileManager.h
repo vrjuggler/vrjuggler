@@ -69,7 +69,7 @@
 namespace vpr
 {
 
-   /*** \class ProfileManager ProfileManager.h vpr/Perf/ProfileManager.h
+   /** \class ProfileManager ProfileManager.h vpr/Perf/ProfileManager.h
     *
     * Global static facade for using the profiling code.
     */
