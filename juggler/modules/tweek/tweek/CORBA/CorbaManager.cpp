@@ -141,6 +141,13 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
 void CorbaManager::shutdown(bool waitForCompletion)
 {
+   // If the Subject Manager exists, we need to deactivate it, remove it
+   // from the Naming Service, and free its memory.
+   if ( mSubjectManager != NULL )
+   {
+      destroySubjectManager();
+   }
+
    if ( ! CORBA::is_nil(mRootPOA) )
    {
       // We want to etherialize objects (destroy registered servants).  This

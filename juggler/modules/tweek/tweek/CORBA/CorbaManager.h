@@ -72,13 +72,6 @@ public:
     */
    ~CorbaManager()
    {
-      // If the Subject Manager exists, we need to deactivate it, remove it
-      // from the Naming Service, and free its memory.
-      if ( mSubjectManager != NULL )
-      {
-         destroySubjectManager();
-      }
-
       shutdown();
 
       if ( mOrbThread != NULL )
