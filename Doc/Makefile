@@ -4,9 +4,10 @@ FILTERS = ./filters
 TEMPLATES_INT = ./templates/internal
 TEMPLATES_PUB = ./templates/public
 SRCDIR = ..
-SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Kernel	\
-      $(SRCDIR)/SharedMem $(SRCDIR)/Threads $(SRCDIR)/Environment	\
-      $(SRCDIR)/Math $(SRCDIR)/Performance
+SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Sound \
+      $(SRCDIR)/Kernel $(SRCDIR)/SharedMem $(SRCDIR)/Threads \
+      $(SRCDIR)/Environment $(SRCDIR)/Math $(SRCDIR)/Performance \
+      $(SRCDIR)/Utils
 #SRC = $(SRCDIR)/Config $(SRCDIR)/Math
 
 SRC_EX = ExampleClass.h ExampleClass.C
