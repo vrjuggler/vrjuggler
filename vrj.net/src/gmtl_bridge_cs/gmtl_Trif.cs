@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,40 +54,30 @@ public sealed class Trif
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Tri_float__Tri__();
+   private extern static IntPtr gmtl_Tri_float__Tri__0();
 
    public Trif()
    {
-      mRawObject   = gmtl_Tri_float__Tri__();
+      mRawObject   = gmtl_Tri_float__Tri__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
+   private extern static IntPtr gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
 
    public Trif(gmtl.Point3f p0, gmtl.Point3f p1, gmtl.Point3f p2)
    {
-      
-      
-      
-      mRawObject   = gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(p0, p1, p2);
+      mRawObject   = gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f3(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Tri_float__Tri__gmtl_Trif([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TrifMarshaler))] gmtl.Trif p0);
+   private extern static IntPtr gmtl_Tri_float__Tri__gmtl_Trif1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TrifMarshaler))] gmtl.Trif p0);
 
    public Trif(gmtl.Trif p0)
    {
-      
-      mRawObject   = gmtl_Tri_float__Tri__gmtl_Trif(p0);
+      mRawObject   = gmtl_Tri_float__Tri__gmtl_Trif1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__()
+   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__0()
    {
       gmtl::Point4i* obj = new gmtl::Point4i();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__gmtl_Point4i(const gmtl::Point4i* p0)
+   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__gmtl_Point4i1(const gmtl::Point4i* p0)
    {
       const gmtl::Point4i& marshal_p0 = *p0;
       gmtl::Point4i* obj = new gmtl::Point4i(marshal_p0);
@@ -50,7 +50,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__gmtl_VecBase_int_4(const gmtl::VecBase<int,4>* p0)
+   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__gmtl_VecBase_int_41(const gmtl::VecBase<int,4>* p0)
    {
       const gmtl::VecBase<int,4>& marshal_p0 = *p0;
       gmtl::Point4i* obj = new gmtl::Point4i(marshal_p0);
@@ -58,21 +58,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__int_int(const int p0, const int p1)
+   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__int_int2(const int p0, const int p1)
    {
       gmtl::Point4i* obj = new gmtl::Point4i(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__int_int_int(const int p0, const int p1, const int p2)
+   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__int_int_int3(const int p0, const int p1, const int p2)
    {
       gmtl::Point4i* obj = new gmtl::Point4i(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__int_int_int_int(const int p0, const int p1, const int p2, const int p3)
+   SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__int_int_int_int4(const int p0, const int p1, const int p2, const int p3)
    {
       gmtl::Point4i* obj = new gmtl::Point4i(p0, p1, p2, p3);
       return obj;

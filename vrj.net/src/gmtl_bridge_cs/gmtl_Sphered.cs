@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,35 +54,30 @@ public sealed class Sphered
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_double__Sphere__();
+   private extern static IntPtr gmtl_Sphere_double__Sphere__0();
 
    public Sphered()
    {
-      mRawObject   = gmtl_Sphere_double__Sphere__();
+      mRawObject   = gmtl_Sphere_double__Sphere__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_double__Sphere__gmtl_Point3d_double([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
-	double p1);
+   private extern static IntPtr gmtl_Sphere_double__Sphere__gmtl_Point3d_double2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0, double p1);
 
    public Sphered(gmtl.Point3d p0, double p1)
    {
-      
-      mRawObject   = gmtl_Sphere_double__Sphere__gmtl_Point3d_double(p0, p1);
+      mRawObject   = gmtl_Sphere_double__Sphere__gmtl_Point3d_double2(p0, p1);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_double__Sphere__gmtl_Sphered([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpheredMarshaler))] gmtl.Sphered p0);
+   private extern static IntPtr gmtl_Sphere_double__Sphere__gmtl_Sphered1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpheredMarshaler))] gmtl.Sphered p0);
 
    public Sphered(gmtl.Sphered p0)
    {
-      
-      mRawObject   = gmtl_Sphere_double__Sphere__gmtl_Sphered(p0);
+      mRawObject   = gmtl_Sphere_double__Sphere__gmtl_Sphered1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

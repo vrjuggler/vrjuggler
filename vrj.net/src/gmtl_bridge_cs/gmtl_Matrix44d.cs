@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,20 +54,20 @@ public sealed class Matrix44d
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Matrix_double_4_4__Matrix__();
+   private extern static IntPtr gmtl_Matrix_double_4_4__Matrix__0();
 
    public Matrix44d()
    {
-      mRawObject   = gmtl_Matrix_double_4_4__Matrix__();
+      mRawObject   = gmtl_Matrix_double_4_4__Matrix__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Matrix_double_4_4__Matrix__gmtl_Matrix44d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))] gmtl.Matrix44d p0);
+   private extern static IntPtr gmtl_Matrix_double_4_4__Matrix__gmtl_Matrix44d1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Matrix44dMarshaler))] gmtl.Matrix44d p0);
 
    public Matrix44d(gmtl.Matrix44d p0)
    {
-      mRawObject   = gmtl_Matrix_double_4_4__Matrix__gmtl_Matrix44d(p0);
+      mRawObject   = gmtl_Matrix_double_4_4__Matrix__gmtl_Matrix44d1(p0);
       mWeOwnMemory = true;
    }
 

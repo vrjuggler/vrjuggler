@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__()
+   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__0()
    {
       gmtl::AxisAngled* obj = new gmtl::AxisAngled();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__gmtl_AxisAngled(const gmtl::AxisAngled* p0)
+   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__gmtl_AxisAngled1(const gmtl::AxisAngled* p0)
    {
       const gmtl::AxisAngled& marshal_p0 = *p0;
       gmtl::AxisAngled* obj = new gmtl::AxisAngled(marshal_p0);
@@ -50,14 +50,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_double_double_double(const double p0, const double p1, const double p2, const double p3)
+   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_double_double_double4(const double p0, const double p1, const double p2, const double p3)
    {
       gmtl::AxisAngled* obj = new gmtl::AxisAngled(p0, p1, p2, p3);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(const double p0, const gmtl::Vec3d* p1)
+   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d2(const double p0, const gmtl::Vec3d* p1)
    {
       const gmtl::Vec3d& marshal_p1 = *p1;
       gmtl::AxisAngled* obj = new gmtl::AxisAngled(p0, marshal_p1);

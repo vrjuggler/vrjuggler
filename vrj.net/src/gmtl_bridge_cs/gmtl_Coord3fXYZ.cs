@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,81 +54,56 @@ public sealed class Coord3fXYZ
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__();
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__0();
 
    public Coord3fXYZ()
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__();
+      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Coord3fXYZ([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3fXYZMarshaler))] gmtl.Coord3fXYZ p0);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Coord3fXYZ1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3fXYZMarshaler))] gmtl.Coord3fXYZ p0);
 
    public Coord3fXYZ(gmtl.Coord3fXYZ p0)
    {
-      
-      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Coord3fXYZ(p0);
+      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Coord3fXYZ1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Vec3f_gmtl_EulerAngleXYZf([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleXYZfMarshaler))] gmtl.EulerAngleXYZf p1);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Vec3f_gmtl_EulerAngleXYZf2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleXYZfMarshaler))] gmtl.EulerAngleXYZf p1);
 
    public Coord3fXYZ(gmtl.Vec3f p0, gmtl.EulerAngleXYZf p1)
    {
-      
-      
-      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Vec3f_gmtl_EulerAngleXYZf(p0, p1);
+      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__gmtl_Vec3f_gmtl_EulerAngleXYZf2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float(float p0,
-	float p1,
-	float p2,
-	float p3,
-	float p4,
-	float p5);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float6(float p0, float p1, float p2, float p3, float p4, float p5);
 
    public Coord3fXYZ(float p0, float p1, float p2, float p3, float p4, float p5)
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float(p0, p1, p2, p3, p4, p5);
+      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float6(p0, p1, p2, p3, p4, p5);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float(float p0,
-	float p1,
-	float p2,
-	float p3,
-	float p4,
-	float p5,
-	float p6);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float7(float p0, float p1, float p2, float p3, float p4, float p5, float p6);
 
    public Coord3fXYZ(float p0, float p1, float p2, float p3, float p4, float p5, float p6)
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float(p0, p1, p2, p3, p4, p5, p6);
+      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float7(p0, p1, p2, p3, p4, p5, p6);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float_float(float p0,
-	float p1,
-	float p2,
-	float p3,
-	float p4,
-	float p5,
-	float p6,
-	float p7);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float_float8(float p0, float p1, float p2, float p3, float p4, float p5, float p6, float p7);
 
    public Coord3fXYZ(float p0, float p1, float p2, float p3, float p4, float p5, float p6, float p7)
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float_float(p0, p1, p2, p3, p4, p5, p6, p7);
+      mRawObject   = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_XYZ____Coord__float_float_float_float_float_float_float_float8(p0, p1, p2, p3, p4, p5, p6, p7);
       mWeOwnMemory = true;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__()
+   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__0()
    {
       gmtl::LineSegd* obj = new gmtl::LineSegd();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point3d_gmtl_Vec3d(const gmtl::Point3d* p0, const gmtl::Vec3d* p1)
+   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point3d_gmtl_Vec3d2(const gmtl::Point3d* p0, const gmtl::Vec3d* p1)
    {
       const gmtl::Point3d& marshal_p0 = *p0;
       const gmtl::Vec3d& marshal_p1 = *p1;
@@ -51,7 +51,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_LineSegd(const gmtl::LineSegd* p0)
+   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_LineSegd1(const gmtl::LineSegd* p0)
    {
       const gmtl::LineSegd& marshal_p0 = *p0;
       gmtl::LineSegd* obj = new gmtl::LineSegd(marshal_p0);
@@ -59,7 +59,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point3d_gmtl_Point3d(const gmtl::Point3d* p0, const gmtl::Point3d* p1)
+   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point3d_gmtl_Point3d2(const gmtl::Point3d* p0, const gmtl::Point3d* p1)
    {
       const gmtl::Point3d& marshal_p0 = *p0;
       const gmtl::Point3d& marshal_p1 = *p1;

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,37 +54,30 @@ public sealed class AABoxf
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AABox_float__AABox__();
+   private extern static IntPtr gmtl_AABox_float__AABox__0();
 
    public AABoxf()
    {
-      mRawObject   = gmtl_AABox_float__AABox__();
+      mRawObject   = gmtl_AABox_float__AABox__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
+   private extern static IntPtr gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
    public AABoxf(gmtl.Point3f p0, gmtl.Point3f p1)
    {
-      
-      
-      mRawObject   = gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f(p0, p1);
+      mRawObject   = gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AABox_float__AABox__gmtl_AABoxf([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxfMarshaler))] gmtl.AABoxf p0);
+   private extern static IntPtr gmtl_AABox_float__AABox__gmtl_AABoxf1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxfMarshaler))] gmtl.AABoxf p0);
 
    public AABoxf(gmtl.AABoxf p0)
    {
-      
-      mRawObject   = gmtl_AABox_float__AABox__gmtl_AABoxf(p0);
+      mRawObject   = gmtl_AABox_float__AABox__gmtl_AABoxf1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

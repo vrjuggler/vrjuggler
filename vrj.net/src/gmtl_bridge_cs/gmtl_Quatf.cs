@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,35 +54,30 @@ public sealed class Quatf
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Quat_float__Quat__();
+   private extern static IntPtr gmtl_Quat_float__Quat__0();
 
    public Quatf()
    {
-      mRawObject   = gmtl_Quat_float__Quat__();
+      mRawObject   = gmtl_Quat_float__Quat__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Quat_float__Quat__float_float_float_float(float p0,
-	float p1,
-	float p2,
-	float p3);
+   private extern static IntPtr gmtl_Quat_float__Quat__float_float_float_float4(float p0, float p1, float p2, float p3);
 
    public Quatf(float p0, float p1, float p2, float p3)
    {
-      mRawObject   = gmtl_Quat_float__Quat__float_float_float_float(p0, p1, p2, p3);
+      mRawObject   = gmtl_Quat_float__Quat__float_float_float_float4(p0, p1, p2, p3);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Quat_float__Quat__gmtl_Quatf([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.QuatfMarshaler))] gmtl.Quatf p0);
+   private extern static IntPtr gmtl_Quat_float__Quat__gmtl_Quatf1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.QuatfMarshaler))] gmtl.Quatf p0);
 
    public Quatf(gmtl.Quatf p0)
    {
-      
-      mRawObject   = gmtl_Quat_float__Quat__gmtl_Quatf(p0);
+      mRawObject   = gmtl_Quat_float__Quat__gmtl_Quatf1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

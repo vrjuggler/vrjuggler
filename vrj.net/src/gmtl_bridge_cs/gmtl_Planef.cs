@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,66 +54,48 @@ public sealed class Planef
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_float__Plane__();
+   private extern static IntPtr gmtl_Plane_float__Plane__0();
 
    public Planef()
    {
-      mRawObject   = gmtl_Plane_float__Plane__();
+      mRawObject   = gmtl_Plane_float__Plane__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
+   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
 
    public Planef(gmtl.Point3f p0, gmtl.Point3f p1, gmtl.Point3f p2)
    {
-      
-      
-      
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(p0, p1, p2);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f3(p0, p1, p2);
       mWeOwnMemory = true;
-      
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
+   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
    public Planef(gmtl.Vec3f p0, gmtl.Point3f p1)
    {
-      
-      
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f(p0, p1);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Vec3f_float([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0,
-	float p1);
+   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Vec3f_float2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0, float p1);
 
    public Planef(gmtl.Vec3f p0, float p1)
    {
-      
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_float(p0, p1);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_float2(p0, p1);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Planef([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0);
+   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Planef1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0);
 
    public Planef(gmtl.Planef p0)
    {
-      
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Planef(p0);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Planef1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

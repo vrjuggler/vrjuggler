@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__()
+   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__0()
    {
       gmtl::Rayd* obj = new gmtl::Rayd();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d(const gmtl::Point3d* p0, const gmtl::Vec3d* p1)
+   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d2(const gmtl::Point3d* p0, const gmtl::Vec3d* p1)
    {
       const gmtl::Point3d& marshal_p0 = *p0;
       const gmtl::Vec3d& marshal_p1 = *p1;
@@ -51,7 +51,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__gmtl_Rayd(const gmtl::Rayd* p0)
+   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__gmtl_Rayd1(const gmtl::Rayd* p0)
    {
       const gmtl::Rayd& marshal_p0 = *p0;
       gmtl::Rayd* obj = new gmtl::Rayd(marshal_p0);

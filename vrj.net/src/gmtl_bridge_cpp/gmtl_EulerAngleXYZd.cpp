@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::EulerAngleXYZd* gmtl_EulerAngle_double_gmtl_XYZ__EulerAngle__()
+   SHARPPY_API gmtl::EulerAngleXYZd* gmtl_EulerAngle_double_gmtl_XYZ__EulerAngle__0()
    {
       gmtl::EulerAngleXYZd* obj = new gmtl::EulerAngleXYZd();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::EulerAngleXYZd* gmtl_EulerAngle_double_gmtl_XYZ__EulerAngle__gmtl_EulerAngleXYZd(const gmtl::EulerAngleXYZd* p0)
+   SHARPPY_API gmtl::EulerAngleXYZd* gmtl_EulerAngle_double_gmtl_XYZ__EulerAngle__gmtl_EulerAngleXYZd1(const gmtl::EulerAngleXYZd* p0)
    {
       const gmtl::EulerAngleXYZd& marshal_p0 = *p0;
       gmtl::EulerAngleXYZd* obj = new gmtl::EulerAngleXYZd(marshal_p0);
@@ -50,7 +50,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::EulerAngleXYZd* gmtl_EulerAngle_double_gmtl_XYZ__EulerAngle__double_double_double(double p0, double p1, double p2)
+   SHARPPY_API gmtl::EulerAngleXYZd* gmtl_EulerAngle_double_gmtl_XYZ__EulerAngle__double_double_double3(double p0, double p1, double p2)
    {
       gmtl::EulerAngleXYZd* obj = new gmtl::EulerAngleXYZd(p0, p1, p2);
       return obj;
@@ -79,18 +79,6 @@ extern "C"
       }
    }
 
-/*
-   // Wrapper for non-virtual method gmtl::EulerAngle<double,gmtl::XYZ>::getData()
-   SHARPPY_API void gmtl_EulerAngle_double_gmtl_XYZ__getData__0(gmtl::EulerAngleXYZd* self_, double* arrayHolder)
-   {
-      const double* temp_array;
-      temp_array = self_->getData();
-      for ( int i = 0; i < 3; ++i )
-      {
-         arrayHolder[i] = temp_array[i];
-      }
-   }
-*/
 
 } // extern "C" for gmtl::EulerAngleXYZd
 

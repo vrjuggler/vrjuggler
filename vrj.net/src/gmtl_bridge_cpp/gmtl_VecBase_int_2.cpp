@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__()
+   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__0()
    {
       gmtl::VecBase<int,2>* obj = new gmtl::VecBase<int,2>();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__gmtl_VecBase_int_2(const gmtl::VecBase<int,2>* p0)
+   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__gmtl_VecBase_int_21(const gmtl::VecBase<int,2>* p0)
    {
       const gmtl::VecBase<int,2>& marshal_p0 = *p0;
       gmtl::VecBase<int,2>* obj = new gmtl::VecBase<int,2>(marshal_p0);
@@ -50,21 +50,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__int_int(const int p0, const int p1)
+   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__int_int2(const int p0, const int p1)
    {
       gmtl::VecBase<int,2>* obj = new gmtl::VecBase<int,2>(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__int_int_int(const int p0, const int p1, const int p2)
+   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__int_int_int3(const int p0, const int p1, const int p2)
    {
       gmtl::VecBase<int,2>* obj = new gmtl::VecBase<int,2>(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__int_int_int_int(const int p0, const int p1, const int p2, const int p3)
+   SHARPPY_API gmtl::VecBase<int,2>* gmtl_VecBase_int_2__VecBase__int_int_int_int4(const int p0, const int p1, const int p2, const int p3)
    {
       gmtl::VecBase<int,2>* obj = new gmtl::VecBase<int,2>(p0, p1, p2, p3);
       return obj;
@@ -121,18 +121,6 @@ extern "C"
       }
    }
 
-/*
-   // Wrapper for non-virtual method gmtl::VecBase<int,2>::getData()
-   SHARPPY_API void gmtl_VecBase_int_2__getData__0(gmtl::VecBase<int,2>* self_, int* arrayHolder)
-   {
-      const int* temp_array;
-      temp_array = self_->getData();
-      for ( int i = 0; i < 2; ++i )
-      {
-         arrayHolder[i] = temp_array[i];
-      }
-   }
-*/
 
 } // extern "C" for gmtl::VecBase<int,2>
 

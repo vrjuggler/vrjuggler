@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__()
+   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__0()
    {
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__gmtl_AxisAnglef(const gmtl::AxisAnglef* p0)
+   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__gmtl_AxisAnglef1(const gmtl::AxisAnglef* p0)
    {
       const gmtl::AxisAnglef& marshal_p0 = *p0;
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(marshal_p0);
@@ -50,14 +50,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_float_float_float(const float p0, const float p1, const float p2, const float p3)
+   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_float_float_float4(const float p0, const float p1, const float p2, const float p3)
    {
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(p0, p1, p2, p3);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(const float p0, const gmtl::Vec3f* p1)
+   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f2(const float p0, const gmtl::Vec3f* p1)
    {
       const gmtl::Vec3f& marshal_p1 = *p1;
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(p0, marshal_p1);

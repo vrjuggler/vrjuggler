@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -47,72 +47,62 @@ public sealed class Vec4i
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__();
+   private extern static IntPtr gmtl_Vec_int_4__Vec__0();
 
    public Vec4i()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Vec_int_4__Vec__();
+      mRawObject   = gmtl_Vec_int_4__Vec__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__gmtl_Vec4i([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec4iMarshaler))] gmtl.Vec4i p0);
+   private extern static IntPtr gmtl_Vec_int_4__Vec__gmtl_Vec4i1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec4iMarshaler))] gmtl.Vec4i p0);
 
    public Vec4i(gmtl.Vec4i p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gmtl_Vec_int_4__Vec__gmtl_Vec4i(p0);
+      mRawObject   = gmtl_Vec_int_4__Vec__gmtl_Vec4i1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__gmtl_VecBase_int_4([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_4Marshaler))] gmtl.VecBase_int_4 p0);
+   private extern static IntPtr gmtl_Vec_int_4__Vec__gmtl_VecBase_int_41([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_4Marshaler))] gmtl.VecBase_int_4 p0);
 
    public Vec4i(gmtl.VecBase_int_4 p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gmtl_Vec_int_4__Vec__gmtl_VecBase_int_4(p0);
+      mRawObject   = gmtl_Vec_int_4__Vec__gmtl_VecBase_int_41(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__int_int(int p0,
-	int p1);
+   private extern static IntPtr gmtl_Vec_int_4__Vec__int_int2(int p0, int p1);
 
    public Vec4i(int p0, int p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Vec_int_4__Vec__int_int(p0, p1);
+      mRawObject   = gmtl_Vec_int_4__Vec__int_int2(p0, p1);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__int_int_int(int p0,
-	int p1,
-	int p2);
+   private extern static IntPtr gmtl_Vec_int_4__Vec__int_int_int3(int p0, int p1, int p2);
 
    public Vec4i(int p0, int p1, int p2)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Vec_int_4__Vec__int_int_int(p0, p1, p2);
+      mRawObject   = gmtl_Vec_int_4__Vec__int_int_int3(p0, p1, p2);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__int_int_int_int(int p0,
-	int p1,
-	int p2,
-	int p3);
+   private extern static IntPtr gmtl_Vec_int_4__Vec__int_int_int_int4(int p0, int p1, int p2, int p3);
 
    public Vec4i(int p0, int p1, int p2, int p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Vec_int_4__Vec__int_int_int_int(p0, p1, p2, p3);
+      mRawObject   = gmtl_Vec_int_4__Vec__int_int_int_int4(p0, p1, p2, p3);
       mWeOwnMemory = true;
    }
 

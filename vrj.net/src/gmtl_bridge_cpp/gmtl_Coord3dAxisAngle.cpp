@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -37,14 +37,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__()
+   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__0()
    {
       gmtl::Coord3dAxisAngle* obj = new gmtl::Coord3dAxisAngle();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__gmtl_Coord3dAxisAngle(const gmtl::Coord3dAxisAngle* p0)
+   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__gmtl_Coord3dAxisAngle1(const gmtl::Coord3dAxisAngle* p0)
    {
       const gmtl::Coord3dAxisAngle& marshal_p0 = *p0;
       gmtl::Coord3dAxisAngle* obj = new gmtl::Coord3dAxisAngle(marshal_p0);
@@ -52,7 +52,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__gmtl_Vec3d_gmtl_AxisAngled(const gmtl::Vec3d* p0, const gmtl::AxisAngled* p1)
+   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__gmtl_Vec3d_gmtl_AxisAngled2(const gmtl::Vec3d* p0, const gmtl::AxisAngled* p1)
    {
       const gmtl::Vec3d& marshal_p0 = *p0;
       const gmtl::AxisAngled& marshal_p1 = *p1;
@@ -62,7 +62,7 @@ extern "C"
 
 /*
    // Constructor wrapper.
-   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__double_double_double_double_double_double(double p0, double p1, double p2, double p3, double p4, double p5)
+   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__double_double_double_double_double_double6(double p0, double p1, double p2, double p3, double p4, double p5)
    {
       gmtl::Coord3dAxisAngle* obj = new gmtl::Coord3dAxisAngle(p0, p1, p2, p3, p4, p5);
       return obj;
@@ -70,7 +70,7 @@ extern "C"
 */
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__double_double_double_double_double_double_double(double p0, double p1, double p2, double p3, double p4, double p5, double p6)
+   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__double_double_double_double_double_double_double7(double p0, double p1, double p2, double p3, double p4, double p5, double p6)
    {
       gmtl::Coord3dAxisAngle* obj = new gmtl::Coord3dAxisAngle(p0, p1, p2, p3, p4, p5, p6);
       return obj;
@@ -78,7 +78,7 @@ extern "C"
 
 /*
    // Constructor wrapper.
-   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__double_double_double_double_double_double_double_double(double p0, double p1, double p2, double p3, double p4, double p5, double p6, double p7)
+   SHARPPY_API gmtl::Coord3dAxisAngle* gmtl_Coord_gmtl_Vec_double_3__gmtl_AxisAngle_double____Coord__double_double_double_double_double_double_double_double8(double p0, double p1, double p2, double p3, double p4, double p5, double p6, double p7)
    {
       gmtl::Coord3dAxisAngle* obj = new gmtl::Coord3dAxisAngle(p0, p1, p2, p3, p4, p5, p6, p7);
       return obj;

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,37 +54,30 @@ public class Rayd
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Ray_double__Ray__();
+   private extern static IntPtr gmtl_Ray_double__Ray__0();
 
    public Rayd()
    {
-      mRawObject   = gmtl_Ray_double__Ray__();
+      mRawObject   = gmtl_Ray_double__Ray__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p1);
+   private extern static IntPtr gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p1);
 
    public Rayd(gmtl.Point3d p0, gmtl.Vec3d p1)
    {
-      
-      
-      mRawObject   = gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d(p0, p1);
+      mRawObject   = gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Ray_double__Ray__gmtl_Rayd([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.RaydMarshaler))] gmtl.Rayd p0);
+   private extern static IntPtr gmtl_Ray_double__Ray__gmtl_Rayd1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.RaydMarshaler))] gmtl.Rayd p0);
 
    public Rayd(gmtl.Rayd p0)
    {
-      
-      mRawObject   = gmtl_Ray_double__Ray__gmtl_Rayd(p0);
+      mRawObject   = gmtl_Ray_double__Ray__gmtl_Rayd1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

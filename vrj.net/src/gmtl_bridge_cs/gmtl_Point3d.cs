@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -47,72 +47,62 @@ public sealed class Point3d
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_3__Point__();
+   private extern static IntPtr gmtl_Point_double_3__Point__0();
 
    public Point3d()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Point_double_3__Point__();
+      mRawObject   = gmtl_Point_double_3__Point__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_3__Point__gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
+   private extern static IntPtr gmtl_Point_double_3__Point__gmtl_Point3d1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
 
    public Point3d(gmtl.Point3d p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gmtl_Point_double_3__Point__gmtl_Point3d(p0);
+      mRawObject   = gmtl_Point_double_3__Point__gmtl_Point3d1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_3__Point__gmtl_VecBase_double_3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p0);
+   private extern static IntPtr gmtl_Point_double_3__Point__gmtl_VecBase_double_31([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_double_3Marshaler))] gmtl.VecBase_double_3 p0);
 
    public Point3d(gmtl.VecBase_double_3 p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gmtl_Point_double_3__Point__gmtl_VecBase_double_3(p0);
+      mRawObject   = gmtl_Point_double_3__Point__gmtl_VecBase_double_31(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_3__Point__double_double(double p0,
-	double p1);
+   private extern static IntPtr gmtl_Point_double_3__Point__double_double2(double p0, double p1);
 
    public Point3d(double p0, double p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Point_double_3__Point__double_double(p0, p1);
+      mRawObject   = gmtl_Point_double_3__Point__double_double2(p0, p1);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_3__Point__double_double_double(double p0,
-	double p1,
-	double p2);
+   private extern static IntPtr gmtl_Point_double_3__Point__double_double_double3(double p0, double p1, double p2);
 
    public Point3d(double p0, double p1, double p2)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Point_double_3__Point__double_double_double(p0, p1, p2);
+      mRawObject   = gmtl_Point_double_3__Point__double_double_double3(p0, p1, p2);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_3__Point__double_double_double_double(double p0,
-	double p1,
-	double p2,
-	double p3);
+   private extern static IntPtr gmtl_Point_double_3__Point__double_double_double_double4(double p0, double p1, double p2, double p3);
 
    public Point3d(double p0, double p1, double p2, double p3)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_Point_double_3__Point__double_double_double_double(p0, p1, p2, p3);
+      mRawObject   = gmtl_Point_double_3__Point__double_double_double_double4(p0, p1, p2, p3);
       mWeOwnMemory = true;
    }
 

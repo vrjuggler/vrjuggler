@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__()
+   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__0()
    {
       gmtl::Sphered* obj = new gmtl::Sphered();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Point3d_double(const gmtl::Point3d* p0, const double p1)
+   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Point3d_double2(const gmtl::Point3d* p0, const double p1)
    {
       const gmtl::Point3d& marshal_p0 = *p0;
       gmtl::Sphered* obj = new gmtl::Sphered(marshal_p0, p1);
@@ -50,7 +50,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Sphered(const gmtl::Sphered* p0)
+   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Sphered1(const gmtl::Sphered* p0)
    {
       const gmtl::Sphered& marshal_p0 = *p0;
       gmtl::Sphered* obj = new gmtl::Sphered(marshal_p0);

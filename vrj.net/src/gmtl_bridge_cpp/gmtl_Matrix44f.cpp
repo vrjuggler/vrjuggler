@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Matrix44f* gmtl_Matrix_float_4_4__Matrix__()
+   SHARPPY_API gmtl::Matrix44f* gmtl_Matrix_float_4_4__Matrix__0()
    {
       gmtl::Matrix44f* obj = new gmtl::Matrix44f();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Matrix44f* gmtl_Matrix_float_4_4__Matrix__gmtl_Matrix44f(const gmtl::Matrix44f* p0)
+   SHARPPY_API gmtl::Matrix44f* gmtl_Matrix_float_4_4__Matrix__gmtl_Matrix44f1(const gmtl::Matrix44f* p0)
    {
       const gmtl::Matrix44f& marshal_p0 = *p0;
       gmtl::Matrix44f* obj = new gmtl::Matrix44f(marshal_p0);

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__()
+   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__0()
    {
       gmtl::Vec3f* obj = new gmtl::Vec3f();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__gmtl_Vec3f(const gmtl::Vec3f* p0)
+   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__gmtl_Vec3f1(const gmtl::Vec3f* p0)
    {
       const gmtl::Vec3f& marshal_p0 = *p0;
       gmtl::Vec3f* obj = new gmtl::Vec3f(marshal_p0);
@@ -50,7 +50,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__gmtl_VecBase_float_3(const gmtl::VecBase<float,3>* p0)
+   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__gmtl_VecBase_float_31(const gmtl::VecBase<float,3>* p0)
    {
       const gmtl::VecBase<float,3>& marshal_p0 = *p0;
       gmtl::Vec3f* obj = new gmtl::Vec3f(marshal_p0);
@@ -58,21 +58,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__float_float(const float p0, const float p1)
+   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__float_float2(const float p0, const float p1)
    {
       gmtl::Vec3f* obj = new gmtl::Vec3f(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__float_float_float(const float p0, const float p1, const float p2)
+   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__float_float_float3(const float p0, const float p1, const float p2)
    {
       gmtl::Vec3f* obj = new gmtl::Vec3f(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__float_float_float_float(const float p0, const float p1, const float p2, const float p3)
+   SHARPPY_API gmtl::Vec3f* gmtl_Vec_float_3__Vec__float_float_float_float4(const float p0, const float p1, const float p2, const float p3)
    {
       gmtl::Vec3f* obj = new gmtl::Vec3f(p0, p1, p2, p3);
       return obj;

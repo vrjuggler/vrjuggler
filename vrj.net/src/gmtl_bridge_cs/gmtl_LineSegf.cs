@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -47,55 +47,43 @@ public sealed class LineSegf
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_LineSeg_float__LineSeg__();
+   private extern static IntPtr gmtl_LineSeg_float__LineSeg__0();
 
    public LineSegf()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      mRawObject   = gmtl_LineSeg_float__LineSeg__();
+      mRawObject   = gmtl_LineSeg_float__LineSeg__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Vec3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p1);
+   private extern static IntPtr gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Vec3f2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p1);
 
    public LineSegf(gmtl.Point3f p0, gmtl.Vec3f p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      mRawObject   = gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Vec3f(p0, p1);
+      mRawObject   = gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Vec3f2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_LineSeg_float__LineSeg__gmtl_LineSegf([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegfMarshaler))] gmtl.LineSegf p0);
+   private extern static IntPtr gmtl_LineSeg_float__LineSeg__gmtl_LineSegf1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegfMarshaler))] gmtl.LineSegf p0);
 
    public LineSegf(gmtl.LineSegf p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      mRawObject   = gmtl_LineSeg_float__LineSeg__gmtl_LineSegf(p0);
+      mRawObject   = gmtl_LineSeg_float__LineSeg__gmtl_LineSegf1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
+   private extern static IntPtr gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Point3f2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
    public LineSegf(gmtl.Point3f p0, gmtl.Point3f p1)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
-      
-      
-      mRawObject   = gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Point3f(p0, p1);
+      mRawObject   = gmtl_LineSeg_float__LineSeg__gmtl_Point3f_gmtl_Point3f2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    // Internal constructor needed for marshaling purposes.

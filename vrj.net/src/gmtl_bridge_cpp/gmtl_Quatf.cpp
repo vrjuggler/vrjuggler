@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,21 +35,21 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Quatf* gmtl_Quat_float__Quat__()
+   SHARPPY_API gmtl::Quatf* gmtl_Quat_float__Quat__0()
    {
       gmtl::Quatf* obj = new gmtl::Quatf();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Quatf* gmtl_Quat_float__Quat__float_float_float_float(const float p0, const float p1, const float p2, const float p3)
+   SHARPPY_API gmtl::Quatf* gmtl_Quat_float__Quat__float_float_float_float4(const float p0, const float p1, const float p2, const float p3)
    {
       gmtl::Quatf* obj = new gmtl::Quatf(p0, p1, p2, p3);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Quatf* gmtl_Quat_float__Quat__gmtl_Quatf(const gmtl::Quatf* p0)
+   SHARPPY_API gmtl::Quatf* gmtl_Quat_float__Quat__gmtl_Quatf1(const gmtl::Quatf* p0)
    {
       const gmtl::Quatf& marshal_p0 = *p0;
       gmtl::Quatf* obj = new gmtl::Quatf(marshal_p0);

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,81 +54,56 @@ public sealed class Coord4dZYX
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__();
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__0();
 
    public Coord4dZYX()
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__();
+      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Coord4dZYX([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord4dZYXMarshaler))] gmtl.Coord4dZYX p0);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Coord4dZYX1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord4dZYXMarshaler))] gmtl.Coord4dZYX p0);
 
    public Coord4dZYX(gmtl.Coord4dZYX p0)
    {
-      
-      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Coord4dZYX(p0);
+      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Coord4dZYX1(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Vec4d_gmtl_EulerAngleZYXd([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec4dMarshaler))] gmtl.Vec4d p0,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXdMarshaler))] gmtl.EulerAngleZYXd p1);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Vec4d_gmtl_EulerAngleZYXd2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec4dMarshaler))] gmtl.Vec4d p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXdMarshaler))] gmtl.EulerAngleZYXd p1);
 
    public Coord4dZYX(gmtl.Vec4d p0, gmtl.EulerAngleZYXd p1)
    {
-      
-      
-      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Vec4d_gmtl_EulerAngleZYXd(p0, p1);
+      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Vec4d_gmtl_EulerAngleZYXd2(p0, p1);
       mWeOwnMemory = true;
-      
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double(double p0,
-	double p1,
-	double p2,
-	double p3,
-	double p4,
-	double p5);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double6(double p0, double p1, double p2, double p3, double p4, double p5);
 
    public Coord4dZYX(double p0, double p1, double p2, double p3, double p4, double p5)
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double(p0, p1, p2, p3, p4, p5);
+      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double6(p0, p1, p2, p3, p4, p5);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double(double p0,
-	double p1,
-	double p2,
-	double p3,
-	double p4,
-	double p5,
-	double p6);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double7(double p0, double p1, double p2, double p3, double p4, double p5, double p6);
 
    public Coord4dZYX(double p0, double p1, double p2, double p3, double p4, double p5, double p6)
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double(p0, p1, p2, p3, p4, p5, p6);
+      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double7(p0, p1, p2, p3, p4, p5, p6);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double_double(double p0,
-	double p1,
-	double p2,
-	double p3,
-	double p4,
-	double p5,
-	double p6,
-	double p7);
+   private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double_double8(double p0, double p1, double p2, double p3, double p4, double p5, double p6, double p7);
 
    public Coord4dZYX(double p0, double p1, double p2, double p3, double p4, double p5, double p6, double p7)
    {
-      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double_double(p0, p1, p2, p3, p4, p5, p6, p7);
+      mRawObject   = gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZYX____Coord__double_double_double_double_double_double_double_double8(p0, p1, p2, p3, p4, p5, p6, p7);
       mWeOwnMemory = true;
    }
 

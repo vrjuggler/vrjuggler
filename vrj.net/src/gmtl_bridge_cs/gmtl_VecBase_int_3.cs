@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,53 +54,47 @@ public class VecBase_int_3
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_3__VecBase__();
+   private extern static IntPtr gmtl_VecBase_int_3__VecBase__0();
 
    public VecBase_int_3()
    {
-      mRawObject   = gmtl_VecBase_int_3__VecBase__();
+      mRawObject   = gmtl_VecBase_int_3__VecBase__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_3__VecBase__gmtl_VecBase_int_3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_3Marshaler))] gmtl.VecBase_int_3 p0);
+   private extern static IntPtr gmtl_VecBase_int_3__VecBase__gmtl_VecBase_int_31([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_3Marshaler))] gmtl.VecBase_int_3 p0);
 
    public VecBase_int_3(gmtl.VecBase_int_3 p0)
    {
-      mRawObject   = gmtl_VecBase_int_3__VecBase__gmtl_VecBase_int_3(p0);
+      mRawObject   = gmtl_VecBase_int_3__VecBase__gmtl_VecBase_int_31(p0);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_3__VecBase__int_int(int p0,
-	int p1);
+   private extern static IntPtr gmtl_VecBase_int_3__VecBase__int_int2(int p0, int p1);
 
    public VecBase_int_3(int p0, int p1)
    {
-      mRawObject   = gmtl_VecBase_int_3__VecBase__int_int(p0, p1);
+      mRawObject   = gmtl_VecBase_int_3__VecBase__int_int2(p0, p1);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_3__VecBase__int_int_int(int p0,
-	int p1,
-	int p2);
+   private extern static IntPtr gmtl_VecBase_int_3__VecBase__int_int_int3(int p0, int p1, int p2);
 
    public VecBase_int_3(int p0, int p1, int p2)
    {
-      mRawObject   = gmtl_VecBase_int_3__VecBase__int_int_int(p0, p1, p2);
+      mRawObject   = gmtl_VecBase_int_3__VecBase__int_int_int3(p0, p1, p2);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_3__VecBase__int_int_int_int(int p0,
-	int p1,
-	int p2,
-	int p3);
+   private extern static IntPtr gmtl_VecBase_int_3__VecBase__int_int_int_int4(int p0, int p1, int p2, int p3);
 
    public VecBase_int_3(int p0, int p1, int p2, int p3)
    {
-      mRawObject   = gmtl_VecBase_int_3__VecBase__int_int_int_int(p0, p1, p2, p3);
+      mRawObject   = gmtl_VecBase_int_3__VecBase__int_int_int_int4(p0, p1, p2, p3);
       mWeOwnMemory = true;
    }
 
@@ -197,18 +191,6 @@ public class VecBase_int_3
       return array_holder;
    }
 
-/*
-   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_int_3__getData__0(IntPtr obj,
-	[In, Out] int[] arrayHolder);
-
-   public  int[] getData()
-   {
-      int[] array_holder = new int[3];
-      gmtl_VecBase_int_3__getData__0(mRawObject, array_holder);
-      return array_holder;
-   }
-*/
 
    // End of non-virtual methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,35 +54,30 @@ public sealed class Spheref
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_float__Sphere__();
+   private extern static IntPtr gmtl_Sphere_float__Sphere__0();
 
    public Spheref()
    {
-      mRawObject   = gmtl_Sphere_float__Sphere__();
+      mRawObject   = gmtl_Sphere_float__Sphere__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_float__Sphere__gmtl_Point3f_float([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
-	float p1);
+   private extern static IntPtr gmtl_Sphere_float__Sphere__gmtl_Point3f_float2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0, float p1);
 
    public Spheref(gmtl.Point3f p0, float p1)
    {
-      
-      mRawObject   = gmtl_Sphere_float__Sphere__gmtl_Point3f_float(p0, p1);
+      mRawObject   = gmtl_Sphere_float__Sphere__gmtl_Point3f_float2(p0, p1);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_float__Sphere__gmtl_Spheref([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpherefMarshaler))] gmtl.Spheref p0);
+   private extern static IntPtr gmtl_Sphere_float__Sphere__gmtl_Spheref1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.SpherefMarshaler))] gmtl.Spheref p0);
 
    public Spheref(gmtl.Spheref p0)
    {
-      
-      mRawObject   = gmtl_Sphere_float__Sphere__gmtl_Spheref(p0);
+      mRawObject   = gmtl_Sphere_float__Sphere__gmtl_Spheref1(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.

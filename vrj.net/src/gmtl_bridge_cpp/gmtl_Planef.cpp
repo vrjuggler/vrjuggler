@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__()
+   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__0()
    {
       gmtl::Planef* obj = new gmtl::Planef();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(const gmtl::Point3f* p0, const gmtl::Point3f* p1, const gmtl::Point3f* p2)
+   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f3(const gmtl::Point3f* p0, const gmtl::Point3f* p1, const gmtl::Point3f* p2)
    {
       const gmtl::Point3f& marshal_p0 = *p0;
       const gmtl::Point3f& marshal_p1 = *p1;
@@ -52,7 +52,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f(const gmtl::Vec3f* p0, const gmtl::Point3f* p1)
+   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f2(const gmtl::Vec3f* p0, const gmtl::Point3f* p1)
    {
       const gmtl::Vec3f& marshal_p0 = *p0;
       const gmtl::Point3f& marshal_p1 = *p1;
@@ -61,7 +61,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Vec3f_float(const gmtl::Vec3f* p0, const float p1)
+   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Vec3f_float2(const gmtl::Vec3f* p0, const float p1)
    {
       const gmtl::Vec3f& marshal_p0 = *p0;
       gmtl::Planef* obj = new gmtl::Planef(marshal_p0, p1);
@@ -69,7 +69,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Planef(const gmtl::Planef* p0)
+   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Planef1(const gmtl::Planef* p0)
    {
       const gmtl::Planef& marshal_p0 = *p0;
       gmtl::Planef* obj = new gmtl::Planef(marshal_p0);

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,14 +35,14 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__()
+   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__0()
    {
       gmtl::Trid* obj = new gmtl::Trid();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
+   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d3(const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
    {
       const gmtl::Point3d& marshal_p0 = *p0;
       const gmtl::Point3d& marshal_p1 = *p1;
@@ -52,7 +52,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__gmtl_Trid(const gmtl::Trid* p0)
+   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__gmtl_Trid1(const gmtl::Trid* p0)
    {
       const gmtl::Trid& marshal_p0 = *p0;
       gmtl::Trid* obj = new gmtl::Trid(marshal_p0);

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,31 +54,29 @@ public sealed class EulerAngleZYXd
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__();
+   private extern static IntPtr gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__0();
 
    public EulerAngleZYXd()
    {
-      mRawObject   = gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__();
+      mRawObject   = gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__0();
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__gmtl_EulerAngleZYXd([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXdMarshaler))] gmtl.EulerAngleZYXd p0);
+   private extern static IntPtr gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__gmtl_EulerAngleZYXd1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.EulerAngleZYXdMarshaler))] gmtl.EulerAngleZYXd p0);
 
    public EulerAngleZYXd(gmtl.EulerAngleZYXd p0)
    {
-      mRawObject   = gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__gmtl_EulerAngleZYXd(p0);
+      mRawObject   = gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__gmtl_EulerAngleZYXd1(p0);
       mWeOwnMemory = true;
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__double_double_double(double p0,
-	double p1,
-	double p2);
+   private extern static IntPtr gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__double_double_double3(double p0, double p1, double p2);
 
    public EulerAngleZYXd(double p0, double p1, double p2)
    {
-      mRawObject   = gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__double_double_double(p0, p1, p2);
+      mRawObject   = gmtl_EulerAngle_double_gmtl_ZYX__EulerAngle__double_double_double3(p0, p1, p2);
       mWeOwnMemory = true;
    }
 
@@ -131,18 +129,6 @@ public sealed class EulerAngleZYXd
       return array_holder;
    }
 
-/*
-   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_EulerAngle_double_gmtl_ZYX__getData__0(IntPtr obj,
-	[In, Out] double[] arrayHolder);
-
-   public  double[] getData()
-   {
-      double[] array_holder = new double[3];
-      gmtl_EulerAngle_double_gmtl_ZYX__getData__0(mRawObject, array_holder);
-      return array_holder;
-   }
-*/
 
    // End of non-virtual methods.
 
