@@ -19,6 +19,8 @@ class SubjectManagerImpl : public POA_tweek::SubjectManager,
                            public vpr::Singleton<SubjectManagerImpl>
 {
 public:
+   virtual void registerSubject(Subject_ptr subject, const char* name);
+
    virtual Subject_ptr getSubject(const char* name);
 
 protected:
