@@ -87,7 +87,7 @@ void torusApp::draw()
       // Rotate the torus
       const float rot_inc(0.05f);
       mTorusRotation += rot_inc;
-      if(mTorusRotation >= 360.0f);
+      if(mTorusRotation >= 360.0f)
          mTorusRotation = rot_inc;
 
       glRotatef(mTorusRotation, 1,0,0);        // Around X
