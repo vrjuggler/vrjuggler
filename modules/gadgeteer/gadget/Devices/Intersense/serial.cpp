@@ -40,10 +40,126 @@ static void errorMessage(char *message)
 {
     printf("%s\n", message);
 }
+
+/********************** rs232InitCommunications ********************/
+//int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
 int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
 {
-   return FALSE;
+    COMMTIMEOUTS timeout;
+    DCB dcb;
+    const char *openString = "9600,N,8,1";
+
+    /* close port if one is open */
+    rs232DeinitCommunications(port);
+
+    FillMemory(&dcb, sizeof(dcb), 0);
+    port->portHandle = CreateFile(comPort),
+                            GENERIC_READ | GENERIC_WRITE,
+                            0,
+                            0,
+                            OPEN_EXISTING,
+                            FILE_FLAG_OVERLAPPED,
+                            0);
+
+    if(port->portHandle == INVALID_HANDLE_VALUE)
+    {
+        return FALSE;
+    }
+
+    if (!GetCommTimeouts(port->portHandle,&timeout))
+    {
+        errorMessage( "Could not get timeout info" );
+        CloseHandle(port->portHandle);
+        port->portHandle = NULL;
+        return FALSE;
+    }
+
+    timeout.ReadIntervalTimeout = MAXDWORD;
+    timeout.ReadTotalTimeoutMultiplier = 0;
+    timeout.ReadTotalTimeoutConstant = 0;
+    timeout.WriteTotalTimeoutMultiplier = 10;
+    timeout.WriteTotalTimeoutConstant = 100;
+
+    if(!SetCommTimeouts(port->portHandle, &timeout))
+    {
+        errorMessage( "Could not set timeout info");
+        CloseHandle(port->portHandle);
+        port->portHandle = NULL;
+        return FALSE;
+    }
+
+    FillMemory(&dcb, sizeof(dcb), 0);
+    dcb.DCBlength = sizeof(dcb);
+
+    if (!GetCommState(port->portHandle, &dcb))
+    {
+        errorMessage( "Failed to get communications state");
+        CloseHandle(port->portHandle);
+        port->portHandle = NULL;
+        return FALSE;
+    }
+    
+    dcb.Parity = NOPARITY;
+    dcb.StopBits = ONESTOPBIT;
+    dcb.ByteSize = 8;  
+    dcb.DCBlength = sizeof(dcb);
+    
+
+    DWORD  baudRate;
+    switch (baud_rate)
+    {
+    case 9600:
+       baudRate = 9600L;
+       break;
+    case 19200:
+       baudRate = 19200L;
+       break;
+    case 38400:
+       baudRate = 38400L;
+       break;
+    case 57600:
+       baudRate = 57600L;
+       break;
+    case 115200:
+       baudRate = 115200L;
+       break;
+    default:
+       baudRate = 9600L;
+       break;
+    }
+
+
+
+    dcb.BaudRate = baudRate;
+    dcb.fNull = FALSE;
+    dcb.fBinary = TRUE;
+    dcb.fAbortOnError = FALSE;
+    
+    dcb.fOutX = FALSE;
+    dcb.fInX = FALSE;
+    dcb.fRtsControl = RTS_CONTROL_DISABLE;
+    dcb.fDtrControl = DTR_CONTROL_DISABLE;
+    dcb.fOutxCtsFlow = FALSE;
+    dcb.fOutxDsrFlow = FALSE;
+    
+    if (!SetCommState(port->portHandle, &dcb))
+    {
+        errorMessage( "Failed to set communications state");
+        CloseHandle(port->portHandle);
+        port->portHandle = NULL;
+        return FALSE;
+    }
+
+    port->rx_bufsize = RX_BUFFER_SIZE;
+    port->dwRead = 0;
+    port->dwReturned = 0;
+    port->fWaitingOnRead = FALSE;
+    //port->portNumber = (WORD) comPort;
+
+
+    return TRUE;
 }
+
 /********************** rs232InitCommunications ********************/
 int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
 {
