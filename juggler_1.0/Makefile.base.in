@@ -119,6 +119,7 @@ LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
 LDOPTS		= @LDOPTS@
 LIBS		= @LIBS@
+MAKEFLAGS	+= --no-print-directory
 MKPATH		= ${VJROOT_ABS}/mk
 
 # Allow overriding the default value of ${OBJDIR} by setting ${BASE_OBJDIR}
