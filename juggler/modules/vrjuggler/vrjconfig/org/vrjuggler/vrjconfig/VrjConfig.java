@@ -111,6 +111,13 @@ public class VrjConfig
             saveAsBtn_actionPerformed(evt);
          }
       });
+      saveAllBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            saveAllBtn_actionPerformed(evt);
+         }
+      });
       newBtn.setToolTipText("New Configuration");
       newBtn.setActionCommand("New");
       saveBtn.setToolTipText("Save Configuration");
@@ -259,6 +266,26 @@ public class VrjConfig
                   frame.setFilename(filename);
                }
             }
+         }
+      }
+   }
+
+   void saveAllBtn_actionPerformed(ActionEvent evt)
+   {
+      JInternalFrame[] frames = desktop.getAllFrames();
+      for (int i=0; i<frames.length; ++i)
+      {
+         if (frames[i] instanceof ConfigChunkDBEditorIFrame)
+         {
+            ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)frames[i];
+            ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
+            saveConfigChunkDB(chunk_db, frame.getFilename());
+         }
+         else if (frames[i] instanceof ChunkDescDBEditorIFrame)
+         {
+            ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)frames[i];
+            ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
+            saveChunkDescDB(desc_db, frame.getFilename());
          }
       }
    }
