@@ -30,20 +30,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJTEST_MATRIX_TEST_H_
+#define _VRJTEST_MATRIX_TEST_H_
+
 #include <iostream>
 #include <vrj/Math/Matrix.h>
 #include <vrj/Math/Vec3.h>
 
-#include "TestCase.h"
-#include "TestSuite.h"
-#include "TestCaller.h"
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #define testIt(test_desc, test_case) std::cout << test_desc;if((test_case)) { std::cout << "\t [ok]\n"; } else { std::cout << "\t [FAILED]\n";}
 
-class MatrixTest : public TestCase
+namespace vrjTest
+{
+
+class MatrixTest : public CppUnit::TestCase, public JugglerTest
 {
 public:
-   MatrixTest( std::string name ) : TestCase (name), 
+   MatrixTest() : CppUnit::TestCase (), 
       x_axis( 1.0f, 0.0f, 0.0f ),
       y_axis( 0.0f, 1.0f, 0.0f ),
       z_axis( 0.0f, 0.0f, 1.0f ),
@@ -73,12 +79,9 @@ public:
       std::cout << "Matrix:" << std::endl << testMat << std::endl;
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *testSuite = new TestSuite ("vrj::MatrixTest");
-
-      testSuite->addTest( new TestCaller<MatrixTest>( "setmatrix", setmatrix ));
-      return testSuite;
+      suite->addTest( new CppUnit::TestCaller<MatrixTest>( "setmatrix", setmatrix ));
    }
 
 /*
@@ -573,3 +576,7 @@ protected:
    bool     tests_pass;
    long x;
 };
+
+}
+
+#endif
