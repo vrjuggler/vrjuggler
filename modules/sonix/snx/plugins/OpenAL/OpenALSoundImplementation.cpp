@@ -123,6 +123,8 @@ OpenALSoundImplementation::~OpenALSoundImplementation()
  */
 void OpenALSoundImplementation::trigger( const std::string& alias, const int& looping )
 {
+   std::cout << "triggering sound from in OpenALSoundImpl" << std::endl;
+   
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
    snx::SoundImplementation::trigger( alias, looping );

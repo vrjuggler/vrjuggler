@@ -90,6 +90,7 @@ namespace snx
     */
    AudioWorksSoundImplementation::~AudioWorksSoundImplementation()
    {
+      this->shutdownAPI();
    }
 
    /**

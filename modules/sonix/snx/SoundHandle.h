@@ -129,6 +129,7 @@ namespace snx
        */
       virtual void trigger( const int& repeat = 1 )
       {
+         std::cout << "triggering sound from in soundHandle" << std::endl;
          sonix::instance()->trigger( mAlias, repeat );
       }
       
@@ -274,6 +275,7 @@ namespace snx
       virtual void configure( const snx::SoundInfo& description )
       {
          assert( mAlias != mDefaultName && "you must call init to set your sound's name" );
+         std::cout << "configure in soundHandle" << std::endl;
          sonix::instance()->configure( mAlias, description );
       }
 
