@@ -73,8 +73,8 @@ public:
     // ------------------------------------------------------------------------
     InetAddrBSD (void) {
         memset(&m_addr, 0, sizeof(m_addr));
-        m_addr.sin_port        = INADDR_ANY;
-        m_addr.sin_addr.s_addr = INADDR_ANY;
+        setAddressValue(INADDR_ANY);
+        setPort(0);
         setFamily(SocketTypes::INET);
     }
 
@@ -105,8 +105,24 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
+    InetAddrBSD (const Uint32 address) {
+        setAddressValue(address);
+        setPort(0);
+        setFamily(SocketTypes::INET);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     InetAddrBSD (const Uint16 port) {
-        m_addr.sin_addr.s_addr = INADDR_ANY;
+        setAddressValue(INADDR_ANY);
+        setPort(port);
+        setFamily(SocketTypes::INET);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    InetAddrBSD (const Uint32 address, const Uint16 port) {
+        setAddressValue(address);
         setPort(port);
         setFamily(SocketTypes::INET);
     }
