@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.23 2002/09/23 15:42:27 patrickh Exp
+# cvs-gather.pl,v 1.24 2002/10/25 16:00:49 patrickh
 
 use 5.005;
 
@@ -962,6 +962,8 @@ sub runCvsCommand ($)
          print LOG_FILE "$_";
          $next_char = nextSpinnerFrame("$next_char");
       }
+
+      print "\n";
    }
 
    $| = 0;
@@ -971,7 +973,7 @@ sub runCvsCommand ($)
 
    if ( $? && ! $verbose )
    {
-      warn "\nWARNING: An error may have occurred when running CVS.  " .
+      warn "WARNING: An error may have occurred when running CVS.  " .
            "Check $log_file\n";
    }
 
