@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/Plugins/ConfigManager/XMLConfigCommunicator.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
-#include <jccl/Plugins/ConfigManager/ConfigCommand.h>
-#include <jccl/JackalServer/Connect.h>
-#include <jccl/JackalServer/JackalServer.h>
+#include <jccl/RTRC/XMLConfigCommunicator.h>
+#include <jccl/RTRC/ConfigManager.h>
+#include <jccl/RTRC/ConfigCommand.h>
+#include <jccl/Net/Connect.h>
+#include <jccl/Net/JackalServer.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <jccl/Config/ConfigIO.h>
 #include <jccl/Config/XMLConfigIOHandler.h>
