@@ -56,7 +56,7 @@ JAVA_IDL_INCLUDES	= -i $(top_srcdir)
 
 JDOM_JAR	= @JDOM_JAR@
 OPENORB_JAR	= @OPENORB_JAR@
-CLASSPATH	= $(JDOM_JAR)
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(OPENORB_JAR)
 
 IDL_JAVA_FILES	= SubjectManager.java	\
                   Subject.java		\
