@@ -637,20 +637,38 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    /**
     * Network | Disconnect action performed.
     */
-   private void networkDisconnectAction (ActionEvent e)
+   private void networkDisconnectAction(ActionEvent e)
    {
-      mMenuNetDisconnect.setEnabled(false);
-/*
-      try
+      DisconnectionDialog dialog =
+         new DisconnectionDialog(this, "Disconnect from CORBA Service", mORBs);
+      dialog.display();
+
+      if ( dialog.getStatus() == DisconnectionDialog.DISCONNECT_OPTION )
       {
-         m_plex_if.disconnect();
-         mBeanContainer.fireDisconnectionEvent();
+         try
+         {
+            CorbaService selected_orb = dialog.getSelectedCorbaService();
+
+            // Tell the Bean container that we are disconnecting from the active
+            // ORB, and then take steps to shut down that connection.
+            mBeanContainer.fireDisconnectionEvent(selected_orb);
+            mORBs.remove(selected_orb);
+
+            // Do not wait for the ORB to shut down.
+            selected_orb.shutdown(false);
+
+            // If there are no available ORBs, disable the "disconnect" menu
+            // item.
+            if ( mORBs.size() == 0 )
+            {
+               mMenuNetDisconnect.setEnabled(false);
+            }
+         }
+         catch (Exception ex)
+         {
+            ex.printStackTrace();
+         }
       }
-      catch (org.vrjuggler.tweek.net.CommException ex)
-      {
-         ex.printStackTrace();
-      }
-*/
    }
 
    /**
