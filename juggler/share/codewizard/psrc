@@ -1,4 +1,5 @@
 codewizard.rulesdirlist /home/users/allenb/Source/juggler/share/codewizard/Rules/Default/cw_default-rules.txt
+codewizard.rulesdirlist /home/users/allenb/Source/juggler/share/codewizard/Rules/Custom/vj_custom-rules.txt
 
 CodeWizard.Unsuppress item * type SV class * file *
 CodeWizard.Unsuppress item ecpp* type PV class * file *
@@ -9,7 +10,11 @@ CodeWizard.Unsuppress item ucs-13 class * file *
 CodeWizard.Unsuppress item ucs-20 class * file *
 CodeWizard.Unsuppress item ucs-23 class * file *
 CodeWizard.Unsuppress item ucs-27 class * file *
+
+# Init all vars
 CodeWizard.Unsuppress item ucs-32 class * file *
+
+# Init all pointers to a value
 CodeWizard.Unsuppress item ucs-33 class * file *
 CodeWizard.Unsuppress item ucs-34 class * file *
 CodeWizard.Unsuppress item ucs-35 class * file *
@@ -32,6 +37,33 @@ CodeWizard.Suppress item ecpp-20 type * class * file *
 # Allow returning references to private data (yuck!!)
 CodeWizard.Suppress item ucs-18 type * class * file *
 
+# Suppress req of passing objs by reference when possible
+# This should be replaced with a better rule in the future
+CodeWizard.Suppress item ecpp-22 type * class * file *
+
+# For testing new Juggler rules
+#CodeWizard.Suppress item * type * class * file *
+CodeWizard.Unsuppress item user-7* type * class * file *
+
+
+## Fine tuning on type ###
+CodeWizard.Suppress item * type I class * file *
+CodeWizard.Suppress item * type PV class * file *
+CodeWizard.Suppress item * type V class * file *
+
+CodeWizard.Suppress item user-7006 type * class * file *
+
+## Others that should always make it through
+# Init all vars
+CodeWizard.Unsuppress item ucs-32 class * file *
+
+# Init all pointers to a value
+CodeWizard.Unsuppress item ucs-33 class * file *
+
+### Files to completely ignore in checks ####
 # Vapor is vaporized
 CodeWizard.Suppress item * type * class * file *vpr*
 CodeWizard.Suppress item * type * class * file *boost*
+CodeWizard.Suppress item * type * class * file *nspr*
+
+
