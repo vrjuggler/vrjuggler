@@ -741,7 +741,7 @@ AC_SUBST(vpr_64_flags)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 
-VJ_MTREE_LIB_GEN(VPR, release/mtree, $PLATFORM, $ISA)
+VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 
 AC_OUTPUT(Makefile
           Makefile.inc
