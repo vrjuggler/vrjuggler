@@ -72,114 +72,116 @@ extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 namespace gadget
 {
 
-   /**
-    * Class interfacing with vrpn sensor data located on the local machine in
-    * a shared memory arena.
-    *
-    * @note A note on reciever access:
-    *  Clients of Juggler should access tracker recievers as [0-n].  For
-    *  example, if you have recievers 1,2, and 4 with transmitter on 3, then
-    *  you can access the data, in order, as 0, 1, 2.
-    *
-    * @see gadget::Digital, gadget::Analog, gadget::Position
-    */
-   class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
+/**
+ * Class interfacing with vrpn sensor data located on the local machine in
+ * a shared memory arena.
+ *
+ * @note A note on reciever access:
+ *  Clients of Juggler should access tracker recievers as [0-n].  For
+ *  example, if you have recievers 1,2, and 4 with transmitter on 3, then
+ *  you can access the data, in order, as 0, 1, 2.
+ *
+ * @see gadget::Digital, gadget::Analog, gadget::Position
+ */
+class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
+{
+
+public:
+
+   /** Constructor. */
+   Vrpn() : mReadThread(NULL)
    {
-    
-   public:
-    
-      /** Constructor. */
-      Vrpn():mReadThread(NULL){};
-    
-      /**
-       * Destructor.
-       *
-       * @pre None.
-       * @post Shared memory is released.
-       */
-      ~Vrpn();
-
-      /**
-       * Configures the VRPN with the given config element.
-       *
-       * @pre e must be a element that has VRPN config information.
-       * @post If e is a valid config element, the device is configured using
-       *       its contents.  Otherwise, configuration fails and false is
-       *       returned to the caller.
-       *
-       * @param e A pointer to a config element.
-       *
-       * @return true is returned if the device was configured succesfully.
-       *         false is returned if the config element is invalid.
-       */
-      virtual bool config(jccl::ConfigElementPtr e);
-
-      /** Begins sampling. */
-      int startSampling();
-
-      /** Stops sampling. */
-      int stopSampling();
-
-      /** Samples a value. */
-      int sample();
-
-      /**
-       * Update to the sampled data.
-       *
-       * @pre None.
-       * @post Most recent value is copied over to temp area.
-       */
-      void updateData();
-
-      /** Returns what element type is associated with this class. */
-      static std::string getElementType();
-
-      /**
-       * Invokes the global scope delete operator.  This is required for proper
-       * releasing of memory in DLLs on Win32.
-       */
-      void operator delete(void* p)
-      {
-         ::operator delete(p);
-      }
-
-   protected:
-      /**
-       * Deletes this object.  This is an implementation of the pure virtual
-       * gadget::Input::destroy() method.
-       */
-      virtual void destroy()
-      {
-         delete this;
-      }
-
-   private:
-      vpr::Thread* mReadThread;
-      std::string mTrackerServer;
-      std::string mButtonServer;
-      int mTrackerNumber;
-      int mButtonNumber;
-   
-      void handleTracker(vrpn_TRACKERCB t);
-      void handleButton(vrpn_BUTTONCB b);
-
-      void readLoop(void *nullParam);
-
-
-      gmtl::Matrix44f getSensorPos(int d);
-      gadget::DigitalData getDigitalData(int d);
-     
-      std::vector<DigitalData>  mCurButtons; /**< The current button states. */
-      std::vector<PositionData> mCurPositions; /**< The current button states. */
-
-      // Working space - AJS to remove
-      std::vector<gadget::DigitalData> mButtons;
-      std::vector<gmtl::Quatf> mQuats;
-      std::vector<gmtl::Vec3f> mPositions; 
-
-      friend void staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
-      friend void staticHandleButton(void *userdata, vrpn_BUTTONCB t);
    };
+
+   /**
+    * Destructor.
+    *
+    * @pre None.
+    * @post Shared memory is released.
+    */
+   ~Vrpn();
+
+   /**
+    * Configures the VRPN with the given config element.
+    *
+    * @pre e must be a element that has VRPN config information.
+    * @post If e is a valid config element, the device is configured using
+    *       its contents.  Otherwise, configuration fails and false is
+    *       returned to the caller.
+    *
+    * @param e A pointer to a config element.
+    *
+    * @return true is returned if the device was configured succesfully.
+    *         false is returned if the config element is invalid.
+    */
+   virtual bool config(jccl::ConfigElementPtr e);
+
+   /** Begins sampling. */
+   int startSampling();
+
+   /** Stops sampling. */
+   int stopSampling();
+
+   /** Samples a value. */
+   int sample();
+
+   /**
+    * Update to the sampled data.
+    *
+    * @pre None.
+    * @post Most recent value is copied over to temp area.
+    */
+   void updateData();
+
+   /** Returns what element type is associated with this class. */
+   static std::string getElementType();
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
+
+private:
+   vpr::Thread* mReadThread;
+   std::string mTrackerServer;
+   std::string mButtonServer;
+   int mTrackerNumber;
+   int mButtonNumber;
+
+   void handleTracker(vrpn_TRACKERCB t);
+   void handleButton(vrpn_BUTTONCB b);
+
+   void readLoop(void *nullParam);
+
+
+   gmtl::Matrix44f getSensorPos(int d);
+   gadget::DigitalData getDigitalData(int d);
+
+   std::vector<DigitalData>  mCurButtons; /**< The current button states. */
+   std::vector<PositionData> mCurPositions; /**< The current button states. */
+
+   // Working space - AJS to remove
+   std::vector<gadget::DigitalData> mButtons;
+   std::vector<gmtl::Quatf> mQuats;
+   std::vector<gmtl::Vec3f> mPositions;
+
+   friend void staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
+   friend void staticHandleButton(void *userdata, vrpn_BUTTONCB t);
+};
 
 } // End of gadget namespace
 
