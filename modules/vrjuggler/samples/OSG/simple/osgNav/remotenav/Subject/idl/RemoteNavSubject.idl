@@ -6,7 +6,7 @@
 
 module vrj
 {
-   interface RemoteNavSubject
+   interface RemoteNavSubject : tweek::Subject
    {
       /**
        * Sets the absolute position relative to the origin of the virtual
