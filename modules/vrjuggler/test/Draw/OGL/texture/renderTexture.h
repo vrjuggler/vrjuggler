@@ -56,6 +56,20 @@ public:
       texObjectID = -1; // unused
    }
 
+   // return true is texObjectID is valid...
+   static bool isBound( const Texture& texture, const int& texObjectID )
+   {
+      if (texObjectID == -1)
+         return false;
+      
+      unsigned int id( texObjectID );
+      #ifdef GL_VERSION_1_1
+         return ::glIsTexture( id ) == GL_TRUE;
+      #else
+         return ::glIsTextureEXT( id ) == GL_TRUE;
+      #endif
+   }
+   
    // load texture data to hardware, making the texture current
    // NOTE: does not set any glEnable()s, use tex::render() instead of this function.
    // NOTE: this function results in slower performance than using the combination 
