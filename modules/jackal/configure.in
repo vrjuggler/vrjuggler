@@ -39,6 +39,7 @@
 
 AC_REVISION($Revision$)
 AC_INIT(jccl/jcclConfig.h)
+AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(jccl/jcclDefines.h)
 DPP_PREREQ(1.4)
 DPP_INIT
