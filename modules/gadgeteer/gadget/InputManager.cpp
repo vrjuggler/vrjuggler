@@ -50,7 +50,7 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <gadget/RemoteInputManager/RemoteInputManager.h>
+//#include <gadget/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
 #include <gadget/InputLogger.h>
@@ -71,7 +71,7 @@ bool recognizeProxyAlias( jccl::ConfigChunkPtr chunk );
 *********************************************** ahimberg */
 InputManager::InputManager()
 {
-   mRemoteInputManager = new RemoteInputManager(this);
+   //mRemoteInputManager = new RemoteInputManager(this);
 }
 
 
@@ -83,8 +83,8 @@ InputManager::InputManager()
 *********************************************** ahimberg */
 InputManager::~InputManager()
 {
-   mRemoteInputManager->shutdown();
-   delete mRemoteInputManager;
+   //mRemoteInputManager->shutdown();
+   //delete mRemoteInputManager;
 
    for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); a++)    // Stop all devices
       if ((*a).second != NULL)
@@ -111,9 +111,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    bool ret_val = false;      // Flag to return success
 
-   if (mRemoteInputManager->configCanHandle(chunk))
-      ret_val = mRemoteInputManager->configAdd(chunk);
-   else if(DeviceFactory::instance()->recognizeDevice(chunk))
+   //if (mRemoteInputManager->configCanHandle(chunk))
+   //   ret_val = mRemoteInputManager->configAdd(chunk);
+   if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = configureDevice(chunk);
    else if(ProxyFactory::instance()->recognizeProxy(chunk))
       ret_val = configureProxy(chunk);
@@ -243,9 +243,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    bool ret_val = false;      // Flag to return success
 
-   if (mRemoteInputManager->configCanHandle(chunk))
-        ret_val = mRemoteInputManager->configRemove(chunk);
-   else if(DeviceFactory::instance()->recognizeDevice(chunk))
+   //if (mRemoteInputManager->configCanHandle(chunk))
+   //     ret_val = mRemoteInputManager->configRemove(chunk);
+   if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = removeDevice(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = removeProxyAlias(chunk);
@@ -280,7 +280,7 @@ bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
    return ( DeviceFactory::instance()->recognizeDevice(chunk) ||
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
-            mRemoteInputManager->configCanHandle(chunk) ||
+            //mRemoteInputManager->configCanHandle(chunk) ||
             (chunk->getDescToken() == std::string("displaySystem")) ||
             (chunk->getDescToken() == std::string("InputManager")) ||
             (chunk->getDescToken() == std::string("gadget_logger"))
@@ -466,10 +466,10 @@ void InputManager::updateAllData()
    {  mInputLogger->process(); }
 
    // send and receive net device messages
-   if (mRemoteInputManager->isActive())
-   {
-      mRemoteInputManager->updateAll();
-   }
+//   if (mRemoteInputManager->isActive())
+//   {
+//      mRemoteInputManager->updateAll();
+//   }
 
    // Update proxies MIGHT NOT NEED
    for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();

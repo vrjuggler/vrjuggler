@@ -107,7 +107,7 @@
       if that option is supported. The following illustrates how to uncompress
       and extract all in one step:</para>
 
-      <screen>% tar -xzvf vrjuggler-distribution.tar.gzztar</screen>
+      <screen>% tar -xzvf vrjuggler-distribution.tar.gz</screen>
 
       <para>In either case, while the command runs, you will see the name of
       each file as it is written to disk. This is because of the

@@ -58,7 +58,7 @@ namespace gadget
 // Proxies
 class Proxy;
 class Input;
-class RemoteInputManager;
+//class RemoteInputManager;
 class DeviceFactory;
 
 /**
@@ -257,19 +257,15 @@ private:
    /** Configure/create a logger for the system */
    bool configureInputLogger(jccl::ConfigChunkPtr chunk);
 
-   /*********************************************************
-   *          RemoteInputManger                             *
-   *********************************************************/
-
 public:
-   RemoteInputManager* getRemoteInputManager(){ return mRemoteInputManager; }
+//   RemoteInputManager* getRemoteInputManager(){ return mRemoteInputManager; }
 
 protected:
-   bool configureRemoteInputManager(jccl::ConfigChunkPtr chunk);
-   bool configureRemoteConnection(jccl::ConfigChunkPtr chunk);
+//   bool configureRemoteInputManager(jccl::ConfigChunkPtr chunk);
+//   bool configureRemoteConnection(jccl::ConfigChunkPtr chunk);
 
 private:
-   RemoteInputManager* mRemoteInputManager;
+//   RemoteInputManager* mRemoteInputManager;
 };
 
 /** Writes out the status of the Input Manager. */

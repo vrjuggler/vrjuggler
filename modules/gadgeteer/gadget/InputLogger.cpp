@@ -38,6 +38,7 @@
 
 #include <vpr/IO/XMLObjectWriter.h>
 #include <vpr/IO/XMLObjectReader.h>
+#include <vpr/System.h>
 
 #include <fstream>
 

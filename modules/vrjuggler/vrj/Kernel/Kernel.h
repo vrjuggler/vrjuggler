@@ -48,6 +48,11 @@ namespace gadget
    class InputManager;
 }
 
+namespace cluster
+{
+   class ClusterManager;
+}
+
 namespace vpr
 {
    class BaseThread;
@@ -233,6 +238,7 @@ protected:
    vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
 
    /// Factories and Managers
+   cluster::ClusterManager*   mClusterManager;        /**< The Cluster Manager for the system*/
    gadget::InputManager*      mInputManager;          /**< The input manager for the system  */
    DrawManager*               mDrawManager;           /**< The Draw Manager we are currently using */
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */

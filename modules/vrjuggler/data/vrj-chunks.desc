@@ -12,7 +12,7 @@
       <help>Serial port speed</help>
       <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -106,7 +106,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>proxyAlias</allowedtype>
       <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -185,7 +185,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>proxyAlias</allowedtype>
       <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -495,7 +495,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="pitch" defaultvalue="0.0" />
       <item label="roll" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -571,7 +571,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>Id of the transmitter</help>
       <item label="Extended Range" defaultvalue="0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -686,7 +686,7 @@ So for example a rate of:
       <help>the actual analog data values range - upper bound</help>
       <item label="Analog Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -747,7 +747,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -801,7 +801,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -964,7 +964,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>This is the number of milliseconds that the keyboard update loop should sleep between updates.</help>
       <item label="Sleep Time" defaultvalue="75" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1080,7 +1080,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>Measurement rate for the chassis.</help>
       <item label="Chassis Measurement Rate" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1184,7 +1184,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>proxyAlias</allowedtype>
       <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1591,7 +1591,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1627,7 +1627,7 @@ The filters are applied in the order that they are specified in this configurati
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1680,7 +1680,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Analog Device" token="analogDevice" type="embeddedchunk" variable="1">
       <allowedtype>TweekAnalogDevice</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1832,7 +1832,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>proxyAlias</allowedtype>
       <allowedtype>DigProxy</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
@@ -1845,7 +1845,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Sim Keys" />
       <allowedtype>simKeyDigital</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>

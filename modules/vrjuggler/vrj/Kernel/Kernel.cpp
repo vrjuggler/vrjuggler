@@ -49,6 +49,9 @@
 
 #include <gadget/InputManager.h>
 
+#include <cluster/ClusterManager.h>
+#include <cluster/ClusterNetwork/ClusterNetwork.h>
+
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
 //#include <jccl/Net/JackalServer.h>
@@ -140,8 +143,13 @@ void Kernel::controlLoop(void* nullParam)
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
-       jcclTIMESTAMP(jcclPERF_ALL, "kernel/startframe");
+      jcclTIMESTAMP(jcclPERF_ALL, "kernel/startframe");
 
+      // Might not want the Kernel to know about the ClusterNetwork
+      // It is currently being registered as a ConfigChunkHandler in
+      // the ClusterManager constructor
+      cluster::ClusterNetwork::instance()->updateNewConnections();
+      
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
@@ -178,6 +186,9 @@ void Kernel::controlLoop(void* nullParam)
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
          jcclTIMESTAMP(jcclPERF_ALL, "kernel/input/updateAllData()");
+         vprDEBUG(vrjDBG_KERNEL,5) << "vjKERNEL::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
+      mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
+         jcclTIMESTAMP(jcclPERF_ALL, "kernel/cluster/postPostFrame()");
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Any frame-based manager data
          jcclTIMESTAMP(jcclPERF_ALL, "kernel/updateFrameData");
@@ -342,6 +353,7 @@ void Kernel::initConfig()
    mDisplayManager = DisplayManager::instance();  // Get display manager
    vprASSERT(mDisplayManager != NULL);                 // Did we get an object
 
+   mClusterManager = cluster::ClusterManager::instance();
    //setupEnvironmentManager();
 /*
    jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
@@ -356,6 +368,7 @@ void Kernel::initConfig()
    // hook dynamically-reconfigurable managers up to config manager...
    jccl::ConfigManager::instance()->addConfigChunkHandler(this);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mInputManager);
+   jccl::ConfigManager::instance()->addConfigChunkHandler(mClusterManager);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mDisplayManager);
 
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
@@ -580,7 +593,7 @@ User* Kernel::getUser(const std::string& userName)
 Kernel::Kernel()
    : mApp(NULL), mNewApp(NULL), mNewAppSet(false), mIsRunning(false),
      mExitFlag(false), mControlThread(NULL), mInputManager(NULL),
-     mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL)
+     mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL), mClusterManager(NULL)
 {
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
