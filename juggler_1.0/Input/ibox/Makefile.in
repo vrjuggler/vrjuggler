@@ -28,7 +28,7 @@ vpath %.C @srcdir@
 vpath %.o ${OBJDIR}
 
 IBOX_SRCS	:= drivers.c	\
-                   driveunx.c	\
+                   driveunx.c 	\
                    hci.c 	\
                    ibox.c
 
