@@ -44,69 +44,74 @@
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
+# __DZR_INFO_BEGIN__
+#
 # Targets are:
 #
-# world           - Build and install everything.
-# world-all-abi   - Build and install everything using all supported ABIs.
-# buildworld      - Build everything (same as 'all').
-# installworld    - Install everything (same as 'install-all').  This requires 
-#                   that 'buildworld' be successfully completed beforehand.
-# release         - Build and install a release version.
+# T<world>           Build and install everything.
+# T<world-all-abi>   Build and install everything using all supported ABIs.
+# T<buildworld>      Build everything (same as 'all').
+# T<installworld>    Install everything (same as 'install-all').  This requires
+#                    that 'buildworld' be successfully completed beforehand.
+# T<release>         Build and install a release version.
 #
-# all             - Build everything.
-# all-abi         - Build everything using all supported ABIs.
-# debug           - Build the VPR libraries (dynamic and static) with
-#                   debugging symbols turned on.
-# dbg             - Build the debugging, static copy of the libraries.
-# dbg-dso         - Build the debugging, dynamic shared object version of the
-#                   libraries.
-# optim           - Build the VPR libraries (dynamic and static) with
-#                   optimization flags enabled.
-# opt             - Build the optimized, static version of the libraries.
-# opt-dso         - Build the optimized, dynamic shared object version of the
-#                   libraries.
-# profiled        - Build the VPR libraries (dynamic and static) with
-#                   profiling flags enabled.
-# prof            - Build the profiled, static version of the libraries.
-# prof-dso        - Build the profiled, dynamic shared object version of the
-#                   libraries.
-# obj             - Build the object files using the default value for
-#                   $(OBJDIR).
+# T<all>             Build everything.
+# T<all-abi>         Build everything using all supported ABIs.
+# T<debug>           Build the VPR libraries (dynamic and static) with
+#                    debugging symbols turned on.
+# T<dbg>             Build the debugging, static copy of the libraries.
+# T<dbg-dso>         Build the debugging, dynamic shared object version of the
+#                    libraries.
+# T<optim>           Build the VPR libraries (dynamic and static) with
+#                    optimization flags enabled.
+# T<opt>             Build the optimized, static version of the libraries.
+# T<opt-dso>         Build the optimized, dynamic shared object version of the
+#                    libraries.
+# T<profiled>        Build the VPR libraries (dynamic and static) with
+#                    profiling flags enabled.
+# T<prof>            Build the profiled, static version of the libraries.
+# T<prof-dso>        Build the profiled, dynamic shared object version of the
+#                    libraries.
+# T<obj>             Build the object files using the default value for
+#                    $(OBJDIR).
 #
-# links           - Define links (for developer use only) that provide
-#                   functionality allowing the use of the $VPR_BASE_DIR
-#                   environment variable.
-# clean-links     - Remove the symlinks created by 'links'.
+# T<links>           Define links (for developer use only) that provide
+#                    functionality allowing the use of the $VPR_BASE_DIR
+#                    environment variable.
+# T<clean-links>     Remove the symlinks created by 'links'.
 #
-# hier            - Make the full directory hierarchy for the installation.
-# install-all     - Install all versions of the libraries, all header files,
-#                   and the test code.
-# install-all-abi - Install every ABI possible on the target platform.
-# install         - Install the full debugging version of VPR (with both
-#                   static and dynamic libraries). 
-# install-debug   - Same as 'install'.
-# install-dbg     - Install the debugging, static version of the libraries.
-# install-ddso    - Install the debugging, dynamic shared object version of
-#                   the libraries.
-# install-optim   - Install the full optimized version of VPR (with both
-#                   static and dynamic libraries).
-# install-opt     - Install the optimized, static version of the libraries.
-# install-dso     - Install the dynamic shared object version of the libraries.
-# install-headers - Install only the header files.
-# install-test    - Install only the test code.
+# T<hier>            Make the full directory hierarchy for the installation.
+# T<install-all>     Install all versions of the libraries, all header files,
+#                    and the test code.
+# T<install-all-abi> Install every ABI possible on the target platform.
+# T<install>         Install the full debugging version of VPR (with both
+#                    static and dynamic libraries).
+# T<install-debug>   Same as 'install'.
+# T<install-dbg>     Install the debugging, static version of the libraries.
+# T<install-ddso>    Install the debugging, dynamic shared object version of
+#                    the libraries.
+# T<install-optim>   Install the full optimized version of VPR (with both
+#                    static and dynamic libraries).
+# T<install-opt>     Install the optimized, static version of the libraries.
+# T<install-dso>     Install the dynamic shared object version of the
+#                    libraries.
+# T<install-headers> Install only the header files.
+# T<install-test>    Install only the test code.
 #
-# docs            - Build the internal and the public documentation.
-# doc-internal    - Build only the internal documentation.
-# doc-public      - Build only the public documentation.
+# T<docs>            Build the internal and the public documentation.
+# T<doc-internal>    Build only the internal documentation.
+# T<doc-public>      Build only the public documentation.
 #
-# clean           - Clean up everything (uses common 'clean' target).
-# cleandepend     - Clean up the dependency files (uses common 'cleandepend'
-#                   target).
-# clobber         - Clean up everything and remove the directories containing
-#                   the compiled libraries and its object files.
+# T<clean>           Clean up everything (uses common 'clean' target).
+# T<cleandepend>     Clean up the dependency files (uses common 'cleandepend'
+#                    target).
+# T<clobber>         Clean up everything and remove the directories containing
+#                    the compiled libraries and its object files.
 #
-# info            - Print out information about the build process that may be
-#                   useful to the user.
+# T<info>            Print out information about the build process that may be
+#                    useful to the user.
+#
+# __DZR_INFO_END__
 #
 # The default target is 'debug'.  'install' will install the debugging, static
 # version of the libraries.
@@ -118,6 +123,8 @@ default: debug
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
 DEFAULT_SET	= 1
+
+SRC_MKFILES	= Makefile
 
 # Include common definitions.
 include @topdir@/make.defs.mk
@@ -147,7 +154,7 @@ SUBDIR		= vpr/IO	\
                   vpr/md
 
 # =============================================================================
-# Library targets.  The default is 'debug' as defined above.  The steps for 
+# Library targets.  The default is 'debug' as defined above.  The steps for
 # building the 'dbg', 'ddso', 'opt' and 'dso' are as follows:
 #
 #    1) Build dependencies (if necessary).
@@ -279,22 +286,6 @@ doc-internal:
 doc-public:
 	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
 
-# =============================================================================
-# Human-readable information about the build system.
-# =============================================================================
-info:
-	@echo "\nInfo for the make of VPR"
-	@echo "\nOBJDIR: $(OBJDIR)"
-	@echo "VPRROOT_ABS: $(VPRROOT_ABS)"
-	@echo "Default ABI: $(ABI)"
-	@echo "Default instruction set architecture: $(ISA)"
-	@echo "ABI list: $(ABI_LIST)"
-	@echo "DBG_BUILDDIR: $(DBG_BUILDDIR)"
-	@echo "OPT_BUILDDIR: $(OPT_BUILDDIR)"
-	@echo "Installation prefix: $(prefix)"
-	@echo "includedir: $(includedir)"
-	@echo "libdir: $(libdir)"
-	@$(SHELL) $(scriptdir)/print-targets.sh
-
+include $(MKPATH)/dpp.info.mk
 include $(MKPATH)/dpp.subdir.mk
 include Makefile.inc
