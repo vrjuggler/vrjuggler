@@ -130,7 +130,7 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
    vpr::Uint32 port = sock->getLocalAddr().getPort();
    vprASSERT( mIpAddr == sock->getLocalAddr().getAddressValue() && "Trying to add socket to node of wrong ip addr");
    vprASSERT(! hasSocket(port, sock->getType()) && "Tried to overwrite an existing socket");
-   
+
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "NetworkNode::addSocket() [" << mIpStr << "]: Adding socket (" << sock
       << ") with local address " << sock->getLocalAddr() << " to node "
@@ -139,11 +139,11 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
    switch (sock->getType())
    {
       case vpr::SocketTypes::DATAGRAM:
-         vprASSERT( dynamic_cast<vpr::SocketStreamImplSIM*>(sock) != NULL);
+         vprASSERT( dynamic_cast<vpr::SocketDatagramImplSIM*>(sock) != NULL);
          mDgramSocketMap[port] = sock;
          break;
       case vpr::SocketTypes::STREAM:
-         vprASSERT( dynamic_cast<vpr::SocketDatagramImplSIM*>(sock) != NULL);
+         vprASSERT( dynamic_cast<vpr::SocketStreamImplSIM*>(sock) != NULL);
          mStreamSocketMap[port] = sock;
          break;
    }
@@ -153,7 +153,7 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
    socket_map_t::iterator i;
-   
+
    vpr::Uint32 port( sock->getLocalAddr().getPort() );
    vpr::Uint32 ip_addr( sock->getLocalAddr().getAddressValue() );
 
@@ -201,7 +201,7 @@ vpr::Uint32 NetworkNode::getUnassignedTcpPortNumber()
 {
    vpr::Uint32 ret_val(1);
    bool        found_one(false);
-   for(socket_map_t::iterator i = mStreamSocketMap.begin(); 
+   for(socket_map_t::iterator i = mStreamSocketMap.begin();
        (!found_one) && (i != mStreamSocketMap.end()); ++i)
    {
       socket_map_t::iterator next = i; ++next;
@@ -224,7 +224,7 @@ vpr::Uint32 NetworkNode::getUnassignedUdpPortNumber()
 {
    vpr::Uint32 ret_val(1);
    bool        found_one(false);
-   for(socket_map_t::iterator i = mDgramSocketMap.begin(); 
+   for(socket_map_t::iterator i = mDgramSocketMap.begin();
        (!found_one) && (i != mDgramSocketMap.end()); ++i)
    {
       socket_map_t::iterator next = i; ++next;

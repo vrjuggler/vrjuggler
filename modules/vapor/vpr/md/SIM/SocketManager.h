@@ -219,6 +219,9 @@ protected:  // -- Internal helpers -- //
 
    vpr::sim::NetworkGraph::net_vertex_t getLocalhostVertex(void);
 
+   /** Get the ip address value for the "localhost" node that we are using */
+   vpr::Uint32 getLocalhostIpAddrValue();
+
 protected:
    bool mActive;
 
