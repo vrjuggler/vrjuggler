@@ -36,7 +36,7 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
-#include <gadget/Devices/Open/LinuxJoydev/LinuxJoydev.h>
+#include <drivers/Open/LinuxJoydev/LinuxJoydev.h>
 
 #include <stdio.h>
 #include <stdlib.h>
