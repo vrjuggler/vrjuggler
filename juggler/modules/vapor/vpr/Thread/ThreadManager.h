@@ -41,7 +41,6 @@
 
 #ifndef _VPR_THREAD_MANAGER_H_
 #define _VPR_THREAD_MANAGER_H_
-//#pragma once
 
 #include <vpr/vprConfig.h>
 
@@ -50,7 +49,6 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 
-#include <vpr/Util/Debug.h>
 #include <vpr/Util/Singleton.h>
 
 

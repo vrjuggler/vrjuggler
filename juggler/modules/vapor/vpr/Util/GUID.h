@@ -51,13 +51,15 @@
 #include <vpr/Util/Assert.h>
 #include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
 
+#include <vpr/IO/SerializableObject.h>    // For serializing GUID
+
 
 namespace vpr
 {
 
 class GUIDFactory;
 
-class VPR_CLASS_API GUID
+class VPR_CLASS_API GUID : public vpr::SerializableObject
 {
 public:
    /** Tag to the constructor to force generation: dso::GUID guid(dso::GUID::generate_tag);
@@ -66,7 +68,7 @@ public:
    static GenerateTag generateTag;
 
 public:
-   ~GUID (void) {;}
+   virtual ~GUID (void) {;}
 
    GUID(const GenerateTag tag)
    {
@@ -194,6 +196,41 @@ public:
 
    void generate();
    void generate(const GUID& ns_guid, const std::string& name);
+
+   /** @name Reader/Writer methods */
+   //@{
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {
+      writer->writeUint32(mGuid.standard.m0);
+      writer->writeUint16(mGuid.standard.m1);
+      writer->writeUint16(mGuid.standard.m2);
+      writer->writeUint8(mGuid.standard.m3);
+      writer->writeUint8(mGuid.standard.m4);
+      writer->writeUint8(mGuid.standard.m5[0]);
+      writer->writeUint8(mGuid.standard.m5[1]);
+      writer->writeUint8(mGuid.standard.m5[2]);
+      writer->writeUint8(mGuid.standard.m5[3]);
+      writer->writeUint8(mGuid.standard.m5[4]);
+      writer->writeUint8(mGuid.standard.m5[5]);
+      return vpr::ReturnStatus::Succeed;
+   }
+
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   {
+      mGuid.standard.m0 = reader->readUint32();
+      mGuid.standard.m1 = reader->readUint16();
+      mGuid.standard.m2 = reader->readUint16();
+      mGuid.standard.m3 = reader->readUint8();
+      mGuid.standard.m4 = reader->readUint8();
+      mGuid.standard.m5[0] = reader->readUint8();
+      mGuid.standard.m5[1] = reader->readUint8();
+      mGuid.standard.m5[2] = reader->readUint8();
+      mGuid.standard.m5[3] = reader->readUint8();
+      mGuid.standard.m5[4] = reader->readUint8();
+      mGuid.standard.m5[5] = reader->readUint8();
+      return vpr::ReturnStatus::Succeed;
+   }
+   //@}
 
    /**
     * Multi-format GUID/UUID container.  This will always be 128 bits, but

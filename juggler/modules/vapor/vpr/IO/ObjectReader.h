@@ -43,8 +43,8 @@
 #define _VPR_OBJECT_READER_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/System.h>
-#include <vpr/Util/Debug.h>
+//#include <vpr/System.h>
+//#include <vpr/Util/Debug.h>
 
 #include <vector>
 
