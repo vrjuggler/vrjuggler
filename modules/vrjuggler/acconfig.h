@@ -137,6 +137,12 @@
  */
 #undef u_int
 
+/*
+ * Define to the sizeof a memory address if the type caddr_t is not available.
+ * char* is most likely going to be a safe substitute.
+ */
+#undef caddr_t
+
 /* 
  * On Windows when using Visual C++, define to __int32 and __int64
  * respectively if these two are not available.
