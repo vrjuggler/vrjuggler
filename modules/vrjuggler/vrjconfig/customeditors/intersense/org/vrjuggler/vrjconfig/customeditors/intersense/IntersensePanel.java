@@ -276,7 +276,7 @@ public class IntersensePanel extends JPanel implements CustomEditor
       mProxyPanel.add(mToolbar, BorderLayout.NORTH);
 
       Border lowered = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-      TitledBorder proxy_title = BorderFactory.createTitledBorder(lowered, "Station Proxys");
+      TitledBorder proxy_title = BorderFactory.createTitledBorder(lowered, "Station Proxies");
       proxy_title.setTitlePosition(TitledBorder.TOP);
       mProxyPanel.setBorder(proxy_title);
       
