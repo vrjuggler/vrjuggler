@@ -86,44 +86,49 @@ namespace gadget
 
 bool ThreeDMouse::startSampling()
 {
-  if (mThreadID == NULL) {
-
-   openMouse(mPortName);
-   void sampleMouse(void*);
-  
-   mExitFlag = false;
-   vpr::ThreadMemberFunctor<ThreeDMouse>* run_thread =
-      new vpr::ThreadMemberFunctor<ThreeDMouse>(this, &ThreeDMouse::controlLoop, NULL);
-   mThread = new vpr::Thread(run_thread);
-
-   if ( ! mThread->valid() )
+   if ( mThreadID == NULL )
    {
-      return -1;
+      openMouse(mPortName);
+      void sampleMouse(void*);
+
+      mExitFlag = false;
+      vpr::ThreadMemberFunctor<ThreeDMouse>* run_thread =
+         new vpr::ThreadMemberFunctor<ThreeDMouse>(this, &ThreeDMouse::controlLoop,
+                                                   NULL);
+      mThread = new vpr::Thread(run_thread);
+
+      if ( ! mThread->valid() )
+      {
+         return -1;
+      }
+      else
+      {
+         std::cout << "going " << std::endl;
+         return 1;
+      }
    }
    else
    {
-      std::cout << "going " << std::endl;
-      return 1;
-   }
-  } else {
       return -2; // already sampling
-  }
+   }
 
 }
 
 void ThreeDMouse::controlLoop(void* nullParam)
 {
-   boost::ignore_unused_variable_warning(nullParam); 
+   boost::ignore_unused_variable_warning(nullParam);
    struct timeval tv;
    double start_time, stop_time;
 
-   while(!mExitFlag) 
+   while ( !mExitFlag )
    {
       gettimeofday(&tv,0);
       start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
 
-      for(int i = 0; i < 60; i++)
-          sample();
+      for ( int i = 0; i < 60; ++i )
+      {
+         sample();
+      }
 
       gettimeofday(&tv,0);
       stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -133,17 +138,17 @@ void ThreeDMouse::controlLoop(void* nullParam)
 
 bool ThreeDMouse::stopSampling()
 {
-    // Tell thread to stop polling for data and then join and wait for it to
-    // complete
-    if( mThread != NULL)
-    {
-       mExitFlag = true; 
-       mThread->join();
+   // Tell thread to stop polling for data and then join and wait for it to
+   // complete
+   if ( mThread != NULL )
+   {
+      mExitFlag = true;
+      mThread->join();
 
-       mThreadID = NULL;
-       closeMouse();
-       std::cout << "stopping the ThreeDMouse.." << std::endl;
-    }
+      mThreadID = NULL;
+      closeMouse();
+      std::cout << "stopping the ThreeDMouse.." << std::endl;
+   }
 
    return 1;
 }
@@ -153,13 +158,12 @@ void ThreeDMouse::updateData()
    swapPositionBuffers();
 }
 
-
 bool ThreeDMouse::config(jccl::ConfigElementPtr e)
-    // PURPOSE: Constructor - Setup all vars
+   // PURPOSE: Constructor - Setup all vars
 {
 //   strncpy(mPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
-   if(! (gadget::Input::config(e) && gadget::Position::config(e)))
+   if ( ! (gadget::Input::config(e) && gadget::Position::config(e)) )
    {
       return false;
    }
@@ -176,8 +180,6 @@ std::string ThreeDMouse::getElementType()
    return "three_d_mouse";
 }
 
-
-
 /////////////////////////////////////////////////////////////
 // Name: OpenMouse
 //
@@ -185,16 +187,18 @@ std::string ThreeDMouse::getElementType()
 ////////////////////////////////////////////////////////////
 int ThreeDMouse::openMouse(const std::string& portName)
 {
-    int fd;
-    fd = ThreeDMouse::logitechOpen(portName);
-    if (fd==-1)
-   return -1;  // error
-    else {
-   mouseFD = fd;  // assign the fd
-   return 0;
-    }
+   int fd;
+   fd = ThreeDMouse::logitechOpen(portName);
+   if ( fd==-1 )
+   {
+      return -1;  // error
+   }
+   else
+   {
+      mouseFD = fd;  // assign the fd
+      return 0;
+   }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 // Connect the mouse by opening a serial port (19200 baud, 8 data, 1 stop,
@@ -202,68 +206,69 @@ int ThreeDMouse::openMouse(const std::string& portName)
 //
 // Return: file descriptor to serial port or -1 if error opening port
 //////////////////////////////////////////////////////////////////////////
-int ThreeDMouse::logitechOpen (const std::string& port_name)
+int ThreeDMouse::logitechOpen(const std::string& port_name)
 {
-  int fd;
-  struct termios t;
-  unsigned char data[DIAGNOSTIC_SIZE]; /* for diagnostics info */
+   int fd;
+   struct termios t;
+   unsigned char data[DIAGNOSTIC_SIZE]; /* for diagnostics info */
 
-  /* open a serial port, read/write */
-  if ((fd = open (port_name.c_str(), O_RDWR)) < 0) {
-    perror (port_name.c_str());
-    return (-1);
-  }
+   /* open a serial port, read/write */
+   if ( (fd = open(port_name.c_str(), O_RDWR)) < 0 )
+   {
+      perror(port_name.c_str());
+      return(-1);
+   }
 
-    /// Can now safely set the mouseFD value
-  mouseFD = fd;
+   /// Can now safely set the mouseFD value
+   mouseFD = fd;
 
+   /* disable all input mode processing */
+   t.c_iflag = 0;
 
-  /* disable all input mode processing */
-  t.c_iflag = 0;
+   /* disable all output mode processing */
+   t.c_oflag = 0;
 
-  /* disable all output mode processing */
-  t.c_oflag = 0;
+   /* hardware control flags: 19200 baud, 8 data bits, 1 stop bits,
+      no parity, enable receiver */
+   t.c_cflag = B19200 | CS8 | CSTOPB | CREAD;
 
-  /* hardware control flags: 19200 baud, 8 data bits, 1 stop bits,
-     no parity, enable receiver */
-  t.c_cflag = B19200 | CS8 | CSTOPB | CREAD;
+   /* disable local control processing (canonical, control sigs, etc) */
+   t.c_lflag = 0;
 
-  /* disable local control processing (canonical, control sigs, etc) */
-  t.c_lflag = 0;
+   /* set control characters for non-canonical reads */
+   t.c_cc[VMIN] = 1;
+   t.c_cc[VTIME]= 0;
 
-  /* set control characters for non-canonical reads */
-  t.c_cc[VMIN] = 1;
-  t.c_cc[VTIME]= 0;
+   /* control port immediately (TCSANOW) */
+   if ( tcsetattr(mouseFD, TCSANOW, &t) < 0 )
+   {
+      perror("error controlling serial port");
+      return(-1);
+   }
 
-  /* control port immediately (TCSANOW) */
-  if (tcsetattr(mouseFD, TCSANOW, &t) < 0) {
-    perror ("error controlling serial port");
-    return (-1);
-  }
+   /* reset the mouse */
+   ThreeDMouse::resetControlUnit();
 
-  /* reset the mouse */
-  ThreeDMouse::resetControlUnit ();
-
-  /* do diagnostics */
-  ThreeDMouse::getDiagnostics (data);
+   /* do diagnostics */
+   ThreeDMouse::getDiagnostics(data);
 
 #ifdef DEBUG
-  printf ("diag[0]: %2x=", data[0]);
-  print_bin (data[0]);
-  printf ("\n");
-  printf ("diag[1]: %2x=", data[1]);
-  print_bin (data[1]);
-  printf ("\n");
+   printf("diag[0]: %2x=", data[0]);
+   print_bin(data[0]);
+   printf("\n");
+   printf("diag[1]: %2x=", data[1]);
+   print_bin(data[1]);
+   printf("\n");
 #endif
 
-  /* check diagnostic return */
-  if ((data[0] != 0xbf) || (data[1] != 0x3f)) {
-    fprintf (stderr, "Mouse diagnostics failed\n");
-    return (-1);
-  }
-  return (fd);
+   /* check diagnostic return */
+   if ( (data[0] != 0xbf) || (data[1] != 0x3f) )
+   {
+      fprintf(stderr, "Mouse diagnostics failed\n");
+      return(-1);
+   }
+   return(fd);
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 // Close the mouse by closing the serial port.
@@ -272,192 +277,181 @@ int ThreeDMouse::logitechOpen (const std::string& port_name)
 ///////////////////////////////////////////////////////////////////////////////
 int ThreeDMouse::closeMouse()
 {
-  if (close (mouseFD) < 0) {
-    perror ("error closing serial port");
-    return (-1);
-  }
-  else
-    return (0);
+   if ( close (mouseFD) < 0 )
+   {
+      perror("error closing serial port");
+      return(-1);
+   }
+   else
+   {
+      return(0);
+   }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Command demand reporting
 ///////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::cuDemandReporting ()
+void ThreeDMouse::cuDemandReporting()
 {
 
 #ifdef DEBUG
-  printf ("demand reporting enabled\n");
+   printf("demand reporting enabled\n");
 #endif
-  struct termios t;
+   struct termios t;
 
-  tcgetattr (mouseFD, &t);
+   tcgetattr (mouseFD, &t);
 
-  /* set control characters for non-canonical reads */
-  t.c_cc[VMIN] = EULER_RECORD_SIZE;
-  t.c_cc[VTIME]= 1;
+   /* set control characters for non-canonical reads */
+   t.c_cc[VMIN] = EULER_RECORD_SIZE;
+   t.c_cc[VTIME]= 1;
 
-  /* control port immediately (TCSANOW) */
-  if (tcsetattr(mouseFD, TCSANOW, &t) < 0) {
-    perror ("error controlling serial port");
-  }
+   /* control port immediately (TCSANOW) */
+   if ( tcsetattr(mouseFD, TCSANOW, &t) < 0 )
+   {
+      perror("error controlling serial port");
+   }
 
-  write (mouseFD, "*D", 2);
+   write(mouseFD, "*D", 2);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Command control unit to Euler mode
 //////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::cuEulerMode ()
+void ThreeDMouse::cuEulerMode()
 {
-
 #ifdef DEBUG
-  printf ("euler data mode enabled\n");
+   printf("euler data mode enabled\n");
 #endif
 
-  write (mouseFD, "*G", 2);
+   write(mouseFD, "*G", 2);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Command control unit to head tracker mode
 ///////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::cuHeadtrackerMode ()
+void ThreeDMouse::cuHeadtrackerMode()
 {
 
 #ifdef DEBUG
-  printf ("headtracking mode enabled\n");
+   printf("headtracking mode enabled\n");
 #endif
 
-  write (mouseFD, "*H", 2);
+   write(mouseFD, "*H", 2);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Command control unit to mouse mode
 /////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::cuMouseMode ()
+void ThreeDMouse::cuMouseMode()
 {
-
 #ifdef DEBUG
-  printf ("mouse mode enabled\n");
+   printf("mouse mode enabled\n");
 #endif
 
-  write (mouseFD, "*h", 2);
+   write(mouseFD, "*h", 2);
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 // Command control unit to perform diagnostics
 //////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::cuRequestDiagnostics ()
+void ThreeDMouse::cuRequestDiagnostics()
 {
-
 #ifdef DEBUG
-  printf ("performing diagnostics\n");
+   printf("performing diagnostics\n");
 #endif
-  struct termios t;
+   struct termios t;
 
-  tcgetattr (mouseFD, &t);
+   tcgetattr(mouseFD, &t);
 
-  /* set control characters for non-canonical reads */
-  t.c_cc[VMIN] = DIAGNOSTIC_SIZE;
-  t.c_cc[VTIME]= 1;
+   /* set control characters for non-canonical reads */
+   t.c_cc[VMIN] = DIAGNOSTIC_SIZE;
+   t.c_cc[VTIME]= 1;
 
-  /* control port immediately (TCSANOW) */
-  if (tcsetattr(mouseFD, TCSANOW, &t) < 0) {
-    perror ("error controlling serial port");
-  }
+   /* control port immediately (TCSANOW) */
+   if ( tcsetattr(mouseFD, TCSANOW, &t) < 0 )
+   {
+      perror("error controlling serial port");
+   }
 
-  write (mouseFD, "*\05", 2);
+   write(mouseFD, "*\05", 2);
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Command a reset
 ///////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::cuResetControlUnit ()
+void ThreeDMouse::cuResetControlUnit()
 {
-
 #ifdef DEBUG
-  printf ("resetting control unit\n");
+   printf("resetting control unit\n");
 #endif
 
-  write (mouseFD, "*R", 2);
+   write(mouseFD, "*R", 2);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Retrieve diagnostics report
 ///////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::getDiagnostics ( unsigned char data[])
+void ThreeDMouse::getDiagnostics(unsigned char data[])
 {
-  ThreeDMouse::cuRequestDiagnostics (); /* command diagnostics */
-  vpr::System::sleep(1);
-  read (mouseFD, data, DIAGNOSTIC_SIZE);
+   ThreeDMouse::cuRequestDiagnostics(); /* command diagnostics */
+   vpr::System::sleep(1);
+   read(mouseFD, data, DIAGNOSTIC_SIZE);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Retrieve a single record. This routine will spin until a valid record
 // (i.e., 16 bytes and bit 7, byte 0 is on) is received.
 ///////////////////////////////////////////////////////////////////////////////
-int ThreeDMouse::getRecord ( gadget::PositionData* data)
+int ThreeDMouse::getRecord(gadget::PositionData* data)
 {
-  int num_read;
-  vpr::Uint8 record[EULER_RECORD_SIZE];
+   int num_read;
+   vpr::Uint8 record[EULER_RECORD_SIZE];
 
-  ThreeDMouse::cuRequestReport ();
-  num_read = read (mouseFD, record, EULER_RECORD_SIZE);
+   ThreeDMouse::cuRequestReport();
+   num_read = read(mouseFD, record, EULER_RECORD_SIZE);
 
-  /* if didn't get a complete record or if invalid record, then try
-     to get a good one */
-  while ((num_read < EULER_RECORD_SIZE) || !(record[0] & logitech_FLAGBIT)) {
-
-    #ifdef DEBUG
-   printf ("get_record: only got %d bytes\n", num_read);
-    #endif
-
-    /* flush the input buffer */
-    tcflush(mouseFD, TCIFLUSH);
-
-    ThreeDMouse::cuRequestReport ();
-    num_read = read (mouseFD, record, EULER_RECORD_SIZE);
-  }
-
+   /* if didn't get a complete record or if invalid record, then try
+      to get a good one */
+   while ( (num_read < EULER_RECORD_SIZE) || !(record[0] & logitech_FLAGBIT) )
+   {
 #ifdef DEBUG
-  printf ("%d bytes read...", num_read);
+      printf("get_record: only got %d bytes\n", num_read);
 #endif
 
-  ThreeDMouse::eulerToAbsolute (record, data->mPosData);
+      /* flush the input buffer */
+      tcflush(mouseFD, TCIFLUSH);
 
-  return (0);
+      ThreeDMouse::cuRequestReport();
+      num_read = read(mouseFD, record, EULER_RECORD_SIZE);
+   }
+
+#ifdef DEBUG
+   printf("%d bytes read...", num_read);
+#endif
+
+   ThreeDMouse::eulerToAbsolute(record, data->mPosData);
+
+   return(0);
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 // Set control unit into demand reporting, send reset command, and wait for
 // the reset.
 //////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::resetControlUnit ()
+void ThreeDMouse::resetControlUnit()
 {
-  ThreeDMouse::cuDemandReporting ();    /* make sure control unit is processing */
-  vpr::System::usleep ((long) 100000);  /* wait 10 clock ticks = 100 ms */
-  ThreeDMouse::cuResetControlUnit ();   /* command a reset */
-  vpr::System::sleep(1);
+   ThreeDMouse::cuDemandReporting();    /* make sure control unit is processing */
+   vpr::System::usleep((long) 100000);  /* wait 10 clock ticks = 100 ms */
+   ThreeDMouse::cuResetControlUnit();   /* command a reset */
+   vpr::System::sleep(1);
 }
-
 
 /*
 void ThreeDMouse::setBaseOrigin()
     // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 {
-    mData[current].getPosition()->getTrans (baseVector[0],
-                                                baseVector[1],
-                                                baseVector[2]);
+    mData[current].getPosition()->getTrans(baseVector[0], baseVector[1],
+                                           baseVector[2]);
 //      baseVector[0] = mData[current].getPosition()->pos[0];
 //      baseVector[1] = mData[current].getPosition()->pos[1];
 //      baseVector[2] = mData[current].getPosition()->pos[2];
@@ -466,65 +460,63 @@ void ThreeDMouse::setBaseOrigin()
 */
 
 
-
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::eulerToAbsolute (vpr::Uint8 record[], gmtl::Matrix44f& data)
+void ThreeDMouse::eulerToAbsolute(vpr::Uint8 record[], gmtl::Matrix44f& data)
 {
-  long ax, ay, az, arx, ary, arz;
+   long ax, ay, az, arx, ary, arz;
 
- // data->buttons = (byte) record[0];
+   // data->buttons = (byte) record[0];
 
-  ax = (record[1] & 0x40) ? 0xFFE00000 : 0;
-  ax |= (long)(record[1] & 0x7f) << 14;
-  ax |= (long)(record[2] & 0x7f) << 7;
-  ax |= (record[3] & 0x7f);
+   ax = (record[1] & 0x40) ? 0xFFE00000 : 0;
+   ax |= (long)(record[1] & 0x7f) << 14;
+   ax |= (long)(record[2] & 0x7f) << 7;
+   ax |= (record[3] & 0x7f);
 
-  ay = (record[4] & 0x40) ? 0xFFE00000 : 0;
-  ay |= (long)(record[4] & 0x7f) << 14;
-  ay |= (long)(record[5] & 0x7f) << 7;
-  ay |= (record[6] & 0x7f);
+   ay = (record[4] & 0x40) ? 0xFFE00000 : 0;
+   ay |= (long)(record[4] & 0x7f) << 14;
+   ay |= (long)(record[5] & 0x7f) << 7;
+   ay |= (record[6] & 0x7f);
 
-  az = (record[7] & 0x40) ? 0xFFE00000 : 0;
-  az |= (long)(record[7] & 0x7f) << 14;
-  az |= (long)(record[8] & 0x7f) << 7;
-  az |= (record[9] & 0x7f);
+   az = (record[7] & 0x40) ? 0xFFE00000 : 0;
+   az |= (long)(record[7] & 0x7f) << 14;
+   az |= (long)(record[8] & 0x7f) << 7;
+   az |= (record[9] & 0x7f);
 
-  gmtl::setTrans( data, gmtl::Vec3f( ((float) ax) / 1000.0,
-                                        ((float) ay) / 1000.0,
-                                        ((float) az) / 1000.0) );
+   gmtl::setTrans(data, gmtl::Vec3f(((float) ax) / 1000.0,
+                                    ((float) ay) / 1000.0,
+                                    ((float) az) / 1000.0));
 //    data->pos[0] = ((float) ax) / 1000.0;
 //    data->pos[1] = ((float) ay) / 1000.0;
 //    data->pos[2] = ((float) az) / 1000.0;
 
-  arx  = (record[10] & 0x7f) << 7;
-  arx += (record[11] & 0x7f);
+   arx  = (record[10] & 0x7f) << 7;
+   arx += (record[11] & 0x7f);
 
-  ary  = (record[12] & 0x7f) << 7;
-  ary += (record[13] & 0x7f);
+   ary  = (record[12] & 0x7f) << 7;
+   ary += (record[13] & 0x7f);
 
-  arz  = (record[14] & 0x7f) << 7;
-  arz += (record[15] & 0x7f);
+   arz  = (record[14] & 0x7f) << 7;
+   arz += (record[15] & 0x7f);
 
-  gmtl::setTrans( data, gmtl::Vec3f( ((float) arx) / 40.0,
-                                        ((float) ary) / 40.0,
-                                        ((float) arz) / 40.0) );
+   gmtl::setTrans(data, gmtl::Vec3f(((float) arx) / 40.0,
+                                    ((float) ary) / 40.0,
+                                    ((float) arz) / 40.0));
 //    data->pos[0] = ((float) arx) / 40.0;
 //    data->pos[1] = ((float) ary) / 40.0;
 //    data->pos[2] = ((float) arz) / 40.0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 // print an 8-bit binary string
 /////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::printBin (char a)
+void ThreeDMouse::printBin(char a)
 {
-  int i;
-
-  for (i=7; i>=0; i--)
-    printf ("%c", (a&(1<<i)) ? '1' : '0');
+   for ( int i = 7; i >= 0; i-- )
+   {
+      printf ("%c", (a&(1<<i)) ? '1' : '0');
+   }
 }
 
 }
