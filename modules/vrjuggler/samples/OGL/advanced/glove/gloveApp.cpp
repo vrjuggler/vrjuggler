@@ -275,12 +275,12 @@ void gloveApp::postFrame()
    //: Handle navigation
    //mNavigation.accelerate( LeftPointing() == true );
    //mNavigation.rotate( LeftPointing() == false && LeftOpen() == false );
-   //mNavigation.setMatrix( mGlove->getPos(vrj::GloveData::INDEX) );
+   //mNavigation.setMatrix( mGlove->getTipTransform(vrj::GloveData::INDEX) );
    //mNavigation.update( time );
 
 
    //: Get the position of the index finger:
-    finger_matrix = mGlove->getPos(gadget::GloveData::INDEX);
+    finger_matrix = mGlove->getTipTransform(gadget::GloveData::INDEX);
     gmtl::setTrans( glovePos, finger_matrix );
     gmtl::xform(glovePos, invNav, glovePos);
 
@@ -299,7 +299,7 @@ void gloveApp::postFrame()
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
-    gmtl::Matrix44f tttt = mGlove->getPos(gadget::GloveData::INDEX);
+    gmtl::Matrix44f tttt = mGlove->getTipTransform(gadget::GloveData::INDEX);
     wandInfo.updateWithMatrix( tttt );
     userInfo.update( wandInfo, gmtl::Vec3f(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
