@@ -61,20 +61,21 @@ class OpenSGNav : public vrj::OpenSGApp
 {
 public:
    OpenSGNav(vrj::Kernel* kern)
-      : vrj::OpenSGApp(kern), velocity(0.0f)
+      : vrj::OpenSGApp(kern)
+      , mFileToLoad("")
+      , mVelocity(0.0f)
    {
-      std::cout << "OpenSGNav::OpenSGNav called\n";
-      mFileToLoad = std::string("");
+      std::cout << "OpenSGNav::OpenSGNav() called\n";
    }
 
    virtual ~OpenSGNav()
    {
-      std::cout << "OpenSGNav::~OpenSGNav called\n";
+      std::cout << "OpenSGNav::~OpenSGNav() called\n";
    }
 
    /** Handles any initialization needed before API. */
    virtual void init();
-        
+
    /** Initialize the scene graph. */
    virtual void initScene();
 
@@ -99,8 +100,8 @@ public:
 
    void setModelFileName(std::string filename)
    {
-      std::cout << "OpenSGNav::setModelFileName: Set filename: ["
-                << filename << "]\n";
+      std::cout << "[OpenSGNav::setModelFileName()] Set filename '"
+                << filename << "'\n";
       mFileToLoad = filename;
    }
 
@@ -129,7 +130,8 @@ public:
    gadget::DigitalInterface   mButton0;     /**< Wand button 0 */
    gadget::DigitalInterface   mButton1;     /**< Wand button 1 */
    gadget::DigitalInterface   mButton2;     /**< Wand button 2 */
-   float  velocity;
+
+   float mVelocity;
 };
 
 
