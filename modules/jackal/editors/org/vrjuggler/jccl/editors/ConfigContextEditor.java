@@ -26,6 +26,17 @@ public class ConfigContextEditor
          e.printStackTrace();
       }
 
+      // Hack around JSplitPane bug where it can't handle setting the divider
+      // location until it's visible. JDC Bug #4182558.
+      propsSplitPane.addComponentListener(new ComponentAdapter()
+      {
+         public void componentResized(ComponentEvent evt)
+         {
+            propsSplitPane.setDividerLocation(0.80);
+            propsSplitPane.removeComponentListener(this);
+         }
+      });
+
       // Set up the tree
       mContextModel = new ConfigContextModel();
       mElementTree.setModel(mContextModel);

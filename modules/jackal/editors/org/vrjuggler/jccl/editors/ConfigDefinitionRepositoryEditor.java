@@ -77,17 +77,6 @@ public class ConfigDefinitionRepositoryEditor
          e.printStackTrace();
       }
 
-      // Hack around JSplitPane bug where it can't handle setting the divider
-      // location until it's visible. JDC Bug #4182558.
-      mPropsSplitPane.addComponentListener(new ComponentAdapter()
-      {
-         public void componentResized(ComponentEvent evt)
-         {
-            mPropsSplitPane.setDividerLocation(0.80);
-            mPropsSplitPane.removeComponentListener(this);
-         }
-      });
-
       // Init the configuration definition editor pane
       mDefEditorScrollPane.setViewportView(mDefEditor);
       mDefEditorScrollPane.setMinimumSize(new Dimension(0, 0));
@@ -180,23 +169,6 @@ public class ConfigDefinitionRepositoryEditor
    }
 
    /**
-    * Displays the help for the given property definition.
-    */
-   protected void displayHelp(PropertyDefinition propDef)
-   {
-      // Make sure property definition is not null
-      if (propDef != null)
-      {
-         mHelpPane.setText(propDef.getHelp());
-      }
-      else
-      {
-         // Default to an empty help window
-         mHelpPane.setText("");
-      }
-   }
-
-   /**
     * Called when the user has clicked the generic add button positioned above
     * the tree.
     */
@@ -270,18 +242,11 @@ public class ConfigDefinitionRepositoryEditor
       mBaseSplitPane.setLeftComponent(mTreeScrollPane);
       mTreePane.setLayout(mTreeLayout);
       mTreeScrollPane.setViewportView(mDefPropTree);
-      mPropsSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-      mPropsSplitPane.setOneTouchExpandable(true);
       mTreeToolbar.setFloatable(false);
       mAddBtn.setText("Add");
       mAddBtn.setEnabled(false);
       mRemoveBtn.setText("Remove");
       mRemoveBtn.setEnabled(false);
-      mHelpScrollPane.setMinimumSize(new Dimension(0, 0));
-      mHelpPane.setBackground(new Color(255, 253, 181));
-      mHelpPane.setBorder(null);
-      mHelpPane.setEditable(false);
-      mHelpPane.setMinimumSize(new Dimension(0, 0));
       mEditorPane.setLayout(mEditorPaneLayout);
       mEditorPane.setMinimumSize(new Dimension(0, 0));
       mAddBtn.addActionListener(new ActionListener()
@@ -300,14 +265,11 @@ public class ConfigDefinitionRepositoryEditor
       });
       this.add(mBaseSplitPane, BorderLayout.CENTER);
       mBaseSplitPane.add(mTreePane, JSplitPane.LEFT);
-      mBaseSplitPane.add(mPropsSplitPane, JSplitPane.RIGHT);
+      mBaseSplitPane.add(mEditorPane, JSplitPane.RIGHT);
       mTreePane.add(mTreeToolbar, BorderLayout.NORTH);
       mTreePane.add(mTreeScrollPane, BorderLayout.CENTER);
       mTreeToolbar.add(mAddBtn);
       mTreeToolbar.add(mRemoveBtn);
-      mPropsSplitPane.add(mHelpScrollPane, JSplitPane.BOTTOM);
-      mHelpScrollPane.setViewportView(mHelpPane);
-      mPropsSplitPane.add(mEditorPane, JSplitPane.TOP);
    }
 
    /**
@@ -339,14 +301,7 @@ public class ConfigDefinitionRepositoryEditor
    private JButton mRemoveBtn = new JButton();
    private JScrollPane mTreeScrollPane = new JScrollPane();
    private JTree mDefPropTree = new JTree();
-   private JSplitPane mPropsSplitPane = new JSplitPane();
-   private JScrollPane mHelpScrollPane = new JScrollPane();
    private JPanel mEditorPane = new JPanel();
-   private JEditorPane mHelpPane = new JEditorPane()
-   {
-      public boolean getScrollableTracksViewportWidth() { return true; }
-      public boolean getScrollableTracksViewportHeight() { return true; }
-   };
    private CardLayout mEditorPaneLayout = new CardLayout();
    private JPanel mEmptyPane = new JPanel();
 
