@@ -42,13 +42,12 @@ namespace gadget
 {
 
 /**
- * A proxy class to digital speech recognition devices, used by the Input
- * Manager.
+ * A proxy class to command-oriented devices, used by the Input Manager.
  *
- * A digital speech recognition proxy always points to a digital speech
- * recognition device and unit number within that device.  The Input Manager
- * can therefore keep an array of these around and treat them as digital
- * devices that only return a single sub-device's amount of data (one int).
+ * A command proxy always points to a command-oriented device and unit number
+ * within that device.  The Input Manager can therefore keep an array of these
+ * around and treat them as command devices that only return a single
+ * sub-device's amount of data (one int).
  *
  * @see gagdet::Command
  */
@@ -75,17 +74,15 @@ public:
    }
 
    /**
-    * Gets the digital data.
+    * Gets the command data.
     */
    int getData() const
    {
-      // If we're stupified, return gadget::Digital::OFF.  Otherwise, return
-      // the current digital value.
-      return (isStupified() ? 0
-                            : mData.getDigital());
+      // If we're stupified, return 0, return the current command value.
+      return (isStupified() ? 0 : mData.getDigital());
    }
 
-   DigitalData* getDigitalData()
+   CommandData* getCommandData()
    {
       return &mData;
    }
@@ -131,7 +128,7 @@ private:
     * Copy of the digital data we are dealing with.
     * @see getData()
     */
-   DigitalData mData;
+   CommandData mData;
 };
 
 } // End of gadget namespace
