@@ -51,7 +51,7 @@
  * @note The call blocks until a condition has been signaled
  */
 int
-vpr::CondVarGeneric::wait () {
+vpr::CondVarGeneric::wait (vpr::Interval time_to_wait) {
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
    if (condMutex->test() == 0)    // Not locked
