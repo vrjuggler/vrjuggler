@@ -61,8 +61,3 @@ EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@
 EXTRA_CXXFLAGS	= @APP_EXTRA_CFLAGS@
 EXTRA_DEFS	= -DTESTFILES_PATH="\"$(JCCLROOT_ABS)/test/TestSuite/TestFiles/\""
 EXTRA_INCLUDES	= -I$(JCCL_BASE_DIR)/include -I$(srcdir) -I$(CPP_UNIT)/include
-
-ifeq (@PLATFORM@, IRIX)
-    EXTRA_DEPEND_FLAGS	+= -I@BOOST_DIR@/boost/compatibility/cpp_c_headers
-    EXTRA_INCLUDES	+= -I@BOOST_DIR@/boost/compatibility/cpp_c_headers
-endif
