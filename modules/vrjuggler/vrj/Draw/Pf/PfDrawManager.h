@@ -181,47 +181,54 @@ public:
    friend void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo);
    friend void PfAppFunc(pfChannel *chan, void* chandata);
 
-public: // Chunk handlers
-   /** Can the handler handle the given chunk?
+public: // Config element handlers
+   /** Can the handler handle the given element?
    * @returns true - Can handle it
    *          false - Can't handle it
    */
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
+   virtual bool configCanHandle(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       return false;
    }
 
 protected:     // --- Config handling functions --- //
-   /** Add the chunk to the configuration
-   * @pre configCanHandle(chunk) == true
-   * @returns success
-   */
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk)
+   /**
+    * Adds the element to the configuration.
+    * @pre configCanHandle(element) == true.
+    * @returns success.
+    */
+   virtual bool configAdd(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configAdd: configAdd is not supported.\n" << vprDEBUG_FLUSH;
+      boost::ignore_unused_variable_warning(element);
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << "vrj::PfDrawManager::configAdd: configAdd is not supported.\n"
+         << vprDEBUG_FLUSH;
       return false;
    }
 
-   /** Remove the chunk from the current configuration
-   * @pre  configCanHandle(chunk) == true
-   * @returns success
-   */
-   virtual bool configRemove(jccl::ConfigChunkPtr chunk)
+   /**
+    * Removes the element from the current configuration.
+    * @pre  configCanHandle(element) == true.
+    * @returns success.
+    */
+   virtual bool configRemove(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vprDEBUG_FLUSH;
+      boost::ignore_unused_variable_warning(element);
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << "vrj::PfDrawManager::configRemove: configRemove is not supported.\n"
+         << vprDEBUG_FLUSH;
       return false;
    }
 
-   /** Setup display system related attributes
-   * @pre chunk is a chunks of the "dispaySystem" type
-   * @note  MUST be called before initDrawing
-   * @note This must be called by the draw manager
-   *        because the chunk must be gotten from the draw manager
-   */
-   bool configDisplaySystem(jccl::ConfigChunkPtr chunk);
+   /**
+    * Sets up display system related attributes.
+    * @pre element is a config element of the "dispaySystem" type.
+    * @note MUST be called before initDrawing.
+    * @note This must be called by the draw manager because the element must
+    *       be gotten from the draw manager.
+    */
+   bool configDisplaySystem(jccl::ConfigElementPtr element);
 
 protected:
    /** Call all the application channel callbacks */

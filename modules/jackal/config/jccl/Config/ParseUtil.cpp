@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <jccl/jcclConfig.h>
 #include <fstream>
 #include <ctype.h>
@@ -39,38 +38,36 @@
 #include <vpr/System.h>
 #include <vpr/Util/FileUtils.h>
 
+namespace tokens = jccl::types_tokens;
+
 namespace jccl
 {
 
 VarType stringToVarType(const std::string& str)
 {
-   if ( str == int_TOKEN)
+   if (str == tokens::INTEGER)
    {
       return T_INT;
    }
-   if ( str == float_TOKEN)
+   if (str == tokens::FLOAT)
    {
       return T_FLOAT;
    }
-   if ( str == bool_TOKEN)
+   if (str == tokens::BOOLEAN)
    {
       return T_BOOL;
    }
-   if ( str == string_TOKEN)
+   if (str == tokens::STRING)
    {
       return T_STRING;
    }
-   if ( str == distance_TOKEN )
+   if (str == tokens::CONFIGELEMENTPOINTER)
    {
-      return T_DISTANCE;
+      return T_ELEMENT_PTR;
    }
-   if ( str == chunk_TOKEN )
+   if (str == tokens::CONFIGELEMENT)
    {
-      return T_CHUNK;
-   }
-   if ( str == embeddedchunk_TOKEN)
-   {
-      return T_EMBEDDEDCHUNK;
+      return T_CHILD_ELEMENT;
    }
 
    return VJ_T_INVALID;
@@ -81,17 +78,17 @@ std::string typeString(const VarType t)
    switch ( t )
    {
       case T_INT:
-         return int_TOKEN;
+         return tokens::INTEGER;
       case T_BOOL:
-         return bool_TOKEN;
+         return tokens::BOOLEAN;
       case T_FLOAT:
-         return float_TOKEN;
+         return tokens::FLOAT;
       case T_STRING:
-         return string_TOKEN;
-      case T_CHUNK:
-         return chunk_TOKEN;
-      case T_EMBEDDEDCHUNK:
-         return embeddedchunk_TOKEN;
+         return tokens::STRING;
+      case T_ELEMENT_PTR:
+         return tokens::CONFIGELEMENTPOINTER;
+      case T_CHILD_ELEMENT:
+         return tokens::CONFIGELEMENT;
       default:
          return "Unrecognized_Type";
    }
@@ -142,9 +139,9 @@ std::string demangleFileName(const std::string& n, std::string parentfile)
    return fname;
 }
 
-JCCL_IMPLEMENT(vpr::ReturnStatus) findFileUsingPathVar (const std::string& file_name,
-                                                        const std::string& env_name,
-                                                        std::string& absolute_file)
+vpr::ReturnStatus findFileUsingPathVar(const std::string& file_name,
+                                       const std::string& env_name,
+                                       std::string& absolute_file)
 {
    // based on patrick's code to support VJ_CFG_PATH
    // if we find file_name on any path in the variable env_var, we'll
@@ -247,14 +244,14 @@ JCCL_IMPLEMENT(vpr::ReturnStatus) findFileUsingPathVar (const std::string& file_
    return status;
 }
 
-bool hasSeparator (const std::string &path)
+bool hasSeparator(const std::string& path)
 {
    return(path.find(char('/')) != path.npos);
 }
 
-std::string getRemainder (const std::string &path)
+std::string getRemainder(const std::string& path)
 {
-   std::string::size_type i = path.find (char('/'));
+   std::string::size_type i = path.find(char('/'));
    if ( i == path.npos )
    {
       return path;
@@ -265,19 +262,17 @@ std::string getRemainder (const std::string &path)
    }
 }
 
-std::string getFirstNameComponent (const std::string& path)
+std::string getFirstNameComponent(const std::string& path)
 {
-   std::string::size_type i = path.find (char('/'));
+   std::string::size_type i = path.find(char('/'));
    if ( i == path.npos )
    {
       return path;
    }
    else
    {
-      return path.substr (0, i);
+      return path.substr(0, i);
    }
 }
-
-
 
 } // End of jccl namespace

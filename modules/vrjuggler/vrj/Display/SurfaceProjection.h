@@ -70,8 +70,8 @@ public:
       mOriginToBottom = toBottom;
    }
 
-   /** Configures the projection using the chunk given. */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   /** Configures the projection using the element given. */
+   virtual void config(jccl::ConfigElementPtr element);
 
    /**
     * Recalculates the projection matrix.

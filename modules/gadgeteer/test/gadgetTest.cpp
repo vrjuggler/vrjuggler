@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
 	////         CREATE DRIVER LIST
 	////
 	
-	deviceList.push_back(new gadget_test::PinchGloveAdaptor("PinchGlove"));
-	deviceList.push_back(new gadget_test::IboxAdaptor("IBox"));
+	deviceList.push_back(new gadget_test::PinchGloveAdaptor("pinch_glove"));
+	deviceList.push_back(new gadget_test::IboxAdaptor("ibox"));
 	deviceList.push_back(new gadget_test::FlockAdaptor("Flock of Birds"));
 
 	////   ex. deviceList.push_back(new newDeviceDriverAdaptor("newDeviceDriver"));

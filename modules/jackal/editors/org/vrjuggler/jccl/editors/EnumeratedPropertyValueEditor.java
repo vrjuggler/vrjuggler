@@ -37,8 +37,7 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 
 /**
- * An editor that knows how to edit ConfigChunk pointer properties in a
- * ConfigChunk.
+ * An editor that knows how to edit enumerated values in a configuration element.
  */
 public class EnumeratedPropertyValueEditor
    extends PropertyEditorSupport
@@ -48,12 +47,13 @@ public class EnumeratedPropertyValueEditor
     */
    public String getAsText()
    {
-      for (int i=0; i<propertyDesc.getNumEnums(); ++i)
+      Map enums = mPropertyDef.getEnums();
+      for (Iterator itr = enums.keySet().iterator(); itr.hasNext(); )
       {
-         DescEnum de = propertyDesc.getEnumAt(i);
-         if (de.getValue().equals(this.value))
+         String label = (String)itr.next();
+         if (enums.get(label).equals(mValue))
          {
-            return de.getName();
+            return label;
          }
       }
       return null;
@@ -77,14 +77,10 @@ public class EnumeratedPropertyValueEditor
       }
       else
       {
-         for (int i=0; i<propertyDesc.getNumEnums(); ++i)
+         Map enums = mPropertyDef.getEnums();
+         if (enums.containsKey(text))
          {
-            DescEnum de = propertyDesc.getEnumAt(i);
-            if (text.equals(de.getName()))
-            {
-               setValue(de.getValue());
-               return;
-            }
+            setValue(enums.get(text));
          }
 
          // If we got here, we didn't get a valid string value
@@ -97,21 +93,17 @@ public class EnumeratedPropertyValueEditor
     */
    public String[] getTags()
    {
-      String[] tags = new String[propertyDesc.getNumEnums()];
-      for (int i=0; i<propertyDesc.getNumEnums(); ++i)
-      {
-         DescEnum de = propertyDesc.getEnumAt(i);
-         tags[i] = de.getName();
-      }
-      return tags;
+      List tags = new ArrayList(mPropertyDef.getEnums().keySet());
+      Collections.sort(tags);
+      return (String[])tags.toArray(new String[] {});
    }
 
    /**
-    * Sets up the tags list based on the given description of the property.
+    * Sets up the tags list based on the given definition of the property.
     */
-   public void setPropertyDesc(PropertyDesc desc)
+   public void setPropertyDefinition(PropertyDefinition propDef)
    {
-      this.propertyDesc = desc;
+      mPropertyDef = propDef;
    }
 
    /**
@@ -119,7 +111,7 @@ public class EnumeratedPropertyValueEditor
     */
    public Object getValue()
    {
-      return value;
+      return mValue;
    }
 
    /**
@@ -127,17 +119,17 @@ public class EnumeratedPropertyValueEditor
     */
    public void setValue(Object value)
    {
-      this.value = value;
+      mValue = value;
       firePropertyChange();
    }
 
    /**
-    * The value of the Chunk pointer being edited.
+    * The value of the property being edited.
     */
-   private Object value = null;
+   private Object mValue;
 
    /**
-    * The list of tags supported by this value.
+    * The property definition for the value being edited.
     */
-   private PropertyDesc propertyDesc = null;
+   private PropertyDefinition mPropertyDef;
 }

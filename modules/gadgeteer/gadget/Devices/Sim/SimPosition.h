@@ -83,7 +83,7 @@ public:
    {;}
    virtual ~SimPosition() {;}
 
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
    int startSampling() { return 1; }
@@ -93,7 +93,7 @@ public:
    /** Updates the data. */
    virtual void updateData();
 
-   static std::string getChunkType() { return std::string("SimPosition"); }
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

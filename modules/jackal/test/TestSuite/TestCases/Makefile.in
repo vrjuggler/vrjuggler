@@ -41,10 +41,10 @@ top_srcdir=	@top_srcdir@
 DIRPRFX=	TestCases/
 
 SRCS= \
-	ConfigChunkDBTest.cpp		\
-	ConfigChunkTest.cpp		\
+	ConfigurationTest.cpp		\
+	ConfigDefinitionTest.cpp	\
+	ConfigElementTest.cpp		\
 	IncludesTest.cpp
-
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -45,6 +45,11 @@
 
 namespace gadget
 {
+
+std::string EventWindow::getBaseType()
+{
+   return "event_window";
+}
 /**
  * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
  */

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="cluster_manager"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="ClusterJuggler Configuration">
+      <help>All ClusterJuggler configuration settings.</help>
+      <parent />
+      <category>/Cluster</category>
+      <property valuetype="string" variable="true" name="plugin">
+         <help>The names of the cluster plugins to load.</help>
+         <value label="Plugin" defaultvalue="" />
+      </property>
+      <property valuetype="configelementpointer" variable="true" name="cluster_nodes">
+         <help>The list of all active nodes in the cluster.</help>
+         <value label="Machine" />
+         <allowed_type>machine_specific</allowed_type>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="barrier_master">
+         <help>The node in the cluster that is responsible for synchronizing all other nodes.</help>
+         <value label="Barrier Master" />
+         <allowed_type>machine_specific</allowed_type>
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>

@@ -140,7 +140,7 @@ public class ConfigDefinition
     *
     * @param category      the category to add
     */
-   public synchronized void addCategory(String category)
+   public synchronized void addCategory(Category category)
    {
       if (!mCategories.contains(category))
       {
@@ -155,7 +155,7 @@ public class ConfigDefinition
     *
     * @param category      the category to removed
     */
-   public synchronized void removeCategory(String category)
+   public synchronized void removeCategory(Category category)
    {
       if (mCategories.contains(category))
       {
@@ -356,7 +356,7 @@ public class ConfigDefinition
    /**
     * Notifies listeners that a category has been added to this definition.
     */
-   protected void fireCategoryAdded(String category)
+   protected void fireCategoryAdded(Category category)
    {
       ConfigDefinitionEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
@@ -376,7 +376,7 @@ public class ConfigDefinition
    /**
     * Notifies listeners that a category has been removed from this definition.
     */
-   protected void fireCategoryRemoved(String category)
+   protected void fireCategoryRemoved(Category category)
    {
       ConfigDefinitionEvent evt = null;
       Object[] listeners = listenerList.getListenerList();

@@ -37,7 +37,7 @@ import java.util.EventListener;
  * Default implementation of the PropertyDefinitionListener that does nothing in
  * order to make the creating of PropertyDefinition listeners easier.
  */
-public class PropertyDefinitionAdapter
+public abstract class PropertyDefinitionAdapter
    implements PropertyDefinitionListener
 {
    public void nameChanged(PropertyDefinitionEvent evt) {}

@@ -44,7 +44,7 @@ public class FloatEditor
     */
    public String getAsText()
    {
-      return value.toString();
+      return mValue.toString();
    }
 
    /**
@@ -91,7 +91,7 @@ public class FloatEditor
     */
    public Object getValue()
    {
-      return value;
+      return mValue;
    }
 
    /**
@@ -99,12 +99,12 @@ public class FloatEditor
     */
    public void setValue(Object value)
    {
-      this.value = (Float)value;
+      this.mValue = (Float)value;
       firePropertyChange();
    }
 
    /**
     * The Float being edited.
     */
-   private Float value = null;
+   private Float mValue = null;
 }

@@ -49,7 +49,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
@@ -74,13 +74,13 @@ class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
 public:
    Fastrak();                                  // must call vjAnalog()? see vjAnalog.h
    virtual ~Fastrak();
-   static std::string getChunkType()
-   {
-      return std::string("Fastrak");
-   }// return what chunk type is associated with this class.
+
+   // return what element type is associated with this class.
+   static std::string getElementType();
+
 public:
    /// gadget::Input pure virtual functions
-   virtual bool config(jccl::ConfigChunkPtr fastrakChunk);
+   virtual bool config(jccl::ConfigElementPtr fastrakElement);
 
    /** Starts a new thread. */
    virtual int startSampling();
@@ -94,12 +94,11 @@ public:
    /** Kills the sample thread. */
    virtual int stopSampling();
 
-   /** Device's configchunk name (match .desc file). */
+   /** Device's config element name (match the definition). */
    virtual char* getDeviceName()
    {
-//      return "vjFastrak";
       return "Fastrak";
-   };
+   }
 
 public:
    /** gadget::Digital pure virtual function. */

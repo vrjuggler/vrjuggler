@@ -76,8 +76,8 @@ public:
 
    /** Destroy the glove */
    virtual ~DataGlove();
-   virtual bool config( jccl::ConfigChunkPtr c );
-   static std::string getChunkType() { return std::string("DataGlove");}
+   virtual bool config(jccl::ConfigElementPtr e);
+   static std::string getElementType();
    virtual int startSampling();
    virtual int stopSampling();
    virtual int sample();

@@ -50,9 +50,9 @@ float Projection::mNearDist = 0.1f;
 float Projection::mFarDist = 10000.0f;
 
 
-void Projection::config(jccl::ConfigChunkPtr chunk)
+void Projection::config(jccl::ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(chunk);
+   boost::ignore_unused_variable_warning(element);
 }
 
 /**

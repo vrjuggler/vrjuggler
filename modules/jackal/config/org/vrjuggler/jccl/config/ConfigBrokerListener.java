@@ -50,7 +50,7 @@ public interface ConfigBrokerListener
    public void resourceAdded(ConfigBrokerEvent evt);
 
    /**
-    * Gives notification that a resource was remove from the config broker.
+    * Gives notification that a resource was removed from the config broker.
     *
     * @param evt     the config broker event
     */

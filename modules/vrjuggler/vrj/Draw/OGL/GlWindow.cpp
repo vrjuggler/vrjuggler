@@ -49,7 +49,6 @@
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
 //#include <vrj/Display/SurfaceViewport.h>
-#include <jccl/Config/ConfigChunk.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/DrawSimInterface.h>
 

@@ -33,7 +33,7 @@
 #include <gadget/gadgetConfig.h>
 #include <float.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/Position.h>
 
 #include <gmtl/Matrix.h>
@@ -58,31 +58,34 @@ Position::~Position()
 
 
 // Set up the transformation information
-bool Position::config(jccl::ConfigChunkPtr c)
+bool Position::config(jccl::ConfigElementPtr e)
 {
    // --- Configure filters --- //
-   unsigned num_filters = c->getNum("position_filters");
+   unsigned num_filters = e->getNum("position_filters");
 
    vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
-                        std::string("Position::config: ") + c->getName() +
-                           std::string(":") + c->getDescToken() +
+                        std::string("Position::config: ") + e->getName() +
+                           std::string(":") + e->getID() +
                            std::string("\n"),
                         std::string("Position::config: done.\n") );
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
 
-   jccl::ConfigChunkPtr cur_filter;
+   jccl::ConfigElementPtr cur_filter;
    PositionFilter* new_filter = NULL;
 
    for(unsigned i=0;i<num_filters;++i)
    {
-      cur_filter = c->getProperty<jccl::ConfigChunkPtr>("position_filters",i);
+      cur_filter = e->getProperty<jccl::ConfigElementPtr>("position_filters",i);
       vprASSERT(cur_filter.get() != NULL);
 
-      std::string filter_chunk_desc = cur_filter->getDescToken();
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
+      std::string filter_id = cur_filter->getID();
+      vprDEBUG( vprDBG_ALL, vprDBG_VERB_LVL)
+         << "   Filter [" << i << "]: Type:" << filter_id
+         << std::endl << vprDEBUG_FLUSH;
 
-      new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
+      new_filter = PositionFilterFactory::instance()->createObject(filter_id);
       if(new_filter != NULL)
       {
          new_filter->config(cur_filter);
@@ -90,7 +93,8 @@ bool Position::config(jccl::ConfigChunkPtr c)
       }
       else
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
       }
    }
 

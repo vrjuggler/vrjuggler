@@ -84,7 +84,7 @@ public:
     * @return true if the device was configured succesfully.  false is
     *         returned if the configuration element is invalid.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begins sampling. */
    int startSampling() { return 1; }
@@ -103,11 +103,8 @@ public:
     */
    void updateData();
 
-   /** Returns what chunk type is associated with this class. */
-   static std::string getChunkType ()
-   {
-      return std::string("TrackdSensor");
-   }
+   /** Returns what element type is associated with this class. */
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

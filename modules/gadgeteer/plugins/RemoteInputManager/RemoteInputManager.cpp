@@ -63,8 +63,7 @@
 
 // Configuration
 #include <jccl/RTRC/ConfigManager.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <map>
 
@@ -502,17 +501,17 @@ namespace cluster
    //    CONFIG METHODS    //
    //////////////////////////
 
-   /** Add the pending chunk to the configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff chunk was successfully added to configuration.
+   /** Add the pending element to the configuration.
+    *  @pre configCanHandle (element) == true.
+    *  @return true iff element was successfully added to configuration.
     */
-   bool RemoteInputManager::configAdd(jccl::ConfigChunkPtr chunk)
+   bool RemoteInputManager::configAdd(jccl::ConfigElementPtr element)
    {
-      if ( ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) )
+      if ( ClusterManager::instance()->recognizeRemoteDeviceConfig(element) )
       {
-         std::string device_host = chunk->getProperty<std::string>("deviceHost");
+         std::string device_host = element->getProperty<std::string>("device_host");
          ClusterNode* node = cluster::ClusterNetwork::instance()->getClusterNodeByName(device_host);
-         std::string device_name = chunk->getName();
+         std::string device_name = element->getName();
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[RemoteInputManager] ")
          << "Adding the Remote Device: " << device_name
@@ -551,20 +550,20 @@ namespace cluster
    }
 
 
-   /** Remove the pending chunk from the current configuration.
-    *  @pre configCanHandle (chunk) == true.
-    *  @return true iff the chunk (and any objects it represented)
+   /** Remove the pending element from the current configuration.
+    *  @pre configCanHandle (element) == true.
+    *  @return true iff the element (and any objects it represented)
     *          were successfully removed.
     */
-   bool RemoteInputManager::configRemove(jccl::ConfigChunkPtr chunk)
+   bool RemoteInputManager::configRemove(jccl::ConfigElementPtr element)
    {
-      if ( ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) )
+      if ( ClusterManager::instance()->recognizeRemoteDeviceConfig(element) )
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[RemoteInputManager] ")
-         << "Removing the Remote Device: " << chunk->getName() 
+         << "Removing the Remote Device: " << element->getName() 
          << " from the active configuration \n" << vprDEBUG_FLUSH;
 
-         removeVirtualDevice(chunk->getName());
+         removeVirtualDevice(element->getName());
          if ( this->mVirtualDevices.size()== 0 && mDeviceServers.size() == 0 )
          {
             setActive(false);
@@ -580,16 +579,15 @@ namespace cluster
    }
 
 
-   /** Checks if this handler can process chunk.
-    *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+    *  Typically, an implementation of handler will check the element's
     *  description name/token to decide if it knows how to deal with
     *  it.
-    *  @return true iff this handler can process chunk.
+    *  @return true iff this handler can process element.
     */
-   bool RemoteInputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
+   bool RemoteInputManager::configCanHandle(jccl::ConfigElementPtr element)
    {
-      return( ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) );
-
+      return ClusterManager::instance()->recognizeRemoteDeviceConfig(element);
    }
 
    vpr::Uint16 RemoteInputManager::getNumberPendingDeviceRequests()
@@ -610,18 +608,18 @@ namespace cluster
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
       cfg_mgr->lockActive();
-      std::vector<jccl::ConfigChunkPtr>::iterator active_begin = cfg_mgr->getActiveBegin();
-      std::vector<jccl::ConfigChunkPtr>::iterator active_end   = cfg_mgr->getActiveEnd();      
-      std::vector<jccl::ConfigChunkPtr>::iterator i;
+      std::vector<jccl::ConfigElementPtr>::iterator active_begin = cfg_mgr->getActiveBegin();
+      std::vector<jccl::ConfigElementPtr>::iterator active_end   = cfg_mgr->getActiveEnd();      
+      std::vector<jccl::ConfigElementPtr>::iterator i;
 
       // Find the active device that we want to remove
       for ( i = active_begin ; i != active_end ; i++ )
       {
          if ( /*recognizeRemoteDeviceConfig(*i) && */(*i)->getName() == device_name )
          {
-            jccl::ConfigManager::PendingChunk pending;
-            pending.mType = jccl::ConfigManager::PendingChunk::REMOVE;
-            pending.mChunk = (*i);
+            jccl::ConfigManager::PendingElement pending;
+            pending.mType = jccl::ConfigManager::PendingElement::REMOVE;
+            pending.mElement = (*i);
             cfg_mgr->addPending(pending);
 
             cfg_mgr->unlockActive();
@@ -638,21 +636,21 @@ namespace cluster
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
       cfg_mgr->lockActive();
-      std::vector<jccl::ConfigChunkPtr>::iterator active_begin = cfg_mgr->getActiveBegin();
-      std::vector<jccl::ConfigChunkPtr>::iterator active_end   = cfg_mgr->getActiveEnd();      
-      std::vector<jccl::ConfigChunkPtr>::iterator i;
+      std::vector<jccl::ConfigElementPtr>::iterator active_begin = cfg_mgr->getActiveBegin();
+      std::vector<jccl::ConfigElementPtr>::iterator active_end   = cfg_mgr->getActiveEnd();      
+      std::vector<jccl::ConfigElementPtr>::iterator i;
       for ( i = active_begin ; i != active_end ; i++ )
       {
          if ( /*recognizeRemoteDeviceConfig(*i) && */(*i)->getName() == device_name )
          {
-            jccl::ConfigManager::PendingChunk pending_remove;
-            pending_remove.mType = jccl::ConfigManager::PendingChunk::REMOVE;
-            pending_remove.mChunk = (*i);
+            jccl::ConfigManager::PendingElement pending_remove;
+            pending_remove.mType = jccl::ConfigManager::PendingElement::REMOVE;
+            pending_remove.mElement = (*i);
             cfg_mgr->addPending(pending_remove);
 
-            jccl::ConfigManager::PendingChunk pending_add;
-            pending_add.mType = jccl::ConfigManager::PendingChunk::ADD;
-            pending_add.mChunk = (*i);
+            jccl::ConfigManager::PendingElement pending_add;
+            pending_add.mType = jccl::ConfigManager::PendingElement::ADD;
+            pending_add.mElement = (*i);
             cfg_mgr->addPending(pending_add);
 
             cfg_mgr->unlockActive();

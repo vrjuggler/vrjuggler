@@ -82,9 +82,9 @@ public:
       /* Do nothing. */ ;
    }
 
-   bool configCanHandle(jccl::ConfigChunkPtr element);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 
-   bool configAdd(jccl::ConfigChunkPtr element);
+   bool configAdd(jccl::ConfigElementPtr element);
 
    // Execute any initialization needed before the API is started<BR><BR>
    // Initialize VR Juggler device interfaces here.

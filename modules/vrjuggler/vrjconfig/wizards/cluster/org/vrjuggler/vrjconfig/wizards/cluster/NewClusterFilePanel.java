@@ -138,7 +138,7 @@ public class NewClusterFilePanel extends JPanel
         JOptionPane.showMessageDialog(this,"You can not write to this.","ClusterWizard",JOptionPane.ERROR_MESSAGE);
         return false;
       }
-      // We have gotten a positive responce so try to create it below
+      // We have gotten a positive response so try to create it below
     }
     try{
       // Get handle to broker
@@ -147,7 +147,7 @@ public class NewClusterFilePanel extends JPanel
       // Create New FileSource
       if(!mBroker.containsDataSource(mFileSourceName))
       {
-        mFileSource = new FileDataSource(textFilename.getText(),FileDataSource.ELEMENTS);
+        mFileSource = FileDataSource.create(textFilename.getText(), mBroker.getRepository());
         mBroker.add(mFileSourceName, mFileSource);
       }
     }

@@ -810,7 +810,7 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           <classname>jccl::</classname>, and the * to a
           <classname>Ptr</classname>:</para>
 
-          <programlisting>bool myapp::configAdd(jccl::ConfigChunkPtr chunk)</programlisting>
+          <programlisting>bool myapp::configAdd(jccl::ConfigElementPtr element)</programlisting>
 
           <para>The above illustrates the changes with the VR Juggler
           configuration system that affect application programmers. To
@@ -818,11 +818,11 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           namespace, and a special &#34;smart-pointer&#34; type is used
           instead of C/C++ pointers. Porting your config code should be very
           straight forward: just search and replace <classname>vjConfigChunk*</classname>
-          with <classname>jccl::ConfigChunkPtr</classname>.</para>
+          with <classname>jccl::ConfigElementPtr</classname>.</para>
         </listitem>
 
         <listitem>
-          <para>Once you have a <classname>jccl::ConfigChunkPtr</classname>
+          <para>Once you have a <classname>jccl::ConfigElementPtr</classname>
           object, the signature of the <methodname>getProperty()</methodname>
           method has changed. In VR Juggler 1.0 code, a property value of type
           <type>int</type> would have been requested as follows:</para>
@@ -836,11 +836,11 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           <para>In the new API, the desired type is passed as a template
           parameter, as shown below:</para>
 
-          <programlisting>int prop_value = chunk-&#62;getProperty&#60;int&#62;(&#34;someInt&#34;);</programlisting>
+          <programlisting>int prop_value = element-&#62;getProperty&#60;int&#62;(&#34;someInt&#34;);</programlisting>
 
           <para>All the types you would have used with the cast operator
           including <classname>std::string</classname> and
-          <classname>jccl::ConfigChunkPtr</classname> (formerly
+          <classname>jccl::ConfigElementPtr</classname> (formerly
           <classname>vjConfigChunk*</classname>) can be used for the template
           parameter. Other types such as <type>unsigned int</type>,
           <type>short</type>, etc. that were not directly supported by the old
@@ -852,22 +852,22 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           <quote>Name</quote>. To get an element&#39;s name, use the
           <methodname>getName()</methodname> method, as so:</para>
 
-          <programlisting>std::string name = chunk-&#62;getName();</programlisting>
+          <programlisting>std::string name = element-&#62;getName();</programlisting>
         </listitem>
 
         <listitem>
-          <para>The method <methodname>jccl::ConfigChunk::getType()</methodname>
-          has been replaced with <methodname>jccl::ConfigChunk::getDescToken()</methodname>,
+          <para>The method <methodname>jccl::ConfigElement::getType()</methodname>
+          has been replaced with <methodname>jccl::ConfigElement::getID()</methodname>,
           which returns a <classname>std::string</classname> object. The value
           of the returned string corresponds to the token for the
           configuration element in the definition file. Most existing code
           will change from the following:</para>
 
-          <programlisting>std::string type = (std::string) chunk-&#62;getType();</programlisting>
+          <programlisting>std::string type = (std::string) element-&#62;getType();</programlisting>
 
           <para>to this:</para>
 
-          <programlisting>std::string type = chunk-&#62;getDescToken();</programlisting>
+          <programlisting>std::string type(element-&#62;getID());</programlisting>
         </listitem>
 
         <listitem>

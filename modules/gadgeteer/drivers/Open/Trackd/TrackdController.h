@@ -82,17 +82,17 @@ public:
    /**
     * Configure the trackd controller with the given configuration element.
     *
-    * @pre c must be a chunk that has trackd controller config information
-    * @post If c is a valid config chunk, the device is configured using its
+    * @pre e must be a element that has trackd controller config information
+    * @post If e is a valid config element, the device is configured using its
     *       contents.  Otherwise, configuration fails and false is returned
     *       to the caller.
     *
-    * ARGS: c - A pointer to a config chunk.
+    * @param c A pointer to a config element.
     *
     * @return true if the device was configured succesfully; false if the
     *         configuration element is invalid.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begins sampling. */
    int startSampling() { return 1;}
@@ -111,11 +111,8 @@ public:
     */
    void updateData();
 
-   /** Returns what chunk type is associated with this class. */
-   static std::string getChunkType ()
-   {
-      return std::string("TrackdController");
-   }
+   /** Returns what element type is associated with this class. */
+   static std::string getElementType();
 
    /** Returns digital data. */
    virtual const DigitalData getDigitalData(int devNum=0)

@@ -47,13 +47,14 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(JCCL_CONFIG_LIBRARY)
 
 SRCS= \
-	ChunkDesc.cpp \
-	ChunkDescDB.cpp \
-	ChunkFactory.cpp \
-	ConfigChunk.cpp \
-	ConfigChunkDB.cpp \
-	ParseUtil.cpp \
-	PropertyDesc.cpp
+	ConfigDefinition.cpp		\
+	ConfigDefinitionReader.cpp      \
+	ConfigDefinitionRepository.cpp	\
+	ConfigElement.cpp		\
+	Configuration.cpp		\
+	ElementFactory.cpp		\
+	ParseUtil.cpp			\
+	PropertyDefinition.cpp
 
 EXTRA_INCLUDES= \
 	-I$(top_srcdir)/config \

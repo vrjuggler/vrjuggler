@@ -38,7 +38,7 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
@@ -115,29 +115,34 @@ MotionStar::~MotionStar()
    stopSampling();
 }
 
+std::string MotionStar::getElementType()
+{
+   return "motion_star";
+}
+
 // ----------------------------------------------------------------------------
-// Configure the MotionStar with the given config chunk.
+// Configure the MotionStar with the given config element.
 // ----------------------------------------------------------------------------
-bool MotionStar::config(jccl::ConfigChunkPtr c)
+bool MotionStar::config(jccl::ConfigElementPtr e)
 {
    bool retval(false);
 
-   if ( Input::config(c) &&  Position::config(c) )
+   if ( Input::config(e) &&  Position::config(e) )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "       MotionStar::config(jccl::ConfigChunkPtr)\n"
+         << "MotionStar::config(jccl::ConfigElementPtr)\n"
          << vprDEBUG_FLUSH;
 
       // Configure mMotionStar with the config info.
-      setAddressName(c->getProperty<std::string>("address").c_str());
-      setServerPort((unsigned short) c->getProperty<int>("serverPort"));
-      setMasterStatus(c->getProperty<bool>("serverType"));
-      setHemisphere((unsigned char) c->getProperty<int>("hemisphere"));
-      setNumBirds((unsigned int) c->getProperty<int>("num"));
-      setBirdFormat((unsigned int) c->getProperty<int>("bformat"));
-      setRunMode((unsigned int) c->getProperty<int>("mode"));
-      setReportRate((unsigned char) c->getProperty<int>("reportRate"));
-      setMeasurementRate(c->getProperty<float>("measurementRate"));
+      setAddressName(e->getProperty<std::string>("address").c_str());
+      setServerPort((unsigned short) e->getProperty<int>("server_port"));
+      setMasterStatus(e->getProperty<bool>("server_type"));
+      setHemisphere((unsigned char) e->getProperty<int>("hemisphere"));
+      setNumBirds((unsigned int) e->getProperty<int>("number_of_birds"));
+      setBirdFormat((unsigned int) e->getProperty<int>("data_format"));
+      setRunMode((unsigned int) e->getProperty<int>("mode"));
+      setReportRate((unsigned char) e->getProperty<int>("report_rate"));
+      setMeasurementRate(e->getProperty<float>("measurement_rate"));
       retval = true;
    }
 

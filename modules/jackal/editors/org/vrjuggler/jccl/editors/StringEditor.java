@@ -44,7 +44,7 @@ public class StringEditor
     */
    public String getAsText()
    {
-      return value;
+      return mValue;
    }
 
    /**
@@ -82,7 +82,7 @@ public class StringEditor
     */
    public Object getValue()
    {
-      return value;
+      return mValue;
    }
 
    /**
@@ -90,12 +90,12 @@ public class StringEditor
     */
    public void setValue(Object value)
    {
-      this.value = (String)value;
+      this.mValue = (String)value;
       firePropertyChange();
    }
 
    /**
     * The String being edited.
     */
-   private String value = null;
+   private String mValue = null;
 }

@@ -45,9 +45,9 @@
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/ConfigElementPtr.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 
 
 extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
@@ -112,36 +112,36 @@ public:
       return(std::string("SwapLockWiredPlugin"));
    }
 
-   /** Add the pending chunk to the configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff chunk was successfully added to configuration.
+   /** Add the pending element to the configuration.
+    *  PRE: configCanHandle (element) == true.
+    *  @return true iff element was successfully added to configuration.
     */
-   bool configAdd(jccl::ConfigChunkPtr chunk);
+   bool configAdd(jccl::ConfigElementPtr element);
    
-   /** Remove the pending chunk from the current configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff the chunk (and any objects it represented)
+   /** Remove the pending element from the current configuration.
+    *  PRE: configCanHandle (element) == true.
+    *  @return true iff the element (and any objects it represented)
     *          were successfully removed.
     */
-   bool configRemove(jccl::ConfigChunkPtr chunk);
+   bool configRemove(jccl::ConfigElementPtr element);
 
-   /** Checks if this handler can process chunk.
-    *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+    *  Typically, an implementation of handler will check the element's
     *  description name/token to decide if it knows how to deal with
     *  it.
-    *  @return true iff this handler can process chunk.
+    *  @return true iff this handler can process element.
     */
-   bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 private:
    /**
-    * Helper function that determaines if the given ConfigChunk is a SwapLockWiredPlugin.
+    * Helper function that determaines if the given ConfigElement is a SwapLockWiredPlugin.
     */
-   bool recognizeSwapLockWiredPluginConfig(jccl::ConfigChunkPtr chunk);
+   bool recognizeSwapLockWiredPluginConfig(jccl::ConfigElementPtr element);
    
    /**
-    * Returns the string representation of the chunk type used for the SwapLockWiredPlugin
+    * Returns the string representation of the element type used for the SwapLockWiredPlugin
     */   
-   static std::string getChunkType() { return std::string( "SwapLockWiredPlugin" ); }
+   static std::string getElementType() { return std::string( "swap_lock_wired_plugin" ); }
    
    vpr::ReturnStatus ConnectToWiredParallel();
    vpr::ReturnStatus Init();

@@ -112,10 +112,9 @@ public:
          return NULL;
    }
 
-   static std::string getChunkType() 
-   { return "PosProxy"; }
+   static std::string getElementType();
 
-   bool config(jccl::ConfigChunkPtr chunk);
+   bool config(jccl::ConfigElementPtr element);
 
    virtual Input* getProxiedInputDevice()
    {

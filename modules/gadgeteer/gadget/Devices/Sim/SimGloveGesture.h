@@ -57,7 +57,7 @@ public:
    /** Constructs a SimGloveGesture. */
    SimGloveGesture() {;}
 
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /**
     * Get the current gesture.
@@ -80,7 +80,7 @@ public:
    /** Updates the device data. */
    void updateData ();
 
-   static std::string getChunkType() { return std::string("SimGloveGesture");}
+   static std::string getElementType();
 
    /*** These are not supported in sim ***/
    void saveTrainedFile(std::string fileName)

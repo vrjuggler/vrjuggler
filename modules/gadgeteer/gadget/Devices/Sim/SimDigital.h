@@ -60,7 +60,7 @@ public:
    SimDigital();
    virtual ~SimDigital();
 
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
    virtual int startSampling() { return 1; }
@@ -70,7 +70,7 @@ public:
    /** Updates the data. */
    virtual void updateData();
 
-   static std::string getChunkType() { return std::string("SimDigital");}
+   static std::string getElementType();
 
    virtual std::vector<KeyModPair> getKeys() { return mSimKeys; }
 

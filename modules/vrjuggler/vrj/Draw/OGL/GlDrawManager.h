@@ -50,15 +50,20 @@
 #   include <GL/glu.h>
 #endif
 
+#include <jccl/Config/ConfigElementPtr.h>
+
 #include <vrj/Draw/DrawManager.h>
 //#include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlUserData.h>
 
-namespace jccl {
-    class ConfigChunkDB;
-};
+/*
+namespace jccl
+{
+   class Configuration;
+}
+*/
 
 /*
 namespace gadget {
@@ -97,9 +102,9 @@ public:
 
    /**
     * Function to config API specific stuff.
-    * Takes a chunkDB and extracts API specific stuff
+    * Takes a jccl::Configuration and extracts API-specific stuff.
     */
-   //**//virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
+   //**//virtual void configInitial(jccl::Configuration*  cfg);
 
    /** Starts the control loop. */
    virtual void start();
@@ -150,29 +155,29 @@ public:
 
    //void setDisplayManager(DisplayManager* _dispMgr);
 
-public: // Chunk handlers
+public: // Config element handlers
    /**
-    * Adds the chunk to the configuration.
+    * Adds the element to the configuration.
     *
-    * @pre configCanHandle(chunk) == true
+    * @pre configCanHandle(element) == true
     * @return success
     */
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
+   virtual bool configAdd(jccl::ConfigElementPtr element);
 
    /**
-    * Removes the chunk from the current configuration.
+    * Removes the element from the current configuration.
     *
-    * @pre configCanHandle(chunk) == true
+    * @pre configCanHandle(element) == true
     * @return success
     */
-   virtual bool configRemove(jccl::ConfigChunkPtr chunk);
+   virtual bool configRemove(jccl::ConfigElementPtr element);
 
    /**
-    * Can the handler handle the given chunk?
+    * Can the handler handle the given config element?
     *
     * @return true if we can handle it; false if we can't.
     */
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
 
 public:

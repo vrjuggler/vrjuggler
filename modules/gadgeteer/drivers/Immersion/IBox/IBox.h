@@ -104,7 +104,7 @@ public:
    }
    ~IBox();
 
-   virtual bool config( jccl::ConfigChunkPtr c );
+   virtual bool config(jccl::ConfigElementPtr e);
 
    // Input Pure Virtual Functions
    int startSampling();
@@ -112,7 +112,7 @@ public:
    int sample();
    void updateData();
 
-   static std::string getChunkType() { return std::string( "IBox" ); }
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

@@ -35,39 +35,24 @@ import java.util.EventObject;
 
 /**
  * This provides detailed information to ConfigBroker observers as to how the
- * ConfigChunks and ChunkDescs therein have changed.
+ * configuration elements therein have changed.
  */
 public class ConfigEvent
    extends EventObject
 {
    /**
     * Constructs a new ConfigEvent fired from the given source object
-    * relating to the given resource and ChunkDesc.
+    * relating to the given resource and configuration element.
     *
     * @param source     the source of the event
     * @param resource   the resource that changed
-    * @param desc       the chunk desc affected by the change
+    * @param elt        the element affected by the change
     */
-   public ConfigEvent(Object source, String resource, ChunkDesc desc)
+   public ConfigEvent(Object source, String resource, ConfigElement elt)
    {
       super(source);
-      this.resource = resource;
-      this.desc = desc;
-   }
-
-   /**
-    * Constructs a new ConfigEvent fired from the given source object
-    * relating to the given resource and ConfigChunk.
-    *
-    * @param source     the source of the event
-    * @param resource   the resource that changed
-    * @param chunk      the config chunk affected by the change
-    */
-   public ConfigEvent(Object source, String resource, ConfigChunk chunk)
-   {
-      super(source);
-      this.resource = resource;
-      this.chunk = chunk;
+      mResource = resource;
+      mElement = elt;
    }
 
    /**
@@ -75,43 +60,24 @@ public class ConfigEvent
     */
    public String getResource()
    {
-      return resource;
+      return mResource;
    }
 
    /**
-    * Gets the ChunkDesc associated with this event if there was one.
+    * Gets the configuration element associated with this event if there was
+    * one.
     *
-    * @return  the affected chunk desc; null if this event does not relate to a
-    *          chunk desc
+    * @return  the affected element ; null if this event does not relate to a
+    *          element
     */
-   public ChunkDesc getChunkDesc()
+   public ConfigElement getElement()
    {
-      return desc;
+      return mElement;
    }
 
-   /**
-    * Gets the ConfigChunk associated with this event if there was one.
-    *
-    * @return  the affected config chunk; null if this event does not relate to
-    *          a config chunk
-    */
-   public ConfigChunk getConfigChunk()
-   {
-      return chunk;
-   }
+   /** The resource associated with this event. */
+   private String mResource;
 
-   /**
-    * The resource associated with this event.
-    */
-   private String resource;
-
-   /**
-    * The ChunkDesc associated with this event.
-    */
-   private ChunkDesc desc;
-
-   /**
-    * The ConfigChunk associated with this event.
-    */
-   private ConfigChunk chunk;
+   /** The element associated with this event. */
+   private ConfigElement mElement;
 }

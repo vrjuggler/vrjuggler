@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/GestureProxy.h>
 
@@ -39,19 +39,25 @@
 namespace gadget
 {
 
-bool GestureProxy::config(jccl::ConfigChunkPtr chunk)
+std::string GestureProxy::getElementType()
+{
+   return "gesture_proxy";
+}
+
+bool GestureProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ GESTURE PROXY config() -----------------\n"),
       std::string("\n"));
 
-   vprASSERT(chunk->getDescToken() == "GestureProxy");
-   bool base_config = Proxy::config(chunk);
-   if(!base_config)
+   vprASSERT(element->getID() == getElementType());
+
+   if ( ! Proxy::config(element) )
+   {
       return false;
+   }
 
-
-   mDeviceName = chunk->getProperty<std::string>("device");
+   mDeviceName = element->getProperty<std::string>("device");
 
    refresh();
 

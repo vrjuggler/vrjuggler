@@ -32,9 +32,9 @@
 
 #include <iostream>
 
-#include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Config/ChunkFactory.h>
-#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ConfigDefinitionRepository.h>
+#include <jccl/Config/ElementFactory.h>
+#include <jccl/Config/Configuration.h>
 #include <gadget/InputManager.h>
 #include <gadget/Type/PositionInterface.h>
 #include <vrj/Math/Coord.h>
@@ -46,34 +46,31 @@
 
 int main()
 {
-   // --- Load chunk database -- //
-   jccl::ChunkDescDB desc;
-   bool load_worked = desc.load(CHUNK_DESC_LOCATION);
-   jccl::ChunkFactory::instance()->addDescs(&desc);
+   // --- Load configuration definitions -- //
+   jccl::ConfigElementRepository defs;
+   bool load_worked = defs.load(CHUNK_DESC_LOCATION);
+   jccl::ElementFactory::instance()->addDefs(&defs);
 
    if(!load_worked)
-      std::cerr << "Could not load chunkDesc's\n" << std::flush;
+      std::cerr << "Could not load definitions's\n" << std::flush;
 
-   std::cout << desc << "\n----------------------------------------"
+   std::cout << defs << "\n----------------------------------------"
              << std::endl;
 
    // -- Load config -- //
-   jccl::ConfigChunkDB *chunkdb = new jccl::ConfigChunkDB();
-   load_worked = chunkdb->load(CONFIG_LOCATION);
+   jccl::Configuration cfg;
+   load_worked = cfg.load(CONFIG_LOCATION);
    if(!load_worked)
       std::cerr << "Could not load config file\n" << std::flush;
 
-   std::cout << "Printing Chunk DB:" << std::endl;
-   std::cout << (*chunkdb);
-   std::cout << "endochunks" << std::endl;
+   std::cout << "Printing configuration:" << std::endl;
+   std::cout << cfg << std::endl;
 
    gadget::InputManager *input_manager = new gadget::InputManager;
    std::cout << "vjInputManager created" << std::endl;
 
    // --- configure the input manager -- //
-   for ( jccl::ConfigChunkDB::iterator i = chunkdb->begin();
-         i != chunkdb->end();
-         i++ )
+   for ( jccl::Configuration::iterator i = cfg.begin(); i != cfg.end(); ++i )
    {
       input_manager->configAdd(*i);
    }

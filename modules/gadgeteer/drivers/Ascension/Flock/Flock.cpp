@@ -42,7 +42,7 @@
 #include <vpr/System.h>
 #include <vpr/Util/FileUtils.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Ascension/Flock/Flock.h>
@@ -84,21 +84,25 @@ Flock::Flock(const char* const port, const int& baud, const int& sync,
    ;
 }
 
-bool Flock::config(jccl::ConfigChunkPtr c)
+std::string Flock::getElementType()
+{
+   return "flock";
+}
+
+bool Flock::config(jccl::ConfigElementPtr e)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "   Flock::Flock(jccl::ConfigChunk*)"
-         << std::endl << vprDEBUG_FLUSH;
+      << "Flock::Flock(jccl::ConfigElementPtr)\n" << vprDEBUG_FLUSH;
 
    // read in Position's config stuff,
    // --> this will be the port and baud fields
-   if(! (Input::config(c) && Position::config(c)))
+   if(! (Input::config(e) && Position::config(e)))
    {
       return false;
    }
 
-   mPortName = c->getProperty<std::string>("port");
-   mBaudRate = c->getProperty<int>("baud");
+   mPortName = e->getProperty<std::string>("port");
+   mBaudRate = e->getProperty<int>("baud");
 
    // keep FlockStandalone's port and baud members in sync with Input's port
    // and baud members.
@@ -106,21 +110,21 @@ bool Flock::config(jccl::ConfigChunkPtr c)
    mFlockOfBirds.setBaudRate( mBaudRate );
 
    // set mFlockOfBirds with the config info.
-   mFlockOfBirds.setSync( c->getProperty<int>("sync") );
-   mFlockOfBirds.setBlocking( c->getProperty<bool>("blocking") );
-   mFlockOfBirds.setNumBirds( c->getProperty<int>("num") );
-   mFlockOfBirds.setTransmitter( c->getProperty<int>("transmitter") );
-   mFlockOfBirds.setExtendedRange( c->getProperty<bool>("extendedRange") );
-   mFlockOfBirds.setHemisphere( (BIRD_HEMI) c->getProperty<int>("hemi") ); //LOWER_HEMI
-   mFlockOfBirds.setFilterType( (BIRD_FILT) c->getProperty<int>("filt") ); //
+   mFlockOfBirds.setSync( e->getProperty<int>("sync_style") );
+   mFlockOfBirds.setBlocking( e->getProperty<bool>("blocking") );
+   mFlockOfBirds.setNumBirds( e->getProperty<int>("number_of_birds") );
+   mFlockOfBirds.setTransmitter( e->getProperty<int>("transmitter_id") );
+   mFlockOfBirds.setExtendedRange( e->getProperty<bool>("extended_range") );
+   mFlockOfBirds.setHemisphere( (BIRD_HEMI) e->getProperty<int>("hemisphere") ); //LOWER_HEMI
+   mFlockOfBirds.setFilterType( (BIRD_FILT) e->getProperty<int>("filter") ); //
 
    // sanity check the report rate
-   char r = c->getProperty<std::string>("report").c_str()[0];
+   char r = e->getProperty<std::string>("report").c_str()[0];
    if ((r != 'Q') && (r != 'R') &&
        (r != 'S') && (r != 'T'))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "   illegal report rate from configChunk, defaulting to every other cycle (R)"
+         << "   illegal report rate from config element, defaulting to every other cycle (R)"
          << std::endl << vprDEBUG_FLUSH;
       mFlockOfBirds.setReportRate( 'R' );
    }
@@ -140,7 +144,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
       << std::endl << vprDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
-   std::string calfile = c->getProperty<std::string>("calfile");
+   std::string calfile = e->getProperty<std::string>("calibration_file");
    mFlockOfBirds.initCorrectionTable(vpr::replaceEnvVars(calfile).c_str());
 
    return true;

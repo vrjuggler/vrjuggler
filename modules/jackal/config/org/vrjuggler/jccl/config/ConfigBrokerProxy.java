@@ -60,7 +60,7 @@ public class ConfigBrokerProxy
       }
       if (bean.getBean() instanceof ConfigBroker)
       {
-         broker = (ConfigBroker)bean.getBean();
+         mBroker = (ConfigBroker)bean.getBean();
       }
       else
       {
@@ -69,18 +69,18 @@ public class ConfigBrokerProxy
    }
 
    /**
-    * Adds the given resources in the given data source to this broker.
+    * Adds the given resources in the given data source to this mBroker.
     *
     * @param name          the unique name to assign to the resource
     * @param dataSource    the data source from which to retrieve the data
     */
    public void add(String name, DataSource dataSource)
    {
-      broker.add(name, dataSource);
+      mBroker.add(name, dataSource);
    }
 
    /**
-    * Removes the resources in the given data source from this broker.
+    * Removes the resources in the given data source from this mBroker.
     *
     * @param name          the name of the data source to remove
     *
@@ -88,11 +88,11 @@ public class ConfigBrokerProxy
     */
    public DataSource remove(String name)
    {
-      return broker.remove(name);
+      return mBroker.remove(name);
    }
 
    /**
-    * Gets the data source associated with the given name in this broker.
+    * Gets the data source associated with the given name in this mBroker.
     *
     * @param name          the unique name assigned to the data source
     *
@@ -100,12 +100,12 @@ public class ConfigBrokerProxy
     */
    public DataSource get(String name)
    {
-      return broker.get(name);
+      return mBroker.get(name);
    }
 
    /**
     * Tests if the data source with the given name is being managed by this
-    * broker.
+    * mBroker.
     *
     * @param name    the name of the data source to check
     *
@@ -114,111 +114,52 @@ public class ConfigBrokerProxy
     */
    public boolean containsDataSource(String name)
    {
-      return broker.containsDataSource(name);
+      return mBroker.containsDataSource(name);
    }
 
    /**
-    * Adds the given config chunk to the current context. If the context
-    * contains more than one resource, a dialog will prompt the user for which
-    * resource they wish to add the chunk to.
+    * Adds the given configuration element to the current context. If the
+    * context contains more than one resource, a dialog will prompt the user
+    * for which resource they wish to add the element to.
     *
-    * @param context    the context in which to add the chunk
-    * @param chunk      the chunk to add
+    * @param context    the context in which to add the element
+    * @param elt        the configuration element to add
     *
     * @return  true if the addition was successful, false otherwise
     */
-   public boolean add(ConfigContext context, ConfigChunk chunk)
+   public boolean add(ConfigContext context, ConfigElement elt)
    {
-      return broker.add(context, chunk);
+      return mBroker.add(context, elt);
    }
 
    /**
-    * Removes the given config chunk from the current context. If the chunk
-    * appears in more than one resource in the context, a dialog will prompt the
-    * user for which resource they wish to remove the chunk from. If the chunk
-    * does not appear in any resource in the context, this method will return
-    * false.
+    * Removes the given configuration element from the current context. If the
+    * element appears in more than one resource in the context, a dialog will
+    * prompt the user for which resource they wish to remove the element from.
+    * If the element does not appear in any resource in the context, this method
+    * will return false.
     *
-    * @param context    the context from which to remove the chunk
-    * @param chunk      the chunk to remove
+    * @param context    the context from which to remove the element
+    * @param elt        the element to remove
     *
     * @return  true if the removal was successful, false if the user cancelled
-    *          the removal or the chunk does not exist in any resource
+    *          the removal or the element does not exist in any resource
     */
-   public boolean remove(ConfigContext context, ConfigChunk chunk)
+   public boolean remove(ConfigContext context, ConfigElement elt)
    {
-      return broker.remove(context, chunk);
-   }
-
-   /**
-    * Adds the given chunk description to the current context. If the context
-    * contains more than one resource, a dialog will prompt the user for which
-    * resource they wish to add the description to.
-    *
-    * @param context    the context in which to add the description
-    * @param desc       the description to add
-    *
-    * @return  true if the addition was successful, false otherwise
-    */
-   public boolean add(ConfigContext context, ChunkDesc desc)
-   {
-      return broker.add(context, desc);
-   }
-
-   /**
-    * Removes the given chunk description from the current context. If the
-    * description appears in more than one resource in the context, a dialog
-    * will prompt the user for which resource they wish to remove the
-    * description from. If the description does not appear in any resource in
-    * the context, this method will return false.
-    *
-    * @param context    the context from which to remove the description
-    * @param desc       the description to remove
-    *
-    * @return  true if the removal was successful, false if the user cancelled
-    *          the removal or the description does not exist in any resource
-    */
-   public boolean remove(ConfigContext context, ChunkDesc desc)
-   {
-      return broker.remove(context, desc);
-   }
-
-   /**
-    * Gets a list of all the configuration descriptions within the given
-    * context.
-    *
-    * @param context    the context from which to retrieve chunk descs
-    *
-    * @return  a list of the chunk descs
-    */
-   public List getDescs(ConfigContext context)
-   {
-      return broker.getDescs(context);
+      return mBroker.remove(context, elt);
    }
 
    /**
     * Gets a list of all the configuration elements within the given context.
     *
-    * @param context    the context from which to retrieve config chunks
+    * @param context    the context from which to retrieve elements
     *
-    * @return  a list of the config chunks
+    * @return  a list of the elements
     */
-   public List getChunks(ConfigContext context)
+   public List getElements(ConfigContext context)
    {
-      return broker.getChunks(context);
-   }
-
-   /**
-    * Gets a list of all the configuration descriptions within the given
-    * resource.
-    *
-    * @param resource   the name of the resource in which to get descriptions
-    *
-    * @return  a list of the chunk descs in the resource if it has any
-    */
-   public List getDescsIn(String resource)
-   {
-      return broker.getDescsIn(resource);
+      return mBroker.getElements(context);
    }
 
    /**
@@ -227,59 +168,69 @@ public class ConfigBrokerProxy
     *
     * @param resource   the name of the resource in which to get elements
     *
-    * @return  a list of the config chunks in the resource if it has any
+    * @return  a list of the elements in the resource if it has any
     */
-   public List getChunksIn(String resource)
+   public List getElementsIn(String resource)
    {
-      return broker.getChunksIn(resource);
+      return mBroker.getElementsIn(resource);
    }
 
    /**
     * Gets a list of the names all the resources currently being managed by this
-    * broker.
+    * mBroker.
     *
     * @return  a list of the resource names
     */
    public List getResourceNames()
    {
-      return broker.getResourceNames();
+      return mBroker.getResourceNames();
    }
 
    /**
-    * Adds the given listener to receive config events from this broker.
+    * Gets the repository in which configuration definitions are stored.
+    *
+    * @return  the repository of config definitions
+    */
+   public ConfigDefinitionRepository getRepository()
+   {
+      return mBroker.getRepository();
+   }
+
+   /**
+    * Adds the given listener to receive config events from this mBroker.
     */
    public void addConfigListener(ConfigListener listener)
    {
-      broker.addConfigListener(listener);
+      mBroker.addConfigListener(listener);
    }
 
    /**
-    * Removes the given listener from receiving config events from this broker.
+    * Removes the given listener from receiving config events from this mBroker.
     */
    public void removeConfigListener(ConfigListener listener)
    {
-      broker.removeConfigListener(listener);
+      mBroker.removeConfigListener(listener);
    }
 
    /**
-    * Adds the given listener to receive config broker events from this broker.
+    * Adds the given listener to receive config broker events from this mBroker.
     */
    public void addConfigBrokerListener(ConfigBrokerListener listener)
    {
-      broker.addConfigBrokerListener(listener);
+      mBroker.addConfigBrokerListener(listener);
    }
 
    /**
     * Removes the given resource listener from receiving confi broker events
-    * from this broker.
+    * from this mBroker.
     */
    public void removeConfigBrokerListener(ConfigBrokerListener listener)
    {
-      broker.removeConfigBrokerListener(listener);
+      mBroker.removeConfigBrokerListener(listener);
    }
 
    /**
     * The config broker instance this object is proxy to.
     */
-   private ConfigBroker broker;
+   private ConfigBroker mBroker;
 }

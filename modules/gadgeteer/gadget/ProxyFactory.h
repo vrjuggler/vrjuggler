@@ -37,7 +37,7 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 #include <gadget/Type/Proxy.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Singleton.h>
 #include <jccl/RTRC/DependencyManager.h>
 
@@ -63,10 +63,10 @@ public:
     * Creates the proxy.
     * @return NULL if the proxy failed creation or configuration.
     */
-   virtual Proxy* createProxy(jccl::ConfigChunkPtr chunk) const = 0;
+   virtual Proxy* createProxy(jccl::ConfigElementPtr element) const = 0;
 
-   /** Gets the string desc of the type of chunk we can create. */
-   virtual std::string    getChunkType() const = 0;
+   /** Gets the string definition of the type of element we can create. */
+   virtual std::string getElementType() const = 0;
 };
 
 
@@ -80,11 +80,11 @@ public:
     * Creates the proxy.
     * @return NULL if proxy failed creation or configuration.
     */
-   Proxy* createProxy(jccl::ConfigChunkPtr chunk) const
+   Proxy* createProxy(jccl::ConfigElementPtr element) const
    {
       PROXY* new_proxy = new PROXY;             // Create new proxy
-      bool success = new_proxy->config(chunk);  // Attempt to configure it
-                                                // config calls inputmgr registrator
+      bool success = new_proxy->config(element);  // Attempt to configure it
+                                                  // config calls inputmgr registrator
 
       if(success)          // Configured succesfully
       {
@@ -97,8 +97,10 @@ public:
       }
    }
 
-   std::string   getChunkType() const
-   { return PROXY::getChunkType(); }
+   std::string getElementType() const
+   {
+      return PROXY::getElementType();
+   }
 };
 
 
@@ -124,21 +126,21 @@ public:
    /**
     * Queries if the factory knows about the given proxy.
     *
-    * @pre chunk != NULL, chunk is a valid chunk.
-    * @param chunk The chunk we are requesting about knowledge to create.
+    * @pre element != NULL, element is a valid config element.
+    * @param element The element we are requesting about knowledge to create.
     * @return true if the factory knows how to create the proxy; false if not.
     */
-   bool recognizeProxy(jccl::ConfigChunkPtr chunk);
+   bool recognizeProxy(jccl::ConfigElementPtr element);
 
    /**
     * Loads the specified proxy.
     *
-    * @pre recognizeDevice(chunk) == true.
-    * @param chunk The specification of the proxy to load.
+    * @pre recognizeDevice(element) == true.
+    * @param element The specification of the proxy to load.
     * @return NULL is returned if the proxy failed to load.
     *         Otherwise, a pointer to the loaded proxy is returned.
     */
-   Proxy* loadProxy(jccl::ConfigChunkPtr chunk);
+   Proxy* loadProxy(jccl::ConfigElementPtr element);
 
 private:
 
@@ -147,7 +149,7 @@ private:
     * @return -1 is returned if the constructor is not found.
     *         Otherwise, the index of the constructor is returned.
     */
-   int   findConstructor(jccl::ConfigChunkPtr chunk);
+   int findConstructor(jccl::ConfigElementPtr element);
 
 private:
    std::vector<ProxyConstructorBase*> mConstructors;   /**<  List of the proxy constructors */

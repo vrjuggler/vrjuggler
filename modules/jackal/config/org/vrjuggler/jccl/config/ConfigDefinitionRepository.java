@@ -32,6 +32,8 @@
 package org.vrjuggler.jccl.config;
 
 import java.util.*;
+import javax.swing.event.EventListenerList;
+import org.vrjuggler.jccl.config.event.*;
 
 /**
  * Stores a set of configuration definitions that can be retrieved by name and
@@ -65,6 +67,9 @@ public class ConfigDefinitionRepository
 
       // Add the definition into the repository
       def_version_map.put(new Integer(def.getVersion()), def);
+
+      // Notify listeners
+      fireDefinitionAdded(def);
    }
 
    /**
@@ -116,8 +121,88 @@ public class ConfigDefinitionRepository
    }
 
    /**
+    * Gets a list of the latest version all the definitions in the repository.
+    *
+    * @return  a list of configuration definitions
+    */
+   public synchronized List getAllLatest()
+   {
+      List defs = new ArrayList();
+
+      // Get the lastes version for each definition
+      for (Iterator itr = mDefs.keySet().iterator(); itr.hasNext(); )
+      {
+         ConfigDefinition def = get((String)itr.next());
+         defs.add(def);
+      }
+
+      return defs;
+   }
+
+   /**
+    * Adds the given object as a listener for changes to this repository.
+    */
+   public void addConfigDefinitionRepositoryListener(ConfigDefinitionRepositoryListener listener)
+   {
+      mListeners.add(ConfigDefinitionRepositoryListener.class, listener);
+   }
+
+   /**
+    * Removes the given object as a listener for changes to this repository.
+    */
+   public void removeConfigDefinitionRepositoryListener(ConfigDefinitionRepositoryListener listener)
+   {
+      mListeners.remove(ConfigDefinitionRepositoryListener.class, listener);
+   }
+
+   /**
+    * Notifies listeners that the given configuration definition has been added
+    * to the repository.
+    */
+   protected void fireDefinitionAdded(ConfigDefinition def)
+   {
+      ConfigDefinitionRepositoryEvent evt = null;
+      Object[] listeners = mListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigDefinitionRepositoryListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigDefinitionRepositoryEvent(this, def);
+            }
+            ((ConfigDefinitionRepositoryListener)listeners[i+1]).configDefinitionAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that the given configuration definition has been
+    * removed from the repository.
+    */
+   protected void fireDefinitionRemoved(ConfigDefinition def)
+   {
+      ConfigDefinitionRepositoryEvent evt = null;
+      Object[] listeners = mListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigDefinitionRepositoryListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigDefinitionRepositoryEvent(this, def);
+            }
+            ((ConfigDefinitionRepositoryListener)listeners[i+1]).configDefinitionRemoved(evt);
+         }
+      }
+   }
+
+   /**
     * A map of definition names to a map of definition versions to the
     * definitions themselves.
     */
    private Map mDefs;
+
+   /** All listeners interested in this repository. */
+   private EventListenerList mListeners = new EventListenerList();
 }

@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gmtl/Output.h>
 #include <gmtl/Generate.h>
@@ -46,9 +46,9 @@
 namespace vrj
 {
 
-void CameraProjection::config(jccl::ConfigChunkPtr chunk)
+void CameraProjection::config(jccl::ConfigElementPtr element)
 {
-   Projection::config(chunk);
+   Projection::config(element);
 }
 
 /** Calculate the viewmatrix and frustum for the camera

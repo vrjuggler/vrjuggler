@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/GloveProxy.h>
 
@@ -39,18 +39,25 @@
 namespace gadget
 {
 
-bool GloveProxy::config(jccl::ConfigChunkPtr chunk)
+std::string GloveProxy::getElementType()
+{
+   return "glove_proxy";
+}
+
+bool GloveProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ Glove PROXY config() -----------------\n"),
       std::string("\n"));
-   vprASSERT(chunk->getDescToken() == "GloveProxy");
-   bool base_config = Proxy::config(chunk);
-   if(!base_config)
-      return false;
+   vprASSERT(element->getID() == getElementType());
 
-   mUnitNum = chunk->getProperty<int>("unit");
-   mDeviceName = chunk->getProperty<std::string>("device");
+   if ( ! Proxy::config(element) )
+   {
+      return false;
+   }
+
+   mUnitNum = element->getProperty<int>("unit");
+   mDeviceName = element->getProperty<std::string>("device");
 
    refresh();
 

@@ -35,10 +35,8 @@ package org.vrjuggler.vrjconfig.ui;
 import java.awt.*;
 import javax.swing.*;
 
-import org.vrjuggler.jccl.config.ConfigChunk;
-import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.jccl.editors.ConfigChunkPropertySheet;
-import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editors.ConfigElementPropertySheet;
 import org.vrjuggler.vrjconfig.ui.DisplayPlacer;
 import org.vrjuggler.vrjconfig.ui.placer.*;
 
@@ -64,7 +62,7 @@ public class DisplayEditor
       displayPlacer.setDesktopSize(new Dimension(1600,1200));
 
       // Init the icons
-      ClassLoader loader = BeanJarClassLoader.instance();
+      ClassLoader loader = getClass().getClassLoader();
       displayEditorBasicBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/displayeditor_basic32.png")));
       displayEditor3DBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/displayeditor_3d32.png")));
 
@@ -80,14 +78,14 @@ public class DisplayEditor
 //      mainScrollPane.resetToPreferredSizes();
    }
 
-   public void setConfigContext(ConfigContext context)
+   public void setContext(ConfigContext context)
    {
-      displayPlacer.setConfigContext(context);
+      displayPlacer.setContext(context);
    }
 
-   public ConfigContext getConfigContext()
+   public ConfigContext getContext()
    {
-      return displayPlacer.getConfigContext();
+      return displayPlacer.getContext();
    }
 
    /**
@@ -96,8 +94,8 @@ public class DisplayEditor
     */
    protected void displaySelectionChanged()
    {
-      ConfigChunk display_chunk = displayPlacer.getSelectedDisplay();
-      propSheet.setConfigChunk(display_chunk);
+      ConfigElement display_elt = displayPlacer.getSelectedDisplay();
+      propSheet.setElement(display_elt);
    }
 
    /**
@@ -147,5 +145,5 @@ public class DisplayEditor
    private JSplitPane mainSplitPane = new JSplitPane();
    private DisplayPlacer displayPlacer = new DisplayPlacer();
    private JScrollPane propSheetScrollPane = new JScrollPane();
-   private ConfigChunkPropertySheet propSheet = new ConfigChunkPropertySheet();
+   private ConfigElementPropertySheet propSheet = new ConfigElementPropertySheet();
 }

@@ -80,37 +80,37 @@ public class Configuration
    /**
     * Adds a new include to the end of the includes list.
     *
-    * @param config        the configuration to add
+    * @param filename            the filename of the configuration to add
     *
     * @throws IllegalArgumentException
     *             if the configuration is already included in this configuration
     */
-   public synchronized void addInclude(Configuration config)
+   public synchronized void addInclude(String filename)
       throws IllegalArgumentException
    {
-      if (mIncludes.contains(config))
+      if (mIncludes.contains(filename))
       {
-         throw new IllegalArgumentException("Configuration is already included");
+         throw new IllegalArgumentException("Configuration is already included: " + filename);
       }
-      mIncludes.add(config);
+      mIncludes.add(filename);
    }
 
    /**
     * Removes the given configuration from this configuration's includes list.
     *
-    * @param config        the configuration to remove
+    * @param filename            the filename of the configuration to remove
     *
     * @throws IllegalArgumentException
     *             if the configuration is not included in this configuration
     */
-   public synchronized void removeInclude(Configuration config)
+   public synchronized void removeInclude(String filename)
       throws IllegalArgumentException
    {
-      if (!mIncludes.contains(config))
+      if (!mIncludes.contains(filename))
       {
-         throw new IllegalArgumentException("Configuration not included");
+         throw new IllegalArgumentException("Configuration not included: "+filename);
       }
-      mIncludes.remove(config);
+      mIncludes.remove(filename);
    }
 
    /**
@@ -194,7 +194,7 @@ public class Configuration
     * @throws IllegalArgumentException
     *             if the element is not a part of this configuration
     */
-   public synchronized void rewoveElement(ConfigElement elt)
+   public synchronized void removeElement(ConfigElement elt)
       throws IllegalArgumentException
    {
       if (!mElements.contains(elt))

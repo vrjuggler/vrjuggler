@@ -38,7 +38,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/Projection.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gmtl/Point.h>
 #include <gmtl/Vec.h>
@@ -61,15 +61,15 @@ public:
 
 public:
    /**
-    * Takes a display chunk and configures the display based one it.
-    * @pre chunk is a valid chunk.
+    * Takes a display element and configures the viewport based on it.
+    * @pre element is a valid configuration element.
     * @post display is configured.
     *        If there is an error is the specified config, we output error
     *        and "fix" the error.
     * @note All derived display classes MUST call this function
     *        after doing local configuration.
     */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual void config(jccl::ConfigElementPtr element);
 
    virtual void updateProjections(const float positionScale);
 

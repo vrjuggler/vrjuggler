@@ -43,17 +43,17 @@
 namespace gadget
 {
 
-bool ProxyDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
+bool ProxyDepChecker::canHandle(jccl::ConfigElementPtr element)
 {
-   std::string chunk_type = chunk->getDescToken();
+   std::string element_type(element->getID());
 
    bool ret_val;
-   ret_val = ((chunk_type == AnalogProxy::getChunkType()) ||
-              (chunk_type == DigitalProxy::getChunkType()) ||
-              (chunk_type == GestureProxy::getChunkType()) ||
-              (chunk_type == GloveProxy::getChunkType()) ||
-              (chunk_type == EventWindowProxy::getChunkType()) ||
-              (chunk_type == PositionProxy::getChunkType()));
+   ret_val = ((element_type == AnalogProxy::getElementType()) ||
+              (element_type == DigitalProxy::getElementType()) ||
+              (element_type == GestureProxy::getElementType()) ||
+              (element_type == GloveProxy::getElementType()) ||
+              (element_type == EventWindowProxy::getElementType()) ||
+              (element_type == PositionProxy::getElementType()));
 
    return ret_val;
 }

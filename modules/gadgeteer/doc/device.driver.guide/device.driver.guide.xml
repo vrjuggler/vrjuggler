@@ -820,27 +820,27 @@ sampling and the reading are occurring in separate threads, but both threads
 need access to <varname>mSampledDigitalData</varname>.</para>
                </section>
                <section>
-                  <title><methodname>getChunkType()</methodname></title>
+                  <title><methodname>getElementType()</methodname></title>
                   <methodsynopsis>
                      <modifier>static</modifier>
                      <type>std::string</type>
-                     <methodname>getChunkType</methodname>
+                     <methodname>getElementType</methodname>
                      <void/>
                   </methodsynopsis>
-                  <para>In the <methodname>getChunkType()</methodname>
-function, the <firstterm>chunk type</firstterm> of the device must be
-returned. Its name must be as it appears in the chunk description file for
-the driver. For example, the implementation for the simple button driver
-would appear as:</para>
-                  <programlisting>std::string ButtonDevice::getChunkType()
+                  <para>In the <methodname>getElementType()</methodname>
+function, the <firstterm>element type</firstterm> of the device must be
+returned. Its name must be as it appears in the configuration definition
+file for the driver. For example, the implementation for the simple button
+driver would appear as:</para>
+                  <programlisting>std::string ButtonDevice::getElementType()
 {
    return std:string("ButtonDevice");
 }</programlisting>
                   <para>At this time, it is useful to point out that every
-Gadgeteer device needs a <firstterm>chunk type</firstterm> associated with
-it. A chunk type is similar to a struct in C or C++. The data structure is
-defined in a chunk description file (which usually has the extension
-<filename>.desc</filename>). Once defined, the type for a new driver can be
+Gadgeteer device needs an element type associated with it. An element type
+is similar to a struct in C or C++. The data structure is defined in an
+configuration definition file (which usually has the extension
+<filename>.jdef</filename>). Once defined, the type for a new driver can be
 used in JCCL configuration files.</para>
                </section>
                <section>
@@ -1003,8 +1003,8 @@ id="MyButtonDevice.desc.baud.decl"/>
       &lt;help&gt;Serial port speed.&lt;/help&gt;
       &lt;item label="Baud Rate" defaultvalue="38400" /&gt;
     &lt;/PropertyDesc&gt;
-    &lt;PropertyDesc name="Host Node" token="host_chunk" type="chunk"        <co linkends="MyButtonDevice.desc.hostchunk.decl.co"
-id="MyButtonDevice.desc.hostchunk.decl"/>
+    &lt;PropertyDesc name="Host Node" token="deviceHost" type="chunk"        <co linkends="MyButtonDevice.desc.hostelement.decl.co"
+id="MyButtonDevice.desc.hostelement.decl"/>
                   variable="0"&gt;
       &lt;help&gt;Points to the machine that the device is physically
             connected to.&lt;/help&gt;
@@ -1040,9 +1040,9 @@ the default value of 38400 (kbps). In the case of our simple button driver,
 there is no serial port, but we include this property description to
 demonstrate how the configuration definition works.</para>
                   </callout>
-                  <callout arearefs="MyButtonDevice.desc.hostchunk.decl"
-id="MyButtonDevice.desc.hostchunk.decl.co">
-                     <para>Finally, we have the <quote>host_chunk</quote>
+                  <callout arearefs="MyButtonDevice.desc.hostelement.decl"
+id="MyButtonDevice.desc.hostelement.decl.co">
+                     <para>Finally, we have the <quote>deviceHost</quote>
 property that is used in conjunction with the Remote Input Manager. All
 drivers that may be used with the Remote Input Manager must define this
 property. Refer to the <emphasis>Cluster Juggler Guide</emphasis> for more
@@ -1055,13 +1055,13 @@ definition may be needed. Again, the VRJConfig configuration definition
 editor simplifies the creation of this definition.</para>
             <note>
                <para>If the new driver is for a positional device, its name
-must be added to the enumeration in the <varname>PosProxy</varname> chunk
-description. VRJConfig aids this addition.</para>
+must be added to the enumeration in the <varname>PosProxy</varname>
+configuration definition. VRJConfig aids this addition.</para>
             </note>
-            <para>Once the chunk description is in place, a new configuration
-chunk can be created. Once again, VRJConfig makes the step easier. The
-following is an example configuration file that configures the one-button
-device we have been using thus far:</para>
+            <para>Once the configuration definition is in place, a new
+configuration element can be created. Once again, VRJConfig makes the step
+easier. The following is an example configuration file that configures the
+one-button device we have been using thus far:</para>
             <example id="MyButtonDevice.config.example">
                <title><filename>ButtonDevice.config</filename>: Configuration
 File for Simple Button Device</title>
@@ -1087,9 +1087,9 @@ id="MyButtonDevice.config.port.value"/>
     &lt;baud&gt;9600&lt;/baud&gt;                                         <co
 linkends="MyButtonDevice.config.baud.value.co"
 id="MyButtonDevice.config.baud.value"/>
-    &lt;host_chunk /&gt;                                            <co
-linkends="MyButtonDevice.config.hostchunk.value.co"
-id="MyButtonDevice.config.hostchunk.value"/>
+    &lt;deviceHost /&gt;                                            <co
+linkends="MyButtonDevice.config.hostelement.value.co"
+id="MyButtonDevice.config.hostelement.value"/>
   &lt;/ButtonDevice&gt;
 &lt;/ConfigChunkDB&gt;</programlisting>
                <calloutlist>
@@ -1130,10 +1130,10 @@ id="MyButtonDevice.config.baud.value.co">
 rate. Again, this will not actually be used by our simple device, but we show
 it here to give a complete example.</para>
                   </callout>
-                  <callout arearefs="MyButtonDevice.config.hostchunk.value"
-id="MyButtonDevice.config.hostchunk.value.co">
+                  <callout arearefs="MyButtonDevice.config.hostelement.value"
+id="MyButtonDevice.config.hostelement.value.co">
                      <para>For our example, we will not fill in a value for
-<literal>host_chunk</literal> because we are not dealing with the Remote
+<literal>deviceHost</literal> because we are not dealing with the Remote
 Input Manager. Refer to the <emphasis>Cluster Juggler Guide</emphasis> for
 more information about this.</para>
                   </callout>
@@ -1143,13 +1143,13 @@ more information about this.</para>
          <section>
             <title>Writing Code that Accepts the Configuration</title>
             <para>In the driver, there are two methods that must be
-implemented in order to handle config chunks:</para>
+implemented in order to handle config elements:</para>
             <orderedlist>
                <listitem>
                   <methodsynopsis>
                      <modifier>static</modifier>
                      <type>std::string</type>
-                     <methodname>ButtonDevice::getChunkType</methodname>
+                     <methodname>ButtonDevice::getElementType</methodname>
                      <void/>
                   </methodsynopsis>
                   <para>When the configuration changes, the JCCL Configuration
@@ -1160,7 +1160,7 @@ received configuration element, then the handler's
 configuration handlers and thus need to indicate the configuration element
 type they accept. The type value is returned by this method, and the
 implementation for our simple driver is the following:</para>
-                  <programlisting>std::string ButtonDevice::getChunkType()
+                  <programlisting>std::string ButtonDevice::getElementType()
 {
    return std::string("ButtonDevice");
 }</programlisting>
@@ -1173,27 +1173,27 @@ defined in <xref linkend="MyButtonDevice.desc.example"/>.</para>
                      <type>bool</type>
                      <methodname>gadget::Input::config</methodname>
                      <methodparam>
-                        <type>jccl::ConfigChunkPtr</type>
-                        <parameter>c</parameter>
+                        <type>jccl::ConfigElementPtr</type>
+                        <parameter>e</parameter>
                      </methodparam>
                   </methodsynopsis>
                   <para>When the Configuration Manager detects a configuration
 change for a given driver, it will pass the new
-<classname>jccl::ConfigChunkPtr</classname> object as the parameter to this
+<classname>jccl::ConfigElementPtr</classname> object as the parameter to this
 method. For more information about how to use instances of
-<classname>jccl::ConfigChunkPtr</classname>, refer to the <emphasis>JCCL
+<classname>jccl::ConfigElementPtr</classname>, refer to the <emphasis>JCCL
 Programmer's Reference</emphasis>. The following is a simple example for the
 basic button device we have used thus far:</para>
                   <programlisting
->bool ButtonDevice::config(jccl::ConfigChunkPtr c)
+>bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
-   if ( ! gadget::Digital::config(c) )
+   if ( ! gadget::Digital::config(e) )
    {
       return false;
    }
 
-   mPortName = c-&gt;getProperty&lt;std::string&gt;("port");
-   mBaudRate = c-&gt;getProperty&lt;int&gt;("baud");
+   mPortName = e-&gt;getProperty&lt;std::string&gt;("port");
+   mBaudRate = e-&gt;getProperty&lt;int&gt;("baud");
 
    return true;
 }</programlisting>
@@ -1260,7 +1260,7 @@ public:
    virtual int   sample();
    virtual int   stopSampling();
 
-   static std::string getChunkType();
+   static std::string getElementType();
 
 private:
    static void   sampleFunction(void* classPointer);
@@ -1296,8 +1296,8 @@ void initDevice(gadget::InputManager* inputMgr)
 
 // What is the name of this device?
 // This function returns a string that should match this device's
-// config chunk name.
-std::string ButtonDevice::getChunkType()
+// config element name.
+std::string ButtonDevice::getElementType()
 {
    return std::string("ButtonDevice");
 }
@@ -1367,17 +1367,17 @@ void ButtonDevice::sampleFunction(void* classPointer)
 }
 
 // When the system detects a configuration change for your driver, it will
-// pass the new jccl::ConfigChunkPtr into this function.  See the documentation
-// on config chunks for information on how to access them.
-bool ButtonDevice::config(jccl::ConfigChunkPtr c)
+// pass the new jccl::ConfigElementPtr into this function.  See the
+// documentation on config elements for information on how to access them.
+bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
-   if ( ! gadget::Digital::config(c) )
+   if ( ! gadget::Digital::config(e) )
    {
       return false;
    }
 
-   mPortName = c-&gt;getProperty&lt;std::string&gt;("port");
-   mBaudRate = c-&gt;getProperty&lt;int&gt;("baud");
+   mPortName = e-&gt;getProperty&lt;std::string&gt;("port");
+   mBaudRate = e-&gt;getProperty&lt;int&gt;("baud");
 
    return true;
 }</programlisting>

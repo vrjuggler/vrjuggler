@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vector>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Assert.h>
 
 
@@ -64,8 +64,8 @@ public:
 
 public:
    /**
-    * Takes a display chunk and configures the display based one it.
-    * @pre chunk is a valid chunk.
+    * Takes a display config element and configures the display based one it.
+    * @pre element is a valid configuration element.
     * @post display is configured.
     *        If there is an error is the specified config, we output error
     *        and "fix" the error.
@@ -73,10 +73,10 @@ public:
     * @note All derived display classes MUST call this function
     *        after doing local configuration.
     */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual void config(jccl::ConfigElementPtr element);
 
-   void configDisplayWindow(jccl::ConfigChunkPtr chunk);
-   void configViewports(jccl::ConfigChunkPtr chunk);
+   void configDisplayWindow(jccl::ConfigElementPtr element);
+   void configViewports(jccl::ConfigElementPtr element);
 
    /** Updates the projection data for each contained viewport.
    * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
@@ -120,11 +120,13 @@ public:
       return mStereoRequested;
    }
 
-   /** Gets the config chunk that configured this display window. */
-   jccl::ConfigChunkPtr getConfigChunk()
-   { return mDisplayChunk; }
+   /** Gets the config element that configured this display window. */
+   jccl::ConfigElementPtr getConfigElement()
+   {
+      return mDisplayElement;
+   }
 
-   jccl::ConfigChunkPtr getGlFrameBufferConfig();
+   jccl::ConfigElementPtr getGlFrameBufferConfig();
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
@@ -142,7 +144,7 @@ protected:
    int            mPipe;                /**< Hardware pipe. Index of the rendering hardware */
    bool           mActive;              /**< Is the display active or not? */
    bool           mStereoRequested;     /**< Has stereo been requested? */
-   jccl::ConfigChunkPtr mDisplayChunk;  /**< The chunk data for this display */
+   jccl::ConfigElementPtr mDisplayElement;  /**< The config data for this display */
 
    std::vector<vrj::Viewport*>   mViewports;    /**<  Contained viewports */
 };

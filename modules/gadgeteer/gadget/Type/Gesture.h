@@ -36,7 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 
 namespace gadget
@@ -63,9 +63,9 @@ public:
    virtual ~Gesture()
    {;}
 
-   virtual bool config(jccl::ConfigChunkPtr c)
+   virtual bool config(jccl::ConfigElementPtr e)
    {
-      boost::ignore_unused_variable_warning(c);
+      boost::ignore_unused_variable_warning(e);
       return true;
    }
 

@@ -57,14 +57,14 @@ namespace gadget
  *
  *  Flock adds to the FlockStandalone class shared memory and threading.<br>
  *  Flock is a positional device driver for the Flock of Birds, the config
- *  chunk in the constructor should set up all the settings, for these to be
+ *  element in the constructor should set up all the settings, for these to be
  *  changed the Flock has to be deleted and a new instance created with an
- *  updated configchunk.
+ *  updated config element.
  *
  * @note Some functions still remain for changing the options of
  *     the flock when its not in Sampling mode, but in order to stay
  *     consistent with the Input/vjPosition functionality these
- *     are only left for building apps without jccl::ConfigChunks
+ *     are only left for building apps without jccl::ConfigElement objects.
  * @note A note on reciever access:
  *   Clients of juggler should access tracker recievers as [0-n]
  *   For example, if you have recievers 1,2, and 4 with transmitter on 3,
@@ -106,8 +106,8 @@ public:
    ~Flock();
 
 
-   /**  configure the flock with a config chunk */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   /**  configure the flock with a config element. */
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /**  begin sampling */
    int startSampling();
@@ -121,11 +121,8 @@ public:
    /**  update to the sampled data. */
    void updateData();
 
-   /**  return what chunk type is associated with this class. */
-   static std::string getChunkType()
-   {
-      return std::string("Flock");
-   }
+   /** Returns what element type is associated with this class. */
+   static std::string getElementType();
 
    /**  see if the flock is active or not */
    inline const bool& isActive() const

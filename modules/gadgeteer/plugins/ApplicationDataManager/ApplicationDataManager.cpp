@@ -43,8 +43,8 @@
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
 
-//#include <jccl/Config/ConfigChunk.h>
-//#include <jccl/Config/ConfigChunkPtr.h>
+//#include <jccl/Config/ConfigElement.h>
+//#include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
 
@@ -157,24 +157,29 @@ namespace cluster
       } // End if                 
     }
 
-    /** Add the pending chunk to the configuration.
-	 *  PRE: configCanHandle (chunk) == true.
-	 *  @return true iff chunk was successfully added to configuration.
+   std::string ApplicationDataManager::getElementType()
+   {
+      return "application_data_manager";
+   }
+
+	/** Add the pending element to the configuration.
+	 *  @pre configCanHandle(element) == true.
+	 *  @return true iff element was successfully added to configuration.
 	 */
-	bool ApplicationDataManager::configAdd(jccl::ConfigChunkPtr chunk)
+	bool ApplicationDataManager::configAdd(jccl::ConfigElementPtr element)
 	{
-      if (recognizeApplicationDataManagerConfig(chunk))
+      if (recognizeApplicationDataManagerConfig(element))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-            << "The ApplicationDataMananger does not currently support a need for config chunks: " << chunk->getName() 
+            << "The ApplicationDataMananger does not currently support a need for configuration element: " << element->getName() 
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
-      else if (recognizeApplicationDataConfig(chunk))
+      else if (recognizeApplicationDataConfig(element))
       {
-         std::string guid_string = chunk->getProperty<std::string>("guid");
+         std::string guid_string = element->getProperty<std::string>("guid");
          vpr::GUID guid(guid_string);
-         std::string hostname = chunk->getProperty<std::string>("hostname");
+         std::string hostname = element->getProperty<std::string>("hostname");
          
          vpr::Guard<vpr::Mutex> guard(mNeedsConfigedLock);
          std::vector<ApplicationData*>::iterator begin = mNeedsConfiged.begin();
@@ -228,31 +233,31 @@ namespace cluster
 	  {
 	     vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) 
             << "[ApplicationDataManager::ConfigAdd()] " 
-            << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the config chunk: " 
-            << chunk->getName() << std::endl << vprDEBUG_FLUSH;
+            << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the configuration element: " 
+            << element->getName() << std::endl << vprDEBUG_FLUSH;
          return(false);
 	  }
 	}
 
 
-   /** Remove the pending chunk from the current configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff the chunk (and any objects it represented)
-    *          were successfully removed.
-    */
-   bool ApplicationDataManager::configRemove(jccl::ConfigChunkPtr chunk)
+	/** Remove the pending element from the current configuration.
+	 *  @pre configCanHandle(element) == true.
+	 *  @return true iff the element (and any objects it represented)
+	 *          were successfully removed.
+	 */
+   bool ApplicationDataManager::configRemove(jccl::ConfigElementPtr element)
    {
-      if (recognizeApplicationDataManagerConfig(chunk))
+      if (recognizeApplicationDataManagerConfig(element))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-            << "The ApplicationDataMananger does not currently support a need for config chunks: " << chunk->getName() 
+            << "The ApplicationDataMananger does not currently support a need for configuration element: " << element->getName() 
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
-      else if (recognizeApplicationDataManagerConfig(chunk))
+      else if (recognizeApplicationDataManagerConfig(element))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-            << "The ApplicationDataMananger does not currently support a need for config chunks: " << chunk->getName() 
+            << "The ApplicationDataMananger does not currently support a need for configuration element: " << element->getName() 
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
@@ -260,42 +265,42 @@ namespace cluster
 	  {
 	     vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) 
             << "[ApplicationDataManager::ConfigRemove()] " 
-            << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the config chunk: " 
-            << chunk->getName() << std::endl << vprDEBUG_FLUSH;
+            << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the configuration element: " 
+            << element->getName() << std::endl << vprDEBUG_FLUSH;
          return(false);
       }
    }
 
-   /** Checks if this handler can process chunk.
-    *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+    *  Typically, an implementation of handler will check the element's
     *  description name/token to decide if it knows how to deal with
     *  it.
-    *  @return true iff this handler can process chunk.
+    *  @return true iff this handler can process element.
     */
-   bool ApplicationDataManager::configCanHandle(jccl::ConfigChunkPtr chunk)
+   bool ApplicationDataManager::configCanHandle(jccl::ConfigElementPtr element)
    {
-      return( recognizeApplicationDataManagerConfig(chunk) ||
-              recognizeApplicationDataConfig(chunk) );
+      return( recognizeApplicationDataManagerConfig(element) ||
+              recognizeApplicationDataConfig(element) );
    }
     
    /**
-    * Helper function that checks the type of a given chunk against 
+    * Helper function that checks the type of a given element against
     * the type that the ApplicationDataManager accepts.
     */
-   bool ApplicationDataManager::recognizeApplicationDataManagerConfig(jccl::ConfigChunkPtr chunk)
+   bool ApplicationDataManager::recognizeApplicationDataManagerConfig(jccl::ConfigElementPtr element)
    {
-      return(chunk->getDescToken() == ApplicationDataManager::getChunkType());
+      return(element->getID() == ApplicationDataManager::getElementType());
    }  
    
    /**
-    * Helper function that checks the type of a given chunk against 
+    * Helper function that checks the type of a given element against
     * the type that the ApplicationDataManager accepts.
     */
-   bool ApplicationDataManager::recognizeApplicationDataConfig(jccl::ConfigChunkPtr chunk)
+   bool ApplicationDataManager::recognizeApplicationDataConfig(jccl::ConfigElementPtr element)
    {
-      return(chunk->getDescToken() == "AppData");
+      return(element->getID() == "application_data");
    }  
-    
+
    void ApplicationDataManager::postPostFrame()
    {;}
     

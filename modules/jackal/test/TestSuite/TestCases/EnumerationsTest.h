@@ -7,12 +7,12 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/Configuration.h>
+#include <jccl/Config/ElementFactory.h>
 
 /*****************************************************************
- tests out the functionality expected of enumerations in ConfigChunks
+ tests out the functionality expected of enumerations in ConfigElements
 *******************************************************************/
 
 namespace jcclTest
@@ -37,21 +37,21 @@ public:
    void ReadTests () {
       std::string file_path(TESTFILES_PATH);
 
-      jccl::ChunkFactory::instance()->loadDescs (file_path + "EnumerationsTest/enumerations_test.desc");
+      jccl::ElementFactory::instance()->loadDefs(file_path + "EnumerationsTest/enumerations_test.desc");
 
-      jccl::ConfigChunkDB chunkdb;
-      chunkdb.load (file_path + "EnumerationsTest/enumerations_test.config");
+      jccl::Configuration configuration;
+      configuration.load(file_path + "EnumerationsTest/enumerations_test.config");
 
-      jccl::ConfigChunkPtr ch = chunkdb.get("Motion Star master");
+      jccl::ConfigElementPtr ch = configuration.get("Motion Star master");
       CPPUNIT_ASSERT(ch.get() != NULL);
 
-      int port = ch->getProperty<int>("serverPort");
+      int port = ch->getProperty<int>("server_port");
       CPPUNIT_ASSERT(port == 5000);
 
       int hemisphere = ch->getProperty<int>("hemisphere");
       CPPUNIT_ASSERT(hemisphere == 0);
       
-      int format = ch->getProperty<int>("bformat");
+      int format = ch->getProperty<int>("data_format");
       CPPUNIT_ASSERT(format == 4);
       
     }

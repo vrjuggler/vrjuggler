@@ -36,14 +36,15 @@
 #include <vpr/Util/Factory.h>
 #include <vpr/Util/Singleton.h>
 
-/** Register a creator for the PositionFilter classes
-* @pre Requires that the method std::string getChunkType() be defined for class FilterClass
-*
-* Ex: GADGET_REGISTER_POSFILTER_CREATOR( PosXformFilter )
+/** Register a creator for the PositionFilter classes.
+ * @pre Requires that the method std::string getElementType() be defined for
+ *      class FilterClass.
+ *
+ * Ex: GADGET_REGISTER_POSFILTER_CREATOR( PosXformFilter )
 */
 #define GADGET_REGISTER_POSFILTER_CREATOR( FilterType ) \
 class FilterType; \
-const bool reg_ctr_ ## FilterType = gadget::PositionFilterFactory::instance()->registerCreator( FilterType::getChunkType(), \
+const bool reg_ctr_ ## FilterType = gadget::PositionFilterFactory::instance()->registerCreator( FilterType::getElementType(), \
                                              vpr::CreateProduct<PositionFilter, FilterType>);
 
 namespace gadget

@@ -116,12 +116,9 @@ public:
       }
    }
 
-   static std::string getChunkType()
-   {
-      return std::string("EventWindowProxy");
-   }
+   static std::string getElementType();
 
-   bool config(jccl::ConfigChunkPtr chunk);
+   bool config(jccl::ConfigElementPtr element);
 
    virtual Input* getProxiedInputDevice()
    {

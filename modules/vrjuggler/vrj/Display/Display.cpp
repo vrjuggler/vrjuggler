@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
@@ -50,28 +50,28 @@ void Display::updateProjections(const float positionScale)
 }
 
 
-void Display::config(jccl::ConfigChunkPtr chunk)
+void Display::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
+   vprASSERT(element.get() != NULL);
 
-   configDisplayWindow(chunk);
-   configViewports(chunk);
+   configDisplayWindow(element);
+   configViewports(element);
 }
 
-void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
+void Display::configDisplayWindow(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
+   vprASSERT(element.get() != NULL);
 
-   // -- Get config info from chunk -- //
-   int originX      = chunk->getProperty<int>("origin", 0);
-   int originY      = chunk->getProperty<int>("origin", 1);
-   int sizeX        = chunk->getProperty<int>("size", 0);
-   int sizeY        = chunk->getProperty<int>("size", 1);
-   std::string name = chunk->getName();
-   mBorder          = chunk->getProperty<bool>("border");
-   int pipe         = chunk->getProperty<int>("pipe");
-   mActive          = chunk->getProperty<bool>("active");
-   mStereoRequested = chunk->getProperty<bool>("stereo");
+   // -- Get config info from element -- //
+   int originX      = element->getProperty<int>("origin", 0);
+   int originY      = element->getProperty<int>("origin", 1);
+   int sizeX        = element->getProperty<int>("size", 0);
+   int sizeY        = element->getProperty<int>("size", 1);
+   std::string name = element->getName();
+   mBorder          = element->getProperty<bool>("border");
+   int pipe         = element->getProperty<int>("pipe");
+   mActive          = element->getProperty<bool>("active");
+   mStereoRequested = element->getProperty<bool>("stereo");
 
    // -- Check for error in configuration -- //
    // NOTE: If there are errors, set them to some default value
@@ -105,17 +105,17 @@ void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
     setName(name);
     setPipe(pipe);
 
-    mDisplayChunk = chunk;        // Save the chunk for later use
+    mDisplayElement = element;        // Save the element for later use
 }
 
-void Display::configViewports(jccl::ConfigChunkPtr chunk)
+void Display::configViewports(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
+   vprASSERT(element.get() != NULL);
 
-   unsigned num_sim_vps = chunk->getNum("sim_viewports");
-   unsigned num_surface_vps = chunk->getNum("surface_viewports");
+   unsigned num_sim_vps = element->getNum("simulator_viewports");
+   unsigned num_surface_vps = element->getNum("surface_viewports");
 
-   jccl::ConfigChunkPtr vp_chunk;
+   jccl::ConfigElementPtr vp_elt;
    SimViewport* sim_vp = NULL;
    SurfaceViewport* surf_vp = NULL;
 
@@ -126,10 +126,10 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    // - Configure it
    for(i=0;i<num_sim_vps;i++)
    {
-      vp_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("sim_viewports",i);
+      vp_elt = element->getProperty<jccl::ConfigElementPtr>("simulator_viewports",i);
       sim_vp = new SimViewport;
       sim_vp->setDisplay(this);
-      sim_vp->config(vp_chunk);
+      sim_vp->config(vp_elt);
       mViewports.push_back(sim_vp);
    }
 
@@ -138,27 +138,27 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    // - Configure it
    for(i=0;i<num_surface_vps;i++)
    {
-      vp_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("surface_viewports",i);
+      vp_elt = element->getProperty<jccl::ConfigElementPtr>("surface_viewports",i);
       surf_vp = new SurfaceViewport;
       surf_vp->setDisplay(this);
-      surf_vp->config(vp_chunk);
+      surf_vp->config(vp_elt);
       mViewports.push_back(surf_vp);
    }
 }
 
-jccl::ConfigChunkPtr Display::getGlFrameBufferConfig()
+jccl::ConfigElementPtr Display::getGlFrameBufferConfig()
 {
-   jccl::ConfigChunkPtr chunk;
+   jccl::ConfigElementPtr element;
 
-   // XXX: Refactor this to allow different frame buffer child chunks.  Right
-   // now, this assumes that the child chunk type is OpenGLFBConfig.
-   if ( mDisplayChunk->getNum("frameBufferConfig") == 1 )
+   // XXX: Refactor this to allow different frame buffer child elements.  Right
+   // now, this assumes that the child element type is OpenGLFBConfig.
+   if ( mDisplayElement->getNum("frame_buffer_config") == 1 )
    {
-      chunk =
-         mDisplayChunk->getProperty<jccl::ConfigChunkPtr>("frameBufferConfig");
+      element =
+         mDisplayElement->getProperty<jccl::ConfigElementPtr>("frame_buffer_config");
    }
 
-   return chunk;
+   return element;
 }
 
 std::ostream& operator<<(std::ostream& out, Display& disp)

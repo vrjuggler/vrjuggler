@@ -154,7 +154,7 @@
           float = "1"
           id    = "ConfigChunk-WindowChunk.figure"
         >
-            <title>Figure 20: Window chunk</title>
+            <title>Figure 20: Window Configuration Element</title>
             <mediaobject>
                 <imageobject>
                     <imagedata
@@ -169,11 +169,11 @@
         <remark
           revisionflag = "added"
         >Need much more information about the configuration system here. Add information from run-time config paper about parameterization.</remark>
-        <para>All configuration information is contained within small units called config "chunks", and these chunks are divided into properties that hold values. Each property value has a default type associated with it. Although the properties have these default types, they are implemented as a variant data type which allows them to return data in whatever data type is needed.</para>
-        <para>A chunk contains all the configuration information for a particular aspect of the VR system or application. For example, the chunk given in <xref linkend="ConfigChunk-WindowChunk.figure"/> defines configuration information for a window. It has three properties: name, size, and origin. The size property has two values of type int.</para>
-        <para>VR Juggler uses chunks to set configuration options for all the components of the system. There are chunks for specifying configuration information for all types of information needed to set up a VR environment: display chunks, tracker chunks, C2 chunks, HMD chunks, and so on. </para>
+        <para>All configuration information is contained within small units called config "elements", and these elements are divided into properties that hold values. Each property value has a default type associated with it. Although the properties have these default types, they are implemented as a variant data type which allows them to return data in whatever data type is needed.</para>
+        <para>An element contains all the configuration information for a particular aspect of the VR system or application. For example, the element given in <xref linkend="ConfigChunk-WindowChunk.figure"/> defines configuration information for a window. It has three properties: name, size, and origin. The size property has two values of type int.</para>
+        <para>VR Juggler uses config elements to set configuration options for all the components of the system. There are elements for specifying configuration information for all types of information needed to set up a VR environment: display elements, tracker elements, C2 elements, HMD elements, and so on. </para>
         <para>Configuration information is edited with a Java based GUI called vjControl. It used to edit configuration information and interface to the running VR Juggler kernel. It allows users to create and edit config files, change the configuration at run-time, start and stop devices, and view performance data.</para>
-        <para>Applications can also use the configuration system, adding their own chunks of data that can be loaded with the same interface and edited with the same graphical tools. This allows applications to use the same simple, graphical configuration tools as the VR Juggler environment itself.</para>
+        <para>Applications can also use the configuration system, adding their own elements of data that can be loaded with the same interface and edited with the same graphical tools. This allows applications to use the same simple, graphical configuration tools as the VR Juggler environment itself.</para>
     </section>
     <section>
         <title>VR Juggler Microkernel</title>
@@ -460,7 +460,7 @@
         <figure
           id    = "ConfigChunkHandlerHierarchy.figure"
         >
-            <title>vjConfigChunkHandler interface</title>
+            <title>jccl::ConfigElementHandler interface</title>
             <mediaobject>
                 <imageobject>
                     <imagedata
@@ -474,15 +474,15 @@
         </figure>
         <para>All VR Juggler managers support run-time reconfigurability. Input devices can be reconfigured at runtime without affecting the current application. A reconfiguration request can be sent to the input manager requesting that a specific proxy be pointed at a different device. Displays can also be added and removed at run-time. This feature is particularly useful for multi-screen VR systems, because screens can be activated and deactivated as the application runs. Applications can also receive configuration information. This allows applications to respond to changes at run-time in the same way that the rest of the VP does.</para>
         <section>
-            <title>Config chunk handler interface</title>
-            <para>VR Juggler provides a common framework for processing configuration and reconfiguration requests (see<xref linkend="ConfigChunkHandlerHierarchy.figure"/>). The framework defines an interface (<classname>vjConfigChunkHandler</classname>) that specifies the methods a "handler" component must implement to support run-time reconfiguration. All reconfigurable objects must conform to this interface. New objects can add support for run-time reconfiguration by simply inheriting from the vjConfigChunkHandler class and providing implementations for the methods defined by the interface.</para>
+            <title>Config element handler interface</title>
+            <para>VR Juggler provides a common framework for processing configuration and reconfiguration requests (see<xref linkend="ConfigChunkHandlerHierarchy.figure"/>). The framework defines an interface (<classname>jccl::ConfigElementHandler</classname>) that specifies the methods a "handler" component must implement to support run-time reconfiguration. All reconfigurable objects must conform to this interface. New objects can add support for run-time reconfiguration by simply inheriting from the jccl::ConfigElementHandler class and providing implementations for the methods defined by the interface.</para>
             <para>The methods in the handler interface are:</para>
-            <para><methodname>bool configCanHandle(vjConfigChunk* chunk):</methodname></para>
-            <para>This function is used to determine whether the handler object knows how to handle the configuration chunk given. If the object wants to handle the chunk, then this method should return true. If not, then it returns false.</para>
-            <para><methodname>bool configAdd(vjConfigChunk* chunk): </methodname></para>
-            <para>The system is requesting that the handler reconfigures the system to add the configuration specified by the given chunk. It returns true if the change is successful, and false otherwise. </para>
-            <para><methodname>bool configRemove(vjConfigChunk* chunk):</methodname></para>
-            <para>The system is requesting that the handler reconfigures the system to remove the configuration specified by the given chunk. It returns true if the change is successful, and false it the change is unsuccessful or cannot be completed.</para>
+            <para><methodname>bool configCanHandle(jccl::ConfigElementPtr element):</methodname></para>
+            <para>This function is used to determine whether the handler object knows how to handle the configuration element given. If the object wants to handle the element, then this method should return true. If not, then it returns false.</para>
+            <para><methodname>bool configAdd(jccl::ConfigElementPtr element): </methodname></para>
+            <para>The system is requesting that the handler reconfigures the system to add the configuration specified by the given element. It returns true if the change is successful, and false otherwise. </para>
+            <para><methodname>bool configRemove(jccl::ConfigElementPtr element):</methodname></para>
+            <para>The system is requesting that the handler reconfigures the system to remove the configuration specified by the given element. It returns true if the change is successful, and false it the change is unsuccessful or cannot be completed.</para>
             <para>The class interface creates a simple interface for allowing objects to become configurable. Since all configurable components support a common interface, the system can simply keep a list of reconfigurable components. It is not necessary to know the actual type of the components that are being configured.</para>
         </section>
         <section>
@@ -504,7 +504,7 @@
                 </mediaobject>
             </figure>
             <para>Reconfiguration is implemented using a pending config queue that is contained in the config manager (see <classname>vjConfigManager</classname> in <xref linkend="ConfigManager-PendingList-Structure.figure"/>). The queue contains a list of all currently pending reconfiguration requests. As with all other managers, the kernel controls the configuration manager. The kernel is in charge of synchronizing the system and sending reconfiguration requests.</para>
-            <para>The system initially starts with only the kernel and several system managers instantiated. When the kernel receives a new configuration request, it passes it to the config manager which adds the config chunk to a pending reconfiguration queue. The request remains there until the kernel attempts to reconfigure the system with the pending requests. When a request is successfully processed, it is removed from the queue. If a request is not able to be successfully satisfied, then it remains in the queue until the system is able to satisfy the request.</para>
+            <para>The system initially starts with only the kernel and several system managers instantiated. When the kernel receives a new configuration request, it passes it to the config manager which adds the config element to a pending reconfiguration queue. The request remains there until the kernel attempts to reconfigure the system with the pending requests. When a request is successfully processed, it is removed from the queue. If a request is not able to be successfully satisfied, then it remains in the queue until the system is able to satisfy the request.</para>
             <figure
               float = "1"
               id    = "RuntimeConfigurationSequence.figure"
@@ -520,10 +520,10 @@
                 </mediaobject>
                 <address></address>
             </figure>
-            <para>Each frame, the kernel checks for new configuration requests (see <methodname>checkForReconfig</methodname> in <xref linkend="RuntimeConfigurationSequence.figure"/>). If there are any new entries, then the kernel attempts to process the request. The kernel steps through all known managers (that implement the <classname>vjConfigChunkHandler</classname> interface). The kernel asks each one in turn whether they can handle the configuration request. If they can, then the kernel passes the request on to the manager. The manager then processes the request using whatever methods it requires. For example, the input manager maintains an internal list of configurable devices. It looks for the device that corresponds to the given chunk, and configures it.</para>
+            <para>Each frame, the kernel checks for new configuration requests (see <methodname>checkForReconfig</methodname> in <xref linkend="RuntimeConfigurationSequence.figure"/>). If there are any new entries, then the kernel attempts to process the request. The kernel steps through all known managers (that implement the <classname>jccl::ConfigElementHandler</classname> interface). The kernel asks each one in turn whether they can handle the configuration request. If they can, then the kernel passes the request on to the manager. The manager then processes the request using whatever methods it requires. For example, the input manager maintains an internal list of configurable devices. It looks for the device that corresponds to the given element, and configures it.</para>
             <para>When the manager returns from processing the request, the kernel continues on to the next manager and attempts to process the same request. The kernel does not stop processing with the first manager that can handle the request, because multiple managers may need to respond to the same configuration requests.</para>
             <para>After the kernel has iterated through all the known managers, it checks to see if any of the managers successfully processed the configuration request. If a manager successfully processed the request, then the kernel removes it from the pending queue. The configuration request is also stored in an active configuration data structure so the system may use the information again in the future. If no manager was able to complete the request, then the request remains in the queue where the kernel will try to process it again in a future frame.</para>
-            <para>This method of processing the configuration information is based on the chain of responsibility pattern [#design patterns GOF]. It differs only in that the handlers in VR Juggler do not have a strict successor chain. Instead, the kernel keeps a list of several base handlers. The kernel then traverses this list to find a valid handler for a given reconfiguration config chunk. These handlers may then in turn process the request in any way they wish. VR Juggler does not impose any specific behavior on the reconfigurable components.</para>
+            <para>This method of processing the configuration information is based on the chain of responsibility pattern [#design patterns GOF]. It differs only in that the handlers in VR Juggler do not have a strict successor chain. Instead, the kernel keeps a list of several base handlers. The kernel then traverses this list to find a valid handler for a given reconfiguration config element. These handlers may then in turn process the request in any way they wish. VR Juggler does not impose any specific behavior on the reconfigurable components.</para>
             <para>It is also possible for a system component to directly query the config manager if an object would rather not have the kernel manage its reconfiguration.</para>
         </section>
         <section>
@@ -548,16 +548,16 @@
             <section>
                 <title>Dependency checking</title>
                 <para>To handle dependency resolution, VR Juggler performs dependency checking between system components. Dependency checking refers to the process the system goes through when it runs a check to see if all the system resources required by a new configuration request are available before it allows that request to be processed.</para>
-                <para>Dependency checking is supervised by the <classname>vjDependencyManager</classname>. The dependency manager allows the system to send it a query about any configuration chunk. The dependency manager will check to make sure that any dependencies that need to be satisfied for the given chunk have been satisfied, and will return approval to the caller.</para>
+                <para>Dependency checking is supervised by the <classname>vjDependencyManager</classname>. The dependency manager allows the system to send it a query about any configuration element. The dependency manager will check to make sure that any dependencies that need to be satisfied for the given element have been satisfied, and will return approval to the caller.</para>
                 <para>The dependency manager checks dependencies by maintaining a list of dependency checkers objects that it uses to check for dependency fulfillment. All dependency checker objects implement a common interface specified by the <classname>vjDepChecker</classname> class (see <xref linkend="DependencyCheckingClasses.figure"/>).</para>
                 <para>This interface defines two methods that are used for dependency checking:</para>
-                <para><methodname>bool canHandle(vjConfigChunk* chunk)</methodname></para>
-                <para>This function is used to determine whether the checker object knows how to evaluated dependencies for the configuration chunk given. It returns true if the object knows how to evaluate the dependencies, and false if not.</para>
-                <para><methodname>bool depSatisfied(vjConfigChunk* chunk)</methodname></para>
+                <para><methodname>bool canHandle(jccl::ConfigElementPtr element)</methodname></para>
+                <para>This function is used to determine whether the checker object knows how to evaluated dependencies for the configuration element given. It returns true if the object knows how to evaluate the dependencies, and false if not.</para>
+                <para><methodname>bool depSatisfied(jccl::ConfigElementPtr element)</methodname></para>
                 <para>This function actually performs the dependency evaluation. If the dependencies are satisfied, then it returns true. If dependencies are not satisfied, then it returns false.</para>
                 <para>System components that require advanced dependency checking are responsible for registering their dependency checkers with the dependency manager. The VR Juggler manager that most directly deals with the components often handles this registration. For example, whenever a new device registers with the input manager, the device also registers any dependency checkers with the dependency manager.</para>
-                <para>The manager processes dependency requests by querying each dependency checker object to find out what types of configuration chunks it can evaluate.</para>
-                <para>When the manager receives a dependency query, it attempts to find a dependency checker that can handle the given configuration chunk (see <xref linkend="RuntimeConfigurationSequence.figure"/>). If it finds a dependency checker, then it sends a request with the chunk to the checker. The checker then checks for whatever system state is required and returns an answer, which the manager returns to the originator of the query. If the dependency manager does not find a checker, then it uses the default dependency checker to check for many of the most common dependency issues.</para>
+                <para>The manager processes dependency requests by querying each dependency checker object to find out what types of configuration elements it can evaluate.</para>
+                <para>When the manager receives a dependency query, it attempts to find a dependency checker that can handle the given configuration element (see <xref linkend="RuntimeConfigurationSequence.figure"/>). If it finds a dependency checker, then it sends a request with the element to the checker. The checker then checks for whatever system state is required and returns an answer, which the manager returns to the originator of the query. If the dependency manager does not find a checker, then it uses the default dependency checker to check for many of the most common dependency issues.</para>
             </section>
             <section>
                 <title>Automatic unloading</title>
@@ -879,7 +879,7 @@ kernel-&gt;setApplication(application);
                 <para>VR systems are complex and as such, VR development environments are large and complex software systems. As with any large software system maintenance and correctness become important issues. How can we design a VR development environment so that is maintainable into the future? How do developers test for correctness in a large VR development environment? </para>
                 <remark>[Pt: A modular system is easier to maintain]</remark>
                 <para>Maintenance presents a problem in a large system because of inter dependencies within the software system. In a complex system, it is very difficult to completely understand every part of the system. If system components are highly intertwined, changes in one component could affect the correctness of another component. These dependencies are often very difficult to predict and take into account.</para>
-                <para>Maintenance is simplified by breaking the system up into many separate self-contained code modules. Each of these modules presents a single interface that can be accessed by other modules in the system. By breaking the system up into small chunks, it is possible for system designers to make changes within a module without affecting code outside the module.</para>
+                <para>Maintenance is simplified by breaking the system up into many separate self-contained code modules. Each of these modules presents a single interface that can be accessed by other modules in the system. By breaking the system up into small elements, it is possible for system designers to make changes within a module without affecting code outside the module.</para>
                 <remark>[Pt: A modular system is easier to test for correctness]</remark>
                 <para>Testing correctness in a large system is important because you need some level of confidence that the system will work. A common way to manage this is to separate the major system components into separate entities that can be individually tested and verified. The idea is that if a system is made up of many components and each of these components individual works correctly then, the combined system will work correctly (assuming the linking code works correctly). To test such a system, the components should be tested at many levels of granularity. For example in an object-oriented system you may want to test at object, module, and sub-system levels.</para>
             </section>

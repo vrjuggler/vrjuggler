@@ -83,7 +83,7 @@ public:
    /** Destructor */
    virtual ~Position();
 
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
 
    /** Get Positional data. */

@@ -39,7 +39,7 @@
 #include <boost/concept_check.hpp>
 
 #include <gadget/Type/Input.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Singleton.h>
 
 #include <vpr/Util/Debug.h>
@@ -70,9 +70,11 @@ public:
       return NULL;
    }
 
-   /** Gets the string desc of the type of chunk we can create. */
-   virtual std::string  getBaseType()
-   { return std::string("BaseConstructor: Invalid type"); }
+   /** Gets the name of the type of element we can create. */
+   virtual std::string getBaseType()
+   {
+      return std::string("BaseConstructor: Invalid type");
+   }
 };
 
 /**
@@ -100,16 +102,16 @@ public:
 
    /**
     * Queries if the factory knows about the given device.
-    * @pre chunk != NULL, chunk is a valid chunk.
-    * @param chunk The chunk we are requesting about knowledge to create.
+    * @pre element != NULL, element is a valid element.
+    * @param element The element we are requesting about knowledge to create.
     * @return true if the factory knows how to create the device; false if not.
     */
    bool recognizeNetDevice(std::string base_type);
 
    /**
     * Loads the specified device.
-    * @pre recognizeDevice(chunk) == true
-    * @param chunk The specification of the device to load.
+    * @pre recognizeDevice(element) == true
+    * @param element The specification of the device to load.
     * @return NULL is returned if the device failed to load.
     *         Otherwise, a pointer to the loaded device is returned.
     */
@@ -146,7 +148,7 @@ public:
    {
       boost::ignore_unused_variable_warning(baseType);
       DEV* new_dev = new DEV;
-      //bool success = new_dev->config(chunk);
+      //bool success = new_dev->config(element);
       //if(success)
       //{
          return new_dev;

@@ -34,13 +34,18 @@
 
 #include <fstream>
 #include <vpr/Util/FileUtils.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Devices/Sim/SimGloveGesture.h>
 
 
 namespace gadget
 {
+
+std::string SimGloveGesture::getElementType()
+{
+   return "simulated_glove_gesture";
+}
 
 /**
  * Constructs the SimGloveGesture.
@@ -49,23 +54,25 @@ namespace gadget
  * Trim the smallest so they are same length.
  * Find/Set pos proxy for glove.
  */
-bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
+bool SimGloveGesture::config(jccl::ConfigElementPtr element)
 {
-   if((!GloveGesture::config(chunk)) || (!SimInput::config(chunk)))
+   if((!GloveGesture::config(element)) || (!SimInput::config(element)))
+   {
       return false;
+   }
 
    mCurGesture = 0;     // We are in no gesture yet
 
-   std::vector<jccl::ConfigChunkPtr> key_list;
-   int key_count = chunk->getNum("keyPairs");
+   std::vector<jccl::ConfigElementPtr> key_list;
+   int key_count = element->getNum("key_pair");
    for ( int i = 0; i < key_count; ++i )
    {
-      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+      key_list.push_back(element->getProperty<jccl::ConfigElementPtr>("key_pair", i));
    }
    mSimKeys = readKeyList(key_list);
 
    // Get sample filename
-   std::string sample_file = chunk->getProperty<std::string>("trainedFilename");
+   std::string sample_file = element->getProperty<std::string>("trained_filename");
    loadTrainedFile(vpr::replaceEnvVars(sample_file));
 
    // Trim the lengths
@@ -79,7 +86,7 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
    }
 
    // Find pos proxy
-   std::string glove_pos_proxy = chunk->getProperty<std::string>("glovePos");    // Get the name of the pos_proxy
+   std::string glove_pos_proxy = element->getProperty<std::string>("glove_position");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)

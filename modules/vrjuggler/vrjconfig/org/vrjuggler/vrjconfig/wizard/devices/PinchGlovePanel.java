@@ -35,17 +35,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.wizard.devices;
 
-import java.util.Iterator;
-import java.io.IOException;
-import javax.swing.*;
 import java.awt.*;
-import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.tweek.wizard.*;
-import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.*;
 
+import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.wizard.*;
-import org.vrjuggler.vrjconfig.wizard.WizardComboBoxModel;
 
 
 public class PinchGlovePanel extends JPanel
@@ -179,13 +174,13 @@ public class PinchGlovePanel extends JPanel
 
     cbGlovePositionModel = new WizardComboBoxModel();
     cbGlovePositionModel.setFileSource(mFileSourceName);
-    cbGlovePositionModel.addChunkType("proxyAlias");
-    cbGlovePositionModel.addChunkType("PosProxy");
+    cbGlovePositionModel.addElementType("alias");
+    cbGlovePositionModel.addElementType("position_proxy");
     cbGlovePosition.setModel(cbGlovePositionModel);
 
     cbDeviceHostModel = new WizardComboBoxModel();
     cbDeviceHostModel.setFileSource(mFileSourceName);
-    cbDeviceHostModel.addChunkType("MachineSpecific");
+    cbDeviceHostModel.addElementType("machine_specific");
     cbDeviceHost.setModel(cbDeviceHostModel);
     textBaud.setText("9600");
     textPort.setText("/dev/ttyd4");
@@ -207,7 +202,8 @@ public class PinchGlovePanel extends JPanel
 
   public boolean createPinchGloveConfigChunk()
   {
-    if (ConfigUtilities.getChunksWithName(mBroker.getChunks(mContext), textName.getText()).size() != 0)
+    if (ConfigUtilities.getElementsWithName(mBroker.getElements(mContext),
+                                            textName.getText()).size() != 0)
     {
       int result = JOptionPane.showConfirmDialog(this,
           "ConfigChunk by this name already exists. "
@@ -219,21 +215,21 @@ public class PinchGlovePanel extends JPanel
 
       //Remove all old chunks by this name
       java.util.List old_list =
-          ConfigUtilities.getChunksWithName(mBroker.getChunks(mContext), textName.getText());
+          ConfigUtilities.getElementsWithName(mBroker.getElements(mContext), textName.getText());
 
       for(int i=0;i<old_list.size();i++)
       {
-        mBroker.remove(mContext,(ConfigChunk)old_list.get(i));
+        mBroker.remove(mContext,(ConfigElement)old_list.get(i));
       }
     }
 
-    ConfigChunk chunk = ChunkFactory.createConfigChunk("PinchGlove");
-    chunk.setName(textName.getText());
-    chunk.setProperty("port",0,textPort.getText());
-    chunk.setProperty("baud",0,textBaud.getText());
-    chunk.setProperty("deviceHost",0,(String)cbDeviceHost.getSelectedItem());
-    chunk.setProperty("glovePos",0,(String)cbGlovePosition.getSelectedItem());
-    mBroker.add(mContext, chunk);
+    ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
+    ConfigElement glove = factory.create(textName.getText(), "pinch_glove");
+    glove.setProperty("port",0,textPort.getText());
+    glove.setProperty("baud",0,textBaud.getText());
+    glove.setProperty("device_host",0,(String)cbDeviceHost.getSelectedItem());
+    glove.setProperty("glove_position",0,(String)cbGlovePosition.getSelectedItem());
+    mBroker.add(mContext, glove);
     return true;
   }
 }
@@ -250,13 +246,13 @@ public class PinchGlovePanel extends JPanel
     <help>Serial port speed</help>
     <item label="Baud Rate" defaultvalue="9600" />
   </PropertyDesc>
-  <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
+  <PropertyDesc token="glove_position" name="Glove Position" type="chunk" variable="0">
     <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
     <item label="Glove Position" defaultvalue="" />
     <allowedtype>proxyAlias</allowedtype>
     <allowedtype>PosProxy</allowedtype>
   </PropertyDesc>
-  <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
+  <PropertyDesc name="Host Node" token="device_host" type="chunk" variable="0">
     <help>Points to the machine that the device is physically connected to.</help>
     <item label="Host Node" defaultvalue="" />
     <allowedtype>MachineSpecific</allowedtype>

@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -30,11 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <gadget/gadgetConfig.h>
 #include <gadget/Filter/Position/PositionXformFilter.h>
 #include <gadget/Filter/Position/PositionFilterFactory.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -49,47 +49,53 @@ namespace gadget
 /** Register this filter */
 GADGET_REGISTER_POSFILTER_CREATOR( PositionXformFilter );
 
-bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
+std::string PositionXformFilter::getElementType()
+{
+   return "position_transform_filter";
+}
+
+bool PositionXformFilter::config(jccl::ConfigElementPtr e)
 {
    vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL, 
                         std::string("PositionXformFilter::config: ") +
-                           c->getFullName() + std::string(":") +
-                           c->getDescToken() + std::string("\n"),
+                           e->getFullName() + std::string(":") +
+                           e->getID() + std::string("\n"),
                         std::string("PositionXformFilter::config: done.\n") );
 
-   std::string chunk_type = c->getDescToken();
-   vprASSERT(chunk_type == PositionXformFilter::getChunkType());
+   vprASSERT(e->getID() == PositionXformFilter::getElementType());
 
    // These are the transforms from the base tracker coord system
    float pre_xt, pre_yt, pre_zt;
    float post_xt, post_yt, post_zt;
-   pre_xt = c->getProperty<float>("pre_translate",0);
-   pre_yt = c->getProperty<float>("pre_translate",1);
-   pre_zt = c->getProperty<float>("pre_translate",2);
+   pre_xt = e->getProperty<float>("pre_translate",0);
+   pre_yt = e->getProperty<float>("pre_translate",1);
+   pre_zt = e->getProperty<float>("pre_translate",2);
 
-   post_xt = c->getProperty<float>("post_translate",0);
-   post_yt = c->getProperty<float>("post_translate",1);
-   post_zt = c->getProperty<float>("post_translate",2);
+   post_xt = e->getProperty<float>("post_translate",0);
+   post_yt = e->getProperty<float>("post_translate",1);
+   post_zt = e->getProperty<float>("post_translate",2);
 
 
    // These values are specified in human-friendly degrees but must be passed
    // to GMTL as radians.
    float pre_xr, pre_yr, pre_zr;
    float post_xr, post_yr, post_zr;
-   pre_xr = gmtl::Math::deg2Rad(c->getProperty<float>("pre_rotation",0));
-   pre_yr = gmtl::Math::deg2Rad(c->getProperty<float>("pre_rotation",1));
-   pre_zr = gmtl::Math::deg2Rad(c->getProperty<float>("pre_rotation",2));
+   pre_xr = gmtl::Math::deg2Rad(e->getProperty<float>("pre_rotation",0));
+   pre_yr = gmtl::Math::deg2Rad(e->getProperty<float>("pre_rotation",1));
+   pre_zr = gmtl::Math::deg2Rad(e->getProperty<float>("pre_rotation",2));
 
-   post_xr = gmtl::Math::deg2Rad(c->getProperty<float>("post_rotation",0));
-   post_yr = gmtl::Math::deg2Rad(c->getProperty<float>("post_rotation",1));
-   post_zr = gmtl::Math::deg2Rad(c->getProperty<float>("post_rotation",2));
+   post_xr = gmtl::Math::deg2Rad(e->getProperty<float>("post_rotation",0));
+   post_yr = gmtl::Math::deg2Rad(e->getProperty<float>("post_rotation",1));
+   post_zr = gmtl::Math::deg2Rad(e->getProperty<float>("post_rotation",2));
 
    // Calculate the scale value
    // - If dev_units is 0.0f, then use custom_scale
-   mScaleValue = c->getProperty<float>("dev_units");
+   mScaleValue = e->getProperty<float>("device_units");
 
    if(mScaleValue == 0.0f)
-   { mScaleValue = c->getProperty<float>("custom_scale"); }
+   {
+      mScaleValue = e->getProperty<float>("custom_scale");
+   }
 
    // This makes a rotation matrix that moves a pt in
    // the device's coord system to the vj coord system.

@@ -31,28 +31,33 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/DigitalProxy.h>
 
 namespace gadget
 {
 
-bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
+std::string DigitalProxy::getElementType()
+{
+   return "digital_proxy";
+}
+
+bool DigitalProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                               std::string("----------- configuring DIGITAL PROXY -----------------\n"),
                               std::string("----------- exit: configuring digital proxy -----------\n"));
 
-   vprASSERT(chunk->getDescToken() == "DigProxy");
+   vprASSERT(element->getID() == getElementType());
 
-   if( ! Proxy::config(chunk) )
+   if( ! Proxy::config(element) )
    {
       return false;
    }
 
-   mUnitNum = chunk->getProperty<int>("unit");
-   mDeviceName = chunk->getProperty<std::string>("device");
+   mUnitNum = element->getProperty<int>("unit");
+   mDeviceName = element->getProperty<std::string>("device");
 
    refresh();
    return true;

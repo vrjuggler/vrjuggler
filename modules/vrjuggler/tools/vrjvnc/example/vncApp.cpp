@@ -45,14 +45,14 @@
 namespace vrjvnc
 {
 
-bool vncApp::configCanHandle(jccl::ConfigChunkPtr element)
+bool vncApp::configCanHandle(jccl::ConfigElementPtr element)
 {
    static const std::string my_type("vrjVncApp");
 
-   return (my_type == element->getDescToken());
+   return (my_type == element->getID());
 }
 
-bool vncApp::configAdd(jccl::ConfigChunkPtr element)
+bool vncApp::configAdd(jccl::ConfigElementPtr element)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "vncApp::configAdd()\n"
                                              << vprDEBUG_FLUSH;

@@ -37,7 +37,7 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 #include <boost/concept_check.hpp>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/EventWindowInterface.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
@@ -97,7 +97,7 @@ public:
     * Configures the simulated input device.
     * @post Event window proxy is configured.
     */
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    virtual std::string getBaseType()
    {
@@ -133,15 +133,15 @@ protected:
 
    /**
     * Constructs a vector of key mod pairs.
-    * Takes as input a chunk that has a list of KeyModPair embeded chunks.
+    * Takes as input a element that has a list of KeyModPair child elements.
     *
-    * @pre keyList must be full of var values containing chunks of the type
-    *      "KeyModPair".  The KeyModPair chunk type must have fields name key
-    *      and modKey.
+    * @pre keyList must be full of var values containing elements of the type
+    *      "key_modifier_pair".  The KeyModPair element type must have fields
+    *      named key and modifier_key.
     *
     * @return vector of KeyModPairs
     */
-   std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList);
+   std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigElementPtr>& keyList);
 
 protected:
    EventWindowInterface mEventWin; /**< The event window from which we receive events. */

@@ -50,8 +50,8 @@
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
 
-//#include <jccl/Config/ConfigChunk.h>
-//#include <jccl/Config/ConfigChunkPtr.h>
+//#include <jccl/Config/ConfigElement.h>
+//#include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
 
@@ -66,7 +66,7 @@ namespace cluster
 
    ClusterManager::ClusterManager() : mClusterActive(false), mClusterReady(false)
    {
-      jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
+      jccl::ConfigManager::instance()->addConfigElementHandler(ClusterNetwork::instance());
       jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());      
    }
    ClusterManager::~ClusterManager()
@@ -77,7 +77,7 @@ namespace cluster
    bool ClusterManager::isClusterReady()
    {
       // -If the cluster is active and not ready
-      //   -If a StartBarrier ConfigChunk does not exist
+      //   -If a StartBarrier jccl::ConfigElement does not exist
       //    -Warn the user and set cluster ready
       //   -Get new value of mClusterReady from asking all plugins
       // -Return the new mClusterReady
@@ -87,13 +87,13 @@ namespace cluster
 
       if (mClusterActive && !mClusterReady)
       {
-         if (!jccl::ConfigManager::instance()->isChunkTypeInActiveList("StartBarrierPlugin") &&
-             !jccl::ConfigManager::instance()->isChunkTypeInPendingList("StartBarrierPlugin"))
+         if (!jccl::ConfigManager::instance()->isElementTypeInActiveList("start_barrier_plugin") &&
+             !jccl::ConfigManager::instance()->isElementTypeInPendingList("start_barrier_plugin"))
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-            << clrOutBOLD(clrRED, "StartBarrier not config chunk does not exist. ") 
+            << clrOutBOLD(clrRED, "StartBarrier config element does not exist. ") 
             << clrOutBOLD(clrRED, "If your application depends on each node starting at the same ")
-            << clrOutBOLD(clrRED, "time you should add a StartBarrierPlugin configuration chunk.")
+            << clrOutBOLD(clrRED, "time you should add a StartBarrierPlugin configuration element.")
             << std::endl << vprDEBUG_FLUSH;
 
             std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DONE - ERROR XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
@@ -193,7 +193,7 @@ namespace cluster
 
          // We should do this here, but since we do not add the manager until its configAdd
          // currently you can see the problem
-         jccl::ConfigManager::instance()->addConfigChunkHandler(new_plugin);
+         jccl::ConfigManager::instance()->addConfigElementHandler(new_plugin);
          //We can still unregister it when removed below though
 	     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "Adding Plugin: " << new_plugin->getPluginName() <<std::endl << vprDEBUG_FLUSH;
@@ -227,7 +227,7 @@ namespace cluster
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "Removing Plugin: " << old_plugin->getPluginName() <<std::endl << vprDEBUG_FLUSH;
             mPlugins.erase(i);
-            jccl::ConfigManager::instance()->removeConfigChunkHandler(*i);
+            jccl::ConfigManager::instance()->removeConfigElementHandler(*i);
             return;
          }
       }
@@ -384,16 +384,16 @@ namespace cluster
       ClusterNetwork::instance()->unlockClusterNodes();
    }
 
-   bool ClusterManager::recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk)
+   bool ClusterManager::recognizeRemoteDeviceConfig(jccl::ConfigElementPtr element)
    {  
-     if ( gadget::DeviceFactory::instance()->recognizeDevice(chunk) &&  chunk->getNum("deviceHost") > 0 )
+     if ( gadget::DeviceFactory::instance()->recognizeDevice(element) &&  element->getNum("device_host") > 0 )
      {
-        std::string device_host = chunk->getProperty<std::string>("deviceHost");
-        //std::cout << "Checking: " << chunk->getName() << std::endl;
+        std::string device_host = element->getProperty<std::string>("device_host");
+        //std::cout << "Checking: " << element->getName() << std::endl;
         if ( !device_host.empty() )
         {
            // THIS IS A HACK: find a better way to do this
-           jccl::ConfigChunkPtr device_host_ptr = getConfigChunkPointer(device_host);
+           jccl::ConfigElementPtr device_host_ptr = getConfigElementPointer(device_host);
            if (device_host_ptr.get() != NULL)
            {
               std::string host_name = device_host_ptr->getProperty<std::string>("host_name");
@@ -410,36 +410,36 @@ namespace cluster
      return false;
    }
    
-   bool ClusterManager::recognizeClusterManagerConfig(jccl::ConfigChunkPtr chunk)
+   bool ClusterManager::recognizeClusterManagerConfig(jccl::ConfigElementPtr element)
    {
-     return(chunk->getDescToken() == ClusterManager::getChunkType());
+     return(element->getID() == ClusterManager::getElementType());
    }
 
-   /** Add the pending chunk to the configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff chunk was successfully added to configuration.
+   /** Adds the pending element to the configuration.
+    *  @pre configCanHandle(element) == true.
+    *  @return true iff element was successfully added to configuration.
     */
-   bool ClusterManager::configAdd(jccl::ConfigChunkPtr chunk)
+   bool ClusterManager::configAdd(jccl::ConfigElementPtr element)
    {
-      if (recognizeClusterManagerConfig(chunk))
+      if (recognizeClusterManagerConfig(element))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
-            << "Configure the Cluster: " << chunk->getName() 
+            << "Configure the Cluster: " << element->getName() 
             << "\n" << vprDEBUG_FLUSH;
 
          // Get a list of cluster nodes to use for this cluster.
-         int num_nodes = chunk->getNum(std::string("cluster_nodes"));
+         int num_nodes = element->getNum(std::string("cluster_nodes"));
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "configAdd() Number of nodes: " << num_nodes
             << "\n" << vprDEBUG_FLUSH;         
          for (int i = 0 ; i < num_nodes ; i++)
          {
-            std::string new_node = chunk->getProperty<std::string>(std::string("cluster_nodes"), i);            
+            std::string new_node = element->getProperty<std::string>(std::string("cluster_nodes"), i);            
                   vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
                      << "configAdd() New Node Name: " << new_node
                      << "\n" << vprDEBUG_FLUSH;                     
-            jccl::ConfigChunkPtr new_node_chunk = getConfigChunkPointer(new_node);
-            std::string new_node_hostname = new_node_chunk->getProperty<std::string>(std::string("host_name"));
+            jccl::ConfigElementPtr new_node_element = getConfigElementPointer(new_node);
+            std::string new_node_hostname = new_node_element->getProperty<std::string>(std::string("host_name"));
                   vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
                      << "configAdd() New Node Hostname: " << new_node_hostname
                      << "\n" << vprDEBUG_FLUSH;         
@@ -457,14 +457,14 @@ namespace cluster
          
          // --- Load ClusterPlugin dsos -- //
          // - Load individual plugins
-         const std::string plugin_prop_name("clusterPlugin");
-         int plugin_count = chunk->getNum(plugin_prop_name);
+         const std::string plugin_prop_name("plugin");
+         int plugin_count = element->getNum(plugin_prop_name);
          std::string plugin_dso;
 
          for ( int i = 0; i < plugin_count; ++i )
          {
             plugin_dso =
-               vpr::replaceEnvVars(chunk->getProperty<std::string>(plugin_prop_name, i));
+               vpr::replaceEnvVars(element->getProperty<std::string>(plugin_prop_name, i));
             if(!plugin_dso.empty())
             {
                vprDEBUG(gadgetDBG_RIM, vprDBG_STATE_LVL)
@@ -487,76 +487,84 @@ namespace cluster
 	  {
 	     vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
             << clrOutBOLD(clrRED,"[ClusterManager::ConfigAdd] ERROR: ")
-            << "Something is seriously wrong, we should not be handling this chunk\n"
+            << "Something is seriously wrong, we should not be handling this element\n"
 			<< vprDEBUG_FLUSH;
          return false;
 	  }
 	}
 
 
-	/** Remove the pending chunk from the current configuration.
-	 *  PRE: configCanHandle (chunk) == true.
-	 *  @return true iff the chunk (and any objects it represented)
+	/** Remove the pending element from the current configuration.
+	 *  @pre configCanHandle(element) == true.
+	 *  @return true iff the element (and any objects it represented)
 	 *          were successfully removed.
 	 */
-   bool ClusterManager::configRemove(jccl::ConfigChunkPtr chunk)
+   bool ClusterManager::configRemove(jccl::ConfigElementPtr element)
    {
-      if (recognizeClusterManagerConfig(chunk))
+      if (recognizeClusterManagerConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ClusterManager] Shutdown the Cluster: " << chunk->getName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "[ClusterManager] Shutdown the Cluster: " << element->getName() 
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
-	  else
-	  {
-	     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ClusterManager::configRemove] ERROR, Something is seriously wrong, we should never get here\n"
-		    << vprDEBUG_FLUSH;
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "[ClusterManager::configRemove] ERROR, Something is seriously wrong, we should never get here\n"
+            << vprDEBUG_FLUSH;
          return(false);
       }
    }
 
-	/** Checks if this handler can process chunk.
-	 *  Typically, an implementation of handler will check the chunk's
-	 *  description name/token to decide if it knows how to deal with
-	 *  it.
-	 *  @return true iff this handler can process chunk.
-	 */
-	bool ClusterManager::configCanHandle(jccl::ConfigChunkPtr chunk)
-	{
-		if (recognizeClusterManagerConfig(chunk))
-        {
-           return true;
-        }
+   /** Checks if this handler can process element.
+    *  Typically, an implementation of handler will check the element's
+    *  description name/token to decide if it knows how to deal with
+    *  it.
+    *  @return true iff this handler can process element.
+    */
+   bool ClusterManager::configCanHandle(jccl::ConfigElementPtr element)
+   {
+      if (recognizeClusterManagerConfig(element))
+      {
+         return true;
+      }
 
-/*        for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-             i != mPlugins.end() ; i++)
-        {
-           if ((*i)->configCanHandle(chunk))
-           {
-              return true ;
-           }
-        }
+/*
+      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+            i != mPlugins.end();
+            ++i )
+      {
+         if ((*i)->configCanHandle(element))
+         {
+            return true;
+         }
+      }
 */        
-        return false;
-	}
-   
-   
+      return false;
+   }
+
+   std::string ClusterManager::getElementType()
+   {
+      return "cluster_manager";
+   }
+
    // ---- Configuration Helper Functions ----   
-   jccl::ConfigChunkPtr ClusterManager::getConfigChunkPointer(std::string& name)
+   jccl::ConfigElementPtr ClusterManager::getConfigElementPointer(std::string& name)
    {
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
       //cfg_mgr->lockPending();
       //cfg_mgr->unlockPending();
-      for (std::list<jccl::ConfigManager::PendingChunk>::iterator i = cfg_mgr->getPendingBegin();
-           i != cfg_mgr->getPendingEnd() ; i++)
+      for (std::list<jccl::ConfigManager::PendingElement>::iterator i = cfg_mgr->getPendingBegin();
+           i != cfg_mgr->getPendingEnd() ; ++i)
       {
-         if ((*i).mChunk->getName() == name)
+         if ((*i).mElement->getName() == name)
          {
-            return((*i).mChunk);
+            return((*i).mElement);
          }
       }
       cfg_mgr->lockActive();
-      jccl::ConfigChunkPtr temp = cfg_mgr->getActiveConfig()->get(name);
+      jccl::ConfigElementPtr temp = cfg_mgr->getActiveConfig()->get(name);
       cfg_mgr->unlockActive();
       return(temp);
 
