@@ -37,10 +37,7 @@
 
 subsystem_cxxflags="@subsystem_cxxflags@"
 subsystem_libs="@subsystem_libs@"
-Juggler_lib="@Juggler_lib@"
-Juggler_utils_lib="@Juggler_utils_lib@"
-Juggler_ogl_lib="@Juggler_ogl_lib@"
-Juggler_pf_lib="@Juggler_pf_lib@"
+gad_lib="@gad_lib@"
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -49,25 +46,21 @@ exec_prefix_set=no
 usage()
 {
     cat <<EOF
-Usage: vrjuggler-config [OPTIONS] [LIBRARIES]
+Usage: gadgeteer-config [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]           Use \$VJ_BASE_DIR when printing paths
+        [--basedir]           Use \$GAD_BASE_DIR when printing paths
         [--prefix[=DIR]]      Print the installation prefix or set an
                               alternate prefix to use when printing paths
         [--exec-prefix[=DIR]] Print the executable prefix or set an alternate
                               executable prefix to use when printing paths
-        [--libs]              Print the basic VR Juggler libraries
+        [--libs]              Print the basic Gadgeteer libraries
         [--extra-libs]        Print the extra linker options needed for
                               making an executable
         [--cxxflags]          Print the flags for the C++ compiler
         [--subsystem]         Print the OS abstraction layer being used
 
 Libraries (prints the linker options for one or more of these libraries):
-        vrj (all basic libraries)
-        Juggler
-        Juggler_utils
-        Juggler_ogl
-        Juggler_pf
+        gad
 EOF
 
     exit $1
@@ -77,10 +70,7 @@ if test $# -eq 0; then
     usage 1 1>&2
 fi
 
-lib_Juggler=no
-lib_Juggler_ogl=no
-lib_Juggler_pf=no
-lib_Juggler_utils=no
+lib_gad=no
 
 while test $# -gt 0; do
     case "$1" in
@@ -126,24 +116,8 @@ while test $# -gt 0; do
         --static)
             echo_static=yes
             ;;
-        vrj)
-            lib_Juggler_all=yes
-            ;;
-        Juggler)
-            lib_Juggler=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_utils)
-            lib_Juggler_utils=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_ogl)
-            lib_Juggler_ogl=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_pf)
-            lib_Juggler_pf=yes
-            lib_Juggler_all=no
+        gad)
+            lib_gad_all=yes
             ;;
         *)
             usage 1 1>&2
@@ -152,13 +126,13 @@ while test $# -gt 0; do
     shift
 done
 
-if test "x$lib_Juggler_all" = "x" ; then
-    lib_Juggler_all=yes
+if test "x$lib_gad_all" = "x" ; then
+    lib_gad_all=yes
 fi
 
 if test "$echo_prefix" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo $VJ_BASE_DIR
+        echo $GAD_BASE_DIR
     else
         echo $prefix
     fi
@@ -166,7 +140,7 @@ fi
 
 if test "$echo_exec_prefix" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo $VJ_BASE_DIR
+        echo $GAD_BASE_DIR
     else
         echo $exec_prefix
     fi
@@ -174,7 +148,7 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$VJ_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ -I$GAD_BASE_DIR/include $subsystem_cxxflags
     else
         echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
     fi
@@ -187,36 +161,24 @@ fi
 
 if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        ldflags="-L$VJ_BASE_DIR/lib@LIBBITSUF@"
+        ldflags="-L$GAD_BASE_DIR/lib@LIBBITSUF@"
     else
-        ldflags="@vrj_ldflags@"
+        ldflags="@gad_ldflags@"
     fi
 
-    if test "x$lib_Juggler_all" = "xyes" ; then
-        vrj_libs="@vrj_libs@"
+    if test "x$lib_gad_all" = "xyes" ; then
+        gad_libs="@gad_libs@"
     else
-        if test "x$lib_Juggler" = "xyes" ; then
-            vrj_libs="$Juggler_lib"
-        fi
-
-        if test "x$lib_Juggler_utils" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_utils_lib"
-        fi
-
-        if test "x$lib_Juggler_ogl" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_ogl_lib"
-        fi
-
-        if test "x$lib_Juggler_pf" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_pf_lib"
+        if test "x$lib_gad" = "xyes" ; then
+            gad_libs="$gad_lib"
         fi
     fi
 
-    echo $ldflags $static_begin $vrj_libs $static_end
+    echo $ldflags $static_begin $gad_libs $static_end
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
-    vrj_extra_ldflags="@vrj_extra_ldflags@"
-    vrj_extra_libs="@vrj_extra_libs@"
-    echo $vrj_extra_ldflags $vrj_extra_libs
+    gad_extra_ldflags="@gad_extra_ldflags@"
+    gad_extra_libs="@gad_extra_libs@"
+    echo $gad_extra_ldflags $gad_extra_libs
 fi
