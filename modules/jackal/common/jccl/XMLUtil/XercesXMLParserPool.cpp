@@ -36,7 +36,7 @@
 
 namespace jccl {
 
-vjXercesXMLParserPool::vjXercesXMLParserPool () {
+XercesXMLParserPool::XercesXMLParserPool () {
     // Initialize the XML4C2 system
     try {
         XMLPlatformUtils::Initialize();
@@ -49,15 +49,15 @@ vjXercesXMLParserPool::vjXercesXMLParserPool () {
 }
 
 
-vjXercesXMLParserPool::~vjXercesXMLParserPool () {
+XercesXMLParserPool::~XercesXMLParserPool () {
     XMLPlatformUtils::Terminate();
 }
 
-vjXercesXMLParser* vjXercesXMLParserPool::getParser() {
-    vjXercesXMLParser* p;
+XercesXMLParser* XercesXMLParserPool::getParser() {
+    XercesXMLParser* p;
     pool_lock.acquire();
     if (free_parsers.empty()) {
-        p = new vjXercesXMLParser();
+        p = new XercesXMLParser();
         used_parsers.push_back (p);
     }
     else {
@@ -69,7 +69,7 @@ vjXercesXMLParser* vjXercesXMLParserPool::getParser() {
     return p;
 }
 
-void vjXercesXMLParserPool::releaseParser (vjXercesXMLParser* parser) {
+void XercesXMLParserPool::releaseParser (XercesXMLParser* parser) {
     pool_lock.acquire();
     free_parsers.push_back (parser);
     used_parsers.erase (std::find (used_parsers.begin(), used_parsers.end(), parser));
@@ -77,6 +77,6 @@ void vjXercesXMLParserPool::releaseParser (vjXercesXMLParser* parser) {
 }
 
 
-vprSingletonImp (vjXercesXMLParserPool);
+vprSingletonImp (XercesXMLParserPool);
 
 };
