@@ -63,25 +63,6 @@
 
 #endif   /* WIN32 */
 
-
-/* Common C++ includes. */
-/* Put here for pre-compiled headers. */
-#ifdef __cplusplus
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <vector>
-#include <map>
-#include <string>
-#include <algorithm>
-#include <math.h>
-
-#endif   /* __cplusplus */
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -141,7 +122,5 @@
 #   define SNX_CLASS_API	SNX_IMPORT_CLASS
 #   define SNX_DATA_API(__type)	SNX_IMPORT_DATA(__type)
 #endif
-
-// #define SNX_USING_RIM_SYNC
 
 #endif   /* _SNX_CONFIG_H_ */
