@@ -60,45 +60,6 @@ public class ProxyPointerEdge
       super(userObject);
    }
 
-   public ConfigElement getProxyElement()
-   {
-      Object port = getSource();
-      ConfigElement proxy_elt = null;
-
-      if ( port != null && port instanceof DefaultPort )
-      {
-         DefaultPort def_port = (DefaultPort) port;
-         DefaultGraphCell parent = (DefaultGraphCell) def_port.getParent();
-
-         if ( parent.getUserObject() instanceof ProxyInfo )
-         {
-            proxy_elt =
-               (ConfigElement) ((ProxyInfo) parent.getUserObject()).getElement();
-         }
-      }
-
-      return proxy_elt;
-   }
-
-   public ConfigElement getDeviceElement()
-   {
-      Object port = getTarget();
-      ConfigElement dev_elt = null;
-
-      if ( port != null && port instanceof DefaultPort )
-      {
-         DefaultPort def_port = (DefaultPort) port;
-         DefaultGraphCell parent = (DefaultGraphCell) def_port.getParent();
-
-         if ( parent.getUserObject() instanceof DeviceInfo )
-         {
-            dev_elt = ((DeviceInfo) parent.getUserObject()).getElement();
-         }
-      }
-
-      return dev_elt;
-   }
-
    /**
     * Sets the source for this edge.  If the target is the port of a vertex
     * containing a <code>DeviceInfo</code> object, then the source must refer
