@@ -67,8 +67,8 @@ public:
    {;}
 
 protected:
-   void lockMouse();
-   void unlockMouse();
+   void lockMouse(XEvent* ev = NULL);
+   void unlockMouse(XEvent* ev = NULL);
    void updateOriginAndSize(unsigned int width, unsigned int height);
    //void resize(long width, long height);
 
@@ -78,6 +78,7 @@ protected:
     * Copies mKeys to mCurKeys.
     */
    void handleEvents();
+   void handleEvent(::XEvent& event);
 
 private:
    /**
@@ -136,7 +137,7 @@ private:
    
    //XXX: This is not being used anywhere.
    /** Do any extra event processing needed. */
-   virtual void processEvent(XEvent event)
+   virtual void processEvent(::XEvent event)
    {
       boost::ignore_unused_variable_warning(event);
    }
