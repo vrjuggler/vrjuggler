@@ -158,7 +158,7 @@
       <DD>Install the standard Juggler data files.  This makes a copy of
           the <TT>Data</TT> directory tree found in the Juggler source.
     <DT>`<TT>install-gui</TT>'
-      <DD>Install the VJ Control JAR file and its runnable files.  In a
+      <DD>Install the VjControl JAR file and its runnable files.  In a
           UNIX environment, the <TT>vjcontrol</TT> and <TT>vjcontrol1.1</TT>
           scripts are installed.  On a Win32 platform, the
           <TT>vjcontrol.bat</TT> batch file is installed.  This is done only
@@ -205,10 +205,9 @@
           If this was used as part of compiling, it must also be used for
           installing to ensure that everything is installed properly.
     <DT><TT>NO_JAVA_GUI</TT>
-      <DD>Disable the installation of VJ Control by setting this variable
-          to <TT>1</TT> when building.  This is very helpful when VJ
-          Control is not building properly or is not needed for whatever
-          reason.
+      <DD>Disable the installation of VjControl by setting this variable
+          to <TT>1</TT> when building.  This is very helpful when VjControl
+          is not building properly or is not needed for whatever reason.
     <DT><TT>PERL</TT>
       <DD>Provide a different version of a Perl 5.004 or newer binary than
           what <TT>configure</TT> found.  Perl is crucial to the
@@ -226,7 +225,7 @@
     targets (`<TT>installworld</TT>', `<TT>install-all-abi</TT>',
     `<TT>install-debug</TT>' and `<TT>install-optim</TT>').  These targets
     install library binaries and all associated Juggler files (data files,
-    VJ Control, headers, sample apps, etc.).  The steps are:
+    VjControl, headers, sample apps, etc.).  The steps are:
 
     <OL>
       <LI>
@@ -262,7 +261,7 @@
         tables, etc.).
       </LI>
       <LI>
-        Install VJ Control (if it was built).
+        Install VjControl (if it was built).
       </LI>
       <LI>
         Do any post-installation steps necessary.  Currently, nothing is

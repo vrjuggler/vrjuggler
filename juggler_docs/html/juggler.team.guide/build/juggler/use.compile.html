@@ -3,6 +3,7 @@
 </HEAD>
 
 <BODY>
+
 <H2>Compiling VR Juggler</H2>
 
 <H3>Table of Contents:</H3>
@@ -114,7 +115,7 @@
               Data files (sample config files, model files, etc.)
             </LI>
             <LI>
-              VJ Control (if it was built)
+              VjControl (if it was built)
             </LI>
           </UL>
 
@@ -170,7 +171,7 @@
           This does the same thing as `<TT>optim</TT>' but does not compile
           the static libraries.
     <DT>`<TT>gui</TT>'
-      <DD>Compile the VJ Control Java files and collect them into
+      <DD>Compile the VjControl Java files and collect them into
           <TT>VjControl.jar</TT>.  This is only done if the configure
           script found a working Java compiler during its phase of the
           compile process.
@@ -231,9 +232,9 @@
           target) before running the `<TT>world</TT>' target.  Set this
           variable to <TT>1</TT> to enable it.
     <DT><TT>NO_JAVA_GUI</TT>
-      <DD>Disable compiling and installing of VJ Control by setting this
+      <DD>Disable compiling and installing of VjControl by setting this
           variable to <TT>1</TT> when building.  This is very handy when
-          VJ Control is not building properly or is not needed for whatever
+          VjControl is not building properly or is not needed for whatever
           reason.
     <DT><TT>OBJDIR</TT>
       <DD>Set an alternate directory in which object files are created.
@@ -323,7 +324,7 @@
         repeated in step 4).
       </LI>
       <LI>
-        Compile VJ Control if the Java compiler is available and compiling
+        Compile VjControl if the Java compiler is available and compiling
         of it has not been disabled by the user (<A HREF="#variables">see
         above</A> for more information).
       </LI>
