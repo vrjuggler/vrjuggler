@@ -234,6 +234,9 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
+ifdef GLOBAL_BUILD
+	@$(MAKE) links
+endif
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VPR release installation process"
 	@echo "---------------------------------------------------------------"
