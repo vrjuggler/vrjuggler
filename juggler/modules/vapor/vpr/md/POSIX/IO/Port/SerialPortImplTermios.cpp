@@ -1056,13 +1056,13 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs (struct termios* term,
       << "[vpr::SerialPortImplTermios] term->c_ospeed: " << cfgetospeed(term)
       << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "[vpr::SerialPortImplTermios] term->c_cc[]:";
+      << "[vpr::SerialPortImplTermios] term->c_cc[]:" << vprDEBUG_FLUSH;
    for ( int i = 0; i < NCCS; i++ )
    {
       vprDEBUG_CONT(vprDBG_ALL, vprDBG_STATE_LVL)
-         << " " << (unsigned int) term->c_cc[i];
+         << " " << (unsigned int) term->c_cc[i] << vprDEBUG_FLUSH;
    }
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_CONT(vprDBG_ALL, vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
 #endif
 
    if ( tcsetattr(mHandle->mFdesc, mActions, term) == -1 )
