@@ -40,7 +40,7 @@
 class velocityNav : public navigator
 {
 public:
-   enum navMode { GROUND=0, FLY=1 };
+   enum navMode { DRIVE=0, FLY=1 };
    velocityNav();
 
    // Update the interaction state
@@ -64,7 +64,7 @@ public:
 
    // pass in velocity to add per second
    void setAccel( const float& vel_per_sec ) { mAcceleration = vel_per_sec; }
-   
+
    // set the highest velocity this nav can achieve.
    // default is 35
    void setMaxVelocity( const float& velocity = 50.0f )
@@ -77,10 +77,10 @@ public:
 
    //: zero all velocity
    void stop();
-   
+
    // TODO: add other directions to accelerate. (since it's hard coded to 0,0,-x in updateInteraction)
    bool acceleratingForward() { return mAcceleratingForward;}
-   bool braking() { return mBraking; }   
+   bool braking() { return mBraking; }
    bool rotating() { return mRotating;}
    bool stopping() { return mStopping;}
    bool reseting() { return mReseting;}
@@ -136,17 +136,16 @@ private:
    StopWatch   stopWatch;
    navMode     mMode;
    int         mTimeHack;
-
-   vjMatrix mOrigin;
 };
 
 velocityNav::velocityNav() :
-   mOrigin(),
    mTimeHack(0),
    mDamping( 1.0f ),
    mVelocity( 0.0f, 0.0f , 0.0f ),
-   mMode( velocityNav::GROUND ),
-   mMaxVelocity( 9999.0f )
+   mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f),
+   mMode( velocityNav::DRIVE ),
+   mMaxVelocity( 2500.0f ),
+   mAcceleration(10.0f)
 {
    stop();
    stopWatch.start();
@@ -172,6 +171,8 @@ velocityNav::velocityNav() :
    setStopActionCombo(stop_combo);
    setRotationActionCombo(rotate_combo);
    setResetActionCombo(reset_combo);
+
+   mBraking = mAcceleratingForward = mRotating = mStopping = mReseting = false;
 }
 
 
@@ -232,6 +233,18 @@ void velocityNav::updateInteraction()
    rot_mat.setTrans(0,0,0);
 
    setRotationalAcceleration(rot_mat);
+
+   // Output visual feedback
+   if(mAcceleratingForward)
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward") << endl << vjDEBUG_FLUSH;
+   if(mBraking)
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking") << endl << vjDEBUG_FLUSH;
+   if(mStopping)
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping") << endl << vjDEBUG_FLUSH;
+   if(mReseting)
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Reseting") << endl << vjDEBUG_FLUSH;
+   if(mRotating)
+       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating") << endl << vjDEBUG_FLUSH;
 }
 
 void velocityNav::update()
@@ -239,12 +252,6 @@ void velocityNav::update()
    stopWatch.stop();
    stopWatch.start();
 
-   // here to correct for NAN's
-   if (mTimeHack < 3)
-   {
-      stopWatch.timeInstant = 0;
-      ++mTimeHack;
-   }
 
    //////////////////////////////////
    // do navigations...
@@ -268,7 +275,7 @@ void velocityNav::update()
       this->scaled_rotate( mRotationalAcceleration );     // Interpolates the rotation, and updates mCurPos matrix
    }
 
-   if (mMode == GROUND)
+   if (mMode == DRIVE)
    {
       // get the axes of the tracking/pointing device
       // NOTE: constrain to the Y axis in GROUND mode (no flying/hopping or diving faster than gravity allows)
@@ -280,7 +287,7 @@ void velocityNav::update()
       trackerXaxis.xformVec( constrainedToY, trackerXaxis);
       trackerYaxis.xformVec( constrainedToY, trackerYaxis);
    }
-   else
+   else if (mMode == FLY)
    {
       // get the axes of the tracking/pointing device
       trackerZaxis.xformVec( mRotationalAcceleration, trackerZaxis);
@@ -291,7 +298,7 @@ void velocityNav::update()
    // this is used to accumulate velocity added by navigation
    vjVec3   velocityAccumulator( 0.0f, 0.0f, 0.0f );
 
-   if (mMode == GROUND)
+   if (mMode == DRIVE)           // if DRIVING --> we have GRAVITY
    {
       // add the velocity this timeslice/frame by the acceleration from gravity.
       velocityAccumulator += mVelocityFromGravityAccumulator;
@@ -299,6 +306,8 @@ void velocityNav::update()
       // recalculate the current downward velocity from gravity.
       // this vector then is accumulated with the rest of the velocity vectors each frame.
       mVelocityFromGravityAccumulator += (gravity * stopWatch.timeInstant);
+
+      cout << "Grav velocity: " << mVelocityFromGravityAccumulator << endl << flush;
    }
    if (mAllowTrans)
    {
@@ -360,7 +369,7 @@ void velocityNav::scaled_rotate(vjMatrix rot_mat)
 }
 
 // accel = velocity per second
-// TODO: hook this up to the vel accumulator..., 
+// TODO: hook this up to the vel accumulator...,
 //        and get rid of mVelocity weirdness.
 void velocityNav::accelerate(const vjVec3& accel)
 {
