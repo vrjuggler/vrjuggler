@@ -65,6 +65,11 @@ public:
    typedef std::vector< std::vector< DATA_TYPE > > buffer_t;
 
 public:
+   SampleBuffer()
+   {
+      /* Do nothing. */ ;
+   }
+
    /** Add a new sample to the buffer
     * @pre Buffers must be locked before calling
     */
@@ -101,6 +106,10 @@ public:
    { return mStableBuffer; }
 
 protected:
+   // vpr::Mutex is not copyable, so neither are we.
+   SampleBuffer(const SampleBuffer& b) {;}
+   void operator=(const SampleBuffer& b) {;}
+
    buffer_t   mStableBuffer;
    buffer_t   mReadyBuffer;
 

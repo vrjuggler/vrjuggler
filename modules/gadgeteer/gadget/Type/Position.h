@@ -66,8 +66,9 @@ const unsigned short MSG_DATA_POS = 422;
 *  Position objects have the ability to convert from the tracker's coord system
 *  to the Juggler coordinate system.
 *
-*  Position adds one new pure virtual function, GetPosData for retreiving
-*  the positional data, similar to the addition for Analog and Digital.
+*  Position adds one new pure virtual function, getPositionData() for
+*  retreiving the positional data, similar to the addition for gadget:;Analog
+*  and gadget:;Digital.
 */
 class GADGET_CLASS_API Position : public vpr::SerializableObject
 {
@@ -142,6 +143,10 @@ public:
 
 protected:
    PositionData      mDefaultValue;   /**< Default positional value to return */
+
+   // gadget::SampleBuffer<T> is not copyable, so neither are we.
+   Position(const gadget::Position& d) : vpr::SerializableObject() {;}
+   void operator=(const gadget::Position& d) {;}
 
 private:
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
