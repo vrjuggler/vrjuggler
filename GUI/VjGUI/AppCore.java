@@ -31,7 +31,8 @@ public class AppCore extends java.applet.Applet {
 	core.fileio = new FileControl(core);
 	core.net = new NetControl (core);
 	core.ui = new ClientUI(core);
-	core.ui.showPanel("Descriptions");
+	core.ui.initialize();
+       	core.ui.showPanel("Descriptions");
 	core.ui.update();
     }
 
@@ -53,6 +54,7 @@ public class AppCore extends java.applet.Applet {
 		core.chunks = new ConfigChunkDB(core.descs);
 		core.fileio = new FileControl(core);
 		core.ui = new ClientUI(core);
+		core.ui.initialize();
 		core.noautoload = false;
 		for (i = 1; i < argv.length; i++) {
 		    if (argv[i].equalsIgnoreCase ("-noautoload"))
