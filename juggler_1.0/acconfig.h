@@ -45,8 +45,8 @@
 /* Define if using POSIX threads Draft 10 (the "final" draft). */
 #undef _PTHREADS_DRAFT_10
 
-/* Define to use SGI IPC threading instead of POSIX threads. */
-#undef VJ_SGI_IPC
+/* Define to use the IRIX sproc(2) threading model instead of POSIX threads. */
+#undef VJ_IRIX_SPROC
 
 /* Define to use the OpenGL API. */
 #undef VJ_API_OPENGL
@@ -55,7 +55,7 @@
 #undef VJ_API_PERFORMER
 
 /* Define all of the following if building on IRIX. */
-#undef VJ_OS_SGI
+#undef VJ_OS_IRIX
 #undef _BSD_TYPES
 #undef _OLD_TERMIOS
 

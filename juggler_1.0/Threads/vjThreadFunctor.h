@@ -116,7 +116,7 @@ public:
 // This is the actual function that is called.
 // It must be extern "C"
 //---------------------------------------------
-#if defined(VJ_SGI_IPC)		// ---- SGI IPC Barrier ------ //
+#if defined(VJ_IRIX_SPROC)	// ---- SGI IPC Barrier ------ //
     extern "C" void ThreadFunctorFunction(void* args);
 #elif defined(VJ_OS_Win32)
     unsigned int __stdcall ThreadFunctorFunction(void* args);
@@ -129,6 +129,6 @@ public:
         ThreadFunctorFunction (void* args);
 #else
     extern "C" void ThreadFunctorFunction(void* args);
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 
 #endif	/* _THREAD_FUNCTOR_H_ */

@@ -87,13 +87,13 @@ AC_ARG_WITH(abi,
                           Define the Application Binary Interface to use],
             _abi_type="$withval")
 
-dnl # Define which threading model to use.  Possible values are "SGI_IPC" or
-dnl # "POSIX".
-dnl # The default is "SGI_IPC".
+dnl # Define which threading model to use.  Possible values are "IRIX_SPROC"
+dnl # or "POSIX".
+dnl # The default is "IRIX_SPROC".
 AC_ARG_WITH(threads,
-            [  --with-threads=<SGI_IPC|POSIX|WIN32>
-                          Define threading implementation [default=SGI_IPC]],
-            _thread_pkg="$withval", _thread_pkg='SGI_IPC')
+            [  --with-threads=<IRIX_SPROC|POSIX|WIN32>
+                          Define threading implementation [default=IRIX_SPROC]],
+            _thread_pkg="$withval", _thread_pkg='IRIX_SPROC')
 
 dnl # Define the root directory for the Java installation.
 dnl # The default is /usr/java or what the user has defined in his or her
@@ -186,7 +186,7 @@ dnl # provided.
 AC_DEFUN(VJ_ABI_CFG, [ ABI=$1 ISA=$2 LIBBITSUF=$3 _EXTRA_FLAGS=$4 ; ])
 
 dnl # Set default values for these before checking ${_abi_type}.  Currently,
-dnl # these are for non-SGI platforms.
+dnl # these are for non-IRIX platforms.
 ABI=''
 LIBBITSUF=''
 
@@ -311,9 +311,9 @@ case $target_os in
         DSOVERSIONOPTS='-set_version ${DSOVERSION}'
 
         ABI_LIST='64_M4 64_M3 N32_M4 N32_M3'
-        PLATFORM='SGI'
+        PLATFORM='IRIX'
 
-        AC_DEFINE(VJ_OS_SGI,)
+        AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
         AC_DEFINE(_OLD_TERMIOS,)
 
@@ -529,7 +529,7 @@ dnl # --------------------------------------------------------------------
 dnl # Depending on host type and the value in ${_enable_perf}, define the
 dnl # settings for the performance code.
 dnl # --------------------------------------------------------------------
-if test "$PLATFORM" != "SGI" -a "${_enable_perf}" != "NONE" ; then
+if test "$PLATFORM" != "IRIX" -a "${_enable_perf}" != "NONE" ; then
     _enable_perf='POSIX'
 fi
 
@@ -569,7 +569,7 @@ elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
         AC_MSG_ERROR(*** The library requires the MS Visual C++ compiler ***))
     CC=$CXX
 dnl # On IRIX, we have to use cc and CC (not gcc or g++).
-elif test "$PLATFORM" = "SGI" ; then
+elif test "$PLATFORM" = "IRIX" ; then
     AC_CHECK_PROG(CC, cc, cc,
         AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
     AC_CHECK_PROG(CXX, CC, CC,
@@ -764,7 +764,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         dnl # Define the default thread scope depending on the platform.  On
         dnl # IRIX, only process scope is avaiable without special
         dnl # configuration options.  Other systems may support system scope.
-        if test "$PLATFORM" = "SGI" ; then
+        if test "$PLATFORM" = "IRIX" ; then
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
         else
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
@@ -772,7 +772,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
         dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
         dnl # platform.
-        if test "$PLATFORM" = "SGI" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" ; then
+        if test "$PLATFORM" = "IRIX" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" ; then
             AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
@@ -785,18 +785,18 @@ dnl #
 elif test "x${_thread_pkg}" = "xWIN32" ; then
     THREADS='WIN32'
 
-dnl # If we are not using POSIX threads, we must be using the SGI IPC model,
-dnl # but we test ${_thread_pkg} just to be sure it is set right.
-elif test "x${_thread_pkg}" = "xSGI_IPC" ; then
+dnl # If we are not using POSIX threads, we must be using the IRIX sproc(2)
+dnl # model, but we test ${_thread_pkg} just to be sure it is set right.
+elif test "x${_thread_pkg}" = "xIRIX_SPROC" ; then
     AC_CHECK_HEADERS(sys/prctl.h,
-        THREADS='SGI_IPC',
-        AC_MSG_WARN(*** SGI IPC threading will not be used (no headers found) ***))
+        THREADS='IRIX_SPROC',
+        AC_MSG_WARN(*** IRIX sproc(2) threading will not be used (no headers found) ***))
 fi
 
 dnl # Shared memory and synchronization primitives.
-SYNC_SYS=''			# POSIX, SGI_IPC, WIN32
-SHMEM_SYS=''			# SGI_IPC, WIN32
-THREAD_SYS=''			# POSIX, SGI_IPC, WIN32
+SYNC_SYS=''			# POSIX, IRIX_SPROC, WIN32
+SHMEM_SYS=''			# IRIX_SPROC, WIN32
+THREAD_SYS=''			# POSIX, IRIX_SPROC, WIN32
 
 dnl # Define various CPP macros depending on which threads implementation will
 dnl # be used.  If no implementation was defined above, exit configure.
@@ -819,14 +819,14 @@ elif test "$THREADS" = "WIN32" ; then
     THREAD_SYS='WIN32'
     SYNC_SYS='WIN32'
     SHMEM_SYS='WIN32'
-elif test "$THREADS" = "SGI_IPC" ; then
-    AC_DEFINE(VJ_SGI_IPC,)
+elif test "$THREADS" = "IRIX_SPROC" ; then
+    AC_DEFINE(VJ_IRIX_SPROC,)
 
-    dnl # Set to SGI_IPC threading
-    THREAD_SYS="SGI_IPC"
+    dnl # Set to IRIX_SPROC threading
+    THREAD_SYS='IRIX_SPROC'
 
-    SYNC_SYS='SGI_IPC'
-    SHMEM_SYS='SGI_IPC'
+    SYNC_SYS='IRIX_SPROC'
+    SHMEM_SYS='IRIX_SPROC'
 elif test "x$THREADS" = "x" ; then
     AC_MSG_ERROR(No threading package defined!)
 fi
@@ -930,7 +930,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             _LIBOPENGL='opengl32.lib glu32.lib'
         fi
 
-        if test "$PLATFORM" = "SGI" -a "$ABI" = "O32" ; then
+        if test "$PLATFORM" = "IRIX" -a "$ABI" = "O32" ; then
             _SYSTEM_OPENGL="-lmpc -lGLw ${_LIBOPENGL} -lfpe -lXm -lXt -lmalloc"
         else
             _SYSTEM_OPENGL="${_LIBOPENGL}"
@@ -1075,7 +1075,7 @@ dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
 EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
 
-if test "$PLATFORM" = "SGI" ; then
+if test "$PLATFORM" = "IRIX" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
@@ -1125,13 +1125,13 @@ dnl #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling
 dnl #       with the Performer API.
 dnl #
 if test "$OS_TYPE" = "UNIX" ; then
-    if test "$PLATFORM" = "SGI" ; then
+    if test "$PLATFORM" = "IRIX" ; then
         TEST_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         TEST_LIBS_BASIC="-B dynamic -lm -lC"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
-        dnl # is only the case on non-SGI platforms.
+        dnl # is only the case on non-IRIX platforms.
         TEST_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         TEST_LIBS_BASIC="-lm"
     fi

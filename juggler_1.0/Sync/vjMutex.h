@@ -35,7 +35,7 @@
 
 #include <vjConfig.h>
 
-#if defined(VJ_SGI_IPC)
+#if defined(VJ_IRIX_SPROC)
 #   include <ulocks.h>
 #   include <Sync/vjMutexSGI.h>    
     
@@ -47,7 +47,7 @@
 #   include <Sync/vjMutexPosix.h>
 
     typedef  vjMutexPosix vjMutex;
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 
 #include <Sync/vjNullMutex.h>
 

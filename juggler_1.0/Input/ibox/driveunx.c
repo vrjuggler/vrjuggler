@@ -34,7 +34,7 @@
  * If yours is not listed, it can be added.  Contact Immersion Corp.
  */
 
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
 #   define SGI_PLATFORM
 #else
 #ifdef VJ_OS_HPUX
@@ -48,7 +48,7 @@
 #endif	/* VJ_OS_Solaris */
 #endif	/* VJ_OS_Linux */
 #endif	/* VJ_OS_HPUX */
-#endif	/* VJ_OS_SGI */
+#endif	/* VJ_OS_IRIX */
 
 #if defined(SGI_PLATFORM) || defined(LINUX_PLATFORM)
 #define PORT1_DEV  "/dev/ttyd1"

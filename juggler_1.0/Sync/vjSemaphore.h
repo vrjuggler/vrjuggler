@@ -23,7 +23,7 @@
 
 #include <vjConfig.h>
 
-#if defined(VJ_SGI_IPC)
+#if defined(VJ_IRIX_SPROC)
 #   include <ulocks.h>
 #   include <Sync/vjSemaphoreSGI.h>
     
@@ -37,6 +37,6 @@
 #   include <Sync/vjSemaphorePosix.h>
 
     typedef vjSemaphorePosix vjSemaphore;
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 
 #endif

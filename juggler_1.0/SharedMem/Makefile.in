@@ -31,7 +31,7 @@ vpath %.o ${OBJDIR}
 
 SHM_SRCS	:= vjMemory.cpp
 
-ifeq (@SHMEM_SYS@,SGI_IPC)
+ifeq (@SHMEM_SYS@, IRIX_SPROC)
     SHM_SRCS	+= vjMemPoolSGI.cpp
 endif
 ifeq (@SHMEM_SYS@,WIN32)

@@ -39,7 +39,7 @@ THREAD_SRCS	:= vjBaseThread.cpp	\
 ifeq (@THREAD_SYS@,POSIX)
     THREAD_SRCS += vjThreadPosix.cpp
 endif
-ifeq (@THREAD_SYS@,SGI_IPC)
+ifeq (@THREAD_SYS@, IRIX_SPROC)
     THREAD_SRCS += vjThreadSGI.cpp
 endif
 ifeq (@THREAD_SYS@,WIN32)

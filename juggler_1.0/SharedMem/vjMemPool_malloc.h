@@ -27,7 +27,7 @@
  *    - It is *required* that one of the following be used depending on the
  *      platform:
  *         HP-UX 10.20 --> -DVJ_OS_HPUX
- *         IRIX 6.x    --> -DVJ_OS_SGI
+ *         IRIX 6.x    --> -DVJ_OS_IRIX
  * --------------------------------------------------------------------------
  */
 

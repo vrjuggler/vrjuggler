@@ -32,7 +32,7 @@ typedef void (*THREAD_FUNC)(void *);
 #include <Threads/vjBaseThread.h>
 
 
-#if defined(VJ_SGI_IPC)		// ---- SGI IPC Barrier ------ //
+#if defined(VJ_IRIX_SPROC)	// ---- SGI IPC Barrier ------ //
     typedef struct cancel_state	cancel_state_t;
 
 #   include <Threads/vjThreadSGI.h>
@@ -59,7 +59,7 @@ typedef void (*THREAD_FUNC)(void *);
     typedef class vjThreadKeyPosix	vjKeyId;
 #else
 #   include <Threads/vjThreadFunctor.h>
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 
    // Other thread related classes //
 #include <Threads/vjThreadManager.h>

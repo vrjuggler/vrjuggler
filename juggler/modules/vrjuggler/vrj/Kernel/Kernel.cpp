@@ -24,7 +24,7 @@
 #include <Config/vjChunkFactory.h>
 
 // Get the system factory we need
-#if defined(VJ_OS_SGI) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
+#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
 #include <Kernel/vjSGISystemFactory.h>
 #endif
 #ifdef WIN32
@@ -212,7 +212,7 @@ void vjKernel::initConfig()
 
    configAddDB(mInitialChunkDB);       // Add the initial configuration to the config queue
 
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 #else
 #if defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
