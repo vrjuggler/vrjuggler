@@ -29,7 +29,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 ROOT_DIR        = $(top_srcdir)
 
-EXTRA_SRCS_PATH =
+EXTRA_SRCS_PATH = $(srcdir)/plugins
 EXTRA_INCLUDES = -I$(top_srcdir) -I$(srcdir)
 # -I$(AJ_BASE_DIR)
 LIBS = ${LIBS} -lm

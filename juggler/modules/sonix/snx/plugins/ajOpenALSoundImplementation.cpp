@@ -18,10 +18,10 @@
 #include "aj/ajSoundImplementation.h"
 #include "aj/ajSoundInfo.h"
 
-#include "aj/ajOpenALSoundImplementation.h"
+#include "ajOpenALSoundImplementation.h"
 
 
-#include "ajSoundFactory.h"
+#include "aj/ajSoundFactory.h"
 ajSoundFactoryReg<ajOpenALSoundImplementation> openAlRegistrator( "OpenAL" );
 
 void ajOpenALSoundImplementation::step( const float & timeElapsed )
