@@ -106,7 +106,7 @@ std::string FileIO::resolvePathForName( const char* const filename )
 
 /** filename handling routines **/
 
-//: is n an absolute path name?
+/** Is n an absolute path name? */
 bool FileIO::isAbsolutePathName (const std::string& n)
 {
 #ifdef WIN32

@@ -44,7 +44,7 @@ namespace vrj
  * PURPOSE:
  *   This class is used for the application to tell the
  *  Kernel what API it is using.
- */ 
+ */
 class API
 {
 public:
@@ -85,7 +85,7 @@ public:
    { return (mApi == OPENGL);}
 
 private:
-   int mApi;    //: The API we are using.
+   int mApi;    /**< The API we are using. */
 
 };
 

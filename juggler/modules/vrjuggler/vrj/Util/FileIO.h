@@ -58,28 +58,36 @@ public:
 
    /** filename handling routines **/
 
-   //: is n an absolute path name?
-   // examples of one are:
-   // ${HOME}/filename
-   // /home/vr/filename
+   /**
+    * Is n an absolute path name?
+    * Examples of one are:
+    * ${HOME}/filename<br>
+    * /home/vr/filename<br>
+    */
    static bool isAbsolutePathName( const std::string& n );
 
-   // n is your filename
-   // returns n with all ${...} names replaced with their env vars.
-   // if ${...} not found... then replaces it with "", and emits error
-   // message to console.
+   /**
+    * n is your filename.
+    * returns n with all ${...} names replaced with their env vars.
+    * if ${...} not found... then replaces it with "", and emits error
+    * message to console.
+    */
    static std::string demangleFileName( const std::string& n, std::string parentfile );
 
-   // check if file exists... does a demangle on the name before checking
+   /** Checks if file exists. Does a demangle on the name before checking. */
    static bool fileExists( const char* const name );
    static bool fileExists( const std::string& name );
 
-   // check if file exists in any of the registered paths
-   // returns true if exists and the resolved filepath
+   /**
+    * Checks if file exists in any of the registered paths.
+    * @return true if exists and the resolved filepath.
+    */
    static bool fileExistsResolvePath( const char* const filename, std::string& realPath );
    static bool fileExistsResolvePath( const std::string& filename, std::string& realPath );
 
-   // TODO: remove this function, and move it's code into fileExistsResolvePath
+   /**
+    * @todo Remove this function, and move its code into fileExistsResolvePath.
+    */
    static std::string resolvePathForName( const char* const filename );
 
    static std::vector<std::string> mPaths;

@@ -38,30 +38,38 @@
 
 namespace vrj
 {
-   //: enables vrjuggler to reconfigure the sonix sound interface
-   //!PUBLIC_API:
+   /**
+    * Enables VR Juggler to reconfigure the sonix sound interface.
+    */
    class SoundManagerSonix : public SoundManager
    {
    public:
-      //: Add the chunk to the configuration
-      //! PRE: configCanHandle(chunk) == true
+      /**
+       * Adds the chunk to the configuration.
+       * @pre configCanHandle(chunk) == true
+       */
       virtual bool configAdd( jccl::ConfigChunkPtr chunk );
 
-      //: Remove the chunk from the current configuration
-      //! PRE: configCanHandle(chunk) == true
+      /**
+       * Removes the chunk from the current configuration.
+       * @pre configCanHandle(chunk) == true
+       */
       virtual bool configRemove( jccl::ConfigChunkPtr chunk );
 
-      //: Can the handler handle the given chunk?
-      //! RETURNS: true - Can handle it
-      //+          false - Can't handle it
+      /**
+       * Can the handler handle the given chunk?
+       * @return true if we can handle it; false if not
+       */
       virtual bool configCanHandle( jccl::ConfigChunkPtr chunk );
 
    public:
-      //: Enable a frame to be drawn
+      /** Enables a frame to be drawn. */
       virtual void update();
 
-      //: Blocks until the end of the frame
-      //! POST: The frame has been rendered
+      /**
+       * Blocks until the end of the frame.
+       * @post The frame has been rendered.
+       */
       virtual void sync();
    };
 }; // end namespace
