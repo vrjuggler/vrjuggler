@@ -628,7 +628,7 @@ class ClusterApp(vrj.GlApp):
       </note>
 
       <sidebar>
-        <para>The backed C++ implementation of
+        <para>The backend C++ implementation of
         <classname>cluster.UserData</classname> utilizes
         <classname>cluster::UserData&lt;T&gt;</classname> and a subclass of
         <classname>vpr::SerializableObject</classname> called
