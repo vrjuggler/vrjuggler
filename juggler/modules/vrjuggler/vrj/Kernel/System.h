@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile$
+ * File:        $RCSfile$
  * Date modified: $Date$
- * Version:       $Revision$
+ * Version:      $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -39,57 +39,58 @@
 namespace vrj
 {
 
-//------------------------------------------------------
-//:  This class holds the state of the library system
-//
-//-------------------------------------------------------
+/**  This class holds the state of the library system.
+ */
 class vpr::System
 {
-// ----------- Base MemPool Stuff    --------- //
-//  Since we need to put the singleton in Shared memory
-// Nothing in this section is safe after any forking !!!
-// Must be set BEFORE instance is created.
 public:
-    static void setBaseSize(size_t size)
-    { baseMemPoolSize = size; }
+   /** @name Base MemPool Stuff
+    *  Since we need to put the singleton in Shared memory
+    * Nothing in this section is safe after any forking !!!
+    * Must be set BEFORE instance is created.
+    * @{
+    */
+   static void setBaseSize(size_t size)
+   { baseMemPoolSize = size; }
 
-    static void setBaseNumProcs(int numProcs)
-    { baseNumProcs = numProcs; }
+   static void setBaseNumProcs(int numProcs)
+   { baseNumProcs = numProcs; }
+   /** @} */
 
 private:
-    static SharedPool*  baseMemPool;
-    static size_t baseMemPoolSize;
-    static int    baseNumProcs;
+   static SharedPool*  baseMemPool;
+   static size_t baseMemPoolSize;
+   static int   baseNumProcs;
 
-
-//---------------------------------------------//
-//------------  Singleton Stuff ---------------//
-//---------------------------------------------//
-
-
-// -------- Pure Singleton Stuff ------------- //
 public:
-    static void init()  // Just makes sure that we have been allocated
-    { getInstance(); }
+   /** @name Singleton Stuff
+    * @{
+    */
+   /** Just makes sure that we have been allocated. */
+   static void init()  
+   { getInstance(); }
 
-    static vpr::System* getInstance()
-    {
-   if (_instance == NULL) {
-       // Called automatically --- SharedPool::init();   // Initialize the MemPoolStuff
-       baseMemPool = new SharedPool(baseMemPoolSize, baseNumProcs);
-       _instance = new vpr::System(baseMemPool);
+   /** accessor to the global object. */
+   static vpr::System* getInstance()
+   {
+      if (_instance == NULL) {
+         // Called automatically --- SharedPool::init();   // Initialize the MemPoolStuff
+         baseMemPool = new SharedPool(baseMemPoolSize, baseNumProcs);
+         _instance = new vpr::System(baseMemPool);
+      }
+      return _instance;
    }
-   return _instance;
-    }
 
 protected:
-   // -- Constructor protected so it cannot be called except by getInstance --- //
-    vpr::System()
-    {
+   /** Constructor protected so it cannot be called except by getInstance
+    */
+   vpr::System()
+   {
 
-    }
+   }
 private:
-    static vpr::System* _instance;
+   static vpr::System* _instance;
+   /** @} */
 };
 
 };
