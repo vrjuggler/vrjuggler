@@ -48,6 +48,8 @@ tweek_n32_flags="@tweek_n32_flags@"
 tweek_64_flags="@tweek_64_flags@"
 LIBBITSUF='@LIBBITSUF@'
 
+USE_GCC='@USE_GCC@'
+
 if [ "x$tweek_default_abi" = "xN32" ]; then
     tweek_abi_flags="$tweek_n32_flags"
 elif [ "x$tweek_default_abi" = "x64" ]; then
@@ -56,11 +58,11 @@ else
     tweek_abi_flags=''
 fi
 
-if [ "x$tweek_default_isa" = "xmips3" -o "x$tweek_default_isa" = "xmips4" ]
-then
-    tweek_isa_flags="-$tweek_default_isa"
-else
-    tweek_isa_flags=''
+if [ "x$USE_GCC" != "xyes" ]; then
+   if [ "x$tweek_default_isa" = "xmips3" -o "x$tweek_default_isa" = "xmips4" ]
+   then
+      tweek_isa_flags="-$tweek_default_isa"
+   fi
 fi
 
 prefix=@prefix@
