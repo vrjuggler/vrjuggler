@@ -116,7 +116,7 @@ public class TweekCore
          v.addBeanFocusChangeListener(m_gui);
       }
 
-      m_gui.initGUI( treeModel );
+      m_gui.initGUI(panelTreeModel);
    }
 
    /**
@@ -147,7 +147,7 @@ public class TweekCore
       Object bean = evt.getBean();
       if ( bean instanceof ViewerBean ) {
          BeanModelViewer viewer = ((ViewerBean)bean).getViewer();
-         viewer.initDataModel( treeModel );
+         viewer.initDataModel(panelTreeModel);
          viewer.initGUI();
       }
    }
@@ -182,17 +182,17 @@ public class TweekCore
       }
    }
 
+   public BeanTreeModel getPanelTreeModel()
+   {
+      return panelTreeModel;
+   }
+
    /**
     * Default constructor.
     */
    protected TweekCore ()
    {
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener( this );
-   }
-
-   public BeanTreeModel getTreeModel()
-   {
-      return treeModel;
    }
 
    /**
@@ -255,5 +255,6 @@ public class TweekCore
 
    private TweekFrame m_gui = null;
 
-   private BeanTreeModel treeModel = new BeanTreeModel( new DefaultMutableTreeNode() );
+   private BeanTreeModel panelTreeModel =
+      new BeanTreeModel(new DefaultMutableTreeNode());
 }
