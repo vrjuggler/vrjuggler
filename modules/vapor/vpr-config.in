@@ -99,8 +99,6 @@ Options:
                                 making an executable
         [--cxxflags [N32|64]]   Print the flags for the C++ compiler
         [--subsystem]           Print the OS abstraction layer being used
-Libraries:
-        vpr
 EOF
 
     exit $1
@@ -109,8 +107,6 @@ EOF
 if test $# -eq 0; then
     usage 1 1>&2
 fi
-
-lib_gtk=yes
 
 while test $# -gt 0; do
     case "$1" in
@@ -196,9 +192,6 @@ while test $# -gt 0; do
             ;;
         --static)
             echo_static=yes
-            ;;
-        gtk)
-            lib_gtk=yes
             ;;
         *)
             usage 1 1>&2
