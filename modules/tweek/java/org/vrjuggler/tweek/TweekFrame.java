@@ -39,6 +39,8 @@ package org.vrjuggler.tweek;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -73,24 +75,27 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
    public void setBeanViewer (String viewer)
    {
+      BeanRegistry registry = BeanRegistry.instance();
       if ( viewer != null )
       {
-         Object o = ViewerRegistry.instance().getViewer(viewer);
+         ViewerBean bean = (ViewerBean)registry.getBean( viewer );
 
-         if ( o != null )
+         if ( bean != null )
          {
-            BeanModelViewer bv = (BeanModelViewer) o;
+            BeanModelViewer bv = bean.getViewer();
             m_bean_container.replaceViewer(bv);
          }
          else
          {
             System.out.println("WARNING: Unknown viewer type: '" + viewer + "'");
-            m_bean_container.replaceViewer((BeanModelViewer) ViewerRegistry.instance().getDefaultViewer());
+            ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
+            m_bean_container.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
          }
       }
       else
       {
-         m_bean_container.replaceViewer((BeanModelViewer) ViewerRegistry.instance().getDefaultViewer());
+         ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
+         m_bean_container.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
       }
    }
 
@@ -106,7 +111,9 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       try
       {
-         UIManager.setLookAndFeel(GlobalPreferencesService.instance().getLookAndFeel());
+         GlobalPreferencesService prefs =
+            (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+         UIManager.setLookAndFeel( prefs.getLookAndFeel() );
          jbInit();
       }
       catch (Exception e)
@@ -131,12 +138,12 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
    public void treeModelRefresh (TreeModelRefreshEvent e)
    {
-      BeanTreeModel data_model = BeanCollectionBuilder.instance().getPanelTree();
-      Vector viewers           = ViewerRegistry.instance().getAllViewers();
+      BeanTreeModel data_model = TweekCore.instance().getTreeModel();
+      List viewers = BeanRegistry.instance().getBeansOfType( ViewerBean.class.getName() );
 
-      for ( int i = 0; i < viewers.size(); i++ )
+      for ( Iterator itr = viewers.iterator(); itr.hasNext(); )
       {
-         BeanModelViewer bv = (BeanModelViewer) viewers.elementAt(i);
+         BeanModelViewer bv = ((ViewerBean)itr.next()).getViewer();
          bv.refreshDataModel(data_model);
       }
    }
@@ -163,7 +170,9 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       // If the user's skill level is below intermediate, give them a hint that
       // there is a message printed in the message panel.  They may not have
       // noticed the icon change made above.
-      if ( GlobalPreferencesService.instance().getUserLevel() <= 5 )
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+      if ( prefs.getUserLevel() <= 5 )
       {
          m_status_msg_label.setText("New message in message panel ");
       }
@@ -179,7 +188,9 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void jbInit () throws Exception
    {
-      setBeanViewer(GlobalPreferencesService.instance().getBeanViewer());
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+      setBeanViewer( prefs.getBeanViewer() );
 
       m_content_pane = (JPanel) this.getContentPane();
       m_content_pane.setLayout(m_content_pane_layout);
@@ -427,7 +438,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                                                     dialog.getNameServicePort(),
                                                     dialog.getNamingSubcontext());
 
-            Object service = ServiceRegistry.instance().getService("Environment");
+            TweekBean service = BeanRegistry.instance().getBean( "Environment" );
 
             try
             {
@@ -479,20 +490,23 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void prefsEditGlobal (ActionEvent e)
    {
-      // Save this for later.
-      int old_level = GlobalPreferencesService.instance().getUserLevel();
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
 
-      PrefsDialog dialog = new PrefsDialog(this, "Global Preferences",
-                                           GlobalPreferencesService.instance());
+      // Save this for later.
+      int old_level = prefs.getUserLevel();
+
+      PrefsDialog dialog = new PrefsDialog(this, "Global Preferences", prefs);
       dialog.display();
 
       if ( dialog.getStatus() == PrefsDialog.OK_OPTION )
       {
-         String viewer = GlobalPreferencesService.instance().getBeanViewer();
+         String viewer = prefs.getBeanViewer();
 
-         m_bean_container.replaceViewer((BeanModelViewer) ViewerRegistry.instance().getViewer(viewer));
+         ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean( viewer );
+         m_bean_container.replaceViewer( bean.getViewer() );
 
-         String new_laf = GlobalPreferencesService.instance().getLookAndFeel();
+         String new_laf = prefs.getLookAndFeel();
          String old_laf = UIManager.getCrossPlatformLookAndFeelClassName();
 
          if ( ! old_laf.equals(new_laf) )
@@ -505,7 +519,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
             }
             catch (Exception laf_e)
             {
-               GlobalPreferencesService.instance().setLookAndFeel(old_laf);
+               prefs.setLookAndFeel(old_laf);
                JOptionPane.showMessageDialog(null, "Invalid look and feel '" +
                                              new_laf + "'",
                                              "Bad Look and Feel Setting",
@@ -514,17 +528,20 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          }
 
          // If the user level changed, fire an event saying as much.
-         if ( old_level != GlobalPreferencesService.instance().getUserLevel() )
+         if ( old_level != prefs.getUserLevel() )
          {
             m_bean_container.fireUserLevelChange(old_level,
-                                                 GlobalPreferencesService.instance().getUserLevel());
+                                                 prefs.getUserLevel());
          }
       }
    }
 
    private void beansLoadAction (ActionEvent e)
    {
-      if ( GlobalPreferencesService.instance().getUserLevel() > 5 )
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+
+      if ( prefs.getUserLevel() > 5 )
       {
          String path =
             JOptionPane.showInputDialog(null,
@@ -535,7 +552,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          {
             String exp_path = EnvironmentService.expandEnvVars(path);
             loadBeansFromPath(exp_path);
-            BeanCollectionBuilder.instance().getPanelTree().fireTreeModelRefreshEvent();
+            TweekCore.instance().getTreeModel().fireTreeModelRefreshEvent();
          }
       }
       else
@@ -563,7 +580,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                   loadBeansFromPath(path);
                }
 
-               BeanCollectionBuilder.instance().getPanelTree().fireTreeModelRefreshEvent();
+               TweekCore.instance().getTreeModel().fireTreeModelRefreshEvent();
             }
          }
       }
@@ -573,7 +590,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    {
       try
       {
-         BeanCollectionBuilder.instance().build(path, ! path.endsWith(".xml"));
+         TweekCore.instance().findAndLoadBeans( path );
       }
       catch (BeanPathException path_ex)
       {

@@ -37,7 +37,11 @@
 package org.vrjuggler.tweek;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
+import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 import org.vrjuggler.tweek.services.*;
@@ -48,6 +52,7 @@ import org.vrjuggler.tweek.net.corba.*;
  * @since 1.0
  */
 public class TweekCore
+   implements BeanInstantiationListener
 {
    // ========================================================================
    // Public methods.
@@ -65,22 +70,30 @@ public class TweekCore
 
    public void init (String[] args) throws Exception
    {
+      // Register the internal static beans
+      registerStaticBeans();
+
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
-      findBeans(System.getProperty("TWEEK_BASE_DIR") + File.separator +
-                "bin" + File.separator + "beans");
+      String defaultPath = System.getProperty("TWEEK_BASE_DIR")
+                     + File.separator + "bin" + File.separator + "beans";
+
+      try {
+         findAndLoadBeans( defaultPath );
+      }
+      catch ( BeanPathException e )
+      {
+         System.out.println("WARNING: Invalid path " + defaultPath);
+      }
 
       String[] new_args = parseTweekArgs(args);
-
-      // Load the service Beans into the services registry.
-      buildServiceRegistry();
 
       // Register the command-line arguments with the Environment Service (if
       // it is available).
       try
       {
-         EnvironmentService service =
-            (EnvironmentService) ServiceRegistry.instance().getService("Environment");
+         EnvironmentService service = (EnvironmentService)
+            BeanRegistry.instance().getBean( EnvironmentService.class.getName() );
 
          if ( service != null )
          {
@@ -92,25 +105,81 @@ public class TweekCore
          System.err.println("WARNING: Failed to register command-line arguments");
       }
 
-      // Load the viewer Beans into the viewers registry.
-      buildViewerRegistry();
-
-      // Load the user's global preferences file.
-      GlobalPreferencesService.instance().load();
-
       m_gui = new TweekFrame();
 
       // Now we need to register the TweekFrame instance as a listener for
       // BeanFocusChangeEvents.
-      Vector viewer_beans = ViewerRegistry.instance().getAllViewers();
-
-      for ( int i = 0; i < viewer_beans.size(); i++ )
+      List viewer_beans = BeanRegistry.instance().getBeansOfType( ViewerBean.class.getName() );
+      for ( Iterator itr = viewer_beans.iterator(); itr.hasNext(); )
       {
-         BeanModelViewer v = (BeanModelViewer) viewer_beans.elementAt(i);
+         BeanModelViewer v = ((ViewerBean)itr.next()).getViewer();
          v.addBeanFocusChangeListener(m_gui);
       }
 
-      m_gui.initGUI(BeanCollectionBuilder.instance().getPanelTree());
+      m_gui.initGUI( treeModel );
+   }
+
+   /**
+    * Registers the beans that are internal to Tweek that are required to exist
+    * before the bean loading can begin.
+    */
+   protected void registerStaticBeans()
+   {
+      BeanRegistry registry = BeanRegistry.instance();
+
+      // environment service
+      registry.registerBean( new EnvironmentService(
+            new BeanAttributes( "Environment" ) ) );
+
+      // global preferences service
+      registry.registerBean( new GlobalPreferencesService(
+            new BeanAttributes( "GlobalPreferences" ) ) );
+
+   }
+
+   /**
+    * Called by the BeanInstantiationCommunicator singleton whenever a new bean
+    * is instantiated.
+    */
+   public void beanInstantiation( BeanInstantiationEvent evt )
+   {
+      // If the bean created is a viewer bean, initialize it with tweek
+      Object bean = evt.getBean();
+      if ( bean instanceof ViewerBean ) {
+         BeanModelViewer viewer = ((ViewerBean)bean).getViewer();
+         viewer.initDataModel( treeModel );
+         viewer.initGUI();
+      }
+   }
+
+
+   /**
+    * Look for TweekBeans in standard locations and register them in the
+    * registry.
+    *
+    * @param path    the path in which to search for TweekBeans
+    */
+   public void findAndLoadBeans( String path )
+      throws BeanPathException
+   {
+      BeanRegistry registry = BeanRegistry.instance();
+
+      // Get the beans in the given path
+      XMLBeanFinder finder = new XMLBeanFinder();
+      List beans = finder.find( path );
+      for ( Iterator itr = beans.iterator(); itr.hasNext(); ) {
+         TweekBean bean = (TweekBean)itr.next();
+
+         // try to instantiate the bean
+         try {
+            bean.instantiate();
+            registry.registerBean( bean );
+         } catch( BeanInstantiationException e ) {
+            System.err.println("WARNING: Failed to instantiate bean'" +
+                               bean.getName() + "': " +
+                               e.getMessage());
+         }
+      }
    }
 
    /**
@@ -118,23 +187,12 @@ public class TweekCore
     */
    protected TweekCore ()
    {
+      BeanInstantiationCommunicator.instance().addBeanInstantiationListener( this );
    }
 
-   /**
-    * Searches for JavaBeans in the given path.
-    *
-    * @pre The GUI has not been initialized yet.
-    */
-   protected void findBeans (String path)
+   public BeanTreeModel getTreeModel()
    {
-      try
-      {
-         BeanCollectionBuilder.instance().build(path, ! path.endsWith(".xml"));
-      }
-      catch (org.vrjuggler.tweek.beans.BeanPathException e)
-      {
-         System.out.println("WARNING: Invalid path " + path);
-      }
+      return treeModel;
    }
 
    /**
@@ -156,7 +214,13 @@ public class TweekCore
          {
             int start = args[i].indexOf('=') + 1;
             String path = args[i].substring(start);
-            findBeans(path);
+            try {
+               findAndLoadBeans( path );
+            }
+            catch ( BeanPathException e )
+            {
+               System.out.println("WARNING: Invalid path " + path);
+            }
          }
          else
          {
@@ -179,68 +243,6 @@ public class TweekCore
       return new_args;
    }
 
-   protected void buildServiceRegistry ()
-   {
-      Vector services = BeanCollectionBuilder.instance().getServices();
-
-      ServiceRegistry.instance().registerService("Environment",
-                                                 new EnvironmentService());
-
-      for ( int i = 0; i < services.size(); i++ )
-      {
-         ServiceBean service = (ServiceBean) services.elementAt(i);
-
-         try
-         {
-            service.instantiate();
-            ServiceRegistry.instance().registerService(service.getName(),
-                                                       service.getService());
-         }
-         catch (BeanInstantiationException e)
-         {
-            System.err.println("WARNING: Failed to instantiate service '" +
-                               service.getName() + "': " +
-                               e.getMessage());
-         }
-      }
-   }
-
-   protected void buildViewerRegistry ()
-   {
-      Vector viewers           = BeanCollectionBuilder.instance().getViewers();
-      BeanTreeModel tree_model = BeanCollectionBuilder.instance().getPanelTree();
-
-      GlobalPreferencesService prefs = GlobalPreferencesService.instance();
-
-      for ( int i = 0; i < viewers.size(); i++ )
-      {
-         ViewerBean viewer = (ViewerBean) viewers.elementAt(i);
-
-         try
-         {
-            // The process of loading a new BeanViewer object is a little
-            // involved.  First, we need an instance (duh).  After that, we
-            // need to pass it the tree model, initialize its GUI, and add it
-            // to the available choices in the global preferences.  Once all
-            // that is done, the viewer can be registered for use by other
-            // code.
-            viewer.instantiate();
-            BeanModelViewer bv = (BeanModelViewer) viewer.getViewer();
-            bv.initDataModel(tree_model);
-            bv.initGUI();
-            prefs.addBeanViewer(viewer.getName());
-            ViewerRegistry.instance().registerViewer(viewer.getName(),
-                                                     viewer.getViewer());
-         }
-         catch (BeanInstantiationException e)
-         {
-            System.err.println("WARNING: Failed to instantiate Bean viewer '" +
-                               viewer.getName() + "': " + e.getMessage());
-            e.printStackTrace();
-         }
-      }
-   }
-
    // ========================================================================
    // Protected data members.
    // ========================================================================
@@ -252,4 +254,6 @@ public class TweekCore
    // ========================================================================
 
    private TweekFrame m_gui = null;
+
+   private BeanTreeModel treeModel = new BeanTreeModel( new DefaultMutableTreeNode() );
 }

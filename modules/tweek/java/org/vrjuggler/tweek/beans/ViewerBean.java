@@ -58,22 +58,11 @@ public class ViewerBean extends TweekBean
 
    public void instantiate () throws BeanInstantiationException
    {
-      try
-      {
-         viewer = (BeanModelViewer) doInstantiation();
-      }
-      catch (ClassCastException e)
-      {
-         throw new BeanInstantiationException("org.vrjuggler.tweek.beans.BeanModelViewer " +
-                                              "is not a superclass of " +
-                                              getName().replace('/', '.'));
-      }
+      doInstantiation();
    }
 
    public BeanModelViewer getViewer ()
    {
-      return viewer;
+      return (BeanModelViewer)getBean();
    }
-
-   protected BeanModelViewer viewer     = null;
 }

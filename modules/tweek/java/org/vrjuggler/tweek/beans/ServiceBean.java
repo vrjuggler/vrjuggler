@@ -60,14 +60,7 @@ public class ServiceBean extends TweekBean
       // This should work fairly well as a way to make a Bean a singleton.
       if ( ! instantiated )
       {
-         service = doInstantiation();
+         doInstantiation();
       }
    }
-
-   public Object getService ()
-   {
-      return service;
-   }
-
-   protected Object service     = null;
 }
