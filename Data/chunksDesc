@@ -124,6 +124,7 @@ chunk MotionStar "MotionStar" "Ascension MotionStar server chassis configuration
   bformat Int 1 "Data Format" vj_enumeration { "No Data=0" "Position=1" "Angles=2" "Matrix=3" "Position and Angles=4" "Position and Matrix=5" "Quaternion=7" "Position and Quaternion=8" } "Data format for the birds."
   mode Int 1 "Sample Mode" vj_enumeration { "Run Continuous=0" "Sample Individually=1" } "The sample mode for the running driver."
   reportRate Int 1 "Bird Report Rate" "Report rate for the birds (0-255).  This should usually be 1."
+  measurementRate Float 1 "Chassis Measurement Rate" "Measurement rate for the chassis."
   end
 chunk SimGloveGesture "Glove Gesture Simulator" "Simulate glove gesture device"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
