@@ -159,7 +159,7 @@ public:
    {;}
 
    // -----------------------------------------------------------------------
-   //: Get the "thread ID" of this vjThreadPosix object.  This is a unique
+   //: Get the "thread ID" of this vjBaseThread object.  This is a unique
    //+ integer value assigned when the thread was created.
    //
    //! RETURNS: -1 - Bad thread. Creation error.
