@@ -493,7 +493,7 @@ fi
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
+AC_CHECK_HEADERS(bstring.h fcntl.h limits.h strings.h sys/file.h sys/ioctl.h \
                  sys/time.h termios.h unistd.h sys/capability.h sys/stdsyms.h)
 
 DPP_LANG_SAVE

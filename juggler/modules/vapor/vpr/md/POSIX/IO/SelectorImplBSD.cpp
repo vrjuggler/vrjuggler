@@ -36,6 +36,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+
+#ifdef HAVE_BSTRING_H
+#include <bstring.h>
+#endif
+
 #include <sys/time.h>
 #include <errno.h>
 
