@@ -93,21 +93,68 @@ namespace snx
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   void AudioWorksSoundImplementation::trigger( const std::string & alias, const unsigned int & looping )
+   void AudioWorksSoundImplementation::trigger( const std::string & alias, const int & looping )
    {
       snx::SoundImplementation::trigger( alias, looping );
 
       if (mBindTable.count( alias ) > 0)
       {
-         //std::cout<<"[snx]AudioWorks| DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
-         awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
-         //if (isAmbient(alias))
-         //{
-         //   awProp(mBindTable[alias].mPlayer, AWSND_STATE, AW_ON);
-         //}
+         if (this->isPaused( alias ))
+         {
+            this->unpause( alias );
+         }
+         else
+         {
+            awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
+            
+            // @todo, this only works with "loop points"... grrr....
+            awProp(mBindTable[alias].mSound, AWSND_NLOOPS, looping );
+
+            //if (isAmbient(alias))
+            //{
+            //   awProp( mBindTable[alias].mPlayer, AWSND_STATE, AW_ON );
+            //}
+         }         
       }
    }
 
+   /**
+    * pause the sound, use unpause to return playback where you left off...
+    */
+   void AudioWorksSoundImplementation::pause( const std::string& alias )
+   {
+      if (mBindTable.count( alias ) > 0)
+      {
+         // @todo  this isn't _quite_ pause.  AW didn't really seem to have one 
+         //        (that I could find..)  enable does a mute...
+         awProp( mBindTable[alias].mSound, AWSND_ENABLE, false );
+      }
+   }   
+
+   /**
+    * resume playback from a paused state.  does nothing if sound was not paused.
+    */
+   void AudioWorksSoundImplementation::unpause( const std::string& alias )
+   {
+      if (mBindTable.count( alias ) > 0)
+      {
+         // @todo  this isn't _quite_ pause.  AW didn't really seem to have one 
+         //        (that I could find..)  enable does a mute...
+         awProp( mBindTable[alias].mSound, AWSND_ENABLE, true );
+      }
+   }
+   
+   /** if the sound is paused, then return true. */
+   bool AudioWorksSoundImplementation::isPaused( const std::string& alias )
+   {
+      if (mBindTable.count( alias ) > 0)
+      {
+         bool paused = (bool)awGetProp( mBindTable[alias].mSound, AWSND_ENABLE );
+         return paused;
+      }
+      return false;
+   }
+      
    /*
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?
@@ -120,9 +167,9 @@ namespace snx
       if (mBindTable.count( alias ) > 0)
       {
          if (onOff == true)
-            awProp(mBindTable[alias].mSound, AWSND_RETRIGGER, AW_ON);    //Set retriggering ON
+            awProp( mBindTable[alias].mSound, AWSND_RETRIGGER, AW_ON );    //Set retriggering ON
          else
-            awProp(mBindTable[alias].mSound, AWSND_RETRIGGER, AW_OFF);   //Set retriggering ON
+            awProp( mBindTable[alias].mSound, AWSND_RETRIGGER, AW_OFF );   //Set retriggering ON
       }
    }   
 
@@ -161,33 +208,6 @@ namespace snx
             // convert xyz to performer coords...
             awPlyrCSRef( mBindTable[alias].mPlayer, xyz, hpr );
          }
-      }
-   }
-
-
-   /*
-    * mute, sound continues to play, but you can't hear it...
-    */
-   void AudioWorksSoundImplementation::mute( const std::string& alias )
-   {
-      snx::SoundImplementation::mute( alias );
-
-      if (mBindTable.count( alias ) > 0)
-      {
-         awProp( mBindTable[alias].mSound, AWSND_ENABLE, AW_OFF ); //Enable the sound
-      }
-   }
-
-   /*
-    * unmute, let the muted-playing sound be heard again
-    */
-   void AudioWorksSoundImplementation::unmute( const std::string& alias )
-   {
-      snx::SoundImplementation::unmute( alias );
-
-      if (mBindTable.count( alias ) > 0)
-      {
-         awProp( mBindTable[alias].mSound, AWSND_ENABLE, AW_ON ); // Disable the sound
       }
    }
 
@@ -558,7 +578,7 @@ namespace snx
       awProp( si.mSound, AWSND_ENABLE,      AW_ON );         //Enable the sound
       awProp( si.mSound, AWSND_STATE,       AW_OFF );        //Turn it off for now
       awProp( si.mSound, AWSND_RETRIGGER,   AW_ON );         //Set retriggering ON
-
+         
       awProp( si.mSound, AWSND_ABSORPTION,  AWSND_INHERIT ); //Inherit modeling settings
       awProp( si.mSound, AWSND_ATTENUATION, AWSND_INHERIT ); //from the observer
       awProp( si.mSound, AWSND_DOPPLER,     AWSND_INHERIT ); // ...
@@ -589,6 +609,7 @@ namespace snx
       this->setCutoff( alias, sinfo.cutoff );
       this->setPitchBend( alias, sinfo.pitchbend );
       this->setVolume( alias, sinfo.volume );
+      this->setRetriggerable( alias, sinfo.retriggerable );
       
       std::cout<<"                        bind() done...\n"<<std::flush;
 
