@@ -695,21 +695,12 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             _x_lib_path="-L$x_libraries"
         fi
 
-        _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lXext"
+        _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lX11 -lXext"
 
-        dnl # On non-SGI platforms, we need to add only -lX11 when linking
-        dnl # OpenGL applications.
-        if test "$PLATFORM" != "SGI" ; then
-            _SYSTEM_OPENGL="${_LIBOPENGL} -lX11"
-        dnl # SGI's, on the other hand, need all kinds of extra information.
+        if test "$PLATFORM" = "SGI" -a "$ABI" = "O32" ; then
+            _SYSTEM_OPENGL="-lmpc -lGLw ${_LIBOPENGL} -lfpe -lXm -lXt -lmalloc"
         else
-            if test "$ABI" = "64" ; then
-                _SYSTEM_OPENGL="-limage ${_LIBOPENGL} -lXmu -lX11"
-            elif test "$ABI" = "N32" ; then
-                _SYSTEM_OPENGL="-limage ${_LIBOPENGL} -lXmu -lX11"
-            elif test "$ABI" = "O32" ; then
-                _SYSTEM_OPENGL="-lmpc -limage -lGLw ${_LIBOPENGL} -lfpe -lXm -lXt -lXmu -lX11 -lmalloc"
-            fi
+            _SYSTEM_OPENGL="${_LIBOPENGL}"
         fi
     dnl # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
     dnl # that no OpenGL stuff in included in them.
