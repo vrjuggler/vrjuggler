@@ -51,33 +51,38 @@ namespace vrj
 class DrawManager;
 class Kernel;
 
-/** Encapsulates the actually application.
+/**
+ * Encapsulates the actual application.
  *
- *     This class defines the class that all API specific
- *  application classes should be derived from.  The interface
- *  given is the interface that the Kernel expects in order to
- *  interface with the application.  Most of the application's
- *  interface will be defined in the derived API specific classes.
+ * This class defines the class from which all API-specific application should
+ * be derived from.  The interface given is the interface that the Kernel
+ * expects in order to communicate with the application.  Most of the
+ * application's interface will be defined in the derived API-specific
+ * classes.
  *
- *  Users should sub-class the API specific classes to create
- *  user-defined applications.  A user application is required
- *  to provide function definitions for any of the virual functions
- *  that the application needs to use.  This is the method that
- *  the application programmer uses to interface with VR Juggler.
+ * Users should sub-class the API-specific classes to create user-defined
+ * applications.  A user application is required to provide function
+ * definitions for any of the virual functions that the application needs to
+ * use.  This is the method that the application programmer uses to interface
+ * with VR Juggler.
  *
- *  The control loop will look similar to this: <br> <br>
- *  @note One time through the loop is a Juggler Frame <br>
+ * The control loop will look similar to this:
  *
- *  while (drawing)           <br>
- *  {                         <br>
- *       <b>preFrame()</b>;   <br>
- *       draw();              <br>
- *       <b>intraFrame()</b>; <br>
- *       sync();              <br>
- *       <b>postFrame()</b>;  <br>
- *                            <br>
- *       UpdateTrackers();    <br>
- *  }                         <br>
+ * \code
+ *  while (drawing)
+ *  {
+ *     <b>preFrame()</b>;
+ *     <b>latePreFrame()</b>;
+ *     draw();
+ *     <b>intraFrame()</b>;
+ *     sync();
+ *     <b>postFrame()</b>;
+ *
+ *     UpdateTrackers();
+ *  }
+ * \endcode
+ *
+ * @note One time through the loop is a Juggler Frame.
  */
 class VJ_CLASS_API App : public jccl::ConfigElementHandler
 {
