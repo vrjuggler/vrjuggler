@@ -39,29 +39,64 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_NSPR_HELPER_H_
-#define _VPR_NSPR_HELPER_H_
+#ifndef _VPR_ERROR_IMPL_NSPR_H_
+#define _VPR_ERROR_IMPL_NSPR_H_
 
-#include <string>
-#include <prinrval.h>
-#include <vpr/Util/Interval.h>
+#include <vpr/vprConfig.h>
+#include <iostream>
+#include <prerror.h>
+#include <vpr/Util/ErrorBase.h>
+
 
 namespace vpr
 {
 
-// Print out the current NSPR error message to stderr
-extern void NSPR_PrintError(const std::string error_prefix_string, std::ostream& = std::cout);
-
-inline PRUint32 NSPR_getInterval(const vpr::Interval interval)
+/** NSPR Implementation of ---> Cross-platform Error reporting class.
+*
+* A selector is used to wait on a set of Handles untils any of the
+* events occur that the user is interested in.
+*
+* Implementation site of the Selector_t bridge.
+*/
+class VPR_CLASS_API ErrorImplNSPR : public ErrorBase
 {
-   if(interval == vpr::Interval::NoTimeout)
-      return PR_INTERVAL_NO_TIMEOUT;
-   else if(interval == vpr::Interval::NoWait)
-      return PR_INTERVAL_NO_WAIT;
-   else
-      return PR_MicrosecondsToInterval(interval.usec());
-}
+public:
+   
+   static void outputCurrentError(std::ostream& out, const std::string& prefix)
+   {
+      PRErrorCode  err = PR_GetError();
+      const char* err_name = PR_ErrorToName(err);
+      const char* err_str = PR_ErrorToString(err,0);
+   
+      /*
+      int os_err = PR_GetOSError();
+      char* os_str = strerror(PR_GetOSError());
+      */
+   
+      out << "Error (NSPR): " << prefix
+                << " (" << err;
+      if(err_name != NULL)
+          out << ":" << err_name;
+       
+      if(err_str != NULL)
+          out << ", " << err_str;
+   
+      out << ")" << std::endl;
+   }
 
-}; // namespace
+   static ErrorType getCurrentError()
+   {
+      return NoError;
+   }
 
-#endif
+protected:
+   static PRErrorCode convertErrorVprToNspr(ErrorType mask)
+   { return PR_MAX_ERROR; }
+   static ErrorType convertErrorNsprToVpr(PRErrorCode mask)
+   { return NoError; }
+};
+
+} // End of vpr namespace
+
+
+#endif  /* _VPR_ERROR_IMP_NSPR_H_ */

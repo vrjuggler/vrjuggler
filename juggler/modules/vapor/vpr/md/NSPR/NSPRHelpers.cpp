@@ -52,7 +52,7 @@
 namespace vpr {
 
 // Print out the current NSPR error message to stderr
-void NSPR_PrintError(const std::string error_prefix_string )
+void NSPR_PrintError(const std::string error_prefix_string, std::ostream& out )
 {
    PRErrorCode  err = PR_GetError();
    const char* err_name = PR_ErrorToName(err);
@@ -63,15 +63,15 @@ void NSPR_PrintError(const std::string error_prefix_string )
    char* os_str = strerror(PR_GetOSError());
    */
 
-   std::cerr << "Error (NSPR): " << error_prefix_string
+   out << "Error (NSPR): " << error_prefix_string
              << "(" << err;
    if(err_name != NULL)
-       std::cerr << ":" << err_name;
+       out << ":" << err_name;
     
    if(err_str != NULL)
-       std::cerr << ", " << err_str;
+       out << ", " << err_str;
 
-   std::cerr << ")" << std::endl;
+   out << ")" << std::endl;
 }
 
 }   // namespace

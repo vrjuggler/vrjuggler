@@ -52,7 +52,7 @@
 #include <prinrval.h>
 
 #include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
-#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/Util/Error.h>
 
 
 namespace vpr
@@ -107,7 +107,7 @@ vpr::ReturnStatus SocketStreamImplNSPR::listen (const int backlog)
 
       if ( PR_FAILURE == status )
       {
-         NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
+         vpr::Error::outputCurrentError(std::cerr, "SocketStreamImplNSPR::listen: Cannon listen on socket: ");
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
@@ -156,7 +156,7 @@ vpr::ReturnStatus SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock,
          }
          else
          {
-            NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
+            vpr::Error::outputCurrentError(std::cerr, "SocketStreamImplNSPR::accept: Cannot accept on socket: ");
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }

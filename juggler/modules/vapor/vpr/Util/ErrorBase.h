@@ -39,29 +39,36 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_NSPR_HELPER_H_
-#define _VPR_NSPR_HELPER_H_
+#ifndef _VPR_ERROR_BASE_H_
+#define _VPR_ERROR_BASE_H_
 
-#include <string>
-#include <prinrval.h>
-#include <vpr/Util/Interval.h>
+#include <vpr/vprConfig.h>
+#include <iostream>
+
 
 namespace vpr
 {
 
-// Print out the current NSPR error message to stderr
-extern void NSPR_PrintError(const std::string error_prefix_string, std::ostream& = std::cout);
-
-inline PRUint32 NSPR_getInterval(const vpr::Interval interval)
+/**
+ * Common base for all selectors and imp's
+ */
+class VPR_CLASS_API ErrorBase
 {
-   if(interval == vpr::Interval::NoTimeout)
-      return PR_INTERVAL_NO_TIMEOUT;
-   else if(interval == vpr::Interval::NoWait)
-      return PR_INTERVAL_NO_WAIT;
-   else
-      return PR_MicrosecondsToInterval(interval.usec());
-}
+public:
+   enum ErrorType
+   {
+      NoError = 0
+      /* Fill in common error types */
+   };
 
-}; // namespace
+   static void outputCurrentError(std::ostream& out, const std::string& prefix)
+   {;}
 
-#endif
+   static ErrorType getCurrentError()
+   { return NoError; }
+};
+
+} // End of vpr namespace
+
+
+#endif  /* _VPR_SELECTOR_BASE_H_ */

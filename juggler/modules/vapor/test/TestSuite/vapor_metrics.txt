@@ -10,3 +10,5 @@ gfxn1/Debug/TSDataOverhead6                                        15.5863
 gfxn1/Debug/TSDataOverhead7                                        14.819
 gfxn1/Debug/TSDataOverhead8                                        13.8941
 gfxn1/Debug/TSDataOverhead9                                        13.7644
+gfxn2/Debug/GUIDTest/CreationOverhead                              0.97014
+gfxn2/Debug/Main/MetricTest                                        1221.75

@@ -103,6 +103,7 @@ namespace vpr
 
    typedef class InetAddrNSPR InetAddr;
    typedef class IOSysNSPR    IOSys;
+   typedef class ErrorImplNSPR Error;
 
    typedef class Selector_t<class SelectorImplNSPR> Selector;
 
@@ -126,6 +127,7 @@ namespace vpr
 
    typedef class InetAddrBSD InetAddr;
    typedef class IOSysUnix   IOSys;
+   typedef class ErrorBase   Error;
 
    typedef class Selector_t<class SelectorImplBSD>         Selector;
    typedef class SerialPort_t<class SerialPortImplTermios> SerialPort;

@@ -44,6 +44,7 @@
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
+#include <vpr/Util/Error.h>
 
 namespace vpr {
 
@@ -144,7 +145,8 @@ ReturnStatus SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::In
 
    if( -1 == result)
    {
-      NSPR_PrintError("SelectorImplNSPR::select: Error selecting. ");
+      //NSPR_PrintError("SelectorImplNSPR::select: Error selecting. ");
+      vpr::Error::outputCurrentError(std::cerr, "SelectorImplNSPR::select: Error selecting.");
       numWithEvents = 0;
       ret_val.setCode(ReturnStatus::Fail);
    }
