@@ -188,7 +188,7 @@ public:
    //: getInstanceName()
    //
    //  Returns the name identifying the INSTANCE of this InputDevice
-   char* getInstanceName() {
+   const char* getInstanceName() {
       if (instName == NULL) return "Undefined";
       return instName;
    }
