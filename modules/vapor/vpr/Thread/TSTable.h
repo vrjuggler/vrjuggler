@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <vprConfig.h>
+#include <vector>
 #include <Threads/TSObject.h>
 #include <Sync/Mutex.h>
 #include <Utils/Assert.h>

@@ -36,7 +36,10 @@
 #include <vprConfig.h>
 
 #include <sys/types.h>
-//#include <unistd.h>
+
+#ifdef HAVE_UNISTD_H
+#   include <unistd.h>
+#endif
 
 #include <Sync/Semaphore.h>
 #include <Sync/Mutex.h>
