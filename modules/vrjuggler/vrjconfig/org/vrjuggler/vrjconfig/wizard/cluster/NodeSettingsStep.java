@@ -35,8 +35,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.wizard.cluster;
 
+import java.util.*;
 import javax.swing.*;
-import java.awt.*;
 
 import org.vrjuggler.tweek.wizard.*;
 
@@ -82,6 +82,20 @@ public class NodeSettingsStep
    public String getFileSourceName()
    {
      return(mFileSourceName);
+   }
+
+   public List getRequiredClasses()
+   {
+      List classes = new ArrayList();
+      classes.add(NodeSettingsPanel.class.getName());
+      return classes;
+   }
+
+   public List getRequiredResources()
+   {
+      List res = new ArrayList();
+      res.add("org/vrjuggler/vrjconfig/wizard/cluster/images/ClusterIcon.png");
+      return res;
    }
 
 

@@ -35,8 +35,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.wizard.cluster;
 
+import java.util.*;
 import javax.swing.*;
-import java.awt.*;
 
 import org.vrjuggler.tweek.wizard.*;
 
@@ -98,6 +98,19 @@ public class CreateClusteredSimDevicesStep
      return(mFileSourceName);
    }
 
+   public List getRequiredClasses()
+   {
+      List classes = new ArrayList();
+      classes.add(CreateClusteredSimDevicesPanel.class.getName());
+      return classes;
+   }
+
+   public List getRequiredResources()
+   {
+      List res = new ArrayList();
+      res.add("org/vrjuggler/vrjconfig/wizard/cluster/images/ClusterIcon.png");
+      return res;
+   }
 
    /**
     * The JPanel that makes up this pane's UI.
