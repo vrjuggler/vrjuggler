@@ -46,6 +46,7 @@
 /* Physical devices */
 #ifndef WIN32
 #include <Input/vjPosition/vjFlock.h>
+#include <Input/vjPosition/vjIsense.h>
 #include <Input/vjInput/vjIbox.h>
 #include <Input/vjGlove/vjCyberGlove.h>
 #include <Input/vjGlove/vjPinchGlove.h>
@@ -90,6 +91,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
 
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
+   vjDeviceConstructor<vjIsense>* intersense = new vjDeviceConstructor<vjIsense>;
    vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
    vjDeviceConstructor<vjTrackdSensor>* trackd_sensor = new vjDeviceConstructor<vjTrackdSensor>;
    vjDeviceConstructor<vjTrackdController>* trackd_controller = new vjDeviceConstructor<vjTrackdController>;

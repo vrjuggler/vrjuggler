@@ -69,6 +69,8 @@ VJPOS_SRCS	+= logiclass.cpp	\
                    aFlock.cpp		\
                    vjFlock.cpp		\
                    aMotionStar.cpp	\
+		   isIntersense.cpp	\
+		   vjIsense.cpp		\
                    vjMotionStar.cpp
 endif
 

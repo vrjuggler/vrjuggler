@@ -62,6 +62,7 @@ SUBDIRS		= Filter	\
                   InputManager	\
                   Multi		\
                   ibox		\
+		  intersense    \
                   vjGesture	\
                   vjGlove	\
                   vjInput	\
