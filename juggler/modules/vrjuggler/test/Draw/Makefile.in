@@ -41,7 +41,7 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: OGL OpenSG # OSG Pf
+all: OGL # OpenSG OSG Pf
 
 OGL OpenSG OSG Pf::
 	cd $@ && $(MAKE) all
@@ -51,6 +51,6 @@ OGL OpenSG OSG Pf::
 # -----------------------------------------------------------------------------
 clean:	
 	-cd OGL && $(MAKE) clean
-	-cd OpenSG && $(MAKE) clean
+#	-cd OpenSG && $(MAKE) clean
 #	-cd OSG && $(MAKE) clean
 #	-cd Pf  && $(MAKE) clean	
