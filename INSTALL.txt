@@ -169,13 +169,13 @@ Compiling
    this script, use one of the following (the second being much more
    detailed):
 
- ./configure.pl --script-help
+ ./configure.pl --help
  ./configure.pl --manual
 
    To configure your system, you'll need to see what options all the
    Autoconf-based configure scripts in Juggler need. To get this text, enter:
 
- ./configure.pl --help
+ ./configure.pl --all-help
 
    configure.pl works in a different "build" directory or in the directory
    where it resides. Here is how we (the team) have been using it:
