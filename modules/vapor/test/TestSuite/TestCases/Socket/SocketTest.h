@@ -43,6 +43,10 @@ public:
       mOpenServerSuccess=0;
       mNumSServer=2;
       mNumClient=2;
+      mFinishFlag=false;
+      mBlockingFlag=true;
+      mStartFlag=false;
+      mReadnFlag=false;
    }
    
    // use this within your threads (CppUnit doesn't catch the assertTest there)
@@ -318,7 +322,7 @@ public:
    // =========================================================================
    // open-close test
    // =========================================================================
-   void openCloseTest()
+   void testOpenClose()
    { 
       std::cout<<"]==================================================\n"<<std::flush; 
       std::cout<<" Open/Close Test: "; 
@@ -341,6 +345,7 @@ public:
       assertTest( closeSuccess && "Socket can not be closed!");
       delete sock;
    }
+   
    // =========================================================================
    // bind again should fail test
    // =========================================================================
@@ -463,8 +468,8 @@ public:
       delete sock2;
       delete sock3;
    }
-   
-         
+
+
    // =========================================================================
    // reuse address client/server test
    // =========================================================================
@@ -545,6 +550,165 @@ public:
       std::cout << " done\n" << std::flush;
    }
    
+   // =========================================================================
+   // Blocking/Nonblocking test
+   // =========================================================================
+   void testBlocking_connector(void* arg)
+   {
+      vpr::Uint16 port = 7001;
+      
+      //keep testing until acceptor says finish
+      while (!mFinishFlag) {
+         char  buffer[40];
+         bool  result = 0;
+         char  buffer2[]="Oops";
+         int   amount_read;
+         
+         // make a new socket that will connect to port "port"
+         vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
+      
+         // open socket
+         result = connector_socket.open();
+         threadAssertTest( result != false && "Socket::open() failed when test blocking" );
+
+         // connect to the acceptor
+         result = connector_socket.connect();
+         threadAssertTest( result != false && "Socket::connect() failed when test blocking" );
+            
+         //sleep until acceptor says begin
+         while (!mStartFlag){
+            vpr::System::msleep(1);
+         }
+         
+         //set socket to blocking/nonblocking mode as required          
+         if (mBlockingFlag)
+            connector_socket.enableBlocking();
+         else
+            connector_socket.enableNonBlocking();
+         
+         //if the the flag of readn is true, use readn(), otherwise use read().
+         if (mReadnFlag)
+            connector_socket.readn(buffer, 20);
+         else
+            amount_read=connector_socket.read(buffer, 20);
+            
+         if (amount_read>0) {
+            connector_socket.write(buffer, amount_read);
+         }
+         else {
+            connector_socket.write(buffer2, sizeof(buffer2));
+         }
+         
+         result = connector_socket.close();
+         threadAssertTest( result != false && "Socket::close() failed when test blocking" );         
+      }
+
+      // let the acceptor get a chance to start before connecting (sleep a while)
+      vpr::System::usleep( 50000 );
+   }
+
+   void testBlocking_acceptor(void* arg)
+   {
+      int num_of_times_to_test = 10;
+      vpr::Uint16 port = 7001;
+      const int backlog = 5;
+      bool  result = 0;
+      char  buffer[40];
+      char  buffer1[]="Hello, there!";
+      char  buffer2[]="Hello!!!";
+      int   amount_read;
+      
+      // make a new socket listening on port "port"
+      vpr::SocketStream	acceptor_socket( vpr::InetAddr(port), vpr::InetAddr::AnyAddr );
+      acceptor_socket.setOpenBlocking();
+      
+      // open socket
+      result = acceptor_socket.open();
+      threadAssertTest( result != false && "Socket::open() failed in blocking test" );
+
+      result = acceptor_socket.bind();
+      threadAssertTest( result != false && "Socket::bind() failed in blocking test" );
+
+      // set the socket to listen
+      result = acceptor_socket.listen( backlog );
+      threadAssertTest( result != false && "Socket::listen() failed in blocking test" );
+      
+      mFinishFlag = false;
+      
+      // switch between blocking/nonblocking and read/readn many times...
+      for (int xx = 0; xx < num_of_times_to_test; ++xx)
+      {
+         // wait for a connect (blocking)
+         // when someone connects to the server, and we accept the connection, 
+         // spawn a child socket to deal with the connection
+         vpr::SocketStream* child_socket = acceptor_socket.accept();
+         threadAssertTest( child_socket != NULL && "Socket::accept() failed in blocking test" );
+         
+         int yy=xx-(xx/4);
+         if(yy==0 || yy==2)
+            mBlockingFlag=true;
+         else mBlockingFlag=false;
+         if(yy==1 || yy==3)
+            mReadnFlag=false;
+         else mReadnFlag=false;
+         
+         mStartFlag=true;
+         
+         vpr::System::msleep(200);
+         
+         child_socket->write(buffer1, sizeof(buffer1));
+         
+         vpr::System::msleep(500);
+         
+         child_socket->write(buffer2, sizeof(buffer2));
+         amount_read=child_socket->read(buffer, 40);
+         if (mBlockingFlag && mReadnFlag)
+            threadAssertTest(amount_read==20 && "");
+         if (mBlockingFlag && !mReadnFlag)
+            threadAssertTest(amount_read==13 && "");
+         if (!mBlockingFlag && mReadnFlag)
+            threadAssertTest(amount_read==5 && "");
+         if (!mBlockingFlag && !mReadnFlag)
+            threadAssertTest(amount_read==5 && "");
+            
+         result = child_socket->close();
+         threadAssertTest( result != false && "Socket::close() failed in blocking test" );
+
+         // clean up any memory i've made...
+         delete child_socket;
+         mStartFlag=false;
+      }
+      // close the socket
+      
+      mFinishFlag = true;
+      result = acceptor_socket.close();
+      threadAssertTest( result != false && "Socket::close() failed" );
+   }  
+   
+   void testBlocking()
+   {
+      std::cout<<"]==================================================\n"<<std::flush; 
+      std::cout<<" Blocking/Nonblocking Test: \n"<<std::flush; 
+      
+      // spawn an acceptor thread
+      vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testBlocking_acceptor );
+      vpr::Thread acceptor_thread( &acceptor_functor );
+      
+      // let the acceptor get a chance to start before connecting (sleep a while)
+      vpr::System::msleep( 500 );
+      
+      // spawn a connector thread
+      vpr::ThreadMemberFunctor<SocketTest> connector_functor( this, &SocketTest::testBlocking_connector );
+      vpr::Thread connector_thread( &connector_functor );
+      
+      // wait for both threads to terminate, then continue
+      vpr::System::sleep( 7 );
+      //connector_thread.join(); // join is broken.
+      //acceptor_thread.join();
+      std::cout << " done\n" << std::flush;
+   }
+   
+            
    void testTcpConnection()
    {
       mServerCheck=0;
@@ -666,22 +830,28 @@ public:
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
-      test_suite->addTest( new TestCaller<SocketTest>("Open/CloseTest", &SocketTest::openCloseTest));
-      
+
+      test_suite->addTest( new TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));      
       test_suite->addTest( new TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
       test_suite->addTest( new TestCaller<SocketTest>("same-Address-Open-Bind-Close Test", &SocketTest::sameAddressOpenBindCloseTest));
       test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
       
       test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
       test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
+
       test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
       test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
+      test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       return test_suite;
    }
 
 protected:
    vpr::Mutex     mItemProtectionMutex;         // Protect an exclusive item
+   bool           mFinishFlag;
+   bool           mBlockingFlag;
+   bool           mStartFlag;
+   bool           mReadnFlag;
    long           mOpenServerSuccess;
    long           mNumSServer;
    long           mNumClient;
