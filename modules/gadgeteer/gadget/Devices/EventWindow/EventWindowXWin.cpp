@@ -60,13 +60,10 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
 
    const char neg_one_STRING[] = "-1";
 
-   // Done in Input --- mThread = NULL;
    for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
-      mCurKeys[i] = mRealkeys[i] = mKeys[i] = 0;
+      mRealkeys[i] = mKeys[i] = mCurKeys[i];
    }
-
-   mCurKeys[0] = mRealkeys[0] = mKeys[0] = 1;
 
    // Get size and position
    mWidth = c->getProperty<int>("width");
