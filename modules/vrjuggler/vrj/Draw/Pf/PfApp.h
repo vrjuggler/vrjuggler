@@ -55,11 +55,15 @@ public:
    //: Return the current scene graph
    // This function must be defined so that the performer draw manager
    // can get a scene graph to draw.
-   virtual pfScene* getScene() = 0;
+   // NOTE: Make sure that the node returned is NOT a pfScene.
+   //+      If it is, then lighting will NOT work.
+   virtual pfGroup* getScene() = 0;
 
    //: Init a pWin
-   virtual void initPWin(pfPipeWindow* pWin)
-   {;}
+   virtual void configPWin(pfPipeWindow* pWin)
+   {
+     ;
+   }
 
    //: Function called in the channel draw function to do the actual drawing
    //
@@ -78,10 +82,6 @@ public:
    //! POST: Channel should be drawn
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
-      //pfEnable(PFEN_LIGHTING);
-      //int cur_light_state = pfGetEnable(PFEN_LIGHTING);
-      //vjDEBUG(vjDBG_DRAW_MGR,1) << "initScene: Current lighting state: " << cur_light_state << endl << vjDEBUG_FLUSH;
-
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel
    }
