@@ -114,18 +114,7 @@ DPP_WIN32_SETUP
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 # build, target and host platforms rather than only the host.
 AC_CANONICAL_SYSTEM
-
-_vpr_save_CC="$CC"
-
-# On Win32, force the use of CL.EXE as the C compiler in DPP_SYSTEM_SETUP.
-# This ensures that $OBJEXT and $EXEEXT are set properly.
-if test "x$target_os" = "xcygwin" -a "x$USE_GCC" != "xyes" ; then
-    CC='cl'
-fi
-
 DPP_SYSTEM_SETUP
-
-CC="${_vpr_save_CC}"
 
 # These are used on all platforms.
 AC_DEFINE_UNQUOTED(VPR_OS_RELEASE, "$OS_REL_STR")
