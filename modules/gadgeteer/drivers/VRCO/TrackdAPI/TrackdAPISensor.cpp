@@ -81,7 +81,9 @@ namespace gadget
     int shm_key = e->getProperty<int>("shared_memory_key");
     if(shm_key == 0)
     {
-       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdAPISensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << "gadget::TrackdAPISensor::config: Bad shm_key sent: Had value of 0."
+         << std::endl << vprDEBUG_FLUSH;
        return false;
     }
     mTrackerReader = new TrackerReader(shm_key);

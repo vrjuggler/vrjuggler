@@ -65,7 +65,7 @@ namespace gadget
 class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
 {
 public:
-   Fastrak();                                  // must call vjAnalog()? see vjAnalog.h
+   Fastrak();           // must call gadget::Analog()? see gadget/Type/Analog.h
    virtual ~Fastrak();
 
    // return what element type is associated with this class.

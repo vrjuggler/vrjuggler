@@ -105,8 +105,6 @@ bool Fastrak::config(jccl::ConfigElementPtr fastrakElement)
       return false;
    }
 
-   // configFile = "/home/kruger/VRjuggler/juggler/Input/vjPosition/ft_config.dat";
-
    // *************************************************************************
    // mFastrakDev.trackerInit(configFile);
 
@@ -135,7 +133,7 @@ bool Fastrak::config(jccl::ConfigElementPtr fastrakElement)
       case 1: conf.button = '1'; conf.cont='c'; break;
       case 2: conf.button = '0'; conf.cont='C'; break;
       case 3: conf.button = '0'; conf.cont='c'; break;
-      default: printError( "ERROR: vjFastrak::config : not a valid configuration"); break;
+      default: printError( "ERROR: gadget::Fastrak::config : not a valid configuration"); break;
    }
    conf.found |= 1<<BUTTON;
 
@@ -519,7 +517,8 @@ int Fastrak::getDigitalData( int station )
 {
    if ( station != 0 )
    {
-      std::cout << "error in vjFastrak::getDigitalData: invalid station:" << station << std::endl;
+      std::cout << "error in gadget::Fastrak::getDigitalData: invalid station:"
+                << station << std::endl;
       return 0;
    }
    else
@@ -538,7 +537,8 @@ gmtl::Matrix44f Fastrak::getPosData( int station )
 
    if ( !( (0<=station) && (station<=3) ) )
    {
-      std::cout << "error in vjFastrak::getPosData: invalid station:" << station << std::endl;
+      std::cout << "error in gadget::Fastrak::getPosData: invalid station:"
+                << station << std::endl;
    }
    else
    {
