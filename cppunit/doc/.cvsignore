@@ -1,0 +1,7 @@
+Makefile.in Makefile
+Doxyfile
+html
+man
+CppUnit-dox.log
+*.bak
+

@@ -1,0 +1,9 @@
+*.Tags.WW
+Debug DebugCrossplatform Release ReleaseDll DebugDLL DebugPlugIn ReleasePlugIn
+*.ncb
+simple.opt
+Makefile.in Makefile
+.deps
+.libs
+simple
+*.xml

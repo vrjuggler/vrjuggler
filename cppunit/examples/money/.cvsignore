@@ -1,0 +1,7 @@
+*.Tags.WW
+Debug DebugCrossplatform Release ReleaseDll DebugDLL
+*.ncb *.opt
+Makefile.in Makefile
+.deps
+.libs
+MoneyApp

@@ -1,0 +1,7 @@
+Makefile.in Makefile
+.deps
+.libs
+hierarchy
+*.Tags.WW
+Debug DebugCrossplatform Release
+*.ncb *.opt

@@ -1,0 +1,13 @@
+configure
+config.cache config.log config.status
+aclocal.m4
+Makefile.in Makefile
+libtool
+build-stamp
+cppunit.spec
+cppunit-config
+lib
+stamp-h
+autom4te.cache
+SunWS_cache
+ir.out

@@ -1,0 +1,6 @@
+Makefile.in Makefile
+*.ncb
+*.opt
+
+SunWS_cache
+ir.out
