@@ -13,8 +13,8 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _SEMAPHORE_POSIX_H_
-#define _SEMAPHORE_POSIX_H_
+#ifndef _VJ_SEMAPHORE_POSIX_H_
+#define _VJ_SEMAPHORE_POSIX_H_
 
 #include <vjConfig.h>
 #include <unistd.h>
@@ -40,9 +40,9 @@ public:
     // -----------------------------------------------------------------------
     vjSemaphorePosix (int initialValue = 1) {
         // ----- Allocate the unnamed semaphore ----- //
-        sema = (sem_t*) malloc(sizeof(sem_t));
+        mSema = (sem_t*) malloc(sizeof(sem_t));
 
-        if ( sem_init(sema, 0, initialValue) != 0 ) {
+        if ( sem_init(mSema, 0, initialValue) != 0 ) {
             perror("sem_init() error");
         }
     }
@@ -55,11 +55,11 @@ public:
     // -----------------------------------------------------------------------
     ~vjSemaphorePosix (void) {
         // ---- Delete the semaphore --- //
-        if ( sem_destroy(sema) != 0 ) {
+        if ( sem_destroy(mSema) != 0 ) {
             perror("sem_destroy() error");
         }
 
-        free(sema);
+        free(mSema);
     }
 
     // -----------------------------------------------------------------------
@@ -76,7 +76,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     acquire (void) const {
-        if ( sem_wait(sema) == 0 ) {
+        if ( sem_wait(mSema) == 0 ) {
             return 1;
         } else {
             perror("sem_wait() error");
@@ -136,7 +136,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     tryAcquire (void) const {
-        return sem_trywait(sema);
+        return sem_trywait(mSema);
     }
 
     // -----------------------------------------------------------------------
@@ -185,7 +185,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     release (void) const {
-        return sem_post(sema);
+        return sem_post(mSema);
     }
 
     // -----------------------------------------------------------------------
@@ -205,10 +205,10 @@ public:
     inline int
     reset (int val) {
         // First destroy the current semaphore.
-        sem_destroy(sema);
+        sem_destroy(mSema);
 
         // Now recreate it with the new value in val.
-        return sem_init(sema, 0, val);
+        return sem_init(mSema, 0, val);
     }
 
     // -----------------------------------------------------------------------
@@ -229,18 +229,18 @@ public:
     {
         int value;
 
-        sem_getvalue(sema, &value);
+        sem_getvalue(mSema, &value);
 
         fprintf(dest, "%s", message);
         fprintf(dest, "Current semaphore value: %d", value);
     }
 
 protected:
-    sem_t* sema;	//: Semaphore variable for the class.
+    sem_t* mSema;	//: Semaphore variable for the class.
 
     // Prevent assignment and initialization.
     void operator= (const vjSemaphorePosix &) {}
     vjSemaphorePosix (const vjSemaphorePosix &) {}
 };
 
-#endif	/* _SEMAPHORE_POSIX_H_ */
+#endif	/* _VJ_SEMAPHORE_POSIX_H_ */
