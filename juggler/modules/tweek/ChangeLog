@@ -1,5 +1,11 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-07-03 patrickh    Subject Manager servants are now named using a GUID to
+                       guarantee automatic uniqueness without using a special
+                       naming context.  The tweek::SubjectManager interface 
+                       has been extended to provide clients with additional
+                       instance-specific information about a given reference.
+                       NEW VERSION: 0.5.0
 2002-06-24 patrickh    The tweek-config script is now written in Perl.  It is
                        capable of determining its installation path at runtime.
 2002-05-09 nonchocoboy The Bean XML files now name the Bean class rather than
