@@ -143,12 +143,13 @@ long long TimeStaMpSGI::maxval;
 
 };
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
-namespace vrj
-{
 /*
  * gettimeofday version
  */
 #include <vrj/Performance/TimeStampPosix.h>
+
+namespace vrj
+{
 
 TimeStaMpPosix& TimeStaMpPosix::operator= (const TimeStaMpPosix& t2) {
     val = t2.val;
