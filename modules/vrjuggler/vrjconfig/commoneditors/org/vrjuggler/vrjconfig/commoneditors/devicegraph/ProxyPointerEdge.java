@@ -81,6 +81,13 @@ public class ProxyPointerEdge
       {
          super.setSource(port);
       }
+      else if ( port == null )
+      {
+         // Use the old, non-null source to update the proxy that no longer
+         // points to anything.
+         clearOldProxy((DefaultPort) getSource());
+         super.setSource(port);
+      }
       // Otherwise, we need to perform updates on all proxies involved.
       else
       {
@@ -115,13 +122,7 @@ public class ProxyPointerEdge
             // update the old proxy so that it points at nothing.
             if ( old_source != null )
             {
-               DefaultGraphCell old_proxy_cell =
-                  (DefaultGraphCell) old_source.getParent();
-               ProxyInfo old_proxy_info =
-                  (ProxyInfo) old_proxy_cell.getUserObject();
-               ConfigElement old_proxy_elt = old_proxy_info.getElement();
-               old_proxy_elt.setProperty(DEVICE_PROPERTY, 0, "",
-                                         old_proxy_info.getContext());
+               clearOldProxy(old_source);
             }
 
             // Get the device (target) information.
@@ -200,13 +201,13 @@ public class ProxyPointerEdge
       {
          try
          {
-            DefaultPort dev_port = (DefaultPort) port;
-
             // Get the proxy (source) information.
             Object proxy_port_obj = getSource();
 
             if ( proxy_port_obj != null )
             {
+               DefaultPort dev_port = (DefaultPort) port;
+
                DefaultPort proxy_port = (DefaultPort) proxy_port_obj;
                DefaultGraphCell proxy_cell =
                   (DefaultGraphCell) proxy_port.getParent();
@@ -264,5 +265,15 @@ public class ProxyPointerEdge
                                                port.getClass());
          }
       }
+   }
+
+   private void clearOldProxy(DefaultPort oldSource)
+   {
+      DefaultGraphCell old_proxy_cell =
+         (DefaultGraphCell) oldSource.getParent();
+      ProxyInfo old_proxy_info = (ProxyInfo) old_proxy_cell.getUserObject();
+      ConfigElement old_proxy_elt = old_proxy_info.getElement();
+      old_proxy_elt.setProperty(DEVICE_PROPERTY, 0, "",
+                                old_proxy_info.getContext());
    }
 }
