@@ -31,27 +31,28 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OGL/simple
-#
-# Generated for use on @PLATFORM@
+# Makefile.in for vrjuggler/samples/OGL/simple/ConfigApp
+# This requires GNU make.
 # -----------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# Build targets.
-# -----------------------------------------------------------------------------
-default: all
+all: ConfigApp@EXEEXT@
 
-all: ConfigApp MPApp SimpleApp contextApp simpleInput
+APP_NAME=	ConfigApp@EXEEXT@
 
-ConfigApp MPApp SimpleApp contextApp simpleInput::
-	cd $@ && $(MAKE) all
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		ConfigApp.cpp main.cpp navigation.cxx
+
+GLOVE_DIR=		$(srcdir)/../../advanced/glove
+EXTRA_PATH_FOR_SOURCES=	$(GLOVE_DIR)
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+
+EXTRA_INCLUDES+=	-I$(GLOVE_DIR)
 
 # -----------------------------------------------------------------------------
-# Clean-up.
+# Application build targets.
 # -----------------------------------------------------------------------------
-clean:	
-	-cd ConfigApp && $(MAKE) clean
-	-cd MPApp && $(MAKE) clean
-	-cd SimpleApp && $(MAKE) clean
-	-cd contextApp && $(MAKE) clean
-	-cd simpleInput && $(MAKE) clean
+ConfigApp@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
