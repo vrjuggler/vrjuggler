@@ -65,25 +65,14 @@ namespace gadget
 
 /**
  * Configure constructor.
- *
- * @param port  such as "/dev/ttyd3"
- * @param baud  such as 38400, 19200, 9600, 14400, etc...
- * @param sync  sync type
- * @param block  blocking
- * @param numBrds  number of birds in flock (without transmitter)
- * @param transmit  transmitter unit number
- * @param hemi  hemisphere to track from
- * @param filt  filtering type
- * @param report  flock report rate
- * @param calfile  a calibration file, if "", then use none
  */
-Flock::Flock(const char* const port, const int& baud,
-             const int& numBrds, const int& transmit)
-   : mThread(NULL),
-     mFlockOfBirds(port, baud)
-
+Flock::Flock(const char* port, const int baud, const int numBrds,
+             const int transmit)
+   : mThread(NULL)
+   , mFlockOfBirds(port, baud)
 {
-   ;
+   boost::ignore_unused_variable_warning(numBrds);
+   boost::ignore_unused_variable_warning(transmit);
 }
 
 std::string Flock::getElementType()
@@ -103,31 +92,44 @@ bool Flock::config(jccl::ConfigElementPtr e)
       return false;
    }
 
-   std::string port_name = e->getProperty<std::string>("port");
-   int baud_rate = e->getProperty<int>("baud");
+   // Keep this up to date with the version of the element definition we're
+   // expecting to handle.
+   const unsigned int cur_version(2);
+   bool status(true);
 
-   // keep FlockStandalone's port and baud members in sync with Input's port
-   // and baud members.
-   mFlockOfBirds.setPort( port_name );
-   mFlockOfBirds.setBaudRate( baud_rate );
+   // If the element version is less than cur_version, we will not try to
+   // proceed.  Instead, we'll print an error message and return false so
+   // that the Config Manager knows this element wasn't consumed.
+   if ( e->getVersion() < cur_version )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR") << " [Flock] Element named '"
+         << e->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "is version " << e->getVersion()
+         << ", but we require at least version " << cur_version << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "Ignoring this element and moving on." << std::endl
+         << vprDEBUG_FLUSH;
+      status = false;
+   }
+   else
+   {
+      // keep FlockStandalone's port and baud members in sync with Input's port
+      // and baud members.
+      mFlockOfBirds.setPort( e->getProperty<std::string>("port") );
+      mFlockOfBirds.setBaudRate( e->getProperty<int>("baud") );
 
-   // If these are non-negative, then override the auto-configuration abilities of the flock driver
-   // XXX: These values are auto configured now.
-   
-   //int num_birds =  e->getProperty<int>("number_of_birds");
-   //if(num_birds > 0)
-   //{  mFlockOfBirds.setNumSensors(num_birds); }
-   //int trans_addr =  e->getProperty<int>("transmitter_id");
-   //if (trans_addr > 0)
-   //{  mFlockOfBirds.setTransmitter(trans_addr); }
-   //mFlockOfBirds.setSync( e->getProperty<int>("sync_style") );
-   
-   // Set mFlockOfBirds with the config info.
-   mFlockOfBirds.setHemisphere( (BIRD_HEMI) e->getProperty<int>("hemisphere") ); //LOWER_HEMI
-   mFlockOfBirds.setFilterType( (BIRD_FILT) e->getProperty<int>("filter") ); //
-   mFlockOfBirds.setOutputFormat(::Flock::Output::PositionQuaternion);          // Default to pos quaternion
+      // Set mFlockOfBirds with the config info.
+      mFlockOfBirds.setHemisphere( (BIRD_HEMI) e->getProperty<int>("hemisphere") );
+      mFlockOfBirds.setMasterAddress( e->getProperty<unsigned>("master_address") );
+      mFlockOfBirds.setAddressingMode( (::Flock::AddressingMode) e->getProperty<int>("addressing_mode") );
+      mFlockOfBirds.setFilterType( (BIRD_FILT) e->getProperty<int>("filter") ); //
+      mFlockOfBirds.setOutputFormat(::Flock::Output::PositionQuaternion);          // Default to pos quaternion
+   }
 
-   return true;
+   return status;
 }
 
 Flock::~Flock()
