@@ -96,7 +96,7 @@ namespace gadget{
 
       vpr::SocketStream*                  mServerSync;
       bool                                mIsMaster;
-      std::string                       mSyncMasterChunkName;
+      std::string                         mSyncMasterChunkName;
 
    public:
       RemoteInputManager(InputManager* input_manager);

@@ -240,9 +240,9 @@ namespace gadget
                << "Waiting for a handshake responce on port: "<< mListenPort << "\n"<< clrRESET << vprDEBUG_FLUSH;
                
                // If we receive a handshake successfully
-            if ( mAcceptMsgPackage.receiveHandshake(streamHostname,streamPort, streamManagerId, client_sock) )
+            if ( mAcceptMsgPackage.receiveHandshake(streamHostname,streamPort, streamManagerId, client_sock, sync) )
             {  
-              /*/if (sync)
+              if (sync)
                {
                   // We have a sync request.
                 if (mIsMaster)
@@ -255,7 +255,7 @@ namespace gadget
                 {
                     vprASSERT(false && "Tried to conneted to a client machine!");
                 }
-               }*/
+               }
                if (getTransmittingConnectionByManagerId(streamManagerId) == NULL)   // If the transmitting NetConnection does not exist yet
                                  {
                   NetConnection* connection = new NetConnection(vpr::Interval(0,vpr::Interval::Base),streamHostname, streamPort, streamManagerId, client_sock);
@@ -267,7 +267,7 @@ namespace gadget
                   << vprDEBUG_FLUSH;
                   
                      // Create handshake responce
-                  mAcceptMsgPackage.createHandshake(true,mShortHostname,mListenPort, mManagerId.toString());   // send my name: send my hostname & port
+                  mAcceptMsgPackage.createHandshake(true,mShortHostname,mListenPort, mManagerId.toString(),false);   // send my name: send my hostname & port
                   mAcceptMsgPackage.sendAndClear(client_sock);
                   
                      //Cluster Sync crap
@@ -281,7 +281,7 @@ namespace gadget
                      << "RemoteInputManager: Connection to " << streamHostname
                      <<" : "<< streamPort <<" : "<< streamManagerId << " already exists.\n"
                      << vprDEBUG_FLUSH;
-                  mAcceptMsgPackage.createHandshake(false,mShortHostname, mListenPort, mManagerId.toString());   // send my manager's name
+                  mAcceptMsgPackage.createHandshake(false,mShortHostname, mListenPort, mManagerId.toString(),false);   // send my manager's name
                   mAcceptMsgPackage.sendAndClear(client_sock);
                   client_sock->close();
                   delete client_sock;
@@ -290,7 +290,7 @@ namespace gadget
             }
             else
             {
-               mAcceptMsgPackage.createHandshake(false,mShortHostname, mListenPort, mManagerId.toString());   // send my manager's name
+               mAcceptMsgPackage.createHandshake(false,mShortHostname, mListenPort, mManagerId.toString(),false);   // send my manager's name
                mAcceptMsgPackage.sendAndClear(client_sock);
                client_sock->close();
                delete client_sock;
@@ -349,7 +349,7 @@ namespace gadget
       }
       
 
-      /*jccl::ConfigChunkPtr sync_server_chunk = mMachineTable[mSyncMasterChunkName];
+      jccl::ConfigChunkPtr sync_server_chunk = mMachineTable[mSyncMasterChunkName];
       std::string sync_server_hostname = sync_server_chunk->getProperty<std::string>("host_name");
       
       if (sync_server_hostname == getLocalHostName())
@@ -364,7 +364,7 @@ namespace gadget
           {
              if ((*i).second->getProperty<std::string>("host_name") != getLocalHostName())
              {
-                mLocalMachineChunkName = (*i).first;
+                // mLocalMachineChunkName = (*i).first;
                 ///////////////////////////////////////////////////////////////////////
 
 
@@ -374,7 +374,7 @@ namespace gadget
                 ///////////////////////////////////////////////////////////////////////
              }
           }
-      } */
+      }
 
          // Seperate devices from local and remote
       for (std::vector<jccl::ConfigChunkPtr>::iterator j = mDeviceChunks.begin();
@@ -1043,7 +1043,7 @@ namespace gadget
                << connection_hostname <<":"<< connection_port << "\n"<< vprDEBUG_FLUSH;
    
                // Send a handshake to initalize communication with remote computer
-            mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString());
+            mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString(),false);
             mMsgPackage.sendAndClear(sock_stream);
    
    
@@ -1056,7 +1056,7 @@ namespace gadget
                << connection_port << "\n"<< clrRESET << vprDEBUG_FLUSH;
             
                // Wait for the remote machine to respond with a handshake
-            if ( mMsgPackage.receiveHandshake(received_hostname, received_port, received_manager_id,sock_stream) )
+            if ( mMsgPackage.receiveHandshake(received_hostname, received_port, received_manager_id,sock_stream, sync) )
             { 
                   // Create a new NetConnection  (We use the hostname that we know, not that was sent to us)
                NetConnection* connection = new NetConnection(vpr::Interval(0,vpr::Interval::Base),connection_hostname, connection_port, received_manager_id, sock_stream);
@@ -1119,7 +1119,7 @@ namespace gadget
                << connection_hostname <<":"<< connection_port << "\n"<< vprDEBUG_FLUSH;
    
                // Send a handshake to initalize communication with remote computer
-            mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString());
+            mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString(),false);
             mMsgPackage.sendAndClear(sock_stream);
    
    
@@ -1132,7 +1132,7 @@ namespace gadget
                << connection_port << "\n"<< clrRESET << vprDEBUG_FLUSH;
             
                // Wait for the remote machine to respond with a handshake
-            if ( mMsgPackage.receiveHandshake(received_hostname, received_port, received_manager_id,sock_stream) )
+            if ( mMsgPackage.receiveHandshake(received_hostname, received_port, received_manager_id,sock_stream, sync) )
             {
                return sock_stream;
             }
