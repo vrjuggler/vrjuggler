@@ -41,16 +41,16 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vrj/Draw/Pf
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(PF_LIBRARY)
+includedir=	@includedir@/vrj/Draw/Pf
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(PF_LIBRARY)
 
-SRCS		= PfDrawManager.cpp	     \
-                  PfUtil.cpp		     \
-		  PfBasicSimulator.cpp	     \
-		  PfSimInterfaceFactory.cpp
+SRCS=		PfDrawManager.cpp	     \
+		PfUtil.cpp		     \
+		PfBasicSimulator.cpp	     \
+		PfSimInterfaceFactory.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -59,6 +59,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
