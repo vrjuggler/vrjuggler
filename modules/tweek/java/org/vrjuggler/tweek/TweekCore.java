@@ -218,12 +218,25 @@ public class TweekCore
       GlobalPreferencesService prefs =
          (GlobalPreferencesService) registry.getBean("GlobalPreferences");
 
-      // Get the beans in the given path.
+      // Get the beans in the given path and add them to the dependency manager
       XMLBeanFinder finder = new XMLBeanFinder(mValidateXML);
       List beans = finder.find( path );
       for ( Iterator itr = beans.iterator(); itr.hasNext(); )
       {
          TweekBean bean = (TweekBean)itr.next();
+         mDepManager.add(bean);
+      }
+
+      // Instantiate the beans pending in the dependency manager
+      while (mDepManager.hasBeansPending())
+      {
+         TweekBean bean = (TweekBean)mDepManager.pop();
+         if (bean == null)
+         {
+            // There are more beans pending, but they all have unsatisfied
+            // dependencies so we can instantiate them ...
+            break;
+         }
 
          // Try to instantiate the Bean.
          try
@@ -344,6 +357,11 @@ public class TweekCore
     * The name of the panel bean to select by default when Tweek is started.
     */
    private String defaultBean = null;
+
+   /**
+    * The bean dependency manager used to load beans in a stable order.
+    */
+   private BeanDependencyManager mDepManager = new BeanDependencyManager();
 
    private boolean mValidateXML = false;
    private List    mBeanDirs    = new ArrayList();

@@ -36,27 +36,37 @@
 package org.vrjuggler.tweek.beans;
 
 /**
- * This is just a simple encapsulation of a bean's dependency on another bean.
+ * This is just a simple encapsulation of a Bean's dependency on a JAR file
+ * and the directory (or directories) that might contain that JAR file.
  */
-public class BeanDependency
+public class JarDependency
 {
    /**
-    * Creates a new dependency object with the given bean name.
+    * Creates a new dependency object with the named JAR file and the given
+    * path to find the file.  The file should name just the JAR file, and
+    * the path must be a semicolon-separated list of one or more directories.
+    * (If there is only one directory, no semicolon is needed).
     *
-    * @param beanName   the name of the bean to depend on
+    * @param _file The JAR file upon which a Bean depends.
+    * @param _path The semicolon-separated list of directories where the JAR
+    *              file might be found.
     */
-   public BeanDependency(String beanName)
+   public JarDependency (String _file, String _path)
    {
-      this.beanName = beanName;
+      file = _file;
+      path = _path;
    }
 
-   /**
-    * Gets the name of the bean that this dependency refers to.
-    */
-   public String getBeanName()
+   public String getFile ()
    {
-      return beanName;
+      return file;
    }
 
-   private String beanName;
+   public String getPath ()
+   {
+      return path;
+   }
+
+   private String file;
+   private String path;
 }
