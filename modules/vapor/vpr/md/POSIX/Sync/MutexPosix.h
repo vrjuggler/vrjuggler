@@ -41,9 +41,6 @@
 
 /*
  * ----------------------------------------------------------------------------
- * Author:
- *   Patrick Hartling (based on vpr::MutexSGI by Allen Bierbaum).
- * ----------------------------------------------------------------------------
  * NOTES:
  *    - This file (MutexPosix.h) must be included by vpr/Sync/Mutex.h, not the
  *      other way around.
@@ -62,20 +59,22 @@
 
 namespace vpr {
 
-//: Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
-//+ for the implementation.
-
-//!PUBLIC_API:
+/**
+ * Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
+ * for the implementation.
+ *
+ * @author Patrick Hartling
+ */
 class MutexPosix {
 public:
-    // -----------------------------------------------------------------------
-    //: Constructor for vpr::MutexPosix class.
-    //
-    //! PRE: None.
-    //! POST: The mutex variable is initialized for use.  It must be
-    //+       initialized before any other member functions can do anything
-    //+       with it.
-    // -----------------------------------------------------------------------
+    /**
+     * Constructor for vpr::MutexPosix class.
+     *
+     * @pre None.
+     * @post The mutex variable is initialized for use.  It must be
+     *       initialized before any other member functions can do anything
+     *       with it.
+     */
     MutexPosix (void) {
         // Initialize the mutex.
 #ifdef _PTHREADS_DRAFT_4
@@ -85,14 +84,14 @@ public:
 #endif
     }
 
-    // -----------------------------------------------------------------------
-    //: Destructor for vpr::MutexPosix class.
-    //
-    //! PRE: The mutex variable should be unlocked before being destroyed,
-    //+      but if it is not, this routine will unlock it and then destroy
-    //+      it.
-    //! POST: The mutex variable is destroyed and unlocked if necessary.
-    // -----------------------------------------------------------------------
+    /**
+     * Destructor for vpr::MutexPosix class.
+     *
+     * @pre The mutex variable should be unlocked before being destroyed,
+     *      but if it is not, this routine will unlock it and then destroy
+     *      it.
+     * @post The mutex variable is destroyed and unlocked if necessary.
+     */
     ~MutexPosix (void) {
         // Destroy the mutex.
         if ( pthread_mutex_destroy(&mMutex) == -1 ) {
@@ -101,17 +100,17 @@ public:
         }
     }
 
-    // -----------------------------------------------------------------------
-    //: Lock the mutex.
-    //
-    //! PRE: None.
-    //! POST: A lock on the mutex variable is acquired by the caller.  If a
-    //+       lock has already been acquired by another process/thread, the
-    //+       caller blocks until the mutex has been freed.
-    //
-    //! RETURNS:  1 - Lock acquired
-    //! RETURNS: -1 - Error
-    // -----------------------------------------------------------------------
+    /**
+     * Locks this mutex.
+     *
+     * @pre None.
+     * @post A lock on the mutex variable is acquired by the caller.  If a
+     *       lock has already been acquired by another process/thread, the
+     *       caller blocks until the mutex has been freed.
+     *
+     * @return 1 is returned if the lock is acquired.<br>
+     *         -1 is returned if an error occurred.
+     */
     inline int
     acquire (void) {
         int retval;
@@ -137,53 +136,53 @@ public:
         }
     }
 
-    // -----------------------------------------------------------------------
-    //: Acquire a read mutex lock.
-    //
-    //! PRE: None.
-    //! POST: A lock on the mutex variable is acquired by the caller.  If a
-    //+       lock has already been acquired by another process/thread, the
-    //+       caller blocks until the mutex has been freed.
-    //
-    //! RETURNS:  1 - Lock acquired
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: No special read mutex has been defined for now.
-    // -----------------------------------------------------------------------
+    /**
+     * Acquires a read lock on this mutex.
+     *
+     * @pre None.
+     * @post A lock on the mutex variable is acquired by the caller.  If a
+     *       lock has already been acquired by another process/thread, the
+     *       caller blocks until the mutex has been freed.
+     *
+     * @return 1 is returned if the lock is acquired.<br>
+     *         -1 is returned if an error occurred.
+     *
+     * @note No special read lock has been defined for now.
+     */
     inline int
     acquireRead (void) {
         return this->acquire();
     }
 
-    // -----------------------------------------------------------------------
-    //: Acquire a write mutex lock.
-    //
-    //! PRE: None.
-    //! POST: A lock on the mutex variable is acquired by the caller.  If a
-    //+       lock has already been acquired by another process/thread, the
-    //+       caller blocks until the mutex has been freed.
-    //
-    //! RETURNS:  1 - Acquired
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: No special write mutex has been defined for now.
-    // -----------------------------------------------------------------------
+    /**
+     * Acquires a write lock on this mutex.
+     *
+     * @pre None.
+     * @post A lock on the mutex variable is acquired by the caller.  If a
+     *       lock has already been acquired by another process/thread, the
+     *       caller blocks until the mutex has been freed.
+     *
+     * @return 1 is returned if the lock is acquired.<br>
+     *         -1 is returned if an error occurred.
+     *
+     * @note No special write lock has been defined for now.
+     */
     inline int
     acquireWrite (void) {
         return this->acquire();
     }
 
-    // -----------------------------------------------------------------------
-    //: Try to acquire a lock on the mutex variable (does not block).
-    //
-    //! PRE: None.
-    //! POST: A lock on the mutex variable is acquired by the caller.  If a
-    //+       lock has already been acquired by another process/thread, the
-    //+       caller returns does not wait for it to be unlocked.
-    //
-    //! RETURNS: 1 - Acquired
-    //! RETURNS: 0 - Mutex is busy
-    // -----------------------------------------------------------------------
+    /**
+     * Tries to acquire a lock on this mutex variable (does not block).
+     *
+     * @pre None.
+     * @post A lock on the mutex variable is acquired by the caller.  If a
+     *       lock has already been acquired by another process/thread, the
+     *       caller returns does not wait for it to be unlocked.
+     *
+     * @return 1 is returned if the lock is acquired.<br>
+     *         0 is returned if the mutex is already locked.
+     */
     inline int
     tryAcquire (void) {
         if ( pthread_mutex_trylock(&mMutex) == 0 ) {
@@ -193,75 +192,75 @@ public:
         }
     }
 
-    // -----------------------------------------------------------------------
-    //: Try to acquire a read mutex lock (does not block).
-    //
-    //! PRE: None.
-    //! POST: A lock on the mutex variable is acquired by the caller.  If a
-    //+       lock has already been acquired by another process/thread, the
-    //+       caller returns does not wait for it to be unlocked.
-    //
-    //! RETURNS: 1 - Acquired
-    //! RETURNS: 0 - Mutex is busy
-    // -----------------------------------------------------------------------
+    /**
+     * Tries to acquire a read lock on this mutex (does not block).
+     *
+     * @pre None.
+     * @post A lock on the mutex variable is acquired by the caller.  If a
+     *       lock has already been acquired by another process/thread, the
+     *       caller returns does not wait for it to be unlocked.
+     *
+     * @return 1 is returned if the read lock is acquired.<br>
+     *         0 is returned if the mutex is already locked.
+     */
     inline int
     tryAcquireRead (void) {
         return this->tryAcquire();
     }
 
-    // -----------------------------------------------------------------------
-    //: Try to acquire a write mutex (does not block)..
-    //
-    //! PRE: None.
-    //! POST: A lock on the mutex variable is acquired by the caller.  If a
-    //+       lock has already been acquired by another process/thread, the
-    //+       caller returns does not wait for it to be unlocked.
-    //
-    //! RETURNS: 1 - Acquired
-    //! RETURNS: 0 - Mutex is busy
-    // -----------------------------------------------------------------------
+    /**
+     * Tries to acquire a write lock on this mutex (does not block).
+     *
+     * @pre None.
+     * @post A lock on the mutex variable is acquired by the caller.  If a
+     *       lock has already been acquired by another process/thread, the
+     *       caller returns does not wait for it to be unlocked.
+     *
+     * @return 1 is returned if the write lock is acquired.<br>
+     *         0 is returned if the mutex is already locked.
+     */
     inline int
     tryAcquireWrite (void) {
         return this->tryAcquire();
     }
 
-    // -----------------------------------------------------------------------
-    //: Release the mutex.
-    //
-    //! PRE: The mutex variable must be locked.
-    //! POST: The mutex variable is unlocked.
-    //
-    //! RETURNS:  0 - Success
-    //! RETURNS: -1 - Error
-    // -----------------------------------------------------------------------
+    /**
+     * Releases this mutex.
+     *
+     * @pre The mutex variable must be locked.
+     * @post The mutex variable is unlocked.
+     *
+     * @return 0 is returned if the lock is released successfully.<br>
+     *         -1 is returned otherwise.
+     */
     inline int
     release (void) {
         return pthread_mutex_unlock(&mMutex);
     }
 
-    // -----------------------------------------------------------------------
-    //: Test the current lock status.
-    //
-    //! PRE: None.
-    //! POST: The state of the mutex variable is returned.
-    //
-    //! RETURNS: 0 - Not locked
-    //! RETURNS: 1 - Locked
-    // -----------------------------------------------------------------------
+    /**
+     * Tests the current lock status.
+     *
+     * @pre None.
+     * @post The state of the mutex variable is returned.
+     *
+     * @return 0 is returned if this mutex is not currently locked.<br>
+     *         0 is returned if this mutex is locked.
+     */
     int test(void);
 
-    // -----------------------------------------------------------------------
-    //: Dump the mutex debug stuff and current state.
-    //
-    //! PRE: None.
-    //! POST: All important data and debugging information related to the
-    //+       mutex are dumped to the specified file descriptor (or to stderr
-    //+       if none is given).
-    //
-    //! ARGS: dest - File descriptor to which the output will be written.
-    //+              It defaults to stderr if no descriptor is specified.
-    //! ARGS: message - Message printed out before the output is dumped.
-    // -----------------------------------------------------------------------
+    /**
+     * Dumps the mutex debug stuff and current state.
+     *
+     * @pre None.
+     * @post All important data and debugging information related to the
+     *       mutex are dumped to the specified file descriptor (or to stderr
+     *       if none is given).
+     *
+     * @param dest    File descriptor to which the output will be written.
+     *                It defaults to stderr if no descriptor is specified.
+     * @param message Message printed out before the output is dumped.
+     */
     void
     dump (FILE* dest = stderr,
           const char* message = "\n------ Mutex Dump -----\n") const
@@ -277,7 +276,7 @@ public:
     friend class CondVarPosix;
 
 protected:
-    pthread_mutex_t mMutex;    //: Mutex variable for the class.
+    pthread_mutex_t mMutex;    /**< Mutex variable for the class. */
 
     // = Prevent assignment and initialization.
     void operator= (const MutexPosix &) {;}
