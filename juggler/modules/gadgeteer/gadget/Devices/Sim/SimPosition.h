@@ -77,16 +77,16 @@ public:
    SimPosition() {;}
    virtual ~SimPosition() {;}
 
-   virtual bool config(ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunk* chunk);
 
    //: Return position data
-   Matrix* getPosData(int devNum=0)
+   vrj::Matrix* getPosData(int devNum=0)
    {
       vprASSERT(devNum == 0);    // Make sure we have a valid dev
       return &mPos;
    }
 
-    TimeStamp* getPosUpdateTime (int devNum = 0) {
+    jccl::TimeStamp* getPosUpdateTime (int devNum = 0) {
    return &mUpdateTime;
     }
 
@@ -121,18 +121,18 @@ private:
 
    //: Check if movement is allowed
    //! NOTE: It is not allowed if it hits a simulated wall, etc.
-   bool isTransAllowed(Vec3 trans);
+   bool isTransAllowed(vrj::Vec3 trans);
 
 
 private:
    int            mTransCoordSystem;                 //: What coord system for translations?
    int            mRotCoordSystem;              //: What coord system for rotations?
-   Matrix       mPos;                         //: The current position being simulated
+   vrj::Matrix       mPos;                         //: The current position being simulated
    KeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
    float          mDTrans;                      //: Delta translation
    float          mDRot;                        //: Delta rotation
 
-    TimeStamp   mUpdateTime;                  //: Time of last update
+    jccl::TimeStamp   mUpdateTime;                  //: Time of last update
 };
 
 };

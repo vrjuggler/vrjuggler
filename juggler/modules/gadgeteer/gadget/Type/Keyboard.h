@@ -117,7 +117,7 @@ public:
 
    virtual ~Keyboard() {;}
 
-   virtual bool config(ConfigChunk* chunk)
+   virtual bool config(jccl::ConfigChunk* chunk)
    { return true; }
 
       //: Is the given key pressed.

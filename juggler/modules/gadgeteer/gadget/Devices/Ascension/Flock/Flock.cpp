@@ -110,11 +110,11 @@ Flock::Flock(const char* const port,
    myThread = NULL;
 }
 
-bool Flock::config(ConfigChunk *c)
+bool Flock::config(jccl::ConfigChunk *c)
 {
    port_id = -1;
 
-   vprDEBUG(vrjDBG_INPUT_MGR,3) << "   Flock::Flock(ConfigChunk*)"
+   vprDEBUG(vrjDBG_INPUT_MGR,3) << "   Flock::Flock(jccl::ConfigChunk*)"
                               << std::endl << vprDEBUG_FLUSH;
 
    // read in Position's config stuff,
@@ -159,7 +159,7 @@ bool Flock::config(ConfigChunk *c)
 
    // init the correction table with the calibration file.
    char* calfile = c->getProperty("calfile").cstring();
-   mFlockOfBirds.initCorrectionTable(FileIO::replaceEnvVars(calfile).c_str());
+   mFlockOfBirds.initCorrectionTable(vrj::FileIO::replaceEnvVars(calfile).c_str());
 
    return true;
 }
@@ -205,8 +205,8 @@ int Flock::startSampling()
 
       // Allocate buffer space for birds
       int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
-      theData = new Matrix[numbuffs];
-      mDataTimes = new TimeStamp[numbuffs];
+      theData = new vrj::Matrix[numbuffs];
+      mDataTimes = new jccl::TimeStamp[numbuffs];
 
       // Reset current, progress, and valid indices
       resetIndexes();
@@ -253,7 +253,7 @@ int Flock::sample()
       return 0;
 
    int i;
-      TimeStamp sampletime;
+   jccl::TimeStamp sampletime;
    sampletime.set();
    mFlockOfBirds.sample();
 
@@ -285,7 +285,7 @@ int Flock::sample()
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
-      Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
       world_T_transmitter = xformMat;                    // Set transmitter offset from local info
       transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
@@ -334,7 +334,7 @@ int Flock::stopSampling()
    return 1;
 }
 
-Matrix* Flock::getPosData( int d ) // d is 0 based
+vrj::Matrix* Flock::getPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
       return NULL;
@@ -342,7 +342,7 @@ Matrix* Flock::getPosData( int d ) // d is 0 based
     return (&theData[getBirdIndex(d,current)]);
 }
 
-TimeStamp* Flock::getPosUpdateTime (int d) {
+jccl::TimeStamp* Flock::getPosUpdateTime (int d) {
     if (this->isActive() == false)
       return NULL;
 

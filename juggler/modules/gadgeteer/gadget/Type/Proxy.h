@@ -117,7 +117,8 @@ public:
 
    virtual bool refresh()
    {
-      Input* input_dev = vrj::Kernel::instance()->getInputManager()->getDevice(mDeviceName);
+       Input* input_dev = NULL;//InputManager::instance()->getDevice(mDeviceName);
+       //XXX Input* input_dev = vrj::Kernel::instance()->getInputManager()->getDevice(mDeviceName);
       if(NULL == input_dev)       // Not found, so stupify
       {
          vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "vjTypedProxy::refresh: Could not find device: " << mDeviceName << std::endl << vprDEBUG_FLUSH;

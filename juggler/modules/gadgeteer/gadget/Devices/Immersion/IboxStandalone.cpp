@@ -14,7 +14,7 @@
 #define MIN_TIMEOUT 0.1
 
 
-#include <gadget/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <gadget/Devices/Immersion/ibox2.h>
 

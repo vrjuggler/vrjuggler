@@ -64,7 +64,7 @@ namespace gadget
 // -Create the trackdSensor based on config info
 // -set to active
 // -grow the vector to however many values we need
-bool TrackdController::config(ConfigChunk* c)
+bool TrackdController::config(jccl::ConfigChunk* c)
 {
    if(! (Input::config(c) && Digital::config(c) && Analog::config(c)))
       return false;

@@ -40,9 +40,9 @@ namespace gadget
 {
 
 // Set up the transformation information
-bool Position::config(ConfigChunk *c)
+bool Position::config(jccl::ConfigChunk *c)
 {
-  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position(ConfigChunk*)" << vprDEBUG_FLUSH;
+  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position(jccl::ConfigChunk*)" << vprDEBUG_FLUSH;
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
     // These are the transforms from the base tracker coord system
@@ -70,9 +70,9 @@ bool Position::config(ConfigChunk *c)
   return true;
 }
 
-TimeStamp* Position::getPosUpdateTime (int devNum)
+jccl::TimeStamp* Position::getPosUpdateTime (int devNum)
 {
-      vprDEBUG(vrjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vrjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vprDEBUG_FLUSH;
    return NULL;
 }
 

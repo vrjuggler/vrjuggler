@@ -49,13 +49,13 @@ SimDigital::~SimDigital()
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimDigital::config(ConfigChunk* chunk)
+bool SimDigital::config(jccl::ConfigChunk* chunk)
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))
       return false;
 
-   std::vector<VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
    mSimKeys = readKeyList(key_list);
 
    int num_pairs = mSimKeys.size();

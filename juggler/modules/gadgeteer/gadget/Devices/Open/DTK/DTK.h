@@ -65,7 +65,7 @@ public:
    virtual ~DTK();
 
 //: configure the flock with a config chunk
-    virtual bool config(ConfigChunk* c);
+    virtual bool config(jccl::ConfigChunk* c);
 
 //: begin sampling
     int startSampling();
@@ -94,7 +94,7 @@ public:
 //! NOTE: Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
 //+  then you can access them, in order, as 0,1,2.
-    Matrix* getPosData( int dev = 0); // 0 base
+    vrj::Matrix* getPosData( int dev = 0); // 0 base
 
 //: Get the digital and analog data
 //! ARGS: d - the button number
@@ -106,7 +106,7 @@ public:
 //: Get time of last update for this receiver
 //! ARGS: dev - is the reciever number
 //! POST: returns a pointer to the reciever's timestamp
-    TimeStamp* getPosUpdateTime (int dev = 0);
+    jccl::TimeStamp* getPosUpdateTime (int dev = 0);
 
 //: see if the DTK is active or not
     inline bool isActive() { return active; };

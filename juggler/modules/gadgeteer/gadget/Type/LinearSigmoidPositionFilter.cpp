@@ -32,7 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/LinearSigmoidPositionFilter.h>
-
+#include <vpr/Util/Debug.h>
 
 namespace gadget
 {
@@ -57,7 +57,7 @@ namespace gadget
 // If the scale factor is 0.0 or 1.0, then just return the matrix directly
 // Else, perform a quaternion slerp on the rotation and linear calculation
 // on position and return that matrix.
-Matrix LinearSigmoidPositionFilter::getPos(const Matrix newPos)
+vrj::Matrix LinearSigmoidPositionFilter::getPos(const vrj::Matrix newPos)
 {
    // If value is the same, then return immediately
    if(newPos == mLastReturnedPos)
@@ -66,9 +66,9 @@ Matrix LinearSigmoidPositionFilter::getPos(const Matrix newPos)
    const float eps(0.001);         // An epsilon value because of numerical precision as we approach zero difference
    float scale_factor(0.0f);
    float dist;
-   Vec3 last_returned_trans;
-   Vec3 new_trans;
-   Vec3 trans_diff;
+   vrj::Vec3 last_returned_trans;
+   vrj::Vec3 new_trans;
+   vrj::Vec3 trans_diff;
 
    // Get difference in translation
    last_returned_trans = mLastReturnedPos.getTrans();
@@ -102,8 +102,8 @@ Matrix LinearSigmoidPositionFilter::getPos(const Matrix newPos)
 
       vprASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 
-      Vec3 ret_trans;
-      Matrix ret_val;
+      vrj::Vec3 ret_trans;
+      vrj::Matrix ret_val;
 
       ret_trans = last_returned_trans + (trans_diff * scale_factor);
 
@@ -112,7 +112,7 @@ Matrix LinearSigmoidPositionFilter::getPos(const Matrix newPos)
                            << " * " << scale_factor << " )\n" << vprDEBUG_FLUSH;
 
       // Compute scaled rotation
-      Quat      source_rot, goal_rot, slerp_rot;
+      vrj::Quat      source_rot, goal_rot, slerp_rot;
       source_rot.makeRot( mLastReturnedPos );          // Create source
       goal_rot.makeRot( newPos );                      // Create goal
 

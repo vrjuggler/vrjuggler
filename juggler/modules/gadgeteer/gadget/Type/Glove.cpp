@@ -95,8 +95,8 @@ GloveData::GloveData(const GloveData& data)
 // Wrist is not being done at all
 int GloveData::calcXforms()
 {
-   Vec3 xAxis(1.0f, 0.0f, 0.0f);
-   Vec3 yAxis(0.0f, 1.0f, 0.0f);
+   vrj::Vec3 xAxis(1.0f, 0.0f, 0.0f);
+   vrj::Vec3 yAxis(0.0f, 1.0f, 0.0f);
    const float oneIn(1/12.0f);
 
 
@@ -205,12 +205,12 @@ float Glove::getGloveAngle(GloveData::GloveComponent component,
 //: This returns a vector ponting "out" of the component
 // Can be used for selection, etc.
 // Use getGlovePos to get the transformation matrix
-Vec3 Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
+vrj::Vec3 Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
 {
    // Take a normalized ray up default (yAxis), and transform by finger tip rot matrix
    // ret_val = wTt yAxis
-   Vec3 y_axis(0.0f, 1.0f, 0.0f);
-   Vec3 ret_val(0.0f, 0.0f, 0.0f);
+   vrj::Vec3 y_axis(0.0f, 1.0f, 0.0f);
+   vrj::Vec3 ret_val(0.0f, 0.0f, 0.0f);
 
    ret_val.xformVec(getGlovePos(component, devNum), y_axis);      // Compute the vector direction
    return ret_val;
@@ -219,13 +219,13 @@ Vec3 Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
 // Calculated from the matrices in xforms
 // <sub>world</sub><b>T</b><sub>tip</sub> = <sub>world</sub><b>T</b><sub>base</sub> <sub>base</sub><b>T</b><sub>dij</sub> <sub>dij</sub><b>T</b><sub>tip</sub>
 //  i.e. wTt = wTb bTd dTt
-Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
+vrj::Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
 {
    if(mGlovePos[devNum] != NULL)
    {
-      Matrix ret_val;       // The returned matrix.
-      Matrix baseTdij;      // Transform from base to dig coord system
-      Matrix dijTtip;       // Transform to the tip of the finger
+      vrj::Matrix ret_val;       // The returned matrix.
+      vrj::Matrix baseTdij;      // Transform from base to dig coord system
+      vrj::Matrix dijTtip;       // Transform to the tip of the finger
 
       switch(component)
       {
@@ -238,9 +238,9 @@ Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
       case GloveData::RING:
       case GloveData::PINKY:
       case GloveData::THUMB:
-         dijTtip.makeTrans(mTheData[devNum][current].dims[component][GloveData::DIJ+1][GADGET_X],
-                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][GADGET_Y],
-                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][GADGET_Z]);
+         dijTtip.makeTrans(mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_X],
+                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Y],
+                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Z]);
          baseTdij = mTheData[devNum][current].xforms[component][GloveData::MPJ];            // baseTmpj
          baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::PIJ]);    // mpjTpij
          baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::DIJ]);    // pijTdij
@@ -262,7 +262,7 @@ Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
    {
       vprDEBUG( vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Glove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vprDEBUG_FLUSH;
       vprASSERT( mGlovePos[devNum] != NULL );      // should be false in here
-      return Matrix();
+      return vrj::Matrix();
    }
 }
 

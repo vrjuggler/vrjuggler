@@ -90,9 +90,12 @@ const unsigned int DEVICE_GROW1    = 64;
 const unsigned int DEVICE_GROW2    = 128;
 */
 
+namespace jccl {
+    class ConfigChunk;
+};
+
 namespace gadget
 {
-   class ConfigChunk;
 
 //-----------------------------------------------------------------------------
 //: Input is the abstract base class that all input objects derive from.
@@ -140,7 +143,7 @@ public:
    //  This baselevel config will fill the base datamembers
    //  when found in the ConfigChunk, such as serial port, instance name
    //  and baud rate.
-   virtual bool config(ConfigChunk *c);
+   virtual bool config(jccl::ConfigChunk *c);
 
    //: Sample the device
    //

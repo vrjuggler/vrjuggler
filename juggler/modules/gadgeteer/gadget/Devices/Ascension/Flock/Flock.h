@@ -67,7 +67,7 @@ namespace gadget
 //! NOTE: Some functions still remain for changing the options of
 //+    the flock when its not in Sampling mode, but in order to stay
 //+    consistent with the Input/vjPosition functionality these
-//+    are only left for building apps without ConfigChunks
+//+    are only left for building apps without jccl::ConfigChunks
 //! NOTE: A note on reciever access:
 //+  Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
@@ -106,7 +106,7 @@ class Flock : public Input, public Position {
 
 
     //: configure the flock with a config chunk
-    virtual bool config(ConfigChunk* c);
+    virtual bool config(jccl::ConfigChunk* c);
 
     //: begin sampling
     int startSampling();
@@ -129,12 +129,12 @@ class Flock : public Input, public Position {
     //! NOTE: Clients of juggler should access tracker recievers as [0-n]
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
-    Matrix* getPosData( int dev = 0); // 0 base
+    vrj::Matrix* getPosData( int dev = 0); // 0 base
 
     //: Get time of last update for this receiver
     //! ARGS: dev - is the reciever number
     //! POST: returns a pointer to the reciever's timestamp
-    TimeStamp* getPosUpdateTime (int dev = 0);
+    jccl::TimeStamp* getPosUpdateTime (int dev = 0);
 
     //: see if the flock is active or not
     inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
