@@ -88,6 +88,8 @@ public:
 
    /**
     * Recalculate the projection matrix.
+    * @pre eyePos is scaled by position factor.
+    * @pre scaleFactor is the scale current used
     * @post frustum has been recomputed for given eyePos.
     */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor)

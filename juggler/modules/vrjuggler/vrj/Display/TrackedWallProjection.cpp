@@ -34,6 +34,7 @@
 
 #include <vrj/Display/TrackedWallProjection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
+#include <gmtl/Generate.h>
 
 
 namespace vrj
@@ -55,10 +56,10 @@ void TrackedWallProjection::updateWallParams()
    // Cost: 2 inversions, 1 mult, 2 temp matrices
 #if 0
    gmtl::Matrix44f wall_rot_bak_inv;
-   wall_rot_bak_inv.invert(mWallRotationMatrix_bak);
+   gmtl::invert(wall_rot_bak_inv, mWallRotationMatrix_bak);
    gmtl::Matrix44f base_m_surf;
-   base_m_surf.mult(tracker_mat,wall_rot_bak_inv);
-   mWallRotationMatrix.invert(base_m_surf);
+   base_m_surf = tracker_mat * wall_rot_bak_inv;
+   gmtl::invert(mWallRotationMatrix,base_m_surf);
 #endif
 
 #if 1
@@ -68,6 +69,8 @@ void TrackedWallProjection::updateWallParams()
    gmtl::Matrix44f tracker_mat_inv;                 // trackerMbase
    gmtl::invert( tracker_mat_inv, tracker_mat);
    mWallRotationMatrix = mWallRotationMatrix_bak * tracker_mat_inv;
+
+   std::cout << "Walrotation: pos: " << gmtl::makeTrans<gmtl::Vec3f>(mWallRotationMatrix) << std::endl;
 #endif
 }
 

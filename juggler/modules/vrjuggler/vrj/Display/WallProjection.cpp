@@ -72,6 +72,8 @@ void WallProjection::config(jccl::ConfigChunkPtr chunk)
  *
  * @pre WallRotation matrix must be set correctly.
  * @pre mOrigin*'s must all be set correctly.
+ * @pre eyePos is scaled by position factor.
+ * @pre scaleFactor is the scale current used
  */
 void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleFactor )
 {
@@ -79,7 +81,6 @@ void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleF
 
    //Coord eye_coord(eyePos);
    gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
-   //eye_pos = eye_coord.pos;
 
    // Need to post translate to get the view matrix at the position of the eye
    mViewMat = mWallRotationMatrix * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
@@ -122,9 +123,9 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleF
    eye_xformed = mWallRotationMatrix * eye_pos;
 
    vprDEBUG(vrjDBG_DISP_MGR,7)
-      << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
+      //<< "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
       << "vjWallProjection::calcWallProjection:    Base eye:" << eye_pos
-      << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed
+      << "  Xformed eye:" << eye_xformed
       << std::endl << vprDEBUG_FLUSH;
 
    // Compute dist from eye to screen/edges
