@@ -35,6 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlApp.h>
 
 #include <gadget/Type/PositionInterface.h>
