@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-15-2003 aronb       Added automatic ConfigElement upgrades using XSLT.
+Oct-10-2003 aronb       Added multiple inheritance for config element
+                        definitions.
 Oct-06-2003 patrickh    Added jccl::ConfigElement::getVersion().
                         NEW VERSION: 0.12.3
 Aug-16-2003 patrickh    Updated to Tweek 0.15.
