@@ -62,8 +62,8 @@
 // since all of our derived types are going to be gadget::Eventwindows as well
 // as GL Windows.  They need to be so we can get keyboard input for
 // the simulators that will run on/in this window
-#include <gadget/Type/EventWindow.h>
-#include <gadget/Type/EventWindowProxy.h>
+#include <gadget/Type/KeyboardMouse.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 
 // This variable determines which matrix stack we put the viewing transformation
@@ -87,8 +87,6 @@ void GlWindow::configWindow(vrj::Display* displayWindow)
                                  mWindowHeight);
    mHasBorder = mVrjDisplay->shouldDrawBorder();
    mHideMouse = mVrjDisplay->shouldHideMouse();
-
-   /// Other stuff
 }
 
 /** Complete any setup that is needed after open
@@ -237,7 +235,7 @@ void GlWindow::setProjection(vrj::Projection* proj)
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(proj->getViewMat().mData);
+   glMultMatrixf(proj->getViewMatrix().mData);
 #endif
 }
 
