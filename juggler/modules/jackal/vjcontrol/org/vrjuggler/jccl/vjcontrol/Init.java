@@ -70,6 +70,9 @@ public class Init {
             if (args[i].equalsIgnoreCase ("-j")) {
                 extension_dirs.add (args[++i]);
             }
+            else if (args[i].endsWith (".jar") || args[i].endsWith(".JAR")) {
+                extension_dirs.add (args[i]);
+            }
         }
 
         Core.component_factory.registerBaseJar();
