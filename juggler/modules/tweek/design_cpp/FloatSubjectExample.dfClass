@@ -66,14 +66,14 @@ class __tags {
 class __options {
 }/**
 @__positions <oigroup:<oiref:cpp#Extends#FloatSubjectImpl#tweek::SubjectImpl:oiref>=371,260,371,220:oigroup>
-<oigroup:<oiref:idl#Extends#example::FloatSubject#tweek::Subject:oiref>=106,220,106,187:oigroup>
-<oigroup:<oiref:java#Class#FloatObserverImpl:oiref>=600,220,160,109,0:oigroup>
-<oigroup:<oiref:cpp#Class#FloatSubjectImpl:oiref>=280,260,182,141,0:oigroup>
+<oigroup:<oiref:idl#Extends#example::FloatSubject#tweek::Subject:oiref>=110,220,110,187:oigroup>
+<oigroup:<oiref:java#Class#FloatObserverImpl:oiref>=600,220,160,90,0:oigroup>
+<oigroup:<oiref:cpp#Class#FloatSubjectImpl:oiref>=280,260,182,170,0:oigroup>
 <oigroup:<oiref:cpp#Class#FloatSubject:oiref>=120,230,164,143,0:oigroup>
 <oigroup:<oiref:idl#Class#example::FloatSubject:oiref>=30,220,167,141,1:oigroup>
 <oigroup:<oiref:java#Implements#FloatObserverImpl#tweek.ObserverPOA:oiref>=680,220,680,150:oigroup>
 <oigroup:<oiref:java#Class#tweek.ObserverPOA:oiref>=540,20,270,130,0:oigroup>
-<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=50,20,113,167,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=30,20,160,167,0:oigroup>
 <oigroup:<oiref:cpp#Class#tweek::SubjectImpl:oiref>=240,20,250,200,0:oigroup>
 
 */
