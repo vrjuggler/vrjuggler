@@ -33,23 +33,11 @@
 #ifndef _TORUS_APP
 #define _TORUS_APP
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
+#include <vrj/Draw/OGL/GlApp.h>
 
-#include <iostream>
-#include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
-#include <Math/vjQuat.h>
-#include <Utils/vjDebug.h>
-
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
 
 
 //--------------------------------------------------
@@ -57,10 +45,10 @@
 //
 // This application simply renders a torus in the corner of a C2.
 //---------------------------------------------------
-class torusApp : public GlApp
+class torusApp : public vrj::GlApp
 {
 public:
-   torusApp(Kernel* kern) : GlApp(kern)
+   torusApp(vrj::Kernel* kern) : vrj::GlApp(kern)
    {;}
 
    virtual ~torusApp (void) {
@@ -113,7 +101,7 @@ private:
    void initGLState();
 
 private:
-   PosInterface    mWand;
+   vrj::PosInterface    mWand;
 };
 
 #endif
