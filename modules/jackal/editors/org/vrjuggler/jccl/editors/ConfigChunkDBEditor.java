@@ -697,13 +697,11 @@ public class ConfigChunkDBEditor
                      chunkPropTree.getLastSelectedPathComponent();
 
       // Get a DB of all known ChunkDescs
-      ConfigManagerService mgr = (ConfigManagerService)
-            BeanRegistry.instance().getBean("ConfigManager").getBean();
-      ChunkDescDB desc_db = mgr.getAllChunkDescs();
+      List descs = getConfigBroker().getDescs(context);
 
       // Ask the user to choose a base ChunkDesc
       ChunkDescChooser chooser = new ChunkDescChooser();
-      chooser.setChunkDescDB(desc_db);
+      chooser.setDescs(descs);
       int result = chooser.showDialog(this);
 
       // If the user did not cancel their choice, make a new ConfigChunk for
