@@ -162,20 +162,20 @@ void NavGrabApp::dumpState()
 
 void NavGrabApp::initShapes()
 {
-   // Initialize the sphere.  This creates a sphere with radius 2 and center
-   // (5, 5, -2.5).
-   mSphereCenter = gmtl::Point3f(5.0f, 5.0f, -2.0f);
-   mSphereRadius = 3.0f;
+   // Initialize the sphere.  This creates a sphere with radius 1 and center
+   // (2.5, 3, -2.5).
+   mSphereCenter = gmtl::Point3f(2.5f, 3.0f, -2.5f);
+   mSphereRadius = 1.0f;
    mSphere.setCenter(mSphereCenter);
    mSphere.setRadius(mSphereRadius);
 
    // Allocate a new quadric that will be used to render the sphere.
    mSphereQuad = gluNewQuadric();
 
-   // Initialize the cube.  This creates a cube with sides of length 5 centered
-   // at (-5, 5, -2.5).
-   mCubeMin = gmtl::Point3f(-7.5f, 2.5f, -5.0f);
-   mCubeMax = gmtl::Point3f(-2.5f, 7.5f, 0.0f);
+   // Initialize the cube.  This creates a cube with sides of length 2 centered
+   // at (-2.5, 3, -2.5).
+   mCubeMin = gmtl::Point3f(-3.5f, 2.0f, -3.5f);
+   mCubeMax = gmtl::Point3f(-1.5f, 4.0f, -1.5f);
    mCube.setMin(mCubeMin); // Bottom rear left corner
    mCube.setMax(mCubeMax); // Top front right corner
    mCube.setEmpty(false);
