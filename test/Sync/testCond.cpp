@@ -50,18 +50,19 @@ int main(void)
    {         
       cerr << setw(5) << vjThread::self() << "P1: Before Trigger" << endl;   
 
-         vjDEBUG(0) << "main: trigger\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "main: trigger\n" << vjDEBUG_FLUSH;
       syncer.trigger();    // Trigger the beginning of frame drawing
-         vjDEBUG(3) << "main: trigger done\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 3) << "main: trigger done\n" << vjDEBUG_FLUSH;
 
       cerr << setw(5) << vjThread::self() << "P1: Between" << endl;
 
-         vjDEBUG(0) << "main: sync up\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "main: sync up\n" << vjDEBUG_FLUSH;
       syncer.sync();    // Block until drawing is done
-         vjDEBUG(0) << "main: sync done\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "main: sync done\n" << vjDEBUG_FLUSH;
       
       syncer.decValue();
-      vjDEBUG(0) << "VAL: " << syncer.getValue() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 0) << "VAL: " << syncer.getValue() << endl
+                            << vjDEBUG_FLUSH;
    }
 
    return 1;
@@ -81,8 +82,8 @@ int SyncIncrementer::start()
 
    vjThread* control_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(0) << "SyncIncrementer::start: Just started main loop.  "
-              << control_thread << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL, 0) << "SyncIncrementer::start: Just started main loop.  "
+                         << control_thread << endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -98,7 +99,7 @@ void SyncIncrementer::trigger()
 
       go = true;          // Signal that rendering can happen
       syncCond.signal();
-         vjDEBUG(0) << "Trigger signaled\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "Trigger signaled\n" << vjDEBUG_FLUSH;
          //syncCond.dump();
    }
    syncCond.release();
@@ -115,7 +116,8 @@ void SyncIncrementer::sync()
          syncCond.wait();
       }
       /* Do nothing */
-         vjDEBUG(0) << "Sync: Completed. trigger == false\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "Sync: Completed. trigger == false\n"
+                               << vjDEBUG_FLUSH;
          //syncCond.dump();
       cerr << setw(5) << vjThread::self() << "  P1: Exit wait" << endl;
    }
@@ -129,7 +131,7 @@ void SyncIncrementer::main(void* nullParam) {
    {
       syncCond.acquire();
       {
-         vjDEBUG(0) << "Wait for trigger\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "Wait for trigger\n" << vjDEBUG_FLUSH;
          
          // Wait for trigger == true
          while (go == false)
@@ -141,11 +143,12 @@ void SyncIncrementer::main(void* nullParam) {
          cerr << setw(5) << vjThread::self() << "  P2: Wait done" << endl;
          //syncCond.dump();
          // THEN --- Do Work --- //
-         vjDEBUG(0) << "Incrementing\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "Incrementing\n" << vjDEBUG_FLUSH;
 	
          incValue();
 
-         vjDEBUG(0) << "Var Incremented - Set trigger FALSE and SIGNAL\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, 0) << "Var Incremented - Set trigger FALSE and SIGNAL\n"
+                               << vjDEBUG_FLUSH;
 
          go = false;   // We are done rendering
 
