@@ -12,7 +12,8 @@ type="text/css"?>
   morphon.document.settings.whitespaces.type="indent"
   morphon.document.settings.endofline.type="2"
 ?>
-<!DOCTYPE book SYSTEM "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!DOCTYPE book SYSTEM
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>Gadgeteer</title>
@@ -696,7 +697,7 @@ with the Remote Input Manager, it may derive from one or more of the device
 type classes directly using multiple inheritance.</para>
                <para>For example, to make a driver that registers button
 presses, derive from <classname>gadget::Digital</classname>:</para>
-               <programlisting>class MyButtonDevice
+               <programlisting>class ButtonDevice
    : public gadget::InputMixer&lt;gadget::Input, gadget::Digital&gt;</programlisting>
                <para>Suppose that a joystick driver supporting buttons and
 movement is needed. In this case, an additional component, this one for
@@ -704,7 +705,7 @@ analog input, is needed for the X and Y axes. Since the device is both
 digital and analog, its class must derive from both
 <classname>gadget::Digital</classname> and
 <classname>gadget::Analog</classname> using C++ multiple inheritance:</para>
-               <programlisting>class MyJoystickDevice
+               <programlisting>class JoystickDevice
    : public gadget::InputMixer&lt;gadget::Input,
                                gadget::InputMixer&lt;gadget::Digital,
                                                   gadget::Analog&gt; &gt;</programlisting>
@@ -719,7 +720,7 @@ able to replace one device with another, the alternate device class must
 derive from the same base classes as the original device.</para>
                </note>
                <para>Using basic class declaration for
-<classname>MyButtonDevice</classname> from above, we will proceed with the
+<classname>ButtonDevice</classname> from above, we will proceed with the
 implementation of the driver class. First, there are six member functions
 that must be implemented:</para>
                <section>
@@ -734,19 +735,17 @@ that must be implemented:</para>
 thread is used to sample the data from the device. The thread creation step
 may look something like the following:</para>
                   <programlisting
->vpr::ThreadMemberFunctor&lt;MyButtonDevice&gt;* functor =
-   new vpr::ThreadMemberFunctor&lt;MyButtonDevice&gt;(this,
-                                                &amp;MyButtonDevice::sampleFunction,
-                                                NULL);
+>vpr::ThreadMemberFunctor&lt;ButtonDevice&gt;* functor =
+   new vpr::ThreadMemberFunctor&lt;ButtonDevice&gt;(this,
+                                              &amp;ButtonDevice::sampleFunction,
+                                              NULL);
 mThread = new vpr::Thread(functor);
 mThread-&gt;start();</programlisting>
                   <para>The above creates a thread that will execute
-<methodname>MyButtonDevice::sampleFunction()</methodname>, a non-static
-member function in the class <classname>MyButtonDevice</classname>. The
-implementation of that method would be similar to the following in most
-cases</para>
-                  <programlisting
->void MyButtonDevice::sampleFunction(void* arg)
+<methodname>ButtonDevice::sampleFunction()</methodname>, a non-static member
+function in the class <classname>ButtonDevice</classname>. The implementation
+of that method would be similar to the following in most cases</para>
+                  <programlisting>void ButtonDevice::sampleFunction(void* arg)
 {
    // Keep working until mRunning becomes false.
    while ( mRunning )
@@ -778,7 +777,7 @@ in <methodname>startSampling()</methodname>.</para>
                   </methodsynopsis>
                   <para>This method reads data from the device and stores it
 for later use by <methodname>getDigitalData()</methodname>. Note that
-<methodname>MyButtonDevice::sampleFunction()</methodname>, defined above,
+<methodname>ButtonDevice::sampleFunction()</methodname>, defined above,
 invokes this method.</para>
                   <para>Gadgeteer devices typically use triple-buffered data
 management. This is done to ensure that data is not being written into a
@@ -805,7 +804,7 @@ When writing the freshly sampled data into the array, use
                   <para>Triple-buffered device drivers use this method to swap
 the data indices. The member function is usually implemented as
 follows:</para>
-                  <programlisting>void MyButtonDevice::updateData()
+                  <programlisting>void ButtonDevice::updateData()
 {
    vpr::Guard&lt;vpr::Mutex&gt; updateGuard(lock);
 
@@ -834,9 +833,9 @@ function, the <firstterm>chunk type</firstterm> of the device must be
 returned. Its name must be as it appears in the chunk description file for
 the driver. For example, the implementation for the simple button driver
 would appear as:</para>
-                  <programlisting>std::string MyButtonDevice::getChunkType()
+                  <programlisting>std::string ButtonDevice::getChunkType()
 {
-   return std:string("MyButtonDevice");
+   return std:string("ButtonDevice");
 }</programlisting>
                   <para>At this time, it is useful to point out that every
 Gadgeteer device needs a <firstterm>chunk type</firstterm> associated with
@@ -862,7 +861,7 @@ becomes especially valuable. To provide the Input Manager with the most
 up-to-date sample, use <varname>gadget::Input::current</varname> as the
 index, as shown below:</para>
                   <programlisting
->int MyJoystickDevice::getDigitalData(int devNum)
+>int JoystickDevice::getDigitalData(int devNum)
 {
   return mSampledDigitalData[current];
 }</programlisting>
@@ -887,7 +886,7 @@ for the X and Y axes. The data here is more complex because it would be for
 triple-buffered two-dimensional samples. An implementation might look similar
 to the following:</para>
                   <programlisting
->float MyJoystickDevice::getAnalogData(int axis)
+>float JoystickDevice::getAnalogData(int axis)
 {
    vprASSERT(axis &gt;= 0 &amp;&amp; axis &lt;= 1 &amp;&amp; "only 2 axes (x and y) available");
    return mSampledAnalogData[current][axis];
@@ -911,15 +910,35 @@ type called
                   </indexterm>. When this type is used with a special
 <quote>factory function</quote> called <function>initDevice()</function>, the
 driver can be used as a plug-in to the Input Manager. While there are some
-drivers that cannot currently be loaded dynamically, most will implement
-<function>initDevice()</function> as follows:</para>
+drivers that cannot currently be loaded dynamically, we declare
+<function>initDevice()</function> in <filename>ButtonDevice.h</filename> as
+follows:</para>
+               <programlisting>#include &lt;gadget/Devices/DriverConfig.h&gt;
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);</programlisting>
+               <para>Because we are dealing with C++ code, we must indicate to
+the compiler that this is a C function, so no name mangling should occur when
+its symbol table entry is created. For cross-platform plug-in capabilities,
+we use the <symbol>GADGET_DRIVER_API()</symbol> macro. On Win32 systems, this
+will add the appropriate type modifiers to declare
+<function>initDevice()</function> as a function exported by the DLL that will
+be compiled. For other platforms, the macro simply evaluates to the
+<type>void</type> type. (These details are handled within the
+<filename>DriverConfig.h</filename> header.)</para>
+               <para>The implementation of <function>initDevice()</function>
+will appear in <filename>ButtonDevice.cpp</filename> as follows:</para>
                <programlisting>#include &lt;gadget/Devices/DriverConfig.h&gt;
 #include &lt;gadget/Type/DeviceConstructor.h&gt;
-#include "MyButtonDevice.h"
+#include "ButtonDevice.h"
 
 void initDevice(gadget::InputManager* inputMgr)
 {
-   new gadget::DeviceConstructor&lt;MyButtonDevice&gt;(inputMgr);
+   new gadget::DeviceConstructor&lt;ButtonDevice&gt;(inputMgr);
 }</programlisting>
                <para>The new device driver can be compiled into a standalone
 library (<filename></filename><filename>.so</filename>, or
@@ -936,12 +955,12 @@ file:</para>
 &lt;?org-vrjuggler-jccl-settings config.db.version="2.1" ?&gt;
 &lt;ConfigChunkDB&gt;
   &lt;InputManager name="Input Manager"&gt;
-    &lt;driver&gt;${HOME}/MyButtonDevice_drv.so&lt;/driver&gt;
+    &lt;driver&gt;${HOME}/ButtonDevice_drv.so&lt;/driver&gt;
   &lt;/InputManager&gt;
 &lt;/ConfigChunkDB&gt;</programlisting>
                <para>Here, the driver plug-in is named
-<filename>MyButtonDevice_drv.so</filename>, and it is found in the user's
-home directory.</para>
+<filename>ButtonDevice_drv.so</filename>, and it is found in the user's home
+directory.</para>
             </section>
          </section>
       </chapter>
@@ -966,12 +985,12 @@ home directory.</para>
 must be created. We recommend that this be done using VRJConfig. For the
 button device, the definition file will be the following:</para>
             <example id="MyButtonDevice.desc.example">
-               <title><filename>MyButtonDevice.desc</filename>: Configuration
+               <title><filename>ButtonDevice.desc</filename>: Configuration
 Definition File for Simple Button Device</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?org-vrjuggler-jccl-settings desc.db.version="2.1"?&gt;
 &lt;ChunkDescDB&gt;
-  &lt;ChunkDesc token="MyButtonDevice" name="My Button Device"&gt;              <co linkends="MyButtonDevice.desc.token.decl.co"
+  &lt;ChunkDesc token="ButtonDevice" name="My Button Device"&gt;              <co linkends="MyButtonDevice.desc.token.decl.co"
 id="MyButtonDevice.desc.token.decl"/>
     &lt;category&gt;Devices&lt;/category&gt;
     &lt;help&gt;Configuration for simple one-button device.&lt;/help&gt;
@@ -1045,22 +1064,22 @@ chunk can be created. Once again, VRJConfig makes the step easier. The
 following is an example configuration file that configures the one-button
 device we have been using thus far:</para>
             <example id="MyButtonDevice.config.example">
-               <title><filename>MyButtonDevice.config</filename>:
-Configuration File for Simple Button Device</title>
+               <title><filename>ButtonDevice.config</filename>: Configuration
+File for Simple Button Device</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?org-vrjuggler-jccl-settings config.db.version="2.1"?&gt;
-&lt;?org-vrjuggler-jccl-includedesc file="MyButtonDevice.desc"?&gt; <co
+&lt;?org-vrjuggler-jccl-includedesc file="ButtonDevice.desc"?&gt; <co
 linkends="MyButtonDevice.config.desc.inc.co"
 id="MyButtonDevice.config.desc.inc"/>
 &lt;ConfigChunkDB&gt;
   &lt;InputManager name="Input Manager"&gt;                         <co
 linkends="MyButtonDevice.config.driver.co"
 id="MyButtonDevice.config.InputManager"/>
-    &lt;driver&gt;${HOME}/MyButtonDevice_drv.so&lt;/driver&gt;            <co
+    &lt;driver&gt;${HOME}/ButtonDevice_drv.so&lt;/driver&gt;            <co
 linkends="MyButtonDevice.config.driver.co"
 id="MyButtonDevice.config.driver"/>
   &lt;/InputManager&gt;
-  &lt;MyButtonDevice name="Button Device"&gt;                       <co
+  &lt;ButtonDevice name="Button Device"&gt;                       <co
 linkends="MyButtonDevice.config.ButtonDevice.co"
 id="MyButtonDevice.config.ButtonDevice"/>
     &lt;port&gt;/dev/ttyd4&lt;/port&gt;                                   <co
@@ -1072,29 +1091,29 @@ id="MyButtonDevice.config.baud.value"/>
     &lt;host_chunk /&gt;                                            <co
 linkends="MyButtonDevice.config.hostchunk.value.co"
 id="MyButtonDevice.config.hostchunk.value"/>
-  &lt;/MyButtonDevice&gt;
+  &lt;/ButtonDevice&gt;
 &lt;/ConfigChunkDB&gt;</programlisting>
                <calloutlist>
                   <callout arearefs="MyButtonDevice.config.desc.inc"
 id="MyButtonDevice.config.desc.inc.co">
                      <para>This processing directive tells the configuration
 file handler to load the named file. Since no path is given, the directory
-where <filename>MyButtonDevice.config</filename> is located is searched for
-<filename>MyButtonDevice.desc</filename>.</para>
+where <filename>ButtonDevice.config</filename> is located is searched for
+<filename>ButtonDevice.desc</filename>.</para>
                   </callout>
                   <callout arearefs="MyButtonDevice.config.InputManager
 MyButtonDevice.config.driver" id="MyButtonDevice.config.driver.co">
                      <para>The <literal>InputManager</literal> element
 configures the Gadgeteer Input Manager. In this case, we are telling the
 Input Manager about a driver plug-in, found at
-<filename>${HOME}/MyButtonDevice_drv.so</filename>, that should be loaded at
+<filename>${HOME}/ButtonDevice_drv.so</filename>, that should be loaded at
 runtime.</para>
                   </callout>
                   <callout arearefs="MyButtonDevice.config.ButtonDevice"
 id="MyButtonDevice.config.ButtonDevice.co">
                      <para>Next, we have an instance of the configuration
 definition shown in <xref linkend="MyButtonDevice.desc.example"/>. As
-described above, <sgmltag>&lt;MyButtonDevice&gt;</sgmltag> is named based on
+described above, <sgmltag>&lt;ButtonDevice&gt;</sgmltag> is named based on
 the <literal>token</literal> attribute. The <literal>name</literal> attribute
 here gives this instance a unique name.</para>
                   </callout>
@@ -1104,7 +1123,7 @@ id="MyButtonDevice.config.port.value.co">
 noted above, our simple button device does not actually use the serial port,
 but this demonstrates how the property value is used in a configuration file.
 If no value were given here, the default value set in
-<filename>MyButtonDevice.desc</filename> would be used.</para>
+<filename>ButtonDevice.desc</filename> would be used.</para>
                   </callout>
                   <callout arearefs="MyButtonDevice.config.baud.value"
 id="MyButtonDevice.config.baud.value.co">
@@ -1131,15 +1150,23 @@ implemented in order to handle config chunks:</para>
                   <methodsynopsis>
                      <modifier>static</modifier>
                      <type>std::string</type>
-                     <methodname>MyButtonDevice::getChunkType</methodname>
+                     <methodname>ButtonDevice::getChunkType</methodname>
                      <void/>
                   </methodsynopsis>
-                  <para>When the VR system configuration changes, the system
-asks every registered driver for their chunk type. If it matches the new
-configuration chunk passed into the system, then the driver's
-<methodname>config()</methodname> method is invoked. This will happen, for
-example, when a new configuration file is loaded into the VR Juggler kernel.
-The implementation of this method was described above.</para>
+                  <para>When the configuration changes, the JCCL Configuration
+Manager asks every registered configuration handler for their respective
+configuration element types. If the type matches the type of the newly
+received configuration element, then the handler's
+<methodname>config()</methodname> method is invoked. All device drivers are
+configuration handlers and thus need to indicate the configuration element
+type they accept. The type value is returned by this method, and the
+implementation for our simple driver is the following:</para>
+                  <programlisting>std::string ButtonDevice::getChunkType()
+{
+   return std::string("ButtonDevice");
+}</programlisting>
+                  <para>Note that the string returned matches the token we
+defined in <xref linkend="MyButtonDevice.desc.example"/>.</para>
                </listitem>
                <listitem>
                   <methodsynopsis>
@@ -1151,14 +1178,15 @@ The implementation of this method was described above.</para>
                         <parameter>c</parameter>
                      </methodparam>
                   </methodsynopsis>
-                  <para>When the system detects a configuration change for a
-given driver, it will pass the new
-<classname>jccl::ConfigChunkPtr</classname> object to this method. For more
-information about how to access config chunk objects, refer to the
-<emphasis>Programmer's Reference</emphasis>. The following is a simple
-example for the basic button device we have used thus far:</para>
+                  <para>When the Configuration Manager detects a configuration
+change for a given driver, it will pass the new
+<classname>jccl::ConfigChunkPtr</classname> object as the parameter to this
+method. For more information about how to use instances of
+<classname>jccl::ConfigChunkPtr</classname>, refer to the <emphasis>JCCL
+Programmer's Reference</emphasis>. The following is a simple example for the
+basic button device we have used thus far:</para>
                   <programlisting
->bool MyButtonDevice::config(jccl::ConfigChunkPtr c)
+>bool ButtonDevice::config(jccl::ConfigChunkPtr c)
 {
    if ( ! gadget::Digital::config(c) )
    {
@@ -1195,7 +1223,7 @@ device driver to Gadgeteer, we can show some code. The following example is
 for a fictitious piece of hardware that has only one button.</para>
             <example id="MyButtonDevice.h.example">
                <title
-id="MyButtonDevice.cpp.example"><filename>MyButtonDevice.h</filename></title>
+id="MyButtonDevice.cpp.example"><filename>ButtonDevice.h</filename></title>
                <programlisting
 linenumbering="numbered">#ifndef _MY_BUTTON_DEVICE_H_
 #define _MY_BUTTON_DEVICE_H_
@@ -1216,14 +1244,14 @@ namespace gadget
 
 extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
-class MyButtonDevice
+class ButtonDevice
    : public gadget::InputMixer&lt;gadget::Input, gadget::Digital&gt;
 {
 public:
-   MyButtonDevice() : mSampleThread(NULL), mThreadRunning(false)
+   ButtonDevice() : mSampleThread(NULL), mThreadRunning(false)
    {;}
 
-   virtual ~MyButtonDevice()
+   virtual ~ButtonDevice()
    {
       this-&gt;stopSampling();
    }
@@ -1236,7 +1264,7 @@ public:
    static std::string getChunkType();
 
 private:
-   static void   threadedSampleFunction(void* classPointer);
+   static void   sampleFunction(void* classPointer);
    int           mDigitalData;
    vpr::Thread*  mSampleThread;
 
@@ -1250,33 +1278,34 @@ private:
 #endif</programlisting>
             </example>
             <example>
-               <title><filename>MyButtonDevice.cpp</filename></title>
-               <programlisting>#include &lt;gadget/Devices/DriverConfig.h&gt;
+               <title><filename>ButtonDevice.cpp</filename></title>
+               <programlisting
+linenumbering="numbered">#include &lt;gadget/Devices/DriverConfig.h&gt;
 
 #include &lt;vpr/vpr.h&gt;
 #include &lt;vpr/System.h&gt;
 #include &lt;vpr/Sync/Guard.h&gt;
 #include &lt;gadget/Type/DeviceConstructor.h&gt;
 
-#include "MyButtonDevice.h"
+#include "ButtonDevice.h"
 
 
 void initDevice(gadget::InputManager* inputMgr)
 {
-   new gadget::DeviceConstructor&lt;MyButtonDevice&gt;(inputMgr);
+   new gadget::DeviceConstructor&lt;ButtonDevice&gt;(inputMgr);
 }
 
 // What is the name of this device?
 // This function returns a string that should match this device's
 // config chunk name.
-std::string MyButtonDevice::getChunkType()
+std::string ButtonDevice::getChunkType()
 {
-   return std::string("MyButtonDevice");
+   return std::string("ButtonDevice");
 }
 
 // spawn a sample thread,
-// which calls MyButtonDevice::sample() repeatedly
-int MyButtonDevice::startSampling()
+// which calls ButtonDevice::sample() repeatedly
+int ButtonDevice::startSampling()
 {
    mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
    mSampleThread-&gt;start();
@@ -1293,7 +1322,7 @@ int MyButtonDevice::startSampling()
 
 //: Record (or sample) the current data
 // this is called repeatedly by the sample thread created by startSampling()
-int MyButtonDevice::sample()
+int ButtonDevice::sample()
 {
    // here you would add your code to
    // sample the hardware for a button press:
@@ -1302,7 +1331,7 @@ int MyButtonDevice::sample()
 }
 
 // kill sample thread
-int MyButtonDevice::stopSampling()
+int ButtonDevice::stopSampling()
 {
    if ( mSampleThread != NULL &amp;&amp; mThreadRunning )
    {
@@ -1316,18 +1345,18 @@ int MyButtonDevice::stopSampling()
 
 // function for users to get the digital data.
 // here we overload gadget::Digital::getDigitalData
-int MyButtonDevice::getDigitalData(int d)
+int ButtonDevice::getDigitalData(int d)
 {
    // only one button, so we ignore "d"
    return mDigitalData[current];
 }
 
 // Our threaded sample function
-// This function is declared as a static member of MyButtonDevice
+// This function is declared as a static member of ButtonDevice
 // just spins... calling sample() over and over.
-void MyButtonDevice::threadedSampleFunction(void* classPointer)
+void ButtonDevice::sampleFunction(void* classPointer)
 {
-   MyButtonDevice* this_ptr = static_cast&lt;MyButtonDevice*&gt;(classPointer);
+   ButtonDevice* this_ptr = static_cast&lt;ButtonDevice*&gt;(classPointer);
 
    this_ptr-&gt;mThreadRunning = true;
 
@@ -1342,7 +1371,7 @@ void MyButtonDevice::threadedSampleFunction(void* classPointer)
 // When the system detects a configuration change for your driver, it will
 // pass the new jccl::ConfigChunkPtr into this function.  See the documentation
 // on config chunks for information on how to access them.
-bool MyButtonDevice::config(jccl::ConfigChunkPtr c)
+bool ButtonDevice::config(jccl::ConfigChunkPtr c)
 {
    if ( ! gadget::Digital::config(c) )
    {
@@ -1363,12 +1392,12 @@ that could be added to the Gadgeteer build system.</para>
             <example id="Makefile.in.example">
                <title><filename>Makefile.in</filename> for Gadgeteer Build
 System</title>
-               <programlisting>default: all
+               <programlisting linenumbering="numbered">default: all
 
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-DRIVER_NAME=	MyDriver
+DRIVER_NAME=	ButtonDevice
 
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
@@ -1377,8 +1406,8 @@ INSTALL_FILES=
 SUBOBJDIR=	$(DRIVER_NAME)
 C_AFTERBUILD=	driver-dso
 
-SRCS=		MyButtonDevice.cpp	\
-		MyDriverStandalone.cpp
+SRCS=		ButtonDevice.cpp		\
+		DriverStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/gadget/Devices/driver.defs.mk
@@ -1396,12 +1425,12 @@ endif</programlisting>
 outside of the Gadgeteer source tree.</para>
             <example>
                <title>Makefile for Use Outside Gadgeteer Source Tree</title>
-               <programlisting>default: all
+               <programlisting linenumbering="numbered">default: all
 
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-DRIVER_NAME=	MyDriver
+DRIVER_NAME=	ButtonDevice
 
 srcdir=		.
 INSTALL=	@INSTALL@
@@ -1409,8 +1438,8 @@ INSTALL_FILES=
 SUBOBJDIR=	$(DRIVER_NAME)
 C_AFTERBUILD=	driver-dso
 
-SRCS=		MyButtonDevice.cpp	\
-		MyDriverStandalone.cpp
+SRCS=		ButtonDevice.cpp		\
+		DriverStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/gadget/Devices/driver.defs.mk
