@@ -1178,7 +1178,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Pre Trans Z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="pre_rotation" name="Pre Rotation" type="float" variable="0">
-      <help>base_T_sensor rotation (euler angles in the base coordinate system)</help>
+      <help>base_T_sensor rotation (euler angles measured in degrees in the base coordinate system)</help>
       <item label="Pre Rot X" defaultvalue="0.0" />
       <item label="Pre Rot Y" defaultvalue="0.0" />
       <item label="Pre Rot Z" defaultvalue="0.0" />
@@ -1195,6 +1195,7 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="Feet" value="0.3048" />
       <enumeration name="Inches" value="0.0254" />
       <item label="Device Units" defaultvalue="1.0" />
+      <help>Select the units in which the device returns data.  This enumeration value will be used to convert from your device units into meters.</help>
     </PropertyDesc>
     <PropertyDesc token="post_translate" name="Post Translation" type="float" variable="0">
       <help>base_T_sensor translation. In units of the current sensor data.</help>
@@ -1203,7 +1204,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Post Trans Z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="post_rotation" name="Post Rotation" type="float" variable="0">
-      <help>base_T_sensor rotation (euler angles in the base coordinate system)</help>
+      <help>base_T_sensor rotation (euler angles measured in degrees in the base coordinate system)</help>
       <item label="Post Rot X" defaultvalue="0.0" />
       <item label="Post Rot Y" defaultvalue="0.0" />
       <item label="Post Rot Z" defaultvalue="0.0" />
@@ -1231,20 +1232,11 @@ The filters are applied in the order that they are specified in this configurati
       <help>The unit in the device this proxy attaches to</help>
       <item label="Unit" defaultvalue="0" />
     </PropertyDesc>
-    <PropertyDesc token="etrans" name="Enable Transformation" type="bool" variable="0">
-      <help>If true, the Proxy Transformation is applied to data</help>
-      <item label="Enable Transformation" defaultvalue="0" />
-    </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
-    </PropertyDesc>
-    <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="embeddedchunk" variable="0">
-      <help>TODO: Insert help here!</help>
-      <item label="Sigmoid Parameters" />
-      <allowedtype>sigmoid_linear_pos_filter</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimPosition" name="Position Simulator">
@@ -1347,21 +1339,6 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="None" value="0" />
       <enumeration name="TCP/IP Sockets" value="1" />
       <enumeration name="TCP/IP Sockets &amp; Serial Port" value="2" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
-    <category>Devices</category>
-    <PropertyDesc token="minDist" name="minDist" type="float" variable="0">
-      <help>Low point of the sigmoid.  Anything below this is ignored.  Anything larger is interpolated.</help>
-      <item label="Minimum Distance" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="maxDist" name="maxDist" type="float" variable="0">
-      <help>high point of the sigmoid.  Anything beyond this is just treated as normal</help>
-      <item label="Maximum Distance" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="maxThreshold" name="maxThreshold" type="float" variable="0">
-      <help>Maximum distance value allowed.  Anything larger than this is just ignored.</help>
-      <item albel="Maximum Threshold" defaultvalue="0.0" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove">
@@ -1731,7 +1708,7 @@ The filters are applied in the order that they are specified in this configurati
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="JugglerUser" name="VR Juggler User">
-    <category>Devices</category>
+    <category>User</category>
     <help>This is a user in VR Juggler.  This is used for multi-user applications</help>
     <PropertyDesc token="headPos" name="Head Position" type="chunk" variable="0">
       <help>This is the source of head position information.</help>
@@ -1740,8 +1717,8 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="interocular_distance" name="Eye Separation" type="float" variable="0">
-      <help>Interocular distance.  NOTE: In same units as displays settings.</help>
-      <item label="User's eye separation" defaultvalue="0.229" />
+      <help>Interocular distance.  This value must be in meters.</help>
+      <item label="User's eye separation" defaultvalue="0.069" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Vec3" name="Vec3">
