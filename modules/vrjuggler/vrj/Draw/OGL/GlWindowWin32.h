@@ -40,6 +40,10 @@ public:
    //: Performs an OpenGL swap buffers command
    virtual void swapBuffers();
 
+   //: Check for window events
+   //! POST: All win32 events have ben dispatched and dealt with
+   virtual void checkEvents();
+
 protected:
 	// WindowProcedure to deal with the events generated.
 	// Called only for the window that we are controlling

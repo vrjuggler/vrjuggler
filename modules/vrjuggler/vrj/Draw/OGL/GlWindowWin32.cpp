@@ -93,11 +93,28 @@ bool vjGlWinWin32::makeCurrent()
 }
 
 // Swap the front and back buffers
+// Process events here
 void vjGlWinWin32::swapBuffers()
 {
 	assert(hDC != NULL);
 	SwapBuffers(hDC);
 }
+
+void vjGlWinWin32::checkEvents()
+{
+   MSG win_message;   
+   
+   while(PeekMessage(&win_message,NULL,0,0,PM_REMOVE))
+	{
+		// Test if quit
+		if(win_message.message == WM_QUIT)
+			break;
+
+		TranslateMessage(&win_message);		// Translate the accelerator keys
+		DispatchMessage(&win_message);		// Send to the WinProc
+	}		
+}
+
 
 // WindowProcedure to deal with the events generated.
 // Called only for the window that we are controlling
