@@ -53,19 +53,19 @@ public:
       ;
    }
 
-   StringData(const std::string s)
+   StringData(const std::string& s)
       : InputData()
       , mStringData(s)
    {
       ;
    }
 
-   std::string getString() const
+   const std::string& getString() const
    {
       return mStringData;
    }
 
-   void setString(const std::string s)
+   void setString(const std::string& s)
    {
       mStringData = s;
    }
@@ -77,7 +77,7 @@ public:
       return *this;
    }
 
-   StringData& operator= (const std::string data)
+   StringData& operator= (const std::string& data)
    {
       mStringData = data;
       return *this;
