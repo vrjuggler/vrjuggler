@@ -71,7 +71,7 @@ public class Placer
    /**
     * The current drag mode.
     */
-   private int dragMode = MOVE;
+   private int dragMode = INVALID;
 
    /**
     * The resize direction. This can be any logical combindation of the
@@ -569,7 +569,8 @@ public class Placer
       // Check if the mouse cursor is located in the non-overlapping region
       // of inner and outer.
       if (outer.contains(mousePt.x, mousePt.y) &&
-          !inner.contains(mousePt.x, mousePt.y))
+          !inner.contains(mousePt.x, mousePt.y) &&
+          allowResize)
       {
          // Figure out which part of the region the mouse is in
          int outcode = inner.outcode((double)mousePt.x, (double)mousePt.y);
@@ -613,7 +614,7 @@ public class Placer
          resizeDirection = outcode;
       }
       // Check if cursor is inside the object's bounds, but not on an edge
-      else if (bounds.contains(mousePt.x, mousePt.y))
+      else if (bounds.contains(mousePt.x, mousePt.y) && allowMove)
       {
          setCursor(new Cursor(Cursor.MOVE_CURSOR));
          dragMode = MOVE;
@@ -622,6 +623,7 @@ public class Placer
       else
       {
          setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+         dragMode = INVALID;
       }
    }
 
