@@ -30,8 +30,7 @@ import org.vrjuggler.jccl.config.*;
 
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Name", ""));
-      prop_defs.add(new PropertyDefinition("Name",
-                                           "name",
+      prop_defs.add(new PropertyDefinition("name",
                                            String.class,
                                            "Your name",
                                            prop_value_defs,
@@ -42,8 +41,7 @@ import org.vrjuggler.jccl.config.*;
 
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Age", new Integer(0)));
-      prop_defs.add(new PropertyDefinition("Age",
-                                           "age",
+      prop_defs.add(new PropertyDefinition("age",
                                            Integer.class,
                                            "Your age",
                                            prop_value_defs,
@@ -54,8 +52,7 @@ import org.vrjuggler.jccl.config.*;
 
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Friends"));
-      prop_defs.add(new PropertyDefinition("Friends",
-                                           "friends",
+      prop_defs.add(new PropertyDefinition("friends",
                                            ConfigElement.class,
                                            "Your friends",
                                            prop_value_defs,
@@ -92,8 +89,7 @@ import org.vrjuggler.jccl.config.*;
       prop_value_defs.add(new PropertyValueDefinition("Upper Left Corner"));
       allowed_types = new ArrayList();
       allowed_types.add("corner");
-      prop_defs.add(new PropertyDefinition("Corners",
-                                           "corners",
+      prop_defs.add(new PropertyDefinition("corners",
                                            ConfigElement.class,
                                            "The corners that make up the wall.",
                                            prop_value_defs,
@@ -126,8 +122,7 @@ import org.vrjuggler.jccl.config.*;
       prop_value_defs.add(new PropertyValueDefinition("x", new Float(0)));
       prop_value_defs.add(new PropertyValueDefinition("y", new Float(0)));
       prop_value_defs.add(new PropertyValueDefinition("z", new Float(0)));
-      prop_defs.add(new PropertyDefinition("Position",
-                                           "position",
+      prop_defs.add(new PropertyDefinition("position",
                                            Float.class,
                                            "The position of the corner in 3D space.",
                                            prop_value_defs,

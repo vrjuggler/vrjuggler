@@ -25,8 +25,7 @@ import org.vrjuggler.jccl.config.event.*;
 
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Name", ""));
-      prop_defs.add(new PropertyDefinition("Name",
-                                           "name",
+      prop_defs.add(new PropertyDefinition("name",
                                            String.class,
                                            "Your name",
                                            prop_value_defs,
@@ -37,8 +36,7 @@ import org.vrjuggler.jccl.config.event.*;
 
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Age", new Integer(0)));
-      prop_defs.add(new PropertyDefinition("Age",
-                                           "age",
+      prop_defs.add(new PropertyDefinition("age",
                                            Integer.class,
                                            "Your age",
                                            prop_value_defs,
@@ -49,8 +47,7 @@ import org.vrjuggler.jccl.config.event.*;
 
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Friends"));
-      prop_defs.add(new PropertyDefinition("Friends",
-                                           "friends",
+      prop_defs.add(new PropertyDefinition("friends",
                                            ConfigElement.class,
                                            "Your friends",
                                            prop_value_defs,

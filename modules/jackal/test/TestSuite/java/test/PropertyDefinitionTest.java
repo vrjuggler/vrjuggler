@@ -20,8 +20,7 @@ import org.vrjuggler.jccl.config.event.*;
    {
       List prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Age", new Integer(0)));
-      return new PropertyDefinition("Age",
-                                    "age",
+      return new PropertyDefinition("age",
                                     Integer.class,
                                     "The age of a person.",
                                     prop_value_defs,
@@ -37,36 +36,12 @@ import org.vrjuggler.jccl.config.event.*;
       prop_value_defs.add(new PropertyValueDefinition("Age", new Integer(0)));
 
       PropertyDefinition def = makePropertyDef();
-      assertEquals(def.getName(), "Age");
+      assertEquals(def.getName(), "age");
       assertEquals(def.getToken(), "age");
       assertEquals(def.getType(), Integer.class);
       assertEquals(def.getHelp(), "The age of a person.");
       assertEquals(def.getPropertyValueDefinitions(), prop_value_defs);
       assertTrue(! def.isVariable());
-   }
-
-   public void testSetName()
-   {
-      class Listener extends PropertyDefinitionAdapter
-      {
-         public void nameChanged(PropertyDefinitionEvent evt)
-         {
-            fired = true;
-         }
-
-         public boolean fired = false;
-      }
-
-      Listener l = new Listener();
-
-      PropertyDefinition def = makePropertyDef();
-      def.addPropertyDefinitionListener(l);
-      def.setName("Your Age");
-      // Make sure the name was actually changed
-      assertEquals(def.getName(), "Your Age");
-      
-      // Make sure an event was posted
-      assertTrue(l.fired);
    }
 
    public void testSetToken()
