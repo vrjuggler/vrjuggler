@@ -38,7 +38,6 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Devices/Sim/SimInput.h>
 #include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
 
