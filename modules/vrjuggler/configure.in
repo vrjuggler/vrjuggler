@@ -450,10 +450,11 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
-    DYLIB_DEPS_BASIC="$LDFLAGS $SNX_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-    DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) Juggler_utils.lib $DYLIB_DEPS_BASIC"
+echo "GADGET_LIBS_LD: $GADGET_LIBS_LD"
+    DYLIB_DEPS_BASIC="$LDFLAGS $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) Juggler_utils.lib $GADGET_LIBS_LD $DYLIB_DEPS_BASIC"
     DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
-    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
+    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $GADGET_LIBS_LD $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
