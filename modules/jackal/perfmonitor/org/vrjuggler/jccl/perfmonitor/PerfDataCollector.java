@@ -34,15 +34,23 @@
 
 package VjComponents.PerfMonitor;
 
+import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
 import VjComponents.PerfMonitor.DataLine;
 import VjConfig.*;
 import VjControl.Core;
-//import VjComponents.UI.Widgets.*;
 import VjConfig.ConfigStreamTokenizer;
 
+/** Class for storing performance data from a single source.
+ *  A source is, for example, a jccl::PerfDataBuffer.
+ *
+ *  PerfDataCollector is a source for ActionEvents, with the following
+ *  ActionCommands:
+ *      "Update" - when data is appended to the Collector.
+ *      "Clear" - when the Collector clears out all its data.
+ */
 public class PerfDataCollector {
     // stores all performance data coming from a particular buffer
     public String name;
@@ -60,6 +68,41 @@ public class PerfDataCollector {
     int place;
     ConfigChunk infochunk;
     int maxdatalines;
+    protected List action_listeners;
+
+    public PerfDataCollector(String _name, int _num, int maxsamples) {
+        datalines = new LinkedList();
+        action_listeners = new ArrayList();
+	name = _name;
+	num = _num;
+	numsamps = new int[num];
+	maxvals = new double[num];
+	maxlinetotal = 0.0;
+	sums = new double[num];
+	totalsum = 0.0;
+	totalsamps = 0;
+	for (int i = 0; i < num; i++) {
+	    numsamps[i] = 0;
+	    maxvals[i] = 0.0;
+	    sums[i] = 0.0;
+	}
+	dl = new DataLine (num);
+	place = 0;
+	maxdatalines = maxsamples;
+	System.out.println ("creating PerfDataCollector " + _name + " with " + _num + " elements.");
+
+        List infochunks = Core.vjcontrol_chunkdb.getOfDescToken ("PerfData");
+        infochunk = null;
+        ConfigChunk ch;
+        for (int j = 0; j < infochunks.size(); j++) {
+            ch = (ConfigChunk)infochunks.get(j);
+            if (name.startsWith (ch.getName())) {
+                infochunk = ch;
+                break;
+            }
+        }
+
+    }
 
 
     public void write (DataOutputStream out) throws IOException {
@@ -125,40 +168,6 @@ public class PerfDataCollector {
 	System.out.println ("collector: max lines set to " + maxdatalines);
     }
 
-
-
-    public PerfDataCollector(String _name, int _num, int maxsamples) {
-        datalines = new LinkedList();
-	name = _name;
-	num = _num;
-	numsamps = new int[num];
-	maxvals = new double[num];
-	maxlinetotal = 0.0;
-	sums = new double[num];
-	totalsum = 0.0;
-	totalsamps = 0;
-	for (int i = 0; i < num; i++) {
-	    numsamps[i] = 0;
-	    maxvals[i] = 0.0;
-	    sums[i] = 0.0;
-	}
-	dl = new DataLine (num);
-	place = 0;
-	maxdatalines = maxsamples;
-	System.out.println ("creating PerfDataCollector " + _name + " with " + _num + " elements.");
-
-        List infochunks = Core.vjcontrol_chunkdb.getOfDescToken ("PerfData");
-        infochunk = null;
-        ConfigChunk ch;
-        for (int j = 0; j < infochunks.size(); j++) {
-            ch = (ConfigChunk)infochunks.get(j);
-            if (name.startsWith (ch.getName())) {
-                infochunk = ch;
-                break;
-            }
-        }
-
-    }
 
     public int getNumPhases() {
 	return num;
@@ -315,110 +324,115 @@ public class PerfDataCollector {
 
 
 
-  public void read (ConfigStreamTokenizer st) {
-    // we'll assume that the initial id stuff has already been read
-    // and we can dig straight into the data lines.
-    int i, j;
-    //int place; // position in current DataLine
-    int index;
-    double val;
-    int lastlost;
-    double lastval;
+    public void read (ConfigStreamTokenizer st) {
+        // we'll assume that the initial id stuff has already been read
+        // and we can dig straight into the data lines.
+        int i, j;
+        int index;
+        double val;
+        int lastlost;
+        double lastval;
 
 
-    try {
-      for (;;) {
-	  st.nextToken();
-	  index = Integer.parseInt(st.sval);
-	  st.nextToken();
-	  //System.out.println ("index is " + index + "\nval is " + st.nval);
-	  if (index == -1) {
-	      int numlost = Integer.parseInt(st.sval);
-	      if (numlost == 0)
-		  break; // no data lost, no reason to muck with things
-	      for (; place < num; place++)
-		  dl.vals[place] = Double.NaN;
-	      dl.numlost = numlost;
-	      prevplace = -1;
-	      addDataLine (dl);
-	      dl = new DataLine(num);
-	      place = 0;
-	      break;
-	  }
-	  //System.out.println ("place1 is " + place); 
-          val = Double.parseDouble (st.sval);
-	  for (; place != index; place++) {
-	      //System.out.println ("place1 is " + place);
-	      if (place >= num) {
-		  addDataLine (dl);
-		  dl = new DataLine (num);
-		  place = 0;
-	      }
-	      dl.vals[place] = 0.0;
-	      dl.diffs[place] = 0.0;
-	      if (place == index)
-		  break; //kludge
-	  }
-	  place = index;
-	  //System.out.println ("place2 is " + place); 
-	  dl.vals[place] = val;
-	  if (prevplace != -1) {
-	      dl.diffs[place] = dl.vals[place] - prevval;
-	  }
-	  else
-	      dl.diffs[place] = Double.NaN;
-	  prevplace = place;
-	  prevval = val;
-	  place = (place+1);
-	  if (place >= num) {
-	      addDataLine(dl);
-	      dl = new DataLine(num);
-	      place = 0;
-	  }
-      }
+        try {
+            for (;;) {
+                st.nextToken();
+                index = Integer.parseInt(st.sval);
+                st.nextToken();
+                //System.out.println ("index is " + index + "\nval is " + st.nval);
+                if (index == -1) {
+                    int numlost = Integer.parseInt(st.sval);
+                    if (numlost == 0)
+                        break; // no data lost, no reason to muck with things
+                    for (; place < num; place++)
+                        dl.vals[place] = Double.NaN;
+                    dl.numlost = numlost;
+                    prevplace = -1;
+                    addDataLine (dl);
+                    dl = new DataLine(num);
+                    place = 0;
+                    break;
+                }
+                //System.out.println ("place1 is " + place); 
+                val = Double.parseDouble (st.sval);
+                for (; place != index; place++) {
+                    //System.out.println ("place1 is " + place);
+                    if (place >= num) {
+                        addDataLine (dl);
+                        dl = new DataLine (num);
+                        place = 0;
+                    }
+                    dl.vals[place] = 0.0;
+                    dl.diffs[place] = 0.0;
+                    if (place == index)
+                        break; //kludge
+                }
+                place = index;
+                //System.out.println ("place2 is " + place); 
+                dl.vals[place] = val;
+                if (prevplace != -1) {
+                    dl.diffs[place] = dl.vals[place] - prevval;
+                }
+                else
+                    dl.diffs[place] = Double.NaN;
+                prevplace = place;
+                prevval = val;
+                place = (place+1);
+                if (place >= num) {
+                    addDataLine(dl);
+                    dl = new DataLine(num);
+                    place = 0;
+                }
+            }
+        }
+        catch (IOException e) {
+            System.out.println ("Read failed:\n" + e);
+        }
+
+        notifyActionListenersUpdate();
     }
-    catch (IOException e) {
-      System.out.println ("Read failed:\n" + e);
+
+
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
     }
 
-    // now we need to go thru the vector datalines & calculate diffs all
-    // over the place.
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
 
-    //slightly funny case of datalines[0];
-//     dl = (DataLine)(datalines.elementAt(0));
-//     dl.diffs[0] = Double.NaN;
-//     for (j = 1; j < num; j++) {
-//       if ((dl.vals[j-1] != Double.NaN) && (dl.vals[j] != Double.NaN))
-// 	dl.diffs[j] = dl.vals[j] - dl.vals[j-1];
-//       else
-// 	dl.diffs[j] = Double.NaN;
-//     }
-//     for (i = 1; i < datalines.size(); i++) {
-//       lastval = dl.vals[num-1];
-//       lastlost = dl.numlost;
-//       dl = (DataLine)(datalines.elementAt(i));
-//       if ((lastval != Double.NaN) && (dl.vals[0] != Double.NaN) && (lastlost == 0))
-// 	dl.diffs[0] = dl.vals[0] - lastval;
-//       else
-// 	dl.diffs[0] = Double.NaN;
-//       for (j = 1; j < num; j++) {
-// 	if ((dl.vals[j-1] != Double.NaN) && (dl.vals[j] != Double.NaN))
-// 	  dl.diffs[j] = dl.vals[j] - dl.vals[j-1];
-// 	else
-// 	  dl.diffs[j] = Double.NaN;
-//       }
-//     }
 
-//      // calculate linetotals
-//      for (i = 0; i < datalines.size(); i++) {
-//        dl = (DataLine)datalines.elementAt(i);
-//        dl.linetotal = 0;
-//        for (j = 0; j < num; j++)
-//  	if (!Double.isNaN(dl.diffs[j]))
-//  	  dl.linetotal += dl.diffs[j];
-//      }
+    private void notifyActionListenersUpdate () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Update");
+        notifyActionListeners (e);
+    }
 
-  }
+    private void notifyActionListenersClear () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Clear");
+        notifyActionListeners (e);
+    }
+
+    private void notifyActionListeners (ActionEvent e) {
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
+    }
+
+
 
 
 };

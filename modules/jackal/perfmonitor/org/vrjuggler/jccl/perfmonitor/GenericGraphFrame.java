@@ -72,12 +72,6 @@ public class GenericGraphFrame extends JFrame
 
 
 
-    public void refresh() {
-	panel.refresh();
-    }
-
-
-
     /* WindowListener Stuff */
     public void windowActivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
@@ -128,6 +122,7 @@ public class GenericGraphFrame extends JFrame
     /***************** ChildFrame Stuff ********************/
 
     public void destroy () {
+        panel.destroy();
 	dispose();
     }
 

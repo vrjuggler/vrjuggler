@@ -256,6 +256,8 @@ public class ComponentFactory {
     public VjComponent createComponent (String class_name) {
 
         try {
+            //Class cl = loader.loadClass (class_name);
+            //Object o = cl.newInstance();
             Object o = Beans.instantiate (loader, class_name);
             return (VjComponent)Beans.getInstanceOf (o, VjControl.VjComponent.class);
         }
@@ -280,6 +282,9 @@ public class ComponentFactory {
             loader.loadClass (class_name);
             return true;
         }
+//          catch (java.lang.Error e1) {
+//              return false;
+//          }
         catch (Exception e) {
             return false;
         }
