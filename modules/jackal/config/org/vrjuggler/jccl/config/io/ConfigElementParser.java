@@ -117,12 +117,13 @@ public class ConfigElementParser
       {
          JOptionPane.showMessageDialog(
             null,
-            "ConfigElement \"" + name + "\", of type \"" + token +
-               "\", is an old version.\n" +
-               "We are updating your configuration to the latest version.\n" +
+            "Config element \"" + name + "\", of type \"" + token +
+               "\", is an old version (" + our_version + ").\n" +
+               "We will update this config element to the latest version (" +
+               newest_version_number + ").\n" +
                "You must save your configuration in order for these changes " +
                "to become permanent.",
-            "Upgrading Configuation", JOptionPane.INFORMATION_MESSAGE
+            "Upgrading Configuration", JOptionPane.INFORMATION_MESSAGE
          );
 
          // We must iterate over all versions between ours and the newest
