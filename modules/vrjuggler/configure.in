@@ -355,6 +355,8 @@ VJ_APP_EXTRA_LIBS_INST='$(VRJ_EXTRA_LIBS)'
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
 #       the Performer API.
+#     * APP_EXTRA_LIBS_OSG: The OpenSceneGraph libraries needed for compiling with
+#       the OpenSceneGraph.
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -378,6 +380,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lJuggler_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 
     APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+    APP_EXTRA_LIBS_OSG='-L$(OSGHOME)/lib -losg -losgDB -losgGA -losgUtil'
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
@@ -409,7 +412,9 @@ elif test "$OS_TYPE" = "Win32" ; then
 
     APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
     APP_EXTRA_LIBS_PF="$PF_LDFLAGS_LINK_EXE $LIBPERFORMER_LINK_EXE"
+    APP_EXTRA_LIBS_OSG='/libpath:$(OSGHOME)/lib osg.lib osgDB.lib osgGA.lib osgUtil.lib'
 fi
+
 
 # Define the base path to the source directory using $(VJROOT_ABS) as an
 # alternative to using $(srcdir).
