@@ -40,7 +40,7 @@ class Viewer:
    def addPanel(self, panel):
       self.panels.append(panel)
 
-   def removePanel(self, panel)
+   def removePanel(self, panel):
       self.panels.remove(panel)
 
    def getPanels(self):
