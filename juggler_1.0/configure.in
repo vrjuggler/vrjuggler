@@ -1004,7 +1004,7 @@ case $SUBSYSTEM in
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
-        vrj_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
+        vrj_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     POSIX)
@@ -1020,7 +1020,7 @@ case $SUBSYSTEM in
             static_end="-B dynamic"
         fi
 
-        vrj_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
+        vrj_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     NSPR)
@@ -1036,14 +1036,14 @@ case $SUBSYSTEM in
             static_end="-B dynamic"
         fi
 
-        vrj_ldflags="$EXTRA_LDFLAGS -L$prefix/lib$LIBBITSUF"
+        vrj_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     WIN32)
         subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-        vrj_ldflags="/link /libpath:$prefix/lib/debug $NSPR_LDFLAGS"
+        vrj_ldflags="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
         vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
         ;;
 esac
