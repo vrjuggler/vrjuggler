@@ -56,7 +56,7 @@ else
    # be found.  If using the ORB distributed with the JDK, assign $ORB_JAR a
    # null string.
    : ${JDOM_JAR="@JDOM_JAR@"}
-   : ${ORB_JAR="@OPENORB_JAR@"}
+   : ${ORB_JAR="@JAVA_ORB_JAR@"}
 
    # Java classpath separator character.
    JCPS="@JCPS@"

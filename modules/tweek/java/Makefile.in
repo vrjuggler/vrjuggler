@@ -56,8 +56,8 @@ JAVA_IDL_OPTS		= @JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(top_srcdir)
 
 JDOM_JAR	= @JDOM_JAR@
-OPENORB_JAR	= @OPENORB_JAR@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(OPENORB_JAR)
+JAVA_ORB_JAR	= @JAVA_ORB_JAR@
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
 
 IDL_JAVA_FILES	= SubjectManager.java	\
                   Subject.java		\
@@ -191,7 +191,7 @@ links:
               $(LN_S) $$jar ./ ;					\
           done
 	cd $(instlinks)/bin &&						\
-          for jar in `echo "$(OPENORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          for jar in `echo "$(JAVA_ORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do								\
               $(LN_S) $$jar ./ ;					\
           done
@@ -235,7 +235,7 @@ endif	# if OS_TYPE == UNIX
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $$jar $(bindir) ;					\
           done
-	for jar in `echo "$(OPENORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+	for jar in `echo "$(JAVA_ORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $$jar $(bindir) ;					\

@@ -45,9 +45,9 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP(yes)
 
-AC_ARG_ENABLE(jdk-orb,
-              [  --enable-jdk-orb        Use Java IDL (requires JDK 1.4) [default=no]],
-              _enable_jdk_orb="$enable_val", _enable_jdk_orb='no')
+#AC_ARG_ENABLE(jdk-orb,
+#              [  --enable-jdk-orb        Use Java IDL (requires JDK 1.4) [default=no]],
+#              _enable_jdk_orb="$enable_val", _enable_jdk_orb='no')
 
 # Override the C compiler that configure would otherwise find itself.
 AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
@@ -57,29 +57,48 @@ AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
 AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
             _alt_cxx="$withval", _alt_cxx='none')
 
-AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
-            JDOM_JAR="$withval", JDOM_JAR='none')
+AC_ARG_WITH(cxx-orb,
+            [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB3]
+                          Allowed values are:
+                            omniORB3, omniORB4],
+            cxx_orb_name="$withval", cxx_orb_name='omniORB3')
 
-AC_ARG_WITH(omniorb, [  --with-omniorb=<PATH>   Path to omniORB installation ],
-            OMNI_ROOT="$withval", OMNI_ROOT='none')
+AC_ARG_WITH(cxx-orb-root,
+            [  --with-cxx-orb-root=<PATH>                              [default=/usr]
+                          Root directory of C++ ORB
+                          installation],
+            cxx_orb_root="$withval", cxx_orb_root='/usr')
+#            OMNI_ROOT="$withval", OMNI_ROOT='none')
 
-AC_ARG_WITH(omnibin, [  --with-omnibin=<PATH>   Path to omniORB executables ],
-            OMNI_BIN_DIR="$withval", OMNI_BIN_DIR='none')
+AC_ARG_WITH(cxx-orb-bin,
+            [  --with-cxx-orb-bin=<PATH>                               [default=/usr/bin]
+                          Path to C++ ORB executables],
+            cxx_orb_bin_dir="$withval", cxx_orb_bin_dir='none')
+#            OMNI_BIN_DIR="$withval", OMNI_BIN_DIR='none')
 
-AC_ARG_WITH(omnilib, [  --with-omnilib=<PATH>   Path to omniORB libraries ],
-            OMNI_LIB_DIR="$withval", OMNI_LIB_DIR='none')
+AC_ARG_WITH(cxx-orb-lib,
+            [  --with-cxx-orb-lib=<PATH>                               [default=/usr/lib]
+                          Path to C++ ORB libraries],
+            cxx_orb_lib_dir="$withval", cxx_orb_lib_dir='none')
+#            OMNI_LIB_DIR="$withval", OMNI_LIB_DIR='none')
 
-AC_ARG_WITH(omniver,
-            [  --with-omniver=<VER>    Major version of omniORB        [default=3]],
-            OMNI_VER="$withval", OMNI_VER='3')
+AC_ARG_WITH(java-orb,
+            [  --with-java-orb=<NAME>  Name of Java ORB to use         [default=OpenORB]
+                          Allowed values are:
+                            JDK, OpenORB, JacORB],
+            java_orb_name="$withval", java_orb_name='OpenORB')
 
-AC_ARG_WITH(openorb,
-            [  --with-openorb=<PATH>   Path to OpenORB JAR file(s) ],
-            OPENORB_JAR="$withval", OPENORB_JAR='none')
+AC_ARG_WITH(java-orb-jar,
+            [  --with-java-orb-jar=<PATH>
+                          Path to Java ORB JAR file(s)],
+            JAVA_ORB_JAR="$withval", JAVA_ORB_JAR='none')
 
 AC_ARG_WITH(idl-java,
             [  --with-idl-java=<PATH>  Path to Java IDL compiler ],
             _idl_java="$withval", _idl_java='no')
+
+AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
+            JDOM_JAR="$withval", JDOM_JAR='none')
 
 AC_ARG_WITH(junit, [  --with-junit=<PATH>     Path to JUnit JAR file(s) ],
             JUNIT_JAR="$withval", JUNIT_JAR='none')
@@ -303,27 +322,30 @@ VPR_PATH(0.10.1, , AC_MSG_ERROR(*** VPR required for Tweek ***))
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 
 # Find omniORB.  This one is a beast.
-if test "x$OMNI_ROOT" != "xnone" ; then
-   tweeksave_CPPFLAGS="$CPPFLAGS"
-   tweeksave_LDFLAGS="$LDFLAGS"
-   tweeksave_LIBS="$LIBS"
+setup_omniORB ( )
+{
+   OMNI_VER="$1"
 
-   if test "x$OMNI_BIN_DIR" = "xnone" ; then
-      OMNI_BIN_DIR="$OMNI_PATH/bin"
+   if test "x$cxx_orb_bin_dir" = "xnone" ; then
+      OMNI_BIN_DIR="$cxx_orb_root/bin"
+   else
+      OMNI_BIN_DIR="$cxx_orb_bin_dir"
    fi
 
-   if test "x$OMNI_LIB_DIR" = "xnone" ; then
-      OMNI_LIB_DIR="$OMNI_PATH/lib"
+   if test "x$cxx_orb_lib_dir" = "xnone" ; then
+      OMNI_LIB_DIR="$cxx_orb_root/lib"
+   else
+      OMNI_LIB_DIR="$cxx_orb_lib_dir"
    fi
 
    tweek_omni_lib="omniORB$OMNI_VER"
    tweek_extra_libs=`$VPR_CONFIG --extra-libs`
 
-   CPPFLAGS="$CPPFLAGS -I$OMNI_ROOT/include"
+   CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include"
 
    AC_CHECK_HEADER(omniORB$OMNI_VER/omniORB.h,
-      tweek_omni_inc="$OMNI_ROOT/include",
-      AC_MSG_ERROR(*** omniORB required for Tweek **))
+      tweek_omni_inc="$cxx_orb_root/include",
+      [AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])])
 
    LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
    LIBS="$LIBS -l$tweek_omni_lib -lomnithread -lomniGK_stub $tweek_extra_libs"
@@ -331,8 +353,8 @@ if test "x$OMNI_ROOT" != "xnone" ; then
    DPP_LANG_SAVE
    DPP_LANG_CPLUSPLUS
 
-   AC_CACHE_CHECK(for omniORB::MaxMessageSize in -l$tweek_omni_lib,
-      tweek_cv_omniORB__MaxMessageSize_in_omniORB,
+   AC_CACHE_CHECK([for omniORB::MaxMessageSize in -l$tweek_omni_lib],
+      [tweek_cv_omniORB__MaxMessageSize_in_omniORB],
       AC_TRY_LINK([
 #include <omnithread.h>
 #include <omniORB$OMNI_VER/CORBA.h>
@@ -345,12 +367,12 @@ int omni_main_i(int argc, char** const argv)
                   [omniORB::MaxMessageSize();],
                   [ tweek_cv_omniORB__MaxMessageSize_in_omniORB='yes'
                     rm -rf ./ii_files ],
-                  tweek_cv_omniORB__MaxMessageSize_in_omniORB='no'))
+                  [tweek_cv_omniORB__MaxMessageSize_in_omniORB='no']))
 
-   AC_PATH_PROG(CXX_IDL, omniidl, no, ${OMNI_BIN_DIR}:$PATH)
+   AC_PATH_PROG(CXX_IDL, omniidl, no, [${OMNI_BIN_DIR}:$PATH])
 
    if test "x$CXX_IDL" = "xno" ; then
-      AC_MSG_ERROR(*** omniORB required for Tweek **)
+      AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])
    fi               
 
    CXX_IDL_OPTS='-bcxx -Wbh=.h,s=.cpp'
@@ -358,33 +380,52 @@ int omni_main_i(int argc, char** const argv)
    CXX_IDL_INCFLAG='-I'
 
    if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
-      OMNI_INCLUDES="-I$tweek_omni_inc"
-      OMNI_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
-      OMNI_LDFLAGS="-L$OMNI_LIB_DIR"
+      CXX_ORB_INCLUDES="-I$tweek_omni_inc"
+      CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
+      CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
 
-      OMNI_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
-      OMNI_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
+      CXX_ORB_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
+      CXX_ORB_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
 
-      OMNI_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib omniDynamic$OMNI_VER.lib omniGK_stub.lib"
-      OMNI_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
+      CXX_ORB_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib omniDynamic$OMNI_VER.lib omniGK_stub.lib"
+      CXX_ORB_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
 
       AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
       AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H, <omniORB$OMNI_VER/CORBA.h>)
       AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER")
    else
-      AC_MSG_ERROR(*** omniORB required for Tweek **)
+      AC_MSG_ERROR([*** $cxx_orb_name required for Tweek **])
    fi
 
    DPP_LANG_RESTORE
+}
 
-   CPPFLAGS="$tweeksave_CPPFLAGS"
-   LDFLAGS="$tweeksave_LDFLAGS"
-   LIBS="$tweeksave_LIBS"
-else
-   # XXX: This should not be a fatal error.
-   AC_MSG_ERROR(*** omniORB required for Tweek **)
-fi
+# --------------------
+# Find the C++ ORB.
+# --------------------
+tweeksave_CPPFLAGS="$CPPFLAGS"
+tweeksave_LDFLAGS="$LDFLAGS"
+tweeksave_LIBS="$LIBS"
 
+case $cxx_orb_name in
+   omniORB3)
+      setup_omniORB 3
+      ;;
+   omniORB4)
+      setup_omniORB 4
+      ;;
+   *)
+      AC_MSG_ERROR([Unsupported C++ ORB $cxx_orb_name!])
+      ;;
+esac
+
+CPPFLAGS="$tweeksave_CPPFLAGS"
+LDFLAGS="$tweeksave_LDFLAGS"
+LIBS="$tweeksave_LIBS"
+
+# --------------------
+# Find the Java ORB.
+# --------------------
 if test "x${_idl_java}" = "xno" ; then
    jacorb_dir='$(JUGGLERROOT_ABS)/external/JacORB'
    JAVA_IDL="JACORB_PATH=\"$jacorb_dir\" \"$jacorb_dir/idl\""
@@ -431,27 +472,30 @@ else
    fi
 fi
    
-if test "x${_enable_jdk_orb}" != "xno" ; then
-   # If we are going to use Java IDL, we have to have JDK 1.4 or newer so that
-   # we get an ORB that supports INS.
-   DPP_JDK_VERSION($JDK_HOME, 1.4, ,
-      AC_MSG_ERROR(*** JDK 1.4 or newer required for Java IDL use ***))
-else
-   if test "x$OPENORB_JAR" != "xnone" ; then
-      DPP_CHECK_JAVA_STATIC_METHOD(org.omg.CORBA.ORB,
-         init(), ,
-         [ ORB_CLASS_PROP='org.openorb.CORBA.ORB'
-           ORB_SINGLETON_CLASS_PROP='org.openorb.CORBA.ORBSingleton'
-         ],
-         [ AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***)
-           BUILD_JAVA='N'
-         ],
-         $OPENORB_JAR)
-   else
-      AC_MSG_WARN(*** OpenORB required for Tweek ***)
-      BUILD_JAVA='N'
-   fi
-fi
+case $java_orb_name in
+   JDK)
+      # If we are going to use Java IDL, we have to have JDK 1.4 or newer so
+      # that we get an ORB that supports INS.
+      DPP_JDK_VERSION($JDK_HOME, 1.4, ,
+         [AC_MSG_ERROR([*** JDK 1.4 or newer required for Java IDL use ***])])
+      ;;
+   *)
+      if test "x$JAVA_ORB_JAR" != "xnone" ; then
+         DPP_CHECK_JAVA_STATIC_METHOD([org.omg.CORBA.ORB],
+            [init()], ,
+            [ ORB_CLASS_PROP='org.openorb.CORBA.ORB'
+              ORB_SINGLETON_CLASS_PROP='org.openorb.CORBA.ORBSingleton'
+            ],
+            [ AC_MSG_WARN([*** $java_orb_name required for Tweek GUI execution ***])
+              BUILD_JAVA='N'
+            ],
+            [$JAVA_ORB_JAR])
+      else
+         AC_MSG_WARN([*** $java_orb_name required for Tweek ***])
+         BUILD_JAVA='N'
+      fi
+      ;;
+esac
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
@@ -489,7 +533,7 @@ done
 #done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
-INCLUDES="$INCLUDES $OMNI_INCLUDES"
+INCLUDES="$INCLUDES $CXX_ORB_INCLUDES"
 tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
 tweek_cxxflags_all="$VPR_CXXFLAGS"
 
@@ -534,9 +578,9 @@ UNIX_TWEEKROOT_ABS="$TWEEKROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIB_LINK_EXE $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
+   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB_LINK_EXE $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
 else
-   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIB $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS"
+   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS"
 fi
 
 # Put together the basic information needed to compile VR Juggler applications.
@@ -600,14 +644,14 @@ case $OS_TYPE in
       tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
       tweek_ldflags_linker="$tweek_ldflags_compiler"
       tweek_libs="-ltweek"
-      tweek_extra_libs="$OMNI_LIB"
+      tweek_extra_libs="$CXX_ORB_LIB"
       tweek_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
       tweek_libs="tweek.lib"
-      tweek_extra_libs="$OMNI_LIB_LINK_EXE"
+      tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
       tweek_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS"
       ;;
 esac
@@ -620,12 +664,12 @@ if test "x$PLATFORM" = "xIRIX" ; then
    tweek_64_flags='-64'
 fi
 
-tweek_extra_ldflags="$EXTRA_LDFLAGS $OMNI_LDFLAGS"
+tweek_extra_ldflags="$EXTRA_LDFLAGS $CXX_ORB_LDFLAGS"
 
 jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekServices.jar'
 
-if test "x$OPENORB_JAR" != "xnone" ; then
-   jars="$jars $OPENORB_JAR"
+if test "x$JAVA_ORB_JAR" != "xnone" ; then
+   jars="$jars $JAVA_ORB_JAR"
 fi
 
 changequote(<<, >>)
@@ -657,7 +701,7 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
 AC_SUBST(JDOM_JAR)
-AC_SUBST(OPENORB_JAR)
+AC_SUBST(JAVA_ORB_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)
 AC_SUBST(JUNIT_JAR)
