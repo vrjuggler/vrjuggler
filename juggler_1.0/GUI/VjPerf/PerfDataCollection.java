@@ -161,7 +161,7 @@ public class PerfDataCollection {
 		p.read (st);
 
 	    } while (multiple);
-	    System.out.println ("firing perfdatacollection update");
+	    //System.out.println ("firing perfdatacollection update");
 	    fireActionPerformed (new ActionEvent (this, 5, "update"));
 
 	}
