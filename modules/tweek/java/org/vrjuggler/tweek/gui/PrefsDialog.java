@@ -68,7 +68,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
       windowWidth        = new Integer(mPrefs.getWindowWidth());
       windowHeight       = new Integer(mPrefs.getWindowHeight());
       chooserStartDir    = mPrefs.getChooserStartDir();
-      chooserOpenStyle   = mPrefs.getChooserOpenStyle();
       defaultCorbaHost   = mPrefs.getDefaultCorbaHost();
       defaultCorbaPort   = mPrefs.getDefaultCorbaPort();
       defaultIiopVersion = mPrefs.getDefaultIiopVersion();
@@ -92,17 +91,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mCorbaHostField.setText(String.valueOf(defaultCorbaHost));
       mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
       mIiopVerField.setText(String.valueOf(defaultIiopVersion));
-
-      switch ( chooserOpenStyle )
-      {
-         case GlobalPreferencesService.EMACS_CHOOSER:
-            mEmacsStyleButton.setSelected(true);
-            break;
-         case GlobalPreferencesService.WINDOWS_CHOOSER:
-         default:
-            mWindowsStyleButton.setSelected(true);
-            break;
-      }
 
       this.setModal(true);
       this.pack();
@@ -138,7 +126,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       return beanViewer;
    }
 
-   public void setBeanViewer (String v)
+   public void setBeanViewer(String v)
    {
       mPrefs.setBeanViewer(v);
    }
@@ -162,16 +150,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
    public String getChooserStartDir()
    {
       return chooserStartDir;
-   }
-
-   /**
-    * Returns the current open style behavior choice.  This may be different
-    * than what is currently available through the Global Preferences Service,
-    * depending on whether or not the user has chosen to apply changes.
-    */
-   public int getChooserOpenStyle()
-   {
-      return chooserOpenStyle;
    }
 
    /**
@@ -303,38 +281,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mFcStartDirBox.setMinimumSize(new Dimension(126, 10));
       mFcStartDirBox.setPreferredSize(new Dimension(130, 10));
       mFcStartDirBox.setEditable(true);
-      mFcOpenStyleTitleLabel.setMaximumSize(new Dimension(24, 13));
-      mFcOpenStyleTitleLabel.setMinimumSize(new Dimension(24, 13));
-      mFcOpenStyleTitleLabel.setPreferredSize(new Dimension(24, 13));
-      mFcOpenStyleTitleLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mFcOpenStyleTitleLabel.setText("Open Style");
-      mEmacsStyleButton.setMinimumSize(new Dimension(109, 15));
-      mEmacsStyleButton.setPreferredSize(new Dimension(109, 15));
-      mEmacsStyleButton.setText("Emacs Style");
-      mEmacsStyleButton.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               chooserOpenStyle = GlobalPreferencesService.EMACS_CHOOSER;
-            }
-         });
 
-      mWindowsStyleButton.setMinimumSize(new Dimension(128, 15));
-      mWindowsStyleButton.setPreferredSize(new Dimension(128, 15));
-      mWindowsStyleButton.setText("Windows Style");
-      mWindowsStyleButton.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               chooserOpenStyle = GlobalPreferencesService.WINDOWS_CHOOSER;
-            }
-         });
-
-      mFcOpenStyleButtonPanel.setLayout(mFcOpenStyleButtonLayout);
-      mFcOpenStyleButtonLayout.setColumns(1);
-      mFcOpenStyleButtonLayout.setRows(0);
-      mFcOpenStyleButtonPanel.setMinimumSize(new Dimension(128, 50));
-      mFcOpenStyleButtonPanel.setPreferredSize(new Dimension(128, 50));
       mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
       mLevelBox.setMaximumSize(new Dimension(130, 26));
@@ -474,14 +421,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 95, 23));
       mFcConfigPanel.add(mFcStartDirBox,        new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
-      mFcConfigPanel.add(mFcOpenStyleTitleLabel,             new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mFcConfigPanel.add(mFcOpenStyleButtonPanel,           new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 66, 0));
-      mFcOpenStyleButtonPanel.add(mWindowsStyleButton, null);
-      mFcOpenStyleButtonPanel.add(mEmacsStyleButton, null);
-      mOpenStyleButtonGroup.add(mWindowsStyleButton);
-      mOpenStyleButtonGroup.add(mEmacsStyleButton);
       mContentPane.add(mFileChooserPanel,  "File Chooser");
       mWinSizeTablePane.getViewport().add(mWinSizeTable);
       mGenConfigPanel.add(mWinSizeTablePane,           new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
@@ -620,7 +559,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       dispose();
    }
 
-   private void commit ()
+   private void commit()
    {
       mPrefs.setUserLevel(userLevel);
       mPrefs.setLookAndFeel(lookAndFeel);
@@ -628,7 +567,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mPrefs.setWindowWidth(windowWidth.intValue());
       mPrefs.setWindowHeight(windowHeight.intValue());
       mPrefs.setChooserStartDir(chooserStartDir);
-      mPrefs.setChooserOpenStyle(chooserOpenStyle);
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
       mPrefs.setDefaultCorbaHost(defaultCorbaHost);
       mPrefs.setDefaultCorbaPort(defaultCorbaPort);
@@ -839,7 +777,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private Integer windowWidth        = new Integer(1024);
    private Integer windowHeight       = new Integer(768);
    private String  chooserStartDir    = GlobalPreferencesService.DEFAULT_START;
-   private int     chooserOpenStyle   = GlobalPreferencesService.DEFAULT_CHOOSER;
    private String  defaultCorbaHost   = "";
    private int     defaultCorbaPort   = 0;
    private String  defaultIiopVersion = "";
@@ -856,12 +793,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
    private JLabel       mFcStartDirLabel         = new JLabel();
    private JComboBox    mFcStartDirBox           = new JComboBox();
-   private JLabel       mFcOpenStyleTitleLabel   = new JLabel();
-   private JPanel       mFcOpenStyleButtonPanel  = new JPanel();
-   private GridLayout   mFcOpenStyleButtonLayout = new GridLayout();
    private ButtonGroup  mOpenStyleButtonGroup    = new ButtonGroup();
-   private JRadioButton mWindowsStyleButton      = new JRadioButton();
-   private JRadioButton mEmacsStyleButton        = new JRadioButton();
 
    private JPanel  mButtonPanel  = new JPanel();
    private JButton mCancelButton = new JButton();

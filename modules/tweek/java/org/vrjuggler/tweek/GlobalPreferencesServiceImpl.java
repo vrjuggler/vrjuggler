@@ -92,10 +92,6 @@ class GlobalPreferencesServiceImpl
    public static final int MIN_USER_LEVEL = 1;
    public static final int MAX_USER_LEVEL = 10;
 
-   public static final int WINDOWS_CHOOSER = 0;
-   public static final int EMACS_CHOOSER   = 1;
-   public static final int DEFAULT_CHOOSER = WINDOWS_CHOOSER;
-
    public static final String CWD_START     = "<cwd>";
    public static final String HOME_START    = "<home>";
    public static final String DEFAULT_START = CWD_START;
@@ -262,41 +258,6 @@ class GlobalPreferencesServiceImpl
    }
 
    /**
-    * Sets the user's current preferred file chooser "open style".  This
-    * defines how file choosers should behave with respect to the directory
-    * they use when first opening.  It is up to the code that opens the file
-    * choosers to act on this preference.
-    */
-   public void setChooserOpenStyle(int style)
-   {
-      chooserOpenStyle = style;
-
-      Element e = mPrefsDocRoot.getChild("chooser");
-
-      if ( e == null )
-      {
-         e = new Element("chooser");
-         mPrefsDocRoot.addContent(e);
-      }
-
-      switch (style)
-      {
-         case EMACS_CHOOSER:
-            e.setAttribute("style", "Emacs");
-            break;
-         case WINDOWS_CHOOSER:
-         default:
-            e.setAttribute("style", "Windows");
-            break;
-      }
-   }
-
-   public int getChooserOpenStyle()
-   {
-      return chooserOpenStyle;
-   }
-
-   /**
     * Sets the user's preference for lazy Panel Bean instantiation.  This
     * defines whether Panel Beans are instantiated upon discovery or upon
     * first interaction.
@@ -447,17 +408,6 @@ class GlobalPreferencesServiceImpl
             if ( chooser_element != null )
             {
                chooserStartDir = chooser_element.getAttribute("start").getValue();
-
-               String style = chooser_element.getAttribute("style").getValue();
-
-               if ( style.equals("Windows") )
-               {
-                  chooserOpenStyle = WINDOWS_CHOOSER;
-               }
-               else
-               {
-                  chooserOpenStyle = EMACS_CHOOSER;
-               }
             }
 
             Element lazyinst_element = mPrefsDocRoot.getChild("lazyinst");
@@ -541,17 +491,6 @@ class GlobalPreferencesServiceImpl
 
          Element chooser_element = new Element("chooser");
          chooser_element.setAttribute("start", chooserStartDir);
-
-         switch ( chooserOpenStyle )
-         {
-            case EMACS_CHOOSER:
-               chooser_element.setAttribute("style", "Emacs");
-               break;
-            case WINDOWS_CHOOSER:
-            default:
-               chooser_element.setAttribute("style", "Windows");
-               break;
-         }
 
          mPrefsDocRoot.addContent(chooser_element);
 
@@ -692,7 +631,6 @@ class GlobalPreferencesServiceImpl
    private int     windowWidth      = 1024;
    private int     windowHeight     = 768;
    private String  chooserStartDir  = CWD_START;
-   private int     chooserOpenStyle = WINDOWS_CHOOSER;
    private boolean lazyPanelBeanInstantiation = true;
    private String  defaultCorbaHost   = "";
    private int     defaultCorbaPort   = 2809;
