@@ -42,28 +42,57 @@
 #ifndef _VJ_THREAD_KEY_WIN_32_H_
 #define _VJ_THREAD_KEY_WIN_32_H_
 
-#include <iostream>
-#include <sys/types.h>
+#include <vjConfig.h>
+
+#include <stdio.h>
 
 #include <Threads/vjThreadFunctor.h>
 
+
 // Key destructor function type.
-typedef vj_thread_func_t	vjKeyDestructor;
+typedef vj_thread_func_t vjKeyDestructor;
 
 class vjThreadKeyWin32 {
 public:
     // -----------------------------------------------------------------------
-    //: Constructor.
+    //: Constructor.  Allocate a <keyp> that is used to identify data that is
+    //+ specific to each thread in the process, is global to all threads in
+    //+ the process and is destroyed using the spcefied destructor function
+    //+ that takes a single argument.
+    //
+    //! PRE: None.
+    //! POST: A key is created and is associated with the specified
+    //+       destructor function and argument.
+    //
+    //! ARGS: dest_func - The destructor function for the key.  This uses
+    //+                   the functor data structure.
+    //! ARGS: arg - Argument to be passed to destructor (optional).
     // -----------------------------------------------------------------------
-    vjThreadKeyWin32 (vj_thread_func_t destructor, void* arg = 0) {
-        keycreate(destructor, arg);
+    vjThreadKeyWin32 (vj_thread_func_t destructor, void* arg = 0)
+        : mKeyID(0xffffffff), mDestroyData(NULL)
+    {
+        mDestroyData = new vjThreadNonMemberFunctor(destructor, arg);
+        keycreate();
     }
 
     // -----------------------------------------------------------------------
-    //: Constructor.
+    //: Constructor.  Allocates a <keyp> that is used to identify data that
+    //+ is specific to each thread in the process, is global to all threads
+    //+ in the process and is destroyed by the specified destructor function.
+    //
+    //! PRE: None.
+    //! POST: A key is created and is associated with the specified
+    //+       destructor function.
+    //
+    //! ARGS: desctructor - Procedure to be called to destroy a data value
+    //+                     associated with the key when the thread
+    //+                     terminates.
     // -----------------------------------------------------------------------
-    vjThreadKeyWin32 ( vjBaseThreadFunctor* destructor) {
-        keycreate(destructor);
+    vjThreadKeyWin32 (vjBaseThreadFunctor* destructor)
+        : mKeyID(0xffffffff), mDestroyData(NULL)
+    {
+        mDestroyData = destructor;
+        keycreate();
     }
 
     // -----------------------------------------------------------------------
@@ -94,11 +123,14 @@ public:
     //+       it requires arguments.  Otherwise, use the two-argument
     //+       version of keycreate().
     // -----------------------------------------------------------------------
-    int
+    inline int
     keycreate (vj_thread_func_t destructor, void* arg = 0) {
-        std::cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
+        if ( mDestroyData != NULL ) {
+            delete mDestroyData;
+        }
 
-        return -1;
+        mDestroyData = new vjThreadNonMemberFunctor(destructor, arg);
+        return keycreate();
     }
 
     // -----------------------------------------------------------------------
@@ -117,11 +149,10 @@ public:
     //! RETURNS:  0 - Successful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    int
-    keycreate ( vjBaseThreadFunctor* destructor) {
-        std::cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
-
-        return -1;
+    inline int
+    keycreate (vjBaseThreadFunctor* destructor) {
+        mDestroyData = destructor;
+        return keycreate();
     }
 
     // -----------------------------------------------------------------------
@@ -134,14 +165,25 @@ public:
     //
     //! RETURNS:  0 - Successful completion
     //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is not currently supported on HP-UX 10.20.
     // -----------------------------------------------------------------------
-    int
+    inline int
     keyfree (void) {
-        std::cerr << "vjThreadKeyWin32::keyfree() not implemented yet!\n";
+        int retval;
 
-        return -1;
+        if ( mDestroyData != NULL ) {
+            (*mDestroyData)();
+        }
+
+        retval = 0;
+
+        if ( mKeyID != 0xffffffff ) {
+           if ( ! TlsFree(mKeyID) ) {
+               perror("Could not free thread local storage");
+               retval = -1;
+           }
+        }
+
+        return retval;
     }
 
     // -----------------------------------------------------------------------
@@ -159,11 +201,17 @@ public:
     //! RETURNS:  0 - Successful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    int
+    inline int
     setspecific (void* value) {
-        std::cerr << "vjThreadKeyWin32::setspecific() not implemented yet!\n";
+        int retval;
 
-        return -1;
+        retval = 0;
+        if ( ! TlsSetValue(mKeyID, value) ) {
+            perror("Could not set value for thread local storage");
+            retval = -1;
+        }
+
+        return retval;
     }
 
     // -----------------------------------------------------------------------
@@ -181,15 +229,35 @@ public:
     //! RETURNS:  0 - Successful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    int
+    inline int
     getspecific (void** valuep) {
-        std::cerr << "vjThreadKeyWin32::getspecific() not implemented yet!\n";
+        *valuep = TlsGetValue(mKeyID);
 
-        return -1;
+        return 0;
     }
 
 private:
-    int keyID;		//: Thread key ID
+    // -----------------------------------------------------------------------
+    //: Allocate a <keyp> that is used to identify data that is specific to
+    //+ each thread in the process, is global to all threads in the process.
+    // -----------------------------------------------------------------------
+    inline int
+    keycreate (void) {
+        int retval;
+
+        retval = 0;
+        mKeyID = TlsAlloc();
+
+        if ( mKeyID == 0xffffffff ) {
+            perror("Could not create thread local storage id");
+            retval = -1;
+        }
+
+        return retval;
+    }
+
+    DWORD mKeyID;                      //: Thread local storage ID
+    vjBaseThreadFunctor* mDestroyData; //: Destructor for TLS data
 };
 
 #endif	/* _VJ_THREAD_KEY_WIN_32_H_ */
