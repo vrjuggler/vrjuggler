@@ -449,13 +449,16 @@ public class ConfigToolbar
          //positionDialog(dialog);
          dialog.show();
 
-         RTRCDataSource data_src = dialog.getDataSource();
+         if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
+         {
+            RTRCDataSource data_src = dialog.getDataSource();
 
-         broker.add(data_src.toString(), data_src);
-         ctx.add(data_src.toString());
+            broker.add(data_src.toString(), data_src);
+            ctx.add(data_src.toString());
 
-         setConfigContext(ctx);
-         return true;
+            setConfigContext(ctx);
+            return true;
+         }
       }
       catch (Exception ioe)
       {
