@@ -68,6 +68,8 @@
                 ..
                 Thread
                 ..
+                Util
+                ..
                 examples
                     GMTL
                     ..
@@ -76,8 +78,8 @@
                     Threads
                     ..
                 ..
-                mk
-                ..
+            ..
+            mk
             ..
         ..
         Thread
