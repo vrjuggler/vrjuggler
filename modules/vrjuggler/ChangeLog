@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-12-2002 allenb    Added OpenSG section to programmers guide.
 Jul-05-2002 subatomic Enabled GlWindowWin32 to get window events.
                       This change allows window events such as keyboard
                       and mouse to be recieved in graphics windows while
