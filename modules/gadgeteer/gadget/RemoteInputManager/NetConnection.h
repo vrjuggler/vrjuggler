@@ -108,7 +108,7 @@ namespace gadget
        *
        * @param net_connection   NetConnection that it is getting the packets on.
        */
-      void receiveNetworkPacket();
+      vpr::ReturnStatus receiveNetworkPacket();
 
       std::string getName()
       { return mName; }

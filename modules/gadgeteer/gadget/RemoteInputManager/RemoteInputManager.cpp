@@ -564,15 +564,6 @@ namespace gadget
       // - for each slave
       //   - send ready      
    
-      vprDEBUG(gadgetDBG_RIM,vprDBG_HEX_LVL) << "RemoteInputManager::createBarrier" 
-            << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,vprDBG_HEX_LVL)
-                << "Barrier : " << ( (mBarrier == NULL) ? "NULL" : "Not-NULL" )
-                << "Barrier : " << ( mBarrier->isActive() ? "Active" : "Not Active" )
-                << "RIM : " << ( mConfigured ? "Configured" : "Not Configured" )
-                << std::endl << vprDEBUG_FLUSH;
-   
-      //if ( ((mSyncServer != NULL) || mIsMaster) && mSerialPort != NULL )
       if (mConfigured && mBarrier != NULL && mBarrier->isActive())
       {
          if (mBarrier->isMaster())
@@ -590,7 +581,7 @@ namespace gadget
    
             //second_time.setNow();
             //vpr::Interval diff_time(second_time-first_time);
-            //std::cout << "Latency: " << diff_time.getBaseVal() << "\n" << std::endl;
+            //std::cout << "Latency:" << setw(8) << diff_time.getBaseVal() << " usecs" << std::endl;
          }
       }
    }
@@ -1034,7 +1025,10 @@ namespace gadget
                {
                   vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Something is wrong!\n" << vprDEBUG_FLUSH;
                }
-               (*i)->receiveNetworkPacket();
+               if((*i)->receiveNetworkPacket() == vpr::ReturnStatus::NotConnected)
+               {
+                  mReceivingConnections.erase(i);
+               }
             }
             vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ALL PACKETS RECEIVED for: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
          }
@@ -1071,7 +1065,11 @@ namespace gadget
                {
                   vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Something is wrong!\n" << vprDEBUG_FLUSH;
                }
-               (*i)->receiveNetworkPacket();
+               if((*i)->receiveNetworkPacket() == vpr::ReturnStatus::NotConnected)
+               {
+                  mTransmittingConnections.erase(i);
+               }
+
             }
             vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ALL PACKETS RECEIVED for: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
          }
