@@ -13,14 +13,14 @@ public:
       mHeight = 0;
    }
 
-   bool testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction);
+   bool testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta = false);
 
 private:
    float mHeight;    // Height of the plane
 };
 
 
-bool planeCollidor::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction)
+bool planeCollidor::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta)
 {
    correction.set(0,0,0);
 

@@ -19,12 +19,10 @@
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjProjection.h>
 
-/*
 #include <pfNaver.h>
 #include <collidor.h>
 #include <planeCollidor.h>
 #include <pfCollidor.h>
-*/
 
 
 
@@ -61,7 +59,7 @@ public:
       vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
       rootNode = new pfGroup;
 
-      //naver = new pfNaver();
+      naver = new pfNaver();
 
       sun1 = new pfLightSource;
       pfDCS* fake_dcs = new pfDCS;
@@ -69,7 +67,7 @@ public:
       sun1->setColor(PFLT_DIFFUSE,0.3f,0.0f,0.95f);
       sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.4f);
       sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
-      //naver->addChild(sun1);
+      naver->addChild(sun1);
 
       fake_dcs->addChild(sun1);
       //sun1->on();     // By default
@@ -77,7 +75,7 @@ public:
       //rootNode->addChild(new pfLightSource);
 
       /// Load SIMPLE geometry
-      ///*
+      /*
       pfFilePath("/usr/share/Performer/data");
       //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
@@ -94,10 +92,10 @@ public:
       initial_pos.setTrans(0,0,0);
       //naver->getNavigator()->setCurPos(initial_pos);
       //naver->addChild(world_model);
-      //*/
+      */
 
       // Load the TOWN
-      /*
+      ///*
       pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
       pfDCS* world_model = new pfDCS;    // The node with the world under it
@@ -111,10 +109,12 @@ public:
       naver->addChild(world_model);
 
       //planeCollidor* collide = new planeCollidor;
-      pfCollidor* collide = new pfCollidor(world_model);
+      pfVolumeCollidor* correction_collide = new pfVolumeCollidor(world_model);
+      pfRideCollidor*  ride_collide = new pfRideCollidor(world_model);
 
-      naver->getNavigator()->setCollidor(collide);
-      */
+      naver->getNavigator()->setGravityCollidor(ride_collide);
+      naver->getNavigator()->setCorrectingCollidor(correction_collide);
+      //*/
 
       pfuTravPrintNodes(rootNode, "nodes.out");
       pfdStoreFile(rootNode, "nodes.pfb");
@@ -126,6 +126,15 @@ public:
       vjDEBUG(vjDBG_ALL, 0) << "app::getScene\n" << vjDEBUG_FLUSH;
       return rootNode;
    }
+
+    // Function called by the DEFAULT drawChan function before clearing the channel
+   // and drawing the next frame (pfFrame())
+   virtual void preDrawChan(pfChannel* chan, void* chandata)
+   {
+      pfDisable(PFEN_TEXTURE);
+      pfOverride(PFSTATE_TEXTURE,PF_ON);     // Override texturing to turn it off;
+   }
+
 
    /// Function called before pfSync
    virtual void preSync()
@@ -170,7 +179,7 @@ public:
 public:
    pfLightSource* sun1;
 
-   //pfNaver*    naver;
+   pfNaver*    naver;
    //pfDCS*      baseDCS;
    pfGroup*   rootNode;
 };
