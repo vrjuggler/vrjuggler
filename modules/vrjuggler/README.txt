@@ -39,8 +39,8 @@ Table of contents:
         VR Juggler is officially supported on the following platforms:
 
             IRIX 6.5
-            RedHat Linux 6.1, 6.2, 7.1, and newer
-            Windows NT 4.0 and 2000
+            RedHat Linux 7.1 and newer
+            Windows NT 4.0, 2000, and XP
             Windows 98/Me
 
         VR Juggler is known to work on the following platforms (but is
@@ -61,12 +61,8 @@ Table of contents:
             Java 2 Platform 1.2.2 or newer (only for VjControl)
 
         * IRIX
-            MIPSpro Compilers 7.3.1.1m or newer
+            MIPSpro Compilers 7.3.1.3m or newer
             OpenGL
-
-        * RedHat Linux 6.x
-            GCC 2.91
-            Mesa3D 3.2 or newer
 
         * RedHat Linux 7.1
             GCC 2.96 20000731 (Red Hat Linux 7.1 2.96-81)
@@ -79,7 +75,7 @@ Table of contents:
             OpenGL
 
         * Solaris 7 (patches including 108377-23)
-            GCC 2.85.2 or newer
+            GCC 2.95.3 or newer
             GNU binutils 2.11.2 or newer
             OpenGL
 
@@ -90,7 +86,7 @@ Table of contents:
             OpenGL
 
         * Win32
-            Microsoft Visual Studio 6.0 (SP4 or SP5)
+            Microsoft Visual Studio 7
             Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
 
 ==============================================================================
