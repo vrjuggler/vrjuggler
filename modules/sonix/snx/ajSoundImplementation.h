@@ -12,7 +12,12 @@ public:
    /**
     * @semantics default constructor 
     */
-   ajSoundImplementation() {}
+   ajSoundImplementation() : mSounds()
+   {
+      mListenerPos[0] = 0.0f;
+      mListenerPos[1] = 0.0f;
+      mListenerPos[2] = 0.0f;
+   }
 
    /**
     * copies current state of the system from one API to another.
@@ -219,6 +224,6 @@ private:
     * @link aggregation
     * @supplierCardinality 0..*
     * @clientCardinality 1*/
-   ajSoundInfo lnkSoundInfo_not_used_see_one_above;
+   //ajSoundInfo lnkSoundInfo_not_used_see_one_above;
 };
 #endif //AJSOUNDIMPLEMENTATION_H
