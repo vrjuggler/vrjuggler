@@ -64,6 +64,7 @@
 # MKPATH         - Path to shared vj.*.mk file directory.
 # MTREE_CMD      - Path to a BSD-compatible mtree.
 # OBJDIR         - Path to the directory where the object files will be built.
+# PERL           - Path to Perl 5 binary.
 #
 # C_COMPILE      - Command for compiling C code.
 # CXX_COMPILE    - Command for compiling C++ code.
@@ -133,6 +134,7 @@ LIBS		= @LIBS@
 MAKEFLAGS	+= --no-print-directory
 MKPATH		= ${VJROOT_ABS}/mk
 MTREE_CMD	= @MTREE_CMD@
+PERL		= @PERL@
 
 # Allow overriding the default value of ${OBJDIR} by setting ${BASE_OBJDIR}
 # (probably using an externally defined value).
