@@ -893,7 +893,7 @@ public class ConfigModule extends DefaultCoreModule {
         chunkdb.setName(f.getName());
         chunkdb.setFile(f);
         ConfigIOStatus iostatus;
-        iostatus = ConfigIO.readConfigChunkDB (f, chunkdb, ConfigIO.GUESS);
+        iostatus = ConfigIO.readConfigChunkDB (f, chunkdb);
 
         if (iostatus.getStatus() != iostatus.FAILURE) {
             if (is_new_db)
@@ -930,7 +930,7 @@ public class ConfigModule extends DefaultCoreModule {
 	    return db.name;
 
         try {
-            ConfigIO.writeConfigChunkDB (f, db, ConfigIO.DEFAULT);
+            ConfigIO.writeConfigChunkDB (f, db);
 
             Core.consoleInfoMessage (component_name, "Saved ChunkDB file: " + f);
             db.need_to_save = false;
@@ -1021,7 +1021,7 @@ public class ConfigModule extends DefaultCoreModule {
         descdb.setName(f.getName());
         descdb.setFile (f);
         ConfigIOStatus iostatus;
-        iostatus = ConfigIO.readChunkDescDB (f, descdb, ConfigIO.GUESS);
+        iostatus = ConfigIO.readChunkDescDB (f, descdb);
 
         if (iostatus.getStatus() != iostatus.FAILURE) {
             descdb.need_to_save = false;
@@ -1052,7 +1052,7 @@ public class ConfigModule extends DefaultCoreModule {
 	    return db.name;
 	
 	try {
-            ConfigIO.writeChunkDescDB (f, db, ConfigIO.DEFAULT);
+            ConfigIO.writeChunkDescDB (f, db);
             db.need_to_save = false;
             Core.consoleInfoMessage (component_name, 
                                      "Saved ChunkDesc File: " + f);

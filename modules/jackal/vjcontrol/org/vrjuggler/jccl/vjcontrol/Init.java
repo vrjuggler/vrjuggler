@@ -146,7 +146,7 @@ public class Init {
 	URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
 
         try {
-            iostatus = ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb, ConfigIO.GUESS);
+            iostatus = ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb);
             Core.consoleInfoMessage ("Init", iostatus.toString());
             if (iostatus.getStatus() == iostatus.FAILURE) {
                 Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
@@ -166,10 +166,10 @@ public class Init {
         Core.vjcontrol_chunkdb.setName (f1.getName());
         Core.vjcontrol_chunkdb.setFile (f1);
 
-        iostatus = ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
+        iostatus = ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb);
         if (iostatus.getStatus() == iostatus.FAILURE) {
             f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/vjcontrol.cfg"));
-            iostatus = ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
+            iostatus = ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb);
             Core.consoleInfoMessage ("Init", iostatus.toString());
             if (iostatus.getStatus() == iostatus.FAILURE) {
 		Core.consoleErrorMessage ("Init","Couldn't load VjControl prefs '" + f1 + "' or '" + f2 + "'.");
