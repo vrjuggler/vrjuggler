@@ -1,5 +1,11 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-05-23 patrickh In an effort to get the Juggler suite of tools compiling
+                    with GCC 3.1, specializations of std::hash<T> for
+                    vpr::InetAddr and vpr::Uint64 have been removed.  Hashers
+                    called vpr::InetAddrHash and vpr::Uint64Hash have been
+                    added instead.
+                    NEW VERSION: 0.14.0
 2002-05-22 allenb   Updated to work with Boost 0.1.28.
 2002-04-26 patrickh Turned on versioning in shared library names.
 2002-04-16 allenb   Added vpr::Error which can be used to output
