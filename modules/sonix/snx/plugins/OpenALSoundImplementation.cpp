@@ -508,7 +508,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // open the file as readonly binary
          if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-            std::cerr<<"[snx]OpenAL| file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
+            std::cerr<<"[snx]OpenAL| file '"<<soundInfo.filename<<"' doesn't exist\n" << std::flush;
             break;
          }
 
