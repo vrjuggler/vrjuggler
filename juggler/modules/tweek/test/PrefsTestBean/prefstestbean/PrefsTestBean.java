@@ -32,7 +32,7 @@ public class PrefsTestBean extends JPanel implements java.io.Serializable,
       editor.initGUI();
    }
 
-   public JPanel getEditor ()
+   public JComponent getEditor ()
    {
       return editor;
    }
