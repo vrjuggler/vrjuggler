@@ -451,7 +451,8 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
          if ( path != null )
          {
-            loadBeansFromPath(path);
+            String exp_path = EnvironmentService.expandEnvVars(path);
+            loadBeansFromPath(exp_path);
             BeanCollectionBuilder.instance().getPanelTree().fireTreeModelRefreshEvent();
          }
       }
