@@ -35,7 +35,7 @@
 #include <Threads/BaseThread.h>
 #include <Threads/ThreadManager.h>
 
-int32_t vpr::BaseThread::mNextThreadId = 0;
+vpr::Int32 vpr::BaseThread::mNextThreadId = 0;
 
 	// ---- Ouput operator ---- //
 std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)

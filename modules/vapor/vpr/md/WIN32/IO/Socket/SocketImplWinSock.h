@@ -33,18 +33,19 @@
 #ifndef _VPR_SOCKET_IMP_WINSOCK_H_
 #define _VPR_SOCKET_IMP_WINSOCK_H_
 
+#include <vprConfig.h>
+
 #include <winsock2.h>
-#include <windows.h>
 #include <string>
 #include <vector>
 
-#include <IO/Socket/SocketImp.h>
+#include <IO/BlockIO.h>
 #include <IO/Socket/InetAddr.h>
 
 
 namespace vpr {
 
-class SocketImpWinSock : virtual public SocketImp_i {
+class SocketImpWinSock : public BlockIO {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -172,7 +173,7 @@ public:
     }
 
     // ========================================================================
-    // vpr::SocketImp_i interface implementation.
+    // vpr::Socket interface implementation.
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -236,7 +237,155 @@ protected:
     // ------------------------------------------------------------------------
     void init(void);
 
-    SOCKET m_sockfd;
+    // ------------------------------------------------------------------------
+    // Receive the specified number of bytes from the remote site to which the
+    // local side is connected.
+    //
+    // PRE: The socket is open and connect() has been called.  buffer is at
+    //      least length bytes in size.
+    // POST: length bytes are read from the remote site and stored in the
+    //       given buffer.  The number of bytes read is returned to the
+    //       caller.
+    //
+    // Arguments:
+    //     buffer - A pointer to the buffer used for storing the bytes
+    //              received from the remote site.
+    //     length - The number of bytes to receive from the remote site.
+    //     flags  - Flags to use when receiving the data.  This is optional
+    //              and defaults to 0.
+    //
+    // Returns:
+    //     >-1 - The number of bytes received.
+    //      -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t recv(void* buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
+    //: Receive the specified number of bytes from the remote site to which
+    //+ the local side is connected.
+    //
+    //! PRE: The socket is open and connect() has been called.  buffer is at
+    //+      least length bytes in size.
+    //! POST: length bytes are read from the remote site and stored in the
+    //+       given buffer.  The number of bytes read is returned to the
+    //+       caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) used
+    //+                for storing the bytes received from the remote site.
+    //! ARGS: length - The number of bytes to receive from the remote site.
+    //+                If the length is 0, the value is determined from the
+    //+                size of the string object.
+    //! ARGS: flags  - Flags to use when receiving the data.  This is optional
+    //+                and defaults to 0.
+    //
+    //! RETURNS: >-1 - The number of bytes received.
+    //! RETURNS:  -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t recv(std::string& buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
+    // Receive the specified number of bytes from the remote site to which the
+    // local side is connected.
+    //
+    // PRE: The socket is open and connect() has been called.  buffer is at
+    //      least length bytes in size.
+    // POST: length bytes are read from the remote site and stored in the
+    //       given buffer.  The number of bytes read is returned to the
+    //       caller.
+    //
+    // Arguments:
+    //     buffer - A pointer to the buffer (a vector of chars) used for
+    //              storing the bytes received from the remote site.
+    //     length - The number of bytes to receive from the remote site.  If
+    //              the length is 0, the value is determined from the size of
+    //              the vector.
+    //     flags  - Flags to use when receiving the data.  This is optional
+    //              and defaults to 0.
+    //
+    // Returns:
+    //     >-1 - The number of bytes received.
+    //      -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t recv(std::vector<char>& buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
+    // Send the specified number of bytes contained in the given buffer from
+    // the local side to the remote site to which we are connected.
+    //
+    // PRE: The socket is open and connect() has been called.  buffer is at
+    //      least length bytes in size.
+    // POST: length bytes are sent from the buffer on the local site to the
+    //       remote site.  The number of bytes read is returned to the caller.
+    //
+    // Arguments:
+    //     buffer - A pointer to the buffer containing the bytes to be sent.
+    //     length - The number of bytes to sent to the remote site.
+    //     flags  - Flags to use when sending the data.  This is optional and
+    //              defaults to 0.
+    //
+    // Returns:
+    //     >-1 - The number of bytes received.
+    //      -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t send(const void* buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
+    //: Send the specified number of bytes contained in the given buffer from
+    //+ the local side to the remote site to which we are connected.
+    //
+    //! PRE: The socket is open and connect() has been called.  buffer is at
+    //+      least length bytes in size.
+    //! POST: length bytes are sent from the buffer on the local site to the
+    //+       remote site.  The number of bytes read is returned to the
+    //+       caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object)
+    //+                containing the bytes to be sent.
+    //! ARGS: length - The number of bytes to sent to the remote site.  If the
+    //+                length is 0, the value is determined from the size of
+    //+                the string object.
+    //! ARGS: flags  - Flags to use when sending the data.  This is optional
+    //+                and defaults to 0.
+    //
+    //! RETURNS: >-1 - The number of bytes received.
+    //! RETURNS:  -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t send(const std::string& buffer, const size_t length,
+                         const int flags = 0);
+
+    // ------------------------------------------------------------------------
+    // Send the specified number of bytes contained in the given buffer from
+    // the local side to the remote site to which we are connected.
+    //
+    // PRE: The socket is open and connect() has been called.  buffer is at
+    //      least length bytes in size.
+    // POST: length bytes are sent from the buffer on the local site to the
+    //       remote site.  The number of bytes read is returned to the caller.
+    //
+    // Arguments:
+    //     buffer - A pointer to the buffer (a vector of chars) containing the
+    //              bytes to be sent.
+    //     length - The number of bytes to sent to the remote site.  If the
+    //              length is 0, the value is determined from the size of the
+    //              vector.
+    //     flags  - Flags to use when sending the data.  This is optional and
+    //              defaults to 0.
+    //
+    // Returns:
+    //     >-1 - The number of bytes received.
+    //      -1 - Something went wrong when trying to receive the data.
+    // ------------------------------------------------------------------------
+    virtual ssize_t send(const std::vector<char>& buffer, const size_t length,
+                         const int flags = 0);
+
+    SOCKET            m_sockfd;
+    InetAddr          m_local_addr;
+    InetAddr          m_remote_addr;
+    SocketTypes::Type m_type;
 };
 
 }; // End of vpr namespace

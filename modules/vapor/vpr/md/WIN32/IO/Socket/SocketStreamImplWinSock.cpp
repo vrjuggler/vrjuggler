@@ -30,10 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vprConfig.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <winsock2.h>
-#include <windows.h>
 
 #include <md/WIN32/SocketStreamImpWinSock.h>
 
@@ -50,7 +51,7 @@ namespace vpr {
 // variables of the object.
 // ----------------------------------------------------------------------------
 SocketStreamImpWinSock::SocketStreamImpWinSock (void)
-    : SocketImpWinSock(), SocketStreamImp_i()
+    : SocketImpWinSock()
 {
 fprintf(stderr, "vpr::SocketStreamImpWinSock default constructor\n");
     /* Do nothing. */ ;
@@ -63,8 +64,7 @@ fprintf(stderr, "vpr::SocketStreamImpWinSock default constructor\n");
 // ----------------------------------------------------------------------------
 SocketStreamImpWinSock::SocketStreamImpWinSock (const InetAddr& local_addr,
                                                 const InetAddr& remote_addr)
-    : SocketImpWinSock(local_addr, remote_addr, SocketTypes::STREAM),
-      SocketStreamImp_i(local_addr, remote_addr,)
+    : SocketImpWinSock(local_addr, remote_addr, SocketTypes::STREAM)
 {
 fprintf(stderr, "vpr::SocketStreamImpWinSock(address, port) constructor\n");
 fprintf(stderr, "    Local Address: %s -> %s\n",
@@ -145,7 +145,7 @@ SocketStreamImpWinSock::accept () {
 // ----------------------------------------------------------------------------
 SocketStreamImpWinSock::SocketStreamImpWinSock (const SOCKET sock,
                                                 const InetAddr& remote_addr)
-    : SocketImpWinSock(), SocketStreamImp_i()
+    : SocketImpWinSock()
 {
 fprintf(stderr, "Protected vpr::SocketStreamImpWinSock constructor\n");
 // XXX: Merge

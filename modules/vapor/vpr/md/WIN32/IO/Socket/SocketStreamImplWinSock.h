@@ -33,20 +33,21 @@
 #ifndef _VPR_SOCKET_STREAM_IMP_WINSOCK_H_
 #define _VPR_SOCKET_STREAM_IMP_WINSOCK_H_
 
+#include <vprConfig.h>
+
 #include <string>
 
-#include <IO/Socket/SocketStreamImp.h>
 #include <md/WIN32/SocketImpWinSock.h>
+#include <IO/Socket/InetAddr.h>
 
 
 namespace vpr {
 
-class SocketStreamImpWinSock : virtual public SocketImpWinSock,
-                               virtual public SocketStreamImp_i
+class SocketStreamImpWinSock : public SocketImpWinSock
 {
 public:
     // ========================================================================
-    // vpr::SocketStreamImp_i implementation.
+    // vpr::SocketStream implementation.
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -61,21 +62,9 @@ public:
     SocketStreamImpWinSock(void);
 
     // ------------------------------------------------------------------------
-    // Constructor.  This takes the address (either hostname or IP address) of
-    // a remote site and a port and stores the values for later use in the
-    // member variables of the object.
-    //
-    // PRE: None.
-    // POST: The member variables are initialized with the m_type variable in
-    //       particular set to SOCK_STREAM.
-    //
-    // Arguments:
-    //     address - The hostname or IP address of the site to which we will
-    //               connect.
-    //     port    - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStreamImpWinSock(const std::string& address,
-                           const unsigned short port);
+    SocketStreamImpWinSock(const InetAddr& local_addr,
+                           const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     // Constructor.  This takes the address (either hostname or IP address) of
