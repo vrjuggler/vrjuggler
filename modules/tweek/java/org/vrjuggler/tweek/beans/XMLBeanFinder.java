@@ -133,7 +133,7 @@ public class XMLBeanFinder
                   beans.addAll( manageChildren( root.getChildren() ) );
                }
             }
-            catch ( JDOMException e )
+            catch (Exception e)
             {
                e.printStackTrace();
             }

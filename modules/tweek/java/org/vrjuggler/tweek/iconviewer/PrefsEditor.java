@@ -98,7 +98,7 @@ public class PrefsEditor extends JPanel
 
             smallGui = gui_element.getAttribute("small").getBooleanValue();
          }
-         catch (JDOMException e)
+         catch (Exception e)
          {
             e.printStackTrace();
          }
