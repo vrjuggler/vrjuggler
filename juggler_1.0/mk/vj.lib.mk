@@ -15,7 +15,7 @@
 # -----------------------------------------------------------------------------
 
 static-lib:
-	cd ${LIBDIR} && ${AR} ${LIBNAME} ${OBJS}
+	${AR} ${LIBDIR}/${LIBNAME} ${OBJS}
 
 shared-lib:
-	cd ${LIBDIR} && ${LD} ${LDOPTS} -o ${LIBNAME} ${OBJS}
+	${LD} ${LDOPTS} -o ${LIBDIR}/${LIBNAME} ${OBJS}
