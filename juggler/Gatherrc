@@ -34,10 +34,10 @@ Doozer++
    Path: .;
 };
 
-Xmlpp     // Get xmlpp from the gamedev club site for now
+cppdom
 {
-   CVSROOT:  :pserver:anonymous@cvs.isugamedev.sourceforge.net:/cvsroot/isugamedev;
-   Module: lib/gamekernel/xmlpp  [external/xmlpp];
+   CVSROOT:  :pserver:anonymous@cvs.xml-cppdom.sourceforge.net:/cvsroot/xml-cppdom;
+   Module: cppdom  [external/cppdom];
    Tag: HEAD;
    Path: .;          // Put me right here
 };
