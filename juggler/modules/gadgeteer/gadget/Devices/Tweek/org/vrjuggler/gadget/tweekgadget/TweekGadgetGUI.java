@@ -36,10 +36,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import org.omg.CORBA.BAD_PARAM;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.FileLoader;
@@ -49,6 +45,8 @@ import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.ExtensionFileFilter;
 import tweek.Subject;
 import gadget.*;
+import javax.swing.*;
+import java.awt.*;
 
 
 public class TweekGadgetGUI
@@ -69,6 +67,15 @@ public class TweekGadgetGUI
       catch (IOException ex)
       {
          System.err.println("Shit!");
+      }
+
+      try
+      {
+         jbInit();
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
       }
    }
 
@@ -234,10 +241,20 @@ public class TweekGadgetGUI
 
             button = new TweekDigitalButton(mCorbaService, dig_subj);
             button.setText(subj_name);
-            this.add(button);
-            this.revalidate();
+            mMainPanel.add(button);
+            mMainPanel.revalidate();
          }
       }
+   }
+
+   private void jbInit() throws Exception
+   {
+      this.setLayout(mTopLayout);
+      mTitleLabel.setText("TweekGadget GUI");
+      mTitlePanel.setBorder(BorderFactory.createRaisedBevelBorder());
+      this.add(mMainPanel, BorderLayout.CENTER);
+      this.add(mTitlePanel, BorderLayout.NORTH);
+      mTitlePanel.add(mTitleLabel, null);
    }
 
    private static String mLayoutConfigType = "TweekGadgetGUI";
@@ -248,4 +265,8 @@ public class TweekGadgetGUI
    private List          mPosDevs      = new ArrayList();
    private List          mDigitalDevs  = new ArrayList();
    private List          mAnalogDevs   = new ArrayList();
+   private JPanel mMainPanel = new JPanel();
+   private JPanel mTitlePanel = new JPanel();
+   private BorderLayout mTopLayout = new BorderLayout();
+   private JLabel mTitleLabel = new JLabel();
 }
