@@ -99,9 +99,6 @@ VarValue::VarValue ( VarType t )
 
 VarValue::~VarValue() {
     validation = 0;
-
-//     if (embeddedchunkval)
-//    delete embeddedchunkval;
 }
 
 
@@ -124,10 +121,6 @@ VarValue& VarValue::operator= (const VarValue &v) {
 
     type = v.type;
 
-//      if (embeddedchunkval) {
-//          // delete embeddedchunkval; XXX
-//          embeddedchunkval = NULL;
-//      }
     intval = v.intval;
     floatval = v.floatval;
     boolval = v.boolval;
@@ -319,19 +312,6 @@ VarValue::operator std::string () const {
             sprintf (buf, "%f", floatval);
             return std::string (buf);
         }
-//          c = cstring();
-//          s = c;
-//          delete[] c;
-//          return s;
-//      case T_INT:
-//          //return std::string(intval);
-//          //std::string s = intval;
-//          s = intval;
-//          return s;
-//      case T_FLOAT:
-//          //return std::string(floatval);
-//          s = floatval;
-//          return s;
     case T_BOOL:
         return boolval?"true":"false";
     case VJ_T_INVALID:
@@ -472,10 +452,6 @@ VarValue &VarValue::operator = (const ConfigChunkPtr ch) {
        {
        case T_EMBEDDEDCHUNK:
            embeddedchunkval = ch;
-//             /* XXX: Leave it hanging for now.
-//                if (embeddedchunkval)
-//                delete embeddedchunkval;
-//             */
 //             if (s)
 //                 embeddedchunkval = new ConfigChunk (*s);
 //             else

@@ -101,12 +101,12 @@ VarValue *Property::createVarValue (int i) {
 
 
 Property::~Property () {
-    /* XXX
+
     unsigned int i;
 
     for (i = 0; i < value.size(); i++)
         delete (value)[i];
-        */
+
     validation = 0;
 }
 
@@ -149,10 +149,10 @@ Property& Property::operator= (const Property& p) {
     embeddesc = p.embeddesc;
     num = p.num;
 
-    /*  XXX
+
     for (i = 0; i < value.size(); i++)
         delete (value[i]);
-        */
+
     value.clear();
 
     for (i = 0; i < p.value.size(); i++) {

@@ -157,7 +157,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
         //cout << "command is '" << name << "'." << endl;
         if (!strcasecmp (name, "apply_chunks")) {
             // we've received a set of configchunks to apply.
-            newchunkdb.erase();
+            newchunkdb.clear();
             child = doc.getFirstChild();
             while (child != 0) {
                 retval = retval && config_xml_handler->buildChunkDB (newchunkdb, child);
