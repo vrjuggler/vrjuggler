@@ -21,7 +21,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				ImproveFloatingPointConsistency="TRUE"
-				AdditionalIncludeDirectories="&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="..\..;&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;BOOST_PYTHON_DYNAMIC_LIB"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -34,7 +34,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="1"
-				DisableSpecificWarnings="4005;4267"/>
+				DisableSpecificWarnings="4005;4251;4267;4275;4290;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -83,7 +83,7 @@
 				InlineFunctionExpansion="2"
 				ImproveFloatingPointConsistency="TRUE"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="..\..;&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;BOOST_PYTHON_DYNAMIC_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -94,7 +94,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4005;4267"/>
+				DisableSpecificWarnings="4005;4251;4267;4275;4290;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -145,7 +145,25 @@
 				RelativePath="..\..\src\vpr\_Interval.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\vpr\_ObjectReader.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\vpr\_ObjectWriter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\vpr\_ReadableObject.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\vpr\_ReturnStatus.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\vpr\_SerializableObject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\vpr\_WriteableObject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\pyjutil\InterpreterGuard.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\vpr\vpr.cpp">
@@ -154,6 +172,12 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\pyjutil\Debug.h">
+			</File>
+			<File
+				RelativePath="..\..\pyjutil\InterpreterGuard.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
