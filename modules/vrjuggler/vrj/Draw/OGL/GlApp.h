@@ -39,7 +39,6 @@
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
 
-//#include <vrj/Kernel/Kernel.h>
 #include <vrj/Kernel/User.h>
 #include <vrj/Display/Projection.h>
 
@@ -47,27 +46,26 @@ namespace vrj
 {
    class Kernel;
 
-/** GlApp: Encapulates an actual OpenGL application.
+/**
+ * GlApp: Encapulates an actual OpenGL application.
  *
- * PURPOSE:
- * This class defines the class that OpenGL
- * application classes should be derived from.  The interface
- * given is the interface that the System expects in order to
- * interface with the application.<br> <br>
+ * This class defines the class form which OpenGL application classes should
+ * be derived.  The interface given is the interface that the kernel and
+ * OpenGL Draw Manager expect in order to interact with the application.
  *
- * <h3> The control loop will look similar to this: </h3>
- *  NOTE: One time through the loop is a Juggler Frame <br>
+ * The control loop will look similar to this:
  *
  * \code
  *  contextInit();                 // called for each context
  *  while (drawing)
  *  {
  *     preFrame();
+ *     latePreFrame();
  *     bufferPreDraw();            // called for each draw buffer
  *     contextPreDraw();           // called for each context
- *     draw();                     // called for each surfacewindow
+ *     draw();                     // called for each viewport
  *     contextPostDraw();          // called for each context
- *     intraFrame();               // called in parallel to the draw functions.
+ *     intraFrame();               // called in parallel to the draw functions
  *     sync();
  *     postFrame();
  *
@@ -76,6 +74,8 @@ namespace vrj
  *
  *  contextClose();                // called for each context
  * \endcode
+ *
+ * @note One time through the loop is a Juggler Frame.
  *
  * @see App
  */
