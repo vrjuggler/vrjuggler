@@ -54,7 +54,6 @@
 
 #include <string>
 #include <unistd.h>
-#include <sys/endian.h>
 #include <sys/time.h>
 
 // I don't know why this is necessary, but I think something is being defined
