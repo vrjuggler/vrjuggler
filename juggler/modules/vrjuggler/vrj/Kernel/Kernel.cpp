@@ -113,12 +113,19 @@ void Kernel::stop()
    setApplication(NULL);      // Set NULL application so that the app gets closed
 }
 
-/** Blocks until the kernel exits */
+/** Blocks until the kernel exits 
+*
+* Waits for !mIsRunning && mExitFlag
+* 
+* Need both of those, because even though exit flag may be triggered
+* we can not exit until the kernel control loop stops.  This is signaled by
+* setting mIsRunning = false;
+*/
 void Kernel::waitForKernelStop()
 {
    mExitWaitCondVar.acquire();
    {
-      while ( mIsRunning || (!mExitFlag) )     // While still running OR not time to exit
+      while (! (!mIsRunning && mExitFlag) )   // Wait until !mIsRunning && mExitFlag
       {
          mExitWaitCondVar.wait();
       }
@@ -186,7 +193,7 @@ void Kernel::controlLoop(void* nullParam)
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
          jcclTIMESTAMP (jcclPERF_ALL, "kernel/updateFrameData");
-   }
+   }   
 
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
 
@@ -196,7 +203,7 @@ void Kernel::controlLoop(void* nullParam)
       mIsRunning = false;
       mExitWaitCondVar.signal();
    }
-   mExitWaitCondVar.release();
+   mExitWaitCondVar.release();     
 }
 
 // Set the application to run
