@@ -34,6 +34,10 @@ Steps to add documentation to an installed juggler_docs site
 
       cp -r . <path...>/juggler_docs/html/programmer.reference/classes
 
+      The first works properly with symbolic links which makes it safer
+      to use.  The second is more intuitive, but it will follow symbolic
+      links instead of just copying the symlink over.
+
    5) cd <path...>/juggler_docs/install
 
    6) Run install-web
