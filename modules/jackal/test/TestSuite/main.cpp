@@ -4,7 +4,6 @@
 //#include <TestCases/VarValueTest.h>
 #include <TestCases/ChunkDescTest.h>
 #include <TestCases/IncludesTest.h>
-#include <TestCases/LabeledPerfDataBufferTest.h>
 #include <TestCases/EnumerationsTest.h>
 #include <TestCases/ConfigChunkTest.h>
 #include <TestCases/ConfigChunkDBTest.h>
@@ -62,7 +61,6 @@ int main (int ac, char **av)
    // ------------------------------
    CppUnit::TestSuite* metrics_suite = new CppUnit::TestSuite("metrics");
 
-//     metrics_suite->addTest(jcclTest::LabeledPerfDataBufferTest::metric_suite());
    runner.addTest(metrics_suite);
 
    // -------------------------------
