@@ -65,6 +65,7 @@ import org.vrjuggler.jccl.config.*;
       categories.add("VRAC");
       return new ConfigDefinition("Person",
                                   "person",
+                                  "",
                                   1,
                                   "A person",
                                   categories,
@@ -97,6 +98,7 @@ import org.vrjuggler.jccl.config.*;
       categories.add("VR");
       return new ConfigDefinition("Wall",
                                   "wall",
+                                  "",
                                   1,
                                   "A wall in 3D space.",
                                   categories,
@@ -125,6 +127,7 @@ import org.vrjuggler.jccl.config.*;
       categories.add("VR");
       return new ConfigDefinition("Corner",
                                   "corner",
+                                  "",
                                   1,
                                   "A corner of a wall in 3D space.",
                                   categories,
