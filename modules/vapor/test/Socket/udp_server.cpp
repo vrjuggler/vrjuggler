@@ -58,7 +58,7 @@ main (int argc, char* argv[]) {
         char recv_buf[32];
         char send_buf[] = "Hello there!";
         vpr::Uint32 bytes;
-        vpr::Status sock_stat;
+        vpr::ReturnStatus sock_stat;
 
         // Loop forever reading messages from clients.
         while ( 1 ) {
