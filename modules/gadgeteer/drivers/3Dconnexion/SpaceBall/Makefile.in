@@ -50,10 +50,12 @@ INSTALL=	@INSTALL@
 INSTALL_FILES=	
 SUBOBJDIR=	$(DRIVER_NAME)
 
+ifneq (@PLATFORM@, FreeBSD)
 ifneq (@PLATFORM@, Darwin)
 C_AFTERBUILD=	driver-dso
 
 SRCS=		puck_device.cpp
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk
