@@ -106,6 +106,7 @@ public:
 
    /// Setter for display manager variable
    void setDisplayManager(DisplayManager* _dispMgr);
+   DisplayManager* getDisplayManager();
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out,
                                            DrawManager& drawMgr);

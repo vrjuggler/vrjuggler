@@ -30,37 +30,41 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GL_SIM_INTERFACE_H_
-#define _VRJ_GL_SIM_INTERFACE_H_
+#ifndef _VRJ_DRAW_SIM_INTERFACE_H_
+#define _VRJ_DRAW_SIM_INTERFACE_H_
 
 #include <vrj/vrjConfig.h>
 
 #include <gadget/Type/KeyboardProxy.h>
 #include <gadget/Type/DeviceInterface.h>
-
-#include <vrj/Draw/DrawSimInterface.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
+#include <vrj/Display/Projection.h>
 
 namespace vrj
 {
+   class SimViewport;
+
    /**
-    * Interface for objects that wish to perform simulator function with an
-    * OpenGL application.
+    * Base class for all simulator interface across all draw manager types
     */
-   class GlSimInterface : public DrawSimInterface
+   class DrawSimInterface 
    {
    public:
-      virtual ~GlSimInterface() {}
+      virtual ~DrawSimInterface() {}
       
-      /**
-       * Draws this sim device using the given information about the Window it
-       * will be drawing into.
-       */
-      virtual void draw(const float scaleFactor) = 0;
+      /*
+      * Configure the sim display
+      * @pre chunk is a valid chunk.
+      * @post It should be configured
+      */
+      virtual void config(jccl::ConfigChunkPtr chunk) = 0;
 
-      /**
-       * Sets the keyboard the simulator can use to get input from the user.
-       */
-      virtual void setKeyboard(gadget::KeyboardInterface kbInterface) = 0;
+      /** Called as part of the viewports updateProjection call */
+      virtual void updateProjectionData(const float positionScale, Projection* leftProj, Projection* rightProj)
+      {;}
+
+      virtual void initialize(SimViewport* simVp) = 0;
    };
 }
 

@@ -47,10 +47,24 @@
 #include <vrj/Display/Frustum.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
-//#include <vrj/Display/SimViewport.h>
+#include <vrj/Display/SimViewport.h>
 //#include <vrj/Display/SurfaceViewport.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/DrawSimInterface.h>
+
+#include <vrj/Draw/OGL/GlSimInterface.h>
+
+#include <gadget/InputManager.h>
+
+// Get info about gadget keyboard stuff for registering the simulator below
+// Note: This may seem kind of strange (and it is) but we need it
+// since all of our derived types are going to be gadget::Keyboards as well
+// as GL Windows.  They need to be so we can get keyboard input for
+// the simulators that will run on/in this window
+#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/DeviceInterface.h>
 
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.
@@ -75,6 +89,66 @@ void GlWindow::config(vrj::Display* displayWindow)
 
    /// Other stuff
 }
+
+/** Complete any setup that is needed after open
+* @pre Window is open
+*/
+void GlWindow::finishSetup()
+{
+   vprASSERT(window_is_open && "Pre-condition of being open failed");
+
+   // --- Setup any attached simulator that is needed --- //
+   Viewport* viewport = NULL;
+   SimViewport* sim_vp = NULL;
+   unsigned num_vps = mDisplay->getNumViewports();
+   for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
+   {
+      viewport = mDisplay->getViewport(vp_num);
+      if(viewport->isSimulator())
+      {
+         sim_vp = dynamic_cast<SimViewport*>(viewport);
+         vprASSERT(NULL != sim_vp && "isSimulator lied");
+         
+         DrawSimInterface* draw_sim = sim_vp->getDrawSimInterface();
+         GlSimInterface* gl_draw_sim = dynamic_cast<GlSimInterface*>(draw_sim);
+         if(NULL != gl_draw_sim)
+         {
+            // Setup the simulator
+            // - Get the keyboard device
+            // - Register a proxy that we will use
+            // - Make device interface for that proxy
+            // - Intialize the simulator
+            vprASSERT(mAreKeyboardDevice && "Tried to use simulator with a non-keyboard enabled GL window. Bad programmer.");
+            gadget::Keyboard* kb_dev = dynamic_cast<gadget::Keyboard*>(this);
+            gadget::Input* input_dev = dynamic_cast<gadget::Input*>(this);
+            vprASSERT((kb_dev != NULL) && (input_dev != NULL) && "Failed to cast glWindow impl to a gadget::keyboard");
+            std::string kb_dev_name = input_dev->getInstanceName();
+            vprASSERT( gadget::InputManager::instance()->getDevice(kb_dev_name) != NULL);
+            
+            gadget::KeyboardProxy* kb_proxy = new gadget::KeyboardProxy;
+            kb_proxy->set(kb_dev_name, kb_dev);
+            
+            std::string kb_proxy_name("GlWin-Sim-Keyboard-");
+            kb_proxy_name += kb_dev_name;
+            kb_proxy_name += std::string("-Proxy");
+            kb_proxy->setName(kb_proxy_name);
+            bool add_success = gadget::InputManager::instance()->addProxy(kb_proxy);
+            vprASSERT(add_success && "Failed to add sim wind kb proxy: Check for unique name");
+
+            gadget::KeyboardInterface kb_interface;
+            kb_interface.setProxy(kb_proxy);
+
+            gl_draw_sim->setKeyboard(kb_interface);          // Initialize the simulator
+         }
+         else
+         {
+            vprASSERT(false && "You configured a simulator window and I can find now DrawSimInterface for it");
+         }
+      }
+   }
+
+}
+
 
 
 void GlWindow::updateViewport()

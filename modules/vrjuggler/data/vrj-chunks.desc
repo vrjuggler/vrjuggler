@@ -210,6 +210,36 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="default_simulator" name="DefaultSimulator">
+    <category>Display/Simulator</category>
+    <help />
+    <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
+      <help>This is the pos proxy that controls the sim view</help>
+      <item label="Camera Position" defaultvalue="" />
+      <allowedtype>PosProxy</allowedtype>
+      <allowedtype>proxyAlias</allowedtype>
+    </PropertyDesc>
+    <PropertyDesc token="wandPos" name="wandPos" type="chunk" variable="0">
+      <help>The wand pos proxy to use in the simulator.</help>
+      <item label="Wand Position" defaultvalue="" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>PosProxy</allowedtype>
+    </PropertyDesc>
+    <PropertyDesc token="drawProjections" name="drawProjections" type="bool" variable="0">
+      <help>Should projections be drawn in the simulator?</help>
+      <item label="Draw Projections" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="surfaceColor" name="surfaceColor" type="float" variable="0">
+      <help>What color should the surfaces be?</help>
+      <item label="red" defaultvalue="0.0" />
+      <item label="green" defaultvalue="0.0" />
+      <item label="blue" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="vert_fov" name="Vertical FOV" type="float" variable="0">
+      <help>Vertical field of view in degrees</help>
+      <item label="Vertical Field Of View" defaultvalue="80.0" />
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="DigProxy" name="Digital Proxy" version="1.0">
     <category>Proxies</category>
     <help>Used to access a single digital (binary) input source</help>
@@ -1425,49 +1455,24 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="right_eye" value="2" />
       <enumeration name="stereo" value="3" />
     </PropertyDesc>
-    <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
-      <help>This is the pos proxy that controls the sim view</help>
-      <item label="Camera Position" defaultvalue="" />
-      <allowedtype>PosProxy</allowedtype>
-      <allowedtype>proxyAlias</allowedtype>
-    </PropertyDesc>
     <PropertyDesc token="user" name="user" type="chunk" variable="0">
       <help>This is the user that the window is drawing for.</help>
       <item label="User" defaultvalue="" />
       <allowedtype>JugglerUser</allowedtype>
     </PropertyDesc>
-    <PropertyDesc token="wandPos" name="wandPos" type="chunk" variable="0">
-      <help>The wand pos proxy to use in the simulator.</help>
-      <item label="Wand Position" defaultvalue="" />
-      <allowedtype>proxyAlias</allowedtype>
-      <allowedtype>PosProxy</allowedtype>
-    </PropertyDesc>
     <PropertyDesc token="active" name="active" type="bool" variable="0">
       <help>Is the window active?</help>
       <item label="Use this viewport?" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="drawProjections" name="drawProjections" type="bool" variable="0">
-      <help>Should projections be drawn in the simulator?</help>
-      <item label="Draw Projections" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="surfaceColor" name="surfaceColor" type="float" variable="0">
-      <help>What color should the surfaces be?</help>
-      <item label="red" defaultvalue="0.0" />
-      <item label="green" defaultvalue="0.0" />
-      <item label="blue" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="vert_fov" name="Vertical FOV" type="float" variable="0">
-      <help>Vertical field of view in degrees</help>
-      <item label="Vertical Field Of View" defaultvalue="80.0" />
     </PropertyDesc>
     <PropertyDesc name="Enable Sim Plug-in" token="hasSimPlugin" type="bool" variable="0">
       <item label="hasSimPlugin" defaultvalue="false" />
       <help>Does this viewport have a custom simulator plug-in?</help>
     </PropertyDesc>
-    <PropertyDesc name="Sim Plug-In" token="simPlugIn" type="embeddedchunk" variable="0">
+    <PropertyDesc name="Sim Plug-In" token="simPlugIn" type="embeddedchunk" variable="1">
       <item label="simPlugIn" />
-      <allowedtype>PySim</allowedtype>
+      <allowedtype>default_simulator</allowedtype>
       <help>Configuration of a simulator plug-in.</help>
+      <allowedtype>PySim</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Sound" name="Sound Object" version="1.0">

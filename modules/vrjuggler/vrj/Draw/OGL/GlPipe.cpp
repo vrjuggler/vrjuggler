@@ -50,6 +50,7 @@
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
+#include <vrj/Draw/OGL/GlSimInterface.h>
 
 namespace vrj
 {
@@ -268,14 +269,17 @@ void GlPipe::checkForNewWindows()
 
       for (unsigned int winNum=0; winNum<mNewWins.size(); winNum++)
       {
-          if (mNewWins[winNum]->open()) {
+          if (mNewWins[winNum]->open()) 
+          {
               mNewWins[winNum]->makeCurrent();
               vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window: "
                                         << mNewWins[winNum]->getDisplay()->getName().c_str()
                                         << std::endl << vprDEBUG_FLUSH;
+              mNewWins[winNum]->finishSetup();        // Complete any window open stuff
               mOpenWins.push_back(mNewWins[winNum]);
           }
-          else {
+          else 
+          {
               vprDEBUG(vprDBG_ALL,0) << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
                                    << mNewWins[winNum]->getDisplay()->getName().c_str()
                                    << std::endl << vprDEBUG_FLUSH;
@@ -384,12 +388,14 @@ void GlPipe::renderWindow(GlWindow* win)
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
          {
-            SimViewport* sim_vp(NULL);
+            SimViewport*      sim_vp(NULL);
+            GlSimInterface*   draw_sim_i(NULL);
 
             if(viewport->isSimulator())
             {
                sim_vp = dynamic_cast<SimViewport*>(viewport);
                vprASSERT(NULL != sim_vp);
+               draw_sim_i = dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
             }
 
             if((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
@@ -404,11 +410,10 @@ void GlPipe::renderWindow(GlWindow* win)
                               
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
 
-               glManager->drawObjects();
-               if(NULL != sim_vp)
+               if(NULL != draw_sim_i)
                {
-                  glManager->drawSimulator(sim_vp, scale_factor);
-               }
+                  draw_sim_i->draw(scale_factor);
+               }               
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/left draw objects and sim");
 
@@ -425,10 +430,9 @@ void GlPipe::renderWindow(GlWindow* win)
                               
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/right draw()");
 
-               glManager->drawObjects();
-               if(NULL != sim_vp)
+               if(NULL != draw_sim_i)
                {
-                  glManager->drawSimulator(sim_vp,scale_factor);
+                  draw_sim_i->draw(scale_factor);
                }
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/right draw objects and sim");

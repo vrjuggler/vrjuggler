@@ -35,15 +35,12 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-//#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
-#include <gadget/Type/PositionInterface.h>
-
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
+#include <vrj/Draw/DrawSimInterface.h>
+
 
 namespace vrj
 {
@@ -63,38 +60,11 @@ public:
    */
    virtual void updateProjections(const float positionScale);
 
-   gmtl::Matrix44f getCameraPos()
-   { return mCameraPos; }
-
-   gmtl::Matrix44f getHeadPos()
-   { return mHeadPos; }
-
-   gmtl::Matrix44f getWandPos()
-   { return mWandPos; }
-
-
-public:  // Sim Drawing parameters
-   bool shouldDrawProjections()
-   { return mDrawProjections; }
-
-   gmtl::Vec3f getSurfaceColor()
-   { return mSurfaceColor; }
+   DrawSimInterface* getDrawSimInterface()
+   { return mSimulator; }
 
 protected:
-    /**  Update internal simulator data */
-   void updateInternalData(float positionScale);
-
-private:
-   // Drawing attributes
-   bool   mDrawProjections;       /**< Should we draw projections */
-   gmtl::Vec3f   mSurfaceColor;   /**< Color to draw surfaces */
-
-   gadget::PositionInterface mCamera; /**< Proxy interfaces to devices needed */
-   gadget::PositionInterface mWand;
-
-   gmtl::Matrix44f    mCameraPos;    /**< The data about the position of all this stuff */
-   gmtl::Matrix44f    mHeadPos;
-   gmtl::Matrix44f    mWandPos;
+   DrawSimInterface*    mSimulator;    /**< The simulator that we are using here */
 };
 
 };

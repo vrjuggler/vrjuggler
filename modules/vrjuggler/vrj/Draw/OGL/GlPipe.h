@@ -34,6 +34,7 @@
 #define _VRJ_GL_PIPE_H_
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
@@ -171,6 +172,11 @@ private:
 
    /** Swaps the buffers of the given window. */
    void swapWindowBuffers(GlWindow* win);
+
+   /** Do any other window setup stuff that is needed after the window is open
+   * @pre Window is open and is current
+   */
+   void finishWindowSetup(GlWindow* win);
 
    GlPipe(const GlPipe& o) {;}
    void operator=(const GlPipe& o) {;}

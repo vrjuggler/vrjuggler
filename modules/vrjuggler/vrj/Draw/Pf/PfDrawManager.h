@@ -35,6 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vector>
 #include <functional>
 #include <algorithm>
 

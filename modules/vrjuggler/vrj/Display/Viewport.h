@@ -178,8 +178,8 @@ protected:
 
    Display*          mDisplay;            /**< The parent display */
 
-   jccl::ConfigChunkPtr mViewportChunk;        /**< The chunk data for this display */
-   jccl::LabeledPerfDataBuffer mLatencyMeasure;
+   jccl::ConfigChunkPtr          mViewportChunk;        /**< The chunk data for this display */
+   jccl::LabeledPerfDataBuffer   mLatencyMeasure;
 
    /** @name Location and size of viewport
    * ASSERT: all values are >= 0.0 and <= 1.0

@@ -34,6 +34,7 @@
 #define _VJ_GL_WINDOW_H_
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <stdio.h>
 #include <vpr/vpr.h>
@@ -77,6 +78,7 @@ public:
 
       window_width = window_height = 0;
       origin_x = origin_y = 0;
+      mAreKeyboardDevice = false;
    }
 
    // Cirtual destructor
@@ -117,6 +119,11 @@ public:
     * Handles any window events that have occured.
     */
    virtual void checkEvents() {;}
+
+   /** Complete any setup that is needed after open
+   * @pre Window is open
+   */
+   virtual void finishSetup();
 
 public:
    /** Sets the projection matrix for this window to proj. */
@@ -183,6 +190,9 @@ public:
    bool isStereo()
    { return in_stereo;}
 
+   bool isKeyboardDevice()
+   { return mAreKeyboardDevice; }
+
    vrj::Display* getDisplay()
    { return mDisplay;}
 
@@ -238,6 +248,7 @@ protected:
    int  window_width, window_height;
    int  origin_x, origin_y;         /**< lower-left corner of window */
    int  mWindowId;                  /**< A unique window id to identify us */
+   bool  mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
 
 private:
    static vpr::Mutex mWinIdMutex;
