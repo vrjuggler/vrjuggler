@@ -18,4 +18,4 @@
 # in addition to the first matching regex or "DEFAULT".
 #
 #
-ALL			perl $CVSROOT/CVSROOT/commitcheck
+ALL			/usr/bin/perl $CVSROOT/CVSROOT/commitcheck

@@ -6,7 +6,7 @@
 #
 
 # If the script succeeds, then we fail.
-if perl $CVSROOT/CVSROOT/log_verify.pl ${1+"$@"}
+if /usr/bin/perl $CVSROOT/CVSROOT/log_verify.pl ${1+"$@"}
 then
   exit 0
 else
