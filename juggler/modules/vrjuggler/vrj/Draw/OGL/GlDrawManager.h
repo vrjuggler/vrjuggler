@@ -196,7 +196,9 @@ public:
    }
 protected:
    vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
-   { ;}
+   {
+      mQuadObj = NULL;
+   }
 private:
    static vjGlDrawManager* _instance;
 };
