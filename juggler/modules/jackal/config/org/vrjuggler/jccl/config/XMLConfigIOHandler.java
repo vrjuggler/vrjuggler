@@ -396,7 +396,16 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         boolean retval = true;
 
         ValType vt = p.getValType();
-        if (vt == ValType.STRING || vt == ValType.CHUNK) {
+        if (vt == ValType.CHUNK) {
+            // don't check enums for this type, because it contains a list
+            // of allowed chunk _types_, not chunk references.
+            while ((s = stringTokenizer (buf)) != null) {
+                v = new VarValue(ValType.CHUNK);
+                v.set (s);
+                p.setValue (v, startval++);
+            }
+        }
+        else if (vt == ValType.STRING) {
             while ((s = stringTokenizer (buf)) != null) {
                 v = p.desc.getEnumValue (s);
                 p.setValue (v, startval++);
