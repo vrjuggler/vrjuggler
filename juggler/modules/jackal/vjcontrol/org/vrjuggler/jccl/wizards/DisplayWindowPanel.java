@@ -29,28 +29,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjWizards;
+package org.vrjuggler.jccl.wizards;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-import VjWizards.*;
-import VjConfig.*;
-import VjControl.Core;
-import VjComponents.UI.Widgets.*;
-import VjComponents.ConfigEditor.ConfigUIHelper;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /**
  * Title:        VjControl Sim Wizard GUI
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:      VRAC
- * @author Christopher Just
- * @version 1.0
  */
 
 public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusListener, ActionListener {

@@ -29,15 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjWizards;
+package org.vrjuggler.jccl.wizards;
 
 import java.io.*;
 import javax.swing.*;
-import VjConfig.*;
-import VjComponents.ConfigEditor.ConfigUIHelper;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
 
 public class BeginnerSubPanel1 extends JPanel implements WizardSubPanel {
 
