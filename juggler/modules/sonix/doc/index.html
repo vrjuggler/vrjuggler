@@ -31,11 +31,16 @@
 <BODY>
    <H1><b class="blue">::|&nbsp;</b>SONIX</H1>
    <small><B class="puke">the VRJUGGLER</B><BR>
-   lowlevel sound abstraction</small><BR>
+   highlevel simple sound abstraction</small><BR>
    <HR>
    <b class="blue">&nbsp;:&nbsp;intro to sonix&nbsp;:&nbsp;</b>
    <p>
-   sonix is a subsystem abstraction for audio hardware or audio APIs, reconfigurable
+   sonix is a high level abstraction for audio hardware or audio APIs,
+   The interface to sonix is kept very very simple in order to get people
+   up and running with sound as fast as possible...
+
+   <p>
+   sonix is reconfigurable
    allowing audio APIs to be safely swapped out at runtime without the
    dependant systems noticing.  systems using this layer expect to be
    completely portable.  changing sound APIs at run time will be useful so 
