@@ -357,7 +357,6 @@ public:
       test_suite->addTest( new TestCaller<SocketTest>("Open/CloseTest", &SocketTest::openCloseTest));
       test_suite->addTest( new TestCaller<SocketTest>("ReuseAddrTest", &SocketTest::reuseAddrTest));
       test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
-      test_suite->addTest( new TestCaller<SocketTest>("ReuseAddrTest", &SocketTest::reuseAddrTest));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       return test_suite;
    }
