@@ -522,8 +522,7 @@ def generateAntBuildFiles():
 
       tweek_ext_jars = [
          os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'ui.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'wizard.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'WizardBuilder.jar')
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'wizard.jar')
       ]
 
       jccl_jars = [
@@ -816,7 +815,7 @@ def installTweekJava(prefix):
       ]
 
       beans     = ['Viewers']
-      ext_beans = ['WizardBuilder']
+      ext_beans = []
 
       destdir = os.path.join(prefix, 'share', 'tweek', 'java')
       mkinstalldirs(destdir)
