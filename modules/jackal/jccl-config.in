@@ -150,8 +150,8 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'linker' => \$use_linker, 'static' => \$echo_static,
            'profiled' => \$echo_profiled,
            'jars' => \$echo_jars,
-           'too-much-pressure' => \$echo_has_cxx,
-           'is-jittery' => \$echo_has_java);
+           'has-cxx' => \$echo_has_cxx,
+           'has-java' => \$echo_has_java);
 
 usage(0) if $script_help;
 
