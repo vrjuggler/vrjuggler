@@ -31,7 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
+#include <assert.h>
 #include <Math/vjQuat.h>
+
 
 void vjQuat::makeQuat(const vjMatrix& mat)
 {
