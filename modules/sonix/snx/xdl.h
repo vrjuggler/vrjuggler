@@ -30,17 +30,19 @@
 #ifndef XDL_XDL_H
 #define XDL_XDL_H
 
-#ifndef __APPLE__
-
 #include <iostream>  // for debug output..
 #include <string>    // for std::string
 #include <memory.h>  // for NULL
 
-#ifndef WIN32
-#  include <dlfcn.h>   // for dlopen functions...
-#else
+#ifdef WIN32
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
+#else
+#ifdef __APPLE__
+
+#else
+#  include <dlfcn.h>   // for dlopen functions...
+#endif
 #endif
 
 // for libraries: UNIX needs -ldl, Win32 needs Kernel32.lib
@@ -231,8 +233,100 @@ namespace xdl
       HMODULE mLibHandle;
    };
 
-   typedef LibraryWin32 Library;
+   typedef LibraryWin32 Library; 
 
+#else
+
+#ifdef __APPLE__
+    /**
+    * OS X implementation of xdl::ILibrary
+    * Stubbed out for now
+    */
+   class LibraryOSX : public ILibrary
+   {
+   public:
+      LibraryOSX() : mLibHandle( NULL ) {}
+
+      virtual ~LibraryOSX()
+      {
+         if ( mLibHandle != NULL )
+            this->close();
+      }
+
+      /**
+       * Open the library contained in the given file.
+       *
+       * @param libraryFile   the path to the file containing the library
+       * @param flag          specifies when to resolve undefined symbols in
+       *                      in the library (now or as needed).
+       *
+       * @return  true if successful, false otherwise
+       */
+      virtual bool open( const char *libraryFile, const Flag& flag = NOW )
+      {
+         return false; //Stub
+         /*
+         int f;
+         switch (flag)
+         {
+            case LAZY: f = RTLD_LAZY; break;
+            case NOW: f = RTLD_NOW; break;
+         }
+         mLibHandle = ::dlopen( libraryFile, f );
+         if ( mLibHandle != NULL )
+            return true;
+         else
+         {
+            //std::cout<< "[xdl] " << ::dlerror()<<"\n"<<std::flush;
+            return false;
+         }
+         */
+      }
+
+      /**
+       * Attempts to resolve the given symbol in the library and determine its
+       * address in memory. Results are undefined if the library is not open.
+       *
+       * @param symbol        the symbol to resolve
+       *
+       * @return  a pointer to the symbol if successful, NULL otherwise
+       */
+      virtual void* lookup( const char* symbol )
+      {
+         return NULL; //Stub
+         /*
+         if ( mLibHandle == NULL ) return NULL;
+         return ::dlsym( mLibHandle, symbol );
+         */
+      }
+
+      /**
+       * Close the library. Results are undefined if the library is not open.
+       *
+       * @return  true if successful, false otherwise
+       */
+      virtual bool close()
+      {
+         return false;  //stub
+         /*
+         void* handle = mLibHandle;
+         mLibHandle = NULL;
+         if ( ::dlclose( handle ) == 0 )
+            return true;
+         else
+            return false;
+        */
+      }
+
+   private:
+      void* mLibHandle;
+   };
+
+   typedef LibraryOSX Library;
+    
+    
+    
+    
 #else
 
    /**
@@ -311,9 +405,8 @@ namespace xdl
 
    typedef LibraryUnix Library;
 #endif
+#endif
 
 } // namespace xdl
-
-#endif //Stub out on OS X
 
 #endif
