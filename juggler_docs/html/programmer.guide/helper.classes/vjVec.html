@@ -499,6 +499,46 @@
     Now, <TT>vec1</TT> has the value &lt;-0.5,&nbsp;0.5,&nbsp;0.0&gt;.
   </P>
 
+<H4><A NAME="xform_matrix">Full Transformation by a Matrix</A></H4>
+
+  <P>
+    It is often helpful to apply a transformation to a vector.
+    Transformations are represented by a matrix, so it is necessary to
+    multiply a matrix and a vector.  The method <TT>xformFull()</TT>
+    does this job.  For the following example, assume that you have a
+    <TT>vjMatrix</TT> transformation matrix <TT>xform_mat</TT>:
+
+<PRE>
+    vjVec3 vec(1.0, 1.0, 1.0);
+
+    vec.xformFull(xform_mat);
+</PRE>
+
+    Depending on the transformations contained within <TT>xform_mat</TT>,
+    <TT>vec</TT> will be fully transformed appropriately.
+  </P>
+
+<H4><A NAME="xform_vec">Partial Transformation by a Matrix</A></H4>
+
+  <P>
+    Besides full transformations, it is possible to apply all
+    transformations in a matrix <I>except</I> translation.  (The
+    usefulness of this is left as an exercise for the reader.)  Again
+    assume that you have a <TT>vjMatrix</TT> transformation matrix
+    <TT>xform_mat</TT>:
+
+<PRE>
+    vjVec3 vec(1.0, 1.0, 1.0);
+
+    vec.xformVec(xform_mat);
+</PRE>
+
+    In this case, all transformations in <TT>xform_mat</TT> except
+    translation will be applied to <TT>vec</TT>.  The naming convention
+    here is not terribly helpful, but this documentation is intended to
+    get around that.
+  </P>
+
 <H3><A NAME="details">The Gory Details</A></H3>
 
   <P>
