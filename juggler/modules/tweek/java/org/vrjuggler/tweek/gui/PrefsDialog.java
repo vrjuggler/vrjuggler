@@ -227,8 +227,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
       mLevelBox.setMaximumSize(new Dimension(130, 26));
-      mLevelBox.setMinimumSize(new Dimension(30, 26));
-      mLevelBox.setPreferredSize(new Dimension(40, 26));
+      mLevelBox.setMinimumSize(new Dimension(70, 26));
+      mLevelBox.setPreferredSize(new Dimension(70, 26));
       mViewerBox.setMaximumSize(new Dimension(32767, 26));
       mViewerBox.setMinimumSize(new Dimension(126, 26));
       mViewerBox.setPreferredSize(new Dimension(130, 26));
@@ -292,19 +292,18 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mWinSizeLabel.setText("Window Size");
       mWinSizeTable.setCellSelectionEnabled(true);
       mWinSizeTable.setRowSelectionAllowed(false);
-      mWinSizeTablePane.setMaximumSize(new Dimension(32767, 45));
-      mWinSizeTablePane.setMinimumSize(new Dimension(150, 32));
-      mWinSizeTablePane.setPreferredSize(new Dimension(150, 32));
+      mWinSizeTablePane.setMinimumSize(new Dimension(150, 45));
+      mWinSizeTablePane.setPreferredSize(new Dimension(150, 45));
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mSaveButton, null);
       mButtonPanel.add(mCancelButton, null);
-      this.getContentPane().add(mContentPane, BorderLayout.NORTH);
+      this.getContentPane().add(mContentPane,  BorderLayout.CENTER);
       mContentPane.add(mGeneralPanel,   "General");
       mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
       mGenConfigPanel.add(mLevelLabel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mLevelBox,    new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+      mGenConfigPanel.add(mLevelBox,      new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
       mGenConfigPanel.add(mLafLabel,  new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
       mGenConfigPanel.add(mLafBox,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
