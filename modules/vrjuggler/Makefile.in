@@ -333,6 +333,7 @@ _clean:
 	@echo "Cleaning up the source tree"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="clean" recursive
+	cd GUI && ${MAKE} clean
 	@if test -d ${DBG_BUILDDIR}; then				\
             echo "------------------------------------------------" ;	\
             echo "Cleaning in ${DBG_BUILDDIR} ..."                  ;	\
@@ -352,7 +353,7 @@ _clean:
 	-@rm -f .*_done
 	rm -f so_locations
 	@echo "------------------------------------------------"
-	@echo "Done"
+	@echo "Done with 'clean'"
 	@echo "------------------------------------------------"
 
 clobber: _clean
@@ -372,7 +373,7 @@ clobber: _clean
             rm -rf ${OPT_BUILDDIR} ;					\
         fi
 	@echo "------------------------------------------------"
-	@echo "Done"
+	@echo "Done with 'clobber'"
 	@echo "------------------------------------------------"
 
 # -----------------------------------------------------------------------------
