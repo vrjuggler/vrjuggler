@@ -667,7 +667,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
    DYLIB_PROF_DEPS="$DYLIB_DEPS"
 else
    DYLIB_DEPS="$VPR_LIBS_CC_MIN"
-   DYLIB_PROF_DEPS="$VPR_LIBS_CC_PROF_MIN"
+   DYLIB_PROF_DEPS="$VPR_PROF_LIBS_CC_MIN"
 fi
 
 # Information needed to generate tweek-config.
@@ -686,12 +686,14 @@ case $OS_TYPE in
       tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
       tweek_ldflags_linker="$tweek_ldflags_compiler"
       tweek_libs="-ltweek"
+      tweek_prof_libs="-ltweek_p"
       tweek_extra_libs="$CXX_ORB_LIB"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
       tweek_libs="tweek.lib"
+      tweek_prof_libs="tweek.lib"
       tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
       ;;
 esac
@@ -784,6 +786,7 @@ AC_SUBST(tweek_cxxflags)
 AC_SUBST(tweek_ldflags_compiler)
 AC_SUBST(tweek_ldflags_linker)
 AC_SUBST(tweek_libs)
+AC_SUBST(tweek_prof_libs)
 AC_SUBST(tweek_extra_cxxflags)
 AC_SUBST(tweek_extra_include_dirs)
 AC_SUBST(tweek_extra_ldflags)
