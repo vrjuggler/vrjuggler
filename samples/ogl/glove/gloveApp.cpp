@@ -30,18 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <Input/vjGlove/fsPinchGlove.h>
 #include <Input/vjGlove/vjPinchGlove.h>
 
 #include <gloveApp.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 void gloveApp::renderLightsAndMaterials()
 {
