@@ -28,6 +28,12 @@ class reference {
 @__hiddenMember <oiref:cpp#Member#sonix#getListenerPosition#(#vrj::Matrix&#)#:oiref> 
 */
 class reference29 {
+}/**
+@__ref <oiref:design#Class#id3ejb0cyd7c8e2cyd7fuwu.diagram:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference1 {
 }}/**
 
 @__tags
@@ -41,7 +47,9 @@ filter.d.state = off
 class __options {
 }/**
 @__positions <oigroup:<oiref:cpp#Class#sonix:oiref>=310,20,240,210,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundHandle#lnksonix:oiref>=270,125,310,125:oigroup>
 <oigroup:<oiref:cpp#Class#snx::SoundHandle:oiref>=20,20,250,290,0:oigroup>
+<oigroup:<oiref:design#Class#id3ejb0cyd7c8e2cyd7fuwu.diagram:oiref>=463,423,156,114,1:oigroup>
 */
 class __positions {
 }
