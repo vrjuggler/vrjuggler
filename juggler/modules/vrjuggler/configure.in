@@ -1857,16 +1857,52 @@ else
 END_DIST
 fi
 
-AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
-          GUI/Makefile Input/Makefile Input/Filter/Makefile
-          Input/Multi/Makefile Input/InputManager/Makefile Input/ibox/Makefile
-          Input/vjGesture/Makefile Input/vjGlove/Makefile
-          Input/vjInput/Makefile Input/vjKeyboard/Makefile
-          Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
-          Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
-          Performance/Makefile SharedMem/Makefile Sound/Makefile
-          Sound/aw/Makefile Sound/pf/Makefile Sound/sl/Makefile Sync/Makefile
-          Threads/Makefile Utils/Makefile
+AC_OUTPUT(Makefile
+          Makefile.base
+          Config/Makefile
+          Environment/Makefile
+          GUI/Makefile
+          Input/Makefile
+          Input/Filter/Makefile
+          Input/InputManager/Makefile
+          Input/Multi/Makefile
+          Input/ibox/Makefile
+          Input/vjGesture/Makefile
+          Input/vjGlove/Makefile
+          Input/vjInput/Makefile
+          Input/vjKeyboard/Makefile
+          Input/vjPosition/Makefile
+          Input/vjSim/Makefile
+          Kernel/Makefile
+          Kernel/GL/Makefile
+          Kernel/Pf/Makefile
+          Math/Makefile
+          Performance/Makefile
+          SharedMem/Makefile
+          Sound/Makefile
+          Sound/aw/Makefile
+          Sound/sl/Makefile
+          Sound/pf/Makefile
+          Sync/Makefile
+          Threads/Makefile
+          Utils/Makefile
+          samples/Makefile
+          samples/ogl/Makefile
+          samples/ogl/combo/Makefile
+          samples/ogl/cubes/Makefile
+          samples/ogl/glove/Makefile
+          samples/ogl/digitalGlove/Makefile
+          samples/ogl/simpleGlove/Makefile
+          samples/ogl/torus/Makefile
+          samples/ogl/wand/Makefile
+          samples/pf/Makefile
+          samples/pf/pfConfigNav/Makefile
+          samples/pf/pfNav/Makefile
+          test/TestSuite/Makefile
+          test/TestSuite/mk/mk.defs
+          test/TestSuite/mk/mk.objs
+          test/TestSuite/mk/mk.depend
+          test/TestSuite/mk/mk.hosttype
           test/old/Makefile 
           test/old/CfgTest/Makefile 
           test/old/GLWindow/Makefile
@@ -1880,21 +1916,14 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           test/old/input/Makefile
           test/old/testDynamicCastSTL/Makefile 
           test/old/threads/Makefile
-          samples/Makefile samples/ogl/Makefile samples/ogl/combo/Makefile
-          samples/ogl/cubes/Makefile samples/ogl/glove/Makefile
-          samples/ogl/digitalGlove/Makefile samples/ogl/simpleGlove/Makefile
-          samples/ogl/torus/Makefile samples/ogl/wand/Makefile
-          samples/pf/Makefile samples/pf/pfConfigNav/Makefile
-          samples/pf/pfNav/Makefile
-          tools/Makefile Doc/Makefile
-          release/mtree/VJ.data.dist release/mtree/VJ.include.dist
-          release/mtree/VJ.install.dist release/mtree/VJ.samples.dist
-          release/mtree/VJ.test.dist release/mtree/VJ.tools.dist
-          test/TestSuite/Makefile
-          test/TestSuite/mk/mk.defs
-          test/TestSuite/mk/mk.objs
-          test/TestSuite/mk/mk.depend
-          test/TestSuite/mk/mk.hosttype
+          tools/Makefile
+          Doc/Makefile
+          release/mtree/VJ.data.dist
+          release/mtree/VJ.include.dist
+          release/mtree/VJ.install.dist
+          release/mtree/VJ.samples.dist
+          release/mtree/VJ.test.dist
+          release/mtree/VJ.tools.dist
           VARS.pl)
 
 cat <<BUILD_INFO
