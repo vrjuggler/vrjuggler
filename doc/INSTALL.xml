@@ -73,10 +73,11 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                <para>To simplify shared use of a single configuration file, the contents of the file may be overridden on the command line or using an <quote>overrides</quote> file. The following shows such a file that overrides the CVSROOT settings in <filename>deps.esrc</filename>:</para>
                <programlisting>      #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler 
       Doozer.CVSROOT=patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
-      GMTL.*.CVSROOT=patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
+      Doozer++.CVSROOT=patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
+      GMTL.CVSROOT=patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
                <para>The current <filename>deps.esrc</filename> only allows anonymous CVS access. To override that, we suggest making per-user override files. To use the override file, just add the argument <option>--override=&lt;filename&gt;</option> when running <command>cvs-gather</command>.</para>
-               <para>The following shows how to run <command>cvs-gather</command> with your own overrides file:</para>
-               <screen>cvs-gather.pl --cfg=deps.gatherrc --override=anonuser.gatheroverride</screen>
+               <para>The following shows how to run <command>cvs-gather</command> with your own overrides file (called <filename>my_gatheroverride</filename>):</para>
+               <screen>cvs-gather.pl --cfg=deps.gatherrc --override=my_gatheroverride</screen>
                <para>If all goes well, you'll get everything you need to compile.</para>
             </section>
          </section>
@@ -101,15 +102,15 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                   <screen>cd build.linux.posix</screen>
                </listitem>
                <listitem>
-                  <para>Configure all the Juggler modules. This is when you must tell the module configure scripts where all the package dependencies are.</para>
-                  <screen>../configure.pl --cfg=../juggler.cfg --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1 --with-gmtl-include=/var/tmp/patrick/juggler/modules/GMTL</screen>
+                  <para>Configure all the Juggler modules. This is when you must tell the module configure scripts where all the package dependencies are found.</para>
+                  <screen>../configure.pl --cfg=../juggler.cfg --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1</screen>
+                  <para>In this case, the interesting configuration options are the path to the Xerces-C installation directory and the basic name of the Xerces-C library. The basic library name comes from the actual library name. For example, on UNIX-based systems, the Xerces-C 1.5.1 library is called <filename>libxerces-c1_5_1.so</filename>; on Win32, it is <filename>xerces-c_1.lib</filename>. The configure script only needs the <emphasis>unique</emphasis> part of the name: <filename>xerces-c1_5_1</filename> or <filename>xerces-c_1</filename>.</para>
                </listitem>
                <listitem>
                   <para>Compile the source tree using GNU make.</para>
                   <screen>gmake</screen>
                </listitem>
             </orderedlist>
-            <para>Note that the path to GMTL must be the <emphasis>absolute</emphasis> path to the parent directory containing the <filename>gmtl</filename> directory. That is where the GMTL headers live. Do not set it to <filename>&lt;path&gt;/modules/GMTL/gmtl</filename>--instead you only need to set it to <filename>&lt;path&gt;/modules/GMTL</filename>.</para>
          </section>
          <section>
             <title>Compiling individual tools in the Juggler suite</title>
