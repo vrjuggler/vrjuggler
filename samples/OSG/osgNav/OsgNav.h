@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:			 wandApp.h,v
- * Date modified: 2000/10/30 16:06:10
- * Version:		 1.19
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
