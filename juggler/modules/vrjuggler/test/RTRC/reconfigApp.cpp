@@ -51,6 +51,7 @@
 #include <gadget/Devices/EventWindow/EventWindowXWin.h>
 #include <gadget/Type/AnalogProxy.h>
 
+#include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Util/Debug.h>
 #include <reconfigApp.h>
