@@ -29,7 +29,9 @@ srcdir=		@srcdir@
 
 MOD_NAME=	gmtlnet
 
-SRCS=		gmtl_Matrix33f.cs	\
+SRCS=		Gmtl.cs			\
+		Math.cs			\
+		gmtl_Matrix33f.cs	\
 		gmtl_Matrix44f.cs	\
 		gmtl_Quatf.cs		\
 		gmtl_VecBase_float_3.cs	\

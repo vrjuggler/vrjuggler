@@ -1,0 +1,80 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VRJ.NET is (C) Copyright 2004 by Patrick Hartling
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+// Generated from Revision: 1.1 of RCSfile: free_function_cs.tmpl,v
+using System;
+using System.Runtime.InteropServices;
+
+namespace gmtl
+{
+
+public sealed abstract class Math
+{
+   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   private extern static double gmtl_Math_deg2Rad__double(double p0);
+
+   public static double deg2Rad(double p0)
+   {
+      double result;
+      result = gmtl_Math_deg2Rad__double(p0);
+      return result;
+   }
+
+   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   private extern static float gmtl_Math_deg2Rad__float(float p0);
+
+   public static float deg2Rad(float p0)
+   {
+      float result;
+      result = gmtl_Math_deg2Rad__float(p0);
+      return result;
+   }
+
+   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   private extern static double gmtl_Math_rad2Deg__double(double p0);
+
+   public static double rad2Deg(double p0)
+   {
+      double result;
+      result = gmtl_Math_rad2Deg__double(p0);
+      return result;
+   }
+
+   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   private extern static float gmtl_Math_rad2Deg__float(float p0);
+
+   public static float rad2Deg(float p0)
+   {
+      float result;
+      result = gmtl_Math_rad2Deg__float(p0);
+      return result;
+   }
+
+}
+
+
+} // namespace gmtl

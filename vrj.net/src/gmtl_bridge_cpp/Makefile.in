@@ -33,7 +33,9 @@ EXTRA_INCLUDES=	-I$(top_srcdir)/src $(shell vpr-config --includes)
 EXTRA_LDFLAGS=	
 MOD_NAME=	gmtl
 
-SRCS=		gmtl_Matrix33f.cpp		\
+SRCS=		Gmtl.cpp			\
+		Math.cpp			\
+		gmtl_Matrix33f.cpp		\
 		gmtl_Matrix44f.cpp		\
 		gmtl_Quatf.cpp			\
 		gmtl_VecBase_float_3.cpp	\
