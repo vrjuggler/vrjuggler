@@ -34,18 +34,17 @@
 #define _JCCL_RTRC_INTERFACE_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Net/JackalControl.h>
 
-#include <jccl/Util/Debug.h>
+#include <stdlib.h>
+#include <string>
 
 #include <tweek/CORBA/CorbaManager.h>
-
-#include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
 
 
 namespace jccl 
 {
 
+class RTRCInterfaceSubjectImpl;
 
 /** CORBA RTRC interface object. Handles configuration of the Tweek corba
  *  manager and creation of the interface subject.
@@ -105,6 +104,6 @@ private:
 
 };
 
-}; // namespace jccl
+} // namespace jccl
 
 #endif
