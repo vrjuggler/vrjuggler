@@ -41,6 +41,7 @@
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
+#include <vpr/Util/Interval.h>
 
 namespace gadget
 {
