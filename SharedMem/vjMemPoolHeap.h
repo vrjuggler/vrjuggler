@@ -50,7 +50,6 @@
 
 #include <vjConfig.h>
 #include <stdlib.h>
-#include <SharedMem/vjMemPool.h>
 
 
 class vjMemPoolHeap : public vjMemPool {
