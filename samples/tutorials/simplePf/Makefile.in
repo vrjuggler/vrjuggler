@@ -41,22 +41,19 @@
 srcdir		= @srcdir@
 
 EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ -all 
-COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+COMPILE		= @CXX@ @DEFS@ -I$(srcdir)  $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 
-AW_INCLUDES 	= @APP_EXTRA_INC_AW@
-AW_LIBS		= @APP_EXTRA_LIBS_AW@
-VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
-                  -I$(srcdir) -I$(VJ_BASE_DIR)/samples/nav		\
-                  -I$(VJ_BASE_DIR)/samples/pf/pfTools
-VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_VJ_LIBS_UTILS@ @APP_LIBS_BASIC@ 
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ \
+            @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_UTILS@ @APP_VJ_LIBS_END@ \
+            @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
-                  $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
-                  $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
+              $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
+              $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
 
-vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/samples/nav $(VJ_BASE_DIR)/samples/tools
-vpath %.cpp $(VJ_BASE_DIR)/samples/pf/pfTools
+vpath %.cpp $(srcdir)
 
 # This test program requires the following libraries to be linked:
 #
@@ -72,23 +69,17 @@ vpath %.cpp $(VJ_BASE_DIR)/samples/pf/pfTools
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-COMMON_OBJECTS	= pfFileIO.@OBJ_FILE_SUFFIX@		\
-                  pfTerryCollide.@OBJ_FILE_SUFFIX@	\
-                  pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
-                  pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
-                  pfMPStats.@OBJ_FILE_SUFFIX@
-
-PFNAV_OBJECTS	= pfNav.@OBJ_FILE_SUFFIX@ $(COMMON_OBJECTS)
+SIMPLEPF_OBJECTS	= main.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
-default: pfNav
+default: simplePf
 
-all: pfNav
+all: simplePf
 
-pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+simplePf: $(SIMPLEPF_OBJECTS) $(VJ_LIB_DEPS) $(srcdir)/simplePfApp.h
+	$(LINK) -o $@ $(SIMPLEPF_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
@@ -97,27 +88,7 @@ pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f pfNav $(PFNAV_OBJECTS) *core
+	rm -f simplePf $(SIMPLEPF_OBJECTS) *core
 	rm -rf ./ii_files
 
-# -----------------------------------------------------------------------------
-# Dependency stuff.
-# -----------------------------------------------------------------------------
-DEP_GEN_FLAG	= @DEP_GEN_FLAG@
-DEPEND_FILES	= $(PFNAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)
 
-# This expression reformats the output from the dependency text to be of the
-# form:
-#
-#     file1.o file1.d : ...
-#
-# where file1 is the value in $* and file1.d is $@.  It handles output from
-# the C and C++ compilers which prints only the object file to be created ($*).
-_CC_SED_EXP	= '\''s/\($*\)\.@OBJ_FILE_SUFFIX@[ :]*/.\/\1.@OBJ_FILE_SUFFIX@ $@: /g'\''
-
-%.d: %.cpp
-	@echo "Updating dependency file $@ ..."
-	@$(SHELL) -ec '$(COMPILE) $(DEP_GEN_FLAG) $< |			\
-                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
-
-include $(DEPEND_FILES)
