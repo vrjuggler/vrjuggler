@@ -75,7 +75,7 @@ public:
    ~NetDevice()
    {;}
    
-   void NetDevice::updateFromLocalSource()
+   void updateFromLocalSource()
    {
       mObjectWriter->getData()->clear();
       mObjectWriter->setCurPos(0);
