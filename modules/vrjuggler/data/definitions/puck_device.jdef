@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="puck_device" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd" >
+   <definition_version version="1" label="The Puck Device">
+      <abstract>false</abstract>
+      <help>Configuration for the Puck</help>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="device">
+         <help>The type of this device</help>
+         <value label="Device Name" defaultvalue="SpaceMouse"/>
+         <enumeration editable="false">
+            <enum label="The SpaceMouse or SpaceBall 5000" value="SpaceMouse" />
+            <enum label="The SpaceMouse Plus" value="SpaceMouse Plus XT" />
+            <enum label="The SpaceBall 2003B" value="SpaceBall 2003B" />
+            <enum label="The SpaceBall 4000 FLX" value="SpaceBall 4000 FLX" />
+         </enumeration>
+      </property>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port this device is connected to</help>
+         <value label="Port" defaultvalue="/dev/ttyS0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed</help>
+         <value label="Baud Rate" defaultvalue="9600"/>
+      </property>
+      <property valuetype="float" variable="false" name="min">
+         <help>The lower bound for the range of valid values for the analog data.</help>
+         <value label="Analog Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>The upper bound for the range of valid values for the analog data.</help>
+         <value label="Analog Maximum" defaultvalue="255.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
