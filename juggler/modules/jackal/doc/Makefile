@@ -18,4 +18,4 @@ instdir=	jccl/0.0.6/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
-include ../../../docs/doxygen.mk
+include ../../../doc/doxygen.mk
