@@ -59,12 +59,6 @@ sub groupLibdirArgs($);
 
 usage(1) if $#ARGV == -1;
 
-# ================ CHANGE THIS FOR YOUR LOCAL INSTALLATION ====================
-my $cxx_orb_root    = qq(@tweek_cxx_orb_root@);
-my $cxx_orb_bindir  = qq(@tweek_cxx_orb_bindir@);
-my $cxx_orb_ldflags = qq(@tweek_cxx_orb_ldflags@);
-# ================ CHANGE THIS FOR YOUR LOCAL INSTALLATION ====================
-
 my $tweek_default_abi = qq(@ABI@);
 my $tweek_default_isa = qq(@ISA@);
 my $tweek_n32_flags   = qq(@tweek_n32_flags@);
@@ -99,6 +93,13 @@ $Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
 
 my $base_dir = '';
 
+# Set the location of the collection of dependencies.  If $TWEEK_DEPS_DIR is
+# not defined, then $deps_dir will be an empty string.  If the dependencies
+# are installed in $TWEEK_BASE_DIR, then the user gets the right compiler and
+# linker path options for free.  Otherwise, it is up to the user to provide
+# those paths.
+my $deps_dir = "$ENV{'TWEEK_DEPS_DIR'}" if defined($ENV{'TWEEK_DEPS_DIR'});
+
 # Get the directory where this script is located.
 if ( defined($ENV{'TWEEK_BASE_DIR'}) )
 {
@@ -127,6 +128,10 @@ if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
 # defined.
 $prefix      = "$base_dir";
 $exec_prefix = qq(@exec_prefix@);
+
+my $cxx_orb_root   = "$deps_dir" || "$base_dir";
+my $cxx_orb_bindir = "$cxx_orb_root/" . (qq(@tweek_cxx_orb_bindir@) || 'bin');
+my $cxx_orb_libdir = "$cxx_orb_root/" . (qq(@tweek_cxx_orb_libdir@) || 'lib');
 
 $ECHO_PREFIX      = 0;
 $ECHO_EXEC_PREFIX = 0;
@@ -400,6 +405,7 @@ sub make_CXXFLAGS ($;$)
 
    my $cxxflags = qq(@tweek_cxxflags@ $dep_cxxflags $tweek_extra_cxxflags ) .
                   qq(-I@includedir@ $tweek_extra_includes);
+   $cxxflags   .= " -I$deps_dir/include" if $deps_dir;
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
@@ -492,10 +498,8 @@ sub make_EXTRA_LDFLAGS ($;$$)
       $LIBBITSUF = '64';
    }
 
-   # XXX: Fix me!!!
    my $extra_ldflags = qq(@tweek_extra_ldflags@);
-#   my $extra_ldflags = ($use_linker ? qq(@tweek_extra_ldflags_linker@)
-#                                    : qq(@tweek_extra_ldflags_compiler@));
+   $extra_ldflags    = "-L$cxx_orb_libdir $extra_ldflags";
 
    my $full_extra_ldflags = qq($extra_ldflags @tweek_extra_libs@ ) .
                             "$dep_libs $dep_extra_libs";
