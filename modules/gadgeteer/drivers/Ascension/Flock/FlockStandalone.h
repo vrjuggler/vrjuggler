@@ -221,6 +221,7 @@ namespace Flock
       const vpr::Uint8 BirdRateCount(0x6);
       const vpr::Uint8 BirdRate(0x7);
       const vpr::Uint8 BirdErrorCode(0xA);
+      const vpr::Uint8 BirdErrorMask(0xB);
       const vpr::Uint8 BirdSuddenChange(0xE);
       const vpr::Uint8 ModelIdentification(0xF);
       const vpr::Uint8 BirdExpandedErrorCode(0x10);
@@ -657,6 +658,9 @@ public:  // ---- Query methods for flock state ---- //
 
    /** Get the current expanded error code */
    std::pair<vpr::Uint8,vpr::Uint8> queryExpandedErrorCode();
+
+   void setErrorModeIgnore();
+   void setErrorModeStandard();
 
    /* Check for error, if there is, print out error message and throw exception
    * @throws: BirdErrorException

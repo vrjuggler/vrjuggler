@@ -153,25 +153,27 @@ vpr::ReturnStatus FlockStandalone::open ()
 {
    vpr::ReturnStatus ret_stat;
 
-   // Allocate the port if we need to
-   if ( NULL == mSerialPort )
-   {
-      mSerialPort = new vpr::SerialPort(mPort);
-      if (!mSerialPort)
-      {  return vpr::ReturnStatus::Fail; }
-   }
-
    // - Open and close the port to reset the tracker, then
    // - Open the port
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== Opening fob serial port: " << mPort << " =====\n" << vprDEBUG_FLUSH;
 
-   bool open_successfull(true);
+   bool open_successfull;
    unsigned attempt_num = 0;
    const unsigned max_open_attempts(7);
    // do-while(not successfull)
    //if(1)
    do
    {
+      open_successfull = true;
+
+      // Allocate the port if we need to
+      if ( NULL == mSerialPort )
+      {
+         mSerialPort = new vpr::SerialPort(mPort);
+         if (!mSerialPort)
+         {  return vpr::ReturnStatus::Fail; }
+      }
+
       mSerialPort->setOpenReadWrite();
 
       // - Open the port for the last time
@@ -245,6 +247,8 @@ vpr::ReturnStatus FlockStandalone::open ()
          {
             if (mSerialPort->isOpen())
             {  mSerialPort->close(); }
+            delete mSerialPort;
+            mSerialPort = NULL;
 
             vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "FlockStandalone::open: Failed to open successfully on attempt: "
                                                     << attempt_num << ".  Trying again...\n" << vprDEBUG_FLUSH;
@@ -270,6 +274,8 @@ vpr::ReturnStatus FlockStandalone::open ()
 */
 vpr::ReturnStatus FlockStandalone::configure()
 {
+   setErrorModeIgnore();      // Set to mode where fatal errors are ignored
+
    // Make sure we are called correctly
    vprASSERT((mStatus == FlockStandalone::OPEN) && "Tried to call configure with flock in wrong mode");
 
@@ -285,6 +291,7 @@ vpr::ReturnStatus FlockStandalone::configure()
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting group\n" << vprDEBUG_FLUSH;
       sendGroupCmd(true);        // Go into group mode
+      checkError();
    }
 
    // Set all parameters
@@ -304,7 +311,8 @@ vpr::ReturnStatus FlockStandalone::configure()
    if(Flock::Standalone != mMode)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
-      sendAutoconfigCmd(mActiveUnitEndIndex-1);
+      sendAutoconfigCmd(mActiveUnitEndIndex);
+      checkError();
 
       // Find address of transmitter to use
       vpr::Uint8 transmitter_addr(0);
@@ -314,9 +322,13 @@ vpr::ReturnStatus FlockStandalone::configure()
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter to addr: "
                                              << int(transmitter_addr) << "\n" << vprDEBUG_FLUSH;
       sendNextTransmitterCmd(transmitter_addr, 0);
+      checkError();
    }
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Flock configured and ready to run." << vprDEBUG_FLUSH;
+
+   // Check for errors
+   checkError();
 
    // flock is active.
    mStatus = FlockStandalone::RUNNING;
@@ -1032,9 +1044,9 @@ void FlockStandalone::sendAutoconfigCmd (vpr::Uint8 numUnits)
    std::vector<vpr::Uint8> params;
    params.push_back(numUnits);
 
-   vpr::System::msleep(600);
+   vpr::System::msleep(1000);
    setAttribute(Flock::Parameter::FbbAutoConfig,params);
-   vpr::System::msleep(600);
+   vpr::System::msleep(1000);
 }
 
 
@@ -1199,16 +1211,44 @@ std::pair<vpr::Uint8,vpr::Uint8> FlockStandalone::queryExpandedErrorCode()
    return std::make_pair(resp[0], resp[1]);
 }
 
-/* Check for error, if there is, print out error message and throw exception */
+void FlockStandalone::setErrorModeIgnore()
+{
+   std::vector<vpr::Uint8> param(1);
+   param[0] = 0x1;
+   setAttribute(Flock::Parameter::BirdErrorMask, param);   
+}
+
+void FlockStandalone::setErrorModeStandard()
+{
+   std::vector<vpr::Uint8> param(1);
+   param[0] = 0x0;
+   setAttribute(Flock::Parameter::BirdErrorMask, param);      
+}
+
+
+
+/* Check for error, if there are errors, print out error messages for all errors 
+and throw exception for last error.
+*/
 void FlockStandalone::checkError()
 {
    std::pair<vpr::Uint8,vpr::Uint8> errs = queryExpandedErrorCode();
+   std::pair<vpr::Uint8,vpr::Uint8> prev_err;
+   bool have_error_to_throw(false);
 
-   if(errs.first != 0)
+   while(errs.first != 0)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "ERROR: [FlockStandalone] Bird error: "
                   << Flock::getErrorDescription(errs.first, errs.second) << std::endl << vprDEBUG_FLUSH;
-      throw Flock::BirdErrorException(errs.first, errs.second);
+      
+      prev_err = errs;
+      have_error_to_throw = true;
+      errs = queryExpandedErrorCode();
+   }
+
+   if(have_error_to_throw)
+   {
+      throw Flock::BirdErrorException(prev_err.first, prev_err.second);
    }
 }
 
