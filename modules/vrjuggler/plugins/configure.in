@@ -112,10 +112,10 @@ VJ_PROG_CXX_PROF_FLAG(yes)
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
-DPP_CXX_NAMESPACE([AC_MSG_ERROR([*** JCCL plug-ins require C++ namespace support ***])])
+DPP_CXX_NAMESPACE([AC_MSG_ERROR([*** VRJ plug-ins require C++ namespace support ***])])
 DPP_CXX_HAVE_STD
-DPP_CXX_STATIC_CAST([AC_MSG_ERROR([*** JCCL plug-ins require C++ static_cast<> ***])])
-DPP_CXX_DYNAMIC_CAST([AC_MSG_ERROR([*** JCCL plug-ins require C++ dynamic_cast<> ***])])
+DPP_CXX_STATIC_CAST([AC_MSG_ERROR([*** VRJ plug-ins require C++ static_cast<> ***])])
+DPP_CXX_DYNAMIC_CAST([AC_MSG_ERROR([*** VRJ Juggler plug-ins require C++ dynamic_cast<> ***])])
 
 # Check for the JDK.
 DPP_PATH_JAVA
@@ -123,7 +123,7 @@ DPP_PATH_JAVA
 # If there is still no value in $JAVAC, then warn that the GUI will not be
 # built.
 if test "x$JAVAC" = "xno" ; then
-    AC_MSG_WARN([*** Remote reconfig JavaBean requires javac -- it will not be built ***])
+    AC_MSG_WARN([*** Performance Monitor JavaBean requires javac -- it will not be built ***])
     BUILD_JAVA='N'
 else
     BUILD_JAVA='Y'
@@ -227,7 +227,7 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
-# $DSO_PLUGIN_DEPS must list all the libraries required to link a JCCL plug-in.
+# $DSO_PLUGIN_DEPS must list all the libraries required to link a VRJ plug-in.
 if test "x$OS_TYPE" = "xWin32" ; then
     DSO_PLUGIN_DEPS="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $JCCL_LIBS_LD $LIBS $JCCL_EXTRA_LIBS_LD"
     DSO_PLUGIN_PROF_DEPS="$DSO_PLUGIN_DEPS"
