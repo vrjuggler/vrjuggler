@@ -43,8 +43,7 @@ aFlockTest.o: aFlockTest.cpp
 	CC -D_OLD_TERMIOS -mips3 -n32 -all -I../.. namespaces=ON bool=ON -woff 3303 -c aFlockTest.cpp -o $@  
 
 aFlock.o: ../../Input/vjPosition/aFlock.cpp
-	CC -D_OLD_TERMIOS -mips3 -n32 -all namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
-#	g++ -I/usr/local/lib/g++-include  -mips3 -n32 -o $@ -c ../../Input/vjPosition/aFlock.cpp
+	CC -D_OLD_TERMIOS -mips3 -n32 -all -I../.. namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
 
 # ----------------
 # vjFlock test driver

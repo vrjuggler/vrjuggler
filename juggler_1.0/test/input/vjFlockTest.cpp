@@ -8,24 +8,28 @@
 int main()
 {
   vjMemPool* anSgiPool = new vjMemPoolSGI(1024*1024);
-
-  const int numBirds = 2;
-  const  char* calfile = "/home/users/allenb/Source/juggler/Data/calibration.table";
-  const BIRD_HEMI hemi = LOWER_HEM;
-  const BIRD_FILT filt = AC_NARROW;
-  const int sync = 1;
-  const int blocking = 0;
-  const char report = 'R';
-  const int transmitter = 3; 
-  const  char* port = "/dev/ttyd3";
-  const int baud = 38400;
-  vjFlock* flock = new(anSgiPool) vjFlock
-  		(sync, blocking, numBirds, transmitter,
-		hemi, filt, report, calfile);
   
-  // these are in the vjInput base class...
-  flock->SetBaudRate( baud );
-  flock->SetPort( port );
+  const char* port = "/dev/ttyd3";
+    const int baud = 38400;
+    const int numBirds = 2;
+    const char* calfile = "/home/users/allenb/Source/juggler/Data/calibration.table";
+    const BIRD_HEMI hemi = LOWER_HEM;
+    const BIRD_FILT filt = AC_NARROW;
+    const int sync = 1;
+    const int blocking = 0;
+    const char report = 'R';
+    const int transmitter = 3; 
+    vjFlock* flock = new(anSgiPool) vjFlock
+    		(   port, 
+		    baud, 
+		    sync, 
+		    blocking, 
+		    numBirds, 
+		    transmitter, 
+		    hemi, 
+		    filt, 
+		    report, 
+		    calfile );
 
   char achar;
   cout << "U - Update\n"
