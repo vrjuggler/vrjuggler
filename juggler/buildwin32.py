@@ -39,6 +39,7 @@ import shutil
 import sys
 import time
 import traceback
+import getopt
 
 gHaveTk = False
 try:
@@ -165,17 +166,17 @@ def setDefaultVars():
    }
 
    # If there are cached options, read them in.
-   cache_file = os.path.join(juggler_dir, 'options.cache')
+   cache_file = os.path.join(juggler_dir, gOptionsFileName)
    if os.path.exists(cache_file):
       execfile(cache_file)
    return options
 
 def setVars():
-   cache_file = os.path.join(juggler_dir, 'options.cache')
+   cache_file = os.path.join(juggler_dir, gOptionsFileName)
    options = setDefaultVars()
-
+   
    print "+++ Required Settings"
-   boost_ver = processInput(options, 'prefix', 'installation prefix')
+   processInput(options, 'prefix', 'installation prefix')
    boost_ver = processInput(options, 'BOOST_VERSION', 'Boost C++ version')
    boost_dir = processInput(options, 'BOOST_ROOT',
                             'Boost C++ installation directory')
@@ -1202,6 +1203,8 @@ class Win32SetupFrontEnd:
    def __init__(self, master):
       self.mRoot = master
       self.mRoot.title("VrJuggler Win32 Build -- Python")
+      self.mRoot.protocol("WM_DELETE_WINDOW", self.cleanup)
+      self.mRoot.bind("<Destroy>", lambda e: self.cleanup)
 
       Options = setDefaultVars()
       self.mOptions = {}
@@ -1210,6 +1213,15 @@ class Win32SetupFrontEnd:
          self.mOptions[k] = Str2TkinterStrVar(Options[k])
    
       self.makeOptionsInterface()
+      
+   def cleanup(self):
+      cache_file = os.path.join(juggler_dir, gOptionsFileName)
+      cache_file = open(cache_file, 'w')
+      for k, v in self.mOptions.iteritems():
+         output = "options['%s'] = r'%s'\n" % (k, v.get())
+         cache_file.write(output)
+      cache_file.close()
+      self.mRoot.destroy()
 
    def makeOptionsInterface(self):
       #Set up the Frames
@@ -1305,6 +1317,12 @@ class Win32SetupFrontEnd:
 
       #CommandFrame Innards
       NextRow = 0
+      self.mRoot.CommandFrame.BatchBuildCheck = Tkinter.Checkbutton(self.mRoot.CommandFrame,text="Batch Build", bg=self.JugglerYellow, activebackground=self.JugglerYellow, onvalue="Yes", offvalue="No")
+      self.mRoot.CommandFrame.BatchBuildCheck.Variable = Tkinter.StringVar()
+      self.mRoot.CommandFrame.BatchBuildCheck.Variable.set("Yes")
+      self.mRoot.CommandFrame.BatchBuildCheck["variable"] = self.mRoot.CommandFrame.BatchBuildCheck.Variable
+      self.mRoot.CommandFrame.BatchBuildCheck.grid(row=NextRow, column=0, sticky=Tkinter.EW, pady=4)
+      NextRow = NextRow+1
       self.mRoot.CommandFrame.InstallJugglerCheck = Tkinter.Checkbutton(self.mRoot.CommandFrame,text="Install Juggler", bg=self.JugglerYellow, activebackground=self.JugglerYellow, onvalue="Yes", offvalue="No")
       self.mRoot.CommandFrame.InstallJugglerCheck.Variable = Tkinter.StringVar()
       self.mRoot.CommandFrame.InstallJugglerCheck.Variable.set("Yes")
@@ -1399,6 +1417,7 @@ class Win32SetupFrontEnd:
       return RetValue
 
    def doBuild(self):
+      self.mRoot.CommandFrame.BuildInstallButton.config(state="disabled")
       #Set the Environment Vars
       for k in self.mOptions.iterkeys():
          os.environ[k] = self.mOptions[k].get()
@@ -1442,7 +1461,7 @@ class Win32SetupFrontEnd:
                   os.environ['OMNIORB_VERSION'] = match.group(1)
                   break
 
-         cache_file = os.path.join(juggler_dir, 'options.cache')
+         cache_file = os.path.join(juggler_dir, gOptionsFileName)
          cache_file = open(cache_file, 'w')
          for k, v in self.mOptions.iteritems():
             output = "options['%s'] = r'%s'\n" % (k, v.get())
@@ -1450,9 +1469,7 @@ class Win32SetupFrontEnd:
          cache_file.close()
          
          self.BuildThread = threading.Thread(None, self.runVisualStudio, "BuildThread")
-         self.FinishedBuildThread = threading.Thread(None, self.waitForBuildFinish, "FinishedBuildThread")
          self.BuildThread.start()
-         self.FinishedBuildThread.start()
 
    def installJuggler(self):
       doInstall(self.mOptions['prefix'].get())
@@ -1513,11 +1530,7 @@ class Win32SetupFrontEnd:
       self.mRoot.OutputFrame.MessageText['state'] = 'normal'
       self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Build and Installation Finished.\n", "a")
       self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
-
-   def waitForBuildFinish( self ):
-      while self.BuildThread.isAlive():
-         i=0
-      self.buildFinished()
+      self.updateCommandFrame()
 
    def runVisualStudio( self ):
       #print "generateVersionHeaders()"
@@ -1546,35 +1559,64 @@ class Win32SetupFrontEnd:
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
       #solution_file = r'%s' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
-      solution_file = r'%s' % ('C:\Solution1\Solution1.sln')
+      solution_file = r'%s' % os.path.join('vc7', 'Juggler.sln')
       build_args = r'/build Debug'
 
-      cmd = devenv_cmd_no_exe + ' ' + solution_file + ' ' + build_args
+      if self.mRoot.CommandFrame.BatchBuildCheck.Variable.get() == "Yes":
+         cmd = devenv_cmd_no_exe + ' ' + solution_file + ' ' + build_args
 
-      print cmd
-      try:
-         (stdout, stdin) = os.popen2(cmd)
+         print cmd
+         try:
+            stdin = os.popen(cmd)
 
-         while True:
-            line = stdin.readline()
-            if not line:
-               break
+            while True:
+               line = stdin.readline()
+               if not line:
+                  break
+               self.mRoot.OutputFrame.MessageText['state'] = 'normal'
+               self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, line)
+               self.mRoot.OutputFrame.MessageText.yview("moveto", 1.0)
+               self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+         except OSError, osEx:
+            print "Could not execute %s: %s" % (cmd, osEx)
+            sys.exit(3)
+      else:
+         cmd = devenv_cmd_no_exe + ' ' + solution_file
+         try:
             self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-            self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, line)
-            self.mRoot.OutputFrame.MessageText.yview("moveto", 1.0)
+            self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Visual Studio has been opened.  Build the Solution and then exit Visual Studio to continue the Instalation\n", "a")
             self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
-
-         return 0
-      except OSError, osEx:
-         print "Could not execute %s: %s" % (cmd, osEx)
-         sys.exit(3)
+            status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
+         except OSError, osEx:
+            print "Could not execute %s: %s" % (cmd, osEx)
+            sys.exit(3)
+      self.buildFinished()
 
 def main():
    disable_tk = False
 
    # If the user passed in -c on the command line, disable use of the GUI.
-   if '-c' in sys.argv[1:]:
-      disable_tk = True
+   #if '-c' in sys.argv[1:]:
+   #   disable_tk = True
+   #deal with arguments
+   try:
+      cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cao:h", ["nogui", "auto", "options-file=", "help"])
+   except getopt.GetoptError:
+      usage()
+      sys.exit(4)
+   NoGui = False
+   global gOptionsFileName
+   for o, a in cmd_opts:
+      if o in ("-c","--nogui"):
+         disable_tk = True
+      elif o in ("-o", "--options-file="):
+         gOptionsFileName = a
+         #Make sure file exists
+         if not os.path.isfile(gOptionsFileName):
+            print "No file %s exists.  Will use default options." % (gOptionsFileName)
+      elif o in ("-h", "--help"):
+         usage()
+         sys.exit(0)
 
    # If Tkinter is not available or the user disabled the Tk frontend, use
    # the text-based interface.
@@ -1623,8 +1665,16 @@ def main():
 
       root.mainloop()
 
+def usage():
+   print "Usage: %s [OPTIONS]" % (sys.argv[0])
+   print "Python script for building VRJuggler on Windows.\n"
+   print "-n, --nogui              Disable the Tkinter GUI FrontEnd, e.g. Run in command line mode."
+   #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
+   print "-o, --options-file=FILE  Uses FILE to Load/Save Options."
+   print "-h, --help               Print this usage text and quit."
 
 juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+gOptionsFileName = "options.cache"
 if __name__ == '__main__':
    try:
       main()
