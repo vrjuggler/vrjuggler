@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_pf_d.dll"
 				Version="1.1.164"
 				LinkIncremental="2"
@@ -90,7 +90,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_pf.dll"
 				Version="1.1.164"
 				LinkIncremental="1"
