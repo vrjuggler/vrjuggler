@@ -73,7 +73,7 @@ int GlWindowWin32::open()
       return 0;
    }
 
-   if ( window_is_open )
+   if ( mWindowIsOpen )
    {
       return 1;
    }
@@ -87,7 +87,7 @@ int GlWindowWin32::open()
 
    // If we want a border, create an overlapped window.  This will have
    // a titlebar and a border.
-   if ( border )
+   if ( mHasBorder )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
          << "[vrj::GlWindowWin32::open()] Attempting to give window a border"
@@ -109,8 +109,8 @@ int GlWindowWin32::open()
    // Create the main application window
    mWinHandle = CreateWindow(GL_WINDOW_WIN32_CLASSNAME,
                              GL_WINDOW_WIN32_CLASSNAME, style,
-                             origin_x, root_height - origin_y - window_height,
-                             window_width, window_height, NULL, NULL, hMod,
+                             mOriginX, root_height - mOriginY - mWindowHeight,
+                             mWindowWidth, mWindowHeight, NULL, NULL, hMod,
                              NULL);
 
    // If window was not created, quit
@@ -140,11 +140,11 @@ int GlWindowWin32::open()
    // Display the window
    ShowWindow(mWinHandle, SW_SHOW);
    UpdateWindow(mWinHandle);             // Tell the window to paint
-   window_is_open = true;
+   mWindowIsOpen = true;
 
    // ----------- Event window device starting -------------- //
    // Are we going to act like as an event source?
-   if (true == mAreEventSource)
+   if (true == mIsEventSource)
    {
       this->becomeEventWindowDevice();
    }
@@ -192,12 +192,12 @@ void GlWindowWin32::removeEventWindowDevice()
 int GlWindowWin32::close()
 {
    // if not open, then don't bother.
-   if ( !window_is_open )
+   if ( !mWindowIsOpen )
    {
       return false;
    }
 
-   if (mAreEventSource)
+   if (mIsEventSource)
    {
       this->removeEventWindowDevice();
    }
@@ -205,7 +205,7 @@ int GlWindowWin32::close()
    // Remove window from window list
    GlWindowWin32::removeWindow(mWinHandle);
 
-   window_is_open = false;
+   mWindowIsOpen = false;
 
    // destroy the win32 window
    return(1 == DestroyWindow(mWinHandle));
@@ -232,7 +232,7 @@ void GlWindowWin32::swapBuffers()
 
 void GlWindowWin32::checkEvents()
 {
-   if (true == mAreEventSource)
+   if (true == mIsEventSource)
    {
       /** Sample from the window */
       gadget::EventWindowWin32::sample();
@@ -292,17 +292,17 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
       << "glxWindow::config: display name is: "
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
-   bool was_i_a_keyboard = mAreEventSource;
-   mAreEventSource = display_elt->getProperty<bool>("act_as_event_source");
+   bool was_i_a_keyboard = mIsEventSource;
+   mIsEventSource = display_elt->getProperty<bool>("act_as_event_source");
 
    // If i'm being configured to NOT be an event source, and I was one already.
-   if (false == mAreEventSource && true == was_i_a_keyboard)
+   if (false == mIsEventSource && true == was_i_a_keyboard)
    {
       this->removeEventWindowDevice();
    }
 
    // If i'm being configured to be an event source, and I wasn't one already.
-   else if (true == mAreEventSource && false == was_i_a_keyboard)
+   else if (true == mIsEventSource && false == was_i_a_keyboard)
    {
       // Configure event window device portion.
       jccl::ConfigElementPtr event_win_chunk =
@@ -315,14 +315,14 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
       gadget::EventWindowWin32::config(event_win_chunk);
 
       // Custom configuration
-      gadget::EventWindowWin32::mWidth = GlWindowWin32::window_width;
-      gadget::EventWindowWin32::mHeight = GlWindowWin32::window_height;
+      gadget::EventWindowWin32::mWidth = GlWindowWin32::mWindowWidth;
+      gadget::EventWindowWin32::mHeight = GlWindowWin32::mWindowHeight;
 
       mWeOwnTheWindow = false;      // Event window device does not own window
 
       // if the window is already open, then make it an event window device
       // otherwise, this will be called once the window opens.
-      if (window_is_open)
+      if (mWindowIsOpen)
       {
          this->becomeEventWindowDevice();
       }
@@ -405,12 +405,12 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 
    if ( mVrjDisplay->isStereoRequested() )
    {
-      in_stereo = true;
+      mInStereo = true;
       pfd.dwFlags |= PFD_STEREO;
    }
    else
    {
-      in_stereo = false;
+      mInStereo = false;
    }
 
    int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32);
@@ -512,20 +512,18 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 // the user has changed the size of the window
 void GlWindowWin32::sizeChanged(long width, long height)
 {
-   window_width = width;
-   window_height = height;
-
-   if ( window_width == 0 )        // Make sure we don't have window of 1 size (divide by zero would follow)
+   // Make sure we don't have window of 1 size (divide by zero would follow).
+   if ( width == 0 )
    {
-      window_width = 1;
+      width = 1;
    }
 
-   if ( window_height == 0 )
+   if ( height == 0 )
    {
-      window_height = 1;
+      height = 1;
    }
 
-   updateOriginSize(origin_x, origin_y, window_width, window_height);
+   updateOriginSize(mOriginX, mOriginY, width, height);
    setDirtyViewport(true);
 }
 
