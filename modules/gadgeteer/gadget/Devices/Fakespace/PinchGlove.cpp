@@ -160,7 +160,7 @@ void PinchGlove::controlLoop(void* nullParam)
 //  Returns -1 if function fails or if devNum is out of range.<BR>
 //  NOTE: If devNum is out of range, function will fail, possibly issueing
 //  an error to a log or console - but will not ASSERT.<BR>
-DigitalData* PinchGlove::getDigitalData(int devNum)
+const DigitalData PinchGlove::getDigitalData(int devNum)
 {
    // get the fakespace "gesture", it's a string like this "00000.00000"
    std::string gesture;
@@ -191,7 +191,7 @@ DigitalData* PinchGlove::getDigitalData(int devNum)
 
    // function failed
    //return -1;
-      return &(mDigitalData[devNum]);
+      return (mDigitalData[devNum]);
 }
 
 int PinchGlove::sample()

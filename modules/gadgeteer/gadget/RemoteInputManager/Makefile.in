@@ -1,0 +1,34 @@
+
+# -----------------------------------------------------------------------------
+# Makefile.in for gadgeteer/gadget/RemoteInputManager.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions
+include @topdir@/make.defs.mk
+
+includedir	= @includedir@/gadget/RemoteInputManager
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
+SUBOBJDIR	= $(GADGET_LIBRARY)
+
+SRCS		= MsgPackage.cpp \
+                  NetConnection.cpp \
+                  RecvBuffer.cpp \
+                  RemoteInputManager.cpp \
+                  RmtMgrDepChecker.cpp
+
+include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    -include $(DEPEND_FILES)
+endif
+endif

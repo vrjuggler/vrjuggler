@@ -76,7 +76,7 @@ public:
    virtual bool config(jccl::ConfigChunkPtr c);
 
    /** Get Positional data. */
-   PositionData getPositionData (int devNum = 0)
+   virtual PositionData getPositionData (int devNum = 0)
    {
       gadget::SampleBuffer<PositionData>::buffer_t& stable_buffer = mPosSamples.stableBuffer();
 
