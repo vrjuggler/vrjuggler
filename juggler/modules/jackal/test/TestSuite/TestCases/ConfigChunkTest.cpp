@@ -41,7 +41,7 @@ void ConfigChunkTest::setPropTests()
    // make sure they succeed with a desc
    {
       // start fresh and new (and shiny!!!)
-      jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+      jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
       std::string file_path(TESTFILES_PATH);
       jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
@@ -100,7 +100,7 @@ void ConfigChunkTest::setPropTests()
 void ConfigChunkTest::PropertyValueTests()
 {
    // start fresh and new (and shiny!!!)
-   jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+   jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
    std::string file_path( TESTFILES_PATH );
 
@@ -151,7 +151,7 @@ void ConfigChunkTest::PropertyValueTests()
 void ConfigChunkTest::testEqual()
 {
    // start fresh and new (and shiny!!!)
-   jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+   jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
    std::string file_path(TESTFILES_PATH);
    jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
@@ -175,7 +175,7 @@ void ConfigChunkTest::testEqual()
 void ConfigChunkTest::testCopyConstr()
 {
    // start fresh and new (and shiny!!!)
-   jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+   jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
    std::string file_path(TESTFILES_PATH);
    jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
@@ -193,7 +193,7 @@ void ConfigChunkTest::testCopyConstr()
 void ConfigChunkTest::testIsEqual()
 {
    // start fresh and new (and shiny!!!)
-   jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+   jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
    std::string file_path(TESTFILES_PATH);
    jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
@@ -211,7 +211,7 @@ void ConfigChunkTest::testIsEqual()
 void ConfigChunkTest::testIsNotEqual()
 {
    // start fresh and new (and shiny!!!)
-   jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+   jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
    std::string file_path(TESTFILES_PATH);
    jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
@@ -229,7 +229,7 @@ void ConfigChunkTest::testIsNotEqual()
 void ConfigChunkTest::testAreDefaultsProperlyReturned()
 {
    // start fresh and new (and shiny!!!)
-   jccl::ChunkFactory::instance()->getChunkDescDB()->clear();
+   jccl::ChunkFactory::instance()->getChunkDescDB()->map().clear();
 
    std::string file_path(TESTFILES_PATH);
    jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
