@@ -1,0 +1,19 @@
+                            VR Juggler Known Bugs
+                            ---------------------
+
+For all versions:
+
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.  
+
+===============================================================================
+
+ Version: 1.0.0
+
+    * Performer with POSIX threads is known to be unstable on IRIX.  This is
+      a known issue with the OpenGL Performer library.
+    * 2.96 versions of GCC are known to be unstable on Linux.  In particular,
+      the default compiler on RedHat 7.0 will not compile VR Juggler at all.
+      With the 2.96.69 upgrade, OpenGL applications will work, but
+      Performer-based applications fail dynamic_cast due to problems.
+    * The IBox driver does not currently support analog input.
