@@ -149,7 +149,7 @@ AC_ARG_WITH(perl,
 dnl # Name the user who will own installed files.
 AC_ARG_WITH(install-owner,
             [  --with-install-owner=<USER NAME>
-                          Installed file owner name       [default=You]],
+                          Installed file owner name       [default=`id -un`]],
             _install_owner="$withval")
 
 dnl # Name the group used for setting ownership on installed files.
@@ -1182,11 +1182,7 @@ dnl # -------------------------------------------------------------------------
 
 dnl # Set $OWNER_NAME here in case the check for the user-specified owner
 dnl # failed.  This provides a simple fallback in that case.
-if test "x$OS_TYPE" = "xWin32" ; then
-    OWNER_NAME='500'
-else
-    OWNER_NAME=`whoami`
-fi
+OWNER_NAME=`id -un`
 
 dnl # Make sure that the named install owner is actually available and can
 dnl # be set by this user.  This is done by creating a file (conftest.c) and
