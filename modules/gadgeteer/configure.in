@@ -71,10 +71,6 @@ AC_ARG_WITH(trackdroot,
             [  --with-trackdroot=<PATH> Trackd API installation root   [default=/usr/local]],
             [trackdapi_root="$withval"], [trackdapi_root='/usr/local'])
 
-AC_ARG_WITH(isenseroot,
-            [  --with-isenseroot=<PATH> Isense API installation root   [default=/usr/local]],
-            [isenseapi_root="$withval"], [isenseapi_root='/usr/local'])
-
 # Build the DTK wrapper using the DTK installation found at the given path.
 # There is default path.
 AC_ARG_WITH(dtk,
@@ -259,23 +255,6 @@ CFLAGS="$gadget_save_CFLAGS"
 CPPFLAGS="$gadget_save_CPPFLAGS"
 
 DPP_LANG_RESTORE
-
-# --------------
-# Intersense API
-# --------------
-if test "x$OS_TYPE" = "xUNIX" ; then
-   AC_CHECK_FILE([$isenseapi_root/lib$LIBBITSUF/libisense.so],
-                 [BUILD_ISENSE_API='Y'
-                  ISENSE_API_LIB_FLAGS="-L$isenseapi_root/lib$LIBBITSUF -lisense"],
-                 [AC_MSG_WARN([*** Cannot build Intersense API driver ***])
-                  BUILD_ISENSE_API='N'])
-elif test "x$OS_TYPE" = "xWin32" ; then
-   AC_CHECK_FILE([$isenseapi_root/isense.dll],
-                 [BUILD_ISENSE_API='Y'
-                  ISENSE_API_LIB_FLAGS=""],
-                 [AC_MSG_WARN([*** Cannot build Intersense API driver ***])
-                  BUILD_ISENSE_API='N'])
-fi
 
 # ----
 # DTK
@@ -593,8 +572,6 @@ AC_SUBST(TWEEK_DRIVER_DEPS)
 AC_SUBST(APP_EXTRA_LIBS_X11)
 
 AC_SUBST(TRACKD_API_LIB_FLAGS)
-AC_SUBST(BUILD_ISENSE_API)
-AC_SUBST(ISENSE_API_LIB_FLAGS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
