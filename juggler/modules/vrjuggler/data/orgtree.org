@@ -1,35 +1,41 @@
-begin Zelda
-	begin Display
-		Display
-		DisplaySystem
-		end
-	begin Input
-		begin "Proxies and Aliases"
-			ProxyAlias
-			PosProxy
-			AnaProxy
-			DigProxy
-			end
-		begin "Input Devices"
-			"Keyboard"
-			"flock"
-			"ibox"
-			"Cyberglove"
-			"ThreeDMouse"
-			"DummyPosition"
-			end
-		end
-	begin "Expert Only"
-	  	begin "Performer API"
-			ApiPerformer
-		end
-		begin "Environment Manager"
-			"Environment Manager"
-			"EM File Output"
-		end
-	end
-	begin "*"
-	end
-end
-
-		
+Begin "Zelda"
+    Begin "Display"
+        "Display"
+        "DisplaySystem"
+    End
+    Begin "Input"
+        Begin "Proxies and Aliases"
+            "ProxyAlias"
+            "PosProxy"
+            "AnaProxy"
+            "DigProxy"
+            "GloveProxy"
+            "GestureProxy"
+        End
+        Begin "Input Devices"
+            "Keyboard"
+            "flock"
+            "ibox"
+            "Cyberglove"
+            "ThreeDMouse"
+            "DummyPosition"
+        End
+        Begin "Sim Devices"
+            "SimAnalog"
+            "SimDigital"
+            "SimPosition"
+            "SimGloveGesture"
+        End
+    End
+    Begin "Expert Only"
+        Begin "Performer API"
+            "ApiPerformer"
+        End
+        Begin "Environment Manager"
+            "Environment Manager"
+            "EM File Output"
+        End
+    End
+    Begin "*"
+    End
+End
