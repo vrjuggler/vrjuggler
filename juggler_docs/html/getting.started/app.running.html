@@ -19,6 +19,15 @@
     </LI>
     <LI>
       <A HREF="#simulator">Running an Application in Simulator Mode</A>
+
+      <OL TYPE="i">
+	<LI>
+	  <A HREF="#glove">Using a Simulated Glove</A>
+	</LI>
+	<LI>
+	  <A HREF="#analog">Using a Simulated Analog Device</A>
+	</LI>
+      </OL>
     </LI>
     <LI>
       <A HREF="#full">Running an Application in a VR System</A>
@@ -74,21 +83,34 @@
 
   <P>
     Running in simulator mode means that your input is simulated and your
-    display windows have limited functionality.  By, ``simulated input'',
+    display windows have limited functionality.  (By, ``simulated input'',
     we mean that input is provided through windows that take keyboard and
     mouse input and translate that into transformations in the virtual
-    world.  Simulator windows are limited primarily in that they cannot
-    display stereo graphics.
+    world.)  Simulator displays are limited primarily in that they cannot
+    display stereo graphics.  It is important to note that a simulator
+    display is a special kind of VR Juggler display.  Instead of basing its
+    viewpoint on the head position of one of the users, the viewpoint is
+    controlled by a separate ``camera'' that is just another positional
+    device.  The Sim Display also draws certain objects to help visualize
+    the environment.  For example, the heads of users are represented as
+    blue spheres with gray eyes, and a wand (if present) is drawn as a
+    green cone.  Besides these common simulator objects, surface displays
+    can be drawn.  These are Juggler Displays representing projection
+    screens or HMD viewing projections and are drawn as translucent
+    rectangles.
   </P>
 
   <P>
     As mentioned, several simulator configuration files are provided with
-    a VR Juggler distribution.  Please note that this documentation
+    a VR Juggler distribution.  These files provide a complete simulation
+    of an immersive environment.  Please note that this documentation
     reflects the state of the configuration files at the time the
     documentation was written.  For more information about the
     configuration files and how to view or modify the configuration,
-    refer to the <A HREF="${VJCONTROL}">VjControl Guide</A>.  The
-    configuration files of interest for simulator mode are as follows:
+    refer to the <A HREF="${VJCONTROL}">VjControl Guide</A>.  (Using
+    VjControl is the best way to find out how a specific configuration
+    file is set up.)  The configuration files of interest for simulator
+    mode are as follows:
 
     <UL>
       <LI>
@@ -103,7 +125,9 @@
 	<TT>sim.displays.config</TT> - The basic simulator display
 	configuration file needed by all applications when run in
 	simulator mode.  This file defines the display windows where the
-	rendering magic occurs.
+	rendering magic occurs.  Two simulator display windows are
+	configured by this file: a small one that is active by default and
+	a larger one that is inactive initially.
       </LI>
       <LI>
 	<TT>sim.analog.mixin.config</TT> - A ``mix-in'' configuration file
@@ -544,6 +568,59 @@
 	</TABLE>
       </DD>
   </DL>
+
+  <P>
+    Before continuing on to running an application in a full-scale VR
+    system, we provide two asides: using a simulated glove and using a
+    simulated analog device.  The examples provided thus far have not
+    discussed this because the information was not relevant to the
+    particular sample application being used.  Knowing how to use these
+    simulated devices is important, however, and it is treated separately
+    as a reference for your future endeavors in running VR Juggler
+    applications.
+  </P>
+
+<A NAME="glove"><H5>Using a Simulated Glove</H5></A>
+
+  <P>
+    If you include the <TT>sim.glove.mixin.config</TT> file, your application
+    will also have access to a simulated glove, with position and gesture 
+    inputs.  The glove is controlled by a window titled ``<TT>Glove
+    Keyboard</TT>''.  This window lets you control the glove position and
+    selected gesture.  Movement control of the glove uses the mouse and is
+    the same as that of the wand.  The mouse buttons are used to select
+    gestures.  The mapping of the gesture numbers to actual hand positions
+    is controlled by the ``training file'' for the sim glove.  The defaults
+    training file is
+    <TT>$VJ_BASE_DIR/Data/gesture/simpleSimGestures.dat</TT>.
+  </P>
+
+<A NAME="analog"><H5>Using a Simulated Analog Device</H5></A>
+
+  <P>
+    If you include the <TT>sim.analog.mixin.config</TT> file, your
+    application will also have access to a set of four analog devices
+    (devices with a value in a range from 0.0 to 1.0).  The analog devices
+    are also controlled using the ``<TT>Wand Keyboard</TT>'' window which
+    means that their config file requires the wand config file.  They
+    key presses used for controlling the analog devices are:
+
+<PRE>
+    KEY              ACTION
+   -------------------------
+    Q                VJAnalog0 increase
+    A                VJAnalog0 decrease
+    W                VJAnalog1 increase
+    S                VJAnalog1 decrease
+    E                VJAnalog2 increase
+    D                VJAnalog2 decrease
+    R                VJAnalog3 increase
+    F                VJAnalog3 decrease
+</PRE>
+
+    If you aren't using a QWERTY keyboard, you'll probably want to change
+    those to something more intuitive.
+  </P>
 
 <A NAME="full"><H4>Running an Application in a VR System</H4></A>
 

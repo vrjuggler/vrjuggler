@@ -27,13 +27,17 @@ Builder: JExplorerBuilder V 1. 0. 7
 				link="${GETTINGSTARTED}/environment.variables.html" 
 				info="What's this about environment variables?" 
 				image="Leaf.gif" >
-			< item title="Compiling a Program" 
+			< item title="VR Juggler Sample Programs" 
+				link="${GETTINGSTARTED}/sample.apps.html" 
+				info="What are sample applications are provided?" 
+				image="Leaf.gif" >
+			< item title="Compiling a Sample Program" 
 				link="${GETTINGSTARTED}/app.compiling.html" 
 				info="How do I compile a sample program?" 
 				image="Leaf.gif" >
 			< item title="Running a Program" 
 				link="${GETTINGSTARTED}/app.running.html" 
-				info="How do I run a compiled sample program?" 
+				info="How do I run a compiled program?" 
 				image="Leaf.gif" >
 </rootfolder>
 		</idefault>
