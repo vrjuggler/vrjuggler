@@ -5987,8 +5987,9 @@ private:
             shared data is allowed when using
             <classname>cluster::UserData&lt;T&gt;</classname>. This is true
             both for reading and for writing, demonstrated in <xref
-            linkend="example.write.cluster.UserData" /> and in <xref
-            linkend="example.read.cluster.UserData" />.</para>
+            linkend="example.write.cluster.UserData" />, in <xref
+            linkend="example.read.cluster.UserData.latePreFrame" />, and in
+            <xref linkend="example.read.cluster.UserData.draw" />.</para>
           </important>
 
           <example id="example.write.cluster.UserData">
@@ -6232,6 +6233,573 @@ last_frame = current_frame; // You can get the delta in microseconds from
               </qandaentry>
             </qandadiv>
           </qandaset>
+        </section>
+      </section>
+
+      <section id="section.adding.audio">
+        <title>Adding Audio</title>
+
+        <para>Immersive applications often take advantage of sound to enhance
+        suspension of disbelief. VR Juggler application programmers have many
+        options available to them for adding sound to their virtual
+        environments. In this section, we describe the library Sonix that
+        ships with VR Juggler. Sonix provides a layer of abstraction for
+        third-party audio libraries including <ulink
+        url="http://www.openal.org/">OpenAL</ulink>, <ulink
+        url="http://audiere.sourceforge.net/">Audiere</ulink>, and <ulink
+        url="http://www.multigen-paradigm.com/products/runtime/vega/modules/audioworks.shtml">AudioWorks</ulink>.
+        In VR Juggler 2.0, there is one Sound Manager implemented using Sonix.
+        As such, Sonix is the easiest tool to use for adding sound to VR
+        Juggler applications, but it is not the only option.</para>
+
+        <para>Sonix provides simple audio sound objects on top of several
+        audio APIs. The interface to Sonix is kept very simple in order to get
+        people up and running with sound as fast as possible. Sonix has the
+        following features:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Simple access to spatialized sound triggering.</para>
+          </listitem>
+
+          <listitem>
+            <para>Small learning curve withsimple interface and usage.</para>
+          </listitem>
+
+          <listitem>
+            <para>Abstracts several well-known audio systems to provide
+            enhanced applicatin portability.</para>
+          </listitem>
+
+          <listitem>
+            <para>Supports reconfigurability at runtime.</para>
+          </listitem>
+
+          <listitem>
+            <para>Changing a sound resource reflects properly in all other
+            handles to the same resource (resources allow multiple
+            users).</para>
+          </listitem>
+
+          <listitem>
+            <para>Reconfigurations of sound resources are protected (i.e.
+            reconfiguration does not break application).</para>
+          </listitem>
+
+          <listitem>
+            <para>Supports features needed by 3D virtual environments
+            including spatialized audio, ambient audio, one-shot sounds, and
+            looping sounds.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>VR Juggler application programmers can use the full Sonix API
+        directly, or they can take advantage of the VR Juggler Sound Manager
+        to reduce the amount of coding required. We will present both
+        approaches. Example applications can be found in the directory
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples/sound/simple</filename>.</para>
+
+        <section id="section.using.sonix.directly">
+          <title>Using Sonix Directly</title>
+
+          <para>We begin our explanation of adding sound to a VR Juggler
+          application by presenting the direct use of the Sonix API. This
+          requires more programming than using the VR Juggler Sound Manager,
+          but it will be useful to understand how Sonix operates in order to
+          take full advantage of the Sound Manager. In particular, reading
+          this section is a necessary part of understanding general Sonix
+          usage, and readers are encouraged to read both this section and the
+          next before deciding on which approach to use in their VR Juggler
+          applications.</para>
+
+          <section id="section.basic.sonix.usage">
+            <title>Basic Sonix Usage</title>
+
+            <para>In <xref linkend="figure.sonix.interface" />, we see the API
+            for Sonix (see <xref linkend="figure.complete.sonix.design" /> for
+            the complete software architecture). The main parts that a sound
+            programmer will use are the classes
+            <classname>snx::SoundHandle</classname> and
+            <classname>snx::sonix</classname> (a singleton). The
+            <classname>snx::SoundHandle</classname> class is used to
+            manipulate individual sounds. The
+            <classname>snx::sonix</classname> singleton class is used to
+            start, stop, and reconfigure the sound system. Both classes must
+            be used for any sound to be heard.</para>
+
+            <figure id="figure.sonix.interface">
+              <title>Basic Sonix Interface</title>
+
+              <mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="figures/sonix_interface.png"
+                             format="PNG" />
+                </imageobject>
+              </mediaobject>
+            </figure>
+
+            <para>Starting the Sonix system is easy. Basically, the only call
+            needed to start the system is
+            <methodname>snx::sonix::changeAPI()</methodname>. The backend
+            audio software is loaded into Sonix through a plug-in system. The
+            plug-in to use is identified by a string name, one of
+            <quote>OpenAL</quote>, <quote>AudioWorks</quote>, or
+            <quote>Audiere</quote>, as shown in <xref
+            linkend="example.sonix.OpenAL" />. The choice of which to use
+            depends on availability and compatibility. For example, AudioWorks
+            is available on the IRIX operating system, but it can only be used
+            with a build of VR Juggler that uses SPROC threads. On the other
+            hand, OpenAL and Audiere on IRIX can only be used with a pthreads
+            build of VR Juggler.</para>
+
+            <example id="example.sonix.OpenAL">
+              <title>Initializing the Sonix Sound APi</title>
+
+              <programlisting>snx::sonix::instance()-&gt;changeAPI("OpenAL");</programlisting>
+            </example>
+
+            <para>Setting up a sound is designed to be simple, and an example
+            of doing so is shown in <xref
+            linkend="example.sonix.soundhandle" />. Here, we use an instance
+            of <classname>snx::SoundInfo</classname> to configure the sound
+            object, which is in turn accessed by an instance of
+            <classname>snx::SoundHandle</classname>.</para>
+
+            <example id="example.sonix.soundhandle">
+              <title>Setting Up a Sonix Sound Handle</title>
+
+              <programlisting>snx::SoundInfo info;
+info.filename = "crack.wav";
+info.datasource = snx::SoundInfo::FILESYTEM;
+
+snx::SoundHandle crack_sound("crack");
+crack_sound.configure(info);</programlisting>
+            </example>
+
+            <para>Periodically, an update function must be called to keep
+            Sonix running. The method is snx::sonix::step(), and it takes a
+            single argument of type <type>float</type> representing the time
+            since the last time it was called. In general, this should be
+            invoked in the frame function of an application. In the context of
+            VR Juggler, this would be either
+            <methodname>preFrame()</methodname> or
+            <methodname>postFrame()</methodname> in the application object
+            interface. An example of using this function is shown in <xref
+            linkend="example.sonix.frame" />.</para>
+
+            <example id="example.sonix.frame">
+              <title>Sonix Frame Update</title>
+
+              <programlisting>void MyApp::preFrame()
+{
+   // Update application state for the current frame
+   // ...
+
+   float time_delta = getTimeChangeInSeconds(); // use a system call or other API
+                                                // to get the time delta
+   snx::sonix::instance()-&gt;step(time_delta);
+}</programlisting>
+            </example>
+
+            <example id="example.complete.sonix.app">
+              <title>Complete Sonix Program Using OpenAL</title>
+
+              <programlisting linenumbering="numbered">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;snx/sonix.h&gt;
+
+int main(int argc, char* argv[])
+{
+   std::string filename(:808kick.wav"), api("OpenAL");
+
+   if ( ! snx::FileIO::fileExists(filename.c_str()) )
+   {
+      std::cout &lt;&lt; "File not found: " &lt;&lt; filename &lt;&lt; "\n" &lt;&lt; std::flush;
+      return 1;
+   }
+
+   // start sonix using OpenAL
+   snx::sonix::instance()-&gt;changeAPI(api);
+
+   // fill out a description for the sound we want to play
+   snx::SoundInfo sound_info;
+   sound_info.filename = filename;
+   sound_info.datasource = snx::SoundInfo::FILESYSTEM;
+
+   // create the sound object
+   snx::SoundHandle sound_handle;
+   sound_handle.init("my simple sound");
+   sound_handle.configure(sound_info);
+
+   // trigger the sound
+   sound_handle.trigger();
+   sleep(1);
+
+   // trigger the sound from a different position in 3D space
+   sound_handle.setPosition(10.0f, 0.0f, 0.0f);
+   sound_handle.trigger();
+   sleep(1);
+
+   // this simulates a running application
+   while ( 1 )
+   {
+      snx::sonix::instance()-&gt;step(time_delta);
+   }
+
+   return 0;
+}</programlisting>
+            </example>
+          </section>
+
+          <section id="section.sonix.reconfiguration">
+            <title>Reconfiguration</title>
+
+            <para>Sonix is reconfigurable, allowing audio APIs to be swapped
+            out at run time safely without the dependent systems noticing.
+            Applications using Sonix expect to be completely portable.
+            Changing sound APIs at run time can be useful so that the user can
+            experiment with quality and latency differences of different
+            hardware and sound APIs. If no audio API is available on a given
+            platform, calls to Sonix simply are ignored. This means that
+            applications do not have to have special code to enable or disable
+            sounds based on the availability of the backend sound software.
+            These details are handled transparently by Sonix.</para>
+
+            <para>Everything in Sonix can be reconfigured behind the scenes
+            during application execution. See <xref
+            linkend="example.sonix.reconfigure" /> for a trivial example of
+            how to reconfigure Sonix in C++. In a more complex context, this
+            feature of Sonix has powerful implications. Sounds can be changed
+            on the fly, as well as the API being used to render the sound.
+            Such details are hidden behind sound handles and the
+            <classname>snx::sonix</classname> singleton.</para>
+
+            <example id="example.sonix.reconfigure">
+              <title>Reconfiguring Sonix at Run Time</title>
+
+              <programlisting linenumbering="numbered">// start sonix using OpenAL
+snx::sonix::instance()-&gt;changeAPI("OpenAL");
+
+// fill out a description for the sound we want to play
+snx::SoundInfo sound_info;
+sound_info.filename = "808kick.wav";
+sound_info.datasource = snx::SoundInfo::FILESYSTEM;
+
+// create the sound object
+snx::SoundHandle sound_handle;
+sound_handle.init("my sound for testing");
+sound_handle.configure(sound_info);
+
+// trigger the sound
+sound_handle.trigger();
+sleep(1);
+
+// trigger the sound using a different audio system
+snx::sonix::instance()-&gt;changeAPI("AudioWorks");
+sound_handle.trigger();
+sleep(1);
+
+// trigger our sound object using different source data
+sound_info.filename = "303riff.wav";
+sound_handle.configure(sound_info);
+sound_handle.trigger();
+sleep(1);
+</programlisting>
+            </example>
+
+            <section>
+              <title>Design and Implementation of Sonix</title>
+
+              <para>Before we conclude this section on using Sonix directly in
+              applications, we examine the design details of Sonix. These
+              details are beyond the scope of what needs to be understood in
+              order for Sonix to be utilized by VR Juggler applications, so
+              readers not interested in these details can skip ahead to <xref
+              linkend="section.using.sound.manager" />.</para>
+
+              <para>Sonix was designed using modern software design principles
+              including design patterns and object oriented design. The
+              complete design of Sonix is depicted in UML in <xref
+              linkend="figure.complete.sonix.design" />. As evidenced by the
+              diagram, the design of Sonix is quite simple, though the classes
+              tend to have relatively large interfaces. Refer to the Sonix
+              <emphasis>Programmer Reference</emphasis>, found on the <ulink
+              url="http://www.vrjuggler.org/sonix/docs.php">Sonix
+              documentaiton web page</ulink>, for complete documentation of
+              these interfaces.</para>
+
+              <figure id="figure.complete.sonix.design">
+                <title>The Sonix Design</title>
+
+                <mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="figures/sonix_system_view.png"
+                               format="PNG" />
+                  </imageobject>
+                </mediaobject>
+              </figure>
+
+              <section>
+                <title>Design Patterns Overview</title>
+
+                <para>Design patterns describe simple and elegant solutions to
+                specific problems in object oriented software design. When
+                designing Sonix, we used many design patterns appropriate for
+                a simple audio system.</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>Adapter
+                    (<classname>snx::SoundImplementation</classname>). This
+                    adapter provides a common interface to the underlying
+                    sound API.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Prototype
+                    (<classname>snx::SoundImplementation</classname>). Making
+                    <classname>snx::SoundImplementation</classname> a
+                    Prototype allows a new cloned object to be created from it
+                    that has duplicate state.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Store/plugin-method
+                    (<classname>snx::SoundFactory</classname>). Each sound
+                    implementation is registered with a Store called
+                    <classname>snx::SoundFactory</classname>. This Store
+                    allows users to select items from its inventory. Another
+                    name for Store is <quote>Abstract Factory.</quote></para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Abstract Factory
+                    (<classname>snx::SoundFactory</classname>). The Store can
+                    create new instances of the requested sound
+                    implementation. The Abstract Factory consults its Store of
+                    registered objects, and if found, makes a clone of that
+                    object (Prototype pattern). The Abstract Factory is used
+                    in Sonix to configure the Bridge.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Bridge (<classname>snx::sonix</classname> interface
+                    class and
+                    <classname>snx::SoundImplementation</classname>). The
+                    <classname>snx::sonix</classname> class is the audio
+                    system abstraction which is decoupled from its
+                    implementation
+                    <classname>snx::SoundImplementation</classname>. This way
+                    the two can vary independently. Bridge also facilitates
+                    run-time configuration of the sound API.</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Proxy (<classname>std::string</classname> and
+                    <classname>snx::SoundHandle</classname>).
+                    <classname>snx::SoundHandle</classname> is how users
+                    manipulate their sound object.
+                    <classname>snx::SoundHandle</classname> is actually a
+                    proxy to a <classname>std::string</classname> proxy. The
+                    <classname>std::string</classname> Proxy is what allows
+                    Sonix reconfiguration of resources. Rather than using
+                    pointers which can easily be left to dangle, the
+                    <classname>std::string</classname> serves as a lookup for
+                    a protected sound resource located internally to the Sonix
+                    run-time memory space. The
+                    <classname>snx::SoundHandle</classname> wraps this
+                    <classname>std::string</classname> to provide a simple and
+                    familiar C++ object to use as the sound handle. The Sonix
+                    class acts as Mediator between every Proxy method and the
+                    actual audio system Adapter.</para>
+                  </listitem>
+                </itemizedlist>
+              </section>
+
+              <section>
+                <title>Pluggable audio subsystems</title>
+
+                <para>Sonix supports the selection of several audio subsystems
+                by the application through implementation plug-ins (see <xref
+                linkend="figure.sonix.plugins" />). Each plug-in implements an
+                adapter to an underlying audio subsystem. The adapter supports
+                a common interface that Sonix knows how talk to. Each adapter
+                is then registered with a factory object, which may ask that
+                adapter to clone itself for use by whomever called the
+                factory.</para>
+
+                <figure id="figure.sonix.plugins">
+                  <title>Use of Plug-ins in Sonix</title>
+
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="figures/how_sonix_plugins_work.png"
+                                 format="PNG" />
+                    </imageobject>
+                  </mediaobject>
+                </figure>
+              </section>
+            </section>
+          </section>
+        </section>
+
+        <section id="section.using.sound.manager">
+          <title>Using the VR Juggler Sound Manager</title>
+
+          <para>Now that we understand how Sonix works and how to use its
+          simple API, we can go one step further and simplify the usage even
+          more. Similar to the graphics API-specific VR Juggler Draw Managers,
+          there exists the concept of a Sound Manager. There is a
+          Sonix-specific Sound Manager implementation that handles many of the
+          details of Sonix usage.</para>
+
+          <para>The Sonix Sound Manager is configured using a config element
+          of type <literal>sound_manager_sonix</literal>. The config element
+          sets the sound API to use, defines the llistener position, and sets
+          up all the sound objects that will be used by the application. All
+          of this would normally have to be done by the application programmer
+          using the <classname>snx::sonix</classname> singleton, as presented
+          above in <xref linkend="section.basic.sonix.usage" />. In <xref
+          linkend="example.config.sonix.sound.manager" />, we show a small
+          example of configuring the Sonix Sound Manager. Note that some parts
+          of the config file are removed for brevity. Aspects of this will be
+          referenced in the code examples shown below.</para>
+
+          <example id="example.config.sonix.sound.manager">
+            <title>Example Sonix Sound Manager Conifguration</title>
+
+            <programlisting>&lt;sound_manager_sonix version="1"&gt;
+   &lt;api&gt;OpenAL&lt;/api&gt;
+   &lt;listener_position&gt;0.0&lt;/listener_position&gt;
+   &lt;listener_position&gt;0.0&lt;/listener_position&gt;
+   &lt;listener_position&gt;0.0&lt;/listener_position&gt;
+   &lt;sound&gt;
+      &lt;sound name="bump" version="1"&gt;
+         &lt;filename&gt;${VJ_BASE_DIR}/share/vrjuggler/data/sounds/bump.wav&lt;/filename&gt;
+         &lt;ambient&gt;false&lt;/ambient&gt;
+         &lt;retriggerable&gt;false&lt;/retriggerable&gt;
+         &lt;loop&gt;1&lt;/loop&gt;
+         &lt;pitch_bend&gt;1.0&lt;/pitch_bend&gt;
+         &lt;cutoff&gt;1.0&lt;/cutoff&gt;
+         &lt;volume&gt;1.0&lt;/volume&gt;
+         &lt;position&gt;0.0&lt;/position&gt;
+         &lt;position&gt;0.0&lt;/position&gt;
+         &lt;position&gt;0.0&lt;/position&gt;
+      &lt;/sound&gt;
+   &lt;/sound&gt;
+   &lt;sound&gt;
+      &lt;sound name="step" version="1"&gt;
+         &lt;filename&gt;${VJ_BASE_DIR}/share/vrjuggler/data/sounds/footstep.wav&lt;/filename&gt;
+         &lt;ambient&gt;false&lt;/ambient&gt;
+         &lt;retriggerable&gt;false&lt;/retriggerable&gt;
+         &lt;loop&gt;1&lt;/loop&gt;
+         &lt;pitch_bend&gt;1.0&lt;/pitch_bend&gt;
+         &lt;cutoff&gt;1.0&lt;/cutoff&gt;
+         &lt;volume&gt;1.0&lt;/volume&gt;
+         &lt;position&gt;0.0&lt;/position&gt;
+         &lt;position&gt;0.0&lt;/position&gt;
+         &lt;position&gt;0.0&lt;/position&gt;
+      &lt;/sound&gt;
+   &lt;/sound&gt;
+   &lt;!-- Other sound objects ... --&gt;
+&lt;/sound_manager_sonix&gt;</programlisting>
+          </example>
+
+          <para>All sound files named in the config element are automatically
+          loaded by the Sonix Sound Manager. User applications simply declare
+          sound handles that refer to the loaded sound objects. The VR Juggler
+          application class will then include one
+          <classname>snx::SoundHandle</classname> instance for each sound
+          object declared in the Sonix Sound Manager config element, as shown
+          in <xref linkend="example.app.declaring.sound.handles" />. This is
+          very similar to the use of Gadgeteer device interfaces that provide
+          access to device input.</para>
+
+          <example id="example.app.declaring.sound.handles">
+            <title>Declaring Sound Handles in Application Object Class</title>
+
+            <programlisting>class MySoundApp : public vrj::GlApp
+{
+public:
+   void init();
+   void preFrame();
+   // Other application object interface methods ...
+
+private:
+   // Determines if the "bump" sound should be triggered.
+   bool shouldTriggerBump();
+
+   // Determines if the "step" sound should be triggered.
+   bool shouldTriggerStep();
+
+   snx::SoundHandle mBumpSound;
+   snx::SoundHandle mStepSound;
+   // And so on ...
+};</programlisting>
+          </example>
+
+          <para>To get access to the sounds through the
+          <classname>snx::SoundHandle</classname> objects, the sound handles
+          must be initialized. This is done in the same way as described
+          earlier in the explanation of direct use of the Sonix API. The sound
+          handle initialization should be performed in the
+          <methodname>init()</methodname> method of the VR Juggler application
+          object, as shown in <xref
+          linkend="example.app.init.sound.handles" />. The string value passed
+          to <methodname>snx::SoundHandle::init()</methodname> is the name
+          given in the Sonix Sound Manager config element. Again, we see
+          similarity with the usage of Gadgeteer device interfaces.</para>
+
+          <example id="example.app.init.sound.handles">
+            <title>Initializing Sound Handles in an Application Object</title>
+
+            <programlisting>void MySoundApp::init()
+{
+   mBumpSound.init("bump");
+   mStepSound.init("step");
+   // And so on ...
+}</programlisting>
+          </example>
+
+          <para>Finally, the sounds can be triggered in the application object
+          <methodname>preFrame()</methodname> method, shown below in <xref
+          linkend="example.app.trigger.sound" />. They should not be triggered
+          in the <methodname>draw()</methodname> method because, as we have
+          seen in earlier sections, <methodname>draw()</methodname> can be
+          invoked multiple times per frame. There is no need to call the
+          function <methodname>snx::sonix::step()</methodname> in
+          <methodname>preFrame()</methodname> or in
+          <methodname>postFrame()</methodname>. This is done automatically
+          within the Sonix Sound Manager each time through the kernel control
+          loop.</para>
+
+          <example id="example.app.trigger.sound">
+            <title>Triggering Sounds in an Application Object</title>
+
+            <programlisting>void MySoundApp::preFrame()
+{
+   if ( shouldTriggerBump() )
+   {
+      mBumpSound.trigger();
+   }
+
+   if ( shouldTriggerStep() )
+   {
+      mStepSound.trigger();
+   }
+}</programlisting>
+          </example>
+
+          <para>Other methods in the <classname>snx::SoundHandle</classname>
+          class interface can be invoked on the sound handle objects. We have
+          focused on simple rendering of sounds here. Refer to the Sonix
+          <emphasis>Programmer Reference</emphasis>, found on the <ulink
+          url="http://www.vrjuggler.org/sonix/docs.php">Sonix documentation
+          web page</ulink>, for complete documentation on the interface of
+          <classname>snx::SoundHandle</classname>.</para>
         </section>
       </section>
 
