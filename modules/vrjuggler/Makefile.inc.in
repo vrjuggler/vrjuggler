@@ -274,8 +274,6 @@ endif
 	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjParam.h &&		\
           $(LN_S) $(topdir)/vrj/vrjParam.h ./
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	cd $(instlinks)/bin && $(RM_LN) ./catadf.pl &&			\
-          $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VJROOT_ABS)/vrjuggler-config.in -p 'use_base_dir=yes'	\
             -v $(VJROOT_ABS)/VERSION -o $(instlinks)/bin/vrjuggler-config -x
@@ -411,8 +409,6 @@ install-tools:
           --prefix="$(projdatadir)/tools" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
           $(_GROUP_OPT_PL) --srcdir="."
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
 
 # Install the standard data files.
 install-data:
