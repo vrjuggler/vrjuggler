@@ -13,19 +13,27 @@
 #include <Sync/vjMutex.h>
 #include <Sync/vjGuard.h>
 
+
+//---------------------------------------------------------------------
 //: Helper class for vjBarrier
+//---------------------------------------------------------------------
 class vjSubBarrier
 {
 public:
+    // ------------------------------------------------------------------------
     //: Initialization.
+    // ------------------------------------------------------------------------
     vjSubBarrier (int count, vjMutex* lock) : runningThreads(count), barrierFinished(lock)
     {}
 
     vjCond barrierFinished;   // True if this generation of the barrier is done.
 
-    int runningThreads;  // Number of threads that are still running.
+    int runningThreads;  //: Number of threads that are still running.
 
-    void dump (void)     // Dump the state of an object.
+    // ------------------------------------------------------------------------
+    //: Dump the state of an object.
+    // ------------------------------------------------------------------------
+    void dump (void)
     {
         cerr << "vjSubBarrier::dump" << endl;
         this->barrierFinished.dump();
@@ -47,7 +55,9 @@ public:
 class vjBarrier
 {
 public:
-    // Initialize the barrier to synchronize <count> threads.
+    // ------------------------------------------------------------------------
+    //: Initialize the barrier to synchronize <count> threads.
+    // ------------------------------------------------------------------------
     vjBarrier (int count) : currentGeneration(0),
         count(count),
         subBarrier1(count, &mutex),
@@ -58,62 +68,34 @@ public:
         subBarrier[1] = &subBarrier2;
     }
 
-    // Block the caller until all <count> threads have called <wait> and
-    // then allow all the caller threads to continue in parallel.
-    int wait (void)
+    // -----------------------------------------------------------------------
+    //: Block the caller until all <count> threads have called <wait> and
+    //+ then allow all the caller threads to continue in parallel.
+    // -----------------------------------------------------------------------
+    int wait(void);
+
+    // -----------------------------------------------------------------------
+    //: Tell the barrier to increase the count of the number of threads to
+    //+ syncronize.
+    // -----------------------------------------------------------------------
+    void addProcess()
     {
-        vjGuard<vjMutex> guard(mutex);
-
-        vjSubBarrier* curvjSubBarrier = this->subBarrier[currentGeneration];
-
-        // Check for shutdown...
-        if (curvjSubBarrier == NULL) {
-            return -1;
-        }
-
-        if (curvjSubBarrier->runningThreads == 1)
-        {
-            // We're the last running thread, so swap generations and tell
-            // all the threads waiting on the barrier to continue on their
-            // way.
-
-            curvjSubBarrier->runningThreads = this->count;
-	
-            // Swap generations.
-            currentGeneration = 1 - this->currentGeneration;	    // Cycles between 0 and 1
-            curvjSubBarrier->barrierFinished.broadcast();
-        }
-        else
-        {
-            --curvjSubBarrier->runningThreads;
-
-            // Block until all the other threads wait().
-            while (curvjSubBarrier->runningThreads != count)
-                curvjSubBarrier->barrierFinished.wait ();
-        }
-
-        return 0;
+        cerr << "vjBarrier::addProcess: Not implemented yet." << endl;
     }
 
+    // -----------------------------------------------------------------------
+    //: Tell the barrier to decrease the count of the number of threads to
+    //+ syncronize.
+    // -----------------------------------------------------------------------
+    void removeProcess()
+    {
+        cerr << "vjBarrier::removeProcess: Not implemented yet." << endl;
+    }
 
-    //-----------------------------------------------------------
-    // addProcess/removeProcess
-    // PURPOSE:
-    //	    Tell the barrier to increase/decrease the count of the number
-    //	    of threads to syncronize
-    //-----------------------------------------------------------
-  void addProcess()
-  {
-    cerr << "vjBarrier::addProcess: Not implemented yet." << endl;
-  }
-
-  void removeProcess()
-  {
-    cerr << "vjBarrier::removeProcess: Not implemented yet." << endl;
-  }
-
+    // -----------------------------------------------------------------------
+    //: Dump the state of an object.
+    // -----------------------------------------------------------------------
     void dump (void) const {}
-    // Dump the state of an object.
 
 private:
     vjMutex mutex;   // Serialize access to the barrier state.
@@ -141,5 +123,5 @@ private:
 };
 
 
-#endif
-#endif
+#endif	/* VJ_SGI_IPC */
+#endif	/* _VJBarrier_h_ */
