@@ -157,6 +157,8 @@ links:
            ln -s $(ROOT_ABS)/data ./share/sonix/data
 	cd $(instlinks)/share/sonix &&                          \
           ln -s $(topdir)/samples ./src
+	cd $(instlinks)/share/sonix &&                          \
+          ln -s $(topdir)/README.txt ./
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(ROOT_ABS)/sonix-config.in -p 'use_base_dir=yes'	\
             -v $(ROOT_ABS)/VERSION -o $(instlinks)/bin/sonix-config -x
@@ -228,18 +230,16 @@ POSTINSTALL	= post-install
 
 # Do everything needed after installing the library binaries.
 post-install:
-	@$(MAKE) install-samples
+	@$(MAKE) install-share
 	@$(MAKE) install-test
-	@$(MAKE) install-data
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/sonix-config $(bindir)
 
-install-data:
+install-share:
 	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/sonix/data
 	cp -r $(ROOT_ABS)/data/*.aiff $(datadir)/sonix/data
-
-install-samples:
 	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/sonix/src
+	cp $(ROOT_ABS)/README.txt $(datadir)/sonix
 
 install-test:
 
