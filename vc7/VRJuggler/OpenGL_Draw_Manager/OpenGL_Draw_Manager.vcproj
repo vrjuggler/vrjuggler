@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl_d.dll"
-				Version="1.1.149"
+				Version="1.1.154"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\DebugDLL;..\..\VPR\DebugDLL;..\..\JCCL\DebugDLL;..\..\Gadgeteer\DebugDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
@@ -69,6 +69,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
@@ -91,7 +92,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl.dll"
-				Version="1.1.149"
+				Version="1.1.154"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\ReleaseDLL;..\..\VPR\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\Gadgeteer\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
@@ -121,13 +122,16 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlApp.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlBasicSimulator.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.cpp">
@@ -158,13 +162,13 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlContextData.h">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawObjectFunctor.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.h">
