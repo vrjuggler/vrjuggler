@@ -207,14 +207,10 @@ public:
       }
       mCondVar.release();
 
-      // Wait until the acceptor is ready.
-      // XXX: Maybe this should be imporved upon once non-blocking acceptors
-      // work.
-      while ( acceptor.getSocket().isReadBlocked() ) {
-         vpr::System::usleep(50);
-      }
+      do {
+         status = acceptor.accept(client_sock);
+      } while ( status == vpr::Status::WouldBlock );
 
-      status = acceptor.accept(client_sock);
       threadAssertTest(status.success(), "Accept failed");
 
       threadAssertTest(client_sock.isOpen(), "Accepted socket should be open");
