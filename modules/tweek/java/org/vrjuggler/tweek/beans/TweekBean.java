@@ -156,11 +156,15 @@ public abstract class TweekBean
       }
       catch (java.net.MalformedURLException e)
       {
-         throw new BeanInstantiationException(e.getMessage());
+         String message = "Instantiation of Bean '" + getName() +
+                             "' (type " + attrs.getClassname() + ") failed";
+         throw new BeanInstantiationException(message, e);
       }
       catch (java.io.IOException e)
       {
-         throw new BeanInstantiationException(e.getMessage());
+         String message = "Instantiation of Bean '" + getName() +
+                             "' (type " + attrs.getClassname() + ") failed";
+         throw new BeanInstantiationException(message, e);
       }
    }
 
