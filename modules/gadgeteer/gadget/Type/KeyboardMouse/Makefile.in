@@ -31,38 +31,25 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Devices/EventWindow.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Type/KeyboardMouse.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
 default: all
 
-# Include common definitions.
+# Include common definitions
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/gadget/Devices/EventWindow
+includedir=	@includedir@/gadget/Type/KeyboardMouse
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-xwin_srcs=	EventWindowDepCheckerXWin.cpp	\
-		EventWindowXWin.cpp
-
-ifeq (@OS_TYPE@, Win32)
-   SRCS=	EventWindowWin32.cpp
-else
-   ifeq (@PLATFORM@, Darwin)
-      ifeq (@gadget_use_x11@, yes)
-         SRCS=	$(xwin_srcs)
-      else
-         SRCS=	EventWindowOSX.cpp
-      endif
-   else
-      SRCS=	$(xwin_srcs)
-   endif
-endif
+SRCS=		Event.cpp	\
+		KeyEvent.cpp	\
+		MouseEvent.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

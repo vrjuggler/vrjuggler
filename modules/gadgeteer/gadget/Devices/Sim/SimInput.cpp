@@ -70,7 +70,7 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::Config
 bool SimInput::config(jccl::ConfigElementPtr element)
 {
    // Get the event source.
-   mEventWin.init(element->getProperty<std::string>("event_window_proxy"));
+   mKeyboardMouse.init(element->getProperty<std::string>("keyboard_mouse_proxy"));
 
    return true;
 }
@@ -87,11 +87,11 @@ int SimInput::checkKeyPair(KeyModPair& pair)
 
    if (pair.mModifier == -1)
    {
-      return mEventWin->keyPressed(pair.mKey);
+      return mKeyboardMouse->keyPressed(pair.mKey);
    }
-   if (mEventWin->modifierOnly(pair.mModifier))
+   if (mKeyboardMouse->modifierOnly(pair.mModifier))
    {
-      return mEventWin->keyPressed(pair.mKey);
+      return mKeyboardMouse->keyPressed(pair.mKey);
    }
    else
    {

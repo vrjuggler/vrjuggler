@@ -43,7 +43,7 @@ include @topdir@/make.defs.mk
 DIRPRFX=	gadget/Devices/
 
 # Subdirectories to compile.
-SUBDIR=		EventWindow	\
+SUBDIR=		KeyboardMouseDevice	\
 		Sim
 
 # This is a hack until I can figure out a better way to do this automatically

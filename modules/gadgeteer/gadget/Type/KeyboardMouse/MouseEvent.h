@@ -35,10 +35,10 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Type/EventWindow/Event.h>
-#include <gadget/Type/EventWindow/MouseEventPtr.h>
-#include <gadget/Type/EventWindow/Keys.h>
-#include <gadget/Type/EventWindow/EventFactory.h>
+#include <gadget/Type/KeyboardMouse/Event.h>
+#include <gadget/Type/KeyboardMouse/MouseEventPtr.h>
+#include <gadget/Type/KeyboardMouse/Keys.h>
+#include <gadget/Type/KeyboardMouse/EventFactory.h>
 
 
 namespace gadget

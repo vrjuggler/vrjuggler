@@ -30,37 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigElement.h>
-#include <gadget/Util/Debug.h>
-#include <gadget/Type/EventWindowProxy.h>
+#ifndef _GADGET_KEYBOARD_MOUSE_INTERFACE_H_
+#define _GADGET_KEYBOARD_MOUSE_INTERFACE_H_
 
+#include <gadget/Type/KeyboardMouseProxy.h>
+#include <gadget/Type/DeviceInterface.h>
 
-namespace gadget
-{
-
-std::string EventWindowProxy::getElementType()
-{
-   return "event_window_proxy";
-}
-
-bool EventWindowProxy::config(jccl::ConfigElementPtr element)
-{
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-      std::string("------------------ EventWindow PROXY config() -----------------\n"),
-      std::string("\n"));
-   vprASSERT(element->getID() == getElementType());
-
-   if( ! Proxy::config(element) )
-   {
-      return false;
-   }
-
-   mDeviceName = element->getProperty<std::string>("device");
-
-   refresh();
-
-   return true;
-}
-
-} // End of gadget namespace
+#endif

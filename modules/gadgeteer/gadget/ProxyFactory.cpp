@@ -40,7 +40,7 @@
 #include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/GloveProxy.h>
 #include <gadget/Type/GestureProxy.h>
-#include <gadget/Type/EventWindowProxy.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/CommandProxy.h>
 #include <gadget/Type/StringProxy.h>
 #include <gadget/ProxyDepChecker.h>
@@ -70,7 +70,7 @@ void ProxyFactory::loadKnownProxies()
    ProxyConstructor<PositionProxy>* pos_proxy = new ProxyConstructor<PositionProxy>;
    ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
 //   ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
-   ProxyConstructor<EventWindowProxy>* event_win_proxy = new ProxyConstructor<EventWindowProxy>;
+   ProxyConstructor<KeyboardMouseProxy>* keyboard_mouse_proxy = new ProxyConstructor<KeyboardMouseProxy>;
    ProxyConstructor<CommandProxy>* command_proxy = new ProxyConstructor<CommandProxy>;
    ProxyConstructor<StringProxy>* string_proxy = new ProxyConstructor<StringProxy>;
 
@@ -79,7 +79,7 @@ void ProxyFactory::loadKnownProxies()
        (NULL == pos_proxy) ||
        (NULL == glove_proxy) ||
 //       (NULL == gesture_proxy) ||
-       (NULL == event_win_proxy) ||
+       (NULL == keyboard_mouse_proxy) ||
        (NULL == command_proxy) ||
        (NULL == string_proxy)  )
    {
