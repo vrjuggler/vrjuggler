@@ -454,7 +454,7 @@ int ConfigManager::attemptReconfiguration()
    {
       vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_STATE_LVL,
       std::string("ConfigManager::attemptReconfiguration: Examining pending list.\n"),
-      std::string("ConfigManager::attemptReconfiguration: Examining pending list.\n"));
+      std::string("ConfigManager::attemptReconfiguration: Done Examining pending list.\n"));
       
       std::vector<ConfigChunkHandler*>::iterator it = mChunkHandlers.begin();
       std::vector<ConfigChunkHandler*>::iterator end = mChunkHandlers.end();
@@ -467,11 +467,6 @@ int ConfigManager::attemptReconfiguration()
       }
 
       unlockPending();
-
-      vprDEBUG_END(vprDBG_ALL,vprDBG_STATE_LVL)
-         << "ConfigManager::attemptReconfiguration: Done examining pending list.\n"
-         << vprDEBUG_FLUSH;
-
    }
 
    if ( chunks_processed > 0 )

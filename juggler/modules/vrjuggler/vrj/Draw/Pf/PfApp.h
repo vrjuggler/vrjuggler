@@ -131,7 +131,9 @@ public:
     */
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
-      vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, 4) << "--- drawChan: Entered ---.\n" << vprDEBUG_FLUSH;
+      vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL, 
+                     std::string("--- drawChan: Entered ---.\n"),
+                     std::string("--- drawChan: Exited ---.\n"));
       this->preDrawChan(chan,chandata);
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel

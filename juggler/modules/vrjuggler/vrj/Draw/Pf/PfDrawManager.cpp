@@ -1076,7 +1076,10 @@ void PfAppFunc(pfChannel *chan, void* chandata)
 //template <bool left_eye, bool right_eye, bool stereo, bool simulator>
 void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo)  // , bool simulator)
 {
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFunc: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL, 
+                        std::string("--- PfDrawFunc: Enter ---.\n"),
+                        std::string("--- PfDrawFunc: Exit ---.\n"));
+   
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
 
       // Select correct buffer to draw to
@@ -1112,8 +1115,6 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
 
    }
    */
-
-   vprDEBUG_END(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFunc: Exit ---.\n" << vprDEBUG_FLUSH;
 }
 
 /*********************************************************************
