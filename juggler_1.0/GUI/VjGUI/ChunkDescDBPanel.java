@@ -158,7 +158,7 @@ implements ActionListener {
     else if (e.getSource() == clearbutton) {
       System.out.println ("pressed clear");
       core.descs.removeAll();
-      validate();
+      update();
     }
     else if (e.getSource() == list) {
       String name = list.getSelectedItem();
