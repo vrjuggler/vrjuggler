@@ -246,9 +246,7 @@ endif
 	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjParam.h &&		\
           $(LN_S) $(topdir)/vrj/vrjParam.h ./
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VJROOT_ABS)/vrjuggler-config.in -p 'use_base_dir=yes'	\
-            -v $(VJROOT_ABS)/VERSION -o $(instlinks)/bin/vrjuggler-config -x
+	cd $(instlinks)/bin && cp -p $(topdir)/vrjuggler-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'

@@ -340,22 +340,6 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
-if test "x$X_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $X_INCLUDES"
-fi
-
-if test "x$OGL_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $OGL_INCLUDES"
-fi
-
-if test "x$PF_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $PF_INCLUDES"
-fi
-
-if test "x$OSG_INCLUDES" != "x" -a "x$OSG_API" = "xY" ; then
-    INCLUDES="$INCLUDES $OSG_INCLUDES"
-fi
-
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
 #    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
@@ -369,6 +353,26 @@ vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 
 if test "x$LOCAL_GMTL" = "xY" ; then
    vrj_cxxflags="$vrj_cxxflags $GMTL_INCLUDES"
+fi
+
+if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
+   INCLUDES="$INCLUDES -I$x_includes"
+   vrj_cxxflags="$vrj_cxxflags -I$x_includes"
+fi
+
+if test "x$OGL_INCLUDES" != "x" ; then
+   INCLUDES="$INCLUDES $OGL_INCLUDES"
+   vrj_cxxflags="$vrj_cxxflags $OGL_INCLUDES"
+fi
+
+if test "x$PF_INCLUDES" != "x" ; then
+   INCLUDES="$INCLUDES $PF_INCLUDES"
+   vrj_cxxflags="$vrj_cxxflags $PF_INCLUDES"
+fi
+
+if test "x$OSG_INCLUDES" != "x" -a "x$OSG_API" = "xY" ; then
+   INCLUDES="$INCLUDES $OSG_INCLUDES"
+   vrj_cxxflags="$vrj_cxxflags $OSG_INCLUDES"
 fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -461,10 +465,6 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_PF="$LIBPERFORMER"
     fi
 
-    if test "x$PLATFORM" = "xLinux" ; then
-        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
-    fi
-
     if test "x$OSG_LDFLAGS" != "x" ; then
         APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib $LIBOSG"
     else
@@ -539,8 +539,9 @@ case $OS_TYPE in
         vrj_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_ogl'
-        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
+        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
         vrj_extra_libs_juggler="$GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
+
         Juggler_lib='-lJuggler'
         Juggler_ogl_lib='-lJuggler_ogl'
 
@@ -548,6 +549,10 @@ case $OS_TYPE in
             Juggler_pf_lib='-lJuggler_pf'
         fi
 
+        # XXX: Ideally, -lm would not be added "manually" like this.
+        Juggler_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_X11 $LIBS -lm"
+        Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
+        Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         ;;
     WIN32)
         vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
@@ -558,15 +563,18 @@ case $OS_TYPE in
 
         Juggler_lib='Juggler.lib'
         Juggler_ogl_lib='Juggler_ogl.lib'
+        Juggler_extra_libs="$LDFLAGS $LIBS"
+        Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
         ;;
 esac
-
-vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     vrj_n32_flags='-n32'
     vrj_64_flags='-64'
 fi
+
+vrj_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
+vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
 
 VJ_VERSION_GROK(VERSION)
 
@@ -612,14 +620,19 @@ AC_SUBST(vrj_extra_cxxflags)
 AC_SUBST(vrj_ldflags_compiler)
 AC_SUBST(vrj_ldflags_linker)
 AC_SUBST(vrj_libs)
-AC_SUBST(Juggler_lib)
-AC_SUBST(Juggler_ogl_lib)
-AC_SUBST(Juggler_pf_lib)
-AC_SUBST(vrj_extra_ldflags)
+AC_SUBST(vrj_extra_ldflags_compiler)
+AC_SUBST(vrj_extra_ldflags_linker)
 AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj_extra_libs_juggler)
 AC_SUBST(vrj_n32_flags)
 AC_SUBST(vrj_64_flags)
+
+AC_SUBST(Juggler_lib)
+AC_SUBST(Juggler_ogl_lib)
+AC_SUBST(Juggler_pf_lib)
+AC_SUBST(Juggler_extra_libs)
+AC_SUBST(Juggler_ogl_extra_libs)
+AC_SUBST(Juggler_pf_extra_libs)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -679,6 +692,11 @@ AC_OUTPUT(vrjuggler-config
           test/TestSuite/test.defs.mk
           test/TestSuite/TestCases/Makefile
           test/TestSuite/TestCases/Pf/Makefile
+          test/UI/Makefile
+          test/UI/OGL/Makefile
+          test/UI/OGL/torus/Makefile
+          test/UI/Pf/Makefile
+          test/UI/Pf/simple/Makefile
           tools/Makefile
           mtree/VJ.data.dist
           mtree/VJ.include.dist
@@ -687,9 +705,7 @@ AC_OUTPUT(vrjuggler-config
           mtree/VJ.test.dist
           mtree/VJ.tools.dist
           VARS.pl,
-    [ sed -e 's/^\(%.*\)/#\1/g' vrjuggler-config > vrjuggler-config.tmp
-      mv vrjuggler-config.tmp vrjuggler-config
-      chmod a+x vrjuggler-config ])
+    [chmod a+x vrjuggler-config])
 
 cat <<BUILD_INFO
 

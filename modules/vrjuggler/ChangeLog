@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-25-2002 patrickh  The vrjuggler-config script is now written in Perl.  It
+                      is capable of determining its installation path at
+                      runtime.
 Jun-21-2002 allenb    Fixed bug where GLX window was not processing keyup or
                       button events.
 Jun-20-2002 allenb    Remove multi-threading from the case where GLXWindow and 

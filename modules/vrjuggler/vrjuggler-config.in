@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@PERL@ -w
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
@@ -32,67 +32,184 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-%{
-%}
+use 5.004;
 
-vrj_extra_cxxflags="@vrj_extra_cxxflags@"
-Juggler_lib="@Juggler_lib@"
-Juggler_ogl_lib="@Juggler_ogl_lib@"
-Juggler_pf_lib="@Juggler_pf_lib@"
+use strict 'vars';
+use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
+            $ECHO_PREFIX);
+use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
+            $VRJ_ABI_FLAGS $VRJ_ISA_FLAGS $Win32 %LIBS);
 
-vrj_default_abi="@ABI@"
-vrj_default_isa="@ISA@"
-vrj_n32_flags="@vrj_n32_flags@"
-vrj_64_flags="@vrj_64_flags@"
-LIBBITSUF='@LIBBITSUF@'
+use File::Basename;
+use Getopt::Long;
 
-USE_GCC='@USE_GCC@'
+sub usage($);
+sub make_CXXFLAGS($;$);
+sub make_INCLUDES($);
+sub make_LDFLAGS($;$$);
+sub make_EXTRA_LDFLAGS($;$$);
+sub handleOptArg($$);
+sub stripDuplicateArgs($);
 
-if [ "x$vrj_default_abi" = "xN32" ]; then
-    vrj_abi_flags="$vrj_n32_flags"
-elif [ "x$vrj_default_abi" = "x64" ]; then
-    vrj_abi_flags="$vrj_64_flags"
-else
-    vrj_abi_flags=''
-fi
+# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
 
-if [ "x$USE_GCC" != "xyes" ]; then
-   if [ "x$vrj_default_isa" = "xmips3" -o "x$vrj_default_isa" = "xmips4" ]
-   then
-      vrj_isa_flags="-$vrj_default_isa"
-   fi
-fi
+usage(1) if $#ARGV == -1;
 
-if [ "x$vrj_default_isa" = "xmips3" -o "x$vrj_default_isa" = "xmips4" ]; then
-    vrj_isa_flags="-$vrj_default_isa"
-else
-    vrj_isa_flags=''
-fi
+my $vrj_default_abi = qq(@ABI@);
+my $vrj_default_isa = qq(@ISA@);
+my $vrj_n32_flags   = qq(@vrj_n32_flags@);
+my $vrj_64_flags    = qq(@vrj_64_flags@);
+$LIBBITSUF          = qq(@LIBBITSUF@);
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-prefix_set='no'
-exec_prefix_set='no'
-print_all='no'
-use_linker='no'
+my $use_gcc = '@USE_GCC@';
 
-usage()
+$VRJ_ABI_FLAGS = '';
+
+if ( $vrj_default_abi =~ /n32/i )
 {
-    if test "x$2" != "x" ; then
-       echo "Unrecognized option '$2'"
-    fi
+   $VRJ_ABI_FLAGS = "$vrj_n32_flags";
+}
+elsif ( $vrj_default_abi =~ /64/ )
+{
+   $VRJ_ABI_FLAGS = "$vrj_64_flags";
+}
 
-    cat <<EOF
-Usage: vrjuggler-config [OPTIONS] [LIBRARIES]
+$VRJ_ISA_FLAGS = '';
+
+# If we are not using GCC and a known ISA is defined, add define the ISA
+# argument for the compiler and linker.
+if ( $use_gcc !~ /^y/i && $vrj_default_isa =~ /^mips[34]/ )
+{
+   $VRJ_ISA_FLAGS = "-$vrj_default_isa";
+}
+
+# Set up variables used to determine what the real prefix is.  This is
+# important when this script has been installed.
+$Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
+
+my $base_dir = '';
+
+# Get the directory where this script is located.
+if ( defined($ENV{'VJ_BASE_DIR'}) )
+{
+   $base_dir = "$ENV{'VJ_BASE_DIR'}";
+}
+else
+{
+   $base_dir = (fileparse("$0"))[1];
+
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+
+   $base_dir =~ s|$path_sep$||o;       # Strip off the trailing slash
+   $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
+}
+
+# If we are on Windows, make sure that $base_dir is a full DOS path.
+if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
+{
+   chomp($base_dir = `cygpath -w $base_dir`);
+   $base_dir =~ s|\\|/|g;   # We want / as the path separator
+}
+
+# $exec_prefix may refer to $prefix, so it must be set after $prefix is
+# defined.
+$prefix      = "$base_dir";
+$exec_prefix = qq(@exec_prefix@);
+
+$ECHO_PREFIX      = 0;
+$ECHO_EXEC_PREFIX = 0;
+$PREFIX_SET       = 0;
+$EXEC_PREFIX_SET  = 0;
+$ECHO_CXXFLAGS    = 0;
+$ECHO_LIBS        = 0;
+$ECHO_EXTRA_LIBS  = 0;
+
+my $script_help    = 0;
+my $print_all      = 0;
+my $echo_includes  = 0;
+my $echo_subsystem = 0;
+my $echo_version   = 0;
+my $echo_static    = 0;
+my $use_linker     = 0;
+
+my $cxxflags_arg   = '';
+my $libs_arg       = '';
+my $extra_libs_arg = '';
+
+GetOptions('help|?' => \$script_help, 'all' => \$print_all,
+           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
+           'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
+           'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
+           'linker' => \$use_linker, 'static' => \$echo_static);
+
+usage(0) if $script_help;
+
+# Determine which library's linker options will be printed.
+%LIBS = ();
+
+# Use what is left on the command line.  Ultimately, only "vrj", "Juggler",
+# "Juggler_ogl", and "Juggler_pf" will be recognized.
+if ( $#ARGV != -1 )
+{
+   foreach ( @ARGV )
+   {
+      $LIBS{"$_"} = 1;
+   }
+}
+# Fall back on printing whatever configure tells us is the "default" setting.
+else
+{
+   $LIBS{'vrj'} = 1;
+}
+
+# Construct the (potentially complex) strings that may be printed.
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_all);
+my $includes      = make_INCLUDES("$cxxflags");
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
+my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
+                                       $print_all);
+
+# Finally, print out the requested information.
+print "$prefix\n" if $ECHO_PREFIX;
+print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
+print "@VPR_SUBSYSTEM@\n" if $echo_subsystem;
+print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
+print "$cxxflags\n" if $ECHO_CXXFLAGS;
+print "$includes\n" if $echo_includes;
+print "$ldflags\n" if $ECHO_LIBS;
+print "$extra_ldflags\n" if $ECHO_EXTRA_LIBS;
+
+exit(0);
+
+# =============================================================================
+# Subroutines follow.
+# =============================================================================
+
+sub usage ($)
+{
+    print <<EOF;
+Usage: $0 [LIBRARIES] [OPTIONS]
+
+Libraries (prints the linker options for one or more of these libraries):
+        vrj (all basic libraries)
+        Juggler
+        Juggler_ogl
+        Juggler_pf
+
 Options:
-        [--basedir]             Use \$VJ_BASE_DIR when printing paths
         [--prefix[=DIR]]        Print the installation prefix or set an
                                 alternate prefix to use when printing paths
-        [--exec-prefix[=DIR]]   Print the executable prefix or set an alternate
-                                executable prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an
+                                alternate executable prefix to use when
+                                printing paths
         [--version]             Print the installed VR Juggler's version number
-        [--cxxflags [N32|64]]   Print the flags for the VR Juggler-specific
-                                C++ compiler
+        [--cxxflags [N32|64]]   Print the VR Juggler-specific flags for the C++
+                                compiler
+        [--includes]            Print out only the header path extension
+                                arguments
         [--libs [N32|64]]       Print the basic VR Juggler-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
@@ -101,234 +218,277 @@ Options:
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
         [--subsystem]           Print the VPR OS abstraction layer being used
-
-Libraries (prints the linker options for one or more of these libraries):
-        vrj (all basic libraries)
-        Juggler
-        Juggler_ogl
-        Juggler_pf
 EOF
 
-    exit $1
+    exit($_[0]);
 }
 
-if test $# -eq 0; then
-    usage 1 1>&2
-fi
+sub make_CXXFLAGS ($;$)
+{
+   my $cxxflags_arg = shift;
+   my $print_all    = shift || 0;
 
-lib_Juggler=no
-lib_Juggler_ogl=no
-lib_Juggler_pf=no
+   my $cxxflags = '';
 
-while test $# -gt 0; do
-    case "$1" in
-        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-        *) optarg= ;;
-    esac
+   # Default setting from configure.
+   my $vrj_extra_cxxflags = qq(@vrj_extra_cxxflags@);
 
-    case $1 in
-        --all)
-            print_all='yes'
-            ;;
-        --basedir)
-            use_base_dir=yes
-            ;;
-        --prefix=*)
-            prefix=$optarg
-            prefix_set='yes'
+   if ( $cxxflags_arg =~ /n32/i )
+   {
+      $vrj_extra_cxxflags = "$vrj_extra_cxxflags $vrj_n32_flags $VRJ_ISA_FLAGS";
+   }
+   elsif ( $cxxflags_arg =~ /64/ )
+   {
+      $vrj_extra_cxxflags = "$vrj_extra_cxxflags $vrj_64_flags $VRJ_ISA_FLAGS";
+   }
+   elsif ( "$cxxflags_arg" eq '' )
+   {
+      $vrj_extra_cxxflags = "$vrj_extra_cxxflags $VRJ_ABI_FLAGS $VRJ_ISA_FLAGS";
+   }
 
-            if test $exec_prefix_set = no ; then
-                exec_prefix=$optarg
-            fi
-            ;;
-        --prefix)
-            echo_prefix=yes
-            ;;
-        --exec-prefix=*)
-            exec_prefix=$optarg
-            exec_prefix_set=yes
-            ;;
-        --exec-prefix)
-            echo_exec_prefix=yes
-            ;;
-        --version)
-            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
-            ;;
-        --cxxflags)
-            echo_cxxflags=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_n32_flags $vrj_isa_flags"
-                    shift
-                    ;;
-                64)
-                    vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_64_flags $vrj_isa_flags"
-                    shift
-                    ;;
-                *)
-                    vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_abi_flags $vrj_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --subsystem)
-            echo @VPR_SUBSYSTEM@
-            ;;
-        --libs)
-            echo_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    ldflags="$vrj_n32_flags $vrj_isa_flags"
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    ldflags="$vrj_64_flags $vrj_isa_flags"
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    ldflags="$vrj_abi_flags $vrj_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --extra-libs)
-            echo_extra_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --linker)
-            use_linker='yes'
-            ;;
-        --static)
-            echo_static=yes
-            ;;
-        vrj)
-            lib_Juggler_all=yes
-            ;;
-        Juggler)
-            lib_Juggler=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_ogl)
-            lib_Juggler_ogl=yes
-            lib_Juggler_all=no
-            ;;
-        Juggler_pf)
-            lib_Juggler_pf=yes
-            lib_Juggler_all=no
-            ;;
-        *)
-            usage 1 1>&2
-            ;;
-    esac
-    shift
-done
+   my $vrj_extra_includes     = '';
+#   my $vrj_extra_include_dirs = qq(@vrj_extra_include_dirs@);
 
-if test "x$lib_Juggler_all" = "x" ; then
-    lib_Juggler_all=yes
-fi
+#   if ( "$vrj_extra_include_dirs" ne "" )
+#   {
+#      my $dir;
+#      foreach $dir ( split(/\s+/, "$vrj_extra_include_dirs") )
+#      {
+#         $vrj_extra_includes .= " -I@includedir@/$dir";
+#      }
+#   }
 
-# If we are using $VJ_BASE_DIR, overwrite $prefix and $exec_prefix unless they
-# were set explicitly on the command line.
-if test "$use_base_dir" = "yes" ; then
-    if test "$prefix_set" = "no" ; then
-        prefix="$VJ_BASE_DIR"
-    fi
+   my $vrj_cxxflags_addtl = ($print_all ? qq(@vrj_cxxflags_all@) : '');
 
-    if test "$exec_prefix_set" = "no" ; then
-        exec_prefix="$VJ_BASE_DIR"
-    fi
-fi
+   $cxxflags = qq(@vrj_cxxflags@ $vrj_cxxflags_addtl $vrj_extra_cxxflags ) .
+               qq(-I@includedir@ $vrj_extra_includes);
 
-if test "$echo_prefix" = "yes"; then
-    echo $prefix
-fi
+   # Strip out extra whitespace.
+   $cxxflags =~ s/\s{2,}/ /g;
 
-if test "$echo_exec_prefix" = "yes"; then
-    echo $exec_prefix
-fi
+   return stripDuplicateArgs("$cxxflags");
+}
 
-if test "$echo_cxxflags" = "yes"; then
-    if test "x$print_all" = "xyes" ; then
-        vrj_cxxflags_addtl="@vrj_cxxflags_all@"
-    else
-        vrj_cxxflags_addtl=''
-    fi
+sub make_INCLUDES ($)
+{
+   my(@compiler_flags) = split(/\s+/, "$_[0]");
+   return join(" ", grep(/^-I/, @compiler_flags));
+}
 
-    echo @vrj_cxxflags@ $vrj_cxxflags_addtl $vrj_extra_cxxflags -I$prefix/include $vrj_extra_includes
-fi
+sub make_LDFLAGS ($;$$)
+{
+   my $libs_arg     = shift;
+   my $echo_static  = shift || 0;  # Echo static linking flags
+   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
 
-if test "$echo_static" = "yes" ; then
-    static_begin='@static_begin@'
-    static_end='@static_end@'
-fi
+   my $static_begin = '';
+   my $static_end   = '';
 
-if test "$echo_libs" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        ldflags="-L$VJ_BASE_DIR/lib$LIBBITSUF"
-    else
-        if test "$use_linker" = "yes" ; then
-            ldflags="$ldflags @vrj_ldflags_linker@"
-        else
-            ldflags="$ldflags @vrj_ldflags_compiler@"
-        fi
-    fi
+   if ( $echo_static )
+   {
+      $static_begin = qq(@static_begin@);
+      $static_end   = qq(@static_end@);
+   }
 
-    if test "x$lib_Juggler_all" = "xyes" ; then
-        vrj_libs="@vrj_libs@"
-    else
-        if test "x$lib_Juggler" = "xyes" ; then
-            vrj_libs="$Juggler_lib"
-        fi
+   my $ldflags = '';
 
-        if test "x$lib_Juggler_ogl" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_ogl_lib"
-        fi
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$vrj_n32_flags $VRJ_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$vrj_64_flags $VRJ_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$VRJ_ABI_FLAGS $VRJ_ISA_FLAGS";
+   }
 
-        if test "x$lib_Juggler_pf" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_pf_lib"
-        fi
-    fi
+   $ldflags .= ($use_linker ? qq( @vrj_ldflags_linker@)
+                            : qq( @vrj_ldflags_compiler@));
 
-    echo $ldflags $static_begin $vrj_libs $static_end
-fi      
+   # Determine what VR Juggler libraries will be printed.
+   my $vrj_libs = '';
 
-if test "x$echo_extra_libs" = "xyes"; then
-    if test "x$print_all" = "xyes" ; then
-        vrj_extra_libs_addtl="@vrj_extra_libs_juggler@"
-    else
-        vrj_extra_libs_addtl=''
-    fi
+   if ( $LIBS{'vrj'} )
+   {
+      $vrj_libs = qq(@vrj_libs@);
+   }
+   else
+   {
+      if ( $LIBS{'Juggler'} )
+      {
+         $vrj_libs = qq(@Juggler_lib@);
+      }
 
-    vrj_extra_ldflags="@vrj_extra_ldflags@"
-    vrj_extra_libs="@vrj_extra_libs@"
-    echo $vrj_extra_ldflags $vrj_extra_libs $vrj_extra_libs_addtl
-fi
+      if ( $LIBS{'Juggler_ogl'} )
+      {
+         $vrj_libs .= qq( @Juggler_ogl_lib@);
+      }
+
+      if ( $LIBS{'Juggler_pf'} )
+      {
+         $vrj_libs .= qq( @Juggler_pf_lib@);
+      }
+   }
+
+   my $full_ldflags = "$ldflags $static_begin $vrj_libs $static_end";
+   $full_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_ldflags";
+}
+
+sub make_EXTRA_LDFLAGS ($;$$)
+{
+   my $extra_libs_arg = shift;
+   my $use_linker     = shift || 0;
+   my $print_all      = shift || 0;
+
+   if ( $extra_libs_arg =~ /n32/i )
+   {
+      $LIBBITSUF = '32';
+   }
+   elsif ( $extra_libs_arg =~ /64/ )
+   {
+      $LIBBITSUF = '64';
+   }
+
+   # Determine what dependency libraries will be printed.
+   my $extra_libs = '';
+
+   if ( $LIBS{'vrj'} )
+   {
+      $extra_libs = qq(@vrj_extra_libs@);
+   }
+   else
+   {
+      # This one is first because it depends on libraries returned by the
+      # following two.
+      if ( $LIBS{'Juggler_pf'} )
+      {
+         $extra_libs = qq(@Juggler_pf_extra_libs@);
+      }
+
+      if ( $LIBS{'Juggler_ogl'} || $LIBS{'Juggler_pf'} )
+      {
+         $extra_libs .= qq( @Juggler_ogl_extra_libs@);
+      }
+
+      # This one is last because it will probably contain things such as the
+      # X11 libraries and the math library.
+      if ( $LIBS{'Juggler'} || $LIBS{'Juggler_pf'} )
+      {
+         $extra_libs .= qq( @Juggler_extra_libs@);
+      }
+   }
+
+   my $extra_ldflags = ($use_linker ? qq(@vrj_extra_ldflags_linker@)
+                                    : qq(@vrj_extra_ldflags_compiler@));
+
+   # Add the full set of extra flags if the user specified --all on the
+   # command line.
+   my $vrj_extra_libs_addtl = ($print_all ? qq(@vrj_extra_libs_juggler@) : '');
+
+   my $full_extra_ldflags = "$extra_ldflags $extra_libs $vrj_extra_libs_addtl";
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_extra_ldflags";
+}
+
+# Subroutine for handling command-line parameters that have an optional
+# argument.
+sub handleOptArg ($$)
+{
+   my $name  = shift;
+   my $value = shift || '';
+
+   SWITCH:
+   {
+      if ( "$name" eq "prefix" )
+      {
+         # If $value is defined, we set $prefix to its value.  The value of
+         # $prefix will not be printed in this case.
+         if ( $value )
+         {
+            $prefix      = "$value";
+            $ECHO_PREFIX = 0;
+            $PREFIX_SET  = 1;
+         }
+         # If $value is undefined, that means that --prefix was specified, but
+         # no value was given.  In that case, we just want to print the
+         # prefix.
+         else
+         {
+            $ECHO_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "exec-prefix" )
+      {
+         # If $value is defined, we set $exec_prefix to its value.  The value
+         # of $exec_prefix will not be printed in this case.
+         if ( $value )
+         {
+            $exec_prefix      = "$value";
+            $EXEC_PREFIX_SET  = 1;
+            $ECHO_EXEC_PREFIX = 0;
+         }
+         # If $value is undefined, that means that --exec-prefix was specified,
+         # but no value was given.  In that case, we just want to print the
+         # exec prefix.
+         else
+         {
+            $ECHO_EXEC_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "cxxflags" )
+      {
+         $ECHO_CXXFLAGS = 1;
+         $cxxflags_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "libs" )
+      {
+         $ECHO_LIBS = 1;
+         $libs_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "extra-libs" )
+      {
+         $ECHO_EXTRA_LIBS = 1;
+         $extra_libs_arg  = $value;
+         last SWITCH;
+      }
+   }
+}
+
+# This is a fairly brute-force method for removing duplicated arguments from
+# the given string.  It should not be used for argument lists such as those
+# passed to the linker where functionality can be turned on and off (for
+# example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
+# static linking).
+sub stripDuplicateArgs ($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   foreach ( @arg_list )
+   {
+      next if exists($known_args{"$_"});  # Skip previously seen arguments
+      $known_args{"$_"} = 1;              # Register this argument
+      push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
+}
