@@ -196,7 +196,7 @@ Compiling
    3. Configure all the Juggler modules. This is when you must tell the
        module configure scripts where all the package dependencies are found.
 
- ../configure.pl --cfg=../juggler.cfg --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1
+ ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1
 
        In this case, the interesting configuration options are the path to
        the Xerces-C installation directory and the basic name of the Xerces-C
@@ -230,7 +230,7 @@ Compiling
    1. mkdir build.vpr
  cd build.vpr
 
-   2. ../configure.pl --cfg=../juggler.cfg --module=VPR --prefix=$HOME/vpr-inst
+   2. ../configure.pl --module=VPR --prefix=$HOME/vpr-inst
 
    3. gmake debug install
 
@@ -255,8 +255,8 @@ Compiling
    2. Choose one of the following depending on which subsystem (or both) you
        want to enable in sonix...
 
- ../configure.pl --cfg=../juggler.cfg --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
- ../configure.pl --cfg=../juggler.cfg --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
+ ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+ ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
 
    3. gmake debug install
 
@@ -272,7 +272,7 @@ Compiling
    1. mkdir build.jccl
  cd build.jccl
 
-   2. ../configure.pl --cfg=../juggler.cfg --module=JCCL --prefix=$HOME/jccl-inst --with-xercesroot=<Xerces C++ dir>
+   2. ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-xercesroot=<Xerces C++ dir>
 
    3. gmake debug install
 
@@ -293,7 +293,7 @@ Compiling
    1. mkdir build.gadgeteer
  cd build.gadgeteer
 
-   2. ../configure.pl --cfg=../juggler.cfg --module=Gadgeteer --prefix=$HOME/gadgeteer-inst
+   2. ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst
 
    3. gmake debug install
 
@@ -321,7 +321,7 @@ Compiling
    1. mkdir build.tweek
  cd build.tweek
 
-   2. ../configure.pl --cfg=../juggler.cfg --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=<JDOMPATH>/jdom.jar:<JDOMPATH>/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=<OMNIORBPATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORBPATH>/lib/openorb-1.2.0.jar
+   2. ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=<JDOMPATH>/jdom.jar:<JDOMPATH>/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=<OMNIORBPATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORBPATH>/lib/openorb-1.2.0.jar
 
    3. gmake debug install
 
