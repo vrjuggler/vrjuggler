@@ -216,6 +216,7 @@ endif	# ifndef NO_JAVA_GUI
 # should be set to $(instlinks).
 # =============================================================================
 links:
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
@@ -259,6 +260,12 @@ endif
 	@echo 'You should now set $$VJ_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
+else
+	@echo "---------------------------------------------------------------"
+	@echo 'You must now install VR Juggler and set %VJ_BASE_DIR% to:'
+	@echo "  $(prefix)"
+	@echo "---------------------------------------------------------------"
+endif
 
 # Remove the links in $(instlinks).
 clean-links:
