@@ -304,7 +304,7 @@ sub make_LDFLAGS ($;$$)
    $ldflags .= ($use_linker ? qq( @snx_ldflags_linker@)
                             : qq( @snx_ldflags_compiler@));
 
-   my $full_ldflags = qq($ldflags $static_begin @APP_LINKALL_ON@ @snx_libs@ @APP_LINKALL_OFF@ $static_end);
+   my $full_ldflags = qq($ldflags $static_begin @snx_libs@ $static_end);
    $full_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_ldflags";

@@ -313,31 +313,6 @@ else
    fi
 fi
 
-# -----------------------------------------------------------------------------
-# figure out what the flags are to link all symbols
-# only needed until sonix can load plugins dynamically ala dlopen
-# -----------------------------------------------------------------------------
-if test "x$OS_TYPE" = "xUNIX" ; then
-   if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
-      APP_LINKALL_ON='-all'
-      APP_LINKALL_OFF=''
-   elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
-      if test "x$PLATFORM" = "xIRIX" ; then
-          APP_LINKALL_ON='-Wl,-all'
-          APP_LINKALL_OFF=''
-      else
-          APP_LINKALL_ON='-Wl,--whole-archive'
-          APP_LINKALL_OFF='-Wl,--no-whole-archive'
-      fi
-   fi
-elif test "$OS_TYPE" = "Win32" ; then
-   APP_LINKALL_ON=''
-   APP_LINKALL_OFF=''
-fi
-
-AC_SUBST(APP_LINKALL_ON)
-AC_SUBST(APP_LINKALL_OFF)
-
 dnl -------------------------------------------------------------
 dnl external stuff (like sample apps, also for those who use sonix-config)....
 dnl -------------------------------------------------------------
@@ -367,7 +342,7 @@ else
    snx_ldflags_linker="$snx_ldflags_compiler"
    snx_lib='-lsonix'
    snx_libs="$snx_libs -lsonix"
-   sample_application_libs="$sample_application_libs -L\$(SNX_BASE_DIR)/lib$LIBBITSUF $APP_LINKALL_ON -lsonix $APP_LINKALL_OFF $LIBS $VPR_LIBS_CC -lm"
+   sample_application_libs="$sample_application_libs -L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS $VPR_LIBS_CC -lm"
 
    DYLIB_DEPS=''
    DYLIB_PROF_DEPS="$DYLIB_DEPS"
