@@ -392,8 +392,8 @@ fi
 # For use in linking applications.
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
-tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\${prefix}/include"
-tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\${prefix}/include"
+tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\${prefix}\${include_dir}"
+tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\${prefix}\${include_dir}"
 tweek_idlgendir_cxx="$CXX_IDL_GENDIR_OPT"
 tweek_idlgendir_java="$JAVA_IDL_GENDIR_OPT"
 tweek_idl_incflag_cxx="$CXX_IDL_INCFLAG"
@@ -404,7 +404,7 @@ idl_gen_dirs="tweek/CORBA"
 
 for dir in "$idl_gen_dirs" ; do
    IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
-   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\${prefix}/include/$dir"
+   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\${prefix}\${include_dir}/$dir"
 done
 
 #for dir in "$idl_src_dirs" ; do
