@@ -285,7 +285,7 @@ bool ConfigElement::getProperty_bool(const std::string& prop, int ind) const
       vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
          << "Expecting boolean string for property '" << prop
          << "' in config element '" << getName() << "'. Got '"
-         << prop_string << " instead. Assuming value of true."
+         << prop_string << '" instead. Assuming value of true.\n"
          << vprDEBUG_FLUSH;
       return true;
    }
