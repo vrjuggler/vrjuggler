@@ -447,6 +447,7 @@ install-m4:
 # =============================================================================
 _cleandepend:
 	@$(MAKE) -C gadget/Devices DO_CLEANDEPEND=1 cleandepend
+	@$(MAKE) -C cluster/Plugins DO_CLEANDEPEND=1 cleandepend
 
 _clobber:
 	@$(MAKE) cleandepend
