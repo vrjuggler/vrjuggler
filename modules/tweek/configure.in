@@ -604,6 +604,10 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
 fi
 
+if test "x$BUILD_CXX" = "xY" ; then
+   tweek_cxxflags="-DTWEEK_HAVE_CXX=1 $tweek_cxxflags"
+fi
+
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
 if test "x$PLATFORM" = "xHP" -a "x$USE_GCC" != "xyes" ; then
