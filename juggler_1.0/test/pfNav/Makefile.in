@@ -36,7 +36,7 @@ all: pfNav
 pfNav: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-pfNav.o: pfNav.cpp
+pfNav.o: pfNav.cpp pfNaver.h
 	${COMPILE} -c -o $@ ${srcdir}/pfNav.cpp
 
 # -----------------------------------------------------------------------------
