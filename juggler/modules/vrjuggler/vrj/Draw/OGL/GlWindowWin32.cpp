@@ -32,6 +32,8 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <iomanip>
+
 #include <jccl/Config/ConfigElement.h>
 
 #include <vpr/Util/Assert.h>
@@ -322,58 +324,44 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    pfd.nSize = (sizeof(PIXELFORMATDESCRIPTOR));
    pfd.nVersion = 1;
 
-   int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32);
    int visual_id(-1);
-   jccl::ConfigElementPtr gl_fb_chunk = mVrjDisplay->getGlFrameBufferConfig();
+   int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32),
+       accum_red_size(1), accum_green_size(1), accum_blue_size(1),
+       accum_alpha_size(1), stencil_size(1);
+   int num_aux_bufs(0);
 
-   if ( gl_fb_chunk.get() != NULL )
+   jccl::ConfigElementPtr gl_fb_elt = mVrjDisplay->getGlFrameBufferConfig();
+
+   if ( gl_fb_elt.get() != NULL )
    {
-      visual_id  = gl_fb_chunk->getProperty<int>("visual_id");
-      red_size   = gl_fb_chunk->getProperty<int>("red_size");
-      green_size = gl_fb_chunk->getProperty<int>("green_size");
-      blue_size  = gl_fb_chunk->getProperty<int>("blue_size");
-      alpha_size = gl_fb_chunk->getProperty<int>("alpha_size");
-      db_size    = gl_fb_chunk->getProperty<int>("depth_buffer_size");
-
-      if ( red_size < 0 )
+      if ( gl_fb_elt->getVersion() < 2 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Red channel size was negative, set to: " << red_size
-            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         red_size = 1;
+            << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
+            << mVrjDisplay->getName() << "'" << std::endl;
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "has an out of date OpenGL frame buffer configuration."
+            << std::endl;
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "Expected version 2 but found version "
+            << gl_fb_elt->getVersion() << ".\n";
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "Default values will be used for some frame buffer settings.\n"
+            << vprDEBUG_FLUSH;
       }
 
-      if ( green_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Green channel size was negative, set to: "
-            << green_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         green_size = 1;
-      }
-
-      if ( blue_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Blue channel size was negative, set to: " << blue_size
-            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         blue_size = 1;
-      }
-
-      if ( alpha_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Alpha channel size was negative, set to: "
-            << alpha_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         alpha_size = 1;
-      }
-
-      if ( db_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Depth buffer size was negative, set to: " << db_size
-            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         db_size = 1;
-      }
+      visual_id        = gl_fb_elt->getProperty<int>("visual_id");
+      red_size         = gl_fb_elt->getProperty<int>("red_size");
+      green_size       = gl_fb_elt->getProperty<int>("green_size");
+      blue_size        = gl_fb_elt->getProperty<int>("blue_size");
+      alpha_size       = gl_fb_elt->getProperty<int>("alpha_size");
+      num_aux_bufs     = gl_fb_elt->getProperty<int>("auxiliary_buffer_count");
+      db_size          = gl_fb_elt->getProperty<int>("depth_buffer_size");
+      stencil_size     = gl_fb_elt->getProperty<int>("stencil_buffer_size");
+      accum_red_size   = gl_fb_elt->getProperty<int>("accum_red_size");
+      accum_green_size = gl_fb_elt->getProperty<int>("accum_green_size");
+      accum_blue_size  = gl_fb_elt->getProperty<int>("accum_blue_size");
+      accum_alpha_size = gl_fb_elt->getProperty<int>("accum_alpha_size");
    }
 
    int pixel_format;
@@ -403,11 +391,104 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    }
    else
    {
-      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
-         << "Frame buffer visual settings for " << mVrjDisplay->getName()
-         << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
-         << " A:" << alpha_size << " DB:" << db_size << std::endl
-         << vprDEBUG_FLUSH;
+      if ( red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer red channel size was negative ("
+            << red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         red_size = 1;
+      }
+
+      if ( green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer green channel size was negative ("
+            << green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         green_size = 1;
+      }
+
+      if ( blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer blue channel size was negative ("
+            << blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         blue_size = 1;
+      }
+
+      if ( alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer alpha channel size was negative ("
+            << alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         alpha_size = 1;
+      }
+
+      if ( num_aux_bufs < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Auxiliary buffer count was negative (" << num_aux_bufs
+            << ").  Setting to 0.\n" << vprDEBUG_FLUSH;
+         num_aux_bufs = 0;
+      }
+
+      if ( db_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Depth buffer size was negative (" << db_size
+            << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         db_size = 1;
+      }
+
+      if ( stencil_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Stencil buffer size was negative (" << stencil_size
+            << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         stencil_size = 1;
+      }
+
+      if ( accum_red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer red channel size was negative ("
+            << accum_red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_red_size = 1;
+      }
+
+      if ( accum_green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer green channel size was negative ("
+            << accum_green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_green_size = 1;
+      }
+
+      if ( accum_blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer blue channel size was negative ("
+            << accum_blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_blue_size = 1;
+      }
+
+      if ( accum_alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer alpha channel size was negative ("
+            << accum_alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_alpha_size = 1;
+      }
 
       /* Defaults. */
       pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
@@ -422,16 +503,53 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
          mInStereo = false;
       }
 
-      pfd.iPixelType = PFD_TYPE_RGBA;
-      pfd.cColorBits = 32;
-      pfd.cRedBits = red_size;
-      pfd.cGreenBits = green_size;
-      pfd.cBlueBits = blue_size;
-      pfd.cAlphaBits = alpha_size;
-      pfd.cDepthBits = db_size;
-      pfd.cStencilBits = 0;
-      pfd.cAccumBits = 0;
-      pfd.cAuxBuffers = 0;
+      pfd.iPixelType        = PFD_TYPE_RGBA;
+      pfd.cColorBits        = red_size + green_size + blue_size + alpha_size;
+      pfd.cRedBits          = red_size;       // Ignored by ChoosePixelFormat()
+      pfd.cGreenBits        = green_size;     // Ignored by ChoosePixelFormat()
+      pfd.cBlueBits         = blue_size;      // Ignored by ChoosePixelFormat()
+      pfd.cAlphaBits        = alpha_size;     // Ignored by ChoosePixelFormat()
+      pfd.cAccumBits        = accum_red_size + accum_green_size +
+                                 accum_blue_size + accum_alpha_size;
+      pfd.cAccumRedBits     = accum_red_size;   // Ignored by ChoosePixelFormat()
+      pfd.cAccumGreenBits   = accum_green_size; // Ignored by ChoosePixelFormat()
+      pfd.cAccumBlueBits    = accum_blue_size;  // Ignored by ChoosePixelFormat()
+      pfd.cAccumAlphaBits   = accum_alpha_size; // Ignored by ChoosePixelFormat()
+      pfd.cDepthBits        = db_size;
+      pfd.cStencilBits      = stencil_size;
+      pfd.cAuxBuffers       = num_aux_bufs;
+
+      const unsigned int indent_level(2);
+      const std::string indent_text(indent_level, ' ');
+      const int pad_width_dot(40 - indent_level);
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "OpenGL visual request settings for " << mVrjDisplay->getName()
+         << ":\n";
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Color bit size " << " " << (int) pfd.cColorBits << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Auxiliary buffer count " << " " << (int) pfd.cAuxBuffers
+         << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Depth buffer size " << " " << (int) pfd.cDepthBits << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Stencil buffer size " << " " << (int) pfd.cStencilBits
+         << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Accumulation buffer bit size " << " " << (int) pfd.cAccumBits
+         << std::endl;
+      vprDEBUG_CONTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << vprDEBUG_FLUSH;
 
       // Let Win32 choose one for us
       pixel_format = ChoosePixelFormat(hDC, &pfd);
@@ -457,8 +575,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    }
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "Visual ID: 0x" << std::hex << pixel_format << std::dec
-      << std::endl << vprDEBUG_FLUSH;
+      << "Visual ID: 0x" << std::setw(2) << std::hex << pixel_format
+      << std::dec << std::endl << vprDEBUG_FLUSH;
 
    // Set the pixel format for the device context
    SetPixelFormat(hDC, pixel_format, &pfd);

@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-09-2005 patrickh    Extended the OpenGL frame buffer configuration to allow
+                        setting preferences for the auxiliary buffers, the
+                        stencil buffer, and the accumulation buffer.
+                        NEW VERSION: 1.1.168
 Feb-03-2005 patrickh    Use JCCL 0.92.1 handling of the .jdef search path.
                         Now, $JCCL_DEFINITION_PATH augments the .jdef search
                         path rather than defining it outright.
