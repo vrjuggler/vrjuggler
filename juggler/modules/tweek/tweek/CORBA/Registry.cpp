@@ -58,16 +58,14 @@ void Registry::initCORBA()
    orb = CORBA::ORB_init(temp, 0, "omniORB2");
    boa = orb->BOA_init(temp, 0, "omniORB2_BOA");
 
-   CosNaming::NamingContext_var rootContext;
-
    try
    {
       CORBA::Object_var initServ;
 
-      initServ    = orb->resolve_initial_references("NameService");
-      rootContext = CosNaming::NamingContext::_narrow(initServ);
+      initServ         = orb->resolve_initial_references("NameService");
+      m_naming_context = CosNaming::NamingContext::_narrow(initServ);
 
-      if ( CORBA::is_nil(rootContext) )
+      if ( CORBA::is_nil(m_naming_context) )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "Failed to narrow. Registry::init\n" << vprDEBUG_FLUSH;
@@ -77,45 +75,6 @@ void Registry::initCORBA()
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "Service required invalid.  Registry::init\n" << vprDEBUG_FLUSH;
-   }
-
-   try
-   {
-      CosNaming::Name contextName;
-      contextName.length(1);
-      contextName[0].id=CORBA::string_dup("test");
-      contextName[0].kind=CORBA::string_dup("my_context");
-
-      try
-      {
-         testContext = rootContext->bind_new_context(contextName);
-      }
-      catch (CosNaming::NamingContext::AlreadyBound& ex)
-      {
-         CORBA::Object_var tmpobj;
-
-         tmpobj      = rootContext->resolve(contextName);
-         testContext = CosNaming::NamingContext::_narrow(tmpobj);
-
-         if ( CORBA::is_nil(testContext) )
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "Failed to narrow. Registry::init\n" << vprDEBUG_FLUSH;
-         }
-      }
-   }
-   catch (CORBA::COMM_FAILURE& ex)
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "COMM_FAILURE: no NameService found.  Registry::init\n"
-         << vprDEBUG_FLUSH;
-   }
-   catch (omniORB::fatalException& ex)
-   {
-      throw;
-   }
-   catch (...)
-   {
    }
 
    start();
@@ -132,12 +91,12 @@ void Registry::addInterface (CORBA::Object_ptr obj, std::string& objectId,
 
    try
    {
-      testContext->bind(objectName,obj);
+      m_naming_context->bind(objectName,obj);
    }
    catch (CosNaming::NamingContext::AlreadyBound& ex)
    {
       // XXX: Is this really what we want to do?
-      testContext->rebind(objectName,obj);
+      m_naming_context->rebind(objectName,obj);
    }
 }
 
@@ -155,11 +114,10 @@ CORBA::Object_var Registry::getInterface (std::string& objectId,
    CORBA::ORB_ptr orb = CORBA::ORB_init(temp, 0, "omniORB3");
 #endif
 
-   CosNaming::NamingContext_var rootContext;
    CORBA::Object_var initServ;
 
-   initServ    = orb->resolve_initial_references("NameService");
-   rootContext = CosNaming::NamingContext::_narrow(initServ);
+   initServ         = orb->resolve_initial_references("NameService");
+   m_naming_context = CosNaming::NamingContext::_narrow(initServ);
 
    CosNaming::Name name;
    name.length(1);
@@ -168,7 +126,7 @@ CORBA::Object_var Registry::getInterface (std::string& objectId,
 
    CORBA::Object_ptr objptr;
 
-   objptr = rootContext->resolve(name);
+   objptr = m_naming_context->resolve(name);
    obj    = objptr;
 
    return obj;
