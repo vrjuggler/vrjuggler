@@ -192,10 +192,9 @@ public:
     * the current time and the time step, and in that case, no event will be
     * processed.
     *
-    * @param time_step The maximum time step allowed for the simulation in
-    *                  tens of microseconds.
+    * @param time_step The maximum time step allowed for the simulation.
     */
-   void processEvents(const vpr::Uint32 time_step);
+   void processEvents(const vpr::Interval& time_step);
 
    const vpr::sim::Clock& getClock (void) const
    {

@@ -44,6 +44,7 @@
 
 #include <vpr/vprConfig.h>
 #include <vpr/vprTypes.h>
+#include <vpr/Util/Interval.h>
 
 
 namespace vpr
@@ -62,28 +63,23 @@ class Clock
 {
 public:
    Clock (void)
-      : mTensOfUsec(0)
+      : mCurrentTime(0, vpr::Interval::Base)
    {
       /* Do nothing. */ ;
    }
 
-   const vpr::Uint32& getCurrentTime (void) const
+   const vpr::Interval& getCurrentTime (void) const
    {
-      return mTensOfUsec;
+      return mCurrentTime;
    }
 
-   void setCurrentTime (const vpr::Uint32 time)
+   void setCurrentTime (const vpr::Interval& time)
    {
-      if ( time > mTensOfUsec )
-      {
-         mTensOfUsec = time;
-      }
+      mCurrentTime = time;
    }
-
-   void setCurrentTime(const vpr::Interval& time);
 
 private:
-   vpr::Uint32 mTensOfUsec;
+   vpr::Interval mCurrentTime;
 };
 
 } // End of sim namespace
