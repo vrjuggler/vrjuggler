@@ -35,8 +35,9 @@
 #include <sys/types.h>
 
 #include <Math/vjCoord.h>
-#include <Input/vjKeyboard/vjKeyboardWin32.h>
 #include <Config/vjConfigChunk.h>
+#include <Kernel/vjDebug.h>
+#include <Input/vjKeyboard/vjKeyboardWin32.h>
 
 // The message loop
 void samplem_keys(void*);
