@@ -261,7 +261,7 @@ namespace gadget
          timestamp = -1;
       }
     
-      // Determine if each finger is touvhing something else.
+      // Determine if each finger is touching something else.
       for(int i = 0 ; i < num_pinch_bytes ; i += 2)
       {
          data[0] |= (input_data[i] & 0x1);
