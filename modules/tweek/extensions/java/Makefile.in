@@ -45,36 +45,42 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir					= $(bindir)/beans
-srcdir					= @srcdir@
-top_srcdir				= @top_srcdir@
-INSTALL					= @INSTALL@
-INSTALL_FILES			=
+beandir			= $(bindir)/beans
+srcdir			= @srcdir@
+top_srcdir		= @top_srcdir@
+INSTALL			= @INSTALL@
+INSTALL_FILES		=
 
 # For each package, we need the four lines to automatically add found sources
 # to the build process. This allows us to not have to modify the build
 # whenever new sources are added.
-WIZARD_PKG		= org.vrjuggler.tweek.wizard;
+WIZARD_PKG		= org.vrjuggler.tweek.wizard
 WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
 WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
-WIZARD_CLASSES	= $(WIZARD_SRCS:.java=.class)
+WIZARD_CLASSES		= $(WIZARD_SRCS:.java=.class)
 
-WIZARD_BUILDER_PKG		= org.vrjuggler.tweek.wizard.builder;
-WIZARD_BUILDER_DIR		= $(subst .,/,$(WIZARD_BUILDER_PKG))
-WIZARD_BUILDER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_BUILDER_DIR)/*.java))
+WIZARD_BUILDER_PKG	= org.vrjuggler.tweek.wizard.builder
+WIZARD_BUILDER_DIR	= $(subst .,/,$(WIZARD_BUILDER_PKG))
+WIZARD_BUILDER_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_BUILDER_DIR)/*.java))
 WIZARD_BUILDER_CLASSES	= $(WIZARD_BUILDER_SRCS:.java=.class)
 # Misc files needed for java targets, such as gfx files and licenses
+
+JAVA_SRCS = \
+	$(WIZARD_SRCS) \
+	$(WIZARD_BUILDER_SRCS)
+
+JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
 
 # Java targets
 JARS		= wizard.jar
 BEANS		= WizardBuilder
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS		= $(WIZARD_PKG) $(WIZARD_BUILDER_PKG)
+DOC_PKGS	= $(WIZARD_PKG) $(WIZARD_BUILDER_PKG)
 webroot		= $(HOME)/public_html/jugglerweb
 instdir		= tweek/wizard/1.0
 doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT		= programmer.reference.java
+DOC_ROOT	= programmer.reference.java
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -84,14 +90,22 @@ include $(MKPATH)/dpp.obj.mk
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
 ifdef GLOBAL_BUILD
 	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	cp $(JARS) $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin
+	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
+ifneq ($(JARS), )
+	cp $(JARS) $(top_srcdir)/bin
+endif
+ifneq ($(BEANS), )
+	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
+endif
 endif
 
 wizard.jar: $(WIZARD_CLASSES)
-	$(JAR) cvf $@ $(WIZARD_CLASSES)
+	$(JAR) cvf $@ \
+		$(WIZARD_DIR)/*.class
 
-wizard_builder.jar: $(WIZARD_BUILDER_CLASSES)
-	$(JAR) cvf $@ $(WIZARD_BUILDER_CLASSES)
+WizardBuilder.jar: $(WIZARD_BUILDER_CLASSES)
+	$(JAR) cvf $@ \
+		$(WIZARD_BUILDER_DIR)/*.class
 
 # -----------------------------------------------------------------------------
 # Extra targets
@@ -102,20 +116,24 @@ docs:
 
 links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
+ifneq ($(JARS), )
 	cd $(instlinks)/bin && \
           for jar in $(JARS) ; \
           do \
               rm $$jar ; \
-              $(LN_S) $(topdir)/java/$$jar ./ ; \
+              $(LN_S) $(topdir)/extensions/java/$$jar ./ ; \
           done
+endif
+ifneq ($(BEANS), )
 	cd $(instlinks)/bin/beans && \
           for bean in $(BEANS) ; \
           do \
               rm -f $$bean.jar ; \
               rm -f $$bean.xml ; \
-              $(LN_S) $(topdir)/java/$$bean.jar ./ ; \
-              $(LN_S) $(TWEEKROOT_ABS)/java/$$bean.xml ./ ; \
+              $(LN_S) $(topdir)/extensions/java/$$bean.jar ./ ; \
+              $(LN_S) $(TWEEKROOT_ABS)/extensions/java/$$bean.xml ./ ; \
           done
+endif
 
 # This cannot be named 'install' because Doozer++ already defines that.
 extensions-install:
@@ -123,18 +141,22 @@ extensions-install:
 	@echo "Installing the Tweek extensions"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
+ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/java/$$jar $(bindir) ; \
+                $(topdir)/extensions/java/$$jar $(bindir) ; \
           done
+endif
+ifneq ($(BEANS), )
 	for bean in $(BEANS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/java/$$bean.jar $(beandir) ; \
+                $(topdir)/extensions/java/$$bean.jar $(beandir) ; \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(top_srcdir)/java/$$bean.xml $(beandir) ; \
+                $(top_srcdir)/extensions/java/$$bean.xml $(beandir) ; \
           done
+endif
 endif
 
 install-docs:
@@ -142,9 +164,10 @@ install-docs:
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
 
-CLEAN_FILES	+= $(JARS) \
-					$(WIZARD_CLASSES) \
-					$(WIZARD_BUILDER_CLASSES)
+CLEAN_FILES	+= \
+	$(JARS) \
+	$(WIZARD_CLASSES) \
+	$(WIZARD_BUILDER_CLASSES)
 
 ifdef GLOBAL_BUILD
     CLEAN_DIRS	+= $(top_srcdir)/bin
