@@ -99,14 +99,14 @@
 #define clrCYAN "36"
 #define clrWHITE "37"
 
-#ifdef WIN32
-#  define clrESC
-#  define clrCONTROL_CHARS(font, color)
-#  define clrSetNORM(color)
-#  define clrSetBOLD(color)
-#  define clrRESET
-#  define clrOutBOLD(color,text)
-#  define clrOutNORM(color,text)
+#ifdef VJ_OS_Win32
+#  define clrESC ""
+#  define clrCONTROL_CHARS(font, color) ""
+#  define clrSetNORM(color) ""
+#  define clrSetBOLD(color) ""
+#  define clrRESET ""
+#  define clrOutBOLD(color,text) ""
+#  define clrOutNORM(color,text) ""
 #else
 #  define clrESC char(27)
 #  define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
