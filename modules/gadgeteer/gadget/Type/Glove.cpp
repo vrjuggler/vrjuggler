@@ -199,7 +199,9 @@ Glove::Glove()
 float Glove::getGloveAngle(GloveData::GloveComponent component,
                              GloveData::GloveJoint joint, int devNum)
 {
-   return mTheData[devNum][current].angles[component][joint];
+   // Temporarily removed
+   // return mTheData[devNum][current].angles[component][joint];
+   return 0;
 }
 
 //: This returns a vector ponting "out" of the component
@@ -221,6 +223,8 @@ vrj::Vec3 Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
 //  i.e. wTt = wTb bTd dTt
 vrj::Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
 {
+   // Temporarily removed
+   /*
    if(mGlovePos[devNum] != NULL)
    {
       vrj::Matrix ret_val;       // The returned matrix.
@@ -263,13 +267,17 @@ vrj::Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
       vprDEBUG( vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Glove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vprDEBUG_FLUSH;
       vprASSERT( mGlovePos[devNum] != NULL );      // should be false in here
       return vrj::Matrix();
-   }
+   }*/
+   vrj::Matrix ret_val;       // The returned matrix.
+   return ret_val;
 }
 
 // Grab a copy of the most current glove data
 GloveData Glove::getGloveData(int devNum)
 {
-   return mTheData[devNum][current];
+   // Temporarily removed
+   //return mTheData[devNum][current];
+   return mTheData[0][0];
 }
 
 
