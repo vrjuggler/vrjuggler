@@ -36,7 +36,7 @@ use 5.005;
 
 use strict 'vars';
 use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
-            $CUSTOM_ARGS $LAST_ARG_GROUP $OS $Win32);
+            $CUSTOM_ARGS $LAST_ARG_GROUP $OS $Win32 $CFG_LOAD_FUNC);
 use vars qw(%MODULES);
 
 use Cwd qw(chdir getcwd);
@@ -54,6 +54,7 @@ use lib("$base_dir");
 use JugglerConfigure;
 
 # Subroutine prototypes.
+sub mergeArgArrays($$);
 sub loadDefaultArgs($);
 sub configureModule($);
 sub regenModuleInfo($);
@@ -67,17 +68,19 @@ sub getPlatform();
 
 %MODULES = ();
 
-my $all_help     = 0;
-my $cfg          = "juggler.cfg";
-my $user_cfg     = '';
-$module          = '';
-my $script_help  = 0;
-my $manual       = 0;
-my $regen        = 0;
-my $mod_list     = 0;
-my $args_file    = 'acdefaults.cfg';
-my $user_args    = '';
-my $no_user_args = 0;
+my $all_help      = 0;
+my $cfg           = "juggler.cfg";
+my $user_cfg      = '';
+$module           = '';
+my $script_help   = 0;
+my $manual        = 0;
+my $regen         = 0;
+my $mod_list      = 0;
+my $args_file     = 'acdefaults.cfg';
+my $args_mod_file = 'acdefaults.pl';
+my $user_args     = '';
+my $user_args_mod = '';
+my $no_user_args  = 0;
 
 $CONFIG_ARGS    = 0;
 $PATH_ARGS      = 1;
@@ -86,13 +89,17 @@ $FEATURE_ARGS   = 3;
 $CUSTOM_ARGS    = 4;
 $LAST_ARG_GROUP = 5;
 
+$CFG_LOAD_FUNC = undef;
+$OS            = '';
+
 my @save_argv = @ARGV;
 
 Getopt::Long::Configure('pass_through');
 GetOptions('help|?' => \$script_help, 'cfg=s' => \$user_cfg,
            'module=s' => \$module, 'all-help' => \$all_help,
            'manual' => \$manual, 'regen' => \$regen, 'modlist' => \$mod_list,
-           'args=s' => \$user_args, 'noargs' => \$no_user_args, 'os=s' => \$OS)
+           'args=s' => \$user_args, 'argsmod=s' => \$user_args_mod,
+           'noargs' => \$no_user_args, 'os=s' => \$OS)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
@@ -151,13 +158,26 @@ else
    # Unless the user passed --noargs, try to find default argument values.
    unless ( $no_user_args )
    {
+      my $args_mod = ("$user_args_mod" eq "") ? "$base_dir/$args_mod_file"
+                                              : "$user_args_mod";
+
       # Figure out what argument file to load, if any.  If the user specified
       # a file name on the command line, it will be in $user_args.  Otherwise,
       # we fall back on $base_dir/$args_file.
       my $args_load = ("$user_args" eq "") ? "$base_dir/$args_file"
                                            : "$user_args";
 
-      if ( -r "$args_load" )
+      if ( -r "$args_mod" )
+      {
+         require "$args_mod";
+
+         if ( $CFG_LOAD_FUNC )
+         {
+            my @default_args = &$CFG_LOAD_FUNC();
+            mergeArgArrays(\@ARGV, \@default_args);
+         }
+      }
+      elsif ( -r "$args_load" )
       {
          loadDefaultArgs("$args_load");
       }
@@ -209,6 +229,24 @@ exit(0);
 # Subroutines follow.
 # =============================================================================
 
+sub mergeArgArrays ($$)
+{
+   my $dest_list   = shift;
+   my $source_list = shift;
+
+   foreach ( @$source_list )
+   {
+      # Strip leading and trailing whitespace.
+      s/^\s+//;
+      s/\s+$//;
+      next if /^$/;   # Just to be safe...
+      
+      # Only add the argument if it is not already on the command line.
+      m/^(--[^=]+)/;
+      push(@$dest_list, "$_") unless grep(/$1/, @$dest_list);
+   }
+}
+
 sub loadDefaultArgs ($)
 {
    my $args_load = shift;
@@ -252,17 +290,7 @@ sub loadDefaultArgs ($)
             $args_contents = $';
          }
 
-         foreach ( @args_list )
-         {
-            # Strip leading and trailing whitespace.
-            s/^\s+//;
-            s/\s+$//;
-            next if /^$/;   # Just to be safe...
-            
-            # Only add the argument if it is not already on the command line.
-            m/^(--[^=]+)/;
-            push(@ARGV, "$_") unless grep(/$1/, @ARGV);
-         }
+         mergeArgArrays(\@ARGV, \@args_list);
       }
    }
    else
@@ -718,6 +746,22 @@ sub getPlatform ()
    return $platform;
 }
 
+sub getHostname ()
+{
+   my $hostname = '';
+
+   if ( defined($ENV{'HOSTNAME'}) )
+   {
+      $hostname = "$ENV{'HOSTNAME'}";
+   }
+   else
+   {
+      chomp($hostname = `hostname`);
+   }
+
+   return $hostname;
+}
+
 __END__
 
 =head1 NAME
@@ -793,6 +837,18 @@ configure script(s) that will be executed.  If not specified, it defaults
 to F<acdefaults.cfg>, found using the same technique as is used for
 F<juggler.cfg> (see B<--cfg> above).
 
+=item B<--argsmod>=file
+
+Name a F<.pl> file (what could be a Perl script) that will be "imported"
+into this script.  This imported script allows users to write Perl code
+that will extend the argument list passed to the Autoconf-generated
+configure scripts.  If not specified, it defaults to F<acdefaults.pl>,
+found using the same technique as is used for F<juggler.cfg> and
+F<acdefaults.cfg> (see B<--cfg> above).
+
+If both F<acdefaults.cfg> and F<acdefaults.pl> exist, F<acdefaults.pl> is
+used, and F<acdefaults.cfg> is ignored.
+
 =item B<--os>=name
 
 Define the host operating system.  This can be any string.  It will be used
@@ -801,4 +857,59 @@ arguments file.  Use of this argument forcibly overrides automatic detection
 of the host operating system.  I<Use with caution!>
 
 =back
+
+=head1 FILE FORMATS
+
+The following describe the formats of files that may be  loaded by this
+script.
+
+=head2 Configuration File
+
+This is a magic file for which documentation cannot possibly be written.
+Or maybe it could be written later.
+
+=head2 Default Arguments File
+
+name1
+{
+   arg1
+   arg2
+   ...
+   argN
+}
+
+name2
+{
+   arg1
+   arg2
+   ...
+   argN
+}
+
+=head2 Default Arguments Module
+
+This must be a valid Perl package.  That means it must declare a package
+name (any name is fine) and have the following as the last line:
+
+1;
+
+To plug into this script, the module must have a subroutine that takes
+no arguments and returns an array.  The loading script is informed of
+this subroutine through a global variable in its scope:
+I<$main::CFG_LOAD_FUNC>.
+
+Assign a reference to the module's subroutine as the first step in the
+module.  For example, consider the case where a subroutine called
+C<&loader>.  The loading module would be informed of this subroutine as
+shown below:
+
+$main::CFG_LOAD_FUNC = \&loader;
+
+=head1 NOTES
+
+The use of a default arguments module (see B<--argsmod> above) takes
+precedence of a default arguments file (see B<--args>).  If both arguments
+are specified (or both default files are found), the configuration file is
+ignored entirely.  It is assumed that Perl code will be more capable of
+filling in default arguments than a simple configuration file.
 
