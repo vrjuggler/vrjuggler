@@ -33,16 +33,16 @@ class vjApp;
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Kernel/vjSystemData.h>
-#include <Environment/vjEnvironmentManager.h>
 #include <Performance/vjPerfDataBuffer.h>
 #include <Kernel/vjUser.h>
-
 
     // Config stuff
 //#include <Config/vjConfigChunkDB.h>
 //#include <Config/vjChunkDescDB.h>
 // #include <Kernel/vjQueuedConfigChunkHandler.h>
 #include <Kernel/vjConfigChunkHandler.h>
+
+class vjEnvironmentManager;
 
 //-------------------------------------------------------
 //: Main control class for all vj applications.
