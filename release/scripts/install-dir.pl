@@ -125,7 +125,7 @@ exit 0;
 # Arguments:
 #     $curfile - The name of the current file in the recursion process.
 # -----------------------------------------------------------------------------
-sub recurseAction ($) {
+sub recurseAction {
     my $curfile = shift;
 
     # If the current file is a .in template file, process it before
