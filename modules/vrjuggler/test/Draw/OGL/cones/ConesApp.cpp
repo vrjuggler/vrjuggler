@@ -115,24 +115,43 @@ ConesApp::apiInit () {
 // ----------------------------------------------------------------------------
 void
 ConesApp::contextInit () {
-    vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
-    mDlData->firstTime = false;
-
     // Generate some random lists.  NOTE: Needed for testing only.
-    int num_dls = rand() % 50;
-    glGenLists(num_dls);
+    mDlDebugData->maxIndex = rand() % 50;
+    mDlDebugData->dlIndex  = glGenLists(mDlDebugData->maxIndex);
 
     // Create display list.
-    mDlData->coneDLIndex = glGenLists(1);
-    glNewList(mDlData->coneDLIndex, GL_COMPILE);
+    mDlData->dlIndex = glGenLists(1);
+    glNewList(mDlData->dlIndex, GL_COMPILE);
         drawCone(1.5, 2.0, 20, 10);
     glEndList();
 
-    vjDEBUG(vjDBG_ALL, 0) << "Creating DL:" << mDlData->coneDLIndex
+    vjDEBUG(vjDBG_ALL, 0) << "Creating DL:" << mDlData->dlIndex
                           << std::endl << vjDEBUG_FLUSH;
-    std::cerr << "created displays lists:" << num_dls + 1 << std::endl;
+    std::cerr << "created displays lists:" << mDlDebugData->dlIndex + 1
+              << std::endl;
 
     initGLState();
+}
+
+// ----------------------------------------------------------------------------
+// Called immediately upon closing an OpenGL context.  This is called for
+// every display window that is closed.  Put OpenGL deallocation here.
+// ----------------------------------------------------------------------------
+void
+ConesApp::contextClose() {
+    // Deallocate the random display lists used for debugging.
+    if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE ) {
+        vjDEBUG(vjDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
+                              << " debugging display lists\n" << vjDEBUG_FLUSH;
+        glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
+    }
+
+    // Deallocate the cube face geometry data from the video hardware.
+    if ( glIsList(mDlData->dlIndex) == GL_TRUE ) {
+        vjDEBUG(vjDBG_ALL, 0) << "Deallocating cone display list\n"
+                              << vjDEBUG_FLUSH;
+        glDeleteLists(mDlData->dlIndex, 1);
+    }
 }
 
 // ----------------------------------------------------------------------------
