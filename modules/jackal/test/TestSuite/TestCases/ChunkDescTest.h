@@ -79,11 +79,33 @@ namespace jcclTest
          CPPUNIT_ASSERT( p->getNumAllowed() == 1 );
       }
 
+      void testEqual()
+      {
+      }
+      
+      void testCopyConstr()
+      {
+      }
+      
+      void testIsEqual()
+      {
+      }
+
+      void testIsNotEqual()
+      {
+      }
+
       static CppUnit::Test* suite()
       {
           CppUnit::TestSuite* test_suite = new CppUnit::TestSuite( "ChunkDescTest" );
           test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "basicFunctions", &ChunkDescTest::basicFunctions ) );
           test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "propertyDescTests", &ChunkDescTest::propertyDescTests ) );
+
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "testEqual", &ChunkDescTest::testEqual ) );
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "testCopyConstr", &ChunkDescTest::testCopyConstr ) );
+
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "testIsEqual", &ChunkDescTest::testIsEqual ) );
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "testIsNotEqual", &ChunkDescTest::testIsNotEqual ) );
 
           return test_suite;
       }
