@@ -119,6 +119,7 @@ public class ChunkDesc
       String old = getName();
       mDomElement.setAttribute("name", newName);
       changeSupport.firePropertyChange("name", old, newName);
+      fireNameChanged();
    }
 
    /**
@@ -439,6 +440,26 @@ public class ChunkDesc
    public void removeChunkDescListener(ChunkDescListener listener)
    {
       listenerList.remove(ChunkDescListener.class, listener);
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that the name has been changed.
+    */
+   protected void fireNameChanged()
+   {
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, getName());
+            }
+            ((ChunkDescListener)listeners[i+1]).nameChanged(evt);
+         }
+      }
    }
 
    /**

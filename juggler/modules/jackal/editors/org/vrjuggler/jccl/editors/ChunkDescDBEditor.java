@@ -217,6 +217,20 @@ public class ChunkDescDBEditor
    }
 
    /**
+    * Called by a ChunkDesc when its name has been changed.
+    */
+   public void nameChanged(ChunkDescEvent evt)
+   {
+      ChunkDesc src = (ChunkDesc)evt.getSource();
+      java.util.List desc_nodes = getNodesFor(src);
+      for (Iterator itr = desc_nodes.iterator(); itr.hasNext(); )
+      {
+         // Let the tree know that the node has changed
+         treeModel.nodeChanged((TreeNode)itr.next());
+      }
+   }
+
+   /**
     * Called by a ChunkDesc when one of its properties has been modified.
     */
    public void propertyDescChanged(ChunkDescEvent evt)

@@ -36,16 +36,40 @@ import java.util.EventObject;
 public class ChunkDescEvent
    extends EventObject
 {
-   public ChunkDescEvent(Object src, PropertyDesc desc)
+   public ChunkDescEvent(Object src, Object value)
+   {
+      this(src, null, 0, value);
+   }
+
+   /**
+    * Creates a new ChunkDesc event from the given source object relating to
+    * the given property desc, the index into that property desc, and the value
+    * of such property desc.
+    */
+   public ChunkDescEvent(Object src, PropertyDesc propDesc, int index, Object value)
    {
       super(src);
-      this.propertyDesc = desc;
+      this.mPropertyDesc = propDesc;
+      this.mIndex = index;
+      this.mValue = value;
    }
 
    public PropertyDesc getPropertyDesc()
    {
-      return propertyDesc;
+      return mPropertyDesc;
    }
 
-   private PropertyDesc propertyDesc;
+   public int getIndex()
+   {
+      return mIndex;
+   }
+
+   public Object getValue()
+   {
+      return mValue;
+   }
+
+   private PropertyDesc mPropertyDesc;
+   private int mIndex;
+   private Object mValue;
 }

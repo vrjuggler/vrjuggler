@@ -23,6 +23,7 @@ public class AllTests
       suite.addTestSuite( DescEnumTest.class );
       suite.addTestSuite( PropertyDescTest.class );
       suite.addTestSuite( ChunkDescTest.class );
+      suite.addTestSuite( ChunkDescEventTest.class );
 //      suite.addTestSuite( ConfigChunkTest.class );
 
       return suite;
