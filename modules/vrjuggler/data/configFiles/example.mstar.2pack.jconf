@@ -19,7 +19,7 @@
                <pre_rotation>0.0</pre_rotation>
                <pre_rotation>180.0</pre_rotation>
                <custom_scale>1.0</custom_scale>
-               <device_units>0.3048</device_units>
+               <device_units>0.0254</device_units>
                <post_translate>0.0</post_translate>
                <post_translate>0.0</post_translate>
                <post_translate>0.0</post_translate>
@@ -49,7 +49,7 @@
                <pre_rotation>0.0</pre_rotation>
                <pre_rotation>180.0</pre_rotation>
                <custom_scale>1.0</custom_scale>
-               <device_units>0.3048</device_units>
+               <device_units>0.0254</device_units>
                <post_translate>0.0</post_translate>
                <post_translate>0.0</post_translate>
                <post_translate>0.0</post_translate>
