@@ -467,8 +467,28 @@ public class ChunkDescDB
          d.addPropertyChangeListener(this);
          d.addChunkDescListener(this);
 
-         // do the deed
-         descs.add(d);
+         // Add the ChunkDesc d to the descs list.  We sort them based on their
+         // token.
+         ChunkDesc cur_desc;
+         boolean added = false;
+
+         for ( int i = 0; i < descs.size(); ++i )
+         {
+            cur_desc = (ChunkDesc) descs.get(i);
+
+            if ( cur_desc.getName().compareTo(d.getName()) > 0 )
+            {
+               descs.add(i, d);
+               added = true;
+               break;
+            }
+         }
+
+         // If the above loop did not insert the desc, then append it.
+         if ( ! added )
+         {
+            descs.add(d);
+         }
       }
 
       DescDBEvent e = new DescDBEvent(this, DescDBEvent.INSERT, d);
