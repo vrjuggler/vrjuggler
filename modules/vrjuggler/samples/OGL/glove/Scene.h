@@ -191,17 +191,16 @@ inline void Scene::_drawFloor()
   // floor
   for (int y = -10; y < 10; ++y)
   {
-     //glColor3f( 1.0f, 1.0f, 1.0f );
      glPolygonMode( GL_FRONT, GL_LINE );
      glLineWidth( 2 );
      glBegin(GL_TRIANGLE_STRIP);
      for (int x = -10; x < 10; ++x)
      {
-	glColor3f( 0.7f, 0.4f, 0.4f );
+	glColor3f( 0.4f, 0.7f, 0.4f );
 	glNormal3f( 0.1f, 0.9f, -0.1f );
 	glVertex3f( (float)x, 0.01f,  y );
 	
-	glColor3f( 0.0f, 0.0f, 0.4f );
+	glColor3f( 0.0f, 0.0f, 0.6f );
 	glNormal3f( -0.1f, 0.9f, 0.1f );
 	glVertex3f( (float)x, 0.01f,  y + 1.0f );
      }
@@ -215,7 +214,7 @@ inline void Scene::_drawFloor()
 	glNormal3f( 0.1f, 0.9f, -0.1f );
 	glVertex3f( (float)x, 0.0f,  y );
 	
-	glColor3f( 0.5f, 0.5f, 0.0f );
+	glColor3f( 0.2f, 0.2f, 0.0f );
 	glNormal3f( -0.1f, 0.9f, 0.1f );
 	glVertex3f( (float)x, 0.0f,  y + 1.0f );
      }
