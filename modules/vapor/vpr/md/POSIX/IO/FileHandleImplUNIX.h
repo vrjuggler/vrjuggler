@@ -33,6 +33,7 @@
 #ifndef _VPR_FILE_HANDLE_IMPL_UNIX_H_
 #define _VPR_FILE_HANDLE_IMPL_UNIX_H_
 
+#include <fcntl.h>
 #include <sys/types.h>
 #include <string>
 #include <vector>
@@ -140,6 +141,45 @@ public:
     // vpr::FileHandle implementation.
     // ========================================================================
 
+    /**
+     * Sets the open flags so that the I/O device is opened in read-only mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       it is opened in read-only mode.  If the device is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenReadOnly (void) {
+        m_open_mode = O_RDONLY;
+    }
+
+    /**
+     * Sets the open flags so that the I/O device is opened in write-only mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in write-only mode.  If the device is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenWriteOnly (void) {
+        m_open_mode = O_WRONLY;
+    }
+
+    /**
+     * Sets the open flags so that the I/O device is opened in read/write mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in read/write mode.  If the device is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenReadWrite (void) {
+        m_open_mode = O_RDWR;
+    }
+
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle to be in append mode.
     //
@@ -183,6 +223,51 @@ public:
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
     Status enableAsynchronousWrite(void);
+
+    /**
+     * Tests if the I/O device is read-only.
+     *
+     * @pre The I/O device is open.
+     * @post The access mode is tested for read-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadOnly (void) {
+        return (m_open_mode == O_RDONLY);
+    }
+
+    /**
+     * Tests if the I/O device is write-only.
+     *
+     * @pre The I/O device is open.
+     * @post The access mode is tested for write-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in write-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isWriteOnly (void) {
+        return (m_open_mode == O_WRONLY);
+    }
+
+    /**
+     * Tests if the I/O device is read/write.
+     *
+     * @pre The I/O device is open.
+     * @post The access mode is tested for read/write mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read/write
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadWrite (void) {
+        return (m_open_mode == O_RDWR);
+    }
 
 protected:
     // Friends.
@@ -287,7 +372,8 @@ protected:
     // ------------------------------------------------------------------------
     Status isWriteable(const vpr::Interval timeout);
 
-    int m_fdesc;    //: File descriptor
+    int m_fdesc;      /**< File descriptor */
+    int m_open_mode;  /**< The open mode of the device */
 };
 
 }; // End of vpr namespace
