@@ -89,9 +89,9 @@ namespace gmtl
    template gmtl::Matrix33f& preMult(gmtl::Matrix33f&, const gmtl::Matrix33f&);
 
    template gmtl::Matrix44f& mult(gmtl::Matrix44f&, const gmtl::Matrix44f&,
-                                  float);
+                                  const float&);
    template gmtl::Matrix33f& mult(gmtl::Matrix33f&, const gmtl::Matrix33f&,
-                                  float);
+                                  const float&);
 
    template gmtl::Matrix44f& mult(gmtl::Matrix44f&, float);
    template gmtl::Matrix33f& mult(gmtl::Matrix33f&, float);
@@ -142,9 +142,15 @@ namespace gmtl
    template bool isNormalized(const gmtl::Vec3f&, const float);
    template bool isNormalized(const gmtl::Vec4f&, const float);
 
-   template gmtl::Vec3f cross(const gmtl::Vec3f&, const gmtl::Vec3f&);
+   template gmtl::Vec3i& cross(gmtl::Vec3i&, const gmtl::Vec3i&,
+                               const gmtl::Vec3i&);
+   template gmtl::Vec3d& cross(gmtl::Vec3d&, const gmtl::Vec3d&,
+                               const gmtl::Vec3d&);
    template gmtl::Vec3f& cross(gmtl::Vec3f&, const gmtl::Vec3f&,
                                const gmtl::Vec3f&);
+
+   template gmtl::Vec3d makeCross(const gmtl::Vec3d&, const gmtl::Vec3d&);
+   template gmtl::Vec3f makeCross(const gmtl::Vec3f&, const gmtl::Vec3f&);
 
    template VecBase3f& reflect(VecBase3f&, const VecBase3f&, const Vec3f&);
    template VecBase3d& reflect(VecBase3d&, const VecBase3d&, const Vec3d&);
