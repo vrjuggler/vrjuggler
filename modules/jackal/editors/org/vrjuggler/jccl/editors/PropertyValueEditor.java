@@ -102,26 +102,34 @@ public class PropertyValueEditor
    {
       delegate.removeCellEditorListener(this);
 
-      // Handle special case for the add property value button at the end of
-      // property with variable values
-      ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
-      PropertyDesc desc = data_model.getPropertyDesc(row);
-      ConfigChunk src_chunk = data_model.getConfigChunk();
-      int num_values = src_chunk.getNumPropertyValues(desc.getToken());
-      int value_idx = row - data_model.getRowFor(desc);
-      if (desc.hasVariableNumberOfValues() && (value_idx == num_values))
+      // Rows 0 and 1 are special
+      if (row == 0 || row == 1)
       {
-         delegate = new AddButtonCellEditor();
-      }
-
-      // Handle embedded chunks specially
-      else if (value instanceof ConfigChunk)
-      {
-         delegate = new EmbeddedChunkCellEditor();
+         delegate = new ConfigChunkCellEditor();
       }
       else
       {
-         delegate = new ConfigChunkCellEditor();
+         // Handle special case for the add property value button at the end of
+         // property with variable values
+         ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
+         PropertyDesc desc = data_model.getPropertyDesc(row);
+         ConfigChunk src_chunk = data_model.getConfigChunk();
+         int num_values = src_chunk.getNumPropertyValues(desc.getToken());
+         int value_idx = row - data_model.getRowFor(desc);
+         if (desc.hasVariableNumberOfValues() && (value_idx == num_values))
+         {
+            delegate = new AddButtonCellEditor();
+         }
+
+         // Handle embedded chunks specially
+         else if (value instanceof ConfigChunk)
+         {
+            delegate = new EmbeddedChunkCellEditor();
+         }
+         else
+         {
+            delegate = new ConfigChunkCellEditor();
+         }
       }
 
       // Add ourselves as a listener to this new delegate
