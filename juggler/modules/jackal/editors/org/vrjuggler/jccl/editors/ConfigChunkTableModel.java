@@ -91,6 +91,9 @@ public class ConfigChunkTableModel
             size += Math.max(mChunk.getNumPropertyValues(desc.getToken()),
                              desc.getItemsSize());
          }
+
+         // Take into account rows for the chunk name and type
+         size += 2;
       }
       return size;
    }
@@ -114,6 +117,16 @@ public class ConfigChunkTableModel
       {
          return false;
       }
+      // The first row is always the chunk name
+      if (row == 0)
+      {
+         return true;
+      }
+      // The second row is always the chunk type - NOT editable here
+      if (row == 1)
+      {
+         return false;
+      }
       // Can't edit embedded ConfigChunks directly
 //      PropertyDesc desc = getPropertyDesc(row);
 //      if (desc.getValType() == ValType.EMBEDDEDCHUNK)
@@ -131,6 +144,12 @@ public class ConfigChunkTableModel
     */
    public PropertyDesc getPropertyDesc(int row)
    {
+      // Rows 0 and 1 are invalid since they are not explicit properties
+      if (row == 0 || row == 1)
+      {
+         return null;
+      }
+
       // We move our cur_row cursor along based on the number of values a
       // property has. Once we pass the row we're looking for, we've found the
       // PropertyDesc we want.
@@ -146,7 +165,7 @@ public class ConfigChunkTableModel
          cur_row += num_values;
 
          // If we've passed the row we're looking for, return that desc.
-         if (row < cur_row)
+         if (row < (cur_row + 2))
          {
             return cur_desc;
          }
@@ -159,7 +178,9 @@ public class ConfigChunkTableModel
     */
    public int getRowFor(PropertyDesc desc)
    {
-      int cursor = 0;
+      // Start on the third row (row 2) because the first two are reserved for
+      // the name and value of the chunk.
+      int cursor = 2;
       List prop_descs = mChunk.getDesc().getPropertyDescs();
       for (Iterator itr = prop_descs.iterator(); itr.hasNext(); )
       {
@@ -185,6 +206,18 @@ public class ConfigChunkTableModel
     */
    public Object getValueAt(int row, int col)
    {
+      // First row is the chunk name
+      if (row == 0)
+      {
+         return (col == 0) ? "Name" : mChunk.getName();
+      }
+
+      // Second row is the chunk type
+      if (row == 1)
+      {
+         return (col == 0) ? "Type" : mChunk.getDesc().getName();
+      }
+
       PropertyDesc desc = getPropertyDesc(row);
       if (col == 0)
       {
@@ -205,45 +238,58 @@ public class ConfigChunkTableModel
     */
    public void setValueAt(Object value, int row, int col)
    {
-      PropertyDesc desc = getPropertyDesc(row);
-
       // We can only set values in the column zero
       if (col == 1)
       {
-         VarValue varVal;
-         if (value instanceof Boolean)
+         // First row is always the chunk name
+         if (row == 0)
          {
-            varVal = new VarValue(((Boolean)value).booleanValue());
+            mChunk.setName((String)value);
          }
-         else if (value instanceof Integer)
+         // Second row is always the chunk type ... invalid
+         else if (row == 1)
          {
-            varVal = new VarValue(((Integer)value).intValue());
-         }
-         else if (value instanceof Float)
-         {
-            varVal = new VarValue(((Float)value).floatValue());
-         }
-         else if (value instanceof String)
-         {
-            varVal = new VarValue(value.toString());
-         }
-         else if (value instanceof ConfigChunk)
-         {
-            varVal = new VarValue((ConfigChunk)value);
+            // no-op
          }
          else
          {
-            // ACK!
-            varVal = null;
+            PropertyDesc desc = getPropertyDesc(row);
+
+            VarValue varVal;
+            if (value instanceof Boolean)
+            {
+               varVal = new VarValue(((Boolean)value).booleanValue());
+            }
+            else if (value instanceof Integer)
+            {
+               varVal = new VarValue(((Integer)value).intValue());
+            }
+            else if (value instanceof Float)
+            {
+               varVal = new VarValue(((Float)value).floatValue());
+            }
+            else if (value instanceof String)
+            {
+               varVal = new VarValue(value.toString());
+            }
+            else if (value instanceof ConfigChunk)
+            {
+               varVal = new VarValue((ConfigChunk)value);
+            }
+            else
+            {
+               // ACK!
+               varVal = null;
+            }
+
+            // Figure out which property value we're editing
+            int base_row = getRowFor(desc);
+            int value_idx = row - base_row;
+
+            // Modify the value and notify listeners
+            mChunk.setProperty(desc.getToken(), value_idx, varVal);
+            fireTableCellUpdated(row, col);
          }
-
-         // Figure out which property value we're editing
-         int base_row = getRowFor(desc);
-         int value_idx = row - base_row;
-
-         // Modify the value and notify listeners
-         mChunk.setProperty(desc.getToken(), value_idx, varVal);
-         fireTableCellUpdated(row, col);
       }
    }
 
