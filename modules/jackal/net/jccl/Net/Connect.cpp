@@ -68,7 +68,7 @@ Connect::Connect(Socket* s, const std::string& _name,
     connect_chunk = ChunkFactory::instance()->createChunk ("FileConnect");
     if (connect_chunk.get()) {
         connect_chunk->setProperty ("Name", name);
-        connect_chunk->setProperty ("Mode", VJC_INTERACTIVE);
+        connect_chunk->setProperty ("Mode", INTERACTIVE_CONNECT);
         connect_chunk->setProperty ("filename", filename);
         connect_chunk->setProperty ("Enabled", true);
         //ConfigManager::instance()->addActive(ch);              // Add to active config
@@ -97,19 +97,19 @@ Connect::Connect(ConfigChunkPtr c): commands_mutex(), communicators() {
     write_connect_thread = NULL;
 
     switch (mode) {
-    case VJC_OUTPUT:
+    case OUTPUT_CONNECT:
         outstream = new std::ofstream (filename.c_str(), std::ios::out);
         if (!outstream)
             vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
                                  << "\"\n" << vprDEBUG_FLUSH;
         break;
-    case VJC_INPUT:
+    case INPUT_CONNECT:
         instream = new std::ifstream (filename.c_str(), std::ios::in);
         if (!instream)
             vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
                                  << "\"\n" << vprDEBUG_FLUSH;
         break;
-    case VJC_INTERACTIVE:
+    case INTERACTIVE_CONNECT:
         instream = new std::fstream (filename.c_str(),
                                      std::ios::in | std::ios::out);
         if (!instream)
@@ -120,7 +120,7 @@ Connect::Connect(ConfigChunkPtr c): commands_mutex(), communicators() {
     }
 
     // logging information to output file...
-    if (mode == VJC_OUTPUT)
+    if (mode == OUTPUT_CONNECT)
         *outstream << "VR Juggler FileConnect output " << name.c_str()
                    << std::endl;
 
@@ -155,7 +155,7 @@ bool Connect::startProcess() {
 
    read_die = write_die = false;
 
-   if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE)
+   if (mode == OUTPUT_CONNECT || mode == INTERACTIVE_CONNECT)
    {
       vpr::ThreadMemberFunctor<Connect> *writeMemberFunctor =
       new vpr::ThreadMemberFunctor<Connect>(this,
@@ -164,7 +164,7 @@ bool Connect::startProcess() {
       write_connect_thread = new vpr::Thread (writeMemberFunctor);
       success = success && write_connect_thread;
    }
-   if (mode == VJC_INPUT || mode == VJC_INTERACTIVE)
+   if (mode == INPUT_CONNECT || mode == INTERACTIVE_CONNECT)
    {
       vpr::ThreadMemberFunctor<Connect> *readMemberFunctor =
       new vpr::ThreadMemberFunctor<Connect>(this,
@@ -212,7 +212,7 @@ bool Connect::stopProcess() {
 
 void Connect::sendDisconnect () {
     std::cerr << "Connect::sendDisconnect not implemented!!!" << std::endl;
-    //    if (mode != VJC_INPUT)
+    //    if (mode != INPUT_CONNECT)
     //   commands.push (new CommandDisconnect());
 }
 
@@ -220,7 +220,7 @@ void Connect::sendDisconnect () {
 void Connect::addCommand (Command* cmd) {
     vprASSERT (cmd != 0);
 
-    if (mode != VJC_INPUT) {
+    if (mode != INPUT_CONNECT) {
         commands_mutex.acquire();
         commands.push (cmd);
         commands_mutex.release();
@@ -231,7 +231,7 @@ void Connect::addCommand (Command* cmd) {
 //! ARGS: _tu - a TimedUpdate*
 //! ARGS: _refresh_time - time between refreshes, in milliseconds
 void Connect::addPeriodicCommand (PeriodicCommand* pc) {
-    if (mode != VJC_INPUT) {
+    if (mode != INPUT_CONNECT) {
         commands_mutex.acquire();
         periodic_commands.push (pc);
         commands_mutex.release();
