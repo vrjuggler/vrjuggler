@@ -148,7 +148,8 @@ def setVars():
       'VRPN_ROOT'       : os.getenv('VRPN_ROOT', ''),
       'AUDIERE_ROOT'    : os.getenv('AUDIERE_ROOT', ''),
       'TRACKD_API_ROOT' : os.getenv('TRACKD_API_ROOT', ''),
-      'prefix'          : r'C:\vrjuggler'
+      'prefix'          : r'C:\vrjuggler',
+      'deps-prefix'     : r'C:\vrjuggler-deps'
    }
 
    # If there are cached options, read them in.
@@ -175,6 +176,7 @@ def setVars():
    processInput(options, 'CPPDOM_ROOT', 'CppDOM installation directory')
 
    print "+++ Optional Settings"
+   processInput(options, 'deps-prefix', 'dependency installation prefix')
    processInput(options, 'JAVA_HOME', 'Java installation directory', False)
 
    # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
@@ -193,7 +195,7 @@ def setVars():
       omni_glob = os.path.join(omnilib, 'omniORB*_rt.lib')
       omni_ver_re = re.compile(r'omniORB(\d\d\d)_rt.lib')
       libs = glob.glob(omni_glob)
-      print libs
+
       for l in libs:
          match = omni_ver_re.search(l)
          if match is not None:
@@ -483,7 +485,6 @@ def doInstall(prefix):
    installGadgeteerPlugins(prefix)
    installVRJuggler(prefix)
    installVRJConfig(prefix)
-   installWin32Deps(prefix)
 
 def mkinstalldirs(dir):
 #   print "Checking for", dir
@@ -976,8 +977,69 @@ def installVRJConfig(prefix):
    else:
       print "VRJConfig not build.  Skipping."
 
-def installWin32Deps(prefix):
-   pass
+def doDependencyInstall(prefix):
+   makeTree(prefix)
+   installNSPR(prefix)
+   installCppDOM(prefix)
+#   installBoost(prefix)
+   installAudiere(prefix)
+   installOmniORB(prefix)
+
+def simpleInstall(name, root, prefix, optional = False):
+   if optional and root == '':
+      return
+
+   print "Installing", name
+
+   # Install all header files.
+   srcdir = os.path.join(root, 'include')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'include')
+      installDir(srcdir, destdir, ['.h', '.hpp'])
+
+   # Install all libraries.
+   srcdir = os.path.join(root, 'lib')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib')
+      installDir(srcdir, destdir)
+
+   # Install all executables.
+   srcdir = os.path.join(root, 'bin')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'bin')
+      installDir(srcdir, destdir)
+
+def installNSPR(prefix):
+   simpleInstall('NSPR headers and libraries', os.environ['NSPR_ROOT'],
+                 prefix)
+
+def installCppDOM(prefix):
+   simpleInstall('CppDOM headers and libraries', os.environ['CPPDOM_ROOT'],
+                 prefix)
+
+def installBoost(prefix):
+   print "Installing Boost headers and libraries"
+
+   srcroot = os.environ['BOOST_ROOT']
+
+   srcdir = os.environ['BOOST_INCLUDES']
+   destdir = os.path.join(prefix, 'include')
+   installDir(srcdir, destdir)
+
+   srcdir = os.path.join(srcroot, 'lib')
+   destdir = os.path.join(prefix, 'lib')
+   installDir(srcdir, destdir)
+
+def installAudiere(prefix):
+   simpleInstall('Audiere headers, libraries, and executables',
+                 os.getenv('AUDIERE_ROOT', ''), prefix, True)
+
+def installOmniORB(prefix):
+   simpleInstall('omniORB headers, libraries, and executables',
+                 os.getenv('OMNIORB_ROOT', ''), prefix, True)
 
 def main():
    options = setVars()
@@ -1007,6 +1069,11 @@ def main():
          proceed = sys.stdin.readline().strip(" \n")
          if proceed == '' or proceed.lower().startswith('y'):
             doInstall(options['prefix'])
+
+            print "Proceed with VR Juggler dependency installation [y]: ",
+            proceed = sys.stdin.readline().strip(" \n")
+            if proceed == '' or proceed.lower().startswith('y'):
+               doDependencyInstall(options['deps-prefix'])
    except OSError, osEx:
       print "Could not execute %s: %s" % (devenv_cmd, osEx)
       sys.exit(3)
