@@ -51,49 +51,89 @@ import org.vrjuggler.tweek.services.EnvironmentService;
 public class ConfigBrokerImpl
    implements ConfigBroker
 {
+//   /**
+//    * Creates a new ConfigBroker service. This will try to load the VRJuggler
+//    * chunk desc file by default upon initialization.
+//    *
+//    * <b>TODO: This is the wrong place to be auto-loading the VRJuggler chunk
+//    * desc file. Look to put this elsewhere.</b>
+//    */
+//   public ConfigBrokerImpl()
+//   {
+//      String desc_filename = EnvironmentService.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
+//      File desc_file = new File(desc_filename);
+//
+//      try
+//      {
+//         if (desc_file.exists() && desc_file.canRead())
+//         {
+//            // File exists and is readable. Lets see if we can load it.
+//            System.out.println("Trying to load "+desc_filename);
+//            InputStream in = new BufferedInputStream(new FileInputStream(desc_file));
+//
+////            String res_name = "VRJuggler Configuration Definitions";
+//            String res_name = desc_file.getAbsolutePath();
+//            open(new ConfigContext(), res_name, in);
+//         }
+//      }
+//      catch (IOException ioe)
+//      {
+//         System.err.println("Failed to load base VRJuggler Chunk Descriptions: "+ioe.getMessage());
+//      }
+//   }
+//
+//   /**
+//    * Opens a new configuration resource using the given unique name from the
+//    * given input stream.
+//    *
+//    * @param context    the context in which to open the resource
+//    * @param name       the unique name to assign to the resource
+//    * @param input      the stream from which to retrieve the resource data
+//    *
+//    * @throws IOException  if there is an error opening the resource
+//    */
+//   public void open(ConfigContext context, String name, InputStream input)
+//     throws IOException
+//   {
+//      // Check if a resource is already open under that name
+//      if (resources.containsKey(name))
+//      {
+//         throw new IllegalArgumentException(name + " already in use");
+//      }
+//
+//      // Try to load in the resource
+//      Document resource_doc = loadResource(input);
+//      if (resource_doc.getRootElement().getName().equals("ChunkDescDB"))
+//      {
+//         // We just loaded a ChunkDescDB
+//         ChunkDescDB desc_db = new ChunkDescDB();
+//         desc_db.build(resource_doc);
+//         resources.put(name, desc_db);
+//      }
+//      else if (resource_doc.getRootElement().getName().equals("ConfigChunkDB"))
+//      {
+//         // We just loaded a ConfigChunkDB
+//         ChunkFactory.setDescs(getDescs(context));
+//         ConfigChunkDB chunk_db = new ConfigChunkDB();
+//         chunk_db.build(resource_doc);
+//         resources.put(name, chunk_db);
+//      }
+//      else
+//      {
+//         throw new IOException("Invalid file");
+//      }
+//
+//      // Let listeners know the resource was opened
+//      fireResourceOpened(name);
+//   }
+
    /**
-    * Creates a new ConfigBroker service. This will try to load the VRJuggler
-    * chunk desc file by default upon initialization.
+    * Adds the given resources in the given data source to this broker.
     *
-    * <b>TODO: This is the wrong place to be auto-loading the VRJuggler chunk
-    * desc file. Look to put this elsewhere.</b>
+    * @param name          the unique name to assign to the resource
+    * @param dataSource    the data source from which to retrieve the data
     */
-   public ConfigBrokerImpl()
-   {
-      String desc_filename = EnvironmentService.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
-      File desc_file = new File(desc_filename);
-
-      try
-      {
-         if (desc_file.exists() && desc_file.canRead())
-         {
-            // File exists and is readable. Lets see if we can load it.
-            System.out.println("Trying to load "+desc_filename);
-            InputStream in = new BufferedInputStream(new FileInputStream(desc_file));
-
-//            String res_name = "VRJuggler Configuration Definitions";
-            String res_name = desc_file.getAbsolutePath();
-            open(new ConfigContext(), res_name, in);
-         }
-      }
-      catch (IOException ioe)
-      {
-         System.err.println("Failed to load base VRJuggler Chunk Descriptions: "+ioe.getMessage());
-      }
-   }
-
-   /**
-    * Opens a new configuration resource using the given unique name from the
-    * given input stream.
-    *
-    * @param context    the context in which to open the resource
-    * @param name       the unique name to assign to the resource
-    * @param input      the stream from which to retrieve the resource data
-    *
-    * @throws IOException  if there is an error opening the resource
-    */
-   public void open(ConfigContext context, String name, InputStream input)
-     throws IOException
+   public void add(String name, DataSource dataSource)
    {
       // Check if a resource is already open under that name
       if (resources.containsKey(name))
@@ -101,30 +141,38 @@ public class ConfigBrokerImpl
          throw new IllegalArgumentException(name + " already in use");
       }
 
-      // Try to load in the resource
-      Document resource_doc = loadResource(input);
-      if (resource_doc.getRootElement().getName().equals("ChunkDescDB"))
+      resources.put(name, dataSource);
+   }
+
+   /**
+    * Removes the resources in the given data source from this broker.
+    *
+    * @param name          the name of the data source to remove
+    *
+    * @return  the data source that was removed
+    */
+   public DataSource remove(String name)
+   {
+      if (resources.containsKey(name))
       {
-         // We just loaded a ChunkDescDB
-         ChunkDescDB desc_db = new ChunkDescDB();
-         desc_db.build(resource_doc);
-         resources.put(name, desc_db);
-      }
-      else if (resource_doc.getRootElement().getName().equals("ConfigChunkDB"))
-      {
-         // We just loaded a ConfigChunkDB
-         ChunkFactory.setDescs(getDescs(context));
-         ConfigChunkDB chunk_db = new ConfigChunkDB();
-         chunk_db.build(resource_doc);
-         resources.put(name, chunk_db);
-      }
-      else
-      {
-         throw new IOException("Invalid file");
+         throw new IllegalArgumentException(name + " is not open");
       }
 
-      // Let listeners know the resource was opened
-      fireResourceOpened(name);
+      //TODO: Refactor into fireResourceRemoved(name)
+      DataSource data_source = (DataSource)resources.remove(name);
+      return data_source;
+   }
+
+   /**
+    * Gets the data source associated with the given name in this broker.
+    *
+    * @param name          the unique name assigned to the data source
+    *
+    * @return  the DataSource if one exists; null if no DataSource has that name
+    */
+   public DataSource get(String name)
+   {
+      return (DataSource)resources.get(name);
    }
 
    /**
@@ -154,74 +202,75 @@ public class ConfigBrokerImpl
       return doc;
    }
 
+//   /**
+//    * Closes the configuration resource associated with the given name.
+//    *
+//    * @param name    the name of the resource to close
+//    *
+//    * @throws IOException  if there is an error closing the resource
+//    */
+//   public void close(String name)
+//     throws IOException
+//   {
+//      // Check if a resource is actually open under that name
+//      if (resources.containsKey(name))
+//      {
+//         throw new IllegalArgumentException(name + " is not open");
+//      }
+//
+//      // Close the resource
+//      resources.remove(name);
+//
+//      // Let listeners know the resource was closed
+//      fireResourceClosed(name);
+//   }
+//
+//   /**
+//    * Saves the configuration resource associated with the given name.
+//    *
+//    * @param name    the name of the resource to save
+//    *
+//    * @throws IOException  if there is an error saving the resource
+//    */
+//   public void save(String name)
+//     throws IOException
+//   {
+//      // Check if a resource is actually open under that name
+//      if (! resources.containsKey(name))
+//      {
+//         throw new IllegalArgumentException(name + " is not open");
+//      }
+//
+//      System.out.println("Saving resource: "+name);
+//
+//      // Try to save the resource
+//      OutputStream out = new BufferedOutputStream(new FileOutputStream(name));
+//      Object resource = resources.get(name);
+//      if (resource instanceof ChunkDescDB)
+//      {
+//         ((ChunkDescDB)resource).write(out);
+//      }
+//      else if (resource instanceof ConfigChunkDB)
+//      {
+//         ((ConfigChunkDB)resource).write(out);
+//      }
+//      else
+//      {
+//         throw new IOException("Unkown resource type");
+//      }
+//      fireResourceSaved(name);
+//   }
+
    /**
-    * Closes the configuration resource associated with the given name.
-    *
-    * @param name    the name of the resource to close
-    *
-    * @throws IOException  if there is an error closing the resource
-    */
-   public void close(String name)
-     throws IOException
-   {
-      // Check if a resource is actually open under that name
-      if (resources.containsKey(name))
-      {
-         throw new IllegalArgumentException(name + " is not open");
-      }
-
-      // Close the resource
-      resources.remove(name);
-
-      // Let listeners know the resource was closed
-      fireResourceClosed(name);
-   }
-
-   /**
-    * Saves the configuration resource associated with the given name.
-    *
-    * @param name    the name of the resource to save
-    *
-    * @throws IOException  if there is an error saving the resource
-    */
-   public void save(String name)
-     throws IOException
-   {
-      // Check if a resource is actually open under that name
-      if (! resources.containsKey(name))
-      {
-         throw new IllegalArgumentException(name + " is not open");
-      }
-
-      System.out.println("Saving resource: "+name);
-
-      // Try to save the resource
-      OutputStream out = new BufferedOutputStream(new FileOutputStream(name));
-      Object resource = resources.get(name);
-      if (resource instanceof ChunkDescDB)
-      {
-         ((ChunkDescDB)resource).write(out);
-      }
-      else if (resource instanceof ConfigChunkDB)
-      {
-         ((ConfigChunkDB)resource).write(out);
-      }
-      else
-      {
-         throw new IOException("Unkown resource type");
-      }
-      fireResourceSaved(name);
-   }
-
-   /**
-    * Tests if the given resource is currently open and being managed by this
+    * Tests if the data source with the given name is being managed by this
     * broker.
     *
-    * @param name    the name of the resource to check
+    * @param name    the name of the data source to check
     *
-    * @return  true if the resource is open, false otherwise
+    * @return  true if the data source resource is in this broker;
+    *          false otherwise
     */
-   public boolean isOpen(String name)
+   public boolean containsDataSource(String name)
    {
       return resources.containsKey(name);
    }
@@ -238,9 +287,9 @@ public class ConfigBrokerImpl
     */
    public boolean add(ConfigContext context, ConfigChunk chunk)
    {
-      // Get a list of the resources in this context that are config chunk DBs
-      List chunk_res = getResourcesOfType(context, ConfigChunkDB.class);
-      ConfigChunkDB target = null;
+      // Get a list of the resources in this context that can handle ConfigChunks
+      List chunk_res = getElementResources(context);
+      DataSource target = null;
 
       // Check if this context has nothing to add to
       if (chunk_res.size() == 0)
@@ -264,7 +313,7 @@ public class ConfigBrokerImpl
          int result = chooser.showDialog(null);
          if (result == ResourceChooser.APPROVE_OPTION)
          {
-            target = (ConfigChunkDB)resources.get(chooser.getSelectedResource());
+            target = (DataSource)resources.get(chooser.getSelectedResource());
          }
          else
          {
@@ -274,7 +323,7 @@ public class ConfigBrokerImpl
       }
       else
       {
-         target = (ConfigChunkDB)chunk_res.get(0);
+         target = (DataSource)chunk_res.get(0);
       }
 
       target.add(chunk);
@@ -297,16 +346,16 @@ public class ConfigBrokerImpl
     */
    public boolean remove(ConfigContext context, ConfigChunk chunk)
    {
-      // Get a list of the resources in this context that are config chunk DBs
-      List chunk_res = getResourcesOfType(context, ConfigChunkDB.class);
+      // Get a list of the resources in this context that can handle ConfigChunks
+      List chunk_res = getElementResources(context);
 
       for (Iterator itr = chunk_res.iterator(); itr.hasNext(); )
       {
-         ConfigChunkDB db = (ConfigChunkDB)itr.next();
-         if (db.contains(chunk))
+         DataSource data_source = (DataSource)itr.next();
+         if (data_source.contains(chunk))
          {
-            db.remove(chunk);
-            fireConfigChunkRemoved(getNameFor(db), chunk);
+            data_source.remove(chunk);
+            fireConfigChunkRemoved(getNameFor(data_source), chunk);
             return true;
          }
       }
@@ -325,9 +374,9 @@ public class ConfigBrokerImpl
     */
    public boolean add(ConfigContext context, ChunkDesc desc)
    {
-      // Get a list of the resources in this context that are chunk desc DBs
-      List desc_res = getResourcesOfType(context, ChunkDescDB.class);
-      ChunkDescDB target = null;
+      // Get a list of the resources in this context that can handle ChunkDescs
+      List desc_res = getDefinitionResources(context);
+      DataSource target = null;
 
       // Check if this context has nothing to add to
       if (desc_res.size() == 0)
@@ -351,7 +400,7 @@ public class ConfigBrokerImpl
          int result = chooser.showDialog(null);
          if (result == ResourceChooser.APPROVE_OPTION)
          {
-            target = (ChunkDescDB)resources.get(chooser.getSelectedResource());
+            target = (DataSource)resources.get(chooser.getSelectedResource());
          }
          else
          {
@@ -361,7 +410,7 @@ public class ConfigBrokerImpl
       }
       else
       {
-         target = (ChunkDescDB)desc_res.get(0);
+         target = (DataSource)desc_res.get(0);
       }
 
       target.add(desc);
@@ -384,16 +433,16 @@ public class ConfigBrokerImpl
     */
    public boolean remove(ConfigContext context, ChunkDesc desc)
    {
-      // Get a list of the resources in this context that are config chunk DBs
-      List desc_res = getResourcesOfType(context, ChunkDescDB.class);
+      // Get a list of the resources in this context that can handle ChunkDescs
+      List desc_res = getDefinitionResources(context);
 
       for (Iterator itr = desc_res.iterator(); itr.hasNext(); )
       {
-         ChunkDescDB db = (ChunkDescDB)itr.next();
-         if (db.contains(desc))
+         DataSource data_source = (DataSource)itr.next();
+         if (data_source.contains(desc))
          {
-            db.remove(desc);
-            fireChunkDescRemoved(getNameFor(db), desc);
+            data_source.remove(desc);
+            fireChunkDescRemoved(getNameFor(data_source), desc);
             return true;
          }
       }
@@ -414,10 +463,10 @@ public class ConfigBrokerImpl
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
          String name = (String)itr.next();
-         Object resource = resources.get(name);
-         if (resource instanceof ChunkDescDB)
+         DataSource data_source = (DataSource)resources.get(name);
+         if (data_source.acceptsDefinitions())
          {
-            all_descs.addAll(((ChunkDescDB)resource).getAll());
+            all_descs.addAll(data_source.getDefinitions());
          }
       }
 
@@ -437,10 +486,10 @@ public class ConfigBrokerImpl
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
          String name = (String)itr.next();
-         Object resource = resources.get(name);
-         if (resource instanceof ConfigChunkDB)
+         DataSource data_source = (DataSource)resources.get(name);
+         if (data_source.acceptsElements())
          {
-            all_chunks.addAll(((ConfigChunkDB)resource).getAll());
+            all_chunks.addAll(data_source.getElements());
          }
       }
 
@@ -457,10 +506,10 @@ public class ConfigBrokerImpl
     */
    public List getDescsIn(String resource)
    {
-      Object res = resources.get(resource);
-      if (res != null && (res instanceof ChunkDescDB))
+      DataSource data_source = (DataSource)resources.get(resource);
+      if (data_source != null && data_source.acceptsDefinitions())
       {
-         return ((ChunkDescDB)res).getAll();
+         return data_source.getDefinitions();
       }
       return new ArrayList();
    }
@@ -475,10 +524,10 @@ public class ConfigBrokerImpl
     */
    public List getChunksIn(String resource)
    {
-      Object res = resources.get(resource);
-      if (res != null && (res instanceof ConfigChunkDB))
+      DataSource data_source = (DataSource)resources.get(resource);
+      if (data_source != null && data_source.acceptsElements())
       {
-         return ((ConfigChunkDB)res).getAll();
+         return data_source.getElements();
       }
       return new ArrayList();
    }
@@ -674,32 +723,57 @@ public class ConfigBrokerImpl
    }
 
    /**
-    * Gets a list of all the resources managed by this broker that are of the
-    * given class.
+    * Gets a list of all the resources that can handle ConfigChunks.
     *
     * @param context       the context in which to search
-    * @param testClass     the class to test for
     *
     * @return  a list of the matching resources
     */
-   protected List getResourcesOfType(ConfigContext context, Class testClass)
+   protected List getElementResources(ConfigContext context)
    {
-      List result = new ArrayList();
+      List results = new ArrayList();
 
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
          String name = (String)itr.next();
-         Object resource = resources.get(name);
-         if (resource != null)
+         DataSource data_source = (DataSource)resources.get(name);
+         if (data_source != null)
          {
-            if (testClass.isInstance(resource))
+            if (data_source.acceptsElements())
             {
-               result.add(resource);
+               results.add(data_source);
             }
          }
       }
 
-      return result;
+      return results;
+   }
+
+   /**
+    * Gets a list of all the resources that can handle ChunkDescs.
+    *
+    * @param context       the context in which to search
+    *
+    * @return  a list of the matching resources
+    */
+   protected List getDefinitionResources(ConfigContext context)
+   {
+      List results = new ArrayList();
+
+      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+      {
+         String name = (String)itr.next();
+         DataSource data_source = (DataSource)resources.get(name);
+         if (data_source != null)
+         {
+            if (data_source.acceptsDefinitions())
+            {
+               results.add(data_source);
+            }
+         }
+      }
+
+      return results;
    }
 
    /**
