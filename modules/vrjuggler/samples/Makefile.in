@@ -41,15 +41,16 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: OGL OSG Pf
+all: tutorials OGL OSG Pf
 
-OGL OSG Pf::
+tutorials OGL OSG Pf::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:	
+	-cd tutorials && $(MAKE) clean
 	-cd OGL && $(MAKE) clean
 	-cd OSG && $(MAKE) clean
 	-cd Pf  && $(MAKE) clean	

@@ -286,8 +286,8 @@ sub make_LDFLAGS ($;$$)
 
    if ( $echo_static )
    {
-      $static_begin = qq(@static_begin@);
-      $static_end   = qq(@static_end@);
+      $static_begin = qq(@APP_LINK_STATIC_ON@);
+      $static_end   = qq(@APP_LINK_STATIC_OFF@);
    }
 
    my $ldflags = '';

@@ -31,117 +31,43 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/Pf/advanced/pfConfigNav.
+# Makefile.in for vrjuggler/samples/Pf/advanced/pfBasicConfigNav.
 # It requires GNU make.
-#
-# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJEXT@
+all: pfBasicConfigNav$(EXT_EXT)
 
-srcdir		= @srcdir@
+APP_NAME=	pfBasicConfigNav$(EXE_EXT)
 
-EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@ @APP_EXTRA_FLAGS_PF@
-COMPILE		= @APP_CXX@ @APP_DEFS@ @APP_CXXFLAGS@			\
-                  @APP_DEBUG_CFLAGS@ $(VJ_INCLUDES) $(EXTRA_CFLAGS)
-EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@ @APP_EXTRA_FLAGS_PF@
-LINK		= @APP_LINK@ @APP_DEBUG_LFLAGS@ @APP_LINK_FLAGS@ $(EXTRA_LFLAGS)
-LINKALL_ON	= @APP_LINKALL_ON@
-LINKALL_OFF	= @APP_LINKALL_OFF@
+# Basic options.
+srcdir=		@srcdir@
+COMMON_SRCS=	simplePfNavApp.cpp	\
+		pfFileIO.cpp		\
+		pfTerryCollide.cpp	\
+		pfTerryPogoCollide.cpp	\
+		pfTerryBoxCollide.cpp	\
+		pfMPStats.cpp
 
-VJ_INCLUDES	= @APP_INCLUDES@ $(AW_INCLUDES) -I$(srcdir)		\
-                  -I$(VJ_BASE_DIR)/include				\
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfNav \
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
-VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-                  @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_BASIC_LIBS_END@
-
-VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
-                  $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
-                  $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
-
+SRCS=		pfBasicConfigNav.cpp $(COMMON_SRCS)
 
 ifeq (@USE_SONIX@, Y)
-    VJ_INCLUDES +=  -I$(SNX_BASE_DIR)/include
-    VJ_LIBS += -L$(SNX_BASE_DIR)/lib@LIBBITSUF@ -lsonix
-    CXXFLAGS += -DUSE_SONIX
+   EXTRA_DEFS+=	-DUSE_SONIX
 endif
 
+EXTRA_PATH_FOR_SOURCES=	$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
+			$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools	\
+			$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools \
+			$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfNav
 
-# Uncomment all of the following lines if you have AudioWorks and your
-# application needs audio.
-#AW_INCLUDES 	= @APP_EXTRA_INC_AW@
-#AW_LIBS		= @APP_EXTRA_LIBS_AW@
-#VJ_AUDIO_LIBS	= @APP_VJ_LIBS_AW@
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 
-vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav
-vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools
-vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
-vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfNav
-
-# This Performer sample program requires the following libraries to be linked:
-#
-#   -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lX11 -lXext -lm
-#
-# If the library uses POSIX threads, the appropriate pthread enabling option
-# must also be added to the list of libraries.  In most cases, this will be
-# "-lpthread".
-#
-# The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
-# 64-bit binaries, use -L/usr/lib64.
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ $(AW_LIBS)	\
-                  @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
-
-COMMON_OBJECTS	= simplePfNavApp.@OBJEXT@	\
-                  pfFileIO.@OBJEXT@		\
-                  pfTerryCollide.@OBJEXT@	\
-                  pfTerryPogoCollide.@OBJEXT@	\
-                  pfTerryBoxCollide.@OBJEXT@	\
-                  pfMPStats.@OBJEXT@
-
-PF_BASIC_CONFIG_NAV_OBJECTS = pfBasicConfigNav.@OBJEXT@	\
-                              $(COMMON_OBJECTS)
+EXTRA_INCLUDES+=	-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
+			-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfNav \
+			-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
 
 # -----------------------------------------------------------------------------
-# Targets.
+# Application build targets.
 # -----------------------------------------------------------------------------
-default: pfBasicConfigNav
-
-all: pfBasicConfigNav
-
-pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
-
-.cpp.@OBJEXT@:
-	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
-
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-clean:
-	rm -f pfBasicConfigNav $(PF_BASIC_CONFIG_NAV_OBJECTS) *core
-	rm -rf ./ii_files
-
-# -----------------------------------------------------------------------------
-# Dependency stuff.
-# -----------------------------------------------------------------------------
-DEP_GEN_FLAG	= @DEP_GEN_FLAG@
-DEPEND_FILES	= $(PF_BASIC_CONFIG_NAV_OBJECTS:.@OBJEXT@=.d)
-
-# This expression reformats the output from the dependency text to be of the
-# form:
-#
-#     file1.o file1.d : ...
-#
-# where file1 is the value in $* and file1.d is $@.  It handles output from
-# the C and C++ compilers which prints only the object file to be created ($*).
-_CC_SED_EXP	= '\''s/\($*\)\.@OBJEXT@[ :]*/.\/\1.@OBJEXT@ $@: /g'\''
-
-%.d: %.cpp
-	@echo "Updating dependency file $@ ..."
-	@$(SHELL) -ec '$(COMPILE) $(DEP_GEN_FLAG) $< |			\
-                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
-
--include $(DEPEND_FILES)
+pfBasicConfigNav$(EXE_EXT): $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
