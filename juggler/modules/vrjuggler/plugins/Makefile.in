@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Base Makefile.in for VRJuggler.  It requires GNU make.
+# Base Makefile.in for the VR Juggler plug-ins.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -46,12 +46,12 @@
 #
 # all             - Build everything.
 # all-abi         - Build everything using all supported ABIs.
-# debug           - Build the VRJuggler libraries (dynamic and static) with
+# debug           - Build the VR Juggler libraries (dynamic and static) with
 #                   debugging symbols turned on.
 # dbg             - Build the debugging, static copy of the libraries.
 # ddso            - Build the debugging, dynamic shared object version of the
 #                   libraries.
-# optim           - Build the VRJuggler libraries (dynamic and static) with
+# optim           - Build the VR Juggler libraries (dynamic and static) with
 #                   optimization flags enabled.
 # opt             - Build the optimized, static version of the libraries.
 # dso             - Build the dynamic shared object version of the libraries.
@@ -67,13 +67,13 @@
 # install-all     - Install all versions of the libraries, all header files,
 #                   and the test code.
 # install-all-abi - Install every ABI possible on the target platform.
-# install         - Install the full debugging version of VRJuggler (with both
+# install         - Install the full debugging version of VR Juggler (with both
 #                   static and dynamic libraries). 
 # install-debug   - Same as 'install'.
 # install-dbg     - Install the debugging, static version of the libraries.
 # install-ddso    - Install the debugging, dynamic shared object version of
 #                   the libraries.
-# install-optim   - Install the full optimized version of VRJuggler (with both
+# install-optim   - Install the full optimized version of VR Juggler (with both
 #                   static and dynamic libraries).
 # install-opt     - Install the optimized, static version of the libraries.
 # install-dso     - Install the dynamic shared object version of the libraries.
@@ -136,7 +136,7 @@ SUBDIR=	corba_perf_mon
 # ------------------------------------------------
 world:
 	@echo "==============================================================="
-	@echo ">>> VRJuggler plug-in make world started $(STARTTIME)"
+	@echo ">>> VR Juggler plug-in make world started $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@$(MAKE) clobber
@@ -144,14 +144,14 @@ endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
 	@echo "---------------------------------------------------------------"
-	@echo "Beginning VRJuggler plug-in installation process"
+	@echo "Beginning VR Juggler plug-in installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	@echo "==============================================================="
-	@echo ">>> VRJuggler plug-in make world started $(STARTTIME)"
-	@echo ">>> VRJuggler plug-in make world completed `LTIME=C date`"
+	@echo ">>> VR Juggler plug-in make world started $(STARTTIME)"
+	@echo ">>> VR Juggler plug-in make world completed `LTIME=C date`"
 	@echo "==============================================================="
 
 # ------------------------------------------------------------------------
@@ -159,7 +159,7 @@ endif
 # ------------------------------------------------------------------------
 world-all-abi:
 	@echo "==============================================================="
-	@echo ">>> VRJuggler plug-in make world started on $(STARTTIME)"
+	@echo ">>> VR Juggler plug-in make world started on $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@$(MAKE) clobber
@@ -172,7 +172,7 @@ endif
             $(MAKE) pluginABI=$$abi libs ;				\
           done
 	@echo "---------------------------------------------------------------"
-	@echo "Beginning VRJuggler plug-in installation process"
+	@echo "Beginning VR Juggler plug-in installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
 	@for abi in $(ABI_LIST) ; do					\
@@ -183,8 +183,8 @@ endif
           done
 	@$(MAKE) do-post-install
 	@echo "==============================================================="
-	@echo ">>> VRJuggler plug-in make world started on $(STARTTIME)"
-	@echo ">>> VRJuggler plug-in make world completed on `LTIME=C date`"
+	@echo ">>> VR Juggler plug-in make world started on $(STARTTIME)"
+	@echo ">>> VR Juggler plug-in make world completed on `LTIME=C date`"
 	@echo "==============================================================="
 
 # -----------------------------------------------------------------------------
@@ -196,7 +196,7 @@ endif
 # -----------------------------------------------------------------------------
 release:
 	@echo "==============================================================="
-	@echo ">>> VRJuggler plug-in make release started on $(STARTTIME)"
+	@echo ">>> VR Juggler plug-in make release started on $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@$(MAKE) clobber
@@ -207,15 +207,15 @@ ifdef GLOBAL_BUILD
 	@$(MAKE) links
 endif
 	@echo "---------------------------------------------------------------"
-	@echo "Beginning VRJuggler plug-in release installation process"
+	@echo "Beginning VR Juggler plug-in release installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
-	@echo ">>> VRJuggler plug-in make release started on $(STARTTIME)"
-	@echo ">>> VRJuggler plug-in make release completed on `LTIME=C date`"
+	@echo ">>> VR Juggler plug-in make release started on $(STARTTIME)"
+	@echo ">>> VR Juggler plug-in make release completed on `LTIME=C date`"
 	@echo "==============================================================="
 
 # -------------------------------------
@@ -233,7 +233,7 @@ installworld: install-all
 # Human-readable information about the build system.
 # =============================================================================
 info:
-	@echo "\nInfo for the make of VRJuggler plug-ins"
+	@echo "\nInfo for the make of VR Juggler plug-ins"
 	@echo "\nOBJDIR: $(OBJDIR)"
 	@echo "VRJugglerROOT_ABS: $(VRJugglerROOT_ABS)"
 	@echo "Default ABI: $(ABI)"
