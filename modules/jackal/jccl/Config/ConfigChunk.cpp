@@ -454,7 +454,7 @@ bool vjConfigChunk::setProperty (const std::string& property, vjConfigChunk* val
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (!p) {
-	vjDEBUG (vjDBG_ALL, 0) << "setProperty: no such property " << property
+	vjDEBUG (vjDBG_ALL, 1) << "setProperty: no such property " << property
 			       << "\n" << vjDEBUG_FLUSH;
 	return false;
     }

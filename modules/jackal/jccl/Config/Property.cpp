@@ -250,3 +250,6 @@ bool vjProperty::setValue (vjVarValue& val, int ind) {
     return true;
 }
 
+
+
+

@@ -126,8 +126,8 @@ std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& pr
 bool vjConfigChunkDB::erase () {
     /* removes all chunks from self (and frees them)
      */
-    for (int i = 0; i < chunks.size(); i++)
-	delete (chunks[i]);
+    //for (int i = 0; i < chunks.size(); i++)
+    //delete (chunks[i]);
     chunks.erase (chunks.begin(), chunks.end() );
     return true;
 }
@@ -143,8 +143,9 @@ int vjConfigChunkDB::removeMatching (const std::string& property, int value) {
     while (begin != chunks.end()) {
 	c = (*begin)->getProperty(property);
 	if (c == value) {
-	    delete (*begin);
+	    //delete (*begin);
 	    chunks.erase(begin);
+	    i++;
 	}
 	else
 	    begin++;
@@ -160,8 +161,9 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
     while (begin != chunks.end()) {
 	c = (*begin)->getProperty(property);
 	if (c == value) {
-	    delete (*begin);
+	    //delete (*begin);
 	    chunks.erase(begin);
+	    i++;
 	}
 	else
 	    begin++;
@@ -170,16 +172,22 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
 }
 
 int vjConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
+    cout << "Remove Matching: property: " << property << ", value '"
+	 << value << "'\n" << endl;
+
     int i = 0;
     std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
     while (begin != chunks.end()) {
 	if (!vjstrcasecmp (value, (*begin)->getProperty(property))) {
-	    delete (*begin);
+	    //delete (*begin);
 	    chunks.erase(begin);
+	    i++;
 	}
 	else
 	    begin++;
     }
+    cout << "resulting db is: \n" << *this << "--------------------" << endl;
+
     return i;
 }
 
@@ -354,7 +362,8 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
          in >> *ch;
 
 	 if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
-	     self.load (ch->getProperty("Name"));
+	     std::string s = ch->getProperty ("Name");
+	     self.load (s);
 	 }
 	 else {
 	     /* OK.  If this chunk has the same instancename as a chunk
@@ -373,8 +382,25 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 }
 
 
+std::string vjConfigChunkDB::demangleFileName (const std::string& n) {
+    if (!vjstrncmp (n, "$HOME", 5)) {
+	std::string s1 = getenv ("HOME");
+	std::string s2 (n, 5, std::string::npos);
+	return (s1 + s2);
+    }
+    else if (!vjstrncmp (n, "$VJ_BASE_DIR", 12)) {
+	std::string s1 = getenv ("VJ_BASE_DIR");
+	std::string s2 (n, 12, std::string::npos);
+	return (s1 + s2);
+    }
+    else {
+	return n;
+    }
+}
 
-bool vjConfigChunkDB::load (const std::string& fname) {
+bool vjConfigChunkDB::load (const std::string& filename) {
+    std::string fname = demangleFileName (filename);
+
     ifstream in(fname.c_str());
 
     vjDEBUG(vjDBG_CONFIG,4) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
@@ -389,6 +415,8 @@ bool vjConfigChunkDB::load (const std::string& fname) {
     in >> *this;
     return true;
 }
+
+
 
 bool vjConfigChunkDB::save (const std::string& fname) {
 

@@ -4,17 +4,19 @@
 #include <Config/vjParseUtil.h>
 
 /* a utility function that probably belongs elsewhere */
-int readString (istream &in, char *buffer, int size, bool *quoted) {
+bool readString (istream &in, char *buffer, int size, bool *quoted) {
     /* reads a string from in.  a string is either " delimited
      * or contains no whitespace.
+     *
+     * returns true if a string is correctly read.  This could be a 0-length
+     * quoted string...
      */
     /* 
-     * post: returns the length of the string read (not counting \0)
      *       Quoted is set true if the string read was in quoted.
      */
 
     int i;
-    int retval = 0;
+    bool retval = false;
     char c, vj;
 
     if (quoted)
@@ -60,7 +62,7 @@ int readString (istream &in, char *buffer, int size, bool *quoted) {
     
     if (buffer[0] == '{') {
 	buffer[1] = '\0';
-	retval = 1;
+	retval = true;
     }
     else if (buffer[0] == '"') {
 	/* do a quoted string */
@@ -72,7 +74,7 @@ int readString (istream &in, char *buffer, int size, bool *quoted) {
 		break;
 	}
 	buffer[i] = '\0';
-	retval = i;
+	retval = true;
     }
     else {
 	for (i = 1; i < size-1; i++) {
@@ -86,7 +88,7 @@ int readString (istream &in, char *buffer, int size, bool *quoted) {
 		break;
 	}
 	buffer[i] = '\0';
-	retval = i;
+	retval = true;
     }
     //cout << "read string: '" << buffer << "'" << endl;
     return retval;
@@ -192,6 +194,20 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
     for (int i = 0; i < n; i++)
 	if (toupper(a[i]) != toupper(b[i]))
+	    return true;
+    return false;
+}
+
+
+
+bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
+
+    int n = VJ_MIN2 (a.size(), b.size());
+    if (_n >= 0)
+	n = VJ_MIN2 (n, _n);
+
+    for (int i = 0; i < n; i++)
+	if (a[i] != b[i])
 	    return true;
     return false;
 }
