@@ -30,47 +30,50 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef GL_DRAW_OBJECT_FUNCTOR_H
-#define GL_DRAW_OBJECT_FUNCTOR_H
+#ifndef _GL_DRAW_HEAD_FUNCTORS_H_
+#define _GL_DRAW_HEAD_FUNCTORS_H_
 
 #include <vrj/vrjConfig.h>
+
+#ifdef VPR_OS_Darwin
+#   include <OpenGL/gl.h>
+#   include <OpenGL/glu.h>
+#else
+#   include <GL/gl.h>
+#   include <GL/glu.h>
+#endif
+
+#include <vrj/Draw/OGL/GlDrawObjectFunctor.h>
 
 
 namespace vrj
 {
 
-class User;
-
-/**
- * Base interface for an object drawing functor.
- * 
- * Any GL draw objects should be derived from this class.
- * This is used for drawing things such as wands and gloves.
- */
-class GlDrawObjectFunctor
-{
-public:   
-   /** Called to initialize any context specific information. */
-   virtual void contextInit() = 0;
-   
-   /**
-    * Callback function for drawing.
-    * Called when the object should be drawn.
-    * @pre OpenGL context is set and ready to go.
-    */
-   virtual void draw(vrj::User* user) = 0;
-};
-
-/**
- * Base class for glove drawing.
- * Adds a function for setting glove parameters.
- */
-class GlDrawGloveObjectFunctor : public GlDrawObjectFunctor
+/** Draw a basic ellipsoid head. */ 
+class GlDrawEllipsoidHeadFunctor : public GlDrawObjectFunctor
 {
 public:
-   virtual void setGlove() = 0;
+   GlDrawEllipsoidHeadFunctor();
+
+   virtual ~GlDrawEllipsoidHeadFunctor();
+
+   /** Called to initialize any context-specific information. */
+   virtual void contextInit()
+   {;}
+   
+   /**
+    * Callback function for drawing.  Called when the object should be drawn.
+    * @pre GL context is set and ready to go.
+    */
+   virtual void draw(vrj::User* user);
+
+protected:
+   void drawSphere(const float radius, const int slices, const int stacks);
+
+   GLUquadricObj* mQuadObj;
 };
 
-}
+} // End of vrj namespace
 
-#endif
+
+#endif /* _GL_DRAW_HEAD_FUNCTORS_H_ */

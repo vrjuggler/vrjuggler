@@ -32,7 +32,10 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vrj/Draw/OGL/GlDrawWandFunctors.h>
+
 
 namespace vrj
 {
@@ -42,8 +45,10 @@ GlDrawConeWandFunctor::GlDrawConeWandFunctor()
 {
 }
 
-void GlDrawConeWandFunctor::draw()
+void GlDrawConeWandFunctor::draw(vrj::User* user)
 {
+   boost::ignore_unused_variable_warning(user);
+
    const float base = 0.2f;
    const float height = 0.6f;
    const int slices = 6;
@@ -55,8 +60,10 @@ void GlDrawConeWandFunctor::draw()
    gluCylinder(mQuadObj, base, 0.0, height, slices, stacks);
 }
 
-void GlDrawRightAngleWandFunctor::draw()
+void GlDrawRightAngleWandFunctor::draw(vrj::User* user)
 {
+   boost::ignore_unused_variable_warning(user);
+
    static GLfloat VertexData[] = {
       0.0140000f, -0.140000f, 0.0140000f, 0.0140000f, 0.028000f, 0.0140000f, -0.0140000f, 0.028000f, 0.0140000f, 
       -0.0140000f, -0.140000f, 0.0140000f, 0.0140000f, -0.140000f, -0.0140000f, 
