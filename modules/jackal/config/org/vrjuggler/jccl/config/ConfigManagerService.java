@@ -31,13 +31,48 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.io.*;
 import java.util.*;
+import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.services.EnvironmentService;
 
 /**
  * Service bean for Tweek that manages loaded ConfigChunk and ChunkDesc DBs.
  */
 public class ConfigManagerService
 {
+   /**
+    * Creates a new ConfigManager service. This will try to load the VRJuggler
+    * chunk desc file by default upon initialization.
+    *
+    * <b>TODO: This is the wrong place to be auto-loading the VRJuggler chunk
+    * desc file. Look to put this elsewhere.</b>
+    */
+   public ConfigManagerService()
+   {
+      // Attempt to load the VRJuggler chunk description file
+      ConfigService config_service = getConfigService();
+      try
+      {
+         String desc_filename = expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
+         File desc_file = new File(desc_filename);
+         if (desc_file.exists() && desc_file.canRead())
+         {
+            // File exists and is readable. Lets see if we can load it.
+            System.out.println("Trying to load "+desc_filename);
+            InputStream in = new BufferedInputStream(new FileInputStream(desc_file));
+            ChunkDescDB desc_db = config_service.loadChunkDescs(in);
+
+            // Register the DB with ourselves
+            this.add(desc_db);
+         }
+      }
+      catch (IOException ioe)
+      {
+         System.err.println("Failed to load base VRJuggler Chunk Descriptions: "+ioe.getMessage());
+      }
+   }
+
    /**
     * Registers the given ConfigChunk collection with this manager.
     */
@@ -133,6 +168,26 @@ public class ConfigManagerService
          }
       }
       return found;
+   }
+
+   /**
+    * This helper tries to get the Config service.
+    */
+   private ConfigService getConfigService()
+   {
+      return (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
+   }
+
+   /**
+    * Expands environment variables in the given string using Tweek's
+    * EnvironmentService bean.
+    *
+    * @return  a post-processed version of the string with the environment
+    *          variables expanded
+    */
+   private String expandEnvVars(String str)
+   {
+      return EnvironmentService.expandEnvVars(str);
    }
 
    /**
