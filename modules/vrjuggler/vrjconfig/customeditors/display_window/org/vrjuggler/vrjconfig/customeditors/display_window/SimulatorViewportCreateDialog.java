@@ -50,8 +50,8 @@ public class SimulatorViewportCreateDialog
 
    public SimulatorViewportCreateDialog(ConfigContext ctx, ConfigElement viewportElt)
    {
-      super("Basic Simulator Viewport Parameters", viewportElt,
-            EditorConstants.simulatorViewportType);
+      super("Basic Simulator Viewport Parameters", ctx,
+            viewportElt, EditorConstants.simulatorViewportType);
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition sim_def = broker.getRepository().get("default_simulator");
