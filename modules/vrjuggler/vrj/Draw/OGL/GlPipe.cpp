@@ -71,7 +71,7 @@ int GlPipe::start()
     mActiveThread = new vpr::Thread(memberFunctor);
 
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-       << "vjGlPipe::start: Started control loop. " << mActiveThread
+       << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
        << std::endl << vprDEBUG_FLUSH;
     return 1;        // XXX: Is this always true?
 }
@@ -126,7 +126,7 @@ void GlPipe::addWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);       // Protect the data
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-      << "vjGlPipe::addWindow: Pipe: " << mPipeNum
+      << "[vrj::GlPipe::addWindow()] Pipe: " << mPipeNum
       << " adding window (to new wins):\n" << win
       << std::endl << vprDEBUG_FLUSH;
    mNewWins.push_back(win);
@@ -140,7 +140,7 @@ void GlPipe::removeWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-      << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
+      << "[vrj::GlPipe::removeWindow()] Pipe: " << mPipeNum
       << " window added to closingWins.\n" << win
       << std::endl << vprDEBUG_FLUSH;
    mClosingWins.push_back(win);
@@ -272,14 +272,15 @@ void GlPipe::checkForNewWindows()
           {
               mNewWins[winNum]->makeCurrent();
               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-                 << "vrj::GlPipe::checkForNewWindows(): Just opened window: "
+                 << "[vrj::GlPipe::checkForNewWindows()] Just opened window: "
                  << mNewWins[winNum]->getDisplay()->getName() << std::endl
                  << *(mNewWins[winNum]) << std::endl << vprDEBUG_FLUSH;
               mNewWins[winNum]->finishSetup();        // Complete any window open stuff
               mOpenWins.push_back(mNewWins[winNum]);
           } else {
               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                 << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
+                 << clrOutBOLD(clrRED,"ERROR:")
+                 << " vrj::GlPipe::checkForNewWindows(): Failed to open window: "
                  << mNewWins[winNum]->getDisplay()->getName().c_str()
                  << std::endl << vprDEBUG_FLUSH;
               // XXX: We should handle this error more gracefully
@@ -311,7 +312,7 @@ void GlPipe::renderWindow(GlWindow* win)
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
-      << "vjGlPipe::renderWindow: Set context to: "
+      << "[vrj::GlPipe::renderWindow()] Set context to: "
       << GlDrawManager::instance()->getCurrentContext()
       << std::endl << vprDEBUG_FLUSH;
 

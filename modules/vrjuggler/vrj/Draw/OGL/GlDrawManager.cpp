@@ -192,9 +192,9 @@ void GlDrawManager::main(void* nullParam)
 
 void GlDrawManager::drawAllPipes()
 {
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
-      << "vjGLDrawManager::drawAllPipes: " << std::endl << std::flush
-      << vprDEBUG_FLUSH;
+   vprD#EBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL,
+                         "vrj::GLDrawManager::drawAllPipes()\n",
+                         "vrj::GLDrawManager::drawAllPipes() done.\n");
    unsigned int pipe_num;
 
    // RENDER
@@ -228,10 +228,6 @@ void GlDrawManager::drawAllPipes()
    {
       pipes[pipe_num]->completeSwap();
    }
-
-   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
-      << "vjGLDrawManager::drawAllPipes: Done" << std::endl << std::flush
-      << vprDEBUG_FLUSH;
 }
 
 /**
