@@ -80,7 +80,7 @@ public:
    *
    * @param new_stream The stream to connect
    * @param remoteAddr The remote address to connect to
-   * @para timeout     The num msecs to wait (0 - NonBlocking)
+   * @param timeout    The num msecs to wait (0 - NonBlocking)
    */
   inline vpr::ReturnStatus connect(vpr::SocketStream& newStream,
                                    const vpr::InetAddr& remoteAddr,
