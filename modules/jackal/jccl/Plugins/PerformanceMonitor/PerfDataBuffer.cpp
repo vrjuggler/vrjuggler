@@ -30,13 +30,13 @@ vjPerfDataBuffer::~vjPerfDataBuffer () {
 
 
 //: activates the buffer
-//! POST: once this call is made, the buffer will start 
+//! POST: once this call is made, the buffer will start
 //+       storing data whenever a set() is made and
 //+       writing available data when requested.
 void vjPerfDataBuffer::activate() {
     active = 1;
-    vjDEBUG(2) << "Performance Buffer " << name << " activated.\n" 
-	       << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_ALL,0) << "Performance Buffer " << name << " activated.\n"
+                           << vjDEBUG_FLUSH;
 }
 
 
@@ -54,7 +54,8 @@ void vjPerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    vjDEBUG(2) << "Performance Buffer " << name << " deactivated.\n" 
+    vjDEBUG(vjDBG_ALL,0) << "Performance Buffer " << name << " deactivated.\n"
+
 	       << vjDEBUG_FLUSH;
 
 }
@@ -68,7 +69,7 @@ bool vjPerfDataBuffer::isActive() {
 
 
 //: writes a new time entry to the buffer
-//! POST: if a buffer is available, it is stamped with 
+//! POST: if a buffer is available, it is stamped with
 //+       the current time and _phase.  If not, the
 //+       'lost' counter is incremented.
 //! ARGS: _phase - an integer index used to differentiate
@@ -88,7 +89,7 @@ void vjPerfDataBuffer::set(int _phase) {
 	    lost_lock.release();
 	}
 	else
-	    vjDEBUG(2) << "vjPerfDataBuffer: lock acquire "
+	    vjDEBUG(vjDBG_ALL,2) << "vjPerfDataBuffer: lock acquire "
 		       << "failed\n" << vjDEBUG_FLUSH;
 	tw = (write_pos + numbufs - 1) % numbufs;
 	buffer[tw].phase = _phase;
@@ -125,7 +126,7 @@ void vjPerfDataBuffer::write (ostream& out) {
     buf_entry* b;
 
     //out.width(13);
-    
+
     if (!active)
 	return;
 
@@ -135,11 +136,11 @@ void vjPerfDataBuffer::write (ostream& out) {
     //cout << "begin/end are " << begin <<' '<< end << endl;
     if (begin == end)
 	return;
-    out << "PerfData1 \"" << name << "\" " << nindex << endl; 
+    out << "PerfData1 \"" << name << "\" " << nindex << endl;
     if (begin < end) {
 	for (i = begin; i < end; i++) {
 	    b = &(buffer[i]);
-	    out << b->phase << ' ' 
+	    out << b->phase << ' '
 		<< setiosflags(ios::fixed) << b->ts << '\n';
 	}
     }
@@ -180,7 +181,7 @@ void vjPerfDataBuffer::writeTotal(ostream& out, int preskip, int postskip, float
 
     retval = buffer[(end-postskip)%numbufs].ts - buffer[(begin+preskip)%numbufs].ts;
     /*
-    cout << "begin is " << begin 
+    cout << "begin is " << begin
 	 << "\nend is " << end
 	 << "\nlast is " << last << endl;
     */
@@ -231,7 +232,7 @@ void vjPerfDataBuffer::writeTotal(ostream& out, int preskip, int postskip, float
 			<< buffer[i-1].ts << " us\n";
 		}
 	    }
-	    
+	
 	}
 
 
