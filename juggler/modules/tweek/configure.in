@@ -706,6 +706,10 @@ tweek_extra_ldflags="$EXTRA_LDFLAGS $CXX_ORB_LDFLAGS"
 jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekServices.jar'
 ext_jars='wizard.jar ui.jar'
 
+if test "x$JDOM_JAR" != "xnone" ; then
+   jars="$jars $JDOM_JAR"
+fi
+
 if test "x$JAVA_ORB_JAR" != "xnone" ; then
    jars="$jars $JAVA_ORB_JAR"
 fi
