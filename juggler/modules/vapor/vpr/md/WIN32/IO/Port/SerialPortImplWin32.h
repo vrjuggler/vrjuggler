@@ -901,6 +901,44 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus controlFlow(vpr::SerialTypes::FlowActionOption opt);
 
+   /**
+    * Returns the current enable state of hardware flow control.
+    *
+    * @pre This serial port is open.
+    *
+    * @return true is returned if hardware flow control is enabled.
+    *         false is returned otherwise.
+    *
+    * @see controlFlow
+    */
+   bool getHardwareFlowControlState(void);
+
+   /**
+    * Attempts to enable "hardware" flow control.  While some documents
+    * recommend the use of hardware flow control over the use of software
+    * flow control, not all platforms implement hardware flow control.  Hence,
+    * this may have no effect depending on the operating system.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see controlFlow
+    */
+   vpr::ReturnStatus enableHardwareFlowControl(void);
+
+   /**
+    * Attempts to disable "hardware" flow control.  While some documents
+    * recommend the use of hardware flow control over the use of software
+    * flow control, not all platforms implement hardware flow control.  Hence,
+    * this may have no effect depending on the operating system.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see controlFlow
+    */
+   vpr::ReturnStatus disableHardwareFlowControl(void);
+
    // ------------------------------------------------------------------------
    //: Discard either the input buffer (unread data received from the
    //+ terminal device) or the output buffer (data written but not yet

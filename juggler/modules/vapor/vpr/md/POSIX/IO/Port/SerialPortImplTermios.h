@@ -59,6 +59,8 @@ namespace vpr
 
 /**
  * vpr::SerialPort implementation using termios.
+ * For more information about serial ports on Linux, refer to
+ * http://www.ibiblio.org/mdw/HOWTO/Serial-HOWTO-3.html
  */
 class SerialPortImplTermios
 {
@@ -898,6 +900,52 @@ public:
    vpr::ReturnStatus controlFlow(vpr::SerialTypes::FlowActionOption opt);
 
    /**
+    * Returns the current enable state of hardware flow control.
+    *
+    * @pre This serial port is open.
+    *
+    * @return true is returned if hardware flow control is enabled.
+    *         false is returned otherwise.
+    *
+    * @see controlFlow
+    */
+   bool getHardwareFlowControlState(void);
+
+   /**
+    * Attempts to enable "hardware" flow control.  While some documents
+    * recommend the use of hardware flow control over the use of software
+    * flow control, not all platforms implement hardware flow control.  Hence,
+    * this may have no effect depending on the operating system.
+    *
+    * @pre This serial port is open.
+    * @post If suppported by the operating system, hardware flow control is
+    *       enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see controlFlow
+    */
+   vpr::ReturnStatus enableHardwareFlowControl(void);
+
+   /**
+    * Attempts to disable "hardware" flow control.  While some documents
+    * recommend the use of hardware flow control over the use of software
+    * flow control, not all platforms implement hardware flow control.  Hence,
+    * this may have no effect depending on the operating system.
+    *
+    * @pre This serial port is open.
+    * @post If suppported by the operating system, hardware flow control is
+    *       disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see controlFlow
+    */
+   vpr::ReturnStatus disableHardwareFlowControl(void);
+
+   /**
     * Discards either the input buffer (unread data received from the
     * terminal device) or the output buffer (data written but not yet
     * transmitted to the terminal device).  The argument tells which queue
@@ -909,7 +957,8 @@ public:
     *
     * @param queue The queue (or queues) to be flushed.
     *
-    * @return A vpr::ReturnStatus object describing the results of the operation.
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
     */
    vpr::ReturnStatus flushQueue(vpr::SerialTypes::FlushQueueOption queue);
 
@@ -1020,9 +1069,10 @@ public:
     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
     *         non-blocking mode, and the write operation could not be
     *         completed.<br>
-    *         vpr::ReturnStatus::Timeout is returned if the write could not begin
-    *         within the timeout interval.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write operation failed.
+    *         vpr::ReturnStatus::Timeout is returned if the write could not
+    *         begin within the timeout interval.<br>
+    *         vpr::ReturnStatus::Fail is returned if the write operation
+    *         failed.
     */
    vpr::ReturnStatus write_i (const void* buffer, const vpr::Uint32 length,
                               vpr::Uint32& bytes_written,
