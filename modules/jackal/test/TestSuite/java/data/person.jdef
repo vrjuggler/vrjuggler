@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="1.0"?>
+<definition name="person">
+   <definition_version version="1" label="Person">
+      <help>This is a person.</help>
+      <parent />
+      <category>Personnel</category>
+      <property valuetype="string" variable="false" name="name">
+         <help>This person's first name.</help>
+         <value label="Name" defaultvalue="" />
+      </property>
+      <property valuetype="integer" variable="false" name="age">
+         <help>This person's age.</help>
+         <value label="Age" defaultvalue="0" />
+      </property>
+      <property valuetype="configelement" variable="true" name="friends">
+         <help>All of this person's friends.</help>
+         <value label="Friend" />
+         <allowed_type>person</allowed_type>
+      </property>
+   </definition_version>
+</definition>
