@@ -41,7 +41,7 @@
 #include <sys/stat.h>      // for open
 #include <assert.h>        // for assert
 
-#ifdef __sun__
+#if defined(__sun__) || defined(__hpux)
 #include <sys/file.h>
 #endif
 
@@ -686,7 +686,6 @@ int aFlock::open_port( const char* const serialPort,
 
 void aFlock::set_blocking( const int& port, const int& blocking )
 {
-#ifdef FNDELAY /* HP:HACK - HP doesn't like FNDELAY */
     //////////////////////////////////////////////////////////////////
     // Setup a non/blocked port & Flush port
     //////////////////////////////////////////////////////////////////
@@ -708,7 +707,6 @@ void aFlock::set_blocking( const int& port, const int& blocking )
     tcflush(port, TCIOFLUSH);
 
     usleep( 1000 * aFlock::mSleepFactor );
-#endif
 }
 
 void aFlock::set_sync( const int& port, const int& sync )
