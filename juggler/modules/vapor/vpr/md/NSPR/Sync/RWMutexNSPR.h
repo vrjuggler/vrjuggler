@@ -58,7 +58,8 @@ class VPR_CLASS_API RWMutexNSPR
 public:
    RWMutexNSPR (void) : mRwLock(NULL)
    {
-      mRwLock = PR_NewRWLock(1, "/var/tmp/test");
+      mRwLock = PR_NewRWLock(0, "VRP RM Mutex");
+      // Note the second argument "VRP RM Mutex" is for debug purposes only
    }
 
    ~RWMutexNSPR (void)
