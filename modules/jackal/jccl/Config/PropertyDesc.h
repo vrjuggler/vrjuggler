@@ -52,6 +52,13 @@ public:
     //+      valuelabels & enumerations are empty.
     vjPropertyDesc ();
 
+
+
+    //:Copy Constructor
+    vjPropertyDesc (vjPropertyDesc& d);
+
+
+
     //: Convenience constructor
     //!POST: name = token = n, help = h, num = i, type = t,
     //+      valuelabels & enumerations are empty.
@@ -126,7 +133,6 @@ public:
 
 
     vjPropertyDesc& operator= (vjPropertyDesc& pd);
-
 
 
 private:
