@@ -50,6 +50,7 @@ public class DisplayEditor
       {
          e.printStackTrace();
       }
+      displayPlacer.setDesktopSize(new Dimension(1600,1200));
 
       // Init the icons
       ClassLoader loader = BeanJarClassLoader.instance();

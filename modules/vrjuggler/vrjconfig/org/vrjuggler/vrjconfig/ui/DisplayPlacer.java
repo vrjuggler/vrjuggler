@@ -95,6 +95,16 @@ public class DisplayPlacer
       });
    }
 
+   public void setDesktopSize(Dimension desktopSize)
+   {
+      wndPlacer.setDesktopSize(desktopSize);
+   }
+
+   public Dimension getDimensionSize()
+   {
+      return wndPlacer.getDesktopSize();
+   }
+
    /**
     * Adds a new display to the configuration.
     */

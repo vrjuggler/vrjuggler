@@ -90,6 +90,11 @@ public class Placer
    private boolean allowMove = true;
 
    /**
+    * The virtual desktop size.
+    */
+   private Dimension desktopSize = new Dimension(1024, 768);
+
+   /**
     * The index of the currently selected object, -1 if nothing selected.
     */
    private transient int selectedIndex = -1;
@@ -231,7 +236,9 @@ public class Placer
     */
    public void setAllowResize(boolean allowResize)
    {
+      boolean old = this.allowResize;
       this.allowResize = allowResize;
+      firePropertyChange("allowResize", old, this.allowResize);
    }
 
    /**
@@ -247,7 +254,9 @@ public class Placer
     */
    public void setAllowMove(boolean allowMove)
    {
+      boolean old = this.allowMove;
       this.allowMove = allowMove;
+      firePropertyChange("alloveMove", old, this.allowMove);
    }
 
    /**
@@ -256,6 +265,24 @@ public class Placer
    public boolean getAllowMove()
    {
       return allowMove;
+   }
+
+   /**
+    * Sets the size of the desktop on which the objects are being placed.
+    */
+   public void setDesktopSize(Dimension desktopSize)
+   {
+      Dimension old = this.desktopSize;
+      this.desktopSize = desktopSize;
+      firePropertyChange("desktopSize", old, this.desktopSize);
+   }
+
+   /**
+    * Gets the size of the desktop on which the objects are being placed.
+    */
+   public Dimension getDesktopSize()
+   {
+      return desktopSize;
    }
 
    /**
@@ -328,20 +355,88 @@ public class Placer
 //   }
 
    /**
+    * Converts the given point in desktop coordinates to component coordinates.
+    *
+    * @param ptDesktop     the point in desktop coordinates
+    *
+    * @return  the point in component coordinates
+    */
+   protected Point desktopToComponent(Point ptDesktop)
+   {
+      Dimension compSize = getSize();
+      float scale_x = (float)compSize.width / desktopSize.width;
+      float scale_y = (float)compSize.height / desktopSize.height;
+
+      return new Point((int)((float)ptDesktop.x * scale_x),
+                       (int)((float)ptDesktop.y * scale_y));
+   }
+
+   /**
+    * Converts the given point in component coordinates to desktop coordinates.
+    *
+    * @param ptComponent   the point in component coordinates
+    *
+    * @return  the point in desktop coordinates
+    */
+   protected Point componentToDesktop(Point ptComponent)
+   {
+      Dimension compSize = getSize();
+      float scale_x = (float)desktopSize.width / compSize.width;
+      float scale_y = (float)desktopSize.height / compSize.height;
+
+      return new Point((int)((float)ptComponent.x * scale_x),
+                       (int)((float)ptComponent.y * scale_y));
+   }
+
+   /**
+    * Converts the given dimension in desktop coordiantes to component coordinates.
+    *
+    * @param dimDesktop    the dimension in desktop coordinates
+    *
+    * @return  the dimension in component coordinates
+    */
+   protected Dimension desktopToComponent(Dimension dimDesktop)
+   {
+      Dimension compSize = getSize();
+      float scale_x = (float)compSize.width / desktopSize.width;
+      float scale_y = (float)compSize.height / desktopSize.height;
+
+      return new Dimension((int)((float)dimDesktop.width * scale_x),
+                           (int)((float)dimDesktop.height * scale_y));
+   }
+
+   /**
+    * Converts the given dimension in component coordinates to desktop coordinates.
+    *
+    * @param dimComponent     the dimension in component coordinates
+    *
+    * @return  the dimension in desktop coordinates
+    */
+   protected Dimension componentToDesktop(Dimension dimComponent)
+   {
+      Dimension compSize = getSize();
+      float scale_x = (float)desktopSize.width / compSize.width;
+      float scale_y = (float)desktopSize.height / compSize.height;
+
+      return new Dimension((int)((float)dimComponent.width * scale_x),
+                           (int)((float)dimComponent.height * scale_y));
+   }
+
+   /**
     * Initializes UI components and sets up listeners.
     */
    private void jbInit() throws Exception
    {
       this.setLayout(null);
       this.setOpaque(true);
-      this.addMouseListener(new java.awt.event.MouseAdapter()
+      this.addMouseListener(new MouseAdapter()
       {
          public void mousePressed(MouseEvent e)
          {
             this_mousePressed(e);
          }
       });
-      this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter()
+      this.addMouseMotionListener(new MouseMotionAdapter()
       {
          public void mouseDragged(MouseEvent e)
          {
@@ -361,13 +456,22 @@ public class Placer
     */
    void this_mousePressed(MouseEvent e)
    {
+      Point componentPt = e.getPoint();
+      Point desktopPt = componentToDesktop(componentPt);
+
+      System.out.println("Mouse Clicked!");
+      System.out.println("\tcomponentPt: "+componentPt);
+      System.out.println("\tcomponentSize: "+getSize());
+      System.out.println("\tdesktopPt: "+desktopPt);
+      System.out.println("\tdesktopSize: "+desktopSize);
+
       // If this is the start of a resize action, the point may be outside the
       // bounds of the object, but we want to give them a bit of a larger region
       // to hit. In such a case, don't try to select a different window.
       if (dragMode != RESIZE)
       {
          // Find the display that has been selected
-         int idx = getModel().getIndexOfElementAt(e.getPoint());
+         int idx = getModel().getIndexOfElementAt(desktopPt);
          if (idx == -1)
          {
             selectedIndex = -1;
@@ -377,12 +481,12 @@ public class Placer
             // Move the selected element up to the front
             getModel().moveToFront(idx);
             selectedIndex = 0;
-            updateCursor(e.getPoint(), getBoundsFor(selectedIndex));
+            updateCursor(componentPt, getBoundsFor(selectedIndex));
          }
          repaint();
          fireItemSelected(selectedIndex);
       }
-      lastMouse = e.getPoint();
+      lastMouse = componentPt;
    }
 
    /**
@@ -393,113 +497,116 @@ public class Placer
       if (selectedIndex != -1)
       {
          // Figure out the distance moved
-         Point mousePt = e.getPoint();
-         Point diff = new Point(mousePt.x - lastMouse.x,
-                                mousePt.y - lastMouse.y);
+         Point componentPt = e.getPoint();
+         Point componentDiff = new Point(componentPt.x - lastMouse.x,
+                                         componentPt.y - lastMouse.y);
+         Point desktopDiff = componentToDesktop(componentDiff);
 
          // User wants to move the selected object
          if (dragMode == MOVE)
          {
             // Move the selected display along
-            Point newPos = new Point(getModel().getLocationOf(selectedIndex));
-            newPos.translate(diff.x, diff.y);
+            Point newDesktopPos = new Point(getModel().getLocationOf(selectedIndex));
+            newDesktopPos.translate(desktopDiff.x, desktopDiff.y);
 
             // Make sure we don't allow the user to drag a display outside of the
             // viewable area.
-            Dimension dim = getModel().getSizeOf(selectedIndex);
-            Dimension visDim = this.getSize();
-            if (newPos.x + dim.width > visDim.width)
+            Dimension desktopObjectSize = getModel().getSizeOf(selectedIndex);
+            if (newDesktopPos.x + desktopObjectSize.width > desktopSize.width)
             {
-               newPos.x = visDim.width - dim.width;
+               newDesktopPos.x = desktopSize.width - desktopObjectSize.width;
             }
-            if (newPos.y + dim.height > visDim.height)
+            if (newDesktopPos.y + desktopObjectSize.height > desktopSize.height)
             {
-               newPos.y = visDim.height - dim.height;
+               newDesktopPos.y = desktopSize.height - desktopObjectSize.height;
             }
-            if (newPos.x < 0)
+            if (newDesktopPos.x < 0)
             {
-               newPos.x = 0;
+               newDesktopPos.x = 0;
             }
-            if (newPos.y < 0)
+            if (newDesktopPos.y < 0)
             {
-               newPos.y = 0;
+               newDesktopPos.y = 0;
             }
-            getModel().setLocationOf(selectedIndex, newPos);
+            getModel().setLocationOf(selectedIndex, newDesktopPos);
 
-            lastMouse = mousePt;
+            lastMouse = componentPt;
             repaint();
          }
          // User want to resize the current object
          else if (dragMode == RESIZE)
          {
-            Point old_pos = getModel().getLocationOf(selectedIndex);
-            Dimension old_size = getModel().getSizeOf(selectedIndex);
-            Point new_pos = null;
-            Dimension new_size = null;
+            Point oldDesktopPos = getModel().getLocationOf(selectedIndex);
+            Dimension oldDesktopSize = getModel().getSizeOf(selectedIndex);
+            Point newDesktopPos = null;
+            Dimension newDesktopSize = null;
+
+            // Get the mouse point in desktop coordinates
+            Point desktopPt = componentToDesktop(componentPt);
 
             switch (resizeDirection)
             {
             // left
             case Rectangle.OUT_LEFT:
                System.out.println("Resizing left");
-               new_pos = new Point(mousePt.x, old_pos.y);
-               new_size = new Dimension(old_size.width + (old_pos.x - new_pos.x),
-                                        old_size.height);
+               newDesktopPos = new Point(desktopPt.x, oldDesktopPos.y);
+               newDesktopSize = new Dimension(oldDesktopSize.width + (oldDesktopPos.x - newDesktopPos.x),
+                                              oldDesktopSize.height);
                break;
             // top left
             case (Rectangle.OUT_LEFT | Rectangle.OUT_TOP):
-               new_pos = new Point(mousePt);
-               new_size = new Dimension(old_size.width + (old_pos.x - new_pos.x),
-                                        old_size.height + (old_pos.y - new_pos.y));
+               newDesktopPos = new Point(desktopPt);
+               newDesktopSize = new Dimension(oldDesktopSize.width + (oldDesktopPos.x - newDesktopPos.x),
+                                              oldDesktopSize.height + (oldDesktopPos.y - newDesktopPos.y));
                break;
             // top
             case Rectangle.OUT_TOP:
-               new_pos = new Point(old_pos.x, mousePt.y);
-               new_size = new Dimension(old_size.width,
-                                        old_size.height + (old_pos.y - new_pos.y));
+               newDesktopPos = new Point(oldDesktopPos.x, desktopPt.y);
+               newDesktopSize = new Dimension(oldDesktopSize.width,
+                                              oldDesktopSize.height + (oldDesktopPos.y - newDesktopPos.y));
                break;
             // top right
             case (Rectangle.OUT_RIGHT | Rectangle.OUT_TOP):
-               new_pos = new Point(old_pos.x, mousePt.y);
-               new_size = new Dimension(mousePt.x - old_pos.x,
-                                        old_size.height + (old_pos.y - new_pos.y));
+               newDesktopPos = new Point(oldDesktopPos.x, desktopPt.y);
+               newDesktopSize = new Dimension(componentPt.x - oldDesktopPos.x,
+                                              oldDesktopSize.height + (oldDesktopPos.y - newDesktopPos.y));
                break;
             // right
             case Rectangle.OUT_RIGHT:
-               new_size = new Dimension(mousePt.x - old_pos.x,
-                                        old_size.height);
+               newDesktopSize = new Dimension(desktopPt.x - oldDesktopPos.x,
+                                              oldDesktopSize.height);
                break;
             // bottom right
             case (Rectangle.OUT_RIGHT | Rectangle.OUT_BOTTOM):
-               new_size = new Dimension(mousePt.x - old_pos.x,
-                                        mousePt.y - old_pos.y);
+               newDesktopSize = new Dimension(desktopPt.x - oldDesktopPos.x,
+                                              desktopPt.y - oldDesktopPos.y);
                break;
             // bottom
             case Rectangle.OUT_BOTTOM:
-               new_size = new Dimension(old_size.width,
-                                        mousePt.y - old_pos.y);
+               newDesktopSize = new Dimension(oldDesktopSize.width,
+                                              desktopPt.y - oldDesktopPos.y);
                break;
             // bottom left
             case (Rectangle.OUT_LEFT | Rectangle.OUT_BOTTOM):
-               new_pos = new Point(mousePt.x, old_pos.y);
-               new_size = new Dimension(old_size.width + (old_pos.x - new_pos.x),
-                                        mousePt.y - old_pos.y);
+               newDesktopPos = new Point(componentPt.x, oldDesktopPos.y);
+               newDesktopSize = new Dimension(oldDesktopSize.width + (oldDesktopPos.x - newDesktopPos.x),
+                                              desktopPt.y - oldDesktopPos.y);
                break;
             }
 
             // Update the object as necessary
-            if (new_pos != null)
+            if (newDesktopPos != null)
             {
-               System.out.println("Updated location to: ("+new_pos.x+", "+new_pos.y+")");
-               getModel().setLocationOf(selectedIndex, new_pos);
+               System.out.println("Updated location to: ("+newDesktopPos.x+", "+newDesktopPos.y+")");
+               getModel().setLocationOf(selectedIndex, newDesktopPos);
             }
-            if (new_size != null)
+            if (newDesktopSize != null)
             {
-               System.out.println("Updated size to: ("+new_size.width+", "+new_size.height+")");
-               getModel().setSizeOf(selectedIndex, new_size);
+               System.out.println("Updated size to: ("+newDesktopSize.width+", "+newDesktopSize.height+")");
+               getModel().setSizeOf(selectedIndex, newDesktopSize);
             }
 
-            lastMouse = mousePt;
+            lastMouse = componentPt;
             repaint();
          }
       }
@@ -516,13 +623,13 @@ public class Placer
       if (selectedIndex != -1)
       {
          // Figure out where we are
-         Point mousePt = e.getPoint();
+         Point componentPt = e.getPoint();
 
          // Get the bounds of the currently selected item
          Rectangle bounds = getBoundsFor(selectedIndex);
 
          // Update the cursor accordingly
-         updateCursor(mousePt, bounds);
+         updateCursor(componentPt, bounds);
       }
    }
 
@@ -533,8 +640,8 @@ public class Placer
     */
    private Rectangle getBoundsFor(int index)
    {
-      return new Rectangle(model.getLocationOf(selectedIndex),
-                           model.getSizeOf(selectedIndex));
+      return new Rectangle(desktopToComponent(model.getLocationOf(selectedIndex)),
+                           desktopToComponent(model.getSizeOf(selectedIndex)));
    }
 
    /**
@@ -645,8 +752,8 @@ public class Placer
                                              (i == selectedIndex),
                                              false,
                                              i);
-         Point pos = getModel().getLocationOf(i);
-         Dimension dim = getModel().getSizeOf(i);
+         Point pos = desktopToComponent(getModel().getLocationOf(i));
+         Dimension dim = desktopToComponent(getModel().getSizeOf(i));
          rendererPane.paintComponent(g, rendererComponent, this,
                                      pos.x, pos.y, dim.width, dim.height);
       }
@@ -774,8 +881,9 @@ class DefaultPlacerRenderer
       if (placer != null && idx >= 0)
       {
          super.paintComponent(g);
-         Point pos = placer.getModel().getLocationOf(idx);
-         Dimension dim = placer.getModel().getSizeOf(idx);
+//         Point pos = placer.getModel().getLocationOf(idx);
+//         Dimension dim = placer.getModel().getSizeOf(idx);
+         Dimension dim = getSize();
          g.setColor(Color.white);
          g.drawRect(0, 0, dim.width-1, dim.height-1);
          g.fillRect(0, 0, dim.width, 3);
