@@ -7,6 +7,7 @@
 #include <Math/vjCoord.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
+#include <Kernel/vjDebug.h>
 
 
 class pfNaver : public pfDCS
@@ -66,15 +67,15 @@ int pfNaver::app(pfTraverser *trav)
    int button0_state = mButton0->GetData();
    int button1_state = mButton1->GetData();
 
-   cout << "b0: " << button0_state << "\t";
-   cout << "b1: " << button1_state << endl;
+   vjDEBUG(1) << "b0: " << button0_state << "\t" << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "b1: " << button1_state << endl << vjDEBUG_FLUSH;
 
    vjMatrix* wandMatrix;
    wandMatrix = mWand->GetData();
 
    vjCoord wand_coord(*wandMatrix);
-   cout << "Wand pos:" << wand_coord.pos << endl;
-   cout << "      or:" << wand_coord.orient << endl;
+   vjDEBUG(1) << "Wand pos:" << wand_coord.pos << endl << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "      or:" << wand_coord.orient << endl << vjDEBUG_FLUSH;
 
    if(1 == button0_state)   // Translation
    {
@@ -94,23 +95,21 @@ int pfNaver::app(pfTraverser *trav)
       setMat(curMat);
    }
 
-   if(1 == button1_state)
+
+   if(1 == button1_state)     // Rotation
    {
       cout << "Button 1 Pressed." << endl;
 
-      //C2Matrix* wandMatrix;
-      //wandMatrix = mKern->getInputManager()->GetPosData(mWandIndex);
-
+      // Should really use quaternions,  For now we will use this
       float x_rot, y_rot, z_rot;
       wandMatrix->getXYZEuler(x_rot, y_rot, z_rot);
 
       vjMatrix new_or;
-      new_or.makeXYZEuler(x_rot*0.25, y_rot*0.25, z_rot*0.25);
+      new_or.makeXYZEuler(x_rot*0.25, y_rot*0.25, z_rot*0.25);    // Scale the rotation
+      new_or.invert(new_or);                                      // Invert the rotation
 
       pfMatrix  new_pf_mat;
-      new_pf_mat.set(new_or.getFloatPtr());      // Hmm...
-      new_pf_mat.preRot(-90, 1, 0, 0, new_pf_mat);
-      new_pf_mat.postRot(new_pf_mat, 90, 1, 0, 0);
+      new_pf_mat = vjGetPfMatrix(new_or);       // Get the performer equivalent matrix
 
       pfMatrix curMat;
       getMat(curMat);

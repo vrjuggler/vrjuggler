@@ -13,6 +13,7 @@
     // --- New Lib Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/Pf/vjPfApp.h>
+#include <Kernel/vjDebug.h>
 
 #include <pfNaver.h>
 
@@ -28,18 +29,18 @@ public:
 
    virtual void init()
    {
-      cerr << "app::init\n";
+      vjDEBUG(1) << "app::init\n" << vjDEBUG_FLUSH;
    }
 
    virtual void apiInit()
    {
-      cerr << "app::apiInit\n";
+      vjDEBUG(1) << "app::apiInit\n" << vjDEBUG_FLUSH;
    }
 
    /// Initialize the scene graph
    virtual void initScene()
    {
-      cerr << "app::initScene\n";
+      vjDEBUG(0) << "app::initScene\n" << vjDEBUG_FLUSH;
       rootNode = new pfScene;
       naver = new pfNaver();
       pfLightSource* sun = new pfLightSource;
@@ -68,26 +69,26 @@ public:
    /// Return the current scene graph
    virtual pfScene* getScene()
    {
-      cerr << "app::getScene\n";
+      vjDEBUG(0) << "app::getScene\n" << vjDEBUG_FLUSH;
       return rootNode;
    }
 
    /// Function called before pfSync
    virtual void preSync()
    {
-      cerr << "app::preSync\n";
+      vjDEBUG(1) << "app::preSync\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfSync and before pfDraw
    virtual void preDraw()
    {
-      //cerr << "app::preDraw\n";
+      vjDEBUG(1) << "app::preDraw\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfDraw
    virtual void postDraw()
    {
-      //cerr << "app::postDraw\n";
+      vjDEBUG(1) << "app::postDraw\n" << vjDEBUG_FLUSH;
    }
 
 public:
