@@ -45,13 +45,12 @@ void NSPR_PrintError(const std::string error_prefix_string )
    PRInt32 textLength = PR_GetErrorTextLength();
    char *text = (char*)malloc(textLength);
    if ( PR_GetErrorText(text) > 0 ) {
-      fprintf(stderr, "%s (%d, %d, %s)\n",
-              error_prefix_string.c_str(), PR_GetError(), PR_GetOSError(),
-              text);
+      fprintf(stderr, "%s (%d, %s) (%d, %s)\n",
+              error_prefix_string.c_str(), PR_GetError(), text, PR_GetOSError(), strerror(PR_GetOSError()));
    }
    else {
-       fprintf(stderr, "%s (%d, %s)\n", PR_GetError(),
-               error_prefix_string.c_str(), strerror(PR_GetOSError()));
+       fprintf(stderr, "%s (%d, %s)\n", 
+               error_prefix_string.c_str(), PR_GetError(), strerror(PR_GetOSError()));
    }
 
    free(text);
