@@ -51,7 +51,7 @@
 //: Wrapper for Win32 thread handling functions.
 //-----------------------------------------------
 //!PUBLIC_API:
-class vjThreadWin32 : public vjBaseThread
+class VJ_CLASS_API vjThreadWin32 : public vjBaseThread
 {
 public:
     // -----------------------------------------------------------------------

@@ -70,7 +70,7 @@ class vjCoord;
 //
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjMatrix
+class VJ_CLASS_API vjMatrix
 {
 public:
    // Column major.  In other words {Column1, Column2, Column3, Column4} in memory

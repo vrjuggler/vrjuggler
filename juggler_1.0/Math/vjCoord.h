@@ -46,7 +46,7 @@ class vjMatrix;
 // Orientation is XYZ Euler angles <br>
 //!PUBLIC_API:
 //---------------------------------------------------
-class vjCoord
+class VJ_CLASS_API vjCoord
 {
 public:
    vjCoord()

@@ -52,7 +52,7 @@
 // Key destructor function type.
 typedef vj_thread_func_t vjKeyDestructor;
 
-class vjThreadKeyWin32 {
+class VJ_CLASS_API vjThreadKeyWin32 {
 public:
     // -----------------------------------------------------------------------
     //: Constructor.  Allocate a <keyp> that is used to identify data that is

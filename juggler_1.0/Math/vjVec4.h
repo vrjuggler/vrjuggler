@@ -50,7 +50,7 @@ class vjMatrix;
 
 //: Vector of length 4
 //!PUBLIC_API:
-class vjVec4
+class VJ_CLASS_API vjVec4
 {
 public:
    // Constructor

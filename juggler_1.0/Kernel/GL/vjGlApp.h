@@ -61,7 +61,7 @@ class vjKernel;
 //  Date: 1-12-98
 //-------------------------------------------------------------
 //!PUBLIC_API:
-class vjGlApp : public vjApp
+class VJ_CLASS_API vjGlApp : public vjApp
 {
 public:
    vjGlApp(vjKernel* kern) : vjApp(kern)

@@ -47,7 +47,7 @@ class vjMatrix;
 // It defines several operators that can be used on the vectors.
 //-----------------------------------------------------------------
 //!PUBLIC_API:
-class vjVec3
+class VJ_CLASS_API vjVec3
 {
 public:
    // Constructor

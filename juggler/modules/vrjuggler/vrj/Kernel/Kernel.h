@@ -66,7 +66,7 @@ class vjApp;
 // Date: 9-7-97
 //-------------------------------------------------------
 //!PUBLIC_API:
-class vjKernel : public vjConfigChunkHandler
+class VJ_CLASS_API vjKernel : public vjConfigChunkHandler
 {
 public:
 

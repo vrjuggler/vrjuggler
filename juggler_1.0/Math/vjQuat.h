@@ -64,7 +64,7 @@
 //    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989  <br>
 //
 //!PUBLIC_API:
-class vjQuat
+class VJ_CLASS_API vjQuat
 {
 public:
    //: default constructor

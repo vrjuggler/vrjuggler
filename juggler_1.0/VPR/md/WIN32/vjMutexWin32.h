@@ -51,7 +51,7 @@
 
 //: Mutex wrapper for Win32 systems.
 //!PUBLIC_API:
-class vjMutexWin32
+class VJ_CLASS_API vjMutexWin32
 {
 public:
     vjMutexWin32 ()

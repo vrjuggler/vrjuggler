@@ -73,7 +73,7 @@ class vjKernel;
 //  Date: 9-8-97
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class vjApp : public vjConfigChunkHandler
+class VJ_CLASS_API vjApp : public vjConfigChunkHandler
 {
 public:
    //: Constructor

@@ -42,7 +42,7 @@
 // NOTES:
 //    - This is used as the base class for all thread classes.
 // -------------------------------------------------------------------------- 
-class vjBaseThread
+class VJ_CLASS_API vjBaseThread
 {
 public:
    enum VJThreadPriority {
@@ -295,7 +295,7 @@ std::ostream& operator<<(std::ostream& out, vjBaseThread* threadPtr);
 // Used internally because we can have many types of indexes for the thread
 // list depending upon the type of threads being used.
 template <class IdxType>
-class vjThreadTable
+class VJ_CLASS_API vjThreadTable
 {
 public:
    // -----------------------------------------------------------------------

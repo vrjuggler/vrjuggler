@@ -49,7 +49,7 @@ public:
    explicit vjStreamLock(vjMutex& mutex) : mMutex(mutex)
    {;}
 
-   friend std::ostream& operator<<(std::ostream&, const vjStreamLock&);
+   friend VJ_API(std::ostream&) operator<<(std::ostream&, const vjStreamLock&);
 
 private:
    vjMutex& mMutex;
@@ -68,7 +68,7 @@ public:
    explicit vjStreamUnLock(vjMutex& mutex) : mMutex(mutex)
    {;}
 
-   friend std::ostream& operator<<(std::ostream&, const vjStreamUnLock&);
+   friend VJ_API(std::ostream&) operator<<(std::ostream&, const vjStreamUnLock&);
 
 private:
    vjMutex& mMutex;

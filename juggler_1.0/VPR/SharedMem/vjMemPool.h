@@ -48,7 +48,7 @@
 //
 // Date: 1-9-97
 //
-class vjMemPool {
+class VJ_CLASS_API vjMemPool {
 
 public:
     // ---> This is a prototype for what all derived constructors should take as params

@@ -51,7 +51,7 @@
 #include <VPR/Threads/vjThread.h>
 
 //!PUBLIC_API:
-class vjSemaphoreWin32
+class VJ_CLASS_API vjSemaphoreWin32
 {
 public:
    vjSemaphoreWin32 (int initialValue = 1)

@@ -47,7 +47,7 @@
 // in the system for a specific thread.
 // Only the owning thread may actually access the table
 //-----------------------------------------------------------------
-class vjTSTable
+class VJ_CLASS_API vjTSTable
 {
 public:
    vjTSTable()

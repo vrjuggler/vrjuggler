@@ -65,7 +65,7 @@
 
 
 
-class vjMemPoolWin32 : public vjMemPool
+class VJ_CLASS_API vjMemPoolWin32 : public vjMemPool
 {
 public:    
    vjMemPoolWin32(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolWin32XXXXXX") {

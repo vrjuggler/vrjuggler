@@ -43,7 +43,7 @@
 // Used for intersections.
 //
 // NOTE: Results are undefined if dir is not normalized at all times.
-class vjSeg
+class VJ_CLASS_API vjSeg
 {
 public:
 	vjSeg()
