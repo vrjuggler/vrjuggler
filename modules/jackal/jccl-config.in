@@ -274,18 +274,18 @@ if test "$echo_libs" = "yes"; then
 #        fi
 #    done
 
-    if test "x$print_all" = "xyes" ; then
-        jccl_libs_addtl="@jccl_libs_all@"
-    else
-        jccl_libs_addtl=''
-    fi
-
-    echo $ldflags $static_begin $jccl_libs $jccl_libs_addtl $static_end 
+    echo $ldflags $static_begin $jccl_libs $static_end 
 #$my_subsystem_libs
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
+    if test "x$print_all" = "xyes" ; then
+        jccl_extra_libs_addtl="@jccl_extra_libs_juggler@"
+    else
+        jccl_extra_libs_addtl=''
+    fi
+
     jccl_extra_ldflags="@jccl_extra_ldflags@"
     jccl_extra_libs="@jccl_extra_libs@"
-    echo $jccl_extra_ldflags $jccl_extra_libs
+    echo $jccl_extra_ldflags $jccl_extra_libs $jccl_extra_libs_addtl 
 fi
