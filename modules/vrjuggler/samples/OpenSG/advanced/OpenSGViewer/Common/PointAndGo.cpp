@@ -88,7 +88,7 @@ void PointAndGo::update(User* user)
    // -- Get wand info -- //
    gmtl::Matrix44f wandMatrix;
    gmtl::Coord3fXYZ wand_coord;
-   wandMatrix = *(user->getWandPos()->getData());      // Get the wand matrix
+   wandMatrix = user->getWandPos()->getData();      // Get the wand matrix
    gmtl::Vec3f direction;
    gmtl::Vec3f forward_dir = gmtl::Vec3f(0.0f, 0.0f, -(mVelocity*delta_secs));
    gmtl::xform( direction, wandMatrix, forward_dir );

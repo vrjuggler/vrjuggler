@@ -66,10 +66,10 @@ void NavGrabApp::contextInit()
 
 void NavGrabApp::preFrame()
 {
-   gmtl::Matrix44f* wand_matrix = mWand->getData();
+   gmtl::Matrix44f wand_matrix = mWand->getData();
 
    // Get the point in space where the wand is located.
-   gmtl::Point3f wand_point = gmtl::makeTrans<gmtl::Point3f>(*wand_matrix);
+   gmtl::Point3f wand_point = gmtl::makeTrans<gmtl::Point3f>(wand_matrix);
 
    // Check for intersection with the wand and our shapes.
    mSphereIsect = gmtl::isInVolume(mSphere, wand_point);
@@ -207,7 +207,7 @@ void NavGrabApp::initTesting()
    mTestRunner = new vrj::test::TestRunner;
 
    mTestRunner->addTest( new SphereTestCase );
-   //mTestRunner->addTest(new FailureTestCase);
+   mTestRunner->addTest(new FailureTestCase);
       
    mTestRunner->initialize(this);
 }

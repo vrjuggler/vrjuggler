@@ -410,7 +410,7 @@ int ThreeDMouse::getRecord ( gadget::PositionData* data)
   printf ("%d bytes read...", num_read);
 #endif
 
-  ThreeDMouse::eulerToAbsolute (record, data->getPosition());
+  ThreeDMouse::eulerToAbsolute (record, data->mPosData);
 
   return (0);
 }
@@ -448,7 +448,7 @@ void ThreeDMouse::setBaseOrigin()
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::eulerToAbsolute (byte record[], gmtl::Matrix44f* data)
+void ThreeDMouse::eulerToAbsolute (byte record[], gmtl::Matrix44f& data)
 {
   long ax, ay, az, arx, ary, arz;
 
@@ -469,7 +469,7 @@ void ThreeDMouse::eulerToAbsolute (byte record[], gmtl::Matrix44f* data)
   az |= (long)(record[8] & 0x7f) << 7;
   az |= (record[9] & 0x7f);
 
-  gmtl::setTrans( (*data), gmtl::Vec3f( ((float) ax) / 1000.0,
+  gmtl::setTrans( data, gmtl::Vec3f( ((float) ax) / 1000.0,
                                         ((float) ay) / 1000.0,
                                         ((float) az) / 1000.0) );
 //    data->pos[0] = ((float) ax) / 1000.0;
@@ -485,7 +485,7 @@ void ThreeDMouse::eulerToAbsolute (byte record[], gmtl::Matrix44f* data)
   arz  = (record[14] & 0x7f) << 7;
   arz += (record[15] & 0x7f);
 
-  gmtl::setTrans( (*data), gmtl::Vec3f( ((float) arx) / 40.0,
+  gmtl::setTrans( data, gmtl::Vec3f( ((float) arx) / 40.0,
                                         ((float) ary) / 40.0,
                                         ((float) arz) / 40.0) );
 //    data->pos[0] = ((float) arx) / 40.0;

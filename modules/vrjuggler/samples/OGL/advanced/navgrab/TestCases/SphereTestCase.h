@@ -22,7 +22,7 @@ class SphereTestCase : public vrj::test::TestCase
 {
 public:
    SphereTestCase()
-      : TestCase("FailureTestCase"), mNavGrabApp(NULL), mCurState(Done)
+      : TestCase("SphereTestCase"), mNavGrabApp(NULL), mCurState(Done)
    {;}
 
    /** Do any setup needed before the test starts */
@@ -40,7 +40,7 @@ public:
       gadget::InputManager* input_mgr = gadget::InputManager::instance();
       mInputLogger = input_mgr->getInputLogger();
 
-      mInputLogger->load("sphere_test.xml");
+      mInputLogger->load("data/sphere_test.xml");
       mInputLogger->play();
    }
 
@@ -73,7 +73,7 @@ public:
       {
          std::cout << "SphereTestCase: stamp: moved:\n" << std::flush;
          
-         gmtl::Point3f sphere_center = mNavGrabApp->mSphereCenter;
+         gmtl::Point3f sphere_center = mNavGrabApp->mSphere.getCenter();
          gmtl::Point3f correct_center(7.07136, 3.10896, -2.16408);
          gmtl::Vec3f diff = sphere_center-correct_center;
          std::cout << "SphereTestCase: moved: diff:" << diff << std::endl;

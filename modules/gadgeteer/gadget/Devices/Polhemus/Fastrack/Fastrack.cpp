@@ -451,7 +451,7 @@ int Fastrack::sample()
    for ( int i = 0; i < 4; ++i )         // for each station
    {
       cur_pos_samples[i].setTime(cur_pos_samples[i].getTime());
-      *(cur_pos_samples[i].getPosition()) = getPosData(i);
+      cur_pos_samples[i].mPosData = getPosData(i);
    }
 
    addPositionSample(cur_pos_samples);

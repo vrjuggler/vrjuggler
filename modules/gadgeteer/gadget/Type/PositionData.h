@@ -48,8 +48,8 @@ public:
     PositionData (): InputData()
     {;}
 
-    gmtl::Matrix44f* getPosition()
-    { return &mPosData; }
+    gmtl::Matrix44f getPosition()
+    { return mPosData; }
 
     void setPosition(gmtl::Matrix44f posMatrix)
     { mPosData = posMatrix; }
@@ -61,7 +61,7 @@ public:
         return *this;
     }
 
-protected:
+public:
     gmtl::Matrix44f mPosData;
 
 }; // class PositionData

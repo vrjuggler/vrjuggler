@@ -36,7 +36,9 @@
 namespace gadget
 {
    /**
-    * Constant values for converting from meters to the given units.
+    * Constant values for converting to/from meters to the given units.
+    * These constants can be used as parameters in the methods that require
+    * scale factor values.
     */
    namespace PositionUnitConversion
    {

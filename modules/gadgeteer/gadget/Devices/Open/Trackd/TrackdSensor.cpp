@@ -102,8 +102,7 @@ TrackdSensor::~TrackdSensor()
 
     for(int i=0;i<mTrackdSensors->numSensors();i++)
     {
-       *(mCurSensorValues[i].getPosition())
-           = mTrackdSensors->getSensorPos(i);
+       mCurSensorValues[i].mPosData = mTrackdSensors->getSensorPos(i);
        mCurSensorValues[i].setTime();
     }
 

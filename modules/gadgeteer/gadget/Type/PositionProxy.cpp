@@ -51,8 +51,6 @@
 namespace gadget
 {
 
-float PositionProxy::sScaleFactor = gadget::PositionUnitConversion::ConvertToFeet;
-
 bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
@@ -114,6 +112,37 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    return true;
 }
 
+// Deprecated, don't use   
+gmtl::Matrix44f PositionProxy::getData(float scaleFactor)
+{
+   gmtl::Matrix44f ret_mat;
+
+   if(mStupified)
+   {
+      gmtl::identity(mPositionData.mPosData);
+      ret_mat = mPositionData.mPosData;
+   }
+   else if(gmtl::Math::isEqual(scaleFactor, 1.0f, 0.01f))
+   {
+      ret_mat = mPositionData.mPosData;
+   }
+   else if(gmtl::Math::isEqual(scaleFactor, gadget::PositionUnitConversion::ConvertToFeet, 0.01f))
+   {
+      ret_mat = mPosMatrix_feet;
+   }
+   else  // Convert using scale factor
+   {
+      ret_mat = mPositionData.getPosition();
+      gmtl::Vec3f trans;                               
+      gmtl::setTrans(trans, ret_mat);           // Get the translational vector
+      trans *= scaleFactor;                     // Scale the translation and set the value again
+      gmtl::setTrans(ret_mat, trans);
+   }
+
+   return ret_mat;
+}
+
+
 void PositionProxy::updateData()
 {
    if((!mStupified) && (mTypedDevice != NULL))
@@ -133,11 +162,12 @@ void PositionProxy::updateData()
       // over to mPositionData.
       mPositionData = temp_sample[0];
 
-      // Do scaling based on Proxy scale factor
-      gmtl::Vec3f trans;                              // SCALE:
-      gmtl::setTrans(trans, *(mPositionData.getPosition()));           // Get the translational vector
-      trans *= sScaleFactor;                          // Scale the translation and set the value again
-      gmtl::setTrans(*(mPositionData.getPosition()), trans);
+      // --- CACHE FEET Scaling ---- //
+      mPosMatrix_feet = mPositionData.getPosition();
+      gmtl::Vec3f trans;                                       // SCALE: to feet
+      gmtl::setTrans(trans, mPosMatrix_feet);                  // Get the translational vector
+      trans *= gadget::PositionUnitConversion::ConvertToFeet;  // Scale the translation and set the value again
+      gmtl::setTrans(mPosMatrix_feet, trans);
    }
 }
 

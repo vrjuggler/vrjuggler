@@ -16,7 +16,7 @@ void User::update()
    // --- UPDATE USER POSITION --- //
    gmtl::Matrix44f vw_M_plat = mViewPlatform.getTransform_virtMplat();
    gmtl::Matrix44f head_pos_world;  // Head position in real world (platform) coords
-   head_pos_world = *(getHeadPos()->getData());
+   head_pos_world = getHeadPos()->getData();
 
    M_vwMuser = vw_M_plat * head_pos_world;   
 }

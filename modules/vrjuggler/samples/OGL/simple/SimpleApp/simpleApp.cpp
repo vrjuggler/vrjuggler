@@ -70,7 +70,7 @@ void simpleApp::draw()
 
    // -- Get Wand matrix --- //
    Matrix44f wand_matrix;
-   wand_matrix = *(mWand->getData());
+   wand_matrix = mWand->getData();
 
    // -- Create box offset matrix -- //
    Matrix44f box_offset;
