@@ -642,7 +642,9 @@ protected:
     }
 
     /**
-     * Implementation of the <code>read</code> template method.
+     * Implementation of the <code>read</code> template method.  This reads
+     * at most the specified number of bytes from the I/O device into the
+     * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
      *      <code>length</code> bytes long.
@@ -656,23 +658,24 @@ protected:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual Status read_i(void* buffer, const size_t length,
                           ssize_t& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
-     * Implementation of the <code>readn</code> template method.
+     * Implementation of the <code>readn</code> template method.  This reads
+     * exactly the specified number of bytes from the I/O device into the
+     * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
      *      <code>length</code> bytes long.
@@ -687,23 +690,23 @@ protected:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual Status readn_i(void* buffer, const size_t length,
                            ssize_t& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
-     * Implementation of the <code>write</code> template method.
+     * Implementation of the <code>write</code> template method.  This writes
+     * the given buffer to the I/O device.
      *
      * @pre The device is open for writing.
      * @post The given buffer is written to the I/O device, and the number
@@ -715,22 +718,20 @@ protected:
      * @param bytes_written The number of bytes written to the device.
      * @param timeout       The maximum amount of time to wait for data to be
      *                      available for writing.  This argument is optional
-     *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
+     *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the write
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> is returned if the handle
-     *         is in non-blocking mode, and the write operation is in
-     *         progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the write
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the write operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress is returned if the handle is in
+     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the write could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the write operation failed.
      */
     virtual Status write_i(const void* buffer, const size_t length,
                            ssize_t& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
+
     /// The name of the I/O device.
     std::string m_name; 
 
