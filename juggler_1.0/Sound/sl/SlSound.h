@@ -55,8 +55,8 @@ public:
    
    // allows a user to enable or disable a sound without worring about its state set by start or stop.
    // NOTE: to hear a sound enable() and play() must be active.
-   //       default is ON
-   virtual void enable( vjSound::BinaryState state = vjSound::ON );
+   //       default is true
+   virtual void enable( const bool& state = true );
     
    virtual void trigger();
    
