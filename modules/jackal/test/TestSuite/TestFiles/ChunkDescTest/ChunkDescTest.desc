@@ -33,11 +33,11 @@
         <help>Single string</help>
     </PropertyDesc>
     <PropertyDesc token="single_chunk" name="single_chunk" type="chunk" num="1">
-        <enumeration name="chunk_type_2"/>
+        <allowedType>chunk_type_2</allowedType>
     </PropertyDesc>
     <PropertyDesc token="embedded_chunk" name="embedded_chunk" type="embeddedchunk" num="1">
         <help>Embedded Chunk</help>
-        <enumeration name="chunk_type_2"/>
+        <allowedType>chunk_type_2</allowedType>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="chunk_type_2" name="ChunkType2">

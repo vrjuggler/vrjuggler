@@ -4,15 +4,15 @@
     <help>The basic chunk type used for testing.</help>
     <PropertyDesc token="eChunkProp" name="Embedded Chunk Prop" type="embeddedchunk" num="1">
         <help>This is a simple embedded chunk test</help>
-        <enumeration name="EmbeddedTestChunk"/>
+        <allowedType>EmbeddedTestChunk</allowedType>
     </PropertyDesc>
     <PropertyDesc token="chunkPtrProp" name="Chunk Ptr Prop" type="chunk" num="1">
         <help>This points to a chunk of type DependentChunk2</help>
-        <enumeration name="DependentChunk2"/>
+        <allowedType>DependentChunk2</allowedType>
     </PropertyDesc>
     <PropertyDesc token="embChunkWithPtrProp" name="Yet Another Embedded Chunk" type="embeddedchunk" num="1">
         <help>This embedded chunk has a chunk pointer</help>
-        <enumeration name="EmbeddedTestChunk3"/>
+        <allowedType>EmbeddedTestChunk3</allowedType>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="EmbeddedTestChunk" name="EmbeddedTestChunk">
@@ -29,7 +29,7 @@
   <ChunkDesc token="EmbeddedTestChunk3" name="EmbeddedTestChunk3">
     <help>This is to be used for embedding a chunk that contains a chunk pointer</help>
     <PropertyDesc token="otherChunkProp" name="Other Chunk" type="chunk" num="1">
-        <enumeration name="DependentChunk"/>
+        <allowedType>DependentChunk</allowedType>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DependentChunk" name="DependentChunk">
@@ -40,7 +40,7 @@
   <ChunkDesc token="DependentChunk3" name="DependentChunk3">
     <help>This is to be used as a dependent chunk containing an embedded chunk (where the embedded chunk is pointed to by another chunk pointer)</help>
     <PropertyDesc token="embChunk" name="Embedded chunk property" type="embeddedchunk" num="1">
-        <enumeration name="EmbeddedTestChunk"/>
+        <allowedType>EmbeddedTestChunk</allowedType>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="EmbeddedTestChunk2" name="EmbeddedTestChunk2">
@@ -52,7 +52,7 @@
     <help>This chunk is to be used as a container for a pointer to an embedded chunk.</help>
     <PropertyDesc token="chunkPtr" name="Emb Chunk Pointer" type="chunk" num="1">
         <help>This should point to an embedded chunk in another chunk.</help>
-        <enumeration name="EmbeddedTestChunk"/>
+        <allowedType>EmbeddedTestChunk</allowedType>
     </PropertyDesc>
   </ChunkDesc>
 </ChunkDescDB>
