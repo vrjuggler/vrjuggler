@@ -149,6 +149,8 @@ public:
    }
 
 public:
+   friend GADGET_API(std::ostream&) operator<<(std::ostream& out,
+                                               ClusterManager& mgr);
    std::vector<std::string> getClusterNodes()
    {
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
