@@ -337,8 +337,12 @@ else
 fi
 
 if test "x${_idl_java}" = "xno" ; then
-   AC_PATH_PROG(JAVA_IDL, idlj, no, $JDK_HOME/bin:$PATH)
+   jacorb_dir='$(JUGGLERROOT_ABS)/external/JacORB'
+   JAVA_IDL="JACORB_PATH=\"$jacorb_dir\" \"$jacorb_dir/idl\""
+   java_idl_name='JacORB'
 else
+   # XXX: Need to support more than one IDL compiler for Java by recognizing
+   # the name of the compiler and defining options for it below.  Blah.
    if test "x${_idl_java}" != "x" ; then
       AC_MSG_CHECKING([execute bit on ${_idl_java}])
 
@@ -357,9 +361,15 @@ if test "x$JAVA_IDL" = "xno" ; then
    BUILD_JAVA='N'
    AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***)
 else
-   JAVA_IDL_OPTS='-emitAll'
-   JAVA_IDL_GENDIR_OPT='-td '
-   JAVA_IDL_INCFLAG='-i '
+   if test "x$java_idl_name" = "xJacORB" ; then
+      JAVA_IDL_OPTS=''
+      JAVA_IDL_GENDIR_OPT='-d '
+      JAVA_IDL_INCFLAG='-I'
+   else
+      JAVA_IDL_OPTS='-emitAll'
+      JAVA_IDL_GENDIR_OPT='-td '
+      JAVA_IDL_INCFLAG='-i '
+   fi
 fi
    
 if test "x${_enable_jdk_orb}" != "xno" ; then
@@ -574,6 +584,7 @@ AC_SUBST(SAFE_JUGGLERROOT_ABS)
 AC_SUBST(CXX_IDL_OPTS)
 AC_SUBST(CXX_IDL_GENDIR_OPT)
 AC_SUBST(CXX_IDL_INCFLAG)
+AC_SUBST(JAVA_IDL)
 AC_SUBST(JAVA_IDL_OPTS)
 AC_SUBST(JAVA_IDL_GENDIR_OPT)
 AC_SUBST(JAVA_IDL_INCFLAG)
