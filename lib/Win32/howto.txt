@@ -1,0 +1,53 @@
+How to get up and running with Visual C++ 6.0
+Note:  You will need to set up all your test projects in the same way
+
+1.  Create a new project
+	a.  File..New
+	b.  From the project tab choose Win32 Static Library
+	c.  Enter a project name (ie Juggler)
+
+2.  Update the project settings
+	a.  Project..Settings (from the main menubar)
+	b.  Choose the project name on the left side if its not already selected
+	c.  Choose the C/C++ tab on the right side of the Project Settings Dialog
+	d.  Add the following to the Project Options editbox:
+	(Note you will need to reset these options if you switch from a
+	debug build to a release build.  The debug build is the default)
+		I.   /TP             (Compile all files as C++ regardless of extension)
+		II.  /GR	     (Enable C++ RTTI)
+		II.  /I.             (Add the Project directory to the include path)
+		III. /MT  (or /MTd for debug)   (Enable multithreading, needed to compile vjThreadWin32)
+		IV.  /I"C:\juggler"  (Add the Juggler root directory to the include path)
+			(or the relative path to the juggler root, such as /I "..\..\")
+
+3.  Add files to the project
+	a.  Switch to fileview in the workspace toolbar
+	b.  Right click on the project name, new folder
+	c.  Create the new folder (ie "Config")
+	d.  Add the relevant files to the new folder for the build
+
+5.  Set up precompiled headers
+	a.  add config.cpp to the project
+	b.  Select Project..Settings..
+		In the left pane select the config.cpp that you just added
+		in the right pane:
+		Select the c++ tab
+		select Category precompiled headers
+		select "Create precompiled header file (.pch)" radio button
+			Through header:  config.h
+	c.  All files add to the build will need #include <config.h> as the first header included for precompiled headers to work
+
+---
+To create an application that uses the library
+	#include the headers necessary, update the project settings the same as for the static library
+	Add a file to project, Juggler.lib from the build directory
+	Add /FORCE:MULTIPLE    to the link options for applications to override the duplicate symbols error when linking
+
+---
+
+Files updated:
+vjChunkDesc.h
+vjSemaphoreWin32.h
+vjThreadWin32.h
+vjFrustum.h
+vjMemPoolwin32.h
