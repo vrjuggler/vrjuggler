@@ -2871,27 +2871,198 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           to be a wrapper class around the proxies. Applications could use the
           proxy classes directly, but
           <classname>gadget::DeviceInterface&lt;T&gt;</classname> and its
-          type-specific instances
-          (<classname>gadget::PositionInterface</classname>,
+          type-specific instances (such as
+          <classname>gadget::PositionInterface</classname>,
           <classname>gadget::DigitalInterface</classname>, etc.) simplify use
-          of the proxy object they contain. Thus, typical VR Juggler
-          application objects will have one or more device interface member
-          variables.</para>
+          of the contained proxy object. Thus, typical VR Juggler application
+          objects will have one or more device interface member variables and
+          no proxy member variables.</para>
 
-          <note>
-            <para>The class
-            <classname>gadget::DeviceInterface&lt;T&gt;</classname> is a
-            templated class based on the proxy type it wraps. Example
-            instantiations of
-            <classname>gadget::DeviceInterface&lt;T&gt;</classname> are
-            <classname>gadget::DeviceInterface&lt;gadget::PositionProxy&gt;</classname>
-            and
-            <classname>gadget::DeviceInterface&lt;gadget::KeyboardProxy&gt;</classname>.
-            Typedefs such as <classname>gadget::PositionInterface</classname>
-            (another name for
-            <classname>gadget::DeviceInterface&lt;gadget::PositionProxy&gt;</classname>)
-            make the code more readable.</para>
-          </note>
+          <para>The class
+          <classname>gadget::DeviceInterface&lt;T&gt;</classname> is a
+          templated class based on the proxy type it wraps. The following is
+          the complete list of available
+          <classname>gadget::DeviceInterface&lt;T&gt;</classname>
+          instantiations in VR Juggler 2.0:</para>
+
+          <indexterm zone="list.gadget.DeviceInterface.instantiations">
+            <primary>gadget::DeviceInterface&lt;T&gt;</primary>
+
+            <secondary>instantiations of</secondary>
+          </indexterm>
+
+          <variablelist id="list.gadget.DeviceInterface.instantiations">
+            <varlistentry>
+              <term><classname>gadget::AnalogInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::AnalogInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::AnalogProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::AnalogProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::AnalogProxy</secondary>
+                  </indexterm> and is used for reading data from analog
+                devices. Include the header file
+                <filename>gadget/Type/AnalogInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::CommandInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::CommandInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::CommandProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::CommandProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::CommandProxy</secondary>
+                  </indexterm> and is used for reading data from
+                command-driven devices. Include the header file
+                <filename>gadget/Type/CommandInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::DigitalInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::DigitalInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::DigitalProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::DigitalProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::DigitalProxy</secondary>
+                  </indexterm> and is used for reading data from digital
+                (on/off) devices. Include the header file
+                <filename>gadget/Type/DigitalInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::GestureInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::GestureInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::GestureProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::GestureProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::GestureProxy</secondary>
+                  </indexterm> and is used for reading data from
+                gesture-oriented devices. Include the header file
+                <filename>gadget/Type/GestureInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::GloveInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::GloveInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::GloveProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::GloveProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::GloveProxy</secondary>
+                  </indexterm> and is used for reading data from glove
+                devices. Include the header file
+                <filename>gadget/Type/GloveInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::KeyboardMouseInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::KeyboardMouseInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::KeyboardMouseProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::KeyboardMouseProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::KeyboardMouseProxy</secondary>
+                  </indexterm> and is used for reading data from analog
+                devices. Include the header file
+                <filename>gadget/Type/KeyboardMouseInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::PositionInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::PositionInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::PositionProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::PositionProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::PositionProxy</secondary>
+                  </indexterm> and is used for reading data from position
+                tracking devices. Include the header file
+                <filename>gadget/Type/PositionInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::StringInterface</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::StringInterface</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>This is a typedef for the template instantiation
+                <classname>gadget::DeviceInterface&lt;gadget::StringProxy&gt;</classname>.
+                It wraps the proxy type
+                <classname>gadget::StringProxy</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::StringProxy</secondary>
+                  </indexterm> and is used for reading data from string (text-
+                or word-driven) devices. Include the header file
+                <filename>gadget/Type/StringInterface.h</filename>.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <para>The typedefs are provided to make the application object code
+          more readable.</para>
 
           <para>In the application object, a device interface member variable
           is used as a <glossterm linkend="gloss.smart.pointer">smart
@@ -2926,10 +3097,10 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
 
               <secondary>gadget::PositionInterface</secondary>
             </indexterm>,
-          <classname>gadget::KeyboardInterface</classname><indexterm>
+          <classname>gadget::KeyboardMouseInterface</classname><indexterm>
               <primary>classes</primary>
 
-              <secondary>gadget::KeyboardInterface</secondary>
+              <secondary>gadget::KeyboardMouseInterface</secondary>
             </indexterm>, and the like. Once they are properly initialized,
           device interface objects (whatever their types may be) will act as
           smart pointers to the actual Gadgeteer device proxy objects they
@@ -3143,16 +3314,15 @@ head_mat = head-&gt;getData();</programlisting>
           </indexterm>
 
           <para>The class <classname>gadget::Proxy</classname> is the base
-          class for all the proxies in the Gadgeteer Input Manager. A better
-          name would be <classname>gadget::InputProxy</classname>, and it may
-          help to think of it with that name. As a programmer of VR Juggler
-          applications, knowledge of such proxies does not have to be terribly
-          in-depth. The fact is, most VR Juggler programmers will probably
-          never need to know more about a specific device proxy's interface
-          than the return type of its <methodname>getData()</methodname>
-          method. Most of the apparent complexity in the specific device proxy
-          classes is only important to Gadgeteer's internal maintenance of the
-          active proxies.</para>
+          class for all the type-specific proxies in the Gadgeteer Input
+          Manager. As a programmer of VR Juggler applications, knowledge of
+          such proxies does not have to be terribly in-depth. The fact is,
+          most VR Juggler programmers will probably never need to know more
+          about the interface of a type-specific device proxy than the return
+          type of its <methodname>getData()</methodname> method. Most of the
+          apparent complexity in the type-specific proxy classes is only
+          important to Gadgeteer's internal maintenance of the active
+          proxies.</para>
 
           <para>That said, this section is relatively short. As a programmer,
           the important thing to know is that a proxy is a pointer to a
