@@ -37,6 +37,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import info.clearthought.layout.*;
 import javax.swing.border.*;
 
@@ -51,6 +54,7 @@ public class DisplayWindowStartDialog
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
       mResolution = resolution;
+      mVisualIdField.setDocument(new HexidecimalDocument());
 
       try
       {
@@ -104,10 +108,10 @@ public class DisplayWindowStartDialog
 
    public Rectangle getDisplayWindowBounds()
    {
-      int x = Integer.parseInt(mPositionXField.getText());
-      int y = Integer.parseInt(mPositionYField.getText());
-      int width = Integer.parseInt(mWidthField.getText());
-      int height = Integer.parseInt(mHeightField.getText());
+      int x = ((Integer) mPositionXField.getValue()).intValue();
+      int y = ((Integer) mPositionYField.getValue()).intValue();
+      int width = ((Integer) mWidthField.getValue()).intValue();
+      int height = ((Integer) mHeightField.getValue()).intValue();
       return new Rectangle(x, y, width, height);
    }
 
@@ -249,7 +253,7 @@ public class DisplayWindowStartDialog
       mPositionLabel.setText("Position");
       mWidthField.setMinimumSize(new Dimension(40, 21));
       mWidthField.setPreferredSize(new Dimension(40, 21));
-      mWidthField.setText("200");
+      mWidthField.setValue(new Integer(200));
       mWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
 /*
       mWidthField.addFocusListener(new FocusAdapter() {
@@ -262,7 +266,7 @@ public class DisplayWindowStartDialog
       mSizeXLabel.setText("\u00D7");
       mHeightField.setMinimumSize(new Dimension(40, 21));
       mHeightField.setPreferredSize(new Dimension(40, 21));
-      mHeightField.setText("200");
+      mHeightField.setValue(new Integer(200));
 /*
       mHeightField.addFocusListener(new FocusAdapter() {
          public void focusLost(FocusEvent e)
@@ -273,7 +277,7 @@ public class DisplayWindowStartDialog
 */
       mPositionXField.setMinimumSize(new Dimension(40, 21));
       mPositionXField.setPreferredSize(new Dimension(40, 21));
-      mPositionXField.setText("0");
+      mPositionXField.setValue(new Integer(0));
       mPositionXField.setHorizontalAlignment(SwingConstants.TRAILING);
 /*
       mPositionXField.addFocusListener(new FocusAdapter() {
@@ -286,7 +290,7 @@ public class DisplayWindowStartDialog
       mPositionXLabel.setText("\u00D7");
       mPositionYField.setMinimumSize(new Dimension(40, 21));
       mPositionYField.setPreferredSize(new Dimension(40, 21));
-      mPositionYField.setText("0");
+      mPositionYField.setValue(new Integer(0));
 /*
       mPositionYField.addFocusListener(new FocusAdapter() {
          public void focusLost(FocusEvent e)
@@ -490,12 +494,12 @@ public class DisplayWindowStartDialog
    private JPanel mSizePanel = new JPanel();
    private JLabel mPositionLabel = new JLabel();
    private JPanel mPositionPanel = new JPanel();
-   private JTextField mWidthField = new JTextField();
+   private JFormattedTextField mWidthField = new JFormattedTextField();
    private JLabel mSizeXLabel = new JLabel();
-   private JTextField mHeightField = new JTextField();
-   private JTextField mPositionXField = new JTextField();
+   private JFormattedTextField mHeightField = new JFormattedTextField();
+   private JFormattedTextField mPositionXField = new JFormattedTextField();
    private JLabel mPositionXLabel = new JLabel();
-   private JTextField mPositionYField = new JTextField();
+   private JFormattedTextField mPositionYField = new JFormattedTextField();
    private JPanel mFrameBufferPanel = new JPanel();
    private TableLayout mFrameBufferPanelLayout = null;
    private TitledBorder mFrameBufferPanelBorder;
@@ -552,12 +556,13 @@ public class DisplayWindowStartDialog
 
       // The name cannot be an empty string.
       name_valid   = ! mNameField.getText().equals("");
-      width_valid  = validateInteger(mWidthField.getText());
-      height_valid = validateInteger(mHeightField.getText());
-      x_pos_valid  = validateInteger(mPositionXField.getText());
-      y_pos_valid  = validateInteger(mPositionYField.getText());
+      width_valid  = ((Integer) mWidthField.getValue()).intValue() > 0;
+      height_valid = ((Integer) mHeightField.getValue()).intValue() > 0;
+      x_pos_valid  = ((Integer) mPositionXField.getValue()).intValue() >= 0;
+      y_pos_valid  = ((Integer) mPositionYField.getValue()).intValue() >= 0;
 
-      if ( name_valid && width_valid && height_valid && x_pos_valid && y_pos_valid )
+      if ( name_valid && width_valid && height_valid && x_pos_valid &&
+           y_pos_valid )
       {
          mOkButton.setEnabled(true);
          validateWindowBounds();
@@ -565,19 +570,6 @@ public class DisplayWindowStartDialog
       else
       {
          mOkButton.setEnabled(false);
-      }
-   }
-
-   private boolean validateInteger(String input)
-   {
-      try
-      {
-         Integer.parseInt(input);
-         return true;
-      }
-      catch(NumberFormatException ex)
-      {
-         return false;
       }
    }
 
@@ -695,31 +687,9 @@ public class DisplayWindowStartDialog
    {
       String id = mVisualIdField.getText();
 
-      if ( ! id.equals("-1") )
+      if ( ! id.equals("-1") && ! id.startsWith("0x") )
       {
-         if ( id.startsWith("0x") )
-         {
-            id = id.substring(2);
-         }
-
-         try
-         {
-            Integer.parseInt(id, 16);
-            if ( ! mVisualIdField.getText().startsWith("0x") )
-            {
-               mVisualIdField.setText("0x" + mVisualIdField.getText());
-            }
-         }
-         catch (NumberFormatException ex)
-         {
-            JOptionPane.showMessageDialog(this,
-                                          "Invalid visual ID '" +
-                                             mVisualIdField.getText() +
-                                             "' entered",
-                                          "Visual ID Format Error",
-                                          JOptionPane.ERROR_MESSAGE);
-            mVisualIdField.setText("-1");
-         }
+         mVisualIdField.setText("0x" + id);
       }
 
       // If the value in the visual ID field is "-1", then the individual
@@ -737,6 +707,71 @@ public class DisplayWindowStartDialog
       mDepthBufferLabel.setEnabled(enabled);
       mDepthBufferSpinner.setEnabled(enabled);
       mFSAACheckbox.setEnabled(enabled);
+   }
+
+   private static class HexidecimalDocument extends PlainDocument
+   {
+      public void insertString(int offset, String string,
+                               AttributeSet attributes)
+      {
+         if ( string == null )
+         {
+            return;
+         }
+         else
+         {
+            String new_value = "";
+            int length = getLength();
+
+            if ( length == 0 )
+            {
+               new_value = string;
+            }
+            else
+            {
+               try
+               {
+                  String currentContent = getText(0, length);
+                  StringBuffer currentBuffer = new StringBuffer(currentContent);
+                  currentBuffer.insert(offset, string);
+                  new_value = currentBuffer.toString();
+               }
+               catch (BadLocationException locEx)
+               {
+                  locEx.printStackTrace();
+               }
+            }
+
+            try
+            {
+               // If the user is not in the process of entering "-1" or "0x",
+               // validate the input as a base 16 integer.
+               if ( ! (new_value.equals("-") || new_value.equals("-1") ||
+                       new_value.equals("0x")) )
+               {
+                  if ( new_value.startsWith("0x") )
+                  {
+                     new_value = new_value.substring(2);
+                  }
+
+                  Integer.parseInt(new_value, 16);
+               }
+
+               try
+               {
+                  super.insertString(offset, string, attributes);
+               }
+               catch (BadLocationException locEx)
+               {
+                  locEx.printStackTrace();
+               }
+            }
+            catch (NumberFormatException exception)
+            {
+               Toolkit.getDefaultToolkit().beep();
+            }
+         }
+      }
    }
 }
 
@@ -785,7 +820,7 @@ class DisplayWindowStartDialog_mHelpButton_actionAdapter
    }
 }
 
-class DisplayWindowStartDialog_mVisualIdField_focusAdapter extends java.awt.event.FocusAdapter
+class DisplayWindowStartDialog_mVisualIdField_focusAdapter extends FocusAdapter
 {
    private DisplayWindowStartDialog adaptee;
 
@@ -799,7 +834,8 @@ class DisplayWindowStartDialog_mVisualIdField_focusAdapter extends java.awt.even
    }
 }
 
-class DisplayWindowStartDialog_mVisualIdField_actionAdapter implements java.awt.event.ActionListener
+class DisplayWindowStartDialog_mVisualIdField_actionAdapter
+   implements ActionListener
 {
    private DisplayWindowStartDialog adaptee;
 
