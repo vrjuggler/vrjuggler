@@ -278,18 +278,21 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
 {
    // For each axis enumrated, this function will set
    // the minimum and maximum range values for it.
-   DIPROPRANGE diprg;
-   diprg.diph.dwSize       = sizeof(DIPROPRANGE);
-   diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-   diprg.diph.dwHow        = DIPH_BYID;
-   diprg.diph.dwObj        = doi->dwType;
-   diprg.lMin              = getAxisMin();
-   diprg.lMax              = getAxisMax();
-
-   // Set the range for the axis
-   if( FAILED(mDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
+   if ( doi->dwType & DIDFT_AXIS )
    {
-      return DIENUM_STOP;
+      DIPROPRANGE diprg;
+      diprg.diph.dwSize       = sizeof(DIPROPRANGE);
+      diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+      diprg.diph.dwHow        = DIPH_BYID;
+      diprg.diph.dwObj        = doi->dwType;
+      diprg.lMin              = getAxisMin();
+      diprg.lMax              = getAxisMax();
+
+      // Set the range for the current axis.
+      if( FAILED(mDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
+      {
+         return DIENUM_STOP;
+      }
    }
 
    return DIENUM_CONTINUE;
