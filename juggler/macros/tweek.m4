@@ -253,7 +253,7 @@ dnl     TWEEK_JAVA_IDL
 dnl     TWEEK_JAVA_IDL_OPTS
 dnl     TWEEK_JAVA_IDL_GENDIR_OPT
 dnl     TWEEK_JAVA_IDL_INCFLAG
-dnl     TWEEK_JARS
+dnl     TWEEK_EXT_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(TWEEK_PATH_JAVA,
 [
@@ -305,9 +305,63 @@ AC_DEFUN(TWEEK_PATH_JAVA,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl TWEEK_PATH_PYTHON([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl
+dnl Tests for Tweek Python API and then defines the following variables:
+dnl     TWEEK_PYTHON_IDL
+dnl     TWEEK_PYTHON_IDL_OPTS
+dnl     TWEEK_PYTHON_IDL_GENDIR_OPT
+dnl     TWEEK_PYTHON_IDL_INCFLAG
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(TWEEK_PATH_PYTHON,
+[
+   AC_REQUIRE([_TWEEK_PATH_SETUP])
+
+   TWEEK_PYTHON_IDL=''
+   TWEEK_PYTHON_IDL_OPTS=''
+   TWEEK_PYTHON_IDL_GENDIR_OPT=''
+   TWEEK_PYTHON_IDL_INCFLAG=''
+
+   if test "x$TWEEK_CONFIG" = "xno" ; then
+      ifelse([$3], , :, [$3])
+   else
+      AC_MSG_CHECKING([whether Tweek Python API is available])
+      has_java=`$TWEEK_CONFIG --is-jittery`
+
+      if test "x$has_java" = "xY" ; then
+         AC_MSG_RESULT([yes])
+         if test "x$TWEEK_VERSION" = "x" ; then
+            _TWEEK_VERSION_CHECK($1, [tweek_version_okay='yes'],
+                                 [tweek_version_okay='no'
+                                  $3])
+         fi
+
+         if test "x$tweek_version_okay" = "xyes" ; then
+            TWEEK_PYTHON_IDL="`$TWEEK_CONFIG $tweek_config_args --idl java`"
+            TWEEK_PYTHON_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags java`"
+            TWEEK_PYTHON_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
+            TWEEK_PYTHON_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag java`"
+            TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
+            TWEEK_EXT_JARS="`$TWEEK_CONFIG $tweek_config_args --ext-jars`"
+
+            ifelse([$2], , :, [$2])
+         fi
+      else
+         AC_MSG_RESULT([no])
+         ifelse([$3], , :, [$3])
+      fi
+   fi
+
+   AC_SUBST([TWEEK_PYTHON_IDL])
+   AC_SUBST([TWEEK_PYTHON_IDL_OPTS])
+   AC_SUBST([TWEEK_PYTHON_IDL_GENDIR_OPT])
+   AC_SUBST([TWEEK_PYTHON_IDL_INCFLAG])
+])
+
+dnl ---------------------------------------------------------------------------
 dnl TWEEK_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Tests for Tweek C++ and Java APIs and then defines the following
+dnl Tests for Tweek C++, Java, and Python APIs and then defines the following
 dnl variables:
 dnl     TWEEK_CXXFLAGS
 dnl     TWEEK_CXXFLAGS_MIN
@@ -327,6 +381,11 @@ dnl     TWEEK_JAVA_IDL_OPTS
 dnl     TWEEK_JAVA_IDL_GENDIR_OPT
 dnl     TWEEK_JAVA_IDL_INCFLAG
 dnl     TWEEK_JARS
+dnl     TWEEK_EXT_JARS
+dnl     TWEEK_PYTHON_IDL
+dnl     TWEEK_PYTHON_IDL_OPTS
+dnl     TWEEK_PYTHON_IDL_GENDIR_OPT
+dnl     TWEEK_PYTHON_IDL_INCFLAG
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(TWEEK_PATH,
 [
@@ -334,5 +393,6 @@ AC_DEFUN(TWEEK_PATH,
 
    if test "x$tweek_have_cxx" = "xyes" ; then
       TWEEK_PATH_JAVA($1, $2, $3, $4)
+      TWEEK_PATH_PYTHON($1, $2, $3, $4)
    fi
 ])
