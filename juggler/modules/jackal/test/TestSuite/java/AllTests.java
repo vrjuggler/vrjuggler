@@ -24,6 +24,8 @@ public class AllTests
       suite.addTestSuite( DescEnumTest.class );
       suite.addTestSuite( PropertyDescTest.class );
       suite.addTestSuite( ChunkDescTest.class );
+      suite.addTestSuite( PropertyTest.class );
+//      suite.addTestSuite( ConfigChunkTest.class );
 
       return suite;
    }
