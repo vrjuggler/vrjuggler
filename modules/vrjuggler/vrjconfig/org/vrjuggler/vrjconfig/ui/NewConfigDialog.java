@@ -56,10 +56,8 @@ public class NewConfigDialog
    public static final int CANCEL_OPTION = 1;
    public static final int ERROR_OPTION = -1;
 
-   public NewConfigDialog(JFileChooser chooser)
+   public NewConfigDialog(File chooserCurDir)
    {
-      fileChooser = chooser;
-      
       try
       {
          jbInit();
@@ -68,6 +66,8 @@ public class NewConfigDialog
       {
          e.printStackTrace();
       }
+
+      fileChooser.setCurrentDirectory(chooserCurDir);
 
       // Try to get icons for the toolbar buttons
       try
@@ -97,7 +97,7 @@ public class NewConfigDialog
       includesTableModel.add(expandEnvVars(DEFAULT_DEFINITION_FILE));
 
       // Default to the user's home dir
-      directoryTxt.setText(expandEnvVars("${HOME}"));
+      directoryTxt.setText(fileChooser.getCurrentDirectory().getAbsolutePath());
    }
 
    public int showDialog(Component parent)
