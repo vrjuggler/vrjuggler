@@ -92,6 +92,7 @@ void _Export_Vec_int_3();
 void _Export_gmtl_Math_h();
 void _Export_gmtl_Defines_h();
 void _Export_gmtl_functions_h();
+void _Export_gmtl_intersect_wrappers_h();
 void _Export_gmtl_wrappers_h();
 
 // Module ======================================================================
@@ -160,5 +161,6 @@ BOOST_PYTHON_MODULE(gmtl)
     _Export_gmtl_Math_h();
     _Export_gmtl_Defines_h();
     _Export_gmtl_functions_h();
+    _Export_gmtl_intersect_wrappers_h();
     _Export_gmtl_wrappers_h();
 }

@@ -114,6 +114,7 @@ GMTL_SRCS=	\
 	gmtl/_gmtl_Defines_h.cpp					\
 	gmtl/_gmtl_Math_h.cpp		        			\
 	gmtl/_gmtl_functions_h.cpp					\
+	gmtl/_gmtl_intersect_wrappers_h.cpp				\
 	gmtl/_gmtl_wrappers_h.cpp					\
 	gmtl/_LineSeg_double.cpp					\
 	gmtl/_LineSeg_float.cpp						\

@@ -528,7 +528,7 @@ set_policy(Function('gmtl::makeVolume', 'gmtl-functions.h'),
 # ====================================================== Containment operations
 
 # Intersection operations =====================================================
-Function('gmtl::intersect', 'gmtl-functions.h')
+Function('gmtlWrappers::intersect', 'gmtl-intersect-wrappers.h')
 # ===================================================== Intersection operations
 
 # Transform operations ========================================================

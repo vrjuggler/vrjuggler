@@ -56,7 +56,6 @@
 #include <gmtl/CoordOps.h>
 #include <gmtl/Containment.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Intersection.h>
 #include <gmtl/Xforms.h>
 
 namespace gmtl
@@ -658,60 +657,6 @@ namespace gmtl
    template void makeVolume(gmtl::AABoxf&, const gmtl::Spheref&);
    template void makeVolume(gmtl::AABoxd&, const gmtl::Sphered&);
 // ====================================================== Containment functions
-
-// Intersection functions =====================================================
-   template bool intersect(const gmtl::AABoxf&, const gmtl::AABoxf&);
-   template bool intersect(const gmtl::AABoxd&, const gmtl::AABoxd&);
-
-   template bool intersect(const gmtl::AABoxf&, const gmtl::Point3f&);
-   template bool intersect(const gmtl::AABoxd&, const gmtl::Point3d&);
-
-   template bool intersect(const gmtl::AABoxf&, const gmtl::Vec3f&,
-                           const gmtl::AABoxf&, const gmtl::Vec3f&,
-                           float&, float&);
-   template bool intersect(const gmtl::AABoxd&, const gmtl::Vec3d&,
-                           const gmtl::AABoxd&, const gmtl::Vec3d&,
-                           double&, double&);
-
-   template bool intersect(const gmtl::Spheref&, const gmtl::Vec3f&,
-                           const gmtl::Spheref&, const gmtl::Vec3f&,
-                           float&, float&);
-   template bool intersect(const gmtl::Sphered&, const gmtl::Vec3d&,
-                           const gmtl::Sphered&, const gmtl::Vec3d&,
-                           double&, double&);
-
-   template bool intersect(const gmtl::AABoxf&, const gmtl::Spheref&);
-   template bool intersect(const gmtl::AABoxd&, const gmtl::Sphered&);
-
-   template bool intersect(const gmtl::Spheref&, const gmtl::AABoxf&);
-   template bool intersect(const gmtl::Sphered&, const gmtl::AABoxd&);
-
-   template bool intersect(const gmtl::Spheref&, const gmtl::Point3f&);
-   template bool intersect(const gmtl::Sphered&, const gmtl::Point3d&);
-
-   template bool intersect(const gmtl::Spheref&, const gmtl::Rayf&, int&,
-                           float&, float&);
-   template bool intersect(const gmtl::Sphered&, const gmtl::Rayd&, int&,
-                           float&, float&);
-
-   template bool intersect(const gmtl::Spheref&, const gmtl::LineSegf&, int&,
-                           float&, float&);
-   template bool intersect(const gmtl::Sphered&, const gmtl::LineSegd&, int&,
-                           float&, float&);
-
-   template bool intersect(const gmtl::Planef&, const gmtl::Rayf&, float&);
-   template bool intersect(const gmtl::Planed&, const gmtl::Rayd&, double&);
-
-   template bool intersect(const gmtl::Trif&, const gmtl::Rayf&, float&,
-                           float&, float&);
-   template bool intersect(const gmtl::Trid&, const gmtl::Rayd&, float&,
-                           float&, float&);
-
-   template bool intersect(const gmtl::Trif&, const gmtl::LineSegf&, float&,
-                           float&, float&);
-   template bool intersect(const gmtl::Trid&, const gmtl::LineSegd&, float&,
-                           float&, float&);
-// ===================================================== Intersection functions
 
 // Transform functions ========================================================
    template gmtl::VecBase<float, 3>& xform(gmtl::VecBase<float, 3>&,
