@@ -44,7 +44,7 @@
             Display
             ..
             Draw
-                GL
+                OGL
                 ..
                 OSG
                 ..
@@ -55,7 +55,6 @@
             ..
             Input
                 Devices
-                ..
                     Ascension
                     ..
                     Fakespace
@@ -69,15 +68,16 @@
                     Logitech
                     ..
                     Open
-                        ..
                         DTK
                         ..
                         Trackd
+                        ..
                     ..
                     Sim
                     ..
                     VirtualTechnologies
                     ..
+                ..
                 Type
                 ..
             ..
