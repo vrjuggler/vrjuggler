@@ -1,6 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2002-06-23 patrickh    The tweek-config script is now written in Perl.  It is
+2002-06-24 patrickh    The tweek-config script is now written in Perl.  It is
                        capable of determining its installation path at runtime.
 2002-05-09 nonchocoboy The Bean XML files now name the Bean class rather than
                        the JAR file entry.
