@@ -446,8 +446,8 @@ public class ChunkDescDB
       synchronized (this)
       {
          // make sure the name will be unique
-         List descs = ConfigUtilities.getDescsWithName(getAll(), d.getName());
-         if (descs.size() > 0)
+         List matches = ConfigUtilities.getDescsWithName(getAll(), d.getName());
+         if (matches.size() > 0)
          {
             // this is ugly & clunky, but it's a rarely occurring case,
             // and java (yay!) will handle the memory for us.  If we're
