@@ -31,37 +31,21 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/vjcontrol/simple_panel
+# Makefile.in for juggler/samples/vjcontrol/AudioPlayer
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
 all: audio.jar
-default: audio.jar
 
 srcdir	= @srcdir@
 
-# JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
+# JDK-related variables.  $(JAVAC_CMD) is the compile line for javac when
 # building .java files.
-JDK_HOME	= @JDK_HOME@
-GUI_CLASSPATH	= ${srcdir}:${VJ_BASE_DIR}/bin/VjControl.jar:${JDK_HOME}/lib/classes.zip
+GUI_CLASSPATH	= $(VJ_BASE_DIR)/bin/VjControl.jar
 JAR		= @JAR@
 JAVAC		= @JAVAC@
-ifeq (@OS_TYPE@, Win32)
-    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}/src
-else
-    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}/src -classpath ${GUI_CLASSPATH}
-endif
-
-# If the user defined ${CLASSPATH} (either as an environment variable or a
-# command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
-# out.
-ifdef CLASSPATH
-    GUI_CLASSPATH	:= ${CLASSPATH}:${GUI_CLASSPATH}
-endif
-
-# Prevent anything in this file from being built in parallel.
-MAKEFLAGS	+= -j 1
+JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir)/src -classpath $(GUI_CLASSPATH)
 
 OBJECTS = AudioPlayer/AudioPlayerPanel.class
 
@@ -70,9 +54,9 @@ OBJECTS = AudioPlayer/AudioPlayerPanel.class
 # -----------------------------------------------------------------------------
 
 audio.jar:
-	${JAVAC_CMD} ${srcdir}/src/AudioPlayer/AudioPlayerPanel.java
-	cp ${srcdir}/*.config .
-	${JAR} cvf audio.jar AudioPlayer/*.class contents.config
+	$(JAVAC_CMD) $(srcdir)/src/AudioPlayer/AudioPlayerPanel.java
+	cp $(srcdir)/*.config .
+	$(JAR) cvf audio.jar AudioPlayer/*.class contents.config
 
 # -----------------------------------------------------------------------------
 # Clean-up.
