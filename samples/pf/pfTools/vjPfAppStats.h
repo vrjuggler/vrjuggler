@@ -163,7 +163,7 @@ void vjPfAppStats::preFrame()
    {
       if(0 == mMPStats.update())       // Is it done updating
       {
-         vjDEBUG(vjDBG_ALL,0) << "myApp: MP Stats mode done!\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: MP Stats mode done!\n" << vjDEBUG_FLUSH;
          setStatsMode(vjPfAppStats::Fill);    // Go to next mode
       } else { cout << ".." <<flush; }
    }
@@ -171,6 +171,8 @@ void vjPfAppStats::preFrame()
    // Check for STATS CYCLE Button
    if(mStatsButton->getData() == vjDigital::TOGGLE_ON)
    {
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"vjPfAppStats: mStatsButton pressed. Turning on or cycling stats.\n") << vjDEBUG_FLUSH;
+
       vjPfAppStats::statMode cur_stat_mode = getStatsMode();
       switch(cur_stat_mode)
       {
@@ -195,25 +197,25 @@ void vjPfAppStats::setStatsMode(vjPfAppStats::statMode mode)
    switch(mode)
    {
       case vjPfAppStats::NONE:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to NONE Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to NONE Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       case vjPfAppStats::FrameTime:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to FrameTime Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to FrameTime Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       case vjPfAppStats::Gfx:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to Gfx Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to Gfx Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       case vjPfAppStats::Pipe:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to Pipe Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to Pipe Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       case vjPfAppStats::MPipe:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to MPipe Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to MPipe Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       case vjPfAppStats::Fill:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to Fill Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to Fill Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       default:
-         vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Switching to unknown Stats mode.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to unknown Stats mode.\n" << vjDEBUG_FLUSH;
          break;
    }
 
