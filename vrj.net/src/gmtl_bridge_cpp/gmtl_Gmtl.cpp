@@ -2806,7 +2806,7 @@ extern "C"
       return result;
    }
 
-
+#ifndef _MSC_VER
    // Wrapper for free function gmtlWrappers::makeDirCosMatrix33()
    SHARPPY_API gmtl::Matrix33f* gmtlWrappers_makeDirCosMatrix33__gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f3(const gmtl::Vec3f* p0, const gmtl::Vec3f* p1, const gmtl::Vec3f* p2)
    {
@@ -3009,7 +3009,7 @@ extern "C"
       result = new gmtl::Matrix44f(gmtlWrappers::makeDirCosMatrix44(marshal_p0, marshal_p1, marshal_p2, marshal_p3, marshal_p4, marshal_p5));
       return result;
    }
-
+#endif
 
    // Wrapper for free function gmtlWrappers::makeTransMatrix44()
    SHARPPY_API gmtl::Matrix44d* gmtlWrappers_makeTransMatrix44__gmtl_Vec3d1(const gmtl::Vec3d* p0)
@@ -4954,7 +4954,7 @@ extern "C"
       return result;
    }
 
-
+#ifndef _MSC_VER
    // Wrapper for free function gmtl::setDirCos()
    SHARPPY_API gmtl::Matrix44f* gmtl_setDirCos__gmtl_Matrix44f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f4(gmtl::Matrix44f* p0, const gmtl::Vec3f* p1, const gmtl::Vec3f* p2, const gmtl::Vec3f* p3)
    {
@@ -5173,7 +5173,7 @@ extern "C"
       result = new gmtl::Matrix33d(gmtl::setDirCos(marshal_p0, marshal_p1, marshal_p2, marshal_p3, marshal_p4, marshal_p5, marshal_p6));
       return result;
    }
-
+#endif
 
    // Wrapper for free function gmtl::setAxes()
    SHARPPY_API gmtl::Matrix44f* gmtl_setAxes__gmtl_Matrix44f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f4(gmtl::Matrix44f* p0, const gmtl::Vec3f* p1, const gmtl::Vec3f* p2, const gmtl::Vec3f* p3)

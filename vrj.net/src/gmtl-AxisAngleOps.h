@@ -34,8 +34,8 @@
 
 namespace gmtl
 {
-   template bool isEqual(const AxisAnglef&, const AxisAnglef&, const float&);
-   template bool isEqual(const AxisAngled&, const AxisAngled&, const double&);
+   template bool isEqual(const AxisAnglef&, const AxisAnglef&, const float);
+   template bool isEqual(const AxisAngled&, const AxisAngled&, const double);
 }
 
 

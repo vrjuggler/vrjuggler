@@ -35,11 +35,11 @@
 namespace gmtl
 {
    template bool isEqual(const EulerAngleXYZf&, const EulerAngleXYZf&,
-                         const float&);
+                         const float);
    template bool isEqual(const EulerAngleZXYf&, const EulerAngleZXYf&,
-                         const float&);
+                         const float);
    template bool isEqual(const EulerAngleZYXf&, const EulerAngleZYXf&,
-                         const float&);
+                         const float);
 }
 
 

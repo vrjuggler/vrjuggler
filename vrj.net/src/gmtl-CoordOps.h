@@ -38,6 +38,7 @@
 
 namespace gmtl
 {
+#ifndef _MSC_VER
    template bool isEqual(const gmtl::Coord3fXYZ&, const gmtl::Coord3fXYZ&,
                          float);
    template bool isEqual(const gmtl::Coord3fZYX&, const gmtl::Coord3fZYX&,
@@ -85,6 +86,7 @@ namespace gmtl
                          const gmtl::Coord4fAxisAngle&, float);
    template bool isEqual(const gmtl::Coord4dAxisAngle&,
                          const gmtl::Coord4dAxisAngle&, double);
+#endif
 }
 
 

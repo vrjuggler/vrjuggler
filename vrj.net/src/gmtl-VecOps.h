@@ -76,13 +76,13 @@ namespace gmtl
                             const VecBase4d&);
 
    template bool isEqual(const gmtl::VecBase3f&, const gmtl::VecBase3f&,
-                         const float&);
+                         const float);
    template bool isEqual(const gmtl::VecBase3d&, const gmtl::VecBase3d&,
-                         const double&);
+                         const double);
    template bool isEqual(const gmtl::VecBase4f&, const gmtl::VecBase4f&,
-                         const float&);
+                         const float);
    template bool isEqual(const gmtl::VecBase4d&, const gmtl::VecBase4d&,
-                         const double&);
+                         const double);
 }
 
 

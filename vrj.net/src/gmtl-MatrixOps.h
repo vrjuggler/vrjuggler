@@ -154,13 +154,13 @@ namespace gmtl
    template gmtl::Matrix33f& invert(gmtl::Matrix33f&);
 
    template bool isEqual(const gmtl::Matrix44d&, const gmtl::Matrix44d&,
-                         const double&);
+                         const double);
    template bool isEqual(const gmtl::Matrix44f&, const gmtl::Matrix44f&,
-                         const float&);
+                         const float);
    template bool isEqual(const gmtl::Matrix33d&, const gmtl::Matrix33d&,
-                         const double&);
+                         const double);
    template bool isEqual(const gmtl::Matrix33f&, const gmtl::Matrix33f&,
-                         const float&);
+                         const float);
 }
 
 
