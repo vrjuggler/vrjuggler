@@ -1,10 +1,8 @@
-#include <vjConfig.h>
-
-#include <Sound/SoundEngine.h>
-#include <Sound/Sound.h>
+#include <Sound/vjSoundEngine.h>
+#include <Sound/vjSound.h>
 
 // calculate the sound volume based on the observer position, sound position, falloff, and volume
-void Sound::getPercievedVolume( float& volume ) const
+void vjSound::getPercievedVolume( float& volume ) const
 {
    // get the observer's position
    vjVec3 observerPos;
