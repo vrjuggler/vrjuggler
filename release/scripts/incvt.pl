@@ -36,7 +36,7 @@ use Getopt::Std;
 use strict 'vars';
 use vars qw(%opts);
 
-getopts('i:o:p:t:', \%opts);
+getopts('i:o:p:t:x', \%opts);
 
 die "ERROR: No input file given!\n" unless defined($opts{'i'});
 die "ERROR: No tempalte file given!\n" unless defined($opts{'t'});
@@ -88,14 +88,17 @@ else {
             $input =~ s/\@${key}\@/$vars{$key}/g;
         }
 
-        # If a preamble was given, substitute its contents appropriately.
-        if ( defined($opts{'p'}) ) {
-            $input =~ s/\%\{.*?\%\}/$opts{'p'}/s;
-        }
+        # Replace the preamble block with whatever was given as an argument to
+        # the -p option.  If nothing was given, the preamble will be removed.
+        # This is probably what the user wants.
+        $input =~ s/\%\{.*?\%\}/$opts{'p'}/s;
 
         print $output_handle "$input";
 
         close($output_handle) or warn "WARNING: Could not close output: $!\n";
+
+        # Set the execute bit on the output file if -x was given.
+        chmod(0755, "$output_file") if defined($opts{'x'});
     }
 }
 
