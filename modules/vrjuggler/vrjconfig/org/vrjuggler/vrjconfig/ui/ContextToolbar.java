@@ -302,65 +302,82 @@ public class ContextToolbar
       fileChooser.setAcceptAllFileFilterUsed(false);
       fileChooser.setFileFilter(new ConfigFileFilter());
       fileChooser.setFileView(new ConfigFileView());
+      fileChooser.setMultiSelectionEnabled(true);
 
+      boolean status = true;
       int result = fileChooser.showOpenDialog(getParentFrame());
       if (result == JFileChooser.APPROVE_OPTION)
       {
-         try
+         ConfigBroker broker = new ConfigBrokerProxy();
+
+         File[] files = fileChooser.getSelectedFiles();
+         int open_count = 0;
+
+         for ( int i = 0; i < files.length; ++i )
          {
-            // Make sure the selected file actually exists
-            File file = fileChooser.getSelectedFile();
+            File file = files[i];
+
+            // Make sure the selected file actually exists.
             if (! file.exists())
             {
                JOptionPane.showMessageDialog(getParentFrame(),
                                              "You must open an existing file.",
                                              "Error",
                                              JOptionPane.ERROR_MESSAGE);
-               return false;
+               continue;
             }
 
-            ConfigBroker broker = new ConfigBrokerProxy();
-
-            // We want to automatically follow include directives. Keep track of
-            // all the URLs on a stack and read them one at a time in the order
-            // that we come across them
-            Stack urls = new Stack();
-            urls.push(file);
-            while (! urls.isEmpty())
+            try
             {
-               // Expand env vars in the URL
-               File res_file = (File)urls.pop();
-               String res_name = expandEnvVars(res_file.getAbsolutePath());
-               System.out.println("Opening included resource: "+res_name);
-
-               FileDataSource data_source =
-                  FileDataSource.open(res_name, getBroker().getRepository());
-               broker.add(res_name, data_source);
-               this.context.add(res_name);
-
-               // Look through the elements in the newly loaded file and see if
-               // any of them are include directives
-               java.util.List includes = data_source.getIncludes();
-               for (Iterator itr = includes.iterator(); itr.hasNext(); )
+               // We want to follow include directives automatically.  Keep
+               // track of all the URLs on a stack and read them one at a time
+               // in the order that we come across them.
+               Stack urls = new Stack();
+               urls.push(file);
+               while (! urls.isEmpty())
                {
-                  // Make sure the file reference it created relative to the
-                  // current file
-                  urls.push(new File(res_file.getParentFile().getAbsolutePath(),
-                                     (String)itr.next()));
+                  // Expand env vars in the URL
+                  File res_file = (File)urls.pop();
+                  String res_name = expandEnvVars(res_file.getAbsolutePath());
+                  System.out.println("Opening included resource: "+res_name);
+
+                  FileDataSource data_source =
+                     FileDataSource.open(res_name,
+                                         getBroker().getRepository());
+                  broker.add(res_name, data_source);
+                  this.context.add(res_name);
+
+                  // Look through the elements in the newly loaded file and
+                  // see if any of them are include directives
+                  java.util.List includes = data_source.getIncludes();
+                  for (Iterator itr = includes.iterator(); itr.hasNext(); )
+                  {
+                     // Make sure the file reference it created relative to the
+                     // current file
+                     urls.push(new File(res_file.getParentFile().getAbsolutePath(),
+                                        (String)itr.next()));
+                  }
+
+                  open_count++;
                }
             }
+            catch (IOException ioe)
+            {
+               JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
+                                             "Error",
+                                             JOptionPane.ERROR_MESSAGE);
+               ioe.printStackTrace();
+            }
+         }
 
-            return true;
-         }
-         catch (IOException ioe)
-         {
-            JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
-                                          "Error", JOptionPane.ERROR_MESSAGE);
-            ioe.printStackTrace();
-         }
+         status = (open_count > 0);
+      }
+      else
+      {
+         status = false;
       }
 
-      return false;
+      return status;
    }
 
    /**
