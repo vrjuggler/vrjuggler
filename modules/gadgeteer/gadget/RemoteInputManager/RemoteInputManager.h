@@ -92,9 +92,9 @@ namespace gadget{
       vpr::InetAddr        mListenAddr;
       vpr::Mutex           mConfigMutex;  // prevents us from try to read devices while they are being modified (added or removed)
 
-      std::vector<vpr::SocketStream*>       mClientSyncs;
+      std::vector<vpr::SocketStream*>       mSyncClients;
 
-      vpr::SocketStream*                  mServerSync;
+      vpr::SocketStream*                  mSyncServer;
       bool                                mIsMaster;
       std::string                         mSyncMasterChunkName;
 

@@ -57,6 +57,7 @@ namespace gadget
    RemoteInputManager::RemoteInputManager(InputManager* input_manager)
    {
       mLocalMachineChunkName = "";
+      mSyncServer=NULL;
       mActive = false;
       mAcceptThread = NULL;
       mIsMaster=false;
@@ -248,7 +249,7 @@ namespace gadget
                   {
                      vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << "SYNC Sync client accepted: " << streamHostname 
                            << std::endl << vprDEBUG_FLUSH;
-                     mClientSyncs.push_back(client_sock);
+                     mSyncClients.push_back(client_sock);
                      client_sock = new vpr::SocketStream;
                   }
                   else
@@ -256,7 +257,7 @@ namespace gadget
                      vprASSERT(false && "Tried to conneted to a client machine!");
                   }
                }
-               if (getTransmittingConnectionByManagerId(streamManagerId) == NULL)   // If the transmitting NetConnection does not exist yet
+               else if (getTransmittingConnectionByManagerId(streamManagerId) == NULL)   // If the transmitting NetConnection does not exist yet
                {
                   NetConnection* connection = new NetConnection(vpr::Interval(0,vpr::Interval::Base),streamHostname, streamPort, streamManagerId, client_sock);
                   this->mTransmittingConnections.push_back(connection);
@@ -348,12 +349,10 @@ namespace gadget
          }
       }
       
-
       // Temporary variables to hold SyncServer information
       jccl::ConfigChunkPtr sync_server_chunk = mMachineTable[mSyncMasterChunkName];
       std::string sync_server_hostname = sync_server_chunk->getProperty<std::string>("host_name");
       int sync_server_listen_port = sync_server_chunk->getProperty<int>("listen_port");
-
 
       // Have all clients connect to sync server
       //   If master 
@@ -364,45 +363,45 @@ namespace gadget
       if (sync_server_hostname == getLocalHostName())
       {
           mIsMaster = true;
-          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "GGG This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
+          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
       }
       else
       {
          // Sync setup loop
          ///////////////////////////////////////////////////////////////////////
 
-
                    //NOTE: BLOCKS WHEN WAITING FOR RETURN HANDSHAKE
-         vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_STATE_LVL) << "SYNC Attempting to connect to SyncServer:  " 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC Attempting to connect to SyncServer:  " 
                << sync_server_hostname <<":"<< sync_server_listen_port << "\n"<< vprDEBUG_FLUSH;
       
-         vpr::SocketStream* sock_stream;
+         //vpr::SocketStream* sock_stream;
          vpr::InetAddr inet_addr;
          //bool sync;
 
             // Set the address that we want to connect to
          if ( !inet_addr.setAddress(sync_server_hostname, sync_server_listen_port).success() )
          {
-            vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED,"SYNC ERROR: Failed to set address\n") << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"SYNC ERROR: Failed to set address\n") << vprDEBUG_FLUSH;
             return false;
          }
             // Create a new socket stream to this address
-         sock_stream = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
+         mSyncServer = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
 
             // If we can successfully open the socket and connect to the server
-         if ( sock_stream->open().success() && sock_stream->connect().success() )
+         if ( mSyncServer->open().success() && mSyncServer->connect().success() )
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << "SYNC Successfully connected to sync server: " 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC Successfully connected to sync server: " 
                << sync_server_hostname <<":"<< sync_server_listen_port << "\n"<< vprDEBUG_FLUSH;
    
                // Send a handshake to initalize communication with remote computer
             mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString(),true);
-            mMsgPackage.sendAndClear(sock_stream);
+            mMsgPackage.sendAndClear(mSyncServer);
          }
          else
          {
-            delete sock_stream;
-            vprDEBUG_END(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrSetNORM(clrRED) << "SYNC ERROR: Could not connect to sync server: " 
+            delete mSyncServer;
+            mSyncServer = NULL;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetNORM(clrRED) << "SYNC ERROR: Could not connect to sync server: " 
                << sync_server_hostname <<" : "<< sync_server_listen_port << "\n" << clrRESET << vprDEBUG_FLUSH;
             return false;
          }
@@ -571,7 +570,7 @@ namespace gadget
 
             //if (host_chunk == this->mSyncMachine)
             //{
-            //    this->mServerSync = this->makeSyncConnection(host_name,port_num);
+            //    this->mSyncServer = this->makeSyncConnection(host_name,port_num);
             ///}
 
 
@@ -683,62 +682,56 @@ namespace gadget
    
    void RemoteInputManager::createBarrier()
    {
-      // If Sync_device is in transmitting
-        // wait for signals from all
-        // send responces to all
+      // If Slave
+      // - send ready to Master
+      // - read ready from Server
+      // Else if Master
+      // - for each slave
+      //   - read ready
+      // - for each slave
+      //   - send ready      
+      
 
-      // If sync_device is in recieving
-        // send signal
-        // wait for responce
-
-       /*if (this->findTransmittingDevice(mSyncMachine)!=NULL)
-       {
-           std::cout << "FOUND, device is a tansmitting device!" << std::endl;
-           for (std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
-                i != mTransmittingConnections.end();i++)
-           {
-               std::cout << "Receiving Barrier" << std::endl;
-
-               if ((*i)->getSockStream()->availableBytes() > 0)
-                {
-                    std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
-                    vprASSERT(1==2);
-                }
-               
-                (*i)->receiveBarrier();
-           }
-           for (std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
-                i != mTransmittingConnections.end();i++)
-           {
-                std::cout << "Sending barrier!" << std::endl;
-                
-                if ((*i)->getSockStream()->availableBytes() > 0)
-                {
-                    std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
-                    vprASSERT(1==2);
-                }
-
-               (*i)->sendBarrier();
-           }
-       }
-       else if (this->findReceivingDevice(mSyncDevice)!=NULL)
-       {
-           std::cout << "FOUND, device is a receving device!" << std::endl;
-           NetConnection* temp = this->findReceivingDevice(mSyncDevice);
-           std::cout << "Sending Barrier" << std::endl;
-
-           if (temp->getSockStream()->availableBytes() > 0)
-           {
-               std::cout << "ERROR: RECEIVING Bytes on socket: " << temp->getSockStream()->availableBytes() << std::endl;
-               vprASSERT(1==2);
-           }
-           
-
-           temp->sendBarrier();
-           std::cout << "Receiving Barrier" << std::endl;
-           temp->receiveBarrier();
-       } */
-       
+      if ( (mSyncServer != NULL) || mIsMaster)
+      {
+         vpr::Uint8 SYNC_SIGNAL = 'G';      
+         vpr::Uint8 temp;
+         vpr::Uint32 bytes_read;
+         const vpr::Interval read_timeout(5,vpr::Interval::Sec);
+   
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, in loop" 
+            << std::endl << vprDEBUG_FLUSH;
+         
+         if (mIsMaster)
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the master so now reading!" 
+               << std::endl << vprDEBUG_FLUSH;
+            for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
+                 i < this->mSyncClients.end();i++)
+            {
+               (*i)->recv(&temp , 1, bytes_read,read_timeout);
+               vprASSERT(1==bytes_read && "Master sync receive timeout");
+            }
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the master so now sending!" 
+               << std::endl << vprDEBUG_FLUSH;
+            for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
+                 i < this->mSyncClients.end();i++)
+            {
+               (*i)->send(&SYNC_SIGNAL , 1, bytes_read);
+            }
+   
+         }
+         else
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the slave so now sending!" 
+               << std::endl << vprDEBUG_FLUSH;
+            mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the slave so now reading!" 
+               << std::endl << vprDEBUG_FLUSH;
+            mSyncServer->recv(&temp , 1, bytes_read,read_timeout);
+            vprASSERT(1==bytes_read && "Slave sync receive timeout");
+         }
+      }
    }
    
    
