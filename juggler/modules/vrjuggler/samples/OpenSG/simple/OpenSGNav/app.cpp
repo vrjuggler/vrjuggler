@@ -31,12 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/Kernel/Kernel.h>
-#include <OpenSGNav.h>
+#include <OpenSGViewer.h>
 
 int main(int argc, char* argv[])
 {
     vrj::Kernel* kernel = vrj::Kernel::instance();
-    OpenSGNav* application = new OpenSGNav(kernel);
+    OpenSGViewer* application = new OpenSGViewer(kernel);
 
     if (argc <= 2)
     {
