@@ -165,7 +165,7 @@ public:
    virtual void init()
    {
       //vjDEBUG(vjDBG_ALL, 1) << "simplePfNavApp::init\n" << vjDEBUG_FLUSH;
-      vjProjection::setNearFar( 0.4f, 200000 );
+      /* vjProjection::setNearFar( 0.4f, 200000 ); XXXX: */
 
       mStats.setToggleButton("VJButton5");
       mNavCycleButton.init(std::string("VJButton3"));
@@ -355,13 +355,16 @@ public:  // Configure the application
    {
       vjASSERT(index < mNavigators.size());
 
-      // Copy cur position to new navigator
-      mNavigators[new_index]->setCurPos(mNavigators[mCurNavIndex]->getCurPos());
+      if(new_index != mCurNavIndex)
+      {
+            // Copy cur position to new navigator
+         mNavigators[new_index]->setCurPos(mNavigators[mCurNavIndex]->getCurPos());
 
-      // Switch em
-      mCurNavIndex = new_index;
-      mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
-      vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: " << clrSetNORM(clrGREEN) << mNavigators[mCurNavIndex]->getName() << clrRESET << endl << vjDEBUG_FLUSH;
+         // Switch em
+         mCurNavIndex = new_index;
+         mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
+         vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: " << clrSetNORM(clrGREEN) << mNavigators[mCurNavIndex]->getName() << clrRESET << endl << vjDEBUG_FLUSH;
+      }
    }
 
    void enableStats() { mUseStats = true;}
