@@ -37,12 +37,15 @@ static tweek::SubjectManager_var chooseSubjectManager(tweek::CorbaService& corba
          if ( ! (*cur_mgr)->_non_existent() )
          {
             std::string response;
+            const std::string proceed("y");
 
             tweek::SubjectManager::SubjectManagerInfoList_var mgr_info =
                (*cur_mgr)->getInfo();
 
             std::cout << "\nSubject Manager information:" << std::endl;
 
+            // Loop over the information items and print each key/value pair
+            // to the screen.
             for ( CORBA::ULong i = 0; i < mgr_info->length(); ++i )
             {
                std::cout << "\t" << mgr_info[i].key  << " = "
@@ -52,7 +55,7 @@ static tweek::SubjectManager_var chooseSubjectManager(tweek::CorbaService& corba
             std::cout << "Use this Subject Manager (y/n)? ";
             std::cin >> response;
 
-            if ( response == std::string("y") )
+            if ( proceed == response )
             {
                subj_mgr = *cur_mgr;
                break;
