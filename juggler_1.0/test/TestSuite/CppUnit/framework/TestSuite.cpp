@@ -1,5 +1,3 @@
-
-
 #include "TestSuite.h"
 #include "TestResult.h"
 
@@ -44,6 +42,3 @@ int TestSuite::countTestCases ()
     return count;
 
 }
-
-
-

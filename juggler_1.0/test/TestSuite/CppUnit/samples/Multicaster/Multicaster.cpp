@@ -1,4 +1,3 @@
-
 #include "Multicaster.h"
 
 bool Multicaster::subscribe (MulticastObserver *observer, std::string address)

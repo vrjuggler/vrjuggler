@@ -1,5 +1,3 @@
-
-
 #ifndef MULTICASTERTEST_H
 #define MULTICASTERTEST_H
 

@@ -1,22 +1,3 @@
-
-#ifndef CPPUNIT_TESTRESULT_H
-#define CPPUNIT_TESTRESULT_H
-
-#include <vector>
-
-#ifndef CPPUNIT_GUARDS_H
-#include "Guards.h"
-#endif
-
-#ifndef CPPUNIT_TESTFAILURE_H
-#include "TestFailure.h"
-#endif
-
-
-class CppUnitException;
-class Test;
-
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -48,6 +29,24 @@ class Test;
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPPUNIT_TESTRESULT_H
+#define CPPUNIT_TESTRESULT_H
+
+#include <vector>
+
+#ifndef CPPUNIT_GUARDS_H
+#include "Guards.h"
+#endif
+
+#ifndef CPPUNIT_TESTFAILURE_H
+#include "TestFailure.h"
+#endif
+
+
+class CppUnitException;
+class Test;
+
 
 class TestResult
 {
@@ -183,6 +182,3 @@ inline void TestResult::setSynchronizationObject (SynchronizationObject *syncObj
 
 
 #endif
-
-
-

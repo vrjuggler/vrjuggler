@@ -1,4 +1,3 @@
-
 #ifndef CPP_UINT_TESTSETUP_H
 #define CPP_UINT_TESTSETUP_H
 
@@ -33,4 +32,3 @@ inline TestSetup::run (TestResult *result)
 { setUp (); TestDecorator::run (result); tearDown (); }
 
 #endif
-

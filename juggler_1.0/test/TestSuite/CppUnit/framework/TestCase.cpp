@@ -1,5 +1,3 @@
-
-
 #include <stdexcept>
 #include <math.h>
 
@@ -111,5 +109,3 @@ std::string TestCase::notEqualsMessage (double expected, double actual)
 { 
     return "expected: " + estring (expected) + " but was: " + estring (actual); 
 }
-
-

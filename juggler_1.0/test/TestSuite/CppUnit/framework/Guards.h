@@ -1,5 +1,3 @@
-
-
 #ifndef CPPUNIT_GUARDS_H
 #define CPPUNIT_GUARDS_H
 
@@ -10,4 +8,3 @@ private: \
     className& operator= (const className& other); 
 
 #endif
-

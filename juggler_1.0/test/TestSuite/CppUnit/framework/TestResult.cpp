@@ -1,5 +1,3 @@
-
-
 #include "TestResult.h"
 
 // Destroys a test result
@@ -15,4 +13,3 @@ TestResult::~TestResult ()
 
     delete m_syncObject;
 }
-

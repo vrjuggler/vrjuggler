@@ -1,25 +1,3 @@
-
-#ifndef CPPUNIT_TEXTTESTRESULT_H
-#define CPPUNIT_TEXTTESTRESULT_H
-
-#include <iostream>
-#include "TestResult.h"
-
-
-class TextTestResult : public TestResult
-{
-public:
-    virtual void        addError      (Test *test, CppUnitException *e);
-    virtual void        addFailure    (Test *test, CppUnitException *e);
-    virtual void        startTest     (Test *test);
-    virtual void        print         (std::ostream& stream);
-    virtual void        printErrors   (std::ostream& stream);
-    virtual void        printFailures (std::ostream& stream);
-    virtual void        printHeader   (std::ostream& stream);
-
-};
-
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -51,10 +29,30 @@ public:
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPPUNIT_TEXTTESTRESULT_H
+#define CPPUNIT_TEXTTESTRESULT_H
+
+#include <iostream>
+#include "TestResult.h"
+
+
+class TextTestResult : public TestResult
+{
+public:
+    virtual void        addError      (Test *test, CppUnitException *e);
+    virtual void        addFailure    (Test *test, CppUnitException *e);
+    virtual void        startTest     (Test *test);
+    virtual void        print         (std::ostream& stream);
+    virtual void        printErrors   (std::ostream& stream);
+    virtual void        printFailures (std::ostream& stream);
+    virtual void        printHeader   (std::ostream& stream);
+
+};
+
+
 inline std::ostream& operator<< (std::ostream& stream, TextTestResult& result)
 { result.print (stream); return stream; }
 
 
 #endif
-
-

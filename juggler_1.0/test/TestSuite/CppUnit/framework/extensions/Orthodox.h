@@ -1,11 +1,3 @@
-
-#ifndef CPPUNIT_ORTHODOX_H
-#define CPPUNIT_ORTHODOX_H
-
-#ifndef CPPUNIT_TESTCASE_H
-#include "TestCase.h"
-#endif
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -37,6 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPPUNIT_ORTHODOX_H
+#define CPPUNIT_ORTHODOX_H
+
+#ifndef CPPUNIT_TESTCASE_H
+#include "TestCase.h"
+#endif
 
 
 template <class ClassUnderTest> class Orthodox : public TestCase
