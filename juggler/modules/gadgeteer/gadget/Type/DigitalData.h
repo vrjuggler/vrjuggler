@@ -36,16 +36,21 @@
 
 #include <gadget/Type/InputData.h>
 
-namespace gadget {
+namespace gadget 
+{
 
 /** InputData subclass for positional data. */
-class GADGET_CLASS_API DigitalData: public InputData {
-
+class GADGET_CLASS_API DigitalData: public InputData 
+{
 public:
 
     /** Constructor. */
     DigitalData (): InputData()
     { mDigitalData = 0; }
+
+    DigitalData(const int d)
+      : InputData(), mDigitalData(d)
+    {;}
 
 
     int getDigital() const

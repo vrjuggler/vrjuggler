@@ -78,7 +78,7 @@ public:
    virtual void updateData();
 
    /// Returns time of last update.
-   vpr::Interval getTimeStamp()
+   vpr::Interval getTimeStamp() const
    {
       return mPositionData.getTime();
    }
@@ -91,7 +91,7 @@ public:
     * @return  the position of the device as a matrix
     * @example getData(3.28f) will return a matrix in feet
     */
-   gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet );
+   gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet ) const;
    
    /** Gets the actual PositionData. */
     PositionData* getPositionData()
@@ -100,7 +100,7 @@ public:
     }
 
    /// Returns this device's subunit number.
-   int getUnit()
+   int getUnit() const
    { return mUnitNum; }
 
    /// Return the Position pointer held by this proxy.
@@ -112,7 +112,8 @@ public:
          return NULL;
    }
 
-   static std::string getChunkType() { return "PosProxy"; }
+   static std::string getChunkType() 
+   { return "PosProxy"; }
 
    bool config(jccl::ConfigChunkPtr chunk);
 

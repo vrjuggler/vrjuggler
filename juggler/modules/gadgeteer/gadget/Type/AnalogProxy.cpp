@@ -48,7 +48,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    if(!base_config)
       return false;
 
-   m_unitNum = chunk->getProperty<int>("unit");
+   mUnitNum = chunk->getProperty<int>("unit");
    mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();     // Refresh the device now that we have something to point at

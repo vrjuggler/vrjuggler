@@ -48,7 +48,7 @@ public:
     PositionData (): InputData()
     {;}
 
-    gmtl::Matrix44f getPosition()
+    gmtl::Matrix44f getPosition() const
     { return mPosData; }
 
     void setPosition(gmtl::Matrix44f posMatrix)

@@ -51,7 +51,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       return false;
    }
 
-   m_unitNum = chunk->getProperty<int>("unit");
+   mUnitNum = chunk->getProperty<int>("unit");
    mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();
@@ -65,37 +65,37 @@ void DigitalProxy::updateData()
 
    if (!isStupified())
    {
-      int old_state = m_data.getDigital();
-      m_data = mTypedDevice->getDigitalData(m_unitNum);
-      int new_state = m_data.getDigital();
+      int old_state = mData.getDigital();
+      mData = mTypedDevice->getDigitalData(mUnitNum);
+      int new_state = mData.getDigital();
 
       if (Digital::OFF == old_state)
       {
          if (new_state)     // Button now pressed
-            m_data = Digital::TOGGLE_ON;
+            mData = Digital::TOGGLE_ON;
          else              // Button now released
-            m_data = Digital::OFF;
+            mData = Digital::OFF;
       }
       else if (Digital::ON == old_state)
       {
          if (new_state)     // Button now pressed
-            m_data = Digital::ON;
+            mData = Digital::ON;
          else              // Button now released
-            m_data = Digital::TOGGLE_OFF;
+            mData = Digital::TOGGLE_OFF;
       }
       else if (Digital::TOGGLE_ON == old_state)
       {
          if (new_state)     // Button now pressed
-            m_data = Digital::ON;
+            mData = Digital::ON;
          else              // Button now released
-            m_data = Digital::TOGGLE_OFF;
+            mData = Digital::TOGGLE_OFF;
       }
       else if (Digital::TOGGLE_OFF == old_state)
       {
          if (new_state)     // Button now pressed
-            m_data = Digital::TOGGLE_ON;
+            mData = Digital::TOGGLE_ON;
          else              // Button now released
-            m_data = Digital::OFF;
+            mData = Digital::OFF;
       }
    }
 }

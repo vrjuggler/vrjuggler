@@ -107,14 +107,15 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 }
 
 // Deprecated, don't use
-gmtl::Matrix44f PositionProxy::getData(float scaleFactor)
+gmtl::Matrix44f PositionProxy::getData(float scaleFactor) const
 {
    gmtl::Matrix44f ret_mat;
 
    if(mStupified)
    {
-      gmtl::identity(mPositionData.mPosData);
-      ret_mat = mPositionData.mPosData;
+      //gmtl::identity(mPositionData.mPosData);
+      //ret_mat = mPositionData.mPosData;
+      gmtl::identity(ret_mat);
    }
    else if(gmtl::Math::isEqual(scaleFactor, 1.0f, 0.01f))
    {
