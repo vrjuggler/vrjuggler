@@ -64,14 +64,14 @@ public class CorbaService
 
    public void init (String[] args) throws SystemException
    {
-      m_orb = ORB.init(args, null);
-      m_orb_thread = new OrbThread(m_orb);
-      m_orb_thread.start();
+      mORB = ORB.init(args, null);
+      mOrbThread = new OrbThread(mORB);
+      mOrbThread.start();
 
       try
       {
-         m_root_poa = (POA) m_orb.resolve_initial_references("RootPOA");
-         m_root_poa.the_POAManager().activate();
+         mRootPoa = (POA) mORB.resolve_initial_references("RootPOA");
+         mRootPoa.the_POAManager().activate();
       }
       catch (org.omg.CORBA.ORBPackage.InvalidName name_ex)
       {
@@ -88,7 +88,7 @@ public class CorbaService
       {
          org.omg.CORBA.Object init_ref = null;
 
-         init_ref    = m_orb.string_to_object(nameServiceURI);
+         init_ref    = mORB.string_to_object(nameServiceURI);
          rootContext = NamingContextHelper.narrow(init_ref);
 
          if ( rootContext != null )
@@ -127,12 +127,12 @@ public class CorbaService
     */
    public void shutdown (boolean wait_for_completion)
    {
-      if ( m_orb_thread != null && m_orb != null )
+      if ( mOrbThread != null && mORB != null )
       {
-         m_root_poa.destroy(true, wait_for_completion);
-         m_orb.shutdown(wait_for_completion);
-         m_orb        = null;
-         m_orb_thread = null;
+         mRootPoa.destroy(true, wait_for_completion);
+         mORB.shutdown(wait_for_completion);
+         mORB       = null;
+         mOrbThread = null;
       }
    }
 
@@ -193,7 +193,7 @@ public class CorbaService
       // Get object reference from the servant.
       try
       {
-         obj_id = m_root_poa.activate_object(servant);
+         obj_id = mRootPoa.activate_object(servant);
       }
       catch (ServantAlreadyActive ex)
       {
@@ -221,7 +221,7 @@ public class CorbaService
          // Deactivate the identified object within the root POA.
          try
          {
-            m_root_poa.deactivate_object(servant_id);
+            mRootPoa.deactivate_object(servant_id);
          }
          catch (ObjectNotActive ex)
          {
@@ -245,17 +245,17 @@ public class CorbaService
    {
       public OrbThread (ORB orb)
       {
-         m_orb = orb;
+         mORB = orb;
       }
 
       public void run ()
       {
          System.out.println("ORB thread starting");
-         m_orb.run();
+         mORB.run();
          System.out.println("ORB thread exiting");
       }
 
-      private ORB m_orb = null;
+      private ORB mORB = null;
    }
 
    private String nameServiceHost = null;
@@ -264,10 +264,10 @@ public class CorbaService
 
    private String namingSubcontext = null;
 
-   private ORB           m_orb        = null;
-   private POA           m_root_poa   = null;
+   private ORB           mORB         = null;
+   private POA           mRootPoa     = null;
    private NamingContext rootContext  = null;
    private NamingContext localContext = null;
 
-   private OrbThread m_orb_thread = null;
+   private OrbThread mOrbThread = null;
 }
