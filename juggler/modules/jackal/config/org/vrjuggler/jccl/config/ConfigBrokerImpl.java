@@ -808,7 +808,7 @@ public class ConfigBrokerImpl
          {
             dialog.pack();
             dialog.setLocationRelativeTo(null);
-            dialog.show();
+            dialog.setVisible(true);
          }
       }
 
@@ -860,7 +860,7 @@ public class ConfigBrokerImpl
                }
             }
 
-            dialog.hide();
+            dialog.setVisible(false);
          }
       }
 

@@ -158,7 +158,7 @@ public class ConfigDefinitionChooser
       // Size and position the dialog
       mDialog.pack();
       mDialog.setLocationRelativeTo(parent);
-      mDialog.show();
+      mDialog.setVisible(true);
 
       return mReturnValue;
    }

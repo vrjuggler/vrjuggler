@@ -134,7 +134,7 @@ public class ResourceChooser
       // Size and position the dialog
       dialog.pack();
       dialog.setLocationRelativeTo(parent);
-      dialog.show();
+      dialog.setVisible(true);
 
       return returnValue;
    }
