@@ -240,6 +240,10 @@ void cubesApp::myDraw(vrj::User* user)
       glMultMatrixf(nav_matrix.getFloatPtr());
 
 
+      // dereferencing a GlContextData is expensive, so we'll do it once
+      // and store the reference.
+      ContextData& cd = *mDlData;
+      
       //---- Main box loop -----///
       for (float x=0;x<1;x += INCR)
          for (float y=0;y<1; y += INCR)
@@ -247,8 +251,8 @@ void cubesApp::myDraw(vrj::User* user)
             {
                glColor3f(x, y, z);     // Set the Color
                glPushMatrix();
-                  glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
-                  drawCube();
+               glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
+               glCallList (cd.dlIndex);
                glPopMatrix();
             }
 
