@@ -144,7 +144,7 @@ public: // -- Query functions --- //
     */
    jccl::ConfigElementPtr getElementNamed(const std::string& elementName);
 
-   /** Checks if the named ConfigElement is in the active configuration.
+   /** Checks if the named conifg element is in the active configuration.
     *  This locks the active list to do processing.
     *
     *  @note This should not be used often. Use this at your own risk.
@@ -156,7 +156,7 @@ public: // -- Query functions --- //
     *
     *  @note This should not be used often. Use this at your own risk.
     */
-   bool isElementTypeInActiveList(const std::string& elementName);
+   bool isElementTypeInActiveList(const std::string& elementType);
 
    /** Is there a element of this type in the pending list?
     *  This locks the pending list to do processing.
