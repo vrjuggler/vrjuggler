@@ -62,8 +62,5 @@ else
 endif
 endif	# ifndef NO_JAVA
 
-extensions-gui-links:
-	@$(MAKE) instlinks="$(instlinks)" links
-
 extensions-gui-install:
 	@$(MAKE) extensions-install

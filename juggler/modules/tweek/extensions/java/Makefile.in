@@ -139,27 +139,6 @@ docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir) \
           -classpath $(CLASSPATH) $(DOC_PKGS)
 
-links:
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
-ifneq ($(JARS), )
-	cd $(instlinks)/bin && \
-          for jar in $(JARS) ; \
-          do \
-              rm $$jar ; \
-              $(LN_S) $(topdir)/extensions/java/$$jar ./ ; \
-          done
-endif
-ifneq ($(BEANS), )
-	cd $(instlinks)/bin/beans && \
-          for bean in $(BEANS) ; \
-          do \
-              rm -f $$bean.jar ; \
-              rm -f $$bean.xml ; \
-              $(LN_S) $(topdir)/extensions/java/$$bean.jar ./ ; \
-              $(LN_S) $(TWEEKROOT_ABS)/extensions/java/$$bean.xml ./ ; \
-          done
-endif
-
 # This cannot be named 'install' because Doozer++ already defines that.
 extensions-install:
 	@echo "------------------------------------------------"
