@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-01-2002 patrickh  Added a workaround for a bug in OSG 0.8.45 that causes
+                      problems with stereo rendering.  This change was
+                      submitted by Aaron Bryden <abryden@vrac.iastate.edu>.
 Jun-21-2002 jahare    Fixed an out-of-memory error in the method
             patrickh  vjDeviceInterface::removeDevInterface().  It is now
                       implemented correctly.
