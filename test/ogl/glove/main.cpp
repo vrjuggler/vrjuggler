@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 
    while(1)
    {
-      sched_yield();
+       usleep (250000);
+       //sched_yield();
    }
 }
