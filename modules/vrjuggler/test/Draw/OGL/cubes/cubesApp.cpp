@@ -181,19 +181,48 @@ void cubesApp::contextInit()
    vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
    mDlData->firstTime = false;
 
-   int num_dls = rand()%50;
-   glGenLists(num_dls);        // Generate some random lists.  NOTE: Needed for testing only
+   // Generate some random lists.  NOTE: Needed for testing/debugging only!
+   mDlDebugData->maxIndex = rand()%50;
+   mDlDebugData->dlIndex = glGenLists(mDlDebugData->maxIndex);
 
-   mDlData->cubeDLIndex = glGenLists(1);
-   glNewList(mDlData->cubeDLIndex, GL_COMPILE);
-	drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
-   glEndList();
+   // Generate the display list to be used for the cube faces.  This is the
+   // important one.
+   mDlData->dlIndex = glGenLists(1);
 
-   vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->cubeDLIndex << std::endl
-                        << vjDEBUG_FLUSH;
-   std::cerr << "created displays lists:" << num_dls+1 << std::endl;
+   // Verify that we got a valid display list index.
+   if ( glIsList(mDlData->dlIndex) == GL_FALSE ) {
+       vjASSERT(false && "glGenLists() returned an invalid display list!");
+   }
+   else {
+       glNewList(mDlData->dlIndex, GL_COMPILE);
+          drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
+       glEndList();
 
-   initGLState();
+       vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->dlIndex
+                            << std::endl << vjDEBUG_FLUSH;
+       std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
+                 << std::endl;
+
+       initGLState();
+    }
+}
+
+//: Called immediately upon closing an OpenGL context 
+// (called for every window that is closed)
+// put your opengl deallocation here...
+void cubesApp::contextClose()
+{
+   // Deallocate the random display lists used for debugging.
+   if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE ) {
+      vjDEBUG(vjDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
+                            << " display lists\n" << vjDEBUG_FLUSH;
+      glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
+   }
+
+   // Deallocate the cube face geometry data from the video hardware.
+   if ( glIsList(mDlData->dlIndex) == GL_TRUE ) {
+      glDeleteLists(mDlData->dlIndex, 1);
+   }
 }
 
 //----------------------------------------------
