@@ -246,7 +246,7 @@ void simplePfNavApp::preFrame()
       if (0 == (mStatusMessageEmitCount++ % 60))
       {
          gmtl::Vec3f cur_pos;
-         gmtl::getTrans(mat, cur_pos[0], cur_pos[1], cur_pos[2]);
+         gmtl::setTrans( cur_pos[0], cur_pos[1], cur_pos[2], mat );
          gmtl::Quatf quat;
          gmtl::set(quat, mat);
 
@@ -270,8 +270,8 @@ void simplePfNavApp::preFrame()
          if (0 == (mStatusMessageEmitCount++ % 60))
          {
             gmtl::Vec3f cur_pos;
-            gmtl::getTrans( mNavigationDCS->getNavigator()->getCurPos(),
-                            cur_pos[0], cur_pos[1], cur_pos[2] );
+            gmtl::setTrans( cur_pos[0], cur_pos[1], cur_pos[2], 
+                            mNavigationDCS->getNavigator()->getCurPos() );
             gmtl::Quatf quat;
             gmtl::set( quat, mNavigationDCS->getNavigator()->getCurPos() );
 

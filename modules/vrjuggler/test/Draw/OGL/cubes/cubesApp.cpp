@@ -64,8 +64,8 @@ void UserData::updateNavigation()
 
    gmtl::Matrix44f* wand_matrix;
    wand_matrix = mWand->getData();
-   gmtl::getRot(*wand_matrix, xyzAngles[0],  xyzAngles[1], xyzAngles[2],
-                gmtl::XYZ);
+   gmtl::setRot( xyzAngles[0], xyzAngles[1], xyzAngles[2], 
+                 gmtl::XYZ, *wand_matrix );
 //   wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
@@ -90,8 +90,8 @@ void UserData::updateNavigation()
 
    vprDEBUG(vprDBG_ALL,6) << "Transform:\n" << transform << std::endl
                         << vprDEBUG_FLUSH;
-   gmtl::getRot(transform, xyzAngles[0],  xyzAngles[1], xyzAngles[2],
-                gmtl::XYZ);
+   gmtl::setRot(xyzAngles[0],  xyzAngles[1], xyzAngles[2],
+                gmtl::XYZ, transform );
    vprDEBUG(vprDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
                         << vprDEBUG_FLUSH;
 
@@ -141,9 +141,9 @@ void UserData::updateNavigation()
 
 //   local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 //   local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-   gmtl::getRot(local_xform, xyzAngles[0], xyzAngles[1], xyzAngles[2],
-                gmtl::XYZ);
-   gmtl::getTrans(local_xform, xyzTrans[0], xyzTrans[1], xyzTrans[2]);
+   gmtl::setRot(xyzAngles[0], xyzAngles[1], xyzAngles[2],
+                gmtl::XYZ, local_xform );
+   gmtl::setTrans(local_xform, xyzTrans[0], xyzTrans[1], xyzTrans[2]);
    vprDEBUG(vprDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
                         << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,6) << "Transform Trans: " << xyzTrans << std::endl
