@@ -67,7 +67,7 @@ namespace gadget
 {
 
 class GADGET_CLASS_API EventWindowWin32
-#ifdef _MSC_VER < 1310  // 1310 == VC++ 7.1
+#if _MSC_VER < 1310  // 1310 == VC++ 7.1
    : public Input, public EventWindow
 #else
    : public InputMixer<Input, EventWindow>
