@@ -67,15 +67,15 @@ filter.d2.state = off
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=353,560,353,510:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=30,300,250,180,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=410,560,186,254,1:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=450,560,450,510:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=215,300,215,270:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=310,300,180,210,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=220,560,176,238,1:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=350,300,350,270:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=150,30,240,240,0:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=335,530,335,490:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=30,290,230,150,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=410,530,200,238,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=460,530,460,490:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=205,290,205,240:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=280,290,230,200,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=220,530,170,222,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=340,290,340,240:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=150,30,250,210,0:oigroup>
 
 */
 class __positions {
