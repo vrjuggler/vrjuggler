@@ -170,6 +170,18 @@ public:
     */
    bool addDevice(Input* devPtr);
 
+   /**
+    * Adds a remote device to InputManager.
+    * Adds the devPtr to the device table.  devPtr should not already be in
+    * the array.
+    *
+    * @modifies self
+    * @post mDevTable' = mDevTable \/ devPtr
+    *
+    * @return false if device addition fails.
+    */
+   bool addRemoteDevice(Input* devPtr, const std::string& device_name);
+
 private:
    /**
     * Removes a device from the InputManager.

@@ -94,7 +94,7 @@ namespace cluster
          case cluster::Header::RIM_APPDATA_REQ:
          {
             ApplicationDataRequest* temp_request = dynamic_cast<ApplicationDataRequest*>(packet);
-
+            vprASSERT(NULL != temp_request && "Dynamic cast failed!");
             ApplicationDataServer* temp_app_data_server = getApplicationDataServer(temp_request->getId());
             ApplicationDataAck* temp_ack = NULL;
             if (temp_app_data_server != NULL)
@@ -114,6 +114,7 @@ namespace cluster
          case cluster::Header::RIM_APPDATA_ACK:
          {
             ApplicationDataAck* temp_ack = dynamic_cast<ApplicationDataAck*>(packet);
+            vprASSERT(NULL != temp_ack && "Dynamic cast failed!");
             if (temp_ack->getAck())
             {
                removePendingApplicationDataRequest(temp_ack->getId());
