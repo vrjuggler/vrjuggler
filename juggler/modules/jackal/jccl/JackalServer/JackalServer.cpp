@@ -50,7 +50,7 @@ bool vjEnvironmentManager::isAccepting() {
 
 
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *v) {
-    vjDEBUG (vjDBG_ALL,3) << "EM adding perf data buffer " << v->getName() << "\n"
+    vjDEBUG (vjDBG_ENV_MGR, 3) << "EM adding perf data buffer " << v->getName() << "\n"
 		<< vjDEBUG_FLUSH;
     perf_buffers.push_back(v);
     activatePerfBuffers();
@@ -118,13 +118,11 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 		killConnections();
 	}
 	setPerformanceTarget(getConnect(s));
-
+	
 	return true;
     }
     else if (!vjstrcasecmp (s, "PerfMeasure")) {
 	current_perf_config = new vjConfigChunk (*chunk);
-	//cout << "setting perf config chunk... chunk we read is:\n" << *chunk;
-	//cout << "we end up with:\n" << *current_perf_config << "right?" << endl;
 	activatePerfBuffers();
 	return true;
     }
@@ -133,8 +131,10 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	// however I seem to have a chicken/egg problem.
 	// so the kludge we'll do now is to not directly add a chunk that's
 	// of type VJC_INTERACTIVE. sigh.
+	// Unfortunately, this means that for other cases (such as attaching
+	// to a named pipe) we're still broken
 	if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
-	    vjDEBUG (vjDBG_ENV_MGR, 0) << "adding fileconnect\n"
+	    vjDEBUG (vjDBG_ENV_MGR, 1) << "adding fileconnect\n"
 				       << vjDEBUG_FLUSH;
 	    // it's new to us
 	    vjConnect* vn = new vjConnect (chunk);
@@ -143,7 +143,8 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	}
 	return true;
     }
-    vjDEBUG(vjDBG_ALL,1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl
+    // shouldn't ever happen
+    vjDEBUG(vjDBG_ENV_MGR,3) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl
 	       << vjDEBUG_FLUSH;
     return false;
 }
@@ -244,12 +245,12 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
     int len;
     vjConnect* connection;
 
-    vjDEBUG(vjDBG_ALL,3) << "vjEnvironmentManager network server running.\n"
+    vjDEBUG(vjDBG_ENV_MGR,3) << "vjEnvironmentManager started control loop.\n"
 	       << vjDEBUG_FLUSH;
 
     /* start listening for connections */
     if (listen (listen_socket, 0)) {
-	vjDEBUG(vjDBG_ALL,1) << "ERROR: vjEnvironmentManager socket listen "
+	vjDEBUG(vjDBG_ALL,0) << "ERROR: vjEnvironmentManager socket listen "
 		   << "failed\n" << vjDEBUG_FLUSH;
 	return;
     }
@@ -334,7 +335,7 @@ bool vjEnvironmentManager::acceptConnections() {
 
     if (bind ( listen_socket, (sockaddr*)&sockaddress,
 	       sizeof (struct sockaddr_in))) {
-	vjDEBUG(vjDBG_ALL,0) << "vjEnvironmentManager couldn't open socket\n"
+	vjDEBUG(vjDBG_ALL,0) << "ERROR: vjEnvironmentManager couldn't open socket\n"
 		   << vjDEBUG_FLUSH;
 	return false;
     }

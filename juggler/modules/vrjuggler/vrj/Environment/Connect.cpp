@@ -20,7 +20,7 @@
 
 vjConnect::vjConnect(int s, const std::string& _name,
 		     vjConnectMode _mode): output(), commands_mutex() {
-    vjDEBUG(vjDBG_ALL,2) << "EM: Creating vjConnect to file or socket\n"
+    vjDEBUG(vjDBG_ENV_MGR,2) << "EM: Creating vjConnect to file or socket\n"
 	       << vjDEBUG_FLUSH;
     fd = s;
     mode = _mode;
@@ -41,8 +41,6 @@ vjConnect::vjConnect(int s, const std::string& _name,
 	ch->setProperty ("Mode", VJC_INTERACTIVE);
 	ch->setProperty ("filename", "Socket/Pipe");
 	ch->setProperty ("Enabled", true);
-    cout << "adding socket vjconnect with new chunk " 
-	 << *ch << endl;
 	db.addChunk(ch);
 	vjKernel::instance()->configAdd(&db);
     }
@@ -73,7 +71,7 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
 	break;
     }
     if (fd == -1) {
-	vjDEBUG(vjDBG_ENV_MGR,0) << "ERROR: file open failed for \"" << filename 
+	vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename 
 			     << "\"\n" << vjDEBUG_FLUSH;
     }
     output.attach (fd);
@@ -81,7 +79,6 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
     // logging information to output file...
     if (mode == VJC_OUTPUT)
 	output << "VR Juggler FileConnect output " << name << endl;
-    //vjDEBUG(0) << "Created vjConnect for " << name << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -107,7 +104,6 @@ bool vjConnect::startProcess() {
 
     bool success = true;
 
-    //vjDEBUG(0) << "starting vjConnect process for " << name << endl << vjDEBUG_FLUSH;
     shutdown = false;
     // Create a new thread to handle the control
 
@@ -194,56 +190,31 @@ void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
 
 //----------------- PRIVATE utility functions ---------------------------
 
-void vjConnect::readControlLoop(void* nullParam) {
-   /* this probably needs considerable revision */
- 
-
- //   pollfdstruct.fd = fd;
-//    pollfdstruct.events = POLLPRI | POLLIN;// | POLLHUP | POLLNVAL;
-//    //pollfdstruct.revents = 0;
-
-   vjDEBUG(vjDBG_ALL,2) << "vjConnect " << name << " started control loop.\n"
-   << vjDEBUG_FLUSH;
-
-   /* attach iostreams to socket */
+void vjConnect::readControlLoop(void* nullParam) { 
+   vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name 
+			    << " started read control loop.\n"
+			    << vjDEBUG_FLUSH;
    ifstream fin(fd);
-
 
    while (!shutdown) {
        if (fin.eof())
 	   break;
        readCommand (fin);
    }
-//        if (mode != VJC_OUTPUT) {
-// 	   pollfdstruct.events = POLLPRI | POLLIN;
-// 	   pollfdstruct.revents = 0;
-// 	   poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
-// 	   cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
-
-// 	   if (fin.eof() || (pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {
-// 	       vjDEBUG(vjDBG_ALL,0) << "vjConnect to file " << fd << " exiting\n"
-// 				    << vjDEBUG_FLUSH;
-// 	       break;
-// 	   }
-
-// 	   if ((pollfdstruct.revents & POLLIN) || (pollfdstruct.revents & POLLPRI)) {
-// 	       cout << "there is a message to read..." << endl;
-
-// 	       readCommand(fin);
-// 	   }
-// 	   //cout << "read" << endl;
-//        }
-//    }
 }
+
 
 
 void vjConnect::writeControlLoop(void* nullParam) {
    /* this probably needs considerable revision */
    vjCommand*  cmd;
-   struct pollfd pollfdstruct;
+
+   vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name 
+			    << " started write control loop.\n"
+			    << vjDEBUG_FLUSH;
 
    while (!shutdown) {
-       usleep (500000); // half a sec
+       usleep (500000); // half a sec - find a better way to do this...
 
        commands_mutex.acquire();
 
@@ -251,7 +222,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
 	   cmd = commands.front();
 	   commands.pop();
 	   cmd->call (output);
-	   vjDEBUG (vjDBG_ALL, 6) << "called EM command " << cmd->getName() << endl <<vjDEBUG_FLUSH;
+	   vjDEBUG (vjDBG_ENV_MGR, 5) << "called EM command " << cmd->getName() << endl <<vjDEBUG_FLUSH;
 	   delete cmd;
        }
 
@@ -284,12 +255,9 @@ void vjConnect::readCommand(ifstream& fin) {
    char*       s;
 
    if (!fin.get(rbuf,buflen,'\n'))
-   {
-      //vjDEBUG(0) << "Couldn't read command for connection " << name << endl
-      //	   << vjDEBUG_FLUSH;
-      return;
-   }
-   vjDEBUG(vjDBG_ALL,0) << "vjConnect:: read: '" << rbuf
+       return;
+
+   vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: read: '" << rbuf
 			<< "'.\n" << vjDEBUG_FLUSH;
    fin.get(c);
    if (c != '\n')
@@ -306,20 +274,18 @@ void vjConnect::readCommand(ifstream& fin) {
       if (!strcasecmp (s, "descriptions"))
       {
 	  vjChunkDescDB* db = vjChunkFactory::getChunkDescDB();
-	  //vjKernel::instance()->getInitialChunkDB()->getChunkDescDB();
-         //cout << "Sending descDB:\n" << *db << endl << flush;
-         sendDescDB (db);
+	  sendDescDB (db);
       }
       else if (!strcasecmp (s,"chunks"))
       {
-         vjConfigChunkDB* db = vjKernel::instance()->getChunkDB();
-         //cout << "Sending chunkdb:\n" << *db << endl << flush;
-         sendChunkDB (db, true);
+	  vjConfigChunkDB* db = vjKernel::instance()->getChunkDB();
+	  //cout << "Sending chunkdb:\n" << *db << endl << flush;
+	  sendChunkDB (db, true);
       }
       else
       {
-         vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received "
-	     "unknown GET " << s << endl << vjDEBUG_FLUSH;
+	  vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received "
+	      "unknown GET " << s << endl << vjDEBUG_FLUSH;
       }
    }
 
@@ -348,11 +314,10 @@ void vjConnect::readCommand(ifstream& fin) {
        //s = strtok (NULL, " \t\n");
       // chunks 'all' option disabled for now...
       //if (!strcasecmp (s, "all"))
-      //	chunkdb->removeAll();
-      //fin >> *chunkdb;
+      //	chunkdb->removeAll()
       vjConfigChunkDB newchunkdb;
       fin >> newchunkdb;
-      vjDEBUG(vjDBG_ALL,0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ENV_MGR,1) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
       // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
       vjKernel::instance()->configAdd(&newchunkdb);      // Add new chunks
    }
@@ -367,7 +332,7 @@ void vjConnect::readCommand(ifstream& fin) {
          {
             // BUG! - what if chunks exist in db using the desc we're removing?
             //cachedDescdb->remove(s);
-            vjDEBUG(vjDBG_ALL,0) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ENV_MGR,1) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
          }
       }
       else if (!strcasecmp (s, "chunks"))
@@ -382,7 +347,7 @@ void vjConnect::readCommand(ifstream& fin) {
 
       }
       else
-         vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect: Unknown remove type: "
+         vjDEBUG(vjDBG_ENV_MGR,1) << "Error: vjConnect: Unknown remove type: "
 			      << s << endl << vjDEBUG_FLUSH;
    }
 #if 0
@@ -414,7 +379,7 @@ void vjConnect::readCommand(ifstream& fin) {
 #endif
    else
    {
-      cerr << "Error: vjConnect:: Unknown command '"
-      << s << "'" << endl;
+      vjDEBUG(vjDBG_ALL,0) << "Error: vjConnect:: Unknown command '"
+			   << s << "'\n" << vjDEBUG_FLUSH;
    }
 }
