@@ -62,7 +62,7 @@ void trigger()
 void load()
 {
    FILE *fh = fopen("sample.wav", "rb");
-   fread( &buf_data[0], 1, buf_len, fh );
+   fread( buf_data, 1, buf_len, fh );
    fclose( fh );
    
    alGenBuffers( 1, &bufferID ); //AL_FORMAT_WAVE_EXT
@@ -87,6 +87,7 @@ void main()
    unload();
    shutdown();
    
+   
    printf( "2st startup (trigger... should hear sample.wav playing...)\n" );
    startup();
    load();
@@ -95,11 +96,12 @@ void main()
    unload();
    shutdown();
    
+   
    printf( "3nd startup (bad... trigger causes a click and no sound)\n" );
    startup();
    load();
    trigger();
-   sleep( 2 );
+   sleep( 10 );
    unload();
    shutdown();
 }
