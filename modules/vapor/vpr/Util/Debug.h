@@ -228,10 +228,13 @@ namespace vpr
       Debug(const Debug& d) {;}
       void operator= (const Debug& d) {;}
 
-   public:
       /** Initialize the system */
-      void init(const std::string filename = std::string(""));
+      void init();
 
+   public:
+
+      void setOutputFile(const std::string& output);
+      
       // Get the debug stream to use
       std::ostream& getStream(const vpr::DebugCategory& cat, const int level, const bool show_thread_info = true,
                               const bool use_indent = true, const int indentChange = 0,
