@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
             // then we are good to go.
             if ( ! CORBA::is_nil(subj) )
             {
-               StringObserverImpl* string_observer;
+               StringObserverImpl* string_observer(NULL);
                PortableServer::ObjectId_var observer_id;
 
                try
@@ -158,12 +158,6 @@ int main(int argc, char* argv[])
                         break;
                      }
                   }
-
-                  // We're done, so now we have to clean up after ourselves.
-                  // The order of operations here is important.
-                  string_observer->detach();
-                  corba_service.unregisterObject(observer_id);
-                  delete string_observer;
                }
                // XXX: Make this more specific.
                catch (...)
@@ -171,15 +165,15 @@ int main(int argc, char* argv[])
                   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                      << "Caught an unknown exception during object interaction!\n"
                      << vprDEBUG_FLUSH;
+               }
 
-                  // If the observer was constructed, then we need to do the
-                  // shutdown clean-up stuff.
-                  if ( NULL != string_observer )
-                  {
-                     string_observer->detach();
-                     corba_service.unregisterObject(observer_id);
-                     delete string_observer;
-                  }
+               // We're done, so now we have to clean up after ourselves.
+               // The order of operations here is important.
+               if ( NULL != string_observer )
+               {
+                  string_observer->detach();
+                  corba_service.unregisterObject(observer_id);
+                  delete string_observer;
                }
             }
          }
