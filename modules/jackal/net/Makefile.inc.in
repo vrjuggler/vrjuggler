@@ -60,8 +60,8 @@
 #
 #net-pkg-links:
 #	@$(MAKE) instlinks="$(instlinks)" links
-#
-#java-install:
+
+java-install:
 #	@$(MAKE) net-install
 #
 links:

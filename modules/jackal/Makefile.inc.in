@@ -275,6 +275,7 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
+	@$(MAKE) install-java
 	@$(MAKE) install-samples
 #	@$(MAKE) install-test
 #	@$(MAKE) install-tools
@@ -296,6 +297,11 @@ post-install-headers:
           $(topdir)/common/jccl/jcclDefines.h $(includedir)/jccl/
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/common/jccl/jcclParam.h $(includedir)/jccl/
+
+install-java:
+	for dir in $(SUBDIR) ; do					\
+            $(MAKE) -C $$dir java-install ;				\
+          done
 
 # Install the sample applications.
 install-samples:

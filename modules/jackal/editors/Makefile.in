@@ -104,20 +104,9 @@ override OBJDIR=.
 # Extra targets.
 # -----------------------------------------------------------------------------
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
-ifdef GLOBAL_BUILD
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
-ifneq ($(JARS), )
-	cp $(JARS) $(top_srcdir)/bin
-endif
-ifneq ($(BEANS), )
-	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
-endif
-endif
 
 jccl_editors.jar: $(JAVA_CLASSES)
-	$(JAR) cvf $@ \
-		$(EDITORS_DIR)/*.class
+	$(JAR) cvf $@ $(EDITORS_DIR)/*.class
 	cd $(srcdir) && $(JAR) uvf $(topdir)/editors/$@ \
 		$(EDITORS_DIR)/images/*.gif
 
@@ -134,16 +123,16 @@ ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/vjcontrol/$$jar $(bindir) ; \
+                $(topdir)/vjcontrol/$$jar $(bindir) || exit 1; \
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ; \
 	  do \
 		$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-		  $(topdir)/editors/$$bean.xml $(beandir) ; \
+		  $(top_srcdir)/editors/$$bean.xml $(beandir) || exit 1; \
 	  	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-		  $(topdir)/editors/$$bean.jar $(beandir) ; \
+		  $(topdir)/editors/$$bean.jar $(beandir) || exit 1; \
 	  done
 endif
 
