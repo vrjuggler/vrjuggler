@@ -286,6 +286,7 @@ world:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make world started $(BUILD_START)"
 	@echo "==============================================================="
+	@${MAKE} beforebuild
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
@@ -308,6 +309,7 @@ world-all-abi:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make world started on `LTIME=C date`"
 	@echo "==============================================================="
+	@${MAKE} beforebuild
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
@@ -344,6 +346,7 @@ release:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release started on `LTIME=C date`"
 	@echo "==============================================================="
+	@${MAKE} beforebuild
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
