@@ -54,6 +54,8 @@ public interface ConfigTokens
    public static final String embeddedchunk_TOKEN = "embeddedchunk";
    public static final String invalid_TOKEN       = "invalid";
 
+   public static final String version_TOKEN       = "version";
+
    public static final String true_TOKEN          = "true";
    public static final String false_TOKEN         = "false";
 
