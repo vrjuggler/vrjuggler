@@ -127,8 +127,9 @@ int vjConfigManager::scanForLostDependencies()
       if(!dep_mgr->depSatisfied(chunks[i]))      // We are not satisfied
       {
          vjDEBUGlg(vjDBG_ALL,1,false,true) << chunks[i]->getProperty("name")
-                                            << " type: " << (std::string)chunks[i]->getType()
-                                            << " has lost dependencies.\n" << vjDEBUG_FLUSH;
+                                            << " type: " << ((std::string)chunks[i]->getType()).c_str()
+                                            << " has lost dependencies.\n"
+                                            << vjDEBUG_FLUSH;
          
          num_lost_deps++;              // Keep a count of the number lost deps found
 

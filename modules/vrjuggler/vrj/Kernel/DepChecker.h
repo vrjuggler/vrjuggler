@@ -81,7 +81,7 @@ public:
    virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
    {
       vjDEBUG_BEGINlg(vjDBG_ALL,dbg_lvl,false,true) << "\n------------ Dependencies for: item: " << chunk->getProperty("name")
-                                                 << " type: " << (std::string)chunk->getType()
+                                                 << " type: " << ((std::string)chunk->getType()).c_str()
                                               << "------------\n" << vjDEBUG_FLUSH;
 
       vjConfigManager* cfg_mgr = vjConfigManager::instance();
@@ -92,7 +92,9 @@ public:
       // Check to see if they are loaded already
       for(unsigned int i=0;i<dependencies.size();i++)
       {         
-         vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,true) << i << ": " << dependencies[i] << " ==> " << vjDEBUG_FLUSH;
+         vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,true) << i << ": "
+                                                 << dependencies[i].c_str()
+                                                 << " ==> " << vjDEBUG_FLUSH;
          if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
          {
             vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,false) << "FAILED!!!\n" << vjDEBUG_FLUSH;
