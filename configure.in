@@ -666,7 +666,8 @@ if test "x${_enable_gl_api}" = "xyes" ; then
                 [ OPENGL_API="Y";
                   AC_DEFINE(VJ_API_OPENGL,) ],
                 AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***)),
-            AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***))
+            AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***),
+            -lGLU -lm -lX11 -lXext -lXt)
     fi
 
     dnl # Restore $CFLAGS and $CPPFLAGS now that we are done testing.
