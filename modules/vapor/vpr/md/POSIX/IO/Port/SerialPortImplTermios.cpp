@@ -231,12 +231,26 @@ SerialPortImpTermios::setTimeout (const Uint8 timeout) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getCharacterSize (Uint16& size) {
+SerialPortImpTermios::getCharacterSize (SerialTypes::CharacterSizeOption& size)
+{
     Status retval;
     struct termios term;
 
     if ( (retval = getAttrs(&term)).success() ) {
-        size = term.c_cflag & CSIZE;
+        switch (term.c_cflag & CSIZE) {
+          case CS5:
+            size = SerialTypes::CS_BITS_5;
+            break;
+          case CS6:
+            size = SerialTypes::CS_BITS_6;
+            break;
+          case CS7:
+            size = SerialTypes::CS_BITS_7;
+            break;
+          case CS8:
+            size = SerialTypes::CS_BITS_8;
+            break;
+        }
     }
 
     return retval;
@@ -245,7 +259,8 @@ SerialPortImpTermios::getCharacterSize (Uint16& size) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setCharacterSize (const Uint16 bpb) {
+SerialPortImpTermios::setCharacterSize (const SerialTypes::CharacterSizeOption bpb)
+{
     struct termios term;
     Status retval;
 
@@ -255,26 +270,20 @@ SerialPortImpTermios::setCharacterSize (const Uint16 bpb) {
         // Set the character size based on the given bits-per-byte value.
         switch (bpb) {
           // 5 bits/byte.
-          case 5:
+          case SerialTypes::CS_BITS_5:
             term.c_cflag |= CS5;
             break;
           // 6 bits/byte.
-          case 6:
+          case SerialTypes::CS_BITS_6:
             term.c_cflag |= CS6;
             break;
           // 7 bits/byte.
-          case 7:
+          case SerialTypes::CS_BITS_7:
             term.c_cflag |= CS7;
             break;
           // 8 bits/byte.
-          case 8:
+          case SerialTypes::CS_BITS_8:
             term.c_cflag |= CS8;
-            break;
-          // Unrecognized value!
-          default:
-            fprintf(stderr,
-                    "[vpr::SerialPortImpTermios] Could not set character size "
-                    " to %hu on port %s\n", bpb, m_name.c_str());
             break;
         }
 

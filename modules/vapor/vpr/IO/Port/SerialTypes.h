@@ -64,6 +64,13 @@ namespace SerialTypes {
                         // queue 
         IO_QUEUES       // Flush all data (combination of the above two)
     };
+
+    enum CharacterSizeOption {
+        CS_BITS_5 = 5,  // 5 bits per byte
+        CS_BITS_6 = 6,  // 6 bits per byte
+        CS_BITS_7 = 7,  // 7 bits per byte
+        CS_BITS_8 = 8   // 8 bits per byte
+    };
 };
 
 }; // End of namespace

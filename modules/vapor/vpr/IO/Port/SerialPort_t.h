@@ -279,14 +279,14 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getCharacterSize (vpr::Uint16& size) {
+    getCharacterSize (SerialTypes::CharacterSizeOption& size) {
         return m_sio_imp.getCharacterSize(size);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setCharacterSize (const vpr::Uint16 bpb) {
+    setCharacterSize (const SerialTypes::CharacterSizeOption bpb) {
         return m_sio_imp.setCharacterSize(bpb);
     }
 
