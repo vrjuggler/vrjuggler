@@ -1,7 +1,24 @@
 #!/bin/sh
 
-# -----------------------------------------------------------------------------
-# $Id$
+#
+#  File:	   $RCSfile$
+#  Date modified:  $Date$
+#  Version:	   $Revision$
+#
+#
+#                                 VR Juggler
+#                                     by
+#                               Allen Bierbaum
+#                              Christopher Just
+#                              Patrick Hartling
+#                             Carolina Cruz-Neira
+#                                Albert Baker
+#
+#                          Copyright - 1997,1998,1999
+#                 Iowa State University Research Foundation, Inc.
+#                             All Rights Reserved
+#
+
 # -----------------------------------------------------------------------------
 # Print out the target information for the build system.  These come directly
 # from the comments at the top of the top-level Makefile.in.  Doing this in a

@@ -1,7 +1,24 @@
 #!/usr/local/bin/perl
 
-# -----------------------------------------------------------------------------
-# $Id$
+#
+#  File:	   $RCSfile$
+#  Date modified:  $Date$
+#  Version:	   $Revision$
+#
+#
+#                                 VR Juggler
+#                                     by
+#                               Allen Bierbaum
+#                              Christopher Just
+#                              Patrick Hartling
+#                             Carolina Cruz-Neira
+#                                Albert Baker
+#
+#                          Copyright - 1997,1998,1999
+#                 Iowa State University Research Foundation, Inc.
+#                             All Rights Reserved
+#
+
 # -----------------------------------------------------------------------------
 # Generate Makefiles in the subdirectories (SUBDIRS) of the installation
 # directory (prefix) from Makefile.in's found in the source directory

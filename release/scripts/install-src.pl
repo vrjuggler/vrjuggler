@@ -1,7 +1,24 @@
 #!/usr/local/bin/perl
 
-# -----------------------------------------------------------------------------
-# $Id$
+#
+#  File:	   $RCSfile$
+#  Date modified:  $Date$
+#  Version:	   $Revision$
+#
+#
+#                                 VR Juggler
+#                                     by
+#                               Allen Bierbaum
+#                              Christopher Just
+#                              Patrick Hartling
+#                             Carolina Cruz-Neira
+#                                Albert Baker
+#
+#                          Copyright - 1997,1998,1999
+#                 Iowa State University Research Foundation, Inc.
+#                             All Rights Reserved
+#
+
 # -----------------------------------------------------------------------------
 # Install a source (i.e., software source) directory to a specified
 # destination directory.  Only pre-defined file types (determined by file
