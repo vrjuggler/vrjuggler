@@ -48,20 +48,17 @@
 #include <Input/vjPosition/aMotionStar.h>
 
 
-aMotionStar::aMotionStar(char* _address,
-			 int _hemisphere,
-			 unsigned int _birdFormat,
-			 unsigned int _birdsRequired,
-			 int _runMode,
-			 double _birdRate,
-			 unsigned char _reportRate) :
-				active(0),
-				hemisphere(_hemisphere),
-				birdFormat(_birdFormat),
-				birdsRequired(_birdsRequired),
-				runMode(_runMode),
-				birdRate(_birdRate),
-				reportRate(_reportRate)
+// ----------------------------------------------------------------------------
+// Constructor.  This initializes member variables and determines the
+// endianness of the host machine.
+// ----------------------------------------------------------------------------
+aMotionStar::aMotionStar(char* _address, int _hemisphere,
+                         unsigned int _birdFormat, unsigned int _birdsRequired,
+                         int _runMode, double _birdRate,
+                         unsigned char _reportRate)
+    : active(0), hemisphere(_hemisphere), birdFormat(_birdFormat),
+      birdsRequired(_birdsRequired), runMode(_runMode), birdRate(_birdRate),
+      reportRate(_reportRate)
 {
   union {
     char c[sizeof(short)];
@@ -88,8 +85,9 @@ aMotionStar::aMotionStar(char* _address,
   m_big_endian = (endian.c[0] ? true : false);
 } // end aMotionStar::aMotionStar()
 
-
-
+// ----------------------------------------------------------------------------
+// Destructor.
+// ----------------------------------------------------------------------------
 aMotionStar::~aMotionStar() {
 
   this->stop();
@@ -101,18 +99,8 @@ aMotionStar::~aMotionStar() {
 
 } // end aMotionStar::~aMotionStar()
 
-
 // ----------------------------------------------------------------------------
-//: Initializes the MotionStar, setting the status for each bird.
-//
-//! PRE: The server address (either IP address or hostname) has been set.
-//! POST: A connection attempt is made to the server.  If successful, the
-//+       socket is set up in connected mode.  Each bird has its status set
-//+       regardless of the connection attempt results.  If the connection
-//+       attempt fails, error status is returned to the caller.
-//
-//! RETURNS:  0 - Successful startup.
-//! RETURNS: -1 - Failed to connect to server.
+// Initializes the MotionStar, setting the status for each bird.
 // ----------------------------------------------------------------------------
 int
 aMotionStar::start () {
@@ -259,7 +247,9 @@ aMotionStar::start () {
   return 0;
 } // end void aMotionStar::start()
 
-
+// ----------------------------------------------------------------------------
+// Stops the driver.
+// ----------------------------------------------------------------------------
 void aMotionStar::stop() {
     /* put in a STOP COMMAND here */
 
@@ -269,7 +259,9 @@ void aMotionStar::stop() {
 
 } // end void aMotionStar::stop()
 
-
+// ----------------------------------------------------------------------------
+// Send a wakeup call to the MotionStar server.
+// ----------------------------------------------------------------------------
 void aMotionStar::send_wakeup()
 {
   /***** send a command to the server wakeup *****/
@@ -294,7 +286,9 @@ void aMotionStar::send_wakeup()
 
 } // end void aMotionStar::send_wakeup ()
 
-
+// ----------------------------------------------------------------------------
+// Tell the MotionStar server to sample continuously.
+// ----------------------------------------------------------------------------
 void aMotionStar::runContinuous() {
 //  cout << "runContinous" << endl;
 
@@ -333,7 +327,9 @@ void aMotionStar::runContinuous() {
 */
 } // end aMotionStar::runContinuous()
 
-
+// ----------------------------------------------------------------------------
+// Request a single sampling of the MotionStar server.
+// ----------------------------------------------------------------------------
 void aMotionStar::singleShot()
 {
   /* send a request for a single shot packet */
@@ -353,7 +349,10 @@ void aMotionStar::singleShot()
 
 } // end void aMotionStar::singleShot()
 
-
+// ----------------------------------------------------------------------------
+// Based on the current run mode, a single sample is taken (run mode is
+// 1), or continuous samples are taken (run mode is 0).
+// ----------------------------------------------------------------------------
 void aMotionStar::sample() {
 //    cout << "Sampling..." << endl;
     if (runMode == 1) {singleShot();}
@@ -432,17 +431,17 @@ void aMotionStar::sample() {
       struct timeval first, second;
 
       while(totalBytesReceived != totalBytesNeeded){
-	gettimeofday(&first);
+        gettimeofday(&first);
         bytesReceived = recv(s, (void*) lpBuffer,
                              (totalBytesNeeded - totalBytesReceived), 0);
-	gettimeofday(&second);
+        gettimeofday(&second);
 
         if (bytesReceived < 0)
           perror("recv2"), exit(1);
 
-	if ( second.tv_usec - first.tv_usec > 5000 ) {
-	    fprintf(stderr, "WARNING: Packet took longer than 5 ms\n");
-	}
+        if ( second.tv_usec - first.tv_usec > 5000 ) {
+            fprintf(stderr, "WARNING: Packet took longer than 5 ms\n");
+        }
 
         totalBytesReceived = totalBytesReceived + bytesReceived;
         lpBuffer = (char*)lpBuffer + bytesReceived;
@@ -472,7 +471,9 @@ void aMotionStar::sample() {
 
 } // end void aMotionStar::sample()
 
-
+// ----------------------------------------------------------------------------
+// Print out the MotionStar information.
+// ----------------------------------------------------------------------------
 void aMotionStar::printInfo(){
   int i;
 
@@ -484,6 +485,9 @@ void aMotionStar::printInfo(){
 
 } // end void aMotionStar::printinfo()
 
+// ----------------------------------------------------------------------------
+// Get the system status.
+// ----------------------------------------------------------------------------
 void aMotionStar::get_status_all()
 {
   void                  *lpBuffer;
@@ -596,8 +600,9 @@ void aMotionStar::get_status_all()
 
 } // end void aMotionStar::get_status_all()
 
-
-
+// ----------------------------------------------------------------------------
+// Set the system status.
+// ----------------------------------------------------------------------------
 void aMotionStar::set_status_all()
 {
      int i;
@@ -623,8 +628,9 @@ void aMotionStar::set_status_all()
 
 } // end void aMotionStar::set_status_all()
 
-
-
+// ----------------------------------------------------------------------------
+// Get the status of an individual bird.
+// ----------------------------------------------------------------------------
 void aMotionStar::get_status_fbb(unsigned char fbb_addr)
 {
   int headerBytes, dataBytes;
@@ -669,8 +675,9 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
 
 } // end void aMotionStar::get_status_fbb()
 
-
-
+// ----------------------------------------------------------------------------
+// Print out the MotionStar's header information.
+// ----------------------------------------------------------------------------
 void aMotionStar::display_hdr()
 {
 
@@ -680,8 +687,9 @@ void aMotionStar::display_hdr()
 
 } // end void aMotionStar::display_hdr()
 
-
-
+// ----------------------------------------------------------------------------
+// Set the status of an individual bird.
+// ----------------------------------------------------------------------------
 void aMotionStar::set_status_fbb(unsigned char fbb_addr)
 {
   response.header.type = 102;
@@ -712,6 +720,9 @@ void aMotionStar::setBirdRate (double n) { birdRate = n; }
 void aMotionStar::setRunMode ( int n ) { runMode = n; }
 void aMotionStar::setReportRate (unsigned char n) { reportRate = n; }
 
+// ----------------------------------------------------------------------------
+// Set the address (either IP address or hostname) for the server.
+// ----------------------------------------------------------------------------
 void
 aMotionStar::setAddress (const char* n) {
   if ( n != NULL ) {
@@ -730,8 +741,6 @@ float aMotionStar::zPos( int i) {return posinfo[i][2];}
 float aMotionStar::zRot( int i) {return posinfo[i][3];}
 float aMotionStar::yRot( int i) {return posinfo[i][4];}
 float aMotionStar::xRot( int i) {return posinfo[i][5];}
-
-bool& aMotionStar::isActive() {return active;}
 
 // ============================================================================
 // Private methods.
