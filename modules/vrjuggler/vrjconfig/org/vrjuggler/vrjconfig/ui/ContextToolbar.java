@@ -167,7 +167,7 @@ public class ContextToolbar
    public boolean doNew()
    {
       NewConfigDialog new_dlg = new NewConfigDialog(fileChooser.getCurrentDirectory());
-      int option = new_dlg.showDialog(this);
+      int option = new_dlg.showDialog(getParentFrame());
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
          // Create the new config file
@@ -216,7 +216,7 @@ public class ContextToolbar
       fileChooser.setFileFilter(new ConfigFileFilter());
       fileChooser.setFileView(new ConfigFileView());
 
-      int result = fileChooser.showOpenDialog(this);
+      int result = fileChooser.showOpenDialog(getParentFrame());
       if (result == JFileChooser.APPROVE_OPTION)
       {
          try
@@ -225,7 +225,8 @@ public class ContextToolbar
             File file = fileChooser.getSelectedFile();
             if (! file.exists())
             {
-               JOptionPane.showMessageDialog(this, "You must open an existing file.",
+               JOptionPane.showMessageDialog(getParentFrame(),
+                                             "You must open an existing file.",
                                              "Error", JOptionPane.ERROR_MESSAGE);
                return false;
             }
@@ -264,8 +265,8 @@ public class ContextToolbar
          }
          catch (IOException ioe)
          {
-            JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
-                                          JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
+                                          "Error", JOptionPane.ERROR_MESSAGE);
             ioe.printStackTrace();
          }
       }
@@ -294,8 +295,8 @@ public class ContextToolbar
       }
       catch (IOException ioe)
       {
-         JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
-                                       JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
+                                       "Error", JOptionPane.ERROR_MESSAGE);
          ioe.printStackTrace();
       }
 
@@ -356,7 +357,7 @@ public class ContextToolbar
       String name = null;
       do
       {
-         int result = fileChooser.showSaveDialog(this);
+         int result = fileChooser.showSaveDialog(getParentFrame());
          if (result == JFileChooser.APPROVE_OPTION)
          {
             File file = fileChooser.getSelectedFile();
@@ -367,7 +368,7 @@ public class ContextToolbar
             }
             else
             {
-               JOptionPane.showMessageDialog(this,
+               JOptionPane.showMessageDialog(getParentFrame(),
                                              "That resource is already open",
                                              "Oops!",
                                              JOptionPane.ERROR_MESSAGE);
@@ -500,7 +501,7 @@ public class ContextToolbar
                int length = java.lang.reflect.Array.getLength(paths);
                String title_name = paths[length - 1];
                fileChooser.setDialogTitle(title_name + " -- Save As...");
-               int result = fileChooser.showSaveDialog(this);
+               int result = fileChooser.showSaveDialog(getParentFrame());
                if (result == JFileChooser.APPROVE_OPTION)
                {
                   /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
@@ -540,11 +541,21 @@ public class ContextToolbar
       }
       catch(IOException ioe)
       {
-         JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
-         JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
+                                       "Error", JOptionPane.ERROR_MESSAGE);
          ioe.printStackTrace();
       }
       return false;
+   }
+
+   private Container getParentFrame()
+   {
+      if ( null == mParentFrame )
+      {
+         mParentFrame = SwingUtilities.getAncestorOfClass(Frame.class, this);
+      }
+
+      return mParentFrame;
    }
    
    // JBuilder GUI variables
@@ -561,6 +572,8 @@ public class ContextToolbar
    private ContextChangeListener contextListener = new ContextChangeListener();
 
    private EnvironmentService mEnvService = new EnvironmentServiceProxy();
+
+   private Container mParentFrame = null;
 
    /**
     * Our special context change listener used to toggle the save and expand
