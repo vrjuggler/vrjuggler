@@ -220,7 +220,10 @@ namespace gadget
                   }
                   else
                   {
-                     vprASSERT( false && "Getting a connection attempt before we are fully configured." );
+                     //XXX: This will make sure that we do not allow a connection
+                     //     from a node that isnot configured yet.
+                     remote_node = NULL;
+                     //vprASSERT( false && "Getting a connection attempt before we are fully configured." );
                   }
                }
             }
@@ -233,9 +236,8 @@ namespace gadget
             local.getHostname( local_hostname );
             cluster::ConnectionAck* temp = NULL;
 
-            vprASSERT( NULL != remote_node && "Remote node must nut be equal to NULL" );
-            
-            if ( remote_node->getStatus() == Node::CONNECTED || 
+            if ( NULL == remote_node ||
+                 remote_node->getStatus() == Node::CONNECTED || 
                  remote_node->getStatus() == Node::NEWCONNECTION )
             {
                vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
@@ -247,6 +249,8 @@ namespace gadget
             }
             else if ( Node::PENDING == remote_node->getStatus() )
             {
+               vprASSERT( NULL != remote_node && "Remote node must nut be equal to NULL" );
+            
                vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
                   << clrOutBOLD( clrMAGENTA, "[Acceptor]")
                   << " Pending Node exists, we must decide which"
@@ -346,7 +350,7 @@ namespace gadget
          }
          else if ( status == vpr::ReturnStatus::Timeout )
          {
-               // Should never happen since timeout is infinite
+            // Should never happen since timeout is infinite
             client_sock->close();
             delete client_sock;
             client_sock = new vpr::SocketStream;
