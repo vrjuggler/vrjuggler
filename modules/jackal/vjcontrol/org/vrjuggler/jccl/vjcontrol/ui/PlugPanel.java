@@ -43,15 +43,15 @@ import VjControl.VjComponent;
  *  PlugPanels are GUI extensions that can be loaded into ControlUI's
  *  tabbed pane (or whatever interface replaces said tabbed pane).
  *  <p>
- *  In addition to implementing this interface, every PlugPanel
- *  component <i>must</i> inherit from javax.swing.JComponent
- *  (directly or indirectly).  
+ *  PlugPanels can inherit from JComponent, or they can contain 
+ *  a JComponent that is returned via getUIComponent().
  *
  *  @author Christopher Just
  *  @version $Revision$
  */
 public interface PlugPanel
     extends VjComponent {
+
 
     /** Returns the UI component associated with this panel.
      *  Many PlugPanels simply inherit from JComponent and return
@@ -64,6 +64,7 @@ public interface PlugPanel
      */
     public JComponent getUIComponent();
 
+
     /** Initializes the PlugPanel's graphical elements.
      *  This function is called immediately before the panel is displayed
      *  to the user.  Creation and layout of a PlugPanel's graphical
@@ -75,16 +76,21 @@ public interface PlugPanel
      */
     public boolean initUIComponent();
 
+
     /** Rebuild display in case of emergency.
      *  This function provides a workaround for various graphical 
      *  glitches that infest certain JDK implementations. ControlUI
      *  can call this method on its various panels to force a refresh.
+     *
+     *  @deprecated 
      */
     public void rebuildDisplay ();
+
 
     /** An icon to use to represent an instance of this component.
      *  May return null.
      */
     public ImageIcon getComponentIcon ();
+
 }
 
