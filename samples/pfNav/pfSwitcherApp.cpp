@@ -56,12 +56,15 @@ void pfAppHandle::constructAppSceneGraph()
    switchOff();
    mAppSwitch->addChild(mAppXformDCS);
 
-   // Get Scaling factor
-   pfBox bound_box;
-   pfuTravCalcBBox(mAppRoot,&bound_box);
-   pfVec3 diag = (bound_box.max - bound_box.min);
-   mUnitScaleFactor = (SWITCHER_APP_BASE_SIZE/diag.length());
-   mUnitTrans = -((bound_box.max+bound_box.min)/2.0f);
+   if(mUnitScaleFactor == 0.0f)            // If we have not already set this
+   {
+      // Get Scaling factor
+      pfBox bound_box;
+      pfuTravCalcBBox(mAppRoot,&bound_box);
+      pfVec3 diag = (bound_box.max - bound_box.min);
+      mUnitScaleFactor = (SWITCHER_APP_BASE_SIZE/diag.length());
+      mUnitTrans = -((bound_box.max+bound_box.min)/2.0f);
+   }
 
    //
    mAppXformDCS->setScale(mUnitScaleFactor);
@@ -134,10 +137,37 @@ void pfSwitcherApp::registerApp(pfAppHandle appHandle)
    // XXX: write this code
 }
 
+// Configure an new application to be put in the switcher
+//
+// -Create a new pfBasicConfigNavApp
+// -Configure it
+// -Put it in app handle
+// -Register it
+bool pfSwitcherApp::configAdd(vjConfigChunk* chunk)
+{
+   vjASSERT(configCanHandle(chunk));
+
+   vjDEBUG(vjDBG_ALL,0) << "pfSwitcherApp::configAdd: "
+                        << clrOutNORM(clrMAGENTA,"CONFIGURING APP:")
+                        << chunk->getProperty("Name") << endl << vjDEBUG_FLUSH;
+   pfBasicConfigNavApp* cfg_app = new pfBasicConfigNavApp();
+   bool ret_val = cfg_app->configApp(chunk);
+   pfAppHandle cfg_app_handle(cfg_app,chunk->getProperty("Name"));
+
+   //XXX: Get the bounding info
+   registerApp(cfg_app_handle);
+
+   vjDEBUG_CONT_END(vjDBG_ALL,0) << vjDEBUG_FLUSH;
+
+   return ret_val;
+}
+
 // Build a skeleton outline of the scenegraph
 // Only consructs the parts that are not app specific
 void pfSwitcherApp::constructSceneGraphSkeleton()
 {
+   vjDEBUG(vjDBG_ALL,0) << "pfSwitcherApp::constructSceneGraphSkeleton: "
+                        << clrOutNORM(clrMAGENTA,"Creating skeleton:") << endl << vjDEBUG_FLUSH;
    mRootNode         = new pfGroup;
    mConstructDCS     = new pfDCS;
    mConstructSwitch  = new pfSwitch;
@@ -171,6 +201,8 @@ void pfSwitcherApp::constructSceneGraphSkeleton()
 
 void pfSwitcherApp::addAppGraph(pfAppHandle& handle)
 {
+   vjDEBUG(vjDBG_ALL,0) << "pfSwitcherApp::addAppGraph: "
+                        << clrOutNORM(clrMAGENTA,"Adding app graph for:") << handle.mAppName << endl << vjDEBUG_FLUSH;
    mRootNode->addChild(handle.mAppSwitch);
 }
 
@@ -272,8 +304,8 @@ void pfSwitcherApp::updateInteraction()
          int new_active(mActiveApp);
          if(next_btn)                        // nextApp
             new_active += 1;
-         else if(prev_btn)                   // PrevApp
-            new_active -= 1;
+         //else if(prev_btn)                   // PrevApp
+         //   new_active -= 1;
 
          // Correct for out of range values
          if((unsigned)new_active >= mApps.size())
@@ -517,6 +549,8 @@ void pfSwitcherApp::initChangeAppTransOut()
 // - Add app to my scene grapy
 void pfSwitcherApp::initScene()
 {
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"========= pfSwitcherApp::initScene ==============") << endl << vjDEBUG_FLUSH;
+
    mHaveInitialized = true;      // Tell future app adds that we are already inited
 
    // --- SWITCHER SKELETON -- //
@@ -541,6 +575,8 @@ void pfSwitcherApp::initScene()
       vjASSERT(mApps[mActiveApp].mAppSwitch != NULL);
       mApps[mActiveApp].switchOn();
    }
+
+   vjDEBUG_END(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"========= pfSwitcherApp::initScene: Exiting. =========") << endl << vjDEBUG_FLUSH;
 }
 
 //: Called between pfInit and pfConfig
@@ -620,6 +656,11 @@ void pfSwitcherApp::postDrawChan(pfChannel* chan, void* chandata)
 void pfSwitcherApp::init()
 {
    mClock.start();            // Initialize clock
+
+   // Process any pending run-time config
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"========= pfSwitcherApp: Initialial forced config processing =========") << endl << vjDEBUG_FLUSH;
+   configProcessPending();
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"========= pfSwitcherApp: Exiting config processing ===================") << endl << vjDEBUG_FLUSH;
 
    // Initialize switcher
    initInteraction();         // Initialize the interation objects
