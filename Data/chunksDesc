@@ -48,12 +48,12 @@ chunk proxyAlias "Proxy Alias" "An additional name for referencing a device prox
   end
 chunk AnaProxy "Analog Proxy" "Used to access a single analog input source"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "SimAnalog" "IBox" "TrackdController" } "The device this proxy attaches to"
+  device Chunk 1 "Device" vj_enumeration { "SimAnalog" "IBox" "TrackdController" "Isense" } "The device this proxy attaches to"
   unit Int 1 "Unit" "The unit in the device this proxy attaches to"
   end
 chunk DigProxy "Digital Proxy" "Used to access a single digital (binary) input source"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "SimDigital" "IBox" "PinchGlove" "ThreeDMouse" "SimDigitalGlove" "TrackdController" } "The device this proxy attaches to"
+  device Chunk 1 "Device" vj_enumeration { "SimDigital" "IBox" "PinchGlove" "ThreeDMouse" "SimDigitalGlove" "TrackdController" "Isense" } "The device this proxy attaches to"
   unit Int 1 "Unit" "The unit in the device this proxy attaches to"
   end
 chunk apiPerformer "Performer API" "This is information for configuring the Performer API.  It only pertains to Performer."
@@ -63,7 +63,7 @@ chunk apiPerformer "Performer API" "This is information for configuring the Perf
   end
 chunk PosProxy "Position Proxy" "Used to access a single positional input source"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "device" vj_enumeration { "Flock" "SimPosition" "DummyPosition" "MotionStar" "TrackdSensor" "SimRelativePosition" } "The device the proxy points to"
+  device Chunk 1 "device" vj_enumeration { "Flock" "SimPosition" "DummyPosition" "MotionStar" "TrackdSensor" "SimRelativePosition" "Isense" } "The device the proxy points to"
   unit Int 1 "unit" "The unit in the device this proxy attaches to"
   etrans Bool 1 "Enable Transformation" "If true, the Proxy Transformation is applied to data"
   translate Float 3 "Translation" vj_valuelabels { "Trans X" "Trans Y" "Trans Z" } "(recv_T_modRecv) Proxy translation (in the reciever's coord system)"
