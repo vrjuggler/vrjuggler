@@ -712,8 +712,10 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
    color[1] = viewportChunk->getProperty<float>("surfaceColor", 1);
    color[2] = viewportChunk->getProperty<float>("surfaceColor", 2);
 
+   std::cout << "R:" << color[0] << "G:" << color[1] << "B:" << color[2] << std::endl;
+   
    //Also no test for this
-
+   
    //vert_fov
    if (viewportChunk->getNum( "vert_fov" ) < 1 )
    {
@@ -740,15 +742,14 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
    fileDB.getByType( "machineSpecific", machineChunks );
    for (int i=0; i < machineChunks.size(); i++)
    {
-
       machineSpecificChunks = windowChunks[i]->getEmbeddedChunks();
-      for (int j=0; i < machineSpecificChunks.size(); i++)
+      for (int j=0; j < machineSpecificChunks.size(); j++)
       {
-         if (machineSpecificChunks[i]->getDescToken() == "displayWindow")
+         if (machineSpecificChunks[j]->getDescToken() == "displayWindow")
          {
             std::cout << "Adding an embedded display to the list to test named: "
-               << machineSpecificChunks[i]->getName() << std::endl;
-            windowChunks.push_back(machineSpecificChunks[i]);
+               << machineSpecificChunks[j]->getName() << std::endl;
+            windowChunks.push_back(machineSpecificChunks[j]);
          }
       }
    }
