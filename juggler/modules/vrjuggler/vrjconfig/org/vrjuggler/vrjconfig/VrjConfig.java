@@ -291,7 +291,12 @@ public class VrjConfig
        */
       public void actionPerformed(ActionEvent evt)
       {
-         // We only want to propogate ActionEvents if we are selected.
+         // Intercept SaveAll action, otherwise we only want to propogate
+         // ActionEvents if we are the selected frame.
+         if(evt.getActionCommand().equals("SaveAll"))
+         {
+            mContextToolbar.doSave();
+         }
          if(isSelected())
          {
             fireAction(evt.getActionCommand());
