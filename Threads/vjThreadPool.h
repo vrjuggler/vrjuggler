@@ -85,15 +85,15 @@ public:
 
     // -----------------------------------------------------------------------
     //: Body of a general-purpose child process. The argument, which must be
-    //+ declared void* to match the func prototype, is the vjOneThread structure
-    //+ that represents this process.   The contents of that struct, in
-    //+ particular threadWait, MUST be initialized by the parent.
+    //+ declared void* to match the func prototype, is the vjOneThread
+    //+ structure that represents this process.   The contents of that
+    //+ struct, in particular threadWait, MUST be initialized by the parent.
     // -----------------------------------------------------------------------
     void threadLoop(void* theThreadAsVoid);
 
     // -----------------------------------------------------------------------
-    //: Wait for work to do.  Put a vjOneThread structure on the ready list and
-    //+ sleep on it.  Called by a child process when its work is done.
+    //: Wait for work to do.  Put a vjOneThread structure on the ready list
+    //+ and sleep on it.  Called by a child process when its work is done.
     // -----------------------------------------------------------------------
     void threadSleep(vjOneThread* theThread);
 
@@ -105,7 +105,7 @@ public:
     vjOneThread* getThread(void);
 
     // -----------------------------------------------------------------------
-    //: Waits until all threads are done doing their work
+    //: Waits until all threads are done doing their work.
     // -----------------------------------------------------------------------
     void
     barrier (void) {

@@ -1,6 +1,7 @@
 #ifndef _VJ_BASE_THREAD_H_
 #define _VJ_BASE_THREAD_H_
 #pragma once
+
 // --------------------------------------------------------------------------
 // vjBaseThread.h
 // $Revision$
@@ -27,11 +28,12 @@ public:
    }
 
 protected:
-   //: After the object has been created, call this routine to complete initialization.
+   //: After the object has been created, call this routine to complete
+   //+ initialization.
    // Done this way, because I need to call this based on stuff that happens
-   // in derived class's constructor
-   //! POST: Thread is setup correctly to run
-   //+       The thread has been registered with the system
+   // in derived class's constructor.
+   //! POST: Thread is setup correctly to run.
+   //+       The thread has been registered with the system.
    //! ARGS: successfulCreation - Did the thread get created correctly
    void registerThread(bool succesfulCreation);
 
@@ -53,14 +55,13 @@ public:
    //! RETURNS:  0 - Successful thread creation
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
-   virtual int spawn ( vjBaseThreadFunctor* functorPtr, long flags = 0,
-                        u_int priority = 0, void* stack_addr = NULL,
-                        size_t stack_size = 0)
+   virtual int spawn (vjBaseThreadFunctor* functorPtr, long flags = 0,
+                      u_int priority = 0, void* stack_addr = NULL,
+                      size_t stack_size = 0)
    {
       cerr << "Base spawn.  Should NOT be called." << endl;
       return -1;
    }
-
 
    // -----------------------------------------------------------------------
    //: Make the calling thread wait for the termination of this thread.
@@ -105,8 +106,6 @@ public:
    //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
-   //
-   //! NOTE: This is not currently supported on HP-UX 10.20.
    // -----------------------------------------------------------------------
    virtual int resume()
    {return -1;}
@@ -116,8 +115,6 @@ public:
    //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
-   //
-   //! NOTE: This is not currently supported on HP-UX 10.20.
    // -----------------------------------------------------------------------
    virtual int suspend()
    {return -1;}
@@ -135,7 +132,6 @@ public:
    //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
-   //
    // -----------------------------------------------------------------------
    virtual int getPrio(int* prio)
    { return -1;}
@@ -168,18 +164,24 @@ public:
    int32_t getTID()
    { return mThreadId; }
 
+   // -----------------------------------------------------------------------
    //: Is this a valid thread?
    //
-   //! RETURNS: true - object represents a thread that has been created corectly
+   //! RETURNS: true - object represents a thread that has been created
+   //+                 correctly.
+   // -----------------------------------------------------------------------
    bool valid()
    {
       return (mThreadId != -1);
    }
+
    // -----------------------------------------------------------------------
    //: Send the specified signal to this thread (not necessarily SIGKILL).
    //
    //! POST: This thread receives the specified signal.
+   //
    //! ARGS: signum - The signal to send to the specified thread.
+   //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
@@ -196,9 +198,8 @@ public:
    virtual void kill()
    {;}
 
-
    // -----------------------------------------------------------------------
-   //: Ouput the state of the object
+   //: Ouput the state of the object.
    // -----------------------------------------------------------------------
    virtual ostream& outStream(ostream& out)
    {
@@ -206,15 +207,17 @@ public:
       return out;
    }
 
-
 protected:
-   // Initialize the state of the object
+   // -----------------------------------------------------------------------
+   //: Initialize the state of the object.
+   // -----------------------------------------------------------------------
    void create_thread_id()
    {
       mThreadId = getNextThreadId();
    }
 
-private:    // Don't allow copy
+private:
+   // Don't allow copy
    vjBaseThread(vjBaseThread& other)
    {;}
 
@@ -236,21 +239,25 @@ private:
 ostream& operator<<(ostream& out, vjBaseThread* threadPtr);
 
 
-//: Helper class that maintains a table of the threads allocated in the system
+//: Helper class that maintains a table of the threads allocated in the system.
 //
-// Used internally because we can have many types of indexes for the thread list
-// depending upon the type of threads being used.
+// Used internally because we can have many types of indexes for the thread
+// list depending upon the type of threads being used.
 template <class IdxType>
 class vjThreadTable
 {
 public:
-   //: Add a thread to the list
+   // -----------------------------------------------------------------------
+   //: Add a thread to the list.
+   // -----------------------------------------------------------------------
    void addThread(vjBaseThread* threadPtr, IdxType index)
    {
       mThreadMap[index] = threadPtr;
    }
 
-   //: Get a thread from the list
+   // -----------------------------------------------------------------------
+   //: Get a thread from the list.
+   // -----------------------------------------------------------------------
    vjBaseThread* getThread(IdxType index)
    {
       std::hash_map<IdxType, vjBaseThread*>::iterator i;
@@ -261,7 +268,9 @@ public:
          return (*i).second;
    }
 
-   //: Remove a thread from the list
+   // -----------------------------------------------------------------------
+   //: Remove a thread from the list.
+   // -----------------------------------------------------------------------
    void removeThread(IdxType index)
    {
       mThreadMap.erase(index);

@@ -24,21 +24,23 @@ class vjThreadSGI : public vjBaseThread
 public:
    /***** CONSTRUCTORS ******/
 
-   //: Spawning constructor
-   //  This will actually start a new thread
-   //  that will execute the specified function.
-   vjThreadSGI (THREAD_FUNC func, void* arg = 0, long flags = 0,
-                 u_int priority = 0, void* stack_addr = NULL,
-                 size_t stack_size = 0);
+   // -----------------------------------------------------------------------
+   //: Spawning constructor.
+   //  This will actually start a new thread that will execute the specified
+   //  function.
+   // -----------------------------------------------------------------------
+   vjThreadSGI(THREAD_FUNC func, void* arg = 0, long flags = 0,
+               u_int priority = 0, void* stack_addr = NULL,
+               size_t stack_size = 0);
 
-
+   // -----------------------------------------------------------------------
    //: Spawning constructor with arguments (functor version).
-   //   This will start a new
-   //   thread that will execute the specified function.
-   vjThreadSGI ( vjBaseThreadFunctor* functorPtr, long flags = 0,
-                  u_int priority = 0, void* stack_addr = NULL,
-                  size_t stack_size = 0);
-
+   //  This will start a new thread that will execute the specified
+   //  function.
+   // -----------------------------------------------------------------------
+   vjThreadSGI(vjBaseThreadFunctor* functorPtr, long flags = 0,
+               u_int priority = 0, void* stack_addr = NULL,
+               size_t stack_size = 0);
 
    virtual ~vjThreadSGI()
    { mThreadTable.removeThread(mThreadPID);}
@@ -60,24 +62,24 @@ public:
    //! RETURNS:       -1 - Error
    // -----------------------------------------------------------------------
    virtual int
-   spawn ( vjBaseThreadFunctor* functorPtr, long flags = 0, u_int priority = 0,
-           void* stack_addr = NULL, size_t stack_size = 0)
+   spawn (vjBaseThreadFunctor* functorPtr, long flags = 0, u_int priority = 0,
+          void* stack_addr = NULL, size_t stack_size = 0)
    {
       mThreadPID = sproc(THREAD_FUNC(&ThreadFunctorFunction), PR_SADDR, functorPtr);
       return mThreadPID;
    }
 
-
    // -----------------------------------------------------------------------
    //: Make the calling thread wait for the termination of the specified
    //+ thread.
-   //! NOTE:  Not implemented.
+   //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
+   //
+   //! NOTE:  Not implemented.
    // -----------------------------------------------------------------------
    virtual int
    join (void** = 0);
-
 
    // -----------------------------------------------------------------------
    //: Resume the execution of a thread that was previously suspended using
@@ -192,7 +194,7 @@ public:
 
 
    // -----------------------------------------------------------------------
-   //: Output the state of the object
+   //: Output the state of the object.
    // -----------------------------------------------------------------------
    ostream& outStream(ostream& out)
    {
@@ -204,15 +206,17 @@ public:
 private:
    pid_t mThreadPID;      //: pid_t data structure for this thread
 
-
    // --------  STATICS ------ //
    // This data is used to maintain a thread table in the system
-   // It is here because the self() function needs to use system specific information
+   // It is here because the self() function needs to use system specific
+   // information.
 public:
-   //: Get a ptr to the thread we are in
+   // -----------------------------------------------------------------------
+   //: Get a ptr to the thread we are in.
    //
-   //!RETURNS: NULL - Thread is not in global table
-   //!RETURNS: NonNull - Ptr to the thread that we are running within
+   //! RETURNS: NULL - Thread is not in global table
+   //! RETURNS: NonNull - Ptr to the thread that we are running within
+   // -----------------------------------------------------------------------
    static vjBaseThread* self()
    {
       pid_t cur_pid = getpid();
