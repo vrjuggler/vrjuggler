@@ -68,10 +68,28 @@ int PinchGlove::startSampling()
 {
    vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
                                << vprDEBUG_FLUSH;
-
    if (mThread == NULL)
    {
-      /* Don't need anymore because SampleBuffers are smarter
+      int maxAttempts=0;
+      bool result = false;
+      while (result == false && maxAttempts < 5)
+      {
+         vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
+                                            << mPort << " at "
+                                            << mBaudRate << "...\n"
+                                            << vprDEBUG_FLUSH;
+         result = mGlove->connectToHardware( mPort , mBaudRate);
+         if (result == false)
+         {
+            vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vprDEBUG_FLUSH;
+            vpr::System::usleep(14500);
+            maxAttempts++;
+         }
+      }
+
+   vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] Successfully connected, Now sampling pinch data." << vprDEBUG_FLUSH;
+     
+/* Don't need anymore because SampleBuffers are smarter
       
       DigitalData temp;
       temp=0;
@@ -113,22 +131,6 @@ void PinchGlove::controlLoop(void* nullParam)
    vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
                                << vprDEBUG_FLUSH;
 
-   bool result = false;
-   while (result == false)
-   {
-      vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
-                                            << mPort << "...\n"
-                                            << vprDEBUG_FLUSH;
-      result = mGlove->connectToHardware( mPort );
-      if (result == false)
-      {
-         vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vprDEBUG_FLUSH;
-         vpr::System::usleep(14500);
-      }
-   }
-
-   vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] Successfully connected, Now sampling pinch data." << vprDEBUG_FLUSH;
-
    while(1)
    {
       sample();
@@ -156,14 +158,14 @@ int PinchGlove::sample()
             //character[1]='\0';
             //number = atoi(character);
             number = character[0] - '0';
-	    mDigitalData[i]=number;
+            mDigitalData[i]=number;
         }
         else if(i>5)
         {
             character[0]=gesture[i];
             //character[1]='\0';
             //number = atoi(character);
-               number = character[0] - '0';
+            number = character[0] - '0';
             mDigitalData[i-1]=number;
         }
     }

@@ -61,7 +61,7 @@ public:
     PinchGloveStandalone();
     ~PinchGloveStandalone();
     //: Connect to the pinch glove hardware
-    bool    connectToHardware( const char* const ttyPort );
+    bool    connectToHardware( const char* const ttyPort, int mBaudRate );
     
     //: call updateStringFromHardware to get most 
     //:  current pinch data. 
@@ -89,7 +89,7 @@ protected:
 
     /* functions provided by fakespace */
     //int	    mConnectToHardware( const unsigned char* const ttyPort = "/dev/ttyd3" );
-    int	    mConnectToHardware( const char* const ttyPort );
+    int	    mConnectToHardware( const char* const ttyPort, int baud );
     int	    mSendCommandToHardware( const char* const command, unsigned char *reply );
     
     int	    mReadRecordsFromHardware( const int& rec_max_len, unsigned char *records );
