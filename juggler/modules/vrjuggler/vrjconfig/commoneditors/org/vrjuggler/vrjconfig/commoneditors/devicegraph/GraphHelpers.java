@@ -602,7 +602,8 @@ public abstract class GraphHelpers
     * object contained in <code>proxyCell</code>, which must be of type
     * <code>ProxyInfo</code>.  The proxy cell's user object will contain the
     * <code>ConfigElement</code> for the proxy, which in turn provides a unit
-    * number for the device to which the proxy should refer.
+    * number for the device to which the proxy should refer.  The proxy config
+    * element and the device config element will remain unchanged.
     *
     * @throws NoSuchPortException thrown If the two cells cannot be connected
     *                             because no appropriate port exists in
@@ -665,6 +666,70 @@ public abstract class GraphHelpers
       {
          throw new NoSuchPortException("Could not find port with unit value " +
                                        unit_prop);
+      }
+
+      return edge;
+   }
+
+   /**
+    * Creates a connection between <code>proxyPort</code> and
+    * <code>devicePort</code>.  The parent of the proxy port must contain a
+    * <code>ProxyInfo</code> object, and the parent of the device port must
+    * contain a <code>DeviceInfo</code> object.  The config element in the
+    * <code>ProxyInfo</code> object is changed to reflect the connection.
+    *
+    * @throws IllegalArgumentException
+    *   thrown If the two ports cannot be connected as a result of a unit
+    *   type mismatch between the proxy's allowed type and the device port's
+    *   unit type
+    *
+    * @see #createProxyCell(ConfigElement,ConfigContext,List,Map,int,int,boolean)
+    */
+   public static DefaultEdge connectProxyToDevice(DefaultPort proxyPort,
+                                                  DefaultPort devicePort,
+                                                  ConnectionSet cs,
+                                                  Map attributes)
+      throws IllegalArgumentException
+   {
+      ProxyPointerEdge edge = null;
+      ProxyInfo proxy_info =
+         (ProxyInfo) ((DefaultGraphCell) proxyPort.getParent()).getUserObject();
+
+      ConfigElement proxy_elt = proxy_info.getElement();
+
+      UnitInfo unit_info = (UnitInfo) devicePort.getUserObject();
+
+      PropertyDefinition device_prop_def =
+         proxy_elt.getDefinition().getPropertyDefinition(DEVICE_PROPERTY);
+
+      Integer allowed_unit_type =
+         UnitTypeHelpers.getUnitType(device_prop_def.getAllowedType(0));
+      if ( ! unit_info.getUnitType().equals(allowed_unit_type) )
+      {
+         throw new IllegalArgumentException(
+            "Unit type mismatch: proxy's allowed type (" +
+            UnitTypeHelpers.getUnitTypeName(allowed_unit_type) +
+            ") does not match device unit " + unit_info
+         );
+      }
+
+      edge = connectPorts(proxyPort, devicePort, cs, attributes);
+
+      try
+      {
+         DeviceInfo dev_info =
+            (DeviceInfo) ((DefaultGraphCell) devicePort.getParent()).getUserObject();
+         proxy_elt.setProperty(DEVICE_PROPERTY, 0,
+                               dev_info.getElement().getName(),
+                               proxy_info.getContext());
+         proxy_elt.setProperty(UNIT_PROPERTY, 0, unit_info.getUnitNumber(),
+                               proxy_info.getContext());
+      }
+      // Thrown if proxy_info's config element does not have a property
+      // EditorConstants.UNIT_PROPERTY.
+      catch (IllegalArgumentException ex)
+      {
+         System.err.println("WARNING: " + ex.getMessage());
       }
 
       return edge;
