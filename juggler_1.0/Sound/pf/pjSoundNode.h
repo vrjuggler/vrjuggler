@@ -50,7 +50,7 @@
 class pjSoundNode : public pfDCS
 {
 public:
-   pjSoundNode( vjSound* sound );
+   pjSoundNode( vjSound* sound, bool isPositional );
    virtual ~pjSoundNode()
    {
       mSound = NULL;
@@ -66,7 +66,12 @@ public:
    void setSound( vjSound* sound )
    {
       mSound = sound;
-   }
+   }   
+   
+   void setPositional( bool isPositional)
+   {
+      mIsPositional = isPositional;
+   }   
 
 public:  // APP traversal
    virtual int app( pfTraverser* );
@@ -86,12 +91,14 @@ public:  // Required for Performer class
 private:
    static pfType* classType;
    vjSound*         mSound;
+   bool mIsPositional;
 };
 
 
 
-pjSoundNode::pjSoundNode( vjSound* sound )
+pjSoundNode::pjSoundNode( vjSound* sound, bool isPositional )
 {
+   this->setPositional( isPositional );
    this->setSound( sound );
    this->setType(classType);  // Set the type
 }
@@ -107,7 +114,8 @@ int pjSoundNode::app(pfTraverser *trav)
 {
    // update the sound attributes (position) based on the current
    // position of this node.
-   if (mSound != NULL)
+   // only do it if the sound is a positional sound.
+   if (mSound != NULL && mIsPositional == true)
    {
       // get position of this sound in relation to the user's orientation and position
       // NOTE: the sound will change position if the user rotates without translation.
@@ -146,7 +154,13 @@ int pjSoundNode::app(pfTraverser *trav)
       // use this for debugging the location of the sound reletive to the user.
       //cout<<"sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
    }
-
+   else
+   {
+      // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f 
+      // this makes the sound the same as the observer.
+      mSound->setPosition( 0.0f, 0.0f, 0.0f );
+   }   
+      
    return pfDCS::app(trav);  // call the parent class's app()
 
 }
