@@ -21,6 +21,19 @@ namespace kev
          Key() : mRot(), mPos()
          {
          }
+         Key( const Key& key ) : mRot( key.mRot ), mPos( key.mPos ), mTime( key.mTime )
+         {
+            
+         }
+         
+         Key& operator=( const Key& key ) 
+         {
+            mRot = key.mRot;
+            mPos = key.mPos;
+            mTime = key.mTime;
+            return *this;
+         }  
+                
          // matrix constructor
          Key( const float& timeVal, const vjMatrix& mat )
          {
@@ -305,11 +318,14 @@ public:
          float normalize = time_needed / size;
 
          // interpolate.
-         VJ_LERP( normalize, keyOne.time(), keyTwo.time(), resultingKey.time() );
+         VJ_LERP( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
          resultingKey.position().lerp( normalize, keyOne.position(), keyTwo.position() );
 	      resultingKey.rotation().slerp( normalize, keyOne.rotation(), keyTwo.rotation() );
       }
       
+      std::map<float, Key>& keys() { return mKeys; }
+      const std::map<float, Key>& keys() const { return mKeys; }
+         
 private:
       // map a time to a key (binary tree, O(lg n) lookup)
       std::map<float, Key>  mKeys; 
@@ -322,7 +338,7 @@ private:
       int            mLoops, mLoopsLeft;
       
       // position in animation...
-      float       mCurrentTime, mFutureTime;
+      float          mCurrentTime, mFutureTime;
       
       // the current key (interpolated)
       Key            mCurrentKey;

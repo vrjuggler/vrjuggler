@@ -1,6 +1,7 @@
 #include "vjConfig.h" // for DEG2RAD macro
 #include <fstream.h>		// for ifstream
 #include "KeyFramer.h"
+#include "Kernel/vjDebug.h"
 
 namespace kev
 {
@@ -66,6 +67,7 @@ namespace kev
             kf.addkey( key );
             output( key );
          }
+         frames_file.close();
       }   
    };
 };

@@ -230,6 +230,18 @@ void simplePfNavApp::preFrame()
    if (mDisableNav == true)
    {
       mNavigationDCS->setActive( false );
+      // Emit a time
+      if (0 == (mStatusMessageEmitCount++ % 60))
+      {
+         vjVec3 cur_pos;
+         cur_pos = mat.getTrans();
+         vjQuat quat;
+         quat.makeQuat( mat );
+
+         std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: ";
+         quat.outStream( std::cout );
+         std::cout << std::endl;
+      }
    }
    else
    {
