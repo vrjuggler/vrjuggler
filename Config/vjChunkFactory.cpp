@@ -67,7 +67,7 @@ void vjChunkFactory::setupInitialEnvironment() {
     
 //     vjChunkDescDB* cfg_desc = new vjChunkDescDB;
 //     if (!cfg_desc->load(chunk_desc_file)) {
-//             vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjChunkFactory::setupInitialEnvironment: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
+//             vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " vjChunkFactory::setupInitialEnvironment: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
 //             exit(1);
 //     }
 //     this->addDescs(cfg_desc);
