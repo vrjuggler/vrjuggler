@@ -209,18 +209,16 @@ public class ConfigContextEditor
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                      mElementTree.getLastSelectedPathComponent();
 
-      // Get a DB of all known ChunkDescs
-      ConfigDefinitionRepository temp = getBroker().getRepository();
-      java.util.List defs = temp.getAllLatest();
-      //java.util.List descs = getBroker().getDescs(getContext());
+      // Get a list of all known ConfigDefinitions.
+      java.util.List defs = getBroker().getRepository().getAllLatest();
 
-      // Ask the user to choose a base ChunkDesc
+      // Ask the user to choose a base ConfigDefinition.
       ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
       chooser.setDefinitions(defs);
       int result = chooser.showDialog(this);
 
       // If the user did not cancel their choice, make a new ConfigChunk for
-      // the chose ChunkDesc
+      // the chosen ConfigDefinition.
       if (result == ConfigDefinitionChooser.APPROVE_OPTION)
       {
          ConfigElementFactory tempfac = new ConfigElementFactory(defs);
