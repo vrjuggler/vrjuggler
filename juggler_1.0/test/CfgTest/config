@@ -1,12 +1,28 @@
-#display
-#  name "Right"
-#  projectiontype "right"
-#  XDisplay ":0.0"
-#  stereo false
-#  sgipipe 0
-#  origin { 450 0 }
-#  size { 400 400 }
-#  end
+chunkinchunktest
+  Name "chunk in chunk test 1"
+  thechunk {
+    innerchunk
+      Name "foo"
+      KeyMod { 2 }
+      KeyPress { 3 }
+      end
+    innerchunk
+      Name "bar"
+      KeyMod { 4 }
+      KeyMod { 5 }
+      end
+  }
+  end
+
+display
+  name "Right"
+  projectiontype "right"
+  XDisplay ":0.0"
+  stereo false
+  sgipipe 0
+  origin { 450 0 }
+  size { 400 400 }
+  end
 
 
 ptrtest
