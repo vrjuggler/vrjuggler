@@ -8,7 +8,6 @@
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
 #include <tweek/CORBA/SubjectImpl.h>
-#include <tweek/CORBA/Observer.h>
 #include <StringSubject.h>
 
 

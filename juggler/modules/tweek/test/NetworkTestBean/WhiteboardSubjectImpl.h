@@ -7,7 +7,6 @@
 #include <vector>
 
 #include <tweek/CORBA/SubjectImpl.h>
-#include <tweek/CORBA/Observer.h>
 #include <WhiteboardSubject.h>
 
 
