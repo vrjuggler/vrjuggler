@@ -98,6 +98,17 @@ the Source</H2>
 <PRE>
     % <B>cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</B>
 </PRE>
+
+      If what you really want is the VR Juggler 1.0 release branch
+      instead of the developmental main branch, use the following command:
+
+<PRE>
+    % <B>cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout -r RELENG_1_0 juggler</B>
+</PRE>
+
+      (The string <TT>RELENG_1_0</TT> is the name of the branch in the
+      CVS repository containing the VR Juggler 1.0 release code.  "RELENG"
+      means "release engineering".)
     </LI>
   </OL>
 
@@ -148,6 +159,8 @@ the Source</H2>
 <PRE>
     % <B>cvs -d<I>login_name</I>@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</B>
 </PRE>
+
+      Be sure to use the appropriate branch name.
     </LI>
   </OL>
 
