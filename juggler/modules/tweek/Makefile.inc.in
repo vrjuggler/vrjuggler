@@ -352,10 +352,9 @@ ifeq ($(BUILD_JAVA), Y)
 ifeq (@OS_TYPE@, Win32)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(JACORB_DIR)/idl.bat $(bindir)
-else
+endif
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/idl $(bindir)
-endif
 endif
 
 PREINSTALL_HEADERS=	pre-install-headers
