@@ -77,7 +77,7 @@ public:
       source_rot.makeQuat(transformIdent);
 
       vjMatrix* wand_matrix;
-      wand_matrix = mWand->GetData();
+      wand_matrix = mWand->getData();
       wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
@@ -105,24 +105,25 @@ public:
       const float velocity_inc = 0.001f;
 
       // Update velocity
-      if(mIncVelocityButton->GetData())
+      if(mIncVelocityButton->getData())
          mCurVelocity += velocity_inc;
-      else if(mDecVelocityButton->GetData())
+      else if(mDecVelocityButton->getData())
          mCurVelocity -= velocity_inc;
-      else if(mStopButton->GetData())
+      else if(mStopButton->getData())
          mCurVelocity = 0.0f;
 
-      if(mIncVelocityButton->GetData() || mDecVelocityButton->GetData())
-         vjDEBUG(vjDBG_ALL,0) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
 
-      if(mIncVelocityButton->GetData() == vjDigital::TOGGLE_ON)
-         vjDEBUG(vjDBG_ALL,0) << "-- Toggle ON --" << endl << vjDEBUG_FLUSH;
-      if(mIncVelocityButton->GetData() == vjDigital::TOGGLE_OFF)
-         vjDEBUG(vjDBG_ALL,0) << "-- Toggle OFF --" << endl << vjDEBUG_FLUSH;
-      if(mIncVelocityButton->GetData() == vjDigital::ON)
-         vjDEBUG(vjDBG_ALL,0) << "-- ON --" << endl << vjDEBUG_FLUSH;
-      if(mIncVelocityButton->GetData() == vjDigital::OFF)
-         vjDEBUG(vjDBG_ALL,1) << "-- OFF --" << endl << vjDEBUG_FLUSH;
+      if(mIncVelocityButton->getData() || mDecVelocityButton->getData())
+         vjDEBUG(vjDBG_ALL,2) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
+
+      if(mIncVelocityButton->getData() == vjDigital::TOGGLE_ON)
+         vjDEBUG(vjDBG_ALL,2) << "-- Toggle ON --" << endl << vjDEBUG_FLUSH;
+      if(mIncVelocityButton->getData() == vjDigital::TOGGLE_OFF)
+         vjDEBUG(vjDBG_ALL,2) << "-- Toggle OFF --" << endl << vjDEBUG_FLUSH;
+      if(mIncVelocityButton->getData() == vjDigital::ON)
+         vjDEBUG(vjDBG_ALL,2) << "-- ON --" << endl << vjDEBUG_FLUSH;
+      if(mIncVelocityButton->getData() == vjDigital::OFF)
+         vjDEBUG(vjDBG_ALL,2) << "-- OFF --" << endl << vjDEBUG_FLUSH;
 
       // Find direction vector
       vjVec3   forward(0.0f, 0.0f, -1.0f);
@@ -215,14 +216,10 @@ public:
 
       int num_dls = rand()%50;
       glGenLists(num_dls);        // Generate some random lists.  NOTE: Needed for testing only
-      mDlData->cubeDLIndex = glGenLists(1);
 
+      mDlData->cubeDLIndex = glGenLists(1);     
       vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
       cerr << "created displays lists:" << num_dls+1 << endl;
-
-      glNewList(mDlData->cubeDLIndex, GL_COMPILE);
-         drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
-      glEndList();
 
       initGLState();
    }
@@ -385,8 +382,8 @@ private:
 
    void drawCube()
    {
-      glCallList(mDlData->cubeDLIndex);
-      //drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+       glCallList(mDlData->cubeDLIndex);
+       //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
    }
 
 

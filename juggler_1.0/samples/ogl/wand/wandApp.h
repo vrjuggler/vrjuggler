@@ -107,8 +107,8 @@ private:
    {
       //cout << "\n--- myDraw() ---\n";
 
-      //cout << "HeadPos:" << vjCoord(*mHead->GetData()).pos << "\t"
-      //     << "WandPos:" << vjCoord(*mWand->GetData()).pos << endl;
+      //cout << "HeadPos:" << vjCoord(*mHead->getData()).pos << "\t"
+      //     << "WandPos:" << vjCoord(*mWand->getData()).pos << endl;
 	
 
       //glClearColor(0.0f, clearColor, 0.0f, 1.0);
@@ -118,7 +118,7 @@ private:
 
          // -- Draw box on wand --- //
       vjMatrix* wandMatrix;
-      wandMatrix = mWand->GetData();
+      wandMatrix = mWand->getData();
 
       glPushMatrix();
 
