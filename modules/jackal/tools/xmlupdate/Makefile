@@ -43,6 +43,13 @@ cfg-update-2.0-2.1:
 desc-update-2.0-2.1:
 	$(MAKE) XSL_FILE=desc_2.0-2.1.xsl $(XSLT_TARGET)
 
+desc-update-2.1-2.2:
+	$(MAKE) XSL_FILE=desc_2.1-2.2.xsl $(XSLT_TARGET)
+
+desc-update-2.0-2.2:
+	$(MAKE) desc-update-2.0-2.1
+	$(MAKE) desc-update-2.1-2.2
+
 # Generate $(OUTPUT_FILE) from $(INPUT_FILE) using xsltproc and $(XSL_FILE) for
 # the stylesheet.
 update-xsltproc:
