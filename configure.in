@@ -735,7 +735,7 @@ else
         JAVAC=`unix2dos "$JAVAC"`
     fi
 
-    JAR="${JAVAC%javac}jar"
+    JAR=`echo $JAVAC | sed 's/javac$//'`jar
     BUILD_GUI='Y'
 fi
 
