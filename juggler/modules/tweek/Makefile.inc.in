@@ -205,15 +205,13 @@ endif
 # =============================================================================
 # Tweek GUI targets.
 # =============================================================================
-EXTRA_OBJ_TARGETS	= tweek-jar
 
 # Build the Tweek GUI code base and the JAR files.
 tweek-gui:
 	@$(MAKE) tweek-java
-	@$(MAKE) tweek-jar
 
 # Build the Java-based monitor application, associated code, and the JAR files.
-tweek-java tweek-jar:
+tweek-java:
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@echo "===> java"
@@ -229,10 +227,9 @@ endif	# ifndef NO_JAVA
 # Build the Tweek extensions and the JAR files
 extensions-gui:
 	@$(MAKE) extensions-java
-	@$(MAKE) extensions-jar
 
 # Build the extensions and their JAR files
-extensions-java extensions-jar:
+extensions-java:
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@echo "===> extensions/java"

@@ -78,83 +78,6 @@ IDL_JAVA_FILES=	SubjectManager.java	\
 		Subject.java		\
 		Observer.java
 
-#JAVA_SRCS=	$(shell find $(srcdir) -name '*.java')
-
-TWEEK_PKG=		org.vrjuggler.tweek
-TWEEK_DIR=		$(subst .,/,$(TWEEK_PKG))
-TWEEK_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TWEEK_DIR)/*.java))
-TWEEK_CLASSES=		$(TWEEK_SRCS:.java=.class)
-
-BEANS_PKG=		org.vrjuggler.tweek.beans
-BEANS_DIR=		$(subst .,/,$(BEANS_PKG))
-BEANS_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(BEANS_DIR)/*.java))
-BEANS_CLASSES=		$(BEANS_SRCS:.java=.class)
-
-LOADER_PKG=		org.vrjuggler.tweek.beans.loader
-LOADER_DIR=		$(subst .,/,$(LOADER_PKG))
-LOADER_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(LOADER_DIR)/*.java))
-LOADER_CLASSES=		$(LOADER_SRCS:.java=.class)
-
-EVENT_PKG=		org.vrjuggler.tweek.event
-EVENT_DIR=		$(subst .,/,$(EVENT_PKG))
-EVENT_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(EVENT_DIR)/*.java))
-EVENT_CLASSES=		$(EVENT_SRCS:.java=.class)
-
-GUI_PKG=		org.vrjuggler.tweek.gui
-GUI_DIR=		$(subst .,/,$(GUI_PKG))
-GUI_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(GUI_DIR)/*.java))
-GUI_CLASSES=		$(GUI_SRCS:.java=.class)
-
-ICONVIEWER_PKG=		org.vrjuggler.tweek.iconviewer
-ICONVIEWER_DIR=		$(subst .,/,$(ICONVIEWER_PKG))
-ICONVIEWER_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(ICONVIEWER_DIR)/*.java))
-ICONVIEWER_CLASSES=	$(ICONVIEWER_SRCS:.java=.class)
-
-NET_PKG=		org.vrjuggler.tweek.net
-NET_DIR=		$(subst .,/,$(NET_PKG))
-NET_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
-NET_CLASSES=		$(NET_SRCS:.java=.class)
-
-CORBA_PKG=		org.vrjuggler.tweek.net.corba
-CORBA_DIR=		$(subst .,/,$(CORBA_PKG))
-CORBA_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CORBA_DIR)/*.java))
-CORBA_CLASSES=		$(CORBA_SRCS:.java=.class)
-
-SERVICES_PKG=		org.vrjuggler.tweek.services
-SERVICES_DIR=		$(subst .,/,$(SERVICES_PKG))
-SERVICES_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(SERVICES_DIR)/*.java))
-SERVICES_CLASSES=	$(SERVICES_SRCS:.java=.class)
-
-TEXT_PKG=		org.vrjuggler.tweek.text
-TEXT_DIR=		$(subst .,/,$(TEXT_PKG))
-TEXT_SRCS=		$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TEXT_DIR)/*.java))
-TEXT_CLASSES=		$(TEXT_SRCS:.java=.class)
-
-TREEVIEWER_PKG=		org.vrjuggler.tweek.treeviewer
-TREEVIEWER_DIR=		$(subst .,/,$(TREEVIEWER_PKG))
-TREEVIEWER_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TREEVIEWER_DIR)/*.java))
-TREEVIEWER_CLASSES=	$(TREEVIEWER_SRCS:.java=.class)
-
-INCORS_PLAF_PKG=	com.incors.plaf
-INCORS_PLAF_DIR=	$(subst .,/,$(INCORS_PLAF_PKG))
-INCORS_PLAF_SRCS=	$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(INCORS_PLAF_DIR)/*.java))
-INCORS_PLAF_CLASSES=	$(INCORS_PLAF_SRCS:.java=.class)
-
-KUNSTSTOFF_PKG=		com.incors.plaf.kunststoff
-KUNSTSTOFF_DIR=		$(subst .,/,$(KUNSTSTOFF_PKG))
-KUNSTSTOFF_SRCS=	$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(KUNSTSTOFF_DIR)/*.java))
-KUNSTSTOFF_CLASSES=	$(KUNSTSTOFF_SRCS:.java=.class)
-
-K_THEMES_PKG=		com.incors.plaf.kunststoff.themes
-K_THEMES_DIR=		$(subst .,/,$(K_THEMES_PKG))
-K_THEMES_SRCS=		$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(K_THEMES_DIR)/*.java))
-K_THEMES_CLASSES=	$(K_THEMES_SRCS:.java=.class)
-
-K_MINI_PKG=		com.incors.plaf.kunststoff.mini
-K_MINI_DIR=		$(subst .,/,$(K_MINI_PKG))
-K_MINI_SRCS=		$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(K_MINI_DIR)/*.java))
-K_MINI_CLASSES=		$(K_MINI_SRCS:.java=.class)
-
 TWEEK_AUTO_SRCS=							\
 	tweek/SubjectManagerHolder.java					\
 	tweek/SubjectHolder.java					\
@@ -163,25 +86,7 @@ TWEEK_AUTO_SRCS=							\
 	tweek/SubjectManagerPackage/RegisteredSubjectHolder.java	\
 	tweek/SubjectManagerPackage/SubjectListHolder.java
 
-JAVA_SRCS=			\
-	$(TWEEK_SRCS)		\
-	$(BEANS_SRCS)		\
-	$(LOADER_SRCS)		\
-	$(EVENT_SRCS)		\
-	$(GUI_SRCS)		\
-	$(ICONVIEWER_SRCS)	\
-	$(NET_SRCS)		\
-	$(CORBA_SRCS)		\
-	$(SERVICES_SRCS)	\
-	$(TEXT_SRCS)		\
-	$(TREEVIEWER_SRCS)	\
-	$(TWEEK_AUTO_SRCS)	\
-	$(INCORS_PLAF_SRCS)	\
-	$(KUNSTSTOFF_SRCS)	\
-	$(K_THEMES_SRCS)	\
-	$(K_MINI_SRCS)
-
-JAVA_CLASSES=	$(JAVA_SRCS:.java=.class)
+JAVA_SRCS=	$(TWEEK_AUTO_SRCS)
 
 JARS=		Tweek.jar		\
 		TweekBeans.jar		\
@@ -191,77 +96,31 @@ JARS=		Tweek.jar		\
 		kunststoff-mod.jar
 BEANS=		Viewers
 
-# Some of our jars need custom manifests
-BEANS_MF=	$(srcdir)/beans.MF
-SERVICES_MF=	$(srcdir)/services.MF
-VIEWERS_MF=	$(srcdir)/viewers.MF
+_LOCAL_CLEAN=_clean
+JAVA_AFTERBUILD=java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+java_afterbuild:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
+
+# -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS) $(addsuffix .jar, $(BEANS))
-ifdef GLOBAL_BUILD
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
-ifneq ($(JARS), )
-	cp $(JARS) $(top_srcdir)/bin
-endif
-ifneq ($(BEANS), )
-	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
-endif
-endif
-
 Subject.java: Subject.idl
 	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
 
 SubjectManager.java: SubjectManager.idl
 	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
-
-Tweek.jar: $(TWEEK_CLASSES) $(GUI_CLASSES) $(TEXT_CLASSES)
-	$(JAR) cvf $@ \
-		$(TWEEK_DIR)/*.class \
-		$(GUI_DIR)/*.class \
-		$(TEXT_DIR)/*.class
-	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ \
-		$(GUI_DIR)/*.gif \
-		$(TEXT_DIR)/*.gif \
-		LICENSE-java-laf.txt
-
-TweekBeans.jar: $(BEANS_MF) $(BEANS_CLASSES) $(LOADER_CLASSES)
-	$(JAR) cvfm $@ $(BEANS_MF) \
-		$(BEANS_DIR)/*.class \
-		$(LOADER_DIR)/*.class
-
-TweekEvents.jar: $(EVENT_CLASSES)
-	$(JAR) cvf $@ \
-		$(EVENT_DIR)/*.class
-
-TweekNet.jar: $(NET_CLASSES) $(CORBA_CLASSES) tweek/*.class tweek/SubjectManagerPackage/*.class
-	$(JAR) cvf $@ \
-		$(NET_DIR)/*.class \
-		$(CORBA_DIR)/*.class \
-		tweek
-
-TweekServices.jar: $(SERVICES_CLASSES)
-	$(JAR) cvfm $@ $(SERVICES_MF) \
-		$(SERVICES_DIR)/*.class
-
-Viewers.jar: $(ICONVIEWER_CLASSES) $(TREEVIEWER_CLASSES)
-	$(JAR) cvfm $@ $(VIEWERS_MF) \
-		$(ICONVIEWER_DIR)/*.class \
-		$(TREEVIEWER_DIR)/*.class
-	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ \
-		$(ICONVIEWER_DIR)/*.gif \
-		LICENSE-java-laf.txt
-
-kunststoff-mod.jar: $(INCORS_PLAF_CLASSES) $(KUNSTSTOFF_CLASSES)	\
-                    $(K_THEMES_CLASSES) $(K_MINI_CLASSES)
-	$(JAR) cvf $@ com/incors/plaf
-	cd $(LAF_DIR)/kunststoff && $(JAR) uvf $(topdir)/java/$@ licence.txt
-	cd $(KUNSTSTOFF_SRCDIR) && $(JAR) uvf $(topdir)/java/$@		\
-          $(KUNSTSTOFF_DIR)/icons/*.gif $(K_MINI_DIR)/icons/*.gif
 
 # This cannot be named 'install' because Doozer++ already defines that.
 tweek-install:
@@ -312,7 +171,6 @@ endif
                 $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
           done
 
-CLEAN_FILES+=	$(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
 CLEAN_DIRS+=	tweek $(srcdir)/tweek
 
 ifdef GLOBAL_BUILD
