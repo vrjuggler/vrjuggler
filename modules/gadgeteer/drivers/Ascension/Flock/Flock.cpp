@@ -58,7 +58,7 @@
 namespace gadget
 {
 
-// Helper to return the index for theData array
+// Helper to return the index for mData array
 // given the birdNum we are dealing with and the bufferIndex
 // to get
 //! ARGS: birdNum - The number of the bird we care about
@@ -108,6 +108,7 @@ Flock::Flock(const char* const port,
                       calfile)
 {
    myThread = NULL;
+   mData = NULL;
 }
 
 bool Flock::config(jccl::ConfigChunkPtr c)
@@ -167,11 +168,8 @@ bool Flock::config(jccl::ConfigChunkPtr c)
 Flock::~Flock()
 {
    this->stopSampling();
-   if (theData != NULL)
-      delete theData;
-      //getMyMemPool()->deallocate((void*)theData);
-   if (mDataTimes != NULL)
-      delete mDataTimes;
+   if (mData != NULL)
+      delete[] mData;
 }
 
 void Flock::controlLoop(void* nullParam)
@@ -197,16 +195,12 @@ int Flock::startSampling()
 
    if (myThread == NULL)
    {
-      if (theData != NULL)
-         delete theData;
-      //   getMyMemPool()->deallocate((void*)theData);
-      if (mDataTimes != NULL)
-         delete mDataTimes;
+      if (mData != NULL)
+         delete[] mData;
 
       // Allocate buffer space for birds
       int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
-      theData = new vrj::Matrix[numbuffs];
-      mDataTimes = new jccl::TimeStamp[numbuffs];
+      mData = new PositionData[numbuffs];
 
       // Reset current, progress, and valid indices
       resetIndexes();
@@ -254,8 +248,8 @@ int Flock::sample()
 
    int i;
    jccl::TimeStamp sampletime;
-   sampletime.set();
    mFlockOfBirds.sample();
+   sampletime.set();
 
    vpr::Thread::yield();
 
@@ -265,17 +259,18 @@ int Flock::sample()
       // Get the index to the current read buffer
       int index = getBirdIndex(i,progress);
 
-
       // We add 1 to "i" to account for the fact that FlockStandalone is
       // 1-based
-      theData[index].makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
-                                  mFlockOfBirds.yRot( i+1 ),
-                                  mFlockOfBirds.xRot( i+1 ));
+      mData[index].getPositionData()->makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
+                                                   mFlockOfBirds.yRot( i+1 ),
+                                                   mFlockOfBirds.xRot( i+1 ));
 
-      theData[index].setTrans(mFlockOfBirds.xPos( i+1 ),
-                              mFlockOfBirds.yPos( i+1 ),
-                              mFlockOfBirds.zPos( i+1 ));
-      mDataTimes[index] = sampletime;
+      mData[index].getPositionData()->setTrans(mFlockOfBirds.xPos( i+1 ),
+                                               mFlockOfBirds.yPos( i+1 ),
+                                               mFlockOfBirds.zPos( i+1 ));
+      mData[index].setTimeStamp (sampletime);
+
+//        mDataTimes[index] = sampletime;
 
 
       //if (i==1)
@@ -286,11 +281,12 @@ int Flock::sample()
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      // is all this copying really necessary?
 
       world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-      transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
+      transmitter_T_reciever = *(mData[index].getPositionData());           // Get reciever data from sampled data
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-      theData[index] = world_T_reciever;                                     // Store corrected xform back into data
+      *(mData[index].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
 
 
       //if (i == 1)
@@ -334,20 +330,14 @@ int Flock::stopSampling()
    return 1;
 }
 
-vrj::Matrix* Flock::getPosData( int d ) // d is 0 based
-{
-    if (this->isActive() == false)
-      return NULL;
 
-    return (&theData[getBirdIndex(d,current)]);
+PositionData* Flock::getPositionData (int dev) {
+    if (this->isActive() == false)
+        return NULL;
+    else
+        return &mData[getBirdIndex (dev, current)];
 }
 
-jccl::TimeStamp* Flock::getPosUpdateTime (int d) {
-    if (this->isActive() == false)
-      return NULL;
-
-    return (&mDataTimes[getBirdIndex(d,current)]);
-}
 
 void Flock::updateData()
 {
@@ -359,7 +349,7 @@ void Flock::updateData()
 
    // Copy the valid data to the current data so that both are valid
    for(int i=0;i<getNumBirds();i++)
-      theData[getBirdIndex(i,current)] = theData[getBirdIndex(i,valid)];   // first hand
+      mData[getBirdIndex(i,current)] = mData[getBirdIndex(i,valid)];   // first hand
 
    // Locks and then swap the indicies
    swapCurrentIndexes();

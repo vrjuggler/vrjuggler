@@ -75,8 +75,7 @@ public:
    virtual void updateData() {
       if(!mStupified)
       {
-         mPosData = *(mTypedDevice->getPosData(mUnitNum));
-         mPosUpdateTime = *(mTypedDevice->getPosUpdateTime(mUnitNum));
+          mPositionData = * (mTypedDevice->getPositionData (mUnitNum));
 
          if(mETrans)
             transformData();
@@ -84,14 +83,14 @@ public:
          // Filter the data if there is an active filters
          if(mFilter != NULL)
          {
-            mPosData = mFilter->getPos(mPosData);
+            *(mPositionData.getPositionData()) = mFilter->getPos(*(mPositionData.getPositionData()));
          }
       }
    }
 
     //: returns time of last update...
-    jccl::TimeStamp* getUpdateTime () {
-   return &mPosUpdateTime;
+    jccl::TimeStamp getTimeStamp () {
+        return mPositionData.getTimeStamp();
     }
 
 
@@ -108,9 +107,9 @@ public:
    vrj::Matrix* getData()
    {
       if(mStupified)
-         mPosData.makeIdent();
+         mPositionData.getPositionData()->makeIdent();
 
-      return &mPosData;
+      return mPositionData.getPositionData();
    }
 
    //: Return this device's subunit number
@@ -137,9 +136,9 @@ public:
    //!NOTE: This moves the wMr to the modifed reciever system wMmr
    //+  where w = world, mr = world of the reciever, and r = reciever
    void transformData()
-   { mPosData.postMult(mMatrixTransform); }
+   { mPositionData.getPositionData()->postMult(mMatrixTransform); }
 
-   static std::string getChunkType() { return "PosProxy"; }
+   static std::string getChunkType() { return "PositionProxy"; }
 
    bool config(jccl::ConfigChunkPtr chunk);
 
@@ -154,8 +153,7 @@ public:
    }
 
 private:
-   vrj::Matrix       mPosData;
-   jccl::TimeStamp   mPosUpdateTime;
+    PositionData     mPositionData;
    vrj::Matrix       mMatrixTransform;    // reciever_t_modifiedReciever
    int               mUnitNum;
    bool              mETrans;             // Are transformation enabled;

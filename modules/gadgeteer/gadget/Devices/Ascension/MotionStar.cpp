@@ -86,7 +86,8 @@ MotionStar::MotionStar (const char* address, const unsigned short port,
    : m_motion_star(address, port, proto, master, hemisphere, bird_format,
                    run_mode, report_rate, measurement_rate, birds_required)
 {
-   m_my_thread = NULL;
+    mData = NULL;
+    m_my_thread = NULL;
 }
 
 // ----------------------------------------------------------------------------
@@ -96,11 +97,10 @@ MotionStar::~MotionStar ()
 {
    stopSampling();
 
-   if (theData != NULL)
+   if (mData != NULL)
    {
-      delete theData;
+      delete[] mData;
    }
-   //getMyMemPool()->deallocate((void*)theData);
 }
 
 // ----------------------------------------------------------------------------
@@ -153,15 +153,15 @@ int MotionStar::startSampling ()
       {
          int num_buffs, start_status;
 
-         if ( theData != NULL )
+         if ( mData != NULL )
          {
-            //getMyMemPool()->deallocate((void*) theData);
-            delete theData;
+            //getMyMemPool()->deallocate((void*) mData);
+            delete[] mData;
          }
 
          // Allocate buffer space for birds.
          num_buffs = (m_motion_star.getNumBirds() + 1) * 3;
-         theData   = new vrj::Matrix[num_buffs];
+         mData   = new PositionData[num_buffs];
 
          // Reset current, progress, and valid indices.
          resetIndexes();
@@ -321,14 +321,17 @@ int MotionStar::sample ()
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-
+      jccl::TimeStamp currentsample;
       m_motion_star.sample();
+      currentsample.set();
 
       // For each bird
       for ( unsigned int i = 0; i < m_motion_star.getNumBirds(); i++ )
       {
          // Get the index to the current read buffer
          index = getBirdIndex(i, progress);
+
+         mData[index].setTimeStamp (currentsample);
 
          format = m_motion_star.getBirdDataFormat(i);
 
@@ -338,18 +341,22 @@ int MotionStar::sample ()
             case FLOCK::INVALID:
                break;
             case FLOCK::POSITION:
-               theData[index].setTrans(m_motion_star.getXPos(i),
-                                       m_motion_star.getYPos(i),
-                                       m_motion_star.getZPos(i));
+               mData[index].getPositionData()->setTrans (
+                    m_motion_star.getXPos(i),
+                    m_motion_star.getYPos(i),
+                    m_motion_star.getZPos(i));
                break;
             case FLOCK::ANGLES:
-               theData[index].makeZYXEuler(m_motion_star.getZRot(i),
-                                           m_motion_star.getYRot(i),
-                                           m_motion_star.getXRot(i));
+               mData[index].getPositionData()->makeZYXEuler(
+                    m_motion_star.getZRot(i),
+                    m_motion_star.getYRot(i),
+                    m_motion_star.getXRot(i));
                break;
             case FLOCK::MATRIX:
                m_motion_star.getMatrixAngles(i, angles);
-               theData[index].makeZYXEuler(angles[0], angles[1], angles[2]);
+               mData[index].getPositionData()->makeZYXEuler(angles[0], 
+                                                            angles[1], 
+                                                            angles[2]);
                break;
             case FLOCK::POSITION_ANGLES:
                trans_mat.setTrans(m_motion_star.getXPos(i),
@@ -358,7 +365,7 @@ int MotionStar::sample ()
                rot_mat.makeZYXEuler(m_motion_star.getZRot(i),
                                     m_motion_star.getYRot(i),
                                     m_motion_star.getXRot(i));
-               theData[index] = trans_mat * rot_mat;
+               *(mData[index].getPositionData()) = trans_mat * rot_mat;
                break;
             case FLOCK::POSITION_MATRIX:
                trans_mat.setTrans(m_motion_star.getXPos(i),
@@ -366,11 +373,11 @@ int MotionStar::sample ()
                                   m_motion_star.getZPos(i));
                m_motion_star.getMatrixAngles(i, angles);
                rot_mat.makeXYZEuler(angles[0], angles[1], angles[2]);
-               theData[index] = trans_mat * rot_mat;
+               *(mData[index].getPositionData()) = trans_mat * rot_mat;
                break;
             case FLOCK::QUATERNION:
                m_motion_star.getQuaternion(i, quat);
-               theData[index].makeQuaternion(quat);
+               mData[index].getPositionData()->makeQuaternion(quat);
                break;
             case FLOCK::POSITION_QUATERNION:
                trans_mat.setTrans(m_motion_star.getXPos(i),
@@ -378,7 +385,7 @@ int MotionStar::sample ()
                                   m_motion_star.getZPos(i));
                m_motion_star.getQuaternion(i, quat);
                quat_mat.makeQuaternion(quat);
-               theData[index] = trans_mat * rot_mat;
+               *(mData[index].getPositionData()) = trans_mat * rot_mat;
                break;
          }
 
@@ -386,13 +393,13 @@ int MotionStar::sample ()
          world_T_transmitter = xformMat;
 
          // Get reciever data from sampled data.
-         transmitter_T_reciever = theData[index];
+         transmitter_T_reciever = *(mData[index].getPositionData());
 
          // Compute total transform.
          world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);
 
          // Store corrected xform back into data.
-         theData[index] = world_T_reciever;
+         *(mData[index].getPositionData()) = world_T_reciever;
       }
 
       // Locks and then swaps the indices.
@@ -425,7 +432,7 @@ void MotionStar::updateData ()
       // Copy the valid data to the current data so that both are valid.
       for ( unsigned int i = 0; i < getNumBirds(); i++ )
       {
-         theData[getBirdIndex(i,current)] = theData[getBirdIndex(i,valid)];   // first hand
+         mData[getBirdIndex(i,current)] = mData[getBirdIndex(i,valid)];   // first hand
       }
 
       // Locks and then swap the indices.
@@ -433,28 +440,17 @@ void MotionStar::updateData ()
    }
 }
 
-// ----------------------------------------------------------------------------
-// Get the reciever transform for the given bird number.  The birds are
-// zero-based.
-// ----------------------------------------------------------------------------
-vrj::Matrix* MotionStar::getPosData (int d)
-{
-   if ( isActive() == false )
-   {
-      vprDEBUG(vprDBG_ALL,0) << "Not active in getPosData()\n"
-                             << vprDEBUG_FLUSH;
-      return NULL;
-   }
-   return (&theData[getBirdIndex(d,current)]);
+
+PositionData* MotionStar::getPositionData (int dev) {
+    if (this->isActive() == false) {
+        vprDEBUG(vprDBG_ALL,0) << "Not active in getPosData()\n"
+                               << vprDEBUG_FLUSH;
+        return NULL;
+    }
+    else
+        return &mData[getBirdIndex (dev, current)];
 }
 
-// ----------------------------------------------------------------------------
-// Not used currently -- needed for interface.
-// ----------------------------------------------------------------------------
-jccl::TimeStamp* MotionStar::getPosUpdateTime (int d)
-{
-   return (&mDataTimes[getBirdIndex(d,current)]);
-}
 
 // ----------------------------------------------------------------------------
 // Set the address (either IP address or hostname) for the server.
@@ -753,7 +749,7 @@ void MotionStar::initCorrectionTable (const char* table_file)
 }
 
 // ----------------------------------------------------------------------------
-// Helper to return the index for theData array given the birdNum we are
+// Helper to return the index for mData array given the birdNum we are
 // dealing with and the bufferIndex to read.
 //
 // XXX: We are going to say the birds are 0 based.

@@ -101,26 +101,16 @@ namespace gadget
 
     for(int i=0;i<mTrackdSensors->numSensors();i++)
     {
-       mCurSensorValues[i] = mTrackdSensors->getSensorPos(i);
+       *(mCurSensorValues[i].getPositionData()) 
+           = mTrackdSensors->getSensorPos(i);
     }
  }
 
 
- // ------------------------------------------------------------------------
- //: Get the transform for the given sensor number.
- //
- //! RETURNS: NULL - The device is not active.
- //! RETURNS: Non-NULL - A pointer to the given sensor's matrix.
- //
- //! NOTE: Clients of Juggler should access tracker recievers as [0-n]
- //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
- //+  then you can access them, in order, as 0,1,2.
- // ------------------------------------------------------------------------
- vrj::Matrix* TrackdSensor::getPosData(int dev)
- {
+PositionData* TrackdSensor::getPositionData (int dev) {
     vprASSERT((unsigned)dev < mCurSensorValues.size() && "getPosData() index out of range");
     return &(mCurSensorValues[dev]);
- }
+}
 
 
 };

@@ -110,21 +110,20 @@ public:
         return std::string("TrackdSensor");
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the transform for the given sensor number.
-    //
-    //! RETURNS: NULL - The device is not active.
-    //! RETURNS: Non-NULL - A pointer to the given sensor's matrix.
-    //
-    //! NOTE: Clients of Juggler should access tracker recievers as [0-n]
-    //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-    //+  then you can access them, in order, as 0,1,2.
-    // ------------------------------------------------------------------------
-    vrj::Matrix* getPosData(int dev = 0);
+    /** Get current data from the receiver.
+     *  @arg dev - the receiver number.  Clients of juggler should access
+     *             tracker receivers as [0-n].  For example, if you have
+     *             receivers 1, 2, and 4, with transmitter on 3, then
+     *             you can access them as devs 0, 1, and 2.
+     *  @return a pointer to the receiver's current PositionData, or NULL
+     *          if the device is not active.
+     */
+    PositionData* getPositionData (int dev=0);
+
 
 private:
     TrackdSensorStandalone* mTrackdSensors; // The sensors that we are dealing with
-    std::vector<vrj::Matrix>   mCurSensorValues; // The current (up-to-date) values
+    std::vector<PositionData>   mCurSensorValues; // The current (up-to-date) values
 };
 
 };

@@ -123,18 +123,15 @@ class Flock : public Input, public Position {
     //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("Flock");}
 
-    //: Get the reciever transform
-    //! ARGS: dev - is the reciever number
-    //! POST: returns a pointer to the reciever's matrix
-    //! NOTE: Clients of juggler should access tracker recievers as [0-n]
-    //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-    //+  then you can access them, in order, as 0,1,2.
-    vrj::Matrix* getPosData( int dev = 0); // 0 base
+    /** Get current data from the receiver.
+     *  @arg dev - the receiver number.  Clients of juggler should access
+     *             tracker receivers as [0-n].  For example, if you have
+     *             receivers 1, 2, and 4, with transmitter on 3, then
+     *             you can access them as devs 0, 1, and 2.
+     *  @return a pointer to the receiver's current PositionData.
+     */
+    PositionData* getPositionData (int dev=0);
 
-    //: Get time of last update for this receiver
-    //! ARGS: dev - is the reciever number
-    //! POST: returns a pointer to the reciever's timestamp
-    jccl::TimeStamp* getPosUpdateTime (int dev = 0);
 
     //: see if the flock is active or not
     inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
@@ -263,6 +260,8 @@ private:
     int getBirdIndex(int birdNum, int bufferIndex);
 
     vpr::Thread*   myThread;      // The thread doing the flock sampling
+
+    PositionData* mData;
 
     FlockStandalone mFlockOfBirds;
 };

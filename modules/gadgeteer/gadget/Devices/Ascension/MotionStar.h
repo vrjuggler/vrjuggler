@@ -228,29 +228,17 @@ public:
    // ------------------------------------------------------------------------
    virtual void updateData(void);
 
-   // ------------------------------------------------------------------------
-   //: Get the reciever transform for the given bird number.  The birds are
-   //+ zero-based.
-   //
-   //! PRE: None.
-   //! POST: If the device is active, a pointer to the given receiver's
-   //+       matrix is returned.
-   //
-   //! ARGS: dev - The receiver (bird) number.  It defaults to 0.
-   //
-   //! RETURNS: NULL - The device is not active.
-   //! RETURNS: Non-NULL - A pointer to the given receiver's matrix.
-   //
-   //! NOTE: Clients of Juggler should access tracker recievers as [0-n]
-   //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-   //+  then you can access them, in order, as 0,1,2.
-   // ------------------------------------------------------------------------
-   virtual vrj::Matrix* getPosData(int dev = 0);
 
-   // ------------------------------------------------------------------------
-   //: Not used currently -- needed for interface.
-   // ------------------------------------------------------------------------
-   virtual jccl::TimeStamp* getPosUpdateTime(int d);
+    /** Get current data from the receiver.
+     *  @arg dev - the receiver number.  Clients of juggler should access
+     *             tracker receivers as [0-n].  For example, if you have
+     *             receivers 1, 2, and 4, with transmitter on 3, then
+     *             you can access them as devs 0, 1, and 2.
+     *  @return a pointer to the receiver's current PositionData, or NULL
+     *          if the device is not active.
+     */
+    PositionData* getPositionData (int dev=0);
+
 
    // ========================================================================
    // MotionStar-specific methods.
@@ -599,11 +587,11 @@ private:
    void initCorrectionTable(const char*);
 
    // ------------------------------------------------------------------------
-   //: Helper to return the index for theData array given the birdNum we are
+   //: Helper to return the index for mData array given the birdNum we are
    //+ dealing with and the bufferIndex to read.
    //
    //! PRE: None.
-   //! POST: The bird index into the theData array is calcualted and
+   //! POST: The bird index into the mData array is calcualted and
    //+       returned to the caller.  An assertion is made to verify that the
    //+       index to be returned is valid.
    //
@@ -611,13 +599,15 @@ private:
    //! ARGS: buffer_index - The value of current, progress, or valid (it is
    //+                      an offset in the array).
    //
-   //! RETURNS: An unsigned integer value given the index into theData for
+   //! RETURNS: An unsigned integer value given the index into mData for
    //+          the given bird number and buffer index.
    // ------------------------------------------------------------------------
    unsigned int getBirdIndex(int bird_num, int buffer_index);
 
    vpr::Thread*         m_my_thread;   // The thread doing the flock sampling
    MotionStarStandalone m_motion_star; // Actual MotionStar device driver
+
+    PositionData*       mData;
 };
 
 

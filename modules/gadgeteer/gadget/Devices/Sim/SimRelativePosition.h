@@ -61,16 +61,15 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   //: Return position data
-   vrj::Matrix* getPosData(int devNum=0)
-   {
-      vprASSERT(devNum == 0);    // Make sure we have a valid dev
-      return &mPos;
-   }
-
-   jccl::TimeStamp* getPosUpdateTime (int devNum = 0) {
-      return &mUpdateTime;
+    /** Get current data from the receiver.
+     *  @arg dev - the virutal device number. 
+     *  @return a pointer to the receiver's current PositionData.
+     */
+    PositionData* getPositionData (int dev=0) {
+        vprASSERT (dev == 0);  // Make sure we have a valid dev.
+        return &mPos;
     }
+
 
    /* These functions don't do anything */
    int startSampling() { return 1; }
@@ -83,11 +82,10 @@ public:
    static std::string getChunkType() { return std::string( "SimRelativePosition" ); }
 
 private:
-   vrj::Matrix            mPos;                   //: The current position being simulated
+   PositionData            mPos;                   //: The current position being simulated
    PositionInterface mBaseFrame;             //: The base frame of reference
    PositionInterface mRelativePos;           //: the relative position
 
-   jccl::TimeStamp         mUpdateTime;            //: Time of last update
 };
 
 };
