@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-08-2002 cjust     Testing equality of two "invalid" VarValues now
+                      returns true.
+                      Added a VarValue::isValid() convenience method.
 Dec-29-2001 cjust     VjControl doesn't open multiple unsynchronized
                       copies of the same file anymore, and asks if the
                       user wants to revert to the saved copy.
