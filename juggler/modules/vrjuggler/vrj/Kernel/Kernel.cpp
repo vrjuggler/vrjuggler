@@ -57,7 +57,7 @@ int vjKernel::start()
 {
    if(mControlThread != NULL) // Have already started
    {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::start called when kernel already running\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vjDEBUG_FLUSH;
       vjASSERT(false);
       exit(0);
    }
@@ -399,7 +399,7 @@ void vjKernel::loadConfigFile(std::string filename)
 
    if (!chunk_db.load(filename.c_str()))
    {
-     vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjConfigManager::loadConfigFile: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
+     vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjConfigManager::loadConfigFile: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
      exit(1);
    }
 
