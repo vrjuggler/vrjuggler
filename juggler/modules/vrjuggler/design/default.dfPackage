@@ -7,36 +7,6 @@ package id2dx08d6gs390yd6gt2nvb;
 */
 class diagram {
 /**
-@__ref <oiref:design#Class#id4bf8hd6gs390yd6gt2rw3.diagram:oiref><oihard>
-@__modelType reference
-@__fqn <oiref:#Package#Sound:oiref> 
-*/
-class reference {
-}/**
-@__ref <oiref:design#Class#id1nubtd6gs390yd6gt2ry3.diagram:oiref><oihard>
-@__modelType reference
-@__fqn <oiref:#Package#Util:oiref> 
-*/
-class reference24 {
-}/**
-@__ref <oiref:design#Class#id2jvvkd6gs390yd6gt2rmm.diagram:oiref><oihard>
-@__modelType reference
-@__fqn <oiref:#Package#Display:oiref> 
-*/
-class reference25 {
-}/**
-@__ref <oiref:design#Class#id1z8gkd6gs390yd6gt2rru.diagram:oiref><oihard>
-@__modelType reference
-@__fqn <oiref:#Package#Draw:oiref> 
-*/
-class reference26 {
-}/**
-@__ref <oiref:design#Class#id2cx5d6gs390yd6gt2rvd.diagram:oiref><oihard>
-@__modelType reference
-@__fqn <oiref:#Package#Kernel:oiref> 
-*/
-class reference27 {
-}/**
 @__ref <oiref:cpp#Class#userPfApp:oiref><oihard>
 @__modelType reference 
 */
@@ -56,11 +26,12 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:design#Class#id2cx5d6gs390yd6gt2rvd.diagram:oiref>=249,190,135,220,1:oigroup>
-<oigroup:<oiref:design#Class#id1z8gkd6gs390yd6gt2rru.diagram:oiref>=10,270,98,143,1:oigroup>
-<oigroup:<oiref:design#Class#id4bf8hd6gs390yd6gt2rw3.diagram:oiref>=249,10,144,135,1:oigroup>
-<oigroup:<oiref:design#Class#id1nubtd6gs390yd6gt2ry3.diagram:oiref>=10,10,53,84,1:oigroup>
-<oigroup:<oiref:design#Class#id2jvvkd6gs390yd6gt2rmm.diagram:oiref>=83,10,146,228,1:oigroup> 
+@__positions <oigroup:<oiref:cpp#Class#userOglApp:oiref>=607,104,153,183,1:oigroup>
+<oigroup:<oiref:design#Class#id2cx5d6gs390yd6gt2rvd.diagram:oiref>=83,83,64,52,1:oigroup>
+<oigroup:<oiref:design#Class#id1z8gkd6gs390yd6gt2rru.diagram:oiref>=1,1,69,111,1:oigroup>
+<oigroup:<oiref:design#Class#id1whbsd6i83xp3d6i89ct4.diagram:oiref>=741,368,165,115,1:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=472,269,122,170,1:oigroup>
+
 */
 class __positions {
 }
