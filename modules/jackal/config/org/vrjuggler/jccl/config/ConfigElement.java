@@ -53,6 +53,7 @@ public class ConfigElement implements ConfigElementPointerListener
       mName = name;
       mDefinition = def;
       mProps = props;
+      mReadOnly = false;
 
       // Iterate over all properties to find ConfigElementPointers
       Iterator itr = props.values().iterator();
@@ -79,6 +80,7 @@ public class ConfigElement implements ConfigElementPointerListener
    {
       mName = new String(old_elm.mName);
       mDefinition = old_elm.mDefinition;
+      mReadOnly = false;
 
       mProps = new TreeMap();
       
@@ -162,6 +164,22 @@ public class ConfigElement implements ConfigElementPointerListener
    public String getFullName()
    {
       return mName;
+   }
+
+   /**
+    * Returns true if the ConfigElement is read only.
+    */
+   public boolean isReadOnly()
+   {
+      return mReadOnly;
+   }
+
+   /**
+    * Specify if ConfigElement is read only.
+    */
+   public void setReadOnly(boolean read_only)
+   {
+      mReadOnly = read_only;
    }
 
    /**
@@ -533,6 +551,9 @@ public class ConfigElement implements ConfigElementPointerListener
 
    /** The name of this element. */
    private String mName;
+
+   /** Is the ConfigElement read only. */
+   private boolean mReadOnly;
 
    /** The definition of the format of this element. */
    private ConfigDefinition mDefinition;

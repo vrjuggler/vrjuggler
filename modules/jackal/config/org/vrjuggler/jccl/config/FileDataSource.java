@@ -130,6 +130,13 @@ public class FileDataSource
       {
          ConfigurationReader reader = new ConfigurationReader(mFile, mDefinitionRepos);
          mConfig = reader.readConfiguration();
+         if (isReadOnly())
+         {
+            for (Iterator itr = mConfig.getElements().iterator() ; itr.hasNext() ; )
+            {
+               ((ConfigElement)itr.next()).setReadOnly(true);
+            }
+         }
       }
       catch (ParseException pe)
       {
