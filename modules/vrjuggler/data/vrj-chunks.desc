@@ -1072,7 +1072,7 @@ The filters are applied in the order that they are specified in this configurati
     </PropertyDesc>
     <PropertyDesc token="measurementRate" name="Chassis Measurement Rate" type="float" variable="0">
       <help>Measurement rate for the chassis.</help>
-      <item label="Chassis Measurement Rate" defaultavlue="0.0" />
+      <item label="Chassis Measurement Rate" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
