@@ -100,6 +100,7 @@ public:
    /// Explicity releases the lock.
    vpr::ReturnStatus release()
    {
+      mLockStatus = false;
       return mTheLock->release();
    }
 
