@@ -131,6 +131,10 @@ void ThreadSGI::startThread(void* null_param)
    }
    ThreadManager::instance()->unlock();
 
+   // Tell this thread to die when its parent dies
+   prctl(PR_SETEXITSIG, 0);
+   prctl(PR_TERMCHILD);
+
    // --- CALL USER FUNCTOR --- //
    (*mUserThreadFunctor)();
 }
