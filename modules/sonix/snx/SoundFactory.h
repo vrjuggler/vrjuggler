@@ -53,7 +53,7 @@
 #include "snx/dirlist.h"
 #include "snx/ReplaceEnvVars.h"
 #include "snx/Singleton.h"
-#include "snx/SoundImplementation.h"
+#include "snx/ISoundImplementation.h"
 
 namespace snx
 {
@@ -143,9 +143,9 @@ public:
             std::cout << "   o  Got plugin: " << name << " registering..." << std::endl;
          
             // create the implementation
-            typedef SoundImplementation* (*newPluginFunc)(void);
+            typedef ISoundImplementation* (*newPluginFunc)(void);
             newPluginFunc newPlugin = (newPluginFunc)mPlugins[x].lookup( "newPlugin" );
-            SoundImplementation* si = NULL;
+            ISoundImplementation* si = NULL;
             if (newPlugin != NULL)
             {
                si = newPlugin();
@@ -193,11 +193,11 @@ public:
     * @semantics factory function used to create an implementation of a sound API 
     */
    void createImplementation( const std::string& apiName,
-                              snx::SoundImplementation* &mImplementation );
+                              snx::ISoundImplementation* &mImplementation );
 
    // pass valid pointer to a sound implementation with a name it's refered to
    // or... pass NULL to unregister/delete apiName...
-   void reg( const std::string& apiName, snx::SoundImplementation* impl )
+   void reg( const std::string& apiName, snx::ISoundImplementation* impl )
    {
       if (impl != NULL)
       {
@@ -213,11 +213,11 @@ public:
       
    }
    
-   std::map< std::string, snx::SoundImplementation* > mRegisteredImplementations;
+   std::map< std::string, snx::ISoundImplementation* > mRegisteredImplementations;
    std::vector<xdl::Library> mPlugins;
 private:  
    /** @link dependency */
-   /*#  snx::SoundImplementation lnkSoundImplementation; */
+   /*#  snx::ISoundImplementation lnkSoundImplementation; */
 
    /** @link dependency */
    /*#  snx::StubSoundImplementation lnksnx::StubSoundImplementation; */
@@ -232,7 +232,7 @@ private:
     * @clientCardinality 1
     * @supplierCardinality 0..*
     * @directed */
-   /*#  snx::SoundImplementation lnkSoundImplementation1; */
+   /*#  snx::ISoundImplementation lnkSoundImplementation1; */
 };
 
 template <class _type>

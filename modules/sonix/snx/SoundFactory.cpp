@@ -4,7 +4,7 @@
  * sonix
  *
  * Original Authors:
- *   Kevin Meinert, Carolina Cruz-Neira
+ *   Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -41,7 +41,7 @@
 
 #include <string>
 #include <iostream>
-#include "snx/SoundImplementation.h"
+#include "snx/ISoundImplementation.h"
 #include "snx/StubSoundImplementation.h" // in case lookup fails...
 
 #include "snx/SoundFactory.h" // my header.
@@ -57,7 +57,7 @@ namespace snx
  * @semantics factory function used to create an implementation of a sound API 
  */
 void SoundFactory::createImplementation( const std::string& apiName,
-                           snx::SoundImplementation* &mImplementation )
+                           snx::ISoundImplementation* &mImplementation )
 {
    if (mRegisteredImplementations.count( apiName ) > 0)
    {

@@ -57,17 +57,19 @@
 
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
+#include "snx/ISoundImplementation.h"
 
 namespace snx
 {
 
-class SoundImplementation
+class SoundImplementation : public ISoundImplementation
 {
 public:
    /**
     * @semantics default constructor 
     */
-   SoundImplementation() : mName( "unknown" ),
+   SoundImplementation() : ISoundImplementation(), 
+                           mName( "unknown" ),
                            mSoundAPIInfo(),
                            mSounds(),
                            mListenerPos()
@@ -77,7 +79,7 @@ public:
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( SoundImplementation* &newCopy ) = 0; 
+   virtual void clone( ISoundImplementation* &newCopy ) = 0; 
    
    /**
     * @semantics destructor 

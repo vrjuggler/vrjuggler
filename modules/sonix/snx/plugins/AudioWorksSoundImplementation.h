@@ -4,7 +4,7 @@
  * sonix
  *
  * Original Authors:
- *   Kevin Meinert, Carolina Cruz-Neira
+ *   Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -80,7 +80,7 @@ public:
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( snx::SoundImplementation* &newCopy );
+   virtual void clone( snx::ISoundImplementation* &newCopy );
    
    /**
     * @input alias of the sound to trigger, and number of times to play
