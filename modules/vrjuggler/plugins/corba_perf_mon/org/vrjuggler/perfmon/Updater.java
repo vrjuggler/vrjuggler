@@ -57,7 +57,7 @@ public class Updater implements Runnable
     for (int i = 0; i < length; ++i)
     {
       System.out.println("[DBG] Adding a new series for " + value_map[i].mName);
-      TimeSeries s = new TimeSeries(value_map[i].mName);
+      TimeSeries s = new TimeSeries(value_map[i].mName, Millisecond.class);
       mTimeSeriesCollection.addSeries(s);
     }
     while ( true )
@@ -76,7 +76,7 @@ public class Updater implements Runnable
       for (int i = 0; i < length; ++i)
       {
          mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map[i].mSampleTime );
-         System.out.println("[DBG] Setting value for series " + i);
+         //System.out.println("[DBG] Setting value for series " + i);
       }
       
       Thread.yield();
