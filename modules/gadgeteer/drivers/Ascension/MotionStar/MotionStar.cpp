@@ -233,7 +233,6 @@ vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
     return (&theData[getBirdIndex(d,current)]);
 }
  
-/* 
 
 void vjMotionStar::updateData()
 {
@@ -253,8 +252,7 @@ void vjMotionStar::updateData()
  
    return;
 }
-
-*/ 
+ 
 
 
 void vjMotionStar::setFormat (unsigned int i)
