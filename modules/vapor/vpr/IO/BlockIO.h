@@ -328,7 +328,10 @@ public:
 
       // size it down if needed, if (bytes_read==length), then resize does
       // nothing...
-      buffer.resize( bytes_read );
+      if ( status.success() )
+      {
+         buffer.resize(bytes_read);
+      }
 
       return status;
    }
@@ -400,7 +403,11 @@ public:
       buffer.resize( length );
       memset( &buffer[0], '\0', buffer.size() );
       status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout);
-      buffer.resize( bytes_read );
+
+      if ( status.success() )
+      {
+         buffer.resize(bytes_read);
+      }
 
       return status;
    }
@@ -443,7 +450,11 @@ public:
       buffer.resize( length );
       memset( &buffer[0], '\0', buffer.size() );
       status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout );
-      buffer.resize(bytes_read);
+
+      if ( status.success() )
+      {
+         buffer.resize(bytes_read);
+      }
 
       return status;
    }
