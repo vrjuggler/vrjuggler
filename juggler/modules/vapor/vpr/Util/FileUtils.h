@@ -55,9 +55,9 @@ namespace vpr
 * @param startStr The string that marks the start of an env var
 * @param endStr The string that marks the end of an env var
 */
-std::string replaceEnvVars(const std::string str,
-                           const std::string startStr,
-                           const std::string endStr);
+extern VPR_API(std::string) replaceEnvVars(const std::string str,
+                                           const std::string startStr,
+                                           const std::string endStr);
 
 /** Replace environment variable strings embedded in str
 *
@@ -65,7 +65,7 @@ std::string replaceEnvVars(const std::string str,
 *  ${VAR}
 *  $(VAR)
 */
-std::string replaceEnvVars(const std::string str);
+extern VPR_API(std::string) replaceEnvVars(const std::string str);
 
 }; // namespace vpr
 
