@@ -9,7 +9,7 @@
       <property valuetype="configelementpointer" variable="false" name="sync_server">
          <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
          <value label="Sync Server Machine"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>
@@ -21,7 +21,7 @@
       <property valuetype="configelementpointer" variable="false" name="sync_server">
          <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
          <value label="Sync Server Machine"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="slave_one">
          <help>Should we syncronize with slave #1?</help>

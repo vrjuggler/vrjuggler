@@ -20,7 +20,7 @@
       <start_barrier_plugin name="Start Barrier" version="1">
          <start_master>Node(ptah-1)</start_master>
       </start_barrier_plugin>
-      <machine_specific name="Node(ptah-1)" version="2">
+      <cluster_node name="Node(ptah-1)" version="1">
          <display_system>
             <display_system name="display_system 0" version="1">
                <number_of_pipes>1</number_of_pipes>
@@ -77,8 +77,8 @@
          </display_windows>
          <listen_port>7000</listen_port>
          <host_name>ptah-1</host_name>
-      </machine_specific>
-      <machine_specific name="Node(ptah-2)" version="2">
+      </cluster_node>
+      <cluster_node name="Node(ptah-2)" version="1">
          <display_system>
             <display_system name="display_system 0" version="1">
                <number_of_pipes>1</number_of_pipes>
@@ -135,8 +135,8 @@
          </display_windows>
          <listen_port>7000</listen_port>
          <host_name>ptah-2</host_name>
-      </machine_specific>
-      <machine_specific name="Node(ptah-3)" version="2">
+      </cluster_node>
+      <cluster_node name="Node(ptah-3)" version="1">
          <display_system>
             <display_system name="display_system 0" version="1">
                <number_of_pipes>1</number_of_pipes>
@@ -193,8 +193,8 @@
          </display_windows>
          <listen_port>7000</listen_port>
          <host_name>ptah-3</host_name>
-      </machine_specific>
-      <machine_specific name="Node(ptah-4)" version="2">
+      </cluster_node>
+      <cluster_node name="Node(ptah-4)" version="1">
          <display_system>
             <display_system name="display_system 0" version="1">
                <number_of_pipes>1</number_of_pipes>
@@ -251,7 +251,7 @@
          </display_windows>
          <listen_port>7000</listen_port>
          <host_name>ptah-4</host_name>
-      </machine_specific>
+      </cluster_node>
    </elements>
 </configuration>
 
