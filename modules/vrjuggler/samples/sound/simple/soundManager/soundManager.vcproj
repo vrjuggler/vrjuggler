@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(VJ_BASE_DIR)/include&quot;"
 				PreprocessorDefinitions="_DEBUG,_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -43,7 +43,7 @@
 				OutputFile="soundManager.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)/lib&quot;;&quot;$(VJ_BASE_DIR)/lib/debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(VJ_BASE_DIR)/lib/debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/soundManager.pdb"
 				SubSystem="1"/>
@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(VJ_BASE_DIR)/include&quot;"
 				PreprocessorDefinitions="_OPT,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
@@ -97,7 +97,7 @@
 				OutputFile=".\Release/soundManager.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)/lib&quot;;&quot;$(VJ_BASE_DIR)/lib/opt&quot;"
+				AdditionalLibraryDirectories="&quot;$(VJ_BASE_DIR)/lib/opt&quot;"
 				ProgramDatabaseFile=".\Release/soundManager.pdb"
 				SubSystem="1"/>
 			<Tool
