@@ -85,8 +85,8 @@ public class ConfigToolbar
                                                           "/open.gif")));
          saveAllBtn.setIcon(new ImageIcon(loader.getResource(img_root +
                                                              "/saveall.gif")));
-         copyBtn.setIcon(new ImageIcon(loader.getResource(img_root +
-                                                          "/Copy16.gif")));
+         cutBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                         "/Cut16.gif")));
          copyBtn.setIcon(new ImageIcon(loader.getResource(img_root +
                                                           "/Copy16.gif")));
          pasteBtn.setIcon(new ImageIcon(loader.getResource(img_root +
@@ -577,27 +577,31 @@ public class ConfigToolbar
       titleLbl.setText("VRJConfig");
       toolbar.setBorder(BorderFactory.createEtchedBorder());
       toolbar.setFloatable(false);
-      newBtn.setToolTipText("New Configuration");
+      newBtn.setToolTipText("Create a new configuration file");
       newBtn.setActionCommand("New");
       newBtn.setFocusPainted(false);
-      openBtn.setToolTipText("Open Configuration");
+      openBtn.setToolTipText("Open a configuration file");
       openBtn.setActionCommand("Open");
       openBtn.setFocusPainted(false);
-      RTRCBtn.setToolTipText("Run Time ReConfiguration");
+      RTRCBtn.setToolTipText("Remote run-time reconfiguration");
       RTRCBtn.setActionCommand("RTRC");
       RTRCBtn.setFocusPainted(false);
 
       saveAllBtn.setEnabled(true);
-      saveAllBtn.setToolTipText("Save All Open Configurations");
+      saveAllBtn.setToolTipText("Save all open configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
 
+      cutBtn.setEnabled(true);
+      cutBtn.setToolTipText("Cut config element to the clipboard");
+      cutBtn.setActionCommand("cut");
+      cutBtn.setFocusPainted(false);
       copyBtn.setEnabled(true);
-      copyBtn.setToolTipText("Copy Config Element");
+      copyBtn.setToolTipText("Copy config element to the clipboard");
       copyBtn.setActionCommand("copy");
       copyBtn.setFocusPainted(false);
       pasteBtn.setEnabled(true);
-      pasteBtn.setToolTipText("Paste Config Element");
+      pasteBtn.setToolTipText("Paste config element");
       pasteBtn.setActionCommand("paste");
       pasteBtn.setFocusPainted(false);
 
@@ -640,6 +644,13 @@ public class ConfigToolbar
             }
          }
       });
+      cutBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            fireAction(evt.getActionCommand());
+         }
+      });
       copyBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -668,6 +679,7 @@ public class ConfigToolbar
       toolbar.add(RTRCBtn, null);
       toolbar.add(saveAllBtn, null);
       toolbar.addSeparator();
+      toolbar.add(cutBtn, null);
       toolbar.add(copyBtn, null);
       toolbar.add(pasteBtn, null);
       toolbar.addSeparator();
@@ -696,6 +708,7 @@ public class ConfigToolbar
    private JButton newBtn = new JButton();
    private JButton openBtn = new JButton();
    private JButton saveAllBtn = new JButton();
+   private JButton cutBtn = new JButton();
    private JButton copyBtn = new JButton();
    private JButton pasteBtn = new JButton();
    private JButton RTRCBtn = new JButton();
