@@ -70,10 +70,10 @@ ConfigChunk::~ConfigChunk () {
     assertValid();
 
     validation = 0;
-    /* XXX
+
     for (unsigned int i = 0; i < props.size(); i++)
         delete (props[i]);
-        */
+
 }
 
 bool ConfigChunk::hasSeparator (const std::string &path) {
@@ -120,10 +120,9 @@ void ConfigChunk::associateDesc (ChunkDescPtr d, bool use_defaults) {
         desc = d;
         type_as_varvalue = desc->getToken();
 
-        /* XXX:
-           for (i = 0; i < props.size(); i++)
-           delete (props[i]);
-        */
+        for (i = 0; i < props.size(); i++)
+            delete (props[i]);
+
         props.clear();
         
         for (i = 0; i < desc->plist.size(); i++) {
@@ -147,10 +146,10 @@ ConfigChunk& ConfigChunk::operator = (const ConfigChunk& c) {
     desc = c.desc;
     type_as_varvalue = c.type_as_varvalue;
 
-    /* XXX:
+
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
-        */
+
     props.clear();
 
     for (i = 0; i < c.props.size(); i++) {
