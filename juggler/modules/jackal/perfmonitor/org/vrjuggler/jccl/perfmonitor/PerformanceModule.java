@@ -210,30 +210,46 @@ public class PerformanceModule extends DefaultCoreModule {
 
 	try {
             for (;;) {
-                //System.out.println ("ttype is " + st.ttype);
-                st.nextToken();
-                //if (st.ttype == st.TT_EOF)
-                //  break;
-                if (st.ttype != ConfigStreamTokenizer.TT_WORD) {
-                    st.pushBack();
-                    break;
+
+                perfdatatype = "";
+                for (;;) {
+                    st.nextToken();
+                    if (st.ttype == st.TT_EOF)
+                        break;
+                    if (st.ttype == st.TT_WORD)
+                        if (st.sval.equalsIgnoreCase ("PerfData1"))
+                            break;
                 }
-                perfdatatype = st.sval;
-                if (!st.sval.equalsIgnoreCase ("PerfData1")) {
-                    st.pushBack();
-                    break;
+
+                if (st.ttype != st.TT_EOF) {
+
+//                     //System.out.println ("ttype is " + st.ttype);
+//                     st.nextToken();
+//                     //if (st.ttype == st.TT_EOF)
+//                     //  break;
+                    
+//                     if (st.ttype != ConfigStreamTokenizer.TT_WORD) {
+//                         st.pushBack();
+//                         break;
+//                     }
+//                     perfdatatype = st.sval;
+//                     if (!st.sval.equalsIgnoreCase ("PerfData1")) {
+//                         st.pushBack();
+//                         break;
+//                     }
+
+                    st.nextToken();
+                    name = st.sval;
+                    st.nextToken();
+                    num = Integer.parseInt(st.sval);
+                
+                    //System.out.println ("read perf info for " + name + "\nnum is " + num);
+                
+                    p = getCollector (name);
+                    if (p == null)
+                        p = addCollector (name, num);   
+                    p.read (st);
                 }
-                st.nextToken();
-                name = st.sval;
-                st.nextToken();
-                num = Integer.parseInt(st.sval);
-                
-                //System.out.println ("read perf info for " + name + "\nnum is " + num);
-                
-                p = getCollector (name);
-                if (p == null)
-                    p = addCollector (name, num);   
-                p.read (st);
             }
 
 	}
