@@ -213,9 +213,9 @@ namespace vpr
       }
 
 
-      static   vpr::Mutex           mTreeLock;
 
    private:
+      static   vpr::Mutex           mTreeLock;
       static   ProfileNode          mRoot;
       static   ProfileNode*         mCurrentNode;
       static   int                  mFrameCounter;
