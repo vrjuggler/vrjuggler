@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <assert.h>
 #include <sys/types.h>
 
 #include <jccl/Config/ConfigChunk.h>
