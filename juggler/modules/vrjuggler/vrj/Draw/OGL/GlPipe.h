@@ -37,12 +37,15 @@ public:
       //!NOTE: All contained windows SHOULD have the same pipe number
    vjGlPipe(int _num, vjGlDrawManager* glMgr) : controlExit(0), glManager(glMgr)
    {
-      ;
+      mThreadRunning = false;
    }
 
       //: Start the pipe running
+      //! PRE: The pipe should not have a thread of control yet
       //!POST: The pipe has it's own thread of control and is ready to operate
       //+       The Thread of control is running controlLoop
+      //! NOTE: The pipe does NOT have to have any windows in order to run
+      //+        that way we can add windows to pipes at run-time
    int start();
   
       //: Stop the pipe
@@ -53,10 +56,12 @@ public:
    }
 
       //: Trigger rendering of the pipe to start
+      //! PRE: The pipe must have a thread of control
       //!POST: The pipe has be told to start rendering
    void triggerRender();
 
       //: Blocks until rendering of the windows is completed
+      //! PRE: The pipe must have a thread of control
       //!POST: The pipe has completed its rendering
    void completeRender();
     
@@ -115,7 +120,9 @@ private:
 
    vjCond      renderCond;          //: Condition variable for Redner state
    RenderState renderState;         //: The current render state.
-   int         controlExit;         //: Flag for when to exit the control loop 
+   int         controlExit;         //: Flag for when to exit the control loop
+
+   bool        mThreadRunning;      //: Do we have a running thread? 
 };
 
 #endif
