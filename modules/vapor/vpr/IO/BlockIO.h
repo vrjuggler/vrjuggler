@@ -152,55 +152,32 @@ public:
    }
 
    /**
-    * Reconfigures the I/O device so that it is in blocking mode.
+    * Reconfigures the I/O device so that it is in blocking or non-blocking
+    * mode depending on the given parameter.
     *
     * @pre The device is open.
     * @post Processes will block when accessing the device.
+    *
+    * @param blocking A true value puts the I/O device into blocking mode.
+    *                 A false value puts it into non-blocking mode.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the device's blocking
     *         mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   virtual ReturnStatus enableBlocking() = 0;
-
-   /**
-    * Reconfigures the I/O device so that it is in non-blocking mode.
-    *
-    * @pre The device is open.
-    * @post Processes will not block when accessing the device.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the device's blocking
-    *         mode is set to non-blocking.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
-    */
-   virtual ReturnStatus enableNonBlocking() = 0;
+   virtual ReturnStatus setBlocking(const bool& blocking) = 0;
 
    /**
     * Gets the current blocking state for the I/O device.
     *
-    * @pre <code>mBlocking</code> is set correctly.
-    * @post
+    * @pre mBlocking is set correctly.
     *
-    * @return <code>true</code> is returned if the device is in blocking mode.
-    *         Otherwise, <code>false</code> is returned.
+    * @return true is returned if the device is in blocking mode.
+    *         Otherwise, false is returned.
     */
-   virtual bool getBlocking() const
+   virtual bool isBlocking() const
    {
       return mBlocking;
-   }
-
-   /**
-    * Gets the current non-blocking state for the I/O device.
-    *
-    * @pre mBlocking is set correctly.
-    * @post
-    *
-    * @return <code>true</code> is returned if the device is in non-blocking
-    *         mode.  Otherwise, <code>false</code> is returned.
-    */
-   virtual bool getNonBlocking() const
-   {
-      return (!mBlocking);
    }
 
    /**

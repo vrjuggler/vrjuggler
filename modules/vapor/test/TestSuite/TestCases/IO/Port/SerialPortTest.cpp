@@ -19,7 +19,7 @@ std::string SerialPortTest::mSendPortName;
 std::string SerialPortTest::mRecvPortName;
 std::vector<vpr::Uint32> SerialPortTest::mBaudRates;
 
-void SerialPortTest::setUp ()
+void SerialPortTest::setUp()
 {
    if ( mRecvPortName.empty() )
    {
@@ -73,12 +73,12 @@ void SerialPortTest::setUp ()
    }
 }
 
-void SerialPortTest::tearDown ()
+void SerialPortTest::tearDown()
 {
    /* Do nothing. */ ;
 }
 
-void SerialPortTest::testGetName ()
+void SerialPortTest::testGetName()
 {
    vpr::SerialPort port1(mSendPortName), port2(mRecvPortName);
    CPPUNIT_ASSERT(port1.getName() == mSendPortName && "Incorret port name in use");
@@ -86,7 +86,7 @@ void SerialPortTest::testGetName ()
    CPPUNIT_ASSERT(port1.getName() != port2.getName());
 }
 
-void SerialPortTest::testChangeUpdateAction ()
+void SerialPortTest::testChangeUpdateAction()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -98,14 +98,14 @@ void SerialPortTest::testChangeUpdateAction ()
    CPPUNIT_ASSERT(port.getUpdateAction() == vpr::SerialTypes::FLUSH);
 }
 
-void SerialPortTest::testOpen ()
+void SerialPortTest::testOpen()
 {
    vpr::SerialPort port(mSendPortName);
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testRepeatedOpen ()
+void SerialPortTest::testRepeatedOpen()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -119,7 +119,7 @@ void SerialPortTest::testRepeatedOpen ()
    }
 }
 
-void SerialPortTest::testOpenModes ()
+void SerialPortTest::testOpenModes()
 {
    vpr::SerialPort port1(mSendPortName);
    port1.setOpenReadOnly();
@@ -137,31 +137,29 @@ void SerialPortTest::testOpenModes ()
    CPPUNIT_ASSERT(port3.close().success() && "Failed to close");
 }
 
-void SerialPortTest::testBlockingOpen ()
+void SerialPortTest::testBlockingOpen()
 {
    vpr::SerialPort port(mSendPortName);
 
    port.setOpenBlocking();
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
-   CPPUNIT_ASSERT(port.getBlocking() && "Port should be in blocking mode");
-   CPPUNIT_ASSERT(! port.getNonBlocking() && "Port should not be in non-blocking mode");
+   CPPUNIT_ASSERT(port.isBlocking() && "Port should be in blocking mode");
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testNonBlockingOpen ()
+void SerialPortTest::testNonBlockingOpen()
 {
    vpr::SerialPort port(mSendPortName);
 
    port.setOpenNonBlocking();
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
-   CPPUNIT_ASSERT(port.getNonBlocking() && "Port should be in non-blocking mode");
-   CPPUNIT_ASSERT(! port.getBlocking() && "Port should not be in blocking mode");
+   CPPUNIT_ASSERT(! port.isBlocking() && "Port should not be in blocking mode");
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testEnableBlocking ()
+void SerialPortTest::testEnableBlocking()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -170,13 +168,12 @@ void SerialPortTest::testEnableBlocking ()
    port.setOpenNonBlocking();
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
-   CPPUNIT_ASSERT(port.enableBlocking().success() && "Failed to enable blocking");
-   CPPUNIT_ASSERT(port.getBlocking() && "Port should be in blocking mode");
-   CPPUNIT_ASSERT(! port.getNonBlocking() && "Port should not be in non-blocking mode");
+   CPPUNIT_ASSERT(port.setBlocking(true).success() && "Failed to enable blocking");
+   CPPUNIT_ASSERT(port.isBlocking() && "Port should be in blocking mode");
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testEnableNonBlocking ()
+void SerialPortTest::testEnableNonBlocking()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -185,13 +182,12 @@ void SerialPortTest::testEnableNonBlocking ()
    port.setOpenBlocking();
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
-   CPPUNIT_ASSERT(port.enableNonBlocking().success() && "Failed to enable non-blocking");
-   CPPUNIT_ASSERT(port.getNonBlocking() && "Port should be in non-blocking mode");
-   CPPUNIT_ASSERT(! port.getBlocking() && "Port should not be in blocking mode");
+   CPPUNIT_ASSERT(port.setBlocking(false).success() && "Failed to enable non-blocking");
+   CPPUNIT_ASSERT(! port.isBlocking() && "Port should not be in blocking mode");
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeBufferSize ()
+void SerialPortTest::testChangeBufferSize()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::Uint16 buf_size, buf_size_new;
@@ -208,7 +204,7 @@ void SerialPortTest::testChangeBufferSize ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeTimeout ()
+void SerialPortTest::testChangeTimeout()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::Uint8 timeout, timeout_new;
@@ -225,7 +221,7 @@ void SerialPortTest::testChangeTimeout ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeCharacterSize ()
+void SerialPortTest::testChangeCharacterSize()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::SerialTypes::CharacterSizeOption orig_size, new_size, mod_size;
@@ -246,7 +242,7 @@ void SerialPortTest::testChangeCharacterSize ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeReadState ()
+void SerialPortTest::testChangeReadState()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -254,19 +250,19 @@ void SerialPortTest::testChangeReadState ()
 
    if ( port.getReadState() )
    {
-      CPPUNIT_ASSERT(port.disableRead().success() && "Failed to disable read");
-      CPPUNIT_ASSERT(port.enableRead().success() && "Failed to re-enable read");
+      CPPUNIT_ASSERT(port.setRead(false).success() && "Failed to disable read");
+      CPPUNIT_ASSERT(port.setRead(true).success() && "Failed to re-enable read");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableRead().success() && "Failed to enable read");
-      CPPUNIT_ASSERT(port.disableRead().success() && "Failed to re-disable read");
+      CPPUNIT_ASSERT(port.setRead(true).success() && "Failed to enable read");
+      CPPUNIT_ASSERT(port.setRead(false).success() && "Failed to re-disable read");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeStopBits ()
+void SerialPortTest::testChangeStopBits()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::Uint8 orig_bits, new_bits, mod_bits;
@@ -288,7 +284,7 @@ void SerialPortTest::testChangeStopBits ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeCanonicalInput ()
+void SerialPortTest::testChangeCanonicalInput()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -296,19 +292,19 @@ void SerialPortTest::testChangeCanonicalInput ()
 
    if ( port.getCanonicalState() )
    {
-      CPPUNIT_ASSERT(port.disableCanonicalInput().success() && "Failed to disable canonical input");
-      CPPUNIT_ASSERT(port.enableCanonicalInput().success() && "Failed to re-enable canonical input");
+      CPPUNIT_ASSERT(port.setCanonicalInput(false).success() && "Failed to disable canonical input");
+      CPPUNIT_ASSERT(port.setCanonicalInput(true).success() && "Failed to re-enable canonical input");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableCanonicalInput().success() && "Failed to enable canonical input");
-      CPPUNIT_ASSERT(port.disableCanonicalInput().success() && "Failed to re-disable canonical input");
+      CPPUNIT_ASSERT(port.setCanonicalInput(true).success() && "Failed to enable canonical input");
+      CPPUNIT_ASSERT(port.setCanonicalInput(false).success() && "Failed to re-disable canonical input");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeBadByteIgnore ()
+void SerialPortTest::testChangeBadByteIgnore()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -316,19 +312,19 @@ void SerialPortTest::testChangeBadByteIgnore ()
 
    if ( port.getBadByteIgnoreState() )
    {
-      CPPUNIT_ASSERT(port.disableBadByteIgnore().success() && "Failed to disable bad byte ignoring");
-      CPPUNIT_ASSERT(port.enableBadByteIgnore().success() && "Failed to re-enable bad byte ignoring");
+      CPPUNIT_ASSERT(port.setBadByteIgnore(false).success() && "Failed to disable bad byte ignoring");
+      CPPUNIT_ASSERT(port.setBadByteIgnore(true).success() && "Failed to re-enable bad byte ignoring");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableBadByteIgnore().success() && "Failed to enable bad byte ignoring");
-      CPPUNIT_ASSERT(port.disableBadByteIgnore().success() && "Failed to re-disable bad byte ignoring");
+      CPPUNIT_ASSERT(port.setBadByteIgnore(true).success() && "Failed to enable bad byte ignoring");
+      CPPUNIT_ASSERT(port.setBadByteIgnore(false).success() && "Failed to re-disable bad byte ignoring");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeInputParityCheck ()
+void SerialPortTest::testChangeInputParityCheck()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -336,19 +332,19 @@ void SerialPortTest::testChangeInputParityCheck ()
 
    if ( port.getInputParityCheckState() )
    {
-      CPPUNIT_ASSERT(port.disableInputParityCheck().success() && "Failed to disable input parity checking");
-      CPPUNIT_ASSERT(port.enableInputParityCheck().success() && "Failed to re-enable input parity checking");
+      CPPUNIT_ASSERT(port.setInputParityCheck(false).success() && "Failed to disable input parity checking");
+      CPPUNIT_ASSERT(port.setInputParityCheck(true).success() && "Failed to re-enable input parity checking");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableInputParityCheck().success() && "Failed to enable input parity checking");
-      CPPUNIT_ASSERT(port.disableInputParityCheck().success() && "Failed to re-disable input parity checking");
+      CPPUNIT_ASSERT(port.setInputParityCheck(true).success() && "Failed to enable input parity checking");
+      CPPUNIT_ASSERT(port.setInputParityCheck(false).success() && "Failed to re-disable input parity checking");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeBitStripping ()
+void SerialPortTest::testChangeBitStripping()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -356,19 +352,19 @@ void SerialPortTest::testChangeBitStripping ()
 
    if ( port.getBitStripState() )
    {
-      CPPUNIT_ASSERT(port.disableBitStripping().success() && "Failed to disable bit stripping");
-      CPPUNIT_ASSERT(port.enableBitStripping().success() && "Failed to re-enable bit stripping");
+      CPPUNIT_ASSERT(port.setBitStripping(false).success() && "Failed to disable bit stripping");
+      CPPUNIT_ASSERT(port.setBitStripping(true).success() && "Failed to re-enable bit stripping");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableBitStripping().success() && "Failed to enable bit stripping");
-      CPPUNIT_ASSERT(port.disableBitStripping().success() && "Failed to re-disable bit stripping");
+      CPPUNIT_ASSERT(port.setBitStripping(true).success() && "Failed to enable bit stripping");
+      CPPUNIT_ASSERT(port.setBitStripping(false).success() && "Failed to re-disable bit stripping");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeStartStopInput ()
+void SerialPortTest::testChangeStartStopInput()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -376,19 +372,19 @@ void SerialPortTest::testChangeStartStopInput ()
 
    if ( port.getStartStopInputState() )
    {
-      CPPUNIT_ASSERT(port.disableStartStopInput().success() && "Failed to disable start/stop input");
-      CPPUNIT_ASSERT(port.enableStartStopInput().success() && "Failed to re-enable start/stop input");
+      CPPUNIT_ASSERT(port.setStartStopInput(false).success() && "Failed to disable start/stop input");
+      CPPUNIT_ASSERT(port.setStartStopInput(true).success() && "Failed to re-enable start/stop input");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableStartStopInput().success() && "Failed to enable start/stop input");
-      CPPUNIT_ASSERT(port.disableStartStopInput().success() && "Failed to re-disable start/stop input");
+      CPPUNIT_ASSERT(port.setStartStopInput(true).success() && "Failed to enable start/stop input");
+      CPPUNIT_ASSERT(port.setStartStopInput(false).success() && "Failed to re-disable start/stop input");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeStartStopOutput ()
+void SerialPortTest::testChangeStartStopOutput()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -396,19 +392,19 @@ void SerialPortTest::testChangeStartStopOutput ()
 
    if ( port.getStartStopOutputState() )
    {
-      CPPUNIT_ASSERT(port.disableStartStopOutput().success() && "Failed to disable start/stop output");
-      CPPUNIT_ASSERT(port.enableStartStopOutput().success() && "Failed to re-enable start/stop output");
+      CPPUNIT_ASSERT(port.setStartStopOutput(false).success() && "Failed to disable start/stop output");
+      CPPUNIT_ASSERT(port.setStartStopOutput(true).success() && "Failed to re-enable start/stop output");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableStartStopOutput().success() && "Failed to enable start/stop output");
-      CPPUNIT_ASSERT(port.disableStartStopOutput().success() && "Failed to re-disable start/stop output");
+      CPPUNIT_ASSERT(port.setStartStopOutput(true).success() && "Failed to enable start/stop output");
+      CPPUNIT_ASSERT(port.setStartStopOutput(false).success() && "Failed to re-disable start/stop output");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeParityGeneration ()
+void SerialPortTest::testChangeParityGeneration()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -416,19 +412,19 @@ void SerialPortTest::testChangeParityGeneration ()
 
    if ( port.getParityGenerationState() )
    {
-      CPPUNIT_ASSERT(port.disableParityGeneration().success() && "Failed to disable parity generation");
-      CPPUNIT_ASSERT(port.enableParityGeneration().success() && "Failed to re-enable parity generation");
+      CPPUNIT_ASSERT(port.setParityGeneration(false).success() && "Failed to disable parity generation");
+      CPPUNIT_ASSERT(port.setParityGeneration(true).success() && "Failed to re-enable parity generation");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableParityGeneration().success() && "Failed to enable parity generation");
-      CPPUNIT_ASSERT(port.disableParityGeneration().success() && "Failed to re-disable parity generation");
+      CPPUNIT_ASSERT(port.setParityGeneration(true).success() && "Failed to enable parity generation");
+      CPPUNIT_ASSERT(port.setParityGeneration(false).success() && "Failed to re-disable parity generation");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeParityErrorMarking ()
+void SerialPortTest::testChangeParityErrorMarking()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -436,19 +432,19 @@ void SerialPortTest::testChangeParityErrorMarking ()
 
    if ( port.getParityErrorMarkingState() )
    {
-      CPPUNIT_ASSERT(port.disableParityErrorMarking().success() && "Failed to disable parity error marking");
-      CPPUNIT_ASSERT(port.enableParityErrorMarking().success() && "Failed to re-enable parity error marking");
+      CPPUNIT_ASSERT(port.setParityErrorMarking(false).success() && "Failed to disable parity error marking");
+      CPPUNIT_ASSERT(port.setParityErrorMarking(true).success() && "Failed to re-enable parity error marking");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableParityErrorMarking().success() && "Failed to enable parity error marking");
-      CPPUNIT_ASSERT(port.disableParityErrorMarking().success() && "Failed to re-disable parity error marking");
+      CPPUNIT_ASSERT(port.setParityErrorMarking(true).success() && "Failed to enable parity error marking");
+      CPPUNIT_ASSERT(port.setParityErrorMarking(false).success() && "Failed to re-disable parity error marking");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeParity ()
+void SerialPortTest::testChangeParity()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -456,19 +452,19 @@ void SerialPortTest::testChangeParity ()
 
    if ( port.getParity() == vpr::SerialTypes::PORT_PARITY_EVEN )
    {
-      CPPUNIT_ASSERT(port.setOddParity().success() && "Failed to set odd parity");
-      CPPUNIT_ASSERT(port.setEvenParity().success() && "Failed to reset even parity");
+      CPPUNIT_ASSERT(port.setParity(vpr::SerialTypes::PORT_PARITY_ODD).success() && "Failed to set odd parity");
+      CPPUNIT_ASSERT(port.setParity(vpr::SerialTypes::PORT_PARITY_EVEN).success() && "Failed to reset even parity");
    }
    else
    {
-      CPPUNIT_ASSERT(port.setEvenParity().success() && "Failed to set even parity");
-      CPPUNIT_ASSERT(port.setOddParity().success() && "Failed to reset odd parity");
+      CPPUNIT_ASSERT(port.setParity(vpr::SerialTypes::PORT_PARITY_EVEN).success() && "Failed to reset even parity");
+      CPPUNIT_ASSERT(port.setParity(vpr::SerialTypes::PORT_PARITY_ODD).success() && "Failed to set odd parity");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeInputBaudRate ()
+void SerialPortTest::testChangeInputBaudRate()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::Uint32 orig_baud, mod_baud;
@@ -491,7 +487,7 @@ void SerialPortTest::testChangeInputBaudRate ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeOutputBaudRate ()
+void SerialPortTest::testChangeOutputBaudRate()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::Uint32 orig_baud, mod_baud;
@@ -514,7 +510,7 @@ void SerialPortTest::testChangeOutputBaudRate ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeHardwareFlowControl ()
+void SerialPortTest::testChangeHardwareFlowControl()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -522,19 +518,19 @@ void SerialPortTest::testChangeHardwareFlowControl ()
 
    if ( port.getHardwareFlowControlState() )
    {
-      CPPUNIT_ASSERT(port.disableHardwareFlowControl().success() && "Failed to disable hardware flow control");
-      CPPUNIT_ASSERT(port.enableHardwareFlowControl().success() && "Failed to re-enable hardware flow control");
+      CPPUNIT_ASSERT(port.setHardwareFlowControl(false).success() && "Failed to disable hardware flow control");
+      CPPUNIT_ASSERT(port.setHardwareFlowControl(true).success() && "Failed to re-enable hardware flow control");
    }
    else
    {
-      CPPUNIT_ASSERT(port.enableHardwareFlowControl().success() && "Failed to enable hardware flow control");
-      CPPUNIT_ASSERT(port.disableHardwareFlowControl().success() && "Failed to re-disable hardware flow control");
+      CPPUNIT_ASSERT(port.setHardwareFlowControl(true).success() && "Failed to enable hardware flow control");
+      CPPUNIT_ASSERT(port.setHardwareFlowControl(false).success() && "Failed to re-disable hardware flow control");
    }
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeSoftwareFlowControl ()
+void SerialPortTest::testChangeSoftwareFlowControl()
 {
    vpr::SerialPort port(mSendPortName);
 
@@ -552,7 +548,7 @@ void SerialPortTest::testChangeSoftwareFlowControl ()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testSendRecv ()
+void SerialPortTest::testSendRecv()
 {
    threadAssertReset();
 
@@ -572,7 +568,7 @@ void SerialPortTest::testSendRecv ()
    checkThreadAssertions();
 }
 
-void SerialPortTest::testSendRecv_receiver (void* arg)
+void SerialPortTest::testSendRecv_receiver(void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
 
@@ -593,10 +589,10 @@ void SerialPortTest::testSendRecv_receiver (void* arg)
       status = recv_port.setCharacterSize(vpr::SerialTypes::CS_BITS_8);
       assertTestThread(status.success() && "Failed to change character size");
 
-      status = recv_port.enableRead();
+      status = recv_port.setRead(true);
       assertTestThread(status.success() && "Failed to enable reading");
 
-      status = recv_port.disableCanonicalInput();
+      status = recv_port.setCanonicalInput(false);
       assertTestThread(status.success() && "Failed to disable canonical input");
 
       status = recv_port.setBufferSize(mDataBuffer.size() * 2);
@@ -631,7 +627,7 @@ void SerialPortTest::testSendRecv_receiver (void* arg)
    }
 }
 
-void SerialPortTest::testSendRecv_sender (void* arg)
+void SerialPortTest::testSendRecv_sender(void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
 
@@ -653,7 +649,7 @@ void SerialPortTest::testSendRecv_sender (void* arg)
       status = send_port.setCharacterSize(vpr::SerialTypes::CS_BITS_8);
       assertTestThread(status.success() && "Failed to change character size");
 
-      status = send_port.disableCanonicalInput();
+      status = send_port.setCanonicalInput(false);
       assertTestThread(status.success() && "Failed to disable canonical input");
 
       mCondVar.acquire();

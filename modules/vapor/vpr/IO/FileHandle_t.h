@@ -73,7 +73,7 @@ public:
     *
     * @param file_name The name of the file to be handled.
     */
-   FileHandle_t (const std::string& file_name)
+   FileHandle_t(const std::string& file_name)
       : BlockIO(file_name), mOpenMode(READ_WRITE), mHandleImpl(file_name)
    {
       /* Do nothing. */ ;
@@ -85,7 +85,7 @@ public:
     * @pre None.
     * @post None.
     */
-   virtual ~FileHandle_t (void)
+   virtual ~FileHandle_t()
    {
       /* Do nothing. */ ;
    }
@@ -99,7 +99,7 @@ public:
     *
     * @return An object containing the name of this file.
     */
-   virtual const std::string& getName (void)
+   virtual const std::string& getName()
    {
       return mHandleImpl.getName();
    }
@@ -117,7 +117,7 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the file
     *         could not be opened for some reason.
     */
-   virtual vpr::ReturnStatus open (void)
+   virtual vpr::ReturnStatus open()
    {
       return mHandleImpl.open();
    }
@@ -135,73 +135,38 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the file
     *         could not be closed.
     */
-   virtual vpr::ReturnStatus close (void)
+   virtual vpr::ReturnStatus close()
    {
       return mHandleImpl.close();
    }
 
    /**
-    * Reconfigures the file handle so that it is in blocking mode.
+    * Reconfigures the file handle so that it is in blocking or non-blocking
+    * mode depending on the value of the parameter.
     *
     * @pre The file handle is open.
     * @post Processes may block when accessing the file.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> will be returned if the
-    *         blocking mode was changed successfully.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> will be returned if the
-    *         blocking mode could not be changed.
+    * @return vpr::ReturnStatus::Succeed will be returned if the blocking mode
+    *         was changed successfully.  vpr::ReturnStatus::Fail will be
+    *         returned if the blocking mode could not be changed.
     */
-   virtual vpr::ReturnStatus enableBlocking (void)
+   virtual vpr::ReturnStatus setBlocking(const bool& blocking)
    {
-      return mHandleImpl.enableBlocking();
-   }
-
-   /**
-    * Reconfigures the file handle so that it is in non-blocking mode.
-    *
-    * @pre The file handle is open.
-    * @post Processes will not block when accessing the file.
-    *
-    * @return <code>vpr::ReturnStatus::Succeed</code> will be returned if the
-    *         blocking mode was changed successfully.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> will be returned if the
-    *         blocking mode could not be changed.
-    */
-   virtual vpr::ReturnStatus enableNonBlocking (void)
-   {
-      return mHandleImpl.enableNonBlocking();
+      return mHandleImpl.setBlocking(blocking);
    }
 
    /**
     * Gets the current blocking state for the file.
     *
-    * @pre <code>mBlocking</code> is set correctly
-    * @post
+    * @pre The blocking mode on the internal file handle is set correctly.
     *
-    * @return <code>true</code> is returned when the file is in blocking
-    *         mode.<br>
-    *         <code>false</code> is returned when the file is in non-blocking
-    *         mode.
+    * @return true is returned when the file is in blocking mode.
+    *         false is returned when the file is in non-blocking mode.
     */
-   bool getBlocking (void) const
+   bool isBlocking() const
    {
-      return mHandleImpl.getBlocking();
-   }
-
-   /**
-    * Gets the current non-blocking state for the file.
-    *
-    * @pre <code>mBlocking</code> is set correctly
-    * @post
-    *
-    * @return <code>true</code> is returned when the file is in non-blocking
-    *         mode.<br>
-    *         <code>false</code> is returned when the file is in blocking
-    *         mode.
-    */
-   bool getNonBlocking (void) const
-   {
-      return mHandleImpl.getNonBlocking();
+      return mHandleImpl.isBlocking();
    }
 
    /**
@@ -211,7 +176,7 @@ public:
     *         has no handle or if the handle could not be returned for some
     *         reason.
     */
-   virtual IOSys::Handle getHandle (void)
+   virtual IOSys::Handle getHandle()
    {
       return mHandleImpl.getHandle();
    }
@@ -228,7 +193,7 @@ public:
     *       it is opened in read-only mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenReadOnly (void)
+   void setOpenReadOnly()
    {
       mHandleImpl.setOpenReadOnly();
    }
@@ -242,7 +207,7 @@ public:
     *       is opened in write-only mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenWriteOnly (void)
+   void setOpenWriteOnly()
    {
       mHandleImpl.setOpenWriteOnly();
    }
@@ -256,72 +221,48 @@ public:
     *       is opened in read/write mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenReadWrite (void)
+   void setOpenReadWrite()
    {
       mHandleImpl.setOpenReadWrite();
    }
 
    /**
-    * Reconfigures the file handle to be in append mode.
+    * Reconfigures the file handle to be in append mode or not.
     *
     * @pre The file handle is open.
-    * @post The file handle's write mode is set to append.
+    * @post The file handle's write mode is set to append (or not) depending
+    *       on the given parameter.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the write
-    *         mode was changed successfully.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned otherwise.
+    * @param flag A value of true indicates that the file should be in append
+    *             mode.  A value of false indicates that it should not.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
+    *         changed successfully.  vpr::ReturnStatus::Fail is returned
+    *         otherwise.
     */
-   vpr::ReturnStatus enableAppend (void)
+   vpr::ReturnStatus setAppend(const bool& flag)
    {
-      return mHandleImpl.enableAppend();
+      return mHandleImpl.setAppend(flag);
    }
 
    /**
-    * Reconfigures the file handle so that it is not in append mode.
-    *
-    * @pre The file handle is open.
-    * @post The file handle's write mode is set so that writes are
-    *              appended.
-    *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the write
-    *         mode was changed successfully.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned otherwise.
-    */
-   vpr::ReturnStatus disableAppend (void)
-   {
-      return mHandleImpl.disableAppend();
-   }
-
-   /**
-    * Reconfigures the file handle so that writes are synchronous.
+    * Reconfigures the file handle so that writes are synchronous or
+    * asynchronous depending on the value of the given parameter.
     *
     * @pre The file handle is open.
     * @post Writes are performed synchronously.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write mode could not
-    *         be changed for some reason.
-    */
-   vpr::ReturnStatus enableSynchronousWrite (void)
-   {
-      return mHandleImpl.enableSynchronousWrite();
-   }
-
-   /**
-    * Reconfigures the file handle so that writes are asynchronous.
-    *
-    * @pre The file handle is open.
-    * @post Writes are performed asynchronously.
+    * @param flag A value of true indicates that the file should use
+    *             synchronous writes.  A value of false indicates that it
+    *             should use asynchronous writes.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if if the write mode could
-    *         not be changed for some reason.
+    *         changed successfully.  vpr::ReturnStatus::Fail is returned if
+    *         the write mode could not be changed for some reason.
     */
-   vpr::ReturnStatus enableAsynchronousWrite (void)
+   vpr::ReturnStatus setSynchronousWrite(const bool& flag)
    {
-      return mHandleImpl.enableAsynchronousWrite();
+      return mHandleImpl.setSynchronousWrite(flag);
    }
 
    /**
@@ -334,7 +275,7 @@ public:
     * @return <code>true</code> is returned if the device is in read-only
     *         mode; <code>false</code> otherwise.
     */
-   bool isReadOnly (void)
+   bool isReadOnly()
    {
       return mHandleImpl.isReadOnly();
    }
@@ -349,7 +290,7 @@ public:
     * @return <code>true</code> is returned if the device is in write-only
     *         mode; <code>false</code> otherwise.
     */
-   bool isWriteOnly (void)
+   bool isWriteOnly()
    {
       return mHandleImpl.isWriteOnly();
    }
@@ -364,7 +305,7 @@ public:
     * @return <code>true</code> is returned if the device is in read/write
     *         mode; <code>false</code> otherwise.
     */
-   bool isReadWrite (void)
+   bool isReadWrite()
    {
       return mHandleImpl.isReadWrite();;
    }
@@ -397,9 +338,9 @@ protected:
     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
     *         non-blocking mode, and there is no data to read.
     */
-   vpr::ReturnStatus read_i (void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytes_read,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
+                            vpr::Uint32& bytes_read,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mHandleImpl.read_i(buffer, length, bytes_read, timeout);
    }
@@ -428,9 +369,9 @@ protected:
     *         completed successfully.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus readn_i (void* buffer, const vpr::Uint32 length,
-                              vpr::Uint32& bytes_read,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& bytes_read,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mHandleImpl.readn_i(buffer, length, bytes_read, timeout);
    }
@@ -460,9 +401,9 @@ protected:
     *         non-blocking mode, and the write operation could not be
     *         completed.
     */
-   vpr::ReturnStatus write_i (const void* buffer, const vpr::Uint32 length,
-                              vpr::Uint32& bytes_written,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& bytes_written,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mHandleImpl.write_i(buffer, length, bytes_written, timeout);
    }

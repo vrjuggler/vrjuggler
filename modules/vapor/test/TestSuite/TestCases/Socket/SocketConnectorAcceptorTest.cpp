@@ -180,7 +180,7 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector (void* arg)
       assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
       bool is_connected = con_sock.isConnected();
-      assertTestThread((is_connected == false) && "Socket should still be connected");
+      assertTestThread(is_connected && "Socket should still be connected");
 
       con_sock.close();                                   // Close socket
 

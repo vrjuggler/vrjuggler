@@ -57,19 +57,15 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Constructor.  This creates a file handle object connected to the given port
 // name and sets the update action to happen immediately.
-// ----------------------------------------------------------------------------
 SerialPortImplTermios::SerialPortImplTermios(const std::string& port_name)
 {
    mHandle = new FileHandleImplUNIX(port_name);
    setUpdateAction(SerialTypes::NOW);
 }
 
-// ----------------------------------------------------------------------------
 // Destructor.  If the file handle is non-NULL, its memory is released.
-// ----------------------------------------------------------------------------
 SerialPortImplTermios::~SerialPortImplTermios()
 {
    if ( mHandle != NULL )
@@ -78,9 +74,7 @@ SerialPortImplTermios::~SerialPortImplTermios()
    }
 }
 
-// ----------------------------------------------------------------------------
 // Open the serial port and initialize its flags.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::open()
 {
    vprASSERT(mHandle->mFdesc == -1 && "The port may already be open");
@@ -98,10 +92,8 @@ vpr::ReturnStatus SerialPortImplTermios::open()
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Get the current update action.  This tells when updates to the serial
 // device take effect.
-// ----------------------------------------------------------------------------
 vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction()
 {
    vpr::SerialTypes::UpdateActionOption action;
@@ -125,11 +117,8 @@ vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction()
    return action;
 }
 
-// ----------------------------------------------------------------------------
 // Clear all flags by setting them to 0. This is mainly needed by Linux
 // because IRIX does this automatically.
-// ----------------------------------------------------------------------------
-
 vpr::ReturnStatus SerialPortImplTermios::clearAll()
 {
     struct termios term;
@@ -151,10 +140,8 @@ vpr::ReturnStatus SerialPortImplTermios::clearAll()
     return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Change the current update action to take place as described by the given
 // value.
-// ----------------------------------------------------------------------------
 void SerialPortImplTermios::setUpdateAction(vpr::SerialTypes::UpdateActionOption action)
 {
    switch ( action )
@@ -171,9 +158,7 @@ void SerialPortImplTermios::setUpdateAction(vpr::SerialTypes::UpdateActionOption
    }
 }
 
-// ----------------------------------------------------------------------------
 // Query the serial port for the maximum buffer size.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getBufferSize(vpr::Uint16& size)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
@@ -188,9 +173,7 @@ vpr::ReturnStatus SerialPortImplTermios::getBufferSize(vpr::Uint16& size)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Attempt to change the buffer size to the given argument.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setBufferSize(const vpr::Uint8 size)
 {
    vpr::ReturnStatus retval;
@@ -205,10 +188,8 @@ vpr::ReturnStatus SerialPortImplTermios::setBufferSize(const vpr::Uint8 size)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getTimeout(vpr::Uint8& timeout)
 {
    vpr::ReturnStatus retval;
@@ -222,11 +203,9 @@ vpr::ReturnStatus SerialPortImplTermios::getTimeout(vpr::Uint8& timeout)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the value of the timeout to wait for data to arrive.  The value given
 // must be in tenths of a second.  This is only applicable in non-canonical
 // mode.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setTimeout(const vpr::Uint8 timeout)
 {
    vpr::ReturnStatus retval;
@@ -241,9 +220,7 @@ vpr::ReturnStatus SerialPortImplTermios::setTimeout(const vpr::Uint8 timeout)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Get the character size (the bits per byte).
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
 {
    vpr::ReturnStatus retval;
@@ -271,11 +248,9 @@ vpr::ReturnStatus SerialPortImplTermios::getCharacterSize(vpr::SerialTypes::Char
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the current character size (the bits per byte) to the size in the given
 // value.  This is used for both reding and writing, and the size does not
 // include the parity bit (if any).
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
 {
    struct termios term;
@@ -312,63 +287,33 @@ vpr::ReturnStatus SerialPortImplTermios::setCharacterSize(const vpr::SerialTypes
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Get the current read state for the port.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getReadState()
 {
    return getBit(CREAD, SerialPortImplTermios::CFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable the receiver so that bytes can be read from the port.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableRead()
+// Enable or disable the receiver so that bytes can be read from the port.
+vpr::ReturnStatus SerialPortImplTermios::setRead(const bool& flag)
 {
-   return setBit(CREAD, SerialPortImplTermios::CFLAG, true,
-                 "Could not enable reading");
+   return setBit(CREAD, SerialPortImplTermios::CFLAG, flag,
+                 "Could not change read state reading");
 }
 
-// ----------------------------------------------------------------------------
-// Disable the receiver so that bytes cannot be read from the port.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableRead()
-{
-   return setBit(CREAD, SerialPortImplTermios::CFLAG, false,
-                 "Could not disable reading");
-}
-
-
-
-// ----------------------------------------------------------------------------
 // Get the current CLOCAL state, if the device is locally attached.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getLocalAttachState()
 {
    return getBit(CLOCAL, SerialPortImplTermios::CFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable CLOCAL, that is the device is locally attached
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableLocalAttach()
+// Enable or disable CLOCAL, that is the device is locally attached.
+vpr::ReturnStatus SerialPortImplTermios::setLocalAttach(const bool& flag)
 {
-   return setBit(CLOCAL, SerialPortImplTermios::CFLAG, true,
-                 "Could not enable local attachment");
+   return setBit(CLOCAL, SerialPortImplTermios::CFLAG, flag,
+                 "Could not change local attachment");
 }
 
-// ----------------------------------------------------------------------------
-// Disable CLOCAL, that is the device is not locally attached
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableLocalAttach()
-{
-   return setBit(CLOCAL, SerialPortImplTermios::CFLAG, false,
-                 "Could not disable local attachment");
-}
-
-// ----------------------------------------------------------------------------
 // Get the number of stop bits in use.  This will be either 1 or 2.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getStopBits(Uint8& num_bits)
 {
    struct termios term;
@@ -382,9 +327,7 @@ vpr::ReturnStatus SerialPortImplTermios::getStopBits(Uint8& num_bits)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the number of stop bits to use.  The value must be either 1 or 2.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setStopBits(const Uint8 num_bits)
 {
    struct termios term;
@@ -419,273 +362,134 @@ vpr::ReturnStatus SerialPortImplTermios::setStopBits(const Uint8 num_bits)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// Query the canonical input state of the serial port.  If canonical mode is
-// enabled, the characters EOF, EOL, EOL2, ERASE, KILL, REPRINT, STATUS, and
-// WERASE are enabled, and the input characters are assembled into lines.
-// Otherwise, read requests are satisfied directly from the input queue, and a
-// read will not return until the buffer is at its minimum capacity or the
-// timeout has expired.  See getBufferSize() and getTimeout() for more
-// information.
-// ----------------------------------------------------------------------------
+// Query the canonical input state of the serial port.
 bool SerialPortImplTermios::getCanonicalState()
 {
    return getBit(ICANON, SerialPortImplTermios::LFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable canonical input.  See getCanonicalState() for more information about
-// what this means.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableCanonicalInput()
+// Enable or disable canonical input.
+vpr::ReturnStatus SerialPortImplTermios::setCanonicalInput(const bool& flag)
 {
-   return setBit(ICANON, SerialPortImplTermios::LFLAG, true,
-                 "Could not enable canonical input mode");
+   return setBit(ICANON, SerialPortImplTermios::LFLAG, flag,
+                 "Could not change canonical input mode");
 }
 
-// ----------------------------------------------------------------------------
-// Disable canonical input.  See getCanonicalState() for more information
-// about what this means.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableCanonicalInput()
-{
-   return setBit(ICANON, SerialPortImplTermios::LFLAG, false,
-                 "Could not disable canonical input mode");
-}
-
-// ----------------------------------------------------------------------------
 // Get the current state of ignoring bytes with framing errors (other than a
 // BREAK) or parity errors.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getBadByteIgnoreState()
 {
    return getBit(IGNPAR, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable ignoring of received bytes with framing errors or parity errors.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableBadByteIgnore()
+// Enable or disable ignoring of received bytes with framing errors or parity
+// errors.
+vpr::ReturnStatus SerialPortImplTermios::setBadByteIgnore(const bool& flag)
 {
-   return setBit(IGNPAR, SerialPortImplTermios::IFLAG, true,
-                 "Could not enable bad byte ignoring");
+   return setBit(IGNPAR, SerialPortImplTermios::IFLAG, flag,
+                 "Could not change bad byte ignoring");
 }
 
-// ----------------------------------------------------------------------------
-// Disable ignoring of received bytes with framing errors or parity errors.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableBadByteIgnore()
-{
-   return setBit(IGNPAR, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable bad byte ignoring");
-}
-// ----------------------------------------------------------------------------
-// Get the current state of ignoring BREAK bytes
-//
-// ----------------------------------------------------------------------------
+// Get the current state of ignoring BREAK bytes.
 bool SerialPortImplTermios::getBreakByteIgnoreState()
 {
    return getBit(IGNBRK, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable ignoring of received BREAK bytes
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore()
+// Enable or disable ignoring of received BREAK bytes.
+vpr::ReturnStatus SerialPortImplTermios::setBreakByteIgnore(const bool& flag)
 {
-   return setBit(IGNBRK, SerialPortImplTermios::IFLAG, true,
-                 "Could not enable break byte ignoring");
+   return setBit(IGNBRK, SerialPortImplTermios::IFLAG, flag,
+                 "Could not change break byte ignoring");
 }
 
-// ----------------------------------------------------------------------------
-// Disable ignoring of received BREAK bytes
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore()
-{
-   return setBit(IGNBRK, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable break byte ignoring");
-}
-
-// ----------------------------------------------------------------------------
 // Get the state of parity checking for input.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getInputParityCheckState()
 {
    return getBit(IGNPAR, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable input parity checking.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableInputParityCheck()
+// Enable or disable input parity checking.
+vpr::ReturnStatus SerialPortImplTermios::setInputParityCheck(const bool& flag)
 {
-   return setBit(INPCK, SerialPortImplTermios::IFLAG, true,
-                 "Could not enable input parity checking");
+   return setBit(INPCK, SerialPortImplTermios::IFLAG, flag,
+                 "Could not change input parity checking");
 }
 
-// ----------------------------------------------------------------------------
-// Disable input parity checking.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableInputParityCheck()
-{
-   return setBit(INPCK, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable input parity checking");
-}
-
-// ----------------------------------------------------------------------------
 // Get the current state of bit stripping.  When enabled, input bytes are
 // stripped to seven bits.  Otherwise, all eight bits are processed.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getBitStripState()
 {
    return getBit(ISTRIP, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
 // Enable stripping of input bytes to seven bits.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableBitStripping()
+vpr::ReturnStatus SerialPortImplTermios::setBitStripping(const bool& flag)
 {
-   return setBit(ISTRIP, SerialPortImplTermios::IFLAG, true,
-                 "Could not enable bit stripping from eight to seven bits");
+   return setBit(ISTRIP, SerialPortImplTermios::IFLAG, flag,
+                 "Could not change bit stripping setting");
 }
 
-// ----------------------------------------------------------------------------
-// Disable stripping of input bytes to seven bits.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableBitStripping()
-{
-   return setBit(ISTRIP, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable bit stripping");
-}
-
-// ----------------------------------------------------------------------------
-// Get the state of start-stop input control.  When enabled, if the terminal
-// driver sees that the receive buffer is getting full, a STOP command is sent
-// to the serial device.  The device should respond by halting its data flow.
-// When the input queue has been processed, a START command is sent to the
-// serial device which should cause it to resume putting bytes onto the input
-// queue.
-// ----------------------------------------------------------------------------
+// Get the state of start-stop input control.
 bool SerialPortImplTermios::getStartStopInputState()
 {
    return getBit(IXOFF, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable start-stop input control.  See getStartStopInputState() for more
-// information.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableStartStopInput()
+// Enable or disable start-stop input control.
+vpr::ReturnStatus SerialPortImplTermios::setStartStopInput(const bool& flag)
 {
-   return setBit(IXOFF, SerialPortImplTermios::IFLAG, true,
-                 "Could not enable start-stop input control");
+   return setBit(IXOFF, SerialPortImplTermios::IFLAG, flag,
+                 "Could not change start-stop input control");
 }
 
-// ----------------------------------------------------------------------------
-// Disable start-stop input control.  See getStartStopInputState() for more
-// information.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableStartStopInput()
-{
-   return setBit(IXOFF, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable start-stop input control");
-}
-
-// ----------------------------------------------------------------------------
-// Get the state of start-stop output control.  When enabled, when the
-// terminal driver receives a STOP command, output stops.  When it receives a
-// START command, output resumes.  If disabled, these/ commands are read as
-// normal characters.
-// ----------------------------------------------------------------------------
+// Get the state of start-stop output control.
 bool SerialPortImplTermios::getStartStopOutputState()
 {
    return getBit(IXON, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable start-stop input control.  See getStartStopInputState() for more
-// information.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableStartStopOutput()
+// Enable or disable start-stop output control.
+vpr::ReturnStatus SerialPortImplTermios::setStartStopOutput(const bool& flag)
 {
-   return setBit(IXON, SerialPortImplTermios::IFLAG, true,
+   return setBit(IXON, SerialPortImplTermios::IFLAG, flag,
                  "Could not enable start-stop output control");
 }
 
-// ----------------------------------------------------------------------------
-// Disable start-stop input control.  See getStartStopInputState() for more
-// information.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableStartStopOutput()
-{
-   return setBit(IXON, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable start-stop output control");
-}
-
-// ----------------------------------------------------------------------------
 // Get the current state of parity generation for outgoing bytes and parity
 // checking for incoming bytes.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getParityGenerationState()
 {
    return getBit(PARENB, SerialPortImplTermios::CFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable parity generation for outgoing bytes and parity checking for
-// incoming bytes.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableParityGeneration()
+// Enable or disable parity generation for outgoing bytes and parity checking
+// for incoming bytes.
+vpr::ReturnStatus SerialPortImplTermios::setParityGeneration(const bool& flag)
 {
-   return setBit(PARENB, SerialPortImplTermios::CFLAG, true,
-                 "Could not enable parity generation on outgoing characters");
+   return setBit(PARENB, SerialPortImplTermios::CFLAG, flag,
+                 "Could not change parity generation on outgoing characters");
 }
 
-// ----------------------------------------------------------------------------
-// Disable parity generation for outgoing bytes and parity checking for
-// incoming bytes.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableParityGeneration()
-{
-   return setBit(PARENB, SerialPortImplTermios::CFLAG, false,
-                 "Could not disable parity generation on outgoing characters");
-}
-
-// ----------------------------------------------------------------------------
 // Enable marking of bytes with parity errors or framing errors (except
 // BREAKs).  This is only active if input parity and framing error reporting
 // is enabled (see getInputParityCheckState() for more information).  The mark
 // is the three-byte sequence \377 \0 X where X is the byte received in error.
 // If bit stripping is enabled, a valid \377 byte is passed as the two-byte
 // sequence \377 \377.
-// ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getParityErrorMarkingState()
 {
    return getBit(PARMRK, SerialPortImplTermios::IFLAG);
 }
 
-// ----------------------------------------------------------------------------
-// Enable parity error and framing error marking.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableParityErrorMarking()
+// Enable or disable parity error and framing error marking.
+vpr::ReturnStatus SerialPortImplTermios::setParityErrorMarking(const bool& flag)
 {
-   return setBit(PARMRK, SerialPortImplTermios::IFLAG, true,
-                 "Could not enable parity error marking");
+   return setBit(PARMRK, SerialPortImplTermios::IFLAG, flag,
+                 "Could not change parity error marking");
 }
 
-// ----------------------------------------------------------------------------
-// Disable parity error and framing error marking.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableParityErrorMarking()
-{
-   return setBit(PARMRK, SerialPortImplTermios::IFLAG, false,
-                 "Could not disable parity error marking");
-}
-
-// ----------------------------------------------------------------------------
 // Get the current parity checking type (either odd or even).
-// ----------------------------------------------------------------------------
 vpr::SerialTypes::ParityType SerialPortImplTermios::getParity()
 {
    vpr::SerialTypes::ParityType retval;
@@ -704,28 +508,17 @@ vpr::SerialTypes::ParityType SerialPortImplTermios::getParity()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// Enable odd parity.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::setOddParity()
+// Enable odd parity or even parity depending on the argument value.  Odd
+// parity corresponds with a value of true, and event parity corresponds with
+// a value of false.
+vpr::ReturnStatus SerialPortImplTermios::setParity(const vpr::SerialTypes::ParityType& type)
 {
-   return setBit(PARODD, SerialPortImplTermios::CFLAG, true,
-                 "Could not set odd parity");
+   return setBit(PARODD, SerialPortImplTermios::CFLAG, (type == vpr::SerialTypes::PORT_PARITY_ODD),
+                 "Could not change parity setting");
 }
 
-// ----------------------------------------------------------------------------
-// Enable even parity.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::setEvenParity()
-{
-   return setBit(PARODD, SerialPortImplTermios::CFLAG, false,
-                 "Could not set even parity");
-}
-
-// ----------------------------------------------------------------------------
 // Get the current input baud rate.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::getInputBaudRate(Uint32& rate)
+vpr::ReturnStatus SerialPortImplTermios::getInputBaudRate(vpr::Uint32& rate)
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -741,10 +534,8 @@ vpr::ReturnStatus SerialPortImplTermios::getInputBaudRate(Uint32& rate)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the current input baud rate.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::setInputBaudRate(const Uint32 baud)
+vpr::ReturnStatus SerialPortImplTermios::setInputBaudRate(const vpr::Uint32& baud)
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -780,10 +571,8 @@ vpr::ReturnStatus SerialPortImplTermios::setInputBaudRate(const Uint32 baud)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Get the current output baud rate.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::getOutputBaudRate(Uint32& rate)
+vpr::ReturnStatus SerialPortImplTermios::getOutputBaudRate(vpr::Uint32& rate)
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -799,10 +588,8 @@ vpr::ReturnStatus SerialPortImplTermios::getOutputBaudRate(Uint32& rate)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the current output baud rate.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::setOutputBaudRate(const Uint32 baud)
+vpr::ReturnStatus SerialPortImplTermios::setOutputBaudRate(const vpr::Uint32& baud)
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -838,9 +625,7 @@ vpr::ReturnStatus SerialPortImplTermios::setOutputBaudRate(const Uint32 baud)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Wait for all output to be transmitted.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::drainOutput()
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
@@ -857,12 +642,10 @@ vpr::ReturnStatus SerialPortImplTermios::drainOutput()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Alter the input or output flow control.  Based on the
 // vpr::SerialTypes::FlowActionOption argument, output can be suspended and
 // restarted or the terminal device can be told to stop or to resume sending
 // data.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::controlFlow(SerialTypes::FlowActionOption opt)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
@@ -905,33 +688,20 @@ bool SerialPortImplTermios::getHardwareFlowControlState()
 #endif
 }
 
-vpr::ReturnStatus SerialPortImplTermios::enableHardwareFlowControl()
+vpr::ReturnStatus SerialPortImplTermios::setHardwareFlowControl(const bool& flag)
 {
 #ifdef VPR_OS_IRIX
-   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, true,
-                 "Could not enable hardware flow control");
+   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, flag,
+                 "Could not change hardware flow control");
 #else
-   return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, true,
-                 "Could not enable hardware flow control");
+   return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, flag,
+                 "Could not change hardware flow control");
 #endif
 }
 
-vpr::ReturnStatus SerialPortImplTermios::disableHardwareFlowControl()
-{
-#ifdef VPR_OS_IRIX
-   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, false,
-                 "Could not disable hardware flow control");
-#else
-   return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, false,
-                 "Could not disable hardware flow control");
-#endif
-}
-
-// ----------------------------------------------------------------------------
 // Discard either the input buffer (unread data received from the terminal
 // device) or the output buffer (data written but not yet transmitted to the
 // terminal device).  The argument tells which queue (or queues) to flush.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::flushQueue(SerialTypes::FlushQueueOption vpr_queue)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
@@ -977,12 +747,10 @@ vpr::ReturnStatus SerialPortImplTermios::flushQueue(SerialTypes::FlushQueueOptio
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Transmit a continuous stream of zero bits for the given duration.  If the
 // argument is 0, the transmission will last between 0.25 and 0.5 seconds.
 // Otherwise, the duration specfies the number of seconds to send the zero bit
 // stream.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::sendBreak(const Int32 duration)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
@@ -1259,7 +1027,7 @@ bool SerialPortImplTermios::getBit(const tcflag_t bit,
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
                                                 SerialPortImplTermios::TermFlag flag,
-                                                const bool enable,
+                                                const bool& enable,
                                                 const std::string& err_msg,
                                                 const bool print_sys_err)
 {

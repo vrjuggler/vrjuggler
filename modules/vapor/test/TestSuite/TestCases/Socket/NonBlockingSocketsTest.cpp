@@ -61,10 +61,10 @@ void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThen
    result = acceptor_socket.open().success();
    CPPUNIT_ASSERT( result );
 
-   CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
+   CPPUNIT_ASSERT(! acceptor_socket.isBlocking());
 
-   acceptor_socket.enableBlocking(); // for reads and writes
-   CPPUNIT_ASSERT( acceptor_socket.getBlocking() );
+   acceptor_socket.setBlocking(true); // for reads and writes
+   CPPUNIT_ASSERT(acceptor_socket.isBlocking());
 
    result = acceptor_socket.close().success();
    CPPUNIT_ASSERT( result );
@@ -87,10 +87,10 @@ void NonBlockingSocketTest::testConnect2NonBlockingSockets()
    CPPUNIT_ASSERT( status.failure() != true );
 
    // a/c: enableNonBlock
-   acceptor_socket.enableNonBlocking();
-   CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
-   connector_socket.enableNonBlocking();
-   CPPUNIT_ASSERT( connector_socket.getNonBlocking() );
+   acceptor_socket.setBlocking(false);
+   CPPUNIT_ASSERT(! acceptor_socket.isBlocking());
+   connector_socket.setBlocking(false);
+   CPPUNIT_ASSERT(! connector_socket.isBlocking());
 
    // a:   bind
    status = acceptor_socket.bind();
@@ -169,7 +169,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
 
    // The acceptor must be non-blocking so that the connected socket it
    // returns will also be non-blocking.  *sigh*
-   status = acceptor.getSocket().enableNonBlocking();
+   status = acceptor.getSocket().setBlocking(false);
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for accepted socket");
 
@@ -189,7 +189,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
    assertTestThread(status.success() && "Accept failed");
 
    assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
-   assertTestThread(client_sock.getNonBlocking() &&
+   assertTestThread(! client_sock.isBlocking() &&
                     "Connected client socket should be non-blocking");
 
    client_sock.setNoDelay(true);
@@ -245,7 +245,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
    status = con_sock.open();
    assertTestThread(status.success() && "Failed to open connector socket");
 
-   status = con_sock.enableNonBlocking();
+   status = con_sock.setBlocking(false);
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for connector");
 
@@ -253,7 +253,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
                               vpr::Interval(5, vpr::Interval::Sec));
    assertTestThread(! status.failure() && "Connector can't connect");
 
-   assertTestThread(con_sock.getNonBlocking() &&
+   assertTestThread(! con_sock.isBlocking() &&
                     "Connector should be non-blocking");
 
    mCondVar.acquire();
@@ -317,8 +317,8 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    status = connector_socket.open();
    CPPUNIT_ASSERT( status.failure() != true );
 
-   CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
-   CPPUNIT_ASSERT( connector_socket.getNonBlocking() );
+   CPPUNIT_ASSERT(! acceptor_socket.isBlocking());
+   CPPUNIT_ASSERT(! connector_socket.isBlocking());
 
    // a: getHandle
    vpr::IOSys::Handle handle = acceptor_socket.getHandle();
@@ -329,10 +329,10 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    selector.setIn( handle, vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except );
 
    // a/c: enableNonBlock
-   acceptor_socket.enableNonBlocking();
-   CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
-   connector_socket.enableNonBlocking();
-   CPPUNIT_ASSERT( connector_socket.getNonBlocking() );
+   acceptor_socket.setBlocking(false);
+   CPPUNIT_ASSERT(! acceptor_socket.isBlocking());
+   connector_socket.setBlocking(false);
+   CPPUNIT_ASSERT(! connector_socket.isBlocking());
 
    // a:   bind
    status = acceptor_socket.bind();
@@ -452,7 +452,7 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
    status = recv_sock.open();
    assertTestThread(status.success() && "Failed to open receiver socket");
 
-   status = recv_sock.enableNonBlocking();
+   status = recv_sock.setBlocking(false);
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for receiver");
 
@@ -511,7 +511,7 @@ void NonBlockingSocketTest::testSendUDP_sender (void* arg)
    status = send_sock.open();
    assertTestThread(status.success() && "Failed to open sender socket");
 
-   status = send_sock.enableNonBlocking();
+   status = send_sock.setBlocking(false);
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for sender");
 
