@@ -90,24 +90,50 @@ DSOREGFILE	= @DSOREGFILE@
 DSOVERSION	= @DSOVERSION@
 DSOVERSIONOPTS	= @DSOVERSIONOPTS@
 
-# Object file build directories for debugging and optimized versions of the
-# library made unique by ABI and platform types.
+# -----------------------------------------------------------------------------
+# Build and installation directory naming information.
+# -----------------------------------------------------------------------------
+
+# ------------------------------------------------
+# Object file build and installation directories.
+# ------------------------------------------------
 _BUILDDIR_BASE	= ${topdir}/obj
 _BUILDDIR	= ${_BUILDDIR_BASE}/${PLATFORM}/${ABI}/${INST_SET}
 _DBG_BUILDDIR	= ${_BUILDDIR}/debug
 _OPT_BUILDDIR	= ${_BUILDDIR}/opt
 
-#
+# --------------------------------------------
+# Library build and installation directories.
+# --------------------------------------------
+
+# ${_install_libdir} is the base directory (minus any debugging or optimized
+# subdirectories) where the library will be installed.
 _install_libdir = ${libdir}${LIBBITSUF}/${INST_SET}
+
+# ${_LIBDIR_NAME} is the name of the library directory including an ABI suffix
+# if applicable.
 _LIBDIR_NAME	= lib${LIBBITSUF}
+
+# ${_LIBDIR_BASE} is the base directory where the library will be built.
 _LIBDIR_BASE	= ${topdir}/${_LIBDIR_NAME}
+
+# ${_LIBDIR} is the first-level subdirectory of ${_LIBDIR_BASE} that is
+# named by the instruction set being used (${INST_SET}).
 _LIBDIR		= ${_LIBDIR_BASE}/${INST_SET}
+
+# ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the library
+# is actually built.  The first is for a debugging copy of the library and
+# the second is for an optimized version of the library.
 _DBG_LIBDIR	= ${_LIBDIR}/debug
 _OPT_LIBDIR	= ${_LIBDIR}/opt
 
 # Full name of the static and dynamic versions of the library.
 LIB_STATIC	= ${LIBRARY}.a
 LIB_DYNAMIC	= ${LIBRARY}.@SHAREDLIB_EXT@
+
+# -----------------------------------------------------------------------------
+# Lists used for various types of recursion.
+# -----------------------------------------------------------------------------
 
 # Subdirectories used for recursion through the source tree.
 SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
@@ -116,6 +142,7 @@ SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
 # installing.
 TEST_SUBDIRS	= . CfgTest Quat input ogl ogl/cubes ogl/wand pfNav
 
+# The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
 
 # -----------------------------------------------------------------------------
