@@ -75,7 +75,6 @@ public class BeanTreeViewer
       empty_left.setMinimumSize(new Dimension(125, 200));
       viewer.add(empty_left, JSplitPane.LEFT);
       viewer.add(mDefaultBeanPanel, JSplitPane.RIGHT);
-      viewer.setDividerSize(5);
    }
 
    public void setModel (BeanTreeModel model)
@@ -260,6 +259,8 @@ public class BeanTreeViewer
       // Put together the BeanTree displaying the JavaBeans.
       mBeanTree.addTreeSelectionListener(new BeanSelectionListener());
       mBeanTree.setScrollsOnExpand(true);
+      viewer.setDividerSize(8);
+      viewer.setOneTouchExpandable(true);
       mBeanTreePane.getViewport().add(mBeanTree, null);
 
       mTitlePanelLabel.setFont(new java.awt.Font("Dialog", 1, 24));
