@@ -79,15 +79,15 @@ public:
        assertTest(sock->getLocalAddr() == newSock1->getLocalAddr());
        
        delete sock;
-       assertTest(newSock1->open() && "Can not open copied socket1");
-       assertTest(newSock2->open() && "Can not open copied socket2");
+       assertTest(newSock1->open().success() && "Can not open copied socket1");
+       assertTest(newSock2->open().success() && "Can not open copied socket2");
        
        assertTest(newSock2->getType() == newSock1->getType());
        assertTest(newSock2->getRemoteAddr() == newSock1->getRemoteAddr());
        assertTest(newSock2->getLocalAddr() == newSock1->getLocalAddr());
        
-       assertTest(newSock1->close() && "Can not close copied socket1");
-       assertTest(newSock2->close() && "Can not close copied socket2");
+       assertTest(newSock1->close().success() && "Can not close copied socket1");
+       assertTest(newSock2->close().success() && "Can not close copied socket2");
        
        delete newSock1;
        delete newSock2;
@@ -129,7 +129,7 @@ public:
        vpr::SocketStream connector_socket(vpr::InetAddr::AnyAddr, remote_addr);
        vpr::SocketStream* copy_connector(NULL);       
        
-       result = connector_socket.open();
+       result = connector_socket.open().success();
        threadAssertTest((result != false), "Can not open connector socket");
        
        // WAIT for READY 
@@ -140,14 +140,15 @@ public:
        }
        mCondVar.release();
        
-       result1 = connector_socket.connect();
+       result1 = connector_socket.connect().success();
        threadAssertTest((result1 != false), "connect fails");
        
        copy_connector = new vpr::SocketStream (connector_socket);
        
        if (result1 != false) {
-         result = copy_connector->read (buffer, 40);
-         if (result>0)
+         ssize_t bytes_read;
+         vpr::Status status = copy_connector->read (buffer, 40, bytes_read);
+         if (status.success())
             copy_connector->close();
        }
        
@@ -172,26 +173,26 @@ public:
     void testCopyConstructor_acceptor(void* arg)
    {
       const vpr::Uint16 port(13579);
-      const int backlog = 5;
       bool result = 0;
       char buffer[]="Hello!";
       vpr::InetAddr local_addr;
       local_addr.setPort(port);
       vpr::SocketStream acceptor_socket(local_addr, vpr::InetAddr::AnyAddr);
        
-      vpr::SocketStream* child_socket(NULL);
+      vpr::SocketStream child_socket;
       vpr::SocketStream* copy_acceptor(NULL);
       vpr::SocketStream* copy_child(NULL);
+      vpr::Status child_create_status;
        
-      result = acceptor_socket.open();
+      result = acceptor_socket.open().success();
       threadAssertTest((result != false), "Can not open acceptor socket");
       
-      result = acceptor_socket.bind();
+      result = acceptor_socket.bind().success();
       
       if (result == false)
          threadAssertTest((false), "Can not bind acceptor socket");
       else { 
-         result = acceptor_socket.listen( backlog );
+         result = acceptor_socket.listen().success();
          threadAssertTest((result != false), "acceptor listening fails");
          // READY - Tell everyone that we are ready to accept
             mCondVar.acquire();
@@ -200,22 +201,25 @@ public:
                mCondVar.signal();       // Tell any waiting threads
             }
             mCondVar.release();       
-         child_socket = acceptor_socket.accept();
-         threadAssertTest((child_socket != NULL), "accept() fails");
+         child_create_status = acceptor_socket.accept(child_socket);
+         threadAssertTest(child_create_status.success() && "accept() fails");
       }
-       
+
       copy_acceptor = new vpr::SocketStream (acceptor_socket);
-      if (child_socket != NULL) copy_child = new vpr::SocketStream (*child_socket);
-       
+      if (child_create_status.success()) {
+         copy_child = new vpr::SocketStream (child_socket);
+      }
+
       threadAssertTest(copy_acceptor->getType() == acceptor_socket.getType());
       threadAssertTest(copy_acceptor->getRemoteAddr() == acceptor_socket.getRemoteAddr());
       threadAssertTest(copy_acceptor->getLocalAddr() == acceptor_socket.getLocalAddr());
        
       if (copy_child != NULL) {
-         copy_child->write(buffer, sizeof(buffer));
-         threadAssertTest(copy_child->getType() == child_socket->getType());
-         threadAssertTest(copy_child->getRemoteAddr() == child_socket->getRemoteAddr());
-         threadAssertTest(copy_child->getLocalAddr() == child_socket->getLocalAddr());
+         ssize_t bytes_written;
+         copy_child->write(buffer, sizeof(buffer), bytes_written);
+         threadAssertTest(copy_child->getType() == child_socket.getType());
+         threadAssertTest(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());
+         threadAssertTest(copy_child->getLocalAddr() == child_socket.getLocalAddr());
       }
       
       // WAIT for close
@@ -224,14 +228,13 @@ public:
             mCondVar.wait();             
       mCondVar.release();
       
-      result = acceptor_socket.close();
+      result = acceptor_socket.close().success();
       threadAssertTest((result != false), "acceptor close fails");
-      if (child_socket != NULL) child_socket->close();
+      if (child_create_status.success()) child_socket.close();
        
       copy_acceptor->close();
       if (copy_child != NULL) copy_child->close();
        
-      if (child_socket != NULL) delete child_socket;
       delete copy_acceptor;
       if (copy_child != NULL) delete copy_child;
    }
