@@ -76,13 +76,13 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=359,300,359,225:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=359,300,359,171:oigroup>
 <oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=270,132,183,132:oigroup>
 <oigroup:<oiref:cpp#Extends#userOpenSGApp#vrj::OpenSGApp:oiref>=206,365,270,365:oigroup>
 <oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=270,300,200,130,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=270,40,179,185,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,173,241,1:oigroup>
-<oigroup:<oiref:cpp#Class#userOpenSGApp:oiref>=10,280,196,163,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=270,40,179,131,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,173,160,1:oigroup>
+<oigroup:<oiref:cpp#Class#userOpenSGApp:oiref>=10,280,196,118,1:oigroup>
 */
 class __positions {
 }
