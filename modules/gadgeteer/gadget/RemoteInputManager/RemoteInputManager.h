@@ -251,7 +251,7 @@ namespace gadget
 
       /**
        * Open a socket and accept incoming connections. When a connection is 
-       * initiated we try to recieve a handshake. If we do then try to create
+       * initiated we try to receive a handshake. If we do then try to create
        * a new NetConnection. If successful respond by sending a handshake back.
        *
        * @post	A NetConnection to a machine that has requested a connection.
