@@ -55,11 +55,11 @@ import org.vrjuggler.jccl.config.*;
  * Swing components and provides an interface for editing the properties of
  * proxy config elements.
  */
-public class ProxyEditor
+public class SimpleProxyEditor
    extends JSplitPane
    implements EditorConstants
 {
-   public ProxyEditor()
+   public SimpleProxyEditor()
    {
       try
       {
@@ -135,14 +135,17 @@ public class ProxyEditor
    {
       mProxyListPanel.setLayout(mProxyListPanelLayout);
       mProxyAddButton.setText("Add");
-      mProxyAddButton.addActionListener(new
-         ProxyEditor_mProxyAddButton_actionAdapter(this));
+      mProxyAddButton.addActionListener(
+         new SimpleProxyEditor_mProxyAddButton_actionAdapter(this)
+      );
       mProxyRemoveButton.setEnabled(false);
       mProxyRemoveButton.setText("Remove");
-      mProxyRemoveButton.addActionListener(new
-         ProxyEditor_mProxyRemoveButton_actionAdapter(this));
-      mProxyList.addListSelectionListener(new
-         ProxyEditor_mProxyList_listSelectionAdapter(this));
+      mProxyRemoveButton.addActionListener(
+         new SimpleProxyEditor_mProxyRemoveButton_actionAdapter(this)
+      );
+      mProxyList.addListSelectionListener(
+         new SimpleProxyEditor_mProxyList_listSelectionAdapter(this)
+      );
       mProxyEditorPanel.setLayout(mProxyEditorPanelLayout);
       mSourceLabel.setLabelFor(mInputSourceField);
       mSourceLabel.setText("Source #");
@@ -150,8 +153,9 @@ public class ProxyEditor
       mInputSourceField.setHorizontalAlignment(SwingConstants.TRAILING);
       mInputSourceField.setMinimumSize(new Dimension(30, 22));
       mInputSourceField.setPreferredSize(new Dimension(40, 22));
-      mInputSourceField.addActionListener(new
-         ProxyEditor_mInputSourceField_actionAdapter(this));
+      mInputSourceField.addActionListener(
+         new SimpleProxyEditor_mInputSourceField_actionAdapter(this)
+      );
       mProxyEditorPanel.setBorder(mProxyEditorPanelTitle);
       mProxyEditorPanel.setMinimumSize(new Dimension(150, 56));
       mProxyEditorPanel.setPreferredSize(new Dimension(150, 56));
@@ -358,11 +362,11 @@ public class ProxyEditor
    }
 }
 
-class ProxyEditor_mInputSourceField_actionAdapter
+class SimpleProxyEditor_mInputSourceField_actionAdapter
    implements ActionListener
 {
-   private ProxyEditor adaptee;
-   ProxyEditor_mInputSourceField_actionAdapter(ProxyEditor adaptee)
+   private SimpleProxyEditor adaptee;
+   SimpleProxyEditor_mInputSourceField_actionAdapter(SimpleProxyEditor adaptee)
    {
       this.adaptee = adaptee;
    }
@@ -479,12 +483,11 @@ class ProxyElement
    private ProxyTypeEditor panel;
 }
 
-class ProxyEditor_mProxyRemoveButton_actionAdapter
+class SimpleProxyEditor_mProxyRemoveButton_actionAdapter
    implements ActionListener
 {
-   private ProxyEditor adaptee;
-   ProxyEditor_mProxyRemoveButton_actionAdapter(ProxyEditor
-      adaptee)
+   private SimpleProxyEditor adaptee;
+   SimpleProxyEditor_mProxyRemoveButton_actionAdapter(SimpleProxyEditor adaptee)
    {
       this.adaptee = adaptee;
    }
@@ -495,12 +498,11 @@ class ProxyEditor_mProxyRemoveButton_actionAdapter
    }
 }
 
-class ProxyEditor_mProxyList_listSelectionAdapter
+class SimpleProxyEditor_mProxyList_listSelectionAdapter
    implements ListSelectionListener
 {
-   private ProxyEditor adaptee;
-   ProxyEditor_mProxyList_listSelectionAdapter(ProxyEditor
-      adaptee)
+   private SimpleProxyEditor adaptee;
+   SimpleProxyEditor_mProxyList_listSelectionAdapter(SimpleProxyEditor adaptee)
    {
       this.adaptee = adaptee;
    }
@@ -511,12 +513,11 @@ class ProxyEditor_mProxyList_listSelectionAdapter
    }
 }
 
-class ProxyEditor_mProxyAddButton_actionAdapter
+class SimpleProxyEditor_mProxyAddButton_actionAdapter
    implements ActionListener
 {
-   private ProxyEditor adaptee;
-   ProxyEditor_mProxyAddButton_actionAdapter(ProxyEditor
-      adaptee)
+   private SimpleProxyEditor adaptee;
+   SimpleProxyEditor_mProxyAddButton_actionAdapter(SimpleProxyEditor adaptee)
    {
       this.adaptee = adaptee;
    }
