@@ -24,7 +24,7 @@ Table of contents:
     c.) Probe the system for capabilities, generate Makefiles, etc...
         this "configures" the source tree for the current system
     d.) "Make" the distribution using gnu-make. 
-6.) Popular build hacks
+6.) Advanced topics
     a.) Send compiler output to a different directory than the source tree.
 
 --------------------------------------------------------------------------
@@ -71,7 +71,7 @@ autoconf
 gmake
 
 
-6.) Build hacks
+6.) Advanced topics
     a.) Send compiler output to a different directory than the source tree.
         Run this in the directory you want compiler output to go to.
 	NOTE: You can change the word "myBuildDirectory" to a name of 
