@@ -49,7 +49,7 @@ namespace cluster
       do
       {
          mId.generate();   // Generate a unique ID for this device
-         vprDEBUG(vprDBG_ALL, VPR_DBG_WARNING_LVL) 
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) 
             << "[DeviceServer] Invalid GUID, generating a new one." 
             << std::endl << vprDEBUG_FLUSH;
       }while(temp == mId);
