@@ -15,11 +15,21 @@
 # Optionally, the including file can add to the following existing variables
 # to provide additional local 'install':
 #
-# INSTALL_DEPS    - Dependencies for the 'install' target.
+# INSTALL_DEPS - Dependencies for the 'install' target.
+# FILE_PERMS   - Permissions on normal (non-executable) files.
+# GROUP_NAME   - The name of the group that will own the files.
 # -----------------------------------------------------------------------------
+
+ifndef FILE_PERMS
+    FILE_PERMS	= 664
+endif
+
+ifndef GROUP_NAME
+    GROUP_NAME	= c2dev
+endif
 
 INSTALL_DEPS	?=
 
 install: ${INSTALL_DEPS}
 	${scriptdir}/mkinstalldirs ${includedir}
-	${INSTALL} -m 664 ${srcdir}/*.h ${includedir}
+	${INSTALL} -m ${FILE_PERMS} -g ${GROUP_NAME} ${srcdir}/*.h ${includedir}
