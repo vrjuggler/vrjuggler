@@ -27,11 +27,10 @@
     Visual C++ project file was used for compiling the library.  Development
     on the GNU Autoconf-based build system on UNIX platforms had been going
     strong for a long time prior to this, and it was quickly realized that
-    having two separate methods for compiling would complicate matters.  As
-    part of the 0.1.95 and 0.2.0 releases (which include the first Windows
-    NT ports), the build system has been unified.  Only the Autoconf-based
-    system is supported which provides the same build environment on all
-    platforms.
+    having two separate methods for compiling would complicate matters.  The
+    build system used for compiling VR Juggler is now the same on UNIX and
+    Win32 platforms.  Only the Autoconf-based system is supported which
+    provides the same build environment on all platforms.
   </P>
 
   <P>
@@ -70,12 +69,14 @@
 
     <UL>
       <LI>
-        <A TARGET="_blank" HREF="http://www.cygnus.com/">Cygnus</A>
-        <A TARGET="_blank" HREF="${GETCYGWIN}">Cygwin</A> ``full'' package.
-        Version B20.1 is known to work.  Note that the version of
-        <TT>make</TT> distributed with B20.1 will not work in a DOS shell.
-        The version in <TT>juggler-tools</TT> will work in both a DOS shell
-        and a BASH shell.
+        <A TARGET="_blank" HREF="${GETCYGWIN}">Cygwin</A> 1.1.8 or newer.
+        Version B20.1 is also known to work, but that version has many
+        problems.  In particular, the version of <TT>make</TT> distributed
+        with B20.1 will not work in a DOS shell.  With the newer versions
+        of Cygwin, the tools work better in the Win32 environment, and
+        many pre-compiled packages are available including CVS, Perl,
+        Autoconf, and Automake.  It is strongly recommended that the Cygwin
+        versions of all these utilities be used.
       </LI>
       <LI>
         <A TARGET="_blank" HREF="${GETAUTOCONF}">GNU Autoconf</A> version
@@ -131,10 +132,11 @@
             initially set only for the user who installed Visual C++ and
             should be changed so that it is set for all users.
       <DT><TT>%VJ_BASE_DIR%</TT>
-        <DD>The value for this should be set using <TT>/</TT>'s as the path
-            separator rather than <TT>\</TT>'s as would normally be the
-            case with DOS/Win32 paths.  It just simplifies things all
-            around to use a UNIX-style path in this case.
+        <DD>The value for this should be set using the DOS path with
+            <TT>/</TT>'s as the path separator rather than <TT>\</TT>'s
+            as would normally be the case with DOS/Win32 paths.  It just
+            simplifies things all around to use a UNIX-style path in this
+            case.
     </DL>
 
 <H3><A NAME="compile">Compiling Juggler</A></H3>
@@ -185,8 +187,8 @@
   <P>
     Once configuration has completed, compiling can be done in either a DOS
     shell or a BASH shell using the version of GNU make in
-    <TT>juggler-tools</TT>.  <I>The Cygwin version will not work in a DOS
-    shell.</I>  This is when it is especially important to have the
+    <TT>juggler-tools</TT>.  <I>The Cygwin B20.1 version will not work in a
+    DOS shell.</I>  This is when it is especially important to have the
     <TT>juggler-tools</TT> directory before the Cygwin directory in the
     user's path.
   </P>
@@ -208,13 +210,16 @@
 
     <UL>
       <LI>
-        Once in a while, the UNIX utilities will appear to become blocked
-        or may die with an error saying that they cannot fork.  This may
-        be due to a race condition in the Cygwin code.  Typically, it
-        happens when one or more BASH shells are open while a build is
-        happening in a DOS shell.  Closing one or more (sometimes all) of
-        the BASH shells usually fixes the problem.  No better solution to
-        this problem has been found yet.
+        In versions of Cygwin prior to 1.1, the UNIX utilities will appear
+        to become blocked or may die with an error saying that they cannot
+        fork.  This may have been due to a race condition in the old Cygwin
+        code.  Typically, it happens when one or more BASH shells are open
+        while a build is happening in a DOS shell.  Closing one or more
+        (sometimes all) of the BASH shells usually fixes the problem.  It
+        is strongly recommended that developers update to
+        <A HREF="${GETCYGWIN}">Cygwin 1.1.8</A> and to the
+        <A HREF="${PUB}/juggler-tools-1.1.zip">latest <TT>juggler-tools</TT>
+        package</A>.
       </LI>
       <LI>
         The ``developer installation'' does not work in any Win32 file
@@ -224,7 +229,7 @@
         compiled (refer to the
         <A HREF="${TEAMGUIDE}/build/juggler/use.install.html">installation
         documentation</A> for more information on this process).  Once
-        that is done, <TT>VJ_BASE_DIR</TT> can be set to point to the
+        that is done, <TT>$VJ_BASE_DIR</TT> can be set to point to the
         installation directory and development can continue in the build
         tree.
       </LI>
@@ -260,9 +265,10 @@
         The application makefiles (<I>not</I> the library makefiles) all
         use the <TT>$(VAR_NAME)</TT> syntax for referencing variables.
         This is so that the makefiles will work with <TT>nmake</TT>.  These
-        are intended to be usable with all version of make (or as many as
-        is feasibly possible), so they deviate from the style used in other
-        makefiles to accommodate this particular version of make.
+        are intended to be usable with all version of <TT>make</TT> (or as
+        many as is feasibly possible), so they deviate from the style used
+        in other makefiles to accommodate this particular version of
+        <TT>make</TT>.
       </LI>
     </UL>
 
