@@ -26,11 +26,9 @@
 
 #include "fileIO.h"
 
-#ifdef USESOUND
 #include <Sound/vjSoundManager.h>
 #include <Sound/pf/pjSoundNode.h> //performer-juggler sound node.
 #include <Sound/pf/pjSoundReplaceTrav.h>
-#endif
 
 // nav includes
 #include <pfNavDCS.h>
@@ -88,7 +86,7 @@ public:
       pfNavDCS::init();
       if(mUseStats)
          mStats.preForkInit();
-      
+
       pjSoundReplaceTrav::preForkInit();
    }
 
@@ -278,13 +276,14 @@ void simplePfNavApp::initScene()
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
    pjSoundReplaceTrav::traverse( mNavigationDCS, extension );
-   
 
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
+   /*
    cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
    pfuTravPrintNodes( mRootNode, "lastscene.out" );
    pfdStoreFile( mRootNode, "lastscene.pfb" );
+   */
 }
 
 #endif
