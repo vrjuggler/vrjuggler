@@ -24,13 +24,11 @@ implements ActionListener {
     
     Panel p1, p2;
 
-    setSize (300,200);
     GridLayout l = new GridLayout(2,1);
     l.setVgap(10);
     l.setHgap(10);
     setLayout (l);
     
-    //setLayout(null);
     p1 = new Panel();
     p2 = new Panel();
     p1.add (new Label("Host Name:"));
@@ -63,20 +61,26 @@ implements ActionListener {
 
 
 
-  public void activate () {
-    /* basically just adds menus to core.ui.menubar */
-    core.ui.menubar.add(filemenu);
-    validate();
-  }
+    public void activate () {
+	/* basically just adds menus to core.ui.menubar */
+	core.ui.menubar.add(filemenu);
+	validate();
+    }
 
-  public void deactivate () {
-    /* removes menus from core.ui.menubar */
-    core.ui.menubar.remove(filemenu);
-  }
+
+
+    public void deactivate () {
+	/* removes menus from core.ui.menubar */
+	core.ui.menubar.remove(filemenu);
+    }
+
+
 
     public boolean update () {
 	return true;
     }
+
+
 
     public void actionPerformed (ActionEvent e) {
 	System.out.println ("connection panel event called");

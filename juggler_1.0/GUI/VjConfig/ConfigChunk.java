@@ -70,11 +70,11 @@ public class ConfigChunk {
       props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
   }
 
-  public String chunkName() {
+  public String getName() {
     return name;
   }
 
-  public String descName() {
+  public String getDescName() {
     return desc.name;
   }
 

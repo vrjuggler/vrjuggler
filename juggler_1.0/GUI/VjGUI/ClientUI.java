@@ -3,96 +3,100 @@ package VjGUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
+import VjConfig.ChunkDesc;
 import VjGUI.AppCore;
-import VjGUI.TrackerDataDisplayPanel;
+import VjGUI.ProcessFrame;
+import VjGUI.DataDisplayFrame;
 
 public class ClientUI extends Frame 
 implements ActionListener, WindowListener, ItemListener {
 
-  ClientGlobals core;
-  Panel cardpanel;
-  CardLayout layout;
-  public Font windowfont;
-  public Font windowfontbold;
-
-  MainWindowPanel descspanel, chunkspanel, connectpanel, activepanel,
-      positionupdatepanel;
-  List panellist; // list of panels in the cardlayout to display
-  Panel mp;
-  public MenuBar menubar;
-
-  public ClientUI (ClientGlobals c) {
-    super("C2 Configuration Editor");
-    core = c;
-
-    windowfont = new Font ("Courier", Font.PLAIN, 16);
-    windowfontbold = new Font ("Courier", Font.BOLD, 16);
-    setFont (windowfont);
-
-    Menu hmen = new Menu ("Help");
-    hmen.add ("Manual");
-
-    menubar = new MenuBar();
-    menubar.setFont (windowfont);
-    menubar.setHelpMenu (hmen);
-    setMenuBar (menubar);
+    ClientGlobals         core;
+    Panel                 cardpanel,
+                          mp;
+    CardLayout            layout;
+    public Font           windowfont;
+    public Font           windowfontbold;
+    BorderedPanel         listpanel;
+    ProcessFrame          procframe;
+    Vector                datadisplayframes;
+    MainWindowPanel       descspanel, 
+	                  chunkspanel, 
+                          connectpanel, 
+                          activepanel;
+    List                  panellist; // list of panels in the cardlayout
+    public MenuBar        menubar;
 
 
-    mp = new Panel();
-    mp.setLayout(new BorderLayout(2,2));
 
-    BorderedPanel listpanel = new BorderedPanel (4,4,0,0);
-    listpanel.setLayout(new BorderLayout());
+    public ClientUI (ClientGlobals c) {
+	super("VR Juggler Configuration Editor");
+	core = c;
 
-    listpanel.add(new Label ("Panels:", Label.LEFT), "North");
-    panellist = new List (10,false);
-    panellist.addItem ("Connection");
-    panellist.addItem ("Descriptions");
-    panellist.addItem ("Chunks");
-    panellist.addItem ("Position Data");
-    //panellist.addActionListener(this);
-    panellist.addItemListener(this);
-    listpanel.add(panellist,"Center");
+	windowfont = new Font ("Courier", Font.PLAIN, 16);
+	windowfontbold = new Font ("Courier", Font.BOLD, 16);
+	setFont (windowfont);
 
-    mp.add (listpanel, "West");
+	datadisplayframes = new Vector();
+	Menu hmen = new Menu ("Help");
+	hmen.add ("Manual");
+
+	menubar = new MenuBar();
+	menubar.setFont (windowfont);
+	menubar.setHelpMenu (hmen);
+	setMenuBar (menubar);
+
+	mp = new Panel();
+	mp.setLayout(new BorderLayout(2,2));
+
+	listpanel = new BorderedPanel (4,4,0,0);
+	listpanel.setLayout(new BorderLayout());
+
+	listpanel.add(new Label ("Panels:", Label.LEFT), "North");
+	panellist = new List (10,false);
+	panellist.addItem ("Connection");
+	panellist.addItem ("Descriptions");
+	panellist.addItem ("Chunks");
+	panellist.addItem ("Processes");
+	panellist.addItemListener(this);
+	listpanel.add(panellist,"Center");
+	mp.add (listpanel, "West");
     
-    cardpanel = new Panel();
-    layout = new CardLayout();
-    descspanel = new ChunkDescDBPanel(core);
-    chunkspanel = new ConfigChunkDBPanel(core);
-    connectpanel = new ConnectionPanel(core);
-    positionupdatepanel = new TrackerDataDisplayPanel(core);
-    cardpanel.setLayout(layout);
+	cardpanel = new Panel();
+	layout = new CardLayout();
+	descspanel = new ChunkDescDBPanel(core);
+	chunkspanel = new ConfigChunkDBPanel(core);
+	connectpanel = new ConnectionPanel(core);
+	cardpanel.setLayout(layout);
+	cardpanel.add(descspanel,"Descriptions");
+	cardpanel.add(chunkspanel,"Chunks");
+	cardpanel.add(connectpanel,"Connection");
 
-    cardpanel.add(descspanel,"Descriptions");
-    cardpanel.add(chunkspanel,"Chunks");
-    cardpanel.add(connectpanel,"Connection");
-    cardpanel.add(positionupdatepanel, "Position Data");
+	layout.layoutContainer(cardpanel);
+	mp.add (cardpanel, "Center");
 
-    layout.layoutContainer(cardpanel);
-    mp.add (cardpanel, "Center");
+	add(mp);
+	addWindowListener(this);
+	layout.show(cardpanel, "Connection");
+	activepanel = connectpanel;
 
-    add(mp);
-    addWindowListener(this);
-    layout.show(cardpanel, "Connection");
-    activepanel = connectpanel;
+	procframe = new ProcessFrame (core, windowfont);
 
-    /* this slightly convoluted process is needed in order to open a window
-     * that is wide enough to show the full PropertyPanels, regardless of
-     * font & label sizes etc.
-     */
-    setSize(500,500);
-    setVisible(true);
-    int width = chunkspanel.getPreferredSize().width 
-	+ listpanel.getPreferredSize().width + 50;
-    setSize(width, 500);
+	pack();
+	setVisible(true);
+    }
 
-  }
 
 
     public boolean showPanel (String s) {
 	activepanel.deactivate();
 	
+	if (s.equalsIgnoreCase("Processes")) {
+	    procframe.update();
+	    procframe.setVisible(true);
+	    return true;
+	}
 	if (s.equalsIgnoreCase("Descriptions")) {
 	    layout.show (cardpanel, "Descriptions");
 	    activepanel = descspanel;
@@ -114,31 +118,82 @@ implements ActionListener, WindowListener, ItemListener {
 	    update();
 	    return true;
 	}
-	else if (s.equalsIgnoreCase("Position Data")) {
-	    layout.show (cardpanel, "Position Data");
-	    activepanel = positionupdatepanel;
-	    positionupdatepanel.activate();
-	    update();
-	    return true;
+	else {
+	    /* check if it's a datadisplayframe */
+	    int i;
+	    DataDisplayFrame f;
+	    for (i = 0; i < datadisplayframes.size(); i++) {
+		f = (DataDisplayFrame)datadisplayframes.elementAt(i);
+		if (f.getName().equalsIgnoreCase(s)) {
+		    f.update();
+		    f.setVisible(true);
+		    return true;
+		}
+	    }
 	}
-	else
-	    return false;
+	return false;
     }
     
 
 
-  public boolean update () {
-    activepanel.update();
-    return true;
-  }
+    public boolean update () {
+	/* for starters, we need to go thru all the datadisplay chunks &
+	 * add frames for any new ones.
+	 */
+	int                 i, 
+                            j;
+	boolean             found;
+	Vector              v;
+	ChunkDesc           d;
+	DataDisplayFrame    f;
 
-  // event handler
+	v = core.descs.getTokenBegins ("vj_timedupdate");
+	for (i = 0; i < v.size(); i++) {
+	    d = (ChunkDesc)v.elementAt(i);
+	    for (j = 0, found = false; j < datadisplayframes.size(); j++) {
+		f = (DataDisplayFrame)datadisplayframes.elementAt(j);
+		if (d.name.equalsIgnoreCase(f.getName())) {
+		    found = true;
+		    break;
+		}
+	    }
+	    if (!found) {
+		f = new DataDisplayFrame (core, d);
+		datadisplayframes.addElement(f);
+		panellist.addItem(f.getName());
+	    }
+	}
 
-  public void actionPerformed (ActionEvent e) {
-    if (e.getSource() == panellist) {
-      showPanel (panellist.getSelectedItem());
+	/* Well _that_ was fun :(
+	 * Now we just have to call update of everything else that's visible
+	 */
+	for (j = 0; j < datadisplayframes.size(); j++) {
+	    f = (DataDisplayFrame)datadisplayframes.elementAt(j);
+	    f.update();
+	}
+	if (procframe.isVisible())
+	    procframe.update();
+	activepanel.update();
+	return true;
     }
-  }
+
+
+
+    public boolean openConfigChunkFrame (String name) {
+	return ((ConfigChunkDBPanel)chunkspanel).openConfigChunkFrame (name);
+    }
+
+
+
+    // event handler
+
+    public void actionPerformed (ActionEvent e) {
+	if (e.getSource() == panellist) {
+	    showPanel (panellist.getSelectedItem());
+	}
+    }
+
+
 
     public void itemStateChanged (ItemEvent e) {
 	if (e.getSource() == panellist) {
@@ -146,22 +201,25 @@ implements ActionListener, WindowListener, ItemListener {
 	}
     }
 
-  public void quit() {
-    dispose();
-    System.exit(0);
-  }
 
-  /* WindowListener Stuff */
-  public void windowActivated(WindowEvent e) {}
-  public void windowClosed(WindowEvent e) {}
-  public void windowClosing(WindowEvent e) {
-    quit();
-  }
-  public void windowDeactivated(WindowEvent e) {}
-  public void windowDeiconified(WindowEvent e) {}
-  public void windowIconified(WindowEvent e) {}
-  public void windowOpened(WindowEvent e) {}
 
+    public void quit() {
+	dispose();
+	System.exit(0);
+    }
+
+
+
+    /* WindowListener Stuff */
+    public void windowActivated(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {}
+    public void windowClosing(WindowEvent e) {
+	quit();
+    }
+    public void windowDeactivated(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {}
 
 
 

@@ -166,7 +166,7 @@ implements ActionListener, ItemListener {
 
 	updateHelpLabel();
 
-	validate();
+	//validate();
 	return true;
     }
 
@@ -244,16 +244,7 @@ implements ActionListener, ItemListener {
 	    String name = list.getSelectedItem();
 	    if (name.charAt(0) != ' ')
 		return;
-	    name = name.trim();
-	    for (int j = 0; j < chunkframes.size(); j++) {
-		if (((ConfigChunkFrame)chunkframes.elementAt(j))
-		    .chunkName().equals(name))
-		    return; // cuz this window is already open.
-	    }
-	    ConfigChunkFrame ccf = new ConfigChunkFrame (core, this,
-							 core.chunks.get(name));
-	    chunkframes.addElement(ccf);
-	    ccf.show();
+	    openConfigChunkFrame(name);
 	}
 
 	/********************* Menus ****************************/
@@ -308,6 +299,21 @@ implements ActionListener, ItemListener {
       ((ConfigChunkFrame)chunkframes.elementAt(j)).dispose();
     chunkframes.removeAllElements();
   }
+
+
+    public boolean openConfigChunkFrame (String name) {
+	name = name.trim();
+	for (int j = 0; j < chunkframes.size(); j++) {
+	    if (((ConfigChunkFrame)chunkframes.elementAt(j))
+		.chunkName().equals(name))
+		return false; // cuz this window is already open.
+	}
+	ConfigChunkFrame ccf = new ConfigChunkFrame (core, this,
+						     core.chunks.get(name));
+	chunkframes.addElement(ccf);
+	ccf.show();
+	return true;
+    }
 
 }
 
