@@ -33,7 +33,7 @@ my $indent_level=0;
 # increase indent by one
 sub indentLevel()
 {
-   outputIndent($indent_level);
+   #outputIndent($indent_level);
 #   print "===>\n";
    $indent_level = $indent_level + 1;
 }
@@ -41,7 +41,7 @@ sub indentLevel()
 # reduce indent by one
 sub outdentLevel()
 {
-   outputIndent($indent_level);
+   #outputIndent($indent_level);
 #   print "<===\n";
    $indent_level = $indent_level - 1;
 }
@@ -55,10 +55,10 @@ sub unknown_action($$$$$)
    my $any_content_inbetween = shift;
    my $tabs = shift;
    
-   outputIndent( $tabs );
-   print "UNKNOWN TAG: type    = $whatAmI\n";
-   outputIndent( $tabs );
-   print "             content = $myParams\n";
+   #outputIndent( $tabs );
+   print "\n(xmlToc) unknown tag = $whatAmI\n";
+   #outputIndent( $tabs );
+   print "               content = $myParams\n";
 }
 
 # function pointers, initialized to unknown_action

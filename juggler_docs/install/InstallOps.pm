@@ -26,6 +26,8 @@
 #     - newDir(): Create a new directory in a given directory tree.
 #     - installFile(): Install a given file with specified permissions to a
 #       destination directory.
+#     - installContent(): Install given content (a string) with specified permissions
+#       and filename to the destination directory.
 #     - replaceTags(): Replace tags of the form "@...@" in the given file
 #       with known replacment values.
 # -----------------------------------------------------------------------------
