@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-01-22 patrickh Started a test suite for the Java code using JUnit.
 2001-12-09 patrickh Added the capability to "unregister" subjects previously
                     registered with the Subject Manager.
 2001-11-20 patrickh Created two new Java API libraries: TweekServices.jar and
