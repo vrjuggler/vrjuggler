@@ -77,7 +77,14 @@ void ConfigChunkDB::getByType(const std::string& typeName, std::vector<ConfigChu
 
 bool ConfigChunkDB::remove(const std::string& name)
 {
-   vprASSERT(false && "Not implemented yet");
+   for ( ConfigChunkDB::iterator i = begin(); i != end(); i++)
+   {
+      if ( name == (*i)->getName() )
+      {
+         erase(i);
+         return true;
+      }
+   }
    return false;
 }
 
