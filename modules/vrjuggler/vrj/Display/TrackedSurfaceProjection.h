@@ -91,7 +91,8 @@ public:
    /** Update the parameters of the tracked surface */
    void updateSurfaceParams(const float scaleFactor);
 
-   std::ostream& outStream(std::ostream& out);
+   std::ostream& outStream(std::ostream& out,
+                           const unsigned int indentLevel = 0);
 
 private:
    /* coord system notes
