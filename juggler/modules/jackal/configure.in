@@ -79,10 +79,15 @@ fi
 
 DPP_STD_CPP(yes)
 
+# Enable CORBA-based remote runtime reconfiguration.
+AC_ARG_ENABLE(corba-rtrc,
+              [  --enable-corba-rtrc     Enable CORBA-based C++ remote
+                          runtime reconfiguration code    [default=no]],
+              enable_corba_rtrc="$enableval", enable_corba_rtrc='no')
+
 # Enable performance testing.
 AC_ARG_ENABLE(performance,
-              [  --enable-performance
-                          Enable performance testing      [default=no]],
+              [  --enable-performance    Enable performance testing      [default=no]],
               _enable_perf="$enableval", _enable_perf='no')
 
 # Enable performance-gathering code if the user requested it.
@@ -196,13 +201,17 @@ DPP_PROG_INSTALL
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
-TWEEK_PATH_CXX([0.4.0],
-               [AC_DEFINE([HAVE_TWEEK_CXX],)
-                HAVE_TWEEK_CXX='Y'
-               ],
-               [AC_MSG_WARN([*** Tweek C++ required for remote reconfig ***])
-                HAVE_TWEEK_CXX='N'
-               ])
+
+if test "x$enable_corba_rtrc" = "xyes" ; then
+   TWEEK_PATH_CXX([0.4.0],
+                  [AC_DEFINE([HAVE_TWEEK_CXX],)
+                   HAVE_TWEEK_CXX='Y'
+                  ],
+                  [AC_MSG_WARN([*** Tweek C++ required for remote reconfig ***])
+                   HAVE_TWEEK_CXX='N'
+                  ])
+fi
+
 TWEEK_PATH_JAVA([0.4.0], ,
                 [AC_MSG_WARN([*** Tweek Java required for edtior JavaBeans ***])
                  BUILD_JAVA='N'
