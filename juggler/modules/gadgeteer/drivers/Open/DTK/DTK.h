@@ -38,7 +38,7 @@
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Open/DTK/DTKMemorySegment.h>
+#include <drivers/Open/DTK/DTKMemorySegment.h>
 
 
 namespace gadget

@@ -43,7 +43,7 @@ include @topdir@/make.defs.mk
 
 DRIVER_NAME=	DTK
 
-srcdir=		@srcdir@/../../../gadget/Devices/Open/DTK
+srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	

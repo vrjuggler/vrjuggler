@@ -38,8 +38,8 @@
 
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
-#include <gadget/Devices/5DT/DataGlove/DataGloveStandalone.h> /* standalone dataglove driver */
-#include <gadget/Devices/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
+#include <drivers/5DT/DataGlove/DataGloveStandalone.h> /* standalone dataglove driver */
+#include <drivers/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
 
 
 void initDevice(gadget::InputManager* inputMgr)

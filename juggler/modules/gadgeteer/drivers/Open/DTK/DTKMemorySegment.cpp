@@ -35,7 +35,7 @@
 #include <dtk.h>
 
 #include <jccl/Config/ConfigChunk.h>
-#include <gadget/Devices/Open/DTK/DTKMemorySegment.h>
+#include <drivers/Open/DTK/DTKMemorySegment.h>
 
 namespace gadget
 {

@@ -31,8 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Devices/5DT/DataGlove.  It requires GNU
-# make.
+# Makefile.in for gadgeteer/drivers/5DT/DataGlove.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -44,7 +43,7 @@ include @topdir@/make.defs.mk
 
 DRIVER_NAME=	DataGlove
 
-srcdir=		@srcdir@/../../../gadget/Devices/5DT/DataGlove
+srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	
