@@ -3,7 +3,7 @@
 # Audio Juggler
 #
 # Original Authors:
-#   Kevin Meinert
+#   Kevin Meinert, Carolina Cruz-Neira
 #
 # -----------------------------------------------------------------
 # File:          $RCSfile$
@@ -12,6 +12,8 @@
 # -----------------------------------------------------------------
 #
 # ****************** <AJ heading END do not edit this line> ******************
+
+
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
@@ -38,6 +40,9 @@
 # Boston, MA 02111-1307, USA.
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
+
+
+
 
 ###############################################################################$
 # builder for test suite.  uses kevin's build system in @srcdir@/mk
