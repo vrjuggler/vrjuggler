@@ -16,7 +16,7 @@
 #include <Threads/vjThread.h>
 
 
-thread_id_t vjThreadPosix::thread_count = 1;
+thread_id_t vjThreadPosix::mThreadCount = 1;
 hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread> vjThreadPosix::mPthreadHash;
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
@@ -240,11 +240,11 @@ vjThreadPosix::setPrio (int prio) {
 void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
-        mThread.id = thread_count;
+        mThread.id = mThreadCount;
         mPthreadHash[(caddr_t) &mThread] = mThread.id;
         registerThread(true);
         mThreadTable.addThread(this, mThread.id);
-        thread_count++;
+        mThreadCount++;
     } else {
         registerThread(false);	// Failed to create
     }
