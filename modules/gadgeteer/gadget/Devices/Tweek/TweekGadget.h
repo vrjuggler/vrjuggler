@@ -33,7 +33,7 @@
 #ifndef _GADGET_TWEEK_GADGET_H_
 #define _GADGET_TWEEK_GADGET_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <string>
 #include <utility>
@@ -54,7 +54,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
