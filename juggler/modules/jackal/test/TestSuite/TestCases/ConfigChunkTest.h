@@ -34,8 +34,82 @@ public:
    {
    }
 
+   void setPropTests()
+   {
+      bool retval = false;
+      
+      // make cure they fail without a desc
+      {
+         // set property integer
+         jccl::ConfigChunkPtr chunk_int = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
+         retval = chunk_int->setProperty( "test prop int", 2, 0 );
+         CPPUNIT_ASSERT( retval == false );
 
-   void PropertyValueTests () 
+         // set property float
+         jccl::ConfigChunkPtr chunk_float = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
+         retval =  chunk_float->setProperty( "test prop float", 78.2f, 0 );
+         CPPUNIT_ASSERT( retval == false );
+
+         // set property string
+         jccl::ConfigChunkPtr chunk_string = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
+         retval =  chunk_string->setProperty( "test prop string", "green hairy meatball", 0 );
+         CPPUNIT_ASSERT( retval == false );
+
+         // set multiple types of props on one chunk...
+         jccl::ConfigChunkPtr chunk_multi = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
+         chunk_multi->setProperty( "test prop multi", 2, 0 );
+         chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
+         chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
+      }
+
+      // make sure they succeed with a desc
+      {
+         std::string file_path(TESTFILES_PATH);
+         jccl::ChunkFactory::instance()->loadDescs (file_path + "ConfigChunkTest/ConfigChunkTest.desc");
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         // set property integer
+         jccl::ConfigChunkPtr chunk_int = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
+         retval = chunk_int->setProperty( "test prop int", 2, 0 );
+         CPPUNIT_ASSERT( retval == true );
+
+         // set property float
+         jccl::ConfigChunkPtr chunk_float = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
+         retval =  chunk_float->setProperty( "test prop float", 78.2f, 0 );
+         CPPUNIT_ASSERT( retval == true );
+
+         // set property string
+         jccl::ConfigChunkPtr chunk_string = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
+         retval =  chunk_string->setProperty( "test prop string", "green hairy meatball", 0 );
+         CPPUNIT_ASSERT( retval == true );
+
+         // set multiple types of props on one chunk...
+         jccl::ConfigChunkPtr chunk_multi = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
+         
+         retval = chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
+         CPPUNIT_ASSERT( retval == true );
+         CPPUNIT_ASSERT( std::string( "bahamas mamas" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+
+         // @todo this test currently fails, but it shouldn't
+         retval = chunk_multi->setProperty( "test prop multi", 2, 0 );
+         CPPUNIT_ASSERT( retval == true );
+         CPPUNIT_ASSERT( std::string( "bahamas mamas" ) != (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+         CPPUNIT_ASSERT( 2 == (int)chunk_multi->getProperty( "test prop multi", 0 ) );
+         
+         // @todo this test currently fails, but it shouldn't
+         retval = chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
+         CPPUNIT_ASSERT( retval == true );
+         CPPUNIT_ASSERT( 2 != (int)chunk_multi->getProperty( "test prop multi", 0 ) );
+         CPPUNIT_ASSERT( 678.098f == (float)chunk_multi->getProperty( "test prop multi", 0 ) );
+         
+         retval = chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
+         CPPUNIT_ASSERT( retval == true );
+         CPPUNIT_ASSERT( 678.098f != (float)chunk_multi->getProperty( "test prop multi", 0 ) );
+         CPPUNIT_ASSERT( std::string( "bahamas mamas" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+      }
+   }
+
+   void PropertyValueTests ()
    {
       std::string file_path(TESTFILES_PATH);
 
@@ -84,7 +158,8 @@ public:
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ConfigChunkTest");
       test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>("PropertyValueTests", &ConfigChunkTest::PropertyValueTests));
-      
+      test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>("setPropTests", &ConfigChunkTest::setPropTests));
+
       return test_suite;
    }
 };
